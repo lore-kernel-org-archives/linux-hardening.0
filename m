@@ -2,140 +2,218 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 114A3C433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 16:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA982C4332F
+	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 17:21:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243358AbiAXQHz (ORCPT
+        id S244475AbiAXRVY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 24 Jan 2022 11:07:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60170 "EHLO
+        Mon, 24 Jan 2022 12:21:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234604AbiAXQHz (ORCPT
+        with ESMTP id S244499AbiAXRUp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 Jan 2022 11:07:55 -0500
-Received: from mail-ed1-x549.google.com (mail-ed1-x549.google.com [IPv6:2a00:1450:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9626AC06173D
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 08:07:54 -0800 (PST)
-Received: by mail-ed1-x549.google.com with SMTP id el8-20020a056402360800b00403bbdcef64so13347565edb.14
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 08:07:54 -0800 (PST)
+        Mon, 24 Jan 2022 12:20:45 -0500
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24AC4C061749
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 09:20:39 -0800 (PST)
+Received: by mail-pf1-x435.google.com with SMTP id u10so12066589pfg.10
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 09:20:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=+AGye14zUPVTO5AZFKONKRmJ1sfYnaX/7sKikyozmko=;
-        b=QXGUwCgt1+kK6OcCemwNcuv0PgKoZWFn89I0RX5BwEJuTdfddVOpxolfDA5VFaGqL6
-         0t7BgDpLEYhLPYW7RjPwR5Bq2kbBosjG3F59mLqDhJ8ia0gHXxs04LrPE7EcjtFhzADK
-         dERxkYpDjulnwu8zDxveSCd7o6LJJKAwwFJU5TVJGKrcigJHP6vrT57tWvOjNz5/xN9T
-         N3/Oug4u8oKXb9t46GjNrrv86zIRqhnzyiCeNZ1XjZrDzhTW6ww0YZBdbmXMUNgKJsd5
-         nFvnoyQDIhL19F9vA/FzzHLT6pMAvGkepr+EJgtg+5Uvhy5g+Gjy39wGGAmwR5cqLo07
-         ++9g==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uvbVlssiuOL2o7l4VGo9wAQ7yG1g9QxFoYPbSYFtdqo=;
+        b=b8kkFS5/WqRt/uGkxgdO4EPtPACa7K4UyA5rdihYBP0zQfEvfu9Hc7L6wke4IFyhtQ
+         9F3JxaZcx3rKTh3OX8pgIvYfgQCZqMuNZnRymYeySn88lJEFnMJ1FFqAGqDns740oe0g
+         y5gJShOglcZEdDYr2VYR12OQOXlCAACHa0JQ0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=+AGye14zUPVTO5AZFKONKRmJ1sfYnaX/7sKikyozmko=;
-        b=faqXiCwuchhdSYne6vGzj4EHaFL9XVJwMtYE4FcS+U5EFv8cwOrl6c7IJ12779eU1E
-         z1rhKzeJchNAe9/SULk+o6U/k4Vczsyi+63eM8Y7/2AZiaty2W73SqD/bgP22BpYY0eR
-         gvvG0wtTuzpVnFbEM+fJpsPGF4OlCFyP7KQxHrL2lL4dlzJOsKIqmReYxAsTbGnHLHqN
-         y6y06cVrubhp1hLiKau5sXmzDEHFggH+kApNzuwXL8tcFHgxR7c/e4VcGDy1d3sRPQqF
-         zsL/8FjQprGwcqqA1ctrSZk8zrOpLNYwgPzpKzIcPd3pfVZc/av+s7+5XmC28clr+2hq
-         ey0A==
-X-Gm-Message-State: AOAM533/iA1gy55j5ZiuLD4upY+1rxwOg0o63R6XLx0f0MFYWLzA2Uc8
-        2IwV/+pimbpvw4InnzW5Z8oGhnQp+g==
-X-Google-Smtp-Source: ABdhPJw5GaRdp0oIWma4V0SyalPQKMjbqS0Pow6hsewfsqFxweHT8lqeOWm/2zbmbFE/HF62wEOQldin5A==
-X-Received: from elver.muc.corp.google.com ([2a00:79e0:15:13:88a9:37db:5c27:10e])
- (user=elver job=sendgmr) by 2002:a17:906:150c:: with SMTP id
- b12mr12577805ejd.284.1643040472427; Mon, 24 Jan 2022 08:07:52 -0800 (PST)
-Date:   Mon, 24 Jan 2022 17:07:44 +0100
-Message-Id: <20220124160744.1244685-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.35.0.rc0.227.g00780c9af4-goog
-Subject: [PATCH] kasan: test: fix compatibility with FORTIFY_SOURCE
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Kees Cook <keescook@chromium.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        linux-hardening@vger.kernel.org, Nico Pache <npache@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uvbVlssiuOL2o7l4VGo9wAQ7yG1g9QxFoYPbSYFtdqo=;
+        b=Tl2ZsZcDRcL8gnzVUHMtc8QAR/HbQ4RT2r6Lk/LSdqPH7Yj/dqyBJV7o4VfjS2Z8J6
+         umvdEk8w9qzif8+N6tkgt028UucU+JXCH6mma3GoDIjtIbcJm+FDxYXgSpQknpQXZSkp
+         dK1AxRG+De7w1M8zqxYACOF0nsYn/s380INAqnRxnc15iMMZ/YEMQXdm2Xmu/ToNktes
+         0JU5u3e8GWhvCPynt/1GDBqCcpS+Il9sRH5cg6g6BADYhMP/MW2haFZXrmehcpTRwJw6
+         2OhxyMB/+VFY7nEuAOlSTQryHddllF8IwoO2bKXic1r2/JW2ZNlNCq4tXwrw0bb6eaUo
+         RR2A==
+X-Gm-Message-State: AOAM530jsjX4OMsUcOHEpqYGzDVJ5OL6l5Rjq3G6BSi2px/620+URX4m
+        hc8GgThifZusQC0ScghRZhSjDQ==
+X-Google-Smtp-Source: ABdhPJwOxnazNMZcXd19bSVJ9MoN8ZvyCdEePmDJfQKMV6Sw4mYioXg78RY4Q74VmtnF7JqMgDdW1Q==
+X-Received: by 2002:a63:204a:: with SMTP id r10mr12454750pgm.502.1643044838506;
+        Mon, 24 Jan 2022 09:20:38 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l26sm12555173pgm.73.2022.01.24.09.20.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jan 2022 09:20:38 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Saeed Mahameed <saeedm@nvidia.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        bpf@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v2 RESEND] net/mlx5e: Avoid field-overflowing memcpy()
+Date:   Mon, 24 Jan 2022 09:20:28 -0800
+Message-Id: <20220124172028.2410761-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6160; h=from:subject; bh=VQqeo576slnncrVuQigWvgwHbkmaogPwolkC5v46MpQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh7t/bEEizP4HPXunI0lIL+G351adCgzYP8rg/gvyC Pv5SX/WJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYe7f2wAKCRCJcvTf3G3AJm6VD/ 9jlPxoUFcLSoP71xgroQBRupcIYrG31w6xXFGdiZs8oSKGJPTYGWEbRd+EcSiDEc0WILjMWRh5qlq3 xCKyFF0jgopugVAQ5bOoCAAuYlm+OxpDaV9qq3aU7ITc7dbSwgB36A/qFxX8fVBv9RisFb0iJPwZp6 5u/67EShGoip2rkulhk4qSkLBaqGB6x/lK4Jego5xxn3iMBBkNK2H3sAD+uTDqpDde44GHbvRK5O/w hG+d4vQSXKy9IotXNQTD0cak7N0d/KXigldG6jUkLX7PX1I95EQHO80E4YzUzE5PizdAPK0FoghAAq ThRukak3eD7WZwU+Ls8P+fL/3EDVFFb6z0mr9ZLs7lcAMbsy17qxZJgQw+p8X+/RMZwM9SZoE2IdHd AR1WKqub7atfYkCGBMCvRBjqaVtBPkU3v6ID9nnN+U67xPc8vedjC6qeHJ3A6aWMxV5qd9+0cWejQE 4iAqY3HzPuwttaOoYs1PUBReTmMmk8QfHBPNMGFurW8HBEfIhgg7j4cAo0mDFuNIYuCCf5Dqo9zFF6 5Z6gsWMiM+yN8zjJUDV/zYHO4grzBp/BUM1Wli/iGpuKUWg9DBmUbdd+en8GTGeghoCHAIk6D1aemY UjQkOLAF0Kyi3rp7rjcTWXjtBLEiPlGZCGnCGloSwEG0DUWTfSh34Ny1lSLQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With CONFIG_FORTIFY_SOURCE enabled, string functions will also perform
-dynamic checks using __builtin_object_size(ptr), which when failed will
-panic the kernel.
+In preparation for FORTIFY_SOURCE performing compile-time and run-time
+field bounds checking for memcpy(), memmove(), and memset(), avoid
+intentionally writing across neighboring fields.
 
-Because the KASAN test deliberately performs out-of-bounds operations,
-the kernel panics with FORITY_SOURCE, for example:
+Use flexible arrays instead of zero-element arrays (which look like they
+are always overflowing) and split the cross-field memcpy() into two halves
+that can be appropriately bounds-checked by the compiler.
 
- | kernel BUG at lib/string_helpers.c:910!
- | invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
- | CPU: 1 PID: 137 Comm: kunit_try_catch Tainted: G    B             5.16.0-rc3+ #3
- | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.14.0-2 04/01/2014
- | RIP: 0010:fortify_panic+0x19/0x1b
- | ...
- | Call Trace:
- |  <TASK>
- |  kmalloc_oob_in_memset.cold+0x16/0x16
- |  ...
+We were doing:
 
-Fix it by also hiding `ptr` from the optimizer, which will ensure that
-__builtin_object_size() does not return a valid size, preventing
-fortified string functions from panicking.
+	#define ETH_HLEN  14
+	#define VLAN_HLEN  4
+	...
+	#define MLX5E_XDP_MIN_INLINE (ETH_HLEN + VLAN_HLEN)
+	...
+        struct mlx5e_tx_wqe      *wqe  = mlx5_wq_cyc_get_wqe(wq, pi);
+	...
+        struct mlx5_wqe_eth_seg  *eseg = &wqe->eth;
+        struct mlx5_wqe_data_seg *dseg = wqe->data;
+	...
+	memcpy(eseg->inline_hdr.start, xdptxd->data, MLX5E_XDP_MIN_INLINE);
 
-Reported-by: Nico Pache <npache@redhat.com>
-Signed-off-by: Marco Elver <elver@google.com>
+target is wqe->eth.inline_hdr.start (which the compiler sees as being
+2 bytes in size), but copying 18, intending to write across start
+(really vlan_tci, 2 bytes). The remaining 16 bytes get written into
+wqe->data[0], covering byte_count (4 bytes), lkey (4 bytes), and addr
+(8 bytes).
+
+struct mlx5e_tx_wqe {
+        struct mlx5_wqe_ctrl_seg   ctrl;                 /*     0    16 */
+        struct mlx5_wqe_eth_seg    eth;                  /*    16    16 */
+        struct mlx5_wqe_data_seg   data[];               /*    32     0 */
+
+        /* size: 32, cachelines: 1, members: 3 */
+        /* last cacheline: 32 bytes */
+};
+
+struct mlx5_wqe_eth_seg {
+        u8                         swp_outer_l4_offset;  /*     0     1 */
+        u8                         swp_outer_l3_offset;  /*     1     1 */
+        u8                         swp_inner_l4_offset;  /*     2     1 */
+        u8                         swp_inner_l3_offset;  /*     3     1 */
+        u8                         cs_flags;             /*     4     1 */
+        u8                         swp_flags;            /*     5     1 */
+        __be16                     mss;                  /*     6     2 */
+        __be32                     flow_table_metadata;  /*     8     4 */
+        union {
+                struct {
+                        __be16     sz;                   /*    12     2 */
+                        u8         start[2];             /*    14     2 */
+                } inline_hdr;                            /*    12     4 */
+                struct {
+                        __be16     type;                 /*    12     2 */
+                        __be16     vlan_tci;             /*    14     2 */
+                } insert;                                /*    12     4 */
+                __be32             trailer;              /*    12     4 */
+        };                                               /*    12     4 */
+
+        /* size: 16, cachelines: 1, members: 9 */
+        /* last cacheline: 16 bytes */
+};
+
+struct mlx5_wqe_data_seg {
+        __be32                     byte_count;           /*     0     4 */
+        __be32                     lkey;                 /*     4     4 */
+        __be64                     addr;                 /*     8     8 */
+
+        /* size: 16, cachelines: 1, members: 3 */
+        /* last cacheline: 16 bytes */
+};
+
+So, split the memcpy() so the compiler can reason about the buffer
+sizes.
+
+"pahole" shows no size nor member offset changes to struct mlx5e_tx_wqe
+nor struct mlx5e_umr_wqe. "objdump -d" shows no meaningful object
+code changes (i.e. only source line number induced differences and
+optimizations).
+
+Cc: Saeed Mahameed <saeedm@nvidia.com>
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-rdma@vger.kernel.org
+Cc: bpf@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- lib/test_kasan.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Since this results in no binary differences, I will carry this in my tree
+unless someone else wants to pick it up. It's one of the last remaining
+clean-ups needed for the next step in memcpy() hardening.
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en.h     | 6 +++---
+ drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c | 4 +++-
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-index 847cdbefab46..26a5c9007653 100644
---- a/lib/test_kasan.c
-+++ b/lib/test_kasan.c
-@@ -492,6 +492,7 @@ static void kmalloc_oob_in_memset(struct kunit *test)
- 	ptr = kmalloc(size, GFP_KERNEL);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+index 812e6810cb3b..c14e06ca64d8 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -224,7 +224,7 @@ static inline int mlx5e_get_max_num_channels(struct mlx5_core_dev *mdev)
+ struct mlx5e_tx_wqe {
+ 	struct mlx5_wqe_ctrl_seg ctrl;
+ 	struct mlx5_wqe_eth_seg  eth;
+-	struct mlx5_wqe_data_seg data[0];
++	struct mlx5_wqe_data_seg data[];
+ };
  
-+	OPTIMIZER_HIDE_VAR(ptr);
- 	OPTIMIZER_HIDE_VAR(size);
- 	KUNIT_EXPECT_KASAN_FAIL(test,
- 				memset(ptr, 0, size + KASAN_GRANULE_SIZE));
-@@ -515,6 +516,7 @@ static void kmalloc_memmove_negative_size(struct kunit *test)
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+ struct mlx5e_rx_wqe_ll {
+@@ -241,8 +241,8 @@ struct mlx5e_umr_wqe {
+ 	struct mlx5_wqe_umr_ctrl_seg   uctrl;
+ 	struct mlx5_mkey_seg           mkc;
+ 	union {
+-		struct mlx5_mtt inline_mtts[0];
+-		struct mlx5_klm inline_klms[0];
++		DECLARE_FLEX_ARRAY(struct mlx5_mtt, inline_mtts);
++		DECLARE_FLEX_ARRAY(struct mlx5_klm, inline_klms);
+ 	};
+ };
  
- 	memset((char *)ptr, 0, 64);
-+	OPTIMIZER_HIDE_VAR(ptr);
- 	OPTIMIZER_HIDE_VAR(invalid_size);
- 	KUNIT_EXPECT_KASAN_FAIL(test,
- 		memmove((char *)ptr, (char *)ptr + 4, invalid_size));
-@@ -531,6 +533,7 @@ static void kmalloc_memmove_invalid_size(struct kunit *test)
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
+index 338d65e2c9ce..56e10c84a706 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.c
+@@ -341,8 +341,10 @@ mlx5e_xmit_xdp_frame(struct mlx5e_xdpsq *sq, struct mlx5e_xmit_data *xdptxd,
  
- 	memset((char *)ptr, 0, 64);
-+	OPTIMIZER_HIDE_VAR(ptr);
- 	KUNIT_EXPECT_KASAN_FAIL(test,
- 		memmove((char *)ptr, (char *)ptr + 4, invalid_size));
- 	kfree(ptr);
-@@ -893,6 +896,7 @@ static void kasan_memchr(struct kunit *test)
- 	ptr = kmalloc(size, GFP_KERNEL | __GFP_ZERO);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
-+	OPTIMIZER_HIDE_VAR(ptr);
- 	OPTIMIZER_HIDE_VAR(size);
- 	KUNIT_EXPECT_KASAN_FAIL(test,
- 		kasan_ptr_result = memchr(ptr, '1', size + 1));
-@@ -919,6 +923,7 @@ static void kasan_memcmp(struct kunit *test)
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 	memset(arr, 0, sizeof(arr));
- 
-+	OPTIMIZER_HIDE_VAR(ptr);
- 	OPTIMIZER_HIDE_VAR(size);
- 	KUNIT_EXPECT_KASAN_FAIL(test,
- 		kasan_int_result = memcmp(ptr, arr, size+1));
+ 	/* copy the inline part if required */
+ 	if (sq->min_inline_mode != MLX5_INLINE_MODE_NONE) {
+-		memcpy(eseg->inline_hdr.start, xdptxd->data, MLX5E_XDP_MIN_INLINE);
++		memcpy(eseg->inline_hdr.start, xdptxd->data, sizeof(eseg->inline_hdr.start));
+ 		eseg->inline_hdr.sz = cpu_to_be16(MLX5E_XDP_MIN_INLINE);
++		memcpy(dseg, xdptxd->data + sizeof(eseg->inline_hdr.start),
++		       MLX5E_XDP_MIN_INLINE - sizeof(eseg->inline_hdr.start));
+ 		dma_len  -= MLX5E_XDP_MIN_INLINE;
+ 		dma_addr += MLX5E_XDP_MIN_INLINE;
+ 		dseg++;
 -- 
-2.35.0.rc0.227.g00780c9af4-goog
+2.30.2
 
