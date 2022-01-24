@@ -2,37 +2,34 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BF2C433F5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDF0C433FE
 	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 17:48:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240939AbiAXRsN (ORCPT
+        id S244732AbiAXRsO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 24 Jan 2022 12:48:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244732AbiAXRsK (ORCPT
+        Mon, 24 Jan 2022 12:48:14 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:43186 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244749AbiAXRsM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 Jan 2022 12:48:10 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4327C06173B
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 09:48:09 -0800 (PST)
+        Mon, 24 Jan 2022 12:48:12 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9EAA9B811A5
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 17:48:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87D72C340E8;
-        Mon, 24 Jan 2022 17:48:04 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 40D8A61301
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 17:48:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D09DEC340EA;
+        Mon, 24 Jan 2022 17:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643046487;
-        bh=EiQVtdzvXgjyL0LmVL1EzAI/mo0NzKG3mqi/KHf8z0w=;
+        s=k20201202; t=1643046490;
+        bh=n1eJJ4h5kOscCZLHFbapcGr7Nu8+OUcDuVRcwnRmu9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uaLOJM/0iChTAq9QSXvxWGqSHB9eJ8s1h0jBUWlEdO9Yp6b6h3qN1ad44oUiWUvwI
-         e46l3zliWny0BPANfEw9rK/p1Qcsn4/Pg3S8Cya+1fd4U5013XOvyh6V0Oy9a4iyDT
-         CwE6z6h40PjHyKHi2StQpzdobVG/Z8Jc3njQz/hmcmiX9IruTGaSSfVqvWRucbyfyu
-         kfu7NoqffN6LRLeXQXs3hfA3fL+zfPCOxAKGaoz6IedNYRaNS5k7R9z6NcV3j7rQl0
-         Zy8cAToaaPNIvw+jhx1mf2HPZOaHVdIPl/CwvK1wKv/ZRAZp5h/BhjS+YNYtB+/dhP
-         wEqxoYKS8VLbw==
+        b=e4EcbP2uWhgUFd7ZWqsyQ1E65yeZzP44sjgl/yulXKXIleScq/buCaA/YytbVEMF+
+         7CK5Z04QHL1GAVl8iM1Tse5GPbm9otwoZZu8FBNPNHE6mOMDi1TfW6NQJTgB2Jc6ag
+         NVYBwwkQkCCMK128cv1HqPRoJ9iBUGEE054lZbqOBCN7SKpyXb1hWsFXEFUCD7d/9A
+         mnSiR58rqNuaJ+ZiovQJkWjipJz/oxY8gkypU4pxUAAPgbmgSPdJ1DH7O/dd0xP9Yd
+         jiBgX1K0YIi4TB0rUdoITI4TTVa531T9m0iT6t6OuERV23Q3mf6E3izT261pKLfho4
+         n1YsQ45JqRuJQ==
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org
 Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
@@ -46,14 +43,14 @@ Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
         Marc Zyngier <maz@kernel.org>,
         Vladimir Murzin <vladimir.murzin@arm.com>,
         Jesse Taube <mr.bossman075@gmail.com>
-Subject: [PATCH v5 04/32] ARM: iop32x: offset IRQ numbers by 1
-Date:   Mon, 24 Jan 2022 18:47:16 +0100
-Message-Id: <20220124174744.1054712-5-ardb@kernel.org>
+Subject: [PATCH v5 05/32] ARM: iop32x: use GENERIC_IRQ_MULTI_HANDLER
+Date:   Mon, 24 Jan 2022 18:47:17 +0100
+Message-Id: <20220124174744.1054712-6-ardb@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220124174744.1054712-1-ardb@kernel.org>
 References: <20220124174744.1054712-1-ardb@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5281; i=ardb@kernel.org; h=from:subject; bh=TWotvNAxcAhiklui1EglJetBjAKAECMqx7SIUyPo0Gw=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBh7uYJmVYJNoijGuYG34bxl/9AS+9/pLYzcuwpulMl f8Zq1HOJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYe7mCQAKCRDDTyI5ktmPJL2kC/ 9ipJlENH4qIC/TCUveonBsIbMxM+pqdzC0qWU+ObjNONxwE0thzanwwRCJIUFvyoTxpxRNQ11iVAiG JBXPzucWBDB5wjZVTsgoyUmEnOB3uxmD1PDsQ7WVrp1UpPlZRmqmPtM2sPNe3xbazAHrDUwS7zlfAv rsALH8JCeypYmo6dhXnig2XPEwSbtDTMYFhD0vwe+l7dA6C0iux09wo1VY5rJIYGqRGRMXb1uRyHqG FRxCY5ymbYWtZ7sQcrGGUJfXACeK0Bxhoq7x8mVaSagDP+l/rLIESOcBR/Bdqbrfs6vf96YcleqUO4 IWytHZMn6X+h7841dtMt2zN6D4Msb+/cZY1UaN0NivUay5WXxzPRhSCf2LjBXLh/ExOglogf5Dj46d ZLEeilQBvRsYUgrcRu+i2iTP1zhBEP0stEpRQHxp4K3sOc83XSrRq4NypoSkS1nxMlC3CJH6puWLkm ODeEzKG3IBx7KcFrGL/HR96RPX2Xk1+bbYP6L6CqYoV7U=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6739; i=ardb@kernel.org; h=from:subject; bh=0u2xOg6wEXf72p6oUm4/55dvuXn004dvI5pPJqhcG+M=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBh7uYLPXmptE87nyCCtDjIvjbkji/yK6wvaHIvcKEx /XUyjUmJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYe7mCwAKCRDDTyI5ktmPJBmjC/ 4jhXpVJV+rOHgknzpEXiOQavsgM1U/nwn+f1DB5iJFDF+IHIaWTljW4IMRwO59tthJoyibmDGNCAOU BOZ+hPvv4FyuZiBh+SS2ih3vkeLKsjS163gFZ7BwWaelWaF7tvR2OVBUnaSH/OlL9bIYkeGmKq61t8 yxU/djMV3FGWkast3rNHdhOaO1sFKOQmLE3AO+OwE69fbYnv6K7eowmqi945WXhyQEMBI1HlbIQcre qovnu4lBQQjbYM80D7VVV+rNMdhS5Vx5+vM7bi84I4kOfzBgPQFBsV8zxzharD1r8RhEEN86OiukJV qgv8UupFXN0ryRiab2dQ1iwNx3tkbm3g1ee6Ctt/6DH87o25599S6T1WCWAzBEJC1hZCOz0p5HkjBu 1gmrj2jzVYZgzY/U4WfDd49nNdxxSh1kL5V/4dqZcLgranBUaWtQK09og9JrAx1rmqL+RCGPVLBAAo Ar5SyjgIZggA+BjooyjTqr/gJmQf7jHvgZIcXxqWHG58o=
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -62,156 +59,230 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-iop32x is one of the last platforms to use IRQ 0, and this has apparently
-stopped working in a 2014 cleanup without anyone noticing. This interrupt
-is used for the DMA engine, so most likely this has not actually worked
-in the past 7 years, but it's also not essential for using this board.
+iop32x uses the entry-macro.S file for both the IRQ entry and for
+hooking into the arch_ret_to_user code path. This is done because the
+cp6 registers have to be enabled before accessing any of the interrupt
+controller registers but have to be disabled when running in user space.
 
-I'm splitting out this change from my GENERIC_IRQ_MULTI_HANDLER
-conversion so it can be backported if anyone cares.
+There is also a lazy-enable logic in cp6.c, but during a hardirq, we
+know it has to be enabled.
 
-Fixes: a71b092a9c68 ("ARM: Convert handle_IRQ to use __handle_domain_irq")
+Both the cp6-enable code and the code to read the IRQ status can be
+lifted into the normal generic_handle_arch_irq() path, but the
+cp6-disable code has to remain in the user return code. As nothing
+other than iop32x uses this hook, just open-code it there with an
+ifdef for the platform that can eventually be removed when iop32x
+has reached the end of its life.
+
+The cp6-enable path in the IRQ entry has an extra cp_wait barrier that
+the trap version does not have, but it is harmless to do it in both
+cases to simplify the logic here at the cost of a few extra cycles
+for the trap.
+
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-[ardb: take +1 offset into account in mask/unmask and init as well]
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Tested-by: Marc Zyngier <maz@kernel.org>
 Tested-by: Vladimir Murzin <vladimir.murzin@arm.com> # ARMv7M
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/mach-iop32x/include/mach/entry-macro.S |  2 +-
- arch/arm/mach-iop32x/include/mach/irqs.h        |  2 +-
- arch/arm/mach-iop32x/irq.c                      |  6 +-
- arch/arm/mach-iop32x/irqs.h                     | 60 +++++++++++---------
- 4 files changed, 37 insertions(+), 33 deletions(-)
+ arch/arm/Kconfig                                |  5 +---
+ arch/arm/kernel/entry-common.S                  | 16 +++++-----
+ arch/arm/mach-iop32x/cp6.c                      | 10 ++++++-
+ arch/arm/mach-iop32x/include/mach/entry-macro.S | 31 --------------------
+ arch/arm/mach-iop32x/iop3xx.h                   |  1 +
+ arch/arm/mach-iop32x/irq.c                      | 23 +++++++++++++++
+ 6 files changed, 43 insertions(+), 43 deletions(-)
 
-diff --git a/arch/arm/mach-iop32x/include/mach/entry-macro.S b/arch/arm/mach-iop32x/include/mach/entry-macro.S
-index 8e6766d4621e..341e5d9a6616 100644
---- a/arch/arm/mach-iop32x/include/mach/entry-macro.S
-+++ b/arch/arm/mach-iop32x/include/mach/entry-macro.S
-@@ -20,7 +20,7 @@
- 	mrc     p6, 0, \irqstat, c8, c0, 0	@ Read IINTSRC
- 	cmp     \irqstat, #0
- 	clzne   \irqnr, \irqstat
--	rsbne   \irqnr, \irqnr, #31
-+	rsbne   \irqnr, \irqnr, #32
- 	.endm
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index bef5085f2ce7..ac2f88ce0b9a 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -226,9 +226,6 @@ config GENERIC_ISA_DMA
+ config FIQ
+ 	bool
  
- 	.macro arch_ret_to_user, tmp1, tmp2
-diff --git a/arch/arm/mach-iop32x/include/mach/irqs.h b/arch/arm/mach-iop32x/include/mach/irqs.h
-index c4e78df428e8..e09ae5f48aec 100644
---- a/arch/arm/mach-iop32x/include/mach/irqs.h
-+++ b/arch/arm/mach-iop32x/include/mach/irqs.h
-@@ -9,6 +9,6 @@
- #ifndef __IRQS_H
- #define __IRQS_H
+-config NEED_RET_TO_USER
+-	bool
+-
+ config ARCH_MTD_XIP
+ 	bool
  
--#define NR_IRQS			32
-+#define NR_IRQS			33
+@@ -370,9 +367,9 @@ config ARCH_IOP32X
+ 	bool "IOP32x-based"
+ 	depends on MMU
+ 	select CPU_XSCALE
++	select GENERIC_IRQ_MULTI_HANDLER
+ 	select GPIO_IOP
+ 	select GPIOLIB
+-	select NEED_RET_TO_USER
+ 	select FORCE_PCI
+ 	select PLAT_IOP
+ 	help
+diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
+index ac86c34682bb..c928d6b04cce 100644
+--- a/arch/arm/kernel/entry-common.S
++++ b/arch/arm/kernel/entry-common.S
+@@ -16,12 +16,14 @@
  
+ 	.equ	NR_syscalls, __NR_syscalls
+ 
+-#ifdef CONFIG_NEED_RET_TO_USER
+-#include <mach/entry-macro.S>
+-#else
+-	.macro  arch_ret_to_user, tmp1, tmp2
+-	.endm
++	.macro  arch_ret_to_user, tmp
++#ifdef CONFIG_ARCH_IOP32X
++	mrc	p15, 0, \tmp, c15, c1, 0
++	tst	\tmp, #(1 << 6)
++	bicne	\tmp, \tmp, #(1 << 6)
++	mcrne	p15, 0, \tmp, c15, c1, 0	@ Disable cp6 access
  #endif
++	.endm
+ 
+ #include "entry-header.S"
+ 
+@@ -55,7 +57,7 @@ __ret_fast_syscall:
+ 
+ 
+ 	/* perform architecture specific actions before user return */
+-	arch_ret_to_user r1, lr
++	arch_ret_to_user r1
+ 
+ 	restore_user_regs fast = 1, offset = S_OFF
+  UNWIND(.fnend		)
+@@ -128,7 +130,7 @@ no_work_pending:
+ 	asm_trace_hardirqs_on save = 0
+ 
+ 	/* perform architecture specific actions before user return */
+-	arch_ret_to_user r1, lr
++	arch_ret_to_user r1
+ 	ct_user_enter save = 0
+ 
+ 	restore_user_regs fast = 0, offset = 0
+diff --git a/arch/arm/mach-iop32x/cp6.c b/arch/arm/mach-iop32x/cp6.c
+index ec74b07fb7e3..2882674a1c39 100644
+--- a/arch/arm/mach-iop32x/cp6.c
++++ b/arch/arm/mach-iop32x/cp6.c
+@@ -7,7 +7,7 @@
+ #include <asm/traps.h>
+ #include <asm/ptrace.h>
+ 
+-static int cp6_trap(struct pt_regs *regs, unsigned int instr)
++void iop_enable_cp6(void)
+ {
+ 	u32 temp;
+ 
+@@ -16,7 +16,15 @@ static int cp6_trap(struct pt_regs *regs, unsigned int instr)
+ 		"mrc	p15, 0, %0, c15, c1, 0\n\t"
+ 		"orr	%0, %0, #(1 << 6)\n\t"
+ 		"mcr	p15, 0, %0, c15, c1, 0\n\t"
++		"mrc	p15, 0, %0, c15, c1, 0\n\t"
++		"mov	%0, %0\n\t"
++		"sub	pc, pc, #4  @ cp_wait\n\t"
+ 		: "=r"(temp));
++}
++
++static int cp6_trap(struct pt_regs *regs, unsigned int instr)
++{
++	iop_enable_cp6();
+ 
+ 	return 0;
+ }
+diff --git a/arch/arm/mach-iop32x/include/mach/entry-macro.S b/arch/arm/mach-iop32x/include/mach/entry-macro.S
+deleted file mode 100644
+index 341e5d9a6616..000000000000
+--- a/arch/arm/mach-iop32x/include/mach/entry-macro.S
++++ /dev/null
+@@ -1,31 +0,0 @@
+-/*
+- * arch/arm/mach-iop32x/include/mach/entry-macro.S
+- *
+- * Low-level IRQ helper macros for IOP32x-based platforms
+- *
+- * This file is licensed under the terms of the GNU General Public
+- * License version 2. This program is licensed "as is" without any
+- * warranty of any kind, whether express or implied.
+- */
+-	.macro get_irqnr_preamble, base, tmp
+-	mrc	p15, 0, \tmp, c15, c1, 0
+-	orr	\tmp, \tmp, #(1 << 6)
+-	mcr	p15, 0, \tmp, c15, c1, 0	@ Enable cp6 access
+-	mrc	p15, 0, \tmp, c15, c1, 0
+-	mov	\tmp, \tmp
+-	sub	pc, pc, #4			@ cp_wait
+-	.endm
+-
+-	.macro  get_irqnr_and_base, irqnr, irqstat, base, tmp
+-	mrc     p6, 0, \irqstat, c8, c0, 0	@ Read IINTSRC
+-	cmp     \irqstat, #0
+-	clzne   \irqnr, \irqstat
+-	rsbne   \irqnr, \irqnr, #32
+-	.endm
+-
+-	.macro arch_ret_to_user, tmp1, tmp2
+-	mrc	p15, 0, \tmp1, c15, c1, 0
+-	ands	\tmp2, \tmp1, #(1 << 6)
+-	bicne	\tmp1, \tmp1, #(1 << 6)
+-	mcrne	p15, 0, \tmp1, c15, c1, 0	@ Disable cp6 access
+-	.endm
+diff --git a/arch/arm/mach-iop32x/iop3xx.h b/arch/arm/mach-iop32x/iop3xx.h
+index 46b4b34a4ad2..a6ec7ebadb35 100644
+--- a/arch/arm/mach-iop32x/iop3xx.h
++++ b/arch/arm/mach-iop32x/iop3xx.h
+@@ -225,6 +225,7 @@ extern int iop3xx_get_init_atu(void);
+ #include <linux/reboot.h>
+ 
+ void iop3xx_map_io(void);
++void iop_enable_cp6(void);
+ void iop_init_cp6_handler(void);
+ void iop_init_time(unsigned long tickrate);
+ void iop3xx_restart(enum reboot_mode, const char *);
 diff --git a/arch/arm/mach-iop32x/irq.c b/arch/arm/mach-iop32x/irq.c
-index 2d48bf1398c1..d1e8824cbd82 100644
+index d1e8824cbd82..6dca7e97d81f 100644
 --- a/arch/arm/mach-iop32x/irq.c
 +++ b/arch/arm/mach-iop32x/irq.c
-@@ -32,14 +32,14 @@ static void intstr_write(u32 val)
+@@ -29,6 +29,15 @@ static void intstr_write(u32 val)
+ 	asm volatile("mcr p6, 0, %0, c4, c0, 0" : : "r" (val));
+ }
+ 
++static u32 iintsrc_read(void)
++{
++	int irq;
++
++	asm volatile("mrc p6, 0, %0, c8, c0, 0" : "=r" (irq));
++
++	return irq;
++}
++
  static void
  iop32x_irq_mask(struct irq_data *d)
  {
--	iop32x_mask &= ~(1 << d->irq);
-+	iop32x_mask &= ~(1 << (d->irq - 1));
- 	intctl_write(iop32x_mask);
- }
+@@ -50,11 +59,25 @@ struct irq_chip ext_chip = {
+ 	.irq_unmask	= iop32x_irq_unmask,
+ };
  
- static void
- iop32x_irq_unmask(struct irq_data *d)
++static void iop_handle_irq(struct pt_regs *regs)
++{
++	u32 mask;
++
++	iop_enable_cp6();
++
++	do {
++		mask = iintsrc_read();
++		if (mask)
++			generic_handle_irq(fls(mask));
++	} while (mask);
++}
++
+ void __init iop32x_init_irq(void)
  {
--	iop32x_mask |= 1 << d->irq;
-+	iop32x_mask |= 1 << (d->irq - 1);
- 	intctl_write(iop32x_mask);
- }
+ 	int i;
  
-@@ -65,7 +65,7 @@ void __init iop32x_init_irq(void)
- 	    machine_is_em7210())
- 		*IOP3XX_PCIIRSR = 0x0f;
+ 	iop_init_cp6_handler();
++	set_handle_irq(iop_handle_irq);
  
--	for (i = 0; i < NR_IRQS; i++) {
-+	for (i = 1; i < NR_IRQS; i++) {
- 		irq_set_chip_and_handler(i, &ext_chip, handle_level_irq);
- 		irq_clear_status_flags(i, IRQ_NOREQUEST | IRQ_NOPROBE);
- 	}
-diff --git a/arch/arm/mach-iop32x/irqs.h b/arch/arm/mach-iop32x/irqs.h
-index 69858e4e905d..e1dfc8b4e7d7 100644
---- a/arch/arm/mach-iop32x/irqs.h
-+++ b/arch/arm/mach-iop32x/irqs.h
-@@ -7,36 +7,40 @@
- #ifndef __IOP32X_IRQS_H
- #define __IOP32X_IRQS_H
- 
-+/* Interrupts in Linux start at 1, hardware starts at 0 */
-+
-+#define IOP_IRQ(x) ((x) + 1)
-+
- /*
-  * IOP80321 chipset interrupts
-  */
--#define IRQ_IOP32X_DMA0_EOT	0
--#define IRQ_IOP32X_DMA0_EOC	1
--#define IRQ_IOP32X_DMA1_EOT	2
--#define IRQ_IOP32X_DMA1_EOC	3
--#define IRQ_IOP32X_AA_EOT	6
--#define IRQ_IOP32X_AA_EOC	7
--#define IRQ_IOP32X_CORE_PMON	8
--#define IRQ_IOP32X_TIMER0	9
--#define IRQ_IOP32X_TIMER1	10
--#define IRQ_IOP32X_I2C_0	11
--#define IRQ_IOP32X_I2C_1	12
--#define IRQ_IOP32X_MESSAGING	13
--#define IRQ_IOP32X_ATU_BIST	14
--#define IRQ_IOP32X_PERFMON	15
--#define IRQ_IOP32X_CORE_PMU	16
--#define IRQ_IOP32X_BIU_ERR	17
--#define IRQ_IOP32X_ATU_ERR	18
--#define IRQ_IOP32X_MCU_ERR	19
--#define IRQ_IOP32X_DMA0_ERR	20
--#define IRQ_IOP32X_DMA1_ERR	21
--#define IRQ_IOP32X_AA_ERR	23
--#define IRQ_IOP32X_MSG_ERR	24
--#define IRQ_IOP32X_SSP		25
--#define IRQ_IOP32X_XINT0	27
--#define IRQ_IOP32X_XINT1	28
--#define IRQ_IOP32X_XINT2	29
--#define IRQ_IOP32X_XINT3	30
--#define IRQ_IOP32X_HPI		31
-+#define IRQ_IOP32X_DMA0_EOT	IOP_IRQ(0)
-+#define IRQ_IOP32X_DMA0_EOC	IOP_IRQ(1)
-+#define IRQ_IOP32X_DMA1_EOT	IOP_IRQ(2)
-+#define IRQ_IOP32X_DMA1_EOC	IOP_IRQ(3)
-+#define IRQ_IOP32X_AA_EOT	IOP_IRQ(6)
-+#define IRQ_IOP32X_AA_EOC	IOP_IRQ(7)
-+#define IRQ_IOP32X_CORE_PMON	IOP_IRQ(8)
-+#define IRQ_IOP32X_TIMER0	IOP_IRQ(9)
-+#define IRQ_IOP32X_TIMER1	IOP_IRQ(10)
-+#define IRQ_IOP32X_I2C_0	IOP_IRQ(11)
-+#define IRQ_IOP32X_I2C_1	IOP_IRQ(12)
-+#define IRQ_IOP32X_MESSAGING	IOP_IRQ(13)
-+#define IRQ_IOP32X_ATU_BIST	IOP_IRQ(14)
-+#define IRQ_IOP32X_PERFMON	IOP_IRQ(15)
-+#define IRQ_IOP32X_CORE_PMU	IOP_IRQ(16)
-+#define IRQ_IOP32X_BIU_ERR	IOP_IRQ(17)
-+#define IRQ_IOP32X_ATU_ERR	IOP_IRQ(18)
-+#define IRQ_IOP32X_MCU_ERR	IOP_IRQ(19)
-+#define IRQ_IOP32X_DMA0_ERR	IOP_IRQ(20)
-+#define IRQ_IOP32X_DMA1_ERR	IOP_IRQ(21)
-+#define IRQ_IOP32X_AA_ERR	IOP_IRQ(23)
-+#define IRQ_IOP32X_MSG_ERR	IOP_IRQ(24)
-+#define IRQ_IOP32X_SSP		IOP_IRQ(25)
-+#define IRQ_IOP32X_XINT0	IOP_IRQ(27)
-+#define IRQ_IOP32X_XINT1	IOP_IRQ(28)
-+#define IRQ_IOP32X_XINT2	IOP_IRQ(29)
-+#define IRQ_IOP32X_XINT3	IOP_IRQ(30)
-+#define IRQ_IOP32X_HPI		IOP_IRQ(31)
- 
- #endif
+ 	intctl_write(0);
+ 	intstr_write(0);
 -- 
 2.30.2
 
