@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44470C433F5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795CCC433EF
 	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 17:49:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241396AbiAXRti (ORCPT
+        id S241589AbiAXRtj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 24 Jan 2022 12:49:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56646 "EHLO
+        Mon, 24 Jan 2022 12:49:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244765AbiAXRtg (ORCPT
+        with ESMTP id S244778AbiAXRth (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 Jan 2022 12:49:36 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C550BC06173B
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 09:49:35 -0800 (PST)
+        Mon, 24 Jan 2022 12:49:37 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C162C06173B
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 09:49:37 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8E49CB811B1
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 17:49:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71116C340EA;
-        Mon, 24 Jan 2022 17:49:30 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2A37361342
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 17:49:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9B8AC340EB;
+        Mon, 24 Jan 2022 17:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643046573;
-        bh=+pQufvmuN+DCXpLjIRbTCfkOyyA2xiTpUnjNr7Ivoi8=;
+        s=k20201202; t=1643046576;
+        bh=jU8c5g2WDlSn9v2Q9DGIfV+/kV2NVDFaFycyGk9Twqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WNC2WlvY8UnzKemIy7LWXbEHs8Z7HSH0HKQYDmIDyrkbdVf11ZEKcsize7uRhtQGf
-         peF32BcCsOtx4+iDZxppY88GES7DnAzO8TPywGvAyeDgptZtGEIgVR+Df05NDdx7EJ
-         2XjYgbAzAItdawO6VCbeUm7YuLADEMoZaHcIcTDmh+KLCufz6t24C9vhf4/Y6zPTRU
-         LElRSoBx6+mHo2BspZHPsdX3UxDXqxqwuETdRGDys1aVyceYVZ2A84WnQma44B0eqq
-         QHfwZRlV8CxdZCoerSk+d2sO8JJx21b+usymv3dkIpDPdrsmNSqt7y33Bc1T7XBboO
-         YqvisY3D3FeQA==
+        b=rgxfhxySuIBkaqwY1+yY78fl5v3+cxN1pL6tYm1PmH9CqNrCg/cnk6e6I0S9GOopX
+         /rJu+eLhfpS3pdTXrqX79DoDglabOpKKnJAUUkVNQlJv724h3RJ9XUhvEsVYjz2T52
+         haP1dccSnmj29jmeY2khrJKJGtC2K8dPrWyI61Af9MHTWCiGvnmmYvlGUhn9kx0oy3
+         mXEpDeHwbvB0/Aqp2rRRscnNRQT/ACy3GShh7jBdu8owGc7lcgPt3F4Tw8NLh7Ls63
+         lVcOoSsr9ruFllduGkFdzQAolQWYoXrWt//SwKJ3CoCAGw9EG37uek7MNPi1IcP8ds
+         ihXRfPRl7VzRw==
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org
 Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
@@ -46,89 +46,149 @@ Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
         Marc Zyngier <maz@kernel.org>,
         Vladimir Murzin <vladimir.murzin@arm.com>,
         Jesse Taube <mr.bossman075@gmail.com>
-Subject: [PATCH v5 30/32] ARM: switch_to: clean up Thumb2 code path
-Date:   Mon, 24 Jan 2022 18:47:42 +0100
-Message-Id: <20220124174744.1054712-31-ardb@kernel.org>
+Subject: [PATCH v5 31/32] ARM: mm: prepare vmalloc_seq handling for use under SMP
+Date:   Mon, 24 Jan 2022 18:47:43 +0100
+Message-Id: <20220124174744.1054712-32-ardb@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220124174744.1054712-1-ardb@kernel.org>
 References: <20220124174744.1054712-1-ardb@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2594; h=from:subject; bh=+pQufvmuN+DCXpLjIRbTCfkOyyA2xiTpUnjNr7Ivoi8=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBh7uY7MBmcoyuFXL9bDPe0NTsfpZSWvkHt5AlfuZ9d huKQsieJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYe7mOwAKCRDDTyI5ktmPJLBBC/ 0QLzsXlHtFMVjLGgsO74jLKztyCpjEDt3dcnYOT4F3sBBvhatgBAFvsMdO7Za9qQ0FOYmIqdN6lJ1x 6rQsuSMvDIXerwAUfuWLqGmVio3a2LtTbZ5zTrYr7QCbvQ1xMZAn5wRV8qBqY9Gre7ZlKRmbjcYbkX PptLuPrd6gVBpeMIBHXd8TT9Em0oZPQqDsUUtDqSlEb3/5nF+vuSXbyKuLcZ0K4iuRmZNo3xX5L7rZ t5TfZmpuHNud8b8TyNMHs0jlfI+WoZI0zwHkfZaqOO5yESfSQWLyos6QvSJk3mSJ0RLKvN1IDDxar2 GIV2qLc4LhndrH6+xAovQBISv++pLDKQYM7si2NywvXS6Ox4ZQ6l832vuohTRo7pT700nzXqIwIQov CC9UwVc6itBnM+L5C93Oe07nsy2dgsFYWH5wcQNMqz3l4UzhmRu81//rOQIZKgu/3BTPrNPEsvo0Cv XUsxHMKItLjst5m8z+ZRXniC9Z6GZC+nQ3bVKeXedjALw=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4675; h=from:subject; bh=jU8c5g2WDlSn9v2Q9DGIfV+/kV2NVDFaFycyGk9Twqw=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBh7uY9a1FStKiCLg0kjH4hSkqtT1XyOzh8RYH56pR0 9dazmzaJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYe7mPQAKCRDDTyI5ktmPJA5rC/ 9qNSoF2/6hE3+ryWpWlkUofg7CgUuwTstIW0N8r6M7K6h8ypzpJGi9WuGQtp1Imv+DyhXpHSHyN4rt Xha/7nzmD5AEqjMJAD+eFimpg+P2v/zba2su8+DK2h6EYa0Ml3okOAektufsQ8gLtIxW/tHya/NFLS +lhyzBYUwUePOtVMfK2WAvCB/CzTcx4U5pDzdN8KqtaDhFc/Kp37gi7l7/6zgtok9e47lIKCsNT51y B0SBW+oZpLIgk2kPQuaejCAVkL5AieaYqjjvqu1S7t1WT5iKnAL/rQFa//MUnGl/iyYifMkg8fvqul EQH/A1y2E5XInz8HqlxgbTk/5JQd7UkUNbrHfpPNp0hDCY7eN1x6Yq+bYT0ngwCUGaoXtAd2vbi6Yh 1dDDhWPO2cRRjjAw1QxXJDpumz3V9YCeD3cjorBYol7IO1mkMce6NyUIwyL0S++dgWL7Z5giFlkFzm HcPsdfilSDlhgK2c9k1Iofqzj599K9LVTCcvng4f2Yw/4=
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The load/store-multiple instructions that essentially perform the
-switch_to operation in ARM mode, by loading/storing all callee save
-registers as well the stack pointer and the link register or program
-counter, is split into 3 separate loads or stores for Thumb-2, with the
-IP register used as a temporary to capture the target address.
+Currently, the vmalloc_seq counter is only used to keep track of changes
+in the vmalloc region on !SMP builds, which means there is no need to
+deal with concurrency explicitly.
 
-We can clean this up a bit, by sticking with a single STMIA or LDMIA
-instruction, but one that uses IP instead of SP.
+However, in a subsequent patch, we will wire up this same mechanism for
+ensuring that vmap'ed stacks are guaranteed to be mapped by the active
+mm before switching to a task, and here we need to ensure that changes
+to the page tables are visible to other CPUs when they observe a change
+in the sequence count.
 
-While at it, switch to a MOVW/MOVT pair to load thread_notify_head.
+Since LPAE needs none of this, fold a check against it into the
+vmalloc_seq counter check after breaking it out into a separate static
+inline helper.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/arm/kernel/entry-armv.S | 24 +++++++++++---------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ arch/arm/include/asm/mmu.h         |  2 +-
+ arch/arm/include/asm/mmu_context.h | 13 +++++++++++--
+ arch/arm/mm/context.c              |  3 +--
+ arch/arm/mm/ioremap.c              | 18 +++++++++++-------
+ 4 files changed, 24 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/kernel/entry-armv.S b/arch/arm/kernel/entry-armv.S
-index a4009e4302bb..86be80159c14 100644
---- a/arch/arm/kernel/entry-armv.S
-+++ b/arch/arm/kernel/entry-armv.S
-@@ -773,14 +773,14 @@ ENDPROC(__fiq_usr)
-  * r0 = previous task_struct, r1 = previous thread_info, r2 = next thread_info
-  * previous and next are guaranteed not to be the same.
-  */
-+	.align	5
- ENTRY(__switch_to)
-  UNWIND(.fnstart	)
-  UNWIND(.cantunwind	)
--	add	ip, r1, #TI_CPU_SAVE
-- ARM(	stmia	ip!, {r4 - sl, fp, sp, lr} )	@ Store most regs on stack
-- THUMB(	stmia	ip!, {r4 - sl, fp}	   )	@ Store most regs on stack
-- THUMB(	str	sp, [ip], #4		   )
-- THUMB(	str	lr, [ip], #4		   )
-+	add	r3, r1, #TI_CPU_SAVE
-+ ARM(	stmia	r3, {r4 - sl, fp, sp, lr}  )	@ Store most regs on stack
-+ THUMB( mov	ip, sp			   )
-+ THUMB( stmia	r3, {r4 - sl, fp, ip, lr}  )	@ Thumb2 does not permit SP here
- 	ldr	r4, [r2, #TI_TP_VALUE]
- 	ldr	r5, [r2, #TI_TP_VALUE + 4]
- #ifdef CONFIG_CPU_USE_DOMAINS
-@@ -805,20 +805,22 @@ ENTRY(__switch_to)
+diff --git a/arch/arm/include/asm/mmu.h b/arch/arm/include/asm/mmu.h
+index 1592a4264488..e049723840d3 100644
+--- a/arch/arm/include/asm/mmu.h
++++ b/arch/arm/include/asm/mmu.h
+@@ -10,7 +10,7 @@ typedef struct {
+ #else
+ 	int		switch_pending;
  #endif
- 	mov	r5, r0
- 	add	r4, r2, #TI_CPU_SAVE
--	ldr	r0, =thread_notify_head
-+	mov_l	r0, thread_notify_head
- 	mov	r1, #THREAD_NOTIFY_SWITCH
- 	bl	atomic_notifier_call_chain
- #if defined(CONFIG_STACKPROTECTOR) && !defined(CONFIG_SMP) && \
-     !defined(CONFIG_STACKPROTECTOR_PER_TASK)
- 	str	r9, [r8]
- #endif
-- THUMB(	mov	ip, r4			   )
- 	mov	r0, r5
- 	set_current r7, r8
-- ARM(	ldmia	r4, {r4 - sl, fp, sp, pc}  )	@ Load all regs saved previously
-- THUMB(	ldmia	ip!, {r4 - sl, fp}	   )	@ Load all regs saved previously
-- THUMB(	ldr	sp, [ip], #4		   )
-- THUMB(	ldr	pc, [ip]		   )
-+#if !defined(CONFIG_THUMB2_KERNEL)
-+	ldmia	r4, {r4 - sl, fp, sp, pc}	@ Load all regs saved previously
-+#else
-+	ldmia	r4, {r4 - sl, fp, ip, lr}	@ Thumb2 does not permit SP here
-+	mov	sp, ip
-+	ret	lr
-+#endif
-  UNWIND(.fnend		)
- ENDPROC(__switch_to)
+-	unsigned int	vmalloc_seq;
++	atomic_t	vmalloc_seq;
+ 	unsigned long	sigpage;
+ #ifdef CONFIG_VDSO
+ 	unsigned long	vdso;
+diff --git a/arch/arm/include/asm/mmu_context.h b/arch/arm/include/asm/mmu_context.h
+index 84e58956fcab..71a26986efb9 100644
+--- a/arch/arm/include/asm/mmu_context.h
++++ b/arch/arm/include/asm/mmu_context.h
+@@ -23,6 +23,16 @@
  
+ void __check_vmalloc_seq(struct mm_struct *mm);
+ 
++#ifdef CONFIG_MMU
++static inline void check_vmalloc_seq(struct mm_struct *mm)
++{
++	if (!IS_ENABLED(CONFIG_ARM_LPAE) &&
++	    unlikely(atomic_read(&mm->context.vmalloc_seq) !=
++		     atomic_read(&init_mm.context.vmalloc_seq)))
++		__check_vmalloc_seq(mm);
++}
++#endif
++
+ #ifdef CONFIG_CPU_HAS_ASID
+ 
+ void check_and_switch_context(struct mm_struct *mm, struct task_struct *tsk);
+@@ -52,8 +62,7 @@ static inline void a15_erratum_get_cpumask(int this_cpu, struct mm_struct *mm,
+ static inline void check_and_switch_context(struct mm_struct *mm,
+ 					    struct task_struct *tsk)
+ {
+-	if (unlikely(mm->context.vmalloc_seq != init_mm.context.vmalloc_seq))
+-		__check_vmalloc_seq(mm);
++	check_vmalloc_seq(mm);
+ 
+ 	if (irqs_disabled())
+ 		/*
+diff --git a/arch/arm/mm/context.c b/arch/arm/mm/context.c
+index 48091870db89..4204ffa2d104 100644
+--- a/arch/arm/mm/context.c
++++ b/arch/arm/mm/context.c
+@@ -240,8 +240,7 @@ void check_and_switch_context(struct mm_struct *mm, struct task_struct *tsk)
+ 	unsigned int cpu = smp_processor_id();
+ 	u64 asid;
+ 
+-	if (unlikely(mm->context.vmalloc_seq != init_mm.context.vmalloc_seq))
+-		__check_vmalloc_seq(mm);
++	check_vmalloc_seq(mm);
+ 
+ 	/*
+ 	 * We cannot update the pgd and the ASID atomicly with classic
+diff --git a/arch/arm/mm/ioremap.c b/arch/arm/mm/ioremap.c
+index 197f8eb3a775..aa08bcb72db9 100644
+--- a/arch/arm/mm/ioremap.c
++++ b/arch/arm/mm/ioremap.c
+@@ -117,16 +117,21 @@ EXPORT_SYMBOL(ioremap_page);
+ 
+ void __check_vmalloc_seq(struct mm_struct *mm)
+ {
+-	unsigned int seq;
++	int seq;
+ 
+ 	do {
+-		seq = init_mm.context.vmalloc_seq;
++		seq = atomic_read(&init_mm.context.vmalloc_seq);
+ 		memcpy(pgd_offset(mm, VMALLOC_START),
+ 		       pgd_offset_k(VMALLOC_START),
+ 		       sizeof(pgd_t) * (pgd_index(VMALLOC_END) -
+ 					pgd_index(VMALLOC_START)));
+-		mm->context.vmalloc_seq = seq;
+-	} while (seq != init_mm.context.vmalloc_seq);
++		/*
++		 * Use a store-release so that other CPUs that observe the
++		 * counter's new value are guaranteed to see the results of the
++		 * memcpy as well.
++		 */
++		atomic_set_release(&mm->context.vmalloc_seq, seq);
++	} while (seq != atomic_read(&init_mm.context.vmalloc_seq));
+ }
+ 
+ #if !defined(CONFIG_SMP) && !defined(CONFIG_ARM_LPAE)
+@@ -157,7 +162,7 @@ static void unmap_area_sections(unsigned long virt, unsigned long size)
+ 			 * Note: this is still racy on SMP machines.
+ 			 */
+ 			pmd_clear(pmdp);
+-			init_mm.context.vmalloc_seq++;
++			atomic_inc_return_release(&init_mm.context.vmalloc_seq);
+ 
+ 			/*
+ 			 * Free the page table, if there was one.
+@@ -174,8 +179,7 @@ static void unmap_area_sections(unsigned long virt, unsigned long size)
+ 	 * Ensure that the active_mm is up to date - we want to
+ 	 * catch any use-after-iounmap cases.
+ 	 */
+-	if (current->active_mm->context.vmalloc_seq != init_mm.context.vmalloc_seq)
+-		__check_vmalloc_seq(current->active_mm);
++	check_vmalloc_seq(current->active_mm);
+ 
+ 	flush_tlb_kernel_range(virt, end);
+ }
 -- 
 2.30.2
 
