@@ -2,34 +2,37 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6499CC4332F
-	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 17:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FFAC433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 17:48:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241340AbiAXRsf (ORCPT
+        id S241414AbiAXRsj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 24 Jan 2022 12:48:35 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:43556 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241414AbiAXRse (ORCPT
+        Mon, 24 Jan 2022 12:48:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241434AbiAXRsi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 Jan 2022 12:48:34 -0500
+        Mon, 24 Jan 2022 12:48:38 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404FAC06173B
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 09:48:38 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7CDC761312
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 17:48:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18E16C340EB;
-        Mon, 24 Jan 2022 17:48:30 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C43C661312
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 17:48:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60B1EC340E8;
+        Mon, 24 Jan 2022 17:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643046513;
-        bh=YhN3QJGzpYUXpQwGEXw+ci07ZoekkfIoc5ZDfaXpolY=;
+        s=k20201202; t=1643046517;
+        bh=eMmzRcjpASAjkmFAFfmqCrwEHxj9li5uj93BJiQL2FM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ugJcKpWfRF3r2V7E6qVihyl2wrRxRV4aQOpcbybKvIvkU3PZcAU8h6AFBV+eBzdmU
-         avHZBEVF8WvWOugfTR9TVp05OEztf6bwO47hgEl7+6hX7p+K3TGiby8Gr6ODlcc3zZ
-         zDY6RUOFC3R0IHtF2PB0L4b96MWMuLfwmuY46UVSfKFsEdv97A4E5wIzmo3kn+gxxP
-         FjAxm9dM5LZhsUHA09IH9q9pG5kJdlyfJJZRqa4qsOwFdarCvISVuVOyTqv6uylz9p
-         jt9z8c7bocmaTN302suOTGZgwdi0XurvbZJ3z5McXWjoyiJBU14cMYZaa9upmfYphG
-         OMhT8I2yoSPGA==
+        b=AZPZ4rZnPVixnstg3xyDgLPdzqHbR3+rK3EtFDNeC/dl8Mc0ZIOj/8dfD8rOQnoJ1
+         zWodRCcEkaSHF8gmZVoE2Tlf2Ke5yEhABGwVxrqq8zsHOBnk9x6st1e1puVqA4/owB
+         LHLh23gGw/+akkCxHP5XdqWZg/SaEb/eWAeUFgr4eTWdpFlLV13EjXgilMyLK2IqVn
+         ssIo19w0CZLmhw88C7a8dsjiTLZujSmI7gODC2iNBwRRY/yGeiuuzXp1aCZ1rRlZef
+         omG9XHLcF8iOs5g8h/q30r732uPOMfgH+P+ZXLPZrssPUOIRh7CGGCxMOaWnByKLfz
+         Wo0opXTl4yuAw==
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org
 Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
@@ -43,26 +46,33 @@ Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
         Marc Zyngier <maz@kernel.org>,
         Vladimir Murzin <vladimir.murzin@arm.com>,
         Jesse Taube <mr.bossman075@gmail.com>
-Subject: [PATCH v5 12/32] ARM: assembler: add optimized ldr/str macros to load variables from memory
-Date:   Mon, 24 Jan 2022 18:47:24 +0100
-Message-Id: <20220124174744.1054712-13-ardb@kernel.org>
+Subject: [PATCH v5 13/32] ARM: percpu: add SMP_ON_UP support
+Date:   Mon, 24 Jan 2022 18:47:25 +0100
+Message-Id: <20220124174744.1054712-14-ardb@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220124174744.1054712-1-ardb@kernel.org>
 References: <20220124174744.1054712-1-ardb@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3676; h=from:subject; bh=YhN3QJGzpYUXpQwGEXw+ci07ZoekkfIoc5ZDfaXpolY=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBh7uYY8XhWWCvJjXsZiYsX7wfoz9aWEplGFkAecTZb wKKXA22JAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYe7mGAAKCRDDTyI5ktmPJCtrC/ 47CN3ftvcb+Ch2vEH6ny+Ae+FD2UEGbf4OUvepURhboK55NqZ46AqBCXkBAx2EQzy7cePJ/7Ttl6lj T939KjdFgjUFI+wWiLvgTrk8kEDVNQdSqgxbSz1I9USBonk4n8JXSMC/j+/dTHVwvHdJ3zTaW7YJl1 1kYDlJrdqAw5BWfNLS9bmtCXYfTBpB67XaBnMt2eiEyiQcYV6y6J0TZpHrnijpMQ4NfQ8wkAmlF3fy QM5vM2VD0xjE6Q/UItsHm8SubOmCWYCtx4IAQPrOmiLdjhOkpu2ppNucWsvtnrz3S+Cg8XV4VMm3Ao qjeTx22DAhAvFu9ATD5KH/FZU1blUztq3b1N1LKk9lEqiT9ZWe7tQPPIRhmJ9r+SC2868bvxJ6LZdT QEHp/rpNESP8gAYHPLGRZKseZ0YY2jjpwNae4hnzYzXUXwTvTyBBpA9TlEPL4SCz4n7wgMCQSh7r/v LzKPoSW6VE+TtfJTKs7GLomAA62MSvhH7dvbS0aViLzVM=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6979; h=from:subject; bh=eMmzRcjpASAjkmFAFfmqCrwEHxj9li5uj93BJiQL2FM=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBh7uYaZg1QGI5pD0MXxQZ7caxgDCmY2nuv0N5kOBth hd5bX8yJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYe7mGgAKCRDDTyI5ktmPJB/YC/ 4vLa3KaDIzczMLw6aSrkoI7UPf/AAiBgGV2bxUQagjI5QV4928PSjKQ4Vli5yt5kQqCKHQ1F6OEjQr kBc8MhQnuXrk3YNUgHfmKImd+6THXy9ChpOtuEiafy7LIFXZYHbMLZzdwrjeaMBAQRFmT+n7iehF1U 8VvqGSoT2YlxKWOXW/yjo5STbcq7n6I/mpc/gDQSzF4I8nKHvlzh4E9kfaxt/SvYBs13NG97Wqmjt3 FC7fUa7KmymkevEYNQTtaqlVa+0mD8dCtrhMR0nDx97KMhIOY7SN9JToqxuen8sExj2K2qiFFzblvz 3/q+16n0F+GP6LMjt8uv+eZsknEAAAxVKkDKdDzqF+JSXn3Zc11W50N9+jcXVnGDtkraGlNklEtRbW jT74Gga+WIZZ08gWAfJFqgZHPLMi8wCOPU8n2o4O6b/KFQFb+lR2/6zTnnIfilSH9apy+v7HwtYkaj lLZ3xEnSME/mnDSHF37DCmjyy9F6QSJh0kkDcbWz6GnaA=
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-We will be adding variable loads to various hot paths, so it makes sense
-to add a helper macro that can load variables from asm code without the
-use of literal pool entries. On v7 or later, we can simply use MOVW/MOVT
-pairs, but on earlier cores, this requires a bit of hackery to emit a
-instruction sequence that implements this using a sequence of ADD/LDR
-instructions.
+Permit the use of the TPIDRPRW system register for carrying the per-CPU
+offset in generic SMP configurations that also target non-SMP capable
+ARMv6 cores. This uses the SMP_ON_UP code patching framework to turn all
+TPIDRPRW accesses into reads/writes of entry #0 in the __per_cpu_offset
+array.
+
+While at it, switch over some existing direct TPIDRPRW accesses in asm
+code to invocations of a new helper that is patched in the same way when
+necessary.
+
+Note that CPU_V6+SMP without SMP_ON_UP results in a kernel that does not
+boot on v6 CPUs without SMP extensions, so add this dependency to
+Kconfig as well.
 
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
 Acked-by: Nicolas Pitre <nico@fluxnic.net>
@@ -70,100 +80,204 @@ Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Tested-by: Marc Zyngier <maz@kernel.org>
 Tested-by: Vladimir Murzin <vladimir.murzin@arm.com> # ARMv7M
 ---
- arch/arm/Kconfig                 | 11 +++++
- arch/arm/include/asm/assembler.h | 48 ++++++++++++++++++--
- 2 files changed, 55 insertions(+), 4 deletions(-)
+ arch/arm/include/asm/assembler.h | 61 +++++++++++++++++++-
+ arch/arm/include/asm/insn.h      | 17 ++++++
+ arch/arm/include/asm/percpu.h    | 36 ++++++++++--
+ arch/arm/mm/Kconfig              |  1 +
+ 4 files changed, 108 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 99ac5d75dcec..9586636289d2 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -139,6 +139,17 @@ config ARM
- 	  Europe.  There is an ARM Linux project with a web page at
- 	  <http://www.arm.linux.org.uk/>.
- 
-+config ARM_HAS_GROUP_RELOCS
-+	def_bool y
-+	depends on !LD_IS_LLD || LLD_VERSION >= 140000
-+	depends on !COMPILE_TEST
-+	help
-+	  Whether or not to use R_ARM_ALU_PC_Gn or R_ARM_LDR_PC_Gn group
-+	  relocations, which have been around for a long time, but were not
-+	  supported in LLD until version 14. The combined range is -/+ 256 MiB,
-+	  which is usually sufficient, but not for allyesconfig, so we disable
-+	  this feature when doing compile testing.
-+
- config ARM_HAS_SG_CHAIN
- 	bool
- 
 diff --git a/arch/arm/include/asm/assembler.h b/arch/arm/include/asm/assembler.h
-index 7d23d4bb2168..7a4e292b68e4 100644
+index 7a4e292b68e4..30752c4427d4 100644
 --- a/arch/arm/include/asm/assembler.h
 +++ b/arch/arm/include/asm/assembler.h
-@@ -564,12 +564,12 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
- 	/*
- 	 * mov_l - move a constant value or [relocated] address into a register
- 	 */
--	.macro		mov_l, dst:req, imm:req
-+	.macro		mov_l, dst:req, imm:req, cond
- 	.if		__LINUX_ARM_ARCH__ < 7
--	ldr		\dst, =\imm
-+	ldr\cond	\dst, =\imm
- 	.else
--	movw		\dst, #:lower16:\imm
--	movt		\dst, #:upper16:\imm
-+	movw\cond	\dst, #:lower16:\imm
-+	movt\cond	\dst, #:upper16:\imm
- 	.endif
- 	.endm
+@@ -216,9 +216,7 @@
  
-@@ -607,6 +607,46 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
- 	__adldst_l	str, \src, \sym, \tmp, \cond
+ 	.macro	reload_current, t1:req, t2:req
+ #ifdef CONFIG_CURRENT_POINTER_IN_TPIDRURO
+-	adr_l	\t1, __entry_task		@ get __entry_task base address
+-	mrc	p15, 0, \t2, c13, c0, 4		@ get per-CPU offset
+-	ldr	\t1, [\t1, \t2]			@ load variable
++	ldr_this_cpu \t1, __entry_task, \t1, \t2
+ 	mcr	p15, 0, \t1, c13, c0, 3		@ store in TPIDRURO
+ #endif
  	.endm
+@@ -308,6 +306,26 @@
+ #define ALT_UP_B(label) b label
+ #endif
  
-+	.macro		__ldst_va, op, reg, tmp, sym, offset=0, cond
-+#if __LINUX_ARM_ARCH__ >= 7 || \
-+    !defined(CONFIG_ARM_HAS_GROUP_RELOCS) || \
-+    (defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS))
-+	mov_l		\tmp, \sym, \cond
-+#else
 +	/*
-+	 * Avoid a literal load, by emitting a sequence of ADD/LDR instructions
-+	 * with the appropriate relocations. The combined sequence has a range
-+	 * of -/+ 256 MiB, which should be sufficient for the core kernel and
-+	 * for modules loaded into the module region.
++	 * this_cpu_offset - load the per-CPU offset of this CPU into
++	 * 		     register 'rd'
 +	 */
++	.macro		this_cpu_offset, rd:req
++#ifdef CONFIG_SMP
++ALT_SMP(mrc		p15, 0, \rd, c13, c0, 4)
++#ifdef CONFIG_CPU_V6
++ALT_UP_B(.L0_\@)
++	.subsection	1
++.L0_\@: ldr_va		\rd, __per_cpu_offset
++	b		.L1_\@
++	.previous
++.L1_\@:
++#endif
++#else
++	mov		\rd, #0
++#endif
++	.endm
++
+ /*
+  * Instruction barrier
+  */
+@@ -647,6 +665,43 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
+ 	__ldst_va	str, \rn, \tmp, \sym
+ 	.endm
+ 
++	/*
++	 * ldr_this_cpu_armv6 - Load a 32-bit word from the per-CPU variable 'sym',
++	 *			without using a temp register. Supported in ARM mode
++	 *			only.
++	 */
++	.macro		ldr_this_cpu_armv6, rd:req, sym:req
++	this_cpu_offset	\rd
 +	.globl		\sym
 +	.reloc		.L0_\@, R_ARM_ALU_PC_G0_NC, \sym
 +	.reloc		.L1_\@, R_ARM_ALU_PC_G1_NC, \sym
 +	.reloc		.L2_\@, R_ARM_LDR_PC_G2, \sym
-+.L0_\@: sub\cond	\tmp, pc, #8 - \offset
-+.L1_\@: sub\cond	\tmp, \tmp, #4 - \offset
++	add		\rd, \rd, pc
++.L0_\@: sub		\rd, \rd, #4
++.L1_\@: sub		\rd, \rd, #0
++.L2_\@: ldr		\rd, [\rd, #4]
++	.endm
++
++	/*
++	 * ldr_this_cpu - Load a 32-bit word from the per-CPU variable 'sym'
++	 *		  into register 'rd', which may be the stack pointer,
++	 *		  using 't1' and 't2' as general temp registers. These
++	 *		  are permitted to overlap with 'rd' if != sp
++	 */
++	.macro		ldr_this_cpu, rd:req, sym:req, t1:req, t2:req
++#ifndef CONFIG_SMP
++	ldr_va		\rd, \sym,, \t1			@ CPU offset == 0x0
++#elif __LINUX_ARM_ARCH__ >= 7 || \
++      !defined(CONFIG_ARM_HAS_GROUP_RELOCS) || \
++      (defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS))
++	this_cpu_offset	\t1
++	mov_l		\t2, \sym
++	ldr		\rd, [\t1, \t2]
++#else
++	ldr_this_cpu_armv6 \rd, \sym
 +#endif
-+.L2_\@: \op\cond	\reg, [\tmp, #\offset]
-+	.endm
-+
-+	/*
-+	 * ldr_va - load a 32-bit word from the virtual address of \sym
-+	 */
-+	.macro		ldr_va, rd:req, sym:req, cond, tmp, offset
-+	.ifb		\tmp
-+	__ldst_va	ldr, \rd, \rd, \sym, \offset, \cond
-+	.else
-+	__ldst_va	ldr, \rd, \tmp, \sym, \offset, \cond
-+	.endif
-+	.endm
-+
-+	/*
-+	 * str_va - store a 32-bit word to the virtual address of \sym
-+	 */
-+	.macro		str_va, rn:req, sym:req, tmp:req
-+	__ldst_va	str, \rn, \tmp, \sym
 +	.endm
 +
  	/*
  	 * rev_l - byte-swap a 32-bit value
  	 *
+diff --git a/arch/arm/include/asm/insn.h b/arch/arm/include/asm/insn.h
+index 5475cbf9fb6b..faf3d1c28368 100644
+--- a/arch/arm/include/asm/insn.h
++++ b/arch/arm/include/asm/insn.h
+@@ -2,6 +2,23 @@
+ #ifndef __ASM_ARM_INSN_H
+ #define __ASM_ARM_INSN_H
+ 
++#include <linux/types.h>
++
++/*
++ * Avoid a literal load by emitting a sequence of ADD/LDR instructions with the
++ * appropriate relocations. The combined sequence has a range of -/+ 256 MiB,
++ * which should be sufficient for the core kernel as well as modules loaded
++ * into the module region. (Not supported by LLD before release 14)
++ */
++#define LOAD_SYM_ARMV6(reg, sym)					\
++	"	.globl	" #sym "				\n\t"	\
++	"	.reloc	10f, R_ARM_ALU_PC_G0_NC, " #sym "	\n\t"	\
++	"	.reloc	11f, R_ARM_ALU_PC_G1_NC, " #sym "	\n\t"	\
++	"	.reloc	12f, R_ARM_LDR_PC_G2, " #sym "		\n\t"	\
++	"10:	sub	" #reg ", pc, #8			\n\t"	\
++	"11:	sub	" #reg ", " #reg ", #4			\n\t"	\
++	"12:	ldr	" #reg ", [" #reg ", #0]		\n\t"
++
+ static inline unsigned long
+ arm_gen_nop(void)
+ {
+diff --git a/arch/arm/include/asm/percpu.h b/arch/arm/include/asm/percpu.h
+index e2fcb3cfd3de..7feba9d65e85 100644
+--- a/arch/arm/include/asm/percpu.h
++++ b/arch/arm/include/asm/percpu.h
+@@ -5,20 +5,27 @@
+ #ifndef _ASM_ARM_PERCPU_H_
+ #define _ASM_ARM_PERCPU_H_
+ 
++#include <asm/insn.h>
++
+ register unsigned long current_stack_pointer asm ("sp");
+ 
+ /*
+  * Same as asm-generic/percpu.h, except that we store the per cpu offset
+  * in the TPIDRPRW. TPIDRPRW only exists on V6K and V7
+  */
+-#if defined(CONFIG_SMP) && !defined(CONFIG_CPU_V6)
++#ifdef CONFIG_SMP
+ static inline void set_my_cpu_offset(unsigned long off)
+ {
++	extern unsigned int smp_on_up;
++
++	if (IS_ENABLED(CONFIG_CPU_V6) && !smp_on_up)
++		return;
++
+ 	/* Set TPIDRPRW */
+ 	asm volatile("mcr p15, 0, %0, c13, c0, 4" : : "r" (off) : "memory");
+ }
+ 
+-static inline unsigned long __my_cpu_offset(void)
++static __always_inline unsigned long __my_cpu_offset(void)
+ {
+ 	unsigned long off;
+ 
+@@ -27,8 +34,29 @@ static inline unsigned long __my_cpu_offset(void)
+ 	 * We want to allow caching the value, so avoid using volatile and
+ 	 * instead use a fake stack read to hazard against barrier().
+ 	 */
+-	asm("mrc p15, 0, %0, c13, c0, 4" : "=r" (off)
+-		: "Q" (*(const unsigned long *)current_stack_pointer));
++	asm("0:	mrc p15, 0, %0, c13, c0, 4			\n\t"
++#ifdef CONFIG_CPU_V6
++	    "1:							\n\t"
++	    "	.subsection 1					\n\t"
++#if defined(CONFIG_ARM_HAS_GROUP_RELOCS) && \
++    !(defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS))
++	    "2: " LOAD_SYM_ARMV6(%0, __per_cpu_offset) "	\n\t"
++	    "	b	1b					\n\t"
++#else
++	    "2: ldr	%0, 3f					\n\t"
++	    "	ldr	%0, [%0]				\n\t"
++	    "	b	1b					\n\t"
++	    "3:	.long	__per_cpu_offset			\n\t"
++#endif
++	    "	.previous					\n\t"
++	    "	.pushsection \".alt.smp.init\", \"a\"		\n\t"
++	    "	.align	2					\n\t"
++	    "	.long	0b - .					\n\t"
++	    "	b	. + (2b - 0b)				\n\t"
++	    "	.popsection					\n\t"
++#endif
++	    : "=r" (off)
++	    : "Q" (*(const unsigned long *)current_stack_pointer));
+ 
+ 	return off;
+ }
+diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
+index 58afba346729..a91ff22c6c2e 100644
+--- a/arch/arm/mm/Kconfig
++++ b/arch/arm/mm/Kconfig
+@@ -386,6 +386,7 @@ config CPU_V6
+ 	select CPU_PABRT_V6
+ 	select CPU_THUMB_CAPABLE
+ 	select CPU_TLB_V6 if MMU
++	select SMP_ON_UP if SMP
+ 
+ # ARMv6k
+ config CPU_V6K
 -- 
 2.30.2
 
