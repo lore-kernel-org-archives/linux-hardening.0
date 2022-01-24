@@ -2,167 +2,112 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCDDC433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 18:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 484DCC3526F
+	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 21:58:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233665AbiAXS6j (ORCPT
+        id S229682AbiAXV6A (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 24 Jan 2022 13:58:39 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:53746 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1343561AbiAXS4f (ORCPT
+        Mon, 24 Jan 2022 16:58:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53288 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1453226AbiAXV3F (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 Jan 2022 13:56:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643050594;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OmJVF3D4x24T0ZfBgEiGjVTIdFS2FiU3zC/rm7HZ71k=;
-        b=UBsX8t7tAUwtAWb6ENnWdHzp95zO2kLM+hfNK4ZWFiOnLujQOrJonURZyEpEQSgm9+vfmr
-        P+nPi2I+9BP4TDcVmyakukTWqGfkavp68cozzxQaR7vo4sKDBZZqF82MgOiAZdKkS9bhKa
-        6PhMcL1YGgLY+BsPaJjssqyvGwI1F5k=
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
- [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-306-V6PVf8G-MxKiTGx15n9v3g-1; Mon, 24 Jan 2022 13:56:33 -0500
-X-MC-Unique: V6PVf8G-MxKiTGx15n9v3g-1
-Received: by mail-io1-f69.google.com with SMTP id v190-20020a6bacc7000000b006046d11e61dso12873578ioe.1
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 10:56:33 -0800 (PST)
+        Mon, 24 Jan 2022 16:29:05 -0500
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAB49C01D7F2
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 12:19:04 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id v74so13883312pfc.1
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 12:19:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EsjxDBMm/CMDAK0wKf2bhoiQ9gqiwqZCH7vh6dCq6Nw=;
+        b=GxbNEjo5OWuFsGAJ6mmDLTkptrYH98ruVoE6emQiNyVh4DXl2855c4/nQnzXH8aPBj
+         kGbHAZd2bG6QzBtjtiEmzffG2UqPBg9D0nGasTg9KFpQKT10+8tQdS8wmLKb1NeMGNrd
+         /kBh1KajfhLWZ9mzXBGIQqfCzQIIT2o+/wQBI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=OmJVF3D4x24T0ZfBgEiGjVTIdFS2FiU3zC/rm7HZ71k=;
-        b=x+aL3wVLfzOKrHSwZp78VaQtx5tbAtjuFJi+9e8I0LjvA3h7cAWmMnT+GkE+Fmk2ky
-         vhdh6EKWjftfsuL6ZBnffn+FKnErJTLuhIqwExGkG/YyVI/COeX583Wg2LAh34rdt9RT
-         KjI9lP3UQzBiduZdg1392eQG1MuVop+MGwycJfXvxnEhCuMtc5tUyIhTnTundNNN9QXN
-         cs9kOQKE8aJx4l0pnXzmFVck8sE9UyRcfKq5RGy+aQd3KNkpVqi1anI5w6CTfQ3x+3BQ
-         C5c709nY3mN94p3OT0X1JsKa0JXTHqlH0GOTRfaInFFKTihgiqKkWfIScvyjSg84/tQ9
-         0ysA==
-X-Gm-Message-State: AOAM532dEg/mPfAMIxaZ1kCjNm2N7nAjVllo0f6RJhQHOrDkv4LQ3A3W
-        VR7BHEb6qmY/n4wI5AW8GHAuJrKoTeeVXmU1Cb2hjTYaNKNDLiYn+isjjzM0OhZmVCi5iM7gyGS
-        ubHDvvesHi+v7+ttfI2nowFYf3NW/
-X-Received: by 2002:a05:6e02:1648:: with SMTP id v8mr9493342ilu.286.1643050592804;
-        Mon, 24 Jan 2022 10:56:32 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyUqwnG4LX6ZXdLQROl5ZTg/5K5xkSA6GPAXQwKR1q5FUNoabgTH0XU1cWTt8kmPKmKuywIrQ==
-X-Received: by 2002:a05:6e02:1648:: with SMTP id v8mr9493326ilu.286.1643050592493;
-        Mon, 24 Jan 2022 10:56:32 -0800 (PST)
-Received: from ?IPV6:2601:280:4400:a2e0::2b4c? ([2601:280:4400:a2e0::2b4c])
-        by smtp.gmail.com with ESMTPSA id h8sm6822557iow.15.2022.01.24.10.56.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jan 2022 10:56:32 -0800 (PST)
-Message-ID: <8f457c89-28ed-71d1-5afa-2386abec6da9@redhat.com>
-Date:   Mon, 24 Jan 2022 13:56:30 -0500
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EsjxDBMm/CMDAK0wKf2bhoiQ9gqiwqZCH7vh6dCq6Nw=;
+        b=THWT67fCdEE0Yr3roig/UAYagX9ukPzliKGQuxRlU09Yy7Mnjmcrcmfi3ctPAQeXbr
+         XIveSC5DOPQPnGZsXpm7F0RkWx/rW8VQDkiERlfRIoxzpf9cVtl0kVu4kD2osmXi0xbN
+         k2mv3Ek4dVWAnXQ/q0FEv91hLy+kl8ed4djcffhuFtBXfIwR2UZWa8DvdBQ9g4okdeK9
+         /W5IqwzIqJWaHsZt0dLwKPET+ZWaua6j2I3q6hyZmib9163Jbd0xB1yo9Xb+Vutt7ghd
+         e31+NRPbxZn6dh6i/eeAL8emboWklQkkBf/p0yc3zkV+EznJIWrH/zaCPND4KygP+IjW
+         uEUA==
+X-Gm-Message-State: AOAM532/rbsGOxICdJ5Jg+LlKhoUnSCEW/PXgMcsisHx4mFrfRopjl9I
+        kVD1/5XVgn4jvkZzDTVVQSGQhg==
+X-Google-Smtp-Source: ABdhPJxU9wiN3m+FHgY11ltcXHbduJ5dePRdoXqE1S7KFCWXf/pNbiUloQZQu6GMJjMSw1xiM3hh5w==
+X-Received: by 2002:a63:7c06:: with SMTP id x6mr588413pgc.316.1643055544483;
+        Mon, 24 Jan 2022 12:19:04 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x23sm3833982pfh.178.2022.01.24.12.19.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jan 2022 12:19:04 -0800 (PST)
+Date:   Mon, 24 Jan 2022 12:19:03 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Johan Hovold <johan@kernel.org>,
+        Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] staging: greybus: i2c: Use struct_size() helper in
+ gb_i2c_operation_create()
+Message-ID: <202201241213.82E7D9F598@keescook>
+References: <20220121222250.GA73021@embeddedor>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCH] kasan: test: fix compatibility with FORTIFY_SOURCE
-To:     Marco Elver <elver@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Kees Cook <keescook@chromium.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        linux-hardening@vger.kernel.org
-References: <20220124160744.1244685-1-elver@google.com>
-From:   Nico Pache <npache@redhat.com>
-In-Reply-To: <20220124160744.1244685-1-elver@google.com>
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=npache@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220121222250.GA73021@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 1/24/22 11:07, Marco Elver wrote:
-> With CONFIG_FORTIFY_SOURCE enabled, string functions will also perform
-> dynamic checks using __builtin_object_size(ptr), which when failed will
-> panic the kernel.
+On Fri, Jan 21, 2022 at 04:22:50PM -0600, Gustavo A. R. Silva wrote:
+> Make use of the struct_size() helper instead of an open-coded version,
+> in order to avoid any potential type mistakes or integer overflows that,
+> in the worst scenario, could lead to heap overflows.
 > 
-> Because the KASAN test deliberately performs out-of-bounds operations,
-> the kernel panics with FORITY_SOURCE, for example:
+> Also, address the following sparse warnings:
+> drivers/staging/greybus/i2c.c:111:24: warning: using sizeof on a flexible structure
 > 
->  | kernel BUG at lib/string_helpers.c:910!
->  | invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
->  | CPU: 1 PID: 137 Comm: kunit_try_catch Tainted: G    B             5.16.0-rc3+ #3
->  | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.14.0-2 04/01/2014
->  | RIP: 0010:fortify_panic+0x19/0x1b
->  | ...
->  | Call Trace:
->  |  <TASK>
->  |  kmalloc_oob_in_memset.cold+0x16/0x16
->  |  ...
-> 
-> Fix it by also hiding `ptr` from the optimizer, which will ensure that
-> __builtin_object_size() does not return a valid size, preventing
-> fortified string functions from panicking.
-> 
-> Reported-by: Nico Pache <npache@redhat.com>
-> Signed-off-by: Marco Elver <elver@google.com>
-
-Looks good! Thanks for posting this Marco :)
-
-Reviewed-by: Nico Pache <npache@redhat.com>
-
+> Link: https://github.com/KSPP/linux/issues/174
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->  lib/test_kasan.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  drivers/staging/greybus/i2c.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> index 847cdbefab46..26a5c9007653 100644
-> --- a/lib/test_kasan.c
-> +++ b/lib/test_kasan.c
-> @@ -492,6 +492,7 @@ static void kmalloc_oob_in_memset(struct kunit *test)
->  	ptr = kmalloc(size, GFP_KERNEL);
->  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+> diff --git a/drivers/staging/greybus/i2c.c b/drivers/staging/greybus/i2c.c
+> index de2f6516da09..9dfc6791c20e 100644
+> --- a/drivers/staging/greybus/i2c.c
+> +++ b/drivers/staging/greybus/i2c.c
+> @@ -108,9 +108,7 @@ gb_i2c_operation_create(struct gb_connection *connection,
+>  		else
+>  			data_out_size += (u32)msg->len;
 >  
-> +	OPTIMIZER_HIDE_VAR(ptr);
->  	OPTIMIZER_HIDE_VAR(size);
->  	KUNIT_EXPECT_KASAN_FAIL(test,
->  				memset(ptr, 0, size + KASAN_GRANULE_SIZE));
-> @@ -515,6 +516,7 @@ static void kmalloc_memmove_negative_size(struct kunit *test)
->  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+> -	request_size = sizeof(*request);
+> -	request_size += msg_count * sizeof(*op);
+> -	request_size += data_out_size;
+> +	request_size = struct_size(request, ops, msg_count) + data_out_size;
+
+This could still overflow if struct_size() returns SIZE_MAX. Perhaps:
+
+	if (check_add_overflow(struct_size(request, ops, msg_count),
+			       data_out_size, &request_size))
+		request_size = SIZE_MAX;
+
+I should brush off the saturating arithmetic helpers series:
+https://lore.kernel.org/all/20210920180853.1825195-1-keescook@chromium.org/
+
 >  
->  	memset((char *)ptr, 0, 64);
-> +	OPTIMIZER_HIDE_VAR(ptr);
->  	OPTIMIZER_HIDE_VAR(invalid_size);
->  	KUNIT_EXPECT_KASAN_FAIL(test,
->  		memmove((char *)ptr, (char *)ptr + 4, invalid_size));
-> @@ -531,6 +533,7 @@ static void kmalloc_memmove_invalid_size(struct kunit *test)
->  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
->  
->  	memset((char *)ptr, 0, 64);
-> +	OPTIMIZER_HIDE_VAR(ptr);
->  	KUNIT_EXPECT_KASAN_FAIL(test,
->  		memmove((char *)ptr, (char *)ptr + 4, invalid_size));
->  	kfree(ptr);
-> @@ -893,6 +896,7 @@ static void kasan_memchr(struct kunit *test)
->  	ptr = kmalloc(size, GFP_KERNEL | __GFP_ZERO);
->  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
->  
-> +	OPTIMIZER_HIDE_VAR(ptr);
->  	OPTIMIZER_HIDE_VAR(size);
->  	KUNIT_EXPECT_KASAN_FAIL(test,
->  		kasan_ptr_result = memchr(ptr, '1', size + 1));
-> @@ -919,6 +923,7 @@ static void kasan_memcmp(struct kunit *test)
->  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
->  	memset(arr, 0, sizeof(arr));
->  
-> +	OPTIMIZER_HIDE_VAR(ptr);
->  	OPTIMIZER_HIDE_VAR(size);
->  	KUNIT_EXPECT_KASAN_FAIL(test,
->  		kasan_int_result = memcmp(ptr, arr, size+1));
+>  	/* Response consists only of incoming data */
+>  	operation = gb_operation_create(connection, GB_I2C_TYPE_TRANSFER,
+> -- 
+> 2.27.0
 > 
 
+-- 
+Kees Cook
