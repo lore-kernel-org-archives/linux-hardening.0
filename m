@@ -2,34 +2,37 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F52DC433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 17:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BF2C433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 17:48:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244673AbiAXRsG (ORCPT
+        id S240939AbiAXRsN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 24 Jan 2022 12:48:06 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:49900 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240939AbiAXRsG (ORCPT
+        Mon, 24 Jan 2022 12:48:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244732AbiAXRsK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 Jan 2022 12:48:06 -0500
+        Mon, 24 Jan 2022 12:48:10 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4327C06173B
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 09:48:09 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5996EB811B1
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 17:48:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 401CBC340EA;
-        Mon, 24 Jan 2022 17:48:01 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9EAA9B811A5
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 17:48:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87D72C340E8;
+        Mon, 24 Jan 2022 17:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643046484;
-        bh=gxecdLt8rF6jDfs+RxXFFv8e21A23HTF4VhA40qVdPg=;
+        s=k20201202; t=1643046487;
+        bh=EiQVtdzvXgjyL0LmVL1EzAI/mo0NzKG3mqi/KHf8z0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tsnkxAD+dPic6cSRme3qNM2JF4krQlm2d2+LrWCghOVC06Pm7CH20fvKOtGM9DeLm
-         rppvO1UyFE+3VOMLftwT48Lf+jjp/hq5svkmuu76V0mgS63QMi2fvvsbwVaDVhxo5j
-         Lk59VtUtJLvzLOvxqcFdQjCnIiF5DQ+qOcP7FBT5jhQ2bcPO+9hwTMMVGHoLaojBO5
-         3matXOGCr16JltFo/YJXZNfyqsBi3p/g8oCluBUPOAAVDn5X/Hp9D7i77AYmi8uFKh
-         FI+t5b/a55raFeKih5CkH7hqYVaNPdPdlZQY/ik3qw/pjuM379T0K3H6QqKlTqNGWX
-         6qnZhprNW0BMw==
+        b=uaLOJM/0iChTAq9QSXvxWGqSHB9eJ8s1h0jBUWlEdO9Yp6b6h3qN1ad44oUiWUvwI
+         e46l3zliWny0BPANfEw9rK/p1Qcsn4/Pg3S8Cya+1fd4U5013XOvyh6V0Oy9a4iyDT
+         CwE6z6h40PjHyKHi2StQpzdobVG/Z8Jc3njQz/hmcmiX9IruTGaSSfVqvWRucbyfyu
+         kfu7NoqffN6LRLeXQXs3hfA3fL+zfPCOxAKGaoz6IedNYRaNS5k7R9z6NcV3j7rQl0
+         Zy8cAToaaPNIvw+jhx1mf2HPZOaHVdIPl/CwvK1wKv/ZRAZp5h/BhjS+YNYtB+/dhP
+         wEqxoYKS8VLbw==
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org
 Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
@@ -43,14 +46,14 @@ Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
         Marc Zyngier <maz@kernel.org>,
         Vladimir Murzin <vladimir.murzin@arm.com>,
         Jesse Taube <mr.bossman075@gmail.com>
-Subject: [PATCH v5 03/32] ARM: footbridge: use GENERIC_IRQ_MULTI_HANDLER
-Date:   Mon, 24 Jan 2022 18:47:15 +0100
-Message-Id: <20220124174744.1054712-4-ardb@kernel.org>
+Subject: [PATCH v5 04/32] ARM: iop32x: offset IRQ numbers by 1
+Date:   Mon, 24 Jan 2022 18:47:16 +0100
+Message-Id: <20220124174744.1054712-5-ardb@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220124174744.1054712-1-ardb@kernel.org>
 References: <20220124174744.1054712-1-ardb@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6395; i=ardb@kernel.org; h=from:subject; bh=YpVOH03SjU446m5no57bBl9lygnIPLQRBjksa7nMLhQ=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBh7uYH3B86fZFA7SfuWfpdNQQjVUTqd2cWNMrgfIjb SROk3FeJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYe7mBwAKCRDDTyI5ktmPJLWADA CLJ1kJiXVSMSMfDEZ0p3DmuE9EcaIpXc95q+pVSsZgXE12E+ZCxni4gCVx1DdskNiXW3BcF0h12njq 0stDshlAj+1oxzU19rxfqGtSq5yWxBpiv2I/i1vvzMBuTzlhDjvumkDrR94teFEfLReIzHz6S1USut 81N5x/rwqWfmqwETv+cCsMDY7kD+zrM4eqc4gZdGZUXgdni4w/Lj1Lkd9076VwiJuUnYFpUuXvhf6G MLT0xm/ioVxW8K06oVwi93nGpByfWAqKtmjrCGXn4rgASrlVlMZZfsYFrrxW1rCAUbOVh0ZL+Tn95j 9MNGbUDwScVV83TP53JqygKMRexb+wtuUVvnVXQ+A18daBkIfQXcQKPjT57w+02JwnvGuQAi4U3p3Z nbsMP4tqWIzichJxPktutayzyZwHsCMgafbUrHftn1Ys1m5U4pp6PjmZOmaLYJjhZTQ8nE66/IMPJf rVK4gjKF6N/y75E9e7+W+1dWRhgUeCaCLgBINsaEcv+eY=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5281; i=ardb@kernel.org; h=from:subject; bh=TWotvNAxcAhiklui1EglJetBjAKAECMqx7SIUyPo0Gw=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBh7uYJmVYJNoijGuYG34bxl/9AS+9/pLYzcuwpulMl f8Zq1HOJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYe7mCQAKCRDDTyI5ktmPJL2kC/ 9ipJlENH4qIC/TCUveonBsIbMxM+pqdzC0qWU+ObjNONxwE0thzanwwRCJIUFvyoTxpxRNQ11iVAiG JBXPzucWBDB5wjZVTsgoyUmEnOB3uxmD1PDsQ7WVrp1UpPlZRmqmPtM2sPNe3xbazAHrDUwS7zlfAv rsALH8JCeypYmo6dhXnig2XPEwSbtDTMYFhD0vwe+l7dA6C0iux09wo1VY5rJIYGqRGRMXb1uRyHqG FRxCY5ymbYWtZ7sQcrGGUJfXACeK0Bxhoq7x8mVaSagDP+l/rLIESOcBR/Bdqbrfs6vf96YcleqUO4 IWytHZMn6X+h7841dtMt2zN6D4Msb+/cZY1UaN0NivUay5WXxzPRhSCf2LjBXLh/ExOglogf5Dj46d ZLEeilQBvRsYUgrcRu+i2iTP1zhBEP0stEpRQHxp4K3sOc83XSrRq4NypoSkS1nxMlC3CJH6puWLkm ODeEzKG3IBx7KcFrGL/HR96RPX2Xk1+bbYP6L6CqYoV7U=
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -59,259 +62,156 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-Footbridge still uses the classic IRQ entry path in assembler,
-but this is easily converted into an equivalent C version.
+iop32x is one of the last platforms to use IRQ 0, and this has apparently
+stopped working in a 2014 cleanup without anyone noticing. This interrupt
+is used for the DMA engine, so most likely this has not actually worked
+in the past 7 years, but it's also not essential for using this board.
 
-In this case, the correlation between IRQ numbers and bits in
-the status register is non-obvious, and the priorities are
-handled by manually checking each bit in a static order,
-re-reading the status register after each handled event.
+I'm splitting out this change from my GENERIC_IRQ_MULTI_HANDLER
+conversion so it can be backported if anyone cares.
 
-I moved the code into the new file and edited the syntax without
-changing this sequence to keep the behavior as close as possible
-to what it traditionally did.
-
+Fixes: a71b092a9c68 ("ARM: Convert handle_IRQ to use __handle_domain_irq")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+[ardb: take +1 offset into account in mask/unmask and init as well]
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Tested-by: Marc Zyngier <maz@kernel.org>
 Tested-by: Vladimir Murzin <vladimir.murzin@arm.com> # ARMv7M
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/Kconfig                                    |   1 +
- arch/arm/mach-footbridge/common.c                   |  87 ++++++++++++++++
- arch/arm/mach-footbridge/include/mach/entry-macro.S | 107 --------------------
- 3 files changed, 88 insertions(+), 107 deletions(-)
+ arch/arm/mach-iop32x/include/mach/entry-macro.S |  2 +-
+ arch/arm/mach-iop32x/include/mach/irqs.h        |  2 +-
+ arch/arm/mach-iop32x/irq.c                      |  6 +-
+ arch/arm/mach-iop32x/irqs.h                     | 60 +++++++++++---------
+ 4 files changed, 37 insertions(+), 33 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 40193ec76f1a..bef5085f2ce7 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -361,6 +361,7 @@ config ARCH_FOOTBRIDGE
- 	select FOOTBRIDGE
- 	select NEED_MACH_IO_H if !MMU
- 	select NEED_MACH_MEMORY_H
-+	select GENERIC_IRQ_MULTI_HANDLER
- 	help
- 	  Support for systems based on the DC21285 companion chip
- 	  ("FootBridge"), such as the Simtec CATS and the Rebel NetWinder.
-diff --git a/arch/arm/mach-footbridge/common.c b/arch/arm/mach-footbridge/common.c
-index eee095f0e2f6..322495df271d 100644
---- a/arch/arm/mach-footbridge/common.c
-+++ b/arch/arm/mach-footbridge/common.c
-@@ -27,6 +27,91 @@
+diff --git a/arch/arm/mach-iop32x/include/mach/entry-macro.S b/arch/arm/mach-iop32x/include/mach/entry-macro.S
+index 8e6766d4621e..341e5d9a6616 100644
+--- a/arch/arm/mach-iop32x/include/mach/entry-macro.S
++++ b/arch/arm/mach-iop32x/include/mach/entry-macro.S
+@@ -20,7 +20,7 @@
+ 	mrc     p6, 0, \irqstat, c8, c0, 0	@ Read IINTSRC
+ 	cmp     \irqstat, #0
+ 	clzne   \irqnr, \irqstat
+-	rsbne   \irqnr, \irqnr, #31
++	rsbne   \irqnr, \irqnr, #32
+ 	.endm
  
- #include "common.h"
+ 	.macro arch_ret_to_user, tmp1, tmp2
+diff --git a/arch/arm/mach-iop32x/include/mach/irqs.h b/arch/arm/mach-iop32x/include/mach/irqs.h
+index c4e78df428e8..e09ae5f48aec 100644
+--- a/arch/arm/mach-iop32x/include/mach/irqs.h
++++ b/arch/arm/mach-iop32x/include/mach/irqs.h
+@@ -9,6 +9,6 @@
+ #ifndef __IRQS_H
+ #define __IRQS_H
  
-+#include <mach/hardware.h>
-+#include <mach/irqs.h>
-+#include <asm/hardware/dec21285.h>
-+
-+static int dc21285_get_irq(void)
-+{
-+	void __iomem *irqstatus = (void __iomem *)CSR_IRQ_STATUS;
-+	u32 mask = readl(irqstatus);
-+
-+	if (mask & IRQ_MASK_SDRAMPARITY)
-+		return IRQ_SDRAMPARITY;
-+
-+	if (mask & IRQ_MASK_UART_RX)
-+		return IRQ_CONRX;
-+
-+	if (mask & IRQ_MASK_DMA1)
-+		return IRQ_DMA1;
-+
-+	if (mask & IRQ_MASK_DMA2)
-+		return IRQ_DMA2;
-+
-+	if (mask & IRQ_MASK_IN0)
-+		return IRQ_IN0;
-+
-+	if (mask & IRQ_MASK_IN1)
-+		return IRQ_IN1;
-+
-+	if (mask & IRQ_MASK_IN2)
-+		return IRQ_IN2;
-+
-+	if (mask & IRQ_MASK_IN3)
-+		return IRQ_IN3;
-+
-+	if (mask & IRQ_MASK_PCI)
-+		return IRQ_PCI;
-+
-+	if (mask & IRQ_MASK_DOORBELLHOST)
-+		return IRQ_DOORBELLHOST;
-+
-+	if (mask & IRQ_MASK_I2OINPOST)
-+		return IRQ_I2OINPOST;
-+
-+	if (mask & IRQ_MASK_TIMER1)
-+		return IRQ_TIMER1;
-+
-+	if (mask & IRQ_MASK_TIMER2)
-+		return IRQ_TIMER2;
-+
-+	if (mask & IRQ_MASK_TIMER3)
-+		return IRQ_TIMER3;
-+
-+	if (mask & IRQ_MASK_UART_TX)
-+		return IRQ_CONTX;
-+
-+	if (mask & IRQ_MASK_PCI_ABORT)
-+		return IRQ_PCI_ABORT;
-+
-+	if (mask & IRQ_MASK_PCI_SERR)
-+		return IRQ_PCI_SERR;
-+
-+	if (mask & IRQ_MASK_DISCARD_TIMER)
-+		return IRQ_DISCARD_TIMER;
-+
-+	if (mask & IRQ_MASK_PCI_DPERR)
-+		return IRQ_PCI_DPERR;
-+
-+	if (mask & IRQ_MASK_PCI_PERR)
-+		return IRQ_PCI_PERR;
-+
-+	return 0;
-+}
-+
-+static void dc21285_handle_irq(struct pt_regs *regs)
-+{
-+	int irq;
-+	do {
-+		irq = dc21285_get_irq();
-+		if (!irq)
-+			break;
-+
-+		generic_handle_irq(irq);
-+	} while (1);
-+}
-+
-+
- unsigned int mem_fclk_21285 = 50000000;
+-#define NR_IRQS			32
++#define NR_IRQS			33
  
- EXPORT_SYMBOL(mem_fclk_21285);
-@@ -108,6 +193,8 @@ static void __init __fb_init_irq(void)
- 
- void __init footbridge_init_irq(void)
+ #endif
+diff --git a/arch/arm/mach-iop32x/irq.c b/arch/arm/mach-iop32x/irq.c
+index 2d48bf1398c1..d1e8824cbd82 100644
+--- a/arch/arm/mach-iop32x/irq.c
++++ b/arch/arm/mach-iop32x/irq.c
+@@ -32,14 +32,14 @@ static void intstr_write(u32 val)
+ static void
+ iop32x_irq_mask(struct irq_data *d)
  {
-+	set_handle_irq(dc21285_handle_irq);
-+
- 	__fb_init_irq();
+-	iop32x_mask &= ~(1 << d->irq);
++	iop32x_mask &= ~(1 << (d->irq - 1));
+ 	intctl_write(iop32x_mask);
+ }
  
- 	if (!footbridge_cfn_mode())
-diff --git a/arch/arm/mach-footbridge/include/mach/entry-macro.S b/arch/arm/mach-footbridge/include/mach/entry-macro.S
-deleted file mode 100644
-index dabbd5c54a78..000000000000
---- a/arch/arm/mach-footbridge/include/mach/entry-macro.S
-+++ /dev/null
-@@ -1,107 +0,0 @@
--/*
-- * arch/arm/mach-footbridge/include/mach/entry-macro.S
-- *
-- * Low-level IRQ helper macros for footbridge-based platforms
-- *
-- * This file is licensed under  the terms of the GNU General Public
-- * License version 2. This program is licensed "as is" without any
-- * warranty of any kind, whether express or implied.
-- */
--#include <mach/hardware.h>
--#include <mach/irqs.h>
--#include <asm/hardware/dec21285.h>
--
--		.equ	dc21285_high, ARMCSR_BASE & 0xff000000
--		.equ	dc21285_low, ARMCSR_BASE & 0x00ffffff
--
--		.macro  get_irqnr_preamble, base, tmp
--		mov	\base, #dc21285_high
--		.if	dc21285_low
--		orr	\base, \base, #dc21285_low
--		.endif
--		.endm
--
--		.macro	get_irqnr_and_base, irqnr, irqstat, base, tmp
--		ldr	\irqstat, [\base, #0x180]	@ get interrupts
--
--		mov	\irqnr, #IRQ_SDRAMPARITY
--		tst	\irqstat, #IRQ_MASK_SDRAMPARITY
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_UART_RX
--		movne	\irqnr, #IRQ_CONRX
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_DMA1
--		movne	\irqnr, #IRQ_DMA1
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_DMA2
--		movne	\irqnr, #IRQ_DMA2
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_IN0
--		movne	\irqnr, #IRQ_IN0
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_IN1
--		movne	\irqnr, #IRQ_IN1
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_IN2
--		movne	\irqnr, #IRQ_IN2
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_IN3
--		movne	\irqnr, #IRQ_IN3
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_PCI
--		movne	\irqnr, #IRQ_PCI
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_DOORBELLHOST
--		movne	\irqnr, #IRQ_DOORBELLHOST
--		bne     1001f
--
--		tst	\irqstat, #IRQ_MASK_I2OINPOST
--		movne	\irqnr, #IRQ_I2OINPOST
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_TIMER1
--		movne	\irqnr, #IRQ_TIMER1
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_TIMER2
--		movne	\irqnr, #IRQ_TIMER2
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_TIMER3
--		movne	\irqnr, #IRQ_TIMER3
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_UART_TX
--		movne	\irqnr, #IRQ_CONTX
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_PCI_ABORT
--		movne	\irqnr, #IRQ_PCI_ABORT
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_PCI_SERR
--		movne	\irqnr, #IRQ_PCI_SERR
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_DISCARD_TIMER
--		movne	\irqnr, #IRQ_DISCARD_TIMER
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_PCI_DPERR
--		movne	\irqnr, #IRQ_PCI_DPERR
--		bne	1001f
--
--		tst	\irqstat, #IRQ_MASK_PCI_PERR
--		movne	\irqnr, #IRQ_PCI_PERR
--1001:
--		.endm
--
+ static void
+ iop32x_irq_unmask(struct irq_data *d)
+ {
+-	iop32x_mask |= 1 << d->irq;
++	iop32x_mask |= 1 << (d->irq - 1);
+ 	intctl_write(iop32x_mask);
+ }
+ 
+@@ -65,7 +65,7 @@ void __init iop32x_init_irq(void)
+ 	    machine_is_em7210())
+ 		*IOP3XX_PCIIRSR = 0x0f;
+ 
+-	for (i = 0; i < NR_IRQS; i++) {
++	for (i = 1; i < NR_IRQS; i++) {
+ 		irq_set_chip_and_handler(i, &ext_chip, handle_level_irq);
+ 		irq_clear_status_flags(i, IRQ_NOREQUEST | IRQ_NOPROBE);
+ 	}
+diff --git a/arch/arm/mach-iop32x/irqs.h b/arch/arm/mach-iop32x/irqs.h
+index 69858e4e905d..e1dfc8b4e7d7 100644
+--- a/arch/arm/mach-iop32x/irqs.h
++++ b/arch/arm/mach-iop32x/irqs.h
+@@ -7,36 +7,40 @@
+ #ifndef __IOP32X_IRQS_H
+ #define __IOP32X_IRQS_H
+ 
++/* Interrupts in Linux start at 1, hardware starts at 0 */
++
++#define IOP_IRQ(x) ((x) + 1)
++
+ /*
+  * IOP80321 chipset interrupts
+  */
+-#define IRQ_IOP32X_DMA0_EOT	0
+-#define IRQ_IOP32X_DMA0_EOC	1
+-#define IRQ_IOP32X_DMA1_EOT	2
+-#define IRQ_IOP32X_DMA1_EOC	3
+-#define IRQ_IOP32X_AA_EOT	6
+-#define IRQ_IOP32X_AA_EOC	7
+-#define IRQ_IOP32X_CORE_PMON	8
+-#define IRQ_IOP32X_TIMER0	9
+-#define IRQ_IOP32X_TIMER1	10
+-#define IRQ_IOP32X_I2C_0	11
+-#define IRQ_IOP32X_I2C_1	12
+-#define IRQ_IOP32X_MESSAGING	13
+-#define IRQ_IOP32X_ATU_BIST	14
+-#define IRQ_IOP32X_PERFMON	15
+-#define IRQ_IOP32X_CORE_PMU	16
+-#define IRQ_IOP32X_BIU_ERR	17
+-#define IRQ_IOP32X_ATU_ERR	18
+-#define IRQ_IOP32X_MCU_ERR	19
+-#define IRQ_IOP32X_DMA0_ERR	20
+-#define IRQ_IOP32X_DMA1_ERR	21
+-#define IRQ_IOP32X_AA_ERR	23
+-#define IRQ_IOP32X_MSG_ERR	24
+-#define IRQ_IOP32X_SSP		25
+-#define IRQ_IOP32X_XINT0	27
+-#define IRQ_IOP32X_XINT1	28
+-#define IRQ_IOP32X_XINT2	29
+-#define IRQ_IOP32X_XINT3	30
+-#define IRQ_IOP32X_HPI		31
++#define IRQ_IOP32X_DMA0_EOT	IOP_IRQ(0)
++#define IRQ_IOP32X_DMA0_EOC	IOP_IRQ(1)
++#define IRQ_IOP32X_DMA1_EOT	IOP_IRQ(2)
++#define IRQ_IOP32X_DMA1_EOC	IOP_IRQ(3)
++#define IRQ_IOP32X_AA_EOT	IOP_IRQ(6)
++#define IRQ_IOP32X_AA_EOC	IOP_IRQ(7)
++#define IRQ_IOP32X_CORE_PMON	IOP_IRQ(8)
++#define IRQ_IOP32X_TIMER0	IOP_IRQ(9)
++#define IRQ_IOP32X_TIMER1	IOP_IRQ(10)
++#define IRQ_IOP32X_I2C_0	IOP_IRQ(11)
++#define IRQ_IOP32X_I2C_1	IOP_IRQ(12)
++#define IRQ_IOP32X_MESSAGING	IOP_IRQ(13)
++#define IRQ_IOP32X_ATU_BIST	IOP_IRQ(14)
++#define IRQ_IOP32X_PERFMON	IOP_IRQ(15)
++#define IRQ_IOP32X_CORE_PMU	IOP_IRQ(16)
++#define IRQ_IOP32X_BIU_ERR	IOP_IRQ(17)
++#define IRQ_IOP32X_ATU_ERR	IOP_IRQ(18)
++#define IRQ_IOP32X_MCU_ERR	IOP_IRQ(19)
++#define IRQ_IOP32X_DMA0_ERR	IOP_IRQ(20)
++#define IRQ_IOP32X_DMA1_ERR	IOP_IRQ(21)
++#define IRQ_IOP32X_AA_ERR	IOP_IRQ(23)
++#define IRQ_IOP32X_MSG_ERR	IOP_IRQ(24)
++#define IRQ_IOP32X_SSP		IOP_IRQ(25)
++#define IRQ_IOP32X_XINT0	IOP_IRQ(27)
++#define IRQ_IOP32X_XINT1	IOP_IRQ(28)
++#define IRQ_IOP32X_XINT2	IOP_IRQ(29)
++#define IRQ_IOP32X_XINT3	IOP_IRQ(30)
++#define IRQ_IOP32X_HPI		IOP_IRQ(31)
+ 
+ #endif
 -- 
 2.30.2
 
