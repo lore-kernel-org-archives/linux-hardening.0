@@ -2,91 +2,100 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 670C6C35270
-	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 21:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9987CC433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 21:58:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235513AbiAXV6N (ORCPT
+        id S1379602AbiAXV6T (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 24 Jan 2022 16:58:13 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:47494 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346686AbiAXVhI (ORCPT
+        Mon, 24 Jan 2022 16:58:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58588 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1457425AbiAXVzF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 Jan 2022 16:37:08 -0500
+        Mon, 24 Jan 2022 16:55:05 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAEBBC07E297;
+        Mon, 24 Jan 2022 12:36:10 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B329AB8105C;
-        Mon, 24 Jan 2022 21:37:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64061C340E8;
-        Mon, 24 Jan 2022 21:37:03 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 78A2A614FF;
+        Mon, 24 Jan 2022 20:36:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15638C340E7;
+        Mon, 24 Jan 2022 20:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643060224;
-        bh=p+HWmAwbx4PM1ahPU6LAvyTqNx07782m8kgyYrwLFT8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=CmipDkkUgY3vXAQnEAtk1lzDgjA15xxFksaITPOHeCfSUazyZtXqWhPOVPaoHLGme
-         nPkaSHZECQ0I9kfxljSD233eNJHIzxq4vLN01DUKt85n245kLxlzz1XxN3spNE6mJo
-         /mRjP4iGQ9Qp5ZgjlDMn2oK5FpQ25JRnsOS6Wbw+RHmiWRNXdu4X8kZoNWvlwp+ZWK
-         xsQEG0KA1E/Cmxdkp+xGLzsKh1ymkmHXbiGGlqIybuXExQ69xNuLOweAyaJP7zSsRh
-         6AGgKLdcZ36JOxVtxGiGwBZdi392cAKlYhgAtYVQQMtlW8NkepvPipzANj8R7L5LY1
-         Xc4wbV2+Mvk5w==
-Date:   Mon, 24 Jan 2022 15:43:47 -0600
+        s=k20201202; t=1643056569;
+        bh=N6HkrGlOPhp/lfQrBU6OuWeAmsz4cFxje4P56uyHS08=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tMvS0u9vqPHiJmamtWo2hxIfeAM+s7Ecv0ZmZJ0nQZ3D9W1YwYkePQzqZdW43jJC/
+         pfn1HewwRr0fGJ+xwd5Szt17yDi6vy2vdgPuuIuDHKlaCZuIULmPqLbZn9cVnX2nzn
+         AtH4RV7t+kJEaz7frVA2Aebsq/f/78dU+4jAly/NqVY6WvAUtuMyruYuYh2yF/EwF4
+         nhXr1MwoYKa6iexDzDGY+fGXeEWHH1cVD03wqebpbpxEwrgzZAcxu4mUZBDTrdMb4K
+         albBIx6R0f/tPjsk7yittG9m7wqN75cGDYd3L2DxSO/JotyKF7DmJsKKXj/81iMtvq
+         fD0RpJx+KWiuQ==
+Date:   Mon, 24 Jan 2022 14:42:53 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] net: mana: Use struct_size() helper in
- mana_gd_create_dma_region()
-Message-ID: <20220124214347.GA24709@embeddedor>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Johan Hovold <johan@kernel.org>,
+        Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] staging: greybus: i2c: Use struct_size() helper in
+ gb_i2c_operation_create()
+Message-ID: <20220124204253.GA11735@embeddedor>
+References: <20220121222250.GA73021@embeddedor>
+ <202201241213.82E7D9F598@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <202201241213.82E7D9F598@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version,
-in order to avoid any potential type mistakes or integer overflows that,
-in the worst scenario, could lead to heap overflows.
+On Mon, Jan 24, 2022 at 12:19:03PM -0800, Kees Cook wrote:
+> On Fri, Jan 21, 2022 at 04:22:50PM -0600, Gustavo A. R. Silva wrote:
+> > Make use of the struct_size() helper instead of an open-coded version,
+> > in order to avoid any potential type mistakes or integer overflows that,
+> > in the worst scenario, could lead to heap overflows.
+> > 
+> > Also, address the following sparse warnings:
+> > drivers/staging/greybus/i2c.c:111:24: warning: using sizeof on a flexible structure
+> > 
+> > Link: https://github.com/KSPP/linux/issues/174
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > ---
+> >  drivers/staging/greybus/i2c.c | 4 +---
+> >  1 file changed, 1 insertion(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/staging/greybus/i2c.c b/drivers/staging/greybus/i2c.c
+> > index de2f6516da09..9dfc6791c20e 100644
+> > --- a/drivers/staging/greybus/i2c.c
+> > +++ b/drivers/staging/greybus/i2c.c
+> > @@ -108,9 +108,7 @@ gb_i2c_operation_create(struct gb_connection *connection,
+> >  		else
+> >  			data_out_size += (u32)msg->len;
+> >  
+> > -	request_size = sizeof(*request);
+> > -	request_size += msg_count * sizeof(*op);
+> > -	request_size += data_out_size;
+> > +	request_size = struct_size(request, ops, msg_count) + data_out_size;
+> 
+> This could still overflow if struct_size() returns SIZE_MAX. Perhaps:
 
-Also, address the following sparse warnings:
-drivers/net/ethernet/microsoft/mana/gdma_main.c:677:24: warning: using sizeof on a flexible structure
+uggh... I got too excited with all the new cases reported. 
+> 
+> 	if (check_add_overflow(struct_size(request, ops, msg_count),
+> 			       data_out_size, &request_size))
+> 		request_size = SIZE_MAX;
 
-Link: https://github.com/KSPP/linux/issues/174
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/ethernet/microsoft/mana/gdma_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Yep; I'll respin and include this change, thanks!
+> 
+> I should brush off the saturating arithmetic helpers series:
+> https://lore.kernel.org/all/20210920180853.1825195-1-keescook@chromium.org/
 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 636dfef24a6c..49b85ca578b0 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -663,7 +663,7 @@ static int mana_gd_create_dma_region(struct gdma_dev *gd,
- 	struct gdma_context *gc = gd->gdma_context;
- 	struct hw_channel_context *hwc;
- 	u32 length = gmi->length;
--	u32 req_msg_size;
-+	size_t req_msg_size;
- 	int err;
- 	int i;
- 
-@@ -674,7 +674,7 @@ static int mana_gd_create_dma_region(struct gdma_dev *gd,
- 		return -EINVAL;
- 
- 	hwc = gc->hwc.driver_data;
--	req_msg_size = sizeof(*req) + num_page * sizeof(u64);
-+	req_msg_size = struct_size(req, page_addr_list, num_page);
- 	if (req_msg_size > hwc->max_req_msg_size)
- 		return -EINVAL;
- 
--- 
-2.27.0
+Yeah; those helpers are very much needed in many places we need to audit...
 
+--
+Gustavo
