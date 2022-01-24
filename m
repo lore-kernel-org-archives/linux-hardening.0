@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE257C4332F
-	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 17:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44470C433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jan 2022 17:49:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244403AbiAXRtb (ORCPT
+        id S241396AbiAXRti (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 24 Jan 2022 12:49:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56630 "EHLO
+        Mon, 24 Jan 2022 12:49:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244383AbiAXRtb (ORCPT
+        with ESMTP id S244765AbiAXRtg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 Jan 2022 12:49:31 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDEA8C06173B
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 09:49:30 -0800 (PST)
+        Mon, 24 Jan 2022 12:49:36 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C550BC06173B
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 09:49:35 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8A97460FDB
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 17:49:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2930CC340E8;
-        Mon, 24 Jan 2022 17:49:26 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8E49CB811B1
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 17:49:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71116C340EA;
+        Mon, 24 Jan 2022 17:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643046570;
-        bh=E6GmgEOc+vQafTW9XEhCWB4pMdBWsplIssEM1Ai0U3c=;
+        s=k20201202; t=1643046573;
+        bh=+pQufvmuN+DCXpLjIRbTCfkOyyA2xiTpUnjNr7Ivoi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H89+2sb18ngW36M/WDIkM/ybOiSCbRo7tNjmk9jLk/UXVn4MDvhJE+u9OzpMpTXuH
-         5xY3T6/lv/PXVbHI9L2mOOv6IOrt1UIPYOZzzm3nO8Ak56Ll3Ybm7anKizNwDjXxvG
-         Fpive1QuOZLdF+EKOK56ztIO0z/B0mdkgWpluHHmvWOM/Y2s8Vdag/MppOEqlHjXXy
-         /3H+yXhe/s6GZj8jGBNcuaex2RwggFy2764z6S/Ck6lI6ZkMQZD9ma+hdLvaO1UPq9
-         kOToJLQzsXoTvaJWgkuUKITTTgS/6hiZXaiIYYxbjdwp4Ewe8UdcY92UwvgdwTt8dm
-         ZJiPYpK7ivIQw==
+        b=WNC2WlvY8UnzKemIy7LWXbEHs8Z7HSH0HKQYDmIDyrkbdVf11ZEKcsize7uRhtQGf
+         peF32BcCsOtx4+iDZxppY88GES7DnAzO8TPywGvAyeDgptZtGEIgVR+Df05NDdx7EJ
+         2XjYgbAzAItdawO6VCbeUm7YuLADEMoZaHcIcTDmh+KLCufz6t24C9vhf4/Y6zPTRU
+         LElRSoBx6+mHo2BspZHPsdX3UxDXqxqwuETdRGDys1aVyceYVZ2A84WnQma44B0eqq
+         QHfwZRlV8CxdZCoerSk+d2sO8JJx21b+usymv3dkIpDPdrsmNSqt7y33Bc1T7XBboO
+         YqvisY3D3FeQA==
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org
 Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
@@ -46,100 +46,89 @@ Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
         Marc Zyngier <maz@kernel.org>,
         Vladimir Murzin <vladimir.murzin@arm.com>,
         Jesse Taube <mr.bossman075@gmail.com>
-Subject: [PATCH v5 29/32] ARM: entry: rework stack realignment code in svc_entry
-Date:   Mon, 24 Jan 2022 18:47:41 +0100
-Message-Id: <20220124174744.1054712-30-ardb@kernel.org>
+Subject: [PATCH v5 30/32] ARM: switch_to: clean up Thumb2 code path
+Date:   Mon, 24 Jan 2022 18:47:42 +0100
+Message-Id: <20220124174744.1054712-31-ardb@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220124174744.1054712-1-ardb@kernel.org>
 References: <20220124174744.1054712-1-ardb@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3424; h=from:subject; bh=E6GmgEOc+vQafTW9XEhCWB4pMdBWsplIssEM1Ai0U3c=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBh7uY5RDYWgucV+8Glqrn8Wi0LCwplEl4eTtkjLHN4 JrB3C2eJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYe7mOQAKCRDDTyI5ktmPJOQhC/ wK6kHr+LrcKAbaF+Su+9znZGr/TaIYvbUT1J1MHKLUOTKj9NpRaLAdRFga1Wj4Afxf4Jdkci0VgGaI PCtAUITVecptOShKWXtzRwO7ghWF/DOO4rzOa+XCwpVWJuqEvsR1ljYXEyl9tSK2fbrOe0vbB19N1m ZG4M9JmYC4/m05BP9pksQS5B0VCV1x5wgv1aacaeEZKyY4BYJA/W/d28D/rtg0I2vWR40uihRHFR+f P4Gd0g1+zPECoANL+PlYuYvS7QA4gYHNB36E+Z1g79FHAfHaicFYGveIeziE1OSK2nKI9g724SLSj9 skdFmP8RKmpr94E8hAmKptK4AF/HcPMb1Rj2UAXM23y7IT7odTERSmr/aYdS2s6tuD1x7OC3j1fknj 14qDQnmooW7nBDuLjGtJi74qcztLapMTOIQncTZ9RbzydvnlIQT03I9UihZg5QZNFGzCoHlnWquyqA C3dtjgxzmRPwacc5jmwMfOVZAD9BN8dodbxTh3o6X1hHE=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2594; h=from:subject; bh=+pQufvmuN+DCXpLjIRbTCfkOyyA2xiTpUnjNr7Ivoi8=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBh7uY7MBmcoyuFXL9bDPe0NTsfpZSWvkHt5AlfuZ9d huKQsieJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYe7mOwAKCRDDTyI5ktmPJLBBC/ 0QLzsXlHtFMVjLGgsO74jLKztyCpjEDt3dcnYOT4F3sBBvhatgBAFvsMdO7Za9qQ0FOYmIqdN6lJ1x 6rQsuSMvDIXerwAUfuWLqGmVio3a2LtTbZ5zTrYr7QCbvQ1xMZAn5wRV8qBqY9Gre7ZlKRmbjcYbkX PptLuPrd6gVBpeMIBHXd8TT9Em0oZPQqDsUUtDqSlEb3/5nF+vuSXbyKuLcZ0K4iuRmZNo3xX5L7rZ t5TfZmpuHNud8b8TyNMHs0jlfI+WoZI0zwHkfZaqOO5yESfSQWLyos6QvSJk3mSJ0RLKvN1IDDxar2 GIV2qLc4LhndrH6+xAovQBISv++pLDKQYM7si2NywvXS6Ox4ZQ6l832vuohTRo7pT700nzXqIwIQov CC9UwVc6itBnM+L5C93Oe07nsy2dgsFYWH5wcQNMqz3l4UzhmRu81//rOQIZKgu/3BTPrNPEsvo0Cv XUsxHMKItLjst5m8z+ZRXniC9Z6GZC+nQ3bVKeXedjALw=
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The original Thumb-2 enablement patches updated the stack realignment
-code in svc_entry to work around the lack of a STMIB instruction in
-Thumb-2, by subtracting 4 from the frame size, inverting the sense of
-the misaligment check, and changing to a STMIA instruction and a final
-stack push of a 4 byte quantity that results in the stack becoming
-aligned at the end of the sequence. It also pushes and pops R0 to the
-stack in order to have a temp register that Thumb-2 allows in general
-purpose ALU instructions, as TST using SP is not permitted.
+The load/store-multiple instructions that essentially perform the
+switch_to operation in ARM mode, by loading/storing all callee save
+registers as well the stack pointer and the link register or program
+counter, is split into 3 separate loads or stores for Thumb-2, with the
+IP register used as a temporary to capture the target address.
 
-Both are a bit problematic for vmap'ed stacks, as using the stack is
-only permitted after we decide that we did not overflow the stack, or
-have already switched to the overflow stack.
+We can clean this up a bit, by sticking with a single STMIA or LDMIA
+instruction, but one that uses IP instead of SP.
 
-As for the alignment check: the current approach creates a corner case
-where, if the initial SUB of SP ends up right at the start of the stack,
-we will end up subtracting another 8 bytes and overflowing it.  This
-means we would need to add the overflow check *after* the SUB that
-deliberately misaligns the stack. However, this would require us to keep
-local state (i.e., whether we performed the subtract or not) across the
-overflow check, but without any GPRs or stack available.
+While at it, switch to a MOVW/MOVT pair to load thread_notify_head.
 
-So let's switch to an approach where we don't use the stack, and where
-the alignment check of the stack pointer occurs in the usual way, as
-this is guaranteed not to result in overflow. This means we will be able
-to do the overflow check first.
-
-While at it, switch to R1 so the mode stack pointer in R0 remains
-accessible.
-
-Acked-by: Nicolas Pitre <nico@fluxnic.net>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Tested-by: Marc Zyngier <maz@kernel.org>
-Tested-by: Vladimir Murzin <vladimir.murzin@arm.com> # ARMv7M
 ---
- arch/arm/kernel/entry-armv.S | 25 +++++++++++---------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ arch/arm/kernel/entry-armv.S | 24 +++++++++++---------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
 diff --git a/arch/arm/kernel/entry-armv.S b/arch/arm/kernel/entry-armv.S
-index 38e3978a50a9..a4009e4302bb 100644
+index a4009e4302bb..86be80159c14 100644
 --- a/arch/arm/kernel/entry-armv.S
 +++ b/arch/arm/kernel/entry-armv.S
-@@ -177,24 +177,27 @@ ENDPROC(__und_invalid)
- 	.macro	svc_entry, stack_hole=0, trace=1, uaccess=1
-  UNWIND(.fnstart		)
-  UNWIND(.save {r0 - pc}		)
--	sub	sp, sp, #(SVC_REGS_SIZE + \stack_hole - 4)
-+	sub	sp, sp, #(SVC_REGS_SIZE + \stack_hole)
- #ifdef CONFIG_THUMB2_KERNEL
-- SPFIX(	str	r0, [sp]	)	@ temporarily saved
-- SPFIX(	mov	r0, sp		)
-- SPFIX(	tst	r0, #4		)	@ test original stack alignment
-- SPFIX(	ldr	r0, [sp]	)	@ restored
-+	add	sp, r1			@ get SP in a GPR without
-+	sub	r1, sp, r1		@ using a temp register
-+	tst	r1, #4			@ test stack pointer alignment
-+	sub	r1, sp, r1		@ restore original R1
-+	sub	sp, r1			@ restore original SP
- #else
-  SPFIX(	tst	sp, #4		)
+@@ -773,14 +773,14 @@ ENDPROC(__fiq_usr)
+  * r0 = previous task_struct, r1 = previous thread_info, r2 = next thread_info
+  * previous and next are guaranteed not to be the same.
+  */
++	.align	5
+ ENTRY(__switch_to)
+  UNWIND(.fnstart	)
+  UNWIND(.cantunwind	)
+-	add	ip, r1, #TI_CPU_SAVE
+- ARM(	stmia	ip!, {r4 - sl, fp, sp, lr} )	@ Store most regs on stack
+- THUMB(	stmia	ip!, {r4 - sl, fp}	   )	@ Store most regs on stack
+- THUMB(	str	sp, [ip], #4		   )
+- THUMB(	str	lr, [ip], #4		   )
++	add	r3, r1, #TI_CPU_SAVE
++ ARM(	stmia	r3, {r4 - sl, fp, sp, lr}  )	@ Store most regs on stack
++ THUMB( mov	ip, sp			   )
++ THUMB( stmia	r3, {r4 - sl, fp, ip, lr}  )	@ Thumb2 does not permit SP here
+ 	ldr	r4, [r2, #TI_TP_VALUE]
+ 	ldr	r5, [r2, #TI_TP_VALUE + 4]
+ #ifdef CONFIG_CPU_USE_DOMAINS
+@@ -805,20 +805,22 @@ ENTRY(__switch_to)
  #endif
-- SPFIX(	subeq	sp, sp, #4	)
--	stmia	sp, {r1 - r12}
-+ SPFIX(	subne	sp, sp, #4	)
-+
-+ ARM(	stmib	sp, {r1 - r12}	)
-+ THUMB(	stmia	sp, {r0 - r12}	)	@ No STMIB in Thumb-2
+ 	mov	r5, r0
+ 	add	r4, r2, #TI_CPU_SAVE
+-	ldr	r0, =thread_notify_head
++	mov_l	r0, thread_notify_head
+ 	mov	r1, #THREAD_NOTIFY_SWITCH
+ 	bl	atomic_notifier_call_chain
+ #if defined(CONFIG_STACKPROTECTOR) && !defined(CONFIG_SMP) && \
+     !defined(CONFIG_STACKPROTECTOR_PER_TASK)
+ 	str	r9, [r8]
+ #endif
+- THUMB(	mov	ip, r4			   )
+ 	mov	r0, r5
+ 	set_current r7, r8
+- ARM(	ldmia	r4, {r4 - sl, fp, sp, pc}  )	@ Load all regs saved previously
+- THUMB(	ldmia	ip!, {r4 - sl, fp}	   )	@ Load all regs saved previously
+- THUMB(	ldr	sp, [ip], #4		   )
+- THUMB(	ldr	pc, [ip]		   )
++#if !defined(CONFIG_THUMB2_KERNEL)
++	ldmia	r4, {r4 - sl, fp, sp, pc}	@ Load all regs saved previously
++#else
++	ldmia	r4, {r4 - sl, fp, ip, lr}	@ Thumb2 does not permit SP here
++	mov	sp, ip
++	ret	lr
++#endif
+  UNWIND(.fnend		)
+ ENDPROC(__switch_to)
  
- 	ldmia	r0, {r3 - r5}
--	add	r7, sp, #S_SP - 4	@ here for interlock avoidance
-+	add	r7, sp, #S_SP		@ here for interlock avoidance
- 	mov	r6, #-1			@  ""  ""      ""       ""
--	add	r2, sp, #(SVC_REGS_SIZE + \stack_hole - 4)
-- SPFIX(	addeq	r2, r2, #4	)
--	str	r3, [sp, #-4]!		@ save the "real" r0 copied
-+	add	r2, sp, #(SVC_REGS_SIZE + \stack_hole)
-+ SPFIX(	addne	r2, r2, #4	)
-+	str	r3, [sp]		@ save the "real" r0 copied
- 					@ from the exception stack
- 
- 	mov	r3, lr
 -- 
 2.30.2
 
