@@ -2,34 +2,34 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE24EC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 09:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC93C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 09:27:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1455514AbiAYJ1G (ORCPT
+        id S1457384AbiAYJ1Q (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Jan 2022 04:27:06 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:48984 "EHLO
+        Tue, 25 Jan 2022 04:27:16 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:49020 "EHLO
         dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1457397AbiAYJPM (ORCPT
+        with ESMTP id S1457403AbiAYJPM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Tue, 25 Jan 2022 04:15:12 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E57B961520
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Jan 2022 09:15:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42D4AC340EB;
-        Tue, 25 Jan 2022 09:15:05 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 73E1D6151D
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Jan 2022 09:15:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C675DC340E6;
+        Tue, 25 Jan 2022 09:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643102107;
-        bh=7HlVD05SkXizpl7tEfj25ZvyZuQshFuhgIjqL7v4bgc=;
+        s=k20201202; t=1643102109;
+        bh=S3pwYCt2gSUeW+29vY6nfD17RKQePaxvX9y2g6JFmnA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KC02KkW2t1QVoqzIjpk6i6V6ybXuk2dJL+lVlysPSQ5Ap3/Q/Fp/YdA7mw9btVkf7
-         8/CY17REUXSq8HtG9vPu8RMX2FpeLhJSBfTzdIaPIBLRMsjkiMp3YCaRCbPooG5CEf
-         eaRZZnOyz23XbT9qqDj7wi8pMUvz7/dRe7HFIQV/AUp1y7KU6jj1fQLmHop8vrpwNH
-         0G9wqmu9aPc2mXsqRpPf8fg2QimQ1c3jxST42U2oIF8bDYqv3qxPYPwBVJdUQnfTAT
-         0K6UGHBvuuHEDSkmxF59nekz9fXI6xR7YAWh9P42tutmp9b6h8/Kyp4VURR9YmvY9v
-         VQO6hwVnz8dDg==
+        b=eh6q96gqh3K5giFBqlNOFbHMwajihgn+8h+EF9uz+zwjRzXHjSiLYgfODCqu8CZVg
+         xqNESrMoPNaRV9BHU4HH72R1ejlD14BF5ugMSyRtLCuaidCjuCNil0CZCtcLzmDts5
+         745YhE7nrd44JSAzKbwTH6oR1UCGliGTwt+8YOkXxxO85ksFNZGsc21mDtmKOiHANE
+         j+qmHMitrf0GAf/OBgbsyltSMFS0m9rNAq3MsZerWPQO5Xv6L7cW6aXdmA95HhWp9e
+         /2fSLVWWqPvDNvdUOj6u8YjMJt6Vfd6VSRJhymb4l295GbLWTd5xXM02V8Q8qGagr3
+         aaW+r75YhVkKw==
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org
 Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
@@ -39,181 +39,140 @@ Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Marc Zyngier <maz@kernel.org>
-Subject: [PATCH v6 2/8] ARM: assembler: define a Kconfig symbol for group relocation support
-Date:   Tue, 25 Jan 2022 10:14:47 +0100
-Message-Id: <20220125091453.1475246-3-ardb@kernel.org>
+Subject: [PATCH v6 3/8] ARM: smp: elide HWCAP_TLS checks or __entry_task updates on SMP+v6
+Date:   Tue, 25 Jan 2022 10:14:48 +0100
+Message-Id: <20220125091453.1475246-4-ardb@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220125091453.1475246-1-ardb@kernel.org>
 References: <20220125091453.1475246-1-ardb@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6264; h=from:subject; bh=7HlVD05SkXizpl7tEfj25ZvyZuQshFuhgIjqL7v4bgc=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBh77+A9sMUYkRtcYQMDCDYTp3v6UAQfQG1Xe70vKp8 hEtiV4CJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYe+/gAAKCRDDTyI5ktmPJFbEC/ 4k1EsmzMc66Pc4yPvJaGOqqSL5TobZz/8CrobbYE3fgN+0/cK4SLF0o+PjUetSKpSt7gUFYli0MI1I exl+4dOFkiB8EKPiYwdSGu8xsnHo9XowPZZvXi0xfBNGW2xXtmOkIVllIntMCva9hPDL63uwbTKkz+ lTZrRHRBccHEsfQLK1lqepSBXIoQCA7gNdsvVjHBCLv13O7TSYml7Q67o6LCQEx83dcPpZ15tK9QwG rxiN9U4n9WcYxhOAFpUpz33Mq/mmO1387PSRR+TXqwdVC0jnG2jQm7avdyD+Yt936jolOtXEuFzUum KplkFrRFbIpKVeruNneASSWrjRJ7tbsOB1kFhkApOsmPwFe+bzBgzdPKWuJ0ZcOzn+wZHqGaokop9i zdu6DbYh+uG+MizsGTXDI6wHTzXO5MLERfu+ofSJR0O0NGojCWml6iiI3waxzkyi4Aw6F8JSAGTyhY Glbq0hxyIU2DChPeBYxUNjbTEIpEM1lRHcCwdJDWrUTnk=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4014; h=from:subject; bh=S3pwYCt2gSUeW+29vY6nfD17RKQePaxvX9y2g6JFmnA=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBh77+Cxdx7lEyA/ZN3qwguA6+yWbFjqZiykNHtkO4u YjWO+a+JAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYe+/ggAKCRDDTyI5ktmPJLh4DA CoXxEfTwJoCboPeMXM3u9sMH3RUogpUz3vXIK86H6ZFzXqEmXQEVPAU1+WJ+6v6CLijNyjL7gPRcP6 P5C1nrrsOUzHFqISLATNTJG9U0fkgy7qT3zfrurjsqbcZq1JwO/lkiyeOSLX6cmHrRSE3AdMvoy0Zd PZwDXgUaf+QfiEv0GYV0D+9bln0yg0+/26GdV0pgoMabfRXm4eZlgZJmzuQhWvn0LkQSe0Z7poOgaX Tre3KHE+Ejs6EhQVkZNszhjgDw/FHHXGxM/JuBc39IdUYgyRDYxOzKzE/sQjvyDnlB9XnKSwSKbGx6 dAXtPc0BnYixQlA06tOF1Uxd5PBTRxHjpyCBZPgT/xQD2eY2Wtx1U0auML3iuOsNL85T5g1y82Dw68 CGqiy2xQvyu9Uf6d717RXYbjLaWXWxZ8I3OzI8Q8d8wp+1bLO3HcnRz9P7IEJwD7GTuNsL1KleSXuz e4J1vqWXGyZU9PzZqU6FFEPxyr/0+UW2COPZ0uPybmBmI=
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Nathan reports the group relocations go out of range in pathological
-cases such as allyesconfig kernels, which have little chance of actually
-booting but are still used in validation.
+Use the SMP_ON_UP patching framework to elide HWCAP_TLS tests from the
+context switch and return to userspace code paths, as SMP systems are
+guaranteed to have this h/w capability.
 
-So add a Kconfig symbol for this feature, and make it depend on
-!COMPILE_TEST.
+At the same time, omit the update of __entry_task if the system is
+detected to be UP at runtime, as in that case, the value is never used.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/arm/Kconfig                 | 13 ++++++++++++-
- arch/arm/include/asm/assembler.h |  8 ++++----
- arch/arm/include/asm/current.h   |  8 ++++----
- arch/arm/include/asm/percpu.h    |  4 ++--
- arch/arm/kernel/module.c         |  7 ++++++-
- 5 files changed, 28 insertions(+), 12 deletions(-)
+ arch/arm/include/asm/switch_to.h |  4 ++--
+ arch/arm/include/asm/tls.h       | 22 ++++++++++++++------
+ arch/arm/kernel/entry-header.S   | 17 +++++++--------
+ 3 files changed, 25 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 359a3b85c8b3..70ab8d807032 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -128,7 +128,7 @@ config ARM
- 	select RTC_LIB
- 	select SYS_SUPPORTS_APM_EMULATION
- 	select THREAD_INFO_IN_TASK
--	select HAVE_ARCH_VMAP_STACK if MMU && (!LD_IS_LLD || LLD_VERSION >= 140000)
-+	select HAVE_ARCH_VMAP_STACK if MMU && ARM_HAS_GROUP_RELOCS
- 	select TRACE_IRQFLAGS_SUPPORT if !CPU_V7M
- 	# Above selects are sorted alphabetically; please add new ones
- 	# according to that.  Thanks.
-@@ -140,6 +140,17 @@ config ARM
- 	  Europe.  There is an ARM Linux project with a web page at
- 	  <http://www.arm.linux.org.uk/>.
+diff --git a/arch/arm/include/asm/switch_to.h b/arch/arm/include/asm/switch_to.h
+index a482c99934ff..f67ae946a3c6 100644
+--- a/arch/arm/include/asm/switch_to.h
++++ b/arch/arm/include/asm/switch_to.h
+@@ -3,6 +3,7 @@
+ #define __ASM_ARM_SWITCH_TO_H
  
-+config ARM_HAS_GROUP_RELOCS
-+	def_bool y
-+	depends on !LD_IS_LLD || LLD_VERSION >= 140000
-+	depends on !COMPILE_TEST
-+	help
-+	  Whether or not to use R_ARM_ALU_PC_Gn or R_ARM_LDR_PC_Gn group
-+	  relocations, which have been around for a long time, but were not
-+	  supported in LLD until version 14. The combined range is -/+ 256 MiB,
-+	  which is usually sufficient, but not for allyesconfig, so we disable
-+	  this feature when doing compile testing.
-+
- config ARM_HAS_SG_CHAIN
- 	bool
+ #include <linux/thread_info.h>
++#include <asm/smp_plat.h>
  
-diff --git a/arch/arm/include/asm/assembler.h b/arch/arm/include/asm/assembler.h
-index 59d7b9e81934..9998718a49ca 100644
---- a/arch/arm/include/asm/assembler.h
-+++ b/arch/arm/include/asm/assembler.h
-@@ -656,8 +656,8 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
- 
- 	.macro		__ldst_va, op, reg, tmp, sym, cond
- #if __LINUX_ARM_ARCH__ >= 7 || \
--    (defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS)) || \
--    (defined(CONFIG_LD_IS_LLD) && CONFIG_LLD_VERSION < 140000)
-+    !defined(CONFIG_ARM_HAS_GROUP_RELOCS) || \
-+    (defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS))
- 	mov_l		\tmp, \sym, \cond
- 	\op\cond	\reg, [\tmp]
- #else
-@@ -716,8 +716,8 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
- 	 */
- 	.macro		ldr_this_cpu, rd:req, sym:req, t1:req, t2:req
- #if __LINUX_ARM_ARCH__ >= 7 || \
--    (defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS)) || \
--    (defined(CONFIG_LD_IS_LLD) && CONFIG_LLD_VERSION < 140000)
-+    !defined(CONFIG_ARM_HAS_GROUP_RELOCS) || \
-+    (defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS))
- 	this_cpu_offset	\t1
- 	mov_l		\t2, \sym
- 	ldr		\rd, [\t1, \t2]
-diff --git a/arch/arm/include/asm/current.h b/arch/arm/include/asm/current.h
-index 2f9d79214b25..131a89bbec6b 100644
---- a/arch/arm/include/asm/current.h
-+++ b/arch/arm/include/asm/current.h
-@@ -37,8 +37,8 @@ static inline __attribute_const__ struct task_struct *get_current(void)
- #ifdef CONFIG_CPU_V6
- 	    "1:							\n\t"
- 	    "	.subsection 1					\n\t"
--#if !(defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS)) && \
--    !(defined(CONFIG_LD_IS_LLD) && CONFIG_LLD_VERSION < 140000)
-+#if defined(CONFIG_ARM_HAS_GROUP_RELOCS) && \
-+    !(defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS))
- 	    "2: " LOAD_SYM_ARMV6(%0, __current) "		\n\t"
- 	    "	b	1b					\n\t"
- #else
-@@ -55,8 +55,8 @@ static inline __attribute_const__ struct task_struct *get_current(void)
- #endif
- 	    : "=r"(cur));
- #elif __LINUX_ARM_ARCH__>= 7 || \
--      (defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS)) || \
--      (defined(CONFIG_LD_IS_LLD) && CONFIG_LLD_VERSION < 140000)
-+      !defined(CONFIG_ARM_HAS_GROUP_RELOCS) || \
-+      (defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS))
- 	cur = __current;
- #else
- 	asm(LOAD_SYM_ARMV6(%0, __current) : "=r"(cur));
-diff --git a/arch/arm/include/asm/percpu.h b/arch/arm/include/asm/percpu.h
-index 28961d60877d..a09034ae45a1 100644
---- a/arch/arm/include/asm/percpu.h
-+++ b/arch/arm/include/asm/percpu.h
-@@ -38,8 +38,8 @@ static inline unsigned long __my_cpu_offset(void)
- #ifdef CONFIG_CPU_V6
- 	    "1:							\n\t"
- 	    "	.subsection 1					\n\t"
--#if !(defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS)) && \
--    !(defined(CONFIG_LD_IS_LLD) && CONFIG_LLD_VERSION < 140000)
-+#if defined(CONFIG_ARM_HAS_GROUP_RELOCS) && \
-+    !(defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS))
- 	    "2: " LOAD_SYM_ARMV6(%0, __per_cpu_offset) "	\n\t"
- 	    "	b	1b					\n\t"
- #else
-diff --git a/arch/arm/kernel/module.c b/arch/arm/kernel/module.c
-index 4d33a7acf617..549abcedf795 100644
---- a/arch/arm/kernel/module.c
-+++ b/arch/arm/kernel/module.c
-@@ -68,6 +68,7 @@ bool module_exit_section(const char *name)
- 		strstarts(name, ".ARM.exidx.exit");
- }
- 
-+#ifdef CONFIG_ARM_HAS_GROUP_RELOCS
  /*
-  * This implements the partitioning algorithm for group relocations as
-  * documented in the ARM AArch32 ELF psABI (IHI 0044).
-@@ -103,6 +104,7 @@ static u32 get_group_rem(u32 group, u32 *offset)
- 	} while (group--);
- 	return shift;
- }
-+#endif
+  * For v7 SMP cores running a preemptible kernel we may be pre-empted
+@@ -40,8 +41,7 @@ static inline void set_ti_cpu(struct task_struct *p)
+ do {									\
+ 	__complete_pending_tlbi();					\
+ 	set_ti_cpu(next);						\
+-	if (IS_ENABLED(CONFIG_CURRENT_POINTER_IN_TPIDRURO) ||		\
+-	    IS_ENABLED(CONFIG_SMP))					\
++	if (IS_ENABLED(CONFIG_CURRENT_POINTER_IN_TPIDRURO) || is_smp())	\
+ 		__this_cpu_write(__entry_task, next);			\
+ 	last = __switch_to(prev,task_thread_info(prev), task_thread_info(next));	\
+ } while (0)
+diff --git a/arch/arm/include/asm/tls.h b/arch/arm/include/asm/tls.h
+index d712c170c095..3dcd0f71a0da 100644
+--- a/arch/arm/include/asm/tls.h
++++ b/arch/arm/include/asm/tls.h
+@@ -18,22 +18,32 @@
+ 	.endm
  
- int
- apply_relocate(Elf32_Shdr *sechdrs, const char *strtab, unsigned int symindex,
-@@ -118,7 +120,9 @@ apply_relocate(Elf32_Shdr *sechdrs, const char *strtab, unsigned int symindex,
- 		unsigned long loc;
- 		Elf32_Sym *sym;
- 		const char *symname;
-+#ifdef CONFIG_ARM_HAS_GROUP_RELOCS
- 		u32 shift, group = 1;
+ 	.macro switch_tls_v6, base, tp, tpuser, tmp1, tmp2
++#ifdef CONFIG_SMP
++ALT_SMP(nop)
++ALT_UP_B(.L0_\@)
++	.subsection 1
 +#endif
- 		s32 offset;
- 		u32 tmp;
- #ifdef CONFIG_THUMB2_KERNEL
-@@ -249,6 +253,7 @@ apply_relocate(Elf32_Shdr *sechdrs, const char *strtab, unsigned int symindex,
- 			*(u32 *)loc = __opcode_to_mem_arm(tmp);
- 			break;
++.L0_\@:
+ 	ldr_va	\tmp1, elf_hwcap
+ 	mov	\tmp2, #0xffff0fff
+ 	tst	\tmp1, #HWCAP_TLS		@ hardware TLS available?
+ 	streq	\tp, [\tmp2, #-15]		@ set TLS value at 0xffff0ff0
+-	mrcne	p15, 0, \tmp2, c13, c0, 2	@ get the user r/w register
+-#ifndef CONFIG_SMP
+-	mcrne	p15, 0, \tp, c13, c0, 3		@ yes, set TLS register
++	beq	.L2_\@
++	mcr	p15, 0, \tp, c13, c0, 3		@ yes, set TLS register
++#ifdef CONFIG_SMP
++	b	.L1_\@
++	.previous
+ #endif
+-	mcrne	p15, 0, \tpuser, c13, c0, 2	@ set user r/w register
+-	strne	\tmp2, [\base, #TI_TP_VALUE + 4] @ save it
++.L1_\@: switch_tls_v6k \base, \tp, \tpuser, \tmp1, \tmp2
++.L2_\@:
+ 	.endm
  
-+#ifdef CONFIG_ARM_HAS_GROUP_RELOCS
- 		case R_ARM_ALU_PC_G0_NC:
- 			group = 0;
- 			fallthrough;
-@@ -296,7 +301,7 @@ apply_relocate(Elf32_Shdr *sechdrs, const char *strtab, unsigned int symindex,
- 			}
- 			*(u32 *)loc = __opcode_to_mem_arm((tmp & ~0xfff) | offset);
- 			break;
--
-+#endif
- #ifdef CONFIG_THUMB2_KERNEL
- 		case R_ARM_THM_CALL:
- 		case R_ARM_THM_JUMP24:
+ 	.macro switch_tls_software, base, tp, tpuser, tmp1, tmp2
+ 	mov	\tmp1, #0xffff0fff
+ 	str	\tp, [\tmp1, #-15]		@ set TLS value at 0xffff0ff0
+ 	.endm
++#else
++#include <asm/smp_plat.h>
+ #endif
+ 
+ #ifdef CONFIG_TLS_REG_EMUL
+@@ -44,7 +54,7 @@
+ #elif defined(CONFIG_CPU_V6)
+ #define tls_emu		0
+ #define has_tls_reg		(elf_hwcap & HWCAP_TLS)
+-#define defer_tls_reg_update	IS_ENABLED(CONFIG_SMP)
++#define defer_tls_reg_update	is_smp()
+ #define switch_tls	switch_tls_v6
+ #elif defined(CONFIG_CPU_32v6K)
+ #define tls_emu		0
+diff --git a/arch/arm/kernel/entry-header.S b/arch/arm/kernel/entry-header.S
+index cb82ff5adec1..9a1dc142f782 100644
+--- a/arch/arm/kernel/entry-header.S
++++ b/arch/arm/kernel/entry-header.S
+@@ -292,21 +292,18 @@
+ 
+ 
+ 	.macro	restore_user_regs, fast = 0, offset = 0
+-#if defined(CONFIG_CPU_32v6K) || defined(CONFIG_SMP)
+-#if defined(CONFIG_CPU_V6) && defined(CONFIG_SMP)
+-ALT_SMP(b	.L1_\@	)
+-ALT_UP( nop		)
+-	ldr_va	r1, elf_hwcap
+-	tst	r1, #HWCAP_TLS			@ hardware TLS available?
+-	beq	.L2_\@
+-.L1_\@:
++#if defined(CONFIG_CPU_32v6K) && \
++    (!defined(CONFIG_CPU_V6) || defined(CONFIG_SMP))
++#ifdef CONFIG_CPU_V6
++ALT_SMP(nop)
++ALT_UP_B(.L1_\@)
+ #endif
+ 	@ The TLS register update is deferred until return to user space so we
+ 	@ can use it for other things while running in the kernel
+-	get_thread_info r1
++	mrc	p15, 0, r1, c13, c0, 3		@ get current_thread_info pointer
+ 	ldr	r1, [r1, #TI_TP_VALUE]
+ 	mcr	p15, 0, r1, c13, c0, 3		@ set TLS register
+-.L2_\@:
++.L1_\@:
+ #endif
+ 
+ 	uaccess_enable r1, isb=0
 -- 
 2.30.2
 
