@@ -2,45 +2,52 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4DEC433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 19:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE3AC433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 19:36:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229936AbiAYT0n (ORCPT
+        id S230299AbiAYTgG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Jan 2022 14:26:43 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:36862 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229924AbiAYT0h (ORCPT
+        Tue, 25 Jan 2022 14:36:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230315AbiAYTfp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Jan 2022 14:26:37 -0500
+        Tue, 25 Jan 2022 14:35:45 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BC2DC061755;
+        Tue, 25 Jan 2022 11:35:30 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A788EB818C2;
-        Tue, 25 Jan 2022 19:26:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 960C5C340E0;
-        Tue, 25 Jan 2022 19:26:32 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 01B78B819D9;
+        Tue, 25 Jan 2022 19:35:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91FC3C340E6;
+        Tue, 25 Jan 2022 19:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643138793;
-        bh=kyf0fBuyLxoLx1MUqMK5zUGymedo4pfkJrSdske5Tnk=;
+        s=k20201202; t=1643139327;
+        bh=2SKgMeaepEa/3fqmOk3qpuRploR2lWhnOwQ1mCTG4l8=;
         h=Date:From:To:Cc:Subject:From;
-        b=VJf5g0XdmTzrj1XQlhdy7Krt3mjRTUCv2ZDCa1UVRuMjj5Dzwh3WvDqu35Ge8f5mf
-         v8CjGbTdjTd0l8cCcAYEgGYVWEBQqVvp7Q1Yzrd03kGCWtO10EQneler1Y1sYWZFCA
-         G33zOLj5fg5sr2uKrzzZxFtFDoB5E89vPIRstickLdvOOnYLs1Gtzv06wxODFPnqBt
-         YVhMe4XmwWWMBV5S+WPEqs7NZ71jA7QsF8Iwo1B6JMlEcxueT3Kk7CDfnsvYRV8cSs
-         xkTG8k/Hqe7xD816kAuhHnPpOt9Hdv5kQIKSccsdUyuAPaM6Ytnvei3oQmixqjxiGs
-         K/MJMSnL/xdSQ==
-Date:   Tue, 25 Jan 2022 13:33:19 -0600
+        b=svmfcgT96x5RmVksMCBJvYdIuMEaOvAt+P5FqTHqYL1XJONcH3ydicPxs5N35LEUb
+         9cCSgKfYet6QPhmh/03Vx6xIZ55/j/ULba+Iua+QuhGaVVDLRZeN7rV/tVP2t0wjEu
+         yVV7a48kjsXtLdRBUsbPDT81z5jHvlR39f5tYG9h95l7tjJp47S1hSZJ8aGaRz2XKI
+         mXkwr3J4wJSeZaWQOaQtZpuXupwcELyp+qlp/Au30u+qNuAaLkmAypZ/wC8WSrFbl9
+         5OQmfLCr4mb4wox0Sd9B2Vi2HYPOBD0/RpCDgc/PFD+oNGC4Zh7njIlUZhxhEuA/dZ
+         L+gUhbJCnczXA==
+Date:   Tue, 25 Jan 2022 13:42:13 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Simon Horman <simon.horman@corigine.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     oss-drivers@corigine.com, netdev@vger.kernel.org,
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-scsi@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] nfp: flower: Use struct_size() helper in kmalloc()
-Message-ID: <20220125193319.GA73108@embeddedor>
+Subject: [PATCH][next] scsi: storvsc: Use struct_size() helper in
+ storvsc_queuecommand()
+Message-ID: <20220125194213.GA74670@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -53,27 +60,38 @@ in order to avoid any potential type mistakes or integer overflows that,
 in the worst scenario, could lead to heap overflows.
 
 Also, address the following sparse warnings:
-drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c:359:25: warning: using sizeof on a flexible structure
+drivers/scsi/storvsc_drv.c:1843:39: warning: using sizeof on a flexible structure
 
 Link: https://github.com/KSPP/linux/issues/174
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/storvsc_drv.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c b/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
-index dfb4468fe287..ce865e619568 100644
---- a/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
-@@ -356,7 +356,7 @@ __nfp_tun_add_route_to_cache(struct list_head *route_list,
- 			return 0;
- 		}
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index 9a0bba5a51a7..89c20dfc6609 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -1755,7 +1755,7 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
+ 	struct scatterlist *sgl;
+ 	struct vmscsi_request *vm_srb;
+ 	struct vmbus_packet_mpb_array  *payload;
+-	u32 payload_sz;
++	size_t payload_sz;
+ 	u32 length;
  
--	entry = kmalloc(sizeof(*entry) + add_len, GFP_ATOMIC);
-+	entry = kmalloc(struct_size(entry, ip_add, add_len), GFP_ATOMIC);
- 	if (!entry) {
- 		spin_unlock_bh(list_lock);
- 		return -ENOMEM;
+ 	if (vmstor_proto_version <= VMSTOR_PROTO_VERSION_WIN8) {
+@@ -1839,8 +1839,8 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
+ 
+ 		if (hvpg_count > MAX_PAGE_BUFFER_COUNT) {
+ 
+-			payload_sz = (hvpg_count * sizeof(u64) +
+-				      sizeof(struct vmbus_packet_mpb_array));
++			payload_sz = struct_size(payload, range.pfn_array,
++						 hvpg_count);
+ 			payload = kzalloc(payload_sz, GFP_ATOMIC);
+ 			if (!payload)
+ 				return SCSI_MLQUEUE_DEVICE_BUSY;
 -- 
 2.27.0
 
