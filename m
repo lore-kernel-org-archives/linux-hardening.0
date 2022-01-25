@@ -2,113 +2,91 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA6AC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 15:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F44EC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 16:59:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234645AbiAYP2n (ORCPT
+        id S237016AbiAYQ67 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Jan 2022 10:28:43 -0500
-Received: from mail-ua1-f45.google.com ([209.85.222.45]:33774 "EHLO
-        mail-ua1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343808AbiAYPZ7 (ORCPT
+        Tue, 25 Jan 2022 11:58:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1586531AbiAYQ5Q (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Jan 2022 10:25:59 -0500
-Received: by mail-ua1-f45.google.com with SMTP id u6so38098405uaq.0;
-        Tue, 25 Jan 2022 07:25:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UDZLNNI8bYyTslSgTWAgw/zQxPHro7WjafgbKw4LNRo=;
-        b=dM+3K6FIBIr67m8hIBLOzHv13bxI28/tTu06WftoV2xDK3h84F9SiBJhbNIMrwOmFv
-         9H62idOHzSS3Ow4uqXK83kt43pxlPsk+Tq57IzVMYicsVKw385vu2CDRqJw1aobKIjhR
-         mrV1f6fi2S3FrGakx2MghIZiFOJwFxCsuqVHwpsb0f/T96y8g1AwROoSp+J0JXE7pnBU
-         QHb2wcXSp6so9WY+8ZPeAYwef8vLaOnINkKfGCU95dfl07K48OscZ7uOCnQ0XQFBpOmS
-         IAHfTitNK4NPsbiHLE/BLGGB6T9Zx5PO8v3xSSlG/8mazh7Z9ToHn1f+U/X3lVP1F7M8
-         SUQg==
-X-Gm-Message-State: AOAM53243CefptTYwIPRErexcViypNZDd8FviIhjE1KlLBoJSp/Yzn0O
-        Ws8zHlJhXlQIf8jFB5LqsMxe2z9NHCcLy/m5
-X-Google-Smtp-Source: ABdhPJz03PZ1ctx6US/HQo/SGmt/9jn5OMdKWd75V+MKGSyaiUavn+bDabmGnBrehBd/6IEh4DSOYQ==
-X-Received: by 2002:a67:c889:: with SMTP id v9mr5953435vsk.30.1643124353063;
-        Tue, 25 Jan 2022 07:25:53 -0800 (PST)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id g22sm1114451vsk.26.2022.01.25.07.25.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Jan 2022 07:25:51 -0800 (PST)
-Received: by mail-ua1-f51.google.com with SMTP id b37so20321618uad.12;
-        Tue, 25 Jan 2022 07:25:51 -0800 (PST)
-X-Received: by 2002:a67:a401:: with SMTP id n1mr3702988vse.38.1643124351338;
- Tue, 25 Jan 2022 07:25:51 -0800 (PST)
-MIME-Version: 1.0
-References: <20220118182003.3385019-1-keescook@chromium.org> <CAMuHMdWu-unMfV1U_HAKwJwPkB_LY3kU88_D69M=bX8y1B=QTg@mail.gmail.com>
-In-Reply-To: <CAMuHMdWu-unMfV1U_HAKwJwPkB_LY3kU88_D69M=bX8y1B=QTg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 25 Jan 2022 16:25:39 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXzEWN7B122ca279t4RPSSWGL29jzTgMdSoJ+Y56jEQYw@mail.gmail.com>
-Message-ID: <CAMuHMdXzEWN7B122ca279t4RPSSWGL29jzTgMdSoJ+Y56jEQYw@mail.gmail.com>
-Subject: Re: [PATCH 5.17-rc1 v2] eeprom: at25: Restore missing allocation
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jiri Prchal <jiri.prchal@aksignal.cz>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ralph Siemsen <ralph.siemsen@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tue, 25 Jan 2022 11:57:16 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82444C0617A3;
+        Tue, 25 Jan 2022 08:54:45 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 498CAB81626;
+        Tue, 25 Jan 2022 16:54:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45D50C340E0;
+        Tue, 25 Jan 2022 16:54:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643129683;
+        bh=rw+3G6xtiUqoEm6IJINS6kg0qGUDlHZ60ZFR3a2STdw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=OvIlRzdNs0u3TKQbD+zqONaqes09wji3XfQ/OdhWSiJNI9x4HiJ6+hDJe6TWjcmVo
+         Ixl108Kp3dLorankwVLvgTuyHHjX6dv9J418QqD93hLZMvID0odhe0s9dRt45GxE0C
+         uf81M+1H3xmwlOxJzOxNz3Dv3/S85GOuNa6vr3Ml0wKRzV8YU7RKvknFgUkLynWLqD
+         advRLLvcLI1Bmp8p967m0/NEgWMKyrIyiNfP5SYb68OaYrvOF6Ih8YXhouE22ViX4s
+         LsuwuzZX0hr4fX3VQWRkOwRgoKXc+VYn5kkEYZHa5sDjcpm+AqxS6jzFIx5FP3o+nq
+         EKQeXrzA/m93Q==
+Date:   Tue, 25 Jan 2022 11:01:28 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH][next] mlxsw: spectrum_kvdl: Use struct_size() helper in
+ kzalloc()
+Message-ID: <20220125170128.GA60918@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jan 25, 2022 at 3:20 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Fri, Jan 21, 2022 at 12:33 AM Kees Cook <keescook@chromium.org> wrote:
-> > The at25 driver regressed in v5.17-rc1 due to a broken conflict
-> > resolution: the allocation of the object was accidentally removed. Restore
-> > it.
-> >
-> > This was found when building under CONFIG_FORTIFY_SOURCE=y and
-> > -Warray-bounds, which complained about strncpy() being used against an
-> > empty object:
-> >
-> > In function 'strncpy',
-> >     inlined from 'at25_fw_to_chip.constprop' at drivers/misc/eeprom/at25.c:312:2:
-> > ./include/linux/fortify-string.h:48:33: warning: '__builtin_strncpy' offset [0, 9] is out of the bounds [0, 0] [-Warray-bounds]
-> >    48 | #define __underlying_strncpy    __builtin_strncpy
-> >       |                                 ^
-> > ./include/linux/fortify-string.h:59:16: note: in expansion of macro '__underlying_strncpy'
-> >    59 |         return __underlying_strncpy(p, q, size);
-> >       |                ^~~~~~~~~~~~~~~~~~~~
-> > In function 'strncpy',
-> >     inlined from 'at25_fram_to_chip' at drivers/misc/eeprom/at25.c:373:2,
-> >     inlined from 'at25_probe' at drivers/misc/eeprom/at25.c:453:10:
-> > ./include/linux/fortify-string.h:48:33: warning: '__builtin_strncpy' offset [0, 9] is out of the bounds [0, 0] [-Warray-bounds]
-> >    48 | #define __underlying_strncpy    __builtin_strncpy
-> >       |                                 ^
-> > ./include/linux/fortify-string.h:59:16: note: in expansion of macro '__underlying_strncpy'
-> >    59 |         return __underlying_strncpy(p, q, size);
-> >       |                ^~~~~~~~~~~~~~~~~~~~
->
-> On real hardware:
->
->     Unable to handle kernel access to user memory outside uaccess
-> routines at virtual address 0000000000000028
->     ...
->     pc : __mutex_init+0x20/0x68
->     lr : at25_probe+0x8c/0x4d8
+Make use of the struct_size() helper instead of an open-coded version,
+in order to avoid any potential type mistakes or integer overflows that,
+in the worst scenario, could lead to heap overflows.
 
-To avoid confusion: of course the crash happens only without Kees'
-patch.  I just wanted to point out what happens when you boot on
-real hardware, as it might be worthwhile to add that to the commit
-description.
+Also, address the following sparse warnings:
+drivers/net/ethernet/mellanox/mlxsw/spectrum1_kvdl.c:229:24: warning: using sizeof on a flexible structure
 
-Gr{oetje,eeting}s,
+Link: https://github.com/KSPP/linux/issues/174
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/ethernet/mellanox/mlxsw/spectrum1_kvdl.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-                        Geert
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum1_kvdl.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum1_kvdl.c
+index a9fff8adc75e..d20e794e01ca 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum1_kvdl.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum1_kvdl.c
+@@ -213,7 +213,6 @@ mlxsw_sp1_kvdl_part_init(struct mlxsw_sp *mlxsw_sp,
+ 	struct mlxsw_sp1_kvdl_part *part;
+ 	bool need_update = true;
+ 	unsigned int nr_entries;
+-	size_t usage_size;
+ 	u64 resource_size;
+ 	int err;
+ 
+@@ -225,8 +224,8 @@ mlxsw_sp1_kvdl_part_init(struct mlxsw_sp *mlxsw_sp,
+ 	}
+ 
+ 	nr_entries = div_u64(resource_size, info->alloc_size);
+-	usage_size = BITS_TO_LONGS(nr_entries) * sizeof(unsigned long);
+-	part = kzalloc(sizeof(*part) + usage_size, GFP_KERNEL);
++	part = kzalloc(struct_size(part, usage, BITS_TO_LONGS(nr_entries)),
++		       GFP_KERNEL);
+ 	if (!part)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-- 
+2.27.0
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
