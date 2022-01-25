@@ -2,46 +2,45 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A9BC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 19:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4DEC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 19:26:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229750AbiAYTVF (ORCPT
+        id S229936AbiAYT0n (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Jan 2022 14:21:05 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:34844 "EHLO
+        Tue, 25 Jan 2022 14:26:43 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:36862 "EHLO
         ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230212AbiAYTTv (ORCPT
+        with ESMTP id S229924AbiAYT0h (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Jan 2022 14:19:51 -0500
+        Tue, 25 Jan 2022 14:26:37 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 09AFEB818C2;
-        Tue, 25 Jan 2022 19:19:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 118A1C340E0;
-        Tue, 25 Jan 2022 19:19:47 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A788EB818C2;
+        Tue, 25 Jan 2022 19:26:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 960C5C340E0;
+        Tue, 25 Jan 2022 19:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643138388;
-        bh=uqDC31ymycx+13e+X3l+SfAMSoIqwEOmqiRflFpE9BU=;
+        s=k20201202; t=1643138793;
+        bh=kyf0fBuyLxoLx1MUqMK5zUGymedo4pfkJrSdske5Tnk=;
         h=Date:From:To:Cc:Subject:From;
-        b=QpP4AkUmRkqerJMgs8ED5wO7VPAKGbOijgtvDl3NIWOgj5RGh5ffI94Bom8wKoK9S
-         9kWniWywjr/cB6ap88gI9oTBWmmEmWxiZCE+nct+1S8xzILN1jlYRPs6PDSnNDAd2U
-         0gCSq7l333iz9/YRW806DcCUeYP1jLXtNGLmlqg1QY0OLolj+tEorYLfqtu914Da2L
-         QSUxMS0AaXv0ESkdQfaFtiqawmr8U8AUKGGVGF9HYBS1smMOzTUPvyFnOUHkSaMPQm
-         9+s/Fs/e2GuogoPSlkpurZVYsvoKpwBZZ+Yn2x/q1VO2BChocZhCpVdPAylWhfTz9P
-         u6lMg0nR8ZBaQ==
-Date:   Tue, 25 Jan 2022 13:26:34 -0600
+        b=VJf5g0XdmTzrj1XQlhdy7Krt3mjRTUCv2ZDCa1UVRuMjj5Dzwh3WvDqu35Ge8f5mf
+         v8CjGbTdjTd0l8cCcAYEgGYVWEBQqVvp7Q1Yzrd03kGCWtO10EQneler1Y1sYWZFCA
+         G33zOLj5fg5sr2uKrzzZxFtFDoB5E89vPIRstickLdvOOnYLs1Gtzv06wxODFPnqBt
+         YVhMe4XmwWWMBV5S+WPEqs7NZ71jA7QsF8Iwo1B6JMlEcxueT3Kk7CDfnsvYRV8cSs
+         xkTG8k/Hqe7xD816kAuhHnPpOt9Hdv5kQIKSccsdUyuAPaM6Ytnvei3oQmixqjxiGs
+         K/MJMSnL/xdSQ==
+Date:   Tue, 25 Jan 2022 13:33:19 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
+To:     Simon Horman <simon.horman@corigine.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     oss-drivers@corigine.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] extcon: usbc-cros-ec: Use struct_size() helper in
- kzalloc()
-Message-ID: <20220125192634.GA70834@embeddedor>
+Subject: [PATCH][next] nfp: flower: Use struct_size() helper in kmalloc()
+Message-ID: <20220125193319.GA73108@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -54,27 +53,27 @@ in order to avoid any potential type mistakes or integer overflows that,
 in the worst scenario, could lead to heap overflows.
 
 Also, address the following sparse warnings:
-drivers/extcon/extcon-usbc-cros-ec.c:71:23: warning: using sizeof on a flexible structure
+drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c:359:25: warning: using sizeof on a flexible structure
 
 Link: https://github.com/KSPP/linux/issues/174
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/extcon/extcon-usbc-cros-ec.c | 2 +-
+ drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/extcon/extcon-usbc-cros-ec.c b/drivers/extcon/extcon-usbc-cros-ec.c
-index 5290cc2d19d9..fde1db62be0d 100644
---- a/drivers/extcon/extcon-usbc-cros-ec.c
-+++ b/drivers/extcon/extcon-usbc-cros-ec.c
-@@ -68,7 +68,7 @@ static int cros_ec_pd_command(struct cros_ec_extcon_info *info,
- 	struct cros_ec_command *msg;
- 	int ret;
+diff --git a/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c b/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
+index dfb4468fe287..ce865e619568 100644
+--- a/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
++++ b/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
+@@ -356,7 +356,7 @@ __nfp_tun_add_route_to_cache(struct list_head *route_list,
+ 			return 0;
+ 		}
  
--	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
-+	msg = kzalloc(struct_size(msg, data, max(outsize, insize)), GFP_KERNEL);
- 	if (!msg)
+-	entry = kmalloc(sizeof(*entry) + add_len, GFP_ATOMIC);
++	entry = kmalloc(struct_size(entry, ip_add, add_len), GFP_ATOMIC);
+ 	if (!entry) {
+ 		spin_unlock_bh(list_lock);
  		return -ENOMEM;
- 
 -- 
 2.27.0
 
