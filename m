@@ -2,96 +2,122 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE3AC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 19:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 129BEC4332F
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 20:49:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230299AbiAYTgG (ORCPT
+        id S232454AbiAYUtA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Jan 2022 14:36:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52060 "EHLO
+        Tue, 25 Jan 2022 15:49:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230315AbiAYTfp (ORCPT
+        with ESMTP id S233478AbiAYUso (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Jan 2022 14:35:45 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BC2DC061755;
-        Tue, 25 Jan 2022 11:35:30 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 01B78B819D9;
-        Tue, 25 Jan 2022 19:35:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91FC3C340E6;
-        Tue, 25 Jan 2022 19:35:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643139327;
-        bh=2SKgMeaepEa/3fqmOk3qpuRploR2lWhnOwQ1mCTG4l8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=svmfcgT96x5RmVksMCBJvYdIuMEaOvAt+P5FqTHqYL1XJONcH3ydicPxs5N35LEUb
-         9cCSgKfYet6QPhmh/03Vx6xIZ55/j/ULba+Iua+QuhGaVVDLRZeN7rV/tVP2t0wjEu
-         yVV7a48kjsXtLdRBUsbPDT81z5jHvlR39f5tYG9h95l7tjJp47S1hSZJ8aGaRz2XKI
-         mXkwr3J4wJSeZaWQOaQtZpuXupwcELyp+qlp/Au30u+qNuAaLkmAypZ/wC8WSrFbl9
-         5OQmfLCr4mb4wox0Sd9B2Vi2HYPOBD0/RpCDgc/PFD+oNGC4Zh7njIlUZhxhEuA/dZ
-         L+gUhbJCnczXA==
-Date:   Tue, 25 Jan 2022 13:42:13 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] scsi: storvsc: Use struct_size() helper in
- storvsc_queuecommand()
-Message-ID: <20220125194213.GA74670@embeddedor>
+        Tue, 25 Jan 2022 15:48:44 -0500
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE0FEC06173B
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Jan 2022 12:48:43 -0800 (PST)
+Received: by mail-lj1-x229.google.com with SMTP id z14so17063381ljc.13
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Jan 2022 12:48:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9/K3eCHzr8SuLwQ7uwDyAB0IWI1YqeJ8BNzbE7dJqfE=;
+        b=KITFhU7y80IhN0k9QSPxgc3sIYSnLfoNVY1hTsyrZGrqFewnwQjqScSitcb29FEbXo
+         bpEtYxKyc4OFdT07OtlJ7uxpyQJzdbMOEiET9L3iXkawE/VKcGn9iCJzwW9rB+hDVsJY
+         UgGIEk2sWT0W2xCTT7wXGYbREsMxmPdTbkPDGAc3l10UjhSJX1H8Axnf6eUgkUC7KyBX
+         o8zIp0q3liZcTCNiXli+bd39UWHSKymbsQdtQItLvPFYJ85DmLPulWmKqiL3oLsmqzq7
+         6zQCtcM4P0dfldAvIhqgpELWnT/pssF/NGJo2hi7mLJ4YDKaHTZJzeCJyJHIBwditz7L
+         dHMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9/K3eCHzr8SuLwQ7uwDyAB0IWI1YqeJ8BNzbE7dJqfE=;
+        b=RjsL10hZuZe90Rz5v/aH193oqVv/eWJZ3EtFcwqZDOtFaMuVt7pBMjb4IZJ2PQsEQm
+         fE6DAsSbM/nZ5MuZIDzG7UgKmYUwcrt4kgsdrnuWcXFOLS4gwHlrFowupW5G1fsO2S58
+         uc031ZZjimgdGYZeTVWQysNLLPYkAxWWn1AzXdUdfK4A0hHbV0S/caknxRhYvGqSUxSa
+         52s2G8WPTLVjDBk1tudWQ7XH/qsbRFOXleortwqmpUXFkaE3On05RTvQNOHs0jP/m490
+         Dag4Gc9tFDNKxl0OdWY3sXWhcavXnyR+2e3d502EsCy3DRfcl7ObCIU0MBarZWtOtGTD
+         ONbA==
+X-Gm-Message-State: AOAM530f05ITVULkiKqWG2A/8vHFR6YpVF0oHQt37Bvw2x/AsptzRTun
+        XtaIixPZPU+pykbZV11LEQCG4X2aYQlswSqAvk+pQw==
+X-Google-Smtp-Source: ABdhPJxJCK62//r1golVsux80RcF0IEtSInJOvm5qfONTIid/D+H6p74ze0yoiDuX0EuKqep/kOYfnv1cBMoDOaclxw=
+X-Received: by 2002:a2e:a5c9:: with SMTP id n9mr16114020ljp.220.1643143721891;
+ Tue, 25 Jan 2022 12:48:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20220125091453.1475246-1-ardb@kernel.org> <20220125091453.1475246-9-ardb@kernel.org>
+In-Reply-To: <20220125091453.1475246-9-ardb@kernel.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 25 Jan 2022 12:48:29 -0800
+Message-ID: <CAKwvOdnV6ndTYjNN5CzYx_4LQpB4A6Qhfe21Vos192pUj=Hwmg@mail.gmail.com>
+Subject: Re: [PATCH v6 8/8] ARM: make get_current() and __my_cpu_offset() __always_inline
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
+        linux-hardening@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Make use of the struct_size() helper instead of an open-coded version,
-in order to avoid any potential type mistakes or integer overflows that,
-in the worst scenario, could lead to heap overflows.
+On Tue, Jan 25, 2022 at 1:15 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> The get_current() and __my_cpu_offset() accessors evaluate to only a
+> single instruction emitted inline, but due to the size of the asm string
+> that is created for SMP+v6 configurations, the compiler assumes
+> otherwise, and may emit the functions out of line instead.
+>
+> So use __always_inline to avoid this.
+>
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 
-Also, address the following sparse warnings:
-drivers/scsi/storvsc_drv.c:1843:39: warning: using sizeof on a flexible structure
+Alternatively, you could use the inline qualifier on the asm stmt.
+i.e. `asm inline ("my asm string")`. Only supported since gcc-8.3+ and
+all kernel-supported versions of clang though. See `asm_inline` in
+include/linux/compiler_types.h.
+Either way,
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Link: https://github.com/KSPP/linux/issues/174
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/scsi/storvsc_drv.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> ---
+>  arch/arm/include/asm/current.h | 2 +-
+>  arch/arm/include/asm/percpu.h  | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/include/asm/current.h b/arch/arm/include/asm/current.h
+> index 131a89bbec6b..1e1178bf176d 100644
+> --- a/arch/arm/include/asm/current.h
+> +++ b/arch/arm/include/asm/current.h
+> @@ -14,7 +14,7 @@ struct task_struct;
+>
+>  extern struct task_struct *__current;
+>
+> -static inline __attribute_const__ struct task_struct *get_current(void)
+> +static __always_inline __attribute_const__ struct task_struct *get_current(void)
+>  {
+>         struct task_struct *cur;
+>
+> diff --git a/arch/arm/include/asm/percpu.h b/arch/arm/include/asm/percpu.h
+> index a09034ae45a1..7545c87c251f 100644
+> --- a/arch/arm/include/asm/percpu.h
+> +++ b/arch/arm/include/asm/percpu.h
+> @@ -25,7 +25,7 @@ static inline void set_my_cpu_offset(unsigned long off)
+>         asm volatile("mcr p15, 0, %0, c13, c0, 4" : : "r" (off) : "memory");
+>  }
+>
+> -static inline unsigned long __my_cpu_offset(void)
+> +static __always_inline unsigned long __my_cpu_offset(void)
+>  {
+>         unsigned long off;
+>
+> --
+> 2.30.2
+>
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index 9a0bba5a51a7..89c20dfc6609 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -1755,7 +1755,7 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 	struct scatterlist *sgl;
- 	struct vmscsi_request *vm_srb;
- 	struct vmbus_packet_mpb_array  *payload;
--	u32 payload_sz;
-+	size_t payload_sz;
- 	u32 length;
- 
- 	if (vmstor_proto_version <= VMSTOR_PROTO_VERSION_WIN8) {
-@@ -1839,8 +1839,8 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 
- 		if (hvpg_count > MAX_PAGE_BUFFER_COUNT) {
- 
--			payload_sz = (hvpg_count * sizeof(u64) +
--				      sizeof(struct vmbus_packet_mpb_array));
-+			payload_sz = struct_size(payload, range.pfn_array,
-+						 hvpg_count);
- 			payload = kzalloc(payload_sz, GFP_ATOMIC);
- 			if (!payload)
- 				return SCSI_MLQUEUE_DEVICE_BUSY;
+
 -- 
-2.27.0
-
+Thanks,
+~Nick Desaulniers
