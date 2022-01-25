@@ -2,229 +2,195 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF00C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 07:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF369C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 08:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245523AbiAYHiz (ORCPT
+        id S1378480AbiAYI0l (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Jan 2022 02:38:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1322807AbiAYDWq (ORCPT
+        Tue, 25 Jan 2022 03:26:41 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:32952 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1450168AbiAYIYk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 Jan 2022 22:22:46 -0500
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3800C0604CC
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 15:23:44 -0800 (PST)
-Received: by mail-pg1-x529.google.com with SMTP id g2so16762187pgo.9
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 15:23:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BUy1cq/aLQFwACsA66qUZgeTjdc6W6p6YIU+kLy4RXI=;
-        b=HMmVLm5Gk4xktbBAU6t3jLyp2yP/6L4jJnClTexhgIce1axDLwVbmNb9kclYALf+x2
-         0eOP9jYiB5WoTm+5qhwtBJz55pfhYca49Ml8+KCXSU5yP+mC++U9lcHxQUOWDgskC1MN
-         2wN/3QGEDEHBI9JYcXZGv9+GYD1bA3s9SGxz8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BUy1cq/aLQFwACsA66qUZgeTjdc6W6p6YIU+kLy4RXI=;
-        b=Ght2bmp04o/8zQ3brXPcYkVktXD/sNtypRjpM/pkpETbC8IM9VbXE8joG6jwGu8lnL
-         wYtXbf0/rNtw3BQ+WmEISk4G1TtrS50GdR2eY7ZaBeBdm1CSb3/+hIKiSrTG51hEFuB2
-         G6uT2Gi7HakohB0opnOqwRz2/s0FrxUvmZIXp6AU6t+osrT2STY1wvs5b5MM/cI4YHev
-         f5SK7wGVz3AdnuzclTIZKoSHscKJVIC6jZu+5B5r2409NOi5PwFKxLhxyeJRxdnV2Az7
-         v53dNI/27b3FOFQKW8Qckd3aK82cx39GvPdgcDWNNZoWTS0xO+LlSWeTp0UuRIno9uSF
-         uRKw==
-X-Gm-Message-State: AOAM533t0vdeP9H7+Q/PDJ/LRJiw9EnzGY2NztOxZf8U5FUJeYHziP9R
-        jsfo2RuFARq2r3L5YRdtGCv0Zg==
-X-Google-Smtp-Source: ABdhPJzJq/ZflgOy7noX+l1C7fkXGtfuvMQKoRWncNP/9c4/r0pI+i3lo/9e35lzQWKaf5+WOauong==
-X-Received: by 2002:a63:2b01:: with SMTP id r1mr6103116pgr.182.1643066624239;
-        Mon, 24 Jan 2022 15:23:44 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b4sm17120790pfl.106.2022.01.24.15.23.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jan 2022 15:23:44 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Keith Busch <kbusch@kernel.org>, Len Baker <len.baker@gmx.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2 1/2] test_overflow: Regularize test reporting output
-Date:   Mon, 24 Jan 2022 15:23:41 -0800
-Message-Id: <20220124232342.3113350-2-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220124232342.3113350-1-keescook@chromium.org>
-References: <20220124232342.3113350-1-keescook@chromium.org>
+        Tue, 25 Jan 2022 03:24:40 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6FB50B8162C;
+        Tue, 25 Jan 2022 08:24:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 222ABC340E0;
+        Tue, 25 Jan 2022 08:24:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643099071;
+        bh=zhEJSMgOmCREgcS8sTDwVMLZTw5f5ROgOOgi3EInTqM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nEaLL1TsOZ2wtCC/6Mf+UAQCuY4QNAw0sIrT9MvRW7X7+caQDud1ootEMANZobvtK
+         k56VZpKRFr4yGNOCvdaLOek5b1F4cJMuGjTiZyA264g8hNxFFrGpbxIR+JNlPqzWNu
+         ykLGyFflEv1C2BAEFOqC5Soh7Yoi1vyIF4vB22VKqMgXI9WQTnEjErtgE2Tfy1q7wp
+         57QM/qVfiDXjL9R7l1GjZJyWPRWpCaAv7wFej2WT/NzkuiJjSTD6coMsno4dfC0MgO
+         e0EHbSSFCPFGKWl3DxThy6imvbDbJ0+WwxN2Ve7fedGSchV6Xf4KFG+AL/gfEQXd+J
+         RwekOcxv3E7TA==
+Date:   Tue, 25 Jan 2022 09:24:26 +0100
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, stable@vger.kernel.org,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH RESEND] media: omap3isp: Use struct_group() for memcpy()
+ region
+Message-ID: <20220125092426.7bdfba8f@coco.lan>
+In-Reply-To: <20220124172952.2411764-1-keescook@chromium.org>
+References: <20220124172952.2411764-1-keescook@chromium.org>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5607; h=from:subject; bh=J3Wsxeg4JzBB1opD2cR25s34lPwyOQCvqPa3Egl9H+E=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh7zT96q6+BfVriBVKq/ZNrGoNFi9S0asAOL9Kgk/1 VRdFiCeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYe80/QAKCRCJcvTf3G3AJrzNEA CaRpSkCzT5WizfZbk+asSaEUEu4QhmQO7+JkP1dJubjfRmx4SgGUcq3ibh0ZLFAS2PqF2O6kb5vWaS g+kPJWdYWXDGhicKtiDgIc6266pep3/W5XRYgtoaI8vdzstVWNF3LEmw9YtTq04g9PEJ4kHyqJ5xii 3vhCip9Be/SY4UgfDtu9mSFrWTav91Z6qoNOYqmp/RiVsq9xP5ymUteR8aUfzIe/KPO6QNO+zGPh7i BWZckReajeP1l2Ffc83s8Ao7rSdOXERPxjbXxGkE7EDChDPzA2D16pQFGY4acKFJ/STYwnoVs+e5oG LhTCJf+zODcSDrXRPtFY0PVEiWhI0IMKXhhE2uw9Tw2xidIMRxhSzQUWwIXdJ2dYqOgPUSwWx1Yfqe Ezfjl9nXwUgas7bhyy+9dX6orfJx0Y+YVo/f64TpEpWBBlk6Ly9HMhSMoqeXHjwwHS1CZQm6lk49Qc w9Vrms1Z8uyqa6PEeWN2i3qzKvmvG7UBtCf/ML8Sf2Ue+H4uPCMcr4mxmr+r92ZDuaGsSYceEOlSwq Nhle/GEVIXy7HIOBEkHL/67h6FT9dp0tiRSIAlfVAjeEKwNu+Zw3zCuGqVgd/0RBmwd/vQCKA5Tsrk 7pj0u3jxpaN2caO4M/xN65lxaAJs1xG3xJFDl3VY8NUTd5sR+ykFgk0iSN0w==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Report test run summaries more regularly, so it's easier to understand
-the output:
-- Remove noisy "ok" reports for shift and allocator tests.
-- Reorganize per-type output to the end of each type's tests.
-- Replace redundant vmalloc tests with __vmalloc so that __GFP_NO_WARN
-  can be used to keep the expected failure warnings out of dmesg,
-  similar to commit 8e060c21ae2c ("lib/test_overflow.c: avoid tainting
-  the kernel and fix wrap size")
+Em Mon, 24 Jan 2022 09:29:52 -0800
+Kees Cook <keescook@chromium.org> escreveu:
 
-Resulting output:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memcpy(), memmove(), and memset(), avoid
+> intentionally writing across neighboring fields. Wrap the target region
+> in struct_group(). This additionally fixes a theoretical misalignment
+> of the copy (since the size of "buf" changes between 64-bit and 32-bit,
+> but this is likely never built for 64-bit).
 
-  test_overflow: 18 u8 arithmetic tests finished
-  test_overflow: 19 s8 arithmetic tests finished
-  test_overflow: 17 u16 arithmetic tests finished
-  test_overflow: 17 s16 arithmetic tests finished
-  test_overflow: 17 u32 arithmetic tests finished
-  test_overflow: 17 s32 arithmetic tests finished
-  test_overflow: 17 u64 arithmetic tests finished
-  test_overflow: 21 s64 arithmetic tests finished
-  test_overflow: 113 shift tests finished
-  test_overflow: 17 overflow size helper tests finished
-  test_overflow: 11 allocation overflow tests finished
-  test_overflow: all tests passed
 
-Acked-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Link: https://lore.kernel.org/all/eb6d02ae-e2ed-e7bd-c700-8a6d004d84ce@rasmusvillemoes.dk/
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://lore.kernel.org/all/CAKwvOdnYYa+72VhtJ4ug=SJVFn7w+n7Th+hKYE87BRDt4hvqOg@mail.gmail.com/
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- lib/test_overflow.c | 54 +++++++++++++++++++++++++--------------------
- 1 file changed, 30 insertions(+), 24 deletions(-)
+> FWIW, I think this code is totally broken on 64-bit (which appears to
+> not be a "real" build configuration): it would either always fail (with
+> an uninitialized data->buf_size) or would cause corruption in userspace
+> due to the copy_to_user() in the call path against an uninitialized
+> data->buf value:
 
-diff --git a/lib/test_overflow.c b/lib/test_overflow.c
-index 7a4b6f6c5473..cea37ae82615 100644
---- a/lib/test_overflow.c
-+++ b/lib/test_overflow.c
-@@ -252,10 +252,10 @@ static int __init test_ ## t ## _overflow(void) {			\
- 	int err = 0;							\
- 	unsigned i;							\
- 									\
--	pr_info("%-3s: %zu arithmetic tests\n", #t,			\
--		ARRAY_SIZE(t ## _tests));				\
- 	for (i = 0; i < ARRAY_SIZE(t ## _tests); ++i)			\
- 		err |= do_test_ ## t(&t ## _tests[i]);			\
-+	pr_info("%zu %s arithmetic tests finished\n",			\
-+		ARRAY_SIZE(t ## _tests), #t);				\
- 	return err;							\
- }
- 
-@@ -291,6 +291,7 @@ static int __init test_overflow_calculation(void)
- static int __init test_overflow_shift(void)
- {
- 	int err = 0;
-+	int count = 0;
- 
- /* Args are: value, shift, type, expected result, overflow expected */
- #define TEST_ONE_SHIFT(a, s, t, expect, of) ({				\
-@@ -313,9 +314,7 @@ static int __init test_overflow_shift(void)
- 			pr_warn("got %llu\n", (u64)__d);		\
- 		__failed = 1;						\
- 	}								\
--	if (!__failed)							\
--		pr_info("ok: (%s)(%s << %s) == %s\n", #t, #a, #s,	\
--			of ? "overflow" : #expect);			\
-+	count++;							\
- 	__failed;							\
- })
- 
-@@ -479,6 +478,10 @@ static int __init test_overflow_shift(void)
- 	err |= TEST_ONE_SHIFT(0, 31, s32, 0, false);
- 	err |= TEST_ONE_SHIFT(0, 63, s64, 0, false);
- 
-+	pr_info("%d shift tests finished\n", count);
-+
-+#undef TEST_ONE_SHIFT
-+
- 	return err;
- }
- 
-@@ -530,7 +533,6 @@ static int __init test_ ## func (void *arg)				\
- 		free ## want_arg (free_func, arg, ptr);			\
- 		return 1;						\
- 	}								\
--	pr_info(#func " detected saturation\n");			\
- 	return 0;							\
- }
- 
-@@ -544,10 +546,7 @@ DEFINE_TEST_ALLOC(kmalloc,	 kfree,	     0, 1, 0);
- DEFINE_TEST_ALLOC(kmalloc_node,	 kfree,	     0, 1, 1);
- DEFINE_TEST_ALLOC(kzalloc,	 kfree,	     0, 1, 0);
- DEFINE_TEST_ALLOC(kzalloc_node,  kfree,	     0, 1, 1);
--DEFINE_TEST_ALLOC(vmalloc,	 vfree,	     0, 0, 0);
--DEFINE_TEST_ALLOC(vmalloc_node,  vfree,	     0, 0, 1);
--DEFINE_TEST_ALLOC(vzalloc,	 vfree,	     0, 0, 0);
--DEFINE_TEST_ALLOC(vzalloc_node,  vfree,	     0, 0, 1);
-+DEFINE_TEST_ALLOC(__vmalloc,	 vfree,	     0, 1, 0);
- DEFINE_TEST_ALLOC(kvmalloc,	 kvfree,     0, 1, 0);
- DEFINE_TEST_ALLOC(kvmalloc_node, kvfree,     0, 1, 1);
- DEFINE_TEST_ALLOC(kvzalloc,	 kvfree,     0, 1, 0);
-@@ -559,8 +558,14 @@ static int __init test_overflow_allocation(void)
- {
- 	const char device_name[] = "overflow-test";
- 	struct device *dev;
-+	int count = 0;
- 	int err = 0;
- 
-+#define check_allocation_overflow(alloc)	({	\
-+	count++;					\
-+	test_ ## alloc(dev);				\
-+})
-+
- 	/* Create dummy device for devm_kmalloc()-family tests. */
- 	dev = root_device_register(device_name);
- 	if (IS_ERR(dev)) {
-@@ -568,23 +573,24 @@ static int __init test_overflow_allocation(void)
- 		return 1;
- 	}
- 
--	err |= test_kmalloc(NULL);
--	err |= test_kmalloc_node(NULL);
--	err |= test_kzalloc(NULL);
--	err |= test_kzalloc_node(NULL);
--	err |= test_kvmalloc(NULL);
--	err |= test_kvmalloc_node(NULL);
--	err |= test_kvzalloc(NULL);
--	err |= test_kvzalloc_node(NULL);
--	err |= test_vmalloc(NULL);
--	err |= test_vmalloc_node(NULL);
--	err |= test_vzalloc(NULL);
--	err |= test_vzalloc_node(NULL);
--	err |= test_devm_kmalloc(dev);
--	err |= test_devm_kzalloc(dev);
-+	err |= check_allocation_overflow(kmalloc);
-+	err |= check_allocation_overflow(kmalloc_node);
-+	err |= check_allocation_overflow(kzalloc);
-+	err |= check_allocation_overflow(kzalloc_node);
-+	err |= check_allocation_overflow(__vmalloc);
-+	err |= check_allocation_overflow(kvmalloc);
-+	err |= check_allocation_overflow(kvmalloc_node);
-+	err |= check_allocation_overflow(kvzalloc);
-+	err |= check_allocation_overflow(kvzalloc_node);
-+	err |= check_allocation_overflow(devm_kmalloc);
-+	err |= check_allocation_overflow(devm_kzalloc);
- 
- 	device_unregister(dev);
- 
-+	pr_info("%d allocation overflow tests finished\n", count);
-+
-+#undef check_allocation_overflow
-+
- 	return err;
- }
- 
--- 
-2.30.2
+It doesn't matter. This driver is specific for TI OMAP3 SoC, which
+is Cortex-A8 (32-bits). It only builds on 64 bit due to COMPILE_TEST.
 
+Regards,
+Mauro
+
+> 
+> omap3isp_stat_request_statistics_time32(...)
+>     struct omap3isp_stat_data data64;
+>     ...
+>     omap3isp_stat_request_statistics(stat, &data64);
+> 
+> int omap3isp_stat_request_statistics(struct ispstat *stat,
+>                                      struct omap3isp_stat_data *data)
+>     ...
+>     buf = isp_stat_buf_get(stat, data);
+> 
+> static struct ispstat_buffer *isp_stat_buf_get(struct ispstat *stat,
+>                                                struct omap3isp_stat_data *data)
+> ...
+>     if (buf->buf_size > data->buf_size) {
+>             ...
+>             return ERR_PTR(-EINVAL);
+>     }
+>     ...
+>     rval = copy_to_user(data->buf,
+>                         buf->virt_addr,
+>                         buf->buf_size);
+> 
+> Regardless, additionally initialize data64 to be zero-filled to avoid
+> undefined behavior.
+> 
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: linux-media@vger.kernel.org
+> Fixes: 378e3f81cb56 ("media: omap3isp: support 64-bit version of omap3isp_stat_data")
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Link: https://lore.kernel.org/lkml/20211215220505.GB21862@embeddedor
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> I will carry this in my tree unless someone else wants to pick it up. It's
+> one of the last remaining clean-ups needed for the next step in memcpy()
+> hardening.
+> ---
+>  drivers/media/platform/omap3isp/ispstat.c |  5 +++--
+>  include/uapi/linux/omap3isp.h             | 21 +++++++++++++--------
+>  2 files changed, 16 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/media/platform/omap3isp/ispstat.c b/drivers/media/platform/omap3isp/ispstat.c
+> index 5b9b57f4d9bf..68cf68dbcace 100644
+> --- a/drivers/media/platform/omap3isp/ispstat.c
+> +++ b/drivers/media/platform/omap3isp/ispstat.c
+> @@ -512,7 +512,7 @@ int omap3isp_stat_request_statistics(struct ispstat *stat,
+>  int omap3isp_stat_request_statistics_time32(struct ispstat *stat,
+>  					struct omap3isp_stat_data_time32 *data)
+>  {
+> -	struct omap3isp_stat_data data64;
+> +	struct omap3isp_stat_data data64 = { };
+>  	int ret;
+>  
+>  	ret = omap3isp_stat_request_statistics(stat, &data64);
+> @@ -521,7 +521,8 @@ int omap3isp_stat_request_statistics_time32(struct ispstat *stat,
+>  
+>  	data->ts.tv_sec = data64.ts.tv_sec;
+>  	data->ts.tv_usec = data64.ts.tv_usec;
+> -	memcpy(&data->buf, &data64.buf, sizeof(*data) - sizeof(data->ts));
+> +	data->buf = (uintptr_t)data64.buf;
+> +	memcpy(&data->frame, &data64.frame, sizeof(data->frame));
+>  
+>  	return 0;
+>  }
+> diff --git a/include/uapi/linux/omap3isp.h b/include/uapi/linux/omap3isp.h
+> index 87b55755f4ff..d9db7ad43890 100644
+> --- a/include/uapi/linux/omap3isp.h
+> +++ b/include/uapi/linux/omap3isp.h
+> @@ -162,6 +162,7 @@ struct omap3isp_h3a_aewb_config {
+>   * struct omap3isp_stat_data - Statistic data sent to or received from user
+>   * @ts: Timestamp of returned framestats.
+>   * @buf: Pointer to pass to user.
+> + * @buf_size: Size of buffer.
+>   * @frame_number: Frame number of requested stats.
+>   * @cur_frame: Current frame number being processed.
+>   * @config_counter: Number of the configuration associated with the data.
+> @@ -176,10 +177,12 @@ struct omap3isp_stat_data {
+>  	struct timeval ts;
+>  #endif
+>  	void __user *buf;
+> -	__u32 buf_size;
+> -	__u16 frame_number;
+> -	__u16 cur_frame;
+> -	__u16 config_counter;
+> +	__struct_group(/* no tag */, frame, /* no attrs */,
+> +		__u32 buf_size;
+> +		__u16 frame_number;
+> +		__u16 cur_frame;
+> +		__u16 config_counter;
+> +	);
+>  };
+>  
+>  #ifdef __KERNEL__
+> @@ -189,10 +192,12 @@ struct omap3isp_stat_data_time32 {
+>  		__s32	tv_usec;
+>  	} ts;
+>  	__u32 buf;
+> -	__u32 buf_size;
+> -	__u16 frame_number;
+> -	__u16 cur_frame;
+> -	__u16 config_counter;
+> +	__struct_group(/* no tag */, frame, /* no attrs */,
+> +		__u32 buf_size;
+> +		__u16 frame_number;
+> +		__u16 cur_frame;
+> +		__u16 config_counter;
+> +	);
+>  };
+>  #endif
+>  
+
+
+
+Thanks,
+Mauro
