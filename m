@@ -2,46 +2,44 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27CCC5DF62
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 23:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE28C5DF62
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 23:18:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234580AbiAYXEE (ORCPT
+        id S234710AbiAYXSk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Jan 2022 18:04:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230468AbiAYXDu (ORCPT
+        Tue, 25 Jan 2022 18:18:40 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:36928 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234706AbiAYXSj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Jan 2022 18:03:50 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F6C6C06161C;
-        Tue, 25 Jan 2022 15:03:50 -0800 (PST)
+        Tue, 25 Jan 2022 18:18:39 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 6FBC2CE19A7;
-        Tue, 25 Jan 2022 23:03:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C5A8C340E0;
-        Tue, 25 Jan 2022 23:03:46 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8244B61245;
+        Tue, 25 Jan 2022 23:18:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65519C340E0;
+        Tue, 25 Jan 2022 23:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643151826;
-        bh=j21Bv3ihuDIqFh63lBoPgd7clmpHK7UKh1kdC+XWpAE=;
+        s=k20201202; t=1643152718;
+        bh=n1VEybndR/BWFpxIeiPPk6LEiEOujbaxi3aCa0daOV8=;
         h=Date:From:To:Cc:Subject:From;
-        b=Wq/rpAPH+zWq5OzOXZ8qSslul+4yXrHab4r5LVIUOTblZplHC7zOwiylgP4gjVScA
-         bpoiQcROcLUFVhsQThsb4tT5772yC7brI2u5SOla8o1A56mHm669lr1Dwyav/Z2WIa
-         MaHgSl8ayo9hx7pL8nb+AGCBDORdcaSrdTOOCJxjng4S6KDhGzIYM64akX+6EluOFV
-         CGlCJyR3fq3P+a4P0Arsaq0G7THBr0OQNPjugN1yk9830k4ZLC9iOvTriPRxdxQWrc
-         +fNAL56ucoZyIFlpCFjWiA+0OihvTXH0shJMWYatjuDQo0kIoI/Gx+xpbr3dtuYBaR
-         hLx1RdyfSqccw==
-Date:   Tue, 25 Jan 2022 17:10:33 -0600
+        b=Mld1rJjAY78xN8cu5NzxFFchzV9a/lwE7wdYoBu6ssbzzZ8KbSx3CnWtnBCQ+X/xN
+         mCb5LjTEdH5R78XdzxqYZCEBFEpsJtB6CNpfG185UBd3l88XYoaGF7nVnrZMCF4QXO
+         azr0jLX6QMH9mGz7QcqUFz1Wo/Bbunv8fPSapv+xIsJugNa8iBe0VRZH6CJIj7WyZu
+         kJQ51XcoyUoYJUpi9h/5ab4Uw/7COTAj8rplX/MqywdR7wH7s70sDNtYwA1d2TASOH
+         9hdDazjO3IPPMhO7iDhm+gb0DJLvKDZjwA5uTbPybWXrYPL4OlzrDla+acUpIqsvAP
+         hySYIi3bM0mLg==
+Date:   Tue, 25 Jan 2022 17:25:25 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>
+Cc:     linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] scsi: core: Use struct_size() helper in kmalloc()
-Message-ID: <20220125231033.GA79247@embeddedor>
+Subject: [PATCH][next] comedi: das16: Use struct_size() helper in
+ comedi_alloc_spriv()
+Message-ID: <20220125232525.GA80228@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -54,26 +52,36 @@ in order to avoid any potential type mistakes or integer overflows that,
 in the worst scenario, could lead to heap overflows.
 
 Also, address the following sparse warnings:
-drivers/scsi/scsi.c:390:27: warning: using sizeof on a flexible structure
+drivers/comedi/drivers/das16.c:964:45: warning: using sizeof on a flexible structure
+drivers/comedi/drivers/das16.c:998:45: warning: using sizeof on a flexible structure
 
 Link: https://github.com/KSPP/linux/issues/174
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/scsi/scsi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/comedi/drivers/das16.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/scsi.c b/drivers/scsi/scsi.c
-index 211aace69c22..949cb530e360 100644
---- a/drivers/scsi/scsi.c
-+++ b/drivers/scsi/scsi.c
-@@ -387,7 +387,7 @@ static struct scsi_vpd *scsi_get_vpd_buf(struct scsi_device *sdev, u8 page)
- 	int vpd_len = SCSI_VPD_PG_LEN, result;
+diff --git a/drivers/comedi/drivers/das16.c b/drivers/comedi/drivers/das16.c
+index 937a69ce0977..728dc02156c8 100644
+--- a/drivers/comedi/drivers/das16.c
++++ b/drivers/comedi/drivers/das16.c
+@@ -961,7 +961,7 @@ static const struct comedi_lrange *das16_ai_range(struct comedi_device *dev,
  
- retry_pg:
--	vpd_buf = kmalloc(sizeof(*vpd_buf) + vpd_len, GFP_KERNEL);
-+	vpd_buf = kmalloc(struct_size(vpd_buf, data, vpd_len), GFP_KERNEL);
- 	if (!vpd_buf)
- 		return NULL;
+ 		/* allocate single-range range table */
+ 		lrange = comedi_alloc_spriv(s,
+-					    sizeof(*lrange) + sizeof(*krange));
++					    struct_size(lrange, range, 1));
+ 		if (!lrange)
+ 			return &range_unknown;
+ 
+@@ -995,7 +995,7 @@ static const struct comedi_lrange *das16_ao_range(struct comedi_device *dev,
+ 
+ 		/* allocate single-range range table */
+ 		lrange = comedi_alloc_spriv(s,
+-					    sizeof(*lrange) + sizeof(*krange));
++					    struct_size(lrange, range, 1));
+ 		if (!lrange)
+ 			return &range_unknown;
  
 -- 
 2.27.0
