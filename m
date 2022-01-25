@@ -2,122 +2,131 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 129BEC4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 20:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AC7C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 22:00:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232454AbiAYUtA (ORCPT
+        id S233451AbiAYWAk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Jan 2022 15:49:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40996 "EHLO
+        Tue, 25 Jan 2022 17:00:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233478AbiAYUso (ORCPT
+        with ESMTP id S233446AbiAYWAk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Jan 2022 15:48:44 -0500
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE0FEC06173B
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Jan 2022 12:48:43 -0800 (PST)
-Received: by mail-lj1-x229.google.com with SMTP id z14so17063381ljc.13
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Jan 2022 12:48:43 -0800 (PST)
+        Tue, 25 Jan 2022 17:00:40 -0500
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43F54C061744
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Jan 2022 14:00:40 -0800 (PST)
+Received: by mail-pf1-x431.google.com with SMTP id p37so20983808pfh.4
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Jan 2022 14:00:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9/K3eCHzr8SuLwQ7uwDyAB0IWI1YqeJ8BNzbE7dJqfE=;
-        b=KITFhU7y80IhN0k9QSPxgc3sIYSnLfoNVY1hTsyrZGrqFewnwQjqScSitcb29FEbXo
-         bpEtYxKyc4OFdT07OtlJ7uxpyQJzdbMOEiET9L3iXkawE/VKcGn9iCJzwW9rB+hDVsJY
-         UgGIEk2sWT0W2xCTT7wXGYbREsMxmPdTbkPDGAc3l10UjhSJX1H8Axnf6eUgkUC7KyBX
-         o8zIp0q3liZcTCNiXli+bd39UWHSKymbsQdtQItLvPFYJ85DmLPulWmKqiL3oLsmqzq7
-         6zQCtcM4P0dfldAvIhqgpELWnT/pssF/NGJo2hi7mLJ4YDKaHTZJzeCJyJHIBwditz7L
-         dHMA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=w+gteY1m43RHWpAycmbb69VeDmwEbqJifo/y9P69NPY=;
+        b=ARuYewZ5nw2ffzLdYlSu2aMvxPDlJPeFoeXQevHpAhWx0mahldaPAuZCLMPBWq2m1W
+         VXOncIt0HDqQbaC7oSXbooZ+Yv2BRa7af2HpboJ7/rLYHtXUsQeMnKSZoBr3U0adBzJF
+         ulCr0dgQp9UF0A3gkAK7uqKN1tMapR4NYI2ZU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9/K3eCHzr8SuLwQ7uwDyAB0IWI1YqeJ8BNzbE7dJqfE=;
-        b=RjsL10hZuZe90Rz5v/aH193oqVv/eWJZ3EtFcwqZDOtFaMuVt7pBMjb4IZJ2PQsEQm
-         fE6DAsSbM/nZ5MuZIDzG7UgKmYUwcrt4kgsdrnuWcXFOLS4gwHlrFowupW5G1fsO2S58
-         uc031ZZjimgdGYZeTVWQysNLLPYkAxWWn1AzXdUdfK4A0hHbV0S/caknxRhYvGqSUxSa
-         52s2G8WPTLVjDBk1tudWQ7XH/qsbRFOXleortwqmpUXFkaE3On05RTvQNOHs0jP/m490
-         Dag4Gc9tFDNKxl0OdWY3sXWhcavXnyR+2e3d502EsCy3DRfcl7ObCIU0MBarZWtOtGTD
-         ONbA==
-X-Gm-Message-State: AOAM530f05ITVULkiKqWG2A/8vHFR6YpVF0oHQt37Bvw2x/AsptzRTun
-        XtaIixPZPU+pykbZV11LEQCG4X2aYQlswSqAvk+pQw==
-X-Google-Smtp-Source: ABdhPJxJCK62//r1golVsux80RcF0IEtSInJOvm5qfONTIid/D+H6p74ze0yoiDuX0EuKqep/kOYfnv1cBMoDOaclxw=
-X-Received: by 2002:a2e:a5c9:: with SMTP id n9mr16114020ljp.220.1643143721891;
- Tue, 25 Jan 2022 12:48:41 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=w+gteY1m43RHWpAycmbb69VeDmwEbqJifo/y9P69NPY=;
+        b=hqZcdKrvpiXBLPGs0w9JieHxu5E2ViPqgJC+81g1C728FanCzv/atCdQebtXaftJI+
+         jfffTbAHdA0zongKCYXTD1iUwkDKotseMNQoqZdRI93NZb9OBTLWp3XVVDQNp0toQwP+
+         CIXMe3zk5cxqxiP+ULNIrq96z+6j93AWW7p4VELEcEvEJqgXQUtwsWl0q1CO0Kh/NiP0
+         frXp4tpjQzr/LVr3+isu5WGtBV/INH7BZfraSrgwH0emNwLpVYDsxr8L4ZEp3Fy/plcA
+         gOoKXUY8ohtwvDSW8CD35f+0WAvwzZ0vfeLBuCLzSMdMJyKjm2fbaYeIZJpKmftOesbT
+         3OYQ==
+X-Gm-Message-State: AOAM5327NcdzAEE86D+8UijOvEs1OWOUHyKRTyLZQSRqRS3rziJLp/QR
+        EqMFonndNqhYBTdSLviq9YJ/Tw==
+X-Google-Smtp-Source: ABdhPJzes72NzIlsk1hNk11tlJURFS9Irv2XtzmUVNkXQUCwSAYsjCxvGFNijeJsuUm756MAeqTZaw==
+X-Received: by 2002:a63:5009:: with SMTP id e9mr13537396pgb.9.1643148039767;
+        Tue, 25 Jan 2022 14:00:39 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g18sm1274268pju.7.2022.01.25.14.00.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jan 2022 14:00:39 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] perf: Avoid -Warray-bounds warning for __rel_loc macro
+Date:   Tue, 25 Jan 2022 14:00:37 -0800
+Message-Id: <20220125220037.2738923-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <20220125091453.1475246-1-ardb@kernel.org> <20220125091453.1475246-9-ardb@kernel.org>
-In-Reply-To: <20220125091453.1475246-9-ardb@kernel.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 25 Jan 2022 12:48:29 -0800
-Message-ID: <CAKwvOdnV6ndTYjNN5CzYx_4LQpB4A6Qhfe21Vos192pUj=Hwmg@mail.gmail.com>
-Subject: Re: [PATCH v6 8/8] ARM: make get_current() and __my_cpu_offset() __always_inline
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Keith Packard <keithpac@amazon.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2566; h=from:subject; bh=3xCm2+8JkO8X0PscRpFVHhDSlZ1UoLF0UYBAebUszpA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh8HMFGIbJFCGrr+z4Xoy2f3YnntnkP9QDnMb6g02i TSwvyiSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYfBzBQAKCRCJcvTf3G3AJqrsD/ 94nj4D9vdN9BWSEEsomamjGEI3J1gCXW+xZ5u7sv0hL1ocGMptGpRIjUC+iXq+GiEW0inZGRByQTz9 4gJVDAWiYy2ZrJAZJacIym4Wnq6YFnAGSl1XPra9r38LFN9yPBIVycYlcoGp3YmlPPilwey9ZP6jtV 5CtWFtr/jt/UNRUm50e28eeO7lxElLxll1OAbW8Vf7LOWyiGXSWzFYUmDWy8u756vkAq4wKd82Ch5K SQh8YtmZoowti5+PZjRxZLsGsHRfjaQ8fZtonvqUNLomp6y4gOB2Lku9JV5gvFvBvMf1rBADSdmiBa t7sSnBU95/9ch6GZmf07QcBkfp2LqZNVCDj8AoKh11eGXVBIlkzaN/OHEAbkHDv/sD2CWYZdOJL4Ok HjEUn2QSOho3O/mV0MAV56pd6PE9PbcF64H0XzETheiDRWgab5rp7/2NVV+LFYPKl2Y/RyNCWYTzM2 uAU+M3sLoylxS0nu1VHREqX4Ty+3v6Nq7LQ/DkptAzYMRz3XgaxpfMMnwLZ/atoDYbQTn7bIScVKYL V6JwuEofnZYi3E6SAwgEch2S4SvHTMyRrB6/+M5kl+5y5njIe/DX1AftdPxZwo3bb1LQTGdbtedloq Ke99TuMaGMCGExVYFLAFXge2tyYhE2ELMp9+qMOWmtDjuB1wUudBAwsB64YQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jan 25, 2022 at 1:15 AM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> The get_current() and __my_cpu_offset() accessors evaluate to only a
-> single instruction emitted inline, but due to the size of the asm string
-> that is created for SMP+v6 configurations, the compiler assumes
-> otherwise, and may emit the functions out of line instead.
->
-> So use __always_inline to avoid this.
->
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+As done for trace_events.h, also fix the __rel_loc macro in perf.h,
+which silences the -Warray-bounds warning:
 
-Alternatively, you could use the inline qualifier on the asm stmt.
-i.e. `asm inline ("my asm string")`. Only supported since gcc-8.3+ and
-all kernel-supported versions of clang though. See `asm_inline` in
-include/linux/compiler_types.h.
-Either way,
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+In file included from ./include/linux/string.h:253,
+                 from ./include/linux/bitmap.h:11,
+                 from ./include/linux/cpumask.h:12,
+                 from ./include/linux/mm_types_task.h:14,
+                 from ./include/linux/mm_types.h:5,
+                 from ./include/linux/buildid.h:5,
+                 from ./include/linux/module.h:14,
+                 from samples/trace_events/trace-events-sample.c:2:
+In function '__fortify_strcpy',
+    inlined from 'perf_trace_foo_rel_loc' at samples/trace_events/./trace-events-sample.h:519:1:
+./include/linux/fortify-string.h:47:33: warning: '__builtin_strcpy' offset 12 is out of the bounds [
+0, 4] [-Warray-bounds]
+   47 | #define __underlying_strcpy     __builtin_strcpy
+      |                                 ^
+./include/linux/fortify-string.h:445:24: note: in expansion of macro '__underlying_strcpy'
+  445 |                 return __underlying_strcpy(p, q);
+      |                        ^~~~~~~~~~~~~~~~~~~
 
-> ---
->  arch/arm/include/asm/current.h | 2 +-
->  arch/arm/include/asm/percpu.h  | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/include/asm/current.h b/arch/arm/include/asm/current.h
-> index 131a89bbec6b..1e1178bf176d 100644
-> --- a/arch/arm/include/asm/current.h
-> +++ b/arch/arm/include/asm/current.h
-> @@ -14,7 +14,7 @@ struct task_struct;
->
->  extern struct task_struct *__current;
->
-> -static inline __attribute_const__ struct task_struct *get_current(void)
-> +static __always_inline __attribute_const__ struct task_struct *get_current(void)
->  {
->         struct task_struct *cur;
->
-> diff --git a/arch/arm/include/asm/percpu.h b/arch/arm/include/asm/percpu.h
-> index a09034ae45a1..7545c87c251f 100644
-> --- a/arch/arm/include/asm/percpu.h
-> +++ b/arch/arm/include/asm/percpu.h
-> @@ -25,7 +25,7 @@ static inline void set_my_cpu_offset(unsigned long off)
->         asm volatile("mcr p15, 0, %0, c13, c0, 4" : : "r" (off) : "memory");
->  }
->
-> -static inline unsigned long __my_cpu_offset(void)
-> +static __always_inline unsigned long __my_cpu_offset(void)
->  {
->         unsigned long off;
->
-> --
-> 2.30.2
->
+Also make __data struct member a proper flexible array to avoid future
+problems.
 
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/trace/perf.h         | 5 +++--
+ include/trace/trace_events.h | 2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
+diff --git a/include/trace/perf.h b/include/trace/perf.h
+index b77d09c70a93..5800d13146c3 100644
+--- a/include/trace/perf.h
++++ b/include/trace/perf.h
+@@ -26,8 +26,9 @@
+ 
+ #undef __get_rel_dynamic_array
+ #define __get_rel_dynamic_array(field)	\
+-		((void *)(&__entry->__rel_loc_##field) +	\
+-		 sizeof(__entry->__rel_loc_##field) +		\
++		((void *)__entry +					\
++		 offsetof(typeof(*__entry), __rel_loc_##field) +	\
++		 sizeof(__entry->__rel_loc_##field) +			\
+ 		 (__entry->__rel_loc_##field & 0xffff))
+ 
+ #undef __get_rel_dynamic_array_len
+diff --git a/include/trace/trace_events.h b/include/trace/trace_events.h
+index cefefed18e85..7c86cc541c7a 100644
+--- a/include/trace/trace_events.h
++++ b/include/trace/trace_events.h
+@@ -134,7 +134,7 @@ TRACE_MAKE_SYSTEM_STR();
+ 	struct trace_event_raw_##name {					\
+ 		struct trace_entry	ent;				\
+ 		tstruct							\
+-		char			__data[0];			\
++		char			__data[];			\
+ 	};								\
+ 									\
+ 	static struct trace_event_class event_class_##name;
 -- 
-Thanks,
-~Nick Desaulniers
+2.30.2
+
