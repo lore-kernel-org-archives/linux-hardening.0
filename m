@@ -2,118 +2,78 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92639C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 17:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C459EC433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 17:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240627AbiAYRoE (ORCPT
+        id S1348289AbiAYRre (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Jan 2022 12:44:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54598 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241819AbiAYRnb (ORCPT
+        Tue, 25 Jan 2022 12:47:34 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:56542 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1382198AbiAYRqC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Jan 2022 12:43:31 -0500
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B07EC06173D
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Jan 2022 09:43:31 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id j16so9470270plx.4
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Jan 2022 09:43:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3NeOAxpdxjWDKGKhW1TpnxdPLPPyAy5jeeY/WTUKNSA=;
-        b=Q0mbDGc/h6Szxq44bScruvzUADOZfGbqZDL0+yNb1fO0Iu4jldp8rqQMNRTLPw1aEr
-         qz19/xV2akGlEkJJ3W1R/rJccgogqwf8k+pfa6f/k+u6RTjYBiy6Ai1HvNgoCT4+x0HY
-         mHOlnQ7DaV201efnCrIGf+jYQpkfcVJcp8ywI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3NeOAxpdxjWDKGKhW1TpnxdPLPPyAy5jeeY/WTUKNSA=;
-        b=sPaysWqNi2AWdopPIrHVBX97mX+B+FXWCMEIAoPu3wC5l6oPd1EMawZclVnWj4WKtt
-         iqiUlaCDjtlq81G2p5mbcukG4hUhiiNYoU4oNKJ0wOFleI5c7SI0rPMRJQmu+Lxy24RC
-         dlGnFL2qJC6O8WB1Xp+asjp6UH9r+XqILREAL+Wx/OO7uZf8+3YnijHQH/iejyG9IhNL
-         tfxPTG9TJaPIlGjafJ+pozimsBDVIk+4EgIHkqMkw9ji5RF0Tjx+EemsoHbd+JcKCcCo
-         7jZN9jFsd1Lbs/xvQi8riNP9LJusV9+I7LKvcuNUG6tsRVJykrTeXUim2ZzDiyvke5Ak
-         WvFw==
-X-Gm-Message-State: AOAM532ZZ+Xgt0mxfkb94O2C4oxVdLFUhUaBlw99XgAMitaweWlQvVeu
-        FgbrSNsIXoi7xL0zonPrNNnVpg==
-X-Google-Smtp-Source: ABdhPJz2DPHOV8XawNQSvqeOIS3FYt4Lo8r9uiSHC8+5GgrNXZgmVXpP2qgfv29+dHKvJgCuqJ38+w==
-X-Received: by 2002:a17:90a:e601:: with SMTP id j1mr4602058pjy.69.1643132610805;
-        Tue, 25 Jan 2022 09:43:30 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b4sm20637342pfl.106.2022.01.25.09.43.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jan 2022 09:43:30 -0800 (PST)
-Date:   Tue, 25 Jan 2022 09:43:29 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jiri Prchal <jiri.prchal@aksignal.cz>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ralph Siemsen <ralph.siemsen@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tue, 25 Jan 2022 12:46:02 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C6DB6B819DB;
+        Tue, 25 Jan 2022 17:46:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D32BDC340E6;
+        Tue, 25 Jan 2022 17:45:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643132759;
+        bh=dpNFflG1Kul0cblc0qXDQXXmYLTowF2QDwhwsWST6u8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=YSaMWp2lLtvrFg8QwQ1S5JB8pAwi3XxyG3y2BfJviBW4/fhmASqZAZAUMlsqY07iy
+         jhNpyOQFJCzMIkKYej0uP1C0XcLvqTPiGedh2sSVbDtqgUJf9XYMpBZnOyI55kwZ89
+         hx3+qfcw9uiBccsDtVQze6OnVOt5T7Xr3Yb4M+Ci1+NafAe8VMvaUjVF62AEO6ntT2
+         pONrQPhwlrQOT4yjvng/IavPvNw2bB6CM0YFeNE832ktu3sqVo5KTbhGgI6h0usaPL
+         TY+hWAOp65b1/xmNK615x6akKZfP1c8Ypk8J9/RQBhlXdqs04WQqBl3HBDvX0fJF2a
+         ovL21RV50wSFg==
+Date:   Tue, 25 Jan 2022 11:52:45 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Sebastian Reichel <sre@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 5.17-rc1 v2] eeprom: at25: Restore missing allocation
-Message-ID: <202201250943.A28F4346@keescook>
-References: <20220118182003.3385019-1-keescook@chromium.org>
- <CAMuHMdWu-unMfV1U_HAKwJwPkB_LY3kU88_D69M=bX8y1B=QTg@mail.gmail.com>
- <CAMuHMdXzEWN7B122ca279t4RPSSWGL29jzTgMdSoJ+Y56jEQYw@mail.gmail.com>
+Subject: [PATCH][next] power: supply: cros_usbpd: Use struct_size() helper in
+ kzalloc()
+Message-ID: <20220125175245.GA66154@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdXzEWN7B122ca279t4RPSSWGL29jzTgMdSoJ+Y56jEQYw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jan 25, 2022 at 04:25:39PM +0100, Geert Uytterhoeven wrote:
-> On Tue, Jan 25, 2022 at 3:20 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Fri, Jan 21, 2022 at 12:33 AM Kees Cook <keescook@chromium.org> wrote:
-> > > The at25 driver regressed in v5.17-rc1 due to a broken conflict
-> > > resolution: the allocation of the object was accidentally removed. Restore
-> > > it.
-> > >
-> > > This was found when building under CONFIG_FORTIFY_SOURCE=y and
-> > > -Warray-bounds, which complained about strncpy() being used against an
-> > > empty object:
-> > >
-> > > In function 'strncpy',
-> > >     inlined from 'at25_fw_to_chip.constprop' at drivers/misc/eeprom/at25.c:312:2:
-> > > ./include/linux/fortify-string.h:48:33: warning: '__builtin_strncpy' offset [0, 9] is out of the bounds [0, 0] [-Warray-bounds]
-> > >    48 | #define __underlying_strncpy    __builtin_strncpy
-> > >       |                                 ^
-> > > ./include/linux/fortify-string.h:59:16: note: in expansion of macro '__underlying_strncpy'
-> > >    59 |         return __underlying_strncpy(p, q, size);
-> > >       |                ^~~~~~~~~~~~~~~~~~~~
-> > > In function 'strncpy',
-> > >     inlined from 'at25_fram_to_chip' at drivers/misc/eeprom/at25.c:373:2,
-> > >     inlined from 'at25_probe' at drivers/misc/eeprom/at25.c:453:10:
-> > > ./include/linux/fortify-string.h:48:33: warning: '__builtin_strncpy' offset [0, 9] is out of the bounds [0, 0] [-Warray-bounds]
-> > >    48 | #define __underlying_strncpy    __builtin_strncpy
-> > >       |                                 ^
-> > > ./include/linux/fortify-string.h:59:16: note: in expansion of macro '__underlying_strncpy'
-> > >    59 |         return __underlying_strncpy(p, q, size);
-> > >       |                ^~~~~~~~~~~~~~~~~~~~
-> >
-> > On real hardware:
-> >
-> >     Unable to handle kernel access to user memory outside uaccess
-> > routines at virtual address 0000000000000028
-> >     ...
-> >     pc : __mutex_init+0x20/0x68
-> >     lr : at25_probe+0x8c/0x4d8
-> 
-> To avoid confusion: of course the crash happens only without Kees'
-> patch.  I just wanted to point out what happens when you boot on
-> real hardware, as it might be worthwhile to add that to the commit
-> description.
+Make use of the struct_size() helper instead of an open-coded version,
+in order to avoid any potential type mistakes or integer overflows that,
+in the worst scenario, could lead to heap overflows.
 
-Okay, whew. :)
+Also, address the following sparse warnings:
+drivers/power/supply/cros_usbpd-charger.c:107:23: warning: using sizeof on a flexible structure
 
+Link: https://github.com/KSPP/linux/issues/174
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/power/supply/cros_usbpd-charger.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/power/supply/cros_usbpd-charger.c b/drivers/power/supply/cros_usbpd-charger.c
+index d89e08efd2ad..cadb6a0c2cc7 100644
+--- a/drivers/power/supply/cros_usbpd-charger.c
++++ b/drivers/power/supply/cros_usbpd-charger.c
+@@ -104,7 +104,7 @@ static int cros_usbpd_charger_ec_command(struct charger_data *charger,
+ 	struct cros_ec_command *msg;
+ 	int ret;
+ 
+-	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
++	msg = kzalloc(struct_size(msg, data, max(outsize, insize)), GFP_KERNEL);
+ 	if (!msg)
+ 		return -ENOMEM;
+ 
 -- 
-Kees Cook
+2.27.0
+
