@@ -2,78 +2,84 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3A6C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 18:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A85BC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 18:01:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358498AbiAYSBg (ORCPT
+        id S245297AbiAYSBr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Jan 2022 13:01:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58290 "EHLO
+        Tue, 25 Jan 2022 13:01:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357892AbiAYR7g (ORCPT
+        with ESMTP id S1347605AbiAYSAp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Jan 2022 12:59:36 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEF19C061751;
-        Tue, 25 Jan 2022 09:59:35 -0800 (PST)
+        Tue, 25 Jan 2022 13:00:45 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04404C06173D;
+        Tue, 25 Jan 2022 10:00:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 679FF614F1;
-        Tue, 25 Jan 2022 17:59:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 634A3C340E0;
-        Tue, 25 Jan 2022 17:59:34 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C0CF2B819FC;
+        Tue, 25 Jan 2022 18:00:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 794B6C340E0;
+        Tue, 25 Jan 2022 18:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643133574;
-        bh=k21UjJLZbebZ1k0oSRvA1Q+UR3HKMKDNhfsWhlor4lc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OjUVEEPp1xSLAGSKZxsmxPapYBkRTBVU+1ocosZ4VvVMQ7XrHKwkcTdDqkZmyCO7r
-         h5wXBoj8iEhWsHZGDt8H5oN7/fTbuiaAltCr8l4qYTfKoYwkMZu/jVqUOsyXcDPnk4
-         JUEC0Wrt/GGRizfpoQQBXaa/3kLCYpj5w4xVM/Xg30bphX9vpfnrrfM1O2irroNTvD
-         xUuTETbr3OGfYla94YYk397f6jTYjfXS2Kh33g9w0IdwKeCuqDGf8zcj3I/YZgu91k
-         Utl4SXvy33Wguo84gW1pWT3eFzhOFJrR3G5X63FVAy2+uuBcDAwJ9nFur56gSUsctv
-         gyMAQA3wo0rGg==
-Date:   Tue, 25 Jan 2022 09:59:33 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH][next] net: mana: Use struct_size() helper in
- mana_gd_create_dma_region()
-Message-ID: <20220125095933.79ba895c@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-In-Reply-To: <BYAPR21MB127022573CE9A4158B2317E9BF5E9@BYAPR21MB1270.namprd21.prod.outlook.com>
-References: <20220124214347.GA24709@embeddedor>
-        <BYAPR21MB127022573CE9A4158B2317E9BF5E9@BYAPR21MB1270.namprd21.prod.outlook.com>
+        s=k20201202; t=1643133640;
+        bh=thPgkn5bU/soMVjidYH0tOpgluG55pEiEr9+5W6b6MA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=kMOAaP29cN/sKal92kvYcKRpaaVQR4woLTyXvu0H3WnJAXlvnTeku2Y+Qo3SwWvId
+         XooGFP6FJhJV+hIQCAjglcY3x5ZCYD310nmZ/mdKPp4PEtQYUWZ57dLc02OR/s2HS7
+         7xKD1CgJd1vYll6gbSdTm5TE9WSsjP728fiamu4EkJnB+Vnx0qFnVHVhHnDsf+TqvV
+         cJ/+rlEBk4qB6WGRIHUwOzL7PYHyaXajCEbhww6UQFdrrOmQlqS89B5Kk9P7e4N8Fe
+         DPVQUOyC2HwNoFwO2lKld9FQNmwLirB0m77loI20BSsMdiQyN3RiKibz0c0l5F/uAt
+         XtFWAtYAzqKZg==
+Date:   Tue, 25 Jan 2022 12:07:26 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] drm/i915/guc: Use struct_size() helper in kmalloc()
+Message-ID: <20220125180726.GA68646@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 24 Jan 2022 21:47:38 +0000 Dexuan Cui wrote:
-> > From: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > Sent: Monday, January 24, 2022 1:44 PM
-> >  ...
-> > Make use of the struct_size() helper instead of an open-coded version,
-> > in order to avoid any potential type mistakes or integer overflows that,
-> > in the worst scenario, could lead to heap overflows.
-> > 
-> > Also, address the following sparse warnings:
-> > drivers/net/ethernet/microsoft/mana/gdma_main.c:677:24: warning: using
-> > sizeof on a flexible structure
-> >  ...
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>  
-> 
-> Reviewed-by: Dexuan Cui <decui@microsoft.com>
+Make use of the struct_size() helper instead of an open-coded version,
+in order to avoid any potential type mistakes or integer overflows that,
+in the worst scenario, could lead to heap overflows.
 
-Thanks! Applied to net-next, 10cdc794dae8 ("net: mana: Use
-struct_size() helper in mana_gd_create_dma_region()")
+Also, address the following sparse warnings:
+drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c:792:23: warning: using sizeof on a flexible structure
+
+Link: https://github.com/KSPP/linux/issues/174
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c b/drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c
+index aa6dd6415202..e352a1aad228 100644
+--- a/drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c
++++ b/drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c
+@@ -789,7 +789,7 @@ static struct ct_incoming_msg *ct_alloc_msg(u32 num_dwords)
+ {
+ 	struct ct_incoming_msg *msg;
+ 
+-	msg = kmalloc(sizeof(*msg) + sizeof(u32) * num_dwords, GFP_ATOMIC);
++	msg = kmalloc(struct_size(msg, msg, num_dwords), GFP_ATOMIC);
+ 	if (msg)
+ 		msg->size = num_dwords;
+ 	return msg;
+-- 
+2.27.0
+
