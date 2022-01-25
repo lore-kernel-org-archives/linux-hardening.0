@@ -2,45 +2,49 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C459EC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 17:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36925C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 17:57:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348289AbiAYRre (ORCPT
+        id S241049AbiAYR4k (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Jan 2022 12:47:34 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:56542 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382198AbiAYRqC (ORCPT
+        Tue, 25 Jan 2022 12:56:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1385185AbiAYRyu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Jan 2022 12:46:02 -0500
+        Tue, 25 Jan 2022 12:54:50 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2364C06175E;
+        Tue, 25 Jan 2022 09:54:48 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C6DB6B819DB;
-        Tue, 25 Jan 2022 17:46:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D32BDC340E6;
-        Tue, 25 Jan 2022 17:45:58 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7F05CB819DC;
+        Tue, 25 Jan 2022 17:54:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BE27C340E0;
+        Tue, 25 Jan 2022 17:54:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643132759;
-        bh=dpNFflG1Kul0cblc0qXDQXXmYLTowF2QDwhwsWST6u8=;
+        s=k20201202; t=1643133286;
+        bh=e8RIDdHaka7BpYFM9Quoh+WQnHQ0tbZzk2YChopEt5k=;
         h=Date:From:To:Cc:Subject:From;
-        b=YSaMWp2lLtvrFg8QwQ1S5JB8pAwi3XxyG3y2BfJviBW4/fhmASqZAZAUMlsqY07iy
-         jhNpyOQFJCzMIkKYej0uP1C0XcLvqTPiGedh2sSVbDtqgUJf9XYMpBZnOyI55kwZ89
-         hx3+qfcw9uiBccsDtVQze6OnVOt5T7Xr3Yb4M+Ci1+NafAe8VMvaUjVF62AEO6ntT2
-         pONrQPhwlrQOT4yjvng/IavPvNw2bB6CM0YFeNE832ktu3sqVo5KTbhGgI6h0usaPL
-         TY+hWAOp65b1/xmNK615x6akKZfP1c8Ypk8J9/RQBhlXdqs04WQqBl3HBDvX0fJF2a
-         ovL21RV50wSFg==
-Date:   Tue, 25 Jan 2022 11:52:45 -0600
+        b=kfe3v9vI/NVHnoFrPeCBhSyVHjQQDrMtFRj2FLGHhtonu4oVamFx2uaUDoex/ZPwl
+         zAnO3bCTPb9q619jkKtp8C1pKJs+BkuizxhpCxMKjeiPV8PutwIkovgwe8m+mrFAMM
+         2HEC5/bm4WyeaEShCLHujXX1zoGLyVfDlZOEvGB6zvoypSLpPLnlheC948/vEtMNsN
+         /fdY4pHAsSdnn3fHTGfUNrB0XxeSV1ybgzkbB/ohctVLAxpjqfQ05uUhAiSMJhSLRq
+         3rYxH/SCyAD0/K0KLdZnAVPnfzcfa4kBNlSjiA/QDbNGNDJwFRub/mtBKmXwTelMft
+         NwUAu3eCvQhBQ==
+Date:   Tue, 25 Jan 2022 12:01:31 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Sebastian Reichel <sre@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] power: supply: cros_usbpd: Use struct_size() helper in
- kzalloc()
-Message-ID: <20220125175245.GA66154@embeddedor>
+Subject: [PATCH][next] Drivers: hv: vmbus: Use struct_size() helper in
+ kmalloc()
+Message-ID: <20220125180131.GA67746@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -53,26 +57,26 @@ in order to avoid any potential type mistakes or integer overflows that,
 in the worst scenario, could lead to heap overflows.
 
 Also, address the following sparse warnings:
-drivers/power/supply/cros_usbpd-charger.c:107:23: warning: using sizeof on a flexible structure
+drivers/hv/vmbus_drv.c:1132:31: warning: using sizeof on a flexible structure
 
 Link: https://github.com/KSPP/linux/issues/174
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/power/supply/cros_usbpd-charger.c | 2 +-
+ drivers/hv/vmbus_drv.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/cros_usbpd-charger.c b/drivers/power/supply/cros_usbpd-charger.c
-index d89e08efd2ad..cadb6a0c2cc7 100644
---- a/drivers/power/supply/cros_usbpd-charger.c
-+++ b/drivers/power/supply/cros_usbpd-charger.c
-@@ -104,7 +104,7 @@ static int cros_usbpd_charger_ec_command(struct charger_data *charger,
- 	struct cros_ec_command *msg;
- 	int ret;
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 17bf55fe3169..cd193456cd84 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1129,7 +1129,7 @@ void vmbus_on_msg_dpc(unsigned long data)
+ 	}
  
--	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
-+	msg = kzalloc(struct_size(msg, data, max(outsize, insize)), GFP_KERNEL);
- 	if (!msg)
- 		return -ENOMEM;
+ 	if (entry->handler_type	== VMHT_BLOCKING) {
+-		ctx = kmalloc(sizeof(*ctx) + payload_size, GFP_ATOMIC);
++		ctx = kmalloc(struct_size(ctx, msg.payload, payload_size), GFP_ATOMIC);
+ 		if (ctx == NULL)
+ 			return;
  
 -- 
 2.27.0
