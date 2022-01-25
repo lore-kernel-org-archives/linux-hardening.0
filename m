@@ -2,282 +2,218 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15208C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 08:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE24EC433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 09:27:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1453745AbiAYI65 (ORCPT
+        id S1455514AbiAYJ1G (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Jan 2022 03:58:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45036 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1453806AbiAYIzv (ORCPT
+        Tue, 25 Jan 2022 04:27:06 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:48984 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1457397AbiAYJPM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Jan 2022 03:55:51 -0500
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B66AC049640
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 23:51:32 -0800 (PST)
-Received: by mail-pf1-x436.google.com with SMTP id i65so18885538pfc.9
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Jan 2022 23:51:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=A/aENFTNzjAM+uwrag3B1qHd/TFz6oxzOU+9OgjpBY0=;
-        b=IHPSFI00pYZGfTVdBdN2epoh1vkXxSzZ97M46BMuvnIKU74J96xadoI9PzAegAn3HK
-         RIlGWMpclfeWbmKM7y7qayMtalDQ/RF0tlQ8WByl4Ru38QaCouqw1q9qoVNUMiFCKjO5
-         xUfU1iOsT1D0C3i5Mue2dPzRsYfbYBWHX6U40=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=A/aENFTNzjAM+uwrag3B1qHd/TFz6oxzOU+9OgjpBY0=;
-        b=ZMx5JvFnlcfO2t6Ekf1z7sizcSdU4HXUMJ5SUjud+e7DGOX2kU8/eF7VYsAMT1o43T
-         xvoIq9n9UOwt6LX0+FmpRmE+g0+BWhRA/GfPyqY8T9+gOja/ai+YuY1vCFhvAdHulDQ9
-         /b122AIh5vdHNVtaDuyq2rzKsfjrJRoQyqj6pDGsuCT9MzEiweDZ+OTPUBas4TAjSsKG
-         RFpm6v8MvPlWmsOgF9Hg+t8o1KDAS1uTekm3JMn4dH0Dj3iEx5DJgIbFR6Qch0WSkpQ9
-         rBA54KB8fuVFWqkyHEWx0pRhfLjyENk74O1pCwpERAVhOZerRF8ES12FU/oyUNSncleK
-         5hXA==
-X-Gm-Message-State: AOAM533uii6GLlhRI6v8wNU8OEyxT5ZZj1Yj92dB1RTA4W2EpPfirubh
-        kAIbfaJQcGlazhy61qGM7dXQHg==
-X-Google-Smtp-Source: ABdhPJxYMmUV6UNJ1kx5yW1QIZXaLDl74r72N+JUDDQM3aNEgpZhzyMmtW9/b2H7LKIZg17H45nJGg==
-X-Received: by 2002:a05:6a00:d64:b0:4ba:cb6f:87e0 with SMTP id n36-20020a056a000d6400b004bacb6f87e0mr17310243pfv.72.1643097091380;
-        Mon, 24 Jan 2022 23:51:31 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h25sm18804198pfn.208.2022.01.24.23.51.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jan 2022 23:51:31 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
+        Tue, 25 Jan 2022 04:15:12 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E57B961520
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Jan 2022 09:15:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42D4AC340EB;
+        Tue, 25 Jan 2022 09:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643102107;
+        bh=7HlVD05SkXizpl7tEfj25ZvyZuQshFuhgIjqL7v4bgc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KC02KkW2t1QVoqzIjpk6i6V6ybXuk2dJL+lVlysPSQ5Ap3/Q/Fp/YdA7mw9btVkf7
+         8/CY17REUXSq8HtG9vPu8RMX2FpeLhJSBfTzdIaPIBLRMsjkiMp3YCaRCbPooG5CEf
+         eaRZZnOyz23XbT9qqDj7wi8pMUvz7/dRe7HFIQV/AUp1y7KU6jj1fQLmHop8vrpwNH
+         0G9wqmu9aPc2mXsqRpPf8fg2QimQ1c3jxST42U2oIF8bDYqv3qxPYPwBVJdUQnfTAT
+         0K6UGHBvuuHEDSkmxF59nekz9fXI6xR7YAWh9P42tutmp9b6h8/Kyp4VURR9YmvY9v
+         VQO6hwVnz8dDg==
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org
+Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Isabella Basso <isabbasso@riseup.net>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v3] Kconfig.debug: Make DEBUG_INFO selectable from a choice
-Date:   Mon, 24 Jan 2022 23:51:26 -0800
-Message-Id: <20220125075126.891825-1-keescook@chromium.org>
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH v6 2/8] ARM: assembler: define a Kconfig symbol for group relocation support
+Date:   Tue, 25 Jan 2022 10:14:47 +0100
+Message-Id: <20220125091453.1475246-3-ardb@kernel.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220125091453.1475246-1-ardb@kernel.org>
+References: <20220125091453.1475246-1-ardb@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8150; h=from:subject; bh=Sk6bdOF055YpWVSI90zrcLZOsF2giKdwSSCMnUw/2Vc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh76v+ed6XRMKylDRICIuwyHz3AwiXdzYskYuNnvYs U5jvS1KJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYe+r/gAKCRCJcvTf3G3AJnEpD/ sHGPkKwHcb4aul5Defn5aISeEIE7j6GeWdkuhaVJsmMhkekO/EU3P6qUMn8KdFv+6IyD+juTzcMn9o uNwAk0ebBEO9iXbhJajo2zpcvStmsNCyDpCI5H2b1rgsog4c4DLIr8NxE3eEyzK88lif/ckVR9/XYW BxPfrINbO11OfCPfiU0GA6octLNFabW3cUtZp5mlz0/JreZqfEHrjLmfU7i++tQLFONKWxg7gTzL1L KezpUoWAYGmVkFr5uh8p5gtlYugsB8ahPMXNSMnAm5aQjK/K080pnKK75X9J6jVIrCrKMpRjEJ6cRE DDtgfDSS8ASRQPZ0k0s01GveNJNFkFyb3dxJESfUkbGxTYOIbjD81MeYoa/xCfsja2SANNkJRNSu4F RjpQU4FfuOrGwg1As29AugdBUwVO78OI3rmihqd4QgoWYqOSV7sko4iSWCQg5Axza/OL+Iu70A1TKV YpWt0B90Iu0XJzu090yd46D+mh0dIGcnFwdw+xd7SJsoCvjTDUtTdbgLwv3tKGzLXCwbl7LA2UrHh1 yegRWwUfWaT4xFVbEtglhuY6cQ/d6KYMBdgBT91Spc+xuXpWfce3YJDo1PzXYWiLQGJ1lFlvfKlnfM nyBDaIot7t3BoqR7n/G3UQUv0/lQzPptdRx9LrqmdZzOcaufS8e5d1++p6sg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6264; h=from:subject; bh=7HlVD05SkXizpl7tEfj25ZvyZuQshFuhgIjqL7v4bgc=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBh77+A9sMUYkRtcYQMDCDYTp3v6UAQfQG1Xe70vKp8 hEtiV4CJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYe+/gAAKCRDDTyI5ktmPJFbEC/ 4k1EsmzMc66Pc4yPvJaGOqqSL5TobZz/8CrobbYE3fgN+0/cK4SLF0o+PjUetSKpSt7gUFYli0MI1I exl+4dOFkiB8EKPiYwdSGu8xsnHo9XowPZZvXi0xfBNGW2xXtmOkIVllIntMCva9hPDL63uwbTKkz+ lTZrRHRBccHEsfQLK1lqepSBXIoQCA7gNdsvVjHBCLv13O7TSYml7Q67o6LCQEx83dcPpZ15tK9QwG rxiN9U4n9WcYxhOAFpUpz33Mq/mmO1387PSRR+TXqwdVC0jnG2jQm7avdyD+Yt936jolOtXEuFzUum KplkFrRFbIpKVeruNneASSWrjRJ7tbsOB1kFhkApOsmPwFe+bzBgzdPKWuJ0ZcOzn+wZHqGaokop9i zdu6DbYh+uG+MizsGTXDI6wHTzXO5MLERfu+ofSJR0O0NGojCWml6iiI3waxzkyi4Aw6F8JSAGTyhY Glbq0hxyIU2DChPeBYxUNjbTEIpEM1lRHcCwdJDWrUTnk=
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Currently it's not possible to enable DEBUG_INFO for an all*config build,
-since it is marked as "depends on !COMPILE_TEST". This generally makes
-sense because a debug build of an all*config target ends up taking much
-longer and the output is much larger. Having this be "default off" makes
-sense. However, there are cases where enabling DEBUG_INFO for such builds
-is useful for doing treewide A/B comparisons of build options, etc.
+Nathan reports the group relocations go out of range in pathological
+cases such as allyesconfig kernels, which have little chance of actually
+booting but are still used in validation.
 
-Make DEBUG_INFO selectable from any of the DWARF version choice options,
-with DEBUG_INFO_NONE being the default for COMPILE_TEST. The mutually
-exclusive relationship between DWARF5 and BTF must be inverted, but the
-result remains the same. Additionally moves DEBUG_KERNEL and DEBUG_MISC
-up to the top of the menu because they were enabling features _above_
-it, making it weird to navigate menuconfig.
+So add a Kconfig symbol for this feature, and make it depend on
+!COMPILE_TEST.
 
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
-v1: https://lore.kernel.org/lkml/20211210000910.3597609-1-keescook@chromium.org
-v2: https://lore.kernel.org/lkml/20220121001204.4023842-1-keescook@chromium.org
-v3: - rebase to v5.17-rc1
----
- lib/Kconfig.debug | 140 +++++++++++++++++++++++++---------------------
- 1 file changed, 75 insertions(+), 65 deletions(-)
+ arch/arm/Kconfig                 | 13 ++++++++++++-
+ arch/arm/include/asm/assembler.h |  8 ++++----
+ arch/arm/include/asm/current.h   |  8 ++++----
+ arch/arm/include/asm/percpu.h    |  4 ++--
+ arch/arm/kernel/module.c         |  7 ++++++-
+ 5 files changed, 28 insertions(+), 12 deletions(-)
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 14b89aa37c5c..1290e0906236 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -208,20 +208,88 @@ config DEBUG_BUGVERBOSE
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 359a3b85c8b3..70ab8d807032 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -128,7 +128,7 @@ config ARM
+ 	select RTC_LIB
+ 	select SYS_SUPPORTS_APM_EMULATION
+ 	select THREAD_INFO_IN_TASK
+-	select HAVE_ARCH_VMAP_STACK if MMU && (!LD_IS_LLD || LLD_VERSION >= 140000)
++	select HAVE_ARCH_VMAP_STACK if MMU && ARM_HAS_GROUP_RELOCS
+ 	select TRACE_IRQFLAGS_SUPPORT if !CPU_V7M
+ 	# Above selects are sorted alphabetically; please add new ones
+ 	# according to that.  Thanks.
+@@ -140,6 +140,17 @@ config ARM
+ 	  Europe.  There is an ARM Linux project with a web page at
+ 	  <http://www.arm.linux.org.uk/>.
  
- endmenu # "printk and dmesg options"
- 
-+config DEBUG_KERNEL
-+	bool "Kernel debugging"
++config ARM_HAS_GROUP_RELOCS
++	def_bool y
++	depends on !LD_IS_LLD || LLD_VERSION >= 140000
++	depends on !COMPILE_TEST
 +	help
-+	  Say Y here if you are developing drivers or trying to debug and
-+	  identify kernel problems.
++	  Whether or not to use R_ARM_ALU_PC_Gn or R_ARM_LDR_PC_Gn group
++	  relocations, which have been around for a long time, but were not
++	  supported in LLD until version 14. The combined range is -/+ 256 MiB,
++	  which is usually sufficient, but not for allyesconfig, so we disable
++	  this feature when doing compile testing.
 +
-+config DEBUG_MISC
-+	bool "Miscellaneous debug code"
-+	default DEBUG_KERNEL
-+	depends on DEBUG_KERNEL
-+	help
-+	  Say Y here if you need to enable miscellaneous debug code that should
-+	  be under a more specific debug option but isn't.
-+
- menu "Compile-time checks and compiler options"
+ config ARM_HAS_SG_CHAIN
+ 	bool
  
- config DEBUG_INFO
--	bool "Compile the kernel with debug info"
--	depends on DEBUG_KERNEL && !COMPILE_TEST
-+	bool
- 	help
--	  If you say Y here the resulting kernel image will include
--	  debugging info resulting in a larger kernel image.
-+	  A kernel debug info option other than "None" has been selected
-+	  in the "Debug information" choice below, indicating that debug
-+	  information will be generated for build targets.
-+
-+choice
-+	prompt "Debug information"
-+	depends on DEBUG_KERNEL
-+	default DEBUG_INFO_NONE if COMPILE_TEST
-+	help
-+	  Selecting something other than "None" results in a kernel image
-+	  that will include debugging info resulting in a larger kernel image.
- 	  This adds debug symbols to the kernel and modules (gcc -g), and
- 	  is needed if you intend to use kernel crashdump or binary object
- 	  tools like crash, kgdb, LKCD, gdb, etc on the kernel.
--	  Say Y here only if you plan to debug the kernel.
+diff --git a/arch/arm/include/asm/assembler.h b/arch/arm/include/asm/assembler.h
+index 59d7b9e81934..9998718a49ca 100644
+--- a/arch/arm/include/asm/assembler.h
++++ b/arch/arm/include/asm/assembler.h
+@@ -656,8 +656,8 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
  
--	  If unsure, say N.
-+	  Choose which version of DWARF debug info to emit. If unsure,
-+	  select "Toolchain default".
-+
-+config DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
-+	bool "Rely on the toolchain's implicit default DWARF version"
-+	select DEBUG_INFO
-+	help
-+	  The implicit default version of DWARF debug info produced by a
-+	  toolchain changes over time.
-+
-+	  This can break consumers of the debug info that haven't upgraded to
-+	  support newer revisions, and prevent testing newer versions, but
-+	  those should be less common scenarios.
-+
-+config DEBUG_INFO_DWARF4
-+	bool "Generate DWARF Version 4 debuginfo"
-+	select DEBUG_INFO
-+	help
-+	  Generate DWARF v4 debug info. This requires gcc 4.5+ and gdb 7.0+.
-+
-+	  If you have consumers of DWARF debug info that are not ready for
-+	  newer revisions of DWARF, you may wish to choose this or have your
-+	  config select this.
-+
-+config DEBUG_INFO_DWARF5
-+	bool "Generate DWARF Version 5 debuginfo"
-+	select DEBUG_INFO
-+	depends on !CC_IS_CLANG || (CC_IS_CLANG && (AS_IS_LLVM || (AS_IS_GNU && AS_VERSION >= 23502)))
-+	help
-+	  Generate DWARF v5 debug info. Requires binutils 2.35.2, gcc 5.0+ (gcc
-+	  5.0+ accepts the -gdwarf-5 flag but only had partial support for some
-+	  draft features until 7.0), and gdb 8.0+.
-+
-+	  Changes to the structure of debug info in Version 5 allow for around
-+	  15-18% savings in resulting image and debug info section sizes as
-+	  compared to DWARF Version 4. DWARF Version 5 standardizes previous
-+	  extensions such as accelerators for symbol indexing and the format
-+	  for fission (.dwo/.dwp) files. Users may not want to select this
-+	  config if they rely on tooling that has not yet been updated to
-+	  support DWARF Version 5.
-+
-+config DEBUG_INFO_NONE
-+	bool "Disable debug information"
-+	help
-+	  Do not build the kernel with debugging information, which will
-+	  result in a faster and smaller build.
-+
-+endchoice # "Debug information"
+ 	.macro		__ldst_va, op, reg, tmp, sym, cond
+ #if __LINUX_ARM_ARCH__ >= 7 || \
+-    (defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS)) || \
+-    (defined(CONFIG_LD_IS_LLD) && CONFIG_LLD_VERSION < 140000)
++    !defined(CONFIG_ARM_HAS_GROUP_RELOCS) || \
++    (defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS))
+ 	mov_l		\tmp, \sym, \cond
+ 	\op\cond	\reg, [\tmp]
+ #else
+@@ -716,8 +716,8 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
+ 	 */
+ 	.macro		ldr_this_cpu, rd:req, sym:req, t1:req, t2:req
+ #if __LINUX_ARM_ARCH__ >= 7 || \
+-    (defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS)) || \
+-    (defined(CONFIG_LD_IS_LLD) && CONFIG_LLD_VERSION < 140000)
++    !defined(CONFIG_ARM_HAS_GROUP_RELOCS) || \
++    (defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS))
+ 	this_cpu_offset	\t1
+ 	mov_l		\t2, \sym
+ 	ldr		\rd, [\t1, \t2]
+diff --git a/arch/arm/include/asm/current.h b/arch/arm/include/asm/current.h
+index 2f9d79214b25..131a89bbec6b 100644
+--- a/arch/arm/include/asm/current.h
++++ b/arch/arm/include/asm/current.h
+@@ -37,8 +37,8 @@ static inline __attribute_const__ struct task_struct *get_current(void)
+ #ifdef CONFIG_CPU_V6
+ 	    "1:							\n\t"
+ 	    "	.subsection 1					\n\t"
+-#if !(defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS)) && \
+-    !(defined(CONFIG_LD_IS_LLD) && CONFIG_LLD_VERSION < 140000)
++#if defined(CONFIG_ARM_HAS_GROUP_RELOCS) && \
++    !(defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS))
+ 	    "2: " LOAD_SYM_ARMV6(%0, __current) "		\n\t"
+ 	    "	b	1b					\n\t"
+ #else
+@@ -55,8 +55,8 @@ static inline __attribute_const__ struct task_struct *get_current(void)
+ #endif
+ 	    : "=r"(cur));
+ #elif __LINUX_ARM_ARCH__>= 7 || \
+-      (defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS)) || \
+-      (defined(CONFIG_LD_IS_LLD) && CONFIG_LLD_VERSION < 140000)
++      !defined(CONFIG_ARM_HAS_GROUP_RELOCS) || \
++      (defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS))
+ 	cur = __current;
+ #else
+ 	asm(LOAD_SYM_ARMV6(%0, __current) : "=r"(cur));
+diff --git a/arch/arm/include/asm/percpu.h b/arch/arm/include/asm/percpu.h
+index 28961d60877d..a09034ae45a1 100644
+--- a/arch/arm/include/asm/percpu.h
++++ b/arch/arm/include/asm/percpu.h
+@@ -38,8 +38,8 @@ static inline unsigned long __my_cpu_offset(void)
+ #ifdef CONFIG_CPU_V6
+ 	    "1:							\n\t"
+ 	    "	.subsection 1					\n\t"
+-#if !(defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS)) && \
+-    !(defined(CONFIG_LD_IS_LLD) && CONFIG_LLD_VERSION < 140000)
++#if defined(CONFIG_ARM_HAS_GROUP_RELOCS) && \
++    !(defined(MODULE) && defined(CONFIG_ARM_MODULE_PLTS))
+ 	    "2: " LOAD_SYM_ARMV6(%0, __per_cpu_offset) "	\n\t"
+ 	    "	b	1b					\n\t"
+ #else
+diff --git a/arch/arm/kernel/module.c b/arch/arm/kernel/module.c
+index 4d33a7acf617..549abcedf795 100644
+--- a/arch/arm/kernel/module.c
++++ b/arch/arm/kernel/module.c
+@@ -68,6 +68,7 @@ bool module_exit_section(const char *name)
+ 		strstarts(name, ".ARM.exidx.exit");
+ }
  
- if DEBUG_INFO
++#ifdef CONFIG_ARM_HAS_GROUP_RELOCS
+ /*
+  * This implements the partitioning algorithm for group relocations as
+  * documented in the ARM AArch32 ELF psABI (IHI 0044).
+@@ -103,6 +104,7 @@ static u32 get_group_rem(u32 group, u32 *offset)
+ 	} while (group--);
+ 	return shift;
+ }
++#endif
  
-@@ -267,56 +335,12 @@ config DEBUG_INFO_SPLIT
- 	  to know about the .dwo files and include them.
- 	  Incompatible with older versions of ccache.
+ int
+ apply_relocate(Elf32_Shdr *sechdrs, const char *strtab, unsigned int symindex,
+@@ -118,7 +120,9 @@ apply_relocate(Elf32_Shdr *sechdrs, const char *strtab, unsigned int symindex,
+ 		unsigned long loc;
+ 		Elf32_Sym *sym;
+ 		const char *symname;
++#ifdef CONFIG_ARM_HAS_GROUP_RELOCS
+ 		u32 shift, group = 1;
++#endif
+ 		s32 offset;
+ 		u32 tmp;
+ #ifdef CONFIG_THUMB2_KERNEL
+@@ -249,6 +253,7 @@ apply_relocate(Elf32_Shdr *sechdrs, const char *strtab, unsigned int symindex,
+ 			*(u32 *)loc = __opcode_to_mem_arm(tmp);
+ 			break;
  
--choice
--	prompt "DWARF version"
--	help
--	  Which version of DWARF debug info to emit.
++#ifdef CONFIG_ARM_HAS_GROUP_RELOCS
+ 		case R_ARM_ALU_PC_G0_NC:
+ 			group = 0;
+ 			fallthrough;
+@@ -296,7 +301,7 @@ apply_relocate(Elf32_Shdr *sechdrs, const char *strtab, unsigned int symindex,
+ 			}
+ 			*(u32 *)loc = __opcode_to_mem_arm((tmp & ~0xfff) | offset);
+ 			break;
 -
--config DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
--	bool "Rely on the toolchain's implicit default DWARF version"
--	help
--	  The implicit default version of DWARF debug info produced by a
--	  toolchain changes over time.
--
--	  This can break consumers of the debug info that haven't upgraded to
--	  support newer revisions, and prevent testing newer versions, but
--	  those should be less common scenarios.
--
--	  If unsure, say Y.
--
--config DEBUG_INFO_DWARF4
--	bool "Generate DWARF Version 4 debuginfo"
--	help
--	  Generate DWARF v4 debug info. This requires gcc 4.5+ and gdb 7.0+.
--
--	  If you have consumers of DWARF debug info that are not ready for
--	  newer revisions of DWARF, you may wish to choose this or have your
--	  config select this.
--
--config DEBUG_INFO_DWARF5
--	bool "Generate DWARF Version 5 debuginfo"
--	depends on !CC_IS_CLANG || (CC_IS_CLANG && (AS_IS_LLVM || (AS_IS_GNU && AS_VERSION >= 23502)))
--	depends on !DEBUG_INFO_BTF
--	help
--	  Generate DWARF v5 debug info. Requires binutils 2.35.2, gcc 5.0+ (gcc
--	  5.0+ accepts the -gdwarf-5 flag but only had partial support for some
--	  draft features until 7.0), and gdb 8.0+.
--
--	  Changes to the structure of debug info in Version 5 allow for around
--	  15-18% savings in resulting image and debug info section sizes as
--	  compared to DWARF Version 4. DWARF Version 5 standardizes previous
--	  extensions such as accelerators for symbol indexing and the format
--	  for fission (.dwo/.dwp) files. Users may not want to select this
--	  config if they rely on tooling that has not yet been updated to
--	  support DWARF Version 5.
--
--endchoice # "DWARF version"
--
- config DEBUG_INFO_BTF
- 	bool "Generate BTF typeinfo"
- 	depends on !DEBUG_INFO_SPLIT && !DEBUG_INFO_REDUCED
- 	depends on !GCC_PLUGIN_RANDSTRUCT || COMPILE_TEST
- 	depends on BPF_SYSCALL
-+	depends on !DEBUG_INFO_DWARF5
- 	help
- 	  Generate deduplicated BTF type information from DWARF debug info.
- 	  Turning this on expects presence of pahole tool, which will convert
-@@ -585,20 +609,6 @@ source "lib/Kconfig.kcsan"
- 
- endmenu
- 
--config DEBUG_KERNEL
--	bool "Kernel debugging"
--	help
--	  Say Y here if you are developing drivers or trying to debug and
--	  identify kernel problems.
--
--config DEBUG_MISC
--	bool "Miscellaneous debug code"
--	default DEBUG_KERNEL
--	depends on DEBUG_KERNEL
--	help
--	  Say Y here if you need to enable miscellaneous debug code that should
--	  be under a more specific debug option but isn't.
--
- menu "Networking Debugging"
- 
- source "net/Kconfig.debug"
++#endif
+ #ifdef CONFIG_THUMB2_KERNEL
+ 		case R_ARM_THM_CALL:
+ 		case R_ARM_THM_JUMP24:
 -- 
 2.30.2
 
