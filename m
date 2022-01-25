@@ -2,111 +2,112 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A28C4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 09:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 162ABC433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jan 2022 13:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1455170AbiAYJ1i (ORCPT
+        id S1384528AbiAYNAj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Jan 2022 04:27:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49468 "EHLO
+        Tue, 25 Jan 2022 08:00:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1573007AbiAYJSg (ORCPT
+        with ESMTP id S1574440AbiAYM6c (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Jan 2022 04:18:36 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95897C061768
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Jan 2022 01:15:05 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8642EB81732
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Jan 2022 09:15:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C2CEC340E0;
-        Tue, 25 Jan 2022 09:14:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643102102;
-        bh=80GpadFNKVGiePMC5wFZfr7KNkkn+bT2EEfR4nbBbso=;
-        h=From:To:Cc:Subject:Date:From;
-        b=LGPkh9/08+yZa0xBiBCYKS1OqRmf5rRIPWStvgxqZYpzXcQncPscuP+wp00GbBCzm
-         CTTvrpnSz+/rBz/sJs2i45xmNZ3pbzLxfUfpmsb4Zb2TbkQ+GJFZ3zYWPrjErU6vyw
-         xc4u9dd3RjhXk1HH4fc6ujMdIFG7reF7wlmLa2VIkfiotzCBmnr5e7+MBf7sKH2pgn
-         g4PwdW+dqYXL9gBX0cr0wNjcLG5X/6Cu2dfJ6WrLeiXk6coYZt/zX/rxKjsIDoWuHM
-         FImXzeMed7RBF79SCDJkXhEt2d5KK7lnoGIBYiTtc9xFPP7Ojw3EMf2TqzxirCl5qK
-         mohUweHI0O9fA==
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org
-Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Keith Packard <keithpac@amazon.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Tue, 25 Jan 2022 07:58:32 -0500
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148B7C06173B
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Jan 2022 04:58:31 -0800 (PST)
+Received: by mail-qt1-x82c.google.com with SMTP id c15so10895054qtv.1
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Jan 2022 04:58:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ObgW7GMZrjNyJrZnK/c5aZcQ8In8o+gHMAIQFfUL8g4=;
+        b=RiFM3eGZFZYsElvhuiHpTLpK2yZKKeJZBFMRSIG+Zv7tTpJLnZ0fhW9T4iBNkUObo7
+         Z5Y8qixG+H+IBjS58yWP3ZUF9GYyKIc+ToLoZCL8QpR2HZIqn3t/XUegmpCl0S917vDj
+         o0I5S+20ABl940VrhDOfdUeyY828MOU/0gwitfT7X6koWRal4aXeXJtFVAx5TfeZ4Kod
+         hV+9j8nt4fWM0YgwjlzK7dx/3c37lPax2IqWRajWG4nnx65hmApZZNG/jD1zcyjXH1by
+         55R2JmVHkzPCpAbhBVKCN6EBlW5u0CcunF+RnkeKAWaRrXQQm57bhiktXGrCaR7PEQyo
+         JO8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ObgW7GMZrjNyJrZnK/c5aZcQ8In8o+gHMAIQFfUL8g4=;
+        b=S9vgru4A5dL6bNIc3/ddU+Rmy7BCfOmDfANhc1UPPrpcF7hG1Cy+Nhf97BURDc2mYw
+         NeDbx0j8YsXcPCRCYV21ZYBD9b20VSSX3nmge0y1Gr22kiWqyQe46nMjKidLZ+Kw0yEY
+         ZwzrqPEoIFzn/3F2Ol00HVwf/9bazbuJBXr+vNTRdW9zNUrO6kbDW1ZPqI+iMPJvBTd4
+         A/EixzbGwSY0sdrQcE9KwRdijXkrFMpJkGT2VMsdpjhSZ6/Xwt3jDJxERAhTSdwOvZSE
+         BbQHGDSCcxiirfQLlCKEWroB5THuyGhfs7CSgbuTDL/TlcFtM8gzn1jND+zMQ4bB/CcZ
+         WvXQ==
+X-Gm-Message-State: AOAM531Bqen0RsRIoTHGkQ5LcUV13HeCd9tApPQu8SgOCKhN5R+ASIfC
+        SPXIJBvxOZ0EjGGSRSINzL6N3A==
+X-Google-Smtp-Source: ABdhPJxdt6MzvRGRy7DhU8dYiiKR5o7gqh7UlLLVITnAT4jmMjP9tlKFF7Pm770byRHYvwwTaACx8A==
+X-Received: by 2002:ac8:5784:: with SMTP id v4mr15013138qta.37.1643115510217;
+        Tue, 25 Jan 2022 04:58:30 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
+        by smtp.gmail.com with ESMTPSA id u37sm8961695qtc.76.2022.01.25.04.58.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jan 2022 04:58:29 -0800 (PST)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1nCLP2-004qqE-1u; Tue, 25 Jan 2022 08:58:28 -0400
+Date:   Tue, 25 Jan 2022 08:58:28 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH v6 0/8] ARM vmap'ed and IRQ stacks roundup
-Date:   Tue, 25 Jan 2022 10:14:45 +0100
-Message-Id: <20220125091453.1475246-1-ardb@kernel.org>
-X-Mailer: git-send-email 2.30.2
+        Leon Romanovsky <leon@kernel.org>,
+        Keith Busch <kbusch@kernel.org>, Len Baker <len.baker@gmx.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/2] overflow: Implement size_t saturating arithmetic
+ helpers
+Message-ID: <20220125125828.GM8034@ziepe.ca>
+References: <20210920180853.1825195-1-keescook@chromium.org>
+ <20210920180853.1825195-2-keescook@chromium.org>
+ <aa42ebfa-03b8-93fa-e036-a7507397d0dc@rasmusvillemoes.dk>
+ <202201241237.C82267B66C@keescook>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2498; h=from:subject; bh=80GpadFNKVGiePMC5wFZfr7KNkkn+bT2EEfR4nbBbso=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBh7798kogx0Vqb3GMM9c0zSDJLVJ+D8muTYRPe7v4x qYSy3qOJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYe+/fAAKCRDDTyI5ktmPJKEhC/ 9Z9RMyWwePwof0dLE2g4M66KQhl/JfYZ1Rxh/YmfjkzDqkRCFuJikuc+IbG2VKU26+lNmXduOF2qK/ UE284SxTfHxceYuST1K+/SETnhEe+ftFiWnw/6oW9V/71DjW9b7iBXXdwE3ZxwN0TQfVBozkvyjKAf 3LLhB+H+SobsSnltxy/ux+JAj1MnseeFS0RcmcBKhghC0c48X9xmSaKnnXqiyp3fn/u59kojkwFv0F pqUu/y/1+t3jdyaIfRif1iQrvc1ncP+xB5dpn+Yf2J1MwGgM2ya/cYstFsKNjlSURTpju58l0xReQc K0IAt9EagbvCiUcFmVPWVJyCvYDDv11kHXp1jw19I0ZP7GrKKydbscBfRDqN0aIhyMvnzkSlxBPEZ5 1VOi0map0hhPfiqf/jCanEbFwbMtsexI9GiiMyUaBH/PoKNK3UBI7Ufh7tQFQCkfvh5eVxYWQB3zuJ oOfx5J5p5sVtc5fUURmqXTMEueZZ7MXF7XiVNuxuzmkTw=
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202201241237.C82267B66C@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-This v6 series is a followup to [0], and presents the proposed changes
-as a set of delta patches against the v4 that was already taken into
-rmk/devel-stable, and dropped from v5.17 when it turned out that were
-unresolved issues related to suspend/resume.
+On Mon, Jan 24, 2022 at 01:13:20PM -0800, Kees Cook wrote:
+> *thread necromancy*
+> 
+> On Tue, Sep 21, 2021 at 08:51:53AM +0200, Rasmus Villemoes wrote:
+> > Not that I can see that the __must_check matters much for these anyway;
+> > if anybody does
+> > 
+> >   size_mul(foo, bar);
+> > 
+> > that's just a statement with no side effects, so probably the compiler
+> > would warn anyway, or at least nobody can then go on to do anything
+> > "wrong". Unlike the check_*_overflow(), which have the (possibly
+> > wrapped) result in a output-pointer and the "did it overflow" as the
+> > return value, so you can do
+> > 
+> >   check_mul_overflow(a, b, &d);
+> >   do_stuff_with(d);
+> > 
+> > were it not for the __must_check wrapper.
+> > 
+> > [Reminder: __must_check is a bit of a misnomer, the attribute is really
+> > warn_unused_result, and there's no requirement that the result is part
+> > of the controlling expression of an if() or while() - just passing the
+> > result on directly to some other function counts as a "use", which is
+> > indeed what we do with the size wrappers.]
+> 
+> What I'd really like is a "store this in a size_t" check to catch dumb
+> storage size problems (or related overflows). In other words:
 
-These patches apply onto rmk/devel-stable directly, which means there is
-an unresolved conflict with the changes that landed in v5.17-rc1 via the
-ARM tree: these will need to be handled by the maintainer.
+Yes, this. The overflow things are nice, but quite often we need to
+get things into a size_t to use with an allocator and the rigorous
+type checking in the normal overflows is a problem.
 
-Code can be found under the arm-vmap-stacks-v6 tag at
-git://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git
-
-[0] https://lore.kernel.org/linux-arm-kernel/20220124174744.1054712-1-ardb@kernel.org/
-
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Keith Packard <keithpac@amazon.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Marc Zyngier <maz@kernel.org>
-
-Ard Biesheuvel (8):
-  ARM: mm: switch to swapper_pg_dir early for vmap'ed stack
-  ARM: assembler: define a Kconfig symbol for group relocation support
-  ARM: smp: elide HWCAP_TLS checks or __entry_task updates on SMP+v6
-  ARM: entry: avoid clobbering R9 in IRQ handler
-  ARM: mm: make vmalloc_seq handling SMP safe
-  ARM: iop: make iop_handle_irq() static
-  ARM: drop pointless SMP check on secondary startup path
-  ARM: make get_current() and __my_cpu_offset() __always_inline
-
- arch/arm/Kconfig                   | 13 +++++++++-
- arch/arm/include/asm/assembler.h   |  8 +++----
- arch/arm/include/asm/current.h     | 10 ++++----
- arch/arm/include/asm/mmu.h         |  2 +-
- arch/arm/include/asm/mmu_context.h | 22 +++++++++++++++--
- arch/arm/include/asm/page.h        |  3 +--
- arch/arm/include/asm/percpu.h      |  6 ++---
- arch/arm/include/asm/switch_to.h   |  4 ++--
- arch/arm/include/asm/tls.h         | 22 ++++++++++++-----
- arch/arm/kernel/entry-armv.S       |  9 ++++---
- arch/arm/kernel/entry-header.S     | 17 ++++++-------
- arch/arm/kernel/head.S             |  7 ++++++
- arch/arm/kernel/module.c           |  7 +++++-
- arch/arm/kernel/sleep.S            |  7 ++++++
- arch/arm/kernel/smp.c              |  5 ----
- arch/arm/kernel/traps.c            | 25 ++++++--------------
- arch/arm/mach-iop32x/irq.c         |  2 +-
- arch/arm/mm/context.c              |  3 +--
- arch/arm/mm/ioremap.c              | 18 ++++++++------
- 19 files changed, 115 insertions(+), 75 deletions(-)
-
--- 
-2.30.2
-
+Jason
