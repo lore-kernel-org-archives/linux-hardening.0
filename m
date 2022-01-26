@@ -2,106 +2,85 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 265B9C28CF5
-	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jan 2022 18:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C2EC28CF5
+	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jan 2022 19:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244288AbiAZSs4 (ORCPT
+        id S233300AbiAZTsm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 26 Jan 2022 13:48:56 -0500
-Received: from mx1.mailbun.net ([170.39.20.100]:35960 "EHLO mx1.mailbun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244249AbiAZSs4 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 26 Jan 2022 13:48:56 -0500
-X-Greylist: delayed 381 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 Jan 2022 13:48:56 EST
-Received: from [2607:fb90:d98b:8818:5079:94eb:24d5:e5c3] (unknown [172.58.104.31])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: ariadne@dereferenced.org)
-        by mx1.mailbun.net (Postfix) with ESMTPSA id 5A0A111A9EF;
-        Wed, 26 Jan 2022 18:42:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=dereferenced.org;
-        s=mailbun; t=1643222555;
-        bh=B9sZSpn37qjYqPXp6j+5pKTlfv3WGOaoXVIWz/eiUKA=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References;
-        b=NTExFgBVmn5euHiNIO9blmd8dKdOHfl6aKpAYF4lhE1kKSgaBmzyc/diAbCOyE0dh
-         hgQ6MG3BHKyfRg/iYLhI9RdkIbFhVftsLK3mzHbZwdr5pyTzKReIVL80ni27j4YYml
-         d8r9oyUOqnF6nad4hvJB6sCrs/k93LyGCA8SXmIy3IWGVNo+YXvHYJOZGD6AUVlum9
-         Corh5NXXh56eLZ2ByXVq9VNqpRAKYBpOkkbM0AqQ3t2Ytrv+Uyk8mwuoaxt3lVWaNh
-         HB2kpDERbk+w1OupAd0SX8wyZ0WSbH1UcRKXnGl19BcK6TleK5Fw23zkL7MFefC4jt
-         1cvAJE5YZdWDQ==
-Date:   Wed, 26 Jan 2022 12:42:27 -0600 (CST)
-From:   Ariadne Conill <ariadne@dereferenced.org>
-To:     Jann Horn <jannh@google.com>
-cc:     Kees Cook <keescook@chromium.org>,
-        Ariadne Conill <ariadne@dereferenced.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Christian Brauner <brauner@kernel.org>,
-        Rich Felker <dalias@libc.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] fs/binfmt_elf: Add padding NULL when argc == 0
-In-Reply-To: <CAG48ez3hN8+zNCmLVP0yU0A5op6BAS+A-rs05aiLm4RQvzzBpg@mail.gmail.com>
-Message-ID: <a89bb47f-677f-4ce7-fd-d3893fe0abbd@dereferenced.org>
-References: <20220126175747.3270945-1-keescook@chromium.org> <CAG48ez3hN8+zNCmLVP0yU0A5op6BAS+A-rs05aiLm4RQvzzBpg@mail.gmail.com>
+        Wed, 26 Jan 2022 14:48:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232351AbiAZTsl (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 26 Jan 2022 14:48:41 -0500
+Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473E3C06173B
+        for <linux-hardening@vger.kernel.org>; Wed, 26 Jan 2022 11:48:41 -0800 (PST)
+Received: by mail-qk1-x72f.google.com with SMTP id c189so556307qkg.11
+        for <linux-hardening@vger.kernel.org>; Wed, 26 Jan 2022 11:48:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cnaHKagfwHGqaznD5wm3EjdQSvy1XNpSCppZJHrSIys=;
+        b=aGK97rakYCe9gtm+vNOzkSTyJolrONWbZ2NnD9qv8O+uupRm9HbODyTEdYDKGwqyfw
+         eaJRbjvPqJlKnLVLWFxBfMNyyTuO+af5C/c11/hnXA/g57VtO+Y0nCxWYwFulgIoVFF7
+         YxD07u+wy/R+NlTHMhpICG1UdViVU9ig95K42g31xhHuB3swuZPH9AcqL4tJBURZDmNs
+         NWQA5kPDpffdLTHusFW8rrzpTCjPhMMaSYL0GBQcIbMPxS+E87YuUaTmIjD5vCURAtP8
+         fZP2DLxhpLki+8DFHIpfVJwxW/A57IlJhbXvIompriWORNmJ40RTqWuXNVTc0KNHREzF
+         Yf9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cnaHKagfwHGqaznD5wm3EjdQSvy1XNpSCppZJHrSIys=;
+        b=PiBe4PjTFUDCPrcZLYtfgMTfDU8brvWmgi3P7GDLpzc1a/waKoepkbL3TysuWT2ktD
+         xhGKFKdgSz1Qs+KnRy0rSUZVZdq7ZnaemYm0p6EZIajXZXfWAnAK1kpbbATZOa2Kmkfw
+         /0xg5Dz3vNc1WgfS7YAp5qMD3rG6FtSjqDgdqs06qQrWPmxO666Vyd7R6yipcaiNkgSQ
+         u4vbXT3LVVeERFTPoLyJz3IxfH8kqlUV3j7GC/x6OOAU7s87pHYwhGFXQum0y8s9ZusU
+         8NzGzNiF4I7Rlz1dCSt+aLVm3cLu49+7CRgfH8BorzCHbcrUrRU3cbcSUCZ4dW/cW1Is
+         w+Ng==
+X-Gm-Message-State: AOAM533f19dmPOE+AeJrIHOLViQrcOEllTp8LP7DhmpGQVpCIlLgpZI9
+        TdCnr+kmBmPSFkMMe0S8Twk43g==
+X-Google-Smtp-Source: ABdhPJyt3NXcmKd1A/0E+XHc7xXKnQSpbQx+rb7XFiJW9mvwHA7ZYU1u822P32XYn5DgApDo+ociPA==
+X-Received: by 2002:a37:b0c:: with SMTP id 12mr211117qkl.667.1643226520231;
+        Wed, 26 Jan 2022 11:48:40 -0800 (PST)
+Received: from localhost (rfs.netwinder.org. [206.248.184.2])
+        by smtp.gmail.com with ESMTPSA id f2sm101432qti.61.2022.01.26.11.48.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jan 2022 11:48:39 -0800 (PST)
+Date:   Wed, 26 Jan 2022 14:48:39 -0500
+From:   Ralph Siemsen <ralph.siemsen@linaro.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jiri Prchal <jiri.prchal@aksignal.cz>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH -next] eeprom: at25: Replace strncpy() with strscpy()
+Message-ID: <20220126194839.GA3763384@maple.netwinder.org>
+References: <20220118182047.3385295-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20220118182047.3385295-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+Hi Kees,
 
-On Wed, 26 Jan 2022, Jann Horn wrote:
-
-> On Wed, Jan 26, 2022 at 6:58 PM Kees Cook <keescook@chromium.org> wrote:
->> Quoting Ariadne Conill:
->>
->> "In several other operating systems, it is a hard requirement that the
->> first argument to execve(2) be the name of a program, thus prohibiting
->> a scenario where argc < 1. POSIX 2017 also recommends this behaviour,
->> but it is not an explicit requirement[1]:
->>
->>     The argument arg0 should point to a filename string that is
->>     associated with the process being started by one of the exec
->>     functions.
->> ...
->> Interestingly, Michael Kerrisk opened an issue about this in 2008[2],
->> but there was no consensus to support fixing this issue then.
->> Hopefully now that CVE-2021-4034 shows practical exploitative use[3]
->> of this bug in a shellcode, we can reconsider."
->>
->> An examination of existing[4] users of execve(..., NULL, NULL) shows
->> mostly test code, or example rootkit code. While rejecting a NULL argv
->> would be preferred, it looks like the main cause of userspace confusion
->> is an assumption that argc >= 1, and buggy programs may skip argv[0]
->> when iterating. To protect against userspace bugs of this nature, insert
->> an extra NULL pointer in argv when argc == 0, so that argv[1] != envp[0].
->>
->> Note that this is only done in the argc == 0 case because some userspace
->> programs expect to find envp at exactly argv[argc]. The overlap of these
->> two misguided assumptions is believed to be zero.
+On Tue, Jan 18, 2022 at 10:20:47AM -0800, Kees Cook wrote:
+>Use strscpy() instead of strncpy(), since its use has been deprecated[1].
 >
-> Will this result in the executed program being told that argc==0 but
-> having an extra NULL pointer on the stack?
-> If so, I believe this breaks the x86-64 ABI documented at
-> https://refspecs.linuxbase.org/elf/x86_64-abi-0.99.pdf - page 29,
-> figure 3.9 describes the layout of the initial process stack.
+>[1] 
+>https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
 
-I'm presently compiling a kernel with the patch to see if it works or not.
+Along with your other fix to restore the missing kzalloc(), I tested 
+this change on 32-bit arm system, and it worked as expected.
 
-> Actually, does this even work? Can a program still properly access its
-> environment variables when invoked with argc==0 with this patch
-> applied? AFAIU the way userspace locates envv on x86-64 is by
-> calculating 8*(argc+1)?
+Tested-by: Ralph Siemsen <ralph.siemsen@linaro.org>
 
-In the other thread, it was suggested that perhaps we should set up an 
-argv of {"", NULL}.  In that case, it seems like it would be safe to claim 
-argc == 1.
-
-What do you think?
-
-Ariadne
+Cheers,
+-Ralph
