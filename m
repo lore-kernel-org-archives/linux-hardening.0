@@ -2,186 +2,117 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7153C5DF62
-	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jan 2022 00:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86122C5DF62
+	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jan 2022 03:30:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235327AbiAZAej (ORCPT
+        id S229998AbiAZDaP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Jan 2022 19:34:39 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:43710 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235320AbiAZAeg (ORCPT
+        Tue, 25 Jan 2022 22:30:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229989AbiAZDaO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Jan 2022 19:34:36 -0500
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A905771;
-        Wed, 26 Jan 2022 01:34:34 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1643157274;
-        bh=lUX+kFPnDrnpFIwRLB+0ea+BzHc8BeXdjxjNfpaQf8o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WSd3MCZcI+qCUvtATN5gB1lFpUqU1+Q+c83YGWkknRH05LoWGRMzUCvn8qBCeICPV
-         /8sMCyWIsZKlV+NNBsIZikbz/z8ME8t8AQtX3RdgVKUm/MCepvjrOpbTu6voN00GGy
-         pzaooN0jnvnmfvYRhUvLVgIERMErGpOsfRnAs+ZQ=
-Date:   Wed, 26 Jan 2022 02:34:15 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, stable@vger.kernel.org,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH RESEND] media: omap3isp: Use struct_group() for memcpy()
- region
-Message-ID: <YfCXB7+XOJ8Ue+rR@pendragon.ideasonboard.com>
-References: <20220124172952.2411764-1-keescook@chromium.org>
+        Tue, 25 Jan 2022 22:30:14 -0500
+Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8D8DC06161C;
+        Tue, 25 Jan 2022 19:30:13 -0800 (PST)
+Received: by mail-qk1-x72c.google.com with SMTP id h2so27029254qkp.10;
+        Tue, 25 Jan 2022 19:30:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E7anDpLimRE6bYis5gbdpa/RPki6eh1XfOHxrRk/P/4=;
+        b=SXRlHFjRWC2Mv38MUu2FfMqDEb49bJZfxYE559Kw+D0Pn2YltH77SpBW3HH0YW5AsE
+         m8kzbCMD9MZIkkdaMBt1JMXzZvL87DNz+apl6ePX/TZd6D1vEa2xLP9paVzPlpB014h9
+         6RZ8KymN/gMgkdABfFHWVpzVAjSf0rYQjS5yktG4rHR6VGF8OAEdq4nqpvvJE1pRreRm
+         qEtmS903LkbFXgqIFXymoOB30fFzO7Q+H8PFLqPdEYHjfqzuqV+Z7QsD3pCwq/2lJ9gm
+         h+TZI7RIh7QW5QG05fDEDYNnEhfg5DP4DhdGFoRo5ptPvIqzokYrOMe0xQ5f3KanUOae
+         L9AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E7anDpLimRE6bYis5gbdpa/RPki6eh1XfOHxrRk/P/4=;
+        b=W9b3muUZtQSM6z1Db2YJp1EIHjTSbauHnZjLptqs+BluknAo4kUDTIPzlOiTLtCeWm
+         8cTroX5iLZ3ATLp2QsTtGn51RoIKLas4YOi+aF/10zugUO3zT8V3P1A4oyixYQghLrxW
+         P0tM15Nn6uvN0Q7JUch1g5YX0gLmhRPA4JH5hEA1k6M17wtCk09p5PL2L8zTTi6bt6VI
+         JrUd3YfDCsS0M64GFfBkHr+c07L847s+UtnDAi55CtjtiDi+qxsQZzq/ucyPtzOiogJ0
+         fulSrnXZBBLJqpk0t5IUYDIkSopWFDrACFXubbybP5Q8uX3NZFhcQ5xBycgkwAjN7KJd
+         AAdg==
+X-Gm-Message-State: AOAM5309rFMrcHmOlWomzrc3lGkVchFm7g8tpErzstf0uqz6za6qh55g
+        kILTOXUY5wo4+t4ZUVryu+iUpRXhORDNXqoITTI=
+X-Google-Smtp-Source: ABdhPJzOxLW8ANKOJuqP39xeWiTHWhbAJym/4GNx7fbso6asTpJBhG97tat7EMYA2eWqagLzlBUDXMJW3yhDFcy0HzY=
+X-Received: by 2002:a05:620a:d95:: with SMTP id q21mr16790410qkl.74.1643167812983;
+ Tue, 25 Jan 2022 19:30:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220124172952.2411764-1-keescook@chromium.org>
+References: <20220125021353.GA29777@embeddedor>
+In-Reply-To: <20220125021353.GA29777@embeddedor>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Wed, 26 Jan 2022 11:30:55 +0800
+Message-ID: <CADBw62opvW1kdZbjxc0SBidjn0teYLsrfxTqfKoua6x9O84Neg@mail.gmail.com>
+Subject: Re: [PATCH][next] hwspinlock: stm32: Use struct_size() helper in devm_kzalloc()
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        linux-remoteproc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
+On Tue, Jan 25, 2022 at 10:07 AM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+>
+> Make use of the struct_size() helper instead of an open-coded version,
+> in order to avoid any potential type mistakes or integer overflows that,
+> in the worst scenario, could lead to heap overflows.
+>
+> Also, address the following sparse warnings:
+> drivers/hwspinlock/stm32_hwspinlock.c:84:32: warning: using sizeof on a flexible structure
+>
+> Link: https://github.com/KSPP/linux/issues/174
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Thank you for the patch.
-
-On Mon, Jan 24, 2022 at 09:29:52AM -0800, Kees Cook wrote:
-> In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> field bounds checking for memcpy(), memmove(), and memset(), avoid
-> intentionally writing across neighboring fields. Wrap the target region
-> in struct_group(). This additionally fixes a theoretical misalignment
-> of the copy (since the size of "buf" changes between 64-bit and 32-bit,
-> but this is likely never built for 64-bit).
-> 
-> FWIW, I think this code is totally broken on 64-bit (which appears to
-> not be a "real" build configuration): it would either always fail (with
-> an uninitialized data->buf_size) or would cause corruption in userspace
-> due to the copy_to_user() in the call path against an uninitialized
-> data->buf value:
-> 
-> omap3isp_stat_request_statistics_time32(...)
->     struct omap3isp_stat_data data64;
->     ...
->     omap3isp_stat_request_statistics(stat, &data64);
-> 
-> int omap3isp_stat_request_statistics(struct ispstat *stat,
->                                      struct omap3isp_stat_data *data)
->     ...
->     buf = isp_stat_buf_get(stat, data);
-> 
-> static struct ispstat_buffer *isp_stat_buf_get(struct ispstat *stat,
->                                                struct omap3isp_stat_data *data)
-> ...
->     if (buf->buf_size > data->buf_size) {
->             ...
->             return ERR_PTR(-EINVAL);
->     }
->     ...
->     rval = copy_to_user(data->buf,
->                         buf->virt_addr,
->                         buf->buf_size);
-> 
-> Regardless, additionally initialize data64 to be zero-filled to avoid
-> undefined behavior.
-> 
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Cc: linux-media@vger.kernel.org
-> Fixes: 378e3f81cb56 ("media: omap3isp: support 64-bit version of omap3isp_stat_data")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Link: https://lore.kernel.org/lkml/20211215220505.GB21862@embeddedor
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> I will carry this in my tree unless someone else wants to pick it up. It's
-> one of the last remaining clean-ups needed for the next step in memcpy()
-> hardening.
-
-I don't mind either way. Sakari, do you want to pick the patch up ?
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+LGTM.
+Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
 
 > ---
->  drivers/media/platform/omap3isp/ispstat.c |  5 +++--
->  include/uapi/linux/omap3isp.h             | 21 +++++++++++++--------
->  2 files changed, 16 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/media/platform/omap3isp/ispstat.c b/drivers/media/platform/omap3isp/ispstat.c
-> index 5b9b57f4d9bf..68cf68dbcace 100644
-> --- a/drivers/media/platform/omap3isp/ispstat.c
-> +++ b/drivers/media/platform/omap3isp/ispstat.c
-> @@ -512,7 +512,7 @@ int omap3isp_stat_request_statistics(struct ispstat *stat,
->  int omap3isp_stat_request_statistics_time32(struct ispstat *stat,
->  					struct omap3isp_stat_data_time32 *data)
->  {
-> -	struct omap3isp_stat_data data64;
-> +	struct omap3isp_stat_data data64 = { };
->  	int ret;
->  
->  	ret = omap3isp_stat_request_statistics(stat, &data64);
-> @@ -521,7 +521,8 @@ int omap3isp_stat_request_statistics_time32(struct ispstat *stat,
->  
->  	data->ts.tv_sec = data64.ts.tv_sec;
->  	data->ts.tv_usec = data64.ts.tv_usec;
-> -	memcpy(&data->buf, &data64.buf, sizeof(*data) - sizeof(data->ts));
-> +	data->buf = (uintptr_t)data64.buf;
-> +	memcpy(&data->frame, &data64.frame, sizeof(data->frame));
->  
->  	return 0;
->  }
-> diff --git a/include/uapi/linux/omap3isp.h b/include/uapi/linux/omap3isp.h
-> index 87b55755f4ff..d9db7ad43890 100644
-> --- a/include/uapi/linux/omap3isp.h
-> +++ b/include/uapi/linux/omap3isp.h
-> @@ -162,6 +162,7 @@ struct omap3isp_h3a_aewb_config {
->   * struct omap3isp_stat_data - Statistic data sent to or received from user
->   * @ts: Timestamp of returned framestats.
->   * @buf: Pointer to pass to user.
-> + * @buf_size: Size of buffer.
->   * @frame_number: Frame number of requested stats.
->   * @cur_frame: Current frame number being processed.
->   * @config_counter: Number of the configuration associated with the data.
-> @@ -176,10 +177,12 @@ struct omap3isp_stat_data {
->  	struct timeval ts;
->  #endif
->  	void __user *buf;
-> -	__u32 buf_size;
-> -	__u16 frame_number;
-> -	__u16 cur_frame;
-> -	__u16 config_counter;
-> +	__struct_group(/* no tag */, frame, /* no attrs */,
-> +		__u32 buf_size;
-> +		__u16 frame_number;
-> +		__u16 cur_frame;
-> +		__u16 config_counter;
-> +	);
->  };
->  
->  #ifdef __KERNEL__
-> @@ -189,10 +192,12 @@ struct omap3isp_stat_data_time32 {
->  		__s32	tv_usec;
->  	} ts;
->  	__u32 buf;
-> -	__u32 buf_size;
-> -	__u16 frame_number;
-> -	__u16 cur_frame;
-> -	__u16 config_counter;
-> +	__struct_group(/* no tag */, frame, /* no attrs */,
-> +		__u32 buf_size;
-> +		__u16 frame_number;
-> +		__u16 cur_frame;
-> +		__u16 config_counter;
-> +	);
->  };
->  #endif
->  
+>  drivers/hwspinlock/stm32_hwspinlock.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/hwspinlock/stm32_hwspinlock.c b/drivers/hwspinlock/stm32_hwspinlock.c
+> index 5bd11a7fab65..716ad4401249 100644
+> --- a/drivers/hwspinlock/stm32_hwspinlock.c
+> +++ b/drivers/hwspinlock/stm32_hwspinlock.c
+> @@ -73,15 +73,14 @@ static int stm32_hwspinlock_probe(struct platform_device *pdev)
+>         struct device *dev = &pdev->dev;
+>         struct stm32_hwspinlock *hw;
+>         void __iomem *io_base;
+> -       size_t array_size;
+>         int i, ret;
+>
+>         io_base = devm_platform_ioremap_resource(pdev, 0);
+>         if (IS_ERR(io_base))
+>                 return PTR_ERR(io_base);
+>
+> -       array_size = STM32_MUTEX_NUM_LOCKS * sizeof(struct hwspinlock);
+> -       hw = devm_kzalloc(dev, sizeof(*hw) + array_size, GFP_KERNEL);
+> +       hw = devm_kzalloc(dev, struct_size(hw, bank.lock, STM32_MUTEX_NUM_LOCKS),
+> +                         GFP_KERNEL);
+>         if (!hw)
+>                 return -ENOMEM;
+>
+> --
+> 2.27.0
+>
+
 
 -- 
-Regards,
-
-Laurent Pinchart
+Baolin Wang
