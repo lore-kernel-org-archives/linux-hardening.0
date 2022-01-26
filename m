@@ -2,151 +2,157 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A66C2BA4C
-	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jan 2022 10:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43610C2BA4C
+	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jan 2022 10:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232890AbiAZKfX (ORCPT
+        id S233548AbiAZKyi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 26 Jan 2022 05:35:23 -0500
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:48993 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232441AbiAZKfW (ORCPT
+        Wed, 26 Jan 2022 05:54:38 -0500
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:20254 "EHLO
+        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240341AbiAZKyh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 26 Jan 2022 05:35:22 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R711e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0V2vBzQX_1643193317;
-Received: from 192.168.193.139(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V2vBzQX_1643193317)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 26 Jan 2022 18:35:18 +0800
-Message-ID: <3f2027af-bbe0-f46f-2ceb-bffc4bbbf70e@linux.alibaba.com>
-Date:   Wed, 26 Jan 2022 02:35:17 -0800
+        Wed, 26 Jan 2022 05:54:37 -0500
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20Q9eWOf007704;
+        Wed, 26 Jan 2022 10:54:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2021-07-09;
+ bh=ic8o+h5FlX+I27h8cRh/VksxayUA7SoJFqGnnEbtteQ=;
+ b=tZMYCL0NQNwqsG1QcupWM2+iXfRfmQPZd226fGRXJihtrVZZVI1TCN8HdDgaf9XU23EN
+ 7d2eqlx7RfP1KPpvTOC9yTaAicYtKmOWSdklRW7LpOGUxAlOn6lRnofHDk0q6GhAvYJo
+ I7uIajGF2Y3K4n7BoRCLRjK9xI8IFdOO5XldBZNhpR/El7P85Nj4itStMbLmDyaMdmnZ
+ TAfoLTUJkbJwVCRKacEjy5b/wmlkxiTNNCin5FHc5VIkFsGlBNnrrrMrbmhZ34gWeL+N
+ bwhMgZzxg/tVZDu01K64Yf/AwbBnY/mmLDnq2FFxkLfEwaPrnvgwWvjnc8+PuVs8SIpy OQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3dsy9s5s49-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Jan 2022 10:54:32 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 20QApJes018469;
+        Wed, 26 Jan 2022 10:54:31 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2168.outbound.protection.outlook.com [104.47.59.168])
+        by aserp3030.oracle.com with ESMTP id 3dr7yhg0xs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Jan 2022 10:54:31 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L6nO4Ff0hARXHFjmAvHEj8Lfg9VuBgzL30AfDMnMqIAtABlA9XXxVO7KcLCbmJtykZ/555132BGq4q2+lOBYkN/YtCBTh+sanLIBlnYL1uiNZewFp//cqbzz20sPY0Z24Dh42DMLDDSMG+zHBppyNR03LQqD81yl9iQsuyHR7XLWJ7L2Ax7/V4iPgJS3lkyceRnnlo7p54UIMGMZ8VCASQpkQGPNJRrSglhx7N6y4pqXqE4O14y+pAQQ+F2YP9PUVr50WX4qtPdEvf8MpdYaX8pC9OWxODWuhItZq5Ks8QsPzZw9LnEKzymE4wdF1NmKRSe8Ds6zVOezwwvjTFM/Ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ic8o+h5FlX+I27h8cRh/VksxayUA7SoJFqGnnEbtteQ=;
+ b=ZXsWZxCcISHS3XTg0ZB/VeRgRDUMVkiNIEbToh8VySpZ/d5QdqvNX2LtdSnlTUo5XuYOsI9pSSzw2845uJ1kkJKsoIoC9JBtQjTdaPfMUS9E4UEco9KAKLKiVRdQBHttfan2VSE8MFGNHsyWqui7JSJC+LG/OnOTYvGC0dErUqlIZ2aj7xm5TIkBOVPEKkOpDi6Lu8Zaoq92jv6pLaEVGaXlBqy/WQo77vL8gisAugL4rWUDnEH4HccHgnkZ7xcssqpZtMBmwaLOgJ04Hfk04CtJaNTOVLGdCQ7QAPwa7Lnkd0nKettJrGWJBlxdtS6HmEg26RTWS9YwVfQbxAN0Tw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ic8o+h5FlX+I27h8cRh/VksxayUA7SoJFqGnnEbtteQ=;
+ b=iMQ+0+q9RR9SQ1rs3SDKyCq82JWuvRU6XLIAZVxw9t+mZz64SBrvWbCOVKY+Qt0u/df6gxd90Xnw2S/w/o+l7Cx8sjoQGFDQagFaQBBxJxKfxAoFUSPMlVH8zgK9INO/QhI4tvaSGJnetbalJNWX3YCvVCtU15hUhOtdQ0tJnPQ=
+Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
+ (2603:10b6:301:2d::28) by DM6PR10MB2763.namprd10.prod.outlook.com
+ (2603:10b6:5:b3::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.12; Wed, 26 Jan
+ 2022 10:54:29 +0000
+Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
+ ([fe80::c13b:5812:a403:6d96]) by MWHPR1001MB2365.namprd10.prod.outlook.com
+ ([fe80::c13b:5812:a403:6d96%6]) with mapi id 15.20.4909.019; Wed, 26 Jan 2022
+ 10:54:29 +0000
+Date:   Wed, 26 Jan 2022 13:54:04 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] staging: greybus: i2c: Use struct_size() helper in
+ gb_i2c_operation_create()
+Message-ID: <20220126105404.GY1951@kadam>
+References: <20220121222250.GA73021@embeddedor>
+ <202201241213.82E7D9F598@keescook>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202201241213.82E7D9F598@keescook>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: JNXP275CA0036.ZAFP275.PROD.OUTLOOK.COM (2603:1086:0:18::24)
+ To MWHPR1001MB2365.namprd10.prod.outlook.com (2603:10b6:301:2d::28)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PING^3][PATCH,v2,1/1,AARCH64][PR102768] aarch64: Add compiler
- support for Shadow Call Stack
-Content-Language: en-US
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     gcc-patches@gcc.gnu.org,
-        Richard Earnshaw <richard.earnshaw@arm.com>,
-        marcus.shawcroft@arm.com, Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-        hp@gcc.gnu.org, Nick Desaulniers <ndesaulniers@google.com>,
-        nsz@gcc.gnu.org, pageexec@gmail.com, qinzhao@gcc.gnu.org,
-        Richard Sandiford <richard.sandiford@arm.com>,
-        linux-hardening@vger.kernel.org,
-        Peter Collingbourne <pcc@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>
-References: <20211102070616.119780-1-ashimida@linux.alibaba.com>
- <81d54b71-7c9c-47ef-ac8d-72aae46cd4ee@linux.alibaba.com>
- <mptk0euk42w.fsf@arm.com>
- <a9daf6bf-94f2-0c5f-b9aa-7fb69781c9d5@linux.alibaba.com>
- <mpto840kti9.fsf@arm.com>
- <3ae4a533-352b-f3e3-27b3-9386df5f56c3@linux.alibaba.com>
- <61acb6f4-9a86-ddad-e48c-c68e4bcb08f1@linux.alibaba.com>
- <CAMj1kXG5oSo0Z+bEjExaaG6Y942R7fiL0fDKH59RETS=G4jDoA@mail.gmail.com>
-From:   Dan Li <ashimida@linux.alibaba.com>
-In-Reply-To: <CAMj1kXG5oSo0Z+bEjExaaG6Y942R7fiL0fDKH59RETS=G4jDoA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 47734eec-1fac-485e-4348-08d9e0ba38a0
+X-MS-TrafficTypeDiagnostic: DM6PR10MB2763:EE_
+X-Microsoft-Antispam-PRVS: <DM6PR10MB2763E1D36846768FF7CF136A8E209@DM6PR10MB2763.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sPlkcy5ve1wJkw78aaZ+Pt6+lGFOP1TNlCJEvDgeNDv05BtW1dseNaeT+oXIOkY0AJ3jw+WTupRAxE1EeE+uZnQquzATNCrPb9xBWJzclKgpFFKTTlAoj0QlUDWbl4FEUrsPIlowPgvXMszTEbionW4sowv111x+fMCStAWLq9TGaejQhUA/aUKnR0uQJTVvi3wBu6TuMyi5X/avgkQBvjw6JyPLVV3XpmMm2pp3OiZIqItfWZ9DUsyLldRPee5lVrtYSE/7Fd6SSIednvkiwWpjh3IQsvcZuaEhFcy486DnE5WFGB9rA5ZYBgErcGgeC9j0VFwf3TQR3qb3FT7/9bmXJQ5K6e2TrgGtl+pQeYZw2gJB9gRBe3XShgea+AN8XH8zZYfF1ingzfVFMO3t/M2MbVqUlpckwPuv4f2w+MI0fuIbLiYAxa+u39udzegrZcDrhgJGXqYe6cDFknC4TIi/NjHadyc54t9xWftlHw1MQ+ZnhrDU+WLYE1xCDCLM6vZ2qZ4LTMRJyICLhmYseWZezXIrFakinmZ3+E+csDjUjQI9WoCUcMoo1Rrlv5xdtwew7z/yjJ8XPbVD5mAocqsg8PE+M5ogmqwnc5ped6DgE57esVi7snIXsa/ze84dEktUEhC2tmO13Oi6YRiyQ0Zqt4rf3qsQn87/eFBeDesXcdIgNNyBXX5rQXiKYYcc8OFttAKVkrrQ8BDJaw5QNxH0T2IRyu/eViN4HclLLFoaLhhAOOS3zSvkg3BdIGOc+BFYJYp1ZO6+z132lk/Ad0eyAtGD6OVuEZCZ0mBsk0t9VAhyuMqkYkOX/gitBrzoi2PtA+4N6Zveuxw8dbITVQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2365.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(366004)(6486002)(1076003)(52116002)(26005)(6506007)(316002)(66946007)(54906003)(966005)(66476007)(2906002)(186003)(8676002)(44832011)(66556008)(508600001)(7416002)(8936002)(38350700002)(38100700002)(5660300002)(86362001)(4326008)(6666004)(83380400001)(4744005)(6916009)(9686003)(6512007)(33656002)(33716001)(70780200001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Jrb6XQser3te3d9/TsArEAfjVF4azz4rA13vg8OkITKMU4UeU/JsZFapPtQW?=
+ =?us-ascii?Q?e/4HwDHW6ulgSHDBXzFqpFeIH4KyyJaZj17Vkb4kWU+tIZbiY1UqAkJ4aScE?=
+ =?us-ascii?Q?d15psWY1yzsCUhw7Gch0nNvuUSqnE45Tkt355oal+Eh+fS/rn3TMlgG+PHg4?=
+ =?us-ascii?Q?hYxpHkZ59YzWHe++lkm6h2WlH0aO6HiYE7itG8vHEJwqu+FbtKITWYlZOgc5?=
+ =?us-ascii?Q?SfbX0r0y6bWdbVxZYqRBYvItWgBLAq/j9i6adDuX+BMpcUrzWe1tGxzxuEYX?=
+ =?us-ascii?Q?q+543NrZfWoQt8UMIn+JO1Rszpgv6lzbaR25gf9yADXKfmYEjcLAbikdHaxU?=
+ =?us-ascii?Q?Dsp3jKS8YL3wvhZ94wnNMBH3nXbeVoIhWG4ZYhG1YHpBd+jTvuA27ENRWtvq?=
+ =?us-ascii?Q?lw2JIobwGbglaOPbRjQSTtAz9nDdx7X+1J3X1jXJGGliQxIfW1+3JmAFB2/5?=
+ =?us-ascii?Q?aREGU07W7+RzzahKlCpPxh+231S2dcnc1b4bDPqG4KyYQzNvqCJ4kjgYL5Qo?=
+ =?us-ascii?Q?ToS2QkOiqCkAtWnK7gwfKwxTMXy6CYqkbamEbCWnP/YanFxXSjC4SjR4SvpI?=
+ =?us-ascii?Q?PBFddHA6cU0auAUUuyhc41175oWUU9IMmDc4TEOCfTx59Kh5JYiOKwyX4roV?=
+ =?us-ascii?Q?k2LqLv/3GxU4YC39KEMba5YPCCwr96uXyOscU+bgS/wRA/aL3emdiK7cP77v?=
+ =?us-ascii?Q?kucre0qQ19FafPHHkLAu8Y4bIUvvOKUCi9CZv55pZWcQO8gE40TPV6ijPyBW?=
+ =?us-ascii?Q?mf4jH7CHffznCm5CLEILC98v47jTpMyWVYReX+r0zqRbv26NdEKahPwuOXkS?=
+ =?us-ascii?Q?ksFJeiBSGSxL7i8VVFcbfm/8nk+MiyqGhfj9xXtqBHXl3f724RhabihawdG2?=
+ =?us-ascii?Q?lyEm1IbXjDO1OoET2saxfYIieF0ezAnZddyt/jRgyyJInzDzp+pxnehVjHsz?=
+ =?us-ascii?Q?7urnr61prt1LrICfmoFZNJI8XXD0gAEMrRs353MTODvnOJislzuGwXytCS0U?=
+ =?us-ascii?Q?7l29fL74WiM1n1c4ce6LFoXlAPyyqoPJL3WGTNoylVlk/aGh+KBJmUNSt1p6?=
+ =?us-ascii?Q?A7ojDnptR9cssZWo68eG5zZJldPTfpB7Ngv/sKwwxuCqkHl+MkdA09WcjWbw?=
+ =?us-ascii?Q?2fwDGpalHwZnPMgofwfqXIlkGwK4jNAuOAdkks2SwM/SJbCJilIWvBtBL/As?=
+ =?us-ascii?Q?k/izx97dINgK1+s4HzGU2muTTJzqi6SEeb/A5vSDxetwLkPN99wIpTfOYrEM?=
+ =?us-ascii?Q?qEY4QhkG329WiOgaBUZ7BKATLGZC6GEsSxZXMlJblUurqiN/f7PF/DE5R0WL?=
+ =?us-ascii?Q?xsHLC58l7mxe1Kb3I+ZiP9Yc8gOxW6ADjGrWyri69ZWiUYpLyBJpp7HIvQvI?=
+ =?us-ascii?Q?33KexQeSHH1oLaFVb3dRvagyqFHw9vYtvXxzy7RIeJjgpUKntlA3WGTLCPin?=
+ =?us-ascii?Q?Ig75cLrpK4TgQNM3Z4VNNEO5LQnm5LnonydXKxr3a5WMyvFc03MjUWrIAHBq?=
+ =?us-ascii?Q?Teqc6ncwOu5mLcAUbp24JR79PfIl4XcBq+ykKazCT2jA9QO6KEkydRQfVM4z?=
+ =?us-ascii?Q?KretHjD0JHeYEcLfF7ia2RrAsBsuZ+ZWPUSgtXC9T11srypDuLCAwUDuAVBs?=
+ =?us-ascii?Q?EJN/lcGXZRshlnyspXh1k8JorkIyxDdqoIibH4jEFv2MWYxc9PeeF9JbCiul?=
+ =?us-ascii?Q?GYUlfLWp1/45Ek6z8SUAe1bZQGM=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47734eec-1fac-485e-4348-08d9e0ba38a0
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2365.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2022 10:54:28.9293
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5zyFsAtLSwYF56xk4ZAzIC5hlx0Krs30mIpdtwXVlxRE1+pej/rfiYTIFABFLl5uGqrN6TFoU3ZI+5lNp/W8/gZIFlr/tZy9uHo2jgPmAao=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB2763
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10238 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2201110000
+ definitions=main-2201260064
+X-Proofpoint-GUID: NNqjVL2BhSvAW0Xx9EBHUOyoJ5hSiNM1
+X-Proofpoint-ORIG-GUID: NNqjVL2BhSvAW0Xx9EBHUOyoJ5hSiNM1
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Thanks, Ard,
-
-On 1/26/22 00:10, Ard Biesheuvel wrote:
-> On Wed, 26 Jan 2022 at 08:53, Dan Li <ashimida@linux.alibaba.com> wrote:
->>
->> Hi, all,
->>
->> Sorry for bothering.
->>
->> I'm trying to commit aarch64 scs code to the gcc and there is an issue
->> that I'm not sure about, could someone give me some suggestions?
->> (To avoid noise, I did't cc PING^3 [1] to the kernel mail list :) )
->>
->> When clang enables scs, the following instructions are usually generated:
->>
->> str     x30, [x18], 8
->> ldp     x29, x30, [sp], 16
->> ......
->> ldp     x29, x30, [sp], 16              ## x30 pop
->> ldr     x30, [x18, -8]!                 ## x30 pop again
->> ret
->>
->> The x30 register is popped twice here, Richard suggested that we can
->> omit the first x30 pop here.
->>
->> AFAICT, it seems fine and also safe for SCS. But I'm not sure if I'm
->> missing something with the kernel, could someone give some suggestions?
->>
->> The previous discussion can be found here [1].
->>
->> [1] https://gcc.gnu.org/pipermail/gcc-patches/2022-January/589257.html
->>
+On Mon, Jan 24, 2022 at 12:19:03PM -0800, Kees Cook wrote:
+> This could still overflow if struct_size() returns SIZE_MAX. Perhaps:
 > 
-> As was pointed out in the discussion, binary patching is in fact a
-> concern for the Linux kernel. E.g., Android uses generic binary
-> builds, but we would like to be able to switch between pointer
-> authentication and shadow call stack at boot time, rather than always
-> support both, and take the SCS performance hit on systems that
-> implement PAC as well.
+> 	if (check_add_overflow(struct_size(request, ops, msg_count),
+> 			       data_out_size, &request_size))
+> 		request_size = SIZE_MAX;
 > 
-> However, it seems more straight-forward to patch PACIASP and AUTIASP
-> instructions into SCS push/pop instructions rather than the other way
-> around, as we can force the use of these exact opcodes [in the NOP
-> space]), as well as rely on existing unwind annotations to locate any
-> such instruction in the binary.
-> 
+> I should brush off the saturating arithmetic helpers series:
+> https://lore.kernel.org/all/20210920180853.1825195-1-keescook@chromium.org/
 
-Well, then I think I don't need to submit a kernel patch to
-enable SCS for gcc :)
+Yes, please!  Those seem like a million times easier to use.
 
-BTW:
-Do we have a plan to submit patches of dynamic patch PAC into
-the kernel recently?
-
-> So omitting the load of X30 from the ordinary stack seems fine to me.
-> 
->> On 1/25/22 22:51, Dan Li wrote:
->>>
->>>
->>> On 1/25/22 02:19, Richard Sandiford wrote:
->>>
->>> Well, probably sticking to pop x30 twice is not a good idea.
->>> AFAICT, there doesn't seem to be an explicit requirement that
->
->>>>
->>>
->>> Ok, I'll cc some kernel folks to make sure I didn't miss something.
->>>
-To Richard:
-
-Sorry for my mistake.
-
-Due to binary compatibility issues, SCS related code may not
-be directly merged into libgcc/glibc, do we still need to
-add this patch into GCC? (I'd like to finish it if that
-makes sense).
-
-
-Thanks all for your time!
-Dan
-
->>>> If binary patching is supposed to be possible then scs_push and
->>>> scs_pop *do* need to be separate define_insns.  But they also need
->>>> to have some magic unspec that differentiates them from normal
->>>> pushes and pops, e.g.:
->>>>
->>>>     (set ...mem...
->>>>          (unspec:DI [...reg...] UNSPEC_SCS_PUSH))
->>>>
->>>> so that there is no chance that the pattern would be treated as
->>>> a normal move and optimised accordingly.
->>>>
->>>
->>> Yeah, this template looks more appropriate if it is to be treated
->>> as a special directive.
->>>
->>> Thanks for your suggestions,
->>> Dan
+regards,
+dan carpenter
