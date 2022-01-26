@@ -2,85 +2,124 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C2EC28CF5
-	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jan 2022 19:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6F6C2BA4C
+	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jan 2022 19:51:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233300AbiAZTsm (ORCPT
+        id S244606AbiAZTvO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 26 Jan 2022 14:48:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48814 "EHLO
+        Wed, 26 Jan 2022 14:51:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232351AbiAZTsl (ORCPT
+        with ESMTP id S244570AbiAZTvI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 26 Jan 2022 14:48:41 -0500
-Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473E3C06173B
-        for <linux-hardening@vger.kernel.org>; Wed, 26 Jan 2022 11:48:41 -0800 (PST)
-Received: by mail-qk1-x72f.google.com with SMTP id c189so556307qkg.11
-        for <linux-hardening@vger.kernel.org>; Wed, 26 Jan 2022 11:48:41 -0800 (PST)
+        Wed, 26 Jan 2022 14:51:08 -0500
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 587E5C061747
+        for <linux-hardening@vger.kernel.org>; Wed, 26 Jan 2022 11:51:08 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id z4so1014533lft.3
+        for <linux-hardening@vger.kernel.org>; Wed, 26 Jan 2022 11:51:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cnaHKagfwHGqaznD5wm3EjdQSvy1XNpSCppZJHrSIys=;
-        b=aGK97rakYCe9gtm+vNOzkSTyJolrONWbZ2NnD9qv8O+uupRm9HbODyTEdYDKGwqyfw
-         eaJRbjvPqJlKnLVLWFxBfMNyyTuO+af5C/c11/hnXA/g57VtO+Y0nCxWYwFulgIoVFF7
-         YxD07u+wy/R+NlTHMhpICG1UdViVU9ig95K42g31xhHuB3swuZPH9AcqL4tJBURZDmNs
-         NWQA5kPDpffdLTHusFW8rrzpTCjPhMMaSYL0GBQcIbMPxS+E87YuUaTmIjD5vCURAtP8
-         fZP2DLxhpLki+8DFHIpfVJwxW/A57IlJhbXvIompriWORNmJ40RTqWuXNVTc0KNHREzF
-         Yf9w==
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zuNchwIZAGymNJC1SQWN7Ldl6BhEKsuYVz79xP7hsik=;
+        b=O8OLscWgdo8HIVwwfzb5dza2dJnXOZndHiDf93M0yfSU4tRodlztvMJGdacXImWFvT
+         A4bYsx1Mbprxlx5fVLCI461Tn/UrA6CYFDOhYredwv63xNGXFUShGpNuzDAOw5ahH/wy
+         fku0dNyYzo7gA9deEfIX9Ymwmf9QKMCC+oudZWHsLMyD1zQulwYSPfLrvVR5/6dhtLMv
+         i8Rpx83onnbgfc/fJMHs6Eo3x2Az2PeOWwaGFbSZDbJrXy7zvLbHFcwkKlszP4w5ibDU
+         SdzVZ4DBXl12xuVCuvS3fMEjBBVETtA+hOE3GdrcD8ofv5KDpVKOl0uPkj5L+7ETEBsq
+         8PvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cnaHKagfwHGqaznD5wm3EjdQSvy1XNpSCppZJHrSIys=;
-        b=PiBe4PjTFUDCPrcZLYtfgMTfDU8brvWmgi3P7GDLpzc1a/waKoepkbL3TysuWT2ktD
-         xhGKFKdgSz1Qs+KnRy0rSUZVZdq7ZnaemYm0p6EZIajXZXfWAnAK1kpbbATZOa2Kmkfw
-         /0xg5Dz3vNc1WgfS7YAp5qMD3rG6FtSjqDgdqs06qQrWPmxO666Vyd7R6yipcaiNkgSQ
-         u4vbXT3LVVeERFTPoLyJz3IxfH8kqlUV3j7GC/x6OOAU7s87pHYwhGFXQum0y8s9ZusU
-         8NzGzNiF4I7Rlz1dCSt+aLVm3cLu49+7CRgfH8BorzCHbcrUrRU3cbcSUCZ4dW/cW1Is
-         w+Ng==
-X-Gm-Message-State: AOAM533f19dmPOE+AeJrIHOLViQrcOEllTp8LP7DhmpGQVpCIlLgpZI9
-        TdCnr+kmBmPSFkMMe0S8Twk43g==
-X-Google-Smtp-Source: ABdhPJyt3NXcmKd1A/0E+XHc7xXKnQSpbQx+rb7XFiJW9mvwHA7ZYU1u822P32XYn5DgApDo+ociPA==
-X-Received: by 2002:a37:b0c:: with SMTP id 12mr211117qkl.667.1643226520231;
-        Wed, 26 Jan 2022 11:48:40 -0800 (PST)
-Received: from localhost (rfs.netwinder.org. [206.248.184.2])
-        by smtp.gmail.com with ESMTPSA id f2sm101432qti.61.2022.01.26.11.48.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jan 2022 11:48:39 -0800 (PST)
-Date:   Wed, 26 Jan 2022 14:48:39 -0500
-From:   Ralph Siemsen <ralph.siemsen@linaro.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jiri Prchal <jiri.prchal@aksignal.cz>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH -next] eeprom: at25: Replace strncpy() with strscpy()
-Message-ID: <20220126194839.GA3763384@maple.netwinder.org>
-References: <20220118182047.3385295-1-keescook@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zuNchwIZAGymNJC1SQWN7Ldl6BhEKsuYVz79xP7hsik=;
+        b=GwuHNF1je9s5ojfc2lNpyoK/cBi1rLroe8/2WVXCBNLO6OMwv4/iQKqzQxVQ05hoi+
+         lwacpEIPzoQ1XI8rM3BcKkkvsk4FntJ0UjIn+731nDzH5yFQsXjKL6q5Fmb/t1lqf7pe
+         0Obo4j+f0VkfrgcbAD6KbVQQhCoUs95ys6M9rLZTNVitUVqMIsPQrSZMLjrMdEm9Ficu
+         k+NJAX/bPzZT+UH0JNRoCerYrDHwCFwUhlGnfpbvgu51kUTiMQAOEYSLzJtYOY2832zA
+         vhpy3SWuImSMdq085hEiDTFN4FHVtYN/2vffPK5Z8HglQVgvnlFoul5UNWXEwR9oWr8w
+         eVBw==
+X-Gm-Message-State: AOAM531U8vhZJlqi8FZ6sRMLz7kX3VoL1FTo1zuTg/9vQW6lOzQWvWi7
+        ahbpa3SaICdCYnnIlwSxy+wLJD/sNkpXu7RYRVjxHg==
+X-Google-Smtp-Source: ABdhPJyF5hb3Or3tNa1mRtH02IzvJBYrARKvzKe6UO+oIpe5xZpket39De33nXm3uzERNauernfMMMz2FTRtxCHRJ/I=
+X-Received: by 2002:a19:ee13:: with SMTP id g19mr384157lfb.288.1643226666411;
+ Wed, 26 Jan 2022 11:51:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20220118182047.3385295-1-keescook@chromium.org>
+References: <20220126175747.3270945-1-keescook@chromium.org>
+ <CAG48ez3hN8+zNCmLVP0yU0A5op6BAS+A-rs05aiLm4RQvzzBpg@mail.gmail.com> <a89bb47f-677f-4ce7-fd-d3893fe0abbd@dereferenced.org>
+In-Reply-To: <a89bb47f-677f-4ce7-fd-d3893fe0abbd@dereferenced.org>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 26 Jan 2022 20:50:39 +0100
+Message-ID: <CAG48ez3iEUDbM03axYSjWOSW+zt-khgzf8CfX1DHmf_6QZap6Q@mail.gmail.com>
+Subject: Re: [PATCH] fs/binfmt_elf: Add padding NULL when argc == 0
+To:     Ariadne Conill <ariadne@dereferenced.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Rich Felker <dalias@libc.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
-
-On Tue, Jan 18, 2022 at 10:20:47AM -0800, Kees Cook wrote:
->Use strscpy() instead of strncpy(), since its use has been deprecated[1].
+On Wed, Jan 26, 2022 at 7:42 PM Ariadne Conill <ariadne@dereferenced.org> wrote:
+> On Wed, 26 Jan 2022, Jann Horn wrote:
+> > On Wed, Jan 26, 2022 at 6:58 PM Kees Cook <keescook@chromium.org> wrote:
+> >> Quoting Ariadne Conill:
+> >>
+> >> "In several other operating systems, it is a hard requirement that the
+> >> first argument to execve(2) be the name of a program, thus prohibiting
+> >> a scenario where argc < 1. POSIX 2017 also recommends this behaviour,
+> >> but it is not an explicit requirement[1]:
+> >>
+> >>     The argument arg0 should point to a filename string that is
+> >>     associated with the process being started by one of the exec
+> >>     functions.
+> >> ...
+> >> Interestingly, Michael Kerrisk opened an issue about this in 2008[2],
+> >> but there was no consensus to support fixing this issue then.
+> >> Hopefully now that CVE-2021-4034 shows practical exploitative use[3]
+> >> of this bug in a shellcode, we can reconsider."
+> >>
+> >> An examination of existing[4] users of execve(..., NULL, NULL) shows
+> >> mostly test code, or example rootkit code. While rejecting a NULL argv
+> >> would be preferred, it looks like the main cause of userspace confusion
+> >> is an assumption that argc >= 1, and buggy programs may skip argv[0]
+> >> when iterating. To protect against userspace bugs of this nature, insert
+> >> an extra NULL pointer in argv when argc == 0, so that argv[1] != envp[0].
+> >>
+> >> Note that this is only done in the argc == 0 case because some userspace
+> >> programs expect to find envp at exactly argv[argc]. The overlap of these
+> >> two misguided assumptions is believed to be zero.
+> >
+> > Will this result in the executed program being told that argc==0 but
+> > having an extra NULL pointer on the stack?
+> > If so, I believe this breaks the x86-64 ABI documented at
+> > https://refspecs.linuxbase.org/elf/x86_64-abi-0.99.pdf - page 29,
+> > figure 3.9 describes the layout of the initial process stack.
 >
->[1] 
->https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
+> I'm presently compiling a kernel with the patch to see if it works or not.
+>
+> > Actually, does this even work? Can a program still properly access its
+> > environment variables when invoked with argc==0 with this patch
+> > applied? AFAIU the way userspace locates envv on x86-64 is by
+> > calculating 8*(argc+1)?
+>
+> In the other thread, it was suggested that perhaps we should set up an
+> argv of {"", NULL}.  In that case, it seems like it would be safe to claim
+> argc == 1.
+>
+> What do you think?
 
-Along with your other fix to restore the missing kzalloc(), I tested 
-this change on 32-bit arm system, and it worked as expected.
+Sounds good to me, since that's something that could also happen
+normally if userspace calls execve(..., {"", NULL}, ...).
 
-Tested-by: Ralph Siemsen <ralph.siemsen@linaro.org>
-
-Cheers,
--Ralph
+(I'd like it even better if we could just bail out with an error code,
+but I guess the risk of breakage might be too high with that
+approach?)
