@@ -2,97 +2,151 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8CBC63682
-	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jan 2022 10:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A66C2BA4C
+	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jan 2022 10:35:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232093AbiAZKIl (ORCPT
+        id S232890AbiAZKfX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 26 Jan 2022 05:08:41 -0500
-Received: from mga12.intel.com ([192.55.52.136]:11913 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232002AbiAZKIk (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 26 Jan 2022 05:08:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643191720; x=1674727720;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=9DdtvZ7yMVpfqtYl7aRfb2H95FdCk00oZ2LfZcvlals=;
-  b=ODNemuJ2HaVLkN5DsuGz2TDK9EM7wr4IoT87cDhvwu/KL13tOvYB/qwS
-   qE2wembYwZt+eRnEV5yjNe0Fj/q+EN5BsVsnkihA7Zc7Mb54EbgnUWcTg
-   GejotZmNN5bUrvIsLQkA3wlFT2XJzjvWTpAjCe4m5VPSh6S0f7YQ51vUe
-   LOrHe2lu71Vf4Vx+tc6YaHuiB5hRbblpDQbeCZldzEb1GB9bsrx1Z0amu
-   AavbSXttPU/Jx4FCDQ+wkvGyctQSzM7KkWn2a0tal9EjgTojQzMQxwIAo
-   PSQ/wAyrk5GbMAgMpsWtbQgruQYnVcypQVdoojPYfaRUdcEJft/VLFvj7
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10238"; a="226496171"
-X-IronPort-AV: E=Sophos;i="5.88,317,1635231600"; 
-   d="scan'208";a="226496171"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 02:08:39 -0800
-X-IronPort-AV: E=Sophos;i="5.88,317,1635231600"; 
-   d="scan'208";a="581061617"
-Received: from mburchar-mobl.amr.corp.intel.com (HELO [10.212.54.252]) ([10.212.54.252])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 02:08:37 -0800
-Message-ID: <a1defc48-6b7c-8a4c-fff1-3baebab9a4f4@linux.intel.com>
-Date:   Wed, 26 Jan 2022 10:08:36 +0000
+        Wed, 26 Jan 2022 05:35:23 -0500
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:48993 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232441AbiAZKfW (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 26 Jan 2022 05:35:22 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R711e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0V2vBzQX_1643193317;
+Received: from 192.168.193.139(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V2vBzQX_1643193317)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 26 Jan 2022 18:35:18 +0800
+Message-ID: <3f2027af-bbe0-f46f-2ceb-bffc4bbbf70e@linux.alibaba.com>
+Date:   Wed, 26 Jan 2022 02:35:17 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [PATCH][next] drm/i915/guc: Use struct_size() helper in kmalloc()
+ Thunderbird/91.5.0
+Subject: Re: [PING^3][PATCH,v2,1/1,AARCH64][PR102768] aarch64: Add compiler
+ support for Shadow Call Stack
 Content-Language: en-US
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20220125180726.GA68646@embeddedor>
-From:   Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
-Organization: Intel Corporation UK Plc
-In-Reply-To: <20220125180726.GA68646@embeddedor>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     gcc-patches@gcc.gnu.org,
+        Richard Earnshaw <richard.earnshaw@arm.com>,
+        marcus.shawcroft@arm.com, Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
+        hp@gcc.gnu.org, Nick Desaulniers <ndesaulniers@google.com>,
+        nsz@gcc.gnu.org, pageexec@gmail.com, qinzhao@gcc.gnu.org,
+        Richard Sandiford <richard.sandiford@arm.com>,
+        linux-hardening@vger.kernel.org,
+        Peter Collingbourne <pcc@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>
+References: <20211102070616.119780-1-ashimida@linux.alibaba.com>
+ <81d54b71-7c9c-47ef-ac8d-72aae46cd4ee@linux.alibaba.com>
+ <mptk0euk42w.fsf@arm.com>
+ <a9daf6bf-94f2-0c5f-b9aa-7fb69781c9d5@linux.alibaba.com>
+ <mpto840kti9.fsf@arm.com>
+ <3ae4a533-352b-f3e3-27b3-9386df5f56c3@linux.alibaba.com>
+ <61acb6f4-9a86-ddad-e48c-c68e4bcb08f1@linux.alibaba.com>
+ <CAMj1kXG5oSo0Z+bEjExaaG6Y942R7fiL0fDKH59RETS=G4jDoA@mail.gmail.com>
+From:   Dan Li <ashimida@linux.alibaba.com>
+In-Reply-To: <CAMj1kXG5oSo0Z+bEjExaaG6Y942R7fiL0fDKH59RETS=G4jDoA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Thanks, Ard,
 
-On 25/01/2022 18:07, Gustavo A. R. Silva wrote:
-> Make use of the struct_size() helper instead of an open-coded version,
-> in order to avoid any potential type mistakes or integer overflows that,
-> in the worst scenario, could lead to heap overflows.
+On 1/26/22 00:10, Ard Biesheuvel wrote:
+> On Wed, 26 Jan 2022 at 08:53, Dan Li <ashimida@linux.alibaba.com> wrote:
+>>
+>> Hi, all,
+>>
+>> Sorry for bothering.
+>>
+>> I'm trying to commit aarch64 scs code to the gcc and there is an issue
+>> that I'm not sure about, could someone give me some suggestions?
+>> (To avoid noise, I did't cc PING^3 [1] to the kernel mail list :) )
+>>
+>> When clang enables scs, the following instructions are usually generated:
+>>
+>> str     x30, [x18], 8
+>> ldp     x29, x30, [sp], 16
+>> ......
+>> ldp     x29, x30, [sp], 16              ## x30 pop
+>> ldr     x30, [x18, -8]!                 ## x30 pop again
+>> ret
+>>
+>> The x30 register is popped twice here, Richard suggested that we can
+>> omit the first x30 pop here.
+>>
+>> AFAICT, it seems fine and also safe for SCS. But I'm not sure if I'm
+>> missing something with the kernel, could someone give some suggestions?
+>>
+>> The previous discussion can be found here [1].
+>>
+>> [1] https://gcc.gnu.org/pipermail/gcc-patches/2022-January/589257.html
+>>
 > 
-> Also, address the following sparse warnings:
-> drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c:792:23: warning: using sizeof on a flexible structure
+> As was pointed out in the discussion, binary patching is in fact a
+> concern for the Linux kernel. E.g., Android uses generic binary
+> builds, but we would like to be able to switch between pointer
+> authentication and shadow call stack at boot time, rather than always
+> support both, and take the SCS performance hit on systems that
+> implement PAC as well.
 > 
-> Link: https://github.com/KSPP/linux/issues/174
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->   drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c b/drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c
-> index aa6dd6415202..e352a1aad228 100644
-> --- a/drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c
-> +++ b/drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c
-> @@ -789,7 +789,7 @@ static struct ct_incoming_msg *ct_alloc_msg(u32 num_dwords)
->   {
->   	struct ct_incoming_msg *msg;
->   
-> -	msg = kmalloc(sizeof(*msg) + sizeof(u32) * num_dwords, GFP_ATOMIC);
-> +	msg = kmalloc(struct_size(msg, msg, num_dwords), GFP_ATOMIC);
->   	if (msg)
->   		msg->size = num_dwords;
->   	return msg;
+> However, it seems more straight-forward to patch PACIASP and AUTIASP
+> instructions into SCS push/pop instructions rather than the other way
+> around, as we can force the use of these exact opcodes [in the NOP
+> space]), as well as rely on existing unwind annotations to locate any
+> such instruction in the binary.
 > 
 
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Well, then I think I don't need to submit a kernel patch to
+enable SCS for gcc :)
 
-Thanks for the patch, will merge shortly.
+BTW:
+Do we have a plan to submit patches of dynamic patch PAC into
+the kernel recently?
 
-Regards,
+> So omitting the load of X30 from the ordinary stack seems fine to me.
+> 
+>> On 1/25/22 22:51, Dan Li wrote:
+>>>
+>>>
+>>> On 1/25/22 02:19, Richard Sandiford wrote:
+>>>
+>>> Well, probably sticking to pop x30 twice is not a good idea.
+>>> AFAICT, there doesn't seem to be an explicit requirement that
+>
+>>>>
+>>>
+>>> Ok, I'll cc some kernel folks to make sure I didn't miss something.
+>>>
+To Richard:
 
-Tvrtko
+Sorry for my mistake.
+
+Due to binary compatibility issues, SCS related code may not
+be directly merged into libgcc/glibc, do we still need to
+add this patch into GCC? (I'd like to finish it if that
+makes sense).
+
+
+Thanks all for your time!
+Dan
+
+>>>> If binary patching is supposed to be possible then scs_push and
+>>>> scs_pop *do* need to be separate define_insns.  But they also need
+>>>> to have some magic unspec that differentiates them from normal
+>>>> pushes and pops, e.g.:
+>>>>
+>>>>     (set ...mem...
+>>>>          (unspec:DI [...reg...] UNSPEC_SCS_PUSH))
+>>>>
+>>>> so that there is no chance that the pattern would be treated as
+>>>> a normal move and optimised accordingly.
+>>>>
+>>>
+>>> Yeah, this template looks more appropriate if it is to be treated
+>>> as a special directive.
+>>>
+>>> Thanks for your suggestions,
+>>> Dan
