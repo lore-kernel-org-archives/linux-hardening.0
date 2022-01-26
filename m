@@ -2,85 +2,97 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E55C28CF5
-	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jan 2022 09:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8CBC63682
+	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jan 2022 10:08:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231742AbiAZJbH (ORCPT
+        id S232093AbiAZKIl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 26 Jan 2022 04:31:07 -0500
-Received: from smtp-relay-canonical-1.canonical.com ([185.125.188.121]:51872
-        "EHLO smtp-relay-canonical-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231687AbiAZJbG (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 26 Jan 2022 04:31:06 -0500
-Received: from [192.168.192.153] (unknown [50.126.114.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 0DCCF3F131;
-        Wed, 26 Jan 2022 09:31:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1643189465;
-        bh=C3TFbDbXFKcqqKVEcUfwOgfrgdi94v6/GW8fG5xPa48=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=jo9dKs5e9Yu2R+73sD5iqoMx+w/QchNyOh+TebWDXpmuX+xqliuGmV4zxHUXkBBo/
-         o0MLrWkVxhhLGbOSfbx2mD1hzpvw+i6w3j27H/vIW0CV/0laHGpDJSJhw+fAyvHpgw
-         aUerQwU/ad3f3ud2yvZFk2RhSKsSos7paXmrLtQvDxdgP/yIZyXJdSY+gCSnE8Yxbx
-         h83BP6Egj6fEsZNviuqUS1b2ZzKwxybbLVNC+oYkdlh+mJxahFenD1oQtbjLESS0Uv
-         GMRL12eRk63Vq7JpPTTLphuG7pgnmi7M2cMXpXCGfC7y9xgpj9otnzm96Yk9SUJqN3
-         1VA6qiykPy4cg==
-Message-ID: <87f35305-324e-6f7a-69a6-710db05c6e7c@canonical.com>
-Date:   Wed, 26 Jan 2022 01:30:54 -0800
+        Wed, 26 Jan 2022 05:08:41 -0500
+Received: from mga12.intel.com ([192.55.52.136]:11913 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232002AbiAZKIk (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 26 Jan 2022 05:08:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643191720; x=1674727720;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9DdtvZ7yMVpfqtYl7aRfb2H95FdCk00oZ2LfZcvlals=;
+  b=ODNemuJ2HaVLkN5DsuGz2TDK9EM7wr4IoT87cDhvwu/KL13tOvYB/qwS
+   qE2wembYwZt+eRnEV5yjNe0Fj/q+EN5BsVsnkihA7Zc7Mb54EbgnUWcTg
+   GejotZmNN5bUrvIsLQkA3wlFT2XJzjvWTpAjCe4m5VPSh6S0f7YQ51vUe
+   LOrHe2lu71Vf4Vx+tc6YaHuiB5hRbblpDQbeCZldzEb1GB9bsrx1Z0amu
+   AavbSXttPU/Jx4FCDQ+wkvGyctQSzM7KkWn2a0tal9EjgTojQzMQxwIAo
+   PSQ/wAyrk5GbMAgMpsWtbQgruQYnVcypQVdoojPYfaRUdcEJft/VLFvj7
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10238"; a="226496171"
+X-IronPort-AV: E=Sophos;i="5.88,317,1635231600"; 
+   d="scan'208";a="226496171"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 02:08:39 -0800
+X-IronPort-AV: E=Sophos;i="5.88,317,1635231600"; 
+   d="scan'208";a="581061617"
+Received: from mburchar-mobl.amr.corp.intel.com (HELO [10.212.54.252]) ([10.212.54.252])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 02:08:37 -0800
+Message-ID: <a1defc48-6b7c-8a4c-fff1-3baebab9a4f4@linux.intel.com>
+Date:   Wed, 26 Jan 2022 10:08:36 +0000
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH][next] apparmor: Use struct_size() helper in kmalloc()
+ Thunderbird/91.3.1
+Subject: Re: [PATCH][next] drm/i915/guc: Use struct_size() helper in kmalloc()
 Content-Language: en-US
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     linux-security-module@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20220125015606.GA28243@embeddedor>
-From:   John Johansen <john.johansen@canonical.com>
-Organization: Canonical
-In-Reply-To: <20220125015606.GA28243@embeddedor>
-Content-Type: text/plain; charset=UTF-8
+References: <20220125180726.GA68646@embeddedor>
+From:   Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
+Organization: Intel Corporation UK Plc
+In-Reply-To: <20220125180726.GA68646@embeddedor>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 1/24/22 17:56, Gustavo A. R. Silva wrote:
+
+On 25/01/2022 18:07, Gustavo A. R. Silva wrote:
 > Make use of the struct_size() helper instead of an open-coded version,
 > in order to avoid any potential type mistakes or integer overflows that,
 > in the worst scenario, could lead to heap overflows.
 > 
 > Also, address the following sparse warnings:
-> security/apparmor/lib.c:139:23: warning: using sizeof on a flexible structure
+> drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c:792:23: warning: using sizeof on a flexible structure
 > 
 > Link: https://github.com/KSPP/linux/issues/174
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-thanks, I have pulled this into my tree
-Acked-by: John Johansen <john.johansen@canonical.com>
-
 > ---
->  security/apparmor/lib.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/security/apparmor/lib.c b/security/apparmor/lib.c
-> index fa49b81eb54c..5eda003c0d45 100644
-> --- a/security/apparmor/lib.c
-> +++ b/security/apparmor/lib.c
-> @@ -136,7 +136,7 @@ __counted char *aa_str_alloc(int size, gfp_t gfp)
->  {
->  	struct counted_str *str;
->  
-> -	str = kmalloc(sizeof(struct counted_str) + size, gfp);
-> +	str = kmalloc(struct_size(str, name, size), gfp);
->  	if (!str)
->  		return NULL;
->  
+> diff --git a/drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c b/drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c
+> index aa6dd6415202..e352a1aad228 100644
+> --- a/drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c
+> +++ b/drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c
+> @@ -789,7 +789,7 @@ static struct ct_incoming_msg *ct_alloc_msg(u32 num_dwords)
+>   {
+>   	struct ct_incoming_msg *msg;
+>   
+> -	msg = kmalloc(sizeof(*msg) + sizeof(u32) * num_dwords, GFP_ATOMIC);
+> +	msg = kmalloc(struct_size(msg, msg, num_dwords), GFP_ATOMIC);
+>   	if (msg)
+>   		msg->size = num_dwords;
+>   	return msg;
+> 
 
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+
+Thanks for the patch, will merge shortly.
+
+Regards,
+
+Tvrtko
