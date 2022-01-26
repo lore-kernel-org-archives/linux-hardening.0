@@ -2,132 +2,174 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C037C28CF5
-	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jan 2022 07:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687FCC2BA4C
+	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jan 2022 07:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237533AbiAZHBe (ORCPT
+        id S238062AbiAZHxi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 26 Jan 2022 02:01:34 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:60578 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229979AbiAZHBe (ORCPT
+        Wed, 26 Jan 2022 02:53:38 -0500
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:51225 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229840AbiAZHxh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 26 Jan 2022 02:01:34 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4A5BAB81C0C;
-        Wed, 26 Jan 2022 07:01:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DB70C340E3;
-        Wed, 26 Jan 2022 07:01:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643180491;
-        bh=DnMOT2vlu2opZbnfCdapvRfBKqFGLQL1Y5Zbwh5314g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SE8ra/wvzUJDhk8ChNZk2kYH5wi9CXIf7KYV1Uw7XnNNJEqrL5Oetr1kfhbYIvxvw
-         3AFkP2fG6WYk8p52Kuq6z3cfAzvUaP4GXrkTcR4FR8iFnJttDl/B63UnLdex/TR+9B
-         HwpU+D5MjDB9Jw3ijrM2E+SyCyOMnngJuio3fdS3hB54xtXltggj67kAaNM7wj7+S+
-         qALdsuInsQAV3jRiqjS4tQV8bO54rfZPuuFqENyysCizjCFFD0JLJeAqSEJ9iFeRJ8
-         Tz0RnBtRM7+WdNrvAEEeJHegTUcFyfoIumaZ5pPWO7cVaWpz2nMNPZUqvDyCu/cVlD
-         jRWY/DGC5WlSw==
-Date:   Wed, 26 Jan 2022 16:01:27 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wed, 26 Jan 2022 02:53:37 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R571e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0V2ucAPL_1643183612;
+Received: from 192.168.193.139(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V2ucAPL_1643183612)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 26 Jan 2022 15:53:33 +0800
+Message-ID: <61acb6f4-9a86-ddad-e48c-c68e4bcb08f1@linux.alibaba.com>
+Date:   Tue, 25 Jan 2022 23:53:32 -0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PING^3][PATCH,v2,1/1,AARCH64][PR102768] aarch64: Add compiler
+ support for Shadow Call Stack
+Content-Language: en-US
+From:   Dan Li <ashimida@linux.alibaba.com>
+To:     gcc-patches@gcc.gnu.org, richard.earnshaw@arm.com,
+        marcus.shawcroft@arm.com, kyrylo.tkachov@arm.com, hp@gcc.gnu.org,
+        ndesaulniers@google.com, nsz@gcc.gnu.org, pageexec@gmail.com,
+        qinzhao@gcc.gnu.org, richard.sandiford@arm.com,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] perf: Avoid -Warray-bounds warning for __rel_loc macro
-Message-Id: <20220126160127.f3deb7f73e87066e94218a48@kernel.org>
-In-Reply-To: <20220125220037.2738923-1-keescook@chromium.org>
-References: <20220125220037.2738923-1-keescook@chromium.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20211102070616.119780-1-ashimida@linux.alibaba.com>
+ <81d54b71-7c9c-47ef-ac8d-72aae46cd4ee@linux.alibaba.com>
+ <mptk0euk42w.fsf@arm.com>
+ <a9daf6bf-94f2-0c5f-b9aa-7fb69781c9d5@linux.alibaba.com>
+ <mpto840kti9.fsf@arm.com>
+ <3ae4a533-352b-f3e3-27b3-9386df5f56c3@linux.alibaba.com>
+Cc:     pcc@google.com, samitolvanen@google.com, ardb@kernel.org,
+        keescook@chromium.org
+In-Reply-To: <3ae4a533-352b-f3e3-27b3-9386df5f56c3@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 25 Jan 2022 14:00:37 -0800
-Kees Cook <keescook@chromium.org> wrote:
+Hi, all,
 
-> As done for trace_events.h, also fix the __rel_loc macro in perf.h,
-> which silences the -Warray-bounds warning:
+Sorry for bothering.
+
+I'm trying to commit aarch64 scs code to the gcc and there is an issue
+that I'm not sure about, could someone give me some suggestions?
+(To avoid noise, I did't cc PING^3 [1] to the kernel mail list :) )
+
+When clang enables scs, the following instructions are usually generated:
+
+str     x30, [x18], 8
+ldp     x29, x30, [sp], 16
+......
+ldp     x29, x30, [sp], 16		## x30 pop
+ldr     x30, [x18, -8]!   		## x30 pop again
+ret
+
+The x30 register is popped twice here, Richard suggested that we can
+omit the first x30 pop here.
+
+AFAICT, it seems fine and also safe for SCS. But I'm not sure if I'm
+missing something with the kernel, could someone give some suggestions?
+
+The previous discussion can be found here [1].
+
+[1] https://gcc.gnu.org/pipermail/gcc-patches/2022-January/589257.html
+
+Thanks a lot!
+Dan
+
+On 1/25/22 22:51, Dan Li wrote:
 > 
-> In file included from ./include/linux/string.h:253,
->                  from ./include/linux/bitmap.h:11,
->                  from ./include/linux/cpumask.h:12,
->                  from ./include/linux/mm_types_task.h:14,
->                  from ./include/linux/mm_types.h:5,
->                  from ./include/linux/buildid.h:5,
->                  from ./include/linux/module.h:14,
->                  from samples/trace_events/trace-events-sample.c:2:
-> In function '__fortify_strcpy',
->     inlined from 'perf_trace_foo_rel_loc' at samples/trace_events/./trace-events-sample.h:519:1:
-> ./include/linux/fortify-string.h:47:33: warning: '__builtin_strcpy' offset 12 is out of the bounds [
-> 0, 4] [-Warray-bounds]
->    47 | #define __underlying_strcpy     __builtin_strcpy
->       |                                 ^
-> ./include/linux/fortify-string.h:445:24: note: in expansion of macro '__underlying_strcpy'
->   445 |                 return __underlying_strcpy(p, q);
->       |                        ^~~~~~~~~~~~~~~~~~~
 > 
-> Also make __data struct member a proper flexible array to avoid future
-> problems.
+> On 1/25/22 02:19, Richard Sandiford wrote:
+>> Dan Li <ashimida@linux.alibaba.com> writes:
+>>>>> +
+>>>>>       if (flag_stack_usage_info)
+>>>>>         current_function_static_stack_size = constant_lower_bound (frame_size);
+>>>>> @@ -9066,6 +9089,10 @@ aarch64_expand_epilogue (bool for_sibcall)
+>>>>>           RTX_FRAME_RELATED_P (insn) = 1;
+>>>>>         }
+>>>>> +  /* Pop return address from shadow call stack.  */
+>>>>> +  if (aarch64_shadow_call_stack_enabled ())
+>>>>> +    emit_insn (gen_scs_pop ());
+>>>>> +
+>>>>
+>>>> This looks correct, but following on from the above, I guess we continue
+>>>> to restore x30 from the frame in the traditional way first, and then
+>>>> overwrite it with the SCS value.  I think the output code would be
+>>>> slightly neater if we suppressed the first restore of x30.
+>>>>
+>>> Yes, the current epilogue is like:
+>>>       .......
+>>>       ldp     x29, x30, [sp], #16
+>>> +   ldr     x30, [x18, #-8]!
+>>>
+>>> I think may be we can keep the two x30 pops here, for two reasons:
+>>> 1) The implementation of scs in clang is to pop x30 twice, it might be
+>>> better to be consistent with clang here[1].
+>>
+>> This doesn't seem a very compelling reason on its own, unless it's
+>> explicitly meant to be observable behaviour.  (But then, observed how?)
+>>
 > 
-
-This looks good to me.
-
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-BTW, same macro is in the include/trace/bpf_probe.h.
-I'm not sure bpf using this macro, should we update it for
-consistency?
-
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  include/trace/perf.h         | 5 +++--
->  include/trace/trace_events.h | 2 +-
->  2 files changed, 4 insertions(+), 3 deletions(-)
+> Well, probably sticking to pop x30 twice is not a good idea.
+> AFAICT, there doesn't seem to be an explicit requirement that
+> this behavior must be followed.
 > 
-> diff --git a/include/trace/perf.h b/include/trace/perf.h
-> index b77d09c70a93..5800d13146c3 100644
-> --- a/include/trace/perf.h
-> +++ b/include/trace/perf.h
-> @@ -26,8 +26,9 @@
->  
->  #undef __get_rel_dynamic_array
->  #define __get_rel_dynamic_array(field)	\
-> -		((void *)(&__entry->__rel_loc_##field) +	\
-> -		 sizeof(__entry->__rel_loc_##field) +		\
-> +		((void *)__entry +					\
-> +		 offsetof(typeof(*__entry), __rel_loc_##field) +	\
-> +		 sizeof(__entry->__rel_loc_##field) +			\
->  		 (__entry->__rel_loc_##field & 0xffff))
->  
->  #undef __get_rel_dynamic_array_len
-> diff --git a/include/trace/trace_events.h b/include/trace/trace_events.h
-> index cefefed18e85..7c86cc541c7a 100644
-> --- a/include/trace/trace_events.h
-> +++ b/include/trace/trace_events.h
-> @@ -134,7 +134,7 @@ TRACE_MAKE_SYSTEM_STR();
->  	struct trace_event_raw_##name {					\
->  		struct trace_entry	ent;				\
->  		tstruct							\
-> -		char			__data[0];			\
-> +		char			__data[];			\
->  	};								\
->  									\
->  	static struct trace_event_class event_class_##name;
-> -- 
-> 2.30.2
+> BTW:
+> Do we still need to emit the .cfi_restore 30 directive here if we
+> want to save a pop x30? (Sorry I'm not familiar enough with DWARF.)
 > 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> Since the aarch64 linux kernel always enables -fno-omit-frame-pointer,
+> the generated assembly code may be as follows:
+> 
+> str     x30, [x18], 8
+> ldp     x29, x30, [sp], 16
+> ......
+> ldr     x29, [sp], 16
+>                          ## Do we still need a .cfi_restore 30 here
+> .cfi_restore 29
+> .cfi_def_cfa_offset 0
+> ldr     x30, [x18, -8]!
+>                          ## Or may be a non-CFA based directive here
+> ret
+> 
+>>> 2) If we keep the first restore of x30, it may provide some flexibility
+>>> for other scenarios. For example, we can directly patch the scs_push/pop
+>>> insns in the binary to turn it into a binary without scs;
+>>
+>> Is that a supported (and ideally documented) use case?  If it is,
+>> then it becomes important for correctness that the compiler emits
+>> exactly the opcodes in the original patch.  If it isn't, then the
+>> compiler can emit other instructions that have the same effect.
+>>
+> 
+> Oh, no, this is just a little trick that can be used for compatibility.
+> (Maybe some scenarios such as our company sometimes need to be
+> compatible with some non-open source binaries from different
+> manufacturers, two pops could make life easier :). )
+> 
+> If this is not a consideration for our community, please ignore
+> this request.
+> 
+>> I'd like a definitive ruling on this from the kernel folks before
+>> the patch goes in.
+>>
+> 
+> Ok, I'll cc some kernel folks to make sure I didn't miss something.
+> 
+>> If binary patching is supposed to be possible then scs_push and
+>> scs_pop *do* need to be separate define_insns.  But they also need
+>> to have some magic unspec that differentiates them from normal
+>> pushes and pops, e.g.:
+>>
+>>    (set ...mem...
+>>         (unspec:DI [...reg...] UNSPEC_SCS_PUSH))
+>>
+>> so that there is no chance that the pattern would be treated as
+>> a normal move and optimised accordingly.
+>>
+> 
+> Yeah, this template looks more appropriate if it is to be treated
+> as a special directive.
+> 
+> Thanks for your suggestions,
+> Dan
