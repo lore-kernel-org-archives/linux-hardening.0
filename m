@@ -2,93 +2,91 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C71C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 27 Jan 2022 07:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E19C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 27 Jan 2022 10:05:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234049AbiA0HbO (ORCPT
+        id S238895AbiA0KFZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 27 Jan 2022 02:31:14 -0500
-Received: from mga05.intel.com ([192.55.52.43]:36655 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233852AbiA0HbN (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 27 Jan 2022 02:31:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643268673; x=1674804673;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WpZCIaQ7itXdEHKPHwyl50Sh+SYGiZNsmk7z77SYSFU=;
-  b=SqFZaHwJ2RHCsPEcBprIekNJeS0VQWWvB8thqkDmzS3aS+/PnHfmiuhC
-   DfUIKWzaCAPm7hPiPy85QQwNCC+KfkRNK5jyDRkRU0v+JN1f7vcq3avvr
-   HxfjKPuey42K6FMQTD7WPa61Vn+pNwOQWzCVCvBXa9lsCZI4XL2o2yPlQ
-   eBgZBXwuF7Yr3gSTN4Pz2UpqZw6Je4yEmhzgfEziIOvJ3x7loPJeRbpPp
-   ayXhn0WIvDwTqP0eKR0PSBLMM7A9QUmjXmG2JvTSs9MaTN34sFmpw718v
-   Sej+/f8avqXwK55ifrjH6cpn7LuKGEyyVTYRMogrlF6GE/1cRCjXzM9VD
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10239"; a="333129883"
-X-IronPort-AV: E=Sophos;i="5.88,320,1635231600"; 
-   d="scan'208";a="333129883"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 23:31:13 -0800
-X-IronPort-AV: E=Sophos;i="5.88,320,1635231600"; 
-   d="scan'208";a="625125127"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 23:31:11 -0800
-Received: from paasikivi.fi.intel.com (localhost [127.0.0.1])
-        by paasikivi.fi.intel.com (Postfix) with SMTP id D0DD6202F2;
-        Thu, 27 Jan 2022 09:31:08 +0200 (EET)
-Date:   Thu, 27 Jan 2022 09:31:08 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-media@vger.kernel.org,
-        stable@vger.kernel.org,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Thu, 27 Jan 2022 05:05:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43006 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238891AbiA0KFZ (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Thu, 27 Jan 2022 05:05:25 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D82DC061714
+        for <linux-hardening@vger.kernel.org>; Thu, 27 Jan 2022 02:05:25 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id b1-20020a17090a990100b001b14bd47532so2473685pjp.0
+        for <linux-hardening@vger.kernel.org>; Thu, 27 Jan 2022 02:05:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LBOQjqTrRKyhdvBvzMylROfqbjWsRkHJwbCc+XSqEB4=;
+        b=hU+y8UUCtnvmLs91gy6C7O0CCHoYJ2TYmaHx7LExtXnAX3g2ZUWGqWjQGO9/EoDTHL
+         LKJm5G2IXBdaabWdTa5DJp52fycGA3iBYSheTFsR6/eT0zTGBJ9vL1CUM+YzZJ4QOml5
+         mjaQGcvCY2aRk+2I7XMu+2PSCwnYj1z7fGDwI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LBOQjqTrRKyhdvBvzMylROfqbjWsRkHJwbCc+XSqEB4=;
+        b=3wnp29sFkz8vQlbv1hZWh0vn81Avs0S0y5Jz3MZaYcrMxYhzYJy03mLbgu/bVNTtn7
+         nDhboxGiL6RO65HaEWtKp+OtesP3PZ17y9kURhteG8ZXFLtNOzL/sAGlJrXZdSPe0A05
+         OrH0LHjLaMxUt8loqs74aGUD3SYOwnqAUwayoIM+OoIjsD8ofjD0Es1KR8KzJJilPFlq
+         JSAoZIcA99PcEZ8OH6zfucYbj25BlfF3DC/NZ6p+QpQtISXNcMSIDV4grEoKc/iSagd+
+         5q9XT8zrl9JVkmqEvynD3j+LNDSwdefzyfrnNsEu4rzFNokgGSFJKPQMWWs+yi2XL2GG
+         wDCQ==
+X-Gm-Message-State: AOAM530Z0O3akAVk/orlZylCZqOyJrahm5MmVs3FcwzY+p70lvc52BWC
+        wdhj5pPd9PcwhU6uvTfgYZJmGQ==
+X-Google-Smtp-Source: ABdhPJwHB0qa1O7m8UjQXGx1IEj/br7glW0Yig/xNOufSEf8geSAYNnvEm+sDvMzb7zRtZzMRbp7zw==
+X-Received: by 2002:a17:90b:1b46:: with SMTP id nv6mr3459486pjb.178.1643277924815;
+        Thu, 27 Jan 2022 02:05:24 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p42sm4980243pfw.71.2022.01.27.02.05.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jan 2022 02:05:24 -0800 (PST)
+Date:   Thu, 27 Jan 2022 02:05:23 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH RESEND] media: omap3isp: Use struct_group() for memcpy()
- region
-Message-ID: <YfJKPCXr4RjPL6lc@paasikivi.fi.intel.com>
-References: <20220124172952.2411764-1-keescook@chromium.org>
- <20220125092426.7bdfba8f@coco.lan>
+Subject: Re: [PATCH][next] staging: greybus: i2c: Use struct_size() helper in
+ gb_i2c_operation_create()
+Message-ID: <202201270204.D460EC35@keescook>
+References: <20220121222250.GA73021@embeddedor>
+ <202201241213.82E7D9F598@keescook>
+ <20220126105404.GY1951@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220125092426.7bdfba8f@coco.lan>
+In-Reply-To: <20220126105404.GY1951@kadam>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Mauro,
+On Wed, Jan 26, 2022 at 01:54:04PM +0300, Dan Carpenter wrote:
+> On Mon, Jan 24, 2022 at 12:19:03PM -0800, Kees Cook wrote:
+> > This could still overflow if struct_size() returns SIZE_MAX. Perhaps:
+> > 
+> > 	if (check_add_overflow(struct_size(request, ops, msg_count),
+> > 			       data_out_size, &request_size))
+> > 		request_size = SIZE_MAX;
+> > 
+> > I should brush off the saturating arithmetic helpers series:
+> > https://lore.kernel.org/all/20210920180853.1825195-1-keescook@chromium.org/
+> 
+> Yes, please!  Those seem like a million times easier to use.
 
-On Tue, Jan 25, 2022 at 09:24:26AM +0100, Mauro Carvalho Chehab wrote:
-> Em Mon, 24 Jan 2022 09:29:52 -0800
-> Kees Cook <keescook@chromium.org> escreveu:
-> 
-> > In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> > field bounds checking for memcpy(), memmove(), and memset(), avoid
-> > intentionally writing across neighboring fields. Wrap the target region
-> > in struct_group(). This additionally fixes a theoretical misalignment
-> > of the copy (since the size of "buf" changes between 64-bit and 32-bit,
-> > but this is likely never built for 64-bit).
-> 
-> 
-> > FWIW, I think this code is totally broken on 64-bit (which appears to
-> > not be a "real" build configuration): it would either always fail (with
-> > an uninitialized data->buf_size) or would cause corruption in userspace
-> > due to the copy_to_user() in the call path against an uninitialized
-> > data->buf value:
-> 
-> It doesn't matter. This driver is specific for TI OMAP3 SoC, which
-> is Cortex-A8 (32-bits). It only builds on 64 bit due to COMPILE_TEST.
+Here they are! :) Please review:
 
-I agree that "it doesn't matter" in any real configuration. But if it's
-this easy to address omap3isp driver behaving nicely with compile test,
-then this is definitely worth merging.
+https://lore.kernel.org/lkml/20220124232342.3113350-1-keescook@chromium.org/
 
-I'll pick the patch to my tree.
+Thanks!
 
 -- 
-Kind regards,
-
-Sakari Ailus
+Kees Cook
