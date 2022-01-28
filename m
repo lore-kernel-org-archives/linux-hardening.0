@@ -2,345 +2,130 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9389EC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 28 Jan 2022 21:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2225C433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 28 Jan 2022 21:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241282AbiA1V1Q (ORCPT
+        id S245037AbiA1Vlf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 28 Jan 2022 16:27:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54458 "EHLO
+        Fri, 28 Jan 2022 16:41:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232623AbiA1V1P (ORCPT
+        with ESMTP id S239505AbiA1Vle (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 28 Jan 2022 16:27:15 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80BCBC061714
-        for <linux-hardening@vger.kernel.org>; Fri, 28 Jan 2022 13:27:15 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id c3so7326597pls.5
-        for <linux-hardening@vger.kernel.org>; Fri, 28 Jan 2022 13:27:15 -0800 (PST)
+        Fri, 28 Jan 2022 16:41:34 -0500
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F9F1C06173B
+        for <linux-hardening@vger.kernel.org>; Fri, 28 Jan 2022 13:41:34 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id my12-20020a17090b4c8c00b001b528ba1cd7so7607736pjb.1
+        for <linux-hardening@vger.kernel.org>; Fri, 28 Jan 2022 13:41:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DzX7+47gjPs8ILgLf0J66KJIKgGaB7Dk6+HNeR2ERRE=;
-        b=lrWPcI3AjQYaniz9ehthdWA2oNEMoH7brJ9Kwg3b3qps/fLP+rBtIQFYxJVScUxNTV
-         pr8tQ3T0x2/OOVnHFWQ5hSyOpTmTWkgz4IxOSsyJ6bicNsRyAYvQNnBA4Z2qJcsEh2Ho
-         bSR0gBzBM+h+T1yj771izIZY4k2GtJhthOmFo=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3wXlxO8ivxh19lX0NUWVIj5SKVX6xM1bt7/6ivcawkI=;
+        b=oaKziv6vTJhWuDvXhdfjGZVLHKZ7L83vnVgyfI1+9l/jD7sXBS4r7CUk8PrAOaF54E
+         epgiy7APhyZWhgKMr/MBLD6P2x6Cmj0RNCqWb0nXyoqbATE91TzVh02Lr6uOrCV85QGS
+         Lr2dE/lBl5NP+xz5eIbm4Pk5LJNr4MpcOFPOk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DzX7+47gjPs8ILgLf0J66KJIKgGaB7Dk6+HNeR2ERRE=;
-        b=1z9AmDkqgUwAJNmNTJgGQ+nkUQAVwBNhbM931hmnAZjRLkPiQtG8oMYkJYUUvmJpTm
-         0DEpOGvNOGrRsgdiW9U0IJsmWXxxrNF2DgXbekwb+eQJgnP6tHAVyKlvplPAO5DnpmSF
-         fyBDJ+Q8qwgt7XjoX/4MCjZ9/DXGsOT11OPSIoHzKZnBmiusGg/NyVrCDfnvCmP520pe
-         EWPh4tK25o06iuqUGGWT9F5m0mTCgiD8b9dM3ysKEO0Drq/aWo/NYdUVD0P2qZFZyniC
-         zmBfmH3WTIXaaESAsuiEIYkMbghNEeqfNiUlq9bOFm1XPKn9rUU3RTzQXRZ+pw8BtXLf
-         V7Rg==
-X-Gm-Message-State: AOAM531HmP0/RyJiYBCI9mrIFR6ZCfq+JoMCUDyp1jMpVBQbwN2U3SGX
-        7hTTSY8/OpPMCqdsvCcNmRJC3Q==
-X-Google-Smtp-Source: ABdhPJwlFwgizi4ArGzF8oDergTmTp0qC5/7Wj21LOUtIbEMhFJqIFbzDJA7GHDOyOhEjBJnelNJLA==
-X-Received: by 2002:a17:903:2305:: with SMTP id d5mr10041599plh.122.1643405235026;
-        Fri, 28 Jan 2022 13:27:15 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3wXlxO8ivxh19lX0NUWVIj5SKVX6xM1bt7/6ivcawkI=;
+        b=zov1fKC5QCH0rTsC4/PC75pYouXbwgbTt2G8RJAMHScc4/Xn5csNbllzPWdDcLrTkC
+         OIV21TKOJ77BcK2uiXKxKNXYZDchhrscKh2Jg5CCrtCkZ49nPm2iFQjHPdCmPbrGkiU/
+         JKPYrG8TrGCMVEISLM6o8elBloHmrctDaMMNJzYOXv6LTLXjhUOyvoLI3B8lNnGCMjsX
+         gSLLvVSFWIp0JH2qIFRutvMwCGpZwnPv86ztzXLRs+YR/JzbdrUuutwS8DEq6AizTbuN
+         yxs1I/++GekUOY+Vd5gVfh6O2iO1A9+B1OYxQtiFlGxoBOw36phmGau7hrjCUJsQn/zR
+         6m1Q==
+X-Gm-Message-State: AOAM531sLoRU55ENN2pRV/evWv/5KrpD4+cxleQ6vDBYbfrWPihYrZ4W
+        MIRdya30XGZcJu/ILouN8RNNAJDXenfPSw==
+X-Google-Smtp-Source: ABdhPJz/fgfsI4xLVm3DEvsoPHm+vtuTG0j/blq9GjI1DbhuSDmGKszKc7oySUS+0SZfLJxZpj/t5A==
+X-Received: by 2002:a17:902:a5c1:: with SMTP id t1mr10890722plq.106.1643406093578;
+        Fri, 28 Jan 2022 13:41:33 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 8sm3250202pji.4.2022.01.28.13.27.14
+        by smtp.gmail.com with ESMTPSA id rj1sm3460112pjb.49.2022.01.28.13.41.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jan 2022 13:27:14 -0800 (PST)
-Date:   Fri, 28 Jan 2022 13:27:13 -0800
+        Fri, 28 Jan 2022 13:41:33 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Nathan Chancellor <nathan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Miguel Ojeda <ojeda@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
         Isabella Basso <isabbasso@riseup.net>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] Kconfig.debug: Make DEBUG_INFO selectable from a
- choice
-Message-ID: <202201281326.8DABC3BE@keescook>
-References: <20220125075126.891825-1-keescook@chromium.org>
- <YfRY6+CaQxX7O8vF@dev-arch.archlinux-ax161>
+Subject: [PATCH] Kconfig.debug: Make DEBUG_INFO always default=n
+Date:   Fri, 28 Jan 2022 13:41:31 -0800
+Message-Id: <20220128214131.580131-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YfRY6+CaQxX7O8vF@dev-arch.archlinux-ax161>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2150; h=from:subject; bh=s9N1b3JvxLd7oL7UEPREgGNdTUKoGAUWw3SiLd7haIE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh9GMLirleATojwN3w57Xd5078WAD6SduT1rPt5nHf EBZlc2+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYfRjCwAKCRCJcvTf3G3AJl31D/ 9ft+lnP5M4ywaWKG9O5qM3gN9sPC7U6rj3pBTCI3T9DcMj+hNqsExa3v9nqxtx35MG+vmzfqhSisa0 ouiA9NrfacD8srxm+etJSmTPdjxu8x4XuesC/avRPeuazGXTwm1W0kizYnBXLjbT6ZNoFJ/TGQKqfI 5fZWRb407xFVfYmcdcCRmsU8z40c0XaTXD/pSbXWHK4dZsy9sYeJPkFBy2btTFB/WVBYBxpoX9yzM8 0CqjseXHvuYkxfjAqYMhJWozZEW9OBHmNjDT43exDBNwfHOo+viIc8cRQbFYGFcW2YEs15G7C5/qQH IMyxcmYIFoiZIkrEDYosigQExBoVIEXg8v+76M+B1GVcyt9Wp3mCoxqOmGOP3PBL4AIkPzoI9IPVvJ O0UP/nWg3Slu8guiRmGSQsIADBMSFjWKzy3K9f55THnW6SOyjO8OPkZGsV550X90RlDh63try++a38 19MJTobH+EGJJHCBTiERWwKnCa+wuvwYY19T4wRZVrOHFuRHsUDiyA8tuD2xsStAsJZhfRv9wg5hYG HpbrRozX/XPcOtqscWXqbDCKUETeHBgZczVz2wrEf8mt7zMjEcNT+OUKoOr4Xdw2km2tfySmAPDTQG IbUks5MlGWA0d0D+uQR5/R6svXYL3b6Zh1nXThDJFyGPyLMggEjEIu+KkHeA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 28, 2022 at 01:58:19PM -0700, Nathan Chancellor wrote:
-> Hi Kees,
-> 
-> On Mon, Jan 24, 2022 at 11:51:26PM -0800, Kees Cook wrote:
-> > Currently it's not possible to enable DEBUG_INFO for an all*config build,
-> > since it is marked as "depends on !COMPILE_TEST". This generally makes
-> > sense because a debug build of an all*config target ends up taking much
-> > longer and the output is much larger. Having this be "default off" makes
-> > sense. However, there are cases where enabling DEBUG_INFO for such builds
-> > is useful for doing treewide A/B comparisons of build options, etc.
-> > 
-> > Make DEBUG_INFO selectable from any of the DWARF version choice options,
-> > with DEBUG_INFO_NONE being the default for COMPILE_TEST. The mutually
-> > exclusive relationship between DWARF5 and BTF must be inverted, but the
-> > result remains the same. Additionally moves DEBUG_KERNEL and DEBUG_MISC
-> > up to the top of the menu because they were enabling features _above_
-> > it, making it weird to navigate menuconfig.
-> > 
-> > Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Masahiro Yamada <masahiroy@kernel.org>
-> > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> > Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> > Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-> > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> > v1: https://lore.kernel.org/lkml/20211210000910.3597609-1-keescook@chromium.org
-> > v2: https://lore.kernel.org/lkml/20220121001204.4023842-1-keescook@chromium.org
-> > v3: - rebase to v5.17-rc1
-> > ---
-> >  lib/Kconfig.debug | 140 +++++++++++++++++++++++++---------------------
-> >  1 file changed, 75 insertions(+), 65 deletions(-)
-> > 
-> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > index 14b89aa37c5c..1290e0906236 100644
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -208,20 +208,88 @@ config DEBUG_BUGVERBOSE
-> >  
-> >  endmenu # "printk and dmesg options"
-> >  
-> > +config DEBUG_KERNEL
-> > +	bool "Kernel debugging"
-> > +	help
-> > +	  Say Y here if you are developing drivers or trying to debug and
-> > +	  identify kernel problems.
-> > +
-> > +config DEBUG_MISC
-> > +	bool "Miscellaneous debug code"
-> > +	default DEBUG_KERNEL
-> > +	depends on DEBUG_KERNEL
-> > +	help
-> > +	  Say Y here if you need to enable miscellaneous debug code that should
-> > +	  be under a more specific debug option but isn't.
-> > +
-> >  menu "Compile-time checks and compiler options"
-> >  
-> >  config DEBUG_INFO
-> > -	bool "Compile the kernel with debug info"
-> > -	depends on DEBUG_KERNEL && !COMPILE_TEST
-> > +	bool
-> >  	help
-> > -	  If you say Y here the resulting kernel image will include
-> > -	  debugging info resulting in a larger kernel image.
-> > +	  A kernel debug info option other than "None" has been selected
-> > +	  in the "Debug information" choice below, indicating that debug
-> > +	  information will be generated for build targets.
-> > +
-> > +choice
-> > +	prompt "Debug information"
-> > +	depends on DEBUG_KERNEL
-> > +	default DEBUG_INFO_NONE if COMPILE_TEST
-> 
-> I apologize for not bringing this up sooner in review (especially with
-> my tag) but I wanted to make sure this change is intentional.
-> 
-> Prior to this commit, we would have to explicitly enable DEBUG_INFO
-> after turning on DEBUG_KERNEL (i.e. DEBUG_KERNEL would not select
-> DEBUG_INFO).
-> 
-> Now, DEBUG_INFO automatically gets turned on with DEBUG_KERNEL because
-> of the depends plus the default for the choice. Is this intentional?
+While trying to make sure CONFIG_DEBUG_INFO wasn't set for COMPILE_TEST,
+I ordered the choices incorrectly to retain the prior default=n state.
+Move DEBUG_INFO_NONE to the top so that the default choice is disabled,
+and remove the "if COMPILE_TEST" as it is now redundant.
 
-Oh, er, no. I think this was an oversight when I tried to adapt this to
-Masahiro's suggestions. I will go fix this up.
+Reported-by: Nathan Chancellor <nathan@kernel.org>
+Link: https://lore.kernel.org/lkml/YfRY6+CaQxX7O8vF@dev-arch.archlinux-ax161
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Andrew, this is a fix for kconfigdebug-make-debug_info-selectable-from-a-choice.patch
+---
+ lib/Kconfig.debug | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-> For example, with x86_64_defconfig:
-> 
-> mainline:
-> 
-> $ make mrproper defconfig && rg DEBUG_INFO .config
-> 4571:# CONFIG_DEBUG_INFO is not set
-> 
-> next-20220128:
-> 
-> $ make mrproper defconfig && rg DEBUG_INFO .config
-> 4573:CONFIG_DEBUG_INFO=y
-> 4574:CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y
-> 4575:# CONFIG_DEBUG_INFO_DWARF4 is not set
-> 4576:# CONFIG_DEBUG_INFO_DWARF5 is not set
-> 4577:# CONFIG_DEBUG_INFO_NONE is not set
-> 4578:# CONFIG_DEBUG_INFO_REDUCED is not set
-> 4579:# CONFIG_DEBUG_INFO_COMPRESSED is not set
-> 4580:# CONFIG_DEBUG_INFO_SPLIT is not set
-> 
-> As far as I can tell, this will have a big impact on everyone's binary
-> and modules size that either enables DEBUG_KERNEL or EXPERT (which
-> selects DEBUG_KERNEL), which is a lot of configs.
-
-Yes, agreed, it's a huge size difference! :)
-
--Kees
-
-> 
-> $ for file in $(rg -l "CONFIG_(DEBUG_KERNEL|EXPERT)" arch/*/configs); do rg DEBUG_INFO $file &>/dev/null || echo $file; done |& wc -l
-> 170
-> 
-> If this change is intentional, then it probably warrants more of an
-> explicit callout in the commit message. I only noticed this because the
-> vmlinux for the multi_v7_defconfig kernel I build for my Raspberry Pi 3
-> went from 32.44 MB to 262.75 MB.
-> 
-> Cheers,
-> Nathan
-> 
-> > +	help
-> > +	  Selecting something other than "None" results in a kernel image
-> > +	  that will include debugging info resulting in a larger kernel image.
-> >  	  This adds debug symbols to the kernel and modules (gcc -g), and
-> >  	  is needed if you intend to use kernel crashdump or binary object
-> >  	  tools like crash, kgdb, LKCD, gdb, etc on the kernel.
-> > -	  Say Y here only if you plan to debug the kernel.
-> >  
-> > -	  If unsure, say N.
-> > +	  Choose which version of DWARF debug info to emit. If unsure,
-> > +	  select "Toolchain default".
-> > +
-> > +config DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
-> > +	bool "Rely on the toolchain's implicit default DWARF version"
-> > +	select DEBUG_INFO
-> > +	help
-> > +	  The implicit default version of DWARF debug info produced by a
-> > +	  toolchain changes over time.
-> > +
-> > +	  This can break consumers of the debug info that haven't upgraded to
-> > +	  support newer revisions, and prevent testing newer versions, but
-> > +	  those should be less common scenarios.
-> > +
-> > +config DEBUG_INFO_DWARF4
-> > +	bool "Generate DWARF Version 4 debuginfo"
-> > +	select DEBUG_INFO
-> > +	help
-> > +	  Generate DWARF v4 debug info. This requires gcc 4.5+ and gdb 7.0+.
-> > +
-> > +	  If you have consumers of DWARF debug info that are not ready for
-> > +	  newer revisions of DWARF, you may wish to choose this or have your
-> > +	  config select this.
-> > +
-> > +config DEBUG_INFO_DWARF5
-> > +	bool "Generate DWARF Version 5 debuginfo"
-> > +	select DEBUG_INFO
-> > +	depends on !CC_IS_CLANG || (CC_IS_CLANG && (AS_IS_LLVM || (AS_IS_GNU && AS_VERSION >= 23502)))
-> > +	help
-> > +	  Generate DWARF v5 debug info. Requires binutils 2.35.2, gcc 5.0+ (gcc
-> > +	  5.0+ accepts the -gdwarf-5 flag but only had partial support for some
-> > +	  draft features until 7.0), and gdb 8.0+.
-> > +
-> > +	  Changes to the structure of debug info in Version 5 allow for around
-> > +	  15-18% savings in resulting image and debug info section sizes as
-> > +	  compared to DWARF Version 4. DWARF Version 5 standardizes previous
-> > +	  extensions such as accelerators for symbol indexing and the format
-> > +	  for fission (.dwo/.dwp) files. Users may not want to select this
-> > +	  config if they rely on tooling that has not yet been updated to
-> > +	  support DWARF Version 5.
-> > +
-> > +config DEBUG_INFO_NONE
-> > +	bool "Disable debug information"
-> > +	help
-> > +	  Do not build the kernel with debugging information, which will
-> > +	  result in a faster and smaller build.
-> > +
-> > +endchoice # "Debug information"
-> >  
-> >  if DEBUG_INFO
-> >  
-> > @@ -267,56 +335,12 @@ config DEBUG_INFO_SPLIT
-> >  	  to know about the .dwo files and include them.
-> >  	  Incompatible with older versions of ccache.
-> >  
-> > -choice
-> > -	prompt "DWARF version"
-> > -	help
-> > -	  Which version of DWARF debug info to emit.
-> > -
-> > -config DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
-> > -	bool "Rely on the toolchain's implicit default DWARF version"
-> > -	help
-> > -	  The implicit default version of DWARF debug info produced by a
-> > -	  toolchain changes over time.
-> > -
-> > -	  This can break consumers of the debug info that haven't upgraded to
-> > -	  support newer revisions, and prevent testing newer versions, but
-> > -	  those should be less common scenarios.
-> > -
-> > -	  If unsure, say Y.
-> > -
-> > -config DEBUG_INFO_DWARF4
-> > -	bool "Generate DWARF Version 4 debuginfo"
-> > -	help
-> > -	  Generate DWARF v4 debug info. This requires gcc 4.5+ and gdb 7.0+.
-> > -
-> > -	  If you have consumers of DWARF debug info that are not ready for
-> > -	  newer revisions of DWARF, you may wish to choose this or have your
-> > -	  config select this.
-> > -
-> > -config DEBUG_INFO_DWARF5
-> > -	bool "Generate DWARF Version 5 debuginfo"
-> > -	depends on !CC_IS_CLANG || (CC_IS_CLANG && (AS_IS_LLVM || (AS_IS_GNU && AS_VERSION >= 23502)))
-> > -	depends on !DEBUG_INFO_BTF
-> > -	help
-> > -	  Generate DWARF v5 debug info. Requires binutils 2.35.2, gcc 5.0+ (gcc
-> > -	  5.0+ accepts the -gdwarf-5 flag but only had partial support for some
-> > -	  draft features until 7.0), and gdb 8.0+.
-> > -
-> > -	  Changes to the structure of debug info in Version 5 allow for around
-> > -	  15-18% savings in resulting image and debug info section sizes as
-> > -	  compared to DWARF Version 4. DWARF Version 5 standardizes previous
-> > -	  extensions such as accelerators for symbol indexing and the format
-> > -	  for fission (.dwo/.dwp) files. Users may not want to select this
-> > -	  config if they rely on tooling that has not yet been updated to
-> > -	  support DWARF Version 5.
-> > -
-> > -endchoice # "DWARF version"
-> > -
-> >  config DEBUG_INFO_BTF
-> >  	bool "Generate BTF typeinfo"
-> >  	depends on !DEBUG_INFO_SPLIT && !DEBUG_INFO_REDUCED
-> >  	depends on !GCC_PLUGIN_RANDSTRUCT || COMPILE_TEST
-> >  	depends on BPF_SYSCALL
-> > +	depends on !DEBUG_INFO_DWARF5
-> >  	help
-> >  	  Generate deduplicated BTF type information from DWARF debug info.
-> >  	  Turning this on expects presence of pahole tool, which will convert
-> > @@ -585,20 +609,6 @@ source "lib/Kconfig.kcsan"
-> >  
-> >  endmenu
-> >  
-> > -config DEBUG_KERNEL
-> > -	bool "Kernel debugging"
-> > -	help
-> > -	  Say Y here if you are developing drivers or trying to debug and
-> > -	  identify kernel problems.
-> > -
-> > -config DEBUG_MISC
-> > -	bool "Miscellaneous debug code"
-> > -	default DEBUG_KERNEL
-> > -	depends on DEBUG_KERNEL
-> > -	help
-> > -	  Say Y here if you need to enable miscellaneous debug code that should
-> > -	  be under a more specific debug option but isn't.
-> > -
-> >  menu "Networking Debugging"
-> >  
-> >  source "net/Kconfig.debug"
-> > -- 
-> > 2.30.2
-> > 
-> > 
-
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index a7b657d67318..a1262358d55a 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -234,7 +234,6 @@ config DEBUG_INFO
+ choice
+ 	prompt "Debug information"
+ 	depends on DEBUG_KERNEL
+-	default DEBUG_INFO_NONE if COMPILE_TEST
+ 	help
+ 	  Selecting something other than "None" results in a kernel image
+ 	  that will include debugging info resulting in a larger kernel image.
+@@ -245,6 +244,12 @@ choice
+ 	  Choose which version of DWARF debug info to emit. If unsure,
+ 	  select "Toolchain default".
+ 
++config DEBUG_INFO_NONE
++	bool "Disable debug information"
++	help
++	  Do not build the kernel with debugging information, which will
++	  result in a faster and smaller build.
++
+ config DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
+ 	bool "Rely on the toolchain's implicit default DWARF version"
+ 	select DEBUG_INFO
+@@ -283,12 +288,6 @@ config DEBUG_INFO_DWARF5
+ 	  config if they rely on tooling that has not yet been updated to
+ 	  support DWARF Version 5.
+ 
+-config DEBUG_INFO_NONE
+-	bool "Disable debug information"
+-	help
+-	  Do not build the kernel with debugging information, which will
+-	  result in a faster and smaller build.
+-
+ endchoice # "Debug information"
+ 
+ if DEBUG_INFO
 -- 
-Kees Cook
+2.30.2
+
