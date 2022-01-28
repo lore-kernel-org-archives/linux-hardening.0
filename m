@@ -2,130 +2,212 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2225C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 28 Jan 2022 21:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2473C433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 28 Jan 2022 22:30:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245037AbiA1Vlf (ORCPT
+        id S1351623AbiA1WaO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 28 Jan 2022 16:41:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57786 "EHLO
+        Fri, 28 Jan 2022 17:30:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239505AbiA1Vle (ORCPT
+        with ESMTP id S1350536AbiA1WaO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 28 Jan 2022 16:41:34 -0500
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F9F1C06173B
-        for <linux-hardening@vger.kernel.org>; Fri, 28 Jan 2022 13:41:34 -0800 (PST)
-Received: by mail-pj1-x1036.google.com with SMTP id my12-20020a17090b4c8c00b001b528ba1cd7so7607736pjb.1
-        for <linux-hardening@vger.kernel.org>; Fri, 28 Jan 2022 13:41:34 -0800 (PST)
+        Fri, 28 Jan 2022 17:30:14 -0500
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC7BBC061714
+        for <linux-hardening@vger.kernel.org>; Fri, 28 Jan 2022 14:30:13 -0800 (PST)
+Received: by mail-pg1-x52e.google.com with SMTP id g2so6464805pgo.9
+        for <linux-hardening@vger.kernel.org>; Fri, 28 Jan 2022 14:30:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3wXlxO8ivxh19lX0NUWVIj5SKVX6xM1bt7/6ivcawkI=;
-        b=oaKziv6vTJhWuDvXhdfjGZVLHKZ7L83vnVgyfI1+9l/jD7sXBS4r7CUk8PrAOaF54E
-         epgiy7APhyZWhgKMr/MBLD6P2x6Cmj0RNCqWb0nXyoqbATE91TzVh02Lr6uOrCV85QGS
-         Lr2dE/lBl5NP+xz5eIbm4Pk5LJNr4MpcOFPOk=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=UQU/zzOIGiyUM8/XLeItcnOhkfwjpiwMD0bTk1M1h+c=;
+        b=jT2/6eWTnRxYOlLDgGUVm6GoKxvh3ihMwsjZsge72KQr5rO94AiWzyRB9S/F8+nezH
+         6GNP+mG2ncB+2c9SeTf952+m26365xklIWFgbK0QJs4L9rcSCV3zREErS/hnjU+ESu6o
+         zs9dPkuxEA4/h44VByiEciXRGX+0o6P4CHv1M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3wXlxO8ivxh19lX0NUWVIj5SKVX6xM1bt7/6ivcawkI=;
-        b=zov1fKC5QCH0rTsC4/PC75pYouXbwgbTt2G8RJAMHScc4/Xn5csNbllzPWdDcLrTkC
-         OIV21TKOJ77BcK2uiXKxKNXYZDchhrscKh2Jg5CCrtCkZ49nPm2iFQjHPdCmPbrGkiU/
-         JKPYrG8TrGCMVEISLM6o8elBloHmrctDaMMNJzYOXv6LTLXjhUOyvoLI3B8lNnGCMjsX
-         gSLLvVSFWIp0JH2qIFRutvMwCGpZwnPv86ztzXLRs+YR/JzbdrUuutwS8DEq6AizTbuN
-         yxs1I/++GekUOY+Vd5gVfh6O2iO1A9+B1OYxQtiFlGxoBOw36phmGau7hrjCUJsQn/zR
-         6m1Q==
-X-Gm-Message-State: AOAM531sLoRU55ENN2pRV/evWv/5KrpD4+cxleQ6vDBYbfrWPihYrZ4W
-        MIRdya30XGZcJu/ILouN8RNNAJDXenfPSw==
-X-Google-Smtp-Source: ABdhPJz/fgfsI4xLVm3DEvsoPHm+vtuTG0j/blq9GjI1DbhuSDmGKszKc7oySUS+0SZfLJxZpj/t5A==
-X-Received: by 2002:a17:902:a5c1:: with SMTP id t1mr10890722plq.106.1643406093578;
-        Fri, 28 Jan 2022 13:41:33 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=UQU/zzOIGiyUM8/XLeItcnOhkfwjpiwMD0bTk1M1h+c=;
+        b=28LndDGgcCq64NLd1XpofKocDOv1iEx2B5WeFXgqevuPm3ZUQGPOgKPUA4efQUBM+p
+         BXgWdoo1DA2aZyH1JO6VyJMY2pSYdK5Wj/Q4sItUZ4xO+8ZCUmpGShxjLkrbDfyQHK04
+         uMtM/+QjfFpf01wXuUYSD093q6iomsCf7jCRWa5Z2OoSLLWG1YMFMgIdinXyq62PUKjv
+         EC0yLw24DEpmQq81+q0l7cSzz0bcVXkZ05cKBmzBZlrpgowgPzz33KnkCI1CV9PxufZx
+         Tp3x90goyJ5JYHb82s9XGEfkoaF5IMHLx44mkPm6rm/mibTTE42Caj3292hl/rNvfHFE
+         mFmA==
+X-Gm-Message-State: AOAM5332/y8OZDJxsVeBXFjk8uQSk2hDSjNskRgC+rQbWnoA+q1L5KYq
+        R1SWodQv+nbzWsD5K3H4/wT48Q==
+X-Google-Smtp-Source: ABdhPJyUHOWf/aLPEpgdmUJXWIEYc1ZsCgRh+fo8EE0lsoiW4r9GmsIXssoGzqEE853Xkwa5k4vN8g==
+X-Received: by 2002:a63:4e58:: with SMTP id o24mr8147584pgl.374.1643409013479;
+        Fri, 28 Jan 2022 14:30:13 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id rj1sm3460112pjb.49.2022.01.28.13.41.33
+        by smtp.gmail.com with ESMTPSA id g18sm3251898pju.7.2022.01.28.14.30.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jan 2022 13:41:33 -0800 (PST)
+        Fri, 28 Jan 2022 14:30:13 -0800 (PST)
+Date:   Fri, 28 Jan 2022 14:30:12 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Isabella Basso <isabbasso@riseup.net>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] Kconfig.debug: Make DEBUG_INFO always default=n
-Date:   Fri, 28 Jan 2022 13:41:31 -0800
-Message-Id: <20220128214131.580131-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     Magnus =?iso-8859-1?Q?Gro=DF?= <magnus.gross@rwth-aachen.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] elf: Relax assumptions about vaddr ordering
+Message-ID: <202201281347.F36AEA5B61@keescook>
+References: <YfF18Dy85mCntXrx@fractal.localdomain>
+ <202201260845.FCBC0B5A06@keescook>
+ <202201262230.E16DF58B@keescook>
+ <YfOooXQ2ScpZLhmD@fractal.localdomain>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2150; h=from:subject; bh=s9N1b3JvxLd7oL7UEPREgGNdTUKoGAUWw3SiLd7haIE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh9GMLirleATojwN3w57Xd5078WAD6SduT1rPt5nHf EBZlc2+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYfRjCwAKCRCJcvTf3G3AJl31D/ 9ft+lnP5M4ywaWKG9O5qM3gN9sPC7U6rj3pBTCI3T9DcMj+hNqsExa3v9nqxtx35MG+vmzfqhSisa0 ouiA9NrfacD8srxm+etJSmTPdjxu8x4XuesC/avRPeuazGXTwm1W0kizYnBXLjbT6ZNoFJ/TGQKqfI 5fZWRb407xFVfYmcdcCRmsU8z40c0XaTXD/pSbXWHK4dZsy9sYeJPkFBy2btTFB/WVBYBxpoX9yzM8 0CqjseXHvuYkxfjAqYMhJWozZEW9OBHmNjDT43exDBNwfHOo+viIc8cRQbFYGFcW2YEs15G7C5/qQH IMyxcmYIFoiZIkrEDYosigQExBoVIEXg8v+76M+B1GVcyt9Wp3mCoxqOmGOP3PBL4AIkPzoI9IPVvJ O0UP/nWg3Slu8guiRmGSQsIADBMSFjWKzy3K9f55THnW6SOyjO8OPkZGsV550X90RlDh63try++a38 19MJTobH+EGJJHCBTiERWwKnCa+wuvwYY19T4wRZVrOHFuRHsUDiyA8tuD2xsStAsJZhfRv9wg5hYG HpbrRozX/XPcOtqscWXqbDCKUETeHBgZczVz2wrEf8mt7zMjEcNT+OUKoOr4Xdw2km2tfySmAPDTQG IbUks5MlGWA0d0D+uQR5/R6svXYL3b6Zh1nXThDJFyGPyLMggEjEIu+KkHeA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <YfOooXQ2ScpZLhmD@fractal.localdomain>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-While trying to make sure CONFIG_DEBUG_INFO wasn't set for COMPILE_TEST,
-I ordered the choices incorrectly to retain the prior default=n state.
-Move DEBUG_INFO_NONE to the top so that the default choice is disabled,
-and remove the "if COMPILE_TEST" as it is now redundant.
+On Fri, Jan 28, 2022 at 09:26:09AM +0100, Magnus Groﬂ wrote:
+> On Wed, Jan 26, 2022 at 10:31:42PM -0800 Kees Cook wrote:
+> > On Wed, Jan 26, 2022 at 08:50:15AM -0800, Kees Cook wrote:
+> > > On Wed, Jan 26, 2022 at 05:25:20PM +0100, Magnus Groﬂ wrote:
+> > > > From ff4dde97e82727727bda711f2367c05663498b24 Mon Sep 17 00:00:00 2001
+> > > > From: =?UTF-8?q?Magnus=20Gro=C3=9F?= <magnus.gross@rwth-aachen.de>
+> > > > Date: Wed, 26 Jan 2022 16:35:07 +0100
+> > > > Subject: [PATCH] elf: Relax assumptions about vaddr ordering
+> > > > MIME-Version: 1.0
+> > > > Content-Type: text/plain; charset=UTF-8
+> > > > Content-Transfer-Encoding: 8bit
+> > > > 
+> > > > Commit 5f501d555653 ("binfmt_elf: reintroduce using
+> > > > MAP_FIXED_NOREPLACE") introduced a regression, where the kernel now
+> > > > assumes that PT_LOAD segments are ordered by vaddr in load_elf_binary().
+> > > > 
+> > > > Specifically consider an ELF binary with the following PT_LOAD segments:
+> > > > 
+> > > > Type  Offset   VirtAddr   PhysAddr   FileSiz  MemSiz    Flg Align
+> > > > LOAD  0x000000 0x08000000 0x08000000 0x474585 0x474585  R E 0x1000
+> > > > LOAD  0x475000 0x08475000 0x08475000 0x090a4  0xc6c10   RW  0x1000
+> > > > LOAD  0x47f000 0x00010000 0x00010000 0x00000  0x7ff0000     0x1000
+> > > > 
+> > > > Note how the last segment is actually the first segment and vice versa.
+> > > > 
+> > > > Since total_mapping_size() only computes the difference between the
+> > > > first and the last segment in the order that they appear, it will return
+> > > > a size of 0 in this case, thus causing load_elf_binary() to fail, which
+> > > > did not happen before that change.
+> > > > 
+> > > > Strictly speaking total_mapping_size() made that assumption already
+> > > > before that patch, but the issue did not appear because the old
+> > > > load_addr_set guards never allowed this call to total_mapping_size().
+> > > > 
+> > > > Instead of fixing this by reverting to the old load_addr_set logic, we
+> > > > fix this by comparing the correct first and last segments in
+> > > > total_mapping_size().
+> > > 
+> > > Ah, nice. Yeah, this is good.
+> > > 
+> > > > Signed-off-by: Magnus Groﬂ <magnus.gross@rwth-aachen.de>
+> > > 
+> > > Fixes: 5f501d555653 ("binfmt_elf: reintroduce using MAP_FIXED_NOREPLACE")
+> > > Cc: stable@vger.kernel.org
+> > > Acked-by: Kees Cook <keescook@chromium.org>
+> > 
+> > Andrew, can you pick this up too?
+> > 
+> > -Kees
+> > 
+> 
+> May I also propose to include this patch in whatever mailing-list
+> corresponds to the 5.16.x bugfix series?
+> It turns out that almost all native Linux games published by the Virtual
+> Programming company have this kind of weird PT_LOAD ordering including
+> the famous Bioshock Infinite, so right now those games are all
+> completely broken since Linux 5.16.
+> 
+> P.S.: Someone should probably ask Virtual Programming, what kind of
+> tooling they use to create such convoluted ELF binaries.
 
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Link: https://lore.kernel.org/lkml/YfRY6+CaQxX7O8vF@dev-arch.archlinux-ax161
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Andrew, this is a fix for kconfigdebug-make-debug_info-selectable-from-a-choice.patch
----
- lib/Kconfig.debug | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+Oh, actually, this was independently fixed:
+https://lore.kernel.org/all/YVmd7D0M6G/DcP4O@localhost.localdomain/
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index a7b657d67318..a1262358d55a 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -234,7 +234,6 @@ config DEBUG_INFO
- choice
- 	prompt "Debug information"
- 	depends on DEBUG_KERNEL
--	default DEBUG_INFO_NONE if COMPILE_TEST
- 	help
- 	  Selecting something other than "None" results in a kernel image
- 	  that will include debugging info resulting in a larger kernel image.
-@@ -245,6 +244,12 @@ choice
- 	  Choose which version of DWARF debug info to emit. If unsure,
- 	  select "Toolchain default".
- 
-+config DEBUG_INFO_NONE
-+	bool "Disable debug information"
-+	help
-+	  Do not build the kernel with debugging information, which will
-+	  result in a faster and smaller build.
-+
- config DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
- 	bool "Rely on the toolchain's implicit default DWARF version"
- 	select DEBUG_INFO
-@@ -283,12 +288,6 @@ config DEBUG_INFO_DWARF5
- 	  config if they rely on tooling that has not yet been updated to
- 	  support DWARF Version 5.
- 
--config DEBUG_INFO_NONE
--	bool "Disable debug information"
--	help
--	  Do not build the kernel with debugging information, which will
--	  result in a faster and smaller build.
--
- endchoice # "Debug information"
- 
- if DEBUG_INFO
+Alexey, you never answered by question about why we can't use a proper
+type and leave the ELF_PAGESTART() macros alone:
+https://lore.kernel.org/all/202110071038.B589687@keescook/
+
+I still don't like the use of "int" in ELF_PAGESTART(), but I agree
+it shouldn't cause a problem. I just really don't like mixing a signed
+type with address calculations, from a robustness perspective.
+
+Andrew, can you update elf-fix-overflow-in-total-mapping-size-calculation.patch
+to include:
+
+Fixes: 5f501d555653 ("binfmt_elf: reintroduce using MAP_FIXED_NOREPLACE")
+Cc: stable@vger.kernel.org
+Acked-by: Kees Cook <keescook@chromium.org>
+
+Thanks!
+
+-Kees
+
+> 
+> > > 
+> > > -Kees
+> > > 
+> > > > ---
+> > > >  fs/binfmt_elf.c | 18 ++++++++++++++----
+> > > >  1 file changed, 14 insertions(+), 4 deletions(-)
+> > > > 
+> > > > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> > > > index f8c7f26f1fbb..0caaad9eddd1 100644
+> > > > --- a/fs/binfmt_elf.c
+> > > > +++ b/fs/binfmt_elf.c
+> > > > @@ -402,19 +402,29 @@ static unsigned long elf_map(struct file *filep, unsigned long addr,
+> > > >  static unsigned long total_mapping_size(const struct elf_phdr *cmds, int nr)
+> > > >  {
+> > > >  	int i, first_idx = -1, last_idx = -1;
+> > > > +	unsigned long min_vaddr = ULONG_MAX, max_vaddr = 0;
+> > > >  
+> > > >  	for (i = 0; i < nr; i++) {
+> > > >  		if (cmds[i].p_type == PT_LOAD) {
+> > > > -			last_idx = i;
+> > > > -			if (first_idx == -1)
+> > > > +			/*
+> > > > +			 * The PT_LOAD segments are not necessarily ordered
+> > > > +			 * by vaddr. Make sure that we get the segment with
+> > > > +			 * minimum vaddr (maximum vaddr respectively)
+> > > > +			 */
+> > > > +			if (cmds[i].p_vaddr <= min_vaddr) {
+> > > >  				first_idx = i;
+> > > > +				min_vaddr = cmds[i].p_vaddr;
+> > > > +			}
+> > > > +			if (cmds[i].p_vaddr >= max_vaddr) {
+> > > > +				last_idx = i;
+> > > > +				max_vaddr = cmds[i].p_vaddr;
+> > > > +			}
+> > > >  		}
+> > > >  	}
+> > > >  	if (first_idx == -1)
+> > > >  		return 0;
+> > > >  
+> > > > -	return cmds[last_idx].p_vaddr + cmds[last_idx].p_memsz -
+> > > > -				ELF_PAGESTART(cmds[first_idx].p_vaddr);
+> > > > +	return max_vaddr + cmds[last_idx].p_memsz - ELF_PAGESTART(min_vaddr);
+> > > >  }
+> > > >  
+> > > >  static int elf_read(struct file *file, void *buf, size_t len, loff_t pos)
+> > > > -- 
+> > > > 2.34.1
+> > > 
+> > > -- 
+> > > Kees Cook
+> > 
+> > -- 
+> > Kees Cook
+
 -- 
-2.30.2
-
+Kees Cook
