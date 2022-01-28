@@ -2,196 +2,519 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED06C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 28 Jan 2022 08:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4890C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 28 Jan 2022 16:08:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347161AbiA1I1R (ORCPT
+        id S245594AbiA1QIy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 28 Jan 2022 03:27:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232172AbiA1I1R (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 28 Jan 2022 03:27:17 -0500
-X-Greylist: delayed 63 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 28 Jan 2022 00:27:16 PST
-Received: from mail-out-2a.itc.rwth-aachen.de (mail-out-2a.itc.rwth-aachen.de [IPv6:2a00:8a60:1:e501::5:45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A1CDC061714
-        for <linux-hardening@vger.kernel.org>; Fri, 28 Jan 2022 00:27:16 -0800 (PST)
-X-IPAS-Result: =?us-ascii?q?A2APAACBo/Nh/6QagoZaGwEBAQEBAQEBBQEBARIBAQEDA?=
- =?us-ascii?q?wEBAUCBRgYBAQELAYFRgixqhEmII4ZLggchnFGBfAsBAQEBAQEBAQEIAT8CB?=
- =?us-ascii?q?AEBhQUCg18CJTQJDgECBAEBAQEDAgMBAQEBAQEDAQEGAQEBAQEBBQSBHIUvR?=
- =?us-ascii?q?oZCAQEBAQMjDwE7CxALEQMBAgECAiYCAhAEMwgOCgQFhhsBrwl6gTGBAYhWg?=
- =?us-ascii?q?ScJAYEGKgGHK4cugimBFYMqPoddgmUEkhQGAYEOHDAPlCmDKEandoIoB4IQV?=
- =?us-ascii?q?GScQoNMliYCkVKWSKY8AgQCBAUCFoFhghUzPk+CaVEXAg+OLBaOLkEyOAIGA?=
- =?us-ascii?q?QoBAQMJgjqDCiYTh08BAQ?=
-IronPort-Data: A9a23:C2DECq3Y9XoWpBqgBPbD5e5wkn2cJEfYwER7XKvMYLTBsI5bpzwOy
- 2ccDDiCbquCNGOmco8nOt/ioUMG7ZSGm95nHAZo3Hw8FHgiRegppDi6BhqqY3nCfpWroGZPt
- Zh2hgzodZhsJpPkjk7xdOCn9BGQ7InQLlbGILes1htZGEk0GE/NtTo5w7Rj2tcy0YDia++wk
- YqaT/P3aQfNNwFcbzp8B5Kr8HuDa9yr5Vv0FnRnDRx6lAe2e0s9VfrzFontR5fMebS4K8bhL
- wr15OzjojmJr09F5uSNyd4XemVSKlLb0JPnZnB+A8BOiTAazsA+PzpS2Pc0MS9qZzu1c99Z4
- Y1juZuecCwQEoqcxMU4czBTDghMBPgTkFPHCSDXXc271VLac3b8hu4ySUhwJ5IE+qN+DSdC+
- JT0KhhUNUzF3rnuhujlDLAy2qzPL+GyVG8bknRpwjfEFrApW5fYWI3Q+sNYmT45jcBDG7DSa
- qL1bBIzNk6YMkQn1lE/OMkXl9r22VXGfRJKuXCeoJQ+oE3C9VkkuFTqGJ+PEjCQfu1Wk0uDr
- WXB/EzyAgsdMd2CzHyC6H3ErubMhSbTXIMUCa39+Pl3hlGa2m0UDlsRT1TTiee4kEmWSd9ZK
- lJS/isosLh081akCMT+NzW1qn+JshMGXvJAFuwh8wCKzOzf5APxLmwFSCNRLdI9uMIoSDgCy
- FCEhZXqCCZpvbnTTmiSnp+QrDWvKW0QKEcBeyYPTk0C+daLiIUyiA/fC9ZqCqK4iNzzFhnuz
- D2Q6isznbMeiYgMzarTwLzcqyizupjEXksuukDeGHi68gM8bYLja4HABUXn0Mus5b2xFjGp1
- EXoUeDHhAzSJflhTBCwfdg=
-IronPort-HdrOrdr: A9a23:sWQt/qGtukwdgirjpLqFaZHXdLJyesId70hD6qkvc3Fom52j/f
- xGws5x6fatskdpZJkh8erwW5VoMkmsjaKdgLNhdotKOTOLhILGFvAE0WKP+Vzd8k7Fh6RgPM
- VbAs5D4bTLZDAU4/oSizPIcerIteP3lJxA8t2uqkuFIzsLV4hQqyNCTiqLGEx/QwdLQbAjEo
- CH28ZBrz28PVwKc8WSHBA+LqT+juyOsKijTQ8NBhYh5gXLpyiv8qTGHx+R2Qpbey9TwI0l7X
- POn2XCl+qeWrCAu1HhPl3ontRrcejau5h+7Qu3+4oowwDX+0eVjUJaKvi/VX4O0aWSAR0R4a
- LxSl8bTr5OAjXqDyyISFLWqnTd+Sdr5Hn4xVCCh3z/5cT/WTIhEsJEwZlUax3D9iMbzadBOY
- 9wrhakXqBsfGT9deXGlqj1fgAvklDxrWspkOYVgXAaWYwCaKVJpYha+E9OCp8PEC/z9YhiSY
- BVfYnhzecTdUnfY2HSv2FpztDpVnMvHg2eSkxHvsCOyTBZkH1w0kNdzs0CmXUL8o47VvB/lq
- 35G7UtkKsLQt4dbKp7CutEScyrCnbVSRaJK26WKUSPLtBzB5rnw6SHnIndJNvaCqDg4KFC5q
- gpYWkoxlLaIXiedvFm9Kc7gyzwfA==
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-AV: E=Sophos;i="5.88,323,1635199200"; 
-   d="scan'208";a="422091"
-Received: from rwthex-s4-a.rwth-ad.de ([134.130.26.164])
-  by mail-in-2a.itc.rwth-aachen.de with ESMTP; 28 Jan 2022 09:26:10 +0100
-Received: from localhost (2a02:908:1066:22e0:95a5:b322:26dd:ff8d) by
- rwthex-s4-a.rwth-ad.de (2a00:8a60:1:e500::26:164) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.15; Fri, 28 Jan 2022 09:26:09 +0100
-Date:   Fri, 28 Jan 2022 09:26:09 +0100
-From:   Magnus =?utf-8?B?R3Jvw58=?= <magnus.gross@rwth-aachen.de>
-To:     Kees Cook <keescook@chromium.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] elf: Relax assumptions about vaddr ordering
-Message-ID: <YfOooXQ2ScpZLhmD@fractal.localdomain>
-References: <YfF18Dy85mCntXrx@fractal.localdomain>
- <202201260845.FCBC0B5A06@keescook>
- <202201262230.E16DF58B@keescook>
+        Fri, 28 Jan 2022 11:08:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:51690 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234788AbiA1QIy (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Fri, 28 Jan 2022 11:08:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AEF7D113E;
+        Fri, 28 Jan 2022 08:08:53 -0800 (PST)
+Received: from [10.57.13.224] (unknown [10.57.13.224])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE1693F793;
+        Fri, 28 Jan 2022 08:08:51 -0800 (PST)
+Message-ID: <65e1ae7d-44ae-a19f-e193-583590cfa0c3@arm.com>
+Date:   Fri, 28 Jan 2022 16:08:50 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202201262230.E16DF58B@keescook>
-User-Agent: Mutt/2.1.5 (31b18ae9) (2021-12-30)
-X-Originating-IP: [2a02:908:1066:22e0:95a5:b322:26dd:ff8d]
-X-ClientProxiedBy: rwthex-w4-b.rwth-ad.de (2a00:8a60:1:e500::26:167) To
- rwthex-s4-a.rwth-ad.de (2a00:8a60:1:e500::26:164)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [RFC PATCH 03/12] arm64: mm: use a fixmap slot for user page
+ table modifications
+Content-Language: en-GB
+To:     Ard Biesheuvel <ardb@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     kvmarm@lists.cs.columbia.edu, linux-hardening@vger.kernel.org,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Fuad Tabba <tabba@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+References: <20220126173011.3476262-1-ardb@kernel.org>
+ <20220126173011.3476262-4-ardb@kernel.org>
+From:   Steven Price <steven.price@arm.com>
+In-Reply-To: <20220126173011.3476262-4-ardb@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jan 26, 2022 at 10:31:42PM -0800 Kees Cook wrote:
-> On Wed, Jan 26, 2022 at 08:50:15AM -0800, Kees Cook wrote:
-> > On Wed, Jan 26, 2022 at 05:25:20PM +0100, Magnus Groß wrote:
-> > > From ff4dde97e82727727bda711f2367c05663498b24 Mon Sep 17 00:00:00 2001
-> > > From: =?UTF-8?q?Magnus=20Gro=C3=9F?= <magnus.gross@rwth-aachen.de>
-> > > Date: Wed, 26 Jan 2022 16:35:07 +0100
-> > > Subject: [PATCH] elf: Relax assumptions about vaddr ordering
-> > > MIME-Version: 1.0
-> > > Content-Type: text/plain; charset=UTF-8
-> > > Content-Transfer-Encoding: 8bit
-> > > 
-> > > Commit 5f501d555653 ("binfmt_elf: reintroduce using
-> > > MAP_FIXED_NOREPLACE") introduced a regression, where the kernel now
-> > > assumes that PT_LOAD segments are ordered by vaddr in load_elf_binary().
-> > > 
-> > > Specifically consider an ELF binary with the following PT_LOAD segments:
-> > > 
-> > > Type  Offset   VirtAddr   PhysAddr   FileSiz  MemSiz    Flg Align
-> > > LOAD  0x000000 0x08000000 0x08000000 0x474585 0x474585  R E 0x1000
-> > > LOAD  0x475000 0x08475000 0x08475000 0x090a4  0xc6c10   RW  0x1000
-> > > LOAD  0x47f000 0x00010000 0x00010000 0x00000  0x7ff0000     0x1000
-> > > 
-> > > Note how the last segment is actually the first segment and vice versa.
-> > > 
-> > > Since total_mapping_size() only computes the difference between the
-> > > first and the last segment in the order that they appear, it will return
-> > > a size of 0 in this case, thus causing load_elf_binary() to fail, which
-> > > did not happen before that change.
-> > > 
-> > > Strictly speaking total_mapping_size() made that assumption already
-> > > before that patch, but the issue did not appear because the old
-> > > load_addr_set guards never allowed this call to total_mapping_size().
-> > > 
-> > > Instead of fixing this by reverting to the old load_addr_set logic, we
-> > > fix this by comparing the correct first and last segments in
-> > > total_mapping_size().
-> > 
-> > Ah, nice. Yeah, this is good.
-> > 
-> > > Signed-off-by: Magnus Groß <magnus.gross@rwth-aachen.de>
-> > 
-> > Fixes: 5f501d555653 ("binfmt_elf: reintroduce using MAP_FIXED_NOREPLACE")
-> > Cc: stable@vger.kernel.org
-> > Acked-by: Kees Cook <keescook@chromium.org>
-> 
-> Andrew, can you pick this up too?
-> 
-> -Kees
-> 
+Hi Ard,
 
-May I also propose to include this patch in whatever mailing-list
-corresponds to the 5.16.x bugfix series?
-It turns out that almost all native Linux games published by the Virtual
-Programming company have this kind of weird PT_LOAD ordering including
-the famous Bioshock Infinite, so right now those games are all
-completely broken since Linux 5.16.
+Interesting series - I attempted[1] something similar a few years ago,
+but only dealing with the page tables in the linear map.
 
-P.S.: Someone should probably ask Virtual Programming, what kind of
-tooling they use to create such convoluted ELF binaries.
+At first glace the series looks like it should work, but this patch
+caught my eye because there's only a single fixmap slot for page table
+modifications. The upshot of which is you need the patch_pte_lock
+serialising multiple CPUs' access to the page tables. Which looks like
+it would hurt badly as the number of CPUs grows.
 
-> > 
-> > -Kees
-> > 
-> > > ---
-> > >  fs/binfmt_elf.c | 18 ++++++++++++++----
-> > >  1 file changed, 14 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> > > index f8c7f26f1fbb..0caaad9eddd1 100644
-> > > --- a/fs/binfmt_elf.c
-> > > +++ b/fs/binfmt_elf.c
-> > > @@ -402,19 +402,29 @@ static unsigned long elf_map(struct file *filep, unsigned long addr,
-> > >  static unsigned long total_mapping_size(const struct elf_phdr *cmds, int nr)
-> > >  {
-> > >  	int i, first_idx = -1, last_idx = -1;
-> > > +	unsigned long min_vaddr = ULONG_MAX, max_vaddr = 0;
-> > >  
-> > >  	for (i = 0; i < nr; i++) {
-> > >  		if (cmds[i].p_type == PT_LOAD) {
-> > > -			last_idx = i;
-> > > -			if (first_idx == -1)
-> > > +			/*
-> > > +			 * The PT_LOAD segments are not necessarily ordered
-> > > +			 * by vaddr. Make sure that we get the segment with
-> > > +			 * minimum vaddr (maximum vaddr respectively)
-> > > +			 */
-> > > +			if (cmds[i].p_vaddr <= min_vaddr) {
-> > >  				first_idx = i;
-> > > +				min_vaddr = cmds[i].p_vaddr;
-> > > +			}
-> > > +			if (cmds[i].p_vaddr >= max_vaddr) {
-> > > +				last_idx = i;
-> > > +				max_vaddr = cmds[i].p_vaddr;
-> > > +			}
-> > >  		}
-> > >  	}
-> > >  	if (first_idx == -1)
-> > >  		return 0;
-> > >  
-> > > -	return cmds[last_idx].p_vaddr + cmds[last_idx].p_memsz -
-> > > -				ELF_PAGESTART(cmds[first_idx].p_vaddr);
-> > > +	return max_vaddr + cmds[last_idx].p_memsz - ELF_PAGESTART(min_vaddr);
-> > >  }
-> > >  
-> > >  static int elf_read(struct file *file, void *buf, size_t len, loff_t pos)
-> > > -- 
-> > > 2.34.1
-> > 
-> > -- 
-> > Kees Cook
+Do you have any benchmarks of the performance? I've lost any I did at
+the time I previously looked at this idea but obviously thought it was
+important at the time.
+
+Thanks,
+
+Steve
+
+[1]
+https://lore.kernel.org/lkml/20200417152619.41680-1-steven.price@arm.com/
+
+On 26/01/2022 17:30, Ard Biesheuvel wrote:
+> To prepare for user and kernel page tables being remapped read-only in
+> the linear region, define a new fixmap slot and use it to apply all page
+> table descriptor updates that target page tables other than swapper.
 > 
-> -- 
-> Kees Cook
+> Fortunately for us, the fixmap descriptors themselves are always
+> manipulated via their kernel mapping in .bss, so there is no special
+> exception required to avoid circular logic here.
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  arch/arm64/Kconfig               |  11 +++
+>  arch/arm64/include/asm/fixmap.h  |   1 +
+>  arch/arm64/include/asm/pgalloc.h |  28 +++++-
+>  arch/arm64/include/asm/pgtable.h |  79 +++++++++++++---
+>  arch/arm64/mm/Makefile           |   2 +
+>  arch/arm64/mm/fault.c            |   8 +-
+>  arch/arm64/mm/ro_page_tables.c   | 100 ++++++++++++++++++++
+>  7 files changed, 209 insertions(+), 20 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 6978140edfa4..a3e98286b074 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1311,6 +1311,17 @@ config RODATA_FULL_DEFAULT_ENABLED
+>  	  This requires the linear region to be mapped down to pages,
+>  	  which may adversely affect performance in some cases.
+>  
+> +config ARM64_RO_PAGE_TABLES
+> +	bool "Remap page tables read-only in the kernel VA space"
+> +	select RODATA_FULL_DEFAULT_ENABLED
+> +	help
+> +	  Remap linear mappings of page table pages read-only as long as they
+> +	  are being used as such, and use a fixmap API to manipulate all page
+> +	  table descriptors, instead of manipulating them directly via their
+> +	  writable mappings in the direct map. This is intended as a debug
+> +	  and/or hardening feature, as it removes the ability for stray writes
+> +	  to be exploited to bypass permission restrictions.
+> +
+>  config ARM64_SW_TTBR0_PAN
+>  	bool "Emulate Privileged Access Never using TTBR0_EL1 switching"
+>  	help
+> diff --git a/arch/arm64/include/asm/fixmap.h b/arch/arm64/include/asm/fixmap.h
+> index 4335800201c9..71dfbe0452bb 100644
+> --- a/arch/arm64/include/asm/fixmap.h
+> +++ b/arch/arm64/include/asm/fixmap.h
+> @@ -50,6 +50,7 @@ enum fixed_addresses {
+>  
+>  	FIX_EARLYCON_MEM_BASE,
+>  	FIX_TEXT_POKE0,
+> +	FIX_TEXT_POKE_PTE,
+>  
+>  #ifdef CONFIG_ACPI_APEI_GHES
+>  	/* Used for GHES mapping from assorted contexts */
+> diff --git a/arch/arm64/include/asm/pgalloc.h b/arch/arm64/include/asm/pgalloc.h
+> index 237224484d0f..d54ac9f8d6c7 100644
+> --- a/arch/arm64/include/asm/pgalloc.h
+> +++ b/arch/arm64/include/asm/pgalloc.h
+> @@ -30,7 +30,11 @@ static inline void pud_populate(struct mm_struct *mm, pud_t *pudp, pmd_t *pmdp)
+>  	pudval_t pudval = PUD_TYPE_TABLE;
+>  
+>  	pudval |= (mm == &init_mm) ? PUD_TABLE_UXN : PUD_TABLE_PXN;
+> -	__pud_populate(pudp, __pa(pmdp), pudval);
+> +	if (page_tables_are_ro())
+> +		xchg_ro_pte(mm, (pte_t *)pudp,
+> +			    __pte(__phys_to_pud_val(__pa(pmdp) | pudval)));
+> +	else
+> +		__pud_populate(pudp, __pa(pmdp), pudval);
+>  }
+>  #else
+>  static inline void __pud_populate(pud_t *pudp, phys_addr_t pmdp, pudval_t prot)
+> @@ -51,7 +55,11 @@ static inline void p4d_populate(struct mm_struct *mm, p4d_t *p4dp, pud_t *pudp)
+>  	p4dval_t p4dval = P4D_TYPE_TABLE;
+>  
+>  	p4dval |= (mm == &init_mm) ? P4D_TABLE_UXN : P4D_TABLE_PXN;
+> -	__p4d_populate(p4dp, __pa(pudp), p4dval);
+> +	if (page_tables_are_ro())
+> +		xchg_ro_pte(mm, (pte_t *)p4dp,
+> +			    __pte(__phys_to_p4d_val(__pa(pudp) | p4dval)));
+> +	else
+> +		__p4d_populate(p4dp, __pa(pudp), p4dval);
+>  }
+>  #else
+>  static inline void __p4d_populate(p4d_t *p4dp, phys_addr_t pudp, p4dval_t prot)
+> @@ -76,15 +84,27 @@ static inline void __pmd_populate(pmd_t *pmdp, phys_addr_t ptep,
+>  static inline void
+>  pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmdp, pte_t *ptep)
+>  {
+> +	pmdval_t pmdval = PMD_TYPE_TABLE | PMD_TABLE_UXN;
+> +
+>  	VM_BUG_ON(mm && mm != &init_mm);
+> -	__pmd_populate(pmdp, __pa(ptep), PMD_TYPE_TABLE | PMD_TABLE_UXN);
+> +	if (page_tables_are_ro())
+> +		xchg_ro_pte(mm, (pte_t *)pmdp,
+> +			    __pte(__phys_to_pmd_val(__pa(ptep) | pmdval)));
+> +	else
+> +		__pmd_populate(pmdp, __pa(ptep), pmdval);
+>  }
+>  
+>  static inline void
+>  pmd_populate(struct mm_struct *mm, pmd_t *pmdp, pgtable_t ptep)
+>  {
+> +	pmdval_t pmdval = PMD_TYPE_TABLE | PMD_TABLE_PXN;
+> +
+>  	VM_BUG_ON(mm == &init_mm);
+> -	__pmd_populate(pmdp, page_to_phys(ptep), PMD_TYPE_TABLE | PMD_TABLE_PXN);
+> +	if (page_tables_are_ro())
+> +		xchg_ro_pte(mm, (pte_t *)pmdp,
+> +			    __pte(__phys_to_pmd_val(page_to_phys(ptep) | pmdval)));
+> +	else
+> +		__pmd_populate(pmdp, page_to_phys(ptep), pmdval);
+>  }
+>  
+>  #endif
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index 8d3806c68687..a8daea6b4ac9 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -30,6 +30,7 @@
+>  
+>  #include <asm/cmpxchg.h>
+>  #include <asm/fixmap.h>
+> +#include <linux/jump_label.h>
+>  #include <linux/mmdebug.h>
+>  #include <linux/mm_types.h>
+>  #include <linux/sched.h>
+> @@ -37,6 +38,17 @@
+>  int set_pgtable_ro(void *addr);
+>  int set_pgtable_rw(void *addr);
+>  
+> +DECLARE_STATIC_KEY_FALSE(ro_page_tables);
+> +
+> +static inline bool page_tables_are_ro(void)
+> +{
+> +	return IS_ENABLED(CONFIG_ARM64_RO_PAGE_TABLES) &&
+> +	       static_branch_unlikely(&ro_page_tables);
+> +}
+> +
+> +pte_t xchg_ro_pte(struct mm_struct *mm, pte_t *ptep, pte_t pte);
+> +pte_t cmpxchg_ro_pte(struct mm_struct *mm, pte_t *ptep, pte_t old, pte_t new);
+> +
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>  #define __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
+>  
+> @@ -89,7 +101,7 @@ static inline pteval_t __phys_to_pte_val(phys_addr_t phys)
+>  	__pte(__phys_to_pte_val((phys_addr_t)(pfn) << PAGE_SHIFT) | pgprot_val(prot))
+>  
+>  #define pte_none(pte)		(!pte_val(pte))
+> -#define pte_clear(mm,addr,ptep)	set_pte(ptep, __pte(0))
+> +#define pte_clear(mm,addr,ptep)	set_pte_at(mm, addr, ptep, __pte(0))
+>  #define pte_page(pte)		(pfn_to_page(pte_pfn(pte)))
+>  
+>  /*
+> @@ -257,7 +269,10 @@ static inline pte_t pte_mkdevmap(pte_t pte)
+>  
+>  static inline void set_pte(pte_t *ptep, pte_t pte)
+>  {
+> -	WRITE_ONCE(*ptep, pte);
+> +	if (page_tables_are_ro())
+> +		xchg_ro_pte(&init_mm, ptep, pte);
+> +	else
+> +		WRITE_ONCE(*ptep, pte);
+>  
+>  	/*
+>  	 * Only if the new pte is valid and kernel, otherwise TLB maintenance
+> @@ -343,7 +358,10 @@ static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
+>  
+>  	__check_racy_pte_update(mm, ptep, pte);
+>  
+> -	set_pte(ptep, pte);
+> +	if (page_tables_are_ro())
+> +		xchg_ro_pte(mm, ptep, pte);
+> +	else
+> +		set_pte(ptep, pte);
+>  }
+>  
+>  /*
+> @@ -579,7 +597,10 @@ static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
+>  	}
+>  #endif /* __PAGETABLE_PMD_FOLDED */
+>  
+> -	WRITE_ONCE(*pmdp, pmd);
+> +	if (page_tables_are_ro())
+> +		xchg_ro_pte(&init_mm, (pte_t *)pmdp, pmd_pte(pmd));
+> +	else
+> +		WRITE_ONCE(*pmdp, pmd);
+>  
+>  	if (pmd_valid(pmd)) {
+>  		dsb(ishst);
+> @@ -589,7 +610,10 @@ static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
+>  
+>  static inline void pmd_clear(pmd_t *pmdp)
+>  {
+> -	set_pmd(pmdp, __pmd(0));
+> +	if (page_tables_are_ro())
+> +		xchg_ro_pte(NULL, (pte_t *)pmdp, __pte(0));
+> +	else
+> +		set_pmd(pmdp, __pmd(0));
+>  }
+>  
+>  static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
+> @@ -640,7 +664,10 @@ static inline void set_pud(pud_t *pudp, pud_t pud)
+>  	}
+>  #endif /* __PAGETABLE_PUD_FOLDED */
+>  
+> -	WRITE_ONCE(*pudp, pud);
+> +	if (page_tables_are_ro())
+> +		xchg_ro_pte(&init_mm, (pte_t *)pudp, pud_pte(pud));
+> +	else
+> +		WRITE_ONCE(*pudp, pud);
+>  
+>  	if (pud_valid(pud)) {
+>  		dsb(ishst);
+> @@ -650,7 +677,10 @@ static inline void set_pud(pud_t *pudp, pud_t pud)
+>  
+>  static inline void pud_clear(pud_t *pudp)
+>  {
+> -	set_pud(pudp, __pud(0));
+> +	if (page_tables_are_ro())
+> +		xchg_ro_pte(NULL, (pte_t *)pudp, __pte(0));
+> +	else
+> +		set_pud(pudp, __pud(0));
+>  }
+>  
+>  static inline phys_addr_t pud_page_paddr(pud_t pud)
+> @@ -704,14 +734,20 @@ static inline void set_p4d(p4d_t *p4dp, p4d_t p4d)
+>  		return;
+>  	}
+>  
+> -	WRITE_ONCE(*p4dp, p4d);
+> +	if (page_tables_are_ro())
+> +		xchg_ro_pte(&init_mm, (pte_t *)p4dp, p4d_pte(p4d));
+> +	else
+> +		WRITE_ONCE(*p4dp, p4d);
+>  	dsb(ishst);
+>  	isb();
+>  }
+>  
+>  static inline void p4d_clear(p4d_t *p4dp)
+>  {
+> -	set_p4d(p4dp, __p4d(0));
+> +	if (page_tables_are_ro())
+> +		xchg_ro_pte(NULL, (pte_t *)p4dp, __pte(0));
+> +	else
+> +		set_p4d(p4dp, __p4d(0));
+>  }
+>  
+>  static inline phys_addr_t p4d_page_paddr(p4d_t p4d)
+> @@ -806,7 +842,7 @@ static inline int pgd_devmap(pgd_t pgd)
+>   * Atomic pte/pmd modifications.
+>   */
+>  #define __HAVE_ARCH_PTEP_TEST_AND_CLEAR_YOUNG
+> -static inline int __ptep_test_and_clear_young(pte_t *ptep)
+> +static inline int __ptep_test_and_clear_young(struct mm_struct *mm, pte_t *ptep)
+>  {
+>  	pte_t old_pte, pte;
+>  
+> @@ -814,8 +850,13 @@ static inline int __ptep_test_and_clear_young(pte_t *ptep)
+>  	do {
+>  		old_pte = pte;
+>  		pte = pte_mkold(pte);
+> -		pte_val(pte) = cmpxchg_relaxed(&pte_val(*ptep),
+> -					       pte_val(old_pte), pte_val(pte));
+> +
+> +		if (page_tables_are_ro())
+> +			pte = cmpxchg_ro_pte(mm, ptep, old_pte, pte);
+> +		else
+> +			pte_val(pte) = cmpxchg_relaxed(&pte_val(*ptep),
+> +						       pte_val(old_pte),
+> +						       pte_val(pte));
+>  	} while (pte_val(pte) != pte_val(old_pte));
+>  
+>  	return pte_young(pte);
+> @@ -825,7 +866,7 @@ static inline int ptep_test_and_clear_young(struct vm_area_struct *vma,
+>  					    unsigned long address,
+>  					    pte_t *ptep)
+>  {
+> -	return __ptep_test_and_clear_young(ptep);
+> +	return __ptep_test_and_clear_young(vma->vm_mm, ptep);
+>  }
+>  
+>  #define __HAVE_ARCH_PTEP_CLEAR_YOUNG_FLUSH
+> @@ -863,6 +904,8 @@ static inline int pmdp_test_and_clear_young(struct vm_area_struct *vma,
+>  static inline pte_t ptep_get_and_clear(struct mm_struct *mm,
+>  				       unsigned long address, pte_t *ptep)
+>  {
+> +	if (page_tables_are_ro())
+> +		return xchg_ro_pte(mm, ptep, __pte(0));
+>  	return __pte(xchg_relaxed(&pte_val(*ptep), 0));
+>  }
+>  
+> @@ -888,8 +931,12 @@ static inline void ptep_set_wrprotect(struct mm_struct *mm, unsigned long addres
+>  	do {
+>  		old_pte = pte;
+>  		pte = pte_wrprotect(pte);
+> -		pte_val(pte) = cmpxchg_relaxed(&pte_val(*ptep),
+> -					       pte_val(old_pte), pte_val(pte));
+> +		if (page_tables_are_ro())
+> +			pte = cmpxchg_ro_pte(mm, ptep, old_pte, pte);
+> +		else
+> +			pte_val(pte) = cmpxchg_relaxed(&pte_val(*ptep),
+> +						       pte_val(old_pte),
+> +						       pte_val(pte));
+>  	} while (pte_val(pte) != pte_val(old_pte));
+>  }
+>  
+> @@ -905,6 +952,8 @@ static inline void pmdp_set_wrprotect(struct mm_struct *mm,
+>  static inline pmd_t pmdp_establish(struct vm_area_struct *vma,
+>  		unsigned long address, pmd_t *pmdp, pmd_t pmd)
+>  {
+> +	if (page_tables_are_ro())
+> +		return pte_pmd(xchg_ro_pte(vma->vm_mm, (pte_t *)pmdp, pmd_pte(pmd)));
+>  	return __pmd(xchg_relaxed(&pmd_val(*pmdp), pmd_val(pmd)));
+>  }
+>  #endif
+> diff --git a/arch/arm64/mm/Makefile b/arch/arm64/mm/Makefile
+> index ff1e800ba7a1..7750cafd969a 100644
+> --- a/arch/arm64/mm/Makefile
+> +++ b/arch/arm64/mm/Makefile
+> @@ -14,3 +14,5 @@ KASAN_SANITIZE_physaddr.o	+= n
+>  
+>  obj-$(CONFIG_KASAN)		+= kasan_init.o
+>  KASAN_SANITIZE_kasan_init.o	:= n
+> +
+> +obj-$(CONFIG_ARM64_RO_PAGE_TABLES) += ro_page_tables.o
+> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> index 77341b160aca..5a5055c3e1c2 100644
+> --- a/arch/arm64/mm/fault.c
+> +++ b/arch/arm64/mm/fault.c
+> @@ -220,7 +220,13 @@ int ptep_set_access_flags(struct vm_area_struct *vma,
+>  		pteval ^= PTE_RDONLY;
+>  		pteval |= pte_val(entry);
+>  		pteval ^= PTE_RDONLY;
+> -		pteval = cmpxchg_relaxed(&pte_val(*ptep), old_pteval, pteval);
+> +		if (page_tables_are_ro())
+> +			pteval = pte_val(cmpxchg_ro_pte(vma->vm_mm, ptep,
+> +							__pte(old_pteval),
+> +							__pte(pteval)));
+> +		else
+> +			pteval = cmpxchg_relaxed(&pte_val(*ptep), old_pteval,
+> +						 pteval);
+>  	} while (pteval != old_pteval);
+>  
+>  	/* Invalidate a stale read-only entry */
+> diff --git a/arch/arm64/mm/ro_page_tables.c b/arch/arm64/mm/ro_page_tables.c
+> new file mode 100644
+> index 000000000000..f497adfd774d
+> --- /dev/null
+> +++ b/arch/arm64/mm/ro_page_tables.c
+> @@ -0,0 +1,100 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2021 - Google Inc
+> + * Author: Ard Biesheuvel <ardb@google.com>
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/memory.h>
+> +#include <linux/mm.h>
+> +#include <linux/sizes.h>
+> +
+> +#include <asm/fixmap.h>
+> +#include <asm/kernel-pgtable.h>
+> +#include <asm/mmu_context.h>
+> +#include <asm/pgalloc.h>
+> +#include <asm/tlbflush.h>
+> +#include <asm/sections.h>
+> +
+> +static DEFINE_RAW_SPINLOCK(patch_pte_lock);
+> +
+> +DEFINE_STATIC_KEY_FALSE(ro_page_tables);
+> +
+> +static bool __initdata ro_page_tables_enabled = true;
+> +
+> +static int __init parse_ro_page_tables(char *arg)
+> +{
+> +	return strtobool(arg, &ro_page_tables_enabled);
+> +}
+> +early_param("ro_page_tables", parse_ro_page_tables);
+> +
+> +static bool in_kernel_text_or_rodata(phys_addr_t pa)
+> +{
+> +	/*
+> +	 * This is a minimal check to ensure that the r/o page table patching
+> +	 * API is not being abused to make changes to the kernel text. This
+> +	 * should ideally cover module and BPF text/rodata as well, but that
+> +	 * is less straight-forward and hence more costly.
+> +	 */
+> +	return pa >= __pa_symbol(_stext) && pa < __pa_symbol(__init_begin);
+> +}
+> +
+> +pte_t xchg_ro_pte(struct mm_struct *mm, pte_t *ptep, pte_t pte)
+> +{
+> +	unsigned long flags;
+> +	u64 pte_pa;
+> +	pte_t ret;
+> +	pte_t *p;
+> +
+> +	/* can we use __pa() on ptep? */
+> +	if (!virt_addr_valid(ptep)) {
+> +		/* only linear aliases are remapped r/o anyway */
+> +		pte_val(ret) = xchg_relaxed(&pte_val(*ptep), pte_val(pte));
+> +		return ret;
+> +	}
+> +
+> +	pte_pa = __pa(ptep);
+> +	BUG_ON(in_kernel_text_or_rodata(pte_pa));
+> +
+> +	raw_spin_lock_irqsave(&patch_pte_lock, flags);
+> +	p = (pte_t *)set_fixmap_offset(FIX_TEXT_POKE_PTE, pte_pa);
+> +	pte_val(ret) = xchg_relaxed(&pte_val(*p), pte_val(pte));
+> +	clear_fixmap(FIX_TEXT_POKE_PTE);
+> +	raw_spin_unlock_irqrestore(&patch_pte_lock, flags);
+> +	return ret;
+> +}
+> +
+> +pte_t cmpxchg_ro_pte(struct mm_struct *mm, pte_t *ptep, pte_t old, pte_t new)
+> +{
+> +	unsigned long flags;
+> +	u64 pte_pa;
+> +	pte_t ret;
+> +	pte_t *p;
+> +
+> +	BUG_ON(!virt_addr_valid(ptep));
+> +
+> +	pte_pa = __pa(ptep);
+> +	BUG_ON(in_kernel_text_or_rodata(pte_pa));
+> +
+> +	raw_spin_lock_irqsave(&patch_pte_lock, flags);
+> +	p = (pte_t *)set_fixmap_offset(FIX_TEXT_POKE_PTE, pte_pa);
+> +	pte_val(ret) = cmpxchg_relaxed(&pte_val(*p), pte_val(old), pte_val(new));
+> +	clear_fixmap(FIX_TEXT_POKE_PTE);
+> +	raw_spin_unlock_irqrestore(&patch_pte_lock, flags);
+> +	return ret;
+> +}
+> +
+> +static int __init ro_page_tables_init(void)
+> +{
+> +	if (ro_page_tables_enabled) {
+> +		if (!rodata_full) {
+> +			pr_err("Failed to enable R/O page table protection, rodata=full is not enabled\n");
+> +		} else {
+> +			pr_err("Enabling R/O page table protection\n");
+> +			static_branch_enable(&ro_page_tables);
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +early_initcall(ro_page_tables_init);
+
