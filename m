@@ -2,80 +2,83 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79255C433EF
-	for <linux-hardening@archiver.kernel.org>; Sat, 29 Jan 2022 07:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F32F3C433F5
+	for <linux-hardening@archiver.kernel.org>; Sat, 29 Jan 2022 13:28:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245649AbiA2Hx2 (ORCPT
+        id S1349416AbiA2N2a (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 29 Jan 2022 02:53:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50696 "EHLO
+        Sat, 29 Jan 2022 08:28:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241538AbiA2Hx1 (ORCPT
+        with ESMTP id S1346162AbiA2N23 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 29 Jan 2022 02:53:27 -0500
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20280C061714;
-        Fri, 28 Jan 2022 23:53:26 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id s5so24059296ejx.2;
-        Fri, 28 Jan 2022 23:53:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=V3C0z5IroBeiguIOSKAcKVGNuToGvGjPgBbl6Yl9zMg=;
-        b=RHdxMon+ZeVk8FQ16CpIIzWiFwQK5GU7XDGx7jyddHtRJSrMZhULKzMZqaOz5MZdR+
-         SZ0gzxdxgVysXWiwSQANZ2rk7mHqS7Z+X8LEQYtvK+0nzbgrmKgL2V3vn/2A5jHBnzct
-         DlXBzp2DTpRxofYGuPPnL0G2KxXHvf1uGll23z94RoddPMw9BKbqzKeN9JrgF3lGN4kW
-         rZDoZ35AwW5L4JCqPeBOulMuax9j1WWOrXT5t74hwjZJwCdQnNB4V5XkJPA4qdAGYIE5
-         XAYHsUYHqlNAC6toswV/q3YIMc3RUDFxPppOM7P9XvZSazFx60oIYlZarvk3Q/wOdit8
-         FD+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=V3C0z5IroBeiguIOSKAcKVGNuToGvGjPgBbl6Yl9zMg=;
-        b=0JtCJe8rBXI37Uw2qtB5iQ3GbDtvEyTe/ARLoCWznFZHDzeiVP6fnFcQQA+flA/mFc
-         +qxyemA5IcbicyFUnkJVbwcO/WpOu205FXSrYhVEybs3wZlyxAmnSSZOvTu0kVJD2D7m
-         WlH25wrejbWmFGxVxv3ZbHgKbG0SPq5M74PEGMOA//Brok2HZIu4eNpN12VqXJm5y6WE
-         H1XkU75IDC2oAX3DWRZj3UNpFwkzA099nNF6Mp/uqO2IK6mSy3gvrFwksCq4F2n2X5eV
-         S4RrxTVrRYarjwQg/zq3Su1Oz6p0pOGcur3hILILEiZqr/CL71b0MyrBCIzKREy4I7vg
-         2hbw==
-X-Gm-Message-State: AOAM53323nK/C8uPcBQpbUkFiFSvJfDzWWQgC0e2m1dVKEU9xEC2RA1b
-        BWJudtwseIz6xJkqzwT/Ig==
-X-Google-Smtp-Source: ABdhPJwf+Gs1yWgNFnDVGNxI23Nmulb7bzJe/lxP0QWRmQrOA9fyGgLwu3ss5qdxBrjTbQdumIX8hg==
-X-Received: by 2002:a17:906:1f57:: with SMTP id d23mr9528448ejk.693.1643442804455;
-        Fri, 28 Jan 2022 23:53:24 -0800 (PST)
-Received: from localhost.localdomain ([46.53.254.3])
-        by smtp.gmail.com with ESMTPSA id j15sm10757736ejx.199.2022.01.28.23.53.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jan 2022 23:53:23 -0800 (PST)
-Date:   Sat, 29 Jan 2022 10:53:22 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
+        Sat, 29 Jan 2022 08:28:29 -0500
+Received: from mail-out-3.itc.rwth-aachen.de (mail-out-3.itc.rwth-aachen.de [IPv6:2a00:8a60:1:e501::5:48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AEABC061714;
+        Sat, 29 Jan 2022 05:28:28 -0800 (PST)
+X-IPAS-Result: =?us-ascii?q?A2AOAAAqQPVh/6QagoZaGgEBAQEBAQEBAQEDAQEBARIBA?=
+ =?us-ascii?q?QEBAgIBAQEBQIFGBQEBAQELAYMlWGoMhD2II4hwA4VMi26LGIF8CwEBAQEBA?=
+ =?us-ascii?q?QEBAQgBNQoCBAEBhQUCg2ACJTQJDgECBAEBAQEDAgMBAQEBAQEDAQEGAQEBA?=
+ =?us-ascii?q?QEBBQSBHIUvOQ2GQgEBAQECASMPATsLEAsRAwECAQICJgICEAQzCA4KBAWDB?=
+ =?us-ascii?q?YJ1IQQLrSx6gTGBAYNOAYUHgSEGCQGBBioBhyuHLoIpgRWDKj6CYwKEeIJlB?=
+ =?us-ascii?q?JIrBgGBDhwQIA+BKwSSeoMnAUaneYIoB4IQVGWLAZFDg12WIAKRVJZKjQ+ZM?=
+ =?us-ascii?q?wIEAgQFAhaBYYIVMz5PgjUBMxM+FwIPjiwWg0+FFIVLQTICNgIGAQoBAQMJg?=
+ =?us-ascii?q?jqDCiYThj8BgQ8BAQ?=
+IronPort-Data: A9a23:w9Fko64VwbAT5N5upQgjzwxRtO3GchMFZxGqfqrLsTDasY5as4F+v
+ jQaDTiCOv/ZMWv1eNpyb421oRhVvZfTn95lTgdv/yw0Zn8b8sCt6fZ1j6vTF37IcpeTHBoPA
+ +E2MISowBUcFyeEzvuVGuG96yE6jMlkf5KkYAL+EnkZqTRMFWFx2XqPp8Zj2tQy2YHjUlvU0
+ T/Pi5S31GGNimYc3l08tvrrRCNH5JwebxtB4zTSzdgS1LPvvyF94KA3fMldHFOkKmVgJdNWc
+ s6YpF2P1j6Do019WovNfoHTKSXmSpaKVeSHZ+E/t6KK2nCurQRquko32WZ1hUp/0120c95NJ
+ Nplsp+yZQp3B6n2iP0yCBdAMnlHI6Rc5+qSSZS/mZT7I0zuaWTww/h+SVpqeIRe4PlrASRH+
+ boUJVjhbDja3L7wmenjDLMywJ19cKEHP6tG0p1k5TTQAvA7WtbMWaLR/vdCwysww8lHFvbTY
+ YwVZFKDaTyZP0wQYA1IVMlWcOGAqEC8YxN2uVivgfAOvGLv3ChXz5XSGY+AEjCNbYAP9qqCn
+ UrF8mniCRYdN/SUySCC93Oxg6nIhyyTcIsRDLiQ8v9snU3WyGsODhEfSVq8p7++kEHWc9tTL
+ EYO+zsnq4A98UWqSp/2WBjQiGCFpBk0SddWEvN87ACL17qS5ByWQHUHJhZMYt0ruMIsQBQ60
+ 16ShNLuA3pkt7j9YXac8KqE6D2pNSULIGsqeyAJV00G7sPlrYV1iQjAJv5nEaionpjwHBnz3
+ TmBr245nbp7pcoK0biruFDOmT6hoJnPQSYr6QjNGGGo9AV0YMiifYPA1LTAxexfMIaUXhya4
+ D0N3dKB8OBLBJ3LmCHlrPgxIYxFLs2taFX06WOD1bF4n9hx0xZPpbxt3Qw=
+IronPort-HdrOrdr: A9a23:+PWSU6s74xGnDaIUa3POFx4W7skDWdV00zEX/kB9WHVpmgXxrb
+ HWoB19726TtN9xYgBFpTnkAsO9qBznhORICOUqTNWftWrdyQyVxeNZnOjfKlTbckWUltK1s5
+ 0QDpSWYOeQMbEQt7eD3ODXKada/DBFysyVbCXlokuECWxRGsRdBstCZTpz23cZeDV7
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="5.88,326,1635199200"; 
+   d="scan'208";a="149722743"
+Received: from rwthex-s4-a.rwth-ad.de ([134.130.26.164])
+  by mail-in-3.itc.rwth-aachen.de with ESMTP; 29 Jan 2022 14:28:27 +0100
+Received: from localhost (92.201.204.180) by rwthex-s4-a.rwth-ad.de
+ (2a00:8a60:1:e500::26:164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.15; Sat, 29 Jan
+ 2022 14:28:26 +0100
+Date:   Sat, 29 Jan 2022 14:28:26 +0100
+From:   Magnus =?utf-8?B?R3Jvw58=?= <magnus.gross@rwth-aachen.de>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Magnus =?utf-8?B?R3Jvw58=?= <magnus.gross@rwth-aachen.de>,
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         Eric Biederman <ebiederm@xmission.com>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org
+        <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-hardening@vger.kernel.org>
 Subject: Re: [PATCH] elf: Relax assumptions about vaddr ordering
-Message-ID: <YfTychdtyCdslrEY@localhost.localdomain>
+Message-ID: <YfVA+jfyW9c8UC7J@bogen>
 References: <YfF18Dy85mCntXrx@fractal.localdomain>
  <202201260845.FCBC0B5A06@keescook>
  <202201262230.E16DF58B@keescook>
  <YfOooXQ2ScpZLhmD@fractal.localdomain>
  <202201281347.F36AEA5B61@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 In-Reply-To: <202201281347.F36AEA5B61@keescook>
+User-Agent: Mutt/2.1.5 (31b18ae9) (2021-12-30)
+X-Originating-IP: [92.201.204.180]
+X-ClientProxiedBy: rwthex-s1-b.rwth-ad.de (2a00:8a60:1:e500::26:153) To
+ rwthex-s4-a.rwth-ad.de (2a00:8a60:1:e500::26:164)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 28, 2022 at 02:30:12PM -0800, Kees Cook wrote:
+On Fri, Jan 28, 2022 at 02:30:12PM -0800 Kees Cook wrote:
 > On Fri, Jan 28, 2022 at 09:26:09AM +0100, Magnus Groß wrote:
 > > On Wed, Jan 26, 2022 at 10:31:42PM -0800 Kees Cook wrote:
 > > > On Wed, Jan 26, 2022 at 08:50:15AM -0800, Kees Cook wrote:
@@ -139,35 +142,94 @@ On Fri, Jan 28, 2022 at 02:30:12PM -0800, Kees Cook wrote:
 > 
 > Oh, actually, this was independently fixed:
 > https://lore.kernel.org/all/YVmd7D0M6G/DcP4O@localhost.localdomain/
-
-Oh wow, I accidently fixed real bug.
-
+> 
 > Alexey, you never answered by question about why we can't use a proper
 > type and leave the ELF_PAGESTART() macros alone:
 > https://lore.kernel.org/all/202110071038.B589687@keescook/
+
+Oh sorry, I didn't see that there was already a patch floating around
+that fixed the issue, otherwise I would have not wasted so much time on
+debugging this.
+Oh well, doesn't matter now, I still learned a lot about kernel
+development and debugging with kgdb, I will probably be able to make
+some use of that knowledge in the future for another kernel patch.
+
+> > P.S.: Someone should probably ask Virtual Programming, what kind of
+> > tooling they use to create such convoluted ELF binaries.
 > 
-> I still don't like the use of "int" in ELF_PAGESTART(), but I agree
-> it shouldn't cause a problem. I just really don't like mixing a signed
-> type with address calculations, from a robustness perspective.
+> Does "strings" provide any hints? :)
 
-It is very robust. There are 2 ways to mask pointers
+It seems to be crosstool-ng
+(https://github.com/crosstool-ng/crosstool-ng):
 
-	unsigned long & ~(unsigned long)-1
+readelf -p .comment bioshock.i386
 
-	or
+String dump of section '.comment':
+[  0]  GCC: (crosstool-NG 1.17.0) 4.6.3
+[ 21]  GCC: (Ubuntu 4.9.1-16ubuntu6) 4.9.1
+[ 45]  GCC: (Ubuntu 4.8.2-19ubuntu1) 4.8.2
 
-	unsigned long & ~(int)-1
 
-Both work. Second variant works for uint32_t too.
+Not sure though if crosstool-ng outputs these weird ELF binaries in
+general or if it's just a bug.
 
-As I wrote in that thread, this macro
+--
+Magnus
 
-	#define ELF_PAGESTART(_v) ((_v) & ~(unsigned long)(ELF_MIN_ALIGN-1))
-
-is slightly incorrect because type of the expression can be (unsigned long)
-but it logically should be typeof(v). Now fixing by switching to ALIGN
-doesn't do anything because ALIGN has the same problem.
-And fixing ALIGN requires to go through thousands of usages, which is
-way too much for one localised ELF fix.
-
-	PT_ALEXEY
+> > 
+> > > > 
+> > > > -Kees
+> > > > 
+> > > > > ---
+> > > > >  fs/binfmt_elf.c | 18 ++++++++++++++----
+> > > > >  1 file changed, 14 insertions(+), 4 deletions(-)
+> > > > > 
+> > > > > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> > > > > index f8c7f26f1fbb..0caaad9eddd1 100644
+> > > > > --- a/fs/binfmt_elf.c
+> > > > > +++ b/fs/binfmt_elf.c
+> > > > > @@ -402,19 +402,29 @@ static unsigned long elf_map(struct file *filep, unsigned long addr,
+> > > > >  static unsigned long total_mapping_size(const struct elf_phdr *cmds, int nr)
+> > > > >  {
+> > > > >  	int i, first_idx = -1, last_idx = -1;
+> > > > > +	unsigned long min_vaddr = ULONG_MAX, max_vaddr = 0;
+> > > > >  
+> > > > >  	for (i = 0; i < nr; i++) {
+> > > > >  		if (cmds[i].p_type == PT_LOAD) {
+> > > > > -			last_idx = i;
+> > > > > -			if (first_idx == -1)
+> > > > > +			/*
+> > > > > +			 * The PT_LOAD segments are not necessarily ordered
+> > > > > +			 * by vaddr. Make sure that we get the segment with
+> > > > > +			 * minimum vaddr (maximum vaddr respectively)
+> > > > > +			 */
+> > > > > +			if (cmds[i].p_vaddr <= min_vaddr) {
+> > > > >  				first_idx = i;
+> > > > > +				min_vaddr = cmds[i].p_vaddr;
+> > > > > +			}
+> > > > > +			if (cmds[i].p_vaddr >= max_vaddr) {
+> > > > > +				last_idx = i;
+> > > > > +				max_vaddr = cmds[i].p_vaddr;
+> > > > > +			}
+> > > > >  		}
+> > > > >  	}
+> > > > >  	if (first_idx == -1)
+> > > > >  		return 0;
+> > > > >  
+> > > > > -	return cmds[last_idx].p_vaddr + cmds[last_idx].p_memsz -
+> > > > > -				ELF_PAGESTART(cmds[first_idx].p_vaddr);
+> > > > > +	return max_vaddr + cmds[last_idx].p_memsz - ELF_PAGESTART(min_vaddr);
+> > > > >  }
+> > > > >  
+> > > > >  static int elf_read(struct file *file, void *buf, size_t len, loff_t pos)
+> > > > > -- 
+> > > > > 2.34.1
+> > > > 
+> > > > -- 
+> > > > Kees Cook
+> > > 
+> > > -- 
+> > > Kees Cook
+> 
+> -- 
+> Kees Cook
