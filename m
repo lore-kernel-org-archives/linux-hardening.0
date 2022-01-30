@@ -2,119 +2,89 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59826C433F5
-	for <linux-hardening@archiver.kernel.org>; Sun, 30 Jan 2022 18:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29E5C433EF
+	for <linux-hardening@archiver.kernel.org>; Sun, 30 Jan 2022 19:55:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229893AbiA3S5V (ORCPT
+        id S230058AbiA3Tzw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 30 Jan 2022 13:57:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229847AbiA3S5S (ORCPT
+        Sun, 30 Jan 2022 14:55:52 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:57208 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229765AbiA3Tzv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 30 Jan 2022 13:57:18 -0500
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AEE8C061714;
-        Sun, 30 Jan 2022 10:57:18 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id u18so22343429edt.6;
-        Sun, 30 Jan 2022 10:57:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+c6u7Ofg/2nJE4oe4zIKTdlG+rAyM0F3JywePufjJYM=;
-        b=fEzMUc2/lvKVYSd05x4eIJdlkVaBNWpsIvFjP53pZMVz4C1ua+SdBIlF2Y71oRMHUn
-         eTNaaAN7jNsnND7UOzgd8hlkdDqwQ8rI8N5+UTu8Gw52Uu9O8kcEHBhM2z4lIkLfPGEm
-         9NbMRJGmO2wYFfBLSiPonjo/yrbgPPH6obYSFo6H7noMA/22I6a3BMqjOdxmazzLs7lB
-         L3r34PZPKPma0fbwwn69FEQqrD0bnhIxRadjedgFW6botXQsxlTcFsL0k3LmgzR8UW0V
-         K+3Wq9Sc+a2NmB4HCJvfkNYXsd6YkrNNE+cHuKsWa7fKRj1Qq4zWPsDXIvWHrBd8sxOp
-         UbSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+c6u7Ofg/2nJE4oe4zIKTdlG+rAyM0F3JywePufjJYM=;
-        b=kp88rnDabFz1dIlI3rbTPmBku4Y0PrOq4h6u8WqEpvbz2ERoDLct3jJxm1U3ZWihA4
-         K8Hf3FC2I1gVHwUq5ys+t5iwlyeBom6yyJ265mIkyGlzo65FRBVKnkkXOY+sYRR4pHx8
-         Cj+XnM9BQQ/i1rPWdLLTZe+rFF9BDlTaRePo9iObCT/RSMhb87SM+h89QmM0MMGojlaj
-         5cHajwEbAAofXBXjL9Lcch+j7fQFaIlDpY1a3CjhbDgdMVaH03gfOsht4gefc57++b4l
-         ca16w9PXFQVWNU6/taOuX57i8hm9gzg3XTeMC17ca2L7vmyoy53nC5Fv0PptbcrCPBOC
-         n5sw==
-X-Gm-Message-State: AOAM533E3EvyjLCbChbgNBNSwwKO/13CaX4sK/+So9KAY1CYcOsPs4bj
-        iJKIsy8f7BhDtWVAViG8exXxFwFA4g/NMxJoeM0=
-X-Google-Smtp-Source: ABdhPJzVRnWp5Ug3XCfyDHGbJBpmeid7psZKR+Hl6hMfm198IpT+7MMWxX5JcvBsHEAdRByxtLhrzDdOGgLcCfsP0iI=
-X-Received: by 2002:aa7:c743:: with SMTP id c3mr17380336eds.270.1643569036193;
- Sun, 30 Jan 2022 10:57:16 -0800 (PST)
-MIME-Version: 1.0
-References: <20220130183653.491292-1-keescook@chromium.org>
-In-Reply-To: <20220130183653.491292-1-keescook@chromium.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 30 Jan 2022 20:56:40 +0200
-Message-ID: <CAHp75Vf9S8jKQGAYRrmSET7YJQNoHMzUC6VVTAOT7DbwcCcc4Q@mail.gmail.com>
-Subject: Re: [PATCH] lib/test_string.c: Add test for strlen()
+        Sun, 30 Jan 2022 14:55:51 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3FF21B82990;
+        Sun, 30 Jan 2022 19:55:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A452AC340E4;
+        Sun, 30 Jan 2022 19:55:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643572548;
+        bh=4zb5UhaLqOlfRtVbPkkYmuMWAyxQjIa7QavGlkoM4eY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MmpQdk6vxwUc5/7Me6VbFqowflhqyb21APAhIUHdRbQqNByAIP3Yy97ZJuFCKVCl8
+         Fdu3jHEYvu9313W7EalsU8hopwAMfD07RixFPkXR3EZrvhFppLmdf0E/KgMUqWHnx/
+         05jS6ZyQeyl9kZYjBqmsy1vTis38vM0FsZMN2C6QHyls0JtlXYqynIHzaQ2K8/lNWP
+         PrCDa/B+FI6ywZO77WLb//H/6Rgy3x/DhycYIX2O6VwTq3sHNQ67+V9C68Ix2GLr/0
+         Sen4s7oAuED/2zCfpUeN7xh704ZRLehX9H/mvdN3QdxZJiD7t6JMzoIZs0/6LZ0ZyG
+         covhJhvsAIvSw==
+Date:   Sun, 30 Jan 2022 12:55:44 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Peter Rosin <peda@axentia.se>,
-        Andy Shevchenko <andy@kernel.org>,
-        Matteo Croce <mcroce@microsoft.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fortify: Update compile-time tests for Clang 14
+Message-ID: <YfbtQKtpyAM1hHiC@dev-arch.archlinux-ax161>
+References: <20220130181616.420092-1-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220130181616.420092-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Jan 30, 2022 at 8:36 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Add a simple test for strlen() functionality, including using it as a
-> constant expression.
+On Sun, Jan 30, 2022 at 10:16:16AM -0800, Kees Cook wrote:
+> Clang 14 introduces support for compiletime_assert(). Update the
+> compile-time warning regex to catch Clang's variant of the warning text
+> in preparation for Clang supporting CONFIG_FORTIFY_SOURCE.
+> 
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: linux-hardening@vger.kernel.org
+> Cc: llvm@lists.linux.dev
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-...
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
 
-> +/*
-> + * Unlike many other string functions, strlen() can be used in
-> + * static initializers when string lengths are known at compile
-> + * time. (i.e. Under these conditions, strlen() is a constant
-> + * expression.) Make sure it can be used this way.
-> + */
-> +static const int strlen_ce = strlen("tada, a constant expression");
-
-So, the compiler will replace this by a constant and then eliminate
-the condition completely from the code. Did I understand this
-correctly?
-
-> +static __init int strlen_selftest(void)
-> +{
-> +       /* String length ruler:         123456789012345 */
-> +       static const char normal[]   = "I am normal";
-> +       static const char *ptr       = "where do I go?";
-> +       static const char trailing[] = "hidden NULLs\0\0\0";
-> +       static const char leading[]  = "\0\0hidden text";
-> +
-> +       if (strlen(normal) != 11)
-> +               return 0x100001;
-> +       if (strlen(ptr++) != 14)
-> +               return 0x100002;
-> +       if (strlen(ptr++) != 13)
-> +               return 0x100003;
-> +       if (strlen(trailing) != 12)
-> +               return 0x100004;
-> +       if (strlen(leading) != 0)
-> +               return 0x100005;
-
-> +       if (strlen_ce != 27)
-> +               return 0x100006;
-
-...so this part won't ever appear in the assembly (assuming -O2).
-
-Same to the rest? If so, why is this not a part of the compiler tests?
-
-> +       return 0;
-> +}
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+> ---
+> I'm splitting this patch out of the main Clang FORTIFY enabling patch.
+> ---
+>  scripts/test_fortify.sh | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/scripts/test_fortify.sh b/scripts/test_fortify.sh
+> index a4da365508f0..c2688ab8281d 100644
+> --- a/scripts/test_fortify.sh
+> +++ b/scripts/test_fortify.sh
+> @@ -46,8 +46,12 @@ if "$@" -Werror -c "$IN" -o "$OUT".o 2> "$TMP" ; then
+>  		status="warning: unsafe ${FUNC}() usage lacked '$WANT' symbol in $IN"
+>  	fi
+>  else
+> -	# If the build failed, check for the warning in the stderr (gcc).
+> -	if ! grep -q -m1 "error: call to .\b${WANT}\b." "$TMP" ; then
+> +	# If the build failed, check for the warning in the stderr.
+> +	# GCC:
+> +	# ./include/linux/fortify-string.h:316:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
+> +	# Clang 14:
+> +	# ./include/linux/fortify-string.h:316:4: error: call to __write_overflow_field declared with 'warning' attribute: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror,-Wattribute-warning]
+> +	if ! grep -Eq -m1 "error: call to .?\b${WANT}\b.?" "$TMP" ; then
+>  		status="warning: unsafe ${FUNC}() usage lacked '$WANT' warning in $IN"
+>  	fi
+>  fi
+> -- 
+> 2.30.2
+> 
