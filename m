@@ -2,89 +2,112 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B29E5C433EF
-	for <linux-hardening@archiver.kernel.org>; Sun, 30 Jan 2022 19:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B37C433F5
+	for <linux-hardening@archiver.kernel.org>; Sun, 30 Jan 2022 20:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230058AbiA3Tzw (ORCPT
+        id S1356078AbiA3UNy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 30 Jan 2022 14:55:52 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:57208 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229765AbiA3Tzv (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 30 Jan 2022 14:55:51 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3FF21B82990;
-        Sun, 30 Jan 2022 19:55:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A452AC340E4;
-        Sun, 30 Jan 2022 19:55:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643572548;
-        bh=4zb5UhaLqOlfRtVbPkkYmuMWAyxQjIa7QavGlkoM4eY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MmpQdk6vxwUc5/7Me6VbFqowflhqyb21APAhIUHdRbQqNByAIP3Yy97ZJuFCKVCl8
-         Fdu3jHEYvu9313W7EalsU8hopwAMfD07RixFPkXR3EZrvhFppLmdf0E/KgMUqWHnx/
-         05jS6ZyQeyl9kZYjBqmsy1vTis38vM0FsZMN2C6QHyls0JtlXYqynIHzaQ2K8/lNWP
-         PrCDa/B+FI6ywZO77WLb//H/6Rgy3x/DhycYIX2O6VwTq3sHNQ67+V9C68Ix2GLr/0
-         Sen4s7oAuED/2zCfpUeN7xh704ZRLehX9H/mvdN3QdxZJiD7t6JMzoIZs0/6LZ0ZyG
-         covhJhvsAIvSw==
-Date:   Sun, 30 Jan 2022 12:55:44 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
+        Sun, 30 Jan 2022 15:13:54 -0500
+Received: from mga02.intel.com ([134.134.136.20]:9758 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1356074AbiA3UNy (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 30 Jan 2022 15:13:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643573634; x=1675109634;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CUGxfIgplr8CR/vNBSqUY2Z6LFy1cI+HK/XEaUaxP70=;
+  b=l4TMDtpGoVbu5eh5eWI+oqrnwKcwGXZWma5A9E15Dk+j30vcWU13b3+j
+   9YvyqaLZlDM4Ksb6MopUuDYtG4d/ugseSFWqmd5X+9RZEJ3KP1AaDeLp7
+   iNPraI8iaIWgZYTVIGvQk73XZrahT9rqQ1co0angF432sE4R7aNfZAKLc
+   OMIRbaAfSRZ2veXSyGiUz7ChGRDL4GWi3Wp9te2xObGZ1hOXJ1S1GaZ1V
+   vTsrKeRgW3Uxh/nN+MmUqfgEzrCNaRh/SiPLKvYqr7d3FNcYFuO0ahp2e
+   T4tEVuCazf+lQvPVY3GHdR9SVfb390fM4LLyh26p+S5BfqFzI/CA4KosA
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10243"; a="234762212"
+X-IronPort-AV: E=Sophos;i="5.88,329,1635231600"; 
+   d="scan'208";a="234762212"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2022 12:13:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,329,1635231600"; 
+   d="scan'208";a="536845470"
+Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 30 Jan 2022 12:13:51 -0800
+Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nEGa6-000Qws-Gs; Sun, 30 Jan 2022 20:13:50 +0000
+Date:   Mon, 31 Jan 2022 04:13:30 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fortify: Update compile-time tests for Clang 14
-Message-ID: <YfbtQKtpyAM1hHiC@dev-arch.archlinux-ax161>
-References: <20220130181616.420092-1-keescook@chromium.org>
+Cc:     kbuild-all@lists.01.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        Peter Rosin <peda@axentia.se>,
+        Andy Shevchenko <andy@kernel.org>,
+        Matteo Croce <mcroce@microsoft.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] lib/test_string.c: Add test for strlen()
+Message-ID: <202201310303.HQlCsvvd-lkp@intel.com>
+References: <20220130183653.491292-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220130181616.420092-1-keescook@chromium.org>
+In-Reply-To: <20220130183653.491292-1-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Jan 30, 2022 at 10:16:16AM -0800, Kees Cook wrote:
-> Clang 14 introduces support for compiletime_assert(). Update the
-> compile-time warning regex to catch Clang's variant of the warning text
-> in preparation for Clang supporting CONFIG_FORTIFY_SOURCE.
-> 
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: linux-hardening@vger.kernel.org
-> Cc: llvm@lists.linux.dev
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Hi Kees,
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+I love your patch! Yet something to improve:
 
-> ---
-> I'm splitting this patch out of the main Clang FORTIFY enabling patch.
-> ---
->  scripts/test_fortify.sh | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/scripts/test_fortify.sh b/scripts/test_fortify.sh
-> index a4da365508f0..c2688ab8281d 100644
-> --- a/scripts/test_fortify.sh
-> +++ b/scripts/test_fortify.sh
-> @@ -46,8 +46,12 @@ if "$@" -Werror -c "$IN" -o "$OUT".o 2> "$TMP" ; then
->  		status="warning: unsafe ${FUNC}() usage lacked '$WANT' symbol in $IN"
->  	fi
->  else
-> -	# If the build failed, check for the warning in the stderr (gcc).
-> -	if ! grep -q -m1 "error: call to .\b${WANT}\b." "$TMP" ; then
-> +	# If the build failed, check for the warning in the stderr.
-> +	# GCC:
-> +	# ./include/linux/fortify-string.h:316:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
-> +	# Clang 14:
-> +	# ./include/linux/fortify-string.h:316:4: error: call to __write_overflow_field declared with 'warning' attribute: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror,-Wattribute-warning]
-> +	if ! grep -Eq -m1 "error: call to .?\b${WANT}\b.?" "$TMP" ; then
->  		status="warning: unsafe ${FUNC}() usage lacked '$WANT' warning in $IN"
->  	fi
->  fi
-> -- 
-> 2.30.2
-> 
+[auto build test ERROR on linux/master]
+[also build test ERROR on linus/master kees/for-next/pstore v5.17-rc2 next-20220128]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
+
+url:    https://github.com/0day-ci/linux/commits/Kees-Cook/lib-test_string-c-Add-test-for-strlen/20220131-023726
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 2c271fe77d52a0555161926c232cd5bc07178b39
+config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20220131/202201310303.HQlCsvvd-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 11.2.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/d22fe883339c5141953dbca980b51466ac3e2329
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Kees-Cook/lib-test_string-c-Add-test-for-strlen/20220131-023726
+        git checkout d22fe883339c5141953dbca980b51466ac3e2329
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=sh SHELL=/bin/bash M=lib/
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+>> lib/test_string.c:188:30: error: initializer element is not constant
+     188 | static const int strlen_ce = strlen("tada, a constant expression");
+         |                              ^~~~~~
+
+
+vim +188 lib/test_string.c
+
+   181	
+   182	/*
+   183	 * Unlike many other string functions, strlen() can be used in
+   184	 * static initializers when string lengths are known at compile
+   185	 * time. (i.e. Under these conditions, strlen() is a constant
+   186	 * expression.) Make sure it can be used this way.
+   187	 */
+ > 188	static const int strlen_ce = strlen("tada, a constant expression");
+   189	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
