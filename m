@@ -2,112 +2,130 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B37C433F5
-	for <linux-hardening@archiver.kernel.org>; Sun, 30 Jan 2022 20:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D1BC433FE
+	for <linux-hardening@archiver.kernel.org>; Sun, 30 Jan 2022 20:34:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356078AbiA3UNy (ORCPT
+        id S1356116AbiA3Ueo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 30 Jan 2022 15:13:54 -0500
-Received: from mga02.intel.com ([134.134.136.20]:9758 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1356074AbiA3UNy (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 30 Jan 2022 15:13:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643573634; x=1675109634;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CUGxfIgplr8CR/vNBSqUY2Z6LFy1cI+HK/XEaUaxP70=;
-  b=l4TMDtpGoVbu5eh5eWI+oqrnwKcwGXZWma5A9E15Dk+j30vcWU13b3+j
-   9YvyqaLZlDM4Ksb6MopUuDYtG4d/ugseSFWqmd5X+9RZEJ3KP1AaDeLp7
-   iNPraI8iaIWgZYTVIGvQk73XZrahT9rqQ1co0angF432sE4R7aNfZAKLc
-   OMIRbaAfSRZ2veXSyGiUz7ChGRDL4GWi3Wp9te2xObGZ1hOXJ1S1GaZ1V
-   vTsrKeRgW3Uxh/nN+MmUqfgEzrCNaRh/SiPLKvYqr7d3FNcYFuO0ahp2e
-   T4tEVuCazf+lQvPVY3GHdR9SVfb390fM4LLyh26p+S5BfqFzI/CA4KosA
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10243"; a="234762212"
-X-IronPort-AV: E=Sophos;i="5.88,329,1635231600"; 
-   d="scan'208";a="234762212"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2022 12:13:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,329,1635231600"; 
-   d="scan'208";a="536845470"
-Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 30 Jan 2022 12:13:51 -0800
-Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nEGa6-000Qws-Gs; Sun, 30 Jan 2022 20:13:50 +0000
-Date:   Mon, 31 Jan 2022 04:13:30 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     kbuild-all@lists.01.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sun, 30 Jan 2022 15:34:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232343AbiA3Uen (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Sun, 30 Jan 2022 15:34:43 -0500
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FF76C06173B
+        for <linux-hardening@vger.kernel.org>; Sun, 30 Jan 2022 12:34:43 -0800 (PST)
+Received: by mail-pl1-x635.google.com with SMTP id k17so10815847plk.0
+        for <linux-hardening@vger.kernel.org>; Sun, 30 Jan 2022 12:34:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7IOZHCJNZdVLsKlAN8UmMORGXdNGmY4XG9mnrfmJGuw=;
+        b=QV4Fu43qCgBQrge/+g0f+BFyeec7tqd+zZb+KsIVqjyPa2+8KTmQsBjFmKMa4GKe40
+         l+YCP1RGk7CDYKX/F/bBg6XL0WJ5kED64GEhx7PaLymQi5WSoZ1ByUuhZ4/TEM/59JKP
+         FdbOeQ1g4JR2P9So2fmDn2lkxdqRX/5OPsoX4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7IOZHCJNZdVLsKlAN8UmMORGXdNGmY4XG9mnrfmJGuw=;
+        b=SGtzxHtvcb5JF8XKhpFopxS/qjHL08RzgHWUJV85VL/7DPzEuKyidkQfbMBkm7PBzx
+         DWx+zEEVrfrfSBO54wfGfceAFMdt++W5+e4LZvW4TFXykDK8XlKayN7M9DMt8iG86E4M
+         X+3wDZbXP0Ae1QbEVOsb/AtU0uelk/GTNzZf+NXUySleYndk7JYjJFlNWEyzS5E5toky
+         w/8sYMoZlTswAwCeIwOK2SG3+oYSpIpGCXDrn0PO7ItHRBpOI3dwEkPGAxWD4tyBBp20
+         ld8RYvHBeQyDDN98wyv378bVh8SYyg6qUgTkNuXzCBfiedooIkHyxRShCxEJTY2kKWpu
+         xESg==
+X-Gm-Message-State: AOAM530C+zIMofjYo9JHv+HSm6OV9jh9cbFaoSpekOpLgdyBxUyidagj
+        TBPq/Oe9JM572nBMo4rSPHEopg==
+X-Google-Smtp-Source: ABdhPJw4yBDg3uS7cAcZfMh1IewxVhrjRAZxYuWwvIIw8kVlS7S/z6VsdX895ZYK9QDlZEQDnCeZAg==
+X-Received: by 2002:a17:902:758c:: with SMTP id j12mr17852607pll.34.1643574882799;
+        Sun, 30 Jan 2022 12:34:42 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d22sm9157814pfl.71.2022.01.30.12.34.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Jan 2022 12:34:42 -0800 (PST)
+Date:   Sun, 30 Jan 2022 12:34:41 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         Peter Rosin <peda@axentia.se>,
         Andy Shevchenko <andy@kernel.org>,
         Matteo Croce <mcroce@microsoft.com>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] lib/test_string.c: Add test for strlen()
-Message-ID: <202201310303.HQlCsvvd-lkp@intel.com>
+Message-ID: <202201301220.529465D6@keescook>
 References: <20220130183653.491292-1-keescook@chromium.org>
+ <CAHp75Vf9S8jKQGAYRrmSET7YJQNoHMzUC6VVTAOT7DbwcCcc4Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220130183653.491292-1-keescook@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHp75Vf9S8jKQGAYRrmSET7YJQNoHMzUC6VVTAOT7DbwcCcc4Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
+On Sun, Jan 30, 2022 at 08:56:40PM +0200, Andy Shevchenko wrote:
+> On Sun, Jan 30, 2022 at 8:36 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Add a simple test for strlen() functionality, including using it as a
+> > constant expression.
+> 
+> ...
+> 
+> > +/*
+> > + * Unlike many other string functions, strlen() can be used in
+> > + * static initializers when string lengths are known at compile
+> > + * time. (i.e. Under these conditions, strlen() is a constant
+> > + * expression.) Make sure it can be used this way.
+> > + */
+> > +static const int strlen_ce = strlen("tada, a constant expression");
+> 
+> So, the compiler will replace this by a constant and then eliminate
+> the condition completely from the code. Did I understand this
+> correctly?
 
-I love your patch! Yet something to improve:
+Yup! See: https://godbolt.org/z/nTqPaszTh
 
-[auto build test ERROR on linux/master]
-[also build test ERROR on linus/master kees/for-next/pstore v5.17-rc2 next-20220128]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+There a few rare places in the kernel that do this, which is how
+I noticed. (I broke strlen() with the recent FORTIFY changes.)
 
-url:    https://github.com/0day-ci/linux/commits/Kees-Cook/lib-test_string-c-Add-test-for-strlen/20220131-023726
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 2c271fe77d52a0555161926c232cd5bc07178b39
-config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20220131/202201310303.HQlCsvvd-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 11.2.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/0day-ci/linux/commit/d22fe883339c5141953dbca980b51466ac3e2329
-        git remote add linux-review https://github.com/0day-ci/linux
-        git fetch --no-tags linux-review Kees-Cook/lib-test_string-c-Add-test-for-strlen/20220131-023726
-        git checkout d22fe883339c5141953dbca980b51466ac3e2329
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=sh SHELL=/bin/bash M=lib/
+> > +static __init int strlen_selftest(void)
+> > +{
+> > +       /* String length ruler:         123456789012345 */
+> > +       static const char normal[]   = "I am normal";
+> > +       static const char *ptr       = "where do I go?";
+> > +       static const char trailing[] = "hidden NULLs\0\0\0";
+> > +       static const char leading[]  = "\0\0hidden text";
+> > +
+> > +       if (strlen(normal) != 11)
+> > +               return 0x100001;
+> > +       if (strlen(ptr++) != 14)
+> > +               return 0x100002;
+> > +       if (strlen(ptr++) != 13)
+> > +               return 0x100003;
+> > +       if (strlen(trailing) != 12)
+> > +               return 0x100004;
+> > +       if (strlen(leading) != 0)
+> > +               return 0x100005;
+> 
+> > +       if (strlen_ce != 27)
+> > +               return 0x100006;
+> 
+> ...so this part won't ever appear in the assembly (assuming -O2).
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+Correct, unless strlen() breaks.
 
-All errors (new ones prefixed by >>):
+> Same to the rest? If so, why is this not a part of the compiler tests?
 
->> lib/test_string.c:188:30: error: initializer element is not constant
-     188 | static const int strlen_ce = strlen("tada, a constant expression");
-         |                              ^~~~~~
+I wanted to keep everything together -- this includes a macro
+side-effect test as well ("ptr++").
 
+-Kees
 
-vim +188 lib/test_string.c
-
-   181	
-   182	/*
-   183	 * Unlike many other string functions, strlen() can be used in
-   184	 * static initializers when string lengths are known at compile
-   185	 * time. (i.e. Under these conditions, strlen() is a constant
-   186	 * expression.) Make sure it can be used this way.
-   187	 */
- > 188	static const int strlen_ce = strlen("tada, a constant expression");
-   189	
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+Kees Cook
