@@ -2,628 +2,150 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13754C433F5
-	for <linux-hardening@archiver.kernel.org>; Sat, 29 Jan 2022 15:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B23BBC433EF
+	for <linux-hardening@archiver.kernel.org>; Sun, 30 Jan 2022 14:13:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235579AbiA2PAr (ORCPT
+        id S1354966AbiA3ONU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 29 Jan 2022 10:00:47 -0500
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:37782 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231262AbiA2PAq (ORCPT
+        Sun, 30 Jan 2022 09:13:20 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:46944 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1354964AbiA3ONU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 29 Jan 2022 10:00:46 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0V377OvC_1643468436;
-Received: from localhost(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V377OvC_1643468436)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 29 Jan 2022 23:00:43 +0800
-From:   Dan Li <ashimida@linux.alibaba.com>
-To:     gcc-patches@gcc.gnu.org, richard.sandiford@arm.com,
-        richard.earnshaw@arm.com, marcus.shawcroft@arm.com,
-        kyrylo.tkachov@arm.com, hp@gcc.gnu.org, ndesaulniers@google.com,
-        nsz@gcc.gnu.org, pageexec@gmail.com, qinzhao@gcc.gnu.org
-Cc:     linux-hardening@vger.kernel.org,
-        Dan Li <ashimida@linux.alibaba.com>
-Subject: [PATCH] [PATCH,v3,1/1,AARCH64][PR102768] aarch64: Add compiler support for Shadow Call Stack
-Date:   Sat, 29 Jan 2022 07:00:35 -0800
-Message-Id: <20220129150035.114602-1-ashimida@linux.alibaba.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 30 Jan 2022 09:13:20 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D8FD6B80D24;
+        Sun, 30 Jan 2022 14:13:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BF6FC340F0;
+        Sun, 30 Jan 2022 14:13:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643551997;
+        bh=137KAOgxQxq5H3WxKNVyxwmutOBva+lpHHW1WAXVK68=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=p3xJzsLIaViunoxpfA/yNFWG5fX8Sa5pJ9pIPRaf1FkMEZN4lFpCA7Cg/kPQsI1H9
+         7xLaLlNwg2t85mlf5zoAmU07kbPWhRFM4NRGdo7oKjGKjFH+Y1Rkj0/wOITdbFbJdQ
+         M8WBeDq5QVOVFVA55eptQw4OxRP+EFYvn9IxskIsz6XsQPJqc92s5qE6jqhfc0TPKz
+         M5PYkUKT17X+wOUCESAB9/j3r6wwqFuxd5KWPAo+2weY9aAWS9HL9LP6Y3OCddY3cg
+         CXV+u487QKTYraFJabGaJ0JiL2jiVz5mnGcU8CtfNue+Bln1QE7fW8uIh/nAGrcsNP
+         MXarEpYalL6Xw==
+Date:   Sun, 30 Jan 2022 14:19:42 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Tanislav, Cosmin" <Cosmin.Tanislav@analog.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v2] iio: addac: ad74413r: Do not reference negative
+ array offsets
+Message-ID: <20220130141942.7c653e0d@jic23-huawei>
+In-Reply-To: <8e6a081daeb54be38fdd658c796ec120@analog.com>
+References: <20220112203456.3950884-1-keescook@chromium.org>
+        <8e6a081daeb54be38fdd658c796ec120@analog.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.31; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Shadow Call Stack can be used to protect the return address of a
-function at runtime, and clang already supports this feature[1].
+On Thu, 13 Jan 2022 21:57:22 +0000
+"Tanislav, Cosmin" <Cosmin.Tanislav@analog.com> wrote:
 
-To enable SCS in user mode, in addition to compiler, other support
-is also required (as discussed in [2]). This patch only adds basic
-support for SCS from the compiler side, and provides convenience
-for users to enable SCS.
+> Reviewed-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
 
-For linux kernel, only the support of the compiler is required.
+Applied to the fixes-togreg branch of iio.git.
 
-[1] https://clang.llvm.org/docs/ShadowCallStack.html
-[2] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=102768
+Thanks,
 
-Signed-off-by: Dan Li <ashimida@linux.alibaba.com>
+Jonathan
 
-gcc/ChangeLog:
-
-	* config/aarch64/aarch64.c (aarch64_layout_frame):
-	Change callee_adjust when scs is enabled.
-	(aarch64_restore_callee_saves): Avoid pop x30 twice
-	when scs is enabled.
-	(aarch64_expand_prologue): Push x30 onto SCS before it's
-	pushed onto stack.
-	(aarch64_expand_epilogue): Pop x30 frome SCS, while
-	preventing it from being popped from the regular stack again.
-	(aarch64_override_options_internal): Add SCS compile option check.
-	(TARGET_HAVE_SHADOW_CALL_STACK): New hook.
-	* config/aarch64/aarch64.h (struct GTY): Add is_scs_enabled.
-	* config/aarch64/aarch64.md (scs_push):  New template.
-	(scs_pop): Likewise.
-	* doc/invoke.texi: Document -fsanitize=shadow-call-stack.
-	* doc/tm.texi: Regenerate.
-	* doc/tm.texi.in: Add hook have_shadow_call_stack.
-	* flag-types.h (enum sanitize_code):
-	Add SANITIZE_SHADOW_CALL_STACK.
-	* opts.c: Add shadow-call-stack.
-	* target.def: New hook.
-	* toplev.c (process_options): Add SCS compile option check.
-
-gcc/testsuite/ChangeLog:
-
-	* gcc.target/aarch64/shadow_call_stack_1.c: New test.
-	* gcc.target/aarch64/shadow_call_stack_2.c: New test.
-	* gcc.target/aarch64/shadow_call_stack_3.c: New test.
-	* gcc.target/aarch64/shadow_call_stack_4.c: New test.
-	* gcc.target/aarch64/shadow_call_stack_5.c: New test.
-	* gcc.target/aarch64/shadow_call_stack_6.c: New test.
-	* gcc.target/aarch64/shadow_call_stack_7.c: New test.
-	* gcc.target/aarch64/shadow_call_stack_8.c: New test.
----
-V3:
-- Change scs_push/pop to standard move patterns.
-- Optimize scs_pop to avoid pop x30 twice when shadow stack is enabled.
-
- gcc/config/aarch64/aarch64.c                  | 66 +++++++++++++++++--
- gcc/config/aarch64/aarch64.h                  |  4 ++
- gcc/config/aarch64/aarch64.md                 | 10 +++
- gcc/doc/invoke.texi                           | 30 +++++++++
- gcc/doc/tm.texi                               |  5 ++
- gcc/doc/tm.texi.in                            |  2 +
- gcc/flag-types.h                              |  2 +
- gcc/opts.c                                    |  1 +
- gcc/target.def                                |  8 +++
- .../gcc.target/aarch64/shadow_call_stack_1.c  |  6 ++
- .../gcc.target/aarch64/shadow_call_stack_2.c  |  6 ++
- .../gcc.target/aarch64/shadow_call_stack_3.c  | 45 +++++++++++++
- .../gcc.target/aarch64/shadow_call_stack_4.c  | 20 ++++++
- .../gcc.target/aarch64/shadow_call_stack_5.c  | 18 +++++
- .../gcc.target/aarch64/shadow_call_stack_6.c  | 18 +++++
- .../gcc.target/aarch64/shadow_call_stack_7.c  | 18 +++++
- .../gcc.target/aarch64/shadow_call_stack_8.c  | 24 +++++++
- gcc/toplev.c                                  | 10 +++
- 18 files changed, 289 insertions(+), 4 deletions(-)
- create mode 100644 gcc/testsuite/gcc.target/aarch64/shadow_call_stack_1.c
- create mode 100644 gcc/testsuite/gcc.target/aarch64/shadow_call_stack_2.c
- create mode 100644 gcc/testsuite/gcc.target/aarch64/shadow_call_stack_3.c
- create mode 100644 gcc/testsuite/gcc.target/aarch64/shadow_call_stack_4.c
- create mode 100644 gcc/testsuite/gcc.target/aarch64/shadow_call_stack_5.c
- create mode 100644 gcc/testsuite/gcc.target/aarch64/shadow_call_stack_6.c
- create mode 100644 gcc/testsuite/gcc.target/aarch64/shadow_call_stack_7.c
- create mode 100644 gcc/testsuite/gcc.target/aarch64/shadow_call_stack_8.c
-
-diff --git a/gcc/config/aarch64/aarch64.c b/gcc/config/aarch64/aarch64.c
-index 699c105a42a..461c205010e 100644
---- a/gcc/config/aarch64/aarch64.c
-+++ b/gcc/config/aarch64/aarch64.c
-@@ -79,6 +79,7 @@
- #include "tree-ssa-loop-niter.h"
- #include "fractional-cost.h"
- #include "rtlanal.h"
-+#include "asan.h"
- 
- /* This file should be included last.  */
- #include "target-def.h"
-@@ -7478,10 +7479,31 @@ aarch64_layout_frame (void)
-   frame.sve_callee_adjust = 0;
-   frame.callee_offset = 0;
- 
-+  /* Shadow call stack only deal with functions where the LR is pushed
-+     onto the stack and without specifying the "no_sanitize" attribute
-+     with the argument "shadow-call-stack".  */
-+  frame.is_scs_enabled
-+    = (!crtl->calls_eh_return
-+       && (sanitize_flags_p (SANITIZE_SHADOW_CALL_STACK)
-+	   && known_ge (cfun->machine->frame.reg_offset[LR_REGNUM], 0)));
-+
-+  /* When shadow call stack is enabled, the scs_pop in the epilogue will
-+     restore x30, and we don't need to pop x30 again in the traditional
-+     way.  At this time, if candidate2 is x30, we need to adjust
-+     max_push_offset to 256 to ensure that the offset meets the requirements
-+     of emit_move_insn.  Similarly, if candidate1 is x30, we need to set
-+     max_push_offset to 0, because x30 is not popped up at this time, so
-+     callee_adjust cannot be adjusted.  */
-   HOST_WIDE_INT max_push_offset = 0;
-   if (frame.wb_candidate2 != INVALID_REGNUM)
--    max_push_offset = 512;
--  else if (frame.wb_candidate1 != INVALID_REGNUM)
-+    {
-+      if (frame.is_scs_enabled && frame.wb_candidate2 == R30_REGNUM)
-+	max_push_offset = 256;
-+      else
-+	max_push_offset = 512;
-+    }
-+  else if ((frame.wb_candidate1 != INVALID_REGNUM)
-+	   && !(frame.is_scs_enabled && frame.wb_candidate1 == R30_REGNUM))
-     max_push_offset = 256;
- 
-   HOST_WIDE_INT const_size, const_outgoing_args_size, const_fp_offset;
-@@ -7993,6 +8015,9 @@ aarch64_restore_callee_saves (poly_int64 start_offset, unsigned start,
-       if (cfun->machine->reg_is_wrapped_separately[regno])
- 	continue;
- 
-+      if (cfun->machine->frame.is_scs_enabled && regno == R30_REGNUM)
-+	continue;
-+
-       rtx reg, mem;
- 
-       if (skip_wb
-@@ -8014,7 +8039,8 @@ aarch64_restore_callee_saves (poly_int64 start_offset, unsigned start,
- 	  && !cfun->machine->reg_is_wrapped_separately[regno2]
- 	  && known_eq (GET_MODE_SIZE (mode),
- 		       cfun->machine->frame.reg_offset[regno2]
--		       - cfun->machine->frame.reg_offset[regno]))
-+		       - cfun->machine->frame.reg_offset[regno])
-+	  && !(cfun->machine->frame.is_scs_enabled && regno2 == R30_REGNUM))
- 	{
- 	  rtx reg2 = gen_rtx_REG (mode, regno2);
- 	  rtx mem2;
-@@ -8810,6 +8836,10 @@ aarch64_expand_prologue (void)
-       RTX_FRAME_RELATED_P (insn) = 1;
-     }
- 
-+  /* Push return address to shadow call stack.  */
-+  if (cfun->machine->frame.is_scs_enabled)
-+    emit_insn (gen_scs_push ());
-+
-   if (flag_stack_usage_info)
-     current_function_static_stack_size = constant_lower_bound (frame_size);
- 
-@@ -8958,6 +8988,7 @@ aarch64_expand_epilogue (bool for_sibcall)
-     = cfun->machine->frame.below_hard_fp_saved_regs_size;
-   unsigned reg1 = cfun->machine->frame.wb_candidate1;
-   unsigned reg2 = cfun->machine->frame.wb_candidate2;
-+  bool is_scs_enabled = cfun->machine->frame.is_scs_enabled;
-   rtx cfi_ops = NULL;
-   rtx_insn *insn;
-   /* A stack clash protection prologue may not have left EP0_REGNUM or
-@@ -9035,7 +9066,16 @@ aarch64_expand_epilogue (bool for_sibcall)
-     emit_insn (gen_stack_tie (stack_pointer_rtx, stack_pointer_rtx));
- 
-   if (callee_adjust != 0)
--    aarch64_pop_regs (reg1, reg2, callee_adjust, &cfi_ops);
-+    if (is_scs_enabled && (reg2 == R30_REGNUM))
-+      aarch64_pop_regs (reg1, INVALID_REGNUM, callee_adjust, &cfi_ops);
-+    else
-+      {
-+	/* callee_adjust will always be 0, when reg1 == R30_REGNUM.  */
-+	if (is_scs_enabled)
-+	  gcc_assert (reg1 != R30_REGNUM);
-+
-+	aarch64_pop_regs (reg1, reg2, callee_adjust, &cfi_ops);
-+      }
- 
-   /* If we have no register restore information, the CFA must have been
-      defined in terms of the stack pointer since the end of the prologue.  */
-@@ -9066,6 +9106,17 @@ aarch64_expand_epilogue (bool for_sibcall)
-       RTX_FRAME_RELATED_P (insn) = 1;
-     }
- 
-+  /* Pop return address from shadow call stack.  */
-+  if (is_scs_enabled)
-+    {
-+      machine_mode mode = aarch64_reg_save_mode (R30_REGNUM);
-+      rtx reg = gen_rtx_REG (mode, R30_REGNUM);
-+
-+      insn = emit_insn (gen_scs_pop ());
-+      add_reg_note (insn, REG_CFA_RESTORE, reg);
-+      RTX_FRAME_RELATED_P (insn) = 1;
-+    }
-+
-   /* We prefer to emit the combined return/authenticate instruction RETAA,
-      however there are three cases in which we must instead emit an explicit
-      authentication instruction.
-@@ -16492,6 +16543,10 @@ aarch64_override_options_internal (struct gcc_options *opts)
-       aarch64_stack_protector_guard_offset = offs;
-     }
- 
-+  if ((flag_sanitize & SANITIZE_SHADOW_CALL_STACK)
-+      && !fixed_regs[R18_REGNUM])
-+    error ("%<-fsanitize=shadow-call-stack%> requires %<-ffixed-x18%>");
-+
-   initialize_aarch64_code_model (opts);
-   initialize_aarch64_tls_size (opts);
- 
-@@ -26505,6 +26560,9 @@ aarch64_libgcc_floating_mode_supported_p
- #undef TARGET_ASM_FUNCTION_EPILOGUE
- #define TARGET_ASM_FUNCTION_EPILOGUE aarch64_sls_emit_blr_function_thunks
- 
-+#undef TARGET_HAVE_SHADOW_CALL_STACK
-+#define TARGET_HAVE_SHADOW_CALL_STACK true
-+
- struct gcc_target targetm = TARGET_INITIALIZER;
- 
- #include "gt-aarch64.h"
-diff --git a/gcc/config/aarch64/aarch64.h b/gcc/config/aarch64/aarch64.h
-index 2792bb29adb..1610a4fd74c 100644
---- a/gcc/config/aarch64/aarch64.h
-+++ b/gcc/config/aarch64/aarch64.h
-@@ -916,6 +916,10 @@ struct GTY (()) aarch64_frame
-   unsigned spare_pred_reg;
- 
-   bool laid_out;
-+
-+  /* Nonzero if shadow call stack should be enabled for the current
-+     function, otherwise return FALSE.  */
-+  bool is_scs_enabled;
- };
- 
- typedef struct GTY (()) machine_function
-diff --git a/gcc/config/aarch64/aarch64.md b/gcc/config/aarch64/aarch64.md
-index 1a39470a1fe..48666b4b218 100644
---- a/gcc/config/aarch64/aarch64.md
-+++ b/gcc/config/aarch64/aarch64.md
-@@ -6994,6 +6994,16 @@ (define_insn "xpaclri"
-   "hint\t7 // xpaclri"
- )
- 
-+;; Save X30 in the X18-based POST_INC stack (consistent with clang).
-+(define_expand "scs_push"
-+  [(set (mem:DI (post_inc:DI (reg:DI R18_REGNUM)))
-+	(reg:DI R30_REGNUM))])
-+
-+;; Load X30 form the X18-based PRE_DEC stack (consistent with clang).
-+(define_expand "scs_pop"
-+  [(set (reg:DI R30_REGNUM)
-+	(mem:DI (pre_dec:DI (reg:DI R18_REGNUM))))])
-+
- ;; UNSPEC_VOLATILE is considered to use and clobber all hard registers and
- ;; all of memory.  This blocks insns from being moved across this point.
- 
-diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
-index 71992b8c597..1e580107fab 100644
---- a/gcc/doc/invoke.texi
-+++ b/gcc/doc/invoke.texi
-@@ -15224,6 +15224,36 @@ add @code{detect_invalid_pointer_pairs=2} to the environment variable
- @env{ASAN_OPTIONS}. Using @code{detect_invalid_pointer_pairs=1} detects
- invalid operation only when both pointers are non-null.
- 
-+@item -fsanitize=shadow-call-stack
-+@opindex fsanitize=shadow-call-stack
-+Enable ShadowCallStack, a security enhancement mechanism used to protect
-+programs against return address overwrites (e.g. stack buffer overflows.)
-+It works by saving a function's return address to a separately allocated
-+shadow call stack in the function prologue and restoring the return address
-+from the shadow call stack in the function epilogue.  Instrumentation only
-+occurs in functions that need to save the return address to the stack.
-+
-+Currently it only supports the aarch64 platform.  It is specifically
-+designed for linux kernels that enable the CONFIG_SHADOW_CALL_STACK option.
-+For the user space programs, runtime support is not currently provided
-+in libc and libgcc.  Users who want to use this feature in user space need
-+to provide their own support for the runtime.  It should be noted that
-+this may cause the ABI rules to be broken.
-+
-+On aarch64, the instrumentation makes use of the platform register @code{x18}.
-+This generally means that any code that may run on the same thread as code
-+compiled with ShadowCallStack must be compiled with the flag
-+@option{-ffixed-x18}, otherwise functions compiled without
-+@option{-ffixed-x18} might clobber @code{x18} and so corrupt the shadow
-+stack pointer.
-+
-+Also, because there is no userspace runtime support, code compiled with
-+ShadowCallStack cannot use exception handling.  Use @option{-fno-exceptions}
-+to turn off exceptions.
-+
-+See @uref{https://clang.llvm.org/docs/ShadowCallStack.html} for more
-+details.
-+
- @item -fsanitize=thread
- @opindex fsanitize=thread
- Enable ThreadSanitizer, a fast data race detector.
-diff --git a/gcc/doc/tm.texi b/gcc/doc/tm.texi
-index 990152f5b15..19c130d7420 100644
---- a/gcc/doc/tm.texi
-+++ b/gcc/doc/tm.texi
-@@ -12575,3 +12575,8 @@ counters are incremented using atomic operations.  Targets not supporting
- 64-bit atomic operations may override the default value and request a 32-bit
- type.
- @end deftypefn
-+
-+@deftypevr {Target Hook} bool TARGET_HAVE_SHADOW_CALL_STACK
-+This value is true if the target platform supports
-+@option{-fsanitize=shadow-call-stack}.  The default value is false.
-+@end deftypevr
-diff --git a/gcc/doc/tm.texi.in b/gcc/doc/tm.texi.in
-index 193c9bdd853..01db5f54b5a 100644
---- a/gcc/doc/tm.texi.in
-+++ b/gcc/doc/tm.texi.in
-@@ -8179,3 +8179,5 @@ maintainer is familiar with.
- @hook TARGET_MEMTAG_UNTAGGED_POINTER
- 
- @hook TARGET_GCOV_TYPE_SIZE
-+
-+@hook TARGET_HAVE_SHADOW_CALL_STACK
-diff --git a/gcc/flag-types.h b/gcc/flag-types.h
-index a5a637160d7..c22ef35a289 100644
---- a/gcc/flag-types.h
-+++ b/gcc/flag-types.h
-@@ -321,6 +321,8 @@ enum sanitize_code {
-   SANITIZE_HWADDRESS = 1UL << 28,
-   SANITIZE_USER_HWADDRESS = 1UL << 29,
-   SANITIZE_KERNEL_HWADDRESS = 1UL << 30,
-+  /* Shadow Call Stack.  */
-+  SANITIZE_SHADOW_CALL_STACK = 1UL << 31,
-   SANITIZE_SHIFT = SANITIZE_SHIFT_BASE | SANITIZE_SHIFT_EXPONENT,
-   SANITIZE_UNDEFINED = SANITIZE_SHIFT | SANITIZE_DIVIDE | SANITIZE_UNREACHABLE
- 		       | SANITIZE_VLA | SANITIZE_NULL | SANITIZE_RETURN
-diff --git a/gcc/opts.c b/gcc/opts.c
-index 4472cec1b98..b2e00e8067a 100644
---- a/gcc/opts.c
-+++ b/gcc/opts.c
-@@ -1994,6 +1994,7 @@ const struct sanitizer_opts_s sanitizer_opts[] =
-   SANITIZER_OPT (vptr, SANITIZE_VPTR, true),
-   SANITIZER_OPT (pointer-overflow, SANITIZE_POINTER_OVERFLOW, true),
-   SANITIZER_OPT (builtin, SANITIZE_BUILTIN, true),
-+  SANITIZER_OPT (shadow-call-stack, SANITIZE_SHADOW_CALL_STACK, false),
-   SANITIZER_OPT (all, ~0U, true),
- #undef SANITIZER_OPT
-   { NULL, 0U, 0UL, false }
-diff --git a/gcc/target.def b/gcc/target.def
-index 87feeec2ea1..ce382714399 100644
---- a/gcc/target.def
-+++ b/gcc/target.def
-@@ -7084,6 +7084,14 @@ counters are incremented using atomic operations.  Targets not supporting\n\
- type.",
-  HOST_WIDE_INT, (void), default_gcov_type_size)
- 
-+/* This value represents whether the shadow call stack is implemented on
-+   the target platform.  */
-+DEFHOOKPOD
-+(have_shadow_call_stack,
-+ "This value is true if the target platform supports\n\
-+@option{-fsanitize=shadow-call-stack}.  The default value is false.",
-+ bool, false)
-+
- /* Close the 'struct gcc_target' definition.  */
- HOOK_VECTOR_END (C90_EMPTY_HACK)
- 
-diff --git a/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_1.c b/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_1.c
-new file mode 100644
-index 00000000000..ab68d6e8482
---- /dev/null
-+++ b/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_1.c
-@@ -0,0 +1,6 @@
-+/* { dg-do compile } */
-+/* { dg-options "-fsanitize=shadow-call-stack -fno-exceptions" } */
-+
-+int i;
-+
-+/* { dg-error "'-fsanitize=shadow-call-stack' requires '-ffixed-x18'" "" {target "aarch64*-*-*" } 0 } */
-diff --git a/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_2.c b/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_2.c
-new file mode 100644
-index 00000000000..b5139a24559
---- /dev/null
-+++ b/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_2.c
-@@ -0,0 +1,6 @@
-+/* { dg-do compile } */
-+/* { dg-options "-fsanitize=shadow-call-stack -ffixed-x18 -fexceptions" } */
-+
-+int i;
-+
-+/* { dg-error "'-fsanitize=shadow-call-stack' requires '-fno-exceptions'" "" {target "aarch64*-*-*" } 0 } */
-diff --git a/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_3.c b/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_3.c
-new file mode 100644
-index 00000000000..f7e7108af8c
---- /dev/null
-+++ b/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_3.c
-@@ -0,0 +1,45 @@
-+/* Testing shadow call stack.  */
-+/* scs_push: str x30, [x18], #8 */
-+/* scs_pop: ldr x30, [x18, #-8]! */
-+/* { dg-do compile } */
-+/* { dg-options "-O2 -fsanitize=shadow-call-stack -ffixed-x18 -fno-exceptions" } */
-+
-+int foo (int);
-+
-+/* function not use x30.  */
-+int func1 (void)
-+{
-+  return 0;
-+}
-+
-+/* function use x30.  */
-+int func2 (void)
-+{
-+  /* scs push */
-+  asm volatile ("":::"x30");
-+
-+  return 0;
-+  /* scs pop */
-+}
-+
-+/* sibcall.  */
-+int func3 (int a, int b)
-+{
-+  /* scs push */
-+  asm volatile ("":::"x30");
-+
-+  return foo (a+b);
-+  /* scs pop */
-+}
-+
-+/* eh_return.  */
-+int func4 (long offset, void *handler)
-+{
-+  /* Do not emit scs push/pop */
-+  asm volatile ("":::"x30");
-+
-+  __builtin_eh_return (offset, handler);
-+}
-+
-+/* { dg-final { scan-assembler-times "str\tx30, \\\[x18\\\], \[#|$\]?8" 2 } } */
-+/* { dg-final { scan-assembler-times "ldr\tx30, \\\[x18, \[#|$\]?-8\\\]!" 2 } } */
-diff --git a/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_4.c b/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_4.c
-new file mode 100644
-index 00000000000..251b37b50ec
---- /dev/null
-+++ b/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_4.c
-@@ -0,0 +1,20 @@
-+/* Testing the disable of shadow call stack.  */
-+/* scs_push: str x30, [x18], #8 */
-+/* scs_pop: ldr x30, [x18, #-8]! */
-+/* { dg-do compile } */
-+/* { dg-options "-O2 -fno-omit-frame-pointer -fsanitize=shadow-call-stack -ffixed-x18 -fno-exceptions" } */
-+
-+int foo (int);
-+
-+/* function disable shadow call stack.  */
-+int __attribute__((no_sanitize("shadow-call-stack"))) func1 (void)
-+{
-+  asm volatile ("":::"x30");
-+
-+  return 0;
-+}
-+
-+/* { dg-final { scan-assembler-not "str\tx30, \\\[x18\\\], \[#|$\]?8" } } */
-+/* { dg-final { scan-assembler-not "ldr\tx30, \\\[x18, \[#|$\]?-8\\\]!" } } */
-+/* { dg-final { scan-assembler-times "stp\tx29, x30, \\\[sp, -\[0-9\]+\\\]!" 1 } } */
-+/* { dg-final { scan-assembler-times "ldp\tx29, x30, \\\[sp\\\], \[0-9\]+" 1 } } */
-diff --git a/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_5.c b/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_5.c
-new file mode 100644
-index 00000000000..a59e36815c7
---- /dev/null
-+++ b/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_5.c
-@@ -0,0 +1,18 @@
-+/* Verify:
-+     * -fno-omit-frame-pointer -fsanitize=shadow-call-stack -fno-exceptions -ffixed-x18.
-+     * without outgoing.
-+     * total frame size <= 512 but > 256.
-+     * callee-saved reg: x29, x30.
-+     * optimized code should use "stp	x29, x30, [sp]" to save frame chain.
-+     * optimized code should use "ldr	x29, [sp]" to restore x29 only.  */
-+
-+/* { dg-do compile } */
-+/* { dg-options "-O2 -fno-omit-frame-pointer -fsanitize=shadow-call-stack -fno-exceptions -ffixed-x18 --save-temps" } */
-+
-+#include "test_frame_common.h"
-+
-+t_frame_pattern (func1, 400, )
-+
-+/* { dg-final { scan-assembler-times "stp\tx29, x30, \\\[sp]" 1 } } */
-+/* { dg-final { scan-assembler "ldr\tx29, \\\[sp\\\]" } } */
-+
-diff --git a/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_6.c b/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_6.c
-new file mode 100644
-index 00000000000..776d8739443
---- /dev/null
-+++ b/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_6.c
-@@ -0,0 +1,18 @@
-+/* Verify:
-+     * -fomit-frame-pointer -fsanitize=shadow-call-stack -fno-exceptions -ffixed-x18.
-+     * without outgoing.
-+     * total frame size <= 256.
-+     * callee-saved reg: x30 only.
-+     * optimized code should use "str   x30, [sp]" to save x30 in prologue.
-+     * optimized code should not restore x30 in epilogue.  */
-+
-+/* { dg-do compile } */
-+/* { dg-options "-O2 -fomit-frame-pointer -fsanitize=shadow-call-stack -fno-exceptions -ffixed-x18 --save-temps" } */
-+
-+#include "test_frame_common.h"
-+
-+t_frame_pattern (func1, 200, )
-+
-+/* { dg-final { scan-assembler-times "str\tx30, \\\[sp]" 1 } } */
-+/* { dg-final { scan-assembler-not "ld\[r\|p\]\tx30, \\\[sp" } } */
-+
-diff --git a/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_7.c b/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_7.c
-new file mode 100644
-index 00000000000..a25ccfdfb06
---- /dev/null
-+++ b/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_7.c
-@@ -0,0 +1,18 @@
-+/* Verify:
-+     * -fomit-frame-pointer -fsanitize=shadow-call-stack -fno-exceptions -ffixed-x18.
-+     * without outgoing.
-+     * total frame size <= 256.
-+     * callee-saved reg: x19, x30.
-+     * optimized code should use "stp   x19, x30, [sp, -x]!" to save x19, x30 in prologue.
-+     * optimized code should use "ldr   x19, [sp], x" to restore x19 only.  */
-+
-+/* { dg-do compile } */
-+/* { dg-options "-O2 -fomit-frame-pointer -fsanitize=shadow-call-stack -fno-exceptions -ffixed-x18 --save-temps" } */
-+
-+#include "test_frame_common.h"
-+
-+t_frame_pattern (func1, 200, "x19")
-+
-+/* { dg-final { scan-assembler-times "stp\tx19, x30, \\\[sp, -\[0-9\]+\\\]!" 1 } } */
-+/* { dg-final { scan-assembler "ldr\tx19, \\\[sp\\\], \[0-9\]+" } } */
-+
-diff --git a/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_8.c b/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_8.c
-new file mode 100644
-index 00000000000..32eeb52ca02
---- /dev/null
-+++ b/gcc/testsuite/gcc.target/aarch64/shadow_call_stack_8.c
-@@ -0,0 +1,24 @@
-+/* Verify:
-+     * -fomit-frame-pointer -fsanitize=shadow-call-stack -fno-exceptions -ffixed-x18.
-+     * without outgoing.
-+     * total frame <= 512 but > 256.
-+     * callee-saved reg: x19, x20, x30.
-+     * optimized code should use "stp   x19, x20, [sp, -x]!" to save x19, x20 in prologue.
-+     * optimized code should use "str	x30, [sp " to save x30 in prologue.
-+     * optimized code should use "ldp	x19, x20, [sp], x" to retore x19, x20 in epilogue.
-+     * optimized code should not restore x30 in epilogue.  */
-+
-+/* { dg-do compile } */
-+/* { dg-options "-O2 -fomit-frame-pointer -fsanitize=shadow-call-stack -fno-exceptions -ffixed-x18 --save-temps" } */
-+
-+int func1 (void)
-+{
-+  unsigned char a[200];
-+  __asm__ ("":::"x19","x20","x30");
-+  return 0;
-+}
-+
-+/* { dg-final { scan-assembler-times "stp\tx19, x20, \\\[sp, -\[0-9\]+\\\]!" 1 } } */
-+/* { dg-final { scan-assembler-times "str\tx30, \\\[sp" 1 } } */
-+/* { dg-final { scan-assembler "ldp\tx19, x20, \\\[sp\\\], \[0-9\]+" } } */
-+/* { dg-final { scan-assembler-not "ld\[r\|p\]\tx30, \\\[sp" } } */
-diff --git a/gcc/toplev.c b/gcc/toplev.c
-index e91f083f8ff..93d17ddbda1 100644
---- a/gcc/toplev.c
-+++ b/gcc/toplev.c
-@@ -1677,6 +1677,16 @@ process_options (bool no_backend)
-       flag_sanitize &= ~SANITIZE_HWADDRESS;
-     }
- 
-+  if (flag_sanitize & SANITIZE_SHADOW_CALL_STACK)
-+    {
-+      if (!targetm.have_shadow_call_stack)
-+	sorry ("%<-fsanitize=shadow-call-stack%> not supported "
-+	       "in current platform");
-+      else if (flag_exceptions)
-+	error_at (UNKNOWN_LOCATION, "%<-fsanitize=shadow-call-stack%> "
-+		  "requires %<-fno-exceptions%>");
-+    }
-+
-   HOST_WIDE_INT patch_area_size, patch_area_start;
-   parse_and_check_patch_area (flag_patchable_function_entry, false,
- 			      &patch_area_size, &patch_area_start);
--- 
-2.17.1
+> 
+> > -----Original Message-----
+> > From: Kees Cook <keescook@chromium.org>
+> > Sent: Wednesday, January 12, 2022 10:35 PM
+> > To: Lars-Peter Clausen <lars@metafoo.de>
+> > Cc: Kees Cook <keescook@chromium.org>; Hennerich, Michael
+> > <Michael.Hennerich@analog.com>; Jonathan Cameron <jic23@kernel.org>;
+> > linux-iio@vger.kernel.org; Tanislav, Cosmin <Cosmin.Tanislav@analog.com>;
+> > Jonathan Cameron <Jonathan.Cameron@huawei.com>; Linus Walleij
+> > <linus.walleij@linaro.org>; linux-kernel@vger.kernel.org; linux-
+> > hardening@vger.kernel.org
+> > Subject: [PATCH v2] iio: addac: ad74413r: Do not reference negative array
+> > offsets
+> > 
+> > [External]
+> > 
+> > Instead of aiming rx_buf at an invalid array-boundary-crossing location,
+> > just skip the first increment. Seen when building with -Warray-bounds:
+> > 
+> > drivers/iio/addac/ad74413r.c: In function 'ad74413r_update_scan_mode':
+> > drivers/iio/addac/ad74413r.c:843:22: warning: array subscript -4 is below
+> > array bounds of 'u8[16]' { aka 'unsigned char[16]'} [-Warray-bounds]
+> >   843 |         u8 *rx_buf = &st->adc_samples_buf.rx_buf[-1 *
+> > AD74413R_FRAME_SIZE];
+> >       |
+> > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/iio/addac/ad74413r.c:84:20: note: while referencing 'rx_buf'
+> >    84 |                 u8 rx_buf[AD74413R_FRAME_SIZE *
+> > AD74413R_CHANNEL_MAX];
+> >       |                    ^~~~~~
+> > 
+> > Cc: Lars-Peter Clausen <lars@metafoo.de>
+> > Cc: Michael Hennerich <Michael.Hennerich@analog.com>
+> > Cc: Jonathan Cameron <jic23@kernel.org>
+> > Cc: linux-iio@vger.kernel.org
+> > Fixes: fea251b6a5db ("iio: addac: add AD74413R driver")
+> > Reviewed-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> > v1: https://urldefense.com/v3/__https://lore.kernel.org/linux-
+> > hardening/20220105180214.2435001-1-
+> > keescook@chromium.org/__;!!A3Ni8CS0y2Y!oWs0KcGPANFn-
+> > L0qJPZgP47AQIYpBXJxg5LHiLDFGa_-SI2DwmSMzjgl3ehyu-8JYPgq$
+> > v2:
+> >  - Update commit Subject prefix
+> >  - add Reviewed-by
+> > ---
+> >  drivers/iio/addac/ad74413r.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/iio/addac/ad74413r.c b/drivers/iio/addac/ad74413r.c
+> > index 5271073bb74e..aba9a643a4ca 100644
+> > --- a/drivers/iio/addac/ad74413r.c
+> > +++ b/drivers/iio/addac/ad74413r.c
+> > @@ -840,7 +840,7 @@ static int ad74413r_update_scan_mode(struct iio_dev
+> > *indio_dev,
+> >  {
+> >  	struct ad74413r_state *st = iio_priv(indio_dev);
+> >  	struct spi_transfer *xfer = st->adc_samples_xfer;
+> > -	u8 *rx_buf = &st->adc_samples_buf.rx_buf[-1 *
+> > AD74413R_FRAME_SIZE];
+> > +	u8 *rx_buf = st->adc_samples_buf.rx_buf;
+> >  	u8 *tx_buf = st->adc_samples_tx_buf;
+> >  	unsigned int channel;
+> >  	int ret = -EINVAL;
+> > @@ -894,9 +894,10 @@ static int ad74413r_update_scan_mode(struct
+> > iio_dev *indio_dev,
+> > 
+> >  		spi_message_add_tail(xfer, &st->adc_samples_msg);
+> > 
+> > -		xfer++;
+> >  		tx_buf += AD74413R_FRAME_SIZE;
+> > -		rx_buf += AD74413R_FRAME_SIZE;
+> > +		if (xfer != st->adc_samples_xfer)
+> > +			rx_buf += AD74413R_FRAME_SIZE;
+> > +		xfer++;
+> >  	}
+> > 
+> >  	xfer->rx_buf = rx_buf;
+> > --
+> > 2.30.2  
+> 
 
