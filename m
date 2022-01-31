@@ -2,129 +2,131 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD73C433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 31 Jan 2022 21:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE4DC433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 31 Jan 2022 22:30:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358291AbiAaVet (ORCPT
+        id S233575AbiAaWat (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 31 Jan 2022 16:34:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50740 "EHLO
+        Mon, 31 Jan 2022 17:30:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358072AbiAaVes (ORCPT
+        with ESMTP id S232520AbiAaWat (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 31 Jan 2022 16:34:48 -0500
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D764C061714
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Jan 2022 13:34:48 -0800 (PST)
-Received: by mail-lf1-x12c.google.com with SMTP id i34so9339904lfv.2
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Jan 2022 13:34:48 -0800 (PST)
+        Mon, 31 Jan 2022 17:30:49 -0500
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 579A6C061714
+        for <linux-hardening@vger.kernel.org>; Mon, 31 Jan 2022 14:30:49 -0800 (PST)
+Received: by mail-pl1-x62b.google.com with SMTP id k17so13864519plk.0
+        for <linux-hardening@vger.kernel.org>; Mon, 31 Jan 2022 14:30:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fY293kK68vvdcex/3vE1UuGsMyzMf3hMzbBW0CECXWo=;
-        b=sbuqsKlKtbosk9vnW8XyVA7uztBNuHZfZtcNYRiovUgAycS22JZkJ7MxOjZiMGYokE
-         xhXCNkbCRNT88OXvTMndIJGfh2RMckU46x0hrSqGUrxA1AJFOX8bMhXN3oqNP8+elCU0
-         lvDAlF8N3I1u2nhtJaNaqw50gxUEox/7eGGrd2H8M1MqUxiEK4xBNMrtaG72GFm6gQLD
-         qpV2iT3ZgC3M5XpLy/d3zAQeGz90PRYlxIDLCQX2VGb4CyN+fEuNTon7uZ+TdCW3h+Lm
-         bOazphReVxD2+MfnXlHtsZydG2omK43C943jxFBmLXKyDFoYPGqR1UCZxsGliywnVtxc
-         xU9Q==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=x0hUswGR/XVoEKkZMJv786HYuroqjOV4Xzoz88cK1Uk=;
+        b=OYXJepQNOCqvgdd3Fq9VMDn+C0UV4o99poBGAYKeB19qtEicUSPDMLhUo7AgqSnjJc
+         4UZhVvPs0zLZJXciTb3RlYcIJc2MQGVIuNcl4RopCunnxeArujE614mC+HyLqurulI1O
+         mi70bn2BUJ2V2Ga0lZhWNVotQyHRmkfz9KXkk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fY293kK68vvdcex/3vE1UuGsMyzMf3hMzbBW0CECXWo=;
-        b=KrKndx8Mk8UXbAAK50586huZM1uLPwhlxPx9Sum2W+1R4Ifm73hQsNK02M6pbRiXO+
-         zS8ym5UybNAV2l3moZuHG/yo4hTNnSotMRuCUc1YO0uYp0DIuNzukkO7cC2VnHnKvz/n
-         8Z1KtxaIn6lFP31+xhdKVpKWwSytvAbo0zAWe5S+nlRdaMlz3LSGgC5Z2rUKnvOB/cmp
-         uKQ3R44ECSCzSOgAe14UmY3o3mZ7IqDLY2NqpApBgrouCSXnvNQSd5/BGYhta0HxNX04
-         uOrFQV/hey2Ve5vpTmToj6wbMTXY4nJetQD0BIC8GKI8eU+LA/Z8wTCTg9nnDQzCacPn
-         TUAQ==
-X-Gm-Message-State: AOAM532MrkqlX/juTbz5hYJ+C/xt9LQT5GURlWO23Z5b7vxMVL8sEzrj
-        sKN36Z3IOZl1d4vFyQVgMKll9uVODeB4gLOfyHnmJA==
-X-Google-Smtp-Source: ABdhPJzxDldmaLxKkITPTgpnzqLDLhm+/u9GBYoFF9PlNaTLN1bwfw05dn5ekB7WpU3SJDjImTN/TnaMqBt9M4u2EEc=
-X-Received: by 2002:ac2:4e10:: with SMTP id e16mr17500223lfr.444.1643664886497;
- Mon, 31 Jan 2022 13:34:46 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=x0hUswGR/XVoEKkZMJv786HYuroqjOV4Xzoz88cK1Uk=;
+        b=Ud2aJjY2HpYNLqkF+HFF8MycNRw5sqnmXktRlhUkgt/I+lvfz45FMB4OPh+67Kj1oy
+         diQ7ncK+wq2ev06QQtLq7TqiAl07zKb4zfxffV4cUoaMgG3lsoDRy6irSA2eGNE+Ii7T
+         rEK0E1qFtFRvoEU7py2cmYFVSwAuTYj4ZknFb9urTiv+i25zK2qTqP79N/VXY+1/vGgS
+         yltirjcXH5en6qzWGmkcYXFkp6M4nn4OHFMUmCfI1RzR7QnoaOYS2PmO2XEf6lgxKHYH
+         lt9hTcUGH4ZH0z1yCwV7FsHfqjLdr5VpC5rIUzz+Gk1iQrbL9yXQ6yBS1wqTQ3DEuxnj
+         WiqQ==
+X-Gm-Message-State: AOAM532QJNVvB7r1ahhLOex2ws/uTiKM3tzR6djzkwMZKMsGK1GOn60W
+        MvpJW4dm3dg40a+D+AdWtiXk35YGebeIaw==
+X-Google-Smtp-Source: ABdhPJxzFY+CO4aJ/kK3+6cjDtA3vW2adjbpAGX4TrRwBbF4gSzc8F3hLJ0ZIeovN8MPB8tY7xJ/rg==
+X-Received: by 2002:a17:90b:3810:: with SMTP id mq16mr35568804pjb.95.1643668248891;
+        Mon, 31 Jan 2022 14:30:48 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c8sm12905815pfv.57.2022.01.31.14.30.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Jan 2022 14:30:48 -0800 (PST)
+Date:   Mon, 31 Jan 2022 14:30:47 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     ci_notify@linaro.org
+Cc:     linaro-kernel@lists.linaro.org, arnd@linaro.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [TCWG CI] Regression caused by linux: Makefile: Enable
+ -Warray-bounds
+Message-ID: <202201311410.EA1999F5@keescook>
+References: <809699127.18214.1643504444637@jenkins.jenkins>
 MIME-Version: 1.0
-References: <20220130181616.420092-1-keescook@chromium.org>
- <CAKwvOdmETY-j9B9vms4d31kAc0xb1yE902KijiH2baY5-M=fLQ@mail.gmail.com> <202201311306.0FC6E303@keescook>
-In-Reply-To: <202201311306.0FC6E303@keescook>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 31 Jan 2022 13:34:34 -0800
-Message-ID: <CAKwvOdnXKfhJQimh6rLe6nU2NrrovbKDGqujinqptoyHyiTKYQ@mail.gmail.com>
-Subject: Re: [PATCH] fortify: Update compile-time tests for Clang 14
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <809699127.18214.1643504444637@jenkins.jenkins>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jan 31, 2022 at 1:09 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, Jan 31, 2022 at 11:09:27AM -0800, Nick Desaulniers wrote:
-> > On Sun, Jan 30, 2022 at 10:16 AM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > Clang 14 introduces support for compiletime_assert(). Update the
-> > > compile-time warning regex to catch Clang's variant of the warning text
-> > > in preparation for Clang supporting CONFIG_FORTIFY_SOURCE.
-> >
-> > https://twitter.com/ifosteve/status/1190348262500421634?lang=en
-> > error messages can change over time. More thoughts below.
->
-> Sure, but I don't want the compile-time checks to silently regress,
-> which requires looking specifically for the error.
->
-> > > Cc: Nathan Chancellor <nathan@kernel.org>
-> > > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > > Cc: linux-hardening@vger.kernel.org
-> > > Cc: llvm@lists.linux.dev
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > > I'm splitting this patch out of the main Clang FORTIFY enabling patch.
-> > > ---
-> > >  scripts/test_fortify.sh | 8 ++++++--
-> > >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/scripts/test_fortify.sh b/scripts/test_fortify.sh
-> > > index a4da365508f0..c2688ab8281d 100644
-> > > --- a/scripts/test_fortify.sh
-> > > +++ b/scripts/test_fortify.sh
-> > > @@ -46,8 +46,12 @@ if "$@" -Werror -c "$IN" -o "$OUT".o 2> "$TMP" ; then
-> > >                 status="warning: unsafe ${FUNC}() usage lacked '$WANT' symbol in $IN"
-> > >         fi
-> > >  else
-> > > -       # If the build failed, check for the warning in the stderr (gcc).
-> > > -       if ! grep -q -m1 "error: call to .\b${WANT}\b." "$TMP" ; then
-> > > +       # If the build failed, check for the warning in the stderr.
-> > > +       # GCC:
-> > > +       # ./include/linux/fortify-string.h:316:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
-> > > +       # Clang 14:
-> > > +       # ./include/linux/fortify-string.h:316:4: error: call to __write_overflow_field declared with 'warning' attribute: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror,-Wattribute-warning]
-> > > +       if ! grep -Eq -m1 "error: call to .?\b${WANT}\b.?" "$TMP" ; then
-> >
-> > Doesn't this depend on -Werror being set? I guess it did so before
-> > hand, too, but couldn't I unset CONFIG_WERROR then this check would
-> > still fail (since instead of `error:` we'd have `warning:`)? If we
-> > used __attribute__((error(""))) then this would always be an error.
-> > Right now, it is only because -Werror is set promoting the warning
-> > diagnostic to an error.
->
-> Right, see earlier up in the script. "-Werror" is explicitly set:
->
-> line 40: if "$@" -Werror -c "$IN" -o "$OUT".o 2> "$TMP" ; then
+On Sun, Jan 30, 2022 at 01:00:43AM +0000, ci_notify@linaro.org wrote:
+> [TCWG CI] Regression caused by linux: Makefile: Enable -Warray-bounds:
+> commit d4e0dad4a0cd00d1518f2105ccbfee17e2aa44a7
+> Author: Kees Cook <keescook@chromium.org>
+> 
+>     Makefile: Enable -Warray-bounds
+> [...]
+> # 00:00:53 ./arch/arm/include/asm/io.h:113:9: error: array subscript 0 is outside array bounds of ‘const volatile void[0]’ [-Werror=array-bounds]
 
-Yep, I missed that.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Thanks for the report!
 
->
-> --
-> Kees Cook
+Would it be possible to include the "inlined from" details in the email
+summaries? Just getting a header file doesn't say where a header-defined
+inline is being used.
 
+For example, extracting from the build log, I can see more:
 
+> 00:00:53 In file included from ./include/linux/io.h:13,
+> 00:00:53                  from arch/arm/mach-cns3xxx/pm.c:8:
+> 00:00:53 In function ‘__raw_readl’,
+> 00:00:53     inlined from ‘cns3xxx_pwr_clk_en’ at arch/arm/mach-cns3xxx/pm.c:17:12:
+> 00:00:53 ./arch/arm/include/asm/io.h:113:9: error: array subscript 0 is outside array bounds of ‘const volatile void[0]’ [-Werror=array-bounds]
+> 00:00:53   113 |         asm volatile("ldr %0, %1"
+> 00:00:53       |         ^~~
+
+Looks like something sees a "void" type... this smells like a compiler
+bug. I haven't been able to reproduce this warning yet.
+
+> [...]
+> git clone https://git.linaro.org/toolchain/jenkins-scripts
+> 
+> # Fetch manifests and test.sh script
+> mkdir -p artifacts/manifests
+> curl -o artifacts/manifests/build-baseline.sh https://ci.linaro.org/job/tcwg_kernel-gnu-bisect-gnu-master-arm-next-allmodconfig/45/artifact/artifacts/manifests/build-baseline.sh --fail
+> curl -o artifacts/manifests/build-parameters.sh https://ci.linaro.org/job/tcwg_kernel-gnu-bisect-gnu-master-arm-next-allmodconfig/45/artifact/artifacts/manifests/build-parameters.sh --fail
+> curl -o artifacts/test.sh https://ci.linaro.org/job/tcwg_kernel-gnu-bisect-gnu-master-arm-next-allmodconfig/45/artifact/artifacts/test.sh --fail
+> chmod +x artifacts/test.sh
+> 
+> # Reproduce the baseline build (build all pre-requisites)
+> ./jenkins-scripts/tcwg_kernel-build.sh @@ artifacts/manifests/build-baseline.sh
+
+I couldn't find the compiler version anywhere in here. Could you include
+the compiler and linker --version output in the build logs too?
+
+Maybe something in tcwg_kernel-build.sh near here, to get either CC or
+CROSS_COMPILE + HOSTCC and ld_opt's --version output:
+
+    local opts
+    opts="CC=$(pwd)/bin/${rr[target]}-cc $ld_opt SUBLEVEL=0 EXTRAVERSION=-bisect"
+    if [ x"${rr[target]}" != x"$(uname -m)" ]; then
+	opts="$opts ARCH=$(print_kernel_target ${rr[target]})"
+	opts="$opts CROSS_COMPILE=$(print_gnu_target ${rr[target]})-"
+	opts="$opts HOSTCC=gcc"
+    fi
+
+It looks like maybe this is built under Ubuntu bionic? Or maybe focal? I
+don't see the warning with any GCC version I've tested with: 11.2.0
+(impish), 10.3.0 (hirsute), 9.3.0 (focal), nor 7.5.0 (bionic).
+
+Do you have some further hints about this?
+
+Thanks!
 
 -- 
-Thanks,
-~Nick Desaulniers
+Kees Cook
