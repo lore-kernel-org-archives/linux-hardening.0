@@ -2,125 +2,227 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04B2C433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 31 Jan 2022 16:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CB1C433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 31 Jan 2022 17:00:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380322AbiAaQ0e (ORCPT
+        id S1380230AbiAaRAE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 31 Jan 2022 11:26:34 -0500
-Received: from foss.arm.com ([217.140.110.172]:34560 "EHLO foss.arm.com"
+        Mon, 31 Jan 2022 12:00:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:36224 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1380326AbiAaQ0a (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 31 Jan 2022 11:26:30 -0500
+        id S1380092AbiAaRAD (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Mon, 31 Jan 2022 12:00:03 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC580ED1;
-        Mon, 31 Jan 2022 08:26:29 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4116FED1;
+        Mon, 31 Jan 2022 09:00:03 -0800 (PST)
 Received: from localhost (unknown [10.32.98.88])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B05143F73B;
-        Mon, 31 Jan 2022 08:26:27 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A94143F73B;
+        Mon, 31 Jan 2022 09:00:01 -0800 (PST)
 From:   Richard Sandiford <richard.sandiford@arm.com>
 To:     Dan Li <ashimida@linux.alibaba.com>
-Mail-Followup-To: Dan Li <ashimida@linux.alibaba.com>,Ard Biesheuvel <ardb@kernel.org>,  gcc-patches@gcc.gnu.org,  Richard Earnshaw <richard.earnshaw@arm.com>,  marcus.shawcroft@arm.com,  Kyrylo Tkachov <kyrylo.tkachov@arm.com>,  hp@gcc.gnu.org,  Nick Desaulniers <ndesaulniers@google.com>,  nsz@gcc.gnu.org,  pageexec@gmail.com,  qinzhao@gcc.gnu.org,  linux-hardening@vger.kernel.org,  Peter Collingbourne <pcc@google.com>,  Sami Tolvanen <samitolvanen@google.com>,  Kees Cook <keescook@chromium.org>, richard.sandiford@arm.com
-Cc:     Ard Biesheuvel <ardb@kernel.org>, gcc-patches@gcc.gnu.org,
-        Richard Earnshaw <richard.earnshaw@arm.com>,
-        marcus.shawcroft@arm.com, Kyrylo Tkachov <kyrylo.tkachov@arm.com>,
-        hp@gcc.gnu.org, Nick Desaulniers <ndesaulniers@google.com>,
-        nsz@gcc.gnu.org, pageexec@gmail.com, qinzhao@gcc.gnu.org,
-        linux-hardening@vger.kernel.org,
-        Peter Collingbourne <pcc@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PING^3][PATCH,v2,1/1,AARCH64][PR102768] aarch64: Add compiler support for Shadow Call Stack
-References: <20211102070616.119780-1-ashimida@linux.alibaba.com>
-        <81d54b71-7c9c-47ef-ac8d-72aae46cd4ee@linux.alibaba.com>
-        <mptk0euk42w.fsf@arm.com>
-        <a9daf6bf-94f2-0c5f-b9aa-7fb69781c9d5@linux.alibaba.com>
-        <mpto840kti9.fsf@arm.com>
-        <3ae4a533-352b-f3e3-27b3-9386df5f56c3@linux.alibaba.com>
-        <61acb6f4-9a86-ddad-e48c-c68e4bcb08f1@linux.alibaba.com>
-        <CAMj1kXG5oSo0Z+bEjExaaG6Y942R7fiL0fDKH59RETS=G4jDoA@mail.gmail.com>
-        <3f2027af-bbe0-f46f-2ceb-bffc4bbbf70e@linux.alibaba.com>
-Date:   Mon, 31 Jan 2022 16:26:26 +0000
-In-Reply-To: <3f2027af-bbe0-f46f-2ceb-bffc4bbbf70e@linux.alibaba.com> (Dan
-        Li's message of "Wed, 26 Jan 2022 02:35:17 -0800")
-Message-ID: <mptfsp3lvm5.fsf@arm.com>
+Mail-Followup-To: Dan Li <ashimida@linux.alibaba.com>,gcc-patches@gcc.gnu.org,  richard.earnshaw@arm.com,  marcus.shawcroft@arm.com,  kyrylo.tkachov@arm.com,  hp@gcc.gnu.org,  ndesaulniers@google.com,  nsz@gcc.gnu.org,  pageexec@gmail.com,  qinzhao@gcc.gnu.org,  linux-hardening@vger.kernel.org, richard.sandiford@arm.com
+Cc:     gcc-patches@gcc.gnu.org, richard.earnshaw@arm.com,
+        marcus.shawcroft@arm.com, kyrylo.tkachov@arm.com, hp@gcc.gnu.org,
+        ndesaulniers@google.com, nsz@gcc.gnu.org, pageexec@gmail.com,
+        qinzhao@gcc.gnu.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] [PATCH,v3,1/1,AARCH64][PR102768] aarch64: Add compiler support for Shadow Call Stack
+References: <20220129150035.114602-1-ashimida@linux.alibaba.com>
+Date:   Mon, 31 Jan 2022 17:00:00 +0000
+In-Reply-To: <20220129150035.114602-1-ashimida@linux.alibaba.com> (Dan Li's
+        message of "Sat, 29 Jan 2022 07:00:35 -0800")
+Message-ID: <mptwnifkfhr.fsf@arm.com>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Thanks for the discussion and sorry for the slow reply, was out most of
-last week.
-
 Dan Li <ashimida@linux.alibaba.com> writes:
-> Thanks, Ard,
+> Shadow Call Stack can be used to protect the return address of a
+> function at runtime, and clang already supports this feature[1].
 >
-> On 1/26/22 00:10, Ard Biesheuvel wrote:
->> On Wed, 26 Jan 2022 at 08:53, Dan Li <ashimida@linux.alibaba.com> wrote:
->>>
->>> Hi, all,
->>>
->>> Sorry for bothering.
->>>
->>> I'm trying to commit aarch64 scs code to the gcc and there is an issue
->>> that I'm not sure about, could someone give me some suggestions?
->>> (To avoid noise, I did't cc PING^3 [1] to the kernel mail list :) )
->>>
->>> When clang enables scs, the following instructions are usually generated:
->>>
->>> str     x30, [x18], 8
->>> ldp     x29, x30, [sp], 16
->>> ......
->>> ldp     x29, x30, [sp], 16              ## x30 pop
->>> ldr     x30, [x18, -8]!                 ## x30 pop again
->>> ret
->>>
->>> The x30 register is popped twice here, Richard suggested that we can
->>> omit the first x30 pop here.
->>>
->>> AFAICT, it seems fine and also safe for SCS. But I'm not sure if I'm
->>> missing something with the kernel, could someone give some suggestions?
->>>
->>> The previous discussion can be found here [1].
->>>
->>> [1] https://gcc.gnu.org/pipermail/gcc-patches/2022-January/589257.html
->>>
->> 
->> As was pointed out in the discussion, binary patching is in fact a
->> concern for the Linux kernel. E.g., Android uses generic binary
->> builds, but we would like to be able to switch between pointer
->> authentication and shadow call stack at boot time, rather than always
->> support both, and take the SCS performance hit on systems that
->> implement PAC as well.
->> 
->> However, it seems more straight-forward to patch PACIASP and AUTIASP
->> instructions into SCS push/pop instructions rather than the other way
->> around, as we can force the use of these exact opcodes [in the NOP
->> space]), as well as rely on existing unwind annotations to locate any
->> such instruction in the binary.
->> 
+> To enable SCS in user mode, in addition to compiler, other support
+> is also required (as discussed in [2]). This patch only adds basic
+> support for SCS from the compiler side, and provides convenience
+> for users to enable SCS.
 >
-> Well, then I think I don't need to submit a kernel patch to
-> enable SCS for gcc :)
+> For linux kernel, only the support of the compiler is required.
 >
-> BTW:
-> Do we have a plan to submit patches of dynamic patch PAC into
-> the kernel recently?
+> [1] https://clang.llvm.org/docs/ShadowCallStack.html
+> [2] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=102768
 >
->> So omitting the load of X30 from the ordinary stack seems fine to me.
+> Signed-off-by: Dan Li <ashimida@linux.alibaba.com>
+>
+> gcc/ChangeLog:
+>
+> 	* config/aarch64/aarch64.c (aarch64_layout_frame):
+> 	Change callee_adjust when scs is enabled.
+> 	(aarch64_restore_callee_saves): Avoid pop x30 twice
+> 	when scs is enabled.
+> 	(aarch64_expand_prologue): Push x30 onto SCS before it's
+> 	pushed onto stack.
+> 	(aarch64_expand_epilogue): Pop x30 frome SCS, while
+> 	preventing it from being popped from the regular stack again.
+> 	(aarch64_override_options_internal): Add SCS compile option check.
+> 	(TARGET_HAVE_SHADOW_CALL_STACK): New hook.
+> 	* config/aarch64/aarch64.h (struct GTY): Add is_scs_enabled.
+> 	* config/aarch64/aarch64.md (scs_push):  New template.
+> 	(scs_pop): Likewise.
+> 	* doc/invoke.texi: Document -fsanitize=shadow-call-stack.
+> 	* doc/tm.texi: Regenerate.
+> 	* doc/tm.texi.in: Add hook have_shadow_call_stack.
+> 	* flag-types.h (enum sanitize_code):
+> 	Add SANITIZE_SHADOW_CALL_STACK.
+> 	* opts.c: Add shadow-call-stack.
+> 	* target.def: New hook.
+> 	* toplev.c (process_options): Add SCS compile option check.
+>
+> gcc/testsuite/ChangeLog:
+>
+> 	* gcc.target/aarch64/shadow_call_stack_1.c: New test.
+> 	* gcc.target/aarch64/shadow_call_stack_2.c: New test.
+> 	* gcc.target/aarch64/shadow_call_stack_3.c: New test.
+> 	* gcc.target/aarch64/shadow_call_stack_4.c: New test.
+> 	* gcc.target/aarch64/shadow_call_stack_5.c: New test.
+> 	* gcc.target/aarch64/shadow_call_stack_6.c: New test.
+> 	* gcc.target/aarch64/shadow_call_stack_7.c: New test.
+> 	* gcc.target/aarch64/shadow_call_stack_8.c: New test.
+> ---
+> V3:
+> - Change scs_push/pop to standard move patterns.
+> - Optimize scs_pop to avoid pop x30 twice when shadow stack is enabled.
+>
+>  gcc/config/aarch64/aarch64.c                  | 66 +++++++++++++++++--
+>  gcc/config/aarch64/aarch64.h                  |  4 ++
+>  gcc/config/aarch64/aarch64.md                 | 10 +++
+>  gcc/doc/invoke.texi                           | 30 +++++++++
+>  gcc/doc/tm.texi                               |  5 ++
+>  gcc/doc/tm.texi.in                            |  2 +
+>  gcc/flag-types.h                              |  2 +
+>  gcc/opts.c                                    |  1 +
+>  gcc/target.def                                |  8 +++
+>  .../gcc.target/aarch64/shadow_call_stack_1.c  |  6 ++
+>  .../gcc.target/aarch64/shadow_call_stack_2.c  |  6 ++
+>  .../gcc.target/aarch64/shadow_call_stack_3.c  | 45 +++++++++++++
+>  .../gcc.target/aarch64/shadow_call_stack_4.c  | 20 ++++++
+>  .../gcc.target/aarch64/shadow_call_stack_5.c  | 18 +++++
+>  .../gcc.target/aarch64/shadow_call_stack_6.c  | 18 +++++
+>  .../gcc.target/aarch64/shadow_call_stack_7.c  | 18 +++++
+>  .../gcc.target/aarch64/shadow_call_stack_8.c  | 24 +++++++
+>  gcc/toplev.c                                  | 10 +++
+>  18 files changed, 289 insertions(+), 4 deletions(-)
+>  create mode 100644 gcc/testsuite/gcc.target/aarch64/shadow_call_stack_1.c
+>  create mode 100644 gcc/testsuite/gcc.target/aarch64/shadow_call_stack_2.c
+>  create mode 100644 gcc/testsuite/gcc.target/aarch64/shadow_call_stack_3.c
+>  create mode 100644 gcc/testsuite/gcc.target/aarch64/shadow_call_stack_4.c
+>  create mode 100644 gcc/testsuite/gcc.target/aarch64/shadow_call_stack_5.c
+>  create mode 100644 gcc/testsuite/gcc.target/aarch64/shadow_call_stack_6.c
+>  create mode 100644 gcc/testsuite/gcc.target/aarch64/shadow_call_stack_7.c
+>  create mode 100644 gcc/testsuite/gcc.target/aarch64/shadow_call_stack_8.c
+>
+> diff --git a/gcc/config/aarch64/aarch64.c b/gcc/config/aarch64/aarch64.c
+> index 699c105a42a..461c205010e 100644
+> --- a/gcc/config/aarch64/aarch64.c
+> +++ b/gcc/config/aarch64/aarch64.c
+> @@ -79,6 +79,7 @@
+>  #include "tree-ssa-loop-niter.h"
+>  #include "fractional-cost.h"
+>  #include "rtlanal.h"
+> +#include "asan.h"
+>  
+>  /* This file should be included last.  */
+>  #include "target-def.h"
+> @@ -7478,10 +7479,31 @@ aarch64_layout_frame (void)
+>    frame.sve_callee_adjust = 0;
+>    frame.callee_offset = 0;
+>  
+> +  /* Shadow call stack only deal with functions where the LR is pushed
 
-OK, thanks.  Let's go with that for now then.  There would still be
-time to change our minds before GCC 12 is released, if anyone feels
-that patching SCS code would be useful.
+Typo: s/deal/deals/
 
-Reading it back, I think my previous message came across as sounding
-like a complaint against binary patching, which wasn't the case at all.
-I think it would be fine to support patching, even if it was just for a
-single vendor rather than expected to be a common case.  It's just that,
-if we did want to support it, we'd need to document it as a requirement
-(at least within GCC) and change the implementation accordingly.
+> +     onto the stack and without specifying the "no_sanitize" attribute
+> +     with the argument "shadow-call-stack".  */
+> +  frame.is_scs_enabled
+> +    = (!crtl->calls_eh_return
+> +       && (sanitize_flags_p (SANITIZE_SHADOW_CALL_STACK)
+> +	   && known_ge (cfun->machine->frame.reg_offset[LR_REGNUM], 0)));
+
+Nit, but normal GCC style would be to use a single chain of &&s here:
+
+  frame.is_scs_enabled
+    = (!crtl->calls_eh_return
+       && sanitize_flags_p (SANITIZE_SHADOW_CALL_STACK)
+       && known_ge (cfun->machine->frame.reg_offset[LR_REGNUM], 0));
+
+> +
+> +  /* When shadow call stack is enabled, the scs_pop in the epilogue will
+> +     restore x30, and we don't need to pop x30 again in the traditional
+> +     way.  At this time, if candidate2 is x30, we need to adjust
+> +     max_push_offset to 256 to ensure that the offset meets the requirements
+> +     of emit_move_insn.  Similarly, if candidate1 is x30, we need to set
+> +     max_push_offset to 0, because x30 is not popped up at this time, so
+> +     callee_adjust cannot be adjusted.  */
+>    HOST_WIDE_INT max_push_offset = 0;
+>    if (frame.wb_candidate2 != INVALID_REGNUM)
+> -    max_push_offset = 512;
+> -  else if (frame.wb_candidate1 != INVALID_REGNUM)
+> +    {
+> +      if (frame.is_scs_enabled && frame.wb_candidate2 == R30_REGNUM)
+> +	max_push_offset = 256;
+> +      else
+> +	max_push_offset = 512;
+> +    }
+> +  else if ((frame.wb_candidate1 != INVALID_REGNUM)
+> +	   && !(frame.is_scs_enabled && frame.wb_candidate1 == R30_REGNUM))
+>      max_push_offset = 256;
+>    HOST_WIDE_INT const_size, const_outgoing_args_size, const_fp_offset;
+
+Maybe we should instead add separate fields for wb_push_candidate[12] and
+wb_pop_candidate[12].  The pop candidates would start out the same as the
+push candidates, but R30_REGNUM would get replaced with INVALID_REGNUM
+for SCS.
+
+Admittedly, suppressing the restore of x30 is turning out to be a bit
+more difficult than I'd realised :-/
+
+> […]
+> diff --git a/gcc/config/aarch64/aarch64.h b/gcc/config/aarch64/aarch64.h
+> index 2792bb29adb..1610a4fd74c 100644
+> --- a/gcc/config/aarch64/aarch64.h
+> +++ b/gcc/config/aarch64/aarch64.h
+> @@ -916,6 +916,10 @@ struct GTY (()) aarch64_frame
+>    unsigned spare_pred_reg;
+>  
+>    bool laid_out;
+> +
+> +  /* Nonzero if shadow call stack should be enabled for the current
+> +     function, otherwise return FALSE.  */
+
+“True” seems better than “Nonzero” given that this is a bool.
+(A lot of GCC bools were originally ints, which is why “nonzero”
+still appears in non-obvious places.)
+
+I think we can just drop “otherwise return FALSE”: “return” doesn't
+seem appropriate here, given that it's a variable.
+
+Looks great otherwise.  Thanks especially for testing the corner cases. :-)
+
+One minor thing:
+
+> +/* { dg-final { scan-assembler-times "str\tx30, \\\[x18\\\], \[#|$\]?8" 2 } } */
+> +/* { dg-final { scan-assembler-times "ldr\tx30, \\\[x18, \[#|$\]?-8\\\]!" 2 } } */
+
+This sort of regexp can be easier to write if you quote them using {…}
+rather than "…", since it reduces the number of backslashes needed.  E.g.:
+
+/* { dg-final { scan-assembler-times {str\tx30, \[x18\], [#|$]?8} 2 } } */
+
+The current version is fine too though, and is widely used.  Just mentioning
+it in case it's useful in future.
+
+Also, [#|$]? can be written #?.
 
 Thanks,
 Richard
