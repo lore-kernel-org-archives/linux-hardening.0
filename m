@@ -2,130 +2,119 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D919C433FE
-	for <linux-hardening@archiver.kernel.org>; Mon, 31 Jan 2022 20:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D1AC433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 31 Jan 2022 21:10:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344167AbiAaUoA (ORCPT
+        id S1379699AbiAaVKJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 31 Jan 2022 15:44:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38784 "EHLO
+        Mon, 31 Jan 2022 16:10:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243308AbiAaUoA (ORCPT
+        with ESMTP id S1380000AbiAaVJm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 31 Jan 2022 15:44:00 -0500
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDF16C061714
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Jan 2022 12:43:59 -0800 (PST)
-Received: by mail-pf1-x435.google.com with SMTP id n32so13882802pfv.11
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Jan 2022 12:43:59 -0800 (PST)
+        Mon, 31 Jan 2022 16:09:42 -0500
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 854EAC06173E
+        for <linux-hardening@vger.kernel.org>; Mon, 31 Jan 2022 13:09:42 -0800 (PST)
+Received: by mail-pf1-x432.google.com with SMTP id a19so7993344pfx.4
+        for <linux-hardening@vger.kernel.org>; Mon, 31 Jan 2022 13:09:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dvY93mLK+gCkLFyqPjkC7SO502H46e/BmHAFAde7pmA=;
-        b=VnaPaLUE79ByM8yxlggAAFwqCLbFIwHYSnwowqWnqMYsC3OgGiS1ToIUXd8N7wK5WS
-         dIFaCM5pOMfQ1J/hUl7v9c5JoiyS6MZaxuMQw2gMtg7ucEwuKSG9xdMypFTCXm3IDQoA
-         7CeWl1HJ3RfJ+RvxNluYPe/tjQw4aj7Gfleog=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QkhfbO5ZuAnM+4vhyHXHVmq11kG0AqyRd/tsjcMAl14=;
+        b=F/nlSE/yNJSASXLMWSaLGYR1yLL+hmZl/FP19SuvRwCudcOLOFjyjyVSys+cJHT9bd
+         DiZvJM5FOigFZ+06vJkHc2u3C3fnV1/DSbQTDMK18auGH7E+/aYpx456r1n6VPV2cenW
+         5C7lLsPmpGYiN/CdnhIbAxw1RAA+Yh655yk9o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dvY93mLK+gCkLFyqPjkC7SO502H46e/BmHAFAde7pmA=;
-        b=3gYc3qhThLLPpmPn6OOlwnUFwhx6BkX+UTjVE0BktwlePjJc7F/JHM8oxSjkmg/UW+
-         1tkCLW4t5CgJi/0Y9n+sntYvpNd7727RqpPoGC1PJxMkrhoVOtvv1HVh2/gvDsUNexoh
-         tg+jh/XEIv7aOHSkCnR/nr7MWvZTYlFs/aH4wOirBvYmndN2lZdstQSaWP3ZaHwa5IzK
-         xW5satHatFlY6aIJPX0vND3lEfjUxIGG0pLWub4II8Bv+FO5/VhNs05EUC3TNw3Bld+b
-         LGRbnYNQud6qikdFbw4fyw2rFV66ND/w9Z4zi6Xq9d/yiz+avM3JGq2++KQYWx8v+Lzm
-         IOAQ==
-X-Gm-Message-State: AOAM530d4c/32aC82/Aq7vA3IjkaAFG0bLImnzV5+u2ZHwdbEya5c0rQ
-        esi7sIjVdFNRX6+p3ZiQX6rgAQ==
-X-Google-Smtp-Source: ABdhPJyMZ/cWvABsZIf40YJbzvSbf2yYk+yDlKZi9uzmJOn1juWqB1Qh+dV/l9giNKX/hZOoOf0/PA==
-X-Received: by 2002:a63:9346:: with SMTP id w6mr18350241pgm.65.1643661839508;
-        Mon, 31 Jan 2022 12:43:59 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QkhfbO5ZuAnM+4vhyHXHVmq11kG0AqyRd/tsjcMAl14=;
+        b=PhGTG6mHTP4t5be2VQNWPCdbi3v4rgXsJ8XNMsi2c9hM1jGXPnRmrx+CxlA0Vbd2oY
+         QFtTOGx+H3SfzC2J0ZxtERe+/RoBLtuZxjV6t8X1nB59msxIGIxJAxAnTHLbnhE9yJBn
+         4NLZhk+sYqDVWa+7Dj/sZoYVnfIz5Uv+ClJsKs0E+Ts9WAe2HOy7kmhK3C501ZzwoGK0
+         3hyGe1JCKu67f3oMZ0nwoPGqNW4gQu4MoHax+SSQElNTXqyVfm9C84I3ae1FBuCMDjeN
+         vMlZBjsQ28FavMUF84e4X/Bv58Q3aIaoow+zT+S5QezJey9LxbWVtwVADHD5D32jQ6Sn
+         KfyA==
+X-Gm-Message-State: AOAM530tS5UVnP46EgnzMrr6uudZAnNKdc54uv/R8upMJWV5l94IxJu1
+        Ul++nYAddTi4c71xGUO6UxRBSg==
+X-Google-Smtp-Source: ABdhPJwLHNNlfqh8k0yscOHN38ElXx7ca741f/SViX5QRk7Zaq7yJAYAxfp6QboGV6M3GgXg8Lw/Tg==
+X-Received: by 2002:a62:1dcc:: with SMTP id d195mr22080045pfd.4.1643663382057;
+        Mon, 31 Jan 2022 13:09:42 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h18sm19549618pfh.51.2022.01.31.12.43.59
+        by smtp.gmail.com with ESMTPSA id bj7sm228915pjb.9.2022.01.31.13.09.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jan 2022 12:43:59 -0800 (PST)
+        Mon, 31 Jan 2022 13:09:41 -0800 (PST)
+Date:   Mon, 31 Jan 2022 13:09:41 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Martin Uecker <Martin.Uecker@med.uni-goettingen.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] linux/const.h: Explain how __is_constexpr() works
-Date:   Mon, 31 Jan 2022 12:43:57 -0800
-Message-Id: <20220131204357.1133674-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fortify: Update compile-time tests for Clang 14
+Message-ID: <202201311306.0FC6E303@keescook>
+References: <20220130181616.420092-1-keescook@chromium.org>
+ <CAKwvOdmETY-j9B9vms4d31kAc0xb1yE902KijiH2baY5-M=fLQ@mail.gmail.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2675; h=from:subject; bh=WlNK1x9BZiL8PdVBf+UDla5QbcDoyx4RBmBre4o9x84=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh+EoMr8eEAxIe/o1NGdfWCDk8aFcQzwQVoNeu5FZ/ ZAhP5D+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYfhKDAAKCRCJcvTf3G3AJtgoD/ sGCz9a8AssZAQB5fVsmWfX5b+plDMlTy+hmWrQ1KL04znEA2Ju1fh43Iv1MvyfWYxO06Oxl5ZFfMvs F9K+sfSnb5IE91FXjDx+mBjQ57kzHI9anob0KWKPxmIeCXfr1RFTTbLepyF7vQU83jlttFMvPGjiLV 1Okkt9dxBFoFXstRu9x/nx5v/El7bDRdrsk/nka+ZvuAFiqJQXL9RLAkuSgV+2l/P60RLOB3g6SFLs Nbf3EFlIUcN76X+QfhqcYHeohmywr0hCJtX8kvwhEpb0QSUocOPVXjZf6qDCI5HWDr/fNGtfHn1yEd RiQei0uJLVmH1EKHt2ZcahLv4LQyQq/cFG1u6VUnRJXVJRBL89zdqW8iiYirdHTmJ2wg4Ay8SJo69E 7tZpQ9HfQS9QwbIMeQwGYA8sHB90DoJgFehqMxnwoXDFJRCKSmIOzesglOo9B+4yqFJw3UnTeSldre rLSGF217GOQfzzcXXMgGRIeyxYRwwzqTyMGM5+U8SAlcswtDbakvP7aT9bctGV1LfUUUpI6RlicNK0 uOk07acYE93Cu2a5NUMH5GJhA8xb7SxT4Asp7IQZgzlTtBjcv2DYx4rMI/0VpbA4/Xa5b/gwaSWFgD DnHzo+Vxqd8CcB7ztHxX+Za2OqabUhA50217kdRVCT8PRtH0ZO+ZrdKqKHhw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdmETY-j9B9vms4d31kAc0xb1yE902KijiH2baY5-M=fLQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The __is_constexpr() macro is dark magic. Shed some light on it with
-a comment to explain how and why it works.
+On Mon, Jan 31, 2022 at 11:09:27AM -0800, Nick Desaulniers wrote:
+> On Sun, Jan 30, 2022 at 10:16 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Clang 14 introduces support for compiletime_assert(). Update the
+> > compile-time warning regex to catch Clang's variant of the warning text
+> > in preparation for Clang supporting CONFIG_FORTIFY_SOURCE.
+> 
+> https://twitter.com/ifosteve/status/1190348262500421634?lang=en
+> error messages can change over time. More thoughts below.
 
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Martin Uecker <Martin.Uecker@med.uni-goettingen.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-doc@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Jon, since this is pure comment, do you want to take it through the docs tree?
----
- include/linux/const.h | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Sure, but I don't want the compile-time checks to silently regress,
+which requires looking specifically for the error.
 
-diff --git a/include/linux/const.h b/include/linux/const.h
-index 435ddd72d2c4..7122d6a1f8ce 100644
---- a/include/linux/const.h
-+++ b/include/linux/const.h
-@@ -7,6 +7,30 @@
-  * This returns a constant expression while determining if an argument is
-  * a constant expression, most importantly without evaluating the argument.
-  * Glory to Martin Uecker <Martin.Uecker@med.uni-goettingen.de>
-+ *
-+ * Details:
-+ * - sizeof() is an integer constant expression, and does not evaluate the
-+ *   value of its operand; it only examines the type of its operand.
-+ * - The results of comparing two integer constant expressions is also
-+ *   an integer constant expression.
-+ * - The use of literal "8" is to avoid warnings about unaligned pointers;
-+ *   these could otherwise just be "1"s.
-+ * - (long)(x) is used to avoid warnings about 64-bit types on 32-bit
-+ *   architectures.
-+ * - The C standard defines an "integer constant expression" as different
-+ *   from a "null pointer constant" (an integer constant 0 pointer).
-+ * - The conditional operator ("... ? ... : ...") returns the type of the
-+ *   operand that isn't a null pointer constant. This behavior is the
-+ *   central mechanism of the macro.
-+ * - If (x) is an integer constant expression, then the "* 0l" resolves it
-+ *   into a null pointer constant, which forces the conditional operator
-+ *   to return the type of the last operand: "(int *)".
-+ * - If (x) is not an integer constant expression, then the type of the
-+ *   conditional operator is from the first operand: "(void *)".
-+ * - sizeof(int) == 4 and sizeof(void) == 1.
-+ * - The ultimate comparison to "sizeof(int)" chooses between either:
-+ *     sizeof(*((int *) (8)) == sizeof(int)   (x was a constant expression)
-+ *     sizeof(*((void *)(8)) == sizeof(void)  (x was not a constant expression)
-  */
- #define __is_constexpr(x) \
- 	(sizeof(int) == sizeof(*(8 ? ((void *)((long)(x) * 0l)) : (int *)8)))
+> > Cc: Nathan Chancellor <nathan@kernel.org>
+> > Cc: Nick Desaulniers <ndesaulniers@google.com>
+> > Cc: linux-hardening@vger.kernel.org
+> > Cc: llvm@lists.linux.dev
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> > I'm splitting this patch out of the main Clang FORTIFY enabling patch.
+> > ---
+> >  scripts/test_fortify.sh | 8 ++++++--
+> >  1 file changed, 6 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/scripts/test_fortify.sh b/scripts/test_fortify.sh
+> > index a4da365508f0..c2688ab8281d 100644
+> > --- a/scripts/test_fortify.sh
+> > +++ b/scripts/test_fortify.sh
+> > @@ -46,8 +46,12 @@ if "$@" -Werror -c "$IN" -o "$OUT".o 2> "$TMP" ; then
+> >                 status="warning: unsafe ${FUNC}() usage lacked '$WANT' symbol in $IN"
+> >         fi
+> >  else
+> > -       # If the build failed, check for the warning in the stderr (gcc).
+> > -       if ! grep -q -m1 "error: call to .\b${WANT}\b." "$TMP" ; then
+> > +       # If the build failed, check for the warning in the stderr.
+> > +       # GCC:
+> > +       # ./include/linux/fortify-string.h:316:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
+> > +       # Clang 14:
+> > +       # ./include/linux/fortify-string.h:316:4: error: call to __write_overflow_field declared with 'warning' attribute: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror,-Wattribute-warning]
+> > +       if ! grep -Eq -m1 "error: call to .?\b${WANT}\b.?" "$TMP" ; then
+> 
+> Doesn't this depend on -Werror being set? I guess it did so before
+> hand, too, but couldn't I unset CONFIG_WERROR then this check would
+> still fail (since instead of `error:` we'd have `warning:`)? If we
+> used __attribute__((error(""))) then this would always be an error.
+> Right now, it is only because -Werror is set promoting the warning
+> diagnostic to an error.
+
+Right, see earlier up in the script. "-Werror" is explicitly set:
+
+line 40: if "$@" -Werror -c "$IN" -o "$OUT".o 2> "$TMP" ; then
+
 -- 
-2.30.2
-
+Kees Cook
