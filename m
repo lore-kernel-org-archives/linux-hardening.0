@@ -2,117 +2,124 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB233C433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 31 Jan 2022 21:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36FFC433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 31 Jan 2022 21:19:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379738AbiAaVOU (ORCPT
+        id S1349142AbiAaVTk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 31 Jan 2022 16:14:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45756 "EHLO
+        Mon, 31 Jan 2022 16:19:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380007AbiAaVNx (ORCPT
+        with ESMTP id S241083AbiAaVTj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 31 Jan 2022 16:13:53 -0500
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 774F1C061401
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Jan 2022 13:13:31 -0800 (PST)
-Received: by mail-pg1-x52d.google.com with SMTP id z131so13371970pgz.12
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Jan 2022 13:13:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GS7ARrVx7mqa1AsFf3AdkLtLmRc92cKknoJbQi/nsN8=;
-        b=VpMxW+eMio0Wu66eA+trKZ060aIZM8z7jb6VDn7qKwkY/PhFOYC8LO+1DYq2da/FxI
-         JAotv9ZcWLXu2zJrGrqOb3fuimLZxVDvBCd1imtyfHmpGXv3gRKgTceDM1NACLwsxF0a
-         fXSM/pmmRC0yZGBYF92QdQD7GqZ4bK4Fiezbw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GS7ARrVx7mqa1AsFf3AdkLtLmRc92cKknoJbQi/nsN8=;
-        b=Qlhudqt2v0toSF8mzoJPqoNKFFgc/aaUG8QL5Zk6o9OHfbHlZT0PICx5dTCQxuRp17
-         5kT53NnEHj/KzKj4R3V4Q5gB1kOxW9/OukLoyAWVnjMldL2+uf1ldG2n/E8WGnHnZFW5
-         RzyhLK/xpSXqocwbK5SiVwQSfiVy5ep4EY5QVJhOQnu15iWnonUZB5aZbMJquaqdZcoG
-         B7nSFbvQlaKMOHk3KBcsmO0jL+It6ZmY0dnLd3z9zZqoU8/bsh/e83vmtEak9eDXsy3/
-         tbM0lRx2NOsiLv5sRVGPBkemfkzU/ZzvKpVbFFHlVJwQRw38uEwNOm/0lcWN58pdJ1qh
-         2B2w==
-X-Gm-Message-State: AOAM530EU0Ofa0a7y771D1JkWT6X1qOXanc5CS7Aaq4VGW1OJqRXZbT0
-        0HMOQc/H+PptSFPIkOLj0593uQ==
-X-Google-Smtp-Source: ABdhPJzxIEXhImcS+G4fX4a7La7yj1Sol7mkyBq+x+m4eA/grNnHBkUexrk8Gwx7zzkYa0bvDq2Fcw==
-X-Received: by 2002:a63:69c8:: with SMTP id e191mr1911222pgc.412.1643663610998;
-        Mon, 31 Jan 2022 13:13:30 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y42sm17430367pfw.157.2022.01.31.13.13.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jan 2022 13:13:30 -0800 (PST)
-Date:   Mon, 31 Jan 2022 13:13:30 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v4] fortify: Work around Clang inlining bugs
-Message-ID: <202201311309.AFF4A0C@keescook>
-References: <20220130182204.420775-1-keescook@chromium.org>
- <CAKwvOdmrzO9U9Cu5zB07t1C+Xh-kAzk_F-MisAxsrArhJVhSNw@mail.gmail.com>
+        Mon, 31 Jan 2022 16:19:39 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98201C061714;
+        Mon, 31 Jan 2022 13:19:39 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 54E37B82CA1;
+        Mon, 31 Jan 2022 21:19:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF0E4C340E8;
+        Mon, 31 Jan 2022 21:19:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643663977;
+        bh=bydv7gfSFyvaJwR+P/7cGzOvsDym3JsAo7rfZrr7r/w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=t6Vk68zSyrlVBRQoLyQEefza0TDiislHx/Z7lsiaTafTymNdJ+L+Ga3ysGKXae/t2
+         7W60y03whPQ/BK4ZI7BNUVOSfjBWiELrkLhDxpjf5GB+gT0knZxcYgvelw/luAevQa
+         ztcsrr9ihLE04UKepEZUAPn1VWb8biP7WB8f98x2Nna8ghkt1s22BtPrsBSiCrOFzt
+         YU24oZWvkilw7M5xw3ZyEeSRSwMEj8dflJvYpoMp2jZFtPoBWZsdSPiyplwDLfS9KO
+         MgKBlhw/6VM38ikvQ+sBUIa1qXnNJ73ZIwC/32M21qs3A7gXh6br+hb1gVYciPX0SM
+         UEKuQ2rbXPQjQ==
+Date:   Mon, 31 Jan 2022 15:26:37 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Martin Uecker <Martin.Uecker@med.uni-goettingen.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] linux/const.h: Explain how __is_constexpr() works
+Message-ID: <20220131212637.GA198787@embeddedor>
+References: <20220131204357.1133674-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdmrzO9U9Cu5zB07t1C+Xh-kAzk_F-MisAxsrArhJVhSNw@mail.gmail.com>
+In-Reply-To: <20220131204357.1133674-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jan 31, 2022 at 11:04:36AM -0800, Nick Desaulniers wrote:
-> On Sun, Jan 30, 2022 at 10:22 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > To enable FORTIFY_SOURCE support for Clang, the kernel must work around
-> > a pair of bugs, related to Clang's inlining:
-> >
-> > 1) Change all the fortified string APIs into macros with different
-> > inline names to bypass Clang's broken inline-of-a-builtin detection:
-> > https://bugs.llvm.org/show_bug.cgi?id=50322
-> >
-> > 2) Lift all misbehaving __builtin_object_size() calls into the macros
-> > to bypass Clang's broken __builtin_object_size() arguments-of-an-inline
-> > visibility:
-> > https://github.com/ClangBuiltLinux/linux/issues/1401
+On Mon, Jan 31, 2022 at 12:43:57PM -0800, Kees Cook wrote:
+> The __is_constexpr() macro is dark magic. Shed some light on it with
+> a comment to explain how and why it works.
 > 
-> ^ mentions a difference in compilers for mode 1. I wonder if this
-> patch could "hoist" the BOS calls into the macro ONLY for mode 1 and
-> not mode 0 usage? i.e. the str* functions, not the mem* functions.
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Martin Uecker <Martin.Uecker@med.uni-goettingen.de>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+> Cc: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-doc@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Everything (with a couple exceptions) is using mode 1 after the earlier
-patches in the series. e.g.:
+Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-+#define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s, \
-+		__builtin_object_size(p, 0), __builtin_object_size(q, 0), \
-+		__builtin_object_size(p, 1), __builtin_object_size(q, 1), \
-+		memcpy)
+Thanks
+--
+Gustavo
 
-> It's too late to fix these in clang-13.  If we get a fix in clang-14
-> or later, what does that look like for this header?  Is there a way we
-
-If the bos mode 1 got fixed for Clang 14, this patch would likely be
-dropped and the Clang + FORTIFY version check would be moved to Clang
-14.
-
-> can provide a different header than include/linux/fortify-string.h
-> just for clang-13 (or whatever versions until the above are fixed)?
-
-So much of it would be identical. This macro-ification is least
-invasive, and it's pretty invasive.
-
-> I don't see this series getting backported to stable, where older
-> versions of clang may still be in use.
-
-Right.
-
-> I'm tempted to say "let's get get these 2 fixed in clang-14" but we'll
-> probably have to trade something off the existing TODO list.
-
-Agreed.
-
--- 
-Kees Cook
+> ---
+> Jon, since this is pure comment, do you want to take it through the docs tree?
+> ---
+>  include/linux/const.h | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/include/linux/const.h b/include/linux/const.h
+> index 435ddd72d2c4..7122d6a1f8ce 100644
+> --- a/include/linux/const.h
+> +++ b/include/linux/const.h
+> @@ -7,6 +7,30 @@
+>   * This returns a constant expression while determining if an argument is
+>   * a constant expression, most importantly without evaluating the argument.
+>   * Glory to Martin Uecker <Martin.Uecker@med.uni-goettingen.de>
+> + *
+> + * Details:
+> + * - sizeof() is an integer constant expression, and does not evaluate the
+> + *   value of its operand; it only examines the type of its operand.
+> + * - The results of comparing two integer constant expressions is also
+> + *   an integer constant expression.
+> + * - The use of literal "8" is to avoid warnings about unaligned pointers;
+> + *   these could otherwise just be "1"s.
+> + * - (long)(x) is used to avoid warnings about 64-bit types on 32-bit
+> + *   architectures.
+> + * - The C standard defines an "integer constant expression" as different
+> + *   from a "null pointer constant" (an integer constant 0 pointer).
+> + * - The conditional operator ("... ? ... : ...") returns the type of the
+> + *   operand that isn't a null pointer constant. This behavior is the
+> + *   central mechanism of the macro.
+> + * - If (x) is an integer constant expression, then the "* 0l" resolves it
+> + *   into a null pointer constant, which forces the conditional operator
+> + *   to return the type of the last operand: "(int *)".
+> + * - If (x) is not an integer constant expression, then the type of the
+> + *   conditional operator is from the first operand: "(void *)".
+> + * - sizeof(int) == 4 and sizeof(void) == 1.
+> + * - The ultimate comparison to "sizeof(int)" chooses between either:
+> + *     sizeof(*((int *) (8)) == sizeof(int)   (x was a constant expression)
+> + *     sizeof(*((void *)(8)) == sizeof(void)  (x was not a constant expression)
+>   */
+>  #define __is_constexpr(x) \
+>  	(sizeof(int) == sizeof(*(8 ? ((void *)((long)(x) * 0l)) : (int *)8)))
+> -- 
+> 2.30.2
+> 
