@@ -2,124 +2,64 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE214C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Feb 2022 14:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0B7C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Feb 2022 15:09:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239500AbiBAOxb (ORCPT
+        id S239729AbiBAPJ6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Feb 2022 09:53:31 -0500
-Received: from brightrain.aerifal.cx ([216.12.86.13]:58248 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239509AbiBAOx2 (ORCPT
+        Tue, 1 Feb 2022 10:09:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233653AbiBAPJ6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Feb 2022 09:53:28 -0500
-Date:   Tue, 1 Feb 2022 09:53:25 -0500
-From:   Rich Felker <dalias@libc.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Ariadne Conill <ariadne@dereferenced.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Christian Brauner <brauner@kernel.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
+        Tue, 1 Feb 2022 10:09:58 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A325C061714;
+        Tue,  1 Feb 2022 07:09:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=AN/jspz2JoBPtJ1HTGOsT/p4u4etOkVQMVBmx8Uzn50=; b=WZ5e8OwGjvIoFUlKOzpq5r3JBZ
+        FNMjL8sIW2SyI5neFlh6We62xXvGsLHHSQGOCSHhXHiil6prF36INPc9/M/30qCMpULBBpjNcwlIk
+        zbxzOOFt8hFGA1lr6V/RfHtRleV/Ttq+QYj5noyMiCeI6Ps7WRZQZGtmxptqMWOfyWchzSdu4bL0o
+        GKXjdYpFFbB7IqWLtgQXfvOAASjQnbAje4SMi7GutaLWLk6ax1JuUCGUuUU6y+z3iwQj2rwjGJHga
+        yfh95Fu66JdHlHGFGUvwOp3bEplThJuI5WFa5L+Wb5Hx6EAnG1Zbb5oZjGFKdwFYz1G38BxqilLZH
+        YflpeprA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nEumr-00CSpr-Nm; Tue, 01 Feb 2022 15:09:41 +0000
+Date:   Tue, 1 Feb 2022 15:09:41 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Martin Uecker <Martin.Uecker@med.uni-goettingen.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] exec: Force single empty string when argv is empty
-Message-ID: <20220201145324.GA29634@brightrain.aerifal.cx>
-References: <20220201000947.2453721-1-keescook@chromium.org>
+Subject: Re: [PATCH] linux/const.h: Explain how __is_constexpr() works
+Message-ID: <YflNNRCibwcy7F3Q@casper.infradead.org>
+References: <20220131204357.1133674-1-keescook@chromium.org>
+ <dc86fdf7-3202-e836-6f71-af1e2458b105@rasmusvillemoes.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220201000947.2453721-1-keescook@chromium.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <dc86fdf7-3202-e836-6f71-af1e2458b105@rasmusvillemoes.dk>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jan 31, 2022 at 04:09:47PM -0800, Kees Cook wrote:
-> Quoting[1] Ariadne Conill:
-> 
-> "In several other operating systems, it is a hard requirement that the
-> second argument to execve(2) be the name of a program, thus prohibiting
-> a scenario where argc < 1. POSIX 2017 also recommends this behaviour,
-> but it is not an explicit requirement[2]:
-> 
->     The argument arg0 should point to a filename string that is
->     associated with the process being started by one of the exec
->     functions.
-> ....
-> Interestingly, Michael Kerrisk opened an issue about this in 2008[3],
-> but there was no consensus to support fixing this issue then.
-> Hopefully now that CVE-2021-4034 shows practical exploitative use[4]
-> of this bug in a shellcode, we can reconsider.
-> 
-> This issue is being tracked in the KSPP issue tracker[5]."
-> 
-> While the initial code searches[6][7] turned up what appeared to be
-> mostly corner case tests, trying to that just reject argv == NULL
-> (or an immediately terminated pointer list) quickly started tripping[8]
-> existing userspace programs.
-> 
-> The next best approach is forcing a single empty string into argv and
-> adjusting argc to match. The number of programs depending on argc == 0
-> seems a smaller set than those calling execve with a NULL argv.
-> 
-> Account for the additional stack space in bprm_stack_limits(). Inject an
-> empty string when argc == 0 (and set argc = 1). Warn about the case so
-> userspace has some notice about the change:
-> 
->     process './argc0' launched './argc0' with NULL argv: empty string added
-> 
-> Additionally WARN() and reject NULL argv usage for kernel threads.
-> 
-> [1] https://lore.kernel.org/lkml/20220127000724.15106-1-ariadne@dereferenced.org/
-> [2] https://pubs.opengroup.org/onlinepubs/9699919799/functions/exec.html
-> [3] https://bugzilla.kernel.org/show_bug.cgi?id=8408
-> [4] https://www.qualys.com/2022/01/25/cve-2021-4034/pwnkit.txt
-> [5] https://github.com/KSPP/linux/issues/176
-> [6] https://codesearch.debian.net/search?q=execve%5C+*%5C%28%5B%5E%2C%5D%2B%2C+*NULL&literal=0
-> [7] https://codesearch.debian.net/search?q=execlp%3F%5Cs*%5C%28%5B%5E%2C%5D%2B%2C%5Cs*NULL&literal=0
-> [8] https://lore.kernel.org/lkml/20220131144352.GE16385@xsang-OptiPlex-9020/
-> 
-> Reported-by: Ariadne Conill <ariadne@dereferenced.org>
-> Reported-by: Michael Kerrisk <mtk.manpages@gmail.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Rich Felker <dalias@libc.org>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  fs/exec.c | 26 +++++++++++++++++++++++++-
->  1 file changed, 25 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 79f2c9483302..bbf3aadf7ce1 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -495,8 +495,14 @@ static int bprm_stack_limits(struct linux_binprm *bprm)
->  	 * the stack. They aren't stored until much later when we can't
->  	 * signal to the parent that the child has run out of stack space.
->  	 * Instead, calculate it here so it's possible to fail gracefully.
-> +	 *
-> +	 * In the case of argc = 0, make sure there is space for adding a
-> +	 * empty string (which will bump argc to 1), to ensure confused
-> +	 * userspace programs don't start processing from argv[1], thinking
-> +	 * argc can never be 0, to keep them from walking envp by accident.
-> +	 * See do_execveat_common().
->  	 */
-> -	ptr_size = (bprm->argc + bprm->envc) * sizeof(void *);
-> +	ptr_size = (min(bprm->argc, 1) + bprm->envc) * sizeof(void *);
+On Tue, Feb 01, 2022 at 02:05:53PM +0100, Rasmus Villemoes wrote:
+> I don't think adding slightly inaccurate comments would help a future
+> reader at all. Then it's better to just stick to Linus' "it's art, and
+> art should not be explained".
 
-From #musl:
-
-<mixi> kees: shouldn't the min(bprm->argc, 1) be max(...) in your patch?
-
-I'm pretty sure without fixing that, you're introducing a giant vuln
-here. I believe this is the second time a patch attempting to fix this
-non-vuln has proposed adding a new vuln...
-
-Rich
+/* You are not expected to understand this */
