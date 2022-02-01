@@ -2,53 +2,41 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B715C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Feb 2022 00:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FA4C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Feb 2022 01:00:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230164AbiBAAJw (ORCPT
+        id S231375AbiBABA4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 31 Jan 2022 19:09:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57982 "EHLO
+        Mon, 31 Jan 2022 20:00:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbiBAAJw (ORCPT
+        with ESMTP id S229739AbiBABAz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 31 Jan 2022 19:09:52 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09EAEC06173B
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Jan 2022 16:09:52 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id t32so13738988pgm.7
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Jan 2022 16:09:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5qwLaEIOYlijwyduplYEjWelGWybvaxEnn7HYTpgP70=;
-        b=mfBat4L77tKMTAhNSuJn3palyMkxYAKXtUo2345uF66a7Zve1Wh63z06waYxMc2JmJ
-         pZjftdSTxVUeocBOulxZral26pOzB1DWdXI6lPmlB/a8tUT7xwF1mYM+qJ8fa7naBVXd
-         X/mJpi59esp4KSFZZF7Je3D9jfUS7CyDLVq2M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5qwLaEIOYlijwyduplYEjWelGWybvaxEnn7HYTpgP70=;
-        b=w5Zj+fv2qWCrm2JgVA+PvAY0/PwtU/0an2V3n8sIjlUbyD+ZJwcLO987klPE1Za6Mu
-         ZzcpBRhOYY4iJmLWUCrKp0R8/S/ePRYLa/IhXOFBEPuInOVvbx9IIdVyNOru2ASsp8ka
-         GLWKvwDM8XM70xFx2n/Y4Agfq31/yhh1z9Rz6JDQkHqZ/56ZEHrz1O7LFJCFp1ZpP9mN
-         xDsV63Ofn1orAPPp2AhP4T+JwndjttJVGvIanwROhPXfyaFbrDDpM2OMF9q12RPw624s
-         VeYg1MFOL8CaG7TnaoL6zzPN68D/MTGTuECs+UWev/5NUf7Itehq6xs+Td11BKMxeQ/C
-         E0Bg==
-X-Gm-Message-State: AOAM531VMhNZj4UZdeZ/mmAFDMN481jdg4/tONorPalipLETkZtunhcn
-        o5cYh8/f5LfGGO9bQMqvR4HKww==
-X-Google-Smtp-Source: ABdhPJxLkBuK1RGXLbnoqpApwiPt4eSLFw4uUzc1mr036KSTiU6DRnWMP5a/gRdhrOLhYs/aSMcDhQ==
-X-Received: by 2002:a63:86c8:: with SMTP id x191mr18864852pgd.248.1643674191512;
-        Mon, 31 Jan 2022 16:09:51 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c18sm2021208pfp.181.2022.01.31.16.09.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jan 2022 16:09:51 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
+        Mon, 31 Jan 2022 20:00:55 -0500
+Received: from mx1.mailbun.net (unknown [IPv6:2602:fd37:1::100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A70BC061714;
+        Mon, 31 Jan 2022 17:00:55 -0800 (PST)
+Received: from [2607:fb90:d98b:8818:11f7:a587:ba64:9b06] (unknown [172.58.104.31])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ariadne@dereferenced.org)
+        by mx1.mailbun.net (Postfix) with ESMTPSA id 6562B11B603;
+        Tue,  1 Feb 2022 01:00:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=dereferenced.org;
+        s=mailbun; t=1643677254;
+        bh=vofBEbGEYkBffGz+fe8oMsX9AmKbLrhXNYF6gYB9zA4=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References;
+        b=LzXawNxn5sShsRjZW+L97R2qySoeFoZ1c/gI9uSjQh8Xhol10J66MwRGSZ14EYYIs
+         4Y6ftMOPBA7SJBTjzig0zQgHRwSa2HhAOpc0pituNUDGLz5mtUKFMGKlYivFfv9p2/
+         KoNaS7i6azgh9CRmUsj/hEHMoWkVuX8cPeF9Z/+A0LmVhwN6kFu6VcheLZBsczn5PF
+         FsVm+9GMNlYm/FJO50IA09buR4sSZ0U20yF5MCHqKvvyHvD6wbl+3N6pfYsfQNBeol
+         0QNGHIIPfYo4uEYWw0zRa6xNiA/BEMFp0lTr2IeDEYwTb/HObU8drbCwuggQ96YEEv
+         w+jVuOlhjNJtQ==
+Date:   Mon, 31 Jan 2022 19:00:46 -0600 (CST)
+From:   Ariadne Conill <ariadne@dereferenced.org>
+To:     Kees Cook <keescook@chromium.org>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
         Ariadne Conill <ariadne@dereferenced.org>,
         Michael Kerrisk <mtk.manpages@gmail.com>,
         Matthew Wilcox <willy@infradead.org>,
@@ -58,135 +46,82 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] exec: Force single empty string when argv is empty
-Date:   Mon, 31 Jan 2022 16:09:47 -0800
-Message-Id: <20220201000947.2453721-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+Subject: Re: [PATCH] exec: Force single empty string when argv is empty
+In-Reply-To: <20220201000947.2453721-1-keescook@chromium.org>
+Message-ID: <a4dba31f-b96-6220-58cd-16f05c65d113@dereferenced.org>
+References: <20220201000947.2453721-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4766; h=from:subject; bh=gaATF+4EbtmlAe3Nasp9+LtjYlIXpznex7XqhlI1JLg=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh+HpKpuM0Z7w1vc/DKue58FoVRYdahszqKEUikyKs LkopZsyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYfh6SgAKCRCJcvTf3G3AJkQwD/ 9gaH8XIr+oEzkggBsQWnCKXTzVmALVe4Zgbuh4C1rNxscXB+aeb4/KQKr3K6vvJ2l/fkh70QW+Pn7u gIJ269Ql3ilTvYMn4HXVyAftwmN3ReDuZJeWNXj4y8gu7ACcVdP4DJh0sfA83KqkhOsgAf9y4DJ8iP OCGZIYAtkcZ+f/KxXM2BDfRb9ddLfwTJn9jHsMftdAK+Yn1zDj17kaeVxZ0W/d65OjCPd6tGgZ3s1c PlXZkeb4CHB7Oav2IKW6lx+21mDFSdm39f9LFCxm+vkzRsLN7rNIJXtdYnvmDgp3BiiEN59pAnk4LM b3tUHI2SsF2nwRpgeVXNUvPYyQvhSiEwC+oY7A16TzgvXU/bF78NmoWUa++albTJtNIeclGpUY63jE v/gCI2FvzFJ6AQBKO5k4pYdUY2/9xPW0b5P6lBvZJyiNFq29tSe1Hiug56G71uztL142LyKBpY1kLG MNpkEp5mybjnAWfXuO5CJNWOaqu3nWYwWqp+3C3AoJP1ftEZo4D4d8jYJLvL/1oyLriS3Y8T5p+LNE zjwsDh7xTQmmr/+sCcnGH3Elw7u2oOGxfZoP24E+ZhWsr4d3NzZ56dxWxYswOkMITolnGYZsne/Zj9 RHyBi5T2aGJ2C2EM0GgBZxw0rpfMuR5J/mTN8WYHLei3px/8432HbTf+5lkQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Quoting[1] Ariadne Conill:
+Hi,
 
-"In several other operating systems, it is a hard requirement that the
-second argument to execve(2) be the name of a program, thus prohibiting
-a scenario where argc < 1. POSIX 2017 also recommends this behaviour,
-but it is not an explicit requirement[2]:
+On Mon, 31 Jan 2022, Kees Cook wrote:
 
-    The argument arg0 should point to a filename string that is
-    associated with the process being started by one of the exec
-    functions.
-...
-Interestingly, Michael Kerrisk opened an issue about this in 2008[3],
-but there was no consensus to support fixing this issue then.
-Hopefully now that CVE-2021-4034 shows practical exploitative use[4]
-of this bug in a shellcode, we can reconsider.
+> Quoting[1] Ariadne Conill:
+>
+> "In several other operating systems, it is a hard requirement that the
+> second argument to execve(2) be the name of a program, thus prohibiting
+> a scenario where argc < 1. POSIX 2017 also recommends this behaviour,
+> but it is not an explicit requirement[2]:
+>
+>    The argument arg0 should point to a filename string that is
+>    associated with the process being started by one of the exec
+>    functions.
+> ...
+> Interestingly, Michael Kerrisk opened an issue about this in 2008[3],
+> but there was no consensus to support fixing this issue then.
+> Hopefully now that CVE-2021-4034 shows practical exploitative use[4]
+> of this bug in a shellcode, we can reconsider.
+>
+> This issue is being tracked in the KSPP issue tracker[5]."
+>
+> While the initial code searches[6][7] turned up what appeared to be
+> mostly corner case tests, trying to that just reject argv == NULL
+> (or an immediately terminated pointer list) quickly started tripping[8]
+> existing userspace programs.
 
-This issue is being tracked in the KSPP issue tracker[5]."
+Yes, it's a shame this is the case, but we do what we have to do, I guess 
+:)
 
-While the initial code searches[6][7] turned up what appeared to be
-mostly corner case tests, trying to that just reject argv == NULL
-(or an immediately terminated pointer list) quickly started tripping[8]
-existing userspace programs.
+>
+> The next best approach is forcing a single empty string into argv and
+> adjusting argc to match. The number of programs depending on argc == 0
+> seems a smaller set than those calling execve with a NULL argv.
+>
+> Account for the additional stack space in bprm_stack_limits(). Inject an
+> empty string when argc == 0 (and set argc = 1). Warn about the case so
+> userspace has some notice about the change:
+>
+>    process './argc0' launched './argc0' with NULL argv: empty string added
+>
+> Additionally WARN() and reject NULL argv usage for kernel threads.
+>
+> [1] https://lore.kernel.org/lkml/20220127000724.15106-1-ariadne@dereferenced.org/
+> [2] https://pubs.opengroup.org/onlinepubs/9699919799/functions/exec.html
+> [3] https://bugzilla.kernel.org/show_bug.cgi?id=8408
+> [4] https://www.qualys.com/2022/01/25/cve-2021-4034/pwnkit.txt
+> [5] https://github.com/KSPP/linux/issues/176
+> [6] https://codesearch.debian.net/search?q=execve%5C+*%5C%28%5B%5E%2C%5D%2B%2C+*NULL&literal=0
+> [7] https://codesearch.debian.net/search?q=execlp%3F%5Cs*%5C%28%5B%5E%2C%5D%2B%2C%5Cs*NULL&literal=0
+> [8] https://lore.kernel.org/lkml/20220131144352.GE16385@xsang-OptiPlex-9020/
+>
+> Reported-by: Ariadne Conill <ariadne@dereferenced.org>
+> Reported-by: Michael Kerrisk <mtk.manpages@gmail.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: Rich Felker <dalias@libc.org>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-The next best approach is forcing a single empty string into argv and
-adjusting argc to match. The number of programs depending on argc == 0
-seems a smaller set than those calling execve with a NULL argv.
+In terms of going with this approach as an alternative verses my original 
+patch,
 
-Account for the additional stack space in bprm_stack_limits(). Inject an
-empty string when argc == 0 (and set argc = 1). Warn about the case so
-userspace has some notice about the change:
+Acked-by: Ariadne Conill <ariadne@dereferenced.org>
 
-    process './argc0' launched './argc0' with NULL argv: empty string added
-
-Additionally WARN() and reject NULL argv usage for kernel threads.
-
-[1] https://lore.kernel.org/lkml/20220127000724.15106-1-ariadne@dereferenced.org/
-[2] https://pubs.opengroup.org/onlinepubs/9699919799/functions/exec.html
-[3] https://bugzilla.kernel.org/show_bug.cgi?id=8408
-[4] https://www.qualys.com/2022/01/25/cve-2021-4034/pwnkit.txt
-[5] https://github.com/KSPP/linux/issues/176
-[6] https://codesearch.debian.net/search?q=execve%5C+*%5C%28%5B%5E%2C%5D%2B%2C+*NULL&literal=0
-[7] https://codesearch.debian.net/search?q=execlp%3F%5Cs*%5C%28%5B%5E%2C%5D%2B%2C%5Cs*NULL&literal=0
-[8] https://lore.kernel.org/lkml/20220131144352.GE16385@xsang-OptiPlex-9020/
-
-Reported-by: Ariadne Conill <ariadne@dereferenced.org>
-Reported-by: Michael Kerrisk <mtk.manpages@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Rich Felker <dalias@libc.org>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- fs/exec.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
-
-diff --git a/fs/exec.c b/fs/exec.c
-index 79f2c9483302..bbf3aadf7ce1 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -495,8 +495,14 @@ static int bprm_stack_limits(struct linux_binprm *bprm)
- 	 * the stack. They aren't stored until much later when we can't
- 	 * signal to the parent that the child has run out of stack space.
- 	 * Instead, calculate it here so it's possible to fail gracefully.
-+	 *
-+	 * In the case of argc = 0, make sure there is space for adding a
-+	 * empty string (which will bump argc to 1), to ensure confused
-+	 * userspace programs don't start processing from argv[1], thinking
-+	 * argc can never be 0, to keep them from walking envp by accident.
-+	 * See do_execveat_common().
- 	 */
--	ptr_size = (bprm->argc + bprm->envc) * sizeof(void *);
-+	ptr_size = (min(bprm->argc, 1) + bprm->envc) * sizeof(void *);
- 	if (limit <= ptr_size)
- 		return -E2BIG;
- 	limit -= ptr_size;
-@@ -1897,6 +1903,9 @@ static int do_execveat_common(int fd, struct filename *filename,
- 	}
- 
- 	retval = count(argv, MAX_ARG_STRINGS);
-+	if (retval == 0)
-+		pr_warn_once("process '%s' launched '%s' with NULL argv: empty string added\n",
-+			     current->comm, bprm->filename);
- 	if (retval < 0)
- 		goto out_free;
- 	bprm->argc = retval;
-@@ -1923,6 +1932,19 @@ static int do_execveat_common(int fd, struct filename *filename,
- 	if (retval < 0)
- 		goto out_free;
- 
-+	/*
-+	 * When argv is empty, add an empty string ("") as argv[0] to
-+	 * ensure confused userspace programs that start processing
-+	 * from argv[1] won't end up walking envp. See also
-+	 * bprm_stack_limits().
-+	 */
-+	if (bprm->argc == 0) {
-+		retval = copy_string_kernel("", bprm);
-+		if (retval < 0)
-+			goto out_free;
-+		bprm->argc = 1;
-+	}
-+
- 	retval = bprm_execve(bprm, fd, filename, flags);
- out_free:
- 	free_bprm(bprm);
-@@ -1951,6 +1973,8 @@ int kernel_execve(const char *kernel_filename,
- 	}
- 
- 	retval = count_strings_kernel(argv);
-+	if (WARN_ON_ONCE(retval == 0))
-+		retval = -EINVAL;
- 	if (retval < 0)
- 		goto out_free;
- 	bprm->argc = retval;
--- 
-2.30.2
-
+Ariadne
