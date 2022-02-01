@@ -2,126 +2,189 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FA4C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Feb 2022 01:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9685BC433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Feb 2022 01:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231375AbiBABA4 (ORCPT
+        id S231761AbiBABQl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 31 Jan 2022 20:00:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41242 "EHLO
+        Mon, 31 Jan 2022 20:16:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229739AbiBABAz (ORCPT
+        with ESMTP id S230315AbiBABQk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 31 Jan 2022 20:00:55 -0500
-Received: from mx1.mailbun.net (unknown [IPv6:2602:fd37:1::100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A70BC061714;
-        Mon, 31 Jan 2022 17:00:55 -0800 (PST)
-Received: from [2607:fb90:d98b:8818:11f7:a587:ba64:9b06] (unknown [172.58.104.31])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: ariadne@dereferenced.org)
-        by mx1.mailbun.net (Postfix) with ESMTPSA id 6562B11B603;
-        Tue,  1 Feb 2022 01:00:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=dereferenced.org;
-        s=mailbun; t=1643677254;
-        bh=vofBEbGEYkBffGz+fe8oMsX9AmKbLrhXNYF6gYB9zA4=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References;
-        b=LzXawNxn5sShsRjZW+L97R2qySoeFoZ1c/gI9uSjQh8Xhol10J66MwRGSZ14EYYIs
-         4Y6ftMOPBA7SJBTjzig0zQgHRwSa2HhAOpc0pituNUDGLz5mtUKFMGKlYivFfv9p2/
-         KoNaS7i6azgh9CRmUsj/hEHMoWkVuX8cPeF9Z/+A0LmVhwN6kFu6VcheLZBsczn5PF
-         FsVm+9GMNlYm/FJO50IA09buR4sSZ0U20yF5MCHqKvvyHvD6wbl+3N6pfYsfQNBeol
-         0QNGHIIPfYo4uEYWw0zRa6xNiA/BEMFp0lTr2IeDEYwTb/HObU8drbCwuggQ96YEEv
-         w+jVuOlhjNJtQ==
-Date:   Mon, 31 Jan 2022 19:00:46 -0600 (CST)
-From:   Ariadne Conill <ariadne@dereferenced.org>
-To:     Kees Cook <keescook@chromium.org>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mon, 31 Jan 2022 20:16:40 -0500
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AFBEC061714
+        for <linux-hardening@vger.kernel.org>; Mon, 31 Jan 2022 17:16:40 -0800 (PST)
+Received: by mail-pg1-x534.google.com with SMTP id j10so13875269pgc.6
+        for <linux-hardening@vger.kernel.org>; Mon, 31 Jan 2022 17:16:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XvxcvzXH4VJ6E7zlHksxhLJ0Jar5RcY37sbz8vcUnwA=;
+        b=n4Xh8YTEBFhu25veL76yREgUBbEjEjW92HU+rostZl5q2oTixGNege0DDfUmWh5Bul
+         GSzaKNQNJMVDUaBazlPuwYdJZOsQ0OMS+GQuZ4FnrivwTO4qZ7J/MAWDUNoSQ4712tQn
+         5aIboyezBxyMpGb/KTKLzCiHWfGzCd7/RHNow=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XvxcvzXH4VJ6E7zlHksxhLJ0Jar5RcY37sbz8vcUnwA=;
+        b=rcTmn2SXNYyEDFWLeZ+kDH9d9zkWHMTifdMRMOk8b/FG3DWDWrHrX31+mgmO1keE+x
+         F0hJ0nQS6zbfXa12UXXG4D/AeuU5Xqm7+7FH6UVNnnDuHkAuWLBPGDhUuniubh1yiHaN
+         SWkfQW4RB2SPhXYuGZgmX7DM7lvAAr1PWEiX8YUAWxC/cv4Y23QFMvdxZSNDyDs4bM+Q
+         BXNPX8SfknMdw1impdyV8JZ+SQVfvgY9D2YS9ZicDzSqSiBdJm7jP5oB9UwBugoVaUHo
+         f0+7gPx6qcBqKsW6W6Pge+NRWHgCrfPEGsGlDarehMZ1rVpHRBrP3YXsdWueIrMEj0dM
+         B8Tg==
+X-Gm-Message-State: AOAM530ZhuHg5BpQH9IlzAceDgnXUmCitLrTMSOEGyEDLvSr6l6oTIPa
+        vqqCOInIiDUYMLv2E4wydyrVHQ==
+X-Google-Smtp-Source: ABdhPJygvz6vAby26Gb6IKXH4kaHD1Vneb7nQ+T6LqCv4x/uIdljdV6rZICzA999yVljOt7DA57yVQ==
+X-Received: by 2002:aa7:9682:: with SMTP id f2mr23009248pfk.56.1643678200095;
+        Mon, 31 Jan 2022 17:16:40 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o2sm29967814pga.57.2022.01.31.17.16.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Jan 2022 17:16:39 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        linux-kselftest@vger.kernel.org,
         Ariadne Conill <ariadne@dereferenced.org>,
         Michael Kerrisk <mtk.manpages@gmail.com>,
         Matthew Wilcox <willy@infradead.org>,
         Christian Brauner <brauner@kernel.org>,
         Rich Felker <dalias@libc.org>,
-        Eric Biederman <ebiederm@xmission.com>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] exec: Force single empty string when argv is empty
-In-Reply-To: <20220201000947.2453721-1-keescook@chromium.org>
-Message-ID: <a4dba31f-b96-6220-58cd-16f05c65d113@dereferenced.org>
-References: <20220201000947.2453721-1-keescook@chromium.org>
+Subject: [PATCH] selftests/exec: Test for empty string on NULL argv
+Date:   Mon, 31 Jan 2022 17:16:37 -0800
+Message-Id: <20220201011637.2457646-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3353; h=from:subject; bh=KVYgP4gBGoag0XXkWLoVuF2irAM9dKCsptscwOX961o=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh+In1d7YWRksOQF3vTA7Ad/dWv3vnj+wq4c1QUv75 5/y9xyWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYfiJ9QAKCRCJcvTf3G3AJmJnD/ wNNO8OqXL3vCcU15W01vFWGk7q8FIyycXT5RgTNAe//OMfilFwNRZrNrPk9oFOiNSgYOAKJ6ozi9kY GoeTNflQ3j6z03RmGX2kD3YZ7smAV/g5F6oL0+O7WKUMc1Qvh+Li6/8Dm+jZGi8EiL+qO9yWv6FU59 jEz0tPWDRtn+NLW0Yphtb9uWaY//uvnsBgw6MRmqRUVVZzDUyC4aB1KdjNF58CyCnVkpy/O9L/xhOl tlaNH7otK628H8Ed1jkhrJWiauj/vWIuxKUgdKFlPSIsZA/J/LoJ2rDMrMKQT6oDIlhrakwd0nfUt0 qSfH3XLWxI5Tv4SS2+6J1pLTSXUUrvYxLxcPpok48Xzn4gjVuEcvXR1G4PCh47oYVQwW3PqQ9I6VEr bL1Ld0cwSfKH0P4a5zpGpUp5I4OXmalSl0Lt/9PkoYi+wbHXC5a8NtnCnd5lawjxRDGv+WQF4P6F2C Yq5qFB6AykeZjD308o/V0ZfuwmaBknBpI/STtH0bHV0Q5rwJW8+DCMWTokojs2Nz/10dyCKAyOBO7V kej3JLmZTsoIg9ae80Qx5+SJjka3kmOGrLzoGPUlOnOK26JfJ1/wQExTmbiY+lAsNkrTGUDgDrg9q1 pHxqok5I3I5NWJTTpULhOke2pIC9DaH9KEUnohglrdlhgNRnQC6EnihEVS8A==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+Test for the NULL argv argument producing a single empty string on exec.
 
-On Mon, 31 Jan 2022, Kees Cook wrote:
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Yang Yingliang <yangyingliang@huawei.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kselftest@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+This is testing for this patch:
+https://lore.kernel.org/linux-hardening/20220201000947.2453721-1-keescook@chromium.org/
+---
+ tools/testing/selftests/exec/Makefile    |  1 +
+ tools/testing/selftests/exec/null-argv.c | 78 ++++++++++++++++++++++++
+ 2 files changed, 79 insertions(+)
+ create mode 100644 tools/testing/selftests/exec/null-argv.c
 
-> Quoting[1] Ariadne Conill:
->
-> "In several other operating systems, it is a hard requirement that the
-> second argument to execve(2) be the name of a program, thus prohibiting
-> a scenario where argc < 1. POSIX 2017 also recommends this behaviour,
-> but it is not an explicit requirement[2]:
->
->    The argument arg0 should point to a filename string that is
->    associated with the process being started by one of the exec
->    functions.
-> ...
-> Interestingly, Michael Kerrisk opened an issue about this in 2008[3],
-> but there was no consensus to support fixing this issue then.
-> Hopefully now that CVE-2021-4034 shows practical exploitative use[4]
-> of this bug in a shellcode, we can reconsider.
->
-> This issue is being tracked in the KSPP issue tracker[5]."
->
-> While the initial code searches[6][7] turned up what appeared to be
-> mostly corner case tests, trying to that just reject argv == NULL
-> (or an immediately terminated pointer list) quickly started tripping[8]
-> existing userspace programs.
+diff --git a/tools/testing/selftests/exec/Makefile b/tools/testing/selftests/exec/Makefile
+index dd61118df66e..4832cd8f4f9c 100644
+--- a/tools/testing/selftests/exec/Makefile
++++ b/tools/testing/selftests/exec/Makefile
+@@ -10,6 +10,7 @@ TEST_GEN_FILES := execveat.symlink execveat.denatured script subdir pipe
+ TEST_FILES := Makefile
+ 
+ TEST_GEN_PROGS += recursion-depth
++TEST_GEN_PROGS += null-argv
+ 
+ EXTRA_CLEAN := $(OUTPUT)/subdir.moved $(OUTPUT)/execveat.moved $(OUTPUT)/xxxxx*	\
+ 	       $(OUTPUT)/S_I*.test
+diff --git a/tools/testing/selftests/exec/null-argv.c b/tools/testing/selftests/exec/null-argv.c
+new file mode 100644
+index 000000000000..c19726e710d1
+--- /dev/null
++++ b/tools/testing/selftests/exec/null-argv.c
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Test that empty argvs are swapped out for a single empty string. */
++#include <stdio.h>
++#include <unistd.h>
++#include <sys/types.h>
++#include <sys/wait.h>
++
++#include "../kselftest.h"
++
++#define FORK(exec)				\
++do {						\
++	pid = fork();				\
++	if (pid == 0) {				\
++		/* Child */			\
++		exec; /* Some kind of exec */	\
++		perror("# " #exec);		\
++		return 1;			\
++	}					\
++	check_result(pid, #exec);		\
++} while (0)
++
++void check_result(pid_t pid, const char *msg)
++{
++	int wstatus;
++
++	if (pid == (pid_t)-1) {
++		perror("# fork");
++		ksft_test_result_fail("fork failed: %s\n", msg);
++		return;
++	}
++	if (waitpid(pid, &wstatus, 0) < 0) {
++		perror("# waitpid");
++		ksft_test_result_fail("waitpid failed: %s\n", msg);
++		return;
++	}
++	if (!WIFEXITED(wstatus)) {
++		ksft_test_result_fail("child did not exit: %s\n", msg);
++		return;
++	}
++	if (WEXITSTATUS(wstatus) != 0) {
++		ksft_test_result_fail("non-zero exit: %s\n", msg);
++		return;
++	}
++	ksft_test_result_pass("%s\n", msg);
++}
++
++int main(int argc, char *argv[], char *envp[])
++{
++	pid_t pid;
++	static char * const args[] = { NULL };
++	static char * const str[] = { "", NULL };
++
++	/* argc counting checks */
++	if (argc < 1) {
++		fprintf(stderr, "# FAIL: saw argc == 0 (old kernel?)\n");
++		return 1;
++	}
++	if (argc != 1) {
++		fprintf(stderr, "# FAIL: unknown argc (%d)\n", argc);
++		return 1;
++	}
++	if (argv[0][0] == '\0') {
++		/* Good, we found a NULL terminated string at argv[0]! */
++		return 0;
++	}
++
++	/* Test runner. */
++	ksft_print_header();
++	ksft_set_plan(5);
++
++	FORK(execve(argv[0], str, NULL));
++	FORK(execve(argv[0], NULL, NULL));
++	FORK(execve(argv[0], NULL, envp));
++	FORK(execve(argv[0], args, NULL));
++	FORK(execve(argv[0], args, envp));
++
++	ksft_exit(ksft_cnt.ksft_pass == ksft_plan);
++}
+-- 
+2.30.2
 
-Yes, it's a shame this is the case, but we do what we have to do, I guess 
-:)
-
->
-> The next best approach is forcing a single empty string into argv and
-> adjusting argc to match. The number of programs depending on argc == 0
-> seems a smaller set than those calling execve with a NULL argv.
->
-> Account for the additional stack space in bprm_stack_limits(). Inject an
-> empty string when argc == 0 (and set argc = 1). Warn about the case so
-> userspace has some notice about the change:
->
->    process './argc0' launched './argc0' with NULL argv: empty string added
->
-> Additionally WARN() and reject NULL argv usage for kernel threads.
->
-> [1] https://lore.kernel.org/lkml/20220127000724.15106-1-ariadne@dereferenced.org/
-> [2] https://pubs.opengroup.org/onlinepubs/9699919799/functions/exec.html
-> [3] https://bugzilla.kernel.org/show_bug.cgi?id=8408
-> [4] https://www.qualys.com/2022/01/25/cve-2021-4034/pwnkit.txt
-> [5] https://github.com/KSPP/linux/issues/176
-> [6] https://codesearch.debian.net/search?q=execve%5C+*%5C%28%5B%5E%2C%5D%2B%2C+*NULL&literal=0
-> [7] https://codesearch.debian.net/search?q=execlp%3F%5Cs*%5C%28%5B%5E%2C%5D%2B%2C%5Cs*NULL&literal=0
-> [8] https://lore.kernel.org/lkml/20220131144352.GE16385@xsang-OptiPlex-9020/
->
-> Reported-by: Ariadne Conill <ariadne@dereferenced.org>
-> Reported-by: Michael Kerrisk <mtk.manpages@gmail.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Rich Felker <dalias@libc.org>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-In terms of going with this approach as an alternative verses my original 
-patch,
-
-Acked-by: Ariadne Conill <ariadne@dereferenced.org>
-
-Ariadne
