@@ -2,56 +2,37 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B57BFC433F5
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Feb 2022 13:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE214C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Feb 2022 14:53:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238513AbiBANWp (ORCPT
+        id S239500AbiBAOxb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Feb 2022 08:22:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238453AbiBANWo (ORCPT
+        Tue, 1 Feb 2022 09:53:31 -0500
+Received: from brightrain.aerifal.cx ([216.12.86.13]:58248 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239509AbiBAOx2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Feb 2022 08:22:44 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6924FC061714;
-        Tue,  1 Feb 2022 05:22:43 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2D69BB82DE3;
-        Tue,  1 Feb 2022 13:22:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F364C340EB;
-        Tue,  1 Feb 2022 13:22:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643721760;
-        bh=GBHBnprdZykprL9bYedIbto9NFGIskkFqjHe8SWv3Q4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Oly/voj/i5cunpQSgrBjwHxTPjdu/Ry1YmPmDQQilRTI/jae0x2lkjDzXth7y3Cth
-         GiWYi3DlnRivMWntEqMmQ6/8G5Yg/7q8Wo9M34wfLPmyYU144voTytNLmaAnHc8U6o
-         LOX3rLghu9HAIemc879REFufbxxaLmqqgJuW2T5xuRjZ+EA6LGNcYeXaoNhZpfrowO
-         ptKvtOQkNy6p+Uz5Pfrw+OqVuPINZRpf9VNJ9GEEKicBxcxODRsqPtQIJQdP/7dixQ
-         iqLBYfbPyzwreG8Ysz/Yivwfwuz4Jq5yhMXrW4nXsJtSlS8/9RkfIyG5xOEUlC5fz3
-         TkjlRq4zqqVTQ==
-Date:   Tue, 1 Feb 2022 14:22:35 +0100
-From:   Christian Brauner <brauner@kernel.org>
+        Tue, 1 Feb 2022 09:53:28 -0500
+Date:   Tue, 1 Feb 2022 09:53:25 -0500
+From:   Rich Felker <dalias@libc.org>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Ariadne Conill <ariadne@dereferenced.org>,
         Michael Kerrisk <mtk.manpages@gmail.com>,
         Matthew Wilcox <willy@infradead.org>,
-        Rich Felker <dalias@libc.org>,
+        Christian Brauner <brauner@kernel.org>,
         Eric Biederman <ebiederm@xmission.com>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] exec: Force single empty string when argv is empty
-Message-ID: <20220201132235.c7yk7rpngpvcw5z3@wittgenstein>
+Message-ID: <20220201145324.GA29634@brightrain.aerifal.cx>
 References: <20220201000947.2453721-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20220201000947.2453721-1-keescook@chromium.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -67,7 +48,7 @@ On Mon, Jan 31, 2022 at 04:09:47PM -0800, Kees Cook wrote:
 >     The argument arg0 should point to a filename string that is
 >     associated with the process being started by one of the exec
 >     functions.
-> ...
+> ....
 > Interestingly, Michael Kerrisk opened an issue about this in 2008[3],
 > but there was no consensus to support fixing this issue then.
 > Hopefully now that CVE-2021-4034 shows practical exploitative use[4]
@@ -112,6 +93,33 @@ On Mon, Jan 31, 2022 at 04:09:47PM -0800, Kees Cook wrote:
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
+>  fs/exec.c | 26 +++++++++++++++++++++++++-
+>  1 file changed, 25 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/exec.c b/fs/exec.c
+> index 79f2c9483302..bbf3aadf7ce1 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -495,8 +495,14 @@ static int bprm_stack_limits(struct linux_binprm *bprm)
+>  	 * the stack. They aren't stored until much later when we can't
+>  	 * signal to the parent that the child has run out of stack space.
+>  	 * Instead, calculate it here so it's possible to fail gracefully.
+> +	 *
+> +	 * In the case of argc = 0, make sure there is space for adding a
+> +	 * empty string (which will bump argc to 1), to ensure confused
+> +	 * userspace programs don't start processing from argv[1], thinking
+> +	 * argc can never be 0, to keep them from walking envp by accident.
+> +	 * See do_execveat_common().
+>  	 */
+> -	ptr_size = (bprm->argc + bprm->envc) * sizeof(void *);
+> +	ptr_size = (min(bprm->argc, 1) + bprm->envc) * sizeof(void *);
 
-Looks good,
-Acked-by: Christian Brauner <brauner@kernel.org>
+From #musl:
+
+<mixi> kees: shouldn't the min(bprm->argc, 1) be max(...) in your patch?
+
+I'm pretty sure without fixing that, you're introducing a giant vuln
+here. I believe this is the second time a patch attempting to fix this
+non-vuln has proposed adding a new vuln...
+
+Rich
