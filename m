@@ -2,116 +2,113 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764DEC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Feb 2022 22:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32012C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Feb 2022 22:44:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241951AbiBAWjx (ORCPT
+        id S230283AbiBAWou (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Feb 2022 17:39:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55094 "EHLO
+        Tue, 1 Feb 2022 17:44:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241910AbiBAWjw (ORCPT
+        with ESMTP id S229501AbiBAWou (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Feb 2022 17:39:52 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A8FC061714
-        for <linux-hardening@vger.kernel.org>; Tue,  1 Feb 2022 14:39:52 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id a19so11199700pfx.4
-        for <linux-hardening@vger.kernel.org>; Tue, 01 Feb 2022 14:39:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0GZoUXjQnTH22StSBxliyAhVCzFd+c4Sty+J+gttCT4=;
-        b=GvbP91DmhMLjdYOUoegWBpQqb/miyMjy6YYVevT1ZRxaED+A56kRX4KU+JTXwP6nzG
-         ERAXGZiwKlE837KdlWrR3j55RfUGKEULV1iLqzKQLpG6nxVXyWhzYAIq8MPXax5d2Xio
-         poQqIuMGBCsIYgx28ObzcK9TtItpQK1EoG0/8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0GZoUXjQnTH22StSBxliyAhVCzFd+c4Sty+J+gttCT4=;
-        b=GyDDA9pOdhH2DHgNCcKi6+SqEmAy3o3oEgRrX0EantyIhogtBC+zjp55H/M2mgEI9M
-         b824AJAuENCSRpmSlvVwVwa7zpXTIMGb4piCMrd/ydz9t1hGYSYrB5vR78iTSrjw6hgt
-         3Ki6l0kvC12gdcygew+FlVBZoDkm3lBUucul/eSVbFK4pGdRdqcrHOCywHWsbcCxti0E
-         AaSanJN308OHbNz6mQjfamDi+u/lOIXoNqo1KyDf44XL6kAknbESfxe3XZC2zIShDgQV
-         5GJQKYvhByv3jQbyE6EQ9KRNKUW23Afws7i0JkdYx8hK31JVKG5fmNc68x/eO0QgHkte
-         oN1A==
-X-Gm-Message-State: AOAM5303lyzG/CHm2hAQhPH5WOf2lQvnhbaCdmgZL56Vyd6GDXJIfIoI
-        GbBuV7VBSfXv+9In5GWrZqVKhg==
-X-Google-Smtp-Source: ABdhPJwuZ7k6dF/cFiU0qBjgvXbZaVrRvy9/zQsrbVOZdmskpEQFO8XlB1vdoE8SkKsHrEqK9IqH5g==
-X-Received: by 2002:a63:8a44:: with SMTP id y65mr22413576pgd.590.1643755191827;
-        Tue, 01 Feb 2022 14:39:51 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id pf4sm4305329pjb.35.2022.02.01.14.39.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Feb 2022 14:39:51 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Sathya Prakash <sathya.prakash@broadcom.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
-        linux-scsi@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] scsi: mpt3sas: Convert to flexible arrays
-Date:   Tue,  1 Feb 2022 14:39:48 -0800
-Message-Id: <20220201223948.1455637-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1736; h=from:subject; bh=WqE1lLvEytA82FqSOgu42SZnb+3Opfv2XchLrZmpS1k=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh+bazzkhdbXAOBFEqdvWi5RQJjP+g3X6lm+CMEChk LUFBymGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYfm2swAKCRCJcvTf3G3AJh13D/ 4zDXtef2HFvEMpK1XRUO77eefGFDwyQKy/IKFT26AwFqQWYu3UQ1rRlVJwcQns/FulB5VU6uXlpDPN ts1X7nJ7LfIy6MPBVtd0wyC3GiT7EcC/fdTZ6upbLbJVjqGwmXfyWRX7uoT0TALJufM/ZEPl5Wy5Sh RGc8a0y/stuk0zpZSfDXqUIFwlGp22Zy85ezBi5ir47s2/inLQoAKtO/zkPPm+d6eyWUQGjkFk0N/u 15fqGj++EYdaPTEuNGTc//q25ADfAtc9Bl/vnynVpBcX1fkVHxPC8W0+7iTW/LtpeunT3UvIZ559pE kOgp6YMot7REfvQa+pU+W53BKbxifbaCQVXj6TbXm6pheVWpNTlzxtnS9WVbdW63166IaEiw05z1Ky jBkhLwWiMJJu1aYKJztca0fp3fgVxn/6IFqhQwaAaylcDyPhvdU4CLwbujPr+KpnYGqjFwegbBlgRt VjGSnIceEsGoQu+TDBzliWwl/8uuwaR5QzJ+UtU9qaVm6wAjcS2bgZ8KRojiLeW1AhsHFkKNVvseZP 3SXI96wuHB9R2eG//G/au2PVD+SPa3KsrMybqBYCBcJwmraphe3gmrIQUlG9vC3LQ7/DyUD3ddtF5O CVe6inKjAL6KYQ0GZuaob/S3tBDC65ygNoxEvp8arfJ1OoadNOwD8P1qdLIA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+        Tue, 1 Feb 2022 17:44:50 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02AEFC061714;
+        Tue,  1 Feb 2022 14:44:49 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7EC0161348;
+        Tue,  1 Feb 2022 22:44:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1198C340EB;
+        Tue,  1 Feb 2022 22:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+        s=korg; t=1643755488;
+        bh=dO2ZiNSWR6loVZvexI+PkBxFGJVVZftpKMMgcbecSMU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=an9agKNMXKcOvdlYglAxVxZwJft3R1qKd11ShJ24N53s77YppESIwDKuLEfDGC5Q7
+         KZbS3UIRpEMEQucPVSbdSP/BPNzCtDgE928WBXcIi7rsjg7pH7q3R70Weh1AeeDkIx
+         2TBHPQOFv3wko+8aPAWdmoYyL9tx2jL8BgxA5NQg=
+Date:   Tue, 1 Feb 2022 14:44:48 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Magnus =?ISO-8859-1?Q?Gro=DF?= <magnus.gross@rwth-aachen.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>
+Subject: Re: [PATCH] elf: Relax assumptions about vaddr ordering
+Message-Id: <20220201144448.8b3b322dc58dc3ec71f72246@linux-foundation.org>
+In-Reply-To: <202201262230.E16DF58B@keescook>
+References: <YfF18Dy85mCntXrx@fractal.localdomain>
+        <202201260845.FCBC0B5A06@keescook>
+        <202201262230.E16DF58B@keescook>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-This converts to a flexible array instead of the old-style 1-element
-arrays. The existing code already did the correct math for finding the
-size of the resulting flexible array structure, so there is no binary
-difference.
+On Wed, 26 Jan 2022 22:31:42 -0800 Kees Cook <keescook@chromium.org> wrote:
 
-The other two structures converted to use flexible arrays appear to
-have no users at all.
+> On Wed, Jan 26, 2022 at 08:50:15AM -0800, Kees Cook wrote:
+> > On Wed, Jan 26, 2022 at 05:25:20PM +0100, Magnus Gro=DF wrote:
+> > > From ff4dde97e82727727bda711f2367c05663498b24 Mon Sep 17 00:00:00 2001
+> > > From: =3D?UTF-8?q?Magnus=3D20Gro=3DC3=3D9F?=3D <magnus.gross@rwth-aac=
+hen.de>
+> > > Date: Wed, 26 Jan 2022 16:35:07 +0100
+> > > Subject: [PATCH] elf: Relax assumptions about vaddr ordering
+> > > MIME-Version: 1.0
+> > > Content-Type: text/plain; charset=3DUTF-8
+> > > Content-Transfer-Encoding: 8bit
+> > >=20
+> > > Commit 5f501d555653 ("binfmt_elf: reintroduce using
+> > > MAP_FIXED_NOREPLACE") introduced a regression, where the kernel now
+> > > assumes that PT_LOAD segments are ordered by vaddr in load_elf_binary=
+().
+> > >=20
+> > > Specifically consider an ELF binary with the following PT_LOAD segmen=
+ts:
+> > >=20
+> > > Type  Offset   VirtAddr   PhysAddr   FileSiz  MemSiz    Flg Align
+> > > LOAD  0x000000 0x08000000 0x08000000 0x474585 0x474585  R E 0x1000
+> > > LOAD  0x475000 0x08475000 0x08475000 0x090a4  0xc6c10   RW  0x1000
+> > > LOAD  0x47f000 0x00010000 0x00010000 0x00000  0x7ff0000     0x1000
+> > >=20
+> > > Note how the last segment is actually the first segment and vice vers=
+a.
+> > >=20
+> > > Since total_mapping_size() only computes the difference between the
+> > > first and the last segment in the order that they appear, it will ret=
+urn
+> > > a size of 0 in this case, thus causing load_elf_binary() to fail, whi=
+ch
+> > > did not happen before that change.
+> > >=20
+> > > Strictly speaking total_mapping_size() made that assumption already
+> > > before that patch, but the issue did not appear because the old
+> > > load_addr_set guards never allowed this call to total_mapping_size().
+> > >=20
+> > > Instead of fixing this by reverting to the old load_addr_set logic, we
+> > > fix this by comparing the correct first and last segments in
+> > > total_mapping_size().
+> >=20
+> > Ah, nice. Yeah, this is good.
+> >=20
+> > > Signed-off-by: Magnus Gro=DF <magnus.gross@rwth-aachen.de>
+> >=20
+> > Fixes: 5f501d555653 ("binfmt_elf: reintroduce using MAP_FIXED_NOREPLACE=
+")
+> > Cc: stable@vger.kernel.org
+> > Acked-by: Kees Cook <keescook@chromium.org>
+>=20
+> Andrew, can you pick this up too?
+>=20
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/scsi/mpt3sas/mpi/mpi2_ioc.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/scsi/mpt3sas/mpi/mpi2_ioc.h b/drivers/scsi/mpt3sas/mpi/mpi2_ioc.h
-index e83c7c529dc9..2c57115172cf 100644
---- a/drivers/scsi/mpt3sas/mpi/mpi2_ioc.h
-+++ b/drivers/scsi/mpt3sas/mpi/mpi2_ioc.h
-@@ -537,7 +537,7 @@ typedef struct _MPI2_EVENT_NOTIFICATION_REPLY {
- 	U16 Event;		/*0x14 */
- 	U16 Reserved4;		/*0x16 */
- 	U32 EventContext;	/*0x18 */
--	U32 EventData[1];	/*0x1C */
-+	U32 EventData[];	/*0x1C */
- } MPI2_EVENT_NOTIFICATION_REPLY, *PTR_MPI2_EVENT_NOTIFICATION_REPLY,
- 	Mpi2EventNotificationReply_t,
- 	*pMpi2EventNotificationReply_t;
-@@ -639,7 +639,7 @@ typedef struct _MPI2_EVENT_DATA_HOST_MESSAGE {
- 	U8 Reserved1;		/*0x01 */
- 	U16 Reserved2;		/*0x02 */
- 	U32 Reserved3;		/*0x04 */
--	U32 HostData[1];	/*0x08 */
-+	U32 HostData[];		/*0x08 */
- } MPI2_EVENT_DATA_HOST_MESSAGE, *PTR_MPI2_EVENT_DATA_HOST_MESSAGE,
- 	Mpi2EventDataHostMessage_t, *pMpi2EventDataHostMessage_t;
- 
-@@ -1397,7 +1397,7 @@ typedef struct _MPI2_SEND_HOST_MESSAGE_REQUEST {
- 	U32 Reserved8;		/*0x18 */
- 	U32 Reserved9;		/*0x1C */
- 	U32 Reserved10;		/*0x20 */
--	U32 HostData[1];	/*0x24 */
-+	U32 HostData[];		/*0x24 */
- } MPI2_SEND_HOST_MESSAGE_REQUEST,
- 	*PTR_MPI2_SEND_HOST_MESSAGE_REQUEST,
- 	Mpi2SendHostMessageRequest_t,
--- 
-2.30.2
+It conflicts significantly with Alexey's "ELF: fix overflow in total
+mapping size calculation".
 
