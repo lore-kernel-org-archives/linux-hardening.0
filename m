@@ -2,86 +2,138 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E8FC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 16:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCB3C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 16:19:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345783AbiBBQRf (ORCPT
+        id S1345808AbiBBQT6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Feb 2022 11:17:35 -0500
-Received: from mga05.intel.com ([192.55.52.43]:12098 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231455AbiBBQRe (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Feb 2022 11:17:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643818654; x=1675354654;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DBfsC8a66ExyypbPhJbhCI57mnu5iWgHbE6gVmzyI2I=;
-  b=YVMf+l1+ZKlvAuNqSqpMqmK2q82XtSwzBOO/3r70+NvFOox/UnJQVUi0
-   rCd5MKXhkLnqyU86xXPqW5SvSYDubPmUqvhPpHXZ+pazqZMEN/XNmraWu
-   sBFoyTn6vkICS19EntOqG8Rsx/F4fffzgU+sZtPWDzd6r8N8/yhWAN+Ud
-   laO70xLGSd0UpO0NpMSjqUyzH5lfyvuQ2t1XqSs56fw5zuj97SoHXRZWo
-   doJzrBKBhp5SgZy0GwMeWdPSWogy/SPRJ+bSh9E4urUFZfuZ3ObdJ3dBT
-   AY1nL3MoWU+m9jetMbS7Mgyi7mWfuUJ3Oejoi3kB9dyrpS+0WqpSRuQNq
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10246"; a="334311447"
-X-IronPort-AV: E=Sophos;i="5.88,337,1635231600"; 
-   d="scan'208";a="334311447"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 08:17:34 -0800
-X-IronPort-AV: E=Sophos;i="5.88,337,1635231600"; 
-   d="scan'208";a="769324845"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 08:17:31 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1nFIJ2-0008eW-RG;
-        Wed, 02 Feb 2022 18:16:28 +0200
-Date:   Wed, 2 Feb 2022 18:16:28 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Peter Rosin <peda@axentia.se>,
-        Andy Shevchenko <andy@kernel.org>,
-        Matteo Croce <mcroce@microsoft.com>,
-        Nathan Chancellor <nathan@kernel.org>,
+        Wed, 2 Feb 2022 11:19:58 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:30841 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230078AbiBBQT5 (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 2 Feb 2022 11:19:57 -0500
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-33-SGQvv5ccMsmU2w2G6u_tRw-1; Wed, 02 Feb 2022 16:19:55 +0000
+X-MC-Unique: SGQvv5ccMsmU2w2G6u_tRw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.28; Wed, 2 Feb 2022 16:19:52 +0000
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.028; Wed, 2 Feb 2022 16:19:52 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Kees Cook' <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Martin Uecker <Martin.Uecker@med.uni-goettingen.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] lib/test_string.c: Add test for strlen()
-Message-ID: <YfquXPrMX6PdD/6u@smile.fi.intel.com>
-References: <20220130183653.491292-1-keescook@chromium.org>
- <20220202160149.GA2322037@roeck-us.net>
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: RE: [PATCH] linux/const.h: Explain how __is_constexpr() works
+Thread-Topic: [PATCH] linux/const.h: Explain how __is_constexpr() works
+Thread-Index: AQHYFuNHRL4oDGFcTkyEh79ubpGBJ6yAbZqw
+Date:   Wed, 2 Feb 2022 16:19:52 +0000
+Message-ID: <6641e01b86374ce197020d57c65ae3b3@AcuMS.aculab.com>
+References: <20220131204357.1133674-1-keescook@chromium.org>
+In-Reply-To: <20220131204357.1133674-1-keescook@chromium.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220202160149.GA2322037@roeck-us.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 02, 2022 at 08:01:49AM -0800, Guenter Roeck wrote:
-> On Sun, Jan 30, 2022 at 10:36:53AM -0800, Kees Cook wrote:
-
+From: Kees Cook
+> Sent: 31 January 2022 20:44
+> 
+> The __is_constexpr() macro is dark magic. Shed some light on it with
+> a comment to explain how and why it works.
+> 
 ...
+> diff --git a/include/linux/const.h b/include/linux/const.h
+> index 435ddd72d2c4..7122d6a1f8ce 100644
+> --- a/include/linux/const.h
+> +++ b/include/linux/const.h
+> @@ -7,6 +7,30 @@
+>   * This returns a constant expression while determining if an argument is
+>   * a constant expression, most importantly without evaluating the argument.
+>   * Glory to Martin Uecker <Martin.Uecker@med.uni-goettingen.de>
+> + *
+> + * Details:
+> + * - sizeof() is an integer constant expression, and does not evaluate the
+> + *   value of its operand; it only examines the type of its operand.
+> + * - The results of comparing two integer constant expressions is also
+> + *   an integer constant expression.
+> + * - The use of literal "8" is to avoid warnings about unaligned pointers;
+> + *   these could otherwise just be "1"s.
+> + * - (long)(x) is used to avoid warnings about 64-bit types on 32-bit
+> + *   architectures.
+> + * - The C standard defines an "integer constant expression" as different
+> + *   from a "null pointer constant" (an integer constant 0 pointer).
+> + * - The conditional operator ("... ? ... : ...") returns the type of the
+> + *   operand that isn't a null pointer constant. This behavior is the
+> + *   central mechanism of the macro.
+> + * - If (x) is an integer constant expression, then the "* 0l" resolves it
+> + *   into a null pointer constant, which forces the conditional operator
+> + *   to return the type of the last operand: "(int *)".
+> + * - If (x) is not an integer constant expression, then the type of the
+> + *   conditional operator is from the first operand: "(void *)".
+> + * - sizeof(int) == 4 and sizeof(void) == 1.
+> + * - The ultimate comparison to "sizeof(int)" chooses between either:
+> + *     sizeof(*((int *) (8)) == sizeof(int)   (x was a constant expression)
+> + *     sizeof(*((void *)(8)) == sizeof(void)  (x was not a constant expression)
+>   */
+>  #define __is_constexpr(x) \
+>  	(sizeof(int) == sizeof(*(8 ? ((void *)((long)(x) * 0l)) : (int *)8)))
 
-> > +static const int strlen_ce = strlen("tada, a constant expression");
-> 
-> This results in:
-> 
-> lib/test_string.c:188:30: error: initializer element is not constant
->   188 | static const int strlen_ce = strlen("tada, a constant expression");
-> 
-> for several of my tests. I don't think you can mandate that a compiler
-> implements this.
+This has been making my head hurt all day.
+The above isn't really a true description - ?: doesn't work that way.
+Try the following for size:
 
-With -O2 probably one can, otherwise I agree.
+- The conditional operator (?:) requires that both expressions have the
+  the same type (after numeric promotions).
+  The type of the result is a compile time constant and doesn't depend on any
+  variables.
+- If the expressions have distinct non-NULL pointer types then they are both
+  cast to (void *) and the result has type 'void *'.
+- A NULL pointer can be made from any integer constant expression that
+  evaluates to 0, not just a literal 0.
+- So the type of (0 ? (void *)(x) : (int *)8) is 'int *' if (x) is zero
+  (because of the NULL) and (void *) otherwise because the pointer types
+  don't match.
 
--- 
-With Best Regards,
-Andy Shevchenko
+You can test this by evaluating:
+	sizeof *(0 ? (float *)4 : (int *)4)
+This is 1 because of the implicit (void *) cast.
 
+I'd also delete the l from the 0l - it isn't needed.
+(Or at least use L)
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
