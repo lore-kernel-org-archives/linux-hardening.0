@@ -2,169 +2,135 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EB3C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 23:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67434C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 23:17:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234221AbiBBXMI (ORCPT
+        id S1347982AbiBBXRW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Feb 2022 18:12:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49482 "EHLO
+        Wed, 2 Feb 2022 18:17:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233905AbiBBXMH (ORCPT
+        with ESMTP id S239155AbiBBXRV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Feb 2022 18:12:07 -0500
-Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88720C061714;
-        Wed,  2 Feb 2022 15:12:07 -0800 (PST)
-Received: by mail-ot1-x334.google.com with SMTP id j38-20020a9d1926000000b0059fa6de6c71so921414ota.10;
-        Wed, 02 Feb 2022 15:12:07 -0800 (PST)
+        Wed, 2 Feb 2022 18:17:21 -0500
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E14FC061714;
+        Wed,  2 Feb 2022 15:17:21 -0800 (PST)
+Received: by mail-ot1-x333.google.com with SMTP id o9-20020a9d7189000000b0059ee49b4f0fso967448otj.2;
+        Wed, 02 Feb 2022 15:17:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=sender:message-id:date:mime-version:user-agent:content-language:to
-         :cc:references:from:subject:in-reply-to:content-transfer-encoding;
-        bh=t29/K+CRAzr2C0Y4zdBwQdSLvuEbGx2x0Uo7Ij6d/QU=;
-        b=Yhr00QwTQbAUMNWJsy/noa8zs8PvkvEhkcRKUwFOldhEFckHStjC8Umi/SL/UO7KhW
-         DapLyXfwOmf/TDHkE1Epqcwubwq446noAyYkpHoYuezANTYykUjGCI/LVwkQWz9NHi9e
-         MhDf5gtyXZQIzVfmGvBabmOyQKVz2390HcKVBnwIfrhjhAVppCUj9YxrHUBwITJ9SuKp
-         m/WGbSM+2hvciWYwltw+n9lkuXZsV7gVlxn67w5GxWh68cGI+zEYvfUKoFSE39i45nOs
-         OY7WWIyVmssrr1jHC1aiZGAcmp8BRBkHr+7PFOy2AVDEYQbYq48EfBj+mYZ2Klf1Ix3H
-         pSjw==
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=SmM5LOXhBptwLoFRQx1xbAsZgGTvkZX2rXC6lKb25Rc=;
+        b=afYIE2hcFMLGO3iC6MkgeyjxvbwUqtd06XMSOBgKA1JmeSorzZXwTl1okvDiOYnB9l
+         I0H4UD7lxXr3PUThf/7IcIvIOsF5sWw5thHdOOKBvrdXNNtS/fD9Ym1WoVqea2HcAfwi
+         6eEM+v9OMcXZhik2LMP/jIpsfUBHKKr1qXWqemYWSWpEtU8twc7PHCgRkvAj36dDXHKE
+         uLVrjqstlVzY4jSFwk3Jc70uwRhAL+ie85/Q+5kwNmZl1ItfbAGYUKAEGF4u54rFb7cz
+         Sw3GPDOyJc4VqVkcsGaX8KF/n9Nh4c/uPgrvkaSGfcBxTVFi0X7Uj8fFeP1i1rAsy4Ge
+         cYCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
-         :content-language:to:cc:references:from:subject:in-reply-to
-         :content-transfer-encoding;
-        bh=t29/K+CRAzr2C0Y4zdBwQdSLvuEbGx2x0Uo7Ij6d/QU=;
-        b=OoMSeMc/GZcgbyfxfel6FayJW2GhiejdZfJZSmv/q0W+9gNcIPGyaSdXU0fkrdkmdQ
-         i5TuaIkENU5EtecpGRxoFFjOi0Y8cZxTCJ0gHbhtyHOXU7Twk/3Ek1xMktmTtVQnAveo
-         0N3nqrVPf2nW/HVxZksL0yM6mul2ncNzK0+tNghMw0ESBc5J5ZIFwgcd/gIbmVTVn1Gg
-         6eoF6MoMwzzc9dgkSMM3GhIIidoxMhznE3m/p2m8gUwQsFk3MCHDpcG4Zz9I/V9TUZTe
-         XvyNMccHbYtZzxiJr+zRJmir67coE50KqnX4vdbiXrSflxH6icuq/nsbCuroBp8THdmB
-         cEgg==
-X-Gm-Message-State: AOAM530tc1MlPPbKkHcnWj+9fIUI4juwsaO0wSKPRowya8xtHRyVzM78
-        Fco/QhnO+s9HcH9zZqIcc/TciYVnKjuScw==
-X-Google-Smtp-Source: ABdhPJzqeLBvSKmuB4xo8RTR/vfquflC7QfdejlXnWv02QOSZcxpWYEKEU1AN1+LL/9H1JXiGpPRTA==
-X-Received: by 2002:a9d:62da:: with SMTP id z26mr17266586otk.26.1643843526905;
-        Wed, 02 Feb 2022 15:12:06 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e92sm8413598ote.72.2022.02.02.15.12.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Feb 2022 15:12:05 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition;
+        bh=SmM5LOXhBptwLoFRQx1xbAsZgGTvkZX2rXC6lKb25Rc=;
+        b=UqPqRF20x5tjKZkHKVP93C2ErgpMRCYMEsjHTraMZHAKixjfI615vUBzN+oavEAP+x
+         tUFwRDmIt6BOpS049uiBG2haLJ9dz+N6L6s71MJqX/hlkzlTZWSAS46P4hHWyeT2Ai4N
+         WN92pl2BjlZ9naQIRwf/0IHj3HX0Hbnp8mrKB0iDx4uqU9MpU+BacbuoIXjX7qOHAulU
+         CJ9Sv67rujDLRD5DSKaEuL29HvT879wfHJx8wCSTHe+nC/py23/SteMb0v0aH1Ccpxtr
+         akp0/QErGDBhBnyJ3oxxJPOVmB/JOuHiLrBw/jzpRAo/SqJYY3vywgVj/y1v7ICiLf+5
+         7Pfw==
+X-Gm-Message-State: AOAM533x7ZZ4bkqShICCNu7fKrg03k9IvoDqw5JaidA5P6k2OEQZuFcu
+        wfJkV6iOu03h/51x7EIoewH04eEwQ1KmGQ==
+X-Google-Smtp-Source: ABdhPJzc1hV3sMwz9XpV4qq85jnj4BL44Eb+9Yn1lIeZrVv16PjI9mAH8w4AtSHfVcFztirlAFzaaQ==
+X-Received: by 2002:a05:6830:4409:: with SMTP id q9mr18658445otv.316.1643843840802;
+        Wed, 02 Feb 2022 15:17:20 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a15sm21399821oil.13.2022.02.02.15.17.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Feb 2022 15:17:20 -0800 (PST)
 Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <5ff18cff-6cfd-1f85-da74-1e5660a1a250@roeck-us.net>
-Date:   Wed, 2 Feb 2022 15:12:03 -0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Peter Rosin <peda@axentia.se>,
-        Andy Shevchenko <andy@kernel.org>,
-        Matteo Croce <mcroce@microsoft.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-References: <20220130183653.491292-1-keescook@chromium.org>
- <20220202160149.GA2322037@roeck-us.net> <202202021237.487D3DE73@keescook>
+Date:   Wed, 2 Feb 2022 15:17:18 -0800
 From:   Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] lib/test_string.c: Add test for strlen()
-In-Reply-To: <202202021237.487D3DE73@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] alpha: Silence -Warray-bounds warnings
+Message-ID: <20220202231718.GA2539669@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2/2/22 12:52, Kees Cook wrote:
-> On Wed, Feb 02, 2022 at 08:01:49AM -0800, Guenter Roeck wrote:
->> On Sun, Jan 30, 2022 at 10:36:53AM -0800, Kees Cook wrote:
->>> Add a simple test for strlen() functionality, including using it as a
->>> constant expression.
->>>
->>> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
->>> Cc: Peter Rosin <peda@axentia.se>
->>> Signed-off-by: Kees Cook <keescook@chromium.org>
->>> ---
->>> I'll be taking this as part of my Clang FORTIFY_SOURCE series.
->>> ---
->>>   lib/test_string.c | 37 +++++++++++++++++++++++++++++++++++++
->>>   1 file changed, 37 insertions(+)
->>>
->>> diff --git a/lib/test_string.c b/lib/test_string.c
->>> index 9dfd6f52de92..59994f552c48 100644
->>> --- a/lib/test_string.c
->>> +++ b/lib/test_string.c
->>> @@ -179,6 +179,38 @@ static __init int strnchr_selftest(void)
->>>   	return 0;
->>>   }
->>>   
->>> +/*
->>> + * Unlike many other string functions, strlen() can be used in
->>> + * static initializers when string lengths are known at compile
->>> + * time. (i.e. Under these conditions, strlen() is a constant
->>> + * expression.) Make sure it can be used this way.
->>> + */
->>> +static const int strlen_ce = strlen("tada, a constant expression");
->>> +
->>
->> This results in:
->>
->> lib/test_string.c:188:30: error: initializer element is not constant
->>    188 | static const int strlen_ce = strlen("tada, a constant expression");
->>
->> for several of my tests. I don't think you can mandate that a compiler
->> implements this.
+On Wed, Feb 02, 2022 at 02:18:25PM -0800, Kees Cook wrote:
+> GCC 11 (incorrectly[1]) assumes that literal values cast to (void *)
+> should be treated like a NULL pointer with an offset, and raises
+> diagnostics when doing bounds checking:
 > 
-> Which tests?
+> In function '__memset',
+>     inlined from '__bad_pagetable' at arch/alpha/mm/init.c:79:2:
+> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
+>    37 |                         return __builtin_memset(s, c, n);
+>       |                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+> In function '__memset',
+>     inlined from '__bad_page' at arch/alpha/mm/init.c:86:2:
+> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
+>    37 |                         return __builtin_memset(s, c, n);
+>       |                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+> In function '__memset',
+>     inlined from 'paging_init' at arch/alpha/mm/init.c:256:2:
+> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
+>    37 |                         return __builtin_memset(s, c, n);
 > 
-
-Some examples:
-
-Build reference: next-20220202
-Compiler version: m68k-linux-gcc (GCC) 11.2.0
-
-Building m68k:defconfig ... failed
---------------
-Error log:
-lib/test_string.c:188:30: error: initializer element is not constant
-   188 | static const int strlen_ce = strlen("tada, a constant expression");
-
-Building mips:malta_defconfig:nocd:smp:net,e1000:initrd ... failed
-------------
-Error log:
-lib/test_string.c:188:30: error: initializer element is not constant
-  static const int strlen_ce = strlen("tada, a constant expression");
-
-Building i386:q35:Broadwell:defconfig:smp:ata:net,rtl8139:hd ... failed
-------------
-Error log:
-lib/test_string.c:188:30: error: initializer element is not constant
-   188 | static const int strlen_ce = strlen("tada, a constant expression");
-
-i386 and is defconfig + CONFIG_STRING_SELFTEST=y; mips is
-malta_defconfig + CONFIG_STRING_SELFTEST=y. All use gcc 11.2.
-
-There may be more, but there are so many failures in -next right now
-that I may be missing some.
-
-> This property of strlen() is already required by our builds (this is how
-> I tripped over it). For example:
+> This has been solved in other places[2] already by using the recently
+> added absolute_pointer() macro. Do the same here.
 > 
-> drivers/firmware/xilinx/zynqmp-debug.c:
+> [1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=99578
+> [2] https://lore.kernel.org/all/20210912160149.2227137-1-linux@roeck-us.net/
 > 
-> #define PM_API(id)               {id, #id, strlen(#id)}
-> static struct pm_api_info pm_api_list[] = {
->          PM_API(PM_GET_API_VERSION),
->          PM_API(PM_QUERY_DATA),
-> };
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-I do not think that it is a C standard that strlen() on a constant string
-must be compile-time evaluated and result in a constant.
+Reviewed-and-tested-by: Guenter Roeck <linux@roeck-us.net>
 
-Anyway, key difference, I think, is the presence of an architecture-specific
-version of strlen(), or the maybe non-presence of __HAVE_ARCH_STRLEN,
-or the definition of strlen() in include/linux/fortify-string.h.
-
-Guenter
+> ---
+>  arch/alpha/mm/init.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/alpha/mm/init.c b/arch/alpha/mm/init.c
+> index f6114d03357c..7511723b7669 100644
+> --- a/arch/alpha/mm/init.c
+> +++ b/arch/alpha/mm/init.c
+> @@ -76,14 +76,14 @@ pgd_alloc(struct mm_struct *mm)
+>  pmd_t *
+>  __bad_pagetable(void)
+>  {
+> -	memset((void *) EMPTY_PGT, 0, PAGE_SIZE);
+> +	memset(absolute_pointer(EMPTY_PGT), 0, PAGE_SIZE);
+>  	return (pmd_t *) EMPTY_PGT;
+>  }
+>  
+>  pte_t
+>  __bad_page(void)
+>  {
+> -	memset((void *) EMPTY_PGE, 0, PAGE_SIZE);
+> +	memset(absolute_pointer(EMPTY_PGE), 0, PAGE_SIZE);
+>  	return pte_mkdirty(mk_pte(virt_to_page(EMPTY_PGE), PAGE_SHARED));
+>  }
+>  
+> @@ -253,7 +253,7 @@ void __init paging_init(void)
+>  	free_area_init(max_zone_pfn);
+>  
+>  	/* Initialize the kernel's ZERO_PGE. */
+> -	memset((void *)ZERO_PGE, 0, PAGE_SIZE);
+> +	memset(absolute_pointer(ZERO_PGE), 0, PAGE_SIZE);
+>  }
+>  
+>  #if defined(CONFIG_ALPHA_GENERIC) || defined(CONFIG_ALPHA_SRM)
+> -- 
+> 2.30.2
+> 
