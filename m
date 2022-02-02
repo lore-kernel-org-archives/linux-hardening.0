@@ -2,79 +2,131 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43ACC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 21:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2074C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 22:02:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231136AbiBBV10 (ORCPT
+        id S1347749AbiBBWCw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Feb 2022 16:27:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53882 "EHLO
+        Wed, 2 Feb 2022 17:02:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239820AbiBBV1Z (ORCPT
+        with ESMTP id S1347746AbiBBWCv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Feb 2022 16:27:25 -0500
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6376BC06173B
-        for <linux-hardening@vger.kernel.org>; Wed,  2 Feb 2022 13:27:25 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id n8so1733695lfq.4
-        for <linux-hardening@vger.kernel.org>; Wed, 02 Feb 2022 13:27:25 -0800 (PST)
+        Wed, 2 Feb 2022 17:02:51 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 660EBC06173B
+        for <linux-hardening@vger.kernel.org>; Wed,  2 Feb 2022 14:02:51 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id oa14-20020a17090b1bce00b001b61aed4a03so916805pjb.5
+        for <linux-hardening@vger.kernel.org>; Wed, 02 Feb 2022 14:02:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vk5wYy3sT4I5WW+WUYmWyAImSgUa3X6inu5KcZCXPKY=;
-        b=aENyZMxtUMXciI8o8/Vm8rLMVTMwkMTUfjJ/Gv61rnrp1fCHNR+qb4Ih6z3KIWHXhw
-         s373VCw9AWxxeLrFacSEm4Gnpw0b+qTknppxCbYyULRkOKgD6E9pz34SgGO8qj+IPsdi
-         YnqpBtc56ZqzQQjKXV9BQmLDHQNKnEu6G4Bg9LYVdTi7cllMQ0ThOesYqVblF5tRNKe7
-         xOIQyekXcQTHn5EzdoIeKu6Iv3dQ6jyhNYlzRhFnEcI94cKlrmCoUSI1tYWV1F2FuP2K
-         vmZkR7+CzSYMh0k0GdSower3/61Aazzj6k2MEh5MgsBbBZCStEbc/DRnHefWMmmTQ2Ha
-         4sYg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ECaOy1T2k4+rTCdYBSi87MWLS+gUoT2Ik7Zjco3xvDE=;
+        b=OEMBwPrvQNPtg00fqc58e+O7P+ks/6XVgwHTnL4WGfVFPWsXrZ60raAX5RLwekwDjI
+         ZaN4hs9hqL64qKDcH1iqR6kyK1tjPr/755d0v/BUj3Hmt7WHxlowHaIhfGumew3ENKXW
+         tW2/pYjZPh/28hmP12Tyd0CLDdAXLGDyX2Fyw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vk5wYy3sT4I5WW+WUYmWyAImSgUa3X6inu5KcZCXPKY=;
-        b=upCmrCm1Aiiv+kX6qP3Y1IAw/tT+3Gg5dlZRjcCfus51CnyrnogulEFOSJuaTHHD0P
-         wWRDMnHbMfuUKf+eKOg68ZmM1lSnaZMNl97hVK90cjD7ZSQ/MN/hTKmZ8enOCv2DgKtt
-         T+mSlaD4I3ZaUVLFwpddK+rEv7zrY/BM0+X4dH1pZ/DqDkRbDY3JLWwRPy8ZTa8bBgIO
-         DRmMkjC0hoZEKkMgfgAcFekGGvF0xzkuXffJpUdEGhcJOInr6hbElL8NHQBU8BDuF6t4
-         3cEuKIViqCRW8gfiFlB1b7NNN/tGK97gCyem/W/xv7mXj1rTKT99WStewFhE7CUUAULy
-         sLYQ==
-X-Gm-Message-State: AOAM531LawVAP8IbfkUHRmsyJ31LaA6yrJBCYhyRcewxpLEPGUGqki2W
-        jrnNvxRdTe2QyOIZiIuc0F47es77+87U7B7JpIXI+Q==
-X-Google-Smtp-Source: ABdhPJyVqcYu3VpsE+xUOxSO999oM0orrVsNe7CURCcH7MfcCvDqjXznVMXZdNpW6flzSa772wPoyzvt1jlwncMP0EQ=
-X-Received: by 2002:a05:6512:3ba5:: with SMTP id g37mr24568699lfv.651.1643837243564;
- Wed, 02 Feb 2022 13:27:23 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ECaOy1T2k4+rTCdYBSi87MWLS+gUoT2Ik7Zjco3xvDE=;
+        b=d6BDyuxtmR6xJvxLOP/Bds770VvVJv7sWiqq480RiTXFYE/9HOEiWJxmXa9kJ50Mse
+         AZD3z0dwcawvV6Gd8Jo9FyP9vp3zDnyP7/fE7RlO5FW9yLa54wjlY1j105zKw7QhFqka
+         ezc/ZWxTCXVoLJMgOUV6dbUK7oJYX5XsQnlWuRs2GWGZPiON6b6l62z6fV2EyOtej1oO
+         6s/4MA4e+Y1HNg3WUpcoAlIAU8/qVG+wbflCCVUurKHwXB50jeY5S/DJwLhb4i0d9u1R
+         NVbaTp4RAC5Ze+G/E/UXPdDZJSp+lduaLz3mqb2stVieYUKeVhTgc8YkrymLpniUGpxW
+         YTiQ==
+X-Gm-Message-State: AOAM5316pMW6yN04BE2nluicxUtJQ50qzB1z/OCtFYwnHTguxah4rgd4
+        sJiGjcaJthgQFqJZd2P3Tlxt9g==
+X-Google-Smtp-Source: ABdhPJzNmSeKdn9TfTjv7P+ZuQp13MUOT0sY08UE2HypvMu3QGzZpnSBshzGXR/ynD7EMIbzNUbq3w==
+X-Received: by 2002:a17:903:183:: with SMTP id z3mr33174467plg.127.1643839370759;
+        Wed, 02 Feb 2022 14:02:50 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a13sm27967620pfv.97.2022.02.02.14.02.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Feb 2022 14:02:50 -0800 (PST)
+Date:   Wed, 2 Feb 2022 14:02:49 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kbuild@vger.kernel.org,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 4/5] Makefile: Enable -Warray-bounds
+Message-ID: <202202021320.ED0050E32@keescook>
+References: <20210818081118.1667663-1-keescook@chromium.org>
+ <20210818081118.1667663-5-keescook@chromium.org>
+ <20220202160903.GA2337834@roeck-us.net>
 MIME-Version: 1.0
-References: <20220202003033.704951-1-keescook@chromium.org> <20220202003033.704951-5-keescook@chromium.org>
-In-Reply-To: <20220202003033.704951-5-keescook@chromium.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 2 Feb 2022 13:27:11 -0800
-Message-ID: <CAKwvOd=icTwyFb39U3OO5i_2YNJMiCMteeNTrVe-Q0tcmmnBJQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4 v5] fortify: Add Clang support
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Miguel Ojeda <ojeda@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        George Burgess IV <gbiv@google.com>, llvm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220202160903.GA2337834@roeck-us.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Feb 1, 2022 at 4:30 PM Kees Cook <keescook@chromium.org> wrote:
->
-> +#define BOS    const __pass_object_size(1)
-> +#define BOS0   const __pass_object_size(0)
+On Wed, Feb 02, 2022 at 08:09:03AM -0800, Guenter Roeck wrote:
+> On Wed, Aug 18, 2021 at 01:11:17AM -0700, Kees Cook wrote:
+> > With the recent fixes for flexible arrays and expanded FORTIFY_SOURCE
+> > coverage, it is now possible to enable -Warray-bounds. Since both
+> > GCC and Clang include -Warray-bounds in -Wall, we just need to stop
+> > disabling it.
+> > 
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Masahiro Yamada <masahiroy@kernel.org>
+> > Cc: linux-kbuild@vger.kernel.org
+> > Co-developed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  Makefile | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/Makefile b/Makefile
+> > index a4aca01a4835..af22b83cede7 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -1072,7 +1072,6 @@ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+> >  
+> >  # We'll want to enable this eventually, but it's not going away for 5.7 at least
+> >  KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
+> > -KBUILD_CFLAGS += -Wno-array-bounds
+> >  KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
+> >  
+> >  # Another good warning that we'll want to enable eventually
+> 
+> alpha:defconfig:
+> 
+> In function '__memset',
+>     inlined from '__bad_pagetable' at arch/alpha/mm/init.c:79:2:
+> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
+>    37 |                         return __builtin_memset(s, c, n);
+>       |                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+> In function '__memset',
+>     inlined from '__bad_page' at arch/alpha/mm/init.c:86:2:
+> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
+>    37 |                         return __builtin_memset(s, c, n);
+>       |                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+> In function '__memset',
+>     inlined from 'paging_init' at arch/alpha/mm/init.c:256:2:
+> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
+>    37 |                         return __builtin_memset(s, c, n);
 
-A dumb bikeshed, but would you mind naming these BOS1 and BOS0, and
-perhaps consider adding a comment or pointer or link to something that
-describes why we use the two different modes?  I recognize that the
-code already uses the two different modes already without comments,
-but this might be a nice place to point folks like myself to so that
-in a month or so when I forget what the difference is between modes
-(again), we have a shorter trail of breadcrumbs.
+Ugh, these all appear to be the same "gcc thinks a literal is an offset
+from NULL" problem Arnd described:
+
+https://lore.kernel.org/linux-hardening/CAK8P3a1CT+-3J7Ufv9TQwRiV4i_+FF=-+phwSjWafyGuPfG+AA@mail.gmail.com
+
+What's annoying is that these values, if stored in a variable, aren't
+treated that way:
+https://pastebin.ubuntu.com/p/ZjZR2tzRpx/
+
+I guess having a common way to convert from an integer (or literal) into
+a void * that GCC doesn't freak out about would be generally nice.
+
+-Kees
+
 -- 
-Thanks,
-~Nick Desaulniers
+Kees Cook
