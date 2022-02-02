@@ -2,128 +2,211 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BE0C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 10:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 275EFC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 12:49:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230365AbiBBKp6 (ORCPT
+        id S239591AbiBBMtA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Feb 2022 05:45:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:50412 "EHLO foss.arm.com"
+        Wed, 2 Feb 2022 07:49:00 -0500
+Received: from mga11.intel.com ([192.55.52.93]:22455 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230010AbiBBKp6 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Feb 2022 05:45:58 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 044591FB;
-        Wed,  2 Feb 2022 02:45:58 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.87.240])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 872633F40C;
-        Wed,  2 Feb 2022 02:45:56 -0800 (PST)
-Date:   Wed, 2 Feb 2022 10:45:42 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Alexander Popov <alex.popov@linux.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] gcc-plugins/stackleak: Use noinstr in favor of notrace
-Message-ID: <Yfpg1rspyJVBLb2a@FVFF77S0Q05N>
-References: <20220202001918.4104428-1-keescook@chromium.org>
+        id S231931AbiBBMs7 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 2 Feb 2022 07:48:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643806139; x=1675342139;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9R23Y71WY2/eFfRHa+sSGWQwsQOjWv/VYmz5SxLVrzM=;
+  b=W1HGKL3nmBeG3SfZXC+NixIBj11D8n0IZQbaYjuqJ9+XGQfuZXD0z89I
+   edFkN8w3UWq/2fLkI8566NV1B7/J8xUrRBzgPdx4wukxBvWh+YPJmXsJr
+   p3MxtAxR8si1Jazll73U3/3TP0pLJOrsY8zKCfLWBLfWK0IGDv60qDFmv
+   kS9CqwjmS3pXBA9e2s6KpWehgtd2Xky9h3Spg1N2zTLvocOS8W3CYr6ws
+   zHsCy2lfzEPo3fiFCRPz1VymbvSkEf6h+bXSwpPHnS07WBLjl4/EBvadc
+   M2J2D1C+ipOZ1IEA6lUZ3cITYBke2Zwp6mkcPsyUhaT/tC/qdQChm4hEH
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="245501847"
+X-IronPort-AV: E=Sophos;i="5.88,336,1635231600"; 
+   d="scan'208";a="245501847"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 04:48:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,336,1635231600"; 
+   d="scan'208";a="480094065"
+Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 02 Feb 2022 04:48:56 -0800
+Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nFF4B-000UaO-M6; Wed, 02 Feb 2022 12:48:55 +0000
+Date:   Wed, 2 Feb 2022 20:48:49 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     kbuild-all@lists.01.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>
+Subject: Re: [PATCH 2/4] mm/kasan: Move kasan_pXX_table() and
+ kasan_early_shadow_page_entry()
+Message-ID: <202202022041.mkJKLdPP-lkp@intel.com>
+References: <3fe9bf0867b2ffc7cd43fe7040ee18d245641ec1.1643791473.git.christophe.leroy@csgroup.eu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220202001918.4104428-1-keescook@chromium.org>
+In-Reply-To: <3fe9bf0867b2ffc7cd43fe7040ee18d245641ec1.1643791473.git.christophe.leroy@csgroup.eu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Feb 01, 2022 at 04:19:18PM -0800, Kees Cook wrote:
-> While the stackleak plugin was already using notrace, objtool is now a
-> bit more picky. Update the notrace uses to noinstr. Silences these
-> warnings:
-> 
-> vmlinux.o: warning: objtool: do_syscall_64()+0x9: call to stackleak_track_stack() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: do_int80_syscall_32()+0x9: call to stackleak_track_stack() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: exc_general_protection()+0x22: call to stackleak_track_stack() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: fixup_bad_iret()+0x20: call to stackleak_track_stack() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: do_machine_check()+0x27: call to stackleak_track_stack() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: .text+0x5346e: call to stackleak_erase() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: .entry.text+0x143: call to stackleak_erase() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: .entry.text+0x10eb: call to stackleak_erase() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: .entry.text+0x17f9: call to stackleak_erase() leaves .noinstr.text section
-> 
-> Cc: Alexander Popov <alex.popov@linux.com>
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Link: https://lore.kernel.org/lkml/YYENAKB0igNFnFmK@hirez.programming.kicks-ass.net/
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> Is it correct to exclude .noinstr.text here? That means any functions called in
-> there will have their stack utilization untracked. This doesn't seem right to me,
-> though. Shouldn't stackleak_track_stack() just be marked noinstr instead?
+Hi Christophe,
 
-Given "noinstr" means "no instrumentation", it seems entirely correct to me
-that noinstr functions should not be instrumented with stack utilization
-checks. I am surprised that those *were* instrumented, and arguably this is a
-fix that should be backported.
+I love your patch! Yet something to improve:
 
-For stackleak_erase() itself, using noinstr certianly makes sense to me given
-the context in which it is called.
+[auto build test ERROR on tip/sched/core]
+[also build test ERROR on linus/master v5.17-rc2]
+[cannot apply to hnaz-mm/master next-20220202]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-FWIW:
+url:    https://github.com/0day-ci/linux/commits/Christophe-Leroy/mm-kasan-Add-CONFIG_KASAN_SOFTWARE/20220202-164612
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ec2444530612a886b406e2830d7f314d1a07d4bb
+config: riscv-randconfig-r042-20220130 (https://download.01.org/0day-ci/archive/20220202/202202022041.mkJKLdPP-lkp@intel.com/config)
+compiler: riscv64-linux-gcc (GCC) 11.2.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/23eabd57613c3b304c1c54f1133ef5376cf5731d
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Christophe-Leroy/mm-kasan-Add-CONFIG_KASAN_SOFTWARE/20220202-164612
+        git checkout 23eabd57613c3b304c1c54f1133ef5376cf5731d
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=riscv SHELL=/bin/bash kernel/
 
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-Mark.
+All errors (new ones prefixed by >>):
 
-> ---
->  kernel/stackleak.c                     | 3 +--
->  scripts/gcc-plugins/stackleak_plugin.c | 3 +++
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/stackleak.c b/kernel/stackleak.c
-> index 66b8af394e58..72d4ebf49480 100644
-> --- a/kernel/stackleak.c
-> +++ b/kernel/stackleak.c
-> @@ -70,7 +70,7 @@ late_initcall(stackleak_sysctls_init);
->  #define skip_erasing()	false
->  #endif /* CONFIG_STACKLEAK_RUNTIME_DISABLE */
->  
-> -asmlinkage void notrace stackleak_erase(void)
-> +asmlinkage void noinstr stackleak_erase(void)
->  {
->  	/* It would be nice not to have 'kstack_ptr' and 'boundary' on stack */
->  	unsigned long kstack_ptr = current->lowest_stack;
-> @@ -124,7 +124,6 @@ asmlinkage void notrace stackleak_erase(void)
->  	/* Reset the 'lowest_stack' value for the next syscall */
->  	current->lowest_stack = current_top_of_stack() - THREAD_SIZE/64;
->  }
-> -NOKPROBE_SYMBOL(stackleak_erase);
->  
->  void __used __no_caller_saved_registers notrace stackleak_track_stack(void)
->  {
-> diff --git a/scripts/gcc-plugins/stackleak_plugin.c b/scripts/gcc-plugins/stackleak_plugin.c
-> index e9db7dcb3e5f..e7e51f0eb597 100644
-> --- a/scripts/gcc-plugins/stackleak_plugin.c
-> +++ b/scripts/gcc-plugins/stackleak_plugin.c
-> @@ -429,6 +429,7 @@ static unsigned int stackleak_cleanup_execute(void)
->  	return 0;
->  }
->  
-> +/* Do not instrument anything found in special sections. */
->  static bool stackleak_gate(void)
->  {
->  	tree section;
-> @@ -446,6 +447,8 @@ static bool stackleak_gate(void)
->  			return false;
->  		if (!strncmp(TREE_STRING_POINTER(section), ".meminit.text", 13))
->  			return false;
-> +		if (!strncmp(TREE_STRING_POINTER(section), ".noinstr.text", 13))
-> +			return false;
->  	}
->  
->  	return track_frame_size >= 0;
-> -- 
-> 2.30.2
-> 
+   In file included from include/linux/slab.h:136,
+                    from kernel/fork.c:16:
+>> include/linux/kasan.h:102:36: error: unknown type name 'p4d_t'; did you mean 'pgd_t'?
+     102 | static inline bool kasan_pud_table(p4d_t p4d)
+         |                                    ^~~~~
+         |                                    pgd_t
+>> include/linux/kasan.h:113:36: error: unknown type name 'pud_t'; did you mean 'pgd_t'?
+     113 | static inline bool kasan_pmd_table(pud_t pud)
+         |                                    ^~~~~
+         |                                    pgd_t
+>> include/linux/kasan.h:130:36: error: unknown type name 'pmd_t'; did you mean 'pgd_t'?
+     130 | static inline bool kasan_pte_table(pmd_t pmd)
+         |                                    ^~~~~
+         |                                    pgd_t
+   kernel/fork.c:162:13: warning: no previous prototype for 'arch_release_task_struct' [-Wmissing-prototypes]
+     162 | void __weak arch_release_task_struct(struct task_struct *tsk)
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~
+   kernel/fork.c:764:20: warning: no previous prototype for 'arch_task_cache_init' [-Wmissing-prototypes]
+     764 | void __init __weak arch_task_cache_init(void) { }
+         |                    ^~~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/slab.h:136,
+                    from kernel/resource.c:17:
+>> include/linux/kasan.h:102:36: error: unknown type name 'p4d_t'; did you mean 'pgd_t'?
+     102 | static inline bool kasan_pud_table(p4d_t p4d)
+         |                                    ^~~~~
+         |                                    pgd_t
+>> include/linux/kasan.h:113:36: error: unknown type name 'pud_t'; did you mean 'pgd_t'?
+     113 | static inline bool kasan_pmd_table(pud_t pud)
+         |                                    ^~~~~
+         |                                    pgd_t
+>> include/linux/kasan.h:130:36: error: unknown type name 'pmd_t'; did you mean 'pgd_t'?
+     130 | static inline bool kasan_pte_table(pmd_t pmd)
+         |                                    ^~~~~
+         |                                    pgd_t
+--
+   In file included from include/linux/slab.h:136,
+                    from include/linux/resource_ext.h:11,
+                    from include/linux/acpi.h:14,
+                    from kernel/irq/irqdomain.c:5:
+>> include/linux/kasan.h:102:36: error: unknown type name 'p4d_t'; did you mean 'pgd_t'?
+     102 | static inline bool kasan_pud_table(p4d_t p4d)
+         |                                    ^~~~~
+         |                                    pgd_t
+>> include/linux/kasan.h:113:36: error: unknown type name 'pud_t'; did you mean 'pgd_t'?
+     113 | static inline bool kasan_pmd_table(pud_t pud)
+         |                                    ^~~~~
+         |                                    pgd_t
+>> include/linux/kasan.h:130:36: error: unknown type name 'pmd_t'; did you mean 'pgd_t'?
+     130 | static inline bool kasan_pte_table(pmd_t pmd)
+         |                                    ^~~~~
+         |                                    pgd_t
+   kernel/irq/irqdomain.c:1918:13: warning: no previous prototype for 'irq_domain_debugfs_init' [-Wmissing-prototypes]
+    1918 | void __init irq_domain_debugfs_init(struct dentry *root)
+         |             ^~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +102 include/linux/kasan.h
+
+    84	
+    85	#if defined(CONFIG_KASAN_SOFTWARE) && CONFIG_PGTABLE_LEVELS > 4
+    86	static inline bool kasan_p4d_table(pgd_t pgd)
+    87	{
+    88		return pgd_page(pgd) == virt_to_page(lm_alias(kasan_early_shadow_p4d));
+    89	}
+    90	#else
+    91	static inline bool kasan_p4d_table(pgd_t pgd)
+    92	{
+    93		return false;
+    94	}
+    95	#endif
+    96	#if defined(CONFIG_KASAN_SOFTWARE) && CONFIG_PGTABLE_LEVELS > 3
+    97	static inline bool kasan_pud_table(p4d_t p4d)
+    98	{
+    99		return p4d_page(p4d) == virt_to_page(lm_alias(kasan_early_shadow_pud));
+   100	}
+   101	#else
+ > 102	static inline bool kasan_pud_table(p4d_t p4d)
+   103	{
+   104		return false;
+   105	}
+   106	#endif
+   107	#if defined(CONFIG_KASAN_SOFTWARE) && CONFIG_PGTABLE_LEVELS > 2
+   108	static inline bool kasan_pmd_table(pud_t pud)
+   109	{
+   110		return pud_page(pud) == virt_to_page(lm_alias(kasan_early_shadow_pmd));
+   111	}
+   112	#else
+ > 113	static inline bool kasan_pmd_table(pud_t pud)
+   114	{
+   115		return false;
+   116	}
+   117	#endif
+   118	
+   119	#ifdef CONFIG_KASAN_SOFTWARE
+   120	static inline bool kasan_pte_table(pmd_t pmd)
+   121	{
+   122		return pmd_page(pmd) == virt_to_page(lm_alias(kasan_early_shadow_pte));
+   123	}
+   124	
+   125	static inline bool kasan_early_shadow_page_entry(pte_t pte)
+   126	{
+   127		return pte_page(pte) == virt_to_page(lm_alias(kasan_early_shadow_page));
+   128	}
+   129	#else
+ > 130	static inline bool kasan_pte_table(pmd_t pmd)
+   131	{
+   132		return false;
+   133	}
+   134	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
