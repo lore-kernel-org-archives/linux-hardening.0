@@ -2,51 +2,48 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2074C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 22:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9EFC43217
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 22:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347749AbiBBWCw (ORCPT
+        id S1347819AbiBBWMR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Feb 2022 17:02:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347746AbiBBWCv (ORCPT
+        Wed, 2 Feb 2022 17:12:17 -0500
+Received: from mail-pf1-f178.google.com ([209.85.210.178]:47081 "EHLO
+        mail-pf1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1347796AbiBBWMQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Feb 2022 17:02:51 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 660EBC06173B
-        for <linux-hardening@vger.kernel.org>; Wed,  2 Feb 2022 14:02:51 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id oa14-20020a17090b1bce00b001b61aed4a03so916805pjb.5
-        for <linux-hardening@vger.kernel.org>; Wed, 02 Feb 2022 14:02:51 -0800 (PST)
+        Wed, 2 Feb 2022 17:12:16 -0500
+Received: by mail-pf1-f178.google.com with SMTP id i17so480611pfq.13
+        for <linux-hardening@vger.kernel.org>; Wed, 02 Feb 2022 14:12:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=ECaOy1T2k4+rTCdYBSi87MWLS+gUoT2Ik7Zjco3xvDE=;
-        b=OEMBwPrvQNPtg00fqc58e+O7P+ks/6XVgwHTnL4WGfVFPWsXrZ60raAX5RLwekwDjI
-         ZaN4hs9hqL64qKDcH1iqR6kyK1tjPr/755d0v/BUj3Hmt7WHxlowHaIhfGumew3ENKXW
-         tW2/pYjZPh/28hmP12Tyd0CLDdAXLGDyX2Fyw=
+        bh=IN96kNo2GoNx6nkpd6g9ql6wx8bZFK4D4L/u8xLTqHk=;
+        b=ej/qevWE55BwyYZAXm1T0tW77I6BR+pgBZLQqwDsccA6kqiKb7YAvfuUfaQyWsL1Ai
+         /T4UVWIC54A24aTN/Xx4DHVPRbe7+orJaGeZRp/7flklRyCiklGorONYLFy9aDc0+15+
+         Y5A2LZpA/DQBFe6DDcKyQywjhl55JM5GgfkDM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ECaOy1T2k4+rTCdYBSi87MWLS+gUoT2Ik7Zjco3xvDE=;
-        b=d6BDyuxtmR6xJvxLOP/Bds770VvVJv7sWiqq480RiTXFYE/9HOEiWJxmXa9kJ50Mse
-         AZD3z0dwcawvV6Gd8Jo9FyP9vp3zDnyP7/fE7RlO5FW9yLa54wjlY1j105zKw7QhFqka
-         ezc/ZWxTCXVoLJMgOUV6dbUK7oJYX5XsQnlWuRs2GWGZPiON6b6l62z6fV2EyOtej1oO
-         6s/4MA4e+Y1HNg3WUpcoAlIAU8/qVG+wbflCCVUurKHwXB50jeY5S/DJwLhb4i0d9u1R
-         NVbaTp4RAC5Ze+G/E/UXPdDZJSp+lduaLz3mqb2stVieYUKeVhTgc8YkrymLpniUGpxW
-         YTiQ==
-X-Gm-Message-State: AOAM5316pMW6yN04BE2nluicxUtJQ50qzB1z/OCtFYwnHTguxah4rgd4
-        sJiGjcaJthgQFqJZd2P3Tlxt9g==
-X-Google-Smtp-Source: ABdhPJzNmSeKdn9TfTjv7P+ZuQp13MUOT0sY08UE2HypvMu3QGzZpnSBshzGXR/ynD7EMIbzNUbq3w==
-X-Received: by 2002:a17:903:183:: with SMTP id z3mr33174467plg.127.1643839370759;
-        Wed, 02 Feb 2022 14:02:50 -0800 (PST)
+        bh=IN96kNo2GoNx6nkpd6g9ql6wx8bZFK4D4L/u8xLTqHk=;
+        b=nO+Q5ueuOFxPUn5R1aNMOD6O6GgeRlJ01zqYKVsDqfbhPj7VhhPdd3+dObQ+Ax7ZzA
+         T7RHE0dK8YFyD7USAZys1fcwdUSYI0QjSslEKoHDRcjjujis/iTd8rvfGVdR4LOJJEvT
+         rCnHe7siFq0X3kuqdJZpy/8eheSngndSO8CpZlaKuT/Sp+OfhT2sqO6JACAbxbrxYzdv
+         X9BZurDeoJgRKJHRKhG3i18+ERMTldmRajc1HktKhXpTSc5DXGJTV9trOuPItdclb9aw
+         A6FtVd4nS2pouH00iFiN56jJ8emVRAtZzHaSNXpYM5UERX6lxUm0UNbpmDScQO1oUBsd
+         w40w==
+X-Gm-Message-State: AOAM5324CS+iGI4Of1seC9rPDdTid4lboYITYkAfMJrSTcnZjhTajEWz
+        iZaWtgMwD7YhCRza6oZVIK53bw==
+X-Google-Smtp-Source: ABdhPJwlVFChYEmq5VaZf5imvLjciEamNSjwDq0IsZQ+oI4+zA9/JblaMbVaWQmXiL7zU9bTnDK2/g==
+X-Received: by 2002:a63:5242:: with SMTP id s2mr25560468pgl.435.1643839876557;
+        Wed, 02 Feb 2022 14:11:16 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a13sm27967620pfv.97.2022.02.02.14.02.50
+        by smtp.gmail.com with ESMTPSA id c17sm28402108pfv.68.2022.02.02.14.11.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Feb 2022 14:02:50 -0800 (PST)
-Date:   Wed, 2 Feb 2022 14:02:49 -0800
+        Wed, 02 Feb 2022 14:11:16 -0800 (PST)
+Date:   Wed, 2 Feb 2022 14:11:15 -0800
 From:   Kees Cook <keescook@chromium.org>
 To:     Guenter Roeck <linux@roeck-us.net>
 Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
@@ -55,7 +52,7 @@ Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         "Gustavo A . R . Silva" <gustavoars@kernel.org>,
         clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH 4/5] Makefile: Enable -Warray-bounds
-Message-ID: <202202021320.ED0050E32@keescook>
+Message-ID: <202202021409.2AA6A4246@keescook>
 References: <20210818081118.1667663-1-keescook@chromium.org>
  <20210818081118.1667663-5-keescook@chromium.org>
  <20220202160903.GA2337834@roeck-us.net>
@@ -114,19 +111,10 @@ On Wed, Feb 02, 2022 at 08:09:03AM -0800, Guenter Roeck wrote:
 > ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
 >    37 |                         return __builtin_memset(s, c, n);
 
-Ugh, these all appear to be the same "gcc thinks a literal is an offset
-from NULL" problem Arnd described:
-
-https://lore.kernel.org/linux-hardening/CAK8P3a1CT+-3J7Ufv9TQwRiV4i_+FF=-+phwSjWafyGuPfG+AA@mail.gmail.com
-
-What's annoying is that these values, if stored in a variable, aren't
-treated that way:
-https://pastebin.ubuntu.com/p/ZjZR2tzRpx/
-
-I guess having a common way to convert from an integer (or literal) into
-a void * that GCC doesn't freak out about would be generally nice.
-
--Kees
+Ah! With Arnd and Nathan's help, I saw:
+https://lore.kernel.org/all/20210912160149.2227137-3-linux@roeck-us.net/
+which is solving the same problem (just manifested through different
+diagnostics). The same solution works here. I'll get the patches sent...
 
 -- 
 Kees Cook
