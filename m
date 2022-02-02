@@ -2,154 +2,128 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0D9C4332F
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 09:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BE0C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 10:45:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230054AbiBBJdH (ORCPT
+        id S230365AbiBBKp6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Feb 2022 04:33:07 -0500
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:36531 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239992AbiBBJdH (ORCPT
-        <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Feb 2022 04:33:07 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0V3RFN.I_1643794383;
-Received: from 192.168.193.142(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V3RFN.I_1643794383)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 02 Feb 2022 17:33:04 +0800
-Message-ID: <7c9fb924-bfef-4edd-a3f1-6c5d2c6c1c42@linux.alibaba.com>
-Date:   Wed, 2 Feb 2022 01:33:03 -0800
+        Wed, 2 Feb 2022 05:45:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:50412 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230010AbiBBKp6 (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 2 Feb 2022 05:45:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 044591FB;
+        Wed,  2 Feb 2022 02:45:58 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.87.240])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 872633F40C;
+        Wed,  2 Feb 2022 02:45:56 -0800 (PST)
+Date:   Wed, 2 Feb 2022 10:45:42 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Alexander Popov <alex.popov@linux.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] gcc-plugins/stackleak: Use noinstr in favor of notrace
+Message-ID: <Yfpg1rspyJVBLb2a@FVFF77S0Q05N>
+References: <20220202001918.4104428-1-keescook@chromium.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH] [PATCH,v3,1/1,AARCH64][PR102768] aarch64: Add compiler
- support for Shadow Call Stack
-Content-Language: en-US
-To:     gcc-patches@gcc.gnu.org, richard.earnshaw@arm.com,
-        marcus.shawcroft@arm.com, kyrylo.tkachov@arm.com, hp@gcc.gnu.org,
-        ndesaulniers@google.com, nsz@gcc.gnu.org, pageexec@gmail.com,
-        qinzhao@gcc.gnu.org, linux-hardening@vger.kernel.org,
-        richard.sandiford@arm.com
-References: <20220129150035.114602-1-ashimida@linux.alibaba.com>
- <mptwnifkfhr.fsf@arm.com>
-From:   Dan Li <ashimida@linux.alibaba.com>
-In-Reply-To: <mptwnifkfhr.fsf@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220202001918.4104428-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Tue, Feb 01, 2022 at 04:19:18PM -0800, Kees Cook wrote:
+> While the stackleak plugin was already using notrace, objtool is now a
+> bit more picky. Update the notrace uses to noinstr. Silences these
+> warnings:
+> 
+> vmlinux.o: warning: objtool: do_syscall_64()+0x9: call to stackleak_track_stack() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: do_int80_syscall_32()+0x9: call to stackleak_track_stack() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: exc_general_protection()+0x22: call to stackleak_track_stack() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: fixup_bad_iret()+0x20: call to stackleak_track_stack() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: do_machine_check()+0x27: call to stackleak_track_stack() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: .text+0x5346e: call to stackleak_erase() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: .entry.text+0x143: call to stackleak_erase() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: .entry.text+0x10eb: call to stackleak_erase() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: .entry.text+0x17f9: call to stackleak_erase() leaves .noinstr.text section
+> 
+> Cc: Alexander Popov <alex.popov@linux.com>
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Link: https://lore.kernel.org/lkml/YYENAKB0igNFnFmK@hirez.programming.kicks-ass.net/
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> Is it correct to exclude .noinstr.text here? That means any functions called in
+> there will have their stack utilization untracked. This doesn't seem right to me,
+> though. Shouldn't stackleak_track_stack() just be marked noinstr instead?
 
-On 1/31/22 09:00, Richard Sandiford wrote:
-> Dan Li <ashimida@linux.alibaba.com> writes:
->> Shadow Call Stack can be used to protect the return address of a
->> function at runtime, and clang already supports this feature[1].
->>
->>   
->>   /* This file should be included last.  */
->>   #include "target-def.h"
->> @@ -7478,10 +7479,31 @@ aarch64_layout_frame (void)
->>     frame.sve_callee_adjust = 0;
->>     frame.callee_offset = 0;
->>   
->> +  /* Shadow call stack only deal with functions where the LR is pushed
-> 
-> Typo: s/deal/deals/
-> 
+Given "noinstr" means "no instrumentation", it seems entirely correct to me
+that noinstr functions should not be instrumented with stack utilization
+checks. I am surprised that those *were* instrumented, and arguably this is a
+fix that should be backported.
 
-Sorry for my non-standard English expression :)
->> +     onto the stack and without specifying the "no_sanitize" attribute
->> +     with the argument "shadow-call-stack".  */
->> +  frame.is_scs_enabled
->> +    = (!crtl->calls_eh_return
->> +       && (sanitize_flags_p (SANITIZE_SHADOW_CALL_STACK)
->> +	   && known_ge (cfun->machine->frame.reg_offset[LR_REGNUM], 0)));
-> 
-> Nit, but normal GCC style would be to use a single chain of &&s here:
-> 
->    frame.is_scs_enabled
->      = (!crtl->calls_eh_return
->         && sanitize_flags_p (SANITIZE_SHADOW_CALL_STACK)
->         && known_ge (cfun->machine->frame.reg_offset[LR_REGNUM], 0));
-> 
+For stackleak_erase() itself, using noinstr certianly makes sense to me given
+the context in which it is called.
 
-Got it.
->> +
->> +  /* When shadow call stack is enabled, the scs_pop in the epilogue will
->> +     restore x30, and we don't need to pop x30 again in the traditional
->> +     way.  At this time, if candidate2 is x30, we need to adjust
->> +     max_push_offset to 256 to ensure that the offset meets the requirements
->> +     of emit_move_insn.  Similarly, if candidate1 is x30, we need to set
->> +     max_push_offset to 0, because x30 is not popped up at this time, so
->> +     callee_adjust cannot be adjusted.  */
->>     HOST_WIDE_INT max_push_offset = 0;
->>     if (frame.wb_candidate2 != INVALID_REGNUM)
->> -    max_push_offset = 512;
->> -  else if (frame.wb_candidate1 != INVALID_REGNUM)
->> +    {
->> +      if (frame.is_scs_enabled && frame.wb_candidate2 == R30_REGNUM)
->> +	max_push_offset = 256;
->> +      else
->> +	max_push_offset = 512;
->> +    }
->> +  else if ((frame.wb_candidate1 != INVALID_REGNUM)
->> +	   && !(frame.is_scs_enabled && frame.wb_candidate1 == R30_REGNUM))
->>       max_push_offset = 256;
->>     HOST_WIDE_INT const_size, const_outgoing_args_size, const_fp_offset;
-> 
-> Maybe we should instead add separate fields for wb_push_candidate[12] and
-> wb_pop_candidate[12].  The pop candidates would start out the same as the
-> push candidates, but R30_REGNUM would get replaced with INVALID_REGNUM
-> for SCS.
-> 
+FWIW:
 
-This looks more reasonable, I'll change it in the next version.
-> Admittedly, suppressing the restore of x30 is turning out to be a bit
-> more difficult than I'd realised :-/
-> 
->> […]
->> diff --git a/gcc/config/aarch64/aarch64.h b/gcc/config/aarch64/aarch64.h
->> index 2792bb29adb..1610a4fd74c 100644
->> --- a/gcc/config/aarch64/aarch64.h
->> +++ b/gcc/config/aarch64/aarch64.h
->> @@ -916,6 +916,10 @@ struct GTY (()) aarch64_frame
->>     unsigned spare_pred_reg;
->>   
->>     bool laid_out;
->> +
->> +  /* Nonzero if shadow call stack should be enabled for the current
->> +     function, otherwise return FALSE.  */
-> 
-> “True” seems better than “Nonzero” given that this is a bool.
-> (A lot of GCC bools were originally ints, which is why “nonzero”
-> still appears in non-obvious places.)
-> 
-> I think we can just drop “otherwise return FALSE”: “return” doesn't
-> seem appropriate here, given that it's a variable.
-> 
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 
-Got it, thanks for the explanation.
-> Looks great otherwise.  Thanks especially for testing the corner cases. :-)
-> 
-> One minor thing:
-> 
->> +/* { dg-final { scan-assembler-times "str\tx30, \\\[x18\\\], \[#|$\]?8" 2 } } */
->> +/* { dg-final { scan-assembler-times "ldr\tx30, \\\[x18, \[#|$\]?-8\\\]!" 2 } } */
-> 
-> This sort of regexp can be easier to write if you quote them using {…}
-> rather than "…", since it reduces the number of backslashes needed.  E.g.:
-> 
-> /* { dg-final { scan-assembler-times {str\tx30, \[x18\], [#|$]?8} 2 } } */
-> 
-> The current version is fine too though, and is widely used.  Just mentioning
-> it in case it's useful in future.
-> 
+Mark.
 
-Oh, thanks Richard, I didn't notice it before.
-> Also, [#|$]? can be written #?.
+> ---
+>  kernel/stackleak.c                     | 3 +--
+>  scripts/gcc-plugins/stackleak_plugin.c | 3 +++
+>  2 files changed, 4 insertions(+), 2 deletions(-)
 > 
-
-Ok.
-> Thanks,
-> Richard
+> diff --git a/kernel/stackleak.c b/kernel/stackleak.c
+> index 66b8af394e58..72d4ebf49480 100644
+> --- a/kernel/stackleak.c
+> +++ b/kernel/stackleak.c
+> @@ -70,7 +70,7 @@ late_initcall(stackleak_sysctls_init);
+>  #define skip_erasing()	false
+>  #endif /* CONFIG_STACKLEAK_RUNTIME_DISABLE */
+>  
+> -asmlinkage void notrace stackleak_erase(void)
+> +asmlinkage void noinstr stackleak_erase(void)
+>  {
+>  	/* It would be nice not to have 'kstack_ptr' and 'boundary' on stack */
+>  	unsigned long kstack_ptr = current->lowest_stack;
+> @@ -124,7 +124,6 @@ asmlinkage void notrace stackleak_erase(void)
+>  	/* Reset the 'lowest_stack' value for the next syscall */
+>  	current->lowest_stack = current_top_of_stack() - THREAD_SIZE/64;
+>  }
+> -NOKPROBE_SYMBOL(stackleak_erase);
+>  
+>  void __used __no_caller_saved_registers notrace stackleak_track_stack(void)
+>  {
+> diff --git a/scripts/gcc-plugins/stackleak_plugin.c b/scripts/gcc-plugins/stackleak_plugin.c
+> index e9db7dcb3e5f..e7e51f0eb597 100644
+> --- a/scripts/gcc-plugins/stackleak_plugin.c
+> +++ b/scripts/gcc-plugins/stackleak_plugin.c
+> @@ -429,6 +429,7 @@ static unsigned int stackleak_cleanup_execute(void)
+>  	return 0;
+>  }
+>  
+> +/* Do not instrument anything found in special sections. */
+>  static bool stackleak_gate(void)
+>  {
+>  	tree section;
+> @@ -446,6 +447,8 @@ static bool stackleak_gate(void)
+>  			return false;
+>  		if (!strncmp(TREE_STRING_POINTER(section), ".meminit.text", 13))
+>  			return false;
+> +		if (!strncmp(TREE_STRING_POINTER(section), ".noinstr.text", 13))
+> +			return false;
+>  	}
+>  
+>  	return track_frame_size >= 0;
+> -- 
+> 2.30.2
+> 
