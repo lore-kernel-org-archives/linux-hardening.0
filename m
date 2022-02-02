@@ -2,108 +2,133 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE4CC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 17:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A9EC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 19:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346305AbiBBRjA (ORCPT
+        id S1346842AbiBBTDw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Feb 2022 12:39:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57808 "EHLO
+        Wed, 2 Feb 2022 14:03:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236238AbiBBRi7 (ORCPT
+        with ESMTP id S235509AbiBBTDv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Feb 2022 12:38:59 -0500
-Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5933DC06173D
-        for <linux-hardening@vger.kernel.org>; Wed,  2 Feb 2022 09:38:59 -0800 (PST)
-Received: by mail-io1-xd36.google.com with SMTP id y84so52897iof.0
-        for <linux-hardening@vger.kernel.org>; Wed, 02 Feb 2022 09:38:59 -0800 (PST)
+        Wed, 2 Feb 2022 14:03:51 -0500
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ED12C061714
+        for <linux-hardening@vger.kernel.org>; Wed,  2 Feb 2022 11:03:51 -0800 (PST)
+Received: by mail-pl1-x62f.google.com with SMTP id z5so57400plg.8
+        for <linux-hardening@vger.kernel.org>; Wed, 02 Feb 2022 11:03:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5ZgUDIIYZb0p0sGt1ruE6r7EKduNuE6iJPlnBrAIoKA=;
-        b=cUKtZGMEPyShwOxkBLK4TT6kN7iU9FHiF/YbNpPfqYjw0okt5j1OVTXSJqqaOO1qic
-         /YNUuFlCbUAaGudiS8lOBDA3wHToNsrSsxYGp1MlhN6AGhKBfd3tQ42rHsivBJ0Xao5K
-         Ny30q3/1w0SYI7sr4pWArpxIagMxVCqYJcmwo=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aukpW1iZ03y9P5Ftl5wjItYFQL/CIJ9WL1xn7dY1lMc=;
+        b=d5CHA/ArAtV/xPhLL2/JhkAe37YFSe43ehxtmA5SCeVDr410kShpQ5JnPBswiRQVcy
+         RmIrCXJZy1n4FE4WROjypPuHYpeubia5+50oO3H4OlzDzlKappn+UlQ9qzPQBMnsVTOP
+         Quueb5szhF/BxSK2uR+7g0OBW6XEC6M1Ihvr4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5ZgUDIIYZb0p0sGt1ruE6r7EKduNuE6iJPlnBrAIoKA=;
-        b=qBOGkFvmurnhivfUJDFUkSIbF3rhEWBnvS1gMhJOaPWTqEdMSeyUZ3DxIKHdBv9YPa
-         7ddeQKJ/X8XtCLfovzkT2bZpd6qFDWMEOOmZpVWYidoyZgh+zf3RAYJZFiKztOlnxAoD
-         NmiBC91n+MFDd0WBXbMJNxtsevXavwAQ65XmmaK2PnjilaydjwfQaCuRkrbDSm0FYR0K
-         si2AcASgWAeFvAmn6BUpWs9yjSiA3AI7r46QKztFCAapRI9zR9ZiXsnvm1y0HkMqjzRm
-         EujKcgaXb9ZtcPxW5Y0VpsyAQGZMiskCqRblnciiJ4ygoAEBY1s3j1LifdN5jqCBzt8f
-         hR7A==
-X-Gm-Message-State: AOAM530Pz/dk9Cg3wRqbcLhPrn+kCy4EMe3IOIBMyu5QKE2KRKsNTSGi
-        pkO1ng7OGVLrIsLR9uLENRDovg==
-X-Google-Smtp-Source: ABdhPJywVmU21xcaWcoRexhtWbe7YKkj4yex5iylSdnFCIHBDrhD2VplYVOBvZUOkDTituScSgE0Hw==
-X-Received: by 2002:a05:6638:4105:: with SMTP id ay5mr16415785jab.186.1643823538745;
-        Wed, 02 Feb 2022 09:38:58 -0800 (PST)
-Received: from [192.168.1.128] ([71.205.29.0])
-        by smtp.gmail.com with ESMTPSA id y22sm3767548iow.2.2022.02.02.09.38.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Feb 2022 09:38:58 -0800 (PST)
-Subject: Re: [PATCH] selftests/exec: Avoid future NULL argv execve warning
-To:     Alexey Dobriyan <adobriyan@gmail.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Eric Biederman <ebiederm@xmission.com>,
-        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aukpW1iZ03y9P5Ftl5wjItYFQL/CIJ9WL1xn7dY1lMc=;
+        b=ms+AeMn8lAR1On05KouHqJjpg8wTZyWcdQ+JOm8djuUQbyOBEO/nb1oPjXPm9rJqob
+         aR5GkcVDp70cDO2dvHRmf96IvQ+j+r+QYDMjAXRd17vZPjPooRo5zSInWM6RN9WySYnm
+         nfWfCGJknRZ4JhUxsQVddc+4PbgtFeBllgoIZNMkhehFdR3rbsns4yxNYGKLCiHbgnPG
+         ZVUKfzD0aiNXtLuZbDdmViHGBY0ZRvBrRSdRNHH7a0o3giLEnmWeEPKsoOvtLTQc/lfy
+         q4O/EJU+5YWKI49qoU3K6PVu+/yMFOxP5zf1LHGtZzixY01WnU2nOJOgjRkvFxyLc2Qv
+         ekiw==
+X-Gm-Message-State: AOAM532/KWcpz0Npk6yvK2OB95yABo6smYzozy23ZFa/HqjHDTPwNOmd
+        Q6B6HfV+oyzj450HxzQcHUQRU3ociFLQ0Q==
+X-Google-Smtp-Source: ABdhPJw+8PJv/OS8Dx0VVQ7xKm/3S+7zS+33PFyICT8EO3OvjoYaQYPH3Qiq87/Okt1OkXuL/rp2pw==
+X-Received: by 2002:a17:90a:be15:: with SMTP id a21mr9663038pjs.36.1643828631016;
+        Wed, 02 Feb 2022 11:03:51 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y191sm25813825pfb.114.2022.02.02.11.03.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Feb 2022 11:03:50 -0800 (PST)
+Date:   Wed, 2 Feb 2022 11:03:49 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Rich Felker <dalias@libc.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Ariadne Conill <ariadne@dereferenced.org>,
         Michael Kerrisk <mtk.manpages@gmail.com>,
         Matthew Wilcox <willy@infradead.org>,
         Christian Brauner <brauner@kernel.org>,
-        Rich Felker <dalias@libc.org>,
+        Eric Biederman <ebiederm@xmission.com>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20220201000807.2453486-1-keescook@chromium.org>
- <Yfqfo0rbq/B/l6IP@localhost.localdomain>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <7af32164-dbdf-26f1-1aaa-b720365f9743@linuxfoundation.org>
-Date:   Wed, 2 Feb 2022 10:38:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] exec: Force single empty string when argv is empty
+Message-ID: <202202021056.ED125C0346@keescook>
+References: <20220201000947.2453721-1-keescook@chromium.org>
+ <20220201145324.GA29634@brightrain.aerifal.cx>
+ <1A24DA4E-2B15-4A95-B2A1-F5F963E0CD6F@chromium.org>
+ <20220202171218.GQ7074@brightrain.aerifal.cx>
 MIME-Version: 1.0
-In-Reply-To: <Yfqfo0rbq/B/l6IP@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220202171218.GQ7074@brightrain.aerifal.cx>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2/2/22 8:13 AM, Alexey Dobriyan wrote:
-> On Mon, Jan 31, 2022 at 04:08:07PM -0800, Kees Cook wrote:
->> Build actual argv for launching recursion test to avoid future warning
->> about using an empty argv in execve().
+On Wed, Feb 02, 2022 at 12:12:19PM -0500, Rich Felker wrote:
+> On Wed, Feb 02, 2022 at 07:50:42AM -0800, Kees Cook wrote:
+> > On February 1, 2022 6:53:25 AM PST, Rich Felker <dalias@libc.org> wrote:
+> > >From #musl:
+> > >
+> > ><mixi> kees: shouldn't the min(bprm->argc, 1) be max(...) in your patch?
+> > 
+> > Fix has already been sent, yup.
+> > 
+> > >I'm pretty sure without fixing that, you're introducing a giant vuln
+> > >here.
+> > 
+> > I wouldn't say "giant", but yes, it weakened a defense in depth for
+> > avoiding high stack utilization.
 > 
->> --- a/tools/testing/selftests/exec/recursion-depth.c
->> +++ b/tools/testing/selftests/exec/recursion-depth.c
->> @@ -24,8 +24,14 @@
->>   #include <sys/mount.h>
->>   #include <unistd.h>
->>   
->> +#define FILENAME "/tmp/1"
->> +#define HASHBANG "#!" FILENAME "\n"
->> +
->>   int main(void)
->>   {
->> +	char * const argv[] = { FILENAME, NULL };
->> +	int rv;
+> I thought it was deciding the amount of memory to allocate/reserve for
+> the arg slots, but based on the comment it looks like it's just a way
+> to fail early rather than making the new process image fault later if
+> they don't fit.
+
+Right.
+
+> > > I believe this is the second time a patch attempting to fix this
+> > >non-vuln has proposed adding a new vuln...
+> > 
+> > Mistakes happen, and that's why there is review and testing. Thank
+> > you for being part of the review process! :)
 > 
-> Can we move out of -Wdeclaration-after-statement mentality in tests at least?
+> I know, and I'm sorry for being a bit hostile over it, and for jumping
+> the gun about the severity. I just get frustrated when I see a rush to
+> make changes over an incidental part of a popularized vuln, with
+> disproportionate weight on "doing something" and not enough on being
+> careful.
 
-selftest like the rest of the kernel follows the same coding guidelines.
-It will follow the moving "-Wdeclaration-after-statement mentality" when
-the rest of the kernel does.
+Sure, I can see it looks that way. My sense of urgency on this in
+particular is that we're early in the development cycle, and it's an
+ABI-breaking change, so I want to maximize how much time it has to get
+tested out in real workloads. (i.e. we've now seen that just rejecting
+NULL argv is likely too painful, etc.)
 
-Looks like this topic was discussed in the following:
-https://patchwork.kernel.org/project/linux-kbuild/patch/c6fda26e8d134264b04fadc3386d6c32@gmail.com/
+All that said, I regularly bemoan the lack of sufficient regression
+tests for execve() and the binfmt_*.c loaders. I've written a couple,
+and so have others, but what I really want is a library of "binary that
+got broken by exec change" for doing regression testing against. That
+gets hampered by both size, redistribution issues, etc, so I've wanted
+to have minimal reproducers for each, but creating those take time, etc,
+etc.
 
-thanks,
--- Shuah
+(And you'll note I wrote[1] a test for this particular behavior, because
+I'm trying to avoid falling further behind in test coverage.)
+
+I would _love_ it if someone had the time and attention to go through
+all the past binaries and make a regression test series. :)
+
+-Kees
+
+[1] https://lore.kernel.org/linux-hardening/20220201011637.2457646-1-keescook@chromium.org/
+
+-- 
+Kees Cook
