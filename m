@@ -2,154 +2,131 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CFEC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 22:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6684AC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 22:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232913AbiBBWmp (ORCPT
+        id S1347955AbiBBWxa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Feb 2022 17:42:45 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.85.151]:52229 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1347626AbiBBWmp (ORCPT
+        Wed, 2 Feb 2022 17:53:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243882AbiBBWx3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Feb 2022 17:42:45 -0500
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-222-4tYY-hjeOVu5KHCJ3wWYMA-1; Wed, 02 Feb 2022 22:42:38 +0000
-X-MC-Unique: 4tYY-hjeOVu5KHCJ3wWYMA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.28; Wed, 2 Feb 2022 22:42:34 +0000
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.028; Wed, 2 Feb 2022 22:42:34 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Rasmus Villemoes' <rasmus.villemoes@prevas.dk>,
-        'Kees Cook' <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Martin Uecker <Martin.Uecker@med.uni-goettingen.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH] linux/const.h: Explain how __is_constexpr() works
-Thread-Topic: [PATCH] linux/const.h: Explain how __is_constexpr() works
-Thread-Index: AQHYFuNHRL4oDGFcTkyEh79ubpGBJ6yAbZqwgABP1oCAAB82kA==
-Date:   Wed, 2 Feb 2022 22:42:34 +0000
-Message-ID: <91f0956687b341a9861f467aafe6dc4d@AcuMS.aculab.com>
-References: <20220131204357.1133674-1-keescook@chromium.org>
- <6641e01b86374ce197020d57c65ae3b3@AcuMS.aculab.com>
- <311c9ca5-e2d4-22fb-0299-d47f84470677@prevas.dk>
-In-Reply-To: <311c9ca5-e2d4-22fb-0299-d47f84470677@prevas.dk>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 2 Feb 2022 17:53:29 -0500
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3C85C061714
+        for <linux-hardening@vger.kernel.org>; Wed,  2 Feb 2022 14:53:29 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id x11so561336plg.6
+        for <linux-hardening@vger.kernel.org>; Wed, 02 Feb 2022 14:53:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rPOGjmoDh+fnvSCSK8zT1oohl04D24duwddzgIk3nEI=;
+        b=DSgFXePcmMMfWdOEhQeZbRpAjykr8OqvlykT3vCxMLBrsZRkn86Hvb81D++0cC2O7P
+         eaiNtWAwguoFP7szwvwShBZmO2pc9mHzce2wim2ngtRcdJkVeEeL4U4vUYdUSyZ7DMmZ
+         vroJKfx3Nnfi/kZ93LGkWU1daDD1zrRjLqRAc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rPOGjmoDh+fnvSCSK8zT1oohl04D24duwddzgIk3nEI=;
+        b=ENMuB/EFj00JiPemKTsRZ+l8Lrd7pVUagT34s+WHZ3rf8Mt6pL0DErxXzNy0lTC6Nb
+         Y6YQkHHtIlo8nVsXQuTS39kd3CnEJYoj5+btf83NUB0YwDDnFyc6eqmU99kjWwEQ0nNx
+         ENgzdUTSvpCUKqj+D1AGgMwCXYemxnK84pTDNaXh+1c8Q3taKrlH/RkVgEJQo49H+9Gw
+         Pl0O7hmAkO9qakzsHoPvtQSAOg09lNy7Yxv4P13PAvmRE5treBfLqjvY27tyuvrkgGU5
+         tiL8nV8K9lChvtWxQKj36omzdzPKw6zZ/gKYvp8ZuTFGtjb6Wz4y/quZV+1OAinydudX
+         wfIw==
+X-Gm-Message-State: AOAM533D/vGQ5nq35DdfSqgDsNiM9XV3rN1zHi6yxXfjO5VWnUvdxN90
+        6iXQ8+Dh6phvpSn3Rv252pWLfg==
+X-Google-Smtp-Source: ABdhPJy46YbgYX/2Q0sy9QYIAZD2Glw5/E490qFkjT5TsETXWbOxhTpw8AgDHSKiaI572HENl1BfAQ==
+X-Received: by 2002:a17:902:ec8a:: with SMTP id x10mr32767661plg.107.1643842409322;
+        Wed, 02 Feb 2022 14:53:29 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y18sm24093086pgh.67.2022.02.02.14.53.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Feb 2022 14:53:29 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] m68k: cmpxchg: Dereference matching size
+Date:   Wed,  2 Feb 2022 14:53:27 -0800
+Message-Id: <20220202225327.1544295-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2399; h=from:subject; bh=NU7D+OEXrcXgfft/7RjJlfx2jx9vXFgzFYyD/JEV3D8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh+wtm8ge1jg+Y66KWK4NHs6Y8l51oU5IKktstmzgP 8aFbX3CJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYfsLZgAKCRCJcvTf3G3AJo54EA CcDIB/M3H+2sLSu4vwe7wzdgtnDCvYBViuTWvKj9z6jyF+/0bEwDwZtCByZtayJmHpkrULNUlR7ge5 sJeji6qeS9CF1nEDQ0KUUeQ+qc66CSWudWduR8j7w/di4TG4AW09Tqlrvkm5/MCNw68uKjR+43iHRf 2INuy6H/p6OWXhgrp4XUQPpyZc+VxSGDp0nRJrZNTKYl454nCfljSzi7jwNVMG7W5Hvqk1Lt5txAr4 Mg11KaGr5xQ/TeOlpcXRnMHEXYpvRecdV0zBiWx1OW3FznjNcgKVWInxf03Fi9wD6GDnmjvOItrNOf HPQKlGbHXbsE2MQQGKrsmW9gys8j8L0wVNOH8dBfhA54Nk+5JDxEmsXKQPCgxuaI5I8VMkKRSbxQjZ 01Rjh+YCTTeebOq1ByPU1by4zI0OKihA1QVv/cPBcgQ7Ja7YKL4yaAf5W1HtmyOz1aV1wnscX1gRpr SAXKlyva9J/EzaQC5gIT+C6jfsX/IGvKWUE691IQGNMzPN/PNJeSWSjbpcbDdbmZN+MMNZEXN5uFAR 1AoQab4fNBAKcrRRPBQnonpliW33MWJ2gZmVre8aQXIy1BbcSUmAQ27qGC5/R7p9KyVIkDhCNtyyct wfDsT4TpBTKUjnXdfGTVOck+cQVJELGXZwGm8cB30kwnD5e6KiAubfaXqt6A==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-RnJvbTogUmFzbXVzIFZpbGxlbW9lcw0KPiBTZW50OiAwMiBGZWJydWFyeSAyMDIyIDIwOjQ0DQo+
-IA0KPiBPbiAwMi8wMi8yMDIyIDE3LjE5LCBEYXZpZCBMYWlnaHQgd3JvdGU6DQo+ID4gRnJvbTog
-S2VlcyBDb29rDQo+ID4+IFNlbnQ6IDMxIEphbnVhcnkgMjAyMiAyMDo0NA0KPiA+Pg0KPiA+PiBU
-aGUgX19pc19jb25zdGV4cHIoKSBtYWNybyBpcyBkYXJrIG1hZ2ljLiBTaGVkIHNvbWUgbGlnaHQg
-b24gaXQgd2l0aA0KPiA+PiBhIGNvbW1lbnQgdG8gZXhwbGFpbiBob3cgYW5kIHdoeSBpdCB3b3Jr
-cy4NCj4gPj4NCj4gPiAuLi4NCj4gPj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvY29uc3Qu
-aCBiL2luY2x1ZGUvbGludXgvY29uc3QuaA0KPiA+PiBpbmRleCA0MzVkZGQ3MmQyYzQuLjcxMjJk
-NmExZjhjZSAxMDA2NDQNCj4gPj4gLS0tIGEvaW5jbHVkZS9saW51eC9jb25zdC5oDQo+ID4+ICsr
-KyBiL2luY2x1ZGUvbGludXgvY29uc3QuaA0KPiA+PiBAQCAtNyw2ICs3LDMwIEBADQo+ID4+ICAg
-KiBUaGlzIHJldHVybnMgYSBjb25zdGFudCBleHByZXNzaW9uIHdoaWxlIGRldGVybWluaW5nIGlm
-IGFuIGFyZ3VtZW50IGlzDQo+ID4+ICAgKiBhIGNvbnN0YW50IGV4cHJlc3Npb24sIG1vc3QgaW1w
-b3J0YW50bHkgd2l0aG91dCBldmFsdWF0aW5nIHRoZSBhcmd1bWVudC4NCj4gPj4gICAqIEdsb3J5
-IHRvIE1hcnRpbiBVZWNrZXIgPE1hcnRpbi5VZWNrZXJAbWVkLnVuaS1nb2V0dGluZ2VuLmRlPg0K
-PiA+PiArICoNCj4gPj4gKyAqIERldGFpbHM6DQo+ID4+ICsgKiAtIHNpemVvZigpIGlzIGFuIGlu
-dGVnZXIgY29uc3RhbnQgZXhwcmVzc2lvbiwgYW5kIGRvZXMgbm90IGV2YWx1YXRlIHRoZQ0KPiA+
-PiArICogICB2YWx1ZSBvZiBpdHMgb3BlcmFuZDsgaXQgb25seSBleGFtaW5lcyB0aGUgdHlwZSBv
-ZiBpdHMgb3BlcmFuZC4NCj4gPj4gKyAqIC0gVGhlIHJlc3VsdHMgb2YgY29tcGFyaW5nIHR3byBp
-bnRlZ2VyIGNvbnN0YW50IGV4cHJlc3Npb25zIGlzIGFsc28NCj4gPj4gKyAqICAgYW4gaW50ZWdl
-ciBjb25zdGFudCBleHByZXNzaW9uLg0KPiA+PiArICogLSBUaGUgdXNlIG9mIGxpdGVyYWwgIjgi
-IGlzIHRvIGF2b2lkIHdhcm5pbmdzIGFib3V0IHVuYWxpZ25lZCBwb2ludGVyczsNCj4gPj4gKyAq
-ICAgdGhlc2UgY291bGQgb3RoZXJ3aXNlIGp1c3QgYmUgIjEicy4NCj4gPj4gKyAqIC0gKGxvbmcp
-KHgpIGlzIHVzZWQgdG8gYXZvaWQgd2FybmluZ3MgYWJvdXQgNjQtYml0IHR5cGVzIG9uIDMyLWJp
-dA0KPiA+PiArICogICBhcmNoaXRlY3R1cmVzLg0KPiA+PiArICogLSBUaGUgQyBzdGFuZGFyZCBk
-ZWZpbmVzIGFuICJpbnRlZ2VyIGNvbnN0YW50IGV4cHJlc3Npb24iIGFzIGRpZmZlcmVudA0KPiA+
-PiArICogICBmcm9tIGEgIm51bGwgcG9pbnRlciBjb25zdGFudCIgKGFuIGludGVnZXIgY29uc3Rh
-bnQgMCBwb2ludGVyKS4NCj4gPj4gKyAqIC0gVGhlIGNvbmRpdGlvbmFsIG9wZXJhdG9yICgiLi4u
-ID8gLi4uIDogLi4uIikgcmV0dXJucyB0aGUgdHlwZSBvZiB0aGUNCj4gPj4gKyAqICAgb3BlcmFu
-ZCB0aGF0IGlzbid0IGEgbnVsbCBwb2ludGVyIGNvbnN0YW50LiBUaGlzIGJlaGF2aW9yIGlzIHRo
-ZQ0KPiA+PiArICogICBjZW50cmFsIG1lY2hhbmlzbSBvZiB0aGUgbWFjcm8uDQo+ID4+ICsgKiAt
-IElmICh4KSBpcyBhbiBpbnRlZ2VyIGNvbnN0YW50IGV4cHJlc3Npb24sIHRoZW4gdGhlICIqIDBs
-IiByZXNvbHZlcyBpdA0KPiA+PiArICogICBpbnRvIGEgbnVsbCBwb2ludGVyIGNvbnN0YW50LCB3
-aGljaCBmb3JjZXMgdGhlIGNvbmRpdGlvbmFsIG9wZXJhdG9yDQo+ID4+ICsgKiAgIHRvIHJldHVy
-biB0aGUgdHlwZSBvZiB0aGUgbGFzdCBvcGVyYW5kOiAiKGludCAqKSIuDQo+ID4+ICsgKiAtIElm
-ICh4KSBpcyBub3QgYW4gaW50ZWdlciBjb25zdGFudCBleHByZXNzaW9uLCB0aGVuIHRoZSB0eXBl
-IG9mIHRoZQ0KPiA+PiArICogICBjb25kaXRpb25hbCBvcGVyYXRvciBpcyBmcm9tIHRoZSBmaXJz
-dCBvcGVyYW5kOiAiKHZvaWQgKikiLg0KPiA+PiArICogLSBzaXplb2YoaW50KSA9PSA0IGFuZCBz
-aXplb2Yodm9pZCkgPT0gMS4NCj4gPj4gKyAqIC0gVGhlIHVsdGltYXRlIGNvbXBhcmlzb24gdG8g
-InNpemVvZihpbnQpIiBjaG9vc2VzIGJldHdlZW4gZWl0aGVyOg0KPiA+PiArICogICAgIHNpemVv
-ZigqKChpbnQgKikgKDgpKSA9PSBzaXplb2YoaW50KSAgICh4IHdhcyBhIGNvbnN0YW50IGV4cHJl
-c3Npb24pDQo+ID4+ICsgKiAgICAgc2l6ZW9mKCooKHZvaWQgKikoOCkpID09IHNpemVvZih2b2lk
-KSAgKHggd2FzIG5vdCBhIGNvbnN0YW50IGV4cHJlc3Npb24pDQo+ID4+ICAgKi8NCj4gPj4gICNk
-ZWZpbmUgX19pc19jb25zdGV4cHIoeCkgXA0KPiA+PiAgCShzaXplb2YoaW50KSA9PSBzaXplb2Yo
-Kig4ID8gKCh2b2lkICopKChsb25nKSh4KSAqIDBsKSkgOiAoaW50ICopOCkpKQ0KPiA+DQo+ID4g
-VGhpcyBoYXMgYmVlbiBtYWtpbmcgbXkgaGVhZCBodXJ0IGFsbCBkYXkuDQo+ID4gVGhlIGFib3Zl
-IGlzbid0IHJlYWxseSBhIHRydWUgZGVzY3JpcHRpb24gLSA/OiBkb2Vzbid0IHdvcmsgdGhhdCB3
-YXkuDQo+ID4gVHJ5IHRoZSBmb2xsb3dpbmcgZm9yIHNpemU6DQo+ID4NCj4gPiAtIFRoZSBjb25k
-aXRpb25hbCBvcGVyYXRvciAoPzopIHJlcXVpcmVzIHRoYXQgYm90aCBleHByZXNzaW9ucyBoYXZl
-IHRoZQ0KPiA+ICAgdGhlIHNhbWUgdHlwZSAoYWZ0ZXIgbnVtZXJpYyBwcm9tb3Rpb25zKS4NCj4g
-DQo+IE5vLiBQbGVhc2UgcmVhZCA2LjUuMTUuMyBmb3IgdGhlIHByZWNvbmRpdGlvbnMsIGFuZCA2
-LjUuMTUuNSBhbmQNCj4gNi41LjE1LjYgZm9yIHRoZSBydWxlcyBnb3Zlcm5pbmcgdGhlIHR5cGUg
-b2YgdGhlIHdob2xlIGV4cHJlc3Npb24uDQo+IA0KPiA+ICAgVGhlIHR5cGUgb2YgdGhlIHJlc3Vs
-dCBpcyBhIGNvbXBpbGUgdGltZSBjb25zdGFudCBhbmQgZG9lc24ndCBkZXBlbmQgb24gYW55DQo+
-ID4gICB2YXJpYWJsZXMuDQo+IA0KPiBZZXMsIHRoZSB0eXBlIG9mIGFueSBleHByZXNzaW9uIGlu
-IEMgaXMga25vd24gYXQgY29tcGlsZSB0aW1lLCBhbmQgaXMNCj4gZGV0ZXJtaW5lZCB2aWEgdGhl
-IHJ1bGVzIGluIHRoZSBDIHN0YW5kYXJkLiBJIHdvdWxkbid0IGNhbGwgaXQgYQ0KPiAiY29tcGls
-ZSB0aW1lIGNvbnN0YW50IiB0aG91Z2guDQo+IA0KPiA+IC0gSWYgdGhlIGV4cHJlc3Npb25zIGhh
-dmUgZGlzdGluY3Qgbm9uLU5VTEwgcG9pbnRlciB0eXBlcyB0aGVuIHRoZXkgYXJlIGJvdGgNCj4g
-PiAgIGNhc3QgdG8gKHZvaWQgKikgYW5kIHRoZSByZXN1bHQgaGFzIHR5cGUgJ3ZvaWQgKicuDQo+
-IA0KPiBXcm9uZy4NCg0KZ2FoIHNlcnZlciBtZSByaWdodCBmb3IgdXNpbmcgZ29kYm9sdCB0byB0
-ZXN0IGl0Lg0KDQo+IA0KPiA+IC0gQSBOVUxMIHBvaW50ZXIgY2FuIGJlIG1hZGUgZnJvbSBhbnkg
-aW50ZWdlciBjb25zdGFudCBleHByZXNzaW9uIHRoYXQNCj4gPiAgIGV2YWx1YXRlcyB0byAwLCBu
-b3QganVzdCBhIGxpdGVyYWwgMC4NCj4gPiAtIFNvIHRoZSB0eXBlIG9mICgwID8gKHZvaWQgKiko
-eCkgOiAoaW50ICopOCkgaXMgJ2ludCAqJyBpZiAoeCkgaXMgemVybw0KPiA+ICAgKGJlY2F1c2Ug
-b2YgdGhlIE5VTEwpIGFuZCAodm9pZCAqKSBvdGhlcndpc2UgYmVjYXVzZSB0aGUgcG9pbnRlciB0
-eXBlcw0KPiA+ICAgZG9uJ3QgbWF0Y2guDQo+IA0KPiBUaGF0J3MgYmFzaWNhbGx5IGhvdyB0aGlz
-IG1hY3JvIHdvcmtzLCBidXQgIlNvIiBpcyBub3Qgd2FycmFudGVkIGFzIGl0DQo+IGRvZXMgbm90
-IGZvbGxvdyBmcm9tIGFueSBvZiB0aGUgcHJldmlvdXMsIHdyb25nLCBzdGF0ZW1lbnRzLg0KPiAN
-Cj4gPiBZb3UgY2FuIHRlc3QgdGhpcyBieSBldmFsdWF0aW5nOg0KPiA+IAlzaXplb2YgKigwID8g
-KGZsb2F0ICopNCA6IChpbnQgKik0KQ0KPiANCj4gVGhhdCdzIGFuIGlsbC1mb3JtZWQgY29uZGl0
-aW9uYWwgb3BlcmF0b3IsIGFuZCBnY2Mgc2F5cyBhcyBtdWNoIGV2ZW4NCj4gd2l0aG91dCBhbnkg
-LVdhbGwgaW4gZWZmZWN0Lg0KPiANCj4gd2FybmluZzogcG9pbnRlciB0eXBlIG1pc21hdGNoIGlu
-IGNvbmRpdGlvbmFsIGV4cHJlc3Npb24NCj4gICAgIDggfCAgcmV0dXJuIHNpemVvZigqKDAgPyAo
-ZmxvYXQgKik0IDogKGludCAqKTQpKTsNCj4gDQo+IA0KPiA+IFRoaXMgaXMgMSBiZWNhdXNlIG9m
-IHRoZSBpbXBsaWNpdCAodm9pZCAqKSBjYXN0Lg0KPiANCj4gVGhlcmUgaXMgbm8gc3VjaCB0aGlu
-Zy4NCg0KT2sgbGV0J3MgdHJ5IGFnYWluLi4uDQpUaGUgY29tcGlsZXIgbmVlZHMgdG8gZmluZCBh
-ICdjb21wYXRpYmxlIHR5cGUnIGVpdGhlciBmb3I6DQoJKHZvaWQgKil4CWFuZAkoaW50ICopOA0K
-b3IgZm9yOg0KCSh2b2lkICopMAlhbmQJKGludCAqKTgNCkluIHRoZSBmb3JtZXIgaXQgaXMgJ3Zv
-aWQgKicgYW5kIHRoZSBsYXR0ZXIgJ2ludCAqJyBiZWNhdXNlIHRoZSAodm9pZCAqKTANCmlzIE5V
-TEwgYW5kIHRodXMgYSB2YWxpZCAnaW50IConIHBvaW50ZXIuDQoNCkluIGFueSBjYXNlIHN1Z2dl
-c3RpbmcgdGhhdCBpdCBpcyBiYXNlZCBvbiB0aGUgdmFsdWUgYmVmb3JlIHRoZSA/IGlzIGJvZ3Vz
-Lg0KDQpUaGF0IGlzIHByb2JhYmx5IGEgcmVhc29uYWJsZSBkZXNjcmlwdGlvbi4NCg0KCURhdmlk
-DQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBG
-YXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2
-IChXYWxlcykNCg==
+Similar to the recent arm64 fix[1], avoid overly wide casts in the cmpxchg
+implementation. Avoid this warning under -Warray-bounds with GCC 11:
+
+net/sched/cls_tcindex.c: In function 'tcindex_set_parms':
+./arch/m68k/include/asm/cmpxchg.h:64:17: warning: array subscript 'volatile struct __xchg_dummy[0]' is partly outside array bounds of 'struct tcf_result[1]' [-Warray-bounds]
+   64 |                 __asm__ __volatile__
+      |                 ^~~~~~~
+net/sched/cls_tcindex.c:338:27: note: while referencing 'cr'
+  338 |         struct tcf_result cr = {};
+      |                           ^~
+
+No binary output differences are seen from this change.
+
+[1] commit 3364c6ce23c6 ("arm64: atomics: lse: Dereference matching size")
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/m68k/include/asm/cmpxchg.h | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/arch/m68k/include/asm/cmpxchg.h b/arch/m68k/include/asm/cmpxchg.h
+index e8ca4b0ccefa..6cf464cdab06 100644
+--- a/arch/m68k/include/asm/cmpxchg.h
++++ b/arch/m68k/include/asm/cmpxchg.h
+@@ -4,8 +4,7 @@
+ 
+ #include <linux/irqflags.h>
+ 
+-struct __xchg_dummy { unsigned long a[100]; };
+-#define __xg(x) ((volatile struct __xchg_dummy *)(x))
++#define __xg(type, x) ((volatile type *)(x))
+ 
+ extern unsigned long __invalid_xchg_size(unsigned long, volatile void *, int);
+ 
+@@ -50,7 +49,7 @@ static inline unsigned long __xchg(unsigned long x, volatile void * ptr, int siz
+ 			 "1:\n\t"
+ 			 "casb %0,%1,%2\n\t"
+ 			 "jne 1b"
+-			 : "=&d" (x) : "d" (x), "m" (*__xg(ptr)) : "memory");
++			 : "=&d" (x) : "d" (x), "m" (*__xg(u8, ptr)) : "memory");
+ 		break;
+ 	case 2:
+ 		__asm__ __volatile__
+@@ -58,7 +57,7 @@ static inline unsigned long __xchg(unsigned long x, volatile void * ptr, int siz
+ 			 "1:\n\t"
+ 			 "casw %0,%1,%2\n\t"
+ 			 "jne 1b"
+-			 : "=&d" (x) : "d" (x), "m" (*__xg(ptr)) : "memory");
++			 : "=&d" (x) : "d" (x), "m" (*__xg(u16, ptr)) : "memory");
+ 		break;
+ 	case 4:
+ 		__asm__ __volatile__
+@@ -66,7 +65,7 @@ static inline unsigned long __xchg(unsigned long x, volatile void * ptr, int siz
+ 			 "1:\n\t"
+ 			 "casl %0,%1,%2\n\t"
+ 			 "jne 1b"
+-			 : "=&d" (x) : "d" (x), "m" (*__xg(ptr)) : "memory");
++			 : "=&d" (x) : "d" (x), "m" (*__xg(u32, ptr)) : "memory");
+ 		break;
+ 	default:
+ 		x = __invalid_xchg_size(x, ptr, size);
+-- 
+2.30.2
 
