@@ -2,93 +2,92 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D386CC433FE
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 15:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8957DC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 15:43:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345417AbiBBPQD (ORCPT
+        id S1345548AbiBBPnG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Feb 2022 10:16:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52946 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345385AbiBBPQC (ORCPT
+        Wed, 2 Feb 2022 10:43:06 -0500
+Received: from mail1.med.uni-goettingen.de ([134.76.103.230]:35204 "EHLO
+        mail1.med.uni-goettingen.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1345536AbiBBPnG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Feb 2022 10:16:02 -0500
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B378C061714;
-        Wed,  2 Feb 2022 07:16:02 -0800 (PST)
-Received: by mail-wm1-x335.google.com with SMTP id o1-20020a1c4d01000000b0034d95625e1fso4878425wmh.4;
-        Wed, 02 Feb 2022 07:16:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Xyx4YcrE4z3BHCAOEuga3pXY2rjKc137zdyuqWhKuOM=;
-        b=Jm7C99cyec4z66bazUdbfaepkU56S2Rm8BfdjARZZFnPAlPCY2JjD45fNi5ArkDevx
-         2cUUFxtcIEboZu+L6f5743Shj1h3wuQayKmy0JZAqrfMiPP8RZ5rtTNlcNcd0VVj7WbC
-         DreaMrXPZefuSSo++0RTBt2t+3D2HXR1OuLcnjbN3oPutyIfGDhMiASrRc0oCHaFeewG
-         dyV50wC/1ARn7MKZS0392pZrWXFIvk03U13Q4Yt25DH7Z/8pAOyieJrVesAxN4sCgqxs
-         tflTU/dB1YgWNcBDs9A2QrCRCPBLgeWtNRZ2VcFaob3ueSLaILSKh702BiS4f83uYXE6
-         nufg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Xyx4YcrE4z3BHCAOEuga3pXY2rjKc137zdyuqWhKuOM=;
-        b=VREF6HeScsX6761Wl9ekg0bN7/0Ba2mSyNEpMaa+nT8Q8X0q0YN2/FlUWaUnS1UUGd
-         KLZs0H33Ox3SttQgjhKm/Y98c5BizjDqHpLFvHupBnslSXRNEc0P//MG4EUN4wQRVyio
-         DtPqVHKRgugtV1bw7Wu3MKI/XdWd/39tV/xsYp96oDkL1O5dBHIM2oHUKaUe3iY8JTE8
-         rkKJ4oMdIMSVtoyTaQZONOjX8z9frXFLzUKF9Kal64MbYSY1iuieHEwqsFe4L9KwGYgg
-         DsJAN6aSW3ysBgeztcAPVCqNdEvYPo/ykgJM7IXnBbztZsYVJV3Jtl+bdXH79lodnSxu
-         GmpA==
-X-Gm-Message-State: AOAM530wIuGCdlHledUxh5DZLD0XaDzia+Y3b9mV6k2O75QetOOHZFc0
-        FT0oxLg2U7N9dzxWuUX3cg==
-X-Google-Smtp-Source: ABdhPJyWGbaaUABtH/hyVAAGBLGuXq3MTw5DLCzV7sRjdtW2leo4+V3sfnENMoemy8bHajCtQvU4kA==
-X-Received: by 2002:a1c:4645:: with SMTP id t66mr6262855wma.39.1643814960897;
-        Wed, 02 Feb 2022 07:16:00 -0800 (PST)
-Received: from localhost.localdomain ([46.53.252.48])
-        by smtp.gmail.com with ESMTPSA id o14sm4814945wmr.3.2022.02.02.07.16.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Feb 2022 07:16:00 -0800 (PST)
-Date:   Wed, 2 Feb 2022 18:15:58 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Magnus =?utf-8?B?R3Jvw58=?= <magnus.gross@rwth-aachen.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] elf: Relax assumptions about vaddr ordering
-Message-ID: <YfqgLmk9+4W50EEB@localhost.localdomain>
-References: <YfF18Dy85mCntXrx@fractal.localdomain>
- <202201260845.FCBC0B5A06@keescook>
- <202201262230.E16DF58B@keescook>
- <YfOooXQ2ScpZLhmD@fractal.localdomain>
- <202201281347.F36AEA5B61@keescook>
- <20220201144816.f84bafcf45c21d01fbc3880a@linux-foundation.org>
+        Wed, 2 Feb 2022 10:43:06 -0500
+Received: from umg-exc-04.ads.local.med.uni-goettingen.de ([10.76.100.73]:64300)
+        by mail1.med.uni-goettingen.de with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <Martin.Uecker@med.uni-goettingen.de>)
+        id 1nFHmg-0007Re-1Y; Wed, 02 Feb 2022 16:43:02 +0100
+Received: from umg-exc-01.ads.local.med.uni-goettingen.de (10.76.100.74) by
+ umg-exc-04.ads.local.med.uni-goettingen.de (10.76.100.73) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.18; Wed, 2 Feb 2022 16:43:02 +0100
+Received: from umg-exc-01.ads.local.med.uni-goettingen.de
+ ([fe80::2886:b6b:10e3:deea]) by umg-exc-01.ads.local.med.uni-goettingen.de
+ ([fe80::2886:b6b:10e3:deea%13]) with mapi id 15.01.2375.018; Wed, 2 Feb 2022
+ 16:43:02 +0100
+From:   "Uecker, Martin" <Martin.Uecker@med.uni-goettingen.de>
+To:     "keescook@chromium.org" <keescook@chromium.org>,
+        "linux@rasmusvillemoes.dk" <linux@rasmusvillemoes.dk>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "David.Laight@ACULAB.COM" <David.Laight@ACULAB.COM>
+CC:     "mingo@kernel.org" <mingo@kernel.org>,
+        "rikard.falkeborn@gmail.com" <rikard.falkeborn@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "miguel.ojeda.sandonis@gmail.com" <miguel.ojeda.sandonis@gmail.com>,
+        "gustavoars@kernel.org" <gustavoars@kernel.org>,
+        "penguin-kernel@I-love.SAKURA.ne.jp" 
+        <penguin-kernel@I-love.SAKURA.ne.jp>,
+        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "ndesaulniers@google.com" <ndesaulniers@google.com>
+Subject: Re: [PATCH] linux/const.h: Explain how __is_constexpr() works
+Thread-Topic: [PATCH] linux/const.h: Explain how __is_constexpr() works
+Thread-Index: AQHYFuNImz1ckbOr7ECuQj6wapZL5Kx+mliAgAFKtoCAAHOGgA==
+Date:   Wed, 2 Feb 2022 15:43:02 +0000
+Message-ID: <4eb192f15c9078984c5e05a9fdc85ab6a9611717.camel@med.uni-goettingen.de>
+References: <20220131204357.1133674-1-keescook@chromium.org>
+         <dc86fdf7-3202-e836-6f71-af1e2458b105@rasmusvillemoes.dk>
+         <8e166131c01b4fbc83a1ca95b83bc362@AcuMS.aculab.com>
+In-Reply-To: <8e166131c01b4fbc83a1ca95b83bc362@AcuMS.aculab.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.76.100.66]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AEC27EED84726842A6C3EB7E92C45392@med.uni-goettingen.de>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220201144816.f84bafcf45c21d01fbc3880a@linux-foundation.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Feb 01, 2022 at 02:48:16PM -0800, Andrew Morton wrote:
-> On Fri, 28 Jan 2022 14:30:12 -0800 Kees Cook <keescook@chromium.org> wrote:
-> 
-> > Andrew, can you update elf-fix-overflow-in-total-mapping-size-calculation.patch
-> > to include:
-> > 
-> > Fixes: 5f501d555653 ("binfmt_elf: reintroduce using MAP_FIXED_NOREPLACE")
-> > Cc: stable@vger.kernel.org
-> > Acked-by: Kees Cook <keescook@chromium.org>
-> 
-> Done.
-> 
-> I'm taking it that we can omit this patch ("elf: Relax assumptions
-> about vaddr ordering") and that Alexey's "ELF: fix overflow in total
-> mapping size calculation" will suffice?
-
-Yes, it is same patch conceptually.
-It should work, but those who can't play Bioshock are better test it.
+QW0gTWl0dHdvY2gsIGRlbiAwMi4wMi4yMDIyLCAwODo0OSArMDAwMCBzY2hyaWViIERhdmlkIExh
+aWdodDoNCj4gRnJvbTogUmFzbXVzIFZpbGxlbW9lcw0KPiA+IFNlbnQ6IDAxIEZlYnJ1YXJ5IDIw
+MjIgMTM6MDYNCj4gLi4uDQo+ID4gPiArICogLSBUaGUgQyBzdGFuZGFyZCBkZWZpbmVzIGFuICJp
+bnRlZ2VyIGNvbnN0YW50IGV4cHJlc3Npb24iIGFzIGRpZmZlcmVudA0KPiA+ID4gKyAqICAgZnJv
+bSBhICJudWxsIHBvaW50ZXIgY29uc3RhbnQiIChhbiBpbnRlZ2VyIGNvbnN0YW50IDAgcG9pbnRl
+cikuDQo+ID4gDQo+ID4gSSBkb24ndCBzZWUgdGhlIHBvaW50IG9mIHRoaXMgYnVsbGV0LiBZZXMs
+IGFuIElDRSBpcyBhIGRpc3RpbmN0IGNvbmNlcHQNCj4gPiBmcm9tIGEgbnVsbCBwb2ludGVyIGNv
+bnN0YW50LCBvYnZpb3VzbHkuIE9uZSBpcyBkZWZpbmVkIGluIHRlcm1zIG9mIHRoZQ0KPiA+IG90
+aGVyIC0gYW5kIHlvdXIgcGFyZW50aGVzaXMgaXMgbm90IGFuIGFjY3VyYXRlIHBhcmFwaHJhc2Ug
+b2YgdGhlDQo+ID4gZGVmaW5pdGlvbiBvZiBhIG51bGwgcG9pbnRlciBjb25zdGFudC4NCj4gDQo+
+IEZyb20gd2hhdCBJIHJlbWVtYmVyIGEgIm51bGwgcG9pbnRlciBjb25zdGFudCIgaXMgaW4gImlu
+dGVnZXIgY29uc3RhbnQNCj4gZXhwcmVzc2lvbiB3aXRoIHZhbHVlIDAgY2FzdCB0byBhIHBvaW50
+ZXIgdHlwZSIuDQo+IFNvICh2b2lkICopKDEtMSkgaXMganVzdCBhcyB2YWxpZCBhcyAodm9pZCAq
+KTAuDQo+IA0KPiBOb3Qgc3VyZSBhbnkgb2YgaXQgaXMgcmVsZXZhbnQgaGVyZS4NCg0KVGhlIEMg
+c3RhbmRhcmQgKGF0IGxlYXN0IHB1YmxpYyBkcmFmdHMgZXNzZW50aWFsbHkNCmlkZW50aWNhbCB0
+byB0aGUgYWN0dWFsIHN0YW5kYXJkcykgY2FuIGJlIGZvdW5kIGhlcmU6DQoNCmh0dHA6Ly93d3cu
+b3Blbi1zdGQub3JnL2p0YzEvc2MyMi93ZzE0L3d3dy9wcm9qZWN0cyM5ODk5DQoNCiJBbiBpbnRl
+Z2VyIGNvbnN0YW50IGV4cHJlc3Npb24gd2l0aCB0aGUgdmFsdWUgMCwgb3Igc3VjaA0KYW4gZXhw
+cmVzc2lvbiBjYXN0IHRvIHR5cGUgdm9pZCAqLCBpcyBjYWxsZWQgYSBudWxsIHBvaW50ZXINCmNv
+bnN0YW50LiINCg0KQlRXOiBJIHRoaW5rIGl0IHdvdWxkIGJlIHZlcnkgdmFsdWFibGUgaWYgV0cx
+NCB3b3VsZCBnZXQNCnByb3Bvc2FscyBhbmQvb3IgY29tbWVudHMgZnJvbSB0aGUga2VybmVsIGNv
+bW11bml0eS4NCg0KTWFydGluDQoNCg0KDQo+IAlEYXZpZA0KPiANCj4gLQ0KPiBSZWdpc3RlcmVk
+IEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5l
+cywgTUsxIDFQVCwgVUsNCj4gUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCj4gDQo=
