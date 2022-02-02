@@ -2,135 +2,137 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67434C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 23:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E08C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 23:21:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347982AbiBBXRW (ORCPT
+        id S1348060AbiBBXVy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Feb 2022 18:17:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50630 "EHLO
+        Wed, 2 Feb 2022 18:21:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239155AbiBBXRV (ORCPT
+        with ESMTP id S229764AbiBBXVx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Feb 2022 18:17:21 -0500
-Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E14FC061714;
-        Wed,  2 Feb 2022 15:17:21 -0800 (PST)
-Received: by mail-ot1-x333.google.com with SMTP id o9-20020a9d7189000000b0059ee49b4f0fso967448otj.2;
-        Wed, 02 Feb 2022 15:17:21 -0800 (PST)
+        Wed, 2 Feb 2022 18:21:53 -0500
+Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17FD4C061714;
+        Wed,  2 Feb 2022 15:21:53 -0800 (PST)
+Received: by mail-oi1-x22b.google.com with SMTP id u13so1316341oie.5;
+        Wed, 02 Feb 2022 15:21:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=SmM5LOXhBptwLoFRQx1xbAsZgGTvkZX2rXC6lKb25Rc=;
-        b=afYIE2hcFMLGO3iC6MkgeyjxvbwUqtd06XMSOBgKA1JmeSorzZXwTl1okvDiOYnB9l
-         I0H4UD7lxXr3PUThf/7IcIvIOsF5sWw5thHdOOKBvrdXNNtS/fD9Ym1WoVqea2HcAfwi
-         6eEM+v9OMcXZhik2LMP/jIpsfUBHKKr1qXWqemYWSWpEtU8twc7PHCgRkvAj36dDXHKE
-         uLVrjqstlVzY4jSFwk3Jc70uwRhAL+ie85/Q+5kwNmZl1ItfbAGYUKAEGF4u54rFb7cz
-         Sw3GPDOyJc4VqVkcsGaX8KF/n9Nh4c/uPgrvkaSGfcBxTVFi0X7Uj8fFeP1i1rAsy4Ge
-         cYCA==
+        h=sender:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=hdKH4tXgHY4cT+RB1bvOiaNomE0XVykpxJcXrke+vqk=;
+        b=ahUVIzCsG7UmQFv3UKQdrfqui2QGTQZCBFE9qIIRoJBK/Vi4phbSMT5axQxpfxM2PD
+         X2L6P853sHMqI3KozRMWBLaotNA80PqAfd0KUZnliq/4RH59DfN098IYFPaTF00s4gPo
+         ZPFgIYIkGGzpvCmdfizsRx1LDy2MeRNNIS7gcen9Ab5iGv4LdIVL0iGyAvzR7MV718hj
+         D8f5TqjhePo6h2EzeAfl41GFuNptREP9wDGvr5ksdFboplULvmcaOgpAZtj44A6f2TmV
+         27gTnWUDzQpK6hM02lcHNuNCNCtcwh2/+noRaDkbuNq9FjHDnGSnyM5RLTlgOeydJ6II
+         r+bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition;
-        bh=SmM5LOXhBptwLoFRQx1xbAsZgGTvkZX2rXC6lKb25Rc=;
-        b=UqPqRF20x5tjKZkHKVP93C2ErgpMRCYMEsjHTraMZHAKixjfI615vUBzN+oavEAP+x
-         tUFwRDmIt6BOpS049uiBG2haLJ9dz+N6L6s71MJqX/hlkzlTZWSAS46P4hHWyeT2Ai4N
-         WN92pl2BjlZ9naQIRwf/0IHj3HX0Hbnp8mrKB0iDx4uqU9MpU+BacbuoIXjX7qOHAulU
-         CJ9Sv67rujDLRD5DSKaEuL29HvT879wfHJx8wCSTHe+nC/py23/SteMb0v0aH1Ccpxtr
-         akp0/QErGDBhBnyJ3oxxJPOVmB/JOuHiLrBw/jzpRAo/SqJYY3vywgVj/y1v7ICiLf+5
-         7Pfw==
-X-Gm-Message-State: AOAM533x7ZZ4bkqShICCNu7fKrg03k9IvoDqw5JaidA5P6k2OEQZuFcu
-        wfJkV6iOu03h/51x7EIoewH04eEwQ1KmGQ==
-X-Google-Smtp-Source: ABdhPJzc1hV3sMwz9XpV4qq85jnj4BL44Eb+9Yn1lIeZrVv16PjI9mAH8w4AtSHfVcFztirlAFzaaQ==
-X-Received: by 2002:a05:6830:4409:: with SMTP id q9mr18658445otv.316.1643843840802;
-        Wed, 02 Feb 2022 15:17:20 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a15sm21399821oil.13.2022.02.02.15.17.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Feb 2022 15:17:20 -0800 (PST)
+        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
+         :subject:content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=hdKH4tXgHY4cT+RB1bvOiaNomE0XVykpxJcXrke+vqk=;
+        b=6DMBLcu+mAAJHHOgZjepk0XHKhBzIfGCYSlkS7DwkwX7iNKXLURtOMhAixnTwuZUuY
+         6jCLl2aTGsAALTKeCVV6NVA7x/Y2dMzbakShKqSnVIU8NxXxC46z0subif5Ixd9w7XLl
+         ULGAYOb8OVnDuKNgDJa1mq2KRew2u1a5MP44K7H5AUeGiFFZHu0U81QXD37Bp1PDlo5p
+         ePA9/t8kiQRoRdRrzEzqHKgWiQ0jtft+ELI+JLkhLwrB3S76jSbV63uOhQQMo7goK6An
+         TGW0ts8rptf/St6GUvBzbDEGJsq8i/r/PWgBACxfzJT05UxWV5tTUF0tPDt4ZkntbCE4
+         yjNw==
+X-Gm-Message-State: AOAM530HrLlBm20p0tqZD4KKEWKeKVr/mK3Trq+jjpyUrtXNyXODc2uY
+        oIoNzDBD66ss0GWteIA2cJk=
+X-Google-Smtp-Source: ABdhPJyF9ihmFyrP/iAi+4muZGLyMY6QrV946GJop1i1WoECKvVAUcx7ezlVj7IYKEUkVl2UcXpFNQ==
+X-Received: by 2002:a05:6808:1aa6:: with SMTP id bm38mr5803076oib.109.1643844112525;
+        Wed, 02 Feb 2022 15:21:52 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s11sm15250609otq.69.2022.02.02.15.21.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Feb 2022 15:21:51 -0800 (PST)
 Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Wed, 2 Feb 2022 15:17:18 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-alpha@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] alpha: Silence -Warray-bounds warnings
-Message-ID: <20220202231718.GA2539669@roeck-us.net>
+Message-ID: <5ce016f8-fb4b-ef50-c543-886b4cfda225@roeck-us.net>
+Date:   Wed, 2 Feb 2022 15:21:49 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH 4/5] Makefile: Enable -Warray-bounds
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kbuild@vger.kernel.org,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
+References: <20210818081118.1667663-1-keescook@chromium.org>
+ <20210818081118.1667663-5-keescook@chromium.org>
+ <20220202160903.GA2337834@roeck-us.net> <202202021409.2AA6A4246@keescook>
+From:   Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <202202021409.2AA6A4246@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 02, 2022 at 02:18:25PM -0800, Kees Cook wrote:
-> GCC 11 (incorrectly[1]) assumes that literal values cast to (void *)
-> should be treated like a NULL pointer with an offset, and raises
-> diagnostics when doing bounds checking:
+On 2/2/22 14:11, Kees Cook wrote:
+> On Wed, Feb 02, 2022 at 08:09:03AM -0800, Guenter Roeck wrote:
+>> On Wed, Aug 18, 2021 at 01:11:17AM -0700, Kees Cook wrote:
+>>> With the recent fixes for flexible arrays and expanded FORTIFY_SOURCE
+>>> coverage, it is now possible to enable -Warray-bounds. Since both
+>>> GCC and Clang include -Warray-bounds in -Wall, we just need to stop
+>>> disabling it.
+>>>
+>>> Cc: Arnd Bergmann <arnd@arndb.de>
+>>> Cc: Masahiro Yamada <masahiroy@kernel.org>
+>>> Cc: linux-kbuild@vger.kernel.org
+>>> Co-developed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>>> ---
+>>>   Makefile | 1 -
+>>>   1 file changed, 1 deletion(-)
+>>>
+>>> diff --git a/Makefile b/Makefile
+>>> index a4aca01a4835..af22b83cede7 100644
+>>> --- a/Makefile
+>>> +++ b/Makefile
+>>> @@ -1072,7 +1072,6 @@ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+>>>   
+>>>   # We'll want to enable this eventually, but it's not going away for 5.7 at least
+>>>   KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
+>>> -KBUILD_CFLAGS += -Wno-array-bounds
+>>>   KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
+>>>   
+>>>   # Another good warning that we'll want to enable eventually
+>>
+>> alpha:defconfig:
+>>
+>> In function '__memset',
+>>      inlined from '__bad_pagetable' at arch/alpha/mm/init.c:79:2:
+>> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
+>>     37 |                         return __builtin_memset(s, c, n);
+>>        |                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+>> In function '__memset',
+>>      inlined from '__bad_page' at arch/alpha/mm/init.c:86:2:
+>> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
+>>     37 |                         return __builtin_memset(s, c, n);
+>>        |                                ^~~~~~~~~~~~~~~~~~~~~~~~~
+>> In function '__memset',
+>>      inlined from 'paging_init' at arch/alpha/mm/init.c:256:2:
+>> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
+>>     37 |                         return __builtin_memset(s, c, n);
 > 
-> In function '__memset',
->     inlined from '__bad_pagetable' at arch/alpha/mm/init.c:79:2:
-> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
->    37 |                         return __builtin_memset(s, c, n);
->       |                                ^~~~~~~~~~~~~~~~~~~~~~~~~
-> In function '__memset',
->     inlined from '__bad_page' at arch/alpha/mm/init.c:86:2:
-> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
->    37 |                         return __builtin_memset(s, c, n);
->       |                                ^~~~~~~~~~~~~~~~~~~~~~~~~
-> In function '__memset',
->     inlined from 'paging_init' at arch/alpha/mm/init.c:256:2:
-> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
->    37 |                         return __builtin_memset(s, c, n);
-> 
-> This has been solved in other places[2] already by using the recently
-> added absolute_pointer() macro. Do the same here.
-> 
-> [1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=99578
-> [2] https://lore.kernel.org/all/20210912160149.2227137-1-linux@roeck-us.net/
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Ah! With Arnd and Nathan's help, I saw:
+> https://lore.kernel.org/all/20210912160149.2227137-3-linux@roeck-us.net/
 
-Reviewed-and-tested-by: Guenter Roeck <linux@roeck-us.net>
+Guilty as charged. Sorry, I didn't try to analyze the problem,
+or I might have noticed (and saved you some work).
 
-> ---
->  arch/alpha/mm/init.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+Guenter
+
+> which is solving the same problem (just manifested through different
+> diagnostics). The same solution works here. I'll get the patches sent...
 > 
-> diff --git a/arch/alpha/mm/init.c b/arch/alpha/mm/init.c
-> index f6114d03357c..7511723b7669 100644
-> --- a/arch/alpha/mm/init.c
-> +++ b/arch/alpha/mm/init.c
-> @@ -76,14 +76,14 @@ pgd_alloc(struct mm_struct *mm)
->  pmd_t *
->  __bad_pagetable(void)
->  {
-> -	memset((void *) EMPTY_PGT, 0, PAGE_SIZE);
-> +	memset(absolute_pointer(EMPTY_PGT), 0, PAGE_SIZE);
->  	return (pmd_t *) EMPTY_PGT;
->  }
->  
->  pte_t
->  __bad_page(void)
->  {
-> -	memset((void *) EMPTY_PGE, 0, PAGE_SIZE);
-> +	memset(absolute_pointer(EMPTY_PGE), 0, PAGE_SIZE);
->  	return pte_mkdirty(mk_pte(virt_to_page(EMPTY_PGE), PAGE_SHARED));
->  }
->  
-> @@ -253,7 +253,7 @@ void __init paging_init(void)
->  	free_area_init(max_zone_pfn);
->  
->  	/* Initialize the kernel's ZERO_PGE. */
-> -	memset((void *)ZERO_PGE, 0, PAGE_SIZE);
-> +	memset(absolute_pointer(ZERO_PGE), 0, PAGE_SIZE);
->  }
->  
->  #if defined(CONFIG_ALPHA_GENERIC) || defined(CONFIG_ALPHA_SRM)
-> -- 
-> 2.30.2
-> 
+
