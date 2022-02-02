@@ -2,82 +2,99 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA780C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 01:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8241C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 05:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243642AbiBBBOL (ORCPT
+        id S238754AbiBBFUk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Feb 2022 20:14:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231531AbiBBBOK (ORCPT
+        Wed, 2 Feb 2022 00:20:40 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:51486 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230087AbiBBFUk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Feb 2022 20:14:10 -0500
-Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74888C061714;
-        Tue,  1 Feb 2022 17:14:10 -0800 (PST)
-Received: by mail-io1-xd2a.google.com with SMTP id s18so23479300ioa.12;
-        Tue, 01 Feb 2022 17:14:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SuoLk/eB2LyIrK2WAJXGapA14pYbHY6NEIo8Ima2GSM=;
-        b=X+Pob0+LvdGmN/GRaPCbi9J6/KBqHLvgbrEnAP4POO6efQUxRgvyfxDVeUjDSJk00/
-         U5WNDqbIgqcWUkeNcKYDn6CKYfCS1NOTnPqEdz+socs5sKHZTSao2LydOwYfqXpdVe5q
-         7w8Jz2XFzyYKnuHdmwZnIKkiLL094dHrqYklGpjiWnZxoQNlqRtHHIwTqeUt8dYkNkW5
-         +8MzGjKVqvkeaABefP6V1ViIzowswND3fJJy3iq8ebvVePyiuUWfqqvZPtAfE70Q4sdI
-         NBztqSgHqcGkd6tBihMOLqOgAyDi9HTxMz3AO7CD//0bC5rd09iFRUjzVOxAJnZHvGP1
-         Gkfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SuoLk/eB2LyIrK2WAJXGapA14pYbHY6NEIo8Ima2GSM=;
-        b=R1S7AQ87gbzmho6mRL2Y3q7zkLb/dQRR9EnvK4BR73B48opMZ5X9RKRLPGqgLQyEiu
-         EDtp9Gd3csQbq7afZ9Yb+QaRoDYzsZ8JVO8caeaNv2IAx7R3CwlZiYcFSvl7vC2ut9+m
-         AC6lyrpuZy+vOElh77TpFJ2qhrRkebgUFtu0Gd3VcMZ7RfnzY3B4dl5SKfbfz9h+hb4Z
-         ohCvvRGQv3y8b6tqVPuy7pSkCnIGty0ThCjsG6pZ/El8liFl26s+gI308U6bwwtiNCoj
-         IrxDQqvN+kWOnCt835YL0lBgtSJv4Yv3XBJS9TEVm/7mqc8XCPOfSL0s13ieAkKI9Lhv
-         VL9g==
-X-Gm-Message-State: AOAM531MuyZYI9zdrUTAetfi8xMQWazn8IvEy9e2MkcufM9MJmawROl5
-        3VN5W2GDfBgkJJoW3fL1BFHS3NNP1Aa3qOoXam4=
-X-Google-Smtp-Source: ABdhPJzQOP2XQDSSMDsr4TM971ls6AQSgLTjolNI1RoC42eUw8X2ye05F4aKMvVYkQUavql4xy01L/RDlcI4bzaTAHQ=
-X-Received: by 2002:a05:6638:382a:: with SMTP id i42mr13265444jav.256.1643764449909;
- Tue, 01 Feb 2022 17:14:09 -0800 (PST)
+        Wed, 2 Feb 2022 00:20:40 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 242E6B83009;
+        Wed,  2 Feb 2022 05:20:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11094C004E1;
+        Wed,  2 Feb 2022 05:20:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643779237;
+        bh=+Ft2F5sVLRHh1Pp8pxHlA0yq0lccuM3N/YhAGhykIME=;
+        h=Date:From:To:Cc:Subject:From;
+        b=JFyHcFJ4V4CNFYHfgEGRKpfVGFlbHoOrQFHo48cbL463opA/mHP7hGlNJLVAy0Kbl
+         6K/1/ox6yPyL/ubuniQ8q9ZXgrXxSa7YFbet9woC9sy7boZSQYURx7YwNxq+ljWv/y
+         4wxTW5Skq2bJG+GM7A3tCV7unY6+w2ygRPCxv9ETkrXkG/hkOFy/YEDspglnDNbptB
+         MUuhJcxOYAOdy1c1LcH+rIRXMDQe9MvI3cWffR66SmieOcbFQZ64Wu8ekkGOSeyIPx
+         d4PngYy/4MaOshdlP/DH6Uc/63UvfG+46fr0S91g/E3cG66m/z47UC9mq23CqSmftq
+         3/ohsts/pcy4w==
+Date:   Tue, 1 Feb 2022 23:27:41 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Phillip Potter <phil@philpotter.co.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] staging: r8188eu: Fix out-of-bounds error in
+Message-ID: <20220202052741.GA238470@embeddedor>
 MIME-Version: 1.0
-References: <20220202003033.704951-1-keescook@chromium.org>
- <20220202003033.704951-2-keescook@chromium.org> <CANiq72n1d7ouKNi+pbsy7chsg0DfCXxez27qqtS9XE1n3m5=8Q@mail.gmail.com>
-In-Reply-To: <CANiq72n1d7ouKNi+pbsy7chsg0DfCXxez27qqtS9XE1n3m5=8Q@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 2 Feb 2022 02:13:58 +0100
-Message-ID: <CANiq72=aDRzxV0DZ6PNFXL-Z=NBAmyaMwL=MNxaOEWVSo8PZ1Q@mail.gmail.com>
-Subject: Re: [PATCH 1/4] Compiler Attributes: Add Clang's __pass_object_size
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Miguel Ojeda <ojeda@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <nathan@kernel.org>, llvm@lists.linux.dev,
-        George Burgess IV <gbiv@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 2, 2022 at 2:11 AM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> For `__diagnose_as_builtin__`, I only see it on Clang trunk, so I
-> assume >= 14, thus could you please add:
->
->     * Optional: only supported since clang >= 14.
+HT_caps_handler()
+Reply-To: 
 
-...and the other two too:
+Fix the following out-of-bounds error (caught with -Warray-bounds=2):
 
->     * Optional: not supported by gcc.
->     * Optional: not supported by icc.
+drivers/staging/r8188eu/core/rtw_wlan_util.c: In function ‘HT_caps_handler’:
+drivers/staging/r8188eu/core/rtw_wlan_util.c:719:54: error: array subscript 2 is above array bounds of ‘u8[1]’ {aka ‘unsigned char[1]’} [-Werror=array-bounds]
+  719 |                                             pIE->data[i] & 0x3);
+      |                                             ~~~~~~~~~^~~
+./include/linux/minmax.h:32:39: note: in definition of macro ‘__cmp_once’
+   32 |                 typeof(y) unique_y = (y);               \
+      |                                       ^
+./include/linux/minmax.h:45:25: note: in expansion of macro ‘__careful_cmp’
+   45 | #define min(x, y)       __careful_cmp(x, y, <)
+      |                         ^~~~~~~~~~~~~
+drivers/staging/r8188eu/core/rtw_wlan_util.c:718:41: note: in expansion of macro ‘min’
+  718 |                         max_AMPDU_len = min(pmlmeinfo->HT_caps.u.HT_cap_element.AMPDU_para & 0x3,
+      |                                         ^~~
+In file included from drivers/staging/r8188eu/core/../include/drv_types.h:16,
+                 from drivers/staging/r8188eu/core/rtw_wlan_util.c:7:
+drivers/staging/r8188eu/core/../include/wlan_bssdef.h:64:13: note: while referencing ‘data’
+   64 |         u8  data[1];
+      |             ^~~~
 
-Cheers,
-Miguel
+by transforming one-element array into a flexible-array member in
+struct ndis_802_11_var_ie
+
+This is part of the ongoing efforts to globally enable -Warray-bounds.
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/staging/r8188eu/include/wlan_bssdef.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/r8188eu/include/wlan_bssdef.h b/drivers/staging/r8188eu/include/wlan_bssdef.h
+index 99ca097b8edd..9d1c9e763287 100644
+--- a/drivers/staging/r8188eu/include/wlan_bssdef.h
++++ b/drivers/staging/r8188eu/include/wlan_bssdef.h
+@@ -61,7 +61,7 @@ struct ndis_802_11_fixed_ie {
+ struct ndis_802_11_var_ie {
+ 	u8  ElementID;
+ 	u8  Length;
+-	u8  data[1];
++	u8  data[];
+ };
+ 
+ /*
+-- 
+2.27.0
+
