@@ -2,138 +2,151 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCB3C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 16:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8CDC433FE
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 17:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345808AbiBBQT6 convert rfc822-to-8bit (ORCPT
+        id S1346169AbiBBRMU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Feb 2022 11:19:58 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:30841 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230078AbiBBQT5 (ORCPT
+        Wed, 2 Feb 2022 12:12:20 -0500
+Received: from brightrain.aerifal.cx ([216.12.86.13]:60134 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237785AbiBBRMU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Feb 2022 11:19:57 -0500
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-33-SGQvv5ccMsmU2w2G6u_tRw-1; Wed, 02 Feb 2022 16:19:55 +0000
-X-MC-Unique: SGQvv5ccMsmU2w2G6u_tRw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.28; Wed, 2 Feb 2022 16:19:52 +0000
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.028; Wed, 2 Feb 2022 16:19:52 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Kees Cook' <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Martin Uecker <Martin.Uecker@med.uni-goettingen.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH] linux/const.h: Explain how __is_constexpr() works
-Thread-Topic: [PATCH] linux/const.h: Explain how __is_constexpr() works
-Thread-Index: AQHYFuNHRL4oDGFcTkyEh79ubpGBJ6yAbZqw
-Date:   Wed, 2 Feb 2022 16:19:52 +0000
-Message-ID: <6641e01b86374ce197020d57c65ae3b3@AcuMS.aculab.com>
-References: <20220131204357.1133674-1-keescook@chromium.org>
-In-Reply-To: <20220131204357.1133674-1-keescook@chromium.org>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 2 Feb 2022 12:12:20 -0500
+Date:   Wed, 2 Feb 2022 12:12:19 -0500
+From:   Rich Felker <dalias@libc.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Ariadne Conill <ariadne@dereferenced.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] exec: Force single empty string when argv is empty
+Message-ID: <20220202171218.GQ7074@brightrain.aerifal.cx>
+References: <20220201000947.2453721-1-keescook@chromium.org>
+ <20220201145324.GA29634@brightrain.aerifal.cx>
+ <1A24DA4E-2B15-4A95-B2A1-F5F963E0CD6F@chromium.org>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1A24DA4E-2B15-4A95-B2A1-F5F963E0CD6F@chromium.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook
-> Sent: 31 January 2022 20:44
+On Wed, Feb 02, 2022 at 07:50:42AM -0800, Kees Cook wrote:
 > 
-> The __is_constexpr() macro is dark magic. Shed some light on it with
-> a comment to explain how and why it works.
 > 
-...
-> diff --git a/include/linux/const.h b/include/linux/const.h
-> index 435ddd72d2c4..7122d6a1f8ce 100644
-> --- a/include/linux/const.h
-> +++ b/include/linux/const.h
-> @@ -7,6 +7,30 @@
->   * This returns a constant expression while determining if an argument is
->   * a constant expression, most importantly without evaluating the argument.
->   * Glory to Martin Uecker <Martin.Uecker@med.uni-goettingen.de>
-> + *
-> + * Details:
-> + * - sizeof() is an integer constant expression, and does not evaluate the
-> + *   value of its operand; it only examines the type of its operand.
-> + * - The results of comparing two integer constant expressions is also
-> + *   an integer constant expression.
-> + * - The use of literal "8" is to avoid warnings about unaligned pointers;
-> + *   these could otherwise just be "1"s.
-> + * - (long)(x) is used to avoid warnings about 64-bit types on 32-bit
-> + *   architectures.
-> + * - The C standard defines an "integer constant expression" as different
-> + *   from a "null pointer constant" (an integer constant 0 pointer).
-> + * - The conditional operator ("... ? ... : ...") returns the type of the
-> + *   operand that isn't a null pointer constant. This behavior is the
-> + *   central mechanism of the macro.
-> + * - If (x) is an integer constant expression, then the "* 0l" resolves it
-> + *   into a null pointer constant, which forces the conditional operator
-> + *   to return the type of the last operand: "(int *)".
-> + * - If (x) is not an integer constant expression, then the type of the
-> + *   conditional operator is from the first operand: "(void *)".
-> + * - sizeof(int) == 4 and sizeof(void) == 1.
-> + * - The ultimate comparison to "sizeof(int)" chooses between either:
-> + *     sizeof(*((int *) (8)) == sizeof(int)   (x was a constant expression)
-> + *     sizeof(*((void *)(8)) == sizeof(void)  (x was not a constant expression)
->   */
->  #define __is_constexpr(x) \
->  	(sizeof(int) == sizeof(*(8 ? ((void *)((long)(x) * 0l)) : (int *)8)))
+> On February 1, 2022 6:53:25 AM PST, Rich Felker <dalias@libc.org> wrote:
+> >On Mon, Jan 31, 2022 at 04:09:47PM -0800, Kees Cook wrote:
+> >> Quoting[1] Ariadne Conill:
+> >> 
+> >> "In several other operating systems, it is a hard requirement that the
+> >> second argument to execve(2) be the name of a program, thus prohibiting
+> >> a scenario where argc < 1. POSIX 2017 also recommends this behaviour,
+> >> but it is not an explicit requirement[2]:
+> >> 
+> >>     The argument arg0 should point to a filename string that is
+> >>     associated with the process being started by one of the exec
+> >>     functions.
+> >> ....
+> >> Interestingly, Michael Kerrisk opened an issue about this in 2008[3],
+> >> but there was no consensus to support fixing this issue then.
+> >> Hopefully now that CVE-2021-4034 shows practical exploitative use[4]
+> >> of this bug in a shellcode, we can reconsider.
+> >> 
+> >> This issue is being tracked in the KSPP issue tracker[5]."
+> >> 
+> >> While the initial code searches[6][7] turned up what appeared to be
+> >> mostly corner case tests, trying to that just reject argv == NULL
+> >> (or an immediately terminated pointer list) quickly started tripping[8]
+> >> existing userspace programs.
+> >> 
+> >> The next best approach is forcing a single empty string into argv and
+> >> adjusting argc to match. The number of programs depending on argc == 0
+> >> seems a smaller set than those calling execve with a NULL argv.
+> >> 
+> >> Account for the additional stack space in bprm_stack_limits(). Inject an
+> >> empty string when argc == 0 (and set argc = 1). Warn about the case so
+> >> userspace has some notice about the change:
+> >> 
+> >>     process './argc0' launched './argc0' with NULL argv: empty string added
+> >> 
+> >> Additionally WARN() and reject NULL argv usage for kernel threads.
+> >> 
+> >> [1] https://lore.kernel.org/lkml/20220127000724.15106-1-ariadne@dereferenced.org/
+> >> [2] https://pubs.opengroup.org/onlinepubs/9699919799/functions/exec.html
+> >> [3] https://bugzilla.kernel.org/show_bug.cgi?id=8408
+> >> [4] https://www.qualys.com/2022/01/25/cve-2021-4034/pwnkit.txt
+> >> [5] https://github.com/KSPP/linux/issues/176
+> >> [6] https://codesearch.debian.net/search?q=execve%5C+*%5C%28%5B%5E%2C%5D%2B%2C+*NULL&literal=0
+> >> [7] https://codesearch.debian.net/search?q=execlp%3F%5Cs*%5C%28%5B%5E%2C%5D%2B%2C%5Cs*NULL&literal=0
+> >> [8] https://lore.kernel.org/lkml/20220131144352.GE16385@xsang-OptiPlex-9020/
+> >> 
+> >> Reported-by: Ariadne Conill <ariadne@dereferenced.org>
+> >> Reported-by: Michael Kerrisk <mtk.manpages@gmail.com>
+> >> Cc: Matthew Wilcox <willy@infradead.org>
+> >> Cc: Christian Brauner <brauner@kernel.org>
+> >> Cc: Rich Felker <dalias@libc.org>
+> >> Cc: Eric Biederman <ebiederm@xmission.com>
+> >> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> >> Cc: linux-fsdevel@vger.kernel.org
+> >> Cc: stable@vger.kernel.org
+> >> Signed-off-by: Kees Cook <keescook@chromium.org>
+> >> ---
+> >>  fs/exec.c | 26 +++++++++++++++++++++++++-
+> >>  1 file changed, 25 insertions(+), 1 deletion(-)
+> >> 
+> >> diff --git a/fs/exec.c b/fs/exec.c
+> >> index 79f2c9483302..bbf3aadf7ce1 100644
+> >> --- a/fs/exec.c
+> >> +++ b/fs/exec.c
+> >> @@ -495,8 +495,14 @@ static int bprm_stack_limits(struct linux_binprm *bprm)
+> >>  	 * the stack. They aren't stored until much later when we can't
+> >>  	 * signal to the parent that the child has run out of stack space.
+> >>  	 * Instead, calculate it here so it's possible to fail gracefully.
+> >> +	 *
+> >> +	 * In the case of argc = 0, make sure there is space for adding a
+> >> +	 * empty string (which will bump argc to 1), to ensure confused
+> >> +	 * userspace programs don't start processing from argv[1], thinking
+> >> +	 * argc can never be 0, to keep them from walking envp by accident.
+> >> +	 * See do_execveat_common().
+> >>  	 */
+> >> -	ptr_size = (bprm->argc + bprm->envc) * sizeof(void *);
+> >> +	ptr_size = (min(bprm->argc, 1) + bprm->envc) * sizeof(void *);
+> >
+> >From #musl:
+> >
+> ><mixi> kees: shouldn't the min(bprm->argc, 1) be max(...) in your patch?
+> 
+> Fix has already been sent, yup.
+> 
+> >I'm pretty sure without fixing that, you're introducing a giant vuln
+> >here.
+> 
+> I wouldn't say "giant", but yes, it weakened a defense in depth for
+> avoiding high stack utilization.
 
-This has been making my head hurt all day.
-The above isn't really a true description - ?: doesn't work that way.
-Try the following for size:
+I thought it was deciding the amount of memory to allocate/reserve for
+the arg slots, but based on the comment it looks like it's just a way
+to fail early rather than making the new process image fault later if
+they don't fit.
 
-- The conditional operator (?:) requires that both expressions have the
-  the same type (after numeric promotions).
-  The type of the result is a compile time constant and doesn't depend on any
-  variables.
-- If the expressions have distinct non-NULL pointer types then they are both
-  cast to (void *) and the result has type 'void *'.
-- A NULL pointer can be made from any integer constant expression that
-  evaluates to 0, not just a literal 0.
-- So the type of (0 ? (void *)(x) : (int *)8) is 'int *' if (x) is zero
-  (because of the NULL) and (void *) otherwise because the pointer types
-  don't match.
+> > I believe this is the second time a patch attempting to fix this
+> >non-vuln has proposed adding a new vuln...
+> 
+> Mistakes happen, and that's why there is review and testing. Thank
+> you for being part of the review process! :)
 
-You can test this by evaluating:
-	sizeof *(0 ? (float *)4 : (int *)4)
-This is 1 because of the implicit (void *) cast.
+I know, and I'm sorry for being a bit hostile over it, and for jumping
+the gun about the severity. I just get frustrated when I see a rush to
+make changes over an incidental part of a popularized vuln, with
+disproportionate weight on "doing something" and not enough on being
+careful.
 
-I'd also delete the l from the 0l - it isn't needed.
-(Or at least use L)
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Rich
