@@ -2,91 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5EAC433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 20:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30BCC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 20:31:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346705AbiBBUO3 (ORCPT
+        id S236867AbiBBUbu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Feb 2022 15:14:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37080 "EHLO
+        Wed, 2 Feb 2022 15:31:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236790AbiBBUO3 (ORCPT
+        with ESMTP id S234008AbiBBUbt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Feb 2022 15:14:29 -0500
-Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77021C061714;
-        Wed,  2 Feb 2022 12:14:29 -0800 (PST)
-Received: by mail-io1-xd2a.google.com with SMTP id w7so519913ioj.5;
-        Wed, 02 Feb 2022 12:14:29 -0800 (PST)
+        Wed, 2 Feb 2022 15:31:49 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B192AC06173D
+        for <linux-hardening@vger.kernel.org>; Wed,  2 Feb 2022 12:31:49 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id v15-20020a17090a4ecf00b001b82db48754so693925pjl.2
+        for <linux-hardening@vger.kernel.org>; Wed, 02 Feb 2022 12:31:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xWDWaWTdNFsu7zj2/HSMpGB10STG6alwvdijx5cjUpU=;
-        b=COSS3HxAtjR8rd0qpXs9u+CYScJTI+x0WMNwVlPbA3D+crcc2CGAwElfdpVOVBapdD
-         KWA3jogiyB/OTLPqN4v8xj6Rt/fby7q1UNaBBWm/29vcd4Qr4eO339PSuZb63uuggZQS
-         QHyDAXaCUUzOK51hMskU8H3GIU2P4dotISNafBf0nUudOM5ert+oAwS17xUIhulv+oDD
-         kUj/9RX0gquNppv9Y1fEVLQIX+kaNHLSUoEWoB5wYJlt4W8KPiUMtlJydGUe34qJhR5+
-         b0R0/Mq9v/kUFwmhdApDTy73gbJhuLptH0n2unlok6Zz//j1FW/WFhvzMsxOxoTxp1U5
-         2+aw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2yFJj6ZVefTE/vWISdKzupJXVjEcJPH4z8zqtZHrZMU=;
+        b=g9ENtVpiaPQ7gXq2RjybtD1vNjZ+vkdx4HgR7sglG5kF08w7f3otDMOAwt6gfBvpXj
+         v1OSktJ1XnffVQpqdExOi/gP/MBtuZNQYSffEN+6/VYDauLT9fU7bFs68ehxwVTFV26g
+         +ZpnzNGfnrAAIkDbtsRXJF7wLsYtouY9HtgEM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xWDWaWTdNFsu7zj2/HSMpGB10STG6alwvdijx5cjUpU=;
-        b=wKLu/C6CF9oAgec2QDykwnZ30ggPiJZIbYgGmK23XlH1o+o1wMbGghvZ/+4COiBNb6
-         UiDJRlLPp7V4A32PBvXsZXYB46/I+kNe+SbMHWK0RtmJctjCAx/bCmRd4v1HH7fqifgY
-         R2GCxRx2yOcOOHNic0BKqBwyv71xhYiExsxjhMhMryvj3YqGCQdAh4By+gwN8XrP28Z3
-         p6fN2wlbtH2sXBP4tsIweNpxzP65T8Jk13xGYzlnScW4jXKRT7vcINwO+zX/U5QeTcg4
-         SOWhq8hwuqMYc+MjVNy9+eA+88HGZ34NNmfrvWF5KUlMrqp37nA5P3oOWr8FWguwsHd5
-         fkwA==
-X-Gm-Message-State: AOAM5300OMHGhUQl0xvewJk5byPCl8SkjucPTCzV93TT5BfXKmVKexNx
-        zJ0rdsxQ58hx+qkdG/YxKjZRzNRPuBzJfXmJEqM=
-X-Google-Smtp-Source: ABdhPJzQ2focj1E8ocbpT49mPiCiGeRc/iwUWS1g1pv1rRyQg6vd6MhrYdR65zbsKH9YTxwj7kLrZrHEI9d7vEsQjr0=
-X-Received: by 2002:a05:6638:380f:: with SMTP id i15mr15636715jav.308.1643832868972;
- Wed, 02 Feb 2022 12:14:28 -0800 (PST)
-MIME-Version: 1.0
-References: <20220131204357.1133674-1-keescook@chromium.org>
- <dc86fdf7-3202-e836-6f71-af1e2458b105@rasmusvillemoes.dk> <8e166131c01b4fbc83a1ca95b83bc362@AcuMS.aculab.com>
- <4eb192f15c9078984c5e05a9fdc85ab6a9611717.camel@med.uni-goettingen.de>
-In-Reply-To: <4eb192f15c9078984c5e05a9fdc85ab6a9611717.camel@med.uni-goettingen.de>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 2 Feb 2022 21:14:18 +0100
-Message-ID: <CANiq72=CHtyCV3Hbf9cSTpKaqNbZANrcW5uUfwp60G_n8t=USA@mail.gmail.com>
-Subject: Re: [PATCH] linux/const.h: Explain how __is_constexpr() works
-To:     "Uecker, Martin" <Martin.Uecker@med.uni-goettingen.de>
-Cc:     "keescook@chromium.org" <keescook@chromium.org>,
-        "linux@rasmusvillemoes.dk" <linux@rasmusvillemoes.dk>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "David.Laight@ACULAB.COM" <David.Laight@aculab.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "rikard.falkeborn@gmail.com" <rikard.falkeborn@gmail.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2yFJj6ZVefTE/vWISdKzupJXVjEcJPH4z8zqtZHrZMU=;
+        b=wMKhQN8y5WTxLw8zKBf613z7BQAtPYGM7wnQOPEU9BxIYik5NX0qcwgRNkiYlUyvIL
+         b+m9sxurvcGA3oLnJZu84gWAQjJ+Uo0Z77Giv88pC/XXJe1Hlc5sihU+Zi68F4zqI3BF
+         cu2KM/XQcnMloIAEp4SmpLNdalhU5fbStCV1cPXWEFf5QXSLqnDix+kZgO44LQHXwPNS
+         BL9is/oHxG4oMVfvo2tIGrIiHtBQrTlo3M5yxi/rJjVOf2DVdl3sLO3hmo6ePL30pXLy
+         sMveZqe+hy8Iwb+3braVMTFDV8svUVit7XoI49LAPlG2zTLxUbcH37Ho/Q2b4cF6YSpH
+         WCfg==
+X-Gm-Message-State: AOAM531rokaUZSWnvhCNzOq5P5L5BXEI2gmaFWAL/24FOlDlAoOlRvdB
+        ucPS1NsKr/TA9iaGNFhjGoX2DQ==
+X-Google-Smtp-Source: ABdhPJwmTwJ5ie1k8bwwQQWok+d1e3DNDo3GqAuF1F32vPbnmIN2LP3OmiFsSSsjNlqbjhUKCc7mLw==
+X-Received: by 2002:a17:903:249:: with SMTP id j9mr31864782plh.81.1643833909142;
+        Wed, 02 Feb 2022 12:31:49 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id ca12sm7166526pjb.11.2022.02.02.12.31.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Feb 2022 12:31:48 -0800 (PST)
+Date:   Wed, 2 Feb 2022 12:31:48 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Ariadne Conill <ariadne@dereferenced.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Rich Felker <dalias@libc.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "gustavoars@kernel.org" <gustavoars@kernel.org>,
-        "penguin-kernel@I-love.SAKURA.ne.jp" 
-        <penguin-kernel@i-love.sakura.ne.jp>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "ndesaulniers@google.com" <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] exec: Force single empty string when argv is empty
+Message-ID: <202202021229.9681AD39B0@keescook>
+References: <20220201000947.2453721-1-keescook@chromium.org>
+ <78959c88715049a4be00fc75bb333d3a@AcuMS.aculab.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <78959c88715049a4be00fc75bb333d3a@AcuMS.aculab.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 2, 2022 at 4:43 PM Uecker, Martin
-<Martin.Uecker@med.uni-goettingen.de> wrote:
->
-> BTW: I think it would be very valuable if WG14 would get
-> proposals and/or comments from the kernel community.
+On Tue, Feb 01, 2022 at 09:17:47AM +0000, David Laight wrote:
+> From: Kees Cook
+> > Sent: 01 February 2022 00:10
+> ...
+> > While the initial code searches[6][7] turned up what appeared to be
+> > mostly corner case tests, trying to that just reject argv == NULL
+> > (or an immediately terminated pointer list) quickly started tripping[8]
+> > existing userspace programs.
+> > 
+> > The next best approach is forcing a single empty string into argv and
+> > adjusting argc to match. The number of programs depending on argc == 0
+> > seems a smaller set than those calling execve with a NULL argv.
+> 
+> Has anyone considered using the pathname for argv[0]?
+> So converting:
+> 	execl(path, NULL);
+> into:
+> 	execl(path, path, NULL);
+> 
+> I've not spotted any such suggestion.
 
-Agreed! I am happy to help anyone do so.
+It came up on some IRC discussions at some point. I'm personally not a
+fan of this because it creates a bit of "new" ABI that has a lot of
+variability (depending on "" is one thing, but depending on a "missing"
+argv matching the exec path is very different). I think there were also
+concerns about dealing with fd-based exec ("what is the 'right' name"),
+etc.
 
-(`memset_explicit` and `#once` were inspired from kernel discussions /
-use cases)
+I'd prefer we stay as simple as possible for this change.
 
-Cheers,
-Miguel
+-- 
+Kees Cook
