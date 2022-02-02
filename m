@@ -2,134 +2,109 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46035C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 20:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8DBC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 21:00:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347331AbiBBU4D (ORCPT
+        id S245555AbiBBVAh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Feb 2022 15:56:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46530 "EHLO
+        Wed, 2 Feb 2022 16:00:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243590AbiBBU4D (ORCPT
+        with ESMTP id S1347368AbiBBVAh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Feb 2022 15:56:03 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AE00C06173B
-        for <linux-hardening@vger.kernel.org>; Wed,  2 Feb 2022 12:56:03 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id z14-20020a17090ab10e00b001b6175d4040so8028199pjq.0
-        for <linux-hardening@vger.kernel.org>; Wed, 02 Feb 2022 12:56:03 -0800 (PST)
+        Wed, 2 Feb 2022 16:00:37 -0500
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9AACC061714;
+        Wed,  2 Feb 2022 13:00:36 -0800 (PST)
+Received: by mail-wr1-x435.google.com with SMTP id k18so840912wrg.11;
+        Wed, 02 Feb 2022 13:00:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=+MOwEsZXX1JZ92aEsSTA+4bQ9fwXO7uqj6443Uicqb0=;
-        b=Mb5OwFKvf8tT0DvmVkSF03zpcm3XzqSHtUtuMB8JAyioHdfW8f1uw1h2J6Oi+HuZLb
-         3LH+5wQkRmNadqvUPytAJvY42l3NtWc5K9Qh9vU1oRYmBEQ2jlHROGDTkZ7g2fyV3Rvv
-         xhWjglkXHBLAiS2L/bD5rGfl/Mrf6dN2i0eFk=
+        bh=7OLSMx2LWSD7WsWcsdtwVZjsVIo2l+VXQLS4NW/dV3s=;
+        b=eFLJLpFYFhHEofxCZUnGM50cphxmqi3TKrpCx+wcfetrsnhrHvhxr4vOJE7lYB9ZmT
+         /elrTIKpSpkNXbqzxpdrXO2XLx2iEBrHH6xoHjDn+FbU4BKv6zKwNVN21CO+5xc3Q3Wf
+         8JKqHd/l5LZtx1UNv6k/TCXVkNZGL6v3a4kNko+voY2evS+gEb46C0pQ8OzSTtQs7eRe
+         TnD0irmM9NqYkKyUvBgrOjQkKwLVCIrCjj2Ic8XUshmvRRkPVspCOJU2ZB0Y+O8xoyCf
+         aEzKh+7sGJIbiGcAOtsLd45+WZlD/YL3t9Af/XVy46iejsEd+O6bWOu0HMrzUUxWtaaP
+         TRYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=+MOwEsZXX1JZ92aEsSTA+4bQ9fwXO7uqj6443Uicqb0=;
-        b=WCjr/hweXba4ud89fQ0XOo2qXcGXpbzyewV3X/yCOO6Jqg5c3aEbjoRMavuGC/bWJ5
-         RhR3zeg1aWFGI3HW/4KWLmJ9ffq8D5OPiIvZY5/oa44A8UuQ1tWeXY2Rxq+sx3rajqej
-         3DRtGqumodTU86FdkSBqJpH9s2VMUr5A0Dz7fimb2Wd9Bzf9b5CXyzxlkIu3x21hXQUX
-         rQEdSYiOWRWtxWo5IZk7UvipgaJBsV196Amw0zq40gTSxDu5W00dj+7fbTGD1ZiS/w+5
-         gDuzScSfSki9T05uL96/4vaMwAjOelFTfRSMJPzs064kTqx9fpRLm5/WBekNV6E+cl2p
-         NSDw==
-X-Gm-Message-State: AOAM530QMUZbtcxnrpeDHS/8RYesd/otW2gdBvyT1M7gSOxc9DzEVFB9
-        qM/p6LC5KfwgvCfbhKpYqCEk90lHKTFIWQ==
-X-Google-Smtp-Source: ABdhPJyfeZdi8A1JowZl63xE7cjRteRe2f/EQsWsDnneOxd/1gPZEhtH8tPe/EVOXmca0ssZNZc69w==
-X-Received: by 2002:a17:90a:548:: with SMTP id h8mr10099210pjf.109.1643835362724;
-        Wed, 02 Feb 2022 12:56:02 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a14sm28023672pfv.212.2022.02.02.12.56.02
+        bh=7OLSMx2LWSD7WsWcsdtwVZjsVIo2l+VXQLS4NW/dV3s=;
+        b=5tHP4qXhBSqYZV0QAAEf3J2QVGn/2kGyD/AasRlG/uQClMur1NKvQ179+75mPm9lJ6
+         SvjWkiMXi77NlkFXgdpItQHIJYzoKFxCj2DAq39ojLJo0+nXgGgxh7cPWPrdTJzCMhDz
+         Dj9knsKOAHKNG6y8Pu65HNvH1/dzltQFuP3zsT1dcH3XBCdUVsxBghLMXMs/1BV6m9dg
+         qOc90AnW5YJhvMhc1OAByftpV6BUhSpVIRlXFKLuF+Zi7rqSC9xyB92trWZV20bLwqli
+         QAsGrxy4tdoRwIw2yyxQGnRfjMhFlRcMyRGCOhLbMuJH88pbcK4nCFCvgt1ow853AwLn
+         5/SA==
+X-Gm-Message-State: AOAM533gaI2oGgdc6xQDx8jijjWlmAcprRuuGn+axjuSVj1gkWekJJ53
+        77CsZxfMGMgpkSOodskLaw==
+X-Google-Smtp-Source: ABdhPJzyLbGClv9WiZEVQXQQzzJST75S7NNTUYTVo82rCjZ58Cit08TatZSRK6vgPtbzGK74oumIzA==
+X-Received: by 2002:a5d:494b:: with SMTP id r11mr27085816wrs.626.1643835635248;
+        Wed, 02 Feb 2022 13:00:35 -0800 (PST)
+Received: from localhost.localdomain ([46.53.252.48])
+        by smtp.gmail.com with ESMTPSA id j19sm6464929wmq.17.2022.02.02.13.00.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Feb 2022 12:56:02 -0800 (PST)
-Date:   Wed, 2 Feb 2022 12:56:01 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 4/5] Makefile: Enable -Warray-bounds
-Message-ID: <202202021254.5A1FD4FFBF@keescook>
-References: <20210818081118.1667663-1-keescook@chromium.org>
- <20210818081118.1667663-5-keescook@chromium.org>
- <20220202160903.GA2337834@roeck-us.net>
+        Wed, 02 Feb 2022 13:00:34 -0800 (PST)
+Date:   Thu, 3 Feb 2022 00:00:32 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        Ariadne Conill <ariadne@dereferenced.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Rich Felker <dalias@libc.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] selftests/exec: Avoid future NULL argv execve warning
+Message-ID: <Yfrw8GREVRgN76tF@localhost.localdomain>
+References: <20220201000807.2453486-1-keescook@chromium.org>
+ <Yfqfo0rbq/B/l6IP@localhost.localdomain>
+ <7af32164-dbdf-26f1-1aaa-b720365f9743@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220202160903.GA2337834@roeck-us.net>
+In-Reply-To: <7af32164-dbdf-26f1-1aaa-b720365f9743@linuxfoundation.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 02, 2022 at 08:09:03AM -0800, Guenter Roeck wrote:
-> On Wed, Aug 18, 2021 at 01:11:17AM -0700, Kees Cook wrote:
-> > With the recent fixes for flexible arrays and expanded FORTIFY_SOURCE
-> > coverage, it is now possible to enable -Warray-bounds. Since both
-> > GCC and Clang include -Warray-bounds in -Wall, we just need to stop
-> > disabling it.
+On Wed, Feb 02, 2022 at 10:38:57AM -0700, Shuah Khan wrote:
+> On 2/2/22 8:13 AM, Alexey Dobriyan wrote:
+> > On Mon, Jan 31, 2022 at 04:08:07PM -0800, Kees Cook wrote:
+> > > Build actual argv for launching recursion test to avoid future warning
+> > > about using an empty argv in execve().
 > > 
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Masahiro Yamada <masahiroy@kernel.org>
-> > Cc: linux-kbuild@vger.kernel.org
-> > Co-developed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  Makefile | 1 -
-> >  1 file changed, 1 deletion(-)
+> > > --- a/tools/testing/selftests/exec/recursion-depth.c
+> > > +++ b/tools/testing/selftests/exec/recursion-depth.c
+> > > @@ -24,8 +24,14 @@
+> > >   #include <sys/mount.h>
+> > >   #include <unistd.h>
+> > > +#define FILENAME "/tmp/1"
+> > > +#define HASHBANG "#!" FILENAME "\n"
+> > > +
+> > >   int main(void)
+> > >   {
+> > > +	char * const argv[] = { FILENAME, NULL };
+> > > +	int rv;
 > > 
-> > diff --git a/Makefile b/Makefile
-> > index a4aca01a4835..af22b83cede7 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -1072,7 +1072,6 @@ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
-> >  
-> >  # We'll want to enable this eventually, but it's not going away for 5.7 at least
-> >  KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
-> > -KBUILD_CFLAGS += -Wno-array-bounds
-> >  KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
-> >  
-> >  # Another good warning that we'll want to enable eventually
+> > Can we move out of -Wdeclaration-after-statement mentality in tests at least?
 > 
-> alpha:defconfig:
+> selftest like the rest of the kernel follows the same coding guidelines.
+> It will follow the moving "-Wdeclaration-after-statement mentality" when
+> the rest of the kernel does.
 > 
-> In function '__memset',
->     inlined from '__bad_pagetable' at arch/alpha/mm/init.c:79:2:
-> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
->    37 |                         return __builtin_memset(s, c, n);
->       |                                ^~~~~~~~~~~~~~~~~~~~~~~~~
-> In function '__memset',
->     inlined from '__bad_page' at arch/alpha/mm/init.c:86:2:
-> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
->    37 |                         return __builtin_memset(s, c, n);
->       |                                ^~~~~~~~~~~~~~~~~~~~~~~~~
-> In function '__memset',
->     inlined from 'paging_init' at arch/alpha/mm/init.c:256:2:
-> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
->    37 |                         return __builtin_memset(s, c, n);
+> Looks like this topic was discussed in the following:
+> https://patchwork.kernel.org/project/linux-kbuild/patch/c6fda26e8d134264b04fadc3386d6c32@gmail.com/
 
-Thanks! I'll take a look. Every instance of the "[0, 0]" bounds means
-the compiler believes there's a way for the destination to be determined
-at compile-time to be NULL.
+The only real argument is "gcc miscompiles /proc" to which adding -Wdeclaration-after-statement
+looks like a too big hammer.
 
-> xtensa:allmodconfig:
-> --------------
-> Error log:
-> In file included from include/linux/uaccess.h:11,
->                  from include/linux/sched/task.h:11,
->                  from arch/xtensa/kernel/process.c:21:
-> arch/xtensa/kernel/process.c: In function 'copy_thread':
-> arch/xtensa/kernel/process.c:262:52: error: array subscript 53 is above array bounds of 'long unsigned int[16]'
-
-I assume this is a weird cast. I will also check this one out.
-
-Thanks!
-
--- 
-Kees Cook
+Why can't we have nice things?
