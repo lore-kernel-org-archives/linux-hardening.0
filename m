@@ -2,109 +2,130 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB4EC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 23:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3CAC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 23:08:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347977AbiBBXDx (ORCPT
+        id S1348023AbiBBXIQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Feb 2022 18:03:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47574 "EHLO
+        Wed, 2 Feb 2022 18:08:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233672AbiBBXDx (ORCPT
+        with ESMTP id S242277AbiBBXIP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Feb 2022 18:03:53 -0500
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00842C061714
-        for <linux-hardening@vger.kernel.org>; Wed,  2 Feb 2022 15:03:53 -0800 (PST)
-Received: by mail-pf1-x42b.google.com with SMTP id i186so655358pfe.0
-        for <linux-hardening@vger.kernel.org>; Wed, 02 Feb 2022 15:03:52 -0800 (PST)
+        Wed, 2 Feb 2022 18:08:15 -0500
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86AEDC061714
+        for <linux-hardening@vger.kernel.org>; Wed,  2 Feb 2022 15:08:15 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id o12so2081698lfg.12
+        for <linux-hardening@vger.kernel.org>; Wed, 02 Feb 2022 15:08:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=OpHOwgHBrGPuOBvUuh6gegX0rjacKztLoN+r7w2V6Cc=;
-        b=kLHpc5FWI8TvPe70KzrjeV3jZKkDbIr+6f4AkB5IWoNluO24vcTskDAWjSaeT658Hq
-         jw4G1tCBsiTHGq/IysgcIMLTv5zXECwdgWr58NVHRHRZk4VkLrXQcKmiGZEEX8gMFXWt
-         064XeHh93Xb2y2itGHP30w5sodLveLwX2vSbE=
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jBBnG4iriAx2QlzLYuicKwqWN3IoZcmUHa4D8MHxWsw=;
+        b=YdPUEHhlnJ0w/JeFN+OZ/SYhMOlNUiH9Ng0LqezBtX+z0wsAuTuq6YiuXY/hol7pYw
+         uXZkdIaGJ8RQXEqSmlZHe9QBfpsoNzIVqK0nuxFohHsknWXkgarRvRaPy8TunLbJ+jjd
+         XqRPTafPGjWAlQTTqWgmsVJeTisraDBDhu+RVI8fNc0halAkc5O3QxVM0o83DqzumI/g
+         oshtN0JCe2UrWAV7EoR73fF/Wv1u+BBKKy+ONF1kFZbYtCjED4DdrAE5bke+Oz/O92Ux
+         n2Z6u2BvkymqYkcDtbm/awpcxUfHNKAo0bpkcro3lj6oLG7OYOgIUeG/Fs4x7L0t8rVS
+         QxfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=OpHOwgHBrGPuOBvUuh6gegX0rjacKztLoN+r7w2V6Cc=;
-        b=HryJfBHursZt01NkXxUjvomqQa4s6iuJOvitzmWKmpEzC9vqQG7r++bxQOmVsaQPW9
-         Y0bMRN2LAAteYVQ/tzUkp+aLGBBvkg69T+TU49nNVhZ1MqDC0bMVazHIwzFnl5il8F2Q
-         OKOe+XaDHWvz7aJPE7BcvAkJaKh8V0ky+GXjT9EauLU5oTpjgtH83F9OPmp3qV6ut7nx
-         xBH7qrEyLIzPR9WJypWsyqt2W2J0qcz4/0V2WltJSbKEwSYXlfWiSfOhn/ulF/IA+PuM
-         YDuUHGs4gSlsvPN/wJZl+CEi/iNRhl1Qu1EFuHYUegf4u/abpMscf7YX0HF7vG1yq1sR
-         JHMg==
-X-Gm-Message-State: AOAM533ASsdO1LiExoVaGThMgmf4+7pZ9SRnv8OlPKUfw0Oia1EaEW+t
-        FwIKhTTW8dYGmPnKBcLrPaVNiq6d1GBi1A==
-X-Google-Smtp-Source: ABdhPJxMgCz9WZjgKwUDwU6lxD19M2Txy+rDJWNiyrtCnk0F6eNhwz7XrkTkl3cQP78CC2G4y02zDw==
-X-Received: by 2002:a63:4903:: with SMTP id w3mr1861183pga.5.1643843032435;
-        Wed, 02 Feb 2022 15:03:52 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id bf23sm7080295pjb.52.2022.02.02.15.03.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Feb 2022 15:03:52 -0800 (PST)
-Date:   Wed, 2 Feb 2022 15:03:51 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>
-Cc:     linux-xtensa@linux-xtensa.org, linux-hardening@vger.kernel.org
-Subject: How large is the xtensa pt_regs::areg array supposed to be?
-Message-ID: <202202021501.DA6594BFC@keescook>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jBBnG4iriAx2QlzLYuicKwqWN3IoZcmUHa4D8MHxWsw=;
+        b=JvvicX9RIjvIWP2flqaNA6mkacEbOYLYtBbC7fU4C7UUuJCs9Vs+O0peONUH9f5ZIj
+         lTb7lNa1UYdP/erVTPWs7ehc09HRvEkOD4Nvjay+orOP0j4nY9ghJaxdo5Cml5+YMiBA
+         vA0EHzybuJY/R5rzhxsvkQgVkc0Bu1nq27lQS9pMeEQGUxDS5nxYzf0Z/q7LODVvCj5X
+         /Xb1qjr7FddBdSSfCqKoqUw562XYIOYtJu8KP+Qzs7c341m62TZYDIoXpFsHgE96tdsF
+         PzxzCQWwlbbkx1ub0WiK9wv7ILoMiOVR/hAuaqd4mkK3UWFX594rPjzFiMXEHSir4iFG
+         EsWg==
+X-Gm-Message-State: AOAM533w5Y4t/SBemBa7CBUW19V+FIUKg9HUp+MJdAq7nmY1rPkAwOj6
+        yKrTuV+BLVu3TVn72GP+Bne54IG1rZeNMh7j3+ZjLw==
+X-Google-Smtp-Source: ABdhPJwNhFCg09jLnWAO/xZyK74NzRqq4QPChtE2uoqCveVvP+dq76KVPeCpKxsOM/QKWb03FPmrFGJV6LfsQmnhw8w=
+X-Received: by 2002:ac2:4e10:: with SMTP id e16mr25504054lfr.444.1643843293594;
+ Wed, 02 Feb 2022 15:08:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20220131204357.1133674-1-keescook@chromium.org>
+ <6641e01b86374ce197020d57c65ae3b3@AcuMS.aculab.com> <CANiq72neVsdLRyLn24avMhLCaHxMEiG0bD-ZkG46O7J29FanYA@mail.gmail.com>
+ <6d75ee32e7c3415ebcfa12e61d26aa87@AcuMS.aculab.com> <CANiq72nep38_aFpUNc5C3Po_AKmuiogqvzc_pJgvixJqy9POwg@mail.gmail.com>
+In-Reply-To: <CANiq72nep38_aFpUNc5C3Po_AKmuiogqvzc_pJgvixJqy9POwg@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 2 Feb 2022 15:08:01 -0800
+Message-ID: <CAKwvOdnWM8kw8TWKOv3uCoqroeqF2kW+TUEavFYOp5W6+ZPgew@mail.gmail.com>
+Subject: Re: [PATCH] linux/const.h: Explain how __is_constexpr() works
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        David Laight <David.Laight@aculab.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Martin Uecker <Martin.Uecker@med.uni-goettingen.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+On Wed, Feb 2, 2022 at 3:01 PM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Wed, Feb 2, 2022 at 11:20 PM David Laight <David.Laight@aculab.com> wrote:
+> >
+> > The type of the result depends on the type of the 2nd and 3rd arguments.
+> > Not on the value of the first one.
+>
+> I am not talking about the first operand. The behavior of the
+> conditional operator has a few cases. Since you mentioned promotions,
+> it looked like you were thinking about what happens for the arithmetic
+> types case, i.e.
+>
+> """If both the second and third operands have arithmetic type, the
+> result type that would be determined by the usual arithmetic
+> conversions, were they applied to those two operands, is the type of
+> the result."""
+>
+> which could lead to thinking that the expressions need to have the
+> same type as you mentioned, but that is not true, and the arithmetic
+> types case is not used in the macro either. The cases used are the
+> null pointer constant vs. pointer and the pointer to void vs. pointer
+> to object type.
+>
+> > It has nothing to with the condition, the compiler is trying to 'sort out'
+> > a suitable return type.
+> >
+> > I suspect the mismatched pointer types might even be a gcc extension.
+>
+> That is why I said it does not fit the constraints of the operator.
+> The standard does not describe what happens in such a case.
 
-When building with -Warray-bounds, I see this:
+Since this patch is a rephrasing of
+https://stackoverflow.com/a/49481218, I think the relevant citation
+from the C standard is below:
 
-In file included from ./include/linux/uaccess.h:11,
-                 from ./include/linux/sched/task.h:11,
-                 from arch/xtensa/kernel/process.c:21:
-arch/xtensa/kernel/process.c: In function 'copy_thread':
-arch/xtensa/kernel/process.c:262:52: warning: array subscript 53 is above array bounds of 'long unsigned int[16]' [-Warray-bounds]
-  262 |                                 put_user(regs->areg[caller_ars+1],
-./arch/xtensa/include/asm/uaccess.h:171:18: note: in definition of macro '__put_user_asm'
-  171 |         :[x] "r"(x_), [efault] "i"(-EFAULT))
-      |                  ^~
-./arch/xtensa/include/asm/uaccess.h:89:17: note: in expansion of macro '__put_user_size'
-   89 |                 __put_user_size((x), __pu_addr, (size), __pu_err);      \
-      |                 ^~~~~~~~~~~~~~~
-./arch/xtensa/include/asm/uaccess.h:62:33: note: in expansion of macro '__put_user_check'
-   62 | #define put_user(x, ptr)        __put_user_check((x), (ptr), sizeof(*(ptr)))
-      |                                 ^~~~~~~~~~~~~~~~
-arch/xtensa/kernel/process.c:262:33: note: in expansion of macro 'put_user'
-  262 |                                 put_user(regs->areg[caller_ars+1],
-      |                                 ^~~~~~~~
-In file included from ./arch/xtensa/include/asm/processor.h:17,
-                 from ./arch/xtensa/include/asm/thread_info.h:20,
-                 from ./arch/xtensa/include/asm/current.h:14,
-                 from ./include/linux/sched.h:12,
-                 from arch/xtensa/kernel/process.c:19:
-./arch/xtensa/include/asm/ptrace.h:80:23: note: while referencing 'areg'
-   80 |         unsigned long areg[16];
-      |                       ^~~~
+```
+The key here is that the conditional operator returns a different type
+depending on whether one of the operands is a null pointer constant
+(6.5.15.6):
 
+[...] if one operand is a null pointer constant, the result has the
+type of the other operand; otherwise, one operand is a pointer to void
+or a qualified version of void, in which case the result type is a
+pointer to an appropriately qualified version of void.
 
-The code is:
-                                int callinc = (regs->areg[0] >> 30) & 3;
-                                int caller_ars = XCHAL_NUM_AREGS - callinc * 4;
-                                put_user(regs->areg[caller_ars+1],
-                                         (unsigned __user*)(usp - 12));
-
-It looks like XCHAL_NUM_AREGS is larger than "16", though?
-
-struct pt_regs {
-...
-        unsigned long areg[16];
-
-What should be happening here?
-
-Thanks!
+So, if x was an integer constant expression, then the second operand
+is a null pointer constant and therefore the type of the expression is
+the type of the third operand, which is a pointer to int.
+```
 
 -- 
-Kees Cook
+Thanks,
+~Nick Desaulniers
