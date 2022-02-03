@@ -2,116 +2,95 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DFBC433FE
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Feb 2022 09:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8EACC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Feb 2022 12:42:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241209AbiBCJZL (ORCPT
+        id S230213AbiBCMm6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Feb 2022 04:25:11 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.85.151]:26670 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237572AbiBCJZL (ORCPT
+        Thu, 3 Feb 2022 07:42:58 -0500
+Received: from mail-wm1-f44.google.com ([209.85.128.44]:41815 "EHLO
+        mail-wm1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1350577AbiBCMm5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Feb 2022 04:25:11 -0500
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-32-mMsgCqnFOQGl0x65lu6MTQ-1; Thu, 03 Feb 2022 09:25:08 +0000
-X-MC-Unique: mMsgCqnFOQGl0x65lu6MTQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.28; Thu, 3 Feb 2022 09:25:07 +0000
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.028; Thu, 3 Feb 2022 09:25:07 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Miguel Ojeda' <miguel.ojeda.sandonis@gmail.com>,
-        Kees Cook <keescook@chromium.org>
-CC:     Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Martin Uecker <Martin.Uecker@med.uni-goettingen.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Rikard Falkeborn" <rikard.falkeborn@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Linux Doc Mailing List" <linux-doc@vger.kernel.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thu, 3 Feb 2022 07:42:57 -0500
+Received: by mail-wm1-f44.google.com with SMTP id bg21-20020a05600c3c9500b0035283e7a012so1761885wmb.0;
+        Thu, 03 Feb 2022 04:42:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=x5SP6wBXIEPK1p3rvS9+DT/uhtMpldQ/pITLaalWzLw=;
+        b=BkpFmJqwJz2ysee2aWBOvg5aYAdb4B2kyqZ75ITDC0pELnyr0Inc0/Ad5oThqyQa3V
+         Zpx1PBm9uPNogd30kux2cg3+SOvc/fenVulaad2ED8imb80jEDkS0TAykntmobrVxZ4b
+         s/ret2/ISqUvnRtPl2ca+7hdY4u8DagxJgXRr3B/biggRy//JgKnuvE3T/r1uD43iwJ3
+         q3/if4dTHIxgGFxZAeBQHQchGSeQZPrKMCUl+VY9d1HsyWSu+wvmvjJpSVkufSPPOGWa
+         OYXmUqimvQeD/gYqMT75ySKAVrnRKCke/cmbTN8mUUeiZDY+BUj9OS5sA6YzTW4ufyNC
+         5fUA==
+X-Gm-Message-State: AOAM532l+edQ3sP4y2pYpmxoIhqx6S+ynqzAtGgAEhRptP8Nml7M9W/h
+        shVcmauGXbRmUJ/nwNmIKGE=
+X-Google-Smtp-Source: ABdhPJz6LM9E71WKtyNJnIR89p9hnohZGRBLXkhtiQ/1bQjjJgJxbCdLm/0Q9s1HlB9OkyJNf1CChA==
+X-Received: by 2002:a05:600c:2741:: with SMTP id 1mr10407655wmw.50.1643892176074;
+        Thu, 03 Feb 2022 04:42:56 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id p7sm7421259wmq.20.2022.02.03.04.42.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Feb 2022 04:42:54 -0800 (PST)
+Date:   Thu, 3 Feb 2022 12:42:53 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH] linux/const.h: Explain how __is_constexpr() works
-Thread-Topic: [PATCH] linux/const.h: Explain how __is_constexpr() works
-Thread-Index: AQHYGHV8RL4oDGFcTkyEh79ubpGBJ6yBjFag
-Date:   Thu, 3 Feb 2022 09:25:07 +0000
-Message-ID: <8f41a0e40e78419d947ba322031acd2f@AcuMS.aculab.com>
-References: <20220131204357.1133674-1-keescook@chromium.org>
- <CANiq72m+3UKC+PskuGYu_c_u1Ua-=bvkHi9Gess-59+pqXdSwA@mail.gmail.com>
-In-Reply-To: <CANiq72m+3UKC+PskuGYu_c_u1Ua-=bvkHi9Gess-59+pqXdSwA@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+Subject: Re: [PATCH][next] Drivers: hv: vmbus: Use struct_size() helper in
+ kmalloc()
+Message-ID: <20220203124253.h33oehbhninoadca@liuwe-devbox-debian-v2>
+References: <20220125180131.GA67746@embeddedor>
+ <MWHPR21MB1593A23CA620CEE3557023F8D7219@MWHPR21MB1593.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MWHPR21MB1593A23CA620CEE3557023F8D7219@MWHPR21MB1593.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-RnJvbTogTWlndWVsIE9qZWRhDQo+IFNlbnQ6IDAyIEZlYnJ1YXJ5IDIwMjIgMjA6NDMNCj4gDQo+
-IE9uIE1vbiwgSmFuIDMxLCAyMDIyIGF0IDk6NDMgUE0gS2VlcyBDb29rIDxrZWVzY29va0BjaHJv
-bWl1bS5vcmc+IHdyb3RlOg0KPiA+DQo+ID4gKyAqIC0gVGhlIGNvbmRpdGlvbmFsIG9wZXJhdG9y
-ICgiLi4uID8gLi4uIDogLi4uIikgcmV0dXJucyB0aGUgdHlwZSBvZiB0aGUNCj4gPiArICogICBv
-cGVyYW5kIHRoYXQgaXNuJ3QgYSBudWxsIHBvaW50ZXIgY29uc3RhbnQuIFRoaXMgYmVoYXZpb3Ig
-aXMgdGhlDQo+IA0KPiBQZXJoYXBzIGNsYXJpZnkgdGhhdCB0aGlzIGhhcHBlbnMgb25seSBpZiBp
-dCBmaXRzIHRoYXQgY2FzZT8gLi4uDQo+IA0KPiA+ICsgKiAtIElmICh4KSBpcyBhbiBpbnRlZ2Vy
-IGNvbnN0YW50IGV4cHJlc3Npb24sIHRoZW4gdGhlICIqIDBsIiByZXNvbHZlcyBpdA0KPiA+ICsg
-KiAgIGludG8gYSBudWxsIHBvaW50ZXIgY29uc3RhbnQsIHdoaWNoIGZvcmNlcyB0aGUgY29uZGl0
-aW9uYWwgb3BlcmF0b3INCj4gPiArICogICB0byByZXR1cm4gdGhlIHR5cGUgb2YgdGhlIGxhc3Qg
-b3BlcmFuZDogIihpbnQgKikiLg0KPiA+ICsgKiAtIElmICh4KSBpcyBub3QgYW4gaW50ZWdlciBj
-b25zdGFudCBleHByZXNzaW9uLCB0aGVuIHRoZSB0eXBlIG9mIHRoZQ0KPiA+ICsgKiAgIGNvbmRp
-dGlvbmFsIG9wZXJhdG9yIGlzIGZyb20gdGhlIGZpcnN0IG9wZXJhbmQ6ICIodm9pZCAqKSIuDQo+
-IA0KPiAuLi4gaS5lLiB0aGlzIG9uZSBoYXBwZW5zIGJlY2F1c2UgaXQgaXMgc3BlY2lmaWVkIGFz
-IHJldHVybmluZyBhDQo+IHBvaW50ZXIgdG8gdm9pZCAob25lIGNvdWxkIHJlYWQgaXQgYXMgcmV0
-dXJuaW5nIHRoZSB0eXBlIG9mIHRoZSBmaXJzdA0KPiBvcGVyYW5kKS4NCj4gDQo+IFdoYXQgYWJv
-dXQgc29tZXRoaW5nIGxpa2U6DQo+IA0KPiAgIC0gVGhlIGJlaGF2aW9yIChpbmNsdWRpbmcgaXRz
-IHJldHVybiB0eXBlKSBvZiB0aGUgY29uZGl0aW9uYWwNCj4gb3BlcmF0b3IgKCIuLi4gPyAuLi4g
-OiAuLi4iKSBkZXBlbmRzIG9uIHRoZSBraW5kIG9mIGV4cHJlc3Npb25zIGdpdmVuDQo+IGZvciB0
-aGUgc2Vjb25kIGFuZCB0aGlyZCBvcGVyYW5kcy4gVGhpcyBpcyB0aGUgY2VudHJhbCBtZWNoYW5p
-c20gb2YNCj4gdGhlIG1hY3JvLg0KPiAgIC0gSWYgKHgpIGlzIGFuIGludGVnZXIgY29uc3RhbnQg
-ZXhwcmVzc2lvbiwgdGhlbiB0aGUgIiogMGwiIHJlc29sdmVzDQo+IGl0IGludG8gYSBudWxsIHBv
-aW50ZXIgY29uc3RhbnQuIFdoZW4gb25lIG9wZXJhbmQgaXMgYSBudWxsIHBvaW50ZXINCj4gY29u
-c3RhbnQgYW5kIHRoZSBvdGhlciBpcyBhIHBvaW50ZXIsIHRoZSBjb25kaXRpb25hbCBvcGVyYXRv
-ciByZXR1cm5zDQo+IHRoZSB0eXBlIG9mIHRoZSBwb2ludGVyIG9wZXJhbmQ7IHRoYXQgaXMsICJp
-bnQgKiIuDQo+ICAgLSBJZiAoeCkgaXMgbm90IGFuIGludGVnZXIgY29uc3RhbnQgZXhwcmVzc2lv
-biwgdGhlbiB0aGF0IG9wZXJhbmQgaXMNCj4gYSBwb2ludGVyIHRvIHZvaWQgKGJ1dCBub3QgYSBu
-dWxsIHBvaW50ZXIgY29uc3RhbnQpLiBXaGVuIG9uZSBvcGVyYW5kDQo+IGlzIGEgcG9pbnRlciB0
-byB2b2lkIGFuZCB0aGUgb3RoZXIgYSBwb2ludGVyIHRvIGFuIG9iamVjdCB0eXBlLCB0aGUNCj4g
-Y29uZGl0aW9uYWwgb3BlcmF0b3IgcmV0dXJucyBhICJ2b2lkICoiIHR5cGUuDQoNCk5pY2sncyBx
-dW90ZSBmcm9tIHRoZSBDIHN0YW5kYXJkIGFjdHVhbGx5IHN1bXMgaXQgdXAgbmljZWx5Og0KDQog
-ICAgVGhlIGtleSBoZXJlIGlzIHRoYXQgdGhlIGNvbmRpdGlvbmFsIG9wZXJhdG9yIHJldHVybnMg
-YSBkaWZmZXJlbnQgdHlwZQ0KICAgIGRlcGVuZGluZyBvbiB3aGV0aGVyIG9uZSBvZiB0aGUgb3Bl
-cmFuZHMgaXMgYSBudWxsIHBvaW50ZXIgY29uc3RhbnQNCiAgICAoNi41LjE1LjYpOg0KDQogICAg
-Wy4uLl0gaWYgb25lIG9wZXJhbmQgaXMgYSBudWxsIHBvaW50ZXIgY29uc3RhbnQsIHRoZSByZXN1
-bHQgaGFzIHRoZQ0KICAgIHR5cGUgb2YgdGhlIG90aGVyIG9wZXJhbmQ7IG90aGVyd2lzZSwgb25l
-IG9wZXJhbmQgaXMgYSBwb2ludGVyIHRvIHZvaWQNCiAgICBvciBhIHF1YWxpZmllZCB2ZXJzaW9u
-IG9mIHZvaWQsIGluIHdoaWNoIGNhc2UgdGhlIHJlc3VsdCB0eXBlIGlzIGENCiAgICBwb2ludGVy
-IHRvIGFuIGFwcHJvcHJpYXRlbHkgcXVhbGlmaWVkIHZlcnNpb24gb2Ygdm9pZC4NCg0KVGhhdCBm
-b2xsb3dlZCBieSBhIHJlbWluZGVyIHRoYXQgIih2b2lkICopeCBpcyBhIG51bGwgcG9pbnRlciBj
-b25zdGFudCBpZiB4DQppcyBhIGNvbXBpbGUgdGltZSBpbnRlZ2VyIGNvbnN0YW50IGV4cHJlc3Np
-b24iIGlzIGVub3VnaC4NCkFsbCB0aGUgcmVzdCBpcyBqdXN0IFRMO0RSLg0KDQpUaGUgJzgnIGFs
-c28ganVzdCBjb25mdXNlIHRoaW5ncywgdGhleSBhcmUgbm90IGltcG9ydGFudCBhdCBhbGwuDQpT
-byBpdCBjYW4gYmU6DQojZGVmaW5lIF9faXNfY29uc3RleHByKHgpIFwNCiAJKHNpemVvZigqKDAg
-PyAoKHZvaWQgKikoKGxvbmcpKHgpICogMCkpIDogKGludCAqKTApKSA9PSBzaXplb2YoaW50KSkN
-Cg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2Fk
-LCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5v
-OiAxMzk3Mzg2IChXYWxlcykNCg==
+On Thu, Jan 27, 2022 at 04:01:28PM +0000, Michael Kelley (LINUX) wrote:
+> From: Gustavo A. R. Silva <gustavoars@kernel.org> Sent: Tuesday, January 25, 2022 10:02 AM
+> > 
+> > Make use of the struct_size() helper instead of an open-coded version,
+> > in order to avoid any potential type mistakes or integer overflows that,
+> > in the worst scenario, could lead to heap overflows.
+> > 
+> > Also, address the following sparse warnings:
+> > drivers/hv/vmbus_drv.c:1132:31: warning: using sizeof on a flexible structure
+> > 
+> > Link: https://github.com/KSPP/linux/issues/174
+> > ---
+> >  drivers/hv/vmbus_drv.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> > index 17bf55fe3169..cd193456cd84 100644
+> > --- a/drivers/hv/vmbus_drv.c
+> > +++ b/drivers/hv/vmbus_drv.c
+> > @@ -1129,7 +1129,7 @@ void vmbus_on_msg_dpc(unsigned long data)
+> >  	}
+> > 
+> >  	if (entry->handler_type	== VMHT_BLOCKING) {
+> > -		ctx = kmalloc(sizeof(*ctx) + payload_size, GFP_ATOMIC);
+> > +		ctx = kmalloc(struct_size(ctx, msg.payload, payload_size), GFP_ATOMIC);
+> >  		if (ctx == NULL)
+> >  			return;
+> > 
+> > --
+> > 2.27.0
+> 
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> 
 
+Applied to hyperv-next. Thanks.
