@@ -2,95 +2,183 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8EACC433F5
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Feb 2022 12:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA16C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Feb 2022 16:41:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230213AbiBCMm6 (ORCPT
+        id S1352292AbiBCQl0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Feb 2022 07:42:58 -0500
-Received: from mail-wm1-f44.google.com ([209.85.128.44]:41815 "EHLO
-        mail-wm1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350577AbiBCMm5 (ORCPT
+        Thu, 3 Feb 2022 11:41:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59936 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1352287AbiBCQlZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Feb 2022 07:42:57 -0500
-Received: by mail-wm1-f44.google.com with SMTP id bg21-20020a05600c3c9500b0035283e7a012so1761885wmb.0;
-        Thu, 03 Feb 2022 04:42:56 -0800 (PST)
+        Thu, 3 Feb 2022 11:41:25 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC5FFC06173B
+        for <linux-hardening@vger.kernel.org>; Thu,  3 Feb 2022 08:41:25 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id d5so2915481pjk.5
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Feb 2022 08:41:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=1evXhfpbBKElbnPFpb9YOErw3xinbR29/m37zDfFiAw=;
+        b=S/UAP0f153LFonp1hCXbIVWAfYmrYBM8A9I4S4MSqcNaBK/XGFbffMh95ZGYIZ02J2
+         J30wn/NHcxDB9DTV6U1ItVXuLRqx+8GWqMlsxpvlKrDFs01zr0cJYjALOlGuFxEsxc2I
+         SsWacMJDXRmANGCDAQkwxE9ivNqKuc+pELREQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=x5SP6wBXIEPK1p3rvS9+DT/uhtMpldQ/pITLaalWzLw=;
-        b=BkpFmJqwJz2ysee2aWBOvg5aYAdb4B2kyqZ75ITDC0pELnyr0Inc0/Ad5oThqyQa3V
-         Zpx1PBm9uPNogd30kux2cg3+SOvc/fenVulaad2ED8imb80jEDkS0TAykntmobrVxZ4b
-         s/ret2/ISqUvnRtPl2ca+7hdY4u8DagxJgXRr3B/biggRy//JgKnuvE3T/r1uD43iwJ3
-         q3/if4dTHIxgGFxZAeBQHQchGSeQZPrKMCUl+VY9d1HsyWSu+wvmvjJpSVkufSPPOGWa
-         OYXmUqimvQeD/gYqMT75ySKAVrnRKCke/cmbTN8mUUeiZDY+BUj9OS5sA6YzTW4ufyNC
-         5fUA==
-X-Gm-Message-State: AOAM532l+edQ3sP4y2pYpmxoIhqx6S+ynqzAtGgAEhRptP8Nml7M9W/h
-        shVcmauGXbRmUJ/nwNmIKGE=
-X-Google-Smtp-Source: ABdhPJz6LM9E71WKtyNJnIR89p9hnohZGRBLXkhtiQ/1bQjjJgJxbCdLm/0Q9s1HlB9OkyJNf1CChA==
-X-Received: by 2002:a05:600c:2741:: with SMTP id 1mr10407655wmw.50.1643892176074;
-        Thu, 03 Feb 2022 04:42:56 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id p7sm7421259wmq.20.2022.02.03.04.42.54
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=1evXhfpbBKElbnPFpb9YOErw3xinbR29/m37zDfFiAw=;
+        b=iddSYsMUx+MDaRtrkbReJKyctIb6UM/o1djmdqTpvtSEsp/dnUNHngVR3IUUDY6qNi
+         FQzj0+WHVOVmNUcg3ZWVTNehejsldiZ0UviJa6r/gq3lqzkkAsNIhfYJz2jynG7MVaMp
+         mAVCohPv/xg/c8cR6Mygwf348LwgsTnNmBpXCbz+Fodmov4D+LvZwelv3Yz6kXcKfzSG
+         2O88KI7E8h82DttN+N5ZtiaoarMZ2PK4eRosOmby9ucgB/9w5zzHoBRmz6eq3YaxdAyj
+         BgmdPTzPIc+HFwIP27vfBOH4JW0ek/AavWdG53arnwYcJ10f8t2PmTPqCbjLSWffySIP
+         AFcg==
+X-Gm-Message-State: AOAM532RtsnWSn3TQwbh+eFWTO8/P8EsGlyYqHiNRpUtHYuGd65BZppd
+        PCKwD/GDzLdXilKQrxQCU94VAA==
+X-Google-Smtp-Source: ABdhPJzMqsctX1naiJ7QdADWrvnbSgaWNfF861ADFSzgLjkBcEQ0An+n3G1dZLDGYZsYZmDRJlHqEw==
+X-Received: by 2002:a17:902:8f8e:: with SMTP id z14mr24281634plo.28.1643906485287;
+        Thu, 03 Feb 2022 08:41:25 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d20sm3234791pfu.9.2022.02.03.08.41.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Feb 2022 04:42:54 -0800 (PST)
-Date:   Thu, 3 Feb 2022 12:42:53 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH][next] Drivers: hv: vmbus: Use struct_size() helper in
- kmalloc()
-Message-ID: <20220203124253.h33oehbhninoadca@liuwe-devbox-debian-v2>
-References: <20220125180131.GA67746@embeddedor>
- <MWHPR21MB1593A23CA620CEE3557023F8D7219@MWHPR21MB1593.namprd21.prod.outlook.com>
+        Thu, 03 Feb 2022 08:41:24 -0800 (PST)
+Date:   Thu, 3 Feb 2022 08:41:24 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, Peter Rosin <peda@axentia.se>,
+        Andy Shevchenko <andy@kernel.org>,
+        Matteo Croce <mcroce@microsoft.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] lib/test_string.c: Add test for strlen()
+Message-ID: <202202030840.74FCB6868@keescook>
+References: <20220130183653.491292-1-keescook@chromium.org>
+ <20220202160149.GA2322037@roeck-us.net>
+ <202202021237.487D3DE73@keescook>
+ <5ff18cff-6cfd-1f85-da74-1e5660a1a250@roeck-us.net>
+ <CAMuHMdWssK2=NFc6NO-inQg5dWxZP4Wv41K3J3RqRXThXatovw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <MWHPR21MB1593A23CA620CEE3557023F8D7219@MWHPR21MB1593.namprd21.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdWssK2=NFc6NO-inQg5dWxZP4Wv41K3J3RqRXThXatovw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jan 27, 2022 at 04:01:28PM +0000, Michael Kelley (LINUX) wrote:
-> From: Gustavo A. R. Silva <gustavoars@kernel.org> Sent: Tuesday, January 25, 2022 10:02 AM
-> > 
-> > Make use of the struct_size() helper instead of an open-coded version,
-> > in order to avoid any potential type mistakes or integer overflows that,
-> > in the worst scenario, could lead to heap overflows.
-> > 
-> > Also, address the following sparse warnings:
-> > drivers/hv/vmbus_drv.c:1132:31: warning: using sizeof on a flexible structure
-> > 
-> > Link: https://github.com/KSPP/linux/issues/174
-> > ---
-> >  drivers/hv/vmbus_drv.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> > index 17bf55fe3169..cd193456cd84 100644
-> > --- a/drivers/hv/vmbus_drv.c
-> > +++ b/drivers/hv/vmbus_drv.c
-> > @@ -1129,7 +1129,7 @@ void vmbus_on_msg_dpc(unsigned long data)
-> >  	}
-> > 
-> >  	if (entry->handler_type	== VMHT_BLOCKING) {
-> > -		ctx = kmalloc(sizeof(*ctx) + payload_size, GFP_ATOMIC);
-> > +		ctx = kmalloc(struct_size(ctx, msg.payload, payload_size), GFP_ATOMIC);
-> >  		if (ctx == NULL)
-> >  			return;
-> > 
-> > --
-> > 2.27.0
+On Thu, Feb 03, 2022 at 09:04:22AM +0100, Geert Uytterhoeven wrote:
+> Hi Günter,
 > 
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> On Thu, Feb 3, 2022 at 12:12 AM Guenter Roeck <linux@roeck-us.net> wrote:
+> > On 2/2/22 12:52, Kees Cook wrote:
+> > > On Wed, Feb 02, 2022 at 08:01:49AM -0800, Guenter Roeck wrote:
+> > >> On Sun, Jan 30, 2022 at 10:36:53AM -0800, Kees Cook wrote:
+> > >>> Add a simple test for strlen() functionality, including using it as a
+> > >>> constant expression.
+> > >>>
+> > >>> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> > >>> Cc: Peter Rosin <peda@axentia.se>
+> > >>> Signed-off-by: Kees Cook <keescook@chromium.org>
+> > >>> ---
+> > >>> I'll be taking this as part of my Clang FORTIFY_SOURCE series.
+> > >>> ---
+> > >>>   lib/test_string.c | 37 +++++++++++++++++++++++++++++++++++++
+> > >>>   1 file changed, 37 insertions(+)
+> > >>>
+> > >>> diff --git a/lib/test_string.c b/lib/test_string.c
+> > >>> index 9dfd6f52de92..59994f552c48 100644
+> > >>> --- a/lib/test_string.c
+> > >>> +++ b/lib/test_string.c
+> > >>> @@ -179,6 +179,38 @@ static __init int strnchr_selftest(void)
+> > >>>     return 0;
+> > >>>   }
+> > >>>
+> > >>> +/*
+> > >>> + * Unlike many other string functions, strlen() can be used in
+> > >>> + * static initializers when string lengths are known at compile
+> > >>> + * time. (i.e. Under these conditions, strlen() is a constant
+> > >>> + * expression.) Make sure it can be used this way.
+> > >>> + */
+> > >>> +static const int strlen_ce = strlen("tada, a constant expression");
+> > >>> +
+> > >>
+> > >> This results in:
+> > >>
+> > >> lib/test_string.c:188:30: error: initializer element is not constant
+> > >>    188 | static const int strlen_ce = strlen("tada, a constant expression");
+> > >>
+> > >> for several of my tests. I don't think you can mandate that a compiler
+> > >> implements this.
+> > >
+> > > Which tests?
+> > >
+> >
+> > Some examples:
+> >
+> > Build reference: next-20220202
+> > Compiler version: m68k-linux-gcc (GCC) 11.2.0
+> >
+> > Building m68k:defconfig ... failed
+> > --------------
+> > Error log:
+> > lib/test_string.c:188:30: error: initializer element is not constant
+> >    188 | static const int strlen_ce = strlen("tada, a constant expression");
+> >
+> > Building mips:malta_defconfig:nocd:smp:net,e1000:initrd ... failed
+> > ------------
+> > Error log:
+> > lib/test_string.c:188:30: error: initializer element is not constant
+> >   static const int strlen_ce = strlen("tada, a constant expression");
+> >
+> > Building i386:q35:Broadwell:defconfig:smp:ata:net,rtl8139:hd ... failed
+> > ------------
+> > Error log:
+> > lib/test_string.c:188:30: error: initializer element is not constant
+> >    188 | static const int strlen_ce = strlen("tada, a constant expression");
+> >
+> > i386 and is defconfig + CONFIG_STRING_SELFTEST=y; mips is
+> > malta_defconfig + CONFIG_STRING_SELFTEST=y. All use gcc 11.2.
+> >
+> > There may be more, but there are so many failures in -next right now
+> > that I may be missing some.
+> >
+> > > This property of strlen() is already required by our builds (this is how
+> > > I tripped over it). For example:
+> > >
+> > > drivers/firmware/xilinx/zynqmp-debug.c:
+> > >
+> > > #define PM_API(id)               {id, #id, strlen(#id)}
+> > > static struct pm_api_info pm_api_list[] = {
+> > >          PM_API(PM_GET_API_VERSION),
+> > >          PM_API(PM_QUERY_DATA),
+> > > };
+> >
+> > I do not think that it is a C standard that strlen() on a constant string
+> > must be compile-time evaluated and result in a constant.
 > 
+> Not if -ffreestanding, which is what several architectures are
+> using nowadays, to a.o. prevent gcc from replacing calls to stdlib
+> functions to other stdlib functions (e.g. strncat() -> strlen() +
+> store, strncmp() -> strcmp()), which breaks linking if the latter is
+> only provided inline.
+> 
+> > Anyway, key difference, I think, is the presence of an architecture-specific
+> > version of strlen(), or the maybe non-presence of __HAVE_ARCH_STRLEN,
+> > or the definition of strlen() in include/linux/fortify-string.h.
+> 
+> It works after dropping -ffreestanding.
 
-Applied to hyperv-next. Thanks.
+Ah-ha, thanks for the clue here. I'll see if there is some way to
+detect this (or, I guess, drop the patch). I don't like that this
+requirement depends on the architecture, so I'd rather it behave the
+same everywhere. Hmm
+
+-- 
+Kees Cook
