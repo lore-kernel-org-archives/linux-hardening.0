@@ -2,89 +2,122 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFABC433F5
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Feb 2022 19:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4306AC433EF
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Feb 2022 19:50:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240903AbiBCTdm (ORCPT
+        id S1353832AbiBCTus (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Feb 2022 14:33:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44500 "EHLO
+        Thu, 3 Feb 2022 14:50:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231639AbiBCTdl (ORCPT
+        with ESMTP id S243439AbiBCTus (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Feb 2022 14:33:41 -0500
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF69DC061714
-        for <linux-hardening@vger.kernel.org>; Thu,  3 Feb 2022 11:33:40 -0800 (PST)
-Received: by mail-ed1-x52f.google.com with SMTP id l5so8180190edv.3
-        for <linux-hardening@vger.kernel.org>; Thu, 03 Feb 2022 11:33:40 -0800 (PST)
+        Thu, 3 Feb 2022 14:50:48 -0500
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F5D4C06173B
+        for <linux-hardening@vger.kernel.org>; Thu,  3 Feb 2022 11:50:48 -0800 (PST)
+Received: by mail-lj1-x229.google.com with SMTP id t14so5434871ljh.8
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Feb 2022 11:50:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UKKVvcG+cC8bIALBnZZmaV3K37giZ1xa1O6hFf3r9uc=;
-        b=Jkx2j0PYyKcGzbdzVprIgIK3c9UJTJU023+j8kMn6bFfwe79YvJheTw9qL5ryIRa80
-         Lh9b7BpjrwhgQhd2J7+B1U+ZMFnZoZUWM9Ajp0Ad4vzpkBa6lrGGNVz1nkoLZyKgapv5
-         0hx1nJz7ou0M7Q+16jCAsq70x2y43qYOvrTMY=
+        bh=aVBeKDKPYFp+Sm22VFGesckBrKnktcRnAdKBFblfodE=;
+        b=AbjtmmjGWQpWdgmjPMsIc8GVNpR6kfz4i/s3EjeX9oSZeV1gQ+cJTDv9UvwEH5rH6C
+         kMf5vi9O1DUi3v8wRd+r927wglgfPiddZu468FnuMFIuDLhtL3ChMK/MxHI7PBY8gzQ/
+         zLOk6W9kMaJbsX0qZJ4X9jOZ6qInlhIMmfIyV/8XOmLBwQhOwmWniKtgiynBLd825bbA
+         5uSzfQYGoAvd0YSJGL+WNkDpnmx4YYLhUd06MnlzN/B455n933bNLVnktWVuVW1HPvAL
+         YcUfyDkoaKoXtKRPjTYXPkTK/x5PDS1HKlZYI/K/8Dlhe6U9B1tNuyAqaavcy5dWL9Sl
+         K7jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UKKVvcG+cC8bIALBnZZmaV3K37giZ1xa1O6hFf3r9uc=;
-        b=z1heKwGXkxEc+hj3CJmOpEb9jStKSmfQXpMWhs5YcfDa7UWPFagojApgBknIg9MoSL
-         r3PNyTpdixspwKRF+9vZR+OFJ5Lr/+bFa8OlKMAbictStjRZ1AfY9aVCvMHsmEpaHXjC
-         8SanCyQKVeIBYLbQAe8aPplTkJl46XEz9JaF3gUW3DtbegVMQI1RtL0Bwx4PApSNRRuB
-         7ZOpeiWAdZCMLOAg8CPuMgZinP8IcKI7VshrXUnG/o68farzWap6MLpG9Pvbs/p3PhXo
-         x5Uxcn83xxyUWODrYj1mXqcXzCARaIop9Rm5XOkxtcqhRyutsy78pUFt9bzh9p7/fDje
-         pS8Q==
-X-Gm-Message-State: AOAM532rcbRJVH+K44GPFdUdRNrz1brtl+2G1T2kweOeVGK5cWmq6BHs
-        nH5BEsPM46SHmAlNlP8TpYmOEaF2ZRaT78yy
-X-Google-Smtp-Source: ABdhPJzKWbY1CfsK3H6l7xbVrYULK6HOEcNcLh/4fkO/TlhGKubLgO4CAeIgpGalfDa6v+XzrWUkLA==
-X-Received: by 2002:aa7:dcd5:: with SMTP id w21mr37746511edu.97.1643916819365;
-        Thu, 03 Feb 2022 11:33:39 -0800 (PST)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
-        by smtp.gmail.com with ESMTPSA id j19sm6152152ejm.111.2022.02.03.11.33.35
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Feb 2022 11:33:36 -0800 (PST)
-Received: by mail-wr1-f47.google.com with SMTP id s18so7023028wrv.7
-        for <linux-hardening@vger.kernel.org>; Thu, 03 Feb 2022 11:33:35 -0800 (PST)
-X-Received: by 2002:adf:d087:: with SMTP id y7mr29738280wrh.274.1643916815565;
- Thu, 03 Feb 2022 11:33:35 -0800 (PST)
+        bh=aVBeKDKPYFp+Sm22VFGesckBrKnktcRnAdKBFblfodE=;
+        b=j2T/OTjuA/QLIo0g++tYU2zrJVIIAfTsOI6C/KVkMNbo860bNd6OVy5azaMxcQjygD
+         TRxQFFpP1YRb+nd24IaeUvxoUt04JZsBaMFN8rJT5K/NIIoUKZNLZccIK910dSoOBAjA
+         y3RBk+0G4GXoAxc19T4HuWAJFOmTmmPtEZFGeaTn9IQwqdpWWnaNR0Zi5AQmbAZOgBAw
+         zBXBLfgX3UYA9AaPwfmI+4bftF0INbXiKNk6U78fQapmKxxCSfuAWXourPzYXzHY+Pq2
+         3jOXsPuf83scAfvjx8DjZCP9x7XOI0EuXAynah+ItXqzyY/2JRopVJeLjVzmEyrMW30w
+         i1Yw==
+X-Gm-Message-State: AOAM532PDtpLgLMBbnCAujf5Fnj056UDEktLRqNxUKAQ2pRyf4ysnlPe
+        Eqe1bJnEYKBdaAicv7Fhas+P5rZ5fQ0NNmbeRdjr4A==
+X-Google-Smtp-Source: ABdhPJxc3sO/oNI/Ujb2wt/q0D3RYB++ahedSpN+JSsytdZf3f4yykiSmktj8jSXmlhjNSYVKgmXGFiLyRxkOQ+A/4w=
+X-Received: by 2002:a2e:954:: with SMTP id 81mr14783838ljj.198.1643917846193;
+ Thu, 03 Feb 2022 11:50:46 -0800 (PST)
 MIME-Version: 1.0
-References: <20220202001918.4104428-1-keescook@chromium.org>
-In-Reply-To: <20220202001918.4104428-1-keescook@chromium.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 3 Feb 2022 11:33:19 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whkwveB2HDOibk+chAWhpm8LyGBVVjZmV4CAeEdnezZ0w@mail.gmail.com>
-Message-ID: <CAHk-=whkwveB2HDOibk+chAWhpm8LyGBVVjZmV4CAeEdnezZ0w@mail.gmail.com>
-Subject: Re: [PATCH] gcc-plugins/stackleak: Use noinstr in favor of notrace
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Alexander Popov <alex.popov@linux.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
+References: <20220130183653.491292-1-keescook@chromium.org>
+ <20220202160149.GA2322037@roeck-us.net> <202202021237.487D3DE73@keescook>
+ <5ff18cff-6cfd-1f85-da74-1e5660a1a250@roeck-us.net> <CAMuHMdWssK2=NFc6NO-inQg5dWxZP4Wv41K3J3RqRXThXatovw@mail.gmail.com>
+ <202202030911.4914709E@keescook> <CAMuHMdUBKofPP-6EofE3B7d6k0zv0nPJ7e4pjsznPF==ApJ6qg@mail.gmail.com>
+In-Reply-To: <CAMuHMdUBKofPP-6EofE3B7d6k0zv0nPJ7e4pjsznPF==ApJ6qg@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 3 Feb 2022 11:50:34 -0800
+Message-ID: <CAKwvOdnJ3w2Jb9tBZ+JnEfviquj2WktemCd833f=_P66a0qVag@mail.gmail.com>
+Subject: Re: [PATCH] lib/test_string.c: Add test for strlen()
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, Peter Rosin <peda@axentia.se>,
+        Andy Shevchenko <andy@kernel.org>,
+        Matteo Croce <mcroce@microsoft.com>,
+        Nathan Chancellor <nathan@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-I was going to apply your patch, but then I read your note:
-
-On Tue, Feb 1, 2022 at 4:19 PM Kees Cook <keescook@chromium.org> wrote:
+On Thu, Feb 3, 2022 at 10:10 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
-> Is it correct to exclude .noinstr.text here? That means any functions called in
-> there will have their stack utilization untracked. This doesn't seem right to me,
-> though. Shouldn't stackleak_track_stack() just be marked noinstr instead?
+> Hi Kees,
+>
+> On Thu, Feb 3, 2022 at 6:15 PM Kees Cook <keescook@chromium.org> wrote:
+> > On Thu, Feb 03, 2022 at 09:04:22AM +0100, Geert Uytterhoeven wrote:
+> > > Not if -ffreestanding, which is what several architectures are
+> > > using nowadays, to a.o. prevent gcc from replacing calls to stdlib
+> > > functions to other stdlib functions (e.g. strncat() -> strlen() +
+> > > store, strncmp() -> strcmp()), which breaks linking if the latter is
+> > > only provided inline.
+> >
+> > Hah, for i386:
+> >
+> > arch/x86/Makefile
+> >         # temporary until string.h is fixed
+> >         KBUILD_CFLAGS += -ffreestanding
+> >
+> > This "temporary" is from 2006. ;)\
 
-... and yes, it seems like stackleak_track_stack() should just be
-'noinstr' just like you made stackleak_erase().
+IIRC I sent a patch removing that. Yeah, Kees even signed off on it.
+https://lore.kernel.org/lkml/20200817220212.338670-5-ndesaulniers@google.com/#t
+I still think that's the right way to go, perhaps worth a resend to
+rekick discussions.
 
-So I've dropped the patch to see what happens.
+>
+> And before that, we had it in the main Makefile.
+>
+> > 6edfba1b33c7 ("[PATCH] x86_64: Don't define string functions to builtin")
+> >
+> > Removing that appears to solve it, and appears to build correctly. I'll
+> > continue testing.
+> >
+> > > It works after dropping -ffreestanding.
+> >
+> > I wonder if the other architectures were just copying x86?
+>
+> At least on m68k it was added because gcc added new optimizations
+> that broke if an architecture provides some functions as inline.
+> As the kernel is not supposed to be linked with the standard C
+> library, -ffreestanding should be correct, isn't it?
 
-If you decide this is the right patch after all, you can just re-send it.
+The kernel does not link against a libc; but it does provide many
+symbols that libc would provide, with the same or similar enough
+semantics that I would strongly recommend we _don't_ use
+-ffreestanding in order to get such libcall optimizations (there are a
+lot; see https://github.com/llvm/llvm-project/blob/main/llvm/lib/Transforms/Utils/SimplifyLibCalls.cpp
+for some examples) and simply use -fno-builtin-* when necessary, or
+fix the kernel implementations individually.
 
-                 Linus
+-- 
+Thanks,
+~Nick Desaulniers
