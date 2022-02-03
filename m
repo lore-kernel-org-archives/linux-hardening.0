@@ -2,151 +2,117 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27572C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Feb 2022 23:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A0BC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Feb 2022 00:28:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348084AbiBBXdP (ORCPT
+        id S230111AbiBCA2g (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Feb 2022 18:33:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54144 "EHLO
+        Wed, 2 Feb 2022 19:28:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348078AbiBBXdP (ORCPT
+        with ESMTP id S229976AbiBCA2g (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Feb 2022 18:33:15 -0500
-Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B966C061714;
-        Wed,  2 Feb 2022 15:33:15 -0800 (PST)
-Received: by mail-ot1-x334.google.com with SMTP id x52-20020a05683040b400b0059ea92202daso980169ott.7;
-        Wed, 02 Feb 2022 15:33:15 -0800 (PST)
+        Wed, 2 Feb 2022 19:28:36 -0500
+Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4D28C061714;
+        Wed,  2 Feb 2022 16:28:35 -0800 (PST)
+Received: by mail-io1-xd31.google.com with SMTP id s18so1189975ioa.12;
+        Wed, 02 Feb 2022 16:28:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=sender:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=/6Cf3W9mkudiHFUznEhVCKbOqbQxkWdOxnCU/ygpF28=;
-        b=TWaEs79JtjrcHTSbcrAqPmFzFOOWnARfpwzPp2C5rcZCCDU3n1/MaPIHrcmUI9y0gb
-         3BMP1lLY574eEgpFQrd8i6DEYYdh5A+AW2XUqCH/IHsnGbFbW8OGQMXStI2OSSEeNtnC
-         2uDg2DUSa7Lho9RKJhIrCDYX76O78hlROcVy4v6YUKMMtvpNwh2nLT30uHlYJiRH7AzS
-         Renh+llJVBBHKSdqelhdavlknNKWPUPZLkmbX5olI92+ek1EnkuVf3RW/4z4TmwshOJX
-         1rUWCsOpUjvI5UjKeKR2QmD1I/U3iw93wQm3B950LOMR3jSQXL17hZURwqicshn6WFkY
-         PjYA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jdtk8UC2KDvFAfWxVTu60U5ncTIHp4dRqG8Pp1F6Se0=;
+        b=pna34lSVqp/u41It8n/Fo5fhhDVwanvK/Lo9P1ktvW5tmybhz5Hr5o7fyaM83d3wqh
+         6/vKbCy5lg6nx9v2EEURDMxfmtVlnL0z3InQlFacvthbuxIeh/KXnCwBzwbIA00e0ZHi
+         rUHvG9B2ITbJCis8Hb9pmf0XSVgNoG9E91nKsmxfWeosHA0KpVCkNm+zWoINipET2kBl
+         cmgBPyjgRSK+SNrs9vrM7/6SjEehdwwiAdt/lqUskoZxK5PtCCZMUz1q1IxoLXwKiqs3
+         GgIbUzktGkF5/ZMKQsTqaSCBgbpQBbV58T69Z8VlbAb2q+RBLoKBTA8nKgimp6E97Wh7
+         dVBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
-         :subject:content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=/6Cf3W9mkudiHFUznEhVCKbOqbQxkWdOxnCU/ygpF28=;
-        b=kuTFmWhyRy+AK/EKS+dKtRdSYYX+6hBBHgWbdDses5jlRpoRJ6QhzVO0uwUGW2g2bC
-         am7e1tIHnq7h+kbh0+CGjBnZTxjEu6xB+74RlfTzOjwPP6+S3+eCyfKicCwaJ5AbnYDE
-         AprA1cy7+g+pJ+0oHAfTRxWZjMsdPnU9MEK3UPZilXTv4RkiS+w4C11ljDu2RKqK9OgG
-         VYfCarjex1o5osY9AEguvYNWkZYhByCyuBhrZVtg+L3UaCO5sXPlKgQvK3nNOttcEdeK
-         oaaGAJsf3Vq0Q/ufme6ZAXL4Dlt1+Fz4DDIF7gm676kpVp+4vQPVe8Jh9bre30CedtX5
-         TsPg==
-X-Gm-Message-State: AOAM531S3lXmMyUwAAflJXwHMpkxNumAznRtXDcWdg+dLtu1LcFfq7gq
-        76n722Jd+JXjagARu/4MLt8=
-X-Google-Smtp-Source: ABdhPJxOgmXoa6PCzUc7JfZNj++eKlj2RApzxbX5R+TNdRwnor8TLrUrfkCNVsoYb2zA/cflqexsBA==
-X-Received: by 2002:a9d:1f0:: with SMTP id e103mr14998061ote.234.1643844794500;
-        Wed, 02 Feb 2022 15:33:14 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y4sm19010868otj.22.2022.02.02.15.33.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Feb 2022 15:33:14 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <cbf0cf07-2350-ed23-f6be-b2686c6a0cea@roeck-us.net>
-Date:   Wed, 2 Feb 2022 15:33:11 -0800
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jdtk8UC2KDvFAfWxVTu60U5ncTIHp4dRqG8Pp1F6Se0=;
+        b=hFpyS7vNS/LXosEFMGM67vxnnzH4wUmesAigbzghLre9G7AIolVzuyV6zUivrq7rwX
+         4EUc6nThaRyPkQFExcXVSHdMUGg1Yi8xmOzsQUXV7ZhBuIxFRpCNF/RVGoKVZjmHHp7s
+         k1XfCiq+wfmL+4+NJdDgxjahAEDnBVr8uIoNkSRGduEFCQoF2aXE/eBD0Afc0tWmfTbV
+         icSxU83WUlCM7isKf+bLXYvny10JaYsrrJOWodaVzE0dIszDIJeV5JOK1JA7YzyzavLp
+         Z7VvQj8+cd+3kDSalMJFCDl00KQf0Ee7YmCmuKpMfhaCYG1TfhOY/WcfONYwVLI6X77C
+         iVLw==
+X-Gm-Message-State: AOAM532ze2SgWZojGVNuKVt7CVNuVjbzAwMzt8R3GVn3rhcbao2M3WVp
+        mSVAZJxSU4lVP7MntBwW92CGkFvfbUCltJi42ro=
+X-Google-Smtp-Source: ABdhPJxUvqr9og1U18lvfIf6cbS9/L/voRkEv9GAQUq+kRmHVEcMZPDe6S6csVaamV5zAeoL1fe1XCurvR9XKJDXLGk=
+X-Received: by 2002:a6b:ea08:: with SMTP id m8mr17362901ioc.172.1643848115331;
+ Wed, 02 Feb 2022 16:28:35 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 4/5] Makefile: Enable -Warray-bounds
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        clang-built-linux@googlegroups.com, linux-hardening@vger.kernel.org
-References: <20210818081118.1667663-1-keescook@chromium.org>
- <20210818081118.1667663-5-keescook@chromium.org>
- <20220202160903.GA2337834@roeck-us.net> <202202021254.5A1FD4FFBF@keescook>
-From:   Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <202202021254.5A1FD4FFBF@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20220131204357.1133674-1-keescook@chromium.org>
+ <6641e01b86374ce197020d57c65ae3b3@AcuMS.aculab.com> <311c9ca5-e2d4-22fb-0299-d47f84470677@prevas.dk>
+ <91f0956687b341a9861f467aafe6dc4d@AcuMS.aculab.com>
+In-Reply-To: <91f0956687b341a9861f467aafe6dc4d@AcuMS.aculab.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 3 Feb 2022 01:28:24 +0100
+Message-ID: <CANiq72nkwKVGODWn1Ri_he+MOzp=Cw_L+3+2TX0UP_3=K0n5pA@mail.gmail.com>
+Subject: Re: [PATCH] linux/const.h: Explain how __is_constexpr() works
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Martin Uecker <Martin.Uecker@med.uni-goettingen.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2/2/22 12:56, Kees Cook wrote:
-> On Wed, Feb 02, 2022 at 08:09:03AM -0800, Guenter Roeck wrote:
->> On Wed, Aug 18, 2021 at 01:11:17AM -0700, Kees Cook wrote:
->>> With the recent fixes for flexible arrays and expanded FORTIFY_SOURCE
->>> coverage, it is now possible to enable -Warray-bounds. Since both
->>> GCC and Clang include -Warray-bounds in -Wall, we just need to stop
->>> disabling it.
->>>
->>> Cc: Arnd Bergmann <arnd@arndb.de>
->>> Cc: Masahiro Yamada <masahiroy@kernel.org>
->>> Cc: linux-kbuild@vger.kernel.org
->>> Co-developed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>> Signed-off-by: Kees Cook <keescook@chromium.org>
->>> ---
->>>   Makefile | 1 -
->>>   1 file changed, 1 deletion(-)
->>>
->>> diff --git a/Makefile b/Makefile
->>> index a4aca01a4835..af22b83cede7 100644
->>> --- a/Makefile
->>> +++ b/Makefile
->>> @@ -1072,7 +1072,6 @@ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
->>>   
->>>   # We'll want to enable this eventually, but it's not going away for 5.7 at least
->>>   KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
->>> -KBUILD_CFLAGS += -Wno-array-bounds
->>>   KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
->>>   
->>>   # Another good warning that we'll want to enable eventually
->>
->> alpha:defconfig:
->>
->> In function '__memset',
->>      inlined from '__bad_pagetable' at arch/alpha/mm/init.c:79:2:
->> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
->>     37 |                         return __builtin_memset(s, c, n);
->>        |                                ^~~~~~~~~~~~~~~~~~~~~~~~~
->> In function '__memset',
->>      inlined from '__bad_page' at arch/alpha/mm/init.c:86:2:
->> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
->>     37 |                         return __builtin_memset(s, c, n);
->>        |                                ^~~~~~~~~~~~~~~~~~~~~~~~~
->> In function '__memset',
->>      inlined from 'paging_init' at arch/alpha/mm/init.c:256:2:
->> ./arch/alpha/include/asm/string.h:37:32: error: '__builtin_memset' offset [0, 8191] is out of the bounds [0, 0] [-Werror=array-bounds]
->>     37 |                         return __builtin_memset(s, c, n);
-> 
-> Thanks! I'll take a look. Every instance of the "[0, 0]" bounds means
-> the compiler believes there's a way for the destination to be determined
-> at compile-time to be NULL.
-> 
->> xtensa:allmodconfig:
->> --------------
->> Error log:
->> In file included from include/linux/uaccess.h:11,
->>                   from include/linux/sched/task.h:11,
->>                   from arch/xtensa/kernel/process.c:21:
->> arch/xtensa/kernel/process.c: In function 'copy_thread':
->> arch/xtensa/kernel/process.c:262:52: error: array subscript 53 is above array bounds of 'long unsigned int[16]'
-> 
-> I assume this is a weird cast. I will also check this one out.
-> 
+On Wed, Feb 2, 2022 at 11:42 PM David Laight <David.Laight@aculab.com> wrote:
+>
+> The compiler needs to find a 'compatible type' either for:
+>         (void *)x       and     (int *)8
+> or for:
+>         (void *)0       and     (int *)8
+>
+> In the former it is 'void *' and the latter 'int *' because the (void *)0
+> is NULL and thus a valid 'int *' pointer.
 
-                                 int callinc = (regs->areg[0] >> 30) & 3;
-                                 int caller_ars = XCHAL_NUM_AREGS - callinc * 4;
-                                 put_user(regs->areg[caller_ars+1],
-                                          ^^^^^^^^^^^^^^^^^^^^^^^^
-                                          (unsigned __user*)(usp - 12));
+I think you are trying to come up with an explanation of how it works
+based on compiler outputs (it makes sense to think that the compiler
+has to find some reasonable "common" type). But the conditional
+operator works case-by-case, slightly differently depending on what
+kind of operands you give.
 
-I think the problem is that XCHAL_NUM_AREGS can be up to 64,
-but the size of struct pt_regs->areg[] is fixed to 16.
+In the two cases involved, there is no "finding a compatible type" /
+promotions going on -- the standard gives explicitly that it is a
+pointer to void (former case), and the type of the other operand
+(latter case). The value is still decided by the condition.
 
-Guenter
+e.g. https://godbolt.org/z/zzE8dc7Ye
+
+0 ?          void pointer (1) : pointer to object type (42) = (void *) 0x2a
+1 ?          void pointer (1) : pointer to object type (42) = (void *) 0x1
+0 ? null pointer constant (0) : pointer                (42) = ( int *) 0x2a
+1 ? null pointer constant (0) : pointer                (42) = ( int *) (nil)
+
+> In any case suggesting that it is based on the value before the ? is bogus.
+
+What Rasmus was saying is that which value is selected still depends
+on the condition, because the last paragraph of the explanation in the
+commit is wrong. It should be something like:
+
+  - The ultimate comparison to "sizeof(int)" reduces to either:
+        sizeof(int) == sizeof(*(int *)0)  (x was a constant expression)
+        sizeof(int) == sizeof(*(void *)0) (x was not a constant expression)
+
+Cheers,
+Miguel
