@@ -2,158 +2,114 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0187C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Feb 2022 21:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD52FC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Feb 2022 22:01:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238443AbiBCV4c (ORCPT
+        id S1355624AbiBCWBU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Feb 2022 16:56:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50076 "EHLO
+        Thu, 3 Feb 2022 17:01:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233926AbiBCV4b (ORCPT
+        with ESMTP id S244138AbiBCWBU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Feb 2022 16:56:31 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C5EBC061714
-        for <linux-hardening@vger.kernel.org>; Thu,  3 Feb 2022 13:56:31 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id h12so3659049pjq.3
-        for <linux-hardening@vger.kernel.org>; Thu, 03 Feb 2022 13:56:31 -0800 (PST)
+        Thu, 3 Feb 2022 17:01:20 -0500
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C283CC06173B
+        for <linux-hardening@vger.kernel.org>; Thu,  3 Feb 2022 14:01:19 -0800 (PST)
+Received: by mail-lj1-x22a.google.com with SMTP id j14so5929724lja.3
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Feb 2022 14:01:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eliSfvb+BO2qlY+XFflmS5vnX6MFnOe/r4Oy2WMuO5k=;
-        b=ivMcu32/m5GYTqc+dsK2UeWBIeL5PYd0bwRYflrgjqSITn2e/8A3V2iofgSJ9H+lZN
-         ghWdAx0MzhJPEM7Ci+Ww7FQobXQ+NfRds2ynJB5Ez1Dzp6edgFCwNHOptyxvhHxTZHQb
-         JUPnDYs3hKfuzWyK5dlGq5sXlONZLPLW3yqEA=
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=cOwd+xKfDb+D7R22x2j6Xg0Pm7V5Bcnv8frM7DHB9xc=;
+        b=qKsj1zmJmC2rY8CmZCR0DCeZljuwB+1GIt7MSX+2QKBdlC2+BViC4sUv1bjz5ARufw
+         hJgAlA/W4VOwD6dAz3cHxdqo7tBWIYVnoir/9uEY224JYvoyNYLfxkYCx8LyzlfWz0lA
+         bj31FK2mXLBjF7KKOSt5d8+XdN4eQ6vQwe8cbZUvYeASzTIjousJwPMWo1ceQWFEifz0
+         sVSNqXr9PtiOpb8QJ9UpuG+xpjgzreUqj3WoFo37jx3fu+SR9LUVMg08PpgM6nJ3Rahb
+         13vOkA6Tt+t2kuHqc82flfDTgP2Au9cVCbB4Fx8fzUAbzP562SCKrRoGzHhqkIp3zKbs
+         tlzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eliSfvb+BO2qlY+XFflmS5vnX6MFnOe/r4Oy2WMuO5k=;
-        b=uMNzp2g1fETmkCEocPC5wBngeOAUZMmGg9US+iyMR4v1uvedy8A8VBs1ubUSmGhrwj
-         zRb12/kSdzE1SrtyD/Lmo6yrxD6FnRwJkXA+lBa+GYJtvZ1XWXsjSLCtXUrtv+gr7rWU
-         V1rJGK9RiBngv2IVKimKM8qjGHfBM1BmzGuseU2DIfC9ANtd3ifvHUibu/Gt4XQsEW/4
-         Bwocu6rPKTz2Avnp21VXsgCdQsPjpyQTsgyAaWmq+hbKBqoLyVbAjzDU5+D2CjoQgaUK
-         EVnXfX8wu2NjKVUlC0xggeARpZ9eh8pR1rSB5w3w5tt3n1wX9xr/3mjlRaXOZ2gR9gbU
-         hBtw==
-X-Gm-Message-State: AOAM531sviZbnIX3/QyFc+PkgTeaNPLg4gQ2oCEkip3wVLjHDlj/atIb
-        Edwfc4P/pSReF4VAgEpO92l/CPoA+bTXWw==
-X-Google-Smtp-Source: ABdhPJxuYA5KkMWxd+bsUZZF9YxUWRyYJLaa7nrOryJ15impEh6f04rTHbdDDF6Wvsnr9d+EIj6JKg==
-X-Received: by 2002:a17:903:1212:: with SMTP id l18mr86614plh.45.1643925390943;
-        Thu, 03 Feb 2022 13:56:30 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k8sm4970pgc.89.2022.02.03.13.56.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Feb 2022 13:56:30 -0800 (PST)
-Date:   Thu, 3 Feb 2022 13:56:29 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Max Filippov <jcmvbkbc@gmail.com>
-Cc:     Chris Zankel <chris@zankel.net>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>, linux-hardening@vger.kernel.org
-Subject: Re: How large is the xtensa pt_regs::areg array supposed to be?
-Message-ID: <202202031328.21E25051@keescook>
-References: <202202021501.DA6594BFC@keescook>
- <CAMo8BfK46Va0qAtMHQzg+i053LUe_hGuqwg-WyL4_P0t2JnuRw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cOwd+xKfDb+D7R22x2j6Xg0Pm7V5Bcnv8frM7DHB9xc=;
+        b=ejWl5JnfuC/bRGGPPIOyRg6PpMsdzlPvHDdMIto2ZMk9hN0eSH/L/vL7KaKCx/mpoI
+         NvcgDmGg4VjYqHVp3ZBM3nVlPjN+LzMOcCI7rmBnUBET5wfl6oCzHnUDSGlmV371HyEo
+         yrzpUpDKb7Fj4oXqsfdL7197oO3iZjkzQ9c6c9VQ6io7E1Z/2gtP5V2gfQXJWXRr8moy
+         dekR/9K+sZy4cisGKj96x1MRyl4lRrbGNyVxtq1lejtqeyFlLQWnprfgf+sye5NztkgZ
+         d5EGJQt6JXMRaGXzXLmCGneHLnbvkkp8ZcUKgxHCMozlSONJkcLLfBGRdWO1aOn2C6RV
+         9ddg==
+X-Gm-Message-State: AOAM5308ERDLEYeJE/QWD/UoTqAlfC8vR419w+nrvkP2BOzSIJW4u+Ml
+        pE3Mo1EnlzeCsK1oYomx+us+I4yMKvd1D6Gl/4uN+w==
+X-Google-Smtp-Source: ABdhPJzYUKomEFSrUBdXf5Ui2PKnaYfgpYNBueMKfPHNY8RPYyDrGoF0s3abGsoFXIZCiigrqziNFDooOPrV64adGU0=
+X-Received: by 2002:a05:651c:3c7:: with SMTP id f7mr27644ljp.62.1643925677879;
+ Thu, 03 Feb 2022 14:01:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMo8BfK46Va0qAtMHQzg+i053LUe_hGuqwg-WyL4_P0t2JnuRw@mail.gmail.com>
+References: <20220203173307.1033257-1-keescook@chromium.org>
+ <20220203173307.1033257-2-keescook@chromium.org> <CAKwvOdmzdQ+X2BsUbuVBWzFtaE2Vst4=ihNNR=LmOdozqQ5Ukg@mail.gmail.com>
+ <202202031247.4F3AC598@keescook>
+In-Reply-To: <202202031247.4F3AC598@keescook>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 3 Feb 2022 14:01:06 -0800
+Message-ID: <CAKwvOdnUHFi=1+9VxsfwxNAkTFEytg5FV=Aii7awSx+ioRaQbQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/4] Compiler Attributes: Add __pass_object_size for Clang
+To:     Kees Cook <keescook@chromium.org>
+Cc:     George Burgess IV <gbiv@google.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>, llvm@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Feb 03, 2022 at 01:13:26PM -0800, Max Filippov wrote:
-> Hi Kees,
-> 
-> On Wed, Feb 2, 2022 at 3:03 PM Kees Cook <keescook@chromium.org> wrote:
-> > When building with -Warray-bounds, I see this:
+On Thu, Feb 3, 2022 at 12:58 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Thu, Feb 03, 2022 at 12:18:24PM -0800, Nick Desaulniers wrote:
+> > On Thu, Feb 3, 2022 at 9:33 AM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > In order to gain greater visibility to type information when using
+> > > __builtin_object_size(), Clang has a function attribute "pass_object_=
+size"
+> > > that will make size information available for marked arguments in
+> > > a function by way of implicit additional function arguments that are
+> > > then wired up the __builtin_object_size().
+> > >
+> > > This is needed to implement FORTIFY_SOURCE in Clang, as a workaround
+> > > to Clang's __builtin_object_size() having limited visibility[1] into =
+types
+> > > across function calls (even inlines).
+> > >
+> > > Since any usage must also be const, include it in the macro.
 > >
-> > In file included from ./include/linux/uaccess.h:11,
-> >                  from ./include/linux/sched/task.h:11,
-> >                  from arch/xtensa/kernel/process.c:21:
-> > arch/xtensa/kernel/process.c: In function 'copy_thread':
-> > arch/xtensa/kernel/process.c:262:52: warning: array subscript 53 is above array bounds of 'long unsigned int[16]' [-Warray-bounds]
-> >   262 |                                 put_user(regs->areg[caller_ars+1],
-> > ./arch/xtensa/include/asm/uaccess.h:171:18: note: in definition of macro '__put_user_asm'
-> >   171 |         :[x] "r"(x_), [efault] "i"(-EFAULT))
-> >       |                  ^~
-> > ./arch/xtensa/include/asm/uaccess.h:89:17: note: in expansion of macro '__put_user_size'
-> >    89 |                 __put_user_size((x), __pu_addr, (size), __pu_err);      \
-> >       |                 ^~~~~~~~~~~~~~~
-> > ./arch/xtensa/include/asm/uaccess.h:62:33: note: in expansion of macro '__put_user_check'
-> >    62 | #define put_user(x, ptr)        __put_user_check((x), (ptr), sizeof(*(ptr)))
-> >       |                                 ^~~~~~~~~~~~~~~~
-> > arch/xtensa/kernel/process.c:262:33: note: in expansion of macro 'put_user'
-> >   262 |                                 put_user(regs->areg[caller_ars+1],
-> >       |                                 ^~~~~~~~
-> > In file included from ./arch/xtensa/include/asm/processor.h:17,
-> >                  from ./arch/xtensa/include/asm/thread_info.h:20,
-> >                  from ./arch/xtensa/include/asm/current.h:14,
-> >                  from ./include/linux/sched.h:12,
-> >                  from arch/xtensa/kernel/process.c:19:
-> > ./arch/xtensa/include/asm/ptrace.h:80:23: note: while referencing 'areg'
-> >    80 |         unsigned long areg[16];
-> >       |                       ^~~~
+> > I think it might be helpful to quote the docs
+> > (https://clang.llvm.org/docs/AttributeReference.html#pass-object-size-p=
+ass-dynamic-object-size)
 > >
+> > >> Additionally, any parameter that pass_object_size is applied to must=
+ be marked const at its function=E2=80=99s definition.
 > >
-> > The code is:
-> >                                 int callinc = (regs->areg[0] >> 30) & 3;
-> >                                 int caller_ars = XCHAL_NUM_AREGS - callinc * 4;
-> >                                 put_user(regs->areg[caller_ars+1],
-> >                                          (unsigned __user*)(usp - 12));
+> > One thing that's concerning to me is though:
 > >
-> > It looks like XCHAL_NUM_AREGS is larger than "16", though?
+> > >> It is an error to take the address of a function with pass_object_si=
+ze on any of its parameters.
 > >
-> > struct pt_regs {
-> > ...
-> >         unsigned long areg[16];
-> >
-> > What should be happening here?
-> 
-> pt_regs::areg is the current register window, but when we enter
-> the kernel from the userspace additional valid registers up the call
-> stack are saved here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/xtensa/kernel/entry.S?h=v5.16#n204
-> This is done because when the kernel is built with windowed ABI
-> we cannot have a mix of user and kernel registers in the physical
-> register file.
+> > Surely the kernel has indirect calls to some of these functions
+> > somewhere? Is that just an issue for C++ name-mangling perhaps?
+>
+> AFAIU, this shouldn't be a problem for any of these. Nothing is trying
+> to take memcpy, memset, etc by address. The macro-ified version of this
+> change proved that out. :)
 
-This is a bit opaque for me to read, but it looks like it's a loop of
-4-at-a-time of the "extra" registers?
+I thought Sami had found a location where memcpy was invoked
+indirectly as part of his kcfi work? Maybe I'm misremembering.
 
-> The space for these registers is reserved here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/xtensa/kernel/entry.S?h=v5.16#n2102
-> by adding PT_REGS_OFFSET, which accounts for the
-> XCHAL_NUM_AREGS value, to the task stack address.
-
-Okay, so it seems like there are two "views" of the registers from an
-ABI perspective, the userspace view (struct pt_regs), and the kernel
-view which is struct pt_regs + more.
-
-> On the other hand, when the kernel is re-entered we don't need
-> to save registers up the kernel stack, so the pt_regs structure
-> exactly represents the kernel stack frame.
-> 
-> The xtensa architecture has configurable windowed registers option.
-> When it's enabled the machine has more than 16 general purpose
-> registers: typically 32 or 64, but only 16 of them are in the current
-> window and may be used by instructions.
-> The window rotates forward on entry to functions and backwards
-> on return. Additional special registers track current window
-> position and valid registers.
-> 
-> For some reason during xtensa port development it was chosen
-> to have pt_regs::areg only cover the current register window. I guess
-> this was done as a common denominator for the user and kernel
-> stack frames and to avoid an exposure of XCHAL_NUM_AREGS
-> constant in the user-visible headers. Chris may have additional details.
-
-Right, that makes sense: pt_regs should be the shared user/kernel view.
-
-The compiler is mad about trying to access the extra registers from the
-pt_reg struct, so maybe a kernel-only struct could be used here?
-
--- 
-Kees Cook
+https://github.com/samitolvanen/linux/commit/46a777fb35784a8c6daf13d67de8bf=
+b5148adc2a#diff-a27660992abdf360d01deac6364db31836d0d98b5d9573b7fc10a6785a6=
+69975R16
+--=20
+Thanks,
+~Nick Desaulniers
