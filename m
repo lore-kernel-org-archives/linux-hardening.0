@@ -2,132 +2,101 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B37D5C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Feb 2022 20:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DE2C4332F
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Feb 2022 20:47:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232443AbiBCUqk (ORCPT
+        id S1354901AbiBCUrF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Feb 2022 15:46:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60730 "EHLO
+        Thu, 3 Feb 2022 15:47:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355436AbiBCUpg (ORCPT
+        with ESMTP id S1356625AbiBCUqc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Feb 2022 15:45:36 -0500
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7841C0604CE
-        for <linux-hardening@vger.kernel.org>; Thu,  3 Feb 2022 12:40:36 -0800 (PST)
-Received: by mail-pf1-x42c.google.com with SMTP id 192so3219853pfz.3
-        for <linux-hardening@vger.kernel.org>; Thu, 03 Feb 2022 12:40:36 -0800 (PST)
+        Thu, 3 Feb 2022 15:46:32 -0500
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C11C061744
+        for <linux-hardening@vger.kernel.org>; Thu,  3 Feb 2022 12:45:38 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id l13so3243995plg.9
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Feb 2022 12:45:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1Hq8t2i1lFDyLvRnwg1bUDP5VtBgoor+g4ujd66vONY=;
-        b=b6icVWzI0OszIxG8sXwiA9RMdLDR7GUV9sSVvqp5VED5n3y2Oxt2I4+88UHpjlzHLO
-         rpQFfWA4VPsCtbVYkl8G9rumQXEkuhu+2viy0b6Qc5212QmPyE4xSmAccbE65MHec9Uc
-         tG9k4cQbVJ5DgcewrpbY0J4HTW+IQKpH4KT80=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Ax+zgGQyyKWqqmUNa+Gr/NFN1a356webih9nQCbtRlA=;
+        b=lq4mnyUfUnu0BzR6Wiz2LqRbI6UXI+AlM29AzDRsgBJJEGxcudKiSVmcZVkBdH1V5R
+         H9ihEHFWxShy/iMqODNdF03wxTXBQYKV/ZiBFz64MRdzRlBLWokuqPF3y8/2M49e7xEO
+         8cpdAI1hx+7n5zGDn6/weEZdRv67FbbRqt0zI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1Hq8t2i1lFDyLvRnwg1bUDP5VtBgoor+g4ujd66vONY=;
-        b=rzCDWMIi/JsleNqGOj3LjwNAKenfAwZFsLXOeVbLXQqgJEPXahwKXIxEvd01VOlKhI
-         ZdDwo0Wxy06EdO6Rv5HPBJn77JpZqN3uuttUFfXYbuwWbkgpGgeOZzpRxQ+Xm2NkKHDt
-         AcD4LSAqvdcTC9nmjyGI9g3naBE5w8P+0V07witKdaamgiAGLfBcItN3NdjT1ZXYJYDK
-         nM2qxLLpAqGKaf4cLXhNp1+GLu+bWnJ4s+PP4adqWFKANWbussbA3e/FJxp/e0I7uzc5
-         IYUYcI6u/6AfA5b1XaKNBy8jivZMnJMtqbLSW+v5dK25K85opFfsCvSnR6hrby38+zSp
-         qNzw==
-X-Gm-Message-State: AOAM530a/3kdodKtIVOWlqgZWYwxJG3FCvAgCoaH8KwTohPsYlKVvv9f
-        GlvQa/sN/4plFHgncEtU2M3hkw==
-X-Google-Smtp-Source: ABdhPJw2mF4VsA2EY/uYHOsVHlSiVGc2GUGLjvQGcaAihNJ3QVKNN7ZmRuss4J4/DLYfnUaeevtwjw==
-X-Received: by 2002:a65:60c3:: with SMTP id r3mr29348450pgv.347.1643920835918;
-        Thu, 03 Feb 2022 12:40:35 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ax+zgGQyyKWqqmUNa+Gr/NFN1a356webih9nQCbtRlA=;
+        b=suvpyVCih4ov+2iiUbDuM/UOIyxGGZeJ9Hoe2NRwh2xqFpZHo4nxOuIjl0txZeryT2
+         VaeNpDVQI/WcCyQRdfW+RWK9NEieoXZjwJdPZcXTD8Y+JlgtPTSPYuW2HUAO/dL9I9v4
+         NSjJpI+N2Wc97rGpMAVvXPRDzHzGR7ZfsTjBPvb3TwK7RcBl8Hs4PFQ17RDNnSr6Bn8k
+         tLW0k9ZXLIG+b/XxGlgkTQ43QEaQM91jo/EAHtkQObW2JlQU9VfvVOT+1k/qtZS9bEI+
+         09L11bncrZ2A1+PMKd1ZxLAVj9W3u1YTRxIISylyaKEhs9JfMam2EAnn4MQaH5SJavnd
+         yvjw==
+X-Gm-Message-State: AOAM531esly421Zzhjin15Hxm73DN9bv3neQhuXgvYPopL+LgK+dJtet
+        ExAL17yP7R4dxczMlO8Tkp4C1w==
+X-Google-Smtp-Source: ABdhPJzyIjueAdPLPELPYzMN0XC6MvF7sAwGHIqciSmxWkbnOpbPZS4x4gmcwTPLeXlwCj4QQRQGWA==
+X-Received: by 2002:a17:902:6903:: with SMTP id j3mr37649101plk.137.1643921137797;
+        Thu, 03 Feb 2022 12:45:37 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z22sm20845328pfe.42.2022.02.03.12.40.35
+        by smtp.gmail.com with ESMTPSA id j10sm30543226pfu.93.2022.02.03.12.45.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Feb 2022 12:40:35 -0800 (PST)
+        Thu, 03 Feb 2022 12:45:37 -0800 (PST)
+Date:   Thu, 3 Feb 2022 12:45:36 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     x86@kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fangrui Song <maskray@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Peter Rosin <peda@axentia.se>,
+        Andy Shevchenko <andy@kernel.org>,
+        Matteo Croce <mcroce@microsoft.com>,
         Nathan Chancellor <nathan@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] x86/build: don't build CONFIG_X86_32 as -ffreestanding
-Date:   Thu,  3 Feb 2022 12:40:25 -0800
-Message-Id: <20220203204025.1153397-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+Subject: Re: [PATCH] lib/test_string.c: Add test for strlen()
+Message-ID: <202202031242.45A7F5704@keescook>
+References: <20220130183653.491292-1-keescook@chromium.org>
+ <20220202160149.GA2322037@roeck-us.net>
+ <202202021237.487D3DE73@keescook>
+ <5ff18cff-6cfd-1f85-da74-1e5660a1a250@roeck-us.net>
+ <CAMuHMdWssK2=NFc6NO-inQg5dWxZP4Wv41K3J3RqRXThXatovw@mail.gmail.com>
+ <202202030911.4914709E@keescook>
+ <CAMuHMdUBKofPP-6EofE3B7d6k0zv0nPJ7e4pjsznPF==ApJ6qg@mail.gmail.com>
+ <CAKwvOdnJ3w2Jb9tBZ+JnEfviquj2WktemCd833f=_P66a0qVag@mail.gmail.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2588; i=keescook@chromium.org; h=from:subject; bh=aiPc6rfVyVWJCKagb0y7ieq3kx54f7V2H4+w457nijQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh/D2OPS4PZRzG7eB9tG4/CcwsHg28XpdLQzsy2j+R SeKm02uJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYfw9jgAKCRCJcvTf3G3AJkBND/ 0UWEgLQJQP2+R5E7y4DmNZF5k5JdGBlkXZL0IIlONprPjQFuw89jHA+HAU+tr+5Tyyu6tyRr02rcke /fh4NYXVdDl4RsvgzhilJKskySMBQ+9+OVoDS2GOlVl9M0R/zAtqnu+Y2MEBkeyq7Xpkzl//Emm17x 5X5krdYmXEzDZnn9KLxDibxKjybpBi4LFa4nFiefUnejjHtjiNx2t8WKGxvQoUn9hNEfAsFCnUXV5/ Ax298EcnluDNSx0rPDHRDctiFBr2Qwq7ZpXHdLQz9WZTOelKktJyBRBI+gWCHcdkSa/7H99Ec7uMY6 +fnUSaeseXl9gOGYINtD4ssfihdlC0A10aNxRiZpu8wNKQ8vs57zAc7Y03c0Q0M+dW/pFNqLWRNBDV y5WsYF2hodjEyGHoEmZZA1NqISeL1NDVI+T2E4u9TeotF/57OmZjsTU/7QJh6SXiwg848hsITVpYD8 rl3CpqvBzxhWvyXLXNC6wExhyLQB4PlVu39xquc+YwxAJkLzVEhraKfIQ2ukjT+4422Zn7O9ckZoPM foA2BMgXiC59qaDZNh3uNyxxdlRvA6ZRMZsc6jAItj5nogkEF0ZLEbhpZztkuj/n5e0VsXOlfl/TOJ nLNw7PvVYlGCYYZTJgnYO34NyNEaFe1pTmcPI04Brr6Vpwj1aZ8HglSBLrzw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdnJ3w2Jb9tBZ+JnEfviquj2WktemCd833f=_P66a0qVag@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+On Thu, Feb 03, 2022 at 11:50:34AM -0800, Nick Desaulniers wrote:
+> The kernel does not link against a libc; but it does provide many
+> symbols that libc would provide, with the same or similar enough
+> semantics that I would strongly recommend we _don't_ use
+> -ffreestanding in order to get such libcall optimizations (there are a
+> lot; see https://github.com/llvm/llvm-project/blob/main/llvm/lib/Transforms/Utils/SimplifyLibCalls.cpp
+> for some examples) and simply use -fno-builtin-* when necessary, or
+> fix the kernel implementations individually.
 
--ffreestanding typically inhibits "libcall optimizations" where calls to
-certain library functions can be replaced by the compiler in certain
-cases to calls to other library functions that may be more efficient.
-This can be problematic for embedded targets that don't provide full
-libc implementations.
+Right, we really don't want -ffreestanding. Rather, we want to not link
+against libgcc. This is mostly true already, though some of the smaller
+architectures still do:
 
--ffreestanding inhibits all such optimizations, which is the safe
-choice, but generally we want the optimizations that are performed. The
-Linux kernel does implement a fair amount of libc routines. Instead of
--ffreestanding (which makes more sense in smaller images like kexec's
-purgatory image), prefer -fno-builtin-* flags to disable the compiler
-from emitting calls to functions which may not be defined.
+$ git grep print-libgcc
+arch/arc/Makefile:LIBGCC        = $(shell $(CC) $(cflags-y) --print-libgcc-file-name)
+arch/csky/Makefile:     $(shell $(CC) $(KBUILD_CFLAGS) $(KCFLAGS) -print-libgcc-file-name)
+arch/h8300/boot/compressed/Makefile:LIBGCC := $(shell $(CROSS-COMPILE)$(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name 2>/dev/null)
+arch/nios2/Makefile:LIBGCC         := $(shell $(CC) $(KBUILD_CFLAGS) $(KCFLAGS) -print-libgcc-file-name)
+arch/openrisc/Makefile:LIBGCC           := $(shell $(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name)
+arch/parisc/Makefile:LIBGCC             := $(shell $(CC) -print-libgcc-file-name)
+arch/xtensa/Makefile:LIBGCC := $(shell $(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name)
+arch/xtensa/boot/boot-redboot/Makefile:LIBGCC := $(shell $(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name)
 
-If you see a linkage failure due to a missing symbol that's typically
-defined in a libc, and not explicitly called from the source code, then
-the compiler may have done such a transform.  You can either implement
-such a function (ie. in lib/string.c) or disable the transform outright
-via -fno-builtin-* flag (where * is the name of the library routine, ie.
--fno-builtin-bcmp).
-
-i386_defconfig build+boot tested with GCC and Clang. Removes a pretty
-old TODO from the codebase.
-
-[kees: These libcall optimizations are specifically needed to allow Clang
-to correctly optimize the string functions under CONFIG_FORTIFY_SOURCE.]
-
-Fixes: 6edfba1b33c7 ("x86_64: Don't define string functions to builtin")
-Suggested-by: Arvind Sankar <nivedita@alum.mit.edu>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Fangrui Song <maskray@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20200817220212.338670-5-ndesaulniers@google.com
----
-This solves build issues for Clang+FORTIFY, and aligns X86_32 with X86_64
-builds again. x86 maintainers: I can carry this in my memcpy topic branch
-unless you'd prefer to take it?
----
- arch/x86/Makefile | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index e84cdd409b64..7ef211865239 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -88,9 +88,6 @@ ifeq ($(CONFIG_X86_32),y)
-         include $(srctree)/arch/x86/Makefile_32.cpu
-         KBUILD_CFLAGS += $(cflags-y)
- 
--        # temporary until string.h is fixed
--        KBUILD_CFLAGS += -ffreestanding
--
- 	ifeq ($(CONFIG_STACKPROTECTOR),y)
- 		ifeq ($(CONFIG_SMP),y)
- 			KBUILD_CFLAGS += -mstack-protector-guard-reg=fs -mstack-protector-guard-symbol=__stack_chk_guard
 -- 
-2.30.2
-
+Kees Cook
