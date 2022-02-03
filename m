@@ -2,84 +2,125 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3AFC433EF
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Feb 2022 19:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53461C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Feb 2022 20:18:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353897AbiBCT5t (ORCPT
+        id S233068AbiBCUR7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Feb 2022 14:57:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49940 "EHLO
+        Thu, 3 Feb 2022 15:17:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240471AbiBCT5s (ORCPT
+        with ESMTP id S231318AbiBCUR7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Feb 2022 14:57:48 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85E63C061714
-        for <linux-hardening@vger.kernel.org>; Thu,  3 Feb 2022 11:57:48 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id n32so3103353pfv.11
-        for <linux-hardening@vger.kernel.org>; Thu, 03 Feb 2022 11:57:48 -0800 (PST)
+        Thu, 3 Feb 2022 15:17:59 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F932C061714
+        for <linux-hardening@vger.kernel.org>; Thu,  3 Feb 2022 12:17:59 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id my12-20020a17090b4c8c00b001b528ba1cd7so4106050pjb.1
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Feb 2022 12:17:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cGaByQ8siwOwFo3H6XR9VUUbom/VIgqp9w81CSI2uiw=;
-        b=T92D31tAA5MiwOX/9m3Jeiumqwj0pecFkTk6CBukk20nvgu17OaKXN1AFtvgv57EKK
-         jq70zxVaT7TPIB4Bc5IfKaIOWLzMDOYLs5SbK3iI9pc2pBwVHPciHGucPx4g5p7kADlq
-         kbnX2qlS2n2xDOjJdk6xX/3F428RmLokW3rrs=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u65nKEBiVcxIujg+NhRj00qIS3qDviOimeIgP6isBm4=;
+        b=EkEWhFlLcn7pO/QQfdOhgUIH9G1jFjbdB85kiPHbPLZdfNWTwsJVWkA6HLzxuKcSjB
+         nFg03S/GM/Vid+Zy+boSbcTYq18ZI2/2fEqmj5vWQPSHSldMInroiSTO2FmnllrEj94r
+         DD1qlXVA9+0nqSMTqJ7Y5j8SH/y+4TsEMogYY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cGaByQ8siwOwFo3H6XR9VUUbom/VIgqp9w81CSI2uiw=;
-        b=2FmYGQLYefr/BMbrsEmJ9y86JP/nscwK5tB89BnaHKr6oCGvolhZ3Dfsdy2ZX9TsXS
-         efwIxoll0d3nl0fbmiyLYzq7X/tv7+8hXyxdC5lmC+oiIRX+QVyyj0ebxJReJCm0XBLk
-         YBUw0SRPdFLREguzXluLAmzYZisq/lMuuPjm0WBdH17FNJChQiBIlKyBE5oPox9KaGP+
-         rpphGpnIQvOaFDKKNhF/Jbzjn9A+KOU0G4Ra5fmir3LT+WvWR4ouZoC+hRGmnlZRCF45
-         ee7Vl4E2927Uw1fhaUeF9entTb22CQKFLDdXX76elZXA+4mKBsYV7GN5CQsiAg+1W1ha
-         mabw==
-X-Gm-Message-State: AOAM532nokjapxhjQ5V6y5hlJeLj4+IcUg04nPh+cEwzlndv+OxiuLOh
-        P9UYvAccTwKJ8gPZ08xDO4aweQ==
-X-Google-Smtp-Source: ABdhPJzbNSRl7D+yCCPxB+1tEd531BtF9DNUrQKCK6weQRbjWpzkV6o1fNMvnURTVpjTcfO9QN+K6A==
-X-Received: by 2002:a63:d80b:: with SMTP id b11mr16714952pgh.189.1643918267952;
-        Thu, 03 Feb 2022 11:57:47 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u65nKEBiVcxIujg+NhRj00qIS3qDviOimeIgP6isBm4=;
+        b=0COBI1rM/UlZu1+PbwD4orHcjt7keMDkVnNMtQI6oqB+WcWU5EZi43aFwurNtJcrnQ
+         /+jdrNRvx6hxo5KiA4MqwHFPUiQbrmB8dhSBAPVe1T4+x0ZKD8G5l3b4Y0S2qYu7K4T4
+         9dLEoJ4FxRbPAnoXefSg0TMU1DGgsu2hTBxVxmS5h9CharSLCynlIiuwPgMa/8H4GP4H
+         1DTOizmvtSkZ2sIewegAKnsX73QYT0CnBM+ZrRlj8NMp1sm/T4XTvRWtmoh+aQPGor7D
+         yXSe8lY5ank78qNFnVKIaFng44wF/p7xK4qjX3FPgyuIzezll5+UBbQVhudw3xJVyeWa
+         dEeA==
+X-Gm-Message-State: AOAM530+mr2G6pWCf+92QXShlSKT5I+yXRJkOsN4FDHbzbQ71I97rfzi
+        zgSbHL/yqjfsLzhfsZOKaJIGIA==
+X-Google-Smtp-Source: ABdhPJy648Xbn5rll4RR7qbfPIT6KZBWtFfPxme9zkRWYi24l1KorDtmwdhQFtQgrbfk6hpWfMzcMw==
+X-Received: by 2002:a17:902:8a91:: with SMTP id p17mr24222957plo.74.1643919479033;
+        Thu, 03 Feb 2022 12:17:59 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id ck21sm10231314pjb.51.2022.02.03.11.57.47
+        by smtp.gmail.com with ESMTPSA id mm24sm10911696pjb.20.2022.02.03.12.17.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Feb 2022 11:57:47 -0800 (PST)
-Date:   Thu, 3 Feb 2022 11:57:46 -0800
+        Thu, 03 Feb 2022 12:17:58 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Miguel Ojeda <ojeda@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        George Burgess IV <gbiv@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v6 0/4] fortify: Add Clang support
-Message-ID: <202202031157.E18FA7BAC@keescook>
-References: <20220203173307.1033257-1-keescook@chromium.org>
- <CANiq72mnF5qxfHGoDmvueMY7n2us9ZtA-u3igCJ+QjcbfKMP=g@mail.gmail.com>
+To:     Alexander Popov <alex.popov@linux.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v2] gcc-plugins/stackleak: Use noinstr in favor of notrace
+Date:   Thu,  3 Feb 2022 12:17:54 -0800
+Message-Id: <20220203201754.1145358-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANiq72mnF5qxfHGoDmvueMY7n2us9ZtA-u3igCJ+QjcbfKMP=g@mail.gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2686; h=from:subject; bh=J+F++YLvVFj2qA/cbnqLRM6GuRs8iI1oLzg+aO2Nozs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBh/DhxWOpPVb5L6xo6o1Ii29uv7CRbZ520IibHsMqm BeOUkASJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYfw4cQAKCRCJcvTf3G3AJjQvEA CCZUJKcjDComKd8IeUIlcJkW0zyrAdliB7lSLQHz3ZDhmb8jIcZvT2AYmi9S3xOs6EsLUMGy92BAon k9/DHvMg/pt6pczpaFJhmUuErV3d6Rf2ueeEHJZn8CG0tSeR6lhelUyySAJYcFHUF4uJ156JDjwzPL ahtUwqEK/FprPCHiFSaU2XN2nBpZIf47wZpKS4r+j5XKBeUdt3meGFGohZO8FOeW7oBKhj9iTYqMdx JTJ0TjBnzIgYJ9UQ0eIWVmEsKkjBAZ/lipeSPpiOGGoJiEBbY4ljycjo7/Z+fhNjCQs/m01oZ+++1R TI7RiHBOHSkmLoofChLzr1qTJmE/piIL7i/RexiqH/913CSf8+Muu2G0qFu32Efvb3Lw2gySRXPuXG gKV0EmYfqUgJ+tqReLEtpJh+K0K8oQtuxnfd3twFBjK7YdDh90iAvSl3lAuMbFPFTstXqt8kmwGhF0 qkggauQsgsBB+opMKEE7ktHeSmBTt77UgtXATyRu6nAdS0ST6+n++ZexFAtRLmfFJ2+7MN4txNKe6n 8YjI4oXr5ltiXtx/doxMGKi9GcimxzeZdLzGRlgaD593AhzNevdHUEQUcI4gst4kkDx7NryHhl9gpU 6JpqFGBtAKysphvt22Xy4UK71NBhj28E03DGmruTjLnqBgVJW2OOIZFVH5PQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Feb 03, 2022 at 06:47:01PM +0100, Miguel Ojeda wrote:
-> On Thu, Feb 3, 2022 at 6:33 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > This has been updated from feedback on the v5 series. Builds correctly with Clang 12.0.1
-> > too now. :)
-> 
-> Looks fine to me! Thanks for the changes. I assume you are taking these, so:
-> 
-> Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
+While the stackleak plugin was already using notrace, objtool is now a
+bit more picky. Update the notrace uses to noinstr. Silences the
+following objtool warnings when building with:
 
-Thanks! Does this tag apply to the fortify-string.h patch as well?
+CONFIG_DEBUG_ENTRY=y
+CONFIG_STACK_VALIDATION=y
+CONFIG_VMLINUX_VALIDATION=y
+CONFIG_GCC_PLUGIN_STACKLEAK=y
 
--Kees
+vmlinux.o: warning: objtool: do_syscall_64()+0x9: call to stackleak_track_stack() leaves .noinstr.text section
+vmlinux.o: warning: objtool: do_int80_syscall_32()+0x9: call to stackleak_track_stack() leaves .noinstr.text section
+vmlinux.o: warning: objtool: exc_general_protection()+0x22: call to stackleak_track_stack() leaves .noinstr.text section
+vmlinux.o: warning: objtool: fixup_bad_iret()+0x20: call to stackleak_track_stack() leaves .noinstr.text section
+vmlinux.o: warning: objtool: do_machine_check()+0x27: call to stackleak_track_stack() leaves .noinstr.text section
+vmlinux.o: warning: objtool: .text+0x5346e: call to stackleak_erase() leaves .noinstr.text section
+vmlinux.o: warning: objtool: .entry.text+0x143: call to stackleak_erase() leaves .noinstr.text section
+vmlinux.o: warning: objtool: .entry.text+0x10eb: call to stackleak_erase() leaves .noinstr.text section
+vmlinux.o: warning: objtool: .entry.text+0x17f9: call to stackleak_erase() leaves .noinstr.text section
 
+Note that the plugin's addition of calls to stackleak_track_stack()
+from noinstr functions is expected to be safe, as it isn't runtime
+instrumentation and is self-contained.
+
+Cc: Alexander Popov <alex.popov@linux.com>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ kernel/stackleak.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/stackleak.c b/kernel/stackleak.c
+index 66b8af394e58..ddb5a7f48d69 100644
+--- a/kernel/stackleak.c
++++ b/kernel/stackleak.c
+@@ -70,7 +70,7 @@ late_initcall(stackleak_sysctls_init);
+ #define skip_erasing()	false
+ #endif /* CONFIG_STACKLEAK_RUNTIME_DISABLE */
+ 
+-asmlinkage void notrace stackleak_erase(void)
++asmlinkage void noinstr stackleak_erase(void)
+ {
+ 	/* It would be nice not to have 'kstack_ptr' and 'boundary' on stack */
+ 	unsigned long kstack_ptr = current->lowest_stack;
+@@ -124,9 +124,8 @@ asmlinkage void notrace stackleak_erase(void)
+ 	/* Reset the 'lowest_stack' value for the next syscall */
+ 	current->lowest_stack = current_top_of_stack() - THREAD_SIZE/64;
+ }
+-NOKPROBE_SYMBOL(stackleak_erase);
+ 
+-void __used __no_caller_saved_registers notrace stackleak_track_stack(void)
++void __used __no_caller_saved_registers noinstr stackleak_track_stack(void)
+ {
+ 	unsigned long sp = current_stack_pointer;
+ 
 -- 
-Kees Cook
+2.30.2
+
