@@ -2,108 +2,89 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F11C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Feb 2022 18:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFABC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Feb 2022 19:33:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349258AbiBCSKM (ORCPT
+        id S240903AbiBCTdm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Feb 2022 13:10:12 -0500
-Received: from mail-ua1-f50.google.com ([209.85.222.50]:46944 "EHLO
-        mail-ua1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232248AbiBCSKM (ORCPT
+        Thu, 3 Feb 2022 14:33:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231639AbiBCTdl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Feb 2022 13:10:12 -0500
-Received: by mail-ua1-f50.google.com with SMTP id c36so6605958uae.13;
-        Thu, 03 Feb 2022 10:10:11 -0800 (PST)
+        Thu, 3 Feb 2022 14:33:41 -0500
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF69DC061714
+        for <linux-hardening@vger.kernel.org>; Thu,  3 Feb 2022 11:33:40 -0800 (PST)
+Received: by mail-ed1-x52f.google.com with SMTP id l5so8180190edv.3
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Feb 2022 11:33:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UKKVvcG+cC8bIALBnZZmaV3K37giZ1xa1O6hFf3r9uc=;
+        b=Jkx2j0PYyKcGzbdzVprIgIK3c9UJTJU023+j8kMn6bFfwe79YvJheTw9qL5ryIRa80
+         Lh9b7BpjrwhgQhd2J7+B1U+ZMFnZoZUWM9Ajp0Ad4vzpkBa6lrGGNVz1nkoLZyKgapv5
+         0hx1nJz7ou0M7Q+16jCAsq70x2y43qYOvrTMY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=C/hgS+ERDNLODK1leRfRhcIAV22csg/2nDjF16o/r6Y=;
-        b=5zn9hiYKFr24Ftfur6f+WMDSFrdpj531C/3eGIdTgthsu3FiCmENQHIrECnPhCrlWZ
-         PRj8ZbGULtF3UAKSf6y1+n2nratWCjuBHvt4sAhya+jx/Dzvkj9XS260CkOhQ7RNvilW
-         OQhPSAY8IoFhIbB5W81fpEcV9Wo2n4HTReWTG/uT+Zx6OobNWDFEqmuv2F4dbFCJxo1a
-         HlqiUEl728vYQraaPzYe1TWmR8Yp7duF9dgVIgtF6D1hc9fO2FnFs0ix0rYwvVyEo8Q8
-         tjN9sI8rqY7bS//yNHcKsevzIXppQky4kifYRPbwZa1SOnjw74QDsQMMOb6y/GTOaCTb
-         KsYg==
-X-Gm-Message-State: AOAM531FvXN9SfaWrfYPk00GVeMUrG1WH6ciz4s5qzb9Lev7HHFAI97a
-        C/7ksuBfXvmnstGzNzaWLy67kDcSoaEVSA==
-X-Google-Smtp-Source: ABdhPJzxUpm94gLkdSeB2L0sqG1FoQmmc4YXTU6V/JB9lt2w3Kkyy2VEJKHsOzxc+tgunoyAOzqoCw==
-X-Received: by 2002:ab0:3c9f:: with SMTP id a31mr16065770uax.141.1643911810358;
-        Thu, 03 Feb 2022 10:10:10 -0800 (PST)
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
-        by smtp.gmail.com with ESMTPSA id w6sm6029864uap.12.2022.02.03.10.10.09
+        bh=UKKVvcG+cC8bIALBnZZmaV3K37giZ1xa1O6hFf3r9uc=;
+        b=z1heKwGXkxEc+hj3CJmOpEb9jStKSmfQXpMWhs5YcfDa7UWPFagojApgBknIg9MoSL
+         r3PNyTpdixspwKRF+9vZR+OFJ5Lr/+bFa8OlKMAbictStjRZ1AfY9aVCvMHsmEpaHXjC
+         8SanCyQKVeIBYLbQAe8aPplTkJl46XEz9JaF3gUW3DtbegVMQI1RtL0Bwx4PApSNRRuB
+         7ZOpeiWAdZCMLOAg8CPuMgZinP8IcKI7VshrXUnG/o68farzWap6MLpG9Pvbs/p3PhXo
+         x5Uxcn83xxyUWODrYj1mXqcXzCARaIop9Rm5XOkxtcqhRyutsy78pUFt9bzh9p7/fDje
+         pS8Q==
+X-Gm-Message-State: AOAM532rcbRJVH+K44GPFdUdRNrz1brtl+2G1T2kweOeVGK5cWmq6BHs
+        nH5BEsPM46SHmAlNlP8TpYmOEaF2ZRaT78yy
+X-Google-Smtp-Source: ABdhPJzKWbY1CfsK3H6l7xbVrYULK6HOEcNcLh/4fkO/TlhGKubLgO4CAeIgpGalfDa6v+XzrWUkLA==
+X-Received: by 2002:aa7:dcd5:: with SMTP id w21mr37746511edu.97.1643916819365;
+        Thu, 03 Feb 2022 11:33:39 -0800 (PST)
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
+        by smtp.gmail.com with ESMTPSA id j19sm6152152ejm.111.2022.02.03.11.33.35
+        for <linux-hardening@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Feb 2022 10:10:10 -0800 (PST)
-Received: by mail-ua1-f47.google.com with SMTP id p26so6618379uaa.11;
-        Thu, 03 Feb 2022 10:10:09 -0800 (PST)
-X-Received: by 2002:a67:a401:: with SMTP id n1mr13230708vse.38.1643911809441;
- Thu, 03 Feb 2022 10:10:09 -0800 (PST)
+        Thu, 03 Feb 2022 11:33:36 -0800 (PST)
+Received: by mail-wr1-f47.google.com with SMTP id s18so7023028wrv.7
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Feb 2022 11:33:35 -0800 (PST)
+X-Received: by 2002:adf:d087:: with SMTP id y7mr29738280wrh.274.1643916815565;
+ Thu, 03 Feb 2022 11:33:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20220130183653.491292-1-keescook@chromium.org>
- <20220202160149.GA2322037@roeck-us.net> <202202021237.487D3DE73@keescook>
- <5ff18cff-6cfd-1f85-da74-1e5660a1a250@roeck-us.net> <CAMuHMdWssK2=NFc6NO-inQg5dWxZP4Wv41K3J3RqRXThXatovw@mail.gmail.com>
- <202202030911.4914709E@keescook>
-In-Reply-To: <202202030911.4914709E@keescook>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 3 Feb 2022 19:09:58 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUBKofPP-6EofE3B7d6k0zv0nPJ7e4pjsznPF==ApJ6qg@mail.gmail.com>
-Message-ID: <CAMuHMdUBKofPP-6EofE3B7d6k0zv0nPJ7e4pjsznPF==ApJ6qg@mail.gmail.com>
-Subject: Re: [PATCH] lib/test_string.c: Add test for strlen()
+References: <20220202001918.4104428-1-keescook@chromium.org>
+In-Reply-To: <20220202001918.4104428-1-keescook@chromium.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 3 Feb 2022 11:33:19 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whkwveB2HDOibk+chAWhpm8LyGBVVjZmV4CAeEdnezZ0w@mail.gmail.com>
+Message-ID: <CAHk-=whkwveB2HDOibk+chAWhpm8LyGBVVjZmV4CAeEdnezZ0w@mail.gmail.com>
+Subject: Re: [PATCH] gcc-plugins/stackleak: Use noinstr in favor of notrace
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>, Peter Rosin <peda@axentia.se>,
-        Andy Shevchenko <andy@kernel.org>,
-        Matteo Croce <mcroce@microsoft.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
+Cc:     Alexander Popov <alex.popov@linux.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+        linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
+I was going to apply your patch, but then I read your note:
 
-On Thu, Feb 3, 2022 at 6:15 PM Kees Cook <keescook@chromium.org> wrote:
-> On Thu, Feb 03, 2022 at 09:04:22AM +0100, Geert Uytterhoeven wrote:
-> > Not if -ffreestanding, which is what several architectures are
-> > using nowadays, to a.o. prevent gcc from replacing calls to stdlib
-> > functions to other stdlib functions (e.g. strncat() -> strlen() +
-> > store, strncmp() -> strcmp()), which breaks linking if the latter is
-> > only provided inline.
+On Tue, Feb 1, 2022 at 4:19 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> Hah, for i386:
->
-> arch/x86/Makefile
->         # temporary until string.h is fixed
->         KBUILD_CFLAGS += -ffreestanding
->
-> This "temporary" is from 2006. ;)
+> Is it correct to exclude .noinstr.text here? That means any functions called in
+> there will have their stack utilization untracked. This doesn't seem right to me,
+> though. Shouldn't stackleak_track_stack() just be marked noinstr instead?
 
-And before that, we had it in the main Makefile.
+... and yes, it seems like stackleak_track_stack() should just be
+'noinstr' just like you made stackleak_erase().
 
-> 6edfba1b33c7 ("[PATCH] x86_64: Don't define string functions to builtin")
->
-> Removing that appears to solve it, and appears to build correctly. I'll
-> continue testing.
->
-> > It works after dropping -ffreestanding.
->
-> I wonder if the other architectures were just copying x86?
+So I've dropped the patch to see what happens.
 
-At least on m68k it was added because gcc added new optimizations
-that broke if an architecture provides some functions as inline.
-As the kernel is not supposed to be linked with the standard C
-library, -ffreestanding should be correct, isn't it?
+If you decide this is the right patch after all, you can just re-send it.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+                 Linus
