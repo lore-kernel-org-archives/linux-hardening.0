@@ -2,43 +2,46 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 035AEC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Feb 2022 23:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C05C433F5
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Feb 2022 23:23:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235330AbiBDXWg (ORCPT
+        id S232809AbiBDXXI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Feb 2022 18:22:36 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:45530 "EHLO
-        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232809AbiBDXWg (ORCPT
+        Fri, 4 Feb 2022 18:23:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1358955AbiBDXXI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Feb 2022 18:22:36 -0500
+        Fri, 4 Feb 2022 18:23:08 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F3E1DFBFFAE;
+        Fri,  4 Feb 2022 15:23:07 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id CECA1CE24BE;
-        Fri,  4 Feb 2022 23:22:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5C62C004E1;
-        Fri,  4 Feb 2022 23:22:32 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id F3416CE248E;
+        Fri,  4 Feb 2022 23:23:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8397C004E1;
+        Fri,  4 Feb 2022 23:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644016953;
-        bh=ILdoUIoX1tocW/C8hL7JwqWasbTDT9C6TZUJmP/1rAk=;
+        s=k20201202; t=1644016984;
+        bh=9P1b74WtVzZInz8h2Map/kXphQdxYtNWHMeXnkSUnm0=;
         h=Date:From:To:Cc:Subject:From;
-        b=XHSTQxHzY2S6CQM/u4VOOLGOCbBtDuJ65nRjfmKCzV1O0vY6bK2p6/HNXln7/BlWn
-         wEhQg7YSoNVZdgCb4xVJsrPQkY7+d6Ttu+nTlXWlQRSHRxJotEOSg7/NByCI+4gTfu
-         t/AbKhVB1emP2zkY9DW/K7OxzBUfcJYIfCutKD2DF/knwcVRBcxjbMJ3zzT7+cxxSO
-         BiWZDQf4IOsTOM1eMwzOCaqgidXBalCuEtjPzdIgT617yYAoaNcbEpvqE5SSEbtYmw
-         Yd/CjOqnhLDcrw8H1uj9DIV8OTkTCxLCi9wm60owaQWmewMhkrusCq0rqAz3cQ//1M
-         73WxerqL/b78Q==
-Date:   Fri, 4 Feb 2022 17:29:44 -0600
+        b=YZIno/g6yKC7ttomeryazCn7gfeS0G3OE31leh3kiR4qRitJ4eYSj+t6TfZBVP3uV
+         CJeCakEVpYoB0U/xLCLrNWgxcrJHkgscx8kWPNb786I9wb9QtY7bHgb1cZtPIRQlTW
+         teKdLC6f+k3bVs+iLyhU9nGsMMNtBYCRvL9NP2VkznuZ8L/qDy3Psuqop7WiTkMVAO
+         uHwbJa5T0LY2bFtGukyGtgAmKuiHVsQLBb0KtgqGAHKDkK6qbYJIxBz1ymWoIIXGvW
+         hynF2rX0TqpztGx17DVpX4yQbVOkxaFYIw0WSAn0h9TVMSY0ti2fuYYetyRY6dvoKB
+         KjdkqgVA5fZTg==
+Date:   Fri, 4 Feb 2022 17:30:15 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] staging: gdm724x: Replace one-element array with
- flexible-array member
-Message-ID: <20220204232944.GA454945@embeddedor>
+Subject: [PATCH][next] staging: wlan-ng: Replace one-element arrays with
+ flexible-array members
+Message-ID: <20220204233015.GA454979@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
@@ -65,22 +68,62 @@ manually.
 Link: https://github.com/KSPP/linux/issues/79
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/staging/gdm724x/hci_packet.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/wlan-ng/p80211mgmt.h  | 8 ++++----
+ drivers/staging/wlan-ng/p80211types.h | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/staging/gdm724x/hci_packet.h b/drivers/staging/gdm724x/hci_packet.h
-index faecdfbc664f..3bb01e94f3b5 100644
---- a/drivers/staging/gdm724x/hci_packet.h
-+++ b/drivers/staging/gdm724x/hci_packet.h
-@@ -34,7 +34,7 @@ struct hci_packet {
- struct tlv {
- 	u8 type;
+diff --git a/drivers/staging/wlan-ng/p80211mgmt.h b/drivers/staging/wlan-ng/p80211mgmt.h
+index 1ef30d3f3159..d6fe52de2c8f 100644
+--- a/drivers/staging/wlan-ng/p80211mgmt.h
++++ b/drivers/staging/wlan-ng/p80211mgmt.h
+@@ -229,14 +229,14 @@ struct wlan_ie {
+ struct wlan_ie_ssid {
+ 	u8 eid;
  	u8 len;
--	u8 *data[1];
-+	u8 *data[];
+-	u8 ssid[1];		/* may be zero, ptrs may overlap */
++	u8 ssid[];		/* may be zero, ptrs may overlap */
  } __packed;
  
- struct sdu_header {
+ /*-- Supported Rates  -----------------------------*/
+ struct wlan_ie_supp_rates {
+ 	u8 eid;
+ 	u8 len;
+-	u8 rates[1];		/* had better be at LEAST one! */
++	u8 rates[];		/* had better be at LEAST one! */
+ } __packed;
+ 
+ /*-- FH Parameter Set  ----------------------------*/
+@@ -274,7 +274,7 @@ struct wlan_ie_tim {
+ 	u8 dtim_cnt;
+ 	u8 dtim_period;
+ 	u8 bitmap_ctl;
+-	u8 virt_bm[1];
++	u8 virt_bm[];
+ } __packed;
+ 
+ /*-- IBSS Parameter Set ---------------------------*/
+@@ -288,7 +288,7 @@ struct wlan_ie_ibss_parms {
+ struct wlan_ie_challenge {
+ 	u8 eid;
+ 	u8 len;
+-	u8 challenge[1];
++	u8 challenge[];
+ } __packed;
+ 
+ /*-------------------------------------------------*/
+diff --git a/drivers/staging/wlan-ng/p80211types.h b/drivers/staging/wlan-ng/p80211types.h
+index 6486612a8f31..b2ffd09881b0 100644
+--- a/drivers/staging/wlan-ng/p80211types.h
++++ b/drivers/staging/wlan-ng/p80211types.h
+@@ -234,7 +234,7 @@ struct p80211pstr32 {
+ /* MAC address array */
+ struct p80211macarray {
+ 	u32 cnt;
+-	u8 data[1][MAXLEN_PSTR6];
++	u8 data[][MAXLEN_PSTR6];
+ } __packed;
+ 
+ /* prototype template */
 -- 
 2.27.0
 
