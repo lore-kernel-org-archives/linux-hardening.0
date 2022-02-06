@@ -2,48 +2,48 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E163C433F5
-	for <linux-hardening@archiver.kernel.org>; Sun,  6 Feb 2022 17:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E832DC433F5
+	for <linux-hardening@archiver.kernel.org>; Sun,  6 Feb 2022 17:45:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344919AbiBFRpR (ORCPT
+        id S1344806AbiBFRpS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 6 Feb 2022 12:45:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37978 "EHLO
+        Sun, 6 Feb 2022 12:45:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344806AbiBFRpQ (ORCPT
+        with ESMTP id S1344781AbiBFRpQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Sun, 6 Feb 2022 12:45:16 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFD81C043186
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7EE0C043188
         for <linux-hardening@vger.kernel.org>; Sun,  6 Feb 2022 09:45:12 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id oa14-20020a17090b1bce00b001b61aed4a03so11187910pjb.5
+Received: by mail-pf1-x429.google.com with SMTP id y5so8784116pfe.4
         for <linux-hardening@vger.kernel.org>; Sun, 06 Feb 2022 09:45:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v6O2o8pG50xk23PLXPp5+UKk+LzVl21UwSd+T/RY4xM=;
-        b=Js3Gu6abALq+9Rw5jzow76VsWNdYKgRb3cosC0c+nCrMduq/KxnH9S9oDgjFr1Y38O
-         Kg8zxMG/u1p32rKiag+YvBC1OUgV+iFZMgQPspJlzvA7k0Om8N6Sro+XLP+MHYlqBke3
-         Cx6xWQIcYFEChSDwzbfJsPiNZYZgBW/w+DHBE=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6iskz+FBLj513LKJP0SIpTgUMOdBW2n6Z2gLN+PMSgA=;
+        b=LHRm33CkBY5V8/+tm1HL8EoysUkEVoniFUHjhF+HJMBSCucOB3Ra3Fk7upn9EfNy7t
+         /1svVUMeSMHcy28RwNLsbW8uHcF2lcOiT+OXWqIXjEFp6RA71kApVtCNm8VW223bzL3S
+         +K46AkioawGWBEnGphgsxFFaWRv/R8SavfMRc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v6O2o8pG50xk23PLXPp5+UKk+LzVl21UwSd+T/RY4xM=;
-        b=utGDjrspprWkWe6CqDLUZ7OPNi8eyfwpMzsxYvbbCRNRUZB6N0hrogrP7mmI08btb3
-         MOIjnfDjbMxJQjJQFJ2Utj+2Y++FyJwLQFk+08mBzzFyKWWOzgKWbUs1zIGxoCe/8Jc1
-         VeqRFFS3DAA7lZpnUFDnCQFP8N74tTFj94BfblhbQ6dmMvHVXmaMsQ4nNGmxugwVuhLi
-         f2LIYSoW1h0wrYieNzo1HQdpEPe0KLWxTWcqfCyo722FaOJj4V88GMTxwQLw8jRsj3hr
-         beNujQR8x7Sz5zLHrkhML70GwPfWCyB4b3S42U85NYLuM5I7lzo8WvHAVU3McEwOTOmQ
-         4bzg==
-X-Gm-Message-State: AOAM5306VTyAi780Qwbuked1BYTCavh4hhthmTEM3paiKvwhksJRrzZ6
-        jopeAlJXEx8PKNLZSCCtxm7NzA==
-X-Google-Smtp-Source: ABdhPJxSvg4hChq0huexNav4rWvjba195f+0fA1dkTHKBmy7VjbGGLnAN+3xEAuI9rFWpjLkyYPwNg==
-X-Received: by 2002:a17:90a:ec0b:: with SMTP id l11mr14212735pjy.200.1644169512190;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6iskz+FBLj513LKJP0SIpTgUMOdBW2n6Z2gLN+PMSgA=;
+        b=HFy57XmgeQJfVNUUO8gg3AKBK5tC2FrfsaFaQLp8UJFXkptee0EKLJ0r7xfC6lJQJd
+         qd3FIVk8AVtyjRq4BEVkceeen1rxQoBQhLkS/tvBSMlIoWd3fhqxphspKGEU6xhjpzaf
+         /6VgMVd0OFKum77/qAjir4v/kGRURllL3/RHGNyLGEPT/AvsCY4wPrkmfiYa6NiHqrYW
+         iZisQu5fAwTF1G7KlArIyhjKuU6s616+zYp3tVVk4564g7SkMkMxuEqJC7Vi4FwsIaKg
+         DfuCCbf4QW0Lm+KL4LSMlrENtmQ07IwrsjE4zdex8rhIaRQaquhW2Nc7+OWTJq7Spcma
+         UNfQ==
+X-Gm-Message-State: AOAM532EJsxlgVwoL1HZ664UbILlTM9ij0Nw8H7eFn7vs0viViw27Vva
+        OnG80rFn88E+/vN30O93czSh5A==
+X-Google-Smtp-Source: ABdhPJx/Hnsk7LZ4mM/pwnpvB4jp1iRjf4dKAVWIoMCBkpSDX6sj+cyHZqyOI82UGSbqYnpBj0zg1w==
+X-Received: by 2002:a63:4b4a:: with SMTP id k10mr6647215pgl.488.1644169512337;
         Sun, 06 Feb 2022 09:45:12 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c12sm9988585pfl.130.2022.02.06.09.45.11
+        by smtp.gmail.com with ESMTPSA id o21sm9555315pfu.100.2022.02.06.09.45.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Sun, 06 Feb 2022 09:45:11 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
@@ -56,37 +56,77 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Borislav Petkov <bp@alien8.de>,
         Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH 0/3] gcc-plugins/stackleak: Ignore .noinstr.text and .entry.text
-Date:   Sun,  6 Feb 2022 09:45:05 -0800
-Message-Id: <20220206174508.2425076-1-keescook@chromium.org>
+Subject: [PATCH 2/3] gcc-plugins/stackleak: Exactly match strings instead of prefixes
+Date:   Sun,  6 Feb 2022 09:45:07 -0800
+Message-Id: <20220206174508.2425076-3-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220206174508.2425076-1-keescook@chromium.org>
+References: <20220206174508.2425076-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=759; h=from:subject; bh=9Mpxe73Kgm9+18b3DRYv4LkxSc2djAQZd/LwhBPfIKg=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiAAkidd+gsthX8X4I2aZfDT4Z+LaGVX4rQib9in1s dFliP0+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYgAJIgAKCRCJcvTf3G3AJhiID/ 4yXopOsjb2jNaBgv82czSWfbFloMfBRc9u6JvZQI/3D6b7aEnC9U4dhHnZBamcKRz6axTehlK6WwSV bUsZ7IN/8jafYXD6xLg8q1XPUFDb7DHxoncKSSzSaCbqGIDgMP8QqX5Rv8zbAy2F5s6dbDZgYrq2yP IvC6nGBc9DsFkbHKHzeN6wWSL2chZOXinqJDqTcC6E20r2FKsYbBnN8bBDKb5qTGi8iqgRzUoFW6yP vqO5u4AIujbIY2wl8yFSwDfRHaOKHCgGgLGy1r1wyz8egJdgksUjajewORaCowrNVEkD3Cf+uGThZC BCOhZEUwgs/7xycCK7wzpumWAGYBbJAiHGLaqYlPiRE321q7cAgHWyENloEfaB+2cRuNE01pkd1BbC jzxiUAOvzbeTt+lzdh4W69JjQ8Aeu/rBVbcqefQVhwBRf+zntZYvW4xm0oXFxeffSgTWSTV89XF4Yh 54BL1yGQKIcKiV5jZk8wzYT2a4ZemmapQVtcVIbgvjYPsze/d92lmsJqxI/M1izyzuSzJxyaC2AUW9 Gn5Yj8N3l932eHuDYYR5cl2p5Aa8XjRVHS4qHNZXsVOVxqJRmzpUoUGDk6Ub7aGakDiaqKCeOvPKZU 7mUMLYPmU0L//Y/zttSZi1IF30Aoy8ZNGQJlW+LecLNLpE0wbkW+gFy755Ww==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2176; h=from:subject; bh=7ZhUIZRWBZdIwU3QloHv8YfGoYLImcCzFHMebm4HT+0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiAAkjiFpI0PExnXK3EXjoT6wrAo802WUdEEqkhhYd sOsAlHKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYgAJIwAKCRCJcvTf3G3AJm3SD/ 4m7rQ6j6Ecz7NmABqTILHvHzWkJNjU/p+4pk3t6w33tf0ftDnwOjecSS9JMQz8Y7w+k37Ijet2rUZc AXkXH9rCcl08/zZvfDaV3ZibARlqLTzBmXtnR8vOCkOk6ruYmlGVpQhLJisNDGbsV8vZm8KGigTmpI ErzHSK5fh/k7aorIk0MgWMBAj8FNvPOZgH96R6L2dUchVa8LboX/R7d09nnfGhAlL2oYWZf5DqHm4s frKlRXPhPv1iEb1p13hM4pJZ3WUhB7t/uyjryxIeUXDGh0ZJUE3/QUQWqypHGp/0HopAzRHFOh93tw t+W4go6Mu6d/vwSmYnk/URY4I+/zqyJM+R7BO7aKvQ/sFggvzKEXLAfm3rPlQ9PIb74+9Y+v6Ga/DF FMFWDsjl5a2w/EGjxL62ktEylPpkaEgQsTz8qwIhgIZDszTp1oRWMGcI/1u89xeErJyFeAp20CK2jW pU6vr+jB+nIfUao3lksZnjFIQzkLJoRltTxfwN8ROs/ChP3QVU8xp97KLRTPaZoQ3xTV+5+9cj5P8p UmBpsJbOmRWeilbtMD86UfEiN9i7nk3+Su7EpphDIG2wGFThTz8hDUeL62lnmhDZiVrSSX7JVJEYCq cHphz6qkNsae/nNic5nqr2UwuBqdNt5yJeveH2DBlHlbWBogTC5BU3G9kL+A==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Out of an abundance of caution, do not perform stack depth analysis on
-.noinstr.text and .entry.text section functions, as it may be possible
-that "current" is not sane.
+Since STRING_CST may not be NUL terminated, strncmp() was used for check
+for equality. However, this may lead to mismatches for longer section
+names where the start matches the tested-for string. Test for exact
+equality by checking for the presences of NUL termination.
 
-Additionally, to verify results, the verbose mode is wired up the Kconfig,
-and the string matching is refactored for correctness.
+Cc: Alexander Popov <alex.popov@linux.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ scripts/gcc-plugins/stackleak_plugin.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
--Kees
-
-Kees Cook (3):
-  gcc-plugins/stackleak: Provide verbose mode
-  gcc-plugins/stackleak: Exactly match strings instead of prefixes
-  gcc-plugins/stackleak: Ignore .noinstr.text and .entry.text
-
- scripts/Makefile.gcc-plugins           |  2 ++
- scripts/gcc-plugins/stackleak_plugin.c | 29 ++++++++++++++++++++++----
- security/Kconfig.hardening             | 10 +++++++++
- 3 files changed, 37 insertions(+), 4 deletions(-)
-
+diff --git a/scripts/gcc-plugins/stackleak_plugin.c b/scripts/gcc-plugins/stackleak_plugin.c
+index e9db7dcb3e5f..623bcad6d0c7 100644
+--- a/scripts/gcc-plugins/stackleak_plugin.c
++++ b/scripts/gcc-plugins/stackleak_plugin.c
+@@ -429,6 +429,23 @@ static unsigned int stackleak_cleanup_execute(void)
+ 	return 0;
+ }
+ 
++/*
++ * STRING_CST may or may not be NUL terminated:
++ * https://gcc.gnu.org/onlinedocs/gccint/Constant-expressions.html
++ */
++static inline bool string_equal(tree node, const char *string, int length)
++{
++	if (TREE_STRING_LENGTH(node) < length)
++		return false;
++	if (TREE_STRING_LENGTH(node) > length + 1)
++		return false;
++	if (TREE_STRING_LENGTH(node) == length + 1 &&
++	    TREE_STRING_POINTER(node)[length] != '\0')
++		return false;
++	return !strncmp(TREE_STRING_POINTER(node), string, length);
++}
++#define STRING_EQUAL(node, str)	string_equal(node, str, strlen(str))
++
+ static bool stackleak_gate(void)
+ {
+ 	tree section;
+@@ -438,13 +455,13 @@ static bool stackleak_gate(void)
+ 	if (section && TREE_VALUE(section)) {
+ 		section = TREE_VALUE(TREE_VALUE(section));
+ 
+-		if (!strncmp(TREE_STRING_POINTER(section), ".init.text", 10))
++		if (STRING_EQUAL(section, ".init.text"))
+ 			return false;
+-		if (!strncmp(TREE_STRING_POINTER(section), ".devinit.text", 13))
++		if (STRING_EQUAL(section, ".devinit.text"))
+ 			return false;
+-		if (!strncmp(TREE_STRING_POINTER(section), ".cpuinit.text", 13))
++		if (STRING_EQUAL(section, ".cpuinit.text"))
+ 			return false;
+-		if (!strncmp(TREE_STRING_POINTER(section), ".meminit.text", 13))
++		if (STRING_EQUAL(section, ".meminit.text"))
+ 			return false;
+ 	}
+ 
 -- 
 2.30.2
 
