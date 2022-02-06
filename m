@@ -2,115 +2,94 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9049AC433EF
-	for <linux-hardening@archiver.kernel.org>; Sat,  5 Feb 2022 13:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B11CC433EF
+	for <linux-hardening@archiver.kernel.org>; Sun,  6 Feb 2022 11:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380021AbiBENin convert rfc822-to-8bit (ORCPT
+        id S234937AbiBFL6e (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 5 Feb 2022 08:38:43 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:26814 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1380016AbiBENin (ORCPT
+        Sun, 6 Feb 2022 06:58:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43554 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230450AbiBFL6d (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 5 Feb 2022 08:38:43 -0500
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-95-HcbmPPd0MRO8RZEsIYtPtQ-1; Sat, 05 Feb 2022 13:38:40 +0000
-X-MC-Unique: HcbmPPd0MRO8RZEsIYtPtQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.28; Sat, 5 Feb 2022 13:38:39 +0000
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.028; Sat, 5 Feb 2022 13:38:39 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Yury Norov' <yury.norov@gmail.com>,
-        Kees Cook <keescook@chromium.org>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH] iio: stmpe-adc: Use correctly sized arguments for bit
- field
-Thread-Topic: [PATCH] iio: stmpe-adc: Use correctly sized arguments for bit
- field
-Thread-Index: AQHYGX/W1vB0TJBlQkimao6oVwCSvqyE956A
-Date:   Sat, 5 Feb 2022 13:38:39 +0000
-Message-ID: <d8a79e103aaa40d2840e56a692762b23@AcuMS.aculab.com>
-References: <20211215232513.2070158-1-keescook@chromium.org>
- <YfyrspBCYjH56xEU@yury-laptop>
-In-Reply-To: <YfyrspBCYjH56xEU@yury-laptop>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Sun, 6 Feb 2022 06:58:33 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 882BBC06173B;
+        Sun,  6 Feb 2022 03:58:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=u8y8YnXoDgPdri5nDxHCd/Dt45QdXd7r35iYZRYPKgI=; b=BkygttVrImN6pKWoJ8l/7fwIhJ
+        XYVZCmGlNE8ZjFHEW2SPgQkaRnw5X3DNcTza1gdcgv1icWVdRpsVVXmjGl6oPiTKCX3+1Erpse07v
+        /9THscrbp3IB/AqKDTtKNITe2JOXT2Q7waWWIZU93z4m/+gHPsTq2CroDf7bf4wdBpW1el7w4DyX4
+        Oj3HpoBDTOU3m6rkw4XyoSG7LybN9GZI6vrflgktjE1IzRLUjLN+bUEe4gN8irmKKAaHa7RSw6Rgs
+        dU4sm95LpZwPFuyNXDu9rW4WgSbtZTBXIk+AsFYOgnLbrXhaCdKdEyNjl4dd52RxLSts0hojJZ5pp
+        7wwim/fw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nGgBO-00Dsz0-Fz; Sun, 06 Feb 2022 11:58:18 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AEC9898622D; Sun,  6 Feb 2022 12:58:16 +0100 (CET)
+Date:   Sun, 6 Feb 2022 12:58:16 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Alexander Popov <alex.popov@linux.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] gcc-plugins/stackleak: Use noinstr in favor of notrace
+Message-ID: <20220206115816.GA23216@worktop.programming.kicks-ass.net>
+References: <20220202001918.4104428-1-keescook@chromium.org>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220202001918.4104428-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Yury Norov
-> Sent: 04 February 2022 04:30
+On Tue, Feb 01, 2022 at 04:19:18PM -0800, Kees Cook wrote:
+> While the stackleak plugin was already using notrace, objtool is now a
+> bit more picky. Update the notrace uses to noinstr. Silences these
+> warnings:
 > 
-> On Wed, Dec 15, 2021 at 03:25:13PM -0800, Kees Cook wrote:
-> > The find.h APIs are designed to be used only on unsigned long arguments.
-> > This can technically result in a over-read, but it is harmless in this
-> > case. Regardless, fix it to avoid the warning seen under -Warray-bounds,
-> > which we'd like to enable globally:
-> >
-...
-> >
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  drivers/iio/adc/stmpe-adc.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/iio/adc/stmpe-adc.c b/drivers/iio/adc/stmpe-adc.c
-> > index fba659bfdb40..d2d405388499 100644
-> > --- a/drivers/iio/adc/stmpe-adc.c
-> > +++ b/drivers/iio/adc/stmpe-adc.c
-> > @@ -256,6 +256,7 @@ static int stmpe_adc_probe(struct platform_device *pdev)
-> >  	struct stmpe_adc *info;
-> >  	struct device_node *np;
-> >  	u32 norequest_mask = 0;
-> > +	unsigned long bits;
-> >  	int irq_temp, irq_adc;
-> >  	int num_chan = 0;
-> >  	int i = 0;
-> > @@ -309,8 +310,8 @@ static int stmpe_adc_probe(struct platform_device *pdev)
-> >
-> >  	of_property_read_u32(np, "st,norequest-mask", &norequest_mask);
-> >
-> > -	for_each_clear_bit(i, (unsigned long *) &norequest_mask,
-> > -			   (STMPE_ADC_LAST_NR + 1)) {
-> > +	bits = norequest_mask;
+> vmlinux.o: warning: objtool: do_syscall_64()+0x9: call to stackleak_track_stack() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: do_int80_syscall_32()+0x9: call to stackleak_track_stack() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: exc_general_protection()+0x22: call to stackleak_track_stack() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: fixup_bad_iret()+0x20: call to stackleak_track_stack() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: do_machine_check()+0x27: call to stackleak_track_stack() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: .text+0x5346e: call to stackleak_erase() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: .entry.text+0x143: call to stackleak_erase() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: .entry.text+0x10eb: call to stackleak_erase() leaves .noinstr.text section
+> vmlinux.o: warning: objtool: .entry.text+0x17f9: call to stackleak_erase() leaves .noinstr.text section
 > 
-> This would not work on 64-bit BE architecture. It should use bitmap_from_arr32()
+> Cc: Alexander Popov <alex.popov@linux.com>
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Link: https://lore.kernel.org/lkml/YYENAKB0igNFnFmK@hirez.programming.kicks-ass.net/
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> Is it correct to exclude .noinstr.text here? That means any functions called in
+> there will have their stack utilization untracked. This doesn't seem right to me,
+> though. Shouldn't stackleak_track_stack() just be marked noinstr instead?
 
-The old version was wrong on 64 bit BE, Kees version is probably ok.
+This patch is right. stackleak_track_stack() cannot be marked noinstr
+becaues it accesses things that might not be there.
 
-But changing norequest_mask to 'unsigned long' is probably neater.
-OTOH using the bitmap functions on single words is just bloat.
+Consider what happens if we pull the PTI page-table swap into the
+noinstr C part.
 
-	David
+> @@ -446,6 +447,8 @@ static bool stackleak_gate(void)
+>  			return false;
+>  		if (!strncmp(TREE_STRING_POINTER(section), ".meminit.text", 13))
+>  			return false;
+> +		if (!strncmp(TREE_STRING_POINTER(section), ".noinstr.text", 13))
+> +			return false;
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+For paranoia's sake I'd like .entry.text added there as well.
 
+>  	}
+>  
+>  	return track_frame_size >= 0;
