@@ -2,83 +2,108 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 494DCC433F5
-	for <linux-hardening@archiver.kernel.org>; Sun,  6 Feb 2022 12:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1163C433EF
+	for <linux-hardening@archiver.kernel.org>; Sun,  6 Feb 2022 16:46:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235677AbiBFMfx (ORCPT
+        id S237290AbiBFQqu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 6 Feb 2022 07:35:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53756 "EHLO
+        Sun, 6 Feb 2022 11:46:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229647AbiBFMfx (ORCPT
+        with ESMTP id S236096AbiBFQqu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 6 Feb 2022 07:35:53 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EE84C043182;
-        Sun,  6 Feb 2022 04:35:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=dlHtdM4jQUdvr1gEwIXtPFjy6fGyO2EwwEyEZ5or8OU=; b=OIGEw3agOpqRHgP0nDkT/shAk3
-        TpkVNeFyNQyVWGCRjh+I2Je04yaXNi1YZMED2c7lvLEou41dDO6cpq1rwjrxCfmd/NlWV0NfmLGae
-        wysJEljAtaELp+Mn95zsTWOG/ksJhXoqtHs5k5IgkahkVyyyBLoyMpRneUFk19I0ISMEIIvdcBENs
-        M21n0KEk8ti1Lt4WC+vAK4U6KBSQAbUpPgMrYsDzL5fchly0hHD/GcIV4jFGT/nwmEPSxuupsaRCV
-        HTsKE6ZrByjgEiawuo3furVzAFH0s26dDW4BduC2E0EkrkD7E+gArbC5vp3pr8sVZ6EY4typg0ogB
-        UB2nWT8g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nGgla-00E0m9-L1; Sun, 06 Feb 2022 12:35:43 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7A0BD98622D; Sun,  6 Feb 2022 13:35:41 +0100 (CET)
-Date:   Sun, 6 Feb 2022 13:35:41 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
+        Sun, 6 Feb 2022 11:46:50 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73880C043184
+        for <linux-hardening@vger.kernel.org>; Sun,  6 Feb 2022 08:46:49 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id x11so9424212plg.6
+        for <linux-hardening@vger.kernel.org>; Sun, 06 Feb 2022 08:46:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=AV/FzMjsxogtDwb4DWVIrdYcYlkVfJVUqj5wlwsCnNI=;
+        b=IM9nujf2vxUCcqhBkGmCyCSjSPkM/1Z8UCnM9qCzcghIic6L3kdbcJM5Sg/f688jy/
+         W6dY+M87VLHAvepwQ6rUnjSZXMumB51f7PU/oCwhuJICX0tXiZseOjojEEhmBUjTqMtO
+         jKtbreY27ABOCklcIwgWFLJw4armPQjQIaTlg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AV/FzMjsxogtDwb4DWVIrdYcYlkVfJVUqj5wlwsCnNI=;
+        b=gLqcWyMj2WY8yZH43CggWf/jhutt1SEhTYaSnvTy+TGNdGs9glVFe73Sgl/JzaKrgt
+         WFP07j+wyON6vkUlT3lDHpuUYxBP0RWnqpcDW3BDSeGIAti93L5bWiOI8WMnLMTefE+d
+         p4haI96AQGbUAYEoinYzNW/ILGwkWGYeHSwbb+GHZGQTeP5p/w5VXyfYkqvb44Y1oUr7
+         cbPndREBTkWUURxfisrFFScGPZf/mQIwMvOPKwSLed56it1lv7mxyXTDhVXYadJzMHKH
+         ulnCR9i+1BFCnGhO1IQqapZwnJlxGgUCWVKlqCLgTZwjt7jjiRNuiAif8PREivD7GEFh
+         HUmA==
+X-Gm-Message-State: AOAM5322S705N3Vk/SI/TtWq7gfHV1acuBxrQlFH4S2sUA0JmhCG3SwT
+        7dq3nk0QwSTSV42a0eY4THMb0wf4xAN4gA==
+X-Google-Smtp-Source: ABdhPJy2qKrHFsxitkkqN9O4RqiQ22JSOYLOpVX3iDRRP/MtqLZZ7QOW64c3Byn6vBd5rthkziC33A==
+X-Received: by 2002:a17:902:ed85:: with SMTP id e5mr12436620plj.46.1644166008765;
+        Sun, 06 Feb 2022 08:46:48 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f8sm9273853pfv.24.2022.02.06.08.46.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Feb 2022 08:46:48 -0800 (PST)
+Date:   Sun, 6 Feb 2022 08:46:47 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Alexander Popov <alex.popov@linux.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] gcc-plugins/stackleak: Use noinstr in favor of notrace
-Message-ID: <20220206123541.GB23216@worktop.programming.kicks-ass.net>
-References: <20220203201754.1145358-1-keescook@chromium.org>
+Subject: Re: [PATCH] gcc-plugins/stackleak: Use noinstr in favor of notrace
+Message-ID: <202202060819.3C86C47DCA@keescook>
+References: <20220202001918.4104428-1-keescook@chromium.org>
+ <20220206115816.GA23216@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220203201754.1145358-1-keescook@chromium.org>
+In-Reply-To: <20220206115816.GA23216@worktop.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Feb 03, 2022 at 12:17:54PM -0800, Kees Cook wrote:
-> While the stackleak plugin was already using notrace, objtool is now a
-> bit more picky. Update the notrace uses to noinstr. Silences the
-> following objtool warnings when building with:
+On Sun, Feb 06, 2022 at 12:58:16PM +0100, Peter Zijlstra wrote:
+> On Tue, Feb 01, 2022 at 04:19:18PM -0800, Kees Cook wrote:
+> > Is it correct to exclude .noinstr.text here? That means any functions called in
+> > there will have their stack utilization untracked. This doesn't seem right to me,
+> > though. Shouldn't stackleak_track_stack() just be marked noinstr instead?
 > 
-> CONFIG_DEBUG_ENTRY=y
-> CONFIG_STACK_VALIDATION=y
-> CONFIG_VMLINUX_VALIDATION=y
-> CONFIG_GCC_PLUGIN_STACKLEAK=y
-> 
-> vmlinux.o: warning: objtool: do_syscall_64()+0x9: call to stackleak_track_stack() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: do_int80_syscall_32()+0x9: call to stackleak_track_stack() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: exc_general_protection()+0x22: call to stackleak_track_stack() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: fixup_bad_iret()+0x20: call to stackleak_track_stack() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: do_machine_check()+0x27: call to stackleak_track_stack() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: .text+0x5346e: call to stackleak_erase() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: .entry.text+0x143: call to stackleak_erase() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: .entry.text+0x10eb: call to stackleak_erase() leaves .noinstr.text section
-> vmlinux.o: warning: objtool: .entry.text+0x17f9: call to stackleak_erase() leaves .noinstr.text section
-> 
-> Note that the plugin's addition of calls to stackleak_track_stack()
-> from noinstr functions is expected to be safe, as it isn't runtime
-> instrumentation and is self-contained.
-> 
-> Cc: Alexander Popov <alex.popov@linux.com>
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> This patch is right. stackleak_track_stack() cannot be marked noinstr
+> becaues it accesses things that might not be there.
 
-No, I didn't suggest this and it is actively wrong. noinstr *really*
-should mean no instrumentation, nothing, nada, zip.
+Hmm, as in "current()" may not be available/sane?
 
+> Consider what happens if we pull the PTI page-table swap into the
+> noinstr C part.
+
+Yeah, I see your point. I suspect the reason this all currently works
+is because stackleak is supposed to only instrument leaf functions that
+have sufficiently large (default 100 bytes) stack usage.
+
+What sorts of things may end up in .noinstr.text that are 100+ byte stack
+leaf functions that would be end up deeper in the call stack? (i.e. what
+could get missed from stack depth tracking?) Interrupt handling comes
+to mind, but I'd expect that to make further calls (i.e. not a leaf).
+
+> > @@ -446,6 +447,8 @@ static bool stackleak_gate(void)
+> >  			return false;
+> >  		if (!strncmp(TREE_STRING_POINTER(section), ".meminit.text", 13))
+> >  			return false;
+> > +		if (!strncmp(TREE_STRING_POINTER(section), ".noinstr.text", 13))
+> > +			return false;
+> 
+> For paranoia's sake I'd like .entry.text added there as well.
+
+Yeah, that's reasonable. Again, I think I see why this hasn't been an
+actual problem before, but given the constraints, I'd agree. It may
+allow for the paravirt special-case to be removed as well.
+
+I'll send a follow-up patch...
+
+-- 
+Kees Cook
