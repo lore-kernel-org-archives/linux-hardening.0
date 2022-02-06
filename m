@@ -2,109 +2,99 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E34C3C433F5
-	for <linux-hardening@archiver.kernel.org>; Sun,  6 Feb 2022 18:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917ADC433F5
+	for <linux-hardening@archiver.kernel.org>; Sun,  6 Feb 2022 20:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245173AbiBFStT (ORCPT
+        id S232618AbiBFUk0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 6 Feb 2022 13:49:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58406 "EHLO
+        Sun, 6 Feb 2022 15:40:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244645AbiBFStS (ORCPT
+        with ESMTP id S232014AbiBFUkZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 6 Feb 2022 13:49:18 -0500
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 661F4C06173B
-        for <linux-hardening@vger.kernel.org>; Sun,  6 Feb 2022 10:49:17 -0800 (PST)
-Received: by mail-pg1-x52b.google.com with SMTP id d186so9712193pgc.9
-        for <linux-hardening@vger.kernel.org>; Sun, 06 Feb 2022 10:49:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2v4Bkm8br56s9qLPALsh3pbC7ql67TUJ0yFnLPxLRHk=;
-        b=bHu48kLEfO0BvtG6X0aiGbTtRNOUTWieaRIPaWNVq0kGREyeoBqdU0yjw4IOPe9Tj0
-         nAeJ7SVbj1adJGvHFKz1t/wqHo3Mbb0w2OoGbI2MoGZAFeXUAzWY7vREhLb1/qR4N82D
-         TvFOCCgbiwXQhtyaCLILTjc57sTV0acdHDw/0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2v4Bkm8br56s9qLPALsh3pbC7ql67TUJ0yFnLPxLRHk=;
-        b=sNkC1V3IwmsoK3NJh2xf5tjkcpTac/Y4zqj+PKC93iUEX3Y/g58z+dHZxeQcD84pw2
-         wv2SiJqkuufDIAOEk/PVr14HLvaEKYTFGHqeiQpzRtQoZT+BY0Xus+DUkXXwqjXJLU0A
-         8IcrygikL5rjZQ61gQ7XlCOWOmazvgo7lEGM7z6+rN9Q9If66hXo/43elnhks9cwzxhe
-         u56p97NbyBQNLev6lLBfuoHV4VbV2BXfXVgBk8bCG88Qki9WlwP5YF3PVH+qCgT2PJsk
-         Sm9OwHsemxqF289wuE27vdXQOSanHBCOV5mnj2kCNcgyc3BcNQ8MwQyFrY/P0l5ampyh
-         WphQ==
-X-Gm-Message-State: AOAM532KOz3QMudjbvk/0CnkeOTB7CFWn4FYg7kar2zB5r7toYNgifAq
-        PKdlcDsejQnFunJiJuR9HmQxvA==
-X-Google-Smtp-Source: ABdhPJyWqmFuqt/fFPdQlg8sO5tyPVSj3BV1IVOc6TI82qubKGsKg0BvZ/UnZK/5jEFTljEBuu8E2Q==
-X-Received: by 2002:a63:e04a:: with SMTP id n10mr6839350pgj.487.1644173356941;
-        Sun, 06 Feb 2022 10:49:16 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k9sm1758823pgg.50.2022.02.06.10.49.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Feb 2022 10:49:16 -0800 (PST)
-Date:   Sun, 6 Feb 2022 10:49:15 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        Sun, 6 Feb 2022 15:40:25 -0500
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25C9DC06173B;
+        Sun,  6 Feb 2022 12:40:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=APvwVB5sJ+LJehHRNtv8FonVED1MX6GFXOyxpmO5zOU=; b=RceeUVHbGMz1Xh8JwkCZIzCOmj
+        jG90mV/LUL6woArPGmcuuZd+7mT2CZL+DqZ9pJ8OLztRl9iom7owr14n7IME/YEhj4nSdKMJhfwAc
+        Sh2/6FJDcOF6zjkKgVxLxIuMIu5pj+Z6+zkXEuEKz3oFi81GdstPitKm//UG+TKmwUpbgpha2D0Vk
+        vYcPMjvKlH5CawzKvnbAJy+sPCu51cHFLCRB1WLvo8ZUswq8a38oRM0sFQWCI3uM0ahg1dg5T3wS0
+        2SEL3oqPDNA8q+AU2hUIIcMaq4ucZgEKyjZPcqPmrwlN4SMfCbWaAYv2oBdIkNnDZrgPqKiChI1uK
+        60c763NQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nGoKW-007Xbu-D0; Sun, 06 Feb 2022 20:40:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6D420300470;
+        Sun,  6 Feb 2022 21:40:15 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5505E21378EDF; Sun,  6 Feb 2022 21:40:15 +0100 (CET)
+Date:   Sun, 6 Feb 2022 21:40:15 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
 Cc:     Alexander Popov <alex.popov@linux.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/3] gcc-plugins/stackleak: Exactly match strings instead
- of prefixes
-Message-ID: <202202061046.040D6A0A0@keescook>
-References: <20220206174508.2425076-1-keescook@chromium.org>
- <20220206174508.2425076-3-keescook@chromium.org>
- <CAHk-=wg5oaiJty+pCLd7aS3c-86=JDvF_vuaUvyq+Yo6+cKhyg@mail.gmail.com>
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] gcc-plugins/stackleak: Use noinstr in favor of notrace
+Message-ID: <YgAyL2D25nweODX3@hirez.programming.kicks-ass.net>
+References: <20220202001918.4104428-1-keescook@chromium.org>
+ <20220206115816.GA23216@worktop.programming.kicks-ass.net>
+ <202202060819.3C86C47DCA@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wg5oaiJty+pCLd7aS3c-86=JDvF_vuaUvyq+Yo6+cKhyg@mail.gmail.com>
+In-Reply-To: <202202060819.3C86C47DCA@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Feb 06, 2022 at 10:34:11AM -0800, Linus Torvalds wrote:
-> On Sun, Feb 6, 2022 at 9:45 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > +       return !strncmp(TREE_STRING_POINTER(node), string, length);
+On Sun, Feb 06, 2022 at 08:46:47AM -0800, Kees Cook wrote:
+> On Sun, Feb 06, 2022 at 12:58:16PM +0100, Peter Zijlstra wrote:
+> > On Tue, Feb 01, 2022 at 04:19:18PM -0800, Kees Cook wrote:
+> > > Is it correct to exclude .noinstr.text here? That means any functions called in
+> > > there will have their stack utilization untracked. This doesn't seem right to me,
+> > > though. Shouldn't stackleak_track_stack() just be marked noinstr instead?
+> > 
+> > This patch is right. stackleak_track_stack() cannot be marked noinstr
+> > becaues it accesses things that might not be there.
 > 
-> Why is this "strncmp()"? That makes no sense when you've just checked
-> the exact lengths of both sides.
+> Hmm, as in "current()" may not be available/sane?
+
+Exactly the case; if we lift the PTI address space swizzle, we start
+with C without having the kernel mapped or even the per-cpu segment
+offset set. So things like current will explode.
+
+The whole noinstr thing was invented to get back to C as portable
+Assembler, with the express purpose to lift a bunch of entry code to C.
+
+> > Consider what happens if we pull the PTI page-table swap into the
+> > noinstr C part.
 > 
-> You're not comparing strings any more, you've already checked the end
-> of the string - you are comparing memory contents.
+> Yeah, I see your point. I suspect the reason this all currently works
+> is because stackleak is supposed to only instrument leaf functions that
+> have sufficiently large (default 100 bytes) stack usage.
 > 
-> So make it just do a "memcmp()".
+> What sorts of things may end up in .noinstr.text that are 100+ byte stack
+> leaf functions that would be end up deeper in the call stack? (i.e. what
+> could get missed from stack depth tracking?) Interrupt handling comes
+> to mind, but I'd expect that to make further calls (i.e. not a leaf).
 
-Yeah, good point. I'll change this for v2, pending more feedback.
+All the syscall/exception/interrupt entry stuff is noinstr; I don't
+think we have huge stackframes, but with all that in C that's much
+easier to do than with then in asm.
 
-> > +#define STRING_EQUAL(node, str)        string_equal(node, str, strlen(str))
-> 
-> .. and please change this name too, since it's not comparing two
-> strings. The first argument is something else entirely.
-> 
-> It's checking the node value of a section, give it some name related to that.
+If you worry about this, it should be possible to have objtool warn
+about excessive stack frames for noinstr code I suppose, it already
+tracks the stack anyway.
 
-Technically, yes. The naming bikeshed here is odd since it's called
-"STRING" by gcc internals, and it *might* be a "C string", etc etc. I'll
-rename it...
-
-> I do also get the feeling that the nodes should actually be checked to
-> be a STRING_CST rather than these blind TREE_VALUE() following things,
-> but I don't really know the rules for gcc plugin internals very well -
-> or at all, really.
-
-I'll double-check this, but if it's not a STRING_CST something else has
-gone very wrong already. But I'm a fan of robustness, so sure. :)
-
--Kees
-
--- 
-Kees Cook
