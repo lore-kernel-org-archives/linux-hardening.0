@@ -2,153 +2,124 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F34FFC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Feb 2022 06:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B136C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Feb 2022 22:24:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346941AbiBHGMg (ORCPT
+        id S239759AbiBHWYg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Feb 2022 01:12:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57068 "EHLO
+        Tue, 8 Feb 2022 17:24:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346772AbiBHGMf (ORCPT
+        with ESMTP id S1386330AbiBHUJX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Feb 2022 01:12:35 -0500
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60E33C0401F2
-        for <linux-hardening@vger.kernel.org>; Mon,  7 Feb 2022 22:12:34 -0800 (PST)
-Received: by mail-pf1-x436.google.com with SMTP id v74so17142535pfc.1
-        for <linux-hardening@vger.kernel.org>; Mon, 07 Feb 2022 22:12:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yWSVf8pbp0RLvS5feKysE3VKtu9J4rvhM+KTpk9qrQU=;
-        b=RWsRxyFyvyBYavICh4sWDRq4hFtsEElxduscRcl85/r8UOE0dw2Nlb0AOk5bEGU3lg
-         DkZflRcmok1YGuVYCzYE45ulO5ZJ698Fb7Gjl8BGpz6voNJ8n+PG8SLaUKoo24urmeC9
-         2rz+93DgZMa0q+9w1e6CvVgGAFHFYrTTnYkSg=
+        Tue, 8 Feb 2022 15:09:23 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 667F3C0612C0
+        for <linux-hardening@vger.kernel.org>; Tue,  8 Feb 2022 12:09:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1644350962;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=I3/8UwtTiLaHjDIsw5ToTGGU9VaJhcJtecxqfQCO+Kg=;
+        b=T9LIjWSY8erc6swS5RMD3ac4dSW9AURKcftZzyOXsyqGJmKjzzPqkh90HhjVcM7hENPOZA
+        o7U+e5K8KuV5/7OvHPXE6OfoIiUgeNG+gKJ4MXyzAOZfsgndgERkUxBXZZ2BZLb3jMm2JR
+        rDsULcP42tEt8g/breLSYGzSF5tWTAI=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-85-oKUkQaniOh-nlozL2ejzCw-1; Tue, 08 Feb 2022 15:09:17 -0500
+X-MC-Unique: oKUkQaniOh-nlozL2ejzCw-1
+Received: by mail-qk1-f199.google.com with SMTP id b204-20020a3767d5000000b004b2a0d2e930so11754304qkc.15
+        for <linux-hardening@vger.kernel.org>; Tue, 08 Feb 2022 12:09:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
          :content-transfer-encoding;
-        bh=yWSVf8pbp0RLvS5feKysE3VKtu9J4rvhM+KTpk9qrQU=;
-        b=ldAd76JEFNBY6nOaznJwyAhzvtPMiAOxr06eurX1SGgaPvn/aNFKTLNOc/+sTAGhGM
-         Eq4bxUD2AzFicNbpjTlheN8iTEK6BVgTDQ0B6R+B5+FAEBWkgnj4llaAk/rX6vjWk217
-         F0T4hV124iwr3jERL2Muwht4I/4H7ZCIz+W0iQS/b9d9Kqe9qm41ByBEiBbdi2GYRDq3
-         K7PqCgxNwDVKI+U699qwhGLqtrzF4NvB2XBMyZTSXmwhjF/Ghdx3UbSoT9w/YmMsEOCE
-         VkZTvVPgv3g0Y00DcvrUtnYCwKJp+sPo2KS7/waW3PC6z57SLYptSrMOJBo9x+Ms6Xhc
-         yZQA==
-X-Gm-Message-State: AOAM532j4BYb4o9GCbAJptPWDS5Lj9V1IhE2OtaAtuKFtvgrSqxZ1+Jz
-        4yq43IZL7iiM4kvUslt1FWspWg==
-X-Google-Smtp-Source: ABdhPJxMZHBfADJf5rumQgSBE2gS1uUgJUBmaG65f5WBVQCEbETLwB32tdutR63nj4k6vRzs4MCykQ==
-X-Received: by 2002:a63:5226:: with SMTP id g38mr2349009pgb.620.1644300753875;
-        Mon, 07 Feb 2022 22:12:33 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a17sm1302594pju.15.2022.02.07.22.12.33
+        bh=I3/8UwtTiLaHjDIsw5ToTGGU9VaJhcJtecxqfQCO+Kg=;
+        b=HSgNsMYUuWk9UqXBg0Zy8FxaSHE/YawbHiJQualLomMDHA67Z7c5gWww+x/oPC0ISl
+         KlWn/wzo/rcHzH5/IIgxDyL8jD7ZYNGsIVREu7EQAaxyPUESgUFZyYXumDOOyna83OCS
+         EtuGEA57WD+TQayFNl+HE5uF2CHRjzYKYmh6LoQx5BEqJy8h9tUkms0B95I2UUAMOnU3
+         Bre4Yj38p5ov+J72zZdlAeUCUUAAG79wJkSS3B5dZXZJO5JRHgYdFstRFF+K+zvl0kyj
+         zBL8lBzmAkzCcK+1jNvaNEjNPPKURlVzbxP2vQYUkpYwPo65JAjPmxObc5P0N3eppfuM
+         zYDg==
+X-Gm-Message-State: AOAM530JlV2TXqlKRE3bdT/kX9fC9xOSF4j3MPX7H65HyRxrv8dTVp00
+        vpGxkix05yYu268AYTx4WPbL5eQGkDHJoCrDBxACWu9bGRmmmFz3YePx5P7x1ewtMwc9He4YtDK
+        zogU6wg6x6nQjVnbHSfqh4P7mL9Xu
+X-Received: by 2002:a05:6214:4111:: with SMTP id kc17mr4417588qvb.61.1644350957410;
+        Tue, 08 Feb 2022 12:09:17 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxsREE/wlVXhB/X8tBjZ+cErEBHMvIYU1EUljfRg7HUFF85vJYIMBgalTBx0/F2MZWG8LFj8g==
+X-Received: by 2002:a05:6214:4111:: with SMTP id kc17mr4417571qvb.61.1644350957203;
+        Tue, 08 Feb 2022 12:09:17 -0800 (PST)
+Received: from [192.168.8.138] (pool-96-230-100-15.bstnma.fios.verizon.net. [96.230.100.15])
+        by smtp.gmail.com with ESMTPSA id p70sm7253061qka.62.2022.02.08.12.09.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Feb 2022 22:12:33 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Michael Cyr <mikecyr@linux.ibm.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        Tue, 08 Feb 2022 12:09:16 -0800 (PST)
+Message-ID: <58cc03e21bdf8665f402c7eb9beed557f19a4be2.camel@redhat.com>
+Subject: Re: [PATCH][next] nouveau/svm: Use struct_size() helper in
+ nouveau_pfns_map()
+From:   Lyude Paul <lyude@redhat.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] scsi: ibmvscsis: Silence -Warray-bounds warning
-Date:   Mon,  7 Feb 2022 22:12:31 -0800
-Message-Id: <20220208061231.3429486-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+Date:   Tue, 08 Feb 2022 15:09:04 -0500
+In-Reply-To: <20220207233923.GA524723@embeddedor>
+References: <20220207233923.GA524723@embeddedor>
+Organization: Red Hat Inc.
+User-Agent: Evolution 3.42.3 (3.42.3-1.fc35)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3327; h=from:subject; bh=/IFLfs1Idemy5ZGqf/yG83q6j/a9J08ZqJuMOeTGsMc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiAgnPuZwn6owIovK4j5/iRsH/3BYZhyUfQIj6fwJ5 88HlxfyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYgIJzwAKCRCJcvTf3G3AJpBFD/ 9fpNqNpzwfTSYBWn11FjpJwFuNAFKT4TKK39GQ0i7wMXrhdsnlmfxGsSVAihkLaBhDuM4U+I6C3IWq SKIf4/3YhmuOY3zpOP5mR89k8A+a75Dxc1ySlhMEDgZp0PqyN/CnAuasvO0RoV5r2PqzOibb5R16Sd 6+ZfpUpagXYYLM9iEfpi9fH6539iQ03hnfedEYcnkW/r4Q6jeyIpjhs6oK4UKrgZj1RxJWDqTTDu63 lu7UBWo4m0OHQocaQxhH63xAhRLM+Zyc6uu3VS08yLprlo8PTEQcZZCa7YZhKhwtrDyfkgyH3K1oKr QPUYVEsKyoGi+UazuVQAp5QNRA9fHRXmyKGAFVNlzRKQkyWrVGAsP8Kd80Z/zMMZTcM5cWYZzBzamw m6AyzSoYBaAmkjyOxOdVurN5YrFJ1Bmrzhl6WEjSduTt41LWAn66BCutY9bJvjKD0lcHZ/mbBxWZam rcTEFdaWxa/pc3Af+dWk50AKGQsr9B5rQcb7+Uz4f7mcor+30QQiBSxfr1/4+dz4VAeA70PRvxP8YR vcdSQSwIQ+xbEeULJ69Zm7S4SNhOtduIy9fUjXneFuBHXyQzN23Nn9rz8vwqKFYm7Kpgnem/l8fOUs 5xUAvVR6eKrYc0rHSMenoo+wfC0fMhbvZ4eIgmi4F9bpcYv4u+YPY6OzYIhA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=lyude@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Instead of doing a cast to storage that is too small, add a union for
-the high 64 bits. Silences the warnings under -Warray-bounds:
+Reviewed-by: Lyude Paul <lyude@redhat.com>
 
-drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c: In function 'ibmvscsis_send_messages':
-drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:1934:44: error: array subscript 'struct viosrp_crq[0]' is partly outside array bounds of 'u64[1]' {aka 'long long unsigned int[1]'} [-Werror=array-bounds]
- 1934 |                                         crq->valid = VALID_CMD_RESP_EL;
-      |                                            ^~
-drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:1875:13: note: while referencing 'msg_hi'
- 1875 |         u64 msg_hi = 0;
-      |             ^~~~~~
+Will push this to drm-misc-next, thanks!
 
-There is no change to the resulting binary instructions.
+On Mon, 2022-02-07 at 17:39 -0600, Gustavo A. R. Silva wrote:
+> Make use of the struct_size() helper instead of an open-coded version,
+> in order to avoid any potential type mistakes or integer overflows that,
+> in the worse scenario, could lead to heap overflows.
+> 
+> Link: https://github.com/KSPP/linux/issues/160
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/gpu/drm/nouveau/nouveau_svm.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c
+> b/drivers/gpu/drm/nouveau/nouveau_svm.c
+> index 266809e511e2..46a5a1016e37 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_svm.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+> @@ -925,8 +925,8 @@ nouveau_pfns_map(struct nouveau_svmm *svmm, struct
+> mm_struct *mm,
+>  
+>         mutex_lock(&svmm->mutex);
+>  
+> -       ret = nvif_object_ioctl(&svmm->vmm->vmm.object, args, sizeof(*args)
+> +
+> -                               npages * sizeof(args->p.phys[0]), NULL);
+> +       ret = nvif_object_ioctl(&svmm->vmm->vmm.object, args,
+> +                               struct_size(args, p.phys, npages), NULL);
+>  
+>         mutex_unlock(&svmm->mutex);
+>  }
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Link: https://lore.kernel.org/lkml/20220125142430.75c3160e@canb.auug.org.au
-Cc: Michael Cyr <mikecyr@linux.ibm.com>
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Tyrel Datwyler <tyreld@linux.ibm.com>
-Cc: linux-scsi@vger.kernel.org
-Cc: target-devel@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c |  9 +++------
- include/scsi/viosrp.h                    | 17 +++++++++++------
- 2 files changed, 14 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-index 61f06f6885a5..80238e6a3c98 100644
---- a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-+++ b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-@@ -1872,11 +1872,8 @@ static void srp_snd_msg_failed(struct scsi_info *vscsi, long rc)
-  */
- static void ibmvscsis_send_messages(struct scsi_info *vscsi)
- {
--	u64 msg_hi = 0;
--	/* note do not attempt to access the IU_data_ptr with this pointer
--	 * it is not valid
--	 */
--	struct viosrp_crq *crq = (struct viosrp_crq *)&msg_hi;
-+	struct viosrp_crq empty_crq = { };
-+	struct viosrp_crq *crq = &empty_crq;
- 	struct ibmvscsis_cmd *cmd, *nxt;
- 	long rc = ADAPT_SUCCESS;
- 	bool retry = false;
-@@ -1940,7 +1937,7 @@ static void ibmvscsis_send_messages(struct scsi_info *vscsi)
- 					crq->IU_length = cpu_to_be16(cmd->rsp.len);
- 
- 					rc = h_send_crq(vscsi->dma_dev->unit_address,
--							be64_to_cpu(msg_hi),
-+							be64_to_cpu(crq->high),
- 							be64_to_cpu(cmd->rsp.tag));
- 
- 					dev_dbg(&vscsi->dev, "send_messages: cmd %p, tag 0x%llx, rc %ld\n",
-diff --git a/include/scsi/viosrp.h b/include/scsi/viosrp.h
-index c978133c83e3..6c5559d2b285 100644
---- a/include/scsi/viosrp.h
-+++ b/include/scsi/viosrp.h
-@@ -70,12 +70,17 @@ enum viosrp_crq_status {
- };
- 
- struct viosrp_crq {
--	u8 valid;		/* used by RPA */
--	u8 format;		/* SCSI vs out-of-band */
--	u8 reserved;
--	u8 status;		/* non-scsi failure? (e.g. DMA failure) */
--	__be16 timeout;		/* in seconds */
--	__be16 IU_length;		/* in bytes */
-+	union {
-+		__be64 high;			/* High 64 bits */
-+		struct {
-+			u8 valid;		/* used by RPA */
-+			u8 format;		/* SCSI vs out-of-band */
-+			u8 reserved;
-+			u8 status;		/* non-scsi failure? (e.g. DMA failure) */
-+			__be16 timeout;		/* in seconds */
-+			__be16 IU_length;	/* in bytes */
-+		};
-+	};
- 	__be64 IU_data_ptr;	/* the TCE for transferring data */
- };
- 
 -- 
-2.30.2
+Cheers,
+ Lyude Paul (she/her)
+ Software Engineer at Red Hat
 
