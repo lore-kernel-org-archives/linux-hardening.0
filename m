@@ -2,159 +2,153 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3A1C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Feb 2022 04:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F34FFC433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Feb 2022 06:12:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346847AbiBHERE (ORCPT
+        id S1346941AbiBHGMg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 7 Feb 2022 23:17:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46168 "EHLO
+        Tue, 8 Feb 2022 01:12:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346853AbiBHERD (ORCPT
+        with ESMTP id S1346772AbiBHGMf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 7 Feb 2022 23:17:03 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC6DEC0401E9;
-        Mon,  7 Feb 2022 20:17:02 -0800 (PST)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 2181rYDe020210;
-        Tue, 8 Feb 2022 04:17:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : content-type :
- mime-version; s=corp-2021-07-09;
- bh=263ZpCfIeeurZhrrhXJbdcBitC0YZGumRtrrZIWyo2c=;
- b=sg6dQS2VpcfNExi4veZprv5i2xF5wGtDfeodjw5dhAkMJveWJHN4FO+afdqKKKK8zYec
- bu3Xw4xWSEZOMQ4MSX6FT+R4FJ7+yXYLD/BU2xoO2uQINhqHG65P0OSL855Ojd1gXylO
- zKaHuNIcVRASpf/Tb3gWlqQE3qbmnlMD0xgKN5kO7NS3XoSGgEa0r6fzq/qDbnvZVkl+
- zWYIcZyloSj465XJEeTrk30PIl2KPGwaA/NEwi39WnuHoRs5MKLEVb89xw+19jczWDdY
- lR1CLca6nTsBHBnRsn84eNc8Nl7t2juLn1oYGElXu8ucRNiUSmwG1EGU/darJgrbE0Ol og== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3e366wshy6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Feb 2022 04:17:00 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 2184GwYO178996;
-        Tue, 8 Feb 2022 04:16:59 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
-        by userp3020.oracle.com with ESMTP id 3e1jpprq45-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Feb 2022 04:16:59 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AA/jtSUpu5ZIiKs2a6XswgKMZzaul2d6cHE5uB5H9M/jQfxhwsmGjMPpFABYqCyCUc84dipPCmDnWeGPs3zqVsd0I5+iTBEbvLn5MMSxp1b0H19PM0tS0G1aMQk5LHmT5E4BzaqFgP6LROi3vX+wliLTkMfUK+BHJY3rxnZiiR1qUhh/WIkDBAJsvwOVuXPbsqQRGMDvhVwTsTG7WD0TC/gx3yMX0i+vkLrgDhuqLupa9T0lVP2DemOzz16t2yCSNxbw6d4MNGHPyqr7M8I4g/JY/q6wQIXp4MITWPd7TBn06jGWZLY64PTKFZKHi7vlihMdf0LDULD88nxRYeU0Mg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=263ZpCfIeeurZhrrhXJbdcBitC0YZGumRtrrZIWyo2c=;
- b=az7uzqQFbnvbT2tNu0uLoiq9hYxASNQnuMh0c8dts8l7Rscfo9ajyYj9sGUZKoFPsV8nYQ+1h0lC0Mehep/H92yP1gOIeYwLVJeQVuy3+8yIJzRNQWTRmZPAhfc7Xr8gjq35ZeZptNkwS44EbDi6jAqazwMfbuZK0e2DeQ4qycn5MqQYVJzEXqOFNUURfCHbyOvr2E8MA0L4KX61jiT89viJ98GvaloG6r8HeM9BPtsPJPefEMQU9Zdk/Csjs76r2U86ooQceDV14GbzitYUUqMj2uxtX+zArJduIKy+ugrvUdDa150xy3lCwmAI3wy1wSQSjGFXC9bpVBzJkBPgTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
+        Tue, 8 Feb 2022 01:12:35 -0500
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60E33C0401F2
+        for <linux-hardening@vger.kernel.org>; Mon,  7 Feb 2022 22:12:34 -0800 (PST)
+Received: by mail-pf1-x436.google.com with SMTP id v74so17142535pfc.1
+        for <linux-hardening@vger.kernel.org>; Mon, 07 Feb 2022 22:12:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=263ZpCfIeeurZhrrhXJbdcBitC0YZGumRtrrZIWyo2c=;
- b=Pa+ssmsJv772piz9SMSIXyq5dh6FcRbtwD9/01oWvjjggR4wFAY/Th6e6j8N2nhlldHnZn2/djR0UmpEPU6lV6Pf26gWTMXPPwMPmjiXv2jPkXR+TUuHK1guQbaa41YPAulyvuPDmiKRpeIRJCnz3kk26qR0Tgt10cghKZluNg0=
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
- by DM6PR10MB4299.namprd10.prod.outlook.com (2603:10b6:5:216::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.16; Tue, 8 Feb
- 2022 04:16:51 +0000
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::2d45:d1bd:ebb9:48d1]) by PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::2d45:d1bd:ebb9:48d1%4]) with mapi id 15.20.4951.019; Tue, 8 Feb 2022
- 04:16:51 +0000
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Sathya Prakash <sathya.prakash@broadcom.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yWSVf8pbp0RLvS5feKysE3VKtu9J4rvhM+KTpk9qrQU=;
+        b=RWsRxyFyvyBYavICh4sWDRq4hFtsEElxduscRcl85/r8UOE0dw2Nlb0AOk5bEGU3lg
+         DkZflRcmok1YGuVYCzYE45ulO5ZJ698Fb7Gjl8BGpz6voNJ8n+PG8SLaUKoo24urmeC9
+         2rz+93DgZMa0q+9w1e6CvVgGAFHFYrTTnYkSg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yWSVf8pbp0RLvS5feKysE3VKtu9J4rvhM+KTpk9qrQU=;
+        b=ldAd76JEFNBY6nOaznJwyAhzvtPMiAOxr06eurX1SGgaPvn/aNFKTLNOc/+sTAGhGM
+         Eq4bxUD2AzFicNbpjTlheN8iTEK6BVgTDQ0B6R+B5+FAEBWkgnj4llaAk/rX6vjWk217
+         F0T4hV124iwr3jERL2Muwht4I/4H7ZCIz+W0iQS/b9d9Kqe9qm41ByBEiBbdi2GYRDq3
+         K7PqCgxNwDVKI+U699qwhGLqtrzF4NvB2XBMyZTSXmwhjF/Ghdx3UbSoT9w/YmMsEOCE
+         VkZTvVPgv3g0Y00DcvrUtnYCwKJp+sPo2KS7/waW3PC6z57SLYptSrMOJBo9x+Ms6Xhc
+         yZQA==
+X-Gm-Message-State: AOAM532j4BYb4o9GCbAJptPWDS5Lj9V1IhE2OtaAtuKFtvgrSqxZ1+Jz
+        4yq43IZL7iiM4kvUslt1FWspWg==
+X-Google-Smtp-Source: ABdhPJxMZHBfADJf5rumQgSBE2gS1uUgJUBmaG65f5WBVQCEbETLwB32tdutR63nj4k6vRzs4MCykQ==
+X-Received: by 2002:a63:5226:: with SMTP id g38mr2349009pgb.620.1644300753875;
+        Mon, 07 Feb 2022 22:12:33 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a17sm1302594pju.15.2022.02.07.22.12.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Feb 2022 22:12:33 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Michael Cyr <mikecyr@linux.ibm.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
-        linux-scsi@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: mpt3sas: Convert to flexible arrays
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1wni6vvq0.fsf@ca-mkp.ca.oracle.com>
-References: <20220201223948.1455637-1-keescook@chromium.org>
-Date:   Mon, 07 Feb 2022 23:16:49 -0500
-In-Reply-To: <20220201223948.1455637-1-keescook@chromium.org> (Kees Cook's
-        message of "Tue, 1 Feb 2022 14:39:48 -0800")
-Content-Type: text/plain
-X-ClientProxiedBy: SN4PR0701CA0042.namprd07.prod.outlook.com
- (2603:10b6:803:2d::16) To PH0PR10MB4759.namprd10.prod.outlook.com
- (2603:10b6:510:3d::12)
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] scsi: ibmvscsis: Silence -Warray-bounds warning
+Date:   Mon,  7 Feb 2022 22:12:31 -0800
+Message-Id: <20220208061231.3429486-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f5e11329-0dae-40a1-3ef8-08d9eab9d4ef
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4299:EE_
-X-Microsoft-Antispam-PRVS: <DM6PR10MB4299E81FC4A8B6DD263C4CAD8E2D9@DM6PR10MB4299.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MnSaJ2WN9nMOUL0qoGhlufMr4AWn+hHVgaNNiWwM2pY6Kb5V+qEF+1rC3/f9iPnMHyMLzWoJuWnyuV6W9+8iwIeHVoUlFNTjB+c1RM1XkGSiAgpm6ynBUXtVCcKy0THSPGvTvw7plrAQFT1Ka3ZzPFqfCvRTvbSY0d703RJOCiU50514q19Wttv0L/8ogMWD3cWsd3RNGIKs1hAPPPLQwylGObFqS0KIGRLl4wVIxpCA4uFJOEIwwSs87ci6jxUyomn7WNY6Su43ha7s8n1hnq+KgFOO5AXWC5e+8Q/gEiVS/DVshpr/XAjRB02nk79gGvoMz1cH2fJwCYkkOD4GABlYGUvqxcsbAoR1td1lJG1QL21vF8qabMX8Ge6VtAI1qI4DsaCTnphi1p4Q0mwTFyvItTGarfEOhXW2nQVC1eYuIziJDl4pKcvHZLqL2fDykR3E42f7fw/6/bppU7m+s3gPVlDxOEzAqWl5J2D+UL1IMEDXKnRNUoqXEXPKTKoFMARofWQAyrivY91oSJMTt67dziwDUPFBqOOkXD/PHvwvgFp/Ny/whkj6nGbQmmnDfoFUNwOOOEosvezcfZ8yMDTwqhTDjStfQ1D0SQgFnuXNqzzUbJ3yvEZUv/vsrE3uqp2li1oykzwdZbWk/XoPgNJZyS2wJSzrzjqaDptATHrRLtb5zGG5Qmn8SJRzkAAm6Hbp0lWL38cmBU62d4xKqPhE4YGTR6ZMNYJedBpiecY=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(54906003)(6916009)(8936002)(4744005)(66946007)(66476007)(66556008)(8676002)(4326008)(38100700002)(5660300002)(6486002)(186003)(26005)(508600001)(2906002)(38350700002)(86362001)(6506007)(36916002)(316002)(6512007)(52116002)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?YSzKYIMKgY8vCC0WgPWUbvzegVjN/gWSKeVZ89nASkpARTXBNQVLTX2AZ5e+?=
- =?us-ascii?Q?Zf7UOVGEiOaEDojHuJSYFVmg0707/5Uwylbe5QqWFq0TQAT+AR+7RxYv6rUp?=
- =?us-ascii?Q?bZWphcjsgMsSLE5r1JClPctr48UNJw4wWHYIuwOARfrc0+34puKq41NO77FF?=
- =?us-ascii?Q?o7ZzQSqXlMQSBEgbpEALPR/qAB3bwH4kiNeqoNj8Qu74hZaXkl9k9r/bSzh1?=
- =?us-ascii?Q?CSa+IoDOpSbQBdx9916t6t6I0lRR9u4lBDG+r9QimrQ3a2nHye/BDfML7raY?=
- =?us-ascii?Q?0ROpZ4A+WfoIzYNTgUyNGba/QpEcrA82sDZ9sSPbGkATkEE/gK1yu6kZkYlM?=
- =?us-ascii?Q?G6BoverqO/tGGltXu/MDzWeKyi7r4KcSuW661BIexpL0rO29e5YLZCWG79hp?=
- =?us-ascii?Q?YSPoGPgLzP6gB/3U30lLtUUzycIYetDsMCD+dlD81SPa26NXXaOfMAgCf2h+?=
- =?us-ascii?Q?zkCZVdBfbAwyljtDkryAj36R74p7VwMcsh5b7JNUGTtJxW4Rh3J9vFR2CyyI?=
- =?us-ascii?Q?C0LzSMx5b2SMJkbNh645m0NHuyqwqaLvKfYcpuOAM/xRHCnSkImB35HvXz+l?=
- =?us-ascii?Q?ff0SfnbKRJSHgzOhAUN7S/DbDVv26DWD35Kg+uQZVj3R4dmq1hbzhi7LO/Ye?=
- =?us-ascii?Q?cjT29ufarycoX/l+1knbHf6fUdTdz011AD4WGRiec3fLqY6g+RWf/D2QN2MP?=
- =?us-ascii?Q?6LrbCK9hF+RNWRRIxgLrlLfnSWc5sEImqHFGc+Wm0tf3KIniAHBEPMGOQ9J1?=
- =?us-ascii?Q?SWzJQgqaGqVuiIKV+wam73hy1XKehSyT5CsOSt9h3++3X0bmf2Yu67TPw1rZ?=
- =?us-ascii?Q?Ajfa1qYx4GpwhyDsnMfrzM76sGPD8fMX221UrEpuElLRoKJ/T2Dw4L5ElrG6?=
- =?us-ascii?Q?8JmqQpyJGrxOcndkknxuD7OCFoGH9K1h218gds6Nj0DUMtaAwySCG/RYlOlJ?=
- =?us-ascii?Q?FpZy16XsHe7hPFtTZWjv7XRPu/EsuafY2AHjnZYSJxByGXNQBDTNAriG72M8?=
- =?us-ascii?Q?BK70a2BdMVVyny/lcCiAFetfQxeA9YpD9sBGtL0m8B71IaQSHbp8Js6qrceq?=
- =?us-ascii?Q?pVInSm4QpyeOargbLu28vNx4aiC4nO93uq72/mGs1Dw4iC/ckR257cX7S7KI?=
- =?us-ascii?Q?mtH2ba53Gb+XxYxfBxoowgcIoVDl5HhY7Z1FlbN4jg2lCLVZ1KnTeAle7/Zj?=
- =?us-ascii?Q?wChoJsAhgETsgv3Xd/fJacG+wcFiPEXqo3Z3dCVuBfjkathYN3FOYYqyNz1p?=
- =?us-ascii?Q?6Mw2ST+IMc7cg40CnCArOR991AlsA5Xp6PJD3LkOaLoMt2okE3L4919BuNmQ?=
- =?us-ascii?Q?5LUtdi0zRPJmDiuA/lJPf89WFffQpIzf+ywm2kCXCHqwvQg3I40L2FxlFxOu?=
- =?us-ascii?Q?qwE+1Ze5alH+RUKV97UFGOdhg+2OJ0EnBdgw+mE0hHAwETqdlqr5R54dt/b0?=
- =?us-ascii?Q?+TYs4lMLU6S65b1W69RKMPIhb9Qll+jtVSrMUtSM2nIoMwPyW5UIdJpBgVO0?=
- =?us-ascii?Q?CT9cvDAPHe/yfBElRgwxIWrrRHBdIzFm/nkSeYmrjjxRADjzALEBOid4JYVU?=
- =?us-ascii?Q?V+AFhqMXQ2fbJRNea4ieh7U0KgkObCyhFBT0aJIyaBZs46AJJvG4eOEtJbQw?=
- =?us-ascii?Q?V0O1o/aidM0FucM1psMLsWGXyebxHmAqxSVeaPuBtw8mr2NGZEMG1uXLmuld?=
- =?us-ascii?Q?DIHnww=3D=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5e11329-0dae-40a1-3ef8-08d9eab9d4ef
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2022 04:16:51.2871
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +KT55vsF883dm8KDzt5ckPWBciEW8vzcCiuiHajWVL2R8SWIFAy5fSRFdDtKEJUIbXPn/dU35zSJmcSDGnCwso0+bqR7gC/rKDe0nvSQ9uU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB4299
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10251 signatures=673430
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=887 mlxscore=0 bulkscore=0
- malwarescore=0 suspectscore=0 phishscore=0 adultscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2201110000
- definitions=main-2202080022
-X-Proofpoint-GUID: o6nrHbB2xsgtz0rW7HfpES06nWGmkTzo
-X-Proofpoint-ORIG-GUID: o6nrHbB2xsgtz0rW7HfpES06nWGmkTzo
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3327; h=from:subject; bh=/IFLfs1Idemy5ZGqf/yG83q6j/a9J08ZqJuMOeTGsMc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiAgnPuZwn6owIovK4j5/iRsH/3BYZhyUfQIj6fwJ5 88HlxfyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYgIJzwAKCRCJcvTf3G3AJpBFD/ 9fpNqNpzwfTSYBWn11FjpJwFuNAFKT4TKK39GQ0i7wMXrhdsnlmfxGsSVAihkLaBhDuM4U+I6C3IWq SKIf4/3YhmuOY3zpOP5mR89k8A+a75Dxc1ySlhMEDgZp0PqyN/CnAuasvO0RoV5r2PqzOibb5R16Sd 6+ZfpUpagXYYLM9iEfpi9fH6539iQ03hnfedEYcnkW/r4Q6jeyIpjhs6oK4UKrgZj1RxJWDqTTDu63 lu7UBWo4m0OHQocaQxhH63xAhRLM+Zyc6uu3VS08yLprlo8PTEQcZZCa7YZhKhwtrDyfkgyH3K1oKr QPUYVEsKyoGi+UazuVQAp5QNRA9fHRXmyKGAFVNlzRKQkyWrVGAsP8Kd80Z/zMMZTcM5cWYZzBzamw m6AyzSoYBaAmkjyOxOdVurN5YrFJ1Bmrzhl6WEjSduTt41LWAn66BCutY9bJvjKD0lcHZ/mbBxWZam rcTEFdaWxa/pc3Af+dWk50AKGQsr9B5rQcb7+Uz4f7mcor+30QQiBSxfr1/4+dz4VAeA70PRvxP8YR vcdSQSwIQ+xbEeULJ69Zm7S4SNhOtduIy9fUjXneFuBHXyQzN23Nn9rz8vwqKFYm7Kpgnem/l8fOUs 5xUAvVR6eKrYc0rHSMenoo+wfC0fMhbvZ4eIgmi4F9bpcYv4u+YPY6OzYIhA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Instead of doing a cast to storage that is too small, add a union for
+the high 64 bits. Silences the warnings under -Warray-bounds:
 
-Kees,
+drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c: In function 'ibmvscsis_send_messages':
+drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:1934:44: error: array subscript 'struct viosrp_crq[0]' is partly outside array bounds of 'u64[1]' {aka 'long long unsigned int[1]'} [-Werror=array-bounds]
+ 1934 |                                         crq->valid = VALID_CMD_RESP_EL;
+      |                                            ^~
+drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:1875:13: note: while referencing 'msg_hi'
+ 1875 |         u64 msg_hi = 0;
+      |             ^~~~~~
 
-> This converts to a flexible array instead of the old-style 1-element
-> arrays. The existing code already did the correct math for finding the
-> size of the resulting flexible array structure, so there is no binary
-> difference.
+There is no change to the resulting binary instructions.
 
-Applied to 5.18/scsi-staging, thanks!
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Link: https://lore.kernel.org/lkml/20220125142430.75c3160e@canb.auug.org.au
+Cc: Michael Cyr <mikecyr@linux.ibm.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Tyrel Datwyler <tyreld@linux.ibm.com>
+Cc: linux-scsi@vger.kernel.org
+Cc: target-devel@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c |  9 +++------
+ include/scsi/viosrp.h                    | 17 +++++++++++------
+ 2 files changed, 14 insertions(+), 12 deletions(-)
 
+diff --git a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
+index 61f06f6885a5..80238e6a3c98 100644
+--- a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
++++ b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
+@@ -1872,11 +1872,8 @@ static void srp_snd_msg_failed(struct scsi_info *vscsi, long rc)
+  */
+ static void ibmvscsis_send_messages(struct scsi_info *vscsi)
+ {
+-	u64 msg_hi = 0;
+-	/* note do not attempt to access the IU_data_ptr with this pointer
+-	 * it is not valid
+-	 */
+-	struct viosrp_crq *crq = (struct viosrp_crq *)&msg_hi;
++	struct viosrp_crq empty_crq = { };
++	struct viosrp_crq *crq = &empty_crq;
+ 	struct ibmvscsis_cmd *cmd, *nxt;
+ 	long rc = ADAPT_SUCCESS;
+ 	bool retry = false;
+@@ -1940,7 +1937,7 @@ static void ibmvscsis_send_messages(struct scsi_info *vscsi)
+ 					crq->IU_length = cpu_to_be16(cmd->rsp.len);
+ 
+ 					rc = h_send_crq(vscsi->dma_dev->unit_address,
+-							be64_to_cpu(msg_hi),
++							be64_to_cpu(crq->high),
+ 							be64_to_cpu(cmd->rsp.tag));
+ 
+ 					dev_dbg(&vscsi->dev, "send_messages: cmd %p, tag 0x%llx, rc %ld\n",
+diff --git a/include/scsi/viosrp.h b/include/scsi/viosrp.h
+index c978133c83e3..6c5559d2b285 100644
+--- a/include/scsi/viosrp.h
++++ b/include/scsi/viosrp.h
+@@ -70,12 +70,17 @@ enum viosrp_crq_status {
+ };
+ 
+ struct viosrp_crq {
+-	u8 valid;		/* used by RPA */
+-	u8 format;		/* SCSI vs out-of-band */
+-	u8 reserved;
+-	u8 status;		/* non-scsi failure? (e.g. DMA failure) */
+-	__be16 timeout;		/* in seconds */
+-	__be16 IU_length;		/* in bytes */
++	union {
++		__be64 high;			/* High 64 bits */
++		struct {
++			u8 valid;		/* used by RPA */
++			u8 format;		/* SCSI vs out-of-band */
++			u8 reserved;
++			u8 status;		/* non-scsi failure? (e.g. DMA failure) */
++			__be16 timeout;		/* in seconds */
++			__be16 IU_length;	/* in bytes */
++		};
++	};
+ 	__be64 IU_data_ptr;	/* the TCE for transferring data */
+ };
+ 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.30.2
+
