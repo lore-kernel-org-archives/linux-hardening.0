@@ -2,46 +2,46 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60360C43217
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Feb 2022 19:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D0EC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Feb 2022 19:02:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241629AbiBITCF (ORCPT
+        id S234939AbiBITCH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Feb 2022 14:02:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34206 "EHLO
+        Wed, 9 Feb 2022 14:02:07 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:38032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241915AbiBITAl (ORCPT
+        with ESMTP id S241953AbiBITAn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Feb 2022 14:00:41 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61E9EC05CBBB;
-        Wed,  9 Feb 2022 10:59:30 -0800 (PST)
+        Wed, 9 Feb 2022 14:00:43 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FAEAC03E92B;
+        Wed,  9 Feb 2022 11:00:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644433170; x=1675969170;
+  t=1644433219; x=1675969219;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=R+jBO/npeGvXg7XDYxgpHbHrFNhYQT3ckL7ow46HPUI=;
-  b=dZSxB9GPood0yX0Ynj0VnmHSjCTmXfM2KqDrd+3twKsIGDM7I32rG6M0
-   BaXVmgLQqha0RHljP7Oc8wknr4SVvf42n6Q8Q6Px76OHQEVuU5araNeRg
-   yHlpUAxXC+7S+oW5+FzjOa2TxVhLquhutju4fuzH9v2za6136IXt+1fy/
-   4z5b6vDWSIZ5xEQkoHJq0i5ZFbYrIoG9FnnUWf7sayPNXPBQFKL1Z5UI9
-   HIdKqu6llFbymnq0BNqIkPIUsMAilrSrYovRthcO0Ml7OwudzGyW/v+pK
-   mIo/N7Xpy1ehIRAR69YyzCImnRoCbZn5SEvV5moR9HqIlaptYdXgnWG2f
+  bh=Yg+C8F7oXSf3fHkZtcL9h1OHdH9KdRrch9oP4ovQrw4=;
+  b=XNaeLeE+ioMo+5afgu+d4ex7beBD1Gr1Xfo1B2Jdz1gWM6oaITRmHK13
+   yE/aEmkaOClB9GC+nYKkxqGSmvnwaUXpRhASE8bu5Ay92/VvXjt1rVWpJ
+   9IbX6cxMpaaaucZSzqpiqP4XsTrxImbogTDOmN2rTJP21f5pqnhRvcO6l
+   0ccJvDr9joYmyY1apAU/QBWwUsFjcXq9tgPZyoBOc52gkEKDw/LY2GyoE
+   Kg0DyTQiSxMOWyq6BFdrOUNcca57hSdxQwBorRAPzw3T0BLcUH+voYy/l
+   ytbV010PzL/8JoI1c4eGlmgsEneqCRMKCYG1J+DijhOJ9lxiuDRbn8UzJ
    A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10253"; a="248140554"
+X-IronPort-AV: E=McAfee;i="6200,9189,10253"; a="273850090"
 X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
-   d="scan'208";a="248140554"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 10:59:21 -0800
+   d="scan'208";a="273850090"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 10:59:09 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
-   d="scan'208";a="629389938"
+   d="scan'208";a="585681729"
 Received: from irvmail001.ir.intel.com ([10.43.11.63])
-  by fmsmga002.fm.intel.com with ESMTP; 09 Feb 2022 10:59:13 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 09 Feb 2022 10:59:01 -0800
 Received: from newjersey.igk.intel.com (newjersey.igk.intel.com [10.102.20.203])
-        by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id 219IwjQZ031082;
-        Wed, 9 Feb 2022 18:59:11 GMT
+        by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id 219IwjQT031082;
+        Wed, 9 Feb 2022 18:58:58 GMT
 From:   Alexander Lobakin <alexandr.lobakin@intel.com>
 To:     linux-hardening@vger.kernel.org, x86@kernel.org
 Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
@@ -80,9 +80,9 @@ Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
         linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
         linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
         llvm@lists.linux.dev
-Subject: [PATCH v10 12/15] module: add arch-indep FG-KASLR for randomizing function layout
-Date:   Wed,  9 Feb 2022 19:57:49 +0100
-Message-Id: <20220209185752.1226407-13-alexandr.lobakin@intel.com>
+Subject: [PATCH v10 06/15] x86: decouple ORC table sorting into a separate file
+Date:   Wed,  9 Feb 2022 19:57:43 +0100
+Message-Id: <20220209185752.1226407-7-alexandr.lobakin@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220209185752.1226407-1-alexandr.lobakin@intel.com>
 References: <20220209185752.1226407-1-alexandr.lobakin@intel.com>
@@ -92,220 +92,266 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kristen Carlson Accardi <kristen@linux.intel.com>
+In order to be able to sort ORC entries from both the kernel and
+the pre-boot compressed environment, place ORC sorting function
+into the new file arch/x86/lib/orc.c.
+It can be then included directly by the pre-boot code, and
+ORC_COMPRESSED_BOOT definition guards out the sort_mutex which
+is unavailable and unneeded in that environment.
 
-Introduce a new config option to allow modules to be re-ordered
-by function. This option can be enabled independently of the
-kernel text KASLR or FG_KASLR settings so that it can be used
-by architectures that do not support either of these features.
-This option will be selected by default if CONFIG_FG_KASLR is
-selected.
+Placing orc_ip() into `include/asm/orc_types.h` wipes out
+sorttable.h's little code dup.
 
-If a module has functions split out into separate text sections
-(i.e. compiled with the -ffunction-sections flag), reorder the
-functions to provide some code diversification to modules.
-
-Alexander Lobakin:
-
-Make it work with ClangCFI -- in such builds, .text section must
-always come first and be page-aligned. Exclude it from the shuffle
-list and leave as it is.
-Make this feature depend on `-z unique-symbol` as well, due to the
-very same reasons as for FG-KASLR for vmlinux.
-Use common shuffle_array() from <linux/random.h> instead of
-open-coding it.
-
-Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Tested-by: Ard Biesheuvel <ardb@kernel.org>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Tested-by: Tony Luck <tony.luck@intel.com>
-Acked-by: Jessica Yu <jeyu@kernel.org>
-Tested-by: Jessica Yu <jeyu@kernel.org>
-Reported-by: kernel test robot <lkp@intel.com> # swap.cocci
-Co-developed-by: Alexander Lobakin <alexandr.lobakin@intel.com>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Alexander Lobakin <alexandr.lobakin@intel.com>
 ---
- Makefile                |  6 +++-
- include/linux/linkage.h |  1 +
- init/Kconfig            | 14 ++++++++
- kernel/module.c         | 73 +++++++++++++++++++++++++++++++++++++++--
- 4 files changed, 91 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/orc_types.h       |  7 +++
+ arch/x86/kernel/unwind_orc.c           | 63 +--------------------
+ arch/x86/lib/Makefile                  |  3 +
+ arch/x86/lib/orc.c                     | 78 ++++++++++++++++++++++++++
+ scripts/sorttable.h                    |  5 --
+ tools/arch/x86/include/asm/orc_types.h |  7 +++
+ 6 files changed, 96 insertions(+), 67 deletions(-)
+ create mode 100644 arch/x86/lib/orc.c
 
-diff --git a/Makefile b/Makefile
-index 4328d53d8b25..cf7cf5cbdad9 100644
---- a/Makefile
-+++ b/Makefile
-@@ -889,7 +889,7 @@ export SECSUBST_AFLAGS
- endif
+diff --git a/arch/x86/include/asm/orc_types.h b/arch/x86/include/asm/orc_types.h
+index 5a2baf28a1dc..7708548713c4 100644
+--- a/arch/x86/include/asm/orc_types.h
++++ b/arch/x86/include/asm/orc_types.h
+@@ -67,6 +67,13 @@ struct orc_entry {
+ #endif
+ } __packed;
  
- # Same for modules. LD DCE doesn't work for them, thus not checking for it
--ifneq ($(CONFIG_LTO_CLANG),)
-+ifneq ($(CONFIG_MODULE_FG_KASLR)$(CONFIG_LTO_CLANG),)
- KBUILD_AFLAGS_MODULE += -Wa,--sectname-subst
- KBUILD_CFLAGS_MODULE += -Wa,--sectname-subst
- endif
-@@ -898,6 +898,10 @@ endif # CONFIG_HAVE_ASM_FUNCTION_SECTIONS
- # ClangLTO implies `-ffunction-sections -fdata-sections`, no need
- # to specify them manually and trigger a pointless full rebuild
- ifndef CONFIG_LTO_CLANG
-+ifdef CONFIG_MODULE_FG_KASLR
-+KBUILD_CFLAGS_MODULE += -ffunction-sections
-+endif
-+
- ifneq ($(CONFIG_LD_DEAD_CODE_DATA_ELIMINATION)$(CONFIG_FG_KASLR),)
- KBUILD_CFLAGS_KERNEL += -ffunction-sections
- endif
-diff --git a/include/linux/linkage.h b/include/linux/linkage.h
-index 95ca162a868c..12cf21f9d8ad 100644
---- a/include/linux/linkage.h
-+++ b/include/linux/linkage.h
-@@ -81,6 +81,7 @@
- #if defined(CONFIG_HAVE_ASM_FUNCTION_SECTIONS) && \
-     ((defined(CONFIG_LD_DEAD_CODE_DATA_ELIMINATION) && !defined(MODULE)) || \
-      (defined(CONFIG_FG_KASLR) && !defined(MODULE)) || \
-+     (defined(CONFIG_MODULE_FG_KASLR) && defined(MODULE)) || \
-      (defined(CONFIG_LTO_CLANG)))
- 
- #define SYM_PUSH_SECTION(name)				\
-diff --git a/init/Kconfig b/init/Kconfig
-index 5fbd1c294df4..86a2d3fd6390 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -2386,6 +2386,20 @@ config UNUSED_KSYMS_WHITELIST
- 	  one per line. The path can be absolute, or relative to the kernel
- 	  source tree.
- 
-+config MODULE_FG_KASLR
-+	bool "Module Function Granular Layout Randomization"
-+	depends on $(cc-option,-ffunction-sections)
-+	depends on LD_HAS_Z_UNIQUE_SYMBOL || !LIVEPATCH
-+	default FG_KASLR
-+	depends on BROKEN
-+	help
-+	  This option randomizes the module text section by reordering the text
-+	  section by function at module load time. In order to use this
-+	  feature, the module must have been compiled with the
-+	  -ffunction-sections compiler flag.
-+
-+	  If unsure, say N.
-+
- endif # MODULES
- 
- config MODULES_TREE_LOOKUP
-diff --git a/kernel/module.c b/kernel/module.c
-index 46a5c2ed1928..616a622953fa 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -57,6 +57,7 @@
- #include <linux/bsearch.h>
- #include <linux/dynamic_debug.h>
- #include <linux/audit.h>
-+#include <linux/random.h>
- #include <uapi/linux/module.h>
- #include "module-internal.h"
- 
-@@ -1526,7 +1527,7 @@ static void free_sect_attrs(struct module_sect_attrs *sect_attrs)
- 
- 	for (section = 0; section < sect_attrs->nsections; section++)
- 		kfree(sect_attrs->attrs[section].battr.attr.name);
--	kfree(sect_attrs);
-+	kvfree(sect_attrs);
- }
- 
- static void add_sect_attrs(struct module *mod, const struct load_info *info)
-@@ -1543,7 +1544,7 @@ static void add_sect_attrs(struct module *mod, const struct load_info *info)
- 	size[0] = ALIGN(struct_size(sect_attrs, attrs, nloaded),
- 			sizeof(sect_attrs->grp.bin_attrs[0]));
- 	size[1] = (nloaded + 1) * sizeof(sect_attrs->grp.bin_attrs[0]);
--	sect_attrs = kzalloc(size[0] + size[1], GFP_KERNEL);
-+	sect_attrs = kvzalloc(size[0] + size[1], GFP_KERNEL);
- 	if (sect_attrs == NULL)
- 		return;
- 
-@@ -2415,6 +2416,71 @@ static bool module_init_layout_section(const char *sname)
- 	return module_init_section(sname);
- }
- 
-+/*
-+ * randomize_text()
-+ * Look through the core section looking for executable code sections.
-+ * Store sections in an array and then shuffle the sections
-+ * to reorder the functions.
-+ */
-+static void randomize_text(struct module *mod, struct load_info *info)
++static inline unsigned long orc_ip(const int *ip)
 +{
-+	int max_sections = info->hdr->e_shnum;
-+	int num_text_sections = 0;
-+	Elf_Shdr **text_list;
-+	int i, size;
-+
-+	text_list = kvmalloc_array(max_sections, sizeof(*text_list), GFP_KERNEL);
-+	if (!text_list)
-+		return;
-+
-+	for (i = 0; i < max_sections; i++) {
-+		Elf_Shdr *shdr = &info->sechdrs[i];
-+		const char *sname = info->secstrings + shdr->sh_name;
-+
-+		if (!(shdr->sh_flags & SHF_ALLOC) ||
-+		    !(shdr->sh_flags & SHF_EXECINSTR) ||
-+		    (shdr->sh_flags & ARCH_SHF_SMALL) ||
-+		    module_init_layout_section(sname))
-+			continue;
-+
-+		/*
-+		 * With CONFIG_CFI_CLANG, .text with __cfi_check() must come
-+		 * before any other text sections, and be aligned to PAGE_SIZE.
-+		 * Don't include it in the shuffle list.
-+		 */
-+		if (IS_ENABLED(CONFIG_CFI_CLANG) && !strcmp(sname, ".text"))
-+			continue;
-+
-+		if (!num_text_sections)
-+			size = shdr->sh_entsize;
-+
-+		text_list[num_text_sections] = shdr;
-+		num_text_sections++;
-+	}
-+
-+	if (!num_text_sections)
-+		goto exit;
-+
-+	shuffle_array(text_list, num_text_sections);
-+
-+	for (i = 0; i < num_text_sections; i++) {
-+		Elf_Shdr *shdr = text_list[i];
-+
-+		/*
-+		 * get_offset has a section index for it's last
-+		 * argument, that is only used by arch_mod_section_prepend(),
-+		 * which is only defined by parisc. Since this type
-+		 * of randomization isn't supported on parisc, we can
-+		 * safely pass in zero as the last argument, as it is
-+		 * ignored.
-+		 */
-+		shdr->sh_entsize = get_offset(mod, &size, shdr, 0);
-+	}
-+
-+exit:
-+	kvfree(text_list);
++	return (unsigned long)ip + *ip;
 +}
 +
- /*
-  * Lay out the SHF_ALLOC sections in a way not dissimilar to how ld
-  * might -- code, read-only data, read-write data, small data.  Tally
-@@ -2509,6 +2575,9 @@ static void layout_sections(struct module *mod, struct load_info *info)
- 			break;
- 		}
- 	}
++void orc_sort(int *ip_table, struct orc_entry *orc_table, u32 num_orcs);
 +
-+	if (IS_ENABLED(CONFIG_MODULE_FG_KASLR))
-+		randomize_text(mod, info);
+ #endif /* __ASSEMBLY__ */
+ 
+ #endif /* _ORC_TYPES_H */
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 2de3c8c5eba9..e5748bf15966 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -25,11 +25,6 @@ extern struct orc_entry __stop_orc_unwind[];
+ static bool orc_init __ro_after_init;
+ static unsigned int lookup_num_blocks __ro_after_init;
+ 
+-static inline unsigned long orc_ip(const int *ip)
+-{
+-	return (unsigned long)ip + *ip;
+-}
+-
+ static struct orc_entry *__orc_find(int *ip_table, struct orc_entry *u_table,
+ 				    unsigned int num_entries, unsigned long ip)
+ {
+@@ -188,53 +183,6 @@ static struct orc_entry *orc_find(unsigned long ip)
  }
  
- static void set_license(struct module *mod, const char *license)
+ #ifdef CONFIG_MODULES
+-
+-static DEFINE_MUTEX(sort_mutex);
+-static int *cur_orc_ip_table = __start_orc_unwind_ip;
+-static struct orc_entry *cur_orc_table = __start_orc_unwind;
+-
+-static void orc_sort_swap(void *_a, void *_b, int size)
+-{
+-	struct orc_entry *orc_a, *orc_b;
+-	struct orc_entry orc_tmp;
+-	int *a = _a, *b = _b, tmp;
+-	int delta = _b - _a;
+-
+-	/* Swap the .orc_unwind_ip entries: */
+-	tmp = *a;
+-	*a = *b + delta;
+-	*b = tmp - delta;
+-
+-	/* Swap the corresponding .orc_unwind entries: */
+-	orc_a = cur_orc_table + (a - cur_orc_ip_table);
+-	orc_b = cur_orc_table + (b - cur_orc_ip_table);
+-	orc_tmp = *orc_a;
+-	*orc_a = *orc_b;
+-	*orc_b = orc_tmp;
+-}
+-
+-static int orc_sort_cmp(const void *_a, const void *_b)
+-{
+-	struct orc_entry *orc_a;
+-	const int *a = _a, *b = _b;
+-	unsigned long a_val = orc_ip(a);
+-	unsigned long b_val = orc_ip(b);
+-
+-	if (a_val > b_val)
+-		return 1;
+-	if (a_val < b_val)
+-		return -1;
+-
+-	/*
+-	 * The "weak" section terminator entries need to always be on the left
+-	 * to ensure the lookup code skips them in favor of real entries.
+-	 * These terminator entries exist to handle any gaps created by
+-	 * whitelisted .o files which didn't get objtool generation.
+-	 */
+-	orc_a = cur_orc_table + (a - cur_orc_ip_table);
+-	return orc_a->sp_reg == ORC_REG_UNDEFINED && !orc_a->end ? -1 : 1;
+-}
+-
+ void unwind_module_init(struct module *mod, void *_orc_ip, size_t orc_ip_size,
+ 			void *_orc, size_t orc_size)
+ {
+@@ -246,16 +194,7 @@ void unwind_module_init(struct module *mod, void *_orc_ip, size_t orc_ip_size,
+ 		     orc_size % sizeof(*orc) != 0 ||
+ 		     num_entries != orc_size / sizeof(*orc));
+ 
+-	/*
+-	 * The 'cur_orc_*' globals allow the orc_sort_swap() callback to
+-	 * associate an .orc_unwind_ip table entry with its corresponding
+-	 * .orc_unwind entry so they can both be swapped.
+-	 */
+-	mutex_lock(&sort_mutex);
+-	cur_orc_ip_table = orc_ip;
+-	cur_orc_table = orc;
+-	sort(orc_ip, num_entries, sizeof(int), orc_sort_cmp, orc_sort_swap);
+-	mutex_unlock(&sort_mutex);
++	orc_sort(orc_ip, orc, num_entries);
+ 
+ 	mod->arch.orc_unwind_ip = orc_ip;
+ 	mod->arch.orc_unwind = orc;
+diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
+index f76747862bd2..ff094cecebc4 100644
+--- a/arch/x86/lib/Makefile
++++ b/arch/x86/lib/Makefile
+@@ -50,6 +50,9 @@ lib-$(CONFIG_INSTRUCTION_DECODER) += insn.o inat.o insn-eval.o
+ lib-$(CONFIG_RANDOMIZE_BASE) += kaslr.o
+ lib-$(CONFIG_FUNCTION_ERROR_INJECTION)	+= error-inject.o
+ lib-$(CONFIG_RETPOLINE) += retpoline.o
++ifdef CONFIG_MODULES
++lib-$(CONFIG_UNWINDER_ORC) += orc.o
++endif
+ 
+ obj-y += msr.o msr-reg.o msr-reg-export.o hweight.o
+ obj-y += iomem.o
+diff --git a/arch/x86/lib/orc.c b/arch/x86/lib/orc.c
+new file mode 100644
+index 000000000000..6a42842bf4ef
+--- /dev/null
++++ b/arch/x86/lib/orc.c
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * ORC sorting shared by the compressed boot code and ORC module
++ * support.
++ */
++
++#include <asm/orc_types.h>
++#include <linux/mutex.h>
++#include <linux/sort.h>
++
++#ifndef ORC_COMPRESSED_BOOT
++static DEFINE_MUTEX(sort_mutex);
++
++#define sort_mutex_lock()	mutex_lock(&sort_mutex)
++#define sort_mutex_unlock()	mutex_unlock(&sort_mutex)
++#else /* ORC_COMPRESSED_BOOT */
++#define sort_mutex_lock()
++#define sort_mutex_unlock()
++#endif /* ORC_COMPRESSED_BOOT */
++
++static int *cur_orc_ip_table;
++static struct orc_entry *cur_orc_table;
++
++static void orc_sort_swap(void *_a, void *_b, int size)
++{
++	struct orc_entry *orc_a, *orc_b;
++	int *a = _a, *b = _b, tmp;
++	int delta = _b - _a;
++
++	/* Swap the .orc_unwind_ip entries: */
++	tmp = *a;
++	*a = *b + delta;
++	*b = tmp - delta;
++
++	/* Swap the corresponding .orc_unwind entries: */
++	orc_a = cur_orc_table + (a - cur_orc_ip_table);
++	orc_b = cur_orc_table + (b - cur_orc_ip_table);
++	swap(*orc_a, *orc_b);
++}
++
++static int orc_sort_cmp(const void *_a, const void *_b)
++{
++	const int *a = _a, *b = _b;
++	unsigned long a_val = orc_ip(a);
++	unsigned long b_val = orc_ip(b);
++	struct orc_entry *orc_a;
++
++	if (a_val > b_val)
++		return 1;
++	if (a_val < b_val)
++		return -1;
++
++	/*
++	 * The "weak" section terminator entries need to always be on the left
++	 * to ensure the lookup code skips them in favor of real entries.
++	 * These terminator entries exist to handle any gaps created by
++	 * whitelisted .o files which didn't get objtool generation.
++	 */
++	orc_a = cur_orc_table + (a - cur_orc_ip_table);
++
++	return orc_a->sp_reg == ORC_REG_UNDEFINED && !orc_a->end ? -1 : 1;
++}
++
++void orc_sort(int *ip_table, struct orc_entry *orc_table, u32 num_orcs)
++{
++	/*
++	 * The 'cur_orc_*' globals allow the orc_sort_swap() callback to
++	 * associate an .orc_unwind_ip table entry with its corresponding
++	 * .orc_unwind entry so they can both be swapped.
++	 */
++	sort_mutex_lock();
++
++	cur_orc_ip_table = ip_table;
++	cur_orc_table = orc_table;
++	sort(ip_table, num_orcs, sizeof(int), orc_sort_cmp, orc_sort_swap);
++
++	sort_mutex_unlock();
++}
+diff --git a/scripts/sorttable.h b/scripts/sorttable.h
+index deb7c1d3e979..a6bb46f36854 100644
+--- a/scripts/sorttable.h
++++ b/scripts/sorttable.h
+@@ -103,11 +103,6 @@ struct orc_entry *g_orc_table;
+ 
+ pthread_t orc_sort_thread;
+ 
+-static inline unsigned long orc_ip(const int *ip)
+-{
+-	return (unsigned long)ip + *ip;
+-}
+-
+ static int orc_sort_cmp(const void *_a, const void *_b)
+ {
+ 	struct orc_entry *orc_a;
+diff --git a/tools/arch/x86/include/asm/orc_types.h b/tools/arch/x86/include/asm/orc_types.h
+index 5a2baf28a1dc..7708548713c4 100644
+--- a/tools/arch/x86/include/asm/orc_types.h
++++ b/tools/arch/x86/include/asm/orc_types.h
+@@ -67,6 +67,13 @@ struct orc_entry {
+ #endif
+ } __packed;
+ 
++static inline unsigned long orc_ip(const int *ip)
++{
++	return (unsigned long)ip + *ip;
++}
++
++void orc_sort(int *ip_table, struct orc_entry *orc_table, u32 num_orcs);
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #endif /* _ORC_TYPES_H */
 -- 
 2.34.1
 
