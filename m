@@ -2,46 +2,46 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A1BC433FE
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Feb 2022 19:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54203C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Feb 2022 19:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241653AbiBITCI (ORCPT
+        id S241861AbiBITDT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Feb 2022 14:02:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33892 "EHLO
+        Wed, 9 Feb 2022 14:03:19 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:49514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241879AbiBITAs (ORCPT
+        with ESMTP id S241726AbiBITDC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Feb 2022 14:00:48 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E01B5C03C1AC;
-        Wed,  9 Feb 2022 11:00:42 -0800 (PST)
+        Wed, 9 Feb 2022 14:03:02 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5859CC043180;
+        Wed,  9 Feb 2022 11:01:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644433243; x=1675969243;
+  t=1644433306; x=1675969306;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=DiAbK0p8+YO+/OBW6g1tSquFbx2OCDf1DNDqZd5HQoI=;
-  b=QQVNCaTDEkgsZ5ct4CuvvqCp2rtf7R8+3H+BxuDYkkcqSy+OfHwJRZmI
-   qV5IJvdfiSWsbwwLo1D8lxWZ1+g059EkgCr+8RY6DWrT3hcwLwVJx/CC/
-   4qVY4T3JNcxe8ODbe39JwM7eaQxtJ8zG6rpQk8iX5bbd02wdSDZwIATd2
-   Y45nCQ7zEZhFrwyxcNbOyY9SvGJ29pyvKHIL14Ewv8VWQVyjtoeSV+iSD
-   cysvP8ZhTp3DwpipEZzkIhnU/C2ewyfl14vrDQyPOAgLo91QOZsYSzCEq
-   voRSWlP/Ucerp++ls5TULFfHMOVCpE7iSMJ2HLg7NuZkvhPKLHXkMeHrV
+  bh=/bF5RmnQNXXN3+vz6F4r6xI2KMbv9yOGNKvu69qEHKw=;
+  b=jzna3XPMrO8mfSNc9ScrYOrkR0IIVIwCO2mwiffdemMyhRtrX5+Sd7BB
+   m6q+zs91Mo6C5d9SYNpcv9YZN6lG3mW2jUXf0pf8EXWOIR/j385CWEDnR
+   GMES+jY0kparVgYtm9vS+hyrW6T5Z7riJIwnIwTw3jhyEQ4u9zrv0VWjr
+   OkiqnIlmazW+MCrjDNAk1FPhRTOUPL5WVE9fOLSskHhnciB5Fde7PXIhb
+   fN+crwvZrvebBMch/mS28L3hfsBRmVkaZhUeckFP22DPrT+824fwJuWWa
+   a1i3RvAvPhpZw8Oc+/xxEK4q8Fhe+M0pi8h+jHvqNzXym9ucn6xKa2Yci
    A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10253"; a="232869379"
+X-IronPort-AV: E=McAfee;i="6200,9189,10253"; a="249516091"
 X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
-   d="scan'208";a="232869379"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 10:59:04 -0800
+   d="scan'208";a="249516091"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 10:59:14 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
-   d="scan'208";a="541248506"
+   d="scan'208";a="622393036"
 Received: from irvmail001.ir.intel.com ([10.43.11.63])
-  by orsmga008.jf.intel.com with ESMTP; 09 Feb 2022 10:58:55 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 09 Feb 2022 10:59:05 -0800
 Received: from newjersey.igk.intel.com (newjersey.igk.intel.com [10.102.20.203])
-        by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id 219IwjQQ031082;
-        Wed, 9 Feb 2022 18:58:52 GMT
+        by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id 219IwjQV031082;
+        Wed, 9 Feb 2022 18:59:02 GMT
 From:   Alexander Lobakin <alexandr.lobakin@intel.com>
 To:     linux-hardening@vger.kernel.org, x86@kernel.org
 Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
@@ -80,9 +80,9 @@ Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
         linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
         linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
         llvm@lists.linux.dev
-Subject: [PATCH v10 03/15] kallsyms: randomize /proc/kallsyms output order
-Date:   Wed,  9 Feb 2022 19:57:40 +0100
-Message-Id: <20220209185752.1226407-4-alexandr.lobakin@intel.com>
+Subject: [PATCH v10 08/15] x86/tools: Add relative relocs for randomized functions
+Date:   Wed,  9 Feb 2022 19:57:45 +0100
+Message-Id: <20220209185752.1226407-9-alexandr.lobakin@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220209185752.1226407-1-alexandr.lobakin@intel.com>
 References: <20220209185752.1226407-1-alexandr.lobakin@intel.com>
@@ -94,246 +94,190 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Kristen Carlson Accardi <kristen@linux.intel.com>
 
-For now, /proc/kallsyms printing code replaces the actual addresses
-with zeros for !CAP_SYSLOG accesses, but still emits the symbols
-sorted by address.
-This makes it easier for an attacker to determine the address of a
-desired function if the address of some other symbol is already
-known. It is especially critical for FG-KASLR as the text layout
-with it is random each boot and sorted /proc/kallsyms renders the
-entire feature useless.
-
-Make /proc/kallsyms display symbols in a random order to completely
-hide the kernel layout. Determine the full number of symbols prior
-to traversing through them and then shuffle the indexes, so the
-printing function will pick them randomly.
+When reordering functions, the relative offsets for relocs that
+are either in the randomized sections, or refer to the randomized
+sections will need to be adjusted. Add code to detect whether a
+reloc satisfies these cases, and if so, add them to the appropriate
+reloc list.
 
 Alexander Lobakin:
 
-Don't depend FG-KASLR and always do that for unprivileged accesses
-as suggested by several folks. Rename show_value to show_layout to
-reflect the new functionality.
-Also, introduce and use a generic shuffle_array() macro which
-shuffles an arbitrary array using a Fisher-Yates algorithm.
+Don't split relocs' usage string across lines to ease grepping.
 
 Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Tested-by: Tony Luck <tony.luck@intel.com>
-Reported-by: kernel test robot <lkp@intel.com> # swap.cocci
-Suggested-by: Ard Biesheuvel <ardb@kernel.org> # always do that
-Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com> # always do that
-Suggested-by: Peter Zijlstra <peterz@infradead.org> # always do that, macro
-Co-developed-by: Alexander Lobakin <alexandr.lobakin@intel.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Alexander Lobakin <alexandr.lobakin@intel.com>
 ---
- include/linux/random.h | 16 +++++++
- kernel/kallsyms.c      | 94 +++++++++++++++++++++++++++++++++++-------
- 2 files changed, 95 insertions(+), 15 deletions(-)
+ arch/x86/boot/compressed/Makefile |  7 ++++++-
+ arch/x86/tools/relocs.c           | 32 +++++++++++++++++++++++++++----
+ arch/x86/tools/relocs.h           |  4 ++--
+ arch/x86/tools/relocs_common.c    | 14 +++++++++-----
+ 4 files changed, 45 insertions(+), 12 deletions(-)
 
-diff --git a/include/linux/random.h b/include/linux/random.h
-index c45b2693e51f..596b27423150 100644
---- a/include/linux/random.h
-+++ b/include/linux/random.h
-@@ -110,6 +110,22 @@ declare_get_random_var_wait(long)
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index e7ee94d5f55a..b1f5817c5737 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -110,6 +110,11 @@ $(obj)/vmlinux: $(vmlinux-objs-y) $(efi-obj-y) FORCE
+ 	$(call if_changed,ld)
  
- unsigned long randomize_page(unsigned long start, unsigned long range);
- 
-+/**
-+ * shuffle_array - use a Fisher-Yates algorithm to shuffle an array.
-+ * @arr: pointer to the array
-+ * @nents: the number of elements in the array
-+ */
-+#define shuffle_array(arr, nents) ({				\
-+	typeof(&(arr)[0]) __arr = &(arr)[0];			\
-+	size_t __i;						\
-+								\
-+	for (__i = (nents) - 1; __i > 0; __i--) {		\
-+		size_t __j = get_random_long() % (__i + 1);	\
-+								\
-+		swap(__arr[__i], __arr[__j]);			\
-+	}							\
-+})
+ OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
 +
- /*
-  * This is designed to be standalone for just prandom
-  * users, but for now we include it from <linux/random.h>
-diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-index 951c93216fc4..d991afa9b5bf 100644
---- a/kernel/kallsyms.c
-+++ b/kernel/kallsyms.c
-@@ -575,13 +575,15 @@ struct kallsym_iter {
- 	loff_t pos_mod_end;
- 	loff_t pos_ftrace_mod_end;
- 	loff_t pos_bpf_end;
-+	loff_t pos_end;
- 	unsigned long value;
- 	unsigned int nameoff; /* If iterating in core kernel symbols. */
- 	char type;
- 	char name[KSYM_NAME_LEN];
- 	char module_name[MODULE_NAME_LEN];
- 	int exported;
--	int show_value;
-+	int show_layout:1;
-+	loff_t shuffled_pos[];
++ifdef CONFIG_FG_KASLR
++RELOCS_ARGS += --fg-kaslr
++endif
++
+ $(obj)/vmlinux.bin: vmlinux FORCE
+ 	$(call if_changed,objcopy)
+ 
+@@ -117,7 +122,7 @@ targets += $(patsubst $(obj)/%,%,$(vmlinux-objs-y)) vmlinux.bin.all vmlinux.relo
+ 
+ CMD_RELOCS = arch/x86/tools/relocs
+ quiet_cmd_relocs = RELOCS  $@
+-      cmd_relocs = $(CMD_RELOCS) $< > $@;$(CMD_RELOCS) --abs-relocs $<
++      cmd_relocs = $(CMD_RELOCS) $(RELOCS_ARGS) $< > $@;$(CMD_RELOCS) $(RELOCS_ARGS) --abs-relocs $<
+ $(obj)/vmlinux.relocs: vmlinux FORCE
+ 	$(call if_changed,relocs)
+ 
+diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
+index e2c5b296120d..96b6042fc76f 100644
+--- a/arch/x86/tools/relocs.c
++++ b/arch/x86/tools/relocs.c
+@@ -45,6 +45,8 @@ struct section {
  };
+ static struct section *secs;
  
- int __weak arch_get_kallsym(unsigned int symnum, unsigned long *value,
-@@ -661,11 +663,19 @@ static int get_ksymbol_bpf(struct kallsym_iter *iter)
-  */
- static int get_ksymbol_kprobe(struct kallsym_iter *iter)
- {
-+	int ret;
++static int fgkaslr_mode;
 +
- 	strlcpy(iter->module_name, "__builtin__kprobes", MODULE_NAME_LEN);
- 	iter->exported = 0;
--	return kprobe_get_kallsym(iter->pos - iter->pos_bpf_end,
--				  &iter->value, &iter->type,
--				  iter->name) < 0 ? 0 : 1;
-+	ret = kprobe_get_kallsym(iter->pos - iter->pos_bpf_end,
-+				 &iter->value, &iter->type,
-+				 iter->name);
-+	if (ret < 0) {
-+		iter->pos_end = iter->pos;
-+		return 0;
-+	}
-+
-+	return 1;
- }
- 
- /* Returns space to next name. */
-@@ -688,11 +698,16 @@ static void reset_iter(struct kallsym_iter *iter, loff_t new_pos)
- 	iter->name[0] = '\0';
- 	iter->nameoff = get_symbol_offset(new_pos);
- 	iter->pos = new_pos;
-+
-+	if (!iter->show_layout)
-+		return;
-+
- 	if (new_pos == 0) {
- 		iter->pos_arch_end = 0;
- 		iter->pos_mod_end = 0;
- 		iter->pos_ftrace_mod_end = 0;
- 		iter->pos_bpf_end = 0;
-+		iter->pos_end = 0;
- 	}
- }
- 
-@@ -721,13 +736,23 @@ static int update_iter_mod(struct kallsym_iter *iter, loff_t pos)
- 	    get_ksymbol_bpf(iter))
- 		return 1;
- 
--	return get_ksymbol_kprobe(iter);
-+	if ((!iter->pos_end || iter->pos_end > pos) &&
-+	    get_ksymbol_kprobe(iter))
-+		return 1;
-+
-+	return 0;
- }
- 
- /* Returns false if pos at or past end of file. */
- static int update_iter(struct kallsym_iter *iter, loff_t pos)
- {
--	/* Module symbols can be accessed randomly. */
-+	if (!iter->show_layout) {
-+		if (pos > iter->pos_end)
-+			return 0;
-+
-+		pos = iter->shuffled_pos[pos];
-+	}
-+
- 	if (pos >= kallsyms_num_syms)
- 		return update_iter_mod(iter, pos);
- 
-@@ -770,7 +795,7 @@ static int s_show(struct seq_file *m, void *p)
- 	if (!iter->name[0])
- 		return 0;
- 
--	value = iter->show_value ? (void *)iter->value : NULL;
-+	value = iter->show_layout ? (void *)iter->value : NULL;
- 
- 	if (iter->module_name[0]) {
- 		char type;
-@@ -807,9 +832,10 @@ static inline int kallsyms_for_perf(void)
- }
- 
+ static const char * const sym_regex_kernel[S_NSYMTYPES] = {
  /*
-- * We show kallsyms information even to normal users if we've enabled
-- * kernel profiling and are explicitly not paranoid (so kptr_restrict
-- * is clear, and sysctl_perf_event_paranoid isn't set).
-+ * We show kallsyms information and display them sorted by address even
-+ * to normal users if we've enabled kernel profiling and are explicitly
-+ * not paranoid (so kptr_restrict is clear, and sysctl_perf_event_paranoid
-+ * isn't set).
-  *
-  * Otherwise, require CAP_SYSLOG (assuming kptr_restrict isn't set to
-  * block even that).
-@@ -839,16 +865,53 @@ static int kallsyms_open(struct inode *inode, struct file *file)
- 	 * using get_symbol_offset for every symbol.
- 	 */
- 	struct kallsym_iter *iter;
--	iter = __seq_open_private(file, &kallsyms_op, sizeof(*iter));
--	if (!iter)
--		return -ENOMEM;
--	reset_iter(iter, 0);
-+	/*
-+	 * This fake iter is needed for the cases with unprivileged
-+	 * access. We need to know the exact number of symbols to
-+	 * randomize the display layout.
-+	 */
-+	struct kallsym_iter fake;
-+	size_t size = sizeof(*iter);
-+	loff_t pos;
-+
-+	fake.show_layout = true;
-+	reset_iter(&fake, 0);
+  * Following symbols have been audited. There values are constant and do
+@@ -823,6 +825,24 @@ static int is_percpu_sym(ElfW(Sym) *sym, const char *symname)
+ 		strncmp(symname, "init_per_cpu_", 13);
+ }
  
- 	/*
- 	 * Instead of checking this on every s_show() call, cache
- 	 * the result here at open time.
- 	 */
--	iter->show_value = kallsyms_show_value(file->f_cred);
-+	fake.show_layout = kallsyms_show_value(file->f_cred);
-+	if (!fake.show_layout) {
-+		pos = kallsyms_num_syms;
-+		while (update_iter_mod(&fake, pos))
-+			pos++;
-+
-+		size = struct_size(iter, shuffled_pos, fake.pos_end + 1);
-+	}
-+
-+	iter = __seq_open_private(file, &kallsyms_op, size);
-+	if (!iter)
-+		return -ENOMEM;
-+
-+	iter->show_layout = fake.show_layout;
-+	reset_iter(iter, 0);
-+
-+	if (iter->show_layout)
++static int is_function_section(struct section *sec)
++{
++	if (!fgkaslr_mode)
 +		return 0;
 +
-+	/* Copy the bounds since they were already discovered above */
-+	iter->pos_arch_end = fake.pos_arch_end;
-+	iter->pos_mod_end = fake.pos_mod_end;
-+	iter->pos_ftrace_mod_end = fake.pos_ftrace_mod_end;
-+	iter->pos_bpf_end = fake.pos_bpf_end;
-+	iter->pos_end = fake.pos_end;
++	return !strncmp(sec_name(sec->shdr.sh_info), ".text.", 6);
++}
 +
-+	for (pos = 0; pos <= iter->pos_end; pos++)
-+		iter->shuffled_pos[pos] = pos;
++static int is_randomized_sym(ElfW(Sym) *sym)
++{
++	if (!fgkaslr_mode)
++		return 0;
 +
-+	shuffle_array(iter->shuffled_pos, iter->pos_end + 1);
++	if (sym->st_shndx > shnum)
++		return 0;
 +
++	return !strncmp(sec_name(sym_index(sym)), ".text.", 6);
++}
+ 
+ static int do_reloc64(struct section *sec, Elf_Rel *rel, ElfW(Sym) *sym,
+ 		      const char *symname)
+@@ -848,12 +868,15 @@ static int do_reloc64(struct section *sec, Elf_Rel *rel, ElfW(Sym) *sym,
+ 	case R_X86_64_PC32:
+ 	case R_X86_64_PLT32:
+ 		/*
+-		 * PC relative relocations don't need to be adjusted unless
+-		 * referencing a percpu symbol.
++		 * we need to keep pc relative relocations for sections which
++		 * might be randomized, and for the percpu section.
++		 * We also need to keep relocations for any offset which might
++		 * reference an address in a section which has been randomized.
+ 		 *
+ 		 * NB: R_X86_64_PLT32 can be treated as R_X86_64_PC32.
+ 		 */
+-		if (is_percpu_sym(sym, symname))
++		if (is_function_section(sec) || is_randomized_sym(sym) ||
++		    is_percpu_sym(sym, symname))
+ 			add_reloc(&relocs32neg, offset);
+ 		break;
+ 
+@@ -1168,8 +1191,9 @@ static void print_reloc_info(void)
+ 
+ void process(FILE *fp, int use_real_mode, int as_text,
+ 	     int show_absolute_syms, int show_absolute_relocs,
+-	     int show_reloc_info)
++	     int show_reloc_info, int fgkaslr)
+ {
++	fgkaslr_mode = fgkaslr;
+ 	regex_init(use_real_mode);
+ 	read_ehdr(fp);
+ 	read_shdrs(fp);
+diff --git a/arch/x86/tools/relocs.h b/arch/x86/tools/relocs.h
+index 4c49c82446eb..269db511b243 100644
+--- a/arch/x86/tools/relocs.h
++++ b/arch/x86/tools/relocs.h
+@@ -32,8 +32,8 @@ enum symtype {
+ 
+ void process_32(FILE *fp, int use_real_mode, int as_text,
+ 		int show_absolute_syms, int show_absolute_relocs,
+-		int show_reloc_info);
++		int show_reloc_info, int fgkaslr);
+ void process_64(FILE *fp, int use_real_mode, int as_text,
+ 		int show_absolute_syms, int show_absolute_relocs,
+-		int show_reloc_info);
++		int show_reloc_info, int fgkaslr);
+ #endif /* RELOCS_H */
+diff --git a/arch/x86/tools/relocs_common.c b/arch/x86/tools/relocs_common.c
+index 6634352a20bc..d6acda36575a 100644
+--- a/arch/x86/tools/relocs_common.c
++++ b/arch/x86/tools/relocs_common.c
+@@ -12,14 +12,13 @@ void die(char *fmt, ...)
+ 
+ static void usage(void)
+ {
+-	die("relocs [--abs-syms|--abs-relocs|--reloc-info|--text|--realmode]" \
+-	    " vmlinux\n");
++	die("relocs [--abs-syms|--abs-relocs|--reloc-info|--text|--realmode|--fg-kaslr] vmlinux\n");
+ }
+ 
+ int main(int argc, char **argv)
+ {
+ 	int show_absolute_syms, show_absolute_relocs, show_reloc_info;
+-	int as_text, use_real_mode;
++	int as_text, use_real_mode, fgkaslr_opt;
+ 	const char *fname;
+ 	FILE *fp;
+ 	int i;
+@@ -30,6 +29,7 @@ int main(int argc, char **argv)
+ 	show_reloc_info = 0;
+ 	as_text = 0;
+ 	use_real_mode = 0;
++	fgkaslr_opt = 0;
+ 	fname = NULL;
+ 	for (i = 1; i < argc; i++) {
+ 		char *arg = argv[i];
+@@ -54,6 +54,10 @@ int main(int argc, char **argv)
+ 				use_real_mode = 1;
+ 				continue;
+ 			}
++			if (strcmp(arg, "--fg-kaslr") == 0) {
++				fgkaslr_opt = 1;
++				continue;
++			}
+ 		}
+ 		else if (!fname) {
+ 			fname = arg;
+@@ -75,11 +79,11 @@ int main(int argc, char **argv)
+ 	if (e_ident[EI_CLASS] == ELFCLASS64)
+ 		process_64(fp, use_real_mode, as_text,
+ 			   show_absolute_syms, show_absolute_relocs,
+-			   show_reloc_info);
++			   show_reloc_info, fgkaslr_opt);
+ 	else
+ 		process_32(fp, use_real_mode, as_text,
+ 			   show_absolute_syms, show_absolute_relocs,
+-			   show_reloc_info);
++			   show_reloc_info, fgkaslr_opt);
+ 	fclose(fp);
  	return 0;
  }
- 
-@@ -859,6 +922,7 @@ const char *kdb_walk_kallsyms(loff_t *pos)
- 	if (*pos == 0) {
- 		memset(&kdb_walk_kallsyms_iter, 0,
- 		       sizeof(kdb_walk_kallsyms_iter));
-+		kdb_walk_kallsyms_iter.show_layout = true;
- 		reset_iter(&kdb_walk_kallsyms_iter, 0);
- 	}
- 	while (1) {
 -- 
 2.34.1
 
