@@ -2,46 +2,46 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D0EC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Feb 2022 19:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A1BC433FE
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Feb 2022 19:02:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234939AbiBITCH (ORCPT
+        id S241653AbiBITCI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Feb 2022 14:02:07 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:38032 "EHLO
+        Wed, 9 Feb 2022 14:02:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241953AbiBITAn (ORCPT
+        with ESMTP id S241879AbiBITAs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Feb 2022 14:00:43 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FAEAC03E92B;
-        Wed,  9 Feb 2022 11:00:19 -0800 (PST)
+        Wed, 9 Feb 2022 14:00:48 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E01B5C03C1AC;
+        Wed,  9 Feb 2022 11:00:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644433219; x=1675969219;
+  t=1644433243; x=1675969243;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Yg+C8F7oXSf3fHkZtcL9h1OHdH9KdRrch9oP4ovQrw4=;
-  b=XNaeLeE+ioMo+5afgu+d4ex7beBD1Gr1Xfo1B2Jdz1gWM6oaITRmHK13
-   yE/aEmkaOClB9GC+nYKkxqGSmvnwaUXpRhASE8bu5Ay92/VvXjt1rVWpJ
-   9IbX6cxMpaaaucZSzqpiqP4XsTrxImbogTDOmN2rTJP21f5pqnhRvcO6l
-   0ccJvDr9joYmyY1apAU/QBWwUsFjcXq9tgPZyoBOc52gkEKDw/LY2GyoE
-   Kg0DyTQiSxMOWyq6BFdrOUNcca57hSdxQwBorRAPzw3T0BLcUH+voYy/l
-   ytbV010PzL/8JoI1c4eGlmgsEneqCRMKCYG1J+DijhOJ9lxiuDRbn8UzJ
+  bh=DiAbK0p8+YO+/OBW6g1tSquFbx2OCDf1DNDqZd5HQoI=;
+  b=QQVNCaTDEkgsZ5ct4CuvvqCp2rtf7R8+3H+BxuDYkkcqSy+OfHwJRZmI
+   qV5IJvdfiSWsbwwLo1D8lxWZ1+g059EkgCr+8RY6DWrT3hcwLwVJx/CC/
+   4qVY4T3JNcxe8ODbe39JwM7eaQxtJ8zG6rpQk8iX5bbd02wdSDZwIATd2
+   Y45nCQ7zEZhFrwyxcNbOyY9SvGJ29pyvKHIL14Ewv8VWQVyjtoeSV+iSD
+   cysvP8ZhTp3DwpipEZzkIhnU/C2ewyfl14vrDQyPOAgLo91QOZsYSzCEq
+   voRSWlP/Ucerp++ls5TULFfHMOVCpE7iSMJ2HLg7NuZkvhPKLHXkMeHrV
    A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10253"; a="273850090"
+X-IronPort-AV: E=McAfee;i="6200,9189,10253"; a="232869379"
 X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
-   d="scan'208";a="273850090"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 10:59:09 -0800
+   d="scan'208";a="232869379"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 10:59:04 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
-   d="scan'208";a="585681729"
+   d="scan'208";a="541248506"
 Received: from irvmail001.ir.intel.com ([10.43.11.63])
-  by fmsmga008.fm.intel.com with ESMTP; 09 Feb 2022 10:59:01 -0800
+  by orsmga008.jf.intel.com with ESMTP; 09 Feb 2022 10:58:55 -0800
 Received: from newjersey.igk.intel.com (newjersey.igk.intel.com [10.102.20.203])
-        by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id 219IwjQT031082;
-        Wed, 9 Feb 2022 18:58:58 GMT
+        by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id 219IwjQQ031082;
+        Wed, 9 Feb 2022 18:58:52 GMT
 From:   Alexander Lobakin <alexandr.lobakin@intel.com>
 To:     linux-hardening@vger.kernel.org, x86@kernel.org
 Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
@@ -80,9 +80,9 @@ Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
         linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
         linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
         llvm@lists.linux.dev
-Subject: [PATCH v10 06/15] x86: decouple ORC table sorting into a separate file
-Date:   Wed,  9 Feb 2022 19:57:43 +0100
-Message-Id: <20220209185752.1226407-7-alexandr.lobakin@intel.com>
+Subject: [PATCH v10 03/15] kallsyms: randomize /proc/kallsyms output order
+Date:   Wed,  9 Feb 2022 19:57:40 +0100
+Message-Id: <20220209185752.1226407-4-alexandr.lobakin@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220209185752.1226407-1-alexandr.lobakin@intel.com>
 References: <20220209185752.1226407-1-alexandr.lobakin@intel.com>
@@ -92,266 +92,248 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In order to be able to sort ORC entries from both the kernel and
-the pre-boot compressed environment, place ORC sorting function
-into the new file arch/x86/lib/orc.c.
-It can be then included directly by the pre-boot code, and
-ORC_COMPRESSED_BOOT definition guards out the sort_mutex which
-is unavailable and unneeded in that environment.
+From: Kristen Carlson Accardi <kristen@linux.intel.com>
 
-Placing orc_ip() into `include/asm/orc_types.h` wipes out
-sorttable.h's little code dup.
+For now, /proc/kallsyms printing code replaces the actual addresses
+with zeros for !CAP_SYSLOG accesses, but still emits the symbols
+sorted by address.
+This makes it easier for an attacker to determine the address of a
+desired function if the address of some other symbol is already
+known. It is especially critical for FG-KASLR as the text layout
+with it is random each boot and sorted /proc/kallsyms renders the
+entire feature useless.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Make /proc/kallsyms display symbols in a random order to completely
+hide the kernel layout. Determine the full number of symbols prior
+to traversing through them and then shuffle the indexes, so the
+printing function will pick them randomly.
+
+Alexander Lobakin:
+
+Don't depend FG-KASLR and always do that for unprivileged accesses
+as suggested by several folks. Rename show_value to show_layout to
+reflect the new functionality.
+Also, introduce and use a generic shuffle_array() macro which
+shuffles an arbitrary array using a Fisher-Yates algorithm.
+
+Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Tested-by: Tony Luck <tony.luck@intel.com>
+Reported-by: kernel test robot <lkp@intel.com> # swap.cocci
+Suggested-by: Ard Biesheuvel <ardb@kernel.org> # always do that
+Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com> # always do that
+Suggested-by: Peter Zijlstra <peterz@infradead.org> # always do that, macro
+Co-developed-by: Alexander Lobakin <alexandr.lobakin@intel.com>
 Signed-off-by: Alexander Lobakin <alexandr.lobakin@intel.com>
 ---
- arch/x86/include/asm/orc_types.h       |  7 +++
- arch/x86/kernel/unwind_orc.c           | 63 +--------------------
- arch/x86/lib/Makefile                  |  3 +
- arch/x86/lib/orc.c                     | 78 ++++++++++++++++++++++++++
- scripts/sorttable.h                    |  5 --
- tools/arch/x86/include/asm/orc_types.h |  7 +++
- 6 files changed, 96 insertions(+), 67 deletions(-)
- create mode 100644 arch/x86/lib/orc.c
+ include/linux/random.h | 16 +++++++
+ kernel/kallsyms.c      | 94 +++++++++++++++++++++++++++++++++++-------
+ 2 files changed, 95 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/include/asm/orc_types.h b/arch/x86/include/asm/orc_types.h
-index 5a2baf28a1dc..7708548713c4 100644
---- a/arch/x86/include/asm/orc_types.h
-+++ b/arch/x86/include/asm/orc_types.h
-@@ -67,6 +67,13 @@ struct orc_entry {
- #endif
- } __packed;
+diff --git a/include/linux/random.h b/include/linux/random.h
+index c45b2693e51f..596b27423150 100644
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -110,6 +110,22 @@ declare_get_random_var_wait(long)
  
-+static inline unsigned long orc_ip(const int *ip)
-+{
-+	return (unsigned long)ip + *ip;
-+}
+ unsigned long randomize_page(unsigned long start, unsigned long range);
+ 
++/**
++ * shuffle_array - use a Fisher-Yates algorithm to shuffle an array.
++ * @arr: pointer to the array
++ * @nents: the number of elements in the array
++ */
++#define shuffle_array(arr, nents) ({				\
++	typeof(&(arr)[0]) __arr = &(arr)[0];			\
++	size_t __i;						\
++								\
++	for (__i = (nents) - 1; __i > 0; __i--) {		\
++		size_t __j = get_random_long() % (__i + 1);	\
++								\
++		swap(__arr[__i], __arr[__j]);			\
++	}							\
++})
 +
-+void orc_sort(int *ip_table, struct orc_entry *orc_table, u32 num_orcs);
-+
- #endif /* __ASSEMBLY__ */
+ /*
+  * This is designed to be standalone for just prandom
+  * users, but for now we include it from <linux/random.h>
+diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+index 951c93216fc4..d991afa9b5bf 100644
+--- a/kernel/kallsyms.c
++++ b/kernel/kallsyms.c
+@@ -575,13 +575,15 @@ struct kallsym_iter {
+ 	loff_t pos_mod_end;
+ 	loff_t pos_ftrace_mod_end;
+ 	loff_t pos_bpf_end;
++	loff_t pos_end;
+ 	unsigned long value;
+ 	unsigned int nameoff; /* If iterating in core kernel symbols. */
+ 	char type;
+ 	char name[KSYM_NAME_LEN];
+ 	char module_name[MODULE_NAME_LEN];
+ 	int exported;
+-	int show_value;
++	int show_layout:1;
++	loff_t shuffled_pos[];
+ };
  
- #endif /* _ORC_TYPES_H */
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 2de3c8c5eba9..e5748bf15966 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -25,11 +25,6 @@ extern struct orc_entry __stop_orc_unwind[];
- static bool orc_init __ro_after_init;
- static unsigned int lookup_num_blocks __ro_after_init;
- 
--static inline unsigned long orc_ip(const int *ip)
--{
--	return (unsigned long)ip + *ip;
--}
--
- static struct orc_entry *__orc_find(int *ip_table, struct orc_entry *u_table,
- 				    unsigned int num_entries, unsigned long ip)
+ int __weak arch_get_kallsym(unsigned int symnum, unsigned long *value,
+@@ -661,11 +663,19 @@ static int get_ksymbol_bpf(struct kallsym_iter *iter)
+  */
+ static int get_ksymbol_kprobe(struct kallsym_iter *iter)
  {
-@@ -188,53 +183,6 @@ static struct orc_entry *orc_find(unsigned long ip)
++	int ret;
++
+ 	strlcpy(iter->module_name, "__builtin__kprobes", MODULE_NAME_LEN);
+ 	iter->exported = 0;
+-	return kprobe_get_kallsym(iter->pos - iter->pos_bpf_end,
+-				  &iter->value, &iter->type,
+-				  iter->name) < 0 ? 0 : 1;
++	ret = kprobe_get_kallsym(iter->pos - iter->pos_bpf_end,
++				 &iter->value, &iter->type,
++				 iter->name);
++	if (ret < 0) {
++		iter->pos_end = iter->pos;
++		return 0;
++	}
++
++	return 1;
  }
  
- #ifdef CONFIG_MODULES
--
--static DEFINE_MUTEX(sort_mutex);
--static int *cur_orc_ip_table = __start_orc_unwind_ip;
--static struct orc_entry *cur_orc_table = __start_orc_unwind;
--
--static void orc_sort_swap(void *_a, void *_b, int size)
--{
--	struct orc_entry *orc_a, *orc_b;
--	struct orc_entry orc_tmp;
--	int *a = _a, *b = _b, tmp;
--	int delta = _b - _a;
--
--	/* Swap the .orc_unwind_ip entries: */
--	tmp = *a;
--	*a = *b + delta;
--	*b = tmp - delta;
--
--	/* Swap the corresponding .orc_unwind entries: */
--	orc_a = cur_orc_table + (a - cur_orc_ip_table);
--	orc_b = cur_orc_table + (b - cur_orc_ip_table);
--	orc_tmp = *orc_a;
--	*orc_a = *orc_b;
--	*orc_b = orc_tmp;
--}
--
--static int orc_sort_cmp(const void *_a, const void *_b)
--{
--	struct orc_entry *orc_a;
--	const int *a = _a, *b = _b;
--	unsigned long a_val = orc_ip(a);
--	unsigned long b_val = orc_ip(b);
--
--	if (a_val > b_val)
--		return 1;
--	if (a_val < b_val)
--		return -1;
--
--	/*
--	 * The "weak" section terminator entries need to always be on the left
--	 * to ensure the lookup code skips them in favor of real entries.
--	 * These terminator entries exist to handle any gaps created by
--	 * whitelisted .o files which didn't get objtool generation.
--	 */
--	orc_a = cur_orc_table + (a - cur_orc_ip_table);
--	return orc_a->sp_reg == ORC_REG_UNDEFINED && !orc_a->end ? -1 : 1;
--}
--
- void unwind_module_init(struct module *mod, void *_orc_ip, size_t orc_ip_size,
- 			void *_orc, size_t orc_size)
- {
-@@ -246,16 +194,7 @@ void unwind_module_init(struct module *mod, void *_orc_ip, size_t orc_ip_size,
- 		     orc_size % sizeof(*orc) != 0 ||
- 		     num_entries != orc_size / sizeof(*orc));
+ /* Returns space to next name. */
+@@ -688,11 +698,16 @@ static void reset_iter(struct kallsym_iter *iter, loff_t new_pos)
+ 	iter->name[0] = '\0';
+ 	iter->nameoff = get_symbol_offset(new_pos);
+ 	iter->pos = new_pos;
++
++	if (!iter->show_layout)
++		return;
++
+ 	if (new_pos == 0) {
+ 		iter->pos_arch_end = 0;
+ 		iter->pos_mod_end = 0;
+ 		iter->pos_ftrace_mod_end = 0;
+ 		iter->pos_bpf_end = 0;
++		iter->pos_end = 0;
+ 	}
+ }
  
--	/*
--	 * The 'cur_orc_*' globals allow the orc_sort_swap() callback to
--	 * associate an .orc_unwind_ip table entry with its corresponding
--	 * .orc_unwind entry so they can both be swapped.
--	 */
--	mutex_lock(&sort_mutex);
--	cur_orc_ip_table = orc_ip;
--	cur_orc_table = orc;
--	sort(orc_ip, num_entries, sizeof(int), orc_sort_cmp, orc_sort_swap);
--	mutex_unlock(&sort_mutex);
-+	orc_sort(orc_ip, orc, num_entries);
+@@ -721,13 +736,23 @@ static int update_iter_mod(struct kallsym_iter *iter, loff_t pos)
+ 	    get_ksymbol_bpf(iter))
+ 		return 1;
  
- 	mod->arch.orc_unwind_ip = orc_ip;
- 	mod->arch.orc_unwind = orc;
-diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
-index f76747862bd2..ff094cecebc4 100644
---- a/arch/x86/lib/Makefile
-+++ b/arch/x86/lib/Makefile
-@@ -50,6 +50,9 @@ lib-$(CONFIG_INSTRUCTION_DECODER) += insn.o inat.o insn-eval.o
- lib-$(CONFIG_RANDOMIZE_BASE) += kaslr.o
- lib-$(CONFIG_FUNCTION_ERROR_INJECTION)	+= error-inject.o
- lib-$(CONFIG_RETPOLINE) += retpoline.o
-+ifdef CONFIG_MODULES
-+lib-$(CONFIG_UNWINDER_ORC) += orc.o
-+endif
- 
- obj-y += msr.o msr-reg.o msr-reg-export.o hweight.o
- obj-y += iomem.o
-diff --git a/arch/x86/lib/orc.c b/arch/x86/lib/orc.c
-new file mode 100644
-index 000000000000..6a42842bf4ef
---- /dev/null
-+++ b/arch/x86/lib/orc.c
-@@ -0,0 +1,78 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * ORC sorting shared by the compressed boot code and ORC module
-+ * support.
-+ */
-+
-+#include <asm/orc_types.h>
-+#include <linux/mutex.h>
-+#include <linux/sort.h>
-+
-+#ifndef ORC_COMPRESSED_BOOT
-+static DEFINE_MUTEX(sort_mutex);
-+
-+#define sort_mutex_lock()	mutex_lock(&sort_mutex)
-+#define sort_mutex_unlock()	mutex_unlock(&sort_mutex)
-+#else /* ORC_COMPRESSED_BOOT */
-+#define sort_mutex_lock()
-+#define sort_mutex_unlock()
-+#endif /* ORC_COMPRESSED_BOOT */
-+
-+static int *cur_orc_ip_table;
-+static struct orc_entry *cur_orc_table;
-+
-+static void orc_sort_swap(void *_a, void *_b, int size)
-+{
-+	struct orc_entry *orc_a, *orc_b;
-+	int *a = _a, *b = _b, tmp;
-+	int delta = _b - _a;
-+
-+	/* Swap the .orc_unwind_ip entries: */
-+	tmp = *a;
-+	*a = *b + delta;
-+	*b = tmp - delta;
-+
-+	/* Swap the corresponding .orc_unwind entries: */
-+	orc_a = cur_orc_table + (a - cur_orc_ip_table);
-+	orc_b = cur_orc_table + (b - cur_orc_ip_table);
-+	swap(*orc_a, *orc_b);
-+}
-+
-+static int orc_sort_cmp(const void *_a, const void *_b)
-+{
-+	const int *a = _a, *b = _b;
-+	unsigned long a_val = orc_ip(a);
-+	unsigned long b_val = orc_ip(b);
-+	struct orc_entry *orc_a;
-+
-+	if (a_val > b_val)
+-	return get_ksymbol_kprobe(iter);
++	if ((!iter->pos_end || iter->pos_end > pos) &&
++	    get_ksymbol_kprobe(iter))
 +		return 1;
-+	if (a_val < b_val)
-+		return -1;
 +
-+	/*
-+	 * The "weak" section terminator entries need to always be on the left
-+	 * to ensure the lookup code skips them in favor of real entries.
-+	 * These terminator entries exist to handle any gaps created by
-+	 * whitelisted .o files which didn't get objtool generation.
-+	 */
-+	orc_a = cur_orc_table + (a - cur_orc_ip_table);
-+
-+	return orc_a->sp_reg == ORC_REG_UNDEFINED && !orc_a->end ? -1 : 1;
-+}
-+
-+void orc_sort(int *ip_table, struct orc_entry *orc_table, u32 num_orcs)
-+{
-+	/*
-+	 * The 'cur_orc_*' globals allow the orc_sort_swap() callback to
-+	 * associate an .orc_unwind_ip table entry with its corresponding
-+	 * .orc_unwind entry so they can both be swapped.
-+	 */
-+	sort_mutex_lock();
-+
-+	cur_orc_ip_table = ip_table;
-+	cur_orc_table = orc_table;
-+	sort(ip_table, num_orcs, sizeof(int), orc_sort_cmp, orc_sort_swap);
-+
-+	sort_mutex_unlock();
-+}
-diff --git a/scripts/sorttable.h b/scripts/sorttable.h
-index deb7c1d3e979..a6bb46f36854 100644
---- a/scripts/sorttable.h
-+++ b/scripts/sorttable.h
-@@ -103,11 +103,6 @@ struct orc_entry *g_orc_table;
++	return 0;
+ }
  
- pthread_t orc_sort_thread;
- 
--static inline unsigned long orc_ip(const int *ip)
--{
--	return (unsigned long)ip + *ip;
--}
--
- static int orc_sort_cmp(const void *_a, const void *_b)
+ /* Returns false if pos at or past end of file. */
+ static int update_iter(struct kallsym_iter *iter, loff_t pos)
  {
- 	struct orc_entry *orc_a;
-diff --git a/tools/arch/x86/include/asm/orc_types.h b/tools/arch/x86/include/asm/orc_types.h
-index 5a2baf28a1dc..7708548713c4 100644
---- a/tools/arch/x86/include/asm/orc_types.h
-+++ b/tools/arch/x86/include/asm/orc_types.h
-@@ -67,6 +67,13 @@ struct orc_entry {
- #endif
- } __packed;
- 
-+static inline unsigned long orc_ip(const int *ip)
-+{
-+	return (unsigned long)ip + *ip;
-+}
+-	/* Module symbols can be accessed randomly. */
++	if (!iter->show_layout) {
++		if (pos > iter->pos_end)
++			return 0;
 +
-+void orc_sort(int *ip_table, struct orc_entry *orc_table, u32 num_orcs);
++		pos = iter->shuffled_pos[pos];
++	}
 +
- #endif /* __ASSEMBLY__ */
+ 	if (pos >= kallsyms_num_syms)
+ 		return update_iter_mod(iter, pos);
  
- #endif /* _ORC_TYPES_H */
+@@ -770,7 +795,7 @@ static int s_show(struct seq_file *m, void *p)
+ 	if (!iter->name[0])
+ 		return 0;
+ 
+-	value = iter->show_value ? (void *)iter->value : NULL;
++	value = iter->show_layout ? (void *)iter->value : NULL;
+ 
+ 	if (iter->module_name[0]) {
+ 		char type;
+@@ -807,9 +832,10 @@ static inline int kallsyms_for_perf(void)
+ }
+ 
+ /*
+- * We show kallsyms information even to normal users if we've enabled
+- * kernel profiling and are explicitly not paranoid (so kptr_restrict
+- * is clear, and sysctl_perf_event_paranoid isn't set).
++ * We show kallsyms information and display them sorted by address even
++ * to normal users if we've enabled kernel profiling and are explicitly
++ * not paranoid (so kptr_restrict is clear, and sysctl_perf_event_paranoid
++ * isn't set).
+  *
+  * Otherwise, require CAP_SYSLOG (assuming kptr_restrict isn't set to
+  * block even that).
+@@ -839,16 +865,53 @@ static int kallsyms_open(struct inode *inode, struct file *file)
+ 	 * using get_symbol_offset for every symbol.
+ 	 */
+ 	struct kallsym_iter *iter;
+-	iter = __seq_open_private(file, &kallsyms_op, sizeof(*iter));
+-	if (!iter)
+-		return -ENOMEM;
+-	reset_iter(iter, 0);
++	/*
++	 * This fake iter is needed for the cases with unprivileged
++	 * access. We need to know the exact number of symbols to
++	 * randomize the display layout.
++	 */
++	struct kallsym_iter fake;
++	size_t size = sizeof(*iter);
++	loff_t pos;
++
++	fake.show_layout = true;
++	reset_iter(&fake, 0);
+ 
+ 	/*
+ 	 * Instead of checking this on every s_show() call, cache
+ 	 * the result here at open time.
+ 	 */
+-	iter->show_value = kallsyms_show_value(file->f_cred);
++	fake.show_layout = kallsyms_show_value(file->f_cred);
++	if (!fake.show_layout) {
++		pos = kallsyms_num_syms;
++		while (update_iter_mod(&fake, pos))
++			pos++;
++
++		size = struct_size(iter, shuffled_pos, fake.pos_end + 1);
++	}
++
++	iter = __seq_open_private(file, &kallsyms_op, size);
++	if (!iter)
++		return -ENOMEM;
++
++	iter->show_layout = fake.show_layout;
++	reset_iter(iter, 0);
++
++	if (iter->show_layout)
++		return 0;
++
++	/* Copy the bounds since they were already discovered above */
++	iter->pos_arch_end = fake.pos_arch_end;
++	iter->pos_mod_end = fake.pos_mod_end;
++	iter->pos_ftrace_mod_end = fake.pos_ftrace_mod_end;
++	iter->pos_bpf_end = fake.pos_bpf_end;
++	iter->pos_end = fake.pos_end;
++
++	for (pos = 0; pos <= iter->pos_end; pos++)
++		iter->shuffled_pos[pos] = pos;
++
++	shuffle_array(iter->shuffled_pos, iter->pos_end + 1);
++
+ 	return 0;
+ }
+ 
+@@ -859,6 +922,7 @@ const char *kdb_walk_kallsyms(loff_t *pos)
+ 	if (*pos == 0) {
+ 		memset(&kdb_walk_kallsyms_iter, 0,
+ 		       sizeof(kdb_walk_kallsyms_iter));
++		kdb_walk_kallsyms_iter.show_layout = true;
+ 		reset_iter(&kdb_walk_kallsyms_iter, 0);
+ 	}
+ 	while (1) {
 -- 
 2.34.1
 
