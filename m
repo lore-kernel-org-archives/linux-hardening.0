@@ -2,199 +2,138 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8ABC4321E
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Feb 2022 01:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 393EBC4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Feb 2022 01:56:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233242AbiBJB4F (ORCPT
+        id S233339AbiBJB4B (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Feb 2022 20:56:05 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:60038 "EHLO
+        Wed, 9 Feb 2022 20:56:01 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:60030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233248AbiBJBzp (ORCPT
+        with ESMTP id S233226AbiBJBzn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Feb 2022 20:55:45 -0500
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F3B82AA8F
-        for <linux-hardening@vger.kernel.org>; Wed,  9 Feb 2022 17:37:38 -0800 (PST)
-Received: by mail-wr1-x433.google.com with SMTP id e3so6997059wra.0
-        for <linux-hardening@vger.kernel.org>; Wed, 09 Feb 2022 17:37:38 -0800 (PST)
+        Wed, 9 Feb 2022 20:55:43 -0500
+Received: from mail-oo1-xc36.google.com (mail-oo1-xc36.google.com [IPv6:2607:f8b0:4864:20::c36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16FD12B6B3
+        for <linux-hardening@vger.kernel.org>; Wed,  9 Feb 2022 17:45:46 -0800 (PST)
+Received: by mail-oo1-xc36.google.com with SMTP id o128-20020a4a4486000000b003181707ed40so4604584ooa.11
+        for <linux-hardening@vger.kernel.org>; Wed, 09 Feb 2022 17:45:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WsQRJ8ndtqiy6dmXBPH5IVtHwtgIWPM+6Wq7h7pgzqw=;
-        b=eck2Vn7r4Cx40UMENI4/9XdUUdLwOnGCzfgNUYfTK4754FCtD1iuDbQZAUeRUJyIMk
-         fEanP9d5yolm3U6WwVKI5vbJFYad/2mMvh/+gI3fbpkZaF+mXofXourCU2yBjtScG0CC
-         C51QJTqG5/WK83pfsfmESNUcQjuWgVIYOGWfKTWpqkPy7tt2t340umvbGBd9o38e7tNV
-         QTB5mTMHF3PYxwZbPBqTHx8HK8UNXZ+gh0xijQOzlOlcyXtNG7jHj0M7qP0xneWG0oH3
-         2eXJmEuqdT1WA8mE6kKHZVVY5QDm/IHsQp6SXBmIaDv/UA9hb/lZ9SmWmUaDUfKFOEg6
-         9HHg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uFbiXZ661Ew9fjYfgC6u/MqjxislkKWsUWOZlueLXog=;
+        b=byGrfDBXU40CMAMH+QnRmZB2hgpnzd4NGTUutUKY82+AwMVd2EJaISHTE/1ECUa4pn
+         MUX+upwrE8IMcQhdBgL9c9HMqEiPyB75Gbk2uvK+EAH5RDmJeWfvinBuuZDxPbUpxGSS
+         lmdcQLNrhT7C7ORUJn3fReuqyYy4BRYSW1wZk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WsQRJ8ndtqiy6dmXBPH5IVtHwtgIWPM+6Wq7h7pgzqw=;
-        b=du47ePrRgOOsmB93aTOA1kyL9hRMa/iOwoRGV2dF3Wt3TfRBNdyF/lF0Vnv6vk67eH
-         4o6xVV5IUf0kFAPm63FnpB7mPc6K/kkUH1LNjzhZF+3mSx5I4rqw9REd05Awk/+Z9B80
-         qOf0FboAQWBdbU39NjOJQ0VvGmQzuHzNFtrMcqeSbF1zoYoMFZg5Syc2lFAji9WWJOMz
-         8zk7Gz+cnO6x/aO2YKoY8iuFIml4YP/voGSPpxo0EVLFoY/g/9pURbgPciFK8ibmcNUa
-         G6070ZvLMDBFdRK874SDEEkqIhz/b6FLp2/sWgQr1U0KYWoQndYitb/S2HENQINc/O/z
-         HWcg==
-X-Gm-Message-State: AOAM530we0V9A/OEsljT/8wCgFNwodinB5n9ZNti4yRnmBTi+0X9YDeF
-        rVbsB47qNXlVWm0HYKnMCAm7ebZht8mgmJgMzJ8Jjg==
-X-Google-Smtp-Source: ABdhPJwq62uinZtJKWxWNzISWawAa3D953n4Fq52DkoUrTEM4TzyQSmuSdqys4D5n/PaI7HHGUNisPL57lIKXwr1lOg=
-X-Received: by 2002:a5d:64a7:: with SMTP id m7mr4331762wrp.80.1644457056586;
- Wed, 09 Feb 2022 17:37:36 -0800 (PST)
-MIME-Version: 1.0
-References: <20220210003224.773957-1-keescook@chromium.org>
-In-Reply-To: <20220210003224.773957-1-keescook@chromium.org>
-From:   David Gow <davidgow@google.com>
-Date:   Thu, 10 Feb 2022 09:37:25 +0800
-Message-ID: <CABVgOSkx0xNkyva3UtmxVQM=rZyoRNDiytpzCkNG8era+mXMnA@mail.gmail.com>
-Subject: Re: [PATCH] um: Enable FORTIFY_SOURCE
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        linux-um <linux-um@lists.infradead.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uFbiXZ661Ew9fjYfgC6u/MqjxislkKWsUWOZlueLXog=;
+        b=wRdfMS+1w0w3qnEM4kIAW8ZBFUwKnqe0VbgNqlxkodDo4TQBwXWjC24e3KEaewv9lY
+         eJk01kjpl5eFFQfLtblX6kfOyiCWqC7abmu93i2Snn3eygXwig1YGXBw0XBEz/WgYjGk
+         LkLvRvBGVXy7jqvjLWYtQ+f9nxEj7/sA7K9NPsYSTMDxYGGvQkM9vryOGr7tpF4gXv4i
+         JdWIt2hvGYcoqnlJVBgISAjHxD0ogFCkJeqEryMvInE/dF5qFTo9rq07z5Bq/QMH9o+y
+         f43no0kB/F4K9oXlVV6/LtlBlEPez7pOHcOpkuYDrQf81i0VoplnPEQPeh+j6HPli5aF
+         S97g==
+X-Gm-Message-State: AOAM5302l4Cur+GBHs/sfTrErR8oP62RXXC2i8A4hfykMNzZI/uLA4Sy
+        e8Llcgkhg3+6fSYv3PGGLMF5wwf7g++jGg==
+X-Google-Smtp-Source: ABdhPJw+ZghIulP0lt/u5PYX2r5k/dJWK03itV6SCLMJRIfcICpmHfG8aQwsu7+Iq2Lfh3+XNlri9w==
+X-Received: by 2002:a17:90b:314d:: with SMTP id ip13mr18418pjb.42.1644453808447;
+        Wed, 09 Feb 2022 16:43:28 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r12sm15047114pgn.6.2022.02.09.16.43.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Feb 2022 16:43:28 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A . R . Silva" <gustavoars@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Keith Busch <kbusch@kernel.org>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000b983e505d79ffe0a"
+Subject: [PATCH] overflow: Provide constant expression struct_size
+Date:   Wed,  9 Feb 2022 16:43:26 -0800
+Message-Id: <20220210004326.776574-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2666; h=from:subject; bh=14Ho7e3+FD8cqq+qkLYHbJIZoGsnOpApzExmvlYtrYc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiBF+tnHoL+rQk6Nngev4Kq+u30muSK0zNRaDjdCOE 1Oj38ieJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYgRfrQAKCRCJcvTf3G3AJs6FD/ 9avPoQ7Z4IlMHbSykAxXrGFYSF+wvMgfe0LImCrE+GjGwL4rIgyN23by0prK/cgL3Y8vaggBM7gWub J532rvb1aGcwXl9AX6g4IT1r59xMvTB/+476o42yRpyBWHCkuZ2zdOTPWAmYb7oogKxfjH4pRlbGb0 54LugsOVNG9aiPEM8IvRmpuuNldJUUytI+7gDBxNnpkjBQnNXspdQoAqnu32RJhud1yrkDsi8++eQv afTWFDCZr1aQsThpcScXNOjBwvnVDnecEfuBzLKkLQ2GcETyd2J+qM6hlmHgofPhhof/jW8CE5QkiA VXhBfe6dd3JeSx/YN6Whg/stKHHJav9N/ye42U0uVV5UfjuzLxqLQPQ9OPjL5wu8X42x2tnKtJnRHu aGOtDi8V6JLqU3oDGtq8eVjgbhrjWKvgWOYxm0i7ZkE0qDThvkMKyNwtmv4AeyaAV+F9M3Dlh/s0Zq j60wyEwq82qbLk9v29YGRkbwrkqGmOPy5t1bznogdUjxg1lm3nX7E0SmO/jdkZXITYuRsPsXT5IDFu ZrTu8MlrtTor6sSB6MTu+J3YI+sq++lnl0fSNZ2986hrzFyqFeyCoju2Ckv5U6o2j/IMpeTAVG8fGs B1z8nyvOKcTrHfsPaMmWzWuTx9TQ/tZYcVaWLFI2UTgUeZZyXn9pApEK/Yjw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
---000000000000b983e505d79ffe0a
-Content-Type: text/plain; charset="UTF-8"
+There have been cases where struct_size() (or flex_array_size()) needs
+to be calculated for an initializer, which requires it be a constant
+expression. This is possible when the "count" argument is a constant
+expression, so provide this ability for the helpers.
 
-On Thu, Feb 10, 2022 at 8:32 AM Kees Cook <keescook@chromium.org> wrote:
->
-> Enable FORTIFY_SOURCE so running Kunit tests can test fortified
-> functions.
->
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/linux/overflow.h | 10 +++++++---
+ lib/test_overflow.c      |  7 +++++++
+ 2 files changed, 14 insertions(+), 3 deletions(-)
 
-Thanks -- I was successfully able to run KUnit tests with
-FORTIFY_SOURCE with this, and added some errors which it caught.
+diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+index 59d7228104d0..f1221d11f8e5 100644
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/compiler.h>
+ #include <linux/limits.h>
++#include <linux/const.h>
+ 
+ /*
+  * We need to compute the minimum and maximum values representable in a given
+@@ -221,8 +222,9 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+  * Return: number of bytes needed or SIZE_MAX on overflow.
+  */
+ #define flex_array_size(p, member, count)				\
+-	size_mul(count,							\
+-		 sizeof(*(p)->member) + __must_be_array((p)->member))
++	__builtin_choose_expr(__is_constexpr(count),			\
++		(count) * sizeof(*(p)->member) + __must_be_array((p)->member),	\
++		size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+ 
+ /**
+  * struct_size() - Calculate size of structure with trailing flexible array.
+@@ -237,6 +239,8 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+  * Return: number of bytes needed or SIZE_MAX on overflow.
+  */
+ #define struct_size(p, member, count)					\
+-	size_add(sizeof(*(p)), flex_array_size(p, member, count))
++	__builtin_choose_expr(__is_constexpr(count),			\
++		sizeof(*(p)) + flex_array_size(p, member, count),	\
++		size_add(sizeof(*(p)), flex_array_size(p, member, count)))
+ 
+ #endif /* __LINUX_OVERFLOW_H */
+diff --git a/lib/test_overflow.c b/lib/test_overflow.c
+index 712fb2351c27..d488ffaf56be 100644
+--- a/lib/test_overflow.c
++++ b/lib/test_overflow.c
+@@ -602,11 +602,18 @@ struct __test_flex_array {
+ 
+ static int __init test_overflow_size_helpers(void)
+ {
++	/* Make sure struct_size() can be used in a constant expression. */
++	u8 ce_array[struct_size((struct __test_flex_array *)0, data, 55)];
+ 	struct __test_flex_array *obj;
+ 	int count = 0;
+ 	int err = 0;
+ 	int var;
+ 
++	/* Verify constant expression against runtime version. */
++	var = 55;
++	OPTIMIZER_HIDE_VAR(var);
++	err |= sizeof(ce_array) != struct_size(obj, data, var);
++
+ #define check_one_size_helper(expected, func, args...)	({	\
+ 	bool __failure = false;					\
+ 	size_t _r;						\
+-- 
+2.30.2
 
-It might be worth noting that FORTIFY_SOURCE isn't enabled by default
-under KUnit with this patch, though it's possible to use it with
-./tools/testing/kunit/kunit.py run --kconfig_add CONFIG_FORTIFY_SOURCE=y
-
-Tested-by: David Gow <davidgow@google.com>
-
-Cheers,
--- David
-
->  arch/um/Kconfig              | 1 +
->  arch/um/os-Linux/user_syms.c | 1 +
->  2 files changed, 2 insertions(+)
->
-> diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-> index 4d398b80aea8..746e661395d7 100644
-> --- a/arch/um/Kconfig
-> +++ b/arch/um/Kconfig
-> @@ -9,6 +9,7 @@ config UML
->         select ARCH_HAS_KCOV
->         select ARCH_HAS_STRNCPY_FROM_USER
->         select ARCH_HAS_STRNLEN_USER
-> +       select ARCH_HAS_FORTIFY_SOURCE
->         select ARCH_NO_PREEMPT
->         select HAVE_ARCH_AUDITSYSCALL
->         select HAVE_ARCH_SECCOMP_FILTER
-> diff --git a/arch/um/os-Linux/user_syms.c b/arch/um/os-Linux/user_syms.c
-> index 715594fe5719..d9845b5219ce 100644
-> --- a/arch/um/os-Linux/user_syms.c
-> +++ b/arch/um/os-Linux/user_syms.c
-> @@ -1,4 +1,5 @@
->  // SPDX-License-Identifier: GPL-2.0
-> +#define __NO_FORTIFY
->  #include <linux/types.h>
->  #include <linux/module.h>
->
-> --
-> 2.30.2
->
-
---000000000000b983e505d79ffe0a
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIPnwYJKoZIhvcNAQcCoIIPkDCCD4wCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ggz5MIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
-dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
-6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
-c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
-I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
-AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
-CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
-AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
-MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
-My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
-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
-G7p3AiuB2sgfq6cOpbO5MEwGA1UdIARFMEMwQQYJKwYBBAGgMgEoMDQwMgYIKwYBBQUHAgEWJmh0
-dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQCMAAwgZoGCCsG
-AQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9jYS9n
-c2F0bGFzcjNzbWltZWNhMjAyMDBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5nbG9iYWxzaWdu
-LmNvbS9jYWNlcnQvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3J0MB8GA1UdIwQYMBaAFHzMCmjXouse
-LHIb0c1dlW+N+/JjMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20v
-Y2EvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3JsMA0GCSqGSIb3DQEBCwUAA4IBAQBsL34EJkCtu9Nu
-2+R6l1Qzno5Gl+N2Cm6/YLujukDGYa1JW27txXiilR9dGP7yl60HYyG2Exd5i6fiLDlaNEw0SqzE
-dw9ZSIak3Qvm2UybR8zcnB0deCUiwahqh7ZncEPlhnPpB08ETEUtwBEqCEnndNEkIN67yz4kniCZ
-jZstNF/BUnI3864fATiXSbnNqBwlJS3YkoaCTpbI9qNTrf5VIvnbryT69xJ6f25yfmxrXNJJe5OG
-ncB34Cwnb7xQyk+uRLZ465yUBkbjk9pC/yamL0O7SOGYUclrQl2c5zzGuVBD84YcQGDOK6gSPj6w
-QuBfOooZPOyZZZ8AMih7J980MYICajCCAmYCAQEwaDBUMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQ
-R2xvYmFsU2lnbiBudi1zYTEqMCgGA1UEAxMhR2xvYmFsU2lnbiBBdGxhcyBSMyBTTUlNRSBDQSAy
-MDIwAhABQeVybOOpR4bOOXZYL5T3MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCB5
-jfXy7/MUzVxeicSwnEj98yQFJ1i/BQIiJp+6MWhgpjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
-MBwGCSqGSIb3DQEJBTEPFw0yMjAyMTAwMTM3MzZaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUD
-BAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsG
-CSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAG+FWw/TAeWs535scteMM
-JGG8Lx14zelXFPbXWNPcmqWUpO0vshOIJBNdo6fBkWFytZf8Zlut9FWA0H8kXuxbembfEoPUOwkA
-/R1GdiurFJYKiA1SgsRBrohmcoN78ir3//PSF/qx8Qzj7lTprVI5pH1avPr74h5Tpk4BLsE75uIK
-jGh+cSPv+GIoKcBmvAkwdErLDrILyECDYww+SbsC9cDEc69Hze93y825COJRonMxsLxjXz2Y0tyD
-V0AyCXH5WvwkwwlYttIGLnWjfBVA4r2iJkz5Fh5eJfJHS0ak014k1+H0UiI8Y0JMHgliXwpUjl7j
-17IbGbR/ZTjHn3jt4w==
---000000000000b983e505d79ffe0a--
