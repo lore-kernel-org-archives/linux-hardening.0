@@ -2,302 +2,199 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06353C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Feb 2022 19:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8ABC4321E
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Feb 2022 01:56:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241914AbiBITEx (ORCPT
+        id S233242AbiBJB4F (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Feb 2022 14:04:53 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:49510 "EHLO
+        Wed, 9 Feb 2022 20:56:05 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:60038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231628AbiBITEU (ORCPT
+        with ESMTP id S233248AbiBJBzp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Feb 2022 14:04:20 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C44A4C050CCA;
-        Wed,  9 Feb 2022 11:02:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644433322; x=1675969322;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zOrA7C3DptaNUP/qG5SJSyg2DZfotK6JEnOnVCcTrms=;
-  b=U09Eu/z49Ya52Vl2q54xoYr8c8RXY+fUQhKge+8A3tIVSy4TAIwnunQM
-   b8wsnrJrRtW+m15SPPV6PPlv+eFUOgaKgE97Y7/ZZ2BPjwpzAHKN7ZXVJ
-   rvthtbkID20Hd5DN5IHS/lQDbRWCYEKzggmVqdZ5XMRSGPIdp4D30af6X
-   8ZwRU15n6rRjpmz6qElnGg5T1u41yVHSlHH8ktkfPHIZTC9wKZTl690o9
-   5sLog/NlXqB1+qomQZOWWMqAizHJ6LsNT8pjVIA3wX3ZXilSxGakcUSpI
-   dr/6/FfI95rJCEXRAiS2IyqUWYwoaw5jH3rw7J32D2f99rOTJh4AwkqLA
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10253"; a="236710020"
-X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
-   d="scan'208";a="236710020"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 10:59:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
-   d="scan'208";a="773601637"
-Received: from irvmail001.ir.intel.com ([10.43.11.63])
-  by fmsmga005.fm.intel.com with ESMTP; 09 Feb 2022 10:59:15 -0800
-Received: from newjersey.igk.intel.com (newjersey.igk.intel.com [10.102.20.203])
-        by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id 219IwjQa031082;
-        Wed, 9 Feb 2022 18:59:13 GMT
-From:   Alexander Lobakin <alexandr.lobakin@intel.com>
-To:     linux-hardening@vger.kernel.org, x86@kernel.org
-Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Bruce Schlobohm <bruce.schlobohm@intel.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Marios Pomonis <pomonis@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Nicolas Pitre <nico@fluxnic.net>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: [PATCH v10 13/15] module: use a scripted approach for FG-KASLR
-Date:   Wed,  9 Feb 2022 19:57:50 +0100
-Message-Id: <20220209185752.1226407-14-alexandr.lobakin@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220209185752.1226407-1-alexandr.lobakin@intel.com>
-References: <20220209185752.1226407-1-alexandr.lobakin@intel.com>
+        Wed, 9 Feb 2022 20:55:45 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F3B82AA8F
+        for <linux-hardening@vger.kernel.org>; Wed,  9 Feb 2022 17:37:38 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id e3so6997059wra.0
+        for <linux-hardening@vger.kernel.org>; Wed, 09 Feb 2022 17:37:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WsQRJ8ndtqiy6dmXBPH5IVtHwtgIWPM+6Wq7h7pgzqw=;
+        b=eck2Vn7r4Cx40UMENI4/9XdUUdLwOnGCzfgNUYfTK4754FCtD1iuDbQZAUeRUJyIMk
+         fEanP9d5yolm3U6WwVKI5vbJFYad/2mMvh/+gI3fbpkZaF+mXofXourCU2yBjtScG0CC
+         C51QJTqG5/WK83pfsfmESNUcQjuWgVIYOGWfKTWpqkPy7tt2t340umvbGBd9o38e7tNV
+         QTB5mTMHF3PYxwZbPBqTHx8HK8UNXZ+gh0xijQOzlOlcyXtNG7jHj0M7qP0xneWG0oH3
+         2eXJmEuqdT1WA8mE6kKHZVVY5QDm/IHsQp6SXBmIaDv/UA9hb/lZ9SmWmUaDUfKFOEg6
+         9HHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WsQRJ8ndtqiy6dmXBPH5IVtHwtgIWPM+6Wq7h7pgzqw=;
+        b=du47ePrRgOOsmB93aTOA1kyL9hRMa/iOwoRGV2dF3Wt3TfRBNdyF/lF0Vnv6vk67eH
+         4o6xVV5IUf0kFAPm63FnpB7mPc6K/kkUH1LNjzhZF+3mSx5I4rqw9REd05Awk/+Z9B80
+         qOf0FboAQWBdbU39NjOJQ0VvGmQzuHzNFtrMcqeSbF1zoYoMFZg5Syc2lFAji9WWJOMz
+         8zk7Gz+cnO6x/aO2YKoY8iuFIml4YP/voGSPpxo0EVLFoY/g/9pURbgPciFK8ibmcNUa
+         G6070ZvLMDBFdRK874SDEEkqIhz/b6FLp2/sWgQr1U0KYWoQndYitb/S2HENQINc/O/z
+         HWcg==
+X-Gm-Message-State: AOAM530we0V9A/OEsljT/8wCgFNwodinB5n9ZNti4yRnmBTi+0X9YDeF
+        rVbsB47qNXlVWm0HYKnMCAm7ebZht8mgmJgMzJ8Jjg==
+X-Google-Smtp-Source: ABdhPJwq62uinZtJKWxWNzISWawAa3D953n4Fq52DkoUrTEM4TzyQSmuSdqys4D5n/PaI7HHGUNisPL57lIKXwr1lOg=
+X-Received: by 2002:a5d:64a7:: with SMTP id m7mr4331762wrp.80.1644457056586;
+ Wed, 09 Feb 2022 17:37:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220210003224.773957-1-keescook@chromium.org>
+In-Reply-To: <20220210003224.773957-1-keescook@chromium.org>
+From:   David Gow <davidgow@google.com>
+Date:   Thu, 10 Feb 2022 09:37:25 +0800
+Message-ID: <CABVgOSkx0xNkyva3UtmxVQM=rZyoRNDiytpzCkNG8era+mXMnA@mail.gmail.com>
+Subject: Re: [PATCH] um: Enable FORTIFY_SOURCE
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="000000000000b983e505d79ffe0a"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Use the same methods and scripts to generate an LD script for every
-module containing all the output text sections.
-The only difference there is that we don't need to reserve any space
-as the memory for every section is being allocated dynamically.
+--000000000000b983e505d79ffe0a
+Content-Type: text/plain; charset="UTF-8"
 
-I picked ".ko.lds" extension since there's a fistful of ".lds" files
-inside the tree, so I couldn't count all of them as generated /
-build artifacts. OTOH, we're limited in heuristics when cleaning as
-dotconfig doesn't get included and stuff like ".mod.c" is just being
-wiped using `find`.
+On Thu, Feb 10, 2022 at 8:32 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> Enable FORTIFY_SOURCE so running Kunit tests can test fortified
+> functions.
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
 
-Signed-off-by: Alexander Lobakin <alexandr.lobakin@intel.com>
----
- .gitignore                        |  1 +
- include/asm-generic/vmlinux.lds.h | 12 ++++++++++++
- init/Kconfig                      | 15 ++++++++++++++-
- scripts/Makefile.modfinal         | 20 +++++++++++++++++---
- scripts/generate_text_sections.pl |  9 ++++++++-
- scripts/module.lds.S              | 14 +++++++++++++-
- 6 files changed, 65 insertions(+), 6 deletions(-)
+Thanks -- I was successfully able to run KUnit tests with
+FORTIFY_SOURCE with this, and added some errors which it caught.
 
-diff --git a/.gitignore b/.gitignore
-index 7afd412dadd2..d1b48f01037a 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -26,6 +26,7 @@
- *.gz
- *.i
- *.ko
-+*.ko.lds
- *.lex.c
- *.ll
- *.lst
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index e63d5a69f1bc..9f67660ace18 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -130,6 +130,18 @@
- #define TEXT_MAIN		.text
- #endif
- 
-+/*
-+ * Same for modules. However, LD_DEAD_CODE_DATA_ELIMINATION doesn't touch
-+ * them, so no need to check for it here.
-+ */
-+#if defined(CONFIG_LTO_CLANG) && !defined(CONFIG_MODULE_FG_KASLR)
-+#define TEXT_MAIN_MODULE	SECT_WILDCARD(.text)
-+#elif defined(CONFIG_MODULE_FG_KASLR)
-+#define TEXT_MAIN_MODULE	.text.__unused__
-+#else
-+#define TEXT_MAIN_MODULE	.text
-+#endif
-+
- /*
-  * Used by scripts/generate_text_sections.pl to inject text sections,
-  * harmless if FG-KASLR is disabled.
-diff --git a/init/Kconfig b/init/Kconfig
-index 86a2d3fd6390..90951631aa03 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -2391,7 +2391,6 @@ config MODULE_FG_KASLR
- 	depends on $(cc-option,-ffunction-sections)
- 	depends on LD_HAS_Z_UNIQUE_SYMBOL || !LIVEPATCH
- 	default FG_KASLR
--	depends on BROKEN
- 	help
- 	  This option randomizes the module text section by reordering the text
- 	  section by function at module load time. In order to use this
-@@ -2400,6 +2399,20 @@ config MODULE_FG_KASLR
- 
- 	  If unsure, say N.
- 
-+config MODULE_FG_KASLR_SHIFT
-+	int "Module FG-KASLR granularity (functions per section shift)"
-+	depends on MODULE_FG_KASLR
-+	range 0 16
-+	default 0
-+	help
-+	  This sets the number of functions that will be put in each section
-+	  as a power of two.
-+	  Decreasing the value increases the randomization, but also increases
-+	  the size of the final kernel module due to the amount of sections.
-+	  0 means that a separate section will be created for each function.
-+	  16 almost disables the randomization, leaving only the manual
-+	  separation.
-+
- endif # MODULES
- 
- config MODULES_TREE_LOOKUP
-diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
-index 7f39599e9fae..4ca9d8fc978d 100644
---- a/scripts/Makefile.modfinal
-+++ b/scripts/Makefile.modfinal
-@@ -28,13 +28,25 @@ quiet_cmd_cc_o_c = CC [M]  $@
- %.mod.o: %.mod.c FORCE
- 	$(call if_changed_dep,cc_o_c)
- 
-+ifdef CONFIG_MODULE_FG_KASLR
-+quiet_cmd_gen_modules_lds = GEN [M] $@
-+      cmd_gen_modules_lds =						\
-+	$(PERL) $(srctree)/scripts/generate_text_sections.pl		\
-+		$(if $(CONFIG_HAVE_ASM_FUNCTION_SECTIONS),-a)		\
-+		-s $(CONFIG_MODULE_FG_KASLR_SHIFT) $(filter %.o, $^)	\
-+		< $(filter %.lds, $^) > $@
-+
-+%.ko.lds: %$(mod-prelink-ext).o scripts/module.lds FORCE
-+	$(call if_changed,gen_modules_lds)
-+endif
-+
- ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
- 
- quiet_cmd_ld_ko_o = LD [M]  $@
-       cmd_ld_ko_o +=							\
- 	$(LD) -r $(KBUILD_LDFLAGS)					\
- 		$(KBUILD_LDFLAGS_MODULE) $(LDFLAGS_MODULE)		\
--		-T scripts/module.lds -o $@ $(filter %.o, $^);		\
-+		-T $(filter %.lds, $^) -o $@ $(filter %.o, $^);		\
- 	$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
- 
- quiet_cmd_btf_ko = BTF [M] $@
-@@ -56,13 +68,15 @@ if_changed_except = $(if $(call newer_prereqs_except,$(2))$(cmd-check),      \
- 
- 
- # Re-generate module BTFs if either module's .ko or vmlinux changed
--$(modules): %.ko: %$(mod-prelink-ext).o %.mod.o scripts/module.lds $(if $(KBUILD_BUILTIN),vmlinux) FORCE
-+$(modules): %.ko: %$(mod-prelink-ext).o %.mod.o
-+$(modules): %.ko: $(if $(CONFIG_MODULE_FG_KASLR),%.ko.lds,scripts/module.lds)
-+$(modules): %.ko: $(if $(KBUILD_BUILTIN),vmlinux) FORCE
- 	+$(call if_changed_except,ld_ko_o,vmlinux)
- ifdef CONFIG_DEBUG_INFO_BTF_MODULES
- 	+$(if $(newer-prereqs),$(call cmd,btf_ko))
- endif
- 
--targets += $(modules) $(modules:.ko=.mod.o)
-+targets += $(modules) $(modules:.ko=.mod.o) $(modules:.ko=.ko.lds)
- 
- # Add FORCE to the prequisites of a target to force it to be always rebuilt.
- # ---------------------------------------------------------------------------
-diff --git a/scripts/generate_text_sections.pl b/scripts/generate_text_sections.pl
-index 999e1b68181f..a05ae9fb0041 100755
---- a/scripts/generate_text_sections.pl
-+++ b/scripts/generate_text_sections.pl
-@@ -48,6 +48,7 @@ my $readelf = $ENV{'READELF'} || die "$0: ERROR: READELF not set?";
- ## text sections array
- my @sections = ();
- my $has_ccf = 0;
-+my $vmlinux = 0;
- 
- ## max alignment found to reserve some space. It would probably be
- ## better to start from 64, but CONFIG_DEBUG_FORCE_FUNCTION_ALIGN_64B
-@@ -78,6 +79,12 @@ sub read_sections {
- 			$has_ccf = 1;
- 		}
- 
-+		## If we're processing a module, don't reserve any space
-+		## at the end as its sections are being allocated separately.
-+		if ($name eq ".sched.text") {
-+			$vmlinux = 1;
-+		}
-+
- 		if (!($name =~ /^\.text(\.(?!hot\.|unknown\.|unlikely\.|.san\.)[0-9a-zA-Z_]*){1,2}((\.constprop|\.isra|\.part)\.[0-9]){0,2}(|\.[0-9cfi]*)$/)) {
- 			next;
- 		}
-@@ -141,7 +148,7 @@ sub print_reserve {
- 	## If we have text sections aligned with 128 bytes or more, make
- 	## sure we reserve some space for them to not overlap _etext
- 	## while shuffling sections.
--	if (!$count) {
-+	if (!$vmlinux or !$count) {
- 		return;
- 	}
- 
-diff --git a/scripts/module.lds.S b/scripts/module.lds.S
-index 1d0e1e4dc3d2..6e957aa614b1 100644
---- a/scripts/module.lds.S
-+++ b/scripts/module.lds.S
-@@ -3,6 +3,11 @@
-  * Archs are free to supply their own linker scripts.  ld will
-  * combine them automatically.
-  */
-+
-+#include <asm-generic/vmlinux.lds.h>
-+
-+#undef SANITIZER_DISCARDS
-+
- #ifdef CONFIG_CFI_CLANG
- # include <asm/page.h>
- # define ALIGN_CFI 		ALIGN(PAGE_SIZE)
-@@ -58,9 +63,16 @@ SECTIONS {
- 	 */
- 	.text : ALIGN_CFI {
- 		*(.text.__cfi_check)
--		*(.text .text.[0-9a-zA-Z_]* .text..L.cfi*)
-+		*(TEXT_MAIN_MODULE)
-+		*(.text..L.cfi.jumptable .text..L.cfi.jumptable.*)
-+	}
-+#elif defined(CONFIG_MODULE_FG_KASLR)
-+	.text : {
-+		*(TEXT_MAIN_MODULE)
- 	}
- #endif
-+
-+	TEXT_FG_KASLR
- }
- 
- /* bring in arch-specific sections */
--- 
-2.34.1
+It might be worth noting that FORTIFY_SOURCE isn't enabled by default
+under KUnit with this patch, though it's possible to use it with
+./tools/testing/kunit/kunit.py run --kconfig_add CONFIG_FORTIFY_SOURCE=y
 
+Tested-by: David Gow <davidgow@google.com>
+
+Cheers,
+-- David
+
+>  arch/um/Kconfig              | 1 +
+>  arch/um/os-Linux/user_syms.c | 1 +
+>  2 files changed, 2 insertions(+)
+>
+> diff --git a/arch/um/Kconfig b/arch/um/Kconfig
+> index 4d398b80aea8..746e661395d7 100644
+> --- a/arch/um/Kconfig
+> +++ b/arch/um/Kconfig
+> @@ -9,6 +9,7 @@ config UML
+>         select ARCH_HAS_KCOV
+>         select ARCH_HAS_STRNCPY_FROM_USER
+>         select ARCH_HAS_STRNLEN_USER
+> +       select ARCH_HAS_FORTIFY_SOURCE
+>         select ARCH_NO_PREEMPT
+>         select HAVE_ARCH_AUDITSYSCALL
+>         select HAVE_ARCH_SECCOMP_FILTER
+> diff --git a/arch/um/os-Linux/user_syms.c b/arch/um/os-Linux/user_syms.c
+> index 715594fe5719..d9845b5219ce 100644
+> --- a/arch/um/os-Linux/user_syms.c
+> +++ b/arch/um/os-Linux/user_syms.c
+> @@ -1,4 +1,5 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> +#define __NO_FORTIFY
+>  #include <linux/types.h>
+>  #include <linux/module.h>
+>
+> --
+> 2.30.2
+>
+
+--000000000000b983e505d79ffe0a
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIIPnwYJKoZIhvcNAQcCoIIPkDCCD4wCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+ggz5MIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
+IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
+dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
+6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
+c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
+I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
+AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
+BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
+CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
+AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
+MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
+My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
+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
+G7p3AiuB2sgfq6cOpbO5MEwGA1UdIARFMEMwQQYJKwYBBAGgMgEoMDQwMgYIKwYBBQUHAgEWJmh0
+dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQCMAAwgZoGCCsG
+AQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9jYS9n
+c2F0bGFzcjNzbWltZWNhMjAyMDBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5nbG9iYWxzaWdu
+LmNvbS9jYWNlcnQvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3J0MB8GA1UdIwQYMBaAFHzMCmjXouse
+LHIb0c1dlW+N+/JjMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20v
+Y2EvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3JsMA0GCSqGSIb3DQEBCwUAA4IBAQBsL34EJkCtu9Nu
+2+R6l1Qzno5Gl+N2Cm6/YLujukDGYa1JW27txXiilR9dGP7yl60HYyG2Exd5i6fiLDlaNEw0SqzE
+dw9ZSIak3Qvm2UybR8zcnB0deCUiwahqh7ZncEPlhnPpB08ETEUtwBEqCEnndNEkIN67yz4kniCZ
+jZstNF/BUnI3864fATiXSbnNqBwlJS3YkoaCTpbI9qNTrf5VIvnbryT69xJ6f25yfmxrXNJJe5OG
+ncB34Cwnb7xQyk+uRLZ465yUBkbjk9pC/yamL0O7SOGYUclrQl2c5zzGuVBD84YcQGDOK6gSPj6w
+QuBfOooZPOyZZZ8AMih7J980MYICajCCAmYCAQEwaDBUMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQ
+R2xvYmFsU2lnbiBudi1zYTEqMCgGA1UEAxMhR2xvYmFsU2lnbiBBdGxhcyBSMyBTTUlNRSBDQSAy
+MDIwAhABQeVybOOpR4bOOXZYL5T3MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCB5
+jfXy7/MUzVxeicSwnEj98yQFJ1i/BQIiJp+6MWhgpjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
+MBwGCSqGSIb3DQEJBTEPFw0yMjAyMTAwMTM3MzZaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUD
+BAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsG
+CSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAG+FWw/TAeWs535scteMM
+JGG8Lx14zelXFPbXWNPcmqWUpO0vshOIJBNdo6fBkWFytZf8Zlut9FWA0H8kXuxbembfEoPUOwkA
+/R1GdiurFJYKiA1SgsRBrohmcoN78ir3//PSF/qx8Qzj7lTprVI5pH1avPr74h5Tpk4BLsE75uIK
+jGh+cSPv+GIoKcBmvAkwdErLDrILyECDYww+SbsC9cDEc69Hze93y825COJRonMxsLxjXz2Y0tyD
+V0AyCXH5WvwkwwlYttIGLnWjfBVA4r2iJkz5Fh5eJfJHS0ak014k1+H0UiI8Y0JMHgliXwpUjl7j
+17IbGbR/ZTjHn3jt4w==
+--000000000000b983e505d79ffe0a--
