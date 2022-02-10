@@ -2,133 +2,101 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8ADC4332F
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Feb 2022 01:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BD5C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Feb 2022 01:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233435AbiBJB4b (ORCPT
+        id S233707AbiBJB55 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Feb 2022 20:56:31 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:33842 "EHLO
+        Wed, 9 Feb 2022 20:57:57 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:60016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233244AbiBJB4H (ORCPT
+        with ESMTP id S233735AbiBJB4N (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Feb 2022 20:56:07 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33C262AA80;
-        Wed,  9 Feb 2022 17:36:31 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4F65FB823EF;
-        Thu, 10 Feb 2022 00:56:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4934DC340E7;
-        Thu, 10 Feb 2022 00:56:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644454603;
-        bh=eYU7NV2lU87Te/oArn1NFLW6lyegJxoiFC+uPfhAoqM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UHNJ+HIGQETrnOyMDDQrDAi7CbpVHwry6k0dMz7Pll50RKFrgTdC7ep7ZJJsbkQ9o
-         nTH/ipeptiqJQB9LfMlZEXWuno7bbnE7pH/5O0B051E4cZsA5yGzWV3crxMqw4NgJ5
-         iXcswHuj30mc0r0F7U5EV/DfEEMJFq2/w/GPjlNJIf+/dLy0mLiXZGPAJ54Lc7wJaZ
-         nA1EOyKH0EGXRI7wJJJVLqMm1y1P4VenifBojYd7ZRMwkqsRRnWCoL/kQU085yNLkh
-         BKykwY5Er6HpdG7W3KbwpaLNIrrJeIyZyqKLsk7rLBrT/+cG+EftZhyCL6GUTVrQ74
-         r6qFp0TC9oHcg==
-Date:   Wed, 9 Feb 2022 19:04:07 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Keith Busch <kbusch@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] overflow: Provide constant expression struct_size
-Message-ID: <20220210010407.GA701603@embeddedor>
-References: <20220210004326.776574-1-keescook@chromium.org>
+        Wed, 9 Feb 2022 20:56:13 -0500
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E1E02AAB0
+        for <linux-hardening@vger.kernel.org>; Wed,  9 Feb 2022 17:40:52 -0800 (PST)
+Received: by mail-io1-xd2b.google.com with SMTP id s18so5509267ioa.12
+        for <linux-hardening@vger.kernel.org>; Wed, 09 Feb 2022 17:40:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NnM5dCp68E2rE/49/oOSjnZsSaxmdjzgIGASXkmR6xY=;
+        b=SAzNK2jOoju8Kh3tfB4nt1GBgAe2hFe+vZ/ZEcNq9+YseZkdv2Fs4ANx/8Njn2iHYw
+         VgImwzzPwpqjZer2EaG3EFoHGPc7ZAG0lVoML//dwhD2BjDTxWacHXbShQifoKV37Z0B
+         VlqmbomQWjifurbhavxvDrNbK8H8R7Dm5ffKg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NnM5dCp68E2rE/49/oOSjnZsSaxmdjzgIGASXkmR6xY=;
+        b=l4SZh5DjnXtq4FPw43obhMO0wLVEDjbS3YGpN3cvjVPKombL48DWBFG2tjjakq9IdR
+         fEdjZUL43OEGxvRAcb3iRydqiN/7WMqwcSQE8i44mrtiWaeruRyRuoN/nOMvOIChHJFX
+         c54ALZa1kQcZ4W7/MYFPC35ortN0ycDD7c5sQ9AmP1EGpUM+cLqQXBtljuQiuEOeN7OB
+         X/1fIN1St+SkkLtIG/zcZLwyS64ht4mZJEos3HILOf7d/QVbJRdLGaYiZ6KQlJ/7LxG4
+         mb507f+kGvT1pG2a8SIwlinrDwT6cQmugf+wRMerzhnvstPTT2JPdPO56KpeQ5DetHnT
+         53sw==
+X-Gm-Message-State: AOAM532aQFAdZiEevuDb50oe0H6GK74q4DPz0Il+IgVDR4u56QwyW5Nn
+        CRzl6fuzMw9nxLs7ffWxeEP4FhJrIi/hSw==
+X-Google-Smtp-Source: ABdhPJx1Wh7HpA/HF6B4EOxrjALlX3FDTxDRKrQ1wIzg5zjIWbRCBbc3R4Vri25XuSFgtzE6GDqv0A==
+X-Received: by 2002:a63:cf05:: with SMTP id j5mr4054620pgg.544.1644453146584;
+        Wed, 09 Feb 2022 16:32:26 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id lr7sm8382805pjb.42.2022.02.09.16.32.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Feb 2022 16:32:26 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Jeff Dike <jdike@addtoit.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-um@lists.infradead.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] um: Enable FORTIFY_SOURCE
+Date:   Wed,  9 Feb 2022 16:32:24 -0800
+Message-Id: <20220210003224.773957-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220210004326.776574-1-keescook@chromium.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=965; h=from:subject; bh=8p9qV7nCUTAMY0NIWHaERW8Fzn7HqVa7AIuy3N51Nyw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiBF0Xl67ZsAL362Vl2CFFWCSHpRPRaKgRKXg0mWx7 ZMVp4xqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYgRdFwAKCRCJcvTf3G3AJgidD/ 0ZTEYhKrilkWGasprf9ZIJxdPF1kViXr2K/C6/H7qvfbMkbD5Fg2txX23xhIDwLbpy5MpK6IDxNR2P MaUrUJnHJl0ZNl2PNf2uHwC/kjyyYsTvIHWJcdwDIBceeGQ7ub0Oq7j2vm/ldaha1PEymXloMWDwHz /3fj9YBHe5CKyezHu0V0lUx0hm4jNUDN3meuyyr3VAQ7sclsdreGSU+Ci0IhyaH6KuOlPtxmK+GGXQ r8lfsQiPVm5BJl8l+52BHMXlCQNhs4Nz6qv0Woxb9YML5Dv62TkyeGp/lWSPgPJFsSnnm3oycROEtr YxP3tKf0eBqiYZ/BmpO+svULC2RCO1ZBCuZ3Dl7hWtoC0hj6p2l8MwjH/P/VJDj8Qi4IjNAg8Pk1ou Zh7Fye8CDaK8vxMKBKB0HQ+OmgTnf4CM3eYhEvTQgnzhmnsiHS5rsAhfH0pgDMyp8F+WXGDc9CPYaF dBEixq9z4prhX1xhEZ9oZosu4MH0rUOwjFzaLuqJkSlfpIw8limtRgTkrtVFa4NLOjQqLZ1MAkRx5C B4ipNCCEMFhMf21hLLc54+iBrfAutksrvAhvYx8YLdOX/6nn3doqRqbjRwq38WqJsIzWgWeDv1veIK JO/xEQBVhQRO5nJ3XymXJQv5p2F7scM+73OoDDW+Hg+88tMp6ynYwykvph0A==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 09, 2022 at 04:43:26PM -0800, Kees Cook wrote:
-> There have been cases where struct_size() (or flex_array_size()) needs
-> to be calculated for an initializer, which requires it be a constant
-> expression. This is possible when the "count" argument is a constant
-> expression, so provide this ability for the helpers.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Enable FORTIFY_SOURCE so running Kunit tests can test fortified
+functions.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Tested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/um/Kconfig              | 1 +
+ arch/um/os-Linux/user_syms.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-Thanks!
---
-Gustavo
+diff --git a/arch/um/Kconfig b/arch/um/Kconfig
+index 4d398b80aea8..746e661395d7 100644
+--- a/arch/um/Kconfig
++++ b/arch/um/Kconfig
+@@ -9,6 +9,7 @@ config UML
+ 	select ARCH_HAS_KCOV
+ 	select ARCH_HAS_STRNCPY_FROM_USER
+ 	select ARCH_HAS_STRNLEN_USER
++	select ARCH_HAS_FORTIFY_SOURCE
+ 	select ARCH_NO_PREEMPT
+ 	select HAVE_ARCH_AUDITSYSCALL
+ 	select HAVE_ARCH_SECCOMP_FILTER
+diff --git a/arch/um/os-Linux/user_syms.c b/arch/um/os-Linux/user_syms.c
+index 715594fe5719..d9845b5219ce 100644
+--- a/arch/um/os-Linux/user_syms.c
++++ b/arch/um/os-Linux/user_syms.c
+@@ -1,4 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
++#define __NO_FORTIFY
+ #include <linux/types.h>
+ #include <linux/module.h>
+ 
+-- 
+2.30.2
 
-> ---
->  include/linux/overflow.h | 10 +++++++---
->  lib/test_overflow.c      |  7 +++++++
->  2 files changed, 14 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> index 59d7228104d0..f1221d11f8e5 100644
-> --- a/include/linux/overflow.h
-> +++ b/include/linux/overflow.h
-> @@ -4,6 +4,7 @@
->  
->  #include <linux/compiler.h>
->  #include <linux/limits.h>
-> +#include <linux/const.h>
->  
->  /*
->   * We need to compute the minimum and maximum values representable in a given
-> @@ -221,8 +222,9 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
->   * Return: number of bytes needed or SIZE_MAX on overflow.
->   */
->  #define flex_array_size(p, member, count)				\
-> -	size_mul(count,							\
-> -		 sizeof(*(p)->member) + __must_be_array((p)->member))
-> +	__builtin_choose_expr(__is_constexpr(count),			\
-> +		(count) * sizeof(*(p)->member) + __must_be_array((p)->member),	\
-> +		size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
->  
->  /**
->   * struct_size() - Calculate size of structure with trailing flexible array.
-> @@ -237,6 +239,8 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
->   * Return: number of bytes needed or SIZE_MAX on overflow.
->   */
->  #define struct_size(p, member, count)					\
-> -	size_add(sizeof(*(p)), flex_array_size(p, member, count))
-> +	__builtin_choose_expr(__is_constexpr(count),			\
-> +		sizeof(*(p)) + flex_array_size(p, member, count),	\
-> +		size_add(sizeof(*(p)), flex_array_size(p, member, count)))
->  
->  #endif /* __LINUX_OVERFLOW_H */
-> diff --git a/lib/test_overflow.c b/lib/test_overflow.c
-> index 712fb2351c27..d488ffaf56be 100644
-> --- a/lib/test_overflow.c
-> +++ b/lib/test_overflow.c
-> @@ -602,11 +602,18 @@ struct __test_flex_array {
->  
->  static int __init test_overflow_size_helpers(void)
->  {
-> +	/* Make sure struct_size() can be used in a constant expression. */
-> +	u8 ce_array[struct_size((struct __test_flex_array *)0, data, 55)];
->  	struct __test_flex_array *obj;
->  	int count = 0;
->  	int err = 0;
->  	int var;
->  
-> +	/* Verify constant expression against runtime version. */
-> +	var = 55;
-> +	OPTIMIZER_HIDE_VAR(var);
-> +	err |= sizeof(ce_array) != struct_size(obj, data, var);
-> +
->  #define check_one_size_helper(expected, func, args...)	({	\
->  	bool __failure = false;					\
->  	size_t _r;						\
-> -- 
-> 2.30.2
-> 
