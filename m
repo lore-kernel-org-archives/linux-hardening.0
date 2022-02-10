@@ -2,118 +2,230 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0BAC43217
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Feb 2022 02:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E72C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Feb 2022 03:06:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231643AbiBJCxZ (ORCPT
+        id S229549AbiBJDGZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Feb 2022 21:53:25 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56646 "EHLO
+        Wed, 9 Feb 2022 22:06:25 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:32812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231664AbiBJCxX (ORCPT
+        with ESMTP id S232139AbiBJDGY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Feb 2022 21:53:23 -0500
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BA26240B6
-        for <linux-hardening@vger.kernel.org>; Wed,  9 Feb 2022 18:53:25 -0800 (PST)
-Received: by mail-pf1-x435.google.com with SMTP id 9so4877294pfx.12
-        for <linux-hardening@vger.kernel.org>; Wed, 09 Feb 2022 18:53:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rl83JHro1anRWjIQgDE0XbmJ8BuE/Ygl74q80wpYn4M=;
-        b=FVy5gybG75QthWoOFg6lXY1vKAIo4Qk48eB/T/aIoERC7xTr0zQeWQS7qc+Ih0KsBH
-         eZwLfoZl8SQ6qzXgsauNDHBkrpUJKn7A0FHGJutz1wwJNZhDOH12vBLB9LPw9Jz9EMpd
-         xP7EBQyvMSHD+pkh2/4WWL2eSXB35ow8+bC7s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rl83JHro1anRWjIQgDE0XbmJ8BuE/Ygl74q80wpYn4M=;
-        b=Tl2najNu+eAB6CqcpWyt7ZdAbRkMMIRgfRyu04pbHeDDXx3G21RnL9M+FpXQH2jCmf
-         9WyGGa1nbLyXUHRdAEh81NRq/N8t0OfyDCh+Uq7dqe1zU2WNYZHd9WTz1zyp+a/ohtmW
-         KY4aCLccOxOpiYYLtP2bFTg8CyphptF7rvV5M83MUQIgSgGBSVCz1GwmPlt1kwxP3G1W
-         kicyUmEzGOTvVCRyW1RnCqBYYBD4BhlPNL8OQrgupmQhZLdrFToReSoxvYP10t6zJplU
-         ObCF5WmEsIu5WFdCy6UqkHRHuOAYRO9SU0SMr/7hfrJSVmGKJJUCVo7X/7R+saV2Nahb
-         6EMA==
-X-Gm-Message-State: AOAM531PTQAJMCI4qXwT8HY7GQFXv2jPDZ+m9RyjwBpIQ97XYvbmPcXX
-        nnWfiNTx3xpT6L1hca+axrVtjw==
-X-Google-Smtp-Source: ABdhPJw+gp51DO3UuC2Vk5guTVJ5d67yx58qd2qO9c9t1jcZL1HCjXXoQ1JcC5e6J/o2t4J/lPI5ZA==
-X-Received: by 2002:a63:9307:: with SMTP id b7mr4499370pge.616.1644461604498;
-        Wed, 09 Feb 2022 18:53:24 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t24sm21549660pfg.92.2022.02.09.18.53.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Feb 2022 18:53:23 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        =?UTF-8?q?Robert=20=C5=9Awi=C4=99cki?= <robert@swiecki.net>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH 3/3] samples/seccomp: Adjust sample to also provide kill option
-Date:   Wed,  9 Feb 2022 18:53:21 -0800
-Message-Id: <20220210025321.787113-4-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220210025321.787113-1-keescook@chromium.org>
-References: <20220210025321.787113-1-keescook@chromium.org>
+        Wed, 9 Feb 2022 22:06:24 -0500
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 705222BB02
+        for <linux-hardening@vger.kernel.org>; Wed,  9 Feb 2022 19:06:25 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0V422t5l_1644462380;
+Received: from 192.168.193.143(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V422t5l_1644462380)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 10 Feb 2022 11:06:21 +0800
+Message-ID: <93a72e23-3d67-3c46-308d-f69ec517e793@linux.alibaba.com>
+Date:   Wed, 9 Feb 2022 19:06:20 -0800
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1611; h=from:subject; bh=CDt8AGWhLzy7NL4kvvBB5tTCY0LueyR3ecDeoGuIsbA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiBH4h69+BYJGJ3Tocnvvj73dk+HxAJPLEUEd/PKa8 VwJ6tq2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYgR+IQAKCRCJcvTf3G3AJjdOD/ oDc+BTzQ15+vRXjOZrhBIBubYZ54o/oFqBiaqcBS7fVKBRJnI49NttnvRr0tq5MKRb0iNpHL3xMkxk GFX9TWlxpEUn+SN1tpQ258maPyQT8GNoGtciu9zuF04vllZcN+ptH5T3qwpn2GAmM2l0g0Vkak7OF5 MZpoq0WeiyCksDYAee8PMvm0prsUZXTK09MwRtIRnoQu1wK5FzP5d75SvGqsqvz3wY/BChveCjfS3l VpyZS4z0+9DAzl8mcIprS+r0B/jssYOMf5hEp0GHtFSyAypeVxhBmQXZ/p2CWHZ9iO1i4612MrdZHd KtAhE3KFY7NDp+FrxE8wB5u0fPm37VgZpliIsqDyo8yzolv3K67bXRQjxmUaPlYROqicxECfx5T7mV FjCCPmU+RqAZ1fxfUWUfPIk4LrUABcJrkPESZuEvyN5JVGdor6AbxOb1Nq4KcjEeVWEFWV7EyjvOoa NvplB4ov4uWSmIbvfkC5z9tFrKXBRTAklxBoHfZaYqGO7/sRpexsQiNW6wsLQ7hAJer6E1hoh48t4a XTfdGou6FMR5mNWu0ossHE4tRxATv4D3UfqAaFRaGOEUCDyVldBKTxAiB3mTi1xnCXQKb8xjYvZ0ew 7tJxLr7npTMcGlCEkDsMHq1A3FUPtn4PUnqpPPealHSKdpL2NfYlk1rtNqrA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH] [PATCH,v4,1/1,AARCH64][PR102768] aarch64: Add compiler
+ support for Shadow Call Stack
+Content-Language: en-US
+To:     gcc-patches@gcc.gnu.org, richard.earnshaw@arm.com,
+        marcus.shawcroft@arm.com, kyrylo.tkachov@arm.com, hp@gcc.gnu.org,
+        ndesaulniers@google.com, nsz@gcc.gnu.org, pageexec@gmail.com,
+        qinzhao@gcc.gnu.org, linux-hardening@vger.kernel.org,
+        richard.sandiford@arm.com
+References: <20220205110500.47430-1-ashimida@linux.alibaba.com>
+ <mpt7da481l6.fsf@arm.com>
+From:   Dan Li <ashimida@linux.alibaba.com>
+In-Reply-To: <mpt7da481l6.fsf@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-As a quick way to test SECCOMP_RET_KILL, have a negative errno mean to
-kill the process.
 
-While we're in here, also swap the arch and syscall arguments so they're
-ordered more like how seccomp filters order them.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- samples/seccomp/dropper.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+On 2/9/22 08:08, Richard Sandiford wrote:
+> Dan Li <ashimida@linux.alibaba.com> writes:
+>> +
+>> +  /* When shadow call stack is enabled, the scs_pop in the epilogue will
+>> +     restore x30, and we don't need to pop x30 again in the traditional
+>> +     way.  Pop candidates record the registers that need to be popped
+>> +     eventually.  */
+>> +  if (frame.is_scs_enabled)
+>> +    {
+>> +      if (frame.wb_push_candidate2 == R30_REGNUM)
+>> +	frame.wb_pop_candidate2 = INVALID_REGNUM;
+>> +      else if (frame.wb_push_candidate1 == R30_REGNUM)
+>> +	frame.wb_pop_candidate1 = INVALID_REGNUM;
+> 
+> Although it makes no difference to the behaviour, I think it would be
+> clearer to use pop rather than push in the checks here.
+> 
 
-diff --git a/samples/seccomp/dropper.c b/samples/seccomp/dropper.c
-index cc0648eb389e..4bca4b70f665 100644
---- a/samples/seccomp/dropper.c
-+++ b/samples/seccomp/dropper.c
-@@ -25,7 +25,7 @@
- #include <sys/prctl.h>
- #include <unistd.h>
- 
--static int install_filter(int nr, int arch, int error)
-+static int install_filter(int arch, int nr, int error)
- {
- 	struct sock_filter filter[] = {
- 		BPF_STMT(BPF_LD+BPF_W+BPF_ABS,
-@@ -42,6 +42,10 @@ static int install_filter(int nr, int arch, int error)
- 		.len = (unsigned short)(sizeof(filter)/sizeof(filter[0])),
- 		.filter = filter,
- 	};
-+	if (error == -1) {
-+		struct sock_filter kill = BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_KILL);
-+		filter[4] = kill;
-+	}
- 	if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) {
- 		perror("prctl(NO_NEW_PRIVS)");
- 		return 1;
-@@ -57,9 +61,10 @@ int main(int argc, char **argv)
- {
- 	if (argc < 5) {
- 		fprintf(stderr, "Usage:\n"
--			"dropper <syscall_nr> <arch> <errno> <prog> [<args>]\n"
-+			"dropper <arch> <syscall_nr> <errno> <prog> [<args>]\n"
- 			"Hint:	AUDIT_ARCH_I386: 0x%X\n"
- 			"	AUDIT_ARCH_X86_64: 0x%X\n"
-+			"	errno == -1 means SECCOMP_RET_KILL\n"
- 			"\n", AUDIT_ARCH_I386, AUDIT_ARCH_X86_64);
- 		return 1;
- 	}
--- 
-2.30.2
+Got it.
+>> @@ -7885,8 +7914,8 @@ aarch64_save_callee_saves (poly_int64 start_offset,
+>>         bool frame_related_p = aarch64_emit_cfi_for_reg_p (regno);
+>>   
+>>         if (skip_wb
+>> -	  && (regno == cfun->machine->frame.wb_candidate1
+>> -	      || regno == cfun->machine->frame.wb_candidate2))
+>> +	  && (regno == cfun->machine->frame.wb_push_candidate1
+>> +	      || regno == cfun->machine->frame.wb_push_candidate2))
+>>   	continue;
+>>   
+>>         if (cfun->machine->reg_is_wrapped_separately[regno])
+>> @@ -7996,8 +8025,8 @@ aarch64_restore_callee_saves (poly_int64 start_offset, unsigned start,
+>>         rtx reg, mem;
+>>   
+>>         if (skip_wb
+>> -	  && (regno == cfun->machine->frame.wb_candidate1
+>> -	      || regno == cfun->machine->frame.wb_candidate2))
+>> +	  && (regno == cfun->machine->frame.wb_push_candidate1
+>> +	      || regno == cfun->machine->frame.wb_push_candidate2))
+> 
+> Shouldn't this be using pop rather than push?
+> 
 
+There might be a little difference:
+
+- Using push candidates means that a register to be ignored in pop
+candidates will not be emitted again during the "restore" (pop_candidates
+should always be a subset of push_candidates, since popping a register
+without a push might not make sense).
+
+- Using pop candidates means that a registers to be ignored in pop
+candidates will be re-emitted during the "restore". For example,
+if we specify to ignore the x20 register in pop:
+
+--- a/gcc/config/aarch64/aarch64.c
++++ b/gcc/config/aarch64/aarch64.c
+@@ -7502,6 +7502,8 @@ aarch64_layout_frame (void)
+         frame.wb_pop_candidate1 = INVALID_REGNUM;
+      }
+  
++  if (frame.wb_pop_candidate2 == R20_REGNUM)
++       frame.wb_pop_candidate2 = INVALID_REGNUM;
+    /* If candidate2 is INVALID_REGNUM, we need to adjust max_push_offset to
+       256 to ensure that the offset meets the requirements of emit_move_insn.
+       Similarly, if candidate1 is INVALID_REGNUM, we need to set
+
+With the test case:
+
+int main(void)
+{
+         __asm__ ("":::"x19", "x20");
+         return 0;
+}
+
+When we use "pop_candidate[12]", one more insn is emitted:
+
+0000000000400604 <main>:
+    400604:       a9bf53f3        stp     x19, x20, [sp, #-16]!
+    400608:       52800000        mov     w0, #0x0
++  40060c:       f94007f4        ldr     x20, [sp, #8]
+    400610:       f84107f3        ldr     x19, [sp], #16
+    400614:       d65f03c0        ret
+
+But in the case of ignoring a specific register (like scs ignores x30),
+there is no difference between the two (because we always need
+to explicitly specify which registers to ignore in the parameter of
+aarch64_restore_callee_saves).
+
+If pop looks better here, I'd like to change it to pop in the
+next version :).
+
+>> +  /* When shadow call stack is enabled, the scs_pop in the epilogue will
+>> +     restore x30, we don't need to restore x30 again in the traditional
+>> +     way.  */
+>> +  if (cfun->machine->frame.is_scs_enabled)
+>> +    aarch64_restore_callee_saves (callee_offset - sve_callee_adjust,
+>> +				  R0_REGNUM, R29_REGNUM,
+>> +				  callee_adjust != 0, &cfi_ops);
+>> +  else
+>> +    aarch64_restore_callee_saves (callee_offset - sve_callee_adjust,
+>> +				  R0_REGNUM, R30_REGNUM,
+>> +				  callee_adjust != 0, &cfi_ops);
+>> +
+> 
+> Very minor, but I think it would be better to have:
+> 
+>    unsigned int last_gpr = (cfun->machine->frame.is_scs_enabled
+> 			   ? R29_REGNUM : R30_REGNUM);
+> 
+> so that we don't need to repeat the other arguments.  There's then
+> less risk of the two versions getting out of sync.
+> 
+
+Got it.
+
+>>   
+>>     if (need_barrier_p)
+>>       emit_insn (gen_stack_tie (stack_pointer_rtx, stack_pointer_rtx));
+>> @@ -9066,6 +9109,17 @@ aarch64_expand_epilogue (bool for_sibcall)
+>>         RTX_FRAME_RELATED_P (insn) = 1;
+>>       }
+>>   
+>> +  /* Pop return address from shadow call stack.  */
+>> +  if (cfun->machine->frame.is_scs_enabled)
+>> +    {
+>> +      machine_mode mode = aarch64_reg_save_mode (R30_REGNUM);
+>> +      rtx reg = gen_rtx_REG (mode, R30_REGNUM);
+>> +
+>> +      insn = emit_insn (gen_scs_pop ());
+>> +      add_reg_note (insn, REG_CFA_RESTORE, reg);
+>> +      RTX_FRAME_RELATED_P (insn) = 1;
+>> +    }
+>> +
+>>     /* We prefer to emit the combined return/authenticate instruction RETAA,
+>>        however there are three cases in which we must instead emit an explicit
+>>        authentication instruction.
+>> @@ -16492,6 +16546,10 @@ aarch64_override_options_internal (struct gcc_options *opts)
+>>         aarch64_stack_protector_guard_offset = offs;
+>>       }
+>>   
+>> +  if ((flag_sanitize & SANITIZE_SHADOW_CALL_STACK)
+>> +      && !fixed_regs[R18_REGNUM])
+>> +    error ("%<-fsanitize=shadow-call-stack%> requires %<-ffixed-x18%>");
+>> +
+>>     initialize_aarch64_code_model (opts);
+>>     initialize_aarch64_tls_size (opts);
+>>   
+>> @@ -26505,6 +26563,9 @@ aarch64_libgcc_floating_mode_supported_p
+>>   #undef TARGET_ASM_FUNCTION_EPILOGUE
+>>   #define TARGET_ASM_FUNCTION_EPILOGUE aarch64_sls_emit_blr_function_thunks
+>>   
+>> +#undef TARGET_HAVE_SHADOW_CALL_STACK
+>> +#define TARGET_HAVE_SHADOW_CALL_STACK true
+>> +
+>>   struct gcc_target targetm = TARGET_INITIALIZER;
+>>   
+>>   #include "gt-aarch64.h"
+>> diff --git a/gcc/config/aarch64/aarch64.h b/gcc/config/aarch64/aarch64.h
+>> index 2792bb29adb..b5efe083f30 100644
+>> --- a/gcc/config/aarch64/aarch64.h
+>> +++ b/gcc/config/aarch64/aarch64.h
+>> @@ -906,9 +906,21 @@ struct GTY (()) aarch64_frame
+>>   	 Indicated by CALLEE_ADJUST == 0 && EMIT_FRAME_CHAIN.
+>>   
+>>        These fields indicate which registers we've decided to handle using
+>> -     (1) or (2), or INVALID_REGNUM if none.  */
+>> -  unsigned wb_candidate1;
+>> -  unsigned wb_candidate2;
+>> +     (1) or (2), or INVALID_REGNUM if none.
+>> +
+>> +     In some cases we don't always need to pop all registers in the push
+>> +     candidates, pop candidates record which registers need to be popped
+>> +     eventually.  The initial value of a pop candidate is copied from its
+>> +     corresponding push candidate.
+>> +
+>> +     Currently, the pop candidates are only used for shadow call stack.
+> 
+> Maybe s/the/different/, since the variables themselves are used
+> regardless of -fsanitize.
+> 
+
+Got it.
+
+Thanks,
+Dan
