@@ -2,116 +2,129 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40064C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Feb 2022 16:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5C3C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Feb 2022 17:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244122AbiBJQTH (ORCPT
+        id S245232AbiBJRhh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Feb 2022 11:19:07 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38002 "EHLO
+        Thu, 10 Feb 2022 12:37:37 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:46570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244116AbiBJQTG (ORCPT
+        with ESMTP id S240449AbiBJRhg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Feb 2022 11:19:06 -0500
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61E1398
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Feb 2022 08:19:07 -0800 (PST)
-Received: by mail-lf1-x133.google.com with SMTP id m18so11404221lfq.4
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Feb 2022 08:19:07 -0800 (PST)
+        Thu, 10 Feb 2022 12:37:36 -0500
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 735ADF23
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Feb 2022 09:37:37 -0800 (PST)
+Received: by mail-pf1-x435.google.com with SMTP id n23so11548306pfo.1
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Feb 2022 09:37:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JKW081rgGpaiP4kwWeXuyBtPDTahlHH6s9OhRPepRUE=;
-        b=P+OBlYOROMsamaTxRHS41/nKtUTb4mUW3k2CPzOjp/XYHUPtBGs6jPd01VgUDErVf8
-         Unk8sJzZKBtnswkppHfrYbVkSkJ5cczyJC0cjllbYGH/KBMcRytWaEGxYdY5uMmWDM0h
-         JK/pVSXO60FPuFXurMeTKq/F7uU/KUZ8yVFMzfXLGQr6NE6QpvcS10pcWo1oEzXwECfO
-         4gHx3+unCa+lHixMKdaAPxdC53UEfTLeAdNUqoVlTGDMZ82noVy4gzGK3DWPhJrrCgpK
-         lFAC1wuCcD2jaDGDXO8SztoVlPo+ZtD+Uv+3h6obQjaL6lXaJZW/75Hey0myJA7ugfhL
-         nmXQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=N0oLRk9WeOqKeOJsm7SffWghsKhMRhJhnNCJ7hAOzHs=;
+        b=TuUkbtECnMw5pstxW8Vf9MzxmHFnzQ3VrFEtni7dbPixYPAbEo7NkMJuM1Qgj661KE
+         VJk9b0PYPRSKeDN+YxctUa3QcAVCD7gNix6N+IkF65J+3xW2bM603Gziaqz6EhHSn7Mb
+         /8xvocsd5u5OmtK/6qYupEdGZ7DajwT8DsAUM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JKW081rgGpaiP4kwWeXuyBtPDTahlHH6s9OhRPepRUE=;
-        b=V2I5d/kH2Zz/lAzn+Ujcsb+R2Fxwaxp8Byv4WWe0Xcx+oBy1JAj9F0XQNCK+p/WBXp
-         bdT8zPGANOzsjkL2zBVjs7CogzErQPOhq+mH4+tKGxK0SHk1p2w2hU8SZudI8M9NNBYt
-         S8bQgMDclkfvM4FTaYBD8MvnYKBLWvw+vUSOq3wunYCRBDwp6p8vSHv1WHPTV6Uxlf0r
-         0VS4AZNbQfLhnLBJQp5YtD7yzR5X56G9t1D8UHvRF+8RN2C0Wk2tB3SygqLyIYaRi0NP
-         6YnaL/jDDjbsGpfNFOJ+2BY1PzaOQ+GjwTUE6PIt6E+2gP1AIHXo6Pl785/YIee9JvlG
-         2g9w==
-X-Gm-Message-State: AOAM530Sy9KCYio8Ikn3K2hBLeY2UZTESxJ3SULV70LV/54Re2xFXWV4
-        nRJP5ldGGG3YGgkW0pAS5whJS2oMOvIFUAz5geEJ2w==
-X-Google-Smtp-Source: ABdhPJzSeIXpEi5a/UY7UA0L0H6R5yPxcX1+X4e6O0HqF4FM449Qca/ijPlTHh/bLWKtIu6cm6R4AbBxxmv0naarpTw=
-X-Received: by 2002:a19:ee04:: with SMTP id g4mr5504587lfb.157.1644509945581;
- Thu, 10 Feb 2022 08:19:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20220210025321.787113-1-keescook@chromium.org> <20220210025321.787113-2-keescook@chromium.org>
-In-Reply-To: <20220210025321.787113-2-keescook@chromium.org>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 10 Feb 2022 17:18:39 +0100
-Message-ID: <CAG48ez1m7XJ1wJvTHtNorH480jTWNgdrn5Q1LTZZQ4uve3r4Sw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] signal: HANDLER_EXIT should clear SIGNAL_UNKILLABLE
-To:     Kees Cook <keescook@chromium.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=N0oLRk9WeOqKeOJsm7SffWghsKhMRhJhnNCJ7hAOzHs=;
+        b=h6hbhcH4MFgWk/S1FWQQSg26qrNntTRkAIUYmWW5opQPKJVQynPeV4IkwiK0GUDnUq
+         O9raIOVfc3WFD6Rk/gRsQAz+sSfNtW8XgPanXshdvD3MM2sYefkQLlA5W+u749hfTKaz
+         qm3efZ38OKsPDcsOV7Pqt3irAzOARzzrab/eDvc9ghCmOy9AFMNQbCf8DmtLWOYc/jkT
+         mepkRSCj1E3Ewl2upBIpgk6JxuS2sXXvICJHpXy06V579h1UG2rzdE85WPDXE/Lp/tQ5
+         x0GeM9GU7XQc8BwbTNHvDN1t2cjsJVWIrajIfRdddYy7N5HoGXIfTxl3KY8ivSr+v2E8
+         /Gaw==
+X-Gm-Message-State: AOAM530Kv+7n/bhmohWeeUwkbIplst18FwoHhg2vbqN2IS3q7LTD32DH
+        NGoiWg9VRHHyCUWi5R+vPxu2Zw==
+X-Google-Smtp-Source: ABdhPJxa+zZlprJsPdRL16Vv3RjWBcmKKx4NXwfBhSgmfxd679Na+4oIMIPpYFm1OsZM+mHYkOu5PQ==
+X-Received: by 2002:a05:6a00:134b:: with SMTP id k11mr8674137pfu.33.1644514656966;
+        Thu, 10 Feb 2022 09:37:36 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 13sm23620222pfm.161.2022.02.10.09.37.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Feb 2022 09:37:36 -0800 (PST)
+Date:   Thu, 10 Feb 2022 09:37:36 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Jann Horn <jannh@google.com>
 Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        =?UTF-8?B?Um9iZXJ0IMWad2nEmWNraQ==?= <robert@swiecki.net>,
+        Robert =?utf-8?B?xZp3acSZY2tp?= <robert@swiecki.net>,
         stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>,
         Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/3] signal: HANDLER_EXIT should clear SIGNAL_UNKILLABLE
+Message-ID: <202202100935.FB3E60FA5@keescook>
+References: <20220210025321.787113-1-keescook@chromium.org>
+ <20220210025321.787113-2-keescook@chromium.org>
+ <CAG48ez1m7XJ1wJvTHtNorH480jTWNgdrn5Q1LTZZQ4uve3r4Sw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG48ez1m7XJ1wJvTHtNorH480jTWNgdrn5Q1LTZZQ4uve3r4Sw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Feb 10, 2022 at 3:53 AM Kees Cook <keescook@chromium.org> wrote:
-> Fatal SIGSYS signals were not being delivered to pid namespace init
-> processes. Make sure the SIGNAL_UNKILLABLE doesn't get set for these
-> cases.
->
-> Reported-by: Robert =C5=9Awi=C4=99cki <robert@swiecki.net>
-> Suggested-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> Fixes: 00b06da29cf9 ("signal: Add SA_IMMUTABLE to ensure forced siganls d=
-o not get changed")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  kernel/signal.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 38602738866e..33e3ee4f3383 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -1342,9 +1342,10 @@ force_sig_info_to_task(struct kernel_siginfo *info=
-, struct task_struct *t,
->         }
->         /*
->          * Don't clear SIGNAL_UNKILLABLE for traced tasks, users won't ex=
-pect
-> -        * debugging to leave init killable.
-> +        * debugging to leave init killable, unless it is intended to exi=
-t.
->          */
-> -       if (action->sa.sa_handler =3D=3D SIG_DFL && !t->ptrace)
-> +       if (action->sa.sa_handler =3D=3D SIG_DFL &&
-> +           (!t->ptrace || (handler =3D=3D HANDLER_EXIT)))
->                 t->signal->flags &=3D ~SIGNAL_UNKILLABLE;
+On Thu, Feb 10, 2022 at 05:18:39PM +0100, Jann Horn wrote:
+> On Thu, Feb 10, 2022 at 3:53 AM Kees Cook <keescook@chromium.org> wrote:
+> > Fatal SIGSYS signals were not being delivered to pid namespace init
+> > processes. Make sure the SIGNAL_UNKILLABLE doesn't get set for these
+> > cases.
+> >
+> > Reported-by: Robert Święcki <robert@swiecki.net>
+> > Suggested-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> > Fixes: 00b06da29cf9 ("signal: Add SA_IMMUTABLE to ensure forced siganls do not get changed")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  kernel/signal.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/kernel/signal.c b/kernel/signal.c
+> > index 38602738866e..33e3ee4f3383 100644
+> > --- a/kernel/signal.c
+> > +++ b/kernel/signal.c
+> > @@ -1342,9 +1342,10 @@ force_sig_info_to_task(struct kernel_siginfo *info, struct task_struct *t,
+> >         }
+> >         /*
+> >          * Don't clear SIGNAL_UNKILLABLE for traced tasks, users won't expect
+> > -        * debugging to leave init killable.
+> > +        * debugging to leave init killable, unless it is intended to exit.
+> >          */
+> > -       if (action->sa.sa_handler == SIG_DFL && !t->ptrace)
+> > +       if (action->sa.sa_handler == SIG_DFL &&
+> > +           (!t->ptrace || (handler == HANDLER_EXIT)))
+> >                 t->signal->flags &= ~SIGNAL_UNKILLABLE;
+> 
+> You're changing the subclause:
+> 
+> !t->ptrace
+> 
+> to:
+> 
+> (!t->ptrace || (handler == HANDLER_EXIT))
+> 
+> which means that the change only affects cases where the process has a
+> ptracer, right? That's not the scenario the commit message is talking
+> about...
 
-You're changing the subclause:
+Sorry, yes, I was not as accurate as I should have been in the commit
+log. I have changed it to:
 
-!t->ptrace
+Fatal SIGSYS signals (i.e. seccomp RET_KILL_* syscall filter actions)
+were not being delivered to ptraced pid namespace init processes. Make
+sure the SIGNAL_UNKILLABLE doesn't get set for these cases.
 
-to:
+> 
+> >         ret = send_signal(sig, info, t, PIDTYPE_PID);
+> >         spin_unlock_irqrestore(&t->sighand->siglock, flags);
+> > --
+> > 2.30.2
+> >
 
-(!t->ptrace || (handler =3D=3D HANDLER_EXIT))
-
-which means that the change only affects cases where the process has a
-ptracer, right? That's not the scenario the commit message is talking
-about...
-
->         ret =3D send_signal(sig, info, t, PIDTYPE_PID);
->         spin_unlock_irqrestore(&t->sighand->siglock, flags);
-> --
-> 2.30.2
->
+-- 
+Kees Cook
