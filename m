@@ -2,258 +2,109 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3416EC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Feb 2022 01:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFCFC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Feb 2022 02:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235662AbiBKBrc (ORCPT
+        id S241955AbiBKCxp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Feb 2022 20:47:32 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:51980 "EHLO
+        Thu, 10 Feb 2022 21:53:45 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:36192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230175AbiBKBrb (ORCPT
+        with ESMTP id S1347483AbiBKCxo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Feb 2022 20:47:31 -0500
-Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F3AD5F99;
-        Thu, 10 Feb 2022 17:47:31 -0800 (PST)
-Received: from in01.mta.xmission.com ([166.70.13.51]:36220)
-        by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1nIL22-000byL-FN; Thu, 10 Feb 2022 18:47:30 -0700
-Received: from ip68-227-174-4.om.om.cox.net ([68.227.174.4]:51922 helo=email.froward.int.ebiederm.org.xmission.com)
-        by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1nIL20-00FHr4-Vy; Thu, 10 Feb 2022 18:47:30 -0700
-From:   "Eric W. Biederman" <ebiederm@xmission.com>
-To:     Kees Cook <keescook@chromium.org>
+        Thu, 10 Feb 2022 21:53:44 -0500
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FB4E5F5B
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Feb 2022 18:53:44 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id c8-20020a17090a674800b001b91184b732so8124777pjm.5
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Feb 2022 18:53:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=q7nVE8+FuxeU5FFClhGDXDoFJV628rh5FpUiGKzXxNE=;
+        b=Q4jSNnEEf5TTnDFdP+QIrGYCniWqlMjDtDl15EB6BuVgp/1kgHtK7NuR7irQUhk5HC
+         h8JWRdNp5hfF1oaO0ia3rX1PLWPZ2sWlOgSooZy8LQUlQYFmEjQCm77cXB2nsH+NvJ0y
+         /OSkr+7dew1D0TRgpAeJM01soH519lB49TkBc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=q7nVE8+FuxeU5FFClhGDXDoFJV628rh5FpUiGKzXxNE=;
+        b=1h1O1Pg9SiHumKLgCmA2MlDAzb6mRUdghoE/M/rsjOHXrNadQ1/sep7V/ehaASGk1z
+         IkYQbELWjpOQL87EGeOUc37umlDB2/otQAz4ad2x/8iUoPu/SxsCPStlAaI+Xvb0RhvF
+         peDSh3vzzRrBuO9dYpG01vDDSGMAoQj5eaojuVCDqQcUaJEN19T7g5Q+ra2Dt4CnIzfK
+         RjhRa0no9toM3BmThcRXYv9E6YcmhUyIUTXTNpDnU2KtA9YPDGIYx0b3bHdcTVb97Kol
+         2SYjwL0CXKZyF2T5loZhOuTbUP+uCwDHWVhXQNYS5JegZnf2WcVfGI6iXHe//JNuJ3e3
+         s7Wg==
+X-Gm-Message-State: AOAM53291TXFqF7Qbbi7S5rQGBvH8XgVMLNgGGcLaKEbeneioqBJU0cP
+        TZyoIe3qwHwJFIhn5WJQWRpSlA==
+X-Google-Smtp-Source: ABdhPJw0573RstLDOG/3Ni2PM5x/JJwAzoK13F6L/08toAdgodmpPNJOhaLW4NwtmU7o7tF3WaopRQ==
+X-Received: by 2002:a17:90a:9e5:: with SMTP id 92mr500097pjo.128.1644548023775;
+        Thu, 10 Feb 2022 18:53:43 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id lj14sm3553116pjb.48.2022.02.10.18.53.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Feb 2022 18:53:43 -0800 (PST)
+Date:   Thu, 10 Feb 2022 18:53:42 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
 Cc:     Robert =?utf-8?B?xZp3acSZY2tp?= <robert@swiecki.net>,
         Andy Lutomirski <luto@amacapital.net>,
         Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-References: <20220210025321.787113-1-keescook@chromium.org>
-        <871r0a8u29.fsf@email.froward.int.ebiederm.org>
-        <202202101033.9C04563D9@keescook>
-        <87pmnu5z28.fsf@email.froward.int.ebiederm.org>
-        <202202101137.B48D02138@keescook>
-        <87k0e249tt.fsf@email.froward.int.ebiederm.org>
-        <202202101710.668EDCDC@keescook>
-Date:   Thu, 10 Feb 2022 19:47:00 -0600
-In-Reply-To: <202202101710.668EDCDC@keescook> (Kees Cook's message of "Thu, 10
-        Feb 2022 17:26:27 -0800")
-Message-ID: <875ypm41kb.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1nIL20-00FHr4-Vy;;;mid=<875ypm41kb.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.174.4;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/nqHJ51IsUdPOo+T0IvmYOwyxWQ2BNMiM=
-X-SA-Exim-Connect-IP: 68.227.174.4
-X-SA-Exim-Mail-From: ebiederm@xmission.com
 Subject: Re: [PATCH 0/3] signal: HANDLER_EXIT should clear SIGNAL_UNKILLABLE
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Message-ID: <202202101827.4B16DF54@keescook>
+References: <20220210025321.787113-1-keescook@chromium.org>
+ <871r0a8u29.fsf@email.froward.int.ebiederm.org>
+ <202202101033.9C04563D9@keescook>
+ <87pmnu5z28.fsf@email.froward.int.ebiederm.org>
+ <202202101137.B48D02138@keescook>
+ <87k0e249tt.fsf@email.froward.int.ebiederm.org>
+ <202202101710.668EDCDC@keescook>
+ <875ypm41kb.fsf@email.froward.int.ebiederm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <875ypm41kb.fsf@email.froward.int.ebiederm.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
+On Thu, Feb 10, 2022 at 07:47:00PM -0600, Eric W. Biederman wrote:
+> Kees Cook <keescook@chromium.org> writes:
+> > The common accessors for the bits are set_syscall_work()/clear_syscall_work()
+> > but I don't see anything to operate on an entire mask. Maybe it needs to
+> > grow something like reset_syscall_work()?
+> 
+> Oh.  I hadn't realized SYSCALL_WORK_EXIT and TIF_SYSCALL_WORK were
+> masks.  Yes it looks like a simple addition of reset_syscall_work()
+> and calling it from force_sig_info when HANDLER_EXIT will hide these
+> events.
 
-> On Thu, Feb 10, 2022 at 04:48:30PM -0600, Eric W. Biederman wrote:
->> Kees Cook <keescook@chromium.org> writes:
->> 
->> > On Thu, Feb 10, 2022 at 12:58:07PM -0600, Eric W. Biederman wrote:
->> >> Kees Cook <keescook@chromium.org> writes:
->> >> 
->> >> > On Thu, Feb 10, 2022 at 12:17:50PM -0600, Eric W. Biederman wrote:
->> >> >> Kees Cook <keescook@chromium.org> writes:
->> >> >> 
->> >> >> > Hi,
->> >> >> >
->> >> >> > This fixes the signal refactoring to actually kill unkillable processes
->> >> >> > when receiving a fatal SIGSYS from seccomp. Thanks to Robert for the
->> >> >> > report and Eric for the fix! I've also tweaked seccomp internal a bit to
->> >> >> > fail more safely. This was a partial seccomp bypass, in the sense that
->> >> >> > SECCOMP_RET_KILL_* didn't kill the process, but it didn't bypass other
->> >> >> > aspects of the filters. (i.e. the syscall was still blocked, etc.)
->> >> >> 
->> >> >> Any luck on figuring out how to suppress the extra event?
->> >> >
->> >> > I haven't found a good single indicator of a process being in an "I am dying"
->> >> > state, and even if I did, it seems every architecture's exit path would
->> >> > need to add a new test.
->> >> 
->> >> The "I am dying" state for a task is fatal_signal_pending, at least
->> >> before get_signal is reached, for a process there is SIGNAL_GROUP_EXIT.
->> >> Something I am busily cleaning up and making more reliable at the
->> >> moment.
->> >
->> > The state I need to catch is "I am dying and this syscall was
->> > interrupted". fatal_signal_pending() is kind of only the first half
->> > (though it doesn't cover fatal SIGSYS?)
->> >
->> > For example, if a process hits a BUG() in the middle of running a
->> > syscall, that syscall isn't expected to "exit" from the perspective of
->> > userspace. This is similarly true for seccomp's fatal SIGSYS.
->> >
->> >> What is the event that is happening?  Is it
->> >> tracehook_report_syscall_exit or something else?
->> >
->> > Yes, but in more completely, it's these three, which are called in
->> > various fashions from architecture syscall exit code:
->> >
->> > 	audit_syscall_exit()		(audit)
->> > 	trace_sys_exit()		(see "TRACE_EVENT_FN(sys_exit,")
->> > 	tracehook_report_syscall_exit()	(ptrace)
->> >
->> >> From the bits I have seen it seems like something else.
->> >
->> > But yes, the place Robert and I both noticed it was with ptrace from
->> > tracehook_report_syscall_exit(), which is rather poorly named. :)
->> 
->> Speaking of patches I am just about to send out.
->> 
->> > Looking at the results, audit_syscall_exit() and trace_sys_exit() need
->> > to be skipped too, since they would each be reporting potential nonsense.
->> >
->> >> > The best approach seems to be clearing the TIF_*WORK* bits, but that's
->> >> > still a bit arch-specific. And I'm not sure which layer would do that.
->> >> > At what point have we decided the process will not continue? More
->> >> > than seccomp was calling do_exit() in the middle of a syscall, but those
->> >> > appear to have all been either SIGKILL or SIGSEGV?
->> >> 
->> >> This is where I get confused what TIF_WORK bits matter?
->> >
->> > This is where I wish all the architectures were using the common syscall
->> > code. The old do_exit() path would completely skip _everything_ in the
->> > exit path, so it was like never calling anything after the syscall
->> > dispatch table. The only userspace visible things in there are triggered
->> > from having TIF_WORK... flags (but again, it's kind of a per-arch mess).
->> >
->> > Skipping the entire exit path makes a fair bit of sense. For example,
->> > rseq_syscall() is redundant (forcing SIGSEGV).
->> >
->> > Regardless, at least the three places above need to be skipped.
->> >
->> > But just testing fatal_signal_pending() seems wrong: a normal syscall
->> > could be finishing just fine, it just happens to have a fatal signal
->> > ready to be processed.
->> 
->> Yes.  It is really just the HANDLER_EXIT case where this is interesting.
->
-> Right.
->
->> 
->> >
->> > Here's the ordering after a syscall on x86 from do_syscall_64():
->> >
->> > do_syscall_x64()
->> > 	sys_call_table[...](regs)
->> > syscall_exit_to_user_mode()
->> > 	__syscall_exit_to_user_mode_work()
->> > 		syscall_exit_to_user_mode_prepare()
->> > 			syscall_exit_work()
->> > 				arch_syscall_exit_tracehook()
->> > 					tracehook_report_syscall_exit()
->> > 	exit_to_user_mode_prepare()
->> > 		exit_to_user_mode_loop()
->> > 			handle_signal_work()
->> > 				arch_do_signal_or_restart()
->> > 					get_signal()
->> > 						do_group_exit()
->> >
->> > Here's arm64 from el0_svc():
->> >
->> > do_el0_svc()
->> > 	el0_svc_common()
->> > 		invoke_syscall()
->> > 			syscall_table[...](regs)
->> > 		syscall_trace_exit()
->> > 			tracehook_report_syscall()
->> > 				tracehook_report_syscall_exit()
->> > exit_to_user_mode()
->> > 	prepare_exit_to_user_mode()
->> > 		do_notify_resume()
->> > 			do_signal()
->> > 				get_signal()
->> > 					do_group_exit()
->> >
->> > In the past, any do_exit() would short circuit everything after the
->> > syscall table. Now, we do all the exit work before starting the return
->> > to user mode which is what processes the signals. So I guess there's
->> > more precisely a difference between "visible to userspace" and "return
->> > to userspace".
->> 
->> Yes.  I see that now.  I had not had an occasion to look at the order
->> all of these were called in before and my mental model was wrong.
->
-> Yeah, I didn't even have a model of this all the way. I'd really only
-> understood the ptrace side of it.
->
->> It makes a certain kind of sense that the per syscall work happens
->> before we do additional things like process signals.  It simply
->> had not realized that was happening in that order until now.
->> 
->> 
->> > (an aside: where to PF_IO_WORKER threads die?)
->> 
->> They are calling do_exit explicitly.
->
-> Ah-ha, thanks.
->
->> 
->> >> I expect if anything else mattered we would need to change it to
->> >> HANDLER_EXIT.
->> >> 
->> >> I made a mistake conflating to cases and I want to make certain I
->> >> successfully separate those two cases at the end of the day.
->> >
->> > For skipping the exit work, I'm not sure it matters, since all the
->> > signal stuff is "too late"...
->> 
->> The conflation lead me to believe that we could simply and safely cause
->> seccomp to use normal signal delivery to kill the process.  The first
->> part of the conflation I sorted out by introducing HANDLER_EXIT.  The
->> user visible part of the change I am not yet certain what to do with.
->> 
->> My gut reaction is does it matter?  Can you escape the seccomp filter
->> with a stop?  Does it break userspace?
->
-> After fixing UNKILLABLE vs IMMUTABLE, I'm not aware of anything else
-> misbehaving. The new nonsense exit event, though, is bound to be at
-> least confusing to humans. ("Why did this syscall not change any of its
-> registers?", etc.)
->
->> I realize the outcome of that question is that it does matter so we
->> probably need to find a way to supress that situation for HANDLER_EXIT.
->> Both force_exit_sig and force_sig_seccomp appear to be using dumpable
->> signals which makes the problem doubly tricky.
->> 
->> The first tricky bit is fatal_signal_pending isn't set because a
->> coredump is possible, so something else is needed to detect this
->> condition.
->> 
->> The second part is what to do when we detect the condition.
->> 
->> The only solution I can think of quickly is to modify
->> force_sig_info_to_task clear TIF_SYSCALL_WORK on the architectures where
->> that is used and to clear SYSCALL_WORK_EXIT on x86 and s390, and to do
->> whatever the architecture appropriate thing is on the other
->> architectures.
->
-> The common accessors for the bits are set_syscall_work()/clear_syscall_work()
-> but I don't see anything to operate on an entire mask. Maybe it needs to
-> grow something like reset_syscall_work()?
+Yeah, it's varied by features, architectures, etc. The good news is it's
+WAY nicer now after the USER_DISPATCH. :)
 
-Oh.  I hadn't realized SYSCALL_WORK_EXIT and TIF_SYSCALL_WORK were
-masks.  Yes it looks like a simple addition of reset_syscall_work()
-and calling it from force_sig_info when HANDLER_EXIT will hide these
-events.
+> When you say the events are corrupted did you mean they return wrong data
+> to userspace or simply that the events should not fire?
 
-When you say the events are corrupted did you mean they return wrong data
-to userspace or simply that the events should not fire?
+It's mainly about the exit stuff having never been run before on these
+kinds of process states, so things don't make sense. For example, on the
+SIGSYS death, the registers have been rewound for the coredump, so when
+the exit trace runs on x86 it sees the syscall return value as equal to
+the syscall number (since %rax is used for the syscall number on entry
+and for the syscall result on exit). So when a tracer watches a seccomp
+fatal SIGSYS, it sees the syscall exit before it sees the child exit
+(and therefore the signal). For example, x86_64 write (syscall number
+1), will return as if it had written 1 byte. :P
 
-I am trying to figure out if there is a case to be made that it was a
-bug that these events were missing.
+So, it's not harmful, but it's confusing and weird. :)
 
-Eric
+> I am trying to figure out if there is a case to be made that it was a
+> bug that these events were missing.
+
+I don't think so -- the syscall did not finish, so there isn't a valid
+return code. The process exited before it completed.
+
+-- 
+Kees Cook
