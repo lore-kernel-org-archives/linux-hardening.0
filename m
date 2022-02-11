@@ -2,149 +2,197 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3357BC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Feb 2022 17:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E10C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Feb 2022 18:05:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237769AbiBKRrU convert rfc822-to-8bit (ORCPT
+        id S1352476AbiBKSFU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 11 Feb 2022 12:47:20 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40130 "EHLO
+        Fri, 11 Feb 2022 13:05:20 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:51740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232454AbiBKRrT (ORCPT
+        with ESMTP id S1352382AbiBKSFR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 11 Feb 2022 12:47:19 -0500
-Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60E3838D;
-        Fri, 11 Feb 2022 09:47:18 -0800 (PST)
-Received: from in01.mta.xmission.com ([166.70.13.51]:59888)
-        by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1nIa0r-002bKF-9q; Fri, 11 Feb 2022 10:47:17 -0700
-Received: from ip68-227-174-4.om.om.cox.net ([68.227.174.4]:47708 helo=email.froward.int.ebiederm.org.xmission.com)
-        by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1nIa0p-000awb-T4; Fri, 11 Feb 2022 10:47:16 -0700
-From:   "Eric W. Biederman" <ebiederm@xmission.com>
-To:     Robert =?utf-8?B?xZp3acSZY2tp?= <robert@swiecki.net>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20220210025321.787113-1-keescook@chromium.org>
-        <871r0a8u29.fsf@email.froward.int.ebiederm.org>
-        <202202101033.9C04563D9@keescook>
-        <87pmnu5z28.fsf@email.froward.int.ebiederm.org>
-        <202202101137.B48D02138@keescook>
-        <87k0e249tt.fsf@email.froward.int.ebiederm.org>
-        <202202101710.668EDCDC@keescook>
-        <875ypm41kb.fsf@email.froward.int.ebiederm.org>
-        <202202101827.4B16DF54@keescook>
-        <CAP145phAg3ZSPJw7x2kKVQe86puy-XyKatVoByVoM27RP4aw_g@mail.gmail.com>
-Date:   Fri, 11 Feb 2022 11:46:53 -0600
-In-Reply-To: <CAP145phAg3ZSPJw7x2kKVQe86puy-XyKatVoByVoM27RP4aw_g@mail.gmail.com>
-        ("Robert =?utf-8?B?xZp3acSZY2tpIidz?= message of "Fri, 11 Feb 2022 13:54:26
- +0100")
-Message-ID: <87a6ex1ek2.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+        Fri, 11 Feb 2022 13:05:17 -0500
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F82CD4A
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Feb 2022 10:05:14 -0800 (PST)
+Received: by mail-yb1-xb31.google.com with SMTP id c6so27299089ybk.3
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Feb 2022 10:05:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=bQCacAqu6AD3L5T1l4m/Dw/zcsi+Jlaw1qBbQHQJ5n8=;
+        b=kLbjkhoYZDNiub72bMg9ZqtXNwhvLpNO+yW5ASu4uizUywougb5IgTN3A9j7vUzPCV
+         ilbbSa1H6KXx7RaT+aD1shRHdR+F7jQhMY0UN+PZf0soTx4mDFCLBkN12LSn14MUXJMC
+         bNY8Rs4cIcMre3iQE1bY1Ur1vW/u69KzewdCW2nJGe9IgAG6nvcuHwrTzvL46TewNu1r
+         U+zUpHn0Hef8B9vTL4zTS59BQuQ6aJP1KPP4mXq58IjfIWdD1mYgt7ZNd5gv/gf0TIGs
+         jwIuFW4tMTPcYA5dGPBW7M+tfiAM/VQkuwm1hqfpeOplL17TdnC+4+tTNbwqFwdIJkQ3
+         7MlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=bQCacAqu6AD3L5T1l4m/Dw/zcsi+Jlaw1qBbQHQJ5n8=;
+        b=GpWLV2GloPptGTQdb/bBH4Ldjoh6Mxj/IaHij51ucQtR/wyuqT3/7XAzy+53rLe5Bi
+         VcFIpFKHwzOzIM/fDy1xqhsgfHX7t69TFs3nDHzgY/4aiIDxxusQbn8Vr+AtMyJppQfi
+         I+Hqq1diCqyd6lFeQduR6Dxrqo7cT871FOWIv27CdvnNW2oNPavN0WkRriznCuTYuajp
+         g9i1SV9v1FDQbxIaOA6Q6V59v4JDoDquBuSx8T2zvgJR+Wv+B0HHzbcXnoTXbvSnydSS
+         MBpMbULFoeA7k08+6vrfx7u8/qrOjnMtSIXmx+J7jDdK38rdxUkdBg2FITeXOOYJ97bz
+         gEXw==
+X-Gm-Message-State: AOAM533unJjTopvVHskUF/v5uUtyxBFxVtDKZbqp1DttTRmivccvtfab
+        XF763VuRy0DwXBsfWiEoDP6K+HZhI4d8aQIEUB9T/A==
+X-Google-Smtp-Source: ABdhPJwqwn2kG4R0P3X04f1gmCys5jwU2Zxegllqb4PCZmn/bHZrdEndwiA5mCsWiE6z6c7BUFdhF4f1GQkwwBkxWBE=
+X-Received: by 2002:a81:ce09:: with SMTP id t9mr2890290ywi.254.1644602713368;
+ Fri, 11 Feb 2022 10:05:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-XM-SPF: eid=1nIa0p-000awb-T4;;;mid=<87a6ex1ek2.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.174.4;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19jyVwxhC+hd4WN4KzZaWrSUkzBjMUuQTQ=
-X-SA-Exim-Connect-IP: 68.227.174.4
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 0/3] signal: HANDLER_EXIT should clear SIGNAL_UNKILLABLE
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+References: <20220209185752.1226407-1-alexandr.lobakin@intel.com>
+ <20220209185752.1226407-3-alexandr.lobakin@intel.com> <20220211174130.xxgjoqr2vidotvyw@treble>
+In-Reply-To: <20220211174130.xxgjoqr2vidotvyw@treble>
+From:   =?UTF-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
+Date:   Fri, 11 Feb 2022 10:05:02 -0800
+Message-ID: <CAFP8O3KvZOZJqOR8HYp9xZGgnYf3D8q5kNijZKORs06L-Vit1g@mail.gmail.com>
+Subject: Re: [PATCH v10 02/15] livepatch: avoid position-based search if `-z
+ unique-symbol` is available
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
+        linux-hardening@vger.kernel.org, x86@kernel.org,
+        Borislav Petkov <bp@alien8.de>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Bruce Schlobohm <bruce.schlobohm@intel.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Marios Pomonis <pomonis@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Nicolas Pitre <nico@fluxnic.net>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
+        llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Robert Święcki <robert@swiecki.net> writes:
-
->> It's mainly about the exit stuff having never been run before on these
->> kinds of process states, so things don't make sense. For example, on the
->> SIGSYS death, the registers have been rewound for the coredump, so when
->> the exit trace runs on x86 it sees the syscall return value as equal to
->> the syscall number (since %rax is used for the syscall number on entry
->> and for the syscall result on exit). So when a tracer watches a seccomp
->> fatal SIGSYS, it sees the syscall exit before it sees the child exit
->> (and therefore the signal). For example, x86_64 write (syscall number
->> 1), will return as if it had written 1 byte. :P
->>
->> So, it's not harmful, but it's confusing and weird. :)
->>
->> > I am trying to figure out if there is a case to be made that it was a
->> > bug that these events were missing.
->>
->> I don't think so -- the syscall did not finish, so there isn't a valid
->> return code. The process exited before it completed.
-
-With the process state rewound for the coredump it makes sense
-why the syscall exit would be meaningless.  So at least for
-now I am convinced function that clears all syscall_work flags
-is the way to go.
-
-> A tangential point: please ignore for the purpose of fixing the
-> problem at hand. I'm mostly making it, in case it can be taken into
-> account in case some bigger changes to this code path are to be made -
-> given that it touches the problem of signal delivery.
+On Fri, Feb 11, 2022 at 9:41 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 >
-> When I noticed this problem, I was looking for a way to figure out
-> what syscall caused SIGSYS (via SECCOMP_RET_KILL_*), and there's no
-> easy way to do that programmatically from the perspective of a parent
-> process. There are three ways of doing this that come to mind.
-
-Unless I am misunderstanding what you are looking for
-this information is contained within the SIGSYS siginfo.
-The field si_syscall contains the system call number and
-the field si_errno contains return code from the seccomp filter.
-
-All of that can be read from the core dump of the process that exited.
-
-Looking quickly I don't see a good way to pull that signal information
-out of the kernel other than with a coredump.
-
-It might be possible to persuade PTRACE_EVENT_EXIT to give it to you,
-but I haven't looked at it enough to see if that would be a sensible
-strategy.
-
-
-> 1). Keep reference to /proc/<child>/syscall and read it upon process
-> exiting by SIGSYS (and reading it with wait/id(WNOWAIT) from parent).
-> This used to work a long time ago, but was racy (I reported this
-> problem many years ago), and currently only -1 0 0 is returned (as in,
-> no syscall in progress).
-
-That might be a bug worth fixing.  But it would definitely need a test
-that is run regularly to prevent future regressions.
-
-> 2). Use ptrace - it works but it changes the logic of the signal
-> delivery inside a traced process and requires non-trivial code to make
-> it work correctly: use of PT_INTERRUPT, understanding all signal
-> delivery events, registers and their mapping to syscall arguments per
-> CPU arch.
-
-I guess this works because you can see which syscall occurred before the
-SECCOMP_RET_KILL.  Except for the bugs we are discussing fixing there
-isn't a ptrace_stop after SECCOMP_RET_KILL.
-
-> 3). auditd will print details of failed syscall to kmsg, but the
-> string is not very structured, and auditd might not be always present
-> inside kernels. And reading that data via netlink requires root IIRC.
-
-I assume this is the same you can see which syscall occurred before
-the SECCOMP_RET_KILL.
-
+> On Wed, Feb 09, 2022 at 07:57:39PM +0100, Alexander Lobakin wrote:
+> > Position-based search, which means that if there are several symbols
+> > with the same name, the user needs to additionally provide the
+> > "index" of a desired symbol, is fragile. For example, it breaks
+> > when two symbols with the same name are located in different
+> > sections.
+> >
+> > Since a while, LD has a flag `-z unique-symbol` which appends
+> > numeric suffixes to the functions with the same name (in symtab
+> > and strtab). It can be used to effectively prevent from having
+> > any ambiguity when referring to a symbol by its name.
 >
-> I think it'd be good to have some way of doing it from the perspective
-> of a parent process - it'd simplify development of sandboxing managers
-> (eg nsjail, minijail, firejail), and creation of good seccomp
-> policies.
+> In the patch description can you also give the version of binutils (and
+> possibly other linkers) which have the flag?
 
-By development do you mean debugging sandbox managers?  Or do you mean
-something that sandbox managers can use on a routine basis?
+GNU ld>=3D2.36 supports -z unique-symbol. ld.lld doesn't support -z unique-=
+symbol.
 
-Eric
+I subscribe to llvm@lists.linux.dev and happen to notice this message
+(can't keep up with the changes...)
+I am a bit concerned with this option and replied last time on
+https://lore.kernel.org/r/20220105032456.hs3od326sdl4zjv4@google.com
+
+My full reasoning is on
+https://maskray.me/blog/2020-11-15-explain-gnu-linker-options#z-unique-symb=
+ol
+
+> > Check for its availability and always prefer when the livepatching
+> > is on. It can be used unconditionally later on after broader testing
+> > on a wide variety of machines, but for now let's stick to the actual
+> > CONFIG_LIVEPATCH=3Dy case, which is true for most of distro configs
+> > anyways.
+>
+> Has anybody objected to just enabling it for *all* configs, not just for
+> livepatch?
+>
+> I'd much prefer that: the less "special" livepatch is (and the distros
+> which enable it), the better.  And I think having unique symbols would
+> benefit some other components.
+>
+> > +++ b/kernel/livepatch/core.c
+> > @@ -143,11 +143,13 @@ static int klp_find_callback(void *data, const ch=
+ar *name,
+> >       args->count++;
+> >
+> >       /*
+> > -      * Finish the search when the symbol is found for the desired pos=
+ition
+> > -      * or the position is not defined for a non-unique symbol.
+> > +      * Finish the search when unique symbol names are enabled
+> > +      * or the symbol is found for the desired position or the
+> > +      * position is not defined for a non-unique symbol.
+> >        */
+> > -     if ((args->pos && (args->count =3D=3D args->pos)) ||
+> > -         (!args->pos && (args->count > 1)))
+> > +     if (IS_ENABLED(CONFIG_LD_HAS_Z_UNIQUE_SYMBOL) ||
+> > +         (args->pos && args->count =3D=3D args->pos) ||
+> > +         (!args->pos && args->count > 1))
+> >               return 1;
+>
+> There's no real need to do this.  The code already works as-is, even if
+> there are no unique symbols.
+>
+> Even if there are no duplicates, there's little harm in going through
+> all the symbols anyway, to check for errors just in case something
+> unexpected happened with the linking (unexpected duplicate) or the patch
+> creation (unexpected sympos).  It's not a hot path, so performance isn't
+> really a concern.
+>
+> When the old linker versions eventually age out, we can then go strip
+> out all the sympos stuff.
+>
+> > @@ -169,6 +171,13 @@ static int klp_find_object_symbol(const char *objn=
+ame, const char *name,
+> >       else
+> >               kallsyms_on_each_symbol(klp_find_callback, &args);
+> >
+> > +     /*
+> > +      * If the LD's `-z unique-symbol` flag is available and enabled,
+> > +      * sympos checks are not relevant.
+> > +      */
+> > +     if (IS_ENABLED(CONFIG_LD_HAS_Z_UNIQUE_SYMBOL))
+> > +             sympos =3D 0;
+> > +
+>
+> Similarly, I don't see a need for this.  If the patch is legit then
+> sympos should already be zero.  If not, an error gets reported and the
+> patch fails to load.
+>
+> --
+> Josh
+>
+>
+
+
+--=20
+=E5=AE=8B=E6=96=B9=E7=9D=BF
