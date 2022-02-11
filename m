@@ -2,110 +2,194 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B2AC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Feb 2022 12:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098BBC433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Feb 2022 13:43:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345231AbiBKMyj (ORCPT
+        id S1350637AbiBKNnO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 11 Feb 2022 07:54:39 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56634 "EHLO
+        Fri, 11 Feb 2022 08:43:14 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229893AbiBKMyi (ORCPT
+        with ESMTP id S238948AbiBKNnO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 11 Feb 2022 07:54:38 -0500
-Received: from mail-oo1-xc32.google.com (mail-oo1-xc32.google.com [IPv6:2607:f8b0:4864:20::c32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C79A0E62
-        for <linux-hardening@vger.kernel.org>; Fri, 11 Feb 2022 04:54:37 -0800 (PST)
-Received: by mail-oo1-xc32.google.com with SMTP id u25-20020a4ad0d9000000b002e8d4370689so10140258oor.12
-        for <linux-hardening@vger.kernel.org>; Fri, 11 Feb 2022 04:54:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=swiecki.net; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6ARFSsbWyOdD6EMO2DQy2Ws/csG1j53wTkmfHHdDFXY=;
-        b=Jkshpjqe1FTAHoJawiFQhz9yzN0NpI9FvO/qjTRn08FgZgcQ5HA+Ush/Ai2Vyzbdn+
-         rCSlVh4dWpG6MiPoiRYhkDDaZTqOQOUJUnKkO71u8+Gg4+x25NOgSS5214ix2N2FyxH6
-         qFYkARezeP6Oy8q3v726X20mHNEIXMs36eI/o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6ARFSsbWyOdD6EMO2DQy2Ws/csG1j53wTkmfHHdDFXY=;
-        b=EYEGDQHYsj0F5O5PQgxUD6XVIw2zKf/6wi3OXRmf7Fkru6gJImZ1RjsCNMIwwITDTP
-         YkUkN2iITBw6ShEoAQW695TnHOrX+vKAMAxUjgBp0GRr+pk7FuDoz337FD/TWaLVXz1b
-         nAMffP4V7L4k5vOiXIXGU1fVA7FtwKBMXJY/+0FePdEwdb/4QcMspnNppV+W+njhnTVn
-         T74CSQlwi6ZyVuEwf1KCCDZfgUdRIGHaD0oiItxoZcMn03Ee+HRTKXaF+NoqQIkW7Ss3
-         FBHvh+QiU/GtoE9W096uKPF/qCZntVpg6PwmwFBkb1dpvBXFF5NmWnC7n5GqPlF4kD2g
-         NW3w==
-X-Gm-Message-State: AOAM531uUkD9oRDcn4+IDpMa645KgdZ2H16lkCLuzK0dnMLxDvFYDt3m
-        hQWg/NzCmTD24TrS1KkXKsP9cxbohR6rRAYtdc0+sQ==
-X-Google-Smtp-Source: ABdhPJycTC6S1obSOSqlJkcCCMqLgeX+Z0N2ENm2rG5bJFgvf8vbjfUK0WI9KAZNGfsCwuNWO3LYwP7aBsccMpeLNeE=
-X-Received: by 2002:a05:6870:8c13:: with SMTP id ec19mr71565oab.262.1644584077154;
- Fri, 11 Feb 2022 04:54:37 -0800 (PST)
+        Fri, 11 Feb 2022 08:43:14 -0500
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64A999E
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Feb 2022 05:43:12 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R371e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0V49bSAF_1644586988;
+Received: from 192.168.193.145(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V49bSAF_1644586988)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 11 Feb 2022 21:43:08 +0800
+Message-ID: <81b35033-489e-d0c0-8677-55923f6abbe0@linux.alibaba.com>
+Date:   Fri, 11 Feb 2022 05:43:07 -0800
 MIME-Version: 1.0
-References: <20220210025321.787113-1-keescook@chromium.org>
- <871r0a8u29.fsf@email.froward.int.ebiederm.org> <202202101033.9C04563D9@keescook>
- <87pmnu5z28.fsf@email.froward.int.ebiederm.org> <202202101137.B48D02138@keescook>
- <87k0e249tt.fsf@email.froward.int.ebiederm.org> <202202101710.668EDCDC@keescook>
- <875ypm41kb.fsf@email.froward.int.ebiederm.org> <202202101827.4B16DF54@keescook>
-In-Reply-To: <202202101827.4B16DF54@keescook>
-From:   =?UTF-8?B?Um9iZXJ0IMWad2nEmWNraQ==?= <robert@swiecki.net>
-Date:   Fri, 11 Feb 2022 13:54:26 +0100
-Message-ID: <CAP145phAg3ZSPJw7x2kKVQe86puy-XyKatVoByVoM27RP4aw_g@mail.gmail.com>
-Subject: Re: [PATCH 0/3] signal: HANDLER_EXIT should clear SIGNAL_UNKILLABLE
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
+Subject: Re: [PATCH] [PATCH,v4,1/1,AARCH64][PR102768] aarch64: Add compiler
+ support for Shadow Call Stack
+Content-Language: en-US
+To:     gcc-patches@gcc.gnu.org, richard.earnshaw@arm.com,
+        marcus.shawcroft@arm.com, kyrylo.tkachov@arm.com, hp@gcc.gnu.org,
+        ndesaulniers@google.com, nsz@gcc.gnu.org, pageexec@gmail.com,
+        qinzhao@gcc.gnu.org, linux-hardening@vger.kernel.org,
+        richard.sandiford@arm.com
+References: <20220205110500.47430-1-ashimida@linux.alibaba.com>
+ <mpt7da481l6.fsf@arm.com>
+ <93a72e23-3d67-3c46-308d-f69ec517e793@linux.alibaba.com>
+ <mptzgmz3v10.fsf@arm.com>
+ <74fb3167-f5d7-84dd-1348-c9ea18665b58@linux.alibaba.com>
+ <mptv8xl20hr.fsf@arm.com>
+From:   Dan Li <ashimida@linux.alibaba.com>
+In-Reply-To: <mptv8xl20hr.fsf@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-> It's mainly about the exit stuff having never been run before on these
-> kinds of process states, so things don't make sense. For example, on the
-> SIGSYS death, the registers have been rewound for the coredump, so when
-> the exit trace runs on x86 it sees the syscall return value as equal to
-> the syscall number (since %rax is used for the syscall number on entry
-> and for the syscall result on exit). So when a tracer watches a seccomp
-> fatal SIGSYS, it sees the syscall exit before it sees the child exit
-> (and therefore the signal). For example, x86_64 write (syscall number
-> 1), will return as if it had written 1 byte. :P
->
-> So, it's not harmful, but it's confusing and weird. :)
->
-> > I am trying to figure out if there is a case to be made that it was a
-> > bug that these events were missing.
->
-> I don't think so -- the syscall did not finish, so there isn't a valid
-> return code. The process exited before it completed.
 
-A tangential point: please ignore for the purpose of fixing the
-problem at hand. I'm mostly making it, in case it can be taken into
-account in case some bigger changes to this code path are to be made -
-given that it touches the problem of signal delivery.
 
-When I noticed this problem, I was looking for a way to figure out
-what syscall caused SIGSYS (via SECCOMP_RET_KILL_*), and there's no
-easy way to do that programmatically from the perspective of a parent
-process. There are three ways of doing this that come to mind.
+On 2/11/22 01:53, Richard Sandiford wrote:
+> Dan Li <ashimida@linux.alibaba.com> writes:
+>> On 2/10/22 01:55, Richard Sandiford wrote:
+>>>>
+>>> But treating scs push and scs pop as part of the register save and
+>>> restore sequences would have one advantage: it would allow the
+>>> scs push and scs pop to be shrink-wrapped.
+>>>
+>>
+>> Sorry for my limited knowledge of shrink warping, I don't think I get
+>> it here (I tried to find a case when compiling the kernel and some
+>> gcc test cases but I still don't have a clue.).
+>>
+>> I see that the bitmap of LR_REGNUM is cleared in
+>> aarch64_get_separate_components and scs push/pop are x18 based operations.
+>>
+>> If we handle them in aarch64_restore/save_callee_saves,
+>> could scs push/pop be shrink-wrapped in some cases?
+> 
+> Yeah, I think so.  E.g. for:
+> 
+> void f();
+> int g(int x) {
+>      if (x == 0)
+>          return 1;
+>      f();
+>      return 2;
+> }
+> 
+> shrink wrapping would allow the scs push and pop to move along with the
+> x30 save:
+> 
+> g:
+>          cbnz    w0, .L9
+>          mov     w0, 1
+>          ret
+> .L9:
+>          stp     x29, x30, [sp, -16]!
+>          mov     x29, sp
+>          bl      f
+>          mov     w0, 2
+>          ldp     x29, x30, [sp], 16
+>          ret
+> 
 
-1). Keep reference to /proc/<child>/syscall and read it upon process
-exiting by SIGSYS (and reading it with wait/id(WNOWAIT) from parent).
-This used to work a long time ago, but was racy (I reported this
-problem many years ago), and currently only -1 0 0 is returned (as in,
-no syscall in progress).
-2). Use ptrace - it works but it changes the logic of the signal
-delivery inside a traced process and requires non-trivial code to make
-it work correctly: use of PT_INTERRUPT, understanding all signal
-delivery events, registers and their mapping to syscall arguments per
-CPU arch.
-3). auditd will print details of failed syscall to kmsg, but the
-string is not very structured, and auditd might not be always present
-inside kernels. And reading that data via netlink requires root IIRC.
+Thanks Richard, (to make sure I understand correctly :)) I think
+it means that the current patch could do a "shrink-wapping", but
+the X30 could not be treat as a "component", now it could gen code
+like:
 
-I think it'd be good to have some way of doing it from the perspective
-of a parent process - it'd simplify development of sandboxing managers
-(eg nsjail, minijail, firejail), and creation of good seccomp
-policies.
+g:
+         cbnz    w0, .L9
+         mov     w0, 1
+         ret
+.L9:
+         str     x30, [x18], 8
+         stp     x29, x30, [sp, -16]!
+         mov     x29, sp
+         bl      f
+         ldr     x30, [x18, -8]!
+         mov     w0, 2
+         ldr     x29, [sp], 16
+         ret
+
+> The idea is that aarch64_save_callee_saves would treat the scs push
+> as part of saving x30 (along with the normal store to the frame chain,
+> when used).  aarch64_restore_callee_saves would similarly treat the scs
+> pop as the way of restoring x30 (instead of loading from the frame chain).
+> This is in contrast to the current patch, where the scs push and pop are
+> treated as fixed parts of the prologue and epilogue instead, and where
+> aarch64_restore_callee_saves tries to avoid doing anything for x30.
+> 
+> If shrink-wrapping decides to treat x30 as a separate “component”, as it
+> does in the example above, then the scs push and pop would be emitted
+> by aarch64_process_components instead.
+> 
+> It would be more complex, but it would give better code.
+> 
+
+Following your idea, I made a poc to add x30 in component bitmap:
+
+diff --git a/gcc/config/aarch64/aarch64.cc b/gcc/config/aarch64/aarch64.cc
+index 35f6f64f5b2..fc9b5e7af54 100644
+--- a/gcc/config/aarch64/aarch64.cc
++++ b/gcc/config/aarch64/aarch64.cc
+@@ -8359,7 +8359,7 @@ aarch64_get_separate_components (void)
+    if (reg1 != INVALID_REGNUM)
+      bitmap_clear_bit (components, reg1);
+  
+-  bitmap_clear_bit (components, LR_REGNUM);
+    bitmap_clear_bit (components, SP_REGNUM);
+  
+    return components;
+@@ -8396,7 +8396,7 @@ aarch64_components_for_bb (basic_block bb)
+    /* GPRs are used in a bb if they are in the IN, GEN, or KILL sets.  */
+    for (unsigned regno = 0; regno <= LAST_SAVED_REGNUM; regno++)
+      if (!fixed_regs[regno]
+-       && !crtl->abi->clobbers_full_reg_p (regno)
++       && (!crtl->abi->clobbers_full_reg_p (regno) || regno == R30_REGNUM)
+         && (TEST_HARD_REG_BIT (extra_caller_saves, regno)
+             || bitmap_bit_p (in, regno)
+             || bitmap_bit_p (gen, regno)
+
+And with a test code compiled with -fno-omit-frame-pointer:
+
+void f();
+int g(int x) {
+     if (x == 0) {
+         __asm__ ("":::"x19", "x20");
+         return 1;
+     }
+     f();
+     return 2;
+}
+
+Then it seems X30 is treat as a "component" (the test
+result of aarch64.exp also seems fine).
+
+g:
+         stp     x19, x20, [sp, -32]!
+         cbnz    w0, .L2
+         mov     w0, 1
+         ldp     x19, x20, [sp], 32
+         ret
+.L2:
+         str     x30, [sp, 16]
+         bl      f
+         ldr     x30, [sp, 16]
+         mov     w0, 2
+         ldp     x19, x20, [sp], 32
+         ret
+
+And I think maybe we could handle this through three patches:
+1.Keep current patch (a V5) unchanged for scs.
+2.Add shrink-warpping for X30:
+logically this might be a separate topic, and I think more testing
+might be needed here (Well, I'm a little worried about if there might
+be other effects, since I just read this part of the code roughly
+yesterday).
+3.Add scs push/pop to shrink-wrapping (and maybe we can do the same for
+the PAC code in pro/epilogue, since it's also the operation of the X30).
+
+Thanks,
+Dan
