@@ -2,113 +2,160 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94991C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Feb 2022 20:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F6AC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Feb 2022 20:15:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353059AbiBKUBH (ORCPT
+        id S245349AbiBKUPj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 11 Feb 2022 15:01:07 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43850 "EHLO
+        Fri, 11 Feb 2022 15:15:39 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245588AbiBKUBG (ORCPT
+        with ESMTP id S231602AbiBKUPi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 11 Feb 2022 15:01:06 -0500
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5453C50
-        for <linux-hardening@vger.kernel.org>; Fri, 11 Feb 2022 12:01:01 -0800 (PST)
-Received: by mail-pf1-x42a.google.com with SMTP id t36so7287573pfg.0
-        for <linux-hardening@vger.kernel.org>; Fri, 11 Feb 2022 12:01:01 -0800 (PST)
+        Fri, 11 Feb 2022 15:15:38 -0500
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35D39CF1
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Feb 2022 12:15:36 -0800 (PST)
+Received: by mail-lf1-x132.google.com with SMTP id j7so1353152lfu.6
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Feb 2022 12:15:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=QNqvweKtPqIF4attpHp1noQLaabICsimXqSeB/QPjEI=;
-        b=DpIN81zjnh+AwCO+qCWcnLW920fFY9PMwlJ3PW0Ee5vWBCqso1AyT9kdGi/ouyKLeQ
-         RPUIDaScKejJU5SIIErkiywv1jEBq22/gq1gLqIZhlxR9SPmoJZaGuYxRuE2mCHVsIXy
-         wyVqBsoQh4qoAteYdlaENTxzZ8rO0FY7grMN8=
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=akw+F2hkLlIx1zx4pGqLno/WqoCLfLF+9C33bhKHXXA=;
+        b=HUU6SdkM6LBsvdup/PD0lWZgy6/ryJ47CutLjO78bSfQjk58z09KwVzWhty+y5iViA
+         vfi9/F4l8vCsLg7iCMNjFKjOgZacD9q+CuVyF+U/WnInP0soTdRar79I8dc/Duc7d4Aw
+         tHCRHyNSm7bRx9v6yPM5H5DtDMBHBB5CbS3c2HcG07IPaIq5T8Nwl1w170zcS/b8eQsB
+         RBuH+ilHUprX4knao6DxzesRQHN2VGIL4o23zshaUr2pYhZPpfjsfmbsGdToAFXLz2Tm
+         20lHlnz/Ld2GMxxmqhpf3cNmTLKsXyUp/DMuHQJNB6TLfmFqI2WRaXkJJq9AOWH00GnA
+         nECg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=QNqvweKtPqIF4attpHp1noQLaabICsimXqSeB/QPjEI=;
-        b=bGgbJqVG9hawLOO1uYEJNRlkELGNOCMPifwewL16/kyB6LDEq/rl7x3rREkZ3C0GF8
-         Y8zjFc15HuwIRguBtGw8Pu6m8TG0Z3tfLDxFNMwRMoojmH0gqVmKp3jFQMMwoFKVSpnR
-         c39Qb7B2UwmFCofful1br8OTHXZgMMTAtjbLOtGBsLsmPuIpM4Ky4njtJj1nXZdgY441
-         i504AZDtykaqE75ynO7+2rT2hbUJLPaCpi+Dtkz+9TdpGUWKBuLI3feC0F/wGDXJUHRQ
-         4Mh8yZTWfhUqQDM5Z16qhX0ZJ2tJyJkHuic2efHAMmiE8ykb0oUqU6Dwv3YMcwTiN0RV
-         319w==
-X-Gm-Message-State: AOAM531xJpc5+NTCEMhDLLOIrtaWFPLX0slS3Fj2Lkc+oiOGVjfn8bcJ
-        g5XXR/xlMzXoneh5w9bUVEpEaGp0FMvHaQ==
-X-Google-Smtp-Source: ABdhPJwLAGT61PFgZsP2SAVpzMNkZ+DM5KpdHyqc7A087qE45VeO3Biw1+4t38r3D6WqAK6kg6XHPA==
-X-Received: by 2002:a63:8849:: with SMTP id l70mr2701342pgd.25.1644609661110;
-        Fri, 11 Feb 2022 12:01:01 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k22sm28951487pfu.210.2022.02.11.12.01.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Feb 2022 12:01:00 -0800 (PST)
-Date:   Fri, 11 Feb 2022 12:01:00 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Robert =?utf-8?B?xZp3acSZY2tp?= <robert@swiecki.net>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 0/3] signal: HANDLER_EXIT should clear SIGNAL_UNKILLABLE
-Message-ID: <202202111159.7B2BAD2EF1@keescook>
-References: <871r0a8u29.fsf@email.froward.int.ebiederm.org>
- <202202101033.9C04563D9@keescook>
- <87pmnu5z28.fsf@email.froward.int.ebiederm.org>
- <202202101137.B48D02138@keescook>
- <87k0e249tt.fsf@email.froward.int.ebiederm.org>
- <202202101710.668EDCDC@keescook>
- <875ypm41kb.fsf@email.froward.int.ebiederm.org>
- <202202101827.4B16DF54@keescook>
- <CAP145phAg3ZSPJw7x2kKVQe86puy-XyKatVoByVoM27RP4aw_g@mail.gmail.com>
- <87a6ex1ek2.fsf@email.froward.int.ebiederm.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=akw+F2hkLlIx1zx4pGqLno/WqoCLfLF+9C33bhKHXXA=;
+        b=SbzCD8BQncECVqKsZRnynlDcVwaxTy8SLOC2kcS3HoymlSpt4iH73ARTY+e1uaxmRD
+         cYlBb2qbFWwhKba/3gFBbgHsRCdFWZpXCIlLfF71ApLuzJlRzZlReVhLl4Z2/zbOcoWn
+         dLXh5O2Y1IVf7iTnM6QkZp1Gg/jYbY+KwPRkoWdaAK54tUalKRnfPkFxpmSCFMmOH+QH
+         WcYjnRLCae5RcMK0960WwOMczI6s77GZTwXSOXjul8oQQohsYZkqfSeTQNNuRav9A37/
+         ztKCsCha/s1W2+Ny7L17lvN97uzdsMkXQ1UK8i0BfzYXvXZUFWUgU12L1TZ1h3hy98rT
+         vOFw==
+X-Gm-Message-State: AOAM533VatIXfgPMFR0Px8zZzF1pP9AfQrd3cGELJRyYsItDGtQTqsfd
+        iEIzyeOsqz2NazsbXBBLQwywl5uM77qIztzu17M+6Q==
+X-Google-Smtp-Source: ABdhPJwxuRGJlb59/HO/KFupbtqn1lGMApRIpVAemnjvZ04sgT9KZ9Pb8LdGhWzkwKG7zykKNWEL3OKZw+Qxo0VpISY=
+X-Received: by 2002:a19:ee13:: with SMTP id g19mr2315780lfb.288.1644610534329;
+ Fri, 11 Feb 2022 12:15:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87a6ex1ek2.fsf@email.froward.int.ebiederm.org>
+References: <20220210025321.787113-1-keescook@chromium.org>
+ <20220210025321.787113-2-keescook@chromium.org> <CAG48ez1m7XJ1wJvTHtNorH480jTWNgdrn5Q1LTZZQ4uve3r4Sw@mail.gmail.com>
+ <202202100935.FB3E60FA5@keescook> <CAG48ez3fG7S1dfE2-JAtyOZUK=0_iZ03scf+oD6gwVyD1Qp33g@mail.gmail.com>
+ <202202101254.1174AB2B@keescook>
+In-Reply-To: <202202101254.1174AB2B@keescook>
+From:   Jann Horn <jannh@google.com>
+Date:   Fri, 11 Feb 2022 21:15:07 +0100
+Message-ID: <CAG48ez0GX5NzAu72DMHaN4u4cwTb51tGm+opwV5uNsUdgL1fVQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] signal: HANDLER_EXIT should clear SIGNAL_UNKILLABLE
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        =?UTF-8?B?Um9iZXJ0IMWad2nEmWNraQ==?= <robert@swiecki.net>,
+        stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Feb 11, 2022 at 11:46:53AM -0600, Eric W. Biederman wrote:
-> Robert Święcki <robert@swiecki.net> writes:
-> > When I noticed this problem, I was looking for a way to figure out
-> > what syscall caused SIGSYS (via SECCOMP_RET_KILL_*), and there's no
-> > easy way to do that programmatically from the perspective of a parent
-> > process. There are three ways of doing this that come to mind.
-> 
-> Unless I am misunderstanding what you are looking for
-> this information is contained within the SIGSYS siginfo.
-> The field si_syscall contains the system call number and
-> the field si_errno contains return code from the seccomp filter.
-> 
-> All of that can be read from the core dump of the process that exited.
-> 
-> Looking quickly I don't see a good way to pull that signal information
-> out of the kernel other than with a coredump.
-> 
-> It might be possible to persuade PTRACE_EVENT_EXIT to give it to you,
-> but I haven't looked at it enough to see if that would be a sensible
-> strategy.
+On Thu, Feb 10, 2022 at 10:09 PM Kees Cook <keescook@chromium.org> wrote:
+> On Thu, Feb 10, 2022 at 07:01:39PM +0100, Jann Horn wrote:
+> > On Thu, Feb 10, 2022 at 6:37 PM Kees Cook <keescook@chromium.org> wrote=
+:
+> > > On Thu, Feb 10, 2022 at 05:18:39PM +0100, Jann Horn wrote:
+> > > > On Thu, Feb 10, 2022 at 3:53 AM Kees Cook <keescook@chromium.org> w=
+rote:
+> > > > > Fatal SIGSYS signals were not being delivered to pid namespace in=
+it
+> > > > > processes. Make sure the SIGNAL_UNKILLABLE doesn't get set for th=
+ese
+> > > > > cases.
+> > > > >
+> > > > > Reported-by: Robert =C5=9Awi=C4=99cki <robert@swiecki.net>
+> > > > > Suggested-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> > > > > Fixes: 00b06da29cf9 ("signal: Add SA_IMMUTABLE to ensure forced s=
+iganls do not get changed")
+> > > > > Cc: stable@vger.kernel.org
+> > > > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > > > ---
+> > > > >  kernel/signal.c | 5 +++--
+> > > > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/kernel/signal.c b/kernel/signal.c
+> > > > > index 38602738866e..33e3ee4f3383 100644
+> > > > > --- a/kernel/signal.c
+> > > > > +++ b/kernel/signal.c
+> > > > > @@ -1342,9 +1342,10 @@ force_sig_info_to_task(struct kernel_sigin=
+fo *info, struct task_struct *t,
+> > > > >         }
+> > > > >         /*
+> > > > >          * Don't clear SIGNAL_UNKILLABLE for traced tasks, users =
+won't expect
+> > > > > -        * debugging to leave init killable.
+> > > > > +        * debugging to leave init killable, unless it is intende=
+d to exit.
+> > > > >          */
+> > > > > -       if (action->sa.sa_handler =3D=3D SIG_DFL && !t->ptrace)
+> > > > > +       if (action->sa.sa_handler =3D=3D SIG_DFL &&
+> > > > > +           (!t->ptrace || (handler =3D=3D HANDLER_EXIT)))
+> > > > >                 t->signal->flags &=3D ~SIGNAL_UNKILLABLE;
+> > > >
+> > > > You're changing the subclause:
+> > > >
+> > > > !t->ptrace
+> > > >
+> > > > to:
+> > > >
+> > > > (!t->ptrace || (handler =3D=3D HANDLER_EXIT))
+> > > >
+> > > > which means that the change only affects cases where the process ha=
+s a
+> > > > ptracer, right? That's not the scenario the commit message is talki=
+ng
+> > > > about...
+> > >
+> > > Sorry, yes, I was not as accurate as I should have been in the commit
+> > > log. I have changed it to:
+> > >
+> > > Fatal SIGSYS signals (i.e. seccomp RET_KILL_* syscall filter actions)
+> > > were not being delivered to ptraced pid namespace init processes. Mak=
+e
+> > > sure the SIGNAL_UNKILLABLE doesn't get set for these cases.
+> >
+> > So basically force_sig_info() is trying to figure out whether
+> > get_signal() will later on check for SIGNAL_UNKILLABLE (the SIG_DFL
+> > case), and if so, it clears the flag from the target's signal_struct
+> > that marks the process as unkillable?
+> >
+> > This used to be:
+> >
+> > if (action->sa.sa_handler =3D=3D SIG_DFL)
+> >     t->signal->flags &=3D ~SIGNAL_UNKILLABLE;
+> >
+> > Then someone noticed that in the ptrace case, the signal might not
+> > actually end up being consumed by the target process, and added the
+> > "&& !t->ptrace" clause in commit
+> > eb61b5911bdc923875cde99eb25203a0e2b06d43.
+> >
+> > And now Robert Swiecki noticed that that still didn't accurately model
+> > what'll happen in get_signal().
+> >
+> > This seems hacky to me, and also racy: What if, while you're going
+> > through a SECCOMP_RET_KILL_PROCESS in an unkillable process, some
+> > other thread e.g. concurrently changes the disposition of SIGSYS from
+> > a custom handler to SIG_DFL?
+>
+> Do you mean after force_sig_info_to_task() has finished but before
+> get_signal()? SA_IMMUTABLE will block changes to the action.
 
-If there is already a ptrace on the child with PTRACE_O_TRACEEXIT, it
-should be possible to use PTRACE_GETSIGINFO.
-
-> > I think it'd be good to have some way of doing it from the perspective
-> > of a parent process - it'd simplify development of sandboxing managers
-> > (eg nsjail, minijail, firejail), and creation of good seccomp
-> > policies.
-> 
-> By development do you mean debugging sandbox managers?  Or do you mean
-> something that sandbox managers can use on a routine basis?
-
-It'd really be nice to be able to get this info without the ptrace
-relationship already in place... hmmm.
-
--- 
-Kees Cook
+Yeah, that's what I meant.
+Thanks, I missed SA_IMMUTABLE. Ugh, this is not pretty code...
