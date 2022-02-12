@@ -2,270 +2,79 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4595CC433F5
-	for <linux-hardening@archiver.kernel.org>; Sat, 12 Feb 2022 04:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2A0C433F5
+	for <linux-hardening@archiver.kernel.org>; Sat, 12 Feb 2022 05:31:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231490AbiBLE2w (ORCPT
+        id S229668AbiBLFbN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 11 Feb 2022 23:28:52 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:50944 "EHLO
+        Sat, 12 Feb 2022 00:31:13 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:51108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229541AbiBLE2v (ORCPT
+        with ESMTP id S229593AbiBLFbM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 11 Feb 2022 23:28:51 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71F0422B15
-        for <linux-hardening@vger.kernel.org>; Fri, 11 Feb 2022 20:28:49 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id d9-20020a17090a498900b001b8bb1d00e7so10602728pjh.3
-        for <linux-hardening@vger.kernel.org>; Fri, 11 Feb 2022 20:28:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KgktAnMyQV8XmOFvmPrbI1fjqTx70lJS+/GJGKFg5Dk=;
-        b=cycbFQ18OsaTXolp85tbhsU5ysSl6wQ2+XHBRXTFySF/48z/07XhkqnelcXE9J3iTr
-         nSD0IgV8vg5z5StKfyaetKO0yholM9dxtd/lbJwSThUzmQGuvQG3C+CYyW5IuXnGEM+I
-         GSn1DDd4JvFGxkjT0/P3GgwWEE24qhQ5kpGNU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KgktAnMyQV8XmOFvmPrbI1fjqTx70lJS+/GJGKFg5Dk=;
-        b=i9Ct+X8l0loqpEtkF7zQdKZ9jTEOEnkRijZ/w3nKnaw4WSL9QFkQU5rf+kTnB9v9iI
-         eP0RRV06QQ/cTvst/8u6gx6InYXh1tUOKbuSMT7QS/vVpnNmZ+dAJ/KC0V9zldF91F4W
-         Pf6w3tWle6KX5enBhNrSeAKSDfNhKrkJJi/OEdkCXbb7kPJr2hSpVsxi274kPyvJ+JuP
-         iVb6VhYvA7CC/OJj8Cme5lQz4g/QV8azpKKlKq+Arxbeg1l6/sozTaBnk6z27Pz7L17n
-         AvE5Hli5vHTQ2uk5JHEjo1mynNP08z3U/aVlXdWxMTU9h6B0Lkqi0U4i1IByVZW02Kmi
-         IpIA==
-X-Gm-Message-State: AOAM530EbIiO9CAGyTuDDngIAyCUspkYqT0uBY/zlEU24DdwKghnoayv
-        v1lMho+R/+4p3froI6YOxRBebQ==
-X-Google-Smtp-Source: ABdhPJwW4B9UBaWVq4xUpnOwGsaDM4DTG1uUli1Ye17djY99VVEyUtBB8Yh0xDEhdJc/idk9jwSQhQ==
-X-Received: by 2002:a17:90b:2248:: with SMTP id hk8mr3683027pjb.242.1644640128933;
-        Fri, 11 Feb 2022 20:28:48 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g12sm27226970pfm.119.2022.02.11.20.28.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Feb 2022 20:28:48 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        =?UTF-8?q?Robert=20=C5=9Awi=C4=99cki?= <robert@swiecki.net>,
-        Jann Horn <jannh@google.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [RFC] Get siginfo from unreaped task
-Date:   Fri, 11 Feb 2022 20:28:43 -0800
-Message-Id: <20220212042843.2993537-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+        Sat, 12 Feb 2022 00:31:12 -0500
+Received: from out30-45.freemail.mail.aliyun.com (out30-45.freemail.mail.aliyun.com [115.124.30.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3F7F29816
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Feb 2022 21:31:09 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0V4CNvzv_1644643865;
+Received: from 192.168.193.145(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V4CNvzv_1644643865)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 12 Feb 2022 13:31:06 +0800
+Message-ID: <7b5a0c4e-ae34-d5be-36d8-5b2eb42bbcce@linux.alibaba.com>
+Date:   Fri, 11 Feb 2022 21:30:18 -0800
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6322; h=from:subject; bh=y0/xaB0q0yddSF0EmbpT28oabYdHCkprnUmnhMq2bLQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiBzd61bZSzb0DFXL8Uftb29a+ETNBryjwSp8Cy3X5 R6Hoxz6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYgc3egAKCRCJcvTf3G3AJmlOD/ 491PzsFwJwaWa2D38uLWLRrnXt6ytUK0OLzEs9ue7cxany9QnaZ1O49cb/FxWQOGWc/t59Qwa5Spe4 pSQYvOK63IfqH5ARNORE9XEFN5dKlSCBalNNlz0IwPGVAAgSgcj6rkAihk8/sDp48BJzDHlQsjoZb8 MdiX9UsatQ47vlp+Ta6Ia2VKtkkrYLWah7oJQMpdpDDPi60jP8Mncd7spaPg4fj/Vksulx5u1gxVUS oesk3tFymYBOow5DD/EN9X+5d8h/h7AmZTSathYs1kHw1VUevtIuW9fq7LBNW1fwQe5qtd1xf21zUY MjwLAwfCJFjUFJRs26QxMK5fZf3hn16KYIM6qugi6vbEJ+QbM4Y8PofZ0+c12vzIIP6BlKuQVD/7Op Rq+ucgpOv1TBOAw9tT2pjgih3ugArdj6kd2thdYZe44vDdhlr99rxxyLu0ddQvQgzJj9vE4ZooDRnO TOB2HhibT7mAq/VibBamp20X6eSgBDtTsFNGBkDaSznMkTlKM5CdytkaSKTpAWN7AKf5lJvql3YM+y apNw8rKwj5XVtmeOxz7FBQkaJliQcaAN2A1GI74dSjGQ9q2QX7cy9QB4fU7CL7NypIWhYJxF2EBFm2 Epr4PCM2ZAMKF1nxL2dkZcLLiMaUhVxyy98FJzlR3pgVXIUNSVx4/kmQ1bhQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
+Subject: Re: [PATCH] [PATCH,v4,1/1,AARCH64][PR102768] aarch64: Add compiler
+ support for Shadow Call Stack
+Content-Language: en-US
+To:     gcc-patches@gcc.gnu.org, richard.earnshaw@arm.com,
+        marcus.shawcroft@arm.com, kyrylo.tkachov@arm.com, hp@gcc.gnu.org,
+        ndesaulniers@google.com, nsz@gcc.gnu.org, pageexec@gmail.com,
+        qinzhao@gcc.gnu.org, linux-hardening@vger.kernel.org,
+        richard.sandiford@arm.com
+References: <20220205110500.47430-1-ashimida@linux.alibaba.com>
+ <mpt7da481l6.fsf@arm.com>
+ <93a72e23-3d67-3c46-308d-f69ec517e793@linux.alibaba.com>
+ <mptzgmz3v10.fsf@arm.com>
+ <74fb3167-f5d7-84dd-1348-c9ea18665b58@linux.alibaba.com>
+ <mptv8xl20hr.fsf@arm.com>
+ <81b35033-489e-d0c0-8677-55923f6abbe0@linux.alibaba.com>
+ <mpto83dzaai.fsf@arm.com>
+From:   Dan Li <ashimida@linux.alibaba.com>
+In-Reply-To: <mpto83dzaai.fsf@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Make siginfo available through PTRACE_GETSIGINFO after process death,
-without needing to have already used PTRACE_ATTACH. Uses 48 more bytes
-in task_struct, though I bet there might be somewhere else we could
-stash a copy of it?
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/linux/sched.h                         |   1 +
- kernel/ptrace.c                               |  12 +-
- kernel/signal.c                               |   4 +
- tools/testing/selftests/seccomp/seccomp_bpf.c | 119 ++++++++++++++++++
- 4 files changed, 134 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index f5b2be39a78c..e40789e801ef 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1178,6 +1178,7 @@ struct task_struct {
- #endif
- 	/* Ptrace state: */
- 	unsigned long			ptrace_message;
-+	kernel_siginfo_t		death_siginfo;
- 	kernel_siginfo_t		*last_siginfo;
- 
- 	struct task_io_accounting	ioac;
-diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-index eea265082e97..990839c57842 100644
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -1304,8 +1304,16 @@ SYSCALL_DEFINE4(ptrace, long, request, long, pid, unsigned long, addr,
- 
- 	ret = ptrace_check_attach(child, request == PTRACE_KILL ||
- 				  request == PTRACE_INTERRUPT);
--	if (ret < 0)
--		goto out_put_task_struct;
-+	if (ret < 0) {
-+		/*
-+		 * Allow PTRACE_GETSIGINFO if process is dead
-+		 * and we could otherwise ptrace it.
-+		 */
-+		if (request != PTRACE_GETSIGINFO ||
-+		    !child->exit_state ||
-+		    !ptrace_may_access(child, PTRACE_MODE_READ_REALCREDS))
-+			goto out_put_task_struct;
-+	}
- 
- 	ret = arch_ptrace(child, request, addr, data);
- 	if (ret || request != PTRACE_DETACH)
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 9b04631acde8..41f6ba6b7aa7 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -2825,6 +2825,10 @@ bool get_signal(struct ksignal *ksig)
- 		}
- 
- 	fatal:
-+		/* Allow siginfo to be queried until reaped. */
-+		copy_siginfo(&current->death_siginfo, &ksig->info);
-+		current->last_siginfo = &current->death_siginfo;
-+
- 		spin_unlock_irq(&sighand->siglock);
- 		if (unlikely(cgroup_task_frozen(current)))
- 			cgroup_leave_frozen(true);
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index 9d126d7fabdb..d2bbf9e32f22 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -268,6 +268,10 @@ struct seccomp_notif_addfd_big {
- #define SECCOMP_FILTER_FLAG_TSYNC_ESRCH (1UL << 4)
- #endif
- 
-+#ifndef SYS_SECCOMP
-+#define SYS_SECCOMP	1
-+#endif
-+
- #ifndef seccomp
- int seccomp(unsigned int op, unsigned int flags, void *args)
- {
-@@ -765,6 +769,121 @@ TEST_SIGNAL(KILL_one_arg_six, SIGSYS)
- 	close(fd);
- }
- 
-+FIXTURE(SIGINFO) {
-+	pid_t child_pid;
-+};
-+
-+FIXTURE_SETUP(SIGINFO)
-+{
-+	self->child_pid = 0;
-+}
-+
-+FIXTURE_TEARDOWN(SIGINFO)
-+{
-+	if (self->child_pid > 0)
-+		waitpid(self->child_pid, NULL, WNOHANG);
-+}
-+
-+TEST_F(SIGINFO, child)
-+{
-+	int status;
-+	siginfo_t info = { };
-+	/* Kill only when calling __NR_prctl. */
-+	struct sock_filter filter[] = {
-+		BPF_STMT(BPF_LD|BPF_W|BPF_ABS,
-+			offsetof(struct seccomp_data, nr)),
-+		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_prctl, 0, 1),
-+		BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_KILL_PROCESS | 0xBA),
-+		BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),
-+	};
-+	struct sock_fprog prog = {
-+		.len = (unsigned short)ARRAY_SIZE(filter),
-+		.filter = filter,
-+	};
-+
-+	self->child_pid = fork();
-+	ASSERT_LE(0, self->child_pid);
-+	if (self->child_pid == 0) {
-+		ASSERT_EQ(0, prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) {
-+			TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
-+		}
-+		ASSERT_EQ(0, seccomp(SECCOMP_SET_MODE_FILTER, 0, &prog));
-+		prctl(PR_GET_SECCOMP, 0, 0, 0, 0);
-+		/* Should have died now. */
-+		_exit(37);
-+	}
-+
-+	/* Check siginfo_t contents. */
-+	EXPECT_EQ(waitid(P_PID, self->child_pid, &info, WEXITED | WNOWAIT), 0);
-+#if 0
-+	struct {
-+	        int si_signo;
-+	        int si_code;
-+	        int si_errno;
-+	        union __sifields _sifields;
-+	}
-+
-+	/* SIGCHLD */
-+	struct {
-+		__kernel_pid_t _pid;	/* which child */
-+		__kernel_uid32_t _uid;	/* sender's uid */
-+		int _status;		/* exit code */
-+		__ARCH_SI_CLOCK_T _utime;
-+		__ARCH_SI_CLOCK_T _stime;
-+	} _sigchld;
-+#endif
-+	ASSERT_EQ(info.si_signo, SIGCHLD);
-+	EXPECT_TRUE(info.si_code == CLD_KILLED || info.si_code == CLD_DUMPED);
-+	EXPECT_TRUE(info.si_errno == 0);
-+	EXPECT_EQ(info.si_pid, self->child_pid);
-+
-+	ASSERT_TRUE(WIFSIGNALED(info.si_status));
-+	/* TODO: why doesn't this WCOREDUMP() agree with below? */
-+	/* EXPECT_TRUE(WCOREDUMP(status)); */
-+	EXPECT_EQ(WTERMSIG(info.si_status), SIGSYS);
-+
-+	memset(&info, 0, sizeof(info));
-+	ASSERT_EQ(ptrace(PTRACE_GETSIGINFO, self->child_pid, NULL, &info), 0);
-+#if 0
-+	/* SIGSYS */
-+	struct {
-+		void __user *_call_addr;/* calling user insn */
-+		int _syscall;		/* triggering system call number */
-+		unsigned int _arch;	/* AUDIT_ARCH_* of syscall */
-+	} _sigsys;
-+
-+	info.si_signo = SIGSYS;
-+	info.si_code = SYS_SECCOMP;
-+	info.si_call_addr = (void __user *)KSTK_EIP(current);
-+	info.si_errno = reason;
-+	info.si_arch = syscall_get_arch(current);
-+	info.si_syscall = syscall;
-+
-+#endif
-+	ASSERT_EQ(info.si_signo, SIGSYS);
-+	EXPECT_EQ(info.si_code, SYS_SECCOMP);
-+	/*
-+	 * The syscall will have happened somewhere near the libc
-+	 * prctl implementation.
-+	 */
-+	EXPECT_TRUE(info.si_call_addr >= (void *)prctl &&
-+		    info.si_call_addr <= (void *)prctl + PAGE_SIZE) {
-+		TH_LOG("info.si_call_addr: %p", info.si_call_addr);
-+		TH_LOG("prctl            : %p", prctl);
-+	}
-+	EXPECT_EQ(info.si_errno, 0xBA);
-+	/* EXPECT_EQ(info.si_arch, ...native arch...); */
-+	EXPECT_EQ(info.si_syscall, __NR_prctl);
-+
-+	/* Check status contents. */
-+	ASSERT_EQ(waitpid(self->child_pid, &status, 0), self->child_pid);
-+	ASSERT_TRUE(WIFSIGNALED(status));
-+	/* TODO: why doesn't this WCOREDUMP() agree with above? */
-+	/* EXPECT_TRUE(WCOREDUMP(status)); */
-+	EXPECT_EQ(WTERMSIG(status), SIGSYS);
-+	self->child_pid = 0;
-+}
-+
- /* This is a thread task to die via seccomp filter violation. */
- void *kill_thread(void *data)
- {
--- 
-2.30.2
+On 2/11/22 07:35, Richard Sandiford wrote:
+> Dan Li <ashimida@linux.alibaba.com> writes:
+>> On 2/11/22 01:53, Richard Sandiford wrote:
+>>> Dan Li <ashimida@linux.alibaba.com> writes:
+>>>> On 2/10/22 01:55, Richard Sandiford wrote:
+>>>>>>
+>> And I think maybe we could handle this through three patches:
+>> 1.Keep current patch (a V5) unchanged for scs.
+>> 2.Add shrink-warpping for X30:
+>> logically this might be a separate topic, and I think more testing
+>> might be needed here (Well, I'm a little worried about if there might
+>> be other effects, since I just read this part of the code roughly
+>> yesterday).
+>> 3.Add scs push/pop to shrink-wrapping (and maybe we can do the same for
+>> the PAC code in pro/epilogue, since it's also the operation of the X30).
+> 
+> Yeah, that's fair.
+> 
+> (Like I said earlier, I wasn't asking for the shrink-wrapping change.
+> It was just a note in passing.  But as you point out, the individual
+> shrink-wrapping support would be even more work than I'd imagined.)
+> 
 
+Got it!
+
+Thanks,
+Dan
