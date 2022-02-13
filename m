@@ -2,122 +2,136 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75560C433F5
-	for <linux-hardening@archiver.kernel.org>; Sun, 13 Feb 2022 18:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3978BC433F5
+	for <linux-hardening@archiver.kernel.org>; Sun, 13 Feb 2022 18:32:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231751AbiBMSYx (ORCPT
+        id S235339AbiBMScm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 13 Feb 2022 13:24:53 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:45376 "EHLO
+        Sun, 13 Feb 2022 13:32:42 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:47884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230441AbiBMSYw (ORCPT
+        with ESMTP id S233825AbiBMScl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 13 Feb 2022 13:24:52 -0500
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62FDF575C3
-        for <linux-hardening@vger.kernel.org>; Sun, 13 Feb 2022 10:24:46 -0800 (PST)
-Received: by mail-pf1-x42d.google.com with SMTP id c4so4117886pfl.7
-        for <linux-hardening@vger.kernel.org>; Sun, 13 Feb 2022 10:24:46 -0800 (PST)
+        Sun, 13 Feb 2022 13:32:41 -0500
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A4757B01
+        for <linux-hardening@vger.kernel.org>; Sun, 13 Feb 2022 10:32:35 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id l9so7273449plg.0
+        for <linux-hardening@vger.kernel.org>; Sun, 13 Feb 2022 10:32:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=qIMt0RmWAsQWauyJZDRkp+AWN8bvJQqBJlsPfpkOQXE=;
-        b=ceJfHs1cLBxsz5BKk+/jEK/pAPjb0m9drL+HpSH4kfb4H706RHjLsyJawdA/Yxb4lE
-         erlTmiX/pmE/EiKd2LQvYVMdyq5kZGyMEJEnpWsvN7kJQR7NAe9D06I++F4jVmWdLWgB
-         y1N/T3PCkSejTGnWCRvxEpIGCqN0Ns1w1WbWQ=
+        bh=GbN1m5GjdzaYtEly7rnCE3vNXf0FkYK/naaa45R/epk=;
+        b=GAsZqZDapq/V16jBy3rZ7Dnbf9uE83eqvg/Sh35MKq+OMPn7yycsm+4V6P4/Elf3Nm
+         QY2R0tMqPm5yGDgQQ2iDpVoGdgDrkHrfNkpwU6Ud9o04G1wlcU90nbKq5QbBruKBM4cK
+         +q8n/wCTyCrqdUJE/dHrj8+Snhe+MkcMMRduE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=qIMt0RmWAsQWauyJZDRkp+AWN8bvJQqBJlsPfpkOQXE=;
-        b=3bzE/nHz7tBOTBbCsZSIFJu/HW2oq7kRWWDu4xPi+pX3HU29HF22DhWDNZek6YtxVT
-         pDR3SSp5CZMfs7O7QgEgw/wtKjYJ24F0CHUhzhtwin122ApEJR3g2iaMfsd4dgpcgw5X
-         n9subXIelML9i2c4DOO0UC0j60uMM1m/ssyla95sT91TVC5GIHEgBLxRIHcKkVjzkynF
-         Y7hFb77q/1o2PG3uq+oG1/YDpgncB+4kQdJvZG91ZDtxFM5Lft6piCTu4/x90lJf56MT
-         dqm7MeOCtrWrWUiPJ5T7OhNaV1p1RXUXcykSm58aifVAcNzK9/WEuqITlT2NLAYch5lm
-         yIKA==
-X-Gm-Message-State: AOAM530PPOlpo71bI2jz51VbE5Puox1tjIWl2d8YTZC1uPLf24avlZ8O
-        PkP0ykXfHRpgJFSqmZLdH3+8hOd1Itlv2A==
-X-Google-Smtp-Source: ABdhPJwINsV0XJhP9HuH1sANDjByEYfXqHi97i/CHzledo+kTYPeqHWze6uGAfg2ugeAuBqpfriInQ==
-X-Received: by 2002:a05:6a00:9a9:: with SMTP id u41mr10793347pfg.75.1644776685873;
-        Sun, 13 Feb 2022 10:24:45 -0800 (PST)
+        bh=GbN1m5GjdzaYtEly7rnCE3vNXf0FkYK/naaa45R/epk=;
+        b=WsYbG+V02VfECXhQS6aAOMYP1YEO7BJbsq9RhGbyaPpbfs0daY6Bn6OAJP7Ht1rVZe
+         TpEJbUFtpS2kxfuH8LruVDkrOWa/YHvYSVCTg30l6DX3RstCqQOlpF7rvBzrJN+dVA2J
+         tWfMO3N6QhLl/RaPEQGizq6q5WtKZaZVuP+vY7f0og5vJV6JN70AE/D4nYd4FkMvAenr
+         bniBQIMpLzFNqWrbwOIRIV3sMiXduek9bpPBHWTovBuwJOltc0l2roQEc+K1Udk33DFF
+         vvOdV/ID/F+eqhfH7RrjX7RIzVnWuNBkWueEtLQnX5jVT1zZNVtvfiZVsDs9LF7QvTfN
+         6IWg==
+X-Gm-Message-State: AOAM533WrYKlybhE2CVBdLaoq4O6kvk3LlCLU0Kzu2rTKmTBeTgSNdmv
+        CNPS/bNNhcYeaaoiUKs16SK5aQ==
+X-Google-Smtp-Source: ABdhPJxIvU8YshqC540BFqX03wOgnip+o/Ur/2WzPZDFcquGanRGjudN8XpUTW0jzKbr+1o0UP8xdw==
+X-Received: by 2002:a17:90a:c7cf:: with SMTP id gf15mr10802631pjb.83.1644777155479;
+        Sun, 13 Feb 2022 10:32:35 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c23sm2642759pfi.136.2022.02.13.10.24.45
+        by smtp.gmail.com with ESMTPSA id j2sm33728429pfc.209.2022.02.13.10.32.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Feb 2022 10:24:45 -0800 (PST)
+        Sun, 13 Feb 2022 10:32:35 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Andrey Ryabinin <ryabinin.a.a@gmail.com>
 Cc:     Kees Cook <keescook@chromium.org>,
-        =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        "Justin Forbes" <jmforbes@linuxtx.org>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] tools: Fix use-after-free for realloc(..., 0)
-Date:   Sun, 13 Feb 2022 10:24:43 -0800
-Message-Id: <20220213182443.4037039-1-keescook@chromium.org>
+Subject: [PATCH] kasan: test: Silence allocation warnings from GCC 12
+Date:   Sun, 13 Feb 2022 10:32:32 -0800
+Message-Id: <20220213183232.4038718-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2060; h=from:subject; bh=UDNf8UBq2T0ezuPPJ2TeXHBzHIPtm6yrBQnmEtMJVKc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiCUzqGx4ok+q1/PygEiy3RiPBLR7jygYB1WUQ+GCG Yn3uT6SJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYglM6gAKCRCJcvTf3G3AJpG0D/ 4ojQYj0flSG5P58fm/djxCldhf2qaFTgEzpsQVuu52jXjGVHIb6sMAiaTYQc/gVvKpnJ5TOjPz+5Fs yeOm0juNwOo2ZuovTZcoEJI17cR80rdwq96jN6TUMIycK4NrqRXc8DGrvp+A447Pi6UurGMdWZ9XWq YHYZ8yqAIYOENuM5UbHoig2xLrDMEbnCzaG5CM2iAWCXM77qq6X6Hsy/EJf6jPj3z3h9DyrH+U77JS F2Zf/25Ja5+RZSAasITedL7ikkIqNt81rZsSk5vVkEyO99MaeVN7HbYb4L+TN3CiX5GFsCPCUEIecg aF+YlHOXYX1n0SpfewDAC0yzd0KTjcpzqXyet+BYscaPXJ7aw2sxLC0dZ6K21UlkNn8gPu8hSEr1Gd IlL3P16TLFlWuydqlADn1hPgFuUmaN6sgfwPkeDEX03u/1sxDFm7JaR8zmMmYGzR4EE+Mri2Qcy6zE wLCbKtizssa2vh0pK3yF3AQFVm1bnaF+L1UGqsk15McE+LH07otlTV4R7J784U2pE6OjuYZZrQ1xm+ 8/6K8CLEzTZySrXi0pC+Aq1vbj1dthc5lqBXzra+CtACyPTeXH/fjEcZ6C4XqiEE4PBDvVtIvFElnQ rO9omxtUrKMZN5JE01S1BKPiZXsNQmE9wJctJ+R5iIEsOJGA/ZGbv+oIQC2Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2824; h=from:subject; bh=9u7Cd7ajn+8VmlBggVW9I93wUx5ifwsTV6OZFwgwhrM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiCU6/gcktGKuswV/wNYH+QUBfdaSH8kMaFAvY83FQ ph5DlX+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYglOvwAKCRCJcvTf3G3AJv+tD/ 0f4VQg7uhKWf8BVJWIrY90fqUSCg1jxlya8ImO4GTv7SnS2huBhD3gvcwvxMtKTBTaR66ijo2duyI7 6i/R4ysAKYnFzcVGZVlIwztISpnXG2aCDszH6/9vxsKZT0WArlKqRIqbQjeykzbCCaR8bxpEBAFin2 htLRBbiZeIK/7ITXcNa2EBwmcB3UjN+XLGKaARJgehBunT+W6VFR2H5xM0R3mLvM6vCCQtJ6VFienm PPMNaXG8ai3zXd5d4rN9qbWH9ie3xPjVRze8vKTKPzk16+A5EHP2to7DOWORwlSLLUi/SOcRDknkSw tQxGILWKjx7bLbEwtignkRLipkgt0twRlTP7p73Ss7JM55Kw08KlQRjE+S4aQyc/9tgwBwU5aYuExW 2At+7hE9R/6vEZ/gi1tKolhnItAeh/yHgR/vvCPmSfeaUjKrtDSQ6tkzpjEUPvwXWFIKA42c6xlQSL brzc35QiULxWnwydILbzuOvAUvNR1a4kqISFIADBcXJYELaLqe32E/Be3zIfR5DfTy9aQXQNJvIuR9 x1DBYfSET2fDsWASvaZqIfGYI5m7BqKiYDP9Y9E8r4O86SOvtvkfp81wVCamYcKvyx40Kp6SYdiLCd IWUuwzekAYY0r1WDsvsd3cBgfsOm+QaXU9FsSlbr7ofiVKO7H5ShRQwDBdOQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-GCC 12 was correctly reporting a potential use-after-free condition in
-the xrealloc helper. Fix the warning by avoiding an implicit "free(ptr)"
-when size == 0:
+GCC 12 is able to see more problems with allocation sizes at compile
+time, so these must be silenced so the runtime checks will still be
+available. Use OPTIMIZER_HIDE_VAR() to silence the new warnings:
 
-In file included from help.c:12:
-In function 'xrealloc',
-    inlined from 'add_cmdname' at help.c:24:2: subcmd-util.h:56:23: error: pointer may be used after 'realloc' [-Werror=use-after-free]
-   56 |                 ret = realloc(ptr, size);
-      |                       ^~~~~~~~~~~~~~~~~~
-subcmd-util.h:52:21: note: call to 'realloc' here
-   52 |         void *ret = realloc(ptr, size);
-      |                     ^~~~~~~~~~~~~~~~~~
-subcmd-util.h:58:31: error: pointer may be used after 'realloc' [-Werror=use-after-free]
-   58 |                         ret = realloc(ptr, 1);
-      |                               ^~~~~~~~~~~~~~~
-subcmd-util.h:52:21: note: call to 'realloc' here
-   52 |         void *ret = realloc(ptr, size);
-      |                     ^~~~~~~~~~~~~~~~~~
+lib/test_kasan.c: In function 'ksize_uaf':
+lib/test_kasan.c:781:61: warning: array subscript 120 is outside array bounds of 'void[120]' [-Warray-bounds]
+  781 |         KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[size]);
+      |                                       ~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+lib/test_kasan.c:96:9: note: in definition of macro 'KUNIT_EXPECT_KASAN_FAIL'
+   96 |         expression;                                                     \
+      |         ^~~~~~~~~~
+In function 'kmalloc',
+    inlined from 'ksize_uaf' at lib/test_kasan.c:775:8:
+./include/linux/slab.h:581:24: note: at offset 120 into object of size 120 allocated by 'kmem_cache_alloc_trace'
+  581 |                 return kmem_cache_alloc_trace(
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~
+  582 |                                 kmalloc_caches[kmalloc_type(flags)][index],
+      |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  583 |                                 flags, size);
+      |                                 ~~~~~~~~~~~~
 
-Reported-by: "Valdis Klētnieks" <valdis.kletnieks@vt.edu>
-Fixes: 2f4ce5ec1d44 ("perf tools: Finalize subcmd independence")
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: kasan-dev@googlegroups.com
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-v1: https://lore.kernel.org/lkml/20220212181855.3460176-1-keescook@chromium.org/
-v2: simplify logic (josh)
----
- tools/lib/subcmd/subcmd-util.h | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ lib/test_kasan.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/lib/subcmd/subcmd-util.h b/tools/lib/subcmd/subcmd-util.h
-index 794a375dad36..b2aec04fce8f 100644
---- a/tools/lib/subcmd/subcmd-util.h
-+++ b/tools/lib/subcmd/subcmd-util.h
-@@ -50,15 +50,8 @@ static NORETURN inline void die(const char *err, ...)
- static inline void *xrealloc(void *ptr, size_t size)
- {
- 	void *ret = realloc(ptr, size);
--	if (!ret && !size)
--		ret = realloc(ptr, 1);
--	if (!ret) {
--		ret = realloc(ptr, size);
--		if (!ret && !size)
--			ret = realloc(ptr, 1);
--		if (!ret)
--			die("Out of memory, realloc failed");
--	}
-+	if (!ret)
-+		die("Out of memory, realloc failed");
- 	return ret;
- }
+diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+index 26a5c9007653..a19b3d608e3e 100644
+--- a/lib/test_kasan.c
++++ b/lib/test_kasan.c
+@@ -124,6 +124,7 @@ static void kmalloc_oob_right(struct kunit *test)
  
+ 	ptr = kmalloc(size, GFP_KERNEL);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
++	OPTIMIZER_HIDE_VAR(ptr);
+ 
+ 	/*
+ 	 * An unaligned access past the requested kmalloc size.
+@@ -185,6 +186,7 @@ static void kmalloc_pagealloc_oob_right(struct kunit *test)
+ 	ptr = kmalloc(size, GFP_KERNEL);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+ 
++	OPTIMIZER_HIDE_VAR(ptr);
+ 	KUNIT_EXPECT_KASAN_FAIL(test, ptr[size + OOB_TAG_OFF] = 0);
+ 
+ 	kfree(ptr);
+@@ -265,6 +267,7 @@ static void kmalloc_large_oob_right(struct kunit *test)
+ 	ptr = kmalloc(size, GFP_KERNEL);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+ 
++	OPTIMIZER_HIDE_VAR(ptr);
+ 	KUNIT_EXPECT_KASAN_FAIL(test, ptr[size] = 0);
+ 	kfree(ptr);
+ }
+@@ -748,6 +751,7 @@ static void ksize_unpoisons_memory(struct kunit *test)
+ 
+ 	ptr = kmalloc(size, GFP_KERNEL);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
++	OPTIMIZER_HIDE_VAR(ptr);
+ 	real_size = ksize(ptr);
+ 
+ 	/* This access shouldn't trigger a KASAN report. */
 -- 
 2.30.2
 
