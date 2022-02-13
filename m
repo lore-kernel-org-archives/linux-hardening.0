@@ -2,105 +2,122 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EFBC433EF
-	for <linux-hardening@archiver.kernel.org>; Sun, 13 Feb 2022 08:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75560C433F5
+	for <linux-hardening@archiver.kernel.org>; Sun, 13 Feb 2022 18:24:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234527AbiBMIw3 (ORCPT
+        id S231751AbiBMSYx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 13 Feb 2022 03:52:29 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56434 "EHLO
+        Sun, 13 Feb 2022 13:24:53 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:45376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230153AbiBMIw2 (ORCPT
+        with ESMTP id S230441AbiBMSYw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 13 Feb 2022 03:52:28 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDC851132;
-        Sun, 13 Feb 2022 00:52:23 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id BFA25CE0A56;
-        Sun, 13 Feb 2022 08:52:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A32E2C004E1;
-        Sun, 13 Feb 2022 08:52:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644742339;
-        bh=B/EBfaegPNI+dBkInnAmuSfvhqk9AvrQYIlPmH2+oYg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Yd5zIkOM1+5Td2FmpGTYaf5RyVUT+Xe3TPCoH/trZBr9TcLCJtfF0zqcZYV4pEk63
-         N51+cDMMr79fbYmAdGtaGmKdp29usUysCzdiWRH49bchaYX578GJ7IQySwKDSwyY0e
-         XmclR3U19tqGoDQhH3f24zxgxA4c/E7eYxasYVT9sbJG0/1yHi8gbq8Ynucv84jE0F
-         NaIBBYoR6wYOgnjuMvrJBWxubyYMj80PuHDbgtF26fvslB3ClRUoSSMqqGSYIY3nfy
-         VwITjsMYj109w5e+PsaiJvqnMeqNGE73Trgmr8j8AY9ORb6GXgHcFDnKWF09JE6uIA
-         5m7G0Qt4g3RYQ==
-Date:   Sun, 13 Feb 2022 09:52:12 +0100
-From:   Christian Brauner <brauner@kernel.org>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Robert =?utf-8?B?xZp3acSZY2tp?= <robert@swiecki.net>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>, Will Drewry <wad@chromium.org>,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [RFC] Get siginfo from unreaped task
-Message-ID: <20220213085212.cwzuqlrabpgbnbac@wittgenstein>
-References: <CAP145phC6S6Zda-ZWLH1s4ZfDPh79rtf_7vzs-yvt1vykUCP4A@mail.gmail.com>
- <CF5167CE-FA1C-4CEC-9EA8-5EE8041FE7C4@amacapital.net>
+        Sun, 13 Feb 2022 13:24:52 -0500
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62FDF575C3
+        for <linux-hardening@vger.kernel.org>; Sun, 13 Feb 2022 10:24:46 -0800 (PST)
+Received: by mail-pf1-x42d.google.com with SMTP id c4so4117886pfl.7
+        for <linux-hardening@vger.kernel.org>; Sun, 13 Feb 2022 10:24:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qIMt0RmWAsQWauyJZDRkp+AWN8bvJQqBJlsPfpkOQXE=;
+        b=ceJfHs1cLBxsz5BKk+/jEK/pAPjb0m9drL+HpSH4kfb4H706RHjLsyJawdA/Yxb4lE
+         erlTmiX/pmE/EiKd2LQvYVMdyq5kZGyMEJEnpWsvN7kJQR7NAe9D06I++F4jVmWdLWgB
+         y1N/T3PCkSejTGnWCRvxEpIGCqN0Ns1w1WbWQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qIMt0RmWAsQWauyJZDRkp+AWN8bvJQqBJlsPfpkOQXE=;
+        b=3bzE/nHz7tBOTBbCsZSIFJu/HW2oq7kRWWDu4xPi+pX3HU29HF22DhWDNZek6YtxVT
+         pDR3SSp5CZMfs7O7QgEgw/wtKjYJ24F0CHUhzhtwin122ApEJR3g2iaMfsd4dgpcgw5X
+         n9subXIelML9i2c4DOO0UC0j60uMM1m/ssyla95sT91TVC5GIHEgBLxRIHcKkVjzkynF
+         Y7hFb77q/1o2PG3uq+oG1/YDpgncB+4kQdJvZG91ZDtxFM5Lft6piCTu4/x90lJf56MT
+         dqm7MeOCtrWrWUiPJ5T7OhNaV1p1RXUXcykSm58aifVAcNzK9/WEuqITlT2NLAYch5lm
+         yIKA==
+X-Gm-Message-State: AOAM530PPOlpo71bI2jz51VbE5Puox1tjIWl2d8YTZC1uPLf24avlZ8O
+        PkP0ykXfHRpgJFSqmZLdH3+8hOd1Itlv2A==
+X-Google-Smtp-Source: ABdhPJwINsV0XJhP9HuH1sANDjByEYfXqHi97i/CHzledo+kTYPeqHWze6uGAfg2ugeAuBqpfriInQ==
+X-Received: by 2002:a05:6a00:9a9:: with SMTP id u41mr10793347pfg.75.1644776685873;
+        Sun, 13 Feb 2022 10:24:45 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c23sm2642759pfi.136.2022.02.13.10.24.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Feb 2022 10:24:45 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        "Justin Forbes" <jmforbes@linuxtx.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v2] tools: Fix use-after-free for realloc(..., 0)
+Date:   Sun, 13 Feb 2022 10:24:43 -0800
+Message-Id: <20220213182443.4037039-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2060; h=from:subject; bh=UDNf8UBq2T0ezuPPJ2TeXHBzHIPtm6yrBQnmEtMJVKc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiCUzqGx4ok+q1/PygEiy3RiPBLR7jygYB1WUQ+GCG Yn3uT6SJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYglM6gAKCRCJcvTf3G3AJpG0D/ 4ojQYj0flSG5P58fm/djxCldhf2qaFTgEzpsQVuu52jXjGVHIb6sMAiaTYQc/gVvKpnJ5TOjPz+5Fs yeOm0juNwOo2ZuovTZcoEJI17cR80rdwq96jN6TUMIycK4NrqRXc8DGrvp+A447Pi6UurGMdWZ9XWq YHYZ8yqAIYOENuM5UbHoig2xLrDMEbnCzaG5CM2iAWCXM77qq6X6Hsy/EJf6jPj3z3h9DyrH+U77JS F2Zf/25Ja5+RZSAasITedL7ikkIqNt81rZsSk5vVkEyO99MaeVN7HbYb4L+TN3CiX5GFsCPCUEIecg aF+YlHOXYX1n0SpfewDAC0yzd0KTjcpzqXyet+BYscaPXJ7aw2sxLC0dZ6K21UlkNn8gPu8hSEr1Gd IlL3P16TLFlWuydqlADn1hPgFuUmaN6sgfwPkeDEX03u/1sxDFm7JaR8zmMmYGzR4EE+Mri2Qcy6zE wLCbKtizssa2vh0pK3yF3AQFVm1bnaF+L1UGqsk15McE+LH07otlTV4R7J784U2pE6OjuYZZrQ1xm+ 8/6K8CLEzTZySrXi0pC+Aq1vbj1dthc5lqBXzra+CtACyPTeXH/fjEcZ6C4XqiEE4PBDvVtIvFElnQ rO9omxtUrKMZN5JE01S1BKPiZXsNQmE9wJctJ+R5iIEsOJGA/ZGbv+oIQC2Q==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CF5167CE-FA1C-4CEC-9EA8-5EE8041FE7C4@amacapital.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Feb 12, 2022 at 06:32:08PM -0800, Andy Lutomirski wrote:
-> 
-> > On Feb 12, 2022, at 3:24 AM, Robert Święcki <robert@swiecki.net> wrote:
-> > 
-> > ﻿sob., 12 lut 2022 o 05:28 Kees Cook <keescook@chromium.org> napisał(a):
-> >> 
-> >> Make siginfo available through PTRACE_GETSIGINFO after process death,
-> >> without needing to have already used PTRACE_ATTACH. Uses 48 more bytes
-> >> in task_struct, though I bet there might be somewhere else we could
-> >> stash a copy of it?
-> > 
-> > An alternative way of accessing this info could be abusing the
-> > waitid() interface, with some additional, custom to Linux, flag
-> > 
-> > waitid(P_ALL, 0, &si, __WCHILDSIGINFO);
-> > 
-> > which would change what is put into si.
-> > 
-> > But maybe ptrace() is better, because it's mostly incompatible with
-> > other OSes anyway on the behavior/flag level, while waitd() seems to
-> > be POSIX/BSD standard, even if Linux specifies some additional flags.
-> > 
-> > 
-> 
-> I had a kind of opposite thought, which is that it would be very nice
-> to be able to get all the waitid() data without reaping a process or
-> even necessarily being its parent.  Maybe these can be combined?  A
-> new waitid() option like you’re suggesting could add siginfo (and
-> might need permissions).  And we could have a different waitid() flag
-> that says “maybe not my child, don’t reap” (and also needs
-> permissions).
-> 
-> Although the “don’t reap” thing is fundamentally racy. What a sane
-> process manager actually wants is an interface to read all this info
-> from a pidfd, which means it all needs to get stuck in struct pid. And
+GCC 12 was correctly reporting a potential use-after-free condition in
+the xrealloc helper. Fix the warning by avoiding an implicit "free(ptr)"
+when size == 0:
 
-/me briefly pops out from vacation
+In file included from help.c:12:
+In function 'xrealloc',
+    inlined from 'add_cmdname' at help.c:24:2: subcmd-util.h:56:23: error: pointer may be used after 'realloc' [-Werror=use-after-free]
+   56 |                 ret = realloc(ptr, size);
+      |                       ^~~~~~~~~~~~~~~~~~
+subcmd-util.h:52:21: note: call to 'realloc' here
+   52 |         void *ret = realloc(ptr, size);
+      |                     ^~~~~~~~~~~~~~~~~~
+subcmd-util.h:58:31: error: pointer may be used after 'realloc' [-Werror=use-after-free]
+   58 |                         ret = realloc(ptr, 1);
+      |                               ^~~~~~~~~~~~~~~
+subcmd-util.h:52:21: note: call to 'realloc' here
+   52 |         void *ret = realloc(ptr, size);
+      |                     ^~~~~~~~~~~~~~~~~~
 
-Agreed and not just siginfo I would expect(?). We already came to that
-conclusion when we first introduced them.
+Reported-by: "Valdis Klētnieks" <valdis.kletnieks@vt.edu>
+Fixes: 2f4ce5ec1d44 ("perf tools: Finalize subcmd independence")
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v1: https://lore.kernel.org/lkml/20220212181855.3460176-1-keescook@chromium.org/
+v2: simplify logic (josh)
+---
+ tools/lib/subcmd/subcmd-util.h | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-> task_struct needs a completion or wait queue so you can actually wait
-> for a pidfd to exit (unless someone already did this — I had patches a
-> while back).  And this would be awesome.
+diff --git a/tools/lib/subcmd/subcmd-util.h b/tools/lib/subcmd/subcmd-util.h
+index 794a375dad36..b2aec04fce8f 100644
+--- a/tools/lib/subcmd/subcmd-util.h
++++ b/tools/lib/subcmd/subcmd-util.h
+@@ -50,15 +50,8 @@ static NORETURN inline void die(const char *err, ...)
+ static inline void *xrealloc(void *ptr, size_t size)
+ {
+ 	void *ret = realloc(ptr, size);
+-	if (!ret && !size)
+-		ret = realloc(ptr, 1);
+-	if (!ret) {
+-		ret = realloc(ptr, size);
+-		if (!ret && !size)
+-			ret = realloc(ptr, 1);
+-		if (!ret)
+-			die("Out of memory, realloc failed");
+-	}
++	if (!ret)
++		die("Out of memory, realloc failed");
+ 	return ret;
+ }
+ 
+-- 
+2.30.2
 
-Currently, you can wait for a pidfd to exit via polling and you can use
-a pidfd to pass it to waitid(P_PIDFD, pidfd, ...).
-
-/me pops back into vacation
