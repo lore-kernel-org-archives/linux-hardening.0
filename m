@@ -2,121 +2,108 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B49C433EF
-	for <linux-hardening@archiver.kernel.org>; Sun, 13 Feb 2022 01:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CEDC433F5
+	for <linux-hardening@archiver.kernel.org>; Sun, 13 Feb 2022 02:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232725AbiBMBDK (ORCPT
+        id S232931AbiBMCcU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 12 Feb 2022 20:03:10 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34520 "EHLO
+        Sat, 12 Feb 2022 21:32:20 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232719AbiBMBDK (ORCPT
+        with ESMTP id S232920AbiBMCcT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 12 Feb 2022 20:03:10 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 32E2860054
-        for <linux-hardening@vger.kernel.org>; Sat, 12 Feb 2022 17:03:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644714184;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ins8sGNc9bHOmwljx/s1vxHKOLJy2EKsmlSrZVMjDnI=;
-        b=KB/ayYPJwJXU9XV1XmcHWc4DXjLAo8ZmrHyNnwKJn6HlDhXVJzojxDqKWufIfIto+hvyAz
-        y5qjgE+kKcM/uUp2VOGXQ2YQ5i7TuPVeEhOV1w1/wnkdGwhgbesvi4modnGUgC4iruA1D0
-        DAESHYDlhvwBcEugmuWUZynSV8+KAkM=
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
- [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-486-bqA5_3yEOiKj18o6S1dfWA-1; Sat, 12 Feb 2022 20:03:02 -0500
-X-MC-Unique: bqA5_3yEOiKj18o6S1dfWA-1
-Received: by mail-ot1-f70.google.com with SMTP id l1-20020a9d7341000000b0059c2046f9edso7849027otk.3
-        for <linux-hardening@vger.kernel.org>; Sat, 12 Feb 2022 17:03:02 -0800 (PST)
+        Sat, 12 Feb 2022 21:32:19 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8934A5FF2F
+        for <linux-hardening@vger.kernel.org>; Sat, 12 Feb 2022 18:32:13 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id i10so183971plr.2
+        for <linux-hardening@vger.kernel.org>; Sat, 12 Feb 2022 18:32:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=684CqHNwxeeFLDieT+hnImprW0dvEy16HRmo/OqQ8xM=;
+        b=2/eyFc1PS/DG76NEKk8T151hYk/zKSztRGlztHd6pc0aK7ITJTn2hnlBYUh4LfTu8N
+         NzDHhflNWPpKnwjtmTIem29YuUXO8HGI6pGiua3Ht1aD51mkr0XaB+i7i8B1y+C2wLN4
+         Gp0235f94zC/e+/VEY+aBGx7k5zK86/Q+rcv90U55I3yFunbLBqcm0P9PrIuUTs3WvkX
+         xyWMflfEMQ89O1RPyHPWwnySFALCgg9m+jmk6128At2dw8WD6TrfQsPHvsXgBmQ2WI9/
+         79XVmkOmcqEpAwgWU8r91cFOXXgtjCZPRK+cMrdnbAEp+PQ99Ak114iATUTAyY2sx7Qv
+         ELKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ins8sGNc9bHOmwljx/s1vxHKOLJy2EKsmlSrZVMjDnI=;
-        b=Q4JSZtkWh5Ounpzx83T1phkOajnP5Ul0ovJ7jsEzI9ufWHuJz5glOmr+Jy6+ou2H39
-         8QDEPmzdKLNiYujRuN+Knq4HclAId1Qgb3Bo//t+tMKG1xRv7GC49+daGVxjMF30/Uqb
-         hTdrIOWMRCnotiUYhA22AGq+M/99Vdz7CUkxXV7wFEmaE7dOY91E8O9+m4OPzPnmRgP6
-         k061EtQouRYfaHRENerA18CytORIrEW9mH5mQt1XKDKY61sL122GFDUFScb1ribUgIqA
-         xjstMfdLTaUDVezN8Ggf7Qa+IDMIFpBocR2ClOD6/q2WYxX97KNG6F9jJ9ZklxHBY3ab
-         HZmg==
-X-Gm-Message-State: AOAM531PspSUX60Q+K6w0lbCygoNRh3MqE9ueVjdmZVKchS1DQCiY6RE
-        GvEwweAxuMHRFJKAWQwDPLND5YYdEhxOjUK6AA02LqGFr8FkR8t5o5BaQ5keu3OmqbDOEUn5WOx
-        qsgZPackjA8FLbwOdG6HrQAQPhDay
-X-Received: by 2002:a05:6830:92:: with SMTP id a18mr2878494oto.373.1644714182191;
-        Sat, 12 Feb 2022 17:03:02 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyLlMZslbwgMVP9zAD5/X+Q5Yz8w5PDh7Q9JtMTWNAPu+5FtKAISWKRrI4EwXxFCANNDNkE1w==
-X-Received: by 2002:a05:6830:92:: with SMTP id a18mr2878490oto.373.1644714181909;
-        Sat, 12 Feb 2022 17:03:01 -0800 (PST)
-Received: from treble ([2600:1700:6e32:6c00::35])
-        by smtp.gmail.com with ESMTPSA id u5sm11273818ooo.46.2022.02.12.17.02.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Feb 2022 17:03:01 -0800 (PST)
-Date:   Sat, 12 Feb 2022 17:02:57 -0800
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Justin Forbes <jmforbes@linuxtx.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] tools: Fix use-after-free for realloc(..., 0)
-Message-ID: <20220213010257.yllouthdbjzawil2@treble>
-References: <20220212181855.3460176-1-keescook@chromium.org>
-MIME-Version: 1.0
-In-Reply-To: <20220212181855.3460176-1-keescook@chromium.org>
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jpoimboe@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=684CqHNwxeeFLDieT+hnImprW0dvEy16HRmo/OqQ8xM=;
+        b=0VyAWfQDizrHS3zSETttoOBtngg54ztjbOv3rzr8hFEPVeFC6jz4zc8i3N3s8FxbUh
+         rMRRB8sJInX48pZR7SCh+LfFsj4kQQU8keMtD4gNi1NU6Wbg8w9y889QN8QQm19dRkJ3
+         nd6zGQGVJm772HHn+QEbqd1I1tFuiHV+vt6FtD8FGPFdQB2Kfut50Ue/WPvIcib/Pv/u
+         dF5DV5PBaqHbYz3RjI7eO89k9qfXjCQVEK3w2p+9XLbcV27PxHGBv/ZPoabgeNRBS1DE
+         WOIQSoW9rN8m9jpdjBoi5/TjuoGjSRU5esRl3/+fnTQm9NpvT5CYPw1GhUIErkIeng4b
+         8vpA==
+X-Gm-Message-State: AOAM533ieBDNG0PTU3VlTtCg1Pgq/0ISSm36pdQrH1lk+dQGZ98Hmn2E
+        0/jAXlwckPkpWYEMerB2x9JcXbGYlJqaQw==
+X-Google-Smtp-Source: ABdhPJyO3PZGcWVStExkJGBmRqNZ3FSI0hCXzWP8s9q//C22gfxpdpkBR42a4pFeBrtu1+7v3NVK6A==
+X-Received: by 2002:a17:90a:9704:: with SMTP id x4mr7680500pjo.219.1644719532927;
+        Sat, 12 Feb 2022 18:32:12 -0800 (PST)
+Received: from smtpclient.apple ([2600:1010:b021:31a8:38de:7526:b98f:ba7b])
+        by smtp.gmail.com with ESMTPSA id 16sm20612051pfm.200.2022.02.12.18.32.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 12 Feb 2022 18:32:12 -0800 (PST)
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC] Get siginfo from unreaped task
+Date:   Sat, 12 Feb 2022 18:32:08 -0800
+Message-Id: <CF5167CE-FA1C-4CEC-9EA8-5EE8041FE7C4@amacapital.net>
+References: <CAP145phC6S6Zda-ZWLH1s4ZfDPh79rtf_7vzs-yvt1vykUCP4A@mail.gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Jann Horn <jannh@google.com>, Will Drewry <wad@chromium.org>,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+In-Reply-To: <CAP145phC6S6Zda-ZWLH1s4ZfDPh79rtf_7vzs-yvt1vykUCP4A@mail.gmail.com>
+To:     =?utf-8?Q?Robert_=C5=9Awi=C4=99cki?= <robert@swiecki.net>
+X-Mailer: iPhone Mail (19C63)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Feb 12, 2022 at 10:18:55AM -0800, Kees Cook wrote:
->  static inline void *xrealloc(void *ptr, size_t size)
->  {
-> -	void *ret = realloc(ptr, size);
-> -	if (!ret && !size)
-> -		ret = realloc(ptr, 1);
-> +	void *ret;
-> +
-> +	/*
-> +	 * Convert a zero-sized allocation into 1 byte, since
-> +	 * realloc(ptr, 0) means free(ptr), but we don't want
-> +	 * to release the memory. For a new allocation (when
-> +	 * ptr == NULL), avoid triggering NULL-checking error
-> +	 * conditions for zero-sized allocations.
-> +	 */
-> +	if (!size)
-> +		size = 1;
-> +	ret = realloc(ptr, size);
->  	if (!ret) {
-> -		ret = realloc(ptr, size);
-> -		if (!ret && !size)
-> -			ret = realloc(ptr, 1);
-> -		if (!ret)
-> -			die("Out of memory, realloc failed");
-> +		/*
-> +		 * If realloc() fails, the original block is left untouched;
-> +		 * it is not freed or moved.
-> +		 */
-> +		die("Out of memory, realloc failed");
 
-xrealloc() only has two uses -- both via ALLOC_GROW() -- and they don't
-rely on the 'size == 0' freeing anyway.  How about simplifying this
-further to just:
+> On Feb 12, 2022, at 3:24 AM, Robert =C5=9Awi=C4=99cki <robert@swiecki.net>=
+ wrote:
+>=20
+> =EF=BB=BFsob., 12 lut 2022 o 05:28 Kees Cook <keescook@chromium.org> napis=
+a=C5=82(a):
+>>=20
+>> Make siginfo available through PTRACE_GETSIGINFO after process death,
+>> without needing to have already used PTRACE_ATTACH. Uses 48 more bytes
+>> in task_struct, though I bet there might be somewhere else we could
+>> stash a copy of it?
+>=20
+> An alternative way of accessing this info could be abusing the
+> waitid() interface, with some additional, custom to Linux, flag
+>=20
+> waitid(P_ALL, 0, &si, __WCHILDSIGINFO);
+>=20
+> which would change what is put into si.
+>=20
+> But maybe ptrace() is better, because it's mostly incompatible with
+> other OSes anyway on the behavior/flag level, while waitd() seems to
+> be POSIX/BSD standard, even if Linux specifies some additional flags.
+>=20
+>=20
 
- 	ret = realloc(ptr, size);
-  	if (!ret)
-		die("Out of memory, realloc failed");
+I had a kind of opposite thought, which is that it would be very nice to be a=
+ble to get all the waitid() data without reaping a process or even necessari=
+ly being its parent.  Maybe these can be combined?  A new waitid() option li=
+ke you=E2=80=99re suggesting could add siginfo (and might need permissions).=
+  And we could have a different waitid() flag that says =E2=80=9Cmaybe not m=
+y child, don=E2=80=99t reap=E2=80=9D (and also needs permissions).
 
-Much easier to grok, and as a bonus, we don't need the long comments :-)
-
--- 
-Josh
-
+Although the =E2=80=9Cdon=E2=80=99t reap=E2=80=9D thing is fundamentally rac=
+y. What a sane process manager actually wants is an interface to read all th=
+is info from a pidfd, which means it all needs to get stuck in struct pid. A=
+nd task_struct needs a completion or wait queue so you can actually wait for=
+ a pidfd to exit (unless someone already did this =E2=80=94 I had patches a w=
+hile back).  And this would be awesome.=
