@@ -2,91 +2,144 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C52C4332F
-	for <linux-hardening@archiver.kernel.org>; Mon, 14 Feb 2022 11:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300BFC433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 14 Feb 2022 11:43:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351864AbiBNLed (ORCPT
+        id S1353158AbiBNLnd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 14 Feb 2022 06:34:33 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35288 "EHLO
+        Mon, 14 Feb 2022 06:43:33 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351867AbiBNLd5 (ORCPT
+        with ESMTP id S1352666AbiBNLnV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 14 Feb 2022 06:33:57 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF4CD694A2;
-        Mon, 14 Feb 2022 03:20:11 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 67E6D61140;
-        Mon, 14 Feb 2022 11:20:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BA768C340F4;
-        Mon, 14 Feb 2022 11:20:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644837610;
-        bh=zWy0Fim2DwHOqTznLyHN/+gBuNl38IaDVjY6vI5cAbc=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=ByKf4xlzTOWN4zaJBApDy94pxmz1dtM683EsWZe7YQgB+7CG3ElSqXWY2nx8IIAEa
-         gUdXdXud4e//MmD/9eOiO0xRz8oLbCJ+6NipSvWydSaDvTN2aHVHQHi+2CSy/pY4Tz
-         lHJOn3Gr7py+zZ5q4L0mdbrWB732VkCjb9BW35VGjnLl9GAYy0Q6g/xbVEXT38bkDo
-         dsA4BQERYiVCdFTdteuap97ZKUeJP8bvOWKCo+MvGXxKPh5h/Hly29lzQL6qutdWEr
-         DvQx4Lj34Ze9zO+mOgKN6R05FH5Bw/0GQEWPhxdSsYEp0e5cpk7rWcaylrHdfYjLzr
-         J3TLa3r37/N0Q==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A44C1E7BB04;
-        Mon, 14 Feb 2022 11:20:10 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Mon, 14 Feb 2022 06:43:21 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB03310FA;
+        Mon, 14 Feb 2022 03:35:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1644838513; x=1676374513;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=YGHaP2hnU1orIs+CLY7os5ijsM1R9T/d7HZLRE0xrlA=;
+  b=dX6mTdeqdXBZBd/pj2j2TYNlmdNVZFw7mTNtAKYMSuBo115sinKvmJrT
+   qCD3uZTLOdwmtV/3K6W7EUVdU/QLwq4EOnoE0T7gMPK4JVt7nJBL5habt
+   Vxa/S3Kef5cYNP5X0mVo36cveEcKxGnhdq5QAydpYCFHHrC+Sh//eoyDH
+   XGIeLW0dRtOGLNPgkUKwQKCcp1TJtzcbIrZu5l6xoK9+rPN9lRYflpg6o
+   /7274SqBNOoblX7c9nu2Bv/xFA9zVD0qCv74FvCMVR8rGfYeaXgiuY+km
+   SqxFULvcS3Me8QL4or5/DReeb5V77A5REPijD2OACxwZZRgzxrMN0PLYR
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10257"; a="250277559"
+X-IronPort-AV: E=Sophos;i="5.88,367,1635231600"; 
+   d="scan'208";a="250277559"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2022 03:35:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,367,1635231600"; 
+   d="scan'208";a="775096766"
+Received: from irvmail001.ir.intel.com ([10.43.11.63])
+  by fmsmga005.fm.intel.com with ESMTP; 14 Feb 2022 03:34:59 -0800
+Received: from newjersey.igk.intel.com (newjersey.igk.intel.com [10.102.20.203])
+        by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id 21EBYuXA031487;
+        Mon, 14 Feb 2022 11:34:57 GMT
+From:   Alexander Lobakin <alexandr.lobakin@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
+        linux-hardening@vger.kernel.org, x86@kernel.org,
+        Borislav Petkov <bp@alien8.de>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Bruce Schlobohm <bruce.schlobohm@intel.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Marios Pomonis <pomonis@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Nicolas Pitre <nico@fluxnic.net>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v10 10/15] FG-KASLR: use a scripted approach to handle .text.* sections
+Date:   Mon, 14 Feb 2022 12:34:34 +0100
+Message-Id: <20220214113434.5256-1-alexandr.lobakin@intel.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220211153706.GW23216@worktop.programming.kicks-ass.net>
+References: <20220209185752.1226407-1-alexandr.lobakin@intel.com> <20220209185752.1226407-11-alexandr.lobakin@intel.com> <20220211153706.GW23216@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] etherdevice: Adjust ether_addr* prototypes to silence
- -Wstringop-overead
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <164483761066.10850.7033053223597897963.git-patchwork-notify@kernel.org>
-Date:   Mon, 14 Feb 2022 11:20:10 +0000
-References: <20220212171449.3000885-1-keescook@chromium.org>
-In-Reply-To: <20220212171449.3000885-1-keescook@chromium.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     kuba@kernel.org, mkl@pengutronix.de, davem@davemloft.net,
-        netdev@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        hawk@kernel.org, john.fastabend@gmail.com, andrii@kernel.org,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        kpsingh@kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Fri, 11 Feb 2022 16:37:06 +0100
 
-This patch was applied to netdev/net-next.git (master)
-by David S. Miller <davem@davemloft.net>:
-
-On Sat, 12 Feb 2022 09:14:49 -0800 you wrote:
-> With GCC 12, -Wstringop-overread was warning about an implicit cast from
-> char[6] to char[8]. However, the extra 2 bytes are always thrown away,
-> alignment doesn't matter, and the risk of hitting the edge of unallocated
-> memory has been accepted, so this prototype can just be converted to a
-> regular char *. Silences:
+> On Wed, Feb 09, 2022 at 07:57:47PM +0100, Alexander Lobakin wrote:
+> > +sub read_sections {
+> > +	open(my $fh, "\"$readelf\" -SW \"$file\" 2>/dev/null |")
+> > +		or die "$0: ERROR: failed to execute \"$readelf\": $!";
+> > +
+> > +	while (<$fh>) {
+> > +		my $name;
+> > +		my $align;
+> > +		chomp;
+> > +
+> > +		($name, $align) = $_ =~ /^\s*\[[\s0-9]*\]\s*(\.\S*)\s*[A-Z]*\s*[0-9a-f]{16}\s*[0-9a-f]*\s*[0-9a-f]*\s*[0-9a-f]*\s*[0-9a-f]{2}\s*[A-Z]{2}\s*[0-9]\s*[0-9]\s*([0-9]*)$/;
 > 
-> net/core/dev.c: In function ‘bpf_prog_run_generic_xdp’: net/core/dev.c:4618:21: warning: ‘ether_addr_equal_64bits’ reading 8 bytes from a region of size 6 [-Wstringop-overread]
->  4618 |         orig_host = ether_addr_equal_64bits(eth->h_dest, > skb->dev->dev_addr);
->       |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> net/core/dev.c:4618:21: note: referencing argument 1 of type ‘const u8[8]’ {aka ‘const unsigned char[8]’}
-> net/core/dev.c:4618:21: note: referencing argument 2 of type ‘const u8[8]’ {aka ‘const unsigned char[8]’}
-> In file included from net/core/dev.c:91: include/linux/etherdevice.h:375:20: note: in a call to function ‘ether_addr_equal_64bits’
->   375 | static inline bool ether_addr_equal_64bits(const u8 addr1[6+2],
->       |                    ^~~~~~~~~~~~~~~~~~~~~~~
+> Is there really no readable way to write this?
+
+I'm no regexp master, so I'd be glad if someone could help improve
+this :D I only tried to optimize it using online tools, and they
+eventually didn't help.
+It could probably be replaced with a pipe to `cut` or `tr`, I'll
+take a look a bit later if there won't be any other proposals.
+
 > 
-> [...]
+> > +
+> > +		if (!defined($name)) {
+> > +			next;
+> > +		}
+> > +
+> > +		## Clang 13 onwards emits __cfi_check_fail only on final
+> > +		## linking, so it won't appear in .o files and will be
+> > +		## missing in @sections. Add it manually to prevent
+> > +		## spawning orphans.
+> > +		if ($name eq ".text.__cfi_check_fail") {
+> > +			$has_ccf = 1;
+> > +		}
+> 
+> How is that relevant, x86-64 doesn't and won't do clang-cfi.
 
-Here is the summary with links:
-  - etherdevice: Adjust ether_addr* prototypes to silence -Wstringop-overead
-    https://git.kernel.org/netdev/net-next/c/2618a0dae09e
+1. One of my test cases was based on Sami's ClangCFI x86 series from
+   LKML (the one that was getting patched by objtool :P).
+2. ClangCFI is present on ARM64 and it can receive FG-KASLR in a
+   future, why not make it work together from the start?
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Re "won't do" -- sorry for trying to hijack this thread a bit, but
+did I miss something? The last comments I've read were that LLVM
+tools need to change their approach for CFI on x86, and Sami went
+redo it, but I can't recall any "life-time" nacks.
 
-
+Thanks,
+Al
