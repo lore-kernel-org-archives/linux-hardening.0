@@ -2,136 +2,91 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3978BC433F5
-	for <linux-hardening@archiver.kernel.org>; Sun, 13 Feb 2022 18:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C52C4332F
+	for <linux-hardening@archiver.kernel.org>; Mon, 14 Feb 2022 11:34:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235339AbiBMScm (ORCPT
+        id S1351864AbiBNLed (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 13 Feb 2022 13:32:42 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:47884 "EHLO
+        Mon, 14 Feb 2022 06:34:33 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233825AbiBMScl (ORCPT
+        with ESMTP id S1351867AbiBNLd5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 13 Feb 2022 13:32:41 -0500
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A4757B01
-        for <linux-hardening@vger.kernel.org>; Sun, 13 Feb 2022 10:32:35 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id l9so7273449plg.0
-        for <linux-hardening@vger.kernel.org>; Sun, 13 Feb 2022 10:32:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GbN1m5GjdzaYtEly7rnCE3vNXf0FkYK/naaa45R/epk=;
-        b=GAsZqZDapq/V16jBy3rZ7Dnbf9uE83eqvg/Sh35MKq+OMPn7yycsm+4V6P4/Elf3Nm
-         QY2R0tMqPm5yGDgQQ2iDpVoGdgDrkHrfNkpwU6Ud9o04G1wlcU90nbKq5QbBruKBM4cK
-         +q8n/wCTyCrqdUJE/dHrj8+Snhe+MkcMMRduE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GbN1m5GjdzaYtEly7rnCE3vNXf0FkYK/naaa45R/epk=;
-        b=WsYbG+V02VfECXhQS6aAOMYP1YEO7BJbsq9RhGbyaPpbfs0daY6Bn6OAJP7Ht1rVZe
-         TpEJbUFtpS2kxfuH8LruVDkrOWa/YHvYSVCTg30l6DX3RstCqQOlpF7rvBzrJN+dVA2J
-         tWfMO3N6QhLl/RaPEQGizq6q5WtKZaZVuP+vY7f0og5vJV6JN70AE/D4nYd4FkMvAenr
-         bniBQIMpLzFNqWrbwOIRIV3sMiXduek9bpPBHWTovBuwJOltc0l2roQEc+K1Udk33DFF
-         vvOdV/ID/F+eqhfH7RrjX7RIzVnWuNBkWueEtLQnX5jVT1zZNVtvfiZVsDs9LF7QvTfN
-         6IWg==
-X-Gm-Message-State: AOAM533WrYKlybhE2CVBdLaoq4O6kvk3LlCLU0Kzu2rTKmTBeTgSNdmv
-        CNPS/bNNhcYeaaoiUKs16SK5aQ==
-X-Google-Smtp-Source: ABdhPJxIvU8YshqC540BFqX03wOgnip+o/Ur/2WzPZDFcquGanRGjudN8XpUTW0jzKbr+1o0UP8xdw==
-X-Received: by 2002:a17:90a:c7cf:: with SMTP id gf15mr10802631pjb.83.1644777155479;
-        Sun, 13 Feb 2022 10:32:35 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j2sm33728429pfc.209.2022.02.13.10.32.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Feb 2022 10:32:35 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] kasan: test: Silence allocation warnings from GCC 12
-Date:   Sun, 13 Feb 2022 10:32:32 -0800
-Message-Id: <20220213183232.4038718-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+        Mon, 14 Feb 2022 06:33:57 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF4CD694A2;
+        Mon, 14 Feb 2022 03:20:11 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 67E6D61140;
+        Mon, 14 Feb 2022 11:20:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BA768C340F4;
+        Mon, 14 Feb 2022 11:20:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644837610;
+        bh=zWy0Fim2DwHOqTznLyHN/+gBuNl38IaDVjY6vI5cAbc=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=ByKf4xlzTOWN4zaJBApDy94pxmz1dtM683EsWZe7YQgB+7CG3ElSqXWY2nx8IIAEa
+         gUdXdXud4e//MmD/9eOiO0xRz8oLbCJ+6NipSvWydSaDvTN2aHVHQHi+2CSy/pY4Tz
+         lHJOn3Gr7py+zZ5q4L0mdbrWB732VkCjb9BW35VGjnLl9GAYy0Q6g/xbVEXT38bkDo
+         dsA4BQERYiVCdFTdteuap97ZKUeJP8bvOWKCo+MvGXxKPh5h/Hly29lzQL6qutdWEr
+         DvQx4Lj34Ze9zO+mOgKN6R05FH5Bw/0GQEWPhxdSsYEp0e5cpk7rWcaylrHdfYjLzr
+         J3TLa3r37/N0Q==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A44C1E7BB04;
+        Mon, 14 Feb 2022 11:20:10 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2824; h=from:subject; bh=9u7Cd7ajn+8VmlBggVW9I93wUx5ifwsTV6OZFwgwhrM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiCU6/gcktGKuswV/wNYH+QUBfdaSH8kMaFAvY83FQ ph5DlX+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYglOvwAKCRCJcvTf3G3AJv+tD/ 0f4VQg7uhKWf8BVJWIrY90fqUSCg1jxlya8ImO4GTv7SnS2huBhD3gvcwvxMtKTBTaR66ijo2duyI7 6i/R4ysAKYnFzcVGZVlIwztISpnXG2aCDszH6/9vxsKZT0WArlKqRIqbQjeykzbCCaR8bxpEBAFin2 htLRBbiZeIK/7ITXcNa2EBwmcB3UjN+XLGKaARJgehBunT+W6VFR2H5xM0R3mLvM6vCCQtJ6VFienm PPMNaXG8ai3zXd5d4rN9qbWH9ie3xPjVRze8vKTKPzk16+A5EHP2to7DOWORwlSLLUi/SOcRDknkSw tQxGILWKjx7bLbEwtignkRLipkgt0twRlTP7p73Ss7JM55Kw08KlQRjE+S4aQyc/9tgwBwU5aYuExW 2At+7hE9R/6vEZ/gi1tKolhnItAeh/yHgR/vvCPmSfeaUjKrtDSQ6tkzpjEUPvwXWFIKA42c6xlQSL brzc35QiULxWnwydILbzuOvAUvNR1a4kqISFIADBcXJYELaLqe32E/Be3zIfR5DfTy9aQXQNJvIuR9 x1DBYfSET2fDsWASvaZqIfGYI5m7BqKiYDP9Y9E8r4O86SOvtvkfp81wVCamYcKvyx40Kp6SYdiLCd IWUuwzekAYY0r1WDsvsd3cBgfsOm+QaXU9FsSlbr7ofiVKO7H5ShRQwDBdOQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] etherdevice: Adjust ether_addr* prototypes to silence
+ -Wstringop-overead
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <164483761066.10850.7033053223597897963.git-patchwork-notify@kernel.org>
+Date:   Mon, 14 Feb 2022 11:20:10 +0000
+References: <20220212171449.3000885-1-keescook@chromium.org>
+In-Reply-To: <20220212171449.3000885-1-keescook@chromium.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     kuba@kernel.org, mkl@pengutronix.de, davem@davemloft.net,
+        netdev@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        hawk@kernel.org, john.fastabend@gmail.com, andrii@kernel.org,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        kpsingh@kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-GCC 12 is able to see more problems with allocation sizes at compile
-time, so these must be silenced so the runtime checks will still be
-available. Use OPTIMIZER_HIDE_VAR() to silence the new warnings:
+Hello:
 
-lib/test_kasan.c: In function 'ksize_uaf':
-lib/test_kasan.c:781:61: warning: array subscript 120 is outside array bounds of 'void[120]' [-Warray-bounds]
-  781 |         KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[size]);
-      |                                       ~~~~~~~~~~~~~~~~~~~~~~^~~~~~
-lib/test_kasan.c:96:9: note: in definition of macro 'KUNIT_EXPECT_KASAN_FAIL'
-   96 |         expression;                                                     \
-      |         ^~~~~~~~~~
-In function 'kmalloc',
-    inlined from 'ksize_uaf' at lib/test_kasan.c:775:8:
-./include/linux/slab.h:581:24: note: at offset 120 into object of size 120 allocated by 'kmem_cache_alloc_trace'
-  581 |                 return kmem_cache_alloc_trace(
-      |                        ^~~~~~~~~~~~~~~~~~~~~~~
-  582 |                                 kmalloc_caches[kmalloc_type(flags)][index],
-      |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  583 |                                 flags, size);
-      |                                 ~~~~~~~~~~~~
+This patch was applied to netdev/net-next.git (master)
+by David S. Miller <davem@davemloft.net>:
 
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: kasan-dev@googlegroups.com
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- lib/test_kasan.c | 4 ++++
- 1 file changed, 4 insertions(+)
+On Sat, 12 Feb 2022 09:14:49 -0800 you wrote:
+> With GCC 12, -Wstringop-overread was warning about an implicit cast from
+> char[6] to char[8]. However, the extra 2 bytes are always thrown away,
+> alignment doesn't matter, and the risk of hitting the edge of unallocated
+> memory has been accepted, so this prototype can just be converted to a
+> regular char *. Silences:
+> 
+> net/core/dev.c: In function ‘bpf_prog_run_generic_xdp’: net/core/dev.c:4618:21: warning: ‘ether_addr_equal_64bits’ reading 8 bytes from a region of size 6 [-Wstringop-overread]
+>  4618 |         orig_host = ether_addr_equal_64bits(eth->h_dest, > skb->dev->dev_addr);
+>       |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> net/core/dev.c:4618:21: note: referencing argument 1 of type ‘const u8[8]’ {aka ‘const unsigned char[8]’}
+> net/core/dev.c:4618:21: note: referencing argument 2 of type ‘const u8[8]’ {aka ‘const unsigned char[8]’}
+> In file included from net/core/dev.c:91: include/linux/etherdevice.h:375:20: note: in a call to function ‘ether_addr_equal_64bits’
+>   375 | static inline bool ether_addr_equal_64bits(const u8 addr1[6+2],
+>       |                    ^~~~~~~~~~~~~~~~~~~~~~~
+> 
+> [...]
 
-diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-index 26a5c9007653..a19b3d608e3e 100644
---- a/lib/test_kasan.c
-+++ b/lib/test_kasan.c
-@@ -124,6 +124,7 @@ static void kmalloc_oob_right(struct kunit *test)
- 
- 	ptr = kmalloc(size, GFP_KERNEL);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-+	OPTIMIZER_HIDE_VAR(ptr);
- 
- 	/*
- 	 * An unaligned access past the requested kmalloc size.
-@@ -185,6 +186,7 @@ static void kmalloc_pagealloc_oob_right(struct kunit *test)
- 	ptr = kmalloc(size, GFP_KERNEL);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
-+	OPTIMIZER_HIDE_VAR(ptr);
- 	KUNIT_EXPECT_KASAN_FAIL(test, ptr[size + OOB_TAG_OFF] = 0);
- 
- 	kfree(ptr);
-@@ -265,6 +267,7 @@ static void kmalloc_large_oob_right(struct kunit *test)
- 	ptr = kmalloc(size, GFP_KERNEL);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
- 
-+	OPTIMIZER_HIDE_VAR(ptr);
- 	KUNIT_EXPECT_KASAN_FAIL(test, ptr[size] = 0);
- 	kfree(ptr);
- }
-@@ -748,6 +751,7 @@ static void ksize_unpoisons_memory(struct kunit *test)
- 
- 	ptr = kmalloc(size, GFP_KERNEL);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-+	OPTIMIZER_HIDE_VAR(ptr);
- 	real_size = ksize(ptr);
- 
- 	/* This access shouldn't trigger a KASAN report. */
+Here is the summary with links:
+  - etherdevice: Adjust ether_addr* prototypes to silence -Wstringop-overead
+    https://git.kernel.org/netdev/net-next/c/2618a0dae09e
+
+You are awesome, thank you!
 -- 
-2.30.2
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
