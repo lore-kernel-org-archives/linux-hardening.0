@@ -2,121 +2,113 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E34A3C433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 14 Feb 2022 22:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E4FC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 14 Feb 2022 22:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231714AbiBNWJP (ORCPT
+        id S231874AbiBNWbq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 14 Feb 2022 17:09:15 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54912 "EHLO
+        Mon, 14 Feb 2022 17:31:46 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:42452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231700AbiBNWJO (ORCPT
+        with ESMTP id S230102AbiBNWbp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 14 Feb 2022 17:09:14 -0500
-Received: from mail-oo1-xc36.google.com (mail-oo1-xc36.google.com [IPv6:2607:f8b0:4864:20::c36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EDBE13C394
-        for <linux-hardening@vger.kernel.org>; Mon, 14 Feb 2022 14:09:05 -0800 (PST)
-Received: by mail-oo1-xc36.google.com with SMTP id o192-20020a4a2cc9000000b00300af40d795so21000237ooo.13
-        for <linux-hardening@vger.kernel.org>; Mon, 14 Feb 2022 14:09:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=swiecki.net; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=U22U8uNB24DJ6j76hTyECruth37Sas7YuiuN1xBZATI=;
-        b=Rgo9DqZ5dSPhH4Wq0GSTADHafTnKjcn/Qmce0uEobUoE8LAd+MYei7tl2R7iG3VudV
-         To3x8+HsM/++UfKBrtitpN9DFDSB992Mcz03KCWtQdRvLF8Ma3Ieh6aHwCL3qju6kPfa
-         t7/bPPG+iPl7SQ2FiJlW70X4RRnCuuFq56PpA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=U22U8uNB24DJ6j76hTyECruth37Sas7YuiuN1xBZATI=;
-        b=m7TSV30uAoab8+mSXDwJ9JH3WhVs8UFuzeanYOO1bKCljBBLc66vfNw5J5oMohamQP
-         hS/o2eBPVAy9+Yxd0kwEBvC3xTG0RRAq/Xfpc5nzJ+iP0X6CA60a3M8F0BarkwjTMlzI
-         uMHrJYEpGlNEfcaXEuc0jBS58MRqR8s/wI0wMXj0grK1qx/bgWiusmUInPzBYXXril41
-         nLiYIysIXOfwNcyhmPBtV6CEuVcYKOUqjz3Rmc0vRx3JyIcPfn6zG3rh8MLaePAdkMxz
-         t0wrBqqSZUapNhENrXRBKWsuf3IL1P5zTLI6POEQvXaVU16BLu605DJti/i8qTmTqE4U
-         JkUQ==
-X-Gm-Message-State: AOAM532QC9ghsPpMVf8NK6NwI599eqFOUMqG2XfBpCcVOYXTehVeRj3S
-        EfayeOsXo8WrKYhYTOF3Rwz0SLGrQBhfAXfX0LsRfg==
-X-Google-Smtp-Source: ABdhPJxCypFkXLGm4DP4yUyaac3elld5nTXluLxOTb4KYdkVFTgF+p+VHgUvbvYz2/TyZ5BOrSv8g1zwmSB8zysDq50=
-X-Received: by 2002:a05:6870:a8ab:b0:d2:cd36:7859 with SMTP id
- eb43-20020a056870a8ab00b000d2cd367859mr316799oab.83.1644876544500; Mon, 14
- Feb 2022 14:09:04 -0800 (PST)
+        Mon, 14 Feb 2022 17:31:45 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D323713E9C;
+        Mon, 14 Feb 2022 14:31:31 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A0D1EB80C6D;
+        Mon, 14 Feb 2022 22:31:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C2DFC340E9;
+        Mon, 14 Feb 2022 22:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644877888;
+        bh=U9FS+HbROd6gXASD/1YFQXlW6ra2q4lCYkPCYYdKZzE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Lobos/mRirqUrrb/uzx6jBqU9QlkWKLRqWIns9GiMrotTuxIx2uPk8VwRBhvRBNP6
+         5l9MSsfHVd+AG/trcUCUHZ1gVGTmBECg15Fy+FvjZhpmS6BgRUFDXWq7/53xuTwnJk
+         i1gjAzU1emFp2bnoEJamngEaxtOnZUhnjGWyaUgxP2JWrPWPXRQDtWwqdBRVzLIMST
+         +vTDEhugRBS5/qvX3uvImYtXxQg/ahBxIGFKG8TIe/tP+28aKiC76W/pWiaw8cM5c+
+         8OAr2jGYXND6YM48GNK0k0Wz8nISudZGLAjjSmE+7Xtpj2z+x6Zn6iBwmX6Kgt8rn3
+         KMpyKplQQsOYA==
+Date:   Mon, 14 Feb 2022 16:39:03 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Hannes Reinecke <hare@suse.de>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>
+Subject: [PATCH v2][next] scsi: fc: Replace one-element arrays with
+ flexible-array members
+Message-ID: <20220214223903.GA859464@embeddedor>
 MIME-Version: 1.0
-References: <CAP145phC6S6Zda-ZWLH1s4ZfDPh79rtf_7vzs-yvt1vykUCP4A@mail.gmail.com>
- <CF5167CE-FA1C-4CEC-9EA8-5EE8041FE7C4@amacapital.net> <20220213085212.cwzuqlrabpgbnbac@wittgenstein>
- <202202141152.6296CD7F@keescook>
-In-Reply-To: <202202141152.6296CD7F@keescook>
-From:   =?UTF-8?B?Um9iZXJ0IMWad2nEmWNraQ==?= <robert@swiecki.net>
-Date:   Mon, 14 Feb 2022 23:08:53 +0100
-Message-ID: <CAP145piExdhYLaKcHaCOoXVageMqmB6eDV-iyzeNc+RgVc=B-Q@mail.gmail.com>
-Subject: Re: [RFC] Get siginfo from unreaped task
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christian Brauner <brauner@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>, Will Drewry <wad@chromium.org>,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-pon., 14 lut 2022 o 21:07 Kees Cook <keescook@chromium.org> napisa=C5=82(a)=
-:
+Use flexible-array members in struct fc_fdmi_attr_entry and
+fs_fdmi_attrs instead of one-element arrays, and refactor the
+code accordingly.
 
-> > > I had a kind of opposite thought, which is that it would be very nice
-> > > to be able to get all the waitid() data without reaping a process or
-> > > even necessarily being its parent.  Maybe these can be combined?  A
-> > > new waitid() option like you=E2=80=99re suggesting could add siginfo =
-(and
-> > > might need permissions).  And we could have a different waitid() flag
-> > > that says =E2=80=9Cmaybe not my child, don=E2=80=99t reap=E2=80=9D (a=
-nd also needs
-> > > permissions).
-> > >
-> > > Although the =E2=80=9Cdon=E2=80=99t reap=E2=80=9D thing is fundamenta=
-lly racy. What a sane
-> > > process manager actually wants is an interface to read all this info
-> > > from a pidfd, which means it all needs to get stuck in struct pid. An=
-d
-> >
-> > /me briefly pops out from vacation
-> >
-> > Agreed and not just siginfo I would expect(?). We already came to that
-> > conclusion when we first introduced them.
-> >
-> > > task_struct needs a completion or wait queue so you can actually wait
-> > > for a pidfd to exit (unless someone already did this =E2=80=94 I had =
-patches a
-> > > while back).  And this would be awesome.
-> >
-> > Currently, you can wait for a pidfd to exit via polling and you can use
-> > a pidfd to pass it to waitid(P_PIDFD, pidfd, ...).
-> >
-> > /me pops back into vacation
->
-> Right, so waitid already has all the infrastructure for this, so I think
-> adding it there makes a lot of sense. Here's what I've got:
->
-> One usability question I have is:
->
-> - if the process just exited normally, should it return an empty
->   siginfo, or should it ignore __WCHILDSIGINFO? (I have it ignoring it
->   above.)
+Also, this helps with the ongoing efforts to globally enable
+-Warray-bounds and get us closer to being able to tighten the
+FORTIFY_SOURCE routines on memcpy().
 
-Maybe ENODATA as return code, in order to make it obvious to the
-caller that the siginfo is missing? In the end if somebody requests
-it, they probably should have already checked that the child process
-was killed by a signal, by using WNOWAIT with waitid() or wait4().
+https://github.com/KSPP/linux/issues/79
+https://github.com/ClangBuiltLinux/linux/issues/1590
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Revert changes for _port_ due to protocol definition conflict.
+   Link: https://lore.kernel.org/lkml/22139a80-3f64-1f21-6b5c-65d250bafe09@linux.ibm.com/
+ - Update subject line.
+ - Update changelog text.
 
-Additionally, there might be a problem with input params. The waitid()
-can take P_ALL or P_PGID as arguments. If waitid() returns with 0, the
-pid of the child process generating the event can be read from
-si->si_pid. But siginfo_t is a union of multiple different structs,
-many of them missing si_pid. So, such a flag (__WCHILDSIGINFO) would
-make sense with P_PID and P_PIDFD only, maybe this should be
-explicitly checked for?
+ drivers/scsi/libfc/fc_encode.h | 2 +-
+ include/scsi/fc/fc_ms.h        | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/scsi/libfc/fc_encode.h b/drivers/scsi/libfc/fc_encode.h
+index 74ae7fd15d8d..7dcac3b6baa7 100644
+--- a/drivers/scsi/libfc/fc_encode.h
++++ b/drivers/scsi/libfc/fc_encode.h
+@@ -246,7 +246,7 @@ static inline int fc_ct_ms_fill(struct fc_lport *lport,
+ 				   &entry->type);
+ 		put_unaligned_be16(len, &entry->len);
+ 		put_unaligned_be64(lport->wwnn,
+-				   (__be64 *)&entry->value[0]);
++				   (__be64 *)&entry->value);
+ 
+ 		/* Manufacturer */
+ 		entry = (struct fc_fdmi_attr_entry *)((char *)entry->value +
+diff --git a/include/scsi/fc/fc_ms.h b/include/scsi/fc/fc_ms.h
+index 00191695233a..56a5d2b5a624 100644
+--- a/include/scsi/fc/fc_ms.h
++++ b/include/scsi/fc/fc_ms.h
+@@ -158,7 +158,7 @@ struct fc_fdmi_port_name {
+ struct fc_fdmi_attr_entry {
+ 	__be16		type;
+ 	__be16		len;
+-	__u8		value[1];
++	__u8		value[];
+ } __attribute__((__packed__));
+ 
+ /*
+@@ -166,7 +166,7 @@ struct fc_fdmi_attr_entry {
+  */
+ struct fs_fdmi_attrs {
+ 	__be32				numattrs;
+-	struct fc_fdmi_attr_entry	attr[1];
++	struct fc_fdmi_attr_entry	attr[];
+ } __attribute__((__packed__));
+ 
+ /*
+-- 
+2.27.0
+
