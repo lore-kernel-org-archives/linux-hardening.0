@@ -2,49 +2,63 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4132C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 14 Feb 2022 12:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A85E2C433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 14 Feb 2022 18:10:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235050AbiBNMbZ (ORCPT
+        id S236350AbiBNSKS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 14 Feb 2022 07:31:25 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:58050 "EHLO
+        Mon, 14 Feb 2022 13:10:18 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346211AbiBNMbY (ORCPT
+        with ESMTP id S235368AbiBNSKR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 14 Feb 2022 07:31:24 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0852549FB8;
-        Mon, 14 Feb 2022 04:31:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644841877; x=1676377877;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=msYr7lp/NjLWQX8Lr1N6lQehsKDhUEBlDaTRF91PHo0=;
-  b=WWicxnF8oUTeZyRc+grWYz7kyQUFReKLOP+L6ghk/Wn5sTO/eE/b+AsU
-   3REVQk3/f3hUuJ+o58CoXhUHcQdR8hggraxyf1nCITSRah6B2oZD97C/j
-   7Gp77r+is4g6a7H2uRxDlHw8eH/HPsXye/jTbx2wSLuoKpFgya4sIvZ6B
-   uTgTp06IpkKKlpWmYVt7XGBB4nTKvz8f50aBp1uMu+fU4riBcBmctZ+9R
-   zH2WjAMnTZsr9efWcodjdbBe6ClaAHF/L5QVKnI4F7SCqOZBNCHciwtZZ
-   9r+2h2eb8ZjJuK7zPRFDsJbnXv/0mCqBz2sJzl07Z+G1yM1B9oR66dgue
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10257"; a="336505927"
-X-IronPort-AV: E=Sophos;i="5.88,367,1635231600"; 
-   d="scan'208";a="336505927"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2022 04:31:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,367,1635231600"; 
-   d="scan'208";a="570153044"
-Received: from irvmail001.ir.intel.com ([10.43.11.63])
-  by orsmga001.jf.intel.com with ESMTP; 14 Feb 2022 04:31:07 -0800
-Received: from newjersey.igk.intel.com (newjersey.igk.intel.com [10.102.20.203])
-        by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id 21ECV4hY011148;
-        Mon, 14 Feb 2022 12:31:04 GMT
-From:   Alexander Lobakin <alexandr.lobakin@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
+        Mon, 14 Feb 2022 13:10:17 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E448C65171
+        for <linux-hardening@vger.kernel.org>; Mon, 14 Feb 2022 10:10:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1644862209;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CGNOFCt1MU85Ts1xBeqV0FyWp/WQxMTDQKYlq49a4uc=;
+        b=QM6ImguIZ8zc4cCkdJFURHD34Ls3owlDOTdkpmfFPgjf55xKBNBA68rwYbbjrIYv/QDw+v
+        i6wOfxzcl2LAc+dz8o8yepmuHSQ3n0axurH5sFJdnctgJkXXp6Q4I2GmZaOOEUsy68xWzO
+        rnAC4vYaOXo+04ubSRO5X2yxRAoGoY8=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-340-2I99wgCZPGaQ_3ud0oyHCQ-1; Mon, 14 Feb 2022 13:10:07 -0500
+X-MC-Unique: 2I99wgCZPGaQ_3ud0oyHCQ-1
+Received: by mail-qt1-f199.google.com with SMTP id c15-20020ac87dcf000000b002d0a849c0beso13084950qte.16
+        for <linux-hardening@vger.kernel.org>; Mon, 14 Feb 2022 10:10:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CGNOFCt1MU85Ts1xBeqV0FyWp/WQxMTDQKYlq49a4uc=;
+        b=j9w8IFHU07ilwtvjIu5rRj85GPYOia56zMQJ8gDz6ZuTQ6heumB7d8GK7SLW++qfs0
+         fFQ4XTBdKWxC/Ly6KhBV4od3TunP2MpuTq0qCZlwThcjUad7KV34XHG6YLgHGkB6DpKG
+         r1NfdPcg5mCfLOHe60pAsEIKVICoKbxIa6YJTKSAZOuwTF+uXibdMa1fTEDA3YjZQZX5
+         OvD5RSUIb6ah04rZ4WDfLHrTQVkzYbJcmBSgKmHYJUXI2aT11IBUj8msJXmM9TkF7m0h
+         vQtts1xj8yaEmN78LgL2lgs3Umd82mlT5VBrHJ4rWijGMfl2K4WGWvCIusgr9qeJhHlI
+         M6Jg==
+X-Gm-Message-State: AOAM530k4i3te3zrb7EWEyDRzaEyEp7wq8j8+/lYUw6Hej8fXnlqhfCC
+        MKH/WxnJnwWceZahs9QkMWovkb58zMgp/5HwxEnqlp1HwEa8uqhLHLlHAjDQ8kxQWei61FImd6S
+        Rg4kavNpgDPNI4r1YJ/SO2iCpWUx4
+X-Received: by 2002:a05:6214:762:: with SMTP id f2mr693709qvz.24.1644862206837;
+        Mon, 14 Feb 2022 10:10:06 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJx/vy40rnBwdMoVvt1Kva6lhknBX3yMZ/S5wMQcb4vy84dEW8nb/n8AHTcudHMUidnRHHxsJw==
+X-Received: by 2002:a05:6214:762:: with SMTP id f2mr693693qvz.24.1644862206520;
+        Mon, 14 Feb 2022 10:10:06 -0800 (PST)
+Received: from treble ([2600:1700:6e32:6c00::35])
+        by smtp.gmail.com with ESMTPSA id br30sm16056253qkb.67.2022.02.14.10.10.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Feb 2022 10:10:05 -0800 (PST)
+Date:   Mon, 14 Feb 2022 10:10:00 -0800
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexander Lobakin <alexandr.lobakin@intel.com>
+Cc:     =?utf-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>,
         linux-hardening@vger.kernel.org, x86@kernel.org,
         Borislav Petkov <bp@alien8.de>,
         Jesse Brandeburg <jesse.brandeburg@intel.com>,
@@ -70,8 +84,8 @@ Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         "H. Peter Anvin" <hpa@zytor.com>,
         Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
         Nathan Chancellor <nathan@kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Marios Pomonis <pomonis@google.com>,
@@ -80,41 +94,62 @@ Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
         linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
         linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
         llvm@lists.linux.dev
-Subject: Re: [PATCH v10 10/15] FG-KASLR: use a scripted approach to handle .text.* sections
-Date:   Mon, 14 Feb 2022 13:30:53 +0100
-Message-Id: <20220214123053.289169-1-alexandr.lobakin@intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <YgpEJ7BmuYtHkayT@hirez.programming.kicks-ass.net>
-References: <20220209185752.1226407-1-alexandr.lobakin@intel.com> <20220209185752.1226407-11-alexandr.lobakin@intel.com> <20220211153706.GW23216@worktop.programming.kicks-ass.net> <20220214113434.5256-1-alexandr.lobakin@intel.com> <YgpEJ7BmuYtHkayT@hirez.programming.kicks-ass.net>
+Subject: Re: [PATCH v10 02/15] livepatch: avoid position-based search if `-z
+ unique-symbol` is available
+Message-ID: <20220214181000.xln2qgyzgswjxwcz@treble>
+References: <20220209185752.1226407-1-alexandr.lobakin@intel.com>
+ <20220209185752.1226407-3-alexandr.lobakin@intel.com>
+ <20220211174130.xxgjoqr2vidotvyw@treble>
+ <CAFP8O3KvZOZJqOR8HYp9xZGgnYf3D8q5kNijZKORs06L-Vit1g@mail.gmail.com>
+ <20220211183529.q7qi2qmlyuscxyto@treble>
+ <20220214122433.288910-1-alexandr.lobakin@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220214122433.288910-1-alexandr.lobakin@intel.com>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jpoimboe@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Mon, 14 Feb 2022 12:59:35 +0100
+On Mon, Feb 14, 2022 at 01:24:33PM +0100, Alexander Lobakin wrote:
+> > One idea I mentioned before, it may be worth exploring changing the "F"
+> > in FGKASLR to "File" instead of "Function".  In other words, only
+> > shuffle at an object-file granularity.  Then, even with duplicates, the
+> > <file+function> symbol pair doesn't change in the symbol table.  And as
+> > a bonus, it should help FGKASLR i-cache performance, significantly.
+> 
+> Yeah, I keep that in mind. However, this wouldn't solve the
+> duplicate static function names problem, right?
+> Let's say you have a static function f() in file1 and f() in file2,
+> then the layout each boot can be
+> 
+> .text.file1  or  .text.file2
+> f()              f()
+> .text.file2      .text.file1
+> f()              f()
+> 
+> and position-based search won't work anyway, right?
 
-> On Mon, Feb 14, 2022 at 12:34:34PM +0100, Alexander Lobakin wrote:
-> 
-> > Re "won't do" -- sorry for trying to hijack this thread a bit, but
-> > did I miss something? The last comments I've read were that LLVM
-> > tools need to change their approach for CFI on x86, and Sami went
-> > redo it, but I can't recall any "life-time" nacks.
-> 
-> Won't as in the lclang-cfi as it exists today. And I've understood that
-> this CFI model is a keeper. It is true that Sami has been working on an
-> alternative KCFI, but the little I can make of this proposal, it
-> still needs serious work. Also see here:
-> 
->   https://lkml.kernel.org/r/20220211133803.GV23216@worktop.programming.kicks-ass.net
-> 
-> Specifically, I object to the existence of any __*cfi_check_fail symbol
-> on the grounds that it will bloat the code (and makes thinking about the
-> whole speculation angle more painful than it needs to be).
+Right, so we'd have to abandon position-based search in favor of
+file+func based search.
 
-Ah, I see, thanks! I've been tracking your IBT works, but missed
-LKML thread for some reason.
-I have no problems in dropping the related lines from my patch.
+It's not perfect because there are still a few file+func duplicates.
+But it might be good enough.  We would presumably just refuse to patch a
+duplicate.  Or we could remove them (and enforce their continued removal
+with tooling-based warnings).
 
-Al
+Another variant of this which I described here
+
+  https://lore.kernel.org/all/20210125172124.awabevkpvq4poqxf@treble/
+
+would be to keep it function-granular, but have kallsyms keep track of
+what file each func belongs to.  Then livepatch could still do the
+file+func based search.
+
+-- 
+Josh
+
