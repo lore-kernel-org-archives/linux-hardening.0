@@ -2,117 +2,79 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7D1C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 15 Feb 2022 09:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74877C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 15 Feb 2022 09:14:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235500AbiBOJCJ (ORCPT
+        id S233060AbiBOJOS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 15 Feb 2022 04:02:09 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41090 "EHLO
+        Tue, 15 Feb 2022 04:14:18 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231453AbiBOJCI (ORCPT
+        with ESMTP id S235708AbiBOJOR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 15 Feb 2022 04:02:08 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4091B54C8;
-        Tue, 15 Feb 2022 01:01:58 -0800 (PST)
+        Tue, 15 Feb 2022 04:14:17 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2951725EA6;
+        Tue, 15 Feb 2022 01:14:07 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2A065B80764;
-        Tue, 15 Feb 2022 09:01:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5C4EC340EC;
-        Tue, 15 Feb 2022 09:01:53 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B389F616BC;
+        Tue, 15 Feb 2022 09:14:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AED21C340EC;
+        Tue, 15 Feb 2022 09:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644915715;
-        bh=7EejRv6u9amFqRYVYWyOD9s0dLtId/TOvvFuq30/PYk=;
+        s=k20201202; t=1644916446;
+        bh=As0zp7KHDdXIFqtOLNpY8KtgPS637bO4Rg8goRTcRaQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e4evkuJgCoF1G+Drlcz97TmsU/QuwhqKfyQrVlMFhl3+IzhR0vfhGRPu4dVsLLiSb
-         T7qgkYHFR3chK9Us2GBsqc3g8r2VutrU4BJJi9p6Eu4swXNkAgsLt1cBpOJF/lZdrx
-         P9UTZGizLEp9lJ/+zKq8nYbPFsCeoqgeboWEPG7dM+JoWUpM7OobVjHG7hrHcToQRc
-         1JK4iK4e939Fa31R3Rzwg/vH0iEVPSzFQto64WR1IQ9w2Hyg5jsKxZeL6lJDkrifNB
-         tdobEUht/pZGRNy142a3sRymPUgYpCmThE8a69ZhsxTMJ+sFPpquPHnfKCvIMGOy61
-         Vqi8Zh9bLcMig==
-Date:   Tue, 15 Feb 2022 10:01:51 +0100
+        b=MRUpR31BlYi7HvFIep1lZbT6vtfYoy8OvEcqaM0UAN2Fy8YZb7mLZAsN8nz/09WCv
+         xJC4WJUfm6LAMbsgKyASgJEyp6RKbbSqjUS0f3P342s23YlrfygrxpZb7zJcNosfVU
+         HO7WpLA65QE61OnVLDr0lIZ/r3s10WKiiwoBtpvV0d7HEhLosyZ4CzB+CY/wj9pHro
+         NDPXUiaLaREJuy2rdmM4Dvlk0R0qasdAobAMdUXmSkEbu7qhwPNR8n/ys1KMrB9tKP
+         +EJHB0LzZWcUxk7l0kt4crbzEnCFaRjmk4AHQIsW0qDp2PaMxxJR7qr3H+YxVfWFbt
+         yDsGSxAvMyOKQ==
+Date:   Tue, 15 Feb 2022 10:14:00 +0100
 From:   Christian Brauner <brauner@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@amacapital.net>,
         Robert =?utf-8?B?xZp3acSZY2tp?= <robert@swiecki.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>, Will Drewry <wad@chromium.org>,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [RFC] Get siginfo from unreaped task
-Message-ID: <20220215090151.zpatnzpvqnaeekrq@wittgenstein>
-References: <CAP145phC6S6Zda-ZWLH1s4ZfDPh79rtf_7vzs-yvt1vykUCP4A@mail.gmail.com>
- <CF5167CE-FA1C-4CEC-9EA8-5EE8041FE7C4@amacapital.net>
- <20220213085212.cwzuqlrabpgbnbac@wittgenstein>
- <202202141152.6296CD7F@keescook>
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/2] exit: Introduce __WCHILDSIGINFO for waitid
+Message-ID: <20220215091400.m4koiz4qqhgctnlx@wittgenstein>
+References: <20220214213823.3297816-1-keescook@chromium.org>
+ <20220214213823.3297816-2-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <202202141152.6296CD7F@keescook>
+In-Reply-To: <20220214213823.3297816-2-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Feb 14, 2022 at 12:07:25PM -0800, Kees Cook wrote:
-> On Sun, Feb 13, 2022 at 09:52:12AM +0100, Christian Brauner wrote:
-> > On Sat, Feb 12, 2022 at 06:32:08PM -0800, Andy Lutomirski wrote:
-> > > 
-> > > > On Feb 12, 2022, at 3:24 AM, Robert Święcki <robert@swiecki.net> wrote:
-> > > > 
-> > > > ﻿sob., 12 lut 2022 o 05:28 Kees Cook <keescook@chromium.org> napisał(a):
-> > > >> 
-> > > >> Make siginfo available through PTRACE_GETSIGINFO after process death,
-> > > >> without needing to have already used PTRACE_ATTACH. Uses 48 more bytes
-> > > >> in task_struct, though I bet there might be somewhere else we could
-> > > >> stash a copy of it?
-> > > > 
-> > > > An alternative way of accessing this info could be abusing the
-> > > > waitid() interface, with some additional, custom to Linux, flag
-> > > > 
-> > > > waitid(P_ALL, 0, &si, __WCHILDSIGINFO);
-> > > > 
-> > > > which would change what is put into si.
-> > > > 
-> > > > But maybe ptrace() is better, because it's mostly incompatible with
-> > > > other OSes anyway on the behavior/flag level, while waitd() seems to
-> > > > be POSIX/BSD standard, even if Linux specifies some additional flags.
-> > > > 
-> > > > 
-> > > 
-> > > I had a kind of opposite thought, which is that it would be very nice
-> > > to be able to get all the waitid() data without reaping a process or
-> > > even necessarily being its parent.  Maybe these can be combined?  A
-> > > new waitid() option like you’re suggesting could add siginfo (and
-> > > might need permissions).  And we could have a different waitid() flag
-> > > that says “maybe not my child, don’t reap” (and also needs
-> > > permissions).
-> > > 
-> > > Although the “don’t reap” thing is fundamentally racy. What a sane
-> > > process manager actually wants is an interface to read all this info
-> > > from a pidfd, which means it all needs to get stuck in struct pid. And
-> > 
-> > /me briefly pops out from vacation
-> > 
-> > Agreed and not just siginfo I would expect(?). We already came to that
-> > conclusion when we first introduced them.
-> > 
-> > > task_struct needs a completion or wait queue so you can actually wait
-> > > for a pidfd to exit (unless someone already did this — I had patches a
-> > > while back).  And this would be awesome.
-> > 
-> > Currently, you can wait for a pidfd to exit via polling and you can use
-> > a pidfd to pass it to waitid(P_PIDFD, pidfd, ...).
-> > 
-> > /me pops back into vacation
+On Mon, Feb 14, 2022 at 01:38:22PM -0800, Kees Cook wrote:
+> When __WCHILDSIGINFO is specified, copy the child's siginfo into the
+> waitid infop instead of constructing the parent's SIGCHLD perspective.
 > 
-> Right, so waitid already has all the infrastructure for this, so I think
-> adding it there makes a lot of sense. Here's what I've got:
-> 
-> 
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+> Cc: Andy Lutomirski <luto@amacapital.net>
+> Cc: "Robert Święcki" <robert@swiecki.net>
+> Cc: Jann Horn <jannh@google.com>
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: linux-api@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  include/linux/sched.h     |  1 +
+>  include/uapi/linux/wait.h |  1 +
+>  kernel/exit.c             | 23 +++++++++++++++++++----
+>  kernel/signal.c           |  4 ++++
+>  4 files changed, 25 insertions(+), 4 deletions(-)
 > 
 > diff --git a/include/linux/sched.h b/include/linux/sched.h
 > index f5b2be39a78c..e40789e801ef 100644
@@ -126,21 +88,6 @@ On Mon, Feb 14, 2022 at 12:07:25PM -0800, Kees Cook wrote:
 >  	kernel_siginfo_t		*last_siginfo;
 >  
 >  	struct task_io_accounting	ioac;
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 9b04631acde8..41f6ba6b7aa7 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -2825,6 +2825,10 @@ bool get_signal(struct ksignal *ksig)
->  		}
->  
->  	fatal:
-> +		/* Allow siginfo to be queried until reaped. */
-> +		copy_siginfo(&current->death_siginfo, &ksig->info);
-> +		current->last_siginfo = &current->death_siginfo;
-> +
->  		spin_unlock_irq(&sighand->siglock);
->  		if (unlikely(cgroup_task_frozen(current)))
->  			cgroup_leave_frozen(true);
 > diff --git a/include/uapi/linux/wait.h b/include/uapi/linux/wait.h
 > index 85b809fc9f11..7258cd4510ba 100644
 > --- a/include/uapi/linux/wait.h
@@ -154,7 +101,7 @@ On Mon, Feb 14, 2022 at 12:07:25PM -0800, Kees Cook wrote:
 >  #define __WALL		0x40000000	/* Wait on all children, regardless of type */
 >  #define __WCLONE	0x80000000	/* Wait only on non-SIGCHLD children */
 > diff --git a/kernel/exit.c b/kernel/exit.c
-> index d54efddd378b..70ecb996cecd 100644
+> index b00a25bb4ab9..de6e024976c6 100644
 > --- a/kernel/exit.c
 > +++ b/kernel/exit.c
 > @@ -953,6 +953,7 @@ struct waitid_info {
@@ -162,6 +109,12 @@ On Mon, Feb 14, 2022 at 12:07:25PM -0800, Kees Cook wrote:
 >  	int status;
 >  	int cause;
 > +	kernel_siginfo_t siginfo;
+
+Heh, I once got yelled at because I put siginfo in there... :)
+If this time it's acceptable it might be worth considering replacing
+some of the duplicated fields if possible. But again, on a suboptimal
+device because of vacation.
+
 >  };
 >  
 >  struct wait_opts {
@@ -209,43 +162,53 @@ On Mon, Feb 14, 2022 at 12:07:25PM -0800, Kees Cook wrote:
 >  		return -EINVAL;
 >  	if (!(options & (WEXITED|WSTOPPED|WCONTINUED)))
 >  		return -EINVAL;
-> @@ -1638,6 +1645,10 @@ SYSCALL_DEFINE5(waitid, int, which, pid_t, upid, struct siginfo __user *,
+> @@ -1637,6 +1642,10 @@ SYSCALL_DEFINE5(waitid, int, which, pid_t, upid, struct siginfo __user *,
 >  	if (!infop)
 >  		return err;
 >  
 > +	/* __WCHILDSIGINFO */
-> +	if (info->siginfo.signo)
-> +		return copy_siginfo_to_user(infop, &info->siginfo);
+> +	if (info.siginfo.si_signo)
+> +		return copy_siginfo_to_user(infop, &info.siginfo);
 > +
 >  	if (!user_write_access_begin(infop, sizeof(*infop)))
 >  		return -EFAULT;
 >  
-> @@ -1781,6 +1792,12 @@ COMPAT_SYSCALL_DEFINE5(waitid,
+> @@ -1780,6 +1789,12 @@ COMPAT_SYSCALL_DEFINE5(waitid,
 >  	if (!infop)
 >  		return err;
 >  
 > +	/* __WCHILDSIGINFO */
-> +	if (info->siginfo.signo)
+> +	if (info.siginfo.si_signo)
 > +		return copy_siginfo_to_user32(
 > +				(struct compat_siginfo __user *)infop,
-> +				&info->siginfo);
+> +				&info.siginfo);
 > +
+
+Just to repeat what I said in the earlier thread: if I'm not misreading
+this - I have to do this on a suboptimal device because of vacation -
+then there's a behavioral change for what fields are initialized and
+what additional fields (if any) are zeroed between a __WCHILDSIGINFO
+request and a regular waitid() request. I'm a) not sure we want this and
+b) we should document it.
+
 >  	if (!user_write_access_begin(infop, sizeof(*infop)))
 >  		return -EFAULT;
 >  
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 9b04631acde8..41f6ba6b7aa7 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -2825,6 +2825,10 @@ bool get_signal(struct ksignal *ksig)
+>  		}
+>  
+>  	fatal:
+> +		/* Allow siginfo to be queried until reaped. */
+> +		copy_siginfo(&current->death_siginfo, &ksig->info);
+> +		current->last_siginfo = &current->death_siginfo;
+> +
+>  		spin_unlock_irq(&sighand->siglock);
+>  		if (unlikely(cgroup_task_frozen(current)))
+>  			cgroup_leave_frozen(true);
+> -- 
+> 2.30.2
 > 
-> 
-> One usability question I have is:
-> 
-> - if the process just exited normally, should it return an empty
->   siginfo, or should it ignore __WCHILDSIGINFO? (I have it ignoring it
->   above.)
-
-I would model this after the regular waitid() call which seems to always
-fill in that info? But note that afaict, there is a potential behavioral
-difference between getting the siginfo from a no-reaped task and a
-reaped task now. copy_siginfo_to_user*() simply copies all of siginfo
-to the user and clears additional fields. In contrast, regular waitid()
-only fills in specific fields and leaves additional fields as they were
-before. It might not matter in practice but if you're doing this then
-this behavior should be documented on the manpage.
