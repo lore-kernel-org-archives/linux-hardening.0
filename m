@@ -2,113 +2,93 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E4FC433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 14 Feb 2022 22:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22965C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 15 Feb 2022 03:19:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231874AbiBNWbq (ORCPT
+        id S233833AbiBODT6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 14 Feb 2022 17:31:46 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:42452 "EHLO
+        Mon, 14 Feb 2022 22:19:58 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230102AbiBNWbp (ORCPT
+        with ESMTP id S233811AbiBODTz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 14 Feb 2022 17:31:45 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D323713E9C;
-        Mon, 14 Feb 2022 14:31:31 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A0D1EB80C6D;
-        Mon, 14 Feb 2022 22:31:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C2DFC340E9;
-        Mon, 14 Feb 2022 22:31:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644877888;
-        bh=U9FS+HbROd6gXASD/1YFQXlW6ra2q4lCYkPCYYdKZzE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Lobos/mRirqUrrb/uzx6jBqU9QlkWKLRqWIns9GiMrotTuxIx2uPk8VwRBhvRBNP6
-         5l9MSsfHVd+AG/trcUCUHZ1gVGTmBECg15Fy+FvjZhpmS6BgRUFDXWq7/53xuTwnJk
-         i1gjAzU1emFp2bnoEJamngEaxtOnZUhnjGWyaUgxP2JWrPWPXRQDtWwqdBRVzLIMST
-         +vTDEhugRBS5/qvX3uvImYtXxQg/ahBxIGFKG8TIe/tP+28aKiC76W/pWiaw8cM5c+
-         8OAr2jGYXND6YM48GNK0k0Wz8nISudZGLAjjSmE+7Xtpj2z+x6Zn6iBwmX6Kgt8rn3
-         KMpyKplQQsOYA==
-Date:   Mon, 14 Feb 2022 16:39:03 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Hannes Reinecke <hare@suse.de>,
+        Mon, 14 Feb 2022 22:19:55 -0500
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0088520F59;
+        Mon, 14 Feb 2022 19:19:46 -0800 (PST)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 21F2WvHh022038;
+        Tue, 15 Feb 2022 03:19:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2021-07-09;
+ bh=Y457YTdXV5O2I0r5weXh5J18vYtPaowY8zWk4jkV6kU=;
+ b=XwaUh/E67LGicq3GJRmDmiTDoXxgqnFK+jYeJuxMTI3wdmOuAEiEISohH76MIJxtorzt
+ hp12XbkOIGD5dLeVieWzuFDjSL+s2oWYY0UsRx5+29757SdzcmmPA4/YbMU1RjQWZcoj
+ 1QS5tk7RMygnVvlmH8LxXUtW63Yy5lTIAXtWNOIyLhIVnWaBEiuH07kOtMG0wqIh8w/9
+ rtzN6izxDGaVg4k3630c4rhYRQrqcOhcJuYHeiB26WL0h1nbcpfWRiP0Pzq3zPArNYDJ
+ 2KXY+rv0JRSqB2OWnYgzSpfruGmY0blpW9T2Cx4t0yn4b67spMyqOSQ/4wZztqCwy1Uq ng== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3e63ad6bqw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Feb 2022 03:19:31 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 21F3GpFC057595;
+        Tue, 15 Feb 2022 03:19:30 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3030.oracle.com with ESMTP id 3e620wpgsh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Feb 2022 03:19:30 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 21F3JMPC064243;
+        Tue, 15 Feb 2022 03:19:30 GMT
+Received: from ca-mkp.mkp.ca.oracle.com (ca-mkp.ca.oracle.com [10.156.108.201])
+        by userp3030.oracle.com with ESMTP id 3e620wpgqq-6;
+        Tue, 15 Feb 2022 03:19:29 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Michael Cyr <mikecyr@linux.ibm.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-hardening@vger.kernel.org, target-devel@vger.kernel.org,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>
-Subject: [PATCH v2][next] scsi: fc: Replace one-element arrays with
- flexible-array members
-Message-ID: <20220214223903.GA859464@embeddedor>
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: ibmvscsis: Silence -Warray-bounds warning
+Date:   Mon, 14 Feb 2022 22:19:18 -0500
+Message-Id: <164489513313.15031.7832986884338779882.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220208061231.3429486-1-keescook@chromium.org>
+References: <20220208061231.3429486-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: SLlgXN1neJdbvyITMnETiSiq6oqy43In
+X-Proofpoint-ORIG-GUID: SLlgXN1neJdbvyITMnETiSiq6oqy43In
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Use flexible-array members in struct fc_fdmi_attr_entry and
-fs_fdmi_attrs instead of one-element arrays, and refactor the
-code accordingly.
+On Mon, 7 Feb 2022 22:12:31 -0800, Kees Cook wrote:
 
-Also, this helps with the ongoing efforts to globally enable
--Warray-bounds and get us closer to being able to tighten the
-FORTIFY_SOURCE routines on memcpy().
+> Instead of doing a cast to storage that is too small, add a union for
+> the high 64 bits. Silences the warnings under -Warray-bounds:
+> 
+> drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c: In function 'ibmvscsis_send_messages':
+> drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:1934:44: error: array subscript 'struct viosrp_crq[0]' is partly outside array bounds of 'u64[1]' {aka 'long long unsigned int[1]'} [-Werror=array-bounds]
+>  1934 |                                         crq->valid = VALID_CMD_RESP_EL;
+>       |                                            ^~
+> drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c:1875:13: note: while referencing 'msg_hi'
+>  1875 |         u64 msg_hi = 0;
+>       |             ^~~~~~
+> 
+> [...]
 
-https://github.com/KSPP/linux/issues/79
-https://github.com/ClangBuiltLinux/linux/issues/1590
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Revert changes for _port_ due to protocol definition conflict.
-   Link: https://lore.kernel.org/lkml/22139a80-3f64-1f21-6b5c-65d250bafe09@linux.ibm.com/
- - Update subject line.
- - Update changelog text.
+Applied to 5.18/scsi-queue, thanks!
 
- drivers/scsi/libfc/fc_encode.h | 2 +-
- include/scsi/fc/fc_ms.h        | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+[1/1] scsi: ibmvscsis: Silence -Warray-bounds warning
+      https://git.kernel.org/mkp/scsi/c/03e4383c7ce3
 
-diff --git a/drivers/scsi/libfc/fc_encode.h b/drivers/scsi/libfc/fc_encode.h
-index 74ae7fd15d8d..7dcac3b6baa7 100644
---- a/drivers/scsi/libfc/fc_encode.h
-+++ b/drivers/scsi/libfc/fc_encode.h
-@@ -246,7 +246,7 @@ static inline int fc_ct_ms_fill(struct fc_lport *lport,
- 				   &entry->type);
- 		put_unaligned_be16(len, &entry->len);
- 		put_unaligned_be64(lport->wwnn,
--				   (__be64 *)&entry->value[0]);
-+				   (__be64 *)&entry->value);
- 
- 		/* Manufacturer */
- 		entry = (struct fc_fdmi_attr_entry *)((char *)entry->value +
-diff --git a/include/scsi/fc/fc_ms.h b/include/scsi/fc/fc_ms.h
-index 00191695233a..56a5d2b5a624 100644
---- a/include/scsi/fc/fc_ms.h
-+++ b/include/scsi/fc/fc_ms.h
-@@ -158,7 +158,7 @@ struct fc_fdmi_port_name {
- struct fc_fdmi_attr_entry {
- 	__be16		type;
- 	__be16		len;
--	__u8		value[1];
-+	__u8		value[];
- } __attribute__((__packed__));
- 
- /*
-@@ -166,7 +166,7 @@ struct fc_fdmi_attr_entry {
-  */
- struct fs_fdmi_attrs {
- 	__be32				numattrs;
--	struct fc_fdmi_attr_entry	attr[1];
-+	struct fc_fdmi_attr_entry	attr[];
- } __attribute__((__packed__));
- 
- /*
 -- 
-2.27.0
-
+Martin K. Petersen	Oracle Linux Engineering
