@@ -2,86 +2,250 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56202C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Feb 2022 20:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970A1C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Feb 2022 22:06:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232329AbiBPUhA (ORCPT
+        id S234358AbiBPWHH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Feb 2022 15:37:00 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57944 "EHLO
+        Wed, 16 Feb 2022 17:07:07 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229823AbiBPUhA (ORCPT
+        with ESMTP id S231319AbiBPWHG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Feb 2022 15:37:00 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB09D18D014
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Feb 2022 12:36:47 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id w20so2874463plq.12
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Feb 2022 12:36:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=PEXMMTYC1FVGPA5+aOj0q5CSmQ9v9RUX9ecJLilAcPc=;
-        b=bGWQFfWY+GOCY9ajK+jUK4dJTPTv2kIB0Yq1hbme80ItJPDtVUuCrducyub/97EQ0a
-         GThVGEfbIU6o1qenCjxJXD50S6/ObQWidSyhO1XjNEw7iQRU3mYiOLPWLzMEtydU+TOg
-         XrEVvwY9SVG0TkiKWWRS2pgrzzhEh02Lo8/FM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=PEXMMTYC1FVGPA5+aOj0q5CSmQ9v9RUX9ecJLilAcPc=;
-        b=7P6H5+hipiDRAz3K457leahDLhb9i/p0G5LzStjSnKbDWIo0J6wSX7jqEV0jkQRbL6
-         hrR7tr/Ooz4dIjFwGth+HLlyNRi/NfMC8kocrNx3pB5Pchspbesyu4Na5+fZGB1d0p1t
-         XX2GGk/T8m0EZwP1MzNpeoi8Lg2r4NrBIohXm7V7GldhHtFwiQEUEGLjCdrhh2H5ZdMe
-         ALRfwqvirgJcTaOzoiXzkh6cLnTEKXWC1qqgoaj51I5srKf23XeDxEwkI5KE5c/t4+LZ
-         PW6/z1ZXu53S9E7uPIdcWXAV7TJ0HXV4YeJa9Nk3TkMFkYvTjCjgFTjQrB/3N0CE1RCE
-         UGcQ==
-X-Gm-Message-State: AOAM532UBVT8wsZHx59PJUE1PbfYhoDmlnMeBrgEp5fnEKlfK0tNTl8v
-        LOErpz4otyFjxFPU2GE+obddUw==
-X-Google-Smtp-Source: ABdhPJzJF/YEfH5OONFh8EpYA13PwFuw+6/qJPkCze+i5HDTetsTW9VKrS9AD6KT8uYwRyvr45KVbw==
-X-Received: by 2002:a17:90b:2496:b0:1b9:a6dd:ae7 with SMTP id nt22-20020a17090b249600b001b9a6dd0ae7mr3717687pjb.35.1645043807401;
-        Wed, 16 Feb 2022 12:36:47 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id lw3sm18168488pjb.24.2022.02.16.12.36.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Feb 2022 12:36:47 -0800 (PST)
-Date:   Wed, 16 Feb 2022 12:36:46 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Robert Moore <robert.moore@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        devel@acpica.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] ACPICA: iASL: Replace zero-length array with
- flexible-array member
-Message-ID: <202202161236.FBD5D268@keescook>
-References: <20220216203240.GA918517@embeddedor>
+        Wed, 16 Feb 2022 17:07:06 -0500
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AD91170D78;
+        Wed, 16 Feb 2022 14:06:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645049213; x=1676585213;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eh2+wIJwPhsyAITQqGz0mlyqdm1obMslzcq+p1zNUzQ=;
+  b=f0jieK8bhAdFI/MKBCWp+pua7WedLsNDK7X0RjpJrS5+atayQZF8/V7G
+   Gz6DtASPwKDRWMl2yUvUT8UTOtKhK4IhgyO5erVo8jmcSCjsPTInyAtEA
+   Ytm8rFE7886kgsBmGJ0pobFS4mKxZI+Zb5gAYK21k/69qBGAJujdO4vO4
+   S7f+q+WNwc+MPVp0ys90/G/2hrFSxb6c+/nwtx/WsA3w6GC4Q9d9Yt8Jd
+   wGyij0crfhGsBdEC+TOLxbldFH91QDXY2RF5iUYavl5XzUYRrF+hh87F+
+   /eIVFrT/0wqYZHbFinjy0Dc7u06z/dPefImDvQc4/A/mOSCceCsUiiLmS
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10260"; a="311476979"
+X-IronPort-AV: E=Sophos;i="5.88,374,1635231600"; 
+   d="scan'208";a="311476979"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2022 14:06:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,374,1635231600"; 
+   d="scan'208";a="500179434"
+Received: from lkp-server01.sh.intel.com (HELO d95dc2dabeb1) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 16 Feb 2022 14:06:51 -0800
+Received: from kbuild by d95dc2dabeb1 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nKSRm-000BAC-JJ; Wed, 16 Feb 2022 22:06:50 +0000
+Date:   Thu, 17 Feb 2022 06:06:04 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc:     kbuild-all@lists.01.org, Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] lkdtm/usercopy: Expand size of "out of frame" object
+Message-ID: <202202170604.hO1q7HZU-lkp@intel.com>
+References: <20220216201743.2088344-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220216203240.GA918517@embeddedor>
+In-Reply-To: <20220216201743.2088344-1-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 16, 2022 at 02:32:40PM -0600, Gustavo A. R. Silva wrote:
-> There is a regular need in the kernel to provide a way to declare
-> having a dynamically sized set of trailing elements in a structure.
-> Kernel code should always use “flexible array members”[1] for these
-> cases. The older style of one-element or zero-length arrays should
-> no longer be used[2].
-> 
-> [1] https://en.wikipedia.org/wiki/Flexible_array_member
-> [2] https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
-> 
-> Link: https://github.com/KSPP/linux/issues/78
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Hi Kees,
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+I love your patch! Yet something to improve:
 
--- 
-Kees Cook
+[auto build test ERROR on char-misc/char-misc-testing]
+[also build test ERROR on soc/for-next kees/for-next/pstore v5.17-rc4 next-20220216]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
+
+url:    https://github.com/0day-ci/linux/commits/Kees-Cook/lkdtm-usercopy-Expand-size-of-out-of-frame-object/20220217-041936
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git e6cb9c167eeb8f90ab924666c573e69e85e700a0
+config: riscv-allmodconfig (https://download.01.org/0day-ci/archive/20220217/202202170604.hO1q7HZU-lkp@intel.com/config)
+compiler: riscv64-linux-gcc (GCC) 11.2.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/aa676e88f535bd79a3e22a1cc70c9b6cc51dbbfe
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Kees-Cook/lkdtm-usercopy-Expand-size-of-out-of-frame-object/20220217-041936
+        git checkout aa676e88f535bd79a3e22a1cc70c9b6cc51dbbfe
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=riscv SHELL=/bin/bash drivers/misc/lkdtm/
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/kernel.h:29,
+                    from drivers/misc/lkdtm/lkdtm.h:7,
+                    from drivers/misc/lkdtm/usercopy.c:6:
+   drivers/misc/lkdtm/usercopy.c: In function 'do_usercopy_stack':
+>> drivers/misc/lkdtm/usercopy.c:74:46: error: 'current_stack_pointer' undeclared (first use in this function); did you mean 'kernel_stack_pointer'?
+      74 |         pr_info("stack     : %px\n", (void *)current_stack_pointer);
+         |                                              ^~~~~~~~~~~~~~~~~~~~~
+   include/linux/printk.h:418:33: note: in definition of macro 'printk_index_wrap'
+     418 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
+         |                                 ^~~~~~~~~~~
+   include/linux/printk.h:519:9: note: in expansion of macro 'printk'
+     519 |         printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+         |         ^~~~~~
+   drivers/misc/lkdtm/usercopy.c:74:9: note: in expansion of macro 'pr_info'
+      74 |         pr_info("stack     : %px\n", (void *)current_stack_pointer);
+         |         ^~~~~~~
+   drivers/misc/lkdtm/usercopy.c:74:46: note: each undeclared identifier is reported only once for each function it appears in
+      74 |         pr_info("stack     : %px\n", (void *)current_stack_pointer);
+         |                                              ^~~~~~~~~~~~~~~~~~~~~
+   include/linux/printk.h:418:33: note: in definition of macro 'printk_index_wrap'
+     418 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
+         |                                 ^~~~~~~~~~~
+   include/linux/printk.h:519:9: note: in expansion of macro 'printk'
+     519 |         printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+         |         ^~~~~~
+   drivers/misc/lkdtm/usercopy.c:74:9: note: in expansion of macro 'pr_info'
+      74 |         pr_info("stack     : %px\n", (void *)current_stack_pointer);
+         |         ^~~~~~~
+
+
+vim +74 drivers/misc/lkdtm/usercopy.c
+
+   > 6	#include "lkdtm.h"
+     7	#include <linux/slab.h>
+     8	#include <linux/vmalloc.h>
+     9	#include <linux/sched/task_stack.h>
+    10	#include <linux/mman.h>
+    11	#include <linux/uaccess.h>
+    12	#include <asm/cacheflush.h>
+    13	
+    14	/*
+    15	 * Many of the tests here end up using const sizes, but those would
+    16	 * normally be ignored by hardened usercopy, so force the compiler
+    17	 * into choosing the non-const path to make sure we trigger the
+    18	 * hardened usercopy checks by added "unconst" to all the const copies,
+    19	 * and making sure "cache_size" isn't optimized into a const.
+    20	 */
+    21	static volatile size_t unconst;
+    22	static volatile size_t cache_size = 1024;
+    23	static struct kmem_cache *whitelist_cache;
+    24	
+    25	static const unsigned char test_text[] = "This is a test.\n";
+    26	
+    27	/*
+    28	 * Instead of adding -Wno-return-local-addr, just pass the stack address
+    29	 * through a function to obfuscate it from the compiler.
+    30	 */
+    31	static noinline unsigned char *trick_compiler(unsigned char *stack)
+    32	{
+    33		return stack + unconst;
+    34	}
+    35	
+    36	static noinline unsigned char *do_usercopy_stack_callee(int value)
+    37	{
+    38		unsigned char buf[128];
+    39		int i;
+    40	
+    41		/* Exercise stack to avoid everything living in registers. */
+    42		for (i = 0; i < sizeof(buf); i++) {
+    43			buf[i] = value & 0xff;
+    44		}
+    45	
+    46		/*
+    47		 * Put the target buffer in the middle of stack allocation
+    48		 * so that we don't step on future stack users regardless
+    49		 * of stack growth direction.
+    50		 */
+    51		return trick_compiler(&buf[(128/2)-32]);
+    52	}
+    53	
+    54	static noinline void do_usercopy_stack(bool to_user, bool bad_frame)
+    55	{
+    56		unsigned long user_addr;
+    57		unsigned char good_stack[32];
+    58		unsigned char *bad_stack;
+    59		int i;
+    60	
+    61		/* Exercise stack to avoid everything living in registers. */
+    62		for (i = 0; i < sizeof(good_stack); i++)
+    63			good_stack[i] = test_text[i % sizeof(test_text)];
+    64	
+    65		/* This is a pointer to outside our current stack frame. */
+    66		if (bad_frame) {
+    67			bad_stack = do_usercopy_stack_callee((uintptr_t)&bad_stack);
+    68		} else {
+    69			/* Put start address just inside stack. */
+    70			bad_stack = task_stack_page(current) + THREAD_SIZE;
+    71			bad_stack -= sizeof(unsigned long);
+    72		}
+    73	
+  > 74		pr_info("stack     : %px\n", (void *)current_stack_pointer);
+    75		pr_info("good_stack: %px-%px\n", good_stack, good_stack + sizeof(good_stack));
+    76		pr_info("bad_stack : %px-%px\n", bad_stack, bad_stack + sizeof(good_stack));
+    77	
+    78		user_addr = vm_mmap(NULL, 0, PAGE_SIZE,
+    79				    PROT_READ | PROT_WRITE | PROT_EXEC,
+    80				    MAP_ANONYMOUS | MAP_PRIVATE, 0);
+    81		if (user_addr >= TASK_SIZE) {
+    82			pr_warn("Failed to allocate user memory\n");
+    83			return;
+    84		}
+    85	
+    86		if (to_user) {
+    87			pr_info("attempting good copy_to_user of local stack\n");
+    88			if (copy_to_user((void __user *)user_addr, good_stack,
+    89					 unconst + sizeof(good_stack))) {
+    90				pr_warn("copy_to_user failed unexpectedly?!\n");
+    91				goto free_user;
+    92			}
+    93	
+    94			pr_info("attempting bad copy_to_user of distant stack\n");
+    95			if (copy_to_user((void __user *)user_addr, bad_stack,
+    96					 unconst + sizeof(good_stack))) {
+    97				pr_warn("copy_to_user failed, but lacked Oops\n");
+    98				goto free_user;
+    99			}
+   100		} else {
+   101			/*
+   102			 * There isn't a safe way to not be protected by usercopy
+   103			 * if we're going to write to another thread's stack.
+   104			 */
+   105			if (!bad_frame)
+   106				goto free_user;
+   107	
+   108			pr_info("attempting good copy_from_user of local stack\n");
+   109			if (copy_from_user(good_stack, (void __user *)user_addr,
+   110					   unconst + sizeof(good_stack))) {
+   111				pr_warn("copy_from_user failed unexpectedly?!\n");
+   112				goto free_user;
+   113			}
+   114	
+   115			pr_info("attempting bad copy_from_user of distant stack\n");
+   116			if (copy_from_user(bad_stack, (void __user *)user_addr,
+   117					   unconst + sizeof(good_stack))) {
+   118				pr_warn("copy_from_user failed, but lacked Oops\n");
+   119				goto free_user;
+   120			}
+   121		}
+   122	
+   123	free_user:
+   124		vm_munmap(user_addr, PAGE_SIZE);
+   125	}
+   126	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
