@@ -2,125 +2,152 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D49C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 15 Feb 2022 22:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D2BC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Feb 2022 01:02:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239534AbiBOWOn (ORCPT
+        id S245232AbiBPBCc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 15 Feb 2022 17:14:43 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34142 "EHLO
+        Tue, 15 Feb 2022 20:02:32 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242800AbiBOWOl (ORCPT
+        with ESMTP id S245234AbiBPBC3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 15 Feb 2022 17:14:41 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D6BAA27CCB
-        for <linux-hardening@vger.kernel.org>; Tue, 15 Feb 2022 14:14:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644963270;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0SgVDXV404yMNw+CNJPlab88lztIU+ojT1PQnfND6pg=;
-        b=OPU1GRnHz/vgBuMfDRYaC9lUhreKMyn6ftzgCoGHIZV+h6xSZ2jbwirzRJHfyk4ei+HWYY
-        rSJh/IsEk7BjJUV3YKMx4eX239ULOwv3UUc5DgEfXkaHDy3tsm8pNyYAtwLaqQ+Sx+ZyOa
-        2ZUawPODtf9FIwZdDMrnbsb8GTjePH0=
-Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
- [209.85.161.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-370-cicOSxibNdqssqIeYJvVSw-1; Tue, 15 Feb 2022 17:14:28 -0500
-X-MC-Unique: cicOSxibNdqssqIeYJvVSw-1
-Received: by mail-oo1-f70.google.com with SMTP id s14-20020a4aa54e000000b002ea553d580eso157940oom.4
-        for <linux-hardening@vger.kernel.org>; Tue, 15 Feb 2022 14:14:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=0SgVDXV404yMNw+CNJPlab88lztIU+ojT1PQnfND6pg=;
-        b=0rJAnHmuzBsbWMu63BWAO8bgoHC8LAg50svH5aMsgx3zpA86w3VVx6/z/7V0iEhlmS
-         IlVJuWGxlmUpZRBuZNAArvhfRabj/sKLTvxeZMiInyuF+UtrtVVZxz6Cmg6wQO00iVGN
-         sKaJvIaOq8B8a53n/Y5li5amb3G0iDyMFEZIxh5NTuyA7A+fNyA0TiWgS5/oE55s6rKD
-         BUvo8lv+5NhpmlifOxXd/+2vg+jBRT/NvxFv1cCfJa/6Dnik6R6kIO7uAhwih08MOa74
-         LC0xrg81g2VwJXTgFh/xyFo/02hi4Qq8CBvUcicLymyX81oNpD0GHlW3IrwA17GYvCp/
-         PrXg==
-X-Gm-Message-State: AOAM532MRhIId4LnlSP0ZlLABLZpaoMJVkDKlNtEuENa6oX+Bs81isrR
-        OEB1bnXpVCMKoLo7QvavURGIiZ+yrKo4XuEsrwMtoOTiXKtq58pB+DH8T/jubgAk8MucpSOYI8P
-        KleN1xg9fjgfj2if49mj4Go+PxCMk
-X-Received: by 2002:a9d:634c:: with SMTP id y12mr426952otk.247.1644963267663;
-        Tue, 15 Feb 2022 14:14:27 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzVXfIWZdTFKoCWv5zBjTEK28rZYLt4d2ssRGQsRnGv5qqbZqev0beqgPvRqsVb8AYyrRoeMg==
-X-Received: by 2002:a9d:634c:: with SMTP id y12mr426943otk.247.1644963267400;
-        Tue, 15 Feb 2022 14:14:27 -0800 (PST)
-Received: from treble ([2600:1700:6e32:6c00::35])
-        by smtp.gmail.com with ESMTPSA id 8sm13835736oav.28.2022.02.15.14.14.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Feb 2022 14:14:26 -0800 (PST)
-Date:   Tue, 15 Feb 2022 14:14:24 -0800
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Justin Forbes <jmforbes@linuxtx.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] tools: Fix use-after-free for realloc(..., 0)
-Message-ID: <20220215221424.hmnei74ar5gtqfy2@treble>
-References: <20220213182443.4037039-1-keescook@chromium.org>
- <20220214200730.a3qz6ocy2ohwafrt@treble>
- <YgwQO1Z0UmV241vg@kernel.org>
+        Tue, 15 Feb 2022 20:02:29 -0500
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29FBA86E3C
+        for <linux-hardening@vger.kernel.org>; Tue, 15 Feb 2022 17:02:17 -0800 (PST)
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20220216010215epoutp0284294f9d5138bdac870798c4411ad55b~UHohwbECY2956429564epoutp02j
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Feb 2022 01:02:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20220216010215epoutp0284294f9d5138bdac870798c4411ad55b~UHohwbECY2956429564epoutp02j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1644973335;
+        bh=W76p5lzZuTrN/LwNZhMY5heYVmdXwnLF1jR2bQKZcjo=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=FXAIq+y8cRIA6LpnoiMatK9GdAARFEDOdeoNWfKvMf2a7vEge3vaFskuwbXZA4D5b
+         lwubJybHcTpg9emuqhAYgaWQimXVaPUl+S32y+epmLjjDGDwFJS6+KkZjpZ0SC0fyB
+         BbbOpbyd/ARsplgLodSfXN6I4QfzyAXA8sNKdZpA=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20220216010214epcas1p2f4e8fe0a9815a2e4f2667ef9daec3820~UHohgW00X0154301543epcas1p2g;
+        Wed, 16 Feb 2022 01:02:14 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.36.136]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4Jz06V1DySz4x9QQ; Wed, 16 Feb
+        2022 01:02:10 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        23.B1.28648.E0D4C026; Wed, 16 Feb 2022 10:02:06 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20220216010206epcas1p3532638080c2ec47aec8add2f126128f8~UHoZvVtk91822018220epcas1p3O;
+        Wed, 16 Feb 2022 01:02:06 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20220216010206epsmtrp20792e037782f16ef98bb9cd82ee04ef9~UHoZudLhE1789517895epsmtrp2u;
+        Wed, 16 Feb 2022 01:02:06 +0000 (GMT)
+X-AuditID: b6c32a39-003ff70000006fe8-1d-620c4d0eb184
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        44.C3.08738.E0D4C026; Wed, 16 Feb 2022 10:02:06 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20220216010206epsmtip18ff9dd2f9c213256a4ea2d57c17fa31f~UHoZiM0P03127131271epsmtip1L;
+        Wed, 16 Feb 2022 01:02:06 +0000 (GMT)
+Subject: Re: [PATCH][next] extcon: usbc-cros-ec: Use struct_size() helper in
+ kzalloc()
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <3136d3aa-4c01-33be-86de-1a2b3b6b6733@samsung.com>
+Date:   Wed, 16 Feb 2022 10:26:34 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-In-Reply-To: <YgwQO1Z0UmV241vg@kernel.org>
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jpoimboe@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220125192634.GA70834@embeddedor>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIJsWRmVeSWpSXmKPExsWy7bCmvi6fL0+SwY8PlhbTn1xmsTj1ahmz
+        xa+L01gt5q3/yWhxedccNovbjSvYHNg8ZjdcZPHYtKqTzaNvyypGj8+b5AJYorJtMlITU1KL
+        FFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0yc4CWKymUJeaUAoUCEouL
+        lfTtbIryS0tSFTLyi0tslVILUnIKTAv0ihNzi0vz0vXyUkusDA0MjEyBChOyM870bGUt6OCu
+        +L7xEVMD4ybOLkZODgkBE4k/TZOYuhi5OIQEdjBKXDz7mxHC+cQo0d2ynh3C+cwo8X0/SAai
+        5fubGcwQiV2MEt/+P2eFcN4zSpybdY8FpEpYIELi/+KHYAkRgeWMElOf32MDSTALOEq0vt4M
+        ZrMJaEnsf3EDzOYXUJS4+uMx2ApeATuJ20dusYLYLAKqEgdnnWUHsUUFwiRObmuBqhGUODnz
+        CdgyTgEDiZsTzrJAzBeXuPVkPhOELS+x/e0csFMlBHo5JN5/vQr1g4tE579DULawxKvjW9gh
+        bCmJz+/2skE0NDNKNLy4zQjh9DBKHH3WxwJRZSyxf+lkoBUcQCs0Jdbv0ocIK0rs/D2XEWIz
+        n8S7rz2sICUSArwSHW1CECXKEpcf3GWCsCUlFrd3sk1gVJqF5J9ZSH6YheSHWQjLFjCyrGIU
+        Sy0ozk1PLTYsMIVHeHJ+7iZGcNrUstzBOP3tB71DjEwcjIcYJTiYlUR4485yJgnxpiRWVqUW
+        5ccXleakFh9iNAWG8ERmKdHkfGDiziuJNzSxNDAxMzI2sTA0M1QS51017XSikEB6Yklqdmpq
+        QWoRTB8TB6dUA9OG3YJ9EdeOJ/7XZQrPl/6ysenr6w0Hw9LKwsVOrJ3xyyplx+ca8apZloVn
+        v1bFVW80+BW+3nmz1qbI1Nlpxqrzppa9LvxWFuB57nHC22nCzG0bftoHP3nvJPTLxl/F2PzC
+        w4bg9Z13D+sr74mw1WFfcbk6I4A3wM+efYY9/yzb77UcG/8H5xf+15nrWx5r8OL2jxzJ8Nlt
+        0obHGcNXXPw18/2iCodLDqL2N3emSf59/+Gn6vXrmwo1U40UiqtX+Bg09B6an9toaLDjfpn9
+        p82Pn6e5st48kH6vk0ExnTHbPo/lpt40lY60ZunwZVFnOP+9sVvdfWPCT+ndaW7vZs7942oS
+        G5PGZLeJ92bgYiWW4oxEQy3mouJEAK7fnyQkBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFLMWRmVeSWpSXmKPExsWy7bCSnC6fL0+SwazP8hbTn1xmsTj1ahmz
+        xa+L01gt5q3/yWhxedccNovbjSvYHNg8ZjdcZPHYtKqTzaNvyypGj8+b5AJYorhsUlJzMstS
+        i/TtErgyzvRsZS3o4K74vvERUwPjJs4uRk4OCQETie9vZjB3MXJxCAnsYJTY2jSRBSIhKTHt
+        4lGgBAeQLSxx+HAxRM1bRom9P5awgtQIC0RI/F/8kBUkISKwnFHi9YGZYAlmAUeJ1teb2SA6
+        mhklJnffA0uwCWhJ7H9xgw3E5hdQlLj64zEjiM0rYCdx+8gtsBoWAVWJg7POsoPYogJhEjuX
+        PGaCqBGUODnzCdh1nAIGEjcnnGWBWKYu8WfeJWYIW1zi1pP5TBC2vMT2t3OYJzAKz0LSPgtJ
+        yywkLbOQtCxgZFnFKJlaUJybnltsWGCUl1quV5yYW1yal66XnJ+7iREcPVpaOxj3rPqgd4iR
+        iYPxEKMEB7OSCG/cWc4kId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rwXuk7GCwmkJ5akZqemFqQW
+        wWSZODilGpiixc4XzDZd9On0rv13nOu9ItSPm/5d8zoqZA73mz08hZprv8Syq96fufBdfFgI
+        w9wJ3seufhHJYLb/9e1rs/iFW00Sp7Vm52bfYGWqP8kyYe3Mrj28XTemLRHxMHZbsMWrxVH4
+        xz6Hj2KmohJac4rOpt+0Dby4iOVbYYChXcjnrZPE+Teeyp4j/uTHhlzN6w86uaev6eTKDfa4
+        eJt1+12mkJKVbsJMcf0zMz+FNZ0TuZl6Zs3GtFc1ne8Vpb7P537pezA/cc+fFcnLUs/P1ZO4
+        2a++IWtr+vPIHg9lQfcGzQDRX8anliVvWZDZuJHN7sn2H2dk0mXCLTaZrZ2qondhn872hUfu
+        7H8taGjAYaCjxFKckWioxVxUnAgAcHk94Q0DAAA=
+X-CMS-MailID: 20220216010206epcas1p3532638080c2ec47aec8add2f126128f8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20220125192140epcas1p27d09a1d2ceaed49dd7c410c0223c51d7
+References: <CGME20220125192140epcas1p27d09a1d2ceaed49dd7c410c0223c51d7@epcas1p2.samsung.com>
+        <20220125192634.GA70834@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Feb 15, 2022 at 05:42:35PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Feb 14, 2022 at 12:07:30PM -0800, Josh Poimboeuf escreveu:
-> > On Sun, Feb 13, 2022 at 10:24:43AM -0800, Kees Cook wrote:
-> > > GCC 12 was correctly reporting a potential use-after-free condition in
-> > > the xrealloc helper. Fix the warning by avoiding an implicit "free(ptr)"
-> > > when size == 0:
-> > > 
-> > > In file included from help.c:12:
-> > > In function 'xrealloc',
-> > >     inlined from 'add_cmdname' at help.c:24:2: subcmd-util.h:56:23: error: pointer may be used after 'realloc' [-Werror=use-after-free]
-> > >    56 |                 ret = realloc(ptr, size);
-> > >       |                       ^~~~~~~~~~~~~~~~~~
-> > > subcmd-util.h:52:21: note: call to 'realloc' here
-> > >    52 |         void *ret = realloc(ptr, size);
-> > >       |                     ^~~~~~~~~~~~~~~~~~
-> > > subcmd-util.h:58:31: error: pointer may be used after 'realloc' [-Werror=use-after-free]
-> > >    58 |                         ret = realloc(ptr, 1);
-> > >       |                               ^~~~~~~~~~~~~~~
-> > > subcmd-util.h:52:21: note: call to 'realloc' here
-> > >    52 |         void *ret = realloc(ptr, size);
-> > >       |                     ^~~~~~~~~~~~~~~~~~
-> > > 
-> > > Reported-by: "Valdis Klētnieks" <valdis.kletnieks@vt.edu>
-> > > Fixes: 2f4ce5ec1d44 ("perf tools: Finalize subcmd independence")
-> > > Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > > v1: https://lore.kernel.org/lkml/20220212181855.3460176-1-keescook@chromium.org/
-> > > v2: simplify logic (josh)
-> > 
-> > Thanks, running through testing now.
+On 1/26/22 4:26 AM, Gustavo A. R. Silva wrote:
+> Make use of the struct_size() helper instead of an open-coded version,
+> in order to avoid any potential type mistakes or integer overflows that,
+> in the worst scenario, could lead to heap overflows.
 > 
-> I assume that testing went ok, may I add a Tested-by: you?
+> Also, address the following sparse warnings:
+> drivers/extcon/extcon-usbc-cros-ec.c:71:23: warning: using sizeof on a flexible structure
+> 
+> Link: https://protect2.fireeye.com/v1/url?k=2dc5c327-725efa52-2dc44868-0cc47a31ce4e-cb277ab0badba227&q=1&e=e53efbe1-ab25-4a39-a8b1-9e099fcccde3&u=https%3A%2F%2Fgithub.com%2FKSPP%2Flinux%2Fissues%2F174
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/extcon/extcon-usbc-cros-ec.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/extcon/extcon-usbc-cros-ec.c b/drivers/extcon/extcon-usbc-cros-ec.c
+> index 5290cc2d19d9..fde1db62be0d 100644
+> --- a/drivers/extcon/extcon-usbc-cros-ec.c
+> +++ b/drivers/extcon/extcon-usbc-cros-ec.c
+> @@ -68,7 +68,7 @@ static int cros_ec_pd_command(struct cros_ec_extcon_info *info,
+>  	struct cros_ec_command *msg;
+>  	int ret;
+>  
+> -	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
+> +	msg = kzalloc(struct_size(msg, data, max(outsize, insize)), GFP_KERNEL);
+>  	if (!msg)
+>  		return -ENOMEM;
+>  
+> 
 
-Yes, feel free to add:
-
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Applied it. Thanks.
 
 -- 
-Josh
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
