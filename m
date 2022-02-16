@@ -2,297 +2,86 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5411FC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Feb 2022 20:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3FBC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Feb 2022 20:34:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231319AbiBPUd1 (ORCPT
+        id S231473AbiBPUeN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Feb 2022 15:33:27 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:52198 "EHLO
+        Wed, 16 Feb 2022 15:34:13 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:53350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229832AbiBPUdX (ORCPT
+        with ESMTP id S231478AbiBPUeM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Feb 2022 15:33:23 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E3F5018E10D
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Feb 2022 12:33:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645043590;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=esrjKhqDjQRh/iEBpaxk9ksIYgz7Irgaj2mX7UxyKYA=;
-        b=SXth4u3usvEkSNfzXkJZwNffggJSjuwJCkRr3PrthipaFWKrc9nbv32QUHjrlBVKUp7PZA
-        M2OLzN3cAJKEDagkfwo6woPR45AcLcMPe1i9nxd5dofklfDRwHVjs5gxCR9LJVg5OCWxNJ
-        KjhTZ4kg493e8t9DkCM3/BE7RkRgkzk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-561-Vy3cQXvAM8KFOvE-Jg-Pqw-1; Wed, 16 Feb 2022 15:33:06 -0500
-X-MC-Unique: Vy3cQXvAM8KFOvE-Jg-Pqw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 423DB1091DA0;
-        Wed, 16 Feb 2022 20:33:01 +0000 (UTC)
-Received: from redhat.com (unknown [10.22.8.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C152C12E39;
-        Wed, 16 Feb 2022 20:32:43 +0000 (UTC)
-Date:   Wed, 16 Feb 2022 15:32:41 -0500
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
-        =?utf-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>,
-        linux-hardening@vger.kernel.org, x86@kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Bruce Schlobohm <bruce.schlobohm@intel.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        Wed, 16 Feb 2022 15:34:12 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F0C62A39F0
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Feb 2022 12:33:59 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id q11-20020a17090a304b00b001b94d25eaecso3464528pjl.4
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Feb 2022 12:33:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=iwe6dEk//R9IuP/djM6G40dVnul034jHIp8QF8r0XR0=;
+        b=BrGmYaDzFVlZCLvN5Oth2ItnzMAlHs1DOQ822SesSK2Oh5jI6qS4aqNad+42EY2kKb
+         Ia8+hSaZ4mqQi9XOqxajxbt2sLo9H9by+N/WHQcxUA1yFiFYk9ATeu2f1uttgqFYOcpr
+         x1RktQZKgCy5KR+NplaKdMWCDgeigYmlySNcw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=iwe6dEk//R9IuP/djM6G40dVnul034jHIp8QF8r0XR0=;
+        b=OydGgfhedfsv1EddQfG9YdxkOnPxHca55j43zWBmIszOYFZJl1Tp1yjAbxyK80pteS
+         gWBzgM7j61MCB35ReFovd3YtYF3pXgcASmJ851lKIA0fPGXfoc0XPWG/JuO0KPlTrw8E
+         dpL0YK98mhymucLHdHwqSzAE09Qr9XB+OlrxHZK9yz1ny+WkU9ydLAc6oj0j64jVisu8
+         vyQ4sYBE8rlcQTU4pV3PRK99/Z1Aun8OSm1jtdsaWN6SPEvlyZ9SSaAt5ZsF6OgZ6E3y
+         ySrIJAcUBf7EJpWGcJpOyjptdWpvHTthDdnooKhF9zPl8OWACqDQMkXbp9X/bJl+xat2
+         OR8Q==
+X-Gm-Message-State: AOAM531VZ6/gVULW6R2Q0vvdfDHewxPJ7LDWH4h9yTcHItUE/gfEWvZH
+        evqmNBUTq9pIDPBIK3Uv3XKFzw==
+X-Google-Smtp-Source: ABdhPJwsH0zVt+LsoY8rw3hePDyetrBIK4AyokHSO8tVCiAs2LgBt0S1V97Mw3awlO8FX1zTwc/+nA==
+X-Received: by 2002:a17:902:db05:b0:14d:743f:5162 with SMTP id m5-20020a170902db0500b0014d743f5162mr603116plx.12.1645043638779;
+        Wed, 16 Feb 2022 12:33:58 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m21sm6259992pgh.69.2022.02.16.12.33.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Feb 2022 12:33:58 -0800 (PST)
+Date:   Wed, 16 Feb 2022 12:33:57 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Kalle Valo <kvalo@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Marios Pomonis <pomonis@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Nicolas Pitre <nico@fluxnic.net>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v10 02/15] livepatch: avoid position-based search if `-z
- unique-symbol` is available
-Message-ID: <Yg1fab6h1rTjVbYO@redhat.com>
-References: <20220209185752.1226407-1-alexandr.lobakin@intel.com>
- <20220209185752.1226407-3-alexandr.lobakin@intel.com>
- <20220211174130.xxgjoqr2vidotvyw@treble>
- <CAFP8O3KvZOZJqOR8HYp9xZGgnYf3D8q5kNijZKORs06L-Vit1g@mail.gmail.com>
- <20220211183529.q7qi2qmlyuscxyto@treble>
- <20220214122433.288910-1-alexandr.lobakin@intel.com>
- <20220214181000.xln2qgyzgswjxwcz@treble>
+        Jakub Kicinski <kuba@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] ath10k: Replace zero-length array with
+ flexible-array member
+Message-ID: <202202161233.805BB2B7A@keescook>
+References: <20220216194807.GA904008@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220214181000.xln2qgyzgswjxwcz@treble>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220216194807.GA904008@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Feb 14, 2022 at 10:10:00AM -0800, Josh Poimboeuf wrote:
-> On Mon, Feb 14, 2022 at 01:24:33PM +0100, Alexander Lobakin wrote:
-> > > One idea I mentioned before, it may be worth exploring changing the "F"
-> > > in FGKASLR to "File" instead of "Function".  In other words, only
-> > > shuffle at an object-file granularity.  Then, even with duplicates, the
-> > > <file+function> symbol pair doesn't change in the symbol table.  And as
-> > > a bonus, it should help FGKASLR i-cache performance, significantly.
-> > 
-> > Yeah, I keep that in mind. However, this wouldn't solve the
-> > duplicate static function names problem, right?
-> > Let's say you have a static function f() in file1 and f() in file2,
-> > then the layout each boot can be
-> > 
-> > .text.file1  or  .text.file2
-> > f()              f()
-> > .text.file2      .text.file1
-> > f()              f()
-> > 
-> > and position-based search won't work anyway, right?
+On Wed, Feb 16, 2022 at 01:48:07PM -0600, Gustavo A. R. Silva wrote:
+> There is a regular need in the kernel to provide a way to declare
+> having a dynamically sized set of trailing elements in a structure.
+> Kernel code should always use “flexible array members”[1] for these
+> cases. The older style of one-element or zero-length arrays should
+> no longer be used[2].
 > 
-> Right, so we'd have to abandon position-based search in favor of
-> file+func based search.
+> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> [2] https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
 > 
-> It's not perfect because there are still a few file+func duplicates.
-> But it might be good enough.  We would presumably just refuse to patch a
-> duplicate.  Or we could remove them (and enforce their continued removal
-> with tooling-based warnings).
-> 
+> Link: https://github.com/KSPP/linux/issues/78
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-You're talking about duplicate file+func combinations as stored in the
-symbol table?
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-From a recent rhel-9 development kernel:
-
-$ readelf --wide --symbols vmlinux | \
-  awk '$4=="FILE" { f=$NF } $4=="OBJECT" || $4=="FUNC" { print $4 " " f "::" $NF }' | \
-  sort | uniq -c | sort -n | awk '$1 != 1'
-
-      2 FUNC bus.c::new_id_store
-      2 FUNC core.c::native_read_msr
-      2 FUNC core.c::type_show
-      2 FUNC diag.c::sk_diag_fill.constprop.0
-      2 FUNC hid-core.c::hid_exit
-      2 FUNC hid-core.c::hid_init
-      2 FUNC inode.c::remove_one
-      2 FUNC iommu.c::__list_del_entry
-      2 FUNC msr.c::msr_init
-      2 FUNC msr.c::msr_read
-      2 FUNC proc.c::c_next
-      2 FUNC proc.c::c_start
-      2 FUNC proc.c::c_stop
-      2 FUNC raw.c::copy_overflow
-      2 FUNC raw.c::dst_output
-      2 FUNC route.c::dst_discard
-      2 FUNC sysfs.c::name_show
-      2 FUNC udp.c::copy_overflow
-      2 FUNC udp.c::udp_lib_close
-      2 FUNC udp.c::udp_lib_hash
-      2 FUNC udp.c::udplite_getfrag
-      2 FUNC udplite.c::udp_lib_close
-      2 FUNC udplite.c::udp_lib_hash
-      2 FUNC udplite.c::udplite_sk_init
-      2 OBJECT acpi.c::__func__.0
-      2 OBJECT amd.c::__already_done.10
-      2 OBJECT amd.c::__func__.4
-      2 OBJECT amd.c::__func__.5
-      2 OBJECT bus.c::driver_attr_new_id
-      2 OBJECT bus.c::__func__.1
-      2 OBJECT bus.c::__func__.2
-      2 OBJECT bus.c::__func__.3
-      2 OBJECT bus.c::__func__.4
-      2 OBJECT bus.c::__func__.5
-      2 OBJECT bus.c::__func__.6
-      2 OBJECT bus.c::__func__.7
-      2 OBJECT bus.c::__func__.8
-      2 OBJECT bus.c::__func__.9
-      2 OBJECT cgroup.c::__func__.0
-      2 OBJECT class.c::__func__.0
-      2 OBJECT class.c::__func__.1
-      2 OBJECT class.c::__func__.3
-      2 OBJECT class.c::__func__.5
-      2 OBJECT class.c::__key.0
-      2 OBJECT class.c::__key.1
-      2 OBJECT class.c::__key.4
-      2 OBJECT core.c::__already_done.18
-      2 OBJECT core.c::__already_done.19
-      2 OBJECT core.c::__already_done.3
-      2 OBJECT core.c::dev_attr_size
-      2 OBJECT core.c::dev_attr_start
-      2 OBJECT core.c::dev_attr_type
-      2 OBJECT core.c::empty_attrs
-      2 OBJECT core.c::__func__.10
-      2 OBJECT core.c::__func__.14
-      2 OBJECT core.c::__func__.7
-      2 OBJECT core.c::__func__.9
-      2 OBJECT core.c::__key.0
-      2 OBJECT core.c::__key.2
-      2 OBJECT core.c::__key.3
-      2 OBJECT dev.c::__func__.0
-      2 OBJECT dir.c::__func__.3
-      2 OBJECT driver.c::__func__.0
-      2 OBJECT fib_rules.c::__msg.0
-      2 OBJECT file.c::__func__.2
-      2 OBJECT file.c::__key.1
-      2 OBJECT file.c::__key.2
-      2 OBJECT hpet.c::__func__.4
-      2 OBJECT icmp.c::__func__.1
-      2 OBJECT inode.c::__func__.1
-      2 OBJECT inode.c::__func__.3
-      2 OBJECT intel.c::__already_done.10
-      2 OBJECT intel.c::__already_done.11
-      2 OBJECT intel.c::__already_done.13
-      2 OBJECT ioctl.c::__func__.0
-      2 OBJECT iommu.c::__already_done.15
-      2 OBJECT iommu.c::__func__.10
-      2 OBJECT iommu.c::__func__.2
-      2 OBJECT iommu.c::_rs.13
-      2 OBJECT iommu.c::_rs.5
-      2 OBJECT iommu.c::_rs.9
-      2 OBJECT irq.c::__func__.0
-      2 OBJECT irq.c::__func__.2
-      2 OBJECT irqdomain.c::__func__.0
-      2 OBJECT irqdomain.c::__func__.1
-      2 OBJECT irqdomain.c::__func__.3
-      2 OBJECT main.c::__func__.10
-      2 OBJECT main.c::__func__.11
-      2 OBJECT main.c::__func__.3
-      2 OBJECT main.c::__func__.4
-      2 OBJECT main.c::__func__.5
-      2 OBJECT manage.c::__func__.1
-      2 OBJECT mount.c::__func__.0
-      2 OBJECT msr.c::__func__.0
-      2 OBJECT ping.c::__func__.1
-      2 OBJECT property.c::__func__.3
-      2 OBJECT qos.c::__func__.0
-      2 OBJECT qos.c::__func__.2
-      2 OBJECT resource.c::__func__.1
-      2 OBJECT route.c::__key.0
-      2 OBJECT route.c::__msg.1
-      2 OBJECT route.c::__msg.2
-      2 OBJECT route.c::__msg.3
-      2 OBJECT route.c::__msg.4
-      2 OBJECT route.c::__msg.5
-      2 OBJECT route.c::__msg.6
-      2 OBJECT swap.c::__func__.0
-      2 OBJECT syncookies.c::___done.1
-      2 OBJECT syncookies.c::msstab
-      2 OBJECT syncookies.c::___once_key.2
-      2 OBJECT sysfs.c::dev_attr_name
-      2 OBJECT sysfs.c::__key.1
-      2 OBJECT sysfs.c::power_attrs
-      2 OBJECT udp.c::descriptor.12
-      2 OBJECT udp.c::descriptor.13
-      2 OBJECT udp.c::__func__.2
-      2 OBJECT udp.c::__func__.3
-      2 OBJECT udp.c::__func__.4
-      2 OBJECT utils.c::__func__.5
-      3 FUNC core.c::cmask_show
-      3 FUNC core.c::edge_show
-      3 FUNC core.c::event_show
-      3 FUNC core.c::inv_show
-      3 FUNC core.c::umask_show
-      3 FUNC inode.c::init_once
-      3 OBJECT acpi.c::__func__.1
-      3 OBJECT core.c::format_attr_cmask
-      3 OBJECT core.c::format_attr_edge
-      3 OBJECT core.c::format_attr_event
-      3 OBJECT core.c::format_attr_inv
-      3 OBJECT core.c::format_attr_umask
-      3 OBJECT core.c::__func__.6
-      3 OBJECT core.c::__func__.8
-      3 OBJECT file.c::__key.3
-      3 OBJECT generic.c::__func__.0
-      3 OBJECT iommu.c::__func__.0
-      3 OBJECT iommu.c::__func__.1
-      3 OBJECT iommu.c::__func__.8
-      3 OBJECT main.c::__func__.0
-      3 OBJECT main.c::__func__.1
-      3 OBJECT main.c::__func__.6
-      3 OBJECT quirks.c::__func__.0
-      3 OBJECT sysfs.c::__func__.0
-      4 OBJECT core.c::__func__.4
-      5 OBJECT inode.c::tokens
-      6 OBJECT core.c::__func__.3
-      6 OBJECT core.c::__func__.5
-      7 OBJECT core.c::__func__.1
-      8 OBJECT core.c::__func__.0
-      8 OBJECT core.c::__func__.2
-
-We could probably minimize the FUNC duplicates with unique names, but
-I'm not as optimistic about the OBJECTs as most are created via macros
-like __already_done.X.  Unless clever macro magic?
-
-Next question: what are the odds that these entries, at least the ones
-we can't easily rename, need disambiguity for livepatching?  or
-kpatch-build for related purposes?
-
--- Joe
-
+-- 
+Kees Cook
