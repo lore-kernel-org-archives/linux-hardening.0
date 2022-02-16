@@ -2,49 +2,49 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD59FC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Feb 2022 19:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B14BAC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Feb 2022 19:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235894AbiBPTnW (ORCPT
+        id S234536AbiBPTp5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Feb 2022 14:43:22 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:51604 "EHLO
+        Wed, 16 Feb 2022 14:45:57 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:60816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238001AbiBPTnV (ORCPT
+        with ESMTP id S235811AbiBPTpm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Feb 2022 14:43:21 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18327D0071;
-        Wed, 16 Feb 2022 11:43:09 -0800 (PST)
+        Wed, 16 Feb 2022 14:45:42 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11C1D2B0B0E;
+        Wed, 16 Feb 2022 11:45:30 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F4FE618CC;
-        Wed, 16 Feb 2022 19:43:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37738C004E1;
-        Wed, 16 Feb 2022 19:43:07 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 5A99ECE288F;
+        Wed, 16 Feb 2022 19:45:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58ABFC004E1;
+        Wed, 16 Feb 2022 19:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645040588;
-        bh=vBUFtqU9xaEDtrCpZcGQYn7RAcYm9CMccb0wG8HPStQ=;
+        s=k20201202; t=1645040726;
+        bh=nV83EU5BC6L679ZHewC4G3ylEOOQGrWb+Knyt4QxiZc=;
         h=Date:From:To:Cc:Subject:From;
-        b=VTm7D3reMVnfuFASVyzY0zFKU/nf8t85RH4Skpx+du3VJDUOqWvvfyHbcycWCsbmz
-         hJ5Pc/w1aMJAik97ztwwjONThijXMvjXs137HeomB8khtyoUwNrKrk5Hg0f+XTUAKE
-         07+RtAgTjj9dIYeNabfYczPOIpxM5qCLs9CRo0bcwuQVSUyfkZJiKmSuR66WS4RTzm
-         5r5V/eZHY3qMhIWzb+bnFxJol8AYVsmMiOBBRJRO0731EIs7VYM8g5CxHZpuCyXw22
-         ko1oVvUIXb9nbdNRI/MT882L37WDlYc76e4QOY3KBPJMoSSrNhYWOb8DZqhS0z0Yol
-         aGq+rizFU33DQ==
-Date:   Wed, 16 Feb 2022 13:50:47 -0600
+        b=MAvPwRZPatgu0YtwoH60uhnzF7GDZL1DEw3ZsLTIE6ZwtzOfVMXcsvTtodGeyYdP9
+         k//erXEpCq9TJOOZT/SNiIgtDLnmAqwwZfd39YbdZAvMqwh+21MHRG2Oh8bNfKC976
+         qO70O8GrdgnzQk9ynUVZiM6dbdINFzlnG/DOSFNJNHzmNDXQqj8hdwSp1QZ3o4Pr2K
+         GLPZAJaxVWGZbXBUr27gzvWcr1QyoPUjIwjpNyQcKv0ZH3DrXEf3B4jZozUKg/C+tF
+         tOrHIlmpwQRJD7s5qFgK559nnrCYntqg/ISNm8gNOcUtAPli6C8Jf6Tqv2osOj/N+N
+         0D4v0FaVQ8NRA==
+Date:   Wed, 16 Feb 2022 13:53:06 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Ping-Ke Shih <pkshih@realtek.com>, Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+To:     Cc: linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] tw89: core.h: Replace zero-length array with
+        linux-hardening@vger.kernel.org, ;
+Illegal-Object: Syntax error in To: address found on vger.kernel.org:
+        To:     ;
+                        ^-missing semicolon to end mail group, extraneous tokens in mailbox, missing end of mailbox
+Cc:     Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH] uapi: wireless: Replace zero-length array with
  flexible-array member
-Message-ID: <20220216195047.GA904198@embeddedor>
+Message-ID: <20220216195306.GA904220@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
@@ -65,22 +65,22 @@ no longer be used[2].
 Link: https://github.com/KSPP/linux/issues/78
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw89/core.h | 2 +-
+ include/uapi/linux/wireless.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw89/core.h b/drivers/net/wireless/realtek/rtw89/core.h
-index 7c84556ec4ad..b15b529e19ed 100644
---- a/drivers/net/wireless/realtek/rtw89/core.h
-+++ b/drivers/net/wireless/realtek/rtw89/core.h
-@@ -2847,7 +2847,7 @@ struct rtw89_dev {
- 	int napi_budget_countdown;
- 
- 	/* HCI related data, keep last */
--	u8 priv[0] __aligned(sizeof(void *));
-+	u8 priv[] __aligned(sizeof(void *));
+diff --git a/include/uapi/linux/wireless.h b/include/uapi/linux/wireless.h
+index 08967b3f19c8..3c2ad5fae17f 100644
+--- a/include/uapi/linux/wireless.h
++++ b/include/uapi/linux/wireless.h
+@@ -835,7 +835,7 @@ struct iw_encode_ext {
+ 			       * individual keys */
+ 	__u16		alg; /* IW_ENCODE_ALG_* */
+ 	__u16		key_len;
+-	__u8		key[0];
++	__u8		key[];
  };
  
- static inline int rtw89_hci_tx_write(struct rtw89_dev *rtwdev,
+ /* SIOCSIWMLME data */
 -- 
 2.27.0
 
