@@ -2,154 +2,147 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEEAC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Feb 2022 20:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C98C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Feb 2022 20:14:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229451AbiBPUBo (ORCPT
+        id S230104AbiBPUPF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Feb 2022 15:01:44 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57142 "EHLO
+        Wed, 16 Feb 2022 15:15:05 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:46142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbiBPUBn (ORCPT
+        with ESMTP id S229913AbiBPUPF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Feb 2022 15:01:43 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EE61D17AA9
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Feb 2022 12:01:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645041689;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2VxECJm9oCcTZNF1nwOOvaIbVoK8MPKCQvBO1i/w1TA=;
-        b=Vv04gAFQhoWwfU+yN7IgPFVA7reZejSm41Gjb6s5qCL20RHqfdq2S33RQxUCD5zeN8WeWY
-        iABJqtnhI1kQzOOR9bUmxJm81nVv7RgHO1GV9rEk6gnrUo4TB2yuIoz2UL8xgxQTSTigUO
-        /WMChSjEwy2rpkdFCDuwUmrgza2GLwA=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-635-92PXauDVOF2qm_p8mRZFHg-1; Wed, 16 Feb 2022 15:01:27 -0500
-X-MC-Unique: 92PXauDVOF2qm_p8mRZFHg-1
-Received: by mail-qv1-f70.google.com with SMTP id cs16-20020ad44c50000000b0042bfd7b5158so2913090qvb.3
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Feb 2022 12:01:27 -0800 (PST)
+        Wed, 16 Feb 2022 15:15:05 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FB33235875
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Feb 2022 12:14:52 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id w20so2827834plq.12
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Feb 2022 12:14:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xqE2BW0tKVRqM9ZhCDPXCovwSbjof6cI+9q/oGqooSk=;
+        b=NR7TiaIkVeb6mYv4qWdPa8tE15JoCJw13yejHxDLUfmlF0RP3HlJZPJp7inuchCg3k
+         bLOz3ieHHziV0osXGKcv6SubQC2ZeptScXKgpr+t4GS9WZQjM/OHtElPdNEb4YVPKp3C
+         BgrrSZdkcsm8IgTQG6Cl2WHciGSaYcw2pV+NY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=2VxECJm9oCcTZNF1nwOOvaIbVoK8MPKCQvBO1i/w1TA=;
-        b=5vlfSMzDVCtCy24+z3s3phLHTMEs+UyZvXn+ETEKfjtgiNfSOkLLgXzacaerDdSU6L
-         yZKXQPBN+uLb5oUwG/atvdz4SXlUls0NFtCT7xJsodtsoVMYxFlaVdAkUhtmbjtcKBIq
-         VheHPItFxY80ljny6d8jbEFrLSXXChq4vJVpOkHNUAJEYu3llNTjbVCKUqXoUD4yZclm
-         bWdFbPz8cyZCOlomGqdFFbfsV4fS7HRnxZ+fBkjqvOXmSuGeGpvB77dEpsZOlMpDWtZw
-         nH5aJAm2ArIrU4znMZwMSA1S/7ue4aJvdLJo+iVWPDMk+S51w3q/5sxdSEQBKzwpIeVW
-         WTJQ==
-X-Gm-Message-State: AOAM53152XOGU4Hjs617xUQrp4orEsneF87mLQEKjzRmjTKF99UBq0R6
-        viHoLcYKmoINdBSp+LUgAhimLKfGHhQzZIW+YIS84JFn9IZdR3f3Pgqxdm30r8u/yValwi+S4UT
-        /NxmNFd4kEwn+HDmwiYLDa7lvE6bU
-X-Received: by 2002:ae9:eb12:0:b0:608:4151:c70f with SMTP id b18-20020ae9eb12000000b006084151c70fmr1842247qkg.281.1645041686715;
-        Wed, 16 Feb 2022 12:01:26 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzcmcVnXIz7khB34mtSJ5XeCHKuXXwpaasMWVF3vmW0irrcQH4GnwIH7nMDtcIH2X2ytZ5b9A==
-X-Received: by 2002:ae9:eb12:0:b0:608:4151:c70f with SMTP id b18-20020ae9eb12000000b006084151c70fmr1842215qkg.281.1645041686423;
-        Wed, 16 Feb 2022 12:01:26 -0800 (PST)
-Received: from treble ([2600:1700:6e32:6c00::15])
-        by smtp.gmail.com with ESMTPSA id p6sm8916153qkg.33.2022.02.16.12.01.22
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xqE2BW0tKVRqM9ZhCDPXCovwSbjof6cI+9q/oGqooSk=;
+        b=RDVYE2ITLF8NzXI5Ej5XSFgSs1d4wqe2eQJ4RGJFpazc7+Pi6t7FVfkj8GyucNOUWX
+         6eee6r8RMc0ExLqaqO9hkKkVTVnmbp13LF0fK0nwwxpETEvUUo2YGWgCCf3j9Mrj/U75
+         K15hiCy6JNeSu5ivQpeA1Nw83qbPRdsl3TzmVmj5agvmXdaQP5EwVZ6mHc71OBLrnyau
+         ZUOG5p42kJTHJoKpITQ0tw9R+AFQ4ofh6JpXeqs7xSwaR4JazkrgoS1Dm4HdfX6poDQ6
+         FN5Q89S9Z/jxUva9nF5EqfuvdXCyZnqTObSXPjR3C0tQOGi789x2UZRLdsNbOBlrRQu4
+         P2jA==
+X-Gm-Message-State: AOAM530Z9oI93kHT2Oetek1MhP28QB46+FIsQi1EP6D9tvBSFp/1slxT
+        a/caPhSQcfs1xKpmh+TVGjzSNw==
+X-Google-Smtp-Source: ABdhPJwIU2Fu/iRv2C0QJmBs5y1p/RE21NXtauVHjHeLf70sjR3+jCzd9e3ecNuE5/iHmiiSBEDwiQ==
+X-Received: by 2002:a17:90b:4004:b0:1b8:b2eb:4b83 with SMTP id ie4-20020a17090b400400b001b8b2eb4b83mr3691254pjb.149.1645042491710;
+        Wed, 16 Feb 2022 12:14:51 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t1sm5964516pgj.43.2022.02.16.12.14.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Feb 2022 12:01:25 -0800 (PST)
-Date:   Wed, 16 Feb 2022 12:01:20 -0800
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     =?utf-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>,
-        Alexander Lobakin <alexandr.lobakin@intel.com>,
-        linux-hardening@vger.kernel.org, x86@kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Bruce Schlobohm <bruce.schlobohm@intel.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Marios Pomonis <pomonis@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Nicolas Pitre <nico@fluxnic.net>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v10 02/15] livepatch: avoid position-based search if `-z
- unique-symbol` is available
-Message-ID: <20220216200120.djt6ijjenmcxmko6@treble>
-References: <20220209185752.1226407-1-alexandr.lobakin@intel.com>
- <20220209185752.1226407-3-alexandr.lobakin@intel.com>
- <20220211174130.xxgjoqr2vidotvyw@treble>
- <CAFP8O3KvZOZJqOR8HYp9xZGgnYf3D8q5kNijZKORs06L-Vit1g@mail.gmail.com>
- <20220211183529.q7qi2qmlyuscxyto@treble>
- <alpine.LSU.2.21.2202161606430.1475@pobox.suse.cz>
+        Wed, 16 Feb 2022 12:14:51 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] usercopy: Check valid lifetime via stack depth
+Date:   Wed, 16 Feb 2022 12:14:49 -0800
+Message-Id: <20220216201449.2087956-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.21.2202161606430.1475@pobox.suse.cz>
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jpoimboe@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2777; h=from:subject; bh=jr1yKp0UMwd5gvvB/ePD/2FkWdtbd+ZCUu7BnVQyulA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiDVs4Hh87CYY9W3rMbKqyfd7+UszuGa3FFWxH8s9m q2FNCVaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYg1bOAAKCRCJcvTf3G3AJttLD/ wNKTVOmCoYdtqtUSIlcd62hL/1Pq8cEu2EynIeBUQSn25cWzaTcMQu47PDzckY8hcz2F6ZCQSrlf2s EGpOHPUFK6E+Yk7LHpnLGg7P/NS3DzdGE7uixLZmooHCROncIbDIsvWDDpX5rKKNACSRKVf9Rx/1PI pnLyZUzDNVtwQK9XDphmrat0BKjWb3OTB7vbbtDz8bkVZnN1IS+eMSbEraPpeRY6Vl0jwktEK5jTRm q29MZlM2AB9X/EuFrzaoR6jXQ7CDtPg7klR/gSM/eQht6pH7UY6HsUqofFfbYziHjFCMzYnxMRZHf6 Cx0cXvZbjrOnzsyoVBdhM1003MSKtlEuUVT8p31J88qXf5d9uvRK/Sj9gFvBWiyxtcpV8Lwf4pOsb1 sBFN0hJ6kaIZoYi+LNf3K2QLBfXymjowRa5WKzhKzzQQxlBdTr5Gt+0UWcyyvjAK4J9IB3BEuo8sbT RAzGeMq122044mgIkhYN7M7rvd5stZnzgA0BOMpFQjvJsdSso5ovUlW46vqQYpWAxEEPhsFNKaICo8 hRnGOa70iGY7KvgyEt/0ePSl2MlN8s2gfyv5dDPGwbjmN/05WKk3zYB2hFPEjZ0uVY19Rv8G13AaMs xHMo/2VEcpc4rQd9KR0qW3usVDOF84bmQwX5tD/twu+aFsKbBov8rVBuORNg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 16, 2022 at 04:15:20PM +0100, Miroslav Benes wrote:
-> > > I subscribe to llvm@lists.linux.dev and happen to notice this message
-> > > (can't keep up with the changes...)
-> > > I am a bit concerned with this option and replied last time on
-> > > https://lore.kernel.org/r/20220105032456.hs3od326sdl4zjv4@google.com
-> > > 
-> > > My full reasoning is on
-> > > https://maskray.me/blog/2020-11-15-explain-gnu-linker-options#z-unique-symbol
-> > 
-> > Ah, right.  Also discussed here:
-> > 
-> >   https://lore.kernel.org/all/20210123225928.z5hkmaw6qjs2gu5g@google.com/T/#u
-> >   https://lore.kernel.org/all/20210125172124.awabevkpvq4poqxf@treble/
-> > 
-> > I'm not qualified to comment on LTO/PGO stability issues, but it doesn't
-> > sound good.  And we want to support livepatch for LTO kernels.
-> 
-> Hm, bear with me, because I am very likely missing something which is 
-> clear to everyone else...
-> 
-> Is the stability really a problem for the live patching (and I am talking 
-> about the live patching only here. It may be a problem elsewhere, but I am 
-> just trying to understand.)? I understand that two different kernel builds 
-> could have a different name mapping between the original symbols and their 
-> unique renames. Not nice. But we can prepare two different live patches 
-> for these two different kernels. Something one would like to avoid if 
-> possible, but it is not impossible. Am I missing something?
+Under CONFIG_HARDENED_USERCOPY=y, when exact stack frame boundary checking
+is not available (i.e. everything except x86 with FRAME_POINTER), check
+a stack object as being at least "current depth valid", in the sense
+that any object within the stack region but not between start-of-stack
+and current_stack_pointer should be considered unavailable (i.e. its
+lifetime is from a call no longer present on the stack).
 
-Maybe Fāng-ruì can clarify, but my understanding was that the stability
-issue affects the kernel in general (particularly if LTO or PGO is
-enabled) and isn't necessarily specific to livepatch itself.
+Additionally report usercopy bounds checking failures with an offset
+from current_stack_pointer, which may assist with diagnosing failures.
 
+The LKDTM USERCOPY_STACK_FRAME_TO and USERCOPY_STACK_FRAME_FROM tests
+(once slightly adjusted in a separate patch) will pass again with
+this fixed.
+
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ mm/usercopy.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
+
+diff --git a/mm/usercopy.c b/mm/usercopy.c
+index d0d268135d96..3846c1634dca 100644
+--- a/mm/usercopy.c
++++ b/mm/usercopy.c
+@@ -29,13 +29,20 @@
+  * Returns:
+  *	NOT_STACK: not at all on the stack
+  *	GOOD_FRAME: fully within a valid stack frame
+- *	GOOD_STACK: fully on the stack (when can't do frame-checking)
++ *	GOOD_STACK: within the current stack (when can't frame-check exactly)
+  *	BAD_STACK: error condition (invalid stack position or bad stack frame)
+  */
+ static noinline int check_stack_object(const void *obj, unsigned long len)
+ {
+ 	const void * const stack = task_stack_page(current);
+ 	const void * const stackend = stack + THREAD_SIZE;
++#ifndef CONFIG_STACK_GROWSUP
++	const void * const high = stackend;
++	const void * const low = (void *)current_stack_pointer;
++#else
++	const void * const high = (void *)current_stack_pointer;
++	const void * const low = stack;
++#endif
+ 	int ret;
+ 
+ 	/* Object is not on the stack at all. */
+@@ -55,6 +62,12 @@ static noinline int check_stack_object(const void *obj, unsigned long len)
+ 	if (ret)
+ 		return ret;
+ 
++	/*
++	 * Reject: object not within current stack depth.
++	 */
++	if (obj < low || high < obj + len)
++		return BAD_STACK;
++
+ 	return GOOD_STACK;
+ }
+ 
+@@ -280,7 +293,13 @@ void __check_object_size(const void *ptr, unsigned long n, bool to_user)
+ 		 */
+ 		return;
+ 	default:
+-		usercopy_abort("process stack", NULL, to_user, 0, n);
++		usercopy_abort("process stack", NULL, to_user,
++#ifndef CONFIG_STACK_GROWSUP
++				(void *)current_stack_pointer - ptr,
++#else
++				ptr - (void *)current_stack_pointer,
++#endif
++				n);
+ 	}
+ 
+ 	/* Check for bad heap object. */
 -- 
-Josh
+2.30.2
 
