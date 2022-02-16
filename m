@@ -2,65 +2,150 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B58C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Feb 2022 01:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99181C4332F
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Feb 2022 15:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245343AbiBPBLN (ORCPT
+        id S235347AbiBPPGm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 15 Feb 2022 20:11:13 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37526 "EHLO
+        Wed, 16 Feb 2022 10:06:42 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245410AbiBPBLL (ORCPT
+        with ESMTP id S235343AbiBPPGl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 15 Feb 2022 20:11:11 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9612BF5426;
-        Tue, 15 Feb 2022 17:11:00 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Wed, 16 Feb 2022 10:06:41 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62DFE13DE6;
+        Wed, 16 Feb 2022 07:06:27 -0800 (PST)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 9E6EA1F383;
+        Wed, 16 Feb 2022 15:06:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1645023985; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3it8c4g9PmcpMm7AVyWFVcPZi877GGLsiHCyQXjAw2E=;
+        b=vUlnkrqW1PQVcaEji7C7yhlvwvbKzJFH0ouape6Cas7VyK46roEZIBVwoCVL12yr5MboGc
+        oA8WlCkpLciutCICFw3I06QebT0gG2rXBpj726aHbZEH+55lIpVbPOTfcTz05osj48HyfZ
+        M+3+xd9vqQ1oGrY59A1DsymghJzi/j0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1645023985;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3it8c4g9PmcpMm7AVyWFVcPZi877GGLsiHCyQXjAw2E=;
+        b=2Qz8dy5ipnslWsHoRc2D1woM7dc2nhEm2cxygn+mfXoRXSse0FqcjMK7bCdJ8mmneVNXE+
+        WY6zm6dMxQlRAKBg==
+Received: from pobox.suse.cz (pobox.suse.cz [10.100.2.14])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3512961741;
-        Wed, 16 Feb 2022 01:11:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13C56C340EB;
-        Wed, 16 Feb 2022 01:10:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644973859;
-        bh=IKAdFG1ScRZwrYF3lRBmxcqtvrVn4JWBCrJ3n+qCEio=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L54brTvCDIuxdADxI8jBpQ/9q82/BimAIDjlCe9rJp+li96pSPYjyZPJ2hcPzpRfn
-         /akbESPv5PLlI3x11bpCrORl0N1nvG7IrVLcmzTgc9ZZb/rvimGLwH/cM456pxaTz3
-         oNxXK0pxuwBYkKW9RBuz9b9hx7uTIw2qvzktakQN5zSNgAGg3UehspxnoYf1ztIBSJ
-         +0jo+NIGUq0xfOWWqc29lRgGjueyq3dplnv9Y0RFskNkyoIzP+mmwgi7+W2lR958gc
-         XD9g1/TRbdAq3UbTlWWsso6l4GzkHlV6VrTQtld1VgQQRaNDyHlfgK3CGiNIro+Hn9
-         7hrI76Wi6VBhA==
-Date:   Tue, 15 Feb 2022 19:18:37 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] extcon: usbc-cros-ec: Use struct_size() helper in
- kzalloc()
-Message-ID: <20220216011837.GA890303@embeddedor>
-References: <CGME20220125192140epcas1p27d09a1d2ceaed49dd7c410c0223c51d7@epcas1p2.samsung.com>
- <20220125192634.GA70834@embeddedor>
- <3136d3aa-4c01-33be-86de-1a2b3b6b6733@samsung.com>
+        by relay2.suse.de (Postfix) with ESMTPS id 8B9A7A3B84;
+        Wed, 16 Feb 2022 15:06:24 +0000 (UTC)
+Date:   Wed, 16 Feb 2022 16:06:24 +0100 (CET)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
+        linux-hardening@vger.kernel.org, x86@kernel.org,
+        Borislav Petkov <bp@alien8.de>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Bruce Schlobohm <bruce.schlobohm@intel.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Marios Pomonis <pomonis@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Nicolas Pitre <nico@fluxnic.net>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH v10 02/15] livepatch: avoid position-based search if `-z
+ unique-symbol` is available
+In-Reply-To: <20220211174130.xxgjoqr2vidotvyw@treble>
+Message-ID: <alpine.LSU.2.21.2202161601010.1475@pobox.suse.cz>
+References: <20220209185752.1226407-1-alexandr.lobakin@intel.com> <20220209185752.1226407-3-alexandr.lobakin@intel.com> <20220211174130.xxgjoqr2vidotvyw@treble>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3136d3aa-4c01-33be-86de-1a2b3b6b6733@samsung.com>
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 16, 2022 at 10:26:34AM +0900, Chanwoo Choi wrote:
-> On 1/26/22 4:26 AM, Gustavo A. R. Silva wrote:
+> > +++ b/kernel/livepatch/core.c
+> > @@ -143,11 +143,13 @@ static int klp_find_callback(void *data, const char *name,
+> >  	args->count++;
+> >  
+> >  	/*
+> > -	 * Finish the search when the symbol is found for the desired position
+> > -	 * or the position is not defined for a non-unique symbol.
+> > +	 * Finish the search when unique symbol names are enabled
+> > +	 * or the symbol is found for the desired position or the
+> > +	 * position is not defined for a non-unique symbol.
+> >  	 */
+> > -	if ((args->pos && (args->count == args->pos)) ||
+> > -	    (!args->pos && (args->count > 1)))
+> > +	if (IS_ENABLED(CONFIG_LD_HAS_Z_UNIQUE_SYMBOL) ||
+> > +	    (args->pos && args->count == args->pos) ||
+> > +	    (!args->pos && args->count > 1))
+> >  		return 1;
 > 
-> Applied it. Thanks.
+> There's no real need to do this.  The code already works as-is, even if
+> there are no unique symbols.
+> 
+> Even if there are no duplicates, there's little harm in going through
+> all the symbols anyway, to check for errors just in case something
+> unexpected happened with the linking (unexpected duplicate) or the patch
+> creation (unexpected sympos).  It's not a hot path, so performance isn't
+> really a concern.
 
-Great. :)
+Correct.
+ 
+> When the old linker versions eventually age out, we can then go strip
+> out all the sympos stuff.
 
-Thanks, Chanwoo.
---
-Gustavo
+Yes.
+
+> > @@ -169,6 +171,13 @@ static int klp_find_object_symbol(const char *objname, const char *name,
+> >  	else
+> >  		kallsyms_on_each_symbol(klp_find_callback, &args);
+> >  
+> > +	/*
+> > +	 * If the LD's `-z unique-symbol` flag is available and enabled,
+> > +	 * sympos checks are not relevant.
+> > +	 */
+> > +	if (IS_ENABLED(CONFIG_LD_HAS_Z_UNIQUE_SYMBOL))
+> > +		sympos = 0;
+> > +
+> 
+> Similarly, I don't see a need for this.  If the patch is legit then
+> sympos should already be zero.  If not, an error gets reported and the
+> patch fails to load.
+
+My concern was that if the patch is not legit (that is, sympos is > 0 for 
+some reason), the error would be really cryptic and would not help the 
+user at all. So zeroing sympos seems to be a good idea to me. There is no 
+harm and the change is very small and compact.
+
+On the other hand, I do not insist on this.
+
+Regards,
+Miroslav
