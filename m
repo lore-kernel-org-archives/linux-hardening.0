@@ -2,152 +2,111 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03ECC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Feb 2022 16:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B61D0C4321E
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Feb 2022 19:06:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231514AbiBPQWe (ORCPT
+        id S237998AbiBPTGM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Feb 2022 11:22:34 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59816 "EHLO
+        Wed, 16 Feb 2022 14:06:12 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:52602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229789AbiBPQWe (ORCPT
+        with ESMTP id S235595AbiBPTGL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Feb 2022 11:22:34 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12177EA744
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Feb 2022 08:22:22 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id e17so2529155pfv.5
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Feb 2022 08:22:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=iH8izYx1CVz5zaeZ+ywlrsYpOCO6qk+mt4vdLHF4sUs=;
-        b=eSk+1+Ggbfk0AhU70cpJBicS0hA69s9vK1Bi7n96BbfWLI6zRs8x+KOsBbAI8mclXZ
-         3Zc8R9z9rkUEnkYWm55iGCZZ3nKpgsokl9S80sgZwB8Oh40iBMxq/oIobscYaTUl5IBA
-         qh6yZLZLx4cteFegp47jDWPXBTBGtxZ10S+Yg=
+        Wed, 16 Feb 2022 14:06:11 -0500
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3523C27019F;
+        Wed, 16 Feb 2022 11:05:59 -0800 (PST)
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-2d641c31776so9255867b3.12;
+        Wed, 16 Feb 2022 11:05:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iH8izYx1CVz5zaeZ+ywlrsYpOCO6qk+mt4vdLHF4sUs=;
-        b=yNVnc8Ea/pwV/nmDW5Jm7iHOgr1h1xTXfYVHGHRj2y2Sw+JQwic3xKER2RuuEULhcA
-         +C6kPYKqMase7yRXrxwEVFA0Qvc9YRNWTX67y3TfRtit9DuXWdZQzF0VEApfmNWeWHfv
-         GzV65Nl2xh0ssy3DLpwIpqvkoohHImejDX7mzFo3OjoyeGXmHX73Rz6wnjBv+o6I0qtz
-         Ny5yl8eBtoOiaa8QQygFvczvGz9uxWFWnmYbm0D1hNfIA7hvx3T1ysFRVfO0/8AoVuqf
-         097IXNS4EXGS0/vlmNBq45FQNX2zu4RIujkxq1GZIEVDIwE/q8+jECoj2e/3kv19Ekd2
-         Qvwg==
-X-Gm-Message-State: AOAM53273+VgN6vTAvjB24uGgOqhXMD5oBBSbzrkr3xxUi1ITJeIbeQ6
-        VUP38yn1X1zZGiGQfvXckG6M0w==
-X-Google-Smtp-Source: ABdhPJwM35c8o4itXQ75uRT0gT9Q8ANPfi0G8/4vakNLoGb1EtCDC2a/D8VE1q3PilaofUGS3lvheQ==
-X-Received: by 2002:a05:6a00:2387:b0:4e0:5414:da5c with SMTP id f7-20020a056a00238700b004e05414da5cmr3976133pfc.85.1645028541563;
-        Wed, 16 Feb 2022 08:22:21 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h26sm5903093pgm.72.2022.02.16.08.22.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Feb 2022 08:22:21 -0800 (PST)
-Date:   Wed, 16 Feb 2022 08:22:20 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrey Konovalov <andreyknvl@gmail.com>
-Cc:     Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kasan: test: Silence allocation warnings from GCC 12
-Message-ID: <202202160821.AA9264A71@keescook>
-References: <20220213183232.4038718-1-keescook@chromium.org>
- <CA+fCnZfOSD56Uvetqd=ofv-Wxw6LOOZv3sUDcEuX2F3u-MgL9Q@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yLrFIsE9bo3p9BnVIL7Uc7sprqnSKm0YOW7fBIQdERM=;
+        b=RuPu7SzNkaJd1WR9+wnB7RuMLb2/6JyYiKaOmBtWGY+4dQhlRrtGvZ6OCmGpbsWMoE
+         P6HWXArbpHHQ7o31q4rHYkzBeYrTVeQSPrCkdBec5F3RuJYRVM//BwT9telG3bmZAcoB
+         FxtlU7vncA/7M5kWQwcqyBdpk27zG/p5D5rGZq0nsDf1j034j4N9NruAlDbyjIIBOzmu
+         KbHBVnw1SI5P4hqVE2AIEQGFaF2ieMYBNUQvgI02g+e1RAX1uy1xzU6XISp25w56c5dM
+         rQeGODqdry9lEgQwF/Hg6FiJO1SoO7gDJ8o3BoJD78lW8gTuVok5Fl/klWvtUyspycM7
+         AmqA==
+X-Gm-Message-State: AOAM532jcwakILeJ+RRfPI4QyknirUMpZKArmVbmtERBQUf3YEr8M+pB
+        AOGbopeO05mizhBNkS7JDbWQ5dPD2ZUb11wOmK0=
+X-Google-Smtp-Source: ABdhPJyFOmiGOmRDkw8czUhuWEAUWZI3b6hfKAcdDSxdtm3oSTgs7z2noREt7vOvPl7JarLhxJEUxltkCz2WrL99cSU=
+X-Received: by 2002:a0d:c244:0:b0:2d1:1fbb:180d with SMTP id
+ e65-20020a0dc244000000b002d11fbb180dmr3902361ywd.196.1645038358332; Wed, 16
+ Feb 2022 11:05:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+fCnZfOSD56Uvetqd=ofv-Wxw6LOOZv3sUDcEuX2F3u-MgL9Q@mail.gmail.com>
+References: <20220215174743.GA878920@embeddedor> <202202151016.C0471D6E@keescook>
+ <20220215192110.GA883653@embeddedor> <Ygv8wY75hNqS7zO6@unreal> <20220215193221.GA884407@embeddedor>
+In-Reply-To: <20220215193221.GA884407@embeddedor>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 16 Feb 2022 20:05:47 +0100
+Message-ID: <CAJZ5v0jpAnQk+Hub6ue6t712RW+W0YBjb_gAcZZbUeuYMGv7mg@mail.gmail.com>
+Subject: Re: [PATCH][next] treewide: Replace zero-length arrays with
+ flexible-array members
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        GR-QLogic-Storage-Upstream@marvell.com,
+        linux-alpha@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-xtensa@linux-xtensa.org,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        coresight@lists.linaro.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        "open list:TARGET SUBSYSTEM" <linux-scsi@vger.kernel.org>,
+        target-devel@vger.kernel.org, mpi3mr-linuxdrv.pdl@broadcom.com,
+        linux-staging@lists.linux.dev,
+        linux-rpi-kernel@lists.infradead.org, sparmaintainer@unisys.com,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        greybus-dev@lists.linaro.org, linux-i3c@lists.infradead.org,
+        linux-rdma@vger.kernel.org,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-perf-users@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 16, 2022 at 04:26:46PM +0100, Andrey Konovalov wrote:
-> On Sun, Feb 13, 2022 at 7:32 PM Kees Cook <keescook@chromium.org> wrote:
+On Tue, Feb 15, 2022 at 8:24 PM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+>
+> On Tue, Feb 15, 2022 at 09:19:29PM +0200, Leon Romanovsky wrote:
+> > On Tue, Feb 15, 2022 at 01:21:10PM -0600, Gustavo A. R. Silva wrote:
+> > > On Tue, Feb 15, 2022 at 10:17:40AM -0800, Kees Cook wrote:
+> > > > On Tue, Feb 15, 2022 at 11:47:43AM -0600, Gustavo A. R. Silva wrote:
+> > > >
+> > > > These all look trivially correct to me. Only two didn't have the end of
+> > > > the struct visible in the patch, and checking those showed them to be
+> > > > trailing members as well, so:
+> > > >
+> > > > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > >
+> > > I'll add this to my -next tree.
 > >
-> > GCC 12 is able to see more problems with allocation sizes at compile
-> > time, so these must be silenced so the runtime checks will still be
-> > available. Use OPTIMIZER_HIDE_VAR() to silence the new warnings:
-> >
-> > lib/test_kasan.c: In function 'ksize_uaf':
-> 
-> Hm, the warning mentions ksize_uaf, but none of the changes touch it.
+> > I would like to ask you to send mlx5 patch separately to netdev. We are working
+> > to delete that file completely and prefer to avoid from unnecessary merge conflicts.
+>
+> Oh OK. Sure thing; I will do so.
 
-Excellent point -- let me go re-test this.
+Can you also send the ACPI patch separately, please?
 
--Kees
-
-> 
-> > lib/test_kasan.c:781:61: warning: array subscript 120 is outside array bounds of 'void[120]' [-Warray-bounds]
-> >   781 |         KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[size]);
-> >       |                                       ~~~~~~~~~~~~~~~~~~~~~~^~~~~~
-> > lib/test_kasan.c:96:9: note: in definition of macro 'KUNIT_EXPECT_KASAN_FAIL'
-> >    96 |         expression;                                                     \
-> >       |         ^~~~~~~~~~
-> > In function 'kmalloc',
-> >     inlined from 'ksize_uaf' at lib/test_kasan.c:775:8:
-> > ./include/linux/slab.h:581:24: note: at offset 120 into object of size 120 allocated by 'kmem_cache_alloc_trace'
-> >   581 |                 return kmem_cache_alloc_trace(
-> >       |                        ^~~~~~~~~~~~~~~~~~~~~~~
-> >   582 |                                 kmalloc_caches[kmalloc_type(flags)][index],
-> >       |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >   583 |                                 flags, size);
-> >       |                                 ~~~~~~~~~~~~
-> >
-> > Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-> > Cc: Alexander Potapenko <glider@google.com>
-> > Cc: Andrey Konovalov <andreyknvl@gmail.com>
-> > Cc: Dmitry Vyukov <dvyukov@google.com>
-> > Cc: kasan-dev@googlegroups.com
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  lib/test_kasan.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> > index 26a5c9007653..a19b3d608e3e 100644
-> > --- a/lib/test_kasan.c
-> > +++ b/lib/test_kasan.c
-> > @@ -124,6 +124,7 @@ static void kmalloc_oob_right(struct kunit *test)
-> >
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-> > +       OPTIMIZER_HIDE_VAR(ptr);
-> >
-> >         /*
-> >          * An unaligned access past the requested kmalloc size.
-> > @@ -185,6 +186,7 @@ static void kmalloc_pagealloc_oob_right(struct kunit *test)
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-> >
-> > +       OPTIMIZER_HIDE_VAR(ptr);
-> >         KUNIT_EXPECT_KASAN_FAIL(test, ptr[size + OOB_TAG_OFF] = 0);
-> >
-> >         kfree(ptr);
-> > @@ -265,6 +267,7 @@ static void kmalloc_large_oob_right(struct kunit *test)
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-> >
-> > +       OPTIMIZER_HIDE_VAR(ptr);
-> >         KUNIT_EXPECT_KASAN_FAIL(test, ptr[size] = 0);
-> >         kfree(ptr);
-> >  }
-> > @@ -748,6 +751,7 @@ static void ksize_unpoisons_memory(struct kunit *test)
-> >
-> >         ptr = kmalloc(size, GFP_KERNEL);
-> >         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-> > +       OPTIMIZER_HIDE_VAR(ptr);
-> >         real_size = ksize(ptr);
-> >
-> >         /* This access shouldn't trigger a KASAN report. */
-> > --
-> > 2.30.2
-> >
-
--- 
-Kees Cook
+We would like to route it through the upstream ACPICA code base.
