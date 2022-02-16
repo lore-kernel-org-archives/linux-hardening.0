@@ -2,73 +2,81 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B5BC433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Feb 2022 20:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93F2C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Feb 2022 20:34:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231886AbiBPUey (ORCPT
+        id S231643AbiBPUfC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Feb 2022 15:34:54 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54254 "EHLO
+        Wed, 16 Feb 2022 15:35:02 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231971AbiBPUex (ORCPT
+        with ESMTP id S231960AbiBPUfB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Feb 2022 15:34:53 -0500
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72A592A417D
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Feb 2022 12:34:39 -0800 (PST)
-Received: by mail-pf1-x42e.google.com with SMTP id y5so3115358pfe.4
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Feb 2022 12:34:39 -0800 (PST)
+        Wed, 16 Feb 2022 15:35:01 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AA592A4A02
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Feb 2022 12:34:46 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id q11-20020a17090a304b00b001b94d25eaecso3466204pjl.4
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Feb 2022 12:34:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=34foyzQgH1WJK6GDE5OU+q5UkwqrR0OjV9oJltEHxZ8=;
-        b=aLEwSzUXsbHpjpEbePXetqBJCK4mTyMypKirkaRKMEIJxOo32byNWjOdNhSj/8uD2a
-         3NOBFqO/DEwyTQOCCwXkOozXzVsnNwapuTJJgqkgFnqWssFy5spfqxO7k1X8Jv7HmB3F
-         g0Fj4Iu3e14KFwBmtuO6nVr+jZNAw1rSkPFiE=
+        bh=Pdsfe0gyEmDKM5R6mqr1jUT1ZdiKllfIVbOCvrOVopY=;
+        b=GqO3BGtvS7W0omx157sqs6ni6O3amemk/DItS/LHtrqA4L13kV5lyQ7j6RIiUaNOhw
+         y29Ks3MP3wxKHWL6hgE1e7JTiWVe7ZwqdhO23Bqcxll4rswcr9rzkypRIQC70LMjVedU
+         926c/yyIwb2MXUtVMMunPN59htdYvKUKDXdw0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=34foyzQgH1WJK6GDE5OU+q5UkwqrR0OjV9oJltEHxZ8=;
-        b=dShRcsjvmrTC0vTbwdi+oVccTIRDZ1YfmznCrnyG7Jqd8qt11NyyvtP5vy3ki595xX
-         jAog8GqYT5qO7R7ijnqdy7zxfcWYrLfn1mFkqx7uslMudvzc2lqadBgR/nz6FEeJPPuT
-         jW7sxHmoBPLw+VgKu6YPSEBLuhrBQnPLtMpCJB6dUZvPoXh1p9qTHVl5yJgIK64XZ+KB
-         VqOJjujIilCKJDTgmoI6EVYl8QJ+kvbU9R3dgzL37xgCIC94v6xOmQeno2xzxBiknXHi
-         gYHxwjUQDjLn+SehMvIrnICchxwDFu4BVAN3kFC4UFGOKwOT1jVZHFSV8kTyAs0/xl5B
-         sCSw==
-X-Gm-Message-State: AOAM531MAq+foFGVzaG9Bze6MNOF4S+pMgK1azveeLC4lHCqI8An0J9O
-        GeWZKGRVUXvUyV8P7oK5OpR36A==
-X-Google-Smtp-Source: ABdhPJznIfmcDoGkWc9lXrl3Y/k3eI/Gzm5CrHU0WAf7yVBSM4pE0rhp0jVMulgBcFjnnnVwf+OaRQ==
-X-Received: by 2002:a05:6a00:15c7:b0:4e1:5aa5:1dd7 with SMTP id o7-20020a056a0015c700b004e15aa51dd7mr5121282pfu.60.1645043678639;
-        Wed, 16 Feb 2022 12:34:38 -0800 (PST)
+        bh=Pdsfe0gyEmDKM5R6mqr1jUT1ZdiKllfIVbOCvrOVopY=;
+        b=StH4hrfn6cdP2KurQqOogKGRFhYOlZiAHURMm70NS4Wv8q/as+kyqdmy8bsQ/Wlx7n
+         /WzkD0QuRWGi+urx9jtBpycDJRhwi5T+KAcQ+8/4RUl6xwfxFVYGEBmXBArAa0B0Mwv1
+         IDazouMN6cFVox19SHUTBOdsvOD2nah8UCpjmUwe2/dB3jqcZYn5SENYmEFWhn0ARCUF
+         GAksOoR0i21ouVWgg2p6RTBNcfWKfDso8Y017qyKpj1VfDzApLYpGnvNRKvpbisCDyjB
+         /sesciYtYgiwpBPk1CNuS4A8ZGseFmSJWXqE9Lo1C2lJJU2ujCQ0H9SGWHF3NoJDNhnu
+         qnjg==
+X-Gm-Message-State: AOAM533oiufsChbUz33Tunrn4bWtiWuakulzY0nRlo9dgJRtSOdKahG8
+        gPTLRpcmNZ7G4dNlS/MH2bAvNQ==
+X-Google-Smtp-Source: ABdhPJwdgVBQz/qyf2UdTRXGoq4ewW/DaZkx7WmJn3WoZHGknxkEs553N90vxJHp1bw1lio6Ff29gg==
+X-Received: by 2002:a17:902:9007:b0:14f:3680:66d1 with SMTP id a7-20020a170902900700b0014f368066d1mr570949plp.91.1645043685753;
+        Wed, 16 Feb 2022 12:34:45 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id lx4sm20562299pjb.1.2022.02.16.12.34.38
+        by smtp.gmail.com with ESMTPSA id a15sm5814755pgd.11.2022.02.16.12.34.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Feb 2022 12:34:38 -0800 (PST)
-Date:   Wed, 16 Feb 2022 12:34:37 -0800
+        Wed, 16 Feb 2022 12:34:45 -0800 (PST)
+Date:   Wed, 16 Feb 2022 12:34:44 -0800
 From:   Kees Cook <keescook@chromium.org>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Kalle Valo <kvalo@kernel.org>,
+Cc:     Arend van Spriel <aspriel@gmail.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-hsien Lin <chi-hsien.lin@infineon.com>,
+        Wright Feng <wright.feng@infineon.com>,
+        Chung-hsien Hsu <chung-hsien.hsu@infineon.com>,
+        Kalle Valo <kvalo@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        SHA-cyfmac-dev-list@infineon.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] ath: Replace zero-length arrays with
+Subject: Re: [PATCH][next] brcmfmac: Replace zero-length arrays with
  flexible-array members
-Message-ID: <202202161234.FCBA0EE18@keescook>
-References: <20220216194915.GA904081@embeddedor>
+Message-ID: <202202161234.3BCDC5D2@keescook>
+References: <20220216194935.GA904103@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220216194915.GA904081@embeddedor>
+In-Reply-To: <20220216194935.GA904103@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 16, 2022 at 01:49:15PM -0600, Gustavo A. R. Silva wrote:
+On Wed, Feb 16, 2022 at 01:49:35PM -0600, Gustavo A. R. Silva wrote:
 > There is a regular need in the kernel to provide a way to declare
 > having a dynamically sized set of trailing elements in a structure.
 > Kernel code should always use “flexible array members”[1] for these
