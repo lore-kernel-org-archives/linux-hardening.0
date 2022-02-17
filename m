@@ -2,134 +2,164 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135C9C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Feb 2022 00:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB380C433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Feb 2022 01:00:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229561AbiBQAhd (ORCPT
+        id S229990AbiBQBA2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Feb 2022 19:37:33 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:48860 "EHLO
+        Wed, 16 Feb 2022 20:00:28 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:36928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbiBQAhd (ORCPT
+        with ESMTP id S229900AbiBQBA2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Feb 2022 19:37:33 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52368E6D91;
-        Wed, 16 Feb 2022 16:37:20 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E142161C55;
-        Thu, 17 Feb 2022 00:37:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F37CC004E1;
-        Thu, 17 Feb 2022 00:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645058239;
-        bh=Jse37Gv/FnjBWQ3ysuSP5HtMYEFNEpKn11Uwq/2SITw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RQDBnsc2JFAmf6I3DvnJry/b1qFlhqSRrrFtSBB3uQgkYn8rLSjH4TmDwEgspboEp
-         ZYudBDEFFc/d0gunx8OYqyarmMB1WqTd/UF43t/syGPIMCThVcK/ZLk8fULXkRP08p
-         3XHnOniUr6envfAoU3S/pPlak535axWtN5PvsXi4VSPMKZO+Z6kg2PCetkkmQdQu0A
-         pfe/5pcoFCmw9oyifU6HBc1wJ3N7LiF+6FpkC49SzJZT3h71FCKc54zM+NQpOqELCV
-         uozqEDiyNmqF6/Shv33feDH8lF1+c0386LCaq5iOiwBEakHU6NYUMGUnw772yjAyRJ
-         QMe4TbQBOfXHw==
-Date:   Wed, 16 Feb 2022 17:37:13 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        David Gow <davidgow@google.com>, linux-um@lists.infradead.org,
-        linux-kbuild@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, llvm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] um: Allow builds with Clang
-Message-ID: <Yg2YubZxvYvx7/nm@dev-arch.archlinux-ax161>
-References: <20220217002843.2312603-1-keescook@chromium.org>
+        Wed, 16 Feb 2022 20:00:28 -0500
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A694D27AA3C;
+        Wed, 16 Feb 2022 17:00:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645059614; x=1676595614;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JOE3Z+fvMcnJ/xlaJj15KpF9bdp81h8xkVXrYehasK0=;
+  b=na6bMpsAPLxPcV74evCMuz82PWMRPew62sczDcIp4nBmgoVO7SzriPYm
+   mg34clRrqAizNF51QFn1WQLVrSA7YJKu/DYBAbQZL0YKUtFdb+xuYmitT
+   sYYm5m7NRvSNCEixCPTdf3w8MNMBVEaw1EEmooLzakMb8Y9Vr4NlpempR
+   7BCQOAOyTAGF1Tb81VxGCN97ynUYpK3dl4bw/olOWY7qAODaRlD/0VbT8
+   kYaUjAqAKQmalu1atC83LOZlXBdF987hV/i9LtQiGKS2l+A3f/tSED95l
+   6WudPkV/Y1NxjNycN90YYER8J+vRaiM2X+o0Eti4poYWohnC2Er6WlNF1
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10260"; a="311501972"
+X-IronPort-AV: E=Sophos;i="5.88,374,1635231600"; 
+   d="scan'208";a="311501972"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2022 16:59:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,374,1635231600"; 
+   d="scan'208";a="704537496"
+Received: from lkp-server01.sh.intel.com (HELO d95dc2dabeb1) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 16 Feb 2022 16:59:55 -0800
+Received: from kbuild by d95dc2dabeb1 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nKV9G-000BH7-ID; Thu, 17 Feb 2022 00:59:54 +0000
+Date:   Thu, 17 Feb 2022 08:59:02 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc:     kbuild-all@lists.01.org, Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] usercopy: Check valid lifetime via stack depth
+Message-ID: <202202170844.jnpFFEmh-lkp@intel.com>
+References: <20220216201449.2087956-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220217002843.2312603-1-keescook@chromium.org>
+In-Reply-To: <20220216201449.2087956-1-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 16, 2022 at 04:28:43PM -0800, Kees Cook wrote:
-> Add x86-64 target for Clang+um and update user-offsets.c to use
-> Clang-friendly assembler, similar to the fix from commit cf0c3e68aa81
+Hi Kees,
 
-Clang-friendly assembly?
+I love your patch! Yet something to improve:
 
-> ("kbuild: fix asm-offset generation to work with clang").
-> 
-> This lets me run KUnit tests with Clang:
-> 
-> $ ./tools/testing/kunit/kunit.py config --make_options LLVM=1
-> ...
-> $ ./tools/testing/kunit/kunit.py run --make_options LLVM=1
-> ...
-> 
-> Cc: Jeff Dike <jdike@addtoit.com>
-> Cc: Richard Weinberger <richard@nod.at>
-> Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: David Gow <davidgow@google.com>
-> Cc: linux-um@lists.infradead.org
-> Cc: linux-kbuild@vger.kernel.org
-> Cc: linux-kselftest@vger.kernel.org
-> Cc: kunit-dev@googlegroups.com
-> Cc: llvm@lists.linux.dev
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+[auto build test ERROR on hnaz-mm/master]
+[also build test ERROR on kees/for-next/pstore v5.17-rc4 next-20220216]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-I am not super familiar with UML but this seems reasonable.
+url:    https://github.com/0day-ci/linux/commits/Kees-Cook/usercopy-Check-valid-lifetime-via-stack-depth/20220217-041611
+base:   https://github.com/hnaz/linux-mm master
+config: openrisc-randconfig-r002-20220216 (https://download.01.org/0day-ci/archive/20220217/202202170844.jnpFFEmh-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 11.2.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/77944e5fa0cf5a29903b72466a22152c6a5d41ac
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Kees-Cook/usercopy-Check-valid-lifetime-via-stack-depth/20220217-041611
+        git checkout 77944e5fa0cf5a29903b72466a22152c6a5d41ac
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=openrisc SHELL=/bin/bash
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-One small nit below if you have to send a v2, not sure it is worth it
-otherwise.
+All errors (new ones prefixed by >>):
 
-> ---
->  arch/x86/um/user-offsets.c | 4 ++--
->  scripts/Makefile.clang     | 1 +
->  2 files changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/um/user-offsets.c b/arch/x86/um/user-offsets.c
-> index bae61554abcc..d9071827b515 100644
-> --- a/arch/x86/um/user-offsets.c
-> +++ b/arch/x86/um/user-offsets.c
-> @@ -10,10 +10,10 @@
->  #include <asm/types.h>
->  
->  #define DEFINE(sym, val) \
-> -	asm volatile("\n->" #sym " %0 " #val : : "i" (val))
-> +	asm volatile("\n.ascii \"->" #sym " %0 " #val "\"": : "i" (val))
->  
->  #define DEFINE_LONGS(sym, val) \
-> -	asm volatile("\n->" #sym " %0 " #val : : "i" (val/sizeof(unsigned long)))
-> +	asm volatile("\n.ascii \"->" #sym " %0 " #val "\"": : "i" (val/sizeof(unsigned long)))
->  
->  void foo(void)
->  {
-> diff --git a/scripts/Makefile.clang b/scripts/Makefile.clang
-> index 51fc23e2e9e5..857b23de51c6 100644
-> --- a/scripts/Makefile.clang
-> +++ b/scripts/Makefile.clang
-> @@ -10,6 +10,7 @@ CLANG_TARGET_FLAGS_powerpc	:= powerpc64le-linux-gnu
->  CLANG_TARGET_FLAGS_riscv	:= riscv64-linux-gnu
->  CLANG_TARGET_FLAGS_s390		:= s390x-linux-gnu
->  CLANG_TARGET_FLAGS_x86		:= x86_64-linux-gnu
-> +CLANG_TARGET_FLAGS_um		:= x86_64-linux-gnu
+   mm/usercopy.c: In function 'check_stack_object':
+>> mm/usercopy.c:41:42: error: 'current_stack_pointer' undeclared (first use in this function); did you mean 'user_stack_pointer'?
+      41 |         const void * const low = (void *)current_stack_pointer;
+         |                                          ^~~~~~~~~~~~~~~~~~~~~
+         |                                          user_stack_pointer
+   mm/usercopy.c:41:42: note: each undeclared identifier is reported only once for each function it appears in
+   mm/usercopy.c: In function '__check_object_size':
+   mm/usercopy.c:287:41: error: 'current_stack_pointer' undeclared (first use in this function); did you mean 'user_stack_pointer'?
+     287 |                                 (void *)current_stack_pointer - ptr,
+         |                                         ^~~~~~~~~~~~~~~~~~~~~
+         |                                         user_stack_pointer
 
-It might be nice to keep this in alphabetical order.
 
->  CLANG_TARGET_FLAGS		:= $(CLANG_TARGET_FLAGS_$(SRCARCH))
->  
->  ifeq ($(CROSS_COMPILE),)
-> -- 
-> 2.30.2
-> 
-> 
+vim +41 mm/usercopy.c
+
+    24	
+    25	/*
+    26	 * Checks if a given pointer and length is contained by the current
+    27	 * stack frame (if possible).
+    28	 *
+    29	 * Returns:
+    30	 *	NOT_STACK: not at all on the stack
+    31	 *	GOOD_FRAME: fully within a valid stack frame
+    32	 *	GOOD_STACK: within the current stack (when can't frame-check exactly)
+    33	 *	BAD_STACK: error condition (invalid stack position or bad stack frame)
+    34	 */
+    35	static noinline int check_stack_object(const void *obj, unsigned long len)
+    36	{
+    37		const void * const stack = task_stack_page(current);
+    38		const void * const stackend = stack + THREAD_SIZE;
+    39	#ifndef CONFIG_STACK_GROWSUP
+    40		const void * const high = stackend;
+  > 41		const void * const low = (void *)current_stack_pointer;
+    42	#else
+    43		const void * const high = (void *)current_stack_pointer;
+    44		const void * const low = stack;
+    45	#endif
+    46		int ret;
+    47	
+    48		/* Object is not on the stack at all. */
+    49		if (obj + len <= stack || stackend <= obj)
+    50			return NOT_STACK;
+    51	
+    52		/*
+    53		 * Reject: object partially overlaps the stack (passing the
+    54		 * check above means at least one end is within the stack,
+    55		 * so if this check fails, the other end is outside the stack).
+    56		 */
+    57		if (obj < stack || stackend < obj + len)
+    58			return BAD_STACK;
+    59	
+    60		/* Check if object is safely within a valid frame. */
+    61		ret = arch_within_stack_frames(stack, stackend, obj, len);
+    62		if (ret)
+    63			return ret;
+    64	
+    65		/*
+    66		 * Reject: object not within current stack depth.
+    67		 */
+    68		if (obj < low || high < obj + len)
+    69			return BAD_STACK;
+    70	
+    71		return GOOD_STACK;
+    72	}
+    73	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
