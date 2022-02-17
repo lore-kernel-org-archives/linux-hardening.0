@@ -2,119 +2,83 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD04C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Feb 2022 07:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 012D0C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Feb 2022 10:06:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236235AbiBQHqD (ORCPT
+        id S230434AbiBQKG7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Feb 2022 02:46:03 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37642 "EHLO
+        Thu, 17 Feb 2022 05:06:59 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230237AbiBQHqC (ORCPT
+        with ESMTP id S230077AbiBQKG6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Feb 2022 02:46:02 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A00E23A1A8;
-        Wed, 16 Feb 2022 23:45:47 -0800 (PST)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id C4B591F37D;
-        Thu, 17 Feb 2022 07:45:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1645083945; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=N1Bwkgc0b1NsSzA+goLBbyLYnuFpjvP2ZA623nZPeoU=;
-        b=LMzvITKL+HRLw4P7XofOjk1T99l49Svs+bIG968ShkCNoMHbk4iFHhRC/+aSeIWvQXhVj4
-        IUWURCieN1XSygVBt+Oo0ERi/4JQeNKE8hwXaYdSwW7+QWRjqLQ8wyIPo1sQSujPmsKUfA
-        xvUKJPohu4obUX4yyl8TAjblL2pnEms=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1645083945;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=N1Bwkgc0b1NsSzA+goLBbyLYnuFpjvP2ZA623nZPeoU=;
-        b=sA66tyj6hGa43RzOunBJ54EjO34EwRWPSAqD7VXSJ/ifWqAqw8zyPNB71MS1Z0JeTybQOl
-        6qqR0AaRmeM7F0Dw==
-Received: from pobox.suse.cz (pobox.suse.cz [10.100.2.14])
+        Thu, 17 Feb 2022 05:06:58 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD5EB5618;
+        Thu, 17 Feb 2022 02:06:42 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 3F741A3B91;
-        Thu, 17 Feb 2022 07:45:44 +0000 (UTC)
-Date:   Thu, 17 Feb 2022 08:45:44 +0100 (CET)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
-        linux-hardening@vger.kernel.org, x86@kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Bruce Schlobohm <bruce.schlobohm@intel.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4DF41B820B5;
+        Thu, 17 Feb 2022 10:06:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46132C340E8;
+        Thu, 17 Feb 2022 10:06:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645092400;
+        bh=CpMkhyEggAbXw8Y2Xa5B91alz+d+1tT2IuOlwYGR6GU=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=uQhw7NwcZ3Veoow5rB3RqsW3ZeEAk46cWAs0OGjM9QIlcn8SOXA3jbl8D/NQaO0W6
+         9zgqWUDTXJxBDrTiHY3QxMy1bdcdOoXWVxInUIUkj89Yi1xT++TQm7Eb8KmJIKJaxz
+         igf4R+zggUkeI2nhWe1Lx6e21cpQcg4LVNN3hztRueLXDRp63F9xLLENEFh9voHhQ3
+         G9zLbpsSoQzORjfn3CNGiWcG6V4farUNmiqy20hY55NM6T1MIfYKP1EEgMQ+l1BRW8
+         vRH0b5XruvC8KeMde3AIHFVYlzED2rcLrbwuKhjmNnxqLmAgRoaSpnXWeXpjSUbdEv
+         JM3hMnB+UedDQ==
+From:   Kalle Valo <kvalo@kernel.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Ping-Ke Shih <pkshih@realtek.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Marios Pomonis <pomonis@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Nicolas Pitre <nico@fluxnic.net>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v10 02/15] livepatch: avoid position-based search if `-z
- unique-symbol` is available
-In-Reply-To: <20220216195738.vhlot4udoqga4ndm@treble>
-Message-ID: <alpine.LSU.2.21.2202170841240.29121@pobox.suse.cz>
-References: <20220209185752.1226407-1-alexandr.lobakin@intel.com> <20220209185752.1226407-3-alexandr.lobakin@intel.com> <20220211174130.xxgjoqr2vidotvyw@treble> <alpine.LSU.2.21.2202161601010.1475@pobox.suse.cz> <20220216195738.vhlot4udoqga4ndm@treble>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] tw89: core.h: Replace zero-length array with flexible-array member
+References: <20220216195047.GA904198@embeddedor>
+        <20220216184213.13328667@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Date:   Thu, 17 Feb 2022 12:06:36 +0200
+In-Reply-To: <20220216184213.13328667@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        (Jakub Kicinski's message of "Wed, 16 Feb 2022 18:42:13 -0800")
+Message-ID: <874k4x24er.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 16 Feb 2022, Josh Poimboeuf wrote:
+Jakub Kicinski <kuba@kernel.org> writes:
 
-> On Wed, Feb 16, 2022 at 04:06:24PM +0100, Miroslav Benes wrote:
-> > > > +	/*
-> > > > +	 * If the LD's `-z unique-symbol` flag is available and enabled,
-> > > > +	 * sympos checks are not relevant.
-> > > > +	 */
-> > > > +	if (IS_ENABLED(CONFIG_LD_HAS_Z_UNIQUE_SYMBOL))
-> > > > +		sympos = 0;
-> > > > +
-> > > 
-> > > Similarly, I don't see a need for this.  If the patch is legit then
-> > > sympos should already be zero.  If not, an error gets reported and the
-> > > patch fails to load.
-> > 
-> > My concern was that if the patch is not legit (that is, sympos is > 0 for 
-> > some reason), the error would be really cryptic and would not help the 
-> > user at all. So zeroing sympos seems to be a good idea to me. There is no 
-> > harm and the change is very small and compact.
-> 
-> But wouldn't a cryptic error be better than no error at all?  A bad
-> sympos might be indicative of some larger issue, like the wrong symbol
-> getting patched.
+> On Wed, 16 Feb 2022 13:50:47 -0600 Gustavo A. R. Silva wrote:
+>> There is a regular need in the kernel to provide a way to declare
+>> having a dynamically sized set of trailing elements in a structure.
+>> Kernel code should always use =E2=80=9Cflexible array members=E2=80=9D[1=
+] for these
+>> cases. The older style of one-element or zero-length arrays should
+>> no longer be used[2].
+>>=20
+>> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+>> [2]
+>> https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-lengt=
+h-and-one-element-arrays
+>>=20
+>> Link: https://github.com/KSPP/linux/issues/78
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>
+> The subject is off.
 
-Maybe you are right. I do not feel confident enough to decide it. So 
-either way would be fine, I guess.
+I can fix that during commit.
 
-Miroslav
+--=20
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
