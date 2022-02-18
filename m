@@ -2,168 +2,202 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B19A1C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Feb 2022 19:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9499C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Feb 2022 02:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244905AbiBQTC3 (ORCPT
+        id S231545AbiBRCU4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Feb 2022 14:02:29 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:60742 "EHLO
+        Thu, 17 Feb 2022 21:20:56 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:52316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244891AbiBQTC2 (ORCPT
+        with ESMTP id S231479AbiBRCU4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Feb 2022 14:02:28 -0500
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B218090D
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Feb 2022 11:02:13 -0800 (PST)
-Received: by mail-ej1-x630.google.com with SMTP id p14so9425724ejf.11
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Feb 2022 11:02:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9ikRVBzBT/FT2DEDw+8BeKqhzPIo0bpn2iXDMO301p4=;
-        b=qFy+upxzo8ujjI4h3pWNkOcceHresXDg4chqjvXmO1gJOLQHTOmQiJp9M5nXqQA0i6
-         Y3AsL9Njs1xcoOEJDj02riua7dj8JMXn6+iHKCY4cpnREFJvlGan+/lVQTNvysmjIAp0
-         B7vTNa07K6DD5yVU7uB21jCxB0K+s0VlSQe0dAM8bhWsdtCi4eaK+VhVcwMl5fMvqqxY
-         MLhQChU0xlQdzq2e+4ypchsozEWXWcq7m+Oe1ZyA8wSCDIcqbDo0QEOPebT4SbhwBtQy
-         9RmQ/FuXGoT2+ISuAQt1b3yLDoeaDwYp4j1sAq54DIjMiH9CRk5wG5q2nZi0QVUnNYS2
-         uxaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9ikRVBzBT/FT2DEDw+8BeKqhzPIo0bpn2iXDMO301p4=;
-        b=fo4F29UgXCqElmZn3E4U7/aaeHDxJZFuqZHSdX0KAH6VnJ0IXZ3C1F8K5gv6DFSQRY
-         C2Ms6YmdfCNrgLWSNx3Diuuf0R/xjKJO1Y3iAKXmCeCM71ncY/wMepV7Nk8R63zc1+yy
-         wSp7vWKc8evJpZnisera/msEM2TnoceYfCv8SL4nHPeObvl3Xua+di6YXSCSgUKOgcqU
-         am3Kt0SiRDSwKBG1zcxSYQxHOrRJuXTZkH1CcnIMAc2m4oq5kr8IMZUDPB7x1cyo7ipn
-         xiA+sKXzQtmDJAZrQMs7jy2K/tyNHnOaLeZdkVvWhSneme3cUQ/h1jL3jIPge3v8R/VH
-         3Eyw==
-X-Gm-Message-State: AOAM531CsRpY5EI7ipnySXlWHf/sgnFATa+u5i8WFxPgTFLk0kXWmIPO
-        yK8yDkWRE/PIXF9Q0jwjPKdResTFWYvyYXA+XhZw8g==
-X-Google-Smtp-Source: ABdhPJyi9cQ8LbwZQgUUVctT0gJzfoA9B70Zeo1OeZWEXAfLo3b+lmQnPmAQzcOMYohHi1PnV3R1uS0lxC0Ac0YgBxc=
-X-Received: by 2002:a17:906:ce23:b0:6cf:7203:ded6 with SMTP id
- sd3-20020a170906ce2300b006cf7203ded6mr3412467ejb.170.1645124531438; Thu, 17
- Feb 2022 11:02:11 -0800 (PST)
+        Thu, 17 Feb 2022 21:20:56 -0500
+X-Greylist: delayed 77082 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 17 Feb 2022 18:20:39 PST
+Received: from conssluserg-01.nifty.com (conssluserg-01.nifty.com [210.131.2.80])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7579B7DF;
+        Thu, 17 Feb 2022 18:20:39 -0800 (PST)
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 21I2KCNZ023307;
+        Fri, 18 Feb 2022 11:20:12 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 21I2KCNZ023307
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1645150813;
+        bh=oTkWcaEf9jnFVKJN3p9Suk7c1bsGL0A3lknSj12v+7I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VDAcoaHNdUsbQLowZjruNwVk9mblUqzQo6ITBxcrlZY8Ma44uNYNxVO5bNPVUCt+s
+         1teshno3NGiIKYkFuxIqTE0lp2tDvcQM2/1aF7ViyKuPrSAJFg+YOvDu+3AbP9ieD4
+         yNqvtGdNJ8EtKFAKV9jJBMfgfVWBSsjS7I1WlME1f48bRfvOd4wHHbwn01MtauNIUD
+         FtWmkSBFYZpHKMZrFB3LjAfxv+RVB03iP0e6bV53GYDMLjTxlNEG32ibk4c0THVeFp
+         T8pWE/bPL4ppW9+sbjsdjMlTrKurERvsQgFE80ws1vcqbHBT5DiN3vR1SAn3g47+qu
+         wVt93TczYyScQ==
+X-Nifty-SrcIP: [209.85.216.54]
+Received: by mail-pj1-f54.google.com with SMTP id m7so7385863pjk.0;
+        Thu, 17 Feb 2022 18:20:12 -0800 (PST)
+X-Gm-Message-State: AOAM532xze/2D0u2/mAzCrqinu/8uz3wvXcanIZcpWiSKN03YT5fLUkz
+        MS6ObeFWqAusMwQEJtY/UdgQ6n2UkntUsjj/Gz8=
+X-Google-Smtp-Source: ABdhPJy36VTNx/GOTLfwWDr/Q6D5q1UHnWRQBNMl4BqD+jlNw2u9WpWNKjA00Rdwo2aBqEiQuiXaVDyH9pWT8wCO1AY=
+X-Received: by 2002:a17:90a:ab17:b0:1b9:b61a:aadb with SMTP id
+ m23-20020a17090aab1700b001b9b61aaadbmr6008892pjq.77.1645150811855; Thu, 17
+ Feb 2022 18:20:11 -0800 (PST)
 MIME-Version: 1.0
-References: <20220216224153.2242451-1-keescook@chromium.org>
- <CAGS_qxoOYjOtX6BQm-ozcarnazyED2vocd4iV+VdDVnMWpjWjg@mail.gmail.com> <202202170903.E39554DF@keescook>
-In-Reply-To: <202202170903.E39554DF@keescook>
-From:   Daniel Latypov <dlatypov@google.com>
-Date:   Thu, 17 Feb 2022 11:01:59 -0800
-Message-ID: <CAGS_qxpQGcJJQ9qT-rEXO8Qo_vq5R0hhdHAtBMTSbBbyhas_wg@mail.gmail.com>
-Subject: Re: [PATCH] lib: overflow: Convert to Kunit
-To:     Kees Cook <keescook@chromium.org>
-Cc:     David Gow <davidgow@google.com>,
-        Vitor Massaru Iha <vitor@massaru.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+References: <20220217002843.2312603-1-keescook@chromium.org>
+ <CAK7LNASMobjuAen+_O4eFOgkOoUwf5ANk6_TjL4SdtT47Jge-w@mail.gmail.com> <Yg6I0YZAh5yWYpT2@dev-arch.archlinux-ax161>
+In-Reply-To: <Yg6I0YZAh5yWYpT2@dev-arch.archlinux-ax161>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 18 Feb 2022 11:19:32 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARbP_xxc21N4VO95RQNn5MzGW2HpKxS_vxNWy4mqP+GxA@mail.gmail.com>
+Message-ID: <CAK7LNARbP_xxc21N4VO95RQNn5MzGW2HpKxS_vxNWy4mqP+GxA@mail.gmail.com>
+Subject: Re: [PATCH] um: Allow builds with Clang
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
+        David Gow <davidgow@google.com>, linux-um@lists.infradead.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        llvm@lists.linux.dev,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Feb 17, 2022 at 9:09 AM Kees Cook <keescook@chromium.org> wrote:
+On Fri, Feb 18, 2022 at 2:41 AM Nathan Chancellor <nathan@kernel.org> wrote:
 >
-> On Wed, Feb 16, 2022 at 02:57:12PM -0800, Daniel Latypov wrote:
-> > On Wed, Feb 16, 2022 at 2:42 PM Kees Cook <keescook@chromium.org> wrote:
+> On Thu, Feb 17, 2022 at 01:54:58PM +0900, Masahiro Yamada wrote:
+> > On Thu, Feb 17, 2022 at 9:28 AM Kees Cook <keescook@chromium.org> wrote:
 > > >
-> > > Convert overflow unit tests to KUnit, for better integration into the
-> > > kernel self test framework. Includes a rename of test_overflow.c to
-> > > overflow_kunit.c, and CONFIG_TEST_OVERFLOW to CONFIG_OVERFLOW_KUNIT_TEST.
+> > > Add x86-64 target for Clang+um and update user-offsets.c to use
+> > > Clang-friendly assembler, similar to the fix from commit cf0c3e68aa81
+> > > ("kbuild: fix asm-offset generation to work with clang").
 > > >
-> > > $ ./tools/testing/kunit/kunit.py config
+> > > This lets me run KUnit tests with Clang:
+> > >
+> > > $ ./tools/testing/kunit/kunit.py config --make_options LLVM=1
 > > > ...
-> > > $ ./tools/testing/kunit/kunit.py run overflow
-> >
-> > JFYI, you can run this as a one-liner via
-> >
-> > $ ./tools/testing/kunit/kunit.py run --kunitconfig /dev/stdin <<EOF
-> > CONFIG_KUNIT=y
-> > CONFIG_TEST_OVERFLOW=y
-> > EOF
-> >
-> > The above is taken from my own duplicate version of this patch
-> > [1] https://lore.kernel.org/linux-kselftest/20210503211536.1384578-1-dlatypov@google.com/
->
-> Ah-ha! I thought I remembered this conversion being proposed before but
-> I totally failed to find it. Thank you! I'll compare/adjust this patch
-> and add you as Co-developed-by.
-
-There's a lot that's already identical line for line.
-I think I pointed to all the places where they differed in any
-meaningful way down below.
-So you can probably save yourself the time of looking over.
-
-And yeah, I vaguely remembered that Vitor had worked on it, but
-somehow failed to find that as well.
-Something about this test :)
-
->
+> > > $ ./tools/testing/kunit/kunit.py run --make_options LLVM=1
 > > > ...
-> > > [14:33:51] Starting KUnit Kernel (1/1)...
-> > > [14:33:51] ============================================================
-> > > [14:33:51] ================== overflow (11 subtests) ==================
-> > > [14:33:51] [PASSED] u8_overflow_test
-> > > [14:33:51] [PASSED] s8_overflow_test
-> > > [14:33:51] [PASSED] u16_overflow_test
-> > > [14:33:51] [PASSED] s16_overflow_test
-> > > [14:33:51] [PASSED] u32_overflow_test
-> > > [14:33:51] [PASSED] s32_overflow_test
-> > > [14:33:51] [PASSED] u64_overflow_test
-> > > [14:33:51] [PASSED] s64_overflow_test
-> > > [14:33:51] [PASSED] overflow_shift_test
-> > > [14:33:51] [PASSED] overflow_allocation_test
-> > > [14:33:51] [PASSED] overflow_size_helpers_test
-> > > [14:33:51] ==================== [PASSED] overflow =====================
-> > > [14:33:51] ============================================================
-> > > [14:33:51] Testing complete. Passed: 11, Failed: 0, Crashed: 0, Skipped: 0, Errors: 0
-> > > [14:33:51] Elapsed time: 12.525s total, 0.001s configuring, 12.402s building, 0.101s running
 > > >
-> > > Cc: David Gow <davidgow@google.com>
-> > > Cc: Vitor Massaru Iha <vitor@massaru.org>
-> > > Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> > > Cc: Jeff Dike <jdike@addtoit.com>
+> > > Cc: Richard Weinberger <richard@nod.at>
+> > > Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+> > > Cc: Masahiro Yamada <masahiroy@kernel.org>
 > > > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > > Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
-> > > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> > > Link: https://lore.kernel.org/lkml/20200720224418.200495-1-vitor@massaru.org/
+> > > Cc: Nathan Chancellor <nathan@kernel.org>
+> > > Cc: David Gow <davidgow@google.com>
+> > > Cc: linux-um@lists.infradead.org
+> > > Cc: linux-kbuild@vger.kernel.org
+> > > Cc: linux-kselftest@vger.kernel.org
+> > > Cc: kunit-dev@googlegroups.com
+> > > Cc: llvm@lists.linux.dev
 > > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >  arch/x86/um/user-offsets.c | 4 ++--
+> > >  scripts/Makefile.clang     | 1 +
+> > >  2 files changed, 3 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/arch/x86/um/user-offsets.c b/arch/x86/um/user-offsets.c
+> > > index bae61554abcc..d9071827b515 100644
+> > > --- a/arch/x86/um/user-offsets.c
+> > > +++ b/arch/x86/um/user-offsets.c
+> > > @@ -10,10 +10,10 @@
+> > >  #include <asm/types.h>
+> > >
+> > >  #define DEFINE(sym, val) \
+> > > -       asm volatile("\n->" #sym " %0 " #val : : "i" (val))
+> > > +       asm volatile("\n.ascii \"->" #sym " %0 " #val "\"": : "i" (val))
+> > >
+> > >  #define DEFINE_LONGS(sym, val) \
+> > > -       asm volatile("\n->" #sym " %0 " #val : : "i" (val/sizeof(unsigned long)))
+> > > +       asm volatile("\n.ascii \"->" #sym " %0 " #val "\"": : "i" (val/sizeof(unsigned long)))
+> > >
+> > >  void foo(void)
+> > >  {
+> > > diff --git a/scripts/Makefile.clang b/scripts/Makefile.clang
+> > > index 51fc23e2e9e5..857b23de51c6 100644
+> > > --- a/scripts/Makefile.clang
+> > > +++ b/scripts/Makefile.clang
+> > > @@ -10,6 +10,7 @@ CLANG_TARGET_FLAGS_powerpc    := powerpc64le-linux-gnu
+> > >  CLANG_TARGET_FLAGS_riscv       := riscv64-linux-gnu
+> > >  CLANG_TARGET_FLAGS_s390                := s390x-linux-gnu
+> > >  CLANG_TARGET_FLAGS_x86         := x86_64-linux-gnu
+> > > +CLANG_TARGET_FLAGS_um          := x86_64-linux-gnu
 > >
-> > Reviewed-by: Daniel Latypov <dlatypov@google.com>
 > >
-> > Looks good to me, some minor nits/suggestions wrt KUnit usage.
-> > Nice to see this test converted over!
->
-> Thanks!
->
-> > [...]
-> > > index f6530fce799d..4cc27b9926a1 100644
-> > > --- a/lib/test_overflow.c
-> > > +++ b/lib/overflow_kunit.c
-> > > @@ -1,9 +1,13 @@
-> > >  // SPDX-License-Identifier: GPL-2.0 OR MIT
-> > >  /*
-> > > - * Test cases for arithmetic overflow checks.
-> > > + * Test cases for arithmetic overflow checks. See:
-> > > + * https://www.kernel.org/doc/html/latest/dev-tools/kunit/kunit-tool.html#configuring-building-and-running-tests
-> > > + *     ./tools/testing/kunit/kunit.py config
-> > > + *     ./tools/testing/kunit/kunit.py run overflow [--raw_output]
-> > >   */
-> > >  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> > Does this work for the i386 host?
 > >
-> > We can drop the pr_fmt now, I think
+> > UML supports i386 and x86_64 as the host architecture as of now,
+> > but this always compiles UML for x86_64?
 >
-> My instinct is to leave these in place just so that anything weird that
-> gets inlined and sneaks a pr_*() call into the code will have a
-> meaningful prefix.
+> I think the current code will work because arch/x86/Makefile.um includes
+> -m32 for CONFIG_X86_32, which will implicitly change x86_64-linux-gnu
+> into a 32-bit target triple:
 
-Ack, sounds good.
-We've historically dropped it and assumed we'd use kunit_info() for
-all the pr_*()'s we cared about.
+Ah, you are right!
 
-But there's definitely concern that some macro might use it to print
-an important and relevant message, hmm.
+
+>
+> $ echo | clang --target=x86_64-linux-gnu -x c -c -o test.o -
+>
+> $ file test.o
+> test.o: ELF 64-bit LSB relocatable, x86-64, version 1 (SYSV), not stripped
+>
+> $ echo | clang --target=x86_64-linux-gnu -m32 -x c -c -o test.o -
+>
+> $ file test.o
+> test.o: ELF 32-bit LSB relocatable, Intel 80386, version 1 (SYSV), not stripped
+>
+> In fact, we rely on this for ARCH=i386 LLVM=1 right now, as it uses
+> x86_64-linux-gnu for the target flag.
+>
+> While UML only supports x86, maybe it is worth using SUBARCH instead of
+> hardcoding the triple? No strong opinion around that though.
+>
+> diff --git a/scripts/Makefile.clang b/scripts/Makefile.clang
+> index 51fc23e2e9e5..87285b76adb2 100644
+> --- a/scripts/Makefile.clang
+> +++ b/scripts/Makefile.clang
+> @@ -10,6 +10,7 @@ CLANG_TARGET_FLAGS_powerpc    := powerpc64le-linux-gnu
+>  CLANG_TARGET_FLAGS_riscv       := riscv64-linux-gnu
+>  CLANG_TARGET_FLAGS_s390                := s390x-linux-gnu
+>  CLANG_TARGET_FLAGS_x86         := x86_64-linux-gnu
+> +CLANG_TARGET_FLAGS_um          := $(CLANG_TARGET_FLAGS_$(SUBARCH))
+
+
+LGTM.
+
+I also thought of not passing --target at all for ARCH=um, but
+we decided to override --target all the time (for reproducibility?).
+Anyway, Nathan's way is clean, and looks OK to me.
+
+
+
+
+
+
+
+>  CLANG_TARGET_FLAGS             := $(CLANG_TARGET_FLAGS_$(SRCARCH))
+>
+>  ifeq ($(CROSS_COMPILE),)
+>
+> > >  CLANG_TARGET_FLAGS             := $(CLANG_TARGET_FLAGS_$(SRCARCH))
+> > >
+> > >  ifeq ($(CROSS_COMPILE),)
+> > > --
+> > > 2.30.2
+> > >
+> >
+> >
+> > --
+> > Best Regards
+> > Masahiro Yamada
+
+
+
+--
+Best Regards
+Masahiro Yamada
