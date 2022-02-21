@@ -2,82 +2,90 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 832D1C43217
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Feb 2022 10:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13135C433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 21 Feb 2022 17:26:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344983AbiBUK5p (ORCPT
+        id S1354267AbiBUR0t (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 21 Feb 2022 05:57:45 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55186 "EHLO
+        Mon, 21 Feb 2022 12:26:49 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:58686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355792AbiBUK4L (ORCPT
+        with ESMTP id S236985AbiBUR0s (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 21 Feb 2022 05:56:11 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 834A51F8;
-        Mon, 21 Feb 2022 02:26:07 -0800 (PST)
+        Mon, 21 Feb 2022 12:26:48 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B71FAE67;
+        Mon, 21 Feb 2022 09:26:25 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 45A97B80DA4;
-        Mon, 21 Feb 2022 10:26:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52968C340E9;
-        Mon, 21 Feb 2022 10:26:03 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DAAB36145B;
+        Mon, 21 Feb 2022 17:26:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E26DC340E9;
+        Mon, 21 Feb 2022 17:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645439165;
-        bh=x6k+ycJdfYSMO02ATdagF4nEoyWp5WFVtrDQAT/eU1k=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=XnwV50qndTO0Xo45t5JsGpYY6Tlo6TXVim7QQAfD/gahHvtKY8SuMUFwdQE6mfurl
-         S6no9Mik+DRG4rhPRPxaHBIkDRgGdXXCNqjfbtT2soCtrPbvWii8X4wJYAy9ncAGeq
-         NAXOCe8z3HcEo2ZiIngk5JF01IKK0ZQRTCqt3QXI4LS5Trt6oUtIe6+1bkA7IMGQ/N
-         CyvJwvD3pqIE5aaEBWKIZ09t14OAg8E7m4+oZ607udCBXIeUjUGlNvXpuv+dkWc8j/
-         xF89kHSdYpDos/RSPeKUKwS24dLjw2rpKwlsfE2/G/cC9MXzoh4rU9t+EbMmt0Ua5r
-         XbfinfhMiqOnw==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH][next] ath6kl: Replace zero-length arrays with
- flexible-array
- members
-From:   Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <20220216194857.GA904059@embeddedor>
-References: <20220216194857.GA904059@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        s=k20201202; t=1645464384;
+        bh=qBj7d9tqvyTrDe+jWiLg29epXyfUz1hfeK++4JVGmVk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=M6kK0PUmEHFlsMnWb9+vjHramr2qb7w17MMGVH1XG7r33RWg1yWvRaKS2NMNNWZfN
+         3Ie7iVXOVTyipUk7BYbkGz7tcstInHR88fjKt3UCjVsXfU/wzkyI1sIKG96G67ltC7
+         MLVakHJI7Ae7Ux9jFq58fqBaW7B1NChs5PyvJJO1cJXbiOT0+xDDPt1ZHLR/duGjyK
+         nMuud5YTo60laoCJLEmNBGog0S0EMDsOfYg6fIyAiXhh5yYZ9nDjRmr5N7tpdhil56
+         dKZkrlXQci3XQnyGDp4IkTHtrPUAKrUyeQu7o95JfcQDowdAY6GVSzsV2M8KuHki+n
+         f+rPXNl5vTs+A==
+Date:   Mon, 21 Feb 2022 11:34:15 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-usb@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-ID: <164543916134.26423.3775423173401494740.kvalo@kernel.org>
-Date:   Mon, 21 Feb 2022 10:26:03 +0000 (UTC)
+Subject: [PATCH][next] usbnet: gl620a: Replace one-element array with
+ flexible-array member
+Message-ID: <20220221173415.GA1149599@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+There is a regular need in the kernel to provide a way to declare having
+a dynamically sized set of trailing elements in a structure. Kernel code
+should always use “flexible array members”[1] for these cases. The older
+style of one-element or zero-length arrays should no longer be used[2].
 
-> There is a regular need in the kernel to provide a way to declare
-> having a dynamically sized set of trailing elements in a structure.
-> Kernel code should always use “flexible array members”[1] for these
-> cases. The older style of one-element or zero-length arrays should
-> no longer be used[2].
-> 
-> [1] https://en.wikipedia.org/wiki/Flexible_array_member
-> [2] https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
-> 
-> Link: https://github.com/KSPP/linux/issues/78
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+This helps with the ongoing efforts to globally enable -Warray-bounds
+and get us closer to being able to tighten the FORTIFY_SOURCE routines
+on memcpy().
 
-Patch applied to ath-next branch of ath.git, thanks.
+This issue was found with the help of Coccinelle and audited and fixed,
+manually.
 
-d9bc14167b1f ath6kl: Replace zero-length arrays with flexible-array members
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
 
+Link: https://github.com/KSPP/linux/issues/79
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/usb/gl620a.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/usb/gl620a.c b/drivers/net/usb/gl620a.c
+index 13a9a83b8538..46af78caf457 100644
+--- a/drivers/net/usb/gl620a.c
++++ b/drivers/net/usb/gl620a.c
+@@ -56,7 +56,7 @@
+ 
+ struct gl_packet {
+ 	__le32		packet_length;
+-	char		packet_data [1];
++	char		packet_data[];
+ };
+ 
+ struct gl_header {
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20220216194857.GA904059@embeddedor/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.27.0
 
