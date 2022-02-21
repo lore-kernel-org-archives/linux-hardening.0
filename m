@@ -2,34 +2,34 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A86CC433FE
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Feb 2022 09:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5D1C433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 21 Feb 2022 09:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241109AbiBUJ1j (ORCPT
+        id S1351397AbiBUJsx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 21 Feb 2022 04:27:39 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:52002 "EHLO
+        Mon, 21 Feb 2022 04:48:53 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350133AbiBUJ1V (ORCPT
+        with ESMTP id S1352963AbiBUJsF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 21 Feb 2022 04:27:21 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A61562C5;
-        Mon, 21 Feb 2022 01:11:44 -0800 (PST)
+        Mon, 21 Feb 2022 04:48:05 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8377CCFE;
+        Mon, 21 Feb 2022 01:22:01 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id DB27CCE0E88;
-        Mon, 21 Feb 2022 09:11:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2DBAC340E9;
-        Mon, 21 Feb 2022 09:11:40 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 219DE608C4;
+        Mon, 21 Feb 2022 09:22:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF05DC340E9;
+        Mon, 21 Feb 2022 09:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1645434701;
+        s=korg; t=1645435320;
         bh=8IUsyVO3CUV/NHmrn9iyf0MiQePqG+1lN0ZMxV/tScY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LSAbS2VVth/qBaOEKjS6zScBzbsN7giLrtEvH3Pmc8oqwGIiqlBgye3Fu/hYG2vpF
-         okw1yPuYhV3j6mEiWPsIHASBfP/tmoViHgQXfmVSW7xfcX+g+JdqEZax+AyIsyvFiV
-         7HDtC8/Yoz8FLOZhhuJqhSgpooSyw8WF7xc+SO2o=
+        b=qdjUFveKP9l+CTHTunC4vSQcq1/JQX+VMIn3E3VD8lbmMPHwtIRjnymnsVvhOuhuY
+         UJAzQc6Ej+HLJhBt9l09EIQUFgwwmqldXY8PJhgw999+ZrMDFWl9Sj8DiRqL4MtAQf
+         +VsUHVqZ9pwVw8PuQKVGrUfJMyraBxnJVxhyhS2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -40,12 +40,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         linux-hardening@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.15 100/196] libsubcmd: Fix use-after-free for realloc(..., 0)
-Date:   Mon, 21 Feb 2022 09:48:52 +0100
-Message-Id: <20220221084934.287411642@linuxfoundation.org>
+Subject: [PATCH 5.16 123/227] libsubcmd: Fix use-after-free for realloc(..., 0)
+Date:   Mon, 21 Feb 2022 09:49:02 +0100
+Message-Id: <20220221084938.941272051@linuxfoundation.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220221084930.872957717@linuxfoundation.org>
-References: <20220221084930.872957717@linuxfoundation.org>
+In-Reply-To: <20220221084934.836145070@linuxfoundation.org>
+References: <20220221084934.836145070@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
