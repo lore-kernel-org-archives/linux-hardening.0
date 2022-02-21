@@ -2,34 +2,34 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BD3C433FE
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Feb 2022 08:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E50C433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 21 Feb 2022 08:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345393AbiBUIw0 (ORCPT
+        id S1346032AbiBUIz4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 21 Feb 2022 03:52:26 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:42582 "EHLO
+        Mon, 21 Feb 2022 03:55:56 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:45024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345106AbiBUIwI (ORCPT
+        with ESMTP id S1346093AbiBUIzX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 21 Feb 2022 03:52:08 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F70713B;
-        Mon, 21 Feb 2022 00:51:45 -0800 (PST)
+        Mon, 21 Feb 2022 03:55:23 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52B4624BC4;
+        Mon, 21 Feb 2022 00:53:38 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D10B7B80EAF;
-        Mon, 21 Feb 2022 08:51:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C860C340E9;
-        Mon, 21 Feb 2022 08:51:41 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 462D761155;
+        Mon, 21 Feb 2022 08:53:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A56CC340E9;
+        Mon, 21 Feb 2022 08:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1645433502;
-        bh=nJe6J7dX+m0rnm2nKvchv1+6052pMV1S6eHy69tQasE=;
+        s=korg; t=1645433612;
+        bh=8IUsyVO3CUV/NHmrn9iyf0MiQePqG+1lN0ZMxV/tScY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NHwY47/Mn30UXTsLSqI2gZiRPK079JNPsclSW/Ovm4ryNKKqF+AnyortDHOfwkDX+
-         MYcE39DFgZKCKn68Q7Od+co2VGMFFiXfg2PQvqlesZO8Dy65LXQCiPIuVeuaMGs6B5
-         uQaLcVayCvH7pjdQS0V9ZT0OAPEEOYp3/ck2IICk=
+        b=mF8DOiCxxuD4Ol1jw/V0X7PMTOFQfZeKLK4+dui0R/Qvk9ASptOYqMNXFGwmQvNrX
+         OsQ3HdIYzaID4k9Bt/x1pYJ1MR21HeD4spoYI7w8f0vzNotInhl3G3j1NLnWZ+Rv6E
+         wIpzSeO3vl1wKlb4l8VEe+6EmVOXWAjGXXvysO7k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -40,12 +40,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         linux-hardening@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.9 21/33] libsubcmd: Fix use-after-free for realloc(..., 0)
-Date:   Mon, 21 Feb 2022 09:49:14 +0100
-Message-Id: <20220221084909.463671717@linuxfoundation.org>
+Subject: [PATCH 4.14 26/45] libsubcmd: Fix use-after-free for realloc(..., 0)
+Date:   Mon, 21 Feb 2022 09:49:17 +0100
+Message-Id: <20220221084911.300384687@linuxfoundation.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220221084908.568970525@linuxfoundation.org>
-References: <20220221084908.568970525@linuxfoundation.org>
+In-Reply-To: <20220221084910.454824160@linuxfoundation.org>
+References: <20220221084910.454824160@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -94,7 +94,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/tools/lib/subcmd/subcmd-util.h
 +++ b/tools/lib/subcmd/subcmd-util.h
-@@ -49,15 +49,8 @@ static NORETURN inline void die(const ch
+@@ -50,15 +50,8 @@ static NORETURN inline void die(const ch
  static inline void *xrealloc(void *ptr, size_t size)
  {
  	void *ret = realloc(ptr, size);
