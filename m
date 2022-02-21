@@ -2,86 +2,115 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B76C433F5
-	for <linux-hardening@archiver.kernel.org>; Sat, 19 Feb 2022 09:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BD3C433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 21 Feb 2022 08:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230176AbiBSJNj (ORCPT
+        id S1345393AbiBUIw0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 19 Feb 2022 04:13:39 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44344 "EHLO
+        Mon, 21 Feb 2022 03:52:26 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:42582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230002AbiBSJNi (ORCPT
+        with ESMTP id S1345106AbiBUIwI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 19 Feb 2022 04:13:38 -0500
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4B9E56231
-        for <linux-hardening@vger.kernel.org>; Sat, 19 Feb 2022 01:13:18 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0V4t6FMH_1645261995;
-Received: from 192.168.193.149(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V4t6FMH_1645261995)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 19 Feb 2022 17:13:16 +0800
-Message-ID: <2313ee27-45e2-ea5e-140b-11be42e52809@linux.alibaba.com>
-Date:   Sat, 19 Feb 2022 01:13:14 -0800
+        Mon, 21 Feb 2022 03:52:08 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F70713B;
+        Mon, 21 Feb 2022 00:51:45 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D10B7B80EAF;
+        Mon, 21 Feb 2022 08:51:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C860C340E9;
+        Mon, 21 Feb 2022 08:51:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1645433502;
+        bh=nJe6J7dX+m0rnm2nKvchv1+6052pMV1S6eHy69tQasE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NHwY47/Mn30UXTsLSqI2gZiRPK079JNPsclSW/Ovm4ryNKKqF+AnyortDHOfwkDX+
+         MYcE39DFgZKCKn68Q7Od+co2VGMFFiXfg2PQvqlesZO8Dy65LXQCiPIuVeuaMGs6B5
+         uQaLcVayCvH7pjdQS0V9ZT0OAPEEOYp3/ck2IICk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Kees Kook <keescook@chromium.org>,
+        "Justin M. Forbes" <jforbes@fedoraproject.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        linux-hardening@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.9 21/33] libsubcmd: Fix use-after-free for realloc(..., 0)
+Date:   Mon, 21 Feb 2022 09:49:14 +0100
+Message-Id: <20220221084909.463671717@linuxfoundation.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220221084908.568970525@linuxfoundation.org>
+References: <20220221084908.568970525@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH] [PATCH,v5,1/1,AARCH64][PR102768] aarch64: Add compiler
- support for Shadow Call Stack
-Content-Language: en-US
-To:     gcc-patches@gcc.gnu.org, richard.earnshaw@arm.com,
-        marcus.shawcroft@arm.com, kyrylo.tkachov@arm.com, hp@gcc.gnu.org,
-        ndesaulniers@google.com, nsz@gcc.gnu.org, pageexec@gmail.com,
-        qinzhao@gcc.gnu.org, linux-hardening@vger.kernel.org,
-        richard.sandiford@arm.com
-References: <20220212082751.4524-1-ashimida@linux.alibaba.com>
- <mpt1r04t3dz.fsf@arm.com>
-From:   Dan Li <ashimida@linux.alibaba.com>
-In-Reply-To: <mpt1r04t3dz.fsf@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+From: Kees Cook <keescook@chromium.org>
+
+commit 52a9dab6d892763b2a8334a568bd4e2c1a6fde66 upstream.
+
+GCC 12 correctly reports a potential use-after-free condition in the
+xrealloc helper. Fix the warning by avoiding an implicit "free(ptr)"
+when size == 0:
+
+In file included from help.c:12:
+In function 'xrealloc',
+    inlined from 'add_cmdname' at help.c:24:2: subcmd-util.h:56:23: error: pointer may be used after 'realloc' [-Werror=use-after-free]
+   56 |                 ret = realloc(ptr, size);
+      |                       ^~~~~~~~~~~~~~~~~~
+subcmd-util.h:52:21: note: call to 'realloc' here
+   52 |         void *ret = realloc(ptr, size);
+      |                     ^~~~~~~~~~~~~~~~~~
+subcmd-util.h:58:31: error: pointer may be used after 'realloc' [-Werror=use-after-free]
+   58 |                         ret = realloc(ptr, 1);
+      |                               ^~~~~~~~~~~~~~~
+subcmd-util.h:52:21: note: call to 'realloc' here
+   52 |         void *ret = realloc(ptr, size);
+      |                     ^~~~~~~~~~~~~~~~~~
+
+Fixes: 2f4ce5ec1d447beb ("perf tools: Finalize subcmd independence")
+Reported-by: Valdis Klētnieks <valdis.kletnieks@vt.edu>
+Signed-off-by: Kees Kook <keescook@chromium.org>
+Tested-by: Valdis Klētnieks <valdis.kletnieks@vt.edu>
+Tested-by: Justin M. Forbes <jforbes@fedoraproject.org>
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: linux-hardening@vger.kernel.org
+Cc: Valdis Klētnieks <valdis.kletnieks@vt.edu>
+Link: http://lore.kernel.org/lkml/20220213182443.4037039-1-keescook@chromium.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ tools/lib/subcmd/subcmd-util.h |   11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
+
+--- a/tools/lib/subcmd/subcmd-util.h
++++ b/tools/lib/subcmd/subcmd-util.h
+@@ -49,15 +49,8 @@ static NORETURN inline void die(const ch
+ static inline void *xrealloc(void *ptr, size_t size)
+ {
+ 	void *ret = realloc(ptr, size);
+-	if (!ret && !size)
+-		ret = realloc(ptr, 1);
+-	if (!ret) {
+-		ret = realloc(ptr, size);
+-		if (!ret && !size)
+-			ret = realloc(ptr, 1);
+-		if (!ret)
+-			die("Out of memory, realloc failed");
+-	}
++	if (!ret)
++		die("Out of memory, realloc failed");
+ 	return ret;
+ }
+ 
 
 
-On 2/15/22 10:02, Richard Sandiford wrote:
-> Dan Li <ashimida@linux.alibaba.com> writes:
->> Shadow Call Stack can be used to protect the return address of a
-> 
-> Looks good, thanks.  However, when I bootstrap it on
-> aarch64-linux-gnu I get:
-> 
-> .../gcc/ubsan.cc: In function ‘bool ubsan_expand_null_ifn(gimple_stmt_iterator*)’:
-> .../gcc/ubsan.cc:835:50: error: enumerated and non-enumerated type in conditional expression [-Werror=extra]
->    835 |         = (flag_sanitize_recover & ((check_align ? SANITIZE_ALIGNMENT : 0)
->        |                                      ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
-> .../gcc/ubsan.cc:836:51: error: enumerated and non-enumerated type in conditional expression [-Werror=extra]
->    836 |                                     | (check_null ? SANITIZE_NULL : 0)))
->        |                                        ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
-> 
-> I think this is because you're taking the last available bit
-> of the enum :-)
-> 
-> A hacky fix is to add "+ 0" to SANITIZE_ALIGNMENT and SANITIZE_NULL
-> in the code quoted above (i.e. the code in the error messages).
-> That seems slightly more robust than a cast to unsigned int (say),
-> since "+ 0" will work even if the values become 64-bit quantities
-> in future.
-> 
-> Richard
-
-Hi, Richard,
-I have sent out the v6[1]. I re-tested native/cross-compile, and tested
-all test cases in both cases (make -k check).
-
-The test results of this patch are consistent with the current mainline
-(but in my test environment there are some test cases that fail in both).
-
-The current version seems fine to me, please let me know if I'm missing
-something :)
-
-[1]https://gcc.gnu.org/pipermail/gcc-patches/2022-February/590602.html
-
-Thanks,
-Dan
