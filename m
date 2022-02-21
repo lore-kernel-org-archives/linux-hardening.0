@@ -2,115 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C16C433FE
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Feb 2022 09:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FDDC433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 21 Feb 2022 09:07:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347439AbiBUJGZ (ORCPT
+        id S1347417AbiBUJHo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 21 Feb 2022 04:06:25 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43232 "EHLO
+        Mon, 21 Feb 2022 04:07:44 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347658AbiBUJF7 (ORCPT
+        with ESMTP id S1347677AbiBUJHg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 21 Feb 2022 04:05:59 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDA0625EAA;
-        Mon, 21 Feb 2022 00:59:27 -0800 (PST)
+        Mon, 21 Feb 2022 04:07:36 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68B5531343;
+        Mon, 21 Feb 2022 00:59:59 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AE5D661204;
-        Mon, 21 Feb 2022 08:59:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96871C340E9;
-        Mon, 21 Feb 2022 08:59:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1645433967;
-        bh=8IUsyVO3CUV/NHmrn9iyf0MiQePqG+1lN0ZMxV/tScY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zrndo4lug0l8Nu2hxfDA/TRbptrt2HAopmliJZKqx6ZnN6+6vZUqkHlwoTZqBje8L
-         yS5prmK2qmkmS9NATrRNaPCFaf5rF8sVFseTYqEwHSWdvYoC9XrzaxGU8aOR3/f+Q4
-         WR28Ep3HHIt/7ZKnGUNrq6WM2ersnjfq0HLmCIsM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Valdis=20Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Kees Kook <keescook@chromium.org>,
-        "Justin M. Forbes" <jforbes@fedoraproject.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-hardening@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.4 45/80] libsubcmd: Fix use-after-free for realloc(..., 0)
-Date:   Mon, 21 Feb 2022 09:49:25 +0100
-Message-Id: <20220221084917.048654891@linuxfoundation.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220221084915.554151737@linuxfoundation.org>
-References: <20220221084915.554151737@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by ams.source.kernel.org (Postfix) with ESMTPS id 07D00B80EAF;
+        Mon, 21 Feb 2022 08:59:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71643C340E9;
+        Mon, 21 Feb 2022 08:59:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645433997;
+        bh=EDcnl/SXjNhFjt2tMyZWMrIk4KXM0og1BPFfteTgKWk=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=E6TMrjcjgWKg8e0p3Frb4HVh5bubGzKepDtd2OdOOi6nqqEIktYo1MbWIYol4HQiF
+         7t6mkT4A5fVYglEtRwYacRNJvkEDN9JiRHKVdYz6ueB7YcSy/EbN+0+2an6rUF5WAK
+         LRa2pJdBGd/Qpobem0KH4gz16QSdkq7W1OFe1TBqgs6ygFw91/3CB5vfC0V2JJsqQd
+         iuG3K7gGG0YNkPABL5GB35VOwyYcjyJVH32k8wRMH4cUALZ8RF4fISqEIPojlf8pbW
+         DwnJaQphtxeDqtcifeTxCJs6IhebXOBoQi5voFcWqNDkSzI9PVaEPG/S9vKYjUV81b
+         4eu/kxBnZELOA==
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH][next] brcmfmac: Replace zero-length arrays with
+ flexible-array members
+From:   Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <20220216194935.GA904103@embeddedor>
+References: <20220216194935.GA904103@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Arend van Spriel <aspriel@gmail.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-hsien Lin <chi-hsien.lin@infineon.com>,
+        Wright Feng <wright.feng@infineon.com>,
+        Chung-hsien Hsu <chung-hsien.hsu@infineon.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        SHA-cyfmac-dev-list@infineon.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.7.3
+Message-ID: <164543399279.995.3471133482847126442.kvalo@kernel.org>
+Date:   Mon, 21 Feb 2022 08:59:54 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-commit 52a9dab6d892763b2a8334a568bd4e2c1a6fde66 upstream.
+> There is a regular need in the kernel to provide a way to declare
+> having a dynamically sized set of trailing elements in a structure.
+> Kernel code should always use “flexible array members”[1] for these
+> cases. The older style of one-element or zero-length arrays should
+> no longer be used[2].
+> 
+> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> [2] https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
+> 
+> Link: https://github.com/KSPP/linux/issues/78
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-GCC 12 correctly reports a potential use-after-free condition in the
-xrealloc helper. Fix the warning by avoiding an implicit "free(ptr)"
-when size == 0:
+Patch applied to wireless-next.git, thanks.
 
-In file included from help.c:12:
-In function 'xrealloc',
-    inlined from 'add_cmdname' at help.c:24:2: subcmd-util.h:56:23: error: pointer may be used after 'realloc' [-Werror=use-after-free]
-   56 |                 ret = realloc(ptr, size);
-      |                       ^~~~~~~~~~~~~~~~~~
-subcmd-util.h:52:21: note: call to 'realloc' here
-   52 |         void *ret = realloc(ptr, size);
-      |                     ^~~~~~~~~~~~~~~~~~
-subcmd-util.h:58:31: error: pointer may be used after 'realloc' [-Werror=use-after-free]
-   58 |                         ret = realloc(ptr, 1);
-      |                               ^~~~~~~~~~~~~~~
-subcmd-util.h:52:21: note: call to 'realloc' here
-   52 |         void *ret = realloc(ptr, size);
-      |                     ^~~~~~~~~~~~~~~~~~
+d8b1f4193e09 brcmfmac: Replace zero-length arrays with flexible-array members
 
-Fixes: 2f4ce5ec1d447beb ("perf tools: Finalize subcmd independence")
-Reported-by: Valdis Klētnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Kees Kook <keescook@chromium.org>
-Tested-by: Valdis Klētnieks <valdis.kletnieks@vt.edu>
-Tested-by: Justin M. Forbes <jforbes@fedoraproject.org>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: linux-hardening@vger.kernel.org
-Cc: Valdis Klētnieks <valdis.kletnieks@vt.edu>
-Link: http://lore.kernel.org/lkml/20220213182443.4037039-1-keescook@chromium.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- tools/lib/subcmd/subcmd-util.h |   11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20220216194935.GA904103@embeddedor/
 
---- a/tools/lib/subcmd/subcmd-util.h
-+++ b/tools/lib/subcmd/subcmd-util.h
-@@ -50,15 +50,8 @@ static NORETURN inline void die(const ch
- static inline void *xrealloc(void *ptr, size_t size)
- {
- 	void *ret = realloc(ptr, size);
--	if (!ret && !size)
--		ret = realloc(ptr, 1);
--	if (!ret) {
--		ret = realloc(ptr, size);
--		if (!ret && !size)
--			ret = realloc(ptr, 1);
--		if (!ret)
--			die("Out of memory, realloc failed");
--	}
-+	if (!ret)
-+		die("Out of memory, realloc failed");
- 	return ret;
- }
- 
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
