@@ -2,34 +2,34 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E30AC43219
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Feb 2022 09:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A86CC433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 21 Feb 2022 09:27:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245310AbiBUJNZ (ORCPT
+        id S241109AbiBUJ1j (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 21 Feb 2022 04:13:25 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:33874 "EHLO
+        Mon, 21 Feb 2022 04:27:39 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:52002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348842AbiBUJLp (ORCPT
+        with ESMTP id S1350133AbiBUJ1V (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 21 Feb 2022 04:11:45 -0500
+        Mon, 21 Feb 2022 04:27:21 -0500
 Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F8C286F3;
-        Mon, 21 Feb 2022 01:04:14 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A61562C5;
+        Mon, 21 Feb 2022 01:11:44 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id C50ECCE0E86;
-        Mon, 21 Feb 2022 09:04:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A67F0C340E9;
-        Mon, 21 Feb 2022 09:04:10 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id DB27CCE0E88;
+        Mon, 21 Feb 2022 09:11:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2DBAC340E9;
+        Mon, 21 Feb 2022 09:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1645434251;
+        s=korg; t=1645434701;
         bh=8IUsyVO3CUV/NHmrn9iyf0MiQePqG+1lN0ZMxV/tScY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IMQx8vNcAyqO6dEGdkYG0o2lOJ238ZXCmzWgva6us1T2ykTOOZhkWTlVfE8t36RLt
-         D/u8KlIK+mu4KNXFWtaWoFBKSoW0huw2UL3vB7uD5sWEOQ7IOyIXaXbUA32G3FpxP0
-         g9+1au6YlkklOU+ZVb5vjBKds5NKfv3Q2RZmPAMU=
+        b=LSAbS2VVth/qBaOEKjS6zScBzbsN7giLrtEvH3Pmc8oqwGIiqlBgye3Fu/hYG2vpF
+         okw1yPuYhV3j6mEiWPsIHASBfP/tmoViHgQXfmVSW7xfcX+g+JdqEZax+AyIsyvFiV
+         7HDtC8/Yoz8FLOZhhuJqhSgpooSyw8WF7xc+SO2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -40,12 +40,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         linux-hardening@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.10 065/121] libsubcmd: Fix use-after-free for realloc(..., 0)
-Date:   Mon, 21 Feb 2022 09:49:17 +0100
-Message-Id: <20220221084923.404143613@linuxfoundation.org>
+Subject: [PATCH 5.15 100/196] libsubcmd: Fix use-after-free for realloc(..., 0)
+Date:   Mon, 21 Feb 2022 09:48:52 +0100
+Message-Id: <20220221084934.287411642@linuxfoundation.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220221084921.147454846@linuxfoundation.org>
-References: <20220221084921.147454846@linuxfoundation.org>
+In-Reply-To: <20220221084930.872957717@linuxfoundation.org>
+References: <20220221084930.872957717@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
