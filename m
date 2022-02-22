@@ -2,83 +2,141 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AB6C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 22 Feb 2022 07:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCF0C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 22 Feb 2022 09:57:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230513AbiBVHXk (ORCPT
+        id S230382AbiBVJ6S (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 22 Feb 2022 02:23:40 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:54626 "EHLO
+        Tue, 22 Feb 2022 04:58:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230495AbiBVHXj (ORCPT
+        with ESMTP id S230317AbiBVJ6R (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 22 Feb 2022 02:23:39 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5573EC4295;
-        Mon, 21 Feb 2022 23:23:15 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E4D95611C8;
-        Tue, 22 Feb 2022 07:23:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA9E1C340E8;
-        Tue, 22 Feb 2022 07:23:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645514594;
-        bh=lw9fy6EP1h2nUptSIDOirVphpvqPdsxFhmUtQZxs2B0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sOGlSCAogaMh7NzeqJYs5YzeOcOA0uhY6Jy1te1KlgAs5DEvMt1L0aeXbCmGV7qjR
-         /QCHBeqAye9mcbW0UGXVYL40S1W2UmB3lRacQVKCFduYQMhoQA5VQb43YvLA2BCJno
-         IivFiSCoK10IkwdVNKQrvN7eh2xh1Pw4p0NY2W1/kqQTpQU124IHRpq4uQX3Srb/yv
-         IGBT+7by5twipzM+hmklfKDGiI4hTVPtfXTjGtItjJ9Kn+ou7kpTsweqbHYgM4L3M4
-         ra5GgwfLaCX+Sef4H64BgmnMFaVsOBCdwqrY0zlugsqma1/7aD5jx4WF1WdzHVmYEF
-         hawqnv6QKx37w==
-Date:   Tue, 22 Feb 2022 01:31:07 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 8/8][next] scsi: aacraid: Replace one-element array with
- flexible-array member in struct aac_aifcmd
-Message-ID: <7d0571ef5dc87904008c325a942cfed24dbbf42e.1645513670.git.gustavoars@kernel.org>
-References: <cover.1645513670.git.gustavoars@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1645513670.git.gustavoars@kernel.org>
+        Tue, 22 Feb 2022 04:58:17 -0500
+Received: from out30-44.freemail.mail.aliyun.com (out30-44.freemail.mail.aliyun.com [115.124.30.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3009ECC7E;
+        Tue, 22 Feb 2022 01:57:50 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0V5CSWke_1645523857;
+Received: from localhost(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V5CSWke_1645523857)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 22 Feb 2022 17:57:46 +0800
+From:   Dan Li <ashimida@linux.alibaba.com>
+To:     catalin.marinas@arm.com, will@kernel.org, nathan@kernel.org,
+        ndesaulniers@google.com, keescook@chromium.org,
+        masahiroy@kernel.org, tglx@linutronix.de,
+        akpm@linux-foundation.org, mark.rutland@arm.com,
+        samitolvanen@google.com, npiggin@gmail.com, linux@roeck-us.net,
+        mhiramat@kernel.org, ojeda@kernel.org, luc.vanoostenryck@gmail.com,
+        elver@google.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org,
+        Dan Li <ashimida@linux.alibaba.com>
+Subject: [PATCH] [PATCH] AARCH64: Add gcc Shadow Call Stack support
+Date:   Tue, 22 Feb 2022 01:57:36 -0800
+Message-Id: <20220222095736.24898-1-ashimida@linux.alibaba.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Replace one-element array with flexible-array member in struct
-aac_aifcmd.
+Shadow call stack is available in GCC > 11.2.0, this patch makes
+the corresponding kernel configuration available when compiling
+the kernel with gcc.
 
-This issue was found with the help of Coccinelle and audited and fixed,
-manually.
+Note that the implementation in GCC is slightly different from Clang.
+With SCS enabled, functions will only pop x30 once in the epilogue,
+like:
 
-Link: https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
-Link: https://github.com/KSPP/linux/issues/79
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+   str     x30, [x18], #8
+   stp     x29, x30, [sp, #-16]!
+   ......
+-  ldp     x29, x30, [sp], #16	  //clang
++  ldr     x29, [sp], #16	  //GCC
+   ldr     x30, [x18, #-8]!
+
+Link: https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=ce09ab17ddd21f73ff2caf6eec3b0ee9b0e1a11e
+
+Signed-off-by: Dan Li <ashimida@linux.alibaba.com>
 ---
- drivers/scsi/aacraid/aacraid.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+FYI:
+This function can be used to test if the shadow call stack works:
+//noinline void __noscs scs_test(void)
+noinline void scs_test(void)
+{
+    register unsigned long *sp asm("sp");
+    unsigned long * lr = sp + 1;
 
-diff --git a/drivers/scsi/aacraid/aacraid.h b/drivers/scsi/aacraid/aacraid.h
-index 97948cd5f13c..447feabf5360 100644
---- a/drivers/scsi/aacraid/aacraid.h
-+++ b/drivers/scsi/aacraid/aacraid.h
-@@ -2616,7 +2616,7 @@ struct aac_hba_info {
- struct aac_aifcmd {
- 	__le32 command;		/* Tell host what type of notify this is */
- 	__le32 seqnum;		/* To allow ordering of reports (if necessary) */
--	u8 data[1];		/* Undefined length (from kernel viewpoint) */
-+	u8 data[];		/* Undefined length (from kernel viewpoint) */
- };
+    asm volatile("":::"x30");
+    *lr = 0;
+}
+
+ffff800008012704:       d503233f        paciasp
+ffff800008012708:       f800865e        str     x30, [x18], #8
+ffff80000801270c:       a9bf7bfd        stp     x29, x30, [sp, #-16]!
+ffff800008012710:       910003fd        mov     x29, sp
+ffff800008012714:       910003e0        mov     x0, sp
+ffff800008012718:       f900041f        str     xzr, [x0, #8]
+ffff80000801271c:       f85f8e5e        ldr     x30, [x18, #-8]!
+ffff800008012720:       f84107fd        ldr     x29, [sp], #16
+ffff800008012724:       d50323bf        autiasp
+ffff800008012728:       d65f03c0        ret
+
+If SCS protection is enabled, this function will return normally.
+If the function has __noscs attribute (scs disabled), it will crash due to 0
+address access.
+
+ arch/Kconfig                 | 6 +++---
+ arch/arm64/Kconfig           | 2 +-
+ include/linux/compiler-gcc.h | 4 ++++
+ 3 files changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 678a80713b21..35db7b72bdb0 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -604,11 +604,11 @@ config ARCH_SUPPORTS_SHADOW_CALL_STACK
+ 	  switching.
  
- /**
+ config SHADOW_CALL_STACK
+-	bool "Clang Shadow Call Stack"
+-	depends on CC_IS_CLANG && ARCH_SUPPORTS_SHADOW_CALL_STACK
++	bool "Shadow Call Stack"
++	depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
+ 	depends on DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
+ 	help
+-	  This option enables Clang's Shadow Call Stack, which uses a
++	  This option enables Clang/GCC's Shadow Call Stack, which uses a
+ 	  shadow stack to protect function return addresses from being
+ 	  overwritten by an attacker. More information can be found in
+ 	  Clang's documentation:
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 09b885cc4db5..a48a604301aa 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1255,7 +1255,7 @@ config HW_PERF_EVENTS
+ config ARCH_HAS_FILTER_PGPROT
+ 	def_bool y
+ 
+-# Supported by clang >= 7.0
++# Supported by clang >= 7.0 or GCC > 11.2.0
+ config CC_HAVE_SHADOW_CALL_STACK
+ 	def_bool $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
+ 
+diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+index ccbbd31b3aae..deff5b308470 100644
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -97,6 +97,10 @@
+ #define KASAN_ABI_VERSION 4
+ #endif
+ 
++#ifdef CONFIG_SHADOW_CALL_STACK
++#define __noscs __attribute__((__no_sanitize__("shadow-call-stack")))
++#endif
++
+ #if __has_attribute(__no_sanitize_address__)
+ #define __no_sanitize_address __attribute__((no_sanitize_address))
+ #else
 -- 
-2.27.0
+2.17.1
 
