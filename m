@@ -2,38 +2,38 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6844BC4167B
-	for <linux-hardening@archiver.kernel.org>; Wed, 23 Feb 2022 02:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B502EC3525B
+	for <linux-hardening@archiver.kernel.org>; Wed, 23 Feb 2022 02:33:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237300AbiBWCeB (ORCPT
+        id S237326AbiBWCeB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
         Tue, 22 Feb 2022 21:34:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43542 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237512AbiBWCdJ (ORCPT
+        with ESMTP id S237233AbiBWCcl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 22 Feb 2022 21:33:09 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E66275C875;
-        Tue, 22 Feb 2022 18:31:11 -0800 (PST)
+        Tue, 22 Feb 2022 21:32:41 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD9DA5A5B8;
+        Tue, 22 Feb 2022 18:30:38 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8DD3BB81CA7;
-        Wed, 23 Feb 2022 02:31:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99613C340EB;
-        Wed, 23 Feb 2022 02:31:09 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 51324B81E15;
+        Wed, 23 Feb 2022 02:30:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 563D1C340F1;
+        Wed, 23 Feb 2022 02:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645583470;
-        bh=Gj0iWRHvzKvEEd9PMj+e/nxm3CPNPPbzzqd6+h5mdpk=;
+        s=k20201202; t=1645583437;
+        bh=5J/lYOlg+fnmxcJ6RZWQwnyehKvMIl8d1ncoQiQ9fcw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UkxdGCOA1BSb1FZYDeps3UPMw9Fz7KOUW5QYv/KW6HM3tGTQgvOb3/n+wW8gazf73
-         F6UodAknZm3e5kwiptyJfo4GuYjBwblbghw4rpe7vTTjw8hnbTcMJaff1RyHui3iXm
-         NxURPCeB0tKlWSakzJUtEi+EFBYnB4fYVRn/wf2+1J8Rauf5vuXHAdXzpsG9QU3ssf
-         9R+ab3mKfDs0uX3uXnyxERRFJM61RB0WQWAohPMFF06dJk5i6InJg6CfDAvqhnwdcV
-         scbbokgjg7ko5Egk+AgvvrYgjKXo1fqBFQ286jhFF/7GIG8FF+/p6MK9KomQRARttW
-         xpHDCo6id22qw==
-Date:   Tue, 22 Feb 2022 20:39:05 -0600
+        b=l5XjhmXsJFytYXELA4i2ZwCcGg+xyPVOUOmnnsbNJQ341mu1a0oVQivPUKHALanHC
+         mpVNPFyLG4OiYCzy8Nf3m8am4Xm+5NCM/Y32QDMo02QsTh5ygKLaJdZK3iv5ikJl9h
+         68RSNY4/+tfWZ2IIoOCbVxU2a/wdr35rKdHztRXsPeGgTtxP9YwbtKTlEOyHQgE3v2
+         AzS4tXqV3OeSgLE69yzpYmRC7sOdujBNcVhxVF3b9zpsqm5fl04oGy1E4D+xwmD+nw
+         L05CUHVP7AjL5m7TchcP9uU4Cd0vgWHFVvYh3dmGPnxiJI1Ez3IOSwl2JZd2FEOk+r
+         Jt36jNXVXUPpw==
+Date:   Tue, 22 Feb 2022 20:38:31 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Kalle Valo <kvalo@kernel.org>,
@@ -41,9 +41,9 @@ Cc:     Kalle Valo <kvalo@kernel.org>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
         linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 5/6][next] ath6kl: wmi: Replace one-element array with
- flexible-array  member in struct wmi_disconnect_event
-Message-ID: <4a42b591109202589cb1cf87df13daef02eb75f9.1645583264.git.gustavoars@kernel.org>
+Subject: [PATCH 1/6][next] ath6kl: wmi: Replace one-element array with
+ flexible-array member in struct wmi_begin_scan_cmd
+Message-ID: <af3e7cf6101586a6de9710d8f1302763aa7c6396.1645583264.git.gustavoars@kernel.org>
 References: <cover.1645583264.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -54,15 +54,7 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 Replace one-element array with flexible-array member in struct
-wmi_disconnect_event.
-
-It's also worth noting that due to the flexible array transformation,
-the size of struct wmi_disconnect_event changed (now the size is 1 byte
-smaller), and in order to preserve the logic of before the transformation,
-the following change is needed:
-
-        -       if (len < sizeof(struct wmi_disconnect_event))
-        +       if (len <= sizeof(struct wmi_disconnect_event))
+wmi_begin_scan_cmd. Also, make use of the struct_size() helper.
 
 This issue was found with the help of Coccinelle and audited and fixed,
 manually.
@@ -71,46 +63,56 @@ Link: https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-
 Link: https://github.com/KSPP/linux/issues/79
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
-Hi!
-
-It'd be great if someone can confirm or comment on the following
-changes described in the changelog text:
-
-        -       if (len < sizeof(struct wmi_disconnect_event))
-        +       if (len <= sizeof(struct wmi_disconnect_event))
-
-Thanks
-
- drivers/net/wireless/ath/ath6kl/wmi.c | 2 +-
+ drivers/net/wireless/ath/ath6kl/wmi.c | 9 ++-------
  drivers/net/wireless/ath/ath6kl/wmi.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ 2 files changed, 3 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/net/wireless/ath/ath6kl/wmi.c b/drivers/net/wireless/ath/ath6kl/wmi.c
-index ccdccead688e..645fb6cae3be 100644
+index bd1ef6334997..e1c950014f3e 100644
 --- a/drivers/net/wireless/ath/ath6kl/wmi.c
 +++ b/drivers/net/wireless/ath/ath6kl/wmi.c
-@@ -1023,7 +1023,7 @@ static int ath6kl_wmi_disconnect_event_rx(struct wmi *wmi, u8 *datap, int len,
- 	struct wmi_disconnect_event *ev;
- 	wmi->traffic_class = 100;
+@@ -2008,7 +2008,7 @@ int ath6kl_wmi_beginscan_cmd(struct wmi *wmi, u8 if_idx,
+ 	struct ieee80211_supported_band *sband;
+ 	struct sk_buff *skb;
+ 	struct wmi_begin_scan_cmd *sc;
+-	s8 size, *supp_rates;
++	s8 *supp_rates;
+ 	int i, band, ret;
+ 	struct ath6kl *ar = wmi->parent_dev;
+ 	int num_rates;
+@@ -2023,18 +2023,13 @@ int ath6kl_wmi_beginscan_cmd(struct wmi *wmi, u8 if_idx,
+ 						num_chan, ch_list);
+ 	}
  
--	if (len < sizeof(struct wmi_disconnect_event))
-+	if (len <= sizeof(struct wmi_disconnect_event))
+-	size = sizeof(struct wmi_begin_scan_cmd);
+-
+ 	if ((scan_type != WMI_LONG_SCAN) && (scan_type != WMI_SHORT_SCAN))
  		return -EINVAL;
  
- 	ev = (struct wmi_disconnect_event *) datap;
+ 	if (num_chan > WMI_MAX_CHANNELS)
+ 		return -EINVAL;
+ 
+-	if (num_chan)
+-		size += sizeof(u16) * (num_chan - 1);
+-
+-	skb = ath6kl_wmi_get_new_buf(size);
++	skb = ath6kl_wmi_get_new_buf(struct_size(sc, ch_list, num_chan));
+ 	if (!skb)
+ 		return -ENOMEM;
+ 
 diff --git a/drivers/net/wireless/ath/ath6kl/wmi.h b/drivers/net/wireless/ath/ath6kl/wmi.h
-index 6b064e669d87..6a7fc07cd9aa 100644
+index 784940ba4c90..322539ed9c12 100644
 --- a/drivers/net/wireless/ath/ath6kl/wmi.h
 +++ b/drivers/net/wireless/ath/ath6kl/wmi.h
-@@ -1596,7 +1596,7 @@ struct wmi_disconnect_event {
- 	u8 disconn_reason;
+@@ -863,7 +863,7 @@ struct wmi_begin_scan_cmd {
+ 	u8 num_ch;
  
- 	u8 assoc_resp_len;
--	u8 assoc_info[1];
-+	u8 assoc_info[];
+ 	/* channels in Mhz */
+-	__le16 ch_list[1];
++	__le16 ch_list[];
  } __packed;
  
- /*
+ /* wmi_start_scan_cmd is to be deprecated. Use
 -- 
 2.27.0
 
