@@ -2,141 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D67C4321E
-	for <linux-hardening@archiver.kernel.org>; Wed, 23 Feb 2022 02:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA2DC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 23 Feb 2022 08:50:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237338AbiBWCeD (ORCPT
+        id S239068AbiBWIu5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 22 Feb 2022 21:34:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42850 "EHLO
+        Wed, 23 Feb 2022 03:50:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237420AbiBWCdE (ORCPT
+        with ESMTP id S239069AbiBWIuy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 22 Feb 2022 21:33:04 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3443354BEF;
-        Tue, 22 Feb 2022 18:31:00 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D436AB81DD2;
-        Wed, 23 Feb 2022 02:30:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB55AC340F1;
-        Wed, 23 Feb 2022 02:30:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645583455;
-        bh=H9zXEc7xajyp0WNLmUqmywqLWj4AFxabUZT7J4ZwI44=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pO9XXYnrCCqQPomdmANKP8O9qxTbnjx61E+exDu2XW+tnjbuSvKAKWseHRJRMhU8t
-         5+R5p/2OSuPBl7aTHW60WkNbnttWsgGC4mojnWOP99ZEV05EA187xYchv1l1VQ+ltU
-         MsZ64e1DKkJZY//dOFdOlnMKrG7ulpalLxc/OlNKjBC39NVFlFpZCVq1qlkxx6MfB8
-         wK18E7iOXvEvB2dLkSwNLYrPwhDTxkJmOA16rguBlXYHzT8yiGMV29dLWUNcZ5Xl19
-         HX6C373RMnIPZ8jRkGH81+EYY2j2i17PVgRs6rpYgBgK4E3Dw7GTf+tMUr95P5iFP/
-         KS8HBWNzjzQ4Q==
-Date:   Tue, 22 Feb 2022 20:38:50 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH 3/6][next] ath6kl: wmi: Replace one-element array with
- flexible-array  member in struct wmi_channel_list_reply
-Message-ID: <30306253b1b5e6b8f5c0faba97e935eda4638020.1645583264.git.gustavoars@kernel.org>
-References: <cover.1645583264.git.gustavoars@kernel.org>
+        Wed, 23 Feb 2022 03:50:54 -0500
+Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05A537B55B;
+        Wed, 23 Feb 2022 00:50:26 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R931e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0V5HHvjC_1645606221;
+Received: from 192.168.193.152(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V5HHvjC_1645606221)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 23 Feb 2022 16:50:22 +0800
+Message-ID: <69d351c6-a69d-6ebb-53bc-b46dfe4da08a@linux.alibaba.com>
+Date:   Wed, 23 Feb 2022 00:50:21 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1645583264.git.gustavoars@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
+Subject: Re: [PATCH] [PATCH] AARCH64: Add gcc Shadow Call Stack support
+Content-Language: en-US
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     catalin.marinas@arm.com, will@kernel.org, ndesaulniers@google.com,
+        keescook@chromium.org, masahiroy@kernel.org, tglx@linutronix.de,
+        akpm@linux-foundation.org, mark.rutland@arm.com,
+        samitolvanen@google.com, npiggin@gmail.com, linux@roeck-us.net,
+        mhiramat@kernel.org, ojeda@kernel.org, luc.vanoostenryck@gmail.com,
+        elver@google.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+References: <20220222095736.24898-1-ashimida@linux.alibaba.com>
+ <YhUMRoLDan7tJRiL@dev-arch.archlinux-ax161>
+From:   Dan Li <ashimida@linux.alibaba.com>
+In-Reply-To: <YhUMRoLDan7tJRiL@dev-arch.archlinux-ax161>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Replace one-element array with flexible-array member in struct
-wmi_channel_list_reply.
 
-It's also worth noting that due to the flexible array transformation,
-the size of struct wmi_channel_list_reply changed, see below.
 
-Before flex-array transformation:
+On 2/22/22 08:16, Nathan Chancellor wrote:
+> On Tue, Feb 22, 2022 at 01:57:36AM -0800, Dan Li wrote:
+>> Shadow call stack is available in GCC > 11.2.0, this patch makes
+>> the corresponding kernel configuration available when compiling
+>> the kernel with gcc.
+>>   config SHADOW_CALL_STACK
+>> -	bool "Clang Shadow Call Stack"
+>> -	depends on CC_IS_CLANG && ARCH_SUPPORTS_SHADOW_CALL_STACK
+>> +	bool "Shadow Call Stack"
+>> +	depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
+>>   	depends on DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
+>>   	help
+>> -	  This option enables Clang's Shadow Call Stack, which uses a
+>> +	  This option enables Clang/GCC's Shadow Call Stack, which uses a
+> 
+> I wonder if we want to just ditch the mention of the compiler if both
+> support it?
+> 
 
-struct wmi_channel_list_reply {
-	u8                         reserved;             /*     0     1 */
-	u8                         num_ch;               /*     1     1 */
-	__le16                     ch_list[1];           /*     2     2 */
+My intention is to remind users that this is a compiler feature.
+But since there is also a hint in CC_HAVE_SHADOW_CALL_STACK:
++# Supported by clang >= 7.0 or GCC ...
 
-	/* size: 4, cachelines: 1, members: 3 */
-	/* last cacheline: 4 bytes */
-};
+Removing the specific compiler here also looks fine to me.
+Would this look better?
 
-After flex-array transformation:
+"This option enables Shadow Call Stack, which uses a ..."
 
-struct wmi_channel_list_reply {
-	u8                         reserved;             /*     0     1 */
-	u8                         num_ch;               /*     1     1 */
-	__le16                     ch_list[];            /*     2     0 */
+or maybe:
 
-	/* size: 2, cachelines: 1, members: 3 */
-	/* last cacheline: 2 bytes */
-};
+"This option enables compiler's Shadow Call Stack, which uses a ..."
 
-So, the following change preserves the logic that if _len_ is at least
-4 bytes in size, this is the existence of at least one channel in
-ch_list[] is being considered, then the execution jumps to call
-ath6kl_wakeup_event(wmi->parent_dev);, otherwise _len_ is 2 bytes or
-less and the code returns -EINVAL:
+>>   	  shadow stack to protect function return addresses from being
+>>   	  overwritten by an attacker. More information can be found in
+>>   	  Clang's documentation:
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index 09b885cc4db5..a48a604301aa 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -1255,7 +1255,7 @@ config HW_PERF_EVENTS
+>>   config ARCH_HAS_FILTER_PGPROT
+>>   	def_bool y
+>>   
+>> -# Supported by clang >= 7.0
+>> +# Supported by clang >= 7.0 or GCC > 11.2.0
+> 
+> Same thing here, although eventually there may be a minimum GCC version
+> bump to something newer than 11.2.0, which would allow us to just drop
+> CONFIG_CC_HAVE_SHADOW_CALL_STACK altogether. No strong opinion.
+> 
 
-	-       if (len < sizeof(struct wmi_channel_list_reply))
-	+       if (len <= sizeof(struct wmi_channel_list_reply))
+As Guenter said, I thought maybe we could mark the minimum available
+version for users :)
 
-This issue was found with the help of Coccinelle and audited and fixed,
-manually.
-
-Link: https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
-Link: https://github.com/KSPP/linux/issues/79
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Hi!
-
-It'd be great if someone can confirm or comment on the following
-changes described in the changelog text:
-
-	-       if (len < sizeof(struct wmi_channel_list_reply))
-	+       if (len <= sizeof(struct wmi_channel_list_reply))
-
-Thanks
-
- drivers/net/wireless/ath/ath6kl/wmi.c | 2 +-
- drivers/net/wireless/ath/ath6kl/wmi.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath6kl/wmi.c b/drivers/net/wireless/ath/ath6kl/wmi.c
-index bdfc057c5a82..049d75f31f3c 100644
---- a/drivers/net/wireless/ath/ath6kl/wmi.c
-+++ b/drivers/net/wireless/ath/ath6kl/wmi.c
-@@ -1240,7 +1240,7 @@ static int ath6kl_wmi_ratemask_reply_rx(struct wmi *wmi, u8 *datap, int len)
- 
- static int ath6kl_wmi_ch_list_reply_rx(struct wmi *wmi, u8 *datap, int len)
- {
--	if (len < sizeof(struct wmi_channel_list_reply))
-+	if (len <= sizeof(struct wmi_channel_list_reply))
- 		return -EINVAL;
- 
- 	ath6kl_wakeup_event(wmi->parent_dev);
-diff --git a/drivers/net/wireless/ath/ath6kl/wmi.h b/drivers/net/wireless/ath/ath6kl/wmi.h
-index 9e168752bec2..432e4f428a4a 100644
---- a/drivers/net/wireless/ath/ath6kl/wmi.h
-+++ b/drivers/net/wireless/ath/ath6kl/wmi.h
-@@ -1373,7 +1373,7 @@ struct wmi_channel_list_reply {
- 	u8 num_ch;
- 
- 	/* channel in Mhz */
--	__le16 ch_list[1];
-+	__le16 ch_list[];
- } __packed;
- 
- /* List of Events (target to host) */
--- 
-2.27.0
+Thanks,
+Dan.
 
