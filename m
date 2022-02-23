@@ -2,44 +2,45 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA2DC433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 23 Feb 2022 08:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C419CC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 23 Feb 2022 08:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239068AbiBWIu5 (ORCPT
+        id S234163AbiBWI4N (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 23 Feb 2022 03:50:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58744 "EHLO
+        Wed, 23 Feb 2022 03:56:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239069AbiBWIuy (ORCPT
+        with ESMTP id S229437AbiBWI4N (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 23 Feb 2022 03:50:54 -0500
-Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05A537B55B;
-        Wed, 23 Feb 2022 00:50:26 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R931e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0V5HHvjC_1645606221;
-Received: from 192.168.193.152(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V5HHvjC_1645606221)
+        Wed, 23 Feb 2022 03:56:13 -0500
+Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D557C149;
+        Wed, 23 Feb 2022 00:55:45 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0V5HULum_1645606540;
+Received: from 192.168.193.152(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V5HULum_1645606540)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 23 Feb 2022 16:50:22 +0800
-Message-ID: <69d351c6-a69d-6ebb-53bc-b46dfe4da08a@linux.alibaba.com>
-Date:   Wed, 23 Feb 2022 00:50:21 -0800
+          Wed, 23 Feb 2022 16:55:41 +0800
+Message-ID: <769ae7ad-e860-722d-59b7-cd7be5f6f1ee@linux.alibaba.com>
+Date:   Wed, 23 Feb 2022 00:55:40 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.6.0
 Subject: Re: [PATCH] [PATCH] AARCH64: Add gcc Shadow Call Stack support
 Content-Language: en-US
-To:     Nathan Chancellor <nathan@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Nathan Chancellor <nathan@kernel.org>
 Cc:     catalin.marinas@arm.com, will@kernel.org, ndesaulniers@google.com,
         keescook@chromium.org, masahiroy@kernel.org, tglx@linutronix.de,
         akpm@linux-foundation.org, mark.rutland@arm.com,
-        samitolvanen@google.com, npiggin@gmail.com, linux@roeck-us.net,
-        mhiramat@kernel.org, ojeda@kernel.org, luc.vanoostenryck@gmail.com,
-        elver@google.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
+        samitolvanen@google.com, npiggin@gmail.com, mhiramat@kernel.org,
+        ojeda@kernel.org, luc.vanoostenryck@gmail.com, elver@google.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
 References: <20220222095736.24898-1-ashimida@linux.alibaba.com>
  <YhUMRoLDan7tJRiL@dev-arch.archlinux-ax161>
+ <f44612ce-5bb1-da45-d6cb-39464898c4ff@roeck-us.net>
 From:   Dan Li <ashimida@linux.alibaba.com>
-In-Reply-To: <YhUMRoLDan7tJRiL@dev-arch.archlinux-ax161>
+In-Reply-To: <f44612ce-5bb1-da45-d6cb-39464898c4ff@roeck-us.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -48,60 +49,40 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 2/22/22 08:16, Nathan Chancellor wrote:
-> On Tue, Feb 22, 2022 at 01:57:36AM -0800, Dan Li wrote:
->> Shadow call stack is available in GCC > 11.2.0, this patch makes
->> the corresponding kernel configuration available when compiling
->> the kernel with gcc.
->>   config SHADOW_CALL_STACK
->> -	bool "Clang Shadow Call Stack"
->> -	depends on CC_IS_CLANG && ARCH_SUPPORTS_SHADOW_CALL_STACK
->> +	bool "Shadow Call Stack"
->> +	depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
->>   	depends on DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
->>   	help
->> -	  This option enables Clang's Shadow Call Stack, which uses a
->> +	  This option enables Clang/GCC's Shadow Call Stack, which uses a
+On 2/22/22 08:47, Guenter Roeck wrote:
+> On 2/22/22 08:16, Nathan Chancellor wrote:
+>> On Tue, Feb 22, 2022 at 01:57:36AM -0800, Dan Li wrote:
+>>> Shadow call stack is available in GCC > 11.2.0, this patch makes
 > 
-> I wonder if we want to just ditch the mention of the compiler if both
-> support it?
+> The above suggests that the option will be available with gcc 11.3.0.
+> Information available in public suggests that it will be introduced
+> with gcc 12.0.
 > 
 
-My intention is to remind users that this is a compiler feature.
-But since there is also a hint in CC_HAVE_SHADOW_CALL_STACK:
-+# Supported by clang >= 7.0 or GCC ...
+Ah, yes, I think we could use "gcc >= 12.0.0" here.
 
-Removing the specific compiler here also looks fine to me.
-Would this look better?
-
-"This option enables Shadow Call Stack, which uses a ..."
-
-or maybe:
-
-"This option enables compiler's Shadow Call Stack, which uses a ..."
-
->>   	  shadow stack to protect function return addresses from being
->>   	  overwritten by an attacker. More information can be found in
->>   	  Clang's documentation:
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index 09b885cc4db5..a48a604301aa 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -1255,7 +1255,7 @@ config HW_PERF_EVENTS
->>   config ARCH_HAS_FILTER_PGPROT
->>   	def_bool y
->>   
->> -# Supported by clang >= 7.0
->> +# Supported by clang >= 7.0 or GCC > 11.2.0
+> The point here, I think, is to list the minimum gcc version.
+> It is going to be a long time until gcc 12.0 is the minimum version,
+> so I think it makes sense to list the minimum version number for
+> each compiler here.
 > 
-> Same thing here, although eventually there may be a minimum GCC version
-> bump to something newer than 11.2.0, which would allow us to just drop
-> CONFIG_CC_HAVE_SHADOW_CALL_STACK altogether. No strong opinion.
+> However, it may make sense to add some reference indicating that
+> support will indeed be added with gcc 11.3.0, and not only starting
+
+I took a quick look at the gcc description, and it seems like the
+y in x.y.z is usually used to fix bugs, and new features should be
+added directly to the trunk.
+
+Link: https://gcc.gnu.org/develop.html
+
+> with gcc 12.0 (and maybe wait with applying this patch until it is
+> actually available in gcc and can be confirmed to work as intended).
 > 
 
-As Guenter said, I thought maybe we could mark the minimum available
-version for users :)
+It's also fine to wait for gcc 12 to be released, and I thought maybe
+I could submit the "final" version of this patch to the community (or
+mailing list) first so maybe more people would test it and if there
+were any issues, it could be fixed before GCC 12 is released :)
 
 Thanks,
 Dan.
-
