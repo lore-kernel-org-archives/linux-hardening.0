@@ -2,171 +2,94 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C06AFC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 22 Feb 2022 23:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D208C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed, 23 Feb 2022 02:33:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236030AbiBVXtn (ORCPT
+        id S233399AbiBWCcm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 22 Feb 2022 18:49:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50548 "EHLO
+        Tue, 22 Feb 2022 21:32:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236433AbiBVXth (ORCPT
+        with ESMTP id S237056AbiBWCcd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 22 Feb 2022 18:49:37 -0500
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B7840936
-        for <linux-hardening@vger.kernel.org>; Tue, 22 Feb 2022 15:49:02 -0800 (PST)
-Received: by mail-pg1-x52e.google.com with SMTP id 75so18337369pgb.4
-        for <linux-hardening@vger.kernel.org>; Tue, 22 Feb 2022 15:49:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=k4qXAFqi0ySdR1Aw0Ol4TjEnW6pDCjdujI4uqf/WnnU=;
-        b=ZmrKv5e3LteilLdgvO0riCg56HCfXHzS5Oo12KO3OkOWIYQXyGiLi5XNNrLgp7YCf8
-         l5gxN2WmuRZRBBtn709j//Go662IvHPvA09LL+YE0r/+SjxWQ1G/4wdDPRIWlAeSKINo
-         DdZK8E6mAVsQ3HcXj2qgWqTojpwo1DHXZrcEc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=k4qXAFqi0ySdR1Aw0Ol4TjEnW6pDCjdujI4uqf/WnnU=;
-        b=tWhKKFfrtw55n00P1v4ChIovB/4dF21Ko+amiFTxUfcBRIBd1kVws8P4K3qwRk8w/b
-         6y0808qImiecILnslh8kumXAGtSGCoc2rWfplyPb1bPiYziBsXJY0rWf9q+teqiHWcu7
-         c4TfSZqQb3xK3XvE+ehKD6Xn5nUxcw61qszXVC0GGm3l7f5QoL9dTW6iUqAMVC8e29e4
-         9a5I2NxNDbELzIFqsbkJPH1H5uENSVccJhkwfW+tdaEQrD4EXoicDxDV8Wet9U2b3uez
-         qK53pOaNvPamgQCmnFx0XNBcjiHEKYRq6+moZ1SzWAajnJFKXXrQWxzWqE83AvCkMcv8
-         4RYg==
-X-Gm-Message-State: AOAM532Ic2L1AkcUNJH+XSDpvudhnTInyF+K61biFpFQXl5BmrM0XcaU
-        OPWDCEFiEUQXZap9oT0oCd9MWQ==
-X-Google-Smtp-Source: ABdhPJwO85XCsJ5U7aygs5T7n4qrv8cEaxFM6h8IIKkhSD3i+A4YChQvIGP8qo+3GKsOKcHea9z9KA==
-X-Received: by 2002:a63:224c:0:b0:372:9ec7:e7e4 with SMTP id t12-20020a63224c000000b003729ec7e7e4mr21075101pgm.385.1645573742144;
-        Tue, 22 Feb 2022 15:49:02 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z14sm19080775pfe.30.2022.02.22.15.49.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Feb 2022 15:49:01 -0800 (PST)
-Date:   Tue, 22 Feb 2022 15:49:00 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Juxin Gao <gaojuxin@loongson.cn>, linux-mips@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] MIPS: Modernize READ_IMPLIES_EXEC
-Message-ID: <202202221548.40C0AA5E@keescook>
-References: <20210901194208.2420671-1-keescook@chromium.org>
+        Tue, 22 Feb 2022 21:32:33 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E999659A53;
+        Tue, 22 Feb 2022 18:30:30 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C1164614FF;
+        Wed, 23 Feb 2022 02:30:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76D40C340EB;
+        Wed, 23 Feb 2022 02:30:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645583422;
+        bh=h5iW1xnxYLihq1VYREsa+idqlKZAATRY4MQrqNiQGKE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VptbQJ50VYO1ckFXPf8UodRCgCOzAMPRTDKvgvQIJjjzb+v/B2kF1GqwlAPWtZGYc
+         dvNJDnM3NdMT/GIuYs6FunvztufU4tigXz+lfis3BUsMza8vP9YZgKD10NfEZWJ1Co
+         wTAKq5xm/pSdUELV2jMJy0hjLMc22YsyEHT1pkvPSJ6hc/BI/FnoHZWuyhIOl00C6z
+         ULBARob9XDxoGzMj+sS0YwujjTRwBL/v+thrOq8TH3bXvG2owLvFXM1DS/z5xzX4MX
+         v3sWaAyBFRCMlHEj2jVFVzBccD7rtFiX1TD6MObPsgiA3OUEtzjez+HTIPZGZa71mn
+         w7Ez5L1Scaw4w==
+Date:   Tue, 22 Feb 2022 20:38:16 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH 0/6][next] ath6kl: wmi: Replace one-element arrays with
+ flexible-array members
+Message-ID: <cover.1645583264.git.gustavoars@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210901194208.2420671-1-keescook@chromium.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Friendly ping. :)
+This series aims to replace one-element arrays with flexible-array
+members in multiple structures in drivers/net/wireless/ath/ath6kl/wmi.h
 
-On Wed, Sep 01, 2021 at 12:42:08PM -0700, Kees Cook wrote:
-> I'm doing some thread necromancy of
-> https://lore.kernel.org/lkml/202007081624.82FA0CC1EA@keescook/
-> 
-> x86, arm64, and arm32 adjusted their READ_IMPLIES_EXEC logic to better
-> align with the safer defaults and the interactions with other mappings,
-> which I illustrated with this comment on x86:
-> 
-> /*
->  * An executable for which elf_read_implies_exec() returns TRUE will
->  * have the READ_IMPLIES_EXEC personality flag set automatically.
->  *
->  * The decision process for determining the results are:
->  *
->  *                 CPU: | lacks NX*  | has NX, ia32     | has NX, x86_64 |
->  * ELF:                 |            |                  |                |
->  * ---------------------|------------|------------------|----------------|
->  * missing PT_GNU_STACK | exec-all   | exec-all         | exec-none      |
->  * PT_GNU_STACK == RWX  | exec-stack | exec-stack       | exec-stack     |
->  * PT_GNU_STACK == RW   | exec-none  | exec-none        | exec-none      |
->  *
->  *  exec-all  : all PROT_READ user mappings are executable, except when
->  *              backed by files on a noexec-filesystem.
->  *  exec-none : only PROT_EXEC user mappings are executable.
->  *  exec-stack: only the stack and PROT_EXEC user mappings are
->  *  executable.
->  *
->  *  *this column has no architectural effect: NX markings are ignored by
->  *   hardware, but may have behavioral effects when "wants X" collides with
->  *   "cannot be X" constraints in memory permission flags, as in
->  *   https://lkml.kernel.org/r/20190418055759.GA3155@mellanox.com
->  *
->  */
-> 
-> For MIPS, the "lacks NX" above is the "!cpu_has_rixi" check. On x86,
-> we decided that the READ_IMPLIES_EXEC flag needed to reflect the
-> expectations, not the architectural behavior due to bad interactions
-> as noted above, as always returning "1" on non-NX hardware breaks
-> some mappings.
-> 
-> The other part of the issue is "what does the MIPS toolchain do for
-> PT_GNU_STACK?" The answer seems to be "by default, include PT_GNU_STACK,
-> but mark it executable" (likely due to concerns over non-NX hardware):
-> 
-> $ mipsel-linux-gnu-gcc -o hello_world hello_world.c
-> $ llvm-readelf -lW hellow_world | grep GNU_STACK
->   GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RWE 0x10
-> 
-> Given that older hardware doesn't support non-executable memory, it
-> seems safe to make the "PT_GNU_STACK is absent" logic mean "assume
-> non-executable", but this might break very old software running on
-> modern MIPS. This situation matches the ia32-on-x86_64 logic x86
-> uses (which assumes needing READ_IMPLIES_EXEC in that situation). But
-> modern toolchains on modern MIPS hardware should follow a safer default
-> (assume NX stack).
-> 
-> A follow-up to this change would be to switch the MIPS toolchain to emit
-> a non-executable PT_GNU_STACK, as this seems to be unneeded.
-> 
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
-> Cc: Xuefeng Li <lixuefeng@loongson.cn>
-> Cc: Juxin Gao <gaojuxin@loongson.cn>
-> Cc: linux-mips@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/mips/kernel/elf.c | 16 +++++-----------
->  1 file changed, 5 insertions(+), 11 deletions(-)
-> 
-> diff --git a/arch/mips/kernel/elf.c b/arch/mips/kernel/elf.c
-> index 7b045d2a0b51..5582a4ca1e9e 100644
-> --- a/arch/mips/kernel/elf.c
-> +++ b/arch/mips/kernel/elf.c
-> @@ -328,16 +328,10 @@ void mips_set_personality_nan(struct arch_elf_state *state)
->  
->  int mips_elf_read_implies_exec(void *elf_ex, int exstack)
->  {
-> -	if (exstack != EXSTACK_DISABLE_X) {
-> -		/* The binary doesn't request a non-executable stack */
-> -		return 1;
-> -	}
-> -
-> -	if (!cpu_has_rixi) {
-> -		/* The CPU doesn't support non-executable memory */
-> -		return 1;
-> -	}
-> -
-> -	return 0;
-> +	/*
-> +	 * Set READ_IMPLIES_EXEC only on non-NX systems that
-> +	 * do not request a specific state via PT_GNU_STACK.
-> +	 */
-> +	return (!cpu_has_rixi && exstack == EXSTACK_DEFAULT);
->  }
->  EXPORT_SYMBOL(mips_elf_read_implies_exec);
-> -- 
-> 2.30.2
-> 
+There is a regular need in the kernel to provide a way to declare having
+a dynamically sized set of trailing elements in a structure. Kernel code
+should always use “flexible array members”[1] for these cases. The older
+style of one-element or zero-length arrays should no longer be used[2].
+
+This helps with the ongoing efforts to globally enable -Warray-bounds
+and get us closer to being able to tighten the FORTIFY_SOURCE routines
+on memcpy().
+
+These issues were found with the help of Coccinelle and audited and fixed,
+manually.
+
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
+
+Link: https://github.com/KSPP/linux/issues/79
+
+Gustavo A. R. Silva (6):
+  ath6kl: wmi: Replace one-element array with flexible-array member in
+    struct wmi_begin_scan_cmd
+  ath6kl: wmi: Replace one-element array with flexible-array member in
+    struct wmi_start_scan_cmd
+  ath6kl: wmi: Replace one-element array with flexible-array  member in
+    struct wmi_channel_list_reply
+  ath6kl: wmi: Replace one-element array with flexible-array  member in
+    struct wmi_connect_event
+  ath6kl: wmi: Replace one-element array with flexible-array  member in
+    struct wmi_disconnect_event
+  ath6kl: wmi: Replace one-element array with flexible-array  member in
+    struct wmi_aplist_event
+
+ drivers/net/wireless/ath/ath6kl/wmi.c | 30 +++++++--------------------
+ drivers/net/wireless/ath/ath6kl/wmi.h | 12 +++++------
+ 2 files changed, 14 insertions(+), 28 deletions(-)
 
 -- 
-Kees Cook
+2.27.0
+
