@@ -2,113 +2,149 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2477FC433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 23 Feb 2022 11:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89230C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 23 Feb 2022 15:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236285AbiBWLtm (ORCPT
+        id S240685AbiBWP6U (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 23 Feb 2022 06:49:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52186 "EHLO
+        Wed, 23 Feb 2022 10:58:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233558AbiBWLtl (ORCPT
+        with ESMTP id S229842AbiBWP6T (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 23 Feb 2022 06:49:41 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 037E1E99;
-        Wed, 23 Feb 2022 03:49:14 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B18D3B81F01;
-        Wed, 23 Feb 2022 11:49:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B2F0C340F5;
-        Wed, 23 Feb 2022 11:49:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645616951;
-        bh=+ioWVHNgMYeDeBDsUP7f/drz0hwa8yRvXmdVGF3eiFQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=amipTyugIxJO3OK3SYdgOFAUabSp6w39r0/eyVWT+fJDXgPBbmQOnORSBUTQR+O0Z
-         bjZnZzvujx/rFKnqDifCEtVemDXzMXqCYKkWzWDOVRjTqXoFletbgV1Av+aN7SdIdv
-         ls/RPtf/RUjv5uqSdUbrTvKFxt/BGjABV70qd1mf2zDB9oVwFHEZKP3LdgQ0rK66jn
-         Cy0KwhZpUuoUvvLku+ZvlMUo7MuzAAzpc323fDtqdartLYEiI2YbFLE5m6bEWe0vQ0
-         KvVXhHWvrqeFmU0UBHkCw5wWBJrMROVNWfDNRBUdmFK0gB7WfGkZosotO2JFzH6qFq
-         NqlkwHQKA7Yuw==
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-2d641c31776so207344117b3.12;
-        Wed, 23 Feb 2022 03:49:11 -0800 (PST)
-X-Gm-Message-State: AOAM531FmkAkHwypMZMbzEO1qM6HqEvbzbH0S7SZ3J98W+sstX18ySYc
-        ypgn7AmAjliO6BucVd44MMyY3g0dstlBQNeZ3co=
-X-Google-Smtp-Source: ABdhPJwQIornAPE/LrSfmaLY9p5F4ZAJgJS6+jzrvvmVxK04wF1Vvvs+R7teI3vNg74R7BJvxG5X95O2qSVBFpjInRc=
-X-Received: by 2002:a81:4a45:0:b0:2d6:b212:6a76 with SMTP id
- x66-20020a814a45000000b002d6b2126a76mr26808813ywa.60.1645616950272; Wed, 23
- Feb 2022 03:49:10 -0800 (PST)
-MIME-Version: 1.0
-References: <20220222095736.24898-1-ashimida@linux.alibaba.com> <YhUvp5RHkTlBXX3o@lakrids>
-In-Reply-To: <YhUvp5RHkTlBXX3o@lakrids>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 23 Feb 2022 12:48:58 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXHXz_CFL1A53J+h6EgRCKcrRfd_pMAy9Z+PztfzZYAawg@mail.gmail.com>
-Message-ID: <CAMj1kXHXz_CFL1A53J+h6EgRCKcrRfd_pMAy9Z+PztfzZYAawg@mail.gmail.com>
-Subject: Re: [PATCH] [PATCH] AARCH64: Add gcc Shadow Call Stack support
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Dan Li <ashimida@linux.alibaba.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        Wed, 23 Feb 2022 10:58:19 -0500
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EF208AB463;
+        Wed, 23 Feb 2022 07:57:50 -0800 (PST)
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1nMu1U-00073R-00; Wed, 23 Feb 2022 16:57:48 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 03722C2761; Wed, 23 Feb 2022 16:03:50 +0100 (CET)
+Date:   Wed, 23 Feb 2022 16:03:50 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Juxin Gao <gaojuxin@loongson.cn>, linux-mips@vger.kernel.org,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Miguel Ojeda <ojeda@kernel.org>, luc.vanoostenryck@gmail.com,
-        Marco Elver <elver@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] MIPS: Modernize READ_IMPLIES_EXEC
+Message-ID: <20220223150350.GA15128@alpha.franken.de>
+References: <20210901194208.2420671-1-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210901194208.2420671-1-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 22 Feb 2022 at 19:48, Mark Rutland <mark.rutland@arm.com> wrote:
->
-> Hi,
->
-> On Tue, Feb 22, 2022 at 01:57:36AM -0800, Dan Li wrote:
-> > Shadow call stack is available in GCC > 11.2.0, this patch makes
-> > the corresponding kernel configuration available when compiling
-> > the kernel with gcc.
->
-> Neat!
->
-> My local GCC devs told me that means GCC 12.x.x rather than 11.2.x or
-> 11.3.x, so as others have said it'd be clearer to say `GCC >= 12.0.0`.
->
-> I'd like to try this with a GCC binary before I provide an Ack or R-b;
-> but in the mean time I have a few comments below.
->
-> > Note that the implementation in GCC is slightly different from Clang.
-> > With SCS enabled, functions will only pop x30 once in the epilogue,
-> > like:
-> >
-> >    str     x30, [x18], #8
-> >    stp     x29, x30, [sp, #-16]!
-> >    ......
-> > -  ldp     x29, x30, [sp], #16          //clang
-> > +  ldr     x29, [sp], #16       //GCC
-> >    ldr     x30, [x18, #-8]!
->
-> Given the prologue still pushes both x29 and x30 (which we critically
-> depend upon) that sounds OK to me.
->
+On Wed, Sep 01, 2021 at 12:42:08PM -0700, Kees Cook wrote:
+> I'm doing some thread necromancy of
+> https://lore.kernel.org/lkml/202007081624.82FA0CC1EA@keescook/
+> 
+> x86, arm64, and arm32 adjusted their READ_IMPLIES_EXEC logic to better
+> align with the safer defaults and the interactions with other mappings,
+> which I illustrated with this comment on x86:
+> 
+> /*
+>  * An executable for which elf_read_implies_exec() returns TRUE will
+>  * have the READ_IMPLIES_EXEC personality flag set automatically.
+>  *
+>  * The decision process for determining the results are:
+>  *
+>  *                 CPU: | lacks NX*  | has NX, ia32     | has NX, x86_64 |
+>  * ELF:                 |            |                  |                |
+>  * ---------------------|------------|------------------|----------------|
+>  * missing PT_GNU_STACK | exec-all   | exec-all         | exec-none      |
+>  * PT_GNU_STACK == RWX  | exec-stack | exec-stack       | exec-stack     |
+>  * PT_GNU_STACK == RW   | exec-none  | exec-none        | exec-none      |
+>  *
+>  *  exec-all  : all PROT_READ user mappings are executable, except when
+>  *              backed by files on a noexec-filesystem.
+>  *  exec-none : only PROT_EXEC user mappings are executable.
+>  *  exec-stack: only the stack and PROT_EXEC user mappings are
+>  *  executable.
+>  *
+>  *  *this column has no architectural effect: NX markings are ignored by
+>  *   hardware, but may have behavioral effects when "wants X" collides with
+>  *   "cannot be X" constraints in memory permission flags, as in
+>  *   https://lkml.kernel.org/r/20190418055759.GA3155@mellanox.com
+>  *
+>  */
+> 
+> For MIPS, the "lacks NX" above is the "!cpu_has_rixi" check. On x86,
+> we decided that the READ_IMPLIES_EXEC flag needed to reflect the
+> expectations, not the architectural behavior due to bad interactions
+> as noted above, as always returning "1" on non-NX hardware breaks
+> some mappings.
+> 
+> The other part of the issue is "what does the MIPS toolchain do for
+> PT_GNU_STACK?" The answer seems to be "by default, include PT_GNU_STACK,
+> but mark it executable" (likely due to concerns over non-NX hardware):
+> 
+> $ mipsel-linux-gnu-gcc -o hello_world hello_world.c
+> $ llvm-readelf -lW hellow_world | grep GNU_STACK
+>   GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RWE 0x10
+> 
+> Given that older hardware doesn't support non-executable memory, it
+> seems safe to make the "PT_GNU_STACK is absent" logic mean "assume
+> non-executable", but this might break very old software running on
+> modern MIPS. This situation matches the ia32-on-x86_64 logic x86
+> uses (which assumes needing READ_IMPLIES_EXEC in that situation). But
+> modern toolchains on modern MIPS hardware should follow a safer default
+> (assume NX stack).
+> 
+> A follow-up to this change would be to switch the MIPS toolchain to emit
+> a non-executable PT_GNU_STACK, as this seems to be unneeded.
+> 
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Cc: Xuefeng Li <lixuefeng@loongson.cn>
+> Cc: Juxin Gao <gaojuxin@loongson.cn>
+> Cc: linux-mips@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/mips/kernel/elf.c | 16 +++++-----------
+>  1 file changed, 5 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/mips/kernel/elf.c b/arch/mips/kernel/elf.c
+> index 7b045d2a0b51..5582a4ca1e9e 100644
+> --- a/arch/mips/kernel/elf.c
+> +++ b/arch/mips/kernel/elf.c
+> @@ -328,16 +328,10 @@ void mips_set_personality_nan(struct arch_elf_state *state)
+>  
+>  int mips_elf_read_implies_exec(void *elf_ex, int exstack)
+>  {
+> -	if (exstack != EXSTACK_DISABLE_X) {
+> -		/* The binary doesn't request a non-executable stack */
+> -		return 1;
+> -	}
+> -
+> -	if (!cpu_has_rixi) {
+> -		/* The CPU doesn't support non-executable memory */
+> -		return 1;
+> -	}
+> -
+> -	return 0;
+> +	/*
+> +	 * Set READ_IMPLIES_EXEC only on non-NX systems that
+> +	 * do not request a specific state via PT_GNU_STACK.
+> +	 */
+> +	return (!cpu_has_rixi && exstack == EXSTACK_DEFAULT);
+>  }
+>  EXPORT_SYMBOL(mips_elf_read_implies_exec);
+> -- 
+> 2.30.2
 
-Indeed.
+applied to mips-next.
 
-What did come up in the discussion on the GCC side was runtime
-patching (to avoid the overhead of having both PAC and SCS), but it
-seems far more likely that we would patch PACIASP/AUTIASP instructions
-into SCS pushes/pops rather than the other way around, and so loading
-x30 only once should be fine.
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
