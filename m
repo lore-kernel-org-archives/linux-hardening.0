@@ -2,45 +2,57 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C419CC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 23 Feb 2022 08:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC7BC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 23 Feb 2022 08:58:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234163AbiBWI4N (ORCPT
+        id S231680AbiBWI6i (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 23 Feb 2022 03:56:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34996 "EHLO
+        Wed, 23 Feb 2022 03:58:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbiBWI4N (ORCPT
+        with ESMTP id S229437AbiBWI6i (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 23 Feb 2022 03:56:13 -0500
-Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D557C149;
-        Wed, 23 Feb 2022 00:55:45 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0V5HULum_1645606540;
-Received: from 192.168.193.152(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V5HULum_1645606540)
+        Wed, 23 Feb 2022 03:58:38 -0500
+Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFB357463A;
+        Wed, 23 Feb 2022 00:58:10 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0V5Hmy0a_1645606685;
+Received: from 192.168.193.152(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V5Hmy0a_1645606685)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 23 Feb 2022 16:55:41 +0800
-Message-ID: <769ae7ad-e860-722d-59b7-cd7be5f6f1ee@linux.alibaba.com>
-Date:   Wed, 23 Feb 2022 00:55:40 -0800
+          Wed, 23 Feb 2022 16:58:06 +0800
+Message-ID: <887572c7-b508-ca51-6cd5-54a2c9ecaa75@linux.alibaba.com>
+Date:   Wed, 23 Feb 2022 00:58:05 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.6.0
 Subject: Re: [PATCH] [PATCH] AARCH64: Add gcc Shadow Call Stack support
 Content-Language: en-US
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Nathan Chancellor <nathan@kernel.org>
-Cc:     catalin.marinas@arm.com, will@kernel.org, ndesaulniers@google.com,
-        keescook@chromium.org, masahiroy@kernel.org, tglx@linutronix.de,
-        akpm@linux-foundation.org, mark.rutland@arm.com,
-        samitolvanen@google.com, npiggin@gmail.com, mhiramat@kernel.org,
-        ojeda@kernel.org, luc.vanoostenryck@gmail.com, elver@google.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Marco Elver <elver@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
 References: <20220222095736.24898-1-ashimida@linux.alibaba.com>
  <YhUMRoLDan7tJRiL@dev-arch.archlinux-ax161>
  <f44612ce-5bb1-da45-d6cb-39464898c4ff@roeck-us.net>
+ <CANiq72nhu+CtYYNfWLYxf19OscoEEZj=TATM0SHNU8ic1iDhyQ@mail.gmail.com>
 From:   Dan Li <ashimida@linux.alibaba.com>
-In-Reply-To: <f44612ce-5bb1-da45-d6cb-39464898c4ff@roeck-us.net>
+In-Reply-To: <CANiq72nhu+CtYYNfWLYxf19OscoEEZj=TATM0SHNU8ic1iDhyQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -49,40 +61,21 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 2/22/22 08:47, Guenter Roeck wrote:
-> On 2/22/22 08:16, Nathan Chancellor wrote:
->> On Tue, Feb 22, 2022 at 01:57:36AM -0800, Dan Li wrote:
->>> Shadow call stack is available in GCC > 11.2.0, this patch makes
+On 2/22/22 08:59, Miguel Ojeda wrote:
+> On Tue, Feb 22, 2022 at 5:48 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>>
+>> The point here, I think, is to list the minimum gcc version.
+>> It is going to be a long time until gcc 12.0 is the minimum version,
+>> so I think it makes sense to list the minimum version number for
+>> each compiler here.
 > 
-> The above suggests that the option will be available with gcc 11.3.0.
-> Information available in public suggests that it will be introduced
-> with gcc 12.0.
-> 
-
-Ah, yes, I think we could use "gcc >= 12.0.0" here.
-
-> The point here, I think, is to list the minimum gcc version.
-> It is going to be a long time until gcc 12.0 is the minimum version,
-> so I think it makes sense to list the minimum version number for
-> each compiler here.
-> 
-> However, it may make sense to add some reference indicating that
-> support will indeed be added with gcc 11.3.0, and not only starting
-
-I took a quick look at the gcc description, and it seems like the
-y in x.y.z is usually used to fix bugs, and new features should be
-added directly to the trunk.
-
-Link: https://gcc.gnu.org/develop.html
-
-> with gcc 12.0 (and maybe wait with applying this patch until it is
-> actually available in gcc and can be confirmed to work as intended).
+> Yeah, please list the minimum version (ideally `>=` instead of `>`,
+> with the actual version where it first appeared). It makes it easy to
+> then remove things that are not needed anymore when the minimum GCC
+> version is upgraded.
 > 
 
-It's also fine to wait for gcc 12 to be released, and I thought maybe
-I could submit the "final" version of this patch to the community (or
-mailing list) first so maybe more people would test it and if there
-were any issues, it could be fixed before GCC 12 is released :)
+Got it, I'll use "gcc >= 12.0.0" in the next patch.
 
 Thanks,
 Dan.
