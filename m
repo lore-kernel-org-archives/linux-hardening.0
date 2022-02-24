@@ -2,140 +2,247 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0C0C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 18:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC1CC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 19:43:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231826AbiBXS24 (ORCPT
+        id S233085AbiBXToZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Feb 2022 13:28:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41110 "EHLO
+        Thu, 24 Feb 2022 14:44:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229805AbiBXS24 (ORCPT
+        with ESMTP id S233043AbiBXToY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Feb 2022 13:28:56 -0500
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A5B12B771
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Feb 2022 10:28:25 -0800 (PST)
-Received: by mail-ed1-x536.google.com with SMTP id cm8so4113966edb.3
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Feb 2022 10:28:25 -0800 (PST)
+        Thu, 24 Feb 2022 14:44:24 -0500
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE7801C6EF3
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Feb 2022 11:43:53 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id w3so4360484edu.8
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Feb 2022 11:43:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=A9fzDXY9Pawtti5sitNYgs0Fy4usPU844voMfn3IdBw=;
-        b=dl6HDEGVlT4NNXS+IICLIyWUeJ4CPNtZVqt7karefHOT34m9SGbvzOBZnY4TRymU+P
-         TkWhXBb6+tkuw3h4utWmhoNw6f+PwulSb7gpb+/NZejGPPxjEbaBMwIoyyP5tVnqrnQI
-         NU8gttIl16ZIr9mhL9cMEXK7E0Q9RK3aACepd+i0T6ECmKr1Ko8jaU6MhGwU4USSGPfq
-         z779HAe3Cr+BgKDZ8/CCe0NULpEw0jkPfilJrpWc4A+0mBtl4Dx5QXt15277Bov3kmLJ
-         xxFcHR9V4DDznD/q4rB8pCa4mUrLkNRhFtkVse/rJeEVYV0SEw/kkggDHdHJ7xCbHjRr
-         tYIA==
+        bh=cT6VTaPBAvZcJT0C07jbq6jkkSfnrkv3DOfnLzZ77CM=;
+        b=cph9wo/cKs42xh7OHpJ1L4/fItWA1YtsVsR8Di5tl2igWrI3LjGzwy+GTVPrIL3I1Z
+         GPmf1B0NtZnAEE3hGPmw8LkPPA+8eTx1vMqrbiZJvC6TMFfHROnbmMiYXNJp8huLI+gx
+         qO7LzfpbfGtaHrKawj/KVlZawWWAemhDdkG+FfRsf2zbCwRLYY8yk1hUtHQPAc+vZfmk
+         RxJzf8gEOCvxp1Kuikw1mJyQ5GskvlzG3ChUBTmfgr88rXLMULIcbZFULMD36AaKUC3e
+         HhchVJPs5IExtwcXN/IpVT84JaqinlITjSuAktAm60Cw3JGxFH3MCqXm65fyUBe1lLZi
+         IxIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=A9fzDXY9Pawtti5sitNYgs0Fy4usPU844voMfn3IdBw=;
-        b=RXkIBrIThRSDnMkwhqULWmakodELtHh4NUv0G+/6PRYYk88mUTFuU9i6g/swvofMJt
-         gPlkuSUP3FO2BdN230o4FRTcUtA7Q3A3uVv5b8CwTPo3Fq19/3SUmaKcaJn+6Uv+m7vt
-         B/WA9M/kejBJ2JhfXs642+Ivnt4fH3HP5DXda4K8FLIVQ8t9j0vuyGdl0To7H8n2xLVc
-         DeSsKA0aVk+NFXzO3VSs6xJRQUp3xy3OxvVtjiyZR1pR2EvfGH0qKS9us+7DnBnSN2D5
-         CX85VOfJRdmnEgtVkjPVKj205mTvMcK9I+vtOQ7b3A5OJk1Wfq3A5e7TWgZc7lBP8jg2
-         0UXg==
-X-Gm-Message-State: AOAM530xnhdoJ8wJYDLuQ8hoaptH5kpUNwIH3WwfHP2yEJakxbp97Ysa
-        2rQvWrtW/5OwNlZTk/1wXKqvvfz0wLk4nWQguHYiPw==
-X-Google-Smtp-Source: ABdhPJyd0J9YBYi7aXnqX6OwRKkx26kDeX3KMKqCXaMxU62hgxoaffTO84p3kE7edGocRELjW9JrDbnvnBAzeENlM9g=
-X-Received: by 2002:aa7:d592:0:b0:410:b9f9:90f2 with SMTP id
- r18-20020aa7d592000000b00410b9f990f2mr3543452edq.327.1645727303752; Thu, 24
- Feb 2022 10:28:23 -0800 (PST)
+        bh=cT6VTaPBAvZcJT0C07jbq6jkkSfnrkv3DOfnLzZ77CM=;
+        b=uu+rJxTVCS3ig1P63TCB7MhNmxnRZSzxSdKqX2IUpZ3fToF+CkR+DqkLb2BMDnI6Lz
+         cFa0JpVatkoxEek3bDMgYtj0UPr/uNu3+Ao9o1AWGI3RbGtwE8G+5ieh6HMOgu9wFhWJ
+         bBvVACIDabwj4raH/ybJaKruVqp9O+lIWMzrlgXPyJzQx7ZN4iAGmLKQLYbsowYJG/Vp
+         UmXNpkLwR5bsELiyQ11IzED+VqOfQrVxNLSfjw+cfq5Qwlo9N7gYsZMJpMidi/BNk/N/
+         vMmNBw+Q8Z7loNBlqLhIl5JQ0IZDLPmKebQKkw8asyihXQmJgmzgXVchIPDK4vwi4sXB
+         Q/zA==
+X-Gm-Message-State: AOAM530VUow+gj2DdN5F6a69lnKQ6fh4kiIvjLLoDFGk1ampOWnKcN0q
+        Kcjkk/ahjqtakeJ63nRXTjSqBsYAscnfSWP6i/v87A==
+X-Google-Smtp-Source: ABdhPJwrdy9Ks+AvYVAONIODLhAaLZ43j966hZvJwXtEANqW/+4iWi8AF6gH87RMvVRxu+szCttnMs6KWkl6HKVvHdU=
+X-Received: by 2002:a05:6402:2546:b0:412:d0eb:2a4a with SMTP id
+ l6-20020a056402254600b00412d0eb2a4amr3924248edb.306.1645731832090; Thu, 24
+ Feb 2022 11:43:52 -0800 (PST)
 MIME-Version: 1.0
-References: <20220224055350.1854078-1-keescook@chromium.org>
-In-Reply-To: <20220224055350.1854078-1-keescook@chromium.org>
+References: <20220224055145.1853657-1-keescook@chromium.org>
+In-Reply-To: <20220224055145.1853657-1-keescook@chromium.org>
 From:   Daniel Latypov <dlatypov@google.com>
-Date:   Thu, 24 Feb 2022 10:28:12 -0800
-Message-ID: <CAGS_qxo1UkRUbXnX7NkfDCLhqa2-_dn3poKBi=NyGJ4C0EhUmw@mail.gmail.com>
-Subject: Re: [PATCH] kunit: tool: Do not colorize output when redirected
+Date:   Thu, 24 Feb 2022 11:43:40 -0800
+Message-ID: <CAGS_qxrRi0zvGnoi-Ne=wp8xkuFKPzNj9d57eq=51gg5gwX=eA@mail.gmail.com>
+Subject: Re: [PATCH] lib: stackinit: Convert to KUnit
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
+Cc:     David Gow <davidgow@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 9:53 PM Kees Cook <keescook@chromium.org> wrote:
+On Wed, Feb 23, 2022 at 9:51 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> Filling log files with color codes makes diffs and other comparisons
-> difficult. Only emit vt100 codes when the stdout is a TTY.
->
-> Cc: Brendan Higgins <brendanhiggins@google.com>
-> Cc: linux-kselftest@vger.kernel.org
-> Cc: kunit-dev@googlegroups.com
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  tools/testing/kunit/kunit_parser.py | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
-> index 05ff334761dd..807ed2bd6832 100644
-> --- a/tools/testing/kunit/kunit_parser.py
-> +++ b/tools/testing/kunit/kunit_parser.py
-> @@ -11,6 +11,7 @@
->
->  from __future__ import annotations
->  import re
-> +import sys
->
->  import datetime
->  from enum import Enum, auto
-> @@ -503,14 +504,20 @@ RESET = '\033[0;0m'
->
->  def red(text: str) -> str:
->         """Returns inputted string with red color code."""
-> +       if not sys.stdout.isatty():
-> +               return text
 
-I'd been thinking about doing this for a while.
-I'd just gotten used to removing them via sed, or ending pipes with less -R.
-I totally agree it's for the best that colors be turned off by default
-when piping.
-
-My hesitation was whether we'd want to introduce a flag like grep et al have.
-I.e. --color=auto/always/etc.
-
-Pros:
-* consistency with grep, maybe less surprise
-* allows wrappers around kunit.py to redirect output and still show color
-   * this is very niche and I know it. But I happen to own such a wrapper :)
-
-Cons:
-* an extra flag that's very niche
-  * I'm likely the only person to have ever used `kunit.py run | ... | less -R`
-* the logic to check for coloring becomes more complicated, need to add a helper
-
-I'm fine if we just stick with this simpler approach or do it later.
-My aforementioned wrapper only redirects stdout when necessary anyways.
+<snip>
 
 
->         return '\033[1;31m' + text + RESET
+>  /* Userspace headers. */
+> +#define _GNU_SOURCE
+>  #include <stdio.h>
+>  #include <stdint.h>
+> +#include <stdlib.h>
+>  #include <string.h>
+>  #include <stdbool.h>
+>  #include <errno.h>
+>  #include <sys/types.h>
 >
->  def yellow(text: str) -> str:
->         """Returns inputted string with yellow color code."""
-> +       if not sys.stdout.isatty():
-> +               return text
->         return '\033[1;33m' + text + RESET
+>  /* Linux kernel-ism stubs for stand-alone userspace build. */
+
+This is neat and esp. so that it works.
+But may I ask, what's the value of using this vs UML?
+
+Given this has changed into mainly just a KUnit-compatibility layer,
+it feels like it can maybe live as a standalone file, if there's ever
+interest in doing this for other tests.
+
+It feels like something that will never quite be "supported", but I
+find it neat enough I'd have fun sending some patches to make it more
+realistic.
+
+> -#define KBUILD_MODNAME         "stackinit"
+> -#define pr_fmt(fmt)            KBUILD_MODNAME ": " fmt
+> -#define pr_err(fmt, ...)       fprintf(stderr, pr_fmt(fmt), ##__VA_ARGS__)
+> -#define pr_warn(fmt, ...)      fprintf(stderr, pr_fmt(fmt), ##__VA_ARGS__)
+> -#define pr_info(fmt, ...)      fprintf(stdout, pr_fmt(fmt), ##__VA_ARGS__)
+> -#define __init                 /**/
+> -#define __exit                 /**/
+> +#define TEST_PASS      0
+> +#define TEST_SKIP      1
+> +#define TEST_FAIL      2
+> +struct kunit {
+> +       int status;
+> +       char *msg;
+> +};
+> +struct kunit_case {
+> +        void (*run_case)(struct kunit *test);
+> +        const char *name;
+> +};
+> +struct kunit_suite {
+> +       const char *name;
+> +       const struct kunit_case *test_cases;
+> +};
+> +#define KUNIT_CASE(test_name) { .run_case = test_name, .name = #test_name }
+> +
+> +#define KUNIT_ASSERT_TRUE_MSG(test, expr, fmt, ...)                    \
+> +do {                                                                   \
+> +       if (!(expr)) {                                                  \
+> +               if (test->status != TEST_SKIP)                          \
+> +                       test->status = TEST_FAIL;                       \
+> +               if (test->msg)                                          \
+> +                       free(test->msg);                                \
+> +               asprintf(&test->msg, fmt, ##__VA_ARGS__);               \
+> +       }                                                               \
+> +} while (0)
+
+This looks more like KUNIT_EXPECT_TRUE_MSG(), since this macro won't
+abort the test if the expectation fails.
+
+Looking at the code, it looks like we do want the ability to abort.
+Perhaps we can do what Googletest does in C++ and just add in a `return;`?
+
+It has some annoying implications, like using them from helper
+functions doesn't work as one would expect.
+But people seem to be doing fine with that tradeoff in C++ land.
+
+> +
+> +#define KUNIT_ASSERT_EQ_MSG(test, left, right, fmt, ...)               \
+> +       KUNIT_ASSERT_TRUE_MSG(test, (left) == (right), fmt, ##__VA_ARGS__)
+
+Very optional:
+
+It might be nice to show the expressions automatically on failure.
+We could implement that via something like
+
+KUNIT_ASSERT_TRUE_MSG(test, (left) == (right), #left " != " #right ":
+" fmt, ##__VA_ARGS__);
+
+E.g.
+KUNIT_ASSERT_EQ_MSG(test, 2+2, 5, "math is broken")
+=> 2+2 != 5: math is broken
+
+But I can see that being a bit too complicated to want to do here.
+And the failure messages we had before are already decent at giving context.
+
+> +
+> +#define kunit_skip(test, fmt, ...)                                     \
+> +do {                                                                   \
+> +       test->status = TEST_SKIP;                                       \
+> +       if (test->msg)                                                  \
+> +               free(test->msg);                                        \
+> +       asprintf(&test->msg, fmt, ##__VA_ARGS__);                       \
+> +} while (0)
+
+Similarly, this has no control flow implications, so the current
+semantics match kunit_mark_skipped().
+
+But looking at the code, I think we want to abort early here too.
+
+> +
+>  #define __user                 /**/
+>  #define noinline               __attribute__((__noinline__))
+>  #define __aligned(x)           __attribute__((__aligned__(x)))
+> @@ -59,16 +102,44 @@ typedef uint16_t           u16;
+>  typedef uint32_t               u32;
+>  typedef uint64_t               u64;
 >
->  def green(text: str) -> str:
->         """Returns inputted string with green color code."""
-> +       if not sys.stdout.isatty():
-> +               return text
->         return '\033[1;32m' + text + RESET
->
->  ANSI_LEN = len(red(''))
-> --
-> 2.30.2
->
-> --
-> You received this message because you are subscribed to the Google Groups "KUnit Development" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kunit-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kunit-dev/20220224055350.1854078-1-keescook%40chromium.org.
+> -#define module_init(func)      static int (*do_init)(void) = func
+> -#define module_exit(func)      static void (*do_exit)(void) = func
+> -#define MODULE_LICENSE(str)    int main(void) {                \
+> -                                       int rc;                 \
+> -                                       /* License: str */      \
+> -                                       rc = do_init();         \
+> -                                       if (rc == 0)            \
+> -                                               do_exit();      \
+> -                                       return rc;              \
+> -                               }
+> +#define MODULE_LICENSE(str)    /* */
+> +
+> +int do_kunit_test_suite(struct kunit_suite *suite)
+> +{
+> +       const struct kunit_case *test_case;
+> +       int rc = 0;
+> +
+> +       for (test_case = suite->test_cases; test_case->run_case; test_case++) {
+> +               struct kunit test = { };
+> +
+> +               test_case->run_case(&test);
+> +               switch (test.status) {
+> +               default:
+> +               case TEST_FAIL:
+> +                       fprintf(stderr, "FAIL: %s%s%s", test_case->name,
+> +                               test.msg ? ": " : "",
+> +                               test.msg ?: "\n");
+> +                       rc = 1;
+> +                       break;
+> +               case TEST_SKIP:
+> +                       fprintf(stdout, "XFAIL: %s%s%s", test_case->name,
+> +                               test.msg ? ": " : "",
+> +                               test.msg ?: "\n");
+> +                       break;
+> +               case TEST_PASS:
+> +                       fprintf(stdout, "ok: %s\n", test_case->name);
+> +                       break;
+> +               }
+> +               if (test.msg)
+> +                       free(test.msg);
+> +       }
+> +       return rc;
+> +}
+> +
+> +#define kunit_test_suite(suite)                                        \
+> +int main(void) {                                               \
+> +       return do_kunit_test_suite(&(suite));                   \
+> +}
+
+very optional:
+emulating kunit_test_suites() might be more future-proof here, if we
+ever want to setup more suites.
+There's little reason to do so right now given the lack of init and
+exit support.
+
+Like the stuff above, it wouldn't be hard to do, but I can see it not
+being worth the extra code, i.e.
+
+#define kunit_test_suites(suites...) \
+  int main(void) {
+     static struct kunit_suite *suites =[] = { __VA_ARGS__ };
+     int i, ret = 0;
+     for (i = 0; i < ARRAY_SIZE(suites); ++i)
+       ret += do_kunit_test_suite(suites[i]);
+     return ret;
+   }
