@@ -2,123 +2,261 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C410FC433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 23 Feb 2022 17:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CF3C433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 00:14:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243413AbiBWRkM (ORCPT
+        id S242549AbiBXAOh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 23 Feb 2022 12:40:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58144 "EHLO
+        Wed, 23 Feb 2022 19:14:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232607AbiBWRkL (ORCPT
+        with ESMTP id S242345AbiBXAOh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 23 Feb 2022 12:40:11 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5236B48;
-        Wed, 23 Feb 2022 09:39:43 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 26A4C61484;
-        Wed, 23 Feb 2022 17:39:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4F2DC340E7;
-        Wed, 23 Feb 2022 17:39:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645637982;
-        bh=UB/fdzNnOIHMXBBBmk61V4+OoYvesbVZ2l0elnEufzg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Kf3D2LPejolRCxzzwXBAjLaXRzKYJp3PVnWiPo6fUoWNajRrzf0DJpnrbGS310o+b
-         d5Wp8WWyMsyHMqh1H4aXG7CkNqkqxv4nhSAXKmxgG0Wi4NmyoI0VJTpvgAse7fDhqh
-         IEWoXVixG3N+TSSAF24zW1hB0F9jxPdSQghzIwFhmQqihwyNKVgQvCn5z5dfmBNCs9
-         ynAGTrmCV1hFtBbw+754CjyRqQN4nDhp5+vTuDH098HsUtx/ZeikW8QnO3DspbBz89
-         7KSa29WNpvX4IFs+d+kut4AytrYJVsnDTmBX/9nQDNosRbphm1Fr657UDS/CNoBrXU
-         yp1WsX2CJWy7Q==
-Date:   Wed, 23 Feb 2022 10:39:35 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Dan Li <ashimida@linux.alibaba.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, ndesaulniers@google.com,
-        keescook@chromium.org, masahiroy@kernel.org, tglx@linutronix.de,
-        akpm@linux-foundation.org, mark.rutland@arm.com,
-        samitolvanen@google.com, npiggin@gmail.com, linux@roeck-us.net,
-        mhiramat@kernel.org, ojeda@kernel.org, luc.vanoostenryck@gmail.com,
-        elver@google.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
+        Wed, 23 Feb 2022 19:14:37 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 126A160047
+        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 16:14:07 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id z2so241285plg.8
+        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 16:14:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tWiJqyBmHVLQbDjgYyBAcQodJ4PbnDvUmaAVoLsJS4w=;
+        b=B+uh6Yp6xmTIXeSfs1JnBFk/jkkLZ1Vw3BYubhwlQbspU1RCcNeNqctn4I70RVLIol
+         Si6KDKcaEODue79zVe71vc/DaykBQDtjchY9fgGTBS+KTTnL37m8tlAxIV6NsBX133xz
+         Q2rkDjkA10QCxmyJQa0mMefeOF+NB5BwMJV1w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tWiJqyBmHVLQbDjgYyBAcQodJ4PbnDvUmaAVoLsJS4w=;
+        b=bmo7ydeBXcbqIGH6I0OzRCKD/Cn6UiSOGAmFFs1a2IC3PeUxcqt3sUsEU9LpuAgQUN
+         a4Ekbb01MU+rRKwZ4DiufhY5dE6yD8a1jyUBR+rkVwLTQ/KbWW9Ntc+OzG/FCJHTKEWZ
+         L7eaCspSnYgIcAPU8/XdBPDs2dM2cai6EOWD8norvS1JfBSfLugHHbq3Twq2Z0r0oOBK
+         mndUx7noilnR/OePc5r75PuNhoxzkXD1L3FWEr4ckvI7BMvS27x7YvVV4W/GCZV4TYZI
+         P7dZJqY0ls/917IlyHUEkWGXggfHx9Vl/z9TiC0APAYiYWpoSVEJGSWGJKyEdl31BRAL
+         Gkgw==
+X-Gm-Message-State: AOAM532cjxdk9gvC10SAx2ZNzysG5TJ9NjNTqs4ZO8TIgxmjnQNTMSfZ
+        DunCr7WWFB4zw2Mo8HucBO9vQQ==
+X-Google-Smtp-Source: ABdhPJy7IikcyjifqSeBxQRWe/5wcWscPFj8T6f6zKjKgTnz+rDNhdCaD/mPxW/d2ffvImjPoFesLA==
+X-Received: by 2002:a17:90b:3d02:b0:1bc:85fa:e24 with SMTP id pt2-20020a17090b3d0200b001bc85fa0e24mr8543922pjb.239.1645661646404;
+        Wed, 23 Feb 2022 16:14:06 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q13sm713743pfl.210.2022.02.23.16.14.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Feb 2022 16:14:06 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stefano Zacchiroli <zack@upsilon.cc>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Laura Abbott <labbott@kernel.org>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Wenwen Wang <wenwen@cs.uga.edu>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] [PATCH] AARCH64: Add gcc Shadow Call Stack support
-Message-ID: <YhZxVwoshSwwJkJO@dev-arch.archlinux-ax161>
-References: <20220222095736.24898-1-ashimida@linux.alibaba.com>
- <YhUMRoLDan7tJRiL@dev-arch.archlinux-ax161>
- <69d351c6-a69d-6ebb-53bc-b46dfe4da08a@linux.alibaba.com>
+Subject: [PATCH] Documentation/process: Add Researcher Guidelines
+Date:   Wed, 23 Feb 2022 16:14:03 -0800
+Message-Id: <20220224001403.1307377-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <69d351c6-a69d-6ebb-53bc-b46dfe4da08a@linux.alibaba.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9266; h=from:subject; bh=CQePDr1DFfNdm/DsFEAgI6x+RxatFwswD0jse+R0L4E=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiFs3KW/WPUnYzV5YGusU2EhRH8uEZL21QwjlzlBiZ rh1SwEGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYhbNygAKCRCJcvTf3G3AJldPD/ 95pMS7QUNj58sTT3dZgN6WQ/qY8zYt1FqqMcySA4xyYhNon/W/vZugARYfl0RR5VBVumR1FJgvYiDt nkyH5sLSl+KIHFLgCQEGvm9l6bjv9xStfI+rj9PkMdl4PvtE8TKqDwx3pvEKhv1/pSym9frfRmKLNT YN05KDgumKd7mop+zbKrH3Orl7aInOISB5/8WU5JuWgcykH4bCMwiC5vbZyyZPZMHsXSD+aitb34Pj CcWlBHUBgijHJYsvWydqYnERQNw407IHYG4YHciRFo71dxcRZhjMwEY0YcNJKFu6LKHaTra9b49YdQ Hu6/VNxNjCofKYr7GXtZfttFTph8BQhksrVRGePE1ud5+XfykMd7sGuUdhubEeJ6GBo2gIXlj9e9hE ZrfC+LytF8c7FOUCzWmAFLpdtKp83ouvNwJVnEDm8U3Br9dOjUjvBpawFQD/fPoJfn181YDaWo20C6 hcXo59ekz1FBVMAblRCAP+18Y5Y25HvwIm3B50mKCneyMpuB/0qfaH20SPaemUkhurlWNQVW7X6r2+ UxR82X6pqbOeL4HF/EL5QgPp1eH+4bnZx4A2PKyBbk2d/7xrtgPPvq/GeZL/WyBNqJLVm0J1qtSADh vmdmW+UoPxSPsmf5U8xwMwfkEYNkplB1XLugmavmbUIFEKza6Xcmwu20G3mw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 12:50:21AM -0800, Dan Li wrote:
-> 
-> 
-> On 2/22/22 08:16, Nathan Chancellor wrote:
-> > On Tue, Feb 22, 2022 at 01:57:36AM -0800, Dan Li wrote:
-> > > Shadow call stack is available in GCC > 11.2.0, this patch makes
-> > > the corresponding kernel configuration available when compiling
-> > > the kernel with gcc.
-> > >   config SHADOW_CALL_STACK
-> > > -	bool "Clang Shadow Call Stack"
-> > > -	depends on CC_IS_CLANG && ARCH_SUPPORTS_SHADOW_CALL_STACK
-> > > +	bool "Shadow Call Stack"
-> > > +	depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
-> > >   	depends on DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
-> > >   	help
-> > > -	  This option enables Clang's Shadow Call Stack, which uses a
-> > > +	  This option enables Clang/GCC's Shadow Call Stack, which uses a
-> > 
-> > I wonder if we want to just ditch the mention of the compiler if both
-> > support it?
-> > 
-> 
-> My intention is to remind users that this is a compiler feature.
-> But since there is also a hint in CC_HAVE_SHADOW_CALL_STACK:
-> +# Supported by clang >= 7.0 or GCC ...
-> 
-> Removing the specific compiler here also looks fine to me.
-> Would this look better?
-> 
-> "This option enables Shadow Call Stack, which uses a ..."
-> 
-> or maybe:
-> 
-> "This option enables compiler's Shadow Call Stack, which uses a ..."
+As a follow-up to the UMN incident[1], the TAB took the responsibility
+to document Researcher Guidelines so there would be a common place to
+point for describing our expectations as a developer community.
 
-I do not honestly have a strong opinion around removing mention of the
-compiler so either looks fine to me (might be better to say "the
-compiler's Shadow ..." in the second one).
+Document best practices researchers should follow to participate
+successfully with the Linux developer community.
 
-> > >   	  shadow stack to protect function return addresses from being
-> > >   	  overwritten by an attacker. More information can be found in
-> > >   	  Clang's documentation:
-> > > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > > index 09b885cc4db5..a48a604301aa 100644
-> > > --- a/arch/arm64/Kconfig
-> > > +++ b/arch/arm64/Kconfig
-> > > @@ -1255,7 +1255,7 @@ config HW_PERF_EVENTS
-> > >   config ARCH_HAS_FILTER_PGPROT
-> > >   	def_bool y
-> > > -# Supported by clang >= 7.0
-> > > +# Supported by clang >= 7.0 or GCC > 11.2.0
-> > 
-> > Same thing here, although eventually there may be a minimum GCC version
-> > bump to something newer than 11.2.0, which would allow us to just drop
-> > CONFIG_CC_HAVE_SHADOW_CALL_STACK altogether. No strong opinion.
-> > 
-> 
-> As Guenter said, I thought maybe we could mark the minimum available
-> version for users :)
+[1] https://lore.kernel.org/lkml/202105051005.49BFABCE@keescook/
 
-Yes, that is what I was getting at with the "minimum version" comment.
-It should remain around.
+Co-developed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Co-developed-by: Jonathan Corbet <corbet@lwn.net>
+Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+Co-developed-by: Stefano Zacchiroli <zack@upsilon.cc>
+Signed-off-by: Stefano Zacchiroli <zack@upsilon.cc>
+Co-developed-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+Acked-by: Steve Rostedt <rostedt@goodmis.org>
+Acked-by: Laura Abbott <labbott@kernel.org>
+Reviewed-by: Julia Lawall <julia.lawall@inria.fr>
+Reviewed-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ Documentation/admin-guide/index.rst           |   1 +
+ .../admin-guide/researcher-guidelines.rst     | 141 ++++++++++++++++++
+ 2 files changed, 142 insertions(+)
+ create mode 100644 Documentation/admin-guide/researcher-guidelines.rst
 
-Cheers,
-Nathan
+diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+index 1bedab498104..7fff0730204d 100644
+--- a/Documentation/admin-guide/index.rst
++++ b/Documentation/admin-guide/index.rst
+@@ -35,6 +35,7 @@ problems and bugs in particular.
+    :maxdepth: 1
+ 
+    reporting-issues
++   researcher-guidelines
+    security-bugs
+    bug-hunting
+    bug-bisect
+diff --git a/Documentation/admin-guide/researcher-guidelines.rst b/Documentation/admin-guide/researcher-guidelines.rst
+new file mode 100644
+index 000000000000..993f32d1166c
+--- /dev/null
++++ b/Documentation/admin-guide/researcher-guidelines.rst
+@@ -0,0 +1,141 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++.. _researcher_guidelines:
++
++Researcher Guidelines
+++++++++++++++++++++++
++
++The Linux kernel community welcomes transparent research on the Linux
++kernel, the activities involved in producing it, and any other byproducts
++of its development. Linux benefits greatly from this kind of research, and
++most aspects of Linux are driven by research in one form or another.
++
++The community greatly appreciates if researchers can share preliminary
++findings before making their results public, especially if such research
++involves security. Getting involved early helps both improve the quality
++of research and ability for Linux to improve from it. In any case,
++sharing open access copies of the published research with the community
++is recommended.
++
++This document seeks to clarify what the Linux kernel community considers
++acceptable and non-acceptable practices when conducting such research. At
++the very least, such research and related activities should follow
++standard research ethics rules. For more background on research ethics
++generally, ethics in technology, and research of developer communities
++in particular, see:
++
++* `History of Research Ethics <https://www.unlv.edu/research/ORI-HSR/history-ethics>`_
++* `IEEE Ethics <https://www.ieee.org/about/ethics/index.html>`_
++* `Developer and Researcher Views on the Ethics of Experiments on
++   Open-Source Projects <https://arxiv.org/pdf/2112.13217.pdf>`_
++
++The Linux kernel community expects that everyone interacting with the
++project is participating in good faith to make Linux better. Research on
++any publicly-available artifact (including, but not limited to source
++code) produced by the Linux kernel community is welcome, though research
++on developers must be distinctly opt-in.
++
++Passive research that is based entirely on publicly available sources,
++including posts to public mailing lists and commits to public
++repositories, is clearly permissible. Though, as with any research,
++standard ethics must still be followed.
++
++Active research on developer behavior, however, must be done with the
++explicit agreement of, and full disclosure to, the individual developers
++involved. Developers cannot be interacted with/experimented on without
++consent; this, too, is standard research ethics.
++
++To help clarify: sending patches to developers *is* interacting
++with them, but they have already consented to receiving *good faith
++contributions*. Sending intentionally flawed/vulnerable patches or
++contributing misleading information to discussions is not consented
++to. Such communication can be damaging to the developer (e.g. draining
++time, effort, and morale) and damaging to the project by eroding
++the entire developer community's trust in the contributor (and the
++contributor's organization as a whole), undermining efforts to provide
++constructive feedback to contributors, and putting end users at risk of
++software flaws.
++
++Participation in the development of Linux itself by researchers, as
++with anyone, is welcomed and encouraged. Research into Linux code is
++a common practice, especially when it comes to developing or running
++analysis tools that produce actionable results.
++
++When engaging with the developer community, sending a patch has
++traditionally been the best way to make an impact. Linux already has
++plenty of known bugs -- what's much more helpful is having vetted fixes.
++Before contributing, carefully read the documentation on
++:doc:`submitting patches <../process/submitting-patches>`,
++:doc:`reporting issues <reporting-issues>`, and
++:doc:`handling serious flaws <security-bugs>`. Send a patch (including
++a commit log with all the details listed below), and follow up on any
++feedback from other developers.
++
++When sending patches produced from research, the commit logs should
++contain at least the following details, so that developers have
++appropriate context for understanding the contribution. Answer:
++
++* What is the specific problem that has been found?
++* How could the problem be reached on a running system?
++* What effect would encountering the problem have on the system?
++* How was the problem found? Specifically include details about any
++  testing, static or dynamic analysis programs, and any other tools or
++  methods used to perform the work.
++* Which version of Linux was the problem was found on? Using the most
++  recent release or a recent :doc:`linux-next branch <../process/howto>`
++  is strongly preferred.
++* What was changed to fix the problem, and why it is believed to be correct?
++* How was the change build tested and run-time tested?
++* What prior commit does this change fix? This should go in a "Fixes:"
++  tag as the documentation describes.
++* Who else has reviewed this patch? This should go in appropriate
++  "Reviewed-by:" tags; see below.
++
++For example::
++
++  From: Author <author@email>
++  Subject: [PATCH] drivers/foo_bar: Add missing kfree()
++
++  The error path in foo_bar driver does not correctly free the allocated
++  struct foo_bar_info. This can happen if the attached foo_bar device
++  rejects the initialization packets sent during foo_bar_probe(). This
++  would result in a 64 byte slab memory leak once per device attach,
++  wasting memory resources over time.
++
++  This flaw was found using an experimental static analysis tool we are
++  developing, LeakMagic[1], which reported the following warning when
++  analyzing the v5.15 kernel release:
++
++   path/to/foo_bar.c:187: missing kfree() call?
++
++  Add the missing kfree() to the error path. No other references to
++  this memory exist outside the probe function, so this is the only
++  place it can be freed.
++
++  x86_64 and arm64 defconfig builds with CONFIG_FOO_BAR=y using GCC
++  11.2 show no new warnings, and LeakMagic no longer warns about this
++  code path. As we don't have a FooBar device to test with, no runtime
++  testing was able to be performed.
++
++  [1] https://url/to/leakmagic/details
++
++  Reported-by: Researcher <researcher@email>
++  Fixes: aaaabbbbccccdddd ("Introduce support for FooBar")
++  Signed-off-by: Author <author@email>
++  Reviewed-by: Reviewer <reviewer@email>
++
++If you are a first time contributor it is recommended that the patch
++itself be vetted by others privately before being posted to public lists.
++(This is required if you have been explicitly told your patches need
++more careful internal review.) These people are expected to have their
++"Reviewed-by" tag included in the resulting patch. Finding another
++developer familiar with Linux contribution, especially within your own
++organization, and having them help with reviews before sending them to
++the public mailing lists tends to significantly improve the quality of the
++resulting patches, and there by reduces the burden on other developers.
++
++If no one can be found to internally review patches and you need
++help finding such a person, or if you have any other questions
++related to this document and the developer community's expectations,
++please reach out to the private Technical Advisory Board mailing list:
++<tech-board@lists.linux-foundation.org>.
+-- 
+2.30.2
+
