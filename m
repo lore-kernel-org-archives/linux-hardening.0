@@ -2,96 +2,80 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45914C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 09:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4F9C433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 09:45:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232284AbiBXJR3 (ORCPT
+        id S232702AbiBXJpw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Feb 2022 04:17:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48992 "EHLO
+        Thu, 24 Feb 2022 04:45:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232529AbiBXJR2 (ORCPT
+        with ESMTP id S232105AbiBXJpu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Feb 2022 04:17:28 -0500
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D71F9B250B;
-        Thu, 24 Feb 2022 01:16:57 -0800 (PST)
-Received: by mail-vs1-f51.google.com with SMTP id u10so1393023vsu.13;
-        Thu, 24 Feb 2022 01:16:57 -0800 (PST)
+        Thu, 24 Feb 2022 04:45:50 -0500
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF20A27DF31;
+        Thu, 24 Feb 2022 01:45:20 -0800 (PST)
+Received: by mail-ej1-x62a.google.com with SMTP id bg10so3090013ejb.4;
+        Thu, 24 Feb 2022 01:45:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2bq1GD0jy9T+yRRISppNcCl5IjRO7UwAkdMEPjekUD4=;
+        b=CJKeWGRH84suOvoSjt58KDLWmFmX/vxqR72SQml+AHqPcLbBss5jDWcTr6AM7P9YG+
+         +cFxHfRFn49+jra/Fbe23fQ3ItjFw2uQJ3/E1+MqOBNZlQY0H0YimN4jC61KyqZ/bhFq
+         Fr14TUI2j5sG4M28ss3+5HsL6dNvfyY7xaoaBUFq6yCSKOpT9mSA4Y0XGrsGI8lcqauD
+         RKJEoylC8Emm3Ik6KTnHSdqwYQADVP0OKq5dDEd31LbIAyudOMbcaNqJAIMhmSz3Xbzf
+         eFnI+Zq53aXN7hJfLXs1zuCYwNzu/AqctUqlFgW8StCHzzmSbMw0upXx/DworrBaBqAG
+         wy7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NTd9N13TV5CbKXDGdNq7pUdUNNFFvtUDS+ni8CDyggE=;
-        b=lScmMw5BT63X8kLeEvJTrOwIpbPmGf2wNpZyacy3WVTyXk3xTE6fyAoZywPoCuOKxO
-         SUu8+rNn4jEOSvMbF8RpmAkJGYrb21vutJuI4pWGRfG9mCYL5N5/TNOYMaIfzREoZUes
-         /4e2EwusHStAZ6JU+yvrrNLXrxfZypY2uQai1GCdXq5bew3WzramKrvRgKRbA78SF63l
-         m7rxe7UwWSmd9DHtB/MgCBsF4s5F3cMNPE3UWZ3GkdF5jZdR79ra8GQ3pRsshTsimsrI
-         QPIyTabSC0BuCaM0ZmTgVMA5jQKjCnKXCx4lK0HLz8daPILgESglvFNocgfZp20O+vgf
-         wBsA==
-X-Gm-Message-State: AOAM532jG0OXQXxb3o4gl9u4i77+PKxrOHutTJXTBFUNkfY6kOKiRDHO
-        c1F28ri+o0657v+75wVPYXLdXsQ86QxZoQ==
-X-Google-Smtp-Source: ABdhPJz9eK3KZvx5qIfFhQT88iQjUJ76+n9nQyrERAaYU7ZKl+q7oJiaLh+U2qWY+NF2Gz5bpJkPrg==
-X-Received: by 2002:a67:d092:0:b0:31c:25f3:fc3a with SMTP id s18-20020a67d092000000b0031c25f3fc3amr751633vsi.45.1645694216894;
-        Thu, 24 Feb 2022 01:16:56 -0800 (PST)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id h20sm323892vsk.16.2022.02.24.01.16.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Feb 2022 01:16:56 -0800 (PST)
-Received: by mail-ua1-f51.google.com with SMTP id g15so570169ual.11;
-        Thu, 24 Feb 2022 01:16:56 -0800 (PST)
-X-Received: by 2002:ab0:1009:0:b0:343:779c:f40a with SMTP id
- f9-20020ab01009000000b00343779cf40amr672014uab.89.1645694216310; Thu, 24 Feb
- 2022 01:16:56 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2bq1GD0jy9T+yRRISppNcCl5IjRO7UwAkdMEPjekUD4=;
+        b=bqRxzqouBUtxh+nS5g/IisLltTI/U+cexJ59eZ2pHDfzZ9I8z9U8t0UtnMkBkLw8+f
+         EBlZEBqituqqej/OhPwwfoodQkQcxucfeKQoB5uD6lAiBDCAROgRxeAE6ahPq36IwO34
+         tXs5Gh3pv2ObdjNaO3WE/waSm8OrK3qYYQ0tv4Shv+8XyYf6M4I+mAhllXiEakamrOP/
+         r3FbZvbqnHziy4Qj9FYL8E0/Laze3silXL3skbIS/lkAfhIyPzxmAmF9Yw0tnSRDKq2X
+         E77uv1LY8I+vuHZZfEoRY3pxWNxsHKkRXoJEksTOMMZluquISjIb3Fco5Y2S0RNzS6AQ
+         dCXQ==
+X-Gm-Message-State: AOAM5310KCC9gqhvp8KvcVjn8ASGvzknLxSqvtIBoqWeHG145TIDMMSr
+        5Wjk+B74hR3QAH1JhgGHNHLuusNy+Q==
+X-Google-Smtp-Source: ABdhPJyI9AsrwzY4egVw/KkmAwv6B63e+6k98CRk1XQ8KI7+7LLVavtr+Ld0EyoA9Rue9FEoV6rTMw==
+X-Received: by 2002:a17:906:dfe9:b0:6cf:7f1d:dddd with SMTP id lc9-20020a170906dfe900b006cf7f1dddddmr1547256ejc.621.1645695919492;
+        Thu, 24 Feb 2022 01:45:19 -0800 (PST)
+Received: from localhost.localdomain ([46.53.251.11])
+        by smtp.gmail.com with ESMTPSA id s6sm1075471ejc.206.2022.02.24.01.45.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Feb 2022 01:45:19 -0800 (PST)
+Date:   Thu, 24 Feb 2022 12:45:17 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Eric Biederman <ebiederm@xmission.com>,
+        David Gow <davidgow@google.com>,
+        Magnus =?utf-8?B?R3Jvw58=?= <magnus.gross@rwth-aachen.de>,
+        kunit-dev@googlegroups.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] binfmt_elf: Introduce KUnit test
+Message-ID: <YhdTrXhu6sgi35WQ@localhost.localdomain>
+References: <20220224054332.1852813-1-keescook@chromium.org>
 MIME-Version: 1.0
-References: <20220224060448.1856091-1-keescook@chromium.org>
- <CAMuHMdVioQLy_T2LimgWdfWM=j=fomfpayuS1mbXnBLZj4gGQA@mail.gmail.com> <d75f1259c3e64387a161ebcb0448d594@AcuMS.aculab.com>
-In-Reply-To: <d75f1259c3e64387a161ebcb0448d594@AcuMS.aculab.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 24 Feb 2022 10:16:45 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWtQ+B-01ZOwZNvgQ7pndNsP3V90_jHdR=RS4K7O3Vk9g@mail.gmail.com>
-Message-ID: <CAMuHMdWtQ+B-01ZOwZNvgQ7pndNsP3V90_jHdR=RS4K7O3Vk9g@mail.gmail.com>
-Subject: Re: [PATCH] m68k: Implement "current_stack_pointer"
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20220224054332.1852813-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 10:12 AM David Laight <David.Laight@aculab.com> wrote:
-> From: Geert Uytterhoeven
-> > Sent: 24 February 2022 08:59
-> ...
-> > > +register unsigned long current_stack_pointer __asm__("sp");
-> >
-> > I don't know what HARDENED_USERCOPY does, so I don't know if you need
-> > "usp" (see rdusp()) or "sp"?
->
-> HARDENED_USERCOPY significantly slows down some systems calls
-> (especially things like sendmsg()) by trying to run-time verify
-> that the kernel buffer doesn't overrun a stack frame or kmalloc()ed
+On Wed, Feb 23, 2022 at 09:43:32PM -0800, Kees Cook wrote:
+> Adds simple KUnit test for some binfmt_elf internals: specifically a
+> regression test for the problem fixed by commit 8904d9cd90ee ("ELF:
+> fix overflow in total mapping size calculation").
 
-Kernel stack frame of user stack frame?
+This can be tested by small 2 segment program run from userspace.
+Make 2 segments, swap them, and see executable rejected because mmap
+gets too big an area.
 
-> buffer.
->
-> I've got measurable improvements by either using __copy_to/from_user()
-> (which skips the tests) or user_access_begin() and __get_user().
->
-> At the moment the code for reading a compat iovec[] is actually
-> faster than that for a native one!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+	PT_ALEXEY
