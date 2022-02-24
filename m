@@ -2,107 +2,170 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E07C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 01:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04750C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 02:11:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229816AbiBXBsJ (ORCPT
+        id S229977AbiBXCLz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 23 Feb 2022 20:48:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36728 "EHLO
+        Wed, 23 Feb 2022 21:11:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229793AbiBXBsD (ORCPT
+        with ESMTP id S229974AbiBXCLz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 23 Feb 2022 20:48:03 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EB7423BDC;
-        Wed, 23 Feb 2022 17:47:33 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0CB9BB81CA4;
-        Thu, 24 Feb 2022 00:52:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C6CFC340E7;
-        Thu, 24 Feb 2022 00:52:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645663953;
-        bh=1wzgF479p3ytx0ZzaTYvEhrP3c0Wz+/eVxMr9mVuoZc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NdZ5AkMj1MD0sYFXndFb06IDhwCIkzDr7t2p2oT0ogjvpr2ArUTTHSzrNAKO7qRxS
-         jf+xOFGqcxnPN/ma3hgugytyYGivksqL7y5bDQBArhCfujBGigla05WPUcBR95FdZu
-         0pR2l90PQKftIkKZN9TQwGdG64fWaOv4tmsahmJXEKl9GzFWdOy3tDk77iWHH69fGj
-         dd/5hfGB3TiuJFzTdZPCmppuSzZiROOFjxqg146sty23/VZ3BhxWHKp5t8YBbzNmRq
-         7lf//GGQHPH6x48jpmaF93eVWNMpU6IwOsEuQt23XUfhWB1aGIlNqK0RaDT12XEM8N
-         OhI/HudSZpLEQ==
-Date:   Wed, 23 Feb 2022 19:00:30 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefano Zacchiroli <zack@upsilon.cc>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Laura Abbott <labbott@kernel.org>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Wenwen Wang <wenwen@cs.uga.edu>,
-        Thorsten Leemhuis <linux@leemhuis.info>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] Documentation/process: Add Researcher Guidelines
-Message-ID: <20220224010030.GA1282918@embeddedor>
-References: <20220224001403.1307377-1-keescook@chromium.org>
+        Wed, 23 Feb 2022 21:11:55 -0500
+Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD843D69;
+        Wed, 23 Feb 2022 18:11:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1645668685; x=1677204685;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=fZyhYuwnNQimtogeAc+YQ3EaiDLzHnTREqeogFQmmrI=;
+  b=bERLsWhCZLj/ZLIGwVBNzuQsFDcycH1TMRsmkG6htHImLbF/IUH+GUzR
+   /aNUy0oHYJ0FTrxjXFDaoP4Rj6hSdyIqeT19Uf4pBBEW/9M6A/4BGyF+q
+   LADjbXLMFuQ7RQUq+kUvdpukOR6/4Z7uVO9TOtbzk5EEOFhNRQrNggkq+
+   E=;
+Received: from ironmsg07-lv.qualcomm.com ([10.47.202.151])
+  by alexa-out.qualcomm.com with ESMTP; 23 Feb 2022 16:49:10 -0800
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
+  by ironmsg07-lv.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 16:49:09 -0800
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.15; Wed, 23 Feb 2022 16:49:09 -0800
+Received: from [10.48.243.226] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.15; Wed, 23 Feb
+ 2022 16:49:08 -0800
+Message-ID: <3abb0846-a26f-3d76-8936-cd23cf4387f1@quicinc.com>
+Date:   Wed, 23 Feb 2022 16:49:08 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220224001403.1307377-1-keescook@chromium.org>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH 3/6][next] ath6kl: wmi: Replace one-element array with
+ flexible-array member in struct wmi_channel_list_reply
+Content-Language: en-US
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
+References: <cover.1645583264.git.gustavoars@kernel.org>
+ <30306253b1b5e6b8f5c0faba97e935eda4638020.1645583264.git.gustavoars@kernel.org>
+From:   Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <30306253b1b5e6b8f5c0faba97e935eda4638020.1645583264.git.gustavoars@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.49.16.6]
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 04:14:03PM -0800, Kees Cook wrote:
-> As a follow-up to the UMN incident[1], the TAB took the responsibility
-> to document Researcher Guidelines so there would be a common place to
-> point for describing our expectations as a developer community.
+On 2/22/2022 6:38 PM, Gustavo A. R. Silva wrote:
+> Replace one-element array with flexible-array member in struct
+> wmi_channel_list_reply.
 > 
-> Document best practices researchers should follow to participate
-> successfully with the Linux developer community.
+> It's also worth noting that due to the flexible array transformation,
+> the size of struct wmi_channel_list_reply changed, see below.
 > 
-> [1] https://lore.kernel.org/lkml/202105051005.49BFABCE@keescook/
+> Before flex-array transformation:
 > 
-> Co-developed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Co-developed-by: Jonathan Corbet <corbet@lwn.net>
-> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
-> Co-developed-by: Stefano Zacchiroli <zack@upsilon.cc>
-> Signed-off-by: Stefano Zacchiroli <zack@upsilon.cc>
-> Co-developed-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
-> Acked-by: Steve Rostedt <rostedt@goodmis.org>
-> Acked-by: Laura Abbott <labbott@kernel.org>
-> Reviewed-by: Julia Lawall <julia.lawall@inria.fr>
-> Reviewed-by: Wenwen Wang <wenwen@cs.uga.edu>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-See a comment below...
-
+> struct wmi_channel_list_reply {
+> 	u8                         reserved;             /*     0     1 */
+> 	u8                         num_ch;               /*     1     1 */
+> 	__le16                     ch_list[1];           /*     2     2 */
+> 
+> 	/* size: 4, cachelines: 1, members: 3 */
+> 	/* last cacheline: 4 bytes */
+> };
+> 
+> After flex-array transformation:
+> 
+> struct wmi_channel_list_reply {
+> 	u8                         reserved;             /*     0     1 */
+> 	u8                         num_ch;               /*     1     1 */
+> 	__le16                     ch_list[];            /*     2     0 */
+> 
+> 	/* size: 2, cachelines: 1, members: 3 */
+> 	/* last cacheline: 2 bytes */
+> };
+> 
+> So, the following change preserves the logic that if _len_ is at least
+> 4 bytes in size, this is the existence of at least one channel in
+> ch_list[] is being considered, then the execution jumps to call
+> ath6kl_wakeup_event(wmi->parent_dev);, otherwise _len_ is 2 bytes or
+> less and the code returns -EINVAL:
+> 
+> 	-       if (len < sizeof(struct wmi_channel_list_reply))
+> 	+       if (len <= sizeof(struct wmi_channel_list_reply))
+> 
+> This issue was found with the help of Coccinelle and audited and fixed,
+> manually.
+> 
+> Link: https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
+> Link: https://github.com/KSPP/linux/issues/79
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->  Documentation/admin-guide/index.rst           |   1 +
->  .../admin-guide/researcher-guidelines.rst     | 141 ++++++++++++++++++
->  2 files changed, 142 insertions(+)
->  create mode 100644 Documentation/admin-guide/researcher-guidelines.rst
+> Hi!
+> 
+> It'd be great if someone can confirm or comment on the following
+> changes described in the changelog text:
+> 
+> 	-       if (len < sizeof(struct wmi_channel_list_reply))
+> 	+       if (len <= sizeof(struct wmi_channel_list_reply))
 
-[..]
+My opinion is this can remain unchanged since being unchanged would 
+correctly handle a channel list with no channels whereas the original 
+code required that at least one channel be present.
 
-> +* What is the specific problem that has been found?
-> +* How could the problem be reached on a running system?
-> +* What effect would encountering the problem have on the system?
-> +* How was the problem found? Specifically include details about any
-> +  testing, static or dynamic analysis programs, and any other tools or
-> +  methods used to perform the work.
-> +* Which version of Linux was the problem was found on? Using the most
+The test is really there just to make sure the entirety of the "fixed" 
+portion of the message is present.
 
-I think there is an extra "was" in the question above.
+Ultimately it doesn't matter since no actual processing of the channel 
+list takes place.
 
-Thanks
---
-Gustavo
+If actual processing took place, then it would make sense to have an 
+additional test to verify the len is large enough to handle num_ch entries.
+
+
+> 
+> Thanks
+> 
+>   drivers/net/wireless/ath/ath6kl/wmi.c | 2 +-
+>   drivers/net/wireless/ath/ath6kl/wmi.h | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/ath/ath6kl/wmi.c b/drivers/net/wireless/ath/ath6kl/wmi.c
+> index bdfc057c5a82..049d75f31f3c 100644
+> --- a/drivers/net/wireless/ath/ath6kl/wmi.c
+> +++ b/drivers/net/wireless/ath/ath6kl/wmi.c
+> @@ -1240,7 +1240,7 @@ static int ath6kl_wmi_ratemask_reply_rx(struct wmi *wmi, u8 *datap, int len)
+>   
+>   static int ath6kl_wmi_ch_list_reply_rx(struct wmi *wmi, u8 *datap, int len)
+>   {
+> -	if (len < sizeof(struct wmi_channel_list_reply))
+> +	if (len <= sizeof(struct wmi_channel_list_reply))
+>   		return -EINVAL;
+>   
+>   	ath6kl_wakeup_event(wmi->parent_dev);
+> diff --git a/drivers/net/wireless/ath/ath6kl/wmi.h b/drivers/net/wireless/ath/ath6kl/wmi.h
+> index 9e168752bec2..432e4f428a4a 100644
+> --- a/drivers/net/wireless/ath/ath6kl/wmi.h
+> +++ b/drivers/net/wireless/ath/ath6kl/wmi.h
+> @@ -1373,7 +1373,7 @@ struct wmi_channel_list_reply {
+>   	u8 num_ch;
+>   
+>   	/* channel in Mhz */
+> -	__le16 ch_list[1];
+> +	__le16 ch_list[];
+>   } __packed;
+>   
+>   /* List of Events (target to host) */
+
+whether or not you modify the length check consider this:
+Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
