@@ -2,261 +2,146 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CF3C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 00:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33252C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 01:30:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242549AbiBXAOh (ORCPT
+        id S229517AbiBXBbH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 23 Feb 2022 19:14:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40390 "EHLO
+        Wed, 23 Feb 2022 20:31:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242345AbiBXAOh (ORCPT
+        with ESMTP id S229471AbiBXBbH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 23 Feb 2022 19:14:37 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 126A160047
-        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 16:14:07 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id z2so241285plg.8
-        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 16:14:07 -0800 (PST)
+        Wed, 23 Feb 2022 20:31:07 -0500
+Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E838F9FB2;
+        Wed, 23 Feb 2022 17:30:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tWiJqyBmHVLQbDjgYyBAcQodJ4PbnDvUmaAVoLsJS4w=;
-        b=B+uh6Yp6xmTIXeSfs1JnBFk/jkkLZ1Vw3BYubhwlQbspU1RCcNeNqctn4I70RVLIol
-         Si6KDKcaEODue79zVe71vc/DaykBQDtjchY9fgGTBS+KTTnL37m8tlAxIV6NsBX133xz
-         Q2rkDjkA10QCxmyJQa0mMefeOF+NB5BwMJV1w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tWiJqyBmHVLQbDjgYyBAcQodJ4PbnDvUmaAVoLsJS4w=;
-        b=bmo7ydeBXcbqIGH6I0OzRCKD/Cn6UiSOGAmFFs1a2IC3PeUxcqt3sUsEU9LpuAgQUN
-         a4Ekbb01MU+rRKwZ4DiufhY5dE6yD8a1jyUBR+rkVwLTQ/KbWW9Ntc+OzG/FCJHTKEWZ
-         L7eaCspSnYgIcAPU8/XdBPDs2dM2cai6EOWD8norvS1JfBSfLugHHbq3Twq2Z0r0oOBK
-         mndUx7noilnR/OePc5r75PuNhoxzkXD1L3FWEr4ckvI7BMvS27x7YvVV4W/GCZV4TYZI
-         P7dZJqY0ls/917IlyHUEkWGXggfHx9Vl/z9TiC0APAYiYWpoSVEJGSWGJKyEdl31BRAL
-         Gkgw==
-X-Gm-Message-State: AOAM532cjxdk9gvC10SAx2ZNzysG5TJ9NjNTqs4ZO8TIgxmjnQNTMSfZ
-        DunCr7WWFB4zw2Mo8HucBO9vQQ==
-X-Google-Smtp-Source: ABdhPJy7IikcyjifqSeBxQRWe/5wcWscPFj8T6f6zKjKgTnz+rDNhdCaD/mPxW/d2ffvImjPoFesLA==
-X-Received: by 2002:a17:90b:3d02:b0:1bc:85fa:e24 with SMTP id pt2-20020a17090b3d0200b001bc85fa0e24mr8543922pjb.239.1645661646404;
-        Wed, 23 Feb 2022 16:14:06 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q13sm713743pfl.210.2022.02.23.16.14.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Feb 2022 16:14:06 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefano Zacchiroli <zack@upsilon.cc>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Laura Abbott <labbott@kernel.org>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Wenwen Wang <wenwen@cs.uga.edu>,
-        Thorsten Leemhuis <linux@leemhuis.info>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] Documentation/process: Add Researcher Guidelines
-Date:   Wed, 23 Feb 2022 16:14:03 -0800
-Message-Id: <20220224001403.1307377-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1645666235; x=1677202235;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rRJItIkRVPSRyn6WcQ0w1H/fcH0+5dRK4WI9eRknR58=;
+  b=lbIEGCMrHixZv9VYDEGej38vFQyC8yRLZqsYDsKL3R5KlY8qmlgXuScZ
+   G/UfvZ3RMrz+UOKBbX45zyb/25J5LO2S5lWI2gBqqyHcb/1MpvmhWFTy4
+   RmnzmaDM/vEuFmAWjqDmqqmb46gL4HaGUSQ3pxZp27MKf9ka2BS8vomNH
+   c=;
+Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
+  by alexa-out.qualcomm.com with ESMTP; 23 Feb 2022 16:50:19 -0800
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
+  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 16:50:19 -0800
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.15; Wed, 23 Feb 2022 16:50:19 -0800
+Received: from [10.48.243.226] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.15; Wed, 23 Feb
+ 2022 16:50:18 -0800
+Message-ID: <6106494b-a1b3-6b57-8b44-b9528127533b@quicinc.com>
+Date:   Wed, 23 Feb 2022 16:50:18 -0800
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9266; h=from:subject; bh=CQePDr1DFfNdm/DsFEAgI6x+RxatFwswD0jse+R0L4E=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiFs3KW/WPUnYzV5YGusU2EhRH8uEZL21QwjlzlBiZ rh1SwEGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYhbNygAKCRCJcvTf3G3AJldPD/ 95pMS7QUNj58sTT3dZgN6WQ/qY8zYt1FqqMcySA4xyYhNon/W/vZugARYfl0RR5VBVumR1FJgvYiDt nkyH5sLSl+KIHFLgCQEGvm9l6bjv9xStfI+rj9PkMdl4PvtE8TKqDwx3pvEKhv1/pSym9frfRmKLNT YN05KDgumKd7mop+zbKrH3Orl7aInOISB5/8WU5JuWgcykH4bCMwiC5vbZyyZPZMHsXSD+aitb34Pj CcWlBHUBgijHJYsvWydqYnERQNw407IHYG4YHciRFo71dxcRZhjMwEY0YcNJKFu6LKHaTra9b49YdQ Hu6/VNxNjCofKYr7GXtZfttFTph8BQhksrVRGePE1ud5+XfykMd7sGuUdhubEeJ6GBo2gIXlj9e9hE ZrfC+LytF8c7FOUCzWmAFLpdtKp83ouvNwJVnEDm8U3Br9dOjUjvBpawFQD/fPoJfn181YDaWo20C6 hcXo59ekz1FBVMAblRCAP+18Y5Y25HvwIm3B50mKCneyMpuB/0qfaH20SPaemUkhurlWNQVW7X6r2+ UxR82X6pqbOeL4HF/EL5QgPp1eH+4bnZx4A2PKyBbk2d/7xrtgPPvq/GeZL/WyBNqJLVm0J1qtSADh vmdmW+UoPxSPsmf5U8xwMwfkEYNkplB1XLugmavmbUIFEKza6Xcmwu20G3mw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH 4/6][next] ath6kl: wmi: Replace one-element array with
+ flexible-array member in struct wmi_connect_event
+Content-Language: en-US
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
+References: <cover.1645583264.git.gustavoars@kernel.org>
+ <8a0e347615a3516980fd8b6ad2dc4864a880613b.1645583264.git.gustavoars@kernel.org>
+From:   Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <8a0e347615a3516980fd8b6ad2dc4864a880613b.1645583264.git.gustavoars@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.49.16.6]
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-As a follow-up to the UMN incident[1], the TAB took the responsibility
-to document Researcher Guidelines so there would be a common place to
-point for describing our expectations as a developer community.
+On 2/22/2022 6:38 PM, Gustavo A. R. Silva wrote:
+> Replace one-element array with flexible-array member in struct
+> wmi_connect_event.
+> 
+> It's also worth noting that due to the flexible array transformation,
+> the size of struct wmi_connect_event changed (now the size is 1 byte
+> smaller), and in order to preserve the logic of before the transformation,
+> the following change is needed:
+> 
+> 	-       if (len < sizeof(struct wmi_connect_event))
+> 	+       if (len <= sizeof(struct wmi_connect_event))
+> 
+> This issue was found with the help of Coccinelle and audited and fixed,
+> manually.
+> 
+> Link: https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
+> Link: https://github.com/KSPP/linux/issues/79
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> Hi!
+> 
+> It'd be great if someone can confirm or comment on the following
+> changes described in the changelog text:
+> 
+>          -       if (len < sizeof(struct wmi_connect_event))
+>          +       if (len <= sizeof(struct wmi_connect_event))
+> 
+> Thanks
+> 
+>   drivers/net/wireless/ath/ath6kl/wmi.c | 2 +-
+>   drivers/net/wireless/ath/ath6kl/wmi.h | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/ath/ath6kl/wmi.c b/drivers/net/wireless/ath/ath6kl/wmi.c
+> index 049d75f31f3c..ccdccead688e 100644
+> --- a/drivers/net/wireless/ath/ath6kl/wmi.c
+> +++ b/drivers/net/wireless/ath/ath6kl/wmi.c
+> @@ -857,7 +857,7 @@ static int ath6kl_wmi_connect_event_rx(struct wmi *wmi, u8 *datap, int len,
+>   	struct wmi_connect_event *ev;
+>   	u8 *pie, *peie;
+>   
+> -	if (len < sizeof(struct wmi_connect_event))
+> +	if (len <= sizeof(struct wmi_connect_event))
 
-Document best practices researchers should follow to participate
-successfully with the Linux developer community.
+this is another case where IMO the original code can remain since all it 
+is really checking is to see if the entire "fixed" portion is present. 
+in reality if there was just one byte of assoc_info the response would 
+actually be invalid.
 
-[1] https://lore.kernel.org/lkml/202105051005.49BFABCE@keescook/
+what is missing is logic that verifies len is large enough to hold the 
+payload that is advertised via the beacon_ie_len, assoc_req_len, & 
+assoc_resp_len members. without this even if you change the initial len 
+check you can have a condition where len says there is one u8 in 
+assoc_info (and pass the initial test) but the other three members 
+indicate that much more data is present.
 
-Co-developed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Co-developed-by: Jonathan Corbet <corbet@lwn.net>
-Signed-off-by: Jonathan Corbet <corbet@lwn.net>
-Co-developed-by: Stefano Zacchiroli <zack@upsilon.cc>
-Signed-off-by: Stefano Zacchiroli <zack@upsilon.cc>
-Co-developed-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
-Acked-by: Steve Rostedt <rostedt@goodmis.org>
-Acked-by: Laura Abbott <labbott@kernel.org>
-Reviewed-by: Julia Lawall <julia.lawall@inria.fr>
-Reviewed-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- Documentation/admin-guide/index.rst           |   1 +
- .../admin-guide/researcher-guidelines.rst     | 141 ++++++++++++++++++
- 2 files changed, 142 insertions(+)
- create mode 100644 Documentation/admin-guide/researcher-guidelines.rst
+but that is a pre-existing shortcoming that should be handled with a 
+separate patch.
 
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 1bedab498104..7fff0730204d 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -35,6 +35,7 @@ problems and bugs in particular.
-    :maxdepth: 1
- 
-    reporting-issues
-+   researcher-guidelines
-    security-bugs
-    bug-hunting
-    bug-bisect
-diff --git a/Documentation/admin-guide/researcher-guidelines.rst b/Documentation/admin-guide/researcher-guidelines.rst
-new file mode 100644
-index 000000000000..993f32d1166c
---- /dev/null
-+++ b/Documentation/admin-guide/researcher-guidelines.rst
-@@ -0,0 +1,141 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+.. _researcher_guidelines:
-+
-+Researcher Guidelines
-++++++++++++++++++++++
-+
-+The Linux kernel community welcomes transparent research on the Linux
-+kernel, the activities involved in producing it, and any other byproducts
-+of its development. Linux benefits greatly from this kind of research, and
-+most aspects of Linux are driven by research in one form or another.
-+
-+The community greatly appreciates if researchers can share preliminary
-+findings before making their results public, especially if such research
-+involves security. Getting involved early helps both improve the quality
-+of research and ability for Linux to improve from it. In any case,
-+sharing open access copies of the published research with the community
-+is recommended.
-+
-+This document seeks to clarify what the Linux kernel community considers
-+acceptable and non-acceptable practices when conducting such research. At
-+the very least, such research and related activities should follow
-+standard research ethics rules. For more background on research ethics
-+generally, ethics in technology, and research of developer communities
-+in particular, see:
-+
-+* `History of Research Ethics <https://www.unlv.edu/research/ORI-HSR/history-ethics>`_
-+* `IEEE Ethics <https://www.ieee.org/about/ethics/index.html>`_
-+* `Developer and Researcher Views on the Ethics of Experiments on
-+   Open-Source Projects <https://arxiv.org/pdf/2112.13217.pdf>`_
-+
-+The Linux kernel community expects that everyone interacting with the
-+project is participating in good faith to make Linux better. Research on
-+any publicly-available artifact (including, but not limited to source
-+code) produced by the Linux kernel community is welcome, though research
-+on developers must be distinctly opt-in.
-+
-+Passive research that is based entirely on publicly available sources,
-+including posts to public mailing lists and commits to public
-+repositories, is clearly permissible. Though, as with any research,
-+standard ethics must still be followed.
-+
-+Active research on developer behavior, however, must be done with the
-+explicit agreement of, and full disclosure to, the individual developers
-+involved. Developers cannot be interacted with/experimented on without
-+consent; this, too, is standard research ethics.
-+
-+To help clarify: sending patches to developers *is* interacting
-+with them, but they have already consented to receiving *good faith
-+contributions*. Sending intentionally flawed/vulnerable patches or
-+contributing misleading information to discussions is not consented
-+to. Such communication can be damaging to the developer (e.g. draining
-+time, effort, and morale) and damaging to the project by eroding
-+the entire developer community's trust in the contributor (and the
-+contributor's organization as a whole), undermining efforts to provide
-+constructive feedback to contributors, and putting end users at risk of
-+software flaws.
-+
-+Participation in the development of Linux itself by researchers, as
-+with anyone, is welcomed and encouraged. Research into Linux code is
-+a common practice, especially when it comes to developing or running
-+analysis tools that produce actionable results.
-+
-+When engaging with the developer community, sending a patch has
-+traditionally been the best way to make an impact. Linux already has
-+plenty of known bugs -- what's much more helpful is having vetted fixes.
-+Before contributing, carefully read the documentation on
-+:doc:`submitting patches <../process/submitting-patches>`,
-+:doc:`reporting issues <reporting-issues>`, and
-+:doc:`handling serious flaws <security-bugs>`. Send a patch (including
-+a commit log with all the details listed below), and follow up on any
-+feedback from other developers.
-+
-+When sending patches produced from research, the commit logs should
-+contain at least the following details, so that developers have
-+appropriate context for understanding the contribution. Answer:
-+
-+* What is the specific problem that has been found?
-+* How could the problem be reached on a running system?
-+* What effect would encountering the problem have on the system?
-+* How was the problem found? Specifically include details about any
-+  testing, static or dynamic analysis programs, and any other tools or
-+  methods used to perform the work.
-+* Which version of Linux was the problem was found on? Using the most
-+  recent release or a recent :doc:`linux-next branch <../process/howto>`
-+  is strongly preferred.
-+* What was changed to fix the problem, and why it is believed to be correct?
-+* How was the change build tested and run-time tested?
-+* What prior commit does this change fix? This should go in a "Fixes:"
-+  tag as the documentation describes.
-+* Who else has reviewed this patch? This should go in appropriate
-+  "Reviewed-by:" tags; see below.
-+
-+For example::
-+
-+  From: Author <author@email>
-+  Subject: [PATCH] drivers/foo_bar: Add missing kfree()
-+
-+  The error path in foo_bar driver does not correctly free the allocated
-+  struct foo_bar_info. This can happen if the attached foo_bar device
-+  rejects the initialization packets sent during foo_bar_probe(). This
-+  would result in a 64 byte slab memory leak once per device attach,
-+  wasting memory resources over time.
-+
-+  This flaw was found using an experimental static analysis tool we are
-+  developing, LeakMagic[1], which reported the following warning when
-+  analyzing the v5.15 kernel release:
-+
-+   path/to/foo_bar.c:187: missing kfree() call?
-+
-+  Add the missing kfree() to the error path. No other references to
-+  this memory exist outside the probe function, so this is the only
-+  place it can be freed.
-+
-+  x86_64 and arm64 defconfig builds with CONFIG_FOO_BAR=y using GCC
-+  11.2 show no new warnings, and LeakMagic no longer warns about this
-+  code path. As we don't have a FooBar device to test with, no runtime
-+  testing was able to be performed.
-+
-+  [1] https://url/to/leakmagic/details
-+
-+  Reported-by: Researcher <researcher@email>
-+  Fixes: aaaabbbbccccdddd ("Introduce support for FooBar")
-+  Signed-off-by: Author <author@email>
-+  Reviewed-by: Reviewer <reviewer@email>
-+
-+If you are a first time contributor it is recommended that the patch
-+itself be vetted by others privately before being posted to public lists.
-+(This is required if you have been explicitly told your patches need
-+more careful internal review.) These people are expected to have their
-+"Reviewed-by" tag included in the resulting patch. Finding another
-+developer familiar with Linux contribution, especially within your own
-+organization, and having them help with reviews before sending them to
-+the public mailing lists tends to significantly improve the quality of the
-+resulting patches, and there by reduces the burden on other developers.
-+
-+If no one can be found to internally review patches and you need
-+help finding such a person, or if you have any other questions
-+related to this document and the developer community's expectations,
-+please reach out to the private Technical Advisory Board mailing list:
-+<tech-board@lists.linux-foundation.org>.
--- 
-2.30.2
 
+>   		return -EINVAL;
+>   
+>   	ev = (struct wmi_connect_event *) datap;
+> diff --git a/drivers/net/wireless/ath/ath6kl/wmi.h b/drivers/net/wireless/ath/ath6kl/wmi.h
+> index 432e4f428a4a..6b064e669d87 100644
+> --- a/drivers/net/wireless/ath/ath6kl/wmi.h
+> +++ b/drivers/net/wireless/ath/ath6kl/wmi.h
+> @@ -1545,7 +1545,7 @@ struct wmi_connect_event {
+>   	u8 beacon_ie_len;
+>   	u8 assoc_req_len;
+>   	u8 assoc_resp_len;
+> -	u8 assoc_info[1];
+> +	u8 assoc_info[];
+>   } __packed;
+>   
+>   /* Disconnect Event */
+
+whether or not you modify the length check consider this:
+Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
