@@ -2,363 +2,309 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08573C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 07:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4779EC4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 08:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231244AbiBXH6c (ORCPT
+        id S229631AbiBXIUC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Feb 2022 02:58:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59388 "EHLO
+        Thu, 24 Feb 2022 03:20:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229617AbiBXH6b (ORCPT
+        with ESMTP id S230124AbiBXIUB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Feb 2022 02:58:31 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C891519E0B6
-        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 23:58:01 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id i19so608261wmq.5
-        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 23:58:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TC8xwckBgkveySBmzmsSol9saUP7QaijL+pK7gaCyUo=;
-        b=F6tmVoDIOwIne/k73vfpBGfzp36YHD3X+y1kxoZYoOPny6SgHPj2vG3UjNPcDFirhq
-         Nh3O8JJsNGzu30az0hmgcocm4M/PwBs6Z2UKgI05NLeN3yloM6eFuL6HdSfeEcrGT9gX
-         PYyYKW+m1OLb26kkli93zjdpiiF1EvApmv+rh0zD1apzadfkf9cyXvdPE/q5pch2aJv5
-         LwmJgMQNGp2ofpdlMsW3UZENDn5rPaOUa9sbwrTsrYQYEUhgdB5Iv4pR6yBEh/gThkSa
-         LQD2lBvTO85MhgUCCB3gjlM8x2c0iCJk2LYPdbELHANwXT6SUuSk6CmPprIGEpYcwkuf
-         yNzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TC8xwckBgkveySBmzmsSol9saUP7QaijL+pK7gaCyUo=;
-        b=UeSk/4YSI8KK2F1BXUQbeVXEgbZ/yyTeek8FdacjoddrEahkwixujNLSU/23OOQ3/B
-         393laCguSZ3azakn0Esuvn3UOckvh1KfoReheJ5b3cAJf35IR5zIBD8v6kWskPI5sd9p
-         2MKKTR7U7M5MZ7ALa0CNS5+rEOAjAb1lio1pS1khMGFM4Ezjp9lF7OIkCjpCS8p2HPVL
-         MQpaoOl9NwuQDdIYq/O4LIKBUPRCzlOVwLh2WwarS2wqrh/X44lbavV+N2zxEyWsTtq9
-         3vSuGljRbp+HFXiDIs79GtlKA5W/nIqq/dlMHOTjfSJVOQo2OZzp+nZvGJuSK/TI5Nrz
-         uA1Q==
-X-Gm-Message-State: AOAM533QdRWv8ay6ELIEuqrG/VpCNBKel/Lz8mHn8YdyaUr/EX7l9mVH
-        I22qbxVFSWzDYjRXPtykUP61zuKEY4HvWcdWiCoRRA==
-X-Google-Smtp-Source: ABdhPJwstWV6h+t5B7WVOea3jws4B9FQilLbjX0xjgg+LYQw2wLhUJRT9vLXtuqh4rgUop6VzHO+MPL/WZwAFTP7Vk4=
-X-Received: by 2002:a05:600c:4e8a:b0:37d:1c28:20fc with SMTP id
- f10-20020a05600c4e8a00b0037d1c2820fcmr1206743wmq.166.1645689480009; Wed, 23
- Feb 2022 23:58:00 -0800 (PST)
+        Thu, 24 Feb 2022 03:20:01 -0500
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B370B251E79;
+        Thu, 24 Feb 2022 00:19:30 -0800 (PST)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1nN9LQ-0003ur-Ui; Thu, 24 Feb 2022 09:19:25 +0100
+Message-ID: <974cf8f2-06f3-99a5-9a77-6d7b7cc8271a@leemhuis.info>
+Date:   Thu, 24 Feb 2022 09:19:24 +0100
 MIME-Version: 1.0
-References: <20220224054332.1852813-1-keescook@chromium.org>
- <CAGS_qxp8cjG5jCX-7ziqHcy2gq_MqL8kU01-joFD_W9iPG08EA@mail.gmail.com> <202202232208.B416701@keescook>
-In-Reply-To: <202202232208.B416701@keescook>
-From:   David Gow <davidgow@google.com>
-Date:   Thu, 24 Feb 2022 15:57:48 +0800
-Message-ID: <CABVgOS=3-as5VqOP=5fKTQhyYwEv0ZFM=ykHkW-wU8_WEEZW4g@mail.gmail.com>
-Subject: Re: [PATCH] binfmt_elf: Introduce KUnit test
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Daniel Latypov <dlatypov@google.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Content-Language: en-BS
+To:     Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stefano Zacchiroli <zack@upsilon.cc>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        =?UTF-8?B?TWFnbnVzIEdyb8Of?= <magnus.gross@rwth-aachen.de>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        linux-fsdevel@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000e460b805d8bef092"
+        Laura Abbott <labbott@kernel.org>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Wenwen Wang <wenwen@cs.uga.edu>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20220224001403.1307377-1-keescook@chromium.org>
+From:   Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: [PATCH] Documentation/process: Add Researcher Guidelines
+In-Reply-To: <20220224001403.1307377-1-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1645690770;edb46c4e;
+X-HE-SMSGID: 1nN9LQ-0003ur-Ui
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
---000000000000e460b805d8bef092
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 24.02.22 01:14, Kees Cook wrote:
+> As a follow-up to the UMN incident[1], the TAB took the responsibility
+> to document Researcher Guidelines so there would be a common place to
+> point for describing our expectations as a developer community.
+> 
+> Document best practices researchers should follow to participate
+> successfully with the Linux developer community.
+> 
+> [1] https://lore.kernel.org/lkml/202105051005.49BFABCE@keescook/
+> 
+> Co-developed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Co-developed-by: Jonathan Corbet <corbet@lwn.net>
+> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+> Co-developed-by: Stefano Zacchiroli <zack@upsilon.cc>
+> Signed-off-by: Stefano Zacchiroli <zack@upsilon.cc>
+> Co-developed-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+> Acked-by: Steve Rostedt <rostedt@goodmis.org>
+> Acked-by: Laura Abbott <labbott@kernel.org>
+> Reviewed-by: Julia Lawall <julia.lawall@inria.fr>
+> Reviewed-by: Wenwen Wang <wenwen@cs.uga.edu>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  Documentation/admin-guide/index.rst           |   1 +
+>  .../admin-guide/researcher-guidelines.rst     | 141 ++++++++++++++++++
 
-On Thu, Feb 24, 2022 at 2:13 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Wed, Feb 23, 2022 at 10:07:04PM -0800, Daniel Latypov wrote:
-> > On Wed, Feb 23, 2022 at 9:43 PM Kees Cook <keescook@chromium.org> wrote=
-:
-> > >
-> > > Adds simple KUnit test for some binfmt_elf internals: specifically a
-> > > regression test for the problem fixed by commit 8904d9cd90ee ("ELF:
-> > > fix overflow in total mapping size calculation").
-> > >
-> > > Cc: Eric Biederman <ebiederm@xmission.com>
-> > > Cc: David Gow <davidgow@google.com>
-> > > Cc: Alexey Dobriyan <adobriyan@gmail.com>
-> > > Cc: "Magnus Gro=C3=9F" <magnus.gross@rwth-aachen.de>
-> > > Cc: kunit-dev@googlegroups.com
-> > > Cc: linux-fsdevel@vger.kernel.org
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > > I'm exploring ways to mock copy_to_user() for more tests in here.
-> > > kprobes doesn't seem to let me easily hijack a function...
-> >
-> > Yeah, there doesn't seem to be a good way to do so. It seems more
-> > feasible if one is willing to write arch-specific code, but I'm not
-> > quite sure if that works either.
->
-> Yeah, I'm hoping maybe Steven has some ideas.
->
-> Steven, I want to do fancy live-patch kind or things to replace functions=
-,
-> but it doesn't need to be particularly fancy because KUnit tests (usually=
-)
-> run single-threaded, etc. It looks like kprobes could almost do it, but
-> I don't see a way to have it _avoid_ making a function call.
->
-> > https://kunit.dev/mocking.html has some thoughts on this.
-> > Not sure if there's anything there that would be useful to you, but
-> > perhaps it can give you some ideas.
->
-> Yeah, I figure a small refactoring to use a passed task_struct can avoid
-> the "current" uses in load_elf_binary(), etc, but the copy_to_user() is
-> more of a problem. I have considered inverting the Makefile logic,
-> though, and having binfmt_elf_test.c include binfmt_elf.c and have it
-> just use a #define to redirect copy_to_user, kind of how all the compat
-> handling is already done. But it'd be nice to have a "cleaner" mocking
-> solution...
->
+Hmm, the intro for "Documentation/admin-guide/" states that "The
+following manuals are written for users of the kernel", but the added
+text afaics providing nothing regular users care about. So wouldn't it
+be better if this lived below Documentation/process/ ? It might not a
+really good fit either, but I'd say it's the better place.
 
-I think inverting the Makefile makes some sense here, even if it leads
-to some code-duplication #define ugliness. Unfortunately, there just
-doesn't seem to be a "clean" way of mocking out functions which is
-also safe (particularly for something like copy_to_user(), which might
-be running in a different thread concurrently with a test) and
-performant. If there is a way to refactor the code to avoid the need
-for mocking, that's always nice, but can lead to a lot of extraneous
-exported functions / interfaces and other code churn.
+But well, the best person to know is Jonathan, who is listed as a
+Co-developer above, so maybe I'm wrong my suggestion is a bad one.
 
-> >
-> > > ---
-> > >  fs/Kconfig.binfmt      | 17 +++++++++++
-> > >  fs/binfmt_elf.c        |  4 +++
-> > >  fs/binfmt_elf_test.c   | 64 ++++++++++++++++++++++++++++++++++++++++=
-++
-> > >  fs/compat_binfmt_elf.c |  2 ++
-> > >  4 files changed, 87 insertions(+)
-> > >  create mode 100644 fs/binfmt_elf_test.c
-> > >
-> > > diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
-> > > index 4d5ae61580aa..8e14589ee9cc 100644
-> > > --- a/fs/Kconfig.binfmt
-> > > +++ b/fs/Kconfig.binfmt
-> > > @@ -28,6 +28,23 @@ config BINFMT_ELF
-> > >           ld.so (check the file <file:Documentation/Changes> for loca=
-tion and
-> > >           latest version).
-> > >
-> > > +config BINFMT_ELF_KUNIT_TEST
-> > > +       bool "Build KUnit tests for ELF binary support" if !KUNIT_ALL=
-_TESTS
-> > > +       depends on KUNIT=3Dy && BINFMT_ELF=3Dy
-> > > +       default KUNIT_ALL_TESTS
-> > > +       help
-> > > +         This builds the ELF loader KUnit tests.
-> > > +
-> > > +         KUnit tests run during boot and output the results to the d=
-ebug log
-> > > +         in TAP format (https://testanything.org/). Only useful for =
-kernel devs
-> >
-> > Tangent: should we update the kunit style guide to not refer to TAP
-> > anymore as it's not accurate?
-> > The KTAP spec is live on kernel.org at
-> > https://www.kernel.org/doc/html/latest/dev-tools/ktap.html
-> >
-> > We can leave this patch as-is and update later, or have it be the
-> > guinea pig for the new proposed wording.
->
-> Oops, good point. I was actually thinking it doesn't make too much sense
-> to keep repeating the same long boilerplate generally.
->
+>  2 files changed, 142 insertions(+)
+>  create mode 100644 Documentation/admin-guide/researcher-guidelines.rst
+> 
+> diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+> index 1bedab498104..7fff0730204d 100644
+> --- a/Documentation/admin-guide/index.rst
+> +++ b/Documentation/admin-guide/index.rst
+> @@ -35,6 +35,7 @@ problems and bugs in particular.
+>     :maxdepth: 1
+>  
+>     reporting-issues
+> +   researcher-guidelines
+>     security-bugs
+>     bug-hunting
+>     bug-bisect
+> diff --git a/Documentation/admin-guide/researcher-guidelines.rst b/Documentation/admin-guide/researcher-guidelines.rst
+> new file mode 100644
+> index 000000000000..993f32d1166c
+> --- /dev/null
+> +++ b/Documentation/admin-guide/researcher-guidelines.rst
+> @@ -0,0 +1,141 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +.. _researcher_guidelines:
+> +
+> +Researcher Guidelines
+> ++++++++++++++++++++++
+> +
+> +The Linux kernel community
 
-The KUnit style guide actually never referred to TAP in its example
-Kconfig entry, though a number of existing tests did:
-https://www.kernel.org/doc/html/latest/dev-tools/kunit/style.html#test-kcon=
-fig-entries
+Nitpicking: wondering if this maybe should be something like "The Linux
+kernel developer community" (or "Linux kernel's..."?).
 
-> > (I'm personally in favor of people not copy-pasting these paragraphs
-> > in the first place, but that is what the style-guide currently
-> > recommends)
->
-> Let's change the guide? :)
->
+> welcomes transparent research on the Linux
+> +kernel, the activities involved in producing it, and any other byproducts
+> +of its development. Linux benefits greatly from this kind of research, and
+> +most aspects of Linux are driven by research in one form or another.
+> +
+> +The community greatly appreciates if researchers can share preliminary
+> +findings before making their results public, especially if such research
+> +involves security. Getting involved early helps both improve the quality
+> +of research and ability for Linux to improve from it. In any case,
+> +sharing open access copies of the published research with the community
+> +is recommended.
+> +
+> +This document seeks to clarify what the Linux kernel community considers
+> +acceptable and non-acceptable practices when conducting such research. At
+> +the very least, such research and related activities should follow
+> +standard research ethics rules. For more background on research ethics
+> +generally, ethics in technology, and research of developer communities
+> +in particular, see:
+> +
+> +* `History of Research Ethics <https://www.unlv.edu/research/ORI-HSR/history-ethics>`_
+> +* `IEEE Ethics <https://www.ieee.org/about/ethics/index.html>`_
+> +* `Developer and Researcher Views on the Ethics of Experiments on
+> +   Open-Source Projects <https://arxiv.org/pdf/2112.13217.pdf>`_
+> +
+> +The Linux kernel community expects that everyone interacting with the
+> +project is participating in good faith to make Linux better. Research on
+> +any publicly-available artifact (including, but not limited to source
+> +code) produced by the Linux kernel community is welcome, though research
+> +on developers must be distinctly opt-in.
+> +
+> +Passive research that is based entirely on publicly available sources,
+> +including posts to public mailing lists and commits to public
+> +repositories, is clearly permissible. Though, as with any research,
+> +standard ethics must still be followed.
+> +
+> +Active research on developer behavior,
 
-I don't think the actual text recommended in the guide is a problem:
-it basically just points to the KUnit documentation, but I can send a
-patch to soften the wording from "you MUST describe KUnit in the help
-text" (or remove it entirely) if people really don't like it.
+Nitpicking: when reading this for the first time I here wondered what is
+precisely meant by "Active research". Is this maybe an established term
+in academia I'm simply not aware of? If not, maybe simply writing
+something like "Other research on developer behavior" or "Research on
+developer behavior where you engage in development" avoid this.
 
-> >
-> > > +         running KUnit test harness and are not for inclusion into a
-> > > +         production build.
-> > > +
-> > > +         For more information on KUnit and unit tests in general ple=
-ase refer
-> > > +         to the KUnit documentation in Documentation/dev-tools/kunit=
-/.
-> > > +
-> > > +         If unsure, say N.
-> > > +
-> > >  config COMPAT_BINFMT_ELF
-> > >         def_bool y
-> > >         depends on COMPAT && BINFMT_ELF
-> > > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> > > index 76ff2af15ba5..9bea703ed1c2 100644
-> > > --- a/fs/binfmt_elf.c
-> > > +++ b/fs/binfmt_elf.c
-> > > @@ -2335,3 +2335,7 @@ static void __exit exit_elf_binfmt(void)
-> > >  core_initcall(init_elf_binfmt);
-> > >  module_exit(exit_elf_binfmt);
-> > >  MODULE_LICENSE("GPL");
-> > > +
-> > > +#ifdef CONFIG_BINFMT_ELF_KUNIT_TEST
-> > > +#include "binfmt_elf_test.c"
-> > > +#endif
-> > > diff --git a/fs/binfmt_elf_test.c b/fs/binfmt_elf_test.c
-> > > new file mode 100644
-> > > index 000000000000..486ad419f763
-> > > --- /dev/null
-> > > +++ b/fs/binfmt_elf_test.c
-> > > @@ -0,0 +1,64 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +#include <kunit/test.h>
-> > > +
-> > > +static void total_mapping_size_test(struct kunit *test)
-> > > +{
-> > > +       struct elf_phdr empty[] =3D {
-> > > +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0, .p_memsz =3D 0=
-, },
-> > > +               { .p_type =3D PT_INTERP, .p_vaddr =3D 10, .p_memsz =
-=3D 999999, },
-> > > +       };
-> > > +       /*
-> > > +        * readelf -lW /bin/mount | grep '^  .*0x0' | awk '{print "\t=
-\t{ .p_type =3D PT_" \
-> > > +        *                              $1 ", .p_vaddr =3D " $3 ", .p=
-_memsz =3D " $6 ", },"}'
-> > > +        */
-> > > +       struct elf_phdr mount[] =3D {
-> > > +               { .p_type =3D PT_PHDR, .p_vaddr =3D 0x00000040, .p_me=
-msz =3D 0x0002d8, },
-> > > +               { .p_type =3D PT_INTERP, .p_vaddr =3D 0x00000318, .p_=
-memsz =3D 0x00001c, },
-> > > +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0x00000000, .p_me=
-msz =3D 0x0033a8, },
-> > > +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0x00004000, .p_me=
-msz =3D 0x005c91, },
-> > > +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0x0000a000, .p_me=
-msz =3D 0x0022f8, },
-> > > +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0x0000d330, .p_me=
-msz =3D 0x000d40, },
-> > > +               { .p_type =3D PT_DYNAMIC, .p_vaddr =3D 0x0000d928, .p=
-_memsz =3D 0x000200, },
-> > > +               { .p_type =3D PT_NOTE, .p_vaddr =3D 0x00000338, .p_me=
-msz =3D 0x000030, },
-> > > +               { .p_type =3D PT_NOTE, .p_vaddr =3D 0x00000368, .p_me=
-msz =3D 0x000044, },
-> > > +               { .p_type =3D PT_GNU_PROPERTY, .p_vaddr =3D 0x0000033=
-8, .p_memsz =3D 0x000030, },
-> > > +               { .p_type =3D PT_GNU_EH_FRAME, .p_vaddr =3D 0x0000b49=
-0, .p_memsz =3D 0x0001ec, },
-> > > +               { .p_type =3D PT_GNU_STACK, .p_vaddr =3D 0x00000000, =
-.p_memsz =3D 0x000000, },
-> > > +               { .p_type =3D PT_GNU_RELRO, .p_vaddr =3D 0x0000d330, =
-.p_memsz =3D 0x000cd0, },
-> > > +       };
-> > > +       size_t mount_size =3D 0xE070;
-> > > +       /* https://lore.kernel.org/lkml/YfF18Dy85mCntXrx@fractal.loca=
-ldomain */
-> >
-> > Slight nit, it looks like that message wasn't sent to lkml.
-> > lore gives a suggestion to change to
-> > https://lore.kernel.org/linux-fsdevel/YfF18Dy85mCntXrx@fractal.localdom=
-ain/
->
-> Ah, thank you. I was replacing the /r/ that used to be in that URL, and
-> got lost. :)
->
-> --
-> Kees Cook
+> however, must be done with the
+> +explicit agreement of, and full disclosure to, the individual developers
+> +involved. Developers cannot be interacted with/experimented on without
+> +consent; this, too, is standard research ethics.
+> +
+> +To help clarify: 
 
---000000000000e460b805d8bef092
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+Follow up to above remark: If "Active research" stays above, I'd say it
+might be worth repeating the term here to make clear what's being clarified.
 
-MIIPnwYJKoZIhvcNAQcCoIIPkDCCD4wCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ggz5MIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
-dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
-6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
-c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
-I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
-AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
-CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
-AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
-MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
-My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
-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
-G7p3AiuB2sgfq6cOpbO5MEwGA1UdIARFMEMwQQYJKwYBBAGgMgEoMDQwMgYIKwYBBQUHAgEWJmh0
-dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQCMAAwgZoGCCsG
-AQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9jYS9n
-c2F0bGFzcjNzbWltZWNhMjAyMDBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5nbG9iYWxzaWdu
-LmNvbS9jYWNlcnQvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3J0MB8GA1UdIwQYMBaAFHzMCmjXouse
-LHIb0c1dlW+N+/JjMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20v
-Y2EvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3JsMA0GCSqGSIb3DQEBCwUAA4IBAQBsL34EJkCtu9Nu
-2+R6l1Qzno5Gl+N2Cm6/YLujukDGYa1JW27txXiilR9dGP7yl60HYyG2Exd5i6fiLDlaNEw0SqzE
-dw9ZSIak3Qvm2UybR8zcnB0deCUiwahqh7ZncEPlhnPpB08ETEUtwBEqCEnndNEkIN67yz4kniCZ
-jZstNF/BUnI3864fATiXSbnNqBwlJS3YkoaCTpbI9qNTrf5VIvnbryT69xJ6f25yfmxrXNJJe5OG
-ncB34Cwnb7xQyk+uRLZ465yUBkbjk9pC/yamL0O7SOGYUclrQl2c5zzGuVBD84YcQGDOK6gSPj6w
-QuBfOooZPOyZZZ8AMih7J980MYICajCCAmYCAQEwaDBUMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQ
-R2xvYmFsU2lnbiBudi1zYTEqMCgGA1UEAxMhR2xvYmFsU2lnbiBBdGxhcyBSMyBTTUlNRSBDQSAy
-MDIwAhABQeVybOOpR4bOOXZYL5T3MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCs
-WFw6IjlTP+oNmws6QGvsZCR3WRZk9iW7sazkpiADeTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
-MBwGCSqGSIb3DQEJBTEPFw0yMjAyMjQwNzU4MDBaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUD
-BAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsG
-CSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAVnV+QiayILcefI+u3Qkz
-2M621RV+SUXznv/oagA/5XZKfVig+/9Z4DHa8uxNOvsbzcNdZd4f7VtdibIb2QTZt6G6oYZZGq+z
-M0LZOQs2SWN3P+0A2tqsimwp3CSt+G5d0zCHIhkQRHN1XoAhWOcNCZIk5CmkyShfx6jCTjP1SpWV
-3e51WwPEqCsYHMpR9PNfG4LswP+HbzLovRlJV7SgWryyTUjDuRWuj6x6SAsk9HQJZoM2UA4e7FjF
-PE3Ab7OEtaCNWxo1bBTWq69um+bDNHLAUzdsZdOW+N6w/+OaayNek76T9IReftmyvRzLfrdbvTXB
-6ii3Hhg9BcvI6vNLxQ==
---000000000000e460b805d8bef092--
+> sending patches to developers *is* interacting
+> +with them, but they have already consented to receiving *good faith
+> +contributions*. Sending intentionally flawed/vulnerable patches or
+> +contributing misleading information to discussions is not consented
+> +to. Such communication can be damaging to the developer (e.g. draining
+> +time, effort, and morale) and damaging to the project by eroding
+> +the entire developer community's trust in the contributor (and the
+> +contributor's organization as a whole), undermining efforts to provide
+> +constructive feedback to contributors, and putting end users at risk of
+> +software flaws.
+
+Nitpicking again: Quite a long sentence. Maybe split it up with
+something like a "s!, undermining !; such an approach would thus undermine"
+
+> +Participation in the development of Linux itself by researchers, as
+> +with anyone, is welcomed and encouraged. Research into Linux code is
+> +a common practice, especially when it comes to developing or running
+> +analysis tools that produce actionable results.
+> +
+> +When engaging with the developer community, sending a patch has
+> +traditionally been the best way to make an impact. Linux already has
+> +plenty of known bugs -- what's much more helpful is having vetted fixes.
+> +Before contributing, carefully read the documentation on
+> +:doc:`submitting patches <../process/submitting-patches>`,
+> +:doc:`reporting issues <reporting-issues>`, and
+> +:doc:`handling serious flaws <security-bugs>`.
+
+Wonder if Documentation/process/{development-process.rst,5.Posting.rst}
+should be linked as well.
+
+Additionally not my area of expertise, but from what I'd noticed it
+seems it's better to avoid the :doc:`foo` tag if there is no strict need
+(and I don't think there is one in this case). For the background see here:
+
+https://lore.kernel.org/all/cover.1623824363.git.mchehab+huawei@kernel.org/
+
+Most of those patches got applied meanwhile afaik.
+
+> Send a patch (including
+> +a commit log with all the details listed below), and follow up on any
+> +feedback from other developers.
+> +
+> +When sending patches produced from research, the commit logs should
+> +contain at least the following details, so that developers have
+> +appropriate context for understanding the contribution. Answer:
+> +
+> +* What is the specific problem that has been found?
+> +* How could the problem be reached on a running system?
+> +* What effect would encountering the problem have on the system?
+> +* How was the problem found? Specifically include details about any
+> +  testing, static or dynamic analysis programs, and any other tools or
+> +  methods used to perform the work.
+> +* Which version of Linux was the problem was found on? Using the most
+> +  recent release or a recent :doc:`linux-next branch <../process/howto>`
+> +  is strongly preferred.
+> +* What was changed to fix the problem, and why it is believed to be correct?
+> +* How was the change build tested and run-time tested?
+> +* What prior commit does this change fix? This should go in a "Fixes:"
+> +  tag as the documentation describes.
+> +* Who else has reviewed this patch? This should go in appropriate
+> +  "Reviewed-by:" tags; see below.
+> +
+> +For example::
+> +
+> +  From: Author <author@email>
+> +  Subject: [PATCH] drivers/foo_bar: Add missing kfree()
+> +
+> +  The error path in foo_bar driver does not correctly free the allocated
+> +  struct foo_bar_info. This can happen if the attached foo_bar device
+> +  rejects the initialization packets sent during foo_bar_probe(). This
+> +  would result in a 64 byte slab memory leak once per device attach,
+> +  wasting memory resources over time.
+> +
+> +  This flaw was found using an experimental static analysis tool we are
+> +  developing, LeakMagic[1], which reported the following warning when
+> +  analyzing the v5.15 kernel release:
+> +
+> +   path/to/foo_bar.c:187: missing kfree() call?
+> +
+> +  Add the missing kfree() to the error path. No other references to
+> +  this memory exist outside the probe function, so this is the only
+> +  place it can be freed.
+> +
+> +  x86_64 and arm64 defconfig builds with CONFIG_FOO_BAR=y using GCC
+> +  11.2 show no new warnings, and LeakMagic no longer warns about this
+> +  code path. As we don't have a FooBar device to test with, no runtime
+> +  testing was able to be performed.
+> +
+> +  [1] https://url/to/leakmagic/details
+> +
+> +  Reported-by: Researcher <researcher@email>
+> +  Fixes: aaaabbbbccccdddd ("Introduce support for FooBar")
+> +  Signed-off-by: Author <author@email>
+> +  Reviewed-by: Reviewer <reviewer@email>
+> +
+> +If you are a first time contributor it is recommended that the patch
+> +itself be vetted by others privately before being posted to public lists.
+> +(This is required if you have been explicitly told your patches need
+> +more careful internal review.) These people are expected to have their
+> +"Reviewed-by" tag included in the resulting patch. Finding another
+> +developer familiar with Linux contribution, especially within your own
+> +organization, and having them help with reviews before sending them to
+> +the public mailing lists tends to significantly improve the quality of the
+> +resulting patches, and there by reduces the burden on other developers.
+
+I like the section, but I wonder why it's needed here. Is there anything
+specific to patches produced from research in it there I missed when
+reading it? If not: Wouldn't it be better to include that section as a
+TLDR in Documentation/process/submitting-patches.rst and point there
+instead? We already have at least two places describing how to submit
+patches, creating yet another one (even if it's just in such a brief
+version) somehow feels slightly wrong to me.
+
+OTOH I fully understand that having things in one place has it's
+benefits. If that's wanted, why not put that text as TLDR in
+submitting-patches.rst and maintain a copy here? Sure, keeping things in
+sync has downsides, but I'd say it's the lesser evil. A copy could also
+be avoided by briefly mentioning some of the important bits found in
+another document; that's the approach I took in my patches regarding
+regressions. To quote:
+
+```
++#. Report your issue as outlined in
+Documentation/admin-guide/reporting-issues.rst,
++   it already covers all aspects important for regressions and repeated
++   below for convenience. Two of them are important: start your
+report's subject
++   with "[REGRESSION]" and CC or forward it to `the regression mailing list
++   <https://lore.kernel.org/regressions/>`_ (regressions@lists.linux.dev).
+```
+
+For full context see:
+https://lore.kernel.org/regressions/cover.1644994117.git.linux@leemhuis.info/T/#u
+
+> +If no one can be found to internally review patches and you need
+> +help finding such a person, or if you have any other questions
+> +related to this document and the developer community's expectations,
+> +please reach out to the private Technical Advisory Board mailing list:
+> +<tech-board@lists.linux-foundation.org>.
+
+HTH, Ciao, Thorsten
