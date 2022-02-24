@@ -2,59 +2,62 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D3BC433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 07:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08573C433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 07:58:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229732AbiBXHmU (ORCPT
+        id S231244AbiBXH6c (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Feb 2022 02:42:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54006 "EHLO
+        Thu, 24 Feb 2022 02:58:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229683AbiBXHmS (ORCPT
+        with ESMTP id S229617AbiBXH6b (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Feb 2022 02:42:18 -0500
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31AA82C679
-        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 23:41:47 -0800 (PST)
-Received: by mail-wr1-x430.google.com with SMTP id x15so1564058wrg.8
-        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 23:41:47 -0800 (PST)
+        Thu, 24 Feb 2022 02:58:31 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C891519E0B6
+        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 23:58:01 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id i19so608261wmq.5
+        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 23:58:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=F4c2cpZYCvRQ5ZQu+QGoUVAtLByIPlFAraUYaQnex5A=;
-        b=GDK+It5bIyQSNB2C1rTBDxswS/aUip0/I6cNxMBHxmcaEKfxFdggLnr7ybcVfbjo82
-         tIUuaBHiVYs/d++7+Zpu03v3J0LHS0TZoQPT1SfFKHZoRnc07SznVEWPCelkPx7Rxjdz
-         LnMGAQF77KDiENlT87PzV3fnqevu376GeqkcNJjdQEY5RaJMgFPtoTcdTTtg2VDMgCHc
-         eYEOrVuaqInveLCzFADBG2chatLQ9iS3cNYIdXkBx0boiq1Nwz99TQW179QheNaHCMgY
-         JXDu8ESGoF9WlZsA/VB9ApzpbXasrDSPIhoORcMXuh/iMmL+z4U1Ar99VbPYj8OZI1aX
-         +IyQ==
+        bh=TC8xwckBgkveySBmzmsSol9saUP7QaijL+pK7gaCyUo=;
+        b=F6tmVoDIOwIne/k73vfpBGfzp36YHD3X+y1kxoZYoOPny6SgHPj2vG3UjNPcDFirhq
+         Nh3O8JJsNGzu30az0hmgcocm4M/PwBs6Z2UKgI05NLeN3yloM6eFuL6HdSfeEcrGT9gX
+         PYyYKW+m1OLb26kkli93zjdpiiF1EvApmv+rh0zD1apzadfkf9cyXvdPE/q5pch2aJv5
+         LwmJgMQNGp2ofpdlMsW3UZENDn5rPaOUa9sbwrTsrYQYEUhgdB5Iv4pR6yBEh/gThkSa
+         LQD2lBvTO85MhgUCCB3gjlM8x2c0iCJk2LYPdbELHANwXT6SUuSk6CmPprIGEpYcwkuf
+         yNzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=F4c2cpZYCvRQ5ZQu+QGoUVAtLByIPlFAraUYaQnex5A=;
-        b=V/k3CRc7fh/YQg29EkGzMi8T6vsmMmqAARc5l74czMNe6SQ34tUa/5WuxajBAtuY8x
-         HYkaDBNLpTXo/+oT66yUWPV7LnEIgiVcOtYMlWtor+anNU5R3+p78HdY8WdnauQakQUU
-         LauKwmhCYR9RglzW5S9/2QsCcZzakxG7zBTaoIz31fVqclyRB88s0jVbuLtzGSGb4qpD
-         MFfypTycpwL17kt3T5GiSG0LxTG7yvSFvd0jHI68W6H8cxED6i0y91h1dv+DENHjeZiE
-         F+D9Gek0ZvdSXPTrddp33zb/J2k12OY0njHa3r7eeraeSx8TKixNqDmN0Z3AAIpuGA0I
-         NoQg==
-X-Gm-Message-State: AOAM532ntPjMiu8xPGgRfkfNVJCLv0Cy34Q9XaEniG0N46+XFjXodCda
-        j6pJD3OzbEC2ptgn3aKkhRugD/ODrwOEVQoZkLMSPA==
-X-Google-Smtp-Source: ABdhPJx0d6/ZjRGa7OYf534ii37zSpsDQoOflqiHsGvF7Gyg+PWAGgAdn4fmMa0TcYrDoACkdD1olf/rtI3kDYKWwUI=
-X-Received: by 2002:adf:a486:0:b0:1ed:9cfe:179d with SMTP id
- g6-20020adfa486000000b001ed9cfe179dmr1177609wrb.113.1645688505599; Wed, 23
- Feb 2022 23:41:45 -0800 (PST)
+        bh=TC8xwckBgkveySBmzmsSol9saUP7QaijL+pK7gaCyUo=;
+        b=UeSk/4YSI8KK2F1BXUQbeVXEgbZ/yyTeek8FdacjoddrEahkwixujNLSU/23OOQ3/B
+         393laCguSZ3azakn0Esuvn3UOckvh1KfoReheJ5b3cAJf35IR5zIBD8v6kWskPI5sd9p
+         2MKKTR7U7M5MZ7ALa0CNS5+rEOAjAb1lio1pS1khMGFM4Ezjp9lF7OIkCjpCS8p2HPVL
+         MQpaoOl9NwuQDdIYq/O4LIKBUPRCzlOVwLh2WwarS2wqrh/X44lbavV+N2zxEyWsTtq9
+         3vSuGljRbp+HFXiDIs79GtlKA5W/nIqq/dlMHOTjfSJVOQo2OZzp+nZvGJuSK/TI5Nrz
+         uA1Q==
+X-Gm-Message-State: AOAM533QdRWv8ay6ELIEuqrG/VpCNBKel/Lz8mHn8YdyaUr/EX7l9mVH
+        I22qbxVFSWzDYjRXPtykUP61zuKEY4HvWcdWiCoRRA==
+X-Google-Smtp-Source: ABdhPJwstWV6h+t5B7WVOea3jws4B9FQilLbjX0xjgg+LYQw2wLhUJRT9vLXtuqh4rgUop6VzHO+MPL/WZwAFTP7Vk4=
+X-Received: by 2002:a05:600c:4e8a:b0:37d:1c28:20fc with SMTP id
+ f10-20020a05600c4e8a00b0037d1c2820fcmr1206743wmq.166.1645689480009; Wed, 23
+ Feb 2022 23:58:00 -0800 (PST)
 MIME-Version: 1.0
 References: <20220224054332.1852813-1-keescook@chromium.org>
-In-Reply-To: <20220224054332.1852813-1-keescook@chromium.org>
+ <CAGS_qxp8cjG5jCX-7ziqHcy2gq_MqL8kU01-joFD_W9iPG08EA@mail.gmail.com> <202202232208.B416701@keescook>
+In-Reply-To: <202202232208.B416701@keescook>
 From:   David Gow <davidgow@google.com>
-Date:   Thu, 24 Feb 2022 15:41:34 +0800
-Message-ID: <CABVgOSn97OaW9j_NOqc4KS5BzvF0D7_yvpOT+XVK0vHW2F+FNw@mail.gmail.com>
+Date:   Thu, 24 Feb 2022 15:57:48 +0800
+Message-ID: <CABVgOS=3-as5VqOP=5fKTQhyYwEv0ZFM=ykHkW-wU8_WEEZW4g@mail.gmail.com>
 Subject: Re: [PATCH] binfmt_elf: Introduce KUnit test
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Eric Biederman <ebiederm@xmission.com>,
+Cc:     Daniel Latypov <dlatypov@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Eric Biederman <ebiederm@xmission.com>,
         Alexey Dobriyan <adobriyan@gmail.com>,
         =?UTF-8?B?TWFnbnVzIEdyb8Of?= <magnus.gross@rwth-aachen.de>,
         KUnit Development <kunit-dev@googlegroups.com>,
@@ -63,257 +66,225 @@ Cc:     Eric Biederman <ebiederm@xmission.com>,
         Linux Memory Management List <linux-mm@kvack.org>,
         linux-hardening@vger.kernel.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000ced7bd05d8beb6b7"
+        boundary="000000000000e460b805d8bef092"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
---000000000000ced7bd05d8beb6b7
+--000000000000e460b805d8bef092
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 24, 2022 at 1:43 PM Kees Cook <keescook@chromium.org> wrote:
+On Thu, Feb 24, 2022 at 2:13 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> Adds simple KUnit test for some binfmt_elf internals: specifically a
-> regression test for the problem fixed by commit 8904d9cd90ee ("ELF:
-> fix overflow in total mapping size calculation").
+> On Wed, Feb 23, 2022 at 10:07:04PM -0800, Daniel Latypov wrote:
+> > On Wed, Feb 23, 2022 at 9:43 PM Kees Cook <keescook@chromium.org> wrote=
+:
+> > >
+> > > Adds simple KUnit test for some binfmt_elf internals: specifically a
+> > > regression test for the problem fixed by commit 8904d9cd90ee ("ELF:
+> > > fix overflow in total mapping size calculation").
+> > >
+> > > Cc: Eric Biederman <ebiederm@xmission.com>
+> > > Cc: David Gow <davidgow@google.com>
+> > > Cc: Alexey Dobriyan <adobriyan@gmail.com>
+> > > Cc: "Magnus Gro=C3=9F" <magnus.gross@rwth-aachen.de>
+> > > Cc: kunit-dev@googlegroups.com
+> > > Cc: linux-fsdevel@vger.kernel.org
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > > I'm exploring ways to mock copy_to_user() for more tests in here.
+> > > kprobes doesn't seem to let me easily hijack a function...
+> >
+> > Yeah, there doesn't seem to be a good way to do so. It seems more
+> > feasible if one is willing to write arch-specific code, but I'm not
+> > quite sure if that works either.
+>
+> Yeah, I'm hoping maybe Steven has some ideas.
+>
+> Steven, I want to do fancy live-patch kind or things to replace functions=
+,
+> but it doesn't need to be particularly fancy because KUnit tests (usually=
+)
+> run single-threaded, etc. It looks like kprobes could almost do it, but
+> I don't see a way to have it _avoid_ making a function call.
+>
+> > https://kunit.dev/mocking.html has some thoughts on this.
+> > Not sure if there's anything there that would be useful to you, but
+> > perhaps it can give you some ideas.
+>
+> Yeah, I figure a small refactoring to use a passed task_struct can avoid
+> the "current" uses in load_elf_binary(), etc, but the copy_to_user() is
+> more of a problem. I have considered inverting the Makefile logic,
+> though, and having binfmt_elf_test.c include binfmt_elf.c and have it
+> just use a #define to redirect copy_to_user, kind of how all the compat
+> handling is already done. But it'd be nice to have a "cleaner" mocking
+> solution...
 >
 
-(Just as a note to anyone else testing this, this hasn't hit
-linux-next yet, so the test does fail out of the box.)
+I think inverting the Makefile makes some sense here, even if it leads
+to some code-duplication #define ugliness. Unfortunately, there just
+doesn't seem to be a "clean" way of mocking out functions which is
+also safe (particularly for something like copy_to_user(), which might
+be running in a different thread concurrently with a test) and
+performant. If there is a way to refactor the code to avoid the need
+for mocking, that's always nice, but can lead to a lot of extraneous
+exported functions / interfaces and other code churn.
 
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: David Gow <davidgow@google.com>
-> Cc: Alexey Dobriyan <adobriyan@gmail.com>
-> Cc: "Magnus Gro=C3=9F" <magnus.gross@rwth-aachen.de>
-> Cc: kunit-dev@googlegroups.com
-> Cc: linux-fsdevel@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-
-This looks like a pretty sensible test to me. It's definitely doing a
-few weird things with the whole COMPAT support bit, and I do think
-that inverting the flow and having the binfmt_elf_test.c file include
-binfmt_elf.c is probably the more flexible solution.
-
-In any case, the test works well for me (including the compat_
-variant), modulo a build error and needing to apply the aforementioned
-fix first.
-
-Cheers,
--- David
-
-> I'm exploring ways to mock copy_to_user() for more tests in here.
-> kprobes doesn't seem to let me easily hijack a function...
-
-Not much to add to what Daniel said here, other than to re-tread some
-old discussions around using ftrace, weak-linked symbols, and all
-sorts of other horrors to intercept function calls.
-
-The least horrifying solution we've thought of thus far is to
-literally change the function to add a test to see if it's running
-under a KUnit test which wants to mock it out (using the pointer in
-task_struct and KUnit named resources to check). Even then, that's
-definitely the sort of thing that you want behind an #ifdef
-CONFIG_KUNIT check, and even then is likely to be met with some
-disapproval for something as performance-sensitive as copy_to_user().
-Of course, if just including the binfmt_elf.c file from within the
-test file and using #defines works -- i.e., we don't need to care
-about very indirect calls from within different files -- then that's
-the simplest solution.
-
-More binfmt_elf tests would be great, though, particularly if we can
-get some of those nasty parsing functions tested.
-
-> ---
->  fs/Kconfig.binfmt      | 17 +++++++++++
->  fs/binfmt_elf.c        |  4 +++
->  fs/binfmt_elf_test.c   | 64 ++++++++++++++++++++++++++++++++++++++++++
->  fs/compat_binfmt_elf.c |  2 ++
->  4 files changed, 87 insertions(+)
->  create mode 100644 fs/binfmt_elf_test.c
+> >
+> > > ---
+> > >  fs/Kconfig.binfmt      | 17 +++++++++++
+> > >  fs/binfmt_elf.c        |  4 +++
+> > >  fs/binfmt_elf_test.c   | 64 ++++++++++++++++++++++++++++++++++++++++=
+++
+> > >  fs/compat_binfmt_elf.c |  2 ++
+> > >  4 files changed, 87 insertions(+)
+> > >  create mode 100644 fs/binfmt_elf_test.c
+> > >
+> > > diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
+> > > index 4d5ae61580aa..8e14589ee9cc 100644
+> > > --- a/fs/Kconfig.binfmt
+> > > +++ b/fs/Kconfig.binfmt
+> > > @@ -28,6 +28,23 @@ config BINFMT_ELF
+> > >           ld.so (check the file <file:Documentation/Changes> for loca=
+tion and
+> > >           latest version).
+> > >
+> > > +config BINFMT_ELF_KUNIT_TEST
+> > > +       bool "Build KUnit tests for ELF binary support" if !KUNIT_ALL=
+_TESTS
+> > > +       depends on KUNIT=3Dy && BINFMT_ELF=3Dy
+> > > +       default KUNIT_ALL_TESTS
+> > > +       help
+> > > +         This builds the ELF loader KUnit tests.
+> > > +
+> > > +         KUnit tests run during boot and output the results to the d=
+ebug log
+> > > +         in TAP format (https://testanything.org/). Only useful for =
+kernel devs
+> >
+> > Tangent: should we update the kunit style guide to not refer to TAP
+> > anymore as it's not accurate?
+> > The KTAP spec is live on kernel.org at
+> > https://www.kernel.org/doc/html/latest/dev-tools/ktap.html
+> >
+> > We can leave this patch as-is and update later, or have it be the
+> > guinea pig for the new proposed wording.
 >
-> diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
-> index 4d5ae61580aa..8e14589ee9cc 100644
-> --- a/fs/Kconfig.binfmt
-> +++ b/fs/Kconfig.binfmt
-> @@ -28,6 +28,23 @@ config BINFMT_ELF
->           ld.so (check the file <file:Documentation/Changes> for location=
- and
->           latest version).
+> Oops, good point. I was actually thinking it doesn't make too much sense
+> to keep repeating the same long boilerplate generally.
 >
-> +config BINFMT_ELF_KUNIT_TEST
-> +       bool "Build KUnit tests for ELF binary support" if !KUNIT_ALL_TES=
-TS
-> +       depends on KUNIT=3Dy && BINFMT_ELF=3Dy
-> +       default KUNIT_ALL_TESTS
-> +       help
-> +         This builds the ELF loader KUnit tests.
-> +
-> +         KUnit tests run during boot and output the results to the debug=
- log
-> +         in TAP format (https://testanything.org/). Only useful for kern=
-el devs
-> +         running KUnit test harness and are not for inclusion into a
-> +         production build.
 
-It might be worth documenting here that this particular config option
-actually builds two test suites if COMPAT is enabled.
+The KUnit style guide actually never referred to TAP in its example
+Kconfig entry, though a number of existing tests did:
+https://www.kernel.org/doc/html/latest/dev-tools/kunit/style.html#test-kcon=
+fig-entries
 
-> +
-> +         For more information on KUnit and unit tests in general please =
-refer
-> +         to the KUnit documentation in Documentation/dev-tools/kunit/.
-> +
-> +         If unsure, say N.
-> +
->  config COMPAT_BINFMT_ELF
->         def_bool y
->         depends on COMPAT && BINFMT_ELF
-> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> index 76ff2af15ba5..9bea703ed1c2 100644
-> --- a/fs/binfmt_elf.c
-> +++ b/fs/binfmt_elf.c
-> @@ -2335,3 +2335,7 @@ static void __exit exit_elf_binfmt(void)
->  core_initcall(init_elf_binfmt);
->  module_exit(exit_elf_binfmt);
->  MODULE_LICENSE("GPL");
-> +
-> +#ifdef CONFIG_BINFMT_ELF_KUNIT_TEST
-> +#include "binfmt_elf_test.c"
-> +#endif
-> diff --git a/fs/binfmt_elf_test.c b/fs/binfmt_elf_test.c
-> new file mode 100644
-> index 000000000000..486ad419f763
-> --- /dev/null
-> +++ b/fs/binfmt_elf_test.c
-> @@ -0,0 +1,64 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +#include <kunit/test.h>
-> +
-> +static void total_mapping_size_test(struct kunit *test)
-> +{
-> +       struct elf_phdr empty[] =3D {
-> +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0, .p_memsz =3D 0, },
-> +               { .p_type =3D PT_INTERP, .p_vaddr =3D 10, .p_memsz =3D 99=
-9999, },
-> +       };
-> +       /*
-> +        * readelf -lW /bin/mount | grep '^  .*0x0' | awk '{print "\t\t{ =
-.p_type =3D PT_" \
-> +        *                              $1 ", .p_vaddr =3D " $3 ", .p_mem=
-sz =3D " $6 ", },"}'
-> +        */
-> +       struct elf_phdr mount[] =3D {
-> +               { .p_type =3D PT_PHDR, .p_vaddr =3D 0x00000040, .p_memsz =
-=3D 0x0002d8, },
-> +               { .p_type =3D PT_INTERP, .p_vaddr =3D 0x00000318, .p_mems=
-z =3D 0x00001c, },
-> +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0x00000000, .p_memsz =
-=3D 0x0033a8, },
-> +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0x00004000, .p_memsz =
-=3D 0x005c91, },
-> +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0x0000a000, .p_memsz =
-=3D 0x0022f8, },
-> +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0x0000d330, .p_memsz =
-=3D 0x000d40, },
-> +               { .p_type =3D PT_DYNAMIC, .p_vaddr =3D 0x0000d928, .p_mem=
-sz =3D 0x000200, },
-> +               { .p_type =3D PT_NOTE, .p_vaddr =3D 0x00000338, .p_memsz =
-=3D 0x000030, },
-> +               { .p_type =3D PT_NOTE, .p_vaddr =3D 0x00000368, .p_memsz =
-=3D 0x000044, },
-> +               { .p_type =3D PT_GNU_PROPERTY, .p_vaddr =3D 0x00000338, .=
-p_memsz =3D 0x000030, },
-> +               { .p_type =3D PT_GNU_EH_FRAME, .p_vaddr =3D 0x0000b490, .=
-p_memsz =3D 0x0001ec, },
-> +               { .p_type =3D PT_GNU_STACK, .p_vaddr =3D 0x00000000, .p_m=
-emsz =3D 0x000000, },
-> +               { .p_type =3D PT_GNU_RELRO, .p_vaddr =3D 0x0000d330, .p_m=
-emsz =3D 0x000cd0, },
-
-This doesn't build for me, as PT_GNU_RELRO isn't defined. Adding it
-makes the test build:
-
----
-Signed-off-by: David Gow <davidgow@google.com>
----
-diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-index 61bf4774b8f2..c33cdb4d9464 100644
---- a/include/uapi/linux/elf.h
-+++ b/include/uapi/linux/elf.h
-@@ -36,6 +36,7 @@ typedef __s64 Elf64_Sxword;
-#define PT_LOPROC  0x70000000
-#define PT_HIPROC  0x7fffffff
-#define PT_GNU_EH_FRAME                0x6474e550
-+#define PT_GNU_RELRO           0x6474e552
-#define PT_GNU_PROPERTY                0x6474e553
-
-#define PT_GNU_STACK   (PT_LOOS + 0x474e551)
----
-
-> +       };
-> +       size_t mount_size =3D 0xE070;
-> +       /* https://lore.kernel.org/lkml/YfF18Dy85mCntXrx@fractal.localdom=
-ain */
-> +       struct elf_phdr unordered[] =3D {
-> +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0x00000000, .p_memsz =
-=3D 0x0033a8, },
-> +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0x0000d330, .p_memsz =
-=3D 0x000d40, },
-> +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0x00004000, .p_memsz =
-=3D 0x005c91, },
-> +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0x0000a000, .p_memsz =
-=3D 0x0022f8, },
-> +       };
-> +
-> +       /* No headers, no size. */
-> +       KUNIT_EXPECT_EQ(test, total_mapping_size(NULL, 0), 0);
-> +       KUNIT_EXPECT_EQ(test, total_mapping_size(empty, 0), 0);
-> +       /* Empty headers, no size. */
-> +       KUNIT_EXPECT_EQ(test, total_mapping_size(empty, 1), 0);
-> +       /* No PT_LOAD headers, no size. */
-> +       KUNIT_EXPECT_EQ(test, total_mapping_size(&empty[1], 1), 0);
-> +       /* Empty PT_LOAD and non-PT_LOAD headers, no size. */
-> +       KUNIT_EXPECT_EQ(test, total_mapping_size(empty, 2), 0);
-> +
-> +       /* Normal set of PT_LOADS, and expected size. */
-> +       KUNIT_EXPECT_EQ(test, total_mapping_size(mount, ARRAY_SIZE(mount)=
-), mount_size);
-> +       /* Unordered PT_LOADs result in same size. */
-> +       KUNIT_EXPECT_EQ(test, total_mapping_size(unordered, ARRAY_SIZE(un=
-ordered)), mount_size);
-> +}
-> +
-> +static struct kunit_case binfmt_elf_test_cases[] =3D {
-> +       KUNIT_CASE(total_mapping_size_test),
-> +       {},
-> +};
-> +
-> +static struct kunit_suite binfmt_elf_test_suite =3D {
-> +       .name =3D KBUILD_MODNAME,
-> +       .test_cases =3D binfmt_elf_test_cases,
-> +};
-> +
-> +kunit_test_suite(binfmt_elf_test_suite);
-> diff --git a/fs/compat_binfmt_elf.c b/fs/compat_binfmt_elf.c
-> index 95e72d271b95..8f0af4f62631 100644
-> --- a/fs/compat_binfmt_elf.c
-> +++ b/fs/compat_binfmt_elf.c
-> @@ -135,6 +135,8 @@
->  #define elf_format             compat_elf_format
->  #define init_elf_binfmt                init_compat_elf_binfmt
->  #define exit_elf_binfmt                exit_compat_elf_binfmt
-> +#define binfmt_elf_test_cases  compat_binfmt_elf_test_cases
-> +#define binfmt_elf_test_suite  compat_binfmt_elf_test_suite
+> > (I'm personally in favor of people not copy-pasting these paragraphs
+> > in the first place, but that is what the style-guide currently
+> > recommends)
 >
->  /*
->   * We share all the actual code with the native (64-bit) version.
+> Let's change the guide? :)
+>
+
+I don't think the actual text recommended in the guide is a problem:
+it basically just points to the KUnit documentation, but I can send a
+patch to soften the wording from "you MUST describe KUnit in the help
+text" (or remove it entirely) if people really don't like it.
+
+> >
+> > > +         running KUnit test harness and are not for inclusion into a
+> > > +         production build.
+> > > +
+> > > +         For more information on KUnit and unit tests in general ple=
+ase refer
+> > > +         to the KUnit documentation in Documentation/dev-tools/kunit=
+/.
+> > > +
+> > > +         If unsure, say N.
+> > > +
+> > >  config COMPAT_BINFMT_ELF
+> > >         def_bool y
+> > >         depends on COMPAT && BINFMT_ELF
+> > > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> > > index 76ff2af15ba5..9bea703ed1c2 100644
+> > > --- a/fs/binfmt_elf.c
+> > > +++ b/fs/binfmt_elf.c
+> > > @@ -2335,3 +2335,7 @@ static void __exit exit_elf_binfmt(void)
+> > >  core_initcall(init_elf_binfmt);
+> > >  module_exit(exit_elf_binfmt);
+> > >  MODULE_LICENSE("GPL");
+> > > +
+> > > +#ifdef CONFIG_BINFMT_ELF_KUNIT_TEST
+> > > +#include "binfmt_elf_test.c"
+> > > +#endif
+> > > diff --git a/fs/binfmt_elf_test.c b/fs/binfmt_elf_test.c
+> > > new file mode 100644
+> > > index 000000000000..486ad419f763
+> > > --- /dev/null
+> > > +++ b/fs/binfmt_elf_test.c
+> > > @@ -0,0 +1,64 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +#include <kunit/test.h>
+> > > +
+> > > +static void total_mapping_size_test(struct kunit *test)
+> > > +{
+> > > +       struct elf_phdr empty[] =3D {
+> > > +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0, .p_memsz =3D 0=
+, },
+> > > +               { .p_type =3D PT_INTERP, .p_vaddr =3D 10, .p_memsz =
+=3D 999999, },
+> > > +       };
+> > > +       /*
+> > > +        * readelf -lW /bin/mount | grep '^  .*0x0' | awk '{print "\t=
+\t{ .p_type =3D PT_" \
+> > > +        *                              $1 ", .p_vaddr =3D " $3 ", .p=
+_memsz =3D " $6 ", },"}'
+> > > +        */
+> > > +       struct elf_phdr mount[] =3D {
+> > > +               { .p_type =3D PT_PHDR, .p_vaddr =3D 0x00000040, .p_me=
+msz =3D 0x0002d8, },
+> > > +               { .p_type =3D PT_INTERP, .p_vaddr =3D 0x00000318, .p_=
+memsz =3D 0x00001c, },
+> > > +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0x00000000, .p_me=
+msz =3D 0x0033a8, },
+> > > +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0x00004000, .p_me=
+msz =3D 0x005c91, },
+> > > +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0x0000a000, .p_me=
+msz =3D 0x0022f8, },
+> > > +               { .p_type =3D PT_LOAD, .p_vaddr =3D 0x0000d330, .p_me=
+msz =3D 0x000d40, },
+> > > +               { .p_type =3D PT_DYNAMIC, .p_vaddr =3D 0x0000d928, .p=
+_memsz =3D 0x000200, },
+> > > +               { .p_type =3D PT_NOTE, .p_vaddr =3D 0x00000338, .p_me=
+msz =3D 0x000030, },
+> > > +               { .p_type =3D PT_NOTE, .p_vaddr =3D 0x00000368, .p_me=
+msz =3D 0x000044, },
+> > > +               { .p_type =3D PT_GNU_PROPERTY, .p_vaddr =3D 0x0000033=
+8, .p_memsz =3D 0x000030, },
+> > > +               { .p_type =3D PT_GNU_EH_FRAME, .p_vaddr =3D 0x0000b49=
+0, .p_memsz =3D 0x0001ec, },
+> > > +               { .p_type =3D PT_GNU_STACK, .p_vaddr =3D 0x00000000, =
+.p_memsz =3D 0x000000, },
+> > > +               { .p_type =3D PT_GNU_RELRO, .p_vaddr =3D 0x0000d330, =
+.p_memsz =3D 0x000cd0, },
+> > > +       };
+> > > +       size_t mount_size =3D 0xE070;
+> > > +       /* https://lore.kernel.org/lkml/YfF18Dy85mCntXrx@fractal.loca=
+ldomain */
+> >
+> > Slight nit, it looks like that message wasn't sent to lkml.
+> > lore gives a suggestion to change to
+> > https://lore.kernel.org/linux-fsdevel/YfF18Dy85mCntXrx@fractal.localdom=
+ain/
+>
+> Ah, thank you. I was replacing the /r/ that used to be in that URL, and
+> got lost. :)
+>
 > --
-> 2.30.2
->
+> Kees Cook
 
---000000000000ced7bd05d8beb6b7
+--000000000000e460b805d8bef092
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -380,14 +351,14 @@ jZstNF/BUnI3864fATiXSbnNqBwlJS3YkoaCTpbI9qNTrf5VIvnbryT69xJ6f25yfmxrXNJJe5OG
 ncB34Cwnb7xQyk+uRLZ465yUBkbjk9pC/yamL0O7SOGYUclrQl2c5zzGuVBD84YcQGDOK6gSPj6w
 QuBfOooZPOyZZZ8AMih7J980MYICajCCAmYCAQEwaDBUMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQ
 R2xvYmFsU2lnbiBudi1zYTEqMCgGA1UEAxMhR2xvYmFsU2lnbiBBdGxhcyBSMyBTTUlNRSBDQSAy
-MDIwAhABQeVybOOpR4bOOXZYL5T3MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCB8
-Mr6BJb4BYxVfeVVDisbL0OQ42VgZ+E7+jRSx9E3i+jAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
-MBwGCSqGSIb3DQEJBTEPFw0yMjAyMjQwNzQxNDVaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUD
+MDIwAhABQeVybOOpR4bOOXZYL5T3MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCs
+WFw6IjlTP+oNmws6QGvsZCR3WRZk9iW7sazkpiADeTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
+MBwGCSqGSIb3DQEJBTEPFw0yMjAyMjQwNzU4MDBaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUD
 BAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsG
-CSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAabDLwRIGBdSIRSKpjO5m
-JCFkXr6fyIXJGEib0DoxTa5YLyTQ/kcEYc+STg7TTW1O77rOMH2d1Qo/5LdoKAtrpzIDv9nEvSdI
-dWNUIunk3/BzQl9+BE6SknDEVqG6hdc8fO7Xg5KMHjKS9dKPhp+FhLYUZPMnAqXeDWqselUHukDs
-JoMWjbDaLBhAK/MlaNAX5cjp92KZ6eQLV56365Iw/tsv0mfijb9i47uYCBT7LN1rx1cF03d394gf
-foIL64rqB8VepTHp+ZF/LsYGQ6Fynxn8VEODo2b6/9kzAaMY4jdecbmYW9fDKCy9MmgvRUfzYhbs
-7NEytb3RKebICMlLwQ==
---000000000000ced7bd05d8beb6b7--
+CSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAVnV+QiayILcefI+u3Qkz
+2M621RV+SUXznv/oagA/5XZKfVig+/9Z4DHa8uxNOvsbzcNdZd4f7VtdibIb2QTZt6G6oYZZGq+z
+M0LZOQs2SWN3P+0A2tqsimwp3CSt+G5d0zCHIhkQRHN1XoAhWOcNCZIk5CmkyShfx6jCTjP1SpWV
+3e51WwPEqCsYHMpR9PNfG4LswP+HbzLovRlJV7SgWryyTUjDuRWuj6x6SAsk9HQJZoM2UA4e7FjF
+PE3Ab7OEtaCNWxo1bBTWq69um+bDNHLAUzdsZdOW+N6w/+OaayNek76T9IReftmyvRzLfrdbvTXB
+6ii3Hhg9BcvI6vNLxQ==
+--000000000000e460b805d8bef092--
