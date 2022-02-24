@@ -2,134 +2,99 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DA9C43217
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 02:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C580EC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 05:39:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229987AbiBXCLz (ORCPT
+        id S230289AbiBXFkQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 23 Feb 2022 21:11:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47216 "EHLO
+        Thu, 24 Feb 2022 00:40:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229964AbiBXCLz (ORCPT
+        with ESMTP id S229903AbiBXFkQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 23 Feb 2022 21:11:55 -0500
-Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E8ADB4D;
-        Wed, 23 Feb 2022 18:11:26 -0800 (PST)
+        Thu, 24 Feb 2022 00:40:16 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A28125291D
+        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 21:39:47 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id p17so771562plo.9
+        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 21:39:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1645668686; x=1677204686;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=x6brwM7ZtEJWe3+MXlu4EJraFcB8hQIqzGr5Jpw6Omo=;
-  b=B4xNYAOjZ6b8KkZ6OOj3s3d20VTLnCtTuNXow3pCwGhK9B2Vm0/9benJ
-   GolozGIn0BG3+YYXmnP/NGWu7OqK++77iXZOoaXxSzRsR3Rq7AGn/0Ryu
-   /XhEvkFgjGxuAvPO0rO3M0NuEarEhBSshF2w58O8qMu6hk0c7d9e8cWFP
-   g=;
-Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 23 Feb 2022 16:53:47 -0800
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 16:53:47 -0800
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.15; Wed, 23 Feb 2022 16:53:46 -0800
-Received: from [10.48.243.226] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.15; Wed, 23 Feb
- 2022 16:53:45 -0800
-Message-ID: <03cee2a7-1455-b788-e1f0-5fb48db3478c@quicinc.com>
-Date:   Wed, 23 Feb 2022 16:53:45 -0800
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e6g7HRr0zIYQVPNXmzVLc42NaJplGVZDGpMCXVnQwkY=;
+        b=kQguTOJO79zZ4TeGl8ygulyeSSwdjpqt9d2DbpR98u/5voWF2vVcUewhxvoROD4gsS
+         uZrwk5rvwB7Co7uAs9s1JjHsP7YkJ64yF75ePStV2f1kYz89S9mt/653j1vslw3z4QB/
+         bjCw/20qq+IRFwwfQMNTkH23tqNWmgfeZGHTk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e6g7HRr0zIYQVPNXmzVLc42NaJplGVZDGpMCXVnQwkY=;
+        b=xOSCa/gM3YbnkgIWkSpU/kKFFbWsljwCaErPLDHDiITDHTBICC16VUfGoBqT1+tjsQ
+         E0PsDnpOXsLoyQAFefuYixLGQaomYvs6SY434NT8Ksj2hA4lr1osC6I78DbJRFQ8oY5A
+         mDpvlzTxlQ5RKjLDwjlBdh+dpP3HZrz6vBsSrdrrQW1BcgAzYhAyvco+Ijd07i8abKVQ
+         rgG/vC6qVRR2cyi5OV3BKPLIekT0QdTmj1tPLJUL4l34FYNHhGbhFzMdiOSs7eFIMZYl
+         utVX2/ubyH3K2KVjCF9i9MGWrqZQ2eZ6ml2ttABmD/rVSObjJldG6Z50pfAY7fRoNqm+
+         keYg==
+X-Gm-Message-State: AOAM533a/YwBHl4mgQQKFWoPRVXvHhjTLrYzvBp3GAEpRvSMWIS/iwdo
+        Sd3hKehQiiUNAENFbxPwrFiC8w==
+X-Google-Smtp-Source: ABdhPJxamHd9J69LDxApBkkgGOYtMrUJj4jHtb4mswOsHzhA2LHPjTBWBDLvlXh3wGYZLdR8Pxap/Q==
+X-Received: by 2002:a17:902:9348:b0:14d:8ee9:329f with SMTP id g8-20020a170902934800b0014d8ee9329fmr1309310plp.80.1645681187027;
+        Wed, 23 Feb 2022 21:39:47 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s48sm1436917pfw.111.2022.02.23.21.39.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Feb 2022 21:39:46 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Eric Biederman <ebiederm@xmission.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: Update execve entry with more details
+Date:   Wed, 23 Feb 2022 21:39:45 -0800
+Message-Id: <20220224053945.1852048-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH 5/6][next] ath6kl: wmi: Replace one-element array with
- flexible-array member in struct wmi_disconnect_event
-Content-Language: en-US
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>
-References: <cover.1645583264.git.gustavoars@kernel.org>
- <4a42b591109202589cb1cf87df13daef02eb75f9.1645583264.git.gustavoars@kernel.org>
-From:   Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <4a42b591109202589cb1cf87df13daef02eb75f9.1645583264.git.gustavoars@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.49.16.6]
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1098; h=from:subject; bh=gYwy98bhL+KP9Gi2xFKK93KwgEGtemx/KrxoV+zoPYo=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiFxogXLPUMpaKGsP1Vih6r5khjZfd+nup6pyAwYKN /FXB3bmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYhcaIAAKCRCJcvTf3G3AJsPCEA ClSkAioh0+Pvcf1Eu11wtLQqXh+P5prw5MDJaii8067aGgL2rRL9vVo1GhyWXJ47YSAPzZoN5ySqu8 6OxUTVM7BOzSj6+lnTxAE9/ktBSag7rE+HLVc2PTOr+RI7VQZimb5CjzrxCTJ3cGcEJz9EaJkaXeTX Zr2p6Lw2C4RN96cRPAoviVXLMcIshmJByek6KA/4RqyT0YCH7bPVHb+pHigX9O1TM2pU3if/tFnafI UQi8GkYO877+/7AFsVYMXK8/gZwr4kEJniBRTUexQ3GThdhV529cmFMoVL3egN4DM0M5qKlxUFyGl0 qE5lUqQGNUXYoTl4o/5O2I3aWYsIsxL4hclkllZZmzHvelCkVMlObtQi4kS9pvn9nFA5vEGRGp4F0+ /w6JDZhUgHMD42TYdypgXRjg6jd5JCUI63pXDq2N+Tstny26C9c+wsZJYlb4XRxs8r6deywJnC9fS5 BBvSHKacNHuqFhIW3JVvncWL5lzwA6k2IWZY4R2fpHpOK58iNITgilLkZ3vd2RbknmwzgpF1ToEp33 zSfO3E1qbQ5Zv5EEY8kcT2VDXWXVxOfigkJSB64beoMIfYS129rIhbIBrKs/DkuirlnmE6YRLvEpcG 7i8Ne4f+WKXP9TzAsG9iGK42gCqYsEXK2KZjJniE2ltk/bvm05tnvq8pRrbg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2/22/2022 6:39 PM, Gustavo A. R. Silva wrote:
-> Replace one-element array with flexible-array member in struct
-> wmi_disconnect_event.
-> 
-> It's also worth noting that due to the flexible array transformation,
-> the size of struct wmi_disconnect_event changed (now the size is 1 byte
-> smaller), and in order to preserve the logic of before the transformation,
-> the following change is needed:
-> 
->          -       if (len < sizeof(struct wmi_disconnect_event))
->          +       if (len <= sizeof(struct wmi_disconnect_event))
-> 
-> This issue was found with the help of Coccinelle and audited and fixed,
-> manually.
-> 
-> Link: https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
-> Link: https://github.com/KSPP/linux/issues/79
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> Hi!
-> 
-> It'd be great if someone can confirm or comment on the following
-> changes described in the changelog text:
-> 
->          -       if (len < sizeof(struct wmi_disconnect_event))
->          +       if (len <= sizeof(struct wmi_disconnect_event))
-> 
-> Thanks
-> 
->   drivers/net/wireless/ath/ath6kl/wmi.c | 2 +-
->   drivers/net/wireless/ath/ath6kl/wmi.h | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/ath/ath6kl/wmi.c b/drivers/net/wireless/ath/ath6kl/wmi.c
-> index ccdccead688e..645fb6cae3be 100644
-> --- a/drivers/net/wireless/ath/ath6kl/wmi.c
-> +++ b/drivers/net/wireless/ath/ath6kl/wmi.c
-> @@ -1023,7 +1023,7 @@ static int ath6kl_wmi_disconnect_event_rx(struct wmi *wmi, u8 *datap, int len,
->   	struct wmi_disconnect_event *ev;
->   	wmi->traffic_class = 100;
->   
-> -	if (len < sizeof(struct wmi_disconnect_event))
-> +	if (len <= sizeof(struct wmi_disconnect_event))
+The UAPI elf.h header was missed in the original MAINTAINER entry. Add
+it. Include linux-mm mailing list since that's where execve has
+traditionally been discussed. Note that this area is Supported, and aim
+at the git tree.
 
-this is another case where I believe the original code should remain 
-since that is checking that the "fixed" portion is present.
+Cc: Eric Biederman <ebiederm@xmission.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ MAINTAINERS | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-and here again what is missing in the original code is logic to verify 
-that the provide len is large enough to handle the advertised assoc_resp_len
-
->   		return -EINVAL;
->   
->   	ev = (struct wmi_disconnect_event *) datap;
-> diff --git a/drivers/net/wireless/ath/ath6kl/wmi.h b/drivers/net/wireless/ath/ath6kl/wmi.h
-> index 6b064e669d87..6a7fc07cd9aa 100644
-> --- a/drivers/net/wireless/ath/ath6kl/wmi.h
-> +++ b/drivers/net/wireless/ath/ath6kl/wmi.h
-> @@ -1596,7 +1596,7 @@ struct wmi_disconnect_event {
->   	u8 disconn_reason;
->   
->   	u8 assoc_resp_len;
-> -	u8 assoc_info[1];
-> +	u8 assoc_info[];
->   } __packed;
->   
->   /*
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 69a2935daf6c..2a4de0619c49 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7225,6 +7225,9 @@ F:	net/core/of_net.c
+ EXEC & BINFMT API
+ R:	Eric Biederman <ebiederm@xmission.com>
+ R:	Kees Cook <keescook@chromium.org>
++L:	linux-mm@kvack.org
++S:	Supported
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/execve
+ F:	arch/alpha/kernel/binfmt_loader.c
+ F:	arch/x86/ia32/ia32_aout.c
+ F:	fs/*binfmt_*.c
+@@ -7232,6 +7235,7 @@ F:	fs/exec.c
+ F:	include/linux/binfmts.h
+ F:	include/linux/elf.h
+ F:	include/uapi/linux/binfmts.h
++F:	include/uapi/linux/elf.h
+ F:	tools/testing/selftests/exec/
+ N:	asm/elf.h
+ N:	binfmt
+-- 
+2.30.2
 
