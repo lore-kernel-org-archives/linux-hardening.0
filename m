@@ -2,109 +2,92 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A56C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 09:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A09C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 10:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233115AbiBXJ5F (ORCPT
+        id S233128AbiBXKH4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Feb 2022 04:57:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50178 "EHLO
+        Thu, 24 Feb 2022 05:07:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233151AbiBXJ46 (ORCPT
+        with ESMTP id S233215AbiBXKHu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Feb 2022 04:56:58 -0500
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC80E28ADA9;
-        Thu, 24 Feb 2022 01:56:22 -0800 (PST)
-Received: by mail-vk1-f177.google.com with SMTP id k9so879774vki.4;
-        Thu, 24 Feb 2022 01:56:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UaaU3qYErVihNgxgJw4SHNwOEGx/UhY/ytg286+tR04=;
-        b=JPlbGO8qyl9Dzq1lI5Tgm2np3C9+me2aiPspPVq0QzqjKmt1CUefYd/0T43Ykz1dt6
-         nEge7XJqToKfs3LhCraxdNsFYLBjf7V4ZRR5BDeEUH02AmklI2FUn5PxGd9CHSA078Kt
-         ihtC+iiz77d4FiJ8HdcaPBm47ATGJ5Ca2ZeUIYgvrb+NxOacoQNn4BZ2OnT7IjYe56QU
-         y5wQi4BlZNkYVs/g+SCB1RqAA7g67ME2xMy2EKY5e50Kn2HELIVVtZIWHA95zjwD5EOj
-         vXufRzsX8b09jI3vytBUc3fhMzYjIVKwkQ4/gYs9Tn9njl+Jl3AERL0oCaGLEYhNly6U
-         +mDA==
-X-Gm-Message-State: AOAM531CzzHZl7SlmcC1MKPPF1OlF0bGXhonduA/fTEItZwF0Cweh0F9
-        eF7hAc6Wi0atOJMeF2aE+P35TFbWG7bjcw==
-X-Google-Smtp-Source: ABdhPJynvsEgIoJZ2AoCZok9nIYdyhMjWHm927h9o3VujvqmAS1n0AYSWp7++DenJOLYDcbLSK8JoA==
-X-Received: by 2002:a1f:1c4:0:b0:321:bdee:acbd with SMTP id 187-20020a1f01c4000000b00321bdeeacbdmr727554vkb.39.1645696581613;
-        Thu, 24 Feb 2022 01:56:21 -0800 (PST)
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
-        by smtp.gmail.com with ESMTPSA id b78sm315516vka.56.2022.02.24.01.56.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Feb 2022 01:56:21 -0800 (PST)
-Received: by mail-ua1-f54.google.com with SMTP id g15so610508ual.11;
-        Thu, 24 Feb 2022 01:56:21 -0800 (PST)
-X-Received: by 2002:a9f:360f:0:b0:341:8a12:8218 with SMTP id
- r15-20020a9f360f000000b003418a128218mr737932uad.14.1645696580955; Thu, 24 Feb
- 2022 01:56:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20220224060448.1856091-1-keescook@chromium.org>
- <CAMuHMdVioQLy_T2LimgWdfWM=j=fomfpayuS1mbXnBLZj4gGQA@mail.gmail.com>
- <d75f1259c3e64387a161ebcb0448d594@AcuMS.aculab.com> <CAMuHMdWtQ+B-01ZOwZNvgQ7pndNsP3V90_jHdR=RS4K7O3Vk9g@mail.gmail.com>
- <95b9c3e8227a4892b26cc0384d1782c2@AcuMS.aculab.com>
-In-Reply-To: <95b9c3e8227a4892b26cc0384d1782c2@AcuMS.aculab.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 24 Feb 2022 10:56:09 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdU6msvi0j=mS28GFYbm+uMRk7PkYe+zOM4sDmOVxeibLQ@mail.gmail.com>
-Message-ID: <CAMuHMdU6msvi0j=mS28GFYbm+uMRk7PkYe+zOM4sDmOVxeibLQ@mail.gmail.com>
-Subject: Re: [PATCH] m68k: Implement "current_stack_pointer"
-To:     David Laight <David.Laight@aculab.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 24 Feb 2022 05:07:50 -0500
+X-Greylist: delayed 609 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 24 Feb 2022 02:07:20 PST
+Received: from mail.thorsis.com (mail.thorsis.com [92.198.35.195])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 76345151C71;
+        Thu, 24 Feb 2022 02:07:19 -0800 (PST)
+Date:   Thu, 24 Feb 2022 10:56:59 +0100
+From:   Alexander Dahl <ada@thorsis.com>
+To:     Thorsten Leemhuis <linux@leemhuis.info>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stefano Zacchiroli <zack@upsilon.cc>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Laura Abbott <labbott@kernel.org>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Wenwen Wang <wenwen@cs.uga.edu>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] Documentation/process: Add Researcher Guidelines
+Message-ID: <YhdWa41bXssNVrE3@ada-deb-carambola.ifak-system.com>
+Mail-Followup-To: Thorsten Leemhuis <linux@leemhuis.info>,
+        Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stefano Zacchiroli <zack@upsilon.cc>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Laura Abbott <labbott@kernel.org>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Wenwen Wang <wenwen@cs.uga.edu>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20220224001403.1307377-1-keescook@chromium.org>
+ <974cf8f2-06f3-99a5-9a77-6d7b7cc8271a@leemhuis.info>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <974cf8f2-06f3-99a5-9a77-6d7b7cc8271a@leemhuis.info>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi David, Kees,
+Hello Thorsten,
 
-On Thu, Feb 24, 2022 at 10:54 AM David Laight <David.Laight@aculab.com> wrote:
-> From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > Sent: 24 February 2022 09:17
-> >
-> > On Thu, Feb 24, 2022 at 10:12 AM David Laight <David.Laight@aculab.com> wrote:
-> > > From: Geert Uytterhoeven
-> > > > Sent: 24 February 2022 08:59
-> > > ...
-> > > > > +register unsigned long current_stack_pointer __asm__("sp");
-> > > >
-> > > > I don't know what HARDENED_USERCOPY does, so I don't know if you need
-> > > > "usp" (see rdusp()) or "sp"?
-> > >
-> > > HARDENED_USERCOPY significantly slows down some systems calls
-> > > (especially things like sendmsg()) by trying to run-time verify
-> > > that the kernel buffer doesn't overrun a stack frame or kmalloc()ed
-> >
-> > Kernel stack frame of user stack frame?
->
-> Kernel, the kernel doesn't care if the user stack gets trashed.
+Am Thu, Feb 24, 2022 at 09:19:24AM +0100 schrieb Thorsten Leemhuis:
+> On 24.02.22 01:14, Kees Cook wrote:
+> > +If you are a first time contributor it is recommended that the patch
+> > +itself be vetted by others privately before being posted to public lists.
+> > +(This is required if you have been explicitly told your patches need
+> > +more careful internal review.) These people are expected to have their
+> > +"Reviewed-by" tag included in the resulting patch. Finding another
+> > +developer familiar with Linux contribution, especially within your own
+> > +organization, and having them help with reviews before sending them to
+> > +the public mailing lists tends to significantly improve the quality of the
+> > +resulting patches, and there by reduces the burden on other developers.
+> 
+> I like the section, but I wonder why it's needed here. Is there anything
+> specific to patches produced from research in it there I missed when
+> reading it? If not: Wouldn't it be better to include that section as a
+> TLDR in Documentation/process/submitting-patches.rst and point there
+> instead? We already have at least two places describing how to submit
+> patches, creating yet another one (even if it's just in such a brief
+> version) somehow feels slightly wrong to me.
+> 
+> OTOH I fully understand that having things in one place has it's
+> benefits. If that's wanted, why not put that text as TLDR in
+> submitting-patches.rst and maintain a copy here? Sure, keeping things in
+> sync has downsides, but I'd say it's the lesser evil. A copy could also
+> be avoided by briefly mentioning some of the important bits found in
+> another document; that's the approach I took in my patches regarding
+> regressions. To quote:
 
-OK.
+Without further opinion on the topic or content itself: 
+If there's need to have "copied" parts of the documentation available
+in different places, why not put that to a separate file and include
+it in all places which need it?  
+This would solve the manual synchronization issue.  
+Did that in other projects using sphinx/rst already.  
+Only thing you have to keep an eye on is whether the surrounding
+context at places of the include still matches the included piece.
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Greets
+Alex
 
-Kees: Do you want me to queue this in the m68k for-v5.18 branch, or do
-you want to take it yourself, together with the HARDENED_USERCOPY work?
-In case of the latter:
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-Please let me know. Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
