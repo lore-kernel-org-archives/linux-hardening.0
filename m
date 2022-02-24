@@ -2,247 +2,144 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC1CC433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 19:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6565C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 20:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233085AbiBXToZ (ORCPT
+        id S234131AbiBXUBN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Feb 2022 14:44:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33334 "EHLO
+        Thu, 24 Feb 2022 15:01:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233043AbiBXToY (ORCPT
+        with ESMTP id S232224AbiBXUBN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Feb 2022 14:44:24 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE7801C6EF3
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Feb 2022 11:43:53 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id w3so4360484edu.8
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Feb 2022 11:43:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cT6VTaPBAvZcJT0C07jbq6jkkSfnrkv3DOfnLzZ77CM=;
-        b=cph9wo/cKs42xh7OHpJ1L4/fItWA1YtsVsR8Di5tl2igWrI3LjGzwy+GTVPrIL3I1Z
-         GPmf1B0NtZnAEE3hGPmw8LkPPA+8eTx1vMqrbiZJvC6TMFfHROnbmMiYXNJp8huLI+gx
-         qO7LzfpbfGtaHrKawj/KVlZawWWAemhDdkG+FfRsf2zbCwRLYY8yk1hUtHQPAc+vZfmk
-         RxJzf8gEOCvxp1Kuikw1mJyQ5GskvlzG3ChUBTmfgr88rXLMULIcbZFULMD36AaKUC3e
-         HhchVJPs5IExtwcXN/IpVT84JaqinlITjSuAktAm60Cw3JGxFH3MCqXm65fyUBe1lLZi
-         IxIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cT6VTaPBAvZcJT0C07jbq6jkkSfnrkv3DOfnLzZ77CM=;
-        b=uu+rJxTVCS3ig1P63TCB7MhNmxnRZSzxSdKqX2IUpZ3fToF+CkR+DqkLb2BMDnI6Lz
-         cFa0JpVatkoxEek3bDMgYtj0UPr/uNu3+Ao9o1AWGI3RbGtwE8G+5ieh6HMOgu9wFhWJ
-         bBvVACIDabwj4raH/ybJaKruVqp9O+lIWMzrlgXPyJzQx7ZN4iAGmLKQLYbsowYJG/Vp
-         UmXNpkLwR5bsELiyQ11IzED+VqOfQrVxNLSfjw+cfq5Qwlo9N7gYsZMJpMidi/BNk/N/
-         vMmNBw+Q8Z7loNBlqLhIl5JQ0IZDLPmKebQKkw8asyihXQmJgmzgXVchIPDK4vwi4sXB
-         Q/zA==
-X-Gm-Message-State: AOAM530VUow+gj2DdN5F6a69lnKQ6fh4kiIvjLLoDFGk1ampOWnKcN0q
-        Kcjkk/ahjqtakeJ63nRXTjSqBsYAscnfSWP6i/v87A==
-X-Google-Smtp-Source: ABdhPJwrdy9Ks+AvYVAONIODLhAaLZ43j966hZvJwXtEANqW/+4iWi8AF6gH87RMvVRxu+szCttnMs6KWkl6HKVvHdU=
-X-Received: by 2002:a05:6402:2546:b0:412:d0eb:2a4a with SMTP id
- l6-20020a056402254600b00412d0eb2a4amr3924248edb.306.1645731832090; Thu, 24
- Feb 2022 11:43:52 -0800 (PST)
+        Thu, 24 Feb 2022 15:01:13 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EE472763F9;
+        Thu, 24 Feb 2022 12:00:43 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B3B91B82684;
+        Thu, 24 Feb 2022 20:00:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6924C340E9;
+        Thu, 24 Feb 2022 20:00:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645732840;
+        bh=SQaeb0Kta1h/s7fQ+4T22hNjVzetgs4lJusjv4G1iW0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aax4l6Htvnug8mbTTCX0X2rLTjQUq6JeR+ueffcTenNILwwCX0flGWbvC3gLcJ6tA
+         LIh0hvw+Bbd4wOD+R8WWkcXInjD/9/0jYzDDCJgngg0AP70xSThZhi+xoRqNk2k57S
+         CZRuK6sIXueEnpj9OiYbnawB7IF086gcluUXoeYhoLInJcsG3QP8kljM56vsMmO0nL
+         /YS4U7y0DFUMJwrxWivKuA85OBpeIBAp3XuUSCNqMoGWt7d6xBjNGn0zesXPqr7gIX
+         eMs+OPAknzWIlasB15qWJ+spE8ujhHQYTziWSeHJ7iJl0ihM5++9OEaRHnYQt8UNyK
+         pgum76xmSyGAg==
+Date:   Thu, 24 Feb 2022 14:08:39 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 4/6][next] ath6kl: wmi: Replace one-element array with
+ flexible-array member in struct wmi_connect_event
+Message-ID: <20220224200839.GA1292927@embeddedor>
+References: <cover.1645583264.git.gustavoars@kernel.org>
+ <8a0e347615a3516980fd8b6ad2dc4864a880613b.1645583264.git.gustavoars@kernel.org>
+ <6106494b-a1b3-6b57-8b44-b9528127533b@quicinc.com>
 MIME-Version: 1.0
-References: <20220224055145.1853657-1-keescook@chromium.org>
-In-Reply-To: <20220224055145.1853657-1-keescook@chromium.org>
-From:   Daniel Latypov <dlatypov@google.com>
-Date:   Thu, 24 Feb 2022 11:43:40 -0800
-Message-ID: <CAGS_qxrRi0zvGnoi-Ne=wp8xkuFKPzNj9d57eq=51gg5gwX=eA@mail.gmail.com>
-Subject: Re: [PATCH] lib: stackinit: Convert to KUnit
-To:     Kees Cook <keescook@chromium.org>
-Cc:     David Gow <davidgow@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6106494b-a1b3-6b57-8b44-b9528127533b@quicinc.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 9:51 PM Kees Cook <keescook@chromium.org> wrote:
->
+On Wed, Feb 23, 2022 at 04:50:18PM -0800, Jeff Johnson wrote:
+> On 2/22/2022 6:38 PM, Gustavo A. R. Silva wrote:
+> > Replace one-element array with flexible-array member in struct
+> > wmi_connect_event.
+> > 
+> > It's also worth noting that due to the flexible array transformation,
+> > the size of struct wmi_connect_event changed (now the size is 1 byte
+> > smaller), and in order to preserve the logic of before the transformation,
+> > the following change is needed:
+> > 
+> > 	-       if (len < sizeof(struct wmi_connect_event))
+> > 	+       if (len <= sizeof(struct wmi_connect_event))
+> > 
+> > This issue was found with the help of Coccinelle and audited and fixed,
+> > manually.
+> > 
+> > Link: https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
+> > Link: https://github.com/KSPP/linux/issues/79
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > ---
+> > Hi!
+> > 
+> > It'd be great if someone can confirm or comment on the following
+> > changes described in the changelog text:
+> > 
+> >          -       if (len < sizeof(struct wmi_connect_event))
+> >          +       if (len <= sizeof(struct wmi_connect_event))
+> > 
+> > Thanks
+> > 
+> >   drivers/net/wireless/ath/ath6kl/wmi.c | 2 +-
+> >   drivers/net/wireless/ath/ath6kl/wmi.h | 2 +-
+> >   2 files changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/net/wireless/ath/ath6kl/wmi.c b/drivers/net/wireless/ath/ath6kl/wmi.c
+> > index 049d75f31f3c..ccdccead688e 100644
+> > --- a/drivers/net/wireless/ath/ath6kl/wmi.c
+> > +++ b/drivers/net/wireless/ath/ath6kl/wmi.c
+> > @@ -857,7 +857,7 @@ static int ath6kl_wmi_connect_event_rx(struct wmi *wmi, u8 *datap, int len,
+> >   	struct wmi_connect_event *ev;
+> >   	u8 *pie, *peie;
+> > -	if (len < sizeof(struct wmi_connect_event))
+> > +	if (len <= sizeof(struct wmi_connect_event))
+> 
+> this is another case where IMO the original code can remain since all it is
+> really checking is to see if the entire "fixed" portion is present. in
+> reality if there was just one byte of assoc_info the response would actually
+> be invalid.
 
-<snip>
+I see; that's actually what I needed to be clarified. I wasn't sure if
+a channel list with no channels was valid and expected. Now I see it is. :)
 
+> what is missing is logic that verifies len is large enough to hold the
+> payload that is advertised via the beacon_ie_len, assoc_req_len, &
+> assoc_resp_len members. without this even if you change the initial len
+> check you can have a condition where len says there is one u8 in assoc_info
+> (and pass the initial test) but the other three members indicate that much
+> more data is present.
+> 
+> but that is a pre-existing shortcoming that should be handled with a
+> separate patch.
 
->  /* Userspace headers. */
-> +#define _GNU_SOURCE
->  #include <stdio.h>
->  #include <stdint.h>
-> +#include <stdlib.h>
->  #include <string.h>
->  #include <stdbool.h>
->  #include <errno.h>
->  #include <sys/types.h>
->
->  /* Linux kernel-ism stubs for stand-alone userspace build. */
+Yeah; I'll consider extending this series to include a patch for that.
 
-This is neat and esp. so that it works.
-But may I ask, what's the value of using this vs UML?
+> >   		return -EINVAL;
+> >   	ev = (struct wmi_connect_event *) datap;
+> > diff --git a/drivers/net/wireless/ath/ath6kl/wmi.h b/drivers/net/wireless/ath/ath6kl/wmi.h
+> > index 432e4f428a4a..6b064e669d87 100644
+> > --- a/drivers/net/wireless/ath/ath6kl/wmi.h
+> > +++ b/drivers/net/wireless/ath/ath6kl/wmi.h
+> > @@ -1545,7 +1545,7 @@ struct wmi_connect_event {
+> >   	u8 beacon_ie_len;
+> >   	u8 assoc_req_len;
+> >   	u8 assoc_resp_len;
+> > -	u8 assoc_info[1];
+> > +	u8 assoc_info[];
+> >   } __packed;
+> >   /* Disconnect Event */
+> 
+> whether or not you modify the length check consider this:
+> Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 
-Given this has changed into mainly just a KUnit-compatibility layer,
-it feels like it can maybe live as a standalone file, if there's ever
-interest in doing this for other tests.
+Great. :)
 
-It feels like something that will never quite be "supported", but I
-find it neat enough I'd have fun sending some patches to make it more
-realistic.
+Thanks a lot for the feedback!
+--
+Gustavo
 
-> -#define KBUILD_MODNAME         "stackinit"
-> -#define pr_fmt(fmt)            KBUILD_MODNAME ": " fmt
-> -#define pr_err(fmt, ...)       fprintf(stderr, pr_fmt(fmt), ##__VA_ARGS__)
-> -#define pr_warn(fmt, ...)      fprintf(stderr, pr_fmt(fmt), ##__VA_ARGS__)
-> -#define pr_info(fmt, ...)      fprintf(stdout, pr_fmt(fmt), ##__VA_ARGS__)
-> -#define __init                 /**/
-> -#define __exit                 /**/
-> +#define TEST_PASS      0
-> +#define TEST_SKIP      1
-> +#define TEST_FAIL      2
-> +struct kunit {
-> +       int status;
-> +       char *msg;
-> +};
-> +struct kunit_case {
-> +        void (*run_case)(struct kunit *test);
-> +        const char *name;
-> +};
-> +struct kunit_suite {
-> +       const char *name;
-> +       const struct kunit_case *test_cases;
-> +};
-> +#define KUNIT_CASE(test_name) { .run_case = test_name, .name = #test_name }
-> +
-> +#define KUNIT_ASSERT_TRUE_MSG(test, expr, fmt, ...)                    \
-> +do {                                                                   \
-> +       if (!(expr)) {                                                  \
-> +               if (test->status != TEST_SKIP)                          \
-> +                       test->status = TEST_FAIL;                       \
-> +               if (test->msg)                                          \
-> +                       free(test->msg);                                \
-> +               asprintf(&test->msg, fmt, ##__VA_ARGS__);               \
-> +       }                                                               \
-> +} while (0)
-
-This looks more like KUNIT_EXPECT_TRUE_MSG(), since this macro won't
-abort the test if the expectation fails.
-
-Looking at the code, it looks like we do want the ability to abort.
-Perhaps we can do what Googletest does in C++ and just add in a `return;`?
-
-It has some annoying implications, like using them from helper
-functions doesn't work as one would expect.
-But people seem to be doing fine with that tradeoff in C++ land.
-
-> +
-> +#define KUNIT_ASSERT_EQ_MSG(test, left, right, fmt, ...)               \
-> +       KUNIT_ASSERT_TRUE_MSG(test, (left) == (right), fmt, ##__VA_ARGS__)
-
-Very optional:
-
-It might be nice to show the expressions automatically on failure.
-We could implement that via something like
-
-KUNIT_ASSERT_TRUE_MSG(test, (left) == (right), #left " != " #right ":
-" fmt, ##__VA_ARGS__);
-
-E.g.
-KUNIT_ASSERT_EQ_MSG(test, 2+2, 5, "math is broken")
-=> 2+2 != 5: math is broken
-
-But I can see that being a bit too complicated to want to do here.
-And the failure messages we had before are already decent at giving context.
-
-> +
-> +#define kunit_skip(test, fmt, ...)                                     \
-> +do {                                                                   \
-> +       test->status = TEST_SKIP;                                       \
-> +       if (test->msg)                                                  \
-> +               free(test->msg);                                        \
-> +       asprintf(&test->msg, fmt, ##__VA_ARGS__);                       \
-> +} while (0)
-
-Similarly, this has no control flow implications, so the current
-semantics match kunit_mark_skipped().
-
-But looking at the code, I think we want to abort early here too.
-
-> +
->  #define __user                 /**/
->  #define noinline               __attribute__((__noinline__))
->  #define __aligned(x)           __attribute__((__aligned__(x)))
-> @@ -59,16 +102,44 @@ typedef uint16_t           u16;
->  typedef uint32_t               u32;
->  typedef uint64_t               u64;
->
-> -#define module_init(func)      static int (*do_init)(void) = func
-> -#define module_exit(func)      static void (*do_exit)(void) = func
-> -#define MODULE_LICENSE(str)    int main(void) {                \
-> -                                       int rc;                 \
-> -                                       /* License: str */      \
-> -                                       rc = do_init();         \
-> -                                       if (rc == 0)            \
-> -                                               do_exit();      \
-> -                                       return rc;              \
-> -                               }
-> +#define MODULE_LICENSE(str)    /* */
-> +
-> +int do_kunit_test_suite(struct kunit_suite *suite)
-> +{
-> +       const struct kunit_case *test_case;
-> +       int rc = 0;
-> +
-> +       for (test_case = suite->test_cases; test_case->run_case; test_case++) {
-> +               struct kunit test = { };
-> +
-> +               test_case->run_case(&test);
-> +               switch (test.status) {
-> +               default:
-> +               case TEST_FAIL:
-> +                       fprintf(stderr, "FAIL: %s%s%s", test_case->name,
-> +                               test.msg ? ": " : "",
-> +                               test.msg ?: "\n");
-> +                       rc = 1;
-> +                       break;
-> +               case TEST_SKIP:
-> +                       fprintf(stdout, "XFAIL: %s%s%s", test_case->name,
-> +                               test.msg ? ": " : "",
-> +                               test.msg ?: "\n");
-> +                       break;
-> +               case TEST_PASS:
-> +                       fprintf(stdout, "ok: %s\n", test_case->name);
-> +                       break;
-> +               }
-> +               if (test.msg)
-> +                       free(test.msg);
-> +       }
-> +       return rc;
-> +}
-> +
-> +#define kunit_test_suite(suite)                                        \
-> +int main(void) {                                               \
-> +       return do_kunit_test_suite(&(suite));                   \
-> +}
-
-very optional:
-emulating kunit_test_suites() might be more future-proof here, if we
-ever want to setup more suites.
-There's little reason to do so right now given the lack of init and
-exit support.
-
-Like the stuff above, it wouldn't be hard to do, but I can see it not
-being worth the extra code, i.e.
-
-#define kunit_test_suites(suites...) \
-  int main(void) {
-     static struct kunit_suite *suites =[] = { __VA_ARGS__ };
-     int i, ret = 0;
-     for (i = 0; i < ARRAY_SIZE(suites); ++i)
-       ret += do_kunit_test_suite(suites[i]);
-     return ret;
-   }
