@@ -2,227 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7EDC433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 06:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55431C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 06:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230523AbiBXGN5 (ORCPT
+        id S230029AbiBXGXm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Feb 2022 01:13:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35846 "EHLO
+        Thu, 24 Feb 2022 01:23:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229536AbiBXGN4 (ORCPT
+        with ESMTP id S229632AbiBXGXl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Feb 2022 01:13:56 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5461E23400B
-        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 22:13:27 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id e13so848290plh.3
-        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 22:13:27 -0800 (PST)
+        Thu, 24 Feb 2022 01:23:41 -0500
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D66C165C19;
+        Wed, 23 Feb 2022 22:23:12 -0800 (PST)
+Received: by mail-ed1-x52a.google.com with SMTP id cm8so1415565edb.3;
+        Wed, 23 Feb 2022 22:23:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Asma8WNQQUT3FBNGCvGXdievYO+L9dWKrHZUkqpLwYo=;
-        b=YP0hTw4BhQTutsHE3lgb2hwfeMrAAi2vjHqX4ZmQJDQvgozj5g8q/QqqcI09WdFnPd
-         sD3El4ySr3YOjFuLIb49Bd1UUSdf60EoRhU0SNdE7vvX3rGUTe17TFup32D3dKf11GqR
-         BCjntqEmhiz32jfO4BE5StMUcD6q3Zr8fLQE0=
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=69+mSNz7gTFXWXZZqcOIp0MaPmAG8AGfcHpHb4Enfug=;
+        b=MJBLpupYfAwJzcBD8mLvjEcwEWbv8vQPdsyvldsB1LKJWaKAA/fp54IwLk9Md8lgTx
+         ZI98umEuWLrlcQ+18uknmcQLI/20vN7T42gVy7ekJKRgXOXDhRd0GI3gVNUsl6nwziv3
+         iJDEV6/NuhXbSWzimR30YSQlw9df9FS/mFe4dmWse561L5eZhGm6dftsMFinvr1tnbFi
+         VWjo7hjS/DY8RBoM2oPvFR8rjhATfrcDH3MC5CRIectXuYpD88A+FkItGcNKTcd2bw0i
+         OZizpDnvYC3yvynm2ggbIiSRwsYNqSx3oYCCaAhz5H3O4viil3q21GWfF0NrUnevtEpD
+         F+Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Asma8WNQQUT3FBNGCvGXdievYO+L9dWKrHZUkqpLwYo=;
-        b=bxPT6t4fx2Gf/K6BOkqK6falZtO+tuhCciBBXpzBzTQerG3xLGYFJX1m+3S9f74d4c
-         jxfQmtJgrlneemOGO/wbsolQ9XtvWNiN3mBy+AFfNUZIBoNcidch557LMJ2SsjtUs5JP
-         nGdjYX7JkiuuWxG7F9mpUXPUJXjtRbVGHf95y5m3TVEo2KXs+WPdRVly/7OJsosmu/wG
-         6HvMhtGa4643tHY8tobyLaJb6FNztgkKTP6bKT5TK0ogcYg+U4as9iQvPhXTOLYmyKrt
-         Luli/oNhXQkHSrSa38bMjQ13tnpnJQCwoKkHN9Hjy0zQQoQr2OptvXe3QvuJb1+tAd2F
-         R8Dw==
-X-Gm-Message-State: AOAM531fnmSNvZ8DSv/i+McPfSilktwJUsAJjcE42ynFI4xwhqiobXdZ
-        21Qdipn1AMsJMLXG1tsv2WqouA==
-X-Google-Smtp-Source: ABdhPJyRPCtuqkCcj9377exCaz5pyA9MMqZh33gOYt1MVstAjPz3jqClc+zk9NooYp5PwP7tqlaPNA==
-X-Received: by 2002:a17:90a:a78d:b0:1bc:d11c:ad40 with SMTP id f13-20020a17090aa78d00b001bcd11cad40mr24287pjq.246.1645683206850;
-        Wed, 23 Feb 2022 22:13:26 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 142sm1830697pfy.11.2022.02.23.22.13.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Feb 2022 22:13:26 -0800 (PST)
-Date:   Wed, 23 Feb 2022 22:13:25 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Daniel Latypov <dlatypov@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     Eric Biederman <ebiederm@xmission.com>,
-        David Gow <davidgow@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Magnus =?iso-8859-1?Q?Gro=DF?= <magnus.gross@rwth-aachen.de>,
-        kunit-dev@googlegroups.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] binfmt_elf: Introduce KUnit test
-Message-ID: <202202232208.B416701@keescook>
-References: <20220224054332.1852813-1-keescook@chromium.org>
- <CAGS_qxp8cjG5jCX-7ziqHcy2gq_MqL8kU01-joFD_W9iPG08EA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=69+mSNz7gTFXWXZZqcOIp0MaPmAG8AGfcHpHb4Enfug=;
+        b=X45OliCpQXC9qFisIjfLsBzQYxSKC0ivd5UFsdoztnFkfDu09gzjjFEmY3zundHEXL
+         d8JL3/OMGWeS/aOsnSFLr9CohhfC5NmnXnh+OT2bReRn1kQfsBZ33zUfBgbmOqv4RJ2o
+         GFDydjI/ncTu8Mb1/iiBWtM6gIg8qA3jfswhSBtPnsYnDALZuemb+dYG3SvRVmEe/iwZ
+         nQ2EnXdEdtxom79bEsGw9TneYSyK6QPgHKE8fn2Q73sKG+8erpf2vvBNfa1jv/dm8MZu
+         ok7VHb5iRC/gkqL0Ks/1bmJKyH+/9sdWt+Y5ltYeOXKxpxZVsjvsAMuaUq6jQ/Oom84D
+         MMIg==
+X-Gm-Message-State: AOAM532OXAXp72BGLektOX3mWwgShut//Y62c2BJ1VT+802e0hllEZxO
+        YiWjMO6H7SFZEG4AADBC3a0OYSfgU9veBio55Qld0usD
+X-Google-Smtp-Source: ABdhPJzcp+/rVwnIZbbhIn4T8pggvANZ5gREugNHsGU1SKDCTzJb9/uHDdbP9TyUYv/zqPlZ/7zOALAbBTKjvxsry2g=
+X-Received: by 2002:a50:fa93:0:b0:40f:d482:ef63 with SMTP id
+ w19-20020a50fa93000000b0040fd482ef63mr885613edr.348.1645683790702; Wed, 23
+ Feb 2022 22:23:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGS_qxp8cjG5jCX-7ziqHcy2gq_MqL8kU01-joFD_W9iPG08EA@mail.gmail.com>
+References: <20220224060503.1856302-1-keescook@chromium.org>
+In-Reply-To: <20220224060503.1856302-1-keescook@chromium.org>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Wed, 23 Feb 2022 22:22:59 -0800
+Message-ID: <CAMo8BfJFJE-n3=AF+pb9_6oF3gzxX7a+7aBrASHjjNX5byqDqw@mail.gmail.com>
+Subject: Re: [PATCH] xtensa: Implement "current_stack_pointer"
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Chris Zankel <chris@zankel.net>, Marc Zyngier <maz@kernel.org>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 10:07:04PM -0800, Daniel Latypov wrote:
-> On Wed, Feb 23, 2022 at 9:43 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Adds simple KUnit test for some binfmt_elf internals: specifically a
-> > regression test for the problem fixed by commit 8904d9cd90ee ("ELF:
-> > fix overflow in total mapping size calculation").
-> >
-> > Cc: Eric Biederman <ebiederm@xmission.com>
-> > Cc: David Gow <davidgow@google.com>
-> > Cc: Alexey Dobriyan <adobriyan@gmail.com>
-> > Cc: "Magnus Groﬂ" <magnus.gross@rwth-aachen.de>
-> > Cc: kunit-dev@googlegroups.com
-> > Cc: linux-fsdevel@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> > I'm exploring ways to mock copy_to_user() for more tests in here.
-> > kprobes doesn't seem to let me easily hijack a function...
-> 
-> Yeah, there doesn't seem to be a good way to do so. It seems more
-> feasible if one is willing to write arch-specific code, but I'm not
-> quite sure if that works either.
+On Wed, Feb 23, 2022 at 10:05 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> To follow the existing per-arch conventions replace open-coded uses
+> of asm "sp" as "current_stack_pointer". This will let it be used in
+> non-arch places (like HARDENED_USERCOPY).
+>
+> Cc: Chris Zankel <chris@zankel.net>
+> Cc: Max Filippov <jcmvbkbc@gmail.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: linux-xtensa@linux-xtensa.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/xtensa/Kconfig                  | 1 +
+>  arch/xtensa/include/asm/current.h    | 2 ++
+>  arch/xtensa/include/asm/stacktrace.h | 2 +-
+>  arch/xtensa/kernel/irq.c             | 3 +--
+>  4 files changed, 5 insertions(+), 3 deletions(-)
 
-Yeah, I'm hoping maybe Steven has some ideas.
-
-Steven, I want to do fancy live-patch kind or things to replace functions,
-but it doesn't need to be particularly fancy because KUnit tests (usually)
-run single-threaded, etc. It looks like kprobes could almost do it, but
-I don't see a way to have it _avoid_ making a function call.
-
-> https://kunit.dev/mocking.html has some thoughts on this.
-> Not sure if there's anything there that would be useful to you, but
-> perhaps it can give you some ideas.
-
-Yeah, I figure a small refactoring to use a passed task_struct can avoid
-the "current" uses in load_elf_binary(), etc, but the copy_to_user() is
-more of a problem. I have considered inverting the Makefile logic,
-though, and having binfmt_elf_test.c include binfmt_elf.c and have it
-just use a #define to redirect copy_to_user, kind of how all the compat
-handling is already done. But it'd be nice to have a "cleaner" mocking
-solution...
-
-> 
-> > ---
-> >  fs/Kconfig.binfmt      | 17 +++++++++++
-> >  fs/binfmt_elf.c        |  4 +++
-> >  fs/binfmt_elf_test.c   | 64 ++++++++++++++++++++++++++++++++++++++++++
-> >  fs/compat_binfmt_elf.c |  2 ++
-> >  4 files changed, 87 insertions(+)
-> >  create mode 100644 fs/binfmt_elf_test.c
-> >
-> > diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
-> > index 4d5ae61580aa..8e14589ee9cc 100644
-> > --- a/fs/Kconfig.binfmt
-> > +++ b/fs/Kconfig.binfmt
-> > @@ -28,6 +28,23 @@ config BINFMT_ELF
-> >           ld.so (check the file <file:Documentation/Changes> for location and
-> >           latest version).
-> >
-> > +config BINFMT_ELF_KUNIT_TEST
-> > +       bool "Build KUnit tests for ELF binary support" if !KUNIT_ALL_TESTS
-> > +       depends on KUNIT=y && BINFMT_ELF=y
-> > +       default KUNIT_ALL_TESTS
-> > +       help
-> > +         This builds the ELF loader KUnit tests.
-> > +
-> > +         KUnit tests run during boot and output the results to the debug log
-> > +         in TAP format (https://testanything.org/). Only useful for kernel devs
-> 
-> Tangent: should we update the kunit style guide to not refer to TAP
-> anymore as it's not accurate?
-> The KTAP spec is live on kernel.org at
-> https://www.kernel.org/doc/html/latest/dev-tools/ktap.html
-> 
-> We can leave this patch as-is and update later, or have it be the
-> guinea pig for the new proposed wording.
-
-Oops, good point. I was actually thinking it doesn't make too much sense
-to keep repeating the same long boilerplate generally.
-
-> (I'm personally in favor of people not copy-pasting these paragraphs
-> in the first place, but that is what the style-guide currently
-> recommends)
-
-Let's change the guide? :)
-
-> 
-> > +         running KUnit test harness and are not for inclusion into a
-> > +         production build.
-> > +
-> > +         For more information on KUnit and unit tests in general please refer
-> > +         to the KUnit documentation in Documentation/dev-tools/kunit/.
-> > +
-> > +         If unsure, say N.
-> > +
-> >  config COMPAT_BINFMT_ELF
-> >         def_bool y
-> >         depends on COMPAT && BINFMT_ELF
-> > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> > index 76ff2af15ba5..9bea703ed1c2 100644
-> > --- a/fs/binfmt_elf.c
-> > +++ b/fs/binfmt_elf.c
-> > @@ -2335,3 +2335,7 @@ static void __exit exit_elf_binfmt(void)
-> >  core_initcall(init_elf_binfmt);
-> >  module_exit(exit_elf_binfmt);
-> >  MODULE_LICENSE("GPL");
-> > +
-> > +#ifdef CONFIG_BINFMT_ELF_KUNIT_TEST
-> > +#include "binfmt_elf_test.c"
-> > +#endif
-> > diff --git a/fs/binfmt_elf_test.c b/fs/binfmt_elf_test.c
-> > new file mode 100644
-> > index 000000000000..486ad419f763
-> > --- /dev/null
-> > +++ b/fs/binfmt_elf_test.c
-> > @@ -0,0 +1,64 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +#include <kunit/test.h>
-> > +
-> > +static void total_mapping_size_test(struct kunit *test)
-> > +{
-> > +       struct elf_phdr empty[] = {
-> > +               { .p_type = PT_LOAD, .p_vaddr = 0, .p_memsz = 0, },
-> > +               { .p_type = PT_INTERP, .p_vaddr = 10, .p_memsz = 999999, },
-> > +       };
-> > +       /*
-> > +        * readelf -lW /bin/mount | grep '^  .*0x0' | awk '{print "\t\t{ .p_type = PT_" \
-> > +        *                              $1 ", .p_vaddr = " $3 ", .p_memsz = " $6 ", },"}'
-> > +        */
-> > +       struct elf_phdr mount[] = {
-> > +               { .p_type = PT_PHDR, .p_vaddr = 0x00000040, .p_memsz = 0x0002d8, },
-> > +               { .p_type = PT_INTERP, .p_vaddr = 0x00000318, .p_memsz = 0x00001c, },
-> > +               { .p_type = PT_LOAD, .p_vaddr = 0x00000000, .p_memsz = 0x0033a8, },
-> > +               { .p_type = PT_LOAD, .p_vaddr = 0x00004000, .p_memsz = 0x005c91, },
-> > +               { .p_type = PT_LOAD, .p_vaddr = 0x0000a000, .p_memsz = 0x0022f8, },
-> > +               { .p_type = PT_LOAD, .p_vaddr = 0x0000d330, .p_memsz = 0x000d40, },
-> > +               { .p_type = PT_DYNAMIC, .p_vaddr = 0x0000d928, .p_memsz = 0x000200, },
-> > +               { .p_type = PT_NOTE, .p_vaddr = 0x00000338, .p_memsz = 0x000030, },
-> > +               { .p_type = PT_NOTE, .p_vaddr = 0x00000368, .p_memsz = 0x000044, },
-> > +               { .p_type = PT_GNU_PROPERTY, .p_vaddr = 0x00000338, .p_memsz = 0x000030, },
-> > +               { .p_type = PT_GNU_EH_FRAME, .p_vaddr = 0x0000b490, .p_memsz = 0x0001ec, },
-> > +               { .p_type = PT_GNU_STACK, .p_vaddr = 0x00000000, .p_memsz = 0x000000, },
-> > +               { .p_type = PT_GNU_RELRO, .p_vaddr = 0x0000d330, .p_memsz = 0x000cd0, },
-> > +       };
-> > +       size_t mount_size = 0xE070;
-> > +       /* https://lore.kernel.org/lkml/YfF18Dy85mCntXrx@fractal.localdomain */
-> 
-> Slight nit, it looks like that message wasn't sent to lkml.
-> lore gives a suggestion to change to
-> https://lore.kernel.org/linux-fsdevel/YfF18Dy85mCntXrx@fractal.localdomain/
-
-Ah, thank you. I was replacing the /r/ that used to be in that URL, and
-got lost. :)
+Acked-by: Max Filippov <jcmvbkbc@gmail.com>
 
 -- 
-Kees Cook
+Thanks.
+-- Max
