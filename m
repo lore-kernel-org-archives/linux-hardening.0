@@ -2,100 +2,83 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4950C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 08:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5091BC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 09:04:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231604AbiBXJAH (ORCPT
+        id S231893AbiBXJEq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Feb 2022 04:00:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55240 "EHLO
+        Thu, 24 Feb 2022 04:04:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232428AbiBXI7u (ORCPT
+        with ESMTP id S231736AbiBXJEp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Feb 2022 03:59:50 -0500
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A3C015C9E7;
-        Thu, 24 Feb 2022 00:59:20 -0800 (PST)
-Received: by mail-ua1-f53.google.com with SMTP id g15so552481ual.11;
-        Thu, 24 Feb 2022 00:59:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=glczv0l5uaIHGX0k1sHQaF0Req6u5NGSTbrWdrmUApU=;
-        b=Lu/QJFhL23DemLIEQ/v/O1fo8XJXSAmnLmY95UtSCKNxhuB44dxmLJhfK4xZ9haL68
-         1cm1cdXYv4cldUw9TPtoTnxi9OTXDUxhmpfNT6F7r5eXNouvez18n00j5YW0xn0718md
-         c59h0GBV7KY4s82gwCp/BiH921CbiOdtUkxAzfZd12j/zGx6EoMMYEeTXRW/JaDsOEEX
-         08UI2857XMbuJU4eeRAi1J+JQ3lzlGuz5Cq9tzqYmtis8XyochijwAQEs9gdDeJwsR0U
-         U8vp/UAV5Fo+AG0/4saZOouYWl2rO9cQH45swjSMWp27RpbS963E5ulxvcn5KLcPt72Q
-         0RHQ==
-X-Gm-Message-State: AOAM530WMdS+j7g0sFhzLKvPSkXroUWr2iLV6Xw+UoyITTqWIIkM4/Y1
-        5Fnqly6SCige/8C/w50pjFbkr09fw32HAA==
-X-Google-Smtp-Source: ABdhPJxVMubJNxj6kJFiHtVKwD7Jmy8N7cYjfmfOTg5bG+PlljwGRb4jmORG4KTcT9a8PRSvrfZJ1w==
-X-Received: by 2002:ab0:6897:0:b0:341:f244:f174 with SMTP id t23-20020ab06897000000b00341f244f174mr688142uar.130.1645693159594;
-        Thu, 24 Feb 2022 00:59:19 -0800 (PST)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
-        by smtp.gmail.com with ESMTPSA id y5sm289436vsj.11.2022.02.24.00.59.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Feb 2022 00:59:19 -0800 (PST)
-Received: by mail-vs1-f47.google.com with SMTP id j3so1382996vsi.7;
-        Thu, 24 Feb 2022 00:59:19 -0800 (PST)
-X-Received: by 2002:a05:6102:4411:b0:31b:6df1:3b80 with SMTP id
- df17-20020a056102441100b0031b6df13b80mr696559vsb.5.1645693159137; Thu, 24 Feb
- 2022 00:59:19 -0800 (PST)
+        Thu, 24 Feb 2022 04:04:45 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 398601A58CC;
+        Thu, 24 Feb 2022 01:04:15 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CCFDA60A2B;
+        Thu, 24 Feb 2022 09:04:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F3EC340E9;
+        Thu, 24 Feb 2022 09:04:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645693454;
+        bh=jgxNAFbFo5i1lWEOpOUAVFaQaooKHchqspipaHhzRwA=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=ax/l6HCoZXj8aB2eKuyynYgXe0D8c08z4twnpLIX6i+h4h5aXIcMUo4g3p53tN0LI
+         2wdhgKjJN4W8SnPJt7iebQvR0OCFzkUcwW/Yc+OjUbYRxnuULiV+zftlIvO4HfVKPd
+         JBrxgPavHj3DhDZaWitkwrChtGW6EQh02zQjmqDLV4z4IwkxWHOuI0wM7L9Eq1/VFq
+         p+hVbj95dgq5QRtfvaCidK9O1EE/dbUN/2zd2aNuDqMJ/VtB4r3KPV1oH0IS/AIAu/
+         ix7nErT30AI4Rm/lBS42hef5Dwdo3OAjB3gM4/UwUogTgVgZBmWf77MVod74eKQxH+
+         q7NHsxmMRGihQ==
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20220224060448.1856091-1-keescook@chromium.org>
-In-Reply-To: <20220224060448.1856091-1-keescook@chromium.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 24 Feb 2022 09:59:08 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVioQLy_T2LimgWdfWM=j=fomfpayuS1mbXnBLZj4gGQA@mail.gmail.com>
-Message-ID: <CAMuHMdVioQLy_T2LimgWdfWM=j=fomfpayuS1mbXnBLZj4gGQA@mail.gmail.com>
-Subject: Re: [PATCH] m68k: Implement "current_stack_pointer"
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH][next] carl9170: Replace zero-length arrays with
+ flexible-array members
+From:   Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <20220216194955.GA904126@embeddedor>
+References: <20220216194955.GA904126@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Christian Lamparter <chunkeey@googlemail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.7.3
+Message-ID: <164569345046.30378.3865257122515016490.kvalo@kernel.org>
+Date:   Thu, 24 Feb 2022 09:04:12 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-On Thu, Feb 24, 2022 at 7:04 AM Kees Cook <keescook@chromium.org> wrote:
-> To follow the existing per-arch conventions, add asm "sp" as
-> "current_stack_pointer". This will let it be used in non-arch places
-> (like HARDENED_USERCOPY).
->
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: linux-m68k@lists.linux-m68k.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> There is a regular need in the kernel to provide a way to declare
+> having a dynamically sized set of trailing elements in a structure.
+> Kernel code should always use “flexible array members”[1] for these
+> cases. The older style of one-element or zero-length arrays should
+> no longer be used[2].
+> 
+> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> [2] https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
+> 
+> Link: https://github.com/KSPP/linux/issues/78
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Acked-by: Christian Lamparter <chunkeey@gmail.com>
+> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
 
-Thanks for your patch!
+Patch applied to ath-next branch of ath.git, thanks.
 
-> --- a/arch/m68k/include/asm/current.h
-> +++ b/arch/m68k/include/asm/current.h
-> @@ -24,6 +24,8 @@ static inline struct task_struct *get_current(void)
->
->  #define        current get_current()
->
-> +register unsigned long current_stack_pointer __asm__("sp");
+152094dd8c8d carl9170: Replace zero-length arrays with flexible-array members
 
-I don't know what HARDENED_USERCOPY does, so I don't know if you need
-"usp" (see rdusp()) or "sp"?
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20220216194955.GA904126@embeddedor/
 
-> +
->  #endif /* CONFNIG_MMU */
->
->  #endif /* !(_M68K_CURRENT_H) */
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
