@@ -2,99 +2,101 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C580EC433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 05:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA89C433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 05:40:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230289AbiBXFkQ (ORCPT
+        id S230125AbiBXFko (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Feb 2022 00:40:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37152 "EHLO
+        Thu, 24 Feb 2022 00:40:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229903AbiBXFkQ (ORCPT
+        with ESMTP id S230340AbiBXFkn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Feb 2022 00:40:16 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A28125291D
-        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 21:39:47 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id p17so771562plo.9
-        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 21:39:47 -0800 (PST)
+        Thu, 24 Feb 2022 00:40:43 -0500
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48BB7253BFB
+        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 21:40:13 -0800 (PST)
+Received: by mail-pg1-x530.google.com with SMTP id 27so844627pgk.10
+        for <linux-hardening@vger.kernel.org>; Wed, 23 Feb 2022 21:40:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=e6g7HRr0zIYQVPNXmzVLc42NaJplGVZDGpMCXVnQwkY=;
-        b=kQguTOJO79zZ4TeGl8ygulyeSSwdjpqt9d2DbpR98u/5voWF2vVcUewhxvoROD4gsS
-         uZrwk5rvwB7Co7uAs9s1JjHsP7YkJ64yF75ePStV2f1kYz89S9mt/653j1vslw3z4QB/
-         bjCw/20qq+IRFwwfQMNTkH23tqNWmgfeZGHTk=
+        bh=KUrjnSR2O207wl/KgPF4WFxzn/5+qyXjBbdrgpn74ec=;
+        b=Zcva9b79EO27FMwaZqhkQmi2C3qXN1cjHhc6RAFneX/fNCPfxov3sHq6b7HNY1rauX
+         6dLQXz99cSK5012k50Rn4vOaEFKP1Zw9ZynrshJkBNT2ZZiKVundssVvLLFocPhqce9p
+         gys42g6Uz9gOskZuIs896Iv1zCZThSQLt7d0A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=e6g7HRr0zIYQVPNXmzVLc42NaJplGVZDGpMCXVnQwkY=;
-        b=xOSCa/gM3YbnkgIWkSpU/kKFFbWsljwCaErPLDHDiITDHTBICC16VUfGoBqT1+tjsQ
-         E0PsDnpOXsLoyQAFefuYixLGQaomYvs6SY434NT8Ksj2hA4lr1osC6I78DbJRFQ8oY5A
-         mDpvlzTxlQ5RKjLDwjlBdh+dpP3HZrz6vBsSrdrrQW1BcgAzYhAyvco+Ijd07i8abKVQ
-         rgG/vC6qVRR2cyi5OV3BKPLIekT0QdTmj1tPLJUL4l34FYNHhGbhFzMdiOSs7eFIMZYl
-         utVX2/ubyH3K2KVjCF9i9MGWrqZQ2eZ6ml2ttABmD/rVSObjJldG6Z50pfAY7fRoNqm+
-         keYg==
-X-Gm-Message-State: AOAM533a/YwBHl4mgQQKFWoPRVXvHhjTLrYzvBp3GAEpRvSMWIS/iwdo
-        Sd3hKehQiiUNAENFbxPwrFiC8w==
-X-Google-Smtp-Source: ABdhPJxamHd9J69LDxApBkkgGOYtMrUJj4jHtb4mswOsHzhA2LHPjTBWBDLvlXh3wGYZLdR8Pxap/Q==
-X-Received: by 2002:a17:902:9348:b0:14d:8ee9:329f with SMTP id g8-20020a170902934800b0014d8ee9329fmr1309310plp.80.1645681187027;
-        Wed, 23 Feb 2022 21:39:47 -0800 (PST)
+        bh=KUrjnSR2O207wl/KgPF4WFxzn/5+qyXjBbdrgpn74ec=;
+        b=x037xGauiU6vdr8Z2kYXAOfOX+5khbBf+pq9AzWmK8A+SmuhNcAPbwP21Vput+pXlb
+         Rmxg3v3vxhrkAF/DDWl5y3aqduOYa6UrH/vONt+RdQ0Rki4I3wlEwSUDBv35SGCQNPWB
+         IVj0KELH0ous1h0T5zdsoX7SEu3ZnD6ogY8wW5PccrZvbK7zNDlHq9u0qVlbzCq9i3Ue
+         r6fueYyIYR2/WJ3JYB9N/IeN7R9QBQMHyorMXNie4Z7MZoIdPLkH6kf11IRKrRCfBRrR
+         GOG9GzYbBy7L39+dyhmFGVCEaoQSKT25Sb6jokuEbqIx9D4iueLCw/d2fs+clfmj/+4+
+         O+0A==
+X-Gm-Message-State: AOAM530bL9gCUDT0Wbnjvg/BeftpdZSNlYXUuvv1tIpOgyWfqNcmIe2a
+        ZxMdVZhqMFrgErG2sK6CyS0P7A==
+X-Google-Smtp-Source: ABdhPJyJTZwbrBYIgzpKU3TSYvloJombRvUFLeu3xy1uW0E6d/GTsYL7IVSSKPu2DJeUDlfClhY1Lw==
+X-Received: by 2002:a05:6a00:148f:b0:4bc:fb2d:4b6f with SMTP id v15-20020a056a00148f00b004bcfb2d4b6fmr1213264pfu.62.1645681212842;
+        Wed, 23 Feb 2022 21:40:12 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s48sm1436917pfw.111.2022.02.23.21.39.46
+        by smtp.gmail.com with ESMTPSA id j12sm1448848pfu.79.2022.02.23.21.40.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Feb 2022 21:39:46 -0800 (PST)
+        Wed, 23 Feb 2022 21:40:12 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
 To:     Eric Biederman <ebiederm@xmission.com>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: Update execve entry with more details
-Date:   Wed, 23 Feb 2022 21:39:45 -0800
-Message-Id: <20220224053945.1852048-1-keescook@chromium.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] ELF: Properly redefine PT_GNU_* in terms of PT_LOOS
+Date:   Wed, 23 Feb 2022 21:40:11 -0800
+Message-Id: <20220224054011.1852264-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1098; h=from:subject; bh=gYwy98bhL+KP9Gi2xFKK93KwgEGtemx/KrxoV+zoPYo=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiFxogXLPUMpaKGsP1Vih6r5khjZfd+nup6pyAwYKN /FXB3bmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYhcaIAAKCRCJcvTf3G3AJsPCEA ClSkAioh0+Pvcf1Eu11wtLQqXh+P5prw5MDJaii8067aGgL2rRL9vVo1GhyWXJ47YSAPzZoN5ySqu8 6OxUTVM7BOzSj6+lnTxAE9/ktBSag7rE+HLVc2PTOr+RI7VQZimb5CjzrxCTJ3cGcEJz9EaJkaXeTX Zr2p6Lw2C4RN96cRPAoviVXLMcIshmJByek6KA/4RqyT0YCH7bPVHb+pHigX9O1TM2pU3if/tFnafI UQi8GkYO877+/7AFsVYMXK8/gZwr4kEJniBRTUexQ3GThdhV529cmFMoVL3egN4DM0M5qKlxUFyGl0 qE5lUqQGNUXYoTl4o/5O2I3aWYsIsxL4hclkllZZmzHvelCkVMlObtQi4kS9pvn9nFA5vEGRGp4F0+ /w6JDZhUgHMD42TYdypgXRjg6jd5JCUI63pXDq2N+Tstny26C9c+wsZJYlb4XRxs8r6deywJnC9fS5 BBvSHKacNHuqFhIW3JVvncWL5lzwA6k2IWZY4R2fpHpOK58iNITgilLkZ3vd2RbknmwzgpF1ToEp33 zSfO3E1qbQ5Zv5EEY8kcT2VDXWXVxOfigkJSB64beoMIfYS129rIhbIBrKs/DkuirlnmE6YRLvEpcG 7i8Ne4f+WKXP9TzAsG9iGK42gCqYsEXK2KZjJniE2ltk/bvm05tnvq8pRrbg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1117; h=from:subject; bh=YPig1YOT1VAMyQwHwKMHLoGk8gDQ7+8i5Oupd/upzAI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiFxo6UL94HlohdKVbWsom4kOiCRaxulVCwE/ewmxB IK6bY2+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYhcaOgAKCRCJcvTf3G3AJuw5EA CHaz3ExoZEfKFLE5GrkSqVhaiRerpzFFMZsQCgfdu/v5FyREohk7aJLs6wlN2QTfF4KJSgyWPHjZTE ypwcVnsGs19FUCVge376LOqDNQ/oaCdPIgOzcEnIT8dGvMtJjCljG1MTs6cbA/EvYeQjIN0xOB1obx aSiHROgTHk/M0ICsMsDQ1iCAEWzZIQ3pPHwqQBPKQUHKoTDWiCq6uIgjUzWbiedr4f39NHEQnohiVi Ec4K3KIdKDLMiVHeTlTmBzf+TlciIJjKeDwlpiItZJR6ycacCU0AaYO+slSe1j7ui1fdmOASjEXh7a GbjxKvXwRX2mBv1rgAvRnMoEQHq6xyIOPWo/19NG0YCymkRdfBCKJvpYaGPibsHZiQjY9siVRDRtuP kGNNRLoBrrnVcl2Y7pwt1zBbTYRjFNzbFUNJHnptJjHoUBmsgBmnXnR7gyYGtqpJ/ho8GPBTryAIrw EmsYyEAlfFjinmAidjZnsAaCIFzFOq12AJb/kwya8XbeVkcphs1rCZ9svlXnA9RRHs7Bspoi6tv+4+ 9LI7OE0HSqjWlTXrxA8r226/3HpMmhRNbn8LV+AWtqHU8TXajNJ8CeHL/0AkVsYF2jmG5NPsJIMPBu +S/pg8iXlt6zhnUPhwXyO/hI7Z1vGoXz5KY5k51PAHkPsnoDjr5Sf4rBmTwA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The UAPI elf.h header was missed in the original MAINTAINER entry. Add
-it. Include linux-mm mailing list since that's where execve has
-traditionally been discussed. Note that this area is Supported, and aim
-at the git tree.
+The PT_GNU_* program header types are actually offsets from PT_LOOS,
+so redefine them as such, reorder them, and add the missing PT_GNU_RELRO.
 
 Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Peter Collingbourne <pcc@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dave Martin <Dave.Martin@arm.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- MAINTAINERS | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/uapi/linux/elf.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 69a2935daf6c..2a4de0619c49 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7225,6 +7225,9 @@ F:	net/core/of_net.c
- EXEC & BINFMT API
- R:	Eric Biederman <ebiederm@xmission.com>
- R:	Kees Cook <keescook@chromium.org>
-+L:	linux-mm@kvack.org
-+S:	Supported
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/execve
- F:	arch/alpha/kernel/binfmt_loader.c
- F:	arch/x86/ia32/ia32_aout.c
- F:	fs/*binfmt_*.c
-@@ -7232,6 +7235,7 @@ F:	fs/exec.c
- F:	include/linux/binfmts.h
- F:	include/linux/elf.h
- F:	include/uapi/linux/binfmts.h
-+F:	include/uapi/linux/elf.h
- F:	tools/testing/selftests/exec/
- N:	asm/elf.h
- N:	binfmt
+diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+index 61bf4774b8f2..6438d55529bf 100644
+--- a/include/uapi/linux/elf.h
++++ b/include/uapi/linux/elf.h
+@@ -35,10 +35,11 @@ typedef __s64	Elf64_Sxword;
+ #define PT_HIOS    0x6fffffff      /* OS-specific */
+ #define PT_LOPROC  0x70000000
+ #define PT_HIPROC  0x7fffffff
+-#define PT_GNU_EH_FRAME		0x6474e550
+-#define PT_GNU_PROPERTY		0x6474e553
+-
++#define PT_GNU_EH_FRAME	(PT_LOOS + 0x474e550)
+ #define PT_GNU_STACK	(PT_LOOS + 0x474e551)
++#define PT_GNU_RELRO	(PT_LOOS + 0x474e552)
++#define PT_GNU_PROPERTY	(PT_LOOS + 0x474e553)
++
+ 
+ /*
+  * Extended Numbering
 -- 
 2.30.2
 
