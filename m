@@ -2,118 +2,227 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C32AC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 25 Feb 2022 17:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4409C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Feb 2022 18:55:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243850AbiBYRiD (ORCPT
+        id S233235AbiBYSzn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 25 Feb 2022 12:38:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41224 "EHLO
+        Fri, 25 Feb 2022 13:55:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243965AbiBYRh6 (ORCPT
+        with ESMTP id S233763AbiBYSzm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 25 Feb 2022 12:37:58 -0500
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1CA917053
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Feb 2022 09:37:24 -0800 (PST)
-Received: by mail-pf1-x42e.google.com with SMTP id p8so5267035pfh.8
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Feb 2022 09:37:24 -0800 (PST)
+        Fri, 25 Feb 2022 13:55:42 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F08B21CBA9E
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Feb 2022 10:55:07 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id m22so5605561pja.0
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Feb 2022 10:55:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=02IWQGflWXjYwUX29jDdu/P28RFJb4bHYd+IQuUew8g=;
-        b=kUgfr+BUSyJkVMN/Doh8ZyiibLenLl15zo6bOy4rWBJYX17usBgH/o8iJTHO5XKZdv
-         FIRoxVZBZpjCBE2RUff++qJBIi09y14ofiD3ly3QeSlZp5xJscoOCHa7IsD8lgTU/o1J
-         xO0CrtIahGKQzcczYaERI0DLYTA+5L/usaOtM=
+        bh=3G8GLcsZ8TrBRC+vyuxIFFQQn6OCbNp1Ve7E2rgmM3Q=;
+        b=E2M+MRUq5GKrNDVaVFM2PHjt7vpkcy9YyiyOu6Da4s8joDjCn8XJr9uWMohcSXzVdS
+         lA+agkhg3n57B9iyWnXZxTU7Nb+7Lzv5UUMo8wxk++jYNY5ziJKwzoEs6/9hp3jicJKy
+         FONbQsGQTNOXgpvrC/vymFPlJHT7yRGf/Qks4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=02IWQGflWXjYwUX29jDdu/P28RFJb4bHYd+IQuUew8g=;
-        b=NROtDE+y07eiT8BRYglSLSCcnxrrJ56nmU07w+gMTuO6zW2iVLrJlgO7U0DKADviQR
-         8PtV6FO4g2DqMNCyzhtw9rr227zZLZHx5IsxqKUOf9/IS9TY7Mmgv+fV4u7y8Mod3Vfm
-         5YMFSnTdWr4L3qfya7gKH8ocOVmuyf3wJ+ahkii3vuLV1NxQ4tOO0Awb3ROWuiOc/DAF
-         C6hYTAjj2RG5WDvEbRPnYcONJao16xCu/6s8pYq7Lcz9ooRcp7l28ZORa8ziZE09rylo
-         Ei6U4UNm+dK4qKJA8magdmAg/wgDuKzxOORPjRmS9F7gT4SkNTSzTdWZ5Mf3/zUfcUay
-         UoMg==
-X-Gm-Message-State: AOAM532UNylIWdeEO/l/JEjv7GD+VPIv8LcrM4BaJqNLoGygF67TPji3
-        Dd+7SnZW/OxyCfTovRDM82BCWw==
-X-Google-Smtp-Source: ABdhPJxa8cWp+caZT/XsGUM3pG14CnQKF4h0alaujNsw9OZoKX05Fs4iuNMYG7vu03MfC/TBygUB5w==
-X-Received: by 2002:a63:8543:0:b0:35e:3bd9:3798 with SMTP id u64-20020a638543000000b0035e3bd93798mr7089608pgd.73.1645810644059;
-        Fri, 25 Feb 2022 09:37:24 -0800 (PST)
+        bh=3G8GLcsZ8TrBRC+vyuxIFFQQn6OCbNp1Ve7E2rgmM3Q=;
+        b=KjpJCxJeG6mRuJf3ED9lM56mthMbSilY5y8sLqBc5dME7J5PMkCvC66YEkW7mlXePU
+         Xd45oBJtGqt8rWPOsoeJPmaXzbUPMynyLr+0cZbN00TMwkQnPTsFkUJoJlzxrIBcnCiC
+         cq7BGyKWbgPiuzHv3do/d2nuoclx5vVyevwCVgtpBzuuBU/zZM0TGuQ67cr7uCD3k367
+         EHvmHM2oYcjXDqgNPPzgXrMvrO4+0YUCf2rU96SsOAMgIoqZJld+hNSWhUXORVcHxvK3
+         j21DIR3EwZUsAS4OE7WMY0QoNYZf77Oj55jCL60Fa0ZUWfOxsiEfU54m3Qgn3n1QN6cx
+         bRDw==
+X-Gm-Message-State: AOAM531udiSJrQl7knHkLAOvixzjkAGW07kT/jmnw+7wS0hEuOd82eFL
+        5OOMtlnBaahal6I0O1ZhgA5tBg==
+X-Google-Smtp-Source: ABdhPJwelgtdqCD8aLtDkOXgZlZYmeiX3XAFTym52vAMUNrpD6bh6maPifeeHpzEx0UTvEB9a8/QNw==
+X-Received: by 2002:a17:90a:c296:b0:1bc:7a6e:623b with SMTP id f22-20020a17090ac29600b001bc7a6e623bmr4512775pjt.68.1645815307360;
+        Fri, 25 Feb 2022 10:55:07 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id az22-20020a17090b029600b001bc6500625asm9681173pjb.45.2022.02.25.09.37.23
+        by smtp.gmail.com with ESMTPSA id y5-20020a056a00190500b004f104b5350fsm4346076pfi.93.2022.02.25.10.55.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Feb 2022 09:37:23 -0800 (PST)
-Date:   Fri, 25 Feb 2022 09:37:23 -0800
+        Fri, 25 Feb 2022 10:55:07 -0800 (PST)
+Date:   Fri, 25 Feb 2022 10:55:06 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     David Laight <David.Laight@aculab.com>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] m68k: Implement "current_stack_pointer"
-Message-ID: <202202250936.BA139C4@keescook>
-References: <20220224060448.1856091-1-keescook@chromium.org>
- <CAMuHMdVioQLy_T2LimgWdfWM=j=fomfpayuS1mbXnBLZj4gGQA@mail.gmail.com>
- <d75f1259c3e64387a161ebcb0448d594@AcuMS.aculab.com>
- <CAMuHMdWtQ+B-01ZOwZNvgQ7pndNsP3V90_jHdR=RS4K7O3Vk9g@mail.gmail.com>
- <95b9c3e8227a4892b26cc0384d1782c2@AcuMS.aculab.com>
- <CAMuHMdU6msvi0j=mS28GFYbm+uMRk7PkYe+zOM4sDmOVxeibLQ@mail.gmail.com>
+To:     Thorsten Leemhuis <linux@leemhuis.info>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stefano Zacchiroli <zack@upsilon.cc>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Laura Abbott <labbott@kernel.org>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Wenwen Wang <wenwen@cs.uga.edu>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] Documentation/process: Add Researcher Guidelines
+Message-ID: <202202251044.F509C7F3@keescook>
+References: <20220224001403.1307377-1-keescook@chromium.org>
+ <974cf8f2-06f3-99a5-9a77-6d7b7cc8271a@leemhuis.info>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdU6msvi0j=mS28GFYbm+uMRk7PkYe+zOM4sDmOVxeibLQ@mail.gmail.com>
+In-Reply-To: <974cf8f2-06f3-99a5-9a77-6d7b7cc8271a@leemhuis.info>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 10:56:09AM +0100, Geert Uytterhoeven wrote:
-> Hi David, Kees,
+On Thu, Feb 24, 2022 at 09:19:24AM +0100, Thorsten Leemhuis wrote:
+> On 24.02.22 01:14, Kees Cook wrote:
+> > As a follow-up to the UMN incident[1], the TAB took the responsibility
+> > to document Researcher Guidelines so there would be a common place to
+> > point for describing our expectations as a developer community.
+> > 
+> > Document best practices researchers should follow to participate
+> > successfully with the Linux developer community.
+> > 
+> > [1] https://lore.kernel.org/lkml/202105051005.49BFABCE@keescook/
+> > 
+> > Co-developed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Co-developed-by: Jonathan Corbet <corbet@lwn.net>
+> > Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+> > Co-developed-by: Stefano Zacchiroli <zack@upsilon.cc>
+> > Signed-off-by: Stefano Zacchiroli <zack@upsilon.cc>
+> > Co-developed-by: Steven Rostedt <rostedt@goodmis.org>
+> > Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+> > Acked-by: Steve Rostedt <rostedt@goodmis.org>
+> > Acked-by: Laura Abbott <labbott@kernel.org>
+> > Reviewed-by: Julia Lawall <julia.lawall@inria.fr>
+> > Reviewed-by: Wenwen Wang <wenwen@cs.uga.edu>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  Documentation/admin-guide/index.rst           |   1 +
+> >  .../admin-guide/researcher-guidelines.rst     | 141 ++++++++++++++++++
 > 
-> On Thu, Feb 24, 2022 at 10:54 AM David Laight <David.Laight@aculab.com> wrote:
-> > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > Sent: 24 February 2022 09:17
-> > >
-> > > On Thu, Feb 24, 2022 at 10:12 AM David Laight <David.Laight@aculab.com> wrote:
-> > > > From: Geert Uytterhoeven
-> > > > > Sent: 24 February 2022 08:59
-> > > > ...
-> > > > > > +register unsigned long current_stack_pointer __asm__("sp");
-> > > > >
-> > > > > I don't know what HARDENED_USERCOPY does, so I don't know if you need
-> > > > > "usp" (see rdusp()) or "sp"?
-> > > >
-> > > > HARDENED_USERCOPY significantly slows down some systems calls
-> > > > (especially things like sendmsg()) by trying to run-time verify
-> > > > that the kernel buffer doesn't overrun a stack frame or kmalloc()ed
-> > >
-> > > Kernel stack frame of user stack frame?
-> >
-> > Kernel, the kernel doesn't care if the user stack gets trashed.
+> Hmm, the intro for "Documentation/admin-guide/" states that "The
+> following manuals are written for users of the kernel", but the added
+> text afaics providing nothing regular users care about. So wouldn't it
+> be better if this lived below Documentation/process/ ? It might not a
+> really good fit either, but I'd say it's the better place.
+> 
+> But well, the best person to know is Jonathan, who is listed as a
+> Co-developer above, so maybe I'm wrong my suggestion is a bad one.
 
-Right, this is strictly a kernel-side check in mm/usercopy.c:
-https://lore.kernel.org/linux-hardening/20220225173345.3358109-1-keescook@chromium.org/
+I started in process/ and eventually settled on admin-guide/ since that's
+basically the "front page". But I agree, there isn't an obviously correct
+place for it.
 
+> > +Researcher Guidelines
+> > ++++++++++++++++++++++
+> > +
+> > +The Linux kernel community
 > 
-> OK.
-> 
-> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> 
-> Kees: Do you want me to queue this in the m68k for-v5.18 branch, or do
-> you want to take it yourself, together with the HARDENED_USERCOPY work?
-> In case of the latter:
-> Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> 
-> Please let me know. Thanks!
+> Nitpicking: wondering if this maybe should be something like "The Linux
+> kernel developer community" (or "Linux kernel's..."?).
 
-Yeah, I'll take it via my tree, just so it's all together.
+The idea was to lot limit this to strictly developers. (i.e. cast a wide
+net.)
 
-Thanks!
+> [...]
+> > +Passive research that is based entirely on publicly available sources,
+> > +including posts to public mailing lists and commits to public
+> > +repositories, is clearly permissible. Though, as with any research,
+> > +standard ethics must still be followed.
+> > +
+> > +Active research on developer behavior,
+> 
+> Nitpicking: when reading this for the first time I here wondered what is
+> precisely meant by "Active research". Is this maybe an established term
+> in academia I'm simply not aware of? If not, maybe simply writing
+> something like "Other research on developer behavior" or "Research on
+> developer behavior where you engage in development" avoid this.
+> 
+> > however, must be done with the
+> > +explicit agreement of, and full disclosure to, the individual developers
+> > +involved. Developers cannot be interacted with/experimented on without
+> > +consent; this, too, is standard research ethics.
+> > +
+> > +To help clarify: 
+> 
+> Follow up to above remark: If "Active research" stays above, I'd say it
+> might be worth repeating the term here to make clear what's being clarified.
+
+Hm, yeah, it was a "passive" / "active" comparison, in the sense of
+trying to describe what is examining subject's artifacts (passive)
+and interacting with subjects (active).
+
+I don't think it's an academic term, but rather an engineering term?
+
+> > sending patches to developers *is* interacting
+> > +with them, but they have already consented to receiving *good faith
+> > +contributions*. Sending intentionally flawed/vulnerable patches or
+> > +contributing misleading information to discussions is not consented
+> > +to. Such communication can be damaging to the developer (e.g. draining
+> > +time, effort, and morale) and damaging to the project by eroding
+> > +the entire developer community's trust in the contributor (and the
+> > +contributor's organization as a whole), undermining efforts to provide
+> > +constructive feedback to contributors, and putting end users at risk of
+> > +software flaws.
+> 
+> Nitpicking again: Quite a long sentence. Maybe split it up with
+> something like a "s!, undermining !; such an approach would thus undermine"
+
+Yeah, I can tweak this. That did bother me a little too.
+
+> > +Participation in the development of Linux itself by researchers, as
+> > +with anyone, is welcomed and encouraged. Research into Linux code is
+> > +a common practice, especially when it comes to developing or running
+> > +analysis tools that produce actionable results.
+> > +
+> > +When engaging with the developer community, sending a patch has
+> > +traditionally been the best way to make an impact. Linux already has
+> > +plenty of known bugs -- what's much more helpful is having vetted fixes.
+> > +Before contributing, carefully read the documentation on
+> > +:doc:`submitting patches <../process/submitting-patches>`,
+> > +:doc:`reporting issues <reporting-issues>`, and
+> > +:doc:`handling serious flaws <security-bugs>`.
+> 
+> Wonder if Documentation/process/{development-process.rst,5.Posting.rst}
+> should be linked as well.
+
+I wasn't sure what the balance should be between not enough and too much
+information. :)
+
+> Additionally not my area of expertise, but from what I'd noticed it
+> seems it's better to avoid the :doc:`foo` tag if there is no strict need
+> (and I don't think there is one in this case). For the background see here:
+> 
+> https://lore.kernel.org/all/cover.1623824363.git.mchehab+huawei@kernel.org/
+> 
+> Most of those patches got applied meanwhile afaik.
+
+Oh! Thanks for pointing that out; I'll drop all of that.
+
+> [...]
+> > +If you are a first time contributor it is recommended that the patch
+> > +itself be vetted by others privately before being posted to public lists.
+> > +(This is required if you have been explicitly told your patches need
+> > +more careful internal review.) These people are expected to have their
+> > +"Reviewed-by" tag included in the resulting patch. Finding another
+> > +developer familiar with Linux contribution, especially within your own
+> > +organization, and having them help with reviews before sending them to
+> > +the public mailing lists tends to significantly improve the quality of the
+> > +resulting patches, and there by reduces the burden on other developers.
+> 
+> I like the section, but I wonder why it's needed here. Is there anything
+> specific to patches produced from research in it there I missed when
+> reading it? If not: Wouldn't it be better to include that section as a
+> TLDR in Documentation/process/submitting-patches.rst and point there
+> instead? We already have at least two places describing how to submit
+> patches, creating yet another one (even if it's just in such a brief
+> version) somehow feels slightly wrong to me.
+
+Yeah, there is some redundancy here, but I wanted to have an example
+specifically tuned to the scenario of really fleshing out the parts we'd
+expect from a researcher to help show what context developers are
+expecting.
+
+Thanks for the review!
 
 -Kees
-
 
 -- 
 Kees Cook
