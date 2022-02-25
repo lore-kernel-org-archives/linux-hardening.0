@@ -2,217 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14993C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 25 Feb 2022 20:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78250C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Feb 2022 20:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237961AbiBYU6r (ORCPT
+        id S236854AbiBYVAV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 25 Feb 2022 15:58:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37508 "EHLO
+        Fri, 25 Feb 2022 16:00:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232865AbiBYU6q (ORCPT
+        with ESMTP id S230449AbiBYVAU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 25 Feb 2022 15:58:46 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 307565F5E
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Feb 2022 12:58:13 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id m22so5868576pja.0
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Feb 2022 12:58:13 -0800 (PST)
+        Fri, 25 Feb 2022 16:00:20 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30CAB51E7F
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Feb 2022 12:59:47 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id j10-20020a17090a94ca00b001bc2a9596f6so5882574pjw.5
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Feb 2022 12:59:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=4r5yQQaSHNhtmOiBULctLq+3TeXcmpwOyIGMdk0I96I=;
-        b=Taz3yppnrjcQHhPnHEl7UUdtlx0jgYMFpWbKd+tV3RrrnvBwT1xoa10u3bcbY+aw6q
-         DwKzJ2JGkJVhIloPapc+ROf5KCBXULCCXVMqBcS+KCN+55QjqkU+vJfFfdAboD0o3awb
-         jdklXyAZBt17BLW+MYDdAmepIa20+pAuiKyak=
+        bh=Fql4x3ovzVJy60LLROu61UmkOqqfZk4efC7nY269RYY=;
+        b=iyJ8cdcMw6QQVVazrzlSy9h1aEZAY3Rkb/ll+q4jeCBq5asrG/dWw5lYoQplhVEs15
+         MysenF/BH44K7JCXXm92wlr+S1CojKxCv5xJrJ1n7llFJx0clDXnMue9km97Z7OoPy/9
+         /2hxBDfkkN706m/0pUrholl6F7mKJWK923HhM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=4r5yQQaSHNhtmOiBULctLq+3TeXcmpwOyIGMdk0I96I=;
-        b=YeCMYV8dhgQy41WjnioVqBK4yz+3ExkAM9hC7Ly45L5shiulFekkmplWGfnomVqqGB
-         gML6mNRvaZ+9YlaxY++mMCMbq6+NREvAEeW/iKdK6wxGAgPoN16TjjY8AK70OuQbK74Q
-         Bai9fd+xgogj+RcND9q892GeQrHKAWX+wX116sW8S5vRmi1cCR2sV8ViLIfbg28jXZHw
-         QF8Exfit3rcJJRO2A7jdh2Hg7JGLdJWJuxx5VeaIoEd1Fw1L48wH4ezdBXooQbwCs5lp
-         Edw2qPpY8Gp7F/oKkSsoN+uRz9eTC1/i5S8XdLiNF70unxBYb5+x4HGCQfqMZFtD0FXq
-         8o4w==
-X-Gm-Message-State: AOAM532SWHPbAU5zUIoGov5SuVH5L3BRbRUNh6dMPwIL6KJrTH7r3STo
-        jY4stII2jBHzyYLRT3cENO+i5Q==
-X-Google-Smtp-Source: ABdhPJxqsr/Hfxg8zFmOiWbGBJkTmn5pZSsYzzwU1SR6HN2kfda0SoNg5f0h4TsxbKYcDYo+pyky+Q==
-X-Received: by 2002:a17:902:bf07:b0:150:9b8a:a14f with SMTP id bi7-20020a170902bf0700b001509b8aa14fmr4558946plb.127.1645822692580;
-        Fri, 25 Feb 2022 12:58:12 -0800 (PST)
+        bh=Fql4x3ovzVJy60LLROu61UmkOqqfZk4efC7nY269RYY=;
+        b=oySngEurRdB+hqY6bXtP6fGfVc7t9MsksrPrAyxK8QBRGUocLp23P4g9yIInShDosT
+         gbSV7yrKvfoggy71CirP1XeFoQDp/qICRBszQIXDR5amfIf6yr1LtvST+PeEfjiFOYYm
+         yFJexZgJgUT49D33/LHwCr2hccqeSVRfbUwe9KhxFWhzrVbe7TXfXRSAavl6NzOMSw+0
+         a4wWd5vERXj6bzgAD7AIBU6b6qjEMsdDSj8HvvrywH5slqNQGQAnCY+Hn+A59PCQY9cD
+         TskeupaEtqOlRd64prLGy4dN7FkORV/EhRRg93/vQGspHY8DLjHJx4mqIttLvgV6ispN
+         x8mA==
+X-Gm-Message-State: AOAM532RL/tQqiD1z1U00e8Gu9ROZOf9RI5WCB9amvCejxaK3duenIOM
+        T330719q9GmMuWNmHmOLy5qLYw==
+X-Google-Smtp-Source: ABdhPJy6gzigvV5ZMzn93/w/UhgMAifdcjjoAEXZz8/X7hRTMcFiMGHkU7gBwUXxlrKbQuWbwgIGCg==
+X-Received: by 2002:a17:902:b488:b0:14e:e9f3:24a2 with SMTP id y8-20020a170902b48800b0014ee9f324a2mr9103669plr.72.1645822786686;
+        Fri, 25 Feb 2022 12:59:46 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c19-20020a17090ab29300b001bc13b4bf91sm10093180pjr.43.2022.02.25.12.58.12
+        by smtp.gmail.com with ESMTPSA id lt8-20020a17090b354800b001bc509e0085sm9573094pjb.21.2022.02.25.12.59.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Feb 2022 12:58:12 -0800 (PST)
-Date:   Fri, 25 Feb 2022 12:58:11 -0800
+        Fri, 25 Feb 2022 12:59:46 -0800 (PST)
+Date:   Fri, 25 Feb 2022 12:59:45 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Dan Li <ashimida@linux.alibaba.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, nathan@kernel.org,
-        ndesaulniers@google.com, masahiroy@kernel.org, tglx@linutronix.de,
-        akpm@linux-foundation.org, mark.rutland@arm.com,
-        samitolvanen@google.com, npiggin@gmail.com, linux@roeck-us.net,
-        mhiramat@kernel.org, ojeda@kernel.org, luc.vanoostenryck@gmail.com,
-        elver@google.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Dan Li <ashimida@linux.alibaba.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Marco Elver <elver@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] [PATCH v2] AARCH64: Add gcc Shadow Call Stack support
-Message-ID: <202202251243.1E38256F9@keescook>
+Message-ID: <202202251258.DB0F403B@keescook>
 References: <20220225032410.25622-1-ashimida@linux.alibaba.com>
+ <CANiq72kXoonDYk095XvBwEtRCRNECd1iQOqJHE2cNcgLyUMfcQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220225032410.25622-1-ashimida@linux.alibaba.com>
+In-Reply-To: <CANiq72kXoonDYk095XvBwEtRCRNECd1iQOqJHE2cNcgLyUMfcQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 07:24:10PM -0800, Dan Li wrote:
-> Shadow call stacks will be available in GCC >= 12, this patch makes
-> the corresponding kernel configuration available when compiling
-> the kernel with the gcc.
+On Fri, Feb 25, 2022 at 09:47:19PM +0100, Miguel Ojeda wrote:
+> On Fri, Feb 25, 2022 at 4:24 AM Dan Li <ashimida@linux.alibaba.com> wrote:
+> >
+> > +         - Clang (https://clang.llvm.org/docs/ShadowCallStack.html)
+> > +         - GCC (https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html#Instrumentation-Options)
 > 
-> Note that the implementation in GCC is slightly different from Clang.
-> With SCS enabled, functions will only pop x30 once in the epilogue,
-> like:
+> Maybe Clang: and GCC: instead of the parenthesis?
 > 
->    str     x30, [x18], #8
->    stp     x29, x30, [sp, #-16]!
->    ......
-> -  ldp     x29, x30, [sp], #16	  //clang
-> +  ldr     x29, [sp], #16	  //GCC
->    ldr     x30, [x18, #-8]!
+> > +#ifdef CONFIG_SHADOW_CALL_STACK
+> > +#define __noscs __attribute__((__no_sanitize__("shadow-call-stack")))
+> > +#endif
 > 
-> Link: https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=ce09ab17ddd21f73ff2caf6eec3b0ee9b0e1a11e
-> 
-> Signed-off-by: Dan Li <ashimida@linux.alibaba.com>
+> Since both compilers have it, and I guess the `#ifdef` condition would
+> work for both, could this be moved into `compiler_types.h` where the
+> empty `__noscs` definition is, and remove the one from
+> `compiler-clang.h`?
 
-Thanks for the tweaks!
+I thought about that too, but I think it's less simple due to the
+__has_feature vs CONFIG differences, etc:
+https://lore.kernel.org/lkml/202202251243.1E38256F9@keescook/
 
-> ---
-> FYI:
-> This function can be used to test if the shadow call stack works:
-> //noinline void __noscs scs_test(void)
-> noinline void scs_test(void)
-> {
->     unsigned long * lr = (unsigned long *)__builtin_frame_address(0) + 1;
-> 
->     asm volatile("str xzr, [%0]\n\t": : "r"(lr) : "x30");
-> }                                                         
-
-Not a big deal, but just FYI, there's a lot of whitespace trailing the
-"}" above...
-
-> 
-> ffff800008012770 <scs_test>:
-> ffff800008012770:       d503245f        bti     c
-> ffff800008012774:       d503233f        paciasp
-> ffff800008012778:       f800865e        str     x30, [x18], #8
-> ffff80000801277c:       a9bf7bfd        stp     x29, x30, [sp, #-16]!
-> ffff800008012780:       910003fd        mov     x29, sp
-> ffff800008012784:       910023a0        add     x0, x29, #0x8
-> ffff800008012788:       f900001f        str     xzr, [x0]
-> ffff80000801278c:       f85f8e5e        ldr     x30, [x18, #-8]!
-> ffff800008012790:       f84107fd        ldr     x29, [sp], #16
-> ffff800008012794:       d50323bf        autiasp
-> ffff800008012798:       d65f03c0        ret
-> 
-> If SCS protection is enabled, this function will return normally.
-> If the function has __noscs attribute (scs disabled), it will crash due to 0
-> address access.
-
-It would be cool to turn this into an LKDTM test... (see things like the
-CFI_FORWARD_PROTO test). I imagine this should be CFI_BACKWARD_SHADOW or
-something...
-
-Also, I assume you're using real hardware to test this? It'd be nice to
-see if qemu can be convinced to run with the needed features. Whenever
-I've tried this it becomes impossibly slow. :)
-
-> 
->  arch/Kconfig                 | 19 ++++++++++---------
->  arch/arm64/Kconfig           |  2 +-
->  include/linux/compiler-gcc.h |  4 ++++
->  3 files changed, 15 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 678a80713b21..c92683362ac2 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -599,21 +599,22 @@ config STACKPROTECTOR_STRONG
->  config ARCH_SUPPORTS_SHADOW_CALL_STACK
->  	bool
->  	help
-> -	  An architecture should select this if it supports Clang's Shadow
-> -	  Call Stack and implements runtime support for shadow stack
-> +	  An architecture should select this if it supports the compiler's
-> +	  Shadow Call Stack and implements runtime support for shadow stack
->  	  switching.
->  
->  config SHADOW_CALL_STACK
-> -	bool "Clang Shadow Call Stack"
-> -	depends on CC_IS_CLANG && ARCH_SUPPORTS_SHADOW_CALL_STACK
-> +	bool "Shadow Call Stack"
-> +	depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
->  	depends on DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
->  	help
-> -	  This option enables Clang's Shadow Call Stack, which uses a
-> -	  shadow stack to protect function return addresses from being
-> -	  overwritten by an attacker. More information can be found in
-> -	  Clang's documentation:
-> +	  This option enables the compiler's Shadow Call Stack, which
-> +	  uses a shadow stack to protect function return addresses from
-> +	  being overwritten by an attacker. More information can be found
-> +	  in the compiler's documentation:
->  
-> -	    https://clang.llvm.org/docs/ShadowCallStack.html
-> +	  - Clang (https://clang.llvm.org/docs/ShadowCallStack.html)
-> +	  - GCC (https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html#Instrumentation-Options)
->  
->  	  Note that security guarantees in the kernel differ from the
->  	  ones documented for user space. The kernel must store addresses
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 09b885cc4db5..b7145337efae 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -1255,7 +1255,7 @@ config HW_PERF_EVENTS
->  config ARCH_HAS_FILTER_PGPROT
->  	def_bool y
->  
-> -# Supported by clang >= 7.0
-> +# Supported by clang >= 7.0 or GCC >= 12.0.0
->  config CC_HAVE_SHADOW_CALL_STACK
->  	def_bool $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
->  
-> diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-> index ccbbd31b3aae..deff5b308470 100644
-> --- a/include/linux/compiler-gcc.h
-> +++ b/include/linux/compiler-gcc.h
-> @@ -97,6 +97,10 @@
->  #define KASAN_ABI_VERSION 4
->  #endif
->  
-> +#ifdef CONFIG_SHADOW_CALL_STACK
-> +#define __noscs __attribute__((__no_sanitize__("shadow-call-stack")))
-> +#endif
-
-I initially wondered if we need a separate __no_sanitize(STUFF) patch to
-make the compiler-clang.h macros easier, but I see there are places
-where we do multiple ("address", "hwaddress") and have specialized
-macros, so I think this is fine. And since GCC doesn't support
-"__has_feature", I think this is the correct location for this.
-
-> +
->  #if __has_attribute(__no_sanitize_address__)
->  #define __no_sanitize_address __attribute__((no_sanitize_address))
->  #else
-> -- 
-> 2.17.1
-> 
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
+But maybe __has_feature doesn't really matter here?
 
 -- 
 Kees Cook
