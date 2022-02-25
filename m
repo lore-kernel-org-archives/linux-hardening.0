@@ -2,74 +2,187 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A3FC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 25 Feb 2022 00:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CB8C433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Feb 2022 01:09:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232278AbiBYAfu (ORCPT
+        id S236265AbiBYBKF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Feb 2022 19:35:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40012 "EHLO
+        Thu, 24 Feb 2022 20:10:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229923AbiBYAft (ORCPT
+        with ESMTP id S236264AbiBYBKF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Feb 2022 19:35:49 -0500
-Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E12D24FA2B;
-        Thu, 24 Feb 2022 16:35:16 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0V5Q66IT_1645749311;
-Received: from 192.168.193.153(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V5Q66IT_1645749311)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 25 Feb 2022 08:35:12 +0800
-Message-ID: <d2c864c0-6535-acfd-6c2f-f1175ce8a719@linux.alibaba.com>
-Date:   Thu, 24 Feb 2022 16:34:08 -0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH] [PATCH] AARCH64: Add gcc Shadow Call Stack support
-Content-Language: en-US
-To:     Nathan Chancellor <nathan@kernel.org>
-Cc:     catalin.marinas@arm.com, will@kernel.org, ndesaulniers@google.com,
-        keescook@chromium.org, masahiroy@kernel.org, tglx@linutronix.de,
-        akpm@linux-foundation.org, mark.rutland@arm.com,
-        samitolvanen@google.com, npiggin@gmail.com, linux@roeck-us.net,
-        mhiramat@kernel.org, ojeda@kernel.org, luc.vanoostenryck@gmail.com,
-        elver@google.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
+        Thu, 24 Feb 2022 20:10:05 -0500
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85B4A1D791C
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Feb 2022 17:09:34 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id x18so3364246pfh.5
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Feb 2022 17:09:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=HpKKeKk2n1Oj0dQS7Dfs5DCdtWzG04Br2ivnFnRWVfI=;
+        b=VM4AvjfzqNXsfDsdvekvRmxTfDgxlsOD77uJDqascic5L6G4TxJnnlkDDP0Hn5Dnbo
+         iCMSEAMd874Pg645wmT5FjpVbJx+74tto+6+wJeLmJ3SNBtcMkEL7EkVBeKMCrOzZ+g0
+         BUqsv0pxXmG7Urq/B/jsxI95F+FPe9VCL8arc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HpKKeKk2n1Oj0dQS7Dfs5DCdtWzG04Br2ivnFnRWVfI=;
+        b=LrZqtbsa/sggk2JWDkZe8iRUoN9OER6/g7Cu9yNnSZpc7FZOWcjpp1KhZtEDaR0d9h
+         yqsccQQjxaKoVB/sgYutekSI6snBaC8dgHEZ5hn7v02lH1Y4BTOdBzP7ZZnDzZddvnLY
+         g142ucCOFvGfmFZUPMvNc0d7RBXgisfUm6ZGC0JGqAlOvz2Ig/6lh1NvJQv2jScUYVix
+         xgEwELXXPzcEfVPgI0YSQqcdHJECcvwQzY8EJ3EbN53ZiiJhC5K9vcJqb/mAVtXXx9Lm
+         c42z854Tyxtayt9Ofk/UP/NFlMbOF6Olj32DZ1kgtNJ418uODHiAPyTyaU4Ka/0/Vd8d
+         H6hQ==
+X-Gm-Message-State: AOAM530KofuSgFp8+9ZCRWpU4qEgegVWr1aX6HLQDUjh1f4sWdnuQBcU
+        EA5VkYbfPPfrf9L+R6Bl4/kTuQ==
+X-Google-Smtp-Source: ABdhPJylGbQS8vnj/61NHBaKcstT9+xfvM8OeGnu5F6R0WwgMIHkmiZKleXGTp12T1C8eyeC5tkS/g==
+X-Received: by 2002:a63:db47:0:b0:372:dc64:5b56 with SMTP id x7-20020a63db47000000b00372dc645b56mr4203632pgi.555.1645751373911;
+        Thu, 24 Feb 2022 17:09:33 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d25-20020a639919000000b00364f999aed5sm664001pge.20.2022.02.24.17.09.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Feb 2022 17:09:33 -0800 (PST)
+Date:   Thu, 24 Feb 2022 17:09:32 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, joao@overdrivepizza.com, hjl.tools@gmail.com,
+        jpoimboe@redhat.com, andrew.cooper3@citrix.com,
+        linux-kernel@vger.kernel.org, ndesaulniers@google.com,
+        samitolvanen@google.com, mark.rutland@arm.com,
+        alyssa.milburn@intel.com, mbenes@suse.cz, rostedt@goodmis.org,
+        mhiramat@kernel.org, alexei.starovoitov@gmail.com,
         linux-hardening@vger.kernel.org
-References: <20220222095736.24898-1-ashimida@linux.alibaba.com>
- <YhUMRoLDan7tJRiL@dev-arch.archlinux-ax161>
- <69d351c6-a69d-6ebb-53bc-b46dfe4da08a@linux.alibaba.com>
- <YhZxVwoshSwwJkJO@dev-arch.archlinux-ax161>
-From:   Dan Li <ashimida@linux.alibaba.com>
-In-Reply-To: <YhZxVwoshSwwJkJO@dev-arch.archlinux-ax161>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 18/39] x86/ibt: Add IBT feature, MSR and #CP handling
+Message-ID: <202202241700.6FB8CDF7E7@keescook>
+References: <20220224145138.952963315@infradead.org>
+ <20220224151323.069205370@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220224151323.069205370@infradead.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Thu, Feb 24, 2022 at 03:51:56PM +0100, Peter Zijlstra wrote:
+> [...]
+> @@ -438,7 +439,8 @@ static __always_inline void setup_umip(s
+>  
+>  /* These bits should not change their value after CPU init is finished. */
+>  static const unsigned long cr4_pinned_mask =
+> -	X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP | X86_CR4_FSGSBASE;
+> +	X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP |
+> +	X86_CR4_FSGSBASE | X86_CR4_CET;
+
+Thanks!
+
+>  static DEFINE_STATIC_KEY_FALSE_RO(cr_pinning);
+>  static unsigned long cr4_pinned_bits __ro_after_init;
+>  
+> @@ -592,6 +594,29 @@ static __init int setup_disable_pku(char
+>  __setup("nopku", setup_disable_pku);
+>  #endif /* CONFIG_X86_64 */
+>  
+> +static __always_inline void setup_cet(struct cpuinfo_x86 *c)
+> +{
+> +	u64 msr = CET_ENDBR_EN;
+> +
+> +	if (!HAS_KERNEL_IBT ||
+> +	    !cpu_feature_enabled(X86_FEATURE_IBT))
+> +		return;
+> +
+> +	wrmsrl(MSR_IA32_S_CET, msr);
+> +	cr4_set_bits(X86_CR4_CET);
+> +
+> +	if (!ibt_selftest()) {
+> +		pr_err("IBT selftest: Failed!\n");
+> +		setup_clear_cpu_cap(X86_FEATURE_IBT);
+> +	}
+
+For easy boot-output testing, I'd love to see something like:
+
+	} else {
+		pr_info("CET detected: Indirect Branch Tracking enabled.\n")
+	}
+
+or maybe:
+		pr_info("CET detected: Indirect Branch Tracking is %s.\n",
+			ibt_fatal ? "enforced" : "warning only");
+
+> [...]
+> +bool ibt_selftest(void)
+> +{
+> +	unsigned long ret;
+> +
+> +	asm ("1: lea 2f(%%rip), %%rax\n\t"
+> +	     ANNOTATE_RETPOLINE_SAFE
+> +	     "   jmp *%%rax\n\t"
+> +	     ASM_REACHABLE
+> +	     ANNOTATE_NOENDBR
+> +	     "2: nop\n\t"
+> +
+> +	     /* unsigned ibt_selftest_ip = 2b */
+> +	     ".pushsection .rodata,\"a\"\n\t"
+> +	     ".align 8\n\t"
+> +	     ".type ibt_selftest_ip, @object\n\t"
+> +	     ".size ibt_selftest_ip, 8\n\t"
+> +	     "ibt_selftest_ip:\n\t"
+> +	     ".quad 2b\n\t"
+> +	     ".popsection\n\t"
+> +
+> +	     : "=a" (ret) : : "memory");
+> +
+> +	return !ret;
+> +}
+
+I did something like this for LKDTM, but I realize it depends on having no
+frame pointer, and is likely x86-specific too, as I think arm64's function
+preamble is responsible for pushing the return address on the stack:
 
 
-On 2/23/22 09:39, Nathan Chancellor wrote:
-> On Wed, Feb 23, 2022 at 12:50:21AM -0800, Dan Li wrote:
->> My intention is to remind users that this is a compiler feature.
->> But since there is also a hint in CC_HAVE_SHADOW_CALL_STACK:
->> +# Supported by clang >= 7.0 or GCC ...
->>
->> Removing the specific compiler here also looks fine to me.
->> Would this look better?
->>
->> "This option enables Shadow Call Stack, which uses a ..."
->>
->> or maybe:
->>
->> "This option enables compiler's Shadow Call Stack, which uses a ..."
-> 
-> I do not honestly have a strong opinion around removing mention of the
-> compiler so either looks fine to me (might be better to say "the
-> compiler's Shadow ..." in the second one).
-> 
+static volatile int lkdtm_just_count;
 
-Ah, yes, thanks :)
+/* Function taking one argument, returning int. */
+static noinline void *lkdtm_just_return(void)
+{
+	/* Do something after preamble but before label. */
+	lkdtm_just_count++;
 
-Dan.
+yolo:
+	{
+		void *right_here = &&yolo;
+
+		OPTIMIZER_HIDE_VAR(right_here);
+		return right_here;
+	}
+}
+/*
+ * This tries to call an indirect function in the middle.
+ */
+void lkdtm_CFI_FORWARD_ENTRY(void)
+{
+	/*
+	 * Matches lkdtm_increment_void()'s prototype, but not
+	 * lkdtm_increment_int()'s prototype.
+	 */
+	void * (*func)(void);
+
+	func = lkdtm_just_return;
+	pr_info("Calling actual function entry point %px ...\n", func);
+	func = func();
+
+	pr_info("Calling middle of function %px ...\n", func);
+	func = func();
+
+	pr_err("FAIL: survived non-entry point call!\n");
+#ifdef CONFIG_X86
+	pr_expected_config(CONFIG_X86_BTI);
+#endif
+}
+
+-- 
+Kees Cook
