@@ -2,131 +2,110 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 410BDC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 25 Feb 2022 03:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A8DC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Feb 2022 03:56:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237020AbiBYD1z (ORCPT
+        id S233296AbiBYD4q (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Feb 2022 22:27:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50236 "EHLO
+        Thu, 24 Feb 2022 22:56:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229964AbiBYD1z (ORCPT
+        with ESMTP id S231570AbiBYD4q (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Feb 2022 22:27:55 -0500
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB3BB3E5DF
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Feb 2022 19:27:23 -0800 (PST)
-Received: by mail-pg1-x536.google.com with SMTP id 27so3454628pgk.10
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Feb 2022 19:27:23 -0800 (PST)
+        Thu, 24 Feb 2022 22:56:46 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08AEAE3394
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Feb 2022 19:56:15 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id cp23-20020a17090afb9700b001bbfe0fbe94so3716361pjb.3
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Feb 2022 19:56:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BgI2EJuSIzpOUNhctfjPqGhg508IvCLj61p7UGXcDW4=;
-        b=lnKKEF71GQwLLk6L1Cb6CNm+zcjt5wSJXZcyPvZTpzRaRW24kN1PVpPd4tkvK4XtEq
-         7OX5O5GAwUxP0NaDnJjpSp86bLWJECVKJqdcmoPKPkry6Yrt0GvX7Ef+VaLZRQa0F6X6
-         IRVfTt/yCRIk+JZECaZqjcPTM31K9Qto1XGWE=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9EL9VRrPBu3az25e2ybIauwEmEdCvI/qWzhGi/e6E5Y=;
+        b=jcSFxySYSYdj4BZD63nO0EbhxamC376oNbineqS36uKRwh9Buzq62WyKxAtoxOeaav
+         9v1jABoix2QKwwyzDytesOlugbsEVZLu8HuKgUwGjeMAQqUZPOSZV8sv5iCDzLUFHa2f
+         nbj7QUigSrMOqlhNT0263Oq4BoU39MfL89xLg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BgI2EJuSIzpOUNhctfjPqGhg508IvCLj61p7UGXcDW4=;
-        b=Ldnmgyj03mskYsM6UHHESXKrr5salAaMOhp1goeN9eqmCd/vT951RFa7Qu/6xgy43u
-         23GpJos64usQCpCAoFnckVe/G+uN1uD0ckB3FLYruFSDp+53PPUi7jcmEQXjclS6WdHg
-         Iat6afJLI/GxILqX8G6eNP+QKGpvla3JlCcn9s3EA4Gc6uR7WK959oiUB+a0DeJRdDJY
-         D5+a6ZmZ3DrhHOMPWxfszZlPF8mnJK4t52VcAETaYd5XKAbdaaCki/v2U+Vw8JuJwAgW
-         GAWrnFzVKPP7K6RvxgX4tLFz/NY1wnev2UuDmrPHt0yhfBCyx9q8dVX0IU6BtBE6F+3T
-         1gBw==
-X-Gm-Message-State: AOAM533/gUwtW+XcwMaPDFV4pDI0E3lEvIKoJ3oDdX7a0yin0ibpUa8S
-        aJ6nXJ4H8Kmy+R7gvZw1SohKQTXC56QpcA==
-X-Google-Smtp-Source: ABdhPJw5ZZGF3Ss2gSpUb3HF2rJY1bntT7qQO5JeESYzYRqkYyAZEp30+JzL3ijQKwxRW4jmryxJzg==
-X-Received: by 2002:a05:6a00:24c4:b0:4cb:7324:bfd with SMTP id d4-20020a056a0024c400b004cb73240bfdmr5899295pfv.60.1645759643482;
-        Thu, 24 Feb 2022 19:27:23 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9EL9VRrPBu3az25e2ybIauwEmEdCvI/qWzhGi/e6E5Y=;
+        b=aDFa7TwPgD7DgMvJ/CwYVNjd8Tv5j7kOL0zfMLgmoYQh5auyyq8rPfUS8oAUcgXZ+v
+         I2b/81n3E+BtscU4GkTUbWSxKV3LVmFo6y5B9lc6VRGoLw5eJbrywxpExSaOHJ70ePc/
+         dyyTA11V4xE8FUKj1XjV6H4uODUvCGwSyDqkZwWfS+AFkgJK8q55us/JqoY/BlNO0w7k
+         waO2k3gV7uAA8TU7fhe/ARfQ/b1VKBQGH+mDKwZ5ucVJ74o/a0DDKFqR66XgFL2DxXE7
+         DOyAIzd4pduwPunEW2w37vEgkVCNz4KIejqSDswypxKRMuAv3sg5pIL5L1DtoBGMj/i/
+         aVIg==
+X-Gm-Message-State: AOAM533RLl/OvAJB6zanAF96wD/7uGq+xxFlEn/9nzA2IPy9K73xjxkf
+        vnW0H6tZ+xinTHLakyBJYWRf8Q==
+X-Google-Smtp-Source: ABdhPJz4XEl+dLLGOfRROoPWM4zEB50843UCWkcV9Myxwze9zuT7lnhfAPYHX+lJLKs/8Kyb0lahLw==
+X-Received: by 2002:a17:90a:19d5:b0:1bc:a5db:b655 with SMTP id 21-20020a17090a19d500b001bca5dbb655mr1327748pjj.46.1645761374562;
+        Thu, 24 Feb 2022 19:56:14 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y191-20020a638ac8000000b0036c7329efadsm840783pgd.65.2022.02.24.19.27.23
+        by smtp.gmail.com with ESMTPSA id t190-20020a632dc7000000b003759f87f38csm897373pgt.17.2022.02.24.19.56.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 19:27:23 -0800 (PST)
-Date:   Thu, 24 Feb 2022 19:27:22 -0800
+        Thu, 24 Feb 2022 19:56:14 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Max Filippov <jcmvbkbc@gmail.com>
-Cc:     Chris Zankel <chris@zankel.net>, Marc Zyngier <maz@kernel.org>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] xtensa: Implement "current_stack_pointer"
-Message-ID: <202202241927.B5368AFC@keescook>
-References: <20220224060503.1856302-1-keescook@chromium.org>
- <CAMo8BfJFJE-n3=AF+pb9_6oF3gzxX7a+7aBrASHjjNX5byqDqw@mail.gmail.com>
- <202202232239.FF2343D42@keescook>
- <CAMo8BfLU-BLRnp=fmmQkTckxPq1vkSZeOwfgiSW06L0+H+EDJA@mail.gmail.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Lyude Paul <lyude@redhat.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Dave Airlie <airlied@redhat.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
+        Uma Shankar <uma.shankar@intel.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v3 0/2] drm/dp: Fix out-of-bounds reads
+Date:   Thu, 24 Feb 2022 19:56:08 -0800
+Message-Id: <20220225035610.2552144-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMo8BfLU-BLRnp=fmmQkTckxPq1vkSZeOwfgiSW06L0+H+EDJA@mail.gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=810; h=from:subject; bh=bU37iCBLJ7Q70x0XEhd7PjOmH28YCUaT+vra8oA4uZo=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiGFNZdsEw9YGr2OGD24Hf0kq+QV8dh1Tl0BsSDlLS Qa8/sVWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYhhTWQAKCRCJcvTf3G3AJonKD/ 9dwPGSsOpHqQ5De1f9MxlBVJY6fcHLK5tsekzkp7Nkho9GLFcV/wCa4odTI+ek/3p+TAAuY06YNpPY e2GtXNN2k1N/ScNeCVQ9tRgmqRwEVg8hkmhgTkI6cMdDVSnyWOMZpiXgGJfWshuo9yT4kAnnrL9T35 NuonIO45jrGXry/WROkxa4UTu0HNUqyfI36hke71TFsWNhMBWFBdsaUHcFw3CdNwLofm6yWegvdL6k upXRIp4OJlWrdNvpTRIn9LGq4+p6RlHibE17dzqMBAhkZqvqr9JSMAD/HXba24aIYnDtHGGdMR3rBW QrB6UmqP7HO93A2BGUkx/WnzxHJuF1ClR6XNUKghGz8ZBPdbBGehd/JzCQuJQghhS2IyrpJ2N4CiLk ckG5Mlse+9Nlon9Zr0UD4nmFHVBDLz+5CO0auzsrO93TvM3Brbj5ZsP9/6mv3xCj18QYFIXV2f/z8R m22ovOL5xu0SG2uLEPoXZRD3kLDzB6rb5RRQt6PozL4fRFufF4Pchl24Fh4yTRYaFhnTNVLCvSY+e4 CnqhcHhjE+X+n43xaOAuGZtnTxWrh20mUwWndVPSD7Cx/B4rXTCqesrZJF+s8m06eA0tuisE7j+nxb /Zggztye4Wb/Vo79hwmtVA42S20mTnykG1zZA30JuAQAyR4jKY8a/B/QOR6g==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 10:58:00PM -0800, Max Filippov wrote:
-> On Wed, Feb 23, 2022 at 10:43 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Wed, Feb 23, 2022 at 10:22:59PM -0800, Max Filippov wrote:
-> > > On Wed, Feb 23, 2022 at 10:05 PM Kees Cook <keescook@chromium.org> wrote:
-> > > >
-> > > > To follow the existing per-arch conventions replace open-coded uses
-> > > > of asm "sp" as "current_stack_pointer". This will let it be used in
-> > > > non-arch places (like HARDENED_USERCOPY).
-> > > >
-> > > > Cc: Chris Zankel <chris@zankel.net>
-> > > > Cc: Max Filippov <jcmvbkbc@gmail.com>
-> > > > Cc: Marc Zyngier <maz@kernel.org>
-> > > > Cc: linux-xtensa@linux-xtensa.org
-> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > > ---
-> > > >  arch/xtensa/Kconfig                  | 1 +
-> > > >  arch/xtensa/include/asm/current.h    | 2 ++
-> > > >  arch/xtensa/include/asm/stacktrace.h | 2 +-
-> > > >  arch/xtensa/kernel/irq.c             | 3 +--
-> > > >  4 files changed, 5 insertions(+), 3 deletions(-)
-> > >
-> > > Acked-by: Max Filippov <jcmvbkbc@gmail.com>
-> >
-> > Thanks! And apologies, my cross-compiler tricked me into thinking this
-> > patch compiled without problems. It did, however. I've change the patch
-> > slightly to deal with the needed casts:
-> >
-> > diff --git a/arch/xtensa/include/asm/stacktrace.h b/arch/xtensa/include/asm/stacktrace.h
-> > index fe06e8ed162b..a85e785a6288 100644
-> > --- a/arch/xtensa/include/asm/stacktrace.h
-> > +++ b/arch/xtensa/include/asm/stacktrace.h
-> > @@ -19,14 +19,14 @@ struct stackframe {
-> >
-> >  static __always_inline unsigned long *stack_pointer(struct task_struct *task)
-> >  {
-> > -       unsigned long *sp;
-> > +       unsigned long sp;
-> >
-> >         if (!task || task == current)
-> > -               __asm__ __volatile__ ("mov %0, a1\n" : "=a"(sp));
-> > +               sp = current_stack_pointer;
-> >         else
-> > -               sp = (unsigned long *)task->thread.sp;
-> > +               sp = task->thread.sp;
-> >
-> > -       return sp;
-> > +       return (unsigned long *)sp;
-> >  }
-> >
-> >  void walk_stackframe(unsigned long *sp,
-> >
-> > Shall I send a v2, or just carry this fix in my tree?
-> 
-> This additional change looks good to me, if you could
-> fold it into the original patch that'd be perfect. But separate
-> patch would also work.
+Hi,
+
+I'm sending these again, as they still need fixing. They have been
+rebased due to the drm_dp_helper code being moved into a subdirectory.
+
+Can someone please apply these? :)
 
 Thanks!
 
+-Kees
+
+v1: https://patchwork.freedesktop.org/patch/465200/
+    https://patchwork.freedesktop.org/patch/465201/
+v2: https://patchwork.freedesktop.org/patch/468350/
+    https://patchwork.freedesktop.org/patch/468351/
+v3:
+ - add review tags
+ - rebase to drm/drm-next
+
+Kees Cook (2):
+  drm/dp: Fix off-by-one in register cache size
+  drm/dp: Fix OOB read when handling Post Cursor2 register
+
+ drivers/gpu/drm/dp/drm_dp.c    | 10 ----------
+ drivers/gpu/drm/tegra/dp.c     | 11 ++++++++++-
+ include/drm/dp/drm_dp_helper.h |  4 +---
+ 3 files changed, 11 insertions(+), 14 deletions(-)
+
 -- 
-Kees Cook
+2.30.2
+
