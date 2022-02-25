@@ -2,69 +2,74 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A26C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Feb 2022 23:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A3FC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Feb 2022 00:35:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231365AbiBXXvH (ORCPT
+        id S232278AbiBYAfu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Feb 2022 18:51:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39030 "EHLO
+        Thu, 24 Feb 2022 19:35:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229806AbiBXXvG (ORCPT
+        with ESMTP id S229923AbiBYAft (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Feb 2022 18:51:06 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F9EC294567;
-        Thu, 24 Feb 2022 15:50:35 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AF0A6B82A1F;
-        Thu, 24 Feb 2022 23:50:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87E8EC340E9;
-        Thu, 24 Feb 2022 23:50:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645746633;
-        bh=/R22wQvyMzwte2Vqe2Nqf1fgMov7Hgz6rWLBAX3GlW0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U9o0db8t6TsUIOvX4rBO2ho4uCsAQPzUlwQHITccDbdp5hV5zoC0sTpDt+W3rEf5/
-         L1CjJkpssWhk6jbRAv4e3nk7Y42vas80vN5qAYMQKW/8SQ9JrqH7QgKMjmNAPjQoQM
-         HGJgs+ncgba8sv58MgeVPLoHa4pyJV0dco/nlMjy7LT1oHaWYcTTQSLFYfr9QnB5K8
-         IuxU9MfJKEVzqcgA6F0x2QEqnVSavkY5Nkwmk0Sjoc3dUBd/aCn5VU5YwCVyC5IG+E
-         d23oIT5YkY51XLMeBwB7AisLe++ACKRI3UtxlH97yojo9xKPpdxPVAsVbp9SVNaPFF
-         6lt/GlgcRliWA==
-Date:   Thu, 24 Feb 2022 17:58:32 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 2/6][next] ath6kl: wmi: Replace one-element array with
- flexible-array member in struct wmi_start_scan_cmd
-Message-ID: <20220224235832.GA1312501@embeddedor>
-References: <cover.1645736204.git.gustavoars@kernel.org>
- <8b33c6d86a6bd40b5688cf118b4b35850db8d8c7.1645736204.git.gustavoars@kernel.org>
- <b6cd3d69-12a4-693a-e48f-d769c79fc455@quicinc.com>
+        Thu, 24 Feb 2022 19:35:49 -0500
+Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E12D24FA2B;
+        Thu, 24 Feb 2022 16:35:16 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0V5Q66IT_1645749311;
+Received: from 192.168.193.153(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V5Q66IT_1645749311)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 25 Feb 2022 08:35:12 +0800
+Message-ID: <d2c864c0-6535-acfd-6c2f-f1175ce8a719@linux.alibaba.com>
+Date:   Thu, 24 Feb 2022 16:34:08 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b6cd3d69-12a4-693a-e48f-d769c79fc455@quicinc.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH] [PATCH] AARCH64: Add gcc Shadow Call Stack support
+Content-Language: en-US
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     catalin.marinas@arm.com, will@kernel.org, ndesaulniers@google.com,
+        keescook@chromium.org, masahiroy@kernel.org, tglx@linutronix.de,
+        akpm@linux-foundation.org, mark.rutland@arm.com,
+        samitolvanen@google.com, npiggin@gmail.com, linux@roeck-us.net,
+        mhiramat@kernel.org, ojeda@kernel.org, luc.vanoostenryck@gmail.com,
+        elver@google.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+References: <20220222095736.24898-1-ashimida@linux.alibaba.com>
+ <YhUMRoLDan7tJRiL@dev-arch.archlinux-ax161>
+ <69d351c6-a69d-6ebb-53bc-b46dfe4da08a@linux.alibaba.com>
+ <YhZxVwoshSwwJkJO@dev-arch.archlinux-ax161>
+From:   Dan Li <ashimida@linux.alibaba.com>
+In-Reply-To: <YhZxVwoshSwwJkJO@dev-arch.archlinux-ax161>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 03:35:07PM -0800, Jeff Johnson wrote:
 
-[..]
 
+On 2/23/22 09:39, Nathan Chancellor wrote:
+> On Wed, Feb 23, 2022 at 12:50:21AM -0800, Dan Li wrote:
+>> My intention is to remind users that this is a compiler feature.
+>> But since there is also a hint in CC_HAVE_SHADOW_CALL_STACK:
+>> +# Supported by clang >= 7.0 or GCC ...
+>>
+>> Removing the specific compiler here also looks fine to me.
+>> Would this look better?
+>>
+>> "This option enables Shadow Call Stack, which uses a ..."
+>>
+>> or maybe:
+>>
+>> "This option enables compiler's Shadow Call Stack, which uses a ..."
 > 
-> my e-mail client hung while reviewing v1, so now giving
+> I do not honestly have a strong opinion around removing mention of the
+> compiler so either looks fine to me (might be better to say "the
+> compiler's Shadow ..." in the second one).
 > 
-> Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 
-Thanks, Jeff.
+Ah, yes, thanks :)
 
---
-Gustavo
+Dan.
