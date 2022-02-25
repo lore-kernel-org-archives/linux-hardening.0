@@ -2,180 +2,156 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856ACC43217
-	for <linux-hardening@archiver.kernel.org>; Fri, 25 Feb 2022 03:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA84EC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Feb 2022 04:47:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233253AbiBYD4r (ORCPT
+        id S237449AbiBYErh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Feb 2022 22:56:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49662 "EHLO
+        Thu, 24 Feb 2022 23:47:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229596AbiBYD4q (ORCPT
+        with ESMTP id S237446AbiBYErh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Feb 2022 22:56:46 -0500
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6733AE339A
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Feb 2022 19:56:15 -0800 (PST)
-Received: by mail-pl1-x62f.google.com with SMTP id b22so3711740pls.7
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Feb 2022 19:56:15 -0800 (PST)
+        Thu, 24 Feb 2022 23:47:37 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F1E85A152
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Feb 2022 20:47:04 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id x11so3783701pll.10
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Feb 2022 20:47:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=t1YLXoniWu3jrtmL+uCy1jECjrrpF17pHln6fAOn2n8=;
-        b=EQ8sDEC4veLnMVpqMOWCemJqVV4A/T0kWbaYbsy4HrDd3J+hgLPFr87nfMeHoP69eE
-         5CGIDZF3DYzdVjoL30WQ579opBa3sI8PY9akERrv9MkpP749itHUKrRBSi+qvDc96OG/
-         ZBxkfnDsokLI52Dg0z9j5giVU6zhavAPmxfzc=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=SyanVPTDj26hoM0+/34vC3ojlwHE6zX0sye59Y+Rtjs=;
+        b=ez/pn28OrXoTJLAydt7fC3l/1BRKMczx0EuxgJzCsoJxTes/Q7y60tcVMO7wzlZseu
+         9ifY3jRNBn24/NGKwkqqOVQOACDLdGJKM8O1juUN8Vb5C+HPbiKG5WnRq7DsniVf7u8e
+         fw6ieiJnZPOJ/xg6orBYtG5jEZmuIWIwk6hF4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=t1YLXoniWu3jrtmL+uCy1jECjrrpF17pHln6fAOn2n8=;
-        b=X3ialUGAtr+zED7/6Wy3oGEjKPPVDEJs0jG0ebI7kBV2vJ+B1oSFNqd92VDyBiRBsV
-         oGUeWasWRp8e6YWfNSuYyfPT/IAW/Mu85Hp3UgPgWqBKz/IAuZQx5jfrcKpAhcZfTTYC
-         niFOnwesQLydV0N2tnhPQNwwzFZ2XT1Kr1UauygNTvFVpXCFiKnDOpCfpkLEjEB+Jr7f
-         eNizkUsA1T4ThqmNcpYkGKs4kUT1BOI3cicoA2M2UoXwsGECmEv/feuG8/LtzFy4SqVt
-         ALVyGc3dHhLbJOjIsSmanML85SIa73/cyYzM5/0xJiAvALfulBlquFrVxw6O7YJ5oB7T
-         k+GA==
-X-Gm-Message-State: AOAM533Y0vq2xnU31mjty2rPoKoUj7+M6PlgjTzl4CUyBxiEj8MtFTSS
-        c/LCBQw8i7aPa/Zf9j/4n802OA==
-X-Google-Smtp-Source: ABdhPJyvsfwDWHtraGkWKHzQl5t0UqG9qA17+lPffgcNfhBwhleZBUpk0aciqN27yz1NpueBnjzKZw==
-X-Received: by 2002:a17:90a:3944:b0:1bc:b6a2:f14d with SMTP id n4-20020a17090a394400b001bcb6a2f14dmr1288168pjf.124.1645761374904;
-        Thu, 24 Feb 2022 19:56:14 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SyanVPTDj26hoM0+/34vC3ojlwHE6zX0sye59Y+Rtjs=;
+        b=VRgK35o1nGuT/TzQftWnyJvDJHimC+ut31JfiYgu62AHqkLsVijvwaL9NCS6Ge0Sxv
+         nTTJAUyFhqO+2zqdd+QsmEbtnKL5kp6yomUARN+sI42MqOXlnpfiF9t07fCxdgyGIX6m
+         jTROPN5zpKLkPDsl85JbS/4SaGb7a4sFXbBU+SIr9VuTttXWRIWF3nVItQh8qYQ7owla
+         dIjC5dlkXbycYFuEO9Duct+tpyXv/iwOSYMDlxMfSr1N6rSKENE9q7lnK4gSZWCK7Fde
+         NBQhd9NCCxULjf+wi42OiZNXGN9GIHy1V6VUE9dLPOelU/Aj6IVObJY6BP7Y5LFdNngf
+         TlNw==
+X-Gm-Message-State: AOAM532kL5BfMpnahpEywha1eWp8FTACi19RhqiFX5Lbc91vb9iId4ii
+        bcDhG4S1s70+XPncxNn0cQ2euQ==
+X-Google-Smtp-Source: ABdhPJzy/9ym4pKvdp7gXGiiTJRBM16FFuwlMDSrJbIDB/E//S1S2eCPnNgmXzRLoOrLqxAOu4UIKw==
+X-Received: by 2002:a17:902:f64e:b0:14d:20db:8478 with SMTP id m14-20020a170902f64e00b0014d20db8478mr5755429plg.158.1645764423449;
+        Thu, 24 Feb 2022 20:47:03 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id my6-20020a17090b4c8600b001bc2cb011dasm705551pjb.4.2022.02.24.19.56.14
+        by smtp.gmail.com with ESMTPSA id f16-20020a623810000000b004e1b132bc9esm1254834pfa.149.2022.02.24.20.47.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 19:56:14 -0800 (PST)
+        Thu, 24 Feb 2022 20:47:03 -0800 (PST)
+Date:   Thu, 24 Feb 2022 20:47:02 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Lyude Paul <lyude@redhat.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Dave Airlie <airlied@redhat.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v3 2/2] drm/dp: Fix OOB read when handling Post Cursor2 register
-Date:   Thu, 24 Feb 2022 19:56:10 -0800
-Message-Id: <20220225035610.2552144-3-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220225035610.2552144-1-keescook@chromium.org>
-References: <20220225035610.2552144-1-keescook@chromium.org>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Muhammad Usama Anjum <usama.anjum@collabora.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v2] usercopy: Check valid lifetime via stack depth
+Message-ID: <202202242046.33FF8372@keescook>
+References: <20220224060342.1855457-1-keescook@chromium.org>
+ <85d42900efaa4fdb8c20de2147d938c7@AcuMS.aculab.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4091; h=from:subject; bh=96sk9Gtx/XNCiooctnCaqAKLVeawEGKb7AZz4nCMFf0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiGFNadg22VDVgjy8AQWiUERRf01Zq/MODlSMQoZ58 a8tOe/eJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYhhTWgAKCRCJcvTf3G3AJr2MEA CBjU4bY3VxDS3wV7gdhWpz4b/0P9Ujgue2yyAHPN90Srm5SEbd9jMDRfp9H3dMTE6A7BySPc4o4gCR H8DpGL5CHRY0FwK8TG4Cr5Zlzz9LxG6uR1SmCoPMKTL/XffQmUhYksEoIu/3dEgJZ7eoM+vpJFskuW 1T7Rcvu7jZ67Fx9sx6UfydjkuT6ETIT2gXIcDQXoHV8yCTYlmeDitJC1PApnRtnt5jgsfijdWuaSiU eRQjO6kjpgRtVOQlIz+hSyrPRksjiOY8OP+BGBaOLSFmQKF/Dkq49nk6Tu35mBToYfI8ia6o9ad9jo phgnUAVHAb+HZNPaWujqkDUhtjnj2tEw18prgdSuhZDOg6h8F0asOGLDwphnrAek3sC38g+sqACLjI t4KGvAf/MLwYNA9ikaSgtexLqdviP6zkiRni6rIWS2Yq+reSSGMnhD9dN9hJXQLZn/Fe0bLEO6CK/V 4tNBT8bwGzxQvENSJcZ5J2nEK7E6q0hNscsbSpm26rQk6F5GBzHgYpaanauTxZrAzvdTAKLeI3+ekA 2ldZ2W9gkc3qihSz/5JUWAEhXQnu7vmiEiUiXEJMKNRRl1kR4lAF2nWF5+EeGQOdDNWzuDP3bo2MGY RPn4uZ8FQrQ/wlvt862eva/iKsmIKqTzYp32O+WmGyCqNgisw2umSF8GYzHg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <85d42900efaa4fdb8c20de2147d938c7@AcuMS.aculab.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The link_status array was not large enough to read the Adjust Request
-Post Cursor2 register, so remove the common helper function to avoid
-an OOB read, found with a -Warray-bounds build:
+On Thu, Feb 24, 2022 at 08:58:20AM +0000, David Laight wrote:
+> From: Kees Cook
+> > Sent: 24 February 2022 06:04
+> > 
+> > Under CONFIG_HARDENED_USERCOPY=y, when exact stack frame boundary checking
+> > is not available (i.e. everything except x86 with FRAME_POINTER), check
+> > a stack object as being at least "current depth valid", in the sense
+> > that any object within the stack region but not between start-of-stack
+> > and current_stack_pointer should be considered unavailable (i.e. its
+> > lifetime is from a call no longer present on the stack).
+> > 
+> ...
+> > diff --git a/mm/usercopy.c b/mm/usercopy.c
+> > index d0d268135d96..5d28725af95f 100644
+> > --- a/mm/usercopy.c
+> > +++ b/mm/usercopy.c
+> > @@ -22,6 +22,30 @@
+> >  #include <asm/sections.h>
+> >  #include "slab.h"
+> > 
+> > +/*
+> > + * Only called if obj is within stack/stackend bounds. Determine if within
+> > + * current stack depth.
+> > + */
+> > +static inline int check_stack_object_depth(const void *obj,
+> > +					   unsigned long len)
+> > +{
+> > +#ifdef CONFIG_ARCH_HAS_CURRENT_STACK_POINTER
+> > +#ifndef CONFIG_STACK_GROWSUP
+> 
+> Pointless negation
+> 
+> > +	const void * const high = stackend;
+> > +	const void * const low = (void *)current_stack_pointer;
+> > +#else
+> > +	const void * const high = (void *)current_stack_pointer;
+> > +	const void * const low = stack;
+> > +#endif
+> > +
+> > +	/* Reject: object not within current stack depth. */
+> > +	if (obj < low || high < obj + len)
+> > +		return BAD_STACK;
+> > +
+> > +#endif
+> > +	return GOOD_STACK;
+> > +}
+> 
+> If the comment at the top of the function is correct then
+> only a single test for the correct end of the buffer against
+> the current stack pointer is needed.
+> Something like:
+> #ifdef CONFIG_STACK_GROWSUP
+> 	if ((void *)current_stack_pointer < obj + len)
+> 		return BAD_STACK;
+> #else
+> 	if (obj < (void *)current_stack_pointer)
+> 		return BAD_STACK;
+> #endif
+> 	return GOOD_STACK;
 
-drivers/gpu/drm/drm_dp_helper.c: In function 'drm_dp_get_adjust_request_post_cursor':
-drivers/gpu/drm/drm_dp_helper.c:59:27: error: array subscript 10 is outside array bounds of 'const u8[6]' {aka 'const unsigned char[6]'} [-Werror=array-bounds]
-   59 |         return link_status[r - DP_LANE0_1_STATUS];
-      |                ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpu/drm/drm_dp_helper.c:147:51: note: while referencing 'link_status'
-  147 | u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
-      |                                          ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Oh, yeah, excellent point. I suspect the compiler would probably
+optimize it all away, but yes, this is, in fact, easier to read, and
+short enough I should probably just not bother with a separate function.
 
-Replace the only user of the helper with an open-coded fetch and decode,
-similar to drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c.
+Thanks!
 
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: David Airlie <airlied@linux.ie>
-Cc: dri-devel@lists.freedesktop.org
-Fixes: 79465e0ffeb9 ("drm/dp: Add helper to get post-cursor adjustments")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-Link: https://lore.kernel.org/r/20220105173507.2420910-1-keescook@chromium.org
----
- drivers/gpu/drm/dp/drm_dp.c    | 10 ----------
- drivers/gpu/drm/tegra/dp.c     | 11 ++++++++++-
- include/drm/dp/drm_dp_helper.h |  2 --
- 3 files changed, 10 insertions(+), 13 deletions(-)
+-Kees
 
-diff --git a/drivers/gpu/drm/dp/drm_dp.c b/drivers/gpu/drm/dp/drm_dp.c
-index e159b81800d4..703972ae14c6 100644
---- a/drivers/gpu/drm/dp/drm_dp.c
-+++ b/drivers/gpu/drm/dp/drm_dp.c
-@@ -208,16 +208,6 @@ bool drm_dp_128b132b_link_training_failed(const u8 link_status[DP_LINK_STATUS_SI
- }
- EXPORT_SYMBOL(drm_dp_128b132b_link_training_failed);
- 
--u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
--					 unsigned int lane)
--{
--	unsigned int offset = DP_ADJUST_REQUEST_POST_CURSOR2;
--	u8 value = dp_link_status(link_status, offset);
--
--	return (value >> (lane << 1)) & 0x3;
--}
--EXPORT_SYMBOL(drm_dp_get_adjust_request_post_cursor);
--
- static int __8b10b_clock_recovery_delay_us(const struct drm_dp_aux *aux, u8 rd_interval)
- {
- 	if (rd_interval > 4)
-diff --git a/drivers/gpu/drm/tegra/dp.c b/drivers/gpu/drm/tegra/dp.c
-index e4369e5b2943..7295975e5733 100644
---- a/drivers/gpu/drm/tegra/dp.c
-+++ b/drivers/gpu/drm/tegra/dp.c
-@@ -549,6 +549,15 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
- {
- 	struct drm_dp_link_train_set *adjust = &link->train.adjust;
- 	unsigned int i;
-+	u8 post_cursor;
-+	int err;
-+
-+	err = drm_dp_dpcd_read(link->aux, DP_ADJUST_REQUEST_POST_CURSOR2,
-+			       &post_cursor, sizeof(post_cursor));
-+	if (err < 0) {
-+		DRM_ERROR("failed to read post_cursor2: %d\n", err);
-+		post_cursor = 0;
-+	}
- 
- 	for (i = 0; i < link->lanes; i++) {
- 		adjust->voltage_swing[i] =
-@@ -560,7 +569,7 @@ static void drm_dp_link_get_adjustments(struct drm_dp_link *link,
- 				DP_TRAIN_PRE_EMPHASIS_SHIFT;
- 
- 		adjust->post_cursor[i] =
--			drm_dp_get_adjust_request_post_cursor(status, i);
-+			(post_cursor >> (i << 1)) & 0x3;
- 	}
- }
- 
-diff --git a/include/drm/dp/drm_dp_helper.h b/include/drm/dp/drm_dp_helper.h
-index 2a0e75e69e80..51e02cf75277 100644
---- a/include/drm/dp/drm_dp_helper.h
-+++ b/include/drm/dp/drm_dp_helper.h
-@@ -1530,8 +1530,6 @@ u8 drm_dp_get_adjust_request_pre_emphasis(const u8 link_status[DP_LINK_STATUS_SI
- 					  int lane);
- u8 drm_dp_get_adjust_tx_ffe_preset(const u8 link_status[DP_LINK_STATUS_SIZE],
- 				   int lane);
--u8 drm_dp_get_adjust_request_post_cursor(const u8 link_status[DP_LINK_STATUS_SIZE],
--					 unsigned int lane);
- 
- #define DP_BRANCH_OUI_HEADER_SIZE	0xc
- #define DP_RECEIVER_CAP_SIZE		0xf
+> 
+> Although it may depend on exactly where the stack pointer
+> points to - especially for GROWSUP.
+> 
+> 	David
+> 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+> 
+
 -- 
-2.30.2
-
+Kees Cook
