@@ -2,124 +2,250 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23898C4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 25 Feb 2022 09:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A46EC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Feb 2022 17:33:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238259AbiBYJa6 (ORCPT
+        id S242237AbiBYReW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 25 Feb 2022 04:30:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43646 "EHLO
+        Fri, 25 Feb 2022 12:34:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235025AbiBYJa5 (ORCPT
+        with ESMTP id S233650AbiBYReV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 25 Feb 2022 04:30:57 -0500
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F5CE18F214;
-        Fri, 25 Feb 2022 01:30:26 -0800 (PST)
-Received: by mail-lf1-x132.google.com with SMTP id j15so8310024lfe.11;
-        Fri, 25 Feb 2022 01:30:26 -0800 (PST)
+        Fri, 25 Feb 2022 12:34:21 -0500
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A888F1385A4
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Feb 2022 09:33:48 -0800 (PST)
+Received: by mail-pg1-x52d.google.com with SMTP id o8so5220418pgf.9
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Feb 2022 09:33:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5AzSht2nyeyY1UVfwN1DSU/s7HgEVJ2AdBOgPEuvAS4=;
-        b=W7dBn+KZvH/dwbC5M82ju8KQZO9rpK6NjiO2mKISrctDmuhwUxmuFO+/h4DS12WgWf
-         I9a5z/5L/kiozkUxjDZPY//qN5cCge8x6u/GrHeXx/ORDpCIGc3Iaqrf+EYo6xQKVFi5
-         6HoJt0B5h00do6rhuI3cj9ZcnuqSzG6QP6zbSGGjcemGz+oAs7eRqRa/8FHK5PhTu0+g
-         /wzIBDv+s3ESTHOVsKCyjmrmgqU4Iyv8G0mE/7TRMM5xNS8LmIQTOmh7AwiFYILrVzFA
-         ioFVEqpZkPTOT55mLZYJHm3VV+mOiSQA4wAOH3zP9FUeJxgo4i/3JuvKN8KCdHFk31Iw
-         eCwQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=toTbBOD7f2PmkGndW1qkGlCEgn4CdobY5uDy/cy5NAE=;
+        b=nTpTtZ6GqoykxQez7jGzNazzVSEjA3hRmzuOvp6Rm6lcvWFnPk6YwpyLQqOaOfM/an
+         2Ect1WyMljS2tvmmaSi0oxVPSx80Xdn3/OEr91JN9sylaMKUr3mFDVCuc0SIxyiw4745
+         lX272c7+sctHq1QXAmnTmU8nsl3/69Ve8ATaU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5AzSht2nyeyY1UVfwN1DSU/s7HgEVJ2AdBOgPEuvAS4=;
-        b=LEuTyuQMgNzF9k/TDnX2688qb2Ok9635TJ/336k5UbtdothTHOgcKtNComa4IBF/6m
-         oxGsQMOW7Hr7CuUA8fLKsA/iLVG9Z9Sv54ditxfsvZr6+PMGxNh06LvGm4r5ZyfZCosT
-         KAzxXtO2ZBK04QMLVrVCI8WLWW5gosqjr3vFfBH+MlOyU4V7a4KnUyg+y6zaAt0uQRZM
-         jaWcnAtNjK788fMgvxKkEAJsBlfPoXGivn/jh3SVdkJpq9CTTMncukRaRZQa4tMALp8S
-         n86XsMqCxaj/9IZeJCEGXSDK5mmOAjhy6UI5tpNw2ajD+6ODlbRf8T5wwGF8FkVrxAS0
-         1E5g==
-X-Gm-Message-State: AOAM533HrNdbqLfacyjRZXX7TidGx1hwh5TkhUws0FO0/occJloE64fX
-        KKZWAkYVs+lfbnmLjnByAR8=
-X-Google-Smtp-Source: ABdhPJzqjAQkDVhMqvwqNRM/3Gi5fq3FONQyGaq9x87//cjXPx8Pce+JQEZ8Gw8XTdlydFrpW1TTCQ==
-X-Received: by 2002:a05:6512:3a95:b0:443:1624:3be1 with SMTP id q21-20020a0565123a9500b0044316243be1mr4304250lfu.355.1645781424140;
-        Fri, 25 Feb 2022 01:30:24 -0800 (PST)
-Received: from orome ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id l9-20020a2ea809000000b002466c11ee8asm212995ljq.77.2022.02.25.01.30.21
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=toTbBOD7f2PmkGndW1qkGlCEgn4CdobY5uDy/cy5NAE=;
+        b=xG+sZw0fX444a3mWHKeIAOJ9WNqnyvWj8vToYtcbblosx1UDdrMtbaRP86YXC5ChdL
+         lap5eJ8N87J252D4AEelf5D+N86EsZcj0zIb+D+tPua3ZRntGzE+egAOvTL60w3CktfM
+         2J2Nb8KanJo+FGL4zqjEJSuw6u+YY+WPtycTifdJXhxvxJrSfPa+YCz4n2Ky5M+JURQD
+         9ufJCH1SFKzuvNudycl720vFe5ntQQA1cTiAzf0bVjCqUGE02n7RmpkYQVrFMwvxnNz1
+         EfyEyZ34EeSZn49M42Bahif40MQej8off8blYqVq4I7Vy5EPhJLZ4q72TCCTCqN5vjh9
+         9eeA==
+X-Gm-Message-State: AOAM530mDUMVv1ypsfEcAan6MBAvjbIuccsHyss1A1DcDefH8hquR4jj
+        ZQdzMOVI6Nm4Zdow60sEVZ0clQ==
+X-Google-Smtp-Source: ABdhPJzgY2gr9dyjYiVhYPibWI6tyQMGRgFvIgbCjGZmflYsg9KFVd1wpHVozFe0C4B5LIKLvbR2Pg==
+X-Received: by 2002:a63:d1e:0:b0:372:c1cd:9e16 with SMTP id c30-20020a630d1e000000b00372c1cd9e16mr6917970pgl.421.1645810428205;
+        Fri, 25 Feb 2022 09:33:48 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d32-20020a631d60000000b003650a9d8f9asm3188379pgm.33.2022.02.25.09.33.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Feb 2022 01:30:23 -0800 (PST)
-Date:   Fri, 25 Feb 2022 10:30:19 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Lyude Paul <lyude@redhat.com>,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] drm/dp: Fix out-of-bounds reads
-Message-ID: <YhihqzqPW7qbYnB9@orome>
-References: <20220225035610.2552144-1-keescook@chromium.org>
+        Fri, 25 Feb 2022 09:33:47 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Muhammad Usama Anjum <usama.anjum@collabora.com>,
+        David Laight <David.Laight@ACULAB.COM>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v3] usercopy: Check valid lifetime via stack depth
+Date:   Fri, 25 Feb 2022 09:33:45 -0800
+Message-Id: <20220225173345.3358109-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="akPJIWxgBZHniLnc"
-Content-Disposition: inline
-In-Reply-To: <20220225035610.2552144-1-keescook@chromium.org>
-User-Agent: Mutt/2.2.1 (c8109e14) (2022-02-19)
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6650; h=from:subject; bh=cBT9LfVn4HmKRYh2PcXE/8zQz02Mqq30WHMb1xRpsC8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiGRL4hCGRtyMVNaUuGOXYOQcJfOPMdMFCLw6RqyF4 bSK+p6CJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYhkS+AAKCRCJcvTf3G3AJgiXD/ 9oJAEUhwjjt38fSq/6oFUuGmXix51DHDuPiCQ/O+vtMyBt7Pika1A2AA7aICzbV+JrhaJovM25jLOs ec+SE2h408yHdgsZJTjqhhbUcqZJsVoYWQ6CekV7ZUpqVznkapWGjsiuAeUwpf080muqYbkCUizVD5 d8a+rdIbQiu6x2v102k55/DBqUWPhKQPA31tR9giHixwsTGTIqULFf+cQP4Yn68bmDFGBfiVf6h1Iu KmAvII7sF+CqSPWMG4ITorgRlp4x+dhbQ/QddX9VAdfHQwf/5IgNqYZtAkgSv4+xWwnyWdrcLWQBwK bWwCfcDxRa3vVRqHF6NIPKZ41wzZM6H54opS11bDEp3Kbpdx9Uw0GHjSsmVHJPK9tOVsREZS8KVa31 MjZori9jAT4lqcojRrcaXKaQdTfS3hhA+MJrrOSqmjmFULHKe1NIS1I9xWtpqEstr6+EJ+aKDAy4D3 aH1unqUg4B4lDNeJPZJijllFqLhgRLjjeyj9WWP5O1GIOyk7pKkabuZMVcWVESXE+ApTltYk1Xu86X ewfw6nwTVWYzlj7otcUTknrHPj39m+T9bDQuuf11GiLEk84C2D+ch4tWKKrrvXLfm795vwqc45FA8o hXXNk6rWAdmCmwF9ty1CmJYsXfesFaBYSAS5SWfZTjPYpKV/GTu/8RasyJDQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Under CONFIG_HARDENED_USERCOPY=y, when exact stack frame boundary checking
+is not available (i.e. everything except x86 with FRAME_POINTER), check
+a stack object as being at least "current depth valid", in the sense
+that any object within the stack region but not between start-of-stack
+and current_stack_pointer should be considered unavailable (i.e. its
+lifetime is from a call no longer present on the stack).
 
---akPJIWxgBZHniLnc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Introduce ARCH_HAS_CURRENT_STACK_POINTER to track which architectures
+have actually implemented the common global register alias.
 
-On Thu, Feb 24, 2022 at 07:56:08PM -0800, Kees Cook wrote:
-> Hi,
->=20
-> I'm sending these again, as they still need fixing. They have been
-> rebased due to the drm_dp_helper code being moved into a subdirectory.
+Additionally report usercopy bounds checking failures with an offset
+from current_stack_pointer, which may assist with diagnosing failures.
 
-Yeah, I noticed the other day that this had been partially reverted by
-the DP code move. I've applied this now, though it didn't apply cleanly,
-so I'll do a couple of test builds to make sure my resolution is correct
-and will push this out later on.
+The LKDTM USERCOPY_STACK_FRAME_TO and USERCOPY_STACK_FRAME_FROM tests
+(once slightly adjusted in a separate patch) will pass again with
+this fixed.
 
-Thanks,
-Thierry
+Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org
+Reported-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v1: https://lore.kernel.org/lkml/20220216201449.2087956-1-keescook@chromium.org
+v2: https://lore.kernel.org/lkml/20220224060342.1855457-1-keescook@chromium.org
+v3:
+ - simplify bounds check (David)
+ - add missed Kconfig declaration
+---
+ arch/arm/Kconfig     |  1 +
+ arch/arm64/Kconfig   |  1 +
+ arch/powerpc/Kconfig |  1 +
+ arch/s390/Kconfig    |  1 +
+ arch/sh/Kconfig      |  1 +
+ arch/x86/Kconfig     |  1 +
+ mm/Kconfig           |  9 +++++++++
+ mm/usercopy.c        | 23 +++++++++++++++++++++--
+ 8 files changed, 36 insertions(+), 2 deletions(-)
 
---akPJIWxgBZHniLnc
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 4c97cb40eebb..a7a09eef1852 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -5,6 +5,7 @@ config ARM
+ 	select ARCH_32BIT_OFF_T
+ 	select ARCH_CORRECT_STACKTRACE_ON_KRETPROBE if HAVE_KRETPROBES && FRAME_POINTER && !ARM_UNWIND
+ 	select ARCH_HAS_BINFMT_FLAT
++	select ARCH_HAS_CURRENT_STACK_POINTER
+ 	select ARCH_HAS_DEBUG_VIRTUAL if MMU
+ 	select ARCH_HAS_DMA_WRITE_COMBINE if !ARM_DMA_MEM_BUFFERABLE
+ 	select ARCH_HAS_ELF_RANDOMIZE
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index f2b5a4abef21..b8ab790555c8 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -18,6 +18,7 @@ config ARM64
+ 	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
+ 	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
+ 	select ARCH_HAS_CACHE_LINE_SIZE
++	select ARCH_HAS_CURRENT_STACK_POINTER
+ 	select ARCH_HAS_DEBUG_VIRTUAL
+ 	select ARCH_HAS_DEBUG_VM_PGTABLE
+ 	select ARCH_HAS_DMA_PREP_COHERENT
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index b779603978e1..7e7387bd7d53 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -108,6 +108,7 @@ config PPC
+ 	select ARCH_ENABLE_MEMORY_HOTPLUG
+ 	select ARCH_ENABLE_MEMORY_HOTREMOVE
+ 	select ARCH_HAS_COPY_MC			if PPC64
++	select ARCH_HAS_CURRENT_STACK_POINTER
+ 	select ARCH_HAS_DEBUG_VIRTUAL
+ 	select ARCH_HAS_DEBUG_VM_PGTABLE
+ 	select ARCH_HAS_DEBUG_WX		if STRICT_KERNEL_RWX
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index be9f39fd06df..4845ab549dd1 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -60,6 +60,7 @@ config S390
+ 	select ARCH_ENABLE_MEMORY_HOTPLUG if SPARSEMEM
+ 	select ARCH_ENABLE_MEMORY_HOTREMOVE
+ 	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
++	select ARCH_HAS_CURRENT_STACK_POINTER
+ 	select ARCH_HAS_DEBUG_VM_PGTABLE
+ 	select ARCH_HAS_DEBUG_WX
+ 	select ARCH_HAS_DEVMEM_IS_ALLOWED
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index 2474a04ceac4..1c2b53bf3093 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -7,6 +7,7 @@ config SUPERH
+ 	select ARCH_HAVE_CUSTOM_GPIO_H
+ 	select ARCH_HAVE_NMI_SAFE_CMPXCHG if (GUSA_RB || CPU_SH4A)
+ 	select ARCH_HAS_BINFMT_FLAT if !MMU
++	select ARCH_HAS_CURRENT_STACK_POINTER
+ 	select ARCH_HAS_GIGANTIC_PAGE
+ 	select ARCH_HAS_GCOV_PROFILE_ALL
+ 	select ARCH_HAS_PTE_SPECIAL
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 9f5bd41bf660..90494fba3620 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -69,6 +69,7 @@ config X86
+ 	select ARCH_ENABLE_THP_MIGRATION if X86_64 && TRANSPARENT_HUGEPAGE
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
+ 	select ARCH_HAS_CACHE_LINE_SIZE
++	select ARCH_HAS_CURRENT_STACK_POINTER
+ 	select ARCH_HAS_DEBUG_VIRTUAL
+ 	select ARCH_HAS_DEBUG_VM_PGTABLE	if !X86_PAE
+ 	select ARCH_HAS_DEVMEM_IS_ALLOWED
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 3326ee3903f3..c349599601f8 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -744,6 +744,15 @@ config IDLE_PAGE_TRACKING
+ config ARCH_HAS_CACHE_LINE_SIZE
+ 	bool
+ 
++config ARCH_HAS_CURRENT_STACK_POINTER
++	bool
++	help
++	  In support of HARDENED_USERCOPY performing stack variable lifetime
++	  checking, an architecture-agnostic way to find the stack pointer
++	  is needed. Once an architecture defines an unsigned long global
++	  register alias named "current_stack_pointer", this config can be
++	  selected.
++
+ config ARCH_HAS_PTE_DEVMAP
+ 	bool
+ 
+diff --git a/mm/usercopy.c b/mm/usercopy.c
+index d0d268135d96..5d34c40c16c2 100644
+--- a/mm/usercopy.c
++++ b/mm/usercopy.c
+@@ -29,7 +29,7 @@
+  * Returns:
+  *	NOT_STACK: not at all on the stack
+  *	GOOD_FRAME: fully within a valid stack frame
+- *	GOOD_STACK: fully on the stack (when can't do frame-checking)
++ *	GOOD_STACK: within the current stack (when can't frame-check exactly)
+  *	BAD_STACK: error condition (invalid stack position or bad stack frame)
+  */
+ static noinline int check_stack_object(const void *obj, unsigned long len)
+@@ -55,6 +55,17 @@ static noinline int check_stack_object(const void *obj, unsigned long len)
+ 	if (ret)
+ 		return ret;
+ 
++	/* Finally, check stack depth if possible. */
++#ifdef CONFIG_ARCH_HAS_CURRENT_STACK_POINTER
++	if (IS_ENABLED(CONFIG_STACK_GROWSUP)) {
++		if ((void *)current_stack_pointer < obj + len)
++			return BAD_STACK;
++	} else {
++		if (obj < (void *)current_stack_pointer)
++			return BAD_STACK;
++	}
++#endif
++
+ 	return GOOD_STACK;
+ }
+ 
+@@ -280,7 +291,15 @@ void __check_object_size(const void *ptr, unsigned long n, bool to_user)
+ 		 */
+ 		return;
+ 	default:
+-		usercopy_abort("process stack", NULL, to_user, 0, n);
++		usercopy_abort("process stack", NULL, to_user,
++#ifdef CONFIG_ARCH_HAS_CURRENT_STACK_POINTER
++			IS_ENABLED(CONFIG_STACK_GROWSUP) ?
++				ptr - (void *)current_stack_pointer :
++				(void *)current_stack_pointer - ptr,
++#else
++			0,
++#endif
++			n);
+ 	}
+ 
+ 	/* Check for bad heap object. */
+-- 
+2.30.2
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmIYoakACgkQ3SOs138+
-s6G6ZhAAwXanqGZpI3dY+3mEMff9651PrD8RgficbLnWLnZXd1JsRFE0vDHqaKUL
-WzxwaH+ctqQHXe+f7VTcypE+IV3iZ5cwe7AzEco8kg0wz4i3PesAc7XstmM3FTJA
-FjGbOrUh2XO3epk/lmDyOQz35rNu9nU2ptJiavk+E+zO+KhRV7u7s4WyGYFlIi0M
-y4dQl1IAgF9JaLU57yQ00EuyCShPdyUaTDE0Ow1AVMADWXZ81t+0enV+vO16Z0Gj
-Nm7+gBKg+o6m390BYZYRq8cAxuTW2Hqlu4SEvTQGI899o8AtXe9oqE8lVGAIQQ5+
-LAIV2IgyIGXA9S84CMkP6CLIZDDl24ppVGHtgrUD2GDiMdPYkjo4CuD/bviRzrNV
-3+IbBOjusGycgXp4GJ735h+eq9HMBSqoaQLeMY6BPj9jbzwAfV3IyPbHSRAHE/ii
-VzGG0iBPkWJ0P7+y1iuZAzZPv1Cd/k8+dXzxnsap9D3JvfKCvI/uUrQV5FCtJ7Fl
-txdz7QeDI/TFEcov63wLVZoVJMTNkmdujKkagmrwtokdDMBGwb8gQX+RJI7GIFje
-Mpc+ZjLNzs5NpsVfRRH9h6lks5Sk8u2cNv9lzf0UnnPYYKXie0gtIwspniQi/naR
-TYTZh/Hy91tS88lH16DKwgodoSc9EnrU2d9xT0ykcccQg9GyNRo=
-=tyf3
------END PGP SIGNATURE-----
-
---akPJIWxgBZHniLnc--
