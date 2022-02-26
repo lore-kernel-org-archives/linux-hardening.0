@@ -2,97 +2,129 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FF9C433EF
-	for <linux-hardening@archiver.kernel.org>; Sat, 26 Feb 2022 01:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E20C433F5
+	for <linux-hardening@archiver.kernel.org>; Sat, 26 Feb 2022 01:35:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229531AbiBZB2i (ORCPT
+        id S229559AbiBZBg1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 25 Feb 2022 20:28:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40010 "EHLO
+        Fri, 25 Feb 2022 20:36:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229639AbiBZB2i (ORCPT
+        with ESMTP id S229469AbiBZBg1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 25 Feb 2022 20:28:38 -0500
-Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED0351AAFDE;
-        Fri, 25 Feb 2022 17:28:04 -0800 (PST)
-Received: by mail-io1-xd35.google.com with SMTP id h16so8514850iol.11;
-        Fri, 25 Feb 2022 17:28:04 -0800 (PST)
+        Fri, 25 Feb 2022 20:36:27 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79167257950
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Feb 2022 17:35:51 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id iq13-20020a17090afb4d00b001bc4437df2cso6413264pjb.2
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Feb 2022 17:35:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZnbbEMt3jkmlYOE0bA6a7Tz/qzU0Syhvt4pmLzBwk+U=;
-        b=RD+cBNsCKTgv1ZnZ1ww8dul+ibocM3XNMxPC3T5gBhIuZDqFh4/+kYvjgl+t3THB1t
-         TNY0vlilXIORXYvymwZxQrrjSEK1wd4iJiCthynJiK1XwO21rxyqWtt4NZcR05feyV2n
-         zFvQSxJsRzpiH2PfaXX410mFGoUH5iC6BS7r0YhEenMmvWUivRtYM5bBamYy/HJ4UfQf
-         mLKAjuy7qOm5PbBJEnJV+fLywhchcsy2LndGiD5cvN6P9igs3Jc+hC3E7bO8/PdkZFGK
-         Tm5PdGBeZ0zNFQ8NQgn4dY65bZy9Yq8Irbw8vHAUhXXnjcSAFaVjOaOFooFxtYNNcrVO
-         7N1w==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WpU9pCYtYHOq/uhaCsMM/7Jj3sPtOe5SaReKe0eszxI=;
+        b=K+J7F9HzV/9Sz2xGcjH6EyDqDjhx+eBWkUzD+F07R9mvbWF7RdqTa4735O5p6O4Ie0
+         Au48mtHHDm/DdLoRoYDZbv8ge5D4Qe+qughCaJojbHdvwkouodhSAvwlA92Uuk4rbE2F
+         ODF0loMxDpYS2JHEUDW2z4mwoFot5F+FyaIcg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZnbbEMt3jkmlYOE0bA6a7Tz/qzU0Syhvt4pmLzBwk+U=;
-        b=Fz2AVTJRnzAu1OVXpv59kpgrvZwQ27b6ptu/Hs6vcNBctL//1cJZKrpv+Xk5KPz7Nv
-         9Gn2xyXWba/qfBC716BWWIwd/YD+1Ufw5XIgQ6FtnK3SGQpZ95BQtfIH5o9LIJFruSQB
-         kR5VMEI30l2pHx5RrlkEVs0wQca7CIqqNP02s3tCRb1Rxy4M0+kz1xCl/RGK+OYP50aB
-         oGuFpMIV+uaNZBAKv/Iqp2sZaRArlBss7OFkNVHM3/EYdvFr4pWCbPtwxv5/Qb67hzLQ
-         fGecfnFOvLP+ff/FlGhrUhaPcP5oatsV6feoO+vF7ve90mrmgSZA5SDtMVW6r/wrK0gS
-         LjXw==
-X-Gm-Message-State: AOAM530oC5nsLbO7vFHaiuzDi0PA5ri2zaTAhKy+D/fQQAAqMQ1Uci6I
-        yptNE5BkG6h3j947LV1ffSKrbzu0J77/SNz080tnVTUyz5NShg==
-X-Google-Smtp-Source: ABdhPJwr8piYYKuKvOcgUuJp6nj91ylsWJvd8vpauApcGsvvimPOHYrtBAnaLmcM49B9zyvW3bEcZ47iiLi2OkJg/Kg=
-X-Received: by 2002:a05:6602:2d90:b0:63d:b41e:e4e4 with SMTP id
- k16-20020a0566022d9000b0063db41ee4e4mr7393250iow.172.1645838884294; Fri, 25
- Feb 2022 17:28:04 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WpU9pCYtYHOq/uhaCsMM/7Jj3sPtOe5SaReKe0eszxI=;
+        b=DKfILhg1WB609G+yc3xvTd5XmtskcdQSvif6XsG/JFu8+GoGJgHs7M5owJbEfvAsUH
+         Ra7qtm9eKf3RRCJujZ5LDBg85SwrIXdDZKX9UlLTXvDP8/iblGuDoin5tDCHq9LNhtRH
+         u2gYE03U2Hqxxvqac3rTcswBoy4isgStddnSv4CDO8bnfD8IqoU+XVytJVunLF1C+U0A
+         mPwsnf79iSNmkDxmpEPKRvap5bK4pW0A/GpibTsd/6GLPnjWhJVgSlqseVvZuAxYciqh
+         hiojRScOH4j4fvmKE7GVQzU+SN12WzuA9vUT8Ca7qX0mnGyCOgRGX17hwxMTMDhZCO09
+         fJaQ==
+X-Gm-Message-State: AOAM531DfPDF4yLrM9//iRXU/X6pRYXGMAwD0Y5ZyvZVzGfLbCeBlsTU
+        NouG54SRAEg82CYrMEftekIete94MSnefA==
+X-Google-Smtp-Source: ABdhPJzzGQp7d+uCevH36MY309ZkNeJKKafuPCRtKeMtR1sNdWqZbF3ofCp8kZwki+6glky8YIys/A==
+X-Received: by 2002:a17:902:8d8b:b0:14f:795a:977a with SMTP id v11-20020a1709028d8b00b0014f795a977amr10167644plo.104.1645839350969;
+        Fri, 25 Feb 2022 17:35:50 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h5-20020a056a001a4500b004e177b8cbfdsm4601227pfv.197.2022.02.25.17.35.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Feb 2022 17:35:50 -0800 (PST)
+Date:   Fri, 25 Feb 2022 17:35:49 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, linux-mm@kvack.org,
+        Muhammad Usama Anjum <usama.anjum@collabora.com>,
+        David Laight <David.Laight@aculab.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] usercopy: Check valid lifetime via stack depth
+Message-ID: <202202251728.1634F405@keescook>
+References: <20220225173345.3358109-1-keescook@chromium.org>
+ <20220225160157.680ecdea21ce81183059bb63@linux-foundation.org>
 MIME-Version: 1.0
-References: <20220225032410.25622-1-ashimida@linux.alibaba.com>
- <CANiq72kXoonDYk095XvBwEtRCRNECd1iQOqJHE2cNcgLyUMfcQ@mail.gmail.com> <202202251258.DB0F403B@keescook>
-In-Reply-To: <202202251258.DB0F403B@keescook>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Sat, 26 Feb 2022 02:27:53 +0100
-Message-ID: <CANiq72=KjCd8pWKuXFzoW7oBQM9DV=DDyGzCyz62F4B+e5Q_qg@mail.gmail.com>
-Subject: Re: [PATCH] [PATCH v2] AARCH64: Add gcc Shadow Call Stack support
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Dan Li <ashimida@linux.alibaba.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Marco Elver <elver@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220225160157.680ecdea21ce81183059bb63@linux-foundation.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Feb 25, 2022 at 9:59 PM Kees Cook <keescook@chromium.org> wrote:
->
-> I thought about that too, but I think it's less simple due to the
-> __has_feature vs CONFIG differences, etc:
-> https://lore.kernel.org/lkml/202202251243.1E38256F9@keescook/
->
-> But maybe __has_feature doesn't really matter here?
+On Fri, Feb 25, 2022 at 04:01:57PM -0800, Andrew Morton wrote:
+> On Fri, 25 Feb 2022 09:33:45 -0800 Kees Cook <keescook@chromium.org> wrote:
+> 
+> > Under CONFIG_HARDENED_USERCOPY=y, when exact stack frame boundary checking
+> > is not available (i.e. everything except x86 with FRAME_POINTER), check
+> > a stack object as being at least "current depth valid", in the sense
+> > that any object within the stack region but not between start-of-stack
+> > and current_stack_pointer should be considered unavailable (i.e. its
+> > lifetime is from a call no longer present on the stack).
+> > 
+> > Introduce ARCH_HAS_CURRENT_STACK_POINTER to track which architectures
+> > have actually implemented the common global register alias.
+> > 
+> > Additionally report usercopy bounds checking failures with an offset
+> > from current_stack_pointer, which may assist with diagnosing failures.
+> > 
+> > The LKDTM USERCOPY_STACK_FRAME_TO and USERCOPY_STACK_FRAME_FROM tests
+> > (once slightly adjusted in a separate patch) will pass again with
+> > this fixed.
+> 
+> Again, what does this actually do?
 
-I have not tested it, but I was assuming the `CONFIG` could do its
-job, since it comes from testing the compiler flag.
+One of the things that CONFIG_HARDENED_USERCOPY checks is whether an
+object is overlapping the stack at all. If it is, it performs a number
+of inexpensive bounds checks. One of the finer-grained checks is whether
+an object cross stack frame within the stack region. Doing this with
+CONFIG_FRAME_POINTER was cheap/easy. Doing it with ORC is too heavy, and
+was left out (a while ago), leaving the courser whole-stack check.
 
-If the `__has_feature` is actually restricting it more than that, then
-we should probably get the `CONFIG` fixed so that it only gets enabled
-when really it is going to be used.
+The LKDTM tests try to exercise the cross-frame cases to validate the
+defense. They have been failing every since (which was expected). More
+below...
 
-Cheers,
-Miguel
+> 
+> > Reported-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> 
+> A link to that report would shed some light.  But actually describing
+> the user-visible impact right there in the changelog is preferable.
+
+Yes, good point. The bug[1] involves multiple LKDTM tests and their
+failure modes, so it wasn't a very clean pointer. But I will include it.
+
+[1] https://github.com/kernelci/kernelci-project/issues/84
+
+> It sounds like a selftest is newly failing, which makes it a
+> userspace-visible regression, perhaps?
+
+No, it's been failing since ORC was introduced, but the regression in
+coverage (due to switching from FRAME_POINTER to ORC unwinder) was
+minimal. While discussing this with Muhammad, I realized we did,
+actually, have something that could be tested that was less than "the
+entire stack area" and "each specific frame", and that was current stack
+depth, so we gain back a little coverage.
+
+> If so, do we have a Fixes: and is a cc:stable warranted?
+
+I don't think it's warranted; it is technically a new feature.
+
+-Kees
+
+-- 
+Kees Cook
