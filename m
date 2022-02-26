@@ -2,129 +2,85 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E20C433F5
-	for <linux-hardening@archiver.kernel.org>; Sat, 26 Feb 2022 01:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9AEC433EF
+	for <linux-hardening@archiver.kernel.org>; Sat, 26 Feb 2022 01:47:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229559AbiBZBg1 (ORCPT
+        id S229821AbiBZBrm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 25 Feb 2022 20:36:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55386 "EHLO
+        Fri, 25 Feb 2022 20:47:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbiBZBg1 (ORCPT
+        with ESMTP id S229518AbiBZBrm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 25 Feb 2022 20:36:27 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79167257950
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Feb 2022 17:35:51 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id iq13-20020a17090afb4d00b001bc4437df2cso6413264pjb.2
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Feb 2022 17:35:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WpU9pCYtYHOq/uhaCsMM/7Jj3sPtOe5SaReKe0eszxI=;
-        b=K+J7F9HzV/9Sz2xGcjH6EyDqDjhx+eBWkUzD+F07R9mvbWF7RdqTa4735O5p6O4Ie0
-         Au48mtHHDm/DdLoRoYDZbv8ge5D4Qe+qughCaJojbHdvwkouodhSAvwlA92Uuk4rbE2F
-         ODF0loMxDpYS2JHEUDW2z4mwoFot5F+FyaIcg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WpU9pCYtYHOq/uhaCsMM/7Jj3sPtOe5SaReKe0eszxI=;
-        b=DKfILhg1WB609G+yc3xvTd5XmtskcdQSvif6XsG/JFu8+GoGJgHs7M5owJbEfvAsUH
-         Ra7qtm9eKf3RRCJujZ5LDBg85SwrIXdDZKX9UlLTXvDP8/iblGuDoin5tDCHq9LNhtRH
-         u2gYE03U2Hqxxvqac3rTcswBoy4isgStddnSv4CDO8bnfD8IqoU+XVytJVunLF1C+U0A
-         mPwsnf79iSNmkDxmpEPKRvap5bK4pW0A/GpibTsd/6GLPnjWhJVgSlqseVvZuAxYciqh
-         hiojRScOH4j4fvmKE7GVQzU+SN12WzuA9vUT8Ca7qX0mnGyCOgRGX17hwxMTMDhZCO09
-         fJaQ==
-X-Gm-Message-State: AOAM531DfPDF4yLrM9//iRXU/X6pRYXGMAwD0Y5ZyvZVzGfLbCeBlsTU
-        NouG54SRAEg82CYrMEftekIete94MSnefA==
-X-Google-Smtp-Source: ABdhPJzzGQp7d+uCevH36MY309ZkNeJKKafuPCRtKeMtR1sNdWqZbF3ofCp8kZwki+6glky8YIys/A==
-X-Received: by 2002:a17:902:8d8b:b0:14f:795a:977a with SMTP id v11-20020a1709028d8b00b0014f795a977amr10167644plo.104.1645839350969;
-        Fri, 25 Feb 2022 17:35:50 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h5-20020a056a001a4500b004e177b8cbfdsm4601227pfv.197.2022.02.25.17.35.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Feb 2022 17:35:50 -0800 (PST)
-Date:   Fri, 25 Feb 2022 17:35:49 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
+        Fri, 25 Feb 2022 20:47:42 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 629282B1C96;
+        Fri, 25 Feb 2022 17:46:59 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EE1DF61D17;
+        Sat, 26 Feb 2022 01:46:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15CEAC340E7;
+        Sat, 26 Feb 2022 01:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+        s=korg; t=1645840018;
+        bh=XOAz6ET5rcJ82aoCqycGO2AwFyZKFec2j0t25J+3Gis=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DAuSj1O8gIXKuuNgtA6wwSA7e1XT42Y1zUEM/zWv6pYOK4OrY8b61jprjfdjl5+3W
+         1unXrifjjxipUd0BKkzb2hCnBG1pEe4hNVEdBMU88ZjvWvoqwZE7NAM0Htz5QN95zY
+         T8fZ2atZmt7vvsopoFQ3JkrSBJ2fp0aJHc6rT3tg=
+Date:   Fri, 25 Feb 2022 17:46:57 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Kees Cook <keescook@chromium.org>
 Cc:     Matthew Wilcox <willy@infradead.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>, linux-mm@kvack.org,
         Muhammad Usama Anjum <usama.anjum@collabora.com>,
         David Laight <David.Laight@aculab.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v3] usercopy: Check valid lifetime via stack depth
-Message-ID: <202202251728.1634F405@keescook>
+Message-Id: <20220225174657.9e1af8ec59ce8dbf223f84c5@linux-foundation.org>
+In-Reply-To: <202202251728.1634F405@keescook>
 References: <20220225173345.3358109-1-keescook@chromium.org>
- <20220225160157.680ecdea21ce81183059bb63@linux-foundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220225160157.680ecdea21ce81183059bb63@linux-foundation.org>
+        <20220225160157.680ecdea21ce81183059bb63@linux-foundation.org>
+        <202202251728.1634F405@keescook>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Feb 25, 2022 at 04:01:57PM -0800, Andrew Morton wrote:
-> On Fri, 25 Feb 2022 09:33:45 -0800 Kees Cook <keescook@chromium.org> wrote:
-> 
-> > Under CONFIG_HARDENED_USERCOPY=y, when exact stack frame boundary checking
-> > is not available (i.e. everything except x86 with FRAME_POINTER), check
-> > a stack object as being at least "current depth valid", in the sense
-> > that any object within the stack region but not between start-of-stack
-> > and current_stack_pointer should be considered unavailable (i.e. its
-> > lifetime is from a call no longer present on the stack).
+On Fri, 25 Feb 2022 17:35:49 -0800 Kees Cook <keescook@chromium.org> wrote:
+
+> On Fri, Feb 25, 2022 at 04:01:57PM -0800, Andrew Morton wrote:
+> > On Fri, 25 Feb 2022 09:33:45 -0800 Kees Cook <keescook@chromium.org> wrote:
 > > 
-> > Introduce ARCH_HAS_CURRENT_STACK_POINTER to track which architectures
-> > have actually implemented the common global register alias.
+> > > Under CONFIG_HARDENED_USERCOPY=y, when exact stack frame boundary checking
+> > > is not available (i.e. everything except x86 with FRAME_POINTER), check
+> > > a stack object as being at least "current depth valid", in the sense
+> > > that any object within the stack region but not between start-of-stack
+> > > and current_stack_pointer should be considered unavailable (i.e. its
+> > > lifetime is from a call no longer present on the stack).
+> > > 
+> > > Introduce ARCH_HAS_CURRENT_STACK_POINTER to track which architectures
+> > > have actually implemented the common global register alias.
+> > > 
+> > > Additionally report usercopy bounds checking failures with an offset
+> > > from current_stack_pointer, which may assist with diagnosing failures.
+> > > 
+> > > The LKDTM USERCOPY_STACK_FRAME_TO and USERCOPY_STACK_FRAME_FROM tests
+> > > (once slightly adjusted in a separate patch) will pass again with
+> > > this fixed.
 > > 
-> > Additionally report usercopy bounds checking failures with an offset
-> > from current_stack_pointer, which may assist with diagnosing failures.
-> > 
-> > The LKDTM USERCOPY_STACK_FRAME_TO and USERCOPY_STACK_FRAME_FROM tests
-> > (once slightly adjusted in a separate patch) will pass again with
-> > this fixed.
+> > Again, what does this actually do?
 > 
-> Again, what does this actually do?
+> [answers]
+>
 
-One of the things that CONFIG_HARDENED_USERCOPY checks is whether an
-object is overlapping the stack at all. If it is, it performs a number
-of inexpensive bounds checks. One of the finer-grained checks is whether
-an object cross stack frame within the stack region. Doing this with
-CONFIG_FRAME_POINTER was cheap/easy. Doing it with ORC is too heavy, and
-was left out (a while ago), leaving the courser whole-stack check.
+OK, thanks.  I think a new changelog is warranted?
 
-The LKDTM tests try to exercise the cross-frame cases to validate the
-defense. They have been failing every since (which was expected). More
-below...
+What's your preferred path for upstreaming this change?
 
-> 
-> > Reported-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-> 
-> A link to that report would shed some light.  But actually describing
-> the user-visible impact right there in the changelog is preferable.
 
-Yes, good point. The bug[1] involves multiple LKDTM tests and their
-failure modes, so it wasn't a very clean pointer. But I will include it.
-
-[1] https://github.com/kernelci/kernelci-project/issues/84
-
-> It sounds like a selftest is newly failing, which makes it a
-> userspace-visible regression, perhaps?
-
-No, it's been failing since ORC was introduced, but the regression in
-coverage (due to switching from FRAME_POINTER to ORC unwinder) was
-minimal. While discussing this with Muhammad, I realized we did,
-actually, have something that could be tested that was less than "the
-entire stack area" and "each specific frame", and that was current stack
-depth, so we gain back a little coverage.
-
-> If so, do we have a Fixes: and is a cc:stable warranted?
-
-I don't think it's warranted; it is technically a new feature.
-
--Kees
-
--- 
-Kees Cook
