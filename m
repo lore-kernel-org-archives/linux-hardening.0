@@ -2,204 +2,168 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5F6C433FE
-	for <linux-hardening@archiver.kernel.org>; Sun, 27 Feb 2022 03:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDE8C433F5
+	for <linux-hardening@archiver.kernel.org>; Sun, 27 Feb 2022 17:33:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229807AbiB0D6q (ORCPT
+        id S229708AbiB0ReZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 26 Feb 2022 22:58:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44508 "EHLO
+        Sun, 27 Feb 2022 12:34:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229776AbiB0D6p (ORCPT
+        with ESMTP id S229542AbiB0ReY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 26 Feb 2022 22:58:45 -0500
-Received: from conssluserg-04.nifty.com (conssluserg-04.nifty.com [210.131.2.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB8FD7938B;
-        Sat, 26 Feb 2022 19:58:07 -0800 (PST)
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 21R3viK9010135;
-        Sun, 27 Feb 2022 12:57:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 21R3viK9010135
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1645934265;
-        bh=8vul5cjxHnllEZ9R6kEDpmi+BU/2oY7ZUKtmPcOAiP4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ylAlrzaYHOIz+P1Py/lElRr8Oin5oBV0vItOMGnS7uuc3zxQON2WIpHwNtxYl4fmd
-         vVGDSBcQa74Hwki4/sPqgfV/LevdM7JNwTSTrwnTwk7jnMC12I0HA77ucBiz9tqL6L
-         DzW/2jrxEDj1RTC0g8HyZuDl0bYkONGuTDuAtvolWGMrq6pMEHeOBaRQMXVDAcoleM
-         OHO1pMVcmjXDq6tIKAuK1cP8djpZANPMjXOZTlMnlk2FMwhAeo5Md8qVCa9hBOjMnl
-         WISvXpcyCCYqbotUuqb0Ja57LohhiZCAHFK8uicuKJRbIB5ch8B7v2tOe3f3h1IwTP
-         GkhlIx9EgqeBQ==
-X-Nifty-SrcIP: [209.85.210.175]
-Received: by mail-pf1-f175.google.com with SMTP id a5so7260423pfv.9;
-        Sat, 26 Feb 2022 19:57:44 -0800 (PST)
-X-Gm-Message-State: AOAM533P8cXwi1Jf9vERMrw00EWet5tRjPnZ6xhYL73Bekn8lYM6+mrS
-        N4tddRUU+t4CVhpycbENa7/aY1yRnN8Of/QhtCo=
-X-Google-Smtp-Source: ABdhPJxjVjGM+x2ubvRA5AcuT0fdFuqGSyU4IS6P8OuiKJceoIpY9wcwxuBtYN0eK7eF+0vaytCJWw4mPryhGf+UpR8=
-X-Received: by 2002:a63:1d44:0:b0:373:5612:629b with SMTP id
- d4-20020a631d44000000b003735612629bmr12512970pgm.352.1645934264084; Sat, 26
- Feb 2022 19:57:44 -0800 (PST)
-MIME-Version: 1.0
-References: <20220224055831.1854786-1-keescook@chromium.org>
-In-Reply-To: <20220224055831.1854786-1-keescook@chromium.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sun, 27 Feb 2022 12:57:02 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQewgWYhioL-kWvgpQCnLeg6vgULbAotU-qi46NDoFw2w@mail.gmail.com>
-Message-ID: <CAK7LNAQewgWYhioL-kWvgpQCnLeg6vgULbAotU-qi46NDoFw2w@mail.gmail.com>
-Subject: Re: [PATCH v2] um: Allow builds with Clang
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Sun, 27 Feb 2022 12:34:24 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4CB71A3A9
+        for <linux-hardening@vger.kernel.org>; Sun, 27 Feb 2022 09:33:47 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id q11so8819765pln.11
+        for <linux-hardening@vger.kernel.org>; Sun, 27 Feb 2022 09:33:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=r3V1p7PJfbcnc241Rj0vp4HKOhUxkZJ6zgydSZ91/kY=;
+        b=XMieCkjw8mkwjHfO1Kf8OkVa68g6fnoB5pzlZhfIrZZW1jeB57UjoBz9355UZyhyFL
+         5/Cvt1uXijJORzDAA2K8CpSgbN9Hp9OLPAtmjPCYTv3rYUgiKCik461ve9HlGsNGGsHa
+         7cWxIa3rkJCxXniao/t2f/1EG3YPpxnpQYZd4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=r3V1p7PJfbcnc241Rj0vp4HKOhUxkZJ6zgydSZ91/kY=;
+        b=5+LEFG0flaFYKge3zwrdQBC/jWqt/0JBavzR6p4SiLv/5Tc44/9Eda8KKOVPlg8xBC
+         fzuzVWc6Lv/CInfX3ymFrswzs6cLiRdy7jOF6S3NpWMRWV/4s8PfgNOJzlm7UMk4Gc0X
+         RrISPpkm5abA4bXVXgnC+wr4LNgxw1ytYdyzoB+YO+MPYZIW3kkbeUcD+7hIMOiJ1yof
+         vnKtIX3md+VPP9KvsDy0KZT07zsjiuwduC8teoJdH3JHOO56mxYDV/0VoMrgksnmHXNd
+         2m30TGt94wKGpQY0zhWewG9FUrM2q3Xy/wDeWt2N638pXS6IYaU4Rqybl+WQAOiD0nOX
+         QB/g==
+X-Gm-Message-State: AOAM530x5kJ9Avw2g9zV52DWeM65bjoVmMkEV0mo2fMcj5Khw2k+ghIP
+        syobNlHG01asrqawt0Hl18ttMTw/vENCKg==
+X-Google-Smtp-Source: ABdhPJz/3WJGL8SYDkY1BfUaXM2Qe/Gd/I/m4uOr3ePHylsJY5bnoEBuunW2qbmTQtPSbOS7i5GO6Q==
+X-Received: by 2002:a17:902:b906:b0:14f:76a0:ad48 with SMTP id bf6-20020a170902b90600b0014f76a0ad48mr16904324plb.79.1645983227254;
+        Sun, 27 Feb 2022 09:33:47 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j2-20020a655582000000b00372b2b5467asm8268095pgs.10.2022.02.27.09.33.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Feb 2022 09:33:46 -0800 (PST)
+Date:   Sun, 27 Feb 2022 09:33:46 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     David Gow <davidgow@google.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Nick Desaulniers <ndesaulniers@google.com>,
+        Vitor Massaru Iha <vitor@massaru.org>,
+        Daniel Latypov <dlatypov@google.com>,
         Nathan Chancellor <nathan@kernel.org>,
-        David Gow <davidgow@google.com>, linux-um@lists.infradead.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
-        llvm@lists.linux.dev,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        KUnit Development <kunit-dev@googlegroups.com>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] lib: overflow: Convert to Kunit
+Message-ID: <202202270929.5FD6A89B@keescook>
+References: <20220224054825.1853314-1-keescook@chromium.org>
+ <CABVgOS=TWVh649_Vjo3wnMu9gZnq66gkV-LtGgsksAWMqc+MSA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABVgOS=TWVh649_Vjo3wnMu9gZnq66gkV-LtGgsksAWMqc+MSA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 2:58 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Add x86-64 target for Clang+um and update user-offsets.c to use
-> Clang-friendly assembly, similar to the fix from commit cf0c3e68aa81
-> ("kbuild: fix asm-offset generation to work with clang").
->
-> This lets me run KUnit tests with Clang:
->
-> $ ./tools/testing/kunit/kunit.py config --make_options LLVM=1
-> ...
-> $ ./tools/testing/kunit/kunit.py run --make_options LLVM=1
-> ...
->
-> Cc: Jeff Dike <jdike@addtoit.com>
-> Cc: Richard Weinberger <richard@nod.at>
-> Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: David Gow <davidgow@google.com>
-> Cc: linux-um@lists.infradead.org
-> Cc: linux-kbuild@vger.kernel.org
-> Cc: linux-kselftest@vger.kernel.org
-> Cc: kunit-dev@googlegroups.com
-> Cc: llvm@lists.linux.dev
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-> Link: https://lore.kernel.org/lkml/Yg2YubZxvYvx7%2Fnm@dev-arch.archlinux-ax161/
-> Tested-by: David Gow <davidgow@google.com>
-> Link: https://lore.kernel.org/lkml/CABVgOSk=oFxsbSbQE-v65VwR2+mXeGXDDjzq8t7FShwjJ3+kUg@mail.gmail.com/
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v1: https://lore.kernel.org/lkml/20220217002843.2312603-1-keescook@chromium.org/
-> v2:
->  - tweak commit log phrasing and alphabetize targets (nathan)
->  - fix a missing implicit fallthrough under 32-bit builds
->  - add review tags
-> ---
->  arch/um/os-Linux/execvp.c  | 1 +
->  arch/x86/um/user-offsets.c | 4 ++--
->  scripts/Makefile.clang     | 1 +
->  3 files changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/um/os-Linux/execvp.c b/arch/um/os-Linux/execvp.c
-> index 84a0777c2a45..c09a5fd5e225 100644
-> --- a/arch/um/os-Linux/execvp.c
-> +++ b/arch/um/os-Linux/execvp.c
-> @@ -93,6 +93,7 @@ int execvp_noalloc(char *buf, const char *file, char *const argv[])
->                                            up finding no executable we can use, we want to diagnose
->                                            that we did find one but were denied access.  */
->                                         got_eacces = 1;
-> +                                       break;
->                                 case ENOENT:
->                                 case ESTALE:
->                                 case ENOTDIR:
-> diff --git a/arch/x86/um/user-offsets.c b/arch/x86/um/user-offsets.c
-> index bae61554abcc..d9071827b515 100644
-> --- a/arch/x86/um/user-offsets.c
-> +++ b/arch/x86/um/user-offsets.c
-> @@ -10,10 +10,10 @@
->  #include <asm/types.h>
->
->  #define DEFINE(sym, val) \
-> -       asm volatile("\n->" #sym " %0 " #val : : "i" (val))
-> +       asm volatile("\n.ascii \"->" #sym " %0 " #val "\"": : "i" (val))
+On Fri, Feb 25, 2022 at 03:57:17PM +0800, David Gow wrote:
+> On Thu, Feb 24, 2022 at 1:48 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Convert overflow unit tests to KUnit, for better integration into the
+> > kernel self test framework. Includes a rename of test_overflow.c to
+> > overflow_kunit.c, and CONFIG_TEST_OVERFLOW to CONFIG_OVERFLOW_KUNIT_TEST.
+> >
+> > $ ./tools/testing/kunit/kunit.py config
+> > ...
+> (This 'config' step should be unnecessary... See below)
 
+Ah yeah. I've removed that now.
 
-Another way might be  #include <linux/kbuild.h> and delete this macro
-definition.
+> > $ ./tools/testing/kunit/kunit.py run overflow
+> > ...
+> > [14:33:51] Starting KUnit Kernel (1/1)...
+> > [14:33:51] ============================================================
+> > [14:33:51] ================== overflow (11 subtests) ==================
+> > [14:33:51] [PASSED] u8_overflow_test
+> > [14:33:51] [PASSED] s8_overflow_test
+> > [14:33:51] [PASSED] u16_overflow_test
+> > [14:33:51] [PASSED] s16_overflow_test
+> > [14:33:51] [PASSED] u32_overflow_test
+> > [14:33:51] [PASSED] s32_overflow_test
+> > [14:33:51] [PASSED] u64_overflow_test
+> > [14:33:51] [PASSED] s64_overflow_test
+> > [14:33:51] [PASSED] overflow_shift_test
+> > [14:33:51] [PASSED] overflow_allocation_test
+> > [14:33:51] [PASSED] overflow_size_helpers_test
+> > [14:33:51] ==================== [PASSED] overflow =====================
+> > [14:33:51] ============================================================
+> > [14:33:51] Testing complete. Passed: 11, Failed: 0, Crashed: 0, Skipped: 0, Errors: 0
+> > [14:33:51] Elapsed time: 12.525s total, 0.001s configuring, 12.402s building, 0.101s running
+> >
+> > Cc: David Gow <davidgow@google.com>
+> > Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> > Cc: Nick Desaulniers <ndesaulniers@google.com>
+> > Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
+> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+> > Link: https://lore.kernel.org/lkml/20200720224418.200495-1-vitor@massaru.org/
+> > Co-developed-by: Daniel Latypov <dlatypov@google.com>
+> > Signed-off-by: Daniel Latypov <dlatypov@google.com>
+> > Link: https://lore.kernel.org/linux-kselftest/20210503211536.1384578-1-dlatypov@google.com/
+> > Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Link: https://lore.kernel.org/lkml/CAKwvOdm62iA1dNiC6Q11UJ-MnTqtc4kXkm-ubPaFMK824_k0nw@mail.gmail.com
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> > v1: https://lore.kernel.org/lkml/20220216224153.2242451-1-keescook@chromium.org/
+> > v2: Fixed up the authorship more, pulled in other prior changes (Daniel)
+> 
+> This looks good to me. Some of the test cases _could_ probably be done
+> as parameterised tests (given they're already basically table-driven),
+> but I admit that could end up being excessively verbose.
 
+In the end there was so much churn already I decided to leave it as-is.
 
->  #define DEFINE_LONGS(sym, val) \
-> -       asm volatile("\n->" #sym " %0 " #val : : "i" (val/sizeof(unsigned long)))
-> +       asm volatile("\n.ascii \"->" #sym " %0 " #val "\"": : "i" (val/sizeof(unsigned long)))
+> Apart from my not being able to find a tree this applies cleanly on,
+> the tests work well here.
 
+Ah, sorry about that! (More below...)
 
-This generates wrong comments.
+> Reviewed-by: David Gow <davidgow@google.com>
 
-In include/generated/user_constants.h,
-I see this:
+Thanks!
 
-   #define HOST_BX 5 /* RBX */
+> [...]
+> > @@ -600,127 +554,118 @@ struct __test_flex_array {
+> >         unsigned long data[];
+> ">  };
+> >
+> > -static int __init test_overflow_size_helpers(void)
+> > +static void overflow_size_helpers_test(struct kunit *test)
+> >  {
+> >         /* Make sure struct_size() can be used in a constant expression. */
+> >         u8 ce_array[struct_size((struct __test_flex_array *)0, data, 55)];
+> >         struct __test_flex_array *obj;
+> >         int count = 0;
+> > -       int err = 0;
+> >         int var;
+> >         volatile int unconst = 0;
+> 
+> Where does this variable declaration (and its use below) come from?
+> It's not in the version of the "overflow: Implement size_t saturating
+> arithmetic helpers" patch in linux-next:
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=6312fc63aee9d2fef2f9c4d42e57e5b46828f0dc
+> 
+> It all works if I add it in manually, but it does make applying the
+> change as-is something of a pain.
 
-(Here, the value of RBX is 40.)
+Ah, thanks for noticing that! It looks like I failed to send an update
+for that patch. I'll resend this portion of my tree.
 
-
-
-  #define DEFINE_LONGS(sym, val)     asm volatile("\n.ascii \"->" #sym
-" %0 " #val "/sizeof(unsigned long)\"": : "i" (val/sizeof(unsigned
-long)))
-
-creates valid comments:
-
-   #define HOST_BX 5 /* RBX/sizeof(unsigned long) */
-
-
-
-Another way might be to do this indirectly.
-
-     #define DEFINE_LONGS(sym, val)     DEFINE(sym, val / sizeof(unsigned long))
-
-The comments in include/generated/user_constans.h do not retain
-the original macro names, though...
-
-
-
-
-
-
-
->  void foo(void)
->  {
-> diff --git a/scripts/Makefile.clang b/scripts/Makefile.clang
-> index 51fc23e2e9e5..6e49344c6db2 100644
-> --- a/scripts/Makefile.clang
-> +++ b/scripts/Makefile.clang
-> @@ -9,6 +9,7 @@ CLANG_TARGET_FLAGS_mips         := mipsel-linux-gnu
->  CLANG_TARGET_FLAGS_powerpc     := powerpc64le-linux-gnu
->  CLANG_TARGET_FLAGS_riscv       := riscv64-linux-gnu
->  CLANG_TARGET_FLAGS_s390                := s390x-linux-gnu
-> +CLANG_TARGET_FLAGS_um          := x86_64-linux-gnu
-
-
-Personally, I like Nathan's idea, but we can live with the hard-coding
-since we see no efforts for UML on other host arch.
-
-
-
-
->  CLANG_TARGET_FLAGS_x86         := x86_64-linux-gnu
->  CLANG_TARGET_FLAGS             := $(CLANG_TARGET_FLAGS_$(SRCARCH))
->
-> --
-> 2.30.2
->
-
+-Kees
 
 -- 
-Best Regards
-Masahiro Yamada
+Kees Cook
