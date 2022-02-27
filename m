@@ -2,168 +2,198 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDE8C433F5
-	for <linux-hardening@archiver.kernel.org>; Sun, 27 Feb 2022 17:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBBAC433EF
+	for <linux-hardening@archiver.kernel.org>; Sun, 27 Feb 2022 18:45:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229708AbiB0ReZ (ORCPT
+        id S231228AbiB0SqI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 27 Feb 2022 12:34:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58248 "EHLO
+        Sun, 27 Feb 2022 13:46:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbiB0ReY (ORCPT
+        with ESMTP id S231197AbiB0SqE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 27 Feb 2022 12:34:24 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4CB71A3A9
-        for <linux-hardening@vger.kernel.org>; Sun, 27 Feb 2022 09:33:47 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id q11so8819765pln.11
-        for <linux-hardening@vger.kernel.org>; Sun, 27 Feb 2022 09:33:47 -0800 (PST)
+        Sun, 27 Feb 2022 13:46:04 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B31B228E29
+        for <linux-hardening@vger.kernel.org>; Sun, 27 Feb 2022 10:45:22 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id v5-20020a17090ac90500b001bc40b548f9so12895287pjt.0
+        for <linux-hardening@vger.kernel.org>; Sun, 27 Feb 2022 10:45:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=r3V1p7PJfbcnc241Rj0vp4HKOhUxkZJ6zgydSZ91/kY=;
-        b=XMieCkjw8mkwjHfO1Kf8OkVa68g6fnoB5pzlZhfIrZZW1jeB57UjoBz9355UZyhyFL
-         5/Cvt1uXijJORzDAA2K8CpSgbN9Hp9OLPAtmjPCYTv3rYUgiKCik461ve9HlGsNGGsHa
-         7cWxIa3rkJCxXniao/t2f/1EG3YPpxnpQYZd4=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rtQJ6+HWuDHNtXviDEv3CrUYrjsryDE8pWmriGiESg0=;
+        b=m2E7Mkc5+O/hSN+7zDdRObC+NbGDn8KfETTWlSmuj/vdJqDtWt/86czuCbSuNxGYsA
+         1Y8x9mmgL+ELb5DPf58L2FnoGs1NDCSPpYG1XAYvTOFZMvu4Tjtd1dL3M+2Uzub2AVmJ
+         mxFjyzhIpbnoLtl+uqKjMt1eDPuGbpgQO/92Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=r3V1p7PJfbcnc241Rj0vp4HKOhUxkZJ6zgydSZ91/kY=;
-        b=5+LEFG0flaFYKge3zwrdQBC/jWqt/0JBavzR6p4SiLv/5Tc44/9Eda8KKOVPlg8xBC
-         fzuzVWc6Lv/CInfX3ymFrswzs6cLiRdy7jOF6S3NpWMRWV/4s8PfgNOJzlm7UMk4Gc0X
-         RrISPpkm5abA4bXVXgnC+wr4LNgxw1ytYdyzoB+YO+MPYZIW3kkbeUcD+7hIMOiJ1yof
-         vnKtIX3md+VPP9KvsDy0KZT07zsjiuwduC8teoJdH3JHOO56mxYDV/0VoMrgksnmHXNd
-         2m30TGt94wKGpQY0zhWewG9FUrM2q3Xy/wDeWt2N638pXS6IYaU4Rqybl+WQAOiD0nOX
-         QB/g==
-X-Gm-Message-State: AOAM530x5kJ9Avw2g9zV52DWeM65bjoVmMkEV0mo2fMcj5Khw2k+ghIP
-        syobNlHG01asrqawt0Hl18ttMTw/vENCKg==
-X-Google-Smtp-Source: ABdhPJz/3WJGL8SYDkY1BfUaXM2Qe/Gd/I/m4uOr3ePHylsJY5bnoEBuunW2qbmTQtPSbOS7i5GO6Q==
-X-Received: by 2002:a17:902:b906:b0:14f:76a0:ad48 with SMTP id bf6-20020a170902b90600b0014f76a0ad48mr16904324plb.79.1645983227254;
-        Sun, 27 Feb 2022 09:33:47 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rtQJ6+HWuDHNtXviDEv3CrUYrjsryDE8pWmriGiESg0=;
+        b=dy1NYDMEnIxDMQcZ2hhl8428TmAUb+qw79T4mu5W8C54fwfgHKxPqPEhufJnhEnleM
+         GFatK0Bd+qea3VtRKSWKh7O9P/0sBQjgU9sI/wHeAm5wN8t/FmqR/rd5El1zBXOAgGCP
+         ZBBuQ/N4TNkhdxL7HeGtLIaK4xp+4KkSQeIQeCUdNazWBC4I+O5wQvNilVDXZrXf1mbI
+         cZ/3jO67H9ov4TmoCcXGvkmHzLjrWLCpbMOlPh5lhGRiUiSARi+g71XTaekQdjPf/iS1
+         556LdM2jVbx7FhiLx2aeEejGqYKZx7gP584bT840+7M9buMe3C/l578fK+gb5Nzcabur
+         y2Qg==
+X-Gm-Message-State: AOAM530YGKdxN4cPfgK/qpXBozqmfWd9LuT2epH6wFOI/mleNB+0ysha
+        /JgCqvj+8EV7KrxM36vjBymumg==
+X-Google-Smtp-Source: ABdhPJzVRRQGxF6e1NTngPEsB3I/EvTNRmSUfuQ6v7xj8PQt1X32lE1LoqLXaWLdGVbZluSQR3Vj5w==
+X-Received: by 2002:a17:90b:250f:b0:1bc:e520:91e6 with SMTP id ns15-20020a17090b250f00b001bce52091e6mr13355572pjb.43.1645987521825;
+        Sun, 27 Feb 2022 10:45:21 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j2-20020a655582000000b00372b2b5467asm8268095pgs.10.2022.02.27.09.33.46
+        by smtp.gmail.com with ESMTPSA id q10-20020a056a00084a00b004f26d3f5d8fsm10450378pfk.25.2022.02.27.10.45.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Feb 2022 09:33:46 -0800 (PST)
-Date:   Sun, 27 Feb 2022 09:33:46 -0800
+        Sun, 27 Feb 2022 10:45:21 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     David Gow <davidgow@google.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Vitor Massaru Iha <vitor@massaru.org>,
         Daniel Latypov <dlatypov@google.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
+        David Gow <davidgow@google.com>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        kunit-dev@googlegroups.com, llvm@lists.linux.dev, x86@kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] lib: overflow: Convert to Kunit
-Message-ID: <202202270929.5FD6A89B@keescook>
-References: <20220224054825.1853314-1-keescook@chromium.org>
- <CABVgOS=TWVh649_Vjo3wnMu9gZnq66gkV-LtGgsksAWMqc+MSA@mail.gmail.com>
+Subject: [PATCH v3 1/7] overflow: Provide constant expression struct_size
+Date:   Sun, 27 Feb 2022 10:45:11 -0800
+Message-Id: <20220227184517.504931-2-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220227184517.504931-1-keescook@chromium.org>
+References: <20220227184517.504931-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABVgOS=TWVh649_Vjo3wnMu9gZnq66gkV-LtGgsksAWMqc+MSA@mail.gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5098; h=from:subject; bh=2kZK8Pa8mdtDR/Nqo/3Vk6gXcxnyZeRVGJOFKK5/Dm4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiG8a7FSbvVC74wmbAmC12ksTVuBzN9xRSIPC+WKU3 EO0+lGSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYhvGuwAKCRCJcvTf3G3AJksnD/ 9jFKmi/Ux9BHhxzZ2RpxelaewUNUU1aSHv57YDOG4L43fmRoLxzBROLz9OcWcP5/ejuFFtwfP5323z DZFpA+Ts0sy9zDjBAcP06aCVrZ0D5y/C1HsAUvPpk+yS2jUe50vXwu7X4wwMS//COr8VCW+aGk4dvG B9loTCNsEklQK46RkPdt0d/WAGj0xMnzHWyztM050GcaJUl4TSBtIeN+5BKRWOt045Npdnf3eCWXq5 24GX5UE5ts6sZKHIk4ywytyDoK+uftNnd8Ufbn8iG34ZO8/fbkf7WAilUNTQH/y1cfyx8qYSIDJ7eL ZqDZejMvx4eMGypzGXA4J2L+Isq+cRIXrbnFLxtUgJt9YvTRrfQdunOtMOTC2WmHAnEKzOs9jlymHB T+Vc4UxaWsdNIBMnhRu+nSHuG/JJK2iYBNxjlNh3xcFWcODPFhCJG4S93ANnr+fKRDE8kq9rAkOYna KxjcdpjVWN/jDTmLHOI3cXBRLG3AxPuwSNAvFKvnck0F8hRGoQDfqTXM10M3TLrNXL9tKJrEJ/eIuQ TT36kiajoi0oH2nbWk9ne714xn1lJ4NoqeFFDO05bz78F70Sb5SOe7nU5RN75Gdbpw18YhvTG6ojX6 cuKk1/+pWSBz29y7CCOHSd+MakbP+FqPYa4n7OorO435P4PZiQdZPAhov3Xw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Feb 25, 2022 at 03:57:17PM +0800, David Gow wrote:
-> On Thu, Feb 24, 2022 at 1:48 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Convert overflow unit tests to KUnit, for better integration into the
-> > kernel self test framework. Includes a rename of test_overflow.c to
-> > overflow_kunit.c, and CONFIG_TEST_OVERFLOW to CONFIG_OVERFLOW_KUNIT_TEST.
-> >
-> > $ ./tools/testing/kunit/kunit.py config
-> > ...
-> (This 'config' step should be unnecessary... See below)
+There have been cases where struct_size() (or flex_array_size()) needs
+to be calculated for an initializer, which requires it be a constant
+expression. This is possible when the "count" argument is a constant
+expression, so provide this ability for the helpers.
 
-Ah yeah. I've removed that now.
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Tested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Link: https://lore.kernel.org/lkml/20220210010407.GA701603@embeddedor
+---
+v1: https://lore.kernel.org/linux-hardening/20220210004326.776574-1-keescook@chromium.org
+v2:
+ - fix broken self-test due to CE optimization
+---
+ include/linux/overflow.h | 10 +++++++---
+ lib/test_overflow.c      | 26 +++++++++++++++++---------
+ 2 files changed, 24 insertions(+), 12 deletions(-)
 
-> > $ ./tools/testing/kunit/kunit.py run overflow
-> > ...
-> > [14:33:51] Starting KUnit Kernel (1/1)...
-> > [14:33:51] ============================================================
-> > [14:33:51] ================== overflow (11 subtests) ==================
-> > [14:33:51] [PASSED] u8_overflow_test
-> > [14:33:51] [PASSED] s8_overflow_test
-> > [14:33:51] [PASSED] u16_overflow_test
-> > [14:33:51] [PASSED] s16_overflow_test
-> > [14:33:51] [PASSED] u32_overflow_test
-> > [14:33:51] [PASSED] s32_overflow_test
-> > [14:33:51] [PASSED] u64_overflow_test
-> > [14:33:51] [PASSED] s64_overflow_test
-> > [14:33:51] [PASSED] overflow_shift_test
-> > [14:33:51] [PASSED] overflow_allocation_test
-> > [14:33:51] [PASSED] overflow_size_helpers_test
-> > [14:33:51] ==================== [PASSED] overflow =====================
-> > [14:33:51] ============================================================
-> > [14:33:51] Testing complete. Passed: 11, Failed: 0, Crashed: 0, Skipped: 0, Errors: 0
-> > [14:33:51] Elapsed time: 12.525s total, 0.001s configuring, 12.402s building, 0.101s running
-> >
-> > Cc: David Gow <davidgow@google.com>
-> > Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
-> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> > Link: https://lore.kernel.org/lkml/20200720224418.200495-1-vitor@massaru.org/
-> > Co-developed-by: Daniel Latypov <dlatypov@google.com>
-> > Signed-off-by: Daniel Latypov <dlatypov@google.com>
-> > Link: https://lore.kernel.org/linux-kselftest/20210503211536.1384578-1-dlatypov@google.com/
-> > Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Link: https://lore.kernel.org/lkml/CAKwvOdm62iA1dNiC6Q11UJ-MnTqtc4kXkm-ubPaFMK824_k0nw@mail.gmail.com
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> > v1: https://lore.kernel.org/lkml/20220216224153.2242451-1-keescook@chromium.org/
-> > v2: Fixed up the authorship more, pulled in other prior changes (Daniel)
-> 
-> This looks good to me. Some of the test cases _could_ probably be done
-> as parameterised tests (given they're already basically table-driven),
-> but I admit that could end up being excessively verbose.
-
-In the end there was so much churn already I decided to leave it as-is.
-
-> Apart from my not being able to find a tree this applies cleanly on,
-> the tests work well here.
-
-Ah, sorry about that! (More below...)
-
-> Reviewed-by: David Gow <davidgow@google.com>
-
-Thanks!
-
-> [...]
-> > @@ -600,127 +554,118 @@ struct __test_flex_array {
-> >         unsigned long data[];
-> ">  };
-> >
-> > -static int __init test_overflow_size_helpers(void)
-> > +static void overflow_size_helpers_test(struct kunit *test)
-> >  {
-> >         /* Make sure struct_size() can be used in a constant expression. */
-> >         u8 ce_array[struct_size((struct __test_flex_array *)0, data, 55)];
-> >         struct __test_flex_array *obj;
-> >         int count = 0;
-> > -       int err = 0;
-> >         int var;
-> >         volatile int unconst = 0;
-> 
-> Where does this variable declaration (and its use below) come from?
-> It's not in the version of the "overflow: Implement size_t saturating
-> arithmetic helpers" patch in linux-next:
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=6312fc63aee9d2fef2f9c4d42e57e5b46828f0dc
-> 
-> It all works if I add it in manually, but it does make applying the
-> change as-is something of a pain.
-
-Ah, thanks for noticing that! It looks like I failed to send an update
-for that patch. I'll resend this portion of my tree.
-
--Kees
-
+diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+index 59d7228104d0..f1221d11f8e5 100644
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/compiler.h>
+ #include <linux/limits.h>
++#include <linux/const.h>
+ 
+ /*
+  * We need to compute the minimum and maximum values representable in a given
+@@ -221,8 +222,9 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+  * Return: number of bytes needed or SIZE_MAX on overflow.
+  */
+ #define flex_array_size(p, member, count)				\
+-	size_mul(count,							\
+-		 sizeof(*(p)->member) + __must_be_array((p)->member))
++	__builtin_choose_expr(__is_constexpr(count),			\
++		(count) * sizeof(*(p)->member) + __must_be_array((p)->member),	\
++		size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+ 
+ /**
+  * struct_size() - Calculate size of structure with trailing flexible array.
+@@ -237,6 +239,8 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+  * Return: number of bytes needed or SIZE_MAX on overflow.
+  */
+ #define struct_size(p, member, count)					\
+-	size_add(sizeof(*(p)), flex_array_size(p, member, count))
++	__builtin_choose_expr(__is_constexpr(count),			\
++		sizeof(*(p)) + flex_array_size(p, member, count),	\
++		size_add(sizeof(*(p)), flex_array_size(p, member, count)))
+ 
+ #endif /* __LINUX_OVERFLOW_H */
+diff --git a/lib/test_overflow.c b/lib/test_overflow.c
+index 712fb2351c27..f6530fce799d 100644
+--- a/lib/test_overflow.c
++++ b/lib/test_overflow.c
+@@ -602,10 +602,18 @@ struct __test_flex_array {
+ 
+ static int __init test_overflow_size_helpers(void)
+ {
++	/* Make sure struct_size() can be used in a constant expression. */
++	u8 ce_array[struct_size((struct __test_flex_array *)0, data, 55)];
+ 	struct __test_flex_array *obj;
+ 	int count = 0;
+ 	int err = 0;
+ 	int var;
++	volatile int unconst = 0;
++
++	/* Verify constant expression against runtime version. */
++	var = 55;
++	OPTIMIZER_HIDE_VAR(var);
++	err |= sizeof(ce_array) != struct_size(obj, data, var);
+ 
+ #define check_one_size_helper(expected, func, args...)	({	\
+ 	bool __failure = false;					\
+@@ -663,28 +671,28 @@ static int __init test_overflow_size_helpers(void)
+ 				     flex_array_size, obj, data, var++);
+ 	err |= check_one_size_helper(5 * sizeof(*obj->data),
+ 				     flex_array_size, obj, data, var++);
+-	err |= check_one_size_helper(0, flex_array_size, obj, data, 0);
++	err |= check_one_size_helper(0, flex_array_size, obj, data, 0 + unconst);
+ 	err |= check_one_size_helper(sizeof(*obj->data),
+-				     flex_array_size, obj, data, 1);
++				     flex_array_size, obj, data, 1 + unconst);
+ 	err |= check_one_size_helper(7 * sizeof(*obj->data),
+-				     flex_array_size, obj, data, 7);
++				     flex_array_size, obj, data, 7 + unconst);
+ 	err |= check_one_size_helper(SIZE_MAX,
+-				     flex_array_size, obj, data, -1);
++				     flex_array_size, obj, data, -1 + unconst);
+ 	err |= check_one_size_helper(SIZE_MAX,
+-				     flex_array_size, obj, data, SIZE_MAX - 4);
++				     flex_array_size, obj, data, SIZE_MAX - 4 + unconst);
+ 
+ 	var = 4;
+ 	err |= check_one_size_helper(sizeof(*obj) + (4 * sizeof(*obj->data)),
+ 				     struct_size, obj, data, var++);
+ 	err |= check_one_size_helper(sizeof(*obj) + (5 * sizeof(*obj->data)),
+ 				     struct_size, obj, data, var++);
+-	err |= check_one_size_helper(sizeof(*obj), struct_size, obj, data, 0);
++	err |= check_one_size_helper(sizeof(*obj), struct_size, obj, data, 0 + unconst);
+ 	err |= check_one_size_helper(sizeof(*obj) + sizeof(*obj->data),
+-				     struct_size, obj, data, 1);
++				     struct_size, obj, data, 1 + unconst);
+ 	err |= check_one_size_helper(SIZE_MAX,
+-				     struct_size, obj, data, -3);
++				     struct_size, obj, data, -3 + unconst);
+ 	err |= check_one_size_helper(SIZE_MAX,
+-				     struct_size, obj, data, SIZE_MAX - 3);
++				     struct_size, obj, data, SIZE_MAX - 3 + unconst);
+ 
+ 	pr_info("%d overflow size helper tests finished\n", count);
+ 
 -- 
-Kees Cook
+2.32.0
+
