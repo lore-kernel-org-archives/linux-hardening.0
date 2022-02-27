@@ -2,133 +2,204 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 394F9C433EF
-	for <linux-hardening@archiver.kernel.org>; Sat, 26 Feb 2022 05:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5F6C433FE
+	for <linux-hardening@archiver.kernel.org>; Sun, 27 Feb 2022 03:58:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229984AbiBZFUr (ORCPT
+        id S229807AbiB0D6q (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 26 Feb 2022 00:20:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50398 "EHLO
+        Sat, 26 Feb 2022 22:58:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229948AbiBZFUp (ORCPT
+        with ESMTP id S229776AbiB0D6p (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 26 Feb 2022 00:20:45 -0500
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC283201B9
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Feb 2022 21:20:10 -0800 (PST)
-Received: by mail-pg1-x52d.google.com with SMTP id t14so3569435pgr.3
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Feb 2022 21:20:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lJmu7tk8xpKWgNbS1VGsvLnHCFD03b7u0DqWAbwVAlY=;
-        b=Gmaw4zGkCWLwlSAttIdxC2od4Vj4HVX00LVsVr4U/a2ha/XD/CS4LBGVL95CqESWvw
-         +688rEm99/TrZ+Ah4nafBOrwfirz0zAc13OLS4cIJuo06p/A/vekT1ks1zI6kFxiTeoQ
-         gf1P714kaAkMMDvEyaEy2T5ANb8hf5gXc/kFc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lJmu7tk8xpKWgNbS1VGsvLnHCFD03b7u0DqWAbwVAlY=;
-        b=0K9HsVCnKuT5a4XETKIEDFnJGt9REOX2wQJ2tDql74OpN1D7XqZf274z7ZuyLLdxTg
-         iftm75SdMV6KKp//k1lyBZVx8+3FgcpA3FGojBcF2XYFE4YS1EaJ9+Cr3UqsOB6pALGM
-         2/RE1bs+1S0RiMHhKjRR1SGNIC3s5795COp7bFspGvH7czm8HE6mzxpx9Bqk0lsq5xje
-         Ss+f3XayL0VylnKElOrM8Y50BU/RXtzskLZZNpdfj2pEPTfoVC4pCvq1vl8fo19HecX4
-         MmkpRJV34weoxrTEPkQ1bbA8DSzgcHHVBOZha2Y2s3WBA6LYRrqoIURCaLsKCjpmZ3QA
-         RH2Q==
-X-Gm-Message-State: AOAM532XLnh1oYWhs9hKsDBl//sucoNLtK/zJoqpXtSUHQOG7aK2olNk
-        xuwmKFq395xYkl8m+lmTCl6Rmw==
-X-Google-Smtp-Source: ABdhPJxarm99G1J+berVF4Ui2IyEN1x3MoJnP2vQxP2xgKS+tGux0UIJeF3jiNPjtnHqtgwO+epytA==
-X-Received: by 2002:a63:d354:0:b0:372:fbd2:a22a with SMTP id u20-20020a63d354000000b00372fbd2a22amr9001809pgi.438.1645852809965;
-        Fri, 25 Feb 2022 21:20:09 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h7-20020a056a00218700b004e0314bc83csm5155739pfi.139.2022.02.25.21.20.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Feb 2022 21:20:09 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Muhammad Usama Anjum <usama.anjum@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] lkdtm/usercopy: Expand size of "out of frame" object
-Date:   Fri, 25 Feb 2022 21:20:08 -0800
-Message-Id: <20220226052008.3553312-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.30.2
+        Sat, 26 Feb 2022 22:58:45 -0500
+Received: from conssluserg-04.nifty.com (conssluserg-04.nifty.com [210.131.2.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB8FD7938B;
+        Sat, 26 Feb 2022 19:58:07 -0800 (PST)
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 21R3viK9010135;
+        Sun, 27 Feb 2022 12:57:45 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 21R3viK9010135
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1645934265;
+        bh=8vul5cjxHnllEZ9R6kEDpmi+BU/2oY7ZUKtmPcOAiP4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ylAlrzaYHOIz+P1Py/lElRr8Oin5oBV0vItOMGnS7uuc3zxQON2WIpHwNtxYl4fmd
+         vVGDSBcQa74Hwki4/sPqgfV/LevdM7JNwTSTrwnTwk7jnMC12I0HA77ucBiz9tqL6L
+         DzW/2jrxEDj1RTC0g8HyZuDl0bYkONGuTDuAtvolWGMrq6pMEHeOBaRQMXVDAcoleM
+         OHO1pMVcmjXDq6tIKAuK1cP8djpZANPMjXOZTlMnlk2FMwhAeo5Md8qVCa9hBOjMnl
+         WISvXpcyCCYqbotUuqb0Ja57LohhiZCAHFK8uicuKJRbIB5ch8B7v2tOe3f3h1IwTP
+         GkhlIx9EgqeBQ==
+X-Nifty-SrcIP: [209.85.210.175]
+Received: by mail-pf1-f175.google.com with SMTP id a5so7260423pfv.9;
+        Sat, 26 Feb 2022 19:57:44 -0800 (PST)
+X-Gm-Message-State: AOAM533P8cXwi1Jf9vERMrw00EWet5tRjPnZ6xhYL73Bekn8lYM6+mrS
+        N4tddRUU+t4CVhpycbENa7/aY1yRnN8Of/QhtCo=
+X-Google-Smtp-Source: ABdhPJxjVjGM+x2ubvRA5AcuT0fdFuqGSyU4IS6P8OuiKJceoIpY9wcwxuBtYN0eK7eF+0vaytCJWw4mPryhGf+UpR8=
+X-Received: by 2002:a63:1d44:0:b0:373:5612:629b with SMTP id
+ d4-20020a631d44000000b003735612629bmr12512970pgm.352.1645934264084; Sat, 26
+ Feb 2022 19:57:44 -0800 (PST)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2567; h=from:subject; bh=kFzk9pTiN2SY6j6CSIXkIcPGBQLKynx1uz4PRq5mvTA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiGbiHPaLYl3NPgM80Man7jeQWKmN8DZ32AOmZzQYy u7RB/LyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYhm4hwAKCRCJcvTf3G3AJinXD/ 9xQWn64MIPxSJenCXyfRMp/T7pe3T2i/c8G4HgUibyb4FRosmcyX7s9bZ1SKvaHmAcITVjX1T8KV9W XmzN09iuVHYEC3Eyc+Hb87Wqr/U3tIPz0GXDeeLNYV6Sxb33o/zLcbyogtZSG7AazS30+mTdcyVc7G 81iDM4EBPopkwyb5Bk7xFG86CyemUwgiJkj0yT0jgvI0QUt+Q0aTIS1VfdbHq5esCV4ILFKQjtrBTx 7aI+KSV9AR+dQsYfDtbBW/o7x+gmZnNv3CuVXREfNE/RrHfyVclN+Z/LcPeBrEHUqh5hxgY/Vkd3uU UJ1QNjrmNhLtZTgWdzi8s4ayd96S/Zwnc9yoE2ybcjf/WzTTh3bXroNTZE0FP5vqHIF/TFKOBwcGzt oESjCjpJnlHvzaWnaiEJoGY4SYM1wobcg2gwwbAHbPpsS+92j9xb776ISKRp9uC5kcvbfN9WlVyjxM 258YUjONvRotGy7dPw/aoPYIHUvg0WvkcYhy01fFSJ/vwdhh+ciBlnB4rBcmVeiX9pI44Io6km9vzr I7XTSXquZP3AheCfPIUchHc2bQIOSBq0nFXutfLdj6yUfOreCpXEhjjOMwPgS/2Q0ztjVx4zzSrO+D WK1bQVoUyZK9dGJSpvZEpYs5xxLJrPbdjDpXaszFeeyM6/Sv3/la88vf/erg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20220224055831.1854786-1-keescook@chromium.org>
+In-Reply-To: <20220224055831.1854786-1-keescook@chromium.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 27 Feb 2022 12:57:02 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQewgWYhioL-kWvgpQCnLeg6vgULbAotU-qi46NDoFw2w@mail.gmail.com>
+Message-ID: <CAK7LNAQewgWYhioL-kWvgpQCnLeg6vgULbAotU-qi46NDoFw2w@mail.gmail.com>
+Subject: Re: [PATCH v2] um: Allow builds with Clang
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        David Gow <davidgow@google.com>, linux-um@lists.infradead.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com,
+        llvm@lists.linux.dev,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-To be sufficiently out of range for the usercopy test to see the lifetime
-mismatch, expand the size of the "bad" buffer, which will let it be
-beyond current_stack_pointer regardless of stack growth direction.
-Paired with the recent addition of stack depth checking under
-CONFIG_HARDENED_USERCOPY=y, this will correctly start tripping again.
+On Thu, Feb 24, 2022 at 2:58 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> Add x86-64 target for Clang+um and update user-offsets.c to use
+> Clang-friendly assembly, similar to the fix from commit cf0c3e68aa81
+> ("kbuild: fix asm-offset generation to work with clang").
+>
+> This lets me run KUnit tests with Clang:
+>
+> $ ./tools/testing/kunit/kunit.py config --make_options LLVM=1
+> ...
+> $ ./tools/testing/kunit/kunit.py run --make_options LLVM=1
+> ...
+>
+> Cc: Jeff Dike <jdike@addtoit.com>
+> Cc: Richard Weinberger <richard@nod.at>
+> Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: David Gow <davidgow@google.com>
+> Cc: linux-um@lists.infradead.org
+> Cc: linux-kbuild@vger.kernel.org
+> Cc: linux-kselftest@vger.kernel.org
+> Cc: kunit-dev@googlegroups.com
+> Cc: llvm@lists.linux.dev
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> Link: https://lore.kernel.org/lkml/Yg2YubZxvYvx7%2Fnm@dev-arch.archlinux-ax161/
+> Tested-by: David Gow <davidgow@google.com>
+> Link: https://lore.kernel.org/lkml/CABVgOSk=oFxsbSbQE-v65VwR2+mXeGXDDjzq8t7FShwjJ3+kUg@mail.gmail.com/
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> v1: https://lore.kernel.org/lkml/20220217002843.2312603-1-keescook@chromium.org/
+> v2:
+>  - tweak commit log phrasing and alphabetize targets (nathan)
+>  - fix a missing implicit fallthrough under 32-bit builds
+>  - add review tags
+> ---
+>  arch/um/os-Linux/execvp.c  | 1 +
+>  arch/x86/um/user-offsets.c | 4 ++--
+>  scripts/Makefile.clang     | 1 +
+>  3 files changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/um/os-Linux/execvp.c b/arch/um/os-Linux/execvp.c
+> index 84a0777c2a45..c09a5fd5e225 100644
+> --- a/arch/um/os-Linux/execvp.c
+> +++ b/arch/um/os-Linux/execvp.c
+> @@ -93,6 +93,7 @@ int execvp_noalloc(char *buf, const char *file, char *const argv[])
+>                                            up finding no executable we can use, we want to diagnose
+>                                            that we did find one but were denied access.  */
+>                                         got_eacces = 1;
+> +                                       break;
+>                                 case ENOENT:
+>                                 case ESTALE:
+>                                 case ENOTDIR:
+> diff --git a/arch/x86/um/user-offsets.c b/arch/x86/um/user-offsets.c
+> index bae61554abcc..d9071827b515 100644
+> --- a/arch/x86/um/user-offsets.c
+> +++ b/arch/x86/um/user-offsets.c
+> @@ -10,10 +10,10 @@
+>  #include <asm/types.h>
+>
+>  #define DEFINE(sym, val) \
+> -       asm volatile("\n->" #sym " %0 " #val : : "i" (val))
+> +       asm volatile("\n.ascii \"->" #sym " %0 " #val "\"": : "i" (val))
 
-Reported-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Link: https://lore.kernel.org/lkml/762faf1b-0443-5ddf-4430-44a20cf2ec4d@collabora.com/
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v1: https://lore.kernel.org/lkml/20220216201743.2088344-1-keescook@chromium.org/
-v2: check for ARCH_HAS_CURRENT_STACK_POINTER (lkp)
----
- drivers/misc/lkdtm/usercopy.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/misc/lkdtm/usercopy.c b/drivers/misc/lkdtm/usercopy.c
-index 9161ce7ed47a..3fead5efe523 100644
---- a/drivers/misc/lkdtm/usercopy.c
-+++ b/drivers/misc/lkdtm/usercopy.c
-@@ -30,12 +30,12 @@ static const unsigned char test_text[] = "This is a test.\n";
-  */
- static noinline unsigned char *trick_compiler(unsigned char *stack)
- {
--	return stack + 0;
-+	return stack + unconst;
- }
- 
- static noinline unsigned char *do_usercopy_stack_callee(int value)
- {
--	unsigned char buf[32];
-+	unsigned char buf[128];
- 	int i;
- 
- 	/* Exercise stack to avoid everything living in registers. */
-@@ -43,7 +43,12 @@ static noinline unsigned char *do_usercopy_stack_callee(int value)
- 		buf[i] = value & 0xff;
- 	}
- 
--	return trick_compiler(buf);
-+	/*
-+	 * Put the target buffer in the middle of stack allocation
-+	 * so that we don't step on future stack users regardless
-+	 * of stack growth direction.
-+	 */
-+	return trick_compiler(&buf[(128/2)-32]);
- }
- 
- static noinline void do_usercopy_stack(bool to_user, bool bad_frame)
-@@ -66,6 +71,12 @@ static noinline void do_usercopy_stack(bool to_user, bool bad_frame)
- 		bad_stack -= sizeof(unsigned long);
- 	}
- 
-+#ifdef ARCH_HAS_CURRENT_STACK_POINTER
-+	pr_info("stack     : %px\n", (void *)current_stack_pointer);
-+#endif
-+	pr_info("good_stack: %px-%px\n", good_stack, good_stack + sizeof(good_stack));
-+	pr_info("bad_stack : %px-%px\n", bad_stack, bad_stack + sizeof(good_stack));
-+
- 	user_addr = vm_mmap(NULL, 0, PAGE_SIZE,
- 			    PROT_READ | PROT_WRITE | PROT_EXEC,
- 			    MAP_ANONYMOUS | MAP_PRIVATE, 0);
+Another way might be  #include <linux/kbuild.h> and delete this macro
+definition.
+
+
+>  #define DEFINE_LONGS(sym, val) \
+> -       asm volatile("\n->" #sym " %0 " #val : : "i" (val/sizeof(unsigned long)))
+> +       asm volatile("\n.ascii \"->" #sym " %0 " #val "\"": : "i" (val/sizeof(unsigned long)))
+
+
+This generates wrong comments.
+
+In include/generated/user_constants.h,
+I see this:
+
+   #define HOST_BX 5 /* RBX */
+
+(Here, the value of RBX is 40.)
+
+
+
+  #define DEFINE_LONGS(sym, val)     asm volatile("\n.ascii \"->" #sym
+" %0 " #val "/sizeof(unsigned long)\"": : "i" (val/sizeof(unsigned
+long)))
+
+creates valid comments:
+
+   #define HOST_BX 5 /* RBX/sizeof(unsigned long) */
+
+
+
+Another way might be to do this indirectly.
+
+     #define DEFINE_LONGS(sym, val)     DEFINE(sym, val / sizeof(unsigned long))
+
+The comments in include/generated/user_constans.h do not retain
+the original macro names, though...
+
+
+
+
+
+
+
+>  void foo(void)
+>  {
+> diff --git a/scripts/Makefile.clang b/scripts/Makefile.clang
+> index 51fc23e2e9e5..6e49344c6db2 100644
+> --- a/scripts/Makefile.clang
+> +++ b/scripts/Makefile.clang
+> @@ -9,6 +9,7 @@ CLANG_TARGET_FLAGS_mips         := mipsel-linux-gnu
+>  CLANG_TARGET_FLAGS_powerpc     := powerpc64le-linux-gnu
+>  CLANG_TARGET_FLAGS_riscv       := riscv64-linux-gnu
+>  CLANG_TARGET_FLAGS_s390                := s390x-linux-gnu
+> +CLANG_TARGET_FLAGS_um          := x86_64-linux-gnu
+
+
+Personally, I like Nathan's idea, but we can live with the hard-coding
+since we see no efforts for UML on other host arch.
+
+
+
+
+>  CLANG_TARGET_FLAGS_x86         := x86_64-linux-gnu
+>  CLANG_TARGET_FLAGS             := $(CLANG_TARGET_FLAGS_$(SRCARCH))
+>
+> --
+> 2.30.2
+>
+
+
 -- 
-2.30.2
-
+Best Regards
+Masahiro Yamada
