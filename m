@@ -2,132 +2,204 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A74C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 28 Feb 2022 07:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C34AC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 28 Feb 2022 11:25:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232952AbiB1Hvm (ORCPT
+        id S235781AbiB1L0R (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 28 Feb 2022 02:51:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40736 "EHLO
+        Mon, 28 Feb 2022 06:26:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230194AbiB1Hvl (ORCPT
+        with ESMTP id S235787AbiB1L0I (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 28 Feb 2022 02:51:41 -0500
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 061E966F87;
-        Sun, 27 Feb 2022 23:51:02 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0V5gZjsZ_1646034657;
-Received: from 192.168.193.153(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V5gZjsZ_1646034657)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 28 Feb 2022 15:50:58 +0800
-Message-ID: <3389ef12-81c7-6aba-6c58-63e34008af0c@linux.alibaba.com>
-Date:   Sun, 27 Feb 2022 23:50:57 -0800
+        Mon, 28 Feb 2022 06:26:08 -0500
+Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC68870F75
+        for <linux-hardening@vger.kernel.org>; Mon, 28 Feb 2022 03:25:28 -0800 (PST)
+Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-2d07c4a0d06so103696677b3.13
+        for <linux-hardening@vger.kernel.org>; Mon, 28 Feb 2022 03:25:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p96IvP9fUv4h1PakADfoqUYPHYxVnqzVwq2/kj5L+eU=;
+        b=KeqMjQGcDStWNcUS49dVbtvAJpxlSiOVErm61ZtH3VI5hAlAj0vQ1zcHquzneX3cK7
+         neNjKRdIJoiS6BtbKzb2YPS5nMEe8m5YxMTC5lR8kyZFI3AO2veXAPK8lwntA20ztYMd
+         KwUOA9e03fmOZ7HBoLWjb7t05sZeU/W4/KDzfTVTyKgA+MnDe1LSwmaphusTfs1ef6fK
+         of3KNhlrrVLJq9O7wpEVW9QSv8MmTwUXBvSrPyyIb375h4xyL7mvnPWA5QyNw68S+Ep9
+         h8+rf2NLd5Ip6RKVm7BOKl3zCDQHJWQQ+5s3ZGb3VbTOTSOB/sLncqcMr94bCvJDt0gD
+         xv+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p96IvP9fUv4h1PakADfoqUYPHYxVnqzVwq2/kj5L+eU=;
+        b=lhU/uOpd1EzsgLIz1V2UtmW7CxOKNL0wuhDyMzyNyJxYGpWDgzW/2Ff1hPXgPXdXO4
+         MCFjE0Wi/ZLTDkln4KLNxik2Bog/TQLrjkyFDqrV2+xYKwDs1O2JqA5bjcMypV8uo369
+         UFTT+lVQ6VytSTQIbxMqTCacvq53otvOmF1Lru4fwx+XoxLJojBiQ/N10kyQNB54dPqp
+         r8D+G1lSlfQd4lZqIDk2wnW1YnbjMmUomG8bc9jB8bb/HP9og6QHbDW1VHlIMhH6Ffev
+         +WlWXxfB5+kYIdjzlvJy0ZOaTUMYUa1XBpn5BdpZ5irtaiw1Duke3iw8GQ3W3AQIIvXf
+         ltaA==
+X-Gm-Message-State: AOAM531XJJ8Gt7yuoii3gUQXRG6g8oeH1bpTvz8l17mEEpwYtV8p9z1c
+        y6WQMTc1pbuugxcZ/jbJynWTSFUlvMJ4ZpUYE9M73w==
+X-Google-Smtp-Source: ABdhPJz54dXk6AW8cnKh1rdgLlHMk+YG/fbrfpJzpZACyNSQ2YmjarYCbN3mfTc15EcGKVu9pa7aHfMqg5A3HN7vpFE=
+X-Received: by 2002:a81:7943:0:b0:2d0:c8bb:a45d with SMTP id
+ u64-20020a817943000000b002d0c8bba45dmr18980716ywc.264.1646047527866; Mon, 28
+ Feb 2022 03:25:27 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH] [PATCH v2] AARCH64: Add gcc Shadow Call Stack support
-Content-Language: en-US
+References: <20220225221625.3531852-1-keescook@chromium.org>
+In-Reply-To: <20220225221625.3531852-1-keescook@chromium.org>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 28 Feb 2022 12:24:51 +0100
+Message-ID: <CANpmjNOup5JCjRpRkhsF3Z+dPX6_MQE5u6WhnMit84c1TyRK+A@mail.gmail.com>
+Subject: Re: [PATCH] mm: Handle ksize() vs __alloc_size by forgetting size
 To:     Kees Cook <keescook@chromium.org>
-Cc:     catalin.marinas@arm.com, will@kernel.org, nathan@kernel.org,
-        ndesaulniers@google.com, masahiroy@kernel.org, tglx@linutronix.de,
-        akpm@linux-foundation.org, mark.rutland@arm.com,
-        samitolvanen@google.com, npiggin@gmail.com, linux@roeck-us.net,
-        mhiramat@kernel.org, ojeda@kernel.org, luc.vanoostenryck@gmail.com,
-        elver@google.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-References: <20220225032410.25622-1-ashimida@linux.alibaba.com>
- <202202251243.1E38256F9@keescook>
-From:   Dan Li <ashimida@linux.alibaba.com>
-In-Reply-To: <202202251243.1E38256F9@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Cc:     llvm@lists.linux.dev, Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
+        stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Daniel Micay <danielmicay@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Fri, 25 Feb 2022 at 23:16, Kees Cook <keescook@chromium.org> wrote:
+>
+> If ksize() is used on an allocation, the compiler cannot make any
+> assumptions about its size any more (as hinted by __alloc_size). Force
+> it to forget.
+>
+> One caller was using a container_of() construction that needed to be
+> worked around.
+>
+> Cc: Marco Elver <elver@google.com>
+> Cc: Pekka Enberg <penberg@kernel.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: linux-mm@kvack.org
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1599
+> Fixes: c37495d6254c ("slab: add __alloc_size attributes for better bounds checking")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> This appears to work for me, but I'm waiting for more feedback on
+> the specific instance got tripped over in Android.
+> ---
+>  drivers/base/devres.c |  4 +++-
+>  include/linux/slab.h  | 26 +++++++++++++++++++++++++-
+>  mm/slab_common.c      | 19 +++----------------
+>  3 files changed, 31 insertions(+), 18 deletions(-)
+>
+> diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+> index eaa9a5cd1db9..1a2645bd7234 100644
+> --- a/drivers/base/devres.c
+> +++ b/drivers/base/devres.c
+> @@ -855,6 +855,7 @@ void *devm_krealloc(struct device *dev, void *ptr, size_t new_size, gfp_t gfp)
+>         size_t total_new_size, total_old_size;
+>         struct devres *old_dr, *new_dr;
+>         unsigned long flags;
+> +       void *allocation;
+>
+>         if (unlikely(!new_size)) {
+>                 devm_kfree(dev, ptr);
+> @@ -874,7 +875,8 @@ void *devm_krealloc(struct device *dev, void *ptr, size_t new_size, gfp_t gfp)
+>         if (!check_dr_size(new_size, &total_new_size))
+>                 return NULL;
+>
+> -       total_old_size = ksize(container_of(ptr, struct devres, data));
+> +       allocation = container_of(ptr, struct devres, data);
+> +       total_old_size = ksize(allocation);
+>         if (total_old_size == 0) {
+>                 WARN(1, "Pointer doesn't point to dynamically allocated memory.");
+>                 return NULL;
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> index 37bde99b74af..a14f3bfa2f44 100644
+> --- a/include/linux/slab.h
+> +++ b/include/linux/slab.h
+> @@ -182,8 +182,32 @@ int kmem_cache_shrink(struct kmem_cache *s);
+>  void * __must_check krealloc(const void *objp, size_t new_size, gfp_t flags) __alloc_size(2);
+>  void kfree(const void *objp);
+>  void kfree_sensitive(const void *objp);
+> +
+> +/**
+> + * ksize - get the actual amount of memory allocated for a given object
+> + * @objp: Pointer to the object
+> + *
+> + * kmalloc may internally round up allocations and return more memory
+> + * than requested. ksize() can be used to determine the actual amount of
+> + * memory allocated. The caller may use this additional memory, even though
+> + * a smaller amount of memory was initially specified with the kmalloc call.
+> + * The caller must guarantee that objp points to a valid object previously
+> + * allocated with either kmalloc() or kmem_cache_alloc(). The object
+> + * must not be freed during the duration of the call.
+> + *
+> + * Return: size of the actual memory used by @objp in bytes
+> + */
+> +#define ksize(objp) ({                                                 \
+> +       /*                                                              \
+> +        * Getting the actual allocation size means the __alloc_size    \
+> +        * hints are no longer valid, and the compiler needs to         \
+> +        * forget about them.                                           \
+> +        */                                                             \
+> +       OPTIMIZER_HIDE_VAR(objp);                                       \
+> +       _ksize(objp);                                                   \
+> +})
 
+So per that ClangBuiltLinux issue I'm gleaning that the __alloc_size
+annotations are actually causing the compiler to generate wrong code?
+Possibly due to the compiler thinking that the accesses must stay
+within some bound, and anything beyond that will be "undefined
+behaviour"? Clearly, per the slab APIs, in particular with the
+provision of ksize(), the compiler is wrong.
 
-On 2/25/22 12:58, Kees Cook wrote:
-> On Thu, Feb 24, 2022 at 07:24:10PM -0800, Dan Li wrote:
->> Signed-off-by: Dan Li <ashimida@linux.alibaba.com>
-> 
-> Thanks for the tweaks!
-> 
->> ---
->> FYI:
->> This function can be used to test if the shadow call stack works:
->> //noinline void __noscs scs_test(void)
->> noinline void scs_test(void)
->> {
->>      unsigned long * lr = (unsigned long *)__builtin_frame_address(0) + 1;
->>
->>      asm volatile("str xzr, [%0]\n\t": : "r"(lr) : "x30");
->> }
-> 
-> Not a big deal, but just FYI, there's a lot of whitespace trailing the
-> "}" above...
-> 
+At first I thought this was only related to UBSAN bounds checking
+generating false positives, in which case a simple workaround as you
+present above would probably take care of most cases.
 
-Ah, sorry for the mistake.
->>
->> If SCS protection is enabled, this function will return normally.
->> If the function has __noscs attribute (scs disabled), it will crash due to 0
->> address access.
-> 
-> It would be cool to turn this into an LKDTM test... (see things like the
-> CFI_FORWARD_PROTO test). I imagine this should be CFI_BACKWARD_SHADOW or
-> something...
-> 
+But if the real issue is the compiler suddenly doing more aggressive
+compiler optimizations because it thinks accesses beyond the object
+size (per __alloc_size) is UB, but UB can never happen, and thus does
+crazy things [1], I think the answer (at least with what we have right
+now) should be to find a different solution that is more reliable.
 
-OK, I'll add it in the next version.
+[1] https://lore.kernel.org/all/20220218131358.3032912-1-gregkh@linuxfoundation.org/
 
-> Also, I assume you're using real hardware to test this? It'd be nice to
-> see if qemu can be convinced to run with the needed features. Whenever
-> I've tried this it becomes impossibly slow. :)
-> 
+Because who's to say that there's not some code that does:
 
-I also use qemu to test the patch (qemu 6.1.0 with command "-cpu max"),
-and can feel the performance drop.
+   foo = kmalloc(...);
+   ...
+   bar = foo;
+   s = ksize(bar);
+   ... makes access address-dependent on 's' and 'foo' (but not 'bar') ...
 
-Maybe because my test environment only has simple busybox and ltp,
-the feeling of a slow system running is not that strong for me :)
+This doesn't look like code anyone would write, but I fear with enough
+macro and inline function magic, it's not too unlikely.
 
-For comparison, I simply tested the difference in kernel boot time
-in my test environment:
-//run qemu with "-cpu cortex-a57",
-[    1.254481] Run /linuxrc as init process
-//run qemu with "-cpu max"
-[    3.566091] Run /linuxrc as init process
+I can see a few options:
 
->> diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
->> index ccbbd31b3aae..deff5b308470 100644
->> --- a/include/linux/compiler-gcc.h
->> +++ b/include/linux/compiler-gcc.h
->> @@ -97,6 +97,10 @@
->>   #define KASAN_ABI_VERSION 4
->>   #endif
->>   
->> +#ifdef CONFIG_SHADOW_CALL_STACK
->> +#define __noscs __attribute__((__no_sanitize__("shadow-call-stack")))
->> +#endif
-> 
-> I initially wondered if we need a separate __no_sanitize(STUFF) patch to
-> make the compiler-clang.h macros easier, but I see there are places
-> where we do multiple ("address", "hwaddress") and have specialized
-> macros, so I think this is fine. And since GCC doesn't support
-> "__has_feature", I think this is the correct location for this.
-> 
+1. Dropping __alloc_size.
+2. Somehow statically computing the size-class's size (kmalloc_index()
+might help here), removing __alloc_size from allocation functions and
+instead use some wrapper.
+3. Teaching the compiler to drop *all* object sizes upon encountering a ksize().
 
-As in:
-https://lore.kernel.org/all/26a0a816-bc3e-2ac0-d773-0819d9f225af@linux.alibaba.com/
-
-I think maybe we could use "#ifdef CONFIG_SHADOW_CALL_STACK"
-instead of "#if __has_attribute(__no_sanitize_address__)" here,
-then move it to `compiler_types.h`.
-
- From my current test results, __noscs seems to work fine in
-clang compilation.
+So I think #1 is probably not what you want. #2 seems quite
+complicated, and in many cases likely too relaxed and would miss bugs,
+so also not ideal. #3 would be the most reliable, but
+OPTIMIZER_HIDE_VAR() doesn't cut it, and we need something stronger.
+The downside of #3 is that it might pessimize code generation, but
+given ksize() is used sparingly, might be ok.
 
 Thanks,
-Dan.
+-- Marco
