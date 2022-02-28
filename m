@@ -2,331 +2,157 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA42C433EF
-	for <linux-hardening@archiver.kernel.org>; Sun, 27 Feb 2022 23:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A980C433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 28 Feb 2022 02:20:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232161AbiB0XOr (ORCPT
+        id S232589AbiB1CV2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 27 Feb 2022 18:14:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60482 "EHLO
+        Sun, 27 Feb 2022 21:21:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232159AbiB0XOq (ORCPT
+        with ESMTP id S232137AbiB1CV1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 27 Feb 2022 18:14:46 -0500
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28F5922B19
-        for <linux-hardening@vger.kernel.org>; Sun, 27 Feb 2022 15:14:08 -0800 (PST)
-Received: by mail-pf1-x429.google.com with SMTP id d17so9476511pfl.0
-        for <linux-hardening@vger.kernel.org>; Sun, 27 Feb 2022 15:14:08 -0800 (PST)
+        Sun, 27 Feb 2022 21:21:27 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 960686C1DD;
+        Sun, 27 Feb 2022 18:20:49 -0800 (PST)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 21RNqL89026186;
+        Mon, 28 Feb 2022 02:20:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : content-type :
+ mime-version; s=corp-2021-07-09;
+ bh=zaCTdqpCKWiBn1hUBMU+SOx/CkffRBz3ocPFi6t5+dQ=;
+ b=jreeHuPEDnDMZRFDUmZihi5b0rAuGuWIbeOqKt2qc9J06Sxh0EMS7Ywp8S2hUx7ngoPS
+ k4hV59ouhYIIQ4qgHD8EJ7cSkDgnZu/O0zvqCAmH0WlTWxSWV+q6vWjc31sqUacUltFM
+ Sy+AApA4PP1Mbz1/odKM8zcr3H+LL/uHWuLeSCvmqSRCcBLnwp4mIKXtGIdVFIMmvPPC
+ 8XQP/RlNPzrRNsUr6Co3Nsm0j1xvLrXhUBnhnSge5vnewrVBCNms7bF1eyUmmWnik2Qs
+ 2o4qpXpj1GQEA5jqWYWoun2mpEbr0GW9p10ajV74sj1ptesDCL+CalT4U4BM3n7pRAJE HQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3efc3aas6t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Feb 2022 02:20:37 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 21S2B9aW001675;
+        Mon, 28 Feb 2022 02:20:36 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2173.outbound.protection.outlook.com [104.47.58.173])
+        by aserp3030.oracle.com with ESMTP id 3efa8bw75f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Feb 2022 02:20:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SBwRtkmNuP2Qc+Y8lb6pO4uTnwN4urxsNx7HZb7oM8GCS5FBvqUFdRuoKBf2szIG+0oyjp83bY6D2P0cjhQCiqQ7ahwGAr3mZz6K+FDtRz/CZQEUxDTekf/7Iom1GQMMdeA96ZWI88v5KT6TcUiRUAIa7GT8S3s+a000wGjD3O4fhec806TnugrzZnaBYpD30k7zfyNEG8CJsQq+g4CKqmEh9VjHZoxA1cNqM5RA62f0tTrLrsiObiF2iQMgg507gMVT3Xd1TFjidwVaiH0QKPXXhdFbvT0w10bPIeJGZoB4SDXhm7bZEQTK5OYmm4rsurxXefIST/y0VMrbQcMMvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zaCTdqpCKWiBn1hUBMU+SOx/CkffRBz3ocPFi6t5+dQ=;
+ b=j0ibfwc+utQeG6dJ8ElUgzof1zJPuIVe0IGfK725dY+fYYlpMrq4poZnJaHKeeXz0CokG7MZ6lhctDRATvfGgz9NiUv0Lt1Ddgkei29sTrFH9vX7OwKEm0PwiKODjlEef5X7A1eQoNCD/TUMf3akimALOXEecfukz72Q6ODMPYGlxa9BoHwQh4hI34s/BrbXY/Fg/bJcXAlnJRQOLLxTxVxK5DFR9Jpzj+ONRn746/LE4ohh5wtUdBddfrjd/3SNi+c7AdgeQeQoNZmZ0KwbdI3HOLff21rMsYJeYSgHQK9kXQdeRE3uAmbBZXvSUXciXVeGYlqYKg0ANyAWpLG4Hw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NEz8S7bFkwneq3PE9tC9dbzJqghqcLtq6Jn9Mzewnt8=;
-        b=GnJnp52S2sgob7YzJQwUJ2E/C4ktnqkOB3F8UtNdCrRtL2BOTqvlTf79FozbBrvB1T
-         OjFClYb6wrMcn4OIpJ7BZTtHDzJcrxoXoDUcuCGT4h9ZcOG+3qFO+V2SevTtNATYh6U1
-         C/Z6Jm3J2Vc0y3lSAVJ/MGGqDkzyu7vj8gTQs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NEz8S7bFkwneq3PE9tC9dbzJqghqcLtq6Jn9Mzewnt8=;
-        b=lPQOxTEO2cIOW0wVrv5/uT43O//zQGVVB0T/3HAzZZT6xvwrXSO5njJ6bfCBcOHBq4
-         fg1egIzmrkn5xJgBdmHvvzGpz7ZrT8QeTkhU1D02QLnlOYF0mEQxbUq2vaYMdGX738C1
-         fk2us7aZ+n4p3EA34WI1zZWCnBC5W1xt2rCTSdya36QLZpotbqpMO+fWHl3YWbyGqj8/
-         j/nGSotQAuVP05dCyWUU4S2ZIdtYV9D/JhV54n6JcroGfhFaw9DO+jnfpkz6W9HWlxTt
-         BGJkeP1NGGXY05cHtVpoFMaIZbbPNYuhNbLRca+Xhr6Zi8XfEerK25AL+aS4no8kPJP1
-         ZFEA==
-X-Gm-Message-State: AOAM531w9rnpryZMNUkKM/RPbIQ1dFPs5U3XO6F/nxJJd9awoQaGer/K
-        d+LKegpXtijeM4rQ79uyJ6Sklg==
-X-Google-Smtp-Source: ABdhPJwHXwSmdwy1jcXiNiohtMPQbFABBWndNv7Rc+IH8LJGX+ZYl0dMjBxKzDu/5pFtY9Up6dz9aQ==
-X-Received: by 2002:a63:fb44:0:b0:372:9ec8:745a with SMTP id w4-20020a63fb44000000b003729ec8745amr15051137pgj.551.1646003647597;
-        Sun, 27 Feb 2022 15:14:07 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b3-20020a056a00114300b004e099ec2871sm10766165pfm.154.2022.02.27.15.14.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Feb 2022 15:14:07 -0800 (PST)
-Date:   Sun, 27 Feb 2022 15:14:06 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Vitor Massaru Iha <vitor@massaru.org>,
-        Daniel Latypov <dlatypov@google.com>,
-        David Gow <davidgow@google.com>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        kunit-dev@googlegroups.com, llvm@lists.linux.dev, x86@kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] UAPI: Introduce KUnit userspace compatibility
-Message-ID: <202202271513.3756A55EF7@keescook>
-References: <20220227184517.504931-1-keescook@chromium.org>
- <20220227184517.504931-8-keescook@chromium.org>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zaCTdqpCKWiBn1hUBMU+SOx/CkffRBz3ocPFi6t5+dQ=;
+ b=oWYnSoX60tXIjHGS/MWbM3up1RHEv52IwebZ+Z41dudCwD17C/EfmBUOwpQ/kbH7uKjmX7nJukr/5N82XB2RgSaiX029k4ZpEybXCKzziWIQL76DNiKLhK0dQlxFOssbQtEapMuDEV+dyjQclyc9EcVW633jsuvGpz64sTHPojE=
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by DS7PR10MB5167.namprd10.prod.outlook.com (2603:10b6:5:38e::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.22; Mon, 28 Feb
+ 2022 02:20:34 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::180:b394:7d46:e1c0]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::180:b394:7d46:e1c0%6]) with mapi id 15.20.5017.026; Mon, 28 Feb 2022
+ 02:20:33 +0000
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Hannes Reinecke <hare@suse.de>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>
+Subject: Re: [PATCH v2][next] scsi: fc: Replace one-element arrays with
+ flexible-array members
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1lexv91gl.fsf@ca-mkp.ca.oracle.com>
+References: <20220214223903.GA859464@embeddedor>
+Date:   Sun, 27 Feb 2022 21:20:29 -0500
+In-Reply-To: <20220214223903.GA859464@embeddedor> (Gustavo A. R. Silva's
+        message of "Mon, 14 Feb 2022 16:39:03 -0600")
+Content-Type: text/plain
+X-ClientProxiedBy: SN4PR0501CA0072.namprd05.prod.outlook.com
+ (2603:10b6:803:41::49) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220227184517.504931-8-keescook@chromium.org>
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: cb909c69-dcaa-4b9f-54c6-08d9fa60e64a
+X-MS-TrafficTypeDiagnostic: DS7PR10MB5167:EE_
+X-Microsoft-Antispam-PRVS: <DS7PR10MB5167F77FB59CA91DB033A0418E019@DS7PR10MB5167.namprd10.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jbnbzO50t5LXbLrOt6vqzlP+j4I8KnOBGsPHrS6t1cRCmlyLWXIqM1wME7VdbyGR4EbVTGFyXvwx4teCKaDlCBSeGyuX8yC34H1ZyDZj7klcv6iXlTUbEaqq/gpwSimD861M0uZMMFWwtsxt/Yr8L8ipHAO+b76wjEHW7YcccHe12nULOmz8jxVNEZUZPPsxem03qSiNtuZfzkNoN4Yi3Jk1Sk4t9KVAJdSurduitQNBAbuoPoue1jzLVcMxz2tkb2IS3c3OJYkvToNqQp7PxCUBjBpq6LHRxiGByWC9/dmWYH0MTlARjiiqsZ37FibO009xTLtMNwH1otmNbsEwBWQW6IVdFOifVUT3f0DIJx3rGm2mKAo/fxi045T2a+gKZK2WCQQdzD6eZFqv5bjH8xAayoFJeCnynyVCRNElo9XKaTaEZtpYZFQZ62f+HM8Esm4NoBnAwNnPdbu+IshdwMZ4btJXhCt/NNsQfZLNnVC5tDOq/89LcBvS4odU/ho2R5etdOsVluT2QqlU/GVPf1hqDyTdf6BNvtf2ieB47G033DpAZ1fG8IhQwTJIvD3VKEpQwXGyLavaKpUxaNPAFZ82UsiKIl6nCMy3CHNmXoMt4oa+YSvUAZRji3LgAtlXLIF160x5czL8e5+FRZZmfKGwh0uWbqelog61PCBUnBB7SzrWVZcyO2wJM0m6KcYNCqrtCdYkv4wmxXUh8yjc+Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(508600001)(558084003)(2906002)(8676002)(6666004)(6506007)(52116002)(4326008)(8936002)(316002)(36916002)(6512007)(6486002)(54906003)(26005)(6916009)(66476007)(66556008)(66946007)(5660300002)(38100700002)(38350700002)(86362001)(186003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?W+acetuiOROO7q9d4nJqjbjytM21zNLfe4O/NtvJmQqp5aI0iJW/SYLMk0tr?=
+ =?us-ascii?Q?pkWN4uPi+VQdbNeOk3kwHUXcsF1HRlL7ubEVR9W/DE/0HpqT7DShfEdByFYw?=
+ =?us-ascii?Q?l0Fu/Ydn0Xq9jcUMDGTFlqFWaGZUZQdVFmzU1sBDjdjamhQwa1BnsG2LiVVW?=
+ =?us-ascii?Q?+6iHFcxSjK4kI/1Wfy7zFO77cREIbk7IvhQHdrHDVemR9lzVG1YE0im0ai6F?=
+ =?us-ascii?Q?2WNdW11zWc3FegoHTZgX07/vfbDg6Q0IpMrauAaKhV5+R+B8MjHwF4/ovlZR?=
+ =?us-ascii?Q?bijmRC7Obl140lecwlWOml8Xy8TJ2ard8odszx1jH24CtRHzdL+EowqhKLBs?=
+ =?us-ascii?Q?S+aW8EJZVwQJKvHQZVh9malz6pqoaGLezsme+ammOh40v+VBNPfWw7JcFuKY?=
+ =?us-ascii?Q?yzvBCm7g3yHtOYZe2e2VsVWqZLpKN04xDKgZfzB9jd/4afJ9CvxYbAAmAD28?=
+ =?us-ascii?Q?UK94UkPl4Z5sQwrtuqixmgXHk5RTnIdFcEiiYMlEsCC/pve3KZpodwIT2BoK?=
+ =?us-ascii?Q?uk0lS5e4dv8EWC9TZpwLAetR47O7mJLd4sTdHVx0mFPb3Bj3rK3l9AS7PXbt?=
+ =?us-ascii?Q?oEammgflWZNSFLI0ti3kTx0Do12wPMiCmIBCIVqyvGQxxmzgeAcjQTBxQIff?=
+ =?us-ascii?Q?7fJPSgnoLGW1AwjP/OG1VKmYQ+KHZUsUQVq1Jsz0mO7Ylg5lE+A3aAP4hk9g?=
+ =?us-ascii?Q?CA8pEJN5ErFUhdF3PZhRxBbKxrHj9yiJxfixOLAXELzeL7NTKDBiiUv0e081?=
+ =?us-ascii?Q?jBVuP9iUHV3/Qlp0n7c4cV98VVBBbAROSjcWpI61q6AtjgTqnBHy5DtZKMOz?=
+ =?us-ascii?Q?iu+344QA5vhdYbpi7R3EcwQ8YFgdoadlhFvnnHhq85o/fS+rMk8PyvwgzwJK?=
+ =?us-ascii?Q?/z8Oxed1pFmkgLzwyupr/t1DhCoc3bhSe3yhwuY2UwxL2nz559m7mSm36yBx?=
+ =?us-ascii?Q?NsywZoIOdQUhmhZclJCEucXEALUWpogx+oPKoiZefdXbNsQFzQp+Bk8iKOMU?=
+ =?us-ascii?Q?6WatwyHD2lphUXQhlVogNJtzgWdXLoaC4L0mKnuYPtBne/h5n6aBiGBp8+dQ?=
+ =?us-ascii?Q?91OsZPnjV+iAzOBa3a4W4VbO4tvwNU8WOQjfAenWrr+QbS4LZtm/JzIjnkQr?=
+ =?us-ascii?Q?ePizmDwsp4q297LTirmIoeAhj1K4bs6/8SV7eWsxwGGz/jYLhOgX3s1H/pcZ?=
+ =?us-ascii?Q?nTFEOhPyNqmrJG1aYCtrgTTSmqs24BnkXxkKFkBTERJ6ARJVbA52+ZKiNvtQ?=
+ =?us-ascii?Q?Uls8MBtUHNqEdiRYnT6n5mIuI5GFzCQLA9ol/WcJon4Ba+MrRWx2DYaJ/RMm?=
+ =?us-ascii?Q?z4nFWH/oBeM2VrBRCdbe5OsFR5oie8pW5fPNd2xT54igHBW+C4OcOa50N3hh?=
+ =?us-ascii?Q?0wylRxcc3NUbHPLRvAKGIBCYBFpME1DgsM1mP52mtSoIqMwigek99Bw3RqTP?=
+ =?us-ascii?Q?cm7FNHXOWcxzfG3tOlfWn4NN1725wC2QqXJT+yS9XcqpEkesW0BKuWeyH7CM?=
+ =?us-ascii?Q?ZRJ2Mh9LMY1FfAVfGYKZVlHYZkDeV5Y5BHFvQILptVtjiaJDO2Hhq6clCUu5?=
+ =?us-ascii?Q?pu2zJBKODZvhX7HTLBw8P21pQbttanV8Xn1jOidc4NY62tbAz0W/ANUnxmjE?=
+ =?us-ascii?Q?YaASylp0jqIPdXTzgOuSLtwxKss+aeCqTbShSdtlJox8dDN+Z82bOPdiHbAk?=
+ =?us-ascii?Q?xozSNQ=3D=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb909c69-dcaa-4b9f-54c6-08d9fa60e64a
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2022 02:20:33.8945
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7kdsg/qhbIEBbcne3TRNUG6jJK+e96hdarGNNb1+0QBqJ7zTWsfXlZLF3PXciHjvmISNLOOcIByMccSA9cZDzSuULaNvsvUkR4P8tf0QHn4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5167
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10271 signatures=684655
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
+ malwarescore=0 mlxscore=0 suspectscore=0 spamscore=0 mlxlogscore=806
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2201110000
+ definitions=main-2202280012
+X-Proofpoint-GUID: UXqpGMrtxMoMSYOofR9D_CyBsCfzFScN
+X-Proofpoint-ORIG-GUID: UXqpGMrtxMoMSYOofR9D_CyBsCfzFScN
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Feb 27, 2022 at 10:45:17AM -0800, Kees Cook wrote:
-> The original lib/test_stackinit.c, which exclusively tests toolchain
-> features, was designed to also be built without the full Linux kernel
-> sources so that compiler developers and distro maintainers had an easy
-> way to check for toolchain behaviors. When it was ported to KUnit, this
-> mode was removed to simplify the code.
-> 
-> Add a small header that provides a minimally operational KUnit API that
-> can allow unit tests that don't depend on kernel-specific behaviors
-> to build and run strictly from userspace without kernel sources. Add
-> userspace-build support back to the renamed lib/stackinit_kunit.c test.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-This fails the hdrtest checks, so I'll need to rework it...
+Gustavo,
 
--Kees
+> Use flexible-array members in struct fc_fdmi_attr_entry and
+> fs_fdmi_attrs instead of one-element arrays, and refactor the code
+> accordingly.
 
-> ---
-> v1: https://lore.kernel.org/lkml/20220224055145.1853657-1-keescook@chromium.org
-> v2:
->  - split from stackinit_kunit.c refactoring patch
->  - add missing returns (Daniel)
->  - report expression mismatch in assert msg (Daniel)
->  - emulate kunit_test_suites() (Daniel)
->  - emit valid KTAP (David)
-> ---
->  include/uapi/misc/kunit.h | 181 ++++++++++++++++++++++++++++++++++++++
->  lib/stackinit_kunit.c     |  11 +++
->  2 files changed, 192 insertions(+)
->  create mode 100644 include/uapi/misc/kunit.h
-> 
-> diff --git a/include/uapi/misc/kunit.h b/include/uapi/misc/kunit.h
-> new file mode 100644
-> index 000000000000..afdffda583ae
-> --- /dev/null
-> +++ b/include/uapi/misc/kunit.h
-> @@ -0,0 +1,181 @@
-> +#ifndef __UAPI_MISC_KUNIT_H__
-> +#define __UAPI_MISC_KUNIT_H__
-> +/*
-> + * This is a light-weight userspace drop-in replacement for the in-kernel
-> + * KUnit API. It seeks to implement a minimal subset of features so that
-> + * a concisely written KUnit test can be made to run entirely in userspace
-> + * when it doesn't actually depend on any real kernel internals.
-> + *
-> + * Additionally contains many refactored kernel-isms to support building
-> + * and running in userspace without full kernel source.
-> + */
-> +
-> +#define _GNU_SOURCE
-> +#include <stdio.h>
-> +#include <stdint.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <stdbool.h>
-> +#include <errno.h>
-> +#include <sys/types.h>
-> +
-> +#define __user			/**/
-> +#define noinline		__attribute__((__noinline__))
-> +#define __aligned(x)		__attribute__((__aligned__(x)))
-> +#ifdef __clang__
-> +# define __compiletime_error(message) /**/
-> +#else
-> +# define __compiletime_error(message) __attribute__((__error__(message)))
-> +#endif
-> +#define __compiletime_assert(condition, msg, prefix, suffix)		\
-> +	do {								\
-> +		extern void prefix ## suffix(void) __compiletime_error(msg); \
-> +		if (!(condition))					\
-> +			prefix ## suffix();				\
-> +	} while (0)
-> +#define _compiletime_assert(condition, msg, prefix, suffix) \
-> +	__compiletime_assert(condition, msg, prefix, suffix)
-> +#define compiletime_assert(condition, msg) \
-> +	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-> +#define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-> +#define BUILD_BUG_ON(condition) \
-> +	BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-> +
-> +#define ARRAY_SIZE(a)		(sizeof (a) / sizeof ((a)[0]))
-> +
-> +#define MODULE_LICENSE(str)	/* str */
-> +
-> +typedef uint8_t			u8;
-> +typedef uint16_t		u16;
-> +typedef uint32_t		u32;
-> +typedef uint64_t		u64;
-> +
-> +#define TEST_PASS	0
-> +#define TEST_SKIP	1
-> +#define TEST_FAIL	2
-> +struct kunit {
-> +	int status;
-> +	char *msg;
-> +};
-> +struct kunit_case {
-> +        void (*run_case)(struct kunit *test);
-> +        const char *name;
-> +};
-> +struct kunit_suite {
-> +	const char *name;
-> +	const struct kunit_case *test_cases;
-> +};
-> +#define KUNIT_CASE(test_name) { .run_case = test_name, .name = #test_name }
-> +
-> +#define KUNIT_ASSERT_TRUE_MSG(test, expr, fmt, ...)			\
-> +do {									\
-> +	if (!(expr)) {							\
-> +		if (test->status != TEST_SKIP)				\
-> +			test->status = TEST_FAIL;			\
-> +		if (test->msg)						\
-> +			free(test->msg);				\
-> +		asprintf(&test->msg, fmt, ##__VA_ARGS__);		\
-> +		return;							\
-> +	}								\
-> +} while (0)
-> +
-> +#define KUNIT_ASSERT_EQ_MSG(test, left, right, fmt, ...)		\
-> +	KUNIT_ASSERT_TRUE_MSG(test, (left) == (right),			\
-> +			      #left " != " #right ": " fmt,		\
-> +			      ##__VA_ARGS__)
-> +
-> +#define kunit_skip(test, fmt, ...)					\
-> +do {									\
-> +	test->status = TEST_SKIP;					\
-> +	if (test->msg)							\
-> +		free(test->msg);					\
-> +	asprintf(&test->msg, fmt, ##__VA_ARGS__);			\
-> +	return;								\
-> +} while (0)
-> +
-> +static int do_kunit_test_suite(struct kunit_suite *suite)
-> +{
-> +	const struct kunit_case *test_case;
-> +	int pass = 0, fail = 0, skip = 0;
-> +	int rc = 0;
-> +	size_t i = 0;
-> +
-> +	printf("  TAP version 14\n");
-> +	for (test_case = suite->test_cases; test_case->run_case; test_case++)
-> +		i++;
-> +	printf("  1..%zu\n", i);
-> +	i = 0;
-> +	for (test_case = suite->test_cases; test_case->run_case; test_case++) {
-> +		struct kunit test = { };
-> +
-> +		i++;
-> +		test_case->run_case(&test);
-> +		switch (test.status) {
-> +		default:
-> +		case TEST_FAIL:
-> +			fprintf(stderr, "  not ok %zu - %s%s%s",
-> +				i, test_case->name,
-> +				test.msg ? " # ERROR " : "",
-> +				test.msg ?: "\n");
-> +			rc = 1;
-> +			fail++;
-> +			break;
-> +		case TEST_SKIP:
-> +			fprintf(stdout, "  ok %zu - %s # SKIP%s%s",
-> +				i, test_case->name,
-> +				test.msg ? " " : "",
-> +				test.msg ?: "\n");
-> +			skip++;
-> +			break;
-> +		case TEST_PASS:
-> +			fprintf(stdout, "  ok %zu - %s\n",
-> +				i, test_case->name);
-> +			pass++;
-> +			break;
-> +		}
-> +		if (test.msg)
-> +			free(test.msg);
-> +	}
-> +	printf("# %s: pass:%d fail:%d skip:%d total:%zu\n",
-> +		suite->name, pass, fail, skip, i);
-> +	return rc;
-> +}
-> +
-> +static int run_suites(char *name, struct kunit_suite *suites[], size_t count)
-> +{
-> +	int pass = 0, fail = 0, skip = 0;
-> +	int one, ret = 0;
-> +	size_t i;
-> +
-> +	printf("TAP version 14\n");
-> +	printf("1..%zu\n", count);
-> +	for (i = 0; i < count; ++i) {
-> +		one = do_kunit_test_suite(suites[i]);
-> +		switch (one) {
-> +		case TEST_SKIP:
-> +			skip++;
-> +			break;
-> +		case TEST_PASS:
-> +			pass++;
-> +			break;
-> +		default:
-> +			fail++;
-> +			break;
-> +		}
-> +		printf("%sok %zu - %s\n",
-> +			one == TEST_FAIL ? "not " : "",
-> +			i + 1, suites[i]->name);
-> +		ret |= one;
-> +	}
-> +	printf("# %s: pass:%d fail:%d skip:%d total:%zu\n",
-> +		name, pass, fail, skip, count);
-> +	return ret;
-> +}
-> +
-> +#define kunit_test_suites(suite...)				\
-> +int main(int argc, char *argv[]) {				\
-> +	static struct kunit_suite *suites[] = { suite };	\
-> +	return run_suites(argv[0], suites, ARRAY_SIZE(suites));	\
-> +}
-> +
-> +#endif /* __UAPI_MISC_KUNIT_H__ */
-> diff --git a/lib/stackinit_kunit.c b/lib/stackinit_kunit.c
-> index 35c69aa425b2..6d468630c90a 100644
-> --- a/lib/stackinit_kunit.c
-> +++ b/lib/stackinit_kunit.c
-> @@ -8,7 +8,13 @@
->   *		--make_option LLVM=1 \
->   *		--kconfig_add CONFIG_INIT_STACK_ALL_ZERO=y
->   *
-> + * External build example:
-> + *	clang -O2 -Wall -ftrivial-auto-var-init=pattern \
-> + *		-o stackinit_kunit stackinit_kunit.c
-> + *	./stackinit_kunit
-> + *
->   */
-> +#ifdef __KERNEL__
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
->  #include <kunit/test.h>
-> @@ -17,6 +23,11 @@
->  #include <linux/module.h>
->  #include <linux/string.h>
->  
-> +#else
-> +/* Userspace KUnit stub header. */
-> +#include <misc/kunit.h>
-> +#endif
-> +
->  /* Exfiltration buffer. */
->  #define MAX_VAR_SIZE	128
->  static u8 check_buf[MAX_VAR_SIZE];
-> -- 
-> 2.32.0
-> 
+Applied to 5.18/scsi-staging, thanks!
 
 -- 
-Kees Cook
+Martin K. Petersen	Oracle Linux Engineering
