@@ -2,81 +2,159 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEA8C4332F
-	for <linux-hardening@archiver.kernel.org>; Mon, 28 Feb 2022 15:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AAAC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 28 Feb 2022 19:47:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237527AbiB1PRD (ORCPT
+        id S229625AbiB1TsJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 28 Feb 2022 10:17:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37220 "EHLO
+        Mon, 28 Feb 2022 14:48:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237525AbiB1PRC (ORCPT
+        with ESMTP id S229619AbiB1Tru (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 28 Feb 2022 10:17:02 -0500
-Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A2A8811B0;
-        Mon, 28 Feb 2022 07:16:16 -0800 (PST)
-Received: by mail-ot1-x32d.google.com with SMTP id l25-20020a9d7a99000000b005af173a2875so9736614otn.2;
-        Mon, 28 Feb 2022 07:16:16 -0800 (PST)
+        Mon, 28 Feb 2022 14:47:50 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19F6B204FD6
+        for <linux-hardening@vger.kernel.org>; Mon, 28 Feb 2022 11:46:19 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id h17-20020a17090acf1100b001bc68ecce4aso91495pju.4
+        for <linux-hardening@vger.kernel.org>; Mon, 28 Feb 2022 11:46:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3erX1W/V8eKoqrAyYmfugbwLeZekQvkkVtHUA9NIwMk=;
-        b=drpj1huI2zUtT9Wxsj1mWTLeR7td9jWzGtULueocDG5ZY8vkEnbQe+F9SxynenJPt9
-         1YQxDabJkCDr9VRQRt+LIJ+ge7VwvhZRjkVtgccg8gg1LRTeEDZgCj/PK6o3zVxFqXSR
-         IBubXJps1jrO7uwOlTm8tEda55t/VFR/omtiacO+Guj67wxrRfLIWSQuLJpafmaQRxM1
-         MAAXm47q36VY3tKbW3bqVQY7pd89RN4ie8+Uw2s8ANxcipLCuNiptwD/uNMZZn2VwtpJ
-         LM8YL9V9dzV97ahyiSPKTl6/TaeCbzxCj3cixXfjOrquBp3Q07y1oWvU/vmxBJg/U9Dg
-         5QtA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tR+AhlIqjS9XYnLOtynP2EhZ/OV9mCnZ9eIc3MUdC24=;
+        b=EEqg7pUkySZVbQvZfJGIVuw0lXwGWG+go3YvVrAhLQgLhiQhNzDWgCAEyKKhK7DPsx
+         H1LWnVGxrPGJ5ZGzxfs/DLiWdoAxZu1P28f0+C1qdVWmaheFrUNc+ZjxCmcoA8AqfTkH
+         r9Wsbvj+psRVE1ujQo6yM8ftEYCR7mER0tJ+8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3erX1W/V8eKoqrAyYmfugbwLeZekQvkkVtHUA9NIwMk=;
-        b=rdB/Z7Ib/P1bsEP+HDjlVBB33RLxToa4lrXyY8oX15j+46YuHE/wN69fd8B7xIGjn4
-         AtDKrRp0kQuSF9JbmMH+FfOBaNnwe8kjAbI7SkX1+g4unn+vqWR+gm19fczGOWy4xwN4
-         FfZpXDShFAJMEk10qA6qka8t2MB2efWqusJw7WURNpKt7A1Tsj4BEBrQ42EAx1976xLf
-         cOEoh2SgTxZBLCgVwh1X9SPBvfBEcO9mNxiqTfKUmSKRfIN3ay0xgsPMFOe0q7rMLa4h
-         cxFlpSzWAWOQ5CpHPS7ooUQQBsfq6pFe50F/lT/BTAzhASTTpRAC6yQQyf5KmnuKjgw8
-         SD2Q==
-X-Gm-Message-State: AOAM532dONIL2QsbTOAoiZFQNoFX2NGfSVym5yqEDaUcjwFrUxvYOPV2
-        TtJANPiQPsqumLo3SaVF98Xy94uEyjM/tlDLjyg=
-X-Google-Smtp-Source: ABdhPJx9TTxxLNEwF+4nqK17T9MfrZryYcQnu8nF9wuFdmJwPKwtyAsHwaCtK/g+ns54aBxeRErB7ut9nPOPqMIGnK0=
-X-Received: by 2002:a9d:7096:0:b0:5ad:ebf7:a225 with SMTP id
- l22-20020a9d7096000000b005adebf7a225mr9336023otj.370.1646061375645; Mon, 28
- Feb 2022 07:16:15 -0800 (PST)
-MIME-Version: 1.0
-References: <20220225221625.3531852-1-keescook@chromium.org>
- <CANpmjNOup5JCjRpRkhsF3Z+dPX6_MQE5u6WhnMit84c1TyRK+A@mail.gmail.com> <CA+DvKQ+PYtDyejaUoBj51D_Y7muYaR1_FhQGWGWvgQawCbp31Q@mail.gmail.com>
-In-Reply-To: <CA+DvKQ+PYtDyejaUoBj51D_Y7muYaR1_FhQGWGWvgQawCbp31Q@mail.gmail.com>
-From:   Daniel Micay <danielmicay@gmail.com>
-Date:   Mon, 28 Feb 2022 10:15:59 -0500
-Message-ID: <CA+DvKQ+bp7Y7gmaVhacjv9uF6Ar-o4tet872h4Q8RPYPJjcJQA@mail.gmail.com>
-Subject: Re: [PATCH] mm: Handle ksize() vs __alloc_size by forgetting size
-To:     Marco Elver <elver@google.com>
-Cc:     Kees Cook <keescook@chromium.org>, llvm@lists.linux.dev,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tR+AhlIqjS9XYnLOtynP2EhZ/OV9mCnZ9eIc3MUdC24=;
+        b=Jf0Gf0bsItum13Ih9vQOmErkkGXwV8gzLdrx37vdjon/2Atibg0lLufTD7XCQfxrHu
+         Eciu+/RfAmeOuLd4O1KHnR4wMZP6fQo8d1lfKCjzDoNLBCggiguHunCDTFS+dFYoy4JW
+         CuulGEf8fHP1gKo+pEb01OskMvBS3JCfTbJ+JPpRIeKWRw00e+RoY4NwURowhYQxeBi/
+         iydFtqUzaPr6Lxpkizg0OGl9mqWnz8k1jY4a2KawmwWalKFxkd2+AG0BU0aRTZK4ErMZ
+         ayt8J+iSouIj/NW4cv2fj648FV+a1GmrYHE4njJgXuWa55PeI215QW8oE625WBRmDscl
+         U4lw==
+X-Gm-Message-State: AOAM530wHiuvS8Li0qopaxnCQ7MczvBsssZPSr2qOsEN6RZ3OnwMiFYt
+        rG3MPBrNI1wUVZl8j1YMbT+Cgw==
+X-Google-Smtp-Source: ABdhPJz8yuUY3QLjcjfiLAIH3SgbY2+JCxtn3vQ51x519MkGnccf2G5leuKh/e98pxMWfX9wrbgW2g==
+X-Received: by 2002:a17:90a:6688:b0:1bc:5492:6373 with SMTP id m8-20020a17090a668800b001bc54926373mr18053297pjj.161.1646077576522;
+        Mon, 28 Feb 2022 11:46:16 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v10-20020a056a00148a00b004e0f420dd90sm14288692pfu.40.2022.02.28.11.46.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Feb 2022 11:46:16 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     matoro <matoro_mailinglist_kernel@matoro.tk>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
         stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        regressions@lists.linux.dev, linux-ia64@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH] binfmt_elf: Avoid total_mapping_size for ET_EXEC
+Date:   Mon, 28 Feb 2022 11:46:13 -0800
+Message-Id: <20220228194613.1149432-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3328; h=from:subject; bh=l5ScQA97desVa/cbVIp0ld/aMpV+dI3qivoNgmUT4HY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiHSaEHNpWviXuAR7FBfgnykVicWqBdDFz4Mm5Oxru Wk8kzj2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYh0mhAAKCRCJcvTf3G3AJvL6D/ 4/8Opfekx+etBVTmmg6BBaHAHA8L48+PvyAvXuTrQcBwmTx6u2kHTlNm05KEHD78I3pPl6WFdLidNX hdHtV9YD4pJtlDXWQYpaKFFRSPyMb1Q+Zr3T3Pcw2ONhm72yKR+w2EWSmncLYr9WVuBMr/sMMYY5y0 d4fUjZ0olF55wDUFE+2rN2CcIU4e8HjqVoo+2yvOLqPh8YDdw86l3Z0q9Vj5iq+gH6eLvU5WxEG/eZ cjgfLahNoXjCP0/dlPZeGn4vO8xP36bTR3heewwP2OUFH6FokRxzK85fJXQuhjeTP9WhSdxUtHSezM tHCWIEPOOULFM4ONKAHuXgfjk4aOsipHcg+5sWqeuzU6H3aQb40AiEIR/X7ToKo74ys1wDl1ZYvu2v c07D7+PJ59abndEeaJhxsqJUfYh2JY7ggnaUD/qTMlV+h+6oYiQ2xfc6fp0mcaO4qduMYvC30ATa4G rBzu0m3FByxUJKRnhZnkt6cNIIovqdDVjUbCt0fboRZUO0OOPjAJDGrGqPeArViNIyUJHYJyU87fIC o6/z5yPlNufXyH4ki0eM09QNq+3oIB+MFcUlvE1VrtB4qJYmqVYosQg35kBCPgpeFH9s9ZaIiEZb6q q00aBsO4vT+xKC6RAmJH89G7YBiDGotMkgw0F44f/jTcOCP3obE29Gyc86/A==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Looked through them and nearly all seem easy to replace.
+Partially revert commit 5f501d555653 ("binfmt_elf: reintroduce using
+MAP_FIXED_NOREPLACE").
 
-By the way, the call to ksize in arch/x86/kernel/cpu/microcode/amd.c
-doesn't look right. It allocates the memory with kmemdup. I don't see
-how it can assume that the padding is zero, and that seems to be a
-requirement since it zeroes the destination before copying to it.
-Seems far more reasonable to add a field with the size.
+At least ia64 has ET_EXEC PT_LOAD segments that are not virtual-address
+contiguous (but _are_ file-offset contiguous). This would result in
+giant mapping attempts to cover the entire span, including the virtual
+address range hole. Disable total_mapping_size for ET_EXEC, which
+reduces the MAP_FIXED_NOREPLACE coverage to only the first PT_LOAD:
+
+$ readelf -lW /usr/bin/gcc
+...
+Program Headers:
+  Type Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   ...
+...
+  LOAD 0x000000 0x4000000000000000 0x4000000000000000 0x00b5a0 0x00b5a0 ...
+  LOAD 0x00b5a0 0x600000000000b5a0 0x600000000000b5a0 0x0005ac 0x000710 ...
+...
+       ^^^^^^^^ ^^^^^^^^^^^^^^^^^^                    ^^^^^^^^ ^^^^^^^^
+
+File offset range     : 0x000000-0x00bb4c
+			0x00bb4c bytes
+
+Virtual address range : 0x4000000000000000-0x600000000000bcb0
+			0x200000000000bcb0 bytes
+
+Ironically, this is the reverse of the problem that originally caused
+problems with ET_EXEC and MAP_FIXED_NOREPLACE: overlaps. This problem is
+with holes. Future work could restore full coverage if load_elf_binary()
+were to perform mappings in a separate phase from the loading (where
+it could resolve both overlaps and holes).
+
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Reported-by: matoro <matoro_mailinglist_kernel@matoro.tk>
+Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Fixes: 5f501d555653 ("binfmt_elf: reintroduce using MAP_FIXED_NOREPLACE")
+Link: https://lore.kernel.org/r/a3edd529-c42d-3b09-135c-7e98a15b150f@leemhuis.info
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+matoro (or anyone else) can you please test this?
+---
+ fs/binfmt_elf.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
+
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 9bea703ed1c2..474b44032c65 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1136,14 +1136,25 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 			 * is then page aligned.
+ 			 */
+ 			load_bias = ELF_PAGESTART(load_bias - vaddr);
+-		}
+ 
+-		/*
+-		 * Calculate the entire size of the ELF mapping (total_size).
+-		 * (Note that first_pt_load is set to false later once the
+-		 * initial mapping is performed.)
+-		 */
+-		if (first_pt_load) {
++			/*
++			 * Calculate the entire size of the ELF mapping
++			 * (total_size), used for the initial mapping,
++			 * due to first_pt_load which is set to false later
++			 * once the initial mapping is performed.
++			 *
++			 * Note that this is only sensible when the LOAD
++			 * segments are contiguous (or overlapping). If
++			 * used for LOADs that are far apart, this would
++			 * cause the holes between LOADs to be mapped,
++			 * running the risk of having the mapping fail,
++			 * as it would be larger than the ELF file itself.
++			 *
++			 * As a result, only ET_DYN does this, since
++			 * some ET_EXEC (e.g. ia64) may have virtual
++			 * memory holes between LOADs.
++			 *
++			 */
+ 			total_size = total_mapping_size(elf_phdata,
+ 							elf_ex->e_phnum);
+ 			if (!total_size) {
+-- 
+2.32.0
+
