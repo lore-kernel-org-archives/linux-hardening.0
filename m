@@ -2,71 +2,99 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923B7C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Mar 2022 15:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49FAC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Mar 2022 15:16:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235534AbiCAPHi (ORCPT
+        id S235620AbiCAPRK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Mar 2022 10:07:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56418 "EHLO
+        Tue, 1 Mar 2022 10:17:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235482AbiCAPHh (ORCPT
+        with ESMTP id S235612AbiCAPRJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Mar 2022 10:07:37 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28543A650E;
-        Tue,  1 Mar 2022 07:06:56 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D20F9B81986;
-        Tue,  1 Mar 2022 15:06:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FFC2C340EE;
-        Tue,  1 Mar 2022 15:06:52 +0000 (UTC)
-Date:   Tue, 1 Mar 2022 10:06:50 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Daniel Latypov <dlatypov@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        David Gow <davidgow@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Magnus =?UTF-8?B?R3Jvw58=?= <magnus.gross@rwth-aachen.de>,
-        kunit-dev@googlegroups.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] binfmt_elf: Introduce KUnit test
-Message-ID: <20220301100650.52db90d8@gandalf.local.home>
-In-Reply-To: <CAGS_qxprS1e_f_K6bi-RvVESoPJ2yQgQVszcmcRFq_VQWduyAA@mail.gmail.com>
-References: <20220224054332.1852813-1-keescook@chromium.org>
-        <CAGS_qxp8cjG5jCX-7ziqHcy2gq_MqL8kU01-joFD_W9iPG08EA@mail.gmail.com>
-        <202202232208.B416701@keescook>
-        <20220224091550.2b7e8784@gandalf.local.home>
-        <CAGS_qxoXXkp2rVGrwa4h7bem-sgHikpMufrPXQaSzOW2N==tQw@mail.gmail.com>
-        <20220228232131.4b9cee32@rorschach.local.home>
-        <CAGS_qxprS1e_f_K6bi-RvVESoPJ2yQgQVszcmcRFq_VQWduyAA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Tue, 1 Mar 2022 10:17:09 -0500
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BE0D5694A4
+        for <linux-hardening@vger.kernel.org>; Tue,  1 Mar 2022 07:16:26 -0800 (PST)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-318-Vr7v5iKRMIKftw0gpJuxvQ-1; Tue, 01 Mar 2022 15:16:24 +0000
+X-MC-Unique: Vr7v5iKRMIKftw0gpJuxvQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.28; Tue, 1 Mar 2022 15:16:22 +0000
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.028; Tue, 1 Mar 2022 15:16:22 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Miguel Ojeda' <miguel.ojeda.sandonis@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+CC:     Dan Li <ashimida@linux.alibaba.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Sami Tolvanen" <samitolvanen@google.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Marco Elver <elver@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "llvm@lists.linux.dev" <llvm@lists.linux.dev>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: RE: [PATCH] [PATCH v2] AARCH64: Add gcc Shadow Call Stack support
+Thread-Topic: [PATCH] [PATCH v2] AARCH64: Add gcc Shadow Call Stack support
+Thread-Index: AQHYLU7BTsy+Ydg2gUOh1XD7Md8Cb6yqo40Q
+Date:   Tue, 1 Mar 2022 15:16:22 +0000
+Message-ID: <4b7a3af66c54458681f00a55a84752ab@AcuMS.aculab.com>
+References: <20220225032410.25622-1-ashimida@linux.alibaba.com>
+ <CANiq72kXoonDYk095XvBwEtRCRNECd1iQOqJHE2cNcgLyUMfcQ@mail.gmail.com>
+ <26a0a816-bc3e-2ac0-d773-0819d9f225af@linux.alibaba.com>
+ <CAKwvOdkykPtGTL6ud8qJZHSHKV2eSbpnZE-G4oyymD9BiQKHdg@mail.gmail.com>
+ <CANiq72m0O7ua3F3eqcEru9RuEWHQbG4SumRSoKCi50A8d-+HtA@mail.gmail.com>
+In-Reply-To: <CANiq72m0O7ua3F3eqcEru9RuEWHQbG4SumRSoKCi50A8d-+HtA@mail.gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 28 Feb 2022 22:42:51 -0800
-Daniel Latypov <dlatypov@google.com> wrote:
+RnJvbTogTWlndWVsIE9qZWRhDQo+IFNlbnQ6IDAxIE1hcmNoIDIwMjIgMDk6MjkNCj4gDQo+IE9u
+IE1vbiwgRmViIDI4LCAyMDIyIGF0IDExOjM1IFBNIE5pY2sgRGVzYXVsbmllcnMNCj4gPG5kZXNh
+dWxuaWVyc0Bnb29nbGUuY29tPiB3cm90ZToNCj4gPg0KPiA+IE9yIHNpbXBseSBhZGQgYSAjZGVm
+aW5lIGZvciBfX25vc2NzIHRvIGluY2x1ZGUvbGludXgvY29tcGlsZXItZ2NjLmgNCj4gPiB3aXRo
+IGFwcHJvcHJpYXRlIGd1YXJkIGFuZCBsZWF2ZSB0aGUgZXhpc3RpbmcgI2lmbmRlZiBpbg0KPiA+
+IGluY2x1ZGUvbGludXgvY29tcGlsZXJfdHlwZXMuaCBhcyBpcy4gIEknZCBwcmVmZXIgdGhhdCB3
+aGVuIHRoZQ0KPiA+IGNvbXBpbGVycyBkaWZmZXIgaW4gdGVybXMgb2YgZmVhdHVyZSBkZXRlY3Rp
+b24gc2luY2UgaXQncyBhcyBleHBsaWNpdA0KPiA+IGFzIHBvc3NpYmxlLg0KPiANCj4gVGhlIGlk
+ZWEgaXMgdG8gYXZvaWQgZGlmZmVyaW5nIGhlcmUgdG8gYmVnaW4gd2l0aCwgaS5lLiB0byB1c2Ug
+dGhlDQo+IHNhbWUgY29kZSBmb3IgYm90aCBjb21waWxlcnMgKG9ubHkgd2hlbmV2ZXIgdGhhdCBp
+cyBwb3NzaWJsZSwgb2YNCj4gY291cnNlKSwgdGh1cyBoYXZpbmcgYSBzaW5nbGUgYCNkZWZpbmVg
+IGluIGEgc2luZ2xlIGZpbGUuDQo+IA0KPiBEbyB5b3UgdGhpbmsgd2Ugd2lsbCBoYXZlIHRvIGNo
+YW5nZSBpbiB0aGUgZnV0dXJlIGZvciBzb21lIHJlYXNvbiwNCj4gdGh1cyBuZWVkaW5nIHRvIHNw
+bGl0IGl0IGFnYWluPw0KDQpXaGF0IGhhcHBlbnMgaWYgYW4gb3V0IG9mIHRyZWUgbW9kdWxlIGlz
+IGNvbXBpbGVkIHdpdGggdGhlIG90aGVyIGNvbXBpbGVyPw0KU3VyZWx5IHRoaXMgaXMgcGFydCBv
+ZiB0aGUgQUJJIGFuZCBzaG91bGQgYmUgZGVmaW5lZCBmb3IgdGhlIGFyY2hpdGVjdHVyZT8NCg0K
+CURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBN
+b3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAx
+Mzk3Mzg2IChXYWxlcykNCg==
 
-> But it'd definitely be interesting to try and get klp_arch_set_pc()
-> working on UML if that's a possibility!
-> Speaking from ignorance, I can see this either being somewhat simple
-
-Looking at UML, it doesn't even look like it has ftrace support. So that
-would be required to do it for that arch.
-
-For UML, I'm not sure its worth it. I don't use UML but maybe others would
-want ftrace for it? As UML runs in userspace, the motivation for things like
-ftrace is not as high as you have gdb to walk through everything.
-
-That said, I'm sure it would be a fun exercise for anyone to port ftrace to
-UML :-)
-
--- Steve
