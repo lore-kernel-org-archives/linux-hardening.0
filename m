@@ -2,99 +2,160 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2F2C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Mar 2022 09:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FCFC433FE
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Mar 2022 12:36:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233720AbiCAJ3Z (ORCPT
+        id S233757AbiCAMhS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Mar 2022 04:29:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36306 "EHLO
+        Tue, 1 Mar 2022 07:37:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232878AbiCAJ3Y (ORCPT
+        with ESMTP id S232437AbiCAMhR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Mar 2022 04:29:24 -0500
-Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A3713EBF;
-        Tue,  1 Mar 2022 01:28:44 -0800 (PST)
-Received: by mail-io1-xd2d.google.com with SMTP id h16so17726841iol.11;
-        Tue, 01 Mar 2022 01:28:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z7oq8QcvuWk9j+Ov9KHZtupOvSMMPTgudSgXmryJLhQ=;
-        b=fRpR+SsX+n+Y1VEfkpZyHODKF8yXim+Aoe60zorIil+hZG+9Usa+tgQ0zvFIj5zBbg
-         OQM1fHJ3kgV7ExCOKpO2ad4BbbpwHRuGzBQsyumH/cZyxetB3Ul6gf6HsuCm3P1l9p2m
-         JTHKIL33/2wxY7+F3j0dNcRNcv7TdjS1jPjiayNdiFXhWj9leeb5hQOUoZzMK5H+s+Ug
-         yO0sS4U0y3h8t8oc04RvGH5SO094xiFVlh1C2PpwUCgndN5CUAjbtyluiu4Yzb/Cdh00
-         usJd7gUeU6NFXBAu5nTmoZp36flGtXO/5izMZ7SdJOZY8Ko+7vQOwF6ZHp1psHTFxlEn
-         j/3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z7oq8QcvuWk9j+Ov9KHZtupOvSMMPTgudSgXmryJLhQ=;
-        b=RsB0YQXO2AMcELQj9d5f0HhiSOOAxGhHbugUhsH7G62LoBiLueqKawtlV1B4VRCmir
-         hVmHLEfew93ii0AAshCRcqpiFIbnVy9HOTrOn0PWeV59r5SJhz3VPyjVdbuLHKaQYbQ1
-         mTEyRx2+bEJQLXy8m7Fa4SamtJkUysNZgjMzW7NCSqTBBXwe3nXUmFArF0jC7oyVEiMd
-         XXy6zbnaEmMvfn2imaJtezmFYdS2Lyym96dGqZYhC5dGZGbZF8o+xW79UPLUdoFLHdJr
-         BIx8v7EvlA2NYyupc4pySeOtvm2aUYW5I5rLOafs3E4YWXeK0bUG3uK4CfBUvmNDrAVv
-         TomA==
-X-Gm-Message-State: AOAM531fyNCmt3ljo3BiyrMPlspkBdH0YTTcaixdcj5ICdpICzvQGMsm
-        32AEqT+8BxhLxUEvpaLrJL/b3hNgAKgMF+jPpvg=
-X-Google-Smtp-Source: ABdhPJxw/F8LUd4tEHyA5ovxOOp8pZe/oUlm9MRBeqi6FVI6eyJZsSFV8WHtzwLweWE6jNo0DcDrz7YmIJ0P8JbMJXA=
-X-Received: by 2002:a05:6638:1117:b0:30d:1e9f:26ca with SMTP id
- n23-20020a056638111700b0030d1e9f26camr20714457jal.256.1646126923740; Tue, 01
- Mar 2022 01:28:43 -0800 (PST)
+        Tue, 1 Mar 2022 07:37:17 -0500
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 983B697BBF;
+        Tue,  1 Mar 2022 04:36:36 -0800 (PST)
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.94)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1nP1jk-003IcG-9v; Tue, 01 Mar 2022 13:36:16 +0100
+Received: from suse-laptop.physik.fu-berlin.de ([160.45.32.140])
+          by inpost2.zedat.fu-berlin.de (Exim 4.94)
+          with esmtpsa (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1nP1jk-001HI7-3q; Tue, 01 Mar 2022 13:36:16 +0100
+Message-ID: <49182d0d-708b-4029-da5f-bc18603440a6@physik.fu-berlin.de>
+Date:   Tue, 1 Mar 2022 13:36:15 +0100
 MIME-Version: 1.0
-References: <20220225032410.25622-1-ashimida@linux.alibaba.com>
- <CANiq72kXoonDYk095XvBwEtRCRNECd1iQOqJHE2cNcgLyUMfcQ@mail.gmail.com>
- <26a0a816-bc3e-2ac0-d773-0819d9f225af@linux.alibaba.com> <CAKwvOdkykPtGTL6ud8qJZHSHKV2eSbpnZE-G4oyymD9BiQKHdg@mail.gmail.com>
-In-Reply-To: <CAKwvOdkykPtGTL6ud8qJZHSHKV2eSbpnZE-G4oyymD9BiQKHdg@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Tue, 1 Mar 2022 10:28:32 +0100
-Message-ID: <CANiq72m0O7ua3F3eqcEru9RuEWHQbG4SumRSoKCi50A8d-+HtA@mail.gmail.com>
-Subject: Re: [PATCH] [PATCH v2] AARCH64: Add gcc Shadow Call Stack support
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Dan Li <ashimida@linux.alibaba.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH 5.16 v2] binfmt_elf: Avoid total_mapping_size for ET_EXEC
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        matoro <matoro_mailinglist_kernel@matoro.tk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        stable@vger.kernel.org,
+        =?UTF-8?Q?Magnus_Gro=c3=9f?= <magnus.gross@rwth-aachen.de>,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Marco Elver <elver@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        regressions@lists.linux.dev, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20220228205518.1265798-1-keescook@chromium.org>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+In-Reply-To: <20220228205518.1265798-1-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 160.45.32.140
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Feb 28, 2022 at 11:35 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> Or simply add a #define for __noscs to include/linux/compiler-gcc.h
-> with appropriate guard and leave the existing #ifndef in
-> include/linux/compiler_types.h as is.  I'd prefer that when the
-> compilers differ in terms of feature detection since it's as explicit
-> as possible.
+Hello!
 
-The idea is to avoid differing here to begin with, i.e. to use the
-same code for both compilers (only whenever that is possible, of
-course), thus having a single `#define` in a single file.
+On 2/28/22 21:55, Kees Cook wrote:
+> Partially revert commit 5f501d555653 ("binfmt_elf: reintroduce using
+> MAP_FIXED_NOREPLACE").
+> 
+> At least ia64 has ET_EXEC PT_LOAD segments that are not virtual-address
+> contiguous (but _are_ file-offset contiguous). This would result in
+> giant mapping attempts to cover the entire span, including the virtual
+> address range hole. Disable total_mapping_size for ET_EXEC, which
+> reduces the MAP_FIXED_NOREPLACE coverage to only the first PT_LOAD:
+> 
+> $ readelf -lW /usr/bin/gcc
+> ...
+> Program Headers:
+>   Type Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   ...
+> ...
+>   LOAD 0x000000 0x4000000000000000 0x4000000000000000 0x00b5a0 0x00b5a0 ...
+>   LOAD 0x00b5a0 0x600000000000b5a0 0x600000000000b5a0 0x0005ac 0x000710 ...
+> ...
+>        ^^^^^^^^ ^^^^^^^^^^^^^^^^^^                    ^^^^^^^^ ^^^^^^^^
+> 
+> File offset range     : 0x000000-0x00bb4c
+> 			0x00bb4c bytes
+> 
+> Virtual address range : 0x4000000000000000-0x600000000000bcb0
+> 			0x200000000000bcb0 bytes
+> 
+> Ironically, this is the reverse of the problem that originally caused
+> problems with ET_EXEC and MAP_FIXED_NOREPLACE: overlaps. This problem is
+> with holes. Future work could restore full coverage if load_elf_binary()
+> were to perform mappings in a separate phase from the loading (where
+> it could resolve both overlaps and holes).
+> 
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Reported-by: matoro <matoro_mailinglist_kernel@matoro.tk>
+> Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> Fixes: 5f501d555653 ("binfmt_elf: reintroduce using MAP_FIXED_NOREPLACE")
+> Link: https://lore.kernel.org/r/a3edd529-c42d-3b09-135c-7e98a15b150f@leemhuis.info
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> Here's the v5.16 backport.
+> ---
+>  fs/binfmt_elf.c | 25 ++++++++++++++++++-------
+>  1 file changed, 18 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index f8c7f26f1fbb..911a9e7044f4 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -1135,14 +1135,25 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  			 * is then page aligned.
+>  			 */
+>  			load_bias = ELF_PAGESTART(load_bias - vaddr);
+> -		}
+>  
+> -		/*
+> -		 * Calculate the entire size of the ELF mapping (total_size).
+> -		 * (Note that load_addr_set is set to true later once the
+> -		 * initial mapping is performed.)
+> -		 */
+> -		if (!load_addr_set) {
+> +			/*
+> +			 * Calculate the entire size of the ELF mapping
+> +			 * (total_size), used for the initial mapping,
+> +			 * due to first_pt_load which is set to false later
+> +			 * once the initial mapping is performed.
+> +			 *
+> +			 * Note that this is only sensible when the LOAD
+> +			 * segments are contiguous (or overlapping). If
+> +			 * used for LOADs that are far apart, this would
+> +			 * cause the holes between LOADs to be mapped,
+> +			 * running the risk of having the mapping fail,
+> +			 * as it would be larger than the ELF file itself.
+> +			 *
+> +			 * As a result, only ET_DYN does this, since
+> +			 * some ET_EXEC (e.g. ia64) may have virtual
+> +			 * memory holes between LOADs.
+> +			 *
+> +			 */
+>  			total_size = total_mapping_size(elf_phdata,
+>  							elf_ex->e_phnum);
+>  			if (!total_size) {
 
-Do you think we will have to change in the future for some reason,
-thus needing to split it again?
+I can confirm that this patch fixes the issue for me.
 
-Cheers,
-Miguel
+Tested-By: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+
+Thanks,
+Adrian
+
+-- 
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+
