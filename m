@@ -2,99 +2,67 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B49FAC433F5
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Mar 2022 15:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA20C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Mar 2022 16:34:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235620AbiCAPRK (ORCPT
+        id S235400AbiCAQf3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Mar 2022 10:17:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60192 "EHLO
+        Tue, 1 Mar 2022 11:35:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235612AbiCAPRJ (ORCPT
+        with ESMTP id S235901AbiCAQf2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Mar 2022 10:17:09 -0500
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BE0D5694A4
-        for <linux-hardening@vger.kernel.org>; Tue,  1 Mar 2022 07:16:26 -0800 (PST)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-318-Vr7v5iKRMIKftw0gpJuxvQ-1; Tue, 01 Mar 2022 15:16:24 +0000
-X-MC-Unique: Vr7v5iKRMIKftw0gpJuxvQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.28; Tue, 1 Mar 2022 15:16:22 +0000
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.028; Tue, 1 Mar 2022 15:16:22 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Miguel Ojeda' <miguel.ojeda.sandonis@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-CC:     Dan Li <ashimida@linux.alibaba.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Tue, 1 Mar 2022 11:35:28 -0500
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8FB8513FB1;
+        Tue,  1 Mar 2022 08:34:47 -0800 (PST)
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1nP5SV-0006n6-01; Tue, 01 Mar 2022 17:34:43 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 91177C28F1; Tue,  1 Mar 2022 17:30:20 +0100 (CET)
+Date:   Tue, 1 Mar 2022 17:30:20 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Marc Zyngier <maz@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
         Mark Rutland <mark.rutland@arm.com>,
-        "Sami Tolvanen" <samitolvanen@google.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Marco Elver <elver@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "llvm@lists.linux.dev" <llvm@lists.linux.dev>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH] [PATCH v2] AARCH64: Add gcc Shadow Call Stack support
-Thread-Topic: [PATCH] [PATCH v2] AARCH64: Add gcc Shadow Call Stack support
-Thread-Index: AQHYLU7BTsy+Ydg2gUOh1XD7Md8Cb6yqo40Q
-Date:   Tue, 1 Mar 2022 15:16:22 +0000
-Message-ID: <4b7a3af66c54458681f00a55a84752ab@AcuMS.aculab.com>
-References: <20220225032410.25622-1-ashimida@linux.alibaba.com>
- <CANiq72kXoonDYk095XvBwEtRCRNECd1iQOqJHE2cNcgLyUMfcQ@mail.gmail.com>
- <26a0a816-bc3e-2ac0-d773-0819d9f225af@linux.alibaba.com>
- <CAKwvOdkykPtGTL6ud8qJZHSHKV2eSbpnZE-G4oyymD9BiQKHdg@mail.gmail.com>
- <CANiq72m0O7ua3F3eqcEru9RuEWHQbG4SumRSoKCi50A8d-+HtA@mail.gmail.com>
-In-Reply-To: <CANiq72m0O7ua3F3eqcEru9RuEWHQbG4SumRSoKCi50A8d-+HtA@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Yanteng Si <siyanteng01@gmail.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] mips: Implement "current_stack_pointer"
+Message-ID: <20220301163020.GB13091@alpha.franken.de>
+References: <20220224060432.1855897-1-keescook@chromium.org>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220224060432.1855897-1-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-RnJvbTogTWlndWVsIE9qZWRhDQo+IFNlbnQ6IDAxIE1hcmNoIDIwMjIgMDk6MjkNCj4gDQo+IE9u
-IE1vbiwgRmViIDI4LCAyMDIyIGF0IDExOjM1IFBNIE5pY2sgRGVzYXVsbmllcnMNCj4gPG5kZXNh
-dWxuaWVyc0Bnb29nbGUuY29tPiB3cm90ZToNCj4gPg0KPiA+IE9yIHNpbXBseSBhZGQgYSAjZGVm
-aW5lIGZvciBfX25vc2NzIHRvIGluY2x1ZGUvbGludXgvY29tcGlsZXItZ2NjLmgNCj4gPiB3aXRo
-IGFwcHJvcHJpYXRlIGd1YXJkIGFuZCBsZWF2ZSB0aGUgZXhpc3RpbmcgI2lmbmRlZiBpbg0KPiA+
-IGluY2x1ZGUvbGludXgvY29tcGlsZXJfdHlwZXMuaCBhcyBpcy4gIEknZCBwcmVmZXIgdGhhdCB3
-aGVuIHRoZQ0KPiA+IGNvbXBpbGVycyBkaWZmZXIgaW4gdGVybXMgb2YgZmVhdHVyZSBkZXRlY3Rp
-b24gc2luY2UgaXQncyBhcyBleHBsaWNpdA0KPiA+IGFzIHBvc3NpYmxlLg0KPiANCj4gVGhlIGlk
-ZWEgaXMgdG8gYXZvaWQgZGlmZmVyaW5nIGhlcmUgdG8gYmVnaW4gd2l0aCwgaS5lLiB0byB1c2Ug
-dGhlDQo+IHNhbWUgY29kZSBmb3IgYm90aCBjb21waWxlcnMgKG9ubHkgd2hlbmV2ZXIgdGhhdCBp
-cyBwb3NzaWJsZSwgb2YNCj4gY291cnNlKSwgdGh1cyBoYXZpbmcgYSBzaW5nbGUgYCNkZWZpbmVg
-IGluIGEgc2luZ2xlIGZpbGUuDQo+IA0KPiBEbyB5b3UgdGhpbmsgd2Ugd2lsbCBoYXZlIHRvIGNo
-YW5nZSBpbiB0aGUgZnV0dXJlIGZvciBzb21lIHJlYXNvbiwNCj4gdGh1cyBuZWVkaW5nIHRvIHNw
-bGl0IGl0IGFnYWluPw0KDQpXaGF0IGhhcHBlbnMgaWYgYW4gb3V0IG9mIHRyZWUgbW9kdWxlIGlz
-IGNvbXBpbGVkIHdpdGggdGhlIG90aGVyIGNvbXBpbGVyPw0KU3VyZWx5IHRoaXMgaXMgcGFydCBv
-ZiB0aGUgQUJJIGFuZCBzaG91bGQgYmUgZGVmaW5lZCBmb3IgdGhlIGFyY2hpdGVjdHVyZT8NCg0K
-CURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBN
-b3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAx
-Mzk3Mzg2IChXYWxlcykNCg==
+On Wed, Feb 23, 2022 at 10:04:32PM -0800, Kees Cook wrote:
+> To follow the existing per-arch conventions replace open-coded uses
+> of asm "sp" as "current_stack_pointer". This will let it be used in
+> non-arch places (like HARDENED_USERCOPY).
+> 
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Yanteng Si <siyanteng01@gmail.com>
+> Cc: linux-mips@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/mips/Kconfig                   | 1 +
+>  arch/mips/include/asm/thread_info.h | 2 ++
+>  arch/mips/kernel/irq.c              | 3 +--
+>  arch/mips/lib/uncached.c            | 4 +---
+>  4 files changed, 5 insertions(+), 5 deletions(-)
 
+applied to mips-next.
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
