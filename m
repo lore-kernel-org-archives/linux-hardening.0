@@ -2,92 +2,130 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B78C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Mar 2022 00:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126E6C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Mar 2022 01:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231835AbiCAAco (ORCPT
+        id S231656AbiCABtV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 28 Feb 2022 19:32:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44786 "EHLO
+        Mon, 28 Feb 2022 20:49:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231695AbiCAAco (ORCPT
+        with ESMTP id S229630AbiCABtU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 28 Feb 2022 19:32:44 -0500
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9FD56AA79;
-        Mon, 28 Feb 2022 16:32:03 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0V5pNUKO_1646094718;
-Received: from 192.168.193.153(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V5pNUKO_1646094718)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 01 Mar 2022 08:31:59 +0800
-Message-ID: <bf34b523-8477-c18c-e076-e120051cb6a1@linux.alibaba.com>
-Date:   Mon, 28 Feb 2022 16:31:58 -0800
+        Mon, 28 Feb 2022 20:49:20 -0500
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 563655B880
+        for <linux-hardening@vger.kernel.org>; Mon, 28 Feb 2022 17:48:40 -0800 (PST)
+Received: by mail-ej1-x635.google.com with SMTP id d10so28442422eje.10
+        for <linux-hardening@vger.kernel.org>; Mon, 28 Feb 2022 17:48:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qdaEKJNXyehKmI6OZeRutyAexvnsM0OhIQCRJEZlx28=;
+        b=hk62M/2R3BtupGl5Pb4JIGG6SEHCrWhREvCKfHTYpMBQ4qyhyY+4bK5b+KJJU+prb9
+         jw2/VkjB829+5rxjhC8YKv2FW83z6j482i2qwn1Sq0qRLTW3HOGlTLaPuCIa64sdQ81F
+         6HHA+4u8A39L+cEhNKhWdNpr6HcBlGxPaSH4+wuVJU/yiAvPZT1x+P19RzP0NJiTSqqd
+         HTvyvR1g9rOPUbgaKmcGVAAIMAxR6leD35by1icaadxC09XUfXdMOykTBR0JUJDXqzKP
+         V6NnInEOsPCBEJBhms88PsDL+DOV7tlECL4waxonwf7rH2nwCSmbrvFe6JU9fiKYefHu
+         I4BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qdaEKJNXyehKmI6OZeRutyAexvnsM0OhIQCRJEZlx28=;
+        b=qsyV4eYbJK/ikyIv1hFZLxbsjjF7z6cvQEy5ki81aOowGjfGjIncW0EB+6ckDBtuOV
+         wXMW6FjvrZUpIzFF/RWfnw97P0StvOgod4WEBoS5y74KfhN9eWTMJxHUB3axLFHImEou
+         JSHy5cJy3dlLyU7X6IueDFcsMT9GFpsVwPUkr5Ql1Wqup9RyCapoHVVma6YWDIkcX5Us
+         EwZmhoDrYn2tEqqv6btgnv6Z9xwTK8srUftNgbUM7qBNLK+oeZKcOZUEvEK+kKM140lw
+         oQFkHaOBEAaiedoOMjR48z6fJ72ZHZ1VFuIFgS/poJaFAu14GfzxXncbHZwUQCU/XdSE
+         LsgQ==
+X-Gm-Message-State: AOAM5330GCZK+mFTeTN9vqziH1F6NnInmbanuukwoD45trhIdNiYeoe8
+        V/ZCQtp1XD3pbUckKOJ8fLglwuN0SiKn8CKDHhXXwA==
+X-Google-Smtp-Source: ABdhPJyJnxStim8LcjtJqPLQfafGeXLVGaK+Vyh2JMgcZlT8OZOQfzz8aTwShCHtjtoXEwTHtyCJSy/5UpDO1v71xzI=
+X-Received: by 2002:a17:906:6d0b:b0:6d1:d64e:3142 with SMTP id
+ m11-20020a1709066d0b00b006d1d64e3142mr17304749ejr.631.1646099318663; Mon, 28
+ Feb 2022 17:48:38 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH] [PATCH v2] AARCH64: Add gcc Shadow Call Stack support
-Content-Language: en-US
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Marco Elver <elver@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20220225032410.25622-1-ashimida@linux.alibaba.com>
- <CANiq72kXoonDYk095XvBwEtRCRNECd1iQOqJHE2cNcgLyUMfcQ@mail.gmail.com>
- <26a0a816-bc3e-2ac0-d773-0819d9f225af@linux.alibaba.com>
- <CAKwvOdkykPtGTL6ud8qJZHSHKV2eSbpnZE-G4oyymD9BiQKHdg@mail.gmail.com>
-From:   Dan Li <ashimida@linux.alibaba.com>
-In-Reply-To: <CAKwvOdkykPtGTL6ud8qJZHSHKV2eSbpnZE-G4oyymD9BiQKHdg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20220224054332.1852813-1-keescook@chromium.org>
+ <CAGS_qxp8cjG5jCX-7ziqHcy2gq_MqL8kU01-joFD_W9iPG08EA@mail.gmail.com>
+ <202202232208.B416701@keescook> <20220224091550.2b7e8784@gandalf.local.home>
+In-Reply-To: <20220224091550.2b7e8784@gandalf.local.home>
+From:   Daniel Latypov <dlatypov@google.com>
+Date:   Mon, 28 Feb 2022 17:48:27 -0800
+Message-ID: <CAGS_qxoXXkp2rVGrwa4h7bem-sgHikpMufrPXQaSzOW2N==tQw@mail.gmail.com>
+Subject: Re: [PATCH] binfmt_elf: Introduce KUnit test
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        David Gow <davidgow@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        =?UTF-8?B?TWFnbnVzIEdyb8Of?= <magnus.gross@rwth-aachen.de>,
+        kunit-dev@googlegroups.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Thu, Feb 24, 2022 at 6:15 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Wed, 23 Feb 2022 22:13:25 -0800
+> Kees Cook <keescook@chromium.org> wrote:
+>
+> > Steven, I want to do fancy live-patch kind or things to replace functions,
+> > but it doesn't need to be particularly fancy because KUnit tests (usually)
+> > run single-threaded, etc. It looks like kprobes could almost do it, but
+> > I don't see a way to have it _avoid_ making a function call.
+>
+>
+> // This is called just before the hijacked function is called
+> static void notrace my_tramp(unsigned long ip, unsigned long parent_ip,
+>                              struct ftrace_ops *ops,
+>                              struct ftrace_regs *fregs)
+> {
+>         int bit;
+>
+>         bit = ftrace_test_recursion_trylock(ip, parent_ip);
+>         if (WARN_ON_ONCE(bit < 0))
+>                 return;
+>
+>         /*
+>          * This uses the live kernel patching arch code to now return
+>          * to new_function() instead of the one that was called.
+>          * If you want to do a lookup, you can look at the "ip"
+>          * which will give you the function you are about to replace.
+>          * Note, it may not be equal to the function address,
+>          * but for that, you can have this:
+>          *   ip = ftrace_location(function_ip);
+>          * which will give the ip that is passed here.
+>          */
+>         klp_arch_set_pc(fregs, new_function);
 
+Ahah!
+This was the missing bit.
 
-On 2/28/22 14:35, Nick Desaulniers wrote:
-> On Sun, Feb 27, 2022 at 11:37 PM Dan Li <ashimida@linux.alibaba.com> wrote:
->>>> +#ifdef CONFIG_SHADOW_CALL_STACK
->>>> +#define __noscs __attribute__((__no_sanitize__("shadow-call-stack")))
->>>> +#endif
->>>
->>> Since both compilers have it, and I guess the `#ifdef` condition would
->>> work for both, could this be moved into `compiler_types.h` where the
->>> empty `__noscs` definition is, and remove the one from
->>> `compiler-clang.h`?
->>>
->> In the clang documentation I see __has_feature(shadow_call_stack) is
->> used to check if -fsanitize=shadow-call-stack is enabled, so I think
->> maybe it's fine to use "#ifdef CONFIG_SHADOW_CALL_STACK"
->> instead of "#if __has_attribute(__no_sanitize_address__)" here, then
->> move it to `compiler_types.h`.
-> 
-> Or simply add a #define for __noscs to include/linux/compiler-gcc.h
-> with appropriate guard and leave the existing #ifndef in
-> include/linux/compiler_types.h as is.  I'd prefer that when the
-> compilers differ in terms of feature detection since it's as explicit
-> as possible.
-> 
+David and I both got so excited by this we prototyped experimental
+APIs around this over the weekend.
+He also prototyped a more intrusive alternative to using ftrace and
+kernel livepatch since they don't work on all arches, like UML.
 
-To make sure I understand correctly, that means I should keep
-the current patch unchanged right?
+We're splitting up responsibility and will each submit RFCs to the
+list in the coming days.
+I'll send the ftrace one based on this.
+He'll send his alternative one as well.
+I think we'll end up having both approaches as they both have their usecases.
+
+It'll take some iteration to bikeshed stuff like names and make them
+more consistent with each other.
+I've posted my working copy on Gerrit for now, if people want to take
+a look: https://kunit-review.googlesource.com/c/linux/+/5109
+
+It should be visible publicly, but it will prompt you to sign in if
+you try to post comments ;(
+If anyone has comments before we send out the RFCs, feel free to email
+me directly and CC kunit-dev@.
 
 Thanks,
-Dan.
-
+Daniel
