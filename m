@@ -2,118 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 443CEC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Mar 2022 20:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC0BC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Mar 2022 05:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231714AbiCAUMz (ORCPT
+        id S239573AbiCBFOf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Mar 2022 15:12:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39654 "EHLO
+        Wed, 2 Mar 2022 00:14:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229940AbiCAUMz (ORCPT
+        with ESMTP id S239424AbiCBFOf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Mar 2022 15:12:55 -0500
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4939115A0C
-        for <linux-hardening@vger.kernel.org>; Tue,  1 Mar 2022 12:12:13 -0800 (PST)
-Received: by mail-lj1-x232.google.com with SMTP id e8so23417307ljj.2
-        for <linux-hardening@vger.kernel.org>; Tue, 01 Mar 2022 12:12:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uNDp5KXCKeop2yOo8l/8mrZzIPAvGyioW/V2tn2igq8=;
-        b=EO9u4Ku7uUzMJhGxZnToQLWVHSB4bnEI2drfTxCzPLe+5ic0u1rMguA3h3bRxU3eoh
-         cReVFeLfqv41v3lc3J6nFr4/J+1SwXrqJO18UMmVGOpbxSQmHTbbCyTGYJZ4YXf3+CHs
-         6Q7ScdzXZfZmWBKeHWAN1Zbjq5xv2bsu4AH5cQ4cimtfCgojo1pUQQ5M7SgiGwsBydVB
-         htmv4EdHl2zD6o3DLHcOUsoVrhimoKH+6sblZoGinbMC61wo3YF6n7Wl94kvm2SRe+Ri
-         UwehA2XtceHZx+OtpmA9bfvtnAah569VEqFNIO9b8S3mNUPxDnikkXHpSJk+jSXWArcZ
-         +FNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uNDp5KXCKeop2yOo8l/8mrZzIPAvGyioW/V2tn2igq8=;
-        b=INjxp+dgnRooAs2myxmvvoVcU+ru2xX3lRZMSqmXphQrhyvPuWTzevdyzPwjuLPYZa
-         cxFJjgyiSh74qVEcASMRx/SoG84ny5XHnmQGjNi1GD1JElnSA8QM4rtACT9/Rod6zVxh
-         2hA/AdIPLfE05QTFEwoPxiRS4DrW66e2i/vZ5s75UcnMXOzA8+i5vNYoOXWeSEGf8gqW
-         iC57a1tuoCULXlfV9sNXrKGZovtN003hbFCRcTSZLBC2a+0fm4pHjQzTvifpWH6hVHDH
-         e8apCReXu4ru/hgnLXMErS+Yt1/xYFJyLWcN9CZttk5Ie0U7BVZC6AJZAijVDlzeUdyP
-         yhcQ==
-X-Gm-Message-State: AOAM530953RgbRNaP69h2ANZV/ZW0DdAERyd9cMAvjzDE89zHjre7YrS
-        qKdsCOZ6RS4GCjNXgthLgXMb86Jg7fnSvUAnMAzZTA==
-X-Google-Smtp-Source: ABdhPJxFT25RN4upV+eC9mqObTsE3rwkSU3a9SxEuU0pbBYsUXuPSAtJL86l5x1ByKd9eTwBOET3LqI2vtpo2CE6jm8=
-X-Received: by 2002:a05:651c:1791:b0:243:94bd:d94c with SMTP id
- bn17-20020a05651c179100b0024394bdd94cmr17832518ljb.468.1646165531034; Tue, 01
- Mar 2022 12:12:11 -0800 (PST)
-MIME-Version: 1.0
-References: <20220225032410.25622-1-ashimida@linux.alibaba.com>
- <CANiq72kXoonDYk095XvBwEtRCRNECd1iQOqJHE2cNcgLyUMfcQ@mail.gmail.com>
- <26a0a816-bc3e-2ac0-d773-0819d9f225af@linux.alibaba.com> <CAKwvOdkykPtGTL6ud8qJZHSHKV2eSbpnZE-G4oyymD9BiQKHdg@mail.gmail.com>
- <bf34b523-8477-c18c-e076-e120051cb6a1@linux.alibaba.com>
-In-Reply-To: <bf34b523-8477-c18c-e076-e120051cb6a1@linux.alibaba.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 1 Mar 2022 12:11:59 -0800
-Message-ID: <CAKwvOd=6atvH9fJk0jJcqksSQXZ6wFyAvZ1wsZ7UWsEN-soOTg@mail.gmail.com>
-Subject: Re: [PATCH] [PATCH v2] AARCH64: Add gcc Shadow Call Stack support
-To:     Dan Li <ashimida@linux.alibaba.com>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        Wed, 2 Mar 2022 00:14:35 -0500
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62A41B150A;
+        Tue,  1 Mar 2022 21:13:46 -0800 (PST)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 2222ZTug016801;
+        Wed, 2 Mar 2022 05:13:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2021-07-09;
+ bh=NbzeaFi0z7Sz9o52SekKgALm+FojvqOIJNhInDMUZqA=;
+ b=MyKytFczjIcPJlH9Ayr0JP6fe4tDiNqaDT8Ubj6NjkN7Xe4A6/QzSTnE39dpKWR8dJB4
+ R5Ig43hjswt+I4KetWdykFgItdbYk/VfY88M5AuTn0845tfYoy3oFzje6OvmfRmF/FU6
+ lT+mshpM/dMeY3pn08MV7fDEUt+yfDPEtRMyz9Uym087FQ1hx2/dy+LBZOtM6R9QObi4
+ fn6F34V5jKVAK1zHmmyEVidE2DPtcrq7FK/as01ugd0GPm/Utpp6OIFlm4TXhYVfC+JF
+ RDYp46ETM2WRq9P8djgftVhTq7swnHhQdqOVVLquKAZ6tiPP84iU2KPSaDQ6+n0X9wSx FQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3ehdayu3fh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Mar 2022 05:13:39 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 2225C1tK175224;
+        Wed, 2 Mar 2022 05:13:38 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3030.oracle.com with ESMTP id 3ef9ayxgmp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Mar 2022 05:13:37 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 2225DVPQ178145;
+        Wed, 2 Mar 2022 05:13:37 GMT
+Received: from ca-mkp.mkp.ca.oracle.com (ca-mkp.ca.oracle.com [10.156.108.201])
+        by userp3030.oracle.com with ESMTP id 3ef9ayxgcv-6;
+        Wed, 02 Mar 2022 05:13:37 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Hannes Reinecke <hare@suse.de>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org,
         Nathan Chancellor <nathan@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Marco Elver <elver@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-hardening@vger.kernel.org, linux-scsi@vger.kernel.org
+Subject: Re: [PATCH v2][next] scsi: fc: Replace one-element arrays with flexible-array members
+Date:   Wed,  2 Mar 2022 00:13:24 -0500
+Message-Id: <164619702111.16127.16766138322408976398.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220214223903.GA859464@embeddedor>
+References: <20220214223903.GA859464@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: I1L9p48POxWdIF1CCogKKpt7HuxyLff7
+X-Proofpoint-ORIG-GUID: I1L9p48POxWdIF1CCogKKpt7HuxyLff7
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Feb 28, 2022 at 4:32 PM Dan Li <ashimida@linux.alibaba.com> wrote:
->
->
->
-> On 2/28/22 14:35, Nick Desaulniers wrote:
-> > On Sun, Feb 27, 2022 at 11:37 PM Dan Li <ashimida@linux.alibaba.com> wrote:
-> >>>> +#ifdef CONFIG_SHADOW_CALL_STACK
-> >>>> +#define __noscs __attribute__((__no_sanitize__("shadow-call-stack")))
-> >>>> +#endif
-> >>>
-> >>> Since both compilers have it, and I guess the `#ifdef` condition would
-> >>> work for both, could this be moved into `compiler_types.h` where the
-> >>> empty `__noscs` definition is, and remove the one from
-> >>> `compiler-clang.h`?
-> >>>
-> >> In the clang documentation I see __has_feature(shadow_call_stack) is
-> >> used to check if -fsanitize=shadow-call-stack is enabled, so I think
-> >> maybe it's fine to use "#ifdef CONFIG_SHADOW_CALL_STACK"
-> >> instead of "#if __has_attribute(__no_sanitize_address__)" here, then
-> >> move it to `compiler_types.h`.
-> >
-> > Or simply add a #define for __noscs to include/linux/compiler-gcc.h
-> > with appropriate guard and leave the existing #ifndef in
-> > include/linux/compiler_types.h as is.  I'd prefer that when the
-> > compilers differ in terms of feature detection since it's as explicit
-> > as possible.
-> >
->
-> To make sure I understand correctly, that means I should keep
-> the current patch unchanged right?
+On Mon, 14 Feb 2022 16:39:03 -0600, Gustavo A. R. Silva wrote:
 
-Yes.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Use flexible-array members in struct fc_fdmi_attr_entry and
+> fs_fdmi_attrs instead of one-element arrays, and refactor the
+> code accordingly.
+> 
+> Also, this helps with the ongoing efforts to globally enable
+> -Warray-bounds and get us closer to being able to tighten the
+> FORTIFY_SOURCE routines on memcpy().
+> 
+> [...]
+
+Applied to 5.18/scsi-queue, thanks!
+
+[1/1] scsi: fc: Replace one-element arrays with flexible-array members
+      https://git.kernel.org/mkp/scsi/c/c5b483d5c1a2
+
 -- 
-Thanks,
-~Nick Desaulniers
+Martin K. Petersen	Oracle Linux Engineering
