@@ -2,185 +2,440 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F7DC433F5
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Mar 2022 07:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1018C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Mar 2022 08:27:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230309AbiCCHoi (ORCPT
+        id S231301AbiCCI2N (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Mar 2022 02:44:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34802 "EHLO
+        Thu, 3 Mar 2022 03:28:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229588AbiCCHoh (ORCPT
+        with ESMTP id S229486AbiCCI2M (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Mar 2022 02:44:37 -0500
-Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70A6F1637FF;
-        Wed,  2 Mar 2022 23:43:51 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0V66qjBS_1646293420;
-Received: from localhost(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V66qjBS_1646293420)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 03 Mar 2022 15:43:46 +0800
-From:   Dan Li <ashimida@linux.alibaba.com>
-To:     akpm@linux-foundation.org, arnd@arndb.de, catalin.marinas@arm.com,
-        ashimida@linux.alibaba.com, gregkh@linuxfoundation.org,
-        linux@roeck-us.net, keescook@chromium.org,
-        luc.vanoostenryck@gmail.com, elver@google.com,
-        mark.rutland@arm.com, masahiroy@kernel.org, ojeda@kernel.org,
-        nathan@kernel.org, npiggin@gmail.com, ndesaulniers@google.com,
-        samitolvanen@google.com, shuah@kernel.org, tglx@linutronix.de,
-        will@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, llvm@lists.linux.dev,
+        Thu, 3 Mar 2022 03:28:12 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BFC5E68
+        for <linux-hardening@vger.kernel.org>; Thu,  3 Mar 2022 00:27:26 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id q20so305741wmq.1
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Mar 2022 00:27:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+tFCTSa/n5EE5pJVOckSAXAjTH78HjDg/cGozY/kZJ4=;
+        b=M5uQEa+YimumQmnnTshMcErvtKS7BclbGuVfMDdEz6zgu1NUSS5FXro8K8ZqEdT7Wu
+         MPys1/g5Od2SqW0OiFrLjY1/p5HyrSW9D85jSql5+MzPmeKrtI1cA44MzKLy/Z+a5/sp
+         gEp3p0OgCZN46nVTm4QTnxHarLejj/TUawo2CqWgyOZ89h1GVKii4k7VOrwbRjtYfZ06
+         oHf66ZBs1fWhmzuYiu0wRNdDAgRvpNfI+1Tpd/sa07raVSPlgQAN/tL1WqFlKXBP7mGo
+         zZrk2cPbceDN6GX9rpJYk7H2Hag/OFNf0qNC22ksWyaNRspKnlUcXCb/yuT/9z6X8WLg
+         4a1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+tFCTSa/n5EE5pJVOckSAXAjTH78HjDg/cGozY/kZJ4=;
+        b=oAUOaGO8PxNNtfgWiuZhnOQHOApfHWtNpg8UXlFU5A4Ik/mWdtoXIKJ4PNXta41tyz
+         kc+ND+rexmUmFyCV237Op6viQHO5kNPh64L3YJMkDdbqD1Eai72X/oqr2/jB+xif8FGl
+         k0MAl4uvV3Bw02ZDlKOP9Yqiz5yQ/UV0l7APdQ9aX7grimVGVNncI7UM3J1fZen+lDHE
+         tGy+HAFvElsfpVo28dF9t7JSgEOj5nUVbq3LW1rQNHvSjGMSYnGl6wv+UHd5RiWjrn6m
+         S1NJs3pAlj8V78SocdRmAtsb5Ijr8etcodDPmw7pAEdJ25gCCM4UauSYcEhmBkScas0h
+         8xaQ==
+X-Gm-Message-State: AOAM5336AHEm7riPrhcT4jV8j+S1K2zp5yG711HIxpwt64D6w1XxbNd8
+        yo6Zv64/ai+QtQVpP0wLarRJPu2NBwRBYIBsRFDSeQ==
+X-Google-Smtp-Source: ABdhPJzdCGaw/8uL0lyhL09DBVR6a+lT73YPwaFTJ5piAOaoi9EbtyGfLTEr2RA6fN0BxaEVXaJ0G5H9b5/2Hl8b0Rk=
+X-Received: by 2002:a05:600c:4fd0:b0:382:716a:c5fc with SMTP id
+ o16-20020a05600c4fd000b00382716ac5fcmr2817856wmq.81.1646296044579; Thu, 03
+ Mar 2022 00:27:24 -0800 (PST)
+MIME-Version: 1.0
+References: <20220227184517.504931-1-keescook@chromium.org> <20220227184517.504931-8-keescook@chromium.org>
+In-Reply-To: <20220227184517.504931-8-keescook@chromium.org>
+From:   David Gow <davidgow@google.com>
+Date:   Thu, 3 Mar 2022 16:27:13 +0800
+Message-ID: <CABVgOSn6Oe8Ke=fnuVwgLh2r8HKjBW8pCe44Z35Qo1bVfz9A-A@mail.gmail.com>
+Subject: Re: [PATCH v3 7/7] UAPI: Introduce KUnit userspace compatibility
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Vitor Massaru Iha <vitor@massaru.org>,
+        Daniel Latypov <dlatypov@google.com>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-kbuild@vger.kernel.org,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        llvm@lists.linux.dev, x86@kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v3 2/2] lkdtm: Add Shadow Call Stack tests
-Date:   Wed,  2 Mar 2022 23:43:39 -0800
-Message-Id: <20220303074339.86337-1-ashimida@linux.alibaba.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220303073340.86008-1-ashimida@linux.alibaba.com>
-References: <20220303073340.86008-1-ashimida@linux.alibaba.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="000000000000f570ef05d94c2a9d"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add tests for SCS (Shadow Call Stack) based
-backward CFI (as implemented by Clang and GCC).
+--000000000000f570ef05d94c2a9d
+Content-Type: text/plain; charset="UTF-8"
 
-Signed-off-by: Dan Li <ashimida@linux.alibaba.com>
----
- drivers/misc/lkdtm/Makefile             |  1 +
- drivers/misc/lkdtm/core.c               |  2 +
- drivers/misc/lkdtm/lkdtm.h              |  4 ++
- drivers/misc/lkdtm/scs.c                | 67 +++++++++++++++++++++++++
- tools/testing/selftests/lkdtm/tests.txt |  2 +
- 5 files changed, 76 insertions(+)
- create mode 100644 drivers/misc/lkdtm/scs.c
+On Mon, Feb 28, 2022 at 2:45 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> The original lib/test_stackinit.c, which exclusively tests toolchain
+> features, was designed to also be built without the full Linux kernel
+> sources so that compiler developers and distro maintainers had an easy
+> way to check for toolchain behaviors. When it was ported to KUnit, this
+> mode was removed to simplify the code.
+>
+> Add a small header that provides a minimally operational KUnit API that
+> can allow unit tests that don't depend on kernel-specific behaviors
+> to build and run strictly from userspace without kernel sources. Add
+> userspace-build support back to the renamed lib/stackinit_kunit.c test.
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> v1: https://lore.kernel.org/lkml/20220224055145.1853657-1-keescook@chromium.org
+> v2:
+>  - split from stackinit_kunit.c refactoring patch
+>  - add missing returns (Daniel)
+>  - report expression mismatch in assert msg (Daniel)
+>  - emulate kunit_test_suites() (Daniel)
+>  - emit valid KTAP (David)
+> ---
 
-diff --git a/drivers/misc/lkdtm/Makefile b/drivers/misc/lkdtm/Makefile
-index 2e0aa74ac185..e2fb17868af2 100644
---- a/drivers/misc/lkdtm/Makefile
-+++ b/drivers/misc/lkdtm/Makefile
-@@ -10,6 +10,7 @@ lkdtm-$(CONFIG_LKDTM)		+= rodata_objcopy.o
- lkdtm-$(CONFIG_LKDTM)		+= usercopy.o
- lkdtm-$(CONFIG_LKDTM)		+= stackleak.o
- lkdtm-$(CONFIG_LKDTM)		+= cfi.o
-+lkdtm-$(CONFIG_LKDTM)		+= scs.o
- lkdtm-$(CONFIG_LKDTM)		+= fortify.o
- lkdtm-$(CONFIG_PPC_64S_HASH_MMU)	+= powerpc.o
- 
-diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
-index f69b964b9952..d0ce0bec117c 100644
---- a/drivers/misc/lkdtm/core.c
-+++ b/drivers/misc/lkdtm/core.c
-@@ -178,6 +178,8 @@ static const struct crashtype crashtypes[] = {
- 	CRASHTYPE(USERCOPY_KERNEL),
- 	CRASHTYPE(STACKLEAK_ERASING),
- 	CRASHTYPE(CFI_FORWARD_PROTO),
-+	CRASHTYPE(CFI_BACKWARD_SHADOW),
-+	CRASHTYPE(CFI_BACKWARD_SHADOW_WITH_NOSCS),
- 	CRASHTYPE(FORTIFIED_OBJECT),
- 	CRASHTYPE(FORTIFIED_SUBOBJECT),
- 	CRASHTYPE(FORTIFIED_STRSCPY),
-diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
-index d6137c70ebbe..a23d32dfc10b 100644
---- a/drivers/misc/lkdtm/lkdtm.h
-+++ b/drivers/misc/lkdtm/lkdtm.h
-@@ -158,6 +158,10 @@ void lkdtm_STACKLEAK_ERASING(void);
- /* cfi.c */
- void lkdtm_CFI_FORWARD_PROTO(void);
- 
-+/* scs.c */
-+void lkdtm_CFI_BACKWARD_SHADOW(void);
-+void lkdtm_CFI_BACKWARD_SHADOW_WITH_NOSCS(void);
-+
- /* fortify.c */
- void lkdtm_FORTIFIED_OBJECT(void);
- void lkdtm_FORTIFIED_SUBOBJECT(void);
-diff --git a/drivers/misc/lkdtm/scs.c b/drivers/misc/lkdtm/scs.c
-new file mode 100644
-index 000000000000..5922a55a8844
---- /dev/null
-+++ b/drivers/misc/lkdtm/scs.c
-@@ -0,0 +1,67 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * This is for all the tests relating directly to Shadow Call Stack.
-+ */
-+#include "lkdtm.h"
-+
-+#ifdef CONFIG_ARM64
-+/* Function clears its return address. */
-+static noinline void lkdtm_scs_clear_lr(void)
-+{
-+	unsigned long *lr = (unsigned long *)__builtin_frame_address(0) + 1;
-+
-+	asm volatile("str xzr, [%0]\n\t" : : "r"(lr) : "x30");
-+}
-+
-+/* Function with __noscs attribute clears its return address. */
-+static noinline void __noscs lkdtm_noscs_clear_lr(void)
-+{
-+	unsigned long *lr = (unsigned long *)__builtin_frame_address(0) + 1;
-+
-+	asm volatile("str xzr, [%0]\n\t" : : "r"(lr) : "x30");
-+}
-+#endif
-+
-+/*
-+ * This tries to call a function protected by Shadow Call Stack,
-+ * which corrupts its own return address during execution.
-+ * Due to the protection, the corruption will not take effect
-+ * when the function returns.
-+ */
-+void lkdtm_CFI_BACKWARD_SHADOW(void)
-+{
-+#ifdef CONFIG_ARM64
-+	if (!IS_ENABLED(CONFIG_SHADOW_CALL_STACK)) {
-+		pr_err("FAIL: kernel not built with CONFIG_SHADOW_CALL_STACK\n");
-+		return;
-+	}
-+
-+	pr_info("Trying to corrupt lr in a function with scs protection ...\n");
-+	lkdtm_scs_clear_lr();
-+
-+	pr_err("ok: scs takes effect.\n");
-+#else
-+	pr_err("XFAIL: this test is arm64-only\n");
-+#endif
-+}
-+
-+/*
-+ * This tries to call a function not protected by Shadow Call Stack,
-+ * which corrupts its own return address during execution.
-+ */
-+void lkdtm_CFI_BACKWARD_SHADOW_WITH_NOSCS(void)
-+{
-+#ifdef CONFIG_ARM64
-+	if (!IS_ENABLED(CONFIG_SHADOW_CALL_STACK)) {
-+		pr_err("FAIL: kernel not built with CONFIG_SHADOW_CALL_STACK\n");
-+		return;
-+	}
-+
-+	pr_info("Trying to corrupt lr in a function with attribute __noscs ...\n");
-+	lkdtm_noscs_clear_lr();
-+
-+	pr_err("FAIL: __noscs attribute does not take effect!\n");
-+#else
-+	pr_err("XFAIL: this test is arm64-only\n");
-+#endif
-+}
-diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
-index 6b36b7f5dcf9..c849765c8dcc 100644
---- a/tools/testing/selftests/lkdtm/tests.txt
-+++ b/tools/testing/selftests/lkdtm/tests.txt
-@@ -73,6 +73,8 @@ USERCOPY_STACK_BEYOND
- USERCOPY_KERNEL
- STACKLEAK_ERASING OK: the rest of the thread stack is properly erased
- CFI_FORWARD_PROTO
-+CFI_BACKWARD_SHADOW ok: scs takes effect
-+CFI_BACKWARD_SHADOW_WITH_NOSCS
- FORTIFIED_STRSCPY
- FORTIFIED_OBJECT
- FORTIFIED_SUBOBJECT
--- 
-2.17.1
+This looks pretty good on-the-whole to me, modulo one bug (test suites
+being marked as SKIPPED instead of FAILED) below. And checkpatch being
+grumpy.
 
+I do like the idea of putting this in uapi/ -- it solves the problem
+of distributing it quite elegantly, IMO.
+
+-- David
+
+>  include/uapi/misc/kunit.h | 181 ++++++++++++++++++++++++++++++++++++++
+>  lib/stackinit_kunit.c     |  11 +++
+>  2 files changed, 192 insertions(+)
+>  create mode 100644 include/uapi/misc/kunit.h
+>
+> diff --git a/include/uapi/misc/kunit.h b/include/uapi/misc/kunit.h
+> new file mode 100644
+> index 000000000000..afdffda583ae
+> --- /dev/null
+> +++ b/include/uapi/misc/kunit.h
+> @@ -0,0 +1,181 @@
+> +#ifndef __UAPI_MISC_KUNIT_H__
+> +#define __UAPI_MISC_KUNIT_H__
+> +/*
+> + * This is a light-weight userspace drop-in replacement for the in-kernel
+> + * KUnit API. It seeks to implement a minimal subset of features so that
+> + * a concisely written KUnit test can be made to run entirely in userspace
+> + * when it doesn't actually depend on any real kernel internals.
+> + *
+> + * Additionally contains many refactored kernel-isms to support building
+> + * and running in userspace without full kernel source.
+> + */
+> +
+> +#define _GNU_SOURCE
+> +#include <stdio.h>
+> +#include <stdint.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <stdbool.h>
+> +#include <errno.h>
+> +#include <sys/types.h>
+> +
+> +#define __user                 /**/
+> +#define noinline               __attribute__((__noinline__))
+> +#define __aligned(x)           __attribute__((__aligned__(x)))
+> +#ifdef __clang__
+> +# define __compiletime_error(message) /**/
+> +#else
+> +# define __compiletime_error(message) __attribute__((__error__(message)))
+> +#endif
+> +#define __compiletime_assert(condition, msg, prefix, suffix)           \
+> +       do {                                                            \
+> +               extern void prefix ## suffix(void) __compiletime_error(msg); \
+> +               if (!(condition))                                       \
+> +                       prefix ## suffix();                             \
+> +       } while (0)
+> +#define _compiletime_assert(condition, msg, prefix, suffix) \
+> +       __compiletime_assert(condition, msg, prefix, suffix)
+> +#define compiletime_assert(condition, msg) \
+> +       _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+> +#define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+> +#define BUILD_BUG_ON(condition) \
+> +       BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+> +
+> +#define ARRAY_SIZE(a)          (sizeof (a) / sizeof ((a)[0]))
+> +
+> +#define MODULE_LICENSE(str)    /* str */
+> +
+> +typedef uint8_t                        u8;
+> +typedef uint16_t               u16;
+> +typedef uint32_t               u32;
+> +typedef uint64_t               u64;
+> +
+> +#define TEST_PASS      0
+> +#define TEST_SKIP      1
+> +#define TEST_FAIL      2
+> +struct kunit {
+> +       int status;
+> +       char *msg;
+> +};
+> +struct kunit_case {
+> +        void (*run_case)(struct kunit *test);
+> +        const char *name;
+> +};
+
+Nit: tabs/spaces.
+
+There are a few other checkpatch warnings, mostly it just complaining
+about the use of 'return' in macros, which I think is probably still
+better than trying to hack something out of setjmp/longjmp at this
+point.
+
+> +struct kunit_suite {
+> +       const char *name;
+> +       const struct kunit_case *test_cases;
+> +};
+> +#define KUNIT_CASE(test_name) { .run_case = test_name, .name = #test_name }
+> +
+> +#define KUNIT_ASSERT_TRUE_MSG(test, expr, fmt, ...)                    \
+> +do {                                                                   \
+> +       if (!(expr)) {                                                  \
+> +               if (test->status != TEST_SKIP)                          \
+> +                       test->status = TEST_FAIL;                       \
+> +               if (test->msg)                                          \
+> +                       free(test->msg);                                \
+> +               asprintf(&test->msg, fmt, ##__VA_ARGS__);               \
+> +               return;                                                 \
+> +       }                                                               \
+> +} while (0)
+> +
+> +#define KUNIT_ASSERT_EQ_MSG(test, left, right, fmt, ...)               \
+> +       KUNIT_ASSERT_TRUE_MSG(test, (left) == (right),                  \
+> +                             #left " != " #right ": " fmt,             \
+> +                             ##__VA_ARGS__)
+> +
+> +#define kunit_skip(test, fmt, ...)                                     \
+> +do {                                                                   \
+> +       test->status = TEST_SKIP;                                       \
+> +       if (test->msg)                                                  \
+> +               free(test->msg);                                        \
+> +       asprintf(&test->msg, fmt, ##__VA_ARGS__);                       \
+> +       return;                                                         \
+> +} while (0)
+> +
+> +static int do_kunit_test_suite(struct kunit_suite *suite)
+> +{
+> +       const struct kunit_case *test_case;
+> +       int pass = 0, fail = 0, skip = 0;
+> +       int rc = 0;
+> +       size_t i = 0;
+> +
+> +       printf("  TAP version 14\n");
+> +       for (test_case = suite->test_cases; test_case->run_case; test_case++)
+> +               i++;
+> +       printf("  1..%zu\n", i);
+> +       i = 0;
+> +       for (test_case = suite->test_cases; test_case->run_case; test_case++) {
+> +               struct kunit test = { };
+> +
+> +               i++;
+> +               test_case->run_case(&test);
+> +               switch (test.status) {
+> +               default:
+> +               case TEST_FAIL:
+> +                       fprintf(stderr, "  not ok %zu - %s%s%s",
+> +                               i, test_case->name,
+> +                               test.msg ? " # ERROR " : "",
+> +                               test.msg ?: "\n");
+> +                       rc = 1;
+
+What is this function trying to return? If 'rc' is supposed to be a
+result status, this should be TEST_FAIL (2)?
+
+As-is, when a test case fails, the whole suite is being marked as SKIPPED.
+
+The other thing worth noting is that -- if this is fixed -- there's no
+way a whole suite can be marked SKIPPED. KUnit will mark a suite as
+skipped if all of its subtests are skipped. (This is a much more niche
+case, though.)
+
+> +                       fail++;
+> +                       break;
+> +               case TEST_SKIP:
+> +                       fprintf(stdout, "  ok %zu - %s # SKIP%s%s",
+> +                               i, test_case->name,
+> +                               test.msg ? " " : "",
+> +                               test.msg ?: "\n");
+> +                       skip++;
+> +                       break;
+> +               case TEST_PASS:
+> +                       fprintf(stdout, "  ok %zu - %s\n",
+> +                               i, test_case->name);
+> +                       pass++;
+> +                       break;
+> +               }
+> +               if (test.msg)
+> +                       free(test.msg);
+> +       }
+> +       printf("# %s: pass:%d fail:%d skip:%d total:%zu\n",
+> +               suite->name, pass, fail, skip, i);
+> +       return rc;
+> +}
+> +
+> +static int run_suites(char *name, struct kunit_suite *suites[], size_t count)
+> +{
+> +       int pass = 0, fail = 0, skip = 0;
+> +       int one, ret = 0;
+> +       size_t i;
+> +
+> +       printf("TAP version 14\n");
+> +       printf("1..%zu\n", count);
+> +       for (i = 0; i < count; ++i) {
+> +               one = do_kunit_test_suite(suites[i]);
+> +               switch (one) {
+> +               case TEST_SKIP:
+> +                       skip++;
+> +                       break;
+> +               case TEST_PASS:
+> +                       pass++;
+> +                       break;
+> +               default:
+> +                       fail++;
+> +                       break;
+> +               }
+> +               printf("%sok %zu - %s\n",
+> +                       one == TEST_FAIL ? "not " : "",
+> +                       i + 1, suites[i]->name);
+> +               ret |= one;
+> +       }
+> +       printf("# %s: pass:%d fail:%d skip:%d total:%zu\n",
+> +               name, pass, fail, skip, count);
+> +       return ret;
+> +}
+> +
+> +#define kunit_test_suites(suite...)                            \
+> +int main(int argc, char *argv[]) {                             \
+
+Nit: checkpatch really wants the '{' on the next line.
+
+> +       static struct kunit_suite *suites[] = { suite };        \
+> +       return run_suites(argv[0], suites, ARRAY_SIZE(suites)); \
+> +}
+> +
+> +#endif /* __UAPI_MISC_KUNIT_H__ */
+> diff --git a/lib/stackinit_kunit.c b/lib/stackinit_kunit.c
+> index 35c69aa425b2..6d468630c90a 100644
+> --- a/lib/stackinit_kunit.c
+> +++ b/lib/stackinit_kunit.c
+> @@ -8,7 +8,13 @@
+>   *             --make_option LLVM=1 \
+>   *             --kconfig_add CONFIG_INIT_STACK_ALL_ZERO=y
+>   *
+> + * External build example:
+> + *     clang -O2 -Wall -ftrivial-auto-var-init=pattern \
+> + *             -o stackinit_kunit stackinit_kunit.c
+> + *     ./stackinit_kunit
+> + *
+>   */
+> +#ifdef __KERNEL__
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>
+>  #include <kunit/test.h>
+> @@ -17,6 +23,11 @@
+>  #include <linux/module.h>
+>  #include <linux/string.h>
+>
+> +#else
+> +/* Userspace KUnit stub header. */
+> +#include <misc/kunit.h>
+> +#endif
+> +
+>  /* Exfiltration buffer. */
+>  #define MAX_VAR_SIZE   128
+>  static u8 check_buf[MAX_VAR_SIZE];
+> --
+> 2.32.0
+>
+
+--000000000000f570ef05d94c2a9d
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIIPnwYJKoZIhvcNAQcCoIIPkDCCD4wCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+ggz5MIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
+IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
+dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
+6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
+c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
+I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
+AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
+BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
+CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
+AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
+MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
+My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
+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
+G7p3AiuB2sgfq6cOpbO5MEwGA1UdIARFMEMwQQYJKwYBBAGgMgEoMDQwMgYIKwYBBQUHAgEWJmh0
+dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQCMAAwgZoGCCsG
+AQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9jYS9n
+c2F0bGFzcjNzbWltZWNhMjAyMDBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5nbG9iYWxzaWdu
+LmNvbS9jYWNlcnQvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3J0MB8GA1UdIwQYMBaAFHzMCmjXouse
+LHIb0c1dlW+N+/JjMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20v
+Y2EvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3JsMA0GCSqGSIb3DQEBCwUAA4IBAQBsL34EJkCtu9Nu
+2+R6l1Qzno5Gl+N2Cm6/YLujukDGYa1JW27txXiilR9dGP7yl60HYyG2Exd5i6fiLDlaNEw0SqzE
+dw9ZSIak3Qvm2UybR8zcnB0deCUiwahqh7ZncEPlhnPpB08ETEUtwBEqCEnndNEkIN67yz4kniCZ
+jZstNF/BUnI3864fATiXSbnNqBwlJS3YkoaCTpbI9qNTrf5VIvnbryT69xJ6f25yfmxrXNJJe5OG
+ncB34Cwnb7xQyk+uRLZ465yUBkbjk9pC/yamL0O7SOGYUclrQl2c5zzGuVBD84YcQGDOK6gSPj6w
+QuBfOooZPOyZZZ8AMih7J980MYICajCCAmYCAQEwaDBUMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQ
+R2xvYmFsU2lnbiBudi1zYTEqMCgGA1UEAxMhR2xvYmFsU2lnbiBBdGxhcyBSMyBTTUlNRSBDQSAy
+MDIwAhABQeVybOOpR4bOOXZYL5T3MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCAX
+yQJVv0ndeUJqk1EoyZMJ4g/z7lYiSUs3MTpbBdsdKzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
+MBwGCSqGSIb3DQEJBTEPFw0yMjAzMDMwODI3MjVaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUD
+BAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsG
+CSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAR5p/jPnpODA46aDn/kj1
+48NrhXCZBrrGLQfr2GCmO5QoKe4/Fc21IUtRn4jgtAhlLpIrYV6wK89jfVLWuDt/0J8E45jihCKl
+xB7BlwFwN3K9ZtqqpOWs5ZiI29Lf3xql3Oc4DHxKobkC1gxjbOLQ4TNWX9sngGkp2UrPq9c/YQl3
+NrogjidgTmtJkrII/ULXpY+hgoPOUiX4OK8HJ3kA5mKdr9PerKAFjknoFhOJtNlvZkFQSenv+dwz
+bgtZMcSSp+YRULH6GFdAet6Qw3lM4aJC368ZXO2CV2ihPOt4kYgPZQrJmqK5shw0ftNnIhLV0e3g
+UxOPJaxoovCmSvoRNw==
+--000000000000f570ef05d94c2a9d--
