@@ -2,178 +2,172 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD34C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Mar 2022 20:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752E9C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Mar 2022 23:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234553AbiCCUiB (ORCPT
+        id S235558AbiCCXrx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Mar 2022 15:38:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45422 "EHLO
+        Thu, 3 Mar 2022 18:47:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230186AbiCCUiA (ORCPT
+        with ESMTP id S231986AbiCCXrx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Mar 2022 15:38:00 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 434C41D32C;
-        Thu,  3 Mar 2022 12:37:14 -0800 (PST)
+        Thu, 3 Mar 2022 18:47:53 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7177213DE25;
+        Thu,  3 Mar 2022 15:47:06 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C6CA5B824B3;
-        Thu,  3 Mar 2022 20:37:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FB6DC340EF;
-        Thu,  3 Mar 2022 20:37:10 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0145861656;
+        Thu,  3 Mar 2022 23:47:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86318C004E1;
+        Thu,  3 Mar 2022 23:47:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646339831;
-        bh=OXGr1PhWd90UciyXoThMqMTWRA8qGdjyNBBLaOztyWA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X+KjScztBhjYUP8tJdR/XaLnR53G+5qb3QCupyPWaIdUxaHN+ARp5NZXvwhmUeXF1
-         caA0cXxRDYeCEs9kFx7eMBcZJUStWa2CkvacrvJGG1jGYCqhSxii4zPdxZnUZYdD38
-         PwDrY5sqlJNDieJtf7Oddv3DFhjIlYPEGGqyBNhwqY9ESjiqyxeGW3N0NE0xpQ/pht
-         RA9kyBDi4MJkNrQPHuNQBWwO5QxU259tlde65nIodNx6FHnKZ/1lj14a0Otn4DQonf
-         zjxhHxSU/WGYWCxBv2QYi8ZxbmmPQJbi3JMmlbSp0MJx3WM2KxzFZFr5YDIIKkHUH/
-         /t+H2u+oVsKdQ==
-Date:   Thu, 3 Mar 2022 14:45:26 -0600
+        s=k20201202; t=1646351225;
+        bh=qELuvZR37Ylzxt28jAAWXFUW9hvkb8Eiv69yFb0SIoA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=nS2f7nYM9TgElWijog1JiXagEXXVaFfQytIsiIBNYNKlaUuiwqUx6v04ZKvrvc5n8
+         2V78AbMplcPXOZPzmh5B1orkMsnflzm2Tr0S1LE4vLWpVg2fT/jD8dXsu2mqMDbGap
+         uU21tn9KETkGlaN4CitCCy89q7IFdsVUDcItgo/cb/EVNfQy9VZzIDuCFZy9GVvnvA
+         8FbB2RDdpbWz9LcuMFgU286GsRopZT0AQ8TDyJt5+nHJ2EirafieoTCvg6s3bf772R
+         TUMLmLmOKth4mpwj3o141y/rljXDTuR09eqlD8/pLa06BuBrzIZzz1Nkq1PZY4V94/
+         7o6tx1E/UutrQ==
+Date:   Thu, 3 Mar 2022 17:55:21 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+To:     Hannes Reinecke <hare@suse.de>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Robert Love <robert.w.love@intel.com>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] drm/amd/display: Fix Wstringop-overflow warnings
- in dc_link_dp.c
-Message-ID: <20220303204526.GA1733280@embeddedor>
-References: <20220303172503.GA1731116@embeddedor>
- <202203030937.5BFE3EF@keescook>
- <20220303181957.GA1731711@embeddedor>
+Subject: [PATCH][next] scsi: fcoe: Fix Wstringop-overflow warnings in
+ fcoe_wwn_from_mac()
+Message-ID: <20220303235521.GA1745589@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220303181957.GA1731711@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 03, 2022 at 12:19:57PM -0600, Gustavo A. R. Silva wrote:
-> On Thu, Mar 03, 2022 at 09:43:28AM -0800, Kees Cook wrote:
-> > On Thu, Mar 03, 2022 at 11:25:03AM -0600, Gustavo A. R. Silva wrote:
-> > > Fix the following Wstringop-overflow warnings when building with GCC-11:
-> > > 
-> > > drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link_dpia.c:493:17: warning: ‘dp_decide_lane_settings’ accessing 4 bytes in a region of size 1 [-Wstringop-overflow=]
-> > 
-> > Can you "show your work" a little more here? I don't actually see the
-> > what is getting fixed:
-> > 
-> > enum dc_lane_count {
-> > 	...
-> >         LANE_COUNT_FOUR = 4,
-> > 	...
-> >         LANE_COUNT_DP_MAX = LANE_COUNT_FOUR
-> > };
-> > 
-> > struct link_training_settings {
-> > 	...
-> >         union dpcd_training_lane dpcd_lane_settings[LANE_COUNT_DP_MAX];
-> > };
-> > 
-> > void dp_hw_to_dpcd_lane_settings(
-> > 		...
-> > 		union dpcd_training_lane dpcd_lane_settings[LANE_COUNT_DP_MAX])
-> > {
-> > 	...
-> > }
-> > 
-> > static enum link_training_result dpia_training_cr_transparent(
-> > 		...
-> >                 struct link_training_settings *lt_settings)
-> > {
-> > 	...
-> >                 dp_decide_lane_settings(lt_settings, dpcd_lane_adjust,
-> >                                 lt_settings->hw_lane_settings, lt_settings->dpcd_lane_settings);
-> > 	...
-> > }
-> > 
-> > Everything looks to be the correct size?
-> 
-> Yep; this fix is similar to the one for intel_pm.c in this
-> 
-> 	commit e7c6e405e171fb33990a12ecfd14e6500d9e5cf2
-> 
-> where the array size of 8 seems to be fine for all the
-> struct members related (pri_latency, spr_latency, cur_latency
-> and skl_latency):
-> 
-> drivers/gpu/drm/i915/i915_drv.h:465:struct drm_i915_private {
-> ...
-> 
-> drivers/gpu/drm/i915/i915_drv.h-739-    struct {
-> 
-> ...
-> drivers/gpu/drm/i915/i915_drv.h-745-            /* primary */
-> drivers/gpu/drm/i915/i915_drv.h-746-            u16 pri_latency[5];
-> drivers/gpu/drm/i915/i915_drv.h-747-            /* sprite */
-> drivers/gpu/drm/i915/i915_drv.h-748-            u16 spr_latency[5];
-> drivers/gpu/drm/i915/i915_drv.h-749-            /* cursor */
-> drivers/gpu/drm/i915/i915_drv.h-750-            u16 cur_latency[5];
-> drivers/gpu/drm/i915/i915_drv.h-751-            /*
-> drivers/gpu/drm/i915/i915_drv.h-752-             * Raw watermark memory latency values
-> drivers/gpu/drm/i915/i915_drv.h-753-             * for SKL for all 8 levels
-> drivers/gpu/drm/i915/i915_drv.h-754-             * in 1us units.
-> drivers/gpu/drm/i915/i915_drv.h-755-             */
-> drivers/gpu/drm/i915/i915_drv.h-756-            u16 skl_latency[8];
-> 
-> ...
-> drivers/gpu/drm/i915/i915_drv.h-773-    } wm;
-> ...
-> }
+Fix the following Wstringop-overflow warnings when building with GCC-11:
 
-and in this case the ilk_wm_max_level() returns the right maximum size for the
-corresponding 'struct wm' member:
+drivers/scsi/fcoe/fcoe.c: In function ‘fcoe_netdev_config’:
+drivers/scsi/fcoe/fcoe.c:744:32: warning: ‘fcoe_wwn_from_mac’ accessing 32 bytes in a region of size 6 [-Wstringop-overflow=]
+  744 |                         wwnn = fcoe_wwn_from_mac(ctlr->ctl_src_addr, 1, 0);
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/fcoe/fcoe.c:744:32: note: referencing argument 1 of type ‘unsigned char *’
+In file included from drivers/scsi/fcoe/fcoe.c:36:
+./include/scsi/libfcoe.h:252:5: note: in a call to function ‘fcoe_wwn_from_mac’
+  252 | u64 fcoe_wwn_from_mac(unsigned char mac[MAX_ADDR_LEN], unsigned int, unsigned int);
+      |     ^~~~~~~~~~~~~~~~~
+drivers/scsi/fcoe/fcoe.c:747:32: warning: ‘fcoe_wwn_from_mac’ accessing 32 bytes in a region of size 6 [-Wstringop-overflow=]
+  747 |                         wwpn = fcoe_wwn_from_mac(ctlr->ctl_src_addr,
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  748 |                                                  2, 0);
+      |                                                  ~~~~~
+drivers/scsi/fcoe/fcoe.c:747:32: note: referencing argument 1 of type ‘unsigned char *’
+In file included from drivers/scsi/fcoe/fcoe.c:36:
+./include/scsi/libfcoe.h:252:5: note: in a call to function ‘fcoe_wwn_from_mac’
+  252 | u64 fcoe_wwn_from_mac(unsigned char mac[MAX_ADDR_LEN], unsigned int, unsigned int);
+      |     ^~~~~~~~~~~~~~~~~
+  CC      drivers/scsi/bnx2fc/bnx2fc_io.o
+In function ‘bnx2fc_net_config’,
+    inlined from ‘bnx2fc_if_create’ at drivers/scsi/bnx2fc/bnx2fc_fcoe.c:1543:7:
+drivers/scsi/bnx2fc/bnx2fc_fcoe.c:833:32: warning: ‘fcoe_wwn_from_mac’ accessing 32 bytes in a region of size 6 [-Wstringop-overflow=]
+  833 |                         wwnn = fcoe_wwn_from_mac(ctlr->ctl_src_addr,
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  834 |                                                  1, 0);
+      |                                                  ~~~~~
+drivers/scsi/bnx2fc/bnx2fc_fcoe.c: In function ‘bnx2fc_if_create’:
+drivers/scsi/bnx2fc/bnx2fc_fcoe.c:833:32: note: referencing argument 1 of type ‘unsigned char *’
+In file included from drivers/scsi/bnx2fc/bnx2fc.h:53,
+                 from drivers/scsi/bnx2fc/bnx2fc_fcoe.c:17:
+./include/scsi/libfcoe.h:252:5: note: in a call to function ‘fcoe_wwn_from_mac’
+  252 | u64 fcoe_wwn_from_mac(unsigned char mac[MAX_ADDR_LEN], unsigned int, unsigned int);
+      |     ^~~~~~~~~~~~~~~~~
+In function ‘bnx2fc_net_config’,
+    inlined from ‘bnx2fc_if_create’ at drivers/scsi/bnx2fc/bnx2fc_fcoe.c:1543:7:
+drivers/scsi/bnx2fc/bnx2fc_fcoe.c:839:32: warning: ‘fcoe_wwn_from_mac’ accessing 32 bytes in a region of size 6 [-Wstringop-overflow=]
+  839 |                         wwpn = fcoe_wwn_from_mac(ctlr->ctl_src_addr,
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  840 |                                                  2, 0);
+      |                                                  ~~~~~
+drivers/scsi/bnx2fc/bnx2fc_fcoe.c: In function ‘bnx2fc_if_create’:
+drivers/scsi/bnx2fc/bnx2fc_fcoe.c:839:32: note: referencing argument 1 of type ‘unsigned char *’
+In file included from drivers/scsi/bnx2fc/bnx2fc.h:53,
+                 from drivers/scsi/bnx2fc/bnx2fc_fcoe.c:17:
+./include/scsi/libfcoe.h:252:5: note: in a call to function ‘fcoe_wwn_from_mac’
+  252 | u64 fcoe_wwn_from_mac(unsigned char mac[MAX_ADDR_LEN], unsigned int, unsigned int);
+      |     ^~~~~~~~~~~~~~~~~
+drivers/scsi/qedf/qedf_main.c: In function ‘__qedf_probe’:
+drivers/scsi/qedf/qedf_main.c:3520:30: warning: ‘fcoe_wwn_from_mac’ accessing 32 bytes in a region of size 6 [-Wstringop-overflow=]
+ 3520 |                 qedf->wwnn = fcoe_wwn_from_mac(qedf->mac, 1, 0);
+      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/qedf/qedf_main.c:3520:30: note: referencing argument 1 of type ‘unsigned char *’
+In file included from drivers/scsi/qedf/qedf.h:9,
+                 from drivers/scsi/qedf/qedf_main.c:23:
+./include/scsi/libfcoe.h:252:5: note: in a call to function ‘fcoe_wwn_from_mac’
+  252 | u64 fcoe_wwn_from_mac(unsigned char mac[MAX_ADDR_LEN], unsigned int, unsigned int);
+      |     ^~~~~~~~~~~~~~~~~
+drivers/scsi/qedf/qedf_main.c:3521:30: warning: ‘fcoe_wwn_from_mac’ accessing 32 bytes in a region of size 6 [-Wstringop-overflow=]
+ 3521 |                 qedf->wwpn = fcoe_wwn_from_mac(qedf->mac, 2, 0);
+      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/scsi/qedf/qedf_main.c:3521:30: note: referencing argument 1 of type ‘unsigned char *’
+In file included from drivers/scsi/qedf/qedf.h:9,
+                 from drivers/scsi/qedf/qedf_main.c:23:
+./include/scsi/libfcoe.h:252:5: note: in a call to function ‘fcoe_wwn_from_mac’
+  252 | u64 fcoe_wwn_from_mac(unsigned char mac[MAX_ADDR_LEN], unsigned int, unsigned int);
+      |     ^~~~~~~~~~~~~~~~~
 
-drivers/gpu/drm/i915/intel_pm.c:2993:int ilk_wm_max_level(const struct drm_i915_private *dev_priv)
-drivers/gpu/drm/i915/intel_pm.c-2994-{
-drivers/gpu/drm/i915/intel_pm.c-2995-   /* how many WM levels are we expecting */
-drivers/gpu/drm/i915/intel_pm.c-2996-   if (HAS_HW_SAGV_WM(dev_priv))
-drivers/gpu/drm/i915/intel_pm.c-2997-           return 5;
-drivers/gpu/drm/i915/intel_pm.c-2998-   else if (DISPLAY_VER(dev_priv) >= 9)
-drivers/gpu/drm/i915/intel_pm.c-2999-           return 7;
-drivers/gpu/drm/i915/intel_pm.c-3000-   else if (IS_HASWELL(dev_priv) || IS_BROADWELL(dev_priv))
-drivers/gpu/drm/i915/intel_pm.c-3001-           return 4;
-drivers/gpu/drm/i915/intel_pm.c-3002-   else if (DISPLAY_VER(dev_priv) >= 6)
-drivers/gpu/drm/i915/intel_pm.c-3003-           return 3;
-drivers/gpu/drm/i915/intel_pm.c-3004-   else
-drivers/gpu/drm/i915/intel_pm.c-3005-           return 2;
-drivers/gpu/drm/i915/intel_pm.c-3006-}
+by changing the array size to the correct value of ETH_ALEN in the
+argument declaration.
 
-drivers/gpu/drm/i915/intel_pm.c:3009:static void intel_print_wm_latency(struct drm_i915_private *dev_priv,
-drivers/gpu/drm/i915/intel_pm.c-3010-                              const char *name,
-drivers/gpu/drm/i915/intel_pm.c-3011-                              const u16 wm[])
-drivers/gpu/drm/i915/intel_pm.c-3012-{
-drivers/gpu/drm/i915/intel_pm.c-3013-   int level, max_level = ilk_wm_max_level(dev_priv);
-drivers/gpu/drm/i915/intel_pm.c-3014-
-drivers/gpu/drm/i915/intel_pm.c-3015-   for (level = 0; level <= max_level; level++) {
-drivers/gpu/drm/i915/intel_pm.c-3016-           unsigned int latency = wm[level];
-drivers/gpu/drm/i915/intel_pm.c-3017-
-...
-}
+Also, fix a couple of checkpatch warnings:
+WARNING: function definition argument 'unsigned int' should also have an identifier name
 
-still GCC warns about this with Wstringop-overread, as it is explained
-in commit e7c6e405e171.
+This helps with the ongoing efforts to globally enable
+-Wstringop-overflow.
 
---
-Gustavo
+Link: https://github.com/KSPP/linux/issues/181
+Fixes: 85b4aa4926a5 ("[SCSI] fcoe: Fibre Channel over Ethernet")
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/scsi/fcoe/fcoe_ctlr.c | 2 +-
+ include/scsi/libfcoe.h        | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-> 
-> however GCC warns about accessing bytes beyond the limits, and turning the
-> argument declarations into pointers (removing the over-specified array
-> size from the argument declaration) silence the warnings.
-> 
-> --
-> Gustavo
+diff --git a/drivers/scsi/fcoe/fcoe_ctlr.c b/drivers/scsi/fcoe/fcoe_ctlr.c
+index 1756a0ac6f08..558f3f4e1859 100644
+--- a/drivers/scsi/fcoe/fcoe_ctlr.c
++++ b/drivers/scsi/fcoe/fcoe_ctlr.c
+@@ -1969,7 +1969,7 @@ EXPORT_SYMBOL(fcoe_ctlr_recv_flogi);
+  *
+  * Returns: u64 fc world wide name
+  */
+-u64 fcoe_wwn_from_mac(unsigned char mac[MAX_ADDR_LEN],
++u64 fcoe_wwn_from_mac(unsigned char mac[ETH_ALEN],
+ 		      unsigned int scheme, unsigned int port)
+ {
+ 	u64 wwn;
+diff --git a/include/scsi/libfcoe.h b/include/scsi/libfcoe.h
+index fac8e89aed81..310e0dbffda9 100644
+--- a/include/scsi/libfcoe.h
++++ b/include/scsi/libfcoe.h
+@@ -249,7 +249,8 @@ int fcoe_ctlr_recv_flogi(struct fcoe_ctlr *, struct fc_lport *,
+ 			 struct fc_frame *);
+ 
+ /* libfcoe funcs */
+-u64 fcoe_wwn_from_mac(unsigned char mac[MAX_ADDR_LEN], unsigned int, unsigned int);
++u64 fcoe_wwn_from_mac(unsigned char mac[ETH_ALEN], unsigned int scheme,
++		      unsigned int port);
+ int fcoe_libfc_config(struct fc_lport *, struct fcoe_ctlr *,
+ 		      const struct libfc_function_template *, int init_fcp);
+ u32 fcoe_fc_crc(struct fc_frame *fp);
+-- 
+2.27.0
+
