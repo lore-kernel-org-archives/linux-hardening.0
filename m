@@ -2,202 +2,139 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08076C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Mar 2022 18:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 744AEC433EF
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Mar 2022 18:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232774AbiCCSFU (ORCPT
+        id S235160AbiCCSMb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Mar 2022 13:05:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57548 "EHLO
+        Thu, 3 Mar 2022 13:12:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231256AbiCCSFR (ORCPT
+        with ESMTP id S233967AbiCCSMb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Mar 2022 13:05:17 -0500
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 712F215A23F
-        for <linux-hardening@vger.kernel.org>; Thu,  3 Mar 2022 10:04:30 -0800 (PST)
-Received: by mail-pl1-x630.google.com with SMTP id 9so5278836pll.6
-        for <linux-hardening@vger.kernel.org>; Thu, 03 Mar 2022 10:04:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ohbn/bPviM+Tn+8s9bW5yJzK3RtPWtRGdwqb7XZ19L4=;
-        b=fYI3KNOpEKTXvpyCy3jCS2z+jaUVpXtgvjgEgAdk8FMI22Cg6u/XNKbhtN0HvFfYFm
-         x9P6oFBQLx3A9RVSKEJVMFyI0zWPw7TUDUqVQiTBk1hwqx089hMWSRVZhqCDlZeH4/8R
-         ist44ayWIh7Yb4m/Z1f26HDstQYgLpqBnwFPw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ohbn/bPviM+Tn+8s9bW5yJzK3RtPWtRGdwqb7XZ19L4=;
-        b=AFWz6ELDaHn58zrfOhBKA3i2czjsFO1EV1rODfOLw9vVq1g/AW4+fc6TjFs8m/a0RN
-         rHPZMoemf3yFCrV3uuIljA2l98FPSHJjpbvFeFXd2B0nFouVpmLvm7hT97IfForLgWJS
-         Ja6w79+EoZX7Cg+tzRDX3ZeXrKQYOlD8ZXdRDq+cnn8aJn/l5mklkkOAqYB95rDAwDB+
-         6C3wVcZ/yiMIqhcY3d9JhkumFbyupd2mU7NKHgV5idY61raBMqgvp86h2d0rEVOxTTJS
-         J/Bn6657dM7Q4rN4mfzAvnmajE7FkwVBJsqA2JVCEFsdO0RVU4rWPjHnpnwTF+zJF8pN
-         TQSw==
-X-Gm-Message-State: AOAM532d+4d1yt4mxw2EJHGMsfDM96A9g7/0JdZhhsJwyMZbqVuhvuaX
-        z2ikZvjKDtF3SntX3MuIZfhRDQ==
-X-Google-Smtp-Source: ABdhPJzENxxIElfJcMEZP9UKQ3wwMJC+ln7NAZmhkNK3m4+s2kgRV0YYtMmkprd45T6MhhStzxY7sw==
-X-Received: by 2002:a17:902:e812:b0:14f:40ad:befa with SMTP id u18-20020a170902e81200b0014f40adbefamr36437378plg.172.1646330669843;
-        Thu, 03 Mar 2022 10:04:29 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 16-20020a056a00073000b004dfe2217090sm3226384pfm.200.2022.03.03.10.04.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Mar 2022 10:04:29 -0800 (PST)
-Date:   Thu, 3 Mar 2022 10:04:28 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Nathan Chancellor <nathan@kernel.org>
-Cc:     David Gow <davidgow@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-um@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        llvm@lists.linux.dev, linux-kernel@vger.kernel.org,
+        Thu, 3 Mar 2022 13:12:31 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63A851A3607;
+        Thu,  3 Mar 2022 10:11:45 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 11775B824C9;
+        Thu,  3 Mar 2022 18:11:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B93A6C004E1;
+        Thu,  3 Mar 2022 18:11:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1646331102;
+        bh=vBvtniS14pc6skRP4v+SZ9dikE7hTS9c8Ik6/oxilws=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u3GyHI42VExg7lPhY2UU7c66P6HfWqGOz/RFFC12XDX84pF3EGsBGbXKThREoTRVS
+         ZVHaDn9uNoO3ylEtVK2a8XkIEsXtIQWWqoXVgowzmSMAoAE+iteU74ICvmDy2PJ0H1
+         DTPk48ro2GqmiPRSlRibKgtVghIOyag4xnbDZWOJ1v2ax2v6TeXPnGLNiA1ByY/5YL
+         mT/FVqz8wp99PJlMTV+koZFxgoY/6kaqwhc3MGDD6rPV09RSb4d+mBCj53I0ESNYA6
+         YQU1HEPJnz1Q5epWvJ+ZzOfa002ZLQ0EQEUSBR2a8aN77gEWRvag3lLceJVh2QOaUT
+         2gDFH1vPEN6dg==
+Date:   Thu, 3 Mar 2022 12:19:57 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] um: clang: Strip out -mno-global-merge from USER_CFLAGS
-Message-ID: <202203030947.E2FA3D9@keescook>
-References: <20220303090643.241747-1-davidgow@google.com>
- <YiD7R2wRxoWxtVq7@dev-arch.thelio-3990X>
+Subject: Re: [PATCH][next] drm/amd/display: Fix Wstringop-overflow warnings
+ in dc_link_dp.c
+Message-ID: <20220303181957.GA1731711@embeddedor>
+References: <20220303172503.GA1731116@embeddedor>
+ <202203030937.5BFE3EF@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <YiD7R2wRxoWxtVq7@dev-arch.thelio-3990X>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202203030937.5BFE3EF@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 03, 2022 at 10:30:47AM -0700, Nathan Chancellor wrote:
-> Hi David,
-> 
-> On Thu, Mar 03, 2022 at 05:06:42PM +0800, David Gow wrote:
-> > The things built with USER_CFLAGS don't seem to recognise it as a
-> > compiler option, and print a warning:
-> > clang: warning: argument unused during compilation: '-mno-global-merge' [-Wunused-command-line-argument]
+On Thu, Mar 03, 2022 at 09:43:28AM -0800, Kees Cook wrote:
+> On Thu, Mar 03, 2022 at 11:25:03AM -0600, Gustavo A. R. Silva wrote:
+> > Fix the following Wstringop-overflow warnings when building with GCC-11:
 > > 
-> > Fixes: 744814d2fa ("um: Allow builds with Clang")
-> > Signed-off-by: David Gow <davidgow@google.com>
-> > ---
-> > 
-> > This warning shows up after merging:
-> > https://lore.kernel.org/lkml/20220227184517.504931-6-keescook@chromium.org/
-> > 
-> > I'm not 100% sure why this is necessary, but it does seem to work. All
-> > the attempts to get rid of -mno-global-merge entirely have been met with
-> > skepticism, but I'm guessing that it's not a problem for just the UML
-> > "user" files, as they shouldn't(?) interact too much with modules.
+> > drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link_dpia.c:493:17: warning: ‘dp_decide_lane_settings’ accessing 4 bytes in a region of size 1 [-Wstringop-overflow=]
 > 
-> Thank you for the patch! I think it is correct, as this flag only works
-> for AArch64 and ARM, as it is only used in Clang::AddAArch64TargetArgs()
-> and Clang::AddARMTargetArgs() in clang/lib/Driver/ToolChains/Clang.cpp,
-> which are obviously never called with UML. I am not sure why we do not
-> see warning during regular kernel builds, maybe something about how UML
-> objects are compiled exposes this?
-
-Yeah, I got really turned around when I tried to find this last week.
-
+> Can you "show your work" a little more here? I don't actually see the
+> what is getting fixed:
 > 
-> Regardless, I would definitely like to clean up this instance of the
-> warning because I would like to make this warning a hard error so that
-> we do not get cryptic cc-option failures:
+> enum dc_lane_count {
+> 	...
+>         LANE_COUNT_FOUR = 4,
+> 	...
+>         LANE_COUNT_DP_MAX = LANE_COUNT_FOUR
+> };
 > 
-> https://github.com/ClangBuiltLinux/linux/issues/1587
+> struct link_training_settings {
+> 	...
+>         union dpcd_training_lane dpcd_lane_settings[LANE_COUNT_DP_MAX];
+> };
 > 
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> void dp_hw_to_dpcd_lane_settings(
+> 		...
+> 		union dpcd_training_lane dpcd_lane_settings[LANE_COUNT_DP_MAX])
+> {
+> 	...
+> }
 > 
-> One small comment below.
+> static enum link_training_result dpia_training_cr_transparent(
+> 		...
+>                 struct link_training_settings *lt_settings)
+> {
+> 	...
+>                 dp_decide_lane_settings(lt_settings, dpcd_lane_adjust,
+>                                 lt_settings->hw_lane_settings, lt_settings->dpcd_lane_settings);
+> 	...
+> }
 > 
-> >  arch/um/Makefile | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/arch/um/Makefile b/arch/um/Makefile
-> > index f2fe63bfd819..320b09cd513c 100644
-> > --- a/arch/um/Makefile
-> > +++ b/arch/um/Makefile
-> > @@ -75,6 +75,10 @@ USER_CFLAGS = $(patsubst $(KERNEL_DEFINES),,$(patsubst -I%,,$(KBUILD_CFLAGS))) \
-> >  		-D_FILE_OFFSET_BITS=64 -idirafter $(srctree)/include \
-> >  		-idirafter $(objtree)/include -D__KERNEL__ -D__UM_HOST__
-> >  
-> > +ifdef CONFIG_CC_IS_CLANG
-> 
-> Is this ifdef needed?
-> 
-> > +USER_CFLAGS := $(patsubst -mno-global-merge,,$(USER_CFLAGS))
-> > +endif
+> Everything looks to be the correct size?
 
-How does -mno-global-merge get KBUILD_CFLAGS in the first place? If it's
-arm/arm64 only, shouldn't that get relocated to those architectures?
+Yep; this fix is similar to the one for intel_pm.c in this
 
-*time travel* found it:
+	commit e7c6e405e171fb33990a12ecfd14e6500d9e5cf2
 
-61163efae020 ("kbuild: LLVMLinux: Add Kbuild support for building kernel with Clang")
+where the array size of 8 seems to be fine for all the
+struct members related (pri_latency, spr_latency, cur_latency
+and skl_latency):
 
-So I think this may have been universally true long ago, and now only
-arm/arm64 need it?
+drivers/gpu/drm/i915/i915_drv.h:465:struct drm_i915_private {
+...
 
+drivers/gpu/drm/i915/i915_drv.h-739-    struct {
 
-diff --git a/Makefile b/Makefile
-index 2f6fbba88a0e..fbc42c3c389e 100644
---- a/Makefile
-+++ b/Makefile
-@@ -852,10 +852,6 @@ ifdef CONFIG_CC_IS_CLANG
- KBUILD_CPPFLAGS += -Qunused-arguments
- # The kernel builds with '-std=gnu89' so use of GNU extensions is acceptable.
- KBUILD_CFLAGS += -Wno-gnu
--# CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
--# source of a reference will be _MergedGlobals and not on of the whitelisted names.
--# See modpost pattern 2
--KBUILD_CFLAGS += -mno-global-merge
- else
- 
- # gcc inanely warns about local variables called 'main'
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index a2391b8de5a5..dcab28c44c26 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -48,6 +48,13 @@ CHECKFLAGS	+= -D__ARMEL__
- KBUILD_LDFLAGS	+= -EL
- endif
- 
-+ifdef CONFIG_CC_IS_CLANG
-+# CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
-+# source of a reference will be _MergedGlobals and not on of the whitelisted names.
-+# See modpost pattern 2
-+KBUILD_CFLAGS	+= -mno-global-merge
-+endif
-+
- #
- # The Scalar Replacement of Aggregates (SRA) optimization pass in GCC 4.9 and
- # later may result in code being generated that handles signed short and signed
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 2f1de88651e6..2d20fb2ea664 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -36,6 +36,13 @@ ifeq ($(CONFIG_BROKEN_GAS_INST),y)
- $(warning Detected assembler with broken .inst; disassembly will be unreliable)
- endif
- 
-+ifdef CONFIG_CC_IS_CLANG
-+# CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
-+# source of a reference will be _MergedGlobals and not on of the whitelisted names.
-+# See modpost pattern 2
-+KBUILD_CFLAGS	+= -mno-global-merge
-+endif
-+
- KBUILD_CFLAGS	+= -mgeneral-regs-only	\
- 		   $(compat_vdso) $(cc_has_k_constraint)
- KBUILD_CFLAGS	+= $(call cc-disable-warning, psabi)
+...
+drivers/gpu/drm/i915/i915_drv.h-745-            /* primary */
+drivers/gpu/drm/i915/i915_drv.h-746-            u16 pri_latency[5];
+drivers/gpu/drm/i915/i915_drv.h-747-            /* sprite */
+drivers/gpu/drm/i915/i915_drv.h-748-            u16 spr_latency[5];
+drivers/gpu/drm/i915/i915_drv.h-749-            /* cursor */
+drivers/gpu/drm/i915/i915_drv.h-750-            u16 cur_latency[5];
+drivers/gpu/drm/i915/i915_drv.h-751-            /*
+drivers/gpu/drm/i915/i915_drv.h-752-             * Raw watermark memory latency values
+drivers/gpu/drm/i915/i915_drv.h-753-             * for SKL for all 8 levels
+drivers/gpu/drm/i915/i915_drv.h-754-             * in 1us units.
+drivers/gpu/drm/i915/i915_drv.h-755-             */
+drivers/gpu/drm/i915/i915_drv.h-756-            u16 skl_latency[8];
 
-> > +
-> >  #This will adjust *FLAGS accordingly to the platform.
-> >  include $(srctree)/$(ARCH_DIR)/Makefile-os-$(OS)
-> >  
-> > -- 
-> > 2.35.1.616.g0bdcbb4464-goog
-> > 
+...
+drivers/gpu/drm/i915/i915_drv.h-773-    } wm;
+...
+}
 
--- 
-Kees Cook
+however GCC warns about accessing bytes beyond the limits, and turning the
+argument declarations into pointers (removing the over-specified array
+size from the argument declaration) silence the warnings.
+
+--
+Gustavo
