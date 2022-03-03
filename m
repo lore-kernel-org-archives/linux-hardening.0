@@ -2,117 +2,115 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636DAC4332F
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Mar 2022 17:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656ABC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Mar 2022 17:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235365AbiCCRbo (ORCPT
+        id S231265AbiCCRoQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Mar 2022 12:31:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48312 "EHLO
+        Thu, 3 Mar 2022 12:44:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233589AbiCCRbn (ORCPT
+        with ESMTP id S229887AbiCCRoP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Mar 2022 12:31:43 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9555E199D51;
-        Thu,  3 Mar 2022 09:30:57 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5C42DB82650;
-        Thu,  3 Mar 2022 17:30:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45241C340E9;
-        Thu,  3 Mar 2022 17:30:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646328655;
-        bh=GCDTpWwAdbUUe92yPSIjZBhj5yfaiPwzu66bwylkoac=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CLQazQPiBOZrP69PhmqDFy7s/3OGcDUji9CNq78GafEhJcptBOq9ejoyBYJ2f546B
-         WTlZ8u1FFUpD/OSgSZY6He9snfv0gRmz7lyA01z+f8swbsuntwtgqOlSdC95A9rhzD
-         4EHG/xJLnX+ThYlzbEB371mF/DWMhhm1qjhNHHYZhOO7+PHV6EBURX4/QlJg2a/04b
-         cK6IxzhArX/HTp+RcLIdMrJ/+byFkhr/Hqjfdh68MR5K6wiC4kB9Fz3hjA/9cu5twz
-         SOPBjB6KiiImIA7vzXX5v1kdIK7cVQWHqIsb9S4rGhtqXcJiLS7L+LsHATv9VdVI4o
-         g0bbBtjD2FOMg==
-Date:   Thu, 3 Mar 2022 10:30:47 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     David Gow <davidgow@google.com>
-Cc:     Kees Cook <keescook@chromium.org>, Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-um@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        llvm@lists.linux.dev, linux-kernel@vger.kernel.org,
+        Thu, 3 Mar 2022 12:44:15 -0500
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0AF02FFE0
+        for <linux-hardening@vger.kernel.org>; Thu,  3 Mar 2022 09:43:29 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id 9so5207502pll.6
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Mar 2022 09:43:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=3mNZQL2VC2uYb431PEz6jnFD5ZTmVgeO3AWfSaB6+TY=;
+        b=TSou/dg3MxKfuVnSlJ7/9Ygb6rTt3uj1IAV4FuRAP0EFPtQzGCi18SqZsbllXX+6S8
+         ntcMT0x0I5bMkPvRf+RymUl7ybQA3dv1GWojQ1350VFS3FT8qE2h7SFFXSceT7yfD2T8
+         voM8RJe8gyMdGEmB0QSQndTKjgdU+d71aw2BA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=3mNZQL2VC2uYb431PEz6jnFD5ZTmVgeO3AWfSaB6+TY=;
+        b=59FOsu295vtG37e2U3VtZz8QMnfXdExh6viQA9Z6RfnUgmUKvZ0YsfYZWpe2kmQ4z1
+         AuAtb63V1itNlzwPy3AALvC4rvwJnBA/ngXQQCrMPTiIyZzETOhEEFyxCDzGxZexhUEZ
+         sFvzvVxEP1NIQgjUipWJp4xMxmX8aXGvluBaMKh9GwhcobQ5YnkTjIMLjJuTXczTVqzk
+         Z3NJZNhUvi0/KH+0IjuxOdLGFWHPTME9dlUuqlxWWiCf8m7aJzXoNFQ7PckQ+uZX8cZ6
+         OfY4VnYDU0/c1TnC6hYRNQ8aSVAHn2/SFwmHrEMrLS4WJVf6cZnBDYrFj/ELWLRAXVpH
+         L8ow==
+X-Gm-Message-State: AOAM532gs6gNYRhB1QLiViX5tKR4bOocbuBOshP1ht97U3kSPca+TbD5
+        JJaQyG7BOV6bwxSNHZBuj2aSNw==
+X-Google-Smtp-Source: ABdhPJwuuWN6vPSVt7Mv7dHURNIv9eDx1oLiv+vp7zPxRp6zIMVlyTuNFHJ/8c8jo+dQfkkeI/rm5Q==
+X-Received: by 2002:a17:902:d2cd:b0:14f:c169:dc6f with SMTP id n13-20020a170902d2cd00b0014fc169dc6fmr36769598plc.170.1646329409448;
+        Thu, 03 Mar 2022 09:43:29 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t9-20020a655549000000b0036570f81245sm2536433pgr.84.2022.03.03.09.43.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Mar 2022 09:43:29 -0800 (PST)
+Date:   Thu, 3 Mar 2022 09:43:28 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] um: clang: Strip out -mno-global-merge from USER_CFLAGS
-Message-ID: <YiD7R2wRxoWxtVq7@dev-arch.thelio-3990X>
-References: <20220303090643.241747-1-davidgow@google.com>
+Subject: Re: [PATCH][next] drm/amd/display: Fix Wstringop-overflow warnings
+ in dc_link_dp.c
+Message-ID: <202203030937.5BFE3EF@keescook>
+References: <20220303172503.GA1731116@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220303090643.241747-1-davidgow@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220303172503.GA1731116@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi David,
-
-On Thu, Mar 03, 2022 at 05:06:42PM +0800, David Gow wrote:
-> The things built with USER_CFLAGS don't seem to recognise it as a
-> compiler option, and print a warning:
-> clang: warning: argument unused during compilation: '-mno-global-merge' [-Wunused-command-line-argument]
+On Thu, Mar 03, 2022 at 11:25:03AM -0600, Gustavo A. R. Silva wrote:
+> Fix the following Wstringop-overflow warnings when building with GCC-11:
 > 
-> Fixes: 744814d2fa ("um: Allow builds with Clang")
-> Signed-off-by: David Gow <davidgow@google.com>
-> ---
-> 
-> This warning shows up after merging:
-> https://lore.kernel.org/lkml/20220227184517.504931-6-keescook@chromium.org/
-> 
-> I'm not 100% sure why this is necessary, but it does seem to work. All
-> the attempts to get rid of -mno-global-merge entirely have been met with
-> skepticism, but I'm guessing that it's not a problem for just the UML
-> "user" files, as they shouldn't(?) interact too much with modules.
+> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link_dpia.c:493:17: warning: ‘dp_decide_lane_settings’ accessing 4 bytes in a region of size 1 [-Wstringop-overflow=]
 
-Thank you for the patch! I think it is correct, as this flag only works
-for AArch64 and ARM, as it is only used in Clang::AddAArch64TargetArgs()
-and Clang::AddARMTargetArgs() in clang/lib/Driver/ToolChains/Clang.cpp,
-which are obviously never called with UML. I am not sure why we do not
-see warning during regular kernel builds, maybe something about how UML
-objects are compiled exposes this?
+Can you "show your work" a little more here? I don't actually see the
+what is getting fixed:
 
-Regardless, I would definitely like to clean up this instance of the
-warning because I would like to make this warning a hard error so that
-we do not get cryptic cc-option failures:
+enum dc_lane_count {
+	...
+        LANE_COUNT_FOUR = 4,
+	...
+        LANE_COUNT_DP_MAX = LANE_COUNT_FOUR
+};
 
-https://github.com/ClangBuiltLinux/linux/issues/1587
+struct link_training_settings {
+	...
+        union dpcd_training_lane dpcd_lane_settings[LANE_COUNT_DP_MAX];
+};
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+void dp_hw_to_dpcd_lane_settings(
+		...
+		union dpcd_training_lane dpcd_lane_settings[LANE_COUNT_DP_MAX])
+{
+	...
+}
 
-One small comment below.
+static enum link_training_result dpia_training_cr_transparent(
+		...
+                struct link_training_settings *lt_settings)
+{
+	...
+                dp_decide_lane_settings(lt_settings, dpcd_lane_adjust,
+                                lt_settings->hw_lane_settings, lt_settings->dpcd_lane_settings);
+	...
+}
 
->  arch/um/Makefile | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/um/Makefile b/arch/um/Makefile
-> index f2fe63bfd819..320b09cd513c 100644
-> --- a/arch/um/Makefile
-> +++ b/arch/um/Makefile
-> @@ -75,6 +75,10 @@ USER_CFLAGS = $(patsubst $(KERNEL_DEFINES),,$(patsubst -I%,,$(KBUILD_CFLAGS))) \
->  		-D_FILE_OFFSET_BITS=64 -idirafter $(srctree)/include \
->  		-idirafter $(objtree)/include -D__KERNEL__ -D__UM_HOST__
->  
-> +ifdef CONFIG_CC_IS_CLANG
+Everything looks to be the correct size?
 
-Is this ifdef needed?
-
-> +USER_CFLAGS := $(patsubst -mno-global-merge,,$(USER_CFLAGS))
-> +endif
-> +
->  #This will adjust *FLAGS accordingly to the platform.
->  include $(srctree)/$(ARCH_DIR)/Makefile-os-$(OS)
->  
-> -- 
-> 2.35.1.616.g0bdcbb4464-goog
-> 
+-- 
+Kees Cook
