@@ -2,220 +2,84 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DC8C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Mar 2022 17:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53127C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Mar 2022 17:17:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232153AbiCDRJi (ORCPT
+        id S236449AbiCDRR4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Mar 2022 12:09:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35712 "EHLO
+        Fri, 4 Mar 2022 12:17:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231630AbiCDRJi (ORCPT
+        with ESMTP id S240953AbiCDRRr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Mar 2022 12:09:38 -0500
-Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7105670045;
-        Fri,  4 Mar 2022 09:08:50 -0800 (PST)
-Received: by mail-oi1-x236.google.com with SMTP id k2so8409906oia.2;
-        Fri, 04 Mar 2022 09:08:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gi/unIqjj+EE1Nzn6J49QLVgnUqGPh615g5SFKJniNA=;
-        b=nsFYJv4oWBuqxGTF0HQ7cnTNw6KmBoJ+JvjdHUMiOXYkLuKwr4OPDPojSMLxd+LHlh
-         5/v7eI1MdqWL7kO974UCQeNRDSRpJKp6xUeRnEIKWDpID81sc/5e7Swpt8Q0mgEEUuXm
-         avEufNonnAOcFHW17q6HQgLwiXF2kdDm68w3UOcrQWSP1VLts+QW8f9Pw1l8MBOOzD9z
-         Ezz+W8xfv7RlbwFJTpdJnqHzeSQYQ7gAODdGGpuumG5DWBej3dN5RAHBE9ciIUoh/C0J
-         SZE142AstxXAFv02FgCJXKSUHplHirhqMIBDxHl61J1Jp/DAXu2iLk3Uz848EPmweC9l
-         y6Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gi/unIqjj+EE1Nzn6J49QLVgnUqGPh615g5SFKJniNA=;
-        b=kJ2IUQA2uqZ2UJ57YS+6xFTTcmu/oAkJecFwIjQnEKgcidI/vp28R3bSiLsUE8PcAc
-         UZQ3XHcNaWWCZu1Z9mXoR2nsFIXkEfq0u90mrbmNUirIzPD0iNPwT5Wp1slb/evHbneu
-         OSoaNxj/jtOMJOJiX7pRlzhurSXP6gH9U3Pc6b+F9bFDO+cLxOa2Puvp74BAraIXogvx
-         Kji5hhV27Gglh5hJ4K9p10iowiyHdW7KuZXtqeIAKXvVnr1TaNwugOygDl+7JxvVOf38
-         wAdjZOpFI0E+oNJKAnN7e/bB0Gji/ohcvtLSFQDY+Z/tpddS+gFR3LXR8GcVV1Hg8fFs
-         jBCg==
-X-Gm-Message-State: AOAM533TzQ57xUQgwKLY40pLTlg2LxsPdAkZxfPFsS8u0c7GZLWgXvOj
-        X2erlM0DpOCohOQrUTDzE2ALQvXT1JYaKc6kX60=
-X-Google-Smtp-Source: ABdhPJx/Z2+3w9vow2hddhT2Ieli5lnM7myxL9Kbn0KIBh++s/pr3Ofj6bvN+QEsl1Mjn/ULhvBd0VbnZtrk9bwq8I0=
-X-Received: by 2002:a05:6808:1281:b0:2d9:a01a:4bd6 with SMTP id
- a1-20020a056808128100b002d9a01a4bd6mr42381oiw.253.1646413729711; Fri, 04 Mar
- 2022 09:08:49 -0800 (PST)
+        Fri, 4 Mar 2022 12:17:47 -0500
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 297041CD9DE
+        for <linux-hardening@vger.kernel.org>; Fri,  4 Mar 2022 09:17:00 -0800 (PST)
+Received: from localhost (unknown [IPv6:2601:281:8300:104d::5f6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id D2D902C0;
+        Fri,  4 Mar 2022 17:16:58 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net D2D902C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+        t=1646414219; bh=fmFzS+MsVogVoM8EQElzON04Qt45ag1MEZQ4omlt00s=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Awy3x6wC6HmEJtnx+WGj5N/u1bExg4vlLF6PvR+4X+TGT+Ja7x1paArqSoCce9aD1
+         aUFt7B56ZVkgya6L9V+CC/PUE9zLFFV2RWnkedN8yF6I/yqZxVkct23GAAPH+v7s88
+         69Bkhpl9LZ/qfS+PliPIA4+RxjtPJKoC7zFWTTTkzou67PGnUX3wLhOoBIYWLBY5XJ
+         BV6OMzjq0xz9WiNgAyQOU949MRL4D+ONqz+kvWUWs5fgOwQeIfR/y1tIQY9KOkmuUE
+         XEim1+y/qGf1tSlDt2jgSFdv67nq8bnyG923M29vsJliRBmfGNS28BuRGHYWVrsSeB
+         kWp/MCizFn4SA==
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Kees Cook <keescook@chromium.org>,
+        Thorsten Leemhuis <linux@leemhuis.info>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stefano Zacchiroli <zack@upsilon.cc>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Laura Abbott <labbott@kernel.org>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Wenwen Wang <wenwen@cs.uga.edu>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] Documentation/process: Add Researcher Guidelines
+In-Reply-To: <202202251044.F509C7F3@keescook>
+References: <20220224001403.1307377-1-keescook@chromium.org>
+ <974cf8f2-06f3-99a5-9a77-6d7b7cc8271a@leemhuis.info>
+ <202202251044.F509C7F3@keescook>
+Date:   Fri, 04 Mar 2022 10:16:58 -0700
+Message-ID: <871qzhhc39.fsf@meer.lwn.net>
 MIME-Version: 1.0
-References: <20220303172503.GA1731116@embeddedor> <202203030937.5BFE3EF@keescook>
- <20220303181957.GA1731711@embeddedor> <20220303204526.GA1733280@embeddedor>
-In-Reply-To: <20220303204526.GA1733280@embeddedor>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 4 Mar 2022 12:08:38 -0500
-Message-ID: <CADnq5_M6bJUOOY3Uc-8+grGKQTL=AsXC9SXaO4KYdc=z7WVGtg@mail.gmail.com>
-Subject: Re: [PATCH][next] drm/amd/display: Fix Wstringop-overflow warnings in dc_link_dp.c
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, Leo Li <sunpeng.li@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, Daniel Vetter <daniel@ffwll.ch>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 3, 2022 at 3:37 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> On Thu, Mar 03, 2022 at 12:19:57PM -0600, Gustavo A. R. Silva wrote:
-> > On Thu, Mar 03, 2022 at 09:43:28AM -0800, Kees Cook wrote:
-> > > On Thu, Mar 03, 2022 at 11:25:03AM -0600, Gustavo A. R. Silva wrote:
-> > > > Fix the following Wstringop-overflow warnings when building with GC=
-C-11:
-> > > >
-> > > > drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link_dpia.c:493:17=
-: warning: =E2=80=98dp_decide_lane_settings=E2=80=99 accessing 4 bytes in a=
- region of size 1 [-Wstringop-overflow=3D]
-> > >
-> > > Can you "show your work" a little more here? I don't actually see the
-> > > what is getting fixed:
-> > >
-> > > enum dc_lane_count {
-> > >     ...
-> > >         LANE_COUNT_FOUR =3D 4,
-> > >     ...
-> > >         LANE_COUNT_DP_MAX =3D LANE_COUNT_FOUR
-> > > };
-> > >
-> > > struct link_training_settings {
-> > >     ...
-> > >         union dpcd_training_lane dpcd_lane_settings[LANE_COUNT_DP_MAX=
-];
-> > > };
-> > >
-> > > void dp_hw_to_dpcd_lane_settings(
-> > >             ...
-> > >             union dpcd_training_lane dpcd_lane_settings[LANE_COUNT_DP=
-_MAX])
-> > > {
-> > >     ...
-> > > }
-> > >
-> > > static enum link_training_result dpia_training_cr_transparent(
-> > >             ...
-> > >                 struct link_training_settings *lt_settings)
-> > > {
-> > >     ...
-> > >                 dp_decide_lane_settings(lt_settings, dpcd_lane_adjust=
-,
-> > >                                 lt_settings->hw_lane_settings, lt_set=
-tings->dpcd_lane_settings);
-> > >     ...
-> > > }
-> > >
-> > > Everything looks to be the correct size?
-> >
-> > Yep; this fix is similar to the one for intel_pm.c in this
-> >
-> >       commit e7c6e405e171fb33990a12ecfd14e6500d9e5cf2
-> >
-> > where the array size of 8 seems to be fine for all the
-> > struct members related (pri_latency, spr_latency, cur_latency
-> > and skl_latency):
-> >
-> > drivers/gpu/drm/i915/i915_drv.h:465:struct drm_i915_private {
-> > ...
-> >
-> > drivers/gpu/drm/i915/i915_drv.h-739-    struct {
-> >
-> > ...
-> > drivers/gpu/drm/i915/i915_drv.h-745-            /* primary */
-> > drivers/gpu/drm/i915/i915_drv.h-746-            u16 pri_latency[5];
-> > drivers/gpu/drm/i915/i915_drv.h-747-            /* sprite */
-> > drivers/gpu/drm/i915/i915_drv.h-748-            u16 spr_latency[5];
-> > drivers/gpu/drm/i915/i915_drv.h-749-            /* cursor */
-> > drivers/gpu/drm/i915/i915_drv.h-750-            u16 cur_latency[5];
-> > drivers/gpu/drm/i915/i915_drv.h-751-            /*
-> > drivers/gpu/drm/i915/i915_drv.h-752-             * Raw watermark memory=
- latency values
-> > drivers/gpu/drm/i915/i915_drv.h-753-             * for SKL for all 8 le=
-vels
-> > drivers/gpu/drm/i915/i915_drv.h-754-             * in 1us units.
-> > drivers/gpu/drm/i915/i915_drv.h-755-             */
-> > drivers/gpu/drm/i915/i915_drv.h-756-            u16 skl_latency[8];
-> >
-> > ...
-> > drivers/gpu/drm/i915/i915_drv.h-773-    } wm;
-> > ...
-> > }
->
-> and in this case the ilk_wm_max_level() returns the right maximum size fo=
-r the
-> corresponding 'struct wm' member:
->
-> drivers/gpu/drm/i915/intel_pm.c:2993:int ilk_wm_max_level(const struct dr=
-m_i915_private *dev_priv)
-> drivers/gpu/drm/i915/intel_pm.c-2994-{
-> drivers/gpu/drm/i915/intel_pm.c-2995-   /* how many WM levels are we expe=
-cting */
-> drivers/gpu/drm/i915/intel_pm.c-2996-   if (HAS_HW_SAGV_WM(dev_priv))
-> drivers/gpu/drm/i915/intel_pm.c-2997-           return 5;
-> drivers/gpu/drm/i915/intel_pm.c-2998-   else if (DISPLAY_VER(dev_priv) >=
-=3D 9)
-> drivers/gpu/drm/i915/intel_pm.c-2999-           return 7;
-> drivers/gpu/drm/i915/intel_pm.c-3000-   else if (IS_HASWELL(dev_priv) || =
-IS_BROADWELL(dev_priv))
-> drivers/gpu/drm/i915/intel_pm.c-3001-           return 4;
-> drivers/gpu/drm/i915/intel_pm.c-3002-   else if (DISPLAY_VER(dev_priv) >=
-=3D 6)
-> drivers/gpu/drm/i915/intel_pm.c-3003-           return 3;
-> drivers/gpu/drm/i915/intel_pm.c-3004-   else
-> drivers/gpu/drm/i915/intel_pm.c-3005-           return 2;
-> drivers/gpu/drm/i915/intel_pm.c-3006-}
->
-> drivers/gpu/drm/i915/intel_pm.c:3009:static void intel_print_wm_latency(s=
-truct drm_i915_private *dev_priv,
-> drivers/gpu/drm/i915/intel_pm.c-3010-                              const =
-char *name,
-> drivers/gpu/drm/i915/intel_pm.c-3011-                              const =
-u16 wm[])
-> drivers/gpu/drm/i915/intel_pm.c-3012-{
-> drivers/gpu/drm/i915/intel_pm.c-3013-   int level, max_level =3D ilk_wm_m=
-ax_level(dev_priv);
-> drivers/gpu/drm/i915/intel_pm.c-3014-
-> drivers/gpu/drm/i915/intel_pm.c-3015-   for (level =3D 0; level <=3D max_=
-level; level++) {
-> drivers/gpu/drm/i915/intel_pm.c-3016-           unsigned int latency =3D =
-wm[level];
-> drivers/gpu/drm/i915/intel_pm.c-3017-
-> ...
-> }
->
-> still GCC warns about this with Wstringop-overread, as it is explained
-> in commit e7c6e405e171.
+Kees Cook <keescook@chromium.org> writes:
 
-Did you want to respin with expanded explanation?
-
-Alex
-
+> On Thu, Feb 24, 2022 at 09:19:24AM +0100, Thorsten Leemhuis wrote:
+>> Hmm, the intro for "Documentation/admin-guide/" states that "The
+>> following manuals are written for users of the kernel", but the added
+>> text afaics providing nothing regular users care about. So wouldn't it
+>> be better if this lived below Documentation/process/ ? It might not a
+>> really good fit either, but I'd say it's the better place.
+>> 
+>> But well, the best person to know is Jonathan, who is listed as a
+>> Co-developer above, so maybe I'm wrong my suggestion is a bad one.
 >
-> --
-> Gustavo
->
-> >
-> > however GCC warns about accessing bytes beyond the limits, and turning =
-the
-> > argument declarations into pointers (removing the over-specified array
-> > size from the argument declaration) silence the warnings.
-> >
-> > --
-> > Gustavo
+> I started in process/ and eventually settled on admin-guide/ since that's
+> basically the "front page". But I agree, there isn't an obviously correct
+> place for it.
+
+Sorry, been a bit distracted...when we were working on this I was more
+focused on the text than the location.  My own feeling is that
+Documentation/process is a better place for this - that's where we tell
+the world how to work with the kernel community, after all.  I'm not
+going to dig in my heels and fight about it, but that's my sense.
+
+Otherwise, it kind of seems like this is ready to go in. I'd like to
+apply it before the merge window; lemme know where you want it in the
+end and we can get it done.
+
+Thanks,
+
+jon
