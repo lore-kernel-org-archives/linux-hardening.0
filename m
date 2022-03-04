@@ -2,224 +2,236 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3126C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Mar 2022 04:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505A1C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Mar 2022 06:51:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232339AbiCDEtZ (ORCPT
+        id S233917AbiCDGwT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Mar 2022 23:49:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39154 "EHLO
+        Fri, 4 Mar 2022 01:52:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237928AbiCDEtX (ORCPT
+        with ESMTP id S235683AbiCDGwR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Mar 2022 23:49:23 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E9AB11B5CC
-        for <linux-hardening@vger.kernel.org>; Thu,  3 Mar 2022 20:48:34 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id bd1so6707701plb.13
-        for <linux-hardening@vger.kernel.org>; Thu, 03 Mar 2022 20:48:34 -0800 (PST)
+        Fri, 4 Mar 2022 01:52:17 -0500
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E0218E3D6
+        for <linux-hardening@vger.kernel.org>; Thu,  3 Mar 2022 22:51:29 -0800 (PST)
+Received: by mail-wr1-x42a.google.com with SMTP id t11so11202670wrm.5
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Mar 2022 22:51:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ri9qeC8RR8CGain9Bg7eVi/1eh8/QDMjrM/3UAGQLAk=;
-        b=PXtRY0hxgnrtqzjIHTTEN/Jfh2c8RhhBY5t9dwNrEBs6VOoLYBuikMk+TtXpTFp44A
-         cuT71xzIifuVbTkzTdeeA8xvCYOYIjaJKVCWBfusmi/GVAvHgNl63+3fnNUmIPik6FOe
-         uMYBwCV56ZxnJdRke+Mu/9M7mFfZju5GQLaKs=
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A6Me7A1MLbKNOC8N5XLF9hKjr+5sR0xUNnAbRPEgklA=;
+        b=RZNYhNKyolemoicNv+iSgKN7NyTOheGF+je3nFLyYySt6n7TNsvjLm3wnczC1/Qw7Q
+         70vbPF6dkV0faw5HZmGOYFw3ExuTLWyXhsNErKmXaTU1a8uEfDvlUUg0WvQLkvsMKKRl
+         yInMXKX2k4jKncdaswot7xk7RfWuTICJu/iFG0aBr2MVmM8tyat0SNXns0fdeiv39dY3
+         GjQ2nP9ddwigjED8W00MZEHkwkwbULwC9MSTsCj2AvR6ONVR1v4O016e7Z4jv9xJN8fO
+         d3p08aPOA4qQ3E+RIpM2Q3hEVgVbWY66g9OpG90Q6Bff6oLpz8TP8D79X1Xp/SVUhoq2
+         uMjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ri9qeC8RR8CGain9Bg7eVi/1eh8/QDMjrM/3UAGQLAk=;
-        b=31oonU/U5sb3/Gy9yjPBcTPTEvE/L9BS1PtMKh4QRZtvOHfkTMCqlmAj2eTpxSQwfH
-         y0p6nuC7wwiqQfadzETetDtaQGyDbBaIXkJGYw4Hdlhoy/eB6IQ6r/VJlbkgpearhcKY
-         4BHwT10+/aGGO6jZywXcDNcMH/V+X1ZU95rwuHT0RuGHC5vFEiWhJR2Z3NNJLJB6T5B0
-         pQXSFokwI6gML0jzlaAKbFyqqB04Q01RVZ2WhnpeltCrhyocPFBbn5XgP8xXl2CfifSF
-         KxUyx4VWdYArndkzfQ8eAo5GOEPY4YRpxVUAhKNcbgZ/JUHp3Jn74rIp3J7MlHWnlevW
-         BzgA==
-X-Gm-Message-State: AOAM530iWHCdc0xo90UVTkN8ixHYMA6y/UWWs4zR5zfdMvEVflHcdC3c
-        Nx2FvTgUqnXZaXVw4xgFtf9kCA==
-X-Google-Smtp-Source: ABdhPJyQNWTopy4B9gFA1y+6qGGV7b+LOm34nlwWaqK1F5w5NbaUAl8KnUoQ/BuXUoi0OIfOd70JcA==
-X-Received: by 2002:a17:902:bc47:b0:151:ac43:eae0 with SMTP id t7-20020a170902bc4700b00151ac43eae0mr5525362plz.117.1646369314041;
-        Thu, 03 Mar 2022 20:48:34 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e30-20020a056a0000de00b004ef299a4f89sm4399458pfj.180.2022.03.03.20.48.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Mar 2022 20:48:33 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     David Gow <davidgow@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Daniel Latypov <dlatypov@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        =?UTF-8?q?Magnus=20Gro=C3=9F?= <magnus.gross@rwth-aachen.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v2] binfmt_elf: Introduce KUnit test
-Date:   Thu,  3 Mar 2022 20:48:31 -0800
-Message-Id: <20220304044831.962450-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.32.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A6Me7A1MLbKNOC8N5XLF9hKjr+5sR0xUNnAbRPEgklA=;
+        b=Vl6WP2Jc2PVVcf7lklCUK/XgIzMoDNC/5FaAvrmZON1FeURMOT8eksqG/4HPjBjyld
+         9JvOyyae3emxNlEsrRfnXhFXSHJRJFH03RRabzK+uowW1MMfb07E3eGDXs9xdYjdpN+K
+         N6r4gOeSeVOl5ibVqPi5pHd3rWjZknqQ8RhTlFJlafKarLDsqvKeOtNbIeUm8Nd4kLgH
+         NWuwR+4/ZMRjj+m2hnbHxpfY4Zy4oRYZtKN+DDbm+lZ53ttbTAxVRnr1Jw/8TNxH8rC0
+         KMaMWWE3CT3Z2TODaXj6TA+VGWNTolvLdIoN4YEw/f/+dJthK52v0R9WY4p0eV27JS+P
+         Gkfg==
+X-Gm-Message-State: AOAM531hmeiFqbgTV+5NDEXkCnqimW7Kw5w/UxCWHGQzvkQZ4+Vvajwn
+        imh0Znp2QBhqWeJHGiEYlPRsVSvUUOOQVBATQg9CcQ==
+X-Google-Smtp-Source: ABdhPJxiVAtU1A7z1i59IHCoGvemYK4OIg1qA96J/v4q3pxraY3oW56Zz4BtnLSZ2OAKjPIQoPXo/xJwv+/P/w68Q8k=
+X-Received: by 2002:adf:fd0a:0:b0:1f0:25fd:4082 with SMTP id
+ e10-20020adffd0a000000b001f025fd4082mr8680894wrr.501.1646376687561; Thu, 03
+ Mar 2022 22:51:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6317; h=from:subject; bh=a4w0s4IZAhRLqjb5tB/XeGI0pZPXrfhf132TKT4W6sM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiIZoe6mzGMiS+V65tUEDI5benpoYIwRU5izGHNxNp trQdi96JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYiGaHgAKCRCJcvTf3G3AJswOD/ wJArtGLzdWsYsMObVWMpcm/KSKI6gij5EcZ0Sl/YMn4hB/wbunDSg4l3qUISZ6WBNg999FHe+aN19L kNL44u28ADAqX9UXGCwi1MSZ0ngJQm8XTG3QMoD6lE/Dg4ZQAw/YJYdydHX7xwpvxSJJb46JF63oOf auz58w+XMMJqfO3lUu2svzbgS7gAAeB98TXqzhDWJ5q/Yscm7oU6I7FXUFWixP4fo6anwZtUmh8NVS X77rvrn9nbnAPUB8wN9wbyGXMKCAD2tROg67MHhCmY7oYRA2O1p90gE1l3OL3xNRXdjU1q3I5mXl4H 0V+u/rHf17xNmTJLkhETgCnJBK//XBDnKbDz4jBSiKOvZI3wDpLxn47U2PNAtxgknDaMH50eCyyOVx tHWxouBVHHABaAIKbvr+dD2v/5zQneUShenswE5eclzBqKWuv0IRh5VS9GNlrN4BaJ6bYVnGGnXyNJ ugAxp/CEJSRwbnt/uVU5srLzjAPa8/jLjqKteWXzVvbXRTcdkbzcpdqVmAq+M/WoNRpFPnp5mzHdFH wk1l/Ixz3p0NVEuL6O/MD3tXA8xRprySCgbp5Ke8zeyVUTyYZGgq6pqJ+88zpxtUIerl0hoEybso6d gyEorJy2/nrp1A6ecczPU2crgQm+Xc0S+GKGbBqoQi8AS7Zd/Q+z6LI8jo0g==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20220303090643.241747-1-davidgow@google.com> <YiD7R2wRxoWxtVq7@dev-arch.thelio-3990X>
+In-Reply-To: <YiD7R2wRxoWxtVq7@dev-arch.thelio-3990X>
+From:   David Gow <davidgow@google.com>
+Date:   Fri, 4 Mar 2022 14:51:16 +0800
+Message-ID: <CABVgOSkQPNK59vvhAMFM_5jWF-hNPZXdou8UC31RM0TEXT-=Fg@mail.gmail.com>
+Subject: Re: [PATCH] um: clang: Strip out -mno-global-merge from USER_CFLAGS
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-kbuild@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        llvm@lists.linux.dev,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="000000000000a72fc305d95ef155"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Adds simple KUnit test for some binfmt_elf internals: specifically a
-regression test for the problem fixed by commit 8904d9cd90ee ("ELF:
-fix overflow in total mapping size calculation").
+--000000000000a72fc305d95ef155
+Content-Type: text/plain; charset="UTF-8"
 
-$ ./tools/testing/kunit/kunit.py run --arch x86_64 \
-    --kconfig_add CONFIG_IA32_EMULATION=y '*binfmt_elf'
-...
-[19:41:08] ================== binfmt_elf (1 subtest) ==================
-[19:41:08] [PASSED] total_mapping_size_test
-[19:41:08] =================== [PASSED] binfmt_elf ====================
-[19:41:08] ============== compat_binfmt_elf (1 subtest) ===============
-[19:41:08] [PASSED] total_mapping_size_test
-[19:41:08] ================ [PASSED] compat_binfmt_elf ================
-[19:41:08] ============================================================
-[19:41:08] Testing complete. Passed: 2, Failed: 0, Crashed: 0, Skipped: 0, Errors: 0
+On Fri, Mar 4, 2022 at 1:30 AM Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> Hi David,
+>
+> On Thu, Mar 03, 2022 at 05:06:42PM +0800, David Gow wrote:
+> > The things built with USER_CFLAGS don't seem to recognise it as a
+> > compiler option, and print a warning:
+> > clang: warning: argument unused during compilation: '-mno-global-merge' [-Wunused-command-line-argument]
+> >
+> > Fixes: 744814d2fa ("um: Allow builds with Clang")
+> > Signed-off-by: David Gow <davidgow@google.com>
+> > ---
+> >
+> > This warning shows up after merging:
+> > https://lore.kernel.org/lkml/20220227184517.504931-6-keescook@chromium.org/
+> >
+> > I'm not 100% sure why this is necessary, but it does seem to work. All
+> > the attempts to get rid of -mno-global-merge entirely have been met with
+> > skepticism, but I'm guessing that it's not a problem for just the UML
+> > "user" files, as they shouldn't(?) interact too much with modules.
+>
+> Thank you for the patch! I think it is correct, as this flag only works
+> for AArch64 and ARM, as it is only used in Clang::AddAArch64TargetArgs()
+> and Clang::AddARMTargetArgs() in clang/lib/Driver/ToolChains/Clang.cpp,
+> which are obviously never called with UML. I am not sure why we do not
+> see warning during regular kernel builds, maybe something about how UML
+> objects are compiled exposes this?
 
-Cc: Eric Biederman <ebiederm@xmission.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-This is now at the top of my for-next/execve tree
-v1: https://lore.kernel.org/lkml/20220224054332.1852813-1-keescook@chromium.org
-v2:
- - improve commit log
- - fix comment URL (Daniel)
- - drop redundant KUnit Kconfig help info (Daniel)
- - note in Kconfig help that COMPAT builds add a compat test (David)
----
- fs/Kconfig.binfmt      | 10 +++++++
- fs/binfmt_elf.c        |  4 +++
- fs/binfmt_elf_test.c   | 64 ++++++++++++++++++++++++++++++++++++++++++
- fs/compat_binfmt_elf.c |  2 ++
- 4 files changed, 80 insertions(+)
- create mode 100644 fs/binfmt_elf_test.c
+Yeah: this only seems to show up with UML source compiled as "user"
+files (i.e., talking to the host system). Most of the kernel source
+doesn't show the warning because -Qunused-arguments is set somewhere,
+probably in KBUILD_CPPFLAGS, which doesn't filter down into
+USER_CFLAGS:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Makefile?id=7e57714cd0ad2d5bb90e50b5096a0e671dec1ef3#n784
 
-diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
-index 4d5ae61580aa..f7065e825b7f 100644
---- a/fs/Kconfig.binfmt
-+++ b/fs/Kconfig.binfmt
-@@ -28,6 +28,16 @@ config BINFMT_ELF
- 	  ld.so (check the file <file:Documentation/Changes> for location and
- 	  latest version).
- 
-+config BINFMT_ELF_KUNIT_TEST
-+	bool "Build KUnit tests for ELF binary support" if !KUNIT_ALL_TESTS
-+	depends on KUNIT=y && BINFMT_ELF=y
-+	default KUNIT_ALL_TESTS
-+	help
-+	  This builds the ELF loader KUnit tests, which try to gather
-+	  prior bug fixes into a regression test collection. This is really
-+	  only needed for debugging. Note that with CONFIG_COMPAT=y, the
-+	  compat_binfmt_elf KUnit test is also created.
-+
- config COMPAT_BINFMT_ELF
- 	def_bool y
- 	depends on COMPAT && BINFMT_ELF
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 4c5a2175f605..eaf39b1bdbbb 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -2346,3 +2346,7 @@ static void __exit exit_elf_binfmt(void)
- core_initcall(init_elf_binfmt);
- module_exit(exit_elf_binfmt);
- MODULE_LICENSE("GPL");
-+
-+#ifdef CONFIG_BINFMT_ELF_KUNIT_TEST
-+#include "binfmt_elf_test.c"
-+#endif
-diff --git a/fs/binfmt_elf_test.c b/fs/binfmt_elf_test.c
-new file mode 100644
-index 000000000000..11d734fec366
---- /dev/null
-+++ b/fs/binfmt_elf_test.c
-@@ -0,0 +1,64 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <kunit/test.h>
-+
-+static void total_mapping_size_test(struct kunit *test)
-+{
-+	struct elf_phdr empty[] = {
-+		{ .p_type = PT_LOAD, .p_vaddr = 0, .p_memsz = 0, },
-+		{ .p_type = PT_INTERP, .p_vaddr = 10, .p_memsz = 999999, },
-+	};
-+	/*
-+	 * readelf -lW /bin/mount | grep '^  .*0x0' | awk '{print "\t\t{ .p_type = PT_" \
-+	 *				$1 ", .p_vaddr = " $3 ", .p_memsz = " $6 ", },"}'
-+	 */
-+	struct elf_phdr mount[] = {
-+		{ .p_type = PT_PHDR, .p_vaddr = 0x00000040, .p_memsz = 0x0002d8, },
-+		{ .p_type = PT_INTERP, .p_vaddr = 0x00000318, .p_memsz = 0x00001c, },
-+		{ .p_type = PT_LOAD, .p_vaddr = 0x00000000, .p_memsz = 0x0033a8, },
-+		{ .p_type = PT_LOAD, .p_vaddr = 0x00004000, .p_memsz = 0x005c91, },
-+		{ .p_type = PT_LOAD, .p_vaddr = 0x0000a000, .p_memsz = 0x0022f8, },
-+		{ .p_type = PT_LOAD, .p_vaddr = 0x0000d330, .p_memsz = 0x000d40, },
-+		{ .p_type = PT_DYNAMIC, .p_vaddr = 0x0000d928, .p_memsz = 0x000200, },
-+		{ .p_type = PT_NOTE, .p_vaddr = 0x00000338, .p_memsz = 0x000030, },
-+		{ .p_type = PT_NOTE, .p_vaddr = 0x00000368, .p_memsz = 0x000044, },
-+		{ .p_type = PT_GNU_PROPERTY, .p_vaddr = 0x00000338, .p_memsz = 0x000030, },
-+		{ .p_type = PT_GNU_EH_FRAME, .p_vaddr = 0x0000b490, .p_memsz = 0x0001ec, },
-+		{ .p_type = PT_GNU_STACK, .p_vaddr = 0x00000000, .p_memsz = 0x000000, },
-+		{ .p_type = PT_GNU_RELRO, .p_vaddr = 0x0000d330, .p_memsz = 0x000cd0, },
-+	};
-+	size_t mount_size = 0xE070;
-+	/* https://lore.kernel.org/linux-fsdevel/YfF18Dy85mCntXrx@fractal.localdomain */
-+	struct elf_phdr unordered[] = {
-+		{ .p_type = PT_LOAD, .p_vaddr = 0x00000000, .p_memsz = 0x0033a8, },
-+		{ .p_type = PT_LOAD, .p_vaddr = 0x0000d330, .p_memsz = 0x000d40, },
-+		{ .p_type = PT_LOAD, .p_vaddr = 0x00004000, .p_memsz = 0x005c91, },
-+		{ .p_type = PT_LOAD, .p_vaddr = 0x0000a000, .p_memsz = 0x0022f8, },
-+	};
-+
-+	/* No headers, no size. */
-+	KUNIT_EXPECT_EQ(test, total_mapping_size(NULL, 0), 0);
-+	KUNIT_EXPECT_EQ(test, total_mapping_size(empty, 0), 0);
-+	/* Empty headers, no size. */
-+	KUNIT_EXPECT_EQ(test, total_mapping_size(empty, 1), 0);
-+	/* No PT_LOAD headers, no size. */
-+	KUNIT_EXPECT_EQ(test, total_mapping_size(&empty[1], 1), 0);
-+	/* Empty PT_LOAD and non-PT_LOAD headers, no size. */
-+	KUNIT_EXPECT_EQ(test, total_mapping_size(empty, 2), 0);
-+
-+	/* Normal set of PT_LOADS, and expected size. */
-+	KUNIT_EXPECT_EQ(test, total_mapping_size(mount, ARRAY_SIZE(mount)), mount_size);
-+	/* Unordered PT_LOADs result in same size. */
-+	KUNIT_EXPECT_EQ(test, total_mapping_size(unordered, ARRAY_SIZE(unordered)), mount_size);
-+}
-+
-+static struct kunit_case binfmt_elf_test_cases[] = {
-+	KUNIT_CASE(total_mapping_size_test),
-+	{},
-+};
-+
-+static struct kunit_suite binfmt_elf_test_suite = {
-+	.name = KBUILD_MODNAME,
-+	.test_cases = binfmt_elf_test_cases,
-+};
-+
-+kunit_test_suite(binfmt_elf_test_suite);
-diff --git a/fs/compat_binfmt_elf.c b/fs/compat_binfmt_elf.c
-index 95e72d271b95..8f0af4f62631 100644
---- a/fs/compat_binfmt_elf.c
-+++ b/fs/compat_binfmt_elf.c
-@@ -135,6 +135,8 @@
- #define elf_format		compat_elf_format
- #define init_elf_binfmt		init_compat_elf_binfmt
- #define exit_elf_binfmt		exit_compat_elf_binfmt
-+#define binfmt_elf_test_cases	compat_binfmt_elf_test_cases
-+#define binfmt_elf_test_suite	compat_binfmt_elf_test_suite
- 
- /*
-  * We share all the actual code with the native (64-bit) version.
--- 
-2.32.0
+Is this flag supposed to only work on ARM/AArch64, or is it just
+currently not implemented anywhere else. If it's actually
+ARM-specific, then moving it to the arch/arm{,64} makefile as in Kees'
+patch definitely makes more sense. If it's going to show up on other
+architectures at some point anyway, maybe something like this makes
+sense.
 
+>
+> Regardless, I would definitely like to clean up this instance of the
+> warning because I would like to make this warning a hard error so that
+> we do not get cryptic cc-option failures:
+>
+> https://github.com/ClangBuiltLinux/linux/issues/1587
+>
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+>
+> One small comment below.
+>
+> >  arch/um/Makefile | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/arch/um/Makefile b/arch/um/Makefile
+> > index f2fe63bfd819..320b09cd513c 100644
+> > --- a/arch/um/Makefile
+> > +++ b/arch/um/Makefile
+> > @@ -75,6 +75,10 @@ USER_CFLAGS = $(patsubst $(KERNEL_DEFINES),,$(patsubst -I%,,$(KBUILD_CFLAGS))) \
+> >               -D_FILE_OFFSET_BITS=64 -idirafter $(srctree)/include \
+> >               -idirafter $(objtree)/include -D__KERNEL__ -D__UM_HOST__
+> >
+> > +ifdef CONFIG_CC_IS_CLANG
+>
+> Is this ifdef needed?
+>
+No: it works fine without the ifdef: I just wanted to limit the damage
+I could do playing with things I didn't fully understand. :-)
+
+> > +USER_CFLAGS := $(patsubst -mno-global-merge,,$(USER_CFLAGS))
+> > +endif
+> > +
+> >  #This will adjust *FLAGS accordingly to the platform.
+> >  include $(srctree)/$(ARCH_DIR)/Makefile-os-$(OS)
+> >
+
+Cheers,
+-- David
+
+--000000000000a72fc305d95ef155
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIIPnwYJKoZIhvcNAQcCoIIPkDCCD4wCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+ggz5MIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
+IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
+dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
+6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
+c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
+I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
+AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
+BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
+CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
+AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
+MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
+My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
+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
+G7p3AiuB2sgfq6cOpbO5MEwGA1UdIARFMEMwQQYJKwYBBAGgMgEoMDQwMgYIKwYBBQUHAgEWJmh0
+dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQCMAAwgZoGCCsG
+AQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9jYS9n
+c2F0bGFzcjNzbWltZWNhMjAyMDBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5nbG9iYWxzaWdu
+LmNvbS9jYWNlcnQvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3J0MB8GA1UdIwQYMBaAFHzMCmjXouse
+LHIb0c1dlW+N+/JjMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20v
+Y2EvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3JsMA0GCSqGSIb3DQEBCwUAA4IBAQBsL34EJkCtu9Nu
+2+R6l1Qzno5Gl+N2Cm6/YLujukDGYa1JW27txXiilR9dGP7yl60HYyG2Exd5i6fiLDlaNEw0SqzE
+dw9ZSIak3Qvm2UybR8zcnB0deCUiwahqh7ZncEPlhnPpB08ETEUtwBEqCEnndNEkIN67yz4kniCZ
+jZstNF/BUnI3864fATiXSbnNqBwlJS3YkoaCTpbI9qNTrf5VIvnbryT69xJ6f25yfmxrXNJJe5OG
+ncB34Cwnb7xQyk+uRLZ465yUBkbjk9pC/yamL0O7SOGYUclrQl2c5zzGuVBD84YcQGDOK6gSPj6w
+QuBfOooZPOyZZZ8AMih7J980MYICajCCAmYCAQEwaDBUMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQ
+R2xvYmFsU2lnbiBudi1zYTEqMCgGA1UEAxMhR2xvYmFsU2lnbiBBdGxhcyBSMyBTTUlNRSBDQSAy
+MDIwAhABQeVybOOpR4bOOXZYL5T3MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCo
+gZZNfyHC7gt32VURB7bs1waIRwAVDcFVg+WAp+4WPzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
+MBwGCSqGSIb3DQEJBTEPFw0yMjAzMDQwNjUxMjdaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUD
+BAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsG
+CSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAT4EZ9MXnq6fg9Dha0yqy
+ueRk6qFYjNDrL33X/dy8jrP2j4Z+SCgRWnxM73PN4kGbQUksGTqkOl3uBJ5gF96+DHphqLQJFCxZ
+8I+MMkY9XQ1hK6sxugoNxwDXGsBbXFBuRYCKAUIeDM2wel2nj/foSO8kf+O5wbzIx5gBXJa4SdWu
+JAVKmSJtjlspiPZOKvtsWPM2EyetLWOf29VX+fT2LHHn2sO/zCqmrtrgn306Zl629PMDBVG+j//k
+mPZHPc9hijjliTjp5MvzCtqH5eAX/kT4MfE85F3tJM2fPJ/+Iq0f8reHT/TdCS59CGEYg++SZunD
+qfwkhyGcsIj0Ha9zDg==
+--000000000000a72fc305d95ef155--
