@@ -2,162 +2,120 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505A1C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Mar 2022 06:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281ADC433EF
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Mar 2022 07:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233917AbiCDGwT (ORCPT
+        id S238989AbiCDHxI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Mar 2022 01:52:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54530 "EHLO
+        Fri, 4 Mar 2022 02:53:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235683AbiCDGwR (ORCPT
+        with ESMTP id S238984AbiCDHxH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Mar 2022 01:52:17 -0500
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E0218E3D6
-        for <linux-hardening@vger.kernel.org>; Thu,  3 Mar 2022 22:51:29 -0800 (PST)
-Received: by mail-wr1-x42a.google.com with SMTP id t11so11202670wrm.5
-        for <linux-hardening@vger.kernel.org>; Thu, 03 Mar 2022 22:51:29 -0800 (PST)
+        Fri, 4 Mar 2022 02:53:07 -0500
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 613BB194A8C
+        for <linux-hardening@vger.kernel.org>; Thu,  3 Mar 2022 23:52:18 -0800 (PST)
+Received: by mail-wm1-x331.google.com with SMTP id l10so651111wmb.0
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Mar 2022 23:52:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=A6Me7A1MLbKNOC8N5XLF9hKjr+5sR0xUNnAbRPEgklA=;
-        b=RZNYhNKyolemoicNv+iSgKN7NyTOheGF+je3nFLyYySt6n7TNsvjLm3wnczC1/Qw7Q
-         70vbPF6dkV0faw5HZmGOYFw3ExuTLWyXhsNErKmXaTU1a8uEfDvlUUg0WvQLkvsMKKRl
-         yInMXKX2k4jKncdaswot7xk7RfWuTICJu/iFG0aBr2MVmM8tyat0SNXns0fdeiv39dY3
-         GjQ2nP9ddwigjED8W00MZEHkwkwbULwC9MSTsCj2AvR6ONVR1v4O016e7Z4jv9xJN8fO
-         d3p08aPOA4qQ3E+RIpM2Q3hEVgVbWY66g9OpG90Q6Bff6oLpz8TP8D79X1Xp/SVUhoq2
-         uMjA==
+        bh=ndUklv2vtj23hwPAPGo7EnYKj94SKqJmiT0CxQFtvAc=;
+        b=MEcfk9Pnj6lxhWhBBeB3iyCLebSMILf9yEAc8ITick6jwseRBzrYkogBEtXXlgQp46
+         xZDdTnAhmkiixzrWYIvEzIKTrfPJVj5viC+bvQsUgFLe7cXQufixIILgT/EOxsnfM59Q
+         c9GB7CwknaJEyix3BuulSmE+veGl3A/Uq3qgkBuA1WoBs4RSCVD+BSzihHp6O14xaxSB
+         Zp9ExjeSH1ZAuTlKZzhMyLHlBMllU39r8NSUblnG/aLdlLYJQemzHXL0BvvI9xtyRV3I
+         gBSKbYPc7pavHs3TvcTOWkpwk/rI5vdJ7XlvKEjlRvy6voucB2tBNr8ZCAGZ6YyrZPUW
+         Ebmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=A6Me7A1MLbKNOC8N5XLF9hKjr+5sR0xUNnAbRPEgklA=;
-        b=Vl6WP2Jc2PVVcf7lklCUK/XgIzMoDNC/5FaAvrmZON1FeURMOT8eksqG/4HPjBjyld
-         9JvOyyae3emxNlEsrRfnXhFXSHJRJFH03RRabzK+uowW1MMfb07E3eGDXs9xdYjdpN+K
-         N6r4gOeSeVOl5ibVqPi5pHd3rWjZknqQ8RhTlFJlafKarLDsqvKeOtNbIeUm8Nd4kLgH
-         NWuwR+4/ZMRjj+m2hnbHxpfY4Zy4oRYZtKN+DDbm+lZ53ttbTAxVRnr1Jw/8TNxH8rC0
-         KMaMWWE3CT3Z2TODaXj6TA+VGWNTolvLdIoN4YEw/f/+dJthK52v0R9WY4p0eV27JS+P
-         Gkfg==
-X-Gm-Message-State: AOAM531hmeiFqbgTV+5NDEXkCnqimW7Kw5w/UxCWHGQzvkQZ4+Vvajwn
-        imh0Znp2QBhqWeJHGiEYlPRsVSvUUOOQVBATQg9CcQ==
-X-Google-Smtp-Source: ABdhPJxiVAtU1A7z1i59IHCoGvemYK4OIg1qA96J/v4q3pxraY3oW56Zz4BtnLSZ2OAKjPIQoPXo/xJwv+/P/w68Q8k=
-X-Received: by 2002:adf:fd0a:0:b0:1f0:25fd:4082 with SMTP id
- e10-20020adffd0a000000b001f025fd4082mr8680894wrr.501.1646376687561; Thu, 03
- Mar 2022 22:51:27 -0800 (PST)
+        bh=ndUklv2vtj23hwPAPGo7EnYKj94SKqJmiT0CxQFtvAc=;
+        b=liXgWFcoMmUd0JyNKWgKGAy8VC7sY+LhYgDMUFyu87BFdcAIZTraucs2qPcxoSylFA
+         fUjLGDrNbx7vBDELS6M1Org4t9xs2pgoMRh5BOWdDtHG3TxQZeAeL9WwUSM74SZ4tBNZ
+         GElcAUl32rkaZx25YFXKlGo+oc21P8UdH/WrScBKr4UCOxY4o3CP5hcaV9p1e+UbaUXf
+         drqvr+W1yBtj/NN7m6B423ScwapvlktJ6mBKgjdN7tVKPwSOSNLkXz6Qley3ZhvfTJNa
+         IdjGYVg9ToLTZcYcksr7pcj+lwyAGyH+cw/9KlQ/kB1k7dF+qxG8x/NVnKV8UJYXkkWr
+         m06w==
+X-Gm-Message-State: AOAM531Yut3HQSbzhPYIAbyLHPmfrNgGOUACL4QZEZuv34Vkwdx4KBnQ
+        TXcCLhPQFV4ZsRi0J9HIIC4z9ROcqUg3OZ9PlKYmZQ==
+X-Google-Smtp-Source: ABdhPJxIPfDXvtH+FUsLdt+mQruAYm8bX4xhBQYNp//ry3REN+e7uBKdH22pPJ1wNIYTM2Yhk8PJIKciXziFQf4SpZA=
+X-Received: by 2002:a05:600c:4fd0:b0:382:716a:c5fc with SMTP id
+ o16-20020a05600c4fd000b00382716ac5fcmr6621968wmq.81.1646380336841; Thu, 03
+ Mar 2022 23:52:16 -0800 (PST)
 MIME-Version: 1.0
-References: <20220303090643.241747-1-davidgow@google.com> <YiD7R2wRxoWxtVq7@dev-arch.thelio-3990X>
-In-Reply-To: <YiD7R2wRxoWxtVq7@dev-arch.thelio-3990X>
+References: <20220304044831.962450-1-keescook@chromium.org>
+In-Reply-To: <20220304044831.962450-1-keescook@chromium.org>
 From:   David Gow <davidgow@google.com>
-Date:   Fri, 4 Mar 2022 14:51:16 +0800
-Message-ID: <CABVgOSkQPNK59vvhAMFM_5jWF-hNPZXdou8UC31RM0TEXT-=Fg@mail.gmail.com>
-Subject: Re: [PATCH] um: clang: Strip out -mno-global-merge from USER_CFLAGS
-To:     Nathan Chancellor <nathan@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-kbuild@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        llvm@lists.linux.dev,
+Date:   Fri, 4 Mar 2022 15:52:05 +0800
+Message-ID: <CABVgOSmGN2=ptHmEv+FT7vaCUVW4a4bLQUhLKEDV7gbTtH6raA@mail.gmail.com>
+Subject: Re: [PATCH v2] binfmt_elf: Introduce KUnit test
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Eric Biederman <ebiederm@xmission.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        =?UTF-8?B?TWFnbnVzIEdyb8Of?= <magnus.gross@rwth-aachen.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        linux-fsdevel@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
         linux-hardening@vger.kernel.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000a72fc305d95ef155"
+        boundary="000000000000291c5305d95fcbff"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
---000000000000a72fc305d95ef155
+--000000000000291c5305d95fcbff
 Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Mar 4, 2022 at 1:30 AM Nathan Chancellor <nathan@kernel.org> wrote:
+On Fri, Mar 4, 2022 at 12:48 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> Hi David,
+> Adds simple KUnit test for some binfmt_elf internals: specifically a
+> regression test for the problem fixed by commit 8904d9cd90ee ("ELF:
+> fix overflow in total mapping size calculation").
 >
-> On Thu, Mar 03, 2022 at 05:06:42PM +0800, David Gow wrote:
-> > The things built with USER_CFLAGS don't seem to recognise it as a
-> > compiler option, and print a warning:
-> > clang: warning: argument unused during compilation: '-mno-global-merge' [-Wunused-command-line-argument]
-> >
-> > Fixes: 744814d2fa ("um: Allow builds with Clang")
-> > Signed-off-by: David Gow <davidgow@google.com>
-> > ---
-> >
-> > This warning shows up after merging:
-> > https://lore.kernel.org/lkml/20220227184517.504931-6-keescook@chromium.org/
-> >
-> > I'm not 100% sure why this is necessary, but it does seem to work. All
-> > the attempts to get rid of -mno-global-merge entirely have been met with
-> > skepticism, but I'm guessing that it's not a problem for just the UML
-> > "user" files, as they shouldn't(?) interact too much with modules.
+> $ ./tools/testing/kunit/kunit.py run --arch x86_64 \
+>     --kconfig_add CONFIG_IA32_EMULATION=y '*binfmt_elf'
+> ...
+> [19:41:08] ================== binfmt_elf (1 subtest) ==================
+> [19:41:08] [PASSED] total_mapping_size_test
+> [19:41:08] =================== [PASSED] binfmt_elf ====================
+> [19:41:08] ============== compat_binfmt_elf (1 subtest) ===============
+> [19:41:08] [PASSED] total_mapping_size_test
+> [19:41:08] ================ [PASSED] compat_binfmt_elf ================
+> [19:41:08] ============================================================
+> [19:41:08] Testing complete. Passed: 2, Failed: 0, Crashed: 0, Skipped: 0, Errors: 0
 >
-> Thank you for the patch! I think it is correct, as this flag only works
-> for AArch64 and ARM, as it is only used in Clang::AddAArch64TargetArgs()
-> and Clang::AddARMTargetArgs() in clang/lib/Driver/ToolChains/Clang.cpp,
-> which are obviously never called with UML. I am not sure why we do not
-> see warning during regular kernel builds, maybe something about how UML
-> objects are compiled exposes this?
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> This is now at the top of my for-next/execve tree
+> v1: https://lore.kernel.org/lkml/20220224054332.1852813-1-keescook@chromium.org
+> v2:
+>  - improve commit log
+>  - fix comment URL (Daniel)
+>  - drop redundant KUnit Kconfig help info (Daniel)
+>  - note in Kconfig help that COMPAT builds add a compat test (David)
+> ---
 
-Yeah: this only seems to show up with UML source compiled as "user"
-files (i.e., talking to the host system). Most of the kernel source
-doesn't show the warning because -Qunused-arguments is set somewhere,
-probably in KBUILD_CPPFLAGS, which doesn't filter down into
-USER_CFLAGS:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Makefile?id=7e57714cd0ad2d5bb90e50b5096a0e671dec1ef3#n784
+This looks good to me, and works fine with those two prerequisite
+patches from your tree:
+- ELF: Properly redefine PT_GNU_* in terms of PT_LOOS
+- ELF: fix overflow in total mapping size calculation
+(I even played a few of the games which triggered the ELF bug to make
+sure it was fixed, too. :-) )
 
-Is this flag supposed to only work on ARM/AArch64, or is it just
-currently not implemented anywhere else. If it's actually
-ARM-specific, then moving it to the arch/arm{,64} makefile as in Kees'
-patch definitely makes more sense. If it's going to show up on other
-architectures at some point anyway, maybe something like this makes
-sense.
-
->
-> Regardless, I would definitely like to clean up this instance of the
-> warning because I would like to make this warning a hard error so that
-> we do not get cryptic cc-option failures:
->
-> https://github.com/ClangBuiltLinux/linux/issues/1587
->
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
->
-> One small comment below.
->
-> >  arch/um/Makefile | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/arch/um/Makefile b/arch/um/Makefile
-> > index f2fe63bfd819..320b09cd513c 100644
-> > --- a/arch/um/Makefile
-> > +++ b/arch/um/Makefile
-> > @@ -75,6 +75,10 @@ USER_CFLAGS = $(patsubst $(KERNEL_DEFINES),,$(patsubst -I%,,$(KBUILD_CFLAGS))) \
-> >               -D_FILE_OFFSET_BITS=64 -idirafter $(srctree)/include \
-> >               -idirafter $(objtree)/include -D__KERNEL__ -D__UM_HOST__
-> >
-> > +ifdef CONFIG_CC_IS_CLANG
->
-> Is this ifdef needed?
->
-No: it works fine without the ifdef: I just wanted to limit the damage
-I could do playing with things I didn't fully understand. :-)
-
-> > +USER_CFLAGS := $(patsubst -mno-global-merge,,$(USER_CFLAGS))
-> > +endif
-> > +
-> >  #This will adjust *FLAGS accordingly to the platform.
-> >  include $(srctree)/$(ARCH_DIR)/Makefile-os-$(OS)
-> >
+Reviewed-by: David Gow <davidgow@google.com>
 
 Cheers,
 -- David
 
---000000000000a72fc305d95ef155
+--000000000000291c5305d95fcbff
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -224,14 +182,14 @@ jZstNF/BUnI3864fATiXSbnNqBwlJS3YkoaCTpbI9qNTrf5VIvnbryT69xJ6f25yfmxrXNJJe5OG
 ncB34Cwnb7xQyk+uRLZ465yUBkbjk9pC/yamL0O7SOGYUclrQl2c5zzGuVBD84YcQGDOK6gSPj6w
 QuBfOooZPOyZZZ8AMih7J980MYICajCCAmYCAQEwaDBUMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQ
 R2xvYmFsU2lnbiBudi1zYTEqMCgGA1UEAxMhR2xvYmFsU2lnbiBBdGxhcyBSMyBTTUlNRSBDQSAy
-MDIwAhABQeVybOOpR4bOOXZYL5T3MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCo
-gZZNfyHC7gt32VURB7bs1waIRwAVDcFVg+WAp+4WPzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
-MBwGCSqGSIb3DQEJBTEPFw0yMjAzMDQwNjUxMjdaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUD
+MDIwAhABQeVybOOpR4bOOXZYL5T3MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCV
+FrtjW1B6FpmKliW4uhUI+lIfowUo7bSWeSjsXcKpXTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
+MBwGCSqGSIb3DQEJBTEPFw0yMjAzMDQwNzUyMTdaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUD
 BAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsG
-CSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAT4EZ9MXnq6fg9Dha0yqy
-ueRk6qFYjNDrL33X/dy8jrP2j4Z+SCgRWnxM73PN4kGbQUksGTqkOl3uBJ5gF96+DHphqLQJFCxZ
-8I+MMkY9XQ1hK6sxugoNxwDXGsBbXFBuRYCKAUIeDM2wel2nj/foSO8kf+O5wbzIx5gBXJa4SdWu
-JAVKmSJtjlspiPZOKvtsWPM2EyetLWOf29VX+fT2LHHn2sO/zCqmrtrgn306Zl629PMDBVG+j//k
-mPZHPc9hijjliTjp5MvzCtqH5eAX/kT4MfE85F3tJM2fPJ/+Iq0f8reHT/TdCS59CGEYg++SZunD
-qfwkhyGcsIj0Ha9zDg==
---000000000000a72fc305d95ef155--
+CSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAL2sYhi6qF+P3ASYQL3fi
+2xMTSw82DtAFCyKxLATmRSJVQo1g3wuaiehNaIaWue5Q8ZXRnb+C9kGW58X0al07058td0d1u/mn
+stbGdewvgwWvjY5X66BeaxSBd928y9NKpD42LuthBoZO0nYUJ21q+p3r8kYg1/rx3YkL7JryMwWv
+YzF1VJF6lDfVR5uq3+iDe97GLz3xD+vjl2FjUheXaIepNXKkBUqOb8wh2R3jdiXo/DemM2qjPaj3
+Gt6VpRRxG3S5rsELdaGrGwgBVs4govBSUAU38Lpz7ZZuGbTm5xSp3U9meOdLOuuC6zRgskWOve6k
+7deTjsMkA0KWb+4i6g==
+--000000000000291c5305d95fcbff--
