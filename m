@@ -2,26 +2,26 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 738F9C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Mar 2022 14:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC600C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Mar 2022 14:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231961AbiCDOf2 (ORCPT
+        id S239985AbiCDOzT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Mar 2022 09:35:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57278 "EHLO
+        Fri, 4 Mar 2022 09:55:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230076AbiCDOf2 (ORCPT
+        with ESMTP id S239986AbiCDOzS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Mar 2022 09:35:28 -0500
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A6186C93C;
-        Fri,  4 Mar 2022 06:34:38 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0V6Cl-OW_1646404471;
-Received: from 192.168.193.155(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V6Cl-OW_1646404471)
+        Fri, 4 Mar 2022 09:55:18 -0500
+Received: from out30-44.freemail.mail.aliyun.com (out30-44.freemail.mail.aliyun.com [115.124.30.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13C521B0C4E;
+        Fri,  4 Mar 2022 06:54:29 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R231e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0V6CkHJB_1646405664;
+Received: from 192.168.193.155(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V6CkHJB_1646405664)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 04 Mar 2022 22:34:32 +0800
-Message-ID: <56217d87-84eb-000c-6773-93971f316fbe@linux.alibaba.com>
-Date:   Fri, 4 Mar 2022 06:34:30 -0800
+          Fri, 04 Mar 2022 22:54:25 +0800
+Message-ID: <c26c8946-f979-de83-38ff-ab6533b55885@linux.alibaba.com>
+Date:   Fri, 4 Mar 2022 06:54:23 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.6.1
@@ -39,9 +39,9 @@ Cc:     akpm@linux-foundation.org, arnd@arndb.de, catalin.marinas@arm.com,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
 References: <20220303073340.86008-1-ashimida@linux.alibaba.com>
  <20220303074339.86337-1-ashimida@linux.alibaba.com>
- <202203031010.0A492D114@keescook>
+ <202203031010.0A492D114@keescook> <202203031105.A1B4CAE6@keescook>
 From:   Dan Li <ashimida@linux.alibaba.com>
-In-Reply-To: <202203031010.0A492D114@keescook>
+In-Reply-To: <202203031105.A1B4CAE6@keescook>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -50,186 +50,104 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 3/3/22 10:42, Kees Cook wrote:
-> On Wed, Mar 02, 2022 at 11:43:39PM -0800, Dan Li wrote:
->> Add tests for SCS (Shadow Call Stack) based
->> backward CFI (as implemented by Clang and GCC).
+On 3/3/22 11:09, Kees Cook wrote:
+> On Thu, Mar 03, 2022 at 10:42:45AM -0800, Kees Cook wrote:
+>> Though, having the IS_ENABLED in there makes me wonder if this test
+>> should instead be made _survivable_ on failure. Something like this,
+>> completely untested:
+>>
+>>
+>> And we should, actually, be able to make the "set_lr" functions be
+>> arch-specific, leaving the test itself arch-agnostic....
 > 
-> Cool; thanks for writing these!
+> Yeah, as a tested example, this works for x86_64, and based on what you
+> had, I'd expect it to work on arm64 too:
 > 
->> +lkdtm-$(CONFIG_LKDTM)		+= scs.o
+> #include <stdio.h>
 > 
-> I'd expect these to be in cfi.c, rather than making a new source file.
-> 
-
-Got it.
-
->> +static noinline void lkdtm_scs_clear_lr(void)
->> +{
->> +	unsigned long *lr = (unsigned long *)__builtin_frame_address(0) + 1;
->> +
->> +	asm volatile("str xzr, [%0]\n\t" : : "r"(lr) : "x30");
-> 
-> Is the asm needed here? Why not:
-> 
-> 	unsigned long *lr = (unsigned long *)__builtin_frame_address(0) + 1;
-> 
-> 	*lr = 0;
-> 
-
-Yeah, with "volatile", this one looks better.
-
->> +
->> +/*
->> + * This tries to call a function protected by Shadow Call Stack,
->> + * which corrupts its own return address during execution.
->> + * Due to the protection, the corruption will not take effect
->> + * when the function returns.
->> + */
->> +void lkdtm_CFI_BACKWARD_SHADOW(void)
-> 
-> I think these two tests should be collapsed into a single one.
-> 
-
-It seems that there is currently no cross-line matching in
-selftests/lkdtm/run.sh, if we put these two into one function and
-assume we could make noscs_set_lr _survivable_ (like in your example).
-
-Then we could only match "CFI_BACKWARD_SHADOW ok: scs takes effect."
-in texts.txt
-
-But if the test result is:
-XPASS: Unexpectedly survived lr corruption without scs?
-ok: scs takes effect.
-
-It may not be a real pass, but the xxx_set_lr function doesn't work.
-
->> +{
->> +#ifdef CONFIG_ARM64
->> +	if (!IS_ENABLED(CONFIG_SHADOW_CALL_STACK)) {
->> +		pr_err("FAIL: kernel not built with CONFIG_SHADOW_CALL_STACK\n");
->> +		return;
->> +	}
->> +
->> +	pr_info("Trying to corrupt lr in a function with scs protection ...\n");
->> +	lkdtm_scs_clear_lr();
->> +
->> +	pr_err("ok: scs takes effect.\n");
->> +#else
->> +	pr_err("XFAIL: this test is arm64-only\n");
->> +#endif
-> 
-> This is slightly surprising -- we have no detection when a function has
-> its non-shadow-stack return address corrupted: it just _ignores_ the
-> value stored there. That seems like a missed opportunity for warning
-> about an unexpected state.
-> 
-
-Yes.
-Actually I used to try in the plugin to add a detection before the function
-returns, and call a callback when a mismatch is found. But since almost
-every function has to be instrumented, the performance penalty is
-improved from <3% to ~20% (rough calculation, should still be optimized).
-
->> +}
->> +
->> +/*
->> + * This tries to call a function not protected by Shadow Call Stack,
->> + * which corrupts its own return address during execution.
->> + */
->> +void lkdtm_CFI_BACKWARD_SHADOW_WITH_NOSCS(void)
->> +{
->> +#ifdef CONFIG_ARM64
->> +	if (!IS_ENABLED(CONFIG_SHADOW_CALL_STACK)) {
->> +		pr_err("FAIL: kernel not built with CONFIG_SHADOW_CALL_STACK\n");
->> +		return;
-> 
-> Other tests try to give some hints about failures, e.g.:
-> 
-> 		pr_err("FAIL: cannot change for SCS\n");
-> 		pr_expected_config(CONFIG_SHADOW_CALL_STACK);
-> 
-> Though, having the IS_ENABLED in there makes me wonder if this test
-> should instead be made _survivable_ on failure. Something like this,
-> completely untested:
-> 
-> 
-> #ifdef CONFIG_ARM64
-> static noinline void lkdtm_scs_set_lr(unsigned long *addr)
+> static __attribute__((noinline))
+> void set_return_addr(unsigned long *expected, unsigned long *addr)
 > {
-> 	unsigned long **lr = (unsigned long **)__builtin_frame_address(0) + 1;
-> 	*lr = addr;
+>      /* Use of volatile is to make sure final write isn't seen as a dead store. */
+>      unsigned long * volatile *ret_addr = (unsigned long **)__builtin_frame_address(0) + 1;
+> 
+>      /* Make sure we've found the right place on the stack before writing it. */
+>      if (*ret_addr == expected)
+>          *ret_addr = addr;
 > }
 > 
-> /* Function with __noscs attribute clears its return address. */
-> static noinline void __noscs lkdtm_noscs_set_lr(unsigned long *addr)
+> volatile int force_label;
+> int main(void)
 > {
-> 	unsigned long **lr = (unsigned long **)__builtin_frame_address(0) + 1;
-> 	*lr = addr;
-> }
-> #endif
+>      do {
+>          /* Keep labels in scope. */
+>          if (force_label)
+>              goto normal;
+>          if (force_label)
+>              goto redirected;
 > 
-> 
-> void lkdtm_CFI_BACKWARD_SHADOW(void)
-> {
-> #ifdef CONFIG_ARM64
-> 
-> 	/* Verify the "normal" condition of LR corruption working. */
-> 	do {
-> 		/* Keep label in scope to avoid compiler warning. */
-> 		if ((volatile int)0)
-> 			goto unexpected;
-> 
-> 		pr_info("Trying to corrupt lr in a function without scs protection ...\n");
-> 		lkdtm_noscs_set_lr(&&expected);
-> 
-> unexpected:
-> 		pr_err("XPASS: Unexpectedly survived lr corruption without scs?!\n");
-> 		break;
-> 
-> expected:
-> 		pr_err("ok: lr corruption redirected without scs.\n");
-> 	} while (0);
-> 
-> 
-> 	do {
-> 		/* Keep labe in scope to avoid compiler warning. */
-> 		if ((volatile int)0)
-> 			goto good_scs;
-> 
-> 		pr_info("Trying to corrupt lr in a function with scs protection ...\n");
-> 		lkdtm_scs_set_lr(&&bad_scs);
-> 
-> good_scs:
-> 		pr_info("ok: scs takes effect.\n");
-> 		break;
-> 
-> bad_scs:
-> 		pr_err("FAIL: return address rewritten!\n");
-> 		pr_expected_config(CONFIG_SHADOW_CALL_STACK);
-> 	} while (0);
-> #else
-> 	pr_err("XFAIL: this test is arm64-only\n");
-> #endif
+>          set_return_addr(&&normal, &&redirected);
+> normal:
+>          printf("I should be skipped\n");
+>          break;
+
+ From the assembly code, it seems that "&&normal" does't always equal
+to the address of label "normal" when we use clang with -O2.
+
+> redirected:
+>          printf("Redirected\n");
+>      } while (0);
+>
+
+The address of "&&redirected" may appear in the middle of the assembly
+instructions of the printf. If we unconditionally jump to "&&normal",
+it may crash directly because x0 is not set correctly.
+
+>      return 0;
 > }
 > 
-
-Thanks for the example, Kees :)
-This code (with a little modification) works correctly with clang 12,
-but to make sure it's always correct, I think we might need to add the
-__attribute__((optnone)) attribute to it, because under -O2 the result
-doesn't seem to be "very stable" (as in your example in the next email).
-
-> And we should, actually, be able to make the "set_lr" functions be
-> arch-specific, leaving the test itself arch-agnostic....
+> 
+> It does _not_ work under Clang, though, which I'm still looking at.
 > 
 
-I'm not sure if my understanding is correct, do it means we should
-remove the "#ifdef CONFIG_ARM64" in lkdtm_CFI_BACKWARD_SHADOW?
+AFAICT, maybe we could specify -O0 optimization to bypass this.
 
-Then we may not be able to distinguish between failures caused by
-platform unsupported (XFAIL) and features not enabled (or not
-working properly).
 
-Thanks,
-Dan.
+BTW:
+Occasionally found, the following code works correctly, but i think
+it doesn't solve the issue :)
+
+#include <stdio.h>
+
+static __attribute__((noinline))
+void set_return_addr(unsigned long *expected, unsigned long *addr)
+{
+     /* Use of volatile is to make sure final write isn't seen as a dead store. */
+     unsigned long * volatile *ret_addr = (unsigned long **)__builtin_frame_address(0) + 1;
+
+     /* Make sure we've found the right place on the stack before writing it. */
+//    if (*ret_addr == expected)
+         *ret_addr = addr;
+}
+volatile int force_label;
+int main(void)
+{
+     do {
+         /* Keep labels in scope. */
+         if (force_label)
+             goto normal;
+         if (force_label)
+             goto redirected;
+
+         set_return_addr(&&normal, &&redirected);
+normal:
+         printf("I should be skipped\n");
+         break;
+
+redirected:
+         printf("Redirected\n");
+         printf("\n");				//add a new printf
+     } while (0);
+
+     return 0;
+}
