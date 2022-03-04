@@ -2,172 +2,224 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752E9C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Mar 2022 23:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3126C433F5
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Mar 2022 04:48:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235558AbiCCXrx (ORCPT
+        id S232339AbiCDEtZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Mar 2022 18:47:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58454 "EHLO
+        Thu, 3 Mar 2022 23:49:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231986AbiCCXrx (ORCPT
+        with ESMTP id S237928AbiCDEtX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Mar 2022 18:47:53 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7177213DE25;
-        Thu,  3 Mar 2022 15:47:06 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0145861656;
-        Thu,  3 Mar 2022 23:47:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86318C004E1;
-        Thu,  3 Mar 2022 23:47:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646351225;
-        bh=qELuvZR37Ylzxt28jAAWXFUW9hvkb8Eiv69yFb0SIoA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=nS2f7nYM9TgElWijog1JiXagEXXVaFfQytIsiIBNYNKlaUuiwqUx6v04ZKvrvc5n8
-         2V78AbMplcPXOZPzmh5B1orkMsnflzm2Tr0S1LE4vLWpVg2fT/jD8dXsu2mqMDbGap
-         uU21tn9KETkGlaN4CitCCy89q7IFdsVUDcItgo/cb/EVNfQy9VZzIDuCFZy9GVvnvA
-         8FbB2RDdpbWz9LcuMFgU286GsRopZT0AQ8TDyJt5+nHJ2EirafieoTCvg6s3bf772R
-         TUMLmLmOKth4mpwj3o141y/rljXDTuR09eqlD8/pLa06BuBrzIZzz1Nkq1PZY4V94/
-         7o6tx1E/UutrQ==
-Date:   Thu, 3 Mar 2022 17:55:21 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Hannes Reinecke <hare@suse.de>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Robert Love <robert.w.love@intel.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Thu, 3 Mar 2022 23:49:23 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E9AB11B5CC
+        for <linux-hardening@vger.kernel.org>; Thu,  3 Mar 2022 20:48:34 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id bd1so6707701plb.13
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Mar 2022 20:48:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ri9qeC8RR8CGain9Bg7eVi/1eh8/QDMjrM/3UAGQLAk=;
+        b=PXtRY0hxgnrtqzjIHTTEN/Jfh2c8RhhBY5t9dwNrEBs6VOoLYBuikMk+TtXpTFp44A
+         cuT71xzIifuVbTkzTdeeA8xvCYOYIjaJKVCWBfusmi/GVAvHgNl63+3fnNUmIPik6FOe
+         uMYBwCV56ZxnJdRke+Mu/9M7mFfZju5GQLaKs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ri9qeC8RR8CGain9Bg7eVi/1eh8/QDMjrM/3UAGQLAk=;
+        b=31oonU/U5sb3/Gy9yjPBcTPTEvE/L9BS1PtMKh4QRZtvOHfkTMCqlmAj2eTpxSQwfH
+         y0p6nuC7wwiqQfadzETetDtaQGyDbBaIXkJGYw4Hdlhoy/eB6IQ6r/VJlbkgpearhcKY
+         4BHwT10+/aGGO6jZywXcDNcMH/V+X1ZU95rwuHT0RuGHC5vFEiWhJR2Z3NNJLJB6T5B0
+         pQXSFokwI6gML0jzlaAKbFyqqB04Q01RVZ2WhnpeltCrhyocPFBbn5XgP8xXl2CfifSF
+         KxUyx4VWdYArndkzfQ8eAo5GOEPY4YRpxVUAhKNcbgZ/JUHp3Jn74rIp3J7MlHWnlevW
+         BzgA==
+X-Gm-Message-State: AOAM530iWHCdc0xo90UVTkN8ixHYMA6y/UWWs4zR5zfdMvEVflHcdC3c
+        Nx2FvTgUqnXZaXVw4xgFtf9kCA==
+X-Google-Smtp-Source: ABdhPJyQNWTopy4B9gFA1y+6qGGV7b+LOm34nlwWaqK1F5w5NbaUAl8KnUoQ/BuXUoi0OIfOd70JcA==
+X-Received: by 2002:a17:902:bc47:b0:151:ac43:eae0 with SMTP id t7-20020a170902bc4700b00151ac43eae0mr5525362plz.117.1646369314041;
+        Thu, 03 Mar 2022 20:48:34 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e30-20020a056a0000de00b004ef299a4f89sm4399458pfj.180.2022.03.03.20.48.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Mar 2022 20:48:33 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     David Gow <davidgow@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        =?UTF-8?q?Magnus=20Gro=C3=9F?= <magnus.gross@rwth-aachen.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] scsi: fcoe: Fix Wstringop-overflow warnings in
- fcoe_wwn_from_mac()
-Message-ID: <20220303235521.GA1745589@embeddedor>
+Subject: [PATCH v2] binfmt_elf: Introduce KUnit test
+Date:   Thu,  3 Mar 2022 20:48:31 -0800
+Message-Id: <20220304044831.962450-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6317; h=from:subject; bh=a4w0s4IZAhRLqjb5tB/XeGI0pZPXrfhf132TKT4W6sM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiIZoe6mzGMiS+V65tUEDI5benpoYIwRU5izGHNxNp trQdi96JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYiGaHgAKCRCJcvTf3G3AJswOD/ wJArtGLzdWsYsMObVWMpcm/KSKI6gij5EcZ0Sl/YMn4hB/wbunDSg4l3qUISZ6WBNg999FHe+aN19L kNL44u28ADAqX9UXGCwi1MSZ0ngJQm8XTG3QMoD6lE/Dg4ZQAw/YJYdydHX7xwpvxSJJb46JF63oOf auz58w+XMMJqfO3lUu2svzbgS7gAAeB98TXqzhDWJ5q/Yscm7oU6I7FXUFWixP4fo6anwZtUmh8NVS X77rvrn9nbnAPUB8wN9wbyGXMKCAD2tROg67MHhCmY7oYRA2O1p90gE1l3OL3xNRXdjU1q3I5mXl4H 0V+u/rHf17xNmTJLkhETgCnJBK//XBDnKbDz4jBSiKOvZI3wDpLxn47U2PNAtxgknDaMH50eCyyOVx tHWxouBVHHABaAIKbvr+dD2v/5zQneUShenswE5eclzBqKWuv0IRh5VS9GNlrN4BaJ6bYVnGGnXyNJ ugAxp/CEJSRwbnt/uVU5srLzjAPa8/jLjqKteWXzVvbXRTcdkbzcpdqVmAq+M/WoNRpFPnp5mzHdFH wk1l/Ixz3p0NVEuL6O/MD3tXA8xRprySCgbp5Ke8zeyVUTyYZGgq6pqJ+88zpxtUIerl0hoEybso6d gyEorJy2/nrp1A6ecczPU2crgQm+Xc0S+GKGbBqoQi8AS7Zd/Q+z6LI8jo0g==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Fix the following Wstringop-overflow warnings when building with GCC-11:
+Adds simple KUnit test for some binfmt_elf internals: specifically a
+regression test for the problem fixed by commit 8904d9cd90ee ("ELF:
+fix overflow in total mapping size calculation").
 
-drivers/scsi/fcoe/fcoe.c: In function ‘fcoe_netdev_config’:
-drivers/scsi/fcoe/fcoe.c:744:32: warning: ‘fcoe_wwn_from_mac’ accessing 32 bytes in a region of size 6 [-Wstringop-overflow=]
-  744 |                         wwnn = fcoe_wwn_from_mac(ctlr->ctl_src_addr, 1, 0);
-      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/fcoe/fcoe.c:744:32: note: referencing argument 1 of type ‘unsigned char *’
-In file included from drivers/scsi/fcoe/fcoe.c:36:
-./include/scsi/libfcoe.h:252:5: note: in a call to function ‘fcoe_wwn_from_mac’
-  252 | u64 fcoe_wwn_from_mac(unsigned char mac[MAX_ADDR_LEN], unsigned int, unsigned int);
-      |     ^~~~~~~~~~~~~~~~~
-drivers/scsi/fcoe/fcoe.c:747:32: warning: ‘fcoe_wwn_from_mac’ accessing 32 bytes in a region of size 6 [-Wstringop-overflow=]
-  747 |                         wwpn = fcoe_wwn_from_mac(ctlr->ctl_src_addr,
-      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  748 |                                                  2, 0);
-      |                                                  ~~~~~
-drivers/scsi/fcoe/fcoe.c:747:32: note: referencing argument 1 of type ‘unsigned char *’
-In file included from drivers/scsi/fcoe/fcoe.c:36:
-./include/scsi/libfcoe.h:252:5: note: in a call to function ‘fcoe_wwn_from_mac’
-  252 | u64 fcoe_wwn_from_mac(unsigned char mac[MAX_ADDR_LEN], unsigned int, unsigned int);
-      |     ^~~~~~~~~~~~~~~~~
-  CC      drivers/scsi/bnx2fc/bnx2fc_io.o
-In function ‘bnx2fc_net_config’,
-    inlined from ‘bnx2fc_if_create’ at drivers/scsi/bnx2fc/bnx2fc_fcoe.c:1543:7:
-drivers/scsi/bnx2fc/bnx2fc_fcoe.c:833:32: warning: ‘fcoe_wwn_from_mac’ accessing 32 bytes in a region of size 6 [-Wstringop-overflow=]
-  833 |                         wwnn = fcoe_wwn_from_mac(ctlr->ctl_src_addr,
-      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  834 |                                                  1, 0);
-      |                                                  ~~~~~
-drivers/scsi/bnx2fc/bnx2fc_fcoe.c: In function ‘bnx2fc_if_create’:
-drivers/scsi/bnx2fc/bnx2fc_fcoe.c:833:32: note: referencing argument 1 of type ‘unsigned char *’
-In file included from drivers/scsi/bnx2fc/bnx2fc.h:53,
-                 from drivers/scsi/bnx2fc/bnx2fc_fcoe.c:17:
-./include/scsi/libfcoe.h:252:5: note: in a call to function ‘fcoe_wwn_from_mac’
-  252 | u64 fcoe_wwn_from_mac(unsigned char mac[MAX_ADDR_LEN], unsigned int, unsigned int);
-      |     ^~~~~~~~~~~~~~~~~
-In function ‘bnx2fc_net_config’,
-    inlined from ‘bnx2fc_if_create’ at drivers/scsi/bnx2fc/bnx2fc_fcoe.c:1543:7:
-drivers/scsi/bnx2fc/bnx2fc_fcoe.c:839:32: warning: ‘fcoe_wwn_from_mac’ accessing 32 bytes in a region of size 6 [-Wstringop-overflow=]
-  839 |                         wwpn = fcoe_wwn_from_mac(ctlr->ctl_src_addr,
-      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  840 |                                                  2, 0);
-      |                                                  ~~~~~
-drivers/scsi/bnx2fc/bnx2fc_fcoe.c: In function ‘bnx2fc_if_create’:
-drivers/scsi/bnx2fc/bnx2fc_fcoe.c:839:32: note: referencing argument 1 of type ‘unsigned char *’
-In file included from drivers/scsi/bnx2fc/bnx2fc.h:53,
-                 from drivers/scsi/bnx2fc/bnx2fc_fcoe.c:17:
-./include/scsi/libfcoe.h:252:5: note: in a call to function ‘fcoe_wwn_from_mac’
-  252 | u64 fcoe_wwn_from_mac(unsigned char mac[MAX_ADDR_LEN], unsigned int, unsigned int);
-      |     ^~~~~~~~~~~~~~~~~
-drivers/scsi/qedf/qedf_main.c: In function ‘__qedf_probe’:
-drivers/scsi/qedf/qedf_main.c:3520:30: warning: ‘fcoe_wwn_from_mac’ accessing 32 bytes in a region of size 6 [-Wstringop-overflow=]
- 3520 |                 qedf->wwnn = fcoe_wwn_from_mac(qedf->mac, 1, 0);
-      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/qedf/qedf_main.c:3520:30: note: referencing argument 1 of type ‘unsigned char *’
-In file included from drivers/scsi/qedf/qedf.h:9,
-                 from drivers/scsi/qedf/qedf_main.c:23:
-./include/scsi/libfcoe.h:252:5: note: in a call to function ‘fcoe_wwn_from_mac’
-  252 | u64 fcoe_wwn_from_mac(unsigned char mac[MAX_ADDR_LEN], unsigned int, unsigned int);
-      |     ^~~~~~~~~~~~~~~~~
-drivers/scsi/qedf/qedf_main.c:3521:30: warning: ‘fcoe_wwn_from_mac’ accessing 32 bytes in a region of size 6 [-Wstringop-overflow=]
- 3521 |                 qedf->wwpn = fcoe_wwn_from_mac(qedf->mac, 2, 0);
-      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/scsi/qedf/qedf_main.c:3521:30: note: referencing argument 1 of type ‘unsigned char *’
-In file included from drivers/scsi/qedf/qedf.h:9,
-                 from drivers/scsi/qedf/qedf_main.c:23:
-./include/scsi/libfcoe.h:252:5: note: in a call to function ‘fcoe_wwn_from_mac’
-  252 | u64 fcoe_wwn_from_mac(unsigned char mac[MAX_ADDR_LEN], unsigned int, unsigned int);
-      |     ^~~~~~~~~~~~~~~~~
+$ ./tools/testing/kunit/kunit.py run --arch x86_64 \
+    --kconfig_add CONFIG_IA32_EMULATION=y '*binfmt_elf'
+...
+[19:41:08] ================== binfmt_elf (1 subtest) ==================
+[19:41:08] [PASSED] total_mapping_size_test
+[19:41:08] =================== [PASSED] binfmt_elf ====================
+[19:41:08] ============== compat_binfmt_elf (1 subtest) ===============
+[19:41:08] [PASSED] total_mapping_size_test
+[19:41:08] ================ [PASSED] compat_binfmt_elf ================
+[19:41:08] ============================================================
+[19:41:08] Testing complete. Passed: 2, Failed: 0, Crashed: 0, Skipped: 0, Errors: 0
 
-by changing the array size to the correct value of ETH_ALEN in the
-argument declaration.
-
-Also, fix a couple of checkpatch warnings:
-WARNING: function definition argument 'unsigned int' should also have an identifier name
-
-This helps with the ongoing efforts to globally enable
--Wstringop-overflow.
-
-Link: https://github.com/KSPP/linux/issues/181
-Fixes: 85b4aa4926a5 ("[SCSI] fcoe: Fibre Channel over Ethernet")
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/scsi/fcoe/fcoe_ctlr.c | 2 +-
- include/scsi/libfcoe.h        | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+This is now at the top of my for-next/execve tree
+v1: https://lore.kernel.org/lkml/20220224054332.1852813-1-keescook@chromium.org
+v2:
+ - improve commit log
+ - fix comment URL (Daniel)
+ - drop redundant KUnit Kconfig help info (Daniel)
+ - note in Kconfig help that COMPAT builds add a compat test (David)
+---
+ fs/Kconfig.binfmt      | 10 +++++++
+ fs/binfmt_elf.c        |  4 +++
+ fs/binfmt_elf_test.c   | 64 ++++++++++++++++++++++++++++++++++++++++++
+ fs/compat_binfmt_elf.c |  2 ++
+ 4 files changed, 80 insertions(+)
+ create mode 100644 fs/binfmt_elf_test.c
 
-diff --git a/drivers/scsi/fcoe/fcoe_ctlr.c b/drivers/scsi/fcoe/fcoe_ctlr.c
-index 1756a0ac6f08..558f3f4e1859 100644
---- a/drivers/scsi/fcoe/fcoe_ctlr.c
-+++ b/drivers/scsi/fcoe/fcoe_ctlr.c
-@@ -1969,7 +1969,7 @@ EXPORT_SYMBOL(fcoe_ctlr_recv_flogi);
-  *
-  * Returns: u64 fc world wide name
-  */
--u64 fcoe_wwn_from_mac(unsigned char mac[MAX_ADDR_LEN],
-+u64 fcoe_wwn_from_mac(unsigned char mac[ETH_ALEN],
- 		      unsigned int scheme, unsigned int port)
- {
- 	u64 wwn;
-diff --git a/include/scsi/libfcoe.h b/include/scsi/libfcoe.h
-index fac8e89aed81..310e0dbffda9 100644
---- a/include/scsi/libfcoe.h
-+++ b/include/scsi/libfcoe.h
-@@ -249,7 +249,8 @@ int fcoe_ctlr_recv_flogi(struct fcoe_ctlr *, struct fc_lport *,
- 			 struct fc_frame *);
+diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
+index 4d5ae61580aa..f7065e825b7f 100644
+--- a/fs/Kconfig.binfmt
++++ b/fs/Kconfig.binfmt
+@@ -28,6 +28,16 @@ config BINFMT_ELF
+ 	  ld.so (check the file <file:Documentation/Changes> for location and
+ 	  latest version).
  
- /* libfcoe funcs */
--u64 fcoe_wwn_from_mac(unsigned char mac[MAX_ADDR_LEN], unsigned int, unsigned int);
-+u64 fcoe_wwn_from_mac(unsigned char mac[ETH_ALEN], unsigned int scheme,
-+		      unsigned int port);
- int fcoe_libfc_config(struct fc_lport *, struct fcoe_ctlr *,
- 		      const struct libfc_function_template *, int init_fcp);
- u32 fcoe_fc_crc(struct fc_frame *fp);
++config BINFMT_ELF_KUNIT_TEST
++	bool "Build KUnit tests for ELF binary support" if !KUNIT_ALL_TESTS
++	depends on KUNIT=y && BINFMT_ELF=y
++	default KUNIT_ALL_TESTS
++	help
++	  This builds the ELF loader KUnit tests, which try to gather
++	  prior bug fixes into a regression test collection. This is really
++	  only needed for debugging. Note that with CONFIG_COMPAT=y, the
++	  compat_binfmt_elf KUnit test is also created.
++
+ config COMPAT_BINFMT_ELF
+ 	def_bool y
+ 	depends on COMPAT && BINFMT_ELF
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 4c5a2175f605..eaf39b1bdbbb 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -2346,3 +2346,7 @@ static void __exit exit_elf_binfmt(void)
+ core_initcall(init_elf_binfmt);
+ module_exit(exit_elf_binfmt);
+ MODULE_LICENSE("GPL");
++
++#ifdef CONFIG_BINFMT_ELF_KUNIT_TEST
++#include "binfmt_elf_test.c"
++#endif
+diff --git a/fs/binfmt_elf_test.c b/fs/binfmt_elf_test.c
+new file mode 100644
+index 000000000000..11d734fec366
+--- /dev/null
++++ b/fs/binfmt_elf_test.c
+@@ -0,0 +1,64 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <kunit/test.h>
++
++static void total_mapping_size_test(struct kunit *test)
++{
++	struct elf_phdr empty[] = {
++		{ .p_type = PT_LOAD, .p_vaddr = 0, .p_memsz = 0, },
++		{ .p_type = PT_INTERP, .p_vaddr = 10, .p_memsz = 999999, },
++	};
++	/*
++	 * readelf -lW /bin/mount | grep '^  .*0x0' | awk '{print "\t\t{ .p_type = PT_" \
++	 *				$1 ", .p_vaddr = " $3 ", .p_memsz = " $6 ", },"}'
++	 */
++	struct elf_phdr mount[] = {
++		{ .p_type = PT_PHDR, .p_vaddr = 0x00000040, .p_memsz = 0x0002d8, },
++		{ .p_type = PT_INTERP, .p_vaddr = 0x00000318, .p_memsz = 0x00001c, },
++		{ .p_type = PT_LOAD, .p_vaddr = 0x00000000, .p_memsz = 0x0033a8, },
++		{ .p_type = PT_LOAD, .p_vaddr = 0x00004000, .p_memsz = 0x005c91, },
++		{ .p_type = PT_LOAD, .p_vaddr = 0x0000a000, .p_memsz = 0x0022f8, },
++		{ .p_type = PT_LOAD, .p_vaddr = 0x0000d330, .p_memsz = 0x000d40, },
++		{ .p_type = PT_DYNAMIC, .p_vaddr = 0x0000d928, .p_memsz = 0x000200, },
++		{ .p_type = PT_NOTE, .p_vaddr = 0x00000338, .p_memsz = 0x000030, },
++		{ .p_type = PT_NOTE, .p_vaddr = 0x00000368, .p_memsz = 0x000044, },
++		{ .p_type = PT_GNU_PROPERTY, .p_vaddr = 0x00000338, .p_memsz = 0x000030, },
++		{ .p_type = PT_GNU_EH_FRAME, .p_vaddr = 0x0000b490, .p_memsz = 0x0001ec, },
++		{ .p_type = PT_GNU_STACK, .p_vaddr = 0x00000000, .p_memsz = 0x000000, },
++		{ .p_type = PT_GNU_RELRO, .p_vaddr = 0x0000d330, .p_memsz = 0x000cd0, },
++	};
++	size_t mount_size = 0xE070;
++	/* https://lore.kernel.org/linux-fsdevel/YfF18Dy85mCntXrx@fractal.localdomain */
++	struct elf_phdr unordered[] = {
++		{ .p_type = PT_LOAD, .p_vaddr = 0x00000000, .p_memsz = 0x0033a8, },
++		{ .p_type = PT_LOAD, .p_vaddr = 0x0000d330, .p_memsz = 0x000d40, },
++		{ .p_type = PT_LOAD, .p_vaddr = 0x00004000, .p_memsz = 0x005c91, },
++		{ .p_type = PT_LOAD, .p_vaddr = 0x0000a000, .p_memsz = 0x0022f8, },
++	};
++
++	/* No headers, no size. */
++	KUNIT_EXPECT_EQ(test, total_mapping_size(NULL, 0), 0);
++	KUNIT_EXPECT_EQ(test, total_mapping_size(empty, 0), 0);
++	/* Empty headers, no size. */
++	KUNIT_EXPECT_EQ(test, total_mapping_size(empty, 1), 0);
++	/* No PT_LOAD headers, no size. */
++	KUNIT_EXPECT_EQ(test, total_mapping_size(&empty[1], 1), 0);
++	/* Empty PT_LOAD and non-PT_LOAD headers, no size. */
++	KUNIT_EXPECT_EQ(test, total_mapping_size(empty, 2), 0);
++
++	/* Normal set of PT_LOADS, and expected size. */
++	KUNIT_EXPECT_EQ(test, total_mapping_size(mount, ARRAY_SIZE(mount)), mount_size);
++	/* Unordered PT_LOADs result in same size. */
++	KUNIT_EXPECT_EQ(test, total_mapping_size(unordered, ARRAY_SIZE(unordered)), mount_size);
++}
++
++static struct kunit_case binfmt_elf_test_cases[] = {
++	KUNIT_CASE(total_mapping_size_test),
++	{},
++};
++
++static struct kunit_suite binfmt_elf_test_suite = {
++	.name = KBUILD_MODNAME,
++	.test_cases = binfmt_elf_test_cases,
++};
++
++kunit_test_suite(binfmt_elf_test_suite);
+diff --git a/fs/compat_binfmt_elf.c b/fs/compat_binfmt_elf.c
+index 95e72d271b95..8f0af4f62631 100644
+--- a/fs/compat_binfmt_elf.c
++++ b/fs/compat_binfmt_elf.c
+@@ -135,6 +135,8 @@
+ #define elf_format		compat_elf_format
+ #define init_elf_binfmt		init_compat_elf_binfmt
+ #define exit_elf_binfmt		exit_compat_elf_binfmt
++#define binfmt_elf_test_cases	compat_binfmt_elf_test_cases
++#define binfmt_elf_test_suite	compat_binfmt_elf_test_suite
+ 
+ /*
+  * We share all the actual code with the native (64-bit) version.
 -- 
-2.27.0
+2.32.0
 
