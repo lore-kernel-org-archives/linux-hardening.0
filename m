@@ -2,152 +2,155 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4CFC433F5
-	for <linux-hardening@archiver.kernel.org>; Sun,  6 Mar 2022 06:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB976C433EF
+	for <linux-hardening@archiver.kernel.org>; Mon,  7 Mar 2022 11:46:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233001AbiCFGqS (ORCPT
+        id S238829AbiCGLrh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 6 Mar 2022 01:46:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50370 "EHLO
+        Mon, 7 Mar 2022 06:47:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232994AbiCFGqR (ORCPT
+        with ESMTP id S240917AbiCGLr3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 6 Mar 2022 01:46:17 -0500
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 639ED5520E;
-        Sat,  5 Mar 2022 22:45:25 -0800 (PST)
-Received: by mail-pg1-x52c.google.com with SMTP id o23so10954082pgk.13;
-        Sat, 05 Mar 2022 22:45:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Zp9QIUhBG8OJ8x8CE4qO1HhBpaKE+3Che/Qmp0Ai6ko=;
-        b=REQkqHxdITNVnOCWzGsTiQNSXvvXNkJTV+EUOygAERP4xNm1Ql4y05mDbvLKWL4f/U
-         2SpXin/D0WaC2/ICGpZ9OWkBlKetshYPUVLqif0LpxfFlTBtk/49ad9oLsP28wnVSWQO
-         /wPQP2yCgL7Y/ieNuD9ElbG6cPlglxiHFVj+3pGP1Lq41e0P3rqZ9qHspxLY0TcMYnQC
-         R1Wyd4pks3og8iFbkPXlVkZcGd72wkHRmcS6CfnBnJuMguag6Amvl9S8HqLqHLPVeQdV
-         U0ZyU8NESW5uq9Ly+kICiIqnDyqxAEShjaI1h8sKl7U3NEpS6s6idP90AHG7wli3I3St
-         e5fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Zp9QIUhBG8OJ8x8CE4qO1HhBpaKE+3Che/Qmp0Ai6ko=;
-        b=5hzI9xqbVp7CHytFajA7L58YIYdKfRF6qoeweYWVbP/YK44UII6gyYdLPKAHIaBM7w
-         RYWZwwIxAvCu+zh3SPbqWI2x3fXRTmlK7CbmISqDZePlu0Nk2J1XymAVDN5jcoOxVmEu
-         cbilmdZzu1l7/BlwIB+bDD2pCWMQoZKjBhKnYoGLYAZ/t1sCe9zayZpzFOKkXyp3wQpq
-         9LM8C53uHzZbb98rquAk42QtUng0GrHSz5Ga5VFobwZcqEqPc+tuD75SqHeBemtQtLBU
-         99MqJBlHApPQ8nAH8ZNcdZSIXN7nGj7n9ZWQMLGFmAXxc0TPlzN/hlOkQHElrxqkaOJV
-         agJQ==
-X-Gm-Message-State: AOAM531RU6TxmKaicyKPAjVgF4bOlqLecf0EipkjlgEa0qjjZUs3E3WT
-        IO4x3L32/JtZSlHPiL2vBSc=
-X-Google-Smtp-Source: ABdhPJzoLTMh64KfZAjnVf2ShWlrVil6iQL0UvGQlmJEk2oq/DSbszs2UzjmQkZzm/tRE4Hi8M1iJQ==
-X-Received: by 2002:a05:6a00:1687:b0:4e1:45d:3ded with SMTP id k7-20020a056a00168700b004e1045d3dedmr7211330pfc.0.1646549124892;
-        Sat, 05 Mar 2022 22:45:24 -0800 (PST)
-Received: from octofox.hsd1.ca.comcast.net ([2601:641:401:1d20:dcdb:d868:b18f:a9a8])
-        by smtp.gmail.com with ESMTPSA id 132-20020a62168a000000b004f40e8b3133sm12229047pfw.188.2022.03.05.22.45.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Mar 2022 22:45:24 -0800 (PST)
-From:   Max Filippov <jcmvbkbc@gmail.com>
-To:     linux-xtensa@linux-xtensa.org
-Cc:     Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org,
+        Mon, 7 Mar 2022 06:47:29 -0500
+Received: from gnuweeb.org (gnuweeb.org [51.81.211.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5046B673CD;
+        Mon,  7 Mar 2022 03:46:30 -0800 (PST)
+Received: from integral2.. (unknown [182.2.38.152])
+        by gnuweeb.org (Postfix) with ESMTPSA id C6C2A7E248;
+        Mon,  7 Mar 2022 11:46:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
+        s=default; t=1646653589;
+        bh=312ClY2TF1vfr/9Ev0z6C5MG3DUanFPh1/gqtPzwpOs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RX3h6pRr4fNGtu3e6dOEyFq5COjbqEtNdDge1VtNmuWqZN8t8zXeGVRCm+2SPFfuJ
+         Wa1UhU+CAePcAXP1zJ3OSf8iUV7XjMqM6lupmH8yIhK3sXVFXJMPpXjGlsCAj1j5hr
+         ygLF/JdjFAj7qzx0nALOViUgFHqCIZ5vZnA4N+Q5TCy2Jh4pW2xaN//BZNJBo9AaOh
+         fH5BE6sIuCZvB9Yjsh4g+GaVyY9yEtLB08S0ZfwoHQ5AGCSLoyBO3y0APBMtOY2TOp
+         eNglrD0kKiKBans9A4GALKjS+K5S5oJ2mYjjQG1CN0Gv4HQEXjl+/3eTdfgwS9RTmz
+         5dyBS62O4XDhA==
+From:   Ammar Faizi <ammarfaizi2@gnuweeb.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Ammar Faizi <ammarfaizi2@gnuweeb.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
         Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH 2/2] xtensa: use XCHAL_NUM_AREGS as pt_regs::areg size
-Date:   Sat,  5 Mar 2022 22:44:35 -0800
-Message-Id: <20220306064435.256328-3-jcmvbkbc@gmail.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220306064435.256328-1-jcmvbkbc@gmail.com>
-References: <20220306064435.256328-1-jcmvbkbc@gmail.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Youquan Song <youquan.song@intel.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gwml@vger.gnuweeb.org, x86@kernel.org
+Subject: [PATCH v1 0/2] x86: Avoid using INC and DEC instructions on hot paths
+Date:   Mon,  7 Mar 2022 18:45:56 +0700
+Message-Id: <20220307114558.1234494-1-ammarfaizi2@gnuweeb.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-struct pt_regs is used to access both kernel and user exception frames.
-User exception frames may contain up to XCHAL_NUM_AREG registers that
-task creation and signal delivery code may access, but pt_regs::areg
-array has only 16 entries that cover only the kernel exception frame.
-This results in the following build error:
+Hi,
 
-arch/xtensa/kernel/process.c: In function 'copy_thread':
-arch/xtensa/kernel/process.c:262:52: error: array subscript 53 is above
-           array bounds of 'long unsigned int[16]' [-Werror=array-bounds]
-  262 |                                 put_user(regs->areg[caller_ars+1],
+In order to take maximum advantage of out-of-order execution,
+avoid using INC/DEC instructions when appropriate. INC/DEC only
+writes to part of the flags register, which can cause a partial
+flag register stall. This series replaces INC/DEC with ADD/SUB.
 
-Change struct pt_regs::areg size to XCHAL_NUM_AREGS so that it covers
-the whole user exception frame. Adjust task_pt_regs and drop additional
-register copying code from copy_thread now that the whole user exception
-stack frame is copied.
+Agner Fog's optimization manual says [1]:
+"""
+  The INC and DEC instructions are inefficient on some CPUs because they
+  write to only part of the flags register (excluding the carry flag).
+  Use ADD or SUB instead to avoid false dependences or inefficient
+  splitting of the flags register, especially if they are followed by
+  an instruction that reads the flags.
+"""
 
-Reported-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Intel's optimization manual 3.5.1.1 says [2]:
+"""
+  The INC and DEC instructions modify only a subset of the bits in the
+  flag register. This creates a dependence on all previous writes of
+  the flag register. This is especially problematic when these
+  instructions are on the critical path because they are used to change
+  an address for a load on which many other instructions depend.
+
+  Assembly/Compiler Coding Rule 33. (M impact, H generality) INC and DEC
+  instructions should be replaced with ADD or SUB instructions, because
+  ADD and SUB overwrite all flags, whereas INC and DEC do not, therefore
+  creating false dependencies on earlier instructions that set the flags.
+"""
+
+Newer compilers also do it for generic x86-64 CPU (https://godbolt.org/z/rjsfbdx54).
+# C code:
+
+  int fy_inc(int a, int b, int c)
+  {
+      a++; b++; c++;
+      return a * b * c;
+  }
+
+# ASM
+## GCC 4.1.2 and older use INC (old).
+fy_inc:
+    incl    %edi
+    incl    %esi
+    leal    1(%rdx), %eax
+    imull   %esi, %edi
+    imull   %edi, %eax
+    ret
+
+## GCC 4.4.7 to GCC 11.2 use ADD (new).
+fy_inc:
+    addl    $1, %edi
+    addl    $1, %esi
+    addl    $1, %edx
+    imull   %esi, %edi
+    movl    %edi, %eax
+    imull   %edx, %eax
+    ret
+
+## Clang 5.0.2 and older use INC (old).
+fy_inc:
+    incl    %edi
+    leal    1(%rsi), %eax
+    imull   %edi, %eax
+    incl    %edx
+    imull   %edx, %eax
+    retq
+
+## Clang 6.0.0 to Clang 13.0.1 use ADD (new).
+fy_inc:
+    addl    $1, %edi
+    leal    1(%rsi), %eax
+    imull   %edi, %eax
+    addl    $1, %edx
+    imull   %edx, %eax
+    retq
+
+[1]: https://www.agner.org/optimize/optimizing_assembly.pdf
+[2]: https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-optimization-manual.pdf
+
+Signed-off-by: Ammar Faizi <ammarfaizi2@gnuweeb.org>
 ---
- arch/xtensa/include/asm/ptrace.h |  7 +++----
- arch/xtensa/kernel/process.c     | 10 ----------
- 2 files changed, 3 insertions(+), 14 deletions(-)
+Ammar Faizi (2):
+  x86/include/asm: Avoid using INC and DEC instructions on hot paths
+  x86/lib: Avoid using INC and DEC instructions on hot paths
 
-diff --git a/arch/xtensa/include/asm/ptrace.h b/arch/xtensa/include/asm/ptrace.h
-index b109416dc07e..308f209a4740 100644
---- a/arch/xtensa/include/asm/ptrace.h
-+++ b/arch/xtensa/include/asm/ptrace.h
-@@ -44,6 +44,7 @@
- #ifndef __ASSEMBLY__
- 
- #include <asm/coprocessor.h>
-+#include <asm/core.h>
- 
- /*
-  * This struct defines the way the registers are stored on the
-@@ -77,14 +78,12 @@ struct pt_regs {
- 	/* current register frame.
- 	 * Note: The ESF for kernel exceptions ends after 16 registers!
- 	 */
--	unsigned long areg[16];
-+	unsigned long areg[XCHAL_NUM_AREGS];
- };
- 
--#include <asm/core.h>
--
- # define arch_has_single_step()	(1)
- # define task_pt_regs(tsk) ((struct pt_regs*) \
--	(task_stack_page(tsk) + KERNEL_STACK_SIZE - (XCHAL_NUM_AREGS-16)*4) - 1)
-+	(task_stack_page(tsk) + KERNEL_STACK_SIZE) - 1)
- # define user_mode(regs) (((regs)->ps & 0x00000020)!=0)
- # define instruction_pointer(regs) ((regs)->pc)
- # define return_pointer(regs) (MAKE_PC_FROM_RA((regs)->areg[0], \
-diff --git a/arch/xtensa/kernel/process.c b/arch/xtensa/kernel/process.c
-index bd80df890b1e..e8bfbca5f001 100644
---- a/arch/xtensa/kernel/process.c
-+++ b/arch/xtensa/kernel/process.c
-@@ -232,10 +232,6 @@ int copy_thread(unsigned long clone_flags, unsigned long usp_thread_fn,
- 		p->thread.ra = MAKE_RA_FOR_CALL(
- 				(unsigned long)ret_from_fork, 0x1);
- 
--		/* This does not copy all the regs.
--		 * In a bout of brilliance or madness,
--		 * ARs beyond a0-a15 exist past the end of the struct.
--		 */
- 		*childregs = *regs;
- 		childregs->areg[1] = usp;
- 		childregs->areg[2] = 0;
-@@ -265,14 +261,8 @@ int copy_thread(unsigned long clone_flags, unsigned long usp_thread_fn,
- 			childregs->wmask = 1;
- 			childregs->windowstart = 1;
- 			childregs->windowbase = 0;
--		} else {
--			int len = childregs->wmask & ~0xf;
--			memcpy(&childregs->areg[XCHAL_NUM_AREGS - len/4],
--			       &regs->areg[XCHAL_NUM_AREGS - len/4], len);
- 		}
- 
--		childregs->syscall = regs->syscall;
--
- 		if (clone_flags & CLONE_SETTLS)
- 			childregs->threadptr = tls;
- 	} else {
+ arch/x86/include/asm/xor_32.h | 16 ++++++++--------
+ arch/x86/lib/copy_mc_64.S     | 14 +++++++-------
+ arch/x86/lib/copy_user_64.S   | 26 +++++++++++++-------------
+ arch/x86/lib/memset_64.S      |  6 +++---
+ arch/x86/lib/string_32.c      | 20 ++++++++++----------
+ arch/x86/lib/strstr_32.c      |  4 ++--
+ arch/x86/lib/usercopy_64.c    | 12 ++++++------
+ 7 files changed, 49 insertions(+), 49 deletions(-)
+
+
+base-commit: ffb217a13a2eaf6d5bd974fc83036a53ca69f1e2
 -- 
-2.30.2
+Ammar Faizi
 
