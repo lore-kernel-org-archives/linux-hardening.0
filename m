@@ -2,90 +2,156 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAECC433F5
-	for <linux-hardening@archiver.kernel.org>; Mon,  7 Mar 2022 13:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E402C433FE
+	for <linux-hardening@archiver.kernel.org>; Mon,  7 Mar 2022 15:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242254AbiCGNjF (ORCPT
+        id S242699AbiCGPSz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 7 Mar 2022 08:39:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55350 "EHLO
+        Mon, 7 Mar 2022 10:18:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238625AbiCGNjE (ORCPT
+        with ESMTP id S233032AbiCGPSz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 7 Mar 2022 08:39:04 -0500
-Received: from gnuweeb.org (gnuweeb.org [51.81.211.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F30D2E6B5;
-        Mon,  7 Mar 2022 05:38:10 -0800 (PST)
-Received: from [192.168.43.69] (unknown [182.2.38.152])
-        by gnuweeb.org (Postfix) with ESMTPSA id 77DCC7E6C3;
-        Mon,  7 Mar 2022 13:38:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
-        s=default; t=1646660289;
-        bh=SPrR395Fio1xIoiYPHowYe9I1TFzu6lXoGUk7nXE7MI=;
-        h=Date:To:Cc:References:From:Subject:In-Reply-To:From;
-        b=Jq9W84JzC1kZQIJ+c+L2MvNXQuwzshExfw17fqYYar6573HmdZQIwmp6RV0AhVfwX
-         54XFyno3gpee1rt1KZ9eY1TaRM55VeOQ5s265kdMq0tdydfIOBiZa7VRLRU/NAsZc2
-         MbSJYBzAXJDCi2jQet8EN51Lxp+/MQbXdvzG7uWXeBf6MT37rdyp3sJ3/Db/N/t5TA
-         OQ94E5BY6ZjynVT5KnIu2713KsfsSwMSXJblJVNUnrAzfp/vOGS/RERxa49/n0+xZv
-         56B6k3oFheJ4RdjoXs4axKmvEDN8oLjO5jQhxsZEVLpFyy1C/FrXP0XVBh0znkSsLS
-         LVCiHEYgs+UQg==
-Message-ID: <11dec988-0b4f-00f2-6fa6-8d08be95d106@gnuweeb.org>
-Date:   Mon, 7 Mar 2022 20:37:59 +0700
+        Mon, 7 Mar 2022 10:18:55 -0500
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D3C95044C;
+        Mon,  7 Mar 2022 07:17:55 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R971e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0V6XN-TY_1646666269;
+Received: from 192.168.193.155(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V6XN-TY_1646666269)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 07 Mar 2022 23:17:51 +0800
+Message-ID: <92a767c4-09e1-8783-2581-9848bb72890d@linux.alibaba.com>
+Date:   Mon, 7 Mar 2022 07:16:36 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v3 2/2] lkdtm: Add Shadow Call Stack tests
 Content-Language: en-US
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Youquan Song <youquan.song@intel.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gwml@vger.gnuweeb.org, x86@kernel.org
-References: <20220307114558.1234494-1-ammarfaizi2@gnuweeb.org>
- <YiX81kD/668UdFBr@nazgul.tnic>
-From:   Ammar Faizi <ammarfaizi2@gnuweeb.org>
-Subject: Re: [PATCH v1 0/2] x86: Avoid using INC and DEC instructions on hot
- paths
-In-Reply-To: <YiX81kD/668UdFBr@nazgul.tnic>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     akpm@linux-foundation.org, arnd@arndb.de, catalin.marinas@arm.com,
+        gregkh@linuxfoundation.org, linux@roeck-us.net,
+        luc.vanoostenryck@gmail.com, elver@google.com,
+        mark.rutland@arm.com, masahiroy@kernel.org, ojeda@kernel.org,
+        nathan@kernel.org, npiggin@gmail.com, ndesaulniers@google.com,
+        samitolvanen@google.com, shuah@kernel.org, tglx@linutronix.de,
+        will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20220303073340.86008-1-ashimida@linux.alibaba.com>
+ <20220303074339.86337-1-ashimida@linux.alibaba.com>
+ <202203031010.0A492D114@keescook> <202203031105.A1B4CAE6@keescook>
+From:   Dan Li <ashimida@linux.alibaba.com>
+In-Reply-To: <202203031105.A1B4CAE6@keescook>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 3/7/22 7:38 PM, Borislav Petkov wrote:
-> On Mon, Mar 07, 2022 at 06:45:56PM +0700, Ammar Faizi wrote:
->> In order to take maximum advantage of out-of-order execution,
->> avoid using INC/DEC instructions when appropriate. INC/DEC only
->> writes to part of the flags register, which can cause a partial
->> flag register stall. This series replaces INC/DEC with ADD/SUB.
+
+
+On 3/3/22 11:09, Kees Cook wrote:
+> On Thu, Mar 03, 2022 at 10:42:45AM -0800, Kees Cook wrote:
+>> And we should, actually, be able to make the "set_lr" functions be
+>> arch-specific, leaving the test itself arch-agnostic....
 > 
-> "Improvements" like that need to show in benchmark runs - not
-> microbenchmark - that they bring anything. Just by looking at them, I'd
-> say they won't show any difference. But I'm always open to surprises.
+> Yeah, as a tested example, this works for x86_64, and based on what you
+> had, I'd expect it to work on arm64 too:
+> 
+> #include <stdio.h>
+> 
+> static __attribute__((noinline))
+> void set_return_addr(unsigned long *expected, unsigned long *addr)
+> {
+>      /* Use of volatile is to make sure final write isn't seen as a dead store. */
+>      unsigned long * volatile *ret_addr = (unsigned long **)__builtin_frame_address(0) + 1;
+> 
+>      /* Make sure we've found the right place on the stack before writing it. */
+>      if (*ret_addr == expected)
+>          *ret_addr = addr;
+> }
+> 
+> volatile int force_label;
+> int main(void)
+> {
+>      do {
+>          /* Keep labels in scope. */
+>          if (force_label)
+>              goto normal;
+>          if (force_label)
+>              goto redirected;
+> 
+>          set_return_addr(&&normal, &&redirected);
+> normal:
+>          printf("I should be skipped\n");
+>          break;
+> redirected:
+>          printf("Redirected\n");
+>      } while (0);
+> 
+>      return 0;
+> }
+> 
+> 
+> It does _not_ work under Clang, though, which I'm still looking at.
+> 
 
-OK, thanks for taking a look. I will play a bit more with this. Not sure
-how much the visible improvement. If I can win some numbers (probably can't),
-I will be back to this thread.
+The following code seems to work fine under clang/gcc, x86_64/aarch64
+(also tested in lkdtm_CFI_BACKWARD_SHADOW):
 
-> Btw, you don't have to send all your patches directly to me - there are
-> other x86 maintainers. IOW, you can use scripts/get_maintainer.pl to
-> figure out who to send them to.
+#include <stdio.h>
 
-I did anyway, all CC list here I took from that script. I will try to give
-other maintainers a turn next time.
+static __attribute__((noinline))
+void set_return_addr(unsigned long *expected, unsigned long *addr)
+{
+     /* Use of volatile is to make sure final write isn't seen as a dead store. */
+     unsigned long * volatile *ret_addr = (unsigned long **)__builtin_frame_address(0) + 1;
 
-> Also, I'd advise going over Documentation/process/ if you're new to this.
-> Especially Documentation/process/submitting-patches.rst.
-I might've missed the benchmark backup part. Will review those documents again.
+     /* Make sure we've found the right place on the stack before writing it. */
+     if(*ret_addr == expected)
+         *ret_addr = (addr);
+}
 
--- 
-Ammar Faizi
+static volatile int force_label;
 
+int main(void)
+{
+     void *array[] = {0, &&normal, &&redirected};
+
+     if (force_label) {
+         /* Call it with a NULL to avoid parameters being treated as constants in -02. */
+         set_return_addr(NULL, NULL);
+         goto * array[force_label];
+     }
+
+     do {
+
+         set_return_addr(&&normal, &&redirected);
+
+normal:
+         printf("I should be skipped\n");
+         break;
+
+redirected:
+         printf("Redirected\n");
+
+     } while (0);
+
+     return 0;
+}
+
+But currently it still crashes when I try to enable
+"-mbranch-protection=pac-ret+leaf+bti".
+
+Because the address of "&&redirected" is not encrypted under pac,
+the autiasp check will fail when set_return_addr returns, and
+eventually cause the function to crash when it returns to "&&redirected"
+("&&redirected" as a reserved label always seems to start with a bti j
+insn).
+
+For lkdtm, if we're going to handle both cases in one function, maybe
+it would be better to turn off the -mbranch-protection=pac-ret+leaf+bti
+and maybe also turn off -O2 options for the function :)
+
+Thanks,
+Dan.
