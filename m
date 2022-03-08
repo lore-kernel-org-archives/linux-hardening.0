@@ -2,86 +2,100 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65971C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Mar 2022 21:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700A3C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Mar 2022 22:13:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234333AbiCHVZ7 (ORCPT
+        id S1350030AbiCHWN5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Mar 2022 16:25:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34656 "EHLO
+        Tue, 8 Mar 2022 17:13:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350429AbiCHVZ6 (ORCPT
+        with ESMTP id S229902AbiCHWN4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Mar 2022 16:25:58 -0500
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FDE15004E;
-        Tue,  8 Mar 2022 13:25:00 -0800 (PST)
-Received: by mail-wm1-x332.google.com with SMTP id 7-20020a05600c228700b00385fd860f49so363200wmf.0;
-        Tue, 08 Mar 2022 13:25:00 -0800 (PST)
+        Tue, 8 Mar 2022 17:13:56 -0500
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C65E033368
+        for <linux-hardening@vger.kernel.org>; Tue,  8 Mar 2022 14:12:55 -0800 (PST)
+Received: by mail-pg1-x535.google.com with SMTP id o23so299702pgk.13
+        for <linux-hardening@vger.kernel.org>; Tue, 08 Mar 2022 14:12:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=nDOGbN5ER5kyhrbrSeZfaKAJZ4dw3JtTr6jnBgdLbBI=;
-        b=kmHrGTMSvm6tF864EuT2q9gVNsYXS3s2uIcUZWHBIrB9Q8oVsXygqnpmpDyJow/rtB
-         lldvQxzcy5qU3NO7j9RwlGt7C5cuRxfx5L5x+qoB7R/6PFU+YEtXgbcO06pt+DNxgbRg
-         0kIjeFi+TQVc5+qYRitxrs1b2/ekbArAvz+zBucgyNYqI5PyyYZNMzlMSS3P4pF7aTxl
-         2zxa7YL1+Vy//v5c8ZaLvqYnfikwRN5rmd6yAm/wttKeNs2HOR4SKL2jEBPLrpWgeBb2
-         q2DN0hNxiKsbH8Uw0q7n9hZBcaeHq0Ptst/XDlYJYnZd9lcmkWIeR6bLTTqFO2/h3AW9
-         mGgQ==
+        bh=bkKtesSrq7QqPtPRsrv5MP5UVhIFuJzVkEWr+6F4jZg=;
+        b=HB7Qh4AtVpk8d37bKeerp0qFPsowgSyoNUGO3LpWmMZyfhC0KY2vF+/9yFB3whMWqV
+         r6ygdwoC5f3KyA6nBZBdysI+OaD0+1ZMeKlMNQMyoVYqJrw7jHy0RmxmooM5aq4XJh/k
+         7px/K05dn+P2MGUsxJHuEwW0DQyufasrdA/CY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=nDOGbN5ER5kyhrbrSeZfaKAJZ4dw3JtTr6jnBgdLbBI=;
-        b=oOK+g3dGp1xBl1FAjuaHaz5hzMPMZnAjEqydMNlMCPBSaVydHGFe1SOQ65QVxWdEpH
-         oAExkNisWVkjanIS8KKsZIYVRsdYc+HkpFPBIhvuctrMttrwJUzPlkwn21FlfPui2+gh
-         lYkVuAu+DbClc30432okKVk78XK9umHxiNMNKM13m+JRlqrENrsCqEXgU/6IyEh6K1qi
-         PX6VxHLEOekiGUB63WqVoXdilD440ey0Psgcc0GncNauBOXaBE62a4ee2c6WIw87Ll4B
-         T8nfrSqbuJAOcwWUrutuse/VQxayP2w7vdC/S5lPROuc3erTA7Q1lbTj+GbxfIWPXgbj
-         II+Q==
-X-Gm-Message-State: AOAM531Zr8SFyb3nfttcM1TCbzST1CHlbWln/p6KGT6evzJHCKaPjiXl
-        G/88QgE+PUyNBf2Adb5aww==
-X-Google-Smtp-Source: ABdhPJxuYGxepEE8cVVoar6pJEOKukfeg0awhEsWbFqsOc0BU99sBdi+fMLBfybk2ElJ5BBGowTeEQ==
-X-Received: by 2002:a05:600c:3b1c:b0:389:8677:6c73 with SMTP id m28-20020a05600c3b1c00b0038986776c73mr934939wms.192.1646774698977;
-        Tue, 08 Mar 2022 13:24:58 -0800 (PST)
-Received: from localhost.localdomain ([46.53.254.141])
-        by smtp.gmail.com with ESMTPSA id b3-20020a5d4d83000000b001f1d72a6f97sm26070wru.50.2022.03.08.13.24.57
+        bh=bkKtesSrq7QqPtPRsrv5MP5UVhIFuJzVkEWr+6F4jZg=;
+        b=JgWVhOWE+j5ko0JVhLa3TXsPXUtcmaUWE/pXi8jfFZrvQQMRv1lED4c1BUydMAFNKc
+         6xsJYIV596iv+otxyGkFnHZhhUpEqALoR9G/rVlShg7Yojfz7vqKI2xswwUyU0I2XCqS
+         YIju+Oiw316slJSeu1NP4QH3aL7FTRp2I7Awl/jLrpLdIhP3DtpKQgeuswHpOC057hO0
+         WAyHrNNlv7N/4idy3bTTedhRzV0pigk1oYIJZOsrvqU6IZ6WxXJVJmAKzf39e2ESr6c1
+         UkR5t850OMDilByr13yGi8nTXARq3Mm+DV1ITOzoZwA/XdhwGvQx08NfhfKRW4y/m9CW
+         rY9Q==
+X-Gm-Message-State: AOAM533LlihG7Iq85npcHfBofWt29QQyUdOho7cmnReaKVnbrAJN74AH
+        cbgLvPbOkBxeheGPBmcWX0R7qA==
+X-Google-Smtp-Source: ABdhPJxAagA58tSNDoUZKDWEzQaeBwAsi4rPzMdnA3AIz7iJkUTWHfbJDFjsTEW6XG4sdCX9pvm2qg==
+X-Received: by 2002:aa7:8256:0:b0:4e0:78ad:eb81 with SMTP id e22-20020aa78256000000b004e078adeb81mr20546718pfn.30.1646777575321;
+        Tue, 08 Mar 2022 14:12:55 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s9-20020a056a00194900b004e1583f88a2sm66527pfk.0.2022.03.08.14.12.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Mar 2022 13:24:58 -0800 (PST)
-Date:   Wed, 9 Mar 2022 00:24:56 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Kees Cook <keescook@chromium.org>
+        Tue, 08 Mar 2022 14:12:55 -0800 (PST)
+Date:   Tue, 8 Mar 2022 14:12:54 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
 Cc:     David Gow <davidgow@google.com>,
         Eric Biederman <ebiederm@xmission.com>,
         Daniel Latypov <dlatypov@google.com>,
-        Magnus =?utf-8?B?R3Jvw58=?= <magnus.gross@rwth-aachen.de>,
+        Magnus =?iso-8859-1?Q?Gro=DF?= <magnus.gross@rwth-aachen.de>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v2] binfmt_elf: Introduce KUnit test
-Message-ID: <YifJqN+5ju4kHQ2y@localhost.localdomain>
+Message-ID: <202203081408.0B0FC34C@keescook>
 References: <20220304044831.962450-1-keescook@chromium.org>
+ <YifJqN+5ju4kHQ2y@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220304044831.962450-1-keescook@chromium.org>
+In-Reply-To: <YifJqN+5ju4kHQ2y@localhost.localdomain>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 03, 2022 at 08:48:31PM -0800, Kees Cook wrote:
-> Adds simple KUnit test for some binfmt_elf internals: specifically a
-> regression test for the problem fixed by commit 8904d9cd90ee ("ELF:
-> fix overflow in total mapping size calculation").
+On Wed, Mar 09, 2022 at 12:24:56AM +0300, Alexey Dobriyan wrote:
+> On Thu, Mar 03, 2022 at 08:48:31PM -0800, Kees Cook wrote:
+> > Adds simple KUnit test for some binfmt_elf internals: specifically a
+> > regression test for the problem fixed by commit 8904d9cd90ee ("ELF:
+> > fix overflow in total mapping size calculation").
+> 
+> > +	/* No headers, no size. */
+> > +	KUNIT_EXPECT_EQ(test, total_mapping_size(NULL, 0), 0);
+> 
+> This is meaningless test. This whole function only makes sense
+> if program headers are read and loading process advances far enough
+> so that pointer is not NULL.
 
-> +	/* No headers, no size. */
-> +	KUNIT_EXPECT_EQ(test, total_mapping_size(NULL, 0), 0);
+I think it's important to start adding incremental unit testing to core
+kernel APIs. This is a case of adding a regression test for a specific
+misbehavior. This is good, but in addition, testing should check any other
+corner cases as well. Yes, the above EXPECT line is total nonsense, and
+it makes sure that nonsense actually reports back the expected failure
+state "0".
 
-This is meaningless test. This whole function only makes sense
-if program headers are read and loading process advances far enough
-so that pointer is not NULL.
+> Are we going to mock every single function in the kernel?
+> Disgusting.
 
-Are we going to mock every single function in the kernel?
-Disgusting.
+I'm not really interested in a slippery slope debate, but honestly, if we
+_could_ mock everything in the kernel and create unit tests for everything
+in the kernel, then yes, we should. It's certainly not feasible, but at
+least _getting started_ on unit testing execve is worth it.
+
+-- 
+Kees Cook
