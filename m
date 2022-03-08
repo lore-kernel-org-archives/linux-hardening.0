@@ -2,76 +2,86 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B38BCC433FE
-	for <linux-hardening@archiver.kernel.org>; Mon,  7 Mar 2022 19:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65971C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Mar 2022 21:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245196AbiCGT6R (ORCPT
+        id S234333AbiCHVZ7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 7 Mar 2022 14:58:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49716 "EHLO
+        Tue, 8 Mar 2022 16:25:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245245AbiCGT6A (ORCPT
+        with ESMTP id S1350429AbiCHVZ6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 7 Mar 2022 14:58:00 -0500
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82FFE8A333
-        for <linux-hardening@vger.kernel.org>; Mon,  7 Mar 2022 11:57:04 -0800 (PST)
-Received: by mail-pl1-x634.google.com with SMTP id m2so9017468pll.0
-        for <linux-hardening@vger.kernel.org>; Mon, 07 Mar 2022 11:57:04 -0800 (PST)
+        Tue, 8 Mar 2022 16:25:58 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FDE15004E;
+        Tue,  8 Mar 2022 13:25:00 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id 7-20020a05600c228700b00385fd860f49so363200wmf.0;
+        Tue, 08 Mar 2022 13:25:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=jYGBOhY+YvOBE5ajs2EKO/Fw4vwhlIv5/OzecyNBxUY=;
-        b=MhVTEzfX5LNA3eMH4yHZ97/d4z2HLkI847Lak9vMWfOCsnxCKRkJarB6Z0uoMDtHIM
-         rLIx2BOpMYdKEUxZnuXYu05aPKWFhrr0yibtTroCkQdK+KT+UgxHfq1J29KiozjMHbii
-         iBv9/FOQazz0oO+Pwamqw9fCHZEwuzKjUbWEQ=
+        bh=nDOGbN5ER5kyhrbrSeZfaKAJZ4dw3JtTr6jnBgdLbBI=;
+        b=kmHrGTMSvm6tF864EuT2q9gVNsYXS3s2uIcUZWHBIrB9Q8oVsXygqnpmpDyJow/rtB
+         lldvQxzcy5qU3NO7j9RwlGt7C5cuRxfx5L5x+qoB7R/6PFU+YEtXgbcO06pt+DNxgbRg
+         0kIjeFi+TQVc5+qYRitxrs1b2/ekbArAvz+zBucgyNYqI5PyyYZNMzlMSS3P4pF7aTxl
+         2zxa7YL1+Vy//v5c8ZaLvqYnfikwRN5rmd6yAm/wttKeNs2HOR4SKL2jEBPLrpWgeBb2
+         q2DN0hNxiKsbH8Uw0q7n9hZBcaeHq0Ptst/XDlYJYnZd9lcmkWIeR6bLTTqFO2/h3AW9
+         mGgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=jYGBOhY+YvOBE5ajs2EKO/Fw4vwhlIv5/OzecyNBxUY=;
-        b=4ntDx9DR5WXaSQJbSo056pUgKgaeU1qVuDoz7tHAR4wgclm13MUlyfXuxPPhv0d0DK
-         kfGS4EcNiujmhgeP+acTlYv3vCU/pw2ZZ7Y9IIZzki3rHgnoD73ka8w8dxLc6T8myuzz
-         /+aBlr50QfDMxE0nLPhwdYkJW+pt4FABjSx4OJXd4qBA8NeqjXZlu5VwVCgkryVrls/k
-         C25skq6pi2l9aW3lHYx+CBbvp0pF73OQGC6Z0delD2BdGxd88D0U1mVJX7CcMNcrgoQJ
-         geuyFhV0G3dyIOLaaeF6MafJXbCZtB63fJsqUhWCsGgdKyrasqhae6zRzjxYO2tyAQAj
-         HlDQ==
-X-Gm-Message-State: AOAM531oZTYJclwuWM5PGIPrlp+Cu8o3Icyo/LuZbHT+BM+vkqwiS5EH
-        DSuouV5A+HHALwFZUN20JSJsvw==
-X-Google-Smtp-Source: ABdhPJzFSwEk/kHMWe/4LsmtSbJfExBxEBu2A+0J/xfhRd+JxYC9ib8tEgYrzcL586sB3ZUTNQEB8w==
-X-Received: by 2002:a17:902:cccf:b0:14e:eb44:40a1 with SMTP id z15-20020a170902cccf00b0014eeb4440a1mr13882125ple.111.1646683022900;
-        Mon, 07 Mar 2022 11:57:02 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q12-20020a17090aa00c00b001bc6f1baaaesm164252pjp.39.2022.03.07.11.57.02
+        bh=nDOGbN5ER5kyhrbrSeZfaKAJZ4dw3JtTr6jnBgdLbBI=;
+        b=oOK+g3dGp1xBl1FAjuaHaz5hzMPMZnAjEqydMNlMCPBSaVydHGFe1SOQ65QVxWdEpH
+         oAExkNisWVkjanIS8KKsZIYVRsdYc+HkpFPBIhvuctrMttrwJUzPlkwn21FlfPui2+gh
+         lYkVuAu+DbClc30432okKVk78XK9umHxiNMNKM13m+JRlqrENrsCqEXgU/6IyEh6K1qi
+         PX6VxHLEOekiGUB63WqVoXdilD440ey0Psgcc0GncNauBOXaBE62a4ee2c6WIw87Ll4B
+         T8nfrSqbuJAOcwWUrutuse/VQxayP2w7vdC/S5lPROuc3erTA7Q1lbTj+GbxfIWPXgbj
+         II+Q==
+X-Gm-Message-State: AOAM531Zr8SFyb3nfttcM1TCbzST1CHlbWln/p6KGT6evzJHCKaPjiXl
+        G/88QgE+PUyNBf2Adb5aww==
+X-Google-Smtp-Source: ABdhPJxuYGxepEE8cVVoar6pJEOKukfeg0awhEsWbFqsOc0BU99sBdi+fMLBfybk2ElJ5BBGowTeEQ==
+X-Received: by 2002:a05:600c:3b1c:b0:389:8677:6c73 with SMTP id m28-20020a05600c3b1c00b0038986776c73mr934939wms.192.1646774698977;
+        Tue, 08 Mar 2022 13:24:58 -0800 (PST)
+Received: from localhost.localdomain ([46.53.254.141])
+        by smtp.gmail.com with ESMTPSA id b3-20020a5d4d83000000b001f1d72a6f97sm26070wru.50.2022.03.08.13.24.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Mar 2022 11:57:02 -0800 (PST)
-Date:   Mon, 7 Mar 2022 11:57:02 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Max Filippov <jcmvbkbc@gmail.com>
-Cc:     linux-xtensa@linux-xtensa.org, Chris Zankel <chris@zankel.net>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/2] xtensa: rename PT_SIZE to PT_KERNEL_SIZE
-Message-ID: <202203071157.2218B9B29@keescook>
-References: <20220306064435.256328-1-jcmvbkbc@gmail.com>
- <20220306064435.256328-2-jcmvbkbc@gmail.com>
+        Tue, 08 Mar 2022 13:24:58 -0800 (PST)
+Date:   Wed, 9 Mar 2022 00:24:56 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     David Gow <davidgow@google.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        Magnus =?utf-8?B?R3Jvw58=?= <magnus.gross@rwth-aachen.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] binfmt_elf: Introduce KUnit test
+Message-ID: <YifJqN+5ju4kHQ2y@localhost.localdomain>
+References: <20220304044831.962450-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220306064435.256328-2-jcmvbkbc@gmail.com>
+In-Reply-To: <20220304044831.962450-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Mar 05, 2022 at 10:44:34PM -0800, Max Filippov wrote:
-> PT_SIZE is used by the xtensa port to designate kernel exception frame
-> size. In preparation for struct pt_regs size change rename PT_SIZE to
-> PT_KERNEL_SIZE for clarity and change its definition to always cover
-> only the kernel exception frame.
-> 
-> Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+On Thu, Mar 03, 2022 at 08:48:31PM -0800, Kees Cook wrote:
+> Adds simple KUnit test for some binfmt_elf internals: specifically a
+> regression test for the problem fixed by commit 8904d9cd90ee ("ELF:
+> fix overflow in total mapping size calculation").
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+> +	/* No headers, no size. */
+> +	KUNIT_EXPECT_EQ(test, total_mapping_size(NULL, 0), 0);
 
--- 
-Kees Cook
+This is meaningless test. This whole function only makes sense
+if program headers are read and loading process advances far enough
+so that pointer is not NULL.
+
+Are we going to mock every single function in the kernel?
+Disgusting.
