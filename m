@@ -2,73 +2,84 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C248C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Mar 2022 09:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D74DC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Mar 2022 15:08:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230009AbiCIJep (ORCPT
+        id S233755AbiCIPJc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Mar 2022 04:34:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37590 "EHLO
+        Wed, 9 Mar 2022 10:09:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbiCIJep (ORCPT
+        with ESMTP id S229742AbiCIPJb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Mar 2022 04:34:45 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91A8B6AA5F;
-        Wed,  9 Mar 2022 01:33:46 -0800 (PST)
-Received: from zn.tnic (p200300ea97193859a096270e94cb9aa6.dip0.t-ipconnect.de [IPv6:2003:ea:9719:3859:a096:270e:94cb:9aa6])
+        Wed, 9 Mar 2022 10:09:31 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB5E05522C;
+        Wed,  9 Mar 2022 07:08:32 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2371A1EC02B9;
-        Wed,  9 Mar 2022 10:33:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1646818421;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=69vdQtTpsHh6zZFEeXCX5VhdZ9ZJr7n91rFwrjF4ThI=;
-        b=gGKcL5wjP1iEsYL8UifJPnDRaz6VQGQdC2gxJ+ZnfOpB3TX0VJaOUtSZBMGo3Y1j3ZT7Yd
-        YB3ClgB36HpRo6qQOHgmDFa4eq6ia9NprJlj00FiSpvBn4G8EpGJfbg9C+h7UhmUSS/JQo
-        Hkxyc2doodJ4B+pByfXpsKJdLLafdY4=
-Date:   Wed, 9 Mar 2022 10:33:43 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Ammar Faizi <ammarfaizi2@gnuweeb.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Youquan Song <youquan.song@intel.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gwml@vger.gnuweeb.org, x86@kernel.org
-Subject: Re: [PATCH v1 0/2] x86: Avoid using INC and DEC instructions on hot
- paths
-Message-ID: <Yih0d4Red0ICo/MO@zn.tnic>
-References: <20220307114558.1234494-1-ammarfaizi2@gnuweeb.org>
- <YiX81kD/668UdFBr@nazgul.tnic>
- <11dec988-0b4f-00f2-6fa6-8d08be95d106@gnuweeb.org>
+        by ams.source.kernel.org (Postfix) with ESMTPS id 65117B82200;
+        Wed,  9 Mar 2022 15:08:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B6F2C340E8;
+        Wed,  9 Mar 2022 15:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1646838510;
+        bh=NY/yMXJdJMhG+YVGyL7wkfSuv/bZvZ1vnUmRWsJjlsE=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=WSrVE1AV3R7PCc1H3RC0W32yYPfpK+fgskWBLzx8XfxWLic7JmehEpBune+3XW720
+         mgxcDbfiEpC6hy8CIElTI7j0qtmzoEdxhKH2RUkN1xx05oG0nGD0welWBI7AG8In59
+         qAVvW7PQ72KGlNFmy5WHUmXhW5AZQC0VDAY8oADhQ7x3Z65Y4zeg7FXYViZ9VmZMIL
+         iyu4mRJThA6CXi4fxCjlVAR1jTftNcduOi7V1hNh+XkAzlmFL80TwmARGCHkE6Sh9x
+         aUCfwTC5BFSt0LLs4fQpQaWGHyyypp4RWiuI8WjiMbloJ8B+kywGOkQ5PqxODkcIxG
+         NQfiX+BRjXJSQ==
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <11dec988-0b4f-00f2-6fa6-8d08be95d106@gnuweeb.org>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 1/6][next] ath6kl: wmi: Replace one-element array with
+ flexible-array member in struct wmi_begin_scan_cmd
+From:   Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <1ef801ea24475501fa0f296cb5435a440135206e.1645736204.git.gustavoars@kernel.org>
+References: <1ef801ea24475501fa0f296cb5435a440135206e.1645736204.git.gustavoars@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeff Johnson <quic_jjohnson@quicinc.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.7.3
+Message-ID: <164683850431.5166.5608147363884870335.kvalo@kernel.org>
+Date:   Wed,  9 Mar 2022 15:08:27 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Mar 07, 2022 at 08:37:59PM +0700, Ammar Faizi wrote:
-> > Also, I'd advise going over Documentation/process/ if you're new to this.
-> > Especially Documentation/process/submitting-patches.rst.
-> I might've missed the benchmark backup part. Will review those documents again.
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-The "Describe your changes" section in the abovementioned file has some
-good explanations on what to pay attention to.
+> Replace one-element array with flexible-array member in struct
+> wmi_begin_scan_cmd. Also, make use of the struct_size() helper.
+> 
+> This issue was found with the help of Coccinelle and audited and fixed,
+> manually.
+> 
+> Link: https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
+> Link: https://github.com/KSPP/linux/issues/79
+> Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+
+6 patches applied to ath-next branch of ath.git, thanks.
+
+324edddf2505 ath6kl: wmi: Replace one-element array with flexible-array member in struct wmi_begin_scan_cmd
+56f1257fdcc0 ath6kl: wmi: Replace one-element array with flexible-array member in struct wmi_start_scan_cmd
+3c5e6994eea3 ath6kl: wmi: Replace one-element array with flexible-array member in struct wmi_channel_list_reply
+dfb0203939b1 ath6kl: wmi: Replace one-element array with flexible-array member in struct wmi_connect_event
+5140df50e655 ath6kl: wmi: Replace one-element array with flexible-array member in struct wmi_disconnect_event
+0dff6f05a9dc ath6kl: wmi: Replace one-element array with flexible-array member in struct wmi_aplist_event
 
 -- 
-Regards/Gruss,
-    Boris.
+https://patchwork.kernel.org/project/linux-wireless/patch/1ef801ea24475501fa0f296cb5435a440135206e.1645736204.git.gustavoars@kernel.org/
 
-https://people.kernel.org/tglx/notes-about-netiquette
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
