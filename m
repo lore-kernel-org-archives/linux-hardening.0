@@ -2,40 +2,53 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E3AC4332F
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Mar 2022 20:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D7DC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Mar 2022 22:06:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233784AbiCIUw3 (ORCPT
+        id S236970AbiCIWHg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Mar 2022 15:52:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34354 "EHLO
+        Wed, 9 Mar 2022 17:07:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238252AbiCIUw1 (ORCPT
+        with ESMTP id S236486AbiCIWHf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Mar 2022 15:52:27 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 920FBAD101;
-        Wed,  9 Mar 2022 12:51:23 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 41A93B823D5;
-        Wed,  9 Mar 2022 20:51:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F7F2C340E8;
-        Wed,  9 Mar 2022 20:51:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646859081;
-        bh=ZUQl8VjoXzxjjlXQpxYp7jLs7LQAHPOAzRTYa+vp71A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OA2O0miFItD1GHJrCIsLcNp/1NSkFzqK3+DHFFnITaEAz3K16E084xNgS+fnzfxuR
-         1xOUjrDjKC2W01GEFNLrd6UtCBwcoNQx1x/59BO748C3St6B1LWOfWPH+PBzYjYJ+o
-         hR+sXMcR/E3SuBL+qrjH1Jazsze+eG+u2vbZXxx/LWMq9jOdMGKaaazjUyW/qJDj8q
-         kMjfK+iooKeaxEKd+EyX0Km6mYoUHNJythjG8Xx42lsl3z6WN68Kvz2wIbcAgsFIwn
-         1EmLs2bbIFKYhVabtERmpj1z2B/wBcq9OQW+fXlWmHDN2PvaDyvH5szu2020JEA9E4
-         lXKI2AZ9GqVWg==
-Date:   Wed, 9 Mar 2022 13:51:13 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
+        Wed, 9 Mar 2022 17:07:35 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78FC011EF33
+        for <linux-hardening@vger.kernel.org>; Wed,  9 Mar 2022 14:06:36 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id 9so3169181pll.6
+        for <linux-hardening@vger.kernel.org>; Wed, 09 Mar 2022 14:06:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4umDXsTj1CldyJcysNP+Nnq3pVu2iPQxmtjAZsmbWQc=;
+        b=fonhPV0Eq1KKbf2UvQA+KGAibGPw26KwBtm0dM70xCxj6ATohjtHnwM9d6UdiJ4pES
+         TtwRiVhwuqVmD1pMJN1AjZmG+ufDLj8RIalRJKwWBNl6MUbtTzyxogX/ltfosrYrsK1W
+         ukbHTdoheSpC4mi3+swuWKJMWUMvllUxyoHhA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4umDXsTj1CldyJcysNP+Nnq3pVu2iPQxmtjAZsmbWQc=;
+        b=2G8pDwVWd/nn/ywCkhkQHYilSvdjsBJ9z1JKlHI9cYm0k/c4AB1cCRU1rGOnqC1ab9
+         g7QUqYld0pdrKltzxsFs8TKIhImi66AgXg69t4sKwy6pmmk0nevHBhyLIVSCutQQIuwj
+         DA0c04JlsRr1VuRN7dX5yAxzg9VMtKRHkw+F9P+Yvj6x/cGcJQ9dNulqRg+IWr6dmL3x
+         Jz3dJN12JgCIWI3OMBl4914+4I/veTODNKqhvIn+fTUvGefeUWFPwcaz/nRg01KJI7TI
+         szNI6ihXxecFIgIpFYG9aolBjKFcNRyJD22Kx4WzuGt64/ZuHLvhUfCE7lI3Vq1B3dxs
+         Or3w==
+X-Gm-Message-State: AOAM531fxI7jAzDsBhHiXBaOZ0Cr2l+fmADihxOoxU7iC7Sqq70Nxyha
+        DMcmMJ7/4+MsHiwt8Il9eSFDIkdRu68zVQ==
+X-Google-Smtp-Source: ABdhPJzGofjm+FGYBG97TRW7gxvFjqmZFdCBX6uEyrkbYPtSeUo2O0Yh6GCX+Sushx4dJa23puvXbA==
+X-Received: by 2002:a17:902:7404:b0:151:c3f9:e43a with SMTP id g4-20020a170902740400b00151c3f9e43amr1839188pll.12.1646863595999;
+        Wed, 09 Mar 2022 14:06:35 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u8-20020a056a00098800b004f702473553sm4134935pfg.6.2022.03.09.14.06.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Mar 2022 14:06:35 -0800 (PST)
+Date:   Wed, 9 Mar 2022 14:06:35 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Nathan Chancellor <nathan@kernel.org>
 Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Marc Zyngier <maz@kernel.org>,
         Guenter Roeck <linux@roeck-us.net>,
@@ -45,110 +58,66 @@ Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
         linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] MIPS: Only use current_stack_pointer on GCC
-Message-ID: <YikTQRql+il3HbrK@dev-arch.thelio-3990X>
+Message-ID: <202203091406.E94510FD@keescook>
 References: <20220309204537.390428-1-keescook@chromium.org>
+ <YikTQRql+il3HbrK@dev-arch.thelio-3990X>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220309204537.390428-1-keescook@chromium.org>
+In-Reply-To: <YikTQRql+il3HbrK@dev-arch.thelio-3990X>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Nit: I think the subject needs to be updated (I assume this was written
-before Nick's fix?).
-
-On Wed, Mar 09, 2022 at 12:45:37PM -0800, Kees Cook wrote:
-> Unfortunately, Clang did not have support for "sp" as a global register
-> definition, and was crashing after the addition of current_stack_pointer.
-> This has been fixed in Clang 15, but earlier Clang versions need to
-> avoid this code, so add a versioned test and revert back to the
-> open-coded asm instances. Fixes Clang build error:
+On Wed, Mar 09, 2022 at 01:51:13PM -0700, Nathan Chancellor wrote:
+> Nit: I think the subject needs to be updated (I assume this was written
+> before Nick's fix?).
 > 
-> fatal error: error in backend: Invalid register name global variable
+> On Wed, Mar 09, 2022 at 12:45:37PM -0800, Kees Cook wrote:
+> > Unfortunately, Clang did not have support for "sp" as a global register
+> > definition, and was crashing after the addition of current_stack_pointer.
+> > This has been fixed in Clang 15, but earlier Clang versions need to
+> > avoid this code, so add a versioned test and revert back to the
+> > open-coded asm instances. Fixes Clang build error:
+> > 
+> > fatal error: error in backend: Invalid register name global variable
+> > 
+> > Fixes: 200ed341b864 ("mips: Implement "current_stack_pointer"")
+> > Reported-by: Nathan Chancellor <nathan@kernel.org>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Marc Zyngier <maz@kernel.org>
+> > Cc: Guenter Roeck <linux@roeck-us.net>
+> > Cc: Yanteng Si <siyanteng01@gmail.com>
+> > Cc: linux-mips@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
 > 
-> Fixes: 200ed341b864 ("mips: Implement "current_stack_pointer"")
-> Reported-by: Nathan Chancellor <nathan@kernel.org>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Yanteng Si <siyanteng01@gmail.com>
-> Cc: linux-mips@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Thanks for sending this!
-
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-
-> ---
->  arch/mips/Kconfig                   | 2 +-
->  arch/mips/include/asm/thread_info.h | 2 ++
->  arch/mips/kernel/irq.c              | 3 ++-
->  arch/mips/lib/uncached.c            | 4 +++-
->  4 files changed, 8 insertions(+), 3 deletions(-)
+> Thanks for sending this!
 > 
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index 3f58b45fc953..15769013f46e 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -4,7 +4,7 @@ config MIPS
->  	default y
->  	select ARCH_32BIT_OFF_T if !64BIT
->  	select ARCH_BINFMT_ELF_STATE if MIPS_FP_SUPPORT
-> -	select ARCH_HAS_CURRENT_STACK_POINTER
-> +	select ARCH_HAS_CURRENT_STACK_POINTER if !CC_IS_CLANG || CLANG_VERSION >= 150000
-
-Nit: This can be 140000, as release/14.x has received the fix:
-
-https://github.com/llvm/llvm-project/commit/0826716786cd4a8c7cbcb8c01e4d9fac46b7a17a
-
->  	select ARCH_HAS_DEBUG_VIRTUAL if !64BIT
->  	select ARCH_HAS_FORTIFY_SOURCE
->  	select ARCH_HAS_KCOV
-> diff --git a/arch/mips/include/asm/thread_info.h b/arch/mips/include/asm/thread_info.h
-> index 4463348d2372..ecae7470faa4 100644
-> --- a/arch/mips/include/asm/thread_info.h
-> +++ b/arch/mips/include/asm/thread_info.h
-> @@ -69,7 +69,9 @@ static inline struct thread_info *current_thread_info(void)
->  	return __current_thread_info;
->  }
->  
-> +#ifdef CONFIG_ARCH_HAS_CURRENT_STACK_POINTER
->  register unsigned long current_stack_pointer __asm__("sp");
-> +#endif
->  
->  #endif /* !__ASSEMBLY__ */
->  
-> diff --git a/arch/mips/kernel/irq.c b/arch/mips/kernel/irq.c
-> index fc313c49a417..5e11582fe308 100644
-> --- a/arch/mips/kernel/irq.c
-> +++ b/arch/mips/kernel/irq.c
-> @@ -75,8 +75,9 @@ void __init init_IRQ(void)
->  #ifdef CONFIG_DEBUG_STACKOVERFLOW
->  static inline void check_stack_overflow(void)
->  {
-> -	unsigned long sp = current_stack_pointer;
-> +	unsigned long sp;
->  
-> +	__asm__ __volatile__("move %0, $sp" : "=r" (sp));
->  	sp &= THREAD_MASK;
->  
->  	/*
-> diff --git a/arch/mips/lib/uncached.c b/arch/mips/lib/uncached.c
-> index f8d4ca046c3e..f80a67c092b6 100644
-> --- a/arch/mips/lib/uncached.c
-> +++ b/arch/mips/lib/uncached.c
-> @@ -40,7 +40,9 @@ unsigned long run_uncached(void *func)
->  	register long ret __asm__("$2");
->  	long lfunc = (long)func, ufunc;
->  	long usp;
-> -	long sp = current_stack_pointer;
-> +	long sp;
-> +
-> +	__asm__("move %0, $sp" : "=r" (sp));
->  
->  	if (sp >= (long)CKSEG0 && sp < (long)CKSEG2)
->  		usp = CKSEG1ADDR(sp);
-> -- 
-> 2.32.0
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
 > 
+> > ---
+> >  arch/mips/Kconfig                   | 2 +-
+> >  arch/mips/include/asm/thread_info.h | 2 ++
+> >  arch/mips/kernel/irq.c              | 3 ++-
+> >  arch/mips/lib/uncached.c            | 4 +++-
+> >  4 files changed, 8 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> > index 3f58b45fc953..15769013f46e 100644
+> > --- a/arch/mips/Kconfig
+> > +++ b/arch/mips/Kconfig
+> > @@ -4,7 +4,7 @@ config MIPS
+> >  	default y
+> >  	select ARCH_32BIT_OFF_T if !64BIT
+> >  	select ARCH_BINFMT_ELF_STATE if MIPS_FP_SUPPORT
+> > -	select ARCH_HAS_CURRENT_STACK_POINTER
+> > +	select ARCH_HAS_CURRENT_STACK_POINTER if !CC_IS_CLANG || CLANG_VERSION >= 150000
+> 
+> Nit: This can be 140000, as release/14.x has received the fix:
+> 
+> https://github.com/llvm/llvm-project/commit/0826716786cd4a8c7cbcb8c01e4d9fac46b7a17a
+
+Oh! Excellent. Thanks; I missed that it made the branch. I'll send a v2.
+
+-- 
+Kees Cook
