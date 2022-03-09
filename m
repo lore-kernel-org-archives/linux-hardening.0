@@ -2,143 +2,153 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEA7C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Mar 2022 20:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505F3C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Mar 2022 20:45:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237926AbiCIURs (ORCPT
+        id S238239AbiCIUqp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Mar 2022 15:17:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47940 "EHLO
+        Wed, 9 Mar 2022 15:46:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234387AbiCIURs (ORCPT
+        with ESMTP id S238195AbiCIUqp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Mar 2022 15:17:48 -0500
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02708A9E3D
-        for <linux-hardening@vger.kernel.org>; Wed,  9 Mar 2022 12:16:49 -0800 (PST)
-Received: by mail-pg1-x536.google.com with SMTP id q29so1926789pgn.7
-        for <linux-hardening@vger.kernel.org>; Wed, 09 Mar 2022 12:16:48 -0800 (PST)
+        Wed, 9 Mar 2022 15:46:45 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC1756353C
+        for <linux-hardening@vger.kernel.org>; Wed,  9 Mar 2022 12:45:40 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id v1-20020a17090a088100b001bf25f97c6eso5096469pjc.0
+        for <linux-hardening@vger.kernel.org>; Wed, 09 Mar 2022 12:45:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6BaluqbU/Z25J2R97A+4bgdc+ob1O3EWcsEpPLgF3pk=;
-        b=ISdtbAOwnBbYGM4PCvpKrrw5HmGmfUq3wg3g9OLspUaLc+zFWwDqcVsYfOgzslDf9L
-         8ZVKnke21o94g0bfC8pnuFzNLInuTyhowTRNulQ+CAFOHtaG0pSBOXjDS2XuX6b8YzvF
-         ilTdwW3UUTtdTskFFMnGU9GNP34o5UgoK+vm4=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ERN4EHsAehnzKKHh1D2+nTh+Py8x5Rp5HMGDjFluxr8=;
+        b=cpibhiHH+V6FoD7AGaa89Pnpr1MqQbNAw3c0vVDSFoQFk3yUy7H4dCYYXfTWAmXrOs
+         l8GpE3EWh8KFbr1MAh3LU6KqfHECUwSRcaIveHTwEvCwWTWJkfTWeEBuHrdJRNvVcsLT
+         qHHY3jztnSlnXprm7bX5SKwQ2E493nxBs4RT4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6BaluqbU/Z25J2R97A+4bgdc+ob1O3EWcsEpPLgF3pk=;
-        b=JCOaUi8AseldjpzEXUEu2DROy8UnROpHAi2lvLVpgZjkIdYv/Gnc0C4qDq8iv96LY4
-         IEUghlaFZ01A+42GtCwdz0noaKixk2ZLAVN8+CKm8p65+rJahFjRG7jL/OwIojCkcRGn
-         L1XPtv9b2mDipHUQqu5UVdBVoeSx9lToDWqOegsoU+AwqAea6gFda+Vj63ZRkHBp+qJJ
-         yRfGFPPJZKpknYTmal9UGmJJGnLRJVUUSxaZ6+9qW3H3bjAJE0zgbxmB2o+ndEpadFHO
-         cR/nEqURJ/xCjKpSuvchxs4t1civKxCBpKpk28I4Nrkf4LfD4ZmpyeyHAM5th6N0va+O
-         fNUg==
-X-Gm-Message-State: AOAM533C2wjhJNm9jPi0q3zn9Ho23E1J1KvJvD4KUGBc0qTOTABUWmeN
-        LqVeYP4tlFa2xgNuv5fHsjjXwg==
-X-Google-Smtp-Source: ABdhPJwlFCfuaoDPFowRrKqu5kBpvMkL/ybtBrvNihxj3zKsFGRIqd0H9DrqrIK7H2SCt/BiTczTZA==
-X-Received: by 2002:a05:6a00:2168:b0:4f6:eb64:71dd with SMTP id r8-20020a056a00216800b004f6eb6471ddmr1450854pff.40.1646857008474;
-        Wed, 09 Mar 2022 12:16:48 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ERN4EHsAehnzKKHh1D2+nTh+Py8x5Rp5HMGDjFluxr8=;
+        b=kT6P0QRt18RXG1zyVM7wZqrFX3dp0U6vFbjpwRwwDdX+VF9TNLa9bBJXmYvbIyA5mx
+         aFGpaoViCCsUSZEuyCpIUU/jms4P9863VK+mPyPJJJ5gq+4IHAcvwwBrXY2BWEfMNosI
+         ZuFCr9DMan7oUv4g0Zf/A68EF1cNNxODJa84zDPZIppdwa3F4+faEB1Taed0Ul0CD2CZ
+         8ZYpxVE+312BqezrTLzaF7HbQwEEGJBGEl435fSXGW4cP63tBU1H2f0+zoMb1Rq7XWwo
+         9R0bdL6w567p7plnZK55xTdkNnwJPWlS8YSL1PoS9b3xTpvRNmzzF8lsVGtBJpTzgIOa
+         Lsjg==
+X-Gm-Message-State: AOAM532l9NFEJ1C1zPLOnVD9Ldkmf4hHDLjuDZ2jTSjNttQsWuHqCtXF
+        IlpilWiESHkWe9ljJTxk9HW4Fg==
+X-Google-Smtp-Source: ABdhPJzUHtWrv+KW+UL90YnTzk6+LrU87Z4C7tNuo2i9t4ZS9YtNksuPK+owbWcQ8enR1zl7uRCZYQ==
+X-Received: by 2002:a17:90a:7bc5:b0:1be:eef4:b961 with SMTP id d5-20020a17090a7bc500b001beeef4b961mr12201271pjl.29.1646858740334;
+        Wed, 09 Mar 2022 12:45:40 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e6-20020a63aa06000000b00380c8bed5a6sm1650747pgf.46.2022.03.09.12.16.47
+        by smtp.gmail.com with ESMTPSA id 16-20020a056a00073000b004dfe2217090sm4111014pfm.200.2022.03.09.12.45.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Mar 2022 12:16:48 -0800 (PST)
-Date:   Wed, 9 Mar 2022 12:16:47 -0800
+        Wed, 09 Mar 2022 12:45:40 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Dan Li <ashimida@linux.alibaba.com>
-Cc:     akpm@linux-foundation.org, arnd@arndb.de, catalin.marinas@arm.com,
-        gregkh@linuxfoundation.org, linux@roeck-us.net,
-        luc.vanoostenryck@gmail.com, elver@google.com,
-        mark.rutland@arm.com, masahiroy@kernel.org, ojeda@kernel.org,
-        nathan@kernel.org, npiggin@gmail.com, ndesaulniers@google.com,
-        samitolvanen@google.com, shuah@kernel.org, tglx@linutronix.de,
-        will@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] lkdtm: Add Shadow Call Stack tests
-Message-ID: <202203091211.4F00F560@keescook>
-References: <20220303073340.86008-1-ashimida@linux.alibaba.com>
- <20220303074339.86337-1-ashimida@linux.alibaba.com>
- <202203031010.0A492D114@keescook>
- <202203031105.A1B4CAE6@keescook>
- <92a767c4-09e1-8783-2581-9848bb72890d@linux.alibaba.com>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Yanteng Si <siyanteng01@gmail.com>, linux-mips@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] MIPS: Only use current_stack_pointer on GCC
+Date:   Wed,  9 Mar 2022 12:45:37 -0800
+Message-Id: <20220309204537.390428-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <92a767c4-09e1-8783-2581-9848bb72890d@linux.alibaba.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2946; h=from:subject; bh=mJJlcMAOHOUY1LaTM6CaPuzsaMVsrZSzurV5C9KyV08=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiKRHwT/gRY3du4lkTuPbFhzgpqXfYeWapwif0U9xk 4yZK6xKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYikR8AAKCRCJcvTf3G3AJjnMEA CzTpygscG3HkIXS1hEPEscabCr9RpEuJhqQZXV8xRtoQXwrE2xeA0Uzv/rB4oF/Cd58H1w7442Hjs5 +ElxOHaJB/oGPmAJfKoArhK1r7b8Eb9AseY8z6brFbjRwsIpASiwzatqfrqBelCySWBMyKM30+bnvl Y3cxwrGBKrgJfkSo8hgbg2ysttwY/eOCpuZvoLrFL6DDZ1ku1YLomALhq+ujqRrLFWQsz/6aXI4Eks g1hVpufdlwo10713WyE6x/q8tHLF8DaaFK3ILTSL7qRVqinr2WiIgpbiRAD32ouad9jfNP3pPLDxPI 9a+HfL3fK8/exJ9C9kSNuHxFADYNml/bacRhohBGoDmX/tHJ2RZvwaY2mc+LKs+V8U6eXvCpiMjsxJ KRvGsHdcVONj+RRntX0Mzhj/UgYZ0/QfUo6+qCgqmRSlfvqeeeEJIAzYs96lWz1/L6yTMYdxhUvqTs bqViRba8Mx/muLUPqoazxhUxdlODBf2MmQj5dAe5JA+SNOC6hdlsGTWFqyK+sdJTKKbRzWH2tVjXj0 LZLBjJvNi41ZiLfT0Oae3pEqxHIvtcnztyO8kt0UzAKMaNmsHHmC8RwJBU0jr7ImjONFAZVEjv5yl2 NtUvzJAtB5MsSouKr9u4+MPJEVASs4gCzxhDzJfUdHyp5WbkYQEs2XsawC7Q==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Mar 07, 2022 at 07:16:36AM -0800, Dan Li wrote:
-> The following code seems to work fine under clang/gcc, x86_64/aarch64
-> (also tested in lkdtm_CFI_BACKWARD_SHADOW):
-> 
-> #include <stdio.h>
-> 
-> static __attribute__((noinline))
-> void set_return_addr(unsigned long *expected, unsigned long *addr)
-> {
->     /* Use of volatile is to make sure final write isn't seen as a dead store. */
->     unsigned long * volatile *ret_addr = (unsigned long **)__builtin_frame_address(0) + 1;
-> 
->     /* Make sure we've found the right place on the stack before writing it. */
->     if(*ret_addr == expected)
->         *ret_addr = (addr);
-> }
-> 
-> static volatile int force_label;
-> 
-> int main(void)
-> {
->     void *array[] = {0, &&normal, &&redirected};
-> 
->     if (force_label) {
->         /* Call it with a NULL to avoid parameters being treated as constants in -02. */
->         set_return_addr(NULL, NULL);
->         goto * array[force_label];
->     }
+Unfortunately, Clang did not have support for "sp" as a global register
+definition, and was crashing after the addition of current_stack_pointer.
+This has been fixed in Clang 15, but earlier Clang versions need to
+avoid this code, so add a versioned test and revert back to the
+open-coded asm instances. Fixes Clang build error:
 
-Hah! I like that. :) I had a weird switch statement that was working for
-me; this is cleaner.
+fatal error: error in backend: Invalid register name global variable
 
-> 
->     do {
-> 
->         set_return_addr(&&normal, &&redirected);
-> 
-> normal:
->         printf("I should be skipped\n");
->         break;
-> 
-> redirected:
->         printf("Redirected\n");
-> 
->     } while (0);
-> 
->     return 0;
-> }
-> 
-> But currently it still crashes when I try to enable
-> "-mbranch-protection=pac-ret+leaf+bti".
-> 
-> Because the address of "&&redirected" is not encrypted under pac,
-> the autiasp check will fail when set_return_addr returns, and
-> eventually cause the function to crash when it returns to "&&redirected"
-> ("&&redirected" as a reserved label always seems to start with a bti j
-> insn).
+Fixes: 200ed341b864 ("mips: Implement "current_stack_pointer"")
+Reported-by: Nathan Chancellor <nathan@kernel.org>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Yanteng Si <siyanteng01@gmail.com>
+Cc: linux-mips@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/mips/Kconfig                   | 2 +-
+ arch/mips/include/asm/thread_info.h | 2 ++
+ arch/mips/kernel/irq.c              | 3 ++-
+ arch/mips/lib/uncached.c            | 4 +++-
+ 4 files changed, 8 insertions(+), 3 deletions(-)
 
-Strictly speaking, this is entirely correct. :)
-
-> For lkdtm, if we're going to handle both cases in one function, maybe
-> it would be better to turn off the -mbranch-protection=pac-ret+leaf+bti
-> and maybe also turn off -O2 options for the function :)
-
-If we can apply a function attribute to turn off pac for the "does this
-work without protections", that should be sufficient.
-
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 3f58b45fc953..15769013f46e 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -4,7 +4,7 @@ config MIPS
+ 	default y
+ 	select ARCH_32BIT_OFF_T if !64BIT
+ 	select ARCH_BINFMT_ELF_STATE if MIPS_FP_SUPPORT
+-	select ARCH_HAS_CURRENT_STACK_POINTER
++	select ARCH_HAS_CURRENT_STACK_POINTER if !CC_IS_CLANG || CLANG_VERSION >= 150000
+ 	select ARCH_HAS_DEBUG_VIRTUAL if !64BIT
+ 	select ARCH_HAS_FORTIFY_SOURCE
+ 	select ARCH_HAS_KCOV
+diff --git a/arch/mips/include/asm/thread_info.h b/arch/mips/include/asm/thread_info.h
+index 4463348d2372..ecae7470faa4 100644
+--- a/arch/mips/include/asm/thread_info.h
++++ b/arch/mips/include/asm/thread_info.h
+@@ -69,7 +69,9 @@ static inline struct thread_info *current_thread_info(void)
+ 	return __current_thread_info;
+ }
+ 
++#ifdef CONFIG_ARCH_HAS_CURRENT_STACK_POINTER
+ register unsigned long current_stack_pointer __asm__("sp");
++#endif
+ 
+ #endif /* !__ASSEMBLY__ */
+ 
+diff --git a/arch/mips/kernel/irq.c b/arch/mips/kernel/irq.c
+index fc313c49a417..5e11582fe308 100644
+--- a/arch/mips/kernel/irq.c
++++ b/arch/mips/kernel/irq.c
+@@ -75,8 +75,9 @@ void __init init_IRQ(void)
+ #ifdef CONFIG_DEBUG_STACKOVERFLOW
+ static inline void check_stack_overflow(void)
+ {
+-	unsigned long sp = current_stack_pointer;
++	unsigned long sp;
+ 
++	__asm__ __volatile__("move %0, $sp" : "=r" (sp));
+ 	sp &= THREAD_MASK;
+ 
+ 	/*
+diff --git a/arch/mips/lib/uncached.c b/arch/mips/lib/uncached.c
+index f8d4ca046c3e..f80a67c092b6 100644
+--- a/arch/mips/lib/uncached.c
++++ b/arch/mips/lib/uncached.c
+@@ -40,7 +40,9 @@ unsigned long run_uncached(void *func)
+ 	register long ret __asm__("$2");
+ 	long lfunc = (long)func, ufunc;
+ 	long usp;
+-	long sp = current_stack_pointer;
++	long sp;
++
++	__asm__("move %0, $sp" : "=r" (sp));
+ 
+ 	if (sp >= (long)CKSEG0 && sp < (long)CKSEG2)
+ 		usp = CKSEG1ADDR(sp);
 -- 
-Kees Cook
+2.32.0
+
