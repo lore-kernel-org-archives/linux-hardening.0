@@ -2,81 +2,136 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA975C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Mar 2022 17:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA53C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Mar 2022 18:50:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235701AbiCIRyj (ORCPT
+        id S236496AbiCISvg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Mar 2022 12:54:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47968 "EHLO
+        Wed, 9 Mar 2022 13:51:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235972AbiCIRyi (ORCPT
+        with ESMTP id S236924AbiCISvf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Mar 2022 12:54:38 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00D23E2353
-        for <linux-hardening@vger.kernel.org>; Wed,  9 Mar 2022 09:53:38 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id e6so2609643pgn.2
-        for <linux-hardening@vger.kernel.org>; Wed, 09 Mar 2022 09:53:38 -0800 (PST)
+        Wed, 9 Mar 2022 13:51:35 -0500
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD1201A41C7
+        for <linux-hardening@vger.kernel.org>; Wed,  9 Mar 2022 10:50:36 -0800 (PST)
+Received: by mail-pg1-x534.google.com with SMTP id q19so2719781pgm.6
+        for <linux-hardening@vger.kernel.org>; Wed, 09 Mar 2022 10:50:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=qmSmgs55XaXk15bGqog/U8JOQMvKGJQ0ikFM8ua87j4=;
-        b=OSKDu/ib+3J2AKmp/olwVlOwOaCZPVW39eJ1BbNAHYCtFuzwmo8AYW9BwMNHgNA1tX
-         lcaDZkkAohVeZmWLjkr8x5xnqS/ODlijPMxkfvWzWmWUAXTkdVO3hkPYGFFBS+rjzjlf
-         MdRUQO1ELSotENGcSBwi4pS8B7Fhbs/+OfdaQ=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LmBWuji62xMcbSxN3hasm53uq/foQCgG4A7RDdCuhEA=;
+        b=YsD0B8nTyZZLwlk4V33mqLFeE/khuGQj8poFYl9QAQZUtZVqnEMe2uAQxrQmJGFkru
+         kXTYhMEvKJTdaaYLt3tWsHRa4EI+Ek8BkwvP+bXVztKQq+FZ+NSyBdhzBRL80Z57X/oX
+         C4SsPdHzlzc3GsQlWOQ2zBBQDPPxUzNM/JYMY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=qmSmgs55XaXk15bGqog/U8JOQMvKGJQ0ikFM8ua87j4=;
-        b=iYKbdEg7wNZ18LF8ITWvokTQ4cdQrFHNxKgxH0Mlg8MigEdPhXQ0PXBNcADyhJwdsz
-         1iJpXU3vwSGnQ+Fvuq8oTYJ981Q7sPN2vBbRj8Au18eFzkEcCWdhfsi7Hc7+E1XJz5xU
-         FHrER5oWkgxdTuhUhJsyDFhzkkM2YcAXPh5vHVvYHUWJa/5wASfpVMIyH6NqqPwtUiNE
-         E3CQ2127ZlYY9jwcHC5A9iP8mvZvdZ9hrIOZ52SKJ1weKKLAbyBbls4X9Ca0fxpdZVVK
-         0Ay3diOym957eoEUabM7zXvh+0lAbbVGr82wQxXd9llZLV9f09V7u2ujAv6ufHtaGAHR
-         SrKw==
-X-Gm-Message-State: AOAM532QtaOZamIN9U+9dtcgABtcOB2eDR1m+TDDHf6euCO+ckhenIjP
-        yqL6JZAFKl4xg4UPCk5eGbKmsA==
-X-Google-Smtp-Source: ABdhPJyN4DQkJeA+BsHZknL/wPsqjWVAlxLMty4dze+Issnd8d9INcekBICbrX/aLQMKpE5jpH50pQ==
-X-Received: by 2002:a63:4e52:0:b0:380:7c35:fc9a with SMTP id o18-20020a634e52000000b003807c35fc9amr726462pgl.376.1646848418509;
-        Wed, 09 Mar 2022 09:53:38 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LmBWuji62xMcbSxN3hasm53uq/foQCgG4A7RDdCuhEA=;
+        b=K+koy9aR3KPJvwJ+zEVN2pUM1/vPxSw9yNKyBn4sTgTDTSr6GYlj0lrKdOLHFEtxI7
+         VdVE7K4DgvYamQG5U36C/JYyHtfqy6jZP0TPYG2VP5bwmXFqfUjwljlmoQSPoU8tslUh
+         jLheKUwNXkMgjzD3zSeKyuYbxA/v/joP+VGpGyEho5RZpiyQEDlDe+Wx2nb2mNcESWym
+         yFkRA001nBeXpFhgVdxf59sULVOxA3ySA228JnaP9WZaVHTLGkZXjgxrNaEEP1hoACX7
+         ddgp+rUCQ8jkva74mwEX4TFaBIlJjDQlT0RT9MjaGBf8PudDuClWanuW/r8118K6dZE6
+         pcpQ==
+X-Gm-Message-State: AOAM531mLT9MT/C/971N11qnWkpFeuwyU/t7diMxZ9DC3APkKkcA3dwk
+        7s1IbwedjH2qIXXHf8uJ2xfF4w==
+X-Google-Smtp-Source: ABdhPJzSLLywDntydW15xHyRFHbQQ/clWq4yqveU2NycAIWeDgwg6HfptJrYQstXlq2+fj1nCGYOtg==
+X-Received: by 2002:a63:1d59:0:b0:380:6a04:89da with SMTP id d25-20020a631d59000000b003806a0489damr902517pgm.9.1646851836164;
+        Wed, 09 Mar 2022 10:50:36 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a12-20020a056a000c8c00b004e1a76f0a8asm3893798pfv.51.2022.03.09.09.53.38
+        by smtp.gmail.com with ESMTPSA id d11-20020a056a0024cb00b004f725ecf900sm4036390pfv.97.2022.03.09.10.50.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Mar 2022 09:53:38 -0800 (PST)
-Date:   Wed, 9 Mar 2022 09:53:37 -0800
+        Wed, 09 Mar 2022 10:50:35 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     "kernelci.org bot" <bot@kernelci.org>
-Cc:     linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: next/master build: 224 builds: 30 failed, 194 passed, 97 errors,
- 370 warnings (next-20220309)
-Message-ID: <202203090952.70BFAA32B@keescook>
-References: <6228d80a.1c69fb81.538eb.96f2@mx.google.com>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-mips@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] MIPS: boot/compressed: Use array reference for image bounds
+Date:   Wed,  9 Mar 2022 10:50:32 -0800
+Message-Id: <20220309185032.229123-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3189; h=from:subject; bh=VIo9E2qUGoV4Cmo8f/F9aHEfX2uAnletay6wwUkPAXw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiKPb42VibsKsjr0HXyMgOKJMCkA5Yp13b4Yzgcert 6dHWVb2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYij2+AAKCRCJcvTf3G3AJjucD/ 4wbt2yweQM/CJfDQiloQJAp0O67CUFaRU7T/QetWWZOkK3PBz1KjwhPzIbH0WD45wZ/Z7aQ0wfTula x/qo/69aDSWW/vtctucH2OqHWA4UYFtMDpki8D8g2TZAqtD4attVM+fdbXpgYe0XFy2zHK0Xo9l9P+ TXnCeg3l7qpFNAVTmzdrvtjvO1b3UONop1yzkxTI+8Mo4SOTGmW3de9T0md6/J8dCcDHOF0RO5hN03 qZxwDBNy+7pYZ4FZBll2NvvqdtCAlmkbleofmr9h2qXYEe2VC2N3UEkw9zwdp4K/KKfNndlohmvKJO qNqxrRaidm0IVl0grG9m1TR7G+Cr12WfwetlEbS8VdCH//i3GV2USpAwofAsFPfgK4gd7855Bk3Xjb vcxzcx680unG6ftaeLJms963OzWa+7DxPStxhXPd38fBqdUom9mMSBJyxdJozJX3uEQ6LuIOpYmVO+ Wln6e7HdJ84FkmxwuxXkv1xF19MQ9YFluagcFJARWIc4R+NPrEBszpkUtfD0JVPC6VUgE8+Hq/jQb+ 7AEuo8tWN0bPZYobufB071WlhDf4cv8ZNiPGNNGgLl/ASoFHuo31ynolImmpQSDQqZy9DDyIjFU7PE dE2JJDb7nbrrwensGvPGjQUZ8uQAl+RpSA/snCYJEahjT1SapwM3EgLPV+7A==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <6228d80a.1c69fb81.538eb.96f2@mx.google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Mar 09, 2022 at 08:38:34AM -0800, kernelci.org bot wrote:
-> [...]
-> am200epdkit_defconfig (arm, gcc-10) — PASS, 0 errors, 4 warnings, 0 section mismatches
-> 
-> Warnings:
->     arch/arm/mm/dma-mapping.c:395:15: warning: array subscript <unknown> is outside array bounds of ‘struct dma_contig_early_reserve[0]’ [-Warray-bounds]
->     arch/arm/mm/dma-mapping.c:396:15: warning: array subscript <unknown> is outside array bounds of ‘struct dma_contig_early_reserve[0]’ [-Warray-bounds]
->     arch/arm/mm/dma-mapping.c:404:36: warning: array subscript i is outside array bounds of ‘struct dma_contig_early_reserve[0]’ [-Warray-bounds]
->     arch/arm/mm/dma-mapping.c:405:42: warning: array subscript i is outside array bounds of ‘struct dma_contig_early_reserve[0]’ [-Warray-bounds]
+As done with other image addresses in other architectures, use an
+explicit flexible array instead of "address of char", which can trip
+bounds checking done by the compiler. Found when building with
+-Warray-bounds:
 
-This should be fixed by:
+In file included from ./include/linux/byteorder/little_endian.h:5,
+                 from ./arch/mips/include/uapi/asm/byteorder.h:15,
+                 from ./arch/mips/include/asm/bitops.h:21,
+                 from ./include/linux/bitops.h:33,
+                 from ./include/linux/kernel.h:22,
+                 from arch/mips/boot/compressed/decompress.c:13:
+arch/mips/boot/compressed/decompress.c: In function 'decompress_kernel':
+./include/asm-generic/unaligned.h:14:8: warning: array subscript -1 is outside array bounds of 'unsigned char[1]' [-Warray-bounds]
+   14 |  __pptr->x;        \
+      |  ~~~~~~^~~
+./include/uapi/linux/byteorder/little_endian.h:35:51: note: in definition of macro '__le32_to_cpu'
+   35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
+      |                                                   ^
+./include/asm-generic/unaligned.h:32:21: note: in expansion of macro '__get_unaligned_t'
+   32 |  return le32_to_cpu(__get_unaligned_t(__le32, p));
+      |                     ^~~~~~~~~~~~~~~~~
+arch/mips/boot/compressed/decompress.c:29:37: note: while referencing '__image_end'
+   29 | extern unsigned char __image_begin, __image_end;
+      |                                     ^~~~~~~~~~~
 
-https://lore.kernel.org/linux-hardening/20220309175107.195182-1-keescook@chromium.org/
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-mips@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/mips/boot/compressed/decompress.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/arch/mips/boot/compressed/decompress.c b/arch/mips/boot/compressed/decompress.c
+index aae1346a509a..5b38a802e101 100644
+--- a/arch/mips/boot/compressed/decompress.c
++++ b/arch/mips/boot/compressed/decompress.c
+@@ -26,7 +26,7 @@ unsigned long free_mem_ptr;
+ unsigned long free_mem_end_ptr;
+ 
+ /* The linker tells us where the image is. */
+-extern unsigned char __image_begin, __image_end;
++extern unsigned char __image_begin[], __image_end[];
+ 
+ /* debug interfaces  */
+ #ifdef CONFIG_DEBUG_ZBOOT
+@@ -91,9 +91,9 @@ void decompress_kernel(unsigned long boot_heap_start)
+ {
+ 	unsigned long zimage_start, zimage_size;
+ 
+-	zimage_start = (unsigned long)(&__image_begin);
+-	zimage_size = (unsigned long)(&__image_end) -
+-	    (unsigned long)(&__image_begin);
++	zimage_start = (unsigned long)(__image_begin);
++	zimage_size = (unsigned long)(__image_end) -
++	    (unsigned long)(__image_begin);
+ 
+ 	puts("zimage at:     ");
+ 	puthex(zimage_start);
+@@ -121,7 +121,7 @@ void decompress_kernel(unsigned long boot_heap_start)
+ 		dtb_size = fdt_totalsize((void *)&__appended_dtb);
+ 
+ 		/* last four bytes is always image size in little endian */
+-		image_size = get_unaligned_le32((void *)&__image_end - 4);
++		image_size = get_unaligned_le32((void *)__image_end - 4);
+ 
+ 		/* The device tree's address must be properly aligned  */
+ 		image_size = ALIGN(image_size, STRUCT_ALIGNMENT);
 -- 
-Kees Cook
+2.32.0
+
