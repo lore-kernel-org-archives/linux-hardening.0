@@ -2,136 +2,132 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA53C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Mar 2022 18:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96747C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Mar 2022 19:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236496AbiCISvg (ORCPT
+        id S237172AbiCITEV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Mar 2022 13:51:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32950 "EHLO
+        Wed, 9 Mar 2022 14:04:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236924AbiCISvf (ORCPT
+        with ESMTP id S237192AbiCITEU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Mar 2022 13:51:35 -0500
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD1201A41C7
-        for <linux-hardening@vger.kernel.org>; Wed,  9 Mar 2022 10:50:36 -0800 (PST)
-Received: by mail-pg1-x534.google.com with SMTP id q19so2719781pgm.6
-        for <linux-hardening@vger.kernel.org>; Wed, 09 Mar 2022 10:50:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LmBWuji62xMcbSxN3hasm53uq/foQCgG4A7RDdCuhEA=;
-        b=YsD0B8nTyZZLwlk4V33mqLFeE/khuGQj8poFYl9QAQZUtZVqnEMe2uAQxrQmJGFkru
-         kXTYhMEvKJTdaaYLt3tWsHRa4EI+Ek8BkwvP+bXVztKQq+FZ+NSyBdhzBRL80Z57X/oX
-         C4SsPdHzlzc3GsQlWOQ2zBBQDPPxUzNM/JYMY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LmBWuji62xMcbSxN3hasm53uq/foQCgG4A7RDdCuhEA=;
-        b=K+koy9aR3KPJvwJ+zEVN2pUM1/vPxSw9yNKyBn4sTgTDTSr6GYlj0lrKdOLHFEtxI7
-         VdVE7K4DgvYamQG5U36C/JYyHtfqy6jZP0TPYG2VP5bwmXFqfUjwljlmoQSPoU8tslUh
-         jLheKUwNXkMgjzD3zSeKyuYbxA/v/joP+VGpGyEho5RZpiyQEDlDe+Wx2nb2mNcESWym
-         yFkRA001nBeXpFhgVdxf59sULVOxA3ySA228JnaP9WZaVHTLGkZXjgxrNaEEP1hoACX7
-         ddgp+rUCQ8jkva74mwEX4TFaBIlJjDQlT0RT9MjaGBf8PudDuClWanuW/r8118K6dZE6
-         pcpQ==
-X-Gm-Message-State: AOAM531mLT9MT/C/971N11qnWkpFeuwyU/t7diMxZ9DC3APkKkcA3dwk
-        7s1IbwedjH2qIXXHf8uJ2xfF4w==
-X-Google-Smtp-Source: ABdhPJzSLLywDntydW15xHyRFHbQQ/clWq4yqveU2NycAIWeDgwg6HfptJrYQstXlq2+fj1nCGYOtg==
-X-Received: by 2002:a63:1d59:0:b0:380:6a04:89da with SMTP id d25-20020a631d59000000b003806a0489damr902517pgm.9.1646851836164;
-        Wed, 09 Mar 2022 10:50:36 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d11-20020a056a0024cb00b004f725ecf900sm4036390pfv.97.2022.03.09.10.50.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Mar 2022 10:50:35 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Kees Cook <keescook@chromium.org>,
+        Wed, 9 Mar 2022 14:04:20 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8017D127544;
+        Wed,  9 Mar 2022 11:03:16 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 02715B82365;
+        Wed,  9 Mar 2022 19:03:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F8BEC340E8;
+        Wed,  9 Mar 2022 19:03:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1646852593;
+        bh=wOn8Hies7HCzLfAvnQCaSqDPNyXoIclo0vQqj6JYG3k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uA1e9OONv2ENbAsD18d0StlyDCgqJKYPtI6aV2IVlfpPaF+EhE7QTYHxidyNAySdv
+         8kzQifHpplvlI9H6kI+pLhBq3GcW2ySU+VbhsgERJ0KzV4Kdzck2IebYp0ZbfVE5mq
+         B9kz+V7GPruzNc9dqc9Pt8eePI+/osQr/sDjFKKYhY5wg9BitFvlRoQ8p07FuRse/i
+         02vL0NqgSEFoH1dcMGNPG3O01kuA3FJoRVub+IJah4+OVfPfH1B5YP7iZKWNVTxAuS
+         ugJiI0yjRwJZQMXt4LW1DGS4M+kdcVGEjrutQZYktNsPLq/ITknB+hZIvg/KrDSRQf
+         DbFbVn1z0QkEA==
+Date:   Wed, 9 Mar 2022 13:11:43 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Randy Dunlap <rdunlap@infradead.org>,
         linux-mips@vger.kernel.org, kernel test robot <lkp@intel.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] MIPS: boot/compressed: Use array reference for image bounds
-Date:   Wed,  9 Mar 2022 10:50:32 -0800
-Message-Id: <20220309185032.229123-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.32.0
+Subject: Re: [PATCH] MIPS: boot/compressed: Use array reference for image
+ bounds
+Message-ID: <20220309191143.GA2264083@embeddedor>
+References: <20220309185032.229123-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3189; h=from:subject; bh=VIo9E2qUGoV4Cmo8f/F9aHEfX2uAnletay6wwUkPAXw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiKPb42VibsKsjr0HXyMgOKJMCkA5Yp13b4Yzgcert 6dHWVb2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYij2+AAKCRCJcvTf3G3AJjucD/ 4wbt2yweQM/CJfDQiloQJAp0O67CUFaRU7T/QetWWZOkK3PBz1KjwhPzIbH0WD45wZ/Z7aQ0wfTula x/qo/69aDSWW/vtctucH2OqHWA4UYFtMDpki8D8g2TZAqtD4attVM+fdbXpgYe0XFy2zHK0Xo9l9P+ TXnCeg3l7qpFNAVTmzdrvtjvO1b3UONop1yzkxTI+8Mo4SOTGmW3de9T0md6/J8dCcDHOF0RO5hN03 qZxwDBNy+7pYZ4FZBll2NvvqdtCAlmkbleofmr9h2qXYEe2VC2N3UEkw9zwdp4K/KKfNndlohmvKJO qNqxrRaidm0IVl0grG9m1TR7G+Cr12WfwetlEbS8VdCH//i3GV2USpAwofAsFPfgK4gd7855Bk3Xjb vcxzcx680unG6ftaeLJms963OzWa+7DxPStxhXPd38fBqdUom9mMSBJyxdJozJX3uEQ6LuIOpYmVO+ Wln6e7HdJ84FkmxwuxXkv1xF19MQ9YFluagcFJARWIc4R+NPrEBszpkUtfD0JVPC6VUgE8+Hq/jQb+ 7AEuo8tWN0bPZYobufB071WlhDf4cv8ZNiPGNNGgLl/ASoFHuo31ynolImmpQSDQqZy9DDyIjFU7PE dE2JJDb7nbrrwensGvPGjQUZ8uQAl+RpSA/snCYJEahjT1SapwM3EgLPV+7A==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220309185032.229123-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-As done with other image addresses in other architectures, use an
-explicit flexible array instead of "address of char", which can trip
-bounds checking done by the compiler. Found when building with
--Warray-bounds:
+On Wed, Mar 09, 2022 at 10:50:32AM -0800, Kees Cook wrote:
+> As done with other image addresses in other architectures, use an
+> explicit flexible array instead of "address of char", which can trip
+> bounds checking done by the compiler. Found when building with
+> -Warray-bounds:
+> 
+> In file included from ./include/linux/byteorder/little_endian.h:5,
+>                  from ./arch/mips/include/uapi/asm/byteorder.h:15,
+>                  from ./arch/mips/include/asm/bitops.h:21,
+>                  from ./include/linux/bitops.h:33,
+>                  from ./include/linux/kernel.h:22,
+>                  from arch/mips/boot/compressed/decompress.c:13:
+> arch/mips/boot/compressed/decompress.c: In function 'decompress_kernel':
+> ./include/asm-generic/unaligned.h:14:8: warning: array subscript -1 is outside array bounds of 'unsigned char[1]' [-Warray-bounds]
+>    14 |  __pptr->x;        \
+>       |  ~~~~~~^~~
+> ./include/uapi/linux/byteorder/little_endian.h:35:51: note: in definition of macro '__le32_to_cpu'
+>    35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
+>       |                                                   ^
+> ./include/asm-generic/unaligned.h:32:21: note: in expansion of macro '__get_unaligned_t'
+>    32 |  return le32_to_cpu(__get_unaligned_t(__le32, p));
+>       |                     ^~~~~~~~~~~~~~~~~
+> arch/mips/boot/compressed/decompress.c:29:37: note: while referencing '__image_end'
+>    29 | extern unsigned char __image_begin, __image_end;
+>       |                                     ^~~~~~~~~~~
+> 
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: linux-mips@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-In file included from ./include/linux/byteorder/little_endian.h:5,
-                 from ./arch/mips/include/uapi/asm/byteorder.h:15,
-                 from ./arch/mips/include/asm/bitops.h:21,
-                 from ./include/linux/bitops.h:33,
-                 from ./include/linux/kernel.h:22,
-                 from arch/mips/boot/compressed/decompress.c:13:
-arch/mips/boot/compressed/decompress.c: In function 'decompress_kernel':
-./include/asm-generic/unaligned.h:14:8: warning: array subscript -1 is outside array bounds of 'unsigned char[1]' [-Warray-bounds]
-   14 |  __pptr->x;        \
-      |  ~~~~~~^~~
-./include/uapi/linux/byteorder/little_endian.h:35:51: note: in definition of macro '__le32_to_cpu'
-   35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-      |                                                   ^
-./include/asm-generic/unaligned.h:32:21: note: in expansion of macro '__get_unaligned_t'
-   32 |  return le32_to_cpu(__get_unaligned_t(__le32, p));
-      |                     ^~~~~~~~~~~~~~~~~
-arch/mips/boot/compressed/decompress.c:29:37: note: while referencing '__image_end'
-   29 | extern unsigned char __image_begin, __image_end;
-      |                                     ^~~~~~~~~~~
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-mips@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- arch/mips/boot/compressed/decompress.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Thanks
+--
+Gustavo
 
-diff --git a/arch/mips/boot/compressed/decompress.c b/arch/mips/boot/compressed/decompress.c
-index aae1346a509a..5b38a802e101 100644
---- a/arch/mips/boot/compressed/decompress.c
-+++ b/arch/mips/boot/compressed/decompress.c
-@@ -26,7 +26,7 @@ unsigned long free_mem_ptr;
- unsigned long free_mem_end_ptr;
- 
- /* The linker tells us where the image is. */
--extern unsigned char __image_begin, __image_end;
-+extern unsigned char __image_begin[], __image_end[];
- 
- /* debug interfaces  */
- #ifdef CONFIG_DEBUG_ZBOOT
-@@ -91,9 +91,9 @@ void decompress_kernel(unsigned long boot_heap_start)
- {
- 	unsigned long zimage_start, zimage_size;
- 
--	zimage_start = (unsigned long)(&__image_begin);
--	zimage_size = (unsigned long)(&__image_end) -
--	    (unsigned long)(&__image_begin);
-+	zimage_start = (unsigned long)(__image_begin);
-+	zimage_size = (unsigned long)(__image_end) -
-+	    (unsigned long)(__image_begin);
- 
- 	puts("zimage at:     ");
- 	puthex(zimage_start);
-@@ -121,7 +121,7 @@ void decompress_kernel(unsigned long boot_heap_start)
- 		dtb_size = fdt_totalsize((void *)&__appended_dtb);
- 
- 		/* last four bytes is always image size in little endian */
--		image_size = get_unaligned_le32((void *)&__image_end - 4);
-+		image_size = get_unaligned_le32((void *)__image_end - 4);
- 
- 		/* The device tree's address must be properly aligned  */
- 		image_size = ALIGN(image_size, STRUCT_ALIGNMENT);
--- 
-2.32.0
-
+> ---
+>  arch/mips/boot/compressed/decompress.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/mips/boot/compressed/decompress.c b/arch/mips/boot/compressed/decompress.c
+> index aae1346a509a..5b38a802e101 100644
+> --- a/arch/mips/boot/compressed/decompress.c
+> +++ b/arch/mips/boot/compressed/decompress.c
+> @@ -26,7 +26,7 @@ unsigned long free_mem_ptr;
+>  unsigned long free_mem_end_ptr;
+>  
+>  /* The linker tells us where the image is. */
+> -extern unsigned char __image_begin, __image_end;
+> +extern unsigned char __image_begin[], __image_end[];
+>  
+>  /* debug interfaces  */
+>  #ifdef CONFIG_DEBUG_ZBOOT
+> @@ -91,9 +91,9 @@ void decompress_kernel(unsigned long boot_heap_start)
+>  {
+>  	unsigned long zimage_start, zimage_size;
+>  
+> -	zimage_start = (unsigned long)(&__image_begin);
+> -	zimage_size = (unsigned long)(&__image_end) -
+> -	    (unsigned long)(&__image_begin);
+> +	zimage_start = (unsigned long)(__image_begin);
+> +	zimage_size = (unsigned long)(__image_end) -
+> +	    (unsigned long)(__image_begin);
+>  
+>  	puts("zimage at:     ");
+>  	puthex(zimage_start);
+> @@ -121,7 +121,7 @@ void decompress_kernel(unsigned long boot_heap_start)
+>  		dtb_size = fdt_totalsize((void *)&__appended_dtb);
+>  
+>  		/* last four bytes is always image size in little endian */
+> -		image_size = get_unaligned_le32((void *)&__image_end - 4);
+> +		image_size = get_unaligned_le32((void *)__image_end - 4);
+>  
+>  		/* The device tree's address must be properly aligned  */
+>  		image_size = ALIGN(image_size, STRUCT_ALIGNMENT);
+> -- 
+> 2.32.0
+> 
