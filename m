@@ -2,109 +2,63 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C0AC433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Mar 2022 03:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D1EC4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Mar 2022 07:01:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239364AbiCJD4S (ORCPT
+        id S239953AbiCJHCG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Mar 2022 22:56:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43710 "EHLO
+        Thu, 10 Mar 2022 02:02:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239361AbiCJD4S (ORCPT
+        with ESMTP id S239961AbiCJHCF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Mar 2022 22:56:18 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3748412BF64;
-        Wed,  9 Mar 2022 19:55:18 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C311961743;
-        Thu, 10 Mar 2022 03:55:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84A1FC340E8;
-        Thu, 10 Mar 2022 03:55:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646884517;
-        bh=engZAFmljiWxkf2QOD63DeS0UkAeFcOu1WQRuCKqZSk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qkRL/RM9O++DRkjuRBHVgyX2Q1wbvAd4AKcSNV7coSzpz6j5Be9csVOQBeFj8p4Xv
-         8MPaTJ1GiQuflIOQQQ5kxjZtxu3JQpAv6E/D5rq1AL5gqBvG/zQthhoAF+Jwsk6R+6
-         epn9Gjwa3QKVIAG/qGKF5YpPCeMnCNhLUdnpVwVRB2ptxqn1Y663gnzmyYNVJK+/my
-         4fQFL3E0dep0tHaBnNDlX8AtY+VLwqsuSVa19O9vETVZVm1QB5LW4tm6wWoy299wux
-         RZf6j/wdVuoJG/GvpTAem49TUX7nIIfdmEz1IhfiCzbNu0at8wsNeBK0/PbpBkoRyj
-         4o+4isdyhw2Aw==
-Date:   Wed, 9 Mar 2022 22:03:47 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Thu, 10 Mar 2022 02:02:05 -0500
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B435812F434;
+        Wed,  9 Mar 2022 23:00:55 -0800 (PST)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 9ABD468CFE; Thu, 10 Mar 2022 08:00:43 +0100 (CET)
+Date:   Thu, 10 Mar 2022 08:00:41 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Martin Oliveira <martin.oliveira@eideticom.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Zi Yan <ziy@nvidia.com>, Hari Bathini <hbathini@linux.ibm.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 0/8] scsi: aacraid: Replace one-element arrays with
- flexible-array members
-Message-ID: <20220310040347.GA2295236@embeddedor>
-References: <cover.1645513670.git.gustavoars@kernel.org>
+Subject: Re: [PATCH] ARM/dma-mapping: Remove CMA code when not built with
+ CMA
+Message-ID: <20220310070041.GA24874@lst.de>
+References: <20220309175107.195182-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1645513670.git.gustavoars@kernel.org>
+In-Reply-To: <20220309175107.195182-1-keescook@chromium.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi all,
+On Wed, Mar 09, 2022 at 09:51:07AM -0800, Kees Cook wrote:
+> The MAX_CMA_AREAS could be set to 0, which would result in code that would
+> attempt to operate beyond the end of a zero-sized array. If CONFIG_CMA
+> is disabled, just remove this code entirely. Found when building with
+> -Warray-bounds:
+> 
+> arch/arm/mm/dma-mapping.c:396:22: warning: array subscript <unknown> is outside array bounds of 'str
+> uct dma_contig_early_reserve[0]' [-Warray-bounds]
+>   396 |         dma_mmu_remap[dma_mmu_remap_num].size = size;
+>       |         ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+> arch/arm/mm/dma-mapping.c:389:40: note: while referencing 'dma_mmu_remap'
+>   389 | static struct dma_contig_early_reserve dma_mmu_remap[MAX_CMA_AREAS] __initdata;
 
-Friendly ping: who can review or comment on this series, please?
+Looks good:
 
-Thanks
---
-Gustavo
-
-On Tue, Feb 22, 2022 at 01:28:12AM -0600, Gustavo A. R. Silva wrote:
-> This series aims to replace one-element arrays with flexible-array
-> members in multiple structures in drivers/scsi/aacraid/aacraid.h.
-> 
-> There is a regular need in the kernel to provide a way to declare having
-> a dynamically sized set of trailing elements in a structure. Kernel code
-> should always use “flexible array members”[1] for these cases. The older
-> style of one-element or zero-length arrays should no longer be used[2].
-> 
-> This helps with the ongoing efforts to globally enable -Warray-bounds
-> and get us closer to being able to tighten the FORTIFY_SOURCE routines
-> on memcpy().
-> 
-> These issues were found with the help of Coccinelle and audited and fixed,
-> manually.
-> 
-> [1] https://en.wikipedia.org/wiki/Flexible_array_member
-> [2] https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
-> 
-> Link: https://github.com/KSPP/linux/issues/79
-> 
-> Gustavo A. R. Silva (8):
->   scsi: aacraid: Replace one-element array with flexible-array member
->   scsi: aacraid: Replace one-element array with flexible-array member in
->     struct sgmap
->   scsi: aacraid: Replace one-element array with flexible-array member in
->     struct user_sgmap
->   scsi: aacraid: Replace one-element array with flexible-array member in
->     struct sgmap64
->   scsi: aacraid: Replace one-element array with flexible-array member in
->     struct user_sgmap64
->   scsi: aacraid: Replace one-element array with flexible-array member in
->     struct sgmapraw
->   scsi: aacraid: Replace one-element array with flexible-array member in
->     struct user_sgmapraw
->   scsi: aacraid: Replace one-element array with flexible-array member in
->     struct aac_aifcmd
-> 
->  drivers/scsi/aacraid/aachba.c   | 76 +++++++++++----------------------
->  drivers/scsi/aacraid/aacraid.h  | 16 +++----
->  drivers/scsi/aacraid/commctrl.c |  5 +--
->  drivers/scsi/aacraid/comminit.c |  3 +-
->  4 files changed, 37 insertions(+), 63 deletions(-)
-> 
-> -- 
-> 2.27.0
-> 
+Reviewed-by: Christoph Hellwig <hch@lst.de>
