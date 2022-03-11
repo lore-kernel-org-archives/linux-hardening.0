@@ -2,104 +2,78 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85865C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Mar 2022 18:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4249EC433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Mar 2022 02:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235944AbiCJSWI (ORCPT
+        id S1345695AbiCKCri (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Mar 2022 13:22:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36458 "EHLO
+        Thu, 10 Mar 2022 21:47:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233139AbiCJSWH (ORCPT
+        with ESMTP id S239089AbiCKCrh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Mar 2022 13:22:07 -0500
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D972213CA26
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Mar 2022 10:21:04 -0800 (PST)
-Received: by mail-lj1-x232.google.com with SMTP id 25so8940874ljv.10
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Mar 2022 10:21:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sD9b5dOEVi4YerwZzZEJrDOPFq1VY6jiSE0PCEyxRgg=;
-        b=r7hummoukWQUHQwRHPveXhGWj5cTSwRVSJfVXewO0gZHzkDj9Y6MhYYGGcXvbqBAOW
-         lM4E+5uFkjvbOkqFpb3xDmpYiosRUMQS8SoWt5IlgnIjJEWuQ2FueW6QpYPf1LEhh1yr
-         1prCveLoZQchUSKibr8zHJHrIKKTppYmXOvyGy2g2gEoE/TQWvNa7Hp0VGFXIyApeSKN
-         n16R5dEwFRbW/VFLG9N346VJTL0D9NCGtX0nuglXTJW8kN7A063SOx1YzP7uW0YXZ9mx
-         DRn5tZnkIpNVmwb0F5D3lpC9UYOWRhlBtrPQk8hwE3DQFbPZrLlXn7xGATYWxjbXhIr7
-         b5tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sD9b5dOEVi4YerwZzZEJrDOPFq1VY6jiSE0PCEyxRgg=;
-        b=R8/W494qUMLz9brpz34UJKxLtQBzwPQg8b+Yo+X0ydZI83tNASMJL94F7dvSYRLxXp
-         f1LTvLBnY2QNvJZg6gKN0bM3hAUhZzMSjNfdIJY3D2l/1ew7OBFhXrYPPs35Uh86SY1Q
-         HCf2mZ50FHZLfefrFtKpSRq+Yo7igODenwKb4R2aQtyJSIAsCAD70HwZ3lgSKCQgYC6v
-         z6GohqIpyEnuOtIrsoAV2R5cU+6NlUS47HrijpK1NmFnZxkJTtQQrXvsyenhwjDcH1oy
-         4P/+2SOfUNhgBpq41wd7V/yn6Pou2fXqITxEGWZ2fVG95tgPMDEs1F5kxF+lNgmmULgI
-         s3UQ==
-X-Gm-Message-State: AOAM530S1SJr3VBjkNY+eRRIu0VKhYaHUXey0TGuCZfnJn4TWQ/vlBtd
-        FprKR4jKLPI87OKmvBLZWvp5Xi9j35Im2R3/CphKaZAodUCkwg==
-X-Google-Smtp-Source: ABdhPJyK+q8Dvy2o6fMAN7Y1PY4bwm6vcpQjlBaQAUeqmZ+J3aXZO1oD1PTsVbeZ1Aq60b8cZszt8uLh8uySv1qOcRU=
-X-Received: by 2002:a05:651c:1791:b0:243:94bd:d94c with SMTP id
- bn17-20020a05651c179100b0024394bdd94cmr3729199ljb.468.1646936463000; Thu, 10
- Mar 2022 10:21:03 -0800 (PST)
+        Thu, 10 Mar 2022 21:47:37 -0500
+Received: from out30-44.freemail.mail.aliyun.com (out30-44.freemail.mail.aliyun.com [115.124.30.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF2981A41E9;
+        Thu, 10 Mar 2022 18:46:34 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0V6rDYwB_1646966789;
+Received: from 192.168.193.160(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V6rDYwB_1646966789)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 11 Mar 2022 10:46:30 +0800
+Message-ID: <fc2fa0a9-eae8-edc4-f86f-b9056d93ee12@linux.alibaba.com>
+Date:   Thu, 10 Mar 2022 18:46:29 -0800
 MIME-Version: 1.0
-References: <20220309220939.392227-1-keescook@chromium.org> <3bb36a2d506a4b73aefec200d1edd40a@AcuMS.aculab.com>
-In-Reply-To: <3bb36a2d506a4b73aefec200d1edd40a@AcuMS.aculab.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 10 Mar 2022 10:20:51 -0800
-Message-ID: <CAKwvOdkjsNhR8DNRCjEVLibHf0j1WS54m-CSEQpm070h3J7_4g@mail.gmail.com>
-Subject: Re: [PATCH v2] MIPS: Only use current_stack_pointer on GCC
-To:     David Laight <David.Laight@aculab.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Yanteng Si <siyanteng01@gmail.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "llvm@lists.linux.dev" <llvm@lists.linux.dev>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v3 2/2] lkdtm: Add Shadow Call Stack tests
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>
+Cc:     akpm@linux-foundation.org, arnd@arndb.de, catalin.marinas@arm.com,
+        gregkh@linuxfoundation.org, linux@roeck-us.net,
+        luc.vanoostenryck@gmail.com, elver@google.com,
+        mark.rutland@arm.com, masahiroy@kernel.org, ojeda@kernel.org,
+        nathan@kernel.org, npiggin@gmail.com, ndesaulniers@google.com,
+        samitolvanen@google.com, shuah@kernel.org, tglx@linutronix.de,
+        will@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20220303073340.86008-1-ashimida@linux.alibaba.com>
+ <20220303074339.86337-1-ashimida@linux.alibaba.com>
+ <202203031010.0A492D114@keescook> <202203031105.A1B4CAE6@keescook>
+ <92a767c4-09e1-8783-2581-9848bb72890d@linux.alibaba.com>
+ <202203091211.4F00F560@keescook>
+From:   Dan Li <ashimida@linux.alibaba.com>
+In-Reply-To: <202203091211.4F00F560@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Mar 9, 2022 at 2:44 PM David Laight <David.Laight@aculab.com> wrote:
->
-> From: Kees Cook
-> > Sent: 09 March 2022 22:10
-> >
-> > Unfortunately, Clang did not have support for "sp" as a global register
-> > definition, and was crashing after the addition of current_stack_pointer.
-> > This has been fixed in Clang 15, but earlier Clang versions need to
->                                ^^ 14
-
-Yeah, with that fixed:
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
-Once clang-14 is the minimally supported version, we can go back to
-removing the inline asm for everyone.
 
 
-> > avoid this code, so add a versioned test and revert back to the
-> > open-coded asm instances. Fixes Clang build error:
-> >
-> > fatal error: error in backend: Invalid register name global variable
->
->         David
->
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
->
+On 3/9/22 12:16, Kees Cook wrote:
+> On Mon, Mar 07, 2022 at 07:16:36AM -0800, Dan Li wrote:
+>> But currently it still crashes when I try to enable
+>> "-mbranch-protection=pac-ret+leaf+bti".
+>>
+>> Because the address of "&&redirected" is not encrypted under pac,
+>> the autiasp check will fail when set_return_addr returns, and
+>> eventually cause the function to crash when it returns to "&&redirected"
+>> ("&&redirected" as a reserved label always seems to start with a bti j
+>> insn).
+> 
+> Strictly speaking, this is entirely correct. :)
+> 
+>> For lkdtm, if we're going to handle both cases in one function, maybe
+>> it would be better to turn off the -mbranch-protection=pac-ret+leaf+bti
+>> and maybe also turn off -O2 options for the function :)
+> 
+> If we can apply a function attribute to turn off pac for the "does this
+> work without protections", that should be sufficient.
+> 
 
+Got it, will do in the next version :)
 
--- 
 Thanks,
-~Nick Desaulniers
+Dan.
