@@ -2,457 +2,145 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA80C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 22 Mar 2022 14:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B659C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 22 Mar 2022 18:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236581AbiCVOcL (ORCPT
+        id S240764AbiCVSkb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 22 Mar 2022 10:32:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35840 "EHLO
+        Tue, 22 Mar 2022 14:40:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237562AbiCVOcJ (ORCPT
+        with ESMTP id S240778AbiCVSka (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 22 Mar 2022 10:32:09 -0400
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8A9180220;
-        Tue, 22 Mar 2022 07:30:36 -0700 (PDT)
-Received: by mail-qt1-f176.google.com with SMTP id a11so10624099qtb.12;
-        Tue, 22 Mar 2022 07:30:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GKCeCN4v0IIcKH2AYNMKLGWgRkL6/hNyW/oPzIuHTzU=;
-        b=b7Fr2/o5Xtyysbm6K7fWMmyi86+3j3H8CP5ZUlBavLyG1DkXjlN0MTKqF0FwHwxrqP
-         74bpUgimLmC+8jJNMYPRJRp2e+tH4jsIPqJ3KXTy8m+dQpJLtp3Vh4DTTht23JTLbNdx
-         9eMLUTw4g9EHEzymxrXINN4O0FwvSHkBUI38UTzjIDEE/kxsTmx71IKwShUzEhidmu3V
-         1If/yHiF7QPIONGhQrRra4lfGS9J6jlzuFt0HEFJFxMHBCSu6iyd7W7smUPKgi1CQBgO
-         cw2CBqj9k+4lmmK6tzIaVrSQ9WrHshHyCzY8hcOPBnNskmbmBn9vUuguaajILZLRiNrh
-         hwmg==
-X-Gm-Message-State: AOAM530lYCYoxYB+R/PrWSMeQiuGbFo1ockJWUllme2TooqcqnaYJY6y
-        ewsC00u5/Dk7hI3XMqtRw1VZ1q00rlZCFw==
-X-Google-Smtp-Source: ABdhPJxHKbIdXVVBlHvasT/aTeB1TgkxdMnv+UDxAI+rY7CoeMqFdtty0WTIvmC3eFCaE5eQafjChw==
-X-Received: by 2002:a05:622a:82:b0:2e1:d61d:81ec with SMTP id o2-20020a05622a008200b002e1d61d81ecmr20543988qtw.674.1647959434857;
-        Tue, 22 Mar 2022 07:30:34 -0700 (PDT)
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
-        by smtp.gmail.com with ESMTPSA id n8-20020ac85a08000000b002e06aa02021sm14172151qta.49.2022.03.22.07.30.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Mar 2022 07:30:34 -0700 (PDT)
-Received: by mail-yb1-f174.google.com with SMTP id v35so33919698ybi.10;
-        Tue, 22 Mar 2022 07:30:34 -0700 (PDT)
-X-Received: by 2002:a25:45:0:b0:633:96e2:2179 with SMTP id 66-20020a250045000000b0063396e22179mr28023894yba.393.1647959434009;
- Tue, 22 Mar 2022 07:30:34 -0700 (PDT)
+        Tue, 22 Mar 2022 14:40:30 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29C461BEB8;
+        Tue, 22 Mar 2022 11:39:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B6BF0612FC;
+        Tue, 22 Mar 2022 18:39:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87E19C340EC;
+        Tue, 22 Mar 2022 18:39:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647974341;
+        bh=83MxWvJXMMxW++0FlJkhqDhlQdcZsuRg4UGE2d3K+6w=;
+        h=Date:From:To:Cc:Subject:From;
+        b=il+PF/5lDTVALM0N2qoPSMPAqqGIuPjE3GYn6jbjRxPVk21cRep1A/IVxKET0tZXt
+         sok4x4hv+Lh0rwFR3UKK6eWuelqsBJFGzl7qOA2UtFoOPnjgwsArNBNKek24j7c6yF
+         OSZ2y7T7z/AuvmoYvDYfjT0ZQrj+sRjLGfCkjH9rccfZQll7np7/Mi+KWyQGwzEeUP
+         9KtwvNggDbbr20wGckoy0tkAvpT20UFRuDV8S2rN8vE2dYJwo8sRmaXjrMS2diN5Hk
+         oRPSNtCtdgeFMw8jeUtq9Rckgu8yIa1AgXa5OsE9ZLabnmWbYoU59DZ1JCP8IvZNXi
+         6+3RcNzP/PHpg==
+Date:   Tue, 22 Mar 2022 13:48:02 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [GIT PULL] flexible-array transformations for 5.18-rc1
+Message-ID: <20220322184802.GA2533969@embeddedor>
 MIME-Version: 1.0
-References: <20220224055145.1853657-1-keescook@chromium.org>
-In-Reply-To: <20220224055145.1853657-1-keescook@chromium.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 22 Mar 2022 15:30:22 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdX_g1tbiUL9PUQdqaegrEzCNN3GtbSvSBFYAL4TzvstFg@mail.gmail.com>
-Message-ID: <CAMuHMdX_g1tbiUL9PUQdqaegrEzCNN3GtbSvSBFYAL4TzvstFg@mail.gmail.com>
-Subject: Re: [PATCH] lib: stackinit: Convert to KUnit
-To:     Kees Cook <keescook@chromium.org>
-Cc:     David Gow <davidgow@google.com>,
-        Daniel Latypov <dlatypov@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
+The following changes since commit 26291c54e111ff6ba87a164d85d4a4e134b7315c:
 
-On Thu, Feb 24, 2022 at 9:12 AM Kees Cook <keescook@chromium.org> wrote:
-> Convert to running under Kunit (and retain being able to run stand-alone
-> too). Building under Clang (or GCC 12) with CONFIG_INIT_STACK_ALL_ZERO=y,
-> this now passes as expected:
->
-> $ ./tools/testing/kunit/kunit.py config --make_option LLVM=1
-> $ ./tools/testing/kunit/kunit.py run overflow --make_option LLVM=1 \
->         --kconfig_add CONFIG_INIT_STACK_ALL_ZERO=y
-> ...
+  Linux 5.17-rc2 (2022-01-30 15:37:07 +0200)
 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+are available in the Git repository at:
 
-Thanks for your patch, which is now commit 02788ebcf521fe78 ("lib:
-stackinit: Convert to KUnit") upstream.
+  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/flexible-array-transformations-5.18-rc1
 
-Out of curiosity, I gave this a try on m68k, and it still seems to
-fail the same way of before[1]:
+for you to fetch changes up to 5224f79096170bf7b92cc8fe42a12f44b91e5f62:
 
-    # Subtest: stackinit
-    1..65
-    # test_u8_zero: ASSERTION FAILED at lib/stackinit_kunit.c:333
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
+  treewide: Replace zero-length arrays with flexible-array members (2022-02-17 07:00:39 -0600)
 
-stack fill missed target!? (fill 1 wide, target offset by 16)
-    not ok 1 - test_u8_zero
-    # test_u16_zero: ASSERTION FAILED at lib/stackinit_kunit.c:333
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
+----------------------------------------------------------------
+flexible-array transformations for 5.18-rc1
 
-stack fill missed target!? (fill 2 wide, target offset by 16)
-    not ok 2 - test_u16_zero
-    # test_u32_zero: ASSERTION FAILED at lib/stackinit_kunit.c:333
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
+Hi Linus,
 
-stack fill missed target!? (fill 4 wide, target offset by 16)
-    not ok 3 - test_u32_zero
-    # test_u64_zero: ASSERTION FAILED at lib/stackinit_kunit.c:333
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
+Please, pull the following treewide patch that replaces zero-length arrays with
+flexible-array members. This patch has been baking in linux-next for a
+whole development cycle.
 
-stack fill missed target!? (fill 8 wide, target offset by 16)
-    not ok 4 - test_u64_zero
-    # test_char_array_zero: ASSERTION FAILED at lib/stackinit_kunit.c:333
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 16 wide, target offset by 16)
-    not ok 5 - test_char_array_zero
-    # test_small_hole_zero: ASSERTION FAILED at lib/stackinit_kunit.c:334
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 6 - test_small_hole_zero
-    # test_big_hole_zero: ASSERTION FAILED at lib/stackinit_kunit.c:334
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 128 wide, target offset by 64)
-    not ok 7 - test_big_hole_zero
-    # test_trailing_hole_zero: ASSERTION FAILED at lib/stackinit_kunit.c:334
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 8 - test_trailing_hole_zero
-    # test_packed_zero: ASSERTION FAILED at lib/stackinit_kunit.c:334
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 16 wide, target offset by 16)
-    not ok 9 - test_packed_zero
-    # test_small_hole_dynamic_partial: ASSERTION FAILED at
-lib/stackinit_kunit.c:337
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 10 - test_small_hole_dynamic_partial
-    ok 11 - test_big_hole_dynamic_partial
-    # test_trailing_hole_dynamic_partial: ASSERTION FAILED at
-lib/stackinit_kunit.c:337
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 12 - test_trailing_hole_dynamic_partial
-    # test_packed_dynamic_partial: ASSERTION FAILED at lib/stackinit_kunit.c:337
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 16 wide, target offset by 16)
-    not ok 13 - test_packed_dynamic_partial
-    # test_small_hole_assigned_dynamic_partial: ASSERTION FAILED at
-lib/stackinit_kunit.c:340
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 14 - test_small_hole_assigned_dynamic_partial
-    ok 15 - test_big_hole_assigned_dynamic_partial
-    # test_trailing_hole_assigned_dynamic_partial: ASSERTION FAILED at
-lib/stackinit_kunit.c:340
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 16 - test_trailing_hole_assigned_dynamic_partial
-    # test_packed_assigned_dynamic_partial: ASSERTION FAILED at
-lib/stackinit_kunit.c:340
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 16 wide, target offset by 16)
-    not ok 17 - test_packed_assigned_dynamic_partial
-    # test_small_hole_static_partial: ASSERTION FAILED at
-lib/stackinit_kunit.c:336
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 18 - test_small_hole_static_partial
-    ok 19 - test_big_hole_static_partial
-    # test_trailing_hole_static_partial: ASSERTION FAILED at
-lib/stackinit_kunit.c:336
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 20 - test_trailing_hole_static_partial
-    # test_packed_static_partial: ASSERTION FAILED at lib/stackinit_kunit.c:336
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 16 wide, target offset by 16)
-    not ok 21 - test_packed_static_partial
-    # test_small_hole_static_all: ASSERTION FAILED at lib/stackinit_kunit.c:336
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 22 - test_small_hole_static_all
-    ok 23 - test_big_hole_static_all
-    # test_trailing_hole_static_all: ASSERTION FAILED at
-lib/stackinit_kunit.c:336
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 24 - test_trailing_hole_static_all
-    # test_packed_static_all: ASSERTION FAILED at lib/stackinit_kunit.c:336
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 16 wide, target offset by 16)
-    not ok 25 - test_packed_static_all
-    # test_small_hole_dynamic_all: ASSERTION FAILED at lib/stackinit_kunit.c:337
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 26 - test_small_hole_dynamic_all
-    ok 27 - test_big_hole_dynamic_all # SKIP XFAIL uninit bytes: 124
-    # test_trailing_hole_dynamic_all: ASSERTION FAILED at
-lib/stackinit_kunit.c:337
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 28 - test_trailing_hole_dynamic_all
-    # test_packed_dynamic_all: ASSERTION FAILED at lib/stackinit_kunit.c:337
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 16 wide, target offset by 16)
-    not ok 29 - test_packed_dynamic_all
-    # test_small_hole_runtime_partial: ASSERTION FAILED at
-lib/stackinit_kunit.c:338
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 30 - test_small_hole_runtime_partial
-    ok 31 - test_big_hole_runtime_partial # SKIP XFAIL uninit bytes: 127
-    # test_trailing_hole_runtime_partial: ASSERTION FAILED at
-lib/stackinit_kunit.c:338
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 32 - test_trailing_hole_runtime_partial
-    # test_packed_runtime_partial: ASSERTION FAILED at lib/stackinit_kunit.c:338
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 16 wide, target offset by 16)
-    not ok 33 - test_packed_runtime_partial
-    # test_small_hole_runtime_all: ASSERTION FAILED at lib/stackinit_kunit.c:338
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 34 - test_small_hole_runtime_all
-    ok 35 - test_big_hole_runtime_all # SKIP XFAIL uninit bytes: 124
-    # test_trailing_hole_runtime_all: ASSERTION FAILED at
-lib/stackinit_kunit.c:338
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 36 - test_trailing_hole_runtime_all
-    # test_packed_runtime_all: ASSERTION FAILED at lib/stackinit_kunit.c:338
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 16 wide, target offset by 16)
-    not ok 37 - test_packed_runtime_all
-    # test_small_hole_assigned_static_partial: ASSERTION FAILED at
-lib/stackinit_kunit.c:339
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 38 - test_small_hole_assigned_static_partial
-    ok 39 - test_big_hole_assigned_static_partial
-    # test_trailing_hole_assigned_static_partial: ASSERTION FAILED at
-lib/stackinit_kunit.c:339
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 40 - test_trailing_hole_assigned_static_partial
-    # test_packed_assigned_static_partial: ASSERTION FAILED at
-lib/stackinit_kunit.c:339
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 16 wide, target offset by 16)
-    not ok 41 - test_packed_assigned_static_partial
-    # test_small_hole_assigned_static_all: ASSERTION FAILED at
-lib/stackinit_kunit.c:339
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 42 - test_small_hole_assigned_static_all
-    ok 43 - test_big_hole_assigned_static_all
-    # test_trailing_hole_assigned_static_all: ASSERTION FAILED at
-lib/stackinit_kunit.c:339
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 44 - test_trailing_hole_assigned_static_all
-    # test_packed_assigned_static_all: ASSERTION FAILED at
-lib/stackinit_kunit.c:339
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 16 wide, target offset by 16)
-    not ok 45 - test_packed_assigned_static_all
-    # test_small_hole_assigned_dynamic_all: ASSERTION FAILED at
-lib/stackinit_kunit.c:340
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 46 - test_small_hole_assigned_dynamic_all
-    ok 47 - test_big_hole_assigned_dynamic_all # SKIP XFAIL uninit bytes: 124
-    # test_trailing_hole_assigned_dynamic_all: ASSERTION FAILED at
-lib/stackinit_kunit.c:340
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 48 - test_trailing_hole_assigned_dynamic_all
-    # test_packed_assigned_dynamic_all: ASSERTION FAILED at
-lib/stackinit_kunit.c:340
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 16 wide, target offset by 16)
-    not ok 49 - test_packed_assigned_dynamic_all
-    # test_small_hole_assigned_copy: ASSERTION FAILED at
-lib/stackinit_kunit.c:341
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 50 - test_small_hole_assigned_copy
-    ok 51 - test_big_hole_assigned_copy # SKIP XFAIL uninit bytes: 124
-    # test_trailing_hole_assigned_copy: ASSERTION FAILED at
-lib/stackinit_kunit.c:341
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 52 - test_trailing_hole_assigned_copy
-    # test_packed_assigned_copy: ASSERTION FAILED at lib/stackinit_kunit.c:341
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 16 wide, target offset by 16)
-    not ok 53 - test_packed_assigned_copy
-    # test_u8_none: ASSERTION FAILED at lib/stackinit_kunit.c:343
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 1 wide, target offset by 16)
-    not ok 54 - test_u8_none
-    # test_u16_none: ASSERTION FAILED at lib/stackinit_kunit.c:343
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 2 wide, target offset by 16)
-    not ok 55 - test_u16_none
-    # test_u32_none: ASSERTION FAILED at lib/stackinit_kunit.c:343
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 4 wide, target offset by 16)
-    not ok 56 - test_u32_none
-    # test_u64_none: ASSERTION FAILED at lib/stackinit_kunit.c:343
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 8 wide, target offset by 16)
-    not ok 57 - test_u64_none
-    # test_char_array_none: ASSERTION FAILED at lib/stackinit_kunit.c:343
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 16 wide, target offset by 4)
-    not ok 58 - test_char_array_none
-    # test_switch_1_none: ASSERTION FAILED at lib/stackinit_kunit.c:409
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 80 wide, target offset by 16)
-    not ok 59 - test_switch_1_none
-    # test_switch_2_none: ASSERTION FAILED at lib/stackinit_kunit.c:410
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 80 wide, target offset by 16)
-    not ok 60 - test_switch_2_none
-    # test_small_hole_none: ASSERTION FAILED at lib/stackinit_kunit.c:344
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 61 - test_small_hole_none
-    ok 62 - test_big_hole_none # SKIP XFAIL uninit bytes: 128
-    # test_trailing_hole_none: ASSERTION FAILED at lib/stackinit_kunit.c:344
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 63 - test_trailing_hole_none
-    # test_packed_none: ASSERTION FAILED at lib/stackinit_kunit.c:344
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 16 wide, target offset by 16)
-    not ok 64 - test_packed_none
-    # test_user: ASSERTION FAILED at lib/stackinit_kunit.c:346
-    Expected range_contains(fill_start, fill_size, target_start,
-target_size) to be true, but is false
-
-stack fill missed target!? (fill 14 wide, target offset by 16)
-    not ok 65 - test_user
-# stackinit: pass:6 fail:53 skip:6 total:65
-# Totals: pass:6 fail:53 skip:6 total:65
-not ok 1 - stackinit
-
-[1] https://lore.kernel.org/r/CAMuHMdW6N40+0gGQ+LSrN64Mo4A0-ELAm0pR3gWQ0mNanyBuUQ@mail.gmail.com
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+Thanks
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Gustavo
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+----------------------------------------------------------------
+Gustavo A. R. Silva (1):
+      treewide: Replace zero-length arrays with flexible-array members
+
+ arch/alpha/include/asm/hwrpb.h                       |  2 +-
+ arch/ia64/include/asm/sal.h                          |  2 +-
+ arch/s390/include/asm/ccwgroup.h                     |  2 +-
+ arch/s390/include/asm/chsc.h                         |  2 +-
+ arch/s390/include/asm/eadm.h                         |  2 +-
+ arch/s390/include/asm/fcx.h                          |  4 ++--
+ arch/s390/include/asm/idals.h                        |  2 +-
+ arch/s390/include/asm/sclp.h                         |  2 +-
+ arch/s390/include/asm/sysinfo.h                      |  6 +++---
+ arch/sh/include/asm/thread_info.h                    |  2 +-
+ arch/sparc/include/asm/vio.h                         | 10 +++++-----
+ arch/um/include/shared/net_kern.h                    |  2 +-
+ arch/x86/include/asm/microcode_amd.h                 |  2 +-
+ arch/x86/include/asm/microcode_intel.h               |  4 ++--
+ arch/x86/include/asm/pci.h                           |  2 +-
+ arch/x86/include/asm/pci_x86.h                       |  2 +-
+ arch/xtensa/include/asm/bootparam.h                  |  2 +-
+ drivers/crypto/caam/pdb.h                            |  2 +-
+ drivers/gpu/drm/i915/gt/uc/intel_guc_ads.c           |  2 +-
+ drivers/gpu/drm/nouveau/include/nvfw/hs.h            |  2 +-
+ drivers/hwtracing/coresight/coresight-config.h       |  2 +-
+ drivers/misc/bcm-vk/bcm_vk.h                         |  2 +-
+ drivers/misc/habanalabs/include/common/cpucp_if.h    |  6 +++---
+ .../misc/habanalabs/include/gaudi/gaudi_packets.h    |  4 ++--
+ drivers/misc/habanalabs/include/goya/goya_packets.h  |  4 ++--
+ drivers/net/ethernet/freescale/enetc/enetc_hw.h      |  2 +-
+ drivers/net/ethernet/i825xx/sun3_82586.h             |  2 +-
+ drivers/net/ethernet/marvell/octeontx2/af/npc.h      |  6 +++---
+ drivers/net/ethernet/qlogic/qed/qed_mfw_hsi.h        |  2 +-
+ drivers/net/ethernet/ti/davinci_mdio.c               |  2 +-
+ drivers/scsi/dpt/dpti_i2o.h                          |  2 +-
+ drivers/scsi/elx/libefc_sli/sli4.h                   | 20 ++++++++++----------
+ drivers/scsi/mpi3mr/mpi3mr.h                         |  2 +-
+ drivers/scsi/qla2xxx/qla_bsg.h                       |  4 ++--
+ drivers/scsi/qla2xxx/qla_def.h                       |  2 +-
+ drivers/scsi/qla2xxx/qla_edif_bsg.h                  |  4 ++--
+ drivers/scsi/qla2xxx/qla_fw.h                        |  2 +-
+ drivers/scsi/qla4xxx/ql4_fw.h                        |  2 +-
+ drivers/staging/r8188eu/include/rtw_cmd.h            | 10 +++++-----
+ drivers/staging/rtl8712/rtl871x_cmd.h                |  8 ++++----
+ drivers/staging/rtl8723bs/include/ieee80211.h        |  2 +-
+ drivers/staging/rtl8723bs/include/rtw_cmd.h          |  2 +-
+ .../vc04_services/include/linux/raspberrypi/vchiq.h  |  2 +-
+ drivers/visorbus/vbuschannel.h                       |  2 +-
+ fs/cifs/ntlmssp.h                                    |  2 +-
+ fs/ext4/fast_commit.h                                |  4 ++--
+ fs/ksmbd/ksmbd_netlink.h                             |  2 +-
+ fs/ksmbd/ntlmssp.h                                   |  6 +++---
+ fs/ksmbd/smb2pdu.h                                   |  8 ++++----
+ fs/ksmbd/transport_rdma.c                            |  2 +-
+ fs/ksmbd/xattr.h                                     |  2 +-
+ fs/xfs/scrub/attr.h                                  |  2 +-
+ include/asm-generic/tlb.h                            |  4 ++--
+ include/linux/greybus/greybus_manifest.h             |  4 ++--
+ include/linux/greybus/hd.h                           |  2 +-
+ include/linux/greybus/module.h                       |  2 +-
+ include/linux/i3c/ccc.h                              |  6 +++---
+ include/linux/platform_data/brcmfmac.h               |  2 +-
+ include/linux/platform_data/cros_ec_commands.h       |  2 +-
+ include/net/bluetooth/mgmt.h                         |  2 +-
+ include/net/ioam6.h                                  |  2 +-
+ include/sound/sof/channel_map.h                      |  4 ++--
+ scripts/dtc/libfdt/fdt.h                             |  4 ++--
+ sound/soc/intel/atom/sst-mfld-dsp.h                  |  4 ++--
+ sound/soc/intel/skylake/skl-topology.h               |  2 +-
+ tools/lib/perf/include/perf/event.h                  |  2 +-
+ 66 files changed, 111 insertions(+), 111 deletions(-)
