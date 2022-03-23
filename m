@@ -2,224 +2,127 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20098C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 23 Mar 2022 02:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A940C4332F
+	for <linux-hardening@archiver.kernel.org>; Wed, 23 Mar 2022 15:40:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231467AbiCWCSB (ORCPT
+        id S238053AbiCWPmC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 22 Mar 2022 22:18:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58804 "EHLO
+        Wed, 23 Mar 2022 11:42:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241166AbiCWCR6 (ORCPT
+        with ESMTP id S234688AbiCWPmC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 22 Mar 2022 22:17:58 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8CFD70065
-        for <linux-hardening@vger.kernel.org>; Tue, 22 Mar 2022 19:16:29 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id j13so258663plj.8
-        for <linux-hardening@vger.kernel.org>; Tue, 22 Mar 2022 19:16:29 -0700 (PDT)
+        Wed, 23 Mar 2022 11:42:02 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69F083B575
+        for <linux-hardening@vger.kernel.org>; Wed, 23 Mar 2022 08:40:32 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id o23so1403740pgk.13
+        for <linux-hardening@vger.kernel.org>; Wed, 23 Mar 2022 08:40:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20210112.gappssmtp.com; s=20210112;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CgTLARXl73a8vMc6tpwfKmduohAy7WyurFsoKnNWgu0=;
-        b=2sfQEpK7D1SE5ouqsUhkZLTMHqUMSnKCN/2E9JN22jvFu5ovcsx4bCza0m4OeTzada
-         7GdZ0tJntehuzgc9DlOxEvddk0dmAo07SMfwmI9cyEtnj4x00eORC20VyAAVj7is+nZ3
-         D1PymTuxfK5QhA5V0zWjLGwtQ6XYNKBbr57OUK6+SqWbPUL88piEVQpOg6YwNJ0LwKtU
-         dXEEN0Sy0stqP0BMLwHwNrHQTxlasB+dkIj1LUs/6YYLT0A5r7Csgp11woy/b6d3EYF/
-         V1OEIbkBU2gAva+y70OtK3bApQyRcVS/zsOho9TXC7CKUyQyb2MJrcdPjxr1YoyDUyH9
-         A3fQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tZzHA745yMNG0CGi0w7nKGLCvOOf60jkvqsbdnRb89M=;
+        b=iNLTx1MkU692XhbU/pjEg6oXIWD15fomaPRZ4oW3JJzH3KzlvOHBxqYr3RP16I8BsM
+         PQB/aJJCoSn3Bf5C0iUtZUgR/DiaO2QauRmpfS9c/26CRq2dWzEV6G+MzRR7m7sDBrA9
+         9I1dVEv+ES/8kqvSV10MRviLD3mH5S69ZCr5k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=CgTLARXl73a8vMc6tpwfKmduohAy7WyurFsoKnNWgu0=;
-        b=iCvB8Z5Ym0ynx58F32wXe0PUzKSUqFYLH5FpWNap4Ez2uYxDmImg4j/pYWsFrDdWRG
-         ocVAker1qScdan9WN4idhAD7jFsgSEBxZNFz5CD30UsJ5u27ZujSq37NdrSouNk+v48o
-         b1DJ5ZiNjtE5mOpSovFvVJRQ4kCWS1y0vQW/8A9RIJlUJOd+I/Tl7An3vwfNKZS7PS2O
-         qM3eHb58BSsvXLTBwHvY3XdEdWYVVB0e7X1wwTSWBBjhqBsRFvPWtr6LfCXHJVGW1kXQ
-         2oU2BvIjJTlOMaN3hNX8RyoSu2j0dGIR5PRh5yrBtfd422SWv9rGNyONsauDF4hhWYbY
-         T7Tg==
-X-Gm-Message-State: AOAM530QQ7sJV7RqJ3G+qlGQgOuatoXpvfGXSSo4HeZPxGH3qwbzb+9J
-        RXJhVl5+qw94/hKvo91yQL+hww==
-X-Google-Smtp-Source: ABdhPJzgotRXjhQP3kW38oz7JB3aavGYXp1ugUbmpS1C6w8P28iC2PwkqLg34Gbv+Rx/a6wGjk9rqg==
-X-Received: by 2002:a17:90b:4f8c:b0:1c7:2217:e980 with SMTP id qe12-20020a17090b4f8c00b001c72217e980mr8540720pjb.17.1648001789309;
-        Tue, 22 Mar 2022 19:16:29 -0700 (PDT)
-Received: from localhost ([12.3.194.138])
-        by smtp.gmail.com with ESMTPSA id 16-20020a17090a199000b001bf4b1b268bsm3819263pji.44.2022.03.22.19.16.28
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tZzHA745yMNG0CGi0w7nKGLCvOOf60jkvqsbdnRb89M=;
+        b=K6gvffU5W4oEw6lpijIYf9tEYRyGsl7dlAma/ePGqxvkca02iqmFJudON0r/p7H//7
+         CUqlnIp+JelZ6LpWwPd+MA8WZcf/PUb4M4iRj7qmEsLArw4gJM20NVSz3Blt0wa0PbnN
+         HH4TX/ZElqa3F7KT1uHsm44MqArfBdcfN2vDL/VW0xKpAFpD8fKeJuLNZMK8EP1cgGtd
+         3Vcm8evPHrqvRcfjHWPADjmp8ev4XDESJnwED9sx7ogQIXu4b9Tn/Z82JKgvZtP1+Kia
+         vfbyiR0OarICkBnID2fsxEK9Mouvj9JVdhWV7BzvEfXmB0oVZy6pLuSH7I7H5HBON+Iq
+         tZrw==
+X-Gm-Message-State: AOAM530D60oLYFB0ssljjdsULo/GlJ7rvfjy1Tk58LI9OwV/Ux3z14TE
+        qjLNkjMOLGQ0aTJZTaOLM8hYuQ==
+X-Google-Smtp-Source: ABdhPJw3iGwMMA64SlcWNC/iNJPMHMmKHCz1X+Poh60YG/Rm403iC+8KBQtxt/XL7udZyTinHEg8vw==
+X-Received: by 2002:aa7:91d5:0:b0:4fa:6d3c:55d9 with SMTP id z21-20020aa791d5000000b004fa6d3c55d9mr544396pfa.41.1648050031778;
+        Wed, 23 Mar 2022 08:40:31 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 2-20020a620502000000b004f6d2975cbesm304447pff.116.2022.03.23.08.40.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Mar 2022 19:16:28 -0700 (PDT)
-Date:   Tue, 22 Mar 2022 19:16:28 -0700 (PDT)
-X-Google-Original-Date: Tue, 22 Mar 2022 19:16:25 PDT (-0700)
-Subject:     Re: [PATCH] riscv: Rename "sp_in_global" to "current_stack_pointer"
-In-Reply-To: <20220224060411.1855683-1-keescook@chromium.org>
-CC:     Paul Walmsley <paul.walmsley@sifive.com>, keescook@chromium.org,
-        aou@eecs.berkeley.edu, peterz@infradead.org, jszhang@kernel.org,
-        geert@linux-m68k.org, mark.rutland@arm.com, chenhuang5@huawei.com,
-        linux-riscv@lists.infradead.org, wangkefeng.wang@huawei.com,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     keescook@chromium.org
-Message-ID: <mhng-00315cbb-3685-4918-8ea0-539cda5fbc36@palmer-ri-x1c9>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Wed, 23 Mar 2022 08:40:31 -0700 (PDT)
+Date:   Wed, 23 Mar 2022 08:40:30 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     kernel test robot <oliver.sang@intel.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        lkp@intel.com, "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org
+Subject: Re: [scsi]  6aded12b10: kernel_BUG_at_mm/usercopy.c
+Message-ID: <202203230809.D63BF9511@keescook>
+References: <20220320143453.GD6208@xsang-OptiPlex-9020>
+ <20220323071409.GA25480@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220323071409.GA25480@lst.de>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 23 Feb 2022 22:04:11 PST (-0800), keescook@chromium.org wrote:
-> To follow the existing per-arch conventions, rename "sp_in_global" to
-> "current_stack_pointer". This will let it be used in non-arch places
-> (like HARDENED_USERCOPY).
->
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> Cc: Albert Ou <aou@eecs.berkeley.edu>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Jisheng Zhang <jszhang@kernel.org>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Chen Huang <chenhuang5@huawei.com>
-> Cc: linux-riscv@lists.infradead.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/riscv/Kconfig               | 1 +
->  arch/riscv/include/asm/current.h | 2 ++
->  arch/riscv/kernel/stacktrace.c   | 4 +---
->  3 files changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 5adcbd9b5e88..b120c32697af 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -16,6 +16,7 @@ config RISCV
->  	select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATION
->  	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
->  	select ARCH_HAS_BINFMT_FLAT
-> +	select ARCH_HAS_CURRENT_STACK_POINTER
->  	select ARCH_HAS_DEBUG_VM_PGTABLE
->  	select ARCH_HAS_DEBUG_VIRTUAL if MMU
->  	select ARCH_HAS_DEBUG_WX
-> diff --git a/arch/riscv/include/asm/current.h b/arch/riscv/include/asm/current.h
-> index 1de233d8e8de..21774d868c65 100644
-> --- a/arch/riscv/include/asm/current.h
-> +++ b/arch/riscv/include/asm/current.h
-> @@ -33,6 +33,8 @@ static __always_inline struct task_struct *get_current(void)
->
->  #define current get_current()
->
-> +register unsigned long current_stack_pointer __asm__("sp");
-> +
->  #endif /* __ASSEMBLY__ */
->
->  #endif /* _ASM_RISCV_CURRENT_H */
-> diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-> index 201ee206fb57..278380e2e956 100644
-> --- a/arch/riscv/kernel/stacktrace.c
-> +++ b/arch/riscv/kernel/stacktrace.c
-> @@ -14,8 +14,6 @@
->
->  #include <asm/stacktrace.h>
->
-> -register unsigned long sp_in_global __asm__("sp");
-> -
->  #ifdef CONFIG_FRAME_POINTER
->
->  void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
-> @@ -77,7 +75,7 @@ void notrace walk_stackframe(struct task_struct *task,
->  		sp = user_stack_pointer(regs);
->  		pc = instruction_pointer(regs);
->  	} else if (task == NULL || task == current) {
-> -		sp = sp_in_global;
-> +		sp = current_stack_pointer;
->  		pc = (unsigned long)walk_stackframe;
->  	} else {
->  		/* task blocked in __switch_to */
+On Wed, Mar 23, 2022 at 08:14:10AM +0100, Christoph Hellwig wrote:
+> The actual warning is;
+> 
+> [   34.496096][  T331] usercopy: Kernel memory overwrite attempt detected to spans multiple pages (off set 0, size 6)!
+> 
+> This is for the cmnd field in struct scsi_cmnd, which is allocated by
+> the block layer as part of the request allocator.  So with a specific
+> packing it can legitimately span pages.
+> 
+> Kees: how can we annotate that this is ok?
 
-Sorry to be slow on this one.  This looks good, but another use of 
-sp_in_global snuck into fixes and I don't merge fixes into for-next so 
-that makes this a bit of a headache.
+The main problem is that CONFIG_HARDENED_USERCOPY_PAGESPAN=y is broken
+(and nothing should be setting it).
 
-There's a bunch of stuff in flight, so I'm going to hold off on this 
-until after my first week's merge window PR.  I intend on merging the 
-following, which is at palmer/riscv-sp for now (I'll probably just 
-cherry-pick that, I usually start basing stuff on Linus' merge of my PR 
-and just cherry-pick in single patches).
+This series removes it:
+https://lore.kernel.org/linux-hardening/20220110231530.665970-1-willy@infradead.org/
 
-   commit 7c4f6bb6fb352cfa6028191c2888356b9157a332
-   gpg: Signature made Tue 22 Mar 2022 11:12:19 AM PDT
-   gpg:                using RSA key 2B3C3747446843B24A943A7A2E1319F35FBB1889
-   gpg:                issuer "palmer@dabbelt.com"
-   gpg: Good signature from "Palmer Dabbelt <palmer@dabbelt.com>" [ultimate]
-   gpg:                 aka "Palmer Dabbelt <palmer@rivosinc.com>" [ultimate]
-   Author: Kees Cook <keescook@chromium.org>
-   Date:   Wed Feb 23 22:04:11 2022 -0800
-   
-       riscv: Rename "sp_in_global" to "current_stack_pointer"
-   
-       To follow the existing per-arch conventions, rename "sp_in_global" to
-       "current_stack_pointer". This will let it be used in non-arch places
-       (like HARDENED_USERCOPY).
-   
-       Signed-off-by: Kees Cook <keescook@chromium.org>
-       Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
-   
-   diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-   index 5adcbd9b5e88..b120c32697af 100644
-   --- a/arch/riscv/Kconfig
-   +++ b/arch/riscv/Kconfig
-   @@ -16,6 +16,7 @@ config RISCV
-    	select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATION
-    	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
-    	select ARCH_HAS_BINFMT_FLAT
-   +	select ARCH_HAS_CURRENT_STACK_POINTER
-    	select ARCH_HAS_DEBUG_VM_PGTABLE
-    	select ARCH_HAS_DEBUG_VIRTUAL if MMU
-    	select ARCH_HAS_DEBUG_WX
-   diff --git a/arch/riscv/include/asm/current.h b/arch/riscv/include/asm/current.h
-   index 1de233d8e8de..21774d868c65 100644
-   --- a/arch/riscv/include/asm/current.h
-   +++ b/arch/riscv/include/asm/current.h
-   @@ -33,6 +33,8 @@ static __always_inline struct task_struct *get_current(void)
-   
-    #define current get_current()
-   
-   +register unsigned long current_stack_pointer __asm__("sp");
-   +
-    #endif /* __ASSEMBLY__ */
-   
-    #endif /* _ASM_RISCV_CURRENT_H */
-   diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-   index 14d2b53ec322..08d11a53f39e 100644
-   --- a/arch/riscv/kernel/stacktrace.c
-   +++ b/arch/riscv/kernel/stacktrace.c
-   @@ -14,8 +14,6 @@
-   
-    #include <asm/stacktrace.h>
-   
-   -register unsigned long sp_in_global __asm__("sp");
-   -
-    #ifdef CONFIG_FRAME_POINTER
-   
-    void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
-   @@ -30,7 +28,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
-    		pc = instruction_pointer(regs);
-    	} else if (task == NULL || task == current) {
-    		fp = (unsigned long)__builtin_frame_address(0);
-   -		sp = sp_in_global;
-   +		sp = current_stack_pointer;
-    		pc = (unsigned long)walk_stackframe;
-    	} else {
-    		/* task blocked in __switch_to */
-   @@ -78,7 +76,7 @@ void notrace walk_stackframe(struct task_struct *task,
-    		sp = user_stack_pointer(regs);
-    		pc = instruction_pointer(regs);
-    	} else if (task == NULL || task == current) {
-   -		sp = sp_in_global;
-   +		sp = current_stack_pointer;
-    		pc = (unsigned long)walk_stackframe;
-    	} else {
-    		/* task blocked in __switch_to */
-   
-Thanks!
+Matthew, what's the status of that series? Will it make the current
+merge window?
+
+As for the SCSI changes, I'm a bit worried about type confusion, as I
+don't see anything actually validating types/sizes when converting:
+
+static inline void *blk_mq_rq_to_pdu(struct request *rq)
+{
+        return rq + 1;
+}
+
+But I guess that ship has sailed. :P
+
+Regardless, I'm concerned that disabling PAGESPAN will just uncover
+further checks, though. Where is allocation happening? The check is here:
+
+static int scsi_fill_sghdr_rq(struct scsi_device *sdev, struct request *rq,
+                struct sg_io_hdr *hdr, fmode_t mode)
+{
+        struct scsi_cmnd *scmd = blk_mq_rq_to_pdu(rq);
+
+        if (hdr->cmd_len < 6)
+                return -EMSGSIZE;
+        if (copy_from_user(scmd->cmnd, hdr->cmdp, hdr->cmd_len))
+                return -EFAULT;
+	...
+}
+
+I don't see any earlier marking for this copy_from_user(), so I assume
+the old allocation was a plain kmalloc().
+
+For comparision, a related marking can be seen for a copy_to_user() case
+in commit 0afe76e88c57 ("scsi: Define usercopy region in scsi_sense_cache
+slab cache")
+
+I *think* the allocation is happening in scsi_ioctl_reset()? But that's
+a plain kmalloc(), so I'm not sure why PAGESPAN would have tripped...
+are there other allocation paths?
+
+-- 
+Kees Cook
