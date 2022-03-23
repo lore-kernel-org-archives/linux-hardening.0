@@ -2,115 +2,99 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F23CC433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 23 Mar 2022 15:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222D9C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 23 Mar 2022 15:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238272AbiCWPof (ORCPT
+        id S242681AbiCWPsG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 23 Mar 2022 11:44:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32896 "EHLO
+        Wed, 23 Mar 2022 11:48:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238237AbiCWPoe (ORCPT
+        with ESMTP id S245298AbiCWPsC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 23 Mar 2022 11:44:34 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 861076474;
-        Wed, 23 Mar 2022 08:43:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=WHGiwoQ7jm4I3reye7XZm6CpTzWoNyjTmyKi+u3jjKg=; b=ioGexHFlIpdyX+fUkuYz69BncV
-        uesxLQja4XtEx1Izn4rjO4JkbJuc38YGAzFGDsK0D9mJa/KQfjONqpT0uglw4lILKXlZKtbIzIB7r
-        XJGOEVe7glYhGDuXXiX6v+Ad0AVihbAhTphVZc+m5EQBAGUyw6WHiYRSTsewasJdsGGQV+3HLJWvN
-        FaSGSr48Jz6TCDAD4c+E9uMZNbduvPlNkXpoQug/Lr2/BVRyWtgIMO9xaDvdY99Z2DRFC4+rX6QKS
-        EwFj0OD0tI2S64abJRyR/Os562RgpOTr4HpNUGlpQHe0FugO1XIXnGU+o2HnpV+Wr516QZHDI6QFl
-        l4EDk7bA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nX386-00Ce7z-WB; Wed, 23 Mar 2022 15:42:35 +0000
-Date:   Wed, 23 Mar 2022 15:42:34 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        kernel test robot <oliver.sang@intel.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        lkp@intel.com, linux-mm@kvack.org, linux-hardening@vger.kernel.org
-Subject: Re: [scsi]  6aded12b10: kernel_BUG_at_mm/usercopy.c
-Message-ID: <Yjs/6pLB1uDKBRCG@casper.infradead.org>
-References: <20220320143453.GD6208@xsang-OptiPlex-9020>
- <20220323071409.GA25480@lst.de>
- <202203230809.D63BF9511@keescook>
+        Wed, 23 Mar 2022 11:48:02 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B562F70F70
+        for <linux-hardening@vger.kernel.org>; Wed, 23 Mar 2022 08:46:32 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id e5so1896334pls.4
+        for <linux-hardening@vger.kernel.org>; Wed, 23 Mar 2022 08:46:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xOiL2IfLtHJ36vMwZliYDCRzc17oZt5tTjd6We2oUPs=;
+        b=UIlACU9xyViEAEMb+LWZazjfQIQZ72L+YA+fuprsQuufl1YO3dJiXs476a2EBPOJ5D
+         uz+/vTdIoDtABCazC2o0C61DxSoRE008KpwIMn/TKiyTdmk45/Ra0zCJea1whDpnFmzn
+         6LcHNBGX/iRmNGrrn4J0IY2dZ4yu7DWgYQuEY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xOiL2IfLtHJ36vMwZliYDCRzc17oZt5tTjd6We2oUPs=;
+        b=jFZm3/ADTH6/BUj5We/XG7dnopSFQaTuZLxqtTlTlmsfJHI+59SpimaTiHep8LTTQ/
+         RO/T7tuikT2P0NJHtazT8t3zGZiGR0DWytOkGSBOkCcuhJnRulpliSXWMhKWFSbPPAC3
+         nAzUd+ctB04if/RIgtwBDtbDPCavod8gvXliXr565qvSAT4oN3gKOuCDhIgC82Mi0U59
+         nqaSQHnFwv3yp6Vw+QuCZVAIrtFY7hdcgVBvTaVT/fVBwc8Ovb5HoQ0M+6iDR6IdwXI8
+         rqcjlIT4OHtrKK9GAnkOY3Pd8VcRlRQ+PUsbFGyEGq7XqIn4KqVE+MF8/Q0OHcQhXCyj
+         Y7VQ==
+X-Gm-Message-State: AOAM532U6MzJxhtGXPH0HxnK15VxlPT4jQnxpfRknBjm/FHpy2PAY3yi
+        IEaAbmG4+TYHTWegHD6gcynvWw==
+X-Google-Smtp-Source: ABdhPJz6Yvd8lbd/EYC+2ebO6g3u2YPP5AuLumW3lXbXAAvyq1KLB+vZcAM1bmRaOs9bbWRolPIKdA==
+X-Received: by 2002:a17:902:e9d4:b0:153:bd06:859c with SMTP id 20-20020a170902e9d400b00153bd06859cmr702714plk.8.1648050392261;
+        Wed, 23 Mar 2022 08:46:32 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v24-20020a634818000000b0036407db4728sm210630pga.26.2022.03.23.08.46.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Mar 2022 08:46:32 -0700 (PDT)
+Date:   Wed, 23 Mar 2022 08:46:31 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     David Gow <davidgow@google.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>
+Subject: Re: [PATCH] lib: stackinit: Convert to KUnit
+Message-ID: <202203230844.0B6C73765@keescook>
+References: <20220224055145.1853657-1-keescook@chromium.org>
+ <CAMuHMdX_g1tbiUL9PUQdqaegrEzCNN3GtbSvSBFYAL4TzvstFg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202203230809.D63BF9511@keescook>
+In-Reply-To: <CAMuHMdX_g1tbiUL9PUQdqaegrEzCNN3GtbSvSBFYAL4TzvstFg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Mar 23, 2022 at 08:40:30AM -0700, Kees Cook wrote:
-> On Wed, Mar 23, 2022 at 08:14:10AM +0100, Christoph Hellwig wrote:
-> > The actual warning is;
-> > 
-> > [   34.496096][  T331] usercopy: Kernel memory overwrite attempt detected to spans multiple pages (off set 0, size 6)!
-> > 
-> > This is for the cmnd field in struct scsi_cmnd, which is allocated by
-> > the block layer as part of the request allocator.  So with a specific
-> > packing it can legitimately span pages.
-> > 
-> > Kees: how can we annotate that this is ok?
+On Tue, Mar 22, 2022 at 03:30:22PM +0100, Geert Uytterhoeven wrote:
+> Hi Kees,
 > 
-> The main problem is that CONFIG_HARDENED_USERCOPY_PAGESPAN=y is broken
-> (and nothing should be setting it).
+> On Thu, Feb 24, 2022 at 9:12 AM Kees Cook <keescook@chromium.org> wrote:
+> > Convert to running under Kunit (and retain being able to run stand-alone
+> > too). Building under Clang (or GCC 12) with CONFIG_INIT_STACK_ALL_ZERO=y,
+> > this now passes as expected:
+> >
+> > $ ./tools/testing/kunit/kunit.py config --make_option LLVM=1
+> > $ ./tools/testing/kunit/kunit.py run overflow --make_option LLVM=1 \
+> >         --kconfig_add CONFIG_INIT_STACK_ALL_ZERO=y
+> > ...
 > 
-> This series removes it:
-> https://lore.kernel.org/linux-hardening/20220110231530.665970-1-willy@infradead.org/
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
 > 
-> Matthew, what's the status of that series? Will it make the current
-> merge window?
+> Thanks for your patch, which is now commit 02788ebcf521fe78 ("lib:
+> stackinit: Convert to KUnit") upstream.
+> 
+> Out of curiosity, I gave this a try on m68k, and it still seems to
+> fail the same way of before[1]:
+> [...]
+> [1] https://lore.kernel.org/r/CAMuHMdW6N40+0gGQ+LSrN64Mo4A0-ELAm0pR3gWQ0mNanyBuUQ@mail.gmail.com
 
-I thought you were going to merge it!  I haven't put it in any of my
-public trees.
+Ah yes! Thanks for the reminder. I will take a look at this. Clearly, it's
+an issue with memory layout assumptions that don't match on m68k, etc.
 
-> As for the SCSI changes, I'm a bit worried about type confusion, as I
-> don't see anything actually validating types/sizes when converting:
-> 
-> static inline void *blk_mq_rq_to_pdu(struct request *rq)
-> {
->         return rq + 1;
-> }
-> 
-> But I guess that ship has sailed. :P
-> 
-> Regardless, I'm concerned that disabling PAGESPAN will just uncover
-> further checks, though. Where is allocation happening? The check is here:
-> 
-> static int scsi_fill_sghdr_rq(struct scsi_device *sdev, struct request *rq,
->                 struct sg_io_hdr *hdr, fmode_t mode)
-> {
->         struct scsi_cmnd *scmd = blk_mq_rq_to_pdu(rq);
-> 
->         if (hdr->cmd_len < 6)
->                 return -EMSGSIZE;
->         if (copy_from_user(scmd->cmnd, hdr->cmdp, hdr->cmd_len))
->                 return -EFAULT;
-> 	...
-> }
-> 
-> I don't see any earlier marking for this copy_from_user(), so I assume
-> the old allocation was a plain kmalloc().
-> 
-> For comparision, a related marking can be seen for a copy_to_user() case
-> in commit 0afe76e88c57 ("scsi: Define usercopy region in scsi_sense_cache
-> slab cache")
-> 
-> I *think* the allocation is happening in scsi_ioctl_reset()? But that's
-> a plain kmalloc(), so I'm not sure why PAGESPAN would have tripped...
-> are there other allocation paths?
-> 
-> -- 
-> Kees Cook
-> 
+-- 
+Kees Cook
