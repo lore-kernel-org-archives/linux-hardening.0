@@ -2,145 +2,224 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B659C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 22 Mar 2022 18:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20098C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 23 Mar 2022 02:16:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240764AbiCVSkb (ORCPT
+        id S231467AbiCWCSB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 22 Mar 2022 14:40:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43000 "EHLO
+        Tue, 22 Mar 2022 22:18:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240778AbiCVSka (ORCPT
+        with ESMTP id S241166AbiCWCR6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 22 Mar 2022 14:40:30 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29C461BEB8;
-        Tue, 22 Mar 2022 11:39:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B6BF0612FC;
-        Tue, 22 Mar 2022 18:39:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87E19C340EC;
-        Tue, 22 Mar 2022 18:39:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647974341;
-        bh=83MxWvJXMMxW++0FlJkhqDhlQdcZsuRg4UGE2d3K+6w=;
-        h=Date:From:To:Cc:Subject:From;
-        b=il+PF/5lDTVALM0N2qoPSMPAqqGIuPjE3GYn6jbjRxPVk21cRep1A/IVxKET0tZXt
-         sok4x4hv+Lh0rwFR3UKK6eWuelqsBJFGzl7qOA2UtFoOPnjgwsArNBNKek24j7c6yF
-         OSZ2y7T7z/AuvmoYvDYfjT0ZQrj+sRjLGfCkjH9rccfZQll7np7/Mi+KWyQGwzEeUP
-         9KtwvNggDbbr20wGckoy0tkAvpT20UFRuDV8S2rN8vE2dYJwo8sRmaXjrMS2diN5Hk
-         oRPSNtCtdgeFMw8jeUtq9Rckgu8yIa1AgXa5OsE9ZLabnmWbYoU59DZ1JCP8IvZNXi
-         6+3RcNzP/PHpg==
-Date:   Tue, 22 Mar 2022 13:48:02 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [GIT PULL] flexible-array transformations for 5.18-rc1
-Message-ID: <20220322184802.GA2533969@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Tue, 22 Mar 2022 22:17:58 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8CFD70065
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Mar 2022 19:16:29 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id j13so258663plj.8
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Mar 2022 19:16:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20210112.gappssmtp.com; s=20210112;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CgTLARXl73a8vMc6tpwfKmduohAy7WyurFsoKnNWgu0=;
+        b=2sfQEpK7D1SE5ouqsUhkZLTMHqUMSnKCN/2E9JN22jvFu5ovcsx4bCza0m4OeTzada
+         7GdZ0tJntehuzgc9DlOxEvddk0dmAo07SMfwmI9cyEtnj4x00eORC20VyAAVj7is+nZ3
+         D1PymTuxfK5QhA5V0zWjLGwtQ6XYNKBbr57OUK6+SqWbPUL88piEVQpOg6YwNJ0LwKtU
+         dXEEN0Sy0stqP0BMLwHwNrHQTxlasB+dkIj1LUs/6YYLT0A5r7Csgp11woy/b6d3EYF/
+         V1OEIbkBU2gAva+y70OtK3bApQyRcVS/zsOho9TXC7CKUyQyb2MJrcdPjxr1YoyDUyH9
+         A3fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=CgTLARXl73a8vMc6tpwfKmduohAy7WyurFsoKnNWgu0=;
+        b=iCvB8Z5Ym0ynx58F32wXe0PUzKSUqFYLH5FpWNap4Ez2uYxDmImg4j/pYWsFrDdWRG
+         ocVAker1qScdan9WN4idhAD7jFsgSEBxZNFz5CD30UsJ5u27ZujSq37NdrSouNk+v48o
+         b1DJ5ZiNjtE5mOpSovFvVJRQ4kCWS1y0vQW/8A9RIJlUJOd+I/Tl7An3vwfNKZS7PS2O
+         qM3eHb58BSsvXLTBwHvY3XdEdWYVVB0e7X1wwTSWBBjhqBsRFvPWtr6LfCXHJVGW1kXQ
+         2oU2BvIjJTlOMaN3hNX8RyoSu2j0dGIR5PRh5yrBtfd422SWv9rGNyONsauDF4hhWYbY
+         T7Tg==
+X-Gm-Message-State: AOAM530QQ7sJV7RqJ3G+qlGQgOuatoXpvfGXSSo4HeZPxGH3qwbzb+9J
+        RXJhVl5+qw94/hKvo91yQL+hww==
+X-Google-Smtp-Source: ABdhPJzgotRXjhQP3kW38oz7JB3aavGYXp1ugUbmpS1C6w8P28iC2PwkqLg34Gbv+Rx/a6wGjk9rqg==
+X-Received: by 2002:a17:90b:4f8c:b0:1c7:2217:e980 with SMTP id qe12-20020a17090b4f8c00b001c72217e980mr8540720pjb.17.1648001789309;
+        Tue, 22 Mar 2022 19:16:29 -0700 (PDT)
+Received: from localhost ([12.3.194.138])
+        by smtp.gmail.com with ESMTPSA id 16-20020a17090a199000b001bf4b1b268bsm3819263pji.44.2022.03.22.19.16.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Mar 2022 19:16:28 -0700 (PDT)
+Date:   Tue, 22 Mar 2022 19:16:28 -0700 (PDT)
+X-Google-Original-Date: Tue, 22 Mar 2022 19:16:25 PDT (-0700)
+Subject:     Re: [PATCH] riscv: Rename "sp_in_global" to "current_stack_pointer"
+In-Reply-To: <20220224060411.1855683-1-keescook@chromium.org>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, keescook@chromium.org,
+        aou@eecs.berkeley.edu, peterz@infradead.org, jszhang@kernel.org,
+        geert@linux-m68k.org, mark.rutland@arm.com, chenhuang5@huawei.com,
+        linux-riscv@lists.infradead.org, wangkefeng.wang@huawei.com,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     keescook@chromium.org
+Message-ID: <mhng-00315cbb-3685-4918-8ea0-539cda5fbc36@palmer-ri-x1c9>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The following changes since commit 26291c54e111ff6ba87a164d85d4a4e134b7315c:
+On Wed, 23 Feb 2022 22:04:11 PST (-0800), keescook@chromium.org wrote:
+> To follow the existing per-arch conventions, rename "sp_in_global" to
+> "current_stack_pointer". This will let it be used in non-arch places
+> (like HARDENED_USERCOPY).
+>
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Jisheng Zhang <jszhang@kernel.org>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Chen Huang <chenhuang5@huawei.com>
+> Cc: linux-riscv@lists.infradead.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/riscv/Kconfig               | 1 +
+>  arch/riscv/include/asm/current.h | 2 ++
+>  arch/riscv/kernel/stacktrace.c   | 4 +---
+>  3 files changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 5adcbd9b5e88..b120c32697af 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -16,6 +16,7 @@ config RISCV
+>  	select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATION
+>  	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
+>  	select ARCH_HAS_BINFMT_FLAT
+> +	select ARCH_HAS_CURRENT_STACK_POINTER
+>  	select ARCH_HAS_DEBUG_VM_PGTABLE
+>  	select ARCH_HAS_DEBUG_VIRTUAL if MMU
+>  	select ARCH_HAS_DEBUG_WX
+> diff --git a/arch/riscv/include/asm/current.h b/arch/riscv/include/asm/current.h
+> index 1de233d8e8de..21774d868c65 100644
+> --- a/arch/riscv/include/asm/current.h
+> +++ b/arch/riscv/include/asm/current.h
+> @@ -33,6 +33,8 @@ static __always_inline struct task_struct *get_current(void)
+>
+>  #define current get_current()
+>
+> +register unsigned long current_stack_pointer __asm__("sp");
+> +
+>  #endif /* __ASSEMBLY__ */
+>
+>  #endif /* _ASM_RISCV_CURRENT_H */
+> diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
+> index 201ee206fb57..278380e2e956 100644
+> --- a/arch/riscv/kernel/stacktrace.c
+> +++ b/arch/riscv/kernel/stacktrace.c
+> @@ -14,8 +14,6 @@
+>
+>  #include <asm/stacktrace.h>
+>
+> -register unsigned long sp_in_global __asm__("sp");
+> -
+>  #ifdef CONFIG_FRAME_POINTER
+>
+>  void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+> @@ -77,7 +75,7 @@ void notrace walk_stackframe(struct task_struct *task,
+>  		sp = user_stack_pointer(regs);
+>  		pc = instruction_pointer(regs);
+>  	} else if (task == NULL || task == current) {
+> -		sp = sp_in_global;
+> +		sp = current_stack_pointer;
+>  		pc = (unsigned long)walk_stackframe;
+>  	} else {
+>  		/* task blocked in __switch_to */
 
-  Linux 5.17-rc2 (2022-01-30 15:37:07 +0200)
+Sorry to be slow on this one.  This looks good, but another use of 
+sp_in_global snuck into fixes and I don't merge fixes into for-next so 
+that makes this a bit of a headache.
 
-are available in the Git repository at:
+There's a bunch of stuff in flight, so I'm going to hold off on this 
+until after my first week's merge window PR.  I intend on merging the 
+following, which is at palmer/riscv-sp for now (I'll probably just 
+cherry-pick that, I usually start basing stuff on Linus' merge of my PR 
+and just cherry-pick in single patches).
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/flexible-array-transformations-5.18-rc1
-
-for you to fetch changes up to 5224f79096170bf7b92cc8fe42a12f44b91e5f62:
-
-  treewide: Replace zero-length arrays with flexible-array members (2022-02-17 07:00:39 -0600)
-
-----------------------------------------------------------------
-flexible-array transformations for 5.18-rc1
-
-Hi Linus,
-
-Please, pull the following treewide patch that replaces zero-length arrays with
-flexible-array members. This patch has been baking in linux-next for a
-whole development cycle.
-
-Thanks
---
-Gustavo
-
-----------------------------------------------------------------
-Gustavo A. R. Silva (1):
-      treewide: Replace zero-length arrays with flexible-array members
-
- arch/alpha/include/asm/hwrpb.h                       |  2 +-
- arch/ia64/include/asm/sal.h                          |  2 +-
- arch/s390/include/asm/ccwgroup.h                     |  2 +-
- arch/s390/include/asm/chsc.h                         |  2 +-
- arch/s390/include/asm/eadm.h                         |  2 +-
- arch/s390/include/asm/fcx.h                          |  4 ++--
- arch/s390/include/asm/idals.h                        |  2 +-
- arch/s390/include/asm/sclp.h                         |  2 +-
- arch/s390/include/asm/sysinfo.h                      |  6 +++---
- arch/sh/include/asm/thread_info.h                    |  2 +-
- arch/sparc/include/asm/vio.h                         | 10 +++++-----
- arch/um/include/shared/net_kern.h                    |  2 +-
- arch/x86/include/asm/microcode_amd.h                 |  2 +-
- arch/x86/include/asm/microcode_intel.h               |  4 ++--
- arch/x86/include/asm/pci.h                           |  2 +-
- arch/x86/include/asm/pci_x86.h                       |  2 +-
- arch/xtensa/include/asm/bootparam.h                  |  2 +-
- drivers/crypto/caam/pdb.h                            |  2 +-
- drivers/gpu/drm/i915/gt/uc/intel_guc_ads.c           |  2 +-
- drivers/gpu/drm/nouveau/include/nvfw/hs.h            |  2 +-
- drivers/hwtracing/coresight/coresight-config.h       |  2 +-
- drivers/misc/bcm-vk/bcm_vk.h                         |  2 +-
- drivers/misc/habanalabs/include/common/cpucp_if.h    |  6 +++---
- .../misc/habanalabs/include/gaudi/gaudi_packets.h    |  4 ++--
- drivers/misc/habanalabs/include/goya/goya_packets.h  |  4 ++--
- drivers/net/ethernet/freescale/enetc/enetc_hw.h      |  2 +-
- drivers/net/ethernet/i825xx/sun3_82586.h             |  2 +-
- drivers/net/ethernet/marvell/octeontx2/af/npc.h      |  6 +++---
- drivers/net/ethernet/qlogic/qed/qed_mfw_hsi.h        |  2 +-
- drivers/net/ethernet/ti/davinci_mdio.c               |  2 +-
- drivers/scsi/dpt/dpti_i2o.h                          |  2 +-
- drivers/scsi/elx/libefc_sli/sli4.h                   | 20 ++++++++++----------
- drivers/scsi/mpi3mr/mpi3mr.h                         |  2 +-
- drivers/scsi/qla2xxx/qla_bsg.h                       |  4 ++--
- drivers/scsi/qla2xxx/qla_def.h                       |  2 +-
- drivers/scsi/qla2xxx/qla_edif_bsg.h                  |  4 ++--
- drivers/scsi/qla2xxx/qla_fw.h                        |  2 +-
- drivers/scsi/qla4xxx/ql4_fw.h                        |  2 +-
- drivers/staging/r8188eu/include/rtw_cmd.h            | 10 +++++-----
- drivers/staging/rtl8712/rtl871x_cmd.h                |  8 ++++----
- drivers/staging/rtl8723bs/include/ieee80211.h        |  2 +-
- drivers/staging/rtl8723bs/include/rtw_cmd.h          |  2 +-
- .../vc04_services/include/linux/raspberrypi/vchiq.h  |  2 +-
- drivers/visorbus/vbuschannel.h                       |  2 +-
- fs/cifs/ntlmssp.h                                    |  2 +-
- fs/ext4/fast_commit.h                                |  4 ++--
- fs/ksmbd/ksmbd_netlink.h                             |  2 +-
- fs/ksmbd/ntlmssp.h                                   |  6 +++---
- fs/ksmbd/smb2pdu.h                                   |  8 ++++----
- fs/ksmbd/transport_rdma.c                            |  2 +-
- fs/ksmbd/xattr.h                                     |  2 +-
- fs/xfs/scrub/attr.h                                  |  2 +-
- include/asm-generic/tlb.h                            |  4 ++--
- include/linux/greybus/greybus_manifest.h             |  4 ++--
- include/linux/greybus/hd.h                           |  2 +-
- include/linux/greybus/module.h                       |  2 +-
- include/linux/i3c/ccc.h                              |  6 +++---
- include/linux/platform_data/brcmfmac.h               |  2 +-
- include/linux/platform_data/cros_ec_commands.h       |  2 +-
- include/net/bluetooth/mgmt.h                         |  2 +-
- include/net/ioam6.h                                  |  2 +-
- include/sound/sof/channel_map.h                      |  4 ++--
- scripts/dtc/libfdt/fdt.h                             |  4 ++--
- sound/soc/intel/atom/sst-mfld-dsp.h                  |  4 ++--
- sound/soc/intel/skylake/skl-topology.h               |  2 +-
- tools/lib/perf/include/perf/event.h                  |  2 +-
- 66 files changed, 111 insertions(+), 111 deletions(-)
+   commit 7c4f6bb6fb352cfa6028191c2888356b9157a332
+   gpg: Signature made Tue 22 Mar 2022 11:12:19 AM PDT
+   gpg:                using RSA key 2B3C3747446843B24A943A7A2E1319F35FBB1889
+   gpg:                issuer "palmer@dabbelt.com"
+   gpg: Good signature from "Palmer Dabbelt <palmer@dabbelt.com>" [ultimate]
+   gpg:                 aka "Palmer Dabbelt <palmer@rivosinc.com>" [ultimate]
+   Author: Kees Cook <keescook@chromium.org>
+   Date:   Wed Feb 23 22:04:11 2022 -0800
+   
+       riscv: Rename "sp_in_global" to "current_stack_pointer"
+   
+       To follow the existing per-arch conventions, rename "sp_in_global" to
+       "current_stack_pointer". This will let it be used in non-arch places
+       (like HARDENED_USERCOPY).
+   
+       Signed-off-by: Kees Cook <keescook@chromium.org>
+       Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
+   
+   diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+   index 5adcbd9b5e88..b120c32697af 100644
+   --- a/arch/riscv/Kconfig
+   +++ b/arch/riscv/Kconfig
+   @@ -16,6 +16,7 @@ config RISCV
+    	select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATION
+    	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
+    	select ARCH_HAS_BINFMT_FLAT
+   +	select ARCH_HAS_CURRENT_STACK_POINTER
+    	select ARCH_HAS_DEBUG_VM_PGTABLE
+    	select ARCH_HAS_DEBUG_VIRTUAL if MMU
+    	select ARCH_HAS_DEBUG_WX
+   diff --git a/arch/riscv/include/asm/current.h b/arch/riscv/include/asm/current.h
+   index 1de233d8e8de..21774d868c65 100644
+   --- a/arch/riscv/include/asm/current.h
+   +++ b/arch/riscv/include/asm/current.h
+   @@ -33,6 +33,8 @@ static __always_inline struct task_struct *get_current(void)
+   
+    #define current get_current()
+   
+   +register unsigned long current_stack_pointer __asm__("sp");
+   +
+    #endif /* __ASSEMBLY__ */
+   
+    #endif /* _ASM_RISCV_CURRENT_H */
+   diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
+   index 14d2b53ec322..08d11a53f39e 100644
+   --- a/arch/riscv/kernel/stacktrace.c
+   +++ b/arch/riscv/kernel/stacktrace.c
+   @@ -14,8 +14,6 @@
+   
+    #include <asm/stacktrace.h>
+   
+   -register unsigned long sp_in_global __asm__("sp");
+   -
+    #ifdef CONFIG_FRAME_POINTER
+   
+    void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+   @@ -30,7 +28,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+    		pc = instruction_pointer(regs);
+    	} else if (task == NULL || task == current) {
+    		fp = (unsigned long)__builtin_frame_address(0);
+   -		sp = sp_in_global;
+   +		sp = current_stack_pointer;
+    		pc = (unsigned long)walk_stackframe;
+    	} else {
+    		/* task blocked in __switch_to */
+   @@ -78,7 +76,7 @@ void notrace walk_stackframe(struct task_struct *task,
+    		sp = user_stack_pointer(regs);
+    		pc = instruction_pointer(regs);
+    	} else if (task == NULL || task == current) {
+   -		sp = sp_in_global;
+   +		sp = current_stack_pointer;
+    		pc = (unsigned long)walk_stackframe;
+    	} else {
+    		/* task blocked in __switch_to */
+   
+Thanks!
