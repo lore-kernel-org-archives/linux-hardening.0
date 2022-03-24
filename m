@@ -2,96 +2,128 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5914AC433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Mar 2022 23:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F24EC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Mar 2022 23:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347553AbiCXXEh (ORCPT
+        id S1355733AbiCXXUq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Mar 2022 19:04:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53998 "EHLO
+        Thu, 24 Mar 2022 19:20:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237285AbiCXXEg (ORCPT
+        with ESMTP id S239206AbiCXXUp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Mar 2022 19:04:36 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9125117C
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Mar 2022 16:03:01 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id bx24-20020a17090af49800b001c6872a9e4eso6578522pjb.5
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Mar 2022 16:03:01 -0700 (PDT)
+        Thu, 24 Mar 2022 19:20:45 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7391253A4F
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Mar 2022 16:19:12 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id k14so5065149pga.0
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Mar 2022 16:19:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NMvhdr5s5WrgumtaNdWQbyj33UK7W2QqfjxCJ/3aGYk=;
-        b=B4PyAMh6nh8BnnbQ5pTiIm31wvcDFYWx8MrJe+KDqNok8KtFSF7cvwMJsC+Yf/Mv1S
-         REBIhMlkhul+fvw4q8Fmwn+uS6vTr6GdXXmc2rlmMrQsUSCdWuuhXmB2MYUshXIKGRfn
-         u7b/MxOve0W1Q30WiFSkbbcR8xFPPHmWBjPRY=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=O+W+ADoWLoOEU6HBF2tydQ14SzjI5R4yTLibkuVNSzI=;
+        b=j81dgt71J0dbVcOzA5AbnzZ2giZC/bZ1k//nKXbyqwAoqAdx7xDLBPE08Y+w6zgljY
+         ht+5MxHamQSMEcHb+BnecXhzpA0uEAtXJG+6qN+P64TATCdQttlnTVttQeKgrcG2SxX0
+         ydlt4L8mOnm4EhQbR4vnVsmLeN52cxWdvZKt8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NMvhdr5s5WrgumtaNdWQbyj33UK7W2QqfjxCJ/3aGYk=;
-        b=s6bC98kl4kdTlUHaYR5mcdKI9cZV6NdxS/GDfRHZ2LewKX2wll5/r7+v6UGxDJe3Dh
-         yntixAlcpclfk+y/MM/M5DF8c92xK4cL6oysK7Nrn7h8FTcomF9X6gUVYzvm6pdg5M3n
-         EOBpfsjWi23WqJwbCVseXpNQv1ESdlnUYhomVNqAmj42Vg3x4Zh84ZQ+TflQQ+tdZnDT
-         gXZ24MpfOr2UrC1MCp8bclWm8bB5p8ojl4sqgxo7kwwtsnQUZ5LPZ906VHZ5GKBhoG18
-         K+yJDzs130zQQ1KcXNf9RcFXAL5sxH67AKPK5VZukYUOLaEqt8XWEo2Uuh2gE+6PR/CT
-         WwqQ==
-X-Gm-Message-State: AOAM531NqjcI58S67mgMmCB0vl9ChTeJPI7bJmD3LD1437tldoOl34G+
-        pwkW2Cq2KN0Vsv4I7AP0ySgrugIzHhXsEg==
-X-Google-Smtp-Source: ABdhPJwwZQaCh8732ayq9h1KcwgHuiW3U5joe6p6NZlsbHeLVVN9FEoQzg1WyJLM3CFvDW1MH6WhlA==
-X-Received: by 2002:a17:903:2281:b0:154:50ab:72c6 with SMTP id b1-20020a170903228100b0015450ab72c6mr8561496plh.51.1648162981432;
-        Thu, 24 Mar 2022 16:03:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=O+W+ADoWLoOEU6HBF2tydQ14SzjI5R4yTLibkuVNSzI=;
+        b=e9E9BJNtG5Bjyi+5Qm6P5u/uu5ZqR+6Y/KyEMnFsLuYgYGzOWuOHAnRiNNlj1EkkX8
+         F8eVQj6Fok5z4260TARFkl7X0VD3VOkmrG8r3dMbJbVGh5fyldLtBqJT16ZVbSSVnt3Z
+         XdO8KIudbgBpBs+BLwohhKufVS3StvzW9pcVcdsu1zeiHtj9WfF775BIKo36ziBKt5xH
+         zurlruhP5F17wNrz18pO2U21+Dmmu3MVFzm4g7lepQTcEEVSsMOVO0pCAPENcEXbmWOn
+         fKOU73mPJsZMs17OT6eT3mI8KUggVKdcrJCKdxGQsU2CDjW9vjTnjfylRhQMfkVtnnPq
+         Wlgw==
+X-Gm-Message-State: AOAM531CQOEhg24+9SMt/kVMd220YBZX0WTF3IcozwzuwR30H4DlSVWY
+        tk1scHscpSTWHmBsirX0RLIVzw==
+X-Google-Smtp-Source: ABdhPJwgn8KFoQhC6OlMAFWWee+pIw34BL/z1l6uAZT83dRmrhlsq00kPIDyo+QLfiGUltyKod5FbQ==
+X-Received: by 2002:a65:6753:0:b0:385:fa8a:188f with SMTP id c19-20020a656753000000b00385fa8a188fmr5725762pgu.499.1648163951829;
+        Thu, 24 Mar 2022 16:19:11 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f31-20020a631f1f000000b003742e45f7d7sm3396910pgf.32.2022.03.24.16.03.00
+        by smtp.gmail.com with ESMTPSA id z5-20020a056a00240500b004e15d39f15fsm4445176pfh.83.2022.03.24.16.19.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Mar 2022 16:03:01 -0700 (PDT)
+        Thu, 24 Mar 2022 16:19:11 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>, Christoph Hellwig <hch@lst.de>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] usercopy: Disable CONFIG_HARDENED_USERCOPY_PAGESPAN
-Date:   Thu, 24 Mar 2022 16:02:55 -0700
-Message-Id: <20220324230255.1362706-1-keescook@chromium.org>
+To:     shuah@kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Willem de Bruijn <willemb@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH 2/2] selftests/harness: Pass variant to teardown
+Date:   Thu, 24 Mar 2022 16:19:07 -0700
+Message-Id: <20220324231907.1363887-3-keescook@chromium.org>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220324231907.1363887-1-keescook@chromium.org>
+References: <20220324231907.1363887-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1267; h=from:subject; bh=PUZTtyyCrWHooXV+1D56zBK+JGmXV2w8OK9mWJkic1o=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiPPifqrb8DGM0yMdn4qdqf5YZZ5M6arJpjHvKdYP0 68rSuGCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYjz4nwAKCRCJcvTf3G3AJsJdD/ 0VG373KYR4CtvABh6/5RvvcCU/J/+J03t5++F/c8LUVj4YVDbs5qyM1pesLe6sBNWHVWve5N0XA4Ui RItvFmbvE6PjlIrgvTh7+jIVY7mS6a6iwI1JClduzRpsKCC5TpRzVW+ZLzX//UR0eEkhWCmrOK1yKE SzIj++sUoHzbcTTtDCHLqCsW2n2GqF/2JCTrW1TO74ygik7rzNj8vpgs267kecQxhdkIUiAU3d/B/7 IWditq6YKNOipe+Dd9Oh+XU2sjyA3waUsLeFe3gIiwKlWbnVCD5ol9G7/R1QDp0vFkMmk3MjPu+CnN yHLgykLyqTpMeMXrue6cDQOll/2I5pK6l4/8gSylBweNRF3oZr90kZjZCAtmuBgaF+adHp/vepufIJ dHdDjR+Qb7TTfmFxSQEVSp9s6R6OxtpKx2bPGkUaK/FG2S9hJEBg3Aqov+LcpDVqx1bwFZ/UCo19so GN2mVjXcI4yL0wWX2MI2O3Z4ce87olcv9BLny/JRWBodif4Bkv9AYQSfESdD5itJEAyU5oIon4kl1m YiF0EiiXqFj7qvfQbPaXEdSFTCVH8MR1rDlc1VrbofkytHh5jCxsolMZViiQK4GauDrS8ujk8yAqZy 43zvKwuqkdzEyfYMviYJ+LuqsRi6rNhNKX9gN6xv0WvVz4m5u1Kv6yIaL3FA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2243; i=keescook@chromium.org; h=from:subject; bh=s5I+YaMjoeoicBYfZgT6+xmRuT2Bm5TDH0htvPF34tc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiPPxreGpnoDVxBHq9oVJfM656X06ztHfoXOlmN4Yv QJnuxHqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYjz8awAKCRCJcvTf3G3AJnT3D/ 0XU6tnnx16d5AyjCasjLRVDC5yZ/UlbVu0DMwVB+G1AhW8inYAXpheEnmign/IoRe60RQy98YQ6nSb tEKU3X9OgUOyMGUcLNPbe7fCAhyCeqU55cmNOF8T/c0/JQhA1IrlPKTXasQzxr+zyp/lqlq5jC2HNs FqvAVNihqqr0lNTtL8M966mwZJDCPkbT1MzbYNlJ0Ey+oG1Mj5g/QirkhhbAqC/HtHAg9v8As4p/wX q/1dXZp+roY4rcnaT/DK2WarVWsLCqCN23tazgJtdH2xchB/1DWEPypWIe6kOs6PTEj4Z1hSCBUNb/ fuSSKd/GccSxWd7PwA4dO3RzuChOjq8wF7bdozfLbUh7Zqyg7ag7KPYA9hMpN4oeUu9zVRmKH7oA4S Z8bMs2yvv0Fv8B0p9s5h7azjbi281KnpzFjLyuVCPZzw8H7vp+K3IVn7GO1IiW5dB0Vjh3PGAdRc7t 2xVsDe3lgxkEYLqcXtLk/ofsRGhFVrgcrr4dpP4KiqP8k0P2O+wD8yHUjiJPrb7+IyJLEGn/cojpkh DnE5srpBV6ofaLA/BL0HJkIlI2B7ESgczPoo5r2rRtCEfksQYTBoOn6duKvHRTABV8ZFPJXoMfDdrr ez8x6D3Pbk4hJs+wSy/heSsojmeCuuXgNK7jY/XX+ffGM7m/x9GtJkPyD0Aw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-CONFIG_HARDENED_USERCOPY_PAGESPAN has been mostly broken for a while,
-and it has become hard to ignore with some recent scsi changes[1].
-While there is a more complete series to replace it with better checks[2],
-it should have more soak time in -next. Instead, disable the config now,
-with the expectation that it will be fully replaced in the next kernel
-release.
+From: Willem de Bruijn <willemb@google.com>
 
-[1] https://lore.kernel.org/lkml/20220324064846.GA12961@lst.de/
-[2] https://lore.kernel.org/linux-hardening/20220110231530.665970-1-willy@infradead.org/
+FIXTURE_VARIANT data is passed to FIXTURE_SETUP and TEST_F as "variant".
 
-Suggested-by: Christoph Hellwig <hch@lst.de>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+In some cases, the variant will change the setup, such that expectations
+also change on teardown. Also pass variant to FIXTURE_TEARDOWN.
+
+The new FIXTURE_TEARDOWN logic is identical to that in FIXTURE_SETUP,
+right above.
+
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+Acked-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20201210231010.420298-1-willemdebruijn.kernel@gmail.com
 ---
- security/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/kselftest_harness.h | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/security/Kconfig b/security/Kconfig
-index 0b847f435beb..88a0bc8c592b 100644
---- a/security/Kconfig
-+++ b/security/Kconfig
-@@ -166,7 +166,7 @@ config HARDENED_USERCOPY
- config HARDENED_USERCOPY_PAGESPAN
- 	bool "Refuse to copy allocations that span multiple pages"
- 	depends on HARDENED_USERCOPY
--	depends on EXPERT
-+	depends on BROKEN
- 	help
- 	  When a multi-page allocation is done without __GFP_COMP,
- 	  hardened usercopy will reject attempts to copy it. There are,
+diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+index bef08f824eb5..f5cb5fd1d974 100644
+--- a/tools/testing/selftests/kselftest_harness.h
++++ b/tools/testing/selftests/kselftest_harness.h
+@@ -291,7 +291,9 @@
+ #define FIXTURE_TEARDOWN(fixture_name) \
+ 	void fixture_name##_teardown( \
+ 		struct __test_metadata __attribute__((unused)) *_metadata, \
+-		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self)
++		FIXTURE_DATA(fixture_name) __attribute__((unused)) *self, \
++		const FIXTURE_VARIANT(fixture_name) \
++			__attribute__((unused)) *variant)
+ 
+ /**
+  * FIXTURE_VARIANT() - Optionally called once per fixture
+@@ -306,9 +308,9 @@
+  *       ...
+  *     };
+  *
+- * Defines type of constant parameters provided to FIXTURE_SETUP() and TEST_F()
+- * as *variant*. Variants allow the same tests to be run with different
+- * arguments.
++ * Defines type of constant parameters provided to FIXTURE_SETUP(), TEST_F() and
++ * FIXTURE_TEARDOWN as *variant*. Variants allow the same tests to be run with
++ * different arguments.
+  */
+ #define FIXTURE_VARIANT(fixture_name) struct _fixture_variant_##fixture_name
+ 
+@@ -391,7 +393,7 @@
+ 			fixture_name##_##test_name(_metadata, &self, variant->data); \
+ 		} \
+ 		if (_metadata->setup_completed) \
+-			fixture_name##_teardown(_metadata, &self); \
++			fixture_name##_teardown(_metadata, &self, variant->data); \
+ 		__test_check_assert(_metadata); \
+ 	} \
+ 	static struct __test_metadata \
 -- 
 2.32.0
 
