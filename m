@@ -2,175 +2,105 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8903AC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 25 Mar 2022 22:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9F5C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Mar 2022 22:36:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233619AbiCYWFY (ORCPT
+        id S233831AbiCYWiC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 25 Mar 2022 18:05:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55594 "EHLO
+        Fri, 25 Mar 2022 18:38:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233603AbiCYWFU (ORCPT
+        with ESMTP id S233827AbiCYWiB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 25 Mar 2022 18:05:20 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F103513BADD
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Mar 2022 15:03:44 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id mj15-20020a17090b368f00b001c637aa358eso13458170pjb.0
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Mar 2022 15:03:44 -0700 (PDT)
+        Fri, 25 Mar 2022 18:38:01 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78DE2527F6
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Mar 2022 15:36:25 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id b15so7643966pfm.5
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Mar 2022 15:36:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=F1cl22dPfbgw4CHrs1SfUAlvbEdIMiTM5Jgl06wTsCQ=;
-        b=CmVO13C+dS/O6WM3blGDeY1sVqeF+gRrQrtu21YaYPFlA9Xa5dQqkV7L5Fm+vChYuJ
-         GdVaAqXKiY3OVou43Czv/goYDuWh2yPE2EeWGUoitMVojfySZdnWTHXFTyGJnU8/ctLW
-         re+MkkKvywOKV29zCA2sf8ltxdjYm7pTsrOpM=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=66gIpeXcj5574AY6+wxqIKtN1GXT+H4zW/55ds9MTRA=;
+        b=Pehj9tXJ4jzHdSs9n3UJ6sf8byvgBPWfgS568/84c46HBvPWXXsvdd8pAEE2HzzzdY
+         nhBsal9nGQ7ZgSXnQd9IetpG0IdzOgDsbdffL/rqAdzghtq62mKAtGJ4aJMAiJzpd60K
+         sk4O1Q2hg3+cF5cPtgpMcYhNZQgEAlSy77zvA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=F1cl22dPfbgw4CHrs1SfUAlvbEdIMiTM5Jgl06wTsCQ=;
-        b=S/LI6oDOoohagh2n2JeKca6Bi4IZe+I6L8eVQJUsLIvvsA3/RPC07itVGjlG/hcozb
-         Nd200VWNJzaVUYqNGJFXSDDi+mkyXRJCysfEgrqpAhwAYKmozaMNpCuUdm1U+xB66ftI
-         6CGn4dojneJGJwDXzRVt4gy9Qu0Q+ynVKSYbqxVrND/IMYkOd3nKsvG79B2VY+vSztLG
-         a7kSnSpg3sfov2IDhSEsyuo6ormUmjBCNUE3/fjJXH/xRO1pS6WBTsU1bxovWirjfpFf
-         MHCICy3LsoBwLbucxt5J+9N4oncNruRYJwN2F9UYeobfSo/64GZpzJiI1/laZBHhRP0p
-         Zz5Q==
-X-Gm-Message-State: AOAM5302DeEkxKICBMIvLb/462YX8wLFh/Dp34m1WiQL1ZAQxm+NeZLP
-        fm5aKOjG+38rSKPBaCa7mbEkDA==
-X-Google-Smtp-Source: ABdhPJzDkiJrPUYM7qLN3Sj0nWpVkCZOULBiG9dPZTq3hhO/0HYRD8PEYshHQLol+XIg1yTjMTYl9Q==
-X-Received: by 2002:a17:902:d4cc:b0:154:3a3b:4172 with SMTP id o12-20020a170902d4cc00b001543a3b4172mr13611246plg.165.1648245824405;
-        Fri, 25 Mar 2022 15:03:44 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=66gIpeXcj5574AY6+wxqIKtN1GXT+H4zW/55ds9MTRA=;
+        b=UYGt4XKYm9eOSt8S5lMwj/fAGrwiopioBPFQ8feOwYQLUgsRfzD+xhdbLkmqY1qQXk
+         Otnx+7K1gKrunQqQ7l4ugDhI3Bb8qLrV77R1xdIWzWf3Qb2MwglRxrb+iEtbONW541TV
+         zpdOQdCHPOkJwPq99ogj9k1SkN81StYNLBIi1sHq8cyb7jihIojHSFerrUAxs6zRLK1G
+         rbTeRRjyK9neToE+dG9DWPY0GYucmW/m7sXXLFGaO1xjJoWAT6pjTd5GWBlG2VxgkIGK
+         nchBF1E2dvGN/zUhkzSEqqLzshYt3atMlvQfcatCLF0Bhchno3siAHRBKMVLZApZmScM
+         aJ+A==
+X-Gm-Message-State: AOAM531IpssPtjEp/RT5XIL2aWTVwa3lcb0J7e3xkHJ9G0885lr2e+v0
+        g4BRv5VL5Q2bKwEqAjCtScDhMQ==
+X-Google-Smtp-Source: ABdhPJwG2BRVqQ2ziox0dNsT7VEIXbPPkmt2DvxPblXiXuRWJAFlpkxVnnE+ApT4WaXP9qsdh951NA==
+X-Received: by 2002:a05:6a00:ad2:b0:4f1:2734:a3d9 with SMTP id c18-20020a056a000ad200b004f12734a3d9mr12393340pfl.61.1648247785019;
+        Fri, 25 Mar 2022 15:36:25 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id cq13-20020a056a00330d00b004faa1fffd18sm7152444pfb.124.2022.03.25.15.03.44
+        by smtp.gmail.com with ESMTPSA id be11-20020a056a001f0b00b004fb29215dd9sm398786pfb.30.2022.03.25.15.36.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Mar 2022 15:03:44 -0700 (PDT)
-Date:   Fri, 25 Mar 2022 15:03:43 -0700
+        Fri, 25 Mar 2022 15:36:24 -0700 (PDT)
+Date:   Fri, 25 Mar 2022 15:36:24 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, George Burgess IV <gbiv@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [GIT PULL] FORTIFY_SOURCE updates for v5.18-rc1
-Message-ID: <202203251443.9BBADFD98@keescook>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     shuah@kernel.org, Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        linux-kselftest@vger.kernel.org,
+        Willem de Bruijn <willemb@google.com>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/2] selftests/harness: Run TEARDOWN for ASSERT failures
+Message-ID: <202203251535.4B900BC0@keescook>
+References: <20220324231907.1363887-1-keescook@chromium.org>
+ <20220324231907.1363887-2-keescook@chromium.org>
+ <f705c381-cbe6-0862-e10f-44f2afdef24d@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <f705c381-cbe6-0862-e10f-44f2afdef24d@linuxfoundation.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Linus,
+On Fri, Mar 25, 2022 at 01:37:20PM -0600, Shuah Khan wrote:
+> On 3/24/22 5:19 PM, Kees Cook wrote:
+> > The kselftest test harness has traditionally not run the registered
+> > TEARDOWN handler when a test encountered an ASSERT. This creates
+> > unexpected situations and tests need to be very careful about using
+> > ASSERT, which seems a needless hurdle for test writers.
+> > 
+> > Because of the harness's design for optional failure handlers, the
+> > original implementation of ASSERT used an abort() to immediately
+> > stop execution, but that meant the context for running teardown was
+> > lost. Instead, use setjmp/longjmp so that teardown can be done.
+> > 
+> 
+> Thanks for the patch. The change look good to me.
+> 
+> > Failed SETUP routines continue to not be followed by TEARDOWN, though.
+> 
+> Does this mean failed setup() routines have to handle TEARDOWN? What
+> are guidelines to follow for setup() failures?
+> 
+> Can you add a bit more detail on what you meant by " Failed SETUP
+> routines continue to not be followed by TEARDOWN, though".
 
-Please pull these FORTIFY_SOURCE updates for v5.18-rc1.
+Sure! It means that any failures in a SETUP need to be cleaned up by the
+SETUP, as TEARDOWN won't be run. (As in, this is unchanged from how
+things behaved prior to this patch.)
 
-This series consists of two halves:
-
-- strict compile-time buffer size checking under FORTIFY_SOURCE for
-  the memcpy()-family of functions (for extensive details and rationale,
-  see the first commit),
-
-- enabling FORTIFY_SOURCE for Clang, which has had many overlapping bugs
-  that we've finally worked past.
-
-It looks like all the dependent trees with related buffer fixes have been
-merged (I was waiting for the scsi tree to get pulled). This has been
-in -next for almost 2 development cycles, and I did overnight build
-testing merged against your tree under the following combinations,
-with no new warnings (there is one Clang 14+ specific issue in
-drivers/net/ethernet/huawei/hinic that we're still tracking down as a
-likely compiler regression[1]):
-
-gcc   11.2.1 (Fedora 35)    defconfig:    x86_64 i386 arm64
-gcc   11.2.1 (Fedora 35)    allmodconfig: x86_64 i386 arm64
-gcc   11.2.0 (Ubuntu 21.10) defconfig:    x86_64 i386 arm64
-gcc   11.2.0 (Ubuntu 21.10) allmodconfig: x86_64 i386 arm64
-gcc   10.3.0 (Ubuntu 21.10) defconfig:    x86_64 i386 arm64
-gcc   10.3.0 (Ubuntu 21.10) allmodconfig: x86_64 i386 arm64
-gcc    9.4.0 (Ubuntu 21.10) defconfig:    x86_64 i386 arm64
-gcc    9.4.0 (Ubuntu 21.10) allmodconfig: x86_64 i386 arm64
-gcc    8.5.0 (Ubuntu 21.10) defconfig:    x86_64 i386 arm64
-gcc    8.5.0 (Ubuntu 21.10) allmodconfig: x86_64 i386 arm64
-clang 15.0.0 (local build)  defconfig:    x86_64 i386 arm64
-clang 14.0.0 (Ubuntu 22.04) defconfig:    x86_64 i386 arm64
-clang 13.0.0 (Fedora 35)    defconfig:    x86_64 i386 arm64
-clang 12.0.1 (Ubuntu 21.10) defconfig:    x86_64 i386 arm64
-clang 13.0.0 (Ubuntu 21.10) allmodconfig: x86_64 i386
-clang 12.0.1 (Ubuntu 21.10) allmodconfig: x86_64 i386
-
-There is also still 1 runtime fix pending for the comedi driver's
-selftests[2], which is living in my "pending-fixes" tree (for fixes that
-maintainers appear to have picked up, but haven't appeared in -next yet).
-
-Beyond that, as far as I've been able to track, all the other architecture
-also build cleanly; we've been fixing any issues as they are reported
-by various builders, and when we find them in our builds.
+> 
+> With that:
+> 
+> Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
 
 Thanks!
-
--Kees
-
-[1] https://github.com/ClangBuiltLinux/linux/issues/1592
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=for-next/pending-fixes&id=77cc24d543c46076d753348b6178473eb16fc788
-
-The following changes since commit dfd42facf1e4ada021b939b4e19c935dcdd55566:
-
-  Linux 5.17-rc3 (2022-02-06 12:20:50 -0800)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/memcpy-v5.18-rc1
-
-for you to fetch changes up to 281d0c962752fb40866dd8d4cade68656f34bd1f:
-
-  fortify: Add Clang support (2022-02-13 16:50:07 -0800)
-
-----------------------------------------------------------------
-memcpy updates for v5.18-rc1
-
-- Enable strict FORTIFY_SOURCE compile-time validation of memcpy buffers
-
-- Add Clang features needed for FORTIFY_SOURCE support
-
-- Enable FORTIFY_SOURCE for Clang where possible
-
-----------------------------------------------------------------
-Kees Cook (12):
-      fortify: Detect struct member overflows in memcpy() at compile-time
-      fortify: Detect struct member overflows in memmove() at compile-time
-      fortify: Detect struct member overflows in memset() at compile-time
-      fortify: Update compile-time tests for Clang 14
-      fortify: Replace open-coded __gnu_inline attribute
-      Compiler Attributes: Add __pass_object_size for Clang
-      Compiler Attributes: Add __overloadable for Clang
-      Compiler Attributes: Add __diagnose_as for Clang
-      fortify: Make pointer arguments const
-      fortify: Use __diagnose_as() for better diagnostic coverage
-      fortify: Make sure strlen() may still be used as a constant expression
-      fortify: Add Clang support
-
- arch/x86/boot/compressed/misc.c                 |   3 +-
- arch/x86/lib/memcpy_32.c                        |   1 +
- include/linux/compiler_attributes.h             |  39 ++++
- include/linux/fortify-string.h                  | 238 +++++++++++++++++++-----
- lib/Makefile                                    |   3 +-
- lib/string_helpers.c                            |   6 +
- lib/test_fortify/read_overflow2_field-memcpy.c  |   5 +
- lib/test_fortify/read_overflow2_field-memmove.c |   5 +
- lib/test_fortify/write_overflow_field-memcpy.c  |   5 +
- lib/test_fortify/write_overflow_field-memmove.c |   5 +
- lib/test_fortify/write_overflow_field-memset.c  |   5 +
- scripts/test_fortify.sh                         |   8 +-
- security/Kconfig                                |   5 +-
- 13 files changed, 272 insertions(+), 56 deletions(-)
- create mode 100644 lib/test_fortify/read_overflow2_field-memcpy.c
- create mode 100644 lib/test_fortify/read_overflow2_field-memmove.c
- create mode 100644 lib/test_fortify/write_overflow_field-memcpy.c
- create mode 100644 lib/test_fortify/write_overflow_field-memmove.c
- create mode 100644 lib/test_fortify/write_overflow_field-memset.c
 
 -- 
 Kees Cook
