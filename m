@@ -2,55 +2,101 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A31C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 25 Mar 2022 05:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D00C433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Mar 2022 19:50:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347598AbiCYFcp (ORCPT
+        id S231784AbiCYTwN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 25 Mar 2022 01:32:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41508 "EHLO
+        Fri, 25 Mar 2022 15:52:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243776AbiCYFco (ORCPT
+        with ESMTP id S230368AbiCYTvt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 25 Mar 2022 01:32:44 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61940C5595;
-        Thu, 24 Mar 2022 22:31:11 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id C4BCD68B05; Fri, 25 Mar 2022 06:31:08 +0100 (CET)
-Date:   Fri, 25 Mar 2022 06:31:08 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] usercopy: Disable CONFIG_HARDENED_USERCOPY_PAGESPAN
-Message-ID: <20220325053108.GB5204@lst.de>
-References: <20220324230255.1362706-1-keescook@chromium.org>
+        Fri, 25 Mar 2022 15:51:49 -0400
+Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1B3B14F102
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Mar 2022 12:37:22 -0700 (PDT)
+Received: by mail-il1-x129.google.com with SMTP id j15so5849824ila.13
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Mar 2022 12:37:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=r+I5kgyO1tHgpBki5iRD8MjPGB+7NsBMCsnuZBuuE14=;
+        b=MqzuSUS0yr/bPjYga/LEvUUNISlNPEafGymcHkHdDo8eBX7GHuzf6g/+kmf1KtFnxZ
+         bTDwiRZWThL8Xi79vFyjF5gbvRgB1jkq42i+mjP3YSVt2Xw310TWdk6Rzk6jKRAdeDfZ
+         aQEhrHQGJCIvIk+EpnbENPp1prNGxCxUVBwzA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=r+I5kgyO1tHgpBki5iRD8MjPGB+7NsBMCsnuZBuuE14=;
+        b=2vHSrEA9xf7WbdgDHjCA25XqPazbnoofQXitIzMtWwR1TnxZeYa7xuDNkxptzrrD0b
+         VBNwTs4f0uFc1XAuL7q0tZ0wdLkCiUvseXj3I1jXbuA/HbarO1atzZhSH8iWgTtPiixZ
+         4DW1Ur2BPnV4+ZNmjCITF8Zr+/CGwvP7n/JAGvkQj3oOSXZvMjMD+jLNbTthKPUzPNF+
+         2KB0AdN8LgqJp2/dkFyBYqfw0qwBmyF+qpqZj+SkinMwBIzUly86yCylv0RZeM0+fU1h
+         p5fgTGyor8W9EskEorVFJ/hT3tpjTfyW3dNWPlmFtHrNPKgHhYjb/ghlUN9Q82qEq66I
+         9vdQ==
+X-Gm-Message-State: AOAM531B5LazZKfC5nToB3zdY0vwL9bKYc4BBubhzNCT9q41clOGoBvX
+        Pcu4ZdYu/qzg2y55R+QjOgxf4w==
+X-Google-Smtp-Source: ABdhPJxOiBqtQQ67WxLOxsMZLU4xmrMIRljTj398xq62z9MSAACWfwac6+zmpEx65WXMd4V0g5PdDg==
+X-Received: by 2002:a92:d09:0:b0:2c3:f141:848b with SMTP id 9-20020a920d09000000b002c3f141848bmr137372iln.230.1648237042167;
+        Fri, 25 Mar 2022 12:37:22 -0700 (PDT)
+Received: from [192.168.1.128] ([71.205.29.0])
+        by smtp.gmail.com with ESMTPSA id d14-20020a056602184e00b00649673c175asm3449967ioi.25.2022.03.25.12.37.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Mar 2022 12:37:21 -0700 (PDT)
+Subject: Re: [PATCH 1/2] selftests/harness: Run TEARDOWN for ASSERT failures
+To:     Kees Cook <keescook@chromium.org>, shuah@kernel.org
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        linux-kselftest@vger.kernel.org,
+        Willem de Bruijn <willemb@google.com>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20220324231907.1363887-1-keescook@chromium.org>
+ <20220324231907.1363887-2-keescook@chromium.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <f705c381-cbe6-0862-e10f-44f2afdef24d@linuxfoundation.org>
+Date:   Fri, 25 Mar 2022 13:37:20 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220324230255.1362706-1-keescook@chromium.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20220324231907.1363887-2-keescook@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 24, 2022 at 04:02:55PM -0700, Kees Cook wrote:
-> CONFIG_HARDENED_USERCOPY_PAGESPAN has been mostly broken for a while,
-> and it has become hard to ignore with some recent scsi changes[1].
-> While there is a more complete series to replace it with better checks[2],
-> it should have more soak time in -next. Instead, disable the config now,
-> with the expectation that it will be fully replaced in the next kernel
-> release.
+On 3/24/22 5:19 PM, Kees Cook wrote:
+> The kselftest test harness has traditionally not run the registered
+> TEARDOWN handler when a test encountered an ASSERT. This creates
+> unexpected situations and tests need to be very careful about using
+> ASSERT, which seems a needless hurdle for test writers.
 > 
-> [1] https://lore.kernel.org/lkml/20220324064846.GA12961@lst.de/
-> [2] https://lore.kernel.org/linux-hardening/20220110231530.665970-1-willy@infradead.org/
+> Because of the harness's design for optional failure handlers, the
+> original implementation of ASSERT used an abort() to immediately
+> stop execution, but that meant the context for running teardown was
+> lost. Instead, use setjmp/longjmp so that teardown can be done.
 > 
-> Suggested-by: Christoph Hellwig <hch@lst.de>
-> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-I'd prefer to just remove the code, but this is better than nothing:
+Thanks for the patch. The change look good to me.
 
-Acked-by: Christoph Hellwig <hch@lst.de>
+> Failed SETUP routines continue to not be followed by TEARDOWN, though.
+
+Does this mean failed setup() routines have to handle TEARDOWN? What
+are guidelines to follow for setup() failures?
+
+Can you add a bit more detail on what you meant by " Failed SETUP
+routines continue to not be followed by TEARDOWN, though".
+
+With that:
+
+Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
+
+thanks,
+-- Shuah
