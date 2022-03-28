@@ -2,119 +2,92 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89837C433FE
-	for <linux-hardening@archiver.kernel.org>; Mon, 28 Mar 2022 11:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A02C433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 28 Mar 2022 16:01:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241151AbiC1L3G (ORCPT
+        id S240627AbiC1QDZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 28 Mar 2022 07:29:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46072 "EHLO
+        Mon, 28 Mar 2022 12:03:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241231AbiC1L1E (ORCPT
+        with ESMTP id S235079AbiC1QDY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 28 Mar 2022 07:27:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB7164DB;
-        Mon, 28 Mar 2022 04:23:51 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2F0C9611B7;
-        Mon, 28 Mar 2022 11:23:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD46BC34100;
-        Mon, 28 Mar 2022 11:23:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648466630;
-        bh=KLq3MPkjNx7wkx1Me1htQFQREd2ARzbMTWYEu7Q2FxA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ci4SoAb6GNwN+pW0jJydDMMuFOtxPCrs2N5QE72AlwAoEMHoON17oSa3gIJmY8+sk
-         1zTihS8WVWDnXY5eCCKqW1OVgzfOsunCFnveOdjxS0IqxUfCLrZXvf4QLd/RZXrggP
-         OiwJ6i8mmZcaEcTNK+qUKkVCvfFy4NrOkinHeaTG4yZ/ciaYwNijwN1FGQnV+Z0FBC
-         oyjtOzc4XOff4gAnW7GPjCIB1VoUuFj4Pgu26uLL3TPRaf/e6135731Wfq6ySsTVwc
-         cGykSmSGIhLF1vc3Z12jDiw5yKjJ+jmaQhC8V/D/aBBvLCqNNGZcgnDYZAysqlsftT
-         yjanLRtw/3rBA==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Alexander Popov <alex.popov@linux.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 02/16] gcc-plugins/stackleak: Exactly match strings instead of prefixes
-Date:   Mon, 28 Mar 2022 07:23:31 -0400
-Message-Id: <20220328112345.1556601-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220328112345.1556601-1-sashal@kernel.org>
-References: <20220328112345.1556601-1-sashal@kernel.org>
+        Mon, 28 Mar 2022 12:03:24 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F258A396AC
+        for <linux-hardening@vger.kernel.org>; Mon, 28 Mar 2022 09:01:43 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id s72so12583881pgc.5
+        for <linux-hardening@vger.kernel.org>; Mon, 28 Mar 2022 09:01:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8Gd1mrZiQOq3smqLlHqwKW871rQ12hCh1YJ0GNZOHYE=;
+        b=TrjSxQqoq2V/zaVRUVmSd509ZbzvmP9G/rPfqEw958xRKal/oCddaFt9mZTwpiStt6
+         T7i7jI0YEJ+bPWHPrOL6wm2UbnQsGp/BhD272MaNjuRcndS5qKCbDC9pKTu3Lhvkdjcy
+         nVhO+/vDMFl+S+YlrJm74pvhlS92O00zdMHRg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8Gd1mrZiQOq3smqLlHqwKW871rQ12hCh1YJ0GNZOHYE=;
+        b=VwNW7HaWRvz3dEhgr4bAcO6slf8JrVMJOzd3TiYEm2S8JXsltOEC4u0CF4cK/2iAQS
+         lgbKnThJ6bYPneLmcc6T+p4yl2iooS2vDNhqQzkhYbd3hfQ9JZfAwNMBflf5hGgLmbdJ
+         YQac1G1Ye7wP0xxYj20icTcRrYOzdpXXKpAGJUdxcYo4MSQnqw2yqF3S0J/2btU1IMMj
+         apSdFhbuRHcwzDhSWJtiH9IqDPlb+blS3Ti6bB+HyeSr/M+fZIYotcpd0W/tme6Adtjt
+         7KVC+lNOOdTq13319QiaBZn+CF8yE00cDo5hR0zmpSVH7oN4AJOD4ZhvOCjPgaavVM8W
+         u+Yg==
+X-Gm-Message-State: AOAM5335y5H6t+iqHSyaKGaFK+6JrIdZw37b+OWHsT8w6GjkiPGGIx13
+        AyRNSsLXn4o9PwfpJ3D3LTCFlQ==
+X-Google-Smtp-Source: ABdhPJx/aE4mOpcNZ94+9DP9mvByqTVOtA3KKp0T0hyrjY1SWuvPY/xWOjcqMY/IdfDGO621C3bIVw==
+X-Received: by 2002:a05:6a00:2402:b0:4e1:46ca:68bd with SMTP id z2-20020a056a00240200b004e146ca68bdmr23889175pfh.70.1648483303527;
+        Mon, 28 Mar 2022 09:01:43 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 124-20020a621682000000b004f6a2e59a4dsm16262776pfw.121.2022.03.28.09.01.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Mar 2022 09:01:43 -0700 (PDT)
+Date:   Mon, 28 Mar 2022 09:01:42 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        George Burgess IV <gbiv@google.com>,
+        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [GIT PULL] FORTIFY_SOURCE updates for v5.18-rc1
+Message-ID: <202203280854.C36F2EC@keescook>
+References: <202203251443.9BBADFD98@keescook>
+ <CAHk-=wjeGc-BjkDWTYkXzyQu-vf9EEujuT-6=U7Od0DvCUfb8w@mail.gmail.com>
+ <CAHk-=wid1da7CONOA4ia++vKe5pCFda6gwdafjFP4HXJQcjcsA@mail.gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wid1da7CONOA4ia++vKe5pCFda6gwdafjFP4HXJQcjcsA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+On Sat, Mar 26, 2022 at 12:40:18PM -0700, Linus Torvalds wrote:
+> On Sat, Mar 26, 2022 at 12:29 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > Because if all the compiler issues and warnings have been sorted out,
+> > it sounds to me like the compile-time side could/should be done
+> > unconditionally if there are no runtime downsides.
 
-[ Upstream commit 27e9faf415dbf94af19b9c827842435edbc1fbbc ]
+Yeah, I'd like to do this. The way the header files are currently split
+up makes this slightly weird, and there have been issues with some
+arch/compiler combinations, so it's not quite as cut-and-dried as I'd
+like. I'll investigate what it could look like.
 
-Since STRING_CST may not be NUL terminated, strncmp() was used for check
-for equality. However, this may lead to mismatches for longer section
-names where the start matches the tested-for string. Test for exact
-equality by checking for the presences of NUL termination.
+> .. or do the existing compiler warnings for the builtins already cover
+> all cases, and the only reason the fortify-source code has
+> compile-time warnings is that the option takes over the builtins?
 
-Cc: Alexander Popov <alex.popov@linux.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- scripts/gcc-plugins/stackleak_plugin.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+This mostly depends on the compiler version, and they often overlap, but
+the new FORTIFY logic tends to be more strict (where possible) and is more
+consistent; I view the two diagnostic capabilities as complementary.
 
-diff --git a/scripts/gcc-plugins/stackleak_plugin.c b/scripts/gcc-plugins/stackleak_plugin.c
-index dbd37460c573..f46abb315010 100644
---- a/scripts/gcc-plugins/stackleak_plugin.c
-+++ b/scripts/gcc-plugins/stackleak_plugin.c
-@@ -262,6 +262,23 @@ static unsigned int stackleak_cleanup_execute(void)
- 	return 0;
- }
- 
-+/*
-+ * STRING_CST may or may not be NUL terminated:
-+ * https://gcc.gnu.org/onlinedocs/gccint/Constant-expressions.html
-+ */
-+static inline bool string_equal(tree node, const char *string, int length)
-+{
-+	if (TREE_STRING_LENGTH(node) < length)
-+		return false;
-+	if (TREE_STRING_LENGTH(node) > length + 1)
-+		return false;
-+	if (TREE_STRING_LENGTH(node) == length + 1 &&
-+	    TREE_STRING_POINTER(node)[length] != '\0')
-+		return false;
-+	return !memcmp(TREE_STRING_POINTER(node), string, length);
-+}
-+#define STRING_EQUAL(node, str)	string_equal(node, str, strlen(str))
-+
- static bool stackleak_gate(void)
- {
- 	tree section;
-@@ -271,13 +288,13 @@ static bool stackleak_gate(void)
- 	if (section && TREE_VALUE(section)) {
- 		section = TREE_VALUE(TREE_VALUE(section));
- 
--		if (!strncmp(TREE_STRING_POINTER(section), ".init.text", 10))
-+		if (STRING_EQUAL(section, ".init.text"))
- 			return false;
--		if (!strncmp(TREE_STRING_POINTER(section), ".devinit.text", 13))
-+		if (STRING_EQUAL(section, ".devinit.text"))
- 			return false;
--		if (!strncmp(TREE_STRING_POINTER(section), ".cpuinit.text", 13))
-+		if (STRING_EQUAL(section, ".cpuinit.text"))
- 			return false;
--		if (!strncmp(TREE_STRING_POINTER(section), ".meminit.text", 13))
-+		if (STRING_EQUAL(section, ".meminit.text"))
- 			return false;
- 	}
- 
 -- 
-2.34.1
-
+Kees Cook
