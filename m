@@ -2,74 +2,96 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2B6C433EF
-	for <linux-hardening@archiver.kernel.org>; Sat, 26 Mar 2022 20:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C97CDC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 28 Mar 2022 05:48:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235437AbiCZUTw (ORCPT
+        id S238168AbiC1Ftp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 26 Mar 2022 16:19:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52696 "EHLO
+        Mon, 28 Mar 2022 01:49:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235417AbiCZUTp (ORCPT
+        with ESMTP id S235040AbiC1Fto (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 26 Mar 2022 16:19:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D8E2205CA;
-        Sat, 26 Mar 2022 13:18:07 -0700 (PDT)
+        Mon, 28 Mar 2022 01:49:44 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C3950078;
+        Sun, 27 Mar 2022 22:48:04 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C7ECB60DF8;
-        Sat, 26 Mar 2022 20:18:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2ABB8C340ED;
-        Sat, 26 Mar 2022 20:18:06 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E6388B80E48;
+        Mon, 28 Mar 2022 05:48:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EF70C340F0;
+        Mon, 28 Mar 2022 05:47:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648325886;
-        bh=NQ8FcjPHpoMs5HGYXsG7Q0MuPKyxMlQXUhxEOE1x2o8=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=cR+Naf/TIr3zYUxnbv5UeM//DJN9RRQUz9D7j4I64AGgRf+9QrJbB4j5UNL7PKBq/
-         EPJIBgL/pI5RzVoHSKUTGE1vrqdkFtiOuJdn/wGw12PTUWclsrq7FI0il61u3BYXfw
-         KPwgititsuZjXnQNnvO+JnZtOA+ZMNht2tbTlzDJAp0rCl6vz8k1bzTVDEWWv0V4Ki
-         ZDGjNZ8CagPzvvjHzk6uI6zZs0Dc3MxXufUQLG8i9tppl8bGfoC5SLjcMoUhZBFzbO
-         dLr3Y383vIPZr5E2Ndq/vumgoGHGkbDoNGVum82aPymyc6+7CVcGAIw4NCyNfBgE97
-         l1o5KI6Usl2sA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 17BE6E6D44B;
-        Sat, 26 Mar 2022 20:18:06 +0000 (UTC)
-Subject: Re: [GIT PULL] FORTIFY_SOURCE updates for v5.18-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <202203251443.9BBADFD98@keescook>
-References: <202203251443.9BBADFD98@keescook>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <202203251443.9BBADFD98@keescook>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/memcpy-v5.18-rc1
-X-PR-Tracked-Commit-Id: 281d0c962752fb40866dd8d4cade68656f34bd1f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4be240b18aa67b1144af546bea2d7cad1b75c19b
-Message-Id: <164832588609.7233.7403778797821946356.pr-tracker-bot@kernel.org>
-Date:   Sat, 26 Mar 2022 20:18:06 +0000
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, George Burgess IV <gbiv@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
+        s=k20201202; t=1648446481;
+        bh=7WvjipyGg6RsfucDyVPM5ZDCMQ7EW5OtT8Dh7ipOWPw=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=IF2sIOU2jtJMxOIsuPM+6fW5O0Z0j++wP7ng9+hOlOYtjoqfxlcdG9CEkR1x0mml0
+         lnn7+EqcftVG33r+qMfQFOPl0B7zIX1tQ+mAHREfw/19fdYElXMa8SFUsJwEW8QpKk
+         eX84n5PZAvm3ZdiIbESKll2qdycWZClAR/sIXfCmXk4Hf509Mi8INzCV/P53qk5Suj
+         G3xnb3lGMgu4GD8tW111FxcBWWbp1kp8s/zTOEeQex7SqTI7oK6XEAbZ4ww3CbI8RX
+         +OlRFTSBA2WwWz9tIt9SwRs2PgNpGkxXoPjKA54CpYR7pkfsE3Lw13BkFBEKsCXyb2
+         0MaJqyQ6JXyBQ==
+From:   Kalle Valo <kvalo@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] iwlwifi: fw: Replace zero-length arrays with flexible-array members
+References: <20220216195015.GA904148@embeddedor>
+        <202202161235.2FB20E6A5@keescook>
+        <20220326003843.GA2602091@embeddedor>
+Date:   Mon, 28 Mar 2022 08:47:55 +0300
+In-Reply-To: <20220326003843.GA2602091@embeddedor> (Gustavo A. R. Silva's
+        message of "Fri, 25 Mar 2022 19:38:43 -0500")
+Message-ID: <871qym1vck.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The pull request you sent on Fri, 25 Mar 2022 15:03:43 -0700:
+"Gustavo A. R. Silva" <gustavoars@kernel.org> writes:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/memcpy-v5.18-rc1
+> On Wed, Feb 16, 2022 at 12:35:14PM -0800, Kees Cook wrote:
+>> On Wed, Feb 16, 2022 at 01:50:15PM -0600, Gustavo A. R. Silva wrote:
+>> > There is a regular need in the kernel to provide a way to declare
+>> > having a dynamically sized set of trailing elements in a structure.
+>> > Kernel code should always use =E2=80=9Cflexible array members=E2=80=9D=
+[1] for these
+>> > cases. The older style of one-element or zero-length arrays should
+>> > no longer be used[2].
+>> >=20
+>> > [1] https://en.wikipedia.org/wiki/Flexible_array_member
+>> > [2]
+>> > https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-len=
+gth-and-one-element-arrays
+>> >=20
+>> > Link: https://github.com/KSPP/linux/issues/78
+>> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>=20
+>> Reviewed-by: Kees Cook <keescook@chromium.org>
+>
+> Hi all,
+>
+> Friendly ping: can someone take this, please?
+>
+> ...I can take this in my -next tree in the meantime.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4be240b18aa67b1144af546bea2d7cad1b75c19b
+Like we have discussed before, please don't take any wireless patches to
+your tree. The conflicts just cause more work of us.
 
-Thank you!
+I assigned this patch to me on patchwork and I'm planning to take it to
+wireless-next once it opens. Luca, ack?
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+--=20
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
