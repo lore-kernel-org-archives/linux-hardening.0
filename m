@@ -2,130 +2,119 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFBAC433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 28 Mar 2022 06:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03990C4332F
+	for <linux-hardening@archiver.kernel.org>; Mon, 28 Mar 2022 11:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234153AbiC1Grb (ORCPT
+        id S240611AbiC1LU4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 28 Mar 2022 02:47:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53502 "EHLO
+        Mon, 28 Mar 2022 07:20:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233863AbiC1Gra (ORCPT
+        with ESMTP id S240610AbiC1LU2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 28 Mar 2022 02:47:30 -0400
-X-Greylist: delayed 1398 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 27 Mar 2022 23:45:48 PDT
-Received: from gateway34.websitewelcome.com (gateway34.websitewelcome.com [192.185.148.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE96120AE
-        for <linux-hardening@vger.kernel.org>; Sun, 27 Mar 2022 23:45:48 -0700 (PDT)
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id DEFCA59E0698
-        for <linux-hardening@vger.kernel.org>; Mon, 28 Mar 2022 01:15:26 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Yif0naRUFXvvJYif0noUiK; Mon, 28 Mar 2022 01:15:26 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=jQgqtKv6g3c9JTlzvFF9fkILdnQrG04PzWMmUtyZ79I=; b=Z9m6Uy21YEhtJzNbcBVhcTYQYn
-        vTB3fNlc3MOfcSh6ksPbcbYt3oSXkofi5a6lRQPC05JtMruK8znKUKiTTX3akYnERi0THt5V62b9k
-        O3i2yVX8iGTxxGcpJ47nvcy0wCRN019I5YMj117403A7hpVRofIkzeD8LQgrGrmdIpYLwgqyOAlD/
-        AW2eJjvcAFsrsOMELIVWO1G++G5f5/H22dbAqQ8Ex3v0lYALkLQtX6V/okDZ43zfuA2OfLBspZOEH
-        Bw9+aSG4L4fcfrJe4f2a4dwsO/Uoddhuvu6U0FDkQ06+RWGTnrDTKhOxrvlY2iBr2UTk1rSe/pNCM
-        ikLFO6lA==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:38018 helo=[192.168.15.9])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1nYif0-000lJi-7y; Mon, 28 Mar 2022 01:15:26 -0500
-Message-ID: <4c520e2e-d1a5-6d2b-3ef1-b891d7946c01@embeddedor.com>
-Date:   Mon, 28 Mar 2022 01:23:59 -0500
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH][next] iwlwifi: fw: Replace zero-length arrays with
- flexible-array members
-Content-Language: en-US
-To:     Kalle Valo <kvalo@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+        Mon, 28 Mar 2022 07:20:28 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9E0E5574E;
+        Mon, 28 Mar 2022 04:18:43 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E1E51B81054;
+        Mon, 28 Mar 2022 11:18:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E903FC34110;
+        Mon, 28 Mar 2022 11:18:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1648466320;
+        bh=hOasPOHGeymPIR9CFGjXih8tpW9A6b/MeZtf9fDUetE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=J0MB8FtAX+/NaSGpM8TsW1rd5bTScgxjUQUmgzN+Qy4SQSflbVQFXJJ0D1lj5h8uY
+         +a5XyWdRLxSzp3dekq3O/D5YcgQzUgjVhE8EMliipwROpSVhoKM3SDmkHHwunhS8Av
+         AkO8WKndhRjbjVMKSpflHz/6C6ZkHG/dj5xikU5T5Uc4kQ7inqTkyivXcO7J4YA9wS
+         R/8EHfEe21h6eQ8wMSxQ/9U7bNc1JnLaiYQ6xpIA7xeaCejJNrus88i4McAEbQRKqD
+         0dWM6Yrq3lsAzaiKHeHVg8Ntb81pRxI+3PfLiCGEtk1NqzsqlbpiCHuXQjUmIZppiI
+         urCPcvISqeXtA==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20220216195015.GA904148@embeddedor>
- <202202161235.2FB20E6A5@keescook> <20220326003843.GA2602091@embeddedor>
- <871qym1vck.fsf@kernel.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <871qym1vck.fsf@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Alexander Popov <alex.popov@linux.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.17 05/43] gcc-plugins/stackleak: Exactly match strings instead of prefixes
+Date:   Mon, 28 Mar 2022 07:17:49 -0400
+Message-Id: <20220328111828.1554086-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220328111828.1554086-1-sashal@kernel.org>
+References: <20220328111828.1554086-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1nYif0-000lJi-7y
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.9]) [187.162.31.110]:38018
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+From: Kees Cook <keescook@chromium.org>
 
+[ Upstream commit 27e9faf415dbf94af19b9c827842435edbc1fbbc ]
 
-On 3/28/22 00:47, Kalle Valo wrote:
-> "Gustavo A. R. Silva" <gustavoars@kernel.org> writes:
-> 
->> On Wed, Feb 16, 2022 at 12:35:14PM -0800, Kees Cook wrote:
->>> On Wed, Feb 16, 2022 at 01:50:15PM -0600, Gustavo A. R. Silva wrote:
->>>> There is a regular need in the kernel to provide a way to declare
->>>> having a dynamically sized set of trailing elements in a structure.
->>>> Kernel code should always use “flexible array members”[1] for these
->>>> cases. The older style of one-element or zero-length arrays should
->>>> no longer be used[2].
->>>>
->>>> [1] https://en.wikipedia.org/wiki/Flexible_array_member
->>>> [2]
->>>> https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
->>>>
->>>> Link: https://github.com/KSPP/linux/issues/78
->>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>>
->>> Reviewed-by: Kees Cook <keescook@chromium.org>
->>
->> Hi all,
->>
->> Friendly ping: can someone take this, please?
->>
->> ...I can take this in my -next tree in the meantime.
-> 
-> Like we have discussed before, please don't take any wireless patches to
-> your tree. The conflicts just cause more work of us.
+Since STRING_CST may not be NUL terminated, strncmp() was used for check
+for equality. However, this may lead to mismatches for longer section
+names where the start matches the tested-for string. Test for exact
+equality by checking for the presences of NUL termination.
 
-Sure thing. I just removed it from my tree.
+Cc: Alexander Popov <alex.popov@linux.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ scripts/gcc-plugins/stackleak_plugin.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-I didn't get any reply from wireless people in more than a month, and
-that's why I temporarily took it in my tree so it doesn't get lost. :)
+diff --git a/scripts/gcc-plugins/stackleak_plugin.c b/scripts/gcc-plugins/stackleak_plugin.c
+index e9db7dcb3e5f..b04aa8e91a41 100644
+--- a/scripts/gcc-plugins/stackleak_plugin.c
++++ b/scripts/gcc-plugins/stackleak_plugin.c
+@@ -429,6 +429,23 @@ static unsigned int stackleak_cleanup_execute(void)
+ 	return 0;
+ }
+ 
++/*
++ * STRING_CST may or may not be NUL terminated:
++ * https://gcc.gnu.org/onlinedocs/gccint/Constant-expressions.html
++ */
++static inline bool string_equal(tree node, const char *string, int length)
++{
++	if (TREE_STRING_LENGTH(node) < length)
++		return false;
++	if (TREE_STRING_LENGTH(node) > length + 1)
++		return false;
++	if (TREE_STRING_LENGTH(node) == length + 1 &&
++	    TREE_STRING_POINTER(node)[length] != '\0')
++		return false;
++	return !memcmp(TREE_STRING_POINTER(node), string, length);
++}
++#define STRING_EQUAL(node, str)	string_equal(node, str, strlen(str))
++
+ static bool stackleak_gate(void)
+ {
+ 	tree section;
+@@ -438,13 +455,13 @@ static bool stackleak_gate(void)
+ 	if (section && TREE_VALUE(section)) {
+ 		section = TREE_VALUE(TREE_VALUE(section));
+ 
+-		if (!strncmp(TREE_STRING_POINTER(section), ".init.text", 10))
++		if (STRING_EQUAL(section, ".init.text"))
+ 			return false;
+-		if (!strncmp(TREE_STRING_POINTER(section), ".devinit.text", 13))
++		if (STRING_EQUAL(section, ".devinit.text"))
+ 			return false;
+-		if (!strncmp(TREE_STRING_POINTER(section), ".cpuinit.text", 13))
++		if (STRING_EQUAL(section, ".cpuinit.text"))
+ 			return false;
+-		if (!strncmp(TREE_STRING_POINTER(section), ".meminit.text", 13))
++		if (STRING_EQUAL(section, ".meminit.text"))
+ 			return false;
+ 	}
+ 
+-- 
+2.34.1
 
-> I assigned this patch to me on patchwork and I'm planning to take it to
-> wireless-next once it opens. Luca, ack?
-
-Awesome.
-
-Thanks
---
-Gustavo
