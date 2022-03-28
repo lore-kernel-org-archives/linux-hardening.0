@@ -2,91 +2,130 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA42C433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 28 Mar 2022 05:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFBAC433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 28 Mar 2022 06:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233969AbiC1FuP (ORCPT
+        id S234153AbiC1Grb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 28 Mar 2022 01:50:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40138 "EHLO
+        Mon, 28 Mar 2022 02:47:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235040AbiC1FuK (ORCPT
+        with ESMTP id S233863AbiC1Gra (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 28 Mar 2022 01:50:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B582412A94;
-        Sun, 27 Mar 2022 22:48:29 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 314846109A;
-        Mon, 28 Mar 2022 05:48:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99C6AC340F0;
-        Mon, 28 Mar 2022 05:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648446508;
-        bh=LQyxRKXMf0S7uzGj5hH8/MvLm79Jjubtz0m602VOG1Y=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=r5X52gFgn7hx5pBW0q/WF5RxNd/bFfG97hhie/kXFd6DHGiu014p/NEc7mw71W4xZ
-         JJpY+PSzyAACVYpBT6O0ZzdFiKjp6QJrXwz+v0jZ7x8AJTX6/l/NDBnYq1sqlVgnP4
-         TC9jttkCIwV4kZjwHq751BRBgg7/+OxOYMBKlQ/1/VEqBv9F3R4vDNzdzejBiC9izJ
-         MwyCxqyS/J6At+JIUj9cKkOJws2Airt7fxk70wDV4zRR3FrKmDl6N3EgrhD7z/mJZs
-         ndT9+LTH0vJ2Dvn9wSN5uSjcwCDucJNGGZLWHffCIeuhJtuxVUhgOof8UH0DuiljxA
-         Bgz69gFqxOmfw==
-From:   Kalle Valo <kvalo@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+        Mon, 28 Mar 2022 02:47:30 -0400
+X-Greylist: delayed 1398 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 27 Mar 2022 23:45:48 PDT
+Received: from gateway34.websitewelcome.com (gateway34.websitewelcome.com [192.185.148.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE96120AE
+        for <linux-hardening@vger.kernel.org>; Sun, 27 Mar 2022 23:45:48 -0700 (PDT)
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id DEFCA59E0698
+        for <linux-hardening@vger.kernel.org>; Mon, 28 Mar 2022 01:15:26 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Yif0naRUFXvvJYif0noUiK; Mon, 28 Mar 2022 01:15:26 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=jQgqtKv6g3c9JTlzvFF9fkILdnQrG04PzWMmUtyZ79I=; b=Z9m6Uy21YEhtJzNbcBVhcTYQYn
+        vTB3fNlc3MOfcSh6ksPbcbYt3oSXkofi5a6lRQPC05JtMruK8znKUKiTTX3akYnERi0THt5V62b9k
+        O3i2yVX8iGTxxGcpJ47nvcy0wCRN019I5YMj117403A7hpVRofIkzeD8LQgrGrmdIpYLwgqyOAlD/
+        AW2eJjvcAFsrsOMELIVWO1G++G5f5/H22dbAqQ8Ex3v0lYALkLQtX6V/okDZ43zfuA2OfLBspZOEH
+        Bw9+aSG4L4fcfrJe4f2a4dwsO/Uoddhuvu6U0FDkQ06+RWGTnrDTKhOxrvlY2iBr2UTk1rSe/pNCM
+        ikLFO6lA==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:38018 helo=[192.168.15.9])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1nYif0-000lJi-7y; Mon, 28 Mar 2022 01:15:26 -0500
+Message-ID: <4c520e2e-d1a5-6d2b-3ef1-b891d7946c01@embeddedor.com>
+Date:   Mon, 28 Mar 2022 01:23:59 -0500
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH][next] iwlwifi: fw: Replace zero-length arrays with
+ flexible-array members
+Content-Language: en-US
+To:     Kalle Valo <kvalo@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc:     Kees Cook <keescook@chromium.org>,
         Luca Coelho <luciano.coelho@intel.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] iwlwifi: mei: Replace zero-length array with flexible-array member
-References: <20220216195030.GA904170@embeddedor>
-        <202202161235.F3A134A9@keescook> <20220326004137.GB2602091@embeddedor>
-Date:   Mon, 28 Mar 2022 08:48:24 +0300
-In-Reply-To: <20220326004137.GB2602091@embeddedor> (Gustavo A. R. Silva's
-        message of "Fri, 25 Mar 2022 19:41:37 -0500")
-Message-ID: <87wngezkyf.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20220216195015.GA904148@embeddedor>
+ <202202161235.2FB20E6A5@keescook> <20220326003843.GA2602091@embeddedor>
+ <871qym1vck.fsf@kernel.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <871qym1vck.fsf@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1nYif0-000lJi-7y
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.9]) [187.162.31.110]:38018
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> writes:
 
-> On Wed, Feb 16, 2022 at 12:35:22PM -0800, Kees Cook wrote:
->> On Wed, Feb 16, 2022 at 01:50:30PM -0600, Gustavo A. R. Silva wrote:
->> > There is a regular need in the kernel to provide a way to declare
->> > having a dynamically sized set of trailing elements in a structure.
->> > Kernel code should always use =E2=80=9Cflexible array members=E2=80=9D=
-[1] for these
->> > cases. The older style of one-element or zero-length arrays should
->> > no longer be used[2].
->> >=20
->> > [1] https://en.wikipedia.org/wiki/Flexible_array_member
->> > [2]
->> > https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-len=
-gth-and-one-element-arrays
->> >=20
->> > Link: https://github.com/KSPP/linux/issues/78
->> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>=20
->> Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> Hi all,
->
-> Friendly ping: can someone take this, please?
->
-> ...I can take this in my -next tree in the meantime.
 
-I'll take this. Luca, ack?
+On 3/28/22 00:47, Kalle Valo wrote:
+> "Gustavo A. R. Silva" <gustavoars@kernel.org> writes:
+> 
+>> On Wed, Feb 16, 2022 at 12:35:14PM -0800, Kees Cook wrote:
+>>> On Wed, Feb 16, 2022 at 01:50:15PM -0600, Gustavo A. R. Silva wrote:
+>>>> There is a regular need in the kernel to provide a way to declare
+>>>> having a dynamically sized set of trailing elements in a structure.
+>>>> Kernel code should always use “flexible array members”[1] for these
+>>>> cases. The older style of one-element or zero-length arrays should
+>>>> no longer be used[2].
+>>>>
+>>>> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+>>>> [2]
+>>>> https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
+>>>>
+>>>> Link: https://github.com/KSPP/linux/issues/78
+>>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>>
+>>> Reviewed-by: Kees Cook <keescook@chromium.org>
+>>
+>> Hi all,
+>>
+>> Friendly ping: can someone take this, please?
+>>
+>> ...I can take this in my -next tree in the meantime.
+> 
+> Like we have discussed before, please don't take any wireless patches to
+> your tree. The conflicts just cause more work of us.
 
---=20
-https://patchwork.kernel.org/project/linux-wireless/list/
+Sure thing. I just removed it from my tree.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+I didn't get any reply from wireless people in more than a month, and
+that's why I temporarily took it in my tree so it doesn't get lost. :)
+
+> I assigned this patch to me on patchwork and I'm planning to take it to
+> wireless-next once it opens. Luca, ack?
+
+Awesome.
+
+Thanks
+--
+Gustavo
