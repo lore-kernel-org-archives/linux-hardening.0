@@ -2,49 +2,49 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA57C43219
-	for <linux-hardening@archiver.kernel.org>; Mon, 28 Mar 2022 11:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE80C433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 28 Mar 2022 11:24:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236108AbiC1LZq (ORCPT
+        id S241135AbiC1LZv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 28 Mar 2022 07:25:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44532 "EHLO
+        Mon, 28 Mar 2022 07:25:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240876AbiC1LZA (ORCPT
+        with ESMTP id S241698AbiC1LYH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 28 Mar 2022 07:25:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38D3555BDB;
-        Mon, 28 Mar 2022 04:23:06 -0700 (PDT)
+        Mon, 28 Mar 2022 07:24:07 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 795CA55BEA;
+        Mon, 28 Mar 2022 04:21:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B817E61126;
-        Mon, 28 Mar 2022 11:23:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76B95C36AE7;
-        Mon, 28 Mar 2022 11:23:04 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3EA82B80ED8;
+        Mon, 28 Mar 2022 11:21:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BC68C340EC;
+        Mon, 28 Mar 2022 11:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648466585;
-        bh=jyHeGkeBUgv0uibiiSn4ARBIL2VuEVNmQ8Khl1BNBug=;
+        s=k20201202; t=1648466500;
+        bh=hOasPOHGeymPIR9CFGjXih8tpW9A6b/MeZtf9fDUetE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lk66jqQMBxE2c9vzjVHZ7qBh32R7Uc7QdYWc3DcoC2ma0CY0/AHlkY2VD6MAHWTXA
-         cz3PdjppAo/dcjF/FR0fcouzm0HF3HFQIjeByCw5hwvW8Rp2QJbGBBgMCZTl22dtHC
-         XtIUhJT562KWuZABM4xlQIr1uiA2d1rthOrMV3xkCMjzjLGQQgtanEz/f+VQCL6mng
-         exQb4VDZdNgOOCLMM8zByA7xpUnzSetHj14tdvOOAcL1tdUEUhsPhheULq46xgqc1r
-         AFL8x6gIUOHOtD7T61qorrGgX/RLyEKpGph7lhkMtGByP+FIWD+vaVs3rGblPU8Qvd
-         xvUPFiqf4BS1w==
+        b=M5ne4eXhiwOuMuREOc5wvnIhEt0J7MygTeEmLkI6Zi3amc55DRJJCU9k/FM8w8ZEx
+         jJxSkzUU2P4a/NNTBi7Q38A7nSpbNAuX/N8MCALAjRjS2DhaIiWcAmULhz+DVCk7Nf
+         dMWbuOJlPbir/MSLsxJI/lmnTIAhXfZXm3ykM8wwvEpWsVij8U0osQQAdABZUivl7g
+         1tGV91RL3iMZDgWWa8VrfMlPdxu4VCumi49Xg1xJgiBn8Otv3bYaQVb2KgJhjvvFyT
+         8frrwt8U/DLArg76NZthmKdelo6fDoX5qwLwzrPWXBWjwbbaJ5pyXJy6elnSOFElV+
+         v8LMuNMDQKhAw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
         Alexander Popov <alex.popov@linux.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 03/21] gcc-plugins/stackleak: Exactly match strings instead of prefixes
-Date:   Mon, 28 Mar 2022 07:22:36 -0400
-Message-Id: <20220328112254.1556286-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 04/29] gcc-plugins/stackleak: Exactly match strings instead of prefixes
+Date:   Mon, 28 Mar 2022 07:21:06 -0400
+Message-Id: <20220328112132.1555683-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220328112254.1556286-1-sashal@kernel.org>
-References: <20220328112254.1556286-1-sashal@kernel.org>
+In-Reply-To: <20220328112132.1555683-1-sashal@kernel.org>
+References: <20220328112132.1555683-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -70,10 +70,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 21 insertions(+), 4 deletions(-)
 
 diff --git a/scripts/gcc-plugins/stackleak_plugin.c b/scripts/gcc-plugins/stackleak_plugin.c
-index 48e141e07956..dacd697ffd38 100644
+index e9db7dcb3e5f..b04aa8e91a41 100644
 --- a/scripts/gcc-plugins/stackleak_plugin.c
 +++ b/scripts/gcc-plugins/stackleak_plugin.c
-@@ -431,6 +431,23 @@ static unsigned int stackleak_cleanup_execute(void)
+@@ -429,6 +429,23 @@ static unsigned int stackleak_cleanup_execute(void)
  	return 0;
  }
  
@@ -97,7 +97,7 @@ index 48e141e07956..dacd697ffd38 100644
  static bool stackleak_gate(void)
  {
  	tree section;
-@@ -440,13 +457,13 @@ static bool stackleak_gate(void)
+@@ -438,13 +455,13 @@ static bool stackleak_gate(void)
  	if (section && TREE_VALUE(section)) {
  		section = TREE_VALUE(TREE_VALUE(section));
  
