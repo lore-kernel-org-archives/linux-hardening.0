@@ -2,197 +2,224 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720D2C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 30 Mar 2022 21:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DCEC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Mar 2022 23:12:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351288AbiC3VpU (ORCPT
+        id S1350696AbiC3XOG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 30 Mar 2022 17:45:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41308 "EHLO
+        Wed, 30 Mar 2022 19:14:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351296AbiC3VpS (ORCPT
+        with ESMTP id S236212AbiC3XOF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 30 Mar 2022 17:45:18 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85DC56A42A
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Mar 2022 14:43:27 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id t4so15430462pgc.1
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Mar 2022 14:43:27 -0700 (PDT)
+        Wed, 30 Mar 2022 19:14:05 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B02F4B1E7
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Mar 2022 16:12:19 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id c15-20020a17090a8d0f00b001c9c81d9648so1756907pjo.2
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Mar 2022 16:12:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=3P2ZbSJZ9rgiHSYYO2m+2nx9BByc630ioHG/IwLoqJE=;
-        b=PjUfutm1lwuZaM1pE8wgcTpIk9hG3LkKam3kBHUB2ZUJS03trhR+Q11c7jyPX0kRlw
-         WUSUUF0BakNGVgLGhV6Rmk5ubdoZL3PdnInLnWzcwz7dXKNBpsSLcHbQUEZ25E663cxN
-         iSHaORzhGnqOpItkX1nzwI1xILdSFE//tB+94=
+        d=dabbelt-com.20210112.gappssmtp.com; s=20210112;
+        h=date:subject:in-reply-to:cc:from:to:message-id;
+        bh=sHR4EcucliUpX7+65qOWS8vP81r34dp/5wb9FsMswWI=;
+        b=x9LzSrMwm+OX0LDp8wR/iVTvAirwptvVKFGRsLefAoZx3mxBaC5m3CbbNsq2v9k6rn
+         atQrs2BR3hgdPIkyvTsAbkRBsbmxLVS79kMGutu+P3vZfvflL1ScawHcKIHvWYCDiRMP
+         kw8Qon7IXj49MvWj6TJG6u/xCJsCUWyNtNtahDQ5AxH/GIgKQmnx/dEMStromPP7YKaW
+         TegSDzXqDjpEripUsME1eVjFMnv/KeotMJ2s5VfvM6dO0PALqXQ4gpj55nDNZUIn5bww
+         jHcqPj7uMMvPu51qcFKgU3h3cfrv2Vw5ui/7M0sjaSeuQtBWBAykiX400AH/uMbxo5Mi
+         Nxtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=3P2ZbSJZ9rgiHSYYO2m+2nx9BByc630ioHG/IwLoqJE=;
-        b=wiTPh23pvqOt8prOdhLnF3/ofGFGd8bp9SBvwA8LOmUllsOdBIIo+nCD/VtAaWTGJ5
-         oxrt05veWnayA3ypJy8ueaHRY3dAbltCE4wkkZyUHxrB45pGMF3AweuQ9IEvZ1VQrBeK
-         LO/dYoKgYMFtMPxY1Y6FkqYSxZqzN0p0yrJSXrAcSYn/oB3X3S+zO848b3A+QfdTad7V
-         Y5vK55II0VEYkalm0zXbRVOOid4kRdCiRCXVzUNNBW/UOE3kKtAAnwQOJf9LZYFvBYbK
-         LVwTYw3eUD1Uz2jRqzN5a46Ked2qbdiJQJBt/BEkblTZSqZI/d7t8CFiN1k04IHHAj3u
-         Y/eQ==
-X-Gm-Message-State: AOAM531UA+5E4ZtPoT+M6gmKThLGJiPiOaxpkbdjdGqJa4uWDOY36pna
-        QIo7r8H/sWM64UJNOirneS7brQ==
-X-Google-Smtp-Source: ABdhPJw+oIZ8Zdq1D8w87isFRTzwrCPJdubT8myP52JAOXHEOY4AG29Q15HtDYJmZ5irVYhIv9Qklg==
-X-Received: by 2002:a63:340b:0:b0:398:dad:c396 with SMTP id b11-20020a63340b000000b003980dadc396mr7709875pga.574.1648676606992;
-        Wed, 30 Mar 2022 14:43:26 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v189-20020a622fc6000000b004fb72e95806sm10161274pfv.48.2022.03.30.14.43.26
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id;
+        bh=sHR4EcucliUpX7+65qOWS8vP81r34dp/5wb9FsMswWI=;
+        b=4YTJ/U6u868AJEikvBLIYJqacCK0avbB22LFTDuP1loJOXe18IJ+K2Axf1HvTwM0hD
+         1gKCD5QG7SmgAHALa32h3cjPoqoDuePqx596qc/QR8kCSfpu31Yjq1n8V+7DSskOG2mU
+         6Dlz+CThDF4tEtPuCmZR2SJ/hk+SsGh5zG6/4U5C8gYWLcitLI83nd28cF8Oq7vWwxpk
+         PuV3vzg/ea67jshqGsE1NOO72kTkXIC0bqDStrwj/dhOiV16A7TDJDdQ4vxWGdyI253V
+         1/C8IsLd7jO4c6jqotyzT0pY65qf1d1ZN121XrW6i8dw07+9gIFGYatpN1pH9oPkje+j
+         sz8g==
+X-Gm-Message-State: AOAM530vOlq+HsrdXY49eV3FKjkRFpKCVzXFSfDqn5dKE3fIq11cIPX1
+        w188bt56jqUT+4MBdamVYBl9NA==
+X-Google-Smtp-Source: ABdhPJxgLGkVw1UC6zJxMgHsA5hIYCZ2xeLAbZEkfsaQH9aIpoqKFLPDpzpbbxqoOl8PBNy/pdyaaQ==
+X-Received: by 2002:a17:902:b10e:b0:156:1bf8:bf26 with SMTP id q14-20020a170902b10e00b001561bf8bf26mr2277287plr.8.1648681938921;
+        Wed, 30 Mar 2022 16:12:18 -0700 (PDT)
+Received: from localhost ([12.3.194.138])
+        by smtp.gmail.com with ESMTPSA id ml16-20020a17090b361000b001c6c9141b0csm7303574pjb.45.2022.03.30.16.12.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Mar 2022 14:43:26 -0700 (PDT)
-Date:   Wed, 30 Mar 2022 14:43:26 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Nick Terrell <terrelln@fb.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] lib: zstd: Fix Wstringop-overflow warning
-Message-ID: <202203301416.568595B87@keescook>
-References: <20220330193352.GA119296@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220330193352.GA119296@embeddedor>
+        Wed, 30 Mar 2022 16:12:18 -0700 (PDT)
+Date:   Wed, 30 Mar 2022 16:12:18 -0700 (PDT)
+X-Google-Original-Date: Wed, 30 Mar 2022 16:12:10 PDT (-0700)
+Subject:     Re: [PATCH] riscv: Rename "sp_in_global" to "current_stack_pointer"
+In-Reply-To: <mhng-00315cbb-3685-4918-8ea0-539cda5fbc36@palmer-ri-x1c9>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, keescook@chromium.org,
+        aou@eecs.berkeley.edu, peterz@infradead.org, jszhang@kernel.org,
+        geert@linux-m68k.org, mark.rutland@arm.com, chenhuang5@huawei.com,
+        linux-riscv@lists.infradead.org, wangkefeng.wang@huawei.com,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     keescook@chromium.org
+Message-ID: <mhng-82a6e73b-c0b7-4625-8a79-ed481f8b2cf1@palmer-ri-x1c9>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Mar 30, 2022 at 02:33:52PM -0500, Gustavo A. R. Silva wrote:
-> Fix the following -Wstringop-overflow warning when building with GCC-11:
-> 
-> lib/zstd/decompress/huf_decompress.c: In function ‘HUF_readDTableX2_wksp’:
-> lib/zstd/decompress/huf_decompress.c:700:5: warning: ‘HUF_fillDTableX2.constprop’ accessing 624 bytes in a region of size 52 [-Wstringop-overflow=]
->   700 |     HUF_fillDTableX2(dt, maxTableLog,
->       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   701 |                    wksp->sortedSymbol, sizeOfSort,
->       |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   702 |                    wksp->rankStart0, wksp->rankVal, maxW,
->       |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   703 |                    tableLog+1,
->       |                    ~~~~~~~~~~~
->   704 |                    wksp->calleeWksp, sizeof(wksp->calleeWksp) / sizeof(U32));
->       |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> lib/zstd/decompress/huf_decompress.c:700:5: note: referencing argument 6 of type ‘U32 (*)[13]’ {aka ‘unsigned int (*)[13]’}
-> lib/zstd/decompress/huf_decompress.c:571:13: note: in a call to function ‘HUF_fillDTableX2.constprop’
->   571 | static void HUF_fillDTableX2(HUF_DEltX2* DTable, const U32 targetLog,
->       |             ^~~~~~~~~~~~~~~~
+On Tue, 22 Mar 2022 19:16:28 PDT (-0700), Palmer Dabbelt wrote:
+> On Wed, 23 Feb 2022 22:04:11 PST (-0800), keescook@chromium.org wrote:
+>> To follow the existing per-arch conventions, rename "sp_in_global" to
+>> "current_stack_pointer". This will let it be used in non-arch places
+>> (like HARDENED_USERCOPY).
+>>
+>> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+>> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+>> Cc: Albert Ou <aou@eecs.berkeley.edu>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Jisheng Zhang <jszhang@kernel.org>
+>> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Chen Huang <chenhuang5@huawei.com>
+>> Cc: linux-riscv@lists.infradead.org
+>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>> ---
+>>  arch/riscv/Kconfig               | 1 +
+>>  arch/riscv/include/asm/current.h | 2 ++
+>>  arch/riscv/kernel/stacktrace.c   | 4 +---
+>>  3 files changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+>> index 5adcbd9b5e88..b120c32697af 100644
+>> --- a/arch/riscv/Kconfig
+>> +++ b/arch/riscv/Kconfig
+>> @@ -16,6 +16,7 @@ config RISCV
+>>  	select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATION
+>>  	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
+>>  	select ARCH_HAS_BINFMT_FLAT
+>> +	select ARCH_HAS_CURRENT_STACK_POINTER
+>>  	select ARCH_HAS_DEBUG_VM_PGTABLE
+>>  	select ARCH_HAS_DEBUG_VIRTUAL if MMU
+>>  	select ARCH_HAS_DEBUG_WX
+>> diff --git a/arch/riscv/include/asm/current.h b/arch/riscv/include/asm/current.h
+>> index 1de233d8e8de..21774d868c65 100644
+>> --- a/arch/riscv/include/asm/current.h
+>> +++ b/arch/riscv/include/asm/current.h
+>> @@ -33,6 +33,8 @@ static __always_inline struct task_struct *get_current(void)
+>>
+>>  #define current get_current()
+>>
+>> +register unsigned long current_stack_pointer __asm__("sp");
+>> +
+>>  #endif /* __ASSEMBLY__ */
+>>
+>>  #endif /* _ASM_RISCV_CURRENT_H */
+>> diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
+>> index 201ee206fb57..278380e2e956 100644
+>> --- a/arch/riscv/kernel/stacktrace.c
+>> +++ b/arch/riscv/kernel/stacktrace.c
+>> @@ -14,8 +14,6 @@
+>>
+>>  #include <asm/stacktrace.h>
+>>
+>> -register unsigned long sp_in_global __asm__("sp");
+>> -
+>>  #ifdef CONFIG_FRAME_POINTER
+>>
+>>  void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+>> @@ -77,7 +75,7 @@ void notrace walk_stackframe(struct task_struct *task,
+>>  		sp = user_stack_pointer(regs);
+>>  		pc = instruction_pointer(regs);
+>>  	} else if (task == NULL || task == current) {
+>> -		sp = sp_in_global;
+>> +		sp = current_stack_pointer;
+>>  		pc = (unsigned long)walk_stackframe;
+>>  	} else {
+>>  		/* task blocked in __switch_to */
+>
+> Sorry to be slow on this one.  This looks good, but another use of
+> sp_in_global snuck into fixes and I don't merge fixes into for-next so
+> that makes this a bit of a headache.
+>
+> There's a bunch of stuff in flight, so I'm going to hold off on this
+> until after my first week's merge window PR.  I intend on merging the
+> following, which is at palmer/riscv-sp for now (I'll probably just
+> cherry-pick that, I usually start basing stuff on Linus' merge of my PR
+> and just cherry-pick in single patches).
+>
+>    commit 7c4f6bb6fb352cfa6028191c2888356b9157a332
+>    gpg: Signature made Tue 22 Mar 2022 11:12:19 AM PDT
+>    gpg:                using RSA key 2B3C3747446843B24A943A7A2E1319F35FBB1889
+>    gpg:                issuer "palmer@dabbelt.com"
+>    gpg: Good signature from "Palmer Dabbelt <palmer@dabbelt.com>" [ultimate]
+>    gpg:                 aka "Palmer Dabbelt <palmer@rivosinc.com>" [ultimate]
+>    Author: Kees Cook <keescook@chromium.org>
+>    Date:   Wed Feb 23 22:04:11 2022 -0800
+>
+>        riscv: Rename "sp_in_global" to "current_stack_pointer"
+>
+>        To follow the existing per-arch conventions, rename "sp_in_global" to
+>        "current_stack_pointer". This will let it be used in non-arch places
+>        (like HARDENED_USERCOPY).
+>
+>        Signed-off-by: Kees Cook <keescook@chromium.org>
+>        Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
+>
+>    diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+>    index 5adcbd9b5e88..b120c32697af 100644
+>    --- a/arch/riscv/Kconfig
+>    +++ b/arch/riscv/Kconfig
+>    @@ -16,6 +16,7 @@ config RISCV
+>     	select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATION
+>     	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
+>     	select ARCH_HAS_BINFMT_FLAT
+>    +	select ARCH_HAS_CURRENT_STACK_POINTER
+>     	select ARCH_HAS_DEBUG_VM_PGTABLE
+>     	select ARCH_HAS_DEBUG_VIRTUAL if MMU
+>     	select ARCH_HAS_DEBUG_WX
+>    diff --git a/arch/riscv/include/asm/current.h b/arch/riscv/include/asm/current.h
+>    index 1de233d8e8de..21774d868c65 100644
+>    --- a/arch/riscv/include/asm/current.h
+>    +++ b/arch/riscv/include/asm/current.h
+>    @@ -33,6 +33,8 @@ static __always_inline struct task_struct *get_current(void)
+>
+>     #define current get_current()
+>
+>    +register unsigned long current_stack_pointer __asm__("sp");
+>    +
+>     #endif /* __ASSEMBLY__ */
+>
+>     #endif /* _ASM_RISCV_CURRENT_H */
+>    diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
+>    index 14d2b53ec322..08d11a53f39e 100644
+>    --- a/arch/riscv/kernel/stacktrace.c
+>    +++ b/arch/riscv/kernel/stacktrace.c
+>    @@ -14,8 +14,6 @@
+>
+>     #include <asm/stacktrace.h>
+>
+>    -register unsigned long sp_in_global __asm__("sp");
+>    -
+>     #ifdef CONFIG_FRAME_POINTER
+>
+>     void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+>    @@ -30,7 +28,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+>     		pc = instruction_pointer(regs);
+>     	} else if (task == NULL || task == current) {
+>     		fp = (unsigned long)__builtin_frame_address(0);
+>    -		sp = sp_in_global;
+>    +		sp = current_stack_pointer;
+>     		pc = (unsigned long)walk_stackframe;
+>     	} else {
+>     		/* task blocked in __switch_to */
+>    @@ -78,7 +76,7 @@ void notrace walk_stackframe(struct task_struct *task,
+>     		sp = user_stack_pointer(regs);
+>     		pc = instruction_pointer(regs);
+>     	} else if (task == NULL || task == current) {
+>    -		sp = sp_in_global;
+>    +		sp = current_stack_pointer;
+>     		pc = (unsigned long)walk_stackframe;
+>     	} else {
+>     		/* task blocked in __switch_to */
+>
+> Thanks!
 
-Reviewing this changes would be easier if the reason for the warning
-could be explained. i.e. why has GCC decided that the region is 52
-bytes, and how did it calculate the 624 bytes?
-
-rankVal_t is HUF_TABLELOG_MAX-many rankValCol_t, which itself is
-HUF_TABLELOG_MAX + 1 many U32s. So, basically:
-
-U32 array[HUF_TABLELOG_MAX + 1][HUF_TABLELOG_MAX]
-
-sizeof(rankValCol_t) == 52
-sizeof(rankVal_t) == 624
-
-> 
-> by using pointer notation instead of array notation.
-> 
-> This helps with the ongoing efforts to globally enable
-> -Wstringop-overflow.
-> 
-> Link: https://github.com/KSPP/linux/issues/181
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  lib/zstd/decompress/huf_decompress.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/lib/zstd/decompress/huf_decompress.c b/lib/zstd/decompress/huf_decompress.c
-> index 5105e59ac04a..0ea34621253a 100644
-> --- a/lib/zstd/decompress/huf_decompress.c
-> +++ b/lib/zstd/decompress/huf_decompress.c
-> @@ -570,7 +570,7 @@ static void HUF_fillDTableX2Level2(HUF_DEltX2* DTable, U32 sizeLog, const U32 co
->  
->  static void HUF_fillDTableX2(HUF_DEltX2* DTable, const U32 targetLog,
->                             const sortedSymbol_t* sortedList, const U32 sortedListSize,
-> -                           const U32* rankStart, rankVal_t rankValOrigin, const U32 maxWeight,
-> +                           const U32* rankStart, const U32* rankValOrigin, const U32 maxWeight,
->                             const U32 nbBitsBaseline, U32* wksp, size_t wkspSize)
-
-This really feels like we're papering over the warning. This removes the
-type information and makes it a U32 * instead, and then later makes a
-cast?
-
-Can this be fixed in a way that retains the type information?
-
-On the other hand, all the arguments are also U32 *.
-
-I see stuff like:
-
-    ZSTD_memcpy(rankVal, rankValOrigin, sizeof(U32) * (HUF_TABLELOG_MAX + 1));
-
-That looks like it's ignoring type information as well. i.e. why isn't
-this sizeof(rankValOrigin)? (The length above is 52 bytes.)
-
-I'm especially curious here since rankValOrigin is rankVal_t, which is
-624 bytes, not 52 bytes (i.e. the above is copying a single rankValCol_t
-from rankValOrigin. I'd expect this to be:
-
-    ZSTD_memcpy(rankVal, &rankValOrigin[0], sizeof(rankValOrigin[0]));
-
-
->  {
->      U32* rankVal = wksp;
-> @@ -598,7 +598,7 @@ static void HUF_fillDTableX2(HUF_DEltX2* DTable, const U32 targetLog,
->              if (minWeight < 1) minWeight = 1;
->              sortedRank = rankStart[minWeight];
->              HUF_fillDTableX2Level2(DTable+start, targetLog-nbBits, nbBits,
-> -                           rankValOrigin[nbBits], minWeight,
-> +                           rankValOrigin + nbBits, minWeight,
-
-And here I'd expect to pass	&rankValOrigin[nbBits]
-since HUF_fillDTableX2Level2 is doing another rankValCol_t-sized copy:
-
-    ZSTD_memcpy(rankVal, rankValOrigin, sizeof(U32) * (HUF_TABLELOG_MAX + 1));
-
-
->                             sortedList+sortedRank, sortedListSize-sortedRank,
->                             nbBitsBaseline, symbol, wksp, wkspSize);
->          } else {
-> @@ -699,7 +699,7 @@ size_t HUF_readDTableX2_wksp(HUF_DTable* DTable,
->  
->      HUF_fillDTableX2(dt, maxTableLog,
->                     wksp->sortedSymbol, sizeOfSort,
-> -                   wksp->rankStart0, wksp->rankVal, maxW,
-> +                   wksp->rankStart0, (U32 *)wksp->rankVal, maxW,
-
-It's possible the problem is with this structure:
-
-typedef struct {
-    rankValCol_t rankVal[HUF_TABLELOG_MAX];
-    U32 rankStats[HUF_TABLELOG_MAX + 1];
-    U32 rankStart0[HUF_TABLELOG_MAX + 2];
-    sortedSymbol_t sortedSymbol[HUF_SYMBOLVALUE_MAX + 1];
-    BYTE weightList[HUF_SYMBOLVALUE_MAX + 1];
-    U32 calleeWksp[HUF_READ_STATS_WORKSPACE_SIZE_U32];
-} HUF_ReadDTableX2_Workspace;
-
-it's not using the rankVal_t type for rankVal for some reason?
-
-i.e. what's passed to HUF_fillDTableX2 is a rankValCol_t (52 bytes), but then it
-gets passed against later as rankVal_t (624 bytes).
-
-Does changing the type definition above solve this more cleanly?
-
--Kees
-
->                     tableLog+1,
->                     wksp->calleeWksp, sizeof(wksp->calleeWksp) / sizeof(U32));
->  
-> -- 
-> 2.27.0
-> 
-
--- 
-Kees Cook
+Thanks, this is on for-next.  I put HARDENED_USERCOPY=y test in for SLAB 
+and SLUB, not sure if there's anything else that's interesting to test 
+(we're missing some bits needed for STACKLEAK).
