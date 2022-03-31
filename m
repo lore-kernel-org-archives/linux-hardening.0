@@ -2,233 +2,113 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F7FC433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 31 Mar 2022 04:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AD8C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 31 Mar 2022 19:04:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbiCaFB1 (ORCPT
+        id S238973AbiCaTGf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 31 Mar 2022 01:01:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39840 "EHLO
+        Thu, 31 Mar 2022 15:06:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229561AbiCaFB0 (ORCPT
+        with ESMTP id S238982AbiCaTGe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 31 Mar 2022 01:01:26 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 894CD39686
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Mar 2022 21:59:38 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id g9-20020a17090ace8900b001c7cce3c0aeso1587114pju.2
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Mar 2022 21:59:38 -0700 (PDT)
+        Thu, 31 Mar 2022 15:06:34 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8CB3215464
+        for <linux-hardening@vger.kernel.org>; Thu, 31 Mar 2022 12:04:46 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id bx24-20020a17090af49800b001c6872a9e4eso324960pjb.5
+        for <linux-hardening@vger.kernel.org>; Thu, 31 Mar 2022 12:04:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hTYTSPjKmzj+vmHdHXYX/HkA6CH3798g482prT8jYOE=;
-        b=MATa/EhuSiC9n3rxQZYaexkAJx1IL7RS74xROe1UGfyh9/+YHkY19RkVlXFU07jDNZ
-         B5WYTcQ+0j5Kuoo4IdmLNGorMPNy0UQzPZhO5l8cZ46kGKbSNU87AVO1dX1buGQpUNS2
-         kjnkeBT/Flc5LEWtnUnIjiUUB6IdCRicUXktQ=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8K4qat18oyS/ON0Tc2wg3IJl/20RhGtMMHJnn7j74hI=;
+        b=fu9LzFVAlRADxGRQVppAXuCP8QEOUuMJxhDaoGIzZSn5yF2pGIuxmwhJTWp5woQn4H
+         EHzaLrxIYiJVgpunyLYPv3S9IfZSVNpubgMt/4tO/0lijzJbE1/2ZK2lcEqWyuEedN3T
+         2+pKK2PG5hJ9rQ1KKpCLZBGkXKvVi+SILZFbU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hTYTSPjKmzj+vmHdHXYX/HkA6CH3798g482prT8jYOE=;
-        b=4HgJaGnKkPhxiepA4oAaGYdw7XN8RIBX1xIJmEArHpUG7Dhw10cswQu9yXBdo9DAWz
-         E5BhZDLFY/kCpfp9vYFwVG76EQdmCMDlkB6qEU0Dj8LP5wr1zZTmTUkoM0ordR7v+hns
-         /C/SBrmtnXivG1nHGbfDp5wrE3sUEAwQT3O3axx/lCNGFlOd7Ivi164c1FNnI4/3VuSc
-         gnMk6lZiIyKyUf9pssrCUITn04y9ghyIjwDklbAtZvgyVLtukToSi+o0bm/C3jUg7+Ir
-         OQsUr7sqkzI8yyQbpCFOS0WRo2ftVdbtLRCY2oe0LjJmSHyXeaOEzzKdz2ktvexwK8pP
-         6o1Q==
-X-Gm-Message-State: AOAM532daF+f0bgKBlQQ4OaecWAOkFBba47UGMzjjClo9AcIyUrH4lb8
-        9Ka99aFFev1LJVKy9dsKWpUBlw==
-X-Google-Smtp-Source: ABdhPJw1+av0IyouZw0UTvETMJ5/EYcy0Xubc+iK03x43onqNQ6IIiYW18l9Dvy8z/Jtsv1yJKQF3Q==
-X-Received: by 2002:a17:902:db0f:b0:154:665e:af75 with SMTP id m15-20020a170902db0f00b00154665eaf75mr39355836plx.147.1648702778027;
-        Wed, 30 Mar 2022 21:59:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8K4qat18oyS/ON0Tc2wg3IJl/20RhGtMMHJnn7j74hI=;
+        b=B+H6gZmGAQPPD1ftY2OiJHIBkZ2JgLbtuYagrdqgtgUOyB3qA81ZhpY97RLZkQ6UJW
+         T3aDXdTKcI0yVscsUhY3MhSii7fFiKYfKKaiEtkwOBTpXBqLrsog16l1SovPM7zSG4m6
+         xFmYSNqN577D2MC7oFvDnalykhxCt2aId10nO4PnvsnHHG6pjYMx7jWjzmK4Imb3Eygm
+         V7TaiWlESmYGVqSaZbTIruTKF1SywH4AQV+z4f7+7W6U03H/MDnLnbVnSy0amIgj8pQI
+         OCtlyNBrv35S4vLPzmAg9l16Y38TBcT1tKeZR+jy3yyX2dMBCfRkc3NVSuzacK+JVevM
+         +hzA==
+X-Gm-Message-State: AOAM532lF8tRddRwH+F3jUOI0GkDUnYCfAE663+vlem8Ve7BTytqNlXW
+        f2lFwhBophHiBUKvSdyNQ5W0oQ==
+X-Google-Smtp-Source: ABdhPJzmGmj8aYdwRSZROHgiAtffDN6in63gKRVnyEHWKadCoiriCaM3lZSBHfVtkIHAxWU6vFCsrg==
+X-Received: by 2002:a17:902:d2c6:b0:156:2b2c:ab54 with SMTP id n6-20020a170902d2c600b001562b2cab54mr16131133plc.52.1648753486453;
+        Thu, 31 Mar 2022 12:04:46 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n4-20020a637204000000b00398522203a2sm10728411pgc.80.2022.03.30.21.59.37
+        by smtp.gmail.com with ESMTPSA id v22-20020a056a00149600b004fb34a7b500sm196147pfu.203.2022.03.31.12.04.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Mar 2022 21:59:37 -0700 (PDT)
-Date:   Wed, 30 Mar 2022 21:59:37 -0700
+        Thu, 31 Mar 2022 12:04:46 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-        peterz@infradead.org, jszhang@kernel.org, geert@linux-m68k.org,
-        mark.rutland@arm.com, chenhuang5@huawei.com,
-        linux-riscv@lists.infradead.org, wangkefeng.wang@huawei.com,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] riscv: Rename "sp_in_global" to "current_stack_pointer"
-Message-ID: <202203302159.8FA7A6C@keescook>
-References: <mhng-00315cbb-3685-4918-8ea0-539cda5fbc36@palmer-ri-x1c9>
- <mhng-82a6e73b-c0b7-4625-8a79-ed481f8b2cf1@palmer-ri-x1c9>
+To:     Liviu Dudau <liviu.dudau@arm.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] ARM: vexpress/spc: Avoid negative array index when !SMP
+Date:   Thu, 31 Mar 2022 12:04:43 -0700
+Message-Id: <20220331190443.851661-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <mhng-82a6e73b-c0b7-4625-8a79-ed481f8b2cf1@palmer-ri-x1c9>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1790; h=from:subject; bh=/2a5CSsipys253M5vGRsqHVDoYM5WGy53UpPjsagOIc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiRftKixEnPaz5DYx3KcOYhAntbvuUAggDZhiZY7iw bo/iWgyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYkX7SgAKCRCJcvTf3G3AJn1+D/ 9JmnMmf4cTjvYcKaiTm+ZsZZnuFtJXdv4Sj5cEH11WQawVe+UAqmL0m1glp2GYK85YUhuNPWdd/2An 2zH3JiJlWtqNuCF8jHcxmtuSgvUfnipd2s/l5v12j/RyWt7yUJBB/f+RA68i2rAnPTLL+MerHlWtyb PhxoFZjC7hcnw/3gdFHtOQlTC5Z4Lw57BivrJXu7OBCGCFwK2R0ArvLd2alzA8/cOpesKeB1d2y7Ft N7SQIMtttTn1UaqFUxP5fAJbwQVgdvSbig44DEep6jFro3jykxmBiK44bGqIy/SGK3w2gDnRfDJk0S IaqlI3aixjk7Vh1lnsPLB42Bp6enuHtDlrLJejwBs11oBOh3J5fJKEZ0HnXDWQ1/iZsgb7aOpcQWh3 5/R4Di8zHLA4ywpxPYhsNey5F8A4Pf2U/RCo1uIUehCc/cjO6CaoddINTyJJ+Sz7fhjDrbVLLHzg1O AFtV6Wwp2HJv1Dpry96HDj6aDhK74xNllVO22PzFa46p0o4gi7flIyfOK6Mdxz/8UthhjoRXKIcJk1 ewXb0ZYaFh38NvdBpaC0xA193NKbxRb+hlwz21p1+6FreJdjhYMhaR+cYFkUhCVh6dRqUpiw37fYs9 CMKyba1yS3vRZqEXSCU7fAq2QtFHELV0CqQ+URjZHEklvJABZrjanhwsn6fw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Mar 30, 2022 at 04:12:18PM -0700, Palmer Dabbelt wrote:
-> On Tue, 22 Mar 2022 19:16:28 PDT (-0700), Palmer Dabbelt wrote:
-> > On Wed, 23 Feb 2022 22:04:11 PST (-0800), keescook@chromium.org wrote:
-> >> To follow the existing per-arch conventions, rename "sp_in_global" to
-> >> "current_stack_pointer". This will let it be used in non-arch places
-> >> (like HARDENED_USERCOPY).
-> >>
-> >> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> >> Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> >> Cc: Albert Ou <aou@eecs.berkeley.edu>
-> >> Cc: Peter Zijlstra <peterz@infradead.org>
-> >> Cc: Jisheng Zhang <jszhang@kernel.org>
-> >> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> >> Cc: Mark Rutland <mark.rutland@arm.com>
-> >> Cc: Chen Huang <chenhuang5@huawei.com>
-> >> Cc: linux-riscv@lists.infradead.org
-> >> Signed-off-by: Kees Cook <keescook@chromium.org>
-> >> ---
-> >>  arch/riscv/Kconfig               | 1 +
-> >>  arch/riscv/include/asm/current.h | 2 ++
-> >>  arch/riscv/kernel/stacktrace.c   | 4 +---
-> >>  3 files changed, 4 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> >> index 5adcbd9b5e88..b120c32697af 100644
-> >> --- a/arch/riscv/Kconfig
-> >> +++ b/arch/riscv/Kconfig
-> >> @@ -16,6 +16,7 @@ config RISCV
-> >>  	select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATION
-> >>  	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
-> >>  	select ARCH_HAS_BINFMT_FLAT
-> >> +	select ARCH_HAS_CURRENT_STACK_POINTER
-> >>  	select ARCH_HAS_DEBUG_VM_PGTABLE
-> >>  	select ARCH_HAS_DEBUG_VIRTUAL if MMU
-> >>  	select ARCH_HAS_DEBUG_WX
-> >> diff --git a/arch/riscv/include/asm/current.h b/arch/riscv/include/asm/current.h
-> >> index 1de233d8e8de..21774d868c65 100644
-> >> --- a/arch/riscv/include/asm/current.h
-> >> +++ b/arch/riscv/include/asm/current.h
-> >> @@ -33,6 +33,8 @@ static __always_inline struct task_struct *get_current(void)
-> >>
-> >>  #define current get_current()
-> >>
-> >> +register unsigned long current_stack_pointer __asm__("sp");
-> >> +
-> >>  #endif /* __ASSEMBLY__ */
-> >>
-> >>  #endif /* _ASM_RISCV_CURRENT_H */
-> >> diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-> >> index 201ee206fb57..278380e2e956 100644
-> >> --- a/arch/riscv/kernel/stacktrace.c
-> >> +++ b/arch/riscv/kernel/stacktrace.c
-> >> @@ -14,8 +14,6 @@
-> >>
-> >>  #include <asm/stacktrace.h>
-> >>
-> >> -register unsigned long sp_in_global __asm__("sp");
-> >> -
-> >>  #ifdef CONFIG_FRAME_POINTER
-> >>
-> >>  void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
-> >> @@ -77,7 +75,7 @@ void notrace walk_stackframe(struct task_struct *task,
-> >>  		sp = user_stack_pointer(regs);
-> >>  		pc = instruction_pointer(regs);
-> >>  	} else if (task == NULL || task == current) {
-> >> -		sp = sp_in_global;
-> >> +		sp = current_stack_pointer;
-> >>  		pc = (unsigned long)walk_stackframe;
-> >>  	} else {
-> >>  		/* task blocked in __switch_to */
-> >
-> > Sorry to be slow on this one.  This looks good, but another use of
-> > sp_in_global snuck into fixes and I don't merge fixes into for-next so
-> > that makes this a bit of a headache.
-> >
-> > There's a bunch of stuff in flight, so I'm going to hold off on this
-> > until after my first week's merge window PR.  I intend on merging the
-> > following, which is at palmer/riscv-sp for now (I'll probably just
-> > cherry-pick that, I usually start basing stuff on Linus' merge of my PR
-> > and just cherry-pick in single patches).
-> >
-> >    commit 7c4f6bb6fb352cfa6028191c2888356b9157a332
-> >    gpg: Signature made Tue 22 Mar 2022 11:12:19 AM PDT
-> >    gpg:                using RSA key 2B3C3747446843B24A943A7A2E1319F35FBB1889
-> >    gpg:                issuer "palmer@dabbelt.com"
-> >    gpg: Good signature from "Palmer Dabbelt <palmer@dabbelt.com>" [ultimate]
-> >    gpg:                 aka "Palmer Dabbelt <palmer@rivosinc.com>" [ultimate]
-> >    Author: Kees Cook <keescook@chromium.org>
-> >    Date:   Wed Feb 23 22:04:11 2022 -0800
-> >
-> >        riscv: Rename "sp_in_global" to "current_stack_pointer"
-> >
-> >        To follow the existing per-arch conventions, rename "sp_in_global" to
-> >        "current_stack_pointer". This will let it be used in non-arch places
-> >        (like HARDENED_USERCOPY).
-> >
-> >        Signed-off-by: Kees Cook <keescook@chromium.org>
-> >        Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
-> >
-> >    diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> >    index 5adcbd9b5e88..b120c32697af 100644
-> >    --- a/arch/riscv/Kconfig
-> >    +++ b/arch/riscv/Kconfig
-> >    @@ -16,6 +16,7 @@ config RISCV
-> >     	select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATION
-> >     	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
-> >     	select ARCH_HAS_BINFMT_FLAT
-> >    +	select ARCH_HAS_CURRENT_STACK_POINTER
-> >     	select ARCH_HAS_DEBUG_VM_PGTABLE
-> >     	select ARCH_HAS_DEBUG_VIRTUAL if MMU
-> >     	select ARCH_HAS_DEBUG_WX
-> >    diff --git a/arch/riscv/include/asm/current.h b/arch/riscv/include/asm/current.h
-> >    index 1de233d8e8de..21774d868c65 100644
-> >    --- a/arch/riscv/include/asm/current.h
-> >    +++ b/arch/riscv/include/asm/current.h
-> >    @@ -33,6 +33,8 @@ static __always_inline struct task_struct *get_current(void)
-> >
-> >     #define current get_current()
-> >
-> >    +register unsigned long current_stack_pointer __asm__("sp");
-> >    +
-> >     #endif /* __ASSEMBLY__ */
-> >
-> >     #endif /* _ASM_RISCV_CURRENT_H */
-> >    diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-> >    index 14d2b53ec322..08d11a53f39e 100644
-> >    --- a/arch/riscv/kernel/stacktrace.c
-> >    +++ b/arch/riscv/kernel/stacktrace.c
-> >    @@ -14,8 +14,6 @@
-> >
-> >     #include <asm/stacktrace.h>
-> >
-> >    -register unsigned long sp_in_global __asm__("sp");
-> >    -
-> >     #ifdef CONFIG_FRAME_POINTER
-> >
-> >     void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
-> >    @@ -30,7 +28,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
-> >     		pc = instruction_pointer(regs);
-> >     	} else if (task == NULL || task == current) {
-> >     		fp = (unsigned long)__builtin_frame_address(0);
-> >    -		sp = sp_in_global;
-> >    +		sp = current_stack_pointer;
-> >     		pc = (unsigned long)walk_stackframe;
-> >     	} else {
-> >     		/* task blocked in __switch_to */
-> >    @@ -78,7 +76,7 @@ void notrace walk_stackframe(struct task_struct *task,
-> >     		sp = user_stack_pointer(regs);
-> >     		pc = instruction_pointer(regs);
-> >     	} else if (task == NULL || task == current) {
-> >    -		sp = sp_in_global;
-> >    +		sp = current_stack_pointer;
-> >     		pc = (unsigned long)walk_stackframe;
-> >     	} else {
-> >     		/* task blocked in __switch_to */
-> >
-> > Thanks!
-> 
-> Thanks, this is on for-next.  I put HARDENED_USERCOPY=y test in for SLAB 
-> and SLUB, not sure if there's anything else that's interesting to test 
-> (we're missing some bits needed for STACKLEAK).
+When building multi_v7_defconfig+CONFIG_SMP=n, -Warray-bounds exposes
+a couple negative array index accesses:
 
-Excellent; thank you!
+arch/arm/mach-vexpress/spc.c: In function 've_spc_clk_init':
+arch/arm/mach-vexpress/spc.c:583:21: warning: array subscript -1 is below array bounds of 'bool[2]' {aka '_Bool[2]'} [-Warray-bounds]
+  583 |   if (init_opp_table[cluster])
+      |       ~~~~~~~~~~~~~~^~~~~~~~~
+arch/arm/mach-vexpress/spc.c:556:7: note: while referencing 'init_opp_table'
+  556 |  bool init_opp_table[MAX_CLUSTERS] = { false };
+      |       ^~~~~~~~~~~~~~
+arch/arm/mach-vexpress/spc.c:592:18: warning: array subscript -1 is below array bounds of 'bool[2]' {aka '_Bool[2]'} [-Warray-bounds]
+  592 |    init_opp_table[cluster] = true;
+      |    ~~~~~~~~~~~~~~^~~~~~~~~
+arch/arm/mach-vexpress/spc.c:556:7: note: while referencing 'init_opp_table'
+  556 |  bool init_opp_table[MAX_CLUSTERS] = { false };
+      |       ^~~~~~~~~~~~~~
 
--- 
-Kees Cook
+Skip this logic when built !SMP.
+
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/arm/mach-vexpress/spc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-vexpress/spc.c b/arch/arm/mach-vexpress/spc.c
+index 1da11bdb1dfb..1c6500c4e6a1 100644
+--- a/arch/arm/mach-vexpress/spc.c
++++ b/arch/arm/mach-vexpress/spc.c
+@@ -580,7 +580,7 @@ static int __init ve_spc_clk_init(void)
+ 		}
+
+ 		cluster = topology_physical_package_id(cpu_dev->id);
+-		if (init_opp_table[cluster])
++		if (cluster < 0 || init_opp_table[cluster])
+ 			continue;
+
+ 		if (ve_init_opp_table(cpu_dev))
+--
+2.32.0
+
