@@ -2,132 +2,140 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05224C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri,  1 Apr 2022 00:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F98FC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri,  1 Apr 2022 00:49:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231201AbiDAAP3 (ORCPT
+        id S243593AbiDAAvp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 31 Mar 2022 20:15:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39722 "EHLO
+        Thu, 31 Mar 2022 20:51:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230512AbiDAAP3 (ORCPT
+        with ESMTP id S230257AbiDAAvp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 31 Mar 2022 20:15:29 -0400
+        Thu, 31 Mar 2022 20:51:45 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58F0513CFB;
-        Thu, 31 Mar 2022 17:13:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BFC219D625;
+        Thu, 31 Mar 2022 17:49:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 217DCB82294;
-        Fri,  1 Apr 2022 00:13:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE094C340EE;
-        Fri,  1 Apr 2022 00:13:36 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="iTz8lzFT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-        t=1648772015;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=fxj+V0C98LxH/amAPZh8e04K1hwVl6DGYXcLOUCV95Y=;
-        b=iTz8lzFTmOBq6cT1uGr+3NaK9r8yyhAL6mm7HQf/b5YOTNsSxQgrGjp6AM6mZfLoVOLECt
-        bX8u+vmCuR6CcgbjrLDhizv96ep04iIDx4y7kLPKuuEsFFrOjC6CDud4j9F6r6n4cL5mW6
-        BKGuaZuFB5U44zoeBtUwUq6GcqjQ/lo=
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id c9a5fcd6 (TLSv1.3:AEAD-AES256-GCM-SHA384:256:NO);
-        Fri, 1 Apr 2022 00:13:35 +0000 (UTC)
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     keescook@chromium.org, re.emese@gmail.com,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>, stable@vger.kernel.org
-Subject: [PATCH] gcc-plugins: latent_entropy: use /dev/urandom
-Date:   Thu, 31 Mar 2022 20:13:25 -0400
-Message-Id: <20220401001325.281220-1-Jason@zx2c4.com>
+        by ams.source.kernel.org (Postfix) with ESMTPS id 52C73B82296;
+        Fri,  1 Apr 2022 00:49:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18A7CC340ED;
+        Fri,  1 Apr 2022 00:49:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1648774194;
+        bh=k2NWL0oVgQKreKhbC4I/NAVwEIag4IqjGx4i3YT4Y/M=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dEPEV/kaWDJhphxLwbUmMXxTm85wSDZfOyljX0PxPwugbI3V7xCxB/kBGz7ygoeBQ
+         HTtN4qNa8V5I0hGdd3HvKiMGu3bUfBNpCYm9fD/XIYiborxQP23CBmxJqGxxJ55pAE
+         tS8aNWiGBQuBjsaneVa+A2kc+Bl/zY/Gi4WlCtTr71qgzvtxH7i8vQpFaezw1XhyZr
+         xUDR+EhdUBHTuLFPwzT033Jbv60ohBsJ2aaYPYsBtVuhIusHmcnBINQjQH1l/HMv5P
+         WFNiGmYesPIwbzoeWasLm3lirLJe0ydWK0hSfiNBGoBOkFJ2r7eY9rL8+HRNQgweaG
+         Aots0W7XUyytg==
+Date:   Thu, 31 Mar 2022 19:58:34 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] x86/mm/pgtable: Fix Wstringop-overflow warnings
+Message-ID: <20220401005834.GA182932@embeddedor>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-While the latent entropy plugin mostly doesn't derive entropy from
-get_random_const() for measuring the call graph, when __latent_entropy is
-applied to a constant, then it's initialized statically to output from
-get_random_const(). In that case, this data is derived from a 64-bit
-seed, which means a buffer of 512 bits doesn't really have that amount
-of compile-time entropy.
+Fix the following -Wstringop-overflow warnings when building with GCC-11:
 
-This patch fixes that shortcoming by just buffering chunks of
-/dev/urandom output and doling it out as requested.
+.arch/x86/mm/pgtable.c: In function ‘pgd_alloc’:
+arch/x86/mm/pgtable.c:437:13: warning: ‘preallocate_pmds.constprop’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+  437 |         if (preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/mm/pgtable.c:437:13: note: referencing argument 2 of type ‘pmd_t **’
+arch/x86/mm/pgtable.c:225:12: note: in a call to function ‘preallocate_pmds.constprop’
+  225 | static int preallocate_pmds(struct mm_struct *mm, pmd_t *pmds[], int count)
+      |            ^~~~~~~~~~~~~~~~
+arch/x86/mm/pgtable.c:440:13: warning: ‘preallocate_pmds.constprop’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+  440 |         if (preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/mm/pgtable.c:440:13: note: referencing argument 2 of type ‘pmd_t **’
+arch/x86/mm/pgtable.c:225:12: note: in a call to function ‘preallocate_pmds.constprop’
+  225 | static int preallocate_pmds(struct mm_struct *mm, pmd_t *pmds[], int count)
+      |            ^~~~~~~~~~~~~~~~
+arch/x86/mm/pgtable.c:462:9: warning: ‘free_pmds.constprop’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+  462 |         free_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/mm/pgtable.c:462:9: note: referencing argument 2 of type ‘pmd_t **’
+arch/x86/mm/pgtable.c:213:13: note: in a call to function ‘free_pmds.constprop’
+  213 | static void free_pmds(struct mm_struct *mm, pmd_t *pmds[], int count)
+      |             ^~~~~~~~~
+arch/x86/mm/pgtable.c:455:9: warning: ‘pgd_prepopulate_user_pmd’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+  455 |         pgd_prepopulate_user_pmd(mm, pgd, u_pmds);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/mm/pgtable.c:455:9: note: referencing argument 3 of type ‘pmd_t **’
+arch/x86/mm/pgtable.c:320:13: note: in a call to function ‘pgd_prepopulate_user_pmd’
+  320 | static void pgd_prepopulate_user_pmd(struct mm_struct *mm,
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/mm/pgtable.c:464:9: warning: ‘free_pmds.constprop’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+  464 |         free_pmds(mm, pmds, PREALLOCATED_PMDS);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/mm/pgtable.c:464:9: note: referencing argument 2 of type ‘pmd_t **’
+arch/x86/mm/pgtable.c:213:13: note: in a call to function ‘free_pmds.constprop’
+  213 | static void free_pmds(struct mm_struct *mm, pmd_t *pmds[], int count)
+      |             ^~~~~~~~~
 
-Fixes: 38addce8b600 ("gcc-plugins: Add latent_entropy plugin")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+by using pointer notation instead of array notation as a workaround for
+the above GCC warnings.
+
+This helps with the ongoing efforts to globally enable
+-Wstringop-overflow.
+
+Link: https://github.com/KSPP/linux/issues/181
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
-I'm not super familiar with this plugin or its conventions, so pointers
-would be most welcome if something here looks amiss. The decision to
-buffer 2k at a time is pretty arbitrary too; I haven't measured usage.
+ arch/x86/mm/pgtable.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- scripts/gcc-plugins/latent_entropy_plugin.c | 34 +++++++++------------
- 1 file changed, 15 insertions(+), 19 deletions(-)
-
-diff --git a/scripts/gcc-plugins/latent_entropy_plugin.c b/scripts/gcc-plugins/latent_entropy_plugin.c
-index 589454bce930..f238ba6726b8 100644
---- a/scripts/gcc-plugins/latent_entropy_plugin.c
-+++ b/scripts/gcc-plugins/latent_entropy_plugin.c
-@@ -82,29 +82,27 @@ __visible int plugin_is_GPL_compatible;
- static GTY(()) tree latent_entropy_decl;
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index 3481b35cb4ec..aecaebf3c3d0 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -210,7 +210,7 @@ void pud_populate(struct mm_struct *mm, pud_t *pudp, pmd_t *pmd)
+ #define MAX_PREALLOCATED_USER_PMDS 0
+ #endif	/* CONFIG_X86_PAE */
  
- static struct plugin_info latent_entropy_plugin_info = {
--	.version	= "201606141920vanilla",
-+	.version	= "202203311920vanilla",
- 	.help		= "disable\tturn off latent entropy instrumentation\n",
- };
- 
--static unsigned HOST_WIDE_INT seed;
--/*
-- * get_random_seed() (this is a GCC function) generates the seed.
-- * This is a simple random generator without any cryptographic security because
-- * the entropy doesn't come from here.
-- */
-+static unsigned HOST_WIDE_INT rnd_buf[256];
-+static size_t rnd_idx = ARRAY_SIZE(rnd_buf);
-+static int urandom_fd = -1;
-+
- static unsigned HOST_WIDE_INT get_random_const(void)
+-static void free_pmds(struct mm_struct *mm, pmd_t *pmds[], int count)
++static void free_pmds(struct mm_struct *mm, pmd_t **pmds, int count)
  {
--	unsigned int i;
--	unsigned HOST_WIDE_INT ret = 0;
--
--	for (i = 0; i < 8 * sizeof(ret); i++) {
--		ret = (ret << 1) | (seed & 1);
--		seed >>= 1;
--		if (ret & 1)
--			seed ^= 0xD800000000000000ULL;
-+	if (urandom_fd < 0) {
-+		urandom_fd = open("/dev/urandom", O_RDONLY);
-+		if (urandom_fd < 0)
-+			abort();
- 	}
--
--	return ret;
-+	if (rnd_idx >= ARRAY_SIZE(rnd_buf)) {
-+		if (read(urandom_fd, rnd_buf, sizeof(rnd_buf)) != sizeof(rnd_buf))
-+			abort();
-+		rnd_idx = 0;
-+	}
-+	return rnd_buf[rnd_idx++];
+ 	int i;
+ 
+@@ -222,7 +222,7 @@ static void free_pmds(struct mm_struct *mm, pmd_t *pmds[], int count)
+ 		}
  }
  
- static tree tree_get_random_const(tree type)
-@@ -537,8 +535,6 @@ static void latent_entropy_start_unit(void *gcc_data __unused,
- 	tree type, id;
- 	int quals;
+-static int preallocate_pmds(struct mm_struct *mm, pmd_t *pmds[], int count)
++static int preallocate_pmds(struct mm_struct *mm, pmd_t **pmds, int count)
+ {
+ 	int i;
+ 	bool failed = false;
+@@ -318,7 +318,7 @@ static void pgd_prepopulate_pmd(struct mm_struct *mm, pgd_t *pgd, pmd_t *pmds[])
  
--	seed = get_random_seed(false);
--
- 	if (in_lto_p)
- 		return;
- 
+ #ifdef CONFIG_PAGE_TABLE_ISOLATION
+ static void pgd_prepopulate_user_pmd(struct mm_struct *mm,
+-				     pgd_t *k_pgd, pmd_t *pmds[])
++				     pgd_t *k_pgd, pmd_t **pmds)
+ {
+ 	pgd_t *s_pgd = kernel_to_user_pgdp(swapper_pg_dir);
+ 	pgd_t *u_pgd = kernel_to_user_pgdp(k_pgd);
 -- 
-2.35.1
+2.27.0
 
