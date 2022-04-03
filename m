@@ -2,110 +2,67 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A72C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri,  1 Apr 2022 13:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 432D2C433EF
+	for <linux-hardening@archiver.kernel.org>; Sun,  3 Apr 2022 20:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235356AbiDANOZ (ORCPT
+        id S234875AbiDCUO7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 1 Apr 2022 09:14:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44384 "EHLO
+        Sun, 3 Apr 2022 16:14:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244872AbiDANOX (ORCPT
+        with ESMTP id S232575AbiDCUO6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 1 Apr 2022 09:14:23 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECD5A1D66DE;
-        Fri,  1 Apr 2022 06:12:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=TpRKn7SJqJk10dOIDt+TAhE5hOf2Y79WpsicE+YX85k=; b=PHtC2Xm86gFfykvKt6TEThyM7M
-        Of9YUNDCIcLsjkG/E3JJi26aThQnEy3e2XeE1Ze1NDD5eVAK8t/lmr3JbkTS7ejKWUGrlDekcrscT
-        zxNnM8A4j6wafn7bBTbzDasdq+0Sq4n/LSwOc/lZeB7aWqsRa0wT/baok6J9nRtoIb0zWmgcosrXz
-        0LTQtqFKW1oAW4ApN1crtiuseHp/po4kZye4sHM7kI/8lkPQIVBQIwJjQMmnSp6vyDzkJ0IlanT2K
-        36IncTVI3qDFnRSjgm3ye3+xOylL8xomBBjF1Zc6VoOC16bhLYh90wsVZoJyyhqXM/kNI7Oz3IOBl
-        OIZYMNwQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1naH4g-003DMW-V2; Fri, 01 Apr 2022 13:12:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 77FFD30027B;
-        Fri,  1 Apr 2022 15:12:22 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5C6182008B7BF; Fri,  1 Apr 2022 15:12:22 +0200 (CEST)
-Date:   Fri, 1 Apr 2022 15:12:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] x86/mm/pgtable: Fix Wstringop-overflow warnings
-Message-ID: <Ykb6Nv80LJomLDsO@hirez.programming.kicks-ass.net>
-References: <20220401005834.GA182932@embeddedor>
+        Sun, 3 Apr 2022 16:14:58 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4429134667;
+        Sun,  3 Apr 2022 13:13:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 87FE3B80C94;
+        Sun,  3 Apr 2022 20:13:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA249C340F2;
+        Sun,  3 Apr 2022 20:13:00 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="LPTgZF7M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+        t=1649016778;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MUat7NN72n+1zNfT5Ubj8KrEJni2YmnkaBwnTSYmZJY=;
+        b=LPTgZF7Mp+FUNUaaqY7cDkLb+gfLO+8vbd/CEeOJxkkh1l5x3lkGr1tdVeqvks4y601pAG
+        7WR6lQBwh06MbBwmoI8EX3ORnt+qC7zcDMB424pSyhJgcvoiyWt4zKMUqgmbDyQsujsE4Y
+        PNzJhSRawkgJvEEaK3qGAPY2QN5he38=
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id acb88c5b (TLSv1.3:AEAD-AES256-GCM-SHA384:256:NO);
+        Sun, 3 Apr 2022 20:12:58 +0000 (UTC)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-2eb543fe73eso20319437b3.5;
+        Sun, 03 Apr 2022 13:12:58 -0700 (PDT)
+X-Gm-Message-State: AOAM532lR0yxJOei6Mz0JRmyEekwUrrUZLnbyQ73t82IfgJStn2k7E+e
+        QGGV1tYWw6XJS/4FFzT9vv4WaiKa5/iegZI9C+c=
+X-Google-Smtp-Source: ABdhPJxZ0vwM8euCclIQ3J2DyAMZdXkR1F+uZs+VMAJjNe8IosQGzizLc+DKMceleXoYjbp2miH6G13Hxz4Foi0E4L8=
+X-Received: by 2002:a0d:e8c6:0:b0:2eb:1a8e:19c4 with SMTP id
+ r189-20020a0de8c6000000b002eb1a8e19c4mr14783144ywe.404.1649016777885; Sun, 03
+ Apr 2022 13:12:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220401005834.GA182932@embeddedor>
+References: <20220401001325.281220-1-Jason@zx2c4.com>
+In-Reply-To: <20220401001325.281220-1-Jason@zx2c4.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Sun, 3 Apr 2022 22:12:47 +0200
+X-Gmail-Original-Message-ID: <CAHmME9otYi4pCzZwSGnK40dp1QMRVPxp+DBysVuLXUKkXinAxg@mail.gmail.com>
+Message-ID: <CAHmME9otYi4pCzZwSGnK40dp1QMRVPxp+DBysVuLXUKkXinAxg@mail.gmail.com>
+Subject: Re: [PATCH] gcc-plugins: latent_entropy: use /dev/urandom
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 31, 2022 at 07:58:34PM -0500, Gustavo A. R. Silva wrote:
-> Fix the following -Wstringop-overflow warnings when building with GCC-11:
-> 
-> .arch/x86/mm/pgtable.c: In function ‘pgd_alloc’:
-> arch/x86/mm/pgtable.c:437:13: warning: ‘preallocate_pmds.constprop’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
->   437 |         if (preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
->       |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/x86/mm/pgtable.c:437:13: note: referencing argument 2 of type ‘pmd_t **’
-> arch/x86/mm/pgtable.c:225:12: note: in a call to function ‘preallocate_pmds.constprop’
->   225 | static int preallocate_pmds(struct mm_struct *mm, pmd_t *pmds[], int count)
->       |            ^~~~~~~~~~~~~~~~
-> arch/x86/mm/pgtable.c:440:13: warning: ‘preallocate_pmds.constprop’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
->   440 |         if (preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
->       |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/x86/mm/pgtable.c:440:13: note: referencing argument 2 of type ‘pmd_t **’
-> arch/x86/mm/pgtable.c:225:12: note: in a call to function ‘preallocate_pmds.constprop’
->   225 | static int preallocate_pmds(struct mm_struct *mm, pmd_t *pmds[], int count)
->       |            ^~~~~~~~~~~~~~~~
-> arch/x86/mm/pgtable.c:462:9: warning: ‘free_pmds.constprop’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
->   462 |         free_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS);
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/x86/mm/pgtable.c:462:9: note: referencing argument 2 of type ‘pmd_t **’
-> arch/x86/mm/pgtable.c:213:13: note: in a call to function ‘free_pmds.constprop’
->   213 | static void free_pmds(struct mm_struct *mm, pmd_t *pmds[], int count)
->       |             ^~~~~~~~~
-> arch/x86/mm/pgtable.c:455:9: warning: ‘pgd_prepopulate_user_pmd’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
->   455 |         pgd_prepopulate_user_pmd(mm, pgd, u_pmds);
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/x86/mm/pgtable.c:455:9: note: referencing argument 3 of type ‘pmd_t **’
-> arch/x86/mm/pgtable.c:320:13: note: in a call to function ‘pgd_prepopulate_user_pmd’
->   320 | static void pgd_prepopulate_user_pmd(struct mm_struct *mm,
->       |             ^~~~~~~~~~~~~~~~~~~~~~~~
-> arch/x86/mm/pgtable.c:464:9: warning: ‘free_pmds.constprop’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
->   464 |         free_pmds(mm, pmds, PREALLOCATED_PMDS);
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/x86/mm/pgtable.c:464:9: note: referencing argument 2 of type ‘pmd_t **’
-> arch/x86/mm/pgtable.c:213:13: note: in a call to function ‘free_pmds.constprop’
->   213 | static void free_pmds(struct mm_struct *mm, pmd_t *pmds[], int count)
->       |             ^~~~~~~~~
-> 
-> by using pointer notation instead of array notation as a workaround for
-> the above GCC warnings.
+Hi again,
 
-'Workaround' implies the warning is on crack...
+Please don't apply this yet. It breaks -frandom-seed, so I need to do
+a bit of digging and send a v2 or abandon this all together.
 
-> This helps with the ongoing efforts to globally enable
-> -Wstringop-overflow.
-
-which puts to question this endeavour, why are you wanting to have this
-if its crap?
-
+Jason
