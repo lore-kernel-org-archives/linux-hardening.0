@@ -2,210 +2,118 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B84C4321E
-	for <linux-hardening@archiver.kernel.org>; Mon,  4 Apr 2022 21:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61607C433EF
+	for <linux-hardening@archiver.kernel.org>; Mon,  4 Apr 2022 23:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380146AbiDDVlH (ORCPT
+        id S229511AbiDDXNP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 4 Apr 2022 17:41:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57752 "EHLO
+        Mon, 4 Apr 2022 19:13:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380064AbiDDSvu (ORCPT
+        with ESMTP id S241783AbiDDXKq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 4 Apr 2022 14:51:50 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A4F031504
-        for <linux-hardening@vger.kernel.org>; Mon,  4 Apr 2022 11:49:52 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id s8so9775448pfk.12
-        for <linux-hardening@vger.kernel.org>; Mon, 04 Apr 2022 11:49:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OgBmai9kBCjlr9aFO4p03+ZvCT3qEl4N4BMmkwU41WQ=;
-        b=LTyjDcUYrrGKFD7zBZax9Kejc3M/VxotNH1SBr++BxXDPlIByWs5a8wElJ4CvLKUjn
-         JyRCaI0dzCSpvP/ALFTbNMuJKz1OE+gnZT2yLPLFrixzAKAECrJRPEHlCeASyItdvWGg
-         5xsPixVA5PWT4eWxCZ6OapeXiV8KI2KpoPsxA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OgBmai9kBCjlr9aFO4p03+ZvCT3qEl4N4BMmkwU41WQ=;
-        b=KsPzs/AWvzSYoCFFckdIndR7gdrDu8jiFbilMAtkYlgAOFmTFHLhsmn6T90kkanJlT
-         ze27JJ+F9LVbLP1O18pw5K0KmVPCTMIklGo2TG3krF2wOKK+y7HXoGmU0g3XOwQYh10p
-         KcGmfzP3o7xHqC6tYmhhUBew5sJ3YTOMn4GVqrgmSMvkI9NTzu02LPyxPQrlPumEWHdC
-         3MsGdL/jaL7X6K37z80zQPgiNEVB9XgjExoUfDD1W7IBK3bF2D3SmcUKSHMHQtv3QXYm
-         OivOQKsh5htt0/5fwz9hVsixBlMCf9ooC+oHpUkPgUT2PkzvG6nd8VBuqv41oqL2yEC1
-         a8tA==
-X-Gm-Message-State: AOAM5322+7FVGikIP5afut6k17/+xHIdO5FRq6gf4FE3HSUlTVavSu68
-        lVX4/MtIif12R9tomOcrgU+oBjmeEjrk4w==
-X-Google-Smtp-Source: ABdhPJy+Asj1IhIbA7G/rhnlb2Kxzq17/p8QVmR/14Zr/TJmyt+KN+/Wq9xSl0Xoz+XlLAUuAApNng==
-X-Received: by 2002:a63:5756:0:b0:36c:67bc:7f3f with SMTP id h22-20020a635756000000b0036c67bc7f3fmr1042587pgm.389.1649098191979;
-        Mon, 04 Apr 2022 11:49:51 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c63-20020a624e42000000b004fa9ee41b7bsm12701353pfb.217.2022.04.04.11.49.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Apr 2022 11:49:51 -0700 (PDT)
-Date:   Mon, 4 Apr 2022 11:49:50 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+        Mon, 4 Apr 2022 19:10:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4705524BD3;
+        Mon,  4 Apr 2022 15:47:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D268B616B1;
+        Mon,  4 Apr 2022 22:47:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AE20C2BBE4;
+        Mon,  4 Apr 2022 22:47:19 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="StADTOFj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+        t=1649112437;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=f03Sgznwk70QYZSWwxV+lkMyUN0TDnERCd80Ff7+eOo=;
+        b=StADTOFj1BKH5L0K/Z5hEWL6S9XdFR1mQey631hUwzfWEzSdtgOcm1gqrPMYGihCL+uPc7
+        4/L2tmXryqIqx0SXAwvR0AEXTT19Wl5EO++YJyAxB0eadcN8gF3MyAoWDDo3zVj3CUFnr9
+        jZDSK8q2lGxMT4Kp6BGMZlfRLLxFFrw=
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id b4fa201b (TLSv1.3:AEAD-AES256-GCM-SHA384:256:NO);
+        Mon, 4 Apr 2022 22:47:17 +0000 (UTC)
+Date:   Tue, 5 Apr 2022 00:47:14 +0200
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     Kees Cook <keescook@chromium.org>
 Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
         stable@vger.kernel.org, PaX Team <pageexec@freemail.hu>
 Subject: Re: [PATCH v2] gcc-plugins: latent_entropy: use /dev/urandom
-Message-ID: <202204041144.96FC64A8@keescook>
+Message-ID: <Ykt1cj0wPKEsHL2q@zx2c4.com>
 References: <CAHmME9otYi4pCzZwSGnK40dp1QMRVPxp+DBysVuLXUKkXinAxg@mail.gmail.com>
  <20220403204036.1269562-1-Jason@zx2c4.com>
+ <202204041144.96FC64A8@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220403204036.1269562-1-Jason@zx2c4.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202204041144.96FC64A8@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Apr 03, 2022 at 10:40:36PM +0200, Jason A. Donenfeld wrote:
-> While the latent entropy plugin mostly doesn't derive entropy from
-> get_random_const() for measuring the call graph, when __latent_entropy is
-> applied to a constant, then it's initialized statically to output from
-> get_random_const(). In that case, this data is derived from a 64-bit
-> seed, which means a buffer of 512 bits doesn't really have that amount
-> of compile-time entropy.
-> 
-> This patch fixes that shortcoming by just buffering chunks of
-> /dev/urandom output and doling it out as requested.
-> 
-> At the same time, it's important that we don't break the use of
-> -frandom-seed, for people who want the runtime benefits of the latent
-> entropy plugin, while still having compile-time determinism. In that
-> case, we detect whether gcc's set_random_seed() has been called by
-> making a call to get_random_seed(noinit=true) in the plugin init
-> function, which is called after set_random_seed() is called but before
-> anything that calls get_random_seed(noinit=false), and seeing if it's
-> zero or not. If it's not zero, we're in deterministic mode, and so we
-> just generate numbers with a basic xorshift prng.
+Hi Kees,
 
-This mixes two changes: the pRNG change and the "use urandom if
-non-deterministic" change. I think these should be split, so the pRNG
-change can be explicitly justified.
+On Mon, Apr 4, 2022 at 8:49 PM Kees Cook <keescook@chromium.org> wrote:
+> This mixes two changes: the pRNG change and the "use urandom if
+> non-deterministic" change. I think these should be split, so the pRNG
+> change can be explicitly justified.
 
-More notes below...
+Alright, I'll split those. Or, more probably, just drop the xorshift
+thing. There's not actually a strong reason for preferring xorshift. I
+did it because it produces more uniformity and is faster to compute and
+all that. But none of that stuff actually matters here. It was just a
+sort of "well I'm at it..." thing.
 
-> 
-> Fixes: 38addce8b600 ("gcc-plugins: Add latent_entropy plugin")
-> Cc: stable@vger.kernel.org
-> Cc: PaX Team <pageexec@freemail.hu>
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> ---
-> Changes v1->v2:
-> - Pipacs pointed out that using /dev/urandom unconditionally would break
->   the use of -frandom-seed, so now we check for that and keep with
->   something deterministic in that case.
-> 
-> I'm not super familiar with this plugin or its conventions, so pointers
-> would be most welcome if something here looks amiss. The decision to
-> buffer 2k at a time is pretty arbitrary too; I haven't measured usage.
-> 
->  scripts/gcc-plugins/latent_entropy_plugin.c | 48 +++++++++++++--------
->  1 file changed, 30 insertions(+), 18 deletions(-)
-> 
-> diff --git a/scripts/gcc-plugins/latent_entropy_plugin.c b/scripts/gcc-plugins/latent_entropy_plugin.c
-> index 589454bce930..042442013ae1 100644
-> --- a/scripts/gcc-plugins/latent_entropy_plugin.c
-> +++ b/scripts/gcc-plugins/latent_entropy_plugin.c
-> @@ -82,29 +82,37 @@ __visible int plugin_is_GPL_compatible;
->  static GTY(()) tree latent_entropy_decl;
->  
->  static struct plugin_info latent_entropy_plugin_info = {
-> -	.version	= "201606141920vanilla",
-> +	.version	= "202203311920vanilla",
+> >  static struct plugin_info latent_entropy_plugin_info = {
+> > -     .version        = "201606141920vanilla",
+> > +     .version        = "202203311920vanilla",
+>
+> This doesn't really need to be versioned. We can change this to just
+> "vanilla", IMO.
 
-This doesn't really need to be versioned. We can change this to just
-"vanilla", IMO.
+Okay. I suppose you want it to be in a different patch too, right? In
+which case I'll leave it out and maybe get to it later. (I suppose one
+probably needs to double check whether it's used for anything
+interesting like dwarf debug info or whatever, where maybe it's
+helpful?)
 
->  	.help		= "disable\tturn off latent entropy instrumentation\n",
->  };
->  
-> -static unsigned HOST_WIDE_INT seed;
-> -/*
-> - * get_random_seed() (this is a GCC function) generates the seed.
-> - * This is a simple random generator without any cryptographic security because
-> - * the entropy doesn't come from here.
-> - */
-> +static unsigned HOST_WIDE_INT deterministic_seed;
-> +static unsigned HOST_WIDE_INT rnd_buf[256];
-> +static size_t rnd_idx = ARRAY_SIZE(rnd_buf);
-> +static int urandom_fd = -1;
-> +
->  static unsigned HOST_WIDE_INT get_random_const(void)
->  {
-> -	unsigned int i;
-> -	unsigned HOST_WIDE_INT ret = 0;
-> -
-> -	for (i = 0; i < 8 * sizeof(ret); i++) {
-> -		ret = (ret << 1) | (seed & 1);
-> -		seed >>= 1;
-> -		if (ret & 1)
-> -			seed ^= 0xD800000000000000ULL;
-> +	if (deterministic_seed) {
-> +		unsigned HOST_WIDE_INT w = deterministic_seed;
-> +		w ^= w << 13;
-> +		w ^= w >> 7;
-> +		w ^= w << 17;
-> +		deterministic_seed = w;
-> +		return deterministic_seed;
+> > +     if (deterministic_seed) {
+> > +             unsigned HOST_WIDE_INT w = deterministic_seed;
+> > +             w ^= w << 13;
+> > +             w ^= w >> 7;
+> > +             w ^= w << 17;
+> > +             deterministic_seed = w;
+> > +             return deterministic_seed;
+>
+> While seemingly impossible, perhaps don't reset "deterministic_seed",
+> and just continue to use "seed", so that it can never become "0" again.
 
-While seemingly impossible, perhaps don't reset "deterministic_seed",
-and just continue to use "seed", so that it can never become "0" again.
+Not sure I follow. It's an LFSR. The "L" is important. It'll never become
+zero. It's not "seemingly". We can prove it trivially in Magma:
 
->  	}
->  
-> -	return ret;
-> +	if (urandom_fd < 0) {
-> +		urandom_fd = open("/dev/urandom", O_RDONLY);
-> +		if (urandom_fd < 0)
-> +			abort();
-> +	}
-> +	if (rnd_idx >= ARRAY_SIZE(rnd_buf)) {
-> +		if (read(urandom_fd, rnd_buf, sizeof(rnd_buf)) != sizeof(rnd_buf))
-> +			abort();
-> +		rnd_idx = 0;
-> +	}
-> +	return rnd_buf[rnd_idx++];
->  }
->  
->  static tree tree_get_random_const(tree type)
-> @@ -537,8 +545,6 @@ static void latent_entropy_start_unit(void *gcc_data __unused,
->  	tree type, id;
->  	int quals;
->  
-> -	seed = get_random_seed(false);
-> -
->  	if (in_lto_p)
->  		return;
->  
-> @@ -573,6 +579,12 @@ __visible int plugin_init(struct plugin_name_args *plugin_info,
->  	const struct plugin_argument * const argv = plugin_info->argv;
->  	int i;
->  
-> +	/*
-> +	 * Call get_random_seed() with noinit=true, so that this returns
-> +	 * 0 in the case where no seed has been passed via -frandom-seed.
-> +	 */
-> +	deterministic_seed = get_random_seed(true);
+    > w := 64;
+    > K := GF(2);
+    > I := IdentityMatrix(K, w);
+    > SHL := HorizontalJoin(RemoveColumn(I, 1), ZeroMatrix(K, w, 1));
+    > SHR := HorizontalJoin(ZeroMatrix(K, w, 1), RemoveColumn(I, w));
+    > M :=  (I + SHL^17) * (I + SHR^7) * (I + SHL^13);
+    > Order(M) eq 2^64 - 1;
+    true
+    > P<x> := MinimalPolynomial(M);
+    > IsPrimitive(P);
+    true
+    > IsInvertible(M);
+    true 
+    > Rank(M);
+    64
 
-i.e. have this be:
+And more obviously, splitting this into "seed" and "deterministic_seed",
+as you suggested, wouldn't actually do much in the case when seed=0,
+since 0<<N==0 and 0^0==0.
 
-	deterministic_seed = get_random_seed(true);
-	if (deterministic_seed)
-		seed = get_random_seed(false);
-
-> +
->  	static const struct ggc_root_tab gt_ggc_r_gt_latent_entropy[] = {
->  		{
->  			.base = &latent_entropy_decl,
-> -- 
-> 2.35.1
-> 
-
--- 
-Kees Cook
+Jason
