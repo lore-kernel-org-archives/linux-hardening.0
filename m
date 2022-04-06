@@ -2,268 +2,159 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24984C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  6 Apr 2022 16:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A01C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  6 Apr 2022 20:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237510AbiDFQbT (ORCPT
+        id S229636AbiDFUdw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 6 Apr 2022 12:31:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43420 "EHLO
+        Wed, 6 Apr 2022 16:33:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237706AbiDFQai (ORCPT
+        with ESMTP id S236516AbiDFUdb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 6 Apr 2022 12:30:38 -0400
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F76941FD0A;
-        Tue,  5 Apr 2022 18:48:15 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R721e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0V9JJspu_1649209690;
-Received: from 192.168.193.179(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V9JJspu_1649209690)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 06 Apr 2022 09:48:11 +0800
-Message-ID: <2bda020e-cc1b-ecf2-be23-9b7ed5d61945@linux.alibaba.com>
-Date:   Tue, 5 Apr 2022 18:48:09 -0700
+        Wed, 6 Apr 2022 16:33:31 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 460DE369395
+        for <linux-hardening@vger.kernel.org>; Wed,  6 Apr 2022 11:55:29 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id m16so2780776plx.3
+        for <linux-hardening@vger.kernel.org>; Wed, 06 Apr 2022 11:55:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dQMyBdrJI0TKqS6iJJZhTQ6K9ZLVlK71bX36qsCyaOc=;
+        b=XSHD7Rr+AHKSeq3C9olRSWGO+rDcFjM5qx3pbQd10xyj4JC4dTQTtAkjBViXdvkrmK
+         rq4zPR2lloAkd/XLzgm0GqKjIwwxwAJBJAXzk6uXrP3+aCoO5MlBp/SakON+NFdIPwgH
+         H6xX1CLQiO5xRg753Qq1NncjUsZX1WuFyMisk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dQMyBdrJI0TKqS6iJJZhTQ6K9ZLVlK71bX36qsCyaOc=;
+        b=j3A/UJGbtSmoHHl9oQ9t5Ut3w/Q5Ob8zj4eWa3GBSKzlZf7OjXPUWGJJD0Nf/wI27k
+         BUX0IXZAFbmms40VfKkwF7QqtDfozkf36IezhBiC66KYgy1VvUqax4z9kA+ZY5U9IYOf
+         /xptmo50m8CBxFU7iMKCPfdASYsWY2PPHzf2idBMZ/9nUIieEaR7V2s2plDW1ovrSuhl
+         AWIdUlY6zDbXoQSBw+nYlfjju1v4OAd4YY9yrmwBFGwJM9Cct+q2cq3WZ9IjJM96OGBL
+         L+5/vaxiMHvcy9kM3IQJwmUqNLodhsUaZCd9GG1eU3ZXqs9+t/JsQRRRzT2NSi8leY3d
+         y47w==
+X-Gm-Message-State: AOAM533+OfAOaDrotxMCPh3/BQM4Y6eawTn+fXaxA8R1hl5WrhTErAGx
+        Wdw1HlGBWlau1kZKyvTEqwuGXg==
+X-Google-Smtp-Source: ABdhPJwShpXOnPbCB31pSiDlliiYiOpD6jplXs80WT404Afay0P/HhCi4TaRShIn/ulCCbHYmicOuw==
+X-Received: by 2002:a17:902:f0ca:b0:156:caa9:4221 with SMTP id v10-20020a170902f0ca00b00156caa94221mr9790838pla.107.1649271328349;
+        Wed, 06 Apr 2022 11:55:28 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e13-20020a63370d000000b003810782e0cdsm16871427pga.56.2022.04.06.11.55.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Apr 2022 11:55:27 -0700 (PDT)
+Date:   Wed, 6 Apr 2022 11:55:27 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Russell Currey <ruscur@russell.cc>
+Cc:     linuxppc-dev@lists.ozlabs.org, ajd@linux.ibm.com,
+        linux-hardening@vger.kernel.org, jniethe5@gmail.com,
+        npiggin@gmail.com, joel@jms.id.au, dja@axtens.net
+Subject: Re: [PATCH v5 3/8] powerpc/mm/ptdump: debugfs handler for W+X checks
+ at runtime
+Message-ID: <202204061154.5A685C10D@keescook>
+References: <20200226063551.65363-1-ruscur@russell.cc>
+ <20200226063551.65363-4-ruscur@russell.cc>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-From:   Dan Li <ashimida@linux.alibaba.com>
-Subject: Re: [PATCH v4 2/2] lkdtm: Add Shadow Call Stack tests
-To:     catalin.marinas@arm.com, will@kernel.org, keescook@chromium.org,
-        arnd@arndb.de, gregkh@linuxfoundation.org, nathan@kernel.org,
-        ndesaulniers@google.com, shuah@kernel.org, mark.rutland@arm.com,
-        ojeda@kernel.org, akpm@linux-foundation.org, elver@google.com,
-        luc.vanoostenryck@gmail.com, samitolvanen@google.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-kselftest@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Dan Li <ashimida@linux.alibaba.com>
-References: <20220303074339.86337-1-ashimida@linux.alibaba.com>
- <20220314135329.80621-1-ashimida@linux.alibaba.com>
-Content-Language: en-US
-In-Reply-To: <20220314135329.80621-1-ashimida@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226063551.65363-4-ruscur@russell.cc>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
+*thread necromancy*
 
-Gentile ping for this :).
+Is this patch still something folks are working on? It'd be nice to be
+able to trigger this check at runtime.
 
-I also saw the discussion on llvm-project, use address of labels as a
-parameter doesn't seem to be stable.
+-Kees
 
-Do we need to split it into two cases here?
-
-Link: https://github.com/llvm/llvm-project/issues/54328
-
-Thanks,
-Dan
-
-
-On 3/14/22 06:53, Dan Li wrote:
-> Add tests for SCS (Shadow Call Stack) based backward CFI.
+On Wed, Feb 26, 2020 at 05:35:46PM +1100, Russell Currey wrote:
+> Very rudimentary, just
 > 
-> Signed-off-by: Dan Li <ashimida@linux.alibaba.com>
+> 	echo 1 > [debugfs]/check_wx_pages
+> 
+> and check the kernel log.  Useful for testing strict module RWX.
+> 
+> Updated the Kconfig entry to reflect this.
+> 
+> Also fixed a typo.
+> 
+> Signed-off-by: Russell Currey <ruscur@russell.cc>
 > ---
->   arch/arm64/include/asm/compiler.h       | 18 ++++++
->   drivers/misc/lkdtm/cfi.c                | 84 +++++++++++++++++++++++++
->   drivers/misc/lkdtm/core.c               |  1 +
->   drivers/misc/lkdtm/lkdtm.h              |  1 +
->   include/linux/compiler-clang.h          |  1 +
->   include/linux/compiler-gcc.h            |  2 +
->   include/linux/compiler_types.h          |  4 ++
->   tools/testing/selftests/lkdtm/tests.txt |  1 +
->   8 files changed, 112 insertions(+)
+>  arch/powerpc/Kconfig.debug      |  6 ++++--
+>  arch/powerpc/mm/ptdump/ptdump.c | 21 ++++++++++++++++++++-
+>  2 files changed, 24 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/arm64/include/asm/compiler.h b/arch/arm64/include/asm/compiler.h
-> index dc3ea4080e2e..96590fb4a8de 100644
-> --- a/arch/arm64/include/asm/compiler.h
-> +++ b/arch/arm64/include/asm/compiler.h
-> @@ -8,6 +8,24 @@
->   #define ARM64_ASM_PREAMBLE
->   #endif
->   
-> +#ifndef __ASSEMBLY__
-> +#ifdef __KERNEL__
+> diff --git a/arch/powerpc/Kconfig.debug b/arch/powerpc/Kconfig.debug
+> index 0b063830eea8..e37960ef68c6 100644
+> --- a/arch/powerpc/Kconfig.debug
+> +++ b/arch/powerpc/Kconfig.debug
+> @@ -370,7 +370,7 @@ config PPC_PTDUMP
+>  	  If you are unsure, say N.
+>  
+>  config PPC_DEBUG_WX
+> -	bool "Warn on W+X mappings at boot"
+> +	bool "Warn on W+X mappings at boot & enable manual checks at runtime"
+>  	depends on PPC_PTDUMP && STRICT_KERNEL_RWX
+>  	help
+>  	  Generate a warning if any W+X mappings are found at boot.
+> @@ -384,7 +384,9 @@ config PPC_DEBUG_WX
+>  	  of other unfixed kernel bugs easier.
+>  
+>  	  There is no runtime or memory usage effect of this option
+> -	  once the kernel has booted up - it's a one time check.
+> +	  once the kernel has booted up, it only automatically checks once.
 > +
-> +#ifdef CONFIG_ARM64_PTR_AUTH_KERNEL
+> +	  Enables the "check_wx_pages" debugfs entry for checking at runtime.
+>  
+>  	  If in doubt, say "Y".
+>  
+> diff --git a/arch/powerpc/mm/ptdump/ptdump.c b/arch/powerpc/mm/ptdump/ptdump.c
+> index 206156255247..a15e19a3b14e 100644
+> --- a/arch/powerpc/mm/ptdump/ptdump.c
+> +++ b/arch/powerpc/mm/ptdump/ptdump.c
+> @@ -4,7 +4,7 @@
+>   *
+>   * This traverses the kernel pagetables and dumps the
+>   * information about the used sections of memory to
+> - * /sys/kernel/debug/kernel_pagetables.
+> + * /sys/kernel/debug/kernel_page_tables.
+>   *
+>   * Derived from the arm64 implementation:
+>   * Copyright (c) 2014, The Linux Foundation, Laura Abbott.
+> @@ -413,6 +413,25 @@ void ptdump_check_wx(void)
+>  	else
+>  		pr_info("Checked W+X mappings: passed, no W+X pages found\n");
+>  }
 > +
-> +#ifdef CONFIG_ARM64_BTI_KERNEL
-> +# define __no_ptrauth __attribute__((target("branch-protection=bti")))
-> +#elif defined(CONFIG_CC_HAS_BRANCH_PROT_PAC_RET)
-> +# define __no_ptrauth __attribute__((target("branch-protection=none")))
-> +#elif defined(CONFIG_CC_HAS_SIGN_RETURN_ADDRESS)
-> +# define __no_ptrauth __attribute__((target("sign-return-address=none")))
-> +#endif
-> +
-> +#endif /* CONFIG_ARM64_PTR_AUTH_KERNEL */
-> +
-> +#endif /* __KERNEL__ */
-> +#endif /* __ASSEMBLY__ */
-> +
->   /*
->    * The EL0/EL1 pointer bits used by a pointer authentication code.
->    * This is dependent on TBI0/TBI1 being enabled, or bits 63:56 would also apply.
-> diff --git a/drivers/misc/lkdtm/cfi.c b/drivers/misc/lkdtm/cfi.c
-> index c9aeddef1044..468ba2f26f74 100644
-> --- a/drivers/misc/lkdtm/cfi.c
-> +++ b/drivers/misc/lkdtm/cfi.c
-> @@ -41,3 +41,87 @@ void lkdtm_CFI_FORWARD_PROTO(void)
->   	pr_err("FAIL: survived mismatched prototype function call!\n");
->   	pr_expected_config(CONFIG_CFI_CLANG);
->   }
-> +
-> +#ifdef CONFIG_ARM64
-> +/*
-> + * This function is used to modify its return address. The PAC needs to be turned
-> + * off here to ensure that the modification of the return address will not be blocked.
-> + */
-> +static noinline __no_ptrauth
-> +void lkdtm_scs_set_lr(unsigned long *expected, unsigned long *addr)
+> +static int check_wx_debugfs_set(void *data, u64 val)
 > +{
-> +	/* Use of volatile is to make sure final write isn't seen as a dead store. */
-> +	unsigned long * volatile *ret_addr = (unsigned long **)__builtin_frame_address(0) + 1;
+> +	if (val != 1ULL)
+> +		return -EINVAL;
 > +
-> +	/* Make sure we've found the right place on the stack before writing it. */
-> +	if (*ret_addr == expected)
-> +		*ret_addr = addr;
+> +	ptdump_check_wx();
+> +
+> +	return 0;
 > +}
 > +
-> +/* Function with __noscs attribute attempts to modify its return address. */
-> +static noinline __no_ptrauth __noscs
-> +void lkdtm_noscs_set_lr(unsigned long *expected, unsigned long *addr)
+> +DEFINE_SIMPLE_ATTRIBUTE(check_wx_fops, NULL, check_wx_debugfs_set, "%llu\n");
+> +
+> +static int ptdump_check_wx_init(void)
 > +{
-> +	/* Use of volatile is to make sure final write isn't seen as a dead store. */
-> +	unsigned long * volatile *ret_addr = (unsigned long **)__builtin_frame_address(0) + 1;
-> +
-> +	/* Make sure we've found the right place on the stack before writing it. */
-> +	if (*ret_addr == expected)
-> +		*ret_addr = addr;
+> +	return debugfs_create_file("check_wx_pages", 0200, NULL,
+> +				   NULL, &check_wx_fops) ? 0 : -ENOMEM;
 > +}
-> +#else
-> +static inline void lkdtm_noscs_set_lr(unsigned long *expected, unsigned long *addr) { }
-> +static inline void lkdtm_scs_set_lr(unsigned long *expected, unsigned long *addr) { }
-> +#endif
-> +
-> +static volatile unsigned int force_label;
-> +
-> +/*
-> + * This first checks whether a function with the __noscs attribute under
-> + * the current platform can directly modify its return address, and if so,
-> + * checks whether scs takes effect.
-> + */
-> +void __no_optimize lkdtm_CFI_BACKWARD_SHADOW(void)
-> +{
-> +	void *array[] = {&&unexpected, &&expected, &&good_scs, &&bad_scs};
-> +
-> +	if (force_label && (force_label < sizeof(array))) {
-> +		/*
-> +		 * Call them with "NULL" first to avoid
-> +		 * arguments being treated as constants in -02.
-> +		 */
-> +		lkdtm_noscs_set_lr(NULL, NULL);
-> +		lkdtm_scs_set_lr(NULL, NULL);
-> +		goto *array[force_label];
-> +	}
-> +
-> +	/* Keep labels in scope to avoid compiler warnings. */
-> +	do {
-> +		/* Verify the "normal" condition of LR corruption working. */
-> +		pr_info("Trying to corrupt lr in a function without scs protection ...\n");
-> +		lkdtm_noscs_set_lr(&&unexpected, &&expected);
-> +
-> +unexpected:
-> +		/*
-> +		 * If lr cannot be modified, the following check is meaningless,
-> +		 * returns directly.
-> +		 */
-> +		pr_err("XPASS: Unexpectedly survived lr corruption without scs?!\n");
-> +		break;
-> +
-> +expected:
-> +		pr_info("ok: lr corruption redirected without scs.\n");
-> +
-> +		/* Verify that SCS is in effect. */
-> +		pr_info("Trying to corrupt lr in a function with scs protection ...\n");
-> +		lkdtm_scs_set_lr(&&good_scs, &&bad_scs);
-> +
-> +good_scs:
-> +		pr_info("ok: scs takes effect.\n");
-> +		break;
-> +
-> +bad_scs:
-> +		pr_err("FAIL: return address rewritten!\n");
-> +		pr_expected_config(CONFIG_SHADOW_CALL_STACK);
-> +	} while (0);
-> +}
-> diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
-> index f69b964b9952..7af7268b82e4 100644
-> --- a/drivers/misc/lkdtm/core.c
-> +++ b/drivers/misc/lkdtm/core.c
-> @@ -178,6 +178,7 @@ static const struct crashtype crashtypes[] = {
->   	CRASHTYPE(USERCOPY_KERNEL),
->   	CRASHTYPE(STACKLEAK_ERASING),
->   	CRASHTYPE(CFI_FORWARD_PROTO),
-> +	CRASHTYPE(CFI_BACKWARD_SHADOW),
->   	CRASHTYPE(FORTIFIED_OBJECT),
->   	CRASHTYPE(FORTIFIED_SUBOBJECT),
->   	CRASHTYPE(FORTIFIED_STRSCPY),
-> diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
-> index d6137c70ebbe..a66fba949ab5 100644
-> --- a/drivers/misc/lkdtm/lkdtm.h
-> +++ b/drivers/misc/lkdtm/lkdtm.h
-> @@ -157,6 +157,7 @@ void lkdtm_STACKLEAK_ERASING(void);
->   
->   /* cfi.c */
->   void lkdtm_CFI_FORWARD_PROTO(void);
-> +void lkdtm_CFI_BACKWARD_SHADOW(void);
->   
->   /* fortify.c */
->   void lkdtm_FORTIFIED_OBJECT(void);
-> diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
-> index 3c4de9b6c6e3..2db37db36651 100644
-> --- a/include/linux/compiler-clang.h
-> +++ b/include/linux/compiler-clang.h
-> @@ -68,3 +68,4 @@
->   
->   #define __nocfi		__attribute__((__no_sanitize__("cfi")))
->   #define __cficanonical	__attribute__((__cfi_canonical_jump_table__))
-> +#define __no_optimize	__attribute__((optnone))
-> diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
-> index deff5b308470..28d1b0ec6656 100644
-> --- a/include/linux/compiler-gcc.h
-> +++ b/include/linux/compiler-gcc.h
-> @@ -162,3 +162,5 @@
->   #if GCC_VERSION < 90100
->   #undef __alloc_size__
->   #endif
-> +
-> +#define __no_optimize	__attribute__((optimize("-O0")))
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index 3c1795fdb568..f5ad83f7ea2f 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -257,6 +257,10 @@ struct ftrace_likely_data {
->   # define __nocfi
->   #endif
->   
-> +#ifndef __no_ptrauth
-> +# define __no_ptrauth
-> +#endif
-> +
->   #ifndef __cficanonical
->   # define __cficanonical
->   #endif
-> diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
-> index 6b36b7f5dcf9..12df67a3b419 100644
-> --- a/tools/testing/selftests/lkdtm/tests.txt
-> +++ b/tools/testing/selftests/lkdtm/tests.txt
-> @@ -73,6 +73,7 @@ USERCOPY_STACK_BEYOND
->   USERCOPY_KERNEL
->   STACKLEAK_ERASING OK: the rest of the thread stack is properly erased
->   CFI_FORWARD_PROTO
-> +CFI_BACKWARD_SHADOW ok: scs takes effect
->   FORTIFIED_STRSCPY
->   FORTIFIED_OBJECT
->   FORTIFIED_SUBOBJECT
+> +device_initcall(ptdump_check_wx_init);
+>  #endif
+>  
+>  static int ptdump_init(void)
+> -- 
+> 2.25.1
+> 
+
+-- 
+Kees Cook
