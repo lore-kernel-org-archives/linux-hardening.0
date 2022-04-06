@@ -2,31 +2,31 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C96D2C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  6 Apr 2022 13:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24984C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  6 Apr 2022 16:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233000AbiDFN1C (ORCPT
+        id S237510AbiDFQbT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 6 Apr 2022 09:27:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47124 "EHLO
+        Wed, 6 Apr 2022 12:31:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233361AbiDFN01 (ORCPT
+        with ESMTP id S237706AbiDFQai (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 6 Apr 2022 09:26:27 -0400
-Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB6EE9F38A;
-        Tue,  5 Apr 2022 18:28:26 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0V9JKQ3h_1649208501;
-Received: from 192.168.193.179(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V9JKQ3h_1649208501)
+        Wed, 6 Apr 2022 12:30:38 -0400
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F76941FD0A;
+        Tue,  5 Apr 2022 18:48:15 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R721e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0V9JJspu_1649209690;
+Received: from 192.168.193.179(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V9JJspu_1649209690)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 06 Apr 2022 09:28:22 +0800
-Message-ID: <daf48a22-6528-6778-09dc-7a37b6a65983@linux.alibaba.com>
-Date:   Tue, 5 Apr 2022 18:28:20 -0700
+          Wed, 06 Apr 2022 09:48:11 +0800
+Message-ID: <2bda020e-cc1b-ecf2-be23-9b7ed5d61945@linux.alibaba.com>
+Date:   Tue, 5 Apr 2022 18:48:09 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
+ Thunderbird/91.8.0
+From:   Dan Li <ashimida@linux.alibaba.com>
 Subject: Re: [PATCH v4 2/2] lkdtm: Add Shadow Call Stack tests
-Content-Language: en-US
 To:     catalin.marinas@arm.com, will@kernel.org, keescook@chromium.org,
         arnd@arndb.de, gregkh@linuxfoundation.org, nathan@kernel.org,
         ndesaulniers@google.com, shuah@kernel.org, mark.rutland@arm.com,
@@ -34,10 +34,11 @@ To:     catalin.marinas@arm.com, will@kernel.org, keescook@chromium.org,
         luc.vanoostenryck@gmail.com, samitolvanen@google.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         llvm@lists.linux.dev, linux-kselftest@vger.kernel.org,
-        linux-hardening@vger.kernel.org
+        linux-hardening@vger.kernel.org,
+        Dan Li <ashimida@linux.alibaba.com>
 References: <20220303074339.86337-1-ashimida@linux.alibaba.com>
  <20220314135329.80621-1-ashimida@linux.alibaba.com>
-From:   Dan Li <ashimida@linux.alibaba.com>
+Content-Language: en-US
 In-Reply-To: <20220314135329.80621-1-ashimida@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
