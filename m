@@ -2,82 +2,267 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455EEC433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  6 Apr 2022 11:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96D2C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  6 Apr 2022 13:25:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230238AbiDFLzq (ORCPT
+        id S233000AbiDFN1C (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 6 Apr 2022 07:55:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36432 "EHLO
+        Wed, 6 Apr 2022 09:27:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230261AbiDFLzW (ORCPT
+        with ESMTP id S233361AbiDFN01 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 6 Apr 2022 07:55:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82307B0A6F;
-        Wed,  6 Apr 2022 00:18:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EF60561B03;
-        Wed,  6 Apr 2022 07:18:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B81BC385A1;
-        Wed,  6 Apr 2022 07:18:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649229527;
-        bh=UR4JAaBQa61qlZC04TBcieCdJUeGJ8gH4nQ8PLOLCUU=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=QwGs9sdihyVKnkQlY11TgpnX3p/Plv2QgabFyIta3ksfqmFjgU71HGGdmD4BdlRNn
-         OQSzPea02kxgVo/oiFAP9Uglk8qo6hjrnTsJAOtq7g+iiid+StjMBzxpj/y2l1HaDM
-         iyNpvNZ3U3po2kiTCbUxMO7A0gFZg6PuS2EtPnZwqYusoEwR94dsW25egfh4gUu4KH
-         qvmbYOrdATnYmr+hss0VY3k/AoY9lVEPd3czSHdtQcpbw3p+/hvrKGrFRwbYQanXNP
-         AH2DY87QceGJEMNo6GrYwMLFuR+xMd73G2533wKkUvTdAE6QaK3WbgqrWjQVD5dwab
-         n++l92b1/vw5w==
-Content-Type: text/plain; charset="utf-8"
+        Wed, 6 Apr 2022 09:26:27 -0400
+Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB6EE9F38A;
+        Tue,  5 Apr 2022 18:28:26 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0V9JKQ3h_1649208501;
+Received: from 192.168.193.179(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0V9JKQ3h_1649208501)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 06 Apr 2022 09:28:22 +0800
+Message-ID: <daf48a22-6528-6778-09dc-7a37b6a65983@linux.alibaba.com>
+Date:   Tue, 5 Apr 2022 18:28:20 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH][next] iwlwifi: fw: Replace zero-length arrays with
- flexible-array members
-From:   Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <20220216195015.GA904148@embeddedor>
-References: <20220216195015.GA904148@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Luca Coelho <luciano.coelho@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v4 2/2] lkdtm: Add Shadow Call Stack tests
+Content-Language: en-US
+To:     catalin.marinas@arm.com, will@kernel.org, keescook@chromium.org,
+        arnd@arndb.de, gregkh@linuxfoundation.org, nathan@kernel.org,
+        ndesaulniers@google.com, shuah@kernel.org, mark.rutland@arm.com,
+        ojeda@kernel.org, akpm@linux-foundation.org, elver@google.com,
+        luc.vanoostenryck@gmail.com, samitolvanen@google.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-kselftest@vger.kernel.org,
         linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-ID: <164922952168.27650.118624078658922574.kvalo@kernel.org>
-Date:   Wed,  6 Apr 2022 07:18:45 +0000 (UTC)
+References: <20220303074339.86337-1-ashimida@linux.alibaba.com>
+ <20220314135329.80621-1-ashimida@linux.alibaba.com>
+From:   Dan Li <ashimida@linux.alibaba.com>
+In-Reply-To: <20220314135329.80621-1-ashimida@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+Hi Kees,
 
-> There is a regular need in the kernel to provide a way to declare
-> having a dynamically sized set of trailing elements in a structure.
-> Kernel code should always use “flexible array members”[1] for these
-> cases. The older style of one-element or zero-length arrays should
-> no longer be used[2].
+Gentile ping for this :).
+
+I also saw the discussion on llvm-project, use address of labels as a
+parameter doesn't seem to be stable.
+
+Do we need to split it into two cases here?
+
+Link: https://github.com/llvm/llvm-project/issues/54328
+
+Thanks,
+Dan
+
+
+On 3/14/22 06:53, Dan Li wrote:
+> Add tests for SCS (Shadow Call Stack) based backward CFI.
 > 
-> [1] https://en.wikipedia.org/wiki/Flexible_array_member
-> [2] https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
+> Signed-off-by: Dan Li <ashimida@linux.alibaba.com>
+> ---
+>   arch/arm64/include/asm/compiler.h       | 18 ++++++
+>   drivers/misc/lkdtm/cfi.c                | 84 +++++++++++++++++++++++++
+>   drivers/misc/lkdtm/core.c               |  1 +
+>   drivers/misc/lkdtm/lkdtm.h              |  1 +
+>   include/linux/compiler-clang.h          |  1 +
+>   include/linux/compiler-gcc.h            |  2 +
+>   include/linux/compiler_types.h          |  4 ++
+>   tools/testing/selftests/lkdtm/tests.txt |  1 +
+>   8 files changed, 112 insertions(+)
 > 
-> Link: https://github.com/KSPP/linux/issues/78
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Acked-by: Luca Coelho <luciano.coelho@intel.com>
-
-Patch applied to wireless-next.git, thanks.
-
-34e63cd5ba29 iwlwifi: fw: Replace zero-length arrays with flexible-array members
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20220216195015.GA904148@embeddedor/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+> diff --git a/arch/arm64/include/asm/compiler.h b/arch/arm64/include/asm/compiler.h
+> index dc3ea4080e2e..96590fb4a8de 100644
+> --- a/arch/arm64/include/asm/compiler.h
+> +++ b/arch/arm64/include/asm/compiler.h
+> @@ -8,6 +8,24 @@
+>   #define ARM64_ASM_PREAMBLE
+>   #endif
+>   
+> +#ifndef __ASSEMBLY__
+> +#ifdef __KERNEL__
+> +
+> +#ifdef CONFIG_ARM64_PTR_AUTH_KERNEL
+> +
+> +#ifdef CONFIG_ARM64_BTI_KERNEL
+> +# define __no_ptrauth __attribute__((target("branch-protection=bti")))
+> +#elif defined(CONFIG_CC_HAS_BRANCH_PROT_PAC_RET)
+> +# define __no_ptrauth __attribute__((target("branch-protection=none")))
+> +#elif defined(CONFIG_CC_HAS_SIGN_RETURN_ADDRESS)
+> +# define __no_ptrauth __attribute__((target("sign-return-address=none")))
+> +#endif
+> +
+> +#endif /* CONFIG_ARM64_PTR_AUTH_KERNEL */
+> +
+> +#endif /* __KERNEL__ */
+> +#endif /* __ASSEMBLY__ */
+> +
+>   /*
+>    * The EL0/EL1 pointer bits used by a pointer authentication code.
+>    * This is dependent on TBI0/TBI1 being enabled, or bits 63:56 would also apply.
+> diff --git a/drivers/misc/lkdtm/cfi.c b/drivers/misc/lkdtm/cfi.c
+> index c9aeddef1044..468ba2f26f74 100644
+> --- a/drivers/misc/lkdtm/cfi.c
+> +++ b/drivers/misc/lkdtm/cfi.c
+> @@ -41,3 +41,87 @@ void lkdtm_CFI_FORWARD_PROTO(void)
+>   	pr_err("FAIL: survived mismatched prototype function call!\n");
+>   	pr_expected_config(CONFIG_CFI_CLANG);
+>   }
+> +
+> +#ifdef CONFIG_ARM64
+> +/*
+> + * This function is used to modify its return address. The PAC needs to be turned
+> + * off here to ensure that the modification of the return address will not be blocked.
+> + */
+> +static noinline __no_ptrauth
+> +void lkdtm_scs_set_lr(unsigned long *expected, unsigned long *addr)
+> +{
+> +	/* Use of volatile is to make sure final write isn't seen as a dead store. */
+> +	unsigned long * volatile *ret_addr = (unsigned long **)__builtin_frame_address(0) + 1;
+> +
+> +	/* Make sure we've found the right place on the stack before writing it. */
+> +	if (*ret_addr == expected)
+> +		*ret_addr = addr;
+> +}
+> +
+> +/* Function with __noscs attribute attempts to modify its return address. */
+> +static noinline __no_ptrauth __noscs
+> +void lkdtm_noscs_set_lr(unsigned long *expected, unsigned long *addr)
+> +{
+> +	/* Use of volatile is to make sure final write isn't seen as a dead store. */
+> +	unsigned long * volatile *ret_addr = (unsigned long **)__builtin_frame_address(0) + 1;
+> +
+> +	/* Make sure we've found the right place on the stack before writing it. */
+> +	if (*ret_addr == expected)
+> +		*ret_addr = addr;
+> +}
+> +#else
+> +static inline void lkdtm_noscs_set_lr(unsigned long *expected, unsigned long *addr) { }
+> +static inline void lkdtm_scs_set_lr(unsigned long *expected, unsigned long *addr) { }
+> +#endif
+> +
+> +static volatile unsigned int force_label;
+> +
+> +/*
+> + * This first checks whether a function with the __noscs attribute under
+> + * the current platform can directly modify its return address, and if so,
+> + * checks whether scs takes effect.
+> + */
+> +void __no_optimize lkdtm_CFI_BACKWARD_SHADOW(void)
+> +{
+> +	void *array[] = {&&unexpected, &&expected, &&good_scs, &&bad_scs};
+> +
+> +	if (force_label && (force_label < sizeof(array))) {
+> +		/*
+> +		 * Call them with "NULL" first to avoid
+> +		 * arguments being treated as constants in -02.
+> +		 */
+> +		lkdtm_noscs_set_lr(NULL, NULL);
+> +		lkdtm_scs_set_lr(NULL, NULL);
+> +		goto *array[force_label];
+> +	}
+> +
+> +	/* Keep labels in scope to avoid compiler warnings. */
+> +	do {
+> +		/* Verify the "normal" condition of LR corruption working. */
+> +		pr_info("Trying to corrupt lr in a function without scs protection ...\n");
+> +		lkdtm_noscs_set_lr(&&unexpected, &&expected);
+> +
+> +unexpected:
+> +		/*
+> +		 * If lr cannot be modified, the following check is meaningless,
+> +		 * returns directly.
+> +		 */
+> +		pr_err("XPASS: Unexpectedly survived lr corruption without scs?!\n");
+> +		break;
+> +
+> +expected:
+> +		pr_info("ok: lr corruption redirected without scs.\n");
+> +
+> +		/* Verify that SCS is in effect. */
+> +		pr_info("Trying to corrupt lr in a function with scs protection ...\n");
+> +		lkdtm_scs_set_lr(&&good_scs, &&bad_scs);
+> +
+> +good_scs:
+> +		pr_info("ok: scs takes effect.\n");
+> +		break;
+> +
+> +bad_scs:
+> +		pr_err("FAIL: return address rewritten!\n");
+> +		pr_expected_config(CONFIG_SHADOW_CALL_STACK);
+> +	} while (0);
+> +}
+> diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+> index f69b964b9952..7af7268b82e4 100644
+> --- a/drivers/misc/lkdtm/core.c
+> +++ b/drivers/misc/lkdtm/core.c
+> @@ -178,6 +178,7 @@ static const struct crashtype crashtypes[] = {
+>   	CRASHTYPE(USERCOPY_KERNEL),
+>   	CRASHTYPE(STACKLEAK_ERASING),
+>   	CRASHTYPE(CFI_FORWARD_PROTO),
+> +	CRASHTYPE(CFI_BACKWARD_SHADOW),
+>   	CRASHTYPE(FORTIFIED_OBJECT),
+>   	CRASHTYPE(FORTIFIED_SUBOBJECT),
+>   	CRASHTYPE(FORTIFIED_STRSCPY),
+> diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+> index d6137c70ebbe..a66fba949ab5 100644
+> --- a/drivers/misc/lkdtm/lkdtm.h
+> +++ b/drivers/misc/lkdtm/lkdtm.h
+> @@ -157,6 +157,7 @@ void lkdtm_STACKLEAK_ERASING(void);
+>   
+>   /* cfi.c */
+>   void lkdtm_CFI_FORWARD_PROTO(void);
+> +void lkdtm_CFI_BACKWARD_SHADOW(void);
+>   
+>   /* fortify.c */
+>   void lkdtm_FORTIFIED_OBJECT(void);
+> diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
+> index 3c4de9b6c6e3..2db37db36651 100644
+> --- a/include/linux/compiler-clang.h
+> +++ b/include/linux/compiler-clang.h
+> @@ -68,3 +68,4 @@
+>   
+>   #define __nocfi		__attribute__((__no_sanitize__("cfi")))
+>   #define __cficanonical	__attribute__((__cfi_canonical_jump_table__))
+> +#define __no_optimize	__attribute__((optnone))
+> diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+> index deff5b308470..28d1b0ec6656 100644
+> --- a/include/linux/compiler-gcc.h
+> +++ b/include/linux/compiler-gcc.h
+> @@ -162,3 +162,5 @@
+>   #if GCC_VERSION < 90100
+>   #undef __alloc_size__
+>   #endif
+> +
+> +#define __no_optimize	__attribute__((optimize("-O0")))
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> index 3c1795fdb568..f5ad83f7ea2f 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -257,6 +257,10 @@ struct ftrace_likely_data {
+>   # define __nocfi
+>   #endif
+>   
+> +#ifndef __no_ptrauth
+> +# define __no_ptrauth
+> +#endif
+> +
+>   #ifndef __cficanonical
+>   # define __cficanonical
+>   #endif
+> diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
+> index 6b36b7f5dcf9..12df67a3b419 100644
+> --- a/tools/testing/selftests/lkdtm/tests.txt
+> +++ b/tools/testing/selftests/lkdtm/tests.txt
+> @@ -73,6 +73,7 @@ USERCOPY_STACK_BEYOND
+>   USERCOPY_KERNEL
+>   STACKLEAK_ERASING OK: the rest of the thread stack is properly erased
+>   CFI_FORWARD_PROTO
+> +CFI_BACKWARD_SHADOW ok: scs takes effect
+>   FORTIFIED_STRSCPY
+>   FORTIFIED_OBJECT
+>   FORTIFIED_SUBOBJECT
