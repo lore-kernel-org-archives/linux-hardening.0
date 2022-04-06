@@ -2,45 +2,45 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB52C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  6 Apr 2022 10:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 455EEC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  6 Apr 2022 11:53:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235744AbiDFK6c (ORCPT
+        id S230238AbiDFLzq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 6 Apr 2022 06:58:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52682 "EHLO
+        Wed, 6 Apr 2022 07:55:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351229AbiDFK5g (ORCPT
+        with ESMTP id S230261AbiDFLzW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 6 Apr 2022 06:57:36 -0400
+        Wed, 6 Apr 2022 07:55:22 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0380635C05F;
-        Wed,  6 Apr 2022 00:19:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82307B0A6F;
+        Wed,  6 Apr 2022 00:18:48 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 930C661B07;
-        Wed,  6 Apr 2022 07:19:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18A23C385A3;
-        Wed,  6 Apr 2022 07:19:18 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EF60561B03;
+        Wed,  6 Apr 2022 07:18:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B81BC385A1;
+        Wed,  6 Apr 2022 07:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649229561;
-        bh=Cz6TDzs+jZOWZjAc5HjVcIh2AZntniGosREgoBaLQnc=;
+        s=k20201202; t=1649229527;
+        bh=UR4JAaBQa61qlZC04TBcieCdJUeGJ8gH4nQ8PLOLCUU=;
         h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=BCuqDE3dUreTJ570sFvl187t+R8w+yJTzRMfxnfED3xUvlqgWcERMWuolZJxJJwjv
-         7RKQIiy6oPlQXky50+7ipd6Q3B4DPt/y+7HqZl0oj1ZSZG2IpgN2TNla4YnOlEWoyS
-         zG9R4Nswt6z9eTM/nTp9XGCQ4XDp0fkotQ5F8msq0uIv6l23IZgaANhZzDi89nqUke
-         UxzWThZ3MEFakzK0YM1XeZ1pJWSLIfAps0+lncQehGUd5i217srChgNCdxkAMC5IkR
-         4cZ6N/kcWdoVWClbCjlonGVum9vItz8sSOkZy4UvSfhAT5fEk76OvtuHkHsFiJLuRt
-         B+jZlFNK570vQ==
+        b=QwGs9sdihyVKnkQlY11TgpnX3p/Plv2QgabFyIta3ksfqmFjgU71HGGdmD4BdlRNn
+         OQSzPea02kxgVo/oiFAP9Uglk8qo6hjrnTsJAOtq7g+iiid+StjMBzxpj/y2l1HaDM
+         iyNpvNZ3U3po2kiTCbUxMO7A0gFZg6PuS2EtPnZwqYusoEwR94dsW25egfh4gUu4KH
+         qvmbYOrdATnYmr+hss0VY3k/AoY9lVEPd3czSHdtQcpbw3p+/hvrKGrFRwbYQanXNP
+         AH2DY87QceGJEMNo6GrYwMLFuR+xMd73G2533wKkUvTdAE6QaK3WbgqrWjQVD5dwab
+         n++l92b1/vw5w==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH][next] iwlwifi: mei: Replace zero-length array with
- flexible-array member
+Subject: Re: [PATCH][next] iwlwifi: fw: Replace zero-length arrays with
+ flexible-array members
 From:   Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <20220216195030.GA904170@embeddedor>
-References: <20220216195030.GA904170@embeddedor>
+In-Reply-To: <20220216195015.GA904148@embeddedor>
+References: <20220216195015.GA904148@embeddedor>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc:     Luca Coelho <luciano.coelho@intel.com>,
         "David S. Miller" <davem@davemloft.net>,
@@ -50,8 +50,8 @@ Cc:     Luca Coelho <luciano.coelho@intel.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
 User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-ID: <164922955689.27650.1046956549336676737.kvalo@kernel.org>
-Date:   Wed,  6 Apr 2022 07:19:18 +0000 (UTC)
+Message-ID: <164922952168.27650.118624078658922574.kvalo@kernel.org>
+Date:   Wed,  6 Apr 2022 07:18:45 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -74,10 +74,10 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 Patch applied to wireless-next.git, thanks.
 
-c5f675748cf0 iwlwifi: mei: Replace zero-length array with flexible-array member
+34e63cd5ba29 iwlwifi: fw: Replace zero-length arrays with flexible-array members
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20220216195030.GA904170@embeddedor/
+https://patchwork.kernel.org/project/linux-wireless/patch/20220216195015.GA904148@embeddedor/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
