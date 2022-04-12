@@ -2,118 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FD9C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu,  7 Apr 2022 17:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05556C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 12 Apr 2022 17:26:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346697AbiDGSBp (ORCPT
+        id S1349180AbiDLR2a (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 7 Apr 2022 14:01:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56626 "EHLO
+        Tue, 12 Apr 2022 13:28:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346694AbiDGSBo (ORCPT
+        with ESMTP id S234973AbiDLR21 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 7 Apr 2022 14:01:44 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EBCB37A90
-        for <linux-hardening@vger.kernel.org>; Thu,  7 Apr 2022 10:59:44 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id a18-20020a25bad2000000b0063360821ea7so4777642ybk.15
-        for <linux-hardening@vger.kernel.org>; Thu, 07 Apr 2022 10:59:44 -0700 (PDT)
+        Tue, 12 Apr 2022 13:28:27 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 184FD51E60
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Apr 2022 10:26:07 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id mp16-20020a17090b191000b001cb5efbcab6so3628862pjb.4
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Apr 2022 10:26:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=qW2G6QJQPB0zAi9jxpZzn0oRvztQZG9cLDkwD68iVl0=;
-        b=oR4xdvGw3j0+k09kg7TSurTUKAgegEO6DhqberYZFqr9S5IhaQ8lB8xT7Vpmk2EZZ9
-         2IizFWMW4QaQnv7jzov4pCAZVMwzutdJ0MeACwMajyrRJeevFyNqtLMMMix8Q8v/F+g+
-         ax33VxknIU6WrU6+nSGQiv+1kiQNEPuOaT6S/R0xJEnzUmbbPHYRi4oZb3dPdQa51Yfw
-         gMx04W5CPC1X2VzSFImUkLF3oyLpMyl5vy84AuTS4fBXefv1yRKnfFVFvyyqnjj5UMUp
-         xuskqUkbHGFX+BCwYqNzRzQo5i96nXcT/C7eeDymFEgX14GsqxmLsYvWFtNUedTiDTGH
-         16VA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tVvKuYmXIsa9qahx409eDRhfKlF4vraPbVM4uLa0fmQ=;
+        b=hdpkAq9aJidmb9mmOq0DjZrlkjc+sWw7doSwZu3Xg9C3ghnTPwU0n5q6LG2l4gVm8h
+         PSWw8Ctere/ruqdtzP5yr+v5cPz2XIOsK78xnSWAj9fRC4zhtzswRvv8xmVrZM7BFqJb
+         Joi0QaXGiDKFhq7k4LUEbecNqvJ89Im/GSkRw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=qW2G6QJQPB0zAi9jxpZzn0oRvztQZG9cLDkwD68iVl0=;
-        b=K+mcQjyMmIFXUtnDNiOBjUT9dtJQUwHVRZO9/x9RStJMbblb27TKFqkGDCos6fes88
-         I8A+GMYaarme4uqAMIHJYs8ChzqdtTcyN7Vw69DIPsdmskmlRJSmK1s7XGufONPI+dN4
-         xf9apHLOTS8ZGq/0wXeOWS804JJKeYlPqTzl/dSh5n1YoAy9gagnWRtX7uvX5PMnfxjE
-         GN4YVDV+icwGODOywNCGX7cPRUfEN81Xccz2wxCSPmE3SiEUa0YHb0cGp3rd/e+Im0+v
-         1Pai3UCmSUZNga/qMI5/fNKipzfJRqyMSpCcT/8QPHzEiKCdwcxfvFqhmEu9l0PihIqa
-         fnmw==
-X-Gm-Message-State: AOAM530NjFcLcvCC5uNp6cmMswublmXzQmsMIlPyY+jOz44GlNdGhSbj
-        nOTOoBDDAIEh2xhXvDOjm1ZfNwFp
-X-Google-Smtp-Source: ABdhPJxivmOowRh3AlaJxt1yAFWeG/V8zRjRa06koVEiM/woQviTIDs6OSB1GpPEauTwy35oABp/bAchig==
-X-Received: from fawn.svl.corp.google.com ([2620:15c:2cd:202:9502:92c1:77f9:4633])
- (user=morbo job=sendgmr) by 2002:a81:52c4:0:b0:2eb:8d52:60d6 with SMTP id
- g187-20020a8152c4000000b002eb8d5260d6mr13102169ywb.394.1649354383373; Thu, 07
- Apr 2022 10:59:43 -0700 (PDT)
-Date:   Thu,  7 Apr 2022 10:59:30 -0700
-Message-Id: <20220407175930.471870-1-morbo@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.35.1.1178.g4f1659d476-goog
-Subject: [PATCH] security: don't treat structure as an array of struct hlist_head
-From:   Bill Wendling <morbo@google.com>
-To:     Kees Cook <keescook@chromium.org>,
-        James Morris <jmorris@namei.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tVvKuYmXIsa9qahx409eDRhfKlF4vraPbVM4uLa0fmQ=;
+        b=aujA4AbL/n8/mygTQqgbIHXLmZZ3HtdsqDzNpPTXpucz5JHuCIToTBQVGcXW6stC6N
+         6cFR0zDxHbJYFhx5yArUjvB59QmSvvH1kJmDdkGyXVe5UeUUBp8FdBlRVt1m4K2UoJW9
+         9bSRC50HiVdb0/S6PmM0aAYikzoqxewx6t1cdgSWPMrzxWZ8Ld+KQWtiHZP2sGVmcfc9
+         gMyt/WR1XDmYF7xMKkW8e/GUMFe71ESNMGGu9rm/+wQipfszQ1DBlt1sa7iBlGK0lS+s
+         1QS51whGoZtbUec3g5cGVar/1azldAGU2HrT5rSj9YG4ZjvUqk/MUtE8kge+wSzHOrXF
+         KNpA==
+X-Gm-Message-State: AOAM530gsu3ofc6sOvhAJIbTOz++MygAIWIqC/96IAUKf4aaW3Lra1eC
+        IOg4h2e0CAyyNulRLB3ymSbeKRTHZsCBFw==
+X-Google-Smtp-Source: ABdhPJzZSMbWxUWddHHGVZsDw6uI2PwBLfss1TlhHC/JrPo2d6O8Fd7mX9TOQ0R5j0I3P74gCw8DAQ==
+X-Received: by 2002:a17:90b:4b01:b0:1cb:a81a:dc4c with SMTP id lx1-20020a17090b4b0100b001cba81adc4cmr6207491pjb.193.1649784366611;
+        Tue, 12 Apr 2022 10:26:06 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b18-20020aa78712000000b005060755f2d9sm1523639pfo.139.2022.04.12.10.26.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Apr 2022 10:26:06 -0700 (PDT)
+Date:   Tue, 12 Apr 2022 10:26:04 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Bill Wendling <morbo@google.com>
+Cc:     James Morris <jmorris@namei.org>,
         "Serge E. Hallyn" <serge@hallyn.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-security-module@vger.kernel.org
-Cc:     Bill Wendling <morbo@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] security: don't treat structure as an array of struct
+ hlist_head
+Message-ID: <202204121025.5D16102@keescook>
+References: <20220407175930.471870-1-morbo@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220407175930.471870-1-morbo@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The initialization of "security_hook_heads" is done by casting it to
-another structure pointer type, and treating it as an array of "struct
-hlist_head" objects. This requires an exception be made in "randstruct",
-because otherwise it will emit an error, reducing the effectiveness of
-the hardening technique.
+On Thu, Apr 07, 2022 at 10:59:30AM -0700, Bill Wendling wrote:
+> The initialization of "security_hook_heads" is done by casting it to
+> another structure pointer type, and treating it as an array of "struct
+> hlist_head" objects. This requires an exception be made in "randstruct",
+> because otherwise it will emit an error, reducing the effectiveness of
+> the hardening technique.
+> 
+> Instead of using a cast, initialize the individual struct hlist_head
+> elements in security_hook_heads explicitly. This removes the need for
+> the cast and randstruct exception.
+> 
+> Signed-off-by: Bill Wendling <morbo@google.com>
+> Cc: Kees Cook <keescook@chromium.org>
 
-Instead of using a cast, initialize the individual struct hlist_head
-elements in security_hook_heads explicitly. This removes the need for
-the cast and randstruct exception.
+Ah! Yes, thanks. This is a good solution for this. I'd rather not have
+any exceptions in the randstruct plugin. :) I'll take this via the
+hardening tree unless anyone objects.
 
-Signed-off-by: Bill Wendling <morbo@google.com>
-Cc: Kees Cook <keescook@chromium.org>
----
- scripts/gcc-plugins/randomize_layout_plugin.c | 2 --
- security/security.c                           | 9 ++++-----
- 2 files changed, 4 insertions(+), 7 deletions(-)
+-Kees
 
-diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-plugins/randomize_layout_plugin.c
-index 334741a31d0a..c2ec81b68505 100644
---- a/scripts/gcc-plugins/randomize_layout_plugin.c
-+++ b/scripts/gcc-plugins/randomize_layout_plugin.c
-@@ -52,8 +52,6 @@ static const struct whitelist_entry whitelist[] = {
- 	{ "net/unix/af_unix.c", "unix_skb_parms", "char" },
- 	/* big_key payload.data struct splashing */
- 	{ "security/keys/big_key.c", "path", "void *" },
--	/* walk struct security_hook_heads as an array of struct hlist_head */
--	{ "security/security.c", "hlist_head", "security_hook_heads" },
- 	{ }
- };
- 
-diff --git a/security/security.c b/security/security.c
-index b7cf5cbfdc67..37a9eeb901e0 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -365,13 +365,12 @@ static void __init ordered_lsm_init(void)
- 
- int __init early_security_init(void)
- {
--	int i;
--	struct hlist_head *list = (struct hlist_head *) &security_hook_heads;
- 	struct lsm_info *lsm;
- 
--	for (i = 0; i < sizeof(security_hook_heads) / sizeof(struct hlist_head);
--	     i++)
--		INIT_HLIST_HEAD(&list[i]);
-+#define LSM_HOOK(RET, DEFAULT, NAME, ...) \
-+	INIT_HLIST_HEAD(&security_hook_heads.NAME);
-+#include "linux/lsm_hook_defs.h"
-+#undef LSM_HOOK
- 
- 	for (lsm = __start_early_lsm_info; lsm < __end_early_lsm_info; lsm++) {
- 		if (!lsm->enabled)
 -- 
-2.35.1.1178.g4f1659d476-goog
-
+Kees Cook
