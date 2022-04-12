@@ -2,88 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05556C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 12 Apr 2022 17:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC70EC433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 12 Apr 2022 18:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349180AbiDLR2a (ORCPT
+        id S1344377AbiDLSgN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 12 Apr 2022 13:28:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33802 "EHLO
+        Tue, 12 Apr 2022 14:36:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234973AbiDLR21 (ORCPT
+        with ESMTP id S236904AbiDLSgN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 12 Apr 2022 13:28:27 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 184FD51E60
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Apr 2022 10:26:07 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id mp16-20020a17090b191000b001cb5efbcab6so3628862pjb.4
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Apr 2022 10:26:07 -0700 (PDT)
+        Tue, 12 Apr 2022 14:36:13 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E75E74EDF5
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Apr 2022 11:33:54 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id md20-20020a17090b23d400b001cb70ef790dso3821768pjb.5
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Apr 2022 11:33:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tVvKuYmXIsa9qahx409eDRhfKlF4vraPbVM4uLa0fmQ=;
-        b=hdpkAq9aJidmb9mmOq0DjZrlkjc+sWw7doSwZu3Xg9C3ghnTPwU0n5q6LG2l4gVm8h
-         PSWw8Ctere/ruqdtzP5yr+v5cPz2XIOsK78xnSWAj9fRC4zhtzswRvv8xmVrZM7BFqJb
-         Joi0QaXGiDKFhq7k4LUEbecNqvJ89Im/GSkRw=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=tIORrv+/2LRk4nx6ozs3wWj/aKmJXy1Yh96OLl5WUNE=;
+        b=T/14KOgusZu9tE7Blvj716S2MXYnWYGVXdWWFu+K6ZQDeNHFwkMMIHNUFluS3bodzj
+         /tNQdZvWhxuJ0PLZ+WAjbo9t4/nnirzb7Ha22W5twpHPDukCX+a7chuh2iMg/+hoCCnq
+         EvOCgHo5h9VByatHhCI8kqXmIR668+T8d9bj4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tVvKuYmXIsa9qahx409eDRhfKlF4vraPbVM4uLa0fmQ=;
-        b=aujA4AbL/n8/mygTQqgbIHXLmZZ3HtdsqDzNpPTXpucz5JHuCIToTBQVGcXW6stC6N
-         6cFR0zDxHbJYFhx5yArUjvB59QmSvvH1kJmDdkGyXVe5UeUUBp8FdBlRVt1m4K2UoJW9
-         9bSRC50HiVdb0/S6PmM0aAYikzoqxewx6t1cdgSWPMrzxWZ8Ld+KQWtiHZP2sGVmcfc9
-         gMyt/WR1XDmYF7xMKkW8e/GUMFe71ESNMGGu9rm/+wQipfszQ1DBlt1sa7iBlGK0lS+s
-         1QS51whGoZtbUec3g5cGVar/1azldAGU2HrT5rSj9YG4ZjvUqk/MUtE8kge+wSzHOrXF
-         KNpA==
-X-Gm-Message-State: AOAM530gsu3ofc6sOvhAJIbTOz++MygAIWIqC/96IAUKf4aaW3Lra1eC
-        IOg4h2e0CAyyNulRLB3ymSbeKRTHZsCBFw==
-X-Google-Smtp-Source: ABdhPJzZSMbWxUWddHHGVZsDw6uI2PwBLfss1TlhHC/JrPo2d6O8Fd7mX9TOQ0R5j0I3P74gCw8DAQ==
-X-Received: by 2002:a17:90b:4b01:b0:1cb:a81a:dc4c with SMTP id lx1-20020a17090b4b0100b001cba81adc4cmr6207491pjb.193.1649784366611;
-        Tue, 12 Apr 2022 10:26:06 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tIORrv+/2LRk4nx6ozs3wWj/aKmJXy1Yh96OLl5WUNE=;
+        b=0zM03meBZOfGkMw2U9mw8dKha+96nDU3208EH9YbAqCL6r651fwZWXjkGOkB4XKLT6
+         mikfDMDLr+CcnYShHZaAKwyIGRJ9uD4fwnU8VJh9aARlXPQO7gWgKj258d4wUkOZugni
+         tpYkS+IkrKow5L8r1RDI9psAURceOTiKDQ3YzpdsS+AvwcMuik2GjEwU4BdAPnuKU5Bv
+         SBStXCAFcEB/EY1+E3vxaffX2ql2GU5OMKvfyVeIfBjaDCPvVh6TFZoxkvcctn2hLJFw
+         PLkNSDdQFXc6EazKcNoGsThxAKpqOicsbZUCLnc5NSGowg8cUf1r+ZWgXmOO95G6doUF
+         l2Nw==
+X-Gm-Message-State: AOAM531El9qYAhYRWSQHc2g3DclUrqEGdmUJjuebCQmj1PidfZZYvQto
+        4ALhvuodeuiE2DBKP4WN2Pv/+g==
+X-Google-Smtp-Source: ABdhPJwqcoomSOwjtJV29/CjOi1tnfkh4AfcHk1QUOr0hmpLGP9VH5eKPVzKPHi8RM6bXgAHa+o/9Q==
+X-Received: by 2002:a17:903:2284:b0:154:3b97:8156 with SMTP id b4-20020a170903228400b001543b978156mr39323752plh.95.1649788434440;
+        Tue, 12 Apr 2022 11:33:54 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b18-20020aa78712000000b005060755f2d9sm1523639pfo.139.2022.04.12.10.26.06
+        by smtp.gmail.com with ESMTPSA id j18-20020a633c12000000b0038204629cc9sm3597529pga.10.2022.04.12.11.33.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Apr 2022 10:26:06 -0700 (PDT)
-Date:   Tue, 12 Apr 2022 10:26:04 -0700
+        Tue, 12 Apr 2022 11:33:54 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Bill Wendling <morbo@google.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH] security: don't treat structure as an array of struct
- hlist_head
-Message-ID: <202204121025.5D16102@keescook>
-References: <20220407175930.471870-1-morbo@google.com>
+To:     linux-kernel@vger.kernel.org,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        PaX Team <pageexec@freemail.hu>,
+        linux-hardening@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>, stable@vger.kernel.org
+Subject: Re: [PATCH v4] gcc-plugins: latent_entropy: use /dev/urandom
+Date:   Tue, 12 Apr 2022 11:32:48 -0700
+Message-Id: <164978836579.3579300.2356881730976056198.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220405222815.21155-1-Jason@zx2c4.com>
+References: <CAHmME9pV4SdoSyMq4kax3w3Vu1nPxjO3faCZKq8d0RDo8t731g@mail.gmail.com> <20220405222815.21155-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220407175930.471870-1-morbo@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Apr 07, 2022 at 10:59:30AM -0700, Bill Wendling wrote:
-> The initialization of "security_hook_heads" is done by casting it to
-> another structure pointer type, and treating it as an array of "struct
-> hlist_head" objects. This requires an exception be made in "randstruct",
-> because otherwise it will emit an error, reducing the effectiveness of
-> the hardening technique.
+On Wed, 6 Apr 2022 00:28:15 +0200, Jason A. Donenfeld wrote:
+> While the latent entropy plugin mostly doesn't derive entropy from
+> get_random_const() for measuring the call graph, when __latent_entropy is
+> applied to a constant, then it's initialized statically to output from
+> get_random_const(). In that case, this data is derived from a 64-bit
+> seed, which means a buffer of 512 bits doesn't really have that amount
+> of compile-time entropy.
 > 
-> Instead of using a cast, initialize the individual struct hlist_head
-> elements in security_hook_heads explicitly. This removes the need for
-> the cast and randstruct exception.
-> 
-> Signed-off-by: Bill Wendling <morbo@google.com>
-> Cc: Kees Cook <keescook@chromium.org>
+> [...]
 
-Ah! Yes, thanks. This is a good solution for this. I'd rather not have
-any exceptions in the randstruct plugin. :) I'll take this via the
-hardening tree unless anyone objects.
+Applied to for-v5.18/hardening, thanks!
 
--Kees
+I dropped the version number change, added a pointer to the GCC bug
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105171, and noted the
+rationale for the buffer size. I'll get this sent to Linus shortly.
+
+[1/1] gcc-plugins: latent_entropy: use /dev/urandom
+      https://git.kernel.org/kees/c/c40160f2998c
 
 -- 
 Kees Cook
+
