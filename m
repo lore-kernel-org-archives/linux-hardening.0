@@ -2,138 +2,170 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EA2C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Apr 2022 17:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C20C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Apr 2022 18:52:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245224AbiDNRYr (ORCPT
+        id S232562AbiDNSyp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Apr 2022 13:24:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59228 "EHLO
+        Thu, 14 Apr 2022 14:54:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245261AbiDNRYq (ORCPT
+        with ESMTP id S230230AbiDNSyo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Apr 2022 13:24:46 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF382BC869
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Apr 2022 10:22:20 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id c12so5198120plr.6
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Apr 2022 10:22:20 -0700 (PDT)
+        Thu, 14 Apr 2022 14:54:44 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D3E0E0AC7
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Apr 2022 11:52:19 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id t13so5520102pgn.8
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Apr 2022 11:52:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=74YOS5V1qHXZZ1fLoG5JxUvAs7/uENmkI5e8dEDxses=;
-        b=iP28I5g0myp4w/7aNYzjc3WyyPOxckjdXhNgkDQjobWLTAXQkU73Qgd0OL6OYIcFiZ
-         7TuqFSQhN5HPnyy4iqyfBSWtpSwySLdgUqwmpPNPnSN+nbp/stQkNNRigCCyyPHN/Amv
-         CP92wNGgq5xuHIV5YjMikUjlIFzM0CXlpzBGE=
+        bh=KPncbYJNbA92y1tOvGAA/kfwDjyfM1X8IrkxMDKfJ+M=;
+        b=oNJvsyY0dZL8jzpd34U1+lD1Mh8SQf6LfMh/R2x0RNJXbEdp0Xg7P85/Y+6PQt0AES
+         rhaP4cro55hlKlnS+hw2JRDJMYhHFgA8+9OIE42iBmqFG6lmbZCLPNkLehXQLN21cuOM
+         91/dtOApOgZJLABiR/avAVberdE2aWu4pBxhU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=74YOS5V1qHXZZ1fLoG5JxUvAs7/uENmkI5e8dEDxses=;
-        b=R2iYOc+uGtob90VNBwq/G5SLwkIR0WoROo0oHy8v1e16lzENN7B1hENVhxRVkRzYjc
-         Yhw4luM7Wn/piUgUiNYxCFIeAUZ7V0ogr/NIXk+M8YwgAVTl8HbqOgVQisyeMpegXZT3
-         EWFKMm6cyRWjgreEn+xIZLyLb7QlEdVPB/jRxNJDq0Z8K7V/oI0NaUvzUWIwTtQpxUtf
-         EKstHviZfS1BOGEnAPmd7unIi5YUwToAlb4T1ytGLzAXwfIaWDhvtHoO917piUUHazk/
-         saUm8bPHSArTbfhZmUmJ4JLKO9L2EzRRy4htd9qPDCeNh4iI99dRiwppB6pjxX+iIzoh
-         MsPg==
-X-Gm-Message-State: AOAM532MF5qC8WXnDTwiFZWLIKN9kUFKdo7Ha/zBKxgk/EoEEue0MsaW
-        tKYTmS2REfK7TJz7DbdP21T0a9JgK1Z6UQ==
-X-Google-Smtp-Source: ABdhPJxAprf/p03cPbZ5hRrExWbkfNTc3juXB5tKGk3RtI0L1iw6o5BW7MusfTN8dyZm5rA7k+YW7A==
-X-Received: by 2002:a17:902:e808:b0:156:cbfd:4235 with SMTP id u8-20020a170902e80800b00156cbfd4235mr48710529plg.24.1649956940429;
-        Thu, 14 Apr 2022 10:22:20 -0700 (PDT)
+        bh=KPncbYJNbA92y1tOvGAA/kfwDjyfM1X8IrkxMDKfJ+M=;
+        b=e9zRDYecrdelnjtq/7sJWB1c6fEGJWg2yyqFm/lz/fO9eZx9wl0AOH9uNZiUoy9x+t
+         wo6uGWfeaw8CFrmmXOmTjh0zyWpD2WtfGWqWwTl9zEZjH9pEeQBCVM9okHMjl109nOrp
+         ye29LngHh0B8e+draKQv6WHtkmgLTtesyrbH5ixqmg5c2sAd67Ta8LWU/4xU+B9HnzrF
+         I7Gsnr6gg6xXaq4pnfRQqnF5F/Vgh2GJHL+GCzlpuicN+72SZWcuF0D2QKkT+F2PYOen
+         JoecNpasqXrADwONGbiBT5mlD/FJSVoNqRYyfu4ljzyuk24EwtouGVVvpwaRu+GPjTfb
+         46tg==
+X-Gm-Message-State: AOAM533FcqeWTylMi68g+MJwm5aM56ZgtUObpcTYcIDS+iL8pDx6T8FU
+        NagcaTTM3DrjmJ4pGU+eMLO9sw==
+X-Google-Smtp-Source: ABdhPJw+Fal9pBni7mp3U0SmabFGXSbaUnm/vG5K31I/eUCpSn6eG3IceNt4WGY+Pb6rg423uVG4qg==
+X-Received: by 2002:a62:1548:0:b0:505:fd84:33f1 with SMTP id 69-20020a621548000000b00505fd8433f1mr5299523pfv.66.1649962338843;
+        Thu, 14 Apr 2022 11:52:18 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h20-20020aa786d4000000b00505dfd42f2fsm503493pfo.22.2022.04.14.10.22.19
+        by smtp.gmail.com with ESMTPSA id c64-20020a624e43000000b005081ec7d679sm613192pfb.1.2022.04.14.11.52.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Apr 2022 10:22:19 -0700 (PDT)
-Date:   Thu, 14 Apr 2022 10:22:19 -0700
+        Thu, 14 Apr 2022 11:52:18 -0700 (PDT)
+Date:   Thu, 14 Apr 2022 11:52:17 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Dan Li <ashimida@linux.alibaba.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] lkdtm: Add CFI_BACKWARD to test ROP mitigations
-Message-ID: <202204141019.CD9152A7@keescook>
-References: <20220413213917.711770-1-keescook@chromium.org>
- <f7a5642f-bfcb-865d-7039-d0b9d62a3360@linux.alibaba.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lennart Poettering <lennart@poettering.net>,
+        Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
+        Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Topi Miettinen <toiwoton@gmail.com>, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-abi-devel@lists.sourceforge.net,
+        linux-hardening@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Salvatore Mesoraca <s.mesoraca16@gmail.com>,
+        Igor Zhbanov <izh1979@gmail.com>
+Subject: Re: [PATCH RFC 0/4] mm, arm64: In-kernel support for
+ memory-deny-write-execute (MDWE)
+Message-ID: <202204141028.0482B08@keescook>
+References: <20220413134946.2732468-1-catalin.marinas@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f7a5642f-bfcb-865d-7039-d0b9d62a3360@linux.alibaba.com>
+In-Reply-To: <20220413134946.2732468-1-catalin.marinas@arm.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 03:19:02AM -0700, Dan Li wrote:
-> Hi, Kees,
-> Thanks for the rewrite. I tested this patch, and it works fine for
-> me except for a few minor comments below :)
-> 
-> On 4/13/22 14:39, Kees Cook wrote:
-> > +/* The ultimate ROP gadget. */
-> > +static noinline __no_ret_protection
-> > +void set_return_addr_unchecked(unsigned long *expected, unsigned long *addr)
-> > +{
-> > +	/* Use of volatile is to make sure final write isn't seen as a dead store. */
-> > +	unsigned long * volatile *ret_addr = (unsigned long **)__builtin_frame_address(0) + 1;
-> > +
-> > +	/* Make sure we've found the right place on the stack before writing it. */
-> > +	if(*ret_addr == expected)
-> > +		*ret_addr = (addr);
-> > +	else
-> > +		/* Check architecture, stack layout, or compiler behavior... */
-> > +		pr_warn("Eek: return address mismatch! %px != %px\n",
-> > +			*ret_addr, addr);
-> > +}
-> > +
-> > +static noinline
-> > +void set_return_addr(unsigned long *expected, unsigned long *addr)
-> > +{
-> > +	/* Use of volatile is to make sure final write isn't seen as a dead store. */
-> > +	unsigned long * volatile *ret_addr = (unsigned long **)__builtin_frame_address(0) + 1;
-> > +
-> > +	/* Make sure we've found the right place on the stack before writing it. */
-> > +	if(*ret_addr == expected)
-> > +		*ret_addr = (addr);
-> 
-> When PAC is enabled, I get a mismatch as follows:
-> 
-> /kselftest_install/lkdtm # ./CFI_BACKWARD.sh
-> [  182.120133] lkdtm: Performing direct entry CFI_BACKWARD
-> [  182.120665] lkdtm: Attempting unchecked stack return address redirection ...
-> [  182.122543] lkdtm: ok: redirected stack return address.
-> [  182.123521] lkdtm: Attempting checked stack return address redirection ...
-> [  182.123964] lkdtm: Eek: return address mismatch! bfff800008fa8014 != ffff800008fa8030
-> [  182.124502] lkdtm: ok: control flow unchanged.
-> CFI_BACKWARD: saw 'call trace:|ok: control flow unchanged': ok
-> 
-> We may need to ignore the pac high bits of return address according
-> to TCR.T1SZ (or simply remove the high 16 bits before comparing).
+On Wed, Apr 13, 2022 at 02:49:42PM +0100, Catalin Marinas wrote:
+> The background to this is that systemd has a configuration option called
+> MemoryDenyWriteExecute [1], implemented as a SECCOMP BPF filter. Its aim
+> is to prevent a user task from inadvertently creating an executable
+> mapping that is (or was) writeable. Since such BPF filter is stateless,
+> it cannot detect mappings that were previously writeable but
+> subsequently changed to read-only. Therefore the filter simply rejects
+> any mprotect(PROT_EXEC). The side-effect is that on arm64 with BTI
+> support (Branch Target Identification), the dynamic loader cannot change
+> an ELF section from PROT_EXEC to PROT_EXEC|PROT_BTI using mprotect().
+> For libraries, it can resort to unmapping and re-mapping but for the
+> main executable it does not have a file descriptor. The original bug
+> report in the Red Hat bugzilla - [2] - and subsequent glibc workaround
+> for libraries - [3].
 
-Oh! Hah, yes, I totally forgot that. Thanks for testing -- getting PAC
-emulation working in QEMU has eluded me. I think untagged_addr() will
-work yes? i.e.:
+Right, so, the systemd filter is a big hammer solution for the kernel
+not having a very easy way to provide W^X mapping protections to
+userspace. There's stuff in SELinux, and there have been several
+attempts[1] at other LSMs to do it too, but nothing stuck.
 
-	if((untagged_addr(*ret_addr) == expected)
+Given the filter, and the implementation of how to enable BTI, I see two
+solutions:
+
+- provide a way to do W^X so systemd can implement the feature differently
+- provide a way to turn on BTI separate from mprotect to bypass the filter
+
+I would agree, the latter seems like the greater hack, so I welcome
+this RFC, though I think it might need to explore a bit of the feature
+space exposed by other solutions[1] (i.e. see SARA and NAX), otherwise
+it risks being too narrowly implemented. For example, playing well with
+JITs should be part of the design, and will likely need some kind of
+ELF flags and/or "sealing" mode, and to handle the vma alias case as
+Jann Horn pointed out[2].
+
+> Add in-kernel support for such feature as a DENY_WRITE_EXEC personality
+> flag, inherited on fork() and execve(). The kernel tracks a previously
+> writeable mapping via a new VM_WAS_WRITE flag (64-bit only
+> architectures). I went for a personality flag by analogy with the
+> READ_IMPLIES_EXEC one. However, I'm happy to change it to a prctl() if
+> we don't want more personality flags. A minor downside with the
+> personality flag is that there is no way for the user to query which
+> flags are supported, so in patch 3 I added an AT_FLAGS bit to advertise
+> this.
+
+My instinct here is to use a prctl(), which maps to other kinds of modern
+inherited state (like no_new_privs).
+
+> Posting this as an RFC to start a discussion and cc'ing some of the
+> systemd guys and those involved in the earlier thread around the glibc
+> workaround for dynamic libraries [4]. Before thinking of upstreaming
+> this we'd need the systemd folk to buy into replacing the MDWE SECCOMP
+> BPF filter with the in-kernel one.
+> 
+> Thanks,
+> 
+> Catalin
+> 
+> [1] https://www.freedesktop.org/software/systemd/man/systemd.exec.html#MemoryDenyWriteExecute=
+> [2] https://bugzilla.redhat.com/show_bug.cgi?id=1888842
+> [3] https://sourceware.org/bugzilla/show_bug.cgi?id=26831
+> [3] https://lore.kernel.org/r/cover.1604393169.git.szabolcs.nagy@arm.com
+
+So, yes, let's do it. It's long long overdue in the kernel. :)
+
+-Kees
+
+[1] https://github.com/KSPP/linux/issues/32
+[2] https://github.com/KSPP/linux/issues/32#issuecomment-1084859611
 
 > 
-> > +	else
-> > +		/* Check architecture, stack layout, or compiler behavior... */
-> > +		pr_warn("Eek: return address mismatch! %px != %px\n",
-> > +			*ret_addr, addr);
+> Catalin Marinas (4):
+>   mm: Track previously writeable vma permission
+>   mm, personality: Implement memory-deny-write-execute as a personality
+>     flag
+>   fs/binfmt_elf: Tell user-space about the DENY_WRITE_EXEC personality
+>     flag
+>   arm64: Select ARCH_ENABLE_DENY_WRITE_EXEC
 > 
-> According to the context, it might be "expected" here?
+>  arch/arm64/Kconfig               |  1 +
+>  fs/binfmt_elf.c                  |  2 ++
+>  include/linux/mm.h               |  6 ++++++
+>  include/linux/mman.h             | 18 +++++++++++++++++-
+>  include/uapi/linux/binfmts.h     |  4 ++++
+>  include/uapi/linux/personality.h |  1 +
+>  mm/Kconfig                       |  4 ++++
+>  mm/mmap.c                        |  3 +++
+>  mm/mprotect.c                    |  5 +++++
+>  9 files changed, 43 insertions(+), 1 deletion(-)
 > 
-> 		pr_warn("Eek: return address mismatch! %px != %px\n",
-> 			*ret_addr, expected);
-> 
-> I simply ignored the upper 16 bits, and tested it separately
-> in gcc/llvm 12 with SCS/PAC and all the four cases worked fine for me.
-
-Great! Do you have the PAC "Oops" text handy so I can include it in the
-commit log as an example of what should be expected?
-
-Thanks!
 
 -- 
 Kees Cook
