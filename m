@@ -2,157 +2,197 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A6BC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Apr 2022 08:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EA8C433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Apr 2022 20:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351493AbiDOInD (ORCPT
+        id S1350338AbiDOUDg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Apr 2022 04:43:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44958 "EHLO
+        Fri, 15 Apr 2022 16:03:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351443AbiDOImi (ORCPT
+        with ESMTP id S1349856AbiDOUDf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Apr 2022 04:42:38 -0400
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 701E82FFD7;
-        Fri, 15 Apr 2022 01:39:52 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=ashimida@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0VA6gkh3_1650011989;
-Received: from 192.168.193.180(mailfrom:ashimida@linux.alibaba.com fp:SMTPD_---0VA6gkh3_1650011989)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 15 Apr 2022 16:39:50 +0800
-Message-ID: <145a1355-d961-9a67-0e08-a13619b3e827@linux.alibaba.com>
-Date:   Fri, 15 Apr 2022 01:39:49 -0700
+        Fri, 15 Apr 2022 16:03:35 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DA2C5D1BF;
+        Fri, 15 Apr 2022 13:01:06 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id o16so10510253ljp.3;
+        Fri, 15 Apr 2022 13:01:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=eg4gbJGTcuDjydc93ZgiyQp7rGraJcFEx1C1W41BcoE=;
+        b=h9J8t2jbujSYA51XssuWPT+TwPBC0hpc4NNrexHCEGwQHAuOieOurTwZYlyAYw+HNq
+         ChT2X77bZtwp1CcM6eDjCnR11R6Nh82vxVzBenPkApzoZHHmnp/icFdomknh2OLflAUy
+         1d2GD4XrY/9bilZfh064seB9+ldnhy1kwCeifrn7Wpt+DRR/K62FTXLnHvLcML1I8N+N
+         vEs4ivWBPRt8itxGZyDoTaMpYd1OW7FewxAuZZ+1KPFPhj///tyVx2puQBqe0yUMia6V
+         MRXiQb3AbFzYVcLbAfWShlNQkoyM2NFNNybmUS/TJgr3ggcERl7PcIWLj278jnUGAbA0
+         hgsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=eg4gbJGTcuDjydc93ZgiyQp7rGraJcFEx1C1W41BcoE=;
+        b=eq0k5kE5GqS/o1WRq3p2l0GiHZ9QrkqRlwyqNylZu41TrzA+lr12hxtC8pH5lU9brL
+         Y8w8JV4AqbGyASwCxT+siL/E1sVk1fYbKObaSRExdUAWWTTxVwdwsELLf7bY2bH4ZmRU
+         XDmoOVcrCQznbRPOml8T8WvDErN+aPwbFvjN5nhgv2sgVi6c2MDXOE56SHtxa+qt/7VC
+         2zWRWnls9G/hrt75txpdeIkG2epwhg7/nIJsGGAXSoox1FWALdY0ThoxmccZFV9rUv0l
+         GcKfBF8NBpnNWhwlRnMYTKAch+K97Q7dI0iCLVy1AiKPYdKGBe1rWqi8uXaDXRK1dgZf
+         HI5A==
+X-Gm-Message-State: AOAM530D10uJs6p9mODVcu7sEBX54vOUe1t98G3S8OSiBT/UAUewjY/w
+        1KZE6BLMSgd1xuKhklnP3NI=
+X-Google-Smtp-Source: ABdhPJxo7t7sKZ95V5o15r/5Ws72mkjtn0VsMmnL3V3M++Sv6h05ITpulnOCCPrR2+mNheI9i/c2Xg==
+X-Received: by 2002:a05:651c:b11:b0:249:9504:e929 with SMTP id b17-20020a05651c0b1100b002499504e929mr402051ljr.0.1650052863776;
+        Fri, 15 Apr 2022 13:01:03 -0700 (PDT)
+Received: from [192.168.1.38] (91-159-150-194.elisa-laajakaista.fi. [91.159.150.194])
+        by smtp.gmail.com with ESMTPSA id c11-20020a19e34b000000b0046f423c87e2sm260940lfk.173.2022.04.15.13.01.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Apr 2022 13:01:02 -0700 (PDT)
+Message-ID: <eb8ba1ad-eb39-9ac3-de5e-ca69ce5af75e@gmail.com>
+Date:   Fri, 15 Apr 2022 23:01:00 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [PATCH] lkdtm: Add CFI_BACKWARD to test ROP mitigations
+Subject: Re: [PATCH RFC 0/4] mm, arm64: In-kernel support for
+ memory-deny-write-execute (MDWE)
 Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20220413213917.711770-1-keescook@chromium.org>
- <f7a5642f-bfcb-865d-7039-d0b9d62a3360@linux.alibaba.com>
- <202204141019.CD9152A7@keescook>
-From:   Dan Li <ashimida@linux.alibaba.com>
-In-Reply-To: <202204141019.CD9152A7@keescook>
+To:     Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lennart Poettering <lennart@poettering.net>,
+        =?UTF-8?Q?Zbigniew_J=c4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
+        Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-abi-devel@lists.sourceforge.net,
+        linux-hardening@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Salvatore Mesoraca <s.mesoraca16@gmail.com>,
+        Igor Zhbanov <izh1979@gmail.com>
+References: <20220413134946.2732468-1-catalin.marinas@arm.com>
+ <202204141028.0482B08@keescook>
+From:   Topi Miettinen <toiwoton@gmail.com>
+In-Reply-To: <202204141028.0482B08@keescook>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 4/14/22 10:22, Kees Cook wrote:
-> On Thu, Apr 14, 2022 at 03:19:02AM -0700, Dan Li wrote:
->> Hi, Kees,
->> Thanks for the rewrite. I tested this patch, and it works fine for
->> me except for a few minor comments below :)
->> We may need to ignore the pac high bits of return address according
->> to TCR.T1SZ (or simply remove the high 16 bits before comparing).
+On 14.4.2022 21.52, Kees Cook wrote:
+> On Wed, Apr 13, 2022 at 02:49:42PM +0100, Catalin Marinas wrote:
+>> The background to this is that systemd has a configuration option called
+>> MemoryDenyWriteExecute [1], implemented as a SECCOMP BPF filter. Its aim
+>> is to prevent a user task from inadvertently creating an executable
+>> mapping that is (or was) writeable. Since such BPF filter is stateless,
+>> it cannot detect mappings that were previously writeable but
+>> subsequently changed to read-only. Therefore the filter simply rejects
+>> any mprotect(PROT_EXEC). The side-effect is that on arm64 with BTI
+>> support (Branch Target Identification), the dynamic loader cannot change
+>> an ELF section from PROT_EXEC to PROT_EXEC|PROT_BTI using mprotect().
+>> For libraries, it can resort to unmapping and re-mapping but for the
+>> main executable it does not have a file descriptor. The original bug
+>> report in the Red Hat bugzilla - [2] - and subsequent glibc workaround
+>> for libraries - [3].
 > 
-> Oh! Hah, yes, I totally forgot that. Thanks for testing -- getting PAC
-> emulation working in QEMU has eluded me. I think untagged_addr() will
-> work yes? i.e.:
+> Right, so, the systemd filter is a big hammer solution for the kernel
+> not having a very easy way to provide W^X mapping protections to
+> userspace. There's stuff in SELinux, and there have been several
+> attempts[1] at other LSMs to do it too, but nothing stuck.
 > 
-> 	if((untagged_addr(*ret_addr) == expected)
+> Given the filter, and the implementation of how to enable BTI, I see two
+> solutions:
 > 
+> - provide a way to do W^X so systemd can implement the feature differently
+> - provide a way to turn on BTI separate from mprotect to bypass the filter
+> 
+> I would agree, the latter seems like the greater hack, so I welcome
+> this RFC, though I think it might need to explore a bit of the feature
+> space exposed by other solutions[1] (i.e. see SARA and NAX), otherwise
+> it risks being too narrowly implemented. For example, playing well with
+> JITs should be part of the design, and will likely need some kind of
+> ELF flags and/or "sealing" mode, and to handle the vma alias case as
+> Jann Horn pointed out[2].
 
-untagged_addr might not clear enough bits, the following code works
-fine for me:
+Another interesting case from 2006 by Ulrich Drepper is to use a 
+temporary file and map it twice, once with PROT_WRITE and once with 
+PROT_EXEC [1]. This isn't possible if the mount flags of the file 
+systems are also in line with W^X principle. System services (unlike 
+user apps) typically don't use /tmp nor /dev/shm (mounted with 
+"rw,exec"). With systemd a simple file system W^X policy can be 
+implemented for a service for example with NoExecPaths=/ ExecPaths=/usr 
+ReadOnlyPaths=/usr. In-kernel MDWE probably could look beyond file 
+descriptors and check if the mount flags of the file system containing 
+the file being mmap()ed agree with W^X. The use cases for system 
+services and user apps may be different: system services are often 
+compatible with maximum hardening, while user apps may need various 
+compatibility solutions if they use JIT, trampolines or FFI and access 
+to W+X file systems may be also needed.
 
-+#define no_pac_addr(addr)      \
-+       ((__force __typeof__(addr))((__force u64)(addr) | PAGE_OFFSET))
-        
--       if(*ret_addr == expected)
-+       if(no_pac_addr(*ret_addr) == expected)
-                 *ret_addr = (addr);
+-Topi
 
-I re-checked the arm manual and found that the pac bits in an address is:
-- Xn[54:bottom_PAC_bit]		 //When address tagging is used
-- Xn[63:56, 54:bottom_PAC_bit]	 //When address tagging is not used
+[1] https://akkadia.org/drepper/selinux-mem.html
 
-bottom_PAC_bit = 64-TCR_ELx.TnSZ //For kernel is VA_BITS
-
-The pac bits could be at most [63:56, 54:VA_BITS], untagged_addr
-clears [63:56] (and clearing the high 16 bits doesn't seem to be
-enough either :) ).
-
-For example, when CONFIG_ARM64_VA_BITS_39 enabled, i get a case:
-- lr         : 0xffffffc0088d04f8
-- lr with pac: 0x5681a740088d04f8
-- PAGE_OFFSET: 0xffffff8000000000
-
-"lr with pac|PAGE_OFFSET" seems to meet the need.
-
+>> Add in-kernel support for such feature as a DENY_WRITE_EXEC personality
+>> flag, inherited on fork() and execve(). The kernel tracks a previously
+>> writeable mapping via a new VM_WAS_WRITE flag (64-bit only
+>> architectures). I went for a personality flag by analogy with the
+>> READ_IMPLIES_EXEC one. However, I'm happy to change it to a prctl() if
+>> we don't want more personality flags. A minor downside with the
+>> personality flag is that there is no way for the user to query which
+>> flags are supported, so in patch 3 I added an AT_FLAGS bit to advertise
+>> this.
+> 
+> My instinct here is to use a prctl(), which maps to other kinds of modern
+> inherited state (like no_new_privs).
+> 
+>> Posting this as an RFC to start a discussion and cc'ing some of the
+>> systemd guys and those involved in the earlier thread around the glibc
+>> workaround for dynamic libraries [4]. Before thinking of upstreaming
+>> this we'd need the systemd folk to buy into replacing the MDWE SECCOMP
+>> BPF filter with the in-kernel one.
 >>
->>> +	else
->>> +		/* Check architecture, stack layout, or compiler behavior... */
->>> +		pr_warn("Eek: return address mismatch! %px != %px\n",
->>> +			*ret_addr, addr);
+>> Thanks,
 >>
->> According to the context, it might be "expected" here?
+>> Catalin
 >>
->> 		pr_warn("Eek: return address mismatch! %px != %px\n",
->> 			*ret_addr, expected);
->>
->> I simply ignored the upper 16 bits, and tested it separately
->> in gcc/llvm 12 with SCS/PAC and all the four cases worked fine for me.
+>> [1] https://www.freedesktop.org/software/systemd/man/systemd.exec.html#MemoryDenyWriteExecute=
+>> [2] https://bugzilla.redhat.com/show_bug.cgi?id=1888842
+>> [3] https://sourceware.org/bugzilla/show_bug.cgi?id=26831
+>> [3] https://lore.kernel.org/r/cover.1604393169.git.szabolcs.nagy@arm.com
 > 
-> Great! Do you have the PAC "Oops" text handy so I can include it in the
-> commit log as an example of what should be expected?
+> So, yes, let's do it. It's long long overdue in the kernel. :)
+> 
+> -Kees
+> 
+> [1] https://github.com/KSPP/linux/issues/32
+> [2] https://github.com/KSPP/linux/issues/32#issuecomment-1084859611
+> 
+>>
+>> Catalin Marinas (4):
+>>    mm: Track previously writeable vma permission
+>>    mm, personality: Implement memory-deny-write-execute as a personality
+>>      flag
+>>    fs/binfmt_elf: Tell user-space about the DENY_WRITE_EXEC personality
+>>      flag
+>>    arm64: Select ARCH_ENABLE_DENY_WRITE_EXEC
+>>
+>>   arch/arm64/Kconfig               |  1 +
+>>   fs/binfmt_elf.c                  |  2 ++
+>>   include/linux/mm.h               |  6 ++++++
+>>   include/linux/mman.h             | 18 +++++++++++++++++-
+>>   include/uapi/linux/binfmts.h     |  4 ++++
+>>   include/uapi/linux/personality.h |  1 +
+>>   mm/Kconfig                       |  4 ++++
+>>   mm/mmap.c                        |  3 +++
+>>   mm/mprotect.c                    |  5 +++++
+>>   9 files changed, 43 insertions(+), 1 deletion(-)
+>>
 > 
 
-Yeah, in my test environment I get the following output:
-
-/kselftest_install/lkdtm # ./CFI_BACKWARD.sh
-[   58.333529] lkdtm: Performing direct entry CFI_BACKWARD
-[   58.333927] lkdtm: Attempting unchecked stack return address redirection ...
-[   58.334230] lkdtm: ok: redirected stack return address.
-[   58.334870] lkdtm: Attempting checked stack return address redirection ...
-[   58.336287] Unable to handle kernel paging request at virtual address bfffffc0088d0514
-[   58.336633] Mem abort info:
-[   58.336789]   ESR = 0x86000004
-[   58.336992]   EC = 0x21: IABT (current EL), IL = 32 bits
-[   58.337234]   SET = 0, FnV = 0
-[   58.337429]   EA = 0, S1PTW = 0
-[   58.337611]   FSC = 0x04: level 0 translation fault
-[   58.337874] [bfffffc0088d0514] address between user and kernel address ranges
-[   58.338304] Internal error: Oops: 86000004 [#1] PREEMPT SMP
-[   58.339209] Modules linked in:
-[   58.340384] CPU: 1 PID: 131 Comm: cat Not tainted 5.18.0-rc2-29474-gb8dcca8f6a13-dirty #393
-[   58.340842] Hardware name: linux,dummy-virt (DT)
-[   58.341231] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[   58.341593] pc : 0xbfffffc0088d0514
-[   58.342255] lr : lkdtm_CFI_BACKWARD+0x108/0x130
-[   58.342716] sp : ffffffc00a73bc60
-[   58.342906] x29: ffffffc00a73bc60 x28: ffffff8003320000 x27: 0000000000000002
-[   58.343462] x26: ffffffc00a204d00 x25: 0000000000000002 x24: ffffffc0092e72f0
-[   58.343863] x23: 0000000000000006 x22: ffffffc00a204d10 x21: ffffff80188d2000
-[   58.344264] x20: ffffffc00a73bde0 x19: ffffffc00a302000 x18: ffffffffffffffff
-[   58.344732] x17: 663a72646461202c x16: 3866343064383830 x15: 0000000000000004
-[   58.345112] x14: 0000000000000fff x13: ffffffc009f8a3e0 x12: 0000000000000003
-[   58.345492] x11: 00000000ffffefff x10: c0000000ffffefff x9 : 90af2887c07d9500
-[   58.345926] x8 : ffffffc0088d04f8 x7 : 205d323234353333 x6 : 332e38352020205b
-[   58.346288] x5 : ffffffc00a2c313c x4 : 0000000000000001 x3 : 0000000000000000
-[   58.346670] x2 : 0000000000000000 x1 : ffffffc00968626d x0 : 000000000000006d
-[   58.347154] Call trace:
-[   58.347419]  0xbfffffc0088d0514
-[   58.347806]  lkdtm_do_action+0x1c/0x30
-[   58.348085]  direct_entry+0x178/0x1b0
-[   58.348291]  full_proxy_write+0x6c/0xe8
-[   58.348523]  vfs_write+0x174/0x3b0
-[   58.348721]  ksys_write+0x78/0xe4
-[   58.348914]  __arm64_sys_write+0x1c/0x28
-[   58.349125]  el0_svc_common+0xa4/0x134
-[   58.349354]  do_el0_svc+0x24/0x7c
-[   58.349551]  el0_svc+0x28/0xa4
-[   58.349745]  el0t_64_sync_handler+0x84/0xe4
-[   58.349995]  el0t_64_sync+0x170/0x174
-[   58.350659] Code: bad PC value
-[   58.351182] ---[ end trace 0000000000000000 ]---
-CFI_BACKWARD: saw 'call trace:|ok: control flow unchanged': ok
-
-Thanks,
-Dan.
