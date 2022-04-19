@@ -2,121 +2,158 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30103C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 19 Apr 2022 04:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D78DC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 19 Apr 2022 21:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230042AbiDSEU3 (ORCPT
+        id S242666AbiDSVTw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 19 Apr 2022 00:20:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42164 "EHLO
+        Tue, 19 Apr 2022 17:19:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348189AbiDSEU2 (ORCPT
+        with ESMTP id S232409AbiDSVTv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 19 Apr 2022 00:20:28 -0400
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0204F2BB2B
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Apr 2022 21:17:46 -0700 (PDT)
-Received: by mail-pg1-x52c.google.com with SMTP id t4so22673560pgc.1
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Apr 2022 21:17:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ua3DWHoWYRZ0Hj18kv0a4L5TFGQ8YVkye6cMbl2VF6s=;
-        b=YyIlytPr7dhGhZh1n4740x8jTXToacvwiuTjRhl7OryQkWqeaG4t9xBbEXMJhWhGiC
-         m1Cq5gcWdtSctAcUnt83MwRhiXBJ+a94dBQ6qGS4tuqqY9RyN8+RbAn8Tl+U55POKAuB
-         D9wVkDFJdg8rIbtS5hisU04sNYtpwd+4rgebs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ua3DWHoWYRZ0Hj18kv0a4L5TFGQ8YVkye6cMbl2VF6s=;
-        b=2J6BPV/NsPvV9P7xLBnUk+EfcOrNrV7cZrhHqNGbdZfomHhXmCN8/WKvNKO0K4LW8s
-         BR1TyTyMvGaocJ8H6/ga4nLWewAkXEBzgGW+vHZGBg1EkxdEwnE2pf1tfYVSrJ1tBJak
-         cFAZLLViMIBLSD/tB3PE/yK/o8PfmxzSaHX4ytabvxnWBUtq+kdOE7sRLrRzLJWgNGls
-         6Z0kZbm1nX4wbAWECHngm5c1HUqOfgBJRsGTTo6MhwLR0VG4Bf4i31NXY9itrnKiRZ+l
-         ciYYt1kYr9WMQOysv7zmyrVW2XLvoiA45ULZO1oYKyAgELAo1/mrYx7/CrOdlIIoGsE1
-         Lhqw==
-X-Gm-Message-State: AOAM531HJtXziruVLiy/dE9E9VxA8F5vThFyNAfaho2rGrJoWepzLgnT
-        163HlGCrm9MzbI2Ol/ipNzbw4A==
-X-Google-Smtp-Source: ABdhPJwQw3NsHIw/XF+SqI6c8xAkwRGZeUj6+GKduWwmPu+iYojpSIIWD9kahjFqaEKb/F+KzBSWsw==
-X-Received: by 2002:a63:fd53:0:b0:386:66d:b40c with SMTP id m19-20020a63fd53000000b00386066db40cmr12741689pgj.266.1650341866296;
-        Mon, 18 Apr 2022 21:17:46 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k5-20020a17090ac50500b001cd5ffcca96sm16726552pjt.27.2022.04.18.21.17.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Apr 2022 21:17:45 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        kernel test robot <lkp@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] USB: serial: Fix heap overflow in WHITEHEAT_GET_DTR_RTS
-Date:   Mon, 18 Apr 2022 21:17:42 -0700
-Message-Id: <20220419041742.4117026-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.32.0
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2631; h=from:subject; bh=gIgxtgBXPkDpXaGP7aAQI8PBhl9DxARQALU32sCb0HQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiXjfmXFgU+SMJsQUdOjA7WslYjSoG7qjHLuLjYkEv G8abkvKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYl435gAKCRCJcvTf3G3AJp63D/ 4u5P63EDXyGqn9YU26NnZ4oNbGN5YfchlZolAZ5r7qKja5KmvCpyan3HLHJQzoovP5H6CWwbwM4QTY XjQ/LVQaTjZRVaCncCJssE5JSCjhPD90lGAE2pmRQOSfFmcE7v9ehLPv19DYz8Ie1aCTB2DNzkhjlB QmThEiUSrtoskck4SemCz6ln0JlndvsjvGiP7VKxkfb2HWvSo5ay0G1PH90uIcsQcKMRjM2b/Iurk5 4UTUTTzZ32raGPjjCsk5FM9t9av+wz0+NgIX3UGlRKDCy0dusVFy+S9sMziYi7mcBrtpCYK5rD/tuz NeKbQLIcojtNN0dCK7KqqR3HNovH2IflWaQHcwkMCsU32I77BFPLuVUX/jIKdCovAxxYBZZGU2XSyq FEqxXjkXhrAOmTzwuSbBrACNI+l/5VvYdPtVEVqxByueJB0CGu9wPwMR7LGbcnrAVFNQG1oxUcUKCr RQF9gxiXS4zAAatKoYWtc3GZbs1bVuj4GmAEioGA+suoeWzzqFtxjqi8utTGTyME41Qap3JHar7H60 gCxE+RDQqwhIpf5GJmbKhtjIhv/rH0zv+Uq/sjQa9ALXM2I0nc2CRCTNpu54amWZOksJmqEqLiPdC5 cqrFa981hQyEKx3L91aZUiGHEmA5huIG90V2xEdEG0CteJipVqv3KQ9tJSgw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+        Tue, 19 Apr 2022 17:19:51 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9DBA637BF6;
+        Tue, 19 Apr 2022 14:17:07 -0700 (PDT)
+Received: from apais-vm1.0synte4vioeebbvidf5q0vz2ua.xx.internal.cloudapp.net (unknown [52.183.86.224])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 163EF20E1A8D;
+        Tue, 19 Apr 2022 14:17:07 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 163EF20E1A8D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1650403027;
+        bh=iznUogW7Ui4gDR1RCeHw3LWMWiszvHx3w2StT5QPOGs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iyd0LIVB4sLS97ntxZkk6JG2qYRYJyz3Gjmc5L7O+QZGdxE2WCy9lUWhbferQ6zdk
+         MOW17Od2+AjTkSackgwX9AJCnuDBd3YBVlOW5mqphZu9DYCqKa8zhdysL7wuuMcUQZ
+         Mk7Z719+FVaw14+dnPCDRKuqao3xBQ3nuIHBV9Tk=
+From:   Allen Pais <apais@linux.microsoft.com>
+To:     olivier.dautricourt@orolia.com, sr@denx.de, vkoul@kernel.org
+Cc:     keescook@chromium.org, linux-hardening@vger.kernel.org,
+        ludovic.desroches@microchip.com, tudor.ambarus@microchip.com,
+        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, nsaenz@kernel.org,
+        paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com,
+        gustavo.pimentel@synopsys.com, vireshk@kernel.org,
+        andriy.shevchenko@linux.intel.com, leoyang.li@nxp.com,
+        zw@zh-kernel.org, wangzhou1@hisilicon.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, sean.wang@mediatek.com,
+        matthias.bgg@gmail.com, afaerber@suse.de, mani@kernel.org,
+        logang@deltatee.com, sanju.mehta@amd.com, daniel@zonque.org,
+        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        krzysztof.kozlowski@linaro.org, green.wan@sifive.com,
+        orsonzhai@gmail.com, baolin.wang7@gmail.com, zhang.lyra@gmail.com,
+        patrice.chotard@foss.st.com, linus.walleij@linaro.org,
+        wens@csie.org, jernej.skrabec@gmail.com, samuel@sholland.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC 0/1] refactor all tasklet users into other APIs
+Date:   Tue, 19 Apr 2022 21:16:57 +0000
+Message-Id: <20220419211658.11403-1-apais@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-This looks like it's harmless, as both the source and the destinations are
-currently the same allocation size (4 bytes) and don't use their padding,
-but if anything were to ever be added after the "mcr" member in "struct
-whiteheat_private", it would be overwritten. The structs both have a
-single u8 "mcr" member, but are 4 bytes in padded size. The memcpy()
-destination was explicitly targeting the u8 member (size 1) with the
-length of the whole structure (size 4), triggering the memcpy buffer
-overflow warning:
+ Tasklet is an old API that will be eventually deprecated.
+During the modernization of the tasklets API, there was a
+request to entirely remove the API from the kernel. 
+This series converts tasklets to simple work.
 
-In file included from include/linux/string.h:253,
-                 from include/linux/bitmap.h:11,
-                 from include/linux/cpumask.h:12,
-                 from include/linux/smp.h:13,
-                 from include/linux/lockdep.h:14,
-                 from include/linux/spinlock.h:62,
-                 from include/linux/mmzone.h:8,
-                 from include/linux/gfp.h:6,
-                 from include/linux/slab.h:15,
-                 from drivers/usb/serial/whiteheat.c:17:
-In function 'fortify_memcpy_chk',
-    inlined from 'firm_send_command' at drivers/usb/serial/whiteheat.c:587:4:
-include/linux/fortify-string.h:328:25: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
-  328 |                         __write_overflow_field(p_size_field, size);
-      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ Feedback on the series would be of great help as we are in the
+process of dropping the usage of tasklets from the rest of the sub-systems.
 
-Expand the memcpy() to the entire structure, though perhaps the correct
-solution is to mark all the USB command structures as "__packed".
+ This is part of KSPP effort which is tracked at:
+https://github.com/KSPP/linux/issues/94
 
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/lkml/202204142318.vDqjjSFn-lkp@intel.com
-Cc: Johan Hovold <johan@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/usb/serial/whiteheat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This series replaces tasklets in drivers/dma/* with simple
+workqueue. 
 
-diff --git a/drivers/usb/serial/whiteheat.c b/drivers/usb/serial/whiteheat.c
-index da65d14c9ed5..6e00498843fb 100644
---- a/drivers/usb/serial/whiteheat.c
-+++ b/drivers/usb/serial/whiteheat.c
-@@ -584,7 +584,7 @@ static int firm_send_command(struct usb_serial_port *port, __u8 command,
- 		switch (command) {
- 		case WHITEHEAT_GET_DTR_RTS:
- 			info = usb_get_serial_port_data(port);
--			memcpy(&info->mcr, command_info->result_buffer,
-+			memcpy(info, command_info->result_buffer,
- 					sizeof(struct whiteheat_dr_info));
- 				break;
- 		}
+Allen Pais (1):
+  drivers/dma/*: replace tasklets with workqueue
+
+ drivers/dma/altera-msgdma.c                   | 15 ++++----
+ drivers/dma/at_hdmac.c                        | 16 ++++-----
+ drivers/dma/at_hdmac_regs.h                   |  6 ++--
+ drivers/dma/at_xdmac.c                        | 14 ++++----
+ drivers/dma/bcm2835-dma.c                     |  2 +-
+ drivers/dma/dma-axi-dmac.c                    |  2 +-
+ drivers/dma/dma-jz4780.c                      |  2 +-
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    |  2 +-
+ drivers/dma/dw-edma/dw-edma-core.c            |  4 +--
+ drivers/dma/dw/core.c                         | 13 +++----
+ drivers/dma/dw/regs.h                         |  2 +-
+ drivers/dma/ep93xx_dma.c                      | 15 ++++----
+ drivers/dma/fsl-edma-common.c                 |  2 +-
+ drivers/dma/fsl-qdma.c                        |  2 +-
+ drivers/dma/fsl_raid.c                        | 12 ++++---
+ drivers/dma/fsl_raid.h                        |  2 +-
+ drivers/dma/fsldma.c                          | 15 ++++----
+ drivers/dma/fsldma.h                          |  2 +-
+ drivers/dma/hisi_dma.c                        |  2 +-
+ drivers/dma/hsu/hsu.c                         |  2 +-
+ drivers/dma/idma64.c                          |  4 +--
+ drivers/dma/img-mdc-dma.c                     |  2 +-
+ drivers/dma/imx-dma.c                         | 27 +++++++-------
+ drivers/dma/imx-sdma.c                        |  6 ++--
+ drivers/dma/ioat/dma.c                        | 19 +++++-----
+ drivers/dma/ioat/dma.h                        |  4 +--
+ drivers/dma/ioat/init.c                       |  2 +-
+ drivers/dma/iop-adma.c                        | 12 +++----
+ drivers/dma/ipu/ipu_idmac.c                   | 22 ++++--------
+ drivers/dma/ipu/ipu_intern.h                  |  2 +-
+ drivers/dma/k3dma.c                           | 19 +++++-----
+ drivers/dma/mediatek/mtk-cqdma.c              | 35 ++++++++++---------
+ drivers/dma/mediatek/mtk-hsdma.c              |  4 +--
+ drivers/dma/mediatek/mtk-uart-apdma.c         |  4 +--
+ drivers/dma/mmp_pdma.c                        | 13 +++----
+ drivers/dma/mmp_tdma.c                        | 11 +++---
+ drivers/dma/mpc512x_dma.c                     | 17 ++++-----
+ drivers/dma/mv_xor.c                          | 13 +++----
+ drivers/dma/mv_xor.h                          |  4 +--
+ drivers/dma/mv_xor_v2.c                       | 23 ++++++------
+ drivers/dma/mxs-dma.c                         | 13 +++----
+ drivers/dma/nbpfaxi.c                         | 15 ++++----
+ drivers/dma/owl-dma.c                         |  2 +-
+ drivers/dma/pch_dma.c                         | 17 ++++-----
+ drivers/dma/pl330.c                           | 32 +++++++++--------
+ drivers/dma/plx_dma.c                         | 13 +++----
+ drivers/dma/ppc4xx/adma.c                     | 17 ++++-----
+ drivers/dma/ppc4xx/adma.h                     |  4 +--
+ drivers/dma/ptdma/ptdma-dev.c                 |  2 +-
+ drivers/dma/ptdma/ptdma.h                     |  4 +--
+ drivers/dma/pxa_dma.c                         |  2 +-
+ drivers/dma/qcom/bam_dma.c                    | 35 ++++++++++---------
+ drivers/dma/qcom/gpi.c                        | 18 +++++-----
+ drivers/dma/qcom/hidma.c                      | 11 +++---
+ drivers/dma/qcom/hidma.h                      |  6 ++--
+ drivers/dma/qcom/hidma_ll.c                   | 11 +++---
+ drivers/dma/qcom/qcom_adm.c                   |  2 +-
+ drivers/dma/s3c24xx-dma.c                     |  2 +-
+ drivers/dma/sa11x0-dma.c                      | 27 +++++++-------
+ drivers/dma/sf-pdma/sf-pdma.c                 | 24 +++++++------
+ drivers/dma/sf-pdma/sf-pdma.h                 |  4 +--
+ drivers/dma/sprd-dma.c                        |  2 +-
+ drivers/dma/st_fdma.c                         |  2 +-
+ drivers/dma/ste_dma40.c                       | 17 ++++-----
+ drivers/dma/sun6i-dma.c                       | 33 ++++++++---------
+ drivers/dma/tegra20-apb-dma.c                 | 19 +++++-----
+ drivers/dma/tegra210-adma.c                   |  2 +-
+ drivers/dma/ti/edma.c                         |  2 +-
+ drivers/dma/ti/k3-udma.c                      | 11 +++---
+ drivers/dma/ti/omap-dma.c                     |  2 +-
+ drivers/dma/timb_dma.c                        | 23 ++++++------
+ drivers/dma/txx9dmac.c                        | 30 ++++++++--------
+ drivers/dma/txx9dmac.h                        |  4 +--
+ drivers/dma/virt-dma.c                        |  9 ++---
+ drivers/dma/virt-dma.h                        |  8 ++---
+ drivers/dma/xgene-dma.c                       | 21 +++++------
+ drivers/dma/xilinx/xilinx_dma.c               | 23 ++++++------
+ drivers/dma/xilinx/xilinx_dpdma.c             | 19 +++++-----
+ drivers/dma/xilinx/zynqmp_dma.c               | 21 +++++------
+ include/linux/platform_data/dma-iop32x.h      |  4 +--
+ 80 files changed, 459 insertions(+), 429 deletions(-)
+
 -- 
-2.32.0
+2.17.1
 
