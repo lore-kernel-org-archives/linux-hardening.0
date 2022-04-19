@@ -2,295 +2,121 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12647C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Apr 2022 21:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30103C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 19 Apr 2022 04:17:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229687AbiDRVx6 (ORCPT
+        id S230042AbiDSEU3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Apr 2022 17:53:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47020 "EHLO
+        Tue, 19 Apr 2022 00:20:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbiDRVx5 (ORCPT
+        with ESMTP id S1348189AbiDSEU2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Apr 2022 17:53:57 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A2A4101D8
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Apr 2022 14:51:16 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id k14so21270010pga.0
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Apr 2022 14:51:16 -0700 (PDT)
+        Tue, 19 Apr 2022 00:20:28 -0400
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0204F2BB2B
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Apr 2022 21:17:46 -0700 (PDT)
+Received: by mail-pg1-x52c.google.com with SMTP id t4so22673560pgc.1
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Apr 2022 21:17:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=McML/7aq2qYQeHtr+zF/mEmdaC5pb8ihc8HBw6Ng3QE=;
-        b=Xynf82T+YJ3L9WP7bS10BageZ9YV+V1bwOGz/uSRoxx9QL0km13oL6wprefg95OK6/
-         XiBa4U49OwIQ2CowIh/bUSmR5pHsIdN4GoSTAeAPT6z5ACOT2wveezuYjmKuGzUEhgWo
-         Y9GdnShjwgAxhuf2vba32qgkr9asYPszd/h2w=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ua3DWHoWYRZ0Hj18kv0a4L5TFGQ8YVkye6cMbl2VF6s=;
+        b=YyIlytPr7dhGhZh1n4740x8jTXToacvwiuTjRhl7OryQkWqeaG4t9xBbEXMJhWhGiC
+         m1Cq5gcWdtSctAcUnt83MwRhiXBJ+a94dBQ6qGS4tuqqY9RyN8+RbAn8Tl+U55POKAuB
+         D9wVkDFJdg8rIbtS5hisU04sNYtpwd+4rgebs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=McML/7aq2qYQeHtr+zF/mEmdaC5pb8ihc8HBw6Ng3QE=;
-        b=BdC8rcRqT2ydk4CAJE72685xy6H9VXoFP0YRo4sIKw434KKDCLSkeIE+YHjYGQAZjD
-         2aS0M/rir6A9PLjDUzMNKNPo8NI92P1n8DNMRiCdqottGVDpt8kFjNp/0cOalKye9y5Q
-         YuxmRZb/3G1m8oilYB7cprB59VeFR/e8ZHtaQTQKfUKyuQdh+T5PYd6lnqgGrZlGdYMJ
-         eXYd4mJ5Gbnk5J2ez/Hl3WPoBgDK+mI9a4uGPjJxf9Cw96W1IXCYIcINNUZsTkTmHqwY
-         J7uGoIhoaQxIWWOL0RHwxnDajg7AGLfanjHnuktrvjRJWhbDJ/M3bJcIHXu1xu5AzohS
-         yEvA==
-X-Gm-Message-State: AOAM533GE1UPClPU4LhBGezWweUGbDjcNv3Y5m9noNLOXo3FPzE5M4nh
-        wzmpR0E0V1NAySdAEx8V9JQaWw==
-X-Google-Smtp-Source: ABdhPJyoRoXMQ/9/BWXQveo5IafXB1/Wwz08+r4TNPjC4GYcIGRdF2i5UDHcNh6YZ4z0qrqlXYQQRA==
-X-Received: by 2002:a05:6a00:e8e:b0:4fa:a52f:59cf with SMTP id bo14-20020a056a000e8e00b004faa52f59cfmr14453638pfb.84.1650318675949;
-        Mon, 18 Apr 2022 14:51:15 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ua3DWHoWYRZ0Hj18kv0a4L5TFGQ8YVkye6cMbl2VF6s=;
+        b=2J6BPV/NsPvV9P7xLBnUk+EfcOrNrV7cZrhHqNGbdZfomHhXmCN8/WKvNKO0K4LW8s
+         BR1TyTyMvGaocJ8H6/ga4nLWewAkXEBzgGW+vHZGBg1EkxdEwnE2pf1tfYVSrJ1tBJak
+         cFAZLLViMIBLSD/tB3PE/yK/o8PfmxzSaHX4ytabvxnWBUtq+kdOE7sRLrRzLJWgNGls
+         6Z0kZbm1nX4wbAWECHngm5c1HUqOfgBJRsGTTo6MhwLR0VG4Bf4i31NXY9itrnKiRZ+l
+         ciYYt1kYr9WMQOysv7zmyrVW2XLvoiA45ULZO1oYKyAgELAo1/mrYx7/CrOdlIIoGsE1
+         Lhqw==
+X-Gm-Message-State: AOAM531HJtXziruVLiy/dE9E9VxA8F5vThFyNAfaho2rGrJoWepzLgnT
+        163HlGCrm9MzbI2Ol/ipNzbw4A==
+X-Google-Smtp-Source: ABdhPJwQw3NsHIw/XF+SqI6c8xAkwRGZeUj6+GKduWwmPu+iYojpSIIWD9kahjFqaEKb/F+KzBSWsw==
+X-Received: by 2002:a63:fd53:0:b0:386:66d:b40c with SMTP id m19-20020a63fd53000000b00386066db40cmr12741689pgj.266.1650341866296;
+        Mon, 18 Apr 2022 21:17:46 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b13-20020a17090a7acd00b001d2cd88956esm203296pjl.24.2022.04.18.14.51.15
+        by smtp.gmail.com with ESMTPSA id k5-20020a17090ac50500b001cd5ffcca96sm16726552pjt.27.2022.04.18.21.17.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Apr 2022 14:51:15 -0700 (PDT)
-Date:   Mon, 18 Apr 2022 14:51:14 -0700
+        Mon, 18 Apr 2022 21:17:45 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Dan Li <ashimida@linux.alibaba.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        kernel test robot <lkp@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, stable@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] lkdtm: Add CFI_BACKWARD to test ROP mitigations
-Message-ID: <202204181451.AC3DB70EE@keescook>
-References: <20220416001103.1524653-1-keescook@chromium.org>
- <e1563d18-36d7-08b2-762c-def7021d1382@linux.alibaba.com>
+Subject: [PATCH] USB: serial: Fix heap overflow in WHITEHEAT_GET_DTR_RTS
+Date:   Mon, 18 Apr 2022 21:17:42 -0700
+Message-Id: <20220419041742.4117026-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e1563d18-36d7-08b2-762c-def7021d1382@linux.alibaba.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2631; h=from:subject; bh=gIgxtgBXPkDpXaGP7aAQI8PBhl9DxARQALU32sCb0HQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiXjfmXFgU+SMJsQUdOjA7WslYjSoG7qjHLuLjYkEv G8abkvKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYl435gAKCRCJcvTf3G3AJp63D/ 4u5P63EDXyGqn9YU26NnZ4oNbGN5YfchlZolAZ5r7qKja5KmvCpyan3HLHJQzoovP5H6CWwbwM4QTY XjQ/LVQaTjZRVaCncCJssE5JSCjhPD90lGAE2pmRQOSfFmcE7v9ehLPv19DYz8Ie1aCTB2DNzkhjlB QmThEiUSrtoskck4SemCz6ln0JlndvsjvGiP7VKxkfb2HWvSo5ay0G1PH90uIcsQcKMRjM2b/Iurk5 4UTUTTzZ32raGPjjCsk5FM9t9av+wz0+NgIX3UGlRKDCy0dusVFy+S9sMziYi7mcBrtpCYK5rD/tuz NeKbQLIcojtNN0dCK7KqqR3HNovH2IflWaQHcwkMCsU32I77BFPLuVUX/jIKdCovAxxYBZZGU2XSyq FEqxXjkXhrAOmTzwuSbBrACNI+l/5VvYdPtVEVqxByueJB0CGu9wPwMR7LGbcnrAVFNQG1oxUcUKCr RQF9gxiXS4zAAatKoYWtc3GZbs1bVuj4GmAEioGA+suoeWzzqFtxjqi8utTGTyME41Qap3JHar7H60 gCxE+RDQqwhIpf5GJmbKhtjIhv/rH0zv+Uq/sjQa9ALXM2I0nc2CRCTNpu54amWZOksJmqEqLiPdC5 cqrFa981hQyEKx3L91aZUiGHEmA5huIG90V2xEdEG0CteJipVqv3KQ9tJSgw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Apr 17, 2022 at 02:15:43AM -0700, Dan Li wrote:
-> 
-> 
-> On 4/15/22 17:11, Kees Cook wrote:
-> > In order to test various backward-edge control flow integrity methods,
-> > add a test that manipulates the return address on the stack. Currently
-> > only arm64 Pointer Authentication and Shadow Call Stack is supported.
-> > 
-> >   $ echo CFI_BACKWARD | cat >/sys/kernel/debug/provoke-crash/DIRECT
-> > 
-> > Under SCS, successful test of the mitigation is reported as:
-> > 
-> >   lkdtm: Performing direct entry CFI_BACKWARD
-> >   lkdtm: Attempting unchecked stack return address redirection ...
-> >   lkdtm: ok: redirected stack return address.
-> >   lkdtm: Attempting checked stack return address redirection ...
-> >   lkdtm: ok: control flow unchanged.
-> > 
-> > Under PAC, successful test of the mitigation is reported by the PAC
-> > exception handler:
-> > 
-> >   lkdtm: Performing direct entry CFI_BACKWARD
-> >   lkdtm: Attempting unchecked stack return address redirection ...
-> >   lkdtm: ok: redirected stack return address.
-> >   lkdtm: Attempting checked stack return address redirection ...
-> >   Unable to handle kernel paging request at virtual address bfffffc0088d0514
-> >   Mem abort info:
-> >     ESR = 0x86000004
-> >     EC = 0x21: IABT (current EL), IL = 32 bits
-> >     SET = 0, FnV = 0
-> >     EA = 0, S1PTW = 0
-> >     FSC = 0x04: level 0 translation fault
-> >   [bfffffc0088d0514] address between user and kernel address ranges
-> >   ...
-> > 
-> > If the CONFIGs are missing (or the mitigation isn't working), failure
-> > is reported as:
-> > 
-> >   lkdtm: Performing direct entry CFI_BACKWARD
-> >   lkdtm: Attempting unchecked stack return address redirection ...
-> >   lkdtm: ok: redirected stack return address.
-> >   lkdtm: Attempting checked stack return address redirection ...
-> >   lkdtm: FAIL: stack return address was redirected!
-> >   lkdtm: This is probably expected, since this kernel was built *without* CONFIG_ARM64_PTR_AUTH_KERNEL=y nor CONFIG_SHADOW_CALL_STACK=y
-> > 
-> > Co-developed-by: Dan Li <ashimida@linux.alibaba.com>
-> > Signed-off-by: Dan Li <ashimida@linux.alibaba.com>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> > v1: https://lore.kernel.org/lkml/20220413213917.711770-1-keescook@chromium.org
-> > v2:
-> >   - add PAGE_OFFSET setting for PAC bits (Dan Li)
-> > ---
-> >   drivers/misc/lkdtm/cfi.c                | 134 ++++++++++++++++++++++++
-> >   tools/testing/selftests/lkdtm/tests.txt |   1 +
-> >   2 files changed, 135 insertions(+)
-> > 
-> > diff --git a/drivers/misc/lkdtm/cfi.c b/drivers/misc/lkdtm/cfi.c
-> > index e88f778be0d5..804965a480b7 100644
-> > --- a/drivers/misc/lkdtm/cfi.c
-> > +++ b/drivers/misc/lkdtm/cfi.c
-> > @@ -3,6 +3,7 @@
-> >    * This is for all the tests relating directly to Control Flow Integrity.
-> >    */
-> >   #include "lkdtm.h"
-> > +#include <asm/page.h>
-> >   static int called_count;
-> > @@ -42,8 +43,141 @@ static void lkdtm_CFI_FORWARD_PROTO(void)
-> >   	pr_expected_config(CONFIG_CFI_CLANG);
-> >   }
-> > +/*
-> > + * This can stay local to LKDTM, as there should not be a production reason
-> > + * to disable PAC && SCS.
-> > + */
-> > +#ifdef CONFIG_ARM64_PTR_AUTH_KERNEL
-> > +# ifdef CONFIG_ARM64_BTI_KERNEL
-> > +#  define __no_pac             "branch-protection=bti"
-> > +# else
-> > +#  define __no_pac             "branch-protection=none"
-> > +# endif
-> > +# define __no_ret_protection   __noscs __attribute__((__target__(__no_pac)))
-> > +#else
-> > +# define __no_ret_protection   __noscs
-> > +#endif
-> > +
-> > +#define no_pac_addr(addr)      \
-> > +	((__force __typeof__(addr))((__force u64)(addr) | PAGE_OFFSET))
-> > +
-> > +/* The ultimate ROP gadget. */
-> > +static noinline __no_ret_protection
-> > +void set_return_addr_unchecked(unsigned long *expected, unsigned long *addr)
-> > +{
-> > +	/* Use of volatile is to make sure final write isn't seen as a dead store. */
-> > +	unsigned long * volatile *ret_addr = (unsigned long **)__builtin_frame_address(0) + 1;
-> > +
-> > +	/* Make sure we've found the right place on the stack before writing it. */
-> > +	if (no_pac_addr(*ret_addr) == expected)
-> > +		*ret_addr = (addr);
-> > +	else
-> > +		/* Check architecture, stack layout, or compiler behavior... */
-> > +		pr_warn("Eek: return address mismatch! %px != %px\n",
-> > +			*ret_addr, addr);
-> > +}
-> > +
-> > +static noinline
-> > +void set_return_addr(unsigned long *expected, unsigned long *addr)
-> > +{
-> > +	/* Use of volatile is to make sure final write isn't seen as a dead store. */
-> > +	unsigned long * volatile *ret_addr = (unsigned long **)__builtin_frame_address(0) + 1;
-> > +
-> > +	/* Make sure we've found the right place on the stack before writing it. */
-> > +	if (no_pac_addr(*ret_addr) == expected)
-> > +		*ret_addr = (addr);
-> > +	else
-> > +		/* Check architecture, stack layout, or compiler behavior... */
-> > +		pr_warn("Eek: return address mismatch! %px != %px\n",
-> > +			*ret_addr, addr);
-> > +}
-> > +
-> > +static volatile int force_check;
-> > +
-> > +static void lkdtm_CFI_BACKWARD(void)
-> > +{
-> > +	/* Use calculated gotos to keep labels addressable. */
-> > +	void *labels[] = {0, &&normal, &&redirected, &&check_normal, &&check_redirected};
-> > +
-> > +	pr_info("Attempting unchecked stack return address redirection ...\n");
-> > +
-> > +	/* Always false */
-> > +	if (force_check) {
-> > +		/*
-> > +		 * Prepare to call with NULLs to avoid parameters being treated as
-> > +		 * constants in -02.
-> > +		 */
-> > +		set_return_addr_unchecked(NULL, NULL);
-> > +		set_return_addr(NULL, NULL);
-> > +		if (force_check)
-> > +			goto *labels[1];
-> > +		if (force_check)
-> > +			goto *labels[2];
-> > +		if (force_check)
-> > +			goto *labels[3];
-> > +		if (force_check)
-> > +			goto *labels[4];
-> > +		return;
-> > +	}
-> > +
-> > +	/*
-> > +	 * Use fallthrough switch case to keep basic block ordering between
-> > +	 * set_return_addr*() and the label after it.
-> > +	 */
-> > +	switch (force_check) {
-> > +	case 0:
-> > +		set_return_addr_unchecked(&&normal, &&redirected);
-> > +		fallthrough;
-> > +	case 1:
-> > +normal:
-> > +		/* Always true */
-> > +		if (!force_check) {
-> > +			pr_err("FAIL: stack return address manipulation failed!\n");
-> > +			/* If we can't redirect "normally", we can't test mitigations. */
-> > +			return;
-> > +		}
-> > +		break;
-> > +	default:
-> > +redirected:
-> > +		pr_info("ok: redirected stack return address.\n");
-> > +		break;
-> > +	}
-> > +
-> > +	pr_info("Attempting checked stack return address redirection ...\n");
-> > +
-> > +	switch (force_check) {
-> > +	case 0:
-> > +		set_return_addr(&&check_normal, &&check_redirected);
-> > +		fallthrough;
-> > +	case 1:
-> > +check_normal:
-> > +		/* Always true */
-> > +		if (!force_check) {
-> > +			pr_info("ok: control flow unchanged.\n");
-> > +			return;
-> > +		}
-> > +
-> > +check_redirected:
-> > +		pr_err("FAIL: stack return address was redirected!\n");
-> > +		break;
-> > +	}
-> > +
-> > +	if (IS_ENABLED(CONFIG_ARM64_PTR_AUTH_KERNEL)) {
-> > +		pr_expected_config(CONFIG_ARM64_PTR_AUTH_KERNEL);
-> > +		return;
-> > +	}
-> > +	if (IS_ENABLED(CONFIG_SHADOW_CALL_STACK)) {
-> > +		pr_expected_config(CONFIG_SHADOW_CALL_STACK);
-> > +		return;
-> > +	}
-> > +	pr_warn("This is probably expected, since this %s was built *without* %s=y nor %s=y\n",
-> > +		lkdtm_kernel_info,
-> > +		"CONFIG_ARM64_PTR_AUTH_KERNEL", "CONFIG_SHADOW_CALL_STACK");
-> > +}
-> > +
-> >   static struct crashtype crashtypes[] = {
-> >   	CRASHTYPE(CFI_FORWARD_PROTO),
-> > +	CRASHTYPE(CFI_BACKWARD),
-> >   };
-> >   struct crashtype_category cfi_crashtypes = {
-> > diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
-> > index 243c781f0780..9dace01dbf15 100644
-> > --- a/tools/testing/selftests/lkdtm/tests.txt
-> > +++ b/tools/testing/selftests/lkdtm/tests.txt
-> > @@ -74,6 +74,7 @@ USERCOPY_STACK_BEYOND
-> >   USERCOPY_KERNEL
-> >   STACKLEAK_ERASING OK: the rest of the thread stack is properly erased
-> >   CFI_FORWARD_PROTO
-> > +CFI_BACKWARD call trace:|ok: control flow unchanged
-> >   FORTIFIED_STRSCPY
-> >   FORTIFIED_OBJECT
-> >   FORTIFIED_SUBOBJECT
-> 
-> 
-> Compiling with gcc/llvm 12 on aarch64 platform with scs/pac enabled
-> respectively, all four cases work fine for me :)
+This looks like it's harmless, as both the source and the destinations are
+currently the same allocation size (4 bytes) and don't use their padding,
+but if anything were to ever be added after the "mcr" member in "struct
+whiteheat_private", it would be overwritten. The structs both have a
+single u8 "mcr" member, but are 4 bytes in padded size. The memcpy()
+destination was explicitly targeting the u8 member (size 1) with the
+length of the whole structure (size 4), triggering the memcpy buffer
+overflow warning:
 
-Great! Thanks for confirming it. :)
+In file included from include/linux/string.h:253,
+                 from include/linux/bitmap.h:11,
+                 from include/linux/cpumask.h:12,
+                 from include/linux/smp.h:13,
+                 from include/linux/lockdep.h:14,
+                 from include/linux/spinlock.h:62,
+                 from include/linux/mmzone.h:8,
+                 from include/linux/gfp.h:6,
+                 from include/linux/slab.h:15,
+                 from drivers/usb/serial/whiteheat.c:17:
+In function 'fortify_memcpy_chk',
+    inlined from 'firm_send_command' at drivers/usb/serial/whiteheat.c:587:4:
+include/linux/fortify-string.h:328:25: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+  328 |                         __write_overflow_field(p_size_field, size);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Expand the memcpy() to the entire structure, though perhaps the correct
+solution is to mark all the USB command structures as "__packed".
+
+Reported-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/lkml/202204142318.vDqjjSFn-lkp@intel.com
+Cc: Johan Hovold <johan@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/usb/serial/whiteheat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/serial/whiteheat.c b/drivers/usb/serial/whiteheat.c
+index da65d14c9ed5..6e00498843fb 100644
+--- a/drivers/usb/serial/whiteheat.c
++++ b/drivers/usb/serial/whiteheat.c
+@@ -584,7 +584,7 @@ static int firm_send_command(struct usb_serial_port *port, __u8 command,
+ 		switch (command) {
+ 		case WHITEHEAT_GET_DTR_RTS:
+ 			info = usb_get_serial_port_data(port);
+-			memcpy(&info->mcr, command_info->result_buffer,
++			memcpy(info, command_info->result_buffer,
+ 					sizeof(struct whiteheat_dr_info));
+ 				break;
+ 		}
 -- 
-Kees Cook
+2.32.0
+
