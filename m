@@ -2,52 +2,183 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A28B6C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 23:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A408BC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 23:21:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351114AbiDTXPU (ORCPT
+        id S1383160AbiDTXYf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Apr 2022 19:15:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55660 "EHLO
+        Wed, 20 Apr 2022 19:24:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345452AbiDTXPT (ORCPT
+        with ESMTP id S1383157AbiDTXYf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Apr 2022 19:15:19 -0400
-Received: from relay11.mail.gandi.net (relay11.mail.gandi.net [IPv6:2001:4b98:dc4:8::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B9913DF0;
-        Wed, 20 Apr 2022 16:12:31 -0700 (PDT)
-Received: (Authenticated sender: joao@overdrivepizza.com)
-        by mail.gandi.net (Postfix) with ESMTPA id 1377F100003;
-        Wed, 20 Apr 2022 23:12:26 +0000 (UTC)
+        Wed, 20 Apr 2022 19:24:35 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 680A71BEBB
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Apr 2022 16:21:47 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id k14so3149683pga.0
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Apr 2022 16:21:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6Ty3DFGunF6jW21MAnsyi+iAr+gyos3k1HPrH3m9fTc=;
+        b=XnWq2s9XXwGGB2wgFdDYbKC7tkgxh2/Z4V4PkH12svVokJESgvrFm5JNzgsc74GH3y
+         PRmXS5NWLTC5YYg3pP+kw7BUee1T44m8duw4HXfmeLtW6YHy8MuBR4c8niTk8T0VuZ9b
+         QJEAL6A9MGfaxtHAG67ubRu9en7CGwFeOVg9E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6Ty3DFGunF6jW21MAnsyi+iAr+gyos3k1HPrH3m9fTc=;
+        b=Hx42Yku5Mh2Fa84DwGN7d/SrrFQ6z+K0FAFQ7ZSqqm28ntIIkquyA2ramJKeZNaTnp
+         poecUWPve6iduiMz3XRUEGGuPiMiNc41/nbsQp1I8+kC0ZP/DJUYXQ49Gki7T6C1EGW3
+         Ydsxg5qd4MWjqVgcD8GNT34fCUgGiovZGfXLgrfVmEKnmLq8THB8wAGQX1NcjmqGdBB7
+         5VotGLUF0J3TiJlcyeR4R7QuVj9kDvFRt9rIJxWYEqQaaWhst047Ifr5CkQuzz3bi/1I
+         CXSTxeafeCV01Ug+lxvzfztXEDhQuorUfPJ0DVyb17byr1Cc4LbyAX0SEwnCdKT/DTqW
+         /+nQ==
+X-Gm-Message-State: AOAM531V6GYyLTxAMePO+A04wM1GQ3O0ZMfNSXaHVFVfpJkgWk7V6GqT
+        p2Muh7OhqFeYvRVfxnxns+rHqQ==
+X-Google-Smtp-Source: ABdhPJwXpf1B85gWACAiQZBQg4zWKjO4yRVSkAvJBvOqRuLOMe9Mwe1L7hhkVq+XyKdgJYc9LDZ6kA==
+X-Received: by 2002:a65:46cf:0:b0:399:13b3:dd8b with SMTP id n15-20020a6546cf000000b0039913b3dd8bmr21529884pgr.585.1650496906919;
+        Wed, 20 Apr 2022 16:21:46 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u7-20020aa78487000000b00505d9277cb3sm20637059pfn.38.2022.04.20.16.21.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Apr 2022 16:21:46 -0700 (PDT)
+Date:   Wed, 20 Apr 2022 16:21:45 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Topi Miettinen <toiwoton@gmail.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lennart Poettering <lennart@poettering.net>,
+        Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
+        Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-abi-devel@lists.sourceforge.net,
+        linux-hardening@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Salvatore Mesoraca <s.mesoraca16@gmail.com>,
+        Igor Zhbanov <izh1979@gmail.com>
+Subject: Re: [PATCH RFC 0/4] mm, arm64: In-kernel support for
+ memory-deny-write-execute (MDWE)
+Message-ID: <202204201610.093C9D5FE8@keescook>
+References: <20220413134946.2732468-1-catalin.marinas@arm.com>
+ <202204141028.0482B08@keescook>
+ <YmAEDsGtxhim46UI@arm.com>
+ <c62170c6-5993-2417-4143-5a37a98b227c@gmail.com>
 MIME-Version: 1.0
-Date:   Wed, 20 Apr 2022 16:12:26 -0700
-From:   Joao Moreira <joao@overdrivepizza.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        peterz@infradead.org, jpoimboe@redhat.com,
-        andrew.cooper3@citrix.com, samitolvanen@google.com,
-        mark.rutland@arm.com, hjl.tools@gmail.com,
-        alyssa.milburn@linux.intel.com, ndesaulniers@google.com,
-        gabriel.gomes@linux.intel.com, rick.p.edgecombe@intel.com
-Subject: Re: [RFC PATCH 11/11] driver/int3400_thermal: Fix prototype matching
-In-Reply-To: <202204201601.8291F550@keescook>
-References: <20220420004241.2093-1-joao@overdrivepizza.com>
- <20220420004241.2093-12-joao@overdrivepizza.com>
- <202204191946.2843CF71@keescook>
- <06435f0b44681588052d145a17d60316@overdrivepizza.com>
- <202204201601.8291F550@keescook>
-Message-ID: <4dd9a9a3a7fb6f9af0fa04b8d2e3d5a2@overdrivepizza.com>
-X-Sender: joao@overdrivepizza.com
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c62170c6-5993-2417-4143-5a37a98b227c@gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Wed, Apr 20, 2022 at 10:34:33PM +0300, Topi Miettinen wrote:
+> On 20.4.2022 16.01, Catalin Marinas wrote:
+> > On Thu, Apr 14, 2022 at 11:52:17AM -0700, Kees Cook wrote:
+> > > On Wed, Apr 13, 2022 at 02:49:42PM +0100, Catalin Marinas wrote:
+> > > > The background to this is that systemd has a configuration option called
+> > > > MemoryDenyWriteExecute [1], implemented as a SECCOMP BPF filter. Its aim
+> > > > is to prevent a user task from inadvertently creating an executable
+> > > > mapping that is (or was) writeable. Since such BPF filter is stateless,
+> > > > it cannot detect mappings that were previously writeable but
+> > > > subsequently changed to read-only. Therefore the filter simply rejects
+> > > > any mprotect(PROT_EXEC). The side-effect is that on arm64 with BTI
+> > > > support (Branch Target Identification), the dynamic loader cannot change
+> > > > an ELF section from PROT_EXEC to PROT_EXEC|PROT_BTI using mprotect().
+> > > > For libraries, it can resort to unmapping and re-mapping but for the
+> > > > main executable it does not have a file descriptor. The original bug
+> > > > report in the Red Hat bugzilla - [2] - and subsequent glibc workaround
+> > > > for libraries - [3].
+> > > 
+> > > Right, so, the systemd filter is a big hammer solution for the kernel
+> > > not having a very easy way to provide W^X mapping protections to
+> > > userspace. There's stuff in SELinux, and there have been several
+> > > attempts[1] at other LSMs to do it too, but nothing stuck.
+> > > 
+> > > Given the filter, and the implementation of how to enable BTI, I see two
+> > > solutions:
+> > > 
+> > > - provide a way to do W^X so systemd can implement the feature differently
+> > > - provide a way to turn on BTI separate from mprotect to bypass the filter
+> > > 
+> > > I would agree, the latter seems like the greater hack,
+> > 
+> > We discussed such hacks in the past but they are just working around the
+> > fundamental issue - systemd wants W^X but with BPF it can only achieve
+> > it by preventing mprotect(PROT_EXEC) irrespective of whether the mapping
+> > was already executable. If we find a better solution for W^X, we
+> > wouldn't have to hack anything for mprotect(PROT_EXEC|PROT_BTI).
+> > 
+> > > so I welcome
+> > > this RFC, though I think it might need to explore a bit of the feature
+> > > space exposed by other solutions[1] (i.e. see SARA and NAX), otherwise
+> > > it risks being too narrowly implemented. For example, playing well with
+> > > JITs should be part of the design, and will likely need some kind of
+> > > ELF flags and/or "sealing" mode, and to handle the vma alias case as
+> > > Jann Horn pointed out[2].
+> > 
+> > I agree we should look at what we want to cover, though trying to avoid
+> > re-inventing SELinux. With this patchset I went for the minimum that
+> > systemd MDWE does with BPF.
+> > 
+> > I think JITs get around it using something like memfd with two separate
+> > mappings to the same page. We could try to prevent such aliases but
+> > allow it if an ELF note is detected (or get the JIT to issue a prctl()).
+> > 
+> > Anyway, with a prctl() we can allow finer-grained control starting with
+> > anonymous and file mappings and later extending to vma aliases,
+> > writeable files etc. On top we can add a seal mask so that a process
+> > cannot disable a control was set. Something like (I'm not good at
+> > names):
+> > 
+> > 	prctl(PR_MDWX_SET, flags, seal_mask);
+> > 	prctl(PR_MDWX_GET);
+> > 
+> > with flags like:
+> > 
+> > 	PR_MDWX_MMAP - basics, should cover mmap() and mprotect()
+> > 	PR_MDWX_ALIAS - vma aliases, allowed with an ELF note
+> > 	PR_MDWX_WRITEABLE_FILE
+> > 
+> > (needs some more thinking)
+> > 
 > 
-> Ah-ha, thanks. I think this will fix it, but I haven't tested it:
+> For systemd, feature compatibility with the BPF version is important so that
+> we could automatically switch to the kernel version once available without
+> regressions. So I think PR_MDWX_MMAP (or maybe PR_MDWX_COMPAT) should match
+> exactly what MemoryDenyWriteExecute=yes as implemented with BPF has: only
+> forbid mmap(PROT_EXEC|PROT_WRITE) and mprotect(PROT_EXEC). Like BPF, once
+> installed there should be no way to escape and ELF flags should be also
+> ignored. ARM BTI should be allowed though (allow PROT_EXEC|PROT_BTI if the
+> old flags had PROT_EXEC).
+> 
+> Then we could have improved versions (other PR_MDWX_ prctls) with lots more
+> checks. This could be enabled with MemoryDenyWriteExecute=strict or so.
+> 
+> Perhaps also more relaxed versions (like SARA) could be interesting (system
+> service running Python with FFI, or perhaps JVM etc), enabled with for
+> example MemoryDenyWriteExecute=trampolines. That way even those programs
+> would get some protection (though there would be a gap in the defences).
 
-I tried that, and IIRC, there was an error or warning in the assignment 
-that happens a bit further in the file. My bad for not having it all 
-properly tracked.
+Yup, I think we're all on the same page. Catalin, can you respin with a
+prctl for enabling MDWE? I propose just:
+
+	prctl(PR_MDWX_SET, flags);
+	prctl(PR_MDWX_GET);
+
+	PR_MDWX_FLAG_MMAP
+		disallows PROT_EXEC on any VMA that is or was PROT_WRITE,
+		covering at least: mmap, mprotect, pkey_mprotect, and shmat.
+
+I don't think anything should be allowed to be disabled once set.
+
+-- 
+Kees Cook
