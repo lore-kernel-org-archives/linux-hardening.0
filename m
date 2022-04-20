@@ -2,23 +2,23 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB12C4332F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC041C43217
 	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 00:43:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358627AbiDTAqU (ORCPT
+        id S232990AbiDTAqU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
         Tue, 19 Apr 2022 20:46:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58796 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358628AbiDTAqT (ORCPT
+        with ESMTP id S1358624AbiDTAqT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Tue, 19 Apr 2022 20:46:19 -0400
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B3C82C117;
-        Tue, 19 Apr 2022 17:43:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CF5C34BAC;
+        Tue, 19 Apr 2022 17:43:28 -0700 (PDT)
 Received: (Authenticated sender: joao@overdrivepizza.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id E24A91BF205;
-        Wed, 20 Apr 2022 00:43:27 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPSA id B0F141BF206;
+        Wed, 20 Apr 2022 00:43:21 +0000 (UTC)
 From:   joao@overdrivepizza.com
 To:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Cc:     joao@overdrivepizza.com, peterz@infradead.org, jpoimboe@redhat.com,
@@ -26,9 +26,9 @@ Cc:     joao@overdrivepizza.com, peterz@infradead.org, jpoimboe@redhat.com,
         samitolvanen@google.com, mark.rutland@arm.com, hjl.tools@gmail.com,
         alyssa.milburn@linux.intel.com, ndesaulniers@google.com,
         gabriel.gomes@linux.intel.com, rick.p.edgecombe@intel.com
-Subject: [RFC PATCH 07/11] x86/lib: Prevent UACCESS call warning from objtool
-Date:   Tue, 19 Apr 2022 17:42:37 -0700
-Message-Id: <20220420004241.2093-8-joao@overdrivepizza.com>
+Subject: [RFC PATCH 06/11] x86/bpf: Support FineIBT
+Date:   Tue, 19 Apr 2022 17:42:36 -0700
+Message-Id: <20220420004241.2093-7-joao@overdrivepizza.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220420004241.2093-1-joao@overdrivepizza.com>
 References: <20220420004241.2093-1-joao@overdrivepizza.com>
@@ -40,29 +40,66 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Joao Moreira <joao@overdrivepizza.com>
 
-Objtool emits a warning whenever it finds a call that may happen with
-UACCESS enabled. Prevent this b not emitting calls to the
-__fineibt_handler in such circumstances, making the function
-coarse-grained.
+BPF jitted code calls helper functions that are in the core and contain a
+FineIBT hash check sequence in their prologue. Make BPF jit capable of
+identifying FineIBT sequences when emitting calls and properly sum the
+offset to bypass it when emitting calls.
 
 Signed-off-by: Joao Moreira <joao@overdrivepizza.com>
+Tinkered-from-patches-by: Peter Zijlstra <peterz@infradead.org>
 ---
- arch/x86/lib/copy_mc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/net/bpf_jit_comp.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/arch/x86/lib/copy_mc.c b/arch/x86/lib/copy_mc.c
-index 80efd45a7761..554e6c6ecea2 100644
---- a/arch/x86/lib/copy_mc.c
-+++ b/arch/x86/lib/copy_mc.c
-@@ -22,7 +22,7 @@ void enable_copy_mc_fragile(void)
-  * Similar to copy_user_handle_tail, probe for the write fault point, or
-  * source exception point.
-  */
--__visible notrace unsigned long
-+__visible notrace unsigned long __coarseendbr
- copy_mc_fragile_handle_tail(char *to, char *from, unsigned len)
+diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+index 16b6efacf7c6..e0c82174a075 100644
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -330,13 +330,44 @@ static int emit_patch(u8 **pprog, void *func, void *ip, u8 opcode)
+ 	return 0;
+ }
+ 
++static inline bool skip_fineibt_sequence(void *func)
++{
++	const void *addr = (void *) func;
++	union text_poke_insn text;
++	u32 insn;
++
++	if ((get_kernel_nofault(insn, addr)) ||
++			(!is_endbr(insn)))
++		return false;
++
++	if ((get_kernel_nofault(text, addr+4)) ||
++			(text.opcode != SUB_INSN_OPCODE))
++		return false;
++
++	if ((get_kernel_nofault(text, addr+11)) ||
++			(text.opcode != JE_INSN_OPCODE))
++		return false;
++
++	if ((get_kernel_nofault(text, addr+13)) ||
++			(text.opcode != CALL_INSN_OPCODE))
++		return false;
++
++	return true;
++}
++
+ static int emit_call(u8 **pprog, void *func, void *ip)
  {
- 	for (; len; --len, to++, from++)
++#ifdef CONFIG_X86_KERNEL_FINEIBT
++	if(skip_fineibt_sequence(func)) func = func + FINEIBT_FIXUP;
++#endif
+ 	return emit_patch(pprog, func, ip, 0xE8);
+ }
+ 
+ static int emit_jump(u8 **pprog, void *func, void *ip)
+ {
++#ifdef CONFIG_X86_KERNEL_FINEIBT
++	if(skip_fineibt_sequence(func)) func = func + FINEIBT_FIXUP;
++#endif
+ 	return emit_patch(pprog, func, ip, 0xE9);
+ }
+ 
 -- 
 2.35.1
 
