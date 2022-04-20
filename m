@@ -2,39 +2,42 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B08EC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 22:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0751DC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 22:41:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353589AbiDTWbP (ORCPT
+        id S241742AbiDTWoE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Apr 2022 18:31:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36028 "EHLO
+        Wed, 20 Apr 2022 18:44:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245378AbiDTWbN (ORCPT
+        with ESMTP id S1359233AbiDTWn6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Apr 2022 18:31:13 -0400
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4AB141FA2;
-        Wed, 20 Apr 2022 15:28:25 -0700 (PDT)
+        Wed, 20 Apr 2022 18:43:58 -0400
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22B0633E16;
+        Wed, 20 Apr 2022 15:40:47 -0700 (PDT)
 Received: (Authenticated sender: joao@overdrivepizza.com)
-        by mail.gandi.net (Postfix) with ESMTPA id 4514A20002;
-        Wed, 20 Apr 2022 22:28:20 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPA id AA7401BF204;
+        Wed, 20 Apr 2022 22:40:41 +0000 (UTC)
 MIME-Version: 1.0
-Date:   Wed, 20 Apr 2022 15:28:20 -0700
+Date:   Wed, 20 Apr 2022 15:40:41 -0700
 From:   Joao Moreira <joao@overdrivepizza.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        peterz@infradead.org, jpoimboe@redhat.com,
-        andrew.cooper3@citrix.com, samitolvanen@google.com,
-        mark.rutland@arm.com, hjl.tools@gmail.com,
-        alyssa.milburn@linux.intel.com, ndesaulniers@google.com,
-        gabriel.gomes@linux.intel.com, rick.p.edgecombe@intel.com
-Subject: Re: [RFC PATCH 11/11] driver/int3400_thermal: Fix prototype matching
-In-Reply-To: <202204191946.2843CF71@keescook>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, hjl.tools@gmail.com,
+        Fangrui Song <maskray@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        andrew.cooper3@citrix.com, keescook@chromium.org,
+        samitolvanen@google.com, mark.rutland@arm.com,
+        alyssa.milburn@linux.intel.com, gabriel.gomes@linux.intel.com,
+        rick.p.edgecombe@intel.com
+Subject: Re: [RFC PATCH 00/11] Kernel FineIBT Support
+In-Reply-To: <CAKwvOdm6J9TFUWJA2Q7VRjx1CpBme9z_Dp99+7YTjN5Jqp5=Aw@mail.gmail.com>
 References: <20220420004241.2093-1-joao@overdrivepizza.com>
- <20220420004241.2093-12-joao@overdrivepizza.com>
- <202204191946.2843CF71@keescook>
-Message-ID: <06435f0b44681588052d145a17d60316@overdrivepizza.com>
+ <20220420074044.GC2731@worktop.programming.kicks-ass.net>
+ <20220420151714.fderdz4dzea75rvg@treble>
+ <CAKwvOdm6J9TFUWJA2Q7VRjx1CpBme9z_Dp99+7YTjN5Jqp5=Aw@mail.gmail.com>
+Message-ID: <bf3273120d8d48a79357f229c5890576@overdrivepizza.com>
 X-Sender: joao@overdrivepizza.com
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
@@ -43,15 +46,37 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-> Where/why is the mismatch happening?
+>> 
+>> If FineIBT needs it, I could reconsider.  But I think there's a strong
+>> case to be made that the linker should be doing that instead.
+> 
+> That sounds reasonable to me (and reminds me of linker relaxation).
+> Joao, can you please work with Fangrui (LLD) and HJ (GNU binutils) to
+> determine how feasible this would be? I assume code outside the kernel
+> might enjoy such an optimization, too.  When that's the case, then it
+> probably makes more sense to "upstream" such "optimizations" from the
+> kernel-specific objtool into the toolchains.
 
-Mismatch happens in dev_attr_show from drivers/base/core.c. There, 
-kobject * is cast to device * before the call, probably because attr is 
-also cast to device_attribute, which may have a mismatching hook 
-prototype, I guess.
+Alright, these are the greenlights I was hoping for.
 
-I haven't tried it with any other CFI scheme other than my own 
-implementation and I did not run this on GDB or anything... I'm just 
-reporting based on the violation that FineIBT logged and in the fact 
-that this patch fixed it, so I'm unsure if there is anything buried 
-here.
+I went quickly into this with HJ and he mentioned that it should be 
+doable in the linker, and that he has a patch for it in gcc (for local 
+function, from what I could see): 
+https://gcc.gnu.org/pipermail/gcc-patches/2022-February/590832.html
+
+If @Fangrui is fine with it, I would like to try implementing this 
+myself in lld (I'm still learning a lot about lld and having an actual 
+problem to solve is the kind of fuel I need). Should take me a while, 
+but I think this is not urgent, right? I can also go ahead and replicate 
+HJ's gcc patch into clang, so we can also handle the local functions 
+within the compiler (I think this makes a lot of sense).
+
+Once we have these in, I'll revisit FineIBT and extend the features to 
+handle the FineIBT instrumentation. Hopefully we'll be released from 
+needing objtool (famous last words?!).
+
+This sounds like a plan, but I'm ofc open to suggestions or different 
+ideas/plans.
+
+Tks,
+Joao
