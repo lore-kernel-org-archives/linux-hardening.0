@@ -2,132 +2,175 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04380C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 18:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5884C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 19:34:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381422AbiDTSOR (ORCPT
+        id S1353156AbiDTThZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Apr 2022 14:14:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40424 "EHLO
+        Wed, 20 Apr 2022 15:37:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381243AbiDTSOP (ORCPT
+        with ESMTP id S1351468AbiDTThY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Apr 2022 14:14:15 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C41746B0E
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Apr 2022 11:11:28 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id n8so2539348plh.1
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Apr 2022 11:11:28 -0700 (PDT)
+        Wed, 20 Apr 2022 15:37:24 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C7C3EF1D;
+        Wed, 20 Apr 2022 12:34:37 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id q14so3095907ljc.12;
+        Wed, 20 Apr 2022 12:34:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GIRfho/UEmgLKksz3Hef8/60q1Jdf6mHBM1iOrwH5Jc=;
-        b=H7/G2cA+tMU6dhaS4+bs+4ByL91KwkZGMQRvZqTZCWUqUKvbULyIT5oOWTFBeD+/qY
-         CMOoaahlyITn1LWInAQNMlc0b1Zf1piHoFjlFn+sJHnvK9u0oS6Mq5poA3EkpZpa5pR8
-         BJTymtJhTU9IAKHqcSLOujdSNa+6oggXyVj9s=
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=tjgtD5b88stSGfQKWtLEKZrrmLsw2qkBuwSeeJ0zuRk=;
+        b=REQ3x7fKLP/EuTnv0GmQmMXaaniRwUtG/2NAsMQ0MKCDkm1I6tRznXQUJsItKuoTlm
+         p2MF8iE5Zzu70G+Gasx2709mXA32PLi1wAASYvs9Q+xTSQ6+D9l0maFctJ2wOTMXGrai
+         bXT3nA9aBaIPBAQsD2PONNhOJkMpkO0CtaImBZd91OqIgwwKnIukZKvAOeSfejYz+uoA
+         pmSTmTrd9MKdpBJza5p0CZyEbb97EnQ4kmBNIyEBE9MjU3kxGEbL/vd8cAMOmYYBgV+E
+         cM5GkendfRXfCHNQhG1krUj2XdXAt5aLy1IZPHTXMHM/5rGHWxU+ZYijqStV6BvlSlGD
+         r2Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GIRfho/UEmgLKksz3Hef8/60q1Jdf6mHBM1iOrwH5Jc=;
-        b=ncV1XXUvXUMI7IB3fvAO5edQI946cUEx5gd0uO6ReFu89+x174b5ERyiBQTcT1xLx7
-         ksC4aGQqHvM3SfFDrJMeTIhxPMxzKnBUiitbAQ6I6PIxI+J2dEjWtNOZHgnekWRN7g9a
-         W+tEG5mdzjrsbQwWJ4Of+tAtWZAQQIk7pA9htyfasRbMssXJqCAHSUnhneQaVNo/lWrt
-         tnLteagN4fxWup9oyW08AsgLtUatnps/uiFhySaXUN1tudmyuQtg4FZ6EijHFRAhsgKQ
-         oPx+CXe+oGu4zNonH67ss5MGPX3W7xE+prKPXzsMfmtg20juXAH5WradB/SAjZNIpH5x
-         JdKg==
-X-Gm-Message-State: AOAM533dFgqAlyNyEQaM+wfeSgvTubAuSMDRzfWkdXdWVsl78+GKS7pS
-        zsw0z+jAlor03FU3Bj0WrxSWYw==
-X-Google-Smtp-Source: ABdhPJyS9oAfiiFyBzLmBJinG3UpEtOBofItMsGhYt4Mpr6EgSebHQollxjiU6lvByWJAnP80PxSXg==
-X-Received: by 2002:a17:903:41c4:b0:158:f3af:f5df with SMTP id u4-20020a17090341c400b00158f3aff5dfmr18794348ple.102.1650478288055;
-        Wed, 20 Apr 2022 11:11:28 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q15-20020a056a00084f00b0050ab60bf37fsm5166814pfk.22.2022.04.20.11.11.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Apr 2022 11:11:27 -0700 (PDT)
-Date:   Wed, 20 Apr 2022 11:11:26 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Johan Hovold <johan@kernel.org>, kernel test robot <lkp@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] USB: serial: Fix heap overflow in WHITEHEAT_GET_DTR_RTS
-Message-ID: <202204201056.5A1A6BAE04@keescook>
-References: <20220419041742.4117026-1-keescook@chromium.org>
- <Yl+8K++wZUJCthMj@hovoldconsulting.com>
- <CAG48ez2Pikm5g2RfJxae=jz1C7KSCWc99sCa7fXFBKvDOPJubA@mail.gmail.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=tjgtD5b88stSGfQKWtLEKZrrmLsw2qkBuwSeeJ0zuRk=;
+        b=A8WtQ+iIAH04sp9ymTQmdrko69Haa6UNbB57Om7Oh7DvO6yY8s4h4qm54RoVvJb9Ep
+         5pNpKUk8X4EW/SPCTPWN4p8afaxKRdRdT8R/c6YOZJEdEgYBbWgsywxGG85t6FsGazZ3
+         mdsh1Cg/z6SwBRjbAphxso3tyS+kzZPWnBy30+zqzazcZPaK2zsDVjRo063rkQn6jDsE
+         vuEou1LYugkrf8oPW/Mu3zthsptfS05oJSu7BGNK5sqx6IBPD3KRHQYaBOL54jaPJV6B
+         kVUhl1mdnkK0H1aqL6Qtams3qagdkY6t6PMuLUrtDz9b4bp6sdEtmsWubgagS3sndPje
+         gJKQ==
+X-Gm-Message-State: AOAM533rzEgjktU1nfe3sDf9WyhL94c6JoFFte6bvUb1D6x5blPXMfFJ
+        VVhL7LFqfLl8/51hNnNWSGk=
+X-Google-Smtp-Source: ABdhPJxsHjCQqq6WluovUBYdrQyV3jelbuozqG0OYcQa6CZdvrrYWe8QWnKWHKNYaNel51RNGyzwhg==
+X-Received: by 2002:a05:651c:905:b0:247:e451:48a5 with SMTP id e5-20020a05651c090500b00247e45148a5mr14529352ljq.313.1650483275515;
+        Wed, 20 Apr 2022 12:34:35 -0700 (PDT)
+Received: from [192.168.1.38] (91-159-150-194.elisa-laajakaista.fi. [91.159.150.194])
+        by smtp.gmail.com with ESMTPSA id d14-20020a19f24e000000b00471a405963asm698679lfk.304.2022.04.20.12.34.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Apr 2022 12:34:35 -0700 (PDT)
+Message-ID: <c62170c6-5993-2417-4143-5a37a98b227c@gmail.com>
+Date:   Wed, 20 Apr 2022 22:34:33 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez2Pikm5g2RfJxae=jz1C7KSCWc99sCa7fXFBKvDOPJubA@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH RFC 0/4] mm, arm64: In-kernel support for
+ memory-deny-write-execute (MDWE)
+Content-Language: en-US
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lennart Poettering <lennart@poettering.net>,
+        =?UTF-8?Q?Zbigniew_J=c4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
+        Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-abi-devel@lists.sourceforge.net,
+        linux-hardening@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Salvatore Mesoraca <s.mesoraca16@gmail.com>,
+        Igor Zhbanov <izh1979@gmail.com>
+References: <20220413134946.2732468-1-catalin.marinas@arm.com>
+ <202204141028.0482B08@keescook> <YmAEDsGtxhim46UI@arm.com>
+From:   Topi Miettinen <toiwoton@gmail.com>
+In-Reply-To: <YmAEDsGtxhim46UI@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Apr 20, 2022 at 02:33:06PM +0200, Jann Horn wrote:
-> On Wed, Apr 20, 2022 at 10:14 AM Johan Hovold <johan@kernel.org> wrote:
-> > On Mon, Apr 18, 2022 at 09:17:42PM -0700, Kees Cook wrote:
-> > > This looks like it's harmless, as both the source and the destinations are
-> > > currently the same allocation size (4 bytes) and don't use their padding,
-> > > but if anything were to ever be added after the "mcr" member in "struct
-> > > whiteheat_private", it would be overwritten. The structs both have a
-> > > single u8 "mcr" member, but are 4 bytes in padded size. The memcpy()
-> > > destination was explicitly targeting the u8 member (size 1) with the
-> > > length of the whole structure (size 4), triggering the memcpy buffer
-> > > overflow warning:
-> >
-> > Ehh... No. The size of a structure with a single u8 is 1, not 4. There's
-> > nothing wrong with the current code even if the use of memcpy for this
-> > is a bit odd.
-
-I thought that was surprising too, and suspected it was something
-specific to the build (as Jann also suggested). I tracked it down[1] to
-"-mabi=apcs-gnu", which is from CONFIG_AEABI=n.
-
-whiteheat_private {
-        __u8                       mcr;                  /*     0     1 */
-
-        /* size: 4, cachelines: 1, members: 1 */
-        /* padding: 3 */
-        /* last cacheline: 4 bytes */
-};
-
-
-> >
-> > > In file included from include/linux/string.h:253,
-> > >                  from include/linux/bitmap.h:11,
-> > >                  from include/linux/cpumask.h:12,
-> > >                  from include/linux/smp.h:13,
-> > >                  from include/linux/lockdep.h:14,
-> > >                  from include/linux/spinlock.h:62,
-> > >                  from include/linux/mmzone.h:8,
-> > >                  from include/linux/gfp.h:6,
-> > >                  from include/linux/slab.h:15,
-> > >                  from drivers/usb/serial/whiteheat.c:17:
-> > > In function 'fortify_memcpy_chk',
-> > >     inlined from 'firm_send_command' at drivers/usb/serial/whiteheat.c:587:4:
-> > > include/linux/fortify-string.h:328:25: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
-> > >   328 |                         __write_overflow_field(p_size_field, size);
-> > >       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >
-> > So something is confused here.
+On 20.4.2022 16.01, Catalin Marinas wrote:
+> On Thu, Apr 14, 2022 at 11:52:17AM -0700, Kees Cook wrote:
+>> On Wed, Apr 13, 2022 at 02:49:42PM +0100, Catalin Marinas wrote:
+>>> The background to this is that systemd has a configuration option called
+>>> MemoryDenyWriteExecute [1], implemented as a SECCOMP BPF filter. Its aim
+>>> is to prevent a user task from inadvertently creating an executable
+>>> mapping that is (or was) writeable. Since such BPF filter is stateless,
+>>> it cannot detect mappings that were previously writeable but
+>>> subsequently changed to read-only. Therefore the filter simply rejects
+>>> any mprotect(PROT_EXEC). The side-effect is that on arm64 with BTI
+>>> support (Branch Target Identification), the dynamic loader cannot change
+>>> an ELF section from PROT_EXEC to PROT_EXEC|PROT_BTI using mprotect().
+>>> For libraries, it can resort to unmapping and re-mapping but for the
+>>> main executable it does not have a file descriptor. The original bug
+>>> report in the Red Hat bugzilla - [2] - and subsequent glibc workaround
+>>> for libraries - [3].
+>>
+>> Right, so, the systemd filter is a big hammer solution for the kernel
+>> not having a very easy way to provide W^X mapping protections to
+>> userspace. There's stuff in SELinux, and there have been several
+>> attempts[1] at other LSMs to do it too, but nothing stuck.
+>>
+>> Given the filter, and the implementation of how to enable BTI, I see two
+>> solutions:
+>>
+>> - provide a way to do W^X so systemd can implement the feature differently
+>> - provide a way to turn on BTI separate from mprotect to bypass the filter
+>>
+>> I would agree, the latter seems like the greater hack,
 > 
-> So something's going wrong in fortify_memcpy_chk()? It looks like it
-> is called with constant "size" equal to 1, and the condition
+> We discussed such hacks in the past but they are just working around the
+> fundamental issue - systemd wants W^X but with BPF it can only achieve
+> it by preventing mprotect(PROT_EXEC) irrespective of whether the mapping
+> was already executable. If we find a better solution for W^X, we
+> wouldn't have to hack anything for mprotect(PROT_EXEC|PROT_BTI).
+> 
+>> so I welcome
+>> this RFC, though I think it might need to explore a bit of the feature
+>> space exposed by other solutions[1] (i.e. see SARA and NAX), otherwise
+>> it risks being too narrowly implemented. For example, playing well with
+>> JITs should be part of the design, and will likely need some kind of
+>> ELF flags and/or "sealing" mode, and to handle the vma alias case as
+>> Jann Horn pointed out[2].
+> 
+> I agree we should look at what we want to cover, though trying to avoid
+> re-inventing SELinux. With this patchset I went for the minimum that
+> systemd MDWE does with BPF.
+> 
+> I think JITs get around it using something like memfd with two separate
+> mappings to the same page. We could try to prevent such aliases but
+> allow it if an ELF note is detected (or get the JIT to issue a prctl()).
+> 
+> Anyway, with a prctl() we can allow finer-grained control starting with
+> anonymous and file mappings and later extending to vma aliases,
+> writeable files etc. On top we can add a seal mask so that a process
+> cannot disable a control was set. Something like (I'm not good at
+> names):
+> 
+> 	prctl(PR_MDWX_SET, flags, seal_mask);
+> 	prctl(PR_MDWX_GET);
+> 
+> with flags like:
+> 
+> 	PR_MDWX_MMAP - basics, should cover mmap() and mprotect()
+> 	PR_MDWX_ALIAS - vma aliases, allowed with an ELF note
+> 	PR_MDWX_WRITEABLE_FILE
+> 
+> (needs some more thinking)
+> 
 
-sizeof(info->mcr) is 1.
-sizeof(struct whiteheat_dr_info) (with CONFIG_AEABI=n) is 4.
+For systemd, feature compatibility with the BPF version is important so 
+that we could automatically switch to the kernel version once available 
+without regressions. So I think PR_MDWX_MMAP (or maybe PR_MDWX_COMPAT) 
+should match exactly what MemoryDenyWriteExecute=yes as implemented with 
+BPF has: only forbid mmap(PROT_EXEC|PROT_WRITE) and mprotect(PROT_EXEC). 
+Like BPF, once installed there should be no way to escape and ELF flags 
+should be also ignored. ARM BTI should be allowed though (allow 
+PROT_EXEC|PROT_BTI if the old flags had PROT_EXEC).
 
-Given nothing actually uses "struct whiteheat_dr_info", except for the
-sizing (har har), I suspect the better solution is just to do:
+Then we could have improved versions (other PR_MDWX_ prctls) with lots 
+more checks. This could be enabled with MemoryDenyWriteExecute=strict or so.
 
-	info->mcr = command_info->result_buffer[0];
+Perhaps also more relaxed versions (like SARA) could be interesting 
+(system service running Python with FFI, or perhaps JVM etc), enabled 
+with for example MemoryDenyWriteExecute=trampolines. That way even those 
+programs would get some protection (though there would be a gap in the 
+defences).
 
--Kees
-
-[1] https://godbolt.org/z/3YvM1MYWW
-
--- 
-Kees Cook
+-Topi
