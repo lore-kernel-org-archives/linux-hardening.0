@@ -2,210 +2,132 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF8DC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 17:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04380C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 18:11:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381253AbiDTRqy (ORCPT
+        id S1381422AbiDTSOR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Apr 2022 13:46:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59624 "EHLO
+        Wed, 20 Apr 2022 14:14:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381259AbiDTRqx (ORCPT
+        with ESMTP id S1381243AbiDTSOP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Apr 2022 13:46:53 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13CF647397
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Apr 2022 10:44:06 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id s17so2442235plg.9
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Apr 2022 10:44:06 -0700 (PDT)
+        Wed, 20 Apr 2022 14:14:15 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C41746B0E
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Apr 2022 11:11:28 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id n8so2539348plh.1
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Apr 2022 11:11:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=Rx+BcE/gSceiKr/zTECjP4EwFSfIzQ9iSKcxGEqhZ8E=;
-        b=S+jeltxbAM3NoFlwTYpJWXeazpb8JERjrM1BTuTkj5LB0pDMpt8FbrJbHowAG9ESGx
-         bF3K1477oF5SMjqvKdyQyw5RvTRXY8zWS3R4UbhQ0goj60wthxhIKo4p3mAIZ3o4hK2S
-         uFVIERf5sWiA4L+yQp4Dau9kCtCAGescfc61A=
+        bh=GIRfho/UEmgLKksz3Hef8/60q1Jdf6mHBM1iOrwH5Jc=;
+        b=H7/G2cA+tMU6dhaS4+bs+4ByL91KwkZGMQRvZqTZCWUqUKvbULyIT5oOWTFBeD+/qY
+         CMOoaahlyITn1LWInAQNMlc0b1Zf1piHoFjlFn+sJHnvK9u0oS6Mq5poA3EkpZpa5pR8
+         BJTymtJhTU9IAKHqcSLOujdSNa+6oggXyVj9s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Rx+BcE/gSceiKr/zTECjP4EwFSfIzQ9iSKcxGEqhZ8E=;
-        b=oxHjWhwnBOtf68UvaeRRf85GGr01KoLHBgdob0CQD7CrKW0VGucjEvb1JoD1lE9gQh
-         YyvuqhZpo4W3/YjBD8aNSK3u2+KTvWqLOMRhlLQIRMPN9CeGOlNdpvmZj87svEKxHF/7
-         +mx9Z68qFXkYM5E3aHPYEpebPopjWT7Y0K/aCbRyLreITlFNitXl944QzLr/hBn7D6Mp
-         Uehrgwc9uDHL/eLqA9MDT9UPuOm2YW1cjXGYMDMejCgP5lheaTvqWASHz+kNB1qtDOyw
-         8UVTqI8eb9ELTwhXzsOGvVmdTqxry/TsAheWL6QUox/IZG35dj8gpfa3iHutJ46s0MUc
-         +fOw==
-X-Gm-Message-State: AOAM532A5+i6aqC33pZAPt99uvM71PUum4S4mG4USGMswIcstZq082gh
-        Tk3gxzD+hUG1FqX/GCjIxdENew==
-X-Google-Smtp-Source: ABdhPJzHXgBTMlSzaXENo42O6xuwYeC0Yi0z/Itbb3PnHI+h5sdz1fnNSuD5YgXE9SazzmYGLZ0n/g==
-X-Received: by 2002:a17:902:c205:b0:15a:2e1b:6360 with SMTP id 5-20020a170902c20500b0015a2e1b6360mr3945500pll.152.1650476645567;
-        Wed, 20 Apr 2022 10:44:05 -0700 (PDT)
+        bh=GIRfho/UEmgLKksz3Hef8/60q1Jdf6mHBM1iOrwH5Jc=;
+        b=ncV1XXUvXUMI7IB3fvAO5edQI946cUEx5gd0uO6ReFu89+x174b5ERyiBQTcT1xLx7
+         ksC4aGQqHvM3SfFDrJMeTIhxPMxzKnBUiitbAQ6I6PIxI+J2dEjWtNOZHgnekWRN7g9a
+         W+tEG5mdzjrsbQwWJ4Of+tAtWZAQQIk7pA9htyfasRbMssXJqCAHSUnhneQaVNo/lWrt
+         tnLteagN4fxWup9oyW08AsgLtUatnps/uiFhySaXUN1tudmyuQtg4FZ6EijHFRAhsgKQ
+         oPx+CXe+oGu4zNonH67ss5MGPX3W7xE+prKPXzsMfmtg20juXAH5WradB/SAjZNIpH5x
+         JdKg==
+X-Gm-Message-State: AOAM533dFgqAlyNyEQaM+wfeSgvTubAuSMDRzfWkdXdWVsl78+GKS7pS
+        zsw0z+jAlor03FU3Bj0WrxSWYw==
+X-Google-Smtp-Source: ABdhPJyS9oAfiiFyBzLmBJinG3UpEtOBofItMsGhYt4Mpr6EgSebHQollxjiU6lvByWJAnP80PxSXg==
+X-Received: by 2002:a17:903:41c4:b0:158:f3af:f5df with SMTP id u4-20020a17090341c400b00158f3aff5dfmr18794348ple.102.1650478288055;
+        Wed, 20 Apr 2022 11:11:28 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p10-20020a637f4a000000b00373a2760775sm20402378pgn.2.2022.04.20.10.44.04
+        by smtp.gmail.com with ESMTPSA id q15-20020a056a00084f00b0050ab60bf37fsm5166814pfk.22.2022.04.20.11.11.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Apr 2022 10:44:05 -0700 (PDT)
-Date:   Wed, 20 Apr 2022 10:44:04 -0700
+        Wed, 20 Apr 2022 11:11:27 -0700 (PDT)
+Date:   Wed, 20 Apr 2022 11:11:26 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lennart Poettering <lennart@poettering.net>,
-        Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
-        Will Deacon <will@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Topi Miettinen <toiwoton@gmail.com>, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-abi-devel@lists.sourceforge.net,
-        linux-hardening@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Salvatore Mesoraca <s.mesoraca16@gmail.com>,
-        Igor Zhbanov <izh1979@gmail.com>
-Subject: Re: [PATCH RFC 0/4] mm, arm64: In-kernel support for
- memory-deny-write-execute (MDWE)
-Message-ID: <202204200952.F2B1F58D6B@keescook>
-References: <20220413134946.2732468-1-catalin.marinas@arm.com>
- <202204141028.0482B08@keescook>
- <YmAEDsGtxhim46UI@arm.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Johan Hovold <johan@kernel.org>, kernel test robot <lkp@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] USB: serial: Fix heap overflow in WHITEHEAT_GET_DTR_RTS
+Message-ID: <202204201056.5A1A6BAE04@keescook>
+References: <20220419041742.4117026-1-keescook@chromium.org>
+ <Yl+8K++wZUJCthMj@hovoldconsulting.com>
+ <CAG48ez2Pikm5g2RfJxae=jz1C7KSCWc99sCa7fXFBKvDOPJubA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YmAEDsGtxhim46UI@arm.com>
+In-Reply-To: <CAG48ez2Pikm5g2RfJxae=jz1C7KSCWc99sCa7fXFBKvDOPJubA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Apr 20, 2022 at 02:01:02PM +0100, Catalin Marinas wrote:
-> I agree we should look at what we want to cover, though trying to avoid
-> re-inventing SELinux. With this patchset I went for the minimum that
-> systemd MDWE does with BPF.
+On Wed, Apr 20, 2022 at 02:33:06PM +0200, Jann Horn wrote:
+> On Wed, Apr 20, 2022 at 10:14 AM Johan Hovold <johan@kernel.org> wrote:
+> > On Mon, Apr 18, 2022 at 09:17:42PM -0700, Kees Cook wrote:
+> > > This looks like it's harmless, as both the source and the destinations are
+> > > currently the same allocation size (4 bytes) and don't use their padding,
+> > > but if anything were to ever be added after the "mcr" member in "struct
+> > > whiteheat_private", it would be overwritten. The structs both have a
+> > > single u8 "mcr" member, but are 4 bytes in padded size. The memcpy()
+> > > destination was explicitly targeting the u8 member (size 1) with the
+> > > length of the whole structure (size 4), triggering the memcpy buffer
+> > > overflow warning:
+> >
+> > Ehh... No. The size of a structure with a single u8 is 1, not 4. There's
+> > nothing wrong with the current code even if the use of memcpy for this
+> > is a bit odd.
 
-Right -- and I don't think we're at any risk of slippery-sloping into a
-full MAC system. :)
+I thought that was surprising too, and suspected it was something
+specific to the build (as Jann also suggested). I tracked it down[1] to
+"-mabi=apcs-gnu", which is from CONFIG_AEABI=n.
 
-I'm fine with doing the implementation in stages, if we've attempted to
-design the steps (which I think you've got a good start on below).
+whiteheat_private {
+        __u8                       mcr;                  /*     0     1 */
 
-> I think JITs get around it using something like memfd with two separate
-> mappings to the same page. We could try to prevent such aliases but
-> allow it if an ELF note is detected (or get the JIT to issue a prctl()).
+        /* size: 4, cachelines: 1, members: 1 */
+        /* padding: 3 */
+        /* last cacheline: 4 bytes */
+};
 
-Right -- I'd rather JITs carry some hard-coded property (i.e. ELF note)
-to indicate the fact that they're expecting to do these kinds of things
-rather than leaving it open for all processes.
 
-> Anyway, with a prctl() we can allow finer-grained control starting with
-> anonymous and file mappings and later extending to vma aliases,
-> writeable files etc. On top we can add a seal mask so that a process
-> cannot disable a control was set. Something like (I'm not good at
-> names):
+> >
+> > > In file included from include/linux/string.h:253,
+> > >                  from include/linux/bitmap.h:11,
+> > >                  from include/linux/cpumask.h:12,
+> > >                  from include/linux/smp.h:13,
+> > >                  from include/linux/lockdep.h:14,
+> > >                  from include/linux/spinlock.h:62,
+> > >                  from include/linux/mmzone.h:8,
+> > >                  from include/linux/gfp.h:6,
+> > >                  from include/linux/slab.h:15,
+> > >                  from drivers/usb/serial/whiteheat.c:17:
+> > > In function 'fortify_memcpy_chk',
+> > >     inlined from 'firm_send_command' at drivers/usb/serial/whiteheat.c:587:4:
+> > > include/linux/fortify-string.h:328:25: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+> > >   328 |                         __write_overflow_field(p_size_field, size);
+> > >       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > So something is confused here.
 > 
-> 	prctl(PR_MDWX_SET, flags, seal_mask);
-> 	prctl(PR_MDWX_GET);
-> 
-> with flags like:
-> 
-> 	PR_MDWX_MMAP - basics, should cover mmap() and mprotect()
-> 	PR_MDWX_ALIAS - vma aliases, allowed with an ELF note
-> 	PR_MDWX_WRITEABLE_FILE
+> So something's going wrong in fortify_memcpy_chk()? It looks like it
+> is called with constant "size" equal to 1, and the condition
 
-The SARA proposal lists a lot of behavioral details to consider.
-Quoting it[1] here:
->> - W^X enforcement will cause problems to any programs that needs
->>   memory pages mapped both as writable and executable at the same time e.g.
->>   programs with executable stack markings in the PT_GNU_STACK segment.
+sizeof(info->mcr) is 1.
+sizeof(struct whiteheat_dr_info) (with CONFIG_AEABI=n) is 4.
 
-IMO, executable stack markings should be considered completely
-deprecated. In fact, we've been warning about it since 2020:
-47a2ebb7f505 ("execve: warn if process starts with executable stack")
+Given nothing actually uses "struct whiteheat_dr_info", except for the
+sizing (har har), I suspect the better solution is just to do:
 
-So with execstack, under W^X, I think we should either:
-- refuse to exec the process (default)
-- disable W^X for the process (but not its children)
-
->> - W!->X restriction will cause problems to any program that
->>   needs to generate executable code at run time or to modify executable
->>   pages e.g. programs with a JIT compiler built-in or linked against a
->>   non-PIC library.
-
-This seems solvable with an ELF flag.
-
->> - Executable MMAP prevention can work only with programs that have at least
->>   partial RELRO support. It's disabled automatically for programs that
->>   lack this feature. It will cause problems to any program that uses dlopen
->>   or tries to do an executable mmap. Unfortunately this feature is the one
->>   that could create most problems and should be enabled only after careful
->>   evaluation.
-
-This seems like a variation on the execstack case, and we should be
-able to detect the state and choose a behavior based on system settings,
-and a smarter version (as SARA has) would track RELRO pages waiting for
-the loader to make them read-only.
-
-SARA was proposed with a set of feature flags[2]; quoting here:
->> | W^X                          |  0x0008  |
-
-This is the basic property, refusing PROT_WRITE | PROT_EXEC. I note that
-SARA also rejects opening /proc/$pid/mem with FMODE_WRITE when this is
-enabled for a process. (It likely should extend to process_vm_write()
-too.)
-
->> | W!->X Heap                   |  0x0001  |
->> | W!->X Stack                  |  0x0002  |
->> | W!->X Other memory           |  0x0004  |
-
-This is for the vma history tracking, and I don't think we need to
-separate this by memory type? It's nice to have the granularity, but for
-a first-pass it seems like overkill? Maybe I'm missing some detail.
-
->> | Don't enforce, just complain |  0x0010  |
->> | Be Verbose                   |  0x0020  |
-
-Unclear if these would work well with a non-LSM approach.
-
->> | Executable MMAP prevention   |  0x0040  |
-
-This is the relro detection piece.
-
->> | Trampoline emulation         |  0x0100  |
-
-This is a more advanced case for emulating execstack, but if we can just
-ignore execstack entirely, this can go away?
-
->> | Children will inherit flags  |  0x0200  |
-
-Should a process have that control?
-
->> | Force W^X on setprocattr     |  0x0080  |
-
-This is a "seal" trigger, which could be done through prctl().
-
-
-It looks like a bunch of the features are designed around having as much
-as possible enabled at exec time, and then tightening it further as
-various things are finished (e.g. execstack, relro, sealing, etc), which
-is, I think, what would still be needed for a process launcher to be
-able to enable this kind of protection. (i.e. hoping the process calls a
-prctl() to enable the protection isn't going to work well with systemd.)
-
-So, I *think* we could have a minimal form with these considerations:
- - execstack: declare it distinctly incompatible.
- - relro: I think this is solved with BIND_NOW. It's been a while since
-   I looked deeply at this, but I think under BIND_NOW, the (executable)
-   PLT doesn't ever need to be writable (since it points into the GOT),
-   and the (initially writable) GOT is already never executable. This
-   needs to be verified...
- - JITs can be allowed with a ELF flag and can choose to opt-in with
-   a prctl().
+	info->mcr = command_info->result_buffer[0];
 
 -Kees
 
-[1] https://lore.kernel.org/lkml/1562410493-8661-1-git-send-email-s.mesoraca16@gmail.com/
-[2] https://lore.kernel.org/lkml/1562410493-8661-2-git-send-email-s.mesoraca16@gmail.com/
+[1] https://godbolt.org/z/3YvM1MYWW
 
 -- 
 Kees Cook
