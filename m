@@ -2,105 +2,126 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD3EC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 12:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19309C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 13:01:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350988AbiDTMgb (ORCPT
+        id S1378709AbiDTND4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Apr 2022 08:36:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48962 "EHLO
+        Wed, 20 Apr 2022 09:03:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244098AbiDTMga (ORCPT
+        with ESMTP id S1378705AbiDTND4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Apr 2022 08:36:30 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E312F3FDB9
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Apr 2022 05:33:44 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id o16so1639133ljp.3
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Apr 2022 05:33:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YK1gwQHfzWNPMKl1EIpM7XtIAL3qDFBevpSSKsKoNRY=;
-        b=nPa8hfPZywMg937IwHbiNMiNe8EsqyiDAnCYtzJBpjQaHy1d4TpWnr2834Me5gYmy6
-         qTW2rv5tNUcbKvQgNCcpb7eEm7/s0Pg6OtLyEXP2aL8WySIbMfxMX/Cc9L+LqMsCMvYJ
-         bjgQaQ25ApPqwrTi0/ibvD/VIeeh6l3EQ5Jd1NTSscsl8uaVbtXR6ekbs9Lpnori+E50
-         2ah6ROt2CtGASMwpjB3xM1pNorO2ZOpzRd5sEsXlmPay6hjuSlTelSxM3gUyxMmJzU9e
-         6T29Qsgm2Q9D5xKR0YMR4TKrumrG7NXHLcHv3ufx+hwDy1gq66fKoJ7AtqK6OORx8kRO
-         Tpfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YK1gwQHfzWNPMKl1EIpM7XtIAL3qDFBevpSSKsKoNRY=;
-        b=tArFX7buZvOsi0L3CFbIPUzeasMXDGJkStkKRNj0URYQkioyOQZmHkbaXeClJosAYR
-         oX2QuVEkP/4bg2QWpeh6wGiikh8/FjV/sHsWT+dPcNbgrvpTMpvl9sPjhdXxCsGR+FUf
-         IFsqnvc5PALskgcO9KXbXaMOUIfeCSr7blGV+RYo3LWle4mLyvXR53WO0LRNv5m03jR7
-         VexeST4dewbkR6FVL/27y+buc/LfKPJSd5Bg4vu6cs6Sx+y13TfZF8FRPvv7+8xALl1W
-         7uPtU1wtXhVN+pa8DbN26Bj5nvjaFqd3JXVgQ/E5QxyLwnUIZa6z32053t3hNfd+VgkK
-         a+lg==
-X-Gm-Message-State: AOAM531khvch0Ejvs13UjEpS9zP0r1Tsy8c0m5aJUVywqXU0JA4hyPpv
-        x0z1sM13xba7Yz0HDpykWTXb6YPiL7VD3kQZLqwfcA==
-X-Google-Smtp-Source: ABdhPJxQh4qATIg7fh2d/Rn6HYLS5+wfjP3gtV1tUSHmAmwfdypDh6a+tcEIkZGaV0XlelDf1q6MHbymQ5w2b/7dafg=
-X-Received: by 2002:a05:651c:1546:b0:24c:7e0c:38b1 with SMTP id
- y6-20020a05651c154600b0024c7e0c38b1mr13233370ljp.375.1650458022985; Wed, 20
- Apr 2022 05:33:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220419041742.4117026-1-keescook@chromium.org> <Yl+8K++wZUJCthMj@hovoldconsulting.com>
-In-Reply-To: <Yl+8K++wZUJCthMj@hovoldconsulting.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Wed, 20 Apr 2022 14:33:06 +0200
-Message-ID: <CAG48ez2Pikm5g2RfJxae=jz1C7KSCWc99sCa7fXFBKvDOPJubA@mail.gmail.com>
-Subject: Re: [PATCH] USB: serial: Fix heap overflow in WHITEHEAT_GET_DTR_RTS
+        Wed, 20 Apr 2022 09:03:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55A3D13E1E;
+        Wed, 20 Apr 2022 06:01:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E5ACC619F3;
+        Wed, 20 Apr 2022 13:01:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2875C385A0;
+        Wed, 20 Apr 2022 13:01:05 +0000 (UTC)
+Date:   Wed, 20 Apr 2022 14:01:02 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Johan Hovold <johan@kernel.org>, kernel test robot <lkp@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lennart Poettering <lennart@poettering.net>,
+        Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
+        Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Topi Miettinen <toiwoton@gmail.com>, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-abi-devel@lists.sourceforge.net,
+        linux-hardening@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Salvatore Mesoraca <s.mesoraca16@gmail.com>,
+        Igor Zhbanov <izh1979@gmail.com>
+Subject: Re: [PATCH RFC 0/4] mm, arm64: In-kernel support for
+ memory-deny-write-execute (MDWE)
+Message-ID: <YmAEDsGtxhim46UI@arm.com>
+References: <20220413134946.2732468-1-catalin.marinas@arm.com>
+ <202204141028.0482B08@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202204141028.0482B08@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Apr 20, 2022 at 10:14 AM Johan Hovold <johan@kernel.org> wrote:
-> On Mon, Apr 18, 2022 at 09:17:42PM -0700, Kees Cook wrote:
-> > This looks like it's harmless, as both the source and the destinations are
-> > currently the same allocation size (4 bytes) and don't use their padding,
-> > but if anything were to ever be added after the "mcr" member in "struct
-> > whiteheat_private", it would be overwritten. The structs both have a
-> > single u8 "mcr" member, but are 4 bytes in padded size. The memcpy()
-> > destination was explicitly targeting the u8 member (size 1) with the
-> > length of the whole structure (size 4), triggering the memcpy buffer
-> > overflow warning:
->
-> Ehh... No. The size of a structure with a single u8 is 1, not 4. There's
-> nothing wrong with the current code even if the use of memcpy for this
-> is a bit odd.
->
-> > In file included from include/linux/string.h:253,
-> >                  from include/linux/bitmap.h:11,
-> >                  from include/linux/cpumask.h:12,
-> >                  from include/linux/smp.h:13,
-> >                  from include/linux/lockdep.h:14,
-> >                  from include/linux/spinlock.h:62,
-> >                  from include/linux/mmzone.h:8,
-> >                  from include/linux/gfp.h:6,
-> >                  from include/linux/slab.h:15,
-> >                  from drivers/usb/serial/whiteheat.c:17:
-> > In function 'fortify_memcpy_chk',
-> >     inlined from 'firm_send_command' at drivers/usb/serial/whiteheat.c:587:4:
-> > include/linux/fortify-string.h:328:25: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
-> >   328 |                         __write_overflow_field(p_size_field, size);
-> >       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->
-> So something is confused here.
+On Thu, Apr 14, 2022 at 11:52:17AM -0700, Kees Cook wrote:
+> On Wed, Apr 13, 2022 at 02:49:42PM +0100, Catalin Marinas wrote:
+> > The background to this is that systemd has a configuration option called
+> > MemoryDenyWriteExecute [1], implemented as a SECCOMP BPF filter. Its aim
+> > is to prevent a user task from inadvertently creating an executable
+> > mapping that is (or was) writeable. Since such BPF filter is stateless,
+> > it cannot detect mappings that were previously writeable but
+> > subsequently changed to read-only. Therefore the filter simply rejects
+> > any mprotect(PROT_EXEC). The side-effect is that on arm64 with BTI
+> > support (Branch Target Identification), the dynamic loader cannot change
+> > an ELF section from PROT_EXEC to PROT_EXEC|PROT_BTI using mprotect().
+> > For libraries, it can resort to unmapping and re-mapping but for the
+> > main executable it does not have a file descriptor. The original bug
+> > report in the Red Hat bugzilla - [2] - and subsequent glibc workaround
+> > for libraries - [3].
+> 
+> Right, so, the systemd filter is a big hammer solution for the kernel
+> not having a very easy way to provide W^X mapping protections to
+> userspace. There's stuff in SELinux, and there have been several
+> attempts[1] at other LSMs to do it too, but nothing stuck.
+> 
+> Given the filter, and the implementation of how to enable BTI, I see two
+> solutions:
+> 
+> - provide a way to do W^X so systemd can implement the feature differently
+> - provide a way to turn on BTI separate from mprotect to bypass the filter
+> 
+> I would agree, the latter seems like the greater hack,
 
-So something's going wrong in fortify_memcpy_chk()? It looks like it
-is called with constant "size" equal to 1, and the condition
-"p_size_field < size" (with an unsigned comparison) is either true
-(meaning p_size_field would have to be 0) or not known at compile
-time?
+We discussed such hacks in the past but they are just working around the
+fundamental issue - systemd wants W^X but with BPF it can only achieve
+it by preventing mprotect(PROT_EXEC) irrespective of whether the mapping
+was already executable. If we find a better solution for W^X, we
+wouldn't have to hack anything for mprotect(PROT_EXEC|PROT_BTI).
 
-The original report says it happened when compiling with
-CONFIG_CC_OPTIMIZE_FOR_SIZE=y, maybe that matters?
+> so I welcome
+> this RFC, though I think it might need to explore a bit of the feature
+> space exposed by other solutions[1] (i.e. see SARA and NAX), otherwise
+> it risks being too narrowly implemented. For example, playing well with
+> JITs should be part of the design, and will likely need some kind of
+> ELF flags and/or "sealing" mode, and to handle the vma alias case as
+> Jann Horn pointed out[2].
+
+I agree we should look at what we want to cover, though trying to avoid
+re-inventing SELinux. With this patchset I went for the minimum that
+systemd MDWE does with BPF.
+
+I think JITs get around it using something like memfd with two separate
+mappings to the same page. We could try to prevent such aliases but
+allow it if an ELF note is detected (or get the JIT to issue a prctl()).
+
+Anyway, with a prctl() we can allow finer-grained control starting with
+anonymous and file mappings and later extending to vma aliases,
+writeable files etc. On top we can add a seal mask so that a process
+cannot disable a control was set. Something like (I'm not good at
+names):
+
+	prctl(PR_MDWX_SET, flags, seal_mask);
+	prctl(PR_MDWX_GET);
+
+with flags like:
+
+	PR_MDWX_MMAP - basics, should cover mmap() and mprotect()
+	PR_MDWX_ALIAS - vma aliases, allowed with an ELF note
+	PR_MDWX_WRITEABLE_FILE
+
+(needs some more thinking)
+
+-- 
+Catalin
