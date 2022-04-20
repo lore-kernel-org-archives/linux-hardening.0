@@ -2,42 +2,38 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0751DC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 22:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E489C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 22:50:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241742AbiDTWoE (ORCPT
+        id S1382998AbiDTWxH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Apr 2022 18:44:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54062 "EHLO
+        Wed, 20 Apr 2022 18:53:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359233AbiDTWn6 (ORCPT
+        with ESMTP id S1356355AbiDTWxF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Apr 2022 18:43:58 -0400
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22B0633E16;
-        Wed, 20 Apr 2022 15:40:47 -0700 (PDT)
+        Wed, 20 Apr 2022 18:53:05 -0400
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::223])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 244EE140EE;
+        Wed, 20 Apr 2022 15:50:17 -0700 (PDT)
 Received: (Authenticated sender: joao@overdrivepizza.com)
-        by mail.gandi.net (Postfix) with ESMTPA id AA7401BF204;
-        Wed, 20 Apr 2022 22:40:41 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPA id BD6BD60003;
+        Wed, 20 Apr 2022 22:50:13 +0000 (UTC)
 MIME-Version: 1.0
-Date:   Wed, 20 Apr 2022 15:40:41 -0700
+Date:   Wed, 20 Apr 2022 15:50:13 -0700
 From:   Joao Moreira <joao@overdrivepizza.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, hjl.tools@gmail.com,
-        Fangrui Song <maskray@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        andrew.cooper3@citrix.com, keescook@chromium.org,
-        samitolvanen@google.com, mark.rutland@arm.com,
-        alyssa.milburn@linux.intel.com, gabriel.gomes@linux.intel.com,
-        rick.p.edgecombe@intel.com
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        peterz@infradead.org, jpoimboe@redhat.com,
+        andrew.cooper3@citrix.com, samitolvanen@google.com,
+        mark.rutland@arm.com, hjl.tools@gmail.com,
+        alyssa.milburn@linux.intel.com, ndesaulniers@google.com,
+        gabriel.gomes@linux.intel.com, rick.p.edgecombe@intel.com
 Subject: Re: [RFC PATCH 00/11] Kernel FineIBT Support
-In-Reply-To: <CAKwvOdm6J9TFUWJA2Q7VRjx1CpBme9z_Dp99+7YTjN5Jqp5=Aw@mail.gmail.com>
+In-Reply-To: <202204191937.2720E7E@keescook>
 References: <20220420004241.2093-1-joao@overdrivepizza.com>
- <20220420074044.GC2731@worktop.programming.kicks-ass.net>
- <20220420151714.fderdz4dzea75rvg@treble>
- <CAKwvOdm6J9TFUWJA2Q7VRjx1CpBme9z_Dp99+7YTjN5Jqp5=Aw@mail.gmail.com>
-Message-ID: <bf3273120d8d48a79357f229c5890576@overdrivepizza.com>
+ <202204191937.2720E7E@keescook>
+Message-ID: <94c61936a0fd339430ef24dcaded759f@overdrivepizza.com>
 X-Sender: joao@overdrivepizza.com
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
@@ -46,37 +42,26 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
->> 
->> If FineIBT needs it, I could reconsider.  But I think there's a strong
->> case to be made that the linker should be doing that instead.
+> I think it'd be good to get kCFI landed in Clang first (since it is
+> effectively architecture agnostic), and then get FineIBT landed. But
+> that doesn't mean we can't be working on the kernel side of things at
+> the same time.
+
+FWIIW, I'm effectively taking some time away from work for the next 3 
+months. I'll be around to answer this and that, help reviewing KCFI and 
+maybe send small fixes around, but I'm not planning to land FineIBT in 
+clang anytime before that (specially now that I have a direction to look 
+into the linker approach as per the other thread e-mails). This should 
+give KCFI the time it needs to squeeze in.
+
 > 
-> That sounds reasonable to me (and reminds me of linker relaxation).
-> Joao, can you please work with Fangrui (LLD) and HJ (GNU binutils) to
-> determine how feasible this would be? I assume code outside the kernel
-> might enjoy such an optimization, too.  When that's the case, then it
-> probably makes more sense to "upstream" such "optimizations" from the
-> kernel-specific objtool into the toolchains.
+> And just thinking generally, for other architecture-specific stuff,
+> I do wonder what an arm64 PAC-based CFI might look like. I prefer 
+> things
+> be hard-coded as kCFI is doing, but it'd be nice to be able to directly
+> measure performance and size overheads comparing the various methods.
 
-Alright, these are the greenlights I was hoping for.
-
-I went quickly into this with HJ and he mentioned that it should be 
-doable in the linker, and that he has a patch for it in gcc (for local 
-function, from what I could see): 
-https://gcc.gnu.org/pipermail/gcc-patches/2022-February/590832.html
-
-If @Fangrui is fine with it, I would like to try implementing this 
-myself in lld (I'm still learning a lot about lld and having an actual 
-problem to solve is the kind of fuel I need). Should take me a while, 
-but I think this is not urgent, right? I can also go ahead and replicate 
-HJ's gcc patch into clang, so we can also handle the local functions 
-within the compiler (I think this makes a lot of sense).
-
-Once we have these in, I'll revisit FineIBT and extend the features to 
-handle the FineIBT instrumentation. Hopefully we'll be released from 
-needing objtool (famous last words?!).
-
-This sounds like a plan, but I'm ofc open to suggestions or different 
-ideas/plans.
-
-Tks,
-Joao
+There are other important bullets to this list, I think, like power 
+consumption, robustness and collateral gains (like IBT's side-channel 
+hardening). But yeah, this is probably a good list to keep in mind for 
+us to discuss during plumbers :)
