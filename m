@@ -2,149 +2,107 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAEEC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 02:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 423FAC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 07:41:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359086AbiDTC6H (ORCPT
+        id S1344742AbiDTHny (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 19 Apr 2022 22:58:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56032 "EHLO
+        Wed, 20 Apr 2022 03:43:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351229AbiDTC6F (ORCPT
+        with ESMTP id S241235AbiDTHnx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 19 Apr 2022 22:58:05 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3FFC165A0
-        for <linux-hardening@vger.kernel.org>; Tue, 19 Apr 2022 19:55:20 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id j17so635075pfi.9
-        for <linux-hardening@vger.kernel.org>; Tue, 19 Apr 2022 19:55:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=x+0BkD90lSyJDZ+2FE+F3s3K1NpvSXBebMgeO2N/Frg=;
-        b=Hfmk01lC9jeqEsouKixV0+yDRgrE5Fn2IlceBrZTVoWNuI6yeRyqhxoOz7EUwRS38d
-         LCZSzTzzyII4PS4IloyZ7eJjfDCzH1vjh9WpiVHL1Zj4twoIdTH4ht5UW8YxbAKhnFL3
-         sBr18LYtGGnmXA6KHl3FRPOtx23EiM2vOgAhs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=x+0BkD90lSyJDZ+2FE+F3s3K1NpvSXBebMgeO2N/Frg=;
-        b=mtgNeo4U/2c5K/7/AKbYSfTpfBJS36bXBOpiJFumvhYJYJsRZY30JhWV8j38arz0lg
-         kcio1WEAqlRb4TQl2Ul+rqbGtfn1E6B0Icw5umnDtHbGuKDutJcqpwmJ0qzACfO7SYu+
-         Nx5qkxXMQe3wX0YdJmgQVw1R5gkqQX5ZxV+CCY3sFSAEDPpQmaJ5Nm9xx8Z5JZ333Isu
-         pGHC0gHUMwM+exbisxU1ePAiH81RkM3OvcA9GwsMx2d4g3mEZHE9FCWU0gMjVbh4QREL
-         LuEUVJ2BaCld1Zvsjfc62BGI4pa6kqx6LQ+7KNkTM31SymZgu6V1trJ6RJDP+tjBMuxY
-         DiVw==
-X-Gm-Message-State: AOAM530n2PfVEJzJj6k6IOPahF4bIR1hil+/eUpZ/1s9mFRoHIx3s4aa
-        s3MfLW3rq7ajtIXa1Kt80MgM/g==
-X-Google-Smtp-Source: ABdhPJztKHnzJt1bTQU7FWsNgVa3dAiH27NdueMZxHr+rgwVvS/3gVFDs06sMa+/DGDJRY29bePZEw==
-X-Received: by 2002:a63:6501:0:b0:39d:a2fc:1522 with SMTP id z1-20020a636501000000b0039da2fc1522mr16907859pgb.91.1650423320193;
-        Tue, 19 Apr 2022 19:55:20 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g15-20020a63be4f000000b0039934531e95sm17484198pgo.18.2022.04.19.19.55.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Apr 2022 19:55:19 -0700 (PDT)
-Date:   Tue, 19 Apr 2022 19:55:19 -0700
-From:   Kees Cook <keescook@chromium.org>
+        Wed, 20 Apr 2022 03:43:53 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4847F396B1;
+        Wed, 20 Apr 2022 00:41:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=loHgwO9WdPiHY+qI9O6T45I75jtAzJoMT4qm2QpWt5g=; b=V2RchLGI6xz9pyK8YlHujLlD/X
+        EE6WJAMG0vax+Uflad9dXecchGGgdrEsgr9/jn+Mlna3FwhPqKb8soGIf+88VVZHsT+f+4RamJTHg
+        0i4jQfkRusmvaBRyWgvTg0oUNrm0KRgEEqWI4AHB6Po/2YoCgzyxIhwI6YMo3tGYZCjyDYffHF83B
+        fcn90QQ0wuA5gcSv9F6QzLORGiSSO75scNG7C5EvYN2+q6Ppq38Bh+q8BEhD3AQnsivSvFPtIzE03
+        F6mTVl5e7Wc3jcFL2ZMB40pMwhnaSS8x4TcDmkG9C/Go20R/TKuhBgzJXOZev+/Lovfl/XL64d0A8
+        mdiuVEwA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nh4xC-0073vt-Eu; Wed, 20 Apr 2022 07:40:46 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B013B9861A4; Wed, 20 Apr 2022 09:40:44 +0200 (CEST)
+Date:   Wed, 20 Apr 2022 09:40:44 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
 To:     joao@overdrivepizza.com
 Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        peterz@infradead.org, jpoimboe@redhat.com,
-        andrew.cooper3@citrix.com, samitolvanen@google.com,
+        jpoimboe@redhat.com, andrew.cooper3@citrix.com,
+        keescook@chromium.org, samitolvanen@google.com,
         mark.rutland@arm.com, hjl.tools@gmail.com,
         alyssa.milburn@linux.intel.com, ndesaulniers@google.com,
         gabriel.gomes@linux.intel.com, rick.p.edgecombe@intel.com
-Subject: Re: [RFC PATCH 11/11] driver/int3400_thermal: Fix prototype matching
-Message-ID: <202204191946.2843CF71@keescook>
+Subject: Re: [RFC PATCH 00/11] Kernel FineIBT Support
+Message-ID: <20220420074044.GC2731@worktop.programming.kicks-ass.net>
 References: <20220420004241.2093-1-joao@overdrivepizza.com>
- <20220420004241.2093-12-joao@overdrivepizza.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220420004241.2093-12-joao@overdrivepizza.com>
+In-Reply-To: <20220420004241.2093-1-joao@overdrivepizza.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Apr 19, 2022 at 05:42:41PM -0700, joao@overdrivepizza.com wrote:
-> From: Joao Moreira <joao@overdrivepizza.com>
+On Tue, Apr 19, 2022 at 05:42:30PM -0700, joao@overdrivepizza.com wrote:
+> @PeterZ @JoshP
 > 
-> The function attr_dev_show directly invokes functions from drivers
-> expecting an specific prototype. The driver for int3400_thermal
-> implements the given show function using a different prototype than what
-> is expected. This violates the prototype-based fine-grained CFI policy.
-> 
-> Make the function prototype compliant and cast the respective assignement
-> so it can be properly user together with fine-grained CFI.
+> I'm a bit unaware of the details on why the objtool approach to bypass ENDBRs
+> was removed from the IBT series. Is this approach now sensible considering that
+> it is a requirement for a new/enhanced feature? If not, how extending the Linker
+> to emit already fixed offsets sounds like?
 
-Does this trip on regular CFI? See below, but this all looks correct to
-me in the original code.
+Josh hates objtool modifying actualy code. He much prefers objtool only
+emits out of band data.
 
-> (FWIIW, there should be a less ugly patch for this, but I don't know
-> enough about the touched source code).
-> 
-> Signed-off-by: Joao Moreira <joao@overdrivepizza.com>
-> ---
->  .../thermal/intel/int340x_thermal/int3400_thermal.c    | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> index 4954800b9850..4bd95a2016b7 100644
-> --- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> +++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> @@ -311,12 +311,13 @@ static int int3400_thermal_get_uuids(struct int3400_thermal_priv *priv)
->  	return result;
->  }
->  
-> -static ssize_t odvp_show(struct kobject *kobj, struct kobj_attribute *attr,
-> +static ssize_t odvp_show(struct device *kobj, struct device_attribute *attr,
->  			 char *buf)
->  {
-> +	struct kobj_attribute *kattr = (struct kobj_attribute *) attr;
->  	struct odvp_attr *odvp_attr;
->  
-> -	odvp_attr = container_of(attr, struct odvp_attr, attr);
-> +	odvp_attr = container_of(kattr, struct odvp_attr, attr);
->  
->  	return sprintf(buf, "%d\n", odvp_attr->priv->odvp[odvp_attr->odvp]);
->  }
-> @@ -388,7 +389,10 @@ static int evaluate_odvp(struct int3400_thermal_priv *priv)
->  				goto out_err;
->  			}
->  			odvp->attr.attr.mode = 0444;
+Now, I did sneak in that jump_label nop'ing, and necessity (broken
+compilers) had us do the KCOV nop'ing in noinstr, but if you look at the
+recent objtool series here:
 
-Eww, this function has a masked "odvp" variable here. One should be
-likely renamed.
+  https://lkml.kernel.org/r/cover.1650300597.git.jpoimboe@redhat.com
 
-But anyway, odvp is:
+you'll see his thoughs on that :-)
 
-struct odvp_attr {
-        int odvp;
-        struct int3400_thermal_priv *priv;
-        struct kobj_attribute attr;
-};
+Now, I obviously don't mind, it's easy enough to figure out what objtool
+actually does with something like:
 
-The original code looks correct to me (besides the masked variable
-name). kobj_attribute is part of odvp, the odvp_show callback has the
-correct prototype, and performs the correct container_of() to get
-odvp_attr.
+  $ OBJTOOL_ARGS="--backup" make O=ibt-build/ -j$lots vmlinux
+  $ objdiff.sh ibt-build/vmlinux.o
 
-Where/why is the mismatch happening?
+Where objdiff.sh is the below crummy script.
 
--Kees
+Now, one compromise that I did get out of Josh was that he objected less
+to rewriting relocations than to rewriting the immediates. From my
+testing the relocations got us the vast majority of direct call sites,
+very few are immediates.
 
-> -			odvp->attr.show = odvp_show;
-> +			odvp->attr.show = (ssize_t (*)
-> +					(struct kobject *,
-> +					 struct kobj_attribute *,
-> +					 char *)) odvp_show;
->  			odvp->attr.store = NULL;
->  			ret = sysfs_create_file(&priv->pdev->dev.kobj,
->  						&odvp->attr.attr);
-> -- 
-> 2.35.1
-> 
+Josh, any way you might reconsider all that? :-)
 
--- 
-Kees Cook
+---
+#!/bin/bash
+
+name=$1
+pre=${name}.orig
+post=${name}
+
+function to_text {
+	obj=$1
+	( objdump -wdr $obj;
+	  readelf -W --relocs --symbols $obj |
+		  awk '/^Relocation section/ { $6=0 } { print $0 }'
+	) > ${obj}.tmp
+}
+
+to_text $pre
+to_text $post
+
+diff -u ${pre}.tmp ${post}.tmp
+
+rm ${pre}.tmp ${post}.tmp
