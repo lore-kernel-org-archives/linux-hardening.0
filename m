@@ -2,107 +2,122 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 423FAC433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 07:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E87D9C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 07:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344742AbiDTHny (ORCPT
+        id S1376348AbiDTH5R (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Apr 2022 03:43:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40950 "EHLO
+        Wed, 20 Apr 2022 03:57:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241235AbiDTHnx (ORCPT
+        with ESMTP id S1376353AbiDTH5Q (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Apr 2022 03:43:53 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4847F396B1;
-        Wed, 20 Apr 2022 00:41:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=loHgwO9WdPiHY+qI9O6T45I75jtAzJoMT4qm2QpWt5g=; b=V2RchLGI6xz9pyK8YlHujLlD/X
-        EE6WJAMG0vax+Uflad9dXecchGGgdrEsgr9/jn+Mlna3FwhPqKb8soGIf+88VVZHsT+f+4RamJTHg
-        0i4jQfkRusmvaBRyWgvTg0oUNrm0KRgEEqWI4AHB6Po/2YoCgzyxIhwI6YMo3tGYZCjyDYffHF83B
-        fcn90QQ0wuA5gcSv9F6QzLORGiSSO75scNG7C5EvYN2+q6Ppq38Bh+q8BEhD3AQnsivSvFPtIzE03
-        F6mTVl5e7Wc3jcFL2ZMB40pMwhnaSS8x4TcDmkG9C/Go20R/TKuhBgzJXOZev+/Lovfl/XL64d0A8
-        mdiuVEwA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nh4xC-0073vt-Eu; Wed, 20 Apr 2022 07:40:46 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B013B9861A4; Wed, 20 Apr 2022 09:40:44 +0200 (CEST)
-Date:   Wed, 20 Apr 2022 09:40:44 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     joao@overdrivepizza.com
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        jpoimboe@redhat.com, andrew.cooper3@citrix.com,
-        keescook@chromium.org, samitolvanen@google.com,
-        mark.rutland@arm.com, hjl.tools@gmail.com,
-        alyssa.milburn@linux.intel.com, ndesaulniers@google.com,
-        gabriel.gomes@linux.intel.com, rick.p.edgecombe@intel.com
-Subject: Re: [RFC PATCH 00/11] Kernel FineIBT Support
-Message-ID: <20220420074044.GC2731@worktop.programming.kicks-ass.net>
-References: <20220420004241.2093-1-joao@overdrivepizza.com>
+        Wed, 20 Apr 2022 03:57:16 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFCB23BFB6;
+        Wed, 20 Apr 2022 00:54:30 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 79EC8B81D57;
+        Wed, 20 Apr 2022 07:54:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37635C385A1;
+        Wed, 20 Apr 2022 07:54:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650441268;
+        bh=m7SJlIg5E2sbLVUQXHfM+atL0bL9CBE9VGEBCjYDBYM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=shbRd2h+1XWVxCtCQFYLTVN1JLc40NI/8P2gc/nlY1N6zvh7LZ6XF5Bt007nNKVdi
+         T10A+G1qYoY9qxbTCHwkIaxtYAR9BEFM5topBWGcAR/d9oHT4o972uquZd/marHEQx
+         jh/QJb/sIZ4k9/7JcO6tVj4xNdyRcXDveJ2mfLLnUmXMp0NHFb4xScjuxOjaDjVl6E
+         8FdH4yLhauzytLYejaEOcWkzeYCKs7bBII+8uHp0vXU7xnIiI+KtNrQt14j9i4dtSw
+         QnCOCggp47eWVzu2B622QBD8wtI55rtgpyxQk6ZH4pr+3QKMypgwKH3lZdVcmCeGWP
+         jAxfeGQis/GGQ==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1nh5AJ-0006YM-O9; Wed, 20 Apr 2022 09:54:20 +0200
+Date:   Wed, 20 Apr 2022 09:54:19 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     kernel test robot <lkp@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] USB: serial: Fix heap overflow in WHITEHEAT_GET_DTR_RTS
+Message-ID: <Yl+8K++wZUJCthMj@hovoldconsulting.com>
+References: <20220419041742.4117026-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220420004241.2093-1-joao@overdrivepizza.com>
+In-Reply-To: <20220419041742.4117026-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Apr 19, 2022 at 05:42:30PM -0700, joao@overdrivepizza.com wrote:
-> @PeterZ @JoshP
+On Mon, Apr 18, 2022 at 09:17:42PM -0700, Kees Cook wrote:
+> This looks like it's harmless, as both the source and the destinations are
+> currently the same allocation size (4 bytes) and don't use their padding,
+> but if anything were to ever be added after the "mcr" member in "struct
+> whiteheat_private", it would be overwritten. The structs both have a
+> single u8 "mcr" member, but are 4 bytes in padded size. The memcpy()
+> destination was explicitly targeting the u8 member (size 1) with the
+> length of the whole structure (size 4), triggering the memcpy buffer
+> overflow warning:
+
+Ehh... No. The size of a structure with a single u8 is 1, not 4. There's
+nothing wrong with the current code even if the use of memcpy for this
+is a bit odd.
+
+> In file included from include/linux/string.h:253,
+>                  from include/linux/bitmap.h:11,
+>                  from include/linux/cpumask.h:12,
+>                  from include/linux/smp.h:13,
+>                  from include/linux/lockdep.h:14,
+>                  from include/linux/spinlock.h:62,
+>                  from include/linux/mmzone.h:8,
+>                  from include/linux/gfp.h:6,
+>                  from include/linux/slab.h:15,
+>                  from drivers/usb/serial/whiteheat.c:17:
+> In function 'fortify_memcpy_chk',
+>     inlined from 'firm_send_command' at drivers/usb/serial/whiteheat.c:587:4:
+> include/linux/fortify-string.h:328:25: warning: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+>   328 |                         __write_overflow_field(p_size_field, size);
+>       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+So something is confused here.
+ 
+> Expand the memcpy() to the entire structure, though perhaps the correct
+> solution is to mark all the USB command structures as "__packed".
+
+Again no, why would you potentially overwrite the whole structure just to
+update a single field? This is just wrong.
+
+And the only structure that needs a __packed which doesn't have it
+already is the unused struct whiteheat_dump.
+
+> Reported-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/lkml/202204142318.vDqjjSFn-lkp@intel.com
+> Cc: Johan Hovold <johan@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-usb@vger.kernel.org
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  drivers/usb/serial/whiteheat.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I'm a bit unaware of the details on why the objtool approach to bypass ENDBRs
-> was removed from the IBT series. Is this approach now sensible considering that
-> it is a requirement for a new/enhanced feature? If not, how extending the Linker
-> to emit already fixed offsets sounds like?
+> diff --git a/drivers/usb/serial/whiteheat.c b/drivers/usb/serial/whiteheat.c
+> index da65d14c9ed5..6e00498843fb 100644
+> --- a/drivers/usb/serial/whiteheat.c
+> +++ b/drivers/usb/serial/whiteheat.c
+> @@ -584,7 +584,7 @@ static int firm_send_command(struct usb_serial_port *port, __u8 command,
+>  		switch (command) {
+>  		case WHITEHEAT_GET_DTR_RTS:
+>  			info = usb_get_serial_port_data(port);
+> -			memcpy(&info->mcr, command_info->result_buffer,
+> +			memcpy(info, command_info->result_buffer,
+>  					sizeof(struct whiteheat_dr_info));
+>  				break;
+>  		}
 
-Josh hates objtool modifying actualy code. He much prefers objtool only
-emits out of band data.
-
-Now, I did sneak in that jump_label nop'ing, and necessity (broken
-compilers) had us do the KCOV nop'ing in noinstr, but if you look at the
-recent objtool series here:
-
-  https://lkml.kernel.org/r/cover.1650300597.git.jpoimboe@redhat.com
-
-you'll see his thoughs on that :-)
-
-Now, I obviously don't mind, it's easy enough to figure out what objtool
-actually does with something like:
-
-  $ OBJTOOL_ARGS="--backup" make O=ibt-build/ -j$lots vmlinux
-  $ objdiff.sh ibt-build/vmlinux.o
-
-Where objdiff.sh is the below crummy script.
-
-Now, one compromise that I did get out of Josh was that he objected less
-to rewriting relocations than to rewriting the immediates. From my
-testing the relocations got us the vast majority of direct call sites,
-very few are immediates.
-
-Josh, any way you might reconsider all that? :-)
-
----
-#!/bin/bash
-
-name=$1
-pre=${name}.orig
-post=${name}
-
-function to_text {
-	obj=$1
-	( objdump -wdr $obj;
-	  readelf -W --relocs --symbols $obj |
-		  awk '/^Relocation section/ { $6=0 } { print $0 }'
-	) > ${obj}.tmp
-}
-
-to_text $pre
-to_text $post
-
-diff -u ${pre}.tmp ${post}.tmp
-
-rm ${pre}.tmp ${post}.tmp
+Johan
