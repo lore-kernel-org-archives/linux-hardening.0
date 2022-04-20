@@ -2,23 +2,23 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC041C43217
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 00:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F2BC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Apr 2022 00:43:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232990AbiDTAqU (ORCPT
+        id S1358641AbiDTAq3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 19 Apr 2022 20:46:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58838 "EHLO
+        Tue, 19 Apr 2022 20:46:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358624AbiDTAqT (ORCPT
+        with ESMTP id S1358642AbiDTAq0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 19 Apr 2022 20:46:19 -0400
+        Tue, 19 Apr 2022 20:46:26 -0400
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CF5C34BAC;
-        Tue, 19 Apr 2022 17:43:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7D1E17A93;
+        Tue, 19 Apr 2022 17:43:41 -0700 (PDT)
 Received: (Authenticated sender: joao@overdrivepizza.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id B0F141BF206;
-        Wed, 20 Apr 2022 00:43:21 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPSA id BFA7F1BF206;
+        Wed, 20 Apr 2022 00:43:33 +0000 (UTC)
 From:   joao@overdrivepizza.com
 To:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Cc:     joao@overdrivepizza.com, peterz@infradead.org, jpoimboe@redhat.com,
@@ -26,9 +26,9 @@ Cc:     joao@overdrivepizza.com, peterz@infradead.org, jpoimboe@redhat.com,
         samitolvanen@google.com, mark.rutland@arm.com, hjl.tools@gmail.com,
         alyssa.milburn@linux.intel.com, ndesaulniers@google.com,
         gabriel.gomes@linux.intel.com, rick.p.edgecombe@intel.com
-Subject: [RFC PATCH 06/11] x86/bpf: Support FineIBT
-Date:   Tue, 19 Apr 2022 17:42:36 -0700
-Message-Id: <20220420004241.2093-7-joao@overdrivepizza.com>
+Subject: [RFC PATCH 08/11] x86/ibt: Add CET_TEST module for IBT testing
+Date:   Tue, 19 Apr 2022 17:42:38 -0700
+Message-Id: <20220420004241.2093-9-joao@overdrivepizza.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220420004241.2093-1-joao@overdrivepizza.com>
 References: <20220420004241.2093-1-joao@overdrivepizza.com>
@@ -40,66 +40,79 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Joao Moreira <joao@overdrivepizza.com>
 
-BPF jitted code calls helper functions that are in the core and contain a
-FineIBT hash check sequence in their prologue. Make BPF jit capable of
-identifying FineIBT sequences when emitting calls and properly sum the
-offset to bypass it when emitting calls.
+Add a kernel module that violates IBT policy on load, triggering a
+control protection fault and makes the enforcement visible.
 
 Signed-off-by: Joao Moreira <joao@overdrivepizza.com>
-Tinkered-from-patches-by: Peter Zijlstra <peterz@infradead.org>
+Tinkered-from-work-by: Alyssa Milburn <alyssa.milburn@linux.intel.com>
 ---
- arch/x86/net/bpf_jit_comp.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ arch/x86/Kconfig.debug     |  5 +++++
+ arch/x86/kernel/Makefile   |  1 +
+ arch/x86/kernel/cet_test.c | 30 ++++++++++++++++++++++++++++++
+ 3 files changed, 36 insertions(+)
+ create mode 100644 arch/x86/kernel/cet_test.c
 
-diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-index 16b6efacf7c6..e0c82174a075 100644
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -330,13 +330,44 @@ static int emit_patch(u8 **pprog, void *func, void *ip, u8 opcode)
- 	return 0;
- }
+diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
+index d3a6f74a94bd..d2463dd912c1 100644
+--- a/arch/x86/Kconfig.debug
++++ b/arch/x86/Kconfig.debug
+@@ -279,3 +279,8 @@ endchoice
+ config FRAME_POINTER
+ 	depends on !UNWINDER_ORC && !UNWINDER_GUESS
+ 	bool
++
++config X86_CET_TEST
++	depends on m
++	depends on X86_KERNEL_IBT
++	tristate "in-kernel CET testing module"
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index cb947569e9d8..a82bcd14bd40 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -149,6 +149,7 @@ obj-$(CONFIG_UNWINDER_GUESS)		+= unwind_guess.o
  
-+static inline bool skip_fineibt_sequence(void *func)
+ obj-$(CONFIG_AMD_MEM_ENCRYPT)		+= sev.o
+ obj-$(CONFIG_X86_KERNEL_FINEIBT)	+= fineibt.o
++obj-$(CONFIG_X86_CET_TEST)		+= cet_test.o
+ 
+ ###
+ # 64 bit specific files
+diff --git a/arch/x86/kernel/cet_test.c b/arch/x86/kernel/cet_test.c
+new file mode 100644
+index 000000000000..c48be8cbd0b5
+--- /dev/null
++++ b/arch/x86/kernel/cet_test.c
+@@ -0,0 +1,30 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <linux/module.h>
++
++static int cet_test_init(void)
 +{
-+	const void *addr = (void *) func;
-+	union text_poke_insn text;
-+	u32 insn;
++	pr_info("CET test, expect faults\n");
 +
-+	if ((get_kernel_nofault(insn, addr)) ||
-+			(!is_endbr(insn)))
-+		return false;
++	// FIXME: use register_die_notifier
 +
-+	if ((get_kernel_nofault(text, addr+4)) ||
-+			(text.opcode != SUB_INSN_OPCODE))
-+		return false;
-+
-+	if ((get_kernel_nofault(text, addr+11)) ||
-+			(text.opcode != JE_INSN_OPCODE))
-+		return false;
-+
-+	if ((get_kernel_nofault(text, addr+13)) ||
-+			(text.opcode != CALL_INSN_OPCODE))
-+		return false;
-+
-+	return true;
++	asm volatile(
++		"lea 1f(%%rip), %%rax\n"
++		"jmp *%%rax\n"
++		"nop\n"
++		"1:\n"
++		/* no endbranch */
++		"nop\n"
++		:::"rax"
++		    );
++	return 0;
 +}
 +
- static int emit_call(u8 **pprog, void *func, void *ip)
- {
-+#ifdef CONFIG_X86_KERNEL_FINEIBT
-+	if(skip_fineibt_sequence(func)) func = func + FINEIBT_FIXUP;
-+#endif
- 	return emit_patch(pprog, func, ip, 0xE8);
- }
- 
- static int emit_jump(u8 **pprog, void *func, void *ip)
- {
-+#ifdef CONFIG_X86_KERNEL_FINEIBT
-+	if(skip_fineibt_sequence(func)) func = func + FINEIBT_FIXUP;
-+#endif
- 	return emit_patch(pprog, func, ip, 0xE9);
- }
- 
++static void cet_test_exit(void)
++{
++}
++
++module_init(cet_test_init);
++module_exit(cet_test_exit);
++
++MODULE_LICENSE("GPL v2");
 -- 
 2.35.1
 
