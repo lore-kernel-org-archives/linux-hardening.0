@@ -2,119 +2,125 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D11C4332F
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Apr 2022 16:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEF7C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 21 Apr 2022 17:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1385799AbiDUQ6C (ORCPT
+        id S1390727AbiDUR1Y (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 21 Apr 2022 12:58:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39996 "EHLO
+        Thu, 21 Apr 2022 13:27:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1390531AbiDUQ55 (ORCPT
+        with ESMTP id S1390577AbiDUR1U (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 21 Apr 2022 12:57:57 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DD60B1F6
-        for <linux-hardening@vger.kernel.org>; Thu, 21 Apr 2022 09:55:07 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id t4so5160113pgc.1
-        for <linux-hardening@vger.kernel.org>; Thu, 21 Apr 2022 09:55:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lWrMBaaG06Rl/KqlbUnN7jouLwLObU2X9LsSayAdIEY=;
-        b=RG6zXViEotCrIPi+aqyunCe71vbxFhC/cyC2pcLO6Nnd/L7hctNT+nu9Wd/37midx4
-         CBEdx7XQHXKUvhBVjHCgDXDtj03gb0gA/FT28uXFAZtrF6FxQCdcvqGjFgu2goVERUa1
-         aBLVjrQlm+M+HHOBlhi69kBAheJbgTj97x2Ws=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lWrMBaaG06Rl/KqlbUnN7jouLwLObU2X9LsSayAdIEY=;
-        b=qM3Thh3CnPJ4nrfLZxwLa1+CPkc9a9ky+PLAypi74xELR4y8TTj7PtwGJCO9BnWyyY
-         46B93C0iNQ7yFfCICfcBUGF+LnoLjKso2g6GHgEt2NwqlSAvIUcnQYUfFFhD5WVH4rpC
-         d+EhnaZsmUS8zauqyutYMU0QkEMwbRWI2P2q0XcenXiKjV4s4b9BTiOFHs+OevsAhDwR
-         W6IVDIzItvRuOOv7R8W7bx4YjitXo0G6O0/5k6W0Cf9Cb8r146vvl7PK6qSMwSJhb0Jg
-         ddIglqjVIZ7PySP+KRjVnR9hoE26qD/R6H7/EJQEIm/KZw6TX52Z/BScqtTnOr51Fs4b
-         5XMw==
-X-Gm-Message-State: AOAM532IInLvvWBgzTyANzq2Z2rTKVtxC0hnixgzbgGDItBmz3AVsuO4
-        LqEhhgn1qxj/L75BH5zGX0K0vg==
-X-Google-Smtp-Source: ABdhPJybFqT9+qbX/fmptKtwh1MKt6C6LFPPlumJnR7fijXXj4514Ft/yXS+m+y8hK+j9Rd4HJauww==
-X-Received: by 2002:a05:6a00:298e:b0:50c:e384:3a16 with SMTP id cj14-20020a056a00298e00b0050ce3843a16mr610980pfb.71.1650560106692;
-        Thu, 21 Apr 2022 09:55:06 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u3-20020a626003000000b00505a38fc90bsm24888533pfb.173.2022.04.21.09.55.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Apr 2022 09:55:06 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        linux-pm@vger.kernel.org, Joao Moreira <joao@overdrivepizza.com>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Chuansheng Liu <chuansheng.liu@intel.com>,
-        Jiasheng Jiang <jiasheng@iscas.ac.cn>,
-        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
-        Matthew Garrett <mjg59@google.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] thermal: int340x: Fix attr.show callback prototype
-Date:   Thu, 21 Apr 2022 09:55:04 -0700
-Message-Id: <20220421165504.3173244-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.32.0
+        Thu, 21 Apr 2022 13:27:20 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 411C32B251;
+        Thu, 21 Apr 2022 10:24:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C90BA61DFA;
+        Thu, 21 Apr 2022 17:24:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE85AC385A5;
+        Thu, 21 Apr 2022 17:24:24 +0000 (UTC)
+Date:   Thu, 21 Apr 2022 18:24:21 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Topi Miettinen <toiwoton@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lennart Poettering <lennart@poettering.net>,
+        Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
+        Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-abi-devel@lists.sourceforge.net,
+        linux-hardening@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Salvatore Mesoraca <s.mesoraca16@gmail.com>,
+        Igor Zhbanov <izh1979@gmail.com>
+Subject: Re: [PATCH RFC 0/4] mm, arm64: In-kernel support for
+ memory-deny-write-execute (MDWE)
+Message-ID: <YmGTRQA74n/ZF7Vl@arm.com>
+References: <20220413134946.2732468-1-catalin.marinas@arm.com>
+ <202204141028.0482B08@keescook>
+ <YmAEDsGtxhim46UI@arm.com>
+ <c62170c6-5993-2417-4143-5a37a98b227c@gmail.com>
+ <202204201610.093C9D5FE8@keescook>
+ <YmF5s4KqT5WL4O0G@arm.com>
+ <202204210941.4318DE6E8@keescook>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1946; h=from:subject; bh=luGT7I33b2VPSU/hRTp4Bzm5YaRlLxElO2D/HiBCrCI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiYYxnp8ng8BLmn3BJUCmqYDM28VV2nCxsOVm2zLy+ LJp8UgqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYmGMZwAKCRCJcvTf3G3AJlOCD/ 9lztboo9y2dy0mnMoOXHcJOcK/kpeyZf11lTux/iSdVIVqNAWXfmfzQBifo15Bq4PZa9jlNoHJIvpj 2/4/xqH0Wfyr9dMmzYCdUD/tXJMQN9xW61hBX1O+Fn6obddy6jvOEsbFKIlV6W2PmmYn2j3ph0JAvb BAhgnXMb7eLsLGarKzjO55yjay/yDwM176Q4VpOaAAc4+RFYUvZIGhW010OBdwM0ut+WQ4YKdbnest uY5+p44FLL35FwQPREFU1tfg0j0gfJStm6cKA9KnO1uamR7Ds6HSqM4OPzsuAz1MUTBQWgihe0JINA +yarzxWBPEP3/d3SueddXMFyle/JYx6g/NwXYfBTvZr1Amyqmt3hsXDQB+KXuR8JsAqxahrTKDc2pu f+y8bmT60daXrqKckbnxMBQ5HPxmIok8WWWfWw3aVGfoQjxqb2UFYbkPn6f9lWSm3ixb113DSXdNvU 5JF7v8Mm7xFlnb2IYCwTNQ7eojS1+ewl20o/vNJ5xXH7r3g9HVXIXIC08Rkoc0HayOEL+pDqLVQm1m 1hiTd32fHiIPownlJp0LdE+0YhyAJHYa9X2VFnlgsTc8WA87O43yGy2Q0nkD9SiAbaLmR1IAK/6sRv ciQKq7l3+RJse92bmT3I8A4kLndMMZlzjy8c+wTpTW6zKM7wJFMSpu0USUiw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202204210941.4318DE6E8@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Control Flow Integrity (CFI) instrumentation of the kernel noticed that
-the caller, dev_attr_show(), and the callback, odvp_show(), did not have
-matching function prototypes, which would cause a CFI exception to be
-raised. Correct the prototype by using struct device_attribute instead
-of struct kobj_attribute.
+On Thu, Apr 21, 2022 at 09:42:23AM -0700, Kees Cook wrote:
+> On Thu, Apr 21, 2022 at 04:35:15PM +0100, Catalin Marinas wrote:
+> > Do we want the "was PROT_WRITE" or we just reject mprotect(PROT_EXEC) if
+> > the vma is not already PROT_EXEC? The latter is closer to the current
+> > systemd approach. The former allows an mprotect(PROT_EXEC) if the
+> > mapping was PROT_READ only for example.
+> > 
+> > I'd drop the "was PROT_WRITE" for now if the aim is a drop-in
+> > replacement for BPF MDWE.
+> 
+> I think "was PROT_WRITE" is an important part of the defense that
+> couldn't be done with a simple seccomp filter (which is why the filter
+> ended up being a problem in the first place).
 
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Amit Kucheria <amitk@kernel.org>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: linux-pm@vger.kernel.org
-Reported-and-tested-by: Joao Moreira <joao@overdrivepizza.com>
-Link: https://lore.kernel.org/lkml/067ce8bd4c3968054509831fa2347f4f@overdrivepizza.com/
-Fixes: 006f006f1e5c ("thermal/int340x_thermal: Export OEM vendor variables")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I would say "was PROT_WRITE" is slightly more relaxed than "is not
+already PROT_EXEC". The seccomp filter can't do "is not already
+PROT_EXEC" either since it only checks the mprotect() arguments, not the
+current vma flags.
 
-diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-index 4954800b9850..d97f496bab9b 100644
---- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-+++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-@@ -68,7 +68,7 @@ static int evaluate_odvp(struct int3400_thermal_priv *priv);
- struct odvp_attr {
- 	int odvp;
- 	struct int3400_thermal_priv *priv;
--	struct kobj_attribute attr;
-+	struct device_attribute attr;
- };
- 
- static ssize_t data_vault_read(struct file *file, struct kobject *kobj,
-@@ -311,7 +311,7 @@ static int int3400_thermal_get_uuids(struct int3400_thermal_priv *priv)
- 	return result;
- }
- 
--static ssize_t odvp_show(struct kobject *kobj, struct kobj_attribute *attr,
-+static ssize_t odvp_show(struct device *dev, struct device_attribute *attr,
- 			 char *buf)
- {
- 	struct odvp_attr *odvp_attr;
+So we have (with sub-cases):
+
+1. Current BPF filter:
+
+   a)	mmap(PROT_READ|PROT_WRITE|PROT_EXEC);	// fails
+
+   b)	mmap(PROT_READ|PROT_EXEC);
+	mprotect(PROT_READ|PROT_EXEC|PROT_BTI);	// fails
+
+2. "is not already PROT_EXEC":
+
+   a)	mmap(PROT_READ|PROT_WRITE|PROT_EXEC);	// fails
+
+   b)	mmap(PROT_READ|PROT_EXEC);
+	mmap(PROT_READ|PROT_EXEC|PROT_BTI);	// passes
+
+   c)	mmap(PROT_READ);
+	mprotect(PROT_READ|PROT_EXEC);		// fails
+
+3. "is or was not PROT_WRITE":
+
+   a)	mmap(PROT_READ|PROT_WRITE|PROT_EXEC);	// fails
+
+   b)	mmap(PROT_READ|PROT_EXEC);
+	mmap(PROT_READ|PROT_EXEC|PROT_BTI);	// passes
+
+   c)	mmap(PROT_READ);
+	mprotect(PROT_READ|PROT_EXEC);		// passes
+
+   d)	mmap(PROT_READ|PROT_WRITE);
+	mprotect(PROT_READ);
+	mprotect(PROT_READ|PROT_EXEC);		// fails (was write)
+
+The current seccomp filter is the strictest. If we go for (2), it allows
+PROT_BTI as in 2.b but prevents 2.c (as would the current seccomp
+filter). (3) relaxes 2.c as in 3.c while still preventing 3.d. Both (1)
+and (2) prevent 3.d by simply rejecting mprotect(PROT_EXEC).
+
+If we don't care about 3.c, we might as well go for (2). I don't mind,
+already went for (3) in this series. I think either of them would not be
+a regression on MDWE, unless there is some test that attempts 3.c and
+expects it to fail.
+
 -- 
-2.32.0
-
+Catalin
