@@ -2,58 +2,68 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 888C2C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Apr 2022 16:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA00EC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 21 Apr 2022 16:48:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231286AbiDUQpU (ORCPT
+        id S232298AbiDUQvX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 21 Apr 2022 12:45:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56674 "EHLO
+        Thu, 21 Apr 2022 12:51:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232057AbiDUQpP (ORCPT
+        with ESMTP id S232072AbiDUQvW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 21 Apr 2022 12:45:15 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BA9748E45
-        for <linux-hardening@vger.kernel.org>; Thu, 21 Apr 2022 09:42:25 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id e62-20020a17090a6fc400b001d2cd8e9b0aso5680146pjk.5
-        for <linux-hardening@vger.kernel.org>; Thu, 21 Apr 2022 09:42:25 -0700 (PDT)
+        Thu, 21 Apr 2022 12:51:22 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73BDE49276;
+        Thu, 21 Apr 2022 09:48:32 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id w1so9741767lfa.4;
+        Thu, 21 Apr 2022 09:48:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WGKEvdgYRQ7SM+AO2vjpmqYxP+BldJQN162qNBP3cZU=;
-        b=mB7+i6aOyxqKX81weI4FoQBPHQS7Yc1HSgzDeU5y/1s3jioCgVQBAmxogLw3X4u405
-         ATFSON/HUUhbKe5oLUTZgoght91a9ULLu35Mr6atCZrkVtOimFJMlRhT2KfW3BEIVjN7
-         9fLhdFyUIDyvHVOyuKDh/goUflgsOwBuirkuk=
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=H01S+Z7PoKhXtthwBx3mI1VVb20IHa0ThHfpXV2OsWk=;
+        b=Te5bNS7bK0yTicPlwPilL/FHzAHcCqm56DhGAmSHJVeyNBi761kWJGIb9kl8TOYuck
+         BiTT/cBsA/F5VgqiWxOJFnnaOZHoAT4gI5awBPaMEgiyrEJmcMFoF8VPBkGOxFB/SDy4
+         qqeDtPW45B92jzLhCXjMqi+0O7pfeh81IUjPs6/oytjFCbtCGr735rxBqlAvms8VYNT0
+         Jvb9G02yo002YknsCfyrj5wNC6z46s/QYuddL1MP5fcS9CizCQNamFZpPEZ8NcHpIzT4
+         CTDjLKjMhaRGxDTW8Gn5MvVYUXGQN4Ptv7zh47AOnsIAKcNf/WhNZKku9l22WYc3adFD
+         kr+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WGKEvdgYRQ7SM+AO2vjpmqYxP+BldJQN162qNBP3cZU=;
-        b=FthZpM7sNXSSQot+52/O9V9ADzsndAxb7p0JniUFdGJviue9tOH+e8cx17/G54HkuR
-         yzOZLS1cMQKe3kecc5bdazXn2qi8578Ko3qx0ZdHN1ZM4JTb7jejdOuR0FenZcxBoNUM
-         2p4ceoUtNtzcybiS4yBpMTkdw66FMWx7L29w9qG0KLm+wgNcddzqMolTsn8QX5iZHSDo
-         oo7mZxghj0kLZoXW7Grtjmd2ZKIH4MsG2eoC4pN4/BxPp3r5UEZIWVW1DVix5MWsS6lS
-         s0fLSqdWcy/mNOdBNjTS7wJM4lRPPWeyjBoioo2OkkjRmBdH3ih+VU+EpwI2t4Mp9hcA
-         oZ+g==
-X-Gm-Message-State: AOAM530ku/+FvRVQw4+ZzzcgH8+uOFbojDzEsPCvo85Rp1/tEeady2aR
-        2OCSXcY+HjkY0hjUvrgR70OXSQ==
-X-Google-Smtp-Source: ABdhPJzhFmMSZnztpRzJKTkyr58MC5Qtizd2jhpjoY39cLT1geTbd0SbOnPo810CxKtCMtjBkj76hg==
-X-Received: by 2002:a17:902:778a:b0:158:da0f:f299 with SMTP id o10-20020a170902778a00b00158da0ff299mr366502pll.29.1650559344761;
-        Thu, 21 Apr 2022 09:42:24 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z5-20020a056a00240500b004e15d39f15fsm25268821pfh.83.2022.04.21.09.42.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Apr 2022 09:42:24 -0700 (PDT)
-Date:   Thu, 21 Apr 2022 09:42:23 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Topi Miettinen <toiwoton@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=H01S+Z7PoKhXtthwBx3mI1VVb20IHa0ThHfpXV2OsWk=;
+        b=DykgAvzxpj6H3pt75Q4xkwWo0tzperKN4BGAAKJp89R4uG1Oz18zJRZY4WXFU7hpq2
+         e9n3ZkGR8CIBe9Nh6uYN0VdKFJhbeoTFgSYGJx2ebN3xjmLZt1+aPzyBSErwh41b9q/t
+         ezT/3OCDSuNvpetqJjn6NpL8CkQBvtQT+hEl3jmj04YCIQQGqKqDM2r4CV+3uSVy6lQK
+         S74a4Qi1MWsJRiEkq+30n6P801mHgBphjnFbkash8z61bA873qPn9fmaju7YA8ogOE+r
+         jHABpQQg9K1jKMOFpDKTZUmQvCZSIm9w1INlNov0X/ttjmhBjd491y7XQi4wwHde4ZGZ
+         SZ/g==
+X-Gm-Message-State: AOAM531lGlGb01gKwa6WSRSgWxPx+q3fFBZTVYm8tyK/nTv9Wq1qvup3
+        1WUOD9cIRlAYwD8D7F5T4cg=
+X-Google-Smtp-Source: ABdhPJw+VLfbypfCSe9stpbubNdMGXl9HD4DhVxLcd/U9wA78sssgaQaPBzfy770WHdBH+UXBFl2ag==
+X-Received: by 2002:a05:6512:151f:b0:44a:2508:1d01 with SMTP id bq31-20020a056512151f00b0044a25081d01mr228077lfb.675.1650559710555;
+        Thu, 21 Apr 2022 09:48:30 -0700 (PDT)
+Received: from [192.168.1.38] (91-159-150-194.elisa-laajakaista.fi. [91.159.150.194])
+        by smtp.gmail.com with ESMTPSA id q64-20020a2e2a43000000b0024ee56ec2bbsm310284ljq.3.2022.04.21.09.48.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Apr 2022 09:48:29 -0700 (PDT)
+Message-ID: <400be309-ef3f-4175-594d-7dc45a43dc36@gmail.com>
+Date:   Thu, 21 Apr 2022 19:48:27 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH RFC 0/4] mm, arm64: In-kernel support for
+ memory-deny-write-execute (MDWE)
+Content-Language: en-US
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Christoph Hellwig <hch@infradead.org>,
         Lennart Poettering <lennart@poettering.net>,
-        Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
+        =?UTF-8?Q?Zbigniew_J=c4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
         Will Deacon <will@kernel.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         Eric Biederman <ebiederm@xmission.com>,
@@ -65,54 +75,49 @@ Cc:     Topi Miettinen <toiwoton@gmail.com>,
         linux-hardening@vger.kernel.org, Jann Horn <jannh@google.com>,
         Salvatore Mesoraca <s.mesoraca16@gmail.com>,
         Igor Zhbanov <izh1979@gmail.com>
-Subject: Re: [PATCH RFC 0/4] mm, arm64: In-kernel support for
- memory-deny-write-execute (MDWE)
-Message-ID: <202204210941.4318DE6E8@keescook>
 References: <20220413134946.2732468-1-catalin.marinas@arm.com>
- <202204141028.0482B08@keescook>
- <YmAEDsGtxhim46UI@arm.com>
+ <202204141028.0482B08@keescook> <YmAEDsGtxhim46UI@arm.com>
  <c62170c6-5993-2417-4143-5a37a98b227c@gmail.com>
- <202204201610.093C9D5FE8@keescook>
- <YmF5s4KqT5WL4O0G@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ <202204201610.093C9D5FE8@keescook> <YmF5s4KqT5WL4O0G@arm.com>
+From:   Topi Miettinen <toiwoton@gmail.com>
 In-Reply-To: <YmF5s4KqT5WL4O0G@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Apr 21, 2022 at 04:35:15PM +0100, Catalin Marinas wrote:
+On 21.4.2022 18.35, Catalin Marinas wrote:
 > On Wed, Apr 20, 2022 at 04:21:45PM -0700, Kees Cook wrote:
-> > On Wed, Apr 20, 2022 at 10:34:33PM +0300, Topi Miettinen wrote:
-> > > For systemd, feature compatibility with the BPF version is important so that
-> > > we could automatically switch to the kernel version once available without
-> > > regressions. So I think PR_MDWX_MMAP (or maybe PR_MDWX_COMPAT) should match
-> > > exactly what MemoryDenyWriteExecute=yes as implemented with BPF has: only
-> > > forbid mmap(PROT_EXEC|PROT_WRITE) and mprotect(PROT_EXEC). Like BPF, once
-> > > installed there should be no way to escape and ELF flags should be also
-> > > ignored. ARM BTI should be allowed though (allow PROT_EXEC|PROT_BTI if the
-> > > old flags had PROT_EXEC).
+>> On Wed, Apr 20, 2022 at 10:34:33PM +0300, Topi Miettinen wrote:
+>>> For systemd, feature compatibility with the BPF version is important so that
+>>> we could automatically switch to the kernel version once available without
+>>> regressions. So I think PR_MDWX_MMAP (or maybe PR_MDWX_COMPAT) should match
+>>> exactly what MemoryDenyWriteExecute=yes as implemented with BPF has: only
+>>> forbid mmap(PROT_EXEC|PROT_WRITE) and mprotect(PROT_EXEC). Like BPF, once
+>>> installed there should be no way to escape and ELF flags should be also
+>>> ignored. ARM BTI should be allowed though (allow PROT_EXEC|PROT_BTI if the
+>>> old flags had PROT_EXEC).
 > 
 > I agree.
 > 
-> > > Then we could have improved versions (other PR_MDWX_ prctls) with lots more
-> > > checks. This could be enabled with MemoryDenyWriteExecute=strict or so.
-> > > 
-> > > Perhaps also more relaxed versions (like SARA) could be interesting (system
-> > > service running Python with FFI, or perhaps JVM etc), enabled with for
-> > > example MemoryDenyWriteExecute=trampolines. That way even those programs
-> > > would get some protection (though there would be a gap in the defences).
-> > 
-> > Yup, I think we're all on the same page. Catalin, can you respin with a
-> > prctl for enabling MDWE? I propose just:
-> > 
-> > 	prctl(PR_MDWX_SET, flags);
-> > 	prctl(PR_MDWX_GET);
-> > 
-> > 	PR_MDWX_FLAG_MMAP
-> > 		disallows PROT_EXEC on any VMA that is or was PROT_WRITE,
-> > 		covering at least: mmap, mprotect, pkey_mprotect, and shmat.
+>>> Then we could have improved versions (other PR_MDWX_ prctls) with lots more
+>>> checks. This could be enabled with MemoryDenyWriteExecute=strict or so.
+>>>
+>>> Perhaps also more relaxed versions (like SARA) could be interesting (system
+>>> service running Python with FFI, or perhaps JVM etc), enabled with for
+>>> example MemoryDenyWriteExecute=trampolines. That way even those programs
+>>> would get some protection (though there would be a gap in the defences).
+>>
+>> Yup, I think we're all on the same page. Catalin, can you respin with a
+>> prctl for enabling MDWE? I propose just:
+>>
+>> 	prctl(PR_MDWX_SET, flags);
+>> 	prctl(PR_MDWX_GET);
+>>
+>> 	PR_MDWX_FLAG_MMAP
+>> 		disallows PROT_EXEC on any VMA that is or was PROT_WRITE,
+>> 		covering at least: mmap, mprotect, pkey_mprotect, and shmat.
 > 
 > Do we want the "was PROT_WRITE" or we just reject mprotect(PROT_EXEC) if
 > the vma is not already PROT_EXEC? The latter is closer to the current
@@ -121,10 +126,13 @@ On Thu, Apr 21, 2022 at 04:35:15PM +0100, Catalin Marinas wrote:
 > 
 > I'd drop the "was PROT_WRITE" for now if the aim is a drop-in
 > replacement for BPF MDWE.
+> 
 
-I think "was PROT_WRITE" is an important part of the defense that
-couldn't be done with a simple seccomp filter (which is why the filter
-ended up being a problem in the first place).
+I think we'd want existing installations with MemoryDenyWriteExecute=yes 
+not start failing when the implementation is changed to in-kernel 
+version. The implementation could be very simple and not even check 
+existing PROT_ flags (except for BTI case) to be maximally compatible to 
+BPF version. So I'd leave "was PROT_WRITE" and other checks to more 
+advanced versions, enabled with a different PR_MDWX_FLAG_.
 
--- 
-Kees Cook
+-Topi
