@@ -2,103 +2,115 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6BCC433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Apr 2022 07:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 313EDC4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 21 Apr 2022 07:58:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1386197AbiDUHwn (ORCPT
+        id S1386268AbiDUIBU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 21 Apr 2022 03:52:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47238 "EHLO
+        Thu, 21 Apr 2022 04:01:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1386262AbiDUHwf (ORCPT
+        with ESMTP id S1386261AbiDUIBT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 21 Apr 2022 03:52:35 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D125E658D;
-        Thu, 21 Apr 2022 00:49:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=b/atdEajx4p/InTBGf9pz75b6PN3+RGLM2H3UyyRqww=; b=gGuH9238Tkpk6NHCyrEPhvr0ZL
-        HRe2ZG9WdJv6oSHV7hyzGlvkr/jBlMTxoJXZIhApBqhgsHQ7MB63hd/HHjWC8HtxNJfSm0gW7z6Qq
-        fTwV74RPZ7kyAhfOmlwKFWh7ErO4VeATzoeh9FRGPQT5IEAsTJV/cYXiQbw0iI7c1qVPxK93s3TFL
-        s6Nb6Z1cd/7luE9DnimnriqEKIYMQRoLiKTV/x8WxSf6dsF7H86m3q3O1Q6Br+p03NxOKAEa5ZoMX
-        M1YLkJOI0/Lyw/L0DGCk/3tWyf3j0LDHzz8n597hUru7dN4OyB+T1+WjSviGPm8P+AWtR92klc5+e
-        YJyx7VqQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nhRZ4-007LZQ-Vp; Thu, 21 Apr 2022 07:49:23 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C74C29861A4; Thu, 21 Apr 2022 09:49:20 +0200 (CEST)
-Date:   Thu, 21 Apr 2022 09:49:20 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joao Moreira <joao@overdrivepizza.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, hjl.tools@gmail.com,
-        Fangrui Song <maskray@google.com>,
+        Thu, 21 Apr 2022 04:01:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E3814033;
+        Thu, 21 Apr 2022 00:58:31 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9EF4C61A9C;
+        Thu, 21 Apr 2022 07:58:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F23FDC385A5;
+        Thu, 21 Apr 2022 07:58:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650527910;
+        bh=4cpOHnm1lKbpsJah/8zKxEWJvRBAEiLp0Eg7bpCKpNU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vBLzYz/8W6TyxyPXZoYXU1M72RDm3yqr3OMzlNfs3UpbQMyS9PdTCZ/KKUhsNLMJv
+         rnhacdd6GCpXpJY5PpNveD83C8/YzuYGQkS53wiQM1aX2DxNKaVd0q4QGeaE3BMmV3
+         0FfKaf2/mKFru+Jj+iG8q/v30EjdlZ73VTcsNKrSW8KVfw39gp0Qp3dZYwUYzdY53g
+         j6WFL4VHoChY90gMNMq4yj1OOD284qTgtUhIQHRTPmGnnUrFgacbXVhNxxMicTjc6l
+         ap6CKzlm5+F6KN7SMGMp4vpSr+6rVyFIvE5EKu3go1s50HvKzyzs8iZAIB2/9qaeL8
+         VdKQnEsvNfaAQ==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1nhRhn-0003up-8a; Thu, 21 Apr 2022 09:58:23 +0200
+Date:   Thu, 21 Apr 2022 09:58:23 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jann Horn <jannh@google.com>, kernel test robot <lkp@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, stable@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        andrew.cooper3@citrix.com, keescook@chromium.org,
-        samitolvanen@google.com, mark.rutland@arm.com,
-        alyssa.milburn@linux.intel.com, gabriel.gomes@linux.intel.com,
-        rick.p.edgecombe@intel.com
-Subject: Re: [RFC PATCH 00/11] Kernel FineIBT Support
-Message-ID: <20220421074920.GK2731@worktop.programming.kicks-ass.net>
-References: <20220420004241.2093-1-joao@overdrivepizza.com>
- <20220420074044.GC2731@worktop.programming.kicks-ass.net>
- <20220420151714.fderdz4dzea75rvg@treble>
- <CAKwvOdm6J9TFUWJA2Q7VRjx1CpBme9z_Dp99+7YTjN5Jqp5=Aw@mail.gmail.com>
- <bf3273120d8d48a79357f229c5890576@overdrivepizza.com>
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] USB: serial: Fix heap overflow in WHITEHEAT_GET_DTR_RTS
+Message-ID: <YmEOn7LrVjJuybvg@hovoldconsulting.com>
+References: <20220419041742.4117026-1-keescook@chromium.org>
+ <Yl+8K++wZUJCthMj@hovoldconsulting.com>
+ <CAG48ez2Pikm5g2RfJxae=jz1C7KSCWc99sCa7fXFBKvDOPJubA@mail.gmail.com>
+ <202204201056.5A1A6BAE04@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bf3273120d8d48a79357f229c5890576@overdrivepizza.com>
+In-Reply-To: <202204201056.5A1A6BAE04@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Apr 20, 2022 at 03:40:41PM -0700, Joao Moreira wrote:
-> > > 
-> > > If FineIBT needs it, I could reconsider.  But I think there's a strong
-> > > case to be made that the linker should be doing that instead.
-> > 
-> > That sounds reasonable to me (and reminds me of linker relaxation).
-> > Joao, can you please work with Fangrui (LLD) and HJ (GNU binutils) to
-> > determine how feasible this would be? I assume code outside the kernel
-> > might enjoy such an optimization, too.  When that's the case, then it
-> > probably makes more sense to "upstream" such "optimizations" from the
-> > kernel-specific objtool into the toolchains.
-> 
-> Alright, these are the greenlights I was hoping for.
-> 
-> I went quickly into this with HJ and he mentioned that it should be doable
-> in the linker, and that he has a patch for it in gcc (for local function,
-> from what I could see):
-> https://gcc.gnu.org/pipermail/gcc-patches/2022-February/590832.html
-> 
-> If @Fangrui is fine with it, I would like to try implementing this myself in
-> lld (I'm still learning a lot about lld and having an actual problem to
-> solve is the kind of fuel I need). Should take me a while, but I think this
-> is not urgent, right? I can also go ahead and replicate HJ's gcc patch into
-> clang, so we can also handle the local functions within the compiler (I
-> think this makes a lot of sense).
-> 
-> Once we have these in, I'll revisit FineIBT and extend the features to
-> handle the FineIBT instrumentation. Hopefully we'll be released from needing
-> objtool (famous last words?!).
-> 
-> This sounds like a plan, but I'm ofc open to suggestions or different
-> ideas/plans.
+[ +CC: Arnd ]
 
-So trivially the plan sounds like: compiler fixes STB_LOCAL because it
-has the scope, and the linker fixes everything else. However, that seems
-to assume that !STB_LOCAL will have ENDBR.
+On Wed, Apr 20, 2022 at 11:11:26AM -0700, Kees Cook wrote:
+> On Wed, Apr 20, 2022 at 02:33:06PM +0200, Jann Horn wrote:
+> > On Wed, Apr 20, 2022 at 10:14 AM Johan Hovold <johan@kernel.org> wrote:
+> > > On Mon, Apr 18, 2022 at 09:17:42PM -0700, Kees Cook wrote:
+> > > > This looks like it's harmless, as both the source and the destinations are
+> > > > currently the same allocation size (4 bytes) and don't use their padding,
+> > > > but if anything were to ever be added after the "mcr" member in "struct
+> > > > whiteheat_private", it would be overwritten. The structs both have a
+> > > > single u8 "mcr" member, but are 4 bytes in padded size. The memcpy()
+> > > > destination was explicitly targeting the u8 member (size 1) with the
+> > > > length of the whole structure (size 4), triggering the memcpy buffer
+> > > > overflow warning:
+> > >
+> > > Ehh... No. The size of a structure with a single u8 is 1, not 4. There's
+> > > nothing wrong with the current code even if the use of memcpy for this
+> > > is a bit odd.
+> 
+> I thought that was surprising too, and suspected it was something
+> specific to the build (as Jann also suggested). I tracked it down[1] to
+> "-mabi=apcs-gnu", which is from CONFIG_AEABI=n.
+> 
+> whiteheat_private {
+>         __u8                       mcr;                  /*     0     1 */
+> 
+>         /* size: 4, cachelines: 1, members: 1 */
+>         /* padding: 3 */
+>         /* last cacheline: 4 bytes */
+> };
 
-This latter isn't true; for one there's __attribute__((nocf_check)) that
-can be used to suppress ENDBR generation on a function.
+I stand corrected, thanks.
 
-Alternatively the linker will need to 'read' the function to determine
-if it has ENDBR, or we need to augment the ELF format such that we can
-tell from that.
+Do we have other ABIs that can increase the alignment of structures like
+this?
 
-So what exactly is the plan?
+Skimming lore reveals a few subsystems that have started depending on
+!OABI to not have to deal with this. Apparently the old ARM ABI is
+deprecated in user space since gcc-4.6:
+
+	https://lore.kernel.org/all/20190304193723.657089-1-arnd@arndb.de/
+
+Perhaps time to drop support from the kernel too?
+
+> Given nothing actually uses "struct whiteheat_dr_info", except for the
+> sizing (har har), I suspect the better solution is just to do:
+> 
+> 	info->mcr = command_info->result_buffer[0];
+
+Yeah, that works for now. Ideally, we'd cast the result buffer to struct
+whiteheat_dr_info and access its single field. But that's not what
+current code does and the above is no less confusing.
+
+Patch applied, thanks.
+
+Johan
