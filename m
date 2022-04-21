@@ -2,125 +2,129 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B85C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Apr 2022 16:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 888C2C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 21 Apr 2022 16:42:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231574AbiDUQ13 (ORCPT
+        id S231286AbiDUQpU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 21 Apr 2022 12:27:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33628 "EHLO
+        Thu, 21 Apr 2022 12:45:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1390578AbiDUQNq (ORCPT
+        with ESMTP id S232057AbiDUQpP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 21 Apr 2022 12:13:46 -0400
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E071A2B241
-        for <linux-hardening@vger.kernel.org>; Thu, 21 Apr 2022 09:10:54 -0700 (PDT)
-Received: by mail-lj1-x233.google.com with SMTP id bf11so6359069ljb.7
-        for <linux-hardening@vger.kernel.org>; Thu, 21 Apr 2022 09:10:54 -0700 (PDT)
+        Thu, 21 Apr 2022 12:45:15 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BA9748E45
+        for <linux-hardening@vger.kernel.org>; Thu, 21 Apr 2022 09:42:25 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id e62-20020a17090a6fc400b001d2cd8e9b0aso5680146pjk.5
+        for <linux-hardening@vger.kernel.org>; Thu, 21 Apr 2022 09:42:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eMQI1rEiKnusZB415KCgTRyB4BP2JkpCOZ5UBRv9+2E=;
-        b=f1mereyCYHXjPh8nr0o+NjPZ4hXeoK1yRpk3KiyfgkGzBpbTRBcX8emLC6FZdsVZDf
-         rUdA58HHwqNqvkoajT1ACXwK+ClfcX9oae/fKbGBG7ZIJDeHpz/ShFS5+8IwhOWVtc9e
-         kWuk/nBRifTouLIu2MCAugIB+i6BGTPmk2EME=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WGKEvdgYRQ7SM+AO2vjpmqYxP+BldJQN162qNBP3cZU=;
+        b=mB7+i6aOyxqKX81weI4FoQBPHQS7Yc1HSgzDeU5y/1s3jioCgVQBAmxogLw3X4u405
+         ATFSON/HUUhbKe5oLUTZgoght91a9ULLu35Mr6atCZrkVtOimFJMlRhT2KfW3BEIVjN7
+         9fLhdFyUIDyvHVOyuKDh/goUflgsOwBuirkuk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eMQI1rEiKnusZB415KCgTRyB4BP2JkpCOZ5UBRv9+2E=;
-        b=QfeQ0xRGpBscXhYH8FKVvfwt4Tfn3UmlFKewy817wTGiyx28o5nrh7lie/7ODuWRNX
-         nMjalHnOZ38sE8Y9uJUs+vCjLM5qPK0KE9NPhUt+m2NMneDENuU8aOP+LhH3/3+MpcoH
-         UR7zeycaSNEPLVO7jZaWhI423mblJ5Ar51FF7WUqz1wO2yPZAqJLHT1IzJ6o5NgbD6XB
-         IcjILkPuR41VH1zaEflIr/2haSxtvTGsWmmpqZZjCLGzGJQ8DSwHBiBwrPa1ci3cv/HG
-         FlVNv8cz6c7M8M0Vp8By1smvV7GNvV7aUHu/IlQejrWAvboTnxMUZMYXGw7hKRhdHHoi
-         GdlA==
-X-Gm-Message-State: AOAM530QyZwBIzpwyXelQxW0dl1qC1uwuCVB8uVnCY92CBnw+avIJTIJ
-        RbvoGQi5Rx1BGI9ibwdqTzpCNPVLNnZ76aAPK3M=
-X-Google-Smtp-Source: ABdhPJxhqIDH2sm7pezjdSaerF61W68zFZ/2wMHFq7KHnn9tGiR9qzVPdA0vw1qXdBlPfN6618QRtA==
-X-Received: by 2002:a2e:b88b:0:b0:24d:b624:6907 with SMTP id r11-20020a2eb88b000000b0024db6246907mr276753ljp.306.1650557452648;
-        Thu, 21 Apr 2022 09:10:52 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id x8-20020a05651c104800b0024dbb8326b2sm1261559ljm.1.2022.04.21.09.10.50
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Apr 2022 09:10:51 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id w1so9563170lfa.4
-        for <linux-hardening@vger.kernel.org>; Thu, 21 Apr 2022 09:10:50 -0700 (PDT)
-X-Received: by 2002:a05:6512:108b:b0:470:90b9:fb51 with SMTP id
- j11-20020a056512108b00b0047090b9fb51mr175297lfg.52.1650557450232; Thu, 21 Apr
- 2022 09:10:50 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WGKEvdgYRQ7SM+AO2vjpmqYxP+BldJQN162qNBP3cZU=;
+        b=FthZpM7sNXSSQot+52/O9V9ADzsndAxb7p0JniUFdGJviue9tOH+e8cx17/G54HkuR
+         yzOZLS1cMQKe3kecc5bdazXn2qi8578Ko3qx0ZdHN1ZM4JTb7jejdOuR0FenZcxBoNUM
+         2p4ceoUtNtzcybiS4yBpMTkdw66FMWx7L29w9qG0KLm+wgNcddzqMolTsn8QX5iZHSDo
+         oo7mZxghj0kLZoXW7Grtjmd2ZKIH4MsG2eoC4pN4/BxPp3r5UEZIWVW1DVix5MWsS6lS
+         s0fLSqdWcy/mNOdBNjTS7wJM4lRPPWeyjBoioo2OkkjRmBdH3ih+VU+EpwI2t4Mp9hcA
+         oZ+g==
+X-Gm-Message-State: AOAM530ku/+FvRVQw4+ZzzcgH8+uOFbojDzEsPCvo85Rp1/tEeady2aR
+        2OCSXcY+HjkY0hjUvrgR70OXSQ==
+X-Google-Smtp-Source: ABdhPJzhFmMSZnztpRzJKTkyr58MC5Qtizd2jhpjoY39cLT1geTbd0SbOnPo810CxKtCMtjBkj76hg==
+X-Received: by 2002:a17:902:778a:b0:158:da0f:f299 with SMTP id o10-20020a170902778a00b00158da0ff299mr366502pll.29.1650559344761;
+        Thu, 21 Apr 2022 09:42:24 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z5-20020a056a00240500b004e15d39f15fsm25268821pfh.83.2022.04.21.09.42.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Apr 2022 09:42:24 -0700 (PDT)
+Date:   Thu, 21 Apr 2022 09:42:23 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Topi Miettinen <toiwoton@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lennart Poettering <lennart@poettering.net>,
+        Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
+        Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-abi-devel@lists.sourceforge.net,
+        linux-hardening@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Salvatore Mesoraca <s.mesoraca16@gmail.com>,
+        Igor Zhbanov <izh1979@gmail.com>
+Subject: Re: [PATCH RFC 0/4] mm, arm64: In-kernel support for
+ memory-deny-write-execute (MDWE)
+Message-ID: <202204210941.4318DE6E8@keescook>
+References: <20220413134946.2732468-1-catalin.marinas@arm.com>
+ <202204141028.0482B08@keescook>
+ <YmAEDsGtxhim46UI@arm.com>
+ <c62170c6-5993-2417-4143-5a37a98b227c@gmail.com>
+ <202204201610.093C9D5FE8@keescook>
+ <YmF5s4KqT5WL4O0G@arm.com>
 MIME-Version: 1.0
-References: <yt9dzgkelelc.fsf@linux.ibm.com>
-In-Reply-To: <yt9dzgkelelc.fsf@linux.ibm.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 21 Apr 2022 09:10:33 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgv4NLtEowsmX+0jq_nBWXFp8jtruX6U3SDm52N=ftkgg@mail.gmail.com>
-Message-ID: <CAHk-=wgv4NLtEowsmX+0jq_nBWXFp8jtruX6U3SDm52N=ftkgg@mail.gmail.com>
-Subject: Re: -Warray-bounds fun again
-To:     Sven Schnelle <svens@linux.ibm.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org, krebbel@linux.ibm.com,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YmF5s4KqT5WL4O0G@arm.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Apr 21, 2022 at 7:02 AM Sven Schnelle <svens@linux.ibm.com> wrote:
->
-> The obvious 'fix' is to use absolute_pointer():
->
-> #define S390_lowcore (*((struct lowcore *)absolute_pointer(0)))
->
-> That makes the warning go away, but unfortunately the compiler no longer
-> knows that the memory access is fitting into a load/store with a 12 bit
-> displacement.
+On Thu, Apr 21, 2022 at 04:35:15PM +0100, Catalin Marinas wrote:
+> On Wed, Apr 20, 2022 at 04:21:45PM -0700, Kees Cook wrote:
+> > On Wed, Apr 20, 2022 at 10:34:33PM +0300, Topi Miettinen wrote:
+> > > For systemd, feature compatibility with the BPF version is important so that
+> > > we could automatically switch to the kernel version once available without
+> > > regressions. So I think PR_MDWX_MMAP (or maybe PR_MDWX_COMPAT) should match
+> > > exactly what MemoryDenyWriteExecute=yes as implemented with BPF has: only
+> > > forbid mmap(PROT_EXEC|PROT_WRITE) and mprotect(PROT_EXEC). Like BPF, once
+> > > installed there should be no way to escape and ELF flags should be also
+> > > ignored. ARM BTI should be allowed though (allow PROT_EXEC|PROT_BTI if the
+> > > old flags had PROT_EXEC).
+> 
+> I agree.
+> 
+> > > Then we could have improved versions (other PR_MDWX_ prctls) with lots more
+> > > checks. This could be enabled with MemoryDenyWriteExecute=strict or so.
+> > > 
+> > > Perhaps also more relaxed versions (like SARA) could be interesting (system
+> > > service running Python with FFI, or perhaps JVM etc), enabled with for
+> > > example MemoryDenyWriteExecute=trampolines. That way even those programs
+> > > would get some protection (though there would be a gap in the defences).
+> > 
+> > Yup, I think we're all on the same page. Catalin, can you respin with a
+> > prctl for enabling MDWE? I propose just:
+> > 
+> > 	prctl(PR_MDWX_SET, flags);
+> > 	prctl(PR_MDWX_GET);
+> > 
+> > 	PR_MDWX_FLAG_MMAP
+> > 		disallows PROT_EXEC on any VMA that is or was PROT_WRITE,
+> > 		covering at least: mmap, mprotect, pkey_mprotect, and shmat.
+> 
+> Do we want the "was PROT_WRITE" or we just reject mprotect(PROT_EXEC) if
+> the vma is not already PROT_EXEC? The latter is closer to the current
+> systemd approach. The former allows an mprotect(PROT_EXEC) if the
+> mapping was PROT_READ only for example.
+> 
+> I'd drop the "was PROT_WRITE" for now if the aim is a drop-in
+> replacement for BPF MDWE.
 
-In the gcc bugzilla for us needing to do these games:
+I think "was PROT_WRITE" is an important part of the defense that
+couldn't be done with a simple seccomp filter (which is why the filter
+ended up being a problem in the first place).
 
-    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=99578
-
-one of the suggestions was "I recommend suppressing the warning either
-by #pragma GCC diagnostic or by making the pointer volatile".
-
-But READ_ONCE() should already be doing that volatile thing, so that
-suggestion may not work with gcc-12 any more.
-
-It is *possible* that gcc-12 has now special-cased the very special
-issue of a cast of the constant zero. That is how NULL was
-traditionally defined.
-
-So just out of a perverse curiosity, what happens if you do something like this:
-
-   #define S390_lowcore_end ((struct lowcore *)sizeof(struct lowcore))
-   #define S390_lowcore (S390_lowcore_end[-1])
-
-instead? It should get the same value in the end, but it doesn't have
-that special case of "cast an integer constant 0 to a pointer".
-
-I suspect it probably doesn't help, because gcc will still see "oh,
-you're basing this off address zero".
-
-Another thing to try might be to remove the initial 16 bytes of
-padding from 'struct lowcore' (it looks like the first 20 bytes are
-not used - so leave 4 bytes of padding still), and use
-
-   #define S390_lowcore (*((struct lowcore_nopad *)16))
-
-instead. Then gcc will never see that 0, and hopefully the "he's
-accessing based off a NULL pointer" logic will go away.
-
-Because right now, our absolute_pointer() protection against this
-horrible gcc mis-feature is literally based on hiding the value from
-the compiler with an inline asm, and by virtue of hiding the value
-then yes, gcc will have to go through a register base pointer and
-cannot see that it fits in 12 bits.
-
-.. or you just need to disable -Warray-bounds on s390.
-
-              Linus
+-- 
+Kees Cook
