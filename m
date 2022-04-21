@@ -2,115 +2,153 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED52C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Apr 2022 18:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DEAC433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 21 Apr 2022 18:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382477AbiDUSSZ (ORCPT
+        id S1391193AbiDUSgE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 21 Apr 2022 14:18:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43000 "EHLO
+        Thu, 21 Apr 2022 14:36:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242648AbiDUSSY (ORCPT
+        with ESMTP id S1389065AbiDUSgE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 21 Apr 2022 14:18:24 -0400
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2588D13EA7;
-        Thu, 21 Apr 2022 11:15:34 -0700 (PDT)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-2ebf3746f87so61154487b3.6;
-        Thu, 21 Apr 2022 11:15:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ll9RiONHC6ecqkUVPX4Bwn7OsJSalGQ2+DEVyJxjcMM=;
-        b=k3cPRCzEJZgibwRKBPHXk/gT0wJUriuZ78x8RqPwl2taYAjVDeSplElw7OuyEOVD3J
-         CaCqupQCrF8nAcrhOcmZ08Iq4Re6y5LHX2Qpkojcsmwp8CFAbng56pW0Y947AwtLzd4z
-         rP8MUtNibaHuTOr7424yOt6WHK4Ady2kuaHy3Aw3jentM0L4dwosyl66gsKfu4J/mWNy
-         vVoUbRj+krBDVmR25M+SToUvGD/jOODnQEr+GMjsHm/r7Np7TWXkro74fw8TWzAfuM1J
-         u3NtQFkpKhlSE+QDqdgNXh91NaVMhVta5FnbBz/Plbf0C4Ln12lGhpkJQTEUVuzjtp1C
-         t9eQ==
-X-Gm-Message-State: AOAM532HpXWp7aDqr+EA6luk4Olx+qLvcePWFU0DCx8IXNi/P7F6qZ4b
-        pXKpFWYrpbiZG7jNu3dqBD9dhHqkLfSC8GiGoGM=
-X-Google-Smtp-Source: ABdhPJyaXa/pSh+pQ0m8rAF5rFqr3ho9+/BS4Jh4qfZXoe5jLLqB/C2heFmLZMRpvgUg9WBAY9TAV/5WuAYxLgp45wc=
-X-Received: by 2002:a81:260a:0:b0:2f4:ca82:a42f with SMTP id
- m10-20020a81260a000000b002f4ca82a42fmr1024201ywm.149.1650564933352; Thu, 21
- Apr 2022 11:15:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220421165504.3173244-1-keescook@chromium.org>
-In-Reply-To: <20220421165504.3173244-1-keescook@chromium.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 21 Apr 2022 20:15:22 +0200
-Message-ID: <CAJZ5v0gw_KZS0ZrWP1rwnrxbUjNJbb-KtgChqutDyYkUZVAMQQ@mail.gmail.com>
-Subject: Re: [PATCH] thermal: int340x: Fix attr.show callback prototype
+        Thu, 21 Apr 2022 14:36:04 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCE3E4BB80;
+        Thu, 21 Apr 2022 11:33:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 429FB60CA5;
+        Thu, 21 Apr 2022 18:33:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B3E6C385A9;
+        Thu, 21 Apr 2022 18:33:09 +0000 (UTC)
+Date:   Thu, 21 Apr 2022 19:33:05 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Stable <stable@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Chuansheng Liu <chuansheng.liu@intel.com>,
-        Jiasheng Jiang <jiasheng@iscas.ac.cn>,
-        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Topi Miettinen <toiwoton@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lennart Poettering <lennart@poettering.net>,
+        Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
+        Will Deacon <will@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-abi-devel@lists.sourceforge.net,
+        linux-hardening@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Salvatore Mesoraca <s.mesoraca16@gmail.com>,
+        Igor Zhbanov <izh1979@gmail.com>
+Subject: Re: [PATCH RFC 0/4] mm, arm64: In-kernel support for
+ memory-deny-write-execute (MDWE)
+Message-ID: <YmGjYYlcSVz38rOe@arm.com>
+References: <20220413134946.2732468-1-catalin.marinas@arm.com>
+ <202204141028.0482B08@keescook>
+ <YmAEDsGtxhim46UI@arm.com>
+ <c62170c6-5993-2417-4143-5a37a98b227c@gmail.com>
+ <202204201610.093C9D5FE8@keescook>
+ <YmF5s4KqT5WL4O0G@arm.com>
+ <202204210941.4318DE6E8@keescook>
+ <YmGTRQA74n/ZF7Vl@arm.com>
+ <202204211030.B0093CC14@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202204211030.B0093CC14@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Apr 21, 2022 at 6:55 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Control Flow Integrity (CFI) instrumentation of the kernel noticed that
-> the caller, dev_attr_show(), and the callback, odvp_show(), did not have
-> matching function prototypes, which would cause a CFI exception to be
-> raised. Correct the prototype by using struct device_attribute instead
-> of struct kobj_attribute.
->
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Amit Kucheria <amitk@kernel.org>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> Cc: linux-pm@vger.kernel.org
-> Reported-and-tested-by: Joao Moreira <joao@overdrivepizza.com>
-> Link: https://lore.kernel.org/lkml/067ce8bd4c3968054509831fa2347f4f@overdrivepizza.com/
-> Fixes: 006f006f1e5c ("thermal/int340x_thermal: Export OEM vendor variables")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On Thu, Apr 21, 2022 at 10:41:43AM -0700, Kees Cook wrote:
+> On Thu, Apr 21, 2022 at 06:24:21PM +0100, Catalin Marinas wrote:
+> > On Thu, Apr 21, 2022 at 09:42:23AM -0700, Kees Cook wrote:
+> > > On Thu, Apr 21, 2022 at 04:35:15PM +0100, Catalin Marinas wrote:
+> > > > Do we want the "was PROT_WRITE" or we just reject mprotect(PROT_EXEC) if
+> > > > the vma is not already PROT_EXEC? The latter is closer to the current
+> > > > systemd approach. The former allows an mprotect(PROT_EXEC) if the
+> > > > mapping was PROT_READ only for example.
+> > > > 
+> > > > I'd drop the "was PROT_WRITE" for now if the aim is a drop-in
+> > > > replacement for BPF MDWE.
+> > > 
+> > > I think "was PROT_WRITE" is an important part of the defense that
+> > > couldn't be done with a simple seccomp filter (which is why the filter
+> > > ended up being a problem in the first place).
+> > 
+> > I would say "was PROT_WRITE" is slightly more relaxed than "is not
+> > already PROT_EXEC". The seccomp filter can't do "is not already
+> > PROT_EXEC" either since it only checks the mprotect() arguments, not the
+> > current vma flags.
+> > 
+> > So we have (with sub-cases):
+> > 
+> > 1. Current BPF filter:
+> > 
+> >    a)	mmap(PROT_READ|PROT_WRITE|PROT_EXEC);	// fails
+> > 
+> >    b)	mmap(PROT_READ|PROT_EXEC);
+> >		mprotect(PROT_READ|PROT_EXEC|PROT_BTI);	// fails
+> >
+> >    c)	mmap(PROT_READ);
+> >		mprotect(PROT_READ|PROT_EXEC);		// fails
+> >
+> >    d)	mmap(PROT_READ|PROT_WRITE);
+> >		mprotect(PROT_READ);
+> >		mprotect(PROT_READ|PROT_EXEC);		// fails
+> > 
+> > 2. "is not already PROT_EXEC":
+> > 
+> >    a)	mmap(PROT_READ|PROT_WRITE|PROT_EXEC);	// fails
+> > 
+> >    b)	mmap(PROT_READ|PROT_EXEC);
+> >		mprotect(PROT_READ|PROT_EXEC|PROT_BTI);	// passes
+> > 
+> >    c)	mmap(PROT_READ);
+> >		mprotect(PROT_READ|PROT_EXEC);		// fails
+> >
+> >    d)	mmap(PROT_READ|PROT_WRITE);
+> >		mprotect(PROT_READ);
+> >		mprotect(PROT_READ|PROT_EXEC);		// fails
+> > 
+> > 3. "is or was not PROT_WRITE":
+> > 
+> >    a)	mmap(PROT_READ|PROT_WRITE|PROT_EXEC);	// fails
+> > 
+> >    b)	mmap(PROT_READ|PROT_EXEC);
+> >		mprotect(PROT_READ|PROT_EXEC|PROT_BTI);	// passes
+> > 
+> >    c)	mmap(PROT_READ);
+> >		mprotect(PROT_READ|PROT_EXEC);		// passes
+> > 
+> >    d)	mmap(PROT_READ|PROT_WRITE);
+> >		mprotect(PROT_READ);
+> >	 	mprotect(PROT_READ|PROT_EXEC);		// fails
+> 
+> [edited above to show each case]
 
-Applied as 5.18-rc material, thanks!
+Thanks, I was in a rush to get home ;).
 
-> ---
->  drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> index 4954800b9850..d97f496bab9b 100644
-> --- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> +++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> @@ -68,7 +68,7 @@ static int evaluate_odvp(struct int3400_thermal_priv *priv);
->  struct odvp_attr {
->         int odvp;
->         struct int3400_thermal_priv *priv;
-> -       struct kobj_attribute attr;
-> +       struct device_attribute attr;
->  };
->
->  static ssize_t data_vault_read(struct file *file, struct kobject *kobj,
-> @@ -311,7 +311,7 @@ static int int3400_thermal_get_uuids(struct int3400_thermal_priv *priv)
->         return result;
->  }
->
-> -static ssize_t odvp_show(struct kobject *kobj, struct kobj_attribute *attr,
-> +static ssize_t odvp_show(struct device *dev, struct device_attribute *attr,
->                          char *buf)
->  {
->         struct odvp_attr *odvp_attr;
-> --
-> 2.32.0
->
+> restated what was already summarized:
+> Problem is 1.b. 2 and 3 solve it. 3 is more relaxed (c passes).
+> 
+> > If we don't care about 3.c, we might as well go for (2). I don't mind,
+> > already went for (3) in this series. I think either of them would not be
+> > a regression on MDWE, unless there is some test that attempts 3.c and
+> > expects it to fail.
+> 
+> I should stop arguing for a less restrictive mode. ;) It just feels weird
+> that the combinations are API-mediated, rather than logically defined:
+> I can do PROT_READ|PROT_EXEC with mmap but not mprotect under 2. As
+> opposed to saying "the vma cannot be executable if it is or ever was
+> writable". I find the latter much easier to reason about as far as the
+> expectations of system state.
+
+I had the same reasoning, hence option 3 in this series. I prefer to
+treat mmap(PROT_READ|PROT_EXEC) and mprotect(PROT_READ|PROT_EXEC) in a
+similar way.
+
+-- 
+Catalin
