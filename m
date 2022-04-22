@@ -2,149 +2,101 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DC7C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 22 Apr 2022 13:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E45BC4332F
+	for <linux-hardening@archiver.kernel.org>; Fri, 22 Apr 2022 16:49:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347141AbiDVNj4 (ORCPT
+        id S1449840AbiDVQvz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 22 Apr 2022 09:39:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39168 "EHLO
+        Fri, 22 Apr 2022 12:51:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1448067AbiDVNjz (ORCPT
+        with ESMTP id S1386269AbiDVQvy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 22 Apr 2022 09:39:55 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 324AD4F46B;
-        Fri, 22 Apr 2022 06:37:01 -0700 (PDT)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23MCiHhA025833;
-        Fri, 22 Apr 2022 13:36:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : references : date : in-reply-to : message-id : content-type :
- mime-version; s=pp1; bh=VyQebr7yOdrQbt8DYFcva59WTdAH9zD09P6uLQXpWYQ=;
- b=QXbFwmgCvIcUpUbl6vwzybx10o5Lpyl11b7nu86jYVHlAx8Fm7Iy04oxJfA6+kTPpECx
- InSuOUPRohR7mnup4rRe5yZIpGyrLFR8ZkRfWnjjXgXRQFHaIK8JsJQ3t9Q6DnU4ZVtJ
- c3xf0qGfX3Ca6MDxamRJOFVqao6DAS4Gx3zz1D4HtL1VN6ye0E2D8l5UoukUiGIGg5H6
- b+yi85E5XCkhlkVA+xkHF3akQfHbF2SrN/3k7c/IZv48a3ergksupJaHwMxQ9I96JdOe
- j5hnJtZ0WEATtpHzwzwBRtxl3FAafZzdOgdNZ3EG7bXemxYG+SdXd4Zu2t9KeLypuAwA Gw== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3fkm5q2nmt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Apr 2022 13:36:58 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23MDLJMJ030707;
-        Fri, 22 Apr 2022 13:36:55 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 3ffne8sed6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Apr 2022 13:36:55 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23MDb40T9044594
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Apr 2022 13:37:04 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C91FF11C04C;
-        Fri, 22 Apr 2022 13:36:52 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8873E11C04A;
-        Fri, 22 Apr 2022 13:36:52 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri, 22 Apr 2022 13:36:52 +0000 (GMT)
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org, krebbel@linux.ibm.com,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-Subject: Re: -Warray-bounds fun again
-References: <yt9dzgkelelc.fsf@linux.ibm.com>
-        <CAHk-=wgv4NLtEowsmX+0jq_nBWXFp8jtruX6U3SDm52N=ftkgg@mail.gmail.com>
-Date:   Fri, 22 Apr 2022 15:36:52 +0200
-In-Reply-To: <CAHk-=wgv4NLtEowsmX+0jq_nBWXFp8jtruX6U3SDm52N=ftkgg@mail.gmail.com>
-        (Linus Torvalds's message of "Thu, 21 Apr 2022 09:10:33 -0700")
-Message-ID: <yt9dilr1kznv.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 6ezghKyRCNCosEJHNXa1JwhFpeyP2ARJ
-X-Proofpoint-GUID: 6ezghKyRCNCosEJHNXa1JwhFpeyP2ARJ
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-04-22_03,2022-04-22_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- clxscore=1015 bulkscore=0 phishscore=0 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 mlxscore=0 suspectscore=0
- mlxlogscore=999 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2202240000 definitions=main-2204220059
+        Fri, 22 Apr 2022 12:51:54 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D444F5F8D1;
+        Fri, 22 Apr 2022 09:49:00 -0700 (PDT)
+Received: from smtpclient.apple (d66-183-91-182.bchsia.telus.net [66.183.91.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id A379620E65D6;
+        Fri, 22 Apr 2022 09:48:59 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A379620E65D6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1650646140;
+        bh=OLe0JPo5zoHc/exu12PHa4ag/S13XMhItTudk6eCymw=;
+        h=Subject:From:In-Reply-To:Date:Cc:References:To:From;
+        b=KJERGAV9DfTL+ebJU6/C40/SgLOm0dGzX8kKykGOu09kEq1+wVze2ZP6m9ZRTj69R
+         QDyg2fYM/zLHYbWeLyY8KoZjyrgECu5HC13wjXZxob4dIrZ8dRKc+GpPKZ/wCS0G2q
+         cJxQ/UdYg1qeE/btSvBGs+LmyEfGFuPP5AkYXE6w=
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.80.82.1.1\))
+Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
+From:   Allen Pais <apais@linux.microsoft.com>
+In-Reply-To: <202204191929.B475B3426@keescook>
+Date:   Fri, 22 Apr 2022 09:48:58 -0700
+Cc:     olivier.dautricourt@orolia.com, sr@denx.de, vkoul@kernel.org,
+        linux-hardening@vger.kernel.org, ludovic.desroches@microchip.com,
+        tudor.ambarus@microchip.com, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, nsaenz@kernel.org,
+        paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com,
+        gustavo.pimentel@synopsys.com, vireshk@kernel.org,
+        andriy.shevchenko@linux.intel.com, leoyang.li@nxp.com,
+        zw@zh-kernel.org, wangzhou1@hisilicon.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, sean.wang@mediatek.com,
+        matthias.bgg@gmail.com, afaerber@suse.de, mani@kernel.org,
+        logang@deltatee.com, sanju.mehta@amd.com, daniel@zonque.org,
+        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        krzysztof.kozlowski@linaro.org, green.wan@sifive.com,
+        orsonzhai@gmail.com, baolin.wang7@gmail.com, zhang.lyra@gmail.com,
+        patrice.chotard@foss.st.com, linus.walleij@linaro.org,
+        wens@csie.org, jernej.skrabec@gmail.com, samuel@sholland.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <59CED9B1-03A4-4A71-9340-575F737037F5@linux.microsoft.com>
+References: <20220419211658.11403-1-apais@linux.microsoft.com>
+ <20220419211658.11403-2-apais@linux.microsoft.com>
+ <202204191929.B475B3426@keescook>
+To:     Kees Cook <keescook@chromium.org>
+X-Mailer: Apple Mail (2.3696.80.82.1.1)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
 
-> On Thu, Apr 21, 2022 at 7:02 AM Sven Schnelle <svens@linux.ibm.com> wrote:
->>
->> The obvious 'fix' is to use absolute_pointer():
->>
->> #define S390_lowcore (*((struct lowcore *)absolute_pointer(0)))
->>
->> That makes the warning go away, but unfortunately the compiler no longer
->> knows that the memory access is fitting into a load/store with a 12 bit
->> displacement.
->
-> In the gcc bugzilla for us needing to do these games:
->
->     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=99578
->
-> one of the suggestions was "I recommend suppressing the warning either
-> by #pragma GCC diagnostic or by making the pointer volatile".
->
-> But READ_ONCE() should already be doing that volatile thing, so that
-> suggestion may not work with gcc-12 any more.
->
-> It is *possible* that gcc-12 has now special-cased the very special
-> issue of a cast of the constant zero. That is how NULL was
-> traditionally defined.
->
-> So just out of a perverse curiosity, what happens if you do something like this:
->
->    #define S390_lowcore_end ((struct lowcore *)sizeof(struct lowcore))
->    #define S390_lowcore (S390_lowcore_end[-1])
->
-> instead? It should get the same value in the end, but it doesn't have
-> that special case of "cast an integer constant 0 to a pointer".
->
-> I suspect it probably doesn't help, because gcc will still see "oh,
-> you're basing this off address zero".
+>> The tasklet is an old API which will be deprecated, workqueue API
+>> cab be used instead of them.
+>>=20
+>> This patch replaces the tasklet usage in drivers/dma/* with a
+>> simple work.
+>=20
+> Thanks for working on this! Can you describe the process for the
+> replacement? For example, was it a 1:1 replacement from one set of
+> functions to another, or something more nuanced? Did you do this by =
+hand,
+> or with the help of something like Coccinelle?
 
-Yes.
+ For this series, I did the work manually as certain had the potential =
+to be improved.
+Also, there are drivers which use queue_work() instead of =
+schedule_work().=20
 
-> Another thing to try might be to remove the initial 16 bytes of
-> padding from 'struct lowcore' (it looks like the first 20 bytes are
-> not used - so leave 4 bytes of padding still), and use
->
->    #define S390_lowcore (*((struct lowcore_nopad *)16))
->
-> instead. Then gcc will never see that 0, and hopefully the "he's
-> accessing based off a NULL pointer" logic will go away.
+> Including these details will help maintainers with review, and will =
+help
+> others do other conversions in the future.
+>=20
 
-Looks like gcc also catches that, i get the same warning.
+ I will wait for a couple of more days and send out the rest of the =
+series with
+More details.
 
-> Because right now, our absolute_pointer() protection against this
-> horrible gcc mis-feature is literally based on hiding the value from
-> the compiler with an inline asm, and by virtue of hiding the value
-> then yes, gcc will have to go through a register base pointer and
-> cannot see that it fits in 12 bits.
->
-> .. or you just need to disable -Warray-bounds on s390.
+Thanks.
 
-That's what i'll do for now. I'll complain in the bugtracker entry
-mentioned above, but for now it is propably easier to just disable
-the warning until we have a fix.
+> Thanks!
+>=20
+> -Kees
+>=20
+> --=20
+> Kees Cook
 
-Thanks
-Sven
