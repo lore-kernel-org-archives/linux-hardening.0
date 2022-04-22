@@ -2,191 +2,113 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42895C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 21 Apr 2022 22:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3843C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 22 Apr 2022 08:24:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1442457AbiDUWaD (ORCPT
+        id S1444729AbiDVI1l (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 21 Apr 2022 18:30:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34828 "EHLO
+        Fri, 22 Apr 2022 04:27:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384054AbiDUWaD (ORCPT
+        with ESMTP id S1445189AbiDVI1g (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 21 Apr 2022 18:30:03 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03E394AE11;
-        Thu, 21 Apr 2022 15:27:10 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id c23so6847260plo.0;
-        Thu, 21 Apr 2022 15:27:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g9wUFSDdd2+1DNFR59TfjyNNqQk5r/GH/A03vywauoc=;
-        b=OF8JsT7VhIsEVkmqS1JOOf5Ukmr0PRzU3NNhBi4XV2pcEhLXU0c5p1w7WeBRNF1Jqs
-         n07Wi9LapJOiEngjYo2sKneMhknNjKzcXksWmk+4OZHNJnSUxgYYlMXWhM6sm3KKm3BP
-         8UteeE0izC2/b5kGCC/yhHQINe0sZ5C2c2/F20QTCLeVLNMDvGPpse4qUx1b09cehAAR
-         ss+ZavBgK63zQsbuu93gFde6Y/FMLjTlnj4I/4VePmPdZp0qy18lb6Rb0yExuV5hQuuW
-         nvRAKR2XHEyYYTt7zBBdj2BRDL+RKV5QMn3hqsAzHtApHJ+xjwPSk6ODp7EKREaxYtea
-         l0ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g9wUFSDdd2+1DNFR59TfjyNNqQk5r/GH/A03vywauoc=;
-        b=QZitqx1L5lBGmEnYWwmqXMPCF7LkHGqBAVINY2geNhlNy5HAJ0IbusrN3MAklF8bzN
-         5AvPO9FZKRb4bAQeIzX8FUF5OZZJGJbuiOFXz9oFAavIliyNlmsFirTa64Cfln8Xxvkq
-         r0C0ZSEC/hUnb78PJ2xoynfIGYBM/HWfvx7+ivp6LUY4zsWs0BgMoqY9+6bcM9U7Yr8B
-         UuMOsqYCff1FK6wYCQv1G+ThKCg6ijJ4InKqKuKudZUVkCPAL7xCTSlN/V0WfJgnFdOq
-         qZoSiRNFxWu+9RKjPaDQBtQ9OP/+ggOfuc3llGpiH65yBxDbBElnIlBgF7tMMlHnk3CI
-         dGXg==
-X-Gm-Message-State: AOAM532CZZ6Q3WtHr3+WgocjnC3eRvcI3g+XSI7jLsGvXZX4huL6tIAS
-        IwrTMNVrabdte9+A/3ghDqCKq0OrdUYQTlfP/BE=
-X-Google-Smtp-Source: ABdhPJxk+9AIKydOzg7DDXuOseBL3eV56i0dbHPQUdgjbp7Sm5O0tIy6XcQo+trh09bapKiIoSuIj6QwCihbzBHFpAo=
-X-Received: by 2002:a17:90b:4c8f:b0:1d2:90e4:26ef with SMTP id
- my15-20020a17090b4c8f00b001d290e426efmr12522620pjb.120.1650580030358; Thu, 21
- Apr 2022 15:27:10 -0700 (PDT)
+        Fri, 22 Apr 2022 04:27:36 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 960C152E6D
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Apr 2022 01:24:43 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-160-RpMxlxWUPReT48akEvTY5g-1; Fri, 22 Apr 2022 09:24:39 +0100
+X-MC-Unique: RpMxlxWUPReT48akEvTY5g-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.32; Fri, 22 Apr 2022 09:24:37 +0100
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.033; Fri, 22 Apr 2022 09:24:37 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Linus Torvalds' <torvalds@linux-foundation.org>,
+        Sven Schnelle <svens@linux.ibm.com>
+CC:     Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "krebbel@linux.ibm.com" <krebbel@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>
+Subject: RE: -Warray-bounds fun again
+Thread-Topic: -Warray-bounds fun again
+Thread-Index: AQHYVZxuMWLod4b+f0KSneXrWfgc9qz7l3Bw
+Date:   Fri, 22 Apr 2022 08:24:37 +0000
+Message-ID: <fd6b4de14d944680b5a5674edfe34654@AcuMS.aculab.com>
+References: <yt9dzgkelelc.fsf@linux.ibm.com>
+ <CAHk-=wgv4NLtEowsmX+0jq_nBWXFp8jtruX6U3SDm52N=ftkgg@mail.gmail.com>
+In-Reply-To: <CAHk-=wgv4NLtEowsmX+0jq_nBWXFp8jtruX6U3SDm52N=ftkgg@mail.gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <20220420004241.2093-1-joao@overdrivepizza.com>
- <20220420074044.GC2731@worktop.programming.kicks-ass.net> <20220420151714.fderdz4dzea75rvg@treble>
- <CAKwvOdm6J9TFUWJA2Q7VRjx1CpBme9z_Dp99+7YTjN5Jqp5=Aw@mail.gmail.com>
- <bf3273120d8d48a79357f229c5890576@overdrivepizza.com> <20220421074920.GK2731@worktop.programming.kicks-ass.net>
- <643dac8c3ccb0720b4a8e67a472b08de@overdrivepizza.com> <CAMe9rOqG5iAbYm_h3KsUeiToGPAs5SZ3SuWUn+_P-5Ax37=f1A@mail.gmail.com>
- <20220421221110.nq3e2vje7uvuu5dd@google.com>
-In-Reply-To: <20220421221110.nq3e2vje7uvuu5dd@google.com>
-From:   "H.J. Lu" <hjl.tools@gmail.com>
-Date:   Thu, 21 Apr 2022 15:26:34 -0700
-Message-ID: <CAMe9rOoHxJixg40r-3mnYeC-GQYj1gqwY9S_iMCdgc-DaajzCQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/11] Kernel FineIBT Support
-To:     Fangrui Song <maskray@google.com>
-Cc:     Joao Moreira <joao@overdrivepizza.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        alyssa.milburn@linux.intel.com, gabriel.gomes@linux.intel.com,
-        Rick P Edgecombe <rick.p.edgecombe@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Apr 21, 2022 at 3:11 PM Fangrui Song <maskray@google.com> wrote:
->
-> On 2022-04-21, H.J. Lu wrote:
-> >On Thu, Apr 21, 2022 at 8:23 AM Joao Moreira <joao@overdrivepizza.com> wrote:
-> >>
-> >> On 2022-04-21 00:49, Peter Zijlstra wrote:
-> >> > On Wed, Apr 20, 2022 at 03:40:41PM -0700, Joao Moreira wrote:
-> >> >> > >
-> >> >> > > If FineIBT needs it, I could reconsider.  But I think there's a strong
-> >> >> > > case to be made that the linker should be doing that instead.
-> >> >> >
-> >> >> > That sounds reasonable to me (and reminds me of linker relaxation).
-> >> >> > Joao, can you please work with Fangrui (LLD) and HJ (GNU binutils) to
-> >> >> > determine how feasible this would be? I assume code outside the kernel
-> >> >> > might enjoy such an optimization, too.  When that's the case, then it
-> >> >> > probably makes more sense to "upstream" such "optimizations" from the
-> >> >> > kernel-specific objtool into the toolchains.
-> >> >>
-> >> >> Alright, these are the greenlights I was hoping for.
-> >> >>
-> >> >> I went quickly into this with HJ and he mentioned that it should be
-> >> >> doable
-> >> >> in the linker, and that he has a patch for it in gcc (for local
-> >> >> function,
-> >> >> from what I could see):
-> >> >> https://gcc.gnu.org/pipermail/gcc-patches/2022-February/590832.html
-> >> >>
-> >> >> If @Fangrui is fine with it, I would like to try implementing this
-> >> >> myself in
-> >> >> lld (I'm still learning a lot about lld and having an actual problem
-> >> >> to
-> >> >> solve is the kind of fuel I need). Should take me a while, but I think
-> >> >> this
-> >> >> is not urgent, right? I can also go ahead and replicate HJ's gcc patch
-> >> >> into
-> >> >> clang, so we can also handle the local functions within the compiler
-> >> >> (I
-> >> >> think this makes a lot of sense).
-> >> >>
-> >> >> Once we have these in, I'll revisit FineIBT and extend the features to
-> >> >> handle the FineIBT instrumentation. Hopefully we'll be released from
-> >> >> needing
-> >> >> objtool (famous last words?!).
-> >> >>
-> >> >> This sounds like a plan, but I'm ofc open to suggestions or different
-> >> >> ideas/plans.
->
-> Thanks for looping me in! (I mean: this is discussed beforehand, instead
-> of GCC/GNU ld taking some steps and pushing LLVM toolchain to follow
-> suite..)
-> Though I think I may not have the full context here...
->
-> I can see that you have a request to skip the endbr instruction
-> (and potentially more instructions for FineIBT).
->
-> The GCC patch https://gcc.gnu.org/pipermail/gcc-patches/2022-February/590832.html
-> achieves it. A linker implementation will handle more cases.
-> This is somewhat similar to PowerPC64's global entry vs local entry.
-> The linker can redirect a branch instruction to the local entry in some
-> conditions. My concern is that inspecting the section content goes too far
-> and breaks the spirit of ELF relocation resolving. The proper way is to use
-> a symbol attribute (e.g. st_other).
->
-> st_other bits are scarce, so any use needs to be prudent.
+RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMjEgQXByaWwgMjAyMiAxNzoxMQ0KPiANCj4g
+T24gVGh1LCBBcHIgMjEsIDIwMjIgYXQgNzowMiBBTSBTdmVuIFNjaG5lbGxlIDxzdmVuc0BsaW51
+eC5pYm0uY29tPiB3cm90ZToNCj4gPg0KPiA+IFRoZSBvYnZpb3VzICdmaXgnIGlzIHRvIHVzZSBh
+YnNvbHV0ZV9wb2ludGVyKCk6DQo+ID4NCj4gPiAjZGVmaW5lIFMzOTBfbG93Y29yZSAoKigoc3Ry
+dWN0IGxvd2NvcmUgKilhYnNvbHV0ZV9wb2ludGVyKDApKSkNCj4gPg0KPiA+IFRoYXQgbWFrZXMg
+dGhlIHdhcm5pbmcgZ28gYXdheSwgYnV0IHVuZm9ydHVuYXRlbHkgdGhlIGNvbXBpbGVyIG5vIGxv
+bmdlcg0KPiA+IGtub3dzIHRoYXQgdGhlIG1lbW9yeSBhY2Nlc3MgaXMgZml0dGluZyBpbnRvIGEg
+bG9hZC9zdG9yZSB3aXRoIGEgMTIgYml0DQo+ID4gZGlzcGxhY2VtZW50Lg0KPiANCj4gSW4gdGhl
+IGdjYyBidWd6aWxsYSBmb3IgdXMgbmVlZGluZyB0byBkbyB0aGVzZSBnYW1lczoNCj4gDQo+ICAg
+ICBodHRwczovL2djYy5nbnUub3JnL2J1Z3ppbGxhL3Nob3dfYnVnLmNnaT9pZD05OTU3OA0KPiAN
+Cj4gb25lIG9mIHRoZSBzdWdnZXN0aW9ucyB3YXMgIkkgcmVjb21tZW5kIHN1cHByZXNzaW5nIHRo
+ZSB3YXJuaW5nIGVpdGhlcg0KPiBieSAjcHJhZ21hIEdDQyBkaWFnbm9zdGljIG9yIGJ5IG1ha2lu
+ZyB0aGUgcG9pbnRlciB2b2xhdGlsZSIuDQo+IA0KPiBCdXQgUkVBRF9PTkNFKCkgc2hvdWxkIGFs
+cmVhZHkgYmUgZG9pbmcgdGhhdCB2b2xhdGlsZSB0aGluZywgc28gdGhhdA0KPiBzdWdnZXN0aW9u
+IG1heSBub3Qgd29yayB3aXRoIGdjYy0xMiBhbnkgbW9yZS4NCj4gDQo+IEl0IGlzICpwb3NzaWJs
+ZSogdGhhdCBnY2MtMTIgaGFzIG5vdyBzcGVjaWFsLWNhc2VkIHRoZSB2ZXJ5IHNwZWNpYWwNCj4g
+aXNzdWUgb2YgYSBjYXN0IG9mIHRoZSBjb25zdGFudCB6ZXJvLiBUaGF0IGlzIGhvdyBOVUxMIHdh
+cw0KPiB0cmFkaXRpb25hbGx5IGRlZmluZWQuDQo+IA0KPiBTbyBqdXN0IG91dCBvZiBhIHBlcnZl
+cnNlIGN1cmlvc2l0eSwgd2hhdCBoYXBwZW5zIGlmIHlvdSBkbyBzb21ldGhpbmcgbGlrZSB0aGlz
+Og0KPiANCj4gICAgI2RlZmluZSBTMzkwX2xvd2NvcmVfZW5kICgoc3RydWN0IGxvd2NvcmUgKilz
+aXplb2Yoc3RydWN0IGxvd2NvcmUpKQ0KPiAgICAjZGVmaW5lIFMzOTBfbG93Y29yZSAoUzM5MF9s
+b3djb3JlX2VuZFstMV0pDQo+IA0KPiBpbnN0ZWFkPyBJdCBzaG91bGQgZ2V0IHRoZSBzYW1lIHZh
+bHVlIGluIHRoZSBlbmQsIGJ1dCBpdCBkb2Vzbid0IGhhdmUNCj4gdGhhdCBzcGVjaWFsIGNhc2Ug
+b2YgImNhc3QgYW4gaW50ZWdlciBjb25zdGFudCAwIHRvIGEgcG9pbnRlciIuDQo+IA0KPiBJIHN1
+c3BlY3QgaXQgcHJvYmFibHkgZG9lc24ndCBoZWxwLCBiZWNhdXNlIGdjYyB3aWxsIHN0aWxsIHNl
+ZSAib2gsDQo+IHlvdSdyZSBiYXNpbmcgdGhpcyBvZmYgYWRkcmVzcyB6ZXJvIi4NCj4gDQo+IEFu
+b3RoZXIgdGhpbmcgdG8gdHJ5IG1pZ2h0IGJlIHRvIHJlbW92ZSB0aGUgaW5pdGlhbCAxNiBieXRl
+cyBvZg0KPiBwYWRkaW5nIGZyb20gJ3N0cnVjdCBsb3djb3JlJyAoaXQgbG9va3MgbGlrZSB0aGUg
+Zmlyc3QgMjAgYnl0ZXMgYXJlDQo+IG5vdCB1c2VkIC0gc28gbGVhdmUgNCBieXRlcyBvZiBwYWRk
+aW5nIHN0aWxsKSwgYW5kIHVzZQ0KPiANCj4gICAgI2RlZmluZSBTMzkwX2xvd2NvcmUgKCooKHN0
+cnVjdCBsb3djb3JlX25vcGFkICopMTYpKQ0KPiANCj4gaW5zdGVhZC4gVGhlbiBnY2Mgd2lsbCBu
+ZXZlciBzZWUgdGhhdCAwLCBhbmQgaG9wZWZ1bGx5IHRoZSAiaGUncw0KPiBhY2Nlc3NpbmcgYmFz
+ZWQgb2ZmIGEgTlVMTCBwb2ludGVyIiBsb2dpYyB3aWxsIGdvIGF3YXkuDQo+IA0KPiBCZWNhdXNl
+IHJpZ2h0IG5vdywgb3VyIGFic29sdXRlX3BvaW50ZXIoKSBwcm90ZWN0aW9uIGFnYWluc3QgdGhp
+cw0KPiBob3JyaWJsZSBnY2MgbWlzLWZlYXR1cmUgaXMgbGl0ZXJhbGx5IGJhc2VkIG9uIGhpZGlu
+ZyB0aGUgdmFsdWUgZnJvbQ0KPiB0aGUgY29tcGlsZXIgd2l0aCBhbiBpbmxpbmUgYXNtLCBhbmQg
+YnkgdmlydHVlIG9mIGhpZGluZyB0aGUgdmFsdWUNCj4gdGhlbiB5ZXMsIGdjYyB3aWxsIGhhdmUg
+dG8gZ28gdGhyb3VnaCBhIHJlZ2lzdGVyIGJhc2UgcG9pbnRlciBhbmQNCj4gY2Fubm90IHNlZSB0
+aGF0IGl0IGZpdHMgaW4gMTIgYml0cy4NCg0KSSB0aGluayB5b3UgbWlnaHQgYmUgbWl4aW5nIHVw
+IHR3byBwcm9ibGVtcy4NCg0KQWNjZXNzaW5nICgoZm9vICopMCktPm1lbWJlciBpcyBwcm9ibGVt
+YXRpYyBiZWNhdXNlIE5VTEwgbWlnaHQgbm90IGJlIHplcm8uDQpJbiB3aGljaCBjYXNlIGFuIHVu
+ZXhwZWN0ZWQgYWRkcmVzcyBpcyBnZW5lcmF0ZWQuDQpJIHRoaW5rIHRoaXMgaXMgd2h5IGNsYW5n
+IHJlYWxseSBkb2Vzbid0IGxpa2UgeW91IGRvaW5nIHRoYXQuDQpVc2luZyAoKGZvbyAqKShzaXpl
+b2YgKGZvbykpWy0xXS5tZW1iZXIgbWlnaHQgZ2V0IGFyb3VuZCB0aGF0Lg0KDQpJIHN1c3BlY3Qg
+dGhlIGFycmF5IGJvdW5kcyBpc3N1ZSBpcyBjYXVzZWQgYnkgZ2NjIHVzaW5nIGEgc2l6ZSBvZiAw
+DQpmb3IgJ0kgZG9uJ3Qga25vdyB0aGUgc2l6ZScgYW5kIHRoZW4gYXNzdW1pbmcgaXQgaXMgcmVh
+bCBzaXplIGxhdGVyIG9uLg0KVGhhdCBzZWVtcyBsaWtlIGEgcmVhbCBnY2MgYnVnLg0KDQoJRGF2
+aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50
+IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTcz
+ODYgKFdhbGVzKQ0K
 
-On the other hand, linker inspection doesn't require changes in object files.
-It is much more user friendly.   X86-64 psABI already allows linker optimization
-based on contents at relocation sites.   This goes one step further to contents
-at relocation targets.
-
-> >> > So trivially the plan sounds like: compiler fixes STB_LOCAL because it
-> >> > has the scope, and the linker fixes everything else. However, that
-> >> > seems
-> >> > to assume that !STB_LOCAL will have ENDBR.
-> >> >
-> >> > This latter isn't true; for one there's __attribute__((nocf_check))
-> >> > that
-> >> > can be used to suppress ENDBR generation on a function.
-> >> >
-> >> > Alternatively the linker will need to 'read' the function to determine
-> >> > if it has ENDBR, or we need to augment the ELF format such that we can
-> >> > tell from that.
-> >> >
-> >> > So what exactly is the plan?
-> >>
-> >> I ran into too many broken dreams by trying to infer the presence of
-> >> ENDBRs just by the symbol locality/linkage... not only because of the
-> >> attribute, but also because of ancient assembly.
-> >>
-> >> So, my first thought was to use something similar to the
-> >> __patchable_function_entries section
-> >> (https://man7.org/linux/man-pages/man1/gcc.1.html), where we would have
-> >> a section to mark all the placed ENDBR. But then it occurred to me that
-> >> if we follow that road we'll miss the ENDBR placed in assembly unless we
-> >> mark it manually, so I started thinking that reading the target
-> >> instructions from the ELF object could be a more simplified approach,
-> >> although a little more treacherous.
-> >>
-> >> I didn't decide yet what to try first -- any thoughts?
-> >>
-> >> @Fangrui's and @HJ's thoughts about this could be gold.
-> >
-> >You can't assume ENDBR existence just by symbol visibility.
-> >Compiler knows if there is an ENDBR at function entry since
-> >it is generated by compiler.   Otherwise, you need to check
-> >the first 4 bytes at function entry,
-> >
-> >--
-> >H.J.
-
-
-
--- 
-H.J.
