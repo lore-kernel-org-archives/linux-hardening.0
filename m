@@ -2,58 +2,43 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5411CC433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 25 Apr 2022 20:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E78FC433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 25 Apr 2022 23:59:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232094AbiDYUhu (ORCPT
+        id S237907AbiDZAC4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 25 Apr 2022 16:37:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40006 "EHLO
+        Mon, 25 Apr 2022 20:02:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245634AbiDYUhq (ORCPT
+        with ESMTP id S236597AbiDZACz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 25 Apr 2022 16:37:46 -0400
-X-Greylist: delayed 1503 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 25 Apr 2022 13:34:41 PDT
-Received: from gateway33.websitewelcome.com (gateway33.websitewelcome.com [192.185.145.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A59C108FD7
-        for <linux-hardening@vger.kernel.org>; Mon, 25 Apr 2022 13:34:41 -0700 (PDT)
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id DE269768D4
-        for <linux-hardening@vger.kernel.org>; Mon, 25 Apr 2022 14:46:42 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id j4fSnw5ePb6UBj4fSnOVQt; Mon, 25 Apr 2022 14:46:42 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=gAUg/R/cVeWAnFANt9sHBSNVGqmO70rdsDy45wJTsaU=; b=nXjSnH2+B4oYCJA///AAVW2NW8
-        r4dPkUjzzfe5pFyYIsoCRBMLDuIqZiFDdS5xObDi78AZXva1lu/ggOV88cwZXwl66sIiTkHrbz3LO
-        eDzD1RJniTpUTwGwp2cJmllIRyoHCREO3oWmuIVVHcTMBzSatuT+r1cBj746FvoVFii8NNk+WQlZN
-        ErkF4Rmdr3IEqIs8jHPDKMeMmW7T9VwpVWrAvsezIR9lOql2dA87aUs5yYE+l5BKxZVHAV1GzK4qR
-        TLo3ytG37WxNYuGZtJLlxTQ2SoYZ+61vCIPZu5OdQTZYe2UoIfU86IO00ok+fB2ohDRXoo87J9Udq
-        nesJsk1A==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:43822 helo=[192.168.15.9])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1nj4fQ-001AN9-N1; Mon, 25 Apr 2022 14:46:40 -0500
-Message-ID: <3ee366a7-e61f-e513-aa2f-12e8d5316f3c@embeddedor.com>
-Date:   Mon, 25 Apr 2022 14:55:22 -0500
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
+        Mon, 25 Apr 2022 20:02:55 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A57D7120119;
+        Mon, 25 Apr 2022 16:59:48 -0700 (PDT)
+Received: from smtpclient.apple (d66-183-91-182.bchsia.telus.net [66.183.91.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 6EAA720E8CA3;
+        Mon, 25 Apr 2022 16:59:47 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6EAA720E8CA3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1650931188;
+        bh=SqaJwtu4nBGeVjj6Zn6hyoAbttxZDPfflYFC2W1PtJw=;
+        h=Subject:From:In-Reply-To:Date:Cc:References:To:From;
+        b=r0fG5JVPwUX7Lvt6Nsw6a+Mfx2XKy6yf1NK+ha+CYOWhXYm1+txuyWYwqA01HqaBB
+         MICE9oBd1OTpFbqVtsLQB6//n8ZmxqEn2KUsK4sRd/yHAzaEKb2/p3eqh9ZgFhD9Pl
+         k+gQf1uUVkFoFfbdX6VPnkan2kaKXykyiBm9G22I=
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.80.82.1.1\))
 Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Allen Pais <apais@linux.microsoft.com>,
-        olivier.dautricourt@orolia.com, sr@denx.de, vkoul@kernel.org
-Cc:     keescook@chromium.org, linux-hardening@vger.kernel.org,
-        ludovic.desroches@microchip.com, tudor.ambarus@microchip.com,
-        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+From:   Allen Pais <apais@linux.microsoft.com>
+In-Reply-To: <CACRpkdZz_JGGCv74gQYKMq5fdHLo_6jFuJ2uh8N9Q1VG5+kCFw@mail.gmail.com>
+Date:   Mon, 25 Apr 2022 16:59:46 -0700
+Cc:     olivier.dautricourt@orolia.com, sr@denx.de, vkoul@kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org, ludovic.desroches@microchip.com,
+        tudor.ambarus@microchip.com, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
         bcm-kernel-feedback-list@broadcom.com, nsaenz@kernel.org,
         paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com,
         gustavo.pimentel@synopsys.com, vireshk@kernel.org,
@@ -66,72 +51,51 @@ Cc:     keescook@chromium.org, linux-hardening@vger.kernel.org,
         agross@kernel.org, bjorn.andersson@linaro.org,
         krzysztof.kozlowski@linaro.org, green.wan@sifive.com,
         orsonzhai@gmail.com, baolin.wang7@gmail.com, zhang.lyra@gmail.com,
-        patrice.chotard@foss.st.com, linus.walleij@linaro.org,
-        wens@csie.org, jernej.skrabec@gmail.com, samuel@sholland.org,
+        patrice.chotard@foss.st.com, wens@csie.org,
+        jernej.skrabec@gmail.com, samuel@sholland.org,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <DE645506-6E3B-4D4D-BD3A-835AF4559F52@linux.microsoft.com>
 References: <20220419211658.11403-1-apais@linux.microsoft.com>
  <20220419211658.11403-2-apais@linux.microsoft.com>
- <353023ba-d506-5d45-be68-df2025074ed6@kernel.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <353023ba-d506-5d45-be68-df2025074ed6@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1nj4fQ-001AN9-N1
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.9]) [187.162.31.110]:43822
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 41
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+ <CACRpkdZz_JGGCv74gQYKMq5fdHLo_6jFuJ2uh8N9Q1VG5+kCFw@mail.gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+X-Mailer: Apple Mail (2.3696.80.82.1.1)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 4/25/22 10:56, Krzysztof Kozlowski wrote:
-> On 19/04/2022 23:16, Allen Pais wrote:
+> On 25-Apr-2022, at 8:06 AM, Linus Walleij <linus.walleij@linaro.org> =
+wrote:
+>=20
+> On Tue, Apr 19, 2022 at 11:17 PM Allen Pais =
+<apais@linux.microsoft.com> wrote:
+>=20
 >> The tasklet is an old API which will be deprecated, workqueue API
 >> cab be used instead of them.
->>
-> 
-> Thank you for your patch. There is something to discuss/improve.
-> 
+>>=20
 >> This patch replaces the tasklet usage in drivers/dma/* with a
 >> simple work.
-> 
-> Minor nits:
-> 
-> 1. Don't use "this patch".
-> https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
-> 2. Use subject prefix matching subsystem (git log --oneline)
-> 
->>
+>>=20
 >> Github: https://github.com/KSPP/linux/issues/94
-> 
-> 3. No external references to some issue management systems, change-ids
-> etc. Lore link could work, but it's not relevant here, I guess.
+>>=20
+>> Signed-off-by: Allen Pais <apais@linux.microsoft.com>
+>=20
+> Booted on:
+>=20
+>> drivers/dma/ste_dma40.c                       | 17 ++++-----
+>=20
+> This DMA-controller with no regressions:
+> Tested-by: Linus Walleij <linus.walleij@linaro.org>
+>=20
+> Also looks good so:
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-I think the link to the KSPP issue tracker should stay. If something,
-just changing 'Github:' to 'Link:'
+ Thanks for review and testing.
 
-The KSPP has been an active _upstream_ project for about 7 years now,
-and the issue tracker is publicly available. :) So it's not like a random
-link to a random project. This also help us to automatically keep track
-of the patches sent out to address a particular issue that we want to
-have resolved upstream. So please, keep the link in the changelog text,
-it's useful. :)
+>=20
+> Yours,
+> Linus Walleij
 
-Thanks
---
-Gustavo
