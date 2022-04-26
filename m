@@ -2,98 +2,98 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DABEEC433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 26 Apr 2022 00:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68093C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 26 Apr 2022 06:11:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233872AbiDZAHj (ORCPT
+        id S236853AbiDZGO4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 25 Apr 2022 20:07:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49992 "EHLO
+        Tue, 26 Apr 2022 02:14:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238630AbiDZAHi (ORCPT
+        with ESMTP id S245070AbiDZGOy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 25 Apr 2022 20:07:38 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D6597107723;
-        Mon, 25 Apr 2022 17:04:32 -0700 (PDT)
-Received: from smtpclient.apple (d66-183-91-182.bchsia.telus.net [66.183.91.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id B112420E8CAC;
-        Mon, 25 Apr 2022 17:04:31 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B112420E8CAC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1650931472;
-        bh=rKuOkio9gI+ognJQOktXvJGUxqRy2DVOygvVJnPJ9OA=;
-        h=Subject:From:In-Reply-To:Date:Cc:References:To:From;
-        b=ZFEmeFY1ma4wYHjB8BWkvmYl70O47TVONFvgQBXywk39QCYGWyi9F/KdrHxZdUauU
-         UGiqJ2o1FCi1jul/8RNnpjdqqqj++yWaTm06Btb5MCRplZgJjOZSxugpQ1Phxpji1W
-         /bjJXgoXYjph7wTx6aSH6N45xCVZukhZbFEcLnXE=
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.80.82.1.1\))
-Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
-From:   Allen Pais <apais@linux.microsoft.com>
-In-Reply-To: <353023ba-d506-5d45-be68-df2025074ed6@kernel.org>
-Date:   Mon, 25 Apr 2022 17:04:31 -0700
-Cc:     olivier.dautricourt@orolia.com, sr@denx.de, vkoul@kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, ludovic.desroches@microchip.com,
-        tudor.ambarus@microchip.com, f.fainelli@gmail.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, nsaenz@kernel.org,
-        paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com,
-        gustavo.pimentel@synopsys.com, vireshk@kernel.org,
-        andriy.shevchenko@linux.intel.com, leoyang.li@nxp.com,
-        zw@zh-kernel.org, wangzhou1@hisilicon.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, sean.wang@mediatek.com,
-        matthias.bgg@gmail.com, afaerber@suse.de, mani@kernel.org,
-        logang@deltatee.com, sanju.mehta@amd.com, daniel@zonque.org,
-        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        krzysztof.kozlowski@linaro.org, green.wan@sifive.com,
-        orsonzhai@gmail.com, baolin.wang7@gmail.com, zhang.lyra@gmail.com,
-        patrice.chotard@foss.st.com, linus.walleij@linaro.org,
-        wens@csie.org, jernej.skrabec@gmail.com, samuel@sholland.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F7470CEE-48F0-4D25-92E2-295787EE6F12@linux.microsoft.com>
-References: <20220419211658.11403-1-apais@linux.microsoft.com>
- <20220419211658.11403-2-apais@linux.microsoft.com>
- <353023ba-d506-5d45-be68-df2025074ed6@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-X-Mailer: Apple Mail (2.3696.80.82.1.1)
+        Tue, 26 Apr 2022 02:14:54 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1FEA36140;
+        Mon, 25 Apr 2022 23:11:47 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3803B61300;
+        Tue, 26 Apr 2022 06:11:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB566C385A0;
+        Tue, 26 Apr 2022 06:11:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650953506;
+        bh=4AtGfUOOD7eSeXBmH+CWZwnEA9Plcz+reR06sgMw9ao=;
+        h=Date:From:To:Cc:Subject:From;
+        b=oqKVBQHa38u+k5V/hkVv1rWq/L+s5zTOQ99ZMyK0aSgRILWjIu1BPkushPZR95NAW
+         2fEfCPq7z9hD/rdjXvr1tjfFVoJ7j7/hyd/9XYtmkK8WUVEMkIkl5KobrBbWffuNPe
+         nTKSIV/2p+PvNpROLjsJ/phM42xqd8L598FQTN1D+Izo6r9Cu7R8rTXx+bsz210MUy
+         fsxGEX9Z4UST37L0MSi0/hz/4ULd3E0uOeBxstgbOuj9JgmUBDMw9qgARUQNDOZoXh
+         cK9ejjiS0eKDB1qxI2BHvPh+X3QplyTaWABjB5bZRC7yRcig+DYQBj1HK3P97OeOE4
+         TuIzSh7cvgWng==
+Date:   Tue, 26 Apr 2022 01:20:43 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Dwaipayan Ray <dwaipayanray1@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] checkpatch: add new alloc functions to alloc with
+ multiplies check
+Message-ID: <20220426062043.GA19970@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+kvmalloc() and kvzalloc() functions have now 2-factor multiplication
+argument forms kvmalloc_array() and kvcalloc(), correspondingly.
 
->> The tasklet is an old API which will be deprecated, workqueue API
->> cab be used instead of them.
->>=20
->=20
-> Thank you for your patch. There is something to discuss/improve.
->=20
->> This patch replaces the tasklet usage in drivers/dma/* with a
->> simple work.
->=20
-> Minor nits:
->=20
-> 1. Don't use "this patch".
-> =
-https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/subm=
-itting-patches.rst#L95
-> 2. Use subject prefix matching subsystem (git log --oneline)
+Add alloc-with-multiplies checks for these new functions.
 
- Thank you. Will have it updated.
+Link: https://github.com/KSPP/linux/issues/187
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ scripts/checkpatch.pl | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
->=20
->>=20
->> Github: https://github.com/KSPP/linux/issues/94
->=20
-> 3. No external references to some issue management systems, change-ids
-> etc. Lore link could work, but it's not relevant here, I guess.
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 577e02998701..503e8abbb2c1 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -7033,14 +7033,16 @@ sub process {
+ 			    "Prefer $3(sizeof(*$1)...) over $3($4...)\n" . $herecurr);
+ 		}
+ 
+-# check for k[mz]alloc with multiplies that could be kmalloc_array/kcalloc
++# check for (kv|k)[mz]alloc with multiplies that could be kmalloc_array/kvmalloc_array/kvcalloc/kcalloc
+ 		if ($perl_version_ok &&
+ 		    defined $stat &&
+-		    $stat =~ /^\+\s*($Lval)\s*\=\s*(?:$balanced_parens)?\s*(k[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)\s*,/) {
++		    $stat =~ /^\+\s*($Lval)\s*\=\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)\s*,/) {
+ 			my $oldfunc = $3;
+ 			my $a1 = $4;
+ 			my $a2 = $10;
+ 			my $newfunc = "kmalloc_array";
++			$newfunc = "kvmalloc_array" if ($oldfunc eq "kvmalloc");
++			$newfunc = "kvcalloc" if ($oldfunc eq "kvzalloc");
+ 			$newfunc = "kcalloc" if ($oldfunc eq "kzalloc");
+ 			my $r1 = $a1;
+ 			my $r2 = $a2;
+@@ -7057,7 +7059,7 @@ sub process {
+ 					 "Prefer $newfunc over $oldfunc with multiply\n" . $herectx) &&
+ 				    $cnt == 1 &&
+ 				    $fix) {
+-					$fixed[$fixlinenr] =~ s/\b($Lval)\s*\=\s*(?:$balanced_parens)?\s*(k[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)/$1 . ' = ' . "$newfunc(" . trim($r1) . ', ' . trim($r2)/e;
++					$fixed[$fixlinenr] =~ s/\b($Lval)\s*\=\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)/$1 . ' = ' . "$newfunc(" . trim($r1) . ', ' . trim($r2)/e;
+ 				}
+ 			}
+ 		}
+-- 
+2.27.0
 
-We have had other tasks in the past which have carried the links. =
-Ideally, I would like to=20
-Keep it, I will leave it to the maintainers.=20
-
-Thanks.=
