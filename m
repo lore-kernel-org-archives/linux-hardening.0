@@ -2,98 +2,91 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 443C8C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 27 Apr 2022 16:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121DBC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 27 Apr 2022 22:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241279AbiD0QDj (ORCPT
+        id S229973AbiD0Wmc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 27 Apr 2022 12:03:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54158 "EHLO
+        Wed, 27 Apr 2022 18:42:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241571AbiD0QDX (ORCPT
+        with ESMTP id S229695AbiD0Wmb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 27 Apr 2022 12:03:23 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 44635170E33;
-        Wed, 27 Apr 2022 08:59:35 -0700 (PDT)
-Received: from smtpclient.apple (d66-183-91-182.bchsia.telus.net [66.183.91.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 6DA7720E97CA;
-        Wed, 27 Apr 2022 08:58:53 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6DA7720E97CA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1651075134;
-        bh=LOLk8KFWAb5rXU/Jm0ZFnROrkWq5xdzno1Ze707Mg8Q=;
-        h=Subject:From:In-Reply-To:Date:Cc:References:To:From;
-        b=lCin7lh3eOWoC8NOgWTsOU0C03Zh/WxRxATeRAsLc9arDLmXdbC8Xz3cFZXKGqkcf
-         DfBeM6nu6FeQm0CloG/1lp+Jr4MIPORFywV2OmiQ61fJFZoc5aJpPjVsFbvFPSlF4R
-         uU8SBBkMZMrfVfX7uVGZLvABbGZFb3L5JMNn+Qfs=
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.80.82.1.1\))
-Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
-From:   Allen Pais <apais@linux.microsoft.com>
-In-Reply-To: <e8cb3d63-f5b9-d067-af66-86f7a7c7f76c@intel.com>
-Date:   Wed, 27 Apr 2022 08:58:52 -0700
-Cc:     Vinod Koul <vkoul@kernel.org>, olivier.dautricourt@orolia.com,
-        sr@denx.de, Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, ludovic.desroches@microchip.com,
-        tudor.ambarus@microchip.com, f.fainelli@gmail.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, nsaenz@kernel.org,
-        paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com,
-        gustavo.pimentel@synopsys.com, vireshk@kernel.org,
-        andriy.shevchenko@linux.intel.com, leoyang.li@nxp.com,
-        zw@zh-kernel.org, wangzhou1@hisilicon.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, sean.wang@mediatek.com,
-        matthias.bgg@gmail.com, afaerber@suse.de, mani@kernel.org,
-        logang@deltatee.com, sanju.mehta@amd.com, daniel@zonque.org,
-        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        krzysztof.kozlowski@linaro.org, green.wan@sifive.com,
-        orsonzhai@gmail.com, baolin.wang7@gmail.com, zhang.lyra@gmail.com,
-        patrice.chotard@foss.st.com, linus.walleij@linaro.org,
-        wens@csie.org, jernej.skrabec@gmail.com, samuel@sholland.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <27B51CB8-FCC0-49FB-AA28-93594943423E@linux.microsoft.com>
-References: <20220419211658.11403-1-apais@linux.microsoft.com>
- <20220419211658.11403-2-apais@linux.microsoft.com> <YmiuUy+PAjKEq6uE@matsya>
- <e8cb3d63-f5b9-d067-af66-86f7a7c7f76c@intel.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-X-Mailer: Apple Mail (2.3696.80.82.1.1)
+        Wed, 27 Apr 2022 18:42:31 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DABA1290;
+        Wed, 27 Apr 2022 15:39:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=s6XKX8og5KIUAHRB93AiGU36ErCzIx+ZrYZ7ApHfXVY=; b=PzOWfZAdgPjJPl9GnpKb5EH5TQ
+        RfRROgx/z6q+6pL25n+U2OA6d/EZ1YgBP7ykxsbEWMgLrLOKQAPiO01FJDnCAxUcYFHubLunAbC9U
+        rOoMMoAiaqaP4obscEKwBHy+dDMiSwDn5PSaYCdCf6WbBbFFQXWZgJAhCfq67JgiksvaWrcWamIrh
+        +P8jh8FD2Ok1rJpu8GahsN0Kcz/JewPTJP2TMyAHAMinPK5GVNyZoLIhfgmNindrZ5zr9XkZ7fL7m
+        v99XVpJvp+dfzjvLINVLkG20L7jF/6nVIAkj6KG8pXib83nTVRTRP0E7ePnFLg27+tcc7xgr0YGLb
+        lIPX9HVA==;
+Received: from [2601:1c0:6280:3f0::aa0b]
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1njqJR-00Ay1a-3H; Wed, 27 Apr 2022 22:39:09 +0000
+Message-ID: <c0bf9c05-9345-b203-611d-411f0237cf26@infradead.org>
+Date:   Wed, 27 Apr 2022 15:39:04 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [PATCH] lkdtm: cfi: Fix type width for masking PAC bits
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     kernel test robot <lkp@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Li <ashimida@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20220427001226.1224704-1-keescook@chromium.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20220427001226.1224704-1-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
->> On 19-04-22, 21:16, Allen Pais wrote:
->>> The tasklet is an old API which will be deprecated, workqueue API
->>> cab be used instead of them.
->> What is the reason for tasklet removal, I am not sure old is a reason =
-to
->> remove an API...
->>=20
->>> This patch replaces the tasklet usage in drivers/dma/* with a
->>> simple work.
->> Dmaengines need very high throughput, one of the reasons in dmaengine
->> API design to use tasklet was higher priority given to them. Will the
->> workqueue allow that...?
->=20
-> Wouldn't the logical move be to convert threaded irq IF tasklets are =
-being deprecated rather than using workqueue as replacement?
 
-  Logically yes. Would all tasklets need to be moved to threaded irq, =
-that I am not sure. I think
-Workqueues does the job.
+On 4/26/22 17:12, Kees Cook wrote:
+> The masking for PAC bits wasn't handling 32-bit architectures correctly.
+> Replace the u64 cast with uintptr_t.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Link: https://lore.kernel.org/lkml/CAMuHMdVz-J-1ZQ08u0bsQihDkcRmEPrtX5B_oRJ+Ns5jrasnUw@mail.gmail.com
+> Fixes: 2e53b877dc12 ("lkdtm: Add CFI_BACKWARD to test ROP mitigations")
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
->=20
-> Also, wouldn't all the spin_lock_bh() calls need to be changed to =
-spin_lock_irqsave() now? Probably not as simple as just replace tasklet =
-with workqueue.
->=20
-
-Yes, this was carefully looked at as we have moved from the =
-interrupt/softirq context to process context.
-
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+fwiw
 Thanks.
 
+> ---
+>  drivers/misc/lkdtm/cfi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/misc/lkdtm/cfi.c b/drivers/misc/lkdtm/cfi.c
+> index 804965a480b7..666a7f4bc137 100644
+> --- a/drivers/misc/lkdtm/cfi.c
+> +++ b/drivers/misc/lkdtm/cfi.c
+> @@ -59,7 +59,7 @@ static void lkdtm_CFI_FORWARD_PROTO(void)
+>  #endif
+>  
+>  #define no_pac_addr(addr)      \
+> -	((__force __typeof__(addr))((__force u64)(addr) | PAGE_OFFSET))
+> +	((__force __typeof__(addr))((uintptr_t)(addr) | PAGE_OFFSET))
+>  
+>  /* The ultimate ROP gadget. */
+>  static noinline __no_ret_protection
+
+-- 
+~Randy
