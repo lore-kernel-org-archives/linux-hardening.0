@@ -2,110 +2,99 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE51C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 27 Apr 2022 07:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A662C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed, 27 Apr 2022 15:44:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358673AbiD0HRk (ORCPT
+        id S240117AbiD0PsD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 27 Apr 2022 03:17:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47962 "EHLO
+        Wed, 27 Apr 2022 11:48:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358669AbiD0HRe (ORCPT
+        with ESMTP id S240120AbiD0PsC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 27 Apr 2022 03:17:34 -0400
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 709FD4B1D6;
-        Wed, 27 Apr 2022 00:14:24 -0700 (PDT)
-Received: by mail-qt1-f173.google.com with SMTP id t16so542512qtr.9;
-        Wed, 27 Apr 2022 00:14:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1mvUlrTirU9klnitg8TwDGH+tVvlE6Lo8EZa9hr0GIw=;
-        b=e9ZmajDgZ/7jQVApNUA0/JMJ24Otyi0XhG2iNMRupVMuPcsGh5ATNibPYGrgyP0b1C
-         UGYRkLCEsBXAZIpHEJbok8rzjWZ4ePE2XiZ11HCuV0518dv6UAM/fPrc+wG8GUc8o5+L
-         LFwK/Z0ti482txpd/+JARJ9Y6pVhje9sJ5Q3JOhZ1mfJLuYMcxxWXtBd8UcbWxdM1VG8
-         vq6fhPvX3RORob6XxhO25g+ov2OhqtsN0qZVANPVS5tsJe46TI/8DnA0xisfc9yqy+P2
-         WVlqdu5ZA1m2EuCnjYWA04zT/iBSUUwA0GiHp0P+Bnz5ccCfz7j8k4u8TTKUJLCD7tog
-         JSKw==
-X-Gm-Message-State: AOAM531PsUzcKakfkKBs1PfIvtptbDvFE4eS9IEFAHfwiXf5iVI9DxO5
-        1MuTqk1TVk5fwDmrdeEp714dpg7n24tGPA==
-X-Google-Smtp-Source: ABdhPJxlOWa55m+1hstWZnHF/1z6+9yCfsZu+RhdCKKDJSHMuZdFct+KSkQ8gdhKmcG62slG7Iz0UQ==
-X-Received: by 2002:ac8:5894:0:b0:2f3:7266:e378 with SMTP id t20-20020ac85894000000b002f37266e378mr6568661qta.631.1651043663435;
-        Wed, 27 Apr 2022 00:14:23 -0700 (PDT)
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
-        by smtp.gmail.com with ESMTPSA id 22-20020ac85916000000b002f3402e34a3sm9820192qty.55.2022.04.27.00.14.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Apr 2022 00:14:22 -0700 (PDT)
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-2ec42eae76bso8455087b3.10;
-        Wed, 27 Apr 2022 00:14:21 -0700 (PDT)
-X-Received: by 2002:a81:e10d:0:b0:2f7:bb2a:6529 with SMTP id
- w13-20020a81e10d000000b002f7bb2a6529mr22442009ywh.62.1651043661690; Wed, 27
- Apr 2022 00:14:21 -0700 (PDT)
+        Wed, 27 Apr 2022 11:48:02 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 914CD4EA30;
+        Wed, 27 Apr 2022 08:44:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651074287; x=1682610287;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VeXWrrau3UGYgT+PE4NxfpOWIgpbbEl5MsiQ9g95Uas=;
+  b=RDm++GYGo3zeL/S+3XOTfVA3GZGVgz3OI9fwiyoeyfQ1UEddFCEQmEHH
+   lywUQcBy5pdO0hd1K8GnBwkIFM6ITHPK27o1h2lQR4yUCLi141/2Iuny4
+   dPerzjxzcQpgl554653PHRlKZiky3cz3jvtqCih/U1Hgh/VckzL5Np3Qz
+   KZsqrzKiinhdPyTX7pnN7vlXqIa+SRdR2Di14xVQpDhBGcpv68p0LOosJ
+   8jBx7Y098Y8VdzMqi/SvTxqxIBidzIE53d29pzaaC4fp4tyA012sOESmx
+   9znifIGvtcs2hV9U8GRO7zeBSfANA9q2BTuo+k5s7nGTCLr/DYiFIMZ/R
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10330"; a="352403846"
+X-IronPort-AV: E=Sophos;i="5.90,293,1643702400"; 
+   d="scan'208";a="352403846"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2022 08:20:14 -0700
+X-IronPort-AV: E=Sophos;i="5.90,293,1643702400"; 
+   d="scan'208";a="705592999"
+Received: from eaojeh-mobl1.amr.corp.intel.com (HELO [10.212.22.124]) ([10.212.22.124])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2022 08:20:12 -0700
+Message-ID: <e8cb3d63-f5b9-d067-af66-86f7a7c7f76c@intel.com>
+Date:   Wed, 27 Apr 2022 08:20:11 -0700
 MIME-Version: 1.0
-References: <20220427001226.1224704-1-keescook@chromium.org>
-In-Reply-To: <20220427001226.1224704-1-keescook@chromium.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 27 Apr 2022 09:14:10 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWJczJGLxbFUyO8YDOAcCqdVQmo1zHj5PYtxruL9MzeOg@mail.gmail.com>
-Message-ID: <CAMuHMdWJczJGLxbFUyO8YDOAcCqdVQmo1zHj5PYtxruL9MzeOg@mail.gmail.com>
-Subject: Re: [PATCH] lkdtm: cfi: Fix type width for masking PAC bits
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel test robot <lkp@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Li <ashimida@linux.alibaba.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
+Content-Language: en-US
+To:     Vinod Koul <vkoul@kernel.org>,
+        Allen Pais <apais@linux.microsoft.com>
+Cc:     olivier.dautricourt@orolia.com, sr@denx.de, keescook@chromium.org,
+        linux-hardening@vger.kernel.org, ludovic.desroches@microchip.com,
+        tudor.ambarus@microchip.com, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, nsaenz@kernel.org,
+        paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com,
+        gustavo.pimentel@synopsys.com, vireshk@kernel.org,
+        andriy.shevchenko@linux.intel.com, leoyang.li@nxp.com,
+        zw@zh-kernel.org, wangzhou1@hisilicon.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, sean.wang@mediatek.com,
+        matthias.bgg@gmail.com, afaerber@suse.de, mani@kernel.org,
+        logang@deltatee.com, sanju.mehta@amd.com, daniel@zonque.org,
+        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        krzysztof.kozlowski@linaro.org, green.wan@sifive.com,
+        orsonzhai@gmail.com, baolin.wang7@gmail.com, zhang.lyra@gmail.com,
+        patrice.chotard@foss.st.com, linus.walleij@linaro.org,
+        wens@csie.org, jernej.skrabec@gmail.com, samuel@sholland.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220419211658.11403-1-apais@linux.microsoft.com>
+ <20220419211658.11403-2-apais@linux.microsoft.com> <YmiuUy+PAjKEq6uE@matsya>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <YmiuUy+PAjKEq6uE@matsya>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
 
-On Wed, Apr 27, 2022 at 2:12 AM Kees Cook <keescook@chromium.org> wrote:
-> The masking for PAC bits wasn't handling 32-bit architectures correctly.
-> Replace the u64 cast with uintptr_t.
+On 4/26/2022 7:45 PM, Vinod Koul wrote:
+> On 19-04-22, 21:16, Allen Pais wrote:
+>> The tasklet is an old API which will be deprecated, workqueue API
+>> cab be used instead of them.
+> What is the reason for tasklet removal, I am not sure old is a reason to
+> remove an API...
 >
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Link: https://lore.kernel.org/lkml/CAMuHMdVz-J-1ZQ08u0bsQihDkcRmEPrtX5B_oRJ+Ns5jrasnUw@mail.gmail.com
-> Fixes: 2e53b877dc12 ("lkdtm: Add CFI_BACKWARD to test ROP mitigations")
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+>> This patch replaces the tasklet usage in drivers/dma/* with a
+>> simple work.
+> Dmaengines need very high throughput, one of the reasons in dmaengine
+> API design to use tasklet was higher priority given to them. Will the
+> workqueue allow that...?
 
-Thank you, that fixes the m68k allmodconfig build, so
-Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Wouldn't the logical move be to convert threaded irq IF tasklets are 
+being deprecated rather than using workqueue as replacement?
 
-> --- a/drivers/misc/lkdtm/cfi.c
-> +++ b/drivers/misc/lkdtm/cfi.c
-> @@ -59,7 +59,7 @@ static void lkdtm_CFI_FORWARD_PROTO(void)
->  #endif
->
->  #define no_pac_addr(addr)      \
-> -       ((__force __typeof__(addr))((__force u64)(addr) | PAGE_OFFSET))
-> +       ((__force __typeof__(addr))((uintptr_t)(addr) | PAGE_OFFSET))
+Also, wouldn't all the spin_lock_bh() calls need to be changed to 
+spin_lock_irqsave() now? Probably not as simple as just replace tasklet 
+with workqueue.
 
-Not related to this patch, but "| PAGE_OFFSET" is not identical
-to "+ PAGE_OFFSET" for large kernel sizes.
 
-More specifically, I'm thinking about platforms where "large" would
-be >= 32 MiB:
-arch/mips/include/asm/mach-ar7/spaces.h:#define PAGE_OFFSET
-_AC(0x94000000, UL)
-or >= 128 MiB:
-arch/x86/Kconfig:         default 0x78000000 if VMSPLIT_2G_OPT
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
