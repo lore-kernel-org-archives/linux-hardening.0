@@ -2,108 +2,97 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1CEC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 26 Apr 2022 14:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCECC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 27 Apr 2022 00:12:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347338AbiDZOuL (ORCPT
+        id S1356209AbiD0APs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 26 Apr 2022 10:50:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53366 "EHLO
+        Tue, 26 Apr 2022 20:15:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231352AbiDZOuK (ORCPT
+        with ESMTP id S1356354AbiD0APq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 26 Apr 2022 10:50:10 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DDCB289AD;
-        Tue, 26 Apr 2022 07:47:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 8A63BCE1EC7;
-        Tue, 26 Apr 2022 14:46:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43544C385AA;
-        Tue, 26 Apr 2022 14:46:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650984417;
-        bh=/8WlzJeTBNWdeEvwIpkR3MrSpPzIdcQR58JBfllQbg0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tyl4AjDWt4sAcE0/gUSdiGR9zz7nOQhSkgWk1ASyVK9yCRxCprkpHuqQe3Z4id9uI
-         FCODM7zTPKCMycIuYtkkm1jcXYto3ecXJ20nCwoAxsFez+VvteusBDERbXvzA/neCi
-         LGCys4wkcjT+nSFCFpgHaZsDUEaT2eM4cldtVaV97EaAfwo4RDEw1/Y0391jGsS1ox
-         9fvD0q2Wtc660LK7txzDJ/ULatEpwmnExFwruNPYPa3jRW/ddai33rMKvlBXF/bMvJ
-         qNprdx9WAXaGaHLKlZUJdu7osDtCR/hD8fZ9JejObeeCRyrV9IvjfdEJKM+klrzvI6
-         qWQ01xNl7d3Rw==
-Date:   Tue, 26 Apr 2022 09:55:54 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
-        Dwaipayan Ray <dwaipayanray1@gmail.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] checkpatch: add new alloc functions to alloc with
- multiplies check
-Message-ID: <20220426145554.GA7712@embeddedor>
-References: <20220426062043.GA19970@embeddedor>
+        Tue, 26 Apr 2022 20:15:46 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11F7E67D0E
+        for <linux-hardening@vger.kernel.org>; Tue, 26 Apr 2022 17:12:31 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id e24so59074pjt.2
+        for <linux-hardening@vger.kernel.org>; Tue, 26 Apr 2022 17:12:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LrY29zoH0JBtqVaH425QnOYLXccFTmhwFII9Fu+0HQc=;
+        b=Nptqp+TlA73Mu1+UbvfBpJP/xL2A5YFZbWR/9azHiX7v62jVA4hu7QEXCq0IHyKL3f
+         ipCCOk1JvkZvL4Oag6VDOfmKCyn9GYxGoghG2WykPwZJ+Vww+j2HcJk43fdhb8OLjzTM
+         SMYV2/uahV9zmIYnJ7lLbWjByz2sCZmvJQhxg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LrY29zoH0JBtqVaH425QnOYLXccFTmhwFII9Fu+0HQc=;
+        b=HNan8F7PU+rs5MegL5MPTWLzozw3oI+9wg/Hb/tZzPiTdbcmLo6iYUExkjp9E7wT86
+         2Vfc3bC22qLWEiaIIPYlTJyfTSaeQexle6iMbov6gIMZuxMWHQ+upKHAGvQqhrTYkSKb
+         NZKhCUcok5YdFyVBGAwIbhVN4XWv0jhNx67eXSEAbJoq9q3nFZC8zcLDMILBOsJ8kFdu
+         1iMXM1Ejax4qVCre7ymRuBZsjbv1GZfgbbgHztjrX1u5HPQovc/8/P0dN8kz3eLcrPdP
+         WU1qP/Ajh1hh65VgU7RNho2xCvFhE/W+/WABFXGMcs83IXiozu04E3mOREiDldRoV66U
+         cu1A==
+X-Gm-Message-State: AOAM531QSkpxHNy4rcjNNWWXFzOqsVgnhnfLHTA8G4yewlmZEAhQ6IIb
+        VaUGQ40Zo7L3MUx2sY0Y3VgOxA==
+X-Google-Smtp-Source: ABdhPJzh2GNfUelh/E8seyDpUBAxJPMlUIErWm87QFNyGWa4pxdnuFXvFmZSXuQ6SBj5obZCBj1u0g==
+X-Received: by 2002:a17:90a:d715:b0:1d9:b55b:9a16 with SMTP id y21-20020a17090ad71500b001d9b55b9a16mr5635541pju.93.1651018350579;
+        Tue, 26 Apr 2022 17:12:30 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y2-20020a056a00190200b004fa865d1fd3sm17090582pfi.86.2022.04.26.17.12.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Apr 2022 17:12:30 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        kernel test robot <lkp@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Li <ashimida@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] lkdtm: cfi: Fix type width for masking PAC bits
+Date:   Tue, 26 Apr 2022 17:12:26 -0700
+Message-Id: <20220427001226.1224704-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220426062043.GA19970@embeddedor>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1119; h=from:subject; bh=qmOzXnXd3i6tUyczr+mAshjhtKMYt8Tj7/F36+UT8Og=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiaIpqzyhZlG6iHvnfZ3eDFRKG+BvbhbLggZSr7CKc yvUBTu2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYmiKagAKCRCJcvTf3G3AJsA2EA CAcU3cjo9QBKKr5AIrPuSxrQutvqiTa3JVSpLL2zzwZFaBGjnEpu4zrkGyuZdJqxPRbb7nhqp9R06O iQwl5w4/qW/bU87rq5L+M3ai/+bUHTk5b5GLolkYVsjyJRvyxZE5lZd9o24nuEP5REWEjBalrMjpZw h/BPZMY9yBqTz/4Y3a0G+PDCm8zZmwSQk7IZ2t4qfIANRwFJ0wrAB0kyxVV20xqNYSe6p4guNY1ZCP XsqvE25Rgcq1Kz3AOgHxwdb+7O1mWN0ZTTZeQpYFy1imAF8HwvFJMmm/MHZiOjcrihPcgtma6b46Ux AE2Rsa+dnFSlSLzyG29iIlZVm4kmOcItC/Qd95h/MUWEobeUeFL7oCd9sqd7iSTPd9D3Qid3elnuNN IicRmyE2zi7I/573A2c3na3azD4DohO5oVYeRqOB9ebuSBIc3EpXsuys1UnGRO8w2PM7bBOoXcLefb G/N+ar3qd59SBHFdZWu+BwpUBkkAlPiXuk2chZaf1hADhiTPrQ80Y7MTYP9bwmEKz4xqFIsqtGh67u ngHLE7CXIdSg8HISCVSoyNufromZvax5VdDoLIkUxsk4KRBGb2LaZzecI+kCQK0QGTEWuu9AoPMPX6 bouXEFAH0gjWbgQNtN0oQNGUQtiGTluvx/o8ZhZt/AkHS9TJAY9AgYKnSDUw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Apr 26, 2022 at 01:20:43AM -0500, Gustavo A. R. Silva wrote:
-> kvmalloc() and kvzalloc() functions have now 2-factor multiplication
-> argument forms kvmalloc_array() and kvcalloc(), correspondingly.
-> 
-> Add alloc-with-multiplies checks for these new functions.
-> 
-> Link: https://github.com/KSPP/linux/issues/187
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+The masking for PAC bits wasn't handling 32-bit architectures correctly.
+Replace the u64 cast with uintptr_t.
 
-I've taken this in my -next tree for 5.19:
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Link: https://lore.kernel.org/lkml/CAMuHMdVz-J-1ZQ08u0bsQihDkcRmEPrtX5B_oRJ+Ns5jrasnUw@mail.gmail.com
+Fixes: 2e53b877dc12 ("lkdtm: Add CFI_BACKWARD to test ROP mitigations")
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/misc/lkdtm/cfi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/commit/?h=for-next/kspp-checkpatch
+diff --git a/drivers/misc/lkdtm/cfi.c b/drivers/misc/lkdtm/cfi.c
+index 804965a480b7..666a7f4bc137 100644
+--- a/drivers/misc/lkdtm/cfi.c
++++ b/drivers/misc/lkdtm/cfi.c
+@@ -59,7 +59,7 @@ static void lkdtm_CFI_FORWARD_PROTO(void)
+ #endif
+ 
+ #define no_pac_addr(addr)      \
+-	((__force __typeof__(addr))((__force u64)(addr) | PAGE_OFFSET))
++	((__force __typeof__(addr))((uintptr_t)(addr) | PAGE_OFFSET))
+ 
+ /* The ultimate ROP gadget. */
+ static noinline __no_ret_protection
+-- 
+2.32.0
 
-Thanks
---
-Gustavo
-
-> ---
->  scripts/checkpatch.pl | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 577e02998701..503e8abbb2c1 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -7033,14 +7033,16 @@ sub process {
->  			    "Prefer $3(sizeof(*$1)...) over $3($4...)\n" . $herecurr);
->  		}
->  
-> -# check for k[mz]alloc with multiplies that could be kmalloc_array/kcalloc
-> +# check for (kv|k)[mz]alloc with multiplies that could be kmalloc_array/kvmalloc_array/kvcalloc/kcalloc
->  		if ($perl_version_ok &&
->  		    defined $stat &&
-> -		    $stat =~ /^\+\s*($Lval)\s*\=\s*(?:$balanced_parens)?\s*(k[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)\s*,/) {
-> +		    $stat =~ /^\+\s*($Lval)\s*\=\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)\s*,/) {
->  			my $oldfunc = $3;
->  			my $a1 = $4;
->  			my $a2 = $10;
->  			my $newfunc = "kmalloc_array";
-> +			$newfunc = "kvmalloc_array" if ($oldfunc eq "kvmalloc");
-> +			$newfunc = "kvcalloc" if ($oldfunc eq "kvzalloc");
->  			$newfunc = "kcalloc" if ($oldfunc eq "kzalloc");
->  			my $r1 = $a1;
->  			my $r2 = $a2;
-> @@ -7057,7 +7059,7 @@ sub process {
->  					 "Prefer $newfunc over $oldfunc with multiply\n" . $herectx) &&
->  				    $cnt == 1 &&
->  				    $fix) {
-> -					$fixed[$fixlinenr] =~ s/\b($Lval)\s*\=\s*(?:$balanced_parens)?\s*(k[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)/$1 . ' = ' . "$newfunc(" . trim($r1) . ', ' . trim($r2)/e;
-> +					$fixed[$fixlinenr] =~ s/\b($Lval)\s*\=\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)/$1 . ' = ' . "$newfunc(" . trim($r1) . ', ' . trim($r2)/e;
->  				}
->  			}
->  		}
-> -- 
-> 2.27.0
-> 
