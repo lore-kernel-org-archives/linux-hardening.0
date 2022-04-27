@@ -2,52 +2,40 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A662C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 27 Apr 2022 15:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 033BEC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 27 Apr 2022 15:53:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240117AbiD0PsD (ORCPT
+        id S240482AbiD0P4s (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 27 Apr 2022 11:48:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34530 "EHLO
+        Wed, 27 Apr 2022 11:56:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240120AbiD0PsC (ORCPT
+        with ESMTP id S240434AbiD0P4p (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 27 Apr 2022 11:48:02 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 914CD4EA30;
-        Wed, 27 Apr 2022 08:44:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651074287; x=1682610287;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VeXWrrau3UGYgT+PE4NxfpOWIgpbbEl5MsiQ9g95Uas=;
-  b=RDm++GYGo3zeL/S+3XOTfVA3GZGVgz3OI9fwiyoeyfQ1UEddFCEQmEHH
-   lywUQcBy5pdO0hd1K8GnBwkIFM6ITHPK27o1h2lQR4yUCLi141/2Iuny4
-   dPerzjxzcQpgl554653PHRlKZiky3cz3jvtqCih/U1Hgh/VckzL5Np3Qz
-   KZsqrzKiinhdPyTX7pnN7vlXqIa+SRdR2Di14xVQpDhBGcpv68p0LOosJ
-   8jBx7Y098Y8VdzMqi/SvTxqxIBidzIE53d29pzaaC4fp4tyA012sOESmx
-   9znifIGvtcs2hV9U8GRO7zeBSfANA9q2BTuo+k5s7nGTCLr/DYiFIMZ/R
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10330"; a="352403846"
-X-IronPort-AV: E=Sophos;i="5.90,293,1643702400"; 
-   d="scan'208";a="352403846"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2022 08:20:14 -0700
-X-IronPort-AV: E=Sophos;i="5.90,293,1643702400"; 
-   d="scan'208";a="705592999"
-Received: from eaojeh-mobl1.amr.corp.intel.com (HELO [10.212.22.124]) ([10.212.22.124])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2022 08:20:12 -0700
-Message-ID: <e8cb3d63-f5b9-d067-af66-86f7a7c7f76c@intel.com>
-Date:   Wed, 27 Apr 2022 08:20:11 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
+        Wed, 27 Apr 2022 11:56:45 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 99A4064713;
+        Wed, 27 Apr 2022 08:53:28 -0700 (PDT)
+Received: from smtpclient.apple (d66-183-91-182.bchsia.telus.net [66.183.91.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 7149C20E97B3;
+        Wed, 27 Apr 2022 08:53:27 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7149C20E97B3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1651074808;
+        bh=TX9/CTz2WBo5vbbwED+TNm+pe6iYOqpcRxy113F+nEs=;
+        h=Subject:From:In-Reply-To:Date:Cc:References:To:From;
+        b=ZKOzz9l2xv5aNTdWwZ4q+vZhDBP5yr52RLVoFAv88x9lQU9pCcPiUElU3QDN+lQOa
+         RMu2HIPSGrrjv0rWaJOFGE1+w/vNAfqNI2CXXJDVQNTX1+Z7TW5jgaM7eRWJBVD2AW
+         iucNZ1g853BVeBOYcJtm7owZqSHtapaLpQKQiArg=
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.80.82.1.1\))
 Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
-Content-Language: en-US
-To:     Vinod Koul <vkoul@kernel.org>,
-        Allen Pais <apais@linux.microsoft.com>
-Cc:     olivier.dautricourt@orolia.com, sr@denx.de, keescook@chromium.org,
+From:   Allen Pais <apais@linux.microsoft.com>
+In-Reply-To: <YmiuUy+PAjKEq6uE@matsya>
+Date:   Wed, 27 Apr 2022 08:53:26 -0700
+Cc:     olivier.dautricourt@orolia.com, sr@denx.de,
+        Kees Cook <keescook@chromium.org>,
         linux-hardening@vger.kernel.org, ludovic.desroches@microchip.com,
         tudor.ambarus@microchip.com, f.fainelli@gmail.com,
         rjui@broadcom.com, sbranden@broadcom.com,
@@ -66,35 +54,45 @@ Cc:     olivier.dautricourt@orolia.com, sr@denx.de, keescook@chromium.org,
         patrice.chotard@foss.st.com, linus.walleij@linaro.org,
         wens@csie.org, jernej.skrabec@gmail.com, samuel@sholland.org,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <2B3258A9-47BA-4AA3-A4E8-BE255D5F4506@linux.microsoft.com>
 References: <20220419211658.11403-1-apais@linux.microsoft.com>
  <20220419211658.11403-2-apais@linux.microsoft.com> <YmiuUy+PAjKEq6uE@matsya>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <YmiuUy+PAjKEq6uE@matsya>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To:     Vinod Koul <vkoul@kernel.org>
+X-Mailer: Apple Mail (2.3696.80.82.1.1)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
-On 4/26/2022 7:45 PM, Vinod Koul wrote:
-> On 19-04-22, 21:16, Allen Pais wrote:
 >> The tasklet is an old API which will be deprecated, workqueue API
 >> cab be used instead of them.
-> What is the reason for tasklet removal, I am not sure old is a reason to
+>=20
+> What is the reason for tasklet removal, I am not sure old is a reason =
+to
 > remove an API...
->
+
+ While we moved to modernised version of tasklet API, there was
+A request to entirely remove tasklets. The following patch is an attempt
+Towards it.=20
+
+>=20
+>>=20
 >> This patch replaces the tasklet usage in drivers/dma/* with a
 >> simple work.
+>=20
 > Dmaengines need very high throughput, one of the reasons in dmaengine
 > API design to use tasklet was higher priority given to them. Will the
 > workqueue allow that...?
 
-Wouldn't the logical move be to convert threaded irq IF tasklets are 
-being deprecated rather than using workqueue as replacement?
+  It is interesting that you brought up this point. I haven=E2=80=99t =
+had the opportunity
+To test the changes by stressing the kernel, what tests/benchmarks would
+You prefer to see run on with these changes.
 
-Also, wouldn't all the spin_lock_bh() calls need to be changed to 
-spin_lock_irqsave() now? Probably not as simple as just replace tasklet 
-with workqueue.
+Thanks.
 
+>=20
+> --=20
+> ~Vinod
 
