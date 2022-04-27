@@ -2,97 +2,85 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCECC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 27 Apr 2022 00:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D8EC43217
+	for <linux-hardening@archiver.kernel.org>; Wed, 27 Apr 2022 02:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356209AbiD0APs (ORCPT
+        id S1357234AbiD0CtG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 26 Apr 2022 20:15:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48420 "EHLO
+        Tue, 26 Apr 2022 22:49:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356354AbiD0APq (ORCPT
+        with ESMTP id S1357242AbiD0Cs5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 26 Apr 2022 20:15:46 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11F7E67D0E
-        for <linux-hardening@vger.kernel.org>; Tue, 26 Apr 2022 17:12:31 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id e24so59074pjt.2
-        for <linux-hardening@vger.kernel.org>; Tue, 26 Apr 2022 17:12:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LrY29zoH0JBtqVaH425QnOYLXccFTmhwFII9Fu+0HQc=;
-        b=Nptqp+TlA73Mu1+UbvfBpJP/xL2A5YFZbWR/9azHiX7v62jVA4hu7QEXCq0IHyKL3f
-         ipCCOk1JvkZvL4Oag6VDOfmKCyn9GYxGoghG2WykPwZJ+Vww+j2HcJk43fdhb8OLjzTM
-         SMYV2/uahV9zmIYnJ7lLbWjByz2sCZmvJQhxg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LrY29zoH0JBtqVaH425QnOYLXccFTmhwFII9Fu+0HQc=;
-        b=HNan8F7PU+rs5MegL5MPTWLzozw3oI+9wg/Hb/tZzPiTdbcmLo6iYUExkjp9E7wT86
-         2Vfc3bC22qLWEiaIIPYlTJyfTSaeQexle6iMbov6gIMZuxMWHQ+upKHAGvQqhrTYkSKb
-         NZKhCUcok5YdFyVBGAwIbhVN4XWv0jhNx67eXSEAbJoq9q3nFZC8zcLDMILBOsJ8kFdu
-         1iMXM1Ejax4qVCre7ymRuBZsjbv1GZfgbbgHztjrX1u5HPQovc/8/P0dN8kz3eLcrPdP
-         WU1qP/Ajh1hh65VgU7RNho2xCvFhE/W+/WABFXGMcs83IXiozu04E3mOREiDldRoV66U
-         cu1A==
-X-Gm-Message-State: AOAM531QSkpxHNy4rcjNNWWXFzOqsVgnhnfLHTA8G4yewlmZEAhQ6IIb
-        VaUGQ40Zo7L3MUx2sY0Y3VgOxA==
-X-Google-Smtp-Source: ABdhPJzh2GNfUelh/E8seyDpUBAxJPMlUIErWm87QFNyGWa4pxdnuFXvFmZSXuQ6SBj5obZCBj1u0g==
-X-Received: by 2002:a17:90a:d715:b0:1d9:b55b:9a16 with SMTP id y21-20020a17090ad71500b001d9b55b9a16mr5635541pju.93.1651018350579;
-        Tue, 26 Apr 2022 17:12:30 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y2-20020a056a00190200b004fa865d1fd3sm17090582pfi.86.2022.04.26.17.12.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Apr 2022 17:12:30 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        kernel test robot <lkp@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Li <ashimida@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] lkdtm: cfi: Fix type width for masking PAC bits
-Date:   Tue, 26 Apr 2022 17:12:26 -0700
-Message-Id: <20220427001226.1224704-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.32.0
+        Tue, 26 Apr 2022 22:48:57 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E61939A4;
+        Tue, 26 Apr 2022 19:45:48 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B5A5BB823FC;
+        Wed, 27 Apr 2022 02:45:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F111C385AD;
+        Wed, 27 Apr 2022 02:45:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651027545;
+        bh=/8i2EjrVabnjrNzstULS7RbhxgjFnDrDmZdVsVHErZc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qx4UPrkzSoQSLhfEBDU2aapQU0Kx9MCVkgN7+JAWok6cXC8FxPUCyl/bGEoms9Viy
+         FzEoKfsdOsRT41EiheBv2sDiNpjs2/BWhPUoieb/B1Bs3sqtyNKlbhGzhAmznpFEi4
+         8trfi1lB2PSqkvaDiDY8WMlRk5g6zwhfS2g6RQU+ixxDZNLvoPIWVDb6cwyaKraxSw
+         k6Rpq52XSWvwSsLzCtHmbJzry/TrKO1gJFaxCvlwoj/pfqGKPUeAWgxo4TaNi0ZqYU
+         aNXpaXTEBKJvAwmVimIgeE0Zt0oHfzVkWpxYf8CneOH+rAaiJOo4TiIRR/8kXsLuHv
+         qCTH2spdOV04A==
+Date:   Wed, 27 Apr 2022 08:15:39 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Allen Pais <apais@linux.microsoft.com>
+Cc:     olivier.dautricourt@orolia.com, sr@denx.de, keescook@chromium.org,
+        linux-hardening@vger.kernel.org, ludovic.desroches@microchip.com,
+        tudor.ambarus@microchip.com, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, nsaenz@kernel.org,
+        paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com,
+        gustavo.pimentel@synopsys.com, vireshk@kernel.org,
+        andriy.shevchenko@linux.intel.com, leoyang.li@nxp.com,
+        zw@zh-kernel.org, wangzhou1@hisilicon.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, sean.wang@mediatek.com,
+        matthias.bgg@gmail.com, afaerber@suse.de, mani@kernel.org,
+        logang@deltatee.com, sanju.mehta@amd.com, daniel@zonque.org,
+        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        krzysztof.kozlowski@linaro.org, green.wan@sifive.com,
+        orsonzhai@gmail.com, baolin.wang7@gmail.com, zhang.lyra@gmail.com,
+        patrice.chotard@foss.st.com, linus.walleij@linaro.org,
+        wens@csie.org, jernej.skrabec@gmail.com, samuel@sholland.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
+Message-ID: <YmiuUy+PAjKEq6uE@matsya>
+References: <20220419211658.11403-1-apais@linux.microsoft.com>
+ <20220419211658.11403-2-apais@linux.microsoft.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1119; h=from:subject; bh=qmOzXnXd3i6tUyczr+mAshjhtKMYt8Tj7/F36+UT8Og=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiaIpqzyhZlG6iHvnfZ3eDFRKG+BvbhbLggZSr7CKc yvUBTu2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYmiKagAKCRCJcvTf3G3AJsA2EA CAcU3cjo9QBKKr5AIrPuSxrQutvqiTa3JVSpLL2zzwZFaBGjnEpu4zrkGyuZdJqxPRbb7nhqp9R06O iQwl5w4/qW/bU87rq5L+M3ai/+bUHTk5b5GLolkYVsjyJRvyxZE5lZd9o24nuEP5REWEjBalrMjpZw h/BPZMY9yBqTz/4Y3a0G+PDCm8zZmwSQk7IZ2t4qfIANRwFJ0wrAB0kyxVV20xqNYSe6p4guNY1ZCP XsqvE25Rgcq1Kz3AOgHxwdb+7O1mWN0ZTTZeQpYFy1imAF8HwvFJMmm/MHZiOjcrihPcgtma6b46Ux AE2Rsa+dnFSlSLzyG29iIlZVm4kmOcItC/Qd95h/MUWEobeUeFL7oCd9sqd7iSTPd9D3Qid3elnuNN IicRmyE2zi7I/573A2c3na3azD4DohO5oVYeRqOB9ebuSBIc3EpXsuys1UnGRO8w2PM7bBOoXcLefb G/N+ar3qd59SBHFdZWu+BwpUBkkAlPiXuk2chZaf1hADhiTPrQ80Y7MTYP9bwmEKz4xqFIsqtGh67u ngHLE7CXIdSg8HISCVSoyNufromZvax5VdDoLIkUxsk4KRBGb2LaZzecI+kCQK0QGTEWuu9AoPMPX6 bouXEFAH0gjWbgQNtN0oQNGUQtiGTluvx/o8ZhZt/AkHS9TJAY9AgYKnSDUw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220419211658.11403-2-apais@linux.microsoft.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The masking for PAC bits wasn't handling 32-bit architectures correctly.
-Replace the u64 cast with uintptr_t.
+On 19-04-22, 21:16, Allen Pais wrote:
+> The tasklet is an old API which will be deprecated, workqueue API
+> cab be used instead of them.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Link: https://lore.kernel.org/lkml/CAMuHMdVz-J-1ZQ08u0bsQihDkcRmEPrtX5B_oRJ+Ns5jrasnUw@mail.gmail.com
-Fixes: 2e53b877dc12 ("lkdtm: Add CFI_BACKWARD to test ROP mitigations")
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/misc/lkdtm/cfi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+What is the reason for tasklet removal, I am not sure old is a reason to
+remove an API...
 
-diff --git a/drivers/misc/lkdtm/cfi.c b/drivers/misc/lkdtm/cfi.c
-index 804965a480b7..666a7f4bc137 100644
---- a/drivers/misc/lkdtm/cfi.c
-+++ b/drivers/misc/lkdtm/cfi.c
-@@ -59,7 +59,7 @@ static void lkdtm_CFI_FORWARD_PROTO(void)
- #endif
- 
- #define no_pac_addr(addr)      \
--	((__force __typeof__(addr))((__force u64)(addr) | PAGE_OFFSET))
-+	((__force __typeof__(addr))((uintptr_t)(addr) | PAGE_OFFSET))
- 
- /* The ultimate ROP gadget. */
- static noinline __no_ret_protection
+> 
+> This patch replaces the tasklet usage in drivers/dma/* with a
+> simple work.
+
+Dmaengines need very high throughput, one of the reasons in dmaengine
+API design to use tasklet was higher priority given to them. Will the
+workqueue allow that...?
+
 -- 
-2.32.0
-
+~Vinod
