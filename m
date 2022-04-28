@@ -2,98 +2,103 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F81C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 27 Apr 2022 22:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A541C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 28 Apr 2022 09:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233353AbiD0Wrk (ORCPT
+        id S231932AbiD1JuK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 27 Apr 2022 18:47:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43382 "EHLO
+        Thu, 28 Apr 2022 05:50:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233279AbiD0WrW (ORCPT
+        with ESMTP id S1347517AbiD1Jcy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 27 Apr 2022 18:47:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 502C6255AF;
-        Wed, 27 Apr 2022 15:44:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D8B5F61E41;
-        Wed, 27 Apr 2022 22:44:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F29B5C385AA;
-        Wed, 27 Apr 2022 22:44:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651099449;
-        bh=OeoXLpSjFFW6YXYpM+6X1nCwuoz/C5wuMa1J1bJYg/o=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mZYO1TnlG1jhH6wwXv7uGnA2tmATzmBfcvQCkMPaaVVojbu0+4O11HvMgieSLnNBn
-         HnBBftQJkegNqvIOJUYFoWDLGkphWjYeC3WQLhPxgzZL0v31oYwCTaIrdVZyGHqJbk
-         gJFYxMNz2uAuUDyX3oaBo0n12t/eCT9bZoishwc++Nj+ah4IKroF4rp6UbUlY4sZb8
-         7RAiCxJR7ZmvO0n7II3qcrjSRnPb7mWxpeDBwrerc8qIXHzgXmKXNBldulrRKEO3zO
-         aaqGKJ8IcGX+Id2sF+ARH6ByQ3V2ZHjk+tJQAqBGaC9eRs5OZ6NEfnrYyu9frrF7kB
-         ufYknbLSKYW+A==
-Date:   Wed, 27 Apr 2022 17:53:01 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] drm/i915: Fix -Wstringop-overflow warning in call to
- intel_read_wm_latency()
-Message-ID: <20220427225301.GA24406@embeddedor>
+        Thu, 28 Apr 2022 05:32:54 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E5467CDD9;
+        Thu, 28 Apr 2022 02:29:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651138180; x=1682674180;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7BV5PZE7OVogZ8OnZ8XL8xlxDzHseF6zynr6xKJK83U=;
+  b=CXo5QWa5l1k4oNzpWYHHVdYZmM5SQ2Rwh+K9/eoBFGhEAqHjTOPmHNrE
+   MtspgnbxHp7v+X2YRzXePdKr71JeWjY5zWkXYlwk8poQrM1Zif8hYa0Gv
+   YWRAd0bcSEdLy/oRtYcyK53Uuy9a8PLWvC6DmTPZqPUDyjeY7VGNWr+Z0
+   h5qDqG0XOFCeSzmzSZx1j5nbpcAY+KN6Jup/iNnICVtJHtBT3JVOnkzc7
+   m1BCtoeidSa7sb93/4yIAoL0NAEt4PbgvIg49K5LTajaxD2rSKOcLT080
+   X3qK4kEmd5P+qbryzskbXk2rBfg66GUIRvvtoeWR47pobeU80E3meGxgB
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10330"; a="246139709"
+X-IronPort-AV: E=Sophos;i="5.90,295,1643702400"; 
+   d="scan'208";a="246139709"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 02:29:39 -0700
+X-IronPort-AV: E=Sophos;i="5.90,295,1643702400"; 
+   d="scan'208";a="618047838"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 02:29:29 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nk0Si-009ERe-Hp;
+        Thu, 28 Apr 2022 12:29:24 +0300
+Date:   Thu, 28 Apr 2022 12:29:24 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Allen Pais <apais@linux.microsoft.com>,
+        olivier.dautricourt@orolia.com, sr@denx.de, vkoul@kernel.org,
+        keescook@chromium.org, linux-hardening@vger.kernel.org,
+        ludovic.desroches@microchip.com, tudor.ambarus@microchip.com,
+        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, nsaenz@kernel.org,
+        paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com,
+        gustavo.pimentel@synopsys.com, vireshk@kernel.org,
+        leoyang.li@nxp.com, zw@zh-kernel.org, wangzhou1@hisilicon.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        sean.wang@mediatek.com, matthias.bgg@gmail.com, afaerber@suse.de,
+        mani@kernel.org, logang@deltatee.com, sanju.mehta@amd.com,
+        daniel@zonque.org, haojian.zhuang@gmail.com,
+        robert.jarzmik@free.fr, agross@kernel.org,
+        bjorn.andersson@linaro.org, krzysztof.kozlowski@linaro.org,
+        green.wan@sifive.com, orsonzhai@gmail.com, baolin.wang7@gmail.com,
+        zhang.lyra@gmail.com, patrice.chotard@foss.st.com,
+        linus.walleij@linaro.org, wens@csie.org, jernej.skrabec@gmail.com,
+        samuel@sholland.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
+Message-ID: <YmpedDjzZXz2t6NS@smile.fi.intel.com>
+References: <20220419211658.11403-1-apais@linux.microsoft.com>
+ <20220419211658.11403-2-apais@linux.microsoft.com>
+ <353023ba-d506-5d45-be68-df2025074ed6@kernel.org>
+ <3ee366a7-e61f-e513-aa2f-12e8d5316f3c@embeddedor.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <3ee366a7-e61f-e513-aa2f-12e8d5316f3c@embeddedor.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Fix the following -Wstringop-overflow warnings when building with GCC-11:
+On Mon, Apr 25, 2022 at 02:55:22PM -0500, Gustavo A. R. Silva wrote:
+> On 4/25/22 10:56, Krzysztof Kozlowski wrote:
+> > On 19/04/2022 23:16, Allen Pais wrote:
 
-drivers/gpu/drm/i915/intel_pm.c:3106:9: warning: ‘intel_read_wm_latency’ accessing 16 bytes in a region of size 10 [-Wstringop-overflow=]
- 3106 |         intel_read_wm_latency(dev_priv, dev_priv->wm.pri_latency);
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpu/drm/i915/intel_pm.c:3106:9: note: referencing argument 2 of type ‘u16 *’ {aka ‘short unsigned int *’}
-drivers/gpu/drm/i915/intel_pm.c:2861:13: note: in a call to function ‘intel_read_wm_latency’
- 2861 | static void intel_read_wm_latency(struct drm_i915_private *dev_priv,
-      |             ^~~~~~~~~~~~~~~~~~~~~
+...
 
-by removing the over-specified array size from the argument declarations.
+> > > Github: https://github.com/KSPP/linux/issues/94
+> > 
+> > 3. No external references to some issue management systems, change-ids
+> > etc. Lore link could work, but it's not relevant here, I guess.
+> 
+> I think the link to the KSPP issue tracker should stay. If something,
+> just changing 'Github:' to 'Link:'
 
-It seems that this code is actually safe because the size of the
-array depends on the hardware generation, and the function checks
-for that.
+BugLink: would be more explicit.
 
-This helps with the ongoing efforts to globally enable
--Wstringop-overflow.
-
-Link: https://github.com/KSPP/linux/issues/181
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/gpu/drm/i915/intel_pm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/i915/intel_pm.c b/drivers/gpu/drm/i915/intel_pm.c
-index ee0047fdc95d..5735915facc5 100644
---- a/drivers/gpu/drm/i915/intel_pm.c
-+++ b/drivers/gpu/drm/i915/intel_pm.c
-@@ -2862,7 +2862,7 @@ static void ilk_compute_wm_level(const struct drm_i915_private *dev_priv,
- }
- 
- static void intel_read_wm_latency(struct drm_i915_private *dev_priv,
--				  u16 wm[8])
-+				  u16 wm[])
- {
- 	struct intel_uncore *uncore = &dev_priv->uncore;
- 
 -- 
-2.27.0
+With Best Regards,
+Andy Shevchenko
+
 
