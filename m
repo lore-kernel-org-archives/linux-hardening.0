@@ -2,69 +2,69 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBD1C43217
-	for <linux-hardening@archiver.kernel.org>; Fri, 29 Apr 2022 20:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC6AC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 29 Apr 2022 20:37:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380873AbiD2Ukz (ORCPT
+        id S1381002AbiD2UlC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 29 Apr 2022 16:40:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51366 "EHLO
+        Fri, 29 Apr 2022 16:41:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380879AbiD2Uk0 (ORCPT
+        with ESMTP id S1380949AbiD2Uku (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 29 Apr 2022 16:40:26 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F60F83028
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:37:07 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id i5-20020a258b05000000b006347131d40bso8323632ybl.17
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:37:07 -0700 (PDT)
+        Fri, 29 Apr 2022 16:40:50 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0333D84EEA
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:37:17 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2f8be9326fcso22423257b3.18
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:37:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=toNjlzYxqQcjAnQGwFPffr4qkB53a+Hv7lcj5bGaBXY=;
-        b=jT2IjI35/b2hVboGLC+3ooZRUd4Cub9P+C1GAq5Lzi2RpnBI3nprAEP2ONx0TVgYm7
-         RKQUcusXWuRlX/RSwyRoevlkYnze8FoZ0cgWs0XkmJqrkmbzD/iTVcyFjW+7lBIrx62H
-         /5rgh472pg0znBMROIcX+aZAbTykh8odIhd1d1eZt3Xhiezsk+ssRCOfRqGk8nkxZYmt
-         ARLP84GFUuoI5iTnarTZJWo/NmZGIqMZ514LXqX1L9+OC5K07pwoLWEacuVGILpzB6pm
-         2o3vScassDAgL2/k3dHkvufJRo2sRVu6AtNiuj4EIghSxVaW+pLsQMGc5wu3M1WI7cGe
-         WneA==
+        bh=RZXa52/+Ccn/FZBSGLGkE2FGb19e6hj/BpUe4CISMqY=;
+        b=josmFUY6sljvn74nbHLbhRTJAUNE7yBBD98Qcf7w5EQ59pm5LnY3aEdiKslS4uyUdq
+         QWXZZukalNl6IxfYG+j3MTT6SVuufgTk6h/3imVwbyFtypJ6Eb+5iu3zX7OiWNC9ee2D
+         gU1FQ1Soj99CCEaCdQg9uDLpFiUCbqfluZmHnaRKKZ3ArEv1Sx4V24aJ+iEs8lBrJR7M
+         C4OFl191/L8Z6I8Mod4iBF6Zpbj90sePJz8AFJfeAilDgco+WL483HO8WXxphkwVe9u+
+         C2/ErRnmGzDy4hQ6Ef1n8xa1Ppzw8CJfQ/J9CE6NwUZfHasM7w1iM2pyCxDImgTQLavS
+         PgIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=toNjlzYxqQcjAnQGwFPffr4qkB53a+Hv7lcj5bGaBXY=;
-        b=LPCOmpvfFXHuTlpZrAoffwr3vWmBhIvhdNUIWqqXXJfa0eVTK5SFEtVqmm6zGSZFbe
-         WkC0mNcdSakTEXHjVccftQl0pPBSFivFNLyVPXkzyGlvUmp2yfAGmfFLDHCH899tLyh5
-         E1ARhkpl6AcbSKv6oiKrAD4L0TUtkutNjAjMAC1enhJEeKPLItlOOIMoJHfL0oZ6grxT
-         e5pMczrftIWHgJm/ijQ5Tr0+hgx4r4vf9ssuCPrNWkQedPKNrcPtBs8OPnkag8Lv0CSQ
-         Ynpp5DEsc7uUpVnKXCKXOqiz7JVJIdSWXfCngbx+lvjUyPYrpeO+AG58YSaj/d/4Ftjc
-         p+FQ==
-X-Gm-Message-State: AOAM530gI5uBO9ECLVCOCipqpA8DXnh8GUseOOC9l4T4REhnGLLBcmJs
-        peuZI4iDivg/W/xofXDzZS2z3d3XHDUOuD7Q5yw=
-X-Google-Smtp-Source: ABdhPJzdzB9TYiBo0cH3i7IETZo7Vtx6hAzbF9aM1cgVRBMhpZILTfH4t0qUn8eq/RY/6gNn7ogPmqoZuJIkbfyQUcw=
+        bh=RZXa52/+Ccn/FZBSGLGkE2FGb19e6hj/BpUe4CISMqY=;
+        b=m0Ukg3N/n6IitFRqpSttwWvXKG3DhDSTvgE3R9K6IX2YZ/5rZfaeZReUW8L8qWNcn0
+         Kpdic4Gab6qTX/Mo61APL1ty7qHqbPt4b7Rw/2MjkXrya8ZuS0bafHXeE0z44sESgiid
+         XvlI4eQIo8tZMeJWLiumzSzCeJuZPgLRdJhufbOZtFIysP/yN0YMt9DrgAPsZZw3sqYu
+         yibZ+NqpLmzjqkyX6HxUi2RCZKFsvybHoTOKW6HIGzzHmWRWCYgVzPPxFrMZppztcGMa
+         L68rD2BdOWSPAyHAmULOi1bbMlppshpPySCq8F4w93wMYJKC0Oa7j4k1H4RKQz5LWePq
+         MNDQ==
+X-Gm-Message-State: AOAM531Av4jsjFtcyW/afnLkt2B65NE+Qvv77UptaQi1nMuHtEsMy6YA
+        E9bwACS/9cMSD30CGIXl1LwsO7/UUg2XsZjY8HE=
+X-Google-Smtp-Source: ABdhPJzYWDvyPKIoG6j4qeVpD8eaxo3WYBiOn2SGRCv1SlZnlvNloHm83UTXxElMZg7DUXgIBs568v8KMUh01iV6d8E=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:351:bea9:f158:1021])
- (user=samitolvanen job=sendgmr) by 2002:a5b:2c3:0:b0:645:6565:fafa with SMTP
- id h3-20020a5b02c3000000b006456565fafamr1378832ybp.323.1651264626792; Fri, 29
- Apr 2022 13:37:06 -0700 (PDT)
-Date:   Fri, 29 Apr 2022 13:36:31 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a05:6902:187:b0:63d:9c95:edca with
+ SMTP id t7-20020a056902018700b0063d9c95edcamr1205951ybh.81.1651264636219;
+ Fri, 29 Apr 2022 13:37:16 -0700 (PDT)
+Date:   Fri, 29 Apr 2022 13:36:35 -0700
 In-Reply-To: <20220429203644.2868448-1-samitolvanen@google.com>
-Message-Id: <20220429203644.2868448-9-samitolvanen@google.com>
+Message-Id: <20220429203644.2868448-13-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20220429203644.2868448-1-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1874; h=from:subject;
- bh=1h/ukcHKrQmO+sSN3rxH1Ur6msZUgu7FigRGuH22//0=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBibExWegFw7CQHbGR62Fd6xfcRvARj359xlrSpoucc
- ArdcVGSJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYmxMVgAKCRBMtfaEi7xW7nlfC/
- 9Gb3x9jy2vor5Y8IfV4iZYQJ6l0SNWdPk8O9fG2ALgkAE9IAoY3yNt7CInVDl3Up/jUDXm4GdmPnik
- 7to6P2rxmV8pQNKUSi67KiH3hmMrB0fIU4J/MvSzBHUWdgHSZn3aQPH3Rc079Y5V61E2jD8VlPZKaV
- 1u6KN3yidWSWuQ77JZWWHoYh1Bv+flKFATCRKjS5HkAVSbVRC5Y7rW05p1iUMkjP+4OIlVfQ2+BIlQ
- 9o2QzOGq3ZtadJoEnDu7xld7MjP+sYgMbheQX+Q5w0Yy+1IsJsrvp5SbLmLVPQTNr087q7N3Wukgcq
- Fe3AntpsILle4R1Z8Q5dScpj0rfxzvTIXFLUM1de97js+7Gw1Kk5FdXtb39myqLExTtew1nu0eu/sI
- SmNQU7Yh+eAXFSkB0/bpxyZXcO+/eYjmueqmPwLiJvXqZ9L21Tg7yUlB530p3vgKhgMOAOaCTMaPxh
- ig39Vl4Nop4cdSOyLMlDd+4kAlJ6y+2uWnMBYCMybx2lg=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2028; h=from:subject;
+ bh=EW4LD0wCU9ODc4AbUHEIgMCEO+Bkbwf1AVkfBUZqjt0=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBibExXM3pFXxbECykde0/DaTjsNNDc6R96rQVSD0FL
+ 7MXUJzOJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYmxMVwAKCRBMtfaEi7xW7u7RC/
+ 4mjffA2OiXywm1kgxwD0ET4V0DIkVj3mDteDH4c0+AAADiJNYraamuovVFmW7kqZD95ZrDQ0DtWzBN
+ De7f5Z9BRZNMX6MVRoo9GZ+vvVTpybMWnZxExbIai3lN4abSxarO4qyBYYddytuOn7gyGtnzCK/9T6
+ fz+QovIirBiumarGHSecOncP1veI4GDHBeWLjZLhj+f+visgFFCKO3BZd+O3yCUjY79lkYmAJnKXOF
+ q4s8uzinImXbHIZaD63mvPzR2dr8R/gU36JxBAIE4D84O9KH2YyUpSl7DUuDJo+y3ty8PQ61/7hh3n
+ GVilTp+N13t+4iSU/hLKu3hczF8y7OLaIjw+//vL/DV9uKs4+sgDgrob11gvGDZHpUd/4udw+ihg7k
+ IwIiS0ak6/a21tSjs4EolviB/Au3/qiKjXvicRjakYv6pd9r5zR2TpEWYQ9HMxDaDTl52r3Y56gYVX
+ 6Q07g4a5BTbZvyMK4W4T30XQuWwzx6kapZdydxqypIsT0=
 X-Mailer: git-send-email 2.36.0.464.gb9c8b46e94-goog
-Subject: [RFC PATCH 08/21] arm64/crypto: Add types to indirect called assembly functions
+Subject: [RFC PATCH 12/21] treewide: Drop __cficanonical
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -86,63 +86,62 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With CONFIG_CFI_CLANG, assembly functions indirectly called from C code
-must be annotated with type identifiers to pass CFI checking. Use
-SYM_TYPED_FUNC_START for indirectly called functions in the crypto code.
+CONFIG_CFI_CLANG doesn't use a jump table anymore and therefore,
+won't change function references to point elsewhere. Remove the
+__cficanonical attribute and all uses of it.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/arm64/crypto/ghash-ce-core.S | 5 +++--
- arch/arm64/crypto/sm3-ce-core.S   | 3 ++-
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ include/linux/compiler_types.h | 4 ----
+ include/linux/init.h           | 4 ++--
+ include/linux/pci.h            | 4 ++--
+ 3 files changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/crypto/ghash-ce-core.S b/arch/arm64/crypto/ghash-ce-core.S
-index 7868330dd54e..ebe5558929b7 100644
---- a/arch/arm64/crypto/ghash-ce-core.S
-+++ b/arch/arm64/crypto/ghash-ce-core.S
-@@ -6,6 +6,7 @@
-  */
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 1c2c33ae1b37..bdd2526af46a 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -263,10 +263,6 @@ struct ftrace_likely_data {
+ # define __nocfi
+ #endif
  
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- #include <asm/assembler.h>
+-#ifndef __cficanonical
+-# define __cficanonical
+-#endif
+-
+ /*
+  * Any place that could be marked with the "alloc_size" attribute is also
+  * a place to be marked with the "malloc" attribute. Do this as part of the
+diff --git a/include/linux/init.h b/include/linux/init.h
+index baf0b29a7010..76058c9e0399 100644
+--- a/include/linux/init.h
++++ b/include/linux/init.h
+@@ -220,8 +220,8 @@ extern bool initcall_debug;
+ 	__initcall_name(initstub, __iid, id)
  
- 	SHASH		.req	v0
-@@ -350,11 +351,11 @@ CPU_LE(	rev64		T1.16b, T1.16b	)
- 	 * void pmull_ghash_update(int blocks, u64 dg[], const char *src,
- 	 *			   struct ghash_key const *k, const char *head)
- 	 */
--SYM_FUNC_START(pmull_ghash_update_p64)
-+SYM_TYPED_FUNC_START(pmull_ghash_update_p64)
- 	__pmull_ghash	p64
- SYM_FUNC_END(pmull_ghash_update_p64)
- 
--SYM_FUNC_START(pmull_ghash_update_p8)
-+SYM_TYPED_FUNC_START(pmull_ghash_update_p8)
- 	__pmull_ghash	p8
- SYM_FUNC_END(pmull_ghash_update_p8)
- 
-diff --git a/arch/arm64/crypto/sm3-ce-core.S b/arch/arm64/crypto/sm3-ce-core.S
-index ef97d3187cb7..ca70cfacd0d0 100644
---- a/arch/arm64/crypto/sm3-ce-core.S
-+++ b/arch/arm64/crypto/sm3-ce-core.S
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- #include <asm/assembler.h>
- 
- 	.irp		b, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
-@@ -73,7 +74,7 @@
- 	 *                       int blocks)
- 	 */
- 	.text
--SYM_FUNC_START(sm3_ce_transform)
-+SYM_TYPED_FUNC_START(sm3_ce_transform)
- 	/* load state */
- 	ld1		{v8.4s-v9.4s}, [x0]
- 	rev64		v8.4s, v8.4s
+ #define __define_initcall_stub(__stub, fn)			\
+-	int __init __cficanonical __stub(void);			\
+-	int __init __cficanonical __stub(void)			\
++	int __init __stub(void);				\
++	int __init __stub(void)					\
+ 	{ 							\
+ 		return fn();					\
+ 	}							\
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 60adf42460ab..3cc50c4e3c64 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2021,8 +2021,8 @@ enum pci_fixup_pass {
+ #ifdef CONFIG_LTO_CLANG
+ #define __DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
+ 				  class_shift, hook, stub)		\
+-	void __cficanonical stub(struct pci_dev *dev);			\
+-	void __cficanonical stub(struct pci_dev *dev)			\
++	void stub(struct pci_dev *dev);					\
++	void stub(struct pci_dev *dev)					\
+ 	{ 								\
+ 		hook(dev); 						\
+ 	}								\
 -- 
 2.36.0.464.gb9c8b46e94-goog
 
