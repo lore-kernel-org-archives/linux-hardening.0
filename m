@@ -2,69 +2,69 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CBFC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 29 Apr 2022 20:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7884AC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 29 Apr 2022 20:37:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380880AbiD2Uk1 (ORCPT
+        id S1380892AbiD2Uka (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 29 Apr 2022 16:40:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51136 "EHLO
+        Fri, 29 Apr 2022 16:40:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380877AbiD2UkX (ORCPT
+        with ESMTP id S1380893AbiD2UkY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 29 Apr 2022 16:40:23 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2BE383B25
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:36:58 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2f7c011e3e9so84572327b3.23
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:36:58 -0700 (PDT)
+        Fri, 29 Apr 2022 16:40:24 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2953784A1D
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:37:03 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2f825f8c944so84500777b3.15
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:37:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=/SID+odwOHhW6fSf1SyMHupf3+2plu1m/MfG1cXg+b0=;
-        b=pXDTPirUN5MykkQCbB5q8AmcY3Jq2zcVF3SAcIhszlCK/5FsnWORlQsvYGApnGAxAh
-         N4ygHCVO+0tz++iUcvEcAIzqvAX84/Bk0ksbA2mq3JhrrA0dtmX6fExMFYmtmqgRnRge
-         57dmSVL1PRWhdkPOFdWHNe0JEgMypLQrindoY00jJsc1acBXPYHF/bcx+WBJSqTkVvUK
-         2QWG2Hkwf8YbJv5WpPdTkXsxom7fiaQ5plQrRjALzpQU03C2Q/ENlR7/kBTEnPJLu6tU
-         AVip6caQubJWmSCSZeQ/NAIyLrLi6utkSyQ1d7lqpcMm1Nv/4Kk2TwLZqH9FKMgYKM6g
-         QA7A==
+         :cc:content-transfer-encoding;
+        bh=vvdIaJf57HGaDpMnbrJ8giqLRUU+BTS8OjFrmaz2vTE=;
+        b=pp5ZuqtMoctSU0CirU7eAqTG/TJOM0spnINt8Gjn3TLZaHntxQdntxMbG6AC9Ytn1A
+         YbobImxlpkDKOtCc7p+HUcjkX6xeFPx/DEbzlgXaBCLyH85pOtUO5AjwtRLJ5v32iDgF
+         GOxVmU9+KLnarIhguwlaAcJMXLCHb/CIIQn5HllZfWoEDWIMA9Dkq2G1E64CEeOFgP/U
+         8lRGqsLZUoDl9j6+7EG0KVET8D+nRVZ9/GAPoDTb0VvTkSklhvkSLnv3DwQ3HD+kRcY5
+         VrykuvxxspP2ULayXxAZ1mjo3k7ttqlSFX+HHy88dA/a3EhnXPGJv5NH9Tm80twX9v1Q
+         sg6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=/SID+odwOHhW6fSf1SyMHupf3+2plu1m/MfG1cXg+b0=;
-        b=D63F0AUreHaXurVQzq1jWUQuo1S+YcMAQXLc9T+CVy50Ej/zLuenezzuEJZTwh+gav
-         lQ/gpbXtHxqzaOra7IL9T5UTghLSQHbnlPR5A8lNNoNJAfsZ1+mUZ0IHa50vA+3w1YhP
-         z4ubVRasVdqCUaFL4UMS8J5pgnjucAekDIaurLPlgeEHptPyKYDz5lWWvdBz+XYyOiBd
-         Q3HKHb9PXFslnKOEA05cOrAiQ8KsxfKYxPuKWFv1anumzO7ppOjTjzw6xW1kvZVI6Zge
-         y7L2gCDoJpXaObxm3rriiIQpcvknHHIcSeRr3siojS+GHQt0Y0ROaeP+99VGLCMNwDXT
-         apfw==
-X-Gm-Message-State: AOAM5338QKY9/8yt4c8ZoqByEiT3xTZeglfPxAW1f4rFEtAY8/IB8EVl
-        vbzScOtYU69M2JkQgyooGWiIm0f2Z6NQ4qpok+k=
-X-Google-Smtp-Source: ABdhPJyyE/KgNn+KGSWVEO4DlT7y+o1aFloDvMPuRcf58kbzYBHSuDzpw++tVU+X2i3WAOfEyDFH7VO3xUNBm2uS/lI=
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=vvdIaJf57HGaDpMnbrJ8giqLRUU+BTS8OjFrmaz2vTE=;
+        b=V/LYy3+XnUQjVGs0VL7olES1/Fd1491Ii6XIuY5um8umk4qjB4ANdruapb/uxAPVxD
+         fKl2MkbIt3z+PY4fqA5qKC7gIzefde0Xp3LfK/DYpEp+Rxqca5Q3HI2qrxEWLT6BvkQ0
+         riM765bDLd7Mh3sJ5EVQgjjwU5UXu+ACUTDfuo6UY6F0hIaNmPWXLPN4IgtCgNEKxI/N
+         nIWcN+DFabhQ99K/j/RAE6gZJMyWr56L+XgfHH+6dUWSFH0Z/VN1ZJlxAID2d+vVDJfn
+         UG5nyP2CDCGA8RSKLnhYz8HoIPmexGBck1LS8DRlf/vk4DGv8xCCLJ4P+6hRVUoEC9Ee
+         I1Ng==
+X-Gm-Message-State: AOAM531Bq3yIe4klKUUG0+R7rn0T/FoneyPno6LhY6IblqK+jwtMvway
+        WeroAv6/aHt7sPJOPfi11f1ez1SNAA+C7k93a4A=
+X-Google-Smtp-Source: ABdhPJzK+TM3mWgJX5Du5pYGBn42fe+Iz5sXydBvEX3gH6bzFZSppJYXAmv+vNiXUVCsvdPo/kBBgKk9tLQAOWDp42s=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:351:bea9:f158:1021])
- (user=samitolvanen job=sendgmr) by 2002:a25:d68c:0:b0:648:d3bd:734e with SMTP
- id n134-20020a25d68c000000b00648d3bd734emr1265294ybg.277.1651264617711; Fri,
- 29 Apr 2022 13:36:57 -0700 (PDT)
-Date:   Fri, 29 Apr 2022 13:36:27 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a05:6902:390:b0:645:7d46:f1db with
+ SMTP id f16-20020a056902039000b006457d46f1dbmr1280096ybs.85.1651264622333;
+ Fri, 29 Apr 2022 13:37:02 -0700 (PDT)
+Date:   Fri, 29 Apr 2022 13:36:29 -0700
 In-Reply-To: <20220429203644.2868448-1-samitolvanen@google.com>
-Message-Id: <20220429203644.2868448-5-samitolvanen@google.com>
+Message-Id: <20220429203644.2868448-7-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20220429203644.2868448-1-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10304; h=from:subject;
- bh=R/qPr3A1VbpNtnYdnS8DSefcpakC96p89+rbs5j/O5k=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBibExVe5jOiLucPBZlfPxt03GQBYZcYZYxotX7Rlbh
- pXb8uw2JAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYmxMVQAKCRBMtfaEi7xW7v0XC/
- 46oeqCOaakLm+oj5yYo6EzrAFTs5pV0T/Iu+pYXTl5auQFlm0gA4dW+t6GzPHH4IgUsYSf+lpZPwyi
- ofHwbMrHNfQ5D7ysP1KkA/LJKm7TDhtzpGczUZKgZXgmcnwfH3bnKFH7TFMZGKzFzufC32y9Xw7Gpg
- bjkVAuZtU5WNqNR5aj/UmamsjNWhnU6POOFzQkr8TxSq7Ia3BkFysQ6cV6B4IFFh3ImVZXywtA6bee
- w2Z5YjCyontExD8s0G6yp5ba/58lnC+890RwiOvzcD30wacx3bTk1hz6Uue44DlnxRJ3vLEZyxGbld
- k0A8yc0yresK/+93VLifSu1yuZKlNGiCXcCDApJwyJvKNMeP645FRVN/D1gMmlyRzPDErbvu1c72aV
- QnF9aVPrFtrYZgbQZCfRjHLkrKUP6ZeNk8K4+vRP9oAFBlea19xt3Re16+QsONeGmW2wpXhQBeU0Ug
- Um6X49lF8QenmfoRzqFjg2RmGAM/dtUJUQkRVUOZCalVc=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=15228; h=from:subject;
+ bh=0g7XP1LgryML35bYmY5P55DUledGJO075lwf/wPq5XY=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBibExVzS6QJPpNhwgvz4rLUMgG/eseoiNocaoGE0+w
+ tX5LFGCJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYmxMVQAKCRBMtfaEi7xW7hkYC/
+ 4ubQXAmms/iLy/3p508tt7PKf5jjRHk61JliAxBIHRWk2AJ+/ApG33RlrxlUW3l1l97z84CdogaqSa
+ jdo5kzTr5mVE8BojuUFoGj3o6JKuqeuKDXPluSgQkK9/n0l6BGyNpH5iMrTqjmTS5+qKjA7Z8yCk6N
+ h2uNUbPmBJ5gerAmb+taQVdcEAcfdLsOmPIoRxKuuFj8hqFU8wwW7mbcQAQZNJ5U//BpPEbO0Ad299
+ aRh5GtCHpvSxLRL9t1egoSBtslKOt86N19OjWNXXnJybdVSRx5Mo8+RUbX33VIUz4hXbuUH7FJuyL9
+ JlZlvDFZwT5JKvRgZWVGKqKMEyyQuQfM5pn1P6Zx/CT5vuWlWZY3EUuVGjUZ/9wHZFNgzPJgCbRBoh
+ ng2kyfVoFHuWLCYRgUx6LAoxF3YPUvGXy+ZGeUgSSYjaZyl2o+S9T4Gt8+YCoSNHiXDy5yGH3hYtX5
+ TMqHSVc2S30OxsckAvhcZzkLCdIj8XoQ0tfMFRpbJIeMU=
 X-Mailer: git-send-email 2.36.0.464.gb9c8b46e94-goog
-Subject: [RFC PATCH 04/21] cfi: Remove CONFIG_CFI_CLANG_SHADOW
+Subject: [RFC PATCH 06/21] cfi: Switch to -fsanitize=kcfi
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -82,367 +82,553 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
         Sami Tolvanen <samitolvanen@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation to switching to -fsanitize=kcfi, remove support for the
-CFI module shadow that will no longer be needed.
+Switch from Clang's original forward-edge control-flow integrity
+implementation to -fsanitize=3Dkcfi, which is better suited for the
+kernel, as it doesn't require LTO, doesn't use a jump table that
+requires altering function references, and won't break cross-module
+function address equality.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/Kconfig        |  10 --
- include/linux/cfi.h |  12 ---
- kernel/cfi.c        | 237 +-------------------------------------------
- kernel/module.c     |  15 ---
- 4 files changed, 1 insertion(+), 273 deletions(-)
+ Makefile                          |  13 +--
+ arch/Kconfig                      |   8 +-
+ include/asm-generic/vmlinux.lds.h |  38 ++++-----
+ include/linux/cfi.h               |  24 +++++-
+ include/linux/compiler-clang.h    |   8 +-
+ include/linux/module.h            |   4 +-
+ kernel/cfi.c                      | 129 ++++++++++++++++--------------
+ kernel/module.c                   |  34 +-------
+ scripts/module.lds.S              |  24 ++----
+ 9 files changed, 126 insertions(+), 156 deletions(-)
 
+diff --git a/Makefile b/Makefile
+index c3ec1ea42379..22a5d48f5fb4 100644
+--- a/Makefile
++++ b/Makefile
+@@ -915,18 +915,7 @@ export CC_FLAGS_LTO
+ endif
+=20
+ ifdef CONFIG_CFI_CLANG
+-CC_FLAGS_CFI	:=3D -fsanitize=3Dcfi \
+-		   -fsanitize-cfi-cross-dso \
+-		   -fno-sanitize-cfi-canonical-jump-tables \
+-		   -fno-sanitize-trap=3Dcfi \
+-		   -fno-sanitize-blacklist
+-
+-ifdef CONFIG_CFI_PERMISSIVE
+-CC_FLAGS_CFI	+=3D -fsanitize-recover=3Dcfi
+-endif
+-
+-# If LTO flags are filtered out, we must also filter out CFI.
+-CC_FLAGS_LTO	+=3D $(CC_FLAGS_CFI)
++CC_FLAGS_CFI	:=3D -fsanitize=3Dkcfi -fno-sanitize-blacklist
+ KBUILD_CFLAGS	+=3D $(CC_FLAGS_CFI)
+ export CC_FLAGS_CFI
+ endif
 diff --git a/arch/Kconfig b/arch/Kconfig
-index 31c4fdc4a4ba..625db6376726 100644
+index 625db6376726..601379a6173d 100644
 --- a/arch/Kconfig
 +++ b/arch/Kconfig
-@@ -739,16 +739,6 @@ config CFI_CLANG
- 
- 	    https://clang.llvm.org/docs/ControlFlowIntegrity.html
- 
--config CFI_CLANG_SHADOW
--	bool "Use CFI shadow to speed up cross-module checks"
--	default y
--	depends on CFI_CLANG && MODULES
--	help
--	  If you select this option, the kernel builds a fast look-up table of
--	  CFI check functions in loaded modules to reduce performance overhead.
+@@ -722,12 +722,8 @@ config ARCH_SUPPORTS_CFI_CLANG
+=20
+ config CFI_CLANG
+ 	bool "Use Clang's Control Flow Integrity (CFI)"
+-	depends on LTO_CLANG && ARCH_SUPPORTS_CFI_CLANG
+-	# Clang >=3D 12:
+-	# - https://bugs.llvm.org/show_bug.cgi?id=3D46258
+-	# - https://bugs.llvm.org/show_bug.cgi?id=3D47479
+-	depends on CLANG_VERSION >=3D 120000
+-	select KALLSYMS
++	depends on ARCH_SUPPORTS_CFI_CLANG
++	depends on $(cc-option,-fsanitize=3Dkcfi)
+ 	help
+ 	  This option enables Clang=E2=80=99s forward-edge Control Flow Integrity
+ 	  (CFI) checking, where the compiler injects a runtime check to each
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinu=
+x.lds.h
+index 69138e9db787..20bfd2f01d6f 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -421,6 +421,22 @@
+ 	__end_ro_after_init =3D .;
+ #endif
+=20
++/*
++ * .kcfi_traps contains a list KCFI trap locations.
++ */
++#ifndef KCFI_TRAPS
++#ifdef CONFIG_CFI_CLANG
++#define KCFI_TRAPS							\
++	__kcfi_traps : AT(ADDR(__kcfi_traps) - LOAD_OFFSET) {		\
++		__start___kcfi_traps =3D .;				\
++		KEEP(*(.kcfi_traps))					\
++		__stop___kcfi_traps =3D .;				\
++	}
++#else
++#define KCFI_TRAPS
++#endif
++#endif
++
+ /*
+  * Read only Data
+  */
+@@ -529,6 +545,8 @@
+ 		__stop___modver =3D .;					\
+ 	}								\
+ 									\
++	KCFI_TRAPS							\
++									\
+ 	RO_EXCEPTION_TABLE						\
+ 	NOTES								\
+ 	BTF								\
+@@ -537,21 +555,6 @@
+ 	__end_rodata =3D .;
+=20
+=20
+-/*
+- * .text..L.cfi.jumptable.* contain Control-Flow Integrity (CFI)
+- * jump table entries.
+- */
+-#ifdef CONFIG_CFI_CLANG
+-#define TEXT_CFI_JT							\
+-		. =3D ALIGN(PMD_SIZE);					\
+-		__cfi_jt_start =3D .;					\
+-		*(.text..L.cfi.jumptable .text..L.cfi.jumptable.*)	\
+-		. =3D ALIGN(PMD_SIZE);					\
+-		__cfi_jt_end =3D .;
+-#else
+-#define TEXT_CFI_JT
+-#endif
 -
--	  If unsure, say Y.
--
- config CFI_PERMISSIVE
- 	bool "Use CFI in permissive mode"
- 	depends on CFI_CLANG
+ /*
+  * Non-instrumentable text section
+  */
+@@ -579,7 +582,6 @@
+ 		*(.text..refcount)					\
+ 		*(.ref.text)						\
+ 		*(.text.asan.* .text.tsan.*)				\
+-		TEXT_CFI_JT						\
+ 	MEM_KEEP(init.text*)						\
+ 	MEM_KEEP(exit.text*)						\
+=20
+@@ -1008,8 +1010,7 @@
+  * keep any .init_array.* sections.
+  * https://bugs.llvm.org/show_bug.cgi?id=3D46478
+  */
+-#if defined(CONFIG_GCOV_KERNEL) || defined(CONFIG_KASAN_GENERIC) || define=
+d(CONFIG_KCSAN) || \
+-	defined(CONFIG_CFI_CLANG)
++#if defined(CONFIG_GCOV_KERNEL) || defined(CONFIG_KASAN_GENERIC) || define=
+d(CONFIG_KCSAN)
+ # ifdef CONFIG_CONSTRUCTORS
+ #  define SANITIZER_DISCARDS						\
+ 	*(.eh_frame)
+@@ -1027,6 +1028,7 @@
+ 	*(.discard)							\
+ 	*(.discard.*)							\
+ 	*(.modinfo)							\
++	*(.kcfi_types)							\
+ 	/* ld.bfd warns about .gnu.version* even when not emitted */	\
+ 	*(.gnu.version*)						\
+=20
 diff --git a/include/linux/cfi.h b/include/linux/cfi.h
-index c6dfc1ed0626..4ab51c067007 100644
+index 2cdbc0fbd0ab..9cbadfca7e01 100644
 --- a/include/linux/cfi.h
 +++ b/include/linux/cfi.h
-@@ -20,18 +20,6 @@ extern void __cfi_check(uint64_t id, void *ptr, void *diag);
- #define __CFI_ADDRESSABLE(fn, __attr) \
- 	const void *__cfi_jt_ ## fn __visible __attr = (void *)&fn
- 
--#ifdef CONFIG_CFI_CLANG_SHADOW
+@@ -2,17 +2,33 @@
+ /*
+  * Clang Control Flow Integrity (CFI) support.
+  *
+- * Copyright (C) 2021 Google LLC
++ * Copyright (C) 2022 Google LLC
+  */
+ #ifndef _LINUX_CFI_H
+ #define _LINUX_CFI_H
+=20
++#include <linux/bug.h>
++#include <linux/module.h>
++
+ #ifdef CONFIG_CFI_CLANG
+-typedef void (*cfi_check_fn)(uint64_t id, void *ptr, void *diag);
+=20
+-/* Compiler-generated function in each module, and the kernel */
+-extern void __cfi_check(uint64_t id, void *ptr, void *diag);
++#ifdef CONFIG_MODULES
++void module_cfi_finalize(const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs, str=
+uct module *mod);
++#endif
++
++void *arch_get_cfi_target(unsigned long addr, struct pt_regs *regs);
++enum bug_trap_type report_cfi(unsigned long addr, struct pt_regs *regs);
++#else
++
++#ifdef CONFIG_MODULES
++static inline void module_cfi_finalize(const Elf_Ehdr *hdr, const Elf_Shdr=
+ *sechdrs,
++				       struct module *mod) {}
++#endif
+=20
++static inline enum bug_trap_type report_cfi(unsigned long addr, struct pt_=
+regs *regs)
++{
++	return BUG_TRAP_TYPE_NONE;
++}
+ #endif /* CONFIG_CFI_CLANG */
+=20
+ #endif /* _LINUX_CFI_H */
+diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.=
+h
+index babb1347148c..c4ff42859077 100644
+--- a/include/linux/compiler-clang.h
++++ b/include/linux/compiler-clang.h
+@@ -66,9 +66,6 @@
+ # define __noscs	__attribute__((__no_sanitize__("shadow-call-stack")))
+ #endif
+=20
+-#define __nocfi		__attribute__((__no_sanitize__("cfi")))
+-#define __cficanonical	__attribute__((__cfi_canonical_jump_table__))
 -
--extern void cfi_module_add(struct module *mod, unsigned long base_addr);
--extern void cfi_module_remove(struct module *mod, unsigned long base_addr);
--
--#else
--
--static inline void cfi_module_add(struct module *mod, unsigned long base_addr) {}
--static inline void cfi_module_remove(struct module *mod, unsigned long base_addr) {}
--
--#endif /* CONFIG_CFI_CLANG_SHADOW */
--
- #else /* !CONFIG_CFI_CLANG */
- 
- #ifdef CONFIG_X86_KERNEL_IBT
+ /*
+  * Turn individual warnings and errors on and off locally, depending
+  * on version.
+@@ -93,3 +90,8 @@
+=20
+ #define __diag_ignore_all(option, comment) \
+ 	__diag_clang(11, ignore, option)
++
++#if CONFIG_CFI_CLANG
++/* Disable CFI checking inside a function. */
++#define __nocfi		__attribute__((__no_sanitize__("kcfi")))
++#endif
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 87857275c047..430ea19f14f6 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -27,7 +27,6 @@
+ #include <linux/tracepoint-defs.h>
+ #include <linux/srcu.h>
+ #include <linux/static_call_types.h>
+-#include <linux/cfi.h>
+=20
+ #include <linux/percpu.h>
+ #include <asm/module.h>
+@@ -389,7 +388,8 @@ struct module {
+ 	unsigned int num_syms;
+=20
+ #ifdef CONFIG_CFI_CLANG
+-	cfi_check_fn cfi_check;
++	unsigned long *kcfi_traps;
++	unsigned long *kcfi_traps_end;
+ #endif
+=20
+ 	/* Kernel parameters. */
 diff --git a/kernel/cfi.c b/kernel/cfi.c
-index 9594cfd1cf2c..2cc0d01ea980 100644
+index 2cc0d01ea980..d9907df6576e 100644
 --- a/kernel/cfi.c
 +++ b/kernel/cfi.c
-@@ -32,237 +32,6 @@ static inline void handle_cfi_failure(void *ptr)
+@@ -1,94 +1,101 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Clang Control Flow Integrity (CFI) error and slowpath handling.
++ * Clang Control Flow Integrity (CFI) error handling.
+  *
+- * Copyright (C) 2021 Google LLC
++ * Copyright (C) 2022 Google LLC
+  */
+=20
+-#include <linux/hardirq.h>
+-#include <linux/kallsyms.h>
+-#include <linux/module.h>
+-#include <linux/mutex.h>
+-#include <linux/printk.h>
+-#include <linux/ratelimit.h>
+-#include <linux/rcupdate.h>
+-#include <linux/vmalloc.h>
+-#include <asm/cacheflush.h>
+-#include <asm/set_memory.h>
+-
+-/* Compiler-defined handler names */
+-#ifdef CONFIG_CFI_PERMISSIVE
+-#define cfi_failure_handler	__ubsan_handle_cfi_check_fail
+-#else
+-#define cfi_failure_handler	__ubsan_handle_cfi_check_fail_abort
+-#endif
+-
+-static inline void handle_cfi_failure(void *ptr)
++#include <linux/cfi.h>
++
++/* Returns the target of the indirect call that follows the trap in `addr`=
+. */
++void * __weak arch_get_cfi_target(unsigned long addr, struct pt_regs *regs=
+)
+ {
+-	if (IS_ENABLED(CONFIG_CFI_PERMISSIVE))
+-		WARN_RATELIMIT(1, "CFI failure (target: %pS):\n", ptr);
+-	else
+-		panic("CFI failure (target: %pS)\n", ptr);
++	return NULL;
  }
- 
+=20
  #ifdef CONFIG_MODULES
--#ifdef CONFIG_CFI_CLANG_SHADOW
--/*
-- * Index type. A 16-bit index can address at most (2^16)-2 pages (taking
-- * into account SHADOW_INVALID), i.e. ~256M with 4k pages.
-- */
--typedef u16 shadow_t;
--#define SHADOW_INVALID		((shadow_t)~0UL)
--
--struct cfi_shadow {
--	/* Page index for the beginning of the shadow */
--	unsigned long base;
--	/* An array of __cfi_check locations (as indices to the shadow) */
--	shadow_t shadow[1];
--} __packed;
--
--/*
-- * The shadow covers ~128M from the beginning of the module region. If
-- * the region is larger, we fall back to __module_address for the rest.
-- */
--#define __SHADOW_RANGE		(_UL(SZ_128M) >> PAGE_SHIFT)
--
--/* The in-memory size of struct cfi_shadow, always at least one page */
--#define __SHADOW_PAGES		((__SHADOW_RANGE * sizeof(shadow_t)) >> PAGE_SHIFT)
--#define SHADOW_PAGES		max(1UL, __SHADOW_PAGES)
--#define SHADOW_SIZE		(SHADOW_PAGES << PAGE_SHIFT)
--
--/* The actual size of the shadow array, minus metadata */
--#define SHADOW_ARR_SIZE		(SHADOW_SIZE - offsetof(struct cfi_shadow, shadow))
--#define SHADOW_ARR_SLOTS	(SHADOW_ARR_SIZE / sizeof(shadow_t))
--
--static DEFINE_MUTEX(shadow_update_lock);
--static struct cfi_shadow __rcu *cfi_shadow __read_mostly;
--
--/* Returns the index in the shadow for the given address */
--static inline int ptr_to_shadow(const struct cfi_shadow *s, unsigned long ptr)
++/* Populates `kcfi_trap(_end)?` fields in `struct module`. */
++void module_cfi_finalize(const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs,
++			 struct module *mod)
++{
++	char *secstrings;
++	unsigned int i;
++
++	mod->kcfi_traps =3D NULL;
++	mod->kcfi_traps_end =3D NULL;
++
++	secstrings =3D (char *)hdr + sechdrs[hdr->e_shstrndx].sh_offset;
++
++	for (i =3D 1; i < hdr->e_shnum; i++) {
++		if (strcmp(secstrings+sechdrs[i].sh_name, "__kcfi_traps"))
++			continue;
+=20
+-static inline cfi_check_fn find_module_check_fn(unsigned long ptr)
++		mod->kcfi_traps =3D (unsigned long *)sechdrs[i].sh_addr;
++		mod->kcfi_traps_end =3D (unsigned long *)(sechdrs[i].sh_addr + sechdrs[i=
+].sh_size);
++		break;
++	}
++}
++
++static bool is_module_cfi_trap(unsigned long addr)
+ {
+-	cfi_check_fn fn =3D NULL;
++	bool found =3D false;
+ 	struct module *mod;
++	unsigned long *p;
+=20
+ 	rcu_read_lock_sched_notrace();
+-	mod =3D __module_address(ptr);
++
++	mod =3D __module_address(addr);
+ 	if (mod)
+-		fn =3D mod->cfi_check;
++		for (p =3D mod->kcfi_traps; !found && p < mod->kcfi_traps_end; ++p)
++			found =3D (*p =3D=3D addr);
++
+ 	rcu_read_unlock_sched_notrace();
+=20
+-	return fn;
++	return found;
+ }
+=20
+-static inline cfi_check_fn find_check_fn(unsigned long ptr)
 -{
--	unsigned long index;
--	unsigned long page = ptr >> PAGE_SHIFT;
--
--	if (unlikely(page < s->base))
--		return -1; /* Outside of module area */
--
--	index = page - s->base;
--
--	if (index >= SHADOW_ARR_SLOTS)
--		return -1; /* Cannot be addressed with shadow */
--
--	return (int)index;
--}
--
--/* Returns the page address for an index in the shadow */
--static inline unsigned long shadow_to_ptr(const struct cfi_shadow *s,
--	int index)
--{
--	if (unlikely(index < 0 || index >= SHADOW_ARR_SLOTS))
--		return 0;
--
--	return (s->base + index) << PAGE_SHIFT;
--}
--
--/* Returns the __cfi_check function address for the given shadow location */
--static inline unsigned long shadow_to_check_fn(const struct cfi_shadow *s,
--	int index)
--{
--	if (unlikely(index < 0 || index >= SHADOW_ARR_SLOTS))
--		return 0;
--
--	if (unlikely(s->shadow[index] == SHADOW_INVALID))
--		return 0;
--
--	/* __cfi_check is always page aligned */
--	return (s->base + s->shadow[index]) << PAGE_SHIFT;
--}
--
--static void prepare_next_shadow(const struct cfi_shadow __rcu *prev,
--		struct cfi_shadow *next)
--{
--	int i, index, check;
--
--	/* Mark everything invalid */
--	memset(next->shadow, 0xFF, SHADOW_ARR_SIZE);
--
--	if (!prev)
--		return; /* No previous shadow */
--
--	/* If the base address didn't change, an update is not needed */
--	if (prev->base == next->base) {
--		memcpy(next->shadow, prev->shadow, SHADOW_ARR_SIZE);
--		return;
--	}
--
--	/* Convert the previous shadow to the new address range */
--	for (i = 0; i < SHADOW_ARR_SLOTS; ++i) {
--		if (prev->shadow[i] == SHADOW_INVALID)
--			continue;
--
--		index = ptr_to_shadow(next, shadow_to_ptr(prev, i));
--		if (index < 0)
--			continue;
--
--		check = ptr_to_shadow(next,
--				shadow_to_check_fn(prev, prev->shadow[i]));
--		if (check < 0)
--			continue;
--
--		next->shadow[index] = (shadow_t)check;
--	}
--}
--
--static void add_module_to_shadow(struct cfi_shadow *s, struct module *mod,
--			unsigned long min_addr, unsigned long max_addr)
--{
--	int check_index;
--	unsigned long check = (unsigned long)mod->cfi_check;
--	unsigned long ptr;
--
--	if (unlikely(!PAGE_ALIGNED(check))) {
--		pr_warn("cfi: not using shadow for module %s\n", mod->name);
--		return;
--	}
--
--	check_index = ptr_to_shadow(s, check);
--	if (check_index < 0)
--		return; /* Module not addressable with shadow */
--
--	/* For each page, store the check function index in the shadow */
--	for (ptr = min_addr; ptr <= max_addr; ptr += PAGE_SIZE) {
--		int index = ptr_to_shadow(s, ptr);
--
--		if (index >= 0) {
--			/* Each page must only contain one module */
--			WARN_ON_ONCE(s->shadow[index] != SHADOW_INVALID);
--			s->shadow[index] = (shadow_t)check_index;
--		}
--	}
--}
--
--static void remove_module_from_shadow(struct cfi_shadow *s, struct module *mod,
--		unsigned long min_addr, unsigned long max_addr)
--{
--	unsigned long ptr;
--
--	for (ptr = min_addr; ptr <= max_addr; ptr += PAGE_SIZE) {
--		int index = ptr_to_shadow(s, ptr);
--
--		if (index >= 0)
--			s->shadow[index] = SHADOW_INVALID;
--	}
--}
--
--typedef void (*update_shadow_fn)(struct cfi_shadow *, struct module *,
--			unsigned long min_addr, unsigned long max_addr);
--
--static void update_shadow(struct module *mod, unsigned long base_addr,
--		update_shadow_fn fn)
--{
--	struct cfi_shadow *prev;
--	struct cfi_shadow *next;
--	unsigned long min_addr, max_addr;
--
--	next = vmalloc(SHADOW_SIZE);
--
--	mutex_lock(&shadow_update_lock);
--	prev = rcu_dereference_protected(cfi_shadow,
--					 mutex_is_locked(&shadow_update_lock));
--
--	if (next) {
--		next->base = base_addr >> PAGE_SHIFT;
--		prepare_next_shadow(prev, next);
--
--		min_addr = (unsigned long)mod->core_layout.base;
--		max_addr = min_addr + mod->core_layout.text_size;
--		fn(next, mod, min_addr & PAGE_MASK, max_addr & PAGE_MASK);
--
--		set_memory_ro((unsigned long)next, SHADOW_PAGES);
--	}
--
--	rcu_assign_pointer(cfi_shadow, next);
--	mutex_unlock(&shadow_update_lock);
--	synchronize_rcu();
--
--	if (prev) {
--		set_memory_rw((unsigned long)prev, SHADOW_PAGES);
--		vfree(prev);
--	}
--}
--
--void cfi_module_add(struct module *mod, unsigned long base_addr)
--{
--	update_shadow(mod, base_addr, add_module_to_shadow);
--}
--
--void cfi_module_remove(struct module *mod, unsigned long base_addr)
--{
--	update_shadow(mod, base_addr, remove_module_from_shadow);
--}
--
--static inline cfi_check_fn ptr_to_check_fn(const struct cfi_shadow __rcu *s,
--	unsigned long ptr)
--{
--	int index;
--
--	if (unlikely(!s))
--		return NULL; /* No shadow available */
--
--	index = ptr_to_shadow(s, ptr);
--	if (index < 0)
--		return NULL; /* Cannot be addressed with shadow */
--
--	return (cfi_check_fn)shadow_to_check_fn(s, index);
--}
--
--static inline cfi_check_fn find_shadow_check_fn(unsigned long ptr)
--{
--	cfi_check_fn fn;
--
--	rcu_read_lock_sched_notrace();
--	fn = ptr_to_check_fn(rcu_dereference_sched(cfi_shadow), ptr);
--	rcu_read_unlock_sched_notrace();
--
+-	cfi_check_fn fn =3D NULL;
++#else /* CONFIG_MODULES */
+=20
+-	if (is_kernel_text(ptr))
+-		return __cfi_check;
++static inline bool is_module_cfi_trap(unsigned long addr)
++{
++	return false;
++}
+=20
+-	/*
+-	 * Indirect call checks can happen when RCU is not watching. Both
+-	 * the shadow and __module_address use RCU, so we need to wake it
+-	 * up if necessary.
+-	 */
+-	RCU_NONIDLE({
+-		fn =3D find_module_check_fn(ptr);
+-	});
++#endif /* CONFIG_MODULES */
+=20
 -	return fn;
 -}
--
--#else /* !CONFIG_CFI_CLANG_SHADOW */
--
--static inline cfi_check_fn find_shadow_check_fn(unsigned long ptr)
--{
--	return NULL;
--}
--
--#endif /* CONFIG_CFI_CLANG_SHADOW */
- 
- static inline cfi_check_fn find_module_check_fn(unsigned long ptr)
++extern unsigned long __start___kcfi_traps[];
++extern unsigned long __stop___kcfi_traps[];
+=20
+-void __cfi_slowpath_diag(uint64_t id, void *ptr, void *diag)
++static bool is_cfi_trap(unsigned long addr)
  {
-@@ -291,11 +60,7 @@ static inline cfi_check_fn find_check_fn(unsigned long ptr)
- 	 * up if necessary.
- 	 */
- 	RCU_NONIDLE({
--		if (IS_ENABLED(CONFIG_CFI_CLANG_SHADOW))
--			fn = find_shadow_check_fn(ptr);
+-	cfi_check_fn fn =3D find_check_fn((unsigned long)ptr);
++	unsigned long *p;
+=20
+-	if (likely(fn))
+-		fn(id, ptr, diag);
+-	else /* Don't allow unchecked modules */
+-		handle_cfi_failure(ptr);
++	for (p =3D __start___kcfi_traps; p < __stop___kcfi_traps; ++p)
++		if (*p =3D=3D addr)
++			return true;
++
++	return is_module_cfi_trap(addr);
+ }
+-EXPORT_SYMBOL(__cfi_slowpath_diag);
+=20
+-#else /* !CONFIG_MODULES */
++#define __CFI_ERROR_FMT "CFI failure at %pS (target: %pS)\n"
+=20
+-void __cfi_slowpath_diag(uint64_t id, void *ptr, void *diag)
++static enum bug_trap_type __report_cfi(void *addr, void *target, struct pt=
+_regs *regs)
+ {
+-	handle_cfi_failure(ptr); /* No modules */
++	if (IS_ENABLED(CONFIG_CFI_PERMISSIVE)) {
++		pr_warn(__CFI_ERROR_FMT, addr, target);
++		__warn(NULL, 0, addr, 0, regs, NULL);
++
++		return BUG_TRAP_TYPE_WARN;
++	} else {
++		pr_crit(__CFI_ERROR_FMT, addr, target);
++		return BUG_TRAP_TYPE_BUG;
++	}
+ }
+-EXPORT_SYMBOL(__cfi_slowpath_diag);
 -
--		if (!fn)
--			fn = find_module_check_fn(ptr);
-+		fn = find_module_check_fn(ptr);
- 	});
- 
- 	return fn;
+-#endif /* CONFIG_MODULES */
+=20
+-void cfi_failure_handler(void *data, void *ptr, void *vtable)
++enum bug_trap_type report_cfi(unsigned long addr, struct pt_regs *regs)
+ {
+-	handle_cfi_failure(ptr);
++	if (!is_cfi_trap(addr))
++		return BUG_TRAP_TYPE_NONE;
++
++	return __report_cfi((void *)addr, arch_get_cfi_target(addr, regs), regs);
+ }
+-EXPORT_SYMBOL(cfi_failure_handler);
 diff --git a/kernel/module.c b/kernel/module.c
-index 6cea788fd965..296fe02323e9 100644
+index 296fe02323e9..411ae8c358e6 100644
 --- a/kernel/module.c
 +++ b/kernel/module.c
-@@ -2151,8 +2151,6 @@ void __weak module_arch_freeing_init(struct module *mod)
- {
+@@ -57,6 +57,7 @@
+ #include <linux/bsearch.h>
+ #include <linux/dynamic_debug.h>
+ #include <linux/audit.h>
++#include <linux/cfi.h>
+ #include <uapi/linux/module.h>
+ #include "module-internal.h"
+=20
+@@ -3871,8 +3872,9 @@ static int complete_formation(struct module *mod, str=
+uct load_info *info)
+ 	if (err < 0)
+ 		goto out;
+=20
+-	/* This relies on module_mutex for list integrity. */
++	/* These rely on module_mutex for list integrity. */
+ 	module_bug_finalize(info->hdr, info->sechdrs, mod);
++	module_cfi_finalize(info->hdr, info->sechdrs, mod);
+=20
+ 	module_enable_ro(mod, false);
+ 	module_enable_nx(mod);
+@@ -3928,8 +3930,6 @@ static int unknown_module_param_cb(char *param, char =
+*val, const char *modname,
+ 	return 0;
  }
- 
--static void cfi_cleanup(struct module *mod);
+=20
+-static void cfi_init(struct module *mod);
 -
- /* Free a module, remove from lists, etc. */
- static void free_module(struct module *mod)
- {
-@@ -2194,9 +2192,6 @@ static void free_module(struct module *mod)
- 	synchronize_rcu();
- 	mutex_unlock(&module_mutex);
- 
--	/* Clean up CFI for the module. */
--	cfi_cleanup(mod);
+ /*
+  * Allocate and load the module: note that size of section 0 is always
+  * zero, and we rely on this for optional sections.
+@@ -4059,9 +4059,6 @@ static int load_module(struct load_info *info, const =
+char __user *uargs,
+=20
+ 	flush_module_icache(mod);
+=20
+-	/* Setup CFI for the module. */
+-	cfi_init(mod);
 -
- 	/* This may be empty, but that's OK */
- 	module_arch_freeing_init(mod);
- 	module_memfree(mod->init_layout.base);
-@@ -4141,7 +4136,6 @@ static int load_module(struct load_info *info, const char __user *uargs,
- 	synchronize_rcu();
- 	kfree(mod->args);
-  free_arch_cleanup:
--	cfi_cleanup(mod);
- 	module_arch_cleanup(mod);
-  free_modinfo:
- 	free_modinfo(mod);
-@@ -4530,15 +4524,6 @@ static void cfi_init(struct module *mod)
- 	if (exit)
- 		mod->exit = *exit;
- #endif
+ 	/* Now copy in args */
+ 	mod->args =3D strndup_user(uargs, ~0UL >> 1);
+ 	if (IS_ERR(mod->args)) {
+@@ -4502,31 +4499,6 @@ int module_kallsyms_on_each_symbol(int (*fn)(void *,=
+ const char *,
+ #endif /* CONFIG_LIVEPATCH */
+ #endif /* CONFIG_KALLSYMS */
+=20
+-static void cfi_init(struct module *mod)
+-{
+-#ifdef CONFIG_CFI_CLANG
+-	initcall_t *init;
+-	exitcall_t *exit;
 -
--	cfi_module_add(mod, module_addr_min);
+-	rcu_read_lock_sched();
+-	mod->cfi_check =3D (cfi_check_fn)
+-		find_kallsyms_symbol_value(mod, "__cfi_check");
+-	init =3D (initcall_t *)
+-		find_kallsyms_symbol_value(mod, "__cfi_jt_init_module");
+-	exit =3D (exitcall_t *)
+-		find_kallsyms_symbol_value(mod, "__cfi_jt_cleanup_module");
+-	rcu_read_unlock_sched();
+-
+-	/* Fix init/exit functions to point to the CFI jump table */
+-	if (init)
+-		mod->init =3D *init;
+-#ifdef CONFIG_MODULE_UNLOAD
+-	if (exit)
+-		mod->exit =3D *exit;
+-#endif
 -#endif
 -}
 -
--static void cfi_cleanup(struct module *mod)
--{
+ /* Maximum number of characters written by module_flags() */
+ #define MODULE_FLAGS_BUF_SIZE (TAINT_FLAGS_COUNT + 4)
+=20
+diff --git a/scripts/module.lds.S b/scripts/module.lds.S
+index 1d0e1e4dc3d2..ccd75d283840 100644
+--- a/scripts/module.lds.S
++++ b/scripts/module.lds.S
+@@ -3,20 +3,11 @@
+  * Archs are free to supply their own linker scripts.  ld will
+  * combine them automatically.
+  */
 -#ifdef CONFIG_CFI_CLANG
--	cfi_module_remove(mod, module_addr_min);
+-# include <asm/page.h>
+-# define ALIGN_CFI 		ALIGN(PAGE_SIZE)
+-# define SANITIZER_DISCARDS	*(.eh_frame)
+-#else
+-# define ALIGN_CFI
+-# define SANITIZER_DISCARDS
+-#endif
+-
+ SECTIONS {
+ 	/DISCARD/ : {
+ 		*(.discard)
+ 		*(.discard.*)
+-		SANITIZER_DISCARDS
++		*(.kcfi_types)
+ 	}
+=20
+ 	__ksymtab		0 : { *(SORT(___ksymtab+*)) }
+@@ -31,6 +22,10 @@ SECTIONS {
+=20
+ 	__patchable_function_entries : { *(__patchable_function_entries) }
+=20
++#ifdef CONFIG_CFI_CLANG
++	__kcfi_traps 		: { KEEP(*(.kcfi_traps)) }
++#endif
++
+ #ifdef CONFIG_LTO_CLANG
+ 	/*
+ 	 * With CONFIG_LTO_CLANG, LLD always enables -fdata-sections and
+@@ -51,15 +46,6 @@ SECTIONS {
+ 		*(.rodata .rodata.[0-9a-zA-Z_]*)
+ 		*(.rodata..L*)
+ 	}
+-
+-	/*
+-	 * With CONFIG_CFI_CLANG, we assume __cfi_check is at the beginning
+-	 * of the .text section, and is aligned to PAGE_SIZE.
+-	 */
+-	.text : ALIGN_CFI {
+-		*(.text.__cfi_check)
+-		*(.text .text.[0-9a-zA-Z_]* .text..L.cfi*)
+-	}
  #endif
  }
- 
--- 
+=20
+--=20
 2.36.0.464.gb9c8b46e94-goog
 
