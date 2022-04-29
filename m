@@ -2,69 +2,69 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0034AC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 29 Apr 2022 20:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3A8C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 29 Apr 2022 20:38:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381044AbiD2Ul1 (ORCPT
+        id S1381033AbiD2Ulb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 29 Apr 2022 16:41:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51164 "EHLO
+        Fri, 29 Apr 2022 16:41:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381045AbiD2UlJ (ORCPT
+        with ESMTP id S1380966AbiD2UlG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 29 Apr 2022 16:41:09 -0400
+        Fri, 29 Apr 2022 16:41:06 -0400
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E108ECE128
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:37:38 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id v17-20020a056902029100b006484d85132eso8347690ybh.14
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:37:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD98CC534
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:37:36 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id w133-20020a25c78b000000b0064847b10a22so8371158ybe.18
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:37:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc:content-transfer-encoding;
-        bh=CBFSOSCWmXZdYTn8wlTZ3Rj5NSKYEySXgB9hFZpDWcQ=;
-        b=ZMe9V/MSuwf8udmciH8lqoba83OKO8v0g4K1vzIlxr2talii7K7Ys0ordrrMAHe+pp
-         DaqLObTTros84C3FoilHwVOlv/STu0KhGjugyeK349pAgMRnv4wFfKGXK66cTNEK/E/2
-         9CS4D6qXyibLUANPFQftw9xg5fy6QMtOA2/GCKenixGS3WyJxUkAAE2Fomn5XE4N6+Fu
-         MH4isN9/BTjRcs0gsnSNZkRVTC/M1BBUGL5BQ+8ljr9lJua+F/PodDy+y3v9FvpxQypS
-         cIBtMTLJxrS2yefnyXe+cpHCAo5gcyjEL1MfDZsZasLEWiGX5qs2r02D/2wLWwBVNFNQ
-         E5nw==
+         :cc;
+        bh=c3P0Hz4r3G9OpLG/quSc8J3HkB5RqmI/gpWW3ubqRHw=;
+        b=L3b4tsGo9U6EKhT1enH+lnwRGBAriMT04pxJOWGmkTh/LOTTSEf7+ZnnodamgedxF/
+         0cwAbqdA5BTRqaVaWO9cIk3CrgrGdAh+jueAcHfV8Bg8TTAZ+khVx+B8eXyacA4mY4Xx
+         K3TQUEqnaXw1lY5l03iwoFMiQRQsJmRAKWpBy5VlbUJzdl8A2l7wvJu19Rol8flqku9I
+         WNZ/yUORvsGxlp+SHTywXjv/cQ3+dFZB9Bv+ISu7Xf8nMdBe2LwKPup9v4pkWEFDDPFS
+         kaimPMTLgDV3p2dFB9fsB4bsR6Vkc62TMrM/JjgmNdYT0fQUUEBM5oeL8rAQdxi3N/ib
+         ZNmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc:content-transfer-encoding;
-        bh=CBFSOSCWmXZdYTn8wlTZ3Rj5NSKYEySXgB9hFZpDWcQ=;
-        b=fqffm01GCwcNuy196b3v79N6vHtEeyawE5hsocRpsx8RB9ZgcV0qY+Sid8ObF32u+I
-         L/BRj2WSWCLBNl73NRCZ9HvF+anba7HFIG6qk7uZpXBpXd8/uHfCdiS/e35dpVDuFOJu
-         0lpvVjJC3OvXHur3BcXFEIaEYGN6yt2YszaLk9qH3n3UC+STKbdK6gqCfbyIZ8Hv452Y
-         /14amPWojb2S73+fGGEYPOi+sxkncvzeMqyHv+DKw0t0nqfJttuUTEIXpqfTpFsgYzqc
-         Q5jZYiNhtsHBzI3dcik8S8Nh4NbYDSXNa458ViOYNmvIEtgVn2Eecgd50bJwJxKkXgRY
-         OkTQ==
-X-Gm-Message-State: AOAM531dDaHUTRFOFfwfLsuWXJf4gAY4Y3dxSZisVwj3bKqydDtzcQcl
-        u5MYVvtvWJOshqd68fsYp5G6bym81FwMgntotmA=
-X-Google-Smtp-Source: ABdhPJz3PRZnRDaYveY8PEOrWLh5TwRRZFIgz/hxn66OLDYa/VrKRiT3aho8JsA1WKfUtkL1urGOjyBFCiYVRzF+Yvc=
+         :references:subject:from:to:cc;
+        bh=c3P0Hz4r3G9OpLG/quSc8J3HkB5RqmI/gpWW3ubqRHw=;
+        b=rIrVZikXuXexWP3jMRtRZHjFqhtICc3cD3F1ju0FoTMwj7DszbFs0/1KngW5Exv6xf
+         9SOJxDAF49nGyXx+LiD2soQ9wjpT2QldJ/zfajiUe75/TNkVaBnbCzc5RZpMPuRHLbsB
+         pRFOPP6NDF3R8N1Nb86ge9M97hOx3Ln012BCdaZXO3pjhJYWr1h0+/BpZEbYFJ6WQ++k
+         iUKh6gQimqqGY8vu46WB0ti9CppCEzlhkNPKfsUmjqOOaBQ9KHcQQIDsHIhGwnB+3sNW
+         zCDhnJwitW7O0Ma/nL4GQq5rnWz0pnZgFL0WH9Rd21Y0DYE1N3nPDBEDtQCpRTpgvzNX
+         8Icg==
+X-Gm-Message-State: AOAM530MnGABhCUPCSYmmJmo0rHhTgGvqLq3lMfhgeLxQDO5Ezu1drr+
+        0FE1/SCofVZL/FAYIg7n+TrGvWZLgea/mwsRqKM=
+X-Google-Smtp-Source: ABdhPJy48Ta9ddvMIF4e+65DRSdxotM1XKnrKu3boCyUAK2XttelwSr/WCmbVBiS9zrXdXlk0V9aV262+2v6W6Pe/+Y=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:351:bea9:f158:1021])
- (user=samitolvanen job=sendgmr) by 2002:a25:e0d3:0:b0:645:77c9:4e31 with SMTP
- id x202-20020a25e0d3000000b0064577c94e31mr1243653ybg.97.1651264657838; Fri,
- 29 Apr 2022 13:37:37 -0700 (PDT)
-Date:   Fri, 29 Apr 2022 13:36:44 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a81:8493:0:b0:2f7:d7c3:15f8 with SMTP
+ id u141-20020a818493000000b002f7d7c315f8mr1216311ywf.196.1651264655480; Fri,
+ 29 Apr 2022 13:37:35 -0700 (PDT)
+Date:   Fri, 29 Apr 2022 13:36:43 -0700
 In-Reply-To: <20220429203644.2868448-1-samitolvanen@google.com>
-Message-Id: <20220429203644.2868448-22-samitolvanen@google.com>
+Message-Id: <20220429203644.2868448-21-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20220429203644.2868448-1-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3169; h=from:subject;
- bh=uFL18k3KC4iCKF4AXgGD1Mq4jj5gai1wigbzvC9PP/o=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBibExY2LifXNevk1TsxQ0IeoobF4r0E0uMXfS+2IhA
- yLd8T56JAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYmxMWAAKCRBMtfaEi7xW7ou7DA
- CVtuVd3sKEK3z2ChoeiIcGcU8iukBN8OM/HXmzh3pZq6yVg67wrrJiJ5oCCKPR2sRaYP0t6MSn772K
- l5U4p82O/prDh9AK0kKeyaSy4kvxVMyegTBCTiWzEC3tN48aXVcmI3dMp98RL7LGQzu9v4CLIEVaAa
- ZyLplEa810jUrIxOZER6sZfDmqUN7V/0ZKKzwsynPVXj76wvte6NCWe3NJ/ZxHTKwz2evdYtezNBOs
- w5UmruzJ3X4BM+NXqEmVZVfauFH9okVc4aHyl3C0tSJ4hQddWslVlW6jiD7FczG0DVtfhYaktcY3yZ
- 335Ly2E9sGHsooiWLotHkG2PgPaJ+Jhfa2cw8T3990e55MXFQKaNXNTCRXA+Qq5C7qXBuPFrmbgIz1
- isZNNgIYvj+7LUjbO4NBInJYbyLkQMpgNLLqoZq/7hfv1xoJcIZg4CS+1iAmr+3dOxn1GAj/d/7CTi
- jKj9QZzAlA88rYhDAQ3LbORG2j6VAUCtSo+oWCun3pPF8=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1427; h=from:subject;
+ bh=qwzizA85BcxzgY6DCPbuVyLVCg+lMcvwRT1NDXtCdLs=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBibExYM8ehL1/+o0aCrhRJzqnXsps5M4p21c1LQlC3
+ sSVsl4WJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYmxMWAAKCRBMtfaEi7xW7tTEDA
+ CIw6jCzNraux3uPsdGgkoAmjqy1E308ymvORumKcO9YZjpCWgxUG+wrt+QoMZR3WsGxUe2zWhOF83/
+ GBMcbJoiHwlX4DbEEk02ZUts9xuqk851PS5XPj4XupWl8F+kbRnXqWj7hSkLGOAkDS71i8n4fC9xr0
+ 6Ez6wHIz/0fvbvzjy2pHl3vX2S1oouofjPnfB6+NNmsyEb/K8pceL8f2CcR6jIzAd/J0QmzZTj76WT
+ O4AwX/0ZNLkWjMQpGtuKzzGFHozskjUdwKRyIsCMnHGCm2py2s1oLV/ZY9mk7yD4IoRB3MrC0v0FDM
+ Fl8hcWy38RiLdiG2OvGkUee959W0eF+qPDLNNpHfpiSB1J1t43APoJLX+iPYsGLObYHe9DGTllVo0x
+ kt56P/u268sda8zQK7JrAuU3qLye5d96mt/FiDL13+rXzBZuloXyNLx7trQLbxVhiAQkGYOvGEGt2D
+ lY6u8L5nEHbyCOCMu0kfKXPQzqa6gVH7sa1innsuiCfcA=
 X-Mailer: git-send-email 2.36.0.464.gb9c8b46e94-goog
-Subject: [RFC PATCH 21/21] x86: Add support for CONFIG_CFI_CLANG
+Subject: [RFC PATCH 20/21] x86/vdso: Disable CFI
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -82,117 +82,39 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
         Sami Tolvanen <samitolvanen@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add CONFIG_CFI_CLANG error handling and allow the config to be selected
-on x86_64.
+CC_FLAGS_LTO no longer includes CC_FLAGS_CFI, so filter these flags
+out as well.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/x86/Kconfig               |  1 +
- arch/x86/include/asm/linkage.h |  7 ++++++
- arch/x86/kernel/traps.c        | 39 +++++++++++++++++++++++++++++++++-
- 3 files changed, 46 insertions(+), 1 deletion(-)
+ arch/x86/entry/vdso/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index b0142e01002e..01db5c5c4dde 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -108,6 +108,7 @@ config X86
- 	select ARCH_SUPPORTS_PAGE_TABLE_CHECK	if X86_64
- 	select ARCH_SUPPORTS_NUMA_BALANCING	if X86_64
- 	select ARCH_SUPPORTS_KMAP_LOCAL_FORCE_MAP	if NR_CPUS <=3D 4096
-+	select ARCH_SUPPORTS_CFI_CLANG		if X86_64
- 	select ARCH_SUPPORTS_LTO_CLANG
- 	select ARCH_SUPPORTS_LTO_CLANG_THIN
- 	select ARCH_USE_BUILTIN_BSWAP
-diff --git a/arch/x86/include/asm/linkage.h b/arch/x86/include/asm/linkage.=
-h
-index 85865f1645bd..d20acf5ebae3 100644
---- a/arch/x86/include/asm/linkage.h
-+++ b/arch/x86/include/asm/linkage.h
-@@ -25,6 +25,13 @@
- #define RET	ret
- #endif
-=20
-+#ifdef CONFIG_CFI_CLANG
-+#define __CFI_TYPE(name)			\
-+	.fill 10, 1, 0x90 ASM_NL		\
-+	.4byte __kcfi_typeid_##name ASM_NL	\
-+	.fill 2, 1, 0xcc
-+#endif
-+
- #else /* __ASSEMBLY__ */
-=20
- #ifdef CONFIG_SLS
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 1563fb995005..b9e46e6ed83b 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -40,6 +40,7 @@
- #include <linux/hardirq.h>
- #include <linux/atomic.h>
- #include <linux/ioasid.h>
-+#include <linux/cfi.h>
-=20
- #include <asm/stacktrace.h>
- #include <asm/processor.h>
-@@ -295,6 +296,41 @@ static inline void handle_invalid_op(struct pt_regs *r=
-egs)
- 		      ILL_ILLOPN, error_get_trap_addr(regs));
- }
-=20
-+#ifdef CONFIG_CFI_CLANG
-+void *arch_get_cfi_target(unsigned long addr, struct pt_regs *regs)
-+{
-+	char buffer[MAX_INSN_SIZE];
-+	int offset;
-+	struct insn insn;
-+	unsigned long *target;
-+
-+	/*
-+	 * The expected CFI check instruction sequence:
-+	 * =C2=A0 cmpl=C2=A0 =C2=A0 <id>, -6(%reg)	; 7 bytes
-+	 *   je      .Ltmp1		; 2 bytes
-+	 *   ud2			; <- addr
-+	 *   .Ltmp1:
-+	 *
-+	 * Therefore, the target address is in a register that we can
-+	 * decode from the cmpl instruction.
-+	 */
-+	if (copy_from_kernel_nofault(buffer, (void *)addr - 9, MAX_INSN_SIZE))
-+		return NULL;
-+	if (insn_decode(&insn, buffer, MAX_INSN_SIZE, INSN_MODE_64))
-+		return NULL;
-+	if (insn.opcode.value !=3D 0x81)
-+		return NULL;
-+
-+	offset =3D insn_get_modrm_rm_off(&insn, regs);
-+	if (offset < 0)
-+		return NULL;
-+
-+	target =3D (void *)regs + offset;
-+
-+	return (void *)*target;
-+}
-+#endif
-+
- static noinstr bool handle_bug(struct pt_regs *regs)
- {
- 	bool handled =3D false;
-@@ -312,7 +348,8 @@ static noinstr bool handle_bug(struct pt_regs *regs)
- 	 */
- 	if (regs->flags & X86_EFLAGS_IF)
- 		raw_local_irq_enable();
--	if (report_bug(regs->ip, regs) =3D=3D BUG_TRAP_TYPE_WARN) {
-+	if (report_bug(regs->ip, regs) =3D=3D BUG_TRAP_TYPE_WARN ||
-+	    report_cfi(regs->ip, regs) =3D=3D BUG_TRAP_TYPE_WARN) {
- 		regs->ip +=3D LEN_UD2;
- 		handled =3D true;
- 	}
---=20
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index 693f8b9031fb..abf41ef0f89e 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -91,7 +91,7 @@ ifneq ($(RETPOLINE_VDSO_CFLAGS),)
+ endif
+ endif
+ 
+-$(vobjs): KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_LTO) $(GCC_PLUGINS_CFLAGS) $(RETPOLINE_CFLAGS),$(KBUILD_CFLAGS)) $(CFL)
++$(vobjs): KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_LTO) $(CC_FLAGS_CFI) $(GCC_PLUGINS_CFLAGS) $(RETPOLINE_CFLAGS),$(KBUILD_CFLAGS)) $(CFL)
+ 
+ #
+ # vDSO code runs in userspace and -pg doesn't help with profiling anyway.
+@@ -151,6 +151,7 @@ KBUILD_CFLAGS_32 := $(filter-out -mfentry,$(KBUILD_CFLAGS_32))
+ KBUILD_CFLAGS_32 := $(filter-out $(GCC_PLUGINS_CFLAGS),$(KBUILD_CFLAGS_32))
+ KBUILD_CFLAGS_32 := $(filter-out $(RETPOLINE_CFLAGS),$(KBUILD_CFLAGS_32))
+ KBUILD_CFLAGS_32 := $(filter-out $(CC_FLAGS_LTO),$(KBUILD_CFLAGS_32))
++KBUILD_CFLAGS_32 := $(filter-out $(CC_FLAGS_CFI),$(KBUILD_CFLAGS_32))
+ KBUILD_CFLAGS_32 += -m32 -msoft-float -mregparm=0 -fpic
+ KBUILD_CFLAGS_32 += -fno-stack-protector
+ KBUILD_CFLAGS_32 += $(call cc-option, -foptimize-sibling-calls)
+-- 
 2.36.0.464.gb9c8b46e94-goog
 
