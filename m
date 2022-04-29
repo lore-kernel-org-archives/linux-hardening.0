@@ -2,69 +2,69 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CD3C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 29 Apr 2022 20:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0034AC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 29 Apr 2022 20:38:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380949AbiD2UlU (ORCPT
+        id S1381044AbiD2Ul1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 29 Apr 2022 16:41:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51046 "EHLO
+        Fri, 29 Apr 2022 16:41:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380958AbiD2UlG (ORCPT
+        with ESMTP id S1381045AbiD2UlJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 29 Apr 2022 16:41:06 -0400
+        Fri, 29 Apr 2022 16:41:09 -0400
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1299783B1B
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:37:34 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id b12-20020a056902030c00b0061d720e274aso8350860ybs.20
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:37:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E108ECE128
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:37:38 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id v17-20020a056902029100b006484d85132eso8347690ybh.14
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:37:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=dAD7TU5bxFw4+mtb6XZpH6YJckvLCjHt6y7FOMRwG5M=;
-        b=sF4rYvxurIR8HSYS3JDDW5zN4WVtRvWJLoykvKPRZlF2xUvwg49nOitD3FnwryJfzG
-         q7yNxY2NXlCrhtPLxo9ZiAN5PVyxyXvMyHMP8TI78vutHXo4STj7VEhf7492C2Y+tsV+
-         /S6COa3b8gLTsTS6KwkR/kpJc/tmJ0jEDFXPv4WRePnoKxxqRUFo+kdbrbCuldPWepY4
-         scMjYHWSDzPDQcxdpgp2KwRs/AmLjQ+Jo93U1R8SCCGwY4XZEVOved3HyMyFTtqqZKtg
-         fc+57Z4pGr2BfvmrY+PS4Z/ooYTznRcTEbHo9uQI0RVSXnPSEr9Piu6r59wPLL/8Og0A
-         AM3g==
+         :cc:content-transfer-encoding;
+        bh=CBFSOSCWmXZdYTn8wlTZ3Rj5NSKYEySXgB9hFZpDWcQ=;
+        b=ZMe9V/MSuwf8udmciH8lqoba83OKO8v0g4K1vzIlxr2talii7K7Ys0ordrrMAHe+pp
+         DaqLObTTros84C3FoilHwVOlv/STu0KhGjugyeK349pAgMRnv4wFfKGXK66cTNEK/E/2
+         9CS4D6qXyibLUANPFQftw9xg5fy6QMtOA2/GCKenixGS3WyJxUkAAE2Fomn5XE4N6+Fu
+         MH4isN9/BTjRcs0gsnSNZkRVTC/M1BBUGL5BQ+8ljr9lJua+F/PodDy+y3v9FvpxQypS
+         cIBtMTLJxrS2yefnyXe+cpHCAo5gcyjEL1MfDZsZasLEWiGX5qs2r02D/2wLWwBVNFNQ
+         E5nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=dAD7TU5bxFw4+mtb6XZpH6YJckvLCjHt6y7FOMRwG5M=;
-        b=h/SSwPcLXXuQwVBiplp5qiHJCPY5Uo2GbhQd2EanwSnnjNf1SaZ9xzkVKpmsDIbAvr
-         Ylshbt6+Zas1Maf9XDfXApzWnahjh1kuRb/B7rYDCiaVcYWWXod60jyPYX1bVdDvUM42
-         KXgY17ANd6eWJ+cPlkVqkdHfEwD5KDF9+UFAYbOz36fLlqrfTznhQK8F+TVfLypS04b3
-         fePS+E7QY44JzK/CmkeM7QxepXtjc8t246vMrVp3mdNhJDZn4RVVbIyPhhAzGd+MiHH6
-         HiJ6NjaW/4ukyH9C8jZ0IAaaIqzETsJtYzm7fRh0R306FrmxOHgH5mVRCog1owafM83F
-         mv7Q==
-X-Gm-Message-State: AOAM532NmZ33dX8HtnBtLv2XDnZEX2OesMYe654BDHj2oKYVIhW8oIhK
-        irguhbNEu4DYSoqs4Wp/xM8CsHjtcYY8pBGrCco=
-X-Google-Smtp-Source: ABdhPJyNThaiFHtVkOlq27b/IsKVC7XcaL87tiPVfnWjDS5LKEWWfPb5Rc+LRi2xmrClI0aQlv/FhNCy8ypRoBYPdOA=
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=CBFSOSCWmXZdYTn8wlTZ3Rj5NSKYEySXgB9hFZpDWcQ=;
+        b=fqffm01GCwcNuy196b3v79N6vHtEeyawE5hsocRpsx8RB9ZgcV0qY+Sid8ObF32u+I
+         L/BRj2WSWCLBNl73NRCZ9HvF+anba7HFIG6qk7uZpXBpXd8/uHfCdiS/e35dpVDuFOJu
+         0lpvVjJC3OvXHur3BcXFEIaEYGN6yt2YszaLk9qH3n3UC+STKbdK6gqCfbyIZ8Hv452Y
+         /14amPWojb2S73+fGGEYPOi+sxkncvzeMqyHv+DKw0t0nqfJttuUTEIXpqfTpFsgYzqc
+         Q5jZYiNhtsHBzI3dcik8S8Nh4NbYDSXNa458ViOYNmvIEtgVn2Eecgd50bJwJxKkXgRY
+         OkTQ==
+X-Gm-Message-State: AOAM531dDaHUTRFOFfwfLsuWXJf4gAY4Y3dxSZisVwj3bKqydDtzcQcl
+        u5MYVvtvWJOshqd68fsYp5G6bym81FwMgntotmA=
+X-Google-Smtp-Source: ABdhPJz3PRZnRDaYveY8PEOrWLh5TwRRZFIgz/hxn66OLDYa/VrKRiT3aho8JsA1WKfUtkL1urGOjyBFCiYVRzF+Yvc=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:351:bea9:f158:1021])
- (user=samitolvanen job=sendgmr) by 2002:a25:1443:0:b0:63d:6c01:d26f with SMTP
- id 64-20020a251443000000b0063d6c01d26fmr1397777ybu.296.1651264653259; Fri, 29
- Apr 2022 13:37:33 -0700 (PDT)
-Date:   Fri, 29 Apr 2022 13:36:42 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a25:e0d3:0:b0:645:77c9:4e31 with SMTP
+ id x202-20020a25e0d3000000b0064577c94e31mr1243653ybg.97.1651264657838; Fri,
+ 29 Apr 2022 13:37:37 -0700 (PDT)
+Date:   Fri, 29 Apr 2022 13:36:44 -0700
 In-Reply-To: <20220429203644.2868448-1-samitolvanen@google.com>
-Message-Id: <20220429203644.2868448-20-samitolvanen@google.com>
+Message-Id: <20220429203644.2868448-22-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20220429203644.2868448-1-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=867; h=from:subject;
- bh=up7BEek35o0M0XxxZGb0YVxeAOsDA2frVViAIISPcAE=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBibExYVHtzXXfVkfpC4f30GmwEWwVNyJTrvW77sDTZ
- wzWWtoaJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYmxMWAAKCRBMtfaEi7xW7mGLDA
- CTEoA/YLkPzO4RCaefNoqVsLm/slm3eKAb0EBTNjPQnz5eXoKCVQRKj9PWoPlcKYv0zhhpUXtVDSTh
- ac1XDqL26rGZoUjODIYRAKzZesDGF6mk0vMZegM83LL0VgP+HiMZb3/+JRnyO5lXl9biI+PKRs9yao
- cB6eP6nxZ2oJoZ3wi8wRjZa2dq6HwI1vjgqvc6wkIVZQB1hn1iiX4jK2s+b1RI6sSKL1KoBnu8ruUc
- XnRlTBjlHvsg3sv+Oo60X+xtVo4jt5qSlxPjVS36s+rcz8PjrRYMwuyiX1owAbYAx6891grqZ/Rtja
- zgQtJMT25Vbp1i0Ch4rkcNHucaP6MceaEMqi96kngq6U8NlFl+N4JSFjR9NwvRPX4zPYA/hjeYCpG/
- AzTNfBREHLnSC45xKO3dgHPlu7+SNR2AwuC0gBm9U9UpzBYdOAHJEKi3xrii9tnkvtP20793/d3GJb
- h5zaP+BZ4RGrD05vaq3ji8gcCm/xu4Nv1ehokRtYYrvXM=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3169; h=from:subject;
+ bh=uFL18k3KC4iCKF4AXgGD1Mq4jj5gai1wigbzvC9PP/o=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBibExY2LifXNevk1TsxQ0IeoobF4r0E0uMXfS+2IhA
+ yLd8T56JAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYmxMWAAKCRBMtfaEi7xW7ou7DA
+ CVtuVd3sKEK3z2ChoeiIcGcU8iukBN8OM/HXmzh3pZq6yVg67wrrJiJ5oCCKPR2sRaYP0t6MSn772K
+ l5U4p82O/prDh9AK0kKeyaSy4kvxVMyegTBCTiWzEC3tN48aXVcmI3dMp98RL7LGQzu9v4CLIEVaAa
+ ZyLplEa810jUrIxOZER6sZfDmqUN7V/0ZKKzwsynPVXj76wvte6NCWe3NJ/ZxHTKwz2evdYtezNBOs
+ w5UmruzJ3X4BM+NXqEmVZVfauFH9okVc4aHyl3C0tSJ4hQddWslVlW6jiD7FczG0DVtfhYaktcY3yZ
+ 335Ly2E9sGHsooiWLotHkG2PgPaJ+Jhfa2cw8T3990e55MXFQKaNXNTCRXA+Qq5C7qXBuPFrmbgIz1
+ isZNNgIYvj+7LUjbO4NBInJYbyLkQMpgNLLqoZq/7hfv1xoJcIZg4CS+1iAmr+3dOxn1GAj/d/7CTi
+ jKj9QZzAlA88rYhDAQ3LbORG2j6VAUCtSo+oWCun3pPF8=
 X-Mailer: git-send-email 2.36.0.464.gb9c8b46e94-goog
-Subject: [RFC PATCH 19/21] x86/purgatory: Disable CFI
+Subject: [RFC PATCH 21/21] x86: Add support for CONFIG_CFI_CLANG
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -82,35 +82,117 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
         Sami Tolvanen <samitolvanen@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Disable CONFIG_CFI_CLANG for the stand-alone purgatory.ro.
+Add CONFIG_CFI_CLANG error handling and allow the config to be selected
+on x86_64.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
 ---
- arch/x86/purgatory/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/Kconfig               |  1 +
+ arch/x86/include/asm/linkage.h |  7 ++++++
+ arch/x86/kernel/traps.c        | 39 +++++++++++++++++++++++++++++++++-
+ 3 files changed, 46 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index ae53d54d7959..b3fa947fa38b 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -55,6 +55,10 @@ ifdef CONFIG_RETPOLINE
- PURGATORY_CFLAGS_REMOVE		+= $(RETPOLINE_CFLAGS)
- endif
- 
-+ifdef CONFIG_CFI_CLANG
-+PURGATORY_CFLAGS_REMOVE		+= $(CC_FLAGS_CFI)
-+endif
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index b0142e01002e..01db5c5c4dde 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -108,6 +108,7 @@ config X86
+ 	select ARCH_SUPPORTS_PAGE_TABLE_CHECK	if X86_64
+ 	select ARCH_SUPPORTS_NUMA_BALANCING	if X86_64
+ 	select ARCH_SUPPORTS_KMAP_LOCAL_FORCE_MAP	if NR_CPUS <=3D 4096
++	select ARCH_SUPPORTS_CFI_CLANG		if X86_64
+ 	select ARCH_SUPPORTS_LTO_CLANG
+ 	select ARCH_SUPPORTS_LTO_CLANG_THIN
+ 	select ARCH_USE_BUILTIN_BSWAP
+diff --git a/arch/x86/include/asm/linkage.h b/arch/x86/include/asm/linkage.=
+h
+index 85865f1645bd..d20acf5ebae3 100644
+--- a/arch/x86/include/asm/linkage.h
++++ b/arch/x86/include/asm/linkage.h
+@@ -25,6 +25,13 @@
+ #define RET	ret
+ #endif
+=20
++#ifdef CONFIG_CFI_CLANG
++#define __CFI_TYPE(name)			\
++	.fill 10, 1, 0x90 ASM_NL		\
++	.4byte __kcfi_typeid_##name ASM_NL	\
++	.fill 2, 1, 0xcc
++#endif
 +
- CFLAGS_REMOVE_purgatory.o	+= $(PURGATORY_CFLAGS_REMOVE)
- CFLAGS_purgatory.o		+= $(PURGATORY_CFLAGS)
- 
--- 
+ #else /* __ASSEMBLY__ */
+=20
+ #ifdef CONFIG_SLS
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 1563fb995005..b9e46e6ed83b 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -40,6 +40,7 @@
+ #include <linux/hardirq.h>
+ #include <linux/atomic.h>
+ #include <linux/ioasid.h>
++#include <linux/cfi.h>
+=20
+ #include <asm/stacktrace.h>
+ #include <asm/processor.h>
+@@ -295,6 +296,41 @@ static inline void handle_invalid_op(struct pt_regs *r=
+egs)
+ 		      ILL_ILLOPN, error_get_trap_addr(regs));
+ }
+=20
++#ifdef CONFIG_CFI_CLANG
++void *arch_get_cfi_target(unsigned long addr, struct pt_regs *regs)
++{
++	char buffer[MAX_INSN_SIZE];
++	int offset;
++	struct insn insn;
++	unsigned long *target;
++
++	/*
++	 * The expected CFI check instruction sequence:
++	 * =C2=A0 cmpl=C2=A0 =C2=A0 <id>, -6(%reg)	; 7 bytes
++	 *   je      .Ltmp1		; 2 bytes
++	 *   ud2			; <- addr
++	 *   .Ltmp1:
++	 *
++	 * Therefore, the target address is in a register that we can
++	 * decode from the cmpl instruction.
++	 */
++	if (copy_from_kernel_nofault(buffer, (void *)addr - 9, MAX_INSN_SIZE))
++		return NULL;
++	if (insn_decode(&insn, buffer, MAX_INSN_SIZE, INSN_MODE_64))
++		return NULL;
++	if (insn.opcode.value !=3D 0x81)
++		return NULL;
++
++	offset =3D insn_get_modrm_rm_off(&insn, regs);
++	if (offset < 0)
++		return NULL;
++
++	target =3D (void *)regs + offset;
++
++	return (void *)*target;
++}
++#endif
++
+ static noinstr bool handle_bug(struct pt_regs *regs)
+ {
+ 	bool handled =3D false;
+@@ -312,7 +348,8 @@ static noinstr bool handle_bug(struct pt_regs *regs)
+ 	 */
+ 	if (regs->flags & X86_EFLAGS_IF)
+ 		raw_local_irq_enable();
+-	if (report_bug(regs->ip, regs) =3D=3D BUG_TRAP_TYPE_WARN) {
++	if (report_bug(regs->ip, regs) =3D=3D BUG_TRAP_TYPE_WARN ||
++	    report_cfi(regs->ip, regs) =3D=3D BUG_TRAP_TYPE_WARN) {
+ 		regs->ip +=3D LEN_UD2;
+ 		handled =3D true;
+ 	}
+--=20
 2.36.0.464.gb9c8b46e94-goog
 
