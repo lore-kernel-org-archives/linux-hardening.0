@@ -2,103 +2,134 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A541C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 28 Apr 2022 09:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EECC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 29 Apr 2022 01:37:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231932AbiD1JuK (ORCPT
+        id S234027AbiD2Bk3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 28 Apr 2022 05:50:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45156 "EHLO
+        Thu, 28 Apr 2022 21:40:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347517AbiD1Jcy (ORCPT
+        with ESMTP id S1353976AbiD2Bk2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 28 Apr 2022 05:32:54 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E5467CDD9;
-        Thu, 28 Apr 2022 02:29:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651138180; x=1682674180;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7BV5PZE7OVogZ8OnZ8XL8xlxDzHseF6zynr6xKJK83U=;
-  b=CXo5QWa5l1k4oNzpWYHHVdYZmM5SQ2Rwh+K9/eoBFGhEAqHjTOPmHNrE
-   MtspgnbxHp7v+X2YRzXePdKr71JeWjY5zWkXYlwk8poQrM1Zif8hYa0Gv
-   YWRAd0bcSEdLy/oRtYcyK53Uuy9a8PLWvC6DmTPZqPUDyjeY7VGNWr+Z0
-   h5qDqG0XOFCeSzmzSZx1j5nbpcAY+KN6Jup/iNnICVtJHtBT3JVOnkzc7
-   m1BCtoeidSa7sb93/4yIAoL0NAEt4PbgvIg49K5LTajaxD2rSKOcLT080
-   X3qK4kEmd5P+qbryzskbXk2rBfg66GUIRvvtoeWR47pobeU80E3meGxgB
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10330"; a="246139709"
-X-IronPort-AV: E=Sophos;i="5.90,295,1643702400"; 
-   d="scan'208";a="246139709"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 02:29:39 -0700
-X-IronPort-AV: E=Sophos;i="5.90,295,1643702400"; 
-   d="scan'208";a="618047838"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 02:29:29 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nk0Si-009ERe-Hp;
-        Thu, 28 Apr 2022 12:29:24 +0300
-Date:   Thu, 28 Apr 2022 12:29:24 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Allen Pais <apais@linux.microsoft.com>,
-        olivier.dautricourt@orolia.com, sr@denx.de, vkoul@kernel.org,
-        keescook@chromium.org, linux-hardening@vger.kernel.org,
-        ludovic.desroches@microchip.com, tudor.ambarus@microchip.com,
-        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, nsaenz@kernel.org,
-        paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com,
-        gustavo.pimentel@synopsys.com, vireshk@kernel.org,
-        leoyang.li@nxp.com, zw@zh-kernel.org, wangzhou1@hisilicon.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de,
-        sean.wang@mediatek.com, matthias.bgg@gmail.com, afaerber@suse.de,
-        mani@kernel.org, logang@deltatee.com, sanju.mehta@amd.com,
-        daniel@zonque.org, haojian.zhuang@gmail.com,
-        robert.jarzmik@free.fr, agross@kernel.org,
-        bjorn.andersson@linaro.org, krzysztof.kozlowski@linaro.org,
-        green.wan@sifive.com, orsonzhai@gmail.com, baolin.wang7@gmail.com,
-        zhang.lyra@gmail.com, patrice.chotard@foss.st.com,
-        linus.walleij@linaro.org, wens@csie.org, jernej.skrabec@gmail.com,
-        samuel@sholland.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
-Message-ID: <YmpedDjzZXz2t6NS@smile.fi.intel.com>
-References: <20220419211658.11403-1-apais@linux.microsoft.com>
- <20220419211658.11403-2-apais@linux.microsoft.com>
- <353023ba-d506-5d45-be68-df2025074ed6@kernel.org>
- <3ee366a7-e61f-e513-aa2f-12e8d5316f3c@embeddedor.com>
+        Thu, 28 Apr 2022 21:40:28 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 149A13DDD9
+        for <linux-hardening@vger.kernel.org>; Thu, 28 Apr 2022 18:37:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1651196230;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hW9cFab8Ik/mglyLVYP+gASmTZotsBUclSU51ABUpQ0=;
+        b=PT1/6tBaT/o32VIi1g8iaVkaKucAm3rCeTlqkC5GkXez/sO5SDvdhQ/Qs2oOziaAj2gihY
+        foYoBePPXh/ve29MePd3gmLLJ7wdrH5OYX68ahYBGQwadnExTWXC3dw8s1d+7sfl5SJOXK
+        J6JOy/zRYuvqsTbUrre49Vr9c65t/4U=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-526-M4ETIcobNHG_ngI1C9wtNg-1; Thu, 28 Apr 2022 21:37:08 -0400
+X-MC-Unique: M4ETIcobNHG_ngI1C9wtNg-1
+Received: by mail-qk1-f197.google.com with SMTP id c8-20020a05620a268800b0069c0f1b3206so4383964qkp.18
+        for <linux-hardening@vger.kernel.org>; Thu, 28 Apr 2022 18:37:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hW9cFab8Ik/mglyLVYP+gASmTZotsBUclSU51ABUpQ0=;
+        b=qqfsUbcJy6zQByG094kTeGR2q3UEgFnAm/sAGu6BRWU0UYu/R3D1B08gYiA4HB+8U3
+         NWa192NxxLOgC3qF7+Na/UnPh7Nl5FR4O/V/3wG4AN7zijI6rpPhf0BjLr8iJyKufJ14
+         lMZng/hcDHjBaWgvmEjbeiUJndobwfaCbId80csBAf1kkn6mFpoaQ6qZ49MSU7ayoG93
+         zRieJ7VZ6V3fRAHByqrm9vREUybDJVKYHi4dfzpOWcfpL9Bn6RZzJSf21+q508HCuDva
+         xr6LBoc23lQ9kimUBrxALAkZ7ocME9BNJskPgktDtQcQNWQs4SRM0STLeM0rHVKi6rcY
+         sYfw==
+X-Gm-Message-State: AOAM5329D8E0eKYU6OgJqVKxzKspEAxqc9XKa+HRLqwBzcld9+XIkSzF
+        p9e2ir5ck976mQNURacZqn4LAuutRDV9ZalRvru7dJxdI1UH81N1LOdbBH5cjezIbJV+LHxZ6qp
+        dCQkDGRKr3QR1/JXgjuGdjYGuXvT6
+X-Received: by 2002:a05:6214:624:b0:441:42c0:7d41 with SMTP id a4-20020a056214062400b0044142c07d41mr26191362qvx.34.1651196228513;
+        Thu, 28 Apr 2022 18:37:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx7Yse6CBMrZfO14BHLXIwt9qxnIOlpImmfux0DWolt48lQgK4qbFnBjFh9ckK3IYFw+duTYg==
+X-Received: by 2002:a05:6214:624:b0:441:42c0:7d41 with SMTP id a4-20020a056214062400b0044142c07d41mr26191349qvx.34.1651196228306;
+        Thu, 28 Apr 2022 18:37:08 -0700 (PDT)
+Received: from treble ([2600:1700:6e32:6c00::d])
+        by smtp.gmail.com with ESMTPSA id n8-20020ac85a08000000b002f1fc230725sm921519qta.31.2022.04.28.18.37.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Apr 2022 18:37:07 -0700 (PDT)
+Date:   Thu, 28 Apr 2022 18:37:04 -0700
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     joao@overdrivepizza.com
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        peterz@infradead.org, andrew.cooper3@citrix.com,
+        keescook@chromium.org, samitolvanen@google.com,
+        mark.rutland@arm.com, hjl.tools@gmail.com,
+        alyssa.milburn@linux.intel.com, ndesaulniers@google.com,
+        gabriel.gomes@linux.intel.com, rick.p.edgecombe@intel.com
+Subject: Re: [RFC PATCH 01/11] x86: kernel FineIBT
+Message-ID: <20220429013704.4n4lmadpstdioe7a@treble>
+References: <20220420004241.2093-1-joao@overdrivepizza.com>
+ <20220420004241.2093-2-joao@overdrivepizza.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20220420004241.2093-2-joao@overdrivepizza.com>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jpoimboe@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3ee366a7-e61f-e513-aa2f-12e8d5316f3c@embeddedor.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Apr 25, 2022 at 02:55:22PM -0500, Gustavo A. R. Silva wrote:
-> On 4/25/22 10:56, Krzysztof Kozlowski wrote:
-> > On 19/04/2022 23:16, Allen Pais wrote:
+On Tue, Apr 19, 2022 at 05:42:31PM -0700, joao@overdrivepizza.com wrote:
+> +void __noendbr __fineibt_handler(void){
+> +	unsigned i;
+> +	unsigned long flags;
+> +	bool skip;
+> +	void * ret;
+> +	void * caller;
+> +
+> +	DO_ALL_PUSHS;
 
-...
+So this function isn't C ABI compliant, right? e.g. the compiler just
+calls the handler without regard for preserving registers?
 
-> > > Github: https://github.com/KSPP/linux/issues/94
-> > 
-> > 3. No external references to some issue management systems, change-ids
-> > etc. Lore link could work, but it's not relevant here, I guess.
-> 
-> I think the link to the KSPP issue tracker should stay. If something,
-> just changing 'Github:' to 'Link:'
+If this function is going to be implemented in C, it should probably
+have an asm thunk wrapper which can properly save/restore the registers
+before calling into the C version.
 
-BugLink: would be more explicit.
+Even better, if the compiler did an invalid op (UD2?), which I think you
+mentioned elsewhere, instead of calling the handler directly, and there
+were a way for the trap code to properly detect it as a FineIBT
+violation, we could get rid of the pushes/pops, plus the uaccess objtool
+warning from patch 7, plus I'm guessing a bunch of noinstr validation
+warnings.
+
+> +
+> +	spin_lock_irqsave(&fineibt_lock, flags);
+> +	skip = false;
+> +
+> +	asm("\t movq 0x90(%%rsp),%0" : "=r"(ret));
+> +	asm("\t movq 0x98(%%rsp),%0" : "=r"(caller));
+
+This is making some questionable assumptions about the stack layout.
+
+I assume this function is still in the prototype stage ;-)
+
+> +	if(!skip) {
+> +		printk("FineIBT violation: %px:%px:%u\n", ret, caller,
+> +				vlts_next);
+> +	}
+> +	DO_ALL_POPS;
+> +}
+
+Right now this handler just does a printk if it hasn't already for this
+caller/callee combo, and then resumes control.  Which is fine for
+debugging, but it really needs to behave similarly to an IBT violation,
+by panicking unless "ibt=warn" on the cmdline.
+
+Not sure what would happen for "ibt=off"?  Maybe apply_ibt_endbr() could
+NOP out all the FineIBT stuff.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Josh
 
