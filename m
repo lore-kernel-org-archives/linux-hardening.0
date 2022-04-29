@@ -2,69 +2,69 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9C7C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 29 Apr 2022 20:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD7AC433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 29 Apr 2022 20:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380903AbiD2UkY (ORCPT
+        id S1380868AbiD2Uk0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 29 Apr 2022 16:40:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50366 "EHLO
+        Fri, 29 Apr 2022 16:40:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380856AbiD2UkP (ORCPT
+        with ESMTP id S1380880AbiD2UkY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 29 Apr 2022 16:40:15 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 416C383B17
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:36:56 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2f4dee8688cso83762447b3.16
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:36:56 -0700 (PDT)
+        Fri, 29 Apr 2022 16:40:24 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D264F83B35
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:37:00 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id b11-20020a5b008b000000b00624ea481d55so8365969ybp.19
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 13:37:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=mNJyMVnIlguT1rUilClQ07jGJwBfREePO+0SEXQazuU=;
-        b=SbPzWHz94PkiMgXJJgKeWVHyDbGKW0iDGndnpCpHSSnGy0udUUlBjtpN0J1quzFzj6
-         9DNm9Bc3j3kVnXgb5WawLcDyFQd04kIbtQGi1DPmqk1xDQVxu0qIpcBAxx/d6ejw5h49
-         KT14vLiZFTxcJrqYL4GVD3dvIF1Fv8ZgUnBDLOgTvQr5SYM7PWI8gAxJ1oq0ZHm80ihD
-         EWjK+FxhDoerz3ciebN4rXM84mTDWRZyheZGg7EhS5aWE9aJqx3EyOAjZOUEGrgxQVMm
-         WiRwj5rN0xhl95Qy5z18BBET4b5MLZM3cRbUhOAOvSictxqNCKkfnrg7fXhpvLyH149+
-         sl2w==
+        bh=svE7kVFxuPlWWXguE8ak9oGVScd1Q4Hw38uYtQTvTB0=;
+        b=FUoFYj7nrytyx4SQGCiHW92ijRaq67I39GZlpyGeR8NTM7JBhSVqrSH5XEo6AC3s33
+         6YkKHAE2q9oeFmrTKUs1tSYTJjtAN96i5EtiDUrkHTNJ7F9pNyevX/fqtpTVyhzDlRbo
+         ygW8w7mnl/f/ac4KYXkyTVBJCPUQ7uLY5KreI2pr7rOjr0HziZOezs6YJb+DRgvxqmvU
+         2Ojm1ZLAjlxdV9gK1KqwV4JtQZcjNXSEYjw35XVQqvPjpeqRn7S3FLFze1rSeIrqplFC
+         BTe4KL/fuc79sjwROMSFVnl3eKltBCdAdu+AkyhU0liNzqOkDRw1+i7197CedoqcHGSp
+         XPMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=mNJyMVnIlguT1rUilClQ07jGJwBfREePO+0SEXQazuU=;
-        b=pFxSIk06va38iCT2VrcweEumuY9IREXpQkJHK8cAU6GOC1LBjVYMhrOjNhq5yWtNG+
-         aRqGhwVpp/eUavmwjvL7gTcXOqkMb6jHm3jwOkN32YtlJX9NuFsgP6ebvI/Lx1wK3YpA
-         GlgeQF/xfhINO4lFWVT/Y2zU4RZt4eqLAJDR7ewoVQ4N8/ZhMC0dch5fxSbiJIg7nIqG
-         htVhonu/HGLpNc1k12bGvNDNcamA/7juivdjMZw80t1QY5FnXJFeChegMr9kkLz/NVXK
-         XcV7jPMMfHFJXzYQN6Mlc6tbRsyh3/oCrf+j+DZE0eeMaOZIVLYXmtYlgcs/ew4IrJQc
-         L9yA==
-X-Gm-Message-State: AOAM531DbftS1OwbDnBHljL89ZetT2RWxOSyvQX45icPm6weFQLI7aMs
-        XwYHmhQKBxe7i6bkNV/xUDzdUMJfQ+qYbui1fdw=
-X-Google-Smtp-Source: ABdhPJyayjsqoZ9MAE/d6QWDpfC4MBpe6t087Wq8ydOs9sA1lE9zrm0OkbjlaqzE1YyNGhiVhX9WmrSBQYStbxUZJck=
+        bh=svE7kVFxuPlWWXguE8ak9oGVScd1Q4Hw38uYtQTvTB0=;
+        b=RqRdJEFpBSZhF7jgPG9DyF3MdTUo0AlU+OfwUF7RlpIyzI/wOTUH9ocnYvIEhhuqbF
+         u8glD3Y1swHSLlsTEJ/8eh8fYfCWYHpt6PtV512DNX+8Tt48+WnMd0naruB2BLcIBx1y
+         x1AOm3CPHVQk8GUUhC6kbrbz1ihfIgg0rF9s21qRd6Zrwk9RrdlWsl4R7HWcyhivjU0W
+         s29jSkp+KX+pkp5OHunkwKulE95SKjEk6lQd1jLEsWAYf5rvCiPrm/AZZRTPhssZntEx
+         LmL6Xttbt31hhoU7mEj8j0Toa5J91vdLw++Pko9zDD0P6tMYINek+QSk+RleUpf5LL9q
+         HaUg==
+X-Gm-Message-State: AOAM531LIPKE3i4Un9GHiEsGqq/Z5c6C1sqOfZPYVKxscgoaXLY90Hpt
+        EogST94Y1bKOD3EEVaxUDZFH2u1eV7yEjXlebX8=
+X-Google-Smtp-Source: ABdhPJxy36VnWpTDmVaEj1n6wpH9g3bLRxJK7JnambFm4dQ2hqamT1j8SUFu5O05FMrvWlAjIaN1GHbxJVVSP4ly7Ts=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:351:bea9:f158:1021])
- (user=samitolvanen job=sendgmr) by 2002:a81:5085:0:b0:2f4:d6fb:f76f with SMTP
- id e127-20020a815085000000b002f4d6fbf76fmr1289650ywb.190.1651264615259; Fri,
- 29 Apr 2022 13:36:55 -0700 (PDT)
-Date:   Fri, 29 Apr 2022 13:36:26 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a05:6902:1ca:b0:648:b241:65be with
+ SMTP id u10-20020a05690201ca00b00648b24165bemr1292760ybh.196.1651264620101;
+ Fri, 29 Apr 2022 13:37:00 -0700 (PDT)
+Date:   Fri, 29 Apr 2022 13:36:28 -0700
 In-Reply-To: <20220429203644.2868448-1-samitolvanen@google.com>
-Message-Id: <20220429203644.2868448-4-samitolvanen@google.com>
+Message-Id: <20220429203644.2868448-6-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20220429203644.2868448-1-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=669; h=from:subject;
- bh=o0oSO6A7dgHXw3JXyfs3kpLOQ31qQjhpc3pVMXlQeFk=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBibExVconqZfKUU7vtSg68iLeto5MMy78pevg9vXBt
- ZBfrWfiJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYmxMVQAKCRBMtfaEi7xW7sdRC/
- 4rfcaIe+IT88EzfaYojaN8Sm+K4SATmfqAiUgwPtEJr2MID9IqKsrAZ9k2RjrSDq6w4bhs0A8V4B0G
- xeVCMT4W1+zvdWXlHb0A00gQOmvQ1vQyWI56OKIo9NiJti+CgLpYubN2ZUJOjoGlgeg1gLbJO66pDw
- icjIr0tUfuqNt27ID7vosvM2t0dLvewBveN5xF39aBc335pIruuGBF+43BjkceurX4nUyMuyRQKyuC
- C53Q0gRzSGtojQq0oZgtUt5bNOXehc7Bl3Y49D251QXr9mC5mhzdgMstIidEmNouXNfULHiTCOP+JZ
- EQXw/jX3KI7Q/9i8Rhjf+MJb6HiZMqWNHAz0Cxs32KU9fFjs5mCqmaXOcuKypUxZf8Bl1rRbOJ6N0P
- 828GLh6ViZaJwR3qKRUm4OMT2qNKAA5RQww1KQsFt1rvpUpLxfm3f4Y4aHj9Gzwtf2CnUqUpg4EAY3
- OYhC9Lm3NuP0XGZvhb3CJ0qnvicQJW7kr29sr8vDYrhkI=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3214; h=from:subject;
+ bh=3j3iVyBHsh++mvfP+DxD8j3SrYI24EpoK/VyI7QxUVI=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBibExVHq3nlFPfzRWE27X7yYpyk4ANovqw9jbo7ZSD
+ aCfwoPWJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYmxMVQAKCRBMtfaEi7xW7j1FC/
+ 9mpAG9wikAu1bkYBp0Lg/jv7Wm7fpH2DwKXLlccEeCa1pxSjoSVgx6wZkzGBqugwmN/O7ovT3GkjhQ
+ eQ6wRcszZQ7fTIEvFK+vcaeg6XDDudg6DpaxZRR1dAMmt2yUCErrCLOe5tN/ft1R5yKnKLwGRHsYvV
+ vUDHffcDPPv60LVfD+5wLq688gEgzU48LyD440gez0N1kY/vqObQpuQlHQTtBE/7qD2ulPR5JdMQu8
+ st9Dh0JD/ATz/I1VA+tl38E7FpTEG0fkqECvMS++yK/JtdB1p+lWaUybht6V838s5BbAzbCBuCuG2h
+ rAddbV72f5KNjs7b0k+EaHJ0fuNY9jPdM4AFqmgjTDBRmzBmkOUQ0U3lCDBj9dXLor5ywcTq2Iqk1G
+ iUekvxJzPaoYKy4o2dQvYBH7YPC2qnSBfn+37GO62vDWM2ayd+N4wwOAQBmy23ARN3CsD5TKITf17Y
+ OIawNg6pfn2v1zDPmU2ZUQnd5lwz6WXpEe195D//G1qwQ=
 X-Mailer: git-send-email 2.36.0.464.gb9c8b46e94-goog
-Subject: [RFC PATCH 03/21] kallsyms: Ignore __kcfi_typeid_
+Subject: [RFC PATCH 05/21] cfi: Drop __CFI_ADDRESSABLE
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -86,25 +86,90 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The compiler generates CFI type identifier symbols for annotating
-assembly functions at link time. Ignore them in kallsyms.
+The __CFI_ADDRESSABLE macro is used for init_module and cleanup_module
+to ensure we have the address of the CFI jump table, and with
+CONFIG_X86_KERNEL_IBT to ensure LTO won't optimize away the symbols.
+As __CFI_ADDRESSABLE is no longer necessary with -fsanitize=kcfi, add
+a more flexible version of the __ADDRESSABLE macro and always ensure
+these symbols won't be dropped.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- scripts/kallsyms.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/cfi.h      | 20 --------------------
+ include/linux/compiler.h |  6 ++++--
+ include/linux/module.h   |  4 ++--
+ 3 files changed, 6 insertions(+), 24 deletions(-)
 
-diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index 8caabddf817c..eebd02e4b832 100644
---- a/scripts/kallsyms.c
-+++ b/scripts/kallsyms.c
-@@ -118,6 +118,7 @@ static bool is_ignored_symbol(const char *name, char type)
- 		"__ThumbV7PILongThunk_",
- 		"__LA25Thunk_",		/* mips lld */
- 		"__microLA25Thunk_",
-+		"__kcfi_typeid_",	/* CFI type identifiers */
- 		NULL
- 	};
+diff --git a/include/linux/cfi.h b/include/linux/cfi.h
+index 4ab51c067007..2cdbc0fbd0ab 100644
+--- a/include/linux/cfi.h
++++ b/include/linux/cfi.h
+@@ -13,26 +13,6 @@ typedef void (*cfi_check_fn)(uint64_t id, void *ptr, void *diag);
+ /* Compiler-generated function in each module, and the kernel */
+ extern void __cfi_check(uint64_t id, void *ptr, void *diag);
+ 
+-/*
+- * Force the compiler to generate a CFI jump table entry for a function
+- * and store the jump table address to __cfi_jt_<function>.
+- */
+-#define __CFI_ADDRESSABLE(fn, __attr) \
+-	const void *__cfi_jt_ ## fn __visible __attr = (void *)&fn
+-
+-#else /* !CONFIG_CFI_CLANG */
+-
+-#ifdef CONFIG_X86_KERNEL_IBT
+-
+-#define __CFI_ADDRESSABLE(fn, __attr) \
+-	const void *__cfi_jt_ ## fn __visible __attr = (void *)&fn
+-
+-#endif /* CONFIG_X86_KERNEL_IBT */
+-
+ #endif /* CONFIG_CFI_CLANG */
+ 
+-#ifndef __CFI_ADDRESSABLE
+-#define __CFI_ADDRESSABLE(fn, __attr)
+-#endif
+-
+ #endif /* _LINUX_CFI_H */
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 219aa5ddbc73..9303f5fe5d89 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -221,9 +221,11 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+  * otherwise, or eliminated entirely due to lack of references that are
+  * visible to the compiler.
+  */
+-#define __ADDRESSABLE(sym) \
+-	static void * __section(".discard.addressable") __used \
++#define ___ADDRESSABLE(sym, __attrs) \
++	static void * __used __attrs \
+ 		__UNIQUE_ID(__PASTE(__addressable_,sym)) = (void *)&sym;
++#define __ADDRESSABLE(sym) \
++	___ADDRESSABLE(sym, __section(".discard.addressable"))
+ 
+ /**
+  * offset_to_ptr - convert a relative memory offset to an absolute pointer
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 1e135fd5c076..87857275c047 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -132,7 +132,7 @@ extern void cleanup_module(void);
+ 	{ return initfn; }					\
+ 	int init_module(void) __copy(initfn)			\
+ 		__attribute__((alias(#initfn)));		\
+-	__CFI_ADDRESSABLE(init_module, __initdata);
++	___ADDRESSABLE(init_module, __initdata);
+ 
+ /* This is only required if you want to be unloadable. */
+ #define module_exit(exitfn)					\
+@@ -140,7 +140,7 @@ extern void cleanup_module(void);
+ 	{ return exitfn; }					\
+ 	void cleanup_module(void) __copy(exitfn)		\
+ 		__attribute__((alias(#exitfn)));		\
+-	__CFI_ADDRESSABLE(cleanup_module, __exitdata);
++	___ADDRESSABLE(cleanup_module, __exitdata);
+ 
+ #endif
  
 -- 
 2.36.0.464.gb9c8b46e94-goog
