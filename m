@@ -2,93 +2,105 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC70C433EF
-	for <linux-hardening@archiver.kernel.org>; Sat, 30 Apr 2022 01:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D191EC433F5
+	for <linux-hardening@archiver.kernel.org>; Sat, 30 Apr 2022 09:02:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238701AbiD3BEC (ORCPT
+        id S1358940AbiD3JF4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 29 Apr 2022 21:04:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36270 "EHLO
+        Sat, 30 Apr 2022 05:05:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347202AbiD3BEA (ORCPT
+        with ESMTP id S1382390AbiD3JFz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 29 Apr 2022 21:04:00 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D2922D1D1
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 18:00:40 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id y76so17260960ybe.1
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 18:00:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v+/lXmWN9a4yBqHcUhGldW2cPmJygtUYS178VCmvTIc=;
-        b=sae9+FjGo9T5Lw9oasK5TSXV+WiJ9kOd1rZxgJTdRsikk6ZkRbafNdUGY5LNRGAq7z
-         KLeLF9me10KOS2tdhq3QqUpedIvCKSr1k5DC/BpSJXrYAbYGX36I/OHi5sPl2+ZQlekd
-         66J+Wwfye+d+OmHrkDF8heOen1RhSJWCYyaI2bN5JBrcN16V9XbLRRbXVKl4swa18OO5
-         tjzIGXovtKoxHb2BPhqhs7CQ8j16lH/BUJJAJBpzv9rkOq3Qi4oG9OwF3Ppi6ZYwQt7t
-         c0tGVoQRbXL9RFIYG+2HjirHMKUjpclTwnxrV6ci7lqAUdDwRL4xfTYawAje7RdrXeb3
-         Ouqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v+/lXmWN9a4yBqHcUhGldW2cPmJygtUYS178VCmvTIc=;
-        b=e4wB+F+5t44RZSlADi7cDZekGDnYY6s7l1jsnhD63wl4DbwAdU4KerNFoFs3gZ0ouM
-         wGF4l+nHFQ44068KmI4vk53IfgUv0xd746JvZQxve7cQ9x14dW9YtBx8C71Jurt9nJVa
-         ACyY0hN33Z61pkzZvzRr+eyF5jMDbXi84PE5dj18NBz8J6gRTdYT7VydYZ/DgpJ5vYRx
-         KI0R/CiLY47xlDuUl6OzvRfIwUpxGn/hC4+TwtNW5qkW0v0gd/Pyma2Ov5/Ddwy90R1+
-         xAHuTtpmpYFeEEiR0CTjkHnyoSdx8iT86KyaDYsZS9XK8mVst3gTlTnxtgQ4ivazFLmb
-         E6+w==
-X-Gm-Message-State: AOAM531D6RFP0TdN74oCgO3a9wX1RuD9QlqdK51/JTzXSm+cFZ7Es/hP
-        LZ0Z9ssX1t/YI+EaPtm6+MswiHQv1qrRJVcb4XUcBw==
-X-Google-Smtp-Source: ABdhPJyhcCyxowcmxR+EC+1LVLQSQWfwL5P0ozbbvft+6vNS3yhM7DK8vGFq8LI/3sHN0lOaYWVuT+28wwYR2ixEuLk=
-X-Received: by 2002:a5b:2c9:0:b0:644:b7c9:3766 with SMTP id
- h9-20020a5b02c9000000b00644b7c93766mr1986227ybp.428.1651280439211; Fri, 29
- Apr 2022 18:00:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220429203644.2868448-1-samitolvanen@google.com>
- <20220429203644.2868448-17-samitolvanen@google.com> <Ymx1JcO36h7YqLa0@hirez.programming.kicks-ass.net>
-In-Reply-To: <Ymx1JcO36h7YqLa0@hirez.programming.kicks-ass.net>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Fri, 29 Apr 2022 18:00:03 -0700
-Message-ID: <CABCJKufNUoJJPcraG-o2AvTBSWmFEQAzg0z-Z=xLohBqsMA3KQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 16/21] objtool: Add support for CONFIG_CFI_CLANG
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, X86 ML <x86@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        Sat, 30 Apr 2022 05:05:55 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19D91527D0;
+        Sat, 30 Apr 2022 02:02:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=iBnV4BkP5XE7j8/bHDZPth3sjqyHE93A1brAIaxH/rg=; b=IJMwzSNyCZKTtgb4cyzEMxr84M
+        Ez+oQK7GJyHGk54jRGjCYc9u4Im5XGW4yGMPK3Wm8/tfZAhgaPfCTavOwcYii4HLBT9yxL3FR/43i
+        ywIhOGB+CgjGWVrYNyfFaXhBemdXk1N2tRo8uVFOcPGPDfSe1en29+zVYKg7L15K6Y7Oly/U5u7Nk
+        IE4G+PTDiBzdA2HVooWo3uQNflAh6yo0xzY0pHYrCy9H6M7C2fWycu9kIwbzLC3gJkm3X0FyuYZMD
+        UnpMzct8F/rmtGmgO8l/9J/bISQlIDTEGkb+Hf+6ZlwZCowCmgaa31gINJ6X5a/GOhF+thgIJQtYg
+        b1vltvWQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nkizQ-009sJC-9L; Sat, 30 Apr 2022 09:02:08 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CC8F8300473;
+        Sat, 30 Apr 2022 11:02:05 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 96E142028EFE6; Sat, 30 Apr 2022 11:02:05 +0200 (CEST)
+Date:   Sat, 30 Apr 2022 11:02:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
         Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Joao Moreira <joao@overdrivepizza.com>,
         Sedat Dilek <sedat.dilek@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-hardening@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+Subject: Re: [RFC PATCH 00/21] KCFI support
+Message-ID: <Ymz7DWkRJy3PMaHm@hirez.programming.kicks-ass.net>
+References: <20220429203644.2868448-1-samitolvanen@google.com>
+ <202204291545.47C6A97EA2@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202204291545.47C6A97EA2@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Apr 29, 2022 at 4:30 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> Urgh, what does this do for decode speed? This is a hash-lookup for
-> every single instruction.
+On Fri, Apr 29, 2022 at 03:53:12PM -0700, Kees Cook wrote:
+> On Fri, Apr 29, 2022 at 01:36:23PM -0700, Sami Tolvanen wrote:
+> > KCFI is a proposed forward-edge control-flow integrity scheme for
+> > Clang, which is more suitable for kernel use than the existing CFI
+> > scheme used by CONFIG_CFI_CLANG. KCFI doesn't require LTO, doesn't
+> > alter function references to point to a jump table, and won't break
+> > function address equality.
+> 
+> 🎉 :)
+> 
+> > The latest LLVM patches are here:
+> > 
+> >   https://reviews.llvm.org/D119296
+> >   https://reviews.llvm.org/D124211
+> > 
+> > [...]
+> > To test this series, you'll need to compile your own Clang toolchain
+> > with the patches linked above. You can also find the complete source
+> > tree here:
+> > 
+> >   https://github.com/samitolvanen/llvm-project/commits/kcfi-rfc
+> 
+> And note that this RFC is seeking to break a bit of a circular dependency
+> with regard to the design of __builtin_kcfi_call_unchecked (D124211
+> above), as the implementation has gone around a few times in review within
+> LLVM, and we want to make sure that kernel folks are okay with what was
+> settled on. If there are no objections on the kernel side, then we can
+> land the KCFI patches, as this is basically the only remaining blocker.
 
-Two actually, since .kcfi_traps only contains compiler-emitted
-locations and we also have to check for manual type annotations. I
-haven't measured performance yet, but I also didn't notice a
-significant impact here.
+So aside from the static_call usage, was there any other?
 
-> Is that kcfi location array sorted by the compiler? Because then you can
-> keep a running iterator and replace the whole lookup with a simple
-> equality comparison.
+Anyway, I think I hate that __builtin, I'd *much* rather see a variable
+attribute or qualifier for this, such that one can mark a function
+pointer as not doing CFI.
 
-The compiler generates a separate .kcfi_types section for each text
-section and the entries are emitted in order, so this should be
-doable.
-
-Sami
+I simply doesn't make sense to have a builtin that operates on an
+expression. The whole thing is about indirect calls, IOW function
+pointers.
