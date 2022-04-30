@@ -2,105 +2,71 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D191EC433F5
-	for <linux-hardening@archiver.kernel.org>; Sat, 30 Apr 2022 09:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F919C433EF
+	for <linux-hardening@archiver.kernel.org>; Sat, 30 Apr 2022 09:09:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358940AbiD3JF4 (ORCPT
+        id S1382429AbiD3JMn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 30 Apr 2022 05:05:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58580 "EHLO
+        Sat, 30 Apr 2022 05:12:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382390AbiD3JFz (ORCPT
+        with ESMTP id S1382421AbiD3JMm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 30 Apr 2022 05:05:55 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19D91527D0;
-        Sat, 30 Apr 2022 02:02:29 -0700 (PDT)
+        Sat, 30 Apr 2022 05:12:42 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C707489CCF;
+        Sat, 30 Apr 2022 02:09:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=iBnV4BkP5XE7j8/bHDZPth3sjqyHE93A1brAIaxH/rg=; b=IJMwzSNyCZKTtgb4cyzEMxr84M
-        Ez+oQK7GJyHGk54jRGjCYc9u4Im5XGW4yGMPK3Wm8/tfZAhgaPfCTavOwcYii4HLBT9yxL3FR/43i
-        ywIhOGB+CgjGWVrYNyfFaXhBemdXk1N2tRo8uVFOcPGPDfSe1en29+zVYKg7L15K6Y7Oly/U5u7Nk
-        IE4G+PTDiBzdA2HVooWo3uQNflAh6yo0xzY0pHYrCy9H6M7C2fWycu9kIwbzLC3gJkm3X0FyuYZMD
-        UnpMzct8F/rmtGmgO8l/9J/bISQlIDTEGkb+Hf+6ZlwZCowCmgaa31gINJ6X5a/GOhF+thgIJQtYg
-        b1vltvWQ==;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=fmjKi3vzk5o50Dip5Ph0Bmr/f1E5Lj21/lbWqEwgHkk=; b=gP2jQek7ogrpQN1C4MXnP7aih6
+        9MpJEvWzvlOJpxul3NuvKTM+1Aymo8v2WKGSWeTkjPuh9j5Kx6oalC9wJePh3SCBiQauChsIADQ2p
+        awHTCsB7ByqI2tgdiudUdNwUPwJefZVeg1l4ofe5iiqvmn8WItr7C/7gjnoGx4MI1PTeAEK+Kce1l
+        m1YgnfIbhxGraj+tYK/82m+XakPv3zCiqhetcFWQppvw2k+nTdjPrw9LuFPQL2QdjLx1kxy4K5nOQ
+        HB4Fh5lHfvGCgodgr2tGjwSaUNzWQ3LPB+VFSFE1iRiJMLzYHDAcxE15A3g/1tBSl/kbjQgvf7UpB
+        oaxIK3rA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nkizQ-009sJC-9L; Sat, 30 Apr 2022 09:02:08 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nkj69-00DDvg-Aj; Sat, 30 Apr 2022 09:09:05 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CC8F8300473;
-        Sat, 30 Apr 2022 11:02:05 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 60B393001EA;
+        Sat, 30 Apr 2022 11:09:03 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 96E142028EFE6; Sat, 30 Apr 2022 11:02:05 +0200 (CEST)
-Date:   Sat, 30 Apr 2022 11:02:05 +0200
+        id 256252028EFE6; Sat, 30 Apr 2022 11:09:03 +0200 (CEST)
+Date:   Sat, 30 Apr 2022 11:09:03 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Joao Moreira <joao@overdrivepizza.com>,
         Sedat Dilek <sedat.dilek@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-hardening@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [RFC PATCH 00/21] KCFI support
-Message-ID: <Ymz7DWkRJy3PMaHm@hirez.programming.kicks-ass.net>
+Subject: Re: [RFC PATCH 06/21] cfi: Switch to -fsanitize=kcfi
+Message-ID: <Ymz8rwWGjkVCfMZ1@hirez.programming.kicks-ass.net>
 References: <20220429203644.2868448-1-samitolvanen@google.com>
- <202204291545.47C6A97EA2@keescook>
+ <20220429203644.2868448-7-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202204291545.47C6A97EA2@keescook>
+In-Reply-To: <20220429203644.2868448-7-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Apr 29, 2022 at 03:53:12PM -0700, Kees Cook wrote:
-> On Fri, Apr 29, 2022 at 01:36:23PM -0700, Sami Tolvanen wrote:
-> > KCFI is a proposed forward-edge control-flow integrity scheme for
-> > Clang, which is more suitable for kernel use than the existing CFI
-> > scheme used by CONFIG_CFI_CLANG. KCFI doesn't require LTO, doesn't
-> > alter function references to point to a jump table, and won't break
-> > function address equality.
-> 
-> 🎉 :)
-> 
-> > The latest LLVM patches are here:
-> > 
-> >   https://reviews.llvm.org/D119296
-> >   https://reviews.llvm.org/D124211
-> > 
-> > [...]
-> > To test this series, you'll need to compile your own Clang toolchain
-> > with the patches linked above. You can also find the complete source
-> > tree here:
-> > 
-> >   https://github.com/samitolvanen/llvm-project/commits/kcfi-rfc
-> 
-> And note that this RFC is seeking to break a bit of a circular dependency
-> with regard to the design of __builtin_kcfi_call_unchecked (D124211
-> above), as the implementation has gone around a few times in review within
-> LLVM, and we want to make sure that kernel folks are okay with what was
-> settled on. If there are no objections on the kernel side, then we can
-> land the KCFI patches, as this is basically the only remaining blocker.
+On Fri, Apr 29, 2022 at 01:36:29PM -0700, Sami Tolvanen wrote:
 
-So aside from the static_call usage, was there any other?
+> +CC_FLAGS_CFI	:= -fsanitize=kcfi -fno-sanitize-blacklist
 
-Anyway, I think I hate that __builtin, I'd *much* rather see a variable
-attribute or qualifier for this, such that one can mark a function
-pointer as not doing CFI.
-
-I simply doesn't make sense to have a builtin that operates on an
-expression. The whole thing is about indirect calls, IOW function
-pointers.
+I'm somewhat surprised to see CFI is a sanitizer. It just doesn't seem
+to fit in the line of {UB,KC,KA}SAN and friends.
