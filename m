@@ -2,59 +2,58 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 467A0C433EF
-	for <linux-hardening@archiver.kernel.org>; Sat, 30 Apr 2022 00:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC70C433EF
+	for <linux-hardening@archiver.kernel.org>; Sat, 30 Apr 2022 01:00:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379927AbiD3AxS (ORCPT
+        id S238701AbiD3BEC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 29 Apr 2022 20:53:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39662 "EHLO
+        Fri, 29 Apr 2022 21:04:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240005AbiD3AxR (ORCPT
+        with ESMTP id S1347202AbiD3BEA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 29 Apr 2022 20:53:17 -0400
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2AF74D265
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 17:49:57 -0700 (PDT)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-2f83983782fso101233837b3.6
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 17:49:57 -0700 (PDT)
+        Fri, 29 Apr 2022 21:04:00 -0400
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D2922D1D1
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 18:00:40 -0700 (PDT)
+Received: by mail-yb1-xb34.google.com with SMTP id y76so17260960ybe.1
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Apr 2022 18:00:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=v9Y7U0wTKqKyrzCZ5VtAbMiTlejqirW8gTMxmJkTfiA=;
-        b=o904YtYKww9l65iOnpFttd2oN+roVVJk4YvsnVIJZjXPGnvk61QhExALxCRC4rOedS
-         GZ+fEIz4xNSI4vgwWDhEYwf63lfKesGr31yZNfmw+UXEX9XN/y2wAhsIjWCitplmO4ps
-         8JTE/bKIyu2Jm+PEDZiXmNfTMKnVsLhQOq62VLJ4/GgKGeiH6TciRzAU6SsdTfIYcJER
-         3BHGtLCXph4PQRO9JLg1+n+i6SRl5zEq6LVsT2vXCl1IbFZA5JBiHGbCTkleXv53Ljbs
-         eh5U/POqRL31KOiefyvGXo2puzoXdUfX+v/WX7nlyz/6NPUWqBhPoK3P/gCH2Cg0mxKY
-         c5Xg==
+        bh=v+/lXmWN9a4yBqHcUhGldW2cPmJygtUYS178VCmvTIc=;
+        b=sae9+FjGo9T5Lw9oasK5TSXV+WiJ9kOd1rZxgJTdRsikk6ZkRbafNdUGY5LNRGAq7z
+         KLeLF9me10KOS2tdhq3QqUpedIvCKSr1k5DC/BpSJXrYAbYGX36I/OHi5sPl2+ZQlekd
+         66J+Wwfye+d+OmHrkDF8heOen1RhSJWCYyaI2bN5JBrcN16V9XbLRRbXVKl4swa18OO5
+         tjzIGXovtKoxHb2BPhqhs7CQ8j16lH/BUJJAJBpzv9rkOq3Qi4oG9OwF3Ppi6ZYwQt7t
+         c0tGVoQRbXL9RFIYG+2HjirHMKUjpclTwnxrV6ci7lqAUdDwRL4xfTYawAje7RdrXeb3
+         Ouqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=v9Y7U0wTKqKyrzCZ5VtAbMiTlejqirW8gTMxmJkTfiA=;
-        b=c2bagvQtsp62hPS4YYuVfnA/nCz1gLw3U7a5Wb4DLlAYQOjfTe75phrRat1M6rPlRh
-         n5IDdWSsCVbEoPhT07cLm1gW747etoK9+K2PnckyzKepPk/MKXmUyw/lBMKH2/oDq4Oe
-         OwBHkf9CVQeMC3NSgujWXNV6xvCjiF9Ddl8qfOBmEj6hMpc/sR3RdiRdRC5Ja5kdco6h
-         agO170hmQE6MlRoAfDwXO6xJOVCpNdL8Lai9fAQ608STHFufKGw8vv5PUIa34wPN/fy8
-         XZCwdUEeifAEjQprymNm0YIvoRo0XAapi8Zqk0PAXa8fYsmXy2clS9JDA8fRL5omHFpm
-         Urmg==
-X-Gm-Message-State: AOAM533HG+rOh+8Q7SA8BSo9XlbZMJtxv1QgVaFzS1QwT/h4MM+uiNo+
-        heuwb8440bmdzA2Jcov/EphtQlbAjlXx2e1bYqpnHQ==
-X-Google-Smtp-Source: ABdhPJwgM0DU8R1vt+rPUv9v3MVwX19+YnYIl4ZgilTxVCVrF9omxoBF3LL/7AkmrlziboUU9RSRxP5sBIMxP78CMas=
-X-Received: by 2002:a81:a93:0:b0:2f4:d65a:d44e with SMTP id
- 141-20020a810a93000000b002f4d65ad44emr1937122ywk.243.1651279796955; Fri, 29
- Apr 2022 17:49:56 -0700 (PDT)
+        bh=v+/lXmWN9a4yBqHcUhGldW2cPmJygtUYS178VCmvTIc=;
+        b=e4wB+F+5t44RZSlADi7cDZekGDnYY6s7l1jsnhD63wl4DbwAdU4KerNFoFs3gZ0ouM
+         wGF4l+nHFQ44068KmI4vk53IfgUv0xd746JvZQxve7cQ9x14dW9YtBx8C71Jurt9nJVa
+         ACyY0hN33Z61pkzZvzRr+eyF5jMDbXi84PE5dj18NBz8J6gRTdYT7VydYZ/DgpJ5vYRx
+         KI0R/CiLY47xlDuUl6OzvRfIwUpxGn/hC4+TwtNW5qkW0v0gd/Pyma2Ov5/Ddwy90R1+
+         xAHuTtpmpYFeEEiR0CTjkHnyoSdx8iT86KyaDYsZS9XK8mVst3gTlTnxtgQ4ivazFLmb
+         E6+w==
+X-Gm-Message-State: AOAM531D6RFP0TdN74oCgO3a9wX1RuD9QlqdK51/JTzXSm+cFZ7Es/hP
+        LZ0Z9ssX1t/YI+EaPtm6+MswiHQv1qrRJVcb4XUcBw==
+X-Google-Smtp-Source: ABdhPJyhcCyxowcmxR+EC+1LVLQSQWfwL5P0ozbbvft+6vNS3yhM7DK8vGFq8LI/3sHN0lOaYWVuT+28wwYR2ixEuLk=
+X-Received: by 2002:a5b:2c9:0:b0:644:b7c9:3766 with SMTP id
+ h9-20020a5b02c9000000b00644b7c93766mr1986227ybp.428.1651280439211; Fri, 29
+ Apr 2022 18:00:39 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220429203644.2868448-1-samitolvanen@google.com>
- <20220429203644.2868448-15-samitolvanen@google.com> <Ymxy/CU+tZhQ9UtN@hirez.programming.kicks-ass.net>
-In-Reply-To: <Ymxy/CU+tZhQ9UtN@hirez.programming.kicks-ass.net>
+ <20220429203644.2868448-17-samitolvanen@google.com> <Ymx1JcO36h7YqLa0@hirez.programming.kicks-ass.net>
+In-Reply-To: <Ymx1JcO36h7YqLa0@hirez.programming.kicks-ass.net>
 From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Fri, 29 Apr 2022 17:49:21 -0700
-Message-ID: <CABCJKud8vC6RwQLs2YXnZMZaXGNYBEq+sNmOsgGjjAw4MfuZuw@mail.gmail.com>
-Subject: Re: [RFC PATCH 14/21] treewide: static_call: Pass call arguments to
- the macro
+Date:   Fri, 29 Apr 2022 18:00:03 -0700
+Message-ID: <CABCJKufNUoJJPcraG-o2AvTBSWmFEQAzg0z-Z=xLohBqsMA3KQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 16/21] objtool: Add support for CONFIG_CFI_CLANG
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Kees Cook <keescook@chromium.org>,
@@ -75,14 +74,21 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Apr 29, 2022 at 4:21 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> Can you explain why this is needed? I don't think there are any indirect
-> calls to get confused about. That is, if you have STATIC_CALL_INLINE
-> then the compiler should be emitting direct calls to the trampoline.
+On Fri, Apr 29, 2022 at 4:30 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> Urgh, what does this do for decode speed? This is a hash-lookup for
+> every single instruction.
 
-Clang emits an indirect call for ({ &f; })(), which is optimized into
-a direct call when possible. Come to think of it, the recent
-InstCombine change to the compiler patch should solve this issue. Let
-me double check, I'd be more than happy to drop these two patches.
+Two actually, since .kcfi_traps only contains compiler-emitted
+locations and we also have to check for manual type annotations. I
+haven't measured performance yet, but I also didn't notice a
+significant impact here.
+
+> Is that kcfi location array sorted by the compiler? Because then you can
+> keep a running iterator and replace the whole lookup with a simple
+> equality comparison.
+
+The compiler generates a separate .kcfi_types section for each text
+section and the entries are emitted in order, so this should be
+doable.
 
 Sami
