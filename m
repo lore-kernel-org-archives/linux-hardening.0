@@ -2,50 +2,41 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F37C433F5
-	for <linux-hardening@archiver.kernel.org>; Sat, 30 Apr 2022 16:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E989AC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon,  2 May 2022 07:47:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243114AbiD3QTn (ORCPT
+        id S1358893AbiEBHud (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 30 Apr 2022 12:19:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43216 "EHLO
+        Mon, 2 May 2022 03:50:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243050AbiD3QTm (ORCPT
+        with ESMTP id S1350995AbiEBHud (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 30 Apr 2022 12:19:42 -0400
-X-Greylist: delayed 495 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 30 Apr 2022 09:16:19 PDT
-Received: from komekko.fuwafuwatime.moe (unknown [IPv6:2a01:4f9:6a:1712::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7DFC34BB6;
-        Sat, 30 Apr 2022 09:16:19 -0700 (PDT)
-Received: from megumin.fuwafuwatime.moe (c-174-50-122-55.hsd1.ga.comcast.net [174.50.122.55])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by komekko.fuwafuwatime.moe (Postfix) with ESMTPSA id 87E981A7B66;
-        Sat, 30 Apr 2022 19:07:59 +0300 (EEST)
-Received: from localhost (bubbles.localdomain [192.168.1.101])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by megumin.fuwafuwatime.moe (Postfix) with ESMTPSA id 64665BB6B5B;
-        Sat, 30 Apr 2022 12:07:54 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=concord.sh; s=dkim;
-        t=1651334876;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=skqVWzMwophoEkJSS/d4zaggvs9O9ypBAst/OCvrWUI=;
-        b=lDrp0a+eCJopgMZ+28H/ix2OqjLXZk3TXlRvSA7ljsSXD9/gu8sFJHdKcyoEs7xdTFfwSH
-        nSiyknf+iWj6UuyRGNtR+0ew8GuX9EAkqwCgDy/F5kQqmzI852WHf6b4AF2ddtArV9e+YD
-        LRaj+Zf9lFzFU6hhEeYY9yRwhqfNPywMsiSKHhJCI1hA9Zbi5HjoUWvu/Em92UwVXKsFyn
-        9KU73ucJiekuZPlsqcnb60Q7EajBR6Jm9MFbCs/ZxRjmZ00kBr19mJB/ZMsuOSomuZSfva
-        OsNe0ws9BpRW+WjCoYG8sLxdQut407naJI4iSJV/XAJTf15VxvmU5c8FwumpPw==
-Date:   Sat, 30 Apr 2022 12:07:50 -0400
-From:   Kenton Groombridge <me@concord.sh>
+        Mon, 2 May 2022 03:50:33 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19DC629CA5;
+        Mon,  2 May 2022 00:47:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=pOoEoq3uxOd2hY3qnCRK9aDXRSIdbU9S375EHmEixg8=; b=Zx1qMADDPH8oEOTa4jVupxWl6E
+        jp0Ix1UpwVxb/Fun8uQkpi/VDVUrELD+eS/RX9VUTmUff5Lfk9pHLGnzXGRo5XQjnKpVQAnDGA+HY
+        6njW7JD42U9XDnB6D3TI9rmTZ/aqSpbsxfUtPIHKH48smGoBc+hsJpqXaRadtuEJcHvW3GiOXvq13
+        d4zs632v/3gKbbrqz0yWyBW7gjlr+57/KxIGorr/dnptiwV1AYALOr2y65wpMHAAJ4xsSV0n37yzE
+        19MxrkmlClL3jeLhLETg9bIIv0pjGFEOLCYtKCiGSpok8qhV9B6cU0FBm//Y4T/y5l5jfkXJiDpIU
+        UHe+W3Jw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nlQlP-00AOnG-Mt; Mon, 02 May 2022 07:46:36 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4FA2398035B; Mon,  2 May 2022 09:46:33 +0200 (CEST)
+Date:   Mon, 2 May 2022 09:46:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
 To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, X86 ML <x86@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -55,86 +46,46 @@ Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         Sedat Dilek <sedat.dilek@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [RFC PATCH 00/21] KCFI support
-Message-ID: <20220430160750.ov7ddsq2vzibwrju@bubbles>
-Mail-Followup-To: Sami Tolvanen <samitolvanen@google.com>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        llvm@lists.linux.dev
+Subject: Re: [RFC PATCH 14/21] treewide: static_call: Pass call arguments to
+ the macro
+Message-ID: <20220502074633.GA479834@worktop.programming.kicks-ass.net>
 References: <20220429203644.2868448-1-samitolvanen@google.com>
+ <20220429203644.2868448-15-samitolvanen@google.com>
+ <Ymxy/CU+tZhQ9UtN@hirez.programming.kicks-ass.net>
+ <CABCJKud8vC6RwQLs2YXnZMZaXGNYBEq+sNmOsgGjjAw4MfuZuw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zpbpn5imnhuprfsc"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220429203644.2868448-1-samitolvanen@google.com>
-Authentication-Results: ORIGINATING;
-        auth=pass smtp.auth=me@concord.sh smtp.mailfrom=me@concord.sh
+In-Reply-To: <CABCJKud8vC6RwQLs2YXnZMZaXGNYBEq+sNmOsgGjjAw4MfuZuw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Fri, Apr 29, 2022 at 05:49:21PM -0700, Sami Tolvanen wrote:
+> On Fri, Apr 29, 2022 at 4:21 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > Can you explain why this is needed? I don't think there are any indirect
+> > calls to get confused about. That is, if you have STATIC_CALL_INLINE
+> > then the compiler should be emitting direct calls to the trampoline.
+> 
+> Clang emits an indirect call for ({ &f; })(), which is optimized into
+> a direct call when possible. Come to think of it, the recent
+> InstCombine change to the compiler patch should solve this issue. Let
+> me double check, I'd be more than happy to drop these two patches.
 
---zpbpn5imnhuprfsc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Oooh, but this must not require any magic. That is, we have a *ton* of
+code that relies on constant propagation of function pointers to not
+emit indirect calls.
 
-On 22/04/29 01:36PM, Sami Tolvanen wrote:
-> KCFI is a proposed forward-edge control-flow integrity scheme for
-> Clang, which is more suitable for kernel use than the existing CFI
-> scheme used by CONFIG_CFI_CLANG. KCFI doesn't require LTO, doesn't
-> alter function references to point to a jump table, and won't break
-> function address equality. The latest LLVM patches are here:
->=20
->   https://reviews.llvm.org/D119296
->   https://reviews.llvm.org/D124211
+Please make sure that 'just-works'.
 
-Many thanks for continuing to work on this! As a user who has been
-following the evolution of this patch series for a while now, I have a
-couple of burning questions:
+Look at all the __always_inline functions in rbtree*.h for instance,
+some like latch and augment rely on quite complicated const propagation
+for the actual function pointer is in a const struct.
 
-1) The LLVM patch says that kCFI is not compatible with execute-only
-memory. Is there a plan ahead for kCFI if and when execute-only memory
-is implemented?
+I've verified all that actually generates direct calls when we did that
+code (on GCC, clang wasn't really a thing back then).
 
-2) kCFI only checks indirect calls while Clang's traditional CFI has
-more schemes like bad cast checking and so on. Are there any major
-security tradeoffs as a result of this?
 
-V/R
 
-Kenton Groombridge
-
---zpbpn5imnhuprfsc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQKTBAABCgB9FiEEP+u3AkfbrORB/inCFt7v5V9Ft54FAmJtXtFfFIAAAAAALgAo
-aXNzdWVyLWZwckBub3RhdGlvbnMub3BlbnBncC5maWZ0aGhvcnNlbWFuLm5ldDNG
-RUJCNzAyNDdEQkFDRTQ0MUZFMjlDMjE2REVFRkU1NUY0NUI3OUUACgkQFt7v5V9F
-t544Dg//ZWfCVPSPbS6jIItV88Z+1j0B2V2ovBXyACDNw9+gb0nK3wdofNteeb+v
-4/U/TIG66RKItrpzntuNJH6aaNvwXFnZX4Zoen+l9z/Y2bppPWk3j/FELtnPTopQ
-Sze0C34gdGZnnHyzQwTl8QVmRJsON+FN0PmZfCQp4+5NRjWJRF3aI3fGBBYPS9sd
-JkiG1k8/pQBRI5IcjYogXNshK/LPV/HpwUhkKdrG+f+Qbs+ItENMS3nO5c80yvd+
-dVSzRf+5pCQHAu6JmcUWTejYG13oI5VasRTruh4US3ITaHB1uIPX1Qkhkejl9RMJ
-hKhEbpKkEqZDBEU9eA5Zvjz2miSEnYBIBKdP8HloN4dhBAznKoiC9Q0hVMmR+kPD
-oXnGs6YqgIP2n6tp8nq50nL/sieaBetzjnVb7qwnUHcmEsfFBa7enprmuwVgi/5g
-sxgO7wup05JlE85rF5JOAXVcWC3zb8au+yMQknDx1p/hGvlMFWK+w0OqecK2dbos
-crliqCbiL+2iL98O1ocYt40HT0AV3uuw8kSbMwjcJJepNvpTzrjf2q90ydCvCoDa
-crAjD2xs16YHG7On/4P19fhh6Pirn/FlMYquKuOqInAU7qSDiu5vnqsXFn2UiuUc
-wDqcwxC0qupYuI+Gm8PAb/QIcEY177T5OHOcu+qMppIasNsnCcI=
-=jtla
------END PGP SIGNATURE-----
-
---zpbpn5imnhuprfsc--
