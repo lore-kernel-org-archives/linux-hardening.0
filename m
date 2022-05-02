@@ -2,94 +2,150 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F245C4332F
-	for <linux-hardening@archiver.kernel.org>; Mon,  2 May 2022 15:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C403BC43217
+	for <linux-hardening@archiver.kernel.org>; Mon,  2 May 2022 17:17:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1385783AbiEBPfk (ORCPT
+        id S1386640AbiEBRVX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 2 May 2022 11:35:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41078 "EHLO
+        Mon, 2 May 2022 13:21:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1385812AbiEBPfi (ORCPT
+        with ESMTP id S1386634AbiEBRVV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 2 May 2022 11:35:38 -0400
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A063EBC02
-        for <linux-hardening@vger.kernel.org>; Mon,  2 May 2022 08:32:08 -0700 (PDT)
-Received: by mail-yb1-xb31.google.com with SMTP id s30so26642952ybi.8
-        for <linux-hardening@vger.kernel.org>; Mon, 02 May 2022 08:32:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=hCGKNipS00tBX8rbB28dkiVg/BvdNz8E722on+AV5GE=;
-        b=iJhBELUzXOr15YhTf0wF+a681aftQovvW35I2W0xmmMp8MntU2wDtF3J/uFXVkHeUI
-         FFh10K8dP/kcvw5GV42gc2kKRsaEByU7ysTgBlBeGuBG8+jtAY9IAEIfWWsgn4nIJpbw
-         bsd6Y41l2YVABLJQ92bJl0KYYuPYfpyYZI9eYjsmq+GzxKmgW0yHxGKt2ihtN9vq3ExH
-         dBOuCATwLlUCWDwVviy4J4NRKpwr/ejONaiz5p0ymgLsXU8O6QPNTKF7w7usOFpdARND
-         A5001AxyjOwcV5fpVk7WWUtsEuvWLCeK6kDaDgzQI8xbzzBrq2zM5i8zSaUPu8vITIUg
-         4CLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=hCGKNipS00tBX8rbB28dkiVg/BvdNz8E722on+AV5GE=;
-        b=H4AoLJ07dsSa8cQXyEvWBJ89JQhvlfHn7b32wAwLzSEzlLsvvL5E0phkRW6kFZqOYf
-         HIszUVZYcRbV/+5VPaIQPjUmuEi6CEVG2KKJQuE0HaFKyb8BSaBlGgCVl3062B+wfix6
-         4tO/0Vw7AgzE19SRD7Ec5918JkI0nrJiwnRo4n+plJ7shL1dZtG2ksChR4/Grdjv9PHW
-         8I5/SfxMErf4RTMkgt5Qu97bUZU/9rNR5LcIgJGUDTfGhGoP1evdTwDkrGhTlRLb3zC0
-         rxejj5d6cLdNrXnJFwPBeaHLgXi6WDEqauy54wQrJvLd3UDuhRbaW4L5Kw2pFCitbIi3
-         zhiA==
-X-Gm-Message-State: AOAM532mXFaLYKXm7G3zQNsl4YcqRyrE9LezDZ2DgBqpGy0BIw2hhbvE
-        kmfckVYPRA2byupXTtuEv3eHK1RZHGJKwnriMLxgHA==
-X-Google-Smtp-Source: ABdhPJwj3QrPFfxu2nyuN5kFPO+0frvF6GLCyRxUVFMu80sCrG1GMxBjBR97BxQia0hYHO5LXNrgaz0HEPZ7M14xL8o=
-X-Received: by 2002:a5b:2c9:0:b0:644:b7c9:3766 with SMTP id
- h9-20020a5b02c9000000b00644b7c93766mr10147935ybp.428.1651505527625; Mon, 02
- May 2022 08:32:07 -0700 (PDT)
+        Mon, 2 May 2022 13:21:21 -0400
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::228])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72596B7D4;
+        Mon,  2 May 2022 10:17:48 -0700 (PDT)
+Received: (Authenticated sender: joao@overdrivepizza.com)
+        by mail.gandi.net (Postfix) with ESMTPA id BA33C1BF205;
+        Mon,  2 May 2022 17:17:42 +0000 (UTC)
 MIME-Version: 1.0
-References: <20220429203644.2868448-1-samitolvanen@google.com> <20220430160750.ov7ddsq2vzibwrju@bubbles>
-In-Reply-To: <20220430160750.ov7ddsq2vzibwrju@bubbles>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Mon, 2 May 2022 08:31:35 -0700
-Message-ID: <CABCJKufWFy0ShK49YAqk60mVApQ3qrfOj9R1nuLAWXiVtqbPJA@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/21] KCFI support
-To:     Sami Tolvanen <samitolvanen@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Date:   Mon, 02 May 2022 10:17:42 -0700
+From:   Joao Moreira <joao@overdrivepizza.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        peterz@infradead.org, andrew.cooper3@citrix.com,
+        keescook@chromium.org, samitolvanen@google.com,
+        mark.rutland@arm.com, hjl.tools@gmail.com,
+        alyssa.milburn@linux.intel.com, ndesaulniers@google.com,
+        gabriel.gomes@linux.intel.com, rick.p.edgecombe@intel.com
+Subject: Re: [RFC PATCH 01/11] x86: kernel FineIBT
+In-Reply-To: <20220429013704.4n4lmadpstdioe7a@treble>
+References: <20220420004241.2093-1-joao@overdrivepizza.com>
+ <20220420004241.2093-2-joao@overdrivepizza.com>
+ <20220429013704.4n4lmadpstdioe7a@treble>
+Message-ID: <d82459b887bcaf9181ad836051e2d16b@overdrivepizza.com>
+X-Sender: joao@overdrivepizza.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Apr 30, 2022 at 9:08 AM Kenton Groombridge <me@concord.sh> wrote:
-> Many thanks for continuing to work on this! As a user who has been
-> following the evolution of this patch series for a while now, I have a
-> couple of burning questions:
->
-> 1) The LLVM patch says that kCFI is not compatible with execute-only
-> memory. Is there a plan ahead for kCFI if and when execute-only memory
-> is implemented?
+On 2022-04-28 18:37, Josh Poimboeuf wrote:
+> On Tue, Apr 19, 2022 at 05:42:31PM -0700, joao@overdrivepizza.com 
+> wrote:
+>> +void __noendbr __fineibt_handler(void){
+>> +	unsigned i;
+>> +	unsigned long flags;
+>> +	bool skip;
+>> +	void * ret;
+>> +	void * caller;
+>> +
+>> +	DO_ALL_PUSHS;
+> 
+> So this function isn't C ABI compliant, right? e.g. the compiler just
+> calls the handler without regard for preserving registers?
+> 
+> If this function is going to be implemented in C, it should probably
+> have an asm thunk wrapper which can properly save/restore the registers
+> before calling into the C version.
+> 
+> Even better, if the compiler did an invalid op (UD2?), which I think 
+> you
+> mentioned elsewhere, instead of calling the handler directly, and there
+> were a way for the trap code to properly detect it as a FineIBT
+> violation, we could get rid of the pushes/pops, plus the uaccess 
+> objtool
+> warning from patch 7, plus I'm guessing a bunch of noinstr validation
+> warnings.
 
-There's no plan for executable-only memory right now, that would
-require type hashes to be moved somewhere else to read-only memory.
+Cool, I'll try to come up with something!
 
-> 2) kCFI only checks indirect calls while Clang's traditional CFI has
-> more schemes like bad cast checking and so on. Are there any major
-> security tradeoffs as a result of this?
+> 
+>> +
+>> +	spin_lock_irqsave(&fineibt_lock, flags);
+>> +	skip = false;
+>> +
+>> +	asm("\t movq 0x90(%%rsp),%0" : "=r"(ret));
+>> +	asm("\t movq 0x98(%%rsp),%0" : "=r"(caller));
+> 
+> This is making some questionable assumptions about the stack layout.
+> 
+> I assume this function is still in the prototype stage ;-)
 
-No, cfi-icall is only scheme that's relevant for the kernel. The other
-schemes implemented in Clang are mostly useful for C++.
+Yeah, this is just a messy instrumentation to get reports about 
+mismatching prototypes (as the ones reported further down the series).
 
-Sami
+The issue with having the call is that it bloats the binary, so the ud2 
+is 3-bytes-per-function better. Yet, we may consider a FINEIBT_DEBUG 
+config, which can then enable a handler. This would be useful together 
+with a fuzzer or a stress tool to cover possible control-flow paths 
+within the kernel and map mismatching prototypes more properly I guess.
+
+> 
+>> +	if(!skip) {
+>> +		printk("FineIBT violation: %px:%px:%u\n", ret, caller,
+>> +				vlts_next);
+>> +	}
+>> +	DO_ALL_POPS;
+>> +}
+> 
+> Right now this handler just does a printk if it hasn't already for this
+> caller/callee combo, and then resumes control.  Which is fine for
+> debugging, but it really needs to behave similarly to an IBT violation,
+> by panicking unless "ibt=warn" on the cmdline.
+> 
+> Not sure what would happen for "ibt=off"?  Maybe apply_ibt_endbr() 
+> could
+> NOP out all the FineIBT stuff.
+
+Either that, or...
+
+I'm thinking about a way to have FineIBT interchangeable with KCFI. 
+Currently KCFI adds a 4 byte hash + 2 byte nops before function entry, 
+to allow for proper prototype checking. After that, there should be an 
+ENDBR of 4 bytes. This gives us 10 bytes in total. Then, my yet to be 
+properly thought idea would be patch these 10 bytes with:
+
+endbr
+call fineibt_handler_<$HASH>
+nop
+
+and then, on the caller side, patch the "cmp <$HASH>, -0x6(%r11); je; 
+ud2; call" sequence with a "sub 0x6, r11; mov $HASH, %r10; call %r11, 
+add 0x6 %r11". This would then allow the kernel to verify if the CPU is 
+IBT capable on boot time and only then setting the proper scheme.
+
+The downsides of having something like this would be that this sub 
+r11/add r11 sequence is kinda meh. We can avoid that by having two 
+padding nops after the original ENDBR, which will be skipped when the 
+function is reached directly by the linker optimization I'm working on, 
+and that we can convert into a JMP -offset that makes control flow reach 
+the padding area before the prologue and from where we can call the 
+fineibt_handler function. The resulting instrumentation would be 
+something like:
+
+1:
+call fineibt_handler_<$HASH>
+jmp 2f
+<foo>
+endbr
+jmp 1b
+2:
+
+Also, it would prevent a paranoid user to have both schemes 
+simultaneously (there are reasons why people could want that).
+
+Any thoughts?
