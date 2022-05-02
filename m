@@ -2,38 +2,59 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E989AC433F5
-	for <linux-hardening@archiver.kernel.org>; Mon,  2 May 2022 07:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6EFC43217
+	for <linux-hardening@archiver.kernel.org>; Mon,  2 May 2022 15:22:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358893AbiEBHud (ORCPT
+        id S239180AbiEBPZh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 2 May 2022 03:50:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38418 "EHLO
+        Mon, 2 May 2022 11:25:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350995AbiEBHud (ORCPT
+        with ESMTP id S1385800AbiEBPYH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 2 May 2022 03:50:33 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19DC629CA5;
-        Mon,  2 May 2022 00:47:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=pOoEoq3uxOd2hY3qnCRK9aDXRSIdbU9S375EHmEixg8=; b=Zx1qMADDPH8oEOTa4jVupxWl6E
-        jp0Ix1UpwVxb/Fun8uQkpi/VDVUrELD+eS/RX9VUTmUff5Lfk9pHLGnzXGRo5XQjnKpVQAnDGA+HY
-        6njW7JD42U9XDnB6D3TI9rmTZ/aqSpbsxfUtPIHKH48smGoBc+hsJpqXaRadtuEJcHvW3GiOXvq13
-        d4zs632v/3gKbbrqz0yWyBW7gjlr+57/KxIGorr/dnptiwV1AYALOr2y65wpMHAAJ4xsSV0n37yzE
-        19MxrkmlClL3jeLhLETg9bIIv0pjGFEOLCYtKCiGSpok8qhV9B6cU0FBm//Y4T/y5l5jfkXJiDpIU
-        UHe+W3Jw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nlQlP-00AOnG-Mt; Mon, 02 May 2022 07:46:36 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4FA2398035B; Mon,  2 May 2022 09:46:33 +0200 (CEST)
-Date:   Mon, 2 May 2022 09:46:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
+        Mon, 2 May 2022 11:24:07 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 169A312088
+        for <linux-hardening@vger.kernel.org>; Mon,  2 May 2022 08:20:39 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id i38so26523968ybj.13
+        for <linux-hardening@vger.kernel.org>; Mon, 02 May 2022 08:20:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VG2N1KHd1YR2ZF1sjkCgsuS94s3wv0dEZ2AS2biKRuc=;
+        b=nCCr/m44vAOB3fWxcTwSvULnXuiNVu4xAEa/q8PX0e8wp//HRJ3pAwZlfI8oXQakqb
+         PBNA5VrluDTvJXwHjjEqKVrz+t1ZAhOuAy0UZ/lpPuIF5TfAQhvGp0eP9kDlGthADP7B
+         jQS2jgmlIf2O2YIMWFKayiS6OkGnXXTuI6mSozGLIgWSqWTudoL0mragtOrIMycv0iNu
+         cZvbiKKjzeuQMjCAHgd1ar9MSdep3a1AilDwleb2gMChOjj8zJLFVuMg4VeHUCWQC8gh
+         4i9wU09zBuZyOBMRAX6+2An3+4aqYMkmsLVezmWAt06zT2xLERXvPiNYHUXkJ6I1taeF
+         kDFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VG2N1KHd1YR2ZF1sjkCgsuS94s3wv0dEZ2AS2biKRuc=;
+        b=amufW0xiPQ6zCHFsneHN1bUIVhZUdgCtWFtxlxYxqP5OACgVkGdk0EQd+jmuMv1Nnc
+         FjsQOXK+d5bwaJz5cTDGOXZB6o3Py+4sKUbcsbw81oSkDFuVzKOoSilU+X5ZxysXNwWK
+         H1LzeJz+x0S2PusWePlaOs9BOWoNPE/lXoKPmX+JmvoSCQCikVevMUZvwm6tOMV+W9Rs
+         ga+9pbhP56VL9WAwMoiwF8TRnp0HCfWAGPBQkRelpS6lt3WsjM+XMrgcZOQu4kWpNo4E
+         a6rEmd9IYxpIYpM0esaGx3k9HjejXGz4s/5mo4Y30q6MEbxBkoRXdLj4mOGgUf6F5lEE
+         L2Rg==
+X-Gm-Message-State: AOAM532VWrx/ppG2wJtT6FOAGhEVCAMyqxffRlU1A4iDJa4wSOmi2kGr
+        qe8wUXIV4H3AEHMaH3l+xGEV4X6WW9twzg5dQ1hFtA==
+X-Google-Smtp-Source: ABdhPJzqk8+IJH8fkyTp0bTuIuMWgJsHqUrnpAZSbYcMmkZ/+21K1dsNoH6iUg94I0Y7z6gpiKYrRf3BnqDN09p5vbs=
+X-Received: by 2002:a25:3455:0:b0:648:44db:51e0 with SMTP id
+ b82-20020a253455000000b0064844db51e0mr10124096yba.314.1651504838091; Mon, 02
+ May 2022 08:20:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220429203644.2868448-1-samitolvanen@google.com>
+ <20220429203644.2868448-22-samitolvanen@google.com> <Ym0ASy87mE3r3EVE@hirez.programming.kicks-ass.net>
+In-Reply-To: <Ym0ASy87mE3r3EVE@hirez.programming.kicks-ass.net>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Mon, 2 May 2022 08:20:05 -0700
+Message-ID: <CABCJKucK39XnVPA=EhLSJ+vcgVLCSgnGzLrRy9tZSM2jzZtUBg@mail.gmail.com>
+Subject: Re: [RFC PATCH 21/21] x86: Add support for CONFIG_CFI_CLANG
+To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Kees Cook <keescook@chromium.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>, X86 ML <x86@kernel.org>,
@@ -48,44 +69,22 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         linux-hardening@vger.kernel.org,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         llvm@lists.linux.dev
-Subject: Re: [RFC PATCH 14/21] treewide: static_call: Pass call arguments to
- the macro
-Message-ID: <20220502074633.GA479834@worktop.programming.kicks-ass.net>
-References: <20220429203644.2868448-1-samitolvanen@google.com>
- <20220429203644.2868448-15-samitolvanen@google.com>
- <Ymxy/CU+tZhQ9UtN@hirez.programming.kicks-ass.net>
- <CABCJKud8vC6RwQLs2YXnZMZaXGNYBEq+sNmOsgGjjAw4MfuZuw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABCJKud8vC6RwQLs2YXnZMZaXGNYBEq+sNmOsgGjjAw4MfuZuw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Apr 29, 2022 at 05:49:21PM -0700, Sami Tolvanen wrote:
-> On Fri, Apr 29, 2022 at 4:21 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > Can you explain why this is needed? I don't think there are any indirect
-> > calls to get confused about. That is, if you have STATIC_CALL_INLINE
-> > then the compiler should be emitting direct calls to the trampoline.
-> 
-> Clang emits an indirect call for ({ &f; })(), which is optimized into
-> a direct call when possible. Come to think of it, the recent
-> InstCombine change to the compiler patch should solve this issue. Let
-> me double check, I'd be more than happy to drop these two patches.
+On Sat, Apr 30, 2022 at 2:24 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Fri, Apr 29, 2022 at 01:36:44PM -0700, Sami Tolvanen wrote:
+> > -     if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN) {
+> > +     if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
+> > +         report_cfi(regs->ip, regs) == BUG_TRAP_TYPE_WARN) {
+>
+> This way you'll first get a BUG splat and then tack on the CFI thing.
 
-Oooh, but this must not require any magic. That is, we have a *ton* of
-code that relies on constant propagation of function pointers to not
-emit indirect calls.
+The CFI ud2 isn't in the bug table, which means find_bug returns
+BUG_TRAP_TYPE_NONE and report_bug bails out before printing out
+anything.
 
-Please make sure that 'just-works'.
-
-Look at all the __always_inline functions in rbtree*.h for instance,
-some like latch and augment rely on quite complicated const propagation
-for the actual function pointer is in a const struct.
-
-I've verified all that actually generates direct calls when we did that
-code (on GCC, clang wasn't really a thing back then).
-
-
-
+Sami
