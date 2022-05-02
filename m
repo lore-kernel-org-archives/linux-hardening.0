@@ -2,128 +2,94 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80532C433F5
-	for <linux-hardening@archiver.kernel.org>; Mon,  2 May 2022 15:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F245C4332F
+	for <linux-hardening@archiver.kernel.org>; Mon,  2 May 2022 15:32:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239158AbiEBP1E (ORCPT
+        id S1385783AbiEBPfk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 2 May 2022 11:27:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59468 "EHLO
+        Mon, 2 May 2022 11:35:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236020AbiEBP1D (ORCPT
+        with ESMTP id S1385812AbiEBPfi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 2 May 2022 11:27:03 -0400
-Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA7A313CC6
-        for <linux-hardening@vger.kernel.org>; Mon,  2 May 2022 08:23:30 -0700 (PDT)
-Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-2f7b815ac06so151615677b3.3
-        for <linux-hardening@vger.kernel.org>; Mon, 02 May 2022 08:23:30 -0700 (PDT)
+        Mon, 2 May 2022 11:35:38 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A063EBC02
+        for <linux-hardening@vger.kernel.org>; Mon,  2 May 2022 08:32:08 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id s30so26642952ybi.8
+        for <linux-hardening@vger.kernel.org>; Mon, 02 May 2022 08:32:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ea1oEhzhMj8grWxQC5SgcBArE4/rXmfoEAuZM9GaSnk=;
-        b=e8jLUWg60Xj2yGbY7ch7OqYrOgajvXWhT4iTIr2BEfGc4+9NKE3qXx5Xs7EWsTT9GL
-         OeGOmR0vut0qQzy7JH/IrH9ka8nmoGFb2Gvyc23nt5LdSRcK5YcEOi9gq0tuIX1LeJ8F
-         dgO5NTyqgBNIjtZfsGM/MVGmXurbMVjBLSFRbguI2sjEXBxprRb2lYwaWk3ntkRBUDU5
-         w3d7TRfSKPgIEQBDgV73myrvp6CyIfvHo0gPoeiO3QhVlTaXfe6T8J6DfnjHgI0tJoXs
-         /uqM+NbLt9VQB70/97KqEMc8frtLzcwZYPKAQP5xl9ZKUvDReHs43KuwvnY0KNe0WvE5
-         DjCg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=hCGKNipS00tBX8rbB28dkiVg/BvdNz8E722on+AV5GE=;
+        b=iJhBELUzXOr15YhTf0wF+a681aftQovvW35I2W0xmmMp8MntU2wDtF3J/uFXVkHeUI
+         FFh10K8dP/kcvw5GV42gc2kKRsaEByU7ysTgBlBeGuBG8+jtAY9IAEIfWWsgn4nIJpbw
+         bsd6Y41l2YVABLJQ92bJl0KYYuPYfpyYZI9eYjsmq+GzxKmgW0yHxGKt2ihtN9vq3ExH
+         dBOuCATwLlUCWDwVviy4J4NRKpwr/ejONaiz5p0ymgLsXU8O6QPNTKF7w7usOFpdARND
+         A5001AxyjOwcV5fpVk7WWUtsEuvWLCeK6kDaDgzQI8xbzzBrq2zM5i8zSaUPu8vITIUg
+         4CLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ea1oEhzhMj8grWxQC5SgcBArE4/rXmfoEAuZM9GaSnk=;
-        b=7DUb4W4/35isbEu/lO4AxXtPAP08CpT2v5tGF6JwVXsvTQeRjNe9ydaa+lr1x1fgKC
-         d8MRw6d5lZMNtazWGVcrpIYpJrsNkldkKRZrxia6P4YCwQq5DcXCrwEL6WwnaAmKz86C
-         odX0Fo7+MGMYW2WTS/kUPDkmEvvovCtUDY0aOUHLSv04ZG59fY/r2SkffQ13pAx+XhaK
-         pqK753CsNXjSaAm3CvjCnnK4ZKJIP0QHOIM5axYZeCyZekytDYb826rVkUsKsmcXQ6bD
-         HKwQdaZuPUZPZ3tTuhMTLm7aEngGAEXDEhc7oMZMp12pMcDHGjoz/7oNmRrQ3pGIdOaA
-         M7ww==
-X-Gm-Message-State: AOAM531IAUPXqaJHpUWCM4p6pRgdKkrGE3YbVV/ECK6HAIPjfvMwK/zV
-        cfkFHp97aFErryFANop+9muahQtPlCh+bQfVx681AQ==
-X-Google-Smtp-Source: ABdhPJzuy+A0wik9KFC+HHMm48ehGTHQOFaLPm3WarFTvUfmKlDOQAAm23en8K1MA9diKN/+E2i0Bt2GyOtIU8ryfck=
-X-Received: by 2002:a81:a93:0:b0:2f4:d65a:d44e with SMTP id
- 141-20020a810a93000000b002f4d65ad44emr11108924ywk.243.1651505009686; Mon, 02
- May 2022 08:23:29 -0700 (PDT)
+         :message-id:subject:to;
+        bh=hCGKNipS00tBX8rbB28dkiVg/BvdNz8E722on+AV5GE=;
+        b=H4AoLJ07dsSa8cQXyEvWBJ89JQhvlfHn7b32wAwLzSEzlLsvvL5E0phkRW6kFZqOYf
+         HIszUVZYcRbV/+5VPaIQPjUmuEi6CEVG2KKJQuE0HaFKyb8BSaBlGgCVl3062B+wfix6
+         4tO/0Vw7AgzE19SRD7Ec5918JkI0nrJiwnRo4n+plJ7shL1dZtG2ksChR4/Grdjv9PHW
+         8I5/SfxMErf4RTMkgt5Qu97bUZU/9rNR5LcIgJGUDTfGhGoP1evdTwDkrGhTlRLb3zC0
+         rxejj5d6cLdNrXnJFwPBeaHLgXi6WDEqauy54wQrJvLd3UDuhRbaW4L5Kw2pFCitbIi3
+         zhiA==
+X-Gm-Message-State: AOAM532mXFaLYKXm7G3zQNsl4YcqRyrE9LezDZ2DgBqpGy0BIw2hhbvE
+        kmfckVYPRA2byupXTtuEv3eHK1RZHGJKwnriMLxgHA==
+X-Google-Smtp-Source: ABdhPJwj3QrPFfxu2nyuN5kFPO+0frvF6GLCyRxUVFMu80sCrG1GMxBjBR97BxQia0hYHO5LXNrgaz0HEPZ7M14xL8o=
+X-Received: by 2002:a5b:2c9:0:b0:644:b7c9:3766 with SMTP id
+ h9-20020a5b02c9000000b00644b7c93766mr10147935ybp.428.1651505527625; Mon, 02
+ May 2022 08:32:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220429203644.2868448-1-samitolvanen@google.com>
- <202204291545.47C6A97EA2@keescook> <Ymz7DWkRJy3PMaHm@hirez.programming.kicks-ass.net>
-In-Reply-To: <Ymz7DWkRJy3PMaHm@hirez.programming.kicks-ass.net>
+References: <20220429203644.2868448-1-samitolvanen@google.com> <20220430160750.ov7ddsq2vzibwrju@bubbles>
+In-Reply-To: <20220430160750.ov7ddsq2vzibwrju@bubbles>
 From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Mon, 2 May 2022 08:22:57 -0700
-Message-ID: <CABCJKuckt75qA1op-LpkJnQsJC36m9fstbY3uD=7pET2VyyZSg@mail.gmail.com>
+Date:   Mon, 2 May 2022 08:31:35 -0700
+Message-ID: <CABCJKufWFy0ShK49YAqk60mVApQ3qrfOj9R1nuLAWXiVtqbPJA@mail.gmail.com>
 Subject: Re: [RFC PATCH 00/21] KCFI support
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+To:     Sami Tolvanen <samitolvanen@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Joao Moreira <joao@overdrivepizza.com>,
         Sedat Dilek <sedat.dilek@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
         linux-hardening@vger.kernel.org,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Apr 30, 2022 at 2:02 AM Peter Zijlstra <peterz@infradead.org> wrote=
-:
+On Sat, Apr 30, 2022 at 9:08 AM Kenton Groombridge <me@concord.sh> wrote:
+> Many thanks for continuing to work on this! As a user who has been
+> following the evolution of this patch series for a while now, I have a
+> couple of burning questions:
 >
-> On Fri, Apr 29, 2022 at 03:53:12PM -0700, Kees Cook wrote:
-> > On Fri, Apr 29, 2022 at 01:36:23PM -0700, Sami Tolvanen wrote:
-> > > KCFI is a proposed forward-edge control-flow integrity scheme for
-> > > Clang, which is more suitable for kernel use than the existing CFI
-> > > scheme used by CONFIG_CFI_CLANG. KCFI doesn't require LTO, doesn't
-> > > alter function references to point to a jump table, and won't break
-> > > function address equality.
-> >
-> > =F0=9F=8E=89 :)
-> >
-> > > The latest LLVM patches are here:
-> > >
-> > >   https://reviews.llvm.org/D119296
-> > >   https://reviews.llvm.org/D124211
-> > >
-> > > [...]
-> > > To test this series, you'll need to compile your own Clang toolchain
-> > > with the patches linked above. You can also find the complete source
-> > > tree here:
-> > >
-> > >   https://github.com/samitolvanen/llvm-project/commits/kcfi-rfc
-> >
-> > And note that this RFC is seeking to break a bit of a circular dependen=
-cy
-> > with regard to the design of __builtin_kcfi_call_unchecked (D124211
-> > above), as the implementation has gone around a few times in review wit=
-hin
-> > LLVM, and we want to make sure that kernel folks are okay with what was
-> > settled on. If there are no objections on the kernel side, then we can
-> > land the KCFI patches, as this is basically the only remaining blocker.
->
-> So aside from the static_call usage, was there any other?
+> 1) The LLVM patch says that kCFI is not compatible with execute-only
+> memory. Is there a plan ahead for kCFI if and when execute-only memory
+> is implemented?
 
-Not at the moment, and it looks like we can get rid of that too.
+There's no plan for executable-only memory right now, that would
+require type hashes to be moved somewhere else to read-only memory.
 
-> Anyway, I think I hate that __builtin, I'd *much* rather see a variable
-> attribute or qualifier for this, such that one can mark a function
-> pointer as not doing CFI.
->
-> I simply doesn't make sense to have a builtin that operates on an
-> expression. The whole thing is about indirect calls, IOW function
-> pointers.
+> 2) kCFI only checks indirect calls while Clang's traditional CFI has
+> more schemes like bad cast checking and so on. Are there any major
+> security tradeoffs as a result of this?
 
-I also thought an attribute would be more convenient, but the compiler
-folks prefer a built-in:
-
-https://reviews.llvm.org/D122673
+No, cfi-icall is only scheme that's relevant for the kernel. The other
+schemes implemented in Clang are mostly useful for C++.
 
 Sami
