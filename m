@@ -2,158 +2,76 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A08BBC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue,  3 May 2022 14:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9175C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  3 May 2022 14:54:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237305AbiECOsf (ORCPT
+        id S237485AbiECO6Y convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 3 May 2022 10:48:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42346 "EHLO
+        Tue, 3 May 2022 10:58:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237289AbiECOsc (ORCPT
+        with ESMTP id S237479AbiECO6W (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 3 May 2022 10:48:32 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C45139176
-        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 07:44:59 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id s14so15141369plk.8
-        for <linux-hardening@vger.kernel.org>; Tue, 03 May 2022 07:44:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e8AVZNz1T1fbKBPaS1jbLfs2nSYwxCJeZrFfZY3AuXg=;
-        b=YgIR+HSs5Fl2nL+1avLDSIxzGwgrqQZg4BiwSjU0cu9k2bxpynzPGC6wvWGoMkvHfv
-         yMI9a0zmrILdE4gbdtT/4db5hjs7b+NxgPwkibcXWrjxuWgC0hV/jH5qF4vcbryjtJi/
-         KvzOXe86/hQ0c/8QofStHRq2f0dDshoXPcr9I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e8AVZNz1T1fbKBPaS1jbLfs2nSYwxCJeZrFfZY3AuXg=;
-        b=VPAaQ2JSyNVLU8m9xEZtUCHUOQ3LTh5psuc2aHvQm4nVYhTn9G8OpH+hfm6zRAckM3
-         qLgNBO9YZtBPBQTC+95dgdT0Zn3ueHt4pgS5qZdSdsdJlMuQD7hDRkAVAk6x2FWP/ELC
-         AYcGv5LkWcuSs0GlKedamw5Aa+GCCmIBVr+4YkOHVz1+NQ2QSEBVpxtAjGr2FmLfHjWm
-         gjGI6HfdyqdhWOQRWjCS9behuTAT2fj+7ZsWOWPgoDLGZwizBIu7oFF6xP6ZGWUsrDPX
-         6k6BRuB11nYbYuWVjr0uuzLpjD+49xyCqY3yCxu2VW0uOsAzoPcwcE79gjZqIYp+i53/
-         tg/g==
-X-Gm-Message-State: AOAM532JUi6eNJ95EwKEGhjH3U7BotAXFvpkj6NICukEpjmcIQSfEst0
-        UWDN6myiRAgZTAFrRk5eZg0F8g==
-X-Google-Smtp-Source: ABdhPJxpqQbtuAURmpaH45+EofYX7rkQQIunIhDE2JG2HBB7V2ZaoSOsrzkTFHzKRa1O/qRfMqbtMA==
-X-Received: by 2002:a17:90a:b106:b0:1d9:7cde:7914 with SMTP id z6-20020a17090ab10600b001d97cde7914mr5052946pjq.56.1651589098978;
-        Tue, 03 May 2022 07:44:58 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k4-20020a170902ba8400b0015e8d4eb230sm6387973pls.122.2022.05.03.07.44.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 May 2022 07:44:58 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Raju Rangoju <rajur@chelsio.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        kernel test robot <lkp@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] net: chelsio: cxgb4: Avoid potential negative array offset
-Date:   Tue,  3 May 2022 07:44:25 -0700
-Message-Id: <20220503144425.2858110-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.32.0
+        Tue, 3 May 2022 10:58:22 -0400
+X-Greylist: delayed 342 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 03 May 2022 07:54:49 PDT
+Received: from mail.megasoftsol.com (mail.megasoftsol.com [43.231.250.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7635A39693
+        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 07:54:49 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.megasoftsol.com (Postfix) with ESMTP id 8ACCC90E9F8
+        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 20:16:36 +0530 (IST)
+Received: from mail.megasoftsol.com ([127.0.0.1])
+        by localhost (mail.megasoftsol.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id YZH0IcInsXOh for <linux-hardening@vger.kernel.org>;
+        Tue,  3 May 2022 20:16:36 +0530 (IST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.megasoftsol.com (Postfix) with ESMTP id 0EE5B90E9F6
+        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 20:16:36 +0530 (IST)
+X-Virus-Scanned: amavisd-new at megasoftsol.com
+Received: from mail.megasoftsol.com ([127.0.0.1])
+        by localhost (mail.megasoftsol.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 4KkO26CPbhDr for <linux-hardening@vger.kernel.org>;
+        Tue,  3 May 2022 20:16:35 +0530 (IST)
+Received: from asda.co.uk (unknown [20.97.211.134])
+        (Authenticated sender: admin)
+        by mail.megasoftsol.com (Postfix) with ESMTPSA id 4207C90E9ED
+        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 20:16:35 +0530 (IST)
+Reply-To: sales@asdaa.uk
+From:   ASDA Stores Limited <Hanes.Thomas23877@asda.co.uk>
+To:     linux-hardening@vger.kernel.org
+Subject: 2nd Quater puchase request
+Date:   03 May 2022 14:49:03 +0000
+Message-ID: <20220503092157.813C37B5D28002EE@asda.co.uk>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4431; h=from:subject; bh=+8uAMoqqS0Bcfw8fZYr6KoQkcNcm36Imb2FI1uAd3hw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBicT/Jv8v/feIVKVuIyt5mmkMRPZzdczQGAeIED/S7 Sue6QWmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYnE/yQAKCRCJcvTf3G3AJnSlD/ 9g7H+DltIHtP9cfNn3f84D/otBGRybV39ENgfcteZPAekvVAxWbzFXVXjV1DCl2HYb6XH94aYgCCvl VjgPLaI2AgI1z6oeSF4FXEZ8Oj+pmwDMBZOwIXpViXgs7UbPQWvC88ax1BUlLCHKdz1cUtZoY/SohH lRdgXNPqyqFjAUyvop6yPb1TyhHTn6DgIzfF92/c/VwB0rgIci9AuoyQ6xSrrse11Q4Q9IVBGgsUSv IcJThpwqDXdsRe0KtlJf6dRV0aB9v9RX6kEvKrx5T4ovBu6XqgSgW5Kjj1XubGyevRDDyU0k/ttLPh Hpzhx+t9n/UC5k+gCFS3q+e1tGbaVF1LOASAs1nhCw7RnSCT/mekDTlJSKwLN+WxfPvQPjCMCF8wh9 Ra3Gb0Uezm2UiXIkAZ4FbQZPP5MR5zARIfUGmT4ChTTw84uORVP9rRBuv1xxBpuNg3HDmfYzu4/UJM ZDJit+SFwwho3EK2zZlweact3kjnuUzcR+v11rY52Ejxl/H/wf0BVWzmJS7nO3tjeIBLn9E86n5uP+ 3iInLzOk4swgV/dqvq/xjSvecKICXVVtvOgnP1pkYAkguEdt46US/lUJhZI/FMIH7uAcCTbH9ARg/A jTjJNdk3gEUCPfhSDLdbzKvYzfYIr95z2fYT1LAc6hfj/RdtVBlXjY9EhL7g==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Using min_t(int, ...) as a potential array index implies to the compiler
-that negative offsets should be allowed. This is not the case, though.
-Replace min_t() with clamp_t(). Fixes the following warning exposed
-under future CONFIG_FORTIFY_SOURCE improvements:
+Dear linux-hardening
 
-In file included from include/linux/string.h:253,
-                 from include/linux/bitmap.h:11,
-                 from include/linux/cpumask.h:12,
-                 from include/linux/smp.h:13,
-                 from include/linux/lockdep.h:14,
-                 from include/linux/rcupdate.h:29,
-                 from include/linux/rculist.h:11,
-                 from include/linux/pid.h:5,
-                 from include/linux/sched.h:14,
-                 from include/linux/delay.h:23,
-                 from drivers/net/ethernet/chelsio/cxgb4/t4_hw.c:35:
-drivers/net/ethernet/chelsio/cxgb4/t4_hw.c: In function 't4_get_raw_vpd_params':
-include/linux/fortify-string.h:46:33: warning: '__builtin_memcpy' pointer overflow between offset 29 and size [2147483648, 4294967295] [-Warray-bounds]
-   46 | #define __underlying_memcpy     __builtin_memcpy
-      |                                 ^
-include/linux/fortify-string.h:388:9: note: in expansion of macro '__underlying_memcpy'
-  388 |         __underlying_##op(p, q, __fortify_size);                        \
-      |         ^~~~~~~~~~~~~
-include/linux/fortify-string.h:433:26: note: in expansion of macro '__fortify_memcpy_chk'
-  433 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
-      |                          ^~~~~~~~~~~~~~~~~~~~
-drivers/net/ethernet/chelsio/cxgb4/t4_hw.c:2796:9: note: in expansion of macro 'memcpy'
- 2796 |         memcpy(p->id, vpd + id, min_t(int, id_len, ID_LEN));
-      |         ^~~~~~
-include/linux/fortify-string.h:46:33: warning: '__builtin_memcpy' pointer overflow between offset 0 and size [2147483648, 4294967295] [-Warray-bounds]
-   46 | #define __underlying_memcpy     __builtin_memcpy
-      |                                 ^
-include/linux/fortify-string.h:388:9: note: in expansion of macro '__underlying_memcpy'
-  388 |         __underlying_##op(p, q, __fortify_size);                        \
-      |         ^~~~~~~~~~~~~
-include/linux/fortify-string.h:433:26: note: in expansion of macro '__fortify_memcpy_chk'
-  433 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
-      |                          ^~~~~~~~~~~~~~~~~~~~
-drivers/net/ethernet/chelsio/cxgb4/t4_hw.c:2798:9: note: in expansion of macro 'memcpy'
- 2798 |         memcpy(p->sn, vpd + sn, min_t(int, sn_len, SERNUM_LEN));
-      |         ^~~~~~
-
-Additionally remove needless cast from u8[] to char * in last strim()
-call.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/lkml/202205031926.FVP7epJM-lkp@intel.com
-Fixes: fc9279298e3a ("cxgb4: Search VPD with pci_vpd_find_ro_info_keyword()")
-Fixes: 24c521f81c30 ("cxgb4: Use pci_vpd_find_id_string() to find VPD ID string")
-Cc: Raju Rangoju <rajur@chelsio.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/ethernet/chelsio/cxgb4/t4_hw.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-index e7b4e3ed056c..f119ec7323e5 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-@@ -2793,14 +2793,14 @@ int t4_get_raw_vpd_params(struct adapter *adapter, struct vpd_params *p)
- 		goto out;
- 	na = ret;
- 
--	memcpy(p->id, vpd + id, min_t(int, id_len, ID_LEN));
-+	memcpy(p->id, vpd + id, clamp_t(int, id_len, 0, ID_LEN));
- 	strim(p->id);
--	memcpy(p->sn, vpd + sn, min_t(int, sn_len, SERNUM_LEN));
-+	memcpy(p->sn, vpd + sn, clamp_t(int, sn_len, 0, SERNUM_LEN));
- 	strim(p->sn);
--	memcpy(p->pn, vpd + pn, min_t(int, pn_len, PN_LEN));
-+	memcpy(p->pn, vpd + pn, clamp_t(int, pn_len, 0, PN_LEN));
- 	strim(p->pn);
--	memcpy(p->na, vpd + na, min_t(int, na_len, MACADDR_LEN));
--	strim((char *)p->na);
-+	memcpy(p->na, vpd + na, clamp_t(int, na_len, 0, MACADDR_LEN));
-+	strim(p->na);
- 
- out:
- 	vfree(vpd);
--- 
-2.32.0
-
+We are interested in having some of your hot selling product in 
+our stores and outlets spread all over United Kingdom, Northern 
+Island and Africa. ASDA Stores Limited is one of the highest-
+ranking Wholesale & Retail outlets in the United Kingdom. 
+  
+We shall furnish our detailed company profile in our next 
+correspondent. However, it would be appreciated if you can send 
+us your catalog through email to learn more about your company's 
+products and wholesale quote. It is hopeful that we can start a 
+viable long-lasting business relationship (partnership) with you.  
+  
+  
+Your prompt response would be delightfully appreciated. 
+  
+Best Wishes 
+  
+  
+Hanes S. Thomas 
+Procurement Office. 
+ASDA Stores Limited 
+Tel:  + 44 - 7451271650 
+WhatsApp: + 44 – 7441440360 
+Website: www.asda.co.uk
