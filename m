@@ -2,76 +2,120 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9175C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue,  3 May 2022 14:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA526C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue,  3 May 2022 20:55:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237485AbiECO6Y convert rfc822-to-8bit (ORCPT
+        id S237685AbiECU6n (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 3 May 2022 10:58:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51746 "EHLO
+        Tue, 3 May 2022 16:58:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237479AbiECO6W (ORCPT
+        with ESMTP id S230520AbiECU6m (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 3 May 2022 10:58:22 -0400
-X-Greylist: delayed 342 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 03 May 2022 07:54:49 PDT
-Received: from mail.megasoftsol.com (mail.megasoftsol.com [43.231.250.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7635A39693
-        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 07:54:49 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.megasoftsol.com (Postfix) with ESMTP id 8ACCC90E9F8
-        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 20:16:36 +0530 (IST)
-Received: from mail.megasoftsol.com ([127.0.0.1])
-        by localhost (mail.megasoftsol.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id YZH0IcInsXOh for <linux-hardening@vger.kernel.org>;
-        Tue,  3 May 2022 20:16:36 +0530 (IST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.megasoftsol.com (Postfix) with ESMTP id 0EE5B90E9F6
-        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 20:16:36 +0530 (IST)
-X-Virus-Scanned: amavisd-new at megasoftsol.com
-Received: from mail.megasoftsol.com ([127.0.0.1])
-        by localhost (mail.megasoftsol.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 4KkO26CPbhDr for <linux-hardening@vger.kernel.org>;
-        Tue,  3 May 2022 20:16:35 +0530 (IST)
-Received: from asda.co.uk (unknown [20.97.211.134])
-        (Authenticated sender: admin)
-        by mail.megasoftsol.com (Postfix) with ESMTPSA id 4207C90E9ED
-        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 20:16:35 +0530 (IST)
-Reply-To: sales@asdaa.uk
-From:   ASDA Stores Limited <Hanes.Thomas23877@asda.co.uk>
-To:     linux-hardening@vger.kernel.org
-Subject: 2nd Quater puchase request
-Date:   03 May 2022 14:49:03 +0000
-Message-ID: <20220503092157.813C37B5D28002EE@asda.co.uk>
+        Tue, 3 May 2022 16:58:42 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBC6B33E12
+        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 13:55:08 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id cq17-20020a17090af99100b001dc0386cd8fso3005005pjb.5
+        for <linux-hardening@vger.kernel.org>; Tue, 03 May 2022 13:55:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jw8bm6qCSYy6P6VWUeZnWl92t/l9H4EI5gAHlpwVuZA=;
+        b=kt6TKIb3spJG6f46eBQBOofeRVyb/ToPb9O6thHh0PamzgM1zvWRbVz5kiNssVNFBZ
+         Ve6UEn/QrqYtA3goKXOZjwlYELzP7vNMxkNOI3gmDQDOLN7ZzrhXgX5O2r/TFkh+7xxP
+         G36udorrUQIVhMwU9srG5RrlZ1tUaiM6B/Xd0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jw8bm6qCSYy6P6VWUeZnWl92t/l9H4EI5gAHlpwVuZA=;
+        b=MXZccpKd6Y6U+1RklsZ0QokC7ZpHo3oXkCTh7a/IFLMyWnNPcbkQsTiCAz2r0Jf1cV
+         3gJmYtwlBdBsKliRKqcR0oWwy678YhA6joXw/tVYdVw+gH+2JDao823fAINX3ET1do2b
+         AdWcqOqAd8u/gN0D1WWufEtwmqFXbP/GqYmOwmpVu5aUj1HJWhRmPh0VYTs5nt3WiJsH
+         +X9AaVaizTQ8fN1hOppI9W25bnJqEhbtRH8DGDMORlORt/bhcw7l5gDaoIL4S8X9pOAd
+         kw2H31kD8yK9qV4AooMh4A0GBER/oJRSEc4Zyn1fVBHFfPlrOoC4Yy+0z6hnPyqrnI92
+         VYog==
+X-Gm-Message-State: AOAM532jVfSrkMznT3n5Ku6OpUPjI2GoaKu3ENlnbZyR76HLWqIONVXc
+        sNtavyvwd8vWdQQIYgOzbDdXjw==
+X-Google-Smtp-Source: ABdhPJzRSol0jBLTzDF96PQvrfj8KiGYUArjUPSdiPRTUGAqUoEG4/WpJCH57Jb+kl4mAgl4y1qGLA==
+X-Received: by 2002:a17:902:bf06:b0:14d:8c72:96c6 with SMTP id bi6-20020a170902bf0600b0014d8c7296c6mr18218018plb.156.1651611308496;
+        Tue, 03 May 2022 13:55:08 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z9-20020a1709027e8900b0015e8d4eb2d1sm6806192pla.283.2022.05.03.13.55.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 May 2022 13:55:08 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Bill Wendling <morbo@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: [PATCH 0/6] randstruct: Enable Clang support
+Date:   Tue,  3 May 2022 13:54:57 -0700
+Message-Id: <20220503205503.3054173-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2263; h=from:subject; bh=X6EU4DNXnTBgSHB25uvB/YQy33D9lwDWmQXpLxpRzXs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBicZalCEa9KZwdrR1ffYy76FhePPL8ViJcDNFJlqIM 9nd88byJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYnGWpQAKCRCJcvTf3G3AJrpDD/ 4+NYBcLmsDxx+YqOPNtZQwIIUoAslvLe7/qL+HjN1AqimNDYdEtWnARl/cEtEtcuunXDDHpAlbDcfC y3KI7dGI78viVuwe1glQ8FbUqDElLxBdQ/OUt2WgQQ9QhGDfKa4vOki1GcsKv5j2rbZ7k5a5vTBdx/ wkRgyLrxCGZWEC3UygQhTrnab2RmOZaBMw57mxjmMqRb/AvYGqgqMnWahl2yubL3tqQMiMxjluDeQI 91ZKeTYtj75MsB5GezmxZAcPHow+o9sP56AjpL7y+uEk1zYZmk3mw0DS4TYPJe52wHPLlsTDwLyToF MXELE+YyqVQs6MoZN68VJmh6tahuhP4/SzgkfdRFrjIQSBFXon7Am04S2kRrXSHQFdGfnJyTnydrRp jW2IrDXX3BINAqjxObarMqzgDaaoSQAxhApaann26UVr8SU3bTzvzcYyfn/mnKG9iFep54gLQDgWfP gTwewKETf/GlCllJIEucaQmzcbbcjbsj2YI3IBbnf+TX46CuToYZRQi91fs6BVPb58VZLIPyOPwf/n 4LEDEtlJdnwDHXganksJt8QU8vqvk2f1Ord4lwn6ZLRsE/92OK5Tn7UdvY9VhEF5yqk5j7edplw6O+ q3aTuiKQm1VwEiIqSS7kQcAqYUq2CiuerfufKKYbN8YFZKfIGAyGwIRd5OhA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Dear linux-hardening
+Hi,
 
-We are interested in having some of your hot selling product in 
-our stores and outlets spread all over United Kingdom, Northern 
-Island and Africa. ASDA Stores Limited is one of the highest-
-ranking Wholesale & Retail outlets in the United Kingdom. 
-  
-We shall furnish our detailed company profile in our next 
-correspondent. However, it would be appreciated if you can send 
-us your catalog through email to learn more about your company's 
-products and wholesale quote. It is hopeful that we can start a 
-viable long-lasting business relationship (partnership) with you.  
-  
-  
-Your prompt response would be delightfully appreciated. 
-  
-Best Wishes 
-  
-  
-Hanes S. Thomas 
-Procurement Office. 
-ASDA Stores Limited 
-Tel:  + 44 - 7451271650 
-WhatsApp: + 44 – 7441440360 
-Website: www.asda.co.uk
+This enables Clang's recently added structure layout randomization
+support, similar to the existing kernel-specific GCC plugin. The general
+Makefile and Kconfig changes are mainly mechanical (moving options
+around), but the random seed generation changes are a bit fiddly because
+it needs to be created very early. I think I did this reasonably, but
+I'd love some more eyes on it.
+
+Thanks!
+
+-Kees
+
+Kees Cook (6):
+  netfs: Eliminate Clang randstruct warning
+  sancov: Split plugin build from plugin CFLAGS
+  randstruct: Reorganize Kconfigs and attribute macros
+  randstruct: Split randstruct Makefile and CFLAGS
+  randstruct: Move seed generation into scripts/basic/
+  randstruct: Enable Clang support
+
+ Documentation/dontdiff                       |  1 +
+ Documentation/kbuild/reproducible-builds.rst |  8 +--
+ Makefile                                     |  1 +
+ arch/arm/vdso/Makefile                       |  2 +-
+ arch/arm64/kernel/vdso/Makefile              |  3 +-
+ arch/riscv/Kconfig                           |  2 +-
+ arch/sparc/vdso/Makefile                     |  3 +-
+ arch/x86/entry/vdso/Makefile                 |  3 +-
+ arch/x86/mm/pti.c                            |  2 +-
+ include/linux/compiler-gcc.h                 |  8 ---
+ include/linux/compiler_types.h               | 14 ++--
+ include/linux/netfs.h                        |  4 +-
+ include/linux/vermagic.h                     | 10 +--
+ kernel/panic.c                               |  2 +-
+ scripts/Makefile.gcc-plugins                 | 22 +++---
+ scripts/Makefile.randstruct                  | 17 +++++
+ scripts/basic/.gitignore                     |  1 +
+ scripts/basic/Makefile                       | 11 +++
+ scripts/gcc-plugins/Kconfig                  | 38 ----------
+ scripts/gcc-plugins/Makefile                 | 15 ++--
+ scripts/gcc-plugins/gen-random-seed.sh       |  9 ---
+ scripts/gen-randstruct-seed.sh               |  7 ++
+ security/Kconfig.hardening                   | 73 ++++++++++++++++++++
+ 23 files changed, 159 insertions(+), 97 deletions(-)
+ create mode 100644 scripts/Makefile.randstruct
+ delete mode 100755 scripts/gcc-plugins/gen-random-seed.sh
+ create mode 100755 scripts/gen-randstruct-seed.sh
+
+-- 
+2.32.0
+
