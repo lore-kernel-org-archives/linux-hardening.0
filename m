@@ -2,176 +2,123 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1BDC433F5
-	for <linux-hardening@archiver.kernel.org>; Tue,  3 May 2022 22:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386A8C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  3 May 2022 22:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230502AbiECWGa (ORCPT
+        id S238125AbiECWjW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 3 May 2022 18:06:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48696 "EHLO
+        Tue, 3 May 2022 18:39:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238803AbiECWG3 (ORCPT
+        with ESMTP id S237217AbiECWjV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 3 May 2022 18:06:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A1BE7424BE
-        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 15:02:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1651615374;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=iQi/ZFhqTl+9HgfZab97oEqJSaMHvbvR0mYRqBC6N6U=;
-        b=enUGKIF+ewjkVPeGlH+Ij6gS2FuJh2z+kWOCcw/LRfePl05wl4fPYKj5yqmEb0kOh+nOFE
-        uuy64JM0P2x0JkzIAfHPXveyoD+GPcNrt5CqGB9UqxbXyZKU5GnzuWtwruM9tmc7E1YQq+
-        N7roKamazc6RtY7aECWrVaqL2HtBOJc=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-507-3c1BwfP1PGGjXrAbi_lZcQ-1; Tue, 03 May 2022 18:02:48 -0400
-X-MC-Unique: 3c1BwfP1PGGjXrAbi_lZcQ-1
-Received: by mail-qk1-f200.google.com with SMTP id 27-20020a05620a041b00b0069fd7a60a43so5451908qkp.3
-        for <linux-hardening@vger.kernel.org>; Tue, 03 May 2022 15:02:48 -0700 (PDT)
+        Tue, 3 May 2022 18:39:21 -0400
+Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A755941F93
+        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 15:35:46 -0700 (PDT)
+Received: by mail-vs1-xe2e.google.com with SMTP id a127so17869291vsa.3
+        for <linux-hardening@vger.kernel.org>; Tue, 03 May 2022 15:35:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8uN3rj4E61pEiXuH0S044PiehAa3W3BMN3Lqc1kk7Uw=;
+        b=Ue8FeaYYp63Oq+H4NMZb+pBRhFnk/iofdWy5gXeIg5QTwAVaQhcPh7NJMycsbGfWZE
+         Fc+5btEiGJmM5fEXhaxOFjxGU7fzkiSoqnkUqFrl1ZRRzs4ig52ohWMhFGSgHhm+VyaG
+         TWPDOh3RfjJbT1pjROk+5GJXdEClUvyooIraMli+y9nHLH03LpgjlCrH+hdF8m40WCQE
+         E5GOMstVRJssp5a6VJFS+WxZDfGT+cOVRpciMnyrojahl/hfM9ETPdwkTCKcre9KwcNY
+         l73O7V2zpphu3uEFz9tC/hRsuke1nKrMRDzlaIhhkSYfm4lNq2qk0/FjvFICEl6nNSsW
+         YGgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iQi/ZFhqTl+9HgfZab97oEqJSaMHvbvR0mYRqBC6N6U=;
-        b=isGkxvGaDhfu60tSGmTWxVTvRNMU3O7059wuOk4KeMji0mVVEW4k5FPJewUkCAFilB
-         2gPc4MIaNOn9jCpkmYxOXzAVPLrOCMMhoY8oonYdedMx5ILasmHLQlq7BA4X88Uo7Vyt
-         iES6YHfATj+AUVq+XtoP8kVjEDHXshv3fo3FhR3IA98lp6dS33Bo6OxP7VrD8SqZBWVr
-         1HRBXjc95alU7Yivyye0KSlEOy/D1ex4prPWo7Bnye00siqYKv/9MPSVYxRJxOdfztSf
-         fjZuxdgmnraMMw56owf/SD+UpHMNfW7/KwY0Q14+ecs9oyHZOtkhVrIIfPtevU6vQknG
-         yNdg==
-X-Gm-Message-State: AOAM533gpOt3zXJpXA4yEb80GcsSk4KEqrmPSX7dwsOLVsacj5TjPTGw
-        mlDYJdC9ebrMRBqas8uXMdvVL1D34tPccY6deG8FT2VLiVGiAyeThZHzYug7c2FxZAXDv4ufsEg
-        Vf6EVN7Z6f3/XwJfIJz/65D/HmdL/
-X-Received: by 2002:a05:622a:14c6:b0:2e2:3f:f938 with SMTP id u6-20020a05622a14c600b002e2003ff938mr17023689qtx.358.1651615368203;
-        Tue, 03 May 2022 15:02:48 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwNF2sJ5o4DN+JrRmRygt7UKrDDbMq9i8YT91xl2y+++ROlpmPF7tbsKPQmSRRLgCZKXv2wOQ==
-X-Received: by 2002:a05:622a:14c6:b0:2e2:3f:f938 with SMTP id u6-20020a05622a14c600b002e2003ff938mr17023656qtx.358.1651615367925;
-        Tue, 03 May 2022 15:02:47 -0700 (PDT)
-Received: from treble ([2600:1700:6e32:6c00::a])
-        by smtp.gmail.com with ESMTPSA id 141-20020a370693000000b0069ff862c84esm2671595qkg.3.2022.05.03.15.02.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 May 2022 15:02:47 -0700 (PDT)
-Date:   Tue, 3 May 2022 15:02:44 -0700
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Joao Moreira <joao@overdrivepizza.com>
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        peterz@infradead.org, andrew.cooper3@citrix.com,
-        keescook@chromium.org, samitolvanen@google.com,
-        mark.rutland@arm.com, hjl.tools@gmail.com,
-        alyssa.milburn@linux.intel.com, ndesaulniers@google.com,
-        gabriel.gomes@linux.intel.com, rick.p.edgecombe@intel.com
-Subject: Re: [RFC PATCH 01/11] x86: kernel FineIBT
-Message-ID: <20220503220244.vyz5flk3gg3y6rbw@treble>
-References: <20220420004241.2093-1-joao@overdrivepizza.com>
- <20220420004241.2093-2-joao@overdrivepizza.com>
- <20220429013704.4n4lmadpstdioe7a@treble>
- <d82459b887bcaf9181ad836051e2d16b@overdrivepizza.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8uN3rj4E61pEiXuH0S044PiehAa3W3BMN3Lqc1kk7Uw=;
+        b=e4mrvzqPdw9FXD38dbpZjd9NtaXHNLZyuZMigNYxBVxdsTLIXerjsjJ2gSfoUtpPxH
+         EByQgIAICm4GvtcPtobmEnB9iC9DjSuB+VYe8U4X3V8XqlFeaTyO12AhkMK61cNFBs4i
+         zZAeSfDu6xNBoqJCb1EHDZGZH7Y+2A8r/5bm2pP0Rh3Oj518KdPNLIJXKM4wDovpafa8
+         UIteiGcXTrDDTgN3/TapatrbIHHd4Uy/TI6X2nk96uodJIRSYOfBr6CfCPYvuOBXvGbh
+         5uwm5xAw0cxeBmupUHQ0Zk3jFV1WJ7ZCPpEiSWgtDtkwhSWgfyhT4zcsG8CIcIShPD69
+         Iadw==
+X-Gm-Message-State: AOAM530ESK12vIpa7OAUIccOMsXejW4KaT5/v+aKOD8cl5XWB8JwVe5K
+        mVEzphykz0NIOIZZCuzIhWtKV0h6rXqc4JGTX7wK7g==
+X-Google-Smtp-Source: ABdhPJyL+ddQCd6SprqNHsm9X7kOXr4Vs6rtLnwYWhuO4UVCOvXbzKSI2dWSxbo9OUaHxwRSd1gZJrBcmkLhnuY7a5Y=
+X-Received: by 2002:a67:c408:0:b0:32d:1319:2e38 with SMTP id
+ c8-20020a67c408000000b0032d13192e38mr6059296vsk.72.1651617345595; Tue, 03 May
+ 2022 15:35:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d82459b887bcaf9181ad836051e2d16b@overdrivepizza.com>
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jpoimboe@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20220429203644.2868448-1-samitolvanen@google.com>
+ <202204291545.47C6A97EA2@keescook> <Ymz7DWkRJy3PMaHm@hirez.programming.kicks-ass.net>
+ <CABCJKuckt75qA1op-LpkJnQsJC36m9fstbY3uD=7pET2VyyZSg@mail.gmail.com> <YnA3Le2uJRaFF4TC@hirez.programming.kicks-ass.net>
+In-Reply-To: <YnA3Le2uJRaFF4TC@hirez.programming.kicks-ass.net>
+From:   Peter Collingbourne <pcc@google.com>
+Date:   Tue, 3 May 2022 15:35:34 -0700
+Message-ID: <CAMn1gO614sMzKzP6qTCcXB0QCeEu-G7CHn_h=6ikCLkFo_Z2Dg@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/21] KCFI support
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Joao Moreira <joao@overdrivepizza.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-hardening@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 02, 2022 at 10:17:42AM -0700, Joao Moreira wrote:
-> > > +	asm("\t movq 0x90(%%rsp),%0" : "=r"(ret));
-> > > +	asm("\t movq 0x98(%%rsp),%0" : "=r"(caller));
-> > 
-> > This is making some questionable assumptions about the stack layout.
-> > 
-> > I assume this function is still in the prototype stage ;-)
-> 
-> Yeah, this is just a messy instrumentation to get reports about mismatching
-> prototypes (as the ones reported further down the series).
-> 
-> The issue with having the call is that it bloats the binary, so the ud2 is
-> 3-bytes-per-function better. Yet, we may consider a FINEIBT_DEBUG config,
-> which can then enable a handler. This would be useful together with a fuzzer
-> or a stress tool to cover possible control-flow paths within the kernel and
-> map mismatching prototypes more properly I guess.
+On Mon, May 2, 2022 at 1:02 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Mon, May 02, 2022 at 08:22:57AM -0700, Sami Tolvanen wrote:
+>
+> > > Anyway, I think I hate that __builtin, I'd *much* rather see a variable
+> > > attribute or qualifier for this, such that one can mark a function
+> > > pointer as not doing CFI.
+> > >
+> > > I simply doesn't make sense to have a builtin that operates on an
+> > > expression. The whole thing is about indirect calls, IOW function
+> > > pointers.
+> >
+> > I also thought an attribute would be more convenient, but the compiler
+> > folks prefer a built-in:
+> >
+> > https://reviews.llvm.org/D122673
+>
+> That seems to mostly worry about C++ things (overload sets, template
+> specialization, name mangling) we kernel folks don't seem to much care
+> about.
+>
+> I'll stick with saying type system makes more sense to me though.
 
-It should be possible to have a non-fatal #UD2 handler.
+I'd say it's not only the C++ issues but more the "action at a
+distance" that's implied by having this be part of the type system.
+With this being in the function type it's hard to tell whether any
+particular call will have CFI disabled, without needing to go and look
+at how the function pointer is defined. On the other hand, if we
+explicitly mark up the calls with CFI disabled, the code becomes
+easier to audit (think Rust "unsafe" blocks).
 
-See for example how WARN() is implemented with __WARN_FLAGS in
-arch/x86/include/asm/bug.h .
+Does it seem any better to you to have this be marked up via the
+function expression, rather than the call? The idea is that this would
+always compile to a check-free function call, no matter what "func"
+is:
 
-So hopefully we can just get rid of the need for the "call handler"
-thing altogether.
+__builtin_kcfi_call_unchecked(func)(args)
 
-> > Not sure what would happen for "ibt=off"?  Maybe apply_ibt_endbr() could
-> > NOP out all the FineIBT stuff.
-> 
-> Either that, or...
-> 
-> I'm thinking about a way to have FineIBT interchangeable with KCFI.
-> Currently KCFI adds a 4 byte hash + 2 byte nops before function entry, to
-> allow for proper prototype checking. After that, there should be an ENDBR of
-> 4 bytes. This gives us 10 bytes in total. Then, my yet to be properly
-> thought idea would be patch these 10 bytes with:
-> 
-> endbr
-> call fineibt_handler_<$HASH>
-> nop
-> 
-> and then, on the caller side, patch the "cmp <$HASH>, -0x6(%r11); je; ud2;
-> call" sequence with a "sub 0x6, r11; mov $HASH, %r10; call %r11, add 0x6
-> %r11". This would then allow the kernel to verify if the CPU is IBT capable
-> on boot time and only then setting the proper scheme.
-> 
-> The downsides of having something like this would be that this sub r11/add
-> r11 sequence is kinda meh. We can avoid that by having two padding nops
-> after the original ENDBR, which will be skipped when the function is reached
-> directly by the linker optimization I'm working on, and that we can convert
-> into a JMP -offset that makes control flow reach the padding area before the
-> prologue and from where we can call the fineibt_handler function. The
-> resulting instrumentation would be something like:
-> 
-> 1:
-> call fineibt_handler_<$HASH>
-> jmp 2f
-> <foo>
-> endbr
-> jmp 1b
-> 2:
-> 
-> Also, it would prevent a paranoid user to have both schemes simultaneously
-> (there are reasons why people could want that).
-> 
-> Any thoughts?
+We already have this, to some degree, with KCFI as implemented: CFI
+checks are disabled if the function expression refers to a declared
+function. The builtin would allow overriding the decision to also
+disable CFI checks for function expressions that use the builtin. It
+also wouldn't preclude a type based system later on (the builtin would
+become effectively a cast to the "unchecked" type).
 
-I'm not really qualified to comment on this too directly since I haven't
-looked very much at the variations on FineIBT/CFI/KCFI, and what the
-protections and drawbacks are for each approach, and when it might even
-make sense to combine them for a "paranoid user".
-
-Since we have multiple similar and possibly competing technologies being
-discussed, one thing I do want to warn against is that we as kernel
-developers tend to err on the side of giving people too many choices and
-combinations which *never* get used.
-
-All those unused options can confuse the user and significantly add to
-complexity and maintenance overhead for us.  Especially for invasive
-features like these.
-
-(Just to be clear, I'm not saying that's happening here, but it's
-something we need to be careful about.)
-
-Here, documentation is going to be crucial, for both reviewers and
-users.  Something that describes when/why I should use X or Y or X+Y.
-
-If we truly want to add more options/combos for different use cases then
-we'll also need clear and concise documentation about which
-options/combos would be used under what circumstances.
-
--- 
-Josh
-
+Peter
