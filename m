@@ -2,124 +2,138 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9497C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue,  3 May 2022 20:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65810C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue,  3 May 2022 20:55:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242109AbiECU6q (ORCPT
+        id S242387AbiECU6v (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 3 May 2022 16:58:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32988 "EHLO
+        Tue, 3 May 2022 16:58:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242211AbiECU6o (ORCPT
+        with ESMTP id S242308AbiECU6r (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 3 May 2022 16:58:44 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9B893E5F3
-        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 13:55:10 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id i62so14924980pgd.6
-        for <linux-hardening@vger.kernel.org>; Tue, 03 May 2022 13:55:10 -0700 (PDT)
+        Tue, 3 May 2022 16:58:47 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30B7035DE2
+        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 13:55:11 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id z5-20020a17090a468500b001d2bc2743c4so3042006pjf.0
+        for <linux-hardening@vger.kernel.org>; Tue, 03 May 2022 13:55:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=D8001mr4LabgPK6vdQOkTgjpB8frOhBImqWC9OKD9m8=;
-        b=a6XXUyblvoUHJJ2m8UB7SU0n251adAuXNR9X6v+Za2Hlmw1sNp0o/S7+TNefs8MDJU
-         1K/zSR1PUN+uRHggUvZwKd7XqE9esYkWif0Ca3ZgdL7z/u8LPOLEliBLqz4gDpXb8NxR
-         lxoWF5b0hqYzYmX7E6RCC1SdQfGlIXXqkFpmw=
+        bh=G7gjgj4/4LSK9c/JAyPIXqGgMKHVguykDn2bHyT8voA=;
+        b=lPFLR0C5AR5qKEBPAIWTWtzBk+9lgyDMXniJNA7VZybl5Svtynw7Q/xjEYdb832RxY
+         jR+mmBUtRcDesMD4DEG7CNWGz0KtJaT50b3NMMS76x0LFx22QrYMECu2xX38hf/AwNb7
+         MMJL5gT3MvziRSysXThA4xSGWJAbkPXC9dKQU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=D8001mr4LabgPK6vdQOkTgjpB8frOhBImqWC9OKD9m8=;
-        b=W1Ee8ikLJx8WI+E1U+yqz+4/7BwCvoNMc1bPXicd/XfRGyk3twxJbOgXZ3FGWSBzD7
-         YSnwjV9ddEorP14lzg3PdMjQ/ys9T/WrCLROZE6Gy7fGEVMVVe1quGjYrqYv1Fhejoav
-         1dwX/sLeLuQcAZjFyx+f4zUomYjq5JQoaiOIp5Fwz+vo74ziLalyQsQEf8CrHJax1XyT
-         wycPkfSpKMPs1s0Eha/gIaSwMlfdPT5fc+0+hlqen/1zE4LhKMvvA6zdz+H9tUlKK1wc
-         UKZfDY3uka8yd0XanbV2BD1fWweOJKEE+BGaZG84TXdSkGqRJCI2yRGSpkr8y29uLEa3
-         /y6g==
-X-Gm-Message-State: AOAM532v83h6PF39pKAWwALrVAe2uwSfwtg8o7s479LvThaqJl79Ozd0
-        QM8Zk2w5adO7g84Ks7Tc66IemA==
-X-Google-Smtp-Source: ABdhPJy0r6jfI214JohcyFyrwVL84vsHM25sexru4n4aT6ATYpL01QZWrLNASKhCm8I23UcXpHmx/w==
-X-Received: by 2002:a63:191e:0:b0:3c1:6920:c4a4 with SMTP id z30-20020a63191e000000b003c16920c4a4mr15613857pgl.365.1651611310150;
-        Tue, 03 May 2022 13:55:10 -0700 (PDT)
+        bh=G7gjgj4/4LSK9c/JAyPIXqGgMKHVguykDn2bHyT8voA=;
+        b=LHzrCSdZ8w13itWoF9j0fNXNxwNdC22w8Bgy4UaFVqU+q7UgWic9W1gav13JXYIXIf
+         90f78n3MD/VqrW2n8mSYhT09BJAsW/QXPK+HP3Kw16JkL1+zz01wE9Kusq8kCm5CwGQX
+         U43u9LtHHLA2rBXpnmpmvPKn3HJ8tUxqVwlCinE1Jajyl+h4H4Yi9DLR4bJvNJ2Hbb0m
+         y9Z0VJHm8ZaxlTkriS9uuszdoBNGZwAZG6aEq69SDVLrkdJUq5iIarUVaZmX6xBzJqDP
+         6aLye+RPlGNu2fQfBnW6ZGRtrvZYwo4DxSXJAk/e3tWllgGERekub9/4AVDx2K+zEvm5
+         TxqQ==
+X-Gm-Message-State: AOAM532KyludDhlI+QGEsUQkiXPvU8ZGWeHN69DO5Yajk6zUwPOC8mh3
+        fUjjIy2k2TvxaQHY5aTzjgFVww==
+X-Google-Smtp-Source: ABdhPJzlRQDlCCwN12p3T2iXLOmaoOKLrPyOTgiWQ5BWcgjSqfBDOLgzhdNXlPBULmM7f+FaLlbpCA==
+X-Received: by 2002:a17:902:bb90:b0:158:a031:2ff2 with SMTP id m16-20020a170902bb9000b00158a0312ff2mr18429818pls.117.1651611311296;
+        Tue, 03 May 2022 13:55:11 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w13-20020aa7858d000000b0050dc762814bsm6716806pfn.37.2022.05.03.13.55.08
+        by smtp.gmail.com with ESMTPSA id s10-20020a63450a000000b003c14af50607sm13111823pga.31.2022.05.03.13.55.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 May 2022 13:55:08 -0700 (PDT)
+        Tue, 03 May 2022 13:55:10 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Bill Wendling <morbo@google.com>
 Cc:     Kees Cook <keescook@chromium.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kbuild@vger.kernel.org,
         Nick Desaulniers <ndesaulniers@google.com>,
         David Howells <dhowells@redhat.com>,
         Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: [PATCH 2/6] sancov: Split plugin build from plugin CFLAGS
-Date:   Tue,  3 May 2022 13:54:59 -0700
-Message-Id: <20220503205503.3054173-3-keescook@chromium.org>
+        linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: [PATCH 6/6] randstruct: Enable Clang support
+Date:   Tue,  3 May 2022 13:55:03 -0700
+Message-Id: <20220503205503.3054173-7-keescook@chromium.org>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220503205503.3054173-1-keescook@chromium.org>
 References: <20220503205503.3054173-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2293; h=from:subject; bh=Z+W1/VzUmR9ZJufPDIl2IGsNAVokPGco3yw6gcXBPsw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBicZalfdpPHCtbFo/0LtbdJECo+DuY6+Cvl0iSgGt8 qmJAIyWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYnGWpQAKCRCJcvTf3G3AJpGVD/ 45paKBOSJMGdYykZni1+b9PFueY4o7xyFCrnukAmYC807VctcCbZeTj9kOFVbB6FUqRl299CyE5lOS 0Vv2x1ORa5MDkdnewBrkAhinq3hf6VYQjQa1WhwghwMcR7O8dkjldlYFQFfWNd+vkHqWGplWx9AtoM 9LqQiDjUBDblzBywzgTI1U9wsStkT5D8OfCxeRCIBpDmrFCimfXKY7nBxWd6NYhX3Gp+zGqP72w18c 9KchJnxEW7GgG5kUUyEgTtJkzHjmvqvMs9TjDk3NIjdHXeqbbgUzqzRpTf57BvDoGnR/NIzSCeQRr6 pBQwd/e0X/JfhMFlCms1vzSrsNpH2mti4MoexFcY8LbRMERFPNbDjGJe7cX+bVbl96QIxPonay3PIF gIcRUVZV5fHy2ufAT1QpQfEaBbAiiW6i4IqgymV9h7oTO+xntdnPrUMdnj8lqYNJJzQHVyncHaNwuv BoB4DQe3wA83QmlAAKISXfQHkxRrfvE2Krf15KnElZEJ96K5TtMPr3wzOUYHFvi7xXmkIyJEsGTcra NWUP2AAiRfv5tLmmjyF8VI8Plz9H0wMy4puNT+CrlVsO0+1sttwAcxXdNjfT16kEfS/1qUStk/AHCE 1JxYtah2EwLWng98hEZwZ9f0aqO+Bc7VIK05wgHnm4eYG7ztr4gF3u8poq9g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2492; h=from:subject; bh=70QhakHoqRBTF2BhS4yZEwFNAa1mWnEa/ie6xwzJGBY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBicZamZGgPTMDtkz2lAP6v2msQMzZKulCSX+KAGB5j E1bmlEqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYnGWpgAKCRCJcvTf3G3AJlU5D/ 9Xyd51aYNqszUUL7SvvNyC19VjSU0o+jEEkpPilQKRN1uRHK9nWVWsrPw3aFhoMz4iTS5XBzAGpYfE DZEIcZQKS7f0MQGz6vgp5cG+EgrB5CcQ4ePyGGRn7IdfAg53lo+OIxP2oilAbt8NP58LUyzfd4EjYV kt5olI/+81/6ht6froYHo+0Qv+4W3GPz9sGufyfAEbFQyXjsEcy9Ro2qAdyOxtoCS8aDDznVpsbfQL 9z41A3ZD5ml0/L04Rk485Bom22yCPUP/1gkISFHvDq23I4slmV8kNHcqAFOPhTq4bc4MJ8+3dUZqmD VvFFb5wmyDS0grBSDnO9ihBplIWn5/Aq5sH2CcmQKp7DKALkQPjHNdED2ABfy/jQdoGogxCHAyuP9F zW7FjuKazB8lTmSMZKxUakxyGS0ANjJR32zyrofE+RdyI7hElnpEzP7vnVTb3vnK8zo+Vk6KYGGEzZ 4yZIbE1lnLdCkvvS3GxZubDQI7e/adQqf/kcL2bKQ9RXvw4IAWaBA4onxJpmaRDtEBar+YGUT9jS3E hcT67gCbpkmG3Vccv5IlmGAI/6hpgM986H4ODejuZbIJymhKClI/n8pqWJdg9ZBGccPsezfwigdKIu oPS4Fo4Cf2D4ZToRh8wuX98q/HcA7kcOkiuSlaUmKQWv49ct43TIINfIBBkQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-When the sancov_plugin is enabled, it gets added to gcc-plugin-y which
-is used to populate both GCC_PLUGIN (for building the plugin) and
-GCC_PLUGINS_CFLAGS (for enabling and options). Instead of adding sancov
-to both and then removing it from GCC_PLUGINS_CFLAGS, create a separate
-list, gcc-plugin-external-y, which is only added to GCC_PLUGIN.
-
-This will also be used by the coming randstruct build changes.
+Clang 15 will support randstruct via the -frandomize-layout-seed-file=...
+option. Update the Kconfig and Makefile to recognize this feature.
 
 Cc: Masahiro Yamada <masahiroy@kernel.org>
 Cc: linux-kbuild@vger.kernel.org
-Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- scripts/Makefile.gcc-plugins | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ scripts/Makefile.randstruct |  3 +++
+ security/Kconfig.hardening  | 14 ++++++++++++--
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
-index f67153b260c0..927c3dd57f84 100644
---- a/scripts/Makefile.gcc-plugins
-+++ b/scripts/Makefile.gcc-plugins
-@@ -8,8 +8,6 @@ ifdef CONFIG_GCC_PLUGIN_LATENT_ENTROPY
+diff --git a/scripts/Makefile.randstruct b/scripts/Makefile.randstruct
+index 4d741e6db554..24e283e89893 100644
+--- a/scripts/Makefile.randstruct
++++ b/scripts/Makefile.randstruct
+@@ -7,6 +7,9 @@ randstruct-cflags-y	\
+ 	+= -fplugin=$(objtree)/scripts/gcc-plugins/randomize_layout_plugin.so
+ randstruct-cflags-$(CONFIG_RANDSTRUCT_PERFORMANCE)		\
+ 	+= -fplugin-arg-randomize_layout_plugin-performance-mode
++else
++randstruct-cflags-y	\
++	+= -frandomize-layout-seed-file=$(objtree)/scripts/basic/randstruct.seed
  endif
- export DISABLE_LATENT_ENTROPY_PLUGIN
  
--gcc-plugin-$(CONFIG_GCC_PLUGIN_SANCOV)		+= sancov_plugin.so
--
- gcc-plugin-$(CONFIG_GCC_PLUGIN_STRUCTLEAK)	+= structleak_plugin.so
- gcc-plugin-cflags-$(CONFIG_GCC_PLUGIN_STRUCTLEAK_VERBOSE)	\
- 		+= -fplugin-arg-structleak_plugin-verbose
-@@ -53,13 +51,17 @@ export DISABLE_ARM_SSP_PER_TASK_PLUGIN
- # All the plugin CFLAGS are collected here in case a build target needs to
- # filter them out of the KBUILD_CFLAGS.
- GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y))
--# The sancov_plugin.so is included via CFLAGS_KCOV, so it is removed here.
--GCC_PLUGINS_CFLAGS := $(filter-out %/sancov_plugin.so, $(GCC_PLUGINS_CFLAGS))
- export GCC_PLUGINS_CFLAGS
+ export RANDSTRUCT_CFLAGS := $(randstruct-cflags-y)
+diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+index 0277ba578779..bd2aabb2c60f 100644
+--- a/security/Kconfig.hardening
++++ b/security/Kconfig.hardening
+@@ -266,9 +266,12 @@ config ZERO_CALL_USED_REGS
  
- # Add the flags to the build!
- KBUILD_CFLAGS += $(GCC_PLUGINS_CFLAGS)
+ endmenu
  
--# All enabled GCC plugins are collected here for building below.
--GCC_PLUGIN := $(gcc-plugin-y)
-+# Some plugins are enabled outside of this Makefile, but they still need to
-+# be included in GCC_PLUGIN so they can get built.
-+gcc-plugin-external-$(CONFIG_GCC_PLUGIN_SANCOV)			\
-+	+= sancov_plugin.so
++config CC_HAS_RANDSTRUCT
++	def_bool $(cc-option,-frandomize-layout-seed-file=/dev/null)
 +
-+# All enabled GCC plugins are collected here for building in
-+# scripts/gcc-scripts/Makefile.
-+GCC_PLUGIN := $(gcc-plugin-y) $(gcc-plugin-external-y)
- export GCC_PLUGIN
+ choice
+ 	prompt "Randomize layout of sensitive kernel structures"
+-	default RANDSTRUCT_FULL if COMPILE_TEST && GCC_PLUGINS
++	default RANDSTRUCT_FULL if COMPILE_TEST && (GCC_PLUGINS || CC_HAS_RANDSTRUCT)
+ 	default RANDSTRUCT_NONE
+ 	help
+ 	  If you enable this, the layouts of structures that are entirely
+@@ -297,13 +300,20 @@ choice
+ 
+ 	config RANDSTRUCT_FULL
+ 		bool "Fully randomize structure layout"
+-		depends on GCC_PLUGINS
++		depends on CC_HAS_RANDSTRUCT || GCC_PLUGINS
+ 		select MODVERSIONS if MODULES
+ 		help
+ 		  Fully randomize the member layout of sensitive
+ 		  structures as much as possible, which may have both a
+ 		  memory size and performance impact.
+ 
++		  One difference between the Clang and GCC plugin
++		  implementations is the handling of bitfields. The GCC
++		  plugin treats them as fully separate variables,
++		  introducing sometimes significant padding. Clang tries
++		  to keep adjacent bitfields together, but with their bit
++		  ordering randomized.
++
+ 	config RANDSTRUCT_PERFORMANCE
+ 		bool "Limit randomization of structure layout to cache-lines"
+ 		depends on GCC_PLUGINS
 -- 
 2.32.0
 
