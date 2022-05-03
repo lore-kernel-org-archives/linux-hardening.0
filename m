@@ -2,118 +2,158 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10244C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue,  3 May 2022 07:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A08BBC433FE
+	for <linux-hardening@archiver.kernel.org>; Tue,  3 May 2022 14:45:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232281AbiECHep (ORCPT
+        id S237305AbiECOsf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 3 May 2022 03:34:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48498 "EHLO
+        Tue, 3 May 2022 10:48:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232280AbiECHeo (ORCPT
+        with ESMTP id S237289AbiECOsc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 3 May 2022 03:34:44 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B8B817074;
-        Tue,  3 May 2022 00:31:13 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 1FF1E1F749;
-        Tue,  3 May 2022 07:31:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1651563072; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=w+PouQmnZ9GsbOBxPEA2aGYdP7XgCY+B9Qhwz2UQ8+Y=;
-        b=ox1CyHAMnWjmEqLQwK8dSc53AwYIueIddr3rIyNhdAh2r9ypOQwtjkrpz55leMI4agVEFu
-        ifQJhpDj2meSrhcdmc3gQKoNNsVuYOX/JYRryRrYxdQrC4tq6KadDhHNSdJoAa4NxZmGNc
-        jChZK/w6hEpO3GjgQW3mNeQDcjqP/fQ=
-Received: from suse.cz (unknown [10.100.224.162])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 148A12C141;
-        Tue,  3 May 2022 07:31:08 +0000 (UTC)
-Date:   Tue, 3 May 2022 09:31:07 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Alexander Lobakin <alexandr.lobakin@intel.com>
-Cc:     linux-hardening@vger.kernel.org, x86@kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Bruce Schlobohm <bruce.schlobohm@intel.com>,
-        Jessica Yu <jeyu@kernel.org>,
+        Tue, 3 May 2022 10:48:32 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C45139176
+        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 07:44:59 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id s14so15141369plk.8
+        for <linux-hardening@vger.kernel.org>; Tue, 03 May 2022 07:44:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e8AVZNz1T1fbKBPaS1jbLfs2nSYwxCJeZrFfZY3AuXg=;
+        b=YgIR+HSs5Fl2nL+1avLDSIxzGwgrqQZg4BiwSjU0cu9k2bxpynzPGC6wvWGoMkvHfv
+         yMI9a0zmrILdE4gbdtT/4db5hjs7b+NxgPwkibcXWrjxuWgC0hV/jH5qF4vcbryjtJi/
+         KvzOXe86/hQ0c/8QofStHRq2f0dDshoXPcr9I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e8AVZNz1T1fbKBPaS1jbLfs2nSYwxCJeZrFfZY3AuXg=;
+        b=VPAaQ2JSyNVLU8m9xEZtUCHUOQ3LTh5psuc2aHvQm4nVYhTn9G8OpH+hfm6zRAckM3
+         qLgNBO9YZtBPBQTC+95dgdT0Zn3ueHt4pgS5qZdSdsdJlMuQD7hDRkAVAk6x2FWP/ELC
+         AYcGv5LkWcuSs0GlKedamw5Aa+GCCmIBVr+4YkOHVz1+NQ2QSEBVpxtAjGr2FmLfHjWm
+         gjGI6HfdyqdhWOQRWjCS9behuTAT2fj+7ZsWOWPgoDLGZwizBIu7oFF6xP6ZGWUsrDPX
+         6k6BRuB11nYbYuWVjr0uuzLpjD+49xyCqY3yCxu2VW0uOsAzoPcwcE79gjZqIYp+i53/
+         tg/g==
+X-Gm-Message-State: AOAM532JUi6eNJ95EwKEGhjH3U7BotAXFvpkj6NICukEpjmcIQSfEst0
+        UWDN6myiRAgZTAFrRk5eZg0F8g==
+X-Google-Smtp-Source: ABdhPJxpqQbtuAURmpaH45+EofYX7rkQQIunIhDE2JG2HBB7V2ZaoSOsrzkTFHzKRa1O/qRfMqbtMA==
+X-Received: by 2002:a17:90a:b106:b0:1d9:7cde:7914 with SMTP id z6-20020a17090ab10600b001d97cde7914mr5052946pjq.56.1651589098978;
+        Tue, 03 May 2022 07:44:58 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k4-20020a170902ba8400b0015e8d4eb230sm6387973pls.122.2022.05.03.07.44.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 May 2022 07:44:58 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Raju Rangoju <rajur@chelsio.com>
+Cc:     Kees Cook <keescook@chromium.org>,
         kernel test robot <lkp@intel.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Marios Pomonis <pomonis@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Nicolas Pitre <nico@fluxnic.net>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-arch@vger.kernel.org, live-patching@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v10 01/15] modpost: fix removing numeric suffixes
-Message-ID: <YnDaO5ThkiYkRXbO@alley>
-References: <20220209185752.1226407-1-alexandr.lobakin@intel.com>
- <20220209185752.1226407-2-alexandr.lobakin@intel.com>
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] net: chelsio: cxgb4: Avoid potential negative array offset
+Date:   Tue,  3 May 2022 07:44:25 -0700
+Message-Id: <20220503144425.2858110-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220209185752.1226407-2-alexandr.lobakin@intel.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4431; h=from:subject; bh=+8uAMoqqS0Bcfw8fZYr6KoQkcNcm36Imb2FI1uAd3hw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBicT/Jv8v/feIVKVuIyt5mmkMRPZzdczQGAeIED/S7 Sue6QWmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYnE/yQAKCRCJcvTf3G3AJnSlD/ 9g7H+DltIHtP9cfNn3f84D/otBGRybV39ENgfcteZPAekvVAxWbzFXVXjV1DCl2HYb6XH94aYgCCvl VjgPLaI2AgI1z6oeSF4FXEZ8Oj+pmwDMBZOwIXpViXgs7UbPQWvC88ax1BUlLCHKdz1cUtZoY/SohH lRdgXNPqyqFjAUyvop6yPb1TyhHTn6DgIzfF92/c/VwB0rgIci9AuoyQ6xSrrse11Q4Q9IVBGgsUSv IcJThpwqDXdsRe0KtlJf6dRV0aB9v9RX6kEvKrx5T4ovBu6XqgSgW5Kjj1XubGyevRDDyU0k/ttLPh Hpzhx+t9n/UC5k+gCFS3q+e1tGbaVF1LOASAs1nhCw7RnSCT/mekDTlJSKwLN+WxfPvQPjCMCF8wh9 Ra3Gb0Uezm2UiXIkAZ4FbQZPP5MR5zARIfUGmT4ChTTw84uORVP9rRBuv1xxBpuNg3HDmfYzu4/UJM ZDJit+SFwwho3EK2zZlweact3kjnuUzcR+v11rY52Ejxl/H/wf0BVWzmJS7nO3tjeIBLn9E86n5uP+ 3iInLzOk4swgV/dqvq/xjSvecKICXVVtvOgnP1pkYAkguEdt46US/lUJhZI/FMIH7uAcCTbH9ARg/A jTjJNdk3gEUCPfhSDLdbzKvYzfYIr95z2fYT1LAc6hfj/RdtVBlXjY9EhL7g==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed 2022-02-09 19:57:38, Alexander Lobakin wrote:
-> `-z unique-symbol` linker flag which is planned to use with FG-KASLR
-> to simplify livepatching (hopefully globally later on) triggers the
-> following:
-> 
-> ERROR: modpost: "param_set_uint.0" [vmlinux] is a static EXPORT_SYMBOL
-> 
-> The reason is that for now the condition from remove_dot():
-> 
-> if (m && (s[n + m] == '.' || s[n + m] == 0))
-> 
-> which was designed to test if it's a dot or a '\0' after the suffix
-> is never satisfied.
-> This is due to that `s[n + m]` always points to the last digit of a
-> numeric suffix, not on the symbol next to it (from a custom debug
-> print added to modpost):
-> 
-> param_set_uint.0, s[n + m] is '0', s[n + m + 1] is '\0'
+Using min_t(int, ...) as a potential array index implies to the compiler
+that negative offsets should be allowed. This is not the case, though.
+Replace min_t() with clamp_t(). Fixes the following warning exposed
+under future CONFIG_FORTIFY_SOURCE improvements:
 
-Yup, the + 1  is for the '.' between the symbol name and the number.
-In the order of apperance it would be: n + 1 + m
+In file included from include/linux/string.h:253,
+                 from include/linux/bitmap.h:11,
+                 from include/linux/cpumask.h:12,
+                 from include/linux/smp.h:13,
+                 from include/linux/lockdep.h:14,
+                 from include/linux/rcupdate.h:29,
+                 from include/linux/rculist.h:11,
+                 from include/linux/pid.h:5,
+                 from include/linux/sched.h:14,
+                 from include/linux/delay.h:23,
+                 from drivers/net/ethernet/chelsio/cxgb4/t4_hw.c:35:
+drivers/net/ethernet/chelsio/cxgb4/t4_hw.c: In function 't4_get_raw_vpd_params':
+include/linux/fortify-string.h:46:33: warning: '__builtin_memcpy' pointer overflow between offset 29 and size [2147483648, 4294967295] [-Warray-bounds]
+   46 | #define __underlying_memcpy     __builtin_memcpy
+      |                                 ^
+include/linux/fortify-string.h:388:9: note: in expansion of macro '__underlying_memcpy'
+  388 |         __underlying_##op(p, q, __fortify_size);                        \
+      |         ^~~~~~~~~~~~~
+include/linux/fortify-string.h:433:26: note: in expansion of macro '__fortify_memcpy_chk'
+  433 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
+      |                          ^~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/chelsio/cxgb4/t4_hw.c:2796:9: note: in expansion of macro 'memcpy'
+ 2796 |         memcpy(p->id, vpd + id, min_t(int, id_len, ID_LEN));
+      |         ^~~~~~
+include/linux/fortify-string.h:46:33: warning: '__builtin_memcpy' pointer overflow between offset 0 and size [2147483648, 4294967295] [-Warray-bounds]
+   46 | #define __underlying_memcpy     __builtin_memcpy
+      |                                 ^
+include/linux/fortify-string.h:388:9: note: in expansion of macro '__underlying_memcpy'
+  388 |         __underlying_##op(p, q, __fortify_size);                        \
+      |         ^~~~~~~~~~~~~
+include/linux/fortify-string.h:433:26: note: in expansion of macro '__fortify_memcpy_chk'
+  433 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
+      |                          ^~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/chelsio/cxgb4/t4_hw.c:2798:9: note: in expansion of macro 'memcpy'
+ 2798 |         memcpy(p->sn, vpd + sn, min_t(int, sn_len, SERNUM_LEN));
+      |         ^~~~~~
 
-> So it's off-by-one and was like that since 2014.
-> Fix this for the sake of upcoming features, but don't bother
-> stable-backporting, as it's well hidden -- apart from that LD flag,
-> can be triggered only by GCC LTO which never landed upstream.
-> 
-> Fixes: fcd38ed0ff26 ("scripts: modpost: fix compilation warning")
-> Signed-off-by: Alexander Lobakin <alexandr.lobakin@intel.com>
+Additionally remove needless cast from u8[] to char * in last strim()
+call.
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/lkml/202205031926.FVP7epJM-lkp@intel.com
+Fixes: fc9279298e3a ("cxgb4: Search VPD with pci_vpd_find_ro_info_keyword()")
+Fixes: 24c521f81c30 ("cxgb4: Use pci_vpd_find_id_string() to find VPD ID string")
+Cc: Raju Rangoju <rajur@chelsio.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/net/ethernet/chelsio/cxgb4/t4_hw.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Best Regards,
-Petr
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+index e7b4e3ed056c..f119ec7323e5 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+@@ -2793,14 +2793,14 @@ int t4_get_raw_vpd_params(struct adapter *adapter, struct vpd_params *p)
+ 		goto out;
+ 	na = ret;
+ 
+-	memcpy(p->id, vpd + id, min_t(int, id_len, ID_LEN));
++	memcpy(p->id, vpd + id, clamp_t(int, id_len, 0, ID_LEN));
+ 	strim(p->id);
+-	memcpy(p->sn, vpd + sn, min_t(int, sn_len, SERNUM_LEN));
++	memcpy(p->sn, vpd + sn, clamp_t(int, sn_len, 0, SERNUM_LEN));
+ 	strim(p->sn);
+-	memcpy(p->pn, vpd + pn, min_t(int, pn_len, PN_LEN));
++	memcpy(p->pn, vpd + pn, clamp_t(int, pn_len, 0, PN_LEN));
+ 	strim(p->pn);
+-	memcpy(p->na, vpd + na, min_t(int, na_len, MACADDR_LEN));
+-	strim((char *)p->na);
++	memcpy(p->na, vpd + na, clamp_t(int, na_len, 0, MACADDR_LEN));
++	strim(p->na);
+ 
+ out:
+ 	vfree(vpd);
+-- 
+2.32.0
+
