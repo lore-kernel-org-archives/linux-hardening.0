@@ -2,95 +2,233 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECCBC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  4 May 2022 20:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D4BC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  4 May 2022 23:24:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377940AbiEDUVk (ORCPT
+        id S240213AbiEDX0w (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 4 May 2022 16:21:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53686 "EHLO
+        Wed, 4 May 2022 19:26:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351588AbiEDUVj (ORCPT
+        with ESMTP id S1384301AbiEDXHu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 4 May 2022 16:21:39 -0400
-Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF4434553B
-        for <linux-hardening@vger.kernel.org>; Wed,  4 May 2022 13:18:02 -0700 (PDT)
-Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-2f7ca2ce255so28119017b3.7
-        for <linux-hardening@vger.kernel.org>; Wed, 04 May 2022 13:18:02 -0700 (PDT)
+        Wed, 4 May 2022 19:07:50 -0400
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D43485A5A2
+        for <linux-hardening@vger.kernel.org>; Wed,  4 May 2022 15:59:54 -0700 (PDT)
+Received: by mail-wm1-f54.google.com with SMTP id c190-20020a1c35c7000000b0038e37907b5bso4106032wma.0
+        for <linux-hardening@vger.kernel.org>; Wed, 04 May 2022 15:59:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
+        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OQdnNmzv4usFcCEslqJZULlg/FXfYALoeT9o7toWf+k=;
-        b=qxZZQ6AsGHlKFFmOKUtmMByudpi1JNcM2xDw70w505LXnF7lLC/fAGH//lR/VZSrlR
-         bzYODkJGL2C4z48gkOhr1/f+95RehMweBA2jJko7pnpROeEw4lFeekw/gjN1Sr37kxgi
-         VOMlKjWfiWZVgzx71URL6y09ubNYGY2jqAqF8+kHrivs8kT+ROvGvq/omyFx6GiYzqnh
-         2HFIhB+NVMjgQxOjfu7xbPQLIRCzspV8NJf8VjKSPTDxgkMvVCPk7/5bkBeytyd4UZ3g
-         nvxpwS5oICYNm4lV3uFPcMoYAXHHXPd6xQUHQRffNQmcC4ERg/4fgc/qsJtYGU/9DGZP
-         TTaw==
+         :cc:content-transfer-encoding;
+        bh=qfWwXZWPvxEE3w1uLnkzPlrx6nJaZSmQ1gbsC3kCZlI=;
+        b=fMehx6+pldeupaypGl5lGMLh8Blc5Pb964suvnwujkOTfmhEds0USznV5iIpAmDMiQ
+         3bX5ovLiBcm+P+Qjkm7S30sNoAIneyphU/3HUmg8FgNya3x4Ys+vGWu+B9CwMsbZwixV
+         5hhw5d61RXfF0ZuA9a19yWLWnmsownsAlvxGOq/bh+zf+KCchfsYUSjN3DbkCogRNiil
+         4sZMBBy0wN3DJWJ3HV3y9RTPrsOy6eZO4wbIVzlw9cfeY3DYzhWrMs9JJuoIK2/rWVPl
+         SzHF6XACCrgzPRUtq8fL5afcNflV6Vriy9o5VdAvBNuxRLNvKxX70jkd0hURqNp4X2R8
+         1xwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OQdnNmzv4usFcCEslqJZULlg/FXfYALoeT9o7toWf+k=;
-        b=pcq+Vzvdgs5oiJOWv1BJ0BSgRfEwUxr+RbgxY2TmzP5C1R4IMsUjw1EJDRmxoPf3pV
-         apEpc5FYmkKzkbBeqummNNIjuiB2dqKlXaMxwAgTTcAr5+Qf9uDQZP+1VufyEAwQVc34
-         +b7OqxORtp73diz9RaGO9BQiNAxRla4LKJnurYM3WbXP4U2Q0hpSLCKiRKaaYrEEPxl8
-         ZZ9Mw2JjGe7IFK/Ls+gHSSSgR3JelPnhBW6fqqavY1dknIxGYZ0k+HAzzTt2Zz5OHgPH
-         LZTIVdSfrmlQrzEUHFO59GHi4VZYIcUxXWZqnZ6pP0ohd7cLQNC2FShQgc8+L/9hAELH
-         caBg==
-X-Gm-Message-State: AOAM531N/48xr+2heQyussw3s53sHavB9Wa8unLus0uWfpGN75d5bYRk
-        7zOOMM1N2CW4AtMbIU3BLCz/d6b6gpq1fHdeIMWwSA==
-X-Google-Smtp-Source: ABdhPJyFwC10hGfB50VlWpxYYTkP/wq9NopFODyumnAGFAWmCLhvv/zUfhxhlo8Okdy8beVJXyf/MQoiY2U1PO5ibCw=
-X-Received: by 2002:a81:a93:0:b0:2f4:d65a:d44e with SMTP id
- 141-20020a810a93000000b002f4d65ad44emr20076337ywk.243.1651695481261; Wed, 04
- May 2022 13:18:01 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qfWwXZWPvxEE3w1uLnkzPlrx6nJaZSmQ1gbsC3kCZlI=;
+        b=DFiwJWC2xi25E6eRj5Q0I2MP6vL/y9OI9AAJFlsnVwSpvcgLmTpRMslLPM1Wx39Oce
+         GXUqLQhcKo/0u6+iMYDi/uqbE1KPXYj0DaUwQcWl6oHNmqywT1O9M0/z5eCfI/Xp3e22
+         5OfEO/s3YUKPFtiTh1nJ0Nv2/ltSGbAYlvEzwjs1FBlbV1MZOogSVur/WPZcsGj1EJsY
+         cmdFBfKeVMC7o8uj74vKGcvGoJXyihaNDliUZcGaDJQrpwDW5aDG+TG9ygTeexEJ5zLp
+         vRBSXXTZ8WLyENIlETmohzNpgaTPLNrTvStmZd0JVCBXajZaZQHvaEi0HGPQ4NlmnQZq
+         8DlA==
+X-Gm-Message-State: AOAM531KjrLX5/58OmDb7zeDrQhgGEa7eTrLXd4K0zuyJDcSVy8gPvg9
+        2wnpkoBpXOhfa8iGLI7+i/rz7G5+DlspgZn/Ksf1
+X-Google-Smtp-Source: ABdhPJzn8kCki7g2xrksVPCE2X0dMoSQ5GNrlnQWJqU+8a/RnZE5ShgkUyQvDBvdRa4kG7oifCsX28YouBnWU5DkxR0=
+X-Received: by 2002:a05:600c:4fc9:b0:394:4317:1aa4 with SMTP id
+ o9-20020a05600c4fc900b0039443171aa4mr1477643wmq.179.1651705059031; Wed, 04
+ May 2022 15:57:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220429203644.2868448-1-samitolvanen@google.com>
- <YnKnLyyXPJl5Llc0@FVFF77S0Q05N> <CABCJKudT9r=r0an4BwNp0-E1wC94wLWiHvUX4_vA8tDkQ=uHKQ@mail.gmail.com>
-In-Reply-To: <CABCJKudT9r=r0an4BwNp0-E1wC94wLWiHvUX4_vA8tDkQ=uHKQ@mail.gmail.com>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Wed, 4 May 2022 13:17:25 -0700
-Message-ID: <CABCJKuc-6daZd8N6hQV6i_TtCtVpfzxJ2UW6xwxC2vxTmJ2deg@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/21] KCFI support
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
+References: <20220504014440.3697851-1-keescook@chromium.org> <20220504014440.3697851-29-keescook@chromium.org>
+In-Reply-To: <20220504014440.3697851-29-keescook@chromium.org>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 4 May 2022 18:57:28 -0400
+Message-ID: <CAHC9VhT5Y=ENiSyb=S-NVbGX63sLOv4nVuR_GS-yww6tiz0wYA@mail.gmail.com>
+Subject: Re: [PATCH 28/32] selinux: Use mem_to_flex_dup() with xfrm and sidtab
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        llvm@lists.linux.dev
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>,
+        netdev@vger.kernel.org, selinux@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Andy Lavr <andy.lavr@gmail.com>,
+        Arend van Spriel <aspriel@gmail.com>,
+        Baowen Zheng <baowen.zheng@corigine.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Bradley Grove <linuxdrivers@attotech.com>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        Christian Brauner <brauner@kernel.org>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Chris Zankel <chris@zankel.net>,
+        Cong Wang <cong.wang@bytedance.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Gow <davidgow@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        devicetree@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Eli Cohen <elic@nvidia.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Francis Laniel <laniel_francis@privacyrequired.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gregory Greenman <gregory.greenman@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        John Keeping <john@metanate.com>,
+        Juergen Gross <jgross@suse.com>, Kalle Valo <kvalo@kernel.org>,
+        Keith Packard <keithp@keithp.com>, keyrings@vger.kernel.org,
+        kunit-dev@googlegroups.com,
+        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux1394-devel@lists.sourceforge.net,
+        linux-afs@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, llvm@lists.linux.dev,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Louis Peens <louis.peens@corigine.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Rich Felker <dalias@aerifal.cx>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        SHA-cyfmac-dev-list@infineon.com,
+        Simon Horman <simon.horman@corigine.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Tadeusz Struk <tadeusz.struk@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
+        Udipto Goswami <quic_ugoswami@quicinc.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        wcn36xx@lists.infradead.org, Wei Liu <wei.liu@kernel.org>,
+        xen-devel@lists.xenproject.org,
+        Yang Yingliang <yangyingliang@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 4, 2022 at 9:41 AM Sami Tolvanen <samitolvanen@google.com> wrote:
+On Tue, May 3, 2022 at 9:57 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> Hi Mark,
+> As part of the work to perform bounds checking on all memcpy() uses,
+> replace the open-coded a deserialization of bytes out of memory into a
+> trailing flexible array by using a flex_array.h helper to perform the
+> allocation, bounds checking, and copying:
 >
-> On Wed, May 4, 2022 at 9:18 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> > I wanted to give this a spin on arm64, but I'm seeing some very odd toolchain
-> > behaviour. I'm not sure if I've done something wrong, or if I'm just hitting an
-> > edge-case, but it looks like using -fsanitize=kcfi causes the toolchain to hit
-> > out-of-memory errors and other issues which look like they could be memory
-> > corruption.
+>     struct xfrm_sec_ctx
+>     struct sidtab_str_cache
 >
-> Thanks for the detailed bug report! It definitely looks like something
-> is wrong with the recent switch from std::string to Twine in the Clang
-> code. I didn't see this issue when compiling the arm64 kernel, but
-> I'll take a closer look and see if I can reproduce it.
+> Cc: Steffen Klassert <steffen.klassert@secunet.com>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: Stephen Smalley <stephen.smalley.work@gmail.com>
+> Cc: Eric Paris <eparis@parisplace.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Xiu Jianfeng <xiujianfeng@huawei.com>
+> Cc: "Christian G=C3=B6ttsche" <cgzones@googlemail.com>
+> Cc: netdev@vger.kernel.org
+> Cc: selinux@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  include/uapi/linux/xfrm.h    | 4 ++--
+>  security/selinux/ss/sidtab.c | 9 +++------
+>  security/selinux/xfrm.c      | 7 ++-----
+>  3 files changed, 7 insertions(+), 13 deletions(-)
+>
+> diff --git a/include/uapi/linux/xfrm.h b/include/uapi/linux/xfrm.h
+> index 65e13a099b1a..4a6fa2beff6a 100644
+> --- a/include/uapi/linux/xfrm.h
+> +++ b/include/uapi/linux/xfrm.h
+> @@ -31,9 +31,9 @@ struct xfrm_id {
+>  struct xfrm_sec_ctx {
+>         __u8    ctx_doi;
+>         __u8    ctx_alg;
+> -       __u16   ctx_len;
+> +       __DECLARE_FLEX_ARRAY_ELEMENTS_COUNT(__u16, ctx_len);
+>         __u32   ctx_sid;
+> -       char    ctx_str[0];
+> +       __DECLARE_FLEX_ARRAY_ELEMENTS(char, ctx_str);
+>  };
 
-I was able to reproduce this by turning off assertions in Clang. It
-seems to work fine with -DLLVM_ENABLE_ASSERTIONS=ON. I'll go fix.
+While I like the idea of this in principle, I'd like to hear about the
+testing you've done on these patches.  A previous flex array
+conversion in the audit uapi headers ended up causing a problem with
+GCC12 and SWIG; while it was a SWIG problem and not a kernel header
+problem that was thin consolation for those with broken builds.
 
-Sami
+> diff --git a/security/selinux/ss/sidtab.c b/security/selinux/ss/sidtab.c
+> index a54b8652bfb5..a9d434e8cff7 100644
+> --- a/security/selinux/ss/sidtab.c
+> +++ b/security/selinux/ss/sidtab.c
+> @@ -23,8 +23,8 @@ struct sidtab_str_cache {
+>         struct rcu_head rcu_member;
+>         struct list_head lru_member;
+>         struct sidtab_entry *parent;
+> -       u32 len;
+> -       char str[];
+> +       DECLARE_FLEX_ARRAY_ELEMENTS_COUNT(u32, len);
+> +       DECLARE_FLEX_ARRAY_ELEMENTS(char, str);
+>  };
+>
+>  #define index_to_sid(index) ((index) + SECINITSID_NUM + 1)
+
+--=20
+paul-moore.com
