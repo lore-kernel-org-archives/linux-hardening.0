@@ -2,226 +2,153 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72EFC433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  4 May 2022 01:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BD2C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  4 May 2022 02:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233660AbiEDCCl (ORCPT
+        id S232713AbiEDCWv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 3 May 2022 22:02:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48964 "EHLO
+        Tue, 3 May 2022 22:22:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343875AbiEDCCA (ORCPT
+        with ESMTP id S229579AbiEDCWu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 3 May 2022 22:02:00 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0C8145792
-        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 18:57:48 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d17so206983plg.0
-        for <linux-hardening@vger.kernel.org>; Tue, 03 May 2022 18:57:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/QgTacQ+A83oLfMgc7AcEsbfIOOMUUn/07ShQ/z1lc0=;
-        b=OEKPNTKscDvuMfuoT9d4JeIvnRRtddZvUR90FLHTaY6dqJ3WoEedmmXxG6udDH4ll2
-         hQ3xVWzIJux8F2/IVGnkOvoKvzigrtb6PN+WIk/nKNi6EuEO6/f9y41IdVZKJ50O2w0U
-         wl96xKQAPtHy1YFDiqJxnzLe5ZISnsn0F+m/k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/QgTacQ+A83oLfMgc7AcEsbfIOOMUUn/07ShQ/z1lc0=;
-        b=Dos6KLfeJdwXhb3mKFdvX5SK0QtFvygF5eCRAWXqtJjGrZFonZpdgjQ9PASkpks7iG
-         2xb5YWPdpEhyeQz5o9W1KkcCemMWvwYrgQD5wV/KrICAfkGwbc8jrZP8SsC05vmc0LS/
-         tffUAF8/mLAqCOBM2CbTmVLtVHKTk2ze2Dt3XOyP+3sPUt/jouzc7E1xZQ1xo6HGEvkU
-         RWZcHS/KUKJQei8jJEVzypXl0ifxZoGY59yHk9fsUAGPoYl+FpKpbAqaodvj9W5mVWyb
-         W1NGib2/uoIrH7gKauex0F/ok07duKQRww06WrGiWp9zwYXTxuzLjfTM1pZXVhEhzSKv
-         m85Q==
-X-Gm-Message-State: AOAM530oskEUE81IpLoFTnqMvBgZYehGM/SC3Js0hLjWMUoJ4IVclOxK
-        We/dv8Jq6F9tQ48ApuVSLnX4cQ==
-X-Google-Smtp-Source: ABdhPJx8aKMSjL++Bpt30on0DM0NaXAHkv4OnZme/XsKFvFNTXlI9dAida62sUR6NL+CxtZNwLd4Dg==
-X-Received: by 2002:a17:90b:1a88:b0:1dc:8e84:9133 with SMTP id ng8-20020a17090b1a8800b001dc8e849133mr4261692pjb.231.1651629467464;
-        Tue, 03 May 2022 18:57:47 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d10-20020a170902e14a00b0015e8d4eb23fsm6979600pla.137.2022.05.03.18.57.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 May 2022 18:57:46 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A . R . Silva" <gustavoars@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        John Keeping <john@metanate.com>, Jens Axboe <axboe@kernel.dk>,
-        Udipto Goswami <quic_ugoswami@quicinc.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        linux-usb@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Andy Lavr <andy.lavr@gmail.com>,
-        Arend van Spriel <aspriel@gmail.com>,
-        Baowen Zheng <baowen.zheng@corigine.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Bradley Grove <linuxdrivers@attotech.com>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        Christian Brauner <brauner@kernel.org>,
-        =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Chris Zankel <chris@zankel.net>,
-        Cong Wang <cong.wang@bytedance.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Gow <davidgow@google.com>,
-        David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        devicetree@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Eli Cohen <elic@nvidia.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Francis Laniel <laniel_francis@privacyrequired.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Gregory Greenman <gregory.greenman@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Hulk Robot <hulkci@huawei.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Juergen Gross <jgross@suse.com>, Kalle Valo <kvalo@kernel.org>,
-        Keith Packard <keithp@keithp.com>, keyrings@vger.kernel.org,
-        kunit-dev@googlegroups.com,
-        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux1394-devel@lists.sourceforge.net,
-        linux-afs@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        llvm@lists.linux.dev, Loic Poulain <loic.poulain@linaro.org>,
-        Louis Peens <louis.peens@corigine.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Nathan Chancellor <nathan@kernel.org>, netdev@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Rich Felker <dalias@aerifal.cx>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>, selinux@vger.kernel.org,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        SHA-cyfmac-dev-list@infineon.com,
-        Simon Horman <simon.horman@corigine.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Tadeusz Struk <tadeusz.struk@linaro.org>,
-        Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        wcn36xx@lists.infradead.org, Wei Liu <wei.liu@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        Xiu Jianfeng <xiujianfeng@huawei.com>,
-        Yang Yingliang <yangyingliang@huawei.com>
-Subject: [PATCH 30/32] usb: gadget: f_fs: Use mem_to_flex_dup() with struct ffs_buffer
-Date:   Tue,  3 May 2022 18:44:39 -0700
-Message-Id: <20220504014440.3697851-31-keescook@chromium.org>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220504014440.3697851-1-keescook@chromium.org>
-References: <20220504014440.3697851-1-keescook@chromium.org>
+        Tue, 3 May 2022 22:22:50 -0400
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::225])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF8A2B27C;
+        Tue,  3 May 2022 19:19:15 -0700 (PDT)
+Received: (Authenticated sender: joao@overdrivepizza.com)
+        by mail.gandi.net (Postfix) with ESMTPA id 4842A1C0004;
+        Wed,  4 May 2022 02:19:11 +0000 (UTC)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2095; h=from:subject; bh=LoG608ySlb2xL5QEVpZpmYP+iWI9TrvgD0EbU83Sc1E=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBicdqHiYfLCw3gedIJSUEv2AjZro9JsQDzVs6+PWv3 Jf25uuWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYnHahwAKCRCJcvTf3G3AJtOuD/ 44mR9b5DwvccUUG6HIlhBLAsn/BfAVzBmuRK+yPZ9MioNDOL4TpD4dZaBBpGG0hJon5radolumfj0P VNZW46qoLbHEBiSScw3XJnUUVFGSv9GbDDKBVRxmIWevrrYcSx9Ey7v8r/vqablkY0Kzx4Q+fL+nnh 4X55duw+qKqgzFtzT5kMl5IKcf/sFUgv1r2jts0fmdh4Bu2jfLlkfdmjQhJ4Af2db1+OF6UjtoOy5R 6BRYL6DkOEkVM3vSV8rlDM6yldlZogrtVEpiQUvbkDi2LerWROmCrkpPzwbukN6gYwmAh2v78g4BDT Asjg/ynqVVAPardAHgI8QUQbZeI1y2iXC5u4FfFaeEUSCVddHgdjugXVWOiP7s+phDof4Ke2yI+sBV QfV5yaD/w1jelv5AZidP9asc2fTSb8ASrFF+lKcuVilfbgIn9krQvLJqB8gjrr8OyJ8falxCUPu3i9 l/P190yQNXc+sUM1kJVb0JaQYSk6mxyyCv3suqH72zxRXkDKeNa7lGgBW+tH8Of1c6RUkdJZYUe0pH L7tc/j/ocIEHXPRHlkHrndofVZCRhIQ2XiFWxCEfSW4N1fXtuDO+O77rmlbdYwwwgsTLusPjWPXhon 642xzSjREIl8aWgxlvRZ5ty8QQFJP8TbxfkMEUHUpitb1yMsa0xo6z3WBFcA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Date:   Tue, 03 May 2022 19:19:11 -0700
+From:   Joao Moreira <joao@overdrivepizza.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        peterz@infradead.org, andrew.cooper3@citrix.com,
+        keescook@chromium.org, samitolvanen@google.com,
+        mark.rutland@arm.com, hjl.tools@gmail.com,
+        alyssa.milburn@linux.intel.com, ndesaulniers@google.com,
+        gabriel.gomes@linux.intel.com, rick.p.edgecombe@intel.com
+Subject: Re: [RFC PATCH 01/11] x86: kernel FineIBT
+In-Reply-To: <20220503220244.vyz5flk3gg3y6rbw@treble>
+References: <20220420004241.2093-1-joao@overdrivepizza.com>
+ <20220420004241.2093-2-joao@overdrivepizza.com>
+ <20220429013704.4n4lmadpstdioe7a@treble>
+ <d82459b887bcaf9181ad836051e2d16b@overdrivepizza.com>
+ <20220503220244.vyz5flk3gg3y6rbw@treble>
+Message-ID: <068cafedb0699383b696ce15d5677979@overdrivepizza.com>
+X-Sender: joao@overdrivepizza.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-As part of the work to perform bounds checking on all memcpy() uses,
-replace the open-coded a deserialization of bytes out of memory into a
-trailing flexible array by using a flex_array.h helper to perform the
-allocation, bounds checking, and copying.
+> 
+> It should be possible to have a non-fatal #UD2 handler.
+> 
+> See for example how WARN() is implemented with __WARN_FLAGS in
+> arch/x86/include/asm/bug.h .
+> 
+> So hopefully we can just get rid of the need for the "call handler"
+> thing altogether.
+> 
+Nice, I'll look into it. Tks.
 
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc: John Keeping <john@metanate.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Udipto Goswami <quic_ugoswami@quicinc.com>
-Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Cc: linux-usb@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/usb/gadget/function/f_fs.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+>> > Not sure what would happen for "ibt=off"?  Maybe apply_ibt_endbr() could
+>> > NOP out all the FineIBT stuff.
+>> 
+>> Either that, or...
+>> 
+>> I'm thinking about a way to have FineIBT interchangeable with KCFI.
+>> Currently KCFI adds a 4 byte hash + 2 byte nops before function entry, 
+>> to
+>> allow for proper prototype checking. After that, there should be an 
+>> ENDBR of
+>> 4 bytes. This gives us 10 bytes in total. Then, my yet to be properly
+>> thought idea would be patch these 10 bytes with:
+>> 
+>> endbr
+>> call fineibt_handler_<$HASH>
+>> nop
+>> 
+>> and then, on the caller side, patch the "cmp <$HASH>, -0x6(%r11); je; 
+>> ud2;
+>> call" sequence with a "sub 0x6, r11; mov $HASH, %r10; call %r11, add 
+>> 0x6
+>> %r11". This would then allow the kernel to verify if the CPU is IBT 
+>> capable
+>> on boot time and only then setting the proper scheme.
+>> 
+>> The downsides of having something like this would be that this sub 
+>> r11/add
+>> r11 sequence is kinda meh. We can avoid that by having two padding 
+>> nops
+>> after the original ENDBR, which will be skipped when the function is 
+>> reached
+>> directly by the linker optimization I'm working on, and that we can 
+>> convert
+>> into a JMP -offset that makes control flow reach the padding area 
+>> before the
+>> prologue and from where we can call the fineibt_handler function. The
+>> resulting instrumentation would be something like:
+>> 
+>> 1:
+>> call fineibt_handler_<$HASH>
+>> jmp 2f
+>> <foo>
+>> endbr
+>> jmp 1b
+>> 2:
+>> 
+>> Also, it would prevent a paranoid user to have both schemes 
+>> simultaneously
+>> (there are reasons why people could want that).
+>> 
+>> Any thoughts?
+> 
+> I'm not really qualified to comment on this too directly since I 
+> haven't
+> looked very much at the variations on FineIBT/CFI/KCFI, and what the
+> protections and drawbacks are for each approach, and when it might even
+> make sense to combine them for a "paranoid user".
+> 
+> Since we have multiple similar and possibly competing technologies 
+> being
+> discussed, one thing I do want to warn against is that we as kernel
+> developers tend to err on the side of giving people too many choices 
+> and
+> combinations which *never* get used.
+> 
+> All those unused options can confuse the user and significantly add to
+> complexity and maintenance overhead for us.  Especially for invasive
+> features like these.
+> 
+> (Just to be clear, I'm not saying that's happening here, but it's
+> something we need to be careful about.)
+> 
+> Here, documentation is going to be crucial, for both reviewers and
+> users.  Something that describes when/why I should use X or Y or X+Y.
+> 
+> If we truly want to add more options/combos for different use cases 
+> then
+> we'll also need clear and concise documentation about which
+> options/combos would be used under what circumstances.
 
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index 4585ee3a444a..bb0ff41dabd2 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -202,9 +202,9 @@ struct ffs_epfile {
- };
- 
- struct ffs_buffer {
--	size_t length;
-+	DECLARE_FLEX_ARRAY_ELEMENTS_COUNT(size_t, length);
- 	char *data;
--	char storage[];
-+	DECLARE_FLEX_ARRAY_ELEMENTS(char, storage);
- };
- 
- /*  ffs_io_data structure ***************************************************/
-@@ -905,7 +905,7 @@ static ssize_t __ffs_epfile_read_data(struct ffs_epfile *epfile,
- 				      void *data, int data_len,
- 				      struct iov_iter *iter)
- {
--	struct ffs_buffer *buf;
-+	struct ffs_buffer *buf = NULL;
- 
- 	ssize_t ret = copy_to_iter(data, data_len, iter);
- 	if (data_len == ret)
-@@ -919,12 +919,9 @@ static ssize_t __ffs_epfile_read_data(struct ffs_epfile *epfile,
- 		data_len, ret);
- 
- 	data_len -= ret;
--	buf = kmalloc(struct_size(buf, storage, data_len), GFP_KERNEL);
--	if (!buf)
-+	if (mem_to_flex_dup(&buf, data + ret, data_len, GFP_KERNEL))
- 		return -ENOMEM;
--	buf->length = data_len;
- 	buf->data = buf->storage;
--	memcpy(buf->storage, data + ret, flex_array_size(buf, storage, data_len));
- 
- 	/*
- 	 * At this point read_buffer is NULL or READ_BUFFER_DROP (if
--- 
-2.32.0
+Yeah, I totally understand/support this concern and I feel the same way. 
+While, in this case, I can't see super clear reasons for X+Y, there are 
+aspects why someone could prefer X or Y -- so I think that using 
+alternatives to flip the instrumentation is a valid consideration. In 
+time, taking the chance to be fair on the credits, using alternatives to 
+replace KCFI/FineIBT was also Peter's idea, not mine. It looked hard to 
+do at first sight because of the caller/callee-side checks differences, 
+but since Peter mentioned it, I started trying to solve the puzzle of 
+having the best suitable instrumentation that would be changeable. I 
+haven't discussed this with anyone yet, but at this point I think it 
+might be doable, although not in the most performant shape. Anyway, I'll 
+post something here once I have a more solid idea.
 
+And yes, I agree that documentation will be key and I totally see your 
+point/understand how confusing I was in my previous e-mail. I'll keep 
+that in mind for the next revision. Thanks for pointing it out :)
