@@ -2,130 +2,107 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFB7C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  4 May 2022 07:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE70C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  4 May 2022 10:20:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239972AbiEDHjl (ORCPT
+        id S1347750AbiEDKYM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 4 May 2022 03:39:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58982 "EHLO
+        Wed, 4 May 2022 06:24:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346037AbiEDHjQ (ORCPT
+        with ESMTP id S1348094AbiEDKYL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 4 May 2022 03:39:16 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D05DB27157;
-        Wed,  4 May 2022 00:34:37 -0700 (PDT)
+        Wed, 4 May 2022 06:24:11 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 389251D313;
+        Wed,  4 May 2022 03:20:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=cTSIQdlg91RSK+na/NVKBd/Ax/ZBULg9Q/4Gx74hmBE=; b=DJ4sRfVFdZHqiUR1scXw9foZfl
-        L7yKxBEJhUhm/nN8KNGznPTfuCfQS10cTZGTZncnxpQcvHtmIibXuZIf4BWhkVTwUsXutzODCujTX
-        9ol5m6lfkrhF1XEjyiZyaKvorG5EUGu2bSqA/FcWM5LcriPRGK2tDMPLFNt4Lz0WYO0NKcTysvqe1
-        ju+XiMI9AoOmYgIRswBct3J0G8rSnfT/S/lYzMGoHVAa5UY/87fStP27Br/E5nPYN5Sh2OitDpTAx
-        CPy06b7r2hzVIO98a1HVNwlRWcw0xPwXqpEILLaa17u5ZiJGLI0PMYOMFXL3CPPGYkmCdK5kE6dIL
-        wBOgZgjg==;
+        bh=ESaW3Lw9SOMSc32omcBAeoAPR4+1N9KeZ6OSTGrq0SI=; b=fxxSWhNKz7xeuVwlCstG2wYOEg
+        jm6pnlgdg5AAhRIr0NcoKcDWc/qry+0jMni24n0DkaPQbTFdEyDPNEDGm037jg9YiorAU70hTZz7R
+        T7BAl2A7B9I8Vz2Sl3leFVwMOmNmtQBR9R5QAUb7m+yKQgzIPb94a46/2ly2uBa1fYx/cH6IkiMev
+        ZkdpIXbfDWSA2S/uWiHIYoI/muBWAog1HmUczkA/Vm3Nndb+EUs2fAnUKZjw/ygdjtBxU/ZfBV48k
+        DSFTRsG9q/9gxjG8oXY/J4GGIVKy4k8LNy75EG7ezkmaFzy56vlwkG6KxRjJp5JsWoKhj9tAXsWZR
+        wTCCku6w==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nm9Wd-00B171-EK; Wed, 04 May 2022 07:34:19 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nmC7K-00GV7a-4w; Wed, 04 May 2022 10:20:22 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7BD913004B5;
-        Wed,  4 May 2022 09:34:18 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 912D830017D;
+        Wed,  4 May 2022 12:20:19 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3EF7E2029A1DC; Wed,  4 May 2022 09:34:18 +0200 (CEST)
-Date:   Wed, 4 May 2022 09:34:18 +0200
+        id 5274620275830; Wed,  4 May 2022 12:20:19 +0200 (CEST)
+Date:   Wed, 4 May 2022 12:20:19 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Peter Collingbourne <pcc@google.com>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        llvm@lists.linux.dev
-Subject: Re: [RFC PATCH 00/21] KCFI support
-Message-ID: <YnIses89/uPLrazS@hirez.programming.kicks-ass.net>
-References: <20220429203644.2868448-1-samitolvanen@google.com>
- <202204291545.47C6A97EA2@keescook>
- <Ymz7DWkRJy3PMaHm@hirez.programming.kicks-ass.net>
- <CABCJKuckt75qA1op-LpkJnQsJC36m9fstbY3uD=7pET2VyyZSg@mail.gmail.com>
- <YnA3Le2uJRaFF4TC@hirez.programming.kicks-ass.net>
- <CAMn1gO614sMzKzP6qTCcXB0QCeEu-G7CHn_h=6ikCLkFo_Z2Dg@mail.gmail.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Joao Moreira <joao@overdrivepizza.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        andrew.cooper3@citrix.com, keescook@chromium.org,
+        samitolvanen@google.com, mark.rutland@arm.com, hjl.tools@gmail.com,
+        alyssa.milburn@linux.intel.com, ndesaulniers@google.com,
+        gabriel.gomes@linux.intel.com, rick.p.edgecombe@intel.com
+Subject: Re: [RFC PATCH 01/11] x86: kernel FineIBT
+Message-ID: <YnJTYzralOhGGmED@hirez.programming.kicks-ass.net>
+References: <20220420004241.2093-1-joao@overdrivepizza.com>
+ <20220420004241.2093-2-joao@overdrivepizza.com>
+ <20220429013704.4n4lmadpstdioe7a@treble>
+ <d82459b887bcaf9181ad836051e2d16b@overdrivepizza.com>
+ <20220503220244.vyz5flk3gg3y6rbw@treble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMn1gO614sMzKzP6qTCcXB0QCeEu-G7CHn_h=6ikCLkFo_Z2Dg@mail.gmail.com>
+In-Reply-To: <20220503220244.vyz5flk3gg3y6rbw@treble>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 03, 2022 at 03:35:34PM -0700, Peter Collingbourne wrote:
-> On Mon, May 2, 2022 at 1:02 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Mon, May 02, 2022 at 08:22:57AM -0700, Sami Tolvanen wrote:
-> >
-> > > > Anyway, I think I hate that __builtin, I'd *much* rather see a variable
-> > > > attribute or qualifier for this, such that one can mark a function
-> > > > pointer as not doing CFI.
-> > > >
-> > > > I simply doesn't make sense to have a builtin that operates on an
-> > > > expression. The whole thing is about indirect calls, IOW function
-> > > > pointers.
-> > >
-> > > I also thought an attribute would be more convenient, but the compiler
-> > > folks prefer a built-in:
-> > >
-> > > https://reviews.llvm.org/D122673
-> >
-> > That seems to mostly worry about C++ things (overload sets, template
-> > specialization, name mangling) we kernel folks don't seem to much care
-> > about.
-> >
-> > I'll stick with saying type system makes more sense to me though.
+On Tue, May 03, 2022 at 03:02:44PM -0700, Josh Poimboeuf wrote:
+
+> I'm not really qualified to comment on this too directly since I haven't
+> looked very much at the variations on FineIBT/CFI/KCFI, and what the
+> protections and drawbacks are for each approach, and when it might even
+> make sense to combine them for a "paranoid user".
 > 
-> I'd say it's not only the C++ issues but more the "action at a
-> distance" that's implied by having this be part of the type system.
-> With this being in the function type it's hard to tell whether any
-> particular call will have CFI disabled, without needing to go and look
-> at how the function pointer is defined.
+> Since we have multiple similar and possibly competing technologies being
+> discussed, one thing I do want to warn against is that we as kernel
+> developers tend to err on the side of giving people too many choices and
+> combinations which *never* get used.
 
-Look at how we use volatile:
+So I don't think there's going to be a user choice here. If there's
+hardware support, FineIBT makes more sense. That also means that kCFI no
+longer needs to worry about IBT.
 
-	*(volatile int *)(&foo)
+If we do something like:
 
-we don't use volatile on actual variable definitions (much), but instead
-cast it in at the usage site. Same can be done with this if so desired.
 
-> On the other hand, if we
-> explicitly mark up the calls with CFI disabled, the code becomes
-> easier to audit (think Rust "unsafe" blocks).
+        kCFI                                            FineIBT
 
-I don't know any Rust. To me Rust still looks like line noise.
+__cfi_\sym:                                     __cfi_\sym:
+        endbr                           # 4             endbr                   # 4
+        sub $hash, %r10                 # 7             sub $hash, %r10         # 7
+        je \sym                         # 2             je \sym                 # 2
+        ud2                             # 2             ud2                     # 2
+\sym:                                           \sym:
 
-> Does it seem any better to you to have this be marked up via the
-> function expression, rather than the call? The idea is that this would
-> always compile to a check-free function call, no matter what "func"
-> is:
-> 
-> __builtin_kcfi_call_unchecked(func)(args)
-> 
-> We already have this, to some degree, with KCFI as implemented: CFI
-> checks are disabled if the function expression refers to a declared
-> function. The builtin would allow overriding the decision to also
-> disable CFI checks for function expressions that use the builtin. It
-> also wouldn't preclude a type based system later on (the builtin would
-> become effectively a cast to the "unchecked" type).
 
-That's still a bit naf; you've effectively made that builtin a type-cast.
+caller:                                         caller:
+        cmpl $hash, -8(%r11)            # 8             movl $hash, %r10d       # 6
+        je 1f                           # 2             sub 15, %r11            # 4
+        ud2                             # 2             call *%r11              # 3
+1:      call __x86_indirect_thunk_r11   # 5             .nop 4                  # 4 (could even fix up r11 again)
+
+
+Then, all that's required is a slight tweak to apply_retpolines() to
+rewrite a little more text.
+
+Note that this also does away with having to fix up the linker, since
+all direct call will already point at \sym. It's just the IBT indirect
+calls that need to frob the pointer in order to hit the ENDBR.
+
+On top of that, we no longer have to special case the objtool
+instruction decoder, the prelude are proper instructions now.
