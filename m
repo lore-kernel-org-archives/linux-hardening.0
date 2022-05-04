@@ -2,123 +2,297 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 386A8C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue,  3 May 2022 22:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36944C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  4 May 2022 01:47:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238125AbiECWjW (ORCPT
+        id S245368AbiEDBvL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 3 May 2022 18:39:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58128 "EHLO
+        Tue, 3 May 2022 21:51:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237217AbiECWjV (ORCPT
+        with ESMTP id S245242AbiEDBvJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 3 May 2022 18:39:21 -0400
-Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A755941F93
-        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 15:35:46 -0700 (PDT)
-Received: by mail-vs1-xe2e.google.com with SMTP id a127so17869291vsa.3
-        for <linux-hardening@vger.kernel.org>; Tue, 03 May 2022 15:35:46 -0700 (PDT)
+        Tue, 3 May 2022 21:51:09 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4A5B2F002
+        for <linux-hardening@vger.kernel.org>; Tue,  3 May 2022 18:47:33 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id j6so16129730pfe.13
+        for <linux-hardening@vger.kernel.org>; Tue, 03 May 2022 18:47:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8uN3rj4E61pEiXuH0S044PiehAa3W3BMN3Lqc1kk7Uw=;
-        b=Ue8FeaYYp63Oq+H4NMZb+pBRhFnk/iofdWy5gXeIg5QTwAVaQhcPh7NJMycsbGfWZE
-         Fc+5btEiGJmM5fEXhaxOFjxGU7fzkiSoqnkUqFrl1ZRRzs4ig52ohWMhFGSgHhm+VyaG
-         TWPDOh3RfjJbT1pjROk+5GJXdEClUvyooIraMli+y9nHLH03LpgjlCrH+hdF8m40WCQE
-         E5GOMstVRJssp5a6VJFS+WxZDfGT+cOVRpciMnyrojahl/hfM9ETPdwkTCKcre9KwcNY
-         l73O7V2zpphu3uEFz9tC/hRsuke1nKrMRDzlaIhhkSYfm4lNq2qk0/FjvFICEl6nNSsW
-         YGgg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sclcWESS1vfOtw+/lNSZNu/Le9PHpJZ15I1QqAAnvbk=;
+        b=aAevwHR9bd3JwLUN2/LQ5c9sjKYomRXHOOzT8MO771crgcUz3lq0Os/XqytwNxvtUl
+         OUsDFPJQodMi3Gdr6qEsX6JPLYzpX2mmV6xIquzdXHmOBlRoXebJSJEipFEaZ36NWHtd
+         8ThHw67NIdrIhrBqNV3S6GthwijgxDY2pMUM4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8uN3rj4E61pEiXuH0S044PiehAa3W3BMN3Lqc1kk7Uw=;
-        b=e4mrvzqPdw9FXD38dbpZjd9NtaXHNLZyuZMigNYxBVxdsTLIXerjsjJ2gSfoUtpPxH
-         EByQgIAICm4GvtcPtobmEnB9iC9DjSuB+VYe8U4X3V8XqlFeaTyO12AhkMK61cNFBs4i
-         zZAeSfDu6xNBoqJCb1EHDZGZH7Y+2A8r/5bm2pP0Rh3Oj518KdPNLIJXKM4wDovpafa8
-         UIteiGcXTrDDTgN3/TapatrbIHHd4Uy/TI6X2nk96uodJIRSYOfBr6CfCPYvuOBXvGbh
-         5uwm5xAw0cxeBmupUHQ0Zk3jFV1WJ7ZCPpEiSWgtDtkwhSWgfyhT4zcsG8CIcIShPD69
-         Iadw==
-X-Gm-Message-State: AOAM530ESK12vIpa7OAUIccOMsXejW4KaT5/v+aKOD8cl5XWB8JwVe5K
-        mVEzphykz0NIOIZZCuzIhWtKV0h6rXqc4JGTX7wK7g==
-X-Google-Smtp-Source: ABdhPJyL+ddQCd6SprqNHsm9X7kOXr4Vs6rtLnwYWhuO4UVCOvXbzKSI2dWSxbo9OUaHxwRSd1gZJrBcmkLhnuY7a5Y=
-X-Received: by 2002:a67:c408:0:b0:32d:1319:2e38 with SMTP id
- c8-20020a67c408000000b0032d13192e38mr6059296vsk.72.1651617345595; Tue, 03 May
- 2022 15:35:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220429203644.2868448-1-samitolvanen@google.com>
- <202204291545.47C6A97EA2@keescook> <Ymz7DWkRJy3PMaHm@hirez.programming.kicks-ass.net>
- <CABCJKuckt75qA1op-LpkJnQsJC36m9fstbY3uD=7pET2VyyZSg@mail.gmail.com> <YnA3Le2uJRaFF4TC@hirez.programming.kicks-ass.net>
-In-Reply-To: <YnA3Le2uJRaFF4TC@hirez.programming.kicks-ass.net>
-From:   Peter Collingbourne <pcc@google.com>
-Date:   Tue, 3 May 2022 15:35:34 -0700
-Message-ID: <CAMn1gO614sMzKzP6qTCcXB0QCeEu-G7CHn_h=6ikCLkFo_Z2Dg@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/21] KCFI support
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sclcWESS1vfOtw+/lNSZNu/Le9PHpJZ15I1QqAAnvbk=;
+        b=3Qy8mm+T3kSKMEsvEIYS3yCUjydlZXgEP62Ze2N0FeIIlI7wgczltWRRh1k0YZRufg
+         1FYZrLvGqdP4g0SEzEh5VEu92JPiRHCTeuGXJ1cE41J8HFy8tRZyLNFixZhSbugzXarK
+         qBgcQbuuA/UusojrdJ1JfnrQtMwTklnmPEiO+KgpSYtHBJpaMiUrJLQSGy5fFcXj1Urd
+         j/xoxc5zRzguW5Ru0ltucFxNG9r062uafBezweYa4kGMOfFQ5xS2X9C20o9naFeEfGCB
+         wMAlcUvqEc7p/sG3xfkhmeVFOPFeZsIszvlT8ZX88tXaVrlu9gWNJLVoBb6c4xs+mTN6
+         MkBA==
+X-Gm-Message-State: AOAM5303O5N8SJrQDv9eeg4I7hkPVBeoC+liLiKEYpRv75vV6jjGoROD
+        OVXUle4nF9P6LsF2xKdcBbo/YQ==
+X-Google-Smtp-Source: ABdhPJzUPi96Fjb/DQUWQvNyerGs6VtmC5g6wU2czv4Ww7LsLvQHH1GWpZX27vEgkGgQ9anjBam12g==
+X-Received: by 2002:a05:6a00:140f:b0:4e0:6995:9c48 with SMTP id l15-20020a056a00140f00b004e069959c48mr18620378pfu.59.1651628852898;
+        Tue, 03 May 2022 18:47:32 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v24-20020a170902e8d800b0015ea8b4b8f3sm3957768plg.263.2022.05.03.18.47.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 May 2022 18:47:32 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A . R . Silva" <gustavoars@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Andy Lavr <andy.lavr@gmail.com>,
+        Arend van Spriel <aspriel@gmail.com>,
+        Baowen Zheng <baowen.zheng@corigine.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Bradley Grove <linuxdrivers@attotech.com>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        Christian Brauner <brauner@kernel.org>,
+        =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Chris Zankel <chris@zankel.net>,
+        Cong Wang <cong.wang@bytedance.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Gow <davidgow@google.com>,
+        David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        devicetree@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Eli Cohen <elic@nvidia.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Francis Laniel <laniel_francis@privacyrequired.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gregory Greenman <gregory.greenman@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Hulk Robot <hulkci@huawei.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        John Keeping <john@metanate.com>,
+        Juergen Gross <jgross@suse.com>, Kalle Valo <kvalo@kernel.org>,
+        Keith Packard <keithp@keithp.com>, keyrings@vger.kernel.org,
+        kunit-dev@googlegroups.com,
+        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux1394-devel@lists.sourceforge.net,
+        linux-afs@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, llvm@lists.linux.dev,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Louis Peens <louis.peens@corigine.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Nathan Chancellor <nathan@kernel.org>, netdev@vger.kernel.org,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Rich Felker <dalias@aerifal.cx>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>, selinux@vger.kernel.org,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        SHA-cyfmac-dev-list@infineon.com,
+        Simon Horman <simon.horman@corigine.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Tadeusz Struk <tadeusz.struk@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
+        Udipto Goswami <quic_ugoswami@quicinc.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        wcn36xx@lists.infradead.org, Wei Liu <wei.liu@kernel.org>,
+        xen-devel@lists.xenproject.org,
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        Yang Yingliang <yangyingliang@huawei.com>
+Subject: [PATCH 00/32] Introduce flexible array struct memcpy() helpers
+Date:   Tue,  3 May 2022 18:44:09 -0700
+Message-Id: <20220504014440.3697851-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6778; h=from:subject; bh=NBPx/kHPxccGjkqS1SEj//lWw761DgDLlzW6gj8lDu4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBicdqAMDKbiuLQ8pX7zUwKdz8OKsd8xesPXEJn90lJ iEErvqmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYnHagAAKCRCJcvTf3G3AJjEaD/ sFb+hZKXd2lFEv0+WnlWvb0j4ta2t/UZVhsNUWQNDJHAVtv+Zlu02MxnR0jdR0CBnsA3iKMPIFMmfD pdgs6dba5/tH1Iyi6jW+wJXwtek/3ey7ygj+u19Odj4PSt0QygwmNm6MjSvTES52gqKWv74MU5t5xz L/SasXg+UAUYtWgal3FtLixo//9nvHNO1pQXa0nIFsWFnV/HFJgtQ4lutI26Hj2oKn8G30z3GHGSn4 1IRXOAidSEkPmoGdbgk1b5NrcIB4dDVp1bZOWVQ48/ez1pipyXC5BUmkDkC/X1S5WnuU0ZQ0UW1Grm 3khhO+QcGTzdaxvhpnGpJechhRJETE1ML25oQrj3M1NNy97RDl4CAzoWJillKIvj0+U+3eRoIKQc09 jVarH3JkPknzz7xPutFPSXX+ZRRa9ZIrntaHAJu8fM/gDMHvlhMmoSO/MpZW8uL4xNo34dAwBiIsfO 3kXWSB5poclt6J8JY4UGRwxeS2Ccjolknj9sm/IfEioLedUmK04grKYVaFhwm/AgWMQXfLQYxU4UVg LzieTWMmZ+uNuV5sEynHPDSzGXpTKhNmWdH0WmkjYCGd9FIF8ySFxwKVRfGpnPqbVGVOMqmYz9piV5 jE5S5aSXLfYPuj0uiXQg9UZZfkTvEGuBLHq71VsZwciiyvWRhtAG4UU4gmcQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 2, 2022 at 1:02 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, May 02, 2022 at 08:22:57AM -0700, Sami Tolvanen wrote:
->
-> > > Anyway, I think I hate that __builtin, I'd *much* rather see a variable
-> > > attribute or qualifier for this, such that one can mark a function
-> > > pointer as not doing CFI.
-> > >
-> > > I simply doesn't make sense to have a builtin that operates on an
-> > > expression. The whole thing is about indirect calls, IOW function
-> > > pointers.
-> >
-> > I also thought an attribute would be more convenient, but the compiler
-> > folks prefer a built-in:
-> >
-> > https://reviews.llvm.org/D122673
->
-> That seems to mostly worry about C++ things (overload sets, template
-> specialization, name mangling) we kernel folks don't seem to much care
-> about.
->
-> I'll stick with saying type system makes more sense to me though.
+Hi,
 
-I'd say it's not only the C++ issues but more the "action at a
-distance" that's implied by having this be part of the type system.
-With this being in the function type it's hard to tell whether any
-particular call will have CFI disabled, without needing to go and look
-at how the function pointer is defined. On the other hand, if we
-explicitly mark up the calls with CFI disabled, the code becomes
-easier to audit (think Rust "unsafe" blocks).
+This is the next phase of memcpy() buffer bounds checking[1], which
+starts by adding a new set of helpers to address common code patterns
+that result in memcpy() usage that can't be easily verified by the
+compiler (i.e. dynamic bounds due to flexible arrays). The runtime WARN
+from memcpy has been posted before, but now there's more context around
+alternatives for refactoring false positives, etc.
 
-Does it seem any better to you to have this be marked up via the
-function expression, rather than the call? The idea is that this would
-always compile to a check-free function call, no matter what "func"
-is:
+The core of this series is patches 2 (flex_array.h), 3 (flex_array
+KUnit), and 4 (runtime memcpy WARN). Patch 1 is a fix to land before 4
+(and I can send separately), and everything else are examples of what the
+conversions look like for one of the helpers, mem_to_flex_dup(). These
+will need to land via their respective trees, but they all depend on
+patch 2, which I'm hoping to land in the coming merge window.
 
-__builtin_kcfi_call_unchecked(func)(args)
+I'm happy to also point out that the conversions (patches 5+) are actually
+a net reduction in lines of code:
+ 49 files changed, 154 insertions(+), 244 deletions(-)
 
-We already have this, to some degree, with KCFI as implemented: CFI
-checks are disabled if the function expression refers to a declared
-function. The builtin would allow overriding the decision to also
-disable CFI checks for function expressions that use the builtin. It
-also wouldn't preclude a type based system later on (the builtin would
-become effectively a cast to the "unchecked" type).
+Anyway, please let me know what you think. And apologies in advance
+if this is spammy; the CC list got rather large due to the "treewide"
+nature of the example conversions.
 
-Peter
+Also available here:
+https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=flexcpy/next-20220502
+
+-Kees
+
+[1] https://lwn.net/Articles/864521/
+
+Kees Cook (32):
+  netlink: Avoid memcpy() across flexible array boundary
+  Introduce flexible array struct memcpy() helpers
+  flex_array: Add Kunit tests
+  fortify: Add run-time WARN for cross-field memcpy()
+  brcmfmac: Use mem_to_flex_dup() with struct brcmf_fweh_queue_item
+  iwlwifi: calib: Prepare to use mem_to_flex_dup()
+  iwlwifi: calib: Use mem_to_flex_dup() with struct iwl_calib_result
+  iwlwifi: mvm: Use mem_to_flex_dup() with struct ieee80211_key_conf
+  p54: Use mem_to_flex_dup() with struct p54_cal_database
+  wcn36xx: Use mem_to_flex_dup() with struct wcn36xx_hal_ind_msg
+  nl80211: Use mem_to_flex_dup() with struct cfg80211_cqm_config
+  cfg80211: Use mem_to_flex_dup() with struct cfg80211_bss_ies
+  mac80211: Use mem_to_flex_dup() with several structs
+  af_unix: Use mem_to_flex_dup() with struct unix_address
+  802/garp: Use mem_to_flex_dup() with struct garp_attr
+  802/mrp: Use mem_to_flex_dup() with struct mrp_attr
+  net/flow_offload: Use mem_to_flex_dup() with struct flow_action_cookie
+  firewire: Use __mem_to_flex_dup() with struct iso_interrupt_event
+  afs: Use mem_to_flex_dup() with struct afs_acl
+  ASoC: sigmadsp: Use mem_to_flex_dup() with struct sigmadsp_data
+  soc: qcom: apr: Use mem_to_flex_dup() with struct apr_rx_buf
+  atags_proc: Use mem_to_flex_dup() with struct buffer
+  Bluetooth: Use mem_to_flex_dup() with struct
+    hci_op_configure_data_path
+  IB/hfi1: Use mem_to_flex_dup() for struct tid_rb_node
+  Drivers: hv: utils: Use mem_to_flex_dup() with struct cn_msg
+  ima: Use mem_to_flex_dup() with struct modsig
+  KEYS: Use mem_to_flex_dup() with struct user_key_payload
+  selinux: Use mem_to_flex_dup() with xfrm and sidtab
+  xtensa: Use mem_to_flex_dup() with struct property
+  usb: gadget: f_fs: Use mem_to_flex_dup() with struct ffs_buffer
+  xenbus: Use mem_to_flex_dup() with struct read_buffer
+  esas2r: Use __mem_to_flex() with struct atto_ioctl
+
+ arch/arm/kernel/atags_proc.c                  |  12 +-
+ arch/xtensa/platforms/xtfpga/setup.c          |   9 +-
+ drivers/firewire/core-cdev.c                  |   7 +-
+ drivers/hv/hv_utils_transport.c               |   7 +-
+ drivers/infiniband/hw/hfi1/user_exp_rcv.c     |   7 +-
+ drivers/infiniband/hw/hfi1/user_exp_rcv.h     |   4 +-
+ drivers/net/wireless/ath/wcn36xx/smd.c        |   8 +-
+ drivers/net/wireless/ath/wcn36xx/smd.h        |   4 +-
+ .../broadcom/brcm80211/brcmfmac/fweh.c        |  11 +-
+ drivers/net/wireless/intel/iwlwifi/dvm/agn.h  |   2 +-
+ .../net/wireless/intel/iwlwifi/dvm/calib.c    |  23 +-
+ .../net/wireless/intel/iwlwifi/dvm/ucode.c    |   8 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.c  |   8 +-
+ drivers/net/wireless/intersil/p54/eeprom.c    |   8 +-
+ drivers/net/wireless/intersil/p54/p54.h       |   4 +-
+ drivers/scsi/esas2r/atioctl.h                 |   1 +
+ drivers/scsi/esas2r/esas2r_ioctl.c            |  11 +-
+ drivers/soc/qcom/apr.c                        |  12 +-
+ drivers/usb/gadget/function/f_fs.c            |  11 +-
+ drivers/xen/xenbus/xenbus_dev_frontend.c      |  12 +-
+ fs/afs/internal.h                             |   4 +-
+ fs/afs/xattr.c                                |   7 +-
+ include/keys/user-type.h                      |   4 +-
+ include/linux/flex_array.h                    | 637 ++++++++++++++++++
+ include/linux/fortify-string.h                |  70 +-
+ include/linux/of.h                            |   3 +-
+ include/linux/string.h                        |   1 +
+ include/net/af_unix.h                         |  14 +-
+ include/net/bluetooth/hci.h                   |   4 +-
+ include/net/cfg80211.h                        |   4 +-
+ include/net/flow_offload.h                    |   4 +-
+ include/net/garp.h                            |   4 +-
+ include/net/mac80211.h                        |   4 +-
+ include/net/mrp.h                             |   4 +-
+ include/uapi/linux/connector.h                |   4 +-
+ include/uapi/linux/firewire-cdev.h            |   4 +-
+ include/uapi/linux/netlink.h                  |   1 +
+ include/uapi/linux/stddef.h                   |  14 +
+ include/uapi/linux/xfrm.h                     |   4 +-
+ lib/Kconfig.debug                             |  12 +-
+ lib/Makefile                                  |   1 +
+ lib/flex_array_kunit.c                        | 523 ++++++++++++++
+ net/802/garp.c                                |   9 +-
+ net/802/mrp.c                                 |   9 +-
+ net/bluetooth/hci_request.c                   |   9 +-
+ net/core/flow_offload.c                       |   7 +-
+ net/mac80211/cfg.c                            |  22 +-
+ net/mac80211/ieee80211_i.h                    |  12 +-
+ net/netlink/af_netlink.c                      |   5 +-
+ net/unix/af_unix.c                            |   7 +-
+ net/wireless/core.h                           |   4 +-
+ net/wireless/nl80211.c                        |  15 +-
+ net/wireless/scan.c                           |  21 +-
+ security/integrity/ima/ima_modsig.c           |  12 +-
+ security/keys/user_defined.c                  |   7 +-
+ security/selinux/ss/sidtab.c                  |   9 +-
+ security/selinux/xfrm.c                       |   7 +-
+ sound/soc/codecs/sigmadsp.c                   |  11 +-
+ 58 files changed, 1409 insertions(+), 253 deletions(-)
+ create mode 100644 include/linux/flex_array.h
+ create mode 100644 lib/flex_array_kunit.c
+
+-- 
+2.32.0
+
