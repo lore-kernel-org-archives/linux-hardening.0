@@ -2,91 +2,116 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFBCC433EF
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 May 2022 00:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 226F4C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 May 2022 03:14:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231588AbiEEAdN (ORCPT
+        id S238133AbiEEDRl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 4 May 2022 20:33:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51702 "EHLO
+        Wed, 4 May 2022 23:17:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231906AbiEEAdM (ORCPT
+        with ESMTP id S232469AbiEEDRl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 4 May 2022 20:33:12 -0400
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C442D54BC0
-        for <linux-hardening@vger.kernel.org>; Wed,  4 May 2022 17:29:34 -0700 (PDT)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-2f7c57ee6feso33421307b3.2
-        for <linux-hardening@vger.kernel.org>; Wed, 04 May 2022 17:29:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+DBZHgTgHhGifz1O+OvTLRL4mlr40VVe72aYyr9oFJs=;
-        b=dufIc96PMUlxP7YcnxTZoMITLMW8Y8Vo05y80Fc6JcS6UdgaV0y+6VIGR01O9ZyAFn
-         VzgCR2el/k9vlj/s3PNNu1ujfqQGw0o4JhuN6JoKakSGUfCC0EkykjyAuq+tQKFxgZZ/
-         GVl99IrkhYo99EI/plVjYvWuSlliV2lt3vfymRAoKwa/Bw7ItBwDYrcO+AhCCmNWjzcz
-         FaLAW5c/R6V6hjaS0RaO65IAFph/k2zU7r4m3tPSKtOLZmPJtVpDRegKLE9+pCML2Hkr
-         6hV1zIFdE1SFEzA3r4ZR+kzUzCWEQBlKP1Dsw5QGGA9fC2MwHnt14Z2z4QLSXJN7nyDe
-         i5Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+DBZHgTgHhGifz1O+OvTLRL4mlr40VVe72aYyr9oFJs=;
-        b=fY2hjEKTROr6fURljZT723zeBFgVclkxouKKpmJjKVm87h8kUga/osNZjbCk/LnxXY
-         iLcoFtxO62i3Y86aFOCacr8P3g+1NzwGcg7jEOhsF6js5c5Vs5htg6VufEp++Sbt5KFK
-         n9CfoA4lyiThSgBXxZyygmRedhwJuyfwGuOOy9/7a0iDz3067O5AVeVEUG8piU2vj45X
-         CLzUJyLmkq3imyqGyVCYytiBbr596HriLBpJXi6gmXCfR7h+GNVXmItV4wDxtuf6MkTf
-         Po09kmM9TGjx/IQGOMMHJM8D8AnMSPGRv2qemmrABRl4GaGOSOsaAHmZJSMlB4BVs8ut
-         QyrA==
-X-Gm-Message-State: AOAM533x+sqVWdnK+IPcWqNkqgoLnAZnwIudG6QuMbXz4K2nkT/IVdmB
-        PDMvzrUnkxbODpYMXmYmp/sKg7ivuk1pf5Ezq9W/rg==
-X-Google-Smtp-Source: ABdhPJzxktpUG4Yp9bPU3HQqkPixfSm6UoQDjkuYNelP2+Ks74Aez5gQHsRBFtq1NoKFbP2TcO2lCR/gg4qL/ccgLHo=
-X-Received: by 2002:a81:8d02:0:b0:2f8:c9f7:4041 with SMTP id
- d2-20020a818d02000000b002f8c9f74041mr21759476ywg.117.1651710573858; Wed, 04
- May 2022 17:29:33 -0700 (PDT)
+        Wed, 4 May 2022 23:17:41 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5067920F66;
+        Wed,  4 May 2022 20:14:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EB3A5B82794;
+        Thu,  5 May 2022 03:14:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED32EC385A5;
+        Thu,  5 May 2022 03:13:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651720440;
+        bh=fgYShDk8J/LH7fRewSMC+BYKPB5NxskQkpkXs8hqxDs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Gu8BTaS6QcvN1Zcekn09aNMpiKrZ9CwVxhA+jmfPxjC756WBiUYF+PQtSaX3xzv0C
+         WyAvNADizjYRGzBFni+0HqRpXeOUVOjg8WES8/iUOZ8+MICEO2tYZXqGIzVrC+pYR9
+         5KzVzpyoiK32DuYzLzdKP9OiZR1Hij1i3gS4meXMP7qH9jTEdHWyAzkc6zDcSmGDmN
+         xREyDvy+jPrCIfl6VNibDFXcg8GC6ehZ9/X7cmlyVM9TeWwySYbGw/TYJ6hkWeNJGo
+         ZYbThIgvL41D63EC8IcDOPCl88QI75i06nKBS27oAmvBtMYTCkgvoiVLylSEPGNCht
+         H9zuPE6rjSBNg==
+Date:   Wed, 4 May 2022 20:13:58 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Raju Rangoju <rajur@chelsio.com>,
+        kernel test robot <lkp@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] net: chelsio: cxgb4: Avoid potential negative array
+ offset
+Message-ID: <20220504201358.0ba62232@kernel.org>
+In-Reply-To: <20220503144425.2858110-1-keescook@chromium.org>
+References: <20220503144425.2858110-1-keescook@chromium.org>
 MIME-Version: 1.0
-References: <20220420004241.2093-1-joao@overdrivepizza.com>
- <20220420004241.2093-2-joao@overdrivepizza.com> <20220429013704.4n4lmadpstdioe7a@treble>
- <d82459b887bcaf9181ad836051e2d16b@overdrivepizza.com> <20220503220244.vyz5flk3gg3y6rbw@treble>
- <YnJTYzralOhGGmED@hirez.programming.kicks-ass.net> <YnKx5a9WvJ1UhWPm@google.com>
- <YnLDGcJGKfqi5+8w@hirez.programming.kicks-ass.net>
-In-Reply-To: <YnLDGcJGKfqi5+8w@hirez.programming.kicks-ass.net>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Wed, 4 May 2022 17:28:57 -0700
-Message-ID: <CABCJKueqqq-keiyE8tYJQtfitxQt08vQwEfG41C8t3aJC8AwKQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 01/11] x86: kernel FineIBT
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Peter Collingbourne <pcc@google.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org, andrew.cooper3@citrix.com,
-        Kees Cook <keescook@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>, hjl.tools@gmail.com,
-        alyssa.milburn@linux.intel.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        gabriel.gomes@linux.intel.com, rick.p.edgecombe@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 4, 2022 at 11:17 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> __cfi_\sym:                                     __cfi_\sym:
->                                                         int3; int3                              # 2
->         endbr                   # 4                     mov     \hash, %eax                     # 5
->         call    __fineibt_\hash # 5                     int3; int3                              # 2
-> \sym:                                           \sym:
+On Tue,  3 May 2022 07:44:25 -0700 Kees Cook wrote:
+> Using min_t(int, ...) as a potential array index implies to the compiler
+> that negative offsets should be allowed. This is not the case, though.
+> Replace min_t() with clamp_t(). Fixes the following warning exposed
+> under future CONFIG_FORTIFY_SOURCE improvements:
 
-OK, that looks reasonable to me.
+> Additionally remove needless cast from u8[] to char * in last strim()
+> call.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/lkml/202205031926.FVP7epJM-lkp@intel.com
+> Fixes: fc9279298e3a ("cxgb4: Search VPD with pci_vpd_find_ro_info_keyword()")
+> Fixes: 24c521f81c30 ("cxgb4: Use pci_vpd_find_id_string() to find VPD ID string")
 
-> It seems to preserve the properties of the last one in that direct calls
-> will already be correct and we don't need linker fixups, and objtool can
-> simply parse the preamble as regular instructions without needing
-> further help.
+Is it needed in the current release?
 
-Wouldn't objtool still print out unreachable instruction warnings here?
+> Cc: Raju Rangoju <rajur@chelsio.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: netdev@vger.kernel.org
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  drivers/net/ethernet/chelsio/cxgb4/t4_hw.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+> index e7b4e3ed056c..f119ec7323e5 100644
+> --- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+> +++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+> @@ -2793,14 +2793,14 @@ int t4_get_raw_vpd_params(struct adapter *adapter, struct vpd_params *p)
+>  		goto out;
+>  	na = ret;
+>  
+> -	memcpy(p->id, vpd + id, min_t(int, id_len, ID_LEN));
+> +	memcpy(p->id, vpd + id, clamp_t(int, id_len, 0, ID_LEN));
 
-Sami
+The typing is needed because of the enum, right? The variable is
+unsigned, seems a little strange to use clamp(int, ..., 0, constant)
+min(unsigned int, ..., constant) will be equivalent with fewer branches.
+Is it just me?
+
+>  	strim(p->id);
+> -	memcpy(p->sn, vpd + sn, min_t(int, sn_len, SERNUM_LEN));
+> +	memcpy(p->sn, vpd + sn, clamp_t(int, sn_len, 0, SERNUM_LEN));
+>  	strim(p->sn);
+> -	memcpy(p->pn, vpd + pn, min_t(int, pn_len, PN_LEN));
+> +	memcpy(p->pn, vpd + pn, clamp_t(int, pn_len, 0, PN_LEN));
+>  	strim(p->pn);
+> -	memcpy(p->na, vpd + na, min_t(int, na_len, MACADDR_LEN));
+> -	strim((char *)p->na);
+> +	memcpy(p->na, vpd + na, clamp_t(int, na_len, 0, MACADDR_LEN));
+> +	strim(p->na);
+>  
+>  out:
+>  	vfree(vpd);
+
