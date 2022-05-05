@@ -2,98 +2,81 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D43C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 May 2022 11:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB48C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 May 2022 12:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354729AbiEELYe (ORCPT
+        id S239137AbiEEMkT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 May 2022 07:24:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55520 "EHLO
+        Thu, 5 May 2022 08:40:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238682AbiEELYd (ORCPT
+        with ESMTP id S235778AbiEEMkS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 May 2022 07:24:33 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFE66205F3;
-        Thu,  5 May 2022 04:20:52 -0700 (PDT)
-Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.55])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4KvB2x6FckzHnV5;
-        Thu,  5 May 2022 19:16:09 +0800 (CST)
-Received: from ubuntu1804.huawei.com (10.67.174.58) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 5 May 2022 19:20:51 +0800
-From:   Xiu Jianfeng <xiujianfeng@huawei.com>
-To:     <mpe@ellerman.id.au>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <npiggin@gmail.com>,
-        <christophe.leroy@csgroup.eu>, <tglx@linutronix.de>,
-        <mark.rutland@arm.com>
-CC:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>
-Subject: [PATCH -next] powerpc: add support for syscall stack randomization
-Date:   Thu, 5 May 2022 19:19:32 +0800
-Message-ID: <20220505111932.228814-1-xiujianfeng@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 5 May 2022 08:40:18 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E24031CB22;
+        Thu,  5 May 2022 05:36:39 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7A1F106F;
+        Thu,  5 May 2022 05:36:39 -0700 (PDT)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.29.132])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 918A43F885;
+        Thu,  5 May 2022 05:36:37 -0700 (PDT)
+Date:   Thu, 5 May 2022 13:36:29 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Joao Moreira <joao@overdrivepizza.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-hardening@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        llvm@lists.linux.dev
+Subject: Re: [RFC PATCH 00/21] KCFI support
+Message-ID: <YnPEzeab/R270gAZ@FVFF77S0Q05N.cambridge.arm.com>
+References: <20220429203644.2868448-1-samitolvanen@google.com>
+ <YnKnLyyXPJl5Llc0@FVFF77S0Q05N>
+ <CABCJKudT9r=r0an4BwNp0-E1wC94wLWiHvUX4_vA8tDkQ=uHKQ@mail.gmail.com>
+ <CABCJKuc-6daZd8N6hQV6i_TtCtVpfzxJ2UW6xwxC2vxTmJ2deg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.174.58]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpeml500023.china.huawei.com (7.185.36.114)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABCJKuc-6daZd8N6hQV6i_TtCtVpfzxJ2UW6xwxC2vxTmJ2deg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add support for adding a random offset to the stack while handling
-syscalls. This patch uses mftb() instead of get_random_int() for better
-performance.
+On Wed, May 04, 2022 at 01:17:25PM -0700, Sami Tolvanen wrote:
+> On Wed, May 4, 2022 at 9:41 AM Sami Tolvanen <samitolvanen@google.com> wrote:
+> >
+> > Hi Mark,
+> >
+> > On Wed, May 4, 2022 at 9:18 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> > > I wanted to give this a spin on arm64, but I'm seeing some very odd toolchain
+> > > behaviour. I'm not sure if I've done something wrong, or if I'm just hitting an
+> > > edge-case, but it looks like using -fsanitize=kcfi causes the toolchain to hit
+> > > out-of-memory errors and other issues which look like they could be memory
+> > > corruption.
+> >
+> > Thanks for the detailed bug report! It definitely looks like something
+> > is wrong with the recent switch from std::string to Twine in the Clang
+> > code. I didn't see this issue when compiling the arm64 kernel, but
+> > I'll take a closer look and see if I can reproduce it.
+> 
+> I was able to reproduce this by turning off assertions in Clang. It
+> seems to work fine with -DLLVM_ENABLE_ASSERTIONS=ON. I'll go fix.
 
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
- arch/powerpc/Kconfig            | 1 +
- arch/powerpc/kernel/interrupt.c | 3 +++
- 2 files changed, 4 insertions(+)
+FWIW, a `-DLLVM_ENABLE_ASSERTIONS=ON` build also seems to work for me when
+building a kernel with CONFIG_CFI_CLANG=y. It's much slower than a regular
+Release build, so I'm still waiting for that to finish building a kernel, but
+it has gotten much further through the build without issues.
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 5fc9153927ac..7e04c9f80cbc 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -192,6 +192,7 @@ config PPC
- 	select HAVE_ARCH_KASAN			if PPC32 && PPC_PAGE_SHIFT <= 14
- 	select HAVE_ARCH_KASAN_VMALLOC		if PPC32 && PPC_PAGE_SHIFT <= 14
- 	select HAVE_ARCH_KFENCE			if PPC_BOOK3S_32 || PPC_8xx || 40x
-+	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
- 	select HAVE_ARCH_KGDB
- 	select HAVE_ARCH_MMAP_RND_BITS
- 	select HAVE_ARCH_MMAP_RND_COMPAT_BITS	if COMPAT
-diff --git a/arch/powerpc/kernel/interrupt.c b/arch/powerpc/kernel/interrupt.c
-index 784ea3289c84..459385769721 100644
---- a/arch/powerpc/kernel/interrupt.c
-+++ b/arch/powerpc/kernel/interrupt.c
-@@ -4,6 +4,7 @@
- #include <linux/err.h>
- #include <linux/compat.h>
- #include <linux/sched/debug.h> /* for show_regs */
-+#include <linux/randomize_kstack.h>
- 
- #include <asm/kup.h>
- #include <asm/cputime.h>
-@@ -82,6 +83,7 @@ notrace long system_call_exception(long r3, long r4, long r5,
- 
- 	kuap_lock();
- 
-+	add_random_kstack_offset();
- 	regs->orig_gpr3 = r3;
- 
- 	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
-@@ -405,6 +407,7 @@ interrupt_exit_user_prepare_main(unsigned long ret, struct pt_regs *regs)
- 
- 	/* Restore user access locks last */
- 	kuap_user_restore(regs);
-+	choose_random_kstack_offset(mftb() & 0xFF);
- 
- 	return ret;
- }
--- 
-2.17.1
-
+Thanks,
+Mark.
