@@ -2,211 +2,93 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB98C4321E
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 May 2022 03:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E74C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 May 2022 07:36:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240668AbiEEDSh (ORCPT
+        id S1345345AbiEEHk0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 4 May 2022 23:18:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46120 "EHLO
+        Thu, 5 May 2022 03:40:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240703AbiEEDSf (ORCPT
+        with ESMTP id S1345357AbiEEHkY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 4 May 2022 23:18:35 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E9634EDFB
-        for <linux-hardening@vger.kernel.org>; Wed,  4 May 2022 20:14:55 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id q23so4345018wra.1
-        for <linux-hardening@vger.kernel.org>; Wed, 04 May 2022 20:14:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6ucVUJA/3XuUnAZZDdzrSa00V5OM/xNG80G7w+rY/AM=;
-        b=TuxTKLvOuI4WPEKhesTppN+S/ZTkV+RZI5Wf5W2p+hsrw7/gyfISF8EIiT+rnx8Zu6
-         zyyiN1wYwPcxjcCA2Sf5xnxirRkddqYIXy2R06dd7qAEUind0ZWDkOOMEqGzEQWPzWzC
-         ZTGq5qihhGmXwhHHxuYfhzg3wQjnC+ThZO+LDVhD9+QIb89VKx3wO1YbUFwWrxXrBCMa
-         SL8UA4+69pMFcpj8M2pJPoNe1J5xXeNZwxQABf1kR5+ALPhLTrYwt5fLtjpY8BeYkBF4
-         nHH6g/sC5IM5M9d/Ecm/JssJwuDneWf8+Vn5nXmTehGUz+AEuc9+Pt2ztZNda+z83bgG
-         KQkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6ucVUJA/3XuUnAZZDdzrSa00V5OM/xNG80G7w+rY/AM=;
-        b=4BCsFN5s3kOsts+3aSY5k0KV/PghdrF6gkE7H7hW+CgWfVvnAqPuvnkzkeA1avbanN
-         Sw+W+R7FDe13sl3iz20Bv2aSGvruRxGsFaX8hRFJBFBsGdX4rXQCH4vSzNyDp5dGk/KS
-         DzMR28o/+tay+eKyCcXCxg2+D/ISVXeXS+f9eiDofZ3RDArIVAlP+K3urfRUsDMMngiM
-         ZcETj+0gPvLuGOJ3ji/NxrJdXbuD3XiTs2jZSBVfZ4qrx3IqK2T9z90y0umSkzbCS24I
-         M4g8Gt7EL/7NRiaMFrwxBkBV9cjg9xzPS//advkYy7KVSmku2BUUswMLuxebST0dIYtg
-         hkrA==
-X-Gm-Message-State: AOAM533r+QC3jjMZ4VSMfd9YHI2J0yIg7jQ+K2pghd4IfRxt12yynWEn
-        8CcR74MigLvkfyQxMKwywXIfQghEtSwFvlJfNGfz
-X-Google-Smtp-Source: ABdhPJzVMX+BMHIo/6Rx3rt/EGt5DUCiA1Xs3vZE5oz5hLJkbM0bMmp2okAEnKI/au/mDAitpvRIKuXqsxBU1V8TuLw=
-X-Received: by 2002:a5d:590d:0:b0:20a:c3eb:2584 with SMTP id
- v13-20020a5d590d000000b0020ac3eb2584mr18412244wrd.18.1651720493308; Wed, 04
- May 2022 20:14:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220504014440.3697851-1-keescook@chromium.org>
- <20220504014440.3697851-29-keescook@chromium.org> <CAHC9VhT5Y=ENiSyb=S-NVbGX63sLOv4nVuR_GS-yww6tiz0wYA@mail.gmail.com>
- <20220504234324.GA12556@embeddedor>
-In-Reply-To: <20220504234324.GA12556@embeddedor>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 4 May 2022 23:14:42 -0400
-Message-ID: <CAHC9VhRJC4AxeDsGpdphfJD4WzgaeBsdONHnixBzft5u_cE-Dw@mail.gmail.com>
-Subject: Re: [PATCH 28/32] selinux: Use mem_to_flex_dup() with xfrm and sidtab
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
+        Thu, 5 May 2022 03:40:24 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACF0248E59;
+        Thu,  5 May 2022 00:36:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=wcYnBFlZFnuL55r/7R4vP4SWucs4Cfa2ZGuWm0/JeN4=; b=Mef7Zg8e6eUtD1INYhQtlDQDK2
+        TnLMqT87vd+VUwl51mcl7AmONX5pV/tgJ0uw7oTAwA7caDwbAukT4DnHzM8KLsHAsS9h9m+DgpXuG
+        +vZiTI4lrPOlk+6McJj9+HclMTCtZGIETMOAMT5HqfbSX5vWN6kdGECWPnC2bc6QU14ROKZ/njaTk
+        P/frbgH2tbsIm+YynyjOXa/y3RbefwHuSkpyLgOuwHCTiJpEqGhu595W7vOTiU7+3kkTAFKsBRGbx
+        2HEU+isTfSeF35GTlMtDZkhil0YktLztT2YFIxRy6Xht0XtGFMZdpMqVPuxA3tnx+vbxF/Ljm5v+Z
+        GEa2qq6g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nmW2D-00HN1E-Dk; Thu, 05 May 2022 07:36:25 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EBDE8980DFE; Thu,  5 May 2022 09:36:22 +0200 (CEST)
+Date:   Thu, 5 May 2022 09:36:22 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Peter Collingbourne <pcc@google.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Joao Moreira <joao@overdrivepizza.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org, andrew.cooper3@citrix.com,
+        Kees Cook <keescook@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>, hjl.tools@gmail.com,
+        alyssa.milburn@linux.intel.com,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>,
-        =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>,
-        netdev@vger.kernel.org, selinux@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Andy Lavr <andy.lavr@gmail.com>,
-        Arend van Spriel <aspriel@gmail.com>,
-        Baowen Zheng <baowen.zheng@corigine.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Bradley Grove <linuxdrivers@attotech.com>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        Christian Brauner <brauner@kernel.org>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Chris Zankel <chris@zankel.net>,
-        Cong Wang <cong.wang@bytedance.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Gow <davidgow@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        devicetree@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Eli Cohen <elic@nvidia.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Francis Laniel <laniel_francis@privacyrequired.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gregory Greenman <gregory.greenman@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        John Keeping <john@metanate.com>,
-        Juergen Gross <jgross@suse.com>, Kalle Valo <kvalo@kernel.org>,
-        Keith Packard <keithp@keithp.com>, keyrings@vger.kernel.org,
-        kunit-dev@googlegroups.com,
-        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux1394-devel@lists.sourceforge.net,
-        linux-afs@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, llvm@lists.linux.dev,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Louis Peens <louis.peens@corigine.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Rich Felker <dalias@aerifal.cx>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        SHA-cyfmac-dev-list@infineon.com,
-        Simon Horman <simon.horman@corigine.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Tadeusz Struk <tadeusz.struk@linaro.org>,
-        Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
-        Udipto Goswami <quic_ugoswami@quicinc.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        wcn36xx@lists.infradead.org, Wei Liu <wei.liu@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        Yang Yingliang <yangyingliang@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+        gabriel.gomes@linux.intel.com, rick.p.edgecombe@intel.com
+Subject: Re: [RFC PATCH 01/11] x86: kernel FineIBT
+Message-ID: <20220505073622.GC2501@worktop.programming.kicks-ass.net>
+References: <20220420004241.2093-1-joao@overdrivepizza.com>
+ <20220420004241.2093-2-joao@overdrivepizza.com>
+ <20220429013704.4n4lmadpstdioe7a@treble>
+ <d82459b887bcaf9181ad836051e2d16b@overdrivepizza.com>
+ <20220503220244.vyz5flk3gg3y6rbw@treble>
+ <YnJTYzralOhGGmED@hirez.programming.kicks-ass.net>
+ <YnKx5a9WvJ1UhWPm@google.com>
+ <YnLDGcJGKfqi5+8w@hirez.programming.kicks-ass.net>
+ <CABCJKueqqq-keiyE8tYJQtfitxQt08vQwEfG41C8t3aJC8AwKQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABCJKueqqq-keiyE8tYJQtfitxQt08vQwEfG41C8t3aJC8AwKQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 4, 2022 at 7:34 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> Hi Paul,
->
-> On Wed, May 04, 2022 at 06:57:28PM -0400, Paul Moore wrote:
-> > On Tue, May 3, 2022 at 9:57 PM Kees Cook <keescook@chromium.org> wrote:
->
-> [..]
->
-> > > +++ b/include/uapi/linux/xfrm.h
-> > > @@ -31,9 +31,9 @@ struct xfrm_id {
-> > >  struct xfrm_sec_ctx {
-> > >         __u8    ctx_doi;
-> > >         __u8    ctx_alg;
-> > > -       __u16   ctx_len;
-> > > +       __DECLARE_FLEX_ARRAY_ELEMENTS_COUNT(__u16, ctx_len);
-> > >         __u32   ctx_sid;
-> > > -       char    ctx_str[0];
-> > > +       __DECLARE_FLEX_ARRAY_ELEMENTS(char, ctx_str);
-> > >  };
-> >
-> > While I like the idea of this in principle, I'd like to hear about the
-> > testing you've done on these patches.  A previous flex array
-> > conversion in the audit uapi headers ended up causing a problem with
->
-> I'm curious about which commit caused those problems...?
+On Wed, May 04, 2022 at 05:28:57PM -0700, Sami Tolvanen wrote:
+> On Wed, May 4, 2022 at 11:17 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > __cfi_\sym:                                     __cfi_\sym:
+> >                                                         int3; int3                              # 2
+> >         endbr                   # 4                     mov     \hash, %eax                     # 5
+> >         call    __fineibt_\hash # 5                     int3; int3                              # 2
+> > \sym:                                           \sym:
+> 
+> OK, that looks reasonable to me.
+> 
+> > It seems to preserve the properties of the last one in that direct calls
+> > will already be correct and we don't need linker fixups, and objtool can
+> > simply parse the preamble as regular instructions without needing
+> > further help.
+> 
+> Wouldn't objtool still print out unreachable instruction warnings here?
 
-Commit ed98ea2128b6 ("audit: replace zero-length array with
-flexible-array member"), however, as I said earlier, the problem was
-actually with SWIG, it just happened to be triggered by the kernel
-commit.  There was a brief fedora-devel mail thread about the problem,
-see the link below:
+Depends a bit on what kind of symbol they end up being, if they're
+STT_FUNC we'll probably get the complaint that it falls through into the
+next symbol, while if they're STT_NOTYPE then yes, we'll get the
+unreachable thing.
 
-* https://www.spinics.net/lists/fedora-devel/msg297991.html
+So either way we need to special case the __cfi_\sym things anyway.
 
-To reiterate, I'm supportive of changes like this, but I would like to
-hear how it was tested to ensure there are no unexpected problems with
-userspace.  If there are userspace problems it doesn't mean we can't
-make changes like this, it just means we need to ensure that the
-userspace issues are resolved first.
-
--- 
-paul-moore.com
+But that should be relatively straight forward. I think I would lean
+towards making then STT_FUNC (they really are for FineIBT anyway) and
+then supressing the fallthrough warning for all functions that start
+with "__cfi_". This way we get an ORC entry for them and the unwinder
+will be happy.
