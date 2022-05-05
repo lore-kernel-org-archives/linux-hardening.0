@@ -2,63 +2,32 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FD9C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 May 2022 16:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3E9C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 May 2022 16:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378443AbiEEQ1q (ORCPT
+        id S1381993AbiEEQd7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 May 2022 12:27:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49108 "EHLO
+        Thu, 5 May 2022 12:33:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353882AbiEEQ1p (ORCPT
+        with ESMTP id S1381473AbiEEQdx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 May 2022 12:27:45 -0400
-Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E4975BE52
-        for <linux-hardening@vger.kernel.org>; Thu,  5 May 2022 09:24:04 -0700 (PDT)
-Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-2f7b815ac06so54450817b3.3
-        for <linux-hardening@vger.kernel.org>; Thu, 05 May 2022 09:24:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=smRiEfnbDo26TwlBRyyocGS+bQqlFH9vecfF+kAEs0s=;
-        b=Qchh5LkpHNgVC4oS9Z3uWgrF0tIOlBwLOSM/ue3hd7CJxr3Xz29EiGWTzgXTX2LwGK
-         4uq7mH3isrmT1EXJizLeJvJFDf9LhlUWCoaapbPnape0t+PH8AJj+InrnhX20me7M3HY
-         0B22flgiAh5eU+2rzqiChpz1dG3nkkfcoA5K4izNjU7LnZI5qiNJ1bES9xbfWS0aiMLn
-         FMtUx1jWRGAWdwCFESrmwS5Fc8W+htfQnqj9NZBWJhEW4YYXh4B6Plfp1rs4wwS80kCy
-         61wjIvrcCLt+vJmaIMIapWofk3R5LsYlU1VYyQHWZBjyEYCrwX1AeAxL3OazAT1j/diq
-         aQ8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=smRiEfnbDo26TwlBRyyocGS+bQqlFH9vecfF+kAEs0s=;
-        b=oBIWaFgQOT9pcAXK0TLz4O5XxbUkmF6QNt4PrC56Pm9U3xfCBt6Zdk2mIksJ9NFe0D
-         /kz1wNGEV3lt+Hbfd87bgLOBIelmR94U9UoAG+4nDLJTB4S8tMU/ke4MYULJTRRImvKF
-         iA0NJy7U9EovwIWf2G9UBkyiNoEskW41SLN4AuYjd0nYy6RYhVR9Mv0mFMtWMi3eif3z
-         /FZMfH8aV1lP6IZosfvxCuaF4FTe4QPHX5G2RJuSRFBY/3WfbjdXEImyKglGElARAzcB
-         M4xIDxqmAqoAzZGhBBUlZP+A+ERyIkElotTFFHiI4iapDeC5rqi6n31LnrOOy5fSwFWA
-         8i5w==
-X-Gm-Message-State: AOAM5329KVzfCTAeKTVOLEQETLsYlXP5KvBLnEYZ7tBtN8mSExU40FCS
-        6OrELE79hQaVOsYLqmtBvuVsFQV+ZAFDrldQJJibXQ==
-X-Google-Smtp-Source: ABdhPJwBW6nLJQllaWjle33ZcjdAaJs8arGj4v4LRwbmOZTByqaTFnO79d1yMOwsSb1JbpmCL3d16OL6yDeASvHtlUs=
-X-Received: by 2002:a81:a93:0:b0:2f4:d65a:d44e with SMTP id
- 141-20020a810a93000000b002f4d65ad44emr23725228ywk.243.1651767843390; Thu, 05
- May 2022 09:24:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220429203644.2868448-1-samitolvanen@google.com>
- <20220429203644.2868448-10-samitolvanen@google.com> <YnPw+SiY9Ij/b7Yg@FVFF77S0Q05N.cambridge.arm.com>
-In-Reply-To: <YnPw+SiY9Ij/b7Yg@FVFF77S0Q05N.cambridge.arm.com>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Thu, 5 May 2022 09:23:27 -0700
-Message-ID: <CABCJKufjVAbSCcoQZzkemvkmMmwb6DoRYNPu3ADHGoRL_zFPtg@mail.gmail.com>
-Subject: Re: [RFC PATCH 09/21] arm64: Add CFI error handling
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
+        Thu, 5 May 2022 12:33:53 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BA2895C65A;
+        Thu,  5 May 2022 09:30:12 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85844106F;
+        Thu,  5 May 2022 09:30:12 -0700 (PDT)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.38.147])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D2573FA31;
+        Thu,  5 May 2022 09:30:10 -0700 (PDT)
+Date:   Thu, 5 May 2022 17:30:07 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         Nathan Chancellor <nathan@kernel.org>,
@@ -67,38 +36,162 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Sedat Dilek <sedat.dilek@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-hardening@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+Subject: Re: [RFC PATCH 10/21] treewide: Drop function_nocfi
+Message-ID: <YnP7j+miotxYM6fu@FVFF77S0Q05N.cambridge.arm.com>
+References: <20220429203644.2868448-1-samitolvanen@google.com>
+ <20220429203644.2868448-11-samitolvanen@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220429203644.2868448-11-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, May 5, 2022 at 8:45 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> It would be a bit nicer if we could encode the register index into the BRK
-> immediate, i.e. allocate a range of 32 immediates (or 31 given BLR XZR is
-> nonsensical), and have:
->
->         BRK #CFI_BRK_IMM + n
->
-> ... where `n` is the Xn index.
->
-> That way the kernel doesn't need to know the specific code sequence and
-> wouldn't have to decode the instruction to find the relevant register -- we
-> could determine that from the ESR alone. That would also avoid tying the
-> compiler into a specific code sequence, and would allow that to change.
->
-> Since the BRK immediate is 16 bits, we have enough space to also encode the
-> index of the wB register, which would allow the kernel's BRK handler to recover
-> and log the expected type value and the the value at the target of the branch
-> (that latter we can recover from xN, so we don't need wA to be encoded into the
-> immediate).
+On Fri, Apr 29, 2022 at 01:36:33PM -0700, Sami Tolvanen wrote:
+> With -fsanitize=kcfi, we no longer need function_nocfi() as
+> the compiler won't change function references to point to a
+> jump table. Remove all implementations and uses of the macro.
+> 
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> ---
+>  arch/arm64/include/asm/compiler.h         | 16 ----------------
+>  arch/arm64/include/asm/ftrace.h           |  2 +-
+>  arch/arm64/include/asm/mmu_context.h      |  2 +-
+>  arch/arm64/kernel/acpi_parking_protocol.c |  2 +-
+>  arch/arm64/kernel/cpufeature.c            |  2 +-
+>  arch/arm64/kernel/ftrace.c                |  2 +-
+>  arch/arm64/kernel/machine_kexec.c         |  2 +-
+>  arch/arm64/kernel/psci.c                  |  2 +-
+>  arch/arm64/kernel/smp_spin_table.c        |  2 +-
+>  drivers/firmware/psci/psci.c              |  4 ++--
+>  drivers/misc/lkdtm/usercopy.c             |  2 +-
+>  include/linux/compiler.h                  | 10 ----------
+>  12 files changed, 11 insertions(+), 37 deletions(-)
 
-Sure, sounds like a good idea.
+Nice!
 
-> ... does the compiler side of that sound possible?
+I also believe that in most cases we can drop the __nocfi annotation on callers
+now that we can mark the called assembly function with SYM_TYPED_FUNC_START().
 
-Yes, this should be doable. I'll take a look and change this in the
-next version.
+In most cases we needed the __nocfi annotation on a caller because it was
+invoking an assembly function at an unusual virtual address (which differed
+from the link address), and the existing CFI scheme couldn't handle that. The
+kCFI scheme should handle that fine so long as the type ID before the function
+is accessible.
 
-Sami
+The other odd case was where we had the non-cfi address of a target function
+(e.g. for callback structures populated in assembly), and that doesn't matter
+with kCFI.
+
+In looking at the below I spotted some latent issues. I'll prepare some patches
+for those.
+
+> diff --git a/arch/arm64/include/asm/compiler.h b/arch/arm64/include/asm/compiler.h
+> index dc3ea4080e2e..6fb2e6bcc392 100644
+> --- a/arch/arm64/include/asm/compiler.h
+> +++ b/arch/arm64/include/asm/compiler.h
+> @@ -23,20 +23,4 @@
+>  #define __builtin_return_address(val)					\
+>  	(void *)(ptrauth_clear_pac((unsigned long)__builtin_return_address(val)))
+>  
+> -#ifdef CONFIG_CFI_CLANG
+> -/*
+> - * With CONFIG_CFI_CLANG, the compiler replaces function address
+> - * references with the address of the function's CFI jump table
+> - * entry. The function_nocfi macro always returns the address of the
+> - * actual function instead.
+> - */
+> -#define function_nocfi(x) ({						\
+> -	void *addr;							\
+> -	asm("adrp %0, " __stringify(x) "\n\t"				\
+> -	    "add  %0, %0, :lo12:" __stringify(x)			\
+> -	    : "=r" (addr));						\
+> -	addr;								\
+> -})
+> -#endif
+> -
+>  #endif /* __ASM_COMPILER_H */
+> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+> index 1494cfa8639b..c96d47cb8f46 100644
+> --- a/arch/arm64/include/asm/ftrace.h
+> +++ b/arch/arm64/include/asm/ftrace.h
+> @@ -26,7 +26,7 @@
+>  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+>  #define ARCH_SUPPORTS_FTRACE_OPS 1
+>  #else
+> -#define MCOUNT_ADDR		((unsigned long)function_nocfi(_mcount))
+> +#define MCOUNT_ADDR		((unsigned long)_mcount)
+>  #endif
+>  
+>  /* The BL at the callsite's adjusted rec->ip */
+> diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
+> index 6770667b34a3..c9df5ab2c448 100644
+> --- a/arch/arm64/include/asm/mmu_context.h
+> +++ b/arch/arm64/include/asm/mmu_context.h
+> @@ -164,7 +164,7 @@ static inline void __nocfi cpu_replace_ttbr1(pgd_t *pgdp)
+>  		ttbr1 |= TTBR_CNP_BIT;
+>  	}
+>  
+> -	replace_phys = (void *)__pa_symbol(function_nocfi(idmap_cpu_replace_ttbr1));
+> +	replace_phys = (void *)__pa_symbol(idmap_cpu_replace_ttbr1);
+>  
+>  	cpu_install_idmap();
+>  	replace_phys(ttbr1);
+
+
+As long as we create `idmap_cpu_replace_ttbr1` with SYM_TYPED_FUNC_START(), we
+can drop `__nocfi` from `cpu_replace_ttbr1`
+
+[...]
+
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index d72c4b4d389c..dae07d99508b 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -1619,7 +1619,7 @@ kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
+>  	if (arm64_use_ng_mappings)
+>  		return;
+>  
+> -	remap_fn = (void *)__pa_symbol(function_nocfi(idmap_kpti_install_ng_mappings));
+> +	remap_fn = (void *)__pa_symbol(idmap_kpti_install_ng_mappings);
+>  
+>  	cpu_install_idmap();
+>  	remap_fn(cpu, num_online_cpus(), __pa_symbol(swapper_pg_dir));
+
+There' a latent bug here with the existing CFI scheme, since
+`kpti_install_ng_mappings` isn't marked with __nocfi, and should explode when
+calling `idmap_kpti_install_ng_mappings` via the idmap.
+
+With the kCFI scheme we instead need to mark `idmap_kpti_install_ng_mappings`
+with SYM_TYPED_FUNC_START().
+
+[...]
+
+> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> index e16b248699d5..4eb5388aa5a6 100644
+> --- a/arch/arm64/kernel/machine_kexec.c
+> +++ b/arch/arm64/kernel/machine_kexec.c
+> @@ -204,7 +204,7 @@ void machine_kexec(struct kimage *kimage)
+>  		typeof(cpu_soft_restart) *restart;
+>  
+>  		cpu_install_idmap();
+> -		restart = (void *)__pa_symbol(function_nocfi(cpu_soft_restart));
+> +		restart = (void *)__pa_symbol(cpu_soft_restart);
+>  		restart(is_hyp_nvhe(), kimage->start, kimage->arch.dtb_mem,
+>  			0, 0);
+>  	} else {
+
+There' a latent bug here with the existing CFI scheme, since
+`machine_kexec` isn't marked with __nocfi, and should explode when calling
+`cpu_soft_restart` via the idmap.
+
+With the kCFI scheme we instead need to mark `cpu_soft_restart` with
+SYM_TYPED_FUNC_START(). It's currently marked as SYM_CODE() because it doesn't
+follow the usual function call conventions, but that also means it's broken for
+BTI, and for now (without something like objtool caring about function calling
+conventions) SYM_FUNC_START() is fine.
+
+Thanks,
+Mark.
