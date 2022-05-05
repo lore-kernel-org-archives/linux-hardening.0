@@ -2,27 +2,27 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03D2C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 May 2022 17:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEBDC433EF
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 May 2022 18:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382583AbiEERSR (ORCPT
+        id S233705AbiEESG4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 May 2022 13:18:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39296 "EHLO
+        Thu, 5 May 2022 14:06:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382089AbiEERSQ (ORCPT
+        with ESMTP id S1382959AbiEESGz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 May 2022 13:18:16 -0400
+        Thu, 5 May 2022 14:06:55 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 671955C879;
-        Thu,  5 May 2022 10:14:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 04B0D53E32;
+        Thu,  5 May 2022 11:03:15 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E326106F;
-        Thu,  5 May 2022 10:14:36 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDD20106F;
+        Thu,  5 May 2022 11:03:14 -0700 (PDT)
 Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.38.147])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F09AD3FA31;
-        Thu,  5 May 2022 10:14:33 -0700 (PDT)
-Date:   Thu, 5 May 2022 18:14:25 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A0C0E3FA31;
+        Thu,  5 May 2022 11:03:12 -0700 (PDT)
+Date:   Thu, 5 May 2022 19:03:08 +0100
 From:   Mark Rutland <mark.rutland@arm.com>
 To:     Sami Tolvanen <samitolvanen@google.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -39,37 +39,53 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         linux-hardening@vger.kernel.org,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         llvm@lists.linux.dev
-Subject: Re: [RFC PATCH 00/21] KCFI support
-Message-ID: <YnQF5hqsAdrX/UY/@FVFF77S0Q05N.cambridge.arm.com>
+Subject: Re: [RFC PATCH 10/21] treewide: Drop function_nocfi
+Message-ID: <YnQRXCqBW/Ggu3pc@FVFF77S0Q05N.cambridge.arm.com>
 References: <20220429203644.2868448-1-samitolvanen@google.com>
- <YnKnLyyXPJl5Llc0@FVFF77S0Q05N>
- <CABCJKudT9r=r0an4BwNp0-E1wC94wLWiHvUX4_vA8tDkQ=uHKQ@mail.gmail.com>
- <CABCJKuc-6daZd8N6hQV6i_TtCtVpfzxJ2UW6xwxC2vxTmJ2deg@mail.gmail.com>
- <YnPEzeab/R270gAZ@FVFF77S0Q05N.cambridge.arm.com>
- <CABCJKuced3-MoZoBdpL+=h1PC32C-5C12HZH96+dfEp43dJwaQ@mail.gmail.com>
+ <20220429203644.2868448-11-samitolvanen@google.com>
+ <YnP7j+miotxYM6fu@FVFF77S0Q05N.cambridge.arm.com>
+ <CABCJKue6c0FMpKXysdoT0Lc+RBqGFhp52iM03tttWwRv7CZr5w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABCJKuced3-MoZoBdpL+=h1PC32C-5C12HZH96+dfEp43dJwaQ@mail.gmail.com>
+In-Reply-To: <CABCJKue6c0FMpKXysdoT0Lc+RBqGFhp52iM03tttWwRv7CZr5w@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, May 05, 2022 at 09:00:39AM -0700, Sami Tolvanen wrote:
-> On Thu, May 5, 2022 at 5:36 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> > FWIW, a `-DLLVM_ENABLE_ASSERTIONS=ON` build also seems to work for me when
-> > building a kernel with CONFIG_CFI_CLANG=y. It's much slower than a regular
-> > Release build, so I'm still waiting for that to finish building a kernel, but
-> > it has gotten much further through the build without issues.
+On Thu, May 05, 2022 at 09:51:39AM -0700, Sami Tolvanen wrote:
+> On Thu, May 5, 2022 at 9:30 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> > I also believe that in most cases we can drop the __nocfi annotation on callers
+> > now that we can mark the called assembly function with SYM_TYPED_FUNC_START().
 > 
-> Thanks for confirming. This issue should be fixed here if you want to
-> give it another try:
+> Good point, thanks for pointing that out. I'll add these to the next
+> version of the series.
+
+Also, I *think* we can drop __nocfi from __init, and always check calls to
+functions in .init.text. IIUC we made those __nocfi because it leads to section
+mismatches, and dangling entries in the jump tables after we discarded the init
+text, neither of which should be a problem with kCFI.
+
+Unfortuantely, that appears to be masking some existing type mismatches; e.g.
+psci_dt_init() blows up because it uses the wrong type for its callees (a
+mismatched `const`). With that fixed up, arm64 boots fine.
+
+> > There' a latent bug here with the existing CFI scheme, since
+> > `kpti_install_ng_mappings` isn't marked with __nocfi, and should explode when
+> > calling `idmap_kpti_install_ng_mappings` via the idmap.
 > 
-> https://github.com/samitolvanen/llvm-project/commits/kcfi
+> The CONFIG_UNMAP_KERNEL_AT_EL0 version of kpti_install_ng_mappings is
+> marked __nocfi
 
-That works for me, building in Release mode. A defconfig + CFI_CLANG kernel
-built with that builds and boots clenaly.
+Ah, so it is. Sorry for the noise!
 
-Thanks!
+> > There' a latent bug here with the existing CFI scheme, since
+> > `machine_kexec` isn't marked with __nocfi, and should explode when calling
+> > `cpu_soft_restart` via the idmap.
+> 
+> But it's indeed missing from this one.
 
+Cool; I'll prep a patch that fixes just this, then.
+
+Thanks,
 Mark.
