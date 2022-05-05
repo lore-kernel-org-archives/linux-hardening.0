@@ -2,105 +2,103 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961CCC433EF
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 May 2022 16:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FD9C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 May 2022 16:24:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381889AbiEEQ1H (ORCPT
+        id S1378443AbiEEQ1q (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 May 2022 12:27:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48654 "EHLO
+        Thu, 5 May 2022 12:27:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381920AbiEEQ1F (ORCPT
+        with ESMTP id S1353882AbiEEQ1p (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 May 2022 12:27:05 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E7595BE5B
-        for <linux-hardening@vger.kernel.org>; Thu,  5 May 2022 09:23:25 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id 15so4003229pgf.4
-        for <linux-hardening@vger.kernel.org>; Thu, 05 May 2022 09:23:25 -0700 (PDT)
+        Thu, 5 May 2022 12:27:45 -0400
+Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E4975BE52
+        for <linux-hardening@vger.kernel.org>; Thu,  5 May 2022 09:24:04 -0700 (PDT)
+Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-2f7b815ac06so54450817b3.3
+        for <linux-hardening@vger.kernel.org>; Thu, 05 May 2022 09:24:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=k7gsNgCyT247Xr3GRAEbCammiSXa3uZGYJnST76Cxwk=;
-        b=RVmSgg0C3UldZ+RyZHl8yul90x5S8rTQUwsgOGpohyALNMZJb/dKn2xVWmFGTEdiCF
-         icfX7tNfqVo8lyPRr4qhsubbnPL6smsK5FrE89rk26zXP9NU1q5YzSGTVVsN+a9RvN3j
-         7Nh4h4OV9IkVcLQcUo42aryIa4qPP4r88jB+k=
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=smRiEfnbDo26TwlBRyyocGS+bQqlFH9vecfF+kAEs0s=;
+        b=Qchh5LkpHNgVC4oS9Z3uWgrF0tIOlBwLOSM/ue3hd7CJxr3Xz29EiGWTzgXTX2LwGK
+         4uq7mH3isrmT1EXJizLeJvJFDf9LhlUWCoaapbPnape0t+PH8AJj+InrnhX20me7M3HY
+         0B22flgiAh5eU+2rzqiChpz1dG3nkkfcoA5K4izNjU7LnZI5qiNJ1bES9xbfWS0aiMLn
+         FMtUx1jWRGAWdwCFESrmwS5Fc8W+htfQnqj9NZBWJhEW4YYXh4B6Plfp1rs4wwS80kCy
+         61wjIvrcCLt+vJmaIMIapWofk3R5LsYlU1VYyQHWZBjyEYCrwX1AeAxL3OazAT1j/diq
+         aQ8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=k7gsNgCyT247Xr3GRAEbCammiSXa3uZGYJnST76Cxwk=;
-        b=FLWZsib4K4gLxX7/nbj1j4ANSRgVAvZsOjYAr+rAlL+yDAd5Y+5+g73rF5JSd1nF6F
-         oudR+etcl9gc9ofXF1gnvYzJxbeogZhruZ7UZlZFVMOcB5Na46AN6wcOodfflzRBBOiU
-         1jEaL+VYmfZXDbORrbPEDf1aJ/mOtocJbPMoXkdd/IAOR4b8WFmq+AGTeOh0hX/UEN75
-         7okqDl/zPuiQXjCYb83clux+GsLIpxOR245jykqnwwqnqnz3M4+0i/v64iF7NXq3RUGz
-         cyA7DdFfzsEWiac1BTWlCpivmvkGj/96jV0HShme5U4wqQR07ocSHUeNj9jH3hBSsFlU
-         /tOA==
-X-Gm-Message-State: AOAM532QkX9xH1f8/Wcwk1MvyeoYg4t3Qu7wuo28h1zWNIkkRWwyJ7jD
-        eh75NvdLWiQu/7Dkr6xJDvDIgA==
-X-Google-Smtp-Source: ABdhPJyCbUJfJSClHIgPHI9ZfCXrp9dbwQQvNWyR2JsIOw5em9iwuILh3Nu7K4NFe7FWksDwPqmjug==
-X-Received: by 2002:a63:2c53:0:b0:3c1:7367:3a0 with SMTP id s80-20020a632c53000000b003c1736703a0mr22747842pgs.516.1651767804424;
-        Thu, 05 May 2022 09:23:24 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o184-20020a625ac1000000b0050dc76281c3sm1555418pfb.157.2022.05.05.09.23.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 May 2022 09:23:23 -0700 (PDT)
-Date:   Thu, 5 May 2022 09:23:23 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Raju Rangoju <rajur@chelsio.com>,
-        kernel test robot <lkp@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net: chelsio: cxgb4: Avoid potential negative array
- offset
-Message-ID: <202205050919.496AC46@keescook>
-References: <20220503144425.2858110-1-keescook@chromium.org>
- <20220504201358.0ba62232@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=smRiEfnbDo26TwlBRyyocGS+bQqlFH9vecfF+kAEs0s=;
+        b=oBIWaFgQOT9pcAXK0TLz4O5XxbUkmF6QNt4PrC56Pm9U3xfCBt6Zdk2mIksJ9NFe0D
+         /kz1wNGEV3lt+Hbfd87bgLOBIelmR94U9UoAG+4nDLJTB4S8tMU/ke4MYULJTRRImvKF
+         iA0NJy7U9EovwIWf2G9UBkyiNoEskW41SLN4AuYjd0nYy6RYhVR9Mv0mFMtWMi3eif3z
+         /FZMfH8aV1lP6IZosfvxCuaF4FTe4QPHX5G2RJuSRFBY/3WfbjdXEImyKglGElARAzcB
+         M4xIDxqmAqoAzZGhBBUlZP+A+ERyIkElotTFFHiI4iapDeC5rqi6n31LnrOOy5fSwFWA
+         8i5w==
+X-Gm-Message-State: AOAM5329KVzfCTAeKTVOLEQETLsYlXP5KvBLnEYZ7tBtN8mSExU40FCS
+        6OrELE79hQaVOsYLqmtBvuVsFQV+ZAFDrldQJJibXQ==
+X-Google-Smtp-Source: ABdhPJwBW6nLJQllaWjle33ZcjdAaJs8arGj4v4LRwbmOZTByqaTFnO79d1yMOwsSb1JbpmCL3d16OL6yDeASvHtlUs=
+X-Received: by 2002:a81:a93:0:b0:2f4:d65a:d44e with SMTP id
+ 141-20020a810a93000000b002f4d65ad44emr23725228ywk.243.1651767843390; Thu, 05
+ May 2022 09:24:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220504201358.0ba62232@kernel.org>
+References: <20220429203644.2868448-1-samitolvanen@google.com>
+ <20220429203644.2868448-10-samitolvanen@google.com> <YnPw+SiY9Ij/b7Yg@FVFF77S0Q05N.cambridge.arm.com>
+In-Reply-To: <YnPw+SiY9Ij/b7Yg@FVFF77S0Q05N.cambridge.arm.com>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Thu, 5 May 2022 09:23:27 -0700
+Message-ID: <CABCJKufjVAbSCcoQZzkemvkmMmwb6DoRYNPu3ADHGoRL_zFPtg@mail.gmail.com>
+Subject: Re: [RFC PATCH 09/21] arm64: Add CFI error handling
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Joao Moreira <joao@overdrivepizza.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-hardening@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 04, 2022 at 08:13:58PM -0700, Jakub Kicinski wrote:
-> On Tue,  3 May 2022 07:44:25 -0700 Kees Cook wrote:
-> > Using min_t(int, ...) as a potential array index implies to the compiler
-> > that negative offsets should be allowed. This is not the case, though.
-> > Replace min_t() with clamp_t(). Fixes the following warning exposed
-> > under future CONFIG_FORTIFY_SOURCE improvements:
-> 
-> > Additionally remove needless cast from u8[] to char * in last strim()
-> > call.
-> > 
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Link: https://lore.kernel.org/lkml/202205031926.FVP7epJM-lkp@intel.com
-> > Fixes: fc9279298e3a ("cxgb4: Search VPD with pci_vpd_find_ro_info_keyword()")
-> > Fixes: 24c521f81c30 ("cxgb4: Use pci_vpd_find_id_string() to find VPD ID string")
-> 
-> Is it needed in the current release?
+On Thu, May 5, 2022 at 8:45 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> It would be a bit nicer if we could encode the register index into the BRK
+> immediate, i.e. allocate a range of 32 immediates (or 31 given BLR XZR is
+> nonsensical), and have:
+>
+>         BRK #CFI_BRK_IMM + n
+>
+> ... where `n` is the Xn index.
+>
+> That way the kernel doesn't need to know the specific code sequence and
+> wouldn't have to decode the instruction to find the relevant register -- we
+> could determine that from the ESR alone. That would also avoid tying the
+> compiler into a specific code sequence, and would allow that to change.
+>
+> Since the BRK immediate is 16 bits, we have enough space to also encode the
+> index of the wB register, which would allow the kernel's BRK handler to recover
+> and log the expected type value and the the value at the target of the branch
+> (that latter we can recover from xN, so we don't need wA to be encoded into the
+> immediate).
 
-No, the build warning isn't in the current release, but I'm expecting to
-enable the next step of the FORTIFY work in the coming merge window.
+Sure, sounds like a good idea.
 
-> > -	memcpy(p->id, vpd + id, min_t(int, id_len, ID_LEN));
-> > +	memcpy(p->id, vpd + id, clamp_t(int, id_len, 0, ID_LEN));
-> 
-> The typing is needed because of the enum, right? The variable is
-> unsigned, seems a little strange to use clamp(int, ..., 0, constant)
-> min(unsigned int, ..., constant) will be equivalent with fewer branches.
-> Is it just me?
+> ... does the compiler side of that sound possible?
 
-Yes, due to the enum, but you're right; this could just use min_t(uint...
+Yes, this should be doable. I'll take a look and change this in the
+next version.
 
-I'll respin!
-
--- 
-Kees Cook
+Sami
