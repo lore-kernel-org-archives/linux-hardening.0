@@ -2,155 +2,291 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAED9C433EF
-	for <linux-hardening@archiver.kernel.org>; Sun,  8 May 2022 15:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B82ACC43217
+	for <linux-hardening@archiver.kernel.org>; Sun,  8 May 2022 19:13:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234418AbiEHPHU (ORCPT
+        id S231186AbiEHTRP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 8 May 2022 11:07:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38122 "EHLO
+        Sun, 8 May 2022 15:17:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234280AbiEHPHT (ORCPT
+        with ESMTP id S238332AbiEHSB0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 8 May 2022 11:07:19 -0400
-X-Greylist: delayed 412 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 08 May 2022 08:03:27 PDT
-Received: from mx1.arbitrary.ch (may.arbitrary.ch [IPv6:2a01:4f8:221:3641::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F777DED5
-        for <linux-hardening@vger.kernel.org>; Sun,  8 May 2022 08:03:27 -0700 (PDT)
-Received: from [0.0.0.0] (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: peter)
-        by mx1.arbitrary.ch (Postfix) with ESMTPSA id C618314EE0D7;
-        Sun,  8 May 2022 16:56:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=arbitrary.ch;
-        s=mx1-arbitrary-ch; t=1652021793;
-        bh=45/69u/Kyw1A3HHSPSfkFbn8AxFRBJSrAkChF2wibpI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=P53WUHv/EG5cqw2Vn/+gR69BnnVreV6ecqcT+FqYOK3SEv5Ufb84ygSR+sBxc+gZy
-         GTdK9X9YUa142/zTanEu6hjcusvas7Xo5ZsHLbrBy0LGoGdA4Pnb+g1eQ4FpXZIfPG
-         sgAeI4tcpVyzD7Ymo276lAYI9N2yC4ZaoVHM1u8LONUwA88k9l17xm1N50BLJNZHVT
-         OEWfjgrlOHt3eS5/daC5kvdDbWcZwF8tK7vtKeCkm0r3nZNTn19Rq+gA3YQOin+GWX
-         4sV//jYK9rOjU2Lbwd/Q5OAto7NoZoiaReH/9rznJLmz00nkpIjVmQkwenFSIUcP2I
-         A+JhN0F0cbSnA==
-Message-ID: <8e472c9e-2076-bc25-5912-8433adf7b579@arbitrary.ch>
-Date:   Sun, 8 May 2022 16:56:29 +0200
+        Sun, 8 May 2022 14:01:26 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 271B55F55
+        for <linux-hardening@vger.kernel.org>; Sun,  8 May 2022 10:57:35 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id i1so11916318plg.7
+        for <linux-hardening@vger.kernel.org>; Sun, 08 May 2022 10:57:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5Yha8YXFmSTCwJOACS5ryysDBCF5HLsNhYhG1Pfc1Jk=;
+        b=PuA6skDHu+1odQ73rVsqYOfaFpILwYOxgSXjfUFkinJcZ9JsQCGqrKrbEtl5dWXxD1
+         aU1jxDG2wrusCvQgo4AvvwB3tg+I63Jeag/fo8aNvN+XPeXnU/FrYq1GnP/ZJyj54GkA
+         7PqFslEW352FBd463fvn6IB3D7qsfHGZ9GFV8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5Yha8YXFmSTCwJOACS5ryysDBCF5HLsNhYhG1Pfc1Jk=;
+        b=OgorwhD272XFBzfrfvEFxZ9T7qZQyTQb1oNxagy4XwtWWSe3wDjGl+mX+hkAbt1J84
+         5GQXk4IobBFP5nD5S3O4UBW+6usu8dz8yYlC2hdK7P5Td3igLX//oi/oWqCoLyDtohw5
+         AXJPo2shC+lREfruaUd91heom5tQQv+NrHv0lOQ5NYUi+bBqpd49npr9vATixv2LmSNU
+         LohxtKVT9XACGOvcpEYqK+enyf/U0SKPCHgdnUC/P8XBypeOfxrdGEDpA099LXpTg+13
+         /dngVgyDHD43nh+9BLyzXE4LA92DijcB/AfGyxbhSHguwFd4JQEBzeGjEvGcAn8NVYr6
+         VTPQ==
+X-Gm-Message-State: AOAM5339hPmJpBgPj1zZlCW4M5MkVYaVjuadEbFDjusKiQo21c5AYzkt
+        pX1Zj2845CdAV/9RENj5WdeuNKcBE6YNpQ==
+X-Google-Smtp-Source: ABdhPJwFYxH9PXHkN+BXhWFaY5rn4lwyKLHVqKXGtzu72UqPAwEUVVY8R7D4oO3fum0fWvqyLTvQRQ==
+X-Received: by 2002:a17:902:768a:b0:159:71e:971e with SMTP id m10-20020a170902768a00b00159071e971emr12764810pll.163.1652032654667;
+        Sun, 08 May 2022 10:57:34 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s13-20020a056a00178d00b0050dc7628139sm7193031pfg.19.2022.05.08.10.57.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 May 2022 10:57:34 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-hardening@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] big_keys: Use struct for internal payload
+Date:   Sun,  8 May 2022 10:57:31 -0700
+Message-Id: <20220508175732.2693426-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Content-Language: en-US
-From:   Peter Gerber <peter@arbitrary.ch>
-To:     kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] Decouple slub_debug= from no_hash_pointers again
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7559; h=from:subject; bh=6yjZF1eeLJcME/kQGtC/QjTDIfuxcqry8vsXZwhINiE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBieASLSW30lM+bd7UdG/gtSXstFwsIeNBUKhUEOq+n Yw4ND3yJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYngEiwAKCRCJcvTf3G3AJvrvEA Cg9QzTwJdZQo0zDz63uUNZEEopn69q72fsIrZvaRyJfD3+yA5xRDms/q16p5P5FX8sPzy/dc0tE/RB flTF5etTCALZQr9FDB1vu9uUxy89Ht6d0+gQmlIGiZ+6gNfh2p1eO14fmzGGAObOy0ZRTN7sznqsKv uirIMSYLeCtUKh6IDJZPg2JIshxtRwIHWjCZu4GCItEh20pyaGSFqeh/uD6HaHmgKFbmLzOvqLknvu Rx1kREDqySfrIPmqgALTWQwUZiir6RFwRinvE3lM3ZvHZpHqp+LYb4uQ/ubkTh2FE/IcIggtfnNe2W unuqNSqIhpbJQjEQ/Ay84wzzA/S+FQzl83kEeQ+ebMWjnb6+7ydcRcxtcwDXAhpmNQeGih1O/mGmeq Kab98RDRJTnKvt9oTgTuC2bhHI/PB36emxBl0Na2mwF+OdgjpNUt7kMRmf1vLIUKwlVhh+ZRdbA6QK Mgo6B/8skuig0rnEj5RHl/VNs8XCYcj9jXS7YgoG+FqHXtYNlIykecA0o0XVRvRoqyMa/keGLp8eH3 FYCkJk/T+VZFOlXWxVvYAtDzunDVBJSgU0R4/w+zxejNAre9RgBFA+ERYM7wUl6PhFaCLf0u5YOlxs YYrASekELKgaSOr8g67vEn0Ykpi4FHHM6oW95Yg433DDSeX6fvDP5Mbvti+w==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-While, as mentioned in 792702911f58, no_hash_pointers is what
-one wants for debugging, this option is also used for hardening.
+The randstruct GCC plugin gets upset when it sees struct path (which is
+randomized) being assigned from a "void *" (which it cannot type-check).
 
-Various places recommend or use slub_debug for hardening:
+There's no need for these casts, as the entire internal payload use is
+following a normal struct layout. Convert the enum-based void * offset
+dereferencing to the new big_key_payload struct. No meaningful machine
+code changes result after this change, and source readability is improved.
 
-a) The Kernel Self Protection Project lists slub_debug as
-   a recommended setting. [1]
-b) Debian offers package hardening-runtime [2] which enables
-   slub_debug for hardening.
-c) Security- and privacy-oriented Tails enables slub_debug
-   by default [3].
+Drop the randstruct exception now that there is no "confusing" cross-type
+assignment.
 
-I understand that encountering hashed pointers during debugging
-is most unwanted. Thus, I updated the documentation to make
-it as clear as possible that no_hash_pointers is what one
-wants when using slub_debug for debugging. I also added a
-mentioned of the hardening use case in order to discourage
-any other, well-meant, tries to disable hashing with slub_debug.
-
-[1]: https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings
-[2]: https://packages.debian.org/bullseye/hardening-runtime
-[3]: https://tails.boum.org/contribute/design/kernel_hardening/
-
-Fixes: 792702911f58 ("slub: force on no_hash_pointers when slub_debug is enabled")
-Cc: Stephen Boyd <swboyd@chromium.org>
-Cc: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/kernel-hardening/202204121715.11B2CA80@keescook/T/#t
+Cc: David Howells <dhowells@redhat.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: James Morris <jmorris@namei.org>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: linux-hardening@vger.kernel.org
+Cc: keyrings@vger.kernel.org
+Cc: linux-security-module@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  5 +++--
- Documentation/vm/slub.rst                       | 10 ++++++++++
- include/linux/kernel.h                          |  2 --
- mm/slub.c                                       |  4 ----
- 4 files changed, 13 insertions(+), 8 deletions(-)
+ scripts/gcc-plugins/randomize_layout_plugin.c |  2 -
+ security/keys/big_key.c                       | 64 ++++++++++---------
+ 2 files changed, 34 insertions(+), 32 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 3f1cc5e317ed..8987c07e206c 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5344,8 +5344,9 @@
- 			culprit if slab objects become corrupted. Enabling
- 			slub_debug can create guard zones around objects and
- 			may poison objects when not in use. Also tracks the
--			last alloc / free. For more information see
--			Documentation/vm/slub.rst.
-+			last alloc / free. If used for debugging, rather
-+			than hardening, also set no_hash_pointers.
-+			For more information see Documentation/vm/slub.rst.
+diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-plugins/randomize_layout_plugin.c
+index c2ec81b68505..727512eebb3b 100644
+--- a/scripts/gcc-plugins/randomize_layout_plugin.c
++++ b/scripts/gcc-plugins/randomize_layout_plugin.c
+@@ -50,8 +50,6 @@ static const struct whitelist_entry whitelist[] = {
+ 	{ "drivers/net/ethernet/sun/niu.c", "page", "address_space" },
+ 	/* unix_skb_parms via UNIXCB() buffer */
+ 	{ "net/unix/af_unix.c", "unix_skb_parms", "char" },
+-	/* big_key payload.data struct splashing */
+-	{ "security/keys/big_key.c", "path", "void *" },
+ 	{ }
+ };
  
- 	slub_max_order= [MM, SLUB]
- 			Determines the maximum allowed order for slabs.
-diff --git a/Documentation/vm/slub.rst b/Documentation/vm/slub.rst
-index d3028554b1e9..1ae6c27d0ff0 100644
---- a/Documentation/vm/slub.rst
-+++ b/Documentation/vm/slub.rst
-@@ -41,6 +41,16 @@ slub_debug=<Debug-Options>,<slab name1>,<slab name2>,...
- 	Enable options only for select slabs (no spaces
- 	after a comma)
+diff --git a/security/keys/big_key.c b/security/keys/big_key.c
+index d17e5f09eeb8..625869939099 100644
+--- a/security/keys/big_key.c
++++ b/security/keys/big_key.c
+@@ -20,12 +20,13 @@
+ /*
+  * Layout of key payload words.
+  */
+-enum {
+-	big_key_data,
+-	big_key_path,
+-	big_key_path_2nd_part,
+-	big_key_len,
++struct big_key_payload {
++	u8 *data;
++	struct path path;
++	size_t length;
+ };
++#define to_big_key_payload(payload)			\
++	(struct big_key_payload *)((payload).data)
  
-+.. hint::
+ /*
+  * If the data is under this limit, there's no point creating a shm file to
+@@ -55,7 +56,7 @@ struct key_type key_type_big_key = {
+  */
+ int big_key_preparse(struct key_preparsed_payload *prep)
+ {
+-	struct path *path = (struct path *)&prep->payload.data[big_key_path];
++	struct big_key_payload *payload = to_big_key_payload(prep->payload);
+ 	struct file *file;
+ 	u8 *buf, *enckey;
+ 	ssize_t written;
+@@ -63,13 +64,15 @@ int big_key_preparse(struct key_preparsed_payload *prep)
+ 	size_t enclen = datalen + CHACHA20POLY1305_AUTHTAG_SIZE;
+ 	int ret;
+ 
++	BUILD_BUG_ON(sizeof(*payload) != sizeof(prep->payload.data));
 +
-+   **Also enable no_hash_pointers** for debugging. Otherwise, only hashed
-+   pointers are printed.
-+
-+   Hashing is disabled by default because this option, despite having
-+   debug in its name, is also in useed to provide `additional hardening`_.
-+
-+.. _additional hardening: https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings
-+
- Multiple blocks of options for all slabs or selected slabs can be given, with
- blocks of options delimited by ';'. The last of "all slabs" blocks is applied
- to all slabs except those that match one of the "select slabs" block. Options
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index fe6efb24d151..e3d9d3879495 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -229,8 +229,6 @@ int sscanf(const char *, const char *, ...);
- extern __scanf(2, 0)
- int vsscanf(const char *, const char *, va_list);
+ 	if (datalen <= 0 || datalen > 1024 * 1024 || !prep->data)
+ 		return -EINVAL;
  
--extern int no_hash_pointers_enable(char *str);
--
- extern int get_option(char **str, int *pint);
- extern char *get_options(const char *str, int nints, int *ints);
- extern unsigned long long memparse(const char *ptr, char **retptr);
-diff --git a/mm/slub.c b/mm/slub.c
-index ed5c2c03a47a..b78ccfde9214 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -4800,10 +4800,6 @@ void __init kmem_cache_init(void)
- 	if (debug_guardpage_minorder())
- 		slub_max_order = 0;
+ 	/* Set an arbitrary quota */
+ 	prep->quotalen = 16;
  
--	/* Print slub debugging pointers without hashing */
--	if (__slub_debug_enabled())
--		no_hash_pointers_enable(NULL);
--
- 	kmem_cache_node = &boot_kmem_cache_node;
- 	kmem_cache = &boot_kmem_cache;
+-	prep->payload.data[big_key_len] = (void *)(unsigned long)datalen;
++	payload->length = datalen;
  
+ 	if (datalen > BIG_KEY_FILE_THRESHOLD) {
+ 		/* Create a shmem file to store the data in.  This will permit the data
+@@ -117,9 +120,9 @@ int big_key_preparse(struct key_preparsed_payload *prep)
+ 		/* Pin the mount and dentry to the key so that we can open it again
+ 		 * later
+ 		 */
+-		prep->payload.data[big_key_data] = enckey;
+-		*path = file->f_path;
+-		path_get(path);
++		payload->data = enckey;
++		payload->path = file->f_path;
++		path_get(&payload->path);
+ 		fput(file);
+ 		kvfree_sensitive(buf, enclen);
+ 	} else {
+@@ -129,7 +132,7 @@ int big_key_preparse(struct key_preparsed_payload *prep)
+ 		if (!data)
+ 			return -ENOMEM;
+ 
+-		prep->payload.data[big_key_data] = data;
++		payload->data = data;
+ 		memcpy(data, prep->data, prep->datalen);
+ 	}
+ 	return 0;
+@@ -148,12 +151,14 @@ int big_key_preparse(struct key_preparsed_payload *prep)
+  */
+ void big_key_free_preparse(struct key_preparsed_payload *prep)
+ {
++	struct big_key_payload *payload = to_big_key_payload(prep->payload);
++
+ 	if (prep->datalen > BIG_KEY_FILE_THRESHOLD) {
+-		struct path *path = (struct path *)&prep->payload.data[big_key_path];
++		struct path *path = &payload->path;
+ 
+ 		path_put(path);
+ 	}
+-	kfree_sensitive(prep->payload.data[big_key_data]);
++	kfree_sensitive(payload->data);
+ }
+ 
+ /*
+@@ -162,13 +167,12 @@ void big_key_free_preparse(struct key_preparsed_payload *prep)
+  */
+ void big_key_revoke(struct key *key)
+ {
+-	struct path *path = (struct path *)&key->payload.data[big_key_path];
++	struct big_key_payload *payload = to_big_key_payload(key->payload);
+ 
+ 	/* clear the quota */
+ 	key_payload_reserve(key, 0);
+-	if (key_is_positive(key) &&
+-	    (size_t)key->payload.data[big_key_len] > BIG_KEY_FILE_THRESHOLD)
+-		vfs_truncate(path, 0);
++	if (key_is_positive(key) && payload->length > BIG_KEY_FILE_THRESHOLD)
++		vfs_truncate(&payload->path, 0);
+ }
+ 
+ /*
+@@ -176,17 +180,17 @@ void big_key_revoke(struct key *key)
+  */
+ void big_key_destroy(struct key *key)
+ {
+-	size_t datalen = (size_t)key->payload.data[big_key_len];
++	struct big_key_payload *payload = to_big_key_payload(key->payload);
+ 
+-	if (datalen > BIG_KEY_FILE_THRESHOLD) {
+-		struct path *path = (struct path *)&key->payload.data[big_key_path];
++	if (payload->length > BIG_KEY_FILE_THRESHOLD) {
++		struct path *path = &payload->path;
+ 
+ 		path_put(path);
+ 		path->mnt = NULL;
+ 		path->dentry = NULL;
+ 	}
+-	kfree_sensitive(key->payload.data[big_key_data]);
+-	key->payload.data[big_key_data] = NULL;
++	kfree_sensitive(payload->data);
++	payload->data = NULL;
+ }
+ 
+ /*
+@@ -211,14 +215,14 @@ int big_key_update(struct key *key, struct key_preparsed_payload *prep)
+  */
+ void big_key_describe(const struct key *key, struct seq_file *m)
+ {
+-	size_t datalen = (size_t)key->payload.data[big_key_len];
++	struct big_key_payload *payload = to_big_key_payload(key->payload);
+ 
+ 	seq_puts(m, key->description);
+ 
+ 	if (key_is_positive(key))
+ 		seq_printf(m, ": %zu [%s]",
+-			   datalen,
+-			   datalen > BIG_KEY_FILE_THRESHOLD ? "file" : "buff");
++			   payload->length,
++			   payload->length > BIG_KEY_FILE_THRESHOLD ? "file" : "buff");
+ }
+ 
+ /*
+@@ -227,16 +231,16 @@ void big_key_describe(const struct key *key, struct seq_file *m)
+  */
+ long big_key_read(const struct key *key, char *buffer, size_t buflen)
+ {
+-	size_t datalen = (size_t)key->payload.data[big_key_len];
++	struct big_key_payload *payload = to_big_key_payload(key->payload);
++	size_t datalen = payload->length;
+ 	long ret;
+ 
+ 	if (!buffer || buflen < datalen)
+ 		return datalen;
+ 
+ 	if (datalen > BIG_KEY_FILE_THRESHOLD) {
+-		struct path *path = (struct path *)&key->payload.data[big_key_path];
+ 		struct file *file;
+-		u8 *buf, *enckey = (u8 *)key->payload.data[big_key_data];
++		u8 *buf, *enckey = payload->data;
+ 		size_t enclen = datalen + CHACHA20POLY1305_AUTHTAG_SIZE;
+ 		loff_t pos = 0;
+ 
+@@ -244,7 +248,7 @@ long big_key_read(const struct key *key, char *buffer, size_t buflen)
+ 		if (!buf)
+ 			return -ENOMEM;
+ 
+-		file = dentry_open(path, O_RDONLY, current_cred());
++		file = dentry_open(&payload->path, O_RDONLY, current_cred());
+ 		if (IS_ERR(file)) {
+ 			ret = PTR_ERR(file);
+ 			goto error;
+@@ -274,7 +278,7 @@ long big_key_read(const struct key *key, char *buffer, size_t buflen)
+ 		kvfree_sensitive(buf, enclen);
+ 	} else {
+ 		ret = datalen;
+-		memcpy(buffer, key->payload.data[big_key_data], datalen);
++		memcpy(buffer, payload->data, datalen);
+ 	}
+ 
+ 	return ret;
 -- 
-2.35.1
+2.32.0
 
