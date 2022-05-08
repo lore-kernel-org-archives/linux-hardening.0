@@ -2,207 +2,135 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76683C43219
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 May 2022 11:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC33C433EF
+	for <linux-hardening@archiver.kernel.org>; Sun,  8 May 2022 08:29:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378725AbiEFLTy (ORCPT
+        id S231209AbiEHIdF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 6 May 2022 07:19:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53458 "EHLO
+        Sun, 8 May 2022 04:33:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1391236AbiEFLTw (ORCPT
+        with ESMTP id S230527AbiEHIdE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 6 May 2022 07:19:52 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3D1C55DA36
-        for <linux-hardening@vger.kernel.org>; Fri,  6 May 2022 04:16:03 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-141-5bFZsmBPMJaCVZ5XX50WZg-1; Fri, 06 May 2022 12:15:26 +0100
-X-MC-Unique: 5bFZsmBPMJaCVZ5XX50WZg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.32; Fri, 6 May 2022 12:15:23 +0100
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.033; Fri, 6 May 2022 12:15:23 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Johannes Berg' <johannes@sipsolutions.net>,
-        Keith Packard <keithp@keithp.com>,
-        Kees Cook <keescook@chromium.org>
-CC:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Francis Laniel <laniel_francis@privacyrequired.com>,
-        Daniel Axtens <dja@axtens.net>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "Daniel Vetter" <daniel.vetter@ffwll.ch>,
-        Tadeusz Struk <tadeusz.struk@linaro.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Andrew Gabbasov" <andrew_gabbasov@mentor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Andy Lavr <andy.lavr@gmail.com>,
-        Arend van Spriel <aspriel@gmail.com>,
-        Baowen Zheng <baowen.zheng@corigine.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Bradley Grove <linuxdrivers@attotech.com>,
-        "brcm80211-dev-list.pdl@broadcom.com" 
-        <brcm80211-dev-list.pdl@broadcom.com>,
-        Christian Brauner <brauner@kernel.org>,
-        =?utf-8?B?Q2hyaXN0aWFuIEfDtnR0c2NoZQ==?= <cgzones@googlemail.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Chris Zankel <chris@zankel.net>,
-        Cong Wang <cong.wang@bytedance.com>,
-        "David Gow" <davidgow@google.com>,
-        David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "Dmitry Kasatkin" <dmitry.kasatkin@gmail.com>,
-        Eli Cohen <elic@nvidia.com>,
-        "Eric Dumazet" <edumazet@google.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "Eugeniu Rosca" <erosca@de.adit-jv.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Gregory Greenman <gregory.greenman@intel.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "Hante Meuleman" <hante.meuleman@broadcom.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Hulk Robot <hulkci@huawei.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        John Keeping <john@metanate.com>,
-        Juergen Gross <jgross@suse.com>, Kalle Valo <kvalo@kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "kunit-dev@googlegroups.com" <kunit-dev@googlegroups.com>,
-        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        "Lars-Peter Clausen" <lars@metafoo.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "linux1394-devel@lists.sourceforge.net" 
-        <linux1394-devel@lists.sourceforge.net>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>,
-        "llvm@lists.linux.dev" <llvm@lists.linux.dev>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Louis Peens <louis.peens@corigine.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        "Luiz Augusto von Dentz" <luiz.dentz@gmail.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Max Filippov" <jcmvbkbc@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        =?utf-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        "Rich Felker" <dalias@aerifal.cx>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "SHA-cyfmac-dev-list@infineon.com" <SHA-cyfmac-dev-list@infineon.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
-        Udipto Goswami <quic_ugoswami@quicinc.com>,
-        "wcn36xx@lists.infradead.org" <wcn36xx@lists.infradead.org>,
-        Wei Liu <wei.liu@kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>,
-        "Yang Yingliang" <yangyingliang@huawei.com>
-Subject: RE: [PATCH 02/32] Introduce flexible array struct memcpy() helpers
-Thread-Topic: [PATCH 02/32] Introduce flexible array struct memcpy() helpers
-Thread-Index: AQHYYLyA1R9dSzYVM0KNCrE+uTLPFK0RsSYw
-Date:   Fri, 6 May 2022 11:15:23 +0000
-Message-ID: <46ec2f1d6e9347eaba1feeb00e8c508a@AcuMS.aculab.com>
-References: <20220504014440.3697851-1-keescook@chromium.org>
-         <20220504014440.3697851-3-keescook@chromium.org>
-         <d3b73d80f66325fdfaf2d1f00ea97ab3db03146a.camel@sipsolutions.net>
-         <202205040819.DEA70BD@keescook>
-         <970a674df04271b5fd1971b495c6b11a996c20c2.camel@sipsolutions.net>
-         <871qx8qabo.fsf@keithp.com> <202205051228.4D5B8CD624@keescook>
-         <87pmkrpwrs.fsf@keithp.com>
- <e1ea4926f105b456f6a86ce30a0380ee5f48fe6d.camel@sipsolutions.net>
-In-Reply-To: <e1ea4926f105b456f6a86ce30a0380ee5f48fe6d.camel@sipsolutions.net>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Sun, 8 May 2022 04:33:04 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38356BE1B
+        for <linux-hardening@vger.kernel.org>; Sun,  8 May 2022 01:29:15 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id c11so11275344plg.13
+        for <linux-hardening@vger.kernel.org>; Sun, 08 May 2022 01:29:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7UCpbCYGemt9Aa/Zw4e1HeL9KMk2vOHpzpuPbbac9aU=;
+        b=W58G+8OdHxU0j/pFN3mIvPOnRpk6BIqcuZSfqNuZZzoFVmecuaGfMsMDt+G1bLgLl8
+         LPm9jP88QfIEHAmcnigel+Qk2ayRkL43IeIN5NtRftZTKEo8VI+sg0RLcHFghTCiYcsC
+         ZeM4dXARwFAQ6PXK7FqxmriJ13nlEXu/NkCxI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7UCpbCYGemt9Aa/Zw4e1HeL9KMk2vOHpzpuPbbac9aU=;
+        b=L6HzVNvgN+SxNP29AWThmDB2nku6wes3Tvb+GArDUR5yq1DvfIvUqRSVyxVAh7fkDc
+         7ICV6s16Cwx9yj6FXboTyqn4kz6eviHRz0Tw9pT90xrxsqr2cGSx0h3E8Toz5zRIzMxu
+         w6Uyt6iEHK/r5q1hC8P9Ifs4DVaBOXx+C1ge9fWokEYGZhjSYtfetYbWmuO+R6yUqWfR
+         yAM6h9x+Nkdvujkema1bly/x/VKxbVmfc1zdJ2qytf6PUACDTl3TOOqwDc1dc9ODGr67
+         nVltW3vCWtwkOnhq/VMa89qAxRJe7xEqFVr7UDzRwjQsRn5T3DYeCjULu0paLpvmXuX9
+         5i+w==
+X-Gm-Message-State: AOAM5308G3LRABwtOnCpn2kxRrqNZuR4tIzEBtjtMDUvAjFB8ivIz564
+        XTSBQ5xhwDK0hLqcgmKJx4fR8A==
+X-Google-Smtp-Source: ABdhPJzz3DdtjpDiA9nuocex1g3T4DDVDvtdQZmJSz9srhqnxKLq8HLOaBRLGOvv7xfL0IgOG8cEEQ==
+X-Received: by 2002:a17:90a:ee84:b0:1d9:27f3:eeeb with SMTP id i4-20020a17090aee8400b001d927f3eeebmr21028863pjz.66.1651998554410;
+        Sun, 08 May 2022 01:29:14 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b187-20020a62cfc4000000b0050dc76281eesm6219927pfg.200.2022.05.08.01.29.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 May 2022 01:29:13 -0700 (PDT)
+Date:   Sun, 8 May 2022 01:29:13 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Peter Collingbourne <pcc@google.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Joao Moreira <joao@overdrivepizza.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        andrew.cooper3@citrix.com, samitolvanen@google.com,
+        mark.rutland@arm.com, hjl.tools@gmail.com,
+        alyssa.milburn@linux.intel.com, ndesaulniers@google.com,
+        gabriel.gomes@linux.intel.com, rick.p.edgecombe@intel.com
+Subject: Re: [RFC PATCH 01/11] x86: kernel FineIBT
+Message-ID: <202205080033.82AB3703C3@keescook>
+References: <20220420004241.2093-1-joao@overdrivepizza.com>
+ <20220420004241.2093-2-joao@overdrivepizza.com>
+ <20220429013704.4n4lmadpstdioe7a@treble>
+ <d82459b887bcaf9181ad836051e2d16b@overdrivepizza.com>
+ <20220503220244.vyz5flk3gg3y6rbw@treble>
+ <YnJTYzralOhGGmED@hirez.programming.kicks-ass.net>
+ <YnKx5a9WvJ1UhWPm@google.com>
+ <YnLDGcJGKfqi5+8w@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YnLDGcJGKfqi5+8w@hirez.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-RnJvbTogSm9oYW5uZXMgQmVyZw0KPiBTZW50OiAwNSBNYXkgMjAyMiAyMToxMw0KPiBPbiBUaHUs
-IDIwMjItMDUtMDUgYXQgMTM6MDggLTA3MDAsIEtlaXRoIFBhY2thcmQgd3JvdGU6DQo+IA0KPiAN
-Cj4gPiBJIGJldCB5b3UndmUgYWxyZWFkeSBjb25zaWRlcmVkIHRoZSBzaW1wbGVyIGZvcm06DQo+
-ID4NCj4gPiAgICAgICAgIHN0cnVjdCBzb21ldGhpbmcgKmluc3RhbmNlID0gbWVtX3RvX2ZsZXhf
-ZHVwKGJ5dGVfYXJyYXksIGNvdW50LCBHRlBfS0VSTkVMKTsNCj4gPiAgICAgICAgIGlmIChJU19F
-UlIoaW5zdGFuY2UpKQ0KPiA+ICAgICAgICAgICAgIHJldHVybiBQVFJfRVJSKGluc3RhbmNlKTsN
-Cj4gPg0KPiANCj4gU2FkbHksIHRoaXMgZG9lc24ndCB3b3JrIGluIGFueSB3YXkgYmVjYXVzZSBt
-ZW1fdG9fZmxleF9kdXAoKSBuZWVkcyB0bw0KPiBrbm93IGF0IGxlYXN0IHRoZSB0eXBlLCBoZW5j
-ZSBwYXNzaW5nICdpbnN0YW5jZScsIHdoaWNoIGlzIHNpbXBsZXIgdGhhbg0KPiBwYXNzaW5nICdz
-dHJ1Y3Qgc29tZXRoaW5nJy4NCg0KWW91IGNhbiB1c2U6DQogICAgICAgICBzdHJ1Y3Qgc29tZXRo
-aW5nICppbnN0YW5jZTsNCiAgICAgICAgIG1lbV90b19mbGV4X2R1cChpbnN0YW5jZSwgYnl0ZV9h
-cnJheSwgY291bnQsIEdGUF9LRVJORUwpOw0KICAgICAgICAgaWYgKElTX0VSUihpbnN0YW5jZSkp
-DQogICAgICAgICAgICAgcmV0dXJuIFBUUl9FUlIoaW5zdGFuY2UpOw0KYW5kIGhhdmUgbWVtX3Rv
-X2ZsZXhfZHVwKCkgKHdoaWNoIG11c3QgYmUgYSAjZGVmaW5lKSB1cGRhdGUgJ2luc3RhbmNlJy4N
-CihZb3UgY2FuIHJlcXVpcmUgJmluc3RhbmNlIC0gYW5kIGp1c3QgcHJlY2VkZSBhbGwgdGhlIHVz
-ZXMgd2l0aA0KYW4gZXh0cmEgJyonIHRvIG1ha2UgaXQgbW9yZSBvYnZpb3VzIHRoZSB2YXJpYWJs
-ZSBpcyB1cGRhdGVkLg0KQnV0IHRoZXJlIGlzIGxpdHRsZSBwb2ludCByZXF1aXJpbmcgaXQgYmUg
-TlVMTC4pDQoNCklmIHlvdSByZWFsbHkgd2FudCB0byBkZWZpbmUgdGhlIHZhcmlhYmxlIG1pZC1i
-bG9jayB5b3UgY2FuIHVzZToNCiAgICAgICAgIG1lbV90b19mbGV4X2R1cChzdHJ1Y3Qgc29tZXRo
-aW5nICosIGluc3RhbmNlLCBieXRlX2FycmF5LCBjb3VudCwgR0ZQX0tFUk5FTCk7DQoNCmJ1dCBJ
-IHJlYWxseSBoYXRlIGhhdmluZyBkZWNsYXJhdGlvbnMgYW55d2hlcmUgb3RoZXIgdGhhbiB0aGUg
-dG9wIG9mDQphIGZ1bmN0aW9uIGJlY2F1c2UgaXQgbWFrZXMgdGhlbSBoYXJkIGZvciB0aGUgJ21r
-MSBleWViYWxsJyB0byBzcG90Lg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExh
-a2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQs
-IFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+On Wed, May 04, 2022 at 08:16:57PM +0200, Peter Zijlstra wrote:
+> 	FineIBT						kCFI
+> 
+> __fineibt_\hash:
+> 	xor	\hash, %r10	# 7
+> 	jz	1f		# 2
+> 	ud2			# 2
+> 1:	ret			# 1
+> 	int3			# 1
+> 
+> 
+> __cfi_\sym:					__cfi_\sym:
+> 							int3; int3				# 2
+> 	endbr			# 4			mov	\hash, %eax			# 5
+> 	call	__fineibt_\hash	# 5			int3; int3				# 2
+> \sym:						\sym:
+> 	...						...
+> 
+> 
+> caller:						caller:
+> 	movl	\hash, %r10d	# 6			cmpl	\hash, -6(%r11)			# 8
+> 	sub	$9, %r11	# 4			je	1f				# 2
+> 	call	*%r11		# 3			ud2					# 2
+> 	.nop 4			# 4 (or fixup r11)	call	__x86_indirect_thunk_r11	# 5
 
+This looks good!
+
+And just to double-check my understanding here... \sym is expected to
+start with endbr with IBT + kCFI?
+
+
+Random extra thoughts... feel free to ignore. :) Given that both CFI
+schemes depend on an attacker not being able to construct an executable
+memory region that either starts with endbr (for FineIBT) or starts with
+hash & 2 bytes (for kCFI), we should likely take another look at where
+the kernel uses PAGE_KERNEL_EXEC.
+
+It seems non-specialized use is entirely done via module_alloc(). Obviously
+modules need to stay as-is. So we're left with other module_alloc()
+callers: BPF JIT, ftrace, and kprobes.
+
+Perhaps enabling CFI should tie bpf_jit_harden (which performs constant
+blinding) to the value of bpf_jit_enable? (i.e. either use BPF VM which
+reads from non-exec memory, or use BPF JIT with constant blinding.)
+
+I *think* all the kprobes and ftrace stuff ends up using constructed
+direct calls, though, yes? So if we did bounds checking, we could
+"exclude" them as well as the BPF JIT. Though I'm not sure how
+controllable the content written to the kprobes and ftrace regions are,
+though?
+
+For exclusion, we could separate actual modules from the other
+module_alloc() users by maybe allocating in opposite directions from the
+randomized offset and check indirect calls against the kernel text bounds
+and the new modules-only bounds. Sounds expensive, though. Maybe PKS,
+but I can't imagine 2 MSR writes per indirect call would be fast. Hmm...
+
+-- 
+Kees Cook
