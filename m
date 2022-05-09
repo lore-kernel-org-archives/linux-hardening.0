@@ -2,144 +2,171 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C324C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon,  9 May 2022 19:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EA4C433EF
+	for <linux-hardening@archiver.kernel.org>; Mon,  9 May 2022 19:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240589AbiEITkb (ORCPT
+        id S240778AbiEIUDR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 9 May 2022 15:40:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34210 "EHLO
+        Mon, 9 May 2022 16:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240564AbiEITkZ (ORCPT
+        with ESMTP id S240775AbiEIUDL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 9 May 2022 15:40:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72200AE274;
-        Mon,  9 May 2022 12:36:29 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 59CBC60C5A;
-        Mon,  9 May 2022 19:36:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA623C385B2;
-        Mon,  9 May 2022 19:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652124988;
-        bh=lbXpF2CBFxt8r9QI1yEWANwIKiW6h9ySSfu5r+RItXE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=WwJQsdSTkKOhnWYM5jHl2ukngRRMRxtCHsznGqYFhuMpMYePeboun+nwvXrwBv7eY
-         /A93AFWuLj83PmGU9Pgd6Wx2jhmpZalNh/xubw0u/FTuotUahIlchDF5QgePWy6H5y
-         6eh2vXjx9/gFT5WME5Kqbo3Vmqq0HiZUsejwcUdj3ZFv/AWSCGlVGy9ddjgZk4axKY
-         gQcbcUseXdcwsb+PmKYxEXBfaCO94ADFZMBquvV95sLZuhIzBKYqSf5fBHKOBi79fY
-         5O1a16hHCCJQcQTn+fqbDgE36XMDY7alsN5in+m/YWtIKyA1cpVHU2oYkSLNRR7Ldx
-         vOV/bfofI1ErA==
-Date:   Mon, 9 May 2022 14:45:41 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Mon, 9 May 2022 16:03:11 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2100E730D
+        for <linux-hardening@vger.kernel.org>; Mon,  9 May 2022 12:59:16 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id c14so13145786pfn.2
+        for <linux-hardening@vger.kernel.org>; Mon, 09 May 2022 12:59:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=V7KZUrBPkYkK3ObmLm9iJIpKbNqxXLysATTWNIzpo1s=;
+        b=ayrZ7yDH6T9svU6tPTwibAzUSoLOalqbQYXWkPdqg3o9NXzdCZhN9zBRTXAesD7UMm
+         iFvKror4Z0xCVr2lCn/zasmxkxw9rlgJpdlu2UPaRe6dhpQrUWNZM/i2Fu9oz/Dwdr0P
+         t25CSQLgyMv/FhPMxRCVOIRCTZb8jwwubqjOQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=V7KZUrBPkYkK3ObmLm9iJIpKbNqxXLysATTWNIzpo1s=;
+        b=lglhT/6IeELmPPddcjGNNWM9QMfHEZV0VzuQ0D5R8caHub/T9DMdVvscDT3abadS3g
+         iErH2WrLNZW/7GsyEL7sBayAIpEq3w88DJSUd8N3QwfV897TbSeHUy/It7CzUiS2XghV
+         gosW1Qvm3+Upcirr2GqB+ZSyXyxlsglu3g7XKJlwNSiiqIvRPL9zUxLfhC7Zv7Xu/XI7
+         7kjAK7YmgM84kuwVEL9yZpgVfRRxbSEExWG49MJqi9kkEnx6MDTlO/+tLY6nfCmZBiqA
+         o013yMfc1TtDn4WMpeIvbpRAXyHhA9GfiiFHIHVE4guBso11pAX4ljX862Aw3n2Wa1sx
+         vdvg==
+X-Gm-Message-State: AOAM531Ra7/Lh19qAGdKtzPGwHLAYr4RECqp8JpgcU9OFZT/H2DY7xmq
+        IztHOv6Aan/wNHtMkXWBjALvnPtzjcbyVg==
+X-Google-Smtp-Source: ABdhPJyfmUy6w/RVLC05F6TaXz7S5+Hd0EPOJPVOwFJt1Yw2nKMq6U4clT04AG9dQpgPVqOWONrEyg==
+X-Received: by 2002:a63:ef12:0:b0:3c6:aa2c:e27b with SMTP id u18-20020a63ef12000000b003c6aa2ce27bmr6792806pgh.557.1652126356236;
+        Mon, 09 May 2022 12:59:16 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id ij26-20020a170902ab5a00b0015e8d4eb202sm277243plb.76.2022.05.09.12.59.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 May 2022 12:59:15 -0700 (PDT)
+Date:   Mon, 9 May 2022 12:59:15 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
         Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] x86/mm/pgtable: Fix -Wstringop-overflow warnings
-Message-ID: <20220509194541.GA91598@embeddedor>
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] x86/mm/pgtable: Fix -Wstringop-overflow warnings
+Message-ID: <202205091251.5703DE2@keescook>
+References: <20220509194541.GA91598@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20220509194541.GA91598@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Fix the following -Wstringop-overflow warnings when building with GCC-12.1:
+On Mon, May 09, 2022 at 02:45:41PM -0500, Gustavo A. R. Silva wrote:
+> Fix the following -Wstringop-overflow warnings when building with GCC-12.1:
+> 
+> arch/x86/mm/pgtable.c:437:13: warning: 'preallocate_pmds' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+> arch/x86/mm/pgtable.c:440:13: warning: 'preallocate_pmds' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+> arch/x86/mm/pgtable.c:462:9: warning: 'free_pmds' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+> arch/x86/mm/pgtable.c:454:9: warning: 'pgd_prepopulate_pmd' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+> arch/x86/mm/pgtable.c:455:9: warning: 'pgd_prepopulate_user_pmd' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+> arch/x86/mm/pgtable.c:464:9: warning: 'free_pmds' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+> 
+> There is a case in which PREALLOCATED_PMDS, MAX_PREALLOCATED_PMDS,
+> PREALLOCATED_USER_PMDS and MAX_PREALLOCATED_USER_PMDS are defined as
+> zero:
+> 
+> 204 #else  /* !CONFIG_X86_PAE */
+> 205 
+> 206 /* No need to prepopulate any pagetable entries in non-PAE modes. */
+> 207 #define PREALLOCATED_PMDS       0
+> 208 #define MAX_PREALLOCATED_PMDS   0
+> 209 #define PREALLOCATED_USER_PMDS   0
+> 210 #define MAX_PREALLOCATED_USER_PMDS 0
+> 211 #endif  /* CONFIG_X86_PAE */
+> 
+> It seems that GCC is legitimately complaining about the fact that, under
+> certain circumstances, u_pmds and pmds are declared as zero-length arrays
+> in the stack and, of course, they are not flexible arrays.
 
-arch/x86/mm/pgtable.c:437:13: warning: 'preallocate_pmds' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
-arch/x86/mm/pgtable.c:440:13: warning: 'preallocate_pmds' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
-arch/x86/mm/pgtable.c:462:9: warning: 'free_pmds' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
-arch/x86/mm/pgtable.c:454:9: warning: 'pgd_prepopulate_pmd' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
-arch/x86/mm/pgtable.c:455:9: warning: 'pgd_prepopulate_user_pmd' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
-arch/x86/mm/pgtable.c:464:9: warning: 'free_pmds' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+Ah yeah, I've run into this a few times. Since the relationship between
+the macro pairs can't be seen by GCC, it gets upset (i.e. sizeof(u_pmds)
+has no relationship wtih PREALLOCATED_USER_PMDS and the calls weren't
+inlined, so it can't see that it'll always be 0 and 0).
 
-There is a case in which PREALLOCATED_PMDS, MAX_PREALLOCATED_PMDS,
-PREALLOCATED_USER_PMDS and MAX_PREALLOCATED_USER_PMDS are defined as
-zero:
+> 424 pgd_t *pgd_alloc(struct mm_struct *mm)
+> 425 {
+> 426         pgd_t *pgd;
+> 427         pmd_t *u_pmds[MAX_PREALLOCATED_USER_PMDS];
+> 428         pmd_t *pmds[MAX_PREALLOCATED_PMDS];
+> 429
+> 
+> Notice that "Accessing elements of zero-length arrays declared in such
+> contexts is undefined and may be diagnosed."[1]
+> 
+> We can fix this by checking that MAX_PREALLOCATED_PMDS and MAX_PREALLOCATED_USER_PMDS
+> are different than zero, prior to passing u_pmds amd pmds as arguments to any
+> function, in this case to functions preallocate_pmds(), pgd_prepopulate_pmd()
+> and free_pmds().
+> 
+> This helps with the ongoing efforts to globally enable
+> -Wstringop-overflow.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> 
+> Link: https://github.com/KSPP/linux/issues/181
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> Changes in v2:
+>  - Check MAX_PREALLOCATED_PMDS and MAX_PREALLOCATED_USER_PMDS
+>    instead of using pointer notation.
+>    Link: https://lore.kernel.org/linux-hardening/20220401005834.GA182932@embeddedor/
+>  - Update changelog text.
+> 
+>  arch/x86/mm/pgtable.c | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+> index f16059e9a85e..96c3f402a1da 100644
+> --- a/arch/x86/mm/pgtable.c
+> +++ b/arch/x86/mm/pgtable.c
+> @@ -434,14 +434,18 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
+>  
+>  	mm->pgd = pgd;
+>  
+> -	if (preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
+> -		goto out_free_pgd;
+> +	if (MAX_PREALLOCATED_PMDS != 0 && MAX_PREALLOCATED_USER_PMDS != 0) {
+> +		if (preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
+> +			goto out_free_pgd;
+>  
+> -	if (preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
+> -		goto out_free_pmds;
+> +		if (preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
+> +			goto out_free_pmds;
+>  
+> -	if (paravirt_pgd_alloc(mm) != 0)
+> -		goto out_free_user_pmds;
+> +		if (paravirt_pgd_alloc(mm) != 0)
+> +			goto out_free_user_pmds;
+> +	} else {
+> +		goto out_free_pgd;
 
-204 #else  /* !CONFIG_X86_PAE */
-205 
-206 /* No need to prepopulate any pagetable entries in non-PAE modes. */
-207 #define PREALLOCATED_PMDS       0
-208 #define MAX_PREALLOCATED_PMDS   0
-209 #define PREALLOCATED_USER_PMDS   0
-210 #define MAX_PREALLOCATED_USER_PMDS 0
-211 #endif  /* CONFIG_X86_PAE */
+The "all 0" case shouldn't be a failure mode; it should just skip the
+preallocate_pmds() calls.
 
-It seems that GCC is legitimately complaining about the fact that, under
-certain circumstances, u_pmds and pmds are declared as zero-length arrays
-in the stack and, of course, they are not flexible arrays.
+> +	}
+>  
+>  	/*
+>  	 * Make sure that pre-populating the pmds is atomic with
+> -- 
+> 2.27.0
+> 
 
-424 pgd_t *pgd_alloc(struct mm_struct *mm)
-425 {
-426         pgd_t *pgd;
-427         pmd_t *u_pmds[MAX_PREALLOCATED_USER_PMDS];
-428         pmd_t *pmds[MAX_PREALLOCATED_PMDS];
-429
-
-Notice that "Accessing elements of zero-length arrays declared in such
-contexts is undefined and may be diagnosed."[1]
-
-We can fix this by checking that MAX_PREALLOCATED_PMDS and MAX_PREALLOCATED_USER_PMDS
-are different than zero, prior to passing u_pmds amd pmds as arguments to any
-function, in this case to functions preallocate_pmds(), pgd_prepopulate_pmd()
-and free_pmds().
-
-This helps with the ongoing efforts to globally enable
--Wstringop-overflow.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-
-Link: https://github.com/KSPP/linux/issues/181
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Check MAX_PREALLOCATED_PMDS and MAX_PREALLOCATED_USER_PMDS
-   instead of using pointer notation.
-   Link: https://lore.kernel.org/linux-hardening/20220401005834.GA182932@embeddedor/
- - Update changelog text.
-
- arch/x86/mm/pgtable.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index f16059e9a85e..96c3f402a1da 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -434,14 +434,18 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
- 
- 	mm->pgd = pgd;
- 
--	if (preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
--		goto out_free_pgd;
-+	if (MAX_PREALLOCATED_PMDS != 0 && MAX_PREALLOCATED_USER_PMDS != 0) {
-+		if (preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
-+			goto out_free_pgd;
- 
--	if (preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
--		goto out_free_pmds;
-+		if (preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
-+			goto out_free_pmds;
- 
--	if (paravirt_pgd_alloc(mm) != 0)
--		goto out_free_user_pmds;
-+		if (paravirt_pgd_alloc(mm) != 0)
-+			goto out_free_user_pmds;
-+	} else {
-+		goto out_free_pgd;
-+	}
- 
- 	/*
- 	 * Make sure that pre-populating the pmds is atomic with
 -- 
-2.27.0
-
+Kees Cook
