@@ -2,161 +2,144 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECF7C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon,  9 May 2022 11:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C324C433EF
+	for <linux-hardening@archiver.kernel.org>; Mon,  9 May 2022 19:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232539AbiEIL0W (ORCPT
+        id S240589AbiEITkb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 9 May 2022 07:26:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37064 "EHLO
+        Mon, 9 May 2022 15:40:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232417AbiEIL0U (ORCPT
+        with ESMTP id S240564AbiEITkZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 9 May 2022 07:26:20 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 018EC2528A;
-        Mon,  9 May 2022 04:22:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=I5w1l7kr42Qgl1B7paAXQrUp55JqRTIxrpC92Io5gcY=; b=LxIUWFwus+tGPEynRScRh9gh6Y
-        X64jWNjxl8Rt/cXVIAgJZhVY7crrfM4xLN7KDgzNu4d+wAzPhGOYUS1RWkm/+Ru6pPOmp3D+bASwq
-        KcpyRNECMOiaLhUWIXy/NGttEEIWsoZrNYkMsqN/JG9jBDDkN80LIVOytHIwMHTgKWT1RW3FBXJm2
-        B/VGxApqBfe/9R5adpqBf17LKdW4zbp18Hxmv5cgdRxw8nixjx/64X/lk+ry/Y/d6BeJuije5qhX9
-        w1Z3hWajT/AuogLRkzyB47Y5HjbYB4p+2vEFWsZf4jWJvyQVvfkcQyqRoBXkhC3E7Ekyv+9yw0Ic4
-        ZkDjCY1g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1no1Sk-00CXFw-VS; Mon, 09 May 2022 11:22:03 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6D241300385;
-        Mon,  9 May 2022 13:22:00 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 58C562026968A; Mon,  9 May 2022 13:22:00 +0200 (CEST)
-Date:   Mon, 9 May 2022 13:22:00 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Peter Collingbourne <pcc@google.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        andrew.cooper3@citrix.com, samitolvanen@google.com,
-        mark.rutland@arm.com, hjl.tools@gmail.com,
-        alyssa.milburn@linux.intel.com, ndesaulniers@google.com,
-        gabriel.gomes@linux.intel.com, rick.p.edgecombe@intel.com
-Subject: Re: [RFC PATCH 01/11] x86: kernel FineIBT
-Message-ID: <Ynj5WLYnuWs/3oZW@hirez.programming.kicks-ass.net>
-References: <20220420004241.2093-1-joao@overdrivepizza.com>
- <20220420004241.2093-2-joao@overdrivepizza.com>
- <20220429013704.4n4lmadpstdioe7a@treble>
- <d82459b887bcaf9181ad836051e2d16b@overdrivepizza.com>
- <20220503220244.vyz5flk3gg3y6rbw@treble>
- <YnJTYzralOhGGmED@hirez.programming.kicks-ass.net>
- <YnKx5a9WvJ1UhWPm@google.com>
- <YnLDGcJGKfqi5+8w@hirez.programming.kicks-ass.net>
- <202205080033.82AB3703C3@keescook>
+        Mon, 9 May 2022 15:40:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72200AE274;
+        Mon,  9 May 2022 12:36:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 59CBC60C5A;
+        Mon,  9 May 2022 19:36:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA623C385B2;
+        Mon,  9 May 2022 19:36:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652124988;
+        bh=lbXpF2CBFxt8r9QI1yEWANwIKiW6h9ySSfu5r+RItXE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WwJQsdSTkKOhnWYM5jHl2ukngRRMRxtCHsznGqYFhuMpMYePeboun+nwvXrwBv7eY
+         /A93AFWuLj83PmGU9Pgd6Wx2jhmpZalNh/xubw0u/FTuotUahIlchDF5QgePWy6H5y
+         6eh2vXjx9/gFT5WME5Kqbo3Vmqq0HiZUsejwcUdj3ZFv/AWSCGlVGy9ddjgZk4axKY
+         gQcbcUseXdcwsb+PmKYxEXBfaCO94ADFZMBquvV95sLZuhIzBKYqSf5fBHKOBi79fY
+         5O1a16hHCCJQcQTn+fqbDgE36XMDY7alsN5in+m/YWtIKyA1cpVHU2oYkSLNRR7Ldx
+         vOV/bfofI1ErA==
+Date:   Mon, 9 May 2022 14:45:41 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v2][next] x86/mm/pgtable: Fix -Wstringop-overflow warnings
+Message-ID: <20220509194541.GA91598@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202205080033.82AB3703C3@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, May 08, 2022 at 01:29:13AM -0700, Kees Cook wrote:
-> On Wed, May 04, 2022 at 08:16:57PM +0200, Peter Zijlstra wrote:
-> > 	FineIBT						kCFI
-> > 
-> > __fineibt_\hash:
-> > 	xor	\hash, %r10	# 7
-> > 	jz	1f		# 2
-> > 	ud2			# 2
-> > 1:	ret			# 1
-> > 	int3			# 1
-> > 
-> > 
-> > __cfi_\sym:					__cfi_\sym:
-> > 							int3; int3				# 2
-> > 	endbr			# 4			mov	\hash, %eax			# 5
-> > 	call	__fineibt_\hash	# 5			int3; int3				# 2
-> > \sym:						\sym:
-> > 	...						...
-> > 
-> > 
-> > caller:						caller:
-> > 	movl	\hash, %r10d	# 6			cmpl	\hash, -6(%r11)			# 8
-> > 	sub	$9, %r11	# 4			je	1f				# 2
-> > 	call	*%r11		# 3			ud2					# 2
-> > 	.nop 4			# 4 (or fixup r11)	call	__x86_indirect_thunk_r11	# 5
-> 
-> This looks good!
-> 
-> And just to double-check my understanding here... \sym is expected to
-> start with endbr with IBT + kCFI?
+Fix the following -Wstringop-overflow warnings when building with GCC-12.1:
 
-Ah, the thinking was that 'if IBT then FineIBT', so the combination of
-kCFI and IBT is of no concern. And since FineIBT will have the ENDBR in
-the __cfi_\sym thing, \sym will not need it.
+arch/x86/mm/pgtable.c:437:13: warning: 'preallocate_pmds' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+arch/x86/mm/pgtable.c:440:13: warning: 'preallocate_pmds' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+arch/x86/mm/pgtable.c:462:9: warning: 'free_pmds' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+arch/x86/mm/pgtable.c:454:9: warning: 'pgd_prepopulate_pmd' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+arch/x86/mm/pgtable.c:455:9: warning: 'pgd_prepopulate_user_pmd' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+arch/x86/mm/pgtable.c:464:9: warning: 'free_pmds' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
 
-But thinking about this now I suppose __nocfi call symbols will stlil
-need the ENDBR on. Objtool IBT validation would need to either find
-ENDBR or a matching __cfi_\sym I suppose.
+There is a case in which PREALLOCATED_PMDS, MAX_PREALLOCATED_PMDS,
+PREALLOCATED_USER_PMDS and MAX_PREALLOCATED_USER_PMDS are defined as
+zero:
 
-So I was talking to Joao on IRC the other day, and I realized that if
-kCFI generates code as per the above, then we can do FineIBT purely
-in-kernel. That is; have objtool generate a section of __cfi_\sym
-locations. Then use the .retpoline_sites and .cfi_sites to rewrite kCFI
-into the FineIBT form in multi pass:
+204 #else  /* !CONFIG_X86_PAE */
+205 
+206 /* No need to prepopulate any pagetable entries in non-PAE modes. */
+207 #define PREALLOCATED_PMDS       0
+208 #define MAX_PREALLOCATED_PMDS   0
+209 #define PREALLOCATED_USER_PMDS   0
+210 #define MAX_PREALLOCATED_USER_PMDS 0
+211 #endif  /* CONFIG_X86_PAE */
 
- - read all the __cfi_\sym sites and collect all unique hash values
+It seems that GCC is legitimately complaining about the fact that, under
+certain circumstances, u_pmds and pmds are declared as zero-length arrays
+in the stack and, of course, they are not flexible arrays.
 
- - allocate (module) memory and write __fineibt_\hash functions for each
-   unique hash value found
+424 pgd_t *pgd_alloc(struct mm_struct *mm)
+425 {
+426         pgd_t *pgd;
+427         pmd_t *u_pmds[MAX_PREALLOCATED_USER_PMDS];
+428         pmd_t *pmds[MAX_PREALLOCATED_PMDS];
+429
 
- - rewrite callers; nop out kCFI
+Notice that "Accessing elements of zero-length arrays declared in such
+contexts is undefined and may be diagnosed."[1]
 
- - rewrite all __cfi_\sym
+We can fix this by checking that MAX_PREALLOCATED_PMDS and MAX_PREALLOCATED_USER_PMDS
+are different than zero, prior to passing u_pmds amd pmds as arguments to any
+function, in this case to functions preallocate_pmds(), pgd_prepopulate_pmd()
+and free_pmds().
 
- - rewrite all callers
+This helps with the ongoing efforts to globally enable
+-Wstringop-overflow.
 
- - enable IBT
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
 
-And the same on module load I suppose.
+Link: https://github.com/KSPP/linux/issues/181
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Check MAX_PREALLOCATED_PMDS and MAX_PREALLOCATED_USER_PMDS
+   instead of using pointer notation.
+   Link: https://lore.kernel.org/linux-hardening/20220401005834.GA182932@embeddedor/
+ - Update changelog text.
 
-But I've only thought about this, not actually implemented it, so who
-knows what surprises are lurking there :-)
+ arch/x86/mm/pgtable.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-> Random extra thoughts... feel free to ignore. :) Given that both CFI
-> schemes depend on an attacker not being able to construct an executable
-> memory region that either starts with endbr (for FineIBT) or starts with
-> hash & 2 bytes (for kCFI), we should likely take another look at where
-> the kernel uses PAGE_KERNEL_EXEC.
-> 
-> It seems non-specialized use is entirely done via module_alloc(). Obviously
-> modules need to stay as-is. So we're left with other module_alloc()
-> callers: BPF JIT, ftrace, and kprobes.
-> 
-> Perhaps enabling CFI should tie bpf_jit_harden (which performs constant
-> blinding) to the value of bpf_jit_enable? (i.e. either use BPF VM which
-> reads from non-exec memory, or use BPF JIT with constant blinding.)
-> 
-> I *think* all the kprobes and ftrace stuff ends up using constructed
-> direct calls, though, yes? So if we did bounds checking, we could
-> "exclude" them as well as the BPF JIT. Though I'm not sure how
-> controllable the content written to the kprobes and ftrace regions are,
-> though?
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index f16059e9a85e..96c3f402a1da 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -434,14 +434,18 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
+ 
+ 	mm->pgd = pgd;
+ 
+-	if (preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
+-		goto out_free_pgd;
++	if (MAX_PREALLOCATED_PMDS != 0 && MAX_PREALLOCATED_USER_PMDS != 0) {
++		if (preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
++			goto out_free_pgd;
+ 
+-	if (preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
+-		goto out_free_pmds;
++		if (preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
++			goto out_free_pmds;
+ 
+-	if (paravirt_pgd_alloc(mm) != 0)
+-		goto out_free_user_pmds;
++		if (paravirt_pgd_alloc(mm) != 0)
++			goto out_free_user_pmds;
++	} else {
++		goto out_free_pgd;
++	}
+ 
+ 	/*
+ 	 * Make sure that pre-populating the pmds is atomic with
+-- 
+2.27.0
 
-Both ftrace and kprobe only write fairly simple tramplines based off of
-a template. Neither has indirect calls.
-
-> For exclusion, we could separate actual modules from the other
-> module_alloc() users by maybe allocating in opposite directions from the
-> randomized offset and check indirect calls against the kernel text bounds
-> and the new modules-only bounds. Sounds expensive, though. Maybe PKS,
-> but I can't imagine 2 MSR writes per indirect call would be fast. Hmm...
-
-I'm not sure what problem you're trying to solve..
