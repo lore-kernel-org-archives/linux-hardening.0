@@ -2,133 +2,161 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAFFC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 May 2022 22:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89830C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 May 2022 22:18:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231737AbiEJWJA (ORCPT
+        id S235381AbiEJWS1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 10 May 2022 18:09:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34138 "EHLO
+        Tue, 10 May 2022 18:18:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229555AbiEJWI7 (ORCPT
+        with ESMTP id S235439AbiEJWS0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 10 May 2022 18:08:59 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B416B64E
-        for <linux-hardening@vger.kernel.org>; Tue, 10 May 2022 15:08:58 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id j10-20020a17090a94ca00b001dd2131159aso3173262pjw.0
-        for <linux-hardening@vger.kernel.org>; Tue, 10 May 2022 15:08:58 -0700 (PDT)
+        Tue, 10 May 2022 18:18:26 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E5E06C549
+        for <linux-hardening@vger.kernel.org>; Tue, 10 May 2022 15:18:24 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id 7so131522pga.12
+        for <linux-hardening@vger.kernel.org>; Tue, 10 May 2022 15:18:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=9wKOeHUc2xnhBn2gmB2Ek1IaCVg0XLzxAc3hNyfWilQ=;
-        b=K2ASJuEd+iD69DLoR1SkVzlMzX/UTfBdn/8tDBQ/EVWLM4dHjtlT+uiOV6MEp7j4mW
-         UGPc+jw7BrCbQvRcsUTyE/u8BV+0iBPiMJkLu3GLKxLsY7ULcriSxDZXYD/iH17Ua4SD
-         1Uh00kSRYnnOqL7wyAOlfDKfayhL+wp642usM=
+        bh=InNCa+xjWOlYGnWYWDC3xJ/eS8N5Jwfc81JekwauSRA=;
+        b=XgtYlZ/dCAkrzwvZEDyVsySj5TSiVF/dDKregrx22WRD39pVwUZcxemUeP7nTgQjba
+         ZCpQo5QtAyL2qT30j6wV9nr0O6tFtX/kYKOb8nswyOkrIjoIPG+7SMbO6lnuGW3up+lq
+         HeUh1iG/VMrfEarCdU3yR1VhJZuE1Z9Y6U6ww=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=9wKOeHUc2xnhBn2gmB2Ek1IaCVg0XLzxAc3hNyfWilQ=;
-        b=XbcC/JBVEYgx2CLIjbRxhnlhSlnJ2hQ/xwtHj0aYF9qgilxwhGkQ3QhOdy7zqc2yOm
-         +OXNB7RtE/G5QbF4JaofqIfbbedDWiZyqH+jrUv3QUX1eVclvzKEkahCA2M42INtONn8
-         r1sgTEssp7x+0x7IeYBqLI3JhaHsSNEKkRhqnwIJAs/Ka59LG/ohnmIzZVGYaInu0nXF
-         0JyI2Bk11vTkxbBqBJzdo1Eewpr7Qc6ZRLpOcAjNvt+UXpLVcXFGnLUVmy7aSAdxcD4c
-         pQy8NKii+B3E8gCL/FqpmF4kohI6YvCNsxRa5TsOizOXaJrN4TjVAi91OQHO0nXL1fL6
-         Q0Xg==
-X-Gm-Message-State: AOAM5311pycUJjQyWYner5uaz59P11u8tEBpvIcLfoan8Cuon9bZntRx
-        3S7anzdeHo7UXFI2DWBKubYMWw==
-X-Google-Smtp-Source: ABdhPJy+LLX5xA/kUFaFAHebnTbvGLx+1zVxbGcEcO117WqJqHQJRLNgd3uF01bnDEg6dbT0zXcufw==
-X-Received: by 2002:a17:90b:1894:b0:1dc:1028:aecb with SMTP id mn20-20020a17090b189400b001dc1028aecbmr1957870pjb.106.1652220538079;
-        Tue, 10 May 2022 15:08:58 -0700 (PDT)
+        bh=InNCa+xjWOlYGnWYWDC3xJ/eS8N5Jwfc81JekwauSRA=;
+        b=nfv18wT6cemlNBSwSVJMWKHRTM02hO33jodRX7b7kUm+BQtx/o6aAHOMCTZ4Q0s/ER
+         x0eMIu0iteaTb7QjVurPa+40c4w0VUthuHhSa/SMkQ52hMgMXKCedJMlZBIHdbvgqaJ5
+         zwkbjmNfAP80ltUq6SQz8N0T6FWyY5r5v/DtY2VQzoDyQH3+JcVdknLT6NAnR4LSEmkO
+         /92rWI1H4WnxI5H9r/8eGcyyXPhPDLdB3tJBt2Jgu/POr/g6CdwrBkn3A+rGWPDUEccj
+         SyZL3EGGGGPJyRPHG49nZA7gJ/+d6WSIQZfYyjjdJ30Po0Z10vv9Atb8RxqCmCYA2mWT
+         42kQ==
+X-Gm-Message-State: AOAM530+kQ49Bdu8LP35LIP4+vhITBcWfeHoMNmn07Rj/GV3sMgJ2H7A
+        IsIDZUOWbDBmx26iuEucoXPBBw==
+X-Google-Smtp-Source: ABdhPJykDdBjmf6E/+QD1MPnRy3T6XJmUj5VkOlEr3aIPGjL/svdAg5YZdWeuCvHLVkvcoHgfPX0CQ==
+X-Received: by 2002:a63:181c:0:b0:3da:fe5d:90f3 with SMTP id y28-20020a63181c000000b003dafe5d90f3mr2938243pgl.350.1652221104014;
+        Tue, 10 May 2022 15:18:24 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k6-20020a63d846000000b003c14af505f9sm221971pgj.17.2022.05.10.15.08.57
+        by smtp.gmail.com with ESMTPSA id o6-20020a1709026b0600b0015e8d4eb263sm120406plk.173.2022.05.10.15.18.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 May 2022 15:08:57 -0700 (PDT)
-Date:   Tue, 10 May 2022 15:08:56 -0700
+        Tue, 10 May 2022 15:18:23 -0700 (PDT)
+Date:   Tue, 10 May 2022 15:18:22 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH V10 14/44] mm/pkeys: Introduce pks_set_readwrite()
-Message-ID: <202205101504.5B5C693F7C@keescook>
-References: <20220419170649.1022246-1-ira.weiny@intel.com>
- <20220419170649.1022246-15-ira.weiny@intel.com>
- <202205091304.434A9B45@keescook>
- <YnraD8URWxWtaltF@iweiny-desk3>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-hardening@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] big_keys: Use struct for internal payload
+Message-ID: <202205101509.B5E3096@keescook>
+References: <20220508175732.2693426-1-keescook@chromium.org>
+ <YnmgLLcJfPRKEYuk@sol.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YnraD8URWxWtaltF@iweiny-desk3>
+In-Reply-To: <YnmgLLcJfPRKEYuk@sol.localdomain>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 10, 2022 at 02:33:03PM -0700, Ira Weiny wrote:
-> On Mon, May 09, 2022 at 02:38:38PM -0700, Kees Cook wrote:
-> > [...]
-> > Better yet would be:
+On Mon, May 09, 2022 at 04:13:48PM -0700, Eric Biggers wrote:
+> On Sun, May 08, 2022 at 10:57:31AM -0700, Kees Cook wrote:
+> > The randstruct GCC plugin gets upset when it sees struct path (which is
+> > randomized) being assigned from a "void *" (which it cannot type-check).
 > > 
-> > 	preempt_disable();
-> > 	rdmsrl(MSR_IA32_PKRS, pkrs);
-> > 	pkrs = pkey_update_pkval(pkrs, pkey, protection);
-> > 	pks_write_pkrs(pkrs);
-> > 	current->thread.pkrs = pkrs;
-> > 	preempt_enable();
+> > There's no need for these casts, as the entire internal payload use is
+> > following a normal struct layout. Convert the enum-based void * offset
+> > dereferencing to the new big_key_payload struct. No meaningful machine
+> > code changes result after this change, and source readability is improved.
 > > 
-> > Then cross-thread attacks cannot corrupt the _other_ PKS keys (i.e.
-> > write the desired changes to target's current->thread.kprs and trigger
-> > an update to a different pkey, resulting in flushing the attacker's
-> > changes to that CPU's pkey state.
-> 
-> Unfortunately I don't think this entirely prevents an attack through the
-> thread.pkrs value.  thread.pkrs has to be used to set the MSR when a thread is
-> scheduled.  Therefore the rdmsrl above will by definition pick up the
-> thread.pkrs but from an earlier time.
-
-Ooh, good point, yeah.
-
-> I'm not opposed to doing this as I think it does reduce the time window of such
-> an attack but I wanted to mention it.  Especially since I specifically avoided
-> ever reading the MSR to improve performance.
-> 
-> I'm going to run some tests.  Perhaps the MSR read is not that big of a deal
-> and I can convince myself that the performance diff is negligible.
-
-Yeah, given "loaded at scheduling" point, there's not much benefit in
-read/write pair. I think my first suggestion about only writing to
-thread.pkrs after the write, etc, still stands. I'll ponder this a bit
-more.
-
-> > While adding these, can you please also add pks_set_nowrite()? This
-> > will be needed for protecting writes to memory that should be otherwise
-> > readable.
-> 
-> I have a patch to add pks_set_readonly() but I was advised to not send it
-> because this series does not include a use case for it.  (PMEM does not need
-> it.)
-> 
-> Dave, Dan?  Are you ok adding that back?
-> 
-> Kees would you prefer pks_set_nowrite() as a name?
-
-I think nowrite is the better name (in the sense that "read-only" can
-sometimes imply non-executable).
-
+> > Drop the randstruct exception now that there is no "confusing" cross-type
+> > assignment.
 > > 
-> > With these changes it should be possible to protect the kernel's page
-> > table entries from "stray" writes. :)
+> > Cc: David Howells <dhowells@redhat.com>
+> > Cc: Jarkko Sakkinen <jarkko@kernel.org>
+> > Cc: James Morris <jmorris@namei.org>
+> > Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> > Cc: linux-hardening@vger.kernel.org
+> > Cc: keyrings@vger.kernel.org
+> > Cc: linux-security-module@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  scripts/gcc-plugins/randomize_layout_plugin.c |  2 -
+> >  security/keys/big_key.c                       | 64 ++++++++++---------
+> >  2 files changed, 34 insertions(+), 32 deletions(-)
 > 
-> Yes, Rick has done some great work in that area.
+> This looks fine to me, although the way that an array of void pointers is cast
+> to/from another struct is still weird.  I'd prefer if the payload was just
+> changed into a separate allocation.
 
-Oh! I would _love_ to see this series. I was trying to scope the work
-yesterday but gave up after I couldn't figure out the qemu PKS trick. :)
+Yeah, though I realized after sending this patch that I'd done it
+before[1] back with the rest of the randstruct GCC plugin enabling,
+and it seems David was against the separate allocation, which, given the
+space available, isn't unreasonable right up until struct path doesn't fit
+anymore, but that's why I've added the BUILD_BUG_ON() to check sizes. :)
+And this version ended up quite close to what hwh suggested[2] in 2017.
+
+> A couple nits below if you stay with your proposed solution:
+> 
+> >  void big_key_free_preparse(struct key_preparsed_payload *prep)
+> >  {
+> > +	struct big_key_payload *payload = to_big_key_payload(prep->payload);
+> > +
+> >  	if (prep->datalen > BIG_KEY_FILE_THRESHOLD) {
+> > -		struct path *path = (struct path *)&prep->payload.data[big_key_path];
+> > +		struct path *path = &payload->path;
+> >  
+> >  		path_put(path);
+> >  	}
+> 
+> This could just do:
+> 
+> 	if (prep->datalen > BIG_KEY_FILE_THRESHOLD)
+> 		path_put(&payload->path);
+
+Sure, I can avoid the extra variable.
+
+> 
+> >  void big_key_destroy(struct key *key)
+> >  {
+> > -	size_t datalen = (size_t)key->payload.data[big_key_len];
+> > +	struct big_key_payload *payload = to_big_key_payload(key->payload);
+> >  
+> > -	if (datalen > BIG_KEY_FILE_THRESHOLD) {
+> > -		struct path *path = (struct path *)&key->payload.data[big_key_path];
+> > +	if (payload->length > BIG_KEY_FILE_THRESHOLD) {
+> > +		struct path *path = &payload->path;
+> >  
+> >  		path_put(path);
+> >  		path->mnt = NULL;
+> >  		path->dentry = NULL;
+> >  	}
+> 
+> And similarly:
+> 
+> 	if (payload->length > BIG_KEY_FILE_THRESHOLD) {
+> 		path_put(&payload->path);
+> 		payload->path.mnt = NULL;
+> 		payload->path.dentry = NULL;
+> 	}
+
+I will respin.
+
+Thanks!
+
+-Kees
+
+[1] https://lore.kernel.org/lkml/20170508214324.GA124468@beast/
+[2] https://lore.kernel.org/lkml/20170528081249.GD22193@infradead.org/
 
 -- 
 Kees Cook
