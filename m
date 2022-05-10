@@ -2,171 +2,85 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5CDC433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 May 2022 16:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CC4C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 May 2022 17:28:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243572AbiEJQX5 (ORCPT
+        id S1348125AbiEJRcJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 10 May 2022 12:23:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45616 "EHLO
+        Tue, 10 May 2022 13:32:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347284AbiEJQX4 (ORCPT
+        with ESMTP id S1348164AbiEJRcD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 10 May 2022 12:23:56 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0692D2A28ED
-        for <linux-hardening@vger.kernel.org>; Tue, 10 May 2022 09:19:57 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id 7so15018325pga.12
-        for <linux-hardening@vger.kernel.org>; Tue, 10 May 2022 09:19:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9+Df9lfV5BwTT/sLBioPDv57rZs72h8hdScRQUqmfRs=;
-        b=DbTNnQANFcOXKwYHrReNWPiVuWl37/eCn4xpzxdHqJGhGuDe4NiGluHjLalIKfeceQ
-         alveLnONa7r6tMV6vwpk/x2irD0RL1pBt++semHssHPj+E0dC5AwNOvBOEzK1KFqzsoL
-         ZpRW0OsU6syK+H/xXU4Gg5J8fATjoQZiJ0V5c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9+Df9lfV5BwTT/sLBioPDv57rZs72h8hdScRQUqmfRs=;
-        b=so/XNfnKuxuWA1g9p9h5+Mz7FbJbiWJp+o8FwqpkRkBVghlnNkluMoC/hNaIVh/cQp
-         wNRPy0BWg4BmJbkabx7eVGq5vDONS4yDk3OwGkWkeOeRlrwK1YDDxcJKyNY8EuMq4Z/e
-         SJU0cdAFqEP/NrjB8E9PFbJOlX288Co8CcYAPKy2nIf6uGGv0G4NW8CgT1WuksDk0fpB
-         w62pz9mPm0IvOyJSHkzKJ2EhZ/IvZ1/0YibHKSoKFxtJw9s+qG7ZYww1Hl9EGijWdI6n
-         Erf+1YJUApCJYEh/bvc33udU0XgQKXJd5B5AnPf0CvIlXn/l+bqe1wGt7ZOTP3n/Qgl+
-         pGXg==
-X-Gm-Message-State: AOAM530A1Sa/GUEblSKJMUZs6kQl9NDilv0NknWRvUuIjYQoMFfxF9PO
-        LibENt3Oj5n+IxOZbfQpFbzLWQ==
-X-Google-Smtp-Source: ABdhPJwzS6y0yYlhwv0j5NGUmmES9XNaWWTJ+WEmYXv9m0JkzXUvVE28UhT6GLMK52JLwaAtdFpfew==
-X-Received: by 2002:a65:63d9:0:b0:374:6b38:c6b3 with SMTP id n25-20020a6563d9000000b003746b38c6b3mr17713801pgv.195.1652199597370;
-        Tue, 10 May 2022 09:19:57 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t8-20020a170902e84800b0015ea3a491a1sm2332544plg.191.2022.05.10.09.19.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 May 2022 09:19:56 -0700 (PDT)
-Date:   Tue, 10 May 2022 09:19:56 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     benh@kernel.crashing.org, christophe.leroy@csgroup.eu,
-        mark.rutland@arm.com, mpe@ellerman.id.au, paulus@samba.org,
-        tglx@linutronix.de, Xiu Jianfeng <xiujianfeng@huawei.com>,
+        Tue, 10 May 2022 13:32:03 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08CD0562F1;
+        Tue, 10 May 2022 10:28:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=d0Hkb5yZv7o4mCTLzbNDo3V6J+B8rXkEK/qUdzCIUvU=; b=sSmG2Em/o9PHLyGs3CU8EHL1le
+        va/zjEt7uHgZDCI8Jcw4lpvtP1nouOoYImMG13FquRDBTriyrbZ0Jt4Khx2pxDgMYdldGF2m4cjUt
+        q87VA94xPPWTxCiRWkpqdcA0iki/Dz4zqUnckQQCwl9mJSbD13KXx5JO5+c4oAuD8NStmvr5NxvQ6
+        x3ax+vazK252pxNktD7OjuiLgct+FJCyF+bWOliC28CNaxgWs2fC6VRCb3e51MMvoTnlIMn77Ve6l
+        niXMPMVYD+Lf2YuCsISQ2c1oOPezW1oVAHF5W11W5YzB4Lw97jh87hzJTVZp2zZPU6lppDM/LparT
+        2U+a/MfQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1noTe9-004fCw-9d; Tue, 10 May 2022 17:27:41 +0000
+Date:   Tue, 10 May 2022 18:27:41 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Du Cheng <ducheng2@gmail.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <nathan@kernel.org>, netdev@vger.kernel.org,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH -next] powerpc: add support for syscall stack
- randomization
-Message-ID: <202205100917.5480D91@keescook>
-References: <20220505111932.228814-1-xiujianfeng@huawei.com>
- <1652173338.7bltwybi0c.astroid@bobo.none>
+        linux-mm@kvack.org
+Subject: Re: [PATCH] niu: Add "overloaded" struct page union member
+Message-ID: <YnqgjVoMDu5v9PNG@casper.infradead.org>
+References: <20220509222334.3544344-1-keescook@chromium.org>
+ <YnoT+cBTNnPzzg8H@infradead.org>
+ <202205100849.58D2C81@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1652173338.7bltwybi0c.astroid@bobo.none>
+In-Reply-To: <202205100849.58D2C81@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 10, 2022 at 07:23:46PM +1000, Nicholas Piggin wrote:
-> Excerpts from Xiu Jianfeng's message of May 5, 2022 9:19 pm:
-> > Add support for adding a random offset to the stack while handling
-> > syscalls. This patch uses mftb() instead of get_random_int() for better
-> > performance.
+On Tue, May 10, 2022 at 08:50:47AM -0700, Kees Cook wrote:
+> On Tue, May 10, 2022 at 12:27:53AM -0700, Christoph Hellwig wrote:
+> > On Mon, May 09, 2022 at 03:23:33PM -0700, Kees Cook wrote:
+> > > The randstruct GCC plugin gets upset when it sees struct addresspace
+> > > (which is randomized) being assigned to a struct page (which is not
+> > > randomized):
+> > 
+> > Well, the right fix here is to remove this abuse from the driver, not
+> > to legitimize it as part of a "driver" patch touching a core mm header
 > 
-> Hey, very nice.
+> Right, I didn't expect anyone to like the new "overloaded" member.
+> Mainly I'd just like to understand how niu _should_ be fixed. Is using
+> the "private" member the correct thing here?
 
-Agreed! :)
+Well ... no.  We're not entirely set up yet to go to the good answer
+that means we don't have to touch this driver again, and yet we're also
+in a situation where we'll need to touch this driver at some point in
+order to get rid of the way it abuses struct page before we can get to
+our good place.
 
-> > [...]
-> > @@ -82,6 +83,7 @@ notrace long system_call_exception(long r3, long r4, long r5,
-> >  
-> >  	kuap_lock();
-> >  
-> > +	add_random_kstack_offset();
-> >  	regs->orig_gpr3 = r3;
-> >  
-> >  	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
-> 
-> This looks like the right place. I wonder why other interrupts don't
-> get the same treatment. Userspace can induce the kernel to take a 
-> synchronous interrupt, or wait for async ones. Smaller surface area 
-> maybe but certain instruction emulation for example could result in
-> significant logic that depends on user state. Anyway that's for
-> hardening gurus to ponder.
+The eventual good answer is that we declare a driver-private memdesc
+variant that has a ->link, ->base ->refcount and ->pfn (maybe it has more
+than that; I'd have to really understand this driver to be completely
+certain about what it needs).  Or perhaps there's a better way to handle
+driver-allocated memory for this kind of networking card that this driver
+should be converted to use.
 
-I welcome it being used for any userspace controllable entry to the
-kernel! :)
-
-Also, related, have you validated the result using the LKDTM test?
-See tools/testing/selftests/lkdtm/stack-entropy.sh
-
-> 
-> > @@ -405,6 +407,7 @@ interrupt_exit_user_prepare_main(unsigned long ret, struct pt_regs *regs)
-> >  
-> >  	/* Restore user access locks last */
-> >  	kuap_user_restore(regs);
-> > +	choose_random_kstack_offset(mftb() & 0xFF);
-> >  
-> >  	return ret;
-> >  }
-> 
-> So this seems to be what x86 and s390 do, but why are we choosing a
-> new offset for every interrupt when it's only used on a syscall?
-> I would rather you do what arm64 does and just choose the offset
-> at the end of system_call_exception.
-> 
-> I wonder why the choose is separated from the add? I guess it's to
-> avoid a data dependency for stack access on an expensive random
-> function, so that makes sense (a comment would be nice in the
-> generic code).
-
-How does this read? I can send a "real" patch if it looks good:
-
-
-diff --git a/include/linux/randomize_kstack.h b/include/linux/randomize_kstack.h
-index 1468caf001c0..ad3e80275c74 100644
---- a/include/linux/randomize_kstack.h
-+++ b/include/linux/randomize_kstack.h
-@@ -40,8 +40,11 @@ DECLARE_PER_CPU(u32, kstack_offset);
-  */
- #define KSTACK_OFFSET_MAX(x)	((x) & 0x3FF)
- 
--/*
-- * These macros must be used during syscall entry when interrupts and
-+/**
-+ * add_random_kstack_offset - Increase stack utilization by previously
-+ *			      chosen random offset
-+ *
-+ * This should be used in the syscall entry path when interrupts and
-  * preempt are disabled, and after user registers have been stored to
-  * the stack.
-  */
-@@ -55,6 +58,24 @@ DECLARE_PER_CPU(u32, kstack_offset);
- 	}								\
- } while (0)
- 
-+/**
-+ * choose_random_kstack_offset - Choose the random offsset for the next
-+ *				 add_random_kstack_offset()
-+ *
-+ * This should only be used during syscall exit when interrupts and
-+ * preempt are disabled, and before user registers have been restored
-+ * from the stack. This is done to frustrate attack attempts from
-+ * userspace to learn the offset:
-+ * - Maximize the timing uncertainty visible from userspace: if the
-+ *   the offset is chosen at syscall entry, userspace has much more
-+ *   control over the timing between chosen offsets. "How long will we
-+ *   be in kernel mode?" tends to be more difficult to know than "how
-+ *   long will be be in user mode?"
-+ * - Reduce the lifetime of the new offset sitting in memory during
-+ *   kernel mode execution. Exposures of "thread-local" (e.g. current,
-+ *   percpu, etc) memory contents tends to be easier than arbitrary
-+ *   location memory exposures.
-+ */
- #define choose_random_kstack_offset(rand) do {				\
- 	if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,	\
- 				&randomize_kstack_offset)) {		\
-
-
--- 
-Kees Cook
+I haven't looked into this case deeply enough to have strong thoughts
+about how we should handle it, both now and in the glorious future.
