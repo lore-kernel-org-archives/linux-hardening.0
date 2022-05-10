@@ -2,68 +2,62 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB183C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 May 2022 03:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91135C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 May 2022 07:35:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235701AbiEJDlx (ORCPT
+        id S235177AbiEJHjJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 9 May 2022 23:41:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46950 "EHLO
+        Tue, 10 May 2022 03:39:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235689AbiEJDlm (ORCPT
+        with ESMTP id S241433AbiEJHcF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 9 May 2022 23:41:42 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B15921824
-        for <linux-hardening@vger.kernel.org>; Mon,  9 May 2022 20:37:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0B25DB81AEC
-        for <linux-hardening@vger.kernel.org>; Tue, 10 May 2022 03:37:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92A64C385A6;
-        Tue, 10 May 2022 03:37:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-        s=korg; t=1652153863;
-        bh=FT1lNXjVudXrHCOQvlF/y7rn0xd5iMFFhyFSFgCjpK8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=i7mp2aVnHO4vcEj4mBltGUfoGij1uuMJVZCX9l9QX/uC7NbDvWvqoMlDvRCEft3dZ
-         1jnk2UYARlP0RJ/Zru5mnO2/xVPCJQODn/vgiagQ4+wTUxNTgB01HTAd4R8KOMu4m1
-         B+CwEerU2QJUc/d7dJlZr3QcDx8Ig8PUYlmQ2aEI=
-Date:   Mon, 9 May 2022 20:37:42 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/4] mm/usercopy: Check kmap addresses properly
-Message-Id: <20220509203742.0f4adfa4004e51e66c1c9a20@linux-foundation.org>
-In-Reply-To: <20220110231530.665970-2-willy@infradead.org>
-References: <20220110231530.665970-1-willy@infradead.org>
-        <20220110231530.665970-2-willy@infradead.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 10 May 2022 03:32:05 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D66E4245C75;
+        Tue, 10 May 2022 00:28:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3Hrh/oFhXE1F4xFjCTQdwxSdFdLuAyp8OrT/z6Ubir0=; b=4pMjvkt+lUTr+xgL+mPbWT3Sj1
+        liDBnYW/9eKfGfccW/xHqL9rIY9PAaDNi48/PqUECoryiZrCjC4xpiZ6wIgTZ0JOWPSFJ2CW/WKyQ
+        d5+hEYbs4SAmyBXfwSuvmmMyy22dODkerOi4I1ZS310PmOGgjzmFLHpruDAVTVIBet4VPZOFZR7H4
+        LH+MAdOrSRdfppTNHQFZVA9lCDeeQ4V2anQ2+rb6x42fcdRl255QP5eoYvSnLDqVKNmIkT8mW8FiJ
+        M+f1PKQExzGGWhU3ZiIJvY3CT6Shrtvm+r9YfXC0Kc7aphrsVWGpRpQGVwcOv+LOufEL+sTrz0S+w
+        wUpNFQQw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1noKHh-000M5X-Uc; Tue, 10 May 2022 07:27:53 +0000
+Date:   Tue, 10 May 2022 00:27:53 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Du Cheng <ducheng2@gmail.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <nathan@kernel.org>, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] niu: Add "overloaded" struct page union member
+Message-ID: <YnoT+cBTNnPzzg8H@infradead.org>
+References: <20220509222334.3544344-1-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220509222334.3544344-1-keescook@chromium.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 10 Jan 2022 23:15:27 +0000 "Matthew Wilcox (Oracle)" <willy@infradead.org> wrote:
+On Mon, May 09, 2022 at 03:23:33PM -0700, Kees Cook wrote:
+> The randstruct GCC plugin gets upset when it sees struct addresspace
+> (which is randomized) being assigned to a struct page (which is not
+> randomized):
 
-> If you are copying to an address in the kmap region, you may not copy
-> across a page boundary,
-
-In the source, the destination or in both, and why may we not?
-
-> no matter what the size of the underlying
-> allocation.  You can't kmap() a slab page because slab pages always
-> come from low memory.
-
-Why not?  kmap() does
-
-	if (!PageHighMem(page))
-		addr = page_address(page);
-	else
-		addr = kmap_high(page);
-
-
+Well, the right fix here is to remove this abuse from the driver, not
+to legitimize it as part of a "driver" patch touching a core mm header
+that doesn't even cc the mm list.
