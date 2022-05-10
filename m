@@ -2,173 +2,92 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 045DDC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 May 2022 15:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B74C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 May 2022 15:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239098AbiEJPMA (ORCPT
+        id S1346454AbiEJP6h (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 10 May 2022 11:12:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50244 "EHLO
+        Tue, 10 May 2022 11:58:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346097AbiEJPLu (ORCPT
+        with ESMTP id S1347679AbiEJP56 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 10 May 2022 11:11:50 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B99072A18A4;
-        Tue, 10 May 2022 07:45:04 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2A781B81DB5;
-        Tue, 10 May 2022 14:45:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEDB6C385C9;
-        Tue, 10 May 2022 14:45:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652193901;
-        bh=FigDUgbnzGZnaUshxGGnPmztjq2HwG7NbActxSZrPfw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VLCIXi7fuXLQhi/lZX7peub4KDAYbkC5t3ITAGtli7uY52BeAkRiBNNCMludeKthz
-         /P1GSVNtfZd93JBoFbCNXSN3UOTTvCNPzgprUH5eVZHhWJwjno8fncPaEbvEYdaBH2
-         7h60GofoYkK/cmXi2N3oJN9pIZQeLw1a6NTqoHDVo2JWZYPId0bFq7lh3IsYgw1UrX
-         psJpeY2EWwBvpzMPZbL6+bI8a3+6jyspqx3jRaBjR+dn9f2ZtwmYtIlC0ND6NcdUyf
-         q8CRnG17lUuJKvdkZjs3i8z2A4bNh5vwHEmF1ScqL/M25Go4n/scNPWpq5xHMfKgcT
-         dVI99c2Fpj7AQ==
-Date:   Tue, 10 May 2022 09:54:15 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] x86/mm/pgtable: Fix -Wstringop-overflow warnings
-Message-ID: <20220510145415.GA8111@embeddedor>
-References: <20220509194541.GA91598@embeddedor>
- <202205091251.5703DE2@keescook>
- <20220509205056.GA109715@embeddedor>
- <202205091351.6E0BA523@keescook>
- <20220510141202.GA6878@embeddedor>
+        Tue, 10 May 2022 11:57:58 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F6F4381B2
+        for <linux-hardening@vger.kernel.org>; Tue, 10 May 2022 08:50:51 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id c9so16408785plh.2
+        for <linux-hardening@vger.kernel.org>; Tue, 10 May 2022 08:50:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=HPEV8t7jSxF/R5wTa8pBC5XtbUyCWP3bZNNHdlQWnUs=;
+        b=mPax2Elz/ydEtyd6iMyTyMpV7MjOnqrmn0tJyEuV7p8EwcqHHocAkg5aJC6Be4rkXM
+         CGesdkXTN7ozO1xNN/gixirXA3OEw1iTlRvxlj7Y/cr+3EJ2X3CWnbwC4Q2fTW07S+7c
+         8SsqtqT9vF9l67g+AiD+hOwoYFSxj3+I4cdhc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HPEV8t7jSxF/R5wTa8pBC5XtbUyCWP3bZNNHdlQWnUs=;
+        b=jFsENG5o9xWNYfWZhL0mP/F19e7Z4n5Fu5hm1/xMaqFx2ze+bgkjp4l+ZnU102TFc7
+         PdnHwlM+XAvhD7q0g01ATMdOKNxHWE+Z7vz1eODgh/KVkhv14n44zfmtBgeZTIB8ieZF
+         MP/osOaQ9SLHqluXaka8IrjV8TaBx5svrJ+hUp+Youp4o3xptBpSXM3hPxckHMmSjY/X
+         FgWwGVBgqZ3YCqqktPcC51fDgNErPOV72pRzZtgXfrr7FR2ZrjrA69xxAI6WJqQnZ/LE
+         9ULeFpvAvPBx0UIv475X10TnoBsYxDNfXZX/lHO9OixL3/mXkPLBa6zbWpntXXrDZmxz
+         inEQ==
+X-Gm-Message-State: AOAM530pIXeGXUqOtI2ArZB+gDSgQo2HJPxZw4t81vVDFuoCJzs53ytj
+        hds6pMp5iY5pWXvsyd3tBPcFcg==
+X-Google-Smtp-Source: ABdhPJzJ61GrS1rxWQD481NZXRytu8/Kix6yH+jgxvnppV/676fdcePFo/cIUerrTCnluyiEXgcWpA==
+X-Received: by 2002:a17:903:213:b0:15f:4ea:cd63 with SMTP id r19-20020a170903021300b0015f04eacd63mr13256429plh.68.1652197848816;
+        Tue, 10 May 2022 08:50:48 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v22-20020a636116000000b003c14af505fdsm10713363pgb.21.2022.05.10.08.50.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 May 2022 08:50:48 -0700 (PDT)
+Date:   Tue, 10 May 2022 08:50:47 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Du Cheng <ducheng2@gmail.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <nathan@kernel.org>, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH] niu: Add "overloaded" struct page union member
+Message-ID: <202205100849.58D2C81@keescook>
+References: <20220509222334.3544344-1-keescook@chromium.org>
+ <YnoT+cBTNnPzzg8H@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220510141202.GA6878@embeddedor>
+In-Reply-To: <YnoT+cBTNnPzzg8H@infradead.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 10, 2022 at 09:12:02AM -0500, Gustavo A. R. Silva wrote:
-> > > > > --- a/arch/x86/mm/pgtable.c
-> > > > > +++ b/arch/x86/mm/pgtable.c
-> > > > > @@ -434,14 +434,18 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
-> > > > >  
-> > > > >  	mm->pgd = pgd;
-> > > > >  
-> > > > > -	if (preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
-> > > > > -		goto out_free_pgd;
-> > > > > +	if (MAX_PREALLOCATED_PMDS != 0 && MAX_PREALLOCATED_USER_PMDS != 0) {
-> > > > > +		if (preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
-> > > > > +			goto out_free_pgd;
-> > > > >  
-> > > > > -	if (preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
-> > > > > -		goto out_free_pmds;
-> > > > > +		if (preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
-> > > > > +			goto out_free_pmds;
-> > > > >  
-> > > > > -	if (paravirt_pgd_alloc(mm) != 0)
-> > > > > -		goto out_free_user_pmds;
-> > > > > +		if (paravirt_pgd_alloc(mm) != 0)
-> > > > > +			goto out_free_user_pmds;
-> > > > > +	} else {
-> > > > > +		goto out_free_pgd;
-> > > > 
-> > > > The "all 0" case shouldn't be a failure mode; it should just skip the
-> > > > preallocate_pmds() calls.
-> > > 
-> > > Do you mean something like this:
-> > > 
-> > > diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-> > > index f16059e9a85e..4dae168408f1 100644
-> > > --- a/arch/x86/mm/pgtable.c
-> > > +++ b/arch/x86/mm/pgtable.c
-> > > @@ -434,11 +434,13 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
-> > > 
-> > >         mm->pgd = pgd;
-> > > 
-> > > -       if (preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
-> > > -               goto out_free_pgd;
-> > > +       if (MAX_PREALLOCATED_PMDS != 0 && MAX_PREALLOCATED_USER_PMDS != 0) {
-> > > +               if (preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
-> > > +                       goto out_free_pgd;
-> > > 
-> > > -       if (preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
-> > > -               goto out_free_pmds;
-> > > +               if (preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
-> > > +                       goto out_free_pmds;
-> > > +       }
-> > > 
-> > >         if (paravirt_pgd_alloc(mm) != 0)
-> > >                 goto out_free_user_pmds;
-> > > 
-> > > It seems that the above is not enough, because we have the same issue
-> > > when calling pgd_prepopulate_pmd(), pgd_prepopulate_user_pmd() and
-> > > free_pmds():
-> > > 
-> > >   CC      arch/x86/mm/pgtable.o
-> > > arch/x86/mm/pgtable.c: In function 'pgd_alloc':
-> > > arch/x86/mm/pgtable.c:464:9: warning: 'free_pmds' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
-> > >   464 |         free_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS);
-> > >       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > 
-> > Ugh. Perhaps just marking both preallocate_pmds() and free_pmds() as
-> > inline is enough to let the compiler "see" everything correctly?
+On Tue, May 10, 2022 at 12:27:53AM -0700, Christoph Hellwig wrote:
+> On Mon, May 09, 2022 at 03:23:33PM -0700, Kees Cook wrote:
+> > The randstruct GCC plugin gets upset when it sees struct addresspace
+> > (which is randomized) being assigned to a struct page (which is not
+> > randomized):
 > 
-> It doesn't seem to work... however, the following piece of code implies
-> that pmds and u_pmds should be first preallocated through preallocate_pmds(),
-> which cannot happen if (MAX_PREALLOCATED_PMDS != 0 && MAX_PREALLOCATED_USER_PMDS != 0)
+> Well, the right fix here is to remove this abuse from the driver, not
+> to legitimize it as part of a "driver" patch touching a core mm header
 
-I wanted to say: which cannot happen if MAX_PREALLOCATED_PMDS == 0 && MAX_PREALLOCATED_USER_PMDS == 0
+Right, I didn't expect anyone to like the new "overloaded" member.
+Mainly I'd just like to understand how niu _should_ be fixed. Is using
+the "private" member the correct thing here?
 
-> 
-> 448         /*
-> 449          * Make sure that pre-populating the pmds is atomic with
-> 450          * respect to anything walking the pgd_list, so that they
-> 451          * never see a partially populated pgd.
-> 452          */
-> 453         spin_lock(&pgd_lock);
-> 454
-> 455         pgd_ctor(mm, pgd);
-> 456         pgd_prepopulate_pmd(mm, pgd, pmds);
-> 457         pgd_prepopulate_user_pmd(mm, pgd, u_pmds);
-> 458
-> 459         spin_unlock(&pgd_lock);
-> 460
-> 461         return pgd;
-> 
-> So, my question here is why do you think the "all 0" case should only skip the
-> preallocate_pmds() calls and not the pgd_prepopulate_pmd() calls too?
-> 
-> > 
-> > Otherwise, they'll likely each need the same check that was added to
-> > pgd_prepopulate_pmd() ages ago for a similar situation...
-> 
-> uhm... that doesn't seem to have an impact nowadays, or at least now
-> Wstringop-overflow sees the problem first, because now the issue is
-> detected at the moment of passing the arguments to the the function
-> and not when actually executing the function?
-> 
-> otherwise, I think we wouldn't see this error:
-> 
-> arch/x86/mm/pgtable.c:454:9: warning: 'pgd_prepopulate_pmd' accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
->   454 |         pgd_prepopulate_pmd(mm, pgd, pmds);
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/x86/mm/pgtable.c:454:9: note: referencing argument 3 of type 'pmd_t *[0]'
-> arch/x86/mm/pgtable.c:296:13: note: in a call to function 'pgd_prepopulate_pmd'
->   296 | static void pgd_prepopulate_pmd(struct mm_struct *mm, pgd_t *pgd, pmd_t *pmds[])
->       |             ^~~~~~~~~~~~~~~~~~~
-> 
+> that doesn't even cc the mm list.
 
-Thanks
---
-Gustavo
+Oops, yes, sorry.
+
+-- 
+Kees Cook
