@@ -2,243 +2,246 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D07DC433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 May 2022 20:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66FEC433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 May 2022 21:33:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229924AbiEJU5h (ORCPT
+        id S229650AbiEJVdG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 10 May 2022 16:57:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38056 "EHLO
+        Tue, 10 May 2022 17:33:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229560AbiEJU5f (ORCPT
+        with ESMTP id S231445AbiEJVdF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 10 May 2022 16:57:35 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5B144C40D
-        for <linux-hardening@vger.kernel.org>; Tue, 10 May 2022 13:57:33 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id l20-20020a17090a409400b001dd2a9d555bso234432pjg.0
-        for <linux-hardening@vger.kernel.org>; Tue, 10 May 2022 13:57:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qEwSLaBnufvf0B/G9DnjVyMhvQQtp6PRHTVxLgDlPK8=;
-        b=JZZc8nkB/4Su4yIh1M5akAXPXMXUy7OMtkUi17Z4U6q8imKFEnTV2ldgRsbBiWHbOc
-         OXkC8mulfoTXZNJgg7dy8ejG6nYNpAntJzw/UJ+ZREiXKr9wDqUzvSrnqoqdQxyFobaM
-         R+HM0meqwbmtR1sWL0MDTYxA0VK0lzS8IXVh8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qEwSLaBnufvf0B/G9DnjVyMhvQQtp6PRHTVxLgDlPK8=;
-        b=AdnkeRmhBCSNDYRQSuiQvhmzsIulZPehJsxFmSIwVwp5XfJVYuTAw8y+x5C0W7T5VN
-         zBG5SItJ6l3YatKGePaCxY68Meij0mtKLLITemtmoGboxOJEDg8ZYbTlxXspdcIVns7V
-         Smcqbzvql4wNZxE5mw6CfzM+hb293BkYhIVrUZ1FTGFvrWNTbILq7sTNtKVnZupsuNX3
-         BmzN1Z4Bpzmu7Ik0TksMqnny9/LAybB3ZYZDLEII+fYs4p086j8rUPrrEHBuk5RroKHm
-         FMEyU3VfvAsRl9yIH+JXcSYzpxBCQd03kzrVl4Yla6dAtu7TGT+5Eu+T7ng4Bh5IHquI
-         xSHw==
-X-Gm-Message-State: AOAM531HlnvmMGG2uz5xRK9LIe+cvuC0ZMELJHHIWJgOknPbzBo4ra9O
-        wfbtoRIxp5epBYkml41tqk5VhQ==
-X-Google-Smtp-Source: ABdhPJzq6QFou00wiYYBUDT4UWIfcPJViSah6uRx1sl8Xa88lUVgHIvT844SOrOHnYuyyCgBDE0x7w==
-X-Received: by 2002:a17:902:a583:b0:15d:197b:9259 with SMTP id az3-20020a170902a58300b0015d197b9259mr22529041plb.51.1652216253338;
-        Tue, 10 May 2022 13:57:33 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u3-20020a170903108300b0015ee9bb2a38sm72477pld.72.2022.05.10.13.57.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 May 2022 13:57:33 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Du Cheng <ducheng2@gmail.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        William Kucharski <william.kucharski@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <nathan@kernel.org>, netdev@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] niu: Silence randstruct warnings
-Date:   Tue, 10 May 2022 13:57:29 -0700
-Message-Id: <20220510205729.3574400-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.32.0
+        Tue, 10 May 2022 17:33:05 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FA1617D3B6;
+        Tue, 10 May 2022 14:33:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652218384; x=1683754384;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YMJJgS27sPJWQJF1uRrLqJzfA+lf5sUiF1JUG3CJdfA=;
+  b=PcuLcmK2cXofNBbWtg9pLCEKQrB48OqgbSfrDCqTsgxIWZHj3NI6rCkb
+   MrqgXcpgJpFYA+Fm1D8nUVNKsxa/pdrnnZs80gLbRjVsr0OlqWQiy8tCQ
+   WGEXYdpBxkdnSvSyMlUUr7F49sFOQtmBOJ2cjcJLExjN6HqtLeQRxruUj
+   ZSdsikYZWWv29x/t57nzsLwelW39gkQwJZCqEGqFu2t1VTtZjgFVEqNrT
+   EQwhGb0LDa9reEcJT2/aEK5+GO9dOkWr6JMbhWEtemELYfwcfjcnkh1Lo
+   zK+QPAzNWvhPaNFyM0jZb3Up3x6V6FiNFsQW1Rf8MTwz7c6QgIIwt0JW0
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10343"; a="355935372"
+X-IronPort-AV: E=Sophos;i="5.91,215,1647327600"; 
+   d="scan'208";a="355935372"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 14:33:04 -0700
+X-IronPort-AV: E=Sophos;i="5.91,215,1647327600"; 
+   d="scan'208";a="814187125"
+Received: from ticela-or-037.amr.corp.intel.com (HELO localhost) ([10.209.191.163])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 14:33:03 -0700
+Date:   Tue, 10 May 2022 14:33:03 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH V10 14/44] mm/pkeys: Introduce pks_set_readwrite()
+Message-ID: <YnraD8URWxWtaltF@iweiny-desk3>
+References: <20220419170649.1022246-1-ira.weiny@intel.com>
+ <20220419170649.1022246-15-ira.weiny@intel.com>
+ <202205091304.434A9B45@keescook>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6424; h=from:subject; bh=qjuk20AT1lvrR1lDg81FqCODCnq2+tj+/Y7wwEnRQa8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBietG4dsJ9H5fxphZwsMR3iDSJzvX3mPa4VHlCGvUH hideMGiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYnrRuAAKCRCJcvTf3G3AJtleD/ 9zyb+fsiOw5Yfe5VTpCrrjyUdaIkIJl/vUPO3MSulEMU1Unng7KrEqQmJgAJM5WTUcAh7cTjNpY1q7 8+KeeGAO0KfG+t8kYQEEZRsOTCpFxnS4/oaFATHvLKVmZr83K0Yev/T2Ks6sActMbiWmsoo1mWhbJP ZMxlvaAFuKNEW9EjhNwKggoufIHyZcrx55WZFm5FF5HWQpa8sHQswEfZEQdK9raFdLCfMrBUfEEYbu UvlGalUlLC0Eg3kxD8/3HoqiKYvY9oQLdo8jnYGX7iqtwpQdXs9Y45aRQXDg7N55W9cOSut7I2kIMZ luOU+ygvT7MzXWj4Lo2ixe8ZwX7v+Hff8CLqdCpozXqoYiUYH6RzrJbX2ltMwpR4NNhsUsi7YznAT9 2Q0DKZZAjkGQq6c13DiqXaBQjRDAXhpPiUY0jNRi6l6FzxS3jqz9Zxrx2W7QYHGga4BpIc1LVgb5aT Kd04io55f66UaqZWMPDUw6dt02EdrN21KLLjlJUYMBus1KJR5LomjDBIhtphXZSh6+fD5cmFPZO8ZM k8JpuL3zTs+wcdSc4JdrsoELDqoR1K2PmCqX5eiS5GGfDobMFeJkx0lD8QY13R9yGukQrPhbcIcSG8 m7ViudNhHRmgfEdMjUJn0Ws8ouESfaGkchCFruYPxZ8TwyMWXHnsMqOb/7dw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202205091304.434A9B45@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Clang randstruct gets upset when it sees struct addresspace (which is
-randomized) being assigned to a struct page (which is not randomized):
+On Mon, May 09, 2022 at 02:38:38PM -0700, Kees Cook wrote:
+> On Tue, Apr 19, 2022 at 10:06:19AM -0700, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > When kernel code needs access to a PKS protected page they will need to
+> > change the protections for the pkey to Read/Write.
+> 
+> I'm excited to have this infrastructure available! It'll finally give us
+> the "write rarely" infrastructure we've needed:
+> https://github.com/KSPP/linux/issues/130
 
-drivers/net/ethernet/sun/niu.c:3385:12: error: casting from randomized structure pointer type 'struct address_space *' to 'struct page *'
-                        *link = (struct page *) page->mapping;
-                                ^
+Thanks!
 
-It looks like niu.c is looking for an in-line place to chain its allocated
-pages together and is overloading the "mapping" member, as it is unused.
-This is very non-standard, and is expected to be cleaned up in the
-future[1], but there is no "correct" way to handle it today.
+[snip]
 
-No meaningful machine code changes result after this change, and source
-readability is improved.
+> >  
+> > @@ -275,4 +276,34 @@ void pks_setup(void)
+> >  	cr4_set_bits(X86_CR4_PKS);
+> >  }
+> >  
+> > +/*
+> > + * Do not call this directly, see pks_set*().
+> > + *
+> > + * @pkey: Key for the domain to change
+> > + * @protection: protection bits to be used
+> > + *
+> > + * Protection utilizes the same protection bits specified for User pkeys
+> > + *     PKEY_DISABLE_ACCESS
+> > + *     PKEY_DISABLE_WRITE
+> > + *
+> > + */
+> > +void pks_update_protection(u8 pkey, u8 protection)
+> 
+> For better security, I think this should be a static inline, not a
+> callable (i.e. as a non-inline it could be the target of a control
+> flow attack).
 
-Drop the randstruct exception now that there is no "confusing" cross-type
-assignment.
+Good point!  I'll move this to asm/pks.h.
 
-[1] https://lore.kernel.org/lkml/YnqgjVoMDu5v9PNG@casper.infradead.org/
+> 
+> > +{
+> > +	u32 pkrs;
+> > +
+> > +	if (!cpu_feature_enabled(X86_FEATURE_PKS))
+> > +		return;
+> > +
+> > +	if (WARN_ON_ONCE(pkey >= PKS_KEY_MAX))
+> > +		return;
+> 
+> I think this should enforce arguments being __builtin_constant_p(). i.e.
+> making sure that all callers of pks_update_protection() are using a
+> compile-time constant value. That makes it so that the caller location
+> and key become hard-coded (i.e. further reduction in risk to becoming a
+> control-flow gadget: the inlining of a const value means no arguments
+> any more). For example:
+> 
+> 	BUILD_BUG_ON(!__builtin_constant_p(pkey));
+> 	BUILD_BUG_ON(!__builtin_constant_p(protection));
 
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: Du Cheng <ducheng2@gmail.com>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: William Kucharski <william.kucharski@oracle.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: netdev@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-earlier version: https://lore.kernel.org/lkml/20220509222334.3544344-1-keescook@chromium.org/
----
- drivers/net/ethernet/sun/niu.c                | 41 ++++++++++++++-----
- scripts/gcc-plugins/randomize_layout_plugin.c |  2 -
- 2 files changed, 31 insertions(+), 12 deletions(-)
+Sounds reasonable.
 
-diff --git a/drivers/net/ethernet/sun/niu.c b/drivers/net/ethernet/sun/niu.c
-index 42460c0885fc..df70df29deea 100644
---- a/drivers/net/ethernet/sun/niu.c
-+++ b/drivers/net/ethernet/sun/niu.c
-@@ -35,6 +35,25 @@
- 
- #include "niu.h"
- 
-+/* This driver wants to store a link to a "next page" within the
-+ * page struct itself by overloading the content of the "mapping"
-+ * member. This is not expected by the page API, but does currently
-+ * work. However, the randstruct plugin gets very bothered by this
-+ * case because "mapping" (struct address_space) is randomized, so
-+ * casts to/from it trigger warnings. Hide this by way of a union,
-+ * to create a typed alias of "mapping", since that's how it is
-+ * actually being used here.
-+ */
-+union niu_page {
-+	struct page page;
-+	struct {
-+		unsigned long __flags;	/* unused alias of "flags" */
-+		struct list_head __lru;	/* unused alias of "lru" */
-+		struct page *next;	/* alias of "mapping" */
-+	};
-+};
-+#define niu_next_page(p)	container_of(p, union niu_page, page)->next
-+
- #define DRV_MODULE_NAME		"niu"
- #define DRV_MODULE_VERSION	"1.1"
- #define DRV_MODULE_RELDATE	"Apr 22, 2010"
-@@ -3283,7 +3302,7 @@ static struct page *niu_find_rxpage(struct rx_ring_info *rp, u64 addr,
- 
- 	addr &= PAGE_MASK;
- 	pp = &rp->rxhash[h];
--	for (; (p = *pp) != NULL; pp = (struct page **) &p->mapping) {
-+	for (; (p = *pp) != NULL; pp = &niu_next_page(p)) {
- 		if (p->index == addr) {
- 			*link = pp;
- 			goto found;
-@@ -3300,7 +3319,7 @@ static void niu_hash_page(struct rx_ring_info *rp, struct page *page, u64 base)
- 	unsigned int h = niu_hash_rxaddr(rp, base);
- 
- 	page->index = base;
--	page->mapping = (struct address_space *) rp->rxhash[h];
-+	niu_next_page(page) = rp->rxhash[h];
- 	rp->rxhash[h] = page;
- }
- 
-@@ -3382,11 +3401,11 @@ static int niu_rx_pkt_ignore(struct niu *np, struct rx_ring_info *rp)
- 		rcr_size = rp->rbr_sizes[(val & RCR_ENTRY_PKTBUFSZ) >>
- 					 RCR_ENTRY_PKTBUFSZ_SHIFT];
- 		if ((page->index + PAGE_SIZE) - rcr_size == addr) {
--			*link = (struct page *) page->mapping;
-+			*link = niu_next_page(page);
- 			np->ops->unmap_page(np->device, page->index,
- 					    PAGE_SIZE, DMA_FROM_DEVICE);
- 			page->index = 0;
--			page->mapping = NULL;
-+			niu_next_page(page) = NULL;
- 			__free_page(page);
- 			rp->rbr_refill_pending++;
- 		}
-@@ -3451,11 +3470,11 @@ static int niu_process_rx_pkt(struct napi_struct *napi, struct niu *np,
- 
- 		niu_rx_skb_append(skb, page, off, append_size, rcr_size);
- 		if ((page->index + rp->rbr_block_size) - rcr_size == addr) {
--			*link = (struct page *) page->mapping;
-+			*link = niu_next_page(page);
- 			np->ops->unmap_page(np->device, page->index,
- 					    PAGE_SIZE, DMA_FROM_DEVICE);
- 			page->index = 0;
--			page->mapping = NULL;
-+			niu_next_page(page) = NULL;
- 			rp->rbr_refill_pending++;
- 		} else
- 			get_page(page);
-@@ -3518,13 +3537,13 @@ static void niu_rbr_free(struct niu *np, struct rx_ring_info *rp)
- 
- 		page = rp->rxhash[i];
- 		while (page) {
--			struct page *next = (struct page *) page->mapping;
-+			struct page *next = niu_next_page(page);
- 			u64 base = page->index;
- 
- 			np->ops->unmap_page(np->device, base, PAGE_SIZE,
- 					    DMA_FROM_DEVICE);
- 			page->index = 0;
--			page->mapping = NULL;
-+			niu_next_page(page) = NULL;
- 
- 			__free_page(page);
- 
-@@ -6440,8 +6459,7 @@ static void niu_reset_buffers(struct niu *np)
- 
- 				page = rp->rxhash[j];
- 				while (page) {
--					struct page *next =
--						(struct page *) page->mapping;
-+					struct page *next = niu_next_page(page);
- 					u64 base = page->index;
- 					base = base >> RBR_DESCR_ADDR_SHIFT;
- 					rp->rbr[k++] = cpu_to_le32(base);
-@@ -10176,6 +10194,9 @@ static int __init niu_init(void)
- 
- 	BUILD_BUG_ON(PAGE_SIZE < 4 * 1024);
- 
-+	BUILD_BUG_ON(offsetof(struct page, mapping) !=
-+		     offsetof(union niu_page, next));
-+
- 	niu_debug = netif_msg_init(debug, NIU_MSG_DEFAULT);
- 
- #ifdef CONFIG_SPARC64
-diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-plugins/randomize_layout_plugin.c
-index 727512eebb3b..38a8cf90f611 100644
---- a/scripts/gcc-plugins/randomize_layout_plugin.c
-+++ b/scripts/gcc-plugins/randomize_layout_plugin.c
-@@ -46,8 +46,6 @@ struct whitelist_entry {
- };
- 
- static const struct whitelist_entry whitelist[] = {
--	/* NIU overloads mapping with page struct */
--	{ "drivers/net/ethernet/sun/niu.c", "page", "address_space" },
- 	/* unix_skb_parms via UNIXCB() buffer */
- 	{ "net/unix/af_unix.c", "unix_skb_parms", "char" },
- 	{ }
--- 
-2.32.0
+> 
+> (I think the test code will need some tweaking, but it should be
+> possible to adjust it.)
 
+I'll figure it out.
+
+> 
+> > +
+> > +	pkrs = current->thread.pkrs;
+> > +	current->thread.pkrs = pkey_update_pkval(pkrs, pkey,
+> > +						 protection);
+> > +	preempt_disable();
+> > +	pks_write_pkrs(current->thread.pkrs);
+> > +	preempt_enable();
+> 
+> To resist cross-thread attacks, please:
+> 
+> - make pkey_update_pkval() also an inline
+> - use the pkrs variable directly and store it back only after the write
+> 
+> For example:
+> 
+> 	preempt_disable();
+> 	pkrs = pkey_update_pkval(current->thread.pkrs,
+> 				 pkey, protection);
+> 	pks_write_pkrs(pkrs);
+> 	current->thread.pkrs = pkrs;
+> 	preempt_enable();
+> 
+> This means that the pkey/protection relationship always lives in a
+> CPU-local register and cannot be manipulated by another CPU before the
+> msr write completes.
+
+Yes this sounds good.  Thanks for the tip.
+
+> Better yet would be:
+> 
+> 	preempt_disable();
+> 	rdmsrl(MSR_IA32_PKRS, pkrs);
+> 	pkrs = pkey_update_pkval(pkrs, pkey, protection);
+> 	pks_write_pkrs(pkrs);
+> 	current->thread.pkrs = pkrs;
+> 	preempt_enable();
+> 
+> Then cross-thread attacks cannot corrupt the _other_ PKS keys (i.e.
+> write the desired changes to target's current->thread.kprs and trigger
+> an update to a different pkey, resulting in flushing the attacker's
+> changes to that CPU's pkey state.
+
+Unfortunately I don't think this entirely prevents an attack through the
+thread.pkrs value.  thread.pkrs has to be used to set the MSR when a thread is
+scheduled.  Therefore the rdmsrl above will by definition pick up the
+thread.pkrs but from an earlier time.
+
+I'm not opposed to doing this as I think it does reduce the time window of such
+an attack but I wanted to mention it.  Especially since I specifically avoided
+ever reading the MSR to improve performance.
+
+I'm going to run some tests.  Perhaps the MSR read is not that big of a deal
+and I can convince myself that the performance diff is negligible.
+
+> 
+> > +/**
+> > + * pks_set_readwrite() - Make the domain Read/Write
+> > + * @pkey: the pkey for which the access should change.
+> > + *
+> > + * Allow all access, read and write, to the domain specified by pkey.  This is
+> > + * not a global update and only affects the current running thread.
+> > + */
+> > +static inline void pks_set_readwrite(u8 pkey)
+> > +{
+> > +	pks_update_protection(pkey, PKEY_READ_WRITE);
+> > +}
+> 
+> While adding these, can you please also add pks_set_nowrite()? This
+> will be needed for protecting writes to memory that should be otherwise
+> readable.
+
+I have a patch to add pks_set_readonly() but I was advised to not send it
+because this series does not include a use case for it.  (PMEM does not need
+it.)
+
+Dave, Dan?  Are you ok adding that back?
+
+Kees would you prefer pks_set_nowrite() as a name?
+
+> 
+> With these changes it should be possible to protect the kernel's page
+> table entries from "stray" writes. :)
+
+Yes, Rick has done some great work in that area.
+
+Ira
+
+> 
+> -Kees
+> 
+> > +
+> > +#else /* !CONFIG_ARCH_ENABLE_SUPERVISOR_PKEYS */
+> > +
+> > +static inline void pks_set_readwrite(u8 pkey) {}
+> > +
+> > +#endif /* CONFIG_ARCH_ENABLE_SUPERVISOR_PKEYS */
+> > +
+> > +#endif /* _LINUX_PKS_H */
+> > diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
+> > index 6c1aa92a92e4..f179544bd33a 100644
+> > --- a/include/uapi/asm-generic/mman-common.h
+> > +++ b/include/uapi/asm-generic/mman-common.h
+> > @@ -80,6 +80,7 @@
+> >  /* compatibility flags */
+> >  #define MAP_FILE	0
+> >  
+> > +#define PKEY_READ_WRITE		0x0
+> >  #define PKEY_DISABLE_ACCESS	0x1
+> >  #define PKEY_DISABLE_WRITE	0x2
+> >  #define PKEY_ACCESS_MASK	(PKEY_DISABLE_ACCESS |\
+> > -- 
+> > 2.35.1
+> > 
+> 
+> -- 
+> Kees Cook
