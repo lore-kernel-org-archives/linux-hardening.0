@@ -2,91 +2,97 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26970C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 11 May 2022 18:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE299C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 11 May 2022 18:41:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346212AbiEKS1l (ORCPT
+        id S244199AbiEKSla (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 11 May 2022 14:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40040 "EHLO
+        Wed, 11 May 2022 14:41:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237351AbiEKS1k (ORCPT
+        with ESMTP id S1346438AbiEKSl2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 11 May 2022 14:27:40 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E88F66689
-        for <linux-hardening@vger.kernel.org>; Wed, 11 May 2022 11:27:39 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id i19so5697086eja.11
-        for <linux-hardening@vger.kernel.org>; Wed, 11 May 2022 11:27:39 -0700 (PDT)
+        Wed, 11 May 2022 14:41:28 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 822E25402F
+        for <linux-hardening@vger.kernel.org>; Wed, 11 May 2022 11:41:27 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id g184so2553290pgc.1
+        for <linux-hardening@vger.kernel.org>; Wed, 11 May 2022 11:41:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8i5OqL859EJUndLqdpyRDZH0AKz1Nfbg5NkEZBumyYc=;
-        b=F6YUNe9JYU5exa1en7crUAFK+IeIw5wm5JMGme/AEz7g6vN52RFIEcQcD/G21CCjRZ
-         b467EIkBU5M1TKpIY4myh0XwqOBshQypUujtntee3xmYSWRS4cl1doIzj1mendYjL5j7
-         Ai1PtykjGc7qTjXN3nuZJtpoH/Di2UULVtiavKLilDIRTDu6DiI9yrkaWD7vEjJtWUeY
-         Y9FvW+d2yPucKBBzdOuHx3xmFByxjbIaFRW2tPj33TsVW+e7ji/BDmo+tLQvLG+0orwy
-         661nqi4oX56tfPHd+HkgOAbQYvsiAPRT8KC+iG9R6BTFFYqvBOCY345Y9gAel+l1QC8X
-         HT3g==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=S/W5ahkGN17aKq0Mty9sz97Udgy5Xn2TAfN6MZt7waU=;
+        b=XveS5Ud+z1fchdpPGSkARSVyucG8ugxr4jxbMORfnB1YYXhlGJAcMCrc5wrAwoZRON
+         DtHicPaUaCKDpQt2oOtd8+2P97VQRrf1CUbpKJv3O/6HoZeIUi7iMrF3S8/Rkj422WoM
+         2Oyh1G9wsHU15WrRW5ebSebBXeU6QC7Lvx1mI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8i5OqL859EJUndLqdpyRDZH0AKz1Nfbg5NkEZBumyYc=;
-        b=utgvrfWRX2wFE3h2nlHScUR2ftMfGMXS1UkKbO5pXi5ka7eOOcaqT1Q/DiNsHOh3cJ
-         NhCIsbySAQcjb9eOk4b4tlz8s3NsojtTxMBlX2ZYTd+jG0GxQa1rUfGdTVhi8o7WhGhE
-         OiwhMLQA96IOmOCx6/o+z3pJIxqx9WzhPy6lAArBuh3G3KO8dur4Chs/nSB+kR2F5TuR
-         FFCsiHwNp+Nj+oLUeA548TPO5hSPqPFB7Urx2TwWsaCACoTRWmKqrlPewig9YczqSI/L
-         9dOIctBqL7M87j0pnttBVKu/XhknZu6/EMCMMZMc+SarXyhnBlafl4VhbubERQE/ax7/
-         5MqQ==
-X-Gm-Message-State: AOAM533HrlxiKSrhY6DMOlfsW3lohwdH7mHvhY5QV9NC0y4e6dL9lNTa
-        HUfuAkrmvVnt99t++W+QiS4ZXSGslQKdRzqg1AyEM4P2O+4ajQ==
-X-Google-Smtp-Source: ABdhPJz8PQsE966KybB3t7TlW7Rim3780OS2G5SrFf8O6unqFgUy8x0/fq7MqIYU0bnTay5CY4mVC+0ZXmQXFhKy5RA=
-X-Received: by 2002:a17:906:314e:b0:6f0:659:963 with SMTP id
- e14-20020a170906314e00b006f006590963mr26522983eje.358.1652293657552; Wed, 11
- May 2022 11:27:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220511174531.1098548-1-keescook@chromium.org>
-In-Reply-To: <20220511174531.1098548-1-keescook@chromium.org>
-From:   Daniel Latypov <dlatypov@google.com>
-Date:   Wed, 11 May 2022 11:27:26 -0700
-Message-ID: <CAGS_qxokQAjQRip2vPi80toW7hmBnXf=KMTNT51B1wuDqSZuVQ@mail.gmail.com>
-Subject: Re: [PATCH] lib: overflow: Always build 64-bit test cases
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        kernel test robot <lkp@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Vitor Massaru Iha <vitor@massaru.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=S/W5ahkGN17aKq0Mty9sz97Udgy5Xn2TAfN6MZt7waU=;
+        b=4oUZqZLihLF3kJd6IVH09gGMNo5OVZmSxju1wqV2fa0LQjnIecB+CIHkQmfYMYDa4O
+         zEq1r8g1GJnPE4VGadYJRgt5GcSg2L9LSxhPBAxmglYVPn849ru5/NH2RFIsXAj7gHKt
+         vNzkbKSxmkFfEsORPmr62xkVsWPuwMOnfFXPIIUKHCfPR/wfw2ZS51v5IGTVo/7e+ljO
+         /h4NngXhSYSG/HWoesNLU6iRcHz79XS0QfQtrcQPR6zbrluKBwhLlPY0GH7yG0OB1khX
+         ++WYvi7QywORmlZSYxK4tR3H/D3Nkf+SvSqdgSslgSi0kfdaSkBSxVAMGtouNvHvGla3
+         G/MA==
+X-Gm-Message-State: AOAM5311/XWWlfchSdJKGieAV0qF+Wbxtir6u5+sYh+P8gBIe9/o/MEM
+        C08wDovqGdZ28m2MlpdoQxgXUw==
+X-Google-Smtp-Source: ABdhPJwoR3i4ge1oBu9XbRbVuEIompRPsDhy0HZWjmNG50ANEwhAp9q+pVd3jlSw24yDqJk17Y1SQA==
+X-Received: by 2002:a05:6a00:23c6:b0:50f:f570:7ea7 with SMTP id g6-20020a056a0023c600b0050ff5707ea7mr26253004pfc.76.1652294487025;
+        Wed, 11 May 2022 11:41:27 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m3-20020a170902bb8300b0015e8d4eb241sm2228516pls.139.2022.05.11.11.41.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 May 2022 11:41:26 -0700 (PDT)
+Date:   Wed, 11 May 2022 11:41:25 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v2][next] x86/mm/pgtable: Fix -Wstringop-overflow warnings
+Message-ID: <202205111140.21530A125@keescook>
+References: <20220509194541.GA91598@embeddedor>
+ <202205091251.5703DE2@keescook>
+ <20220509205056.GA109715@embeddedor>
+ <202205091351.6E0BA523@keescook>
+ <20220510141202.GA6878@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220510141202.GA6878@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 11, 2022 at 10:45 AM Kees Cook <keescook@chromium.org> wrote:
->
-> There shouldn't be a reason to not build the 64-bit test cases on 32-bit
-> systems; the types exist there too. Remove the #ifdefs.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/lkml/202205110324.7GrtxG8u-lkp@intel.com
-> Fixes: 455a35a6cdb6 ("lib: add runtime test of check_*_overflow functions")
-> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Cc: Vitor Massaru Iha <vitor@massaru.org>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: Daniel Latypov <dlatypov@google.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On Tue, May 10, 2022 at 09:12:02AM -0500, Gustavo A. R. Silva wrote:
+> It doesn't seem to work... however, the following piece of code implies
+> that pmds and u_pmds should be first preallocated through preallocate_pmds(),
+> which cannot happen if (MAX_PREALLOCATED_PMDS != 0 && MAX_PREALLOCATED_USER_PMDS != 0)
 
-Tested-by: Daniel Latypov <dlatypov@google.com>
+This works, weirdly:
 
-Makes sense and looks good to me, I was able to run it via
-$ ./tools/testing/kunit/kunit.py run --arch=i386
---build_dir=kunit_i386/ overflow
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index 3481b35cb4ec..937a87b404c3 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -424,8 +424,8 @@ static inline void _pgd_free(pgd_t *pgd)
+ pgd_t *pgd_alloc(struct mm_struct *mm)
+ {
+ 	pgd_t *pgd;
+-	pmd_t *u_pmds[MAX_PREALLOCATED_USER_PMDS];
+-	pmd_t *pmds[MAX_PREALLOCATED_PMDS];
++	pmd_t *u_pmds[MAX_PREALLOCATED_USER_PMDS + 1];
++	pmd_t *pmds[MAX_PREALLOCATED_PMDS + 1];
+ 
+ 	pgd = _pgd_alloc();
+ 
 
-Raw output was:
-    # u64_overflow_test: 17 u64 arithmetic tests finished
-    ok 7 - u64_overflow_test
-    # s64_overflow_test: 21 s64 arithmetic tests finished
-    ok 8 - s64_overflow_test
+-- 
+Kees Cook
