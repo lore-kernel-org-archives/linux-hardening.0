@@ -2,106 +2,172 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BAEC433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 11 May 2022 07:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B506C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 11 May 2022 08:36:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237592AbiEKHbl (ORCPT
+        id S244160AbiEKIgO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 11 May 2022 03:31:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39948 "EHLO
+        Wed, 11 May 2022 04:36:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234832AbiEKHbg (ORCPT
+        with ESMTP id S243807AbiEKIfk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 11 May 2022 03:31:36 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2AD96543D;
-        Wed, 11 May 2022 00:31:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652254295; x=1683790295;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TzmIUvS+MtG9JtLBVwtHktGy8iBnVLxd6nF8f6yLGKQ=;
-  b=XJ3vsOgspazxtyGGnKyHhqQsBKXYqMnA4CYEFnXfCBHXTfF0dT6mIe9Y
-   sAuELM8LuukLWyG+0bESq/Knh9R0gX4PV2UsLs0rIMzaa+V/OzDvjKQRw
-   VO5uVtsCgwmAUw6I1iC1AbiLNqYevoqeDq8pudfvq5reu5o2j7AGNMigP
-   sWpWG8RGE/6pLaw1A6Q8oKqFOWpY2k+fz0GJ1zSzI9sAHMDjPbYw4u/0c
-   xfeAG58ZsxEkR7Ir+tYLPmnl3HPTNDWzdZ6urYyqMQLXoh55zJEUj3ULM
-   Cchd7qdy4NFrvkp1nzVwFlyCgnvXlkY3sx00uIyeWe9oHjpBHiPV1Lka8
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10343"; a="356041187"
-X-IronPort-AV: E=Sophos;i="5.91,216,1647327600"; 
-   d="scan'208";a="356041187"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 00:31:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,216,1647327600"; 
-   d="scan'208";a="520405839"
-Received: from lkp-server01.sh.intel.com (HELO 5056e131ad90) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 11 May 2022 00:31:32 -0700
-Received: from kbuild by 5056e131ad90 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1nogom-000IqI-8Y;
-        Wed, 11 May 2022 07:31:32 +0000
-Date:   Wed, 11 May 2022 15:31:22 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Alexander Popov <alex.popov@linux.com>
-Cc:     kbuild-all@lists.01.org, Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gcc-plugins: Change all version strings match kernel
-Message-ID: <202205111547.BDAL0Z0h-lkp@intel.com>
-References: <20220510235412.3627034-1-keescook@chromium.org>
+        Wed, 11 May 2022 04:35:40 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D315F15BADD;
+        Wed, 11 May 2022 01:34:15 -0700 (PDT)
+Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.54])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Kyp7x3kN9z1JC6N;
+        Wed, 11 May 2022 16:33:01 +0800 (CST)
+Received: from [10.67.110.112] (10.67.110.112) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 11 May 2022 16:34:13 +0800
+Subject: Re: [PATCH -next] powerpc: add support for syscall stack
+ randomization
+To:     Nicholas Piggin <npiggin@gmail.com>, <benh@kernel.crashing.org>,
+        <christophe.leroy@csgroup.eu>, <mark.rutland@arm.com>,
+        <mpe@ellerman.id.au>, <paulus@samba.org>, <tglx@linutronix.de>
+CC:     <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>
+References: <20220505111932.228814-1-xiujianfeng@huawei.com>
+ <1652173338.7bltwybi0c.astroid@bobo.none>
+From:   xiujianfeng <xiujianfeng@huawei.com>
+Message-ID: <a1dcd50b-0819-df54-a963-ebb0551e3356@huawei.com>
+Date:   Wed, 11 May 2022 16:34:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220510235412.3627034-1-keescook@chromium.org>
+In-Reply-To: <1652173338.7bltwybi0c.astroid@bobo.none>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.110.112]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
+Hi,
 
-I love your patch! Yet something to improve:
+在 2022/5/10 17:23, Nicholas Piggin 写道:
+> Excerpts from Xiu Jianfeng's message of May 5, 2022 9:19 pm:
+>> Add support for adding a random offset to the stack while handling
+>> syscalls. This patch uses mftb() instead of get_random_int() for better
+>> performance.
+> Hey, very nice.
+>
+>> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+>> ---
+>>   arch/powerpc/Kconfig            | 1 +
+>>   arch/powerpc/kernel/interrupt.c | 3 +++
+>>   2 files changed, 4 insertions(+)
+>>
+>> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+>> index 5fc9153927ac..7e04c9f80cbc 100644
+>> --- a/arch/powerpc/Kconfig
+>> +++ b/arch/powerpc/Kconfig
+>> @@ -192,6 +192,7 @@ config PPC
+>>   	select HAVE_ARCH_KASAN			if PPC32 && PPC_PAGE_SHIFT <= 14
+>>   	select HAVE_ARCH_KASAN_VMALLOC		if PPC32 && PPC_PAGE_SHIFT <= 14
+>>   	select HAVE_ARCH_KFENCE			if PPC_BOOK3S_32 || PPC_8xx || 40x
+>> +	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
+>>   	select HAVE_ARCH_KGDB
+>>   	select HAVE_ARCH_MMAP_RND_BITS
+>>   	select HAVE_ARCH_MMAP_RND_COMPAT_BITS	if COMPAT
+>> diff --git a/arch/powerpc/kernel/interrupt.c b/arch/powerpc/kernel/interrupt.c
+>> index 784ea3289c84..459385769721 100644
+>> --- a/arch/powerpc/kernel/interrupt.c
+>> +++ b/arch/powerpc/kernel/interrupt.c
+>> @@ -4,6 +4,7 @@
+>>   #include <linux/err.h>
+>>   #include <linux/compat.h>
+>>   #include <linux/sched/debug.h> /* for show_regs */
+>> +#include <linux/randomize_kstack.h>
+>>   
+>>   #include <asm/kup.h>
+>>   #include <asm/cputime.h>
+>> @@ -82,6 +83,7 @@ notrace long system_call_exception(long r3, long r4, long r5,
+>>   
+>>   	kuap_lock();
+>>   
+>> +	add_random_kstack_offset();
+>>   	regs->orig_gpr3 = r3;
+>>   
+>>   	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
+> This looks like the right place. I wonder why other interrupts don't
+> get the same treatment. Userspace can induce the kernel to take a
+> synchronous interrupt, or wait for async ones. Smaller surface area
+> maybe but certain instruction emulation for example could result in
+> significant logic that depends on user state. Anyway that's for
+> hardening gurus to ponder.
+>
+>> @@ -405,6 +407,7 @@ interrupt_exit_user_prepare_main(unsigned long ret, struct pt_regs *regs)
+>>   
+>>   	/* Restore user access locks last */
+>>   	kuap_user_restore(regs);
+>> +	choose_random_kstack_offset(mftb() & 0xFF);
+>>   
+>>   	return ret;
+>>   }
+> So this seems to be what x86 and s390 do, but why are we choosing a
+> new offset for every interrupt when it's only used on a syscall?
+> I would rather you do what arm64 does and just choose the offset
+> at the end of system_call_exception.
+thanks for you suggestion, will do in v2.
+>
+> I wonder why the choose is separated from the add? I guess it's to
+> avoid a data dependency for stack access on an expensive random
+> function, so that makes sense (a comment would be nice in the
+> generic code).
+>
+> I don't actually know if mftb() is cheaper here than a RNG. It
+> may not be conditioned all that well either. I would be tempted
+#if defined(__powerpc64__) && (defined(CONFIG_PPC_CELL) || 
+defined(CONFIG_E500))
+#define mftb()          ({unsigned long rval;                           \
+                         asm volatile(                                   \
+                                 "90:    mfspr %0, %2;\n"                \
+ASM_FTR_IFSET(                          \
+                                         "97:    cmpwi %0,0;\n"          \
+                                         "       beq- 90b;\n", "", %1)   \
+                         : "=r" (rval) \
+                         : "i" (CPU_FTR_CELL_TB_BUG), "i" (SPRN_TBRL) : 
+"cr0"); \
+                         rval;})
+#elif defined(CONFIG_PPC_8xx)
+#define mftb()          ({unsigned long rval;   \
+                         asm volatile("mftbl %0" : "=r" (rval)); rval;})
+#else
+#define mftb()          ({unsigned long rval;   \
+                         asm volatile("mfspr %0, %1" : \
+                                      "=r" (rval) : "i" (SPRN_TBRL)); 
+rval;})
+#endif /* !CONFIG_PPC_CELL */
 
-[auto build test ERROR on kees/for-next/pstore]
-[also build test ERROR on linux/master linus/master v5.18-rc6 next-20220510]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+there are 3 implementations of mftb() in 
+arch/powerpc/include/asm/vdso/timebase.h,
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kees-Cook/gcc-plugins-Change-all-version-strings-match-kernel/20220511-075434
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/pstore
-config: i386-randconfig-m021-20220509 (https://download.01.org/0day-ci/archive/20220511/202205111547.BDAL0Z0h-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.2.0-20) 11.2.0
-reproduce (this is a W=1 build):
-        # https://github.com/intel-lab-lkp/linux/commit/020fffc667a0f0414fc7f807e6a5f565444eb5e4
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Kees-Cook/gcc-plugins-Change-all-version-strings-match-kernel/20220511-075434
-        git checkout 020fffc667a0f0414fc7f807e6a5f565444eb5e4
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 O=build_dir ARCH=i386 prepare
+the last two cases have only one instruction, It's obviously cheaper 
+than get_random_int,
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+do you mean the first one? It looks like cheaper too, or am I missing 
+something?
 
-All errors (new ones prefixed by >>):
+> to measure. 64-bit *may* be able to use a bit more than 256
+> bytes of stack too -- we have 16 byte alignment minimum so this
+> gives only 4 bits of randomness AFAIKS.
 
->> <command-line>: fatal error: ./include/generated/utsrelease.h: No such file or directory
-   compilation terminated.
-   make[3]: *** [scripts/gcc-plugins/Makefile:49: scripts/gcc-plugins/latent_entropy_plugin.so] Error 1
->> <command-line>: fatal error: ./include/generated/utsrelease.h: No such file or directory
-   compilation terminated.
-   make[3]: *** [scripts/gcc-plugins/Makefile:49: scripts/gcc-plugins/structleak_plugin.so] Error 1
-   make[3]: Target '__build' not remade because of errors.
-   make[2]: *** [scripts/Makefile.build:550: scripts/gcc-plugins] Error 2
-   make[2]: Target '__build' not remade because of errors.
-   make[1]: *** [Makefile:1175: scripts] Error 2
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:219: __sub-make] Error 2
-   make: Target 'prepare' not remade because of errors.
+KSTACK_OFFSET_MAX limits entropy to 10 bits, and THREAD_SHIFT is 14 for 
+ppc64 and 13 for ppc32,
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+so can we just use 0x1FF for both or 0x1FF for 64bit and 0xFF for 32bit? 
+what is your suggestion?
+
+thanks.
+
+>
+> Thanks,
+> Nick
+> .
