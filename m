@@ -2,93 +2,166 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED48C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 11 May 2022 02:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B3BC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 11 May 2022 02:53:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232443AbiEKCWc (ORCPT
+        id S241557AbiEKCxs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 10 May 2022 22:22:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51008 "EHLO
+        Tue, 10 May 2022 22:53:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbiEKCWa (ORCPT
+        with ESMTP id S241830AbiEKCxU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 10 May 2022 22:22:30 -0400
-Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94FCA14C749;
-        Tue, 10 May 2022 19:22:28 -0700 (PDT)
+        Tue, 10 May 2022 22:53:20 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED98124BF0
+        for <linux-hardening@vger.kernel.org>; Tue, 10 May 2022 19:53:05 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id n8so588731plh.1
+        for <linux-hardening@vger.kernel.org>; Tue, 10 May 2022 19:53:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.jp; i=@amazon.co.jp; q=dns/txt;
-  s=amazon201209; t=1652235748; x=1683771748;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zmwvbfSvqDsGXUYgLhWD8/wDkuM1DY3RQ9mlmoV5r/g=;
-  b=Wj6AIuwHdE9QHgT1dFhlK4+4pkKda06F/3PlqjufySnSGzhWBnx8yip7
-   uMCQEbGEANDqE1esysTjPke1ADraA13hHeljstZ6dTLlbJSLx5vOPJ0td
-   vCXBS4+3CugIfJxp2cf5gsZ2z3UET0nCyeXNeaDLvYTnXrX+6x+BjYqpq
-   A=;
-X-IronPort-AV: E=Sophos;i="5.91,215,1647302400"; 
-   d="scan'208";a="87272036"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-pdx-2b-1f9d5b26.us-west-2.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP; 11 May 2022 02:22:27 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-pdx-2b-1f9d5b26.us-west-2.amazon.com (Postfix) with ESMTPS id 8319541C5A;
-        Wed, 11 May 2022 02:22:27 +0000 (UTC)
-Received: from EX13D04ANC001.ant.amazon.com (10.43.157.89) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Wed, 11 May 2022 02:22:26 +0000
-Received: from 88665a182662.ant.amazon.com (10.43.160.22) by
- EX13D04ANC001.ant.amazon.com (10.43.157.89) with Microsoft SMTP Server (TLS)
- id 15.0.1497.32; Wed, 11 May 2022 02:22:23 +0000
-From:   Kuniyuki Iwashima <kuniyu@amazon.co.jp>
-To:     <keescook@chromium.org>
-CC:     <ast@kernel.org>, <cong.wang@bytedance.com>, <davem@davemloft.net>,
-        <hch@infradead.org>, <kuba@kernel.org>, <kuniyu@amazon.co.jp>,
-        <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <pabeni@redhat.com>,
-        <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH] af_unix: Silence randstruct GCC plugin warning
-Date:   Wed, 11 May 2022 11:22:17 +0900
-Message-ID: <20220511022217.58586-1-kuniyu@amazon.co.jp>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220511000109.3628404-1-keescook@chromium.org>
-References: <20220511000109.3628404-1-keescook@chromium.org>
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sa6iliEUhHDKiJ4d5VKYWANmjzvcVks6FAQCBioSqwo=;
+        b=iLg1sZkLeKPM2kWZK1dOBgkVtvIv9fskmkv+uRa3VrGM/iSiUFxz9myhwDCq/lYtMQ
+         uqYJxL/zrLKanqkbFe33nehGm6l5DZ8mvHCYyk8RO7ro9VrUdoxqMHW1qj/9L4C/sZR+
+         79n1lE2VsyCc+x3k5bTSQqe4BWZOIwuScBssM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sa6iliEUhHDKiJ4d5VKYWANmjzvcVks6FAQCBioSqwo=;
+        b=NkgucgT6rJz53/9eDdJ/gy8coUYvH+3osU/odd42qkImgD3c+uOCLyj34fbIZLKqVZ
+         uCkuqhHuinLpxnmVf+Wq9kCkhpDQOqiBKR7n/1wPRDSzs5PSafGufLD8tgC06f1BlJJy
+         cbsRHdpj1oKz6V4GBCDaLQnSyV6hrU8zwrYcXbSp07Y/NKm3ZaWuMfxQWrN//yRh2vS9
+         2apN4cWJbw8Tg42RtmLhEN6H6za8LJJJ7u57gVCyaNq3gHrtlmaL/MrDZPHmsMdG3Rah
+         wg9eoMLz6YYav0/VmQYrX+dCOl/Hw/zPI7T2MTf9QZcBHpAzPKN5vXrLVbUUKTG24wQ8
+         TKCg==
+X-Gm-Message-State: AOAM530k1brfBDSMQHJiyIsr5lPjm8HGcxNhBMzrqezlsv59MC0N89Er
+        lTSmk955nSXNjc0uEVM7WYkE0w==
+X-Google-Smtp-Source: ABdhPJx1c1/TGylCkNI+72RCfr609NArcRVaQDmF+ypY51TnbvIezVGQVIwy6NL0mcbSprU53CJYrg==
+X-Received: by 2002:a17:902:d4c2:b0:15e:abd0:926f with SMTP id o2-20020a170902d4c200b0015eabd0926fmr23646480plg.129.1652237585369;
+        Tue, 10 May 2022 19:53:05 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n9-20020a170902968900b0015e8d4eb1d7sm363503plp.33.2022.05.10.19.53.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 May 2022 19:53:05 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Coco Li <lixiaoyan@google.com>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH] fortify: Provide a memcpy trap door for sharp corners
+Date:   Tue, 10 May 2022 19:53:01 -0700
+Message-Id: <20220511025301.3636666-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4296; h=from:subject; bh=zskFoaXURO/IVylo7b2S5LXUxKy16zZKQmnvSBayKxA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBieyUMQ7ji1ylNdh9eL1qcvtxDkFAlxq4iz5ETfoxb d7pbo8iJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYnslDAAKCRCJcvTf3G3AJnjwD/ 4vfLAWnR6lv2s6quyKFRlqqPX6DLgsFQO/0o6PWTm5WPdSp+jXJqvlubxLwxyUfRZUbAjVMOhXxrZz KnVhdajFWHnLc9B7YN9txp8Hh+eKcnC/OHn7yNU8hpZKQniQmkPh4D9/b1vwGodxeF6+u63TcnX8Z+ zZKjmoKETwoY1YykOIEE1Xqg8ox/oT52kP9u1N092vsWV6YXGrtSUQzsEqal/HToEvS6eW+ZUTi8i3 EyzzxjYtTSltgVY3Et9AqCO9Uo+0Ik7Go0rzqSNgnp0GS8xpKOFXb2g124++75uNB7utcfKmGn5yfR Wb4rd1+trzcYq7kxQp1xPZHqXXLV9UzeTqzToIVwDOwsWyKRmNdmsX9hDkiNiCn+7N9X+l9/gIbMm2 +RjZ/MRfPPTNuGmpliyix25Smdz53NXN1FrhronUFYEKnf1WpUEwTEvF4O42vsCTekwqIrgGXCLurf S/7d3fS4v4Bg8cA+5Qh+Uk0+ZqrTXgUP6OaDMkTICNXHTUGS80cHN7CrFE6q1UO+tsNQ/Fsge8taJS gm+Kiyli7VLSzYhXC0sKHxbB0JH0xP5894RSoW/K/PoLq+kRq7B1YseAHyV0Qfk5+iriQajxk+fnBQ egtZMtFQH8mxnRG8Q/Oo/X9lppUulkGrhJw92Vl2hjcQ77wy6/uvc14JCVXA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.22]
-X-ClientProxiedBy: EX13D15UWB004.ant.amazon.com (10.43.161.61) To
- EX13D04ANC001.ant.amazon.com (10.43.157.89)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From:   Kees Cook <keescook@chromium.org>
-Date:   Tue, 10 May 2022 17:01:09 -0700
-> While preparing for Clang randstruct support (which duplicated many of
-> the warnings the randstruct GCC plugin warned about), one strange one
-> remained only for the randstruct GCC plugin. Eliminating this rids
-> the plugin of the last exception.
-> 
-> It seems the plugin is happy to dereference individual members of
-> a cross-struct cast, but it is upset about casting to a whole object
-> pointer. This only manifests in one place in the kernel, so just replace
-> the variable with individual member accesses. There is no change in
-> executable instruction output.
-> 
-> Drop the last exception from the randstruct GCC plugin.
-> 
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: Kuniyuki Iwashima <kuniyu@amazon.co.jp>
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Cong Wang <cong.wang@bytedance.com>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: netdev@vger.kernel.org
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+As we continue to narrow the scope of what the FORTIFY memcpy() will
+accept and build alternative APIs that give the compiler appropriate
+visibility into more complex memcpy scenarios, there is a need for
+"unfortified" memcpy use in rare cases where combinations of compiler
+behaviors, source code layout, etc, result in cases where the stricter
+memcpy checks need to be bypassed until appropriate solutions can be
+developed (i.e. fix compiler bugs, code refactoring, new API, etc). The
+intention is for this to be used only if there's no other reasonable
+solution, for its use to include a justification that can be used
+to assess future solutions, and for it to be temporary.
 
-LGTM, thank you.
+Example usage included, based on analysis and discussion from:
+https://lore.kernel.org/netdev/CANn89iLS_2cshtuXPyNUGDPaic=sJiYfvTb_wNLgWrZRyBxZ_g@mail.gmail.com
 
-Acked-by: Kuniyuki Iwashima <kuniyu@amazon.co.jp>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Coco Li <lixiaoyan@google.com>
+Cc: Tariq Toukan <tariqt@nvidia.com>
+Cc: Saeed Mahameed <saeedm@nvidia.com>
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: netdev@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en_tx.c |  8 +++++++-
+ include/linux/fortify-string.h                  | 16 ++++++++++++++++
+ include/linux/string.h                          |  4 ++++
+ 3 files changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+index 2dc48406cd08..5855d8f9c509 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+@@ -386,7 +386,13 @@ mlx5e_sq_xmit_wqe(struct mlx5e_txqsq *sq, struct sk_buff *skb,
+ 			stats->added_vlan_packets++;
+ 		} else {
+ 			eseg->inline_hdr.sz |= cpu_to_be16(attr->ihs);
+-			memcpy(eseg->inline_hdr.start, skb->data, attr->ihs);
++			unsafe_memcpy(eseg->inline_hdr.start, skb->data, attr->ihs,
++				/* This copy has been bounds-checked earlier in
++				 * mlx5i_sq_calc_wqe_attr() and intentionally
++				 * crosses a flex array boundary. Since it is
++				 * performance sensitive, splitting the copy is
++				 * undesirable.
++				 */);
+ 		}
+ 		dseg += wqe_attr->ds_cnt_inl;
+ 	} else if (skb_vlan_tag_present(skb)) {
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index 295637a66c46..3b401fa0f374 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -52,6 +52,22 @@ extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size)
+ #define __underlying_strncpy	__builtin_strncpy
+ #endif
+ 
++/**
++ * unsafe_memcpy - memcpy implementation with no FORTIFY bounds checking
++ *
++ * @dst: Destination memory address to write to
++ * @src: Source memory address to read from
++ * @bytes: How many bytes to write to @dst from @src
++ * @justification: Free-form text or comment describing why the use is needed
++ *
++ * This should be used for corner cases where the compiler cannot do the
++ * right thing, or during transitions between APIs, etc. It should be used
++ * very rarely, and includes a place for justification detailing where bounds
++ * checking has happened, and why existing solutions cannot be employed.
++ */
++#define unsafe_memcpy(dst, src, bytes, justification)		\
++	__underlying_memcpy(dst, src, bytes)
++
+ /*
+  * Clang's use of __builtin_object_size() within inlines needs hinting via
+  * __pass_object_size(). The preference is to only ever use type 1 (member
+diff --git a/include/linux/string.h b/include/linux/string.h
+index b6572aeca2f5..61ec7e4f6311 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -252,6 +252,10 @@ static inline const char *kbasename(const char *path)
+ #if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
+ #include <linux/fortify-string.h>
+ #endif
++#ifndef unsafe_memcpy
++#define unsafe_memcpy(dst, src, bytes, justification)		\
++	memcpy(dst, src, bytes)
++#endif
+ 
+ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
+ 		    int pad);
+-- 
+2.32.0
+
