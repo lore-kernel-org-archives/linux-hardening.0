@@ -2,97 +2,127 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05455C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 12 May 2022 12:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E465BC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 12 May 2022 13:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353559AbiELMKt (ORCPT
+        id S1346132AbiELNEG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 12 May 2022 08:10:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47408 "EHLO
+        Thu, 12 May 2022 09:04:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351652AbiELMKs (ORCPT
+        with ESMTP id S1354092AbiELNEE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 12 May 2022 08:10:48 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA7C3109D
-        for <linux-hardening@vger.kernel.org>; Thu, 12 May 2022 05:10:44 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id p10so8641242lfa.12
-        for <linux-hardening@vger.kernel.org>; Thu, 12 May 2022 05:10:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=qy28eExUKPB+7e1xCoRBDK23LQhgAXf1HH1BZA8J3b0=;
-        b=L2XWQIvfJoYLzJjGk02ULr+jJ5iqK3TOxVfbIUivdafGg1D83Tj+Oek8a6jBxDXOU3
-         rvnVdNdal140KxA3ZSVf3Smb6osxoZFlekMuZaVNR+N6jc2oN31+EvBdOn1q1BVM9U6O
-         X7PJwyat0BScW+HbAfYZSKrTdq2d39wiM/NpM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=qy28eExUKPB+7e1xCoRBDK23LQhgAXf1HH1BZA8J3b0=;
-        b=Ci+GoOz4tuoRERIjd+lxS+b7Pz0YU12wq9U8SQf/zwEODQx4l59q8JXaqurhgkcF05
-         NgZErLNkJKhGdEbXLoJUf595fAbxeQ4N6htkNY9HeCuE+GUhY98+NgUKRfyEMdEqu4/g
-         ZcRCiehl7oozU84EHaO8aRNSqfocGOfyqo0ER2aSUJe1bGpa/rBm1N7rs3PQOg60StNH
-         OQuik150a9NIoZ4AmcpJVPi9t7En05hyUVPx8IZmincqDJeTIlSryy26czc0LBXiUXXV
-         jIqD5XA6wxVGeed41kmvqjwBYANSxqCz27Nk/FvhiNHz2Yf/kdRALNfZEY7qU+kfY4A8
-         G9Qw==
-X-Gm-Message-State: AOAM531CUbn1SO4JVf1YVon+Mjzo0tn0XVe3Vo37y/KW3yvf3EinQsRf
-        1BTbGiW1bi7q7DcCc3QAcKQE0Q==
-X-Google-Smtp-Source: ABdhPJyHbMcC+9oVxC8CSrkUBTQAqLZRvaUUJWNSUu7K3hxiGnUCQ4hjma6zdRn627DUM/WHyrsVRQ==
-X-Received: by 2002:a05:6512:b08:b0:46b:a876:3009 with SMTP id w8-20020a0565120b0800b0046ba8763009mr23451314lfu.378.1652357443199;
-        Thu, 12 May 2022 05:10:43 -0700 (PDT)
-Received: from [172.16.11.74] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id m20-20020a0565120a9400b0047255d211a1sm756411lfu.208.2022.05.12.05.10.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 May 2022 05:10:42 -0700 (PDT)
-Message-ID: <5304dada-51d2-e955-b620-c5c97f3b0dbd@rasmusvillemoes.dk>
-Date:   Thu, 12 May 2022 14:10:40 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH] lib: overflow: Always build 64-bit test cases
-Content-Language: en-US
+        Thu, 12 May 2022 09:04:04 -0400
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D794B24F0CA;
+        Thu, 12 May 2022 06:04:02 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4KzX686K5Bz4xLb;
+        Thu, 12 May 2022 23:04:00 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+        s=201909; t=1652360641;
+        bh=0uAQzRywcoHe5qPTXv99UHIxtB59cyjehM95bNbBvXk=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=D/Ze8kpbYRGb3QeCDS8mFRlw8WCqKkvXEfh/RzBhC2BvKw7mKfMr4bYxEGbS7XdD0
+         65J/yFKK9jGe879/HsQq858opPkVlRwszM9jKV8HgjTyAjGEJzEE4mFDBBGpc3GVeE
+         Ww3ebDCRmCMu8vZ/3a1+i3pJvgK4+OpCK8kxstzfJnKpygfD/5yoL/lqm3E4zQ1kMw
+         1XcJOwvVv+N5K2aDWgGJ287AMx6ghdx0I0mUidtmpwV9hn4lNo7vHnuf0x3nkFXngo
+         YJe+hpGN4kEDMUNkj7AJMCWeiH3U22TNK91I3h+Ovd4KePoM7TfH5yr7R+/9CtyJVe
+         CZ310SBi7JwJQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
 To:     Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Cc:     kernel test robot <lkp@intel.com>,
-        Vitor Massaru Iha <vitor@massaru.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Daniel Latypov <dlatypov@google.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20220511174531.1098548-1-keescook@chromium.org>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-In-Reply-To: <20220511174531.1098548-1-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Nicholas Piggin <npiggin@gmail.com>
+Cc:     benh@kernel.crashing.org, christophe.leroy@csgroup.eu,
+        mark.rutland@arm.com, paulus@samba.org, tglx@linutronix.de,
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH -next] powerpc: add support for syscall stack randomization
+In-Reply-To: <202205100917.5480D91@keescook>
+References: <20220505111932.228814-1-xiujianfeng@huawei.com>
+ <1652173338.7bltwybi0c.astroid@bobo.none> <202205100917.5480D91@keescook>
+Date:   Thu, 12 May 2022 23:03:57 +1000
+Message-ID: <87r14y7via.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 11/05/2022 19.45, Kees Cook wrote:
-> There shouldn't be a reason to not build the 64-bit test cases on 32-bit
-> systems; the types exist there too. Remove the #ifdefs.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/lkml/202205110324.7GrtxG8u-lkp@intel.com
-> Fixes: 455a35a6cdb6 ("lib: add runtime test of check_*_overflow functions")
+Kees Cook <keescook@chromium.org> writes:
+> On Tue, May 10, 2022 at 07:23:46PM +1000, Nicholas Piggin wrote:
+...
+>> 
+>> I wonder why the choose is separated from the add? I guess it's to
+>> avoid a data dependency for stack access on an expensive random
+>> function, so that makes sense (a comment would be nice in the
+>> generic code).
+>
+> How does this read? I can send a "real" patch if it looks good:
+>
+>
+> diff --git a/include/linux/randomize_kstack.h b/include/linux/randomize_kstack.h
+> index 1468caf001c0..ad3e80275c74 100644
+> --- a/include/linux/randomize_kstack.h
+> +++ b/include/linux/randomize_kstack.h
+> @@ -40,8 +40,11 @@ DECLARE_PER_CPU(u32, kstack_offset);
+>   */
+>  #define KSTACK_OFFSET_MAX(x)	((x) & 0x3FF)
+>  
+> -/*
+> - * These macros must be used during syscall entry when interrupts and
+> +/**
+> + * add_random_kstack_offset - Increase stack utilization by previously
+> + *			      chosen random offset
+> + *
+> + * This should be used in the syscall entry path when interrupts and
+ 
+I would say "called" rather than used, but that's a nit-pick.
 
-The patch is fine, but I disagree with that Fixes tag. Back then, i.e.
-when the overflow checkers were implemented via macros on old enough
-compilers, they simply didn't work for 64 bit types (because of the
-usual 64 bit division problems) - so anybody trying to use the multiply
-overflow checker, including of course the test suite, would get a build
-error on old compilers. You yourself did that: "[kees: add output to
-commit log, drop u64 tests on 32-bit]"
+>   * preempt are disabled, and after user registers have been stored to
+>   * the stack.
+>   */
+> @@ -55,6 +58,24 @@ DECLARE_PER_CPU(u32, kstack_offset);
+>  	}								\
+>  } while (0)
+>  
+> +/**
+> + * choose_random_kstack_offset - Choose the random offsset for the next
+> + *				 add_random_kstack_offset()
 
-Nowadays, where they are always merely thin wrappers around the compiler
-builtin because we assume gcc >= 5.1 and whatever new enough clang,
-sure, I think the 64 bit ones always work (though I don't think I want
-to know what horrible code the compiler must generate to do the multiply
-overflow checks).
+The name "choose" tricked me into thinking the offset is used verbatim.
+But it's actually xor'ed into the existing offset.
 
-So please fix the commit message so that it instead says that this
-restriction is no longer necessary because such and such history.
+I was pretty dubious about using mftb (~= rdtsc) based on that, but the
+xor makes me less worried.
 
-Rasmus
+Obviously you don't want to change the name now, but it would be good if
+the doc comment mentioned that the value is combined with the existing
+value, not used as-is.
+
+> + * This should only be used during syscall exit when interrupts and
+> + * preempt are disabled, and before user registers have been restored
+> + * from the stack. This is done to frustrate attack attempts from
+> + * userspace to learn the offset:
+> + * - Maximize the timing uncertainty visible from userspace: if the
+> + *   the offset is chosen at syscall entry, userspace has much more
+
+You have a "the the" across the line-break there.
+
+> + *   control over the timing between chosen offsets. "How long will we
+> + *   be in kernel mode?" tends to be more difficult to know than "how
+> + *   long will be be in user mode?"
+> + * - Reduce the lifetime of the new offset sitting in memory during
+> + *   kernel mode execution. Exposures of "thread-local" (e.g. current,
+> + *   percpu, etc) memory contents tends to be easier than arbitrary
+> + *   location memory exposures.
+> + */
+>  #define choose_random_kstack_offset(rand) do {				\
+>  	if (static_branch_maybe(CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT,	\
+>  				&randomize_kstack_offset)) {		\
+>
+
+cheers
