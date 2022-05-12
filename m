@@ -2,126 +2,217 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4172C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 12 May 2022 13:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72A4C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 12 May 2022 18:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354112AbiELNRL (ORCPT
+        id S1357721AbiELSga (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 12 May 2022 09:17:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58342 "EHLO
+        Thu, 12 May 2022 14:36:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354107AbiELNRL (ORCPT
+        with ESMTP id S1357742AbiELSgV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 12 May 2022 09:17:11 -0400
-Received: from gandalf.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6511D246422;
-        Thu, 12 May 2022 06:17:10 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4KzXPF6hr7z4xLb;
-        Thu, 12 May 2022 23:17:05 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-        s=201909; t=1652361426;
-        bh=gYQv0AS0gD3iTDUtUFbFD436ahJqXiZXz8+LVEIcXjY=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=DgXI6vDFoOhQlNw2D3j6l7p9Bo8NxO46sWtXM8r+OYiyMftvvKeZ+YigIjT5fPK7o
-         qs7zCef6LfYSz032M6qHnAc0bmnx7uQ/WxBPhiFl8Pob/lmnwkWrQW6EBHPqj3v0mE
-         BUjjaxw4ou8ESl+UqnJFXaNSJpiAWIJCYhAPt/hhFc2XuEoDWRjSUvkwIhH7yIyBd4
-         NJvpVPUlNtq+1EGWYxAWX3S4ypqkd8noZTBJt+9sgPF8AzspNgP4zVdd25GQTpw3zZ
-         MR158s156buU2q9Qq24SFts9hiB7De9hl/ZGXZ7DC7NvDVOQBx903T4+MnWrsyqNU/
-         /ZQE1z9/wcHUA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     xiujianfeng <xiujianfeng@huawei.com>,
-        Nicholas Piggin <npiggin@gmail.com>, benh@kernel.crashing.org,
-        christophe.leroy@csgroup.eu, mark.rutland@arm.com,
-        paulus@samba.org, tglx@linutronix.de
-Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH -next] powerpc: add support for syscall stack randomization
-In-Reply-To: <a1dcd50b-0819-df54-a963-ebb0551e3356@huawei.com>
-References: <20220505111932.228814-1-xiujianfeng@huawei.com>
- <1652173338.7bltwybi0c.astroid@bobo.none>
- <a1dcd50b-0819-df54-a963-ebb0551e3356@huawei.com>
-Date:   Thu, 12 May 2022 23:17:04 +1000
-Message-ID: <87pmki7uwf.fsf@mpe.ellerman.id.au>
+        Thu, 12 May 2022 14:36:21 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A24A369B6D
+        for <linux-hardening@vger.kernel.org>; Thu, 12 May 2022 11:36:17 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id h186so2713488pgc.3
+        for <linux-hardening@vger.kernel.org>; Thu, 12 May 2022 11:36:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fmzD9rNsECSReNQ5PrX3joY4B7VTF62mQ/BHRo7HwuU=;
+        b=N49+Dheimvina9OkQYZAVLkd9Q3lwiCjCh9sNuFHhqrLreJ6tlSo97fTk8fAnVBi1h
+         vxhemUFg0vioU9jONE5wueJGvxXGa07iS1pR/lny5tD5sU+MpcxGx/ywzUiboxdnvweM
+         t0nLLbHACIWKEXEDinlxTqo5dWSXjITrhkYow=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fmzD9rNsECSReNQ5PrX3joY4B7VTF62mQ/BHRo7HwuU=;
+        b=I/0PII9JLxkacAhmVf7PiM5zgtyQOrpGD4m7JVixGT2Q7DZgtJdkHA+W9EKUp8hs7H
+         s9PgC5EJ9Eb2gTof2K5iMeCFoXpDTYTxB25mpqqZBg1JOxTmFrWAaoh1BOSchqMhuTCF
+         gnqMTrgCighBMBj6+nPyTMRugFq75jKjwU0D/RbmyZeIi8Xg0h9h65cfRq6bVO54KAmZ
+         hNcwnhjvPpeva7gT8HjRRt4cWgoxRRr/1x1V1xrA0VUv+UBJRbdZxmpKOqWZ6BklWSVj
+         tMfzIs/SG8DOVO9LthPc4w2ddwwkwS1Fb1TNC2aMuwiAy77R7pP3b4D6cHu1Zo2mCfkg
+         Rt0g==
+X-Gm-Message-State: AOAM531FvGcVLoKiNwVyPEo1RxG6EJUyw6NCO7Yl51oMwg4syexLXumN
+        czU1SbzCgj9vfu01/JkYK/0U7Q==
+X-Google-Smtp-Source: ABdhPJwQs8f0+Tlghx0styILjotSwjlFz4Ulfnsvrgj0+wEnl9O0MbW/zC+b8ijhKT7PqZW+frim+g==
+X-Received: by 2002:a63:e218:0:b0:3c6:7449:15a2 with SMTP id q24-20020a63e218000000b003c6744915a2mr740941pgh.515.1652380577330;
+        Thu, 12 May 2022 11:36:17 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 16-20020a621610000000b0050dc76281a7sm153076pfw.129.2022.05.12.11.36.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 May 2022 11:36:16 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [RFC][PATCH] lkdtm/usercopy: Add tests for other memory types
+Date:   Thu, 12 May 2022 11:36:13 -0700
+Message-Id: <20220512183613.1069697-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4054; h=from:subject; bh=d/WHu6d3wldPfChuAXknC/QD9Uq1559cFGHibNpURL8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBifVOdEMza0XMDYVrnEzmFV5A91gOAs4JnXuF20cjf +9cNusmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYn1TnQAKCRCJcvTf3G3AJlHWEA CDs2DWMYK2GxdiM6GVRzOvgg71voEFbmx+GYgdPlJ0IZYzAIuaw43olfhV7Y09XkaPAAdjD0cQF/VU sEx90P8GzXQSQ4ffHwBJuJX2CPKXBoI9RZ5YQ7skvlh5EnDet++uggnNIcPBmm5GXeL9Gf97ndpQGC UsO0V7CXeOx4pYGabqM5681lXr9JmZJPjo5vnXFQ4j8IoD02Hly2kYA0LLkWOXX78NGgU6z60rJHTf oFA4Ov2T8bAi1VIvVT+WLSuNx/LdGpjPrEaVPWAEzAS2E1tZhSfa9VPZsKN6KewWwmmWDqBlLH+9u/ e4LP2hOfC+eMJ6nHh9/NEz9y/CBzw8ZbuHL62PFxgg/we4YbHaA0IMC4cckWQn/UtcC5uMx8MIWZ5q drkQ3ulQPjEYAAaiEXuPj1F1T9HyOQ7VDwCBPj5+GRvXKydiTZ4xw+q7n2tQUjJtjZI9GIi9O4hDTw hfn2yU9Yvp0Y8txOn3xEcTAUKml1/2VcNeBNYmFzWnkQRlaEG7NegyXE1byGSza9G3eZnxX9pnxWDm 8TTTWN2CDnhzImKGxFapXhnF480voTx8q7ltMBMMETMV5qBaFlTKcK+GdhBE5rTw/NnMWCqAg1vSJ2 ZMZ5dqBPDjyaBB+Wg7pq2kBaF7UTm6OGeFKBgWAT7c9C3EEDvyKzgM808QKw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-eGl1amlhbmZlbmcgPHhpdWppYW5mZW5nQGh1YXdlaS5jb20+IHdyaXRlczoNCj4g5ZyoIDIwMjIv
-NS8xMCAxNzoyMywgTmljaG9sYXMgUGlnZ2luIOWGmemBkzoNCj4+IEV4Y2VycHRzIGZyb20gWGl1
-IEppYW5mZW5nJ3MgbWVzc2FnZSBvZiBNYXkgNSwgMjAyMiA5OjE5IHBtOg0KPj4+IEFkZCBzdXBw
-b3J0IGZvciBhZGRpbmcgYSByYW5kb20gb2Zmc2V0IHRvIHRoZSBzdGFjayB3aGlsZSBoYW5kbGlu
-Zw0KPj4+IHN5c2NhbGxzLiBUaGlzIHBhdGNoIHVzZXMgbWZ0YigpIGluc3RlYWQgb2YgZ2V0X3Jh
-bmRvbV9pbnQoKSBmb3IgYmV0dGVyDQo+Pj4gcGVyZm9ybWFuY2UuDQo+Pg0KLi4uDQo+Pg0KPj4+
-IEBAIC00MDUsNiArNDA3LDcgQEAgaW50ZXJydXB0X2V4aXRfdXNlcl9wcmVwYXJlX21haW4odW5z
-aWduZWQgbG9uZyByZXQsIHN0cnVjdCBwdF9yZWdzICpyZWdzKQ0KPj4+DQo+Pj4gICAJLyogUmVz
-dG9yZSB1c2VyIGFjY2VzcyBsb2NrcyBsYXN0ICovDQo+Pj4gICAJa3VhcF91c2VyX3Jlc3RvcmUo
-cmVncyk7DQo+Pj4gKwljaG9vc2VfcmFuZG9tX2tzdGFja19vZmZzZXQobWZ0YigpICYgMHhGRik7
-DQo+Pj4NCj4+PiAgIAlyZXR1cm4gcmV0Ow0KPj4+ICAgfQ0KPj4gU28gdGhpcyBzZWVtcyB0byBi
-ZSB3aGF0IHg4NiBhbmQgczM5MCBkbywgYnV0IHdoeSBhcmUgd2UgY2hvb3NpbmcgYQ0KPj4gbmV3
-IG9mZnNldCBmb3IgZXZlcnkgaW50ZXJydXB0IHdoZW4gaXQncyBvbmx5IHVzZWQgb24gYSBzeXNj
-YWxsPw0KPj4gSSB3b3VsZCByYXRoZXIgeW91IGRvIHdoYXQgYXJtNjQgZG9lcyBhbmQganVzdCBj
-aG9vc2UgdGhlIG9mZnNldA0KPj4gYXQgdGhlIGVuZCBvZiBzeXN0ZW1fY2FsbF9leGNlcHRpb24u
-DQo+IHRoYW5rcyBmb3IgeW91IHN1Z2dlc3Rpb24sIHdpbGwgZG8gaW4gdjIuDQo+Pg0KPj4gSSB3
-b25kZXIgd2h5IHRoZSBjaG9vc2UgaXMgc2VwYXJhdGVkIGZyb20gdGhlIGFkZD8gSSBndWVzcyBp
-dCdzIHRvDQo+PiBhdm9pZCBhIGRhdGEgZGVwZW5kZW5jeSBmb3Igc3RhY2sgYWNjZXNzIG9uIGFu
-IGV4cGVuc2l2ZSByYW5kb20NCj4+IGZ1bmN0aW9uLCBzbyB0aGF0IG1ha2VzIHNlbnNlIChhIGNv
-bW1lbnQgd291bGQgYmUgbmljZSBpbiB0aGUNCj4+IGdlbmVyaWMgY29kZSkuDQo+Pg0KPj4gSSBk
-b24ndCBhY3R1YWxseSBrbm93IGlmIG1mdGIoKSBpcyBjaGVhcGVyIGhlcmUgdGhhbiBhIFJORy4g
-SXQNCj4+IG1heSBub3QgYmUgY29uZGl0aW9uZWQgYWxsIHRoYXQgd2VsbCBlaXRoZXIuIEkgd291
-bGQgYmUgdGVtcHRlZA0KDQo+ICNpZiBkZWZpbmVkKF9fcG93ZXJwYzY0X18pICYmIChkZWZpbmVk
-KENPTkZJR19QUENfQ0VMTCkgfHwNCj4gZGVmaW5lZChDT05GSUdfRTUwMCkpDQo+ICNkZWZpbmUg
-bWZ0YigpwqDCoMKgwqDCoMKgwqDCoMKgICh7dW5zaWduZWQgbG9uZyBydmFsO8KgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgXA0KPiAgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBhc20gdm9sYXRpbGUowqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgXA0KPiAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgIjkwOsKgwqDCoCBtZnNwciAlMCwgJTI7XG4iwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIFwNCj4gQVNNX0ZUUl9JRlNFVCjCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBcDQo+ICDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgIjk3OsKgwqDCoCBjbXB3aSAlMCwwO1xuIsKgwqDCoMKgwqDCoMKgwqDCoCBcDQo+ICDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgIsKgwqDCoMKgwqDCoCBiZXEtIDkwYjtcbiIsICIiLCAlMSnCoMKg
-IFwNCj4gIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgOiAi
-PXIiIChydmFsKSBcDQo+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIDogImkiIChDUFVfRlRSX0NFTExfVEJfQlVHKSwgImkiIChTUFJOX1RCUkwpIDoNCj4g
-ImNyMCIpOyBcDQo+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIHJ2YWw7fSkNCj4gI2VsaWYgZGVmaW5lZChDT05GSUdfUFBDXzh4eCkNCj4gI2RlZmluZSBt
-ZnRiKCnCoMKgwqDCoMKgwqDCoMKgwqAgKHt1bnNpZ25lZCBsb25nIHJ2YWw7wqDCoCBcDQo+ICDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGFzbSB2b2xhdGls
-ZSgibWZ0YmwgJTAiIDogIj1yIiAocnZhbCkpOyBydmFsO30pDQo+ICNlbHNlDQo+ICNkZWZpbmUg
-bWZ0YigpwqDCoMKgwqDCoMKgwqDCoMKgICh7dW5zaWduZWQgbG9uZyBydmFsO8KgwqAgXA0KPiAg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBhc20gdm9sYXRp
-bGUoIm1mc3ByICUwLCAlMSIgOiBcDQo+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgIj1yIiAocnZhbCkgOiAi
-aSIgKFNQUk5fVEJSTCkpOw0KPiBydmFsO30pDQo+ICNlbmRpZiAvKiAhQ09ORklHX1BQQ19DRUxM
-ICovDQo+DQo+IHRoZXJlIGFyZSAzIGltcGxlbWVudGF0aW9ucyBvZiBtZnRiKCkgaW4NCj4gYXJj
-aC9wb3dlcnBjL2luY2x1ZGUvYXNtL3Zkc28vdGltZWJhc2UuaCwNCj4NCj4gdGhlIGxhc3QgdHdv
-IGNhc2VzIGhhdmUgb25seSBvbmUgaW5zdHJ1Y3Rpb24sIEl0J3Mgb2J2aW91c2x5IGNoZWFwZXIN
-Cj4gdGhhbiBnZXRfcmFuZG9tX2ludCwNCg0KSnVzdCBiZWNhdXNlIGl0J3Mgb25lIGluc3RydWN0
-aW9uIGRvZXNuJ3QgbWVhbiBpdCdzIG9idmlvdXNseSBjaGVhcGVyLg0KT24gc29tZSBDUFVzIG1m
-dGIgdGFrZXMgMTBzIG9mIGN5Y2xlcywgYW5kIGNhbiBhbHNvIHN0YWxsIHRoZSBwaXBlbGluZS4N
-Cg0KQnV0IGxvb2tpbmcgYXQgZ2V0X3JhbmRvbV91MzIoKSBpdCBkb2VzIGxvb2sgcHJldHR5IGNv
-bXBsaWNhdGVkLCBpdA0KdGFrZXMgYSBsb2NrIGFuZCBzbyBvbi4gSXQncyBhbHNvIHNpbGx5IHRv
-IGNhbGwgZ2V0X3JhbmRvbV91MzIoKSBmb3INCjQtYml0cyBvZiByYW5kb21uZXNzLg0KDQpNeSBp
-bml0aWFsIGltcHJlc3Npb24gd2FzIHRoYXQgbWZ0YigpIGlzIHRvbyBwcmVkaWN0YWJsZSB0byBi
-ZSB1c2VmdWwNCmFnYWluc3QgYSBkZXRlcm1pbmVkIGF0dGFja2VyLiBCdXQgbG9va2luZyBjbG9z
-ZXIgSSBzZWUgdGhhdA0KY2hvb3NlX3JhbmRvbV9rc3RhY2tfb2Zmc2V0KCkgeG9yJ3MgdGhlIHZh
-bHVlIHdlIHBhc3Mgd2l0aCB0aGUgZXhpc3RpbmcNCnZhbHVlLiBTbyB0aGF0IG1ha2VzIG1lIGxl
-c3Mgd29ycmllZCBhYm91dCB1c2luZyBtZnRiKCkuDQoNCldlIGNvdWxkIGFkZGl0aW9uYWxseSBj
-YWxsIGNob29zZV9yYW5kb21fa3N0YWNrX29mZnNldChnZXRfcmFuZG9tX2ludCgpKQ0KbGVzcyBy
-ZWd1bGFybHksIGVnLiBkdXJpbmcgY29udGV4dCBzd2l0Y2guIEJ1dCBJIGd1ZXNzIHRoYXQncyB0
-b28NCmluZnJlcXVlbnQgdG8gYWN0dWFsbHkgbWFrZSBhbnkgZGlmZmVyZW5jZS4NCg0KQnV0IGxp
-bWl0aW5nIGl0IHRvIDQtYml0cyBvZiByYW5kb21uZXNzIHNlZW1zIGluc3VmZmljaWVudC4gSXQg
-c2VlbXMNCmxpa2Ugd2Ugc2hvdWxkIGFsbG93IHRoZSBmdWxsIDYgKDEwKSBiaXRzLCBhbmQgYW55
-b25lIHR1cm5pbmcgdGhpcw0Kb3B0aW9uIG9uIHNob3VsZCBwcm9iYWJseSBhbHNvIGNvbnNpZGVy
-IGluY3JlYXNpbmcgdGhlaXIgc3RhY2sgc2l6ZS4NCg0KQWxzbyBkaWQgeW91IGNoZWNrIHRoZSBo
-ZWxwIHRleHQgYWJvdXQgc3RhY2stcHJvdGVjdG9yIHVuZGVyDQpIQVZFX0FSQ0hfUkFORE9NSVpF
-X0tTVEFDS19PRkZTRVQ/DQoNCmNoZWVycw0K
+Add coverage for the recently added usercopy checks for vmap, kmap, and
+folios.
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Hi,
+
+So, this kmap test fails the "good" copy step... Is copy_to_user()
+limited somewhere else to not touch kmap'd pages? I can't find it...
+
+Also, is my use of folios correct here?
+
+-Kees
+---
+ drivers/misc/lkdtm/usercopy.c | 104 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 104 insertions(+)
+
+diff --git a/drivers/misc/lkdtm/usercopy.c b/drivers/misc/lkdtm/usercopy.c
+index 945806db2a13..d1c585bb7a8d 100644
+--- a/drivers/misc/lkdtm/usercopy.c
++++ b/drivers/misc/lkdtm/usercopy.c
+@@ -5,6 +5,7 @@
+  */
+ #include "lkdtm.h"
+ #include <linux/slab.h>
++#include <linux/highmem.h>
+ #include <linux/vmalloc.h>
+ #include <linux/sched/task_stack.h>
+ #include <linux/mman.h>
+@@ -341,6 +342,106 @@ static void lkdtm_USERCOPY_KERNEL(void)
+ 	vm_munmap(user_addr, PAGE_SIZE);
+ }
+ 
++/*
++ * This expects "kaddr" to point to a PAGE_SIZE allocation, which means
++ * a more complete test that would include copy_from_user() would risk
++ * memory corruption. Just test copy_to_user() here, as that exercises
++ * almost exactly the same code paths.
++ */
++static void do_usercopy_page_span(const char *name, void *kaddr)
++{
++	unsigned long uaddr;
++
++	uaddr = vm_mmap(NULL, 0, PAGE_SIZE, PROT_READ | PROT_WRITE,
++			MAP_ANONYMOUS | MAP_PRIVATE, 0);
++	if (uaddr >= TASK_SIZE) {
++		pr_warn("Failed to allocate user memory\n");
++		return;
++	}
++
++	/* Initialize contents. */
++	memset(kaddr, 0xAA, PAGE_SIZE);
++
++	/* Bump the kaddr forward to detect a page-spanning overflow. */
++	kaddr += PAGE_SIZE / 2;
++
++	pr_info("attempting good copy_to_user() from kernel %s: %px\n",
++		name, kaddr);
++	if (copy_to_user((void __user *)uaddr, kaddr,
++			 unconst + (PAGE_SIZE / 2))) {
++		pr_err("copy_to_user() failed unexpectedly?!\n");
++		goto free_user;
++	}
++
++	pr_info("attempting bad copy_to_user() from kernel %s: %px\n",
++		name, kaddr);
++	if (copy_to_user((void __user *)uaddr, kaddr,
++			 unconst + PAGE_SIZE)) {
++		pr_warn("Good, copy_to_user() failed, but lacked Oops(?!)\n");
++		goto free_user;
++	}
++
++	pr_err("FAIL: bad copy_to_user() not detected!\n");
++	pr_expected_config_param(CONFIG_HARDENED_USERCOPY, "hardened_usercopy");
++
++free_user:
++	vm_munmap(uaddr, PAGE_SIZE);
++}
++
++static void lkdtm_USERCOPY_VMALLOC(void)
++{
++	void *addr;
++
++	addr = vmalloc(PAGE_SIZE);
++	if (!addr) {
++		pr_err("vmalloc() failed!?\n");
++		return;
++	}
++	do_usercopy_page_span("vmalloc", addr);
++	vfree(addr);
++}
++
++static void lkdtm_USERCOPY_KMAP(void)
++{
++	struct page *page;
++	void *addr;
++
++	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, 0);
++	if (!page) {
++		pr_err("alloc_pages() failed!?\n");
++		return;
++	}
++	addr = kmap_atomic(page);
++	if (addr) {
++		do_usercopy_page_span("kmap", addr);
++		kunmap_atomic(addr);
++	} else {
++		pr_err("kmap_atomic() failed!?\n");
++	}
++	__free_pages(page, 0);
++}
++
++static void lkdtm_USERCOPY_FOLIO(void)
++{
++	struct folio *folio;
++	void *addr;
++
++	/*
++	 * FIXME: Folio checking currently misses 0-order allocations, so
++	 * allocate and bump forward to the last page.
++	 */
++	folio = folio_alloc(GFP_KERNEL | __GFP_ZERO, 1);
++	if (!folio) {
++		pr_err("folio_alloc() failed!?\n");
++		return;
++	}
++	addr = page_address(&folio->page);
++	if (addr) {
++		do_usercopy_page_span("folio", addr + PAGE_SIZE);
++	}
++	folio_put(folio);
++}
++
+ void __init lkdtm_usercopy_init(void)
+ {
+ 	/* Prepare cache that lacks SLAB_USERCOPY flag. */
+@@ -365,6 +466,9 @@ static struct crashtype crashtypes[] = {
+ 	CRASHTYPE(USERCOPY_STACK_FRAME_TO),
+ 	CRASHTYPE(USERCOPY_STACK_FRAME_FROM),
+ 	CRASHTYPE(USERCOPY_STACK_BEYOND),
++	CRASHTYPE(USERCOPY_VMALLOC),
++	CRASHTYPE(USERCOPY_KMAP),
++	CRASHTYPE(USERCOPY_FOLIO),
+ 	CRASHTYPE(USERCOPY_KERNEL),
+ };
+ 
+-- 
+2.32.0
+
