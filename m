@@ -2,91 +2,211 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DA9C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 12 May 2022 19:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8743C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 12 May 2022 21:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345169AbiELTMG (ORCPT
+        id S1358798AbiELVld (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 12 May 2022 15:12:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46584 "EHLO
+        Thu, 12 May 2022 17:41:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357923AbiELTMF (ORCPT
+        with ESMTP id S241237AbiELVlb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 12 May 2022 15:12:05 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C45014B1D4
-        for <linux-hardening@vger.kernel.org>; Thu, 12 May 2022 12:12:04 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id c11so5802284plg.13
-        for <linux-hardening@vger.kernel.org>; Thu, 12 May 2022 12:12:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=iBuQvnCRlxDCi6HbteFyBtMacgx7JHqhY0mAy+23sMU=;
-        b=eCRUbpnjk/fEcpD0c1rKjaMp2OZq3E+mjzf19tsay+g+rRiYw2qKYOaRC7HbmpdgaX
-         ehjHpMF4T6hPc0gTaNbV8qw4kAzXB/L8oFA4/hquDa1s64JotM1FD6AFCm1I/pPOmxtB
-         RGEPn652qs6sOT3UKtTVpM9/i50z58+LYLDgs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iBuQvnCRlxDCi6HbteFyBtMacgx7JHqhY0mAy+23sMU=;
-        b=c5A2l3JVtPdtvp3vwzK0SSOCr1wsRpaKKYrULHUpzferEC0dGnJ1XWXKvJlrutFmwv
-         9vYKrSZH8+rBAYvvCso3OA8e1joYdZcq/qLJaOMmfzeuo7Y9ucWxokZlrqjEWP9uAhz8
-         4xj0PNEHM1sdXkymTHmIzyVMAwNnJyMGVtL4Yqp6B0YlSCZDilK8r6aCGXgmXNhVGzwC
-         vG+gNkf3aa9Ysl5XDmds2qa1yUn12Broj5ZnIPQqUW5bKDp2OVkejGE+6N9e3MFWXJnr
-         JtQy1DxzH6OJ9SoF5LgOnQXZPnAANlU2Y7LFvDPBJ3HGj5O/HY9g+CpvrRMJwdrRAAC0
-         6v/w==
-X-Gm-Message-State: AOAM531hsdS6Rs/cNlhN+MZt+SgxP50QvIFPJL/TX64WMB71VvOm6pqI
-        IplG6fsjNRlKbpbG/TD/zbJsXw==
-X-Google-Smtp-Source: ABdhPJzFMIlQvWdvZrnNcVEtDlZHk2iMMaueVcjUNOHdSokOi+f+sVhuVAMjnR60zBB8Cf9BXFDI1A==
-X-Received: by 2002:a17:902:ea09:b0:15e:b761:3ca2 with SMTP id s9-20020a170902ea0900b0015eb7613ca2mr1120324plg.121.1652382723949;
-        Thu, 12 May 2022 12:12:03 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t15-20020a1709028c8f00b0015e8d4eb290sm234854plo.218.2022.05.12.12.12.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 May 2022 12:12:03 -0700 (PDT)
-Date:   Thu, 12 May 2022 12:12:02 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [RFC][PATCH] lkdtm/usercopy: Add tests for other memory types
-Message-ID: <202205121211.B7EFB5A@keescook>
-References: <20220512183613.1069697-1-keescook@chromium.org>
- <Yn1YTZkWVWfXk5Q8@casper.infradead.org>
+        Thu, 12 May 2022 17:41:31 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 27E746EC7A
+        for <linux-hardening@vger.kernel.org>; Thu, 12 May 2022 14:41:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1652391688;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YX4qZOz+9WbIDFanSGeueshT1smpwyQHiwCB0mvZIgg=;
+        b=UB0zHdp4klqAngjDbOqmkofzodTQqJrA4GB7Na4o6Xl/gchGA5HDiTJ5iXOV6YXLK5YI0m
+        3ZAYGxnZwtmMcvOlfbi0V6kdThfpGxt6StW0v+SEb5lxJ9sdpdtBnGZ6jC73eNf5Tluvrl
+        DAPKsCGFHYjcHTS4HfE/Kp0t7IyfCtw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-316--9sq3rMhP6iZqr34jl7IjA-1; Thu, 12 May 2022 17:41:24 -0400
+X-MC-Unique: -9sq3rMhP6iZqr34jl7IjA-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E950F8038E3;
+        Thu, 12 May 2022 21:41:22 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.37.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E2C7416156;
+        Thu, 12 May 2022 21:41:05 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20220504014440.3697851-20-keescook@chromium.org>
+References: <20220504014440.3697851-20-keescook@chromium.org> <20220504014440.3697851-1-keescook@chromium.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        linux-afs@lists.infradead.org, Alexei Starovoitov <ast@kernel.org>,
+        alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Andy Lavr <andy.lavr@gmail.com>,
+        Arend van Spriel <aspriel@gmail.com>,
+        Baowen Zheng <baowen.zheng@corigine.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Bradley Grove <linuxdrivers@attotech.com>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        Christian Brauner <brauner@kernel.org>,
+        Christian =?utf-8?Q?G=C3=B6ttsche?= <cgzones@googlemail.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Chris Zankel <chris@zankel.net>,
+        Cong Wang <cong.wang@bytedance.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Gow <davidgow@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        devicetree@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Eli Cohen <elic@nvidia.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Francis Laniel <laniel_francis@privacyrequired.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gregory Greenman <gregory.greenman@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Hulk Robot <hulkci@huawei.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        John Keeping <john@metanate.com>,
+        Juergen Gross <jgross@suse.com>, Kalle Valo <kvalo@kernel.org>,
+        Keith Packard <keithp@keithp.com>, keyrings@vger.kernel.org,
+        kunit-dev@googlegroups.com,
+        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux1394-devel@lists.sourceforge.net,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, llvm@lists.linux.dev,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Louis Peens <louis.peens@corigine.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Nathan Chancellor <nathan@kernel.org>, netdev@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nuno =?utf-8?Q?S=C3=A1?= <nuno.sa@analog.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Rich Felker <dalias@aerifal.cx>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>, selinux@vger.kernel.org,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        SHA-cyfmac-dev-list@infineon.com,
+        Simon Horman <simon.horman@corigine.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Tadeusz Struk <tadeusz.struk@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
+        Udipto Goswami <quic_ugoswami@quicinc.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        wcn36xx@lists.infradead.org, Wei Liu <wei.liu@kernel.org>,
+        xen-devel@lists.xenproject.org,
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        Yang Yingliang <yangyingliang@huawei.com>
+Subject: Re: [PATCH 19/32] afs: Use mem_to_flex_dup() with struct afs_acl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yn1YTZkWVWfXk5Q8@casper.infradead.org>
+Content-Type: text/plain
+Date:   Thu, 12 May 2022 22:41:05 +0100
+Message-ID: <898803.1652391665@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, May 12, 2022 at 07:56:13PM +0100, Matthew Wilcox wrote:
-> On Thu, May 12, 2022 at 11:36:13AM -0700, Kees Cook wrote:
-> > +static void lkdtm_USERCOPY_FOLIO(void)
-> > +{
-> > +	struct folio *folio;
-> > +	void *addr;
-> > +
-> > +	/*
-> > +	 * FIXME: Folio checking currently misses 0-order allocations, so
-> > +	 * allocate and bump forward to the last page.
-> > +	 */
-> > +	folio = folio_alloc(GFP_KERNEL | __GFP_ZERO, 1);
-> > +	if (!folio) {
-> > +		pr_err("folio_alloc() failed!?\n");
-> > +		return;
-> > +	}
-> > +	addr = page_address(&folio->page);
-> 
-> Ideally, code shouldn't be using &folio->page.  If it is, we have a
-> gap in the folio API.  Fortunately, we have folio_address().
 
-Ah! Perfect, thanks. In trying to find the right alloc/free pair I
-missed folio_address() :)
+Kees Cook <keescook@chromium.org> wrote:
 
--- 
-Kees Cook
+>  struct afs_acl {
+> -	u32	size;
+> -	u8	data[];
+> +	DECLARE_FLEX_ARRAY_ELEMENTS_COUNT(u32, size);
+> +	DECLARE_FLEX_ARRAY_ELEMENTS(u8, data);
+>  };
+
+Oof...  That's really quite unpleasant syntax.  Is it not possible to have
+mem_to_flex_dup() and friends work without that?  You are telling them the
+fields they have to fill in.
+
+> +	struct afs_acl *acl = NULL;
+>  
+> -	acl = kmalloc(sizeof(*acl) + size, GFP_KERNEL);
+> -	if (!acl) {
+> +	if (mem_to_flex_dup(&acl, buffer, size, GFP_KERNEL)) {
+
+Please don't do that.  Either do:
+
+	acl = mem_to_flex_dup(buffer, size, GFP_KERNEL);
+	if (!acl)
+
+or:
+
+	acl = mem_to_flex_dup(buffer, size, GFP_KERNEL);
+	if (IS_ERR(acl))
+
+Please especially don't make it that an apparent 'true' return indicates an
+error.  If you absolutely must return the acl pointer through the argument
+list (presumably because it's actually a macro), make it return false on
+failure:
+
+	if (!mem_to_flex_dup(&acl, buffer, size, GFP_KERNEL))
+
+or return and explicitly check for an error code:
+
+	if (mem_to_flex_dup(&acl, buffer, size, GFP_KERNEL) < 0)
+
+or:
+
+	ret = mem_to_flex_dup(&acl, buffer, size, GFP_KERNEL);
+	if (ret < 0)
+
+(or use != 0 rather than < 0)
+
+David
+
