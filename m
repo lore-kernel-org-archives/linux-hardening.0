@@ -2,69 +2,69 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A62EC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 13 May 2022 20:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16565C4332F
+	for <linux-hardening@archiver.kernel.org>; Fri, 13 May 2022 20:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384169AbiEMUW6 (ORCPT
+        id S1384127AbiEMUW7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 13 May 2022 16:22:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43210 "EHLO
+        Fri, 13 May 2022 16:22:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384178AbiEMUWn (ORCPT
+        with ESMTP id S1384221AbiEMUWq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 13 May 2022 16:22:43 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7965615A744
-        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:21 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2fb7bf98f1aso81568517b3.5
-        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:21 -0700 (PDT)
+        Fri, 13 May 2022 16:22:46 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 225CC17569F
+        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:33 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id w21-20020a25df15000000b0064b401428bfso7256613ybg.22
+        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=bOpzM5rX2l4ip7yxSBZMEDJLuv66hWELCctweBJJHks=;
-        b=rL/hL6OntTIlT6+vghCQAiZfUmoZf+JKLSwkZf+IrrsNgssVEJVawitmFaYY55jmBe
-         amD7Eq+wsfiNCduzWZ9qsgP4L4Eaoz5WdsbalKIQn6dmzQtZSjg5Ws94G9xU2GMA3379
-         ptYLd/GCT/HZYVruQu1ULOS8r60MhY8tYFWaQkLiwx/jHZy3Hv8nqZJGcbTTlO61CRHO
-         Ui5viFE1OPI2iQTd8ZFgpeNNg8UIf9lxq/5l0yMHnkI4aHbNASnhtiPtCkKN6ow4/8Gy
-         Buw+p+M5hlwFYUt71jzAT461tK+NYI45ChnwXdq3pjmdEybkufp0sSLOl8jFCSlKjOtr
-         c9KQ==
+        bh=A+7QPiSqoa8uHCAaz7cWSuhzWOaNl1zZwhVwOmSdW3Q=;
+        b=eoneec1qCPJ+mzeLTO/26o4Gge0cWT5SAiGzbalPj2kajo6F/0cY+hXNaJV6/r+1ew
+         Y6uGiwZLXUyodzZ8UYO/n8YLOsl89RGDclgPhS6fxgoPf/o7am8+mqu4bw/b3L+/Yuyi
+         Cc/OaxzJLjKECCzrQRpdRnOuumBxE4idnbmxYj0GGrcjayFmVVo2gRU+pSIAIGWkmF0a
+         3GrUoXzWAOrstvsKGj3Hh/ia4A/Gbuk8XwS8MbQH/z19h/yMUcGvuCm84jFLSCi6XCzG
+         qcVtZMwaKqUWyqXG9PrxZtGErnPUmFAsNBu4fvRjKv6v93XufMYo0X2ugGmnuiRsSDsp
+         gASQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=bOpzM5rX2l4ip7yxSBZMEDJLuv66hWELCctweBJJHks=;
-        b=OaS0suH5CCtMHMFc/m88cKAUxnTLCYgGauJ82B1LgAbYIEY71jycw+bMldyfuCLDSi
-         SZZNMwGVnGH7loS6iE0HPZqYFS37ljYGYz+2lUNyF1NA/08IcIxKZeUL/YCzntvzeMvG
-         q8UeFuCcQsIDJGr2krQaUoWDwHeJ52TJdZiWzzWFcHoKtOWUxAt5p6xRl1tu8jsTrGIL
-         5yKkbxiD1i8ZaIpptqHrB2HbM6hJJRgeQ+w3ur6C4+M1gSSdZBZ3lmlxEEryKPBJGJlU
-         Udv99egJpaedf3wdVd0DTRH32huBNXM7jnN9t0AJziIOVtf2ncWG0chNNMpmQAgule1K
-         9+8Q==
-X-Gm-Message-State: AOAM5309L2GLQGa4bFMzb5i91mmJyytp6exWszvVTuSNmIuxTl3SjkI+
-        lUTxipm11KZpPfe/WdM8KpGvqxYBvBpv5+qxI8Y=
-X-Google-Smtp-Source: ABdhPJwWzw5BAhCv70kXSSaCh7PhBQVVl4ghLTYlA0W/0QO97ijY+sTWmPSKw5zlsA+je25PPHFJReZCMSvJtqlJTmo=
+        bh=A+7QPiSqoa8uHCAaz7cWSuhzWOaNl1zZwhVwOmSdW3Q=;
+        b=oQKgyZdxgYT2K15+DzOeBk3dzvimrSG3m6dmehTSFLnUmTZvC1SPFw+x1gkGEmzagL
+         B+QyHfrA9bYDmnFU75NJAefbChHtkdVGFlbivNX8yKluAfRS7LIRWVPqw1ktjSaPYKl1
+         +2ZmiBHGgQebqsXj2dYO+c20ynlJI8vegUp+JitG95b2PNFl2bWU7qKgxs6+ux+61ap2
+         oPfECX6uvETc62LFcIACiKTm0ZVOo1Du5Mmk9szobmHavlN0k7+LzKo4Dczfs14G8Hei
+         vBPMXONTTdzLncPgIj5m7cpsvhwAdPw0I0C6kXV0wYUFTKbwZmKK6L117aOsV0IPjWjn
+         CO+g==
+X-Gm-Message-State: AOAM5320qi9xvjg1H6L8J11B7WdRlkaQso+5wc+gPoGXFpdbwNGHvqUe
+        zNM23c4NAg3Obi2mw1zL+YNboLFQfyEN8b8Hcxo=
+X-Google-Smtp-Source: ABdhPJzvGknJQJvJIOdsshYzjyQxItMWAOO5KzitzyEuNvSreyd+VCQrAAW9GnGKTwHoKx86rGgma5rzRyc5taV0BnQ=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:e0:c17e:c2dc:13eb])
- (user=samitolvanen job=sendgmr) by 2002:a25:b320:0:b0:645:6969:52f4 with SMTP
- id l32-20020a25b320000000b00645696952f4mr6410598ybj.466.1652473340628; Fri,
- 13 May 2022 13:22:20 -0700 (PDT)
-Date:   Fri, 13 May 2022 13:21:46 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a81:3685:0:b0:2fb:947b:5247 with SMTP
+ id d127-20020a813685000000b002fb947b5247mr7593917ywa.64.1652473352269; Fri,
+ 13 May 2022 13:22:32 -0700 (PDT)
+Date:   Fri, 13 May 2022 13:21:51 -0700
 In-Reply-To: <20220513202159.1550547-1-samitolvanen@google.com>
-Message-Id: <20220513202159.1550547-9-samitolvanen@google.com>
+Message-Id: <20220513202159.1550547-14-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20220513202159.1550547-1-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=835; h=from:subject;
- bh=HH1ZoZ4U7IrTG0qT02hkMGqwA8ikkqMw52ht6iNCIe8=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBifr3j/HnryEij1/HDUc2sbZLQyYN7d6556HPZq1qT
- l1xSJNOJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYn694wAKCRBMtfaEi7xW7ktXDA
- CU67UkQ9+rP6BZrl4m0BX4xUiwzSmmKPLl9nByQ7yxpXu6x9cOxvsh7U+Y+kdEvD+wXiJX/83jCg88
- viRNpRYeMvJXxI1DPEyJhK+E2GSrC8RfNlnOKOCBWyBm9pDr7/akIxQSKPItAZ9NR9hoZDzYxImk2b
- kFlY7+tt3abbniKqgwD2SlAe9ab1jJeTDp1b8ijpK85f3dEHhJtGWHn4ijrJQWlimUHtN4amn+DJmV
- I7Ti8ClmSh7Lky12ga65DmJQ3s1WHHj5ZrZGalNG25evyzYj+FTwpvEv/D9IRDB2+brvZ/pidt0x7N
- F1EQbzuYgZCDrr4PNCycx1HLCBZ4pC1q+96fvrsjj4UyPP6hEiyzGaqhTM211QovCAKh8N5YyyY8Kq
- cgmRTA/+rmphPKNrl6e434tN7thBoUXXn9pnTlR1B7tNq5ZAio1MvLBno+7zYk2Lthd97TwEgrcjPV
- xYOFqJC1W7SajhbCnMeZUuTW5HZSIq64lZnTLiQXLJKfU=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2492; h=from:subject;
+ bh=O+VMkemg5E90usG6SsfLEV+HTvQnGaBlMMBcrxqTesI=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBifr3kE9sw78o8+eJw34YnMmYuK157n4APskm6j4x8
+ RWFsHcaJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYn695AAKCRBMtfaEi7xW7nURC/
+ wOdNWBO3UhCkvlEOcn4eL9iiDgGLHqd+ms7km80Bh8LZzW9sOnnlG3t3vRb52kdG5VEXtgkxioGv41
+ xDP0vHe/60Dqza8pTAK6oUDwZ9oravnzAdveNeysGT+iWwn6o+1PlLzaJmMM1WHiNJunt64I1Frt7l
+ MG+kykOaX8IOtuUHQGbZHWos22oiPy9qAluaUwvZuPOkfOfDaZILICUJ+aOVo0YsM8pziu05P1lMyZ
+ S6JU5H6j9BiCebv0Fc2EqSsSN5gNHjaRWhPBzA5au10tr+30q+wOqa1BHCK8mMAkmGTFUQZsKOfVyJ
+ OcIxdboVGgRVBnDBRJCMZ8aytWoWx0G6HlaYhqS/WvOC1C4QDVu1DaIIC7FFX3v7KJB+D8zmwf7Tzo
+ BbojzcBBfnmu6tJIxx1uUPt69XNi1OBt4xpbkBA8+eLJ4X7gmJouTVZo8KFUFQJeB6mF8MYQ1ttzhr
+ h0OWEF+nFaDfGtzLvSL23nOGQJx8DP5aI9DLAbnTGhKs8=
 X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
-Subject: [RFC PATCH v2 08/21] psci: Fix the function type for psci_initcall_t
+Subject: [RFC PATCH v2 13/21] treewide: Drop WARN_ON_FUNCTION_MISMATCH
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -86,29 +86,71 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Functions called through a psci_initcall_t pointer all have
-non-const arguments. Fix the type definition to avoid tripping
-indirect call checks with CFI_CLANG.
+CONFIG_CFI_CLANG no longer breaks cross-module function address
+equality, which makes WARN_ON_FUNCTION_MISMATCH unnecessary. Remove
+the definition and switch back to WARN_ON_ONCE.
 
-Reported-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- drivers/firmware/psci/psci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/asm-generic/bug.h | 16 ----------------
+ kernel/kthread.c          |  3 +--
+ kernel/workqueue.c        |  2 +-
+ 3 files changed, 2 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-index cfb448eabdaa..6554bf4b8c99 100644
---- a/drivers/firmware/psci/psci.c
-+++ b/drivers/firmware/psci/psci.c
-@@ -521,7 +521,7 @@ static int __init psci_probe(void)
- 	return 0;
- }
+diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
+index ba1f860af38b..4050b191e1a9 100644
+--- a/include/asm-generic/bug.h
++++ b/include/asm-generic/bug.h
+@@ -220,22 +220,6 @@ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
+ # define WARN_ON_SMP(x)			({0;})
+ #endif
  
--typedef int (*psci_initcall_t)(const struct device_node *);
-+typedef int (*psci_initcall_t)(struct device_node *);
+-/*
+- * WARN_ON_FUNCTION_MISMATCH() warns if a value doesn't match a
+- * function address, and can be useful for catching issues with
+- * callback functions, for example.
+- *
+- * With CONFIG_CFI_CLANG, the warning is disabled because the
+- * compiler replaces function addresses taken in C code with
+- * local jump table addresses, which breaks cross-module function
+- * address equality.
+- */
+-#if defined(CONFIG_CFI_CLANG) && defined(CONFIG_MODULES)
+-# define WARN_ON_FUNCTION_MISMATCH(x, fn) ({ 0; })
+-#else
+-# define WARN_ON_FUNCTION_MISMATCH(x, fn) WARN_ON_ONCE((x) != (fn))
+-#endif
+-
+ #endif /* __ASSEMBLY__ */
  
- /*
-  * PSCI init function for PSCI versions >=0.2
+ #endif
+diff --git a/kernel/kthread.c b/kernel/kthread.c
+index 50265f69a135..dfeb87876b4a 100644
+--- a/kernel/kthread.c
++++ b/kernel/kthread.c
+@@ -1050,8 +1050,7 @@ static void __kthread_queue_delayed_work(struct kthread_worker *worker,
+ 	struct timer_list *timer = &dwork->timer;
+ 	struct kthread_work *work = &dwork->work;
+ 
+-	WARN_ON_FUNCTION_MISMATCH(timer->function,
+-				  kthread_delayed_work_timer_fn);
++	WARN_ON_ONCE(timer->function != kthread_delayed_work_timer_fn);
+ 
+ 	/*
+ 	 * If @delay is 0, queue @dwork->work immediately.  This is for
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 0d2514b4ff0d..18c1a1c09684 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -1651,7 +1651,7 @@ static void __queue_delayed_work(int cpu, struct workqueue_struct *wq,
+ 	struct work_struct *work = &dwork->work;
+ 
+ 	WARN_ON_ONCE(!wq);
+-	WARN_ON_FUNCTION_MISMATCH(timer->function, delayed_work_timer_fn);
++	WARN_ON_ONCE(timer->function != delayed_work_timer_fn);
+ 	WARN_ON_ONCE(timer_pending(timer));
+ 	WARN_ON_ONCE(!list_empty(&work->entry));
+ 
 -- 
 2.36.0.550.gb090851708-goog
 
