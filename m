@@ -2,98 +2,197 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4D4C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 12 May 2022 21:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D24C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 13 May 2022 15:44:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358906AbiELVyw (ORCPT
+        id S1382194AbiEMPop (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 12 May 2022 17:54:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46396 "EHLO
+        Fri, 13 May 2022 11:44:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358996AbiELVyh (ORCPT
+        with ESMTP id S1382192AbiEMPol (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 12 May 2022 17:54:37 -0400
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B87BE54BE1
-        for <linux-hardening@vger.kernel.org>; Thu, 12 May 2022 14:54:36 -0700 (PDT)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-2f83983782fso72140267b3.6
-        for <linux-hardening@vger.kernel.org>; Thu, 12 May 2022 14:54:36 -0700 (PDT)
+        Fri, 13 May 2022 11:44:41 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67CCE3B00B
+        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 08:44:38 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id c1-20020a17090a558100b001dca2694f23so8124959pji.3
+        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 08:44:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K1VU58MHQqP+/7H+d1w/E+L2ZvFeIXOvlm41/oypmL0=;
-        b=sOYt/Gx0hkqvhlgblLEO/HYJxZTdK226ravqNQqKOZQ4UJ5y4ThWbN3ehEwwngDlYf
-         11tzgbu0WDOYcy1r8mukQ0ovGT+JvnNid4hvM/mwJSBL9p6kxhhMPl1VxGiE1H/Brvx6
-         sapouRkIaz3YQWLwT6VqH4XBSxiLo/uPAiRrSo/Sc0ntI2pRCWlzprmHwvostLXD2a1k
-         qhLlOWMG5cY3OqsqNkLjwCh4XSsVHyjdQAiYDfTxJxahxf6nPPoJvTrjufeZHC9GpGfR
-         af8bi9WIHNWL/KF5rHUcdbfZUiKC9vjY0PXp3N2S78bHVYiW6GXw6Cvfpo82kcxnTVm/
-         Ec4w==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ptf+f5eGDE5JGEu9b++jcke6m+bu7vV+b5hUvmlYQQo=;
+        b=SjhK1c9Qotr1qDOqwKlBj3Rw1mlIdcXMiMnONLsDWXIlWQego7JtnDd+2u8lNhcb5o
+         VntS/+cGhwP5NiXqFa0xo4Eurcd+QW1c6ntV0GvlsEyq5axRcQY1ctFnycyCWVGns4We
+         RoLfLtxqMSNKYzeck8DbrFFmqTXggtzGcj49k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K1VU58MHQqP+/7H+d1w/E+L2ZvFeIXOvlm41/oypmL0=;
-        b=m1SZIr4TlYnE0T0OVB0Fr3PhzV80i9ScqXvHkKCvsQfJe/u4FdVYqSS9dt2j4JGwia
-         6oyYZwXBYxFtCkKuvyIi+c7nWdH3jal5Tr0lDoPntfnBF3ckBwkrByQIu7cavfR55U8p
-         0QR8ifdvAaoXfJJuZdw3xIo/FJ+9qIw6kaA8WpzRGnaY0IjdeDWuGRCvTefTagGlH5yI
-         nT4cr5ICQNIW3Y7+5ticWy22wnBzIpLieLid4dTCGEbfzcpsg38X8yYZDtJpeFTJSczl
-         yqlfU6k/2r4SnYiApwnDj5t8tXf8xZ3h9R0e/b1jDYTp3v0Zc6+aIL4bbs8WQPOE9mlU
-         QSxQ==
-X-Gm-Message-State: AOAM531myCmxSAHsO5g+zfR2slVn8L2Vtzw0lEvpej3eeiGlR+wA2WDi
-        LBHix0fXiz1VfbNk+MVIbNfJ2zO1BPM2zFoEOvhSqw==
-X-Google-Smtp-Source: ABdhPJzvEO0jiVxrIG+1xE2X6cZ/BJG2CWgwTmUY1c9wQnpnOTd/I357N8dayLCf00VtX03B0P1jTijf3GPai6A5/ak=
-X-Received: by 2002:a81:1d48:0:b0:2f1:8ebf:25f3 with SMTP id
- d69-20020a811d48000000b002f18ebf25f3mr2377894ywd.118.1652392475988; Thu, 12
- May 2022 14:54:35 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ptf+f5eGDE5JGEu9b++jcke6m+bu7vV+b5hUvmlYQQo=;
+        b=SYsDDfp9Uk5s8uyAfBEe2tWFZ/u0Zu0I7UwFtjMByYqpj6heXTkUUecMD0rpdkiRRX
+         nfU4Mhk77POnd+0Vai1ky33QiFLiWOqUfg9N+TvBQHt7wEyCQwnQ+y9ObXWHeQ45pvQP
+         CprnenipEwOJDgb7609yQl73EAGiHsNzIIyStikXycqwboH0zG65T2/A7X8dsLVvuYi3
+         mKZ6DvVMXwmKwrHhXmgVrgP5+ifdKxqOnD2HKzYhrmo0M1If6BRZ0OKrzR3n9+1HjcKs
+         rrUs/vNkTsSoO0dnfYKCOPqMnl4n7AZLWvzd1dkd0P2nRUkHvASeRafg5EZxbRKyfjKM
+         tkjg==
+X-Gm-Message-State: AOAM53013GiahIMI9TC9Nj572oz0kD+VQLHKVioPLHq6CwHFRpJnxHl6
+        AqPYioVpvTxtY3/cVbKaYAX2tQ==
+X-Google-Smtp-Source: ABdhPJxasBICZO798rz+17+y+t9nZitCCqENVQI5RwTabPKWbsVJ7C2OmZDJ+yTA2ILgpXFaCw37jw==
+X-Received: by 2002:a17:902:ecc8:b0:15e:9e46:cb7e with SMTP id a8-20020a170902ecc800b0015e9e46cb7emr5389423plh.111.1652456677896;
+        Fri, 13 May 2022 08:44:37 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q6-20020a170902a3c600b0015e8d4eb1c9sm2059662plb.19.2022.05.13.08.44.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 May 2022 08:44:37 -0700 (PDT)
+Date:   Fri, 13 May 2022 08:44:33 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        linux-afs@lists.infradead.org, Alexei Starovoitov <ast@kernel.org>,
+        alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Andy Lavr <andy.lavr@gmail.com>,
+        Arend van Spriel <aspriel@gmail.com>,
+        Baowen Zheng <baowen.zheng@corigine.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Bradley Grove <linuxdrivers@attotech.com>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        Christian Brauner <brauner@kernel.org>,
+        Christian =?iso-8859-1?Q?G=F6ttsche?= <cgzones@googlemail.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Chris Zankel <chris@zankel.net>,
+        Cong Wang <cong.wang@bytedance.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Gow <davidgow@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        devicetree@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Eli Cohen <elic@nvidia.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Francis Laniel <laniel_francis@privacyrequired.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gregory Greenman <gregory.greenman@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Hulk Robot <hulkci@huawei.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        John Keeping <john@metanate.com>,
+        Juergen Gross <jgross@suse.com>, Kalle Valo <kvalo@kernel.org>,
+        Keith Packard <keithp@keithp.com>, keyrings@vger.kernel.org,
+        kunit-dev@googlegroups.com,
+        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux1394-devel@lists.sourceforge.net,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, llvm@lists.linux.dev,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Louis Peens <louis.peens@corigine.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Nathan Chancellor <nathan@kernel.org>, netdev@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Rich Felker <dalias@aerifal.cx>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>, selinux@vger.kernel.org,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        SHA-cyfmac-dev-list@infineon.com,
+        Simon Horman <simon.horman@corigine.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Tadeusz Struk <tadeusz.struk@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
+        Udipto Goswami <quic_ugoswami@quicinc.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        wcn36xx@lists.infradead.org, Wei Liu <wei.liu@kernel.org>,
+        xen-devel@lists.xenproject.org,
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        Yang Yingliang <yangyingliang@huawei.com>
+Subject: Re: [PATCH 19/32] afs: Use mem_to_flex_dup() with struct afs_acl
+Message-ID: <202205130841.686F21B64@keescook>
+References: <20220504014440.3697851-20-keescook@chromium.org>
+ <20220504014440.3697851-1-keescook@chromium.org>
+ <898803.1652391665@warthog.procyon.org.uk>
 MIME-Version: 1.0
-References: <20220419211658.11403-1-apais@linux.microsoft.com>
- <20220419211658.11403-2-apais@linux.microsoft.com> <353023ba-d506-5d45-be68-df2025074ed6@kernel.org>
- <3ee366a7-e61f-e513-aa2f-12e8d5316f3c@embeddedor.com> <YmpedDjzZXz2t6NS@smile.fi.intel.com>
- <DA101ED8-F99F-4DCB-9CB7-370A62C44B65@linux.microsoft.com>
-In-Reply-To: <DA101ED8-F99F-4DCB-9CB7-370A62C44B65@linux.microsoft.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 May 2022 23:54:23 +0200
-Message-ID: <CACRpkdadjPn82G4TMKyyQtkju=oA4EX=GNxs8KRtrQ7CcqVOog@mail.gmail.com>
-Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
-To:     Allen Pais <apais@linux.microsoft.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        olivier.dautricourt@orolia.com, sr@denx.de,
-        Vinod Koul <vkoul@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, ludovic.desroches@microchip.com,
-        tudor.ambarus@microchip.com, f.fainelli@gmail.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, nsaenz@kernel.org,
-        paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com,
-        gustavo.pimentel@synopsys.com, vireshk@kernel.org,
-        leoyang.li@nxp.com, zw@zh-kernel.org, wangzhou1@hisilicon.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de,
-        sean.wang@mediatek.com, matthias.bgg@gmail.com, afaerber@suse.de,
-        mani@kernel.org, logang@deltatee.com, sanju.mehta@amd.com,
-        daniel@zonque.org, haojian.zhuang@gmail.com,
-        robert.jarzmik@free.fr, agross@kernel.org,
-        bjorn.andersson@linaro.org, krzysztof.kozlowski@linaro.org,
-        green.wan@sifive.com, orsonzhai@gmail.com, baolin.wang7@gmail.com,
-        zhang.lyra@gmail.com, patrice.chotard@foss.st.com, wens@csie.org,
-        jernej.skrabec@gmail.com, samuel@sholland.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <898803.1652391665@warthog.procyon.org.uk>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, May 6, 2022 at 7:43 PM Allen Pais <apais@linux.microsoft.com> wrote:
+On Thu, May 12, 2022 at 10:41:05PM +0100, David Howells wrote:
+> 
+> Kees Cook <keescook@chromium.org> wrote:
+> 
+> >  struct afs_acl {
+> > -	u32	size;
+> > -	u8	data[];
+> > +	DECLARE_FLEX_ARRAY_ELEMENTS_COUNT(u32, size);
+> > +	DECLARE_FLEX_ARRAY_ELEMENTS(u8, data);
+> >  };
+> 
+> Oof...  That's really quite unpleasant syntax.  Is it not possible to have
+> mem_to_flex_dup() and friends work without that?  You are telling them the
+> fields they have to fill in.
 
->  - Concerns regarding throughput, would workqueues be as efficient as tasklets (Vinod)
+Other threads discussed this too. I'm hoping to have something more
+flexible (pardon the pun) in v2.
 
-You need to ask the scheduler people about this.
+> [...]
+> or:
+> 
+> 	ret = mem_to_flex_dup(&acl, buffer, size, GFP_KERNEL);
+> 	if (ret < 0)
+> 
+> (or use != 0 rather than < 0)
 
-The workqueues goes deep into the scheduler and I can't make
-out how they are prioritized, but they are certainly not treated
-like any other task.
+Sure, I can make the tests more explicit. The kerndoc, etc all shows it's
+using < 0 for errors.
 
-Yours,
-Linus Walleij
+-- 
+Kees Cook
