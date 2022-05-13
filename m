@@ -2,69 +2,69 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FF8C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 13 May 2022 20:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB1BC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 13 May 2022 20:22:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384119AbiEMUWJ (ORCPT
+        id S1384124AbiEMUWP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 13 May 2022 16:22:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42798 "EHLO
+        Fri, 13 May 2022 16:22:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384108AbiEMUWH (ORCPT
+        with ESMTP id S1384121AbiEMUWJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 13 May 2022 16:22:07 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 060DB154F90
-        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:07 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2d7eaa730d9so81517467b3.13
-        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:06 -0700 (PDT)
+        Fri, 13 May 2022 16:22:09 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50762158F8C
+        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:09 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id g26-20020a25b11a000000b0064984a4ffb7so8208163ybj.7
+        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=dq5ya0HLbqhoGaxybMwD+u455UO61ysiO/Cn6SCUV4E=;
-        b=QhvLqyQ7SGkhcJcmlPcAMvH4X9HlQFOiCjtBh/sxV7YFuCJ87i5PkY99k8mpn88Z7L
-         bAJHA6Yi+ZPZn6RvkqV/eFGCG1px4tIYEl7/NiOpU+6qbrDMEZhC+SRZjcWXz+crVMyB
-         k89fvJN/FDgzHnNowBikxn+RDEi5rz5cjkFzu4OdcmLuH5qG5wD0z0VtWR17tHJLAXz6
-         D/UCknaW80Q18TX1vss3qORW2jhII4B6rQkGv+V6pGg9zIzJdJU8oSKhfhM1q13nyTu0
-         RtKAlKqIMYJgUOayt2WSeBxXLwmjgEC/4qZ7cyJ+5su7ftJjYIt4dwxMI94GP5ohXkvi
-         VOKA==
+        bh=IxHEer1R7aVI+23m0/FmYa+I+TASlrgBBKCjzC35/is=;
+        b=OxMA8KuHb8XyzEjNcQew0ArZPh+FVcPLuUudPe8Jic4JWJ2qN0iVlwiAZZSV9Gtzwv
+         7HrYwsvduCROdph8yijbuUGSiOimDaejwPHZbVJ1M734lxldw057vMrtMmT4JDtTWicN
+         LFtVcyF/iv6fifWYUO8WReZUA0eigVeQwl1sgTgmQEQ2c5FaP2Mr+ePC13K4wuaZayO1
+         d8+lzT59gwHtCXP+id4mRPGTa9D7RNmpX55+YjUZbLnUUDJp3++JVBGJgL1r3FL1rFgD
+         9c/LZv5mImy0vO1Qkn8xvEDuDTkaHE5SP9oiguHQSFWAB0RU+W3gKv3DkAA64d0G0jNq
+         TI0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=dq5ya0HLbqhoGaxybMwD+u455UO61ysiO/Cn6SCUV4E=;
-        b=vn1XTvaMKaq+fxFgqYxtjoMA8BwLBzX5G+7titVkBju19Tx3+us1y+Pk2KRQmx7V02
-         0zyiwZ2Dd6AU2J+s634EDaxXVmNzwh41A0K5UQJ2MklhT84y4D9ViKxMhw0HU5CKClbB
-         U2L3WGACRSvYYA2hnKLl8tpAz4e+/mntiHqGDYLXYTltWirEGM9j3lb77Z2J4KoiWqFZ
-         Vsfl08/2p1k7G5QSv0HvGy9g5SK1BPyKpvgKVfHMXiwDTFHLU7jue/CiMomJ84Wnwh3Y
-         RnhQizKEpIdCLJvkYLY2ZY+/E4c9yFB5MSAS3w5rQrq/uyPHGRq1rqvzG57cQE368rHA
-         O2sQ==
-X-Gm-Message-State: AOAM530/RTL1plKhu5JX5UyfDnNkP1PjAMVpTAgbEcPxe19ss8nIs3qI
-        4QFfjpJY+xESDuSDnoAWzOUo0sR/NbOSgoFwt2U=
-X-Google-Smtp-Source: ABdhPJx6nPe/UG4ioi9xxrUNrDLMncxESewxC/vESjwPAZ8T0UiRXU3Rn9QJIYSuvrV9TPZrXKmlIeVohGiRmaBJe18=
+        bh=IxHEer1R7aVI+23m0/FmYa+I+TASlrgBBKCjzC35/is=;
+        b=5psJTPkqDPEDSufKasRypzlfmIF59VNrLp8HMG6NU2DbxuDFYiISc0vXWEctj0wZrA
+         7Ga8GPK16HIqFcjWAc4bdYOsNsuySu5K3NsmSZoT+9/+RZJmDsdBndbfTlSixPTg6FXR
+         okR++1FSiQqNXdCU8ueS2XFdPutBpEGmTYtNHN4Z9imQa6laZKWCKfW162kPyQqyLNPn
+         9wJp0DSkc5MYUE55Y6ox36fidCT1RNXhmPAhWhEkT9J/IlkULwBFDVryMeJsFobcPpeA
+         S8QwisNgIB2fU96WMAA6qKjSDT7XajEznp0Ti0abM4xV71fnk7OdY6v8z57OEvn4GjOe
+         DHeQ==
+X-Gm-Message-State: AOAM532WAphs8hDu/o7dqnio3Ypg76Cf6+2oA+snpskMQ17vyYUjhgO9
+        PUzb34+zBR35G9mkIcm3EBuLSKCNTgQoh1QR3DU=
+X-Google-Smtp-Source: ABdhPJzUS09TySpKZNXM6m4ea8HNMDMOfILnzeEqlsd04WIi/iMakGhB41x1yNg+3tqOE5zhpyksH9HH+6A5s0pmUMM=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:e0:c17e:c2dc:13eb])
- (user=samitolvanen job=sendgmr) by 2002:a25:d1d7:0:b0:64b:6193:cd6d with SMTP
- id i206-20020a25d1d7000000b0064b6193cd6dmr6849614ybg.149.1652473326244; Fri,
- 13 May 2022 13:22:06 -0700 (PDT)
-Date:   Fri, 13 May 2022 13:21:40 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a81:5607:0:b0:2db:c245:5ff4 with SMTP
+ id k7-20020a815607000000b002dbc2455ff4mr7860740ywb.244.1652473328452; Fri, 13
+ May 2022 13:22:08 -0700 (PDT)
+Date:   Fri, 13 May 2022 13:21:41 -0700
 In-Reply-To: <20220513202159.1550547-1-samitolvanen@google.com>
-Message-Id: <20220513202159.1550547-3-samitolvanen@google.com>
+Message-Id: <20220513202159.1550547-4-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20220513202159.1550547-1-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=988; h=from:subject;
- bh=RNVQHrlEA9fX91aGJUv17nzO52aQ646VsAxq7TYCVmE=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBifr3isUdSjjLVv9wzgpsbojWEfNbcYqclULDOWDcw
- kQXpx/yJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYn694gAKCRBMtfaEi7xW7p9EC/
- 9JO2MwCu1MjbT8Exc52X4QzT9yYK9ojOtmr6WsnYMtpgxHa2q1EE6j+R5DjIqzA+m2ZWPHkY8SrMeG
- ZrpJnTHJPvFOmOV9L+KDF1UT+Vgo2YVrHJuQqxkraewUIudUDq4Bab1FpnWkPZ4QtwJ9xuzKjcnA12
- rUIsUKiEhUi1G12cNkjH+aGc4Ny0YP4T2rz89dMrdARLVOHhRPupWfkUNfNVLrIlXbnof/ZCCjhJz1
- /gosCtk/66Q2tgY9KlHpacjuBslmTAN6blKpml6eqY1jRO1Hqa6ScjNXsr7+p5muSKkIRmxw1nPydt
- uEjXwjPlU5Ruc4YYTkRQ1SHEvAY/KmfK1bxhTW2zqyS909mhqMUEKaAw+n3DCzcCfosyD9GzAspMLK
- SZA/KsxdlXzjUxfsDSQMVqyc7AOnO30FS+TtKeAMlZU6kbhpl6I1yJyRW4cejjllmWB/ynZIDhDZTJ
- mZiNpwrFr0PQBQTYS1f63TSat1c1BfyDD5IZxeq1F4sM0=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=669; h=from:subject;
+ bh=nqUrm2wetpzQHlcH5NE19NaoXqu5E22beF1fMMwNKYU=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBifr3iMv7g14dMbgfDCXDLb8bbUgmfd0gW8V9AeL1O
+ zzXtTTuJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYn694gAKCRBMtfaEi7xW7iEdDA
+ CI6z4FnJ7PlqvcN6HOYf/c+XXnT7MWbgCS2HoVv2P8QoFQ7TpgbvN9zIdJ2RqY6xEuuz3emRk6Ah6L
+ m3BDCj8zH2JvuDhGU8CvazPYASgz94v/HBmS7NVikbjwkqCaqgwWglXdD2apJxu5anZhqnCpft8QPP
+ bsIYUu1URvNbcxZKEGTmZ+CfaHo8s7SG6cXjrxevYWrVVsTwtujQ9JyLn0OoTcm/Fz7e+vQTkJ8h83
+ tVq2x9/I247t3sHmmcB9KPidgRSvcn1f9jJq0P1G7rSEDpVyZu2g0xj0mridXoViXt4rnsB3q1jmCE
+ BVikAZnVI/yfasdkpS9g3uH/FygOBkKSfIT27/K+DLNc7XcLJJfDlhBepjYoQ2RwC0/vfOhr+7iq8Z
+ S6gs/HjMHr5L+Y77qMjwRSwMNE2rdV+mTed4i9qBwlRWYaCWx3uwygO/JhgxJmegZ36M5eaQI+mxtd
+ OYZMFi5iejcuHT5TOPjKY0v8Ia7ODn5SOlEwOFOqDPNMs=
 X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
-Subject: [RFC PATCH v2 02/21] arm64/vdso: Filter out CC_FLAGS_CFI
+Subject: [RFC PATCH v2 03/21] kallsyms: Ignore __kcfi_typeid_
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -86,28 +86,26 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Explicitly filter out CC_FLAGS_CFI in preparation for the flags being
-removed from CC_FLAGS_LTO.
+The compiler generates CFI type identifier symbols for annotating
+assembly functions at link time. Ignore them in kallsyms.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/arm64/kernel/vdso/Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ scripts/kallsyms.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
-index 172452f79e46..6c26e0a76a06 100644
---- a/arch/arm64/kernel/vdso/Makefile
-+++ b/arch/arm64/kernel/vdso/Makefile
-@@ -33,7 +33,8 @@ ccflags-y += -DDISABLE_BRANCH_PROFILING -DBUILD_VDSO
- # the CFLAGS of vgettimeofday.c to make possible to build the
- # kernel with CONFIG_WERROR enabled.
- CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) -Os $(CC_FLAGS_SCS) $(GCC_PLUGINS_CFLAGS) \
--				$(CC_FLAGS_LTO) -Wmissing-prototypes -Wmissing-declarations
-+				$(CC_FLAGS_LTO) $(CC_FLAGS_CFI) \
-+				-Wmissing-prototypes -Wmissing-declarations
- KASAN_SANITIZE			:= n
- KCSAN_SANITIZE			:= n
- UBSAN_SANITIZE			:= n
+diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
+index 8caabddf817c..eebd02e4b832 100644
+--- a/scripts/kallsyms.c
++++ b/scripts/kallsyms.c
+@@ -118,6 +118,7 @@ static bool is_ignored_symbol(const char *name, char type)
+ 		"__ThumbV7PILongThunk_",
+ 		"__LA25Thunk_",		/* mips lld */
+ 		"__microLA25Thunk_",
++		"__kcfi_typeid_",	/* CFI type identifiers */
+ 		NULL
+ 	};
+ 
 -- 
 2.36.0.550.gb090851708-goog
 
