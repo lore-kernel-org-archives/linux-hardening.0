@@ -2,69 +2,69 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 746FCC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 13 May 2022 20:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41240C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 13 May 2022 20:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384211AbiEMUXK (ORCPT
+        id S1384222AbiEMUXM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 13 May 2022 16:23:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43200 "EHLO
+        Fri, 13 May 2022 16:23:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384222AbiEMUWq (ORCPT
+        with ESMTP id S1384168AbiEMUWm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 13 May 2022 16:22:46 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58F3817857F
-        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:30 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2f7c5767f0fso81488287b3.4
-        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:30 -0700 (PDT)
+        Fri, 13 May 2022 16:22:42 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEBA71611D0
+        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:16 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2f902276272so80455177b3.21
+        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=pKueGfTY/goVznJAZHYRfYoVZQS7FwsuWNl2D1WQxOc=;
-        b=AicD+aVMHbyUQgelDu/u1R/RkuImfZ3NGDh4a/dhInL4LzdUJxQBUWHXlNlcacf0eI
-         CegXrZ2hbEYHxCUPYInEXPizy12BBQI2p1qyscoH6IJ4i67DbcWl83hZ0URoR1t83ocY
-         c46yJ7P8M3Or0ilkvKBy91bhCu6kDnwYsiF04Im92neNmb6JP6jzyBds6Mv6f8qqAhbl
-         oITe/nj0cScYIxxAw+C2IhHsj3Xs9ByKn4k4SHBna424pWvxrFdSR/60KXeg7yESas/W
-         iOC1TWXB+03qjcnLDnZSLHddRJ8TkQYFlQZLdByDZojTADJhNpC7XlLuaG4fErPLqiX2
-         soxw==
+         :cc:content-transfer-encoding;
+        bh=pCLU/hXWpDFHII+5GFPvqWhTC0IvLx0cTjkTj7lZmbc=;
+        b=Mjo3Zg4GXcSEYygFB3gUeYErey3L9NNmSyjOIi18QzNpHfJy9bulp3ty3kddEgJ9J4
+         OPopww/RNZMAY9EqNOt8UF/ur5jA4xe6Vl4e4J9AaOMr5Cvr53O0MDj9V6zOuahgukPh
+         whNbmEtNYcTwmi5ExvRm3P7wuEcc3XI3iMrUTv/+vhWbGaJN7D8iBsSS8Yiv4aD4qdX2
+         RR4Phvjc5oomZsk9nHp90Pe1Hzk3aTdyy6u1oGKYCyAyoFiiPohavnqrLuMge9o3occh
+         IY17V2npSM/kSAcnAxOw8PLdxW+pSd5E2wi75qbJAw0bn5FUPhJZUWJItdmmZ+cDRi4X
+         jEhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=pKueGfTY/goVznJAZHYRfYoVZQS7FwsuWNl2D1WQxOc=;
-        b=uKAzzVueUkgLzIy4xHetkgjIDS9pNrKVtMZujxt905J8tefF94bYZkSZ7Ko27CwUiD
-         OlmxWn073zU0E2PuHsWejsb8n7GHv4Gi4svJmQ4hlkmNOzaUxZdrtmiYJSWkD5K4L3nq
-         oGmaIkXujuvXVKN13K3yY9Cg9QQPHKSgoxoMXNUuHqRVkmSAt2/In0dDUF2SrXLKAOe3
-         7kGCCNyLXmKVIpRTL/cf7oRNfaFUWfAGIHw/srFX6HFmd8JJ1TDvG5IB3e2KT8BWZEgV
-         xpZwzdJs2qR2Qq2gFVpdmgVfQv0tygAonJPSzTanDB6D/Jtz/pjpOvn9IzAyky+CUgta
-         3vOw==
-X-Gm-Message-State: AOAM5317rxT0gXnJYrVY3Gr5ITfksqV5rFHwPeLEcHRiFNJ1z4CW/02W
-        LwKYR019t4HwJK6EPIwgDjpV2MQCtn2vGG1etVA=
-X-Google-Smtp-Source: ABdhPJy5NerZ1QnDRY0rssJnyjhliebRM5u8sYM6yAbU5xicftCyA+akr+zUPpxv5UkC8ZHwoVf/gQSETw7HtPBynIE=
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=pCLU/hXWpDFHII+5GFPvqWhTC0IvLx0cTjkTj7lZmbc=;
+        b=V6zveo3NzSlMTSv8j4xVQ7cxVErVNucnzxcQpwWgDHaeOUx/a3sD89E05fiUJJxbVY
+         J0tqRvavE/b3s03QIO89tPxTnSxGg3/ypAjJauvqsxprEaMEYzvYPeWHyOCqHeAFmRc7
+         GghpmEgBijYPY/15VQsioWOWHgD72k/jySTMRDU+Rr/asFXhGFPni83uZEqQeJ8Rk5vs
+         FzyKftJ3Aiqu6mfvqmDki4LTYY8tv+f1MlwMLoojTWl1FJzSseHKCSUjZQgttLPBi9xG
+         spATsT6BkDm/O2bPRonb0q2LjDRl5ceVSrdcPvD6bfDTv4wvbAPOF5G0z6wjjUfBaZHR
+         bNlw==
+X-Gm-Message-State: AOAM533c5l02f0PoE9TMJNgR68nRrzN/BnQQLXHsy7kalXuKGpBu02M6
+        NJ8R85CCoXetxGQARZyLoMSE/L9rohhq8zRRCmc=
+X-Google-Smtp-Source: ABdhPJy565vLDtoozxUDDhWLLpuoP38XA6FVRX2KCRBMjTPvFI8LzIegV3p504NDk/E/gB0tUPauPneqNQ2rk7e5uq8=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:e0:c17e:c2dc:13eb])
- (user=samitolvanen job=sendgmr) by 2002:a25:1f85:0:b0:64b:a5fc:e881 with SMTP
- id f127-20020a251f85000000b0064ba5fce881mr3747683ybf.514.1652473349990; Fri,
- 13 May 2022 13:22:29 -0700 (PDT)
-Date:   Fri, 13 May 2022 13:21:50 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a0d:d0c1:0:b0:2dc:5950:c72f with SMTP
+ id s184-20020a0dd0c1000000b002dc5950c72fmr7381095ywd.185.1652473335511; Fri,
+ 13 May 2022 13:22:15 -0700 (PDT)
+Date:   Fri, 13 May 2022 13:21:44 -0700
 In-Reply-To: <20220513202159.1550547-1-samitolvanen@google.com>
-Message-Id: <20220513202159.1550547-13-samitolvanen@google.com>
+Message-Id: <20220513202159.1550547-7-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20220513202159.1550547-1-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8359; h=from:subject;
- bh=GtdEXeDqgjL7YUExR6pdSdJ+hG7BYB7rjNpqb21+UBA=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBifr3kPJP7OmlNlPlbiAOhG3bHnMXk3ULzMmONyfdc
- R6B9+SOJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYn695AAKCRBMtfaEi7xW7gLlC/
- 9ZqJK6Kjg5kn0Elz0CwXBy+P8cvualdfbnv3PcNfhsDu066XR3fGQzuwjfeTr0eiD/FRQZ7YUprO8d
- jcsKq+FhrcyaqCWDqG2iGCsZTMBWsYjsfakU0qhXmG3kTJCtm/tg09JcqIJW5CkA7k2lYo8c694yFt
- qbUJDc2cvKyZAXyO0EhZvHWc0I6H7b8rj1tpJmEgmEtCWqxAAyYAOdDsFBZC5tIEe41ao4EfDqxdd7
- kKSabDZgPqthIulZjR+830BQxel97CM4e522nqvu10rk5bVTjilOfbX5B9JxHNALN4a6NhBRNjHVi4
- iI04qnAKyKPXlXOoqvJuhTAthCuHBKhRTzqQ6yhQK3SBwxL37jqittFUoRUBzEQeGP2ufp6vVAn0dk
- NjiZ7sAd8rp2L4G0AzwgXsZPKJmuhj+8wexLnS8d8xz2eCFnz6WdTJB0s56pSbW7x9EJfbeoBjFsjd
- TxOe937WNZgFvk6Fl01Q4sJ7g6aZbD+3bgbs4x4K8HjEs=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=15262; h=from:subject;
+ bh=o6CdCuNcxPwKwpmkpv7p1X90CAdPdvaaWPEtZqzJ3XE=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBifr3j6rhd7VRsqD7zucXreXJ7ZaNf6DPaYMcLutG9
+ 7vnfmlOJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYn694wAKCRBMtfaEi7xW7r0QC/
+ 97uOH7x5RKTU/aAHQLlxOmNegxtd2PtEXwOXGVEKW203D4f6n5MqdBdM2Jj6NLSMS2zVXhO1Ix6JpJ
+ wTeaiv5+oMu5GTzWiYkYpDvT7RugGEiOdwW3lWmrX+/8B0G1XbIZyDkLykymeurzjZcG9L5tDgR8M/
+ jVIirG2M0l5jtzmMmkfqjH/KYcOHCxTwRs2HE0wpmb0SX2Ctpdymw8SuT+vzzGM2KsqQHYJK7Hzob7
+ bA+KuvgvhQgsgA3pvWOEa/nIQ1wAQTaRTsjs8UeV/Uokf6fNitmtiHztvm3oFpMvySBJQLK6fMjD6j
+ aB+WZH+h5FgVTvUVQNkQHy+SZvgJZ1Wn5DgpfZ8Q0GpJbVLszH9dC2dp8j+GR7td5Z61OEJOxELkJl
+ 4R1qr8PF8PdrxXEvDYZkcQig4q/1lsv834hPEbiZMk0Su5+XsWidHS8xX8cCa52ewu1zuR82hnQK2F
+ us/l/jDOQgh5ZvSyIcOZ6nuHO4c6PRKyUK8gB/+FtSfgA=
 X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
-Subject: [RFC PATCH v2 12/21] treewide: Drop function_nocfi
+Subject: [RFC PATCH v2 06/21] cfi: Switch to -fsanitize=kcfi
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -82,215 +82,541 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
         Sami Tolvanen <samitolvanen@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With -fsanitize=kcfi, we no longer need function_nocfi() as
-the compiler won't change function references to point to a
-jump table. Remove all implementations and uses of the macro.
+Switch from Clang's original forward-edge control-flow integrity
+implementation to -fsanitize=3Dkcfi, which is better suited for the
+kernel, as it doesn't require LTO, doesn't use a jump table that
+requires altering function references, and won't break cross-module
+function address equality.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/arm64/include/asm/compiler.h         | 16 ----------------
- arch/arm64/include/asm/ftrace.h           |  2 +-
- arch/arm64/include/asm/mmu_context.h      |  2 +-
- arch/arm64/kernel/acpi_parking_protocol.c |  2 +-
- arch/arm64/kernel/cpufeature.c            |  2 +-
- arch/arm64/kernel/ftrace.c                |  2 +-
- arch/arm64/kernel/machine_kexec.c         |  2 +-
- arch/arm64/kernel/psci.c                  |  2 +-
- arch/arm64/kernel/smp_spin_table.c        |  2 +-
- drivers/firmware/psci/psci.c              |  4 ++--
- drivers/misc/lkdtm/usercopy.c             |  2 +-
- include/linux/compiler.h                  | 10 ----------
- 12 files changed, 11 insertions(+), 37 deletions(-)
+ Makefile                          |  13 +--
+ arch/Kconfig                      |  11 ++-
+ include/asm-generic/vmlinux.lds.h |  37 ++++-----
+ include/linux/cfi.h               |  35 +++++++--
+ include/linux/compiler-clang.h    |   6 +-
+ include/linux/module.h            |   6 +-
+ kernel/cfi.c                      | 126 ++++++++++++++----------------
+ kernel/module.c                   |  34 +-------
+ scripts/module.lds.S              |  23 +-----
+ 9 files changed, 128 insertions(+), 163 deletions(-)
 
-diff --git a/arch/arm64/include/asm/compiler.h b/arch/arm64/include/asm/compiler.h
-index dc3ea4080e2e..6fb2e6bcc392 100644
---- a/arch/arm64/include/asm/compiler.h
-+++ b/arch/arm64/include/asm/compiler.h
-@@ -23,20 +23,4 @@
- #define __builtin_return_address(val)					\
- 	(void *)(ptrauth_clear_pac((unsigned long)__builtin_return_address(val)))
- 
--#ifdef CONFIG_CFI_CLANG
--/*
-- * With CONFIG_CFI_CLANG, the compiler replaces function address
-- * references with the address of the function's CFI jump table
-- * entry. The function_nocfi macro always returns the address of the
-- * actual function instead.
-- */
--#define function_nocfi(x) ({						\
--	void *addr;							\
--	asm("adrp %0, " __stringify(x) "\n\t"				\
--	    "add  %0, %0, :lo12:" __stringify(x)			\
--	    : "=r" (addr));						\
--	addr;								\
--})
--#endif
+diff --git a/Makefile b/Makefile
+index 2284d1ca2503..8439551954f1 100644
+--- a/Makefile
++++ b/Makefile
+@@ -915,18 +915,7 @@ export CC_FLAGS_LTO
+ endif
+=20
+ ifdef CONFIG_CFI_CLANG
+-CC_FLAGS_CFI	:=3D -fsanitize=3Dcfi \
+-		   -fsanitize-cfi-cross-dso \
+-		   -fno-sanitize-cfi-canonical-jump-tables \
+-		   -fno-sanitize-trap=3Dcfi \
+-		   -fno-sanitize-blacklist
 -
- #endif /* __ASM_COMPILER_H */
-diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
-index 1494cfa8639b..c96d47cb8f46 100644
---- a/arch/arm64/include/asm/ftrace.h
-+++ b/arch/arm64/include/asm/ftrace.h
-@@ -26,7 +26,7 @@
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
- #define ARCH_SUPPORTS_FTRACE_OPS 1
- #else
--#define MCOUNT_ADDR		((unsigned long)function_nocfi(_mcount))
-+#define MCOUNT_ADDR		((unsigned long)_mcount)
+-ifdef CONFIG_CFI_PERMISSIVE
+-CC_FLAGS_CFI	+=3D -fsanitize-recover=3Dcfi
+-endif
+-
+-# If LTO flags are filtered out, we must also filter out CFI.
+-CC_FLAGS_LTO	+=3D $(CC_FLAGS_CFI)
++CC_FLAGS_CFI	:=3D -fsanitize=3Dkcfi
+ KBUILD_CFLAGS	+=3D $(CC_FLAGS_CFI)
+ export CC_FLAGS_CFI
+ endif
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 625db6376726..f179170cb422 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -720,14 +720,13 @@ config ARCH_SUPPORTS_CFI_CLANG
+ 	  An architecture should select this option if it can support Clang's
+ 	  Control-Flow Integrity (CFI) checking.
+=20
++config ARCH_USES_CFI_TRAPS
++	bool
++
+ config CFI_CLANG
+ 	bool "Use Clang's Control Flow Integrity (CFI)"
+-	depends on LTO_CLANG && ARCH_SUPPORTS_CFI_CLANG
+-	# Clang >=3D 12:
+-	# - https://bugs.llvm.org/show_bug.cgi?id=3D46258
+-	# - https://bugs.llvm.org/show_bug.cgi?id=3D47479
+-	depends on CLANG_VERSION >=3D 120000
+-	select KALLSYMS
++	depends on ARCH_SUPPORTS_CFI_CLANG
++	depends on $(cc-option,-fsanitize=3Dkcfi)
+ 	help
+ 	  This option enables Clang=E2=80=99s forward-edge Control Flow Integrity
+ 	  (CFI) checking, where the compiler injects a runtime check to each
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinu=
+x.lds.h
+index 69138e9db787..fcb3c7146a43 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -421,6 +421,22 @@
+ 	__end_ro_after_init =3D .;
  #endif
- 
- /* The BL at the callsite's adjusted rec->ip */
-diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
-index ca0140d0b8cf..8fa4cfbdda90 100644
---- a/arch/arm64/include/asm/mmu_context.h
-+++ b/arch/arm64/include/asm/mmu_context.h
-@@ -164,7 +164,7 @@ static inline void cpu_replace_ttbr1(pgd_t *pgdp)
- 		ttbr1 |= TTBR_CNP_BIT;
- 	}
- 
--	replace_phys = (void *)__pa_symbol(function_nocfi(idmap_cpu_replace_ttbr1));
-+	replace_phys = (void *)__pa_symbol(idmap_cpu_replace_ttbr1);
- 
- 	cpu_install_idmap();
- 	replace_phys(ttbr1);
-diff --git a/arch/arm64/kernel/acpi_parking_protocol.c b/arch/arm64/kernel/acpi_parking_protocol.c
-index bfeeb5319abf..b1990e38aed0 100644
---- a/arch/arm64/kernel/acpi_parking_protocol.c
-+++ b/arch/arm64/kernel/acpi_parking_protocol.c
-@@ -99,7 +99,7 @@ static int acpi_parking_protocol_cpu_boot(unsigned int cpu)
- 	 * that read this address need to convert this address to the
- 	 * Boot-Loader's endianness before jumping.
- 	 */
--	writeq_relaxed(__pa_symbol(function_nocfi(secondary_entry)),
-+	writeq_relaxed(__pa_symbol(secondary_entry),
- 		       &mailbox->entry_point);
- 	writel_relaxed(cpu_entry->gic_cpu_id, &mailbox->cpu_id);
- 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index af78dcacf9fe..5dbe381670a0 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -1619,7 +1619,7 @@ kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
- 	if (arm64_use_ng_mappings)
- 		return;
- 
--	remap_fn = (void *)__pa_symbol(function_nocfi(idmap_kpti_install_ng_mappings));
-+	remap_fn = (void *)__pa_symbol(idmap_kpti_install_ng_mappings);
- 
- 	cpu_install_idmap();
- 	remap_fn(cpu, num_online_cpus(), __pa_symbol(swapper_pg_dir));
-diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
-index 4506c4a90ac1..4128ca6ed485 100644
---- a/arch/arm64/kernel/ftrace.c
-+++ b/arch/arm64/kernel/ftrace.c
-@@ -56,7 +56,7 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
- 	unsigned long pc;
- 	u32 new;
- 
--	pc = (unsigned long)function_nocfi(ftrace_call);
-+	pc = (unsigned long)ftrace_call;
- 	new = aarch64_insn_gen_branch_imm(pc, (unsigned long)func,
- 					  AARCH64_INSN_BRANCH_LINK);
- 
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index e16b248699d5..4eb5388aa5a6 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -204,7 +204,7 @@ void machine_kexec(struct kimage *kimage)
- 		typeof(cpu_soft_restart) *restart;
- 
- 		cpu_install_idmap();
--		restart = (void *)__pa_symbol(function_nocfi(cpu_soft_restart));
-+		restart = (void *)__pa_symbol(cpu_soft_restart);
- 		restart(is_hyp_nvhe(), kimage->start, kimage->arch.dtb_mem,
- 			0, 0);
- 	} else {
-diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
-index ab7f4c476104..29a8e444db83 100644
---- a/arch/arm64/kernel/psci.c
-+++ b/arch/arm64/kernel/psci.c
-@@ -38,7 +38,7 @@ static int __init cpu_psci_cpu_prepare(unsigned int cpu)
- 
- static int cpu_psci_cpu_boot(unsigned int cpu)
- {
--	phys_addr_t pa_secondary_entry = __pa_symbol(function_nocfi(secondary_entry));
-+	phys_addr_t pa_secondary_entry = __pa_symbol(secondary_entry);
- 	int err = psci_ops.cpu_on(cpu_logical_map(cpu), pa_secondary_entry);
- 	if (err)
- 		pr_err("failed to boot CPU%d (%d)\n", cpu, err);
-diff --git a/arch/arm64/kernel/smp_spin_table.c b/arch/arm64/kernel/smp_spin_table.c
-index 7e1624ecab3c..49029eace3ad 100644
---- a/arch/arm64/kernel/smp_spin_table.c
-+++ b/arch/arm64/kernel/smp_spin_table.c
-@@ -66,7 +66,7 @@ static int smp_spin_table_cpu_init(unsigned int cpu)
- static int smp_spin_table_cpu_prepare(unsigned int cpu)
- {
- 	__le64 __iomem *release_addr;
--	phys_addr_t pa_holding_pen = __pa_symbol(function_nocfi(secondary_holding_pen));
-+	phys_addr_t pa_holding_pen = __pa_symbol(secondary_holding_pen);
- 
- 	if (!cpu_release_addr[cpu])
- 		return -ENODEV;
-diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-index 6554bf4b8c99..16a1daec8cd2 100644
---- a/drivers/firmware/psci/psci.c
-+++ b/drivers/firmware/psci/psci.c
-@@ -334,7 +334,7 @@ static int __init psci_features(u32 psci_func_id)
- static int psci_suspend_finisher(unsigned long state)
- {
- 	u32 power_state = state;
--	phys_addr_t pa_cpu_resume = __pa_symbol(function_nocfi(cpu_resume));
-+	phys_addr_t pa_cpu_resume = __pa_symbol(cpu_resume);
- 
- 	return psci_ops.cpu_suspend(power_state, pa_cpu_resume);
- }
-@@ -359,7 +359,7 @@ int psci_cpu_suspend_enter(u32 state)
- 
- static int psci_system_suspend(unsigned long unused)
- {
--	phys_addr_t pa_cpu_resume = __pa_symbol(function_nocfi(cpu_resume));
-+	phys_addr_t pa_cpu_resume = __pa_symbol(cpu_resume);
- 
- 	return invoke_psci_fn(PSCI_FN_NATIVE(1_0, SYSTEM_SUSPEND),
- 			      pa_cpu_resume, 0, 0);
-diff --git a/drivers/misc/lkdtm/usercopy.c b/drivers/misc/lkdtm/usercopy.c
-index 9161ce7ed47a..79a17b1c4885 100644
---- a/drivers/misc/lkdtm/usercopy.c
-+++ b/drivers/misc/lkdtm/usercopy.c
-@@ -318,7 +318,7 @@ void lkdtm_USERCOPY_KERNEL(void)
- 
- 	pr_info("attempting bad copy_to_user from kernel text: %px\n",
- 		vm_mmap);
--	if (copy_to_user((void __user *)user_addr, function_nocfi(vm_mmap),
-+	if (copy_to_user((void __user *)user_addr, vm_mmap,
- 			 unconst + PAGE_SIZE)) {
- 		pr_warn("copy_to_user failed, but lacked Oops\n");
- 		goto free_user;
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 9303f5fe5d89..80ed9644d129 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -203,16 +203,6 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- 	__v;								\
- })
- 
+=20
++/*
++ * .kcfi_traps contains a list KCFI trap locations.
++ */
++#ifndef KCFI_TRAPS
++#ifdef CONFIG_ARCH_USES_CFI_TRAPS
++#define KCFI_TRAPS							\
++	__kcfi_traps : AT(ADDR(__kcfi_traps) - LOAD_OFFSET) {		\
++		__start___kcfi_traps =3D .;				\
++		KEEP(*(.kcfi_traps))					\
++		__stop___kcfi_traps =3D .;				\
++	}
++#else
++#define KCFI_TRAPS
++#endif
++#endif
++
+ /*
+  * Read only Data
+  */
+@@ -529,6 +545,8 @@
+ 		__stop___modver =3D .;					\
+ 	}								\
+ 									\
++	KCFI_TRAPS							\
++									\
+ 	RO_EXCEPTION_TABLE						\
+ 	NOTES								\
+ 	BTF								\
+@@ -537,21 +555,6 @@
+ 	__end_rodata =3D .;
+=20
+=20
 -/*
-- * With CONFIG_CFI_CLANG, the compiler replaces function addresses in
-- * instrumented C code with jump table addresses. Architectures that
-- * support CFI can define this macro to return the actual function address
-- * when needed.
+- * .text..L.cfi.jumptable.* contain Control-Flow Integrity (CFI)
+- * jump table entries.
 - */
--#ifndef function_nocfi
--#define function_nocfi(x) (x)
+-#ifdef CONFIG_CFI_CLANG
+-#define TEXT_CFI_JT							\
+-		. =3D ALIGN(PMD_SIZE);					\
+-		__cfi_jt_start =3D .;					\
+-		*(.text..L.cfi.jumptable .text..L.cfi.jumptable.*)	\
+-		. =3D ALIGN(PMD_SIZE);					\
+-		__cfi_jt_end =3D .;
+-#else
+-#define TEXT_CFI_JT
 -#endif
 -
- #endif /* __KERNEL__ */
- 
  /*
--- 
+  * Non-instrumentable text section
+  */
+@@ -579,7 +582,6 @@
+ 		*(.text..refcount)					\
+ 		*(.ref.text)						\
+ 		*(.text.asan.* .text.tsan.*)				\
+-		TEXT_CFI_JT						\
+ 	MEM_KEEP(init.text*)						\
+ 	MEM_KEEP(exit.text*)						\
+=20
+@@ -1008,8 +1010,7 @@
+  * keep any .init_array.* sections.
+  * https://bugs.llvm.org/show_bug.cgi?id=3D46478
+  */
+-#if defined(CONFIG_GCOV_KERNEL) || defined(CONFIG_KASAN_GENERIC) || define=
+d(CONFIG_KCSAN) || \
+-	defined(CONFIG_CFI_CLANG)
++#if defined(CONFIG_GCOV_KERNEL) || defined(CONFIG_KASAN_GENERIC) || define=
+d(CONFIG_KCSAN)
+ # ifdef CONFIG_CONSTRUCTORS
+ #  define SANITIZER_DISCARDS						\
+ 	*(.eh_frame)
+diff --git a/include/linux/cfi.h b/include/linux/cfi.h
+index 2cdbc0fbd0ab..655b8b10ac3d 100644
+--- a/include/linux/cfi.h
++++ b/include/linux/cfi.h
+@@ -2,17 +2,42 @@
+ /*
+  * Clang Control Flow Integrity (CFI) support.
+  *
+- * Copyright (C) 2021 Google LLC
++ * Copyright (C) 2022 Google LLC
+  */
+ #ifndef _LINUX_CFI_H
+ #define _LINUX_CFI_H
+=20
++#include <linux/bug.h>
++#include <linux/module.h>
++
+ #ifdef CONFIG_CFI_CLANG
+-typedef void (*cfi_check_fn)(uint64_t id, void *ptr, void *diag);
++enum bug_trap_type report_cfi_failure(struct pt_regs *regs, unsigned long =
+addr,
++				      unsigned long target, unsigned long type);
++#else
++static inline enum bug_trap_type report_cfi_failure(struct pt_regs *regs,
++						    unsigned long addr,
++						    unsigned long target,
++						    unsigned long type)
++{
++	return BUG_TRAP_TYPE_NONE;
++}
++#endif /* CONFIG_CFI_CLANG */
+=20
+-/* Compiler-generated function in each module, and the kernel */
+-extern void __cfi_check(uint64_t id, void *ptr, void *diag);
++#ifdef CONFIG_ARCH_USES_CFI_TRAPS
++bool is_cfi_trap(unsigned long addr);
++#else
++static inline bool is_cfi_trap(unsigned long addr) { return false; }
++#endif /* CONFIG_ARCH_USES_CFI_TRAPS */
+=20
+-#endif /* CONFIG_CFI_CLANG */
++#ifdef CONFIG_MODULES
++#ifdef CONFIG_ARCH_USES_CFI_TRAPS
++void module_cfi_finalize(const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs,
++			 struct module *mod);
++#else
++static inline void module_cfi_finalize(const Elf_Ehdr *hdr,
++				       const Elf_Shdr *sechdrs,
++				       struct module *mod) {}
++#endif /* CONFIG_ARCH_USES_CFI_TRAPS */
++#endif /* CONFIG_MODULES */
+=20
+ #endif /* _LINUX_CFI_H */
+diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.=
+h
+index babb1347148c..42e55579d649 100644
+--- a/include/linux/compiler-clang.h
++++ b/include/linux/compiler-clang.h
+@@ -66,8 +66,10 @@
+ # define __noscs	__attribute__((__no_sanitize__("shadow-call-stack")))
+ #endif
+=20
+-#define __nocfi		__attribute__((__no_sanitize__("cfi")))
+-#define __cficanonical	__attribute__((__cfi_canonical_jump_table__))
++#if __has_feature(kcfi)
++/* Disable CFI checking inside a function. */
++#define __nocfi		__attribute__((__no_sanitize__("kcfi")))
++#endif
+=20
+ /*
+  * Turn individual warnings and errors on and off locally, depending
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 87857275c047..3b485834be74 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -27,7 +27,6 @@
+ #include <linux/tracepoint-defs.h>
+ #include <linux/srcu.h>
+ #include <linux/static_call_types.h>
+-#include <linux/cfi.h>
+=20
+ #include <linux/percpu.h>
+ #include <asm/module.h>
+@@ -388,8 +387,9 @@ struct module {
+ 	const s32 *crcs;
+ 	unsigned int num_syms;
+=20
+-#ifdef CONFIG_CFI_CLANG
+-	cfi_check_fn cfi_check;
++#ifdef CONFIG_ARCH_USES_CFI_TRAPS
++	unsigned long *kcfi_traps;
++	unsigned long *kcfi_traps_end;
+ #endif
+=20
+ 	/* Kernel parameters. */
+diff --git a/kernel/cfi.c b/kernel/cfi.c
+index 2cc0d01ea980..456d5eac082a 100644
+--- a/kernel/cfi.c
++++ b/kernel/cfi.c
+@@ -1,94 +1,86 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Clang Control Flow Integrity (CFI) error and slowpath handling.
++ * Clang Control Flow Integrity (CFI) error handling.
+  *
+- * Copyright (C) 2021 Google LLC
++ * Copyright (C) 2022 Google LLC
+  */
+=20
+-#include <linux/hardirq.h>
+-#include <linux/kallsyms.h>
+-#include <linux/module.h>
+-#include <linux/mutex.h>
+-#include <linux/printk.h>
+-#include <linux/ratelimit.h>
+-#include <linux/rcupdate.h>
+-#include <linux/vmalloc.h>
+-#include <asm/cacheflush.h>
+-#include <asm/set_memory.h>
+-
+-/* Compiler-defined handler names */
+-#ifdef CONFIG_CFI_PERMISSIVE
+-#define cfi_failure_handler	__ubsan_handle_cfi_check_fail
+-#else
+-#define cfi_failure_handler	__ubsan_handle_cfi_check_fail_abort
+-#endif
+-
+-static inline void handle_cfi_failure(void *ptr)
+-{
+-	if (IS_ENABLED(CONFIG_CFI_PERMISSIVE))
+-		WARN_RATELIMIT(1, "CFI failure (target: %pS):\n", ptr);
+-	else
+-		panic("CFI failure (target: %pS)\n", ptr);
+-}
+-
+-#ifdef CONFIG_MODULES
++#include <linux/cfi.h>
+=20
+-static inline cfi_check_fn find_module_check_fn(unsigned long ptr)
++enum bug_trap_type report_cfi_failure(struct pt_regs *regs, unsigned long =
+addr,
++				      unsigned long target, unsigned long type)
+ {
+-	cfi_check_fn fn =3D NULL;
+-	struct module *mod;
++	pr_err("CFI failure at %pS (target: %pS; expected type: 0x%08x)\n",
++	       (void *)addr, (void *)target, (u32)type);
+=20
+-	rcu_read_lock_sched_notrace();
+-	mod =3D __module_address(ptr);
+-	if (mod)
+-		fn =3D mod->cfi_check;
+-	rcu_read_unlock_sched_notrace();
++	if (IS_ENABLED(CONFIG_CFI_PERMISSIVE)) {
++		__warn(NULL, 0, (void *)addr, 0, regs, NULL);
++		return BUG_TRAP_TYPE_WARN;
++	}
+=20
+-	return fn;
++	return BUG_TRAP_TYPE_BUG;
+ }
+=20
+-static inline cfi_check_fn find_check_fn(unsigned long ptr)
++#ifdef CONFIG_ARCH_USES_CFI_TRAPS
++#ifdef CONFIG_MODULES
++/* Populates `kcfi_trap(_end)?` fields in `struct module`. */
++void module_cfi_finalize(const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs,
++			 struct module *mod)
+ {
+-	cfi_check_fn fn =3D NULL;
++	char *secstrings;
++	unsigned int i;
+=20
+-	if (is_kernel_text(ptr))
+-		return __cfi_check;
++	mod->kcfi_traps =3D NULL;
++	mod->kcfi_traps_end =3D NULL;
+=20
+-	/*
+-	 * Indirect call checks can happen when RCU is not watching. Both
+-	 * the shadow and __module_address use RCU, so we need to wake it
+-	 * up if necessary.
+-	 */
+-	RCU_NONIDLE({
+-		fn =3D find_module_check_fn(ptr);
+-	});
++	secstrings =3D (char *)hdr + sechdrs[hdr->e_shstrndx].sh_offset;
+=20
+-	return fn;
++	for (i =3D 1; i < hdr->e_shnum; i++) {
++		if (strcmp(secstrings + sechdrs[i].sh_name, "__kcfi_traps"))
++			continue;
++
++		mod->kcfi_traps =3D (unsigned long *)sechdrs[i].sh_addr;
++		mod->kcfi_traps_end =3D (unsigned long *)(sechdrs[i].sh_addr +
++							sechdrs[i].sh_size);
++		break;
++	}
+ }
+=20
+-void __cfi_slowpath_diag(uint64_t id, void *ptr, void *diag)
++static bool is_module_cfi_trap(unsigned long addr)
+ {
+-	cfi_check_fn fn =3D find_check_fn((unsigned long)ptr);
++	bool found =3D false;
++	struct module *mod;
++	unsigned long *p;
+=20
+-	if (likely(fn))
+-		fn(id, ptr, diag);
+-	else /* Don't allow unchecked modules */
+-		handle_cfi_failure(ptr);
+-}
+-EXPORT_SYMBOL(__cfi_slowpath_diag);
++	rcu_read_lock_sched_notrace();
+=20
+-#else /* !CONFIG_MODULES */
++	mod =3D __module_address(addr);
++	if (mod)
++		for (p =3D mod->kcfi_traps; !found && p < mod->kcfi_traps_end; ++p)
++			found =3D (*p =3D=3D addr);
++
++	rcu_read_unlock_sched_notrace();
+=20
+-void __cfi_slowpath_diag(uint64_t id, void *ptr, void *diag)
++	return found;
++}
++#else /* CONFIG_MODULES */
++static inline bool is_module_cfi_trap(unsigned long addr)
+ {
+-	handle_cfi_failure(ptr); /* No modules */
++	return false;
+ }
+-EXPORT_SYMBOL(__cfi_slowpath_diag);
+-
+ #endif /* CONFIG_MODULES */
+=20
+-void cfi_failure_handler(void *data, void *ptr, void *vtable)
++extern unsigned long __start___kcfi_traps[];
++extern unsigned long __stop___kcfi_traps[];
++
++bool is_cfi_trap(unsigned long addr)
+ {
+-	handle_cfi_failure(ptr);
++	unsigned long *p;
++
++	for (p =3D __start___kcfi_traps; p < __stop___kcfi_traps; ++p)
++		if (*p =3D=3D addr)
++			return true;
++
++	return is_module_cfi_trap(addr);
+ }
+-EXPORT_SYMBOL(cfi_failure_handler);
++#endif /* CONFIG_ARCH_USES_CFI_TRAPS */
+diff --git a/kernel/module.c b/kernel/module.c
+index 296fe02323e9..411ae8c358e6 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -57,6 +57,7 @@
+ #include <linux/bsearch.h>
+ #include <linux/dynamic_debug.h>
+ #include <linux/audit.h>
++#include <linux/cfi.h>
+ #include <uapi/linux/module.h>
+ #include "module-internal.h"
+=20
+@@ -3871,8 +3872,9 @@ static int complete_formation(struct module *mod, str=
+uct load_info *info)
+ 	if (err < 0)
+ 		goto out;
+=20
+-	/* This relies on module_mutex for list integrity. */
++	/* These rely on module_mutex for list integrity. */
+ 	module_bug_finalize(info->hdr, info->sechdrs, mod);
++	module_cfi_finalize(info->hdr, info->sechdrs, mod);
+=20
+ 	module_enable_ro(mod, false);
+ 	module_enable_nx(mod);
+@@ -3928,8 +3930,6 @@ static int unknown_module_param_cb(char *param, char =
+*val, const char *modname,
+ 	return 0;
+ }
+=20
+-static void cfi_init(struct module *mod);
+-
+ /*
+  * Allocate and load the module: note that size of section 0 is always
+  * zero, and we rely on this for optional sections.
+@@ -4059,9 +4059,6 @@ static int load_module(struct load_info *info, const =
+char __user *uargs,
+=20
+ 	flush_module_icache(mod);
+=20
+-	/* Setup CFI for the module. */
+-	cfi_init(mod);
+-
+ 	/* Now copy in args */
+ 	mod->args =3D strndup_user(uargs, ~0UL >> 1);
+ 	if (IS_ERR(mod->args)) {
+@@ -4502,31 +4499,6 @@ int module_kallsyms_on_each_symbol(int (*fn)(void *,=
+ const char *,
+ #endif /* CONFIG_LIVEPATCH */
+ #endif /* CONFIG_KALLSYMS */
+=20
+-static void cfi_init(struct module *mod)
+-{
+-#ifdef CONFIG_CFI_CLANG
+-	initcall_t *init;
+-	exitcall_t *exit;
+-
+-	rcu_read_lock_sched();
+-	mod->cfi_check =3D (cfi_check_fn)
+-		find_kallsyms_symbol_value(mod, "__cfi_check");
+-	init =3D (initcall_t *)
+-		find_kallsyms_symbol_value(mod, "__cfi_jt_init_module");
+-	exit =3D (exitcall_t *)
+-		find_kallsyms_symbol_value(mod, "__cfi_jt_cleanup_module");
+-	rcu_read_unlock_sched();
+-
+-	/* Fix init/exit functions to point to the CFI jump table */
+-	if (init)
+-		mod->init =3D *init;
+-#ifdef CONFIG_MODULE_UNLOAD
+-	if (exit)
+-		mod->exit =3D *exit;
+-#endif
+-#endif
+-}
+-
+ /* Maximum number of characters written by module_flags() */
+ #define MODULE_FLAGS_BUF_SIZE (TAINT_FLAGS_COUNT + 4)
+=20
+diff --git a/scripts/module.lds.S b/scripts/module.lds.S
+index 1d0e1e4dc3d2..0708896139cc 100644
+--- a/scripts/module.lds.S
++++ b/scripts/module.lds.S
+@@ -3,20 +3,10 @@
+  * Archs are free to supply their own linker scripts.  ld will
+  * combine them automatically.
+  */
+-#ifdef CONFIG_CFI_CLANG
+-# include <asm/page.h>
+-# define ALIGN_CFI 		ALIGN(PAGE_SIZE)
+-# define SANITIZER_DISCARDS	*(.eh_frame)
+-#else
+-# define ALIGN_CFI
+-# define SANITIZER_DISCARDS
+-#endif
+-
+ SECTIONS {
+ 	/DISCARD/ : {
+ 		*(.discard)
+ 		*(.discard.*)
+-		SANITIZER_DISCARDS
+ 	}
+=20
+ 	__ksymtab		0 : { *(SORT(___ksymtab+*)) }
+@@ -31,6 +21,10 @@ SECTIONS {
+=20
+ 	__patchable_function_entries : { *(__patchable_function_entries) }
+=20
++#ifdef CONFIG_ARCH_USES_CFI_TRAPS
++	__kcfi_traps 		: { KEEP(*(.kcfi_traps)) }
++#endif
++
+ #ifdef CONFIG_LTO_CLANG
+ 	/*
+ 	 * With CONFIG_LTO_CLANG, LLD always enables -fdata-sections and
+@@ -51,15 +45,6 @@ SECTIONS {
+ 		*(.rodata .rodata.[0-9a-zA-Z_]*)
+ 		*(.rodata..L*)
+ 	}
+-
+-	/*
+-	 * With CONFIG_CFI_CLANG, we assume __cfi_check is at the beginning
+-	 * of the .text section, and is aligned to PAGE_SIZE.
+-	 */
+-	.text : ALIGN_CFI {
+-		*(.text.__cfi_check)
+-		*(.text .text.[0-9a-zA-Z_]* .text..L.cfi*)
+-	}
+ #endif
+ }
+=20
+--=20
 2.36.0.550.gb090851708-goog
 
