@@ -2,69 +2,69 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C76C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 13 May 2022 20:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 375A3C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 13 May 2022 20:22:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346200AbiEMUWb (ORCPT
+        id S1384174AbiEMUWq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 13 May 2022 16:22:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43200 "EHLO
+        Fri, 13 May 2022 16:22:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384132AbiEMUWQ (ORCPT
+        with ESMTP id S1384134AbiEMUWm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 13 May 2022 16:22:16 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F288515E636
-        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:13 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id c205-20020a254ed6000000b0064d5bd93479so618015ybb.17
-        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:13 -0700 (PDT)
+        Fri, 13 May 2022 16:22:42 -0400
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D57B6165D44
+        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:18 -0700 (PDT)
+Received: by mail-pg1-x549.google.com with SMTP id y73-20020a638a4c000000b003c63424fb3aso4664454pgd.17
+        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=WU3889iAo2cV03hsiSf5x6zZ/LJ50Xw+92L/EGbhqXo=;
-        b=pZmQDolJvtI0oNoMjFNSs3O4PlnuoIjxWCSUTvNrtCNsWJ/IOfR8nWwmexM+XOZ6VX
-         OBRVl1lCMhpAir8Qb7vKRhjqFO/0FzS9EVJ3+fXOBepXFdP/5tbt6Qv8F2FqZSU9iKzE
-         atW4/BeR2eJaG9x3o1pDimccoqSy9pLSqz1jExrKsvRGU9cfglLErk9kp4JuLSKg0iXS
-         p7fMRI12tbpyBZuSMGUPY12uCE6PP8eUbAqRAoWl+/m1mgK57/DCD4cUyoxzFnUaZNSf
-         aHJ6m/fhSPutclhWYUwr7oDegK72KoFH6Dh5q/VvXM8pxI4DquPJOfYPsJN9ew1qZ1WE
-         ADnw==
+        bh=f+v85zCmompJWMzZo0Lo44MXyCG4blaViTEubU7Q5pk=;
+        b=MESMouEFY2G4SFqcafmefQWoFCP7ps3QB1tZ46af/jtYe6cn5zcxOwxTwft4N8E1NQ
+         +UuIHuj5VEcDhbnPdN1c0OsP0m7BBsr8MIip1QKYnYg6zeoMy088Pl9eVtEl5uK0saGo
+         XtR42j6pIymFijnyo6XcDzAed95J3W7UJ8IviGf6zqWy//NvXfkBj+GJVwnuCt9lcOFH
+         Z4nLVMl3mKjxxgvlkFCBZewyyE5+nMu5wsw21EWC3AA96x/4tIfvIZsY75Roh12akrho
+         avQ626Wx3RZtmrx/IEAGQSI1UB2H2FZgt4JgCTLLjEpfu6Qdx7RMgQixkMV7q4jIt2ca
+         yN7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=WU3889iAo2cV03hsiSf5x6zZ/LJ50Xw+92L/EGbhqXo=;
-        b=LW5znexfjO+xK/eJBnU5VWVVwXPrN0G87tN/+zpN4AYPEq2b28XPW+78fLkVFocDli
-         0U+LxzWOwfNslTuojUaP2sTV9Ebls0D6Y8IWCUCJWe23UqqA5/4Ly4y+D/5E/rxt5/3L
-         fA+HolMa3JK+RICcInLeNuN2NOMrPueuk02l51KnHQPUIOPcMIQy3PdhX2a0eKAkXrCm
-         hwclloxZl94Yqbmb/hmGOY2DRjHbAVl5104t3aqcdtn1gcAnrg5Oxiw0FJ4OWbOKqsOG
-         mvKW9IVE5tx8u9fIhOuBSXjQBTdHZIBttvz0lkhhl2O3IBQvWs8ckm6TRTbc6RyyBNrN
-         dqIQ==
-X-Gm-Message-State: AOAM532O1tGOTUuQNTHMRG/gvkEyl/EDLtahxC9A6CBqP909RCCeRg7u
-        ayxOOPB9cExnGyBUF63NQdYfXrq0cDOp7QdNKbs=
-X-Google-Smtp-Source: ABdhPJwxuELEVPnOQKDtqsVDrkvVAVIRZ1hdHAD2MT+Q+cgbmxzoKXzbrC/MSqHsHIXSfCC9M9j87P/P+HCKcQRnswM=
+        bh=f+v85zCmompJWMzZo0Lo44MXyCG4blaViTEubU7Q5pk=;
+        b=2LF4DyTeXH7+qJ0z074twPTidth9fW0sDRBb2/xZ1gZBeTmSmqAFXGQc6bEzxlyMeN
+         fqfvgRll5/C/pp92ijcXpQJ6BVfZ6r4mSgVdzQ2v4l/KjocIvgb5g+Clt3yM83rhyyNe
+         HrJvl7UE0/LgWMBtuX6XU5mLT0mHdEb91DkhNnaittXHsVw3psd0KrPosTMCkRWOEquf
+         ED7eXx3Zxk3MqoWvCmagnlE2Ilx5MDkl3i0ierX4eZloz8gqAo31r0Brmhyu6AzV3XtE
+         E78212KoY7Hk0w61Dj3PkLBv59xC4bC/WbA98HUiMvCy61ZFHHDrmLEUVh6VCq6hKCry
+         eBFw==
+X-Gm-Message-State: AOAM531szqA4DTi9uRKXRm6aMTdUbO38Vzu0HCqIBj0oSUmGZgPQtFZG
+        uzDh+nAei4bmX3goatfQ+2oRlePwMTfwGzw984Y=
+X-Google-Smtp-Source: ABdhPJwfcFjFJSZbXy4dFXWlYx0UTPoVmJGQDFAqlwZxMLFtphKEHH2VS3sWnVMuhcTFKwv+pj6ccI88tY8WuVvcx7E=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:e0:c17e:c2dc:13eb])
- (user=samitolvanen job=sendgmr) by 2002:a25:83d1:0:b0:648:725c:6a05 with SMTP
- id v17-20020a2583d1000000b00648725c6a05mr6581691ybm.218.1652473333130; Fri,
- 13 May 2022 13:22:13 -0700 (PDT)
-Date:   Fri, 13 May 2022 13:21:43 -0700
+ (user=samitolvanen job=sendgmr) by 2002:aa7:88d1:0:b0:510:3ee2:3f25 with SMTP
+ id k17-20020aa788d1000000b005103ee23f25mr6048858pff.41.1652473338024; Fri, 13
+ May 2022 13:22:18 -0700 (PDT)
+Date:   Fri, 13 May 2022 13:21:45 -0700
 In-Reply-To: <20220513202159.1550547-1-samitolvanen@google.com>
-Message-Id: <20220513202159.1550547-6-samitolvanen@google.com>
+Message-Id: <20220513202159.1550547-8-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20220513202159.1550547-1-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3214; h=from:subject;
- bh=NEJlZMdKjd8Zr3EJq4f2U/eOaR2VOw8ZJNPjD2WS5Pg=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBifr3jsP84AqoF0iPnb8FMjL+St7Zjb6XNSfFd8CUa
- 8toyEnOJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYn694wAKCRBMtfaEi7xW7tzdC/
- 9mHIFZ0j3RnJTawg3pYHmudgAx+YsmdirdE8TFxUnZEf8oHYhTkUlg7HOO3hmf5f63KPJpAii3HWfP
- x9V4qiLz1iAjZ0nt29HurNVlJJwPrPHCAzqmcDL1HncXMzkbJCseEu7h4oldZ0nXQ7G3T9XRplwELO
- IavmbB2Eijy2MIkwJHs2c3dCXg0Cara5MVl2GeFuFSmIZT4Jfdu6GT1fM4vEYPmHgtRZg4pcRK945G
- ub5OI9K19suVmpGxkPlg11HeNJe+o1hoAN0OzNEWwfEVNOULVaVwV8SCEq/g+cRVB3Jm4A7GIlI1Ai
- jgefyruG8c3xYc+hsnDXmBQE99RIclVfn5GRqT/+Z79fNQc5HgKRvjxaAYVxs4BN+XC8VSPP6q0WCL
- csImxtt33P9GdjW7kYGIYq2IF+1wiH5U4iUzV8w7ibhTmTsyza3JW86J49V7i7sEKr99x0QPmP0u2e
- AbGrPE5JTOJt2ddxl3S8VQALAnKF+pj9AN9XiaFcxAkWU=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2369; h=from:subject;
+ bh=TboG0ryIg4JgbMTsV2OXgx0SX/UFOnu1UldMJxVt8Po=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBifr3j4WY4BkbqYI6dC/ZfJbPOV8T4fFdqndEpsBM/
+ hV5fbI2JAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYn694wAKCRBMtfaEi7xW7gMxC/
+ 4pxFRx4HmL+KUme/ZjGLLUnoT9FbQCcyon3/8qR0GI2jddZNW3zIDnAihW+p9AayVGcFBw/cucqeD6
+ aXfUmw4i5Efc8tn7VJtIfgwBMJEeT97CO0koKO1cJfqhLgyPXQDEp5x3qbmJIPEvXkFbMwd9T0no37
+ HPRxilpeC2rxuO4N07WfXvHHMyvz873twQyminhgkImNDn8LWrzNZD2TYLXYTmCSbYCFGu5tXSDEhw
+ ZHK28QweaPZFMYbk0wN8AvV4LKrTN0/LJoOuYP485lixfm/DeCd/25TzV57VDBt4ZfW/VlEHh4RkgX
+ cFHax638u12jlXDQHJK2SS7MLmlojw27IhKgnEszme11T0yFry4yEqhhcfa1m4PMtHA6DBWFAZjYwA
+ CCw/0R+hbTncTA8X3SMH0fWDvX+13ZsaiGA+rH7eLAG+M6F+T6JF6K+96BK3G6xvoablbMV270wlb8
+ +GZCYAV3P1rotvaWrcFV5saGNcr9RR12T6hfVDEQ+LtAA=
 X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
-Subject: [RFC PATCH v2 05/21] cfi: Drop __CFI_ADDRESSABLE
+Subject: [RFC PATCH v2 07/21] cfi: Add type helper macros
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -86,91 +86,83 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The __CFI_ADDRESSABLE macro is used for init_module and cleanup_module
-to ensure we have the address of the CFI jump table, and with
-CONFIG_X86_KERNEL_IBT to ensure LTO won't optimize away the symbols.
-As __CFI_ADDRESSABLE is no longer necessary with -fsanitize=kcfi, add
-a more flexible version of the __ADDRESSABLE macro and always ensure
-these symbols won't be dropped.
+With CONFIG_CFI_CLANG, assembly functions called indirectly
+from C code must be annotated with type identifiers to pass CFI
+checking. The compiler emits a __kcfi_typeid_<function> symbol for
+each address-taken function declaration in C, which contains the
+expected type identifier. Add typed versions of SYM_FUNC_START and
+SYM_FUNC_START_ALIAS, which emit the type identifier before the
+function.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- include/linux/cfi.h      | 20 --------------------
- include/linux/compiler.h |  6 ++++--
- include/linux/module.h   |  4 ++--
- 3 files changed, 6 insertions(+), 24 deletions(-)
+ include/linux/cfi_types.h | 57 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+ create mode 100644 include/linux/cfi_types.h
 
-diff --git a/include/linux/cfi.h b/include/linux/cfi.h
-index 4ab51c067007..2cdbc0fbd0ab 100644
---- a/include/linux/cfi.h
-+++ b/include/linux/cfi.h
-@@ -13,26 +13,6 @@ typedef void (*cfi_check_fn)(uint64_t id, void *ptr, void *diag);
- /* Compiler-generated function in each module, and the kernel */
- extern void __cfi_check(uint64_t id, void *ptr, void *diag);
- 
--/*
-- * Force the compiler to generate a CFI jump table entry for a function
-- * and store the jump table address to __cfi_jt_<function>.
-- */
--#define __CFI_ADDRESSABLE(fn, __attr) \
--	const void *__cfi_jt_ ## fn __visible __attr = (void *)&fn
--
--#else /* !CONFIG_CFI_CLANG */
--
--#ifdef CONFIG_X86_KERNEL_IBT
--
--#define __CFI_ADDRESSABLE(fn, __attr) \
--	const void *__cfi_jt_ ## fn __visible __attr = (void *)&fn
--
--#endif /* CONFIG_X86_KERNEL_IBT */
--
- #endif /* CONFIG_CFI_CLANG */
- 
--#ifndef __CFI_ADDRESSABLE
--#define __CFI_ADDRESSABLE(fn, __attr)
--#endif
--
- #endif /* _LINUX_CFI_H */
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 219aa5ddbc73..9303f5fe5d89 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -221,9 +221,11 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
-  * otherwise, or eliminated entirely due to lack of references that are
-  * visible to the compiler.
-  */
--#define __ADDRESSABLE(sym) \
--	static void * __section(".discard.addressable") __used \
-+#define ___ADDRESSABLE(sym, __attrs) \
-+	static void * __used __attrs \
- 		__UNIQUE_ID(__PASTE(__addressable_,sym)) = (void *)&sym;
-+#define __ADDRESSABLE(sym) \
-+	___ADDRESSABLE(sym, __section(".discard.addressable"))
- 
- /**
-  * offset_to_ptr - convert a relative memory offset to an absolute pointer
-diff --git a/include/linux/module.h b/include/linux/module.h
-index 1e135fd5c076..87857275c047 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -132,7 +132,7 @@ extern void cleanup_module(void);
- 	{ return initfn; }					\
- 	int init_module(void) __copy(initfn)			\
- 		__attribute__((alias(#initfn)));		\
--	__CFI_ADDRESSABLE(init_module, __initdata);
-+	___ADDRESSABLE(init_module, __initdata);
- 
- /* This is only required if you want to be unloadable. */
- #define module_exit(exitfn)					\
-@@ -140,7 +140,7 @@ extern void cleanup_module(void);
- 	{ return exitfn; }					\
- 	void cleanup_module(void) __copy(exitfn)		\
- 		__attribute__((alias(#exitfn)));		\
--	__CFI_ADDRESSABLE(cleanup_module, __exitdata);
-+	___ADDRESSABLE(cleanup_module, __exitdata);
- 
- #endif
- 
+diff --git a/include/linux/cfi_types.h b/include/linux/cfi_types.h
+new file mode 100644
+index 000000000000..dd16e755a197
+--- /dev/null
++++ b/include/linux/cfi_types.h
+@@ -0,0 +1,57 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Clang Control Flow Integrity (CFI) type definitions.
++ */
++#ifndef _LINUX_CFI_TYPES_H
++#define _LINUX_CFI_TYPES_H
++
++#ifdef CONFIG_CFI_CLANG
++#include <linux/linkage.h>
++
++#ifdef __ASSEMBLY__
++/*
++ * Use the __kcfi_typeid_<function> type identifier symbol to
++ * annotate indirectly called assembly functions. The compiler emits
++ * these symbols for all address-taken function declarations in C
++ * code.
++ */
++#ifndef __CFI_TYPE
++#define __CFI_TYPE(name)				\
++	.4byte __kcfi_typeid_##name
++#endif
++
++#define SYM_TYPED_ENTRY(name, fname, linkage, align...)	\
++	linkage(name) ASM_NL				\
++	align ASM_NL					\
++	__CFI_TYPE(fname) ASM_NL			\
++	name:
++
++#define __SYM_TYPED_FUNC_START_ALIAS(name, fname) \
++	SYM_TYPED_ENTRY(name, fname, SYM_L_GLOBAL, SYM_A_ALIGN)
++
++#define __SYM_TYPED_FUNC_START(name, fname) \
++	SYM_TYPED_ENTRY(name, fname, SYM_L_GLOBAL, SYM_A_ALIGN)
++
++#endif /* __ASSEMBLY__ */
++
++#else /* CONFIG_CFI_CLANG */
++
++#ifdef __ASSEMBLY__
++#define __SYM_TYPED_FUNC_START_ALIAS(name, fname) \
++	SYM_FUNC_START_ALIAS(name)
++
++#define __SYM_TYPED_FUNC_START(name, fname) \
++	SYM_FUNC_START(name)
++#endif /* __ASSEMBLY__ */
++
++#endif /* CONFIG_CFI_CLANG */
++
++#ifdef __ASSEMBLY__
++#define SYM_TYPED_FUNC_START_ALIAS(name) \
++	__SYM_TYPED_FUNC_START_ALIAS(name, name)
++
++#define SYM_TYPED_FUNC_START(name) \
++	__SYM_TYPED_FUNC_START(name, name)
++#endif /* __ASSEMBLY__ */
++
++#endif /* _LINUX_CFI_TYPES_H */
 -- 
 2.36.0.550.gb090851708-goog
 
