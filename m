@@ -2,69 +2,69 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 375A3C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 13 May 2022 20:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5C4C433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 13 May 2022 20:22:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384174AbiEMUWq (ORCPT
+        id S1384144AbiEMUWq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
         Fri, 13 May 2022 16:22:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43082 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384134AbiEMUWm (ORCPT
+        with ESMTP id S1384152AbiEMUWn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 13 May 2022 16:22:42 -0400
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D57B6165D44
-        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:18 -0700 (PDT)
-Received: by mail-pg1-x549.google.com with SMTP id y73-20020a638a4c000000b003c63424fb3aso4664454pgd.17
-        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:18 -0700 (PDT)
+        Fri, 13 May 2022 16:22:43 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D61E316D4A8
+        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:23 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id d134-20020a25e68c000000b006483b1adcc3so8189090ybh.11
+        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=f+v85zCmompJWMzZo0Lo44MXyCG4blaViTEubU7Q5pk=;
-        b=MESMouEFY2G4SFqcafmefQWoFCP7ps3QB1tZ46af/jtYe6cn5zcxOwxTwft4N8E1NQ
-         +UuIHuj5VEcDhbnPdN1c0OsP0m7BBsr8MIip1QKYnYg6zeoMy088Pl9eVtEl5uK0saGo
-         XtR42j6pIymFijnyo6XcDzAed95J3W7UJ8IviGf6zqWy//NvXfkBj+GJVwnuCt9lcOFH
-         Z4nLVMl3mKjxxgvlkFCBZewyyE5+nMu5wsw21EWC3AA96x/4tIfvIZsY75Roh12akrho
-         avQ626Wx3RZtmrx/IEAGQSI1UB2H2FZgt4JgCTLLjEpfu6Qdx7RMgQixkMV7q4jIt2ca
-         yN7Q==
+        bh=qSFqHEoM0jVY7Xc145M1tC6JaMH9LeBcrCGvTvckEBI=;
+        b=cByubZC95NZHiGgqSDuLONtA3X/WkLE+HVnc2mzvEL8ZduMsM8hhr6bGQhjb5MAoBf
+         AlxWoFJljgvPJAPexGdsYAU2nkBf2511z76YHeCLBBKG0AAYVqG85Ns8p0H5W1w5vphk
+         R+kEXvZ920Vz9rWKPcwDnTjphfS8yAb1vP3H2TwcJedrvDrAz0I2StTob25tINYtK41w
+         dFHR1/CxVJuaplVjk1XnKzaYEW6m/C1cuf3Iqs0DUZ9htCJOpUbLQuifBjU1Cnimx+Bw
+         DryMNF1HR27a9YQqZ5rpnYIGLfjb9lXH9MM5byY46h79zx0IWoycyOAqIAeODvAlCl4n
+         g0fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=f+v85zCmompJWMzZo0Lo44MXyCG4blaViTEubU7Q5pk=;
-        b=2LF4DyTeXH7+qJ0z074twPTidth9fW0sDRBb2/xZ1gZBeTmSmqAFXGQc6bEzxlyMeN
-         fqfvgRll5/C/pp92ijcXpQJ6BVfZ6r4mSgVdzQ2v4l/KjocIvgb5g+Clt3yM83rhyyNe
-         HrJvl7UE0/LgWMBtuX6XU5mLT0mHdEb91DkhNnaittXHsVw3psd0KrPosTMCkRWOEquf
-         ED7eXx3Zxk3MqoWvCmagnlE2Ilx5MDkl3i0ierX4eZloz8gqAo31r0Brmhyu6AzV3XtE
-         E78212KoY7Hk0w61Dj3PkLBv59xC4bC/WbA98HUiMvCy61ZFHHDrmLEUVh6VCq6hKCry
-         eBFw==
-X-Gm-Message-State: AOAM531szqA4DTi9uRKXRm6aMTdUbO38Vzu0HCqIBj0oSUmGZgPQtFZG
-        uzDh+nAei4bmX3goatfQ+2oRlePwMTfwGzw984Y=
-X-Google-Smtp-Source: ABdhPJwfcFjFJSZbXy4dFXWlYx0UTPoVmJGQDFAqlwZxMLFtphKEHH2VS3sWnVMuhcTFKwv+pj6ccI88tY8WuVvcx7E=
+        bh=qSFqHEoM0jVY7Xc145M1tC6JaMH9LeBcrCGvTvckEBI=;
+        b=WuqQJuNM5cFdTeKe0018rZgv1snojCvHeTnFBIJKP58q6P3v80KB16iec7olVkzwkJ
+         1Qxyuiku+ZCgu11pIl6vVAeTAqpRMHr5//uKn7rcyM24+ECNtpc4PyiTGXHkkNpHPLUB
+         mk9uHjh0q4NZlFtbn8krGDSqdL4hYmZYFSel5IISG6bG3/UGfzg5oOPmvBTmsveWjD/F
+         RGo5n6cHbyllsWeW5lskHmLg2uAGTt1DZ743R8L166y8AHulHesoPECJAd1+Bs+3eoTB
+         JTP9hvrKyhNhGvVNxaFA5UVFg2qAin9GHnBLraoqjAaD68zgosgMCh3pS+0pqd7/RMHv
+         Nx3Q==
+X-Gm-Message-State: AOAM533dckM42m909nOZoUyYKKLTsRRr/CwBLvogR7upFA64RQk2rSf8
+        8qjWs/PPxCx+Zs5gN0L+8Oi0Y4JXPFfbaAlcIS4=
+X-Google-Smtp-Source: ABdhPJxDA6ZdqsEPj1xJDYsYUmAOPwqTrdnMoq/rG+psn5HvqkJ8fzRIKNGmJ0yGoi6cJV7H5UV2gjxi7x01RpVxzCs=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:e0:c17e:c2dc:13eb])
- (user=samitolvanen job=sendgmr) by 2002:aa7:88d1:0:b0:510:3ee2:3f25 with SMTP
- id k17-20020aa788d1000000b005103ee23f25mr6048858pff.41.1652473338024; Fri, 13
- May 2022 13:22:18 -0700 (PDT)
-Date:   Fri, 13 May 2022 13:21:45 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a05:6902:84:b0:63d:4a3d:eb5 with SMTP
+ id h4-20020a056902008400b0063d4a3d0eb5mr6762470ybs.145.1652473342924; Fri, 13
+ May 2022 13:22:22 -0700 (PDT)
+Date:   Fri, 13 May 2022 13:21:47 -0700
 In-Reply-To: <20220513202159.1550547-1-samitolvanen@google.com>
-Message-Id: <20220513202159.1550547-8-samitolvanen@google.com>
+Message-Id: <20220513202159.1550547-10-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20220513202159.1550547-1-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2369; h=from:subject;
- bh=TboG0ryIg4JgbMTsV2OXgx0SX/UFOnu1UldMJxVt8Po=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBifr3j4WY4BkbqYI6dC/ZfJbPOV8T4fFdqndEpsBM/
- hV5fbI2JAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYn694wAKCRBMtfaEi7xW7gMxC/
- 4pxFRx4HmL+KUme/ZjGLLUnoT9FbQCcyon3/8qR0GI2jddZNW3zIDnAihW+p9AayVGcFBw/cucqeD6
- aXfUmw4i5Efc8tn7VJtIfgwBMJEeT97CO0koKO1cJfqhLgyPXQDEp5x3qbmJIPEvXkFbMwd9T0no37
- HPRxilpeC2rxuO4N07WfXvHHMyvz873twQyminhgkImNDn8LWrzNZD2TYLXYTmCSbYCFGu5tXSDEhw
- ZHK28QweaPZFMYbk0wN8AvV4LKrTN0/LJoOuYP485lixfm/DeCd/25TzV57VDBt4ZfW/VlEHh4RkgX
- cFHax638u12jlXDQHJK2SS7MLmlojw27IhKgnEszme11T0yFry4yEqhhcfa1m4PMtHA6DBWFAZjYwA
- CCw/0R+hbTncTA8X3SMH0fWDvX+13ZsaiGA+rH7eLAG+M6F+T6JF6K+96BK3G6xvoablbMV270wlb8
- +GZCYAV3P1rotvaWrcFV5saGNcr9RR12T6hfVDEQ+LtAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3798; h=from:subject;
+ bh=4TCS/TOOZQmpZTvnkB/4gv9RquE2CFE6aPMp1ORi+F8=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBifr3keudw4QkzukoMzVjW96Vw+mRxd/N17uuheg4o
+ ZrrHzi+JAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYn695AAKCRBMtfaEi7xW7mAnC/
+ 9MFFSpVcCRnjn6y/sZgCMgB5v8SzFD4fcUMRzQdCuywzauLs6IVlf2abTnws4RBuqt7xXRPaT0d/Tp
+ CCDvoWoZFKFeNWuUyQQdq8O7hdkgMuRAE+YdBhUJj7/b8NNcxtC//EOkOMwUrddtnhRe+mpqu114Wt
+ x0LCWvLmWILbkSArCygz4rgemA07WPWqt5qveGMr/+j2gvuZlXXlrz8HUewJ30uyHQeeeFk8dXRH41
+ Q59fHATagQlVvKd+rYHMie0iY8PA0hShyA8NRIc3pLg+ZezhtHPudqd7m93l8758xWWMK/RGkNUWqc
+ yIWBB4W3oOfq6RzuUShftpo40PN+Gp2cNvGocpje01s8dROy4bqL2HYjWmLS1nJN4v9PEsMc0KdLMy
+ IbmU/jfkO9j3mbRV3Eg2GqPE/h5IpHeC/yo4w6LEJ69OktyEoM6DTD+k0eg3RitzHvCPjTnnf2eE0E
+ NwIRPdYI8Xg4cSruMxRSdJXpLJx6qOsiQBXk9HWActwcE=
 X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
-Subject: [RFC PATCH v2 07/21] cfi: Add type helper macros
+Subject: [RFC PATCH v2 09/21] arm64: Add types to indirect called assembly functions
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -86,83 +86,124 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With CONFIG_CFI_CLANG, assembly functions called indirectly
-from C code must be annotated with type identifiers to pass CFI
-checking. The compiler emits a __kcfi_typeid_<function> symbol for
-each address-taken function declaration in C, which contains the
-expected type identifier. Add typed versions of SYM_FUNC_START and
-SYM_FUNC_START_ALIAS, which emit the type identifier before the
-function.
+With CONFIG_CFI_CLANG, assembly functions indirectly called from C
+code must be annotated with type identifiers to pass CFI checking. Use
+SYM_TYPED_FUNC_START for indirectly called functions.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- include/linux/cfi_types.h | 57 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 include/linux/cfi_types.h
+ arch/arm64/crypto/ghash-ce-core.S | 5 +++--
+ arch/arm64/crypto/sm3-ce-core.S   | 3 ++-
+ arch/arm64/kernel/cpu-reset.S     | 5 +++--
+ arch/arm64/mm/proc.S              | 5 +++--
+ 4 files changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/cfi_types.h b/include/linux/cfi_types.h
-new file mode 100644
-index 000000000000..dd16e755a197
---- /dev/null
-+++ b/include/linux/cfi_types.h
-@@ -0,0 +1,57 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Clang Control Flow Integrity (CFI) type definitions.
-+ */
-+#ifndef _LINUX_CFI_TYPES_H
-+#define _LINUX_CFI_TYPES_H
-+
-+#ifdef CONFIG_CFI_CLANG
-+#include <linux/linkage.h>
-+
-+#ifdef __ASSEMBLY__
-+/*
-+ * Use the __kcfi_typeid_<function> type identifier symbol to
-+ * annotate indirectly called assembly functions. The compiler emits
-+ * these symbols for all address-taken function declarations in C
-+ * code.
-+ */
-+#ifndef __CFI_TYPE
-+#define __CFI_TYPE(name)				\
-+	.4byte __kcfi_typeid_##name
-+#endif
-+
-+#define SYM_TYPED_ENTRY(name, fname, linkage, align...)	\
-+	linkage(name) ASM_NL				\
-+	align ASM_NL					\
-+	__CFI_TYPE(fname) ASM_NL			\
-+	name:
-+
-+#define __SYM_TYPED_FUNC_START_ALIAS(name, fname) \
-+	SYM_TYPED_ENTRY(name, fname, SYM_L_GLOBAL, SYM_A_ALIGN)
-+
-+#define __SYM_TYPED_FUNC_START(name, fname) \
-+	SYM_TYPED_ENTRY(name, fname, SYM_L_GLOBAL, SYM_A_ALIGN)
-+
-+#endif /* __ASSEMBLY__ */
-+
-+#else /* CONFIG_CFI_CLANG */
-+
-+#ifdef __ASSEMBLY__
-+#define __SYM_TYPED_FUNC_START_ALIAS(name, fname) \
-+	SYM_FUNC_START_ALIAS(name)
-+
-+#define __SYM_TYPED_FUNC_START(name, fname) \
-+	SYM_FUNC_START(name)
-+#endif /* __ASSEMBLY__ */
-+
-+#endif /* CONFIG_CFI_CLANG */
-+
-+#ifdef __ASSEMBLY__
-+#define SYM_TYPED_FUNC_START_ALIAS(name) \
-+	__SYM_TYPED_FUNC_START_ALIAS(name, name)
-+
-+#define SYM_TYPED_FUNC_START(name) \
-+	__SYM_TYPED_FUNC_START(name, name)
-+#endif /* __ASSEMBLY__ */
-+
-+#endif /* _LINUX_CFI_TYPES_H */
+diff --git a/arch/arm64/crypto/ghash-ce-core.S b/arch/arm64/crypto/ghash-ce-core.S
+index 7868330dd54e..ebe5558929b7 100644
+--- a/arch/arm64/crypto/ghash-ce-core.S
++++ b/arch/arm64/crypto/ghash-ce-core.S
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/linkage.h>
++#include <linux/cfi_types.h>
+ #include <asm/assembler.h>
+ 
+ 	SHASH		.req	v0
+@@ -350,11 +351,11 @@ CPU_LE(	rev64		T1.16b, T1.16b	)
+ 	 * void pmull_ghash_update(int blocks, u64 dg[], const char *src,
+ 	 *			   struct ghash_key const *k, const char *head)
+ 	 */
+-SYM_FUNC_START(pmull_ghash_update_p64)
++SYM_TYPED_FUNC_START(pmull_ghash_update_p64)
+ 	__pmull_ghash	p64
+ SYM_FUNC_END(pmull_ghash_update_p64)
+ 
+-SYM_FUNC_START(pmull_ghash_update_p8)
++SYM_TYPED_FUNC_START(pmull_ghash_update_p8)
+ 	__pmull_ghash	p8
+ SYM_FUNC_END(pmull_ghash_update_p8)
+ 
+diff --git a/arch/arm64/crypto/sm3-ce-core.S b/arch/arm64/crypto/sm3-ce-core.S
+index ef97d3187cb7..ca70cfacd0d0 100644
+--- a/arch/arm64/crypto/sm3-ce-core.S
++++ b/arch/arm64/crypto/sm3-ce-core.S
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/linkage.h>
++#include <linux/cfi_types.h>
+ #include <asm/assembler.h>
+ 
+ 	.irp		b, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
+@@ -73,7 +74,7 @@
+ 	 *                       int blocks)
+ 	 */
+ 	.text
+-SYM_FUNC_START(sm3_ce_transform)
++SYM_TYPED_FUNC_START(sm3_ce_transform)
+ 	/* load state */
+ 	ld1		{v8.4s-v9.4s}, [x0]
+ 	rev64		v8.4s, v8.4s
+diff --git a/arch/arm64/kernel/cpu-reset.S b/arch/arm64/kernel/cpu-reset.S
+index 48a8af97faa9..6b752fe89745 100644
+--- a/arch/arm64/kernel/cpu-reset.S
++++ b/arch/arm64/kernel/cpu-reset.S
+@@ -8,6 +8,7 @@
+  */
+ 
+ #include <linux/linkage.h>
++#include <linux/cfi_types.h>
+ #include <asm/assembler.h>
+ #include <asm/sysreg.h>
+ #include <asm/virt.h>
+@@ -28,7 +29,7 @@
+  * branch to what would be the reset vector. It must be executed with the
+  * flat identity mapping.
+  */
+-SYM_CODE_START(cpu_soft_restart)
++SYM_TYPED_FUNC_START(cpu_soft_restart)
+ 	mov_q	x12, INIT_SCTLR_EL1_MMU_OFF
+ 	pre_disable_mmu_workaround
+ 	/*
+@@ -47,6 +48,6 @@ SYM_CODE_START(cpu_soft_restart)
+ 	mov	x1, x3				// arg1
+ 	mov	x2, x4				// arg2
+ 	br	x8
+-SYM_CODE_END(cpu_soft_restart)
++SYM_FUNC_END(cpu_soft_restart)
+ 
+ .popsection
+diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+index 50bbed947bec..dfa715315551 100644
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -10,6 +10,7 @@
+ #include <linux/init.h>
+ #include <linux/linkage.h>
+ #include <linux/pgtable.h>
++#include <linux/cfi_types.h>
+ #include <asm/assembler.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/asm_pointer_auth.h>
+@@ -184,7 +185,7 @@ SYM_FUNC_END(cpu_do_resume)
+  * This is the low-level counterpart to cpu_replace_ttbr1, and should not be
+  * called by anything else. It can only be executed from a TTBR0 mapping.
+  */
+-SYM_FUNC_START(idmap_cpu_replace_ttbr1)
++SYM_TYPED_FUNC_START(idmap_cpu_replace_ttbr1)
+ 	save_and_disable_daif flags=x2
+ 
+ 	__idmap_cpu_set_reserved_ttbr1 x1, x3
+@@ -224,7 +225,7 @@ SYM_FUNC_END(idmap_cpu_replace_ttbr1)
+  */
+ __idmap_kpti_flag:
+ 	.long	1
+-SYM_FUNC_START(idmap_kpti_install_ng_mappings)
++SYM_TYPED_FUNC_START(idmap_kpti_install_ng_mappings)
+ 	cpu		.req	w0
+ 	num_cpus	.req	w1
+ 	swapper_pa	.req	x2
 -- 
 2.36.0.550.gb090851708-goog
 
