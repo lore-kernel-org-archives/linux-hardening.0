@@ -2,69 +2,69 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30763C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 13 May 2022 20:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8CCC433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 13 May 2022 20:23:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384134AbiEMUXE (ORCPT
+        id S1384229AbiEMUXF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 13 May 2022 16:23:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44558 "EHLO
+        Fri, 13 May 2022 16:23:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384244AbiEMUWs (ORCPT
+        with ESMTP id S1384190AbiEMUWs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Fri, 13 May 2022 16:22:48 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45B0D15E61D
-        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:46 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id g129-20020a25db87000000b0064b0d671050so8180379ybf.6
-        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:46 -0700 (PDT)
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA2BE15D33D
+        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:43 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id w21-20020a25df15000000b0064b401428bfso7256613ybg.22
+        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=sN1MQIdlcLov8VgTjyWeulzGcdWJ7BEX/VgFu9sqEms=;
-        b=NDN+pnJemIaCSxm+K2o9kM8xoxP4AQp7FKNhm67B5YN9f5EDBtjQNKeP31f39bv4/X
-         u7Sta5zaVqNE8LpDfbgbrzZSc89IJTRdfylKuFMkp86I7w1oQQ7UKjoL47AzIJGV2wY4
-         9LsNi1Ao6snjicLqufdQjigC9QuO4Lj+vJJw7hg8/6NkaOuIZDEnaS2id6So0DG0ta2C
-         SvvhUKEOlmhey8NHV9HehLbFjkcnVEoZHby8OxicoYYxpFyzgd1HR0qIC2KTzvXjto4r
-         dZJbPHQ/lkgGGEiIG2FhPu3ibzslDXp4HRuIKvuvNFZvOS/+/U8h2BmuRQ7EWpXo/BrE
-         bNrw==
+        bh=PfUOUCtWYZGmp8CXclCTWw0GE2v5WPFVxnxla7QB7vw=;
+        b=nCubo4qm3EWLu8ph4cU0J48klMHpfNRcdDDHvRk87yHuzwBoIBJ/AU7Zj01a7RdZIF
+         t6ik+RXGU61svm9iFsdm0UO6eotpCIPJMowDcoGi43HtZioBN2GSc7Bb/24mH+Y1XxI/
+         H2UqwryguqTCBR6WTNv/1J0rrcU4SgUpj/DCVM+I43JCXI9PY0ZuqC6e3pyWT8kxLHXz
+         aypLH1zJKclQCdpSo+hy/cCSzYH+emciZNSjzDJjmkCQGnRGZTqaCMDjwLCQp7F7hD8B
+         lNK/pR0WZNB0QYRB2IObpdQwuIcXVOFy3fveUYDJmRy2HB/sObRtwd1nPyaJGlvjuvKx
+         1jew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=sN1MQIdlcLov8VgTjyWeulzGcdWJ7BEX/VgFu9sqEms=;
-        b=x6+exFbaWv3grQhGsYF8peRzqsJBrwoB1sbRAl0PzC5Y8TX/caPlbZZZqp/Eg4iDo8
-         9mLclj/Md1lcCR3E3UZfRKEb4uzKPV7fK0LE0kEq01n4nAzINJirj365WZUOnwezvrnS
-         EJzoQsgHYa5hJ0LCIj+TLd29jtgwZsNQytb+Bo8ObqXt9VgC/A3Hh1YIDXH9uOozIzgC
-         qW5PAo51p/OOlbvpYkjhcLk243G3Vl5hEzVbLvn9tB7oWyBKVD4T1EDqDYjmrZoHPKH5
-         hu8y5/ifRg3vE4viIsX7DpG525ISbJVFWpqCXOzEX3qI+1ImPPAN65//x7Z8lGiWWG0c
-         XwRw==
-X-Gm-Message-State: AOAM531koI8CoxymmExyrhI3RuFSHsQ1CiS87O1Kwc3dKAxtyTuvEWXm
-        R/3hN8N22aQOKdnaHuaBR8h9nS+bC/EVMpM0wuA=
-X-Google-Smtp-Source: ABdhPJx5nJW+fLyEvpdIEtsWTO7Bccf8P7rQGyFfkNsIumtMA98HgpHClV78e0G6XQroqhr1CVABaVT70arCD7DKWJc=
+        bh=PfUOUCtWYZGmp8CXclCTWw0GE2v5WPFVxnxla7QB7vw=;
+        b=gPV7UbX1/eRgp8k+ne+eXS4FCImoNKJQz6tZ8P69JRLkgG0KHSW4tPBpxozUweIL5m
+         hqYj4St0GmcKiEQHpAGFpULRiWFL4GuMltKkZa/5mwZwZWdcA+olzv1gYx0gp1Uxj10R
+         GncB1PfEpnTkPYpWtjzdGNk1M5aCH1Pu5HJSZ0uV3R/8+O3ebHrinjdlnwhq+8EqcQQ0
+         M9AT0svyje8xpbvogxWGfiJZhfPhDOJnrfVZoI0OC+Sh4aKnoXEnpJclRvnHg4Z6NwNo
+         qg3ZNLztAH/3RX/XrdQdzTz/FE1k31mr4dxs5IZ6wUHk/1VMTeoKGKbHZtnequQRQSur
+         HjiA==
+X-Gm-Message-State: AOAM531nUgLCA8qiSOVOlcL0qrTzQ9qhPEM9tQ2sbdFtgEVz7FPwgy2z
+        MyjE38Y3ED/17lnjAbGiKDbGklGkZTB+d7ECf1A=
+X-Google-Smtp-Source: ABdhPJw+D7t6SSlbjDlENv5lafSoapQJ6Q274oZIPQGeVXoNM9Zg7HmZCxd74l5G/0JMvVqt1aRLChSV/AE8SNevvWU=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:e0:c17e:c2dc:13eb])
- (user=samitolvanen job=sendgmr) by 2002:a05:6902:3c4:b0:64b:9947:ae0c with
- SMTP id g4-20020a05690203c400b0064b9947ae0cmr4277666ybs.139.1652473365524;
- Fri, 13 May 2022 13:22:45 -0700 (PDT)
-Date:   Fri, 13 May 2022 13:21:57 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a25:8c03:0:b0:649:c7f8:1fc9 with SMTP
+ id k3-20020a258c03000000b00649c7f81fc9mr6802241ybl.587.1652473363438; Fri, 13
+ May 2022 13:22:43 -0700 (PDT)
+Date:   Fri, 13 May 2022 13:21:56 -0700
 In-Reply-To: <20220513202159.1550547-1-samitolvanen@google.com>
-Message-Id: <20220513202159.1550547-20-samitolvanen@google.com>
+Message-Id: <20220513202159.1550547-19-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20220513202159.1550547-1-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1427; h=from:subject;
- bh=57qcu+U/ESwPOD6Y+SONkBgb7Co02QyfDr74Uk03b6A=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBifr3l0ipJhNE6eoVPfJVHE9QVfJa5ZOmTd70bEYHX
- Y/YEamOJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYn695QAKCRBMtfaEi7xW7uSFC/
- 0ZKCyQe27MbqBSzxoH/uHRZkF/mRGq3PzbQqycBC63gV53AhsNrxa68cqQI/p9ZTMUlHpbuqgxceYo
- GjOUCTNfeFJQjNAvcAtAQ4FVHmv7MHC5RaI6Zkv+hnIWlXizBxMSPe2QPGCU44v2xkUx2bDxbItGGX
- HU4Yj5bSd0gZIL0BsXOTeqEWlBel1tof7WIru7x5Cc63rAUVarAFiecr4J5owvzEya+9gnBPxYDcra
- ay5jeQ/kViL1zXdWuWv/c8lO2bshaKGI+7byXNTzIm1NyKM1Bc34y+t7X9RVLcTWX6+AalxYela27+
- Cs7ndV9QgHxu5DDVyrwFBg79BVA2y34witGsut8PgrYolzywRZxaAJKu9U5O3U8UX9U83Kk8iiPCg7
- lnvfvJ+JEZUT2MG1p2X4EhWueUL2cbGs3eL+XCeAouQAA4iV2dYhb+hVPp2BwiDIf9yLF5O+QaFQHu
- MWoGpc8TGw8nfWrniueaU8rSDQl15j0/F9fJPb4Z8u43c=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=867; h=from:subject;
+ bh=1zGkTRBFsYQeOh1nY0Ftktys2F76fLo0aIs4c+r3/F0=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBifr3lqAwmlxBUGYGrHtGRBycX29CVlKsWO3WkULXp
+ 4RXxZyyJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYn695QAKCRBMtfaEi7xW7iRJC/
+ 40aO3dHx7HRqL5IBxJl4LEnss6Sben7NjXL1WF89h7qFltZ5dAJeU01SJQLXBbFrGMVwlJ6QXAdGEj
+ 635LhB+9rvz3J3LtnqvUssb7EF73SxuPBnb6OMm+qYoJRX6x4QzHFUBMSpT7nQgeSRXxgqGzkDSRup
+ vh3xGCK6gB9qpNMP6tfQC0arD6MlBlA6GdKe9mp1HvtqGMQB7swpv2WD9cOCfE9KLcH0y91ynQ6g4U
+ UZPiaQZWKDZYiQPJldKSe7moKZrikR0U0Qo5Q553qfQPjeadJ5XvtghpEAkLCafukyveKh4N09VV1w
+ S5uP5cVYPc1iWKtXKqmCRwCpMMwF7IuEhjpg+hVIGDfAoBFfQZc7B4mxMlOChIzO8+9ddE4OTx6XxB
+ YRAfx/UF3uy7/M0r/sDjqemuUQ62BUUmbl2fY3WLz7xKDa+6xiPI1E+yb9szaxBwq3DbFWH1ubyPnI
+ mSllpHUKTR62DNzA8dewcd7rUu26o+Zb8p+isVc2xVeb0=
 X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
-Subject: [RFC PATCH v2 19/21] x86/vdso: Disable CFI
+Subject: [RFC PATCH v2 18/21] x86/purgatory: Disable CFI
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -86,35 +86,31 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-CC_FLAGS_LTO no longer includes CC_FLAGS_CFI, so filter these flags
-out as well.
+Disable CONFIG_CFI_CLANG for the stand-alone purgatory.ro.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
 ---
- arch/x86/entry/vdso/Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/purgatory/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 693f8b9031fb..abf41ef0f89e 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -91,7 +91,7 @@ ifneq ($(RETPOLINE_VDSO_CFLAGS),)
- endif
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+index ae53d54d7959..b3fa947fa38b 100644
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -55,6 +55,10 @@ ifdef CONFIG_RETPOLINE
+ PURGATORY_CFLAGS_REMOVE		+= $(RETPOLINE_CFLAGS)
  endif
  
--$(vobjs): KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_LTO) $(GCC_PLUGINS_CFLAGS) $(RETPOLINE_CFLAGS),$(KBUILD_CFLAGS)) $(CFL)
-+$(vobjs): KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_LTO) $(CC_FLAGS_CFI) $(GCC_PLUGINS_CFLAGS) $(RETPOLINE_CFLAGS),$(KBUILD_CFLAGS)) $(CFL)
++ifdef CONFIG_CFI_CLANG
++PURGATORY_CFLAGS_REMOVE		+= $(CC_FLAGS_CFI)
++endif
++
+ CFLAGS_REMOVE_purgatory.o	+= $(PURGATORY_CFLAGS_REMOVE)
+ CFLAGS_purgatory.o		+= $(PURGATORY_CFLAGS)
  
- #
- # vDSO code runs in userspace and -pg doesn't help with profiling anyway.
-@@ -151,6 +151,7 @@ KBUILD_CFLAGS_32 := $(filter-out -mfentry,$(KBUILD_CFLAGS_32))
- KBUILD_CFLAGS_32 := $(filter-out $(GCC_PLUGINS_CFLAGS),$(KBUILD_CFLAGS_32))
- KBUILD_CFLAGS_32 := $(filter-out $(RETPOLINE_CFLAGS),$(KBUILD_CFLAGS_32))
- KBUILD_CFLAGS_32 := $(filter-out $(CC_FLAGS_LTO),$(KBUILD_CFLAGS_32))
-+KBUILD_CFLAGS_32 := $(filter-out $(CC_FLAGS_CFI),$(KBUILD_CFLAGS_32))
- KBUILD_CFLAGS_32 += -m32 -msoft-float -mregparm=0 -fpic
- KBUILD_CFLAGS_32 += -fno-stack-protector
- KBUILD_CFLAGS_32 += $(call cc-option, -foptimize-sibling-calls)
 -- 
 2.36.0.550.gb090851708-goog
 
