@@ -2,69 +2,69 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB96C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 13 May 2022 20:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A62EC433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 13 May 2022 20:22:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384107AbiEMUWu (ORCPT
+        id S1384169AbiEMUW6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 13 May 2022 16:22:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43572 "EHLO
+        Fri, 13 May 2022 16:22:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384199AbiEMUWp (ORCPT
+        with ESMTP id S1384178AbiEMUWn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 13 May 2022 16:22:45 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A9EB175698
-        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:28 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2f8398e99dcso81695567b3.9
-        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:28 -0700 (PDT)
+        Fri, 13 May 2022 16:22:43 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7965615A744
+        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:21 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-2fb7bf98f1aso81568517b3.5
+        for <linux-hardening@vger.kernel.org>; Fri, 13 May 2022 13:22:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=hVI2H0xnZ7RmL/u8CtkGkcPsuty3huMjT1xVoaokMS8=;
-        b=ChOWWSpwlZWxcJIQ+SaNXPfO7pMlQzZbg6m7xZvVehWYTAEfesAlK2rfgMl6kKYUJZ
-         PC88MEu08ggaydfb7OYECcrn2NOkrMNmn4eblAgc0zmX5VRvl27k7SoIFReIQfZLRN8r
-         Xj+i+6O7FRCzR9R40JANUSe2JsNQtPUVmZ6bmpUImk/RWRvp35IAvOEg1QHOncWHWOnk
-         XFPQyfBLs72a30aa6J5tmiMLgoA9h+0MOtVMP6BgtZM14sSGVY6sTiFi8Kp9sHcbO8mr
-         6JuTiZzANlnMwoHHFhf4NoXoBBK3TW7AygfM2wKUm2o2ehKVgRxQJX1O8ZfSyi07I/GC
-         15xw==
+        bh=bOpzM5rX2l4ip7yxSBZMEDJLuv66hWELCctweBJJHks=;
+        b=rL/hL6OntTIlT6+vghCQAiZfUmoZf+JKLSwkZf+IrrsNgssVEJVawitmFaYY55jmBe
+         amD7Eq+wsfiNCduzWZ9qsgP4L4Eaoz5WdsbalKIQn6dmzQtZSjg5Ws94G9xU2GMA3379
+         ptYLd/GCT/HZYVruQu1ULOS8r60MhY8tYFWaQkLiwx/jHZy3Hv8nqZJGcbTTlO61CRHO
+         Ui5viFE1OPI2iQTd8ZFgpeNNg8UIf9lxq/5l0yMHnkI4aHbNASnhtiPtCkKN6ow4/8Gy
+         Buw+p+M5hlwFYUt71jzAT461tK+NYI45ChnwXdq3pjmdEybkufp0sSLOl8jFCSlKjOtr
+         c9KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=hVI2H0xnZ7RmL/u8CtkGkcPsuty3huMjT1xVoaokMS8=;
-        b=AqsZ/cMUHtUX8JmgzVo08hfev0IijOZkwyCqAxnVc1DErQguNLWAIcuQqx+MlM5gIQ
-         XLzWVvGC+JN/nuuL+aO4njlhZtgP9P/4mMfHIh/5SzQf6Af+vSe/lFHb7NSvjF0jDeFf
-         OxdXw+xLvIBZOPcrzF9K8XKuzhrP/8OQ0Mtrip3PYcmFjobADTdbXbUtJD9pih+OEKrp
-         gSuepEPKlJurZbfw2gOJ+hR4ihhEpjCQCHZ90McsIhabtLIKQkJN82C5J4uYZBEbQP/O
-         BnAqfwnGGszHud8qI9/OnMnszQ0c76ERBXfEGoaPKQ1jPfTc0dp/4pfvPctxHmFuWNfv
-         CgVg==
-X-Gm-Message-State: AOAM532myg8xSMyJrDbamopnGXCNjeS6gY6555Ui/xcod9iC5KjsBVJO
-        5djyJMlrhk0a2uIvZiK349tXMkFQKUgHfh17hr4=
-X-Google-Smtp-Source: ABdhPJyXOQ8uvyWPL+12fGNZws/BE5YW9i9nX3hNgx2mGOV+806AxTC5RpGIfedu/1NbCFyEdmO58l9WKRQjRyjzaEE=
+        bh=bOpzM5rX2l4ip7yxSBZMEDJLuv66hWELCctweBJJHks=;
+        b=OaS0suH5CCtMHMFc/m88cKAUxnTLCYgGauJ82B1LgAbYIEY71jycw+bMldyfuCLDSi
+         SZZNMwGVnGH7loS6iE0HPZqYFS37ljYGYz+2lUNyF1NA/08IcIxKZeUL/YCzntvzeMvG
+         q8UeFuCcQsIDJGr2krQaUoWDwHeJ52TJdZiWzzWFcHoKtOWUxAt5p6xRl1tu8jsTrGIL
+         5yKkbxiD1i8ZaIpptqHrB2HbM6hJJRgeQ+w3ur6C4+M1gSSdZBZ3lmlxEEryKPBJGJlU
+         Udv99egJpaedf3wdVd0DTRH32huBNXM7jnN9t0AJziIOVtf2ncWG0chNNMpmQAgule1K
+         9+8Q==
+X-Gm-Message-State: AOAM5309L2GLQGa4bFMzb5i91mmJyytp6exWszvVTuSNmIuxTl3SjkI+
+        lUTxipm11KZpPfe/WdM8KpGvqxYBvBpv5+qxI8Y=
+X-Google-Smtp-Source: ABdhPJwWzw5BAhCv70kXSSaCh7PhBQVVl4ghLTYlA0W/0QO97ijY+sTWmPSKw5zlsA+je25PPHFJReZCMSvJtqlJTmo=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:e0:c17e:c2dc:13eb])
- (user=samitolvanen job=sendgmr) by 2002:a25:6407:0:b0:64b:4b88:a3a1 with SMTP
- id y7-20020a256407000000b0064b4b88a3a1mr6935792ybb.320.1652473347761; Fri, 13
- May 2022 13:22:27 -0700 (PDT)
-Date:   Fri, 13 May 2022 13:21:49 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a25:b320:0:b0:645:6969:52f4 with SMTP
+ id l32-20020a25b320000000b00645696952f4mr6410598ybj.466.1652473340628; Fri,
+ 13 May 2022 13:22:20 -0700 (PDT)
+Date:   Fri, 13 May 2022 13:21:46 -0700
 In-Reply-To: <20220513202159.1550547-1-samitolvanen@google.com>
-Message-Id: <20220513202159.1550547-12-samitolvanen@google.com>
+Message-Id: <20220513202159.1550547-9-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20220513202159.1550547-1-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2335; h=from:subject;
- bh=UQlGPlwtYybM8FEAV0vACm4HLycz0znjf8+xx6gkTx0=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBifr3knoHGJRQ8lklk1VH0eWFsW6jNYP2xh19dScd+
- EuJIIM2JAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYn695AAKCRBMtfaEi7xW7kRSC/
- 42vBryC3ccOIXP/usmo03Al21Qca5sIegalwVHuJV+choTcYrlXsVgpXmKEbgvi0MOdXz7P2uXwf6N
- ZMqBuYr2/fS7MiuRb0lv3fUxcWTBSlLokzEKszNO55+3k1A2+OaE1jGDM26vzTk4E6f/ehXixU/lmb
- EPwPWGqa6vrC9QuGN0TOqrJw9h6RZh7EmB5kzUNvXQx0dPN/t0h4qyIufAjODvsE/Umg2MZ+NwqIww
- SXHqyzYZeaEY3pxLTbJ2FC9WvJaK/LnVAtWGuvmNdvdTjHq7ly2b3SVz/5el1sPLp+v5ZoAZ1C6wF/
- HeIsnn2jx/Mk2gb7IcxRwxwtMZjrnTDW9lfq/d0TDHhReaCXOqEWfwE02+h7xRT+xyVP0J2XVbpUK4
- KbUE3kdbMCFdQidVvRFCZlCYl5UbTml8VKUW+GZu1taVIPo5a9jIUwUHJXhrLhxKRfAWWFnz5DnB2g
- vTke5m0gcOVH/HeP/DAQgo3aqLyGnKoS8NlOfBBSnEqmc=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=835; h=from:subject;
+ bh=HH1ZoZ4U7IrTG0qT02hkMGqwA8ikkqMw52ht6iNCIe8=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBifr3j/HnryEij1/HDUc2sbZLQyYN7d6556HPZq1qT
+ l1xSJNOJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYn694wAKCRBMtfaEi7xW7ktXDA
+ CU67UkQ9+rP6BZrl4m0BX4xUiwzSmmKPLl9nByQ7yxpXu6x9cOxvsh7U+Y+kdEvD+wXiJX/83jCg88
+ viRNpRYeMvJXxI1DPEyJhK+E2GSrC8RfNlnOKOCBWyBm9pDr7/akIxQSKPItAZ9NR9hoZDzYxImk2b
+ kFlY7+tt3abbniKqgwD2SlAe9ab1jJeTDp1b8ijpK85f3dEHhJtGWHn4ijrJQWlimUHtN4amn+DJmV
+ I7Ti8ClmSh7Lky12ga65DmJQ3s1WHHj5ZrZGalNG25evyzYj+FTwpvEv/D9IRDB2+brvZ/pidt0x7N
+ F1EQbzuYgZCDrr4PNCycx1HLCBZ4pC1q+96fvrsjj4UyPP6hEiyzGaqhTM211QovCAKh8N5YyyY8Kq
+ cgmRTA/+rmphPKNrl6e434tN7thBoUXXn9pnTlR1B7tNq5ZAio1MvLBno+7zYk2Lthd97TwEgrcjPV
+ xYOFqJC1W7SajhbCnMeZUuTW5HZSIq64lZnTLiQXLJKfU=
 X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
-Subject: [RFC PATCH v2 11/21] arm64: Drop unneeded __nocfi attributes
+Subject: [RFC PATCH v2 08/21] psci: Fix the function type for psci_initcall_t
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -86,58 +86,29 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With -fsanitize=kcfi, CONFIG_CFI_CLANG no longer has issues
-with address space confusion in functions that switch to linear
-mapping. Now that the indirectly called assembly functions have
-type annotations, drop the __nocfi attributes.
+Functions called through a psci_initcall_t pointer all have
+non-const arguments. Fix the type definition to avoid tripping
+indirect call checks with CFI_CLANG.
 
-Suggested-by: Mark Rutland <mark.rutland@arm.com>
+Reported-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
- arch/arm64/include/asm/mmu_context.h | 2 +-
- arch/arm64/kernel/alternative.c      | 2 +-
- arch/arm64/kernel/cpufeature.c       | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/firmware/psci/psci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
-index 6770667b34a3..ca0140d0b8cf 100644
---- a/arch/arm64/include/asm/mmu_context.h
-+++ b/arch/arm64/include/asm/mmu_context.h
-@@ -143,7 +143,7 @@ static inline void cpu_install_ttbr0(phys_addr_t ttbr0, unsigned long t0sz)
-  * Atomically replaces the active TTBR1_EL1 PGD with a new VA-compatible PGD,
-  * avoiding the possibility of conflicting TLB entries being allocated.
-  */
--static inline void __nocfi cpu_replace_ttbr1(pgd_t *pgdp)
-+static inline void cpu_replace_ttbr1(pgd_t *pgdp)
- {
- 	typedef void (ttbr_replace_func)(phys_addr_t);
- 	extern ttbr_replace_func idmap_cpu_replace_ttbr1;
-diff --git a/arch/arm64/kernel/alternative.c b/arch/arm64/kernel/alternative.c
-index 7bbf5104b7b7..e98466bab633 100644
---- a/arch/arm64/kernel/alternative.c
-+++ b/arch/arm64/kernel/alternative.c
-@@ -133,7 +133,7 @@ static void clean_dcache_range_nopatch(u64 start, u64 end)
- 	} while (cur += d_size, cur < end);
+diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+index cfb448eabdaa..6554bf4b8c99 100644
+--- a/drivers/firmware/psci/psci.c
++++ b/drivers/firmware/psci/psci.c
+@@ -521,7 +521,7 @@ static int __init psci_probe(void)
+ 	return 0;
  }
  
--static void __nocfi __apply_alternatives(struct alt_region *region, bool is_module,
-+static void __apply_alternatives(struct alt_region *region, bool is_module,
- 				 unsigned long *feature_mask)
- {
- 	struct alt_instr *alt;
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index d72c4b4d389c..af78dcacf9fe 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -1596,7 +1596,7 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
- }
+-typedef int (*psci_initcall_t)(const struct device_node *);
++typedef int (*psci_initcall_t)(struct device_node *);
  
- #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
--static void __nocfi
-+static void
- kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
- {
- 	typedef void (kpti_remap_fn)(int, int, phys_addr_t);
+ /*
+  * PSCI init function for PSCI versions >=0.2
 -- 
 2.36.0.550.gb090851708-goog
 
