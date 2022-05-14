@@ -2,51 +2,51 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9FCC433F5
-	for <linux-hardening@archiver.kernel.org>; Sat, 14 May 2022 21:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6054C433F5
+	for <linux-hardening@archiver.kernel.org>; Sat, 14 May 2022 21:49:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233724AbiENVqx (ORCPT
+        id S231218AbiENVtk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 14 May 2022 17:46:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48092 "EHLO
+        Sat, 14 May 2022 17:49:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230116AbiENVqw (ORCPT
+        with ESMTP id S229839AbiENVti (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 14 May 2022 17:46:52 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 947055F5E
-        for <linux-hardening@vger.kernel.org>; Sat, 14 May 2022 14:46:51 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id i17so11076334pla.10
-        for <linux-hardening@vger.kernel.org>; Sat, 14 May 2022 14:46:51 -0700 (PDT)
+        Sat, 14 May 2022 17:49:38 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33D2712AF4
+        for <linux-hardening@vger.kernel.org>; Sat, 14 May 2022 14:49:38 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id p12so10788756pfn.0
+        for <linux-hardening@vger.kernel.org>; Sat, 14 May 2022 14:49:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=e29OYJF0Cr34NWXtjSnWsGpG9iO/e7RRuuLzidaM53E=;
-        b=iLL3cfRMy+bNRF6yJMjDw3XvgwGT5nul36IUUc3BfjbVqT/89mvtX0Y9OzZeN0R4Gu
-         W178b+kjzr8Lf53lXiq7GHB/hfPD1hgiN4QTbUs3bRLflRujC0OJjNTHm2LZ3xS18mLX
-         NRFhidoGxgqGZWfBgeQ3q0MvXRxhcwrfDkb+8=
+        bh=s6gyFIzNx3uPs0E9QTdHeabUUHOLCiS5BRmtEkTrJ0M=;
+        b=c7bt5Yyim6jXKVU+nad9I6JP2/SU4szhm6beG8K9aijDODZgSy0Agoa/TRIPhM8F1M
+         rmYwZd8/LYOr0N85MfiL1hP82YXqGevzNXXADwKiS+C2Z1EidmmFYt0rEWxDNpDTeDfz
+         isXaa8uHnFoI1HAe6xmc8AxSjWofOHnUnKFTc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=e29OYJF0Cr34NWXtjSnWsGpG9iO/e7RRuuLzidaM53E=;
-        b=MXRdDMGHJcXEDXoDI8UinKv+zXM5Nt5hxUCCX3PdgkWupcIl70a07GTAgoPIxNycnQ
-         o5URKRrlKi0I6bLJHQA/hwO1Jl7nWPVK/XcYw3jqOCYbhB6llgXopgVaH+v56wpafx2i
-         Adjz9yxagImu5lnYp6DSBAdbnKa+BBqzKR/ajtCyV3QYfI2BJffzQ1D+q7CPtelSqKLH
-         09BVUGsH/ROTEjTBMoizFhkQtWiMJfXAPM/6DdPErKYxsRAEVdMY6EjGBMdjwUDpnp1V
-         TyeUSNrgeAt3DR9P7lWpEGgruUmljGxZGPsEYOaJZRfLHzwPRNBIVQLkXzlB9BO5Iudz
-         KstA==
-X-Gm-Message-State: AOAM531TQwWwssX5TJ2Uh+j8Z3/oWsPHv+3NsgwP2GRRWU0LqTMkLT7B
-        eZwaAasb4uNw+oRxhhUx3Y88bA==
-X-Google-Smtp-Source: ABdhPJwsCXmSC41w6NBmUyzu0g9wSnZn8nG1i4Pdwc6BWgonq72IR1wz8hyIaB0bEBdZVZ1mnem53A==
-X-Received: by 2002:a17:903:189:b0:15e:9584:fbe7 with SMTP id z9-20020a170903018900b0015e9584fbe7mr10635100plg.65.1652564811104;
-        Sat, 14 May 2022 14:46:51 -0700 (PDT)
+        bh=s6gyFIzNx3uPs0E9QTdHeabUUHOLCiS5BRmtEkTrJ0M=;
+        b=t+IY8OB2Qve0FDtZrXMn5/FVikhQsphggxZMnUnRQUa6xo97clNsJnEEiTC2CUTczM
+         njoaEYDVr2sL/WmNIWaMR+J/7Wy630jcsAKheOHWV+5UIhRAIQdDW9008u3cw/WzRc7c
+         faiL6gEGpJ1yJ4ecUsLqJRG94YeIzle04kjK5al4bj+PqYwL34G0f6JGRf3MIlKzsVZM
+         TC12dEt+kFIcAP8ksQKKegvSUrhZQvzPrLLtHIxbKGC5LRWZPDntIGikry0NSRYDdU5N
+         cA8XxlohHEzedUD7wdrmvlQg9unRWCfCDwYZRhnpw8RqyUAc2KnJ9qMMBnIzbIiu1qbl
+         sQrg==
+X-Gm-Message-State: AOAM532AagGw6jdlgxLWqP/8oD9U2dik1H7dlHzbsVXO1W/e+/hmtihm
+        lfcLur12RuGHcdpRei4RuNvbBw==
+X-Google-Smtp-Source: ABdhPJwk8CcBX6QnXuAE6iXMXjeE8Vq7UImMhCQwh4Vg8IjNOXTMawTzaFXfXJRgS9HCVdGKlVDekA==
+X-Received: by 2002:a65:4ccd:0:b0:3c2:428d:d13b with SMTP id n13-20020a654ccd000000b003c2428dd13bmr9330640pgt.425.1652564977729;
+        Sat, 14 May 2022 14:49:37 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j11-20020a056a00174b00b0050dc76281bfsm4049680pfc.153.2022.05.14.14.46.50
+        by smtp.gmail.com with ESMTPSA id f1-20020a170902ff0100b0015e8d4eb26asm4114685plj.180.2022.05.14.14.49.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 May 2022 14:46:50 -0700 (PDT)
-Date:   Sat, 14 May 2022 14:46:50 -0700
+        Sat, 14 May 2022 14:49:37 -0700 (PDT)
+Date:   Sat, 14 May 2022 14:49:36 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Sami Tolvanen <samitolvanen@google.com>
 Cc:     linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -61,32 +61,37 @@ Cc:     linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-hardening@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [RFC PATCH v2 06/21] cfi: Switch to -fsanitize=kcfi
-Message-ID: <202205141444.9F32C94D9@keescook>
+Subject: Re: [RFC PATCH v2 07/21] cfi: Add type helper macros
+Message-ID: <202205141447.E3B5A29@keescook>
 References: <20220513202159.1550547-1-samitolvanen@google.com>
- <20220513202159.1550547-7-samitolvanen@google.com>
+ <20220513202159.1550547-8-samitolvanen@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220513202159.1550547-7-samitolvanen@google.com>
+In-Reply-To: <20220513202159.1550547-8-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, May 13, 2022 at 01:21:44PM -0700, Sami Tolvanen wrote:
-> Switch from Clang's original forward-edge control-flow integrity
-> implementation to -fsanitize=kcfi, which is better suited for the
-> kernel, as it doesn't require LTO, doesn't use a jump table that
-> requires altering function references, and won't break cross-module
-> function address equality.
+On Fri, May 13, 2022 at 01:21:45PM -0700, Sami Tolvanen wrote:
+> With CONFIG_CFI_CLANG, assembly functions called indirectly
+> from C code must be annotated with type identifiers to pass CFI
+> checking. The compiler emits a __kcfi_typeid_<function> symbol for
+> each address-taken function declaration in C, which contains the
+> expected type identifier. Add typed versions of SYM_FUNC_START and
+> SYM_FUNC_START_ALIAS, which emit the type identifier before the
+> function.
 > 
 > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-Yes please. And just to note it somewhere: landing the KCFI
-implementation on Clang depends on this series being accepted (i.e. if
-the arm64 and x86 maintainers are happy with this series, then that'll
-unblock landing it in Clang (no reason to land something that won't get
-used.)
+And the reason to not make this change universally (i.e. directly in
+SYM_FUNC_START) is to minimize how many of these symbol annotations get
+emitted? (And to more directly indicate which asm is called indirectly?)
+
+What happens if an asm function is called indirectly and it doesn't have
+this annotation? (Is this case detectable at compile-time?)
+
+Regardless:
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
