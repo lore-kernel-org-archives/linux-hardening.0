@@ -2,149 +2,113 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6813AC433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 07:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E287AC433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 08:32:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241087AbiEPHeL (ORCPT
+        id S241738AbiEPIcZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 16 May 2022 03:34:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54124 "EHLO
+        Mon, 16 May 2022 04:32:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241130AbiEPHeF (ORCPT
+        with ESMTP id S231979AbiEPIcY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 16 May 2022 03:34:05 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB76A2315E;
-        Mon, 16 May 2022 00:34:03 -0700 (PDT)
-Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.54])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4L1rZ26MsZz1JCDp;
-        Mon, 16 May 2022 15:32:42 +0800 (CST)
-Received: from ubuntu1804.huawei.com (10.67.174.58) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 16 May 2022 15:34:01 +0800
-From:   Xiu Jianfeng <xiujianfeng@huawei.com>
-To:     <mpe@ellerman.id.au>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <npiggin@gmail.com>,
-        <christophe.leroy@csgroup.eu>, <tglx@linutronix.de>,
-        <mark.rutland@arm.com>
-CC:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>
-Subject: [PATCH -next, v2] powerpc: add support for syscall stack randomization
-Date:   Mon, 16 May 2022 15:32:25 +0800
-Message-ID: <20220516073225.112875-1-xiujianfeng@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 16 May 2022 04:32:24 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 66089E099
+        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 01:32:22 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-170-zoDI43liMzmQsfEc1mcSeQ-1; Mon, 16 May 2022 09:32:19 +0100
+X-MC-Unique: zoDI43liMzmQsfEc1mcSeQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.36; Mon, 16 May 2022 09:32:18 +0100
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.036; Mon, 16 May 2022 09:32:18 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Sami Tolvanen' <samitolvanen@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Joao Moreira <joao@overdrivepizza.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        "Steven Rostedt" <rostedt@goodmis.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "llvm@lists.linux.dev" <llvm@lists.linux.dev>
+Subject: RE: [RFC PATCH v2 20/21] x86: Add support for CONFIG_CFI_CLANG
+Thread-Topic: [RFC PATCH v2 20/21] x86: Add support for CONFIG_CFI_CLANG
+Thread-Index: AQHYZwdlgt4N7xLw0EK8voqNmmoVIa0hK0vA
+Date:   Mon, 16 May 2022 08:32:18 +0000
+Message-ID: <f65c01979b884174965802a13cf6b077@AcuMS.aculab.com>
+References: <20220513202159.1550547-1-samitolvanen@google.com>
+ <20220513202159.1550547-21-samitolvanen@google.com>
+In-Reply-To: <20220513202159.1550547-21-samitolvanen@google.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.174.58]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500023.china.huawei.com (7.185.36.114)
-X-CFilter-Loop: Reflected
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add support for adding a random offset to the stack while handling
-syscalls. This patch uses mftb() instead of get_random_int() for better
-performance.
-
-In order to avoid unconditional stack canaries on syscall entry (due to
-the use of alloca()), also disable stack protector to avoid triggering
-needless checks and slowing down the entry path. As there is no general
-way to control stack protector coverage with a function attribute, this
-must be disabled at the compilation unit level.
-
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
-
----
-Changes in v2:
-  -move choose choose_random_kstack_offset() to the end of system_call_exception
-  -allow full 6 (10) bits of entropy
-  -disable stack-protector for interrupt.c
----
- arch/powerpc/Kconfig            |  1 +
- arch/powerpc/kernel/Makefile    |  7 +++++++
- arch/powerpc/kernel/interrupt.c | 19 ++++++++++++++++++-
- 3 files changed, 26 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 98309eeae09c..2f0019a0054e 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -192,6 +192,7 @@ config PPC
- 	select HAVE_ARCH_KASAN			if PPC32 && PPC_PAGE_SHIFT <= 14
- 	select HAVE_ARCH_KASAN_VMALLOC		if PPC32 && PPC_PAGE_SHIFT <= 14
- 	select HAVE_ARCH_KFENCE			if PPC_BOOK3S_32 || PPC_8xx || 40x
-+	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
- 	select HAVE_ARCH_KGDB
- 	select HAVE_ARCH_MMAP_RND_BITS
- 	select HAVE_ARCH_MMAP_RND_COMPAT_BITS	if COMPAT
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index 4ddd161aef32..5c5e85b8229b 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -40,6 +40,13 @@ CFLAGS_cputable.o += -DDISABLE_BRANCH_PROFILING
- CFLAGS_btext.o += -DDISABLE_BRANCH_PROFILING
- endif
- 
-+#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
-+# Remove stack protector to avoid triggering unneeded stack canary
-+# checks due to randomize_kstack_offset.
-+CFLAGS_REMOVE_interrupt.o = -fstack-protector -fstack-protector-strong
-+CFLAGS_interrupt.o += -fno-stack-protector
-+#endif
-+
- obj-y				:= cputable.o syscalls.o \
- 				   irq.o align.o signal_$(BITS).o pmc.o vdso.o \
- 				   process.o systbl.o idle.o \
-diff --git a/arch/powerpc/kernel/interrupt.c b/arch/powerpc/kernel/interrupt.c
-index 784ea3289c84..d7cdcb6fc336 100644
---- a/arch/powerpc/kernel/interrupt.c
-+++ b/arch/powerpc/kernel/interrupt.c
-@@ -4,6 +4,7 @@
- #include <linux/err.h>
- #include <linux/compat.h>
- #include <linux/sched/debug.h> /* for show_regs */
-+#include <linux/randomize_kstack.h>
- 
- #include <asm/kup.h>
- #include <asm/cputime.h>
-@@ -78,10 +79,12 @@ notrace long system_call_exception(long r3, long r4, long r5,
- 				   long r6, long r7, long r8,
- 				   unsigned long r0, struct pt_regs *regs)
- {
-+	long ret;
- 	syscall_fn f;
- 
- 	kuap_lock();
- 
-+	add_random_kstack_offset();
- 	regs->orig_gpr3 = r3;
- 
- 	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
-@@ -229,7 +232,21 @@ notrace long system_call_exception(long r3, long r4, long r5,
- 		f = (void *)sys_call_table[r0];
- 	}
- 
--	return f(r3, r4, r5, r6, r7, r8);
-+	ret = f(r3, r4, r5, r6, r7, r8);
-+	/*
-+	 * Ultimately, this value will get limited by KSTACK_OFFSET_MAX(),
-+	 * so the maximum stack offset is 1k bytes(10 bits).
-+	 *
-+	 * The actual entropy will be further reduced by the compiler when
-+	 * applying stack alignment constraints: the powerpc architecture
-+	 * may have two kinds of stack alignment(16-bytes and 8-bytes).
-+	 *
-+	 * So the resulting 6 or 7 bits of entropy is seen in SP[9:4] or SP[9:3].
-+	 *
-+	 */
-+	choose_random_kstack_offset(mftb());
-+
-+	return ret;
- }
- 
- static notrace void booke_load_dbcr0(void)
--- 
-2.17.1
+RnJvbTogU2FtaSBUb2x2YW5lbg0KPiBTZW50OiAxMyBNYXkgMjAyMiAyMToyMg0KPiANCj4gV2l0
+aCBDT05GSUdfQ0ZJX0NMQU5HLCB0aGUgY29tcGlsZXIgaW5qZWN0cyBhIHR5cGUgcHJlYW1ibGUN
+Cj4gaW1tZWRpYXRlbHkgYmVmb3JlIGVhY2ggZnVuY3Rpb24gYW5kIGEgY2hlY2sgdG8gdmFsaWRh
+dGUgdGhlIHRhcmdldA0KPiBmdW5jdGlvbiB0eXBlIGJlZm9yZSBpbmRpcmVjdCBjYWxsczoNCj4g
+DQo+ICAgOyB0eXBlIHByZWFtYmxlDQo+ICAgX19jZmlfZnVuY3Rpb246DQo+ICAgICBpbnQzDQo+
+ICAgICBpbnQzDQo+ICAgICBtb3YgPGlkPiwgJWVheA0KDQpJbnRlcmVzdGluZyAtIHNpbmNlIHRo
+aXMgY29kZSBjYW4ndCBiZSBleGVjdXRlZCB0aGVyZSBpcyBubw0KcG9pbnQgYWRkaW5nIGFuIGlu
+c3RydWN0aW9uICdwcmVmaXgnIHRvIHRoZSAzMmJpdCBjb25zdGFudC4NCiANCj4gICAgIGludDMN
+Cj4gICAgIGludDMNCj4gICBmdW5jdGlvbjoNCj4gICAgIC4uLg0KPiAgIDsgaW5kaXJlY3QgY2Fs
+bCBjaGVjaw0KPiAgICAgY21wbMKgIMKgIDxpZD4sIC02KCVyMTEpDQo+ICAgICBqZSAgICAgIC5M
+dG1wMQ0KPiAgICAgdWQyDQo+ICAgLkx0bXAxOg0KPiAgICAgY2FsbCAgICBfX3g4Nl9pbmRpcmVj
+dF90aHVua19yMTENCj4gDQo+IERlZmluZSB0aGUgX19DRklfVFlQRSBoZWxwZXIgbWFjcm8gZm9y
+IG1hbnVhbCB0eXBlIGFubm90YXRpb25zIGluDQo+IGFzc2VtYmx5IGNvZGUsIGFkZCBlcnJvciBo
+YW5kbGluZyBmb3IgdGhlIENGSSB1ZDIgdHJhcHMsIGFuZCBhbGxvdw0KPiBDT05GSUdfQ0ZJX0NM
+QU5HIHRvIGJlIHNlbGVjdGVkIG9uIHg4Nl82NC4NCj4gDQouLi4NCj4gKw0KPiArCS8qDQo+ICsJ
+ICogVGhlIGNvbXBpbGVyIGdlbmVyYXRlcyB0aGUgZm9sbG93aW5nIGluc3RydWN0aW9uIHNlcXVl
+bmNlDQo+ICsJICogZm9yIGluZGlyZWN0IGNhbGwgY2hlY2tzOg0KPiArCSAqDQo+ICsJICogwqAg
+Y21wbMKgIMKgIDxpZD4sIC02KCVyZWcpCTsgNyBieXRlcw0KDQpJZiB0aGUgPGlkPiBpcyBiZXR3
+ZWVuIC0xMjggYW5kIDEyNyB0aGVuIGFuIDhiaXQgY29uc3RhbnQNCihzaWduIGV4dGVuZGVkKSBt
+aWdodCBiZSB1c2VkLg0KUG9zc2libHkgdGhlIGNvbXBpbGVyIGZvcmNlcyB0aGUgYXNzZW1ibGVy
+IHRvIGdlbmVyYXRlIHRoZQ0KbG9uZyBmb3JtLg0KDQpUaGVyZSBjb3VsZCBhbHNvIGJlIGEgUkVY
+IHByZWZpeC4NClRoYXQgd2lsbCBicmVhayBhbnkgY29kZSB0aGF0IHRyaWVzIHRvIHVzZSAlcmVn
+Lg0KDQo+ICsJICogICBqZSAgICAgIC5MdG1wMQkJOyAyIGJ5dGVzDQo+ICsJICogICB1ZDIJCQk7
+IDwtIGFkZHINCj4gKwkgKiAgIC5MdG1wMToNCj4gKwkgKg0KPiArCSAqIEJvdGggdGhlIHR5cGUg
+YW5kIHRoZSB0YXJnZXQgYWRkcmVzcyBjYW4gYmUgZGVjb2RlZCBmcm9tIHRoZQ0KPiArCSAqIGNt
+cGwgaW5zdHJ1Y3Rpb24uDQo+ICsJICovDQo+ICsJaWYgKGNvcHlfZnJvbV9rZXJuZWxfbm9mYXVs
+dChidWZmZXIsICh2b2lkICopcmVncy0+aXAgLSA5LCBNQVhfSU5TTl9TSVpFKSkNCj4gKwkJcmV0
+dXJuOw0KPiArCWlmIChpbnNuX2RlY29kZV9rZXJuZWwoJmluc24sIGJ1ZmZlcikpDQo+ICsJCXJl
+dHVybjsNCj4gKwlpZiAoaW5zbi5vcGNvZGUudmFsdWUgIT0gMHg4MSB8fCBYODZfTU9EUk1fUkVH
+KGluc24ubW9kcm0udmFsdWUpICE9IDcpDQo+ICsJCXJldHVybjsNCg0KU2luY2UgeW91IGFyZSBs
+b29raW5nIGZvciBhIHZlcnkgc3BlY2lmaWMgb3Bjb2RlIHdoeSBib3RoZXINCmNhbGxpbmcgaW5z
+bl9kZWNvZGVfa2VybmVsKCkgLSBqdXN0IGNoZWNrIGZvciB0aGUgcmVxdWlyZWQgKG1hc2tlZCkN
+CmJ5dGUgdmFsdWVzLg0KDQo+ICsNCj4gKwkqdHlwZSA9IGluc24uaW1tZWRpYXRlLnZhbHVlOw0K
+PiArDQo+ICsJb2Zmc2V0ID0gaW5zbl9nZXRfbW9kcm1fcm1fb2ZmKCZpbnNuLCByZWdzKTsNCg0K
+R2l2ZW4gdGhlIGV4cGVjdGVkIGluc3RydWN0aW9uLCBpc24ndCB0aGF0IC02ID8/DQo+ICsJaWYg
+KG9mZnNldCA8IDApDQo+ICsJCXJldHVybjsNCj4gKw0KPiArCSp0YXJnZXQgPSAqKHVuc2lnbmVk
+IGxvbmcgKikoKHZvaWQgKilyZWdzICsgb2Zmc2V0KTsNCg0KV1RGIGlzIHRoYXQgY2FsY3VsYXRp
+bmc/Pw0KDQo+ICt9DQouLi4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtl
+c2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBV
+Sw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
