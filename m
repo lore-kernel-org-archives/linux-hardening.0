@@ -2,64 +2,61 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2533EC433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 16:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C650BC433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 17:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343766AbiEPQjk (ORCPT
+        id S1344168AbiEPRPj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 16 May 2022 12:39:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46690 "EHLO
+        Mon, 16 May 2022 13:15:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233538AbiEPQjj (ORCPT
+        with ESMTP id S1344159AbiEPRPi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 16 May 2022 12:39:39 -0400
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3C8D3AA4D
-        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 09:39:38 -0700 (PDT)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-2ef5380669cso159724887b3.9
-        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 09:39:38 -0700 (PDT)
+        Mon, 16 May 2022 13:15:38 -0400
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA9333337A
+        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 10:15:37 -0700 (PDT)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-2fee9fe48c2so39422747b3.3
+        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 10:15:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DJ1mj/6AEbnCZ4HPughZpfwPoxjL4U+12a8eW3KN+cU=;
-        b=BrUCwqzxN2mNfk/ExieimQ9XkZd769u40ZXKgP3WMEJSnoidxk7l4mgPgX8TQLEUf+
-         mHoGRcO4qbZrF3SZvjLddv1SFfTTPb/Qdm7F/4Iww+SxqXQBztROLAuEfJN/v/B1VpYQ
-         Ow8ybjFEWj00m3V7QA+mRR5vUigRQPZszrSAj3T8lfAbC2/FCRo96LSLXzVjjdgvWDsV
-         Yfs6cGR6w4Xbfm8W5Mf6h60V4gzbxVxbjBnQXmEnogjmm/VFkWUOQpgtI8/qriceckOr
-         RaOqb/nWuFQtgqtCf0NnQumcR5ga8ZlkjY+sc2wBUohWGR5PrpBBo67IOdsHmRMHYVWj
-         3kpQ==
+        bh=SGf6wjrvSBA9+5luKWtA8S1TB1Ho/iykZkRoevKUR/M=;
+        b=sG0LBzcw6X5gtPxGyrwzWMTlfNPOaO9928SvntnUZYb9/aTe8ETQvXR+oTGM+2Q01E
+         FT27+UEachU8nZ1/6NE6iFT0H7w2Z3yA+Xt2mScQcVbGHTAWTIC7oC4Ow2OaFjZ9yRPC
+         zsYacU5leVMUJP7q08JQQ5kO8v4LF8Y18NuJOV1FQrJzkb1Q6HVJDb2aR5qUZZ4fxb8L
+         j83sHlqEvTkYQHwcihaYzN7Qej80njRn7ld+NLQm+PvbJhpZV4rhRz6XHZUrjQV7dE19
+         0b1Wx+2l3Noy/e5cucVImILRyz95RaT9Ba/0fxbWcc15VZWfUSGKEh7MDJ5UgWmgO8Wm
+         Fp5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DJ1mj/6AEbnCZ4HPughZpfwPoxjL4U+12a8eW3KN+cU=;
-        b=IRL+t/j0n5tibgsPBHN5fpM5g2mF9Cgw996Av8I5CFqzm4am1xhQ8krvI8nzeuOLM0
-         QfgxZc0Vtss/Usp0k0v0oKvCcF1yKb8c3dOK3EpxxAVyHt/v9D5EClhkCThgi+kX29OR
-         VGmERlIAUWKiO1saapILrzGumIXYwIs3O0GErInSKamQzSUn3f2sIzShltZdK8O7RdNZ
-         VnjuKEetjZSGBXhANOyfmphJlOzg73d6Q5Hl+89sHGJZjxHiCXVkF8PTw7yvll9iFJ7u
-         SEa/ZvgMTXB2fH8XhcLx484v9T+3NyXcKpn9BB3yTT1epNgDTqh+yURAos8X4cVbH2So
-         Ky/A==
-X-Gm-Message-State: AOAM531uMlq1D5Rgz1WtddCxRyS9/ehqluLPNVQpccWzfNRBuwn+gagN
-        S0MerqqGOnkxLKR7BVfJXide4YCsNQ4tsv0DtBsk/w==
-X-Google-Smtp-Source: ABdhPJzQJa1N5l2z5xfrd+zcTG6blvNDsfHVm9LuNqqXVzDY9SqhLJ1LbDtJEHO1K6Zz6VnIidKyyWBgtD0CkopkxGA=
-X-Received: by 2002:a81:4ecf:0:b0:2fe:d9f2:15b3 with SMTP id
- c198-20020a814ecf000000b002fed9f215b3mr11033942ywb.305.1652719177966; Mon, 16
- May 2022 09:39:37 -0700 (PDT)
+        bh=SGf6wjrvSBA9+5luKWtA8S1TB1Ho/iykZkRoevKUR/M=;
+        b=0QO3c05ZzsuIyngyqAPk3nDNlUvAUa0tfErHZv8wrsHhs58DmMdjfAqBR6tMNaLBnU
+         r7zbT+Eq/zujYO12ee/pTTmyDVqBkE3CzpjsOaDhZLXCfNNhBAa01s3gJOqi7mZ2VaK4
+         lIhYSPMf7XBCVGdamDZqn5yE1VXEpRJFOJU1coz5JKqC6yWVopqP1BnSDKJTzj7XWq25
+         rGeArhp7vuE5ZYcn0t55Mg4NNuSmcfKLKfwxOuS2wRhOBKhvkfCuCljUqBadlNb4i2SI
+         +jz1HQI8HXoeqYvCniOgTgiQk1+z7rpPqRmW3yBNNjDePMUjh07mpR1mG3Y6cbBaB/Sd
+         6GGw==
+X-Gm-Message-State: AOAM532HTcjscN09wiqmW65aAd/UdXqUWOI/y9Nn1KUUOH94ZGSG9xHU
+        gZjnA0gtdoOSh2seFXH5NJUzpnIMZi4P/ltN3YEEPg==
+X-Google-Smtp-Source: ABdhPJwVJxOR6miZJ4+xQc2WHDZMKppmkvrGNnjVqxWGG/tKcoV/VdOV2r77ffndCOhGZP+04/DkGyU0orcJhTS4elU=
+X-Received: by 2002:a0d:d747:0:b0:2ff:22b9:9281 with SMTP id
+ z68-20020a0dd747000000b002ff22b99281mr186733ywd.305.1652721336717; Mon, 16
+ May 2022 10:15:36 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220513202159.1550547-1-samitolvanen@google.com>
- <20220513202159.1550547-21-samitolvanen@google.com> <f65c01979b884174965802a13cf6b077@AcuMS.aculab.com>
-In-Reply-To: <f65c01979b884174965802a13cf6b077@AcuMS.aculab.com>
+ <20220513202159.1550547-21-samitolvanen@google.com> <YoIfWENLV1AR2ijj@hirez.programming.kicks-ass.net>
+In-Reply-To: <YoIfWENLV1AR2ijj@hirez.programming.kicks-ass.net>
 From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Mon, 16 May 2022 09:39:02 -0700
-Message-ID: <CABCJKueo+cw1DHH6N2dUjD-U7OKqmkJUyimm0ychv1drt5U9Rg@mail.gmail.com>
+Date:   Mon, 16 May 2022 10:15:00 -0700
+Message-ID: <CABCJKucXA2jbTc9TF1mLUsEDKu52t71tzxpnsGOXY3_ks+W4Bg@mail.gmail.com>
 Subject: Re: [RFC PATCH v2 20/21] x86: Add support for CONFIG_CFI_CLANG
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "x86@kernel.org" <x86@kernel.org>,
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -68,20 +65,16 @@ Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Joao Moreira <joao@overdrivepizza.com>,
         Sedat Dilek <sedat.dilek@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "llvm@lists.linux.dev" <llvm@lists.linux.dev>
+        linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 16, 2022 at 1:32 AM David Laight <David.Laight@aculab.com> wrote:
+On Mon, May 16, 2022 at 2:54 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> From: Sami Tolvanen
-> > Sent: 13 May 2022 21:22
-> >
+> On Fri, May 13, 2022 at 01:21:58PM -0700, Sami Tolvanen wrote:
 > > With CONFIG_CFI_CLANG, the compiler injects a type preamble
 > > immediately before each function and a check to validate the target
 > > function type before indirect calls:
@@ -91,83 +84,62 @@ On Mon, May 16, 2022 at 1:32 AM David Laight <David.Laight@aculab.com> wrote:
 > >     int3
 > >     int3
 > >     mov <id>, %eax
->
-> Interesting - since this code can't be executed there is no
-> point adding an instruction 'prefix' to the 32bit constant.
-
-The reason to embed the type into an instruction is to avoid the need
-to special case objtool's instruction decoder.
-
 > >     int3
 > >     int3
 > >   function:
 > >     ...
+>
+> When I enable CFI_CLANG and X86_KERNEL_IBT I get:
+>
+> 0000000000000c80 <__cfi_io_schedule_timeout>:
+> c80:   cc                      int3
+> c81:   cc                      int3
+> c82:   b8 b5 b1 39 b3          mov    $0xb339b1b5,%eax
+> c87:   cc                      int3
+> c88:   cc                      int3
+>
+> 0000000000000c89 <io_schedule_timeout>:
+> c89:   f3 0f 1e fa             endbr64
+>
+>
+> That seems unfortunate. Would it be possible to get an additional
+> compiler option to suppress the endbr for all symbols that get a __cfi_
+> preaamble?
+
+What's the concern with the endbr? Dropping it would currently break
+the CFI+IBT combination on newer hardware, no?
+
+> Also, perhaps s/CFI_CLANG/KERNEL_CFI/ or somesuch, so that GCC might
+> also implement this same scheme (in time)?
+
+I'm fine with renaming the config.
+
 > >   ; indirect call check
 > >     cmpl    <id>, -6(%r11)
 > >     je      .Ltmp1
 > >     ud2
 > >   .Ltmp1:
 > >     call    __x86_indirect_thunk_r11
-> >
-> > Define the __CFI_TYPE helper macro for manual type annotations in
-> > assembly code, add error handling for the CFI ud2 traps, and allow
-> > CONFIG_CFI_CLANG to be selected on x86_64.
-> >
-> ...
-> > +
-> > +     /*
-> > +      * The compiler generates the following instruction sequence
-> > +      * for indirect call checks:
-> > +      *
-> > +      *   cmpl    <id>, -6(%reg)     ; 7 bytes
 >
-> If the <id> is between -128 and 127 then an 8bit constant
-> (sign extended) might be used.
-> Possibly the compiler forces the assembler to generate the
-> long form.
+> The first one I try and find looks like:
 >
-> There could also be a REX prefix.
-> That will break any code that tries to use %reg.
-
-The compiler always generates this specific instruction sequence.
-
-> > +      *   je      .Ltmp1             ; 2 bytes
-> > +      *   ud2                        ; <- addr
-> > +      *   .Ltmp1:
-> > +      *
-> > +      * Both the type and the target address can be decoded from the
-> > +      * cmpl instruction.
-> > +      */
-> > +     if (copy_from_kernel_nofault(buffer, (void *)regs->ip - 9, MAX_INSN_SIZE))
-> > +             return;
-> > +     if (insn_decode_kernel(&insn, buffer))
-> > +             return;
-> > +     if (insn.opcode.value != 0x81 || X86_MODRM_REG(insn.modrm.value) != 7)
-> > +             return;
+> 26:       41 81 7b fa a6 96 9e 38         cmpl   $0x389e96a6,-0x6(%r11)
+> 2e:       74 02                   je     32 <__traceiter_sched_kthread_stop+0x29>
+> 30:       0f 0b                   ud2
+> 32:       4c 89 f6                mov    %r14,%rsi
+> 35:       e8 00 00 00 00          call   3a <__traceiter_sched_kthread_stop+0x31> 36: R_X86_64_PLT32      __x86_indirect_thunk_r11-0x4
 >
-> Since you are looking for a very specific opcode why bother
-> calling insn_decode_kernel() - just check for the required (masked)
-> byte values.
-
-Because I need to decode both the immediate value and the register
-from that instruction.
-
-> > +
-> > +     *type = insn.immediate.value;
-> > +
-> > +     offset = insn_get_modrm_rm_off(&insn, regs);
+> This must not be. If I'm to rewrite that lot to:
 >
-> Given the expected instruction, isn't that -6 ??
-
-No, this is the register offset.
-
-> > +     if (offset < 0)
-> > +             return;
-> > +
-> > +     *target = *(unsigned long *)((void *)regs + offset);
+>   movl  $\hash, %r10d
+>   sub   $9, %r11
+>   call  *%r11
+>   .nop  4
 >
-> WTF is that calculating??
+> Then there must not be spurious instruction in between the ud2 and the
+> indirect call/retpoline thing.
 
-It's reading the register value from pt_regs.
+With the current compiler patch, LLVM sets up function arguments after
+the CFI check. if it's a problem, we can look into changing that.
 
 Sami
