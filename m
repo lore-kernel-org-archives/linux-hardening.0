@@ -2,38 +2,46 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E287AC433FE
-	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 08:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A19D4C433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 09:54:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241738AbiEPIcZ (ORCPT
+        id S234979AbiEPJyy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 16 May 2022 04:32:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54042 "EHLO
+        Mon, 16 May 2022 05:54:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231979AbiEPIcY (ORCPT
+        with ESMTP id S232901AbiEPJyx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 16 May 2022 04:32:24 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 66089E099
-        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 01:32:22 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-170-zoDI43liMzmQsfEc1mcSeQ-1; Mon, 16 May 2022 09:32:19 +0100
-X-MC-Unique: zoDI43liMzmQsfEc1mcSeQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.36; Mon, 16 May 2022 09:32:18 +0100
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.036; Mon, 16 May 2022 09:32:18 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Sami Tolvanen' <samitolvanen@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "x86@kernel.org" <x86@kernel.org>,
+        Mon, 16 May 2022 05:54:53 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 252816586;
+        Mon, 16 May 2022 02:54:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=/az5ZlpJQ8aDNMLY9MCE8GkO4AGEyZkSzsELYwgNYj4=; b=lA153z4CORR8RVuipFycT+rfic
+        VYFl4X19X2lFe4YCoQJqFTuj7YCFRxXTqHr/oLOJbHFxTWSK+uXWEdITDp5bgfRotRTOaZfRRckec
+        Sj+G268CI945tzUUXnEZksYhmTrG6Sy3FURbkbca+MHHJMoitg/2oU4DZEQkWfSD3i1+wCizpmJUc
+        dlg2eHo4m+ztUEhgMipVS5WpYEzcnPTHeW3BBkO49KLG/FfilI+bVdxrG52y/BTmPwqePK4s2GDO3
+        ZlqKClu94dUuJ8N8lzKak0iRlavTD1c72uGDJqj63oKFd7WRXFmCM5iFfxiE2e4LQUKJiXWSWQRSR
+        +LLHIwbA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nqXQy-009mOl-1R; Mon, 16 May 2022 09:54:36 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 242EE30018E;
+        Mon, 16 May 2022 11:54:33 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 041C020225E5F; Mon, 16 May 2022 11:54:32 +0200 (CEST)
+Date:   Mon, 16 May 2022 11:54:32 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -41,74 +49,78 @@ CC:     Kees Cook <keescook@chromium.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Joao Moreira <joao@overdrivepizza.com>,
         Sedat Dilek <sedat.dilek@gmail.com>,
-        "Steven Rostedt" <rostedt@goodmis.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "llvm@lists.linux.dev" <llvm@lists.linux.dev>
-Subject: RE: [RFC PATCH v2 20/21] x86: Add support for CONFIG_CFI_CLANG
-Thread-Topic: [RFC PATCH v2 20/21] x86: Add support for CONFIG_CFI_CLANG
-Thread-Index: AQHYZwdlgt4N7xLw0EK8voqNmmoVIa0hK0vA
-Date:   Mon, 16 May 2022 08:32:18 +0000
-Message-ID: <f65c01979b884174965802a13cf6b077@AcuMS.aculab.com>
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+Subject: Re: [RFC PATCH v2 20/21] x86: Add support for CONFIG_CFI_CLANG
+Message-ID: <YoIfWENLV1AR2ijj@hirez.programming.kicks-ass.net>
 References: <20220513202159.1550547-1-samitolvanen@google.com>
  <20220513202159.1550547-21-samitolvanen@google.com>
-In-Reply-To: <20220513202159.1550547-21-samitolvanen@google.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220513202159.1550547-21-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-RnJvbTogU2FtaSBUb2x2YW5lbg0KPiBTZW50OiAxMyBNYXkgMjAyMiAyMToyMg0KPiANCj4gV2l0
-aCBDT05GSUdfQ0ZJX0NMQU5HLCB0aGUgY29tcGlsZXIgaW5qZWN0cyBhIHR5cGUgcHJlYW1ibGUN
-Cj4gaW1tZWRpYXRlbHkgYmVmb3JlIGVhY2ggZnVuY3Rpb24gYW5kIGEgY2hlY2sgdG8gdmFsaWRh
-dGUgdGhlIHRhcmdldA0KPiBmdW5jdGlvbiB0eXBlIGJlZm9yZSBpbmRpcmVjdCBjYWxsczoNCj4g
-DQo+ICAgOyB0eXBlIHByZWFtYmxlDQo+ICAgX19jZmlfZnVuY3Rpb246DQo+ICAgICBpbnQzDQo+
-ICAgICBpbnQzDQo+ICAgICBtb3YgPGlkPiwgJWVheA0KDQpJbnRlcmVzdGluZyAtIHNpbmNlIHRo
-aXMgY29kZSBjYW4ndCBiZSBleGVjdXRlZCB0aGVyZSBpcyBubw0KcG9pbnQgYWRkaW5nIGFuIGlu
-c3RydWN0aW9uICdwcmVmaXgnIHRvIHRoZSAzMmJpdCBjb25zdGFudC4NCiANCj4gICAgIGludDMN
-Cj4gICAgIGludDMNCj4gICBmdW5jdGlvbjoNCj4gICAgIC4uLg0KPiAgIDsgaW5kaXJlY3QgY2Fs
-bCBjaGVjaw0KPiAgICAgY21wbMKgIMKgIDxpZD4sIC02KCVyMTEpDQo+ICAgICBqZSAgICAgIC5M
-dG1wMQ0KPiAgICAgdWQyDQo+ICAgLkx0bXAxOg0KPiAgICAgY2FsbCAgICBfX3g4Nl9pbmRpcmVj
-dF90aHVua19yMTENCj4gDQo+IERlZmluZSB0aGUgX19DRklfVFlQRSBoZWxwZXIgbWFjcm8gZm9y
-IG1hbnVhbCB0eXBlIGFubm90YXRpb25zIGluDQo+IGFzc2VtYmx5IGNvZGUsIGFkZCBlcnJvciBo
-YW5kbGluZyBmb3IgdGhlIENGSSB1ZDIgdHJhcHMsIGFuZCBhbGxvdw0KPiBDT05GSUdfQ0ZJX0NM
-QU5HIHRvIGJlIHNlbGVjdGVkIG9uIHg4Nl82NC4NCj4gDQouLi4NCj4gKw0KPiArCS8qDQo+ICsJ
-ICogVGhlIGNvbXBpbGVyIGdlbmVyYXRlcyB0aGUgZm9sbG93aW5nIGluc3RydWN0aW9uIHNlcXVl
-bmNlDQo+ICsJICogZm9yIGluZGlyZWN0IGNhbGwgY2hlY2tzOg0KPiArCSAqDQo+ICsJICogwqAg
-Y21wbMKgIMKgIDxpZD4sIC02KCVyZWcpCTsgNyBieXRlcw0KDQpJZiB0aGUgPGlkPiBpcyBiZXR3
-ZWVuIC0xMjggYW5kIDEyNyB0aGVuIGFuIDhiaXQgY29uc3RhbnQNCihzaWduIGV4dGVuZGVkKSBt
-aWdodCBiZSB1c2VkLg0KUG9zc2libHkgdGhlIGNvbXBpbGVyIGZvcmNlcyB0aGUgYXNzZW1ibGVy
-IHRvIGdlbmVyYXRlIHRoZQ0KbG9uZyBmb3JtLg0KDQpUaGVyZSBjb3VsZCBhbHNvIGJlIGEgUkVY
-IHByZWZpeC4NClRoYXQgd2lsbCBicmVhayBhbnkgY29kZSB0aGF0IHRyaWVzIHRvIHVzZSAlcmVn
-Lg0KDQo+ICsJICogICBqZSAgICAgIC5MdG1wMQkJOyAyIGJ5dGVzDQo+ICsJICogICB1ZDIJCQk7
-IDwtIGFkZHINCj4gKwkgKiAgIC5MdG1wMToNCj4gKwkgKg0KPiArCSAqIEJvdGggdGhlIHR5cGUg
-YW5kIHRoZSB0YXJnZXQgYWRkcmVzcyBjYW4gYmUgZGVjb2RlZCBmcm9tIHRoZQ0KPiArCSAqIGNt
-cGwgaW5zdHJ1Y3Rpb24uDQo+ICsJICovDQo+ICsJaWYgKGNvcHlfZnJvbV9rZXJuZWxfbm9mYXVs
-dChidWZmZXIsICh2b2lkICopcmVncy0+aXAgLSA5LCBNQVhfSU5TTl9TSVpFKSkNCj4gKwkJcmV0
-dXJuOw0KPiArCWlmIChpbnNuX2RlY29kZV9rZXJuZWwoJmluc24sIGJ1ZmZlcikpDQo+ICsJCXJl
-dHVybjsNCj4gKwlpZiAoaW5zbi5vcGNvZGUudmFsdWUgIT0gMHg4MSB8fCBYODZfTU9EUk1fUkVH
-KGluc24ubW9kcm0udmFsdWUpICE9IDcpDQo+ICsJCXJldHVybjsNCg0KU2luY2UgeW91IGFyZSBs
-b29raW5nIGZvciBhIHZlcnkgc3BlY2lmaWMgb3Bjb2RlIHdoeSBib3RoZXINCmNhbGxpbmcgaW5z
-bl9kZWNvZGVfa2VybmVsKCkgLSBqdXN0IGNoZWNrIGZvciB0aGUgcmVxdWlyZWQgKG1hc2tlZCkN
-CmJ5dGUgdmFsdWVzLg0KDQo+ICsNCj4gKwkqdHlwZSA9IGluc24uaW1tZWRpYXRlLnZhbHVlOw0K
-PiArDQo+ICsJb2Zmc2V0ID0gaW5zbl9nZXRfbW9kcm1fcm1fb2ZmKCZpbnNuLCByZWdzKTsNCg0K
-R2l2ZW4gdGhlIGV4cGVjdGVkIGluc3RydWN0aW9uLCBpc24ndCB0aGF0IC02ID8/DQo+ICsJaWYg
-KG9mZnNldCA8IDApDQo+ICsJCXJldHVybjsNCj4gKw0KPiArCSp0YXJnZXQgPSAqKHVuc2lnbmVk
-IGxvbmcgKikoKHZvaWQgKilyZWdzICsgb2Zmc2V0KTsNCg0KV1RGIGlzIHRoYXQgY2FsY3VsYXRp
-bmc/Pw0KDQo+ICt9DQouLi4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtl
-c2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBV
-Sw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+On Fri, May 13, 2022 at 01:21:58PM -0700, Sami Tolvanen wrote:
+> With CONFIG_CFI_CLANG, the compiler injects a type preamble
+> immediately before each function and a check to validate the target
+> function type before indirect calls:
+> 
+>   ; type preamble
+>   __cfi_function:
+>     int3
+>     int3
+>     mov <id>, %eax
+>     int3
+>     int3
+>   function:
+>     ...
 
+When I enable CFI_CLANG and X86_KERNEL_IBT I get:
+
+0000000000000c80 <__cfi_io_schedule_timeout>:
+c80:   cc                      int3
+c81:   cc                      int3
+c82:   b8 b5 b1 39 b3          mov    $0xb339b1b5,%eax
+c87:   cc                      int3
+c88:   cc                      int3
+
+0000000000000c89 <io_schedule_timeout>:
+c89:   f3 0f 1e fa             endbr64
+
+
+That seems unfortunate. Would it be possible to get an additional
+compiler option to suppress the endbr for all symbols that get a __cfi_
+preaamble?
+
+Also, perhaps s/CFI_CLANG/KERNEL_CFI/ or somesuch, so that GCC might
+also implement this same scheme (in time)?
+
+>   ; indirect call check
+>     cmpl    <id>, -6(%r11)
+>     je      .Ltmp1
+>     ud2
+>   .Ltmp1:
+>     call    __x86_indirect_thunk_r11
+
+The first one I try and find looks like:
+
+26:       41 81 7b fa a6 96 9e 38         cmpl   $0x389e96a6,-0x6(%r11)
+2e:       74 02                   je     32 <__traceiter_sched_kthread_stop+0x29>
+30:       0f 0b                   ud2
+32:       4c 89 f6                mov    %r14,%rsi
+35:       e8 00 00 00 00          call   3a <__traceiter_sched_kthread_stop+0x31> 36: R_X86_64_PLT32      __x86_indirect_thunk_r11-0x4
+
+This must not be. If I'm to rewrite that lot to:
+
+  movl	$\hash, %r10d
+  sub	$9, %r11
+  call	*%r11
+  .nop  4
+
+Then there must not be spurious instruction in between the ud2 and the
+indirect call/retpoline thing.
