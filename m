@@ -2,40 +2,61 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5740C433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 18:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177B6C433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 18:57:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343684AbiEPSbf (ORCPT
+        id S1345099AbiEPS5z (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 16 May 2022 14:31:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55654 "EHLO
+        Mon, 16 May 2022 14:57:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344954AbiEPSbZ (ORCPT
+        with ESMTP id S231860AbiEPS5z (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 16 May 2022 14:31:25 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9502632EFB;
-        Mon, 16 May 2022 11:31:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+8+afjaY3BKlHOSP79HK/qVp1CiDmSymT4MdofQ8IZ4=; b=q5xCbm4UH9jAMw10q00U9nl9fj
-        KFfw+45+4Ggx4ZuRGbGIeBDWL5TE5EcKIheQZ2HOcD65sqSiIJSKWVcm/alk5iPqH8nIHyuoX2Q1D
-        0aBYvGEmDA++xrFn7XpzW5GE/RMldzEZTDzod7CKCiofXw9cSy/uvAsduoZy9pzdYtPF2KMZpn4S5
-        Bke46GD3RlhLsRiOYndBdsYizCEF9XKawVbKWaZqVWT7Wy0StoGuSLfn2434+wBNK4FK+a7PqP+pc
-        Pi3ws4dWkxHA7vo9Gcziiim2MLThS/eXzQRC3Ex4YQg630x8f9zgXJU6jLDJNHGDTXF/3T52t/ZUg
-        CoLNqxyQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nqfUX-00A7XG-Vy; Mon, 16 May 2022 18:30:50 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4BC17980DCC; Mon, 16 May 2022 20:30:47 +0200 (CEST)
-Date:   Mon, 16 May 2022 20:30:47 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        Mon, 16 May 2022 14:57:55 -0400
+Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3704F3EABF
+        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 11:57:53 -0700 (PDT)
+Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-2fefb051547so35960047b3.5
+        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 11:57:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X0lDvgtygkUQt/MUd8knhUulQHn3vRN7wQxbpMX/7kc=;
+        b=OtkZKug+pHgQ2UZ/72x5bHwTEdoqxCQfEkm1QUCKIEgRffjKW3KbMb3c/K0hbgw8Hh
+         4snt1OZnOFAGl+LpQ4hpHFIJxYGrgyUHb3MpltCQAyohc4EBc2K3cVdSQIPXWZTMCpAo
+         xvkF6YXXSdLtGnt7ynxNOqwGwVVTZspuksDC6xnRRp98ABNh0U+IV0ZaF0Dke8RLQ2hY
+         0zwsUzPrYM4NS77Te/aQXLi3uZ8/Pe1REWifevXQA7rgTj6p6tmReRBxgn3R2O7hm2fZ
+         OJ6CVb4R6Yse/fCzJP36XXgjWUGVUJLUzzJC39/+B4Yu2HI44XK9AEZhZ/l6VNqETlCG
+         d/dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X0lDvgtygkUQt/MUd8knhUulQHn3vRN7wQxbpMX/7kc=;
+        b=X0y+HxhR5LEB9FSWtV1d8dgMQ9M2LnsIL+9v41P/BYfxPkASFHbdmkQEc/NMYLzJo1
+         i5AlVg6hdx9Ko4NiUO5ysZGF7uqobyexXujadtqzJ2KI35EKNObk32br8h1qZ565taE6
+         TOBYDaL9PQir5rPLZv9gU6YmXXAkoY1LEyO2mv67/3ksFc2pioyz9WaDNb8FM5NSG7KK
+         fKz+a+h3t9sdRQ5y8Wiy5XAbeT8GizmfvPyaokK9HLaAahKnQ4AUG5URfVxuSPLrKZit
+         CpSkg7jzHGA4EmiNERuVXnhtD++Q2OmehKFC9uJTWrjFix8SiqPz3vmcuePXP9Kexb6R
+         sqIw==
+X-Gm-Message-State: AOAM533C0jFjnXbtwr2p9pLnynJnUNoKiIM8+UbCOd6BOSl0n0KmlTuq
+        zYTz0ADF2Bw4x2RVbJhsAH+tEfFkqhXi2D2mbpp6Pg==
+X-Google-Smtp-Source: ABdhPJyxnegSHSL4esR4Y8T2LGVa+WGgTYoK2/N/07nmR8fbjF1kDUJlLs7zXniWb3x4daFZGwyj8JCag7XedUMNBVU=
+X-Received: by 2002:a81:7953:0:b0:2fe:f8a9:7e45 with SMTP id
+ u80-20020a817953000000b002fef8a97e45mr7139331ywc.23.1652727472248; Mon, 16
+ May 2022 11:57:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220513202159.1550547-1-samitolvanen@google.com>
+ <20220513202159.1550547-21-samitolvanen@google.com> <202205141501.92A22264B4@keescook>
+In-Reply-To: <202205141501.92A22264B4@keescook>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Mon, 16 May 2022 11:57:16 -0700
+Message-ID: <CABCJKudiLBjsNHUTH6zqhYik0WQZwsM4OceYJadYKoDQYOFRXw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 20/21] x86: Add support for CONFIG_CFI_CLANG
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -46,104 +67,28 @@ Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-hardening@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [RFC PATCH v2 20/21] x86: Add support for CONFIG_CFI_CLANG
-Message-ID: <20220516183047.GM76023@worktop.programming.kicks-ass.net>
-References: <20220513202159.1550547-1-samitolvanen@google.com>
- <20220513202159.1550547-21-samitolvanen@google.com>
- <YoIfWENLV1AR2ijj@hirez.programming.kicks-ass.net>
- <CABCJKucXA2jbTc9TF1mLUsEDKu52t71tzxpnsGOXY3_ks+W4Bg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABCJKucXA2jbTc9TF1mLUsEDKu52t71tzxpnsGOXY3_ks+W4Bg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 16, 2022 at 10:15:00AM -0700, Sami Tolvanen wrote:
-> On Mon, May 16, 2022 at 2:54 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Fri, May 13, 2022 at 01:21:58PM -0700, Sami Tolvanen wrote:
-> > > With CONFIG_CFI_CLANG, the compiler injects a type preamble
-> > > immediately before each function and a check to validate the target
-> > > function type before indirect calls:
-> > >
-> > >   ; type preamble
-> > >   __cfi_function:
-> > >     int3
-> > >     int3
-> > >     mov <id>, %eax
-> > >     int3
-> > >     int3
-> > >   function:
-> > >     ...
-> >
-> > When I enable CFI_CLANG and X86_KERNEL_IBT I get:
-> >
-> > 0000000000000c80 <__cfi_io_schedule_timeout>:
-> > c80:   cc                      int3
-> > c81:   cc                      int3
-> > c82:   b8 b5 b1 39 b3          mov    $0xb339b1b5,%eax
-> > c87:   cc                      int3
-> > c88:   cc                      int3
-> >
-> > 0000000000000c89 <io_schedule_timeout>:
-> > c89:   f3 0f 1e fa             endbr64
-> >
-> >
-> > That seems unfortunate. Would it be possible to get an additional
-> > compiler option to suppress the endbr for all symbols that get a __cfi_
-> > preaamble?
-> 
-> What's the concern with the endbr? Dropping it would currently break
-> the CFI+IBT combination on newer hardware, no?
+On Sat, May 14, 2022 at 3:03 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Fri, May 13, 2022 at 01:21:58PM -0700, Sami Tolvanen wrote:
+> > +#ifdef CONFIG_CFI_CLANG
+> > +static void decode_cfi_insn(struct pt_regs *regs, unsigned long *target,
+> > +                         unsigned long *type)
+> > +{
+> > +     char buffer[MAX_INSN_SIZE];
+> > +     struct insn insn;
+> > +     int offset;
+> > +
+> > +     *target = *type = 0;
+>
+> Should report_cfi_failure() have some additional hinting for the case
+> where target/type are zero? Like, "hey, got an inexplicable CFI failure
+> here, but preamble decode failed. Yikes!"
 
-Well, yes, but also that combination isn't very interesting. See,
+Good point, I'll add an error message here.
 
-  https://lore.kernel.org/all/20220420004241.2093-1-joao@overdrivepizza.com/T/#m5d67fb010d488b2f8eee33f1eb39d12f769e4ad2
-
-and the patch I did down-thread:
-
-  https://lkml.kernel.org/r/YoJKhHluN4n0kZDm@hirez.programming.kicks-ass.net
-
-If we have IBT, then FineIBT is a much better option than kCFI+IBT.
-Removing that superfluous endbr also shrinks the whole thing by 4 bytes.
-
-So I'm fine with the compiler generating working code for that
-combination; but please get me an option to supress it in order to save
-those pointless bytes. All this CFI stuff is enough bloat as it is.
-
-> > >   ; indirect call check
-> > >     cmpl    <id>, -6(%r11)
-> > >     je      .Ltmp1
-> > >     ud2
-> > >   .Ltmp1:
-> > >     call    __x86_indirect_thunk_r11
-> >
-> > The first one I try and find looks like:
-> >
-> > 26:       41 81 7b fa a6 96 9e 38         cmpl   $0x389e96a6,-0x6(%r11)
-> > 2e:       74 02                   je     32 <__traceiter_sched_kthread_stop+0x29>
-> > 30:       0f 0b                   ud2
-> > 32:       4c 89 f6                mov    %r14,%rsi
-> > 35:       e8 00 00 00 00          call   3a <__traceiter_sched_kthread_stop+0x31> 36: R_X86_64_PLT32      __x86_indirect_thunk_r11-0x4
-> >
-> > This must not be. If I'm to rewrite that lot to:
-> >
-> >   movl  $\hash, %r10d
-> >   sub   $9, %r11
-> >   call  *%r11
-> >   .nop  4
-> >
-> > Then there must not be spurious instruction in between the ud2 and the
-> > indirect call/retpoline thing.
-> 
-> With the current compiler patch, LLVM sets up function arguments after
-> the CFI check. if it's a problem, we can look into changing that.
-
-Yes, please fix that. Again see that same patch for why this is a
-problem. Objtool can trivially find retpoline calls, but finding this
-kCFI gadget is going to be hard work. If you ensure they're
-unconditionally stuck together, then the problem goes away find one,
-finds the other.
-
+Sami
