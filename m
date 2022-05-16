@@ -2,169 +2,131 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CEBC433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 19:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6955DC433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 19:44:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346202AbiEPTmy (ORCPT
+        id S1345540AbiEPTox (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 16 May 2022 15:42:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43946 "EHLO
+        Mon, 16 May 2022 15:44:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345957AbiEPTlD (ORCPT
+        with ESMTP id S1346092AbiEPTn0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 16 May 2022 15:41:03 -0400
-Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B377B3FBEC
-        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 12:39:56 -0700 (PDT)
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-2fedd26615cso52567177b3.7
-        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 12:39:56 -0700 (PDT)
+        Mon, 16 May 2022 15:43:26 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B7DC3ED36
+        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 12:42:52 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id ev18so4777949pjb.4
+        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 12:42:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=99BWpQJkm6AArPPk7WzhPOholNHloGIEKeqo/lgHTyY=;
-        b=HKQpIxEMC4GFsVb7vDVuur9BVqohtM/mXn0p1tH0Gcc2mwIz+1Tr22I3UprAMWSABk
-         6xud03AVA7BWC54cAD97RMffWEB5L35VrUnFHlscjrrErL5W0hPpOCAJcTZL+Y007vUV
-         jdFL+PVaXOmUgIAWJVRG3vPFljY9tUW2cVk9+nJ/5mSJqi/GSAR6t476Q0FiYvI2y42m
-         sZvXIuXVVO4FakgC30CPAMbCdlNMeUf5MKxgMsgUOtKqD62rCULW3pro/bRAgZbvVwXM
-         0cq3BLN4+NkCWUUcEedGxECqGNRpPkkusw29hef/tZVDtRTdG0FbBo5OE1bTREoX9qYF
-         nAtA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hj5kYkQm+5pJCHACOG/iSMHm84jLQAzCIMv4tchrLiw=;
+        b=ZFlMXIq+IQUeeyDt6fafn2sjvdLxHOAjmD8mb8sFvqASHoEehVDVTCYMkCf1ElZy1X
+         p7FthQqGWMKsLygocu8Bd6oL/O7B6yP+HcMJxPBPO+3rCHhrFqtjaATafc7avEsv06QF
+         T81J0wbb5LOe3xLJDV/e9aH44Z65F/Iu+buYk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=99BWpQJkm6AArPPk7WzhPOholNHloGIEKeqo/lgHTyY=;
-        b=CpYAFyHCBe9AZukqejeIlAhYJl9yqy6CEy1waRrDkueIUfCejf/ibDHojmXIb3VB27
-         jd7ckhLG0unxnqAJJWsBdhb8MLbEKCNUsbOgNEz1AFn0ICnKaCUSitYHyioS3XhrAkpl
-         K+ND54+YTfdEe1PGi+KT3HIylvmMVClhXJUVLWHxd522xBrAeVJTgyy8FAFFdv0b6e9s
-         KBq2hEyZKUiKZEF88upGGlHdGQXY290dCvJeh4345SbEYwXmmkKQvSqK/pWxF58TwzmW
-         1ZvXeXvqebY0mZBLg2P1wOuyDobJ58s9glh3z5hEiyvG9fg6xflT5xhqwzDXZS2bOtDu
-         vFJg==
-X-Gm-Message-State: AOAM5307z1Ju5hPs8h04wwie9GjDfk4KISunWjmn9zPKrtel7+NYYxyc
-        ULXFXZ1uEd4sCx8b15tcS7rcmcWjdm7JumNPc6xrztzEY5Rizw==
-X-Google-Smtp-Source: ABdhPJx5GvWkBqAu2Nm1IG231I1soql0HIjYv2G9Ay0REk/aLK0lMgQQ0OdtHS8Nmsne1YoyXIZh5EuOk5GnANhybGQ=
-X-Received: by 2002:a81:9188:0:b0:2fe:d01a:6b09 with SMTP id
- i130-20020a819188000000b002fed01a6b09mr12922227ywg.243.1652729995504; Mon, 16
- May 2022 12:39:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220513202159.1550547-1-samitolvanen@google.com>
- <20220513202159.1550547-21-samitolvanen@google.com> <YoIfWENLV1AR2ijj@hirez.programming.kicks-ass.net>
- <CABCJKucXA2jbTc9TF1mLUsEDKu52t71tzxpnsGOXY3_ks+W4Bg@mail.gmail.com> <20220516183047.GM76023@worktop.programming.kicks-ass.net>
-In-Reply-To: <20220516183047.GM76023@worktop.programming.kicks-ass.net>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Mon, 16 May 2022 12:39:19 -0700
-Message-ID: <CABCJKudmrBOkoDvDPOA-aEyrs9evHPWpzMpDZ10n8vXDBRdCxQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 20/21] x86: Add support for CONFIG_CFI_CLANG
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hj5kYkQm+5pJCHACOG/iSMHm84jLQAzCIMv4tchrLiw=;
+        b=gJ9lBjs0muDT4ufdOGDm1Of3twixPgtFThOBZVdSpRjBrzEZUMUrzfhwS06iPArEhm
+         7XI+kQk+cV2FbG1+rfQOsE3aIE4D+v6gpB34WUS6/AxSUrowj0Drw99stknfM0COmQqm
+         /J/ZCbuxE+ytfRIBqkussTzhNvLyr3kTL4ONQNNmh6TqHxSE31Vsy7rrAbn7tnFWH0Wz
+         s4Q3qjIbC3l6SA4FIBF5T3n1qPf6pk5wI+T7pD+exD25ExBSOImA8UTRZuclU+pKHvoA
+         2nWL8+SmFSBJsrropqFlcZ0XgjLsxS0sxOi0dUkHXTN31xePMFxNGv2Rdx/AK2Gx8ozA
+         4AUQ==
+X-Gm-Message-State: AOAM533083oV82kat6ltkst2dUpAwVdBHNzB5EQg/vOz3w28Z/NOndWS
+        XC1tJdjkGemwQ2GvCDMj9Z5xog==
+X-Google-Smtp-Source: ABdhPJy3Phtyoud6QuxnsCWAs2iVhdOIMa8wMQ852qGwOtvl+AjbMvDwUeZxRW8GzRvrrn9NebJA3A==
+X-Received: by 2002:a17:902:d483:b0:15e:9e44:8a07 with SMTP id c3-20020a170902d48300b0015e9e448a07mr19046812plg.77.1652730171655;
+        Mon, 16 May 2022 12:42:51 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h125-20020a62de83000000b0050dc7628173sm7282259pfg.77.2022.05.16.12.42.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 May 2022 12:42:51 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] sched/core: Do not treat class list boundary markers as arrays
+Date:   Mon, 16 May 2022 12:42:41 -0700
+Message-Id: <20220516194241.3064242-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2796; h=from:subject; bh=UUhCQXF+TJsScoULeerZiaeI/lJVAC/bHGDo6ByIWx0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBigqkx7kVZ/e0yr2DdH/3zd4rgBLL7WPMgcNF3paNW LbCFk0CJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYoKpMQAKCRCJcvTf3G3AJiHPD/ 9lSb4utJjgIxavP3rGUgfkcC0PXcXc8Ps6ff/Rq75RS5jqff9QLpLrdgE/KbWOycSznvbAkWw2tZxe VX+xsllAAyK9NrZjrtIqfnwcYMe90VBDv98fdMgHdprktFx81hmnDKGJ6n6ulxTEM+54ADkxlcehTg PP+pQoptZI4EAYl3mtPMTdK1HXikH4gqegkilEl0DzGCfTBbuLjanKQ1+w0RqsNIhA0q8znQxVOVJC rHdEWa+1wm5nh6TT6sXVfCIAUVICqOQ5cpQcQ9cCODvFbi9pxKjOBzHPA7VKbT0uRltVcyWYDkDQn/ mrRO1JdlDi3qL2Te6q2lxcOoqjvjo0NySWt9dOBjvYWMW07Sev95E3OFyBWkYnOagSAjOFi76I1eIZ rZXEPnSy1eTAhpYyI6WyD58OVIxWkl9eXMVWfvpQgFCUyYYypEsroaxgoblsq1L1JYJgO1YP66XhFI iPiyrvyg8hYTA6GZxhxn6LFL/9pIW502TB1g+rlRT4DuDb/kVu4bi9hPPbTlhef7HybRsN+r7ZLtyb mcfMtMVr+EUTkEb2n1m3FiOdMlq2ZDUAEajMs3EYQUvEFyprvi1CYLmIfdHjVJKX1ZY/so/0VqCfHA u2jQBC8KUHUfiYlMb3Z5dmJXiuLGWpHhxL5uJdRJGLJOSWSZCq0wzQNxH+7Q==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 16, 2022 at 11:30 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, May 16, 2022 at 10:15:00AM -0700, Sami Tolvanen wrote:
-> > On Mon, May 16, 2022 at 2:54 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > On Fri, May 13, 2022 at 01:21:58PM -0700, Sami Tolvanen wrote:
-> > > > With CONFIG_CFI_CLANG, the compiler injects a type preamble
-> > > > immediately before each function and a check to validate the target
-> > > > function type before indirect calls:
-> > > >
-> > > >   ; type preamble
-> > > >   __cfi_function:
-> > > >     int3
-> > > >     int3
-> > > >     mov <id>, %eax
-> > > >     int3
-> > > >     int3
-> > > >   function:
-> > > >     ...
-> > >
-> > > When I enable CFI_CLANG and X86_KERNEL_IBT I get:
-> > >
-> > > 0000000000000c80 <__cfi_io_schedule_timeout>:
-> > > c80:   cc                      int3
-> > > c81:   cc                      int3
-> > > c82:   b8 b5 b1 39 b3          mov    $0xb339b1b5,%eax
-> > > c87:   cc                      int3
-> > > c88:   cc                      int3
-> > >
-> > > 0000000000000c89 <io_schedule_timeout>:
-> > > c89:   f3 0f 1e fa             endbr64
-> > >
-> > >
-> > > That seems unfortunate. Would it be possible to get an additional
-> > > compiler option to suppress the endbr for all symbols that get a __cfi_
-> > > preaamble?
-> >
-> > What's the concern with the endbr? Dropping it would currently break
-> > the CFI+IBT combination on newer hardware, no?
->
-> Well, yes, but also that combination isn't very interesting. See,
->
->   https://lore.kernel.org/all/20220420004241.2093-1-joao@overdrivepizza.com/T/#m5d67fb010d488b2f8eee33f1eb39d12f769e4ad2
->
-> and the patch I did down-thread:
->
->   https://lkml.kernel.org/r/YoJKhHluN4n0kZDm@hirez.programming.kicks-ass.net
->
-> If we have IBT, then FineIBT is a much better option than kCFI+IBT.
-> Removing that superfluous endbr also shrinks the whole thing by 4 bytes.
->
-> So I'm fine with the compiler generating working code for that
-> combination; but please get me an option to supress it in order to save
-> those pointless bytes. All this CFI stuff is enough bloat as it is.
+GCC 12 is very sensitive about array checking, and views all negative
+array accesses as unsafe (a not unreasonable position). Avoid the
+warnings about __begin_sched_classes being accessed via negative bounds
+by converting them to the pointers they actually are. Silences this
+warning:
 
-Sure, I'll take a look at what's the best way to accomplish this.
+In file included from kernel/sched/core.c:81:
+kernel/sched/core.c: In function ‘set_rq_online.part.0’:
+kernel/sched/sched.h:2197:52: error: array subscript -1 is outside array bounds of ‘struct sched_class[44343134792571037]’
+ [-Werror=array-bounds]
+ 2197 | #define sched_class_lowest  (__begin_sched_classes - 1)
+      |                                                    ^
+kernel/sched/sched.h:2200:41: note: in definition of macro ‘for_class_range’
+ 2200 |         for (class = (_from); class != (_to); class--)
+      |                                         ^~~
+kernel/sched/sched.h:2203:53: note: in expansion of macro ‘sched_class_lowest’
+ 2203 |for_class_range(class, sched_class_highest, sched_class_lowest)
+      |                                            ^~~~~~~~~~~~~~~~~~
+kernel/sched/core.c:9115:17: note: in expansion of macro ‘for_each_class’
+ 9115 |                 for_each_class(class) {
+      |                 ^~~~~~~~~~~~~~
+kernel/sched/sched.h:2193:27: note: at offset -208 into object ‘__begin_sched_classes’ of size [0, 9223372036854775807]
+ 2193 | extern struct sched_class __begin_sched_classes[];
+      |                           ^~~~~~~~~~~~~~~~~~~~~
 
-> > > >   ; indirect call check
-> > > >     cmpl    <id>, -6(%r11)
-> > > >     je      .Ltmp1
-> > > >     ud2
-> > > >   .Ltmp1:
-> > > >     call    __x86_indirect_thunk_r11
-> > >
-> > > The first one I try and find looks like:
-> > >
-> > > 26:       41 81 7b fa a6 96 9e 38         cmpl   $0x389e96a6,-0x6(%r11)
-> > > 2e:       74 02                   je     32 <__traceiter_sched_kthread_stop+0x29>
-> > > 30:       0f 0b                   ud2
-> > > 32:       4c 89 f6                mov    %r14,%rsi
-> > > 35:       e8 00 00 00 00          call   3a <__traceiter_sched_kthread_stop+0x31> 36: R_X86_64_PLT32      __x86_indirect_thunk_r11-0x4
-> > >
-> > > This must not be. If I'm to rewrite that lot to:
-> > >
-> > >   movl  $\hash, %r10d
-> > >   sub   $9, %r11
-> > >   call  *%r11
-> > >   .nop  4
-> > >
-> > > Then there must not be spurious instruction in between the ud2 and the
-> > > indirect call/retpoline thing.
-> >
-> > With the current compiler patch, LLVM sets up function arguments after
-> > the CFI check. if it's a problem, we can look into changing that.
->
-> Yes, please fix that. Again see that same patch for why this is a
-> problem. Objtool can trivially find retpoline calls, but finding this
-> kCFI gadget is going to be hard work. If you ensure they're
-> unconditionally stuck together, then the problem goes away find one,
-> finds the other.
+Reported-by: Christophe de Dinechin <dinechin@redhat.com>
+Link: https://lore.kernel.org/lkml/20220414150855.2407137-2-dinechin@redhat.com/
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ kernel/sched/sched.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-You can use .kcfi_traps to locate the check right now, but I agree,
-it's not quite ideal.
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 8dccb34eb190..3d31ed9d33fa 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2190,8 +2190,8 @@ const struct sched_class name##_sched_class \
+ 	__section("__" #name "_sched_class")
+ 
+ /* Defined in include/asm-generic/vmlinux.lds.h */
+-extern struct sched_class __begin_sched_classes[];
+-extern struct sched_class __end_sched_classes[];
++extern struct sched_class *__begin_sched_classes;
++extern struct sched_class *__end_sched_classes;
+ 
+ #define sched_class_highest (__end_sched_classes - 1)
+ #define sched_class_lowest  (__begin_sched_classes - 1)
+-- 
+2.32.0
 
-Sami
