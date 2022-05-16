@@ -2,82 +2,84 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F01C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 21:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA19AC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 21:06:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348980AbiEPVB6 (ORCPT
+        id S1345911AbiEPVG4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 16 May 2022 17:01:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43686 "EHLO
+        Mon, 16 May 2022 17:06:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349433AbiEPVBV (ORCPT
+        with ESMTP id S1348072AbiEPVGn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 16 May 2022 17:01:21 -0400
+        Mon, 16 May 2022 17:06:43 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A590457BC;
-        Mon, 16 May 2022 13:37:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E27411BE82;
+        Mon, 16 May 2022 13:45:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=EbBaokCH/n+lu1lhLbT43j8JHvfW0Dz6fbZSBx6scuQ=; b=cck+N1iLqqxU1fpBU5JRS0N1B6
-        eW8XgJDTLybclIC8HWUHWK+x40eUEu8VMVwSSmlyw+onOPHMk6103otDgCjr7r/gj6AxMt2JG6zUS
-        FW4hJRDCt9gi/Y74jHnj0bbThZ+7LKrvpptAvCL55WgUl7ZD6jSPLOk/J4LOT4mrFcg6jtgO57sZt
-        hoQHbJApaKSta71c1RKZSudOrac98MGT5V/n0coOYJFLWdl32rXWvgxWcG33eetfT5yIc3RruifoO
-        ZrNvjqUXgCWB5KIdVFsLiQqcqKbl6b+c2YyIDFV+k68y0msMUu03cxyi6w0nAy8xLqVwa1jdYBQwI
-        0Zpgu9bA==;
+        bh=oBgHeRTw46lB8VbDalNtQkk1rHR6/RluKxpwDwMO2Lo=; b=IHU66snTQUwaaTUEIkvgO8EA4O
+        QZS20N82CJaeH3XrvC4ENfRC2zSPOoKstH0rOoAuZMpRld56cAaZvNkXqbBqISEc0F/snhp1h7Gd9
+        XAaN7agEaYztFPIOQP7Mp984HJgoo9UqCYyVseM4CKdYI6+H4EkdcFfviA26Xo2sD8NTX0qv1TwzG
+        FyktxL3HS9dJplyg15aahnIv5q4+ETnrMu8Z590oQr+bQoFxYwnrJiXwVGiEt6LzaKWvScY7a2RUq
+        E87g+ow6KUD2AB2ctLQgmoFMk+xfmXUKLo9itTgLxv7bt+xLnUnY/XH2z1L1NnejV9T8UCyYtLg4N
+        q8QrIZSg==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nqhT5-00ADs8-0T; Mon, 16 May 2022 20:37:27 +0000
+        id 1nqhaE-00AEGp-M1; Mon, 16 May 2022 20:44:50 +0000
 Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 45A20980DCC; Mon, 16 May 2022 22:37:23 +0200 (CEST)
-Date:   Mon, 16 May 2022 22:37:23 +0200
+        id 2B0DA980DCC; Mon, 16 May 2022 22:44:49 +0200 (CEST)
+Date:   Mon, 16 May 2022 22:44:49 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [RFC PATCH v2 20/21] x86: Add support for CONFIG_CFI_CLANG
-Message-ID: <20220516203723.GN76023@worktop.programming.kicks-ass.net>
-References: <20220513202159.1550547-1-samitolvanen@google.com>
- <20220513202159.1550547-21-samitolvanen@google.com>
- <YoIfWENLV1AR2ijj@hirez.programming.kicks-ass.net>
- <CABCJKucXA2jbTc9TF1mLUsEDKu52t71tzxpnsGOXY3_ks+W4Bg@mail.gmail.com>
- <20220516183047.GM76023@worktop.programming.kicks-ass.net>
- <CABCJKudmrBOkoDvDPOA-aEyrs9evHPWpzMpDZ10n8vXDBRdCxQ@mail.gmail.com>
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] sched/core: Do not treat class list boundary markers as
+ arrays
+Message-ID: <20220516204449.GO76023@worktop.programming.kicks-ass.net>
+References: <20220516194241.3064242-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABCJKudmrBOkoDvDPOA-aEyrs9evHPWpzMpDZ10n8vXDBRdCxQ@mail.gmail.com>
+In-Reply-To: <20220516194241.3064242-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 16, 2022 at 12:39:19PM -0700, Sami Tolvanen wrote:
+On Mon, May 16, 2022 at 12:42:41PM -0700, Kees Cook wrote:
+> GCC 12 is very sensitive about array checking, and views all negative
+> array accesses as unsafe (a not unreasonable position). Avoid the
+> warnings about __begin_sched_classes being accessed via negative bounds
+> by converting them to the pointers they actually are. Silences this
+> warning:
 
-> > > With the current compiler patch, LLVM sets up function arguments after
-> > > the CFI check. if it's a problem, we can look into changing that.
-> >
-> > Yes, please fix that. Again see that same patch for why this is a
-> > problem. Objtool can trivially find retpoline calls, but finding this
-> > kCFI gadget is going to be hard work. If you ensure they're
-> > unconditionally stuck together, then the problem goes away find one,
-> > finds the other.
+Yeah, this patch is *much* saner, thanks!
+
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 8dccb34eb190..3d31ed9d33fa 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -2190,8 +2190,8 @@ const struct sched_class name##_sched_class \
+>  	__section("__" #name "_sched_class")
+>  
+>  /* Defined in include/asm-generic/vmlinux.lds.h */
+> -extern struct sched_class __begin_sched_classes[];
+> -extern struct sched_class __end_sched_classes[];
+> +extern struct sched_class *__begin_sched_classes;
+> +extern struct sched_class *__end_sched_classes;
+>  
+>  #define sched_class_highest (__end_sched_classes - 1)
+>  #define sched_class_lowest  (__begin_sched_classes - 1)
+> -- 
+> 2.32.0
 > 
-> You can use .kcfi_traps to locate the check right now, but I agree,
-> it's not quite ideal.
-
-Oohh, indeed. Looking at that, I think .kcfi_traps would be better as
-relative offsets; eg. 'addr = (void*)s + *s' like. Halfs the amount of
-storage needed for it.
-
-Also, that code can use a few {} extra.
