@@ -2,144 +2,122 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A23EC433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 21:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3408C433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 21:36:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245420AbiEPVdG (ORCPT
+        id S231365AbiEPVgA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 16 May 2022 17:33:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32814 "EHLO
+        Mon, 16 May 2022 17:36:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240707AbiEPVdF (ORCPT
+        with ESMTP id S1349345AbiEPVf7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 16 May 2022 17:33:05 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3E71115FF1
-        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 14:32:58 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-258-XPGIMpHAPt6Ggx_0Nc-b8Q-1; Mon, 16 May 2022 22:32:56 +0100
-X-MC-Unique: XPGIMpHAPt6Ggx_0Nc-b8Q-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.36; Mon, 16 May 2022 22:32:55 +0100
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.036; Mon, 16 May 2022 22:32:55 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Sami Tolvanen' <samitolvanen@google.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        "Nick Desaulniers" <ndesaulniers@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        "Steven Rostedt" <rostedt@goodmis.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "llvm@lists.linux.dev" <llvm@lists.linux.dev>
-Subject: RE: [RFC PATCH v2 20/21] x86: Add support for CONFIG_CFI_CLANG
-Thread-Topic: [RFC PATCH v2 20/21] x86: Add support for CONFIG_CFI_CLANG
-Thread-Index: AQHYZwdlgt4N7xLw0EK8voqNmmoVIa0hK0vAgAB8yACAAF6CUA==
-Date:   Mon, 16 May 2022 21:32:55 +0000
-Message-ID: <19b3e040302d4d8aa240eee43427dfaa@AcuMS.aculab.com>
-References: <20220513202159.1550547-1-samitolvanen@google.com>
- <20220513202159.1550547-21-samitolvanen@google.com>
- <f65c01979b884174965802a13cf6b077@AcuMS.aculab.com>
- <CABCJKueo+cw1DHH6N2dUjD-U7OKqmkJUyimm0ychv1drt5U9Rg@mail.gmail.com>
-In-Reply-To: <CABCJKueo+cw1DHH6N2dUjD-U7OKqmkJUyimm0ychv1drt5U9Rg@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 16 May 2022 17:35:59 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76EC51020
+        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 14:35:58 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id g16so19692320lja.3
+        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 14:35:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uwkH153JjE/VISwDC6yOaTP7NOzBFSKZdipSvNP+ktE=;
+        b=pPEsL44A8/+VNexCO9dAr1v1HAI5ycZSTdy7Flz8UBakDFVI1Rxg0FRqBCOmyGWTXT
+         TVAE+qwcOA6paQsDhTqw2ITaa/gsU/0l/O/x52asujpIJJuF0kTMD7zhJ8OECUjiJTSm
+         or+nY2JtuynV/X2RIdxr05qWoL1N7dVZ9+ghQy3Ox46w6lwgjIwEYwNcr8Bo9Kehx8Wx
+         UpJumvUJjYDPDPWt1ycthLsqqFZEMNJ3HM9JE0VYSbPSrAE3GEZpuyUd8TnRW1qK+e6M
+         Uu2iZivkDEufqTjA9Pnfqxj/SRSwptWKzhvDJMHRaNO6zEfuDLy//XKHmnvMwvb2xWGg
+         I7+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uwkH153JjE/VISwDC6yOaTP7NOzBFSKZdipSvNP+ktE=;
+        b=WMCSl8H5uIN9jFSQCdqjasfJ3UbgZHXEJk1KpYnS3+4YJpkRAdmSFdzLJVJRwVdBLK
+         9fWQJZ5NIuySfpnqjLTdHCI0u5Recis3evyUJX7DQ5AcZejLagoZ0WNDNKz7xIrJivkk
+         RYq+BpeVtLUVhgSUVn1EStbNjhWW4ZrdtK22LA2/VV8dkE4b0iJxn1GFDZZZ0yWsQVZo
+         Ovcs5DzZxEiT0aW8v4HGdmrFPRxjwYYU6qDjEpTcm9Hn0SgcuqyWvkwf8+GzoJasrhZr
+         0342H7vnZX6TOskxyWXc2pMqxtVFdDiNST7WMzhNTMzZuG9qax2z7XZPmMs9mI6QPRkp
+         wuQQ==
+X-Gm-Message-State: AOAM530IAMS0VJoyO+8GguKIsmPa7lCoLcX4Ge78AabCIhMHlHb8CCDJ
+        euIpoZ+g4c2jcGoglxfqMGmdk3Pbu3HCBtHrq4jHXg==
+X-Google-Smtp-Source: ABdhPJzU9+gfgDOfFGF1PxDHLodCEyA3jCCPrw7fhlBjvTt89XPwU+9AcC6bORZU1NTMdnruU+wLNmh9RPLfai8Jksg=
+X-Received: by 2002:a2e:91cf:0:b0:24f:11ea:d493 with SMTP id
+ u15-20020a2e91cf000000b0024f11ead493mr12125591ljg.408.1652736956594; Mon, 16
+ May 2022 14:35:56 -0700 (PDT)
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <20220511174531.1098548-1-keescook@chromium.org>
+In-Reply-To: <20220511174531.1098548-1-keescook@chromium.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 16 May 2022 14:35:45 -0700
+Message-ID: <CAKwvOdkXUiB3T_YkcqDZAkdvN0=cB2NH-i6jj+Y=sL8r9VCJ6A@mail.gmail.com>
+Subject: Re: [PATCH] lib: overflow: Always build 64-bit test cases
+To:     Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>
+Cc:     kernel test robot <lkp@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Vitor Massaru Iha <vitor@massaru.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Daniel Latypov <dlatypov@google.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-RnJvbTogU2FtaSBUb2x2YW5lbg0KPiBTZW50OiAxNiBNYXkgMjAyMiAxNzozOQ0KPiANCj4gT24g
-TW9uLCBNYXkgMTYsIDIwMjIgYXQgMTozMiBBTSBEYXZpZCBMYWlnaHQgPERhdmlkLkxhaWdodEBh
-Y3VsYWIuY29tPiB3cm90ZToNCj4gPg0KPiA+IEZyb206IFNhbWkgVG9sdmFuZW4NCj4gPiA+IFNl
-bnQ6IDEzIE1heSAyMDIyIDIxOjIyDQo+ID4gPg0KPiA+ID4gV2l0aCBDT05GSUdfQ0ZJX0NMQU5H
-LCB0aGUgY29tcGlsZXIgaW5qZWN0cyBhIHR5cGUgcHJlYW1ibGUNCj4gPiA+IGltbWVkaWF0ZWx5
-IGJlZm9yZSBlYWNoIGZ1bmN0aW9uIGFuZCBhIGNoZWNrIHRvIHZhbGlkYXRlIHRoZSB0YXJnZXQN
-Cj4gPiA+IGZ1bmN0aW9uIHR5cGUgYmVmb3JlIGluZGlyZWN0IGNhbGxzOg0KPiA+ID4NCj4gPiA+
-ICAgOyB0eXBlIHByZWFtYmxlDQo+ID4gPiAgIF9fY2ZpX2Z1bmN0aW9uOg0KPiA+ID4gICAgIGlu
-dDMNCj4gPiA+ICAgICBpbnQzDQo+ID4gPiAgICAgbW92IDxpZD4sICVlYXgNCj4gPg0KPiA+IElu
-dGVyZXN0aW5nIC0gc2luY2UgdGhpcyBjb2RlIGNhbid0IGJlIGV4ZWN1dGVkIHRoZXJlIGlzIG5v
-DQo+ID4gcG9pbnQgYWRkaW5nIGFuIGluc3RydWN0aW9uICdwcmVmaXgnIHRvIHRoZSAzMmJpdCBj
-b25zdGFudC4NCj4gDQo+IFRoZSByZWFzb24gdG8gZW1iZWQgdGhlIHR5cGUgaW50byBhbiBpbnN0
-cnVjdGlvbiBpcyB0byBhdm9pZCB0aGUgbmVlZA0KPiB0byBzcGVjaWFsIGNhc2Ugb2JqdG9vbCdz
-IGluc3RydWN0aW9uIGRlY29kZXIuDQo+IA0KPiA+ID4gICAgIGludDMNCj4gPiA+ICAgICBpbnQz
-DQo+ID4gPiAgIGZ1bmN0aW9uOg0KPiA+ID4gICAgIC4uLg0KPiA+ID4gICA7IGluZGlyZWN0IGNh
-bGwgY2hlY2sNCj4gPiA+ICAgICBjbXBsICAgIDxpZD4sIC02KCVyMTEpDQo+ID4gPiAgICAgamUg
-ICAgICAuTHRtcDENCj4gPiA+ICAgICB1ZDINCj4gPiA+ICAgLkx0bXAxOg0KPiA+ID4gICAgIGNh
-bGwgICAgX194ODZfaW5kaXJlY3RfdGh1bmtfcjExDQo+ID4gPg0KPiA+ID4gRGVmaW5lIHRoZSBf
-X0NGSV9UWVBFIGhlbHBlciBtYWNybyBmb3IgbWFudWFsIHR5cGUgYW5ub3RhdGlvbnMgaW4NCj4g
-PiA+IGFzc2VtYmx5IGNvZGUsIGFkZCBlcnJvciBoYW5kbGluZyBmb3IgdGhlIENGSSB1ZDIgdHJh
-cHMsIGFuZCBhbGxvdw0KPiA+ID4gQ09ORklHX0NGSV9DTEFORyB0byBiZSBzZWxlY3RlZCBvbiB4
-ODZfNjQuDQo+ID4gPg0KPiA+IC4uLg0KPiA+ID4gKw0KPiA+ID4gKyAgICAgLyoNCj4gPiA+ICsg
-ICAgICAqIFRoZSBjb21waWxlciBnZW5lcmF0ZXMgdGhlIGZvbGxvd2luZyBpbnN0cnVjdGlvbiBz
-ZXF1ZW5jZQ0KPiA+ID4gKyAgICAgICogZm9yIGluZGlyZWN0IGNhbGwgY2hlY2tzOg0KPiA+ID4g
-KyAgICAgICoNCj4gPiA+ICsgICAgICAqICAgY21wbCAgICA8aWQ+LCAtNiglcmVnKSAgICAgOyA3
-IGJ5dGVzDQo+ID4NCj4gPiBJZiB0aGUgPGlkPiBpcyBiZXR3ZWVuIC0xMjggYW5kIDEyNyB0aGVu
-IGFuIDhiaXQgY29uc3RhbnQNCj4gPiAoc2lnbiBleHRlbmRlZCkgbWlnaHQgYmUgdXNlZC4NCj4g
-PiBQb3NzaWJseSB0aGUgY29tcGlsZXIgZm9yY2VzIHRoZSBhc3NlbWJsZXIgdG8gZ2VuZXJhdGUg
-dGhlDQo+ID4gbG9uZyBmb3JtLg0KPiA+DQo+ID4gVGhlcmUgY291bGQgYWxzbyBiZSBhIFJFWCBw
-cmVmaXguDQo+ID4gVGhhdCB3aWxsIGJyZWFrIGFueSBjb2RlIHRoYXQgdHJpZXMgdG8gdXNlICVy
-ZWcuDQo+IA0KPiBUaGUgY29tcGlsZXIgYWx3YXlzIGdlbmVyYXRlcyB0aGlzIHNwZWNpZmljIGlu
-c3RydWN0aW9uIHNlcXVlbmNlLg0KDQpZZXMsIGJ1dCB0aGVyZSBhcmUgc2V2ZXJhbCB3YXlzIHRv
-IGVuY29kZSAnY21wbCBpbW0sLTYocmVnKScuDQpGaXJzdGx5IHlvdSBjYW4gdXNlICc4MSAvNyBp
-bW0zMicgb3IgJzgzIC83IGltbTgnIHdoZXJlIGltbTggaXMgc2lnbiBleHRlbmRlZC4NCih0aGUg
-LzcgMS83L2luZGV4X3JlZyBmb3IgYSBzaWduZWQgOCBiaXQgb2Zmc2V0KS4NCkJ1dCB0aGF0IG9u
-bHkgd29ya3MgZm9yIHRoZSBvcmlnaW5hbCAzMmJpdCByZWdpc3RlcnMuDQpGb3IgdGhlIDY0Yml0
-IHI4IHRvIHIxNSBhbiBleHRyYSBSRVggcHJlZml4IGlzIHJlcXVpcmVkLg0KVGhhdCBtYWtlcyB0
-aGUgaW5zdHJ1Y3Rpb24gOCBieXRlcyAoaWYgaXQgbmVlZHMgYSBmdWxsIDMyYml0IGltbWVkaWF0
-ZSkuDQoNClNvIGlmIHRoZSByZWdpc3RlciBpcyAlcjExIHRoZXJlIGlzIGFuIGV4dHJhIFJFWCBi
-eXRlLg0KSWYgdGhlIDxpZD4gaXMgYSBoYXNoIGFuZCBoYXBwZW5zIHRvIGJlIGJldHdlZW4gLTEy
-OCBhbmQgMTI3DQp0aGVuIHRoZXJlIGFyZSB0aHJlZSBsZXNzIGJ5dGVzLg0KDQpTbyBkZWNvZGlu
-ZyBmcm9tIHJlZ3MtPmlwIC0gMCBpc24ndCBhbHdheXMgZ29pbmcgdG8gZ2l2ZQ0KeW91IHRoZSBz
-dGFydCBvZiB0aGUgaW5zdHJ1Y3Rpb24uDQoNCj4gDQo+ID4gPiArICAgICAgKiAgIGplICAgICAg
-Lkx0bXAxICAgICAgICAgICAgIDsgMiBieXRlcw0KPiA+ID4gKyAgICAgICogICB1ZDIgICAgICAg
-ICAgICAgICAgICAgICAgICA7IDwtIGFkZHINCj4gPiA+ICsgICAgICAqICAgLkx0bXAxOg0KPiA+
-ID4gKyAgICAgICoNCj4gPiA+ICsgICAgICAqIEJvdGggdGhlIHR5cGUgYW5kIHRoZSB0YXJnZXQg
-YWRkcmVzcyBjYW4gYmUgZGVjb2RlZCBmcm9tIHRoZQ0KPiA+ID4gKyAgICAgICogY21wbCBpbnN0
-cnVjdGlvbi4NCj4gPiA+ICsgICAgICAqLw0KPiA+ID4gKyAgICAgaWYgKGNvcHlfZnJvbV9rZXJu
-ZWxfbm9mYXVsdChidWZmZXIsICh2b2lkICopcmVncy0+aXAgLSA5LCBNQVhfSU5TTl9TSVpFKSkN
-Cj4gPiA+ICsgICAgICAgICAgICAgcmV0dXJuOw0KPiA+ID4gKyAgICAgaWYgKGluc25fZGVjb2Rl
-X2tlcm5lbCgmaW5zbiwgYnVmZmVyKSkNCj4gPiA+ICsgICAgICAgICAgICAgcmV0dXJuOw0KPiA+
-ID4gKyAgICAgaWYgKGluc24ub3Bjb2RlLnZhbHVlICE9IDB4ODEgfHwgWDg2X01PRFJNX1JFRyhp
-bnNuLm1vZHJtLnZhbHVlKSAhPSA3KQ0KPiA+ID4gKyAgICAgICAgICAgICByZXR1cm47DQo+ID4N
-Cj4gPiBTaW5jZSB5b3UgYXJlIGxvb2tpbmcgZm9yIGEgdmVyeSBzcGVjaWZpYyBvcGNvZGUgd2h5
-IGJvdGhlcg0KPiA+IGNhbGxpbmcgaW5zbl9kZWNvZGVfa2VybmVsKCkgLSBqdXN0IGNoZWNrIGZv
-ciB0aGUgcmVxdWlyZWQgKG1hc2tlZCkNCj4gPiBieXRlIHZhbHVlcy4NCj4gDQo+IEJlY2F1c2Ug
-SSBuZWVkIHRvIGRlY29kZSBib3RoIHRoZSBpbW1lZGlhdGUgdmFsdWUgYW5kIHRoZSByZWdpc3Rl
-cg0KPiBmcm9tIHRoYXQgaW5zdHJ1Y3Rpb24uDQo+IA0KPiA+ID4gKw0KPiA+ID4gKyAgICAgKnR5
-cGUgPSBpbnNuLmltbWVkaWF0ZS52YWx1ZTsNCj4gPiA+ICsNCj4gPiA+ICsgICAgIG9mZnNldCA9
-IGluc25fZ2V0X21vZHJtX3JtX29mZigmaW5zbiwgcmVncyk7DQo+ID4NCj4gPiBHaXZlbiB0aGUg
-ZXhwZWN0ZWQgaW5zdHJ1Y3Rpb24sIGlzbid0IHRoYXQgLTYgPz8NCj4gDQo+IE5vLCB0aGlzIGlz
-IHRoZSByZWdpc3RlciBvZmZzZXQuDQoNCkhtbW0uLi4uIHN0cmFuZ2UgZnVuY3Rpb24gbmFtZS4u
-Lg0KPiANCj4gPiA+ICsgICAgIGlmIChvZmZzZXQgPCAwKQ0KPiA+ID4gKyAgICAgICAgICAgICBy
-ZXR1cm47DQo+ID4gPiArDQo+ID4gPiArICAgICAqdGFyZ2V0ID0gKih1bnNpZ25lZCBsb25nICop
-KCh2b2lkICopcmVncyArIG9mZnNldCk7DQo+ID4NCj4gPiBXVEYgaXMgdGhhdCBjYWxjdWxhdGlu
-Zz8/DQo+IA0KPiBJdCdzIHJlYWRpbmcgdGhlIHJlZ2lzdGVyIHZhbHVlIGZyb20gcHRfcmVncy4N
-Cj4gDQo+IFNhbWkNCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwg
-QnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVn
-aXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+On Wed, May 11, 2022 at 10:45 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> There shouldn't be a reason to not build the 64-bit test cases on 32-bit
+> systems; the types exist there too. Remove the #ifdefs.
 
+I think this is breaking 32b ARM for clang-13 and older?
+https://github.com/ClangBuiltLinux/linux/issues/1636
+
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/lkml/202205110324.7GrtxG8u-lkp@intel.com
+> Fixes: 455a35a6cdb6 ("lib: add runtime test of check_*_overflow functions")
+> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Cc: Vitor Massaru Iha <vitor@massaru.org>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: Daniel Latypov <dlatypov@google.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  lib/overflow_kunit.c | 4 ----
+>  1 file changed, 4 deletions(-)
+>
+> diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
+> index 475f0c064bf6..ac37bb543476 100644
+> --- a/lib/overflow_kunit.c
+> +++ b/lib/overflow_kunit.c
+> @@ -255,10 +255,8 @@ DEFINE_TEST_FUNC(u16, "%d");
+>  DEFINE_TEST_FUNC(s16, "%d");
+>  DEFINE_TEST_FUNC(u32, "%u");
+>  DEFINE_TEST_FUNC(s32, "%d");
+> -#if BITS_PER_LONG == 64
+>  DEFINE_TEST_FUNC(u64, "%llu");
+>  DEFINE_TEST_FUNC(s64, "%lld");
+> -#endif
+>
+>  static void overflow_shift_test(struct kunit *test)
+>  {
+> @@ -650,10 +648,8 @@ static struct kunit_case overflow_test_cases[] = {
+>         KUNIT_CASE(s16_overflow_test),
+>         KUNIT_CASE(u32_overflow_test),
+>         KUNIT_CASE(s32_overflow_test),
+> -#if BITS_PER_LONG == 64
+>         KUNIT_CASE(u64_overflow_test),
+>         KUNIT_CASE(s64_overflow_test),
+> -#endif
+>         KUNIT_CASE(overflow_shift_test),
+>         KUNIT_CASE(overflow_allocation_test),
+>         KUNIT_CASE(overflow_size_helpers_test),
+> --
+> 2.32.0
+>
+
+
+-- 
+Thanks,
+~Nick Desaulniers
