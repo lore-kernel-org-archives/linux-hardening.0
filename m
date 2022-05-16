@@ -2,77 +2,139 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 314DDC433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 07:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BCCC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 07:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240917AbiEPHS0 (ORCPT
+        id S241041AbiEPH3h (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 16 May 2022 03:18:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51652 "EHLO
+        Mon, 16 May 2022 03:29:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240694AbiEPHSZ (ORCPT
+        with ESMTP id S232759AbiEPH3h (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 16 May 2022 03:18:25 -0400
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 422DB13CD0
-        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 00:18:24 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed30:51ae:171f:35c9:722d])
-        by xavier.telenet-ops.be with bizsmtp
-        id XKJK2700L2UsjYA01KJKhi; Mon, 16 May 2022 09:18:22 +0200
-Received: from geert (helo=localhost)
-        by ramsan.of.borg with local-esmtp (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1nqUzi-000YsA-VZ; Mon, 16 May 2022 09:18:18 +0200
-Date:   Mon, 16 May 2022 09:18:18 +0200 (CEST)
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-X-X-Sender: geert@ramsan.of.borg
-To:     linux-kernel@vger.kernel.org
-cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-media@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: Build regressions/improvements in v5.18-rc7
-In-Reply-To: <20220516064231.2425428-1-geert@linux-m68k.org>
-Message-ID: <alpine.DEB.2.22.394.2205160916190.134019@ramsan.of.borg>
-References: <CAHk-=wg2eVUN0a1E5UnBF1ziGaU1yrMJtnFPg4R78O=FcRDqnA@mail.gmail.com> <20220516064231.2425428-1-geert@linux-m68k.org>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Mon, 16 May 2022 03:29:37 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF62621811;
+        Mon, 16 May 2022 00:29:35 -0700 (PDT)
+Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4L1rTW2qhnzhZCc;
+        Mon, 16 May 2022 15:28:47 +0800 (CST)
+Received: from [10.67.110.112] (10.67.110.112) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 16 May 2022 15:29:33 +0800
+Subject: Re: [PATCH -next] powerpc: add support for syscall stack
+ randomization
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        <benh@kernel.crashing.org>, <christophe.leroy@csgroup.eu>,
+        <mark.rutland@arm.com>, <paulus@samba.org>, <tglx@linutronix.de>
+CC:     <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>
+References: <20220505111932.228814-1-xiujianfeng@huawei.com>
+ <1652173338.7bltwybi0c.astroid@bobo.none>
+ <a1dcd50b-0819-df54-a963-ebb0551e3356@huawei.com>
+ <87pmki7uwf.fsf@mpe.ellerman.id.au>
+From:   xiujianfeng <xiujianfeng@huawei.com>
+Message-ID: <bf8abb20-0aca-24b2-0f24-bc977af1fa1c@huawei.com>
+Date:   Mon, 16 May 2022 15:29:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+In-Reply-To: <87pmki7uwf.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.110.112]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 16 May 2022, Geert Uytterhoeven wrote:
-> JFYI, when comparing v5.18-rc7[1] to v5.18-rc6[3], the summaries are:
->  - build errors: +2/-0
 
-   + /kisskb/src/drivers/media/platform/nxp/imx-pxp.h: error: initializer element is not constant:  => 582:38
+在 2022/5/12 21:17, Michael Ellerman 写道:
+> xiujianfeng <xiujianfeng@huawei.com> writes:
+>> 在 2022/5/10 17:23, Nicholas Piggin 写道:
+>>> Excerpts from Xiu Jianfeng's message of May 5, 2022 9:19 pm:
+>>>> Add support for adding a random offset to the stack while handling
+>>>> syscalls. This patch uses mftb() instead of get_random_int() for better
+>>>> performance.
+> ...
+>>>> @@ -405,6 +407,7 @@ interrupt_exit_user_prepare_main(unsigned long ret, struct pt_regs *regs)
+>>>>
+>>>>    	/* Restore user access locks last */
+>>>>    	kuap_user_restore(regs);
+>>>> +	choose_random_kstack_offset(mftb() & 0xFF);
+>>>>
+>>>>    	return ret;
+>>>>    }
+>>> So this seems to be what x86 and s390 do, but why are we choosing a
+>>> new offset for every interrupt when it's only used on a syscall?
+>>> I would rather you do what arm64 does and just choose the offset
+>>> at the end of system_call_exception.
+>> thanks for you suggestion, will do in v2.
+>>> I wonder why the choose is separated from the add? I guess it's to
+>>> avoid a data dependency for stack access on an expensive random
+>>> function, so that makes sense (a comment would be nice in the
+>>> generic code).
+>>>
+>>> I don't actually know if mftb() is cheaper here than a RNG. It
+>>> may not be conditioned all that well either. I would be tempted
+>> #if defined(__powerpc64__) && (defined(CONFIG_PPC_CELL) ||
+>> defined(CONFIG_E500))
+>> #define mftb()          ({unsigned long rval;                           \
+>>                           asm volatile(                                   \
+>>                                   "90:    mfspr %0, %2;\n"                \
+>> ASM_FTR_IFSET(                          \
+>>                                           "97:    cmpwi %0,0;\n"          \
+>>                                           "       beq- 90b;\n", "", %1)   \
+>>                           : "=r" (rval) \
+>>                           : "i" (CPU_FTR_CELL_TB_BUG), "i" (SPRN_TBRL) :
+>> "cr0"); \
+>>                           rval;})
+>> #elif defined(CONFIG_PPC_8xx)
+>> #define mftb()          ({unsigned long rval;   \
+>>                           asm volatile("mftbl %0" : "=r" (rval)); rval;})
+>> #else
+>> #define mftb()          ({unsigned long rval;   \
+>>                           asm volatile("mfspr %0, %1" : \
+>>                                        "=r" (rval) : "i" (SPRN_TBRL));
+>> rval;})
+>> #endif /* !CONFIG_PPC_CELL */
+>>
+>> there are 3 implementations of mftb() in
+>> arch/powerpc/include/asm/vdso/timebase.h,
+>>
+>> the last two cases have only one instruction, It's obviously cheaper
+>> than get_random_int,
+> Just because it's one instruction doesn't mean it's obviously cheaper.
+> On some CPUs mftb takes 10s of cycles, and can also stall the pipeline.
+>
+> But looking at get_random_u32() it does look pretty complicated, it
+> takes a lock and so on. It's also silly to call get_random_u32() for
+> 4-bits of randomness.
+>
+> My initial impression was that mftb() is too predictable to be useful
+> against a determined attacker. But looking closer I see that
+> choose_random_kstack_offset() xor's the value we pass with the existing
+> value. So that makes me less worried about using mftb().
+>
+> We could additionally call choose_random_kstack_offset(get_random_int())
+> less regularly, eg. during context switch. But I guess that's too
+> infrequent to actually make any difference.
+>
+> But limiting it to 4-bits of randomness seems insufficient. It seems
+> like we should allow the full 6 (10) bits, and anyone turning this
+> option on should probably also consider increasing their stack size.
+>
+> Also did you check the help text about stack-protector under
+> HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET?
 
-mipsel-gcc5/mips-allmodconfig
+thanks for your reminder, will disable stack-protector for interrupt.c 
+in v2,
 
-Seen before in other builds, missing "U"-suffix on large unsigned
-constants.
+just like arm64 do.
 
-   + /kisskb/src/include/linux/fortify-string.h: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]:  => 328:25
-
-s390x-gcc11/s390-allmodconfig
-
-> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/42226c989789d8da4af1de0c31070c96726d990c/ (all 131 configs)
-> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/c5eb0a61238dd6faf37f58c9ce61c9980aaffd7a/ (all 131 configs)
-
-Gr{oetje,eeting}s,
-
- 						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
- 							    -- Linus Torvalds
+>
+> cheers
