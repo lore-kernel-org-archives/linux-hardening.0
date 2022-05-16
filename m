@@ -2,96 +2,77 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FC9C433F5
-	for <linux-hardening@archiver.kernel.org>; Sun, 15 May 2022 03:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 314DDC433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 07:18:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234884AbiEODls (ORCPT
+        id S240917AbiEPHS0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 14 May 2022 23:41:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39196 "EHLO
+        Mon, 16 May 2022 03:18:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235649AbiEODll (ORCPT
+        with ESMTP id S240694AbiEPHSZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 14 May 2022 23:41:41 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3890865C8
-        for <linux-hardening@vger.kernel.org>; Sat, 14 May 2022 20:41:40 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id l11-20020a17090a49cb00b001d923a9ca99so11254680pjm.1
-        for <linux-hardening@vger.kernel.org>; Sat, 14 May 2022 20:41:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yTJ/JqBThBUULFI/eq0KMUagYlEy+U8Gm8DCXUOLqI4=;
-        b=Nj4rFH2iGcDCRWm7En8MMB9PlgCsyGVxQAPs7BMHVclQ27z31PBw6Dxdm3IvfWzPAV
-         L7mSdonC/7b1wN1otPDwe1wD51BlBkiLnb6TRuJ8hkgKwbPpocmSPsCRB/70parsHMgc
-         4ME6hu5g6TfCBsYNyr2rW8AOj4lsDpFe7p17c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yTJ/JqBThBUULFI/eq0KMUagYlEy+U8Gm8DCXUOLqI4=;
-        b=7biV8RzGUDPFoEhtQb/fuvgjkt5QcVl/ItSYAddbTE8RniCmNAjCE8lTUlNnJCaS3I
-         dxrwvk8qyIEYZzoLpkXbvGypHsKMUPlpNQFAcM5Uu2U7zS1PrmxNQQZL8YFjdzhAaNNY
-         nFVp2y2/vvcMONDXHSGRjroFs9ZMxLi1yxfsXXq7rGhg3BDNzNxphkWIEQBnO62bfWfj
-         1jLdSQCBmOILla38nKK7HR5O3zKqDPWpJY9BDTgjsjs14NNG+RBtrGmVluhwwdCoUFl3
-         yhrgj7mJDUcJ+zN512yHYAQiN1/LIloEwZWUihgOY9n3mfdOTq7HTBugd0xCzZGOiXGn
-         6HQA==
-X-Gm-Message-State: AOAM531bCQ8JLwdEDNWW9wN0nc4G2qdaG/R082bdUfQYRmPU2erkEUkF
-        XAcyBSstqmM1vGE8QiU9KunNNupL6zSLbg==
-X-Google-Smtp-Source: ABdhPJzZ7tgR5pXn1XQv2q/TxKce2IqTRDTreHqkACR4UFVQZMe4HvU+Dngyrw5oYGEcUo13rmdg5w==
-X-Received: by 2002:a17:90b:1251:b0:1d7:f7ae:9f1 with SMTP id gx17-20020a17090b125100b001d7f7ae09f1mr24122359pjb.65.1652586099705;
-        Sat, 14 May 2022 20:41:39 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id cu8-20020a056a00448800b0050dc76281b3sm4375942pfb.141.2022.05.14.20.41.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 May 2022 20:41:39 -0700 (PDT)
-Date:   Sat, 14 May 2022 20:41:35 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [RFC PATCH v2 06/21] cfi: Switch to -fsanitize=kcfi
-Message-ID: <202205142031.A3322C75@keescook>
-References: <20220513202159.1550547-1-samitolvanen@google.com>
- <20220513202159.1550547-7-samitolvanen@google.com>
+        Mon, 16 May 2022 03:18:25 -0400
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 422DB13CD0
+        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 00:18:24 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed30:51ae:171f:35c9:722d])
+        by xavier.telenet-ops.be with bizsmtp
+        id XKJK2700L2UsjYA01KJKhi; Mon, 16 May 2022 09:18:22 +0200
+Received: from geert (helo=localhost)
+        by ramsan.of.borg with local-esmtp (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nqUzi-000YsA-VZ; Mon, 16 May 2022 09:18:18 +0200
+Date:   Mon, 16 May 2022 09:18:18 +0200 (CEST)
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+X-X-Sender: geert@ramsan.of.borg
+To:     linux-kernel@vger.kernel.org
+cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-media@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: Re: Build regressions/improvements in v5.18-rc7
+In-Reply-To: <20220516064231.2425428-1-geert@linux-m68k.org>
+Message-ID: <alpine.DEB.2.22.394.2205160916190.134019@ramsan.of.borg>
+References: <CAHk-=wg2eVUN0a1E5UnBF1ziGaU1yrMJtnFPg4R78O=FcRDqnA@mail.gmail.com> <20220516064231.2425428-1-geert@linux-m68k.org>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220513202159.1550547-7-samitolvanen@google.com>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, May 13, 2022 at 01:21:44PM -0700, Sami Tolvanen wrote:
-> Switch from Clang's original forward-edge control-flow integrity
-> implementation to -fsanitize=kcfi, which is better suited for the
-> kernel, as it doesn't require LTO, doesn't use a jump table that
-> requires altering function references, and won't break cross-module
-> function address equality.
-> 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+On Mon, 16 May 2022, Geert Uytterhoeven wrote:
+> JFYI, when comparing v5.18-rc7[1] to v5.18-rc6[3], the summaries are:
+>  - build errors: +2/-0
 
-Looks good on arm64 with LKDTM, too:
+   + /kisskb/src/drivers/media/platform/nxp/imx-pxp.h: error: initializer element is not constant:  => 582:38
 
-[   96.904483] lkdtm: Performing direct entry CFI_FORWARD_PROTO
-[   96.904718] lkdtm: Calling matched prototype ...
-[   96.904829] lkdtm: Calling mismatched prototype ...
-[   96.905250] CFI failure at lkdtm_CFI_FORWARD_PROTO+0x54/0x94 [lkdtm] (target: lkdtm_increment_int+0x0/0x20 [lkdtm]; expected type: 0x7e0c52a5)
+mipsel-gcc5/mips-allmodconfig
 
-Tested-by: Kees Cook <keescook@chromium.org>
+Seen before in other builds, missing "U"-suffix on large unsigned
+constants.
 
--Kees
+   + /kisskb/src/include/linux/fortify-string.h: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]:  => 328:25
 
--- 
-Kees Cook
+s390x-gcc11/s390-allmodconfig
+
+> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/42226c989789d8da4af1de0c31070c96726d990c/ (all 131 configs)
+> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/c5eb0a61238dd6faf37f58c9ce61c9980aaffd7a/ (all 131 configs)
+
+Gr{oetje,eeting}s,
+
+ 						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+ 							    -- Linus Torvalds
