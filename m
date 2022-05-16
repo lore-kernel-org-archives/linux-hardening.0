@@ -2,67 +2,56 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BB3C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 22:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB22EC433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 23:01:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349541AbiEPWDl (ORCPT
+        id S1350053AbiEPXBF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 16 May 2022 18:03:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53250 "EHLO
+        Mon, 16 May 2022 19:01:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235943AbiEPWDk (ORCPT
+        with ESMTP id S1350054AbiEPXAv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 16 May 2022 18:03:40 -0400
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9BB82A25B
-        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 15:03:38 -0700 (PDT)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-2f16645872fso168548587b3.4
-        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 15:03:38 -0700 (PDT)
+        Mon, 16 May 2022 19:00:51 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C36D47059
+        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 15:59:43 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id l14so4917923pjk.2
+        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 15:59:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IjaOHrJPxQNUMk++gKnFcKFfTSw8FlwW+UyobtzjVj0=;
-        b=CmIEj5n1Rl0HWNhLuhDFskWScqMt8sTZf+nhjXYfnm9nlgr/YXq9h82Fae9Y2KTq1g
-         KryZOd70RTA6tPdFd6uEglWV6hKFFIZmg7ZFv30zU1JzLwvckRRLR0MEMdF00hjHIHDf
-         hVEuQ8BqEIRE3mG//CqcrOWdJM1NQz8jL2LfiBTS0Uvbwue/yEjA0leJcwc3aoJbKFUo
-         HsYsHIyfIVblYlpHWWLtcT5unFYiki04NZBQO/jfec+mhGllAxhTLo9QATAqOOLauq7u
-         ckKDPDyG+lHdQjd1OuL/8h39HKfWcmiAhNYRkNnJwcWE1smI+GnPF/PAEkdRN2Dzzitq
-         q0nw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qH80CkGInLvkMX2JFapXe6/mirbCbTT5IsB0Ewh+rp8=;
+        b=TOCV1Wq+ft6PCF6l/iA42zY/3oD/IM0GOcYS+7TP3YJrbCBQoBpGYcRJ4FxvAYjGS8
+         Gg7ZH626PyNKxe6gsPGFcJ6V3ZdRL/vPUeoqYVEMEWtWXHFCjfx4Ox5QLjjGI8779p5h
+         T+G2RVdvA3BaNACIhLLpoN8MhXMLEVheXyyvU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IjaOHrJPxQNUMk++gKnFcKFfTSw8FlwW+UyobtzjVj0=;
-        b=BuWGphXpSMWcUOtvq/VNSZfEIa1g6UDAqFMY82SnTDC7lJoIz130Gm/0Rr1u0aCoMs
-         feWLGVmvg9FyIFTCmb1FUonLSIZPhoI0nHErMiJq9lhqwIa2P0AtDMFY4qBwt32wPjrG
-         ZSdjvoUgxCpfb64ba1pxWdFdOVIcdiycV/SHnDhGWAeYl7fC6JLRb/VLRCnLo2H9ygSV
-         4gW7DEq+HegFgVt1StTKUhKFwWXJykp35boekS3akboLei5HYTfLEwG7vdMbOUQekPgg
-         iTR8Md8ph9nbUv5IQbNWmjhqiKU9kBgEC4qsPQRSWF2kAtxxgdYFmTP1p4pyUbylUyed
-         t55Q==
-X-Gm-Message-State: AOAM532CDp3UyXp+nsudU46L2CqcCMQKECKVEXd0pqZVxCTvccRfnzGZ
-        x7mSLGqEAp116uNgHr8MnT0Gun4xapr34p0w6RcTnQ==
-X-Google-Smtp-Source: ABdhPJw3sBkLaeksICo+46rO2UaS3Fk7vsTQRrcZQqDXNASr5C339hIh2SUj2o4+spHZoBL4AtjH3f55xJ+hksTEK84=
-X-Received: by 2002:a0d:d747:0:b0:2ff:22b9:9281 with SMTP id
- z68-20020a0dd747000000b002ff22b99281mr1573852ywd.305.1652738618031; Mon, 16
- May 2022 15:03:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220513202159.1550547-1-samitolvanen@google.com>
- <20220513202159.1550547-21-samitolvanen@google.com> <f65c01979b884174965802a13cf6b077@AcuMS.aculab.com>
- <CABCJKueo+cw1DHH6N2dUjD-U7OKqmkJUyimm0ychv1drt5U9Rg@mail.gmail.com>
- <19b3e040302d4d8aa240eee43427dfaa@AcuMS.aculab.com> <20220516214414.GR76023@worktop.programming.kicks-ass.net>
-In-Reply-To: <20220516214414.GR76023@worktop.programming.kicks-ass.net>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Mon, 16 May 2022 15:03:02 -0700
-Message-ID: <CABCJKucPMgMQ-D_yByvMSx6yutjsBXGAwirmheOYejWHARi9iQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 20/21] x86: Add support for CONFIG_CFI_CLANG
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qH80CkGInLvkMX2JFapXe6/mirbCbTT5IsB0Ewh+rp8=;
+        b=1r1Yh++pitup7UIzvSO97dFm8cyNJ7KVhBmd8y9/4KoIdfj2EJ3kg2kja3WAQpVYfR
+         2McRCrCcMyzDjhsKrck1aXl7g8LzjYWAE7FE+yamBxcJqUdn51e0y1jWCT9GHQSGb8ir
+         THIfhDJdkdMvvDyMwvv8eoB7xPBLiKyXdBuTPnc/HRZQL8kgFsdL8gP9vGUjw/Qx6k6c
+         4KzMkH9rWr1sbN5ItWHC70eQ6d3ArlipH0bKdSc3CdNg/6yYVvmIseO6m0WknNcESyHs
+         VwGU5ylKTGowu4WOX5Ym4g9I86uZ4cqvcLm1xkDyWTKo64n2K01Ku5Qcrw2+fYwneIcA
+         Fv8A==
+X-Gm-Message-State: AOAM531meT36TePOWfdbkUwPvjcu/Z5aPE9ldhCHqyHpTat+G0ySfln6
+        eause8eI4zrxj0sArULZSeuwDw==
+X-Google-Smtp-Source: ABdhPJyxSU6G5TXN+v5ykRQusfkdTnOToZozkVk2taUe7UjHwkwJqQkJiQdCp59lbUQJKd1uM61/1Q==
+X-Received: by 2002:a17:90b:3b42:b0:1dc:5cdf:5649 with SMTP id ot2-20020a17090b3b4200b001dc5cdf5649mr33105926pjb.239.1652741982280;
+        Mon, 16 May 2022 15:59:42 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e16-20020a17090301d000b0015f2d549b46sm7535303plh.237.2022.05.16.15.59.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 May 2022 15:59:41 -0700 (PDT)
+Date:   Mon, 16 May 2022 15:59:41 -0700
+From:   Kees Cook <keescook@chromium.org>
 To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     David Laight <David.Laight@aculab.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Nathan Chancellor <nathan@kernel.org>,
@@ -70,28 +59,173 @@ Cc:     David Laight <David.Laight@aculab.com>,
         Joao Moreira <joao@overdrivepizza.com>,
         Sedat Dilek <sedat.dilek@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "llvm@lists.linux.dev" <llvm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+        linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+Subject: Re: [RFC PATCH v2 20/21] x86: Add support for CONFIG_CFI_CLANG
+Message-ID: <202205161531.3339CA95@keescook>
+References: <20220513202159.1550547-1-samitolvanen@google.com>
+ <20220513202159.1550547-21-samitolvanen@google.com>
+ <YoIfWENLV1AR2ijj@hirez.programming.kicks-ass.net>
+ <CABCJKucXA2jbTc9TF1mLUsEDKu52t71tzxpnsGOXY3_ks+W4Bg@mail.gmail.com>
+ <20220516183047.GM76023@worktop.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220516183047.GM76023@worktop.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 16, 2022 at 2:44 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, May 16, 2022 at 09:32:55PM +0000, David Laight wrote:
->
-> > > The compiler always generates this specific instruction sequence.
-> >
-> > Yes, but there are several ways to encode 'cmpl imm,-6(reg)'.
->
-> Yes, but we don't care. This *always* uses the 32bit immediate form.
-> Even if the immediate is small.
+On Mon, May 16, 2022 at 08:30:47PM +0200, Peter Zijlstra wrote:
+> On Mon, May 16, 2022 at 10:15:00AM -0700, Sami Tolvanen wrote:
+> > On Mon, May 16, 2022 at 2:54 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > >
+> > > On Fri, May 13, 2022 at 01:21:58PM -0700, Sami Tolvanen wrote:
+> > > > With CONFIG_CFI_CLANG, the compiler injects a type preamble
+> > > > immediately before each function and a check to validate the target
+> > > > function type before indirect calls:
+> > > >
+> > > >   ; type preamble
+> > > >   __cfi_function:
+> > > >     int3
+> > > >     int3
+> > > >     mov <id>, %eax
+> > > >     int3
+> > > >     int3
+> > > >   function:
+> > > >     ...
+> > >
+> > > When I enable CFI_CLANG and X86_KERNEL_IBT I get:
+> > >
+> > > 0000000000000c80 <__cfi_io_schedule_timeout>:
+> > > c80:   cc                      int3
+> > > c81:   cc                      int3
+> > > c82:   b8 b5 b1 39 b3          mov    $0xb339b1b5,%eax
+> > > c87:   cc                      int3
+> > > c88:   cc                      int3
+> > >
+> > > 0000000000000c89 <io_schedule_timeout>:
+> > > c89:   f3 0f 1e fa             endbr64
+> > >
+> > >
+> > > That seems unfortunate. Would it be possible to get an additional
+> > > compiler option to suppress the endbr for all symbols that get a __cfi_
+> > > preaamble?
+> > 
+> > What's the concern with the endbr? Dropping it would currently break
+> > the CFI+IBT combination on newer hardware, no?
+> 
+> Well, yes, but also that combination isn't very interesting. See,
+> 
+>   https://lore.kernel.org/all/20220420004241.2093-1-joao@overdrivepizza.com/T/#m5d67fb010d488b2f8eee33f1eb39d12f769e4ad2
+> 
+> and the patch I did down-thread:
+> 
+>   https://lkml.kernel.org/r/YoJKhHluN4n0kZDm@hirez.programming.kicks-ass.net
+> 
+> If we have IBT, then FineIBT is a much better option than kCFI+IBT.
 
-Yes, that part is not a problem, but it's a valid point that LLVM
-might not always use r8-r15 here, so I will have to check for the REX
-prefix before blindly attempting to decode the instruction.
+I'm still not convinced about this, but I'm on the fence.
 
-Sami
+Cons:
+- FineIBT does callee-based hash verification, which means any
+  attacker-constructed memory region just has to have an endbr and nops at
+  "shellcode - 9". KCFI would need the region to have the hash at
+  "shellcode - 6" and an endbr at "shellcode". However, that hash is well
+  known, so it's not much protection.
+- Potential performance hit due to making an additional "call" outside
+  the cache lines of both caller and callee.
+
+Pros:
+- FineIBT can be done without read access to the kernel text, which will
+  be nice in the exec-only future.
+
+I'd kind of like the "dynamic FineIBT conversion" to be a config option,
+at least at first. We could at least do performance comparisons between
+them.
+
+> Removing that superfluous endbr also shrinks the whole thing by 4 bytes.
+> 
+> So I'm fine with the compiler generating working code for that
+> combination; but please get me an option to supress it in order to save
+> those pointless bytes. All this CFI stuff is enough bloat as it is.
+
+So, in the case of "built for IBT but running on a system without IBT",
+no rewrite happens, and no endbr is present (i.e. address-taken
+functions have endbr emission suppressed)?
+
+Stock kernel build:
+	function:
+		[normal code]
+	caller:
+		call    __x86_indirect_thunk_r11
+
+IBT kernel build:
+	function:
+		endbr
+		[normal code]
+	caller:
+		call    __x86_indirect_thunk_r11
+
+CFI kernel build:
+
+	__cfi_function:
+		[int3/mov/int3 preamble]
+	function:
+		[normal code]
+	caller:
+		cmpl    \hash, -6(%r11)
+		je      .Ltmp1
+		ud2
+	.Ltmp1:
+		call    __x86_indirect_thunk_r11
+
+CFI+IBT kernel build:
+
+	__cfi_function:
+		[int3/mov/int3 preamble]
+	function:
+		endbr
+		[normal code]
+	caller:
+		cmpl    \hash, -6(%r11)
+		je      .Ltmp1
+		ud2
+	.Ltmp1:
+		call    __x86_indirect_thunk_r11
+
+CFI+IBT+FineIBT kernel build:
+
+	__cfi_function:
+		[int3/mov/int3 preamble]
+	function:
+		/* no endbr emitted */
+		[normal code]
+	caller:
+		cmpl    \hash, -6(%r11)
+		je      .Ltmp1
+		ud2
+	.Ltmp1:
+		call    __x86_indirect_thunk_r11
+
+	at boot, if IBT is detected:
+	- replace __cfi_function with:
+		endbr
+		call __fineibt_\hash
+	- replace caller with:
+		movl    \hash, %r10d
+		sub     $9, %r11
+		nop2
+		call    *%r11
+	- inject all the __fineibt_\hash elements via module_alloc()
+		__fineibt_\hash:
+			xor     \hash, %r10
+			jz      1f
+			ud2
+		1:	ret
+			int3
+
+
+
+-- 
+Kees Cook
