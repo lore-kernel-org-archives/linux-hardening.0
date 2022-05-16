@@ -2,60 +2,60 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08099C433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 17:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9D2C433F5
+	for <linux-hardening@archiver.kernel.org>; Mon, 16 May 2022 17:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233180AbiEPRRD (ORCPT
+        id S244694AbiEPR5y (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 16 May 2022 13:17:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54498 "EHLO
+        Mon, 16 May 2022 13:57:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230227AbiEPRRC (ORCPT
+        with ESMTP id S230453AbiEPR5x (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 16 May 2022 13:17:02 -0400
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A177F35DC6
-        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 10:17:01 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id e78so7122575ybc.12
-        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 10:17:01 -0700 (PDT)
+        Mon, 16 May 2022 13:57:53 -0400
+Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D04A39BB6
+        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 10:57:52 -0700 (PDT)
+Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-2ebf4b91212so162267677b3.8
+        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 10:57:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FXOnPvl8QcJEDWbi0XN3Lq19sfoQAsf+gUr01P/rvlk=;
-        b=OM8kgeKWnkTLRBZ7RTDJtDZ0OhbvjKtrtPVbHiJv9VobLZNWVHWGgo4QzJUZykXSZV
-         S978AF1P+/+TQwUaWw5r4iAwDc1TIqRPVZfN1U/fYopNiHC0uAC28XABNd1kdXGW/Cn9
-         Gzzz9IacrdlQD2sQ8SN0iUKwmUj7CDUv2AQqwHCBdIW+MTQRZO6d1YJo05tPskMcsXRK
-         6bHxZTPRNql9kT25XB+YzCb9HV5qM8t/bbn/OP++K53Zdm1sI9eoAErldOq/3+coa2/H
-         g7PnWG4un2TUvBbf5ZxcHBq0UFRQF7bpmF3t6OdWsOOkZt3u3dTwaYtW+RnaDr3VwLWH
-         RLag==
+         :cc:content-transfer-encoding;
+        bh=L6QoMgtwgL3tJe4GB/Ih7yflwSG3aQ00OepOaXpJEe4=;
+        b=Zc6rshDMluaKoextbWcKCqT45DJDCK0JaPZ3RS4WxflJ5a/2R1FtVZTwvZq/ZC+Hvw
+         EfTgd2+B7ClPEcqSvU7y+b3GnV3yZWIyV0f1D6fXPWl0YrRfJlN8YBXVUZIakI1yYwgV
+         W4b5WxKlmQsSVJR+9wPV9YQIYhgG0gWlW6dezlkbaCdnwmnqx3jrkWESEoyVo3pBP70l
+         Qlwl1jFhJ0WQL2n/xxb4UQS1lDEFsNc2shbbjfcRimzgDljTstePWW/JNSIYVgBB78oh
+         oE9ddI7QjLL2xzK+HSxXR23YnlhEVDKmwQwb9PS+RBv0cSQTk6RBLlYpJBELdGn4zXxI
+         i1qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FXOnPvl8QcJEDWbi0XN3Lq19sfoQAsf+gUr01P/rvlk=;
-        b=LjxmxpKHIutU2AFnvANw3uZGi8cdpoy5eyIaEx8II3kmvWpNo6uUZobJAruQkwiwe1
-         iWmLNgwjIKaIiijSllUSDu8Zm/IEAYaXJoFa098nfb5ft1QP+pQiondTyk0Qxt6axaiQ
-         Tn67bl0wrxTBNoCiHAA+naKJx+clJS23jZe9lvtN9pVRIMUMOoRsISpebVK/wtDwzlwJ
-         syhm/8d3seTziBHPTYkiUYkaw2SMsI4/TEO4W1dENSudwFlyAbbL/f8yydZQiH6s60s6
-         6OMhJAUqcB9If9U1jp4kV1cLn2Xr7wt6qSdZOjx1YDYwCFRi63y4gZ+CtWMi6uOoluZ0
-         5vVA==
-X-Gm-Message-State: AOAM531pTKYM8UpnczW4yFqPlQEXwHgdjrI3w/7/6XOSNYQs5DbJDMEO
-        LiYLzRH+3oIgSUvNUlUhLtvj30yjYSM1cGWLwJpTew==
-X-Google-Smtp-Source: ABdhPJwErdMw9lIEVb8u38lNc4NgNXjt+kXxu9dBYmAQWe/u7yXSrIRYHJOVxdd0pqgjysXHBrZd7vzZ6OxxZCayB/s=
-X-Received: by 2002:a25:dc93:0:b0:64d:9c5d:d43 with SMTP id
- y141-20020a25dc93000000b0064d9c5d0d43mr6954243ybe.560.1652721420662; Mon, 16
- May 2022 10:17:00 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=L6QoMgtwgL3tJe4GB/Ih7yflwSG3aQ00OepOaXpJEe4=;
+        b=G2C5d8Dv4ZN3bhzEddxfGVN109N9KHI0vN6MVSPLL0Gs9A6/Z63RlqD66oHTlxMRo/
+         mvryBu7PWUi0LtGypS9YDlah61mPlTGfr+h7/zuR7yLtoOTx7H6mtNCR5xCKlme+7GlK
+         9HCxM1DGAjVWxp/zR0MEb4vrEnOR5npaXKe/vMGQcTOj97Mp3uL78pC3F42OOQK37aM1
+         FTEMqRS7jqDQJWetrAQ2M6Km+Ej3R1WgB1KtlvyJtzcDzstOZsDq5aTWeEaZL/0k6mX1
+         QGxhRrT/gctL1lTzPS7bJkqaoiPDi7xymi9uNR+f+nZ4bZfYZwhD2fzjYPfxIFaiup7j
+         2MCQ==
+X-Gm-Message-State: AOAM532sduEI9mO5k7B9fV6HAKq53eclG7TdPQ2+3Wdc4JH36nuHIuNH
+        OA4iQFWAzXl4w3+nVAKdqtkfVUN+zkWzkeLi6WaEBQ==
+X-Google-Smtp-Source: ABdhPJyidyZ+9MInh37119ah6yTP6kCC84bdJzFaKW0zxyWyF1nd0YJqkrMB3Pbhc+Z/UFHH1FjJwSyi6hpdSvHXSCM=
+X-Received: by 2002:a81:7953:0:b0:2fe:f8a9:7e45 with SMTP id
+ u80-20020a817953000000b002fef8a97e45mr6834348ywc.23.1652723871208; Mon, 16
+ May 2022 10:57:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220513202159.1550547-1-samitolvanen@google.com>
- <20220513202159.1550547-22-samitolvanen@google.com> <202205141503.3D87637B85@keescook>
-In-Reply-To: <202205141503.3D87637B85@keescook>
+References: <20220513202159.1550547-1-samitolvanen@google.com> <CA+icZUWr+-HjMvY1VZf+nqjTadxSTDciux0Y5Y-+p_j4o7CmXg@mail.gmail.com>
+In-Reply-To: <CA+icZUWr+-HjMvY1VZf+nqjTadxSTDciux0Y5Y-+p_j4o7CmXg@mail.gmail.com>
 From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Mon, 16 May 2022 10:16:24 -0700
-Message-ID: <CABCJKud1j8RCa2khJBcDxpJA-kmhb1XYU8rJLca658oduEMeoA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 21/21] init: Drop __nocfi from __init
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+Date:   Mon, 16 May 2022 10:57:15 -0700
+Message-ID: <CABCJKueVcwYishxSoEyn9b1vaGTXdoYWF7VyANPm7V=H+yyfhQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 00/21] KCFI support
+To:     sedat.dilek@gmail.com
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
@@ -63,25 +63,62 @@ Cc:     linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-hardening@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, May 14, 2022 at 3:03 PM Kees Cook <keescook@chromium.org> wrote:
+On Mon, May 16, 2022 at 10:31 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>> Anything Like LLVM cmake Options to be condidered and Set?
 >
-> On Fri, May 13, 2022 at 01:21:59PM -0700, Sami Tolvanen wrote:
-> > It's no longer necessary to disable CFI checking for all __init
-> > functions. Drop the __nocfi attribute.
-> >
-> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 >
-> Maybe move this up after patch 11 (the arm64-wide __nocfi removal)?
+> I activate Clang and LLD ad projects - OK - enough?
 
-Yes, that makes sense. I'll move it.
+Clang and LLD should be sufficient.
+
+>> This series is also available in GitHub:
+>>
+>>   https://github.com/samitolvanen/linux/commits/kcfi-rfc-v2
+>>
+>>
+>>
+>
+>> Can you please add a history of what changed?
+
+Oops, I forgot to include that.
+
+Changes in v2:
+- Changed the compiler patch to encode arm64 target and type details
+in the ESR, and updated the kernel error handling patch accordingly.
+- Changed the compiler patch to embed the x86_64 type hash in a valid
+instruction to avoid special casing objtool instruction decoding, and
+added a __cfi_ symbol for the preamble. Changed the kernel error
+handling and manual type annotations to match.
+- Dropped the .kcfi_types section as that=E2=80=99s no longer needed by
+objtool, and changed the objtool patch to simply ignore the __cfi_
+preambles falling through.
+- Dropped the .kcfi_traps section on arm64 as it=E2=80=99s no longer needed=
+,
+and moved the trap look-up code behind CONFIG_ARCH_USES_CFI_TRAPS,
+which is selected only for x86_64.
+- Dropped __nocfi attributes from arm64 code where CFI was disabled
+due to address space confusion issues, and added type annotations to
+relevant assembly functions.
+- Dropped __nocfi from __init.
+
+> Nathan has a i915 cfi patch in His personal kernel.org Git.
+> Is this relevant to kcfi?
+
+It fixes a type mismatch, so in that sense it's relevant.
+
+> To distinguish between clang-cfi we should use different kbuild variables=
+ for kcfi.
+
+The plan is to replace the current CFI implementation. Does reusing
+the kbuild variable names cause a problem?
 
 Sami
