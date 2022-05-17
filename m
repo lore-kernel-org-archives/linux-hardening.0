@@ -2,50 +2,50 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC23C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 17 May 2022 00:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E3AC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 17 May 2022 03:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350561AbiEQAGg (ORCPT
+        id S236356AbiEQDA3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 16 May 2022 20:06:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41280 "EHLO
+        Mon, 16 May 2022 23:00:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350586AbiEQAGf (ORCPT
+        with ESMTP id S234161AbiEQDA2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 16 May 2022 20:06:35 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C242B63E5
-        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 17:06:33 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id x23so15456507pff.9
-        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 17:06:33 -0700 (PDT)
+        Mon, 16 May 2022 23:00:28 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 176CD46146
+        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 20:00:27 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id bo5so15720379pfb.4
+        for <linux-hardening@vger.kernel.org>; Mon, 16 May 2022 20:00:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=mGJWRWdfa3KTmoG3aNOqzyx/Wf+ePAVmXNhTqPQrAPg=;
-        b=Nv3BmeZdD47Bph3PPRA4UtRyGrtqacMmT6PG5xKg2zURJWDKdKI2+mo4CkgNhDOEA0
-         9DXAExWnXsVRpf16SqI9Wt18SkzTyCgH8zFd2PM/Ext0kt8H+GX2NcoA22mkiLld/oYw
-         EcBmTubH7zblItcl/cUAoPbOetUul0BJ/t3Wo=
+        bh=6oDXyhpDBl0Jo1eKHOlaQtjHRyKXTitgCILk3NSE03E=;
+        b=j9UiWFe1CcVfL56kGJWu7qwlU1Mywa1IA9wK5YAICPea5uh55XHx6L9AjyfE8mcOpz
+         r4UQfo3+vsT7qJo6Jx444VhMIppCts6xbWsfAiqCbG58MjQIqYrLkOoZ2kZjqxSjZktt
+         FrJTfkMXrxalLarfnB+EuV5li2wOibdCJtYXg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=mGJWRWdfa3KTmoG3aNOqzyx/Wf+ePAVmXNhTqPQrAPg=;
-        b=VANYsEU6KSFF+CqXDfYLPD8qXl4gqGltFK8rgzI6U6ePMAPV/bTOtt/bnV5foNotpa
-         VqZuwdZe+MFOcERtF9CNjVE2Zi+hoO6VDCiXfjPVkPExA4D7np4fyHKQ8ZeZYbEpNvzK
-         kOurMvXO75n9+wpcXcx5Goym1rGbfZgk0Z8Qq8C8lgYtrGlQNJhjOSbG2X0of4gKeO3X
-         2R9YN0HUQB+EfPplMtyoowfp7Y57BL4s64ghlt1Bu/K634Hy6sRibCOLgLWIP+jwRoRC
-         0Lmdn46FLkCo8um7LeoOheEqpJ7iclwY38+JcliJEDXO2EHk88YFfFu2NIiNkf/ibb+M
-         KrRw==
-X-Gm-Message-State: AOAM533gemSOZn4TuO9WlFYRetxM7+lif0v+t+j7moyqmkMjca4ZmbBF
-        zarcW9J/59nn0Fzeie6jb/lsZQ==
-X-Google-Smtp-Source: ABdhPJyRp9tBevYtLBECx7L46IiKhY3AdADlZVwDMGiuWYjSrScnn89SsdI6GOW2VVOeX3OS3nRFQg==
-X-Received: by 2002:a63:8f45:0:b0:398:d78:142f with SMTP id r5-20020a638f45000000b003980d78142fmr17205784pgn.162.1652745993281;
-        Mon, 16 May 2022 17:06:33 -0700 (PDT)
+        bh=6oDXyhpDBl0Jo1eKHOlaQtjHRyKXTitgCILk3NSE03E=;
+        b=ob60Qwx7BBuOpx9UhKvmS4OR1RkGisQGQT+di3g/eT32dw89srOO3YiE6y0i7kytcd
+         hk/JHa96XWWooiZWo+E2G2jYgGIZFaZv58DM01Qv9oQqKaUu0Diu7P46BvG0BxO5LJUw
+         qAq274WzZM/iVtDwH6vPuhXNm1b7vCXux4KIY4AvSU8kbbjl/HfKJ8dWagemIzGbWVbg
+         swPCd4ByrvqvAKfcXXIWeYsLesLU5FSgVrUSxcMfJVaxXPg+35O2h9cM9dga7K2Rwt5R
+         7bc8PQ5Y4Q7XIMhtDbaG/IGvaBppKJ6QOS4stJBHH0roJh4iVyd7ZbEQFbcMxRH1tD/T
+         1vAg==
+X-Gm-Message-State: AOAM533C+oMEHc7WYHoRPxbo/8ovPssb6pQ/ybwUI2TbeFuWtMfhKM61
+        d2t6cD2aiNnfUax3Lv061gQRVg==
+X-Google-Smtp-Source: ABdhPJyrTrHLcfZFlpWOxDT98h0VjkyGtAzB1+zKS0LgpTJyDE4ZwFrXoUoWaKks5naQsOotVEv2sw==
+X-Received: by 2002:a05:6a00:2985:b0:510:66a4:375d with SMTP id cj5-20020a056a00298500b0051066a4375dmr20573420pfb.18.1652756426526;
+        Mon, 16 May 2022 20:00:26 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l1-20020a170903244100b0015ea4173bd6sm7753792pls.195.2022.05.16.17.06.32
+        by smtp.gmail.com with ESMTPSA id m2-20020a170902db8200b001616b71e5e6sm3715010pld.175.2022.05.16.20.00.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 May 2022 17:06:32 -0700 (PDT)
+        Mon, 16 May 2022 20:00:26 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -58,13 +58,13 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
         Daniel Bristot de Oliveira <bristot@redhat.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] sched/core: Address classes via __begin_sched_classes
-Date:   Mon, 16 May 2022 17:06:30 -0700
-Message-Id: <20220517000630.3383144-1-keescook@chromium.org>
+Subject: [PATCH v3] sched/core: Address classes via __begin_sched_classes
+Date:   Mon, 16 May 2022 20:00:23 -0700
+Message-Id: <20220517030024.3388355-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3380; h=from:subject; bh=yE7Y4iEzw2uQDBPWERz4EnWIp9JgtTYW0MBOSnRfrJA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBigucFz5LmgNLKW4UOYvuzv15xB3QwC3f7ncw6ekcE 9t1cbfOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYoLnBQAKCRCJcvTf3G3AJseGD/ wJZVyWQ3/vhY/sBnEOOY6L8gDxoT+vB96re6BoLQe1GjYnCtJVei64tiNdhCh8S5t5G99jTpDEHB4B gVlLyvXlMOmPN7T3doJaQ6sk+FT+a6kwdVn+vSG2V7uRdo3cjaitrGGis0QWqSp8K2uSxhV+sDTDJx FYs7QmyVZ5D8tq9EonMBt2JgrwSttB3BHM0vNmIXj7qBsPDR7Cc1XX20FSqfjAV2hbDSPM0AdgV67Y 4oEENbuiRpyE5XHVIXghekDrF7oXhA10m8o7P3XSgrqQN+Rb1v5NlAjlo5vnOYhAg9zGACxCaFVAPq ul8d/bxtIO32UZU5yADn5YPbLUZVW1emzJsA6/4R9Dsi4RLdSgYypMSZSRTphEcK4knFdprHiNdfkm bwztYOIIBbPbc73Z4+WwvM0JUUbqHMsFEiN2qtFYghRcrAIpP3G6ZNGS38Ejnif57IQJNRgCvWAUWK Z0PUu4GJRse8bzg7CjaupaLrVJLFSpWLN3igGvWyPAEObQ6/ziapumonrXNN4PxdLFtDRdczaDrKg3 QsD8T5ZwVI0crz5eHBt5IwAvyH4iEWw7nGKSRcAtnc3L1pUK8AUw/LFlwwsAHT4DJD3M7ENlEjUwdO nG81pmpUKqcgUYAzLDDwIxfNE8EmgY9xMWJ4qOG0yZ02XFr7WBQt6OVVk0iw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6031; h=from:subject; bh=KdhucHycTGYVE+04wzrP136yo4J21OP5siXew/NO9Gs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBigw/HvIcI28VIr/wNNWf8zJHdhh2HUCa9vv4KX+DN mLxfvOuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYoMPxwAKCRCJcvTf3G3AJpeuD/ 9ZD0w/FM2zL6lsnv54UU34zEJXcEN97d6Rj/+GYy7vHWIej8WPerxmsmvjxCWVbNZ7jO0lY+XHMHyZ InccVpDnPmrPwhSQLV7+XsnxkauuAP5lNFR3E11U4zSnK8B8zX2t8XYusXYM/YhJwvhqL5f6Qh8jGx 97hSeORGq4cLZXnZmL9qBCtHe8ukotmPxwn1RD1cUUb7RPfYexRMZBZ19wU1AnI6HeGNqaj+Gyfc8d HHwNHN1mD02QwwMR6I0kJ5x5jeOPRK/tekqY9bbAtfqz/N/igkC8v8AZ9djo3vgAYgV1oBgUaMVOhY 3Q9CJHyo7R1lXNftAfP3/tIFh9BE0uT3FdAESryQsA5mUpeF6bXZ51ssUp28ECTEBlyww2euZMyzuS pd0nZ1cEWBdkwVDrXbIyyI59w+hL+AtJ4h4X+z5lNxhRT9MgScqz1ZHEobseR1mrMjXMWeE0YPzReS LrMss9UaCsutL7fECp0w8yY+hfq+feyrVO/YQbdMxzzOQFkIoGSGs6jnjvwJd0E4t5UvqFHGVkyWqP VblMGXtpdYbF113Ycvo0MCK8GhR4JEzAk9/XTV8i4J4IF3Nx3UzAYvhjmpB9Y8JJU1cxJ2/F4MFGDB krxZkSo0nwPJtmKXIo7xmaezgwiB/CK8rpKubpyMZmBr1KgCD+dCDpwAGXiQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -75,8 +75,9 @@ GCC 12 is very sensitive about array checking, and views all negative
 array accesses as unsafe (a not unreasonable position). Redefine
 sched_class_highest in terms of its location from __begin_sched_classes,
 and redefine sched_class_lowest to the actual lowest sched class instead
-of one lower (and adjust the for loop so it still works). Silences
-this warning:
+of one lower. This also means the for_class_range() must be redefined to
+be inclusive, which means its 1 caller must be adjusted to have its
+"lowest" argument bumped up one position. Silences this warning:
 
 In file included from kernel/sched/core.c:81:
 kernel/sched/core.c: In function ‘set_rq_online.part.0’:
@@ -97,11 +98,59 @@ kernel/sched/sched.h:2193:27: note: at offset -208 into object ‘__begin_sched_
  2193 | extern struct sched_class __begin_sched_classes[];
       |                           ^~~~~~~~~~~~~~~~~~~~~
 
+The introduce and use of sched_class_higher() could just be a bare "+ 1",
+but this code's backwards walking and non-inclusive for loop was weird
+enough, it seemed back to explicitly describe the manipulation
+happening.
+
 These can't just be object pointers because GCC still sees it as an
 address of a single struct.
 
+The resulting instruction output is identical to before except that one
+less register is used in set_rq_online(), where an immediate can now
+be used, resulting in a small instruction count savings:
+
+│  set_rq_online():
+│ -	push   %r12
+│  	push   %rbp
+│  	push   %rbx
+│  	mov    0x9a0(%rdi),%rax
+│  	mov    0xa10(%rdi),%edx
+│  	lock bts %rdx,0x20(%rax)
+│  	movabs $0x0,%rbx
+│   R_X86_64_64	__end_sched_classes-0xd0
+│ -	movabs $0x0,%r12
+│ - R_X86_64_64	__begin_sched_classes-0xd0
+│  	movl   $0x1,0xa14(%rdi)
+│ -	cmp    %r12,%rbx
+│ -	je     31ea <set_rq_online.part.0+0x5a>
+│ -	mov    %rdi,%rbp
+│ +	cmp    $0x0,%rbx
+│ + R_X86_64_32S	__begin_sched_classes
+│ +	jb     31e6 <set_rq_online.part.0+0x56>
+│ +	mov    %rdi,%rbp
+│  	mov    0x70(%rbx),%rax
+│  	test   %rax,%rax
+│ -	je     31de <set_rq_online.part.0+0x4e>
+│ +	je     31d6 <set_rq_online.part.0+0x46>
+│  	mov    %rbp,%rdi
+│ -	call   31de <set_rq_online.part.0+0x4e>
+│ +	call   31d6 <set_rq_online.part.0+0x46>
+│   R_X86_64_PLT32	__x86_indirect_thunk_rax-0x4
+│  	sub    $0xd0,%rbx
+│ -	cmp    %r12,%rbx
+│ -	jne    31cd <set_rq_online.part.0+0x3d>
+│ +	cmp    $0x0,%rbx
+│ + R_X86_64_32S	__begin_sched_classes
+│ +	jae    31c5 <set_rq_online.part.0+0x35>
+│  	pop    %rbx
+│  	pop    %rbp
+│ -	pop    %r12
+│  	retq
+
 Reported-by: Christophe de Dinechin <dinechin@redhat.com>
 Link: https://lore.kernel.org/lkml/20220414150855.2407137-2-dinechin@redhat.com/
+Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Juri Lelli <juri.lelli@redhat.com>
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
@@ -113,26 +162,47 @@ Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
 v1: https://lore.kernel.org/lkml/20220516194241.3064242-1-keescook@chromium.org
-v2: use the arrays with proper indexes and adjusted loop logic
+v2: https://lore.kernel.org/lkml/20220517000630.3383144-1-keescook@chromium.org
+v3:
+ - Add missing increment to the one for_class_range() user
+ - Provide instruction sequence change analysis in commit log
 ---
- kernel/sched/sched.h | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ kernel/sched/core.c  |  3 ++-
+ kernel/sched/sched.h | 11 ++++++++---
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index d58c0389eb23..f2bcc7f15381 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5665,7 +5665,8 @@ static void put_prev_task_balance(struct rq *rq, struct task_struct *prev,
+ 	 * We can terminate the balance pass as soon as we know there is
+ 	 * a runnable task of @class priority or higher.
+ 	 */
+-	for_class_range(class, prev->sched_class, &idle_sched_class) {
++	for_class_range(class, prev->sched_class,
++			sched_class_higher(&idle_sched_class)) {
+ 		if (class->balance(rq, prev, rf))
+ 			break;
+ 	}
 diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 8dccb34eb190..09304c01e5ea 100644
+index 8dccb34eb190..c757bd26b01a 100644
 --- a/kernel/sched/sched.h
 +++ b/kernel/sched/sched.h
-@@ -2193,11 +2193,13 @@ const struct sched_class name##_sched_class \
+@@ -2193,11 +2193,16 @@ const struct sched_class name##_sched_class \
  extern struct sched_class __begin_sched_classes[];
  extern struct sched_class __end_sched_classes[];
  
 -#define sched_class_highest (__end_sched_classes - 1)
 -#define sched_class_lowest  (__begin_sched_classes - 1)
++#define sched_class_higher(class) ((class) + 1)
+ 
 +#define sched_class_highest (&__begin_sched_classes[__end_sched_classes     \
 +						    - __begin_sched_classes \
 +						    - 1])
 +#define sched_class_lowest  (&__begin_sched_classes[0])
- 
++
++/* For each class, inclusive from _from down to _to. */
  #define for_class_range(class, _from, _to) \
 -	for (class = (_from); class != (_to); class--)
 +	for (class = (_from); class >= (_to); class--)
