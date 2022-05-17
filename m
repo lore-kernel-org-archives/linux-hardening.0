@@ -2,105 +2,170 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFCCC433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 17 May 2022 21:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F66C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 17 May 2022 21:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229614AbiEQVr5 (ORCPT
+        id S229652AbiEQVsm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 17 May 2022 17:47:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54748 "EHLO
+        Tue, 17 May 2022 17:48:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229528AbiEQVr4 (ORCPT
+        with ESMTP id S229573AbiEQVsm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 17 May 2022 17:47:56 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3EF352B1B
-        for <linux-hardening@vger.kernel.org>; Tue, 17 May 2022 14:47:54 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id o13-20020a17090a9f8d00b001df3fc52ea7so3755450pjp.3
-        for <linux-hardening@vger.kernel.org>; Tue, 17 May 2022 14:47:54 -0700 (PDT)
+        Tue, 17 May 2022 17:48:42 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B72D52B20
+        for <linux-hardening@vger.kernel.org>; Tue, 17 May 2022 14:48:41 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id ev18so115384pjb.4
+        for <linux-hardening@vger.kernel.org>; Tue, 17 May 2022 14:48:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=I7pyy6E2RnWeIWkxBWEXgMm6xwmOUjrAOyo0FwZHE3M=;
-        b=i5ZizIgKjPC5FWkkv4pQ9fzdJ2F9jey36U2ePt8A2qFCy/BSpVAkfHeucHfnA2aJdl
-         3h1wzls8pry+KvjypLKRkqVS+B6RWmHgI67Oq+m/nCYuzzZdFoamUlfS29sl0uKSSl6P
-         QsH/kFcc4Kn1Je1iJOByK9mYHr04kVaT9/Jnk=
+        bh=B0Z8qje4K0QTzYUpRNMwBOVtmOTsji77xZBv0BluXhQ=;
+        b=WnAkLjd1rQkNEoxZ4eEbkLGqsHE1zlXRmuLo6CigBq+Exs81iTZNdgq1vp2esdTT73
+         ++NJDD6ds7gRUeyf86VZC/nyvxR/IriYVDbAp7uEuvp+dvIZpg/8eeuDrqWXNnrTPIM8
+         Jn/CU8fuW3nVAzQBbts1YUu8/lMcDXdHqgaLY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=I7pyy6E2RnWeIWkxBWEXgMm6xwmOUjrAOyo0FwZHE3M=;
-        b=AI9yK5W3kPYVRmZFOoYl729P2v8wSThUzoPnATP6PhYF+Vxj9DvAwXhXSi++UO4/DQ
-         W8b8OuWzmetyiqRtW9jerjd10SXDwtulaG494sp5Spw0KTv8b/QKxBCLAM/L+zjhzxSU
-         GcrGduNeTnu98LK51VeuzCNKs3/JWQPGZ36EJ6AsRgfLFkfwASPdSnAiFkLEEkwqfuXE
-         IzuXPFn70z9w6F7loC4dpKExJzuHF4g1LTpFrMvRFbtirR+38HOHvcQMhNJ5O5tbUM9L
-         R5uXZX/9kAW8PaiJO6IjWhEt4XvHDpaxffs8m31au+QyV5UkGkqqA+SpVvcak8NL9xmg
-         v01g==
-X-Gm-Message-State: AOAM530mP8DKYKfkSW8Y85g86/2MX4p08hl3jQo3qVKrABgQVaTs2Fnd
-        GzKchvnugYY8mJBKaUfKz+w3LA==
-X-Google-Smtp-Source: ABdhPJwcOvKdR0sEAIITObq8HPR9LzoCRWxSkOWIKeyktUa3Hag3FVvj7utF86QSQvkLCYPpQPNXhA==
-X-Received: by 2002:a17:90b:1b47:b0:1dc:3c0a:dde3 with SMTP id nv7-20020a17090b1b4700b001dc3c0adde3mr26988737pjb.52.1652824074462;
-        Tue, 17 May 2022 14:47:54 -0700 (PDT)
+        bh=B0Z8qje4K0QTzYUpRNMwBOVtmOTsji77xZBv0BluXhQ=;
+        b=sYHnmjK4Yap1eTwuqSOI2F/C73mpbAzkm/Qu/+jGru4J9p36QxwVg41fSRy7itRAbw
+         ZiLGDAHKyKIl2nUslDs5icpUKRHltW2vHOME8v/iVXtWOsnMHWVer2QUEsBUJQHOXdsQ
+         IqDFqlLBaWbzpN5+s+rCp8SEltzKDblsjHrXjFKQUPLRVQdfbIVebQam/Sn9gqe/5iMO
+         a2TfNc+ypxOlCVcEMxaIJVOE7DySFroMFNWJEtmZDAT3GOG0DbO6ELx68J64CMJBtm1V
+         8AbexesrsiXDqm1cb4SGnVNQmYq731iVg3QyCv+/C/3h3vbtLECLlbQGqQKChCpDa2d9
+         tU9Q==
+X-Gm-Message-State: AOAM531k6LXWRMnIpaNVieO5qPDhLmfdiY1+OkGOGFPrmZQKuswWTKch
+        x0yRLyxFIlkJLSMrrf02K3yAeQ==
+X-Google-Smtp-Source: ABdhPJzTuE9TAjQU08ieN1Dl6s3PAFg07MAbn45QB1uCfx5RYCe93gt7m9EFwFWROLd0kSiun21p5g==
+X-Received: by 2002:a17:902:b588:b0:161:64fe:af8c with SMTP id a8-20020a170902b58800b0016164feaf8cmr14552040pls.26.1652824120653;
+        Tue, 17 May 2022 14:48:40 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r24-20020a635d18000000b003c1bf4c064fsm25644pgb.72.2022.05.17.14.47.54
+        by smtp.gmail.com with ESMTPSA id ik19-20020a170902ab1300b0015e8d4eb2ccsm73762plb.278.2022.05.17.14.48.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 May 2022 14:47:54 -0700 (PDT)
+        Tue, 17 May 2022 14:48:40 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] lkdtm/heap: Hide allocation size from -Warray-bounds
-Date:   Tue, 17 May 2022 14:47:52 -0700
-Message-Id: <20220517214752.877892-1-keescook@chromium.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] lkdtm/usercopy: Rename "heap" to "slab"
+Date:   Tue, 17 May 2022 14:48:38 -0700
+Message-Id: <20220517214838.878058-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1809; h=from:subject; bh=r1vvWyPMo+weXnHfU6apxX06asx5XlIDPRF3oTBkz4Y=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBihBgHWCusDKC4hKbABxxKuztggfit8AvSMH+iVFLV XdNdeyWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYoQYBwAKCRCJcvTf3G3AJjcZD/ 9DCny8GCVsW0cFQv+UlrgbRciJZMVxV3sPQg0y69mLu1L2uZrYtntwxnxGEW3/L5Ppak9V7w+XgAdQ wUv3G+wT9o/3SkTYMUWbhXbGCTGou1pBPK6lUfWqhPAT/UTmyiYrLC852k2SkubodYpOI085tfSlVA udqJUNCTnR85JZZ/WcXjDocQpTIebmaPSZ7HFLqIF6VjDPJKQBLXWHn5r6711D+6wrUJzgVFK3jErv sHm6Cx9y00dfrkh17PTZsU0BR5g6V4vqarf9Z/lK0UnhPyg3N/+SeJTo5ji4XbofJXm2uCRVOyL5Cs odMp+7d/eHr2WAa88EU+FzUrJfnZeOVzgvlqbsFL6hiyDAleGBKmxL46RHC5YavCUyp5IGbBvjRmdv qmz2dORdoU0C1dilfNKFhsbe19+ahllY9gcyd1wr+L9LFt4r6RvE6YDkUyWwWzjkRGff3oxRh1i6oG aVfYYSzSp+6NYviKODolr/tUl5ujVBopySkGylOB2U58ClcIWo0VEHXbraO6Aog9J0nyJ4d922toqb 2NgXkbtoD3a3gtQ8wrbztQnp/ZtIAaY3KeBc/ZMmDM6HSgsH+COMjWY7+8bam0l/uDbAHG3vVzNuAp KQQMVyYiGQ2sk4XxdPK5lkfNz2ertlaoshGJ8Ym5Ly4UeywnFczLZyUerx8g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3666; h=from:subject; bh=LN8v26DnF+tRW/V4fGkZeqbtRtGnjHihliWqv+vZkmg=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBihBg2VvyA5Kov1gcLauuPlWqWVcXe7VVhoOP+c1Pk zd02JqqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYoQYNgAKCRCJcvTf3G3AJrr4D/ 40cSDPakluAzCs5V7tDR+Vv5V32E27wyAUs+mDWx6vJjrcvRge1cgmpD/HYZK1J4sbtwkv8OmdcAkW YyCC+4I9F7cXneSSD4qydoB3+AdNQYC/LbxyG3b+06x6SESxizVg2AXUKe7EGqNufEYwvKPrb0W8fi GoxjrwXDBkF50IoMg1+hJathXKt4k8xuzSHSUXeMpamy7tObBaFFOiu8C+VIvD0nU27f/u21oNC2Ot STmYNHhs87c5mc/CJce0aj7Y/Wo4SVppp7yX2I/Eb1+SxGTcy8/7eDZTMe8jJATyF738pZzbNpM3JC flTERWJRugf47m6J30pXfweRK25BqCJPjDeD8fkIBQbppCdW0wPvEwYKVLwRKjWj7T3QKw6+kfPsc6 DrCC17oLKygwH8lKVRDBNPdk1z7+pfv5Umb91PnSFDojTVZfMtIZrd2bwnq4GHQoIthKGmE/xzdecr zp9S6l2eOjOUagcomzse0DYzFet6bw7UciAI+OcWeH5i7Ot4fbG1fht9TuYdHB9atWxTuJtUkZ88sw vXZOeyuPrvnZTs0fFbCawHaaTghkso0404HfxxcKGKcjH/Av0zeBypZYRvB4QZZTSXc75EsBonzzVr +cry1uprKVwuezRNqLNQGUZnintUlXJ6X9JZ9sN/Xm0N4sK/wnbiQo/c08eA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With the kmalloc() size annotations, GCC is smart enough to realize that
-LKDTM is intentionally writing past the end of the buffer. This is on
-purpose, of course, so hide the buffer from the optimizer. Silences:
+To more clearly distinguish between the various heap types, rename the
+slab tests to "slab".
 
-../drivers/misc/lkdtm/heap.c: In function 'lkdtm_SLAB_LINEAR_OVERFLOW':
-../drivers/misc/lkdtm/heap.c:59:13: warning: array subscript 256 is outside array bounds of 'void[1020]' [-Warray-bounds]
-   59 |         data[1024 / sizeof(u32)] = 0x12345678;
-      |         ~~~~^~~~~~~~~~~~~~~~~~~~
-In file included from ../drivers/misc/lkdtm/heap.c:7:
-In function 'kmalloc',
-    inlined from 'lkdtm_SLAB_LINEAR_OVERFLOW' at ../drivers/misc/lkdtm/heap.c:54:14:
-../include/linux/slab.h:581:24: note: at offset 1024 into object of size 1020 allocated by 'kmem_cache_alloc_trace'
-  581 |                 return kmem_cache_alloc_trace(
-      |                        ^~~~~~~~~~~~~~~~~~~~~~~
-  582 |                                 kmalloc_caches[kmalloc_type(flags)][index],
-      |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  583 |                                 flags, size);
-      |                                 ~~~~~~~~~~~~
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/misc/lkdtm/heap.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/misc/lkdtm/usercopy.c           | 30 ++++++++++++-------------
+ tools/testing/selftests/lkdtm/tests.txt |  8 +++----
+ 2 files changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/misc/lkdtm/heap.c b/drivers/misc/lkdtm/heap.c
-index 5d3b92cd23bd..62516078a619 100644
---- a/drivers/misc/lkdtm/heap.c
-+++ b/drivers/misc/lkdtm/heap.c
-@@ -56,6 +56,7 @@ static void lkdtm_SLAB_LINEAR_OVERFLOW(void)
- 		return;
+diff --git a/drivers/misc/lkdtm/usercopy.c b/drivers/misc/lkdtm/usercopy.c
+index 7852b9fc7c47..945806db2a13 100644
+--- a/drivers/misc/lkdtm/usercopy.c
++++ b/drivers/misc/lkdtm/usercopy.c
+@@ -130,7 +130,7 @@ static noinline void do_usercopy_stack(bool to_user, bool bad_frame)
+  * This checks for whole-object size validation with hardened usercopy,
+  * with or without usercopy whitelisting.
+  */
+-static void do_usercopy_heap_size(bool to_user)
++static void do_usercopy_slab_size(bool to_user)
+ {
+ 	unsigned long user_addr;
+ 	unsigned char *one, *two;
+@@ -196,9 +196,9 @@ static void do_usercopy_heap_size(bool to_user)
  
- 	pr_info("Attempting slab linear overflow ...\n");
-+	OPTIMIZER_HIDE_VAR(data);
- 	data[1024 / sizeof(u32)] = 0x12345678;
- 	kfree(data);
+ /*
+  * This checks for the specific whitelist window within an object. If this
+- * test passes, then do_usercopy_heap_size() tests will pass too.
++ * test passes, then do_usercopy_slab_size() tests will pass too.
+  */
+-static void do_usercopy_heap_whitelist(bool to_user)
++static void do_usercopy_slab_whitelist(bool to_user)
+ {
+ 	unsigned long user_alloc;
+ 	unsigned char *buf = NULL;
+@@ -272,24 +272,24 @@ static void do_usercopy_heap_whitelist(bool to_user)
  }
+ 
+ /* Callable tests. */
+-static void lkdtm_USERCOPY_HEAP_SIZE_TO(void)
++static void lkdtm_USERCOPY_SLAB_SIZE_TO(void)
+ {
+-	do_usercopy_heap_size(true);
++	do_usercopy_slab_size(true);
+ }
+ 
+-static void lkdtm_USERCOPY_HEAP_SIZE_FROM(void)
++static void lkdtm_USERCOPY_SLAB_SIZE_FROM(void)
+ {
+-	do_usercopy_heap_size(false);
++	do_usercopy_slab_size(false);
+ }
+ 
+-static void lkdtm_USERCOPY_HEAP_WHITELIST_TO(void)
++static void lkdtm_USERCOPY_SLAB_WHITELIST_TO(void)
+ {
+-	do_usercopy_heap_whitelist(true);
++	do_usercopy_slab_whitelist(true);
+ }
+ 
+-static void lkdtm_USERCOPY_HEAP_WHITELIST_FROM(void)
++static void lkdtm_USERCOPY_SLAB_WHITELIST_FROM(void)
+ {
+-	do_usercopy_heap_whitelist(false);
++	do_usercopy_slab_whitelist(false);
+ }
+ 
+ static void lkdtm_USERCOPY_STACK_FRAME_TO(void)
+@@ -358,10 +358,10 @@ void __exit lkdtm_usercopy_exit(void)
+ }
+ 
+ static struct crashtype crashtypes[] = {
+-	CRASHTYPE(USERCOPY_HEAP_SIZE_TO),
+-	CRASHTYPE(USERCOPY_HEAP_SIZE_FROM),
+-	CRASHTYPE(USERCOPY_HEAP_WHITELIST_TO),
+-	CRASHTYPE(USERCOPY_HEAP_WHITELIST_FROM),
++	CRASHTYPE(USERCOPY_SLAB_SIZE_TO),
++	CRASHTYPE(USERCOPY_SLAB_SIZE_FROM),
++	CRASHTYPE(USERCOPY_SLAB_WHITELIST_TO),
++	CRASHTYPE(USERCOPY_SLAB_WHITELIST_FROM),
+ 	CRASHTYPE(USERCOPY_STACK_FRAME_TO),
+ 	CRASHTYPE(USERCOPY_STACK_FRAME_FROM),
+ 	CRASHTYPE(USERCOPY_STACK_BEYOND),
+diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
+index 9dace01dbf15..65e53eb0840b 100644
+--- a/tools/testing/selftests/lkdtm/tests.txt
++++ b/tools/testing/selftests/lkdtm/tests.txt
+@@ -64,10 +64,10 @@ REFCOUNT_DEC_AND_TEST_SATURATED Saturation detected: still saturated
+ REFCOUNT_SUB_AND_TEST_SATURATED Saturation detected: still saturated
+ #REFCOUNT_TIMING timing only
+ #ATOMIC_TIMING timing only
+-USERCOPY_HEAP_SIZE_TO
+-USERCOPY_HEAP_SIZE_FROM
+-USERCOPY_HEAP_WHITELIST_TO
+-USERCOPY_HEAP_WHITELIST_FROM
++USERCOPY_SLAB_SIZE_TO
++USERCOPY_SLAB_SIZE_FROM
++USERCOPY_SLAB_WHITELIST_TO
++USERCOPY_SLAB_WHITELIST_FROM
+ USERCOPY_STACK_FRAME_TO
+ USERCOPY_STACK_FRAME_FROM
+ USERCOPY_STACK_BEYOND
 -- 
 2.32.0
 
