@@ -2,87 +2,123 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B2EC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 17 May 2022 08:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEFBC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 17 May 2022 08:49:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236456AbiEQIrv (ORCPT
+        id S243764AbiEQItJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 17 May 2022 04:47:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47010 "EHLO
+        Tue, 17 May 2022 04:49:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234764AbiEQIrs (ORCPT
+        with ESMTP id S243825AbiEQItE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 17 May 2022 04:47:48 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7381D43AEC;
-        Tue, 17 May 2022 01:47:44 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5D5D1063;
-        Tue, 17 May 2022 01:47:43 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.4.124])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E2EE3F73D;
-        Tue, 17 May 2022 01:47:41 -0700 (PDT)
-Date:   Tue, 17 May 2022 09:47:37 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Tue, 17 May 2022 04:49:04 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9600646B3E
+        for <linux-hardening@vger.kernel.org>; Tue, 17 May 2022 01:48:52 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-34-6UbOAxNsPEi7Kzwns5WYfw-1; Tue, 17 May 2022 09:48:49 +0100
+X-MC-Unique: 6UbOAxNsPEi7Kzwns5WYfw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.36; Tue, 17 May 2022 09:48:41 +0100
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.036; Tue, 17 May 2022 09:48:41 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Peter Zijlstra' <peterz@infradead.org>,
+        Kees Cook <keescook@chromium.org>
+CC:     Sami Tolvanen <samitolvanen@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        "x86@kernel.org" <x86@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Nathan Chancellor" <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Joao Moreira <joao@overdrivepizza.com>,
         Sedat Dilek <sedat.dilek@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [RFC PATCH v2 08/21] psci: Fix the function type for
- psci_initcall_t
-Message-ID: <YoNhKaTT3EDukxXY@FVFF77S0Q05N>
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "llvm@lists.linux.dev" <llvm@lists.linux.dev>
+Subject: RE: [RFC PATCH v2 20/21] x86: Add support for CONFIG_CFI_CLANG
+Thread-Topic: [RFC PATCH v2 20/21] x86: Add support for CONFIG_CFI_CLANG
+Thread-Index: AQHYacnJgt4N7xLw0EK8voqNmmoVIa0iwPIw
+Date:   Tue, 17 May 2022 08:48:41 +0000
+Message-ID: <ebd0c266697a42c8b7609ff6cbc5f6c9@AcuMS.aculab.com>
 References: <20220513202159.1550547-1-samitolvanen@google.com>
- <20220513202159.1550547-9-samitolvanen@google.com>
+ <20220513202159.1550547-21-samitolvanen@google.com>
+ <YoIfWENLV1AR2ijj@hirez.programming.kicks-ass.net>
+ <CABCJKucXA2jbTc9TF1mLUsEDKu52t71tzxpnsGOXY3_ks+W4Bg@mail.gmail.com>
+ <20220516183047.GM76023@worktop.programming.kicks-ass.net>
+ <202205161531.3339CA95@keescook>
+ <YoNXPVQRvIFS81aW@hirez.programming.kicks-ass.net>
+ <YoNfiK1qKd9YDVIf@hirez.programming.kicks-ass.net>
+In-Reply-To: <YoNfiK1qKd9YDVIf@hirez.programming.kicks-ass.net>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220513202159.1550547-9-samitolvanen@google.com>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, May 13, 2022 at 01:21:46PM -0700, Sami Tolvanen wrote:
-> Functions called through a psci_initcall_t pointer all have
-> non-const arguments. Fix the type definition to avoid tripping
-> indirect call checks with CFI_CLANG.
+From: Peter Zijlstra
+> Sent: 17 May 2022 09:41
+...
+> > If we use %eax instead of %r10d for the hash transfer (as per Joao), and
+> > use int3 instead of ud2, then we can shrink the fineibt sequence to:
+> >
+> > __cfi_\func:
+> > 	endbr				# 4
+> > 	xorl	$0x12345678, %eax	# 5
+> > 	jz	1f			# 2
+> > 	int3				# 1
+> > \func:
+> > 	...
+> >
+> > Which is 12 bytes, and needs a larger preamble (up from 9 in the current
+> > proposal).
 > 
-> Reported-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-
-I'd prefer that we spread the `const` to each of the implementations rather
-than dropping it from the type.
-
-I have a local patch for that I can send out shortly.
-
-Thanks,
-Mark.
-
-> ---
->  drivers/firmware/psci/psci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On all that; perhaps it would be good to have a compiler option to
+> specify the preamble size. It can enforce the minimum at 7 to have at
+> least the required:
 > 
-> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-> index cfb448eabdaa..6554bf4b8c99 100644
-> --- a/drivers/firmware/psci/psci.c
-> +++ b/drivers/firmware/psci/psci.c
-> @@ -521,7 +521,7 @@ static int __init psci_probe(void)
->  	return 0;
->  }
->  
-> -typedef int (*psci_initcall_t)(const struct device_node *);
-> +typedef int (*psci_initcall_t)(struct device_node *);
->  
->  /*
->   * PSCI init function for PSCI versions >=0.2
-> -- 
-> 2.36.0.550.gb090851708-goog
+> 	movl $0x12345678, %eax
+> 	int3
+> 	int3
 > 
+> but any larger number will just increase the preamble with int3 padding
+> at the top.
+> 
+> That can go right along with the option to supress endbr when preamble
+> :-)
+
+You also need a compiler option to specify the register.
+While (I think) %eax is usable in kernel, it isn't in userspace.
+It is used in varargs calls to pass (IIRC) the number of fp
+args that are passed in registers.
+
+(I can't remember which registers userspace has reserved for
+the PLT code? - That might include r10??)
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
