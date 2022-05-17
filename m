@@ -2,46 +2,49 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02A2C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 17 May 2022 08:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0A8C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 17 May 2022 09:38:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242899AbiEQI6V (ORCPT
+        id S241832AbiEQJi5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 17 May 2022 04:58:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40640 "EHLO
+        Tue, 17 May 2022 05:38:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244092AbiEQI6N (ORCPT
+        with ESMTP id S233525AbiEQJiy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 17 May 2022 04:58:13 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E261115A28;
-        Tue, 17 May 2022 01:58:10 -0700 (PDT)
+        Tue, 17 May 2022 05:38:54 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF7EF44746;
+        Tue, 17 May 2022 02:38:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=1SCVVAHtClu+1FWsc5YTD1Uvr3wge/WoMABPfJaW99k=; b=qEhWpebbnSLca20mptfUhLsTth
-        WXioCEDPccsX+uQXKR/gNXlIgWiHbdAeMKWBC3RPXtj8U/eKff585U7QCd1O5daXFEFQ8cMp4Jl4Y
-        6ucOdd0e7zRlMc01/8mnuXEB9tmsngezC8p/5pk9TFs2YmKQdEqDtsqWWnRQmBq9dguXgThGChB1d
-        eQYTYGwlTANRuZ2lZoacSC6p8jTaNBMV8GcGpbFTkueKbBRe9G/nL8HwoZKXzSvDfcYpSHubktF8/
-        gh5FDjm/ukuL1HUi7uRaJ/Oe4G1cyieglJHOgoA76LSOPxolv74x2YPVA5V5/JIZvN7bSKmCmB+e4
-        uM8I4f7w==;
+        bh=jwTi2Cazog8blP0yOGLXWlJcsxSDGZ2u4uY9kxsLkfk=; b=MTdKy2r7vz9qnE0wpTp07nMDEg
+        ljCp1Zb2NriOnwiA/uzXXdtuSEEAt+8MmHDW386odcrFLXR7ho+3sO3bDv22akTTPVfMMBXnv+sYI
+        g6gwbLw7UoFN9kxB7jC1PnSyV0mnJYnpYuoffSyjX5HIclZnpntQBYF3T/PccfzfZB5YTQq8536iO
+        PNACVypbg/9epOBrixidP1XzJqc62oEdrDBFOtkey9RO2PV2y4tUg/sKetgnmz/oaloCU6sVTc76I
+        GIFxs0GQBFaxTwXsfnWWxc12azbRX8zbFTrsQm1XHYjiH/MDS52S3YLfghOmjbjQalbuvQq7Rp/3m
+        60MDw/MA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nqt1c-001BZn-V9; Tue, 17 May 2022 08:57:53 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nqtf5-00Aje0-Dt; Tue, 17 May 2022 09:38:39 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3367130018E;
-        Tue, 17 May 2022 10:57:50 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7F7A130031C;
+        Tue, 17 May 2022 11:38:36 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 18EBE2023D0E2; Tue, 17 May 2022 10:57:50 +0200 (CEST)
-Date:   Tue, 17 May 2022 10:57:50 +0200
+        id 66A62202BC439; Tue, 17 May 2022 11:38:36 +0200 (CEST)
+Date:   Tue, 17 May 2022 11:38:36 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -50,41 +53,66 @@ Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         Joao Moreira <joao@overdrivepizza.com>,
         Sedat Dilek <sedat.dilek@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [RFC PATCH v2 00/21] KCFI support
-Message-ID: <YoNjjjb3ygIKnwfj@hirez.programming.kicks-ass.net>
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "llvm@lists.linux.dev" <llvm@lists.linux.dev>
+Subject: Re: [RFC PATCH v2 20/21] x86: Add support for CONFIG_CFI_CLANG
+Message-ID: <YoNtHOm6VH3adwxt@hirez.programming.kicks-ass.net>
 References: <20220513202159.1550547-1-samitolvanen@google.com>
+ <20220513202159.1550547-21-samitolvanen@google.com>
+ <YoIfWENLV1AR2ijj@hirez.programming.kicks-ass.net>
+ <CABCJKucXA2jbTc9TF1mLUsEDKu52t71tzxpnsGOXY3_ks+W4Bg@mail.gmail.com>
+ <20220516183047.GM76023@worktop.programming.kicks-ass.net>
+ <202205161531.3339CA95@keescook>
+ <YoNXPVQRvIFS81aW@hirez.programming.kicks-ass.net>
+ <YoNfiK1qKd9YDVIf@hirez.programming.kicks-ass.net>
+ <ebd0c266697a42c8b7609ff6cbc5f6c9@AcuMS.aculab.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220513202159.1550547-1-samitolvanen@google.com>
+In-Reply-To: <ebd0c266697a42c8b7609ff6cbc5f6c9@AcuMS.aculab.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, May 13, 2022 at 01:21:38PM -0700, Sami Tolvanen wrote:
-> KCFI is a proposed forward-edge control-flow integrity scheme for
-> Clang, which is more suitable for kernel use than the existing CFI
-> scheme used by CONFIG_CFI_CLANG. KCFI doesn't require LTO, doesn't
-> alter function references to point to a jump table, and won't break
-> function address equality. The latest LLVM patch is here:
+On Tue, May 17, 2022 at 08:48:41AM +0000, David Laight wrote:
+> From: Peter Zijlstra
+> > Sent: 17 May 2022 09:41
+> ...
+> > > If we use %eax instead of %r10d for the hash transfer (as per Joao), and
+> > > use int3 instead of ud2, then we can shrink the fineibt sequence to:
+> > >
+> > > __cfi_\func:
+> > > 	endbr				# 4
+> > > 	xorl	$0x12345678, %eax	# 5
+> > > 	jz	1f			# 2
+> > > 	int3				# 1
+> > > \func:
+> > > 	...
+> > >
+> > > Which is 12 bytes, and needs a larger preamble (up from 9 in the current
+> > > proposal).
+> > 
+> > On all that; perhaps it would be good to have a compiler option to
+> > specify the preamble size. It can enforce the minimum at 7 to have at
+> > least the required:
+> > 
+> > 	movl $0x12345678, %eax
+> > 	int3
+> > 	int3
+> > 
+> > but any larger number will just increase the preamble with int3 padding
+> > at the top.
+> > 
+> > That can go right along with the option to supress endbr when preamble
+> > :-)
 > 
->   https://reviews.llvm.org/D119296
-> 
-> This RFC series replaces the current arm64 CFI implementation with
-> KCFI and adds support for x86_64.
+> You also need a compiler option to specify the register.
+> While (I think) %eax is usable in kernel, it isn't in userspace.
+> It is used in varargs calls to pass (IIRC) the number of fp
+> args that are passed in registers.
 
-You have some weird behaviour vs weak functions (I so hate those)...
-
-100: 0000000000000980     9 FUNC    LOCAL  DEFAULT    2 __cfi_free_initmem
-233: 0000000000000989    35 FUNC    WEAK   DEFAULT    2 free_initmem
-
-With the result that on the final link:
-
-   179: 00000000000009b0     9 FUNC    LOCAL  DEFAULT    1 __cfi_free_initmem
-  8689: 00000000000007f0     9 FUNC    LOCAL  DEFAULT   65 __cfi_free_initmem
-173283: 00000000000007f9   198 FUNC    GLOBAL DEFAULT   65 free_initmem
-
-This is getting me objtool issues (I'll fix them) but perhaps it's
-something you can do something about as well.
+You're mistaken, the compiler doesn't emit the FineIBT code *at*all*.
+That's all patched in later. For kCFI the mov is never executed and is
+only there to make it a valid instruction.
