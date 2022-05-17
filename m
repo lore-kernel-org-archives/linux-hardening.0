@@ -2,44 +2,53 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE114C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 17 May 2022 11:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CA2C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 17 May 2022 17:35:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236060AbiEQLrL (ORCPT
+        id S1351442AbiEQRfs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 17 May 2022 07:47:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47088 "EHLO
+        Tue, 17 May 2022 13:35:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229901AbiEQLrL (ORCPT
+        with ESMTP id S239834AbiEQRfr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 17 May 2022 07:47:11 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A3E126121;
-        Tue, 17 May 2022 04:47:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=HIV4LYaBaZEzH3VbJpzxB26/QYZ19hr9VK8W0eYe864=; b=MkRwaucpwLpkBOY0CRtte0b0tH
-        QGBJfD0wLVPelZze9XPHmhku/RdqYirRo89JT9KYU6/XgrCWHcGlAsN0dalWehMbVqy7yNsMaUVtb
-        VBMBJ9VK6xrHv7zTPfUuy0vbxMwtxaLW5L4ei0OPCY37yXxlqBxg1zgJCyVNOUs9IQonvfVoNBdZe
-        rsvhNGlMCqhbvkOIz7fgwSP6hgQdLHPbIDMiVDrAzfT+iPGB8DtKrlNCKO/9j4QtsoyE3C/TBJxm0
-        uzSpIHUrzr4HsvbtmjgXWTAaV8MhSHlJNi5dzZbsNRghptVj9QTL5tXIHy3r/uCfnxzMEdhjDebqK
-        Jnb7ERdw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nqvfE-00Aoxu-80; Tue, 17 May 2022 11:46:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6B5A030031C;
-        Tue, 17 May 2022 13:46:54 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4B64A203BF9EE; Tue, 17 May 2022 13:46:54 +0200 (CEST)
-Date:   Tue, 17 May 2022 13:46:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
+        Tue, 17 May 2022 13:35:47 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E537F6E
+        for <linux-hardening@vger.kernel.org>; Tue, 17 May 2022 10:35:46 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id o13-20020a17090a9f8d00b001df3fc52ea7so3142945pjp.3
+        for <linux-hardening@vger.kernel.org>; Tue, 17 May 2022 10:35:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=sjTMC22wSJ47xdwSvqZCnDiGp9aPojAuMgBLE3Ru6Ns=;
+        b=glbJj5X4FvEyfTXgOl7rRrg5gxtB02qGsHzTepdXpPxdD+2EOa2Gd3eR+cGDpYSzpZ
+         79iaET+rnGfoymf5ex9uVGJjxTgNteZwuM/XWfbSqIrF+vTMPu5tIWJ3oAcEe5S/xh79
+         6BCVObEo2xeexg0OiEd+nYK3Nfn7PexZn1WBA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sjTMC22wSJ47xdwSvqZCnDiGp9aPojAuMgBLE3Ru6Ns=;
+        b=VlGEbykmxlck64NgiRC80kzOHiAQrNi7Dh2EvswrBjDt/fAAbaeXNF2Waq0aX+wwu0
+         OsflaL7J+MljWUhBmuw4PAW8PNs1X+dj6/6KZHXeBZUK2oqSI2xhuj7p0nqNLoiW8aYV
+         b1DaoGn1tFv6z/dlPc+X+U60VWW8Fei+RJ2DAMSB23of2LO9xnQPBx7NqVkDxYkd95kj
+         L9P5Oz/iebpx7LCThPNDVpeEz4K6vaxfojppcisa6fbIjARuszlxjNhy7zOI59QHHKf/
+         Hm0OJIb3YKr0E62F6c7kIRKkaKULSH9w1GiToPjMdj/8Pq421Ki47oBmRQOtZ7qd6muH
+         YDfw==
+X-Gm-Message-State: AOAM530Gp5E/ZQxy/1qCrAWjEFoTlxCJRHnDA9yAJeeIDM6p0ATR8AF0
+        wNEv2kxbNEtcO5EEcDyKC3EMPQ==
+X-Google-Smtp-Source: ABdhPJyklgL9P7KQ8KleeVzd4Z0HdMD3Tyeg8TCp4qbuh8EG/GLEpomy43Lre0Y6YoLoviPMTxtK/Q==
+X-Received: by 2002:a17:903:41c9:b0:15e:b449:ce9a with SMTP id u9-20020a17090341c900b0015eb449ce9amr23097999ple.136.1652808945761;
+        Tue, 17 May 2022 10:35:45 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p10-20020a62b80a000000b0050dc76281a7sm67978pfe.129.2022.05.17.10.35.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 May 2022 10:35:45 -0700 (PDT)
+Date:   Tue, 17 May 2022 10:35:44 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Christophe de Dinechin <dinechin@redhat.com>,
         Ingo Molnar <mingo@redhat.com>,
         Juri Lelli <juri.lelli@redhat.com>,
@@ -50,144 +59,46 @@ Cc:     Christophe de Dinechin <dinechin@redhat.com>,
         Daniel Bristot de Oliveira <bristot@redhat.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v3] sched/core: Address classes via __begin_sched_classes
-Message-ID: <YoOLLmLG7HRTXeEm@hirez.programming.kicks-ass.net>
+Message-ID: <202205170952.A5251F141@keescook>
 References: <20220517030024.3388355-1-keescook@chromium.org>
  <202205162032.5161269A45@keescook>
+ <YoOLLmLG7HRTXeEm@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202205162032.5161269A45@keescook>
+In-Reply-To: <YoOLLmLG7HRTXeEm@hirez.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 16, 2022 at 08:33:25PM -0700, Kees Cook wrote:
+On Tue, May 17, 2022 at 01:46:54PM +0200, Peter Zijlstra wrote:
+> On Mon, May 16, 2022 at 08:33:25PM -0700, Kees Cook wrote:
+> 
+> > I just need to start today over.
+> 
+> :-)
+> 
+> Also, even with this sorted, there's a ton array bound things left.
+> Please don't just mangle the code until it stops complaining like in the
+> previous postings of these patches.
 
-> I just need to start today over.
+Yeah, other code is much simpler. The sched code has been a bit tricky
+to figure out.
 
-:-)
+> As such, I'm only barely ok with the below patch. Ideally I'd shoot GCC
+> in the head. Its *really* tedious you cannot just tell it to shut up
+> already.
 
-Also, even with this sorted, there's a ton array bound things left.
-Please don't just mangle the code until it stops complaining like in the
-previous postings of these patches.
+What you've got below is almost exactly what I had in my first attempt
+at this (that I never posted). What I was missing and couldn't track
+down were the places you used sched_class_above(). I should have sent
+_that_ patch and asked where the comparisons were that I couldn't find.
+I think what you've got is much cleaner, as it makes the for loop use
+the normal iterator idiom.
 
-As such, I'm only barely ok with the below patch. Ideally I'd shoot GCC
-in the head. Its *really* tedious you cannot just tell it to shut up
-already.
+Thank you!
 
----
-Subject: sched: Reverse sched_class layout
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Because GCC-12 is fully stupid about array bounds and it's just really
-hard to get a solid array definition from a linker script, flip the
-array order to avoid needing negative offsets :-/
-
-This makes the whole relational pointer magic a little less obvious, but
-alas.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- include/asm-generic/vmlinux.lds.h | 12 ++++++------
- kernel/sched/core.c               | 12 ++++++------
- kernel/sched/sched.h              | 15 ++++++++-------
- 3 files changed, 20 insertions(+), 19 deletions(-)
-
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 69138e9db787..7515a465ec03 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -126,13 +126,13 @@
-  */
- #define SCHED_DATA				\
- 	STRUCT_ALIGN();				\
--	__begin_sched_classes = .;		\
--	*(__idle_sched_class)			\
--	*(__fair_sched_class)			\
--	*(__rt_sched_class)			\
--	*(__dl_sched_class)			\
-+	__sched_class_highest = .;		\
- 	*(__stop_sched_class)			\
--	__end_sched_classes = .;
-+	*(__dl_sched_class)			\
-+	*(__rt_sched_class)			\
-+	*(__fair_sched_class)			\
-+	*(__idle_sched_class)			\
-+	__sched_class_lowest = .;
- 
- /* The actual configuration determine if the init/exit sections
-  * are handled as text/data or they can be discarded (which
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 95bac3b094b3..a247f8d9d417 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2193,7 +2193,7 @@ void check_preempt_curr(struct rq *rq, struct task_struct *p, int flags)
- {
- 	if (p->sched_class == rq->curr->sched_class)
- 		rq->curr->sched_class->check_preempt_curr(rq, p, flags);
--	else if (p->sched_class > rq->curr->sched_class)
-+	else if (sched_class_above(p->sched_class, rq->curr->sched_class))
- 		resched_curr(rq);
- 
- 	/*
-@@ -5692,7 +5692,7 @@ __pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 	 * higher scheduling class, because otherwise those lose the
- 	 * opportunity to pull in more work from other CPUs.
- 	 */
--	if (likely(prev->sched_class <= &fair_sched_class &&
-+	if (likely(!sched_class_above(prev->sched_class, &fair_sched_class) &&
- 		   rq->nr_running == rq->cfs.h_nr_running)) {
- 
- 		p = pick_next_task_fair(rq, prev, rf);
-@@ -9472,11 +9472,11 @@ void __init sched_init(void)
- 	int i;
- 
- 	/* Make sure the linker didn't screw up */
--	BUG_ON(&idle_sched_class + 1 != &fair_sched_class ||
--	       &fair_sched_class + 1 != &rt_sched_class ||
--	       &rt_sched_class + 1   != &dl_sched_class);
-+	BUG_ON(&idle_sched_class != &fair_sched_class + 1 ||
-+	       &fair_sched_class != &rt_sched_class + 1 ||
-+	       &rt_sched_class   != &dl_sched_class + 1);
- #ifdef CONFIG_SMP
--	BUG_ON(&dl_sched_class + 1 != &stop_sched_class);
-+	BUG_ON(&dl_sched_class != &stop_sched_class + 1);
- #endif
- 
- 	wait_bit_init();
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index fe4d1acb7e38..2ce18584dca3 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2177,6 +2177,8 @@ static inline void set_next_task(struct rq *rq, struct task_struct *next)
-  *
-  *   include/asm-generic/vmlinux.lds.h
-  *
-+ * *CAREFUL* they are laid out in *REVERSE* order!!!
-+ *
-  * Also enforce alignment on the instance, not the type, to guarantee layout.
-  */
- #define DEFINE_SCHED_CLASS(name) \
-@@ -2185,17 +2187,16 @@ const struct sched_class name##_sched_class \
- 	__section("__" #name "_sched_class")
- 
- /* Defined in include/asm-generic/vmlinux.lds.h */
--extern struct sched_class __begin_sched_classes[];
--extern struct sched_class __end_sched_classes[];
--
--#define sched_class_highest (__end_sched_classes - 1)
--#define sched_class_lowest  (__begin_sched_classes - 1)
-+extern struct sched_class __sched_class_highest[];
-+extern struct sched_class __sched_class_lowest[];
- 
- #define for_class_range(class, _from, _to) \
--	for (class = (_from); class != (_to); class--)
-+	for (class = (_from); class < (_to); class++)
- 
- #define for_each_class(class) \
--	for_class_range(class, sched_class_highest, sched_class_lowest)
-+	for_class_range(class, __sched_class_highest, __sched_class_lowest)
-+
-+#define sched_class_above(_a, _b)	((_a) < (_b))
- 
- extern const struct sched_class stop_sched_class;
- extern const struct sched_class dl_sched_class;
+-- 
+Kees Cook
