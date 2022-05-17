@@ -2,128 +2,138 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EDDC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 17 May 2022 22:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 953D6C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 17 May 2022 22:32:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230142AbiEQWXP (ORCPT
+        id S231205AbiEQWcl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 17 May 2022 18:23:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48296 "EHLO
+        Tue, 17 May 2022 18:32:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230250AbiEQWXO (ORCPT
+        with ESMTP id S230510AbiEQWck (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 17 May 2022 18:23:14 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 063934CD5D;
-        Tue, 17 May 2022 15:23:14 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id n10so176348pjh.5;
-        Tue, 17 May 2022 15:23:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=e1pWMCgBviY11E7PKryYO1nXt87Yr/reQMp8Kk+5kvg=;
-        b=GyLFU443PaMI0LYXccQ6xTFEe0FAFeKT5j+xLBdobHYlJccRr0wYD1SULa+0LJ15pj
-         CbRXEM4fkhZtwS0vQ3U3VTeaDGY+LJ+7aKRlCmQCHpTctdWeKYYtZewVfGe8xd5dGora
-         a2326aWXbHXwoeRNpiKaQiNGIkT8fjjcoMUvV0zYgsNEiTQq8kzk0XwzAGY9UhMGZkVG
-         oqOHHAMm1erKkxCFKqTrZ29hcu4REYCGyCFw+VPNGFk/6cm4tOWAyOdcEm+R9cov7T7w
-         ua1LeRrX7QsrrypjviQSZokWZn1BshVMJaVq8mnOst44zk1gXTAHU8DOJL7UuNTJQnj3
-         61sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=e1pWMCgBviY11E7PKryYO1nXt87Yr/reQMp8Kk+5kvg=;
-        b=owwOALXnVwtCZUOXBQVfMC3LUt/9oYDWvLOpwVcH2lz47tXEnArpeOCvyV2s+OrBBz
-         San0wD3UoCzS171NUjXbjBssErBlIHue5iSK9ynoN+qLQAiVF/xCSsvEAZ7qXKlh7UzM
-         qcjS2pDIiFbcp5pIqFngVSFq+Raypl45RkkUEcfw4hxxlsrYd6voirQoyTmVR2KDHExm
-         HQgtafLYQ7pVbx2gwPDftFxC762atoeAMUefcowDsONM0XJKcbm0evwBdr0cQXKgzY8U
-         SAW+0Wd9aDVgS9Ft+41qoqSehEyUROdkwNIHFFDoRf2H4q1WixFrCBfiWdsVi58QBkjU
-         Hbrg==
-X-Gm-Message-State: AOAM5310elamjpiRzRPMOPui3wybAXPvwBfJ5iy/cBQ5aX1uLuho66Oz
-        O9kyTYHwx7LhRtdX8WfvuxE=
-X-Google-Smtp-Source: ABdhPJw7+oocr4KRLhZyU1jJUHnJ1T6v3nxM4zdgPK/CSu9aTWwC6DRkyPOHiHR0RbT6tuuSq4thYw==
-X-Received: by 2002:a17:902:e850:b0:15f:3641:9cf3 with SMTP id t16-20020a170902e85000b0015f36419cf3mr24720729plg.30.1652826193434;
-        Tue, 17 May 2022 15:23:13 -0700 (PDT)
-Received: from localhost (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id x11-20020a170902a38b00b0015e9d4a5d27sm131394pla.23.2022.05.17.15.23.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 May 2022 15:23:13 -0700 (PDT)
-Date:   Tue, 17 May 2022 15:21:00 -0700
-From:   Yury Norov <yury.norov@gmail.com>
+        Tue, 17 May 2022 18:32:40 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94B0D3E0F5;
+        Tue, 17 May 2022 15:32:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id BD640CE1D34;
+        Tue, 17 May 2022 22:32:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84AEFC385B8;
+        Tue, 17 May 2022 22:32:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652826756;
+        bh=+fGT+G+Sm41/oPKm1sHP2aDVVweBeZsmQEMpw6vMTw8=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=UH6jExUv2g5GqaSWS8bUWObiI+Xs5uLSeLchUYhu8G1EzG9xlniD/mDnX8sID2yxm
+         fVsZKryGCdxYWNmqx+FguvXBUQ0irzLgXPZnfEozx2VEr6D8TA7r/n02nTJMA/vORV
+         dqlzSi1KS6vTncbRKqn0oueyq5G+ymPMJ1HwT//kdljLvbnOOtRr1KJ25akxgbReqR
+         pfCOoDRyT5xrOaZFDfV5qryEeQ+FCazthltaVald3RPHQoGPwygrI2sN3HCJxt9O7r
+         0dxgy8RXVPRbxmQEIsE6aR8lK3wZPdhxR3qEYcXhav90pahYH1+l+nHslpKwKw3OID
+         r2CLjKW5kKx2Q==
+Message-ID: <4bbdac4563817326cc5777aa6ec5fcb366235492.camel@kernel.org>
+Subject: Re: [PATCH] netfs: Use container_of() for offset casting
+From:   Jeff Layton <jlayton@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Christophe de Dinechin <dinechin@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] bitmap: Fix return values to be unsigned
-Message-ID: <YoQfzJGaDF5BQ7E4@yury-laptop>
-References: <20220517212234.868181-1-keescook@chromium.org>
+Cc:     David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Date:   Tue, 17 May 2022 18:32:34 -0400
+In-Reply-To: <20220517210230.864239-1-keescook@chromium.org>
+References: <20220517210230.864239-1-keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.1 (3.44.1-1.fc36) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220517212234.868181-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 17, 2022 at 02:22:32PM -0700, Kees Cook wrote:
-> Hi,
-> 
-> As mentioned in the last patch:
-> 
-> Both nodemask and bitmap routines had mixed return values that provided
-> potentially signed results that could never happen. This was leading to
-> the compiler getting confusing about the range of possible return values
-> (it was thinking things could be negative where they could not be). Fix
-> all the nodemask and bitmap routines that should be returning unsigned
-> (or bool) values. Silences GCC 12 warnings:
-> 
->  mm/swapfile.c: In function ‘setup_swap_info’:
->  mm/swapfile.c:2291:47: error: array subscript -1 is below array bounds of ‘struct plist_node[]’ [-Werror=array-bounds]
->   2291 |                                 p->avail_lists[i].prio = 1;
->        |                                 ~~~~~~~~~~~~~~^~~
->  In file included from mm/swapfile.c:16:
->  ./include/linux/swap.h:292:27: note: while referencing ‘avail_lists’
->    292 |         struct plist_node avail_lists[]; /*
->        |                           ^~~~~~~~~~~
-> 
-> This splits up the patch into the bitmap and nodemask halves, and drops
-> a needless change to the random node helper.
-> 
-> I note that Alexey and Rasmus touched on this area in the past, fixing
-> up node ids to be unsigned:
-> 
-> ce0725f78a56 ("numa: make "nr_online_nodes" unsigned int")
-> b9726c26dc21 ("numa: make "nr_node_ids" unsigned int")
-> 33c4fa8c6763 ("linux/nodemask.h: update bitmap wrappers to take unsigned int")
-> 
-> If anyone else would like to carry this, please let me know. I'm happy
-> to carry it in my tree.
+On Tue, 2022-05-17 at 14:02 -0700, Kees Cook wrote:
+> While randstruct was satisfied with using an open-coded "void *" offset
+> cast for the netfs_i_context <-> inode casting, __builtin_object_size()
+> as used by FORTIFY_SOURCE was not as easily fooled. Switch to using
+> an internally defined netfs_i_context/inode struct for doing a full
+> container_of() casting. This keeps both randstruct and __bos() happy
+> under GCC 12. Silences:
+>=20
+> In file included from ./include/linux/string.h:253,
+>                  from ./include/linux/ceph/ceph_debug.h:7,
+>                  from fs/ceph/inode.c:2:
+> In function =E2=80=98fortify_memset_chk=E2=80=99,
+>     inlined from =E2=80=98netfs_i_context_init=E2=80=99 at ./include/linu=
+x/netfs.h:326:2,
+>     inlined from =E2=80=98ceph_alloc_inode=E2=80=99 at fs/ceph/inode.c:46=
+3:2:
+> ./include/linux/fortify-string.h:242:25: warning: call to =E2=80=98__writ=
+e_overflow_field=E2=80=99 declared with attribute warning:
+> detected write beyond size of field (1st parameter); maybe use struct_gro=
+up()? [-Wattribute-warning]
+>   242 |                         __write_overflow_field(p_size_field, size=
+);
+>       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~
+>=20
+> Reported-by: Jeff Layton <jlayton@kernel.org>
+> Link: https://lore.kernel.org/lkml/d2ad3a3d7bdd794c6efb562d2f2b655fb67756=
+b9.camel@kernel.org
+> Cc: Jeff Layton <jlayton@kernel.org>
+> Cc: David Howells <dhowells@redhat.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> If this looks good I can add it to my hardening tree, or if you want to
+> carry it, I can respin this without the earlier randstruct changes and
+> drop that patch from my tree?
+> ---
+>  include/linux/netfs.h | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+> index 0c33b715cbfd..cce5a9b53a8a 100644
+> --- a/include/linux/netfs.h
+> +++ b/include/linux/netfs.h
+> @@ -286,6 +286,17 @@ extern void netfs_put_subrequest(struct netfs_io_sub=
+request *subreq,
+>  				 bool was_async, enum netfs_sreq_ref_trace what);
+>  extern void netfs_stats_show(struct seq_file *);
+> =20
+> +/*
+> + * The struct netfs_i_context instance must always follow the VFS inode,
+> + * but existing users want to avoid a substructure name space, so just
+> + * use this internally to perform the needed container_of() offset
+> + * casting, which will keep both FORTIFY_SOURCE and randstruct happy.
+> + */
+> +struct netfs_i_c_pair {
+> +	struct inode inode;
+> +	struct netfs_i_context ctx;
+> +};
+> +
+>  /**
+>   * netfs_i_context - Get the netfs inode context from the inode
+>   * @inode: The inode to query
+> @@ -295,7 +306,7 @@ extern void netfs_stats_show(struct seq_file *);
+>   */
+>  static inline struct netfs_i_context *netfs_i_context(struct inode *inod=
+e)
+>  {
+> -	return (void *)inode + sizeof(*inode);
+> +	return &container_of(inode, struct netfs_i_c_pair, inode)->ctx;
+>  }
+> =20
+>  /**
+> @@ -307,7 +318,7 @@ static inline struct netfs_i_context *netfs_i_context=
+(struct inode *inode)
+>   */
+>  static inline struct inode *netfs_inode(struct netfs_i_context *ctx)
+>  {
+> -	return (void *)ctx - sizeof(struct inode);
+> +	return &container_of(ctx, struct netfs_i_c_pair, ctx)->inode;
+>  }
+> =20
+>  /**
 
-I think it should go thru my tree, if no objections.
- 
-> -Kees
-> 
-> Kees Cook (2):
->   bitmap: Fix return values to be unsigned
->   nodemask: Fix return values to be unsigned
+This patch didn't apply cleanly for me to a recent tree, but I was able
+to wiggle it into place and it seemed to work.
 
-Can you please also add patch for tools?
-
-Thanks,
-Yury
-
->  include/linux/bitmap.h   | 14 +++++++-------
->  include/linux/nodemask.h | 38 +++++++++++++++++++-------------------
->  lib/bitmap.c             | 28 ++++++++++++++--------------
->  lib/nodemask.c           |  2 +-
->  4 files changed, 41 insertions(+), 41 deletions(-)
-> 
-> -- 
-> 2.32.0
+Tested-by: Jeff Layton <jlayton@kernel.org>
