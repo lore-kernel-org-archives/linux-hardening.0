@@ -2,103 +2,179 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CA2C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 17 May 2022 17:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A00C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 17 May 2022 18:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351442AbiEQRfs (ORCPT
+        id S1345464AbiEQSt2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 17 May 2022 13:35:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51868 "EHLO
+        Tue, 17 May 2022 14:49:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239834AbiEQRfr (ORCPT
+        with ESMTP id S238741AbiEQSt1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 17 May 2022 13:35:47 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E537F6E
-        for <linux-hardening@vger.kernel.org>; Tue, 17 May 2022 10:35:46 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id o13-20020a17090a9f8d00b001df3fc52ea7so3142945pjp.3
-        for <linux-hardening@vger.kernel.org>; Tue, 17 May 2022 10:35:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=sjTMC22wSJ47xdwSvqZCnDiGp9aPojAuMgBLE3Ru6Ns=;
-        b=glbJj5X4FvEyfTXgOl7rRrg5gxtB02qGsHzTepdXpPxdD+2EOa2Gd3eR+cGDpYSzpZ
-         79iaET+rnGfoymf5ex9uVGJjxTgNteZwuM/XWfbSqIrF+vTMPu5tIWJ3oAcEe5S/xh79
-         6BCVObEo2xeexg0OiEd+nYK3Nfn7PexZn1WBA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sjTMC22wSJ47xdwSvqZCnDiGp9aPojAuMgBLE3Ru6Ns=;
-        b=VlGEbykmxlck64NgiRC80kzOHiAQrNi7Dh2EvswrBjDt/fAAbaeXNF2Waq0aX+wwu0
-         OsflaL7J+MljWUhBmuw4PAW8PNs1X+dj6/6KZHXeBZUK2oqSI2xhuj7p0nqNLoiW8aYV
-         b1DaoGn1tFv6z/dlPc+X+U60VWW8Fei+RJ2DAMSB23of2LO9xnQPBx7NqVkDxYkd95kj
-         L9P5Oz/iebpx7LCThPNDVpeEz4K6vaxfojppcisa6fbIjARuszlxjNhy7zOI59QHHKf/
-         Hm0OJIb3YKr0E62F6c7kIRKkaKULSH9w1GiToPjMdj/8Pq421Ki47oBmRQOtZ7qd6muH
-         YDfw==
-X-Gm-Message-State: AOAM530Gp5E/ZQxy/1qCrAWjEFoTlxCJRHnDA9yAJeeIDM6p0ATR8AF0
-        wNEv2kxbNEtcO5EEcDyKC3EMPQ==
-X-Google-Smtp-Source: ABdhPJyklgL9P7KQ8KleeVzd4Z0HdMD3Tyeg8TCp4qbuh8EG/GLEpomy43Lre0Y6YoLoviPMTxtK/Q==
-X-Received: by 2002:a17:903:41c9:b0:15e:b449:ce9a with SMTP id u9-20020a17090341c900b0015eb449ce9amr23097999ple.136.1652808945761;
-        Tue, 17 May 2022 10:35:45 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p10-20020a62b80a000000b0050dc76281a7sm67978pfe.129.2022.05.17.10.35.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 May 2022 10:35:45 -0700 (PDT)
-Date:   Tue, 17 May 2022 10:35:44 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Christophe de Dinechin <dinechin@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Tue, 17 May 2022 14:49:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54C1C39BB0;
+        Tue, 17 May 2022 11:49:26 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E329E615F0;
+        Tue, 17 May 2022 18:49:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65D07C385B8;
+        Tue, 17 May 2022 18:49:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652813365;
+        bh=QbR97zXTo/NaC1jwtAoXzhOVIO4EnZxkhALYWJt3s1g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kuqWIdQKLyeN7nlz+CcqYfc4xOJV5rQVhDnfvKvx8yT3JSbeof2xnY4I+qsyFGWeZ
+         40z5U6jzfh9FSlv3AYsJaRfAYzAOF2XEzqiWQQ2Si7azi0sulysaAB39QMrGRUi/ps
+         FGq991sN8UyU5oqjSmza7h5PqZHLIGlLV8fB4GNA3vDjJZXHGHMkgjEL7bUhpy20UJ
+         Eb4HMJLirkNk/g9phi8jqLbugty5tc6+2d2RE6mZ/Xxb0ErMlIx+F1unhHb5w0yF/g
+         bFYtWV1PRiBCQJdaV4dTNruigqO4/WrMLcksw54XFreFrFSd0FnOTFn1XF4D1uwoKH
+         P5woZcV7I7FtQ==
+Date:   Tue, 17 May 2022 11:49:22 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Joao Moreira <joao@overdrivepizza.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] sched/core: Address classes via __begin_sched_classes
-Message-ID: <202205170952.A5251F141@keescook>
-References: <20220517030024.3388355-1-keescook@chromium.org>
- <202205162032.5161269A45@keescook>
- <YoOLLmLG7HRTXeEm@hirez.programming.kicks-ass.net>
+        linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+Subject: Re: [RFC PATCH v2 00/21] KCFI support
+Message-ID: <YoPuMhc03hUJxmPs@dev-arch.thelio-3990X>
+References: <20220513202159.1550547-1-samitolvanen@google.com>
+ <CA+icZUWr+-HjMvY1VZf+nqjTadxSTDciux0Y5Y-+p_j4o7CmXg@mail.gmail.com>
+ <CABCJKueVcwYishxSoEyn9b1vaGTXdoYWF7VyANPm7V=H+yyfhQ@mail.gmail.com>
+ <CA+icZUUBqz1zTcj61nK=sbkWcSncKYZgR2Qg0FSCWi9un84yLw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <YoOLLmLG7HRTXeEm@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+icZUUBqz1zTcj61nK=sbkWcSncKYZgR2Qg0FSCWi9un84yLw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 17, 2022 at 01:46:54PM +0200, Peter Zijlstra wrote:
-> On Mon, May 16, 2022 at 08:33:25PM -0700, Kees Cook wrote:
+On Tue, May 17, 2022 at 09:33:47AM +0200, Sedat Dilek wrote:
+> Is your tags/kcfi-rfc-v2 the recommended LLVM toolchain for testing kcfi-rfc-v2?
 > 
-> > I just need to start today over.
+> What I want to ask is if your commit well tested for x86 (and arm64)
+> means build and boot on bare metal?
+
+I have run kCFI (v1, I haven't had time to test v2) on x86_64 hardware,
+both AMD and Intel. I have only found two failures so far: the i915
+issue that I mention below and a failure in the KVM subsystem, which I
+can see by just running QEMU:
+
+[  124.344654] CFI failure at kvm_mmu_notifier_invalidate_range_end+0xca/0x177 [kvm] (target: kvm_null_fn+0x0/0x7 [kvm]; expected type: 0x1e2c5b9c)
+[  124.344691] WARNING: CPU: 5 PID: 2767 at kvm_mmu_notifier_invalidate_range_end+0xca/0x177 [kvm]
+[  124.344708] Modules linked in: ...
+[  124.344737] CPU: 5 PID: 2767 Comm: qemu-system-x86 Tainted: P                  5.18.0-rc6-debug-00033-g1d5284aff7cd #1 8c4966c7fb24f3345076747feebac5fb340a4797
+[  124.344738] Hardware name: ASUS System Product Name/PRIME Z590M-PLUS, BIOS 1203 10/27/2021
+[  124.344738] RIP: 0010:kvm_mmu_notifier_invalidate_range_end+0xca/0x177 [kvm]
+[  124.344756] Code: 48 89 da e8 88 16 86 dd 48 85 c0 89 6c 24 0c 74 30 4d 85 f6 74 36 48 c7 c5 19 c8 b4 c0 4c 8b 34 24 81 7d fa 9c 5b 2c 1e 74 02 <0f> 0b 48 89 c7 4c 89 fe 48 89 da e8 b6 16 86 dd 48 85 c0 75 e2 eb
+[  124.344757] RSP: 0018:ffffc033039d78e8 EFLAGS: 00010282
+[  124.344758] RAX: ffffa0a141ed9450 RBX: 00007fb897e9efff RCX: ffffa0a143c9d850
+[  124.344758] RDX: 00007fb897e9efff RSI: 00007fb897e9e000 RDI: ffffc03304499cf8
+[  124.344759] RBP: ffffffffc0b4c819 R08: 0000000000000000 R09: 0000000000000000
+[  124.344759] R10: 0000000000000000 R11: ffffffffc0b4c639 R12: ffffc03304499000
+[  124.344760] R13: ffffc033044a30a0 R14: ffffc033044a3120 R15: 00007fb897e9e000
+[  124.344760] FS:  00007fbca4bc3640(0000) GS:ffffa0a87f540000(0000) knlGS:0000000000000000
+[  124.344761] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  124.344761] CR2: 0000000000000000 CR3: 0000000119f74006 CR4: 0000000000772ee0
+[  124.344762] PKRU: 55555554
+[  124.344762] Call Trace:
+[  124.344762]  <TASK>
+[  124.344763]  __mmu_notifier_invalidate_range_end+0xa1/0xd7
+[  124.344764]  wp_page_copy+0x592/0x920
+[  124.344766]  __handle_mm_fault+0x820/0x8f0
+[  124.344767]  handle_mm_fault+0xe0/0x227
+[  124.344768]  __get_user_pages+0x17a/0x430
+[  124.344769]  get_user_pages_unlocked+0xd9/0x327
+[  124.344770]  hva_to_pfn+0xfa/0x3f7 [kvm 950e483805e01f967a3e331506278d766494a4cc]
+[  124.344788]  kvm_faultin_pfn+0xc3/0x2f0 [kvm 950e483805e01f967a3e331506278d766494a4cc]
+[  124.344806]  ? fast_page_fault+0x400/0x4c0 [kvm 950e483805e01f967a3e331506278d766494a4cc]
+[  124.344823]  direct_page_fault+0x130/0x350 [kvm 950e483805e01f967a3e331506278d766494a4cc]
+[  124.344841]  kvm_mmu_page_fault+0x176/0x2f7 [kvm 950e483805e01f967a3e331506278d766494a4cc]
+[  124.344858]  vmx_handle_exit+0xe/0x37 [kvm_intel 647f514f18fc365045dc57db46d2bb4930b746eb]
+[  124.344863]  vcpu_enter_guest+0xbff/0x1030 [kvm 950e483805e01f967a3e331506278d766494a4cc]
+[  124.344881]  vcpu_run+0x65/0x2f0 [kvm 950e483805e01f967a3e331506278d766494a4cc]
+[  124.344898]  kvm_arch_vcpu_ioctl_run+0x15f/0x3f7 [kvm 950e483805e01f967a3e331506278d766494a4cc]
+[  124.344916]  kvm_vcpu_ioctl+0x547/0x627 [kvm 950e483805e01f967a3e331506278d766494a4cc]
+[  124.344933]  ? syscall_exit_to_user_mode+0x24/0x47
+[  124.344934]  ? do_syscall_64+0x7a/0x97
+[  124.344935]  ? __fget_files+0xa1/0xc0
+[  124.344936]  __se_sys_ioctl+0x7c/0xc0
+[  124.344937]  do_syscall_64+0x6c/0x97
+[  124.344938]  ? do_syscall_64+0x7a/0x97
+[  124.344939]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+[  124.344940] RIP: 0033:0x7fbca75f7b1f
+[  124.344940] Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 18 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+[  124.344941] RSP: 002b:00007fbca4bc2550 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+[  124.344942] RAX: ffffffffffffffda RBX: 000000000000ae80 RCX: 00007fbca75f7b1f
+[  124.344942] RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 000000000000000e
+[  124.344943] RBP: 000056351ba661d0 R08: 000056351a74dc48 R09: 0000000000000004
+[  124.344943] R10: 004818cf4f129e11 R11: 0000000000000246 R12: 0000000000000000
+[  124.344943] R13: 0000000000000000 R14: 00007fbca814f004 R15: 0000000000000000
+[  124.344944]  </TASK>
+[  124.344945] ---[ end trace 0000000000000000 ]---
+
+I don't do any bare metal testing for the tc-build known good revision
+bumps, just QEMU tests with boot-utils.
+
+> Just for the records:
+> You definitely need a pre-LLVM-15 toolchain + KCFI sanitizer patch?
+> LLVM-14?
+
+The feature won't land in LLVM 14, so there is little point to
+backporting and testing it on LLVM 14. This is a work in progress
+feature so it has to target the main branch. I have fairly good coverage
+of tip of tree locally and we have solid coverage through CI so we'll
+know if something major happens, it should be pretty safe to test Sami's
+series.
+
+> > > Nathan has a i915 cfi patch in His personal kernel.org Git.
+> > > Is this relevant to kcfi?
+> >
+> > It fixes a type mismatch, so in that sense it's relevant.
+> >
 > 
-> :-)
+> Here the link to patch "drm/i915: Fix CFI violation with show_dynamic_id()":
 > 
-> Also, even with this sorted, there's a ton array bound things left.
-> Please don't just mangle the code until it stops complaining like in the
-> previous postings of these patches.
+> https://git.kernel.org/pub/scm/linux/kernel/git/nathan/linux.git/commit/?h=submitted/i915-cfi-fix&id=53735be6dc53453fcfbac658e847b54360e73871
 
-Yeah, other code is much simpler. The sched code has been a bit tricky
-to figure out.
+This is now in the i915 tree so that branch is going to disappear:
 
-> As such, I'm only barely ok with the below patch. Ideally I'd shoot GCC
-> in the head. Its *really* tedious you cannot just tell it to shut up
-> already.
+https://cgit.freedesktop.org/drm/drm-intel/commit/?id=18fb42db05a0b93ab5dd5eab5315e50eaa3ca620
 
-What you've got below is almost exactly what I had in my first attempt
-at this (that I never posted). What I was missing and couldn't track
-down were the places you used sched_class_above(). I should have sent
-_that_ patch and asked where the comparisons were that I couldn't find.
-I think what you've got is much cleaner, as it makes the for loop use
-the normal iterator idiom.
+> You say no need to build your kernel with LTO...
+> That sounds good.
+> Currently, I build my kernels with Clang-14 and CONFIG_LTO_CLANG_THIN=y.
+> Does something speak against using CONFIG_LTO_CLANG_THIN=y with KCFI support?
+> Build-time?
+> Disc-usage?
 
-Thank you!
+I wouldn't expect the build time or disk usage to significantly increase
+with kCFI. I ran a quick benchmark with Arch Linux's configuration with
+ThinLTO then ThinLTO + kCFI on an AMD EPYC 7513:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Benchmark 1: ThinLTO
+  Time (abs ≡):        166.036 s               [User: 4687.951 s, System: 1636.767 s]
 
--- 
-Kees Cook
+Benchmark 2: ThinLTO + kCFI
+  Time (abs ≡):        168.739 s               [User: 4682.020 s, System: 1638.109 s]
+
+Summary
+  'ThinLTO' ran
+    1.02 times faster than 'ThinLTO + kCFI'
+
+Cheers,
+Nathan
