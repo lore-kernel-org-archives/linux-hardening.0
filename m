@@ -2,134 +2,117 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84359C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 May 2022 01:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1ECC433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 May 2022 04:45:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231992AbiERBQQ (ORCPT
+        id S229961AbiEREpo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 17 May 2022 21:16:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48236 "EHLO
+        Wed, 18 May 2022 00:45:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229943AbiERBQP (ORCPT
+        with ESMTP id S229904AbiEREpn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 17 May 2022 21:16:15 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84DDEBCA5;
-        Tue, 17 May 2022 18:16:14 -0700 (PDT)
-Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.57])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4L2w576wKrz1JCGK;
-        Wed, 18 May 2022 09:14:51 +0800 (CST)
-Received: from huawei.com (10.67.175.31) by dggpemm500024.china.huawei.com
- (7.185.36.203) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Wed, 18 May
- 2022 09:16:12 +0800
-From:   GUO Zihua <guozihua@huawei.com>
-To:     <linux-integrity@vger.kernel.org>
-CC:     <zohar@linux.ibm.com>, <dmitry.kasatkin@gmail.com>,
-        <gustavoars@kernel.org>, <linux-hardening@vger.kernel.org>
-Subject: [RESEND] evm: Refector struct evm_xattr
-Date:   Wed, 18 May 2022 09:14:39 +0800
-Message-ID: <20220518011439.184809-1-guozihua@huawei.com>
-X-Mailer: git-send-email 2.36.0
+        Wed, 18 May 2022 00:45:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B127A275ED;
+        Tue, 17 May 2022 21:45:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 276C76172E;
+        Wed, 18 May 2022 04:45:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6A8AC385A9;
+        Wed, 18 May 2022 04:45:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652849140;
+        bh=j6MOiP9+5B8pAiYMM89g+aACwKHd4IkfAHOyZ69pSTA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bNpqpBk6m+7sfo46rNylXB8FfOd/nFnzvIsVi946WoLJt7F7FzUQrOjSEOmybKlZ+
+         Y02gmJO2pnjUD0BCEyphtuDs8277lkMT3b6gcYVp+jrnqShnuJ+oFzTnwXttGLsiI7
+         YYTZWayz5noT0hsmJsfZ/qeEPU4b4c9Jm7P4s5wf5zA1Q48Cp57tJgv1JNLxjbNEYY
+         9qJABxenqZ21m5/TlgpHguixMe6xwHlq0lvNRuco1NaXQ8szWH8c4+x7C6vFCXEdKQ
+         LMcsfE5wKbhE9Fd/33t4qFK1prm7kIbHKUtNHa/zacKo8jFyt0Vn43m6kFkHbezAEv
+         uBnPAN8xMDxDw==
+Date:   Tue, 17 May 2022 23:55:07 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     GUO Zihua <guozihua@huawei.com>
+Cc:     keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+        davem@davemloft.net, dhowells@redhat.com,
+        herbert@gondor.apana.org.au, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] crypto: Use struct_size() helper in kmalloc()
+Message-ID: <20220518045507.GA16144@embeddedor>
+References: <20220518005639.181640-1-guozihua@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.31]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500024.china.huawei.com (7.185.36.203)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220518005639.181640-1-guozihua@huawei.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-struct evm_xattr is only used for EVM_XATTR_HMAC type evm digest and is
-glued together one flexible array and one fixed length array. The
-original intention seems to be shortening the code as the "data" field
-would always be a SHA1 digest.
+On Wed, May 18, 2022 at 08:56:39AM +0800, GUO Zihua wrote:
+> Make use of struct_size() heler for structures containing flexible array
+> member instead of sizeof() which prevents potential issues as well as
+> addressing the following sparse warning:
+> 
+> crypto/asymmetric_keys/asymmetric_type.c:155:23: warning: using sizeof
+> on a flexible structure
+> crypto/asymmetric_keys/asymmetric_type.c:247:28: warning: using sizeof
+> on a flexible structure
 
-This implementation is not complying with GCC's specification about
-flexible array and spars yield the following warning:
+The warnings above are not silenced with this patch as struct_size()
+internally use sizeof on the struct-with-flex-array.
 
-security/integrity/evm/evm_main.c:852:30: warning: using sizeof on a flexible
-structure
-security/integrity/evm/evm_main.c:862:32: warning: using sizeof on a flexible
-structure
+However, the use of struct_size() instead of the open-coded expressions
+in the calls to kmalloc() is correct.
 
-Fix it by:
-1. Remove struct evm_xattr and use struct evm_ima_xattr_data directly.
-2. Get array size with struct_size instead of sizeof.
+> 
+> Reference: https://github.com/KSPP/linux/issues/174
 
-Reference: https://github.com/KSPP/linux/issues/174
+I updated this issue on the issue tracker. Please, from now on, just
+use that issue as a list of potential open-coded instances to be
+audited. :)
 
-Fixes: 6be5cc5246f80 ("evm: add support for different security.evm data types")
-Signed-off-by: GUO Zihua <guozihua@huawei.com>
----
- security/integrity/evm/evm_main.c | 14 ++++++++------
- security/integrity/integrity.h    |  6 ------
- 2 files changed, 8 insertions(+), 12 deletions(-)
+> 
+> Signed-off-by: GUO Zihua <guozihua@huawei.com>
 
-diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
-index 7d87772f0ce6..f2c4501a287a 100644
---- a/security/integrity/evm/evm_main.c
-+++ b/security/integrity/evm/evm_main.c
-@@ -211,7 +211,8 @@ static enum integrity_status evm_verify_hmac(struct dentry *dentry,
- 	/* check value type */
- 	switch (xattr_data->type) {
- 	case EVM_XATTR_HMAC:
--		if (xattr_len != sizeof(struct evm_xattr)) {
-+		if (xattr_len != struct_size(*xattr_data, data,
-+					     SHA1_DIGEST_SIZE)) {
- 			evm_status = INTEGRITY_FAIL;
- 			goto out;
- 		}
-@@ -842,24 +843,25 @@ int evm_inode_init_security(struct inode *inode,
- 				 const struct xattr *lsm_xattr,
- 				 struct xattr *evm_xattr)
- {
--	struct evm_xattr *xattr_data;
-+	struct evm_ima_xattr_data *xattr_data;
- 	int rc;
- 
- 	if (!(evm_initialized & EVM_INIT_HMAC) ||
- 	    !evm_protected_xattr(lsm_xattr->name))
- 		return 0;
- 
--	xattr_data = kzalloc(sizeof(*xattr_data), GFP_NOFS);
-+	xattr_data = kzalloc(struct_size(*xattr_data, data,
-+			     SHA1_DIGEST_SIZE), GFP_NOFS);
- 	if (!xattr_data)
- 		return -ENOMEM;
- 
--	xattr_data->data.type = EVM_XATTR_HMAC;
--	rc = evm_init_hmac(inode, lsm_xattr, xattr_data->digest);
-+	xattr_data->type = EVM_XATTR_HMAC;
-+	rc = evm_init_hmac(inode, lsm_xattr, xattr_data->data);
- 	if (rc < 0)
- 		goto out;
- 
- 	evm_xattr->value = xattr_data;
--	evm_xattr->value_len = sizeof(*xattr_data);
-+	evm_xattr->value_len = struct_size(*xattr_data, data, SHA1_DIGEST_SIZE);
- 	evm_xattr->name = XATTR_EVM_SUFFIX;
- 	return 0;
- out:
-diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-index 3510e413ea17..91b16d620dd9 100644
---- a/security/integrity/integrity.h
-+++ b/security/integrity/integrity.h
-@@ -86,12 +86,6 @@ struct evm_ima_xattr_data {
- 	u8 data[];
- } __packed;
- 
--/* Only used in the EVM HMAC code. */
--struct evm_xattr {
--	struct evm_ima_xattr_data data;
--	u8 digest[SHA1_DIGEST_SIZE];
--} __packed;
--
- #define IMA_MAX_DIGEST_SIZE	64
- 
- struct ima_digest_data {
--- 
-2.36.0
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
+Thanks
+--
+Gustavo
+
+> 
+> ---
+> 
+> v2:
+>     Use size_add() helper following Kees Cook's suggestion.
+> ---
+>  crypto/asymmetric_keys/asymmetric_type.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/crypto/asymmetric_keys/asymmetric_type.c b/crypto/asymmetric_keys/asymmetric_type.c
+> index 41a2f0eb4ce4..e020222b1fe5 100644
+> --- a/crypto/asymmetric_keys/asymmetric_type.c
+> +++ b/crypto/asymmetric_keys/asymmetric_type.c
+> @@ -152,7 +152,7 @@ struct asymmetric_key_id *asymmetric_key_generate_id(const void *val_1,
+>  {
+>  	struct asymmetric_key_id *kid;
+>  
+> -	kid = kmalloc(sizeof(struct asymmetric_key_id) + len_1 + len_2,
+> +	kid = kmalloc(struct_size(kid, data, size_add(len_1, len_2)),
+>  		      GFP_KERNEL);
+>  	if (!kid)
+>  		return ERR_PTR(-ENOMEM);
+> @@ -244,7 +244,7 @@ struct asymmetric_key_id *asymmetric_key_hex_to_key_id(const char *id)
+>  	if (asciihexlen & 1)
+>  		return ERR_PTR(-EINVAL);
+>  
+> -	match_id = kmalloc(sizeof(struct asymmetric_key_id) + asciihexlen / 2,
+> +	match_id = kmalloc(struct_size(match_id, data, asciihexlen / 2),
+>  			   GFP_KERNEL);
+>  	if (!match_id)
+>  		return ERR_PTR(-ENOMEM);
+> -- 
+> 2.36.0
+> 
