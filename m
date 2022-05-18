@@ -2,247 +2,322 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C484CC433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 May 2022 20:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4408AC4332F
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 May 2022 20:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242688AbiERUwe (ORCPT
+        id S242831AbiERUwe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
         Wed, 18 May 2022 16:52:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50120 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242825AbiERUwb (ORCPT
+        with ESMTP id S242787AbiERUwa (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 May 2022 16:52:31 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E57673572
-        for <linux-hardening@vger.kernel.org>; Wed, 18 May 2022 13:52:29 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id j6so3194132pfe.13
-        for <linux-hardening@vger.kernel.org>; Wed, 18 May 2022 13:52:29 -0700 (PDT)
+        Wed, 18 May 2022 16:52:30 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E70A16F4BE
+        for <linux-hardening@vger.kernel.org>; Wed, 18 May 2022 13:52:28 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id r71so3243792pgr.0
+        for <linux-hardening@vger.kernel.org>; Wed, 18 May 2022 13:52:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=yqON4Iq1Vc0Hor92F448uKvyKCeniEjRqspyRbzgt/4=;
-        b=YaOYezo2s4lDHb/ClK3ZD5e8w7/qqG4uYKvT57wjGAy+7Iq3N6M5l0ZMoGMqsuOVr/
-         ecRpAE5VR1W2i0ozMPY5zVfAChNPm2P5liwzCN2IEy5k15rAu9xKEBA+0N9UWXgAXxm1
-         2qEReDvm75j5uFlDJYiUhneBgHrj4DB3NaVCc=
+        bh=rQEoNfCNz+zq7ard1iLbZvA8V/F/glMURm+vwsuWs9Q=;
+        b=ikEbWrq1QvO0cD5nQ5sJCbdw0A7gqcLMTzDCG+vJAlcD4uEsaqUsKJOegm/S2T/Ebt
+         /cfShJYdWF1SkAklANQ8vkPKUdTkEh7thdnNIWqaGglOBE6fnaH6DqBxNBhASnFxg3pC
+         D/Ivr4CUsM1AAhl+xKax/0Gp1UyyK6EdZpx0I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yqON4Iq1Vc0Hor92F448uKvyKCeniEjRqspyRbzgt/4=;
-        b=1N9K/sJ/M9qh7FKWUFMGENni/KhSB8/X3PtzrfbL0wI/LYK78s5R89v3dqJBkfKtE/
-         lRyV9wTt0ZITGdbFDqlNMaLhitkGu5JlTFv2ugdccdVQxHTt5t5m4NGwMxVAXasFnRnE
-         iUIbUzzWY1LRPOaj/Ka6FsF9BoQcQIbwYpcXT/LWM0CU/R2alrmV27RQ558JQbkwRd7R
-         AVOOhuo88MPGC4SgrCiZEI4cUYLUeYzXEjZ4furyZz9McIKVVZWBXmv1Djxn1pswBjpu
-         ZCO7cxzAkd1eU19lT3/AaiqYXL6tKcz63IPuhMCZ/reAOsb0GmdpiUuWUZ2LhVMecApg
-         fNQA==
-X-Gm-Message-State: AOAM533h1Me8xViQ935H8KS7R40MYWKYZ5hMPAeXSvWMyf3Av/3Xt8sv
-        TE7bbVLGO7zJqqxH6/LB/cpdVA==
-X-Google-Smtp-Source: ABdhPJy99b2nCQcf/Rn/E751eQ2GqsaZNhUWEL3oOMJLbREMpaEeKdpqMS2HrIyrRH5GwQ2UDTxg7g==
-X-Received: by 2002:a63:3d0b:0:b0:37f:ef34:1431 with SMTP id k11-20020a633d0b000000b0037fef341431mr1037400pga.547.1652907149442;
-        Wed, 18 May 2022 13:52:29 -0700 (PDT)
+        bh=rQEoNfCNz+zq7ard1iLbZvA8V/F/glMURm+vwsuWs9Q=;
+        b=2Oi9nzTK8XNVzoL1P0uUi1Vr3qgRPYD/tUE7zCVpuNw50HOsEysrRZtz9OlK/7r3kd
+         YqJQ1tSYTE4qbrBy8OR8w+nZiP4ikDrvZwDb/p2WlYLTBbutrvAqiKXUmDuKqdONBodi
+         AdSBYJXfkN8cZuBCYthjwAr9clTRAXZj77Seey5yPF9DQOkzliF+0IrbgGKEFDwuGJb5
+         Ww0SWZ/WYMrcy5hPB5I+u2gJ8kJ2J3+4mXma8ZZ6v6Oq27SjlJb8UjDukiPYg1UbXBDZ
+         nmztodA4BvrYzSXXNbNSVcnoaVIXTpdEH921nMPtoV4T9pfHwSrDXQWkma2HZuPQBFIJ
+         RROA==
+X-Gm-Message-State: AOAM533scacvFirvDm+hB9f9f02IilHA9WS6+Bxe5TDJ2YWKEh1Ix6gL
+        WHBazt8zxrUXEvdHhx9+legODZMlGu/NaA==
+X-Google-Smtp-Source: ABdhPJyNOM/+xy9skLHXjhlfQSTn59Toz2JoxVig5i+UXhMiUsM+eNTFyQewWfo11RPTnuUDHggi6w==
+X-Received: by 2002:a63:41c1:0:b0:3c6:e382:c125 with SMTP id o184-20020a6341c1000000b003c6e382c125mr1029348pga.383.1652907148455;
+        Wed, 18 May 2022 13:52:28 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e14-20020a17090301ce00b0016194c1df58sm2216695plh.105.2022.05.18.13.52.28
+        by smtp.gmail.com with ESMTPSA id z18-20020a170903019200b0016184e7b013sm2132387plg.36.2022.05.18.13.52.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 May 2022 13:52:29 -0700 (PDT)
+        Wed, 18 May 2022 13:52:28 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Yury Norov <yury.norov@gmail.com>
 Cc:     Kees Cook <keescook@chromium.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Christophe de Dinechin <dinechin@redhat.com>,
         Alexey Dobriyan <adobriyan@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Andrew Morton <akpm@linux-foundation.org>,
         Zhen Lei <thunder.leizhen@huawei.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v3 2/2] nodemask: Fix return values to be unsigned
-Date:   Wed, 18 May 2022 13:52:23 -0700
-Message-Id: <20220518205223.2908736-3-keescook@chromium.org>
+Subject: [PATCH v3 1/2] bitmap: Fix return values to be unsigned
+Date:   Wed, 18 May 2022 13:52:22 -0700
+Message-Id: <20220518205223.2908736-2-keescook@chromium.org>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220518205223.2908736-1-keescook@chromium.org>
 References: <20220518205223.2908736-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7479; h=from:subject; bh=jKwSPhAGMa32xncMSUgCGkJEItBxEQ3ifQ4V40DS0JM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBihVyH/p0tJo8ozHWap+tEIfvqFepS6dbK2O5B/nZy jiaIkq2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYoVchwAKCRCJcvTf3G3AJiO/EA CiNbQ6XNyjv0nmoPdeojaAeXfm4j/X94zgOa4dguipKDNdKEFEUuIdf1KqR+MlEaU3zlRYmol/J28I D8uClxUdIJezGL5VfkQ8lZBqoXdVVnkono18PhbtqUO3diMG4if6m8N4WalQrNqg3HzqE5ASP+JAHK 2oYHXRCCCZX0C8XKo5Eqo84VAmQ3clu6kvy2nvu1MM6OZp519DQIhZSMydrqQCmpeVXyynNKqtxtLO bPS4YHLinmYa/Vpb8lmcIdbktOkwCiXoJRYHuD8+00fIA8mKAvRccEYj/X/0M22JMUYzh+uF5sAa0H QFnVm/FBDhLaD0u+3LVjVEdaXHtBJynJhwAWt5iV4+SB05xuYVrr/53Su/I79QlpgnsRiY5BLQOo1F QNqe6O+/NtYg0ctEqneLFCqvjyRlzF+wON7HfyCPcQtE1pnkbBfwu9u1Brz/Q/gE3A6nzqsUTJAYWT bhOZ5/mIF3fDNC2h9ItEwgk2/N6ad3rMYGI3ffhKLIMiC3nWb3mA8PsXfmRW4IWtNs1ep2w5o9k5q0 JZE1cTImcx7Q8hF6dxKYjLWR/pwl2kThx+PHsgWktTdTO5NYb1i7E58DrmteFRDB/DlMmNGAklV9Rx CjQuWVpjzVYL/4ceTGX6IUkfhBMisAQl/reccS5EPJuTPLJ6gcxGEC7akEog==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9640; h=from:subject; bh=A9h0iGW+o8mMGv8LcfYnkc4CqQ94dA0Qq+cwea24/TQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBihVyGlDacumFlXPw08iJ7ikCMSrsc7B7JNAnsPdkY IixvxFKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYoVchgAKCRCJcvTf3G3AJrhvEA CvqsKWbwW4ch2+yd7nBDv+2LbHz1w98qurkOz+wN86+F+BUnI1EBNDWIu6avnShmFkFD4owy1/JnNf 5PtPqdSkFPFa4VHym9Hey/IDvQAxL9vbT0Kb4iwi42XuUq2ZL3sveDJMLlJEjNRtY42DklFgsDLfI+ 1VYPFFkT14on0pjhb0bERIJN3koLgb9RDoT4zlwfPVA5rHkl4bbkNafY14Ng98BbSlo6mnTiKun61M 8SEZGWDzdjbqUuGffJiAJefqopzAtHb9u873B7eSuIxBBesC9bcpDPgxlpNpoJYM9puCi+oeEKhdWC cmCmSBxBKyi0d9lvWmZVwAj8B0UMh5IODVqRJe9shQguN4U9OFSF3Zpq4bUFCc3E+ovIeUErQ3zKBm f3k92qXTJxG6M4Pyrdu5WNkCcyIOJMkBRQZRp2//JqyPm8C+afLdDsAkMk8IddsIpDo2UByUL2kAhN O2HMfZVvKl6Avvb+unk2Az5dstfJ3TatuyFb7KbqN96F1LnbRNFYGiKAvCJA2Gw6xrcLkhrzaB7Vmw s3Jiw1vsSX6bTHvTa2J3PpVwTnXrkZtJs17x05fjrFnqX3f5vLyfoFoyEFaJ5d0+LfEIwnXzVQvdsW kqZlb+KIBJmtc05i4GPFMQQtBF/HsWhPxU4zeOqn/3xZ9IywygoVaAlaMfMQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The nodemask routines had mixed return values that provided potentially
-signed return values that could never happen. This was leading to the
-compiler getting confusing about the range of possible return values
-(it was thinking things could be negative where they could not be). Fix
-all the nodemask routines that should be returning unsigned
-(or bool) values. Silences:
+Both nodemask and bitmap routines had mixed return values that provided
+potentially signed return values that could never happen. This was
+leading to the compiler getting confusing about the range of possible
+return values (it was thinking things could be negative where they could
+not be). In preparation for fixing nodemask, fix all the bitmap routines
+that should be returning unsigned (or bool) values.
 
- mm/swapfile.c: In function ‘setup_swap_info’:
- mm/swapfile.c:2291:47: error: array subscript -1 is below array bounds of ‘struct plist_node[]’ [-Werror=array-bounds]
-  2291 |                                 p->avail_lists[i].prio = 1;
-       |                                 ~~~~~~~~~~~~~~^~~
- In file included from mm/swapfile.c:16:
- ./include/linux/swap.h:292:27: note: while referencing ‘avail_lists’
-   292 |         struct plist_node avail_lists[]; /*
-       |                           ^~~~~~~~~~~
-
-Reported-by: Christophe de Dinechin <dinechin@redhat.com>
-Link: https://lore.kernel.org/lkml/20220414150855.2407137-3-dinechin@redhat.com/
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
 Cc: Yury Norov <yury.norov@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Christophe de Dinechin <dinechin@redhat.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Zhen Lei <thunder.leizhen@huawei.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/nodemask.h | 38 +++++++++++++++++++-------------------
- lib/nodemask.c           |  4 ++--
- 2 files changed, 21 insertions(+), 21 deletions(-)
+ include/linux/bitmap.h       | 25 +++++++++++++------------
+ lib/bitmap.c                 | 30 +++++++++++++++---------------
+ tools/include/linux/bitmap.h | 17 +++++++++--------
+ tools/lib/bitmap.c           | 20 ++++++++++----------
+ 4 files changed, 47 insertions(+), 45 deletions(-)
 
-diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
-index 567c3ddba2c4..2c39663c3407 100644
---- a/include/linux/nodemask.h
-+++ b/include/linux/nodemask.h
-@@ -42,11 +42,11 @@
-  * void nodes_shift_right(dst, src, n)	Shift right
-  * void nodes_shift_left(dst, src, n)	Shift left
-  *
-- * int first_node(mask)			Number lowest set bit, or MAX_NUMNODES
-- * int next_node(node, mask)		Next node past 'node', or MAX_NUMNODES
-- * int next_node_in(node, mask)		Next node past 'node', or wrap to first,
-+ * unsigned int first_node(mask)	Number lowest set bit, or MAX_NUMNODES
-+ * unsigend int next_node(node, mask)	Next node past 'node', or MAX_NUMNODES
-+ * unsigned int next_node_in(node, mask) Next node past 'node', or wrap to first,
-  *					or MAX_NUMNODES
-- * int first_unset_node(mask)		First node not set in mask, or 
-+ * unsigned int first_unset_node(mask)	First node not set in mask, or
-  *					MAX_NUMNODES
-  *
-  * nodemask_t nodemask_of_node(node)	Return nodemask with bit 'node' set
-@@ -153,7 +153,7 @@ static inline void __nodes_clear(nodemask_t *dstp, unsigned int nbits)
- 
- #define node_test_and_set(node, nodemask) \
- 			__node_test_and_set((node), &(nodemask))
--static inline int __node_test_and_set(int node, nodemask_t *addr)
-+static inline bool __node_test_and_set(int node, nodemask_t *addr)
- {
- 	return test_and_set_bit(node, addr->bits);
- }
-@@ -200,7 +200,7 @@ static inline void __nodes_complement(nodemask_t *dstp,
- 
- #define nodes_equal(src1, src2) \
- 			__nodes_equal(&(src1), &(src2), MAX_NUMNODES)
--static inline int __nodes_equal(const nodemask_t *src1p,
-+static inline bool __nodes_equal(const nodemask_t *src1p,
- 					const nodemask_t *src2p, unsigned int nbits)
- {
- 	return bitmap_equal(src1p->bits, src2p->bits, nbits);
-@@ -208,7 +208,7 @@ static inline int __nodes_equal(const nodemask_t *src1p,
- 
- #define nodes_intersects(src1, src2) \
- 			__nodes_intersects(&(src1), &(src2), MAX_NUMNODES)
--static inline int __nodes_intersects(const nodemask_t *src1p,
-+static inline bool __nodes_intersects(const nodemask_t *src1p,
- 					const nodemask_t *src2p, unsigned int nbits)
- {
- 	return bitmap_intersects(src1p->bits, src2p->bits, nbits);
-@@ -216,20 +216,20 @@ static inline int __nodes_intersects(const nodemask_t *src1p,
- 
- #define nodes_subset(src1, src2) \
- 			__nodes_subset(&(src1), &(src2), MAX_NUMNODES)
--static inline int __nodes_subset(const nodemask_t *src1p,
-+static inline bool __nodes_subset(const nodemask_t *src1p,
- 					const nodemask_t *src2p, unsigned int nbits)
- {
- 	return bitmap_subset(src1p->bits, src2p->bits, nbits);
- }
- 
- #define nodes_empty(src) __nodes_empty(&(src), MAX_NUMNODES)
--static inline int __nodes_empty(const nodemask_t *srcp, unsigned int nbits)
-+static inline bool __nodes_empty(const nodemask_t *srcp, unsigned int nbits)
- {
- 	return bitmap_empty(srcp->bits, nbits);
- }
- 
- #define nodes_full(nodemask) __nodes_full(&(nodemask), MAX_NUMNODES)
--static inline int __nodes_full(const nodemask_t *srcp, unsigned int nbits)
-+static inline bool __nodes_full(const nodemask_t *srcp, unsigned int nbits)
- {
- 	return bitmap_full(srcp->bits, nbits);
- }
-@@ -260,15 +260,15 @@ static inline void __nodes_shift_left(nodemask_t *dstp,
-           > MAX_NUMNODES, then the silly min_ts could be dropped. */
- 
- #define first_node(src) __first_node(&(src))
--static inline int __first_node(const nodemask_t *srcp)
-+static inline unsigned int __first_node(const nodemask_t *srcp)
- {
--	return min_t(int, MAX_NUMNODES, find_first_bit(srcp->bits, MAX_NUMNODES));
-+	return min_t(unsigned int, MAX_NUMNODES, find_first_bit(srcp->bits, MAX_NUMNODES));
- }
- 
- #define next_node(n, src) __next_node((n), &(src))
--static inline int __next_node(int n, const nodemask_t *srcp)
-+static inline unsigned int __next_node(int n, const nodemask_t *srcp)
- {
--	return min_t(int,MAX_NUMNODES,find_next_bit(srcp->bits, MAX_NUMNODES, n+1));
-+	return min_t(unsigned int, MAX_NUMNODES, find_next_bit(srcp->bits, MAX_NUMNODES, n+1));
- }
- 
- /*
-@@ -276,7 +276,7 @@ static inline int __next_node(int n, const nodemask_t *srcp)
-  * the first node in src if needed.  Returns MAX_NUMNODES if src is empty.
+diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+index 7dba0847510c..8303eb5604ca 100644
+--- a/include/linux/bitmap.h
++++ b/include/linux/bitmap.h
+@@ -132,8 +132,8 @@ unsigned long *devm_bitmap_zalloc(struct device *dev,
+  * lib/bitmap.c provides these functions:
   */
- #define next_node_in(n, src) __next_node_in((n), &(src))
--int __next_node_in(int node, const nodemask_t *srcp);
-+unsigned int __next_node_in(int node, const nodemask_t *srcp);
  
- static inline void init_nodemask_of_node(nodemask_t *mask, int node)
- {
-@@ -296,9 +296,9 @@ static inline void init_nodemask_of_node(nodemask_t *mask, int node)
- })
+-int __bitmap_equal(const unsigned long *bitmap1,
+-		   const unsigned long *bitmap2, unsigned int nbits);
++bool __bitmap_equal(const unsigned long *bitmap1,
++		    const unsigned long *bitmap2, unsigned int nbits);
+ bool __pure __bitmap_or_equal(const unsigned long *src1,
+ 			      const unsigned long *src2,
+ 			      const unsigned long *src3,
+@@ -157,10 +157,10 @@ int __bitmap_andnot(unsigned long *dst, const unsigned long *bitmap1,
+ void __bitmap_replace(unsigned long *dst,
+ 		      const unsigned long *old, const unsigned long *new,
+ 		      const unsigned long *mask, unsigned int nbits);
+-int __bitmap_intersects(const unsigned long *bitmap1,
+-			const unsigned long *bitmap2, unsigned int nbits);
+-int __bitmap_subset(const unsigned long *bitmap1,
+-		    const unsigned long *bitmap2, unsigned int nbits);
++bool __bitmap_intersects(const unsigned long *bitmap1,
++			 const unsigned long *bitmap2, unsigned int nbits);
++bool __bitmap_subset(const unsigned long *bitmap1,
++		     const unsigned long *bitmap2, unsigned int nbits);
+ int __bitmap_weight(const unsigned long *bitmap, unsigned int nbits);
+ void __bitmap_set(unsigned long *map, unsigned int start, int len);
+ void __bitmap_clear(unsigned long *map, unsigned int start, int len);
+@@ -331,8 +331,8 @@ static inline void bitmap_complement(unsigned long *dst, const unsigned long *sr
+ #endif
+ #define BITMAP_MEM_MASK (BITMAP_MEM_ALIGNMENT - 1)
  
- #define first_unset_node(mask) __first_unset_node(&(mask))
--static inline int __first_unset_node(const nodemask_t *maskp)
-+static inline unsigned int __first_unset_node(const nodemask_t *maskp)
+-static inline int bitmap_equal(const unsigned long *src1,
+-			const unsigned long *src2, unsigned int nbits)
++static inline bool bitmap_equal(const unsigned long *src1,
++				const unsigned long *src2, unsigned int nbits)
  {
--	return min_t(int,MAX_NUMNODES,
-+	return min_t(unsigned int, MAX_NUMNODES,
- 			find_first_zero_bit(maskp->bits, MAX_NUMNODES));
+ 	if (small_const_nbits(nbits))
+ 		return !((*src1 ^ *src2) & BITMAP_LAST_WORD_MASK(nbits));
+@@ -362,8 +362,9 @@ static inline bool bitmap_or_equal(const unsigned long *src1,
+ 	return !(((*src1 | *src2) ^ *src3) & BITMAP_LAST_WORD_MASK(nbits));
  }
  
-@@ -436,11 +436,11 @@ static inline int num_node_state(enum node_states state)
- 
- #define first_online_node	first_node(node_states[N_ONLINE])
- #define first_memory_node	first_node(node_states[N_MEMORY])
--static inline int next_online_node(int nid)
-+static inline unsigned int next_online_node(int nid)
+-static inline int bitmap_intersects(const unsigned long *src1,
+-			const unsigned long *src2, unsigned int nbits)
++static inline bool bitmap_intersects(const unsigned long *src1,
++				     const unsigned long *src2,
++				     unsigned int nbits)
  {
- 	return next_node(nid, node_states[N_ONLINE]);
+ 	if (small_const_nbits(nbits))
+ 		return ((*src1 & *src2) & BITMAP_LAST_WORD_MASK(nbits)) != 0;
+@@ -371,8 +372,8 @@ static inline int bitmap_intersects(const unsigned long *src1,
+ 		return __bitmap_intersects(src1, src2, nbits);
  }
--static inline int next_memory_node(int nid)
-+static inline unsigned int next_memory_node(int nid)
+ 
+-static inline int bitmap_subset(const unsigned long *src1,
+-			const unsigned long *src2, unsigned int nbits)
++static inline bool bitmap_subset(const unsigned long *src1,
++				 const unsigned long *src2, unsigned int nbits)
  {
- 	return next_node(nid, node_states[N_MEMORY]);
+ 	if (small_const_nbits(nbits))
+ 		return ! ((*src1 & ~(*src2)) & BITMAP_LAST_WORD_MASK(nbits));
+diff --git a/lib/bitmap.c b/lib/bitmap.c
+index 0d5c2ece0bcb..2692fd43c125 100644
+--- a/lib/bitmap.c
++++ b/lib/bitmap.c
+@@ -45,19 +45,19 @@
+  * for the best explanations of this ordering.
+  */
+ 
+-int __bitmap_equal(const unsigned long *bitmap1,
+-		const unsigned long *bitmap2, unsigned int bits)
++bool __bitmap_equal(const unsigned long *bitmap1,
++		    const unsigned long *bitmap2, unsigned int bits)
+ {
+ 	unsigned int k, lim = bits/BITS_PER_LONG;
+ 	for (k = 0; k < lim; ++k)
+ 		if (bitmap1[k] != bitmap2[k])
+-			return 0;
++			return false;
+ 
+ 	if (bits % BITS_PER_LONG)
+ 		if ((bitmap1[k] ^ bitmap2[k]) & BITMAP_LAST_WORD_MASK(bits))
+-			return 0;
++			return false;
+ 
+-	return 1;
++	return true;
  }
-diff --git a/lib/nodemask.c b/lib/nodemask.c
-index 3aa454c54c0d..e22647f5181b 100644
---- a/lib/nodemask.c
-+++ b/lib/nodemask.c
-@@ -3,9 +3,9 @@
- #include <linux/module.h>
- #include <linux/random.h>
+ EXPORT_SYMBOL(__bitmap_equal);
  
--int __next_node_in(int node, const nodemask_t *srcp)
-+unsigned int __next_node_in(int node, const nodemask_t *srcp)
+@@ -303,33 +303,33 @@ void __bitmap_replace(unsigned long *dst,
+ }
+ EXPORT_SYMBOL(__bitmap_replace);
+ 
+-int __bitmap_intersects(const unsigned long *bitmap1,
+-			const unsigned long *bitmap2, unsigned int bits)
++bool __bitmap_intersects(const unsigned long *bitmap1,
++			 const unsigned long *bitmap2, unsigned int bits)
  {
--	int ret = __next_node(node, srcp);
-+	unsigned int ret = __next_node(node, srcp);
+ 	unsigned int k, lim = bits/BITS_PER_LONG;
+ 	for (k = 0; k < lim; ++k)
+ 		if (bitmap1[k] & bitmap2[k])
+-			return 1;
++			return true;
  
- 	if (ret == MAX_NUMNODES)
- 		ret = __first_node(srcp);
+ 	if (bits % BITS_PER_LONG)
+ 		if ((bitmap1[k] & bitmap2[k]) & BITMAP_LAST_WORD_MASK(bits))
+-			return 1;
+-	return 0;
++			return true;
++	return false;
+ }
+ EXPORT_SYMBOL(__bitmap_intersects);
+ 
+-int __bitmap_subset(const unsigned long *bitmap1,
+-		    const unsigned long *bitmap2, unsigned int bits)
++bool __bitmap_subset(const unsigned long *bitmap1,
++		     const unsigned long *bitmap2, unsigned int bits)
+ {
+ 	unsigned int k, lim = bits/BITS_PER_LONG;
+ 	for (k = 0; k < lim; ++k)
+ 		if (bitmap1[k] & ~bitmap2[k])
+-			return 0;
++			return false;
+ 
+ 	if (bits % BITS_PER_LONG)
+ 		if ((bitmap1[k] & ~bitmap2[k]) & BITMAP_LAST_WORD_MASK(bits))
+-			return 0;
+-	return 1;
++			return false;
++	return true;
+ }
+ EXPORT_SYMBOL(__bitmap_subset);
+ 
+diff --git a/tools/include/linux/bitmap.h b/tools/include/linux/bitmap.h
+index ea97804d04d4..afdf93bebaaf 100644
+--- a/tools/include/linux/bitmap.h
++++ b/tools/include/linux/bitmap.h
+@@ -16,11 +16,11 @@ void __bitmap_or(unsigned long *dst, const unsigned long *bitmap1,
+ 		 const unsigned long *bitmap2, int bits);
+ int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
+ 		 const unsigned long *bitmap2, unsigned int bits);
+-int __bitmap_equal(const unsigned long *bitmap1,
+-		   const unsigned long *bitmap2, unsigned int bits);
++bool __bitmap_equal(const unsigned long *bitmap1,
++		    const unsigned long *bitmap2, unsigned int bits);
+ void bitmap_clear(unsigned long *map, unsigned int start, int len);
+-int __bitmap_intersects(const unsigned long *bitmap1,
+-			const unsigned long *bitmap2, unsigned int bits);
++bool __bitmap_intersects(const unsigned long *bitmap1,
++			 const unsigned long *bitmap2, unsigned int bits);
+ 
+ #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
+ #define BITMAP_LAST_WORD_MASK(nbits) (~0UL >> (-(nbits) & (BITS_PER_LONG - 1)))
+@@ -162,8 +162,8 @@ static inline int bitmap_and(unsigned long *dst, const unsigned long *src1,
+ #define BITMAP_MEM_MASK (BITMAP_MEM_ALIGNMENT - 1)
+ #define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) == 0)
+ 
+-static inline int bitmap_equal(const unsigned long *src1,
+-			const unsigned long *src2, unsigned int nbits)
++static inline bool bitmap_equal(const unsigned long *src1,
++				const unsigned long *src2, unsigned int nbits)
+ {
+ 	if (small_const_nbits(nbits))
+ 		return !((*src1 ^ *src2) & BITMAP_LAST_WORD_MASK(nbits));
+@@ -173,8 +173,9 @@ static inline int bitmap_equal(const unsigned long *src1,
+ 	return __bitmap_equal(src1, src2, nbits);
+ }
+ 
+-static inline int bitmap_intersects(const unsigned long *src1,
+-			const unsigned long *src2, unsigned int nbits)
++static inline bool bitmap_intersects(const unsigned long *src1,
++				     const unsigned long *src2,
++				     unsigned int nbits)
+ {
+ 	if (small_const_nbits(nbits))
+ 		return ((*src1 & *src2) & BITMAP_LAST_WORD_MASK(nbits)) != 0;
+diff --git a/tools/lib/bitmap.c b/tools/lib/bitmap.c
+index db466ef7be9d..354f8cdc0880 100644
+--- a/tools/lib/bitmap.c
++++ b/tools/lib/bitmap.c
+@@ -72,31 +72,31 @@ int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
+ 	return result != 0;
+ }
+ 
+-int __bitmap_equal(const unsigned long *bitmap1,
+-		const unsigned long *bitmap2, unsigned int bits)
++bool __bitmap_equal(const unsigned long *bitmap1,
++		    const unsigned long *bitmap2, unsigned int bits)
+ {
+ 	unsigned int k, lim = bits/BITS_PER_LONG;
+ 	for (k = 0; k < lim; ++k)
+ 		if (bitmap1[k] != bitmap2[k])
+-			return 0;
++			return false;
+ 
+ 	if (bits % BITS_PER_LONG)
+ 		if ((bitmap1[k] ^ bitmap2[k]) & BITMAP_LAST_WORD_MASK(bits))
+-			return 0;
++			return false;
+ 
+-	return 1;
++	return true;
+ }
+ 
+-int __bitmap_intersects(const unsigned long *bitmap1,
+-			const unsigned long *bitmap2, unsigned int bits)
++bool __bitmap_intersects(const unsigned long *bitmap1,
++			 const unsigned long *bitmap2, unsigned int bits)
+ {
+ 	unsigned int k, lim = bits/BITS_PER_LONG;
+ 	for (k = 0; k < lim; ++k)
+ 		if (bitmap1[k] & bitmap2[k])
+-			return 1;
++			return true;
+ 
+ 	if (bits % BITS_PER_LONG)
+ 		if ((bitmap1[k] & bitmap2[k]) & BITMAP_LAST_WORD_MASK(bits))
+-			return 1;
+-	return 0;
++			return true;
++	return false;
+ }
 -- 
 2.32.0
 
