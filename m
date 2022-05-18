@@ -2,171 +2,129 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A369C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 May 2022 22:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B522DC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 May 2022 22:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229943AbiERWCN (ORCPT
+        id S229506AbiERWDm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 May 2022 18:02:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35404 "EHLO
+        Wed, 18 May 2022 18:03:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229982AbiERWCI (ORCPT
+        with ESMTP id S229693AbiERWDb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 May 2022 18:02:08 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD34996BC
-        for <linux-hardening@vger.kernel.org>; Wed, 18 May 2022 14:51:35 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id k16so3356892pff.5
-        for <linux-hardening@vger.kernel.org>; Wed, 18 May 2022 14:51:35 -0700 (PDT)
+        Wed, 18 May 2022 18:03:31 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3BE715BACD;
+        Wed, 18 May 2022 14:55:37 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id ds11so3386647pjb.0;
+        Wed, 18 May 2022 14:55:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rlileXECXQwcs4FwBCFGgd9tlzU7JPOtD7+Op7dKw2A=;
-        b=Ku1CxZ7SlLE9GBbQ8dzXmhq85kFZNi5vcrvHKOMNhhhVvvOh3k+JTtG1I91mqxOvPz
-         LxpEDdwdyUv3b7kshP/C7OV8Xnvt6lTCj47UuL95QjfjiaxUgz2OBHUsP5Srhkx1kCIy
-         4K5H099dlnW9vAKbuow+u2t6st3v9RVot6OcI=
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=KM1eXTiTl5yuttLrQLp0SvlyssgNat2NOVrSe7NxjGw=;
+        b=o4n5aTNjF/u4if8Lr3OS7bHsgZIvG1FCdJXW1XsanajWZ7TA98MqoY1TOevBMF3JHq
+         Cymd+V0oOgILdZtTNw9qinTGyGITGwR4CErE7hRG2tAgWOP/6xE9S+6y31YVQiY9bExG
+         KWouDXNqiXQtYjD3UtlzO4YVz5adDiKtaF3mC5qffjddZBeCb/mQrmTcf4IKBfxXxngV
+         f/sv6PEdMSUuhSPG2RWrobH9BiOLlnRplkrhcJVK8DzSr+XjDd3XGYR1tEyvqAIW5Hhe
+         NkMF6gnRPDKWxcgOEtY3PE/NCic/qnZhw4VbgibDOYl1Hr9mjihzBIcg3CpGJUZRN1Qn
+         lkFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rlileXECXQwcs4FwBCFGgd9tlzU7JPOtD7+Op7dKw2A=;
-        b=v84Fxo/y/A+kfTEbXYT5A940pDJQOHQryDcOzRmoHTzcxOEqz8a7tSmLPsrFEHRAoO
-         t4JlvjSF3JnzV9Lj5m3xpisJUCKLnYIrm4a1yGUzlXj8jXQt4/h0/uZPulSvP5cxvR5z
-         py4v8BbHDDlTqI2vMrLRko/q9LG9IdkV6YLIKrDqefSZzaa8h0I3PiADKDZdhY9o/YZT
-         lkXyHjaNJXuG5sSh5mAYBLs0r3fM1DautLh2NmjpuS10AfGYDbYByXTgecnDA3yzBqwN
-         q8jrY4uaTw9Ei9b3xNMDdm8UFncTr9ssFHZR/kkL7r8UrrIqsg5xiwl007zDE6lUxiGZ
-         C9Tw==
-X-Gm-Message-State: AOAM530IHYWkW9l4ZLpv90z3FhTY+sPiETnZY5nJFR6a2K9UaW1wrNrF
-        nf/Z9xyrRl8j/eYTJ6lHS8Rmrg==
-X-Google-Smtp-Source: ABdhPJx5zkS+wcjiBUuPi4E4o4+onZ93b/N6GptRLkvIzlS3sA/PCVWVNd99O1FMK2DLDlCQ9qFAWw==
-X-Received: by 2002:a63:2c01:0:b0:3db:5e24:67f8 with SMTP id s1-20020a632c01000000b003db5e2467f8mr1256683pgs.372.1652910695229;
-        Wed, 18 May 2022 14:51:35 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n9-20020a17090a928900b001d92e2e5694sm4153624pjo.1.2022.05.18.14.51.34
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=KM1eXTiTl5yuttLrQLp0SvlyssgNat2NOVrSe7NxjGw=;
+        b=U41InmvzeRh8j4gt/bZ0fqSf4MMVS4l0Hq45FHOzV28Xg4WqbGj2KvbrtfKlKQrsh7
+         FltVxiWeIHtl6GtuqtM3pzGIVZEIN1mFnCXPjvm2tuNDIaysthDT1H9LATPPzfq18D/A
+         3GaPm1TNdEJChngYvQkZqLKyjYfv08JEv5JSt1RYmL1rz89CcMEVcwm/WF4LZ0XLVreM
+         Tg+D2kwSZ59C3gfsBqfsAedUcVB67gMTiL2aYSlr/pxofCvMJBsbLbcXiJCVNQ8m7eWP
+         3yK6qUrQdj4MqOEga7v5stwQBu1scJh55haCOVF7AhBbznUZndXoMLf2O7EW0b88av2u
+         hdvw==
+X-Gm-Message-State: AOAM532A0v9rLZeOCwtlAjSwhILB1aQ9tcQMyBb6kYQXKp13eHqs4wdF
+        eLg8gWMj9vA+/qy/jaXg7dM=
+X-Google-Smtp-Source: ABdhPJwfb/uBX1lO7XaWsHjBvhjxhn8kXGOrh0WF/jltFB138/jfo3D4tWbXmxzwCpKjmdDA57+vjQ==
+X-Received: by 2002:a17:90b:1955:b0:1df:a48e:4597 with SMTP id nk21-20020a17090b195500b001dfa48e4597mr1538151pjb.187.1652910937087;
+        Wed, 18 May 2022 14:55:37 -0700 (PDT)
+Received: from localhost (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id n9-20020a629709000000b005180df18990sm2431142pfe.168.2022.05.18.14.55.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 May 2022 14:51:34 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Salvatore Bonaccorso <carnil@debian.org>,
-        keyrings@vger.kernel.org, Adam Langley <agl@google.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v2] sign-file: Convert API usage to support OpenSSL v3
-Date:   Wed, 18 May 2022 14:51:29 -0700
-Message-Id: <20220518215129.264872-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.32.0
+        Wed, 18 May 2022 14:55:36 -0700 (PDT)
+Date:   Wed, 18 May 2022 14:55:36 -0700
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Christophe de Dinechin <dinechin@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] bitmap: Fix return values to be unsigned
+Message-ID: <YoVrWLJwIfJJugxP@yury-laptop>
+References: <20220518205223.2908736-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3057; h=from:subject; bh=QlyfmW5tdA+uLyxr7PSBpgInoqAH8CjIlte2jMmmCSk=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBihWpg7oF3z/IhRHBvgWCBLQG1wB92GJbkzLV7JT+D Wb5E12+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYoVqYAAKCRCJcvTf3G3AJkWnD/ 4n+7O3v/HOHC7LCGNI91a9+Q0utWAK/W5HL/4mZ5izGsoZpD4QoVAQmM2qZVQZMa4cnX2cl8dz3x0d 0wNUq5XM3nEs1aWWWVa4ZHllXFHe+LyXbWCB/zd0sQzIZ2qPALm/H1/uWy685YEyRy1umNXP81xNUn Cyint3G5gCdXUki5OTBXriJMcQTL32nfOscwjeGwnbV0SSRyv7L4aXkvnFkZPe1bLDVwr7gsr8w95h j5raVbRgsFtVHc7t74qEkQC51p5awAFRoziJWA0IiDKlFA8pMmzBblAWI4RQsIeb84EtneWUy2hbmY i80Hr7r1knxsn5vH2ocLDdIv12u2o3jJ9AebZYXN2rvPiw3jkVfP8iaa3x/PqwDbgAxQ/IBDHasYwV rCoU4X/dLo4vSu4PeilPUhrX4xMEjmtsZOm1JGmcCeoQMvXgXwdLpIWmc69VgsroCL+FDu/JrqhQUl SgqNBinCjl7H4k9I9HjxfcURhqV0pMD8vdemQr0i5X1gdXsHIO029Ye3iKhP05Hf5nmNeKrPI+RDwO /DWX61tE6ZZIDbddTAg79kfXIiXztoqMdfq+aVy+PoOl7WWq7XafjBvZkgRYkGI+cuJvlUBaX06x7G iP5KTwpdSTQqPVkOowMgyG1mWzEjBmyP2egZbsDBYRCUnI8TrIFoAU54V72g==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220518205223.2908736-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-OpenSSL's ENGINE API is deprecated in OpenSSL v3.0, along with some
-other functions. Remove the ENGINE use and a macro work-around for
-ERR_get_error_line().
+On Wed, May 18, 2022 at 01:52:21PM -0700, Kees Cook wrote:
+> Hi,
+> 
+> v1: https://lore.kernel.org/lkml/20220517035411.31144-1-keescook@chromium.org
+> v2: https://lore.kernel.org/lkml/20220517212234.868181-1-keescook@chromium.org
+> v3:
+>  - Update missed int variable to unsigned int
+>  - Update tools/ bitmaps code to match
+>  - Adjust whitespace a bit
+> 
+> Rationale repeated from the last patch:
+> 
+> Both nodemask and bitmap routines had mixed return values that provided
+> potentially signed results that could never happen. This was leading to
+> the compiler getting confusing about the range of possible return values
+> (it was thinking things could be negative where they could not be). Fix
+> all the nodemask and bitmap routines that should be returning unsigned
+> (or bool) values. Silences GCC 12 warnings:
+> 
+>  mm/swapfile.c: In function ‘setup_swap_info’:
+>  mm/swapfile.c:2291:47: error: array subscript -1 is below array bounds of ‘struct plist_node[]’ [-Werror=array-bounds]
+>   2291 |                                 p->avail_lists[i].prio = 1;
+>        |                                 ~~~~~~~~~~~~~~^~~
+>  In file included from mm/swapfile.c:16:
+>  ./include/linux/swap.h:292:27: note: while referencing ‘avail_lists’
+>    292 |         struct plist_node avail_lists[]; /*
+>        |                           ^~~~~~~~~~~
+> 
+> 
+> I note that Alexey and Rasmus have touched on this area in the past,
+> fixing up node ids to be unsigned:
+> 
+> ce0725f78a56 ("numa: make "nr_online_nodes" unsigned int")
+> b9726c26dc21 ("numa: make "nr_node_ids" unsigned int")
+> 33c4fa8c6763 ("linux/nodemask.h: update bitmap wrappers to take unsigned int")
+> 
+> -Kees
+> 
+> 
+> Kees Cook (2):
+>   bitmap: Fix return values to be unsigned
+>   nodemask: Fix return values to be unsigned
 
-Cc: David Howells <dhowells@redhat.com>
-Cc: David Woodhouse <dwmw2@infradead.org>
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Salvatore Bonaccorso <carnil@debian.org>
-Cc: keyrings@vger.kernel.org
-Suggested-by: Adam Langley <agl@google.com>
-Co-developed-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v1: https://lore.kernel.org/lkml/20211005161833.1522737-1-lee.jones@linaro.org/
-v2: https://lore.kernel.org/lkml/Yicwb+Ceiu8JjVIS@google.com/
-v3:
- - Eliminate all the build warnings with OpenSSL 3
- - Fully remove ENGINE usage, if it can be optional, just drop it.
----
- scripts/sign-file.c | 49 ++++++++++-----------------------------------
- 1 file changed, 11 insertions(+), 38 deletions(-)
+Applied on https://github.com/norov/linux.git : bitmap-for-next.
+Thanks!
 
-diff --git a/scripts/sign-file.c b/scripts/sign-file.c
-index fbd34b8e8f57..2d633c5f57c3 100644
---- a/scripts/sign-file.c
-+++ b/scripts/sign-file.c
-@@ -52,6 +52,10 @@
- #include <openssl/pkcs7.h>
- #endif
- 
-+#if OPENSSL_VERSION_MAJOR >= 3
-+#define ERR_get_error_line(f, l)	ERR_get_error_all(f, l, NULL, NULL, NULL)
-+#endif
-+
- struct module_signature {
- 	uint8_t		algo;		/* Public-key crypto algorithm [0] */
- 	uint8_t		hash;		/* Digest algorithm [0] */
-@@ -92,16 +96,6 @@ static void display_openssl_errors(int l)
- 	}
- }
- 
--static void drain_openssl_errors(void)
--{
--	const char *file;
--	int line;
--
--	if (ERR_peek_error() == 0)
--		return;
--	while (ERR_get_error_line(&file, &line)) {}
--}
--
- #define ERR(cond, fmt, ...)				\
- 	do {						\
- 		bool __cond = (cond);			\
-@@ -135,35 +129,14 @@ static int pem_pw_cb(char *buf, int len, int w, void *v)
- static EVP_PKEY *read_private_key(const char *private_key_name)
- {
- 	EVP_PKEY *private_key;
-+	BIO *b;
- 
--	if (!strncmp(private_key_name, "pkcs11:", 7)) {
--		ENGINE *e;
--
--		ENGINE_load_builtin_engines();
--		drain_openssl_errors();
--		e = ENGINE_by_id("pkcs11");
--		ERR(!e, "Load PKCS#11 ENGINE");
--		if (ENGINE_init(e))
--			drain_openssl_errors();
--		else
--			ERR(1, "ENGINE_init");
--		if (key_pass)
--			ERR(!ENGINE_ctrl_cmd_string(e, "PIN", key_pass, 0),
--			    "Set PKCS#11 PIN");
--		private_key = ENGINE_load_private_key(e, private_key_name,
--						      NULL, NULL);
--		ERR(!private_key, "%s", private_key_name);
--	} else {
--		BIO *b;
--
--		b = BIO_new_file(private_key_name, "rb");
--		ERR(!b, "%s", private_key_name);
--		private_key = PEM_read_bio_PrivateKey(b, NULL, pem_pw_cb,
--						      NULL);
--		ERR(!private_key, "%s", private_key_name);
--		BIO_free(b);
--	}
--
-+	b = BIO_new_file(private_key_name, "rb");
-+	ERR(!b, "%s", private_key_name);
-+	private_key = PEM_read_bio_PrivateKey(b, NULL, pem_pw_cb,
-+					      NULL);
-+	ERR(!private_key, "%s", private_key_name);
-+	BIO_free(b);
- 	return private_key;
- }
- 
--- 
-2.32.0
-
+>  include/linux/bitmap.h       | 25 ++++++++++++------------
+>  include/linux/nodemask.h     | 38 ++++++++++++++++++------------------
+>  lib/bitmap.c                 | 30 ++++++++++++++--------------
+>  lib/nodemask.c               |  4 ++--
+>  tools/include/linux/bitmap.h | 17 ++++++++--------
+>  tools/lib/bitmap.c           | 20 +++++++++----------
+>  6 files changed, 68 insertions(+), 66 deletions(-)
+> 
+> -- 
+> 2.32.0
