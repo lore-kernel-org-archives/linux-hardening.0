@@ -2,213 +2,181 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23883C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 May 2022 05:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAA8C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 May 2022 06:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232611AbiESFlt (ORCPT
+        id S230430AbiESGpn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 19 May 2022 01:41:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49826 "EHLO
+        Thu, 19 May 2022 02:45:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231872AbiESFlq (ORCPT
+        with ESMTP id S229573AbiESGpl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 19 May 2022 01:41:46 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4179A5A85
-        for <linux-hardening@vger.kernel.org>; Wed, 18 May 2022 22:41:43 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id y41so4168168pfw.12
-        for <linux-hardening@vger.kernel.org>; Wed, 18 May 2022 22:41:43 -0700 (PDT)
+        Thu, 19 May 2022 02:45:41 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C73D94D9F3;
+        Wed, 18 May 2022 23:45:39 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id n13so6109168ejv.1;
+        Wed, 18 May 2022 23:45:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=fjgJyUxglOdNX7ORgfsXOs9MOe0Djm4FQwuHrj7GTTE=;
-        b=Kkk2V/Ze8u/GszkRJQ6HDT0Y3PRUy6UbRTQTWtISRk+4RdjlmgLml3lNvJImahYCLE
-         QHj/pPvHSBfqcXsh5lvwFpzr8JJ1kP3maZhxdOPOXeHgvuzHkXVgVedPrxym1kfKm5GM
-         Yh4FrJKck6E4S7WDodZnXZo/7akxxMK1DimK4=
+        bh=VoByvcP7bL3erDKZ9eCF52S10ofQGaBH9DmhEc6wMHo=;
+        b=o8phvVytMawY11PrJr5yMlH1aL6Pn8rQY9wZFrdDYSPBdSA2V4NdpDC84QfwzjZwYr
+         3esgMdEHOGv7ORU93HY591KCBfgicUeJCfIANLy/cl+HJeZyhX7+VxeX5lQw6/2f1gXi
+         U/VWhwopUuKCyw9aco0y63LQIB0YeFmm5lUAxSHw8ELflVD4kAmkdGh0uPYRN3T0plBO
+         H9LZco+FfksTH4qpXrHF647arG+fi1C56oMrVClhOFQBlIAI4wW66ggpgMEkm9+opho6
+         lw77XAw0lY46NIOaRMhNbJbgsprZY18tNqIDNctMV5bx3ikUAX2wO1iyTAoXLHnlk1dV
+         W6LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fjgJyUxglOdNX7ORgfsXOs9MOe0Djm4FQwuHrj7GTTE=;
-        b=LgcPlaErWNjS0XJu0UJSJR/ytcnSZGLVhxfCXmbWjbobl8NzriNHky0KeuF9TUwh+w
-         yAAFz/TBHokiem2bmiadrdzGqmlm2Ub5lzp+Wb2LnkKfWM68YcnckUZgIlPL6idwDhAz
-         YvRxlTZW5tGQDGbCmi2Wrbtagi9o7gvlMffvE21GGVsCAkVqF6lvgDEt+SKDgZbgfHdd
-         b3+GmcD/oyH+jhWqGA3zcibE1hehzcivsnDytpE3UmDiuHPGbHIyEm0FGYqKH1q4L5t3
-         EVcm0t8NgHIu/MszHWy7Bu8VX9q7BYJY3DAsLAp5sj7AL9yhnOWj4YYMGRvYxnEidZZ2
-         rqQA==
-X-Gm-Message-State: AOAM533qYws6aJdR5WzFyAYW9vc5a2T3bWUXpt2LkdhH6zHRopH9SgTt
-        Ce185iGTlvo2uujyTyRBqItqCQ==
-X-Google-Smtp-Source: ABdhPJxHqltwgTe80L7xytpq/ugnENmQ0t31RUNN4OoXKTpQ2c3WtoGWGY8KwrId2pyzrJLZxAtcXg==
-X-Received: by 2002:a05:6a00:1c76:b0:510:8b76:93b5 with SMTP id s54-20020a056a001c7600b005108b7693b5mr3230605pfw.44.1652938903427;
-        Wed, 18 May 2022 22:41:43 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id cp16-20020a170902e79000b0015e8d4eb2c2sm2677829plb.268.2022.05.18.22.41.42
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=VoByvcP7bL3erDKZ9eCF52S10ofQGaBH9DmhEc6wMHo=;
+        b=PWMniPTEzhA68bFTQGysScwfhVG6RoUoCOpQr2MmfChrZt05FZHref/2YXAxJfj2Za
+         AeMtSNV+DjeBw5BAAR1Immk3Yo7r692OqyDGMcw8+U+MeEmOvYOQTRIoz+mzjcMAw7lr
+         5Cvwn2JUulGk5HGhtV4YHC5hv6S0s6QTcFeqkqtAq2ZZ2apxGxNh7viI/o9aofcy1FWE
+         E6NIy8pvU1W9/IBdziJISLChc2qCqMTGVIzPzHkiBVZFJVHpqLrfYVkydxrhjwetco3d
+         RTXBWyhISHK1VhSmQC555Z70A/LELavcs4LRcrORJC7Dj0MnS0HJOYQNV+KU1e210RJO
+         THhg==
+X-Gm-Message-State: AOAM532B24KLmbljH6YLmUPhzU8t1NnYX/Ly1SXOuV9XE6MbtMCM+ZrS
+        JIUQDCanSy2bCTYpZM2pgMb2rGJvlItxwQ==
+X-Google-Smtp-Source: ABdhPJz7jqZbW7qrXuROZxSOH7g/7ZXBK6MixS/PfYcs8i63eOYX4WDZDhZX76R3t5dzfegD4Ubeiw==
+X-Received: by 2002:a17:906:4ccc:b0:6fe:9155:47ae with SMTP id q12-20020a1709064ccc00b006fe915547aemr2754046ejt.246.1652942738312;
+        Wed, 18 May 2022 23:45:38 -0700 (PDT)
+Received: from eldamar (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id eo20-20020a1709069b1400b006f3ef214e58sm1739298ejc.190.2022.05.18.23.45.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 May 2022 22:41:43 -0700 (PDT)
-Date:   Wed, 18 May 2022 22:41:42 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Guenter Roeck <linux@roeck-us.net>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86/boot: Wrap literal addresses in absolute_pointer()
-Message-ID: <202205182240.A8DDA7D4C@keescook>
-References: <20220227195918.705219-1-keescook@chromium.org>
+        Wed, 18 May 2022 23:45:37 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Date:   Thu, 19 May 2022 08:45:36 +0200
+From:   Salvatore Bonaccorso <carnil@debian.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        keyrings@vger.kernel.org, Adam Langley <agl@google.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] sign-file: Convert API usage to support OpenSSL v3
+Message-ID: <YoXnkIke2xgSuN6F@eldamar.lan>
+References: <20220518215129.264872-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220227195918.705219-1-keescook@chromium.org>
+In-Reply-To: <20220518215129.264872-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Feb 27, 2022 at 11:59:18AM -0800, Kees Cook wrote:
-> GCC 11 (incorrectly[1]) assumes that literal values cast to (void *)
-> should be treated like a NULL pointer with an offset, and raises
-> diagnostics when doing bounds checking under -Warray-bounds. GCC 12
-> got "smarter" about finding these:
+Hi Kees,
+
+On Wed, May 18, 2022 at 02:51:29PM -0700, Kees Cook wrote:
+> OpenSSL's ENGINE API is deprecated in OpenSSL v3.0, along with some
+> other functions. Remove the ENGINE use and a macro work-around for
+> ERR_get_error_line().
 > 
-> In function 'rdfs8',
->     inlined from 'vga_recalc_vertical' at /srv/code/arch/x86/boot/video-mode.c:124:29,
->     inlined from 'set_mode' at /srv/code/arch/x86/boot/video-mode.c:163:3:
-> /srv/code/arch/x86/boot/boot.h:114:9: warning: array subscript 0 is outside array bounds of 'u8[0]' {aka 'unsigned char[]'} [-Warray-bounds]
->   114 |         asm volatile("movb %%fs:%1,%0" : "=q" (v) : "m" (*(u8 *)addr));
->       |         ^~~
-> 
-> This has been solved in other places[2] already by using the recently
-> added absolute_pointer() macro. Do the same here.
-> 
-> [1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=99578
-> [2] https://lore.kernel.org/all/20210912160149.2227137-1-linux@roeck-us.net/
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: x86@kernel.org
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: David Woodhouse <dwmw2@infradead.org>
+> Cc: Eric Biggers <ebiggers@kernel.org>
+> Cc: Shuah Khan <skhan@linuxfoundation.org>
+> Cc: Salvatore Bonaccorso <carnil@debian.org>
+> Cc: keyrings@vger.kernel.org
+> Suggested-by: Adam Langley <agl@google.com>
+> Co-developed-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Thread ping -- this is still needed for GCC 12. Can an x86 maintainer
-either take this or Ack it and I'll carry it?
-
-Thanks!
-
--Kees
-
 > ---
->  arch/x86/boot/boot.h | 36 ++++++++++++++++++++++++------------
->  arch/x86/boot/main.c |  2 +-
->  2 files changed, 25 insertions(+), 13 deletions(-)
+> v1: https://lore.kernel.org/lkml/20211005161833.1522737-1-lee.jones@linaro.org/
+> v2: https://lore.kernel.org/lkml/Yicwb+Ceiu8JjVIS@google.com/
+> v3:
+>  - Eliminate all the build warnings with OpenSSL 3
+>  - Fully remove ENGINE usage, if it can be optional, just drop it.
+> ---
+>  scripts/sign-file.c | 49 ++++++++++-----------------------------------
+>  1 file changed, 11 insertions(+), 38 deletions(-)
 > 
-> diff --git a/arch/x86/boot/boot.h b/arch/x86/boot/boot.h
-> index 34c9dbb6a47d..686a9d75a0e4 100644
-> --- a/arch/x86/boot/boot.h
-> +++ b/arch/x86/boot/boot.h
-> @@ -110,66 +110,78 @@ typedef unsigned int addr_t;
+> diff --git a/scripts/sign-file.c b/scripts/sign-file.c
+> index fbd34b8e8f57..2d633c5f57c3 100644
+> --- a/scripts/sign-file.c
+> +++ b/scripts/sign-file.c
+> @@ -52,6 +52,10 @@
+>  #include <openssl/pkcs7.h>
+>  #endif
 >  
->  static inline u8 rdfs8(addr_t addr)
->  {
-> +	u8 *ptr = (u8 *)absolute_pointer(addr);
->  	u8 v;
-> -	asm volatile("movb %%fs:%1,%0" : "=q" (v) : "m" (*(u8 *)addr));
-> +	asm volatile("movb %%fs:%1,%0" : "=q" (v) : "m" (*ptr));
->  	return v;
->  }
->  static inline u16 rdfs16(addr_t addr)
->  {
-> +	u16 *ptr = (u16 *)absolute_pointer(addr);
->  	u16 v;
-> -	asm volatile("movw %%fs:%1,%0" : "=r" (v) : "m" (*(u16 *)addr));
-> +	asm volatile("movw %%fs:%1,%0" : "=r" (v) : "m" (*ptr));
->  	return v;
->  }
->  static inline u32 rdfs32(addr_t addr)
->  {
-> +	u32 *ptr = (u32 *)absolute_pointer(addr);
->  	u32 v;
-> -	asm volatile("movl %%fs:%1,%0" : "=r" (v) : "m" (*(u32 *)addr));
-> +	asm volatile("movl %%fs:%1,%0" : "=r" (v) : "m" (*ptr));
->  	return v;
+> +#if OPENSSL_VERSION_MAJOR >= 3
+> +#define ERR_get_error_line(f, l)	ERR_get_error_all(f, l, NULL, NULL, NULL)
+> +#endif
+> +
+>  struct module_signature {
+>  	uint8_t		algo;		/* Public-key crypto algorithm [0] */
+>  	uint8_t		hash;		/* Digest algorithm [0] */
+> @@ -92,16 +96,6 @@ static void display_openssl_errors(int l)
+>  	}
 >  }
 >  
->  static inline void wrfs8(u8 v, addr_t addr)
+> -static void drain_openssl_errors(void)
+> -{
+> -	const char *file;
+> -	int line;
+> -
+> -	if (ERR_peek_error() == 0)
+> -		return;
+> -	while (ERR_get_error_line(&file, &line)) {}
+> -}
+> -
+>  #define ERR(cond, fmt, ...)				\
+>  	do {						\
+>  		bool __cond = (cond);			\
+> @@ -135,35 +129,14 @@ static int pem_pw_cb(char *buf, int len, int w, void *v)
+>  static EVP_PKEY *read_private_key(const char *private_key_name)
 >  {
-> -	asm volatile("movb %1,%%fs:%0" : "+m" (*(u8 *)addr) : "qi" (v));
-> +	u8 *ptr = (u8 *)absolute_pointer(addr);
-> +	asm volatile("movb %1,%%fs:%0" : "+m" (*ptr) : "qi" (v));
->  }
->  static inline void wrfs16(u16 v, addr_t addr)
->  {
-> -	asm volatile("movw %1,%%fs:%0" : "+m" (*(u16 *)addr) : "ri" (v));
-> +	u16 *ptr = (u16 *)absolute_pointer(addr);
-> +	asm volatile("movw %1,%%fs:%0" : "+m" (*ptr) : "ri" (v));
->  }
->  static inline void wrfs32(u32 v, addr_t addr)
->  {
-> -	asm volatile("movl %1,%%fs:%0" : "+m" (*(u32 *)addr) : "ri" (v));
-> +	u32 *ptr = (u32 *)absolute_pointer(addr);
-> +	asm volatile("movl %1,%%fs:%0" : "+m" (*ptr) : "ri" (v));
->  }
+>  	EVP_PKEY *private_key;
+> +	BIO *b;
 >  
->  static inline u8 rdgs8(addr_t addr)
->  {
-> +	u8 *ptr = (u8 *)absolute_pointer(addr);
->  	u8 v;
-> -	asm volatile("movb %%gs:%1,%0" : "=q" (v) : "m" (*(u8 *)addr));
-> +	asm volatile("movb %%gs:%1,%0" : "=q" (v) : "m" (*ptr));
->  	return v;
+> -	if (!strncmp(private_key_name, "pkcs11:", 7)) {
+> -		ENGINE *e;
+> -
+> -		ENGINE_load_builtin_engines();
+> -		drain_openssl_errors();
+> -		e = ENGINE_by_id("pkcs11");
+> -		ERR(!e, "Load PKCS#11 ENGINE");
+> -		if (ENGINE_init(e))
+> -			drain_openssl_errors();
+> -		else
+> -			ERR(1, "ENGINE_init");
+> -		if (key_pass)
+> -			ERR(!ENGINE_ctrl_cmd_string(e, "PIN", key_pass, 0),
+> -			    "Set PKCS#11 PIN");
+> -		private_key = ENGINE_load_private_key(e, private_key_name,
+> -						      NULL, NULL);
+> -		ERR(!private_key, "%s", private_key_name);
+> -	} else {
+> -		BIO *b;
+> -
+> -		b = BIO_new_file(private_key_name, "rb");
+> -		ERR(!b, "%s", private_key_name);
+> -		private_key = PEM_read_bio_PrivateKey(b, NULL, pem_pw_cb,
+> -						      NULL);
+> -		ERR(!private_key, "%s", private_key_name);
+> -		BIO_free(b);
+> -	}
+> -
+> +	b = BIO_new_file(private_key_name, "rb");
+> +	ERR(!b, "%s", private_key_name);
+> +	private_key = PEM_read_bio_PrivateKey(b, NULL, pem_pw_cb,
+> +					      NULL);
+> +	ERR(!private_key, "%s", private_key_name);
+> +	BIO_free(b);
+>  	return private_key;
 >  }
->  static inline u16 rdgs16(addr_t addr)
->  {
-> +	u16 *ptr = (u16 *)absolute_pointer(addr);
->  	u16 v;
-> -	asm volatile("movw %%gs:%1,%0" : "=r" (v) : "m" (*(u16 *)addr));
-> +	asm volatile("movw %%gs:%1,%0" : "=r" (v) : "m" (*ptr));
->  	return v;
->  }
->  static inline u32 rdgs32(addr_t addr)
->  {
-> +	u32 *ptr = (u32 *)absolute_pointer(addr);
->  	u32 v;
-> -	asm volatile("movl %%gs:%1,%0" : "=r" (v) : "m" (*(u32 *)addr));
-> +	asm volatile("movl %%gs:%1,%0" : "=r" (v) : "m" (*ptr));
->  	return v;
->  }
->  
->  static inline void wrgs8(u8 v, addr_t addr)
->  {
-> -	asm volatile("movb %1,%%gs:%0" : "+m" (*(u8 *)addr) : "qi" (v));
-> +	u8 *ptr = (u8 *)absolute_pointer(addr);
-> +	asm volatile("movb %1,%%gs:%0" : "+m" (*ptr) : "qi" (v));
->  }
->  static inline void wrgs16(u16 v, addr_t addr)
->  {
-> -	asm volatile("movw %1,%%gs:%0" : "+m" (*(u16 *)addr) : "ri" (v));
-> +	u16 *ptr = (u16 *)absolute_pointer(addr);
-> +	asm volatile("movw %1,%%gs:%0" : "+m" (*ptr) : "ri" (v));
->  }
->  static inline void wrgs32(u32 v, addr_t addr)
->  {
-> -	asm volatile("movl %1,%%gs:%0" : "+m" (*(u32 *)addr) : "ri" (v));
-> +	u32 *ptr = (u32 *)absolute_pointer(addr);
-> +	asm volatile("movl %1,%%gs:%0" : "+m" (*ptr) : "ri" (v));
->  }
->  
->  /* Note: these only return true/false, not a signed return value! */
-> diff --git a/arch/x86/boot/main.c b/arch/x86/boot/main.c
-> index e3add857c2c9..c421af5a3cdc 100644
-> --- a/arch/x86/boot/main.c
-> +++ b/arch/x86/boot/main.c
-> @@ -33,7 +33,7 @@ static void copy_boot_params(void)
->  		u16 cl_offset;
->  	};
->  	const struct old_cmdline * const oldcmd =
-> -		(const struct old_cmdline *)OLD_CL_ADDRESS;
-> +		absolute_pointer(OLD_CL_ADDRESS);
->  
->  	BUILD_BUG_ON(sizeof(boot_params) != 4096);
->  	memcpy(&boot_params.hdr, &hdr, sizeof(hdr));
-> -- 
-> 2.32.0
-> 
 
--- 
-Kees Cook
+Fixes for us as well the build warnings for sign-file.c (as you noted
+the other part is still in extract-cert.c).
+
+Tested-by: Salvatore Bonaccorso <carnil@debian.org>
+
+Regards,
+Salvatore
