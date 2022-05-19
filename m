@@ -2,93 +2,213 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089D7C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 19 May 2022 01:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23883C433F5
+	for <linux-hardening@archiver.kernel.org>; Thu, 19 May 2022 05:41:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232317AbiESBU7 (ORCPT
+        id S232611AbiESFlt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 May 2022 21:20:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55306 "EHLO
+        Thu, 19 May 2022 01:41:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231502AbiESBU6 (ORCPT
+        with ESMTP id S231872AbiESFlq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 May 2022 21:20:58 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A141532058;
-        Wed, 18 May 2022 18:20:54 -0700 (PDT)
-Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4L3X6F67D7zQkGC;
-        Thu, 19 May 2022 09:17:57 +0800 (CST)
-Received: from huawei.com (10.67.175.31) by dggpemm500024.china.huawei.com
- (7.185.36.203) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 19 May
- 2022 09:20:52 +0800
-From:   GUO Zihua <guozihua@huawei.com>
-To:     <keyrings@vger.kernel.org>
-CC:     <linux-crypto@vger.kernel.org>, <davem@davemloft.net>,
-        <dhowells@redhat.com>, <herbert@gondor.apana.org.au>,
-        <gustavoars@kernel.org>, <keescook@chromium.org>,
-        <linux-hardening@vger.kernel.org>
-Subject: [PATCH v4] crypto: Use struct_size() helper with kmalloc()
-Date:   Thu, 19 May 2022 09:19:18 +0800
-Message-ID: <20220519011918.173538-1-guozihua@huawei.com>
-X-Mailer: git-send-email 2.36.0
+        Thu, 19 May 2022 01:41:46 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4179A5A85
+        for <linux-hardening@vger.kernel.org>; Wed, 18 May 2022 22:41:43 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id y41so4168168pfw.12
+        for <linux-hardening@vger.kernel.org>; Wed, 18 May 2022 22:41:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fjgJyUxglOdNX7ORgfsXOs9MOe0Djm4FQwuHrj7GTTE=;
+        b=Kkk2V/Ze8u/GszkRJQ6HDT0Y3PRUy6UbRTQTWtISRk+4RdjlmgLml3lNvJImahYCLE
+         QHj/pPvHSBfqcXsh5lvwFpzr8JJ1kP3maZhxdOPOXeHgvuzHkXVgVedPrxym1kfKm5GM
+         Yh4FrJKck6E4S7WDodZnXZo/7akxxMK1DimK4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fjgJyUxglOdNX7ORgfsXOs9MOe0Djm4FQwuHrj7GTTE=;
+        b=LgcPlaErWNjS0XJu0UJSJR/ytcnSZGLVhxfCXmbWjbobl8NzriNHky0KeuF9TUwh+w
+         yAAFz/TBHokiem2bmiadrdzGqmlm2Ub5lzp+Wb2LnkKfWM68YcnckUZgIlPL6idwDhAz
+         YvRxlTZW5tGQDGbCmi2Wrbtagi9o7gvlMffvE21GGVsCAkVqF6lvgDEt+SKDgZbgfHdd
+         b3+GmcD/oyH+jhWqGA3zcibE1hehzcivsnDytpE3UmDiuHPGbHIyEm0FGYqKH1q4L5t3
+         EVcm0t8NgHIu/MszHWy7Bu8VX9q7BYJY3DAsLAp5sj7AL9yhnOWj4YYMGRvYxnEidZZ2
+         rqQA==
+X-Gm-Message-State: AOAM533qYws6aJdR5WzFyAYW9vc5a2T3bWUXpt2LkdhH6zHRopH9SgTt
+        Ce185iGTlvo2uujyTyRBqItqCQ==
+X-Google-Smtp-Source: ABdhPJxHqltwgTe80L7xytpq/ugnENmQ0t31RUNN4OoXKTpQ2c3WtoGWGY8KwrId2pyzrJLZxAtcXg==
+X-Received: by 2002:a05:6a00:1c76:b0:510:8b76:93b5 with SMTP id s54-20020a056a001c7600b005108b7693b5mr3230605pfw.44.1652938903427;
+        Wed, 18 May 2022 22:41:43 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id cp16-20020a170902e79000b0015e8d4eb2c2sm2677829plb.268.2022.05.18.22.41.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 May 2022 22:41:43 -0700 (PDT)
+Date:   Wed, 18 May 2022 22:41:42 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Guenter Roeck <linux@roeck-us.net>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86/boot: Wrap literal addresses in absolute_pointer()
+Message-ID: <202205182240.A8DDA7D4C@keescook>
+References: <20220227195918.705219-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.31]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500024.china.huawei.com (7.185.36.203)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220227195918.705219-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Make use of struct_size() helper for structures containing flexible array
-member instead of sizeof() which prevents potential issues, as well as
-increase readability.
+On Sun, Feb 27, 2022 at 11:59:18AM -0800, Kees Cook wrote:
+> GCC 11 (incorrectly[1]) assumes that literal values cast to (void *)
+> should be treated like a NULL pointer with an offset, and raises
+> diagnostics when doing bounds checking under -Warray-bounds. GCC 12
+> got "smarter" about finding these:
+> 
+> In function 'rdfs8',
+>     inlined from 'vga_recalc_vertical' at /srv/code/arch/x86/boot/video-mode.c:124:29,
+>     inlined from 'set_mode' at /srv/code/arch/x86/boot/video-mode.c:163:3:
+> /srv/code/arch/x86/boot/boot.h:114:9: warning: array subscript 0 is outside array bounds of 'u8[0]' {aka 'unsigned char[]'} [-Warray-bounds]
+>   114 |         asm volatile("movb %%fs:%1,%0" : "=q" (v) : "m" (*(u8 *)addr));
+>       |         ^~~
+> 
+> This has been solved in other places[2] already by using the recently
+> added absolute_pointer() macro. Do the same here.
+> 
+> [1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=99578
+> [2] https://lore.kernel.org/all/20210912160149.2227137-1-linux@roeck-us.net/
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: x86@kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Reference: https://lore.kernel.org/all/CAHk-=wiGWjxs7EVUpccZEi6esvjpHJdgHQ=vtUeJ5crL62hx9A@mail.gmail.com/
+Thread ping -- this is still needed for GCC 12. Can an x86 maintainer
+either take this or Ack it and I'll carry it?
 
-Signed-off-by: GUO Zihua <guozihua@huawei.com>
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Thanks!
 
----
+-Kees
 
-v4:
-    Change subject from "in kmalloc" to "with kmalloc" following David's
-suggestion. Added Kees' review-by.
-v3:
-    Update commit message according to Gustavo's review.
-v2:
-    Use size_add() helper following Kees Cook's suggestion.
----
- crypto/asymmetric_keys/asymmetric_type.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> ---
+>  arch/x86/boot/boot.h | 36 ++++++++++++++++++++++++------------
+>  arch/x86/boot/main.c |  2 +-
+>  2 files changed, 25 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/x86/boot/boot.h b/arch/x86/boot/boot.h
+> index 34c9dbb6a47d..686a9d75a0e4 100644
+> --- a/arch/x86/boot/boot.h
+> +++ b/arch/x86/boot/boot.h
+> @@ -110,66 +110,78 @@ typedef unsigned int addr_t;
+>  
+>  static inline u8 rdfs8(addr_t addr)
+>  {
+> +	u8 *ptr = (u8 *)absolute_pointer(addr);
+>  	u8 v;
+> -	asm volatile("movb %%fs:%1,%0" : "=q" (v) : "m" (*(u8 *)addr));
+> +	asm volatile("movb %%fs:%1,%0" : "=q" (v) : "m" (*ptr));
+>  	return v;
+>  }
+>  static inline u16 rdfs16(addr_t addr)
+>  {
+> +	u16 *ptr = (u16 *)absolute_pointer(addr);
+>  	u16 v;
+> -	asm volatile("movw %%fs:%1,%0" : "=r" (v) : "m" (*(u16 *)addr));
+> +	asm volatile("movw %%fs:%1,%0" : "=r" (v) : "m" (*ptr));
+>  	return v;
+>  }
+>  static inline u32 rdfs32(addr_t addr)
+>  {
+> +	u32 *ptr = (u32 *)absolute_pointer(addr);
+>  	u32 v;
+> -	asm volatile("movl %%fs:%1,%0" : "=r" (v) : "m" (*(u32 *)addr));
+> +	asm volatile("movl %%fs:%1,%0" : "=r" (v) : "m" (*ptr));
+>  	return v;
+>  }
+>  
+>  static inline void wrfs8(u8 v, addr_t addr)
+>  {
+> -	asm volatile("movb %1,%%fs:%0" : "+m" (*(u8 *)addr) : "qi" (v));
+> +	u8 *ptr = (u8 *)absolute_pointer(addr);
+> +	asm volatile("movb %1,%%fs:%0" : "+m" (*ptr) : "qi" (v));
+>  }
+>  static inline void wrfs16(u16 v, addr_t addr)
+>  {
+> -	asm volatile("movw %1,%%fs:%0" : "+m" (*(u16 *)addr) : "ri" (v));
+> +	u16 *ptr = (u16 *)absolute_pointer(addr);
+> +	asm volatile("movw %1,%%fs:%0" : "+m" (*ptr) : "ri" (v));
+>  }
+>  static inline void wrfs32(u32 v, addr_t addr)
+>  {
+> -	asm volatile("movl %1,%%fs:%0" : "+m" (*(u32 *)addr) : "ri" (v));
+> +	u32 *ptr = (u32 *)absolute_pointer(addr);
+> +	asm volatile("movl %1,%%fs:%0" : "+m" (*ptr) : "ri" (v));
+>  }
+>  
+>  static inline u8 rdgs8(addr_t addr)
+>  {
+> +	u8 *ptr = (u8 *)absolute_pointer(addr);
+>  	u8 v;
+> -	asm volatile("movb %%gs:%1,%0" : "=q" (v) : "m" (*(u8 *)addr));
+> +	asm volatile("movb %%gs:%1,%0" : "=q" (v) : "m" (*ptr));
+>  	return v;
+>  }
+>  static inline u16 rdgs16(addr_t addr)
+>  {
+> +	u16 *ptr = (u16 *)absolute_pointer(addr);
+>  	u16 v;
+> -	asm volatile("movw %%gs:%1,%0" : "=r" (v) : "m" (*(u16 *)addr));
+> +	asm volatile("movw %%gs:%1,%0" : "=r" (v) : "m" (*ptr));
+>  	return v;
+>  }
+>  static inline u32 rdgs32(addr_t addr)
+>  {
+> +	u32 *ptr = (u32 *)absolute_pointer(addr);
+>  	u32 v;
+> -	asm volatile("movl %%gs:%1,%0" : "=r" (v) : "m" (*(u32 *)addr));
+> +	asm volatile("movl %%gs:%1,%0" : "=r" (v) : "m" (*ptr));
+>  	return v;
+>  }
+>  
+>  static inline void wrgs8(u8 v, addr_t addr)
+>  {
+> -	asm volatile("movb %1,%%gs:%0" : "+m" (*(u8 *)addr) : "qi" (v));
+> +	u8 *ptr = (u8 *)absolute_pointer(addr);
+> +	asm volatile("movb %1,%%gs:%0" : "+m" (*ptr) : "qi" (v));
+>  }
+>  static inline void wrgs16(u16 v, addr_t addr)
+>  {
+> -	asm volatile("movw %1,%%gs:%0" : "+m" (*(u16 *)addr) : "ri" (v));
+> +	u16 *ptr = (u16 *)absolute_pointer(addr);
+> +	asm volatile("movw %1,%%gs:%0" : "+m" (*ptr) : "ri" (v));
+>  }
+>  static inline void wrgs32(u32 v, addr_t addr)
+>  {
+> -	asm volatile("movl %1,%%gs:%0" : "+m" (*(u32 *)addr) : "ri" (v));
+> +	u32 *ptr = (u32 *)absolute_pointer(addr);
+> +	asm volatile("movl %1,%%gs:%0" : "+m" (*ptr) : "ri" (v));
+>  }
+>  
+>  /* Note: these only return true/false, not a signed return value! */
+> diff --git a/arch/x86/boot/main.c b/arch/x86/boot/main.c
+> index e3add857c2c9..c421af5a3cdc 100644
+> --- a/arch/x86/boot/main.c
+> +++ b/arch/x86/boot/main.c
+> @@ -33,7 +33,7 @@ static void copy_boot_params(void)
+>  		u16 cl_offset;
+>  	};
+>  	const struct old_cmdline * const oldcmd =
+> -		(const struct old_cmdline *)OLD_CL_ADDRESS;
+> +		absolute_pointer(OLD_CL_ADDRESS);
+>  
+>  	BUILD_BUG_ON(sizeof(boot_params) != 4096);
+>  	memcpy(&boot_params.hdr, &hdr, sizeof(hdr));
+> -- 
+> 2.32.0
+> 
 
-diff --git a/crypto/asymmetric_keys/asymmetric_type.c b/crypto/asymmetric_keys/asymmetric_type.c
-index 41a2f0eb4ce4..e020222b1fe5 100644
---- a/crypto/asymmetric_keys/asymmetric_type.c
-+++ b/crypto/asymmetric_keys/asymmetric_type.c
-@@ -152,7 +152,7 @@ struct asymmetric_key_id *asymmetric_key_generate_id(const void *val_1,
- {
- 	struct asymmetric_key_id *kid;
- 
--	kid = kmalloc(sizeof(struct asymmetric_key_id) + len_1 + len_2,
-+	kid = kmalloc(struct_size(kid, data, size_add(len_1, len_2)),
- 		      GFP_KERNEL);
- 	if (!kid)
- 		return ERR_PTR(-ENOMEM);
-@@ -244,7 +244,7 @@ struct asymmetric_key_id *asymmetric_key_hex_to_key_id(const char *id)
- 	if (asciihexlen & 1)
- 		return ERR_PTR(-EINVAL);
- 
--	match_id = kmalloc(sizeof(struct asymmetric_key_id) + asciihexlen / 2,
-+	match_id = kmalloc(struct_size(match_id, data, asciihexlen / 2),
- 			   GFP_KERNEL);
- 	if (!match_id)
- 		return ERR_PTR(-ENOMEM);
 -- 
-2.36.0
-
+Kees Cook
