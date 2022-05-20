@@ -2,131 +2,162 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3452C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 May 2022 17:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44C2C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 May 2022 17:11:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352031AbiETRJi (ORCPT
+        id S237852AbiETRLd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 May 2022 13:09:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37962 "EHLO
+        Fri, 20 May 2022 13:11:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350328AbiETRJe (ORCPT
+        with ESMTP id S1351887AbiETRLb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 May 2022 13:09:34 -0400
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E1F41862B9
-        for <linux-hardening@vger.kernel.org>; Fri, 20 May 2022 10:09:32 -0700 (PDT)
-Received: by mail-yb1-xb2c.google.com with SMTP id t26so15230994ybt.3
-        for <linux-hardening@vger.kernel.org>; Fri, 20 May 2022 10:09:32 -0700 (PDT)
+        Fri, 20 May 2022 13:11:31 -0400
+Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8178E5A2E5
+        for <linux-hardening@vger.kernel.org>; Fri, 20 May 2022 10:11:29 -0700 (PDT)
+Received: by mail-qt1-x82e.google.com with SMTP id v14so7378824qtc.3
+        for <linux-hardening@vger.kernel.org>; Fri, 20 May 2022 10:11:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QU49IpXWY3ILYjrG9pprYmKd2girarG6kbSVlkmZXq4=;
-        b=RFVe4hjab8BtmvgSDTDCxD8vofyFqNalvXRBQZgx9gZ4x0DAquq0obhlAEFHddTmeW
-         Loz1ZuchS0quSsRLELcG8rhU8pxiZJxYaO165uilvHF+A02AKKBm4UZs1j/+3risPDCw
-         AuXygWBks+teEdgM/k5tlJsk4Ri/AzDhCkFN4xOJIUXax7f+otVYztbsGlIEoQ0bHDSr
-         fzTB0DZN/sTP9AaKfRqBx7fTJfU8EK1BQ8upFpH+yLeNa/kK0VIdE5tgoCkicTGFnVA0
-         LGObsSEUesvNzfC3iZrUfd1CzOmDJh8+Rq+YxtpUs5go5GbpW23fIo/yOU9DrdSO6YFQ
-         UKug==
+        d=cs.cmu.edu; s=google-2021;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ydAaGCacfT+dF14LRG6MBz1p0hoeWZYV+7ZyUquy+B0=;
+        b=BZn01Fi9EpZx4qtDENZYy0KO4bjtysmIThrKmoVvfv0fi553gsX6RfBlT4iL1imCne
+         IZCJxG33SgOdfm4VVaNrKe220DpwwasRZj2VCmFCTp+CRUQJ0TyPntR//tA2h8EoDrj3
+         fsNQ8exLQ4H6QJVtainszao4UrRRiMpThjhXyj2Eg17oiLteUshXkBglhLQn8gQdULrk
+         iVFFkEeJabigDfFQ8uY3QPrKIAAXyK4S7Fjnm2F888VA2GCghSVjrRSFJxYqt9TyvYbD
+         RrRKg3mU/dphVlg64P4+Xrdpqx6i8oXtC3moznBJBHh2DHZvu4qEqmtcH1ASlCatVcTF
+         N7aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QU49IpXWY3ILYjrG9pprYmKd2girarG6kbSVlkmZXq4=;
-        b=yx/ZYBVv2vBUd1S807FWSCUSgNZpLRKhrkKn6koMzybzMKnAOHbTiMSrAwVVqkkXLh
-         +5NFbWEGbytnLSQwiYxEEU667TEiB4R0gCA1fJaTrAyxu5JYc/IemwnAqeNgmLVa+leP
-         xWuDSPIHuQXG/oOlCOtUuc3txGtqEWf7InZglwSn3b37urVxmUPnXWaMIUuNVT0vLKC+
-         9dDUK6XzX3BZW3SFtvDVrNG0U+jpVt3HjB4tvqTlNj0Alwhg9d2r9i9c87553XsAXsFi
-         M/BgXao1bdf4sMeuxtzW4ofGXAZBxY3KyHSGUiduHe6PeGjNN8v9C+nyupyByfGi4tbQ
-         P+ww==
-X-Gm-Message-State: AOAM5306uVhy+AKSJGpSgicRR0vCHxQTRiG12QKFt+lvg6QMl3PEI5Dr
-        Bx/ldJxCfgk1yjySXJzv7aL1evIaLhjXok3XoDB1Vg==
-X-Google-Smtp-Source: ABdhPJxEo6gFNLNscO7/ZgLV0QwPqEiaGItXCsWeFOnHsvuK0OOHvvT7zEaAuGJHZkw4CGOdImbbhBWl0Vj1Ie7MLSo=
-X-Received: by 2002:a05:6902:13c2:b0:641:b6d:a151 with SMTP id
- y2-20020a05690213c200b006410b6da151mr10461624ybu.348.1653066571425; Fri, 20
- May 2022 10:09:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220520165826.2140252-1-keescook@chromium.org>
-In-Reply-To: <20220520165826.2140252-1-keescook@chromium.org>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Fri, 20 May 2022 10:09:20 -0700
-Message-ID: <CAJuCfpGqY4sidGe3XSTjJ-tt+5wsm0JTpmUa-hc8WgT9aRXXSQ@mail.gmail.com>
-Subject: Re: [PATCH] sched/psi: Bounds-check state iterator against NR_PSI_STATES
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ydAaGCacfT+dF14LRG6MBz1p0hoeWZYV+7ZyUquy+B0=;
+        b=VrTG8rnWej0CfBNF7ATfEaTd5x7TK1bUb/B3oeYlvcmfNSw7cR8hsZ+AIniAxC2v1J
+         pyDvFDE6kyF8bYKjHB4stuF9by167nKJBsrdlmE68LJpntfNT7qjbUF78z0kjm7iffkt
+         dcGNvSqZ/aT1vAYy0GLy0tklwDuDXx67vlmnC+6Nbp8x03YEhdm+TZENArOjgFEr9TOc
+         IQ2hse5Il7NbaegNtDS32C2MU1Vkt2D8vjSlt0ggduqFh7NCuZ8E51I0UvBN+mflDwUw
+         strj/nDwNXMJGELLM+/uhO7D5iOxRnbgU+/Lx6zbezJ2+DeTSbHXO8yusZrODetPf+2+
+         jXrw==
+X-Gm-Message-State: AOAM532QtSTk2uAQZP5AIa1ukEs3+JPgahy+A2EcvRtc/S3id395mzJI
+        M3YCsHLWKWnKPTujFBsyYKm3MA==
+X-Google-Smtp-Source: ABdhPJyBeT3VdO5/xLBt0HgHIZisNCjlh8uVoQCLuu6xRLYXi0RSdMQuX0UutteZrXXyKLPss+Rjqw==
+X-Received: by 2002:ac8:5a83:0:b0:2f3:bafa:3bcc with SMTP id c3-20020ac85a83000000b002f3bafa3bccmr8359123qtc.366.1653066688650;
+        Fri, 20 May 2022 10:11:28 -0700 (PDT)
+Received: from cs.cmu.edu (tunnel29655-pt.tunnel.tserv13.ash1.ipv6.he.net. [2001:470:7:582::2])
+        by smtp.gmail.com with ESMTPSA id g1-20020a379d01000000b0069fc13ce1fesm13326qke.47.2022.05.20.10.11.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 May 2022 10:11:28 -0700 (PDT)
+Date:   Fri, 20 May 2022 13:11:25 -0400
+From:   Jan Harkes <jaharkes@cs.cmu.edu>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <vschneid@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] fs/coda: Do not use partially allocated struct
+Message-ID: <20220520171125.7u7q4ih5udkykv6b@cs.cmu.edu>
+References: <20220520165922.2140450-1-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220520165922.2140450-1-keescook@chromium.org>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, May 20, 2022 at 9:58 AM Kees Cook <keescook@chromium.org> wrote:
->
-> GCC 12 cannot tell that "t" will be bounded by NR_PSI_STATES, which could
-> lead to walking off the end of the tasks array, which is NR_PSI_STATES in
-> size. Explicitly bounds-check "t" as part of the loop.
->
-> In file included from ../kernel/sched/build_utility.c:97:
-> ../kernel/sched/psi.c: In function 'psi_group_change':
-> ../kernel/sched/psi.c:730:38: warning: array subscript 32 is above array bounds of 'unsigned int[5]' [-Warray-bounds]
->   730 |                         groupc->tasks[t]++;
->       |                         ~~~~~~~~~~~~~^~~
-> In file included from ../include/linux/psi.h:6,
->                  from ../kernel/sched/build_utility.c:36:
-> ../include/linux/psi_types.h:84:22: note: while referencing 'tasks'
->    84 |         unsigned int tasks[NR_PSI_TASK_COUNTS];
->       |                      ^~~~~
-> ../kernel/sched/psi.c:730:38: warning: array subscript 32 is above array bounds of 'unsigned int[5]' [-Warray-bounds]
->   730 |                         groupc->tasks[t]++;
->       |                         ~~~~~~~~~~~~~^~~
-> ../include/linux/psi_types.h:84:22: note: while referencing 'tasks'
->    84 |         unsigned int tasks[NR_PSI_TASK_COUNTS];
->       |                      ^~~~~
->
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ben Segall <bsegall@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-> Cc: Valentin Schneider <vschneid@redhat.com>
+Looks good to me.
+
+The old code was trying to be too smart for its own good and the type
+gets lost by the uc_data = (void *) cast anyway.
+
+Jan
+
+
+On Fri, May 20, 2022 at 09:59:22AM -0700, Kees Cook wrote:
+> GCC 12 does not like seeing a partially allocated structure being used,
+> especially when a pointer is being passed out of function scope. Since
+> only the struct coda_in_hdr member of union inputArgs is being allocated
+> and used, just replace union inputArgs with struct coda_in_hdr.
+> 
+> ../fs/coda/upcall.c: In function 'coda_upcall':
+> ../fs/coda/upcall.c:801:22: warning: array subscript 'union inputArgs[0]' is partly outside array bounds of 'unsigned char[20]' [-Warray-bounds]
+>   801 |         sig_inputArgs->ih.opcode = CODA_SIGNAL;
+>       |                      ^~
+> In file included from ../include/linux/fs.h:45,
+>                  from ../include/linux/huge_mm.h:8,
+>                  from ../include/linux/mm.h:700,
+>                  from ../fs/coda/upcall.c:22:
+> In function 'kvmalloc',
+>     inlined from 'kvzalloc' at ../include/linux/slab.h:758:9,
+>     inlined from 'coda_upcall' at ../fs/coda/upcall.c:794:18:
+> ../include/linux/slab.h:750:16: note: object of size 20 allocated by 'kvmalloc_node'
+>   750 |         return kvmalloc_node(size, flags, NUMA_NO_NODE);
+>       |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> ../fs/coda/upcall.c: In function 'coda_upcall':
+> ../fs/coda/upcall.c:802:22: warning: array subscript 'union inputArgs[0]' is partly outside array bounds of 'unsigned char[20]' [-Warray-bounds]
+>   802 |         sig_inputArgs->ih.unique = req->uc_unique;
+>       |                      ^~
+> In function 'kvmalloc',
+>     inlined from 'kvzalloc' at ../include/linux/slab.h:758:9,
+>     inlined from 'coda_upcall' at ../fs/coda/upcall.c:794:18:
+> ../include/linux/slab.h:750:16: note: object of size 20 allocated by 'kvmalloc_node'
+>   750 |         return kvmalloc_node(size, flags, NUMA_NO_NODE);
+>       |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Cc: Jan Harkes <jaharkes@cs.cmu.edu>
+> Cc: coda@cs.cmu.edu
+> Cc: codalist@coda.cs.cmu.edu
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
-
 > ---
->  kernel/sched/psi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-> index a337f3e35997..827f16a79936 100644
-> --- a/kernel/sched/psi.c
-> +++ b/kernel/sched/psi.c
-> @@ -725,7 +725,7 @@ static void psi_group_change(struct psi_group *group, int cpu,
->                 }
->         }
->
-> -       for (t = 0; set; set &= ~(1 << t), t++)
-> +       for (t = 0; set && t < ARRAY_SIZE(groupc->tasks); set &= ~(1 << t), t++)
->                 if (set & (1 << t))
->                         groupc->tasks[t]++;
->
-> --
+>  fs/coda/upcall.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/fs/coda/upcall.c b/fs/coda/upcall.c
+> index 59f6cfd06f96..21e4f5f446b2 100644
+> --- a/fs/coda/upcall.c
+> +++ b/fs/coda/upcall.c
+> @@ -711,7 +711,7 @@ static int coda_upcall(struct venus_comm *vcp,
+>  		       union inputArgs *buffer)
+>  {
+>  	union outputArgs *out;
+> -	union inputArgs *sig_inputArgs;
+> +	struct coda_in_hdr *ih;
+>  	struct upc_req *req = NULL, *sig_req;
+>  	int error;
+>  
+> @@ -791,22 +791,22 @@ static int coda_upcall(struct venus_comm *vcp,
+>  	sig_req = kmalloc(sizeof(struct upc_req), GFP_KERNEL);
+>  	if (!sig_req) goto exit;
+>  
+> -	sig_inputArgs = kvzalloc(sizeof(struct coda_in_hdr), GFP_KERNEL);
+> -	if (!sig_inputArgs) {
+> +	ih = kvzalloc(sizeof(*ih), GFP_KERNEL);
+> +	if (!ih) {
+>  		kfree(sig_req);
+>  		goto exit;
+>  	}
+>  
+>  	error = -EINTR;
+> -	sig_inputArgs->ih.opcode = CODA_SIGNAL;
+> -	sig_inputArgs->ih.unique = req->uc_unique;
+> +	ih->opcode = CODA_SIGNAL;
+> +	ih->unique = req->uc_unique;
+>  
+>  	sig_req->uc_flags = CODA_REQ_ASYNC;
+> -	sig_req->uc_opcode = sig_inputArgs->ih.opcode;
+> -	sig_req->uc_unique = sig_inputArgs->ih.unique;
+> -	sig_req->uc_data = (void *)sig_inputArgs;
+> -	sig_req->uc_inSize = sizeof(struct coda_in_hdr);
+> -	sig_req->uc_outSize = sizeof(struct coda_in_hdr);
+> +	sig_req->uc_opcode = ih->opcode;
+> +	sig_req->uc_unique = ih->unique;
+> +	sig_req->uc_data = (void *)ih;
+> +	sig_req->uc_inSize = sizeof(*ih);
+> +	sig_req->uc_outSize = sizeof(*ih);
+>  
+>  	/* insert at head of queue! */
+>  	list_add(&(sig_req->uc_chain), &vcp->vc_pending);
+> -- 
 > 2.32.0
->
+> 
+> 
