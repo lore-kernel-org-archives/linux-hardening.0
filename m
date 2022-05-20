@@ -2,102 +2,121 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC5AC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 May 2022 16:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98772C433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 May 2022 16:57:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351898AbiETQzo (ORCPT
+        id S1351947AbiETQ5R (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 May 2022 12:55:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40380 "EHLO
+        Fri, 20 May 2022 12:57:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351866AbiETQzm (ORCPT
+        with ESMTP id S1351935AbiETQ5Q (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 May 2022 12:55:42 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31DEA15F6CC
-        for <linux-hardening@vger.kernel.org>; Fri, 20 May 2022 09:55:42 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id oe17-20020a17090b395100b001df77d29587so11986447pjb.2
-        for <linux-hardening@vger.kernel.org>; Fri, 20 May 2022 09:55:42 -0700 (PDT)
+        Fri, 20 May 2022 12:57:16 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43CF01796FC
+        for <linux-hardening@vger.kernel.org>; Fri, 20 May 2022 09:57:15 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id q4so7833020plr.11
+        for <linux-hardening@vger.kernel.org>; Fri, 20 May 2022 09:57:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=HImf2kaCG91lzQHnr8MRW3BphKAYkvqBRRs5ES2/Au0=;
-        b=chMw8BbdMENO44Ex7To5iiOLh8gVzvLkcdwXIkjZhtLgjDmcw6bvH3pKV81xXyD1RT
-         jaO2BDd6Ba12cdcRMcQWeQ3eTZhPw5pkToFSdosBNAEAA3xd7hoJfdOKEysEHf/EH7Gx
-         PCTLhPtYCs/oxN3hQZ5CVWyNtXZRzsmr/2/UA=
+        bh=6SpNaB2y1Al28S6NM7uzx+ecVRdfZl8NU3/XOGW88bQ=;
+        b=FlSBAkr4ofMj/1FfrjZdKJHGWxG5It1GsGUnToRA0ztAQWucRqPq4eJCdV9rBICATG
+         p22NWsd07otLxl9qy0pg3FlOUwx8PnAG1t198y4QkGLfPzgimEVAMvWu2HQG70OGWgdS
+         rWLo2Ju0uuDXL89mk3bvO92g5uE8YJGwBQ3Q4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=HImf2kaCG91lzQHnr8MRW3BphKAYkvqBRRs5ES2/Au0=;
-        b=8LdROxhmMwXWOUZfXKkT4AOGzUfKwGPn0oSrwnmKpIl2QksKyoA+UlaIX0ebk5F2Mg
-         +XPW470l620gbG3M7II6Wcla59A/PmdzmBC/ZoYYAIyeO0nAs/8GbJZtNo3O0byVr+ql
-         v46gRD/oC08ByQNjWAiIJv9gALKLhnfg7l9ShQ13jH8lKLwyTepJDLGqmDj5ltXWaIzt
-         KigG/lIkW+HZ1oUVQ5ravOclp2zUgaUktJHTR8wmWqt/OEMjuzeHKiaOil7qtmRNrQQE
-         RH18YRu0kvou85TJn6dZKyDtG7tUrYSJ8k62tvXG7ucePHk+pLSTAWY2COaBnpq+MQIo
-         uC/w==
-X-Gm-Message-State: AOAM530X7tgDHcmX5NprysD3CfTmVW8T3G4NIrErPHI0X2BiSUHFJtiA
-        +kX/BgLV5Yl1UbazGz2r3P47Dw==
-X-Google-Smtp-Source: ABdhPJyPX/wiqqe3vp3/13uQvnlQZbUyGzIpvrkBOpe/APiP2oAzWvzYFRxJefLrl44crd3enNc2Lw==
-X-Received: by 2002:a17:90b:4b83:b0:1df:6862:fa9d with SMTP id lr3-20020a17090b4b8300b001df6862fa9dmr12702530pjb.32.1653065741654;
-        Fri, 20 May 2022 09:55:41 -0700 (PDT)
+        bh=6SpNaB2y1Al28S6NM7uzx+ecVRdfZl8NU3/XOGW88bQ=;
+        b=Ni5YkR9OcmY5g2fjSJrURoHGkfSKzRN9cd/AlW4Z91Dxf/sPDovfLhqxmD42yg3sDQ
+         Fw7o9Q70ICDyi7wBvvlmMDbQ0OwBXAelDQ4ZpSOqeWODTVuLx2mJ01/bADUK11rrTNl1
+         rvpxrabbMnhVmUM0PNo2BmhIU9D/3sXgOELNOF/bGL5LtV9eoZKY8K3o2UcFEDWWZUAK
+         sJgOnRZDPErPy2A8K3Hs9pJBoCdmcWPSbVYH2wLd23P5jwwuNMl40sFMBkalm9tJukU8
+         kiBfNGzlRrxinuSHVJc6RXaOpg8QchQRtfG6jSc6UO17pu78LMYJtf5yv0Of3I78V7WK
+         ZTLA==
+X-Gm-Message-State: AOAM533+3CikynB/SYpiCvwZ0qyrjB7ZnGc58U32TOYLGXsYlrwyF/lU
+        72Bzq3TP3laK4h0oUKJadgUZJw==
+X-Google-Smtp-Source: ABdhPJxkVZRhHdGR5NDul9Khe/5JxygEEdSRxZBEPGrG33xqgtDPzhBAR+c7Iv2CIauYTn5mEid49Q==
+X-Received: by 2002:a17:90b:1a8c:b0:1dc:1c62:2c0c with SMTP id ng12-20020a17090b1a8c00b001dc1c622c0cmr12594751pjb.140.1653065834734;
+        Fri, 20 May 2022 09:57:14 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id bw1-20020a17090af60100b001dc37aef4ffsm2080789pjb.48.2022.05.20.09.55.41
+        by smtp.gmail.com with ESMTPSA id e21-20020aa79815000000b005104c6d7941sm2060007pfl.31.2022.05.20.09.57.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 May 2022 09:55:41 -0700 (PDT)
+        Fri, 20 May 2022 09:57:14 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Jaroslav Kysela <perex@perex.cz>
-Cc:     Kees Cook <keescook@chromium.org>, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] ALSA: lola: Bounds check loop iterator against streams array size
-Date:   Fri, 20 May 2022 09:55:37 -0700
-Message-Id: <20220520165537.2139826-1-keescook@chromium.org>
+Subject: [PATCH] KVM: x86/emulator: Bounds check reg nr against reg array size
+Date:   Fri, 20 May 2022 09:57:04 -0700
+Message-Id: <20220520165705.2140042-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1649; h=from:subject; bh=gr574qUgcbq3MCtPgynzNKObQz8m2bTmWuCGKzHJ8oE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBih8gIIXIPk/P0F6PPAXfjj2YPCN4RrUGeVlJhNe5p dtIzbUCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYofICAAKCRCJcvTf3G3AJmiTD/ wLZy4PXZmSaQfadLpeAOF1dQZVsrfP59bq6c3hU+T8kHRdZW3c7TalWO8SX+bZ//+7SVTcdJ3UJR4U 5yQufY2Hu5aZ3SzEZieTedw2HeRQjSksM6BY86lsk7nCMQHsz1bv8ju2mh5JfscBmPxV8bCob83Wwc C3b38caQpgXXyLfO+4JnhaEdR/g+uSOpjCrr5pg2ibM3Yi+Ks51nX9fCaSnoDSJNVMv0ohoKHAYufC 6Vy4KR5vmxqVQ04jKa6PvDUR6UWAMvY0HKqln8l4KCKO8Hk06Ehrr7JRssAxU08EXO1rdscVF2pNrX bko77kiex8R3J9GV2TvBRQDTc/ddYj+4wHdETAY/8Hd9S2lTQL6Iq+fgpLIPbas35gzm3xnpbBsdaO 9j7QdWUXkSV85wipNjvYUpG2gQbi5cxtPr1CL4ejvZPUZs9L5TDQynWjmB2W6o29Ez8y08iCxy7Idv RcJhkyvvKw3vmG6ICncm8U2+yYyDIUywrft0CWriC3QZU9k90wdCdG310wVJEdfslQbXf8UgG3Hdbg quCgwW81cCh+SUGBw3NLNcOGx7VGJiQxvUMy9zKjVf4yuYbTSFpBNyhlLJM64JPCqxjTPw3iEIJ+Fx 37ZyhnaW3/JAHRauPrgsKEEXoGT+jBZuCVfVRqe4eAn8MomlRYNQkFyb//NA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1901; h=from:subject; bh=JJuMLpa4bRxd+XIVXJHSB00fFvogB4eo+vqKcUS+E5c=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBih8hg9y6m79FVwywHWrIpyRZj+n8gfvE1kdQ4vttq CxUDwHGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYofIYAAKCRCJcvTf3G3AJtHhEA CJetvbOuFyM9hM1wpAXtchIPly9FkjVoOpZjYYW1QuSIQo44/BvNeHZFgtxmVE3BGchr2akYhClwI1 nTy/7bc8Z/i6DFUm6mF0VpTt0Sj32XouSRJb8goy+KJNCO9mn0AaJFfOLkDysFXw98ov7nAl3TrICA 7wXEzs7MPwStZ+Eg3Fod2/LmHSNCyPjgVwguQAPJY2y820fqEWhr58sH6d/hQeSqRZ9/V3N+NM9+Z8 wVEOxxBwVUkzqYUYEq4BavHyE2qUfMpCEUgu9ijb/b+x9/ekkWVFb6/nIQ+KDMKc9bFrAFjJbUrqFp 4XsOUjfjJQXz04M1TibNo0mCM22Ph10iUFlXxYIMpa6kcHkVAnGDU6H2tiGst+/H7j9LjL6+sLFoHE f6uBS262o12sISPjZJP4MzsnmMbJAmoqtpEU/Ws/bIf3VDoB0HLdd7MVOLGk5FH20k+RnLy/GDR2bm zNkBmURh2qIWVrUtbWyNZaM3mpVWY0LQGcUfBYKzRMgPFwl92+nyVeptwm6yaVjTndDHqE7aPBxpVz oW+pJ2XsLw+/GHfLO46BNH9VH3hMBmsDZBcNjriHMERtI97JI6UO/RowyS22w48uZwAu7+nYUlWum7 v0TUYX74ldqPWaE9gjBI2b+XcHC9ERv93e/aHHQ7TvsfTV22SA5aqoQy1mlw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-GCC 12 sees that it's technically possible for num_streams to be larger
-than ARRAY_SIZE(pcm->streams). Bounds-check the iterator.
+GCC 12 sees that it might be possible for "nr" to be outside the _regs
+array. Add explicit bounds checking.
 
-../sound/pci/lola/lola_pcm.c: In function 'lola_pcm_update':
-../sound/pci/lola/lola_pcm.c:567:64: warning: array subscript [0, 31] is outside array bounds of 'struct lola_stream[16]' [-Warray-bounds]
-  567 |                         struct lola_stream *str = &pcm->streams[i];
-      |                                                    ~~~~~~~~~~~~^~~
-In file included from ../sound/pci/lola/lola_pcm.c:15:
-../sound/pci/lola/lola.h:307:28: note: while referencing 'streams'
-  307 |         struct lola_stream streams[MAX_STREAM_COUNT];
-      |                            ^~~~~~~
+In function 'reg_read',
+    inlined from 'reg_rmw' at ../arch/x86/kvm/emulate.c:266:2:
+../arch/x86/kvm/emulate.c:254:27: warning: array subscript 32 is above array bounds of 'long unsigned int[17]' [-Warray-bounds]
+  254 |         return ctxt->_regs[nr];
+      |                ~~~~~~~~~~~^~~~
+In file included from ../arch/x86/kvm/emulate.c:23:
+../arch/x86/kvm/kvm_emulate.h: In function 'reg_rmw':
+../arch/x86/kvm/kvm_emulate.h:366:23: note: while referencing '_regs'
+  366 |         unsigned long _regs[NR_VCPU_REGS];
+      |                       ^~~~~
 
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Wanpeng Li <wanpengli@tencent.com>
+Cc: Jim Mattson <jmattson@google.com>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: kvm@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- sound/pci/lola/lola_pcm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kvm/emulate.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/pci/lola/lola_pcm.c b/sound/pci/lola/lola_pcm.c
-index 738ec987000a..32193fae978d 100644
---- a/sound/pci/lola/lola_pcm.c
-+++ b/sound/pci/lola/lola_pcm.c
-@@ -561,8 +561,9 @@ static snd_pcm_uframes_t lola_pcm_pointer(struct snd_pcm_substream *substream)
- void lola_pcm_update(struct lola *chip, struct lola_pcm *pcm, unsigned int bits)
- {
- 	int i;
-+	u8 num_streams = min_t(u8, pcm->num_streams, ARRAY_SIZE(pcm->streams));
+diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+index 89b11e7dca8a..fbcbc012a3ae 100644
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -247,6 +247,8 @@ enum x86_transfer_type {
  
--	for (i = 0; bits && i < pcm->num_streams; i++) {
-+	for (i = 0; bits && i < num_streams; i++) {
- 		if (bits & (1 << i)) {
- 			struct lola_stream *str = &pcm->streams[i];
- 			if (str->substream && str->running)
+ static ulong reg_read(struct x86_emulate_ctxt *ctxt, unsigned nr)
+ {
++	if (WARN_ON(nr >= ARRAY_SIZE(ctxt->_regs)))
++		return 0;
+ 	if (!(ctxt->regs_valid & (1 << nr))) {
+ 		ctxt->regs_valid |= 1 << nr;
+ 		ctxt->_regs[nr] = ctxt->ops->read_gpr(ctxt, nr);
+@@ -256,6 +258,8 @@ static ulong reg_read(struct x86_emulate_ctxt *ctxt, unsigned nr)
+ 
+ static ulong *reg_write(struct x86_emulate_ctxt *ctxt, unsigned nr)
+ {
++	if (WARN_ON(nr >= ARRAY_SIZE(ctxt->_regs)))
++		return 0;
+ 	ctxt->regs_valid |= 1 << nr;
+ 	ctxt->regs_dirty |= 1 << nr;
+ 	return &ctxt->_regs[nr];
 -- 
 2.32.0
 
