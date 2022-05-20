@@ -2,53 +2,56 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 011FAC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 May 2022 18:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8048FC433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 May 2022 18:48:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241225AbiETST3 (ORCPT
+        id S1353015AbiETSsr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 May 2022 14:19:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45152 "EHLO
+        Fri, 20 May 2022 14:48:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346991AbiETSTW (ORCPT
+        with ESMTP id S1352982AbiETSsr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 May 2022 14:19:22 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD10363BE1
-        for <linux-hardening@vger.kernel.org>; Fri, 20 May 2022 11:19:20 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id pq9-20020a17090b3d8900b001df622bf81dso8501662pjb.3
-        for <linux-hardening@vger.kernel.org>; Fri, 20 May 2022 11:19:20 -0700 (PDT)
+        Fri, 20 May 2022 14:48:47 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17BFD132756
+        for <linux-hardening@vger.kernel.org>; Fri, 20 May 2022 11:48:46 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id m1so8065174plx.3
+        for <linux-hardening@vger.kernel.org>; Fri, 20 May 2022 11:48:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=wgrcw3AWnI5MJ/JhXJfsPIWwbLCvXeysZUnODXN4Ko4=;
-        b=guBYQwxKDovD2VNhx5zMFKN7LQYg5JtyW6Y7ASt3KAzn1dpSAkq5tqlNDPGO5pKpM/
-         cVEeZiHJOfMPHIE5gtS0Fh1czT/Q2fxIWf06Skm68gqzf3NqPGIkp0eqSO0igmbVtltz
-         ggiokUQwWAKEDsTlQ1XDEYgg1ub5xkkVymSxo=
+        bh=9MFOaAM6SritB1AUY+vgPuUQcwHCXP4JENIYW8kmRCU=;
+        b=rwRfRRz5P+63lZfIYNZM0r/UpngSzOvwxn3xC7owpVfczCrLJPrLjFuxIl7eIf1DJ1
+         PJVjyYvtDwSv3dcEF2RARXdaoOaVGCifLSBWXXwxxPHmyP8wuiHeGEOejdL7dcT8smxM
+         UzAA4djNY6A9Zifw2suFj5IGkgTRW/1rCFSZtO0HN4a53UAsKEG33vmj10gzEhiHc/DA
+         93vwr4bWH4IuHozeaRr/HXmIZDR+ezqJM3nLfyINOZ1XVzdIEGxBNUMDWTIU7pvV2OY4
+         wwQRad+aM1nGw5W0juraLidqbroFvwOWmxwwVJ4Iqt44vlPrjdO4wm0spQ4AMH+xvZsT
+         qAjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=wgrcw3AWnI5MJ/JhXJfsPIWwbLCvXeysZUnODXN4Ko4=;
-        b=5uM2cvDfzn2CoQwJK2KC0+QTJPx4qTkHqOBytWsp0C5lnMatNXp1GQvbRH5Lsa6KBt
-         8tFhhHq07YKdRikO7H0iScAuV7iw+45NHv5gYnkvQu3wXwkFVZuJRIp4Qg3FqT39Ohp8
-         wo0hWT6gJB/faiNs9Nkx8qwFbWaKuxjFRf9mStjjQXgGDDbuR7jjEFKrh3ezf/znyRRk
-         OCZgzwaTj8ViKcvslK0pvxikJGd/b/FCBYFrat+6lmmIKZIiFVrDGORuRXVAQivjocN/
-         uNUXRhJJT+klZu4IbJAMU+mQ8dLsuP3BOVhEhb+I1vyAtks8zD60TTfrkUhMyPq4oHIo
-         iT5w==
-X-Gm-Message-State: AOAM531q5RsD/qXsZb0X+VfKLihzKkAWTaqp3hhbxEd3OlcpjYB8stwx
-        Ha8M9edOlKbe5B5idMm1+AJRiQ==
-X-Google-Smtp-Source: ABdhPJzej/3St1PJgS9g4UCEKxkkv9Qgf+QM2ka3RrR3JIjvpUTa9IxTy16SHJm8NjocE+FYSdN8dw==
-X-Received: by 2002:a17:90a:d713:b0:1df:d114:deef with SMTP id y19-20020a17090ad71300b001dfd114deefmr11291356pju.13.1653070760362;
-        Fri, 20 May 2022 11:19:20 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v22-20020aa78096000000b0050dc76281d0sm2183516pff.170.2022.05.20.11.19.19
+        bh=9MFOaAM6SritB1AUY+vgPuUQcwHCXP4JENIYW8kmRCU=;
+        b=qe+QBohA1ltvYYSFePRTHbteT77NOXTgtaCMzw3kkuSUmp/ZzmXYv4dd5WY4Ha8rF5
+         VKccS49wg+xm4+7mYBUNEn2CDMLPccNuvsC+q1CJjF1dnR1h2mkQM6MG+VWkFjZ5JOxa
+         TiX1ZlyW3w59LElvkAtokUYnOl3R6T/aBORk1nXmHpWVDomlvHUicmNKM0xLnArZ+fq4
+         DJpQcL7g/YsBFTCY/WyjL1eURZxkm+BpbzBvkvgpXM5THMQ+W9WkTqWbhx1n8ox2HcGh
+         77ju+71WmcvkKlhC/9l+USrkTPPrjlvWFadCJNBCaZkZE7HwyTEDmYEpsU3RNJ2japIe
+         nYKQ==
+X-Gm-Message-State: AOAM532vwDMkIJ0kDyF1vBRYbXWwmwfg3a3VnWe5DHvcYJcYf64PlwbM
+        ZrOgtS3sTggvSaL1PC9IHdhcXQ==
+X-Google-Smtp-Source: ABdhPJwabEUfr21Xnx9zb4VHZ0+AQnbXbGG2mNAhE3IytmiA+GyXXdmAnIAawPRE0sRKLpdk81gHzQ==
+X-Received: by 2002:a17:902:d2c3:b0:161:ab47:8afe with SMTP id n3-20020a170902d2c300b00161ab478afemr10630779plc.8.1653072525402;
+        Fri, 20 May 2022 11:48:45 -0700 (PDT)
+Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
+        by smtp.gmail.com with ESMTPSA id t9-20020a17090a3e4900b001d960eaed66sm2148755pjm.42.2022.05.20.11.48.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 May 2022 11:19:20 -0700 (PDT)
-Date:   Fri, 20 May 2022 11:19:19 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sean Christopherson <seanjc@google.com>
+        Fri, 20 May 2022 11:48:44 -0700 (PDT)
+Date:   Fri, 20 May 2022 18:48:41 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Kees Cook <keescook@chromium.org>
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         Wanpeng Li <wanpengli@tencent.com>,
@@ -58,94 +61,79 @@ Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] KVM: x86/emulator: Bounds check reg nr against reg array
  size
-Message-ID: <202205201115.5E830F0@keescook>
+Message-ID: <YofiiZZu4/ja3C5R@google.com>
 References: <20220520165705.2140042-1-keescook@chromium.org>
- <YofQlBrlx18J7h9Y@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YofQlBrlx18J7h9Y@google.com>
+In-Reply-To: <20220520165705.2140042-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, May 20, 2022 at 05:32:04PM +0000, Sean Christopherson wrote:
-> On Fri, May 20, 2022, Kees Cook wrote:
-> > GCC 12 sees that it might be possible for "nr" to be outside the _regs
-> > array. Add explicit bounds checking.
+On Fri, May 20, 2022, Kees Cook wrote:
+> GCC 12 sees that it might be possible for "nr" to be outside the _regs
+> array. Add explicit bounds checking.
 > 
-> I think GCC 12 is wrong.
-
-I think it's more like GCC is extremely conservative about these things,
-and assumes the worst when, for whatever reason, it can't track
-something.
-
-> There are four uses of reg_rmw() that don't use hardcoded registers:
+> In function 'reg_read',
+>     inlined from 'reg_rmw' at ../arch/x86/kvm/emulate.c:266:2:
+> ../arch/x86/kvm/emulate.c:254:27: warning: array subscript 32 is above array bounds of 'long unsigned int[17]' [-Warray-bounds]
+>   254 |         return ctxt->_regs[nr];
+>       |                ~~~~~~~~~~~^~~~
+> In file included from ../arch/x86/kvm/emulate.c:23:
+> ../arch/x86/kvm/kvm_emulate.h: In function 'reg_rmw':
+> ../arch/x86/kvm/kvm_emulate.h:366:23: note: while referencing '_regs'
+>   366 |         unsigned long _regs[NR_VCPU_REGS];
+>       |                       ^~~~~
 > 
->    $ git grep reg_rmw | grep -v VCPU_REGS_
->    emulate.c:static ulong *reg_rmw(struct x86_emulate_ctxt *ctxt, unsigned nr)
-> 1  emulate.c:	ulong *preg = reg_rmw(ctxt, reg);
-> 2  emulate.c:		p = (unsigned char *)reg_rmw(ctxt, modrm_reg & 3) + 1;
-> 3  emulate.c:		p = reg_rmw(ctxt, modrm_reg);
-> 4  emulate.c:		assign_register(reg_rmw(ctxt, reg), val, ctxt->op_bytes);
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Sean Christopherson <seanjc@google.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Wanpeng Li <wanpengli@tencent.com>
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: x86@kernel.org
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: kvm@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/x86/kvm/emulate.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> #1 has three users, but two of those use hardcoded registers.
-> 
->   $ git grep register_address_increment | grep -v VCPU_REGS_
->   emulate.c:register_address_increment(struct x86_emulate_ctxt *ctxt, int reg, int inc)
->   emulate.c:	register_address_increment(ctxt, reg, df * op->bytes);
+> diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+> index 89b11e7dca8a..fbcbc012a3ae 100644
+> --- a/arch/x86/kvm/emulate.c
+> +++ b/arch/x86/kvm/emulate.c
+> @@ -247,6 +247,8 @@ enum x86_transfer_type {
 >  
-> and that last one is string_addr_inc(), which is only called with RDI or RSI.
-> 
-> #2 can't overflow as the register can only be 0-3 (yay AH/BH/CH/DH operands).
-> 
-> #3 is the !highbyte path of decode_register(), and is a bit messy, but modrm_reg
-> is always sanitized.
-> 
->    $ git grep -E "decode_register\("
->    emulate.c:static void *decode_register(struct x86_emulate_ctxt *ctxt, u8 modrm_reg,
-> a  emulate.c:      op->addr.reg = decode_register(ctxt, reg, ctxt->d & ByteOp);
-> b  emulate.c:              op->addr.reg = decode_register(ctxt, ctxt->modrm_rm,
-> c  emulate.c:                      ctxt->memop.addr.reg = decode_register(ctxt,
->                                                                           ctxt->modrm_rm, true);
-> 
-> For (b) and (c), modrm_reg == ctxt->modrm_rm, which is computed in one place and
-> is bounded to 0-15:
-> 
-> 	base_reg = (ctxt->rex_prefix << 3) & 8; /* REX.B */
-> 	ctxt->modrm_rm = base_reg | (ctxt->modrm & 0x07);
-> 
-> For (a), "reg" is either modrm_reg or a register that is encoded in the opcode,
-> both of which are again bounded to 0-15:
-> 
-> 	unsigned reg = ctxt->modrm_reg;
-> 
-> 	if (!(ctxt->d & ModRM))
-> 		reg = (ctxt->b & 7) | ((ctxt->rex_prefix & 1) << 3);
-> 
-> and
-> 
-> 	ctxt->modrm_reg = ((ctxt->rex_prefix << 1) & 8); /* REX.R */
-> 	ctxt->modrm_reg |= (ctxt->modrm & 0x38) >> 3;
-> 
-> #4 is em_popa() and is just funky hardcoding of popping RAX-RDI, minus RSP.
-> 
-> I did the same exercise for reg_reg() and write_reg(), and the handful of
-> non-hardcoded use are all bounded in similar ways.
+>  static ulong reg_read(struct x86_emulate_ctxt *ctxt, unsigned nr)
+>  {
+> +	if (WARN_ON(nr >= ARRAY_SIZE(ctxt->_regs)))
+> +		return 0;
+>  	if (!(ctxt->regs_valid & (1 << nr))) {
+>  		ctxt->regs_valid |= 1 << nr;
+>  		ctxt->_regs[nr] = ctxt->ops->read_gpr(ctxt, nr);
+> @@ -256,6 +258,8 @@ static ulong reg_read(struct x86_emulate_ctxt *ctxt, unsigned nr)
+>  
+>  static ulong *reg_write(struct x86_emulate_ctxt *ctxt, unsigned nr)
+>  {
+> +	if (WARN_ON(nr >= ARRAY_SIZE(ctxt->_regs)))
+> +		return 0;
 
-Thanks for digging into this. I tried to do the same and started to lose
-track of things.
+This is wrong, reg_write() confusingly returns a pointer the register to be written,
+it doesn't actually do the write.  So if we want to guard against array overflow,
+it would be better to cap @nr and continue on, i.e. assume some higher bit was
+spuriously set.
 
-> 
-> > In function 'reg_read',
-> >     inlined from 'reg_rmw' at ../arch/x86/kvm/emulate.c:266:2:
-> 
-> Is there more of the "stack" available?  I don't mind the WARN too much, but if
-> there is a bug lurking I would much rather fix the bug.
+The other oddity here is that VCPU_REGS_RIP should never be read, the RIP relative
+code reads _eip directly.  I.e. _regs[] should really be VCPU_REGS_R15+1.  And
+adding a #define for that would clean up this bit of code in writeback_registers()
+that hardcodes 16 (rax - r15) GPRs:
 
-Agreed, but I haven't found a way to get more context here. I think I
-found a separate place where GCC really does look to have a bug, as it
-complains about array usage that is explicitly bounded. :P
+	for_each_set_bit(reg, (ulong *)&ctxt->regs_dirty, 16)
+		ctxt->ops->write_gpr(ctxt, reg, ctxt->_regs[reg]);
 
--- 
-Kees Cook
+Lastly, casting regs_dirty to an unsigned long pointer is all kinds of gross, e.g.
+if it were moved to the end of struct x86_emulate_ctxt then the above could trigger
+an out-of-bounds read.
+
+I'll whip up a small series to clean this code up and add WARNs similar to above.
