@@ -2,73 +2,82 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E44FC433FE
-	for <linux-hardening@archiver.kernel.org>; Sat, 21 May 2022 03:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FCFC433EF
+	for <linux-hardening@archiver.kernel.org>; Sat, 21 May 2022 06:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345423AbiEUDka (ORCPT
+        id S1343964AbiEUGtY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 May 2022 23:40:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38798 "EHLO
+        Sat, 21 May 2022 02:49:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229992AbiEUDk3 (ORCPT
+        with ESMTP id S229939AbiEUGtY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 May 2022 23:40:29 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1802E719C3;
-        Fri, 20 May 2022 20:40:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CA1BCB82F29;
-        Sat, 21 May 2022 03:40:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5909FC385A9;
-        Sat, 21 May 2022 03:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653104425;
-        bh=ISVhewo33uJMRv2Ky/67ulMoXXlMw7gDmiWI46L9w/0=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=eYd1fyDxv+zyZg4eUMEEdXBJQxbxiRJdZZ44FBpu2E1xD5TRheZu9ayuX6hayGdSh
-         u8yMUiXSmPAQA9RNfjsYq7NFbWwCDG7AVU4dQzl3goJIXqt4ozetbbzMhmfe5ehj6J
-         446vDEYIJRW36ZN/oOZUzEI6mCKTcSF4nub4EYuXvi71KglTufVnTyTbjq7gd5wVmK
-         SGA7VXgy0Ety3W2Mbfpk2hgU2g/hwmAkshVgL3M0UTFKu5Y/TZ0aYEN5wPkvOPTmNJ
-         3m1QE+aFVLkNY0L7YgNteZkN9roICK2LWr2M1NfG3BEXCatnFl0EM6T22qXugGIxHZ
-         Sn/jDZ4kCrM0Q==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20210904131714.2312-1-len.baker@gmx.com>
-References: <20210904131714.2312-1-len.baker@gmx.com>
-Subject: Re: [PATCH] clk: ti: composite: Prefer kcalloc over open coded arithmetic
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
-        linux-omap@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Len Baker <len.baker@gmx.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Tero Kristo <kristo@kernel.org>
-Date:   Fri, 20 May 2022 20:40:23 -0700
-User-Agent: alot/0.10
-Message-Id: <20220521034025.5909FC385A9@smtp.kernel.org>
+        Sat, 21 May 2022 02:49:24 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 490C79728A;
+        Fri, 20 May 2022 23:49:23 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 3C11421B9F;
+        Sat, 21 May 2022 06:49:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1653115761; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jvKzZqSyzLuvq1BOT4+dzaCOcfHBWt+sXaEiI2nPk0g=;
+        b=GYQuLlXl4spbIzkf0nKYMFRo/R6BeEKznF8Oqta0WaGywCIKI+Qz5o8IfeZcYPLEyMDWme
+        rx9xgj9GdHkK7Q+IIS1zo3FLf0XYaEsw+vTe7tSUunAVwDkT1YPCS6Z0E2HLNsXGw/QoE8
+        ObdMo3jYzO+aJ04LJJV0S3GCvANubPM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1653115761;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jvKzZqSyzLuvq1BOT4+dzaCOcfHBWt+sXaEiI2nPk0g=;
+        b=z0ZKNFWS0D+WJZEdubGQCF3+jyLihjH+jyFxv9+8PdBl9VVlNc4pGE2/vjUI1/wGdova54
+        gshgR1uQv2eRGyBQ==
+Received: from valkyrie.site.suse.de (unknown [10.163.18.242])
+        by relay2.suse.de (Postfix) with ESMTP id 1A96D2C141;
+        Sat, 21 May 2022 06:49:21 +0000 (UTC)
+Date:   Sat, 21 May 2022 08:49:20 +0200
+Message-ID: <87wnefnzwv.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ALSA: lola: Bounds check loop iterator against streams array size
+In-Reply-To: <20220520165537.2139826-1-keescook@chromium.org>
+References: <20220520165537.2139826-1-keescook@chromium.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?ISO-2022-JP-2?B?R29qGyQoRCtXGyhC?=) APEL/10.8 Emacs/27
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Quoting Len Baker (2021-09-04 06:17:14)
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
->=20
-> So, use the purpose specific kcalloc() function instead of the argument
-> size * count in the kzalloc() function.
->=20
-> [1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-co=
-ded-arithmetic-in-allocator-arguments
->=20
-> Signed-off-by: Len Baker <len.baker@gmx.com>
-> ---
+On Fri, 20 May 2022 18:55:37 +0200,
+Kees Cook wrote:
+> 
+> GCC 12 sees that it's technically possible for num_streams to be larger
+> than ARRAY_SIZE(pcm->streams). Bounds-check the iterator.
+> 
+> ../sound/pci/lola/lola_pcm.c: In function 'lola_pcm_update':
+> ../sound/pci/lola/lola_pcm.c:567:64: warning: array subscript [0, 31] is outside array bounds of 'struct lola_stream[16]' [-Warray-bounds]
+>   567 |                         struct lola_stream *str = &pcm->streams[i];
+>       |                                                    ~~~~~~~~~~~~^~~
+> In file included from ../sound/pci/lola/lola_pcm.c:15:
+> ../sound/pci/lola/lola.h:307:28: note: while referencing 'streams'
+>   307 |         struct lola_stream streams[MAX_STREAM_COUNT];
+>       |                            ^~~~~~~
+> 
+> Cc: Jaroslav Kysela <perex@perex.cz>
+> Cc: Takashi Iwai <tiwai@suse.com>
+> Cc: alsa-devel@alsa-project.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Applied to clk-next
+Thanks, applied now.
+
+
+Takashi
