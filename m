@@ -2,129 +2,179 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6593EC433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 May 2022 20:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7D8C433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 May 2022 20:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232222AbiEWUHZ (ORCPT
+        id S233000AbiEWUaT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 23 May 2022 16:07:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36602 "EHLO
+        Mon, 23 May 2022 16:30:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232180AbiEWUHZ (ORCPT
+        with ESMTP id S232975AbiEWUaS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 23 May 2022 16:07:25 -0400
-Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EECB954A3;
-        Mon, 23 May 2022 13:07:24 -0700 (PDT)
-Received: by mail-oi1-x231.google.com with SMTP id m25so19136653oih.2;
-        Mon, 23 May 2022 13:07:24 -0700 (PDT)
+        Mon, 23 May 2022 16:30:18 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7500041F90
+        for <linux-hardening@vger.kernel.org>; Mon, 23 May 2022 13:30:17 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id t28so7026279pga.6
+        for <linux-hardening@vger.kernel.org>; Mon, 23 May 2022 13:30:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=5VgQT8K1FyKEoolAoPMmYXbF0kmo6XWGxV/7Bz8lAHU=;
-        b=nYbpPsvXC0KEE7WSIsSuO9pUrLaICdMYJH7MRhfnH4a5FklA1MGCb3fzVXapwc/07f
-         opBGExTn/KbDQSTOV2iQcuizp+m6qKz4ppJNSEzZal9RmUpke/itKeufO09fau//BgYd
-         HXyo/RUrTjP1CZ7Frs6J0pykjxDxK4mhWOw3MoTqplmSn5VrXTvvPHWczFQuX9H/Rsm3
-         wuIwmBUDwAQcmBkwBJdKhTLjxuJrbdRrHSLTgVx0aOO8BZxAhE6G7o/5jIaWAoGYK4tx
-         nOVAPZo1taKFtPhk0qCU7bpOKRD5eTqnV/912gyeFgf5DihU9E5HQkdnbYM2AP6pLYKD
-         jdUg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=n7fUAxt+82CsizWnMlCZf98dHnI7u5OUTGdwgpxnSjo=;
+        b=mZerlrpDGB5mhhRV34plfqZfV9LodLPAP8SjLREHFpWzCQuEprqcEum3X+qhfLfGLv
+         V1lZ+pgKoaQxaI0UCDqOMicdGUKwj067xQ4twxZK1rJSNsjQu1dZ9HRGZccgwsIyYoyR
+         ndACwpQnu1dDenXYwD8SuKGL/d3bFILpB0Zgw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition;
-        bh=5VgQT8K1FyKEoolAoPMmYXbF0kmo6XWGxV/7Bz8lAHU=;
-        b=ZGnBK0PS0EGGNcSgRBFT9RjWbm41Jax7LZLal80LyXXhKKAVWDJf8aWlJ00J6STPdY
-         qN8IlrYYYVc6CBsLmX3Rrcx+kDbCWtJqqsSs+RTKDdsBNzk1aab7a7FJUGSvI56C3V5/
-         1QBAlR9m2YQJ4J0qlt2kD64W3vxgKmOMX0ZncGgIvzRCcKtvr3WNqhURW1gmqoIDakCz
-         YKmNI4tnDBC7vPyHsvBtF9mlERadWdCFlfvb5moYKQFYkgLTR93exJJByuYDOYd1Df9z
-         gQd+4DZES9A7nBZ3WJdxoer6xzt7kNv58yl/KREqwkOSy1qMkqIOj2v0xExEi2thN+Jk
-         L0uA==
-X-Gm-Message-State: AOAM5333vFXhm5Bczh+rR9MB49Xc9wg1XsNTn1G8BWymAy7AoQVm946F
-        tneGhDgbuUYFQTIdfI/5lOQ=
-X-Google-Smtp-Source: ABdhPJxQ8/nPC9mzkYgT6gZ4xy/6uIcigaDtlBKE31YJwSM9DgkfBW3YxKzowPvxhxfXENnpYzEnWg==
-X-Received: by 2002:a05:6808:1a17:b0:32b:7ae1:e7e1 with SMTP id bk23-20020a0568081a1700b0032b7ae1e7e1mr403092oib.275.1653336443863;
-        Mon, 23 May 2022 13:07:23 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i2-20020a056870344200b000f200155e06sm4157841oah.54.2022.05.23.13.07.22
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=n7fUAxt+82CsizWnMlCZf98dHnI7u5OUTGdwgpxnSjo=;
+        b=qDrBR6q+8Ehe9gO40fHpLpyihUJvvhkMjT0FGqMY+TLPDq/ZYN88P0+xHkfKMJs19k
+         KDPwfh4r9AWHv/PaJYJaFPluUtKBHLxvtTPC6SF/FbBNX0QxJDue45ISa9TFik9CB3xa
+         i7sYzcFcT1TEUhvBLraz9xltOhzrM2k9S/oG2N7kplFrbzesKTkmfhWn/lst7PVjFJgp
+         VBipwznLlugG0Dq+3Vz5Ln/fRZsfHETqgiVJ3BdUpFYK4NNMQZ9t9pgcefs42G9W8zfO
+         DEpUKJWAfto2Lrk4fV1fSNWjzXWdRFddsq2wdboQSBVdPLfTaW+X62WbVQpnGlzi4ivE
+         Qd7A==
+X-Gm-Message-State: AOAM532qc3G3+4PKNku7x/8W5t2enLLXxr4PWqVD24wz66bGhRIrI5kK
+        vinT6Y+EvUkuPrSSZzvaHRqYtg==
+X-Google-Smtp-Source: ABdhPJx63phKcpO0uZPYB27l4UtMxX68hXxpZO2pMLP4x0d6kJfgCdKhMS16dWLmGoPAyCVkRynQ8w==
+X-Received: by 2002:a05:6a00:198f:b0:50e:7e6:6d5c with SMTP id d15-20020a056a00198f00b0050e07e66d5cmr24908263pfl.20.1653337816886;
+        Mon, 23 May 2022 13:30:16 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u8-20020a170903124800b0016196bd15f4sm5650102plh.15.2022.05.23.13.30.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 May 2022 13:07:23 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Mon, 23 May 2022 13:07:22 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     kernel test robot <lkp@intel.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kbuild@vger.kernel.org,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
+        Mon, 23 May 2022 13:30:16 -0700 (PDT)
+Date:   Mon, 23 May 2022 13:30:13 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] gcc-plugins: Require utsrelease.h before scripts target
-Message-ID: <20220523200722.GA3879929@roeck-us.net>
+Subject: Re: [PATCH] sched/psi: Bounds-check state iterator against
+ NR_PSI_STATES
+Message-ID: <202205231305.E93AAFAA07@keescook>
+References: <20220520165826.2140252-1-keescook@chromium.org>
+ <YouX6g1T7w3FDeM8@cmpxchg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <YouX6g1T7w3FDeM8@cmpxchg.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 23, 2022 at 01:02:22PM -0700, Kees Cook wrote:
-> The "utsrelease.h" target was in parallel with the "scripts" target,
-> which meant -j1 or unlucky parallel builds from a distclean state would
-> fail to build the GCC plugins.
+On Mon, May 23, 2022 at 10:19:22AM -0400, Johannes Weiner wrote:
+> On Fri, May 20, 2022 at 09:58:26AM -0700, Kees Cook wrote:
+> > GCC 12 cannot tell that "t" will be bounded by NR_PSI_STATES, which could
+> > lead to walking off the end of the tasks array, which is NR_PSI_STATES in
+> > size. Explicitly bounds-check "t" as part of the loop.
+> > 
+> > In file included from ../kernel/sched/build_utility.c:97:
+> > ../kernel/sched/psi.c: In function 'psi_group_change':
+> > ../kernel/sched/psi.c:730:38: warning: array subscript 32 is above array bounds of 'unsigned int[5]' [-Warray-bounds]
+> >   730 |                         groupc->tasks[t]++;
+> >       |                         ~~~~~~~~~~~~~^~~
+> > In file included from ../include/linux/psi.h:6,
+> >                  from ../kernel/sched/build_utility.c:36:
+> > ../include/linux/psi_types.h:84:22: note: while referencing 'tasks'
+> >    84 |         unsigned int tasks[NR_PSI_TASK_COUNTS];
+> >       |                      ^~~~~
+> > ../kernel/sched/psi.c:730:38: warning: array subscript 32 is above array bounds of 'unsigned int[5]' [-Warray-bounds]
+> >   730 |                         groupc->tasks[t]++;
+> >       |                         ~~~~~~~~~~~~~^~~
+> > ../include/linux/psi_types.h:84:22: note: while referencing 'tasks'
+> >    84 |         unsigned int tasks[NR_PSI_TASK_COUNTS];
+> >       |                      ^~~~~
+> > 
+> > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > Cc: Suren Baghdasaryan <surenb@google.com>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Juri Lelli <juri.lelli@redhat.com>
+> > Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> > Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > Cc: Ben Segall <bsegall@google.com>
+> > Cc: Mel Gorman <mgorman@suse.de>
+> > Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+> > Cc: Valentin Schneider <vschneid@redhat.com>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  kernel/sched/psi.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+> > index a337f3e35997..827f16a79936 100644
+> > --- a/kernel/sched/psi.c
+> > +++ b/kernel/sched/psi.c
+> > @@ -725,7 +725,7 @@ static void psi_group_change(struct psi_group *group, int cpu,
+> >  		}
+> >  	}
+> >  
+> > -	for (t = 0; set; set &= ~(1 << t), t++)
+> > +	for (t = 0; set && t < ARRAY_SIZE(groupc->tasks); set &= ~(1 << t), t++)
+> >  		if (set & (1 << t))
+> >  			groupc->tasks[t]++;
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/linux-mm/202205230239.EZxeZ3Fv-lkp@intel.com
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Link: https://lore.kernel.org/lkml/YouX6g1T7w3FDeM8@cmpxchg.org
-> Fixes: 61f60bac8c05 ("gcc-plugins: Change all version strings match kernel")
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: linux-kbuild@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> This is a very hot path, it runs for every nested cgroup on every task
+> switch, wakeup and sleep. We should avoid unnecessary instructions and
+> branches if we can help it at all.
+> 
+> Does the below patch address the warning for you? I can't test it
+> myself, because I'm not getting it with gcc version 12.1.0. It's also
+> odd that it didn't warn you about the loop over `clear' a few lines
+> up, which ostensibly has the same "problem".
 
-I was able to reproduce the problem with the following change
-in Makefile.
+It seems this is a GCC 12 bug. Array indexes that have been used with a
+shift end up miscalculated when building also with -fsanitize=shift
+(i.e. allmodconfig):
 
- include/generated/utsrelease.h: include/config/kernel.release FORCE
-+       sleep 2
-        $(call filechk,utsrelease.h)
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105679
 
-With this patch, the problem is gone.
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-
-Guenter
-
+> 
 > ---
->  Makefile                     | 2 +-
->  scripts/gcc-plugins/Makefile | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Makefile b/Makefile
-> index 91c91fcf3c24..c04420d5aa3d 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1175,7 +1175,7 @@ include/config/kernel.release: FORCE
->  # Carefully list dependencies so we do not try to build scripts twice
->  # in parallel
->  PHONY += scripts
-> -scripts: scripts_basic scripts_dtc
-> +scripts: include/generated/utsrelease.h scripts_basic scripts_dtc
->  	$(Q)$(MAKE) $(build)=$(@)
+> diff --git a/include/linux/psi_types.h b/include/linux/psi_types.h
+> index c7fe7c089718..113861343733 100644
+> --- a/include/linux/psi_types.h
+> +++ b/include/linux/psi_types.h
+> @@ -41,6 +41,7 @@ enum psi_task_count {
+>  #define TSK_RUNNING	(1 << NR_RUNNING)
+>  #define TSK_ONCPU	(1 << NR_ONCPU)
+>  #define TSK_MEMSTALL_RUNNING	(1 << NR_MEMSTALL_RUNNING)
+> +#define TSK_MASK	((1U << NR_PSI_TASK_COUNTS) - 1)
 >  
->  # Things we need to do before we recursively start building the kernel
-> diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
-> index 6f0aecad5d67..c29334669a16 100644
-> --- a/scripts/gcc-plugins/Makefile
-> +++ b/scripts/gcc-plugins/Makefile
-> @@ -64,5 +64,5 @@ $(foreach m, $(notdir $(plugin-multi)), $(eval $(obj)/$m: $(addprefix $(obj)/, $
->  quiet_cmd_plugin_cxx_o_c = HOSTCXX $@
->        cmd_plugin_cxx_o_c = $(HOSTCXX) $(plugin_cxxflags) -c -o $@ $<
+>  /* Resources that workloads could be stalled on */
+>  enum psi_res {
+> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+> index a4fa3aadfcba..fb7fd40af337 100644
+> --- a/kernel/sched/psi.c
+> +++ b/kernel/sched/psi.c
+> @@ -804,6 +804,8 @@ void psi_task_change(struct task_struct *task, int clear, int set)
+>  	void *iter = NULL;
+>  	u64 now;
 >  
-> -$(plugin-objs): $(obj)/%.o: $(src)/%.c FORCE
-> +$(plugin-objs): $(obj)/%.o: $(src)/%.c $(objdir)/include/generated/utsrelease.h FORCE
->  	$(call if_changed_dep,plugin_cxx_o_c)
-> -- 
-> 2.32.0
-> 
+> +	WARN_ON_ONCE((clear|set) & ~TSK_MASK);
+> +
+>  	if (!task->pid)
+>  		return;
+
+I'll give this a spin.
+
+Thanks!
+
+-Kees
+
+-- 
+Kees Cook
