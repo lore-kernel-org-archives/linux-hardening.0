@@ -2,164 +2,182 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E99C433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 23 May 2022 14:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A2DC433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 23 May 2022 14:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237075AbiEWOTc (ORCPT
+        id S237117AbiEWOa6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 23 May 2022 10:19:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45674 "EHLO
+        Mon, 23 May 2022 10:30:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237067AbiEWOTb (ORCPT
+        with ESMTP id S237018AbiEWOa6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 23 May 2022 10:19:31 -0400
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A89725A2CF
-        for <linux-hardening@vger.kernel.org>; Mon, 23 May 2022 07:19:25 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id b9so6404126qtx.11
-        for <linux-hardening@vger.kernel.org>; Mon, 23 May 2022 07:19:25 -0700 (PDT)
+        Mon, 23 May 2022 10:30:58 -0400
+Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D6432AD7;
+        Mon, 23 May 2022 07:30:57 -0700 (PDT)
+Received: by mail-oi1-x22f.google.com with SMTP id w130so18063522oig.0;
+        Mon, 23 May 2022 07:30:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20210112.gappssmtp.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=vWWc2ufu33khGKEV0bBRhozmdSQdZxaeJldqWqBjNU0=;
-        b=Ca4pS9a4zUlNfJS71/xyjcXZwSvHarFm9ArT3ZbYYlDSt9AQPBUQZjo1ap515khvib
-         lfG8oGwjxr5aUzbs9rrcRMb4QDXQxw5TsbNIjQBNXX6PHFaVAZZJL3sUld4GscV8Ustm
-         82oInsvFBsCy9EEB9w642rL77Gr+HYyy/8+6J6svU6js20GxtsJrBfZnr1B0tRCVShSp
-         tc7BSlvWSzkJ8c9fCuULWwENNs6hGAMxL1eq0ns3sjaqUNp7nN4NIocOV4YiRJMJEV3e
-         TYJORsIsv+C5YAoKj9CtvGjaaAnZU4V51d3eDApSMPEejh+mx+r7ChtuUUjEorPYlysD
-         58Mg==
+        bh=QTLxi3i1Dh63AaBqqywvdv1nsYvnlCRlV0axCBCsMZo=;
+        b=P3C4rSGg9aR9oj+dyS+yhdQvSXSGMVQJxeBVll2aZxxom4uZ+LCK+KsM0913N+OlFU
+         IrYz+avVRclep9WR51PSIkXtKhrYfGiu1XIq7GGf4i4/B/CzT98BeBGVJoxGQA/6mqqv
+         tvjKy0iOb4yiWPF93deVDZh3ZJq/ct6AeDBwgKYKMOV1VYigvhs9OyeeBECwJrwoTBkd
+         9H38T9jasr6UHhilGGgkKpLS5UhNiUgqXTAX6GhxWwasvweg9nVT8v6ILqRVFq6Vz9xR
+         fvbv3BTLHuGT+v0GwmgIsiCniF7tLwRJeGncwQH1vmSxpNS/gtgVMG7QYPLX0qbqQRy9
+         o3tQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vWWc2ufu33khGKEV0bBRhozmdSQdZxaeJldqWqBjNU0=;
-        b=VS0rIqZ4NwwV8UdcJUetGGjTfS+/RsvDwVXC+TZjZvLkKxo4HfjNlFvu1G1/d+FyqM
-         /BGRLRYJhXlInG/4FJxOAMaOkb0weDYUenm2eRQgHXD1LRELWlF98XBrq5TauO6Jg/EY
-         rIqc2icsDUrH6Z/Ja3ngcjcG0hbPHFwWsVp8h21Hy5TUG5OZBSp90GIieWX2cvmbOL2R
-         H/+AYM5iSjgZJdQ3jOczvSruQ5miu1lcbWk0gbKsotyR7bpXkSh0aGKGThtru097shUt
-         JmbsmDb8hISg8V5FMNWkkKxws9JKcjANyjfHup/UzrgDtrWXhMOI87f4yjkIgWsYplg/
-         n8Cw==
-X-Gm-Message-State: AOAM532ZtANdAGmoL/KiK9JNGwkbZUs5avrpwbnhCNtV/YGiTWLomBQB
-        Hij5vDlQmnf+9fNx0aSgnBi6pg==
-X-Google-Smtp-Source: ABdhPJwjIWZ/Xu8CISDgPppsp4d9DpRDuyDFiAKBdGorgak+hkFR3g6gfGmV423tCLSN+fnTZB80DQ==
-X-Received: by 2002:ac8:5dcc:0:b0:2f3:d8d2:7cf with SMTP id e12-20020ac85dcc000000b002f3d8d207cfmr16552559qtx.464.1653315564452;
-        Mon, 23 May 2022 07:19:24 -0700 (PDT)
-Received: from localhost (cpe-98-15-154-102.hvc.res.rr.com. [98.15.154.102])
-        by smtp.gmail.com with ESMTPSA id bc3-20020a05622a1cc300b002f39b99f6a2sm4165754qtb.60.2022.05.23.07.19.23
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=QTLxi3i1Dh63AaBqqywvdv1nsYvnlCRlV0axCBCsMZo=;
+        b=NnZCJGxs9I3HFuf9Uuvv5RZRhpj5dOs3/bdESDcU27e+EkcC4bZ8V4VXuA/tK7fLpv
+         2yrmpUFHafmVgGImQTzAtKFhDlrexQkfLqPD97EWUpTpG/yGMBxSRtijDsi2yuqt6FXW
+         dlFkZqZzGYjmNnq4Fj7RIgJKa88kE/D3yttVYv4MumE2gJBXDQR1q0dc1mHkXUoqs247
+         jG2rt2/GEG1iPBrd7LmVE1Zm8XxvISqsehkXq5dpD+cvXRYhsSqaeGtDFDT/L+ei8/X9
+         W6BksQ/xP8kfY2fD/4dJyf6IzOF6LN5wSyeC3+Nu+hCWt2Yuvffj1aCwLCyMAkIf8hH2
+         SecQ==
+X-Gm-Message-State: AOAM531W6VsMauS4UP5WAbNKYKQzyTCFUPU1D5h4LHya1Htp0r79+OGd
+        2MhO1+7kQg+cokuy4PVDU2pT6TbReVnCEw==
+X-Google-Smtp-Source: ABdhPJwmd/WZv/khpVJ6dz8/+YETqXIh/fB3qdGDstfp4doFkwGQnGaTYUtysoG07larAH6qpz33/A==
+X-Received: by 2002:a05:6808:19a9:b0:32b:56bd:27bd with SMTP id bj41-20020a05680819a900b0032b56bd27bdmr1490212oib.218.1653316256731;
+        Mon, 23 May 2022 07:30:56 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g16-20020a4a2510000000b0035eb4e5a6b0sm4143957ooa.6.2022.05.23.07.30.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 May 2022 07:19:24 -0700 (PDT)
-Date:   Mon, 23 May 2022 10:19:22 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
+        Mon, 23 May 2022 07:30:56 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Mon, 23 May 2022 07:30:54 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <vschneid@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] sched/psi: Bounds-check state iterator against
- NR_PSI_STATES
-Message-ID: <YouX6g1T7w3FDeM8@cmpxchg.org>
-References: <20220520165826.2140252-1-keescook@chromium.org>
+Cc:     Alexander Popov <alex.popov@linux.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gcc-plugins: Change all version strings match kernel
+Message-ID: <20220523143054.GA3164771@roeck-us.net>
+References: <20220510235412.3627034-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220520165826.2140252-1-keescook@chromium.org>
+In-Reply-To: <20220510235412.3627034-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, May 20, 2022 at 09:58:26AM -0700, Kees Cook wrote:
-> GCC 12 cannot tell that "t" will be bounded by NR_PSI_STATES, which could
-> lead to walking off the end of the tasks array, which is NR_PSI_STATES in
-> size. Explicitly bounds-check "t" as part of the loop.
+On Tue, May 10, 2022 at 04:54:12PM -0700, Kees Cook wrote:
+> It's not meaningful for the GCC plugins to track their versions separately
+> from the rest of the kernel. Switch all versions to the kernel version.
 > 
-> In file included from ../kernel/sched/build_utility.c:97:
-> ../kernel/sched/psi.c: In function 'psi_group_change':
-> ../kernel/sched/psi.c:730:38: warning: array subscript 32 is above array bounds of 'unsigned int[5]' [-Warray-bounds]
->   730 |                         groupc->tasks[t]++;
->       |                         ~~~~~~~~~~~~~^~~
-> In file included from ../include/linux/psi.h:6,
->                  from ../kernel/sched/build_utility.c:36:
-> ../include/linux/psi_types.h:84:22: note: while referencing 'tasks'
->    84 |         unsigned int tasks[NR_PSI_TASK_COUNTS];
->       |                      ^~~~~
-> ../kernel/sched/psi.c:730:38: warning: array subscript 32 is above array bounds of 'unsigned int[5]' [-Warray-bounds]
->   730 |                         groupc->tasks[t]++;
->       |                         ~~~~~~~~~~~~~^~~
-> ../include/linux/psi_types.h:84:22: note: while referencing 'tasks'
->    84 |         unsigned int tasks[NR_PSI_TASK_COUNTS];
->       |                      ^~~~~
+> Fix mismatched indenting while we're at it.
 > 
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ben Segall <bsegall@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-> Cc: Valentin Schneider <vschneid@redhat.com>
+> Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
+
+I see random build failures with this patch in linux-next.
+
+Error log:
+cc1plus: fatal error: ./include/generated/utsrelease.h: No such file or directory
+
+The problem doesn't happen all the time. Is there some missing dependency ?
+
+Guenter
+
 > ---
->  kernel/sched/psi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  scripts/gcc-plugins/Makefile                  | 9 +++++----
+>  scripts/gcc-plugins/latent_entropy_plugin.c   | 2 +-
+>  scripts/gcc-plugins/randomize_layout_plugin.c | 2 +-
+>  scripts/gcc-plugins/sancov_plugin.c           | 2 +-
+>  scripts/gcc-plugins/stackleak_plugin.c        | 2 +-
+>  scripts/gcc-plugins/structleak_plugin.c       | 2 +-
+>  6 files changed, 10 insertions(+), 9 deletions(-)
 > 
-> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-> index a337f3e35997..827f16a79936 100644
-> --- a/kernel/sched/psi.c
-> +++ b/kernel/sched/psi.c
-> @@ -725,7 +725,7 @@ static void psi_group_change(struct psi_group *group, int cpu,
->  		}
->  	}
+> diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
+> index 148f4639cf09..6f0aecad5d67 100644
+> --- a/scripts/gcc-plugins/Makefile
+> +++ b/scripts/gcc-plugins/Makefile
+> @@ -28,10 +28,11 @@ GCC_PLUGINS_DIR = $(shell $(CC) -print-file-name=plugin)
 >  
-> -	for (t = 0; set; set &= ~(1 << t), t++)
-> +	for (t = 0; set && t < ARRAY_SIZE(groupc->tasks); set &= ~(1 << t), t++)
->  		if (set & (1 << t))
->  			groupc->tasks[t]++;
-
-This is a very hot path, it runs for every nested cgroup on every task
-switch, wakeup and sleep. We should avoid unnecessary instructions and
-branches if we can help it at all.
-
-Does the below patch address the warning for you? I can't test it
-myself, because I'm not getting it with gcc version 12.1.0. It's also
-odd that it didn't warn you about the loop over `clear' a few lines
-up, which ostensibly has the same "problem".
-
----
-
-diff --git a/include/linux/psi_types.h b/include/linux/psi_types.h
-index c7fe7c089718..113861343733 100644
---- a/include/linux/psi_types.h
-+++ b/include/linux/psi_types.h
-@@ -41,6 +41,7 @@ enum psi_task_count {
- #define TSK_RUNNING	(1 << NR_RUNNING)
- #define TSK_ONCPU	(1 << NR_ONCPU)
- #define TSK_MEMSTALL_RUNNING	(1 << NR_MEMSTALL_RUNNING)
-+#define TSK_MASK	((1U << NR_PSI_TASK_COUNTS) - 1)
- 
- /* Resources that workloads could be stalled on */
- enum psi_res {
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index a4fa3aadfcba..fb7fd40af337 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -804,6 +804,8 @@ void psi_task_change(struct task_struct *task, int clear, int set)
- 	void *iter = NULL;
- 	u64 now;
- 
-+	WARN_ON_ONCE((clear|set) & ~TSK_MASK);
-+
- 	if (!task->pid)
- 		return;
- 
+>  plugin_cxxflags	= -Wp,-MMD,$(depfile) $(KBUILD_HOSTCXXFLAGS) -fPIC \
+>  		  -include $(srctree)/include/linux/compiler-version.h \
+> -		   -I $(GCC_PLUGINS_DIR)/include -I $(obj) -std=gnu++11 \
+> -		   -fno-rtti -fno-exceptions -fasynchronous-unwind-tables \
+> -		   -ggdb -Wno-narrowing -Wno-unused-variable \
+> -		   -Wno-format-diag
+> +		  -include $(objtree)/include/generated/utsrelease.h \
+> +		  -I $(GCC_PLUGINS_DIR)/include -I $(obj) -std=gnu++11 \
+> +		  -fno-rtti -fno-exceptions -fasynchronous-unwind-tables \
+> +		  -ggdb -Wno-narrowing -Wno-unused-variable \
+> +		  -Wno-format-diag
+>  
+>  plugin_ldflags	= -shared
+>  
+> diff --git a/scripts/gcc-plugins/latent_entropy_plugin.c b/scripts/gcc-plugins/latent_entropy_plugin.c
+> index 8425da41de0d..5d415b2572a8 100644
+> --- a/scripts/gcc-plugins/latent_entropy_plugin.c
+> +++ b/scripts/gcc-plugins/latent_entropy_plugin.c
+> @@ -82,7 +82,7 @@ __visible int plugin_is_GPL_compatible;
+>  static GTY(()) tree latent_entropy_decl;
+>  
+>  static struct plugin_info latent_entropy_plugin_info = {
+> -	.version	= "201606141920vanilla",
+> +	.version	= UTS_RELEASE,
+>  	.help		= "disable\tturn off latent entropy instrumentation\n",
+>  };
+>  
+> diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-plugins/randomize_layout_plugin.c
+> index 65aee5d6d91e..ea2aea570404 100644
+> --- a/scripts/gcc-plugins/randomize_layout_plugin.c
+> +++ b/scripts/gcc-plugins/randomize_layout_plugin.c
+> @@ -34,7 +34,7 @@ __visible int plugin_is_GPL_compatible;
+>  static int performance_mode;
+>  
+>  static struct plugin_info randomize_layout_plugin_info = {
+> -	.version	= "201402201816vanilla",
+> +	.version	= UTS_RELEASE,
+>  	.help		= "disable\t\t\tdo not activate plugin\n"
+>  			  "performance-mode\tenable cacheline-aware layout randomization\n"
+>  };
+> diff --git a/scripts/gcc-plugins/sancov_plugin.c b/scripts/gcc-plugins/sancov_plugin.c
+> index 23bd023a283b..f3d629555b84 100644
+> --- a/scripts/gcc-plugins/sancov_plugin.c
+> +++ b/scripts/gcc-plugins/sancov_plugin.c
+> @@ -26,7 +26,7 @@ __visible int plugin_is_GPL_compatible;
+>  tree sancov_fndecl;
+>  
+>  static struct plugin_info sancov_plugin_info = {
+> -	.version	= "20160402",
+> +	.version	= UTS_RELEASE,
+>  	.help		= "sancov plugin\n",
+>  };
+>  
+> diff --git a/scripts/gcc-plugins/stackleak_plugin.c b/scripts/gcc-plugins/stackleak_plugin.c
+> index 42f0252ee2a4..de817d54b8af 100644
+> --- a/scripts/gcc-plugins/stackleak_plugin.c
+> +++ b/scripts/gcc-plugins/stackleak_plugin.c
+> @@ -44,7 +44,7 @@ static bool verbose = false;
+>  static GTY(()) tree track_function_decl;
+>  
+>  static struct plugin_info stackleak_plugin_info = {
+> -	.version = "201707101337",
+> +	.version = UTS_RELEASE,
+>  	.help = "track-min-size=nn\ttrack stack for functions with a stack frame size >= nn bytes\n"
+>  		"arch=target_arch\tspecify target build arch\n"
+>  		"disable\t\tdo not activate the plugin\n"
+> diff --git a/scripts/gcc-plugins/structleak_plugin.c b/scripts/gcc-plugins/structleak_plugin.c
+> index 74e319288389..86b608a24ec0 100644
+> --- a/scripts/gcc-plugins/structleak_plugin.c
+> +++ b/scripts/gcc-plugins/structleak_plugin.c
+> @@ -37,7 +37,7 @@
+>  __visible int plugin_is_GPL_compatible;
+>  
+>  static struct plugin_info structleak_plugin_info = {
+> -	.version	= "20190125vanilla",
+> +	.version	= UTS_RELEASE,
+>  	.help		= "disable\tdo not activate plugin\n"
+>  			  "byref\tinit structs passed by reference\n"
+>  			  "byref-all\tinit anything passed by reference\n"
+> -- 
+> 2.32.0
+> 
