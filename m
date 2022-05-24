@@ -2,87 +2,79 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E37C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 May 2022 15:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2A7C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 May 2022 19:53:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238809AbiEXP1i (ORCPT
+        id S241346AbiEXTxZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 May 2022 11:27:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50204 "EHLO
+        Tue, 24 May 2022 15:53:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238719AbiEXP1g (ORCPT
+        with ESMTP id S241343AbiEXTxX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 24 May 2022 11:27:36 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD57D5FF08
-        for <linux-hardening@vger.kernel.org>; Tue, 24 May 2022 08:27:34 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id q18so16141235pln.12
-        for <linux-hardening@vger.kernel.org>; Tue, 24 May 2022 08:27:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BXnrulZo1r5kA0HgEtcuN32mxZM7voAvx6bVmM5GKlg=;
-        b=amf1ud7Ta+hHaU0Tlx0olptOOlJOymbQBxws7nnpHfk/HU0cXR6uqD+kg4FNeYCnvv
-         WVOVE3zko9ggmKB46nEg2UFWXQFrUOmc0LTg/GQZMX33mQC6YXci+6DdCHNQrWyje7TI
-         0lKHPoAzSG6YDJbeS/kGQr0MBXA4iaAJ0R1EU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BXnrulZo1r5kA0HgEtcuN32mxZM7voAvx6bVmM5GKlg=;
-        b=g/bOiCdbDdX2tBb+fWxqZGNkPvko6eu+yLM4079XytBIo4B/ltGbSNS11oMMo/kwIc
-         xslSWSTV49u6GbmKsNlzUMGfyuPKA86PgqxHYikSqp/agC5/5NizzL9NKbV99rPrvYvH
-         5/+ksgCIV0W8/lZwdG8FEjvmSIXB5qSWRmc/9dQqpbyo0hmqn2BH05PNK+asxcg4+2dz
-         83jWWcGfRnEKQ2g2HVN5hY+dykRRLnK30OIfmkWtrakMQRhT8muImdeS/0z88/aooiHX
-         qCubLodbujSbnUSHxuktWk1y5rK5p5IXCvkcVi7LDOOLpL4y4g0ujBeG450lIRvXwNMY
-         UwPA==
-X-Gm-Message-State: AOAM531/yCcFFk6N/rjL5eASzD0JFwbRTJq39es1lgsFXQTJuUu18z4R
-        SHZh3ZTzYOFiG+Rjj3gF2jXY4w==
-X-Google-Smtp-Source: ABdhPJySPr9vD6XPn6xRLzunOe4QGJl+qBkox+6/WJFeyv9JqG1tatzea641LmZ0gsenOZYy4WQepg==
-X-Received: by 2002:a17:90b:1b42:b0:1df:f6bb:aa2b with SMTP id nv2-20020a17090b1b4200b001dff6bbaa2bmr5187508pjb.99.1653406054274;
-        Tue, 24 May 2022 08:27:34 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 19-20020a170902e9d300b0015e8d4eb216sm7543425plk.96.2022.05.24.08.27.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 May 2022 08:27:33 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     linux@roeck-us.net, masahiroy@kernel.org,
-        linux-hardening@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, lkp@intel.com,
-        linux-kbuild@vger.kernel.org, ndesaulniers@google.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gcc-plugins: use KERNELVERSION for plugin version
-Date:   Tue, 24 May 2022 08:26:55 -0700
-Message-Id: <165340601337.1531311.10949376876252513636.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220524135541.1453693-1-masahiroy@kernel.org>
-References: <20220524135541.1453693-1-masahiroy@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Tue, 24 May 2022 15:53:23 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51DDD5996A;
+        Tue, 24 May 2022 12:53:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5333EB81BA0;
+        Tue, 24 May 2022 19:53:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1A428C34100;
+        Tue, 24 May 2022 19:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653421999;
+        bh=2bq/6pM1eiRfVNpsd/AZB9LdInGFonZIe5nFXJpMv/A=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=IZv0l+FPc42Qp/SeBzHk3ERPGYjjziiAyC0OMffpUBbaXQhXyfCoLDN3Z6RiNniHI
+         ODdLoOMzTTJh/0NB/Rg0RRzY/uf38SopyjO1UIHTbM/CyEcf3rSd6Lf3xoBjM+4vm5
+         xstqFstgMKnjhFsF2AQT0X2lIM2TBYfcvLRvmGjAbN+QD8K/TKKpLYIKz+dqn7uulZ
+         ZOjDw90EkWBLSAUQ6WNQgMI2yzOdMZVSEnRPXSSoUPPcqTl7eQPnrdXnOzWJD0NCKR
+         uTy6GcNfPjbXlJXGlTrpF0XTjl8Xxw3C3WaDZshadncV2hZ4ry4MM7BOSKOA64eyeE
+         wM9U7uPGrKCgQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 043C6F03938;
+        Tue, 24 May 2022 19:53:19 +0000 (UTC)
+Subject: Re: [GIT PULL] kernel hardening updates for v5.19-rc1
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <202205231146.E8C6085@keescook>
+References: <202205231146.E8C6085@keescook>
+X-PR-Tracked-List-Id: <linux-hardening.vger.kernel.org>
+X-PR-Tracked-Message-Id: <202205231146.E8C6085@keescook>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/kernel-hardening-v5.19-rc1
+X-PR-Tracked-Commit-Id: ed5edd5a70b9525085403f193786395179ea303d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 0bf13a84362e750a90008af259b098d7c0e0755b
+Message-Id: <165342199901.18932.10398964285564438364.pr-tracker-bot@kernel.org>
+Date:   Tue, 24 May 2022 19:53:19 +0000
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Alexander Popov <alex.popov@linux.com>,
+        Bill Wendling <morbo@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Yuanzheng Song <songyuanzheng@huawei.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 24 May 2022 22:55:41 +0900, Masahiro Yamada wrote:
-> Commit 61f60bac8c05 ("gcc-plugins: Change all version strings match
-> kernel") broke parallel builds.
-> 
-> Instead of adding the dependency between GCC plugins and utsrelease.h,
-> let's use KERNELVERSION, which does not require any build artifact.
-> 
-> Another reason why I want to avoid utsrelease.h is because it depends
-> on CONFIG_LOCALVERSION(_AUTO) and localversion* files.
-> 
-> [...]
+The pull request you sent on Mon, 23 May 2022 12:10:02 -0700:
 
-Ah, perfect; I appreciate the better solution! Applied to
-for-next/hardening, thanks!
+> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/kernel-hardening-v5.19-rc1
 
-[1/1] gcc-plugins: use KERNELVERSION for plugin version
-      https://git.kernel.org/kees/c/d37aa2efc89b
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/0bf13a84362e750a90008af259b098d7c0e0755b
+
+Thank you!
 
 -- 
-Kees Cook
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
