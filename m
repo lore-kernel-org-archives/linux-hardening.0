@@ -2,177 +2,171 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF57BC433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 May 2022 10:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8F1C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 May 2022 11:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234030AbiEXKMR (ORCPT
+        id S236721AbiEXLep (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 May 2022 06:12:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52086 "EHLO
+        Tue, 24 May 2022 07:34:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231514AbiEXKMQ (ORCPT
+        with ESMTP id S236604AbiEXLeo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 24 May 2022 06:12:16 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 818C55F8F0;
-        Tue, 24 May 2022 03:12:13 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 901C410E66B1;
-        Tue, 24 May 2022 20:12:06 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ntRWH-00Fn9P-Gs; Tue, 24 May 2022 20:12:05 +1000
-Date:   Tue, 24 May 2022 20:12:05 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     jlayton@kernel.org, keescook@chromium.org,
+        Tue, 24 May 2022 07:34:44 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D448BD36;
+        Tue, 24 May 2022 04:34:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1653392084; x=1684928084;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=dqryofZxF2pFV6kkTP1H9GJ1NQVHZ92x9MysfmWCcAg=;
+  b=DX5QLJUoPEx7bCULQnV0/9GVDT09IhzQeBVBcXeEe96kpLzNxYachsxH
+   S74UiPiooFqdm71f+Fr3TMgZkeWADg83vBu6POg5sslap6Z/BENze8X0Z
+   GUGTiGwYNEeHPPoitHLvB/tPNQ/U9y8EPScROq9LRsXsqTiUktTyz8T9p
+   N/A5gz8cfc3BanNt+I1DGJlr8RZVG0d+tPphKKK+XZdax5jldxsFmSfKH
+   lizNufrUKNl4gedhmf2Iq4mTTPCdcaXiXm4MuvVXM62Sq9Xrepdog2M4k
+   Jrha3YVwG3bH76WJZZHwAWmRs9CTRrz4U2gPcP99TudZk9xZzoIMm+QP1
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10356"; a="253378256"
+X-IronPort-AV: E=Sophos;i="5.91,248,1647327600"; 
+   d="scan'208";a="253378256"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2022 04:34:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,248,1647327600"; 
+   d="scan'208";a="559086967"
+Received: from irvmail001.ir.intel.com ([10.43.11.63])
+  by orsmga002.jf.intel.com with ESMTP; 24 May 2022 04:34:34 -0700
+Received: from newjersey.igk.intel.com (newjersey.igk.intel.com [10.102.20.203])
+        by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id 24OBYVcZ004315;
+        Tue, 24 May 2022 12:34:31 +0100
+From:   Alexander Lobakin <alexandr.lobakin@intel.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
+        linux-hardening@vger.kernel.org, X86 ML <x86@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Bruce Schlobohm <bruce.schlobohm@intel.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
         Jonathan Corbet <corbet@lwn.net>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Steve French <smfrench@gmail.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-doc@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] netfs: Fix gcc-12 warning by embedding vfs inode in
- netfs_i_context
-Message-ID: <20220524101205.GI2306852@dread.disaster.area>
-References: <165305805651.4094995.7763502506786714216.stgit@warthog.procyon.org.uk>
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Marios Pomonis <pomonis@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Nicolas Pitre <nico@fluxnic.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        clang-built-linux <llvm@lists.linux.dev>
+Subject: Re: [PATCH v10 01/15] modpost: fix removing numeric suffixes
+Date:   Tue, 24 May 2022 13:33:37 +0200
+Message-Id: <20220524113337.4128239-1-alexandr.lobakin@intel.com>
+X-Mailer: git-send-email 2.36.1
+In-Reply-To: <CAK7LNAT3QTfkYLFTBKLxghY_gBQZmud3-4UJMK3tA9eOV4UeTg@mail.gmail.com>
+References: <20220209185752.1226407-1-alexandr.lobakin@intel.com> <20220209185752.1226407-2-alexandr.lobakin@intel.com> <CAK7LNAT3QTfkYLFTBKLxghY_gBQZmud3-4UJMK3tA9eOV4UeTg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <165305805651.4094995.7763502506786714216.stgit@warthog.procyon.org.uk>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=628caf7c
-        a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=kj9zAlcOel0A:10 a=oZkIemNP1mAA:10 a=7-415B0cAAAA:8
-        a=OnzENxpBzhtb90kDdFQA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, May 20, 2022 at 03:47:36PM +0100, David Howells wrote:
-> While randstruct was satisfied with using an open-coded "void *" offset
-> cast for the netfs_i_context <-> inode casting, __builtin_object_size() as
-> used by FORTIFY_SOURCE was not as easily fooled.  This was causing the
-> following complaint[1] from gcc v12:
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Tue, 24 May 2022 03:04:00 +0900
+
+> On Thu, Feb 10, 2022 at 3:59 AM Alexander Lobakin
+> <alexandr.lobakin@intel.com> wrote:
+> >
+> > `-z unique-symbol` linker flag which is planned to use with FG-KASLR
+> > to simplify livepatching (hopefully globally later on) triggers the
+> > following:
+> >
+> > ERROR: modpost: "param_set_uint.0" [vmlinux] is a static EXPORT_SYMBOL
+> >
+> > The reason is that for now the condition from remove_dot():
+> >
+> > if (m && (s[n + m] == '.' || s[n + m] == 0))
+> >
+> > which was designed to test if it's a dot or a '\0' after the suffix
+> > is never satisfied.
+> > This is due to that `s[n + m]` always points to the last digit of a
+> > numeric suffix, not on the symbol next to it (from a custom debug
+> > print added to modpost):
+> >
+> > param_set_uint.0, s[n + m] is '0', s[n + m + 1] is '\0'
+> >
+> > So it's off-by-one and was like that since 2014.
+> > Fix this for the sake of upcoming features, but don't bother
+> > stable-backporting, as it's well hidden -- apart from that LD flag,
+> > can be triggered only by GCC LTO which never landed upstream.
+> >
+> > Fixes: fcd38ed0ff26 ("scripts: modpost: fix compilation warning")
+> > Signed-off-by: Alexander Lobakin <alexandr.lobakin@intel.com>
+> > ---
+> >  scripts/mod/modpost.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+> > index 6bfa33217914..4648b7afe5cc 100644
+> > --- a/scripts/mod/modpost.c
+> > +++ b/scripts/mod/modpost.c
+> > @@ -1986,7 +1986,7 @@ static char *remove_dot(char *s)
+> >
+> >         if (n && s[n]) {
+> >                 size_t m = strspn(s + n + 1, "0123456789");
+> > -               if (m && (s[n + m] == '.' || s[n + m] == 0))
+> > +               if (m && (s[n + m + 1] == '.' || s[n + m + 1] == 0))
+> >                         s[n] = 0;
+> >
+> >                 /* strip trailing .lto */
+> > --
+> > 2.34.1
+> >
 > 
-> In file included from ./include/linux/string.h:253,
->                  from ./include/linux/ceph/ceph_debug.h:7,
->                  from fs/ceph/inode.c:2:
-> In function 'fortify_memset_chk',
->     inlined from 'netfs_i_context_init' at ./include/linux/netfs.h:326:2,
->     inlined from 'ceph_alloc_inode' at fs/ceph/inode.c:463:2:
-> ./include/linux/fortify-string.h:242:25: warning: call to '__write_overflow_field' declared with attribute warning:
-> detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
->   242 |                         __write_overflow_field(p_size_field, size);
->       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> This trivial patch has not been picked up yet.
 > 
-> Fix this by embedding a struct inode into struct netfs_i_context (which
-> should perhaps be renamed to struct netfs_inode).  The struct inode
-> vfs_inode fields are then removed from the 9p, afs, ceph and cifs inode
-> structs and vfs_inode is then simply changed to "netfs.inode" in those
-> filesystems.
+> I can apply this to my tree, if you want.
+
+It's a good idea, I'd like to!
+I don't use `-z unique-symbol` for FG-KALSR anymore*, but this fix
+is not directly related to it and can be taken independently.
+Should I change the commit message or it's ok to take it as it is?
+
 > 
-> Further, rename netfs_i_context to netfs_inode, get rid of the
-> netfs_inode() function that converted a netfs_i_context pointer to an inode
-> pointer (that can now be done with &ctx->inode) and rename the
-> netfs_i_context() function to netfs_inode() (which is now a wrapper around
-> container_of()).
+> Please let me know your thoughts.
 > 
-> Most of the changes were done with:
 > 
->   perl -p -i -e 's/vfs_inode/netfs.inode/'g \
-> 	`git grep -l 'vfs_inode' -- fs/{9p,afs,ceph,cifs}/*.[ch]`
-> 
-> Kees suggested doing it with a pair structure[2] and a special declarator
-> to insert that into the network filesystem's inode wrapper[3], but I think
-> it's cleaner to embed it - and then it doesn't matter if struct
-> randomisation reorders things.
+> -- 
+> Best Regards
+> Masahiro Yamada
 
-I can't help but think the code would be so much cleaner with a
-wrapper to covert from the filesysetm structure to the vfs inode.
-e.g. in XFS we use VFS_I(xfs_inode) to get the struct inode and
-XFS_I(inode) to get the xfs_inode from the struct inode.
-i.e.:
+* I'm planning to submit a new rev of FG-KASLR series soon, but
+since I'm too busy with XDP for now, it will happen no sooner than
+in a couple months =\
 
-/* Convert from vfs inode to xfs inode */
-static inline struct xfs_inode *XFS_I(struct inode *inode)
-{
-        return container_of(inode, struct xfs_inode, i_vnode);
-}
-
-/* convert from xfs inode to vfs inode */
-static inline struct inode *VFS_I(struct xfs_inode *ip)
-{
-        return &ip->i_vnode;
-}
-
-Then we end up with stuff like this reading:
-
-> diff --git a/fs/9p/v9fs.c b/fs/9p/v9fs.c
-> index e28ddf763b3b..0129de2ea31a 100644
-> --- a/fs/9p/v9fs.c
-> +++ b/fs/9p/v9fs.c
-> @@ -625,7 +625,7 @@ static void v9fs_inode_init_once(void *foo)
->  	struct v9fs_inode *v9inode = (struct v9fs_inode *)foo;
->  
->  	memset(&v9inode->qid, 0, sizeof(v9inode->qid));
-> -	inode_init_once(&v9inode->vfs_inode);
-> +	inode_init_once(&v9inode->netfs.inode);
-
-	inode_init_once(VFS_I(v9inode));
-
->  }
->  
->  /**
-> diff --git a/fs/9p/v9fs.h b/fs/9p/v9fs.h
-> index ec0e8df3b2eb..1b219c21d15e 100644
-> --- a/fs/9p/v9fs.h
-> +++ b/fs/9p/v9fs.h
-> @@ -109,11 +109,7 @@ struct v9fs_session_info {
->  #define V9FS_INO_INVALID_ATTR 0x01
->  
->  struct v9fs_inode {
-> -	struct {
-> -		/* These must be contiguous */
-> -		struct inode	vfs_inode;	/* the VFS's inode record */
-> -		struct netfs_i_context netfs_ctx; /* Netfslib context */
-> -	};
-> +	struct netfs_inode netfs; /* Netfslib context and vfs inode */
->  	struct p9_qid qid;
->  	unsigned int cache_validity;
->  	struct p9_fid *writeback_fid;
-> @@ -122,13 +118,13 @@ struct v9fs_inode {
->  
->  static inline struct v9fs_inode *V9FS_I(const struct inode *inode)
->  {
-> -	return container_of(inode, struct v9fs_inode, vfs_inode);
-> +	return container_of(inode, struct v9fs_inode, netfs.inode);
->  }
-
-Looky dat - there's already the V9FS_I() function for going from the
-VFS inode to the 9p inode....
-
-I think that having a VFS_I() for every filesystem would make all
-this code a lot cleaner, and it would be easier for everyone to
-understand without having to know the exact details of how the netfs
-inode encapsulates the struct inode. Consistency of code conventions
-across multiple filesystems is a good thing. And if this netfs inode
-structure ever has to be changed in future, it's just a few wrapper
-functions that need updating, not lots of code...
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Thanks!
+Al
