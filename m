@@ -2,79 +2,89 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2A7C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 May 2022 19:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C87C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 May 2022 22:15:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241346AbiEXTxZ (ORCPT
+        id S231444AbiEXWPf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 May 2022 15:53:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43556 "EHLO
+        Tue, 24 May 2022 18:15:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241343AbiEXTxX (ORCPT
+        with ESMTP id S230231AbiEXWPe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 24 May 2022 15:53:23 -0400
+        Tue, 24 May 2022 18:15:34 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51DDD5996A;
-        Tue, 24 May 2022 12:53:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E91E5E153;
+        Tue, 24 May 2022 15:15:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5333EB81BA0;
-        Tue, 24 May 2022 19:53:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1A428C34100;
-        Tue, 24 May 2022 19:53:19 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8A364B81A2E;
+        Tue, 24 May 2022 22:15:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C34DC34115;
+        Tue, 24 May 2022 22:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653421999;
-        bh=2bq/6pM1eiRfVNpsd/AZB9LdInGFonZIe5nFXJpMv/A=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=IZv0l+FPc42Qp/SeBzHk3ERPGYjjziiAyC0OMffpUBbaXQhXyfCoLDN3Z6RiNniHI
-         ODdLoOMzTTJh/0NB/Rg0RRzY/uf38SopyjO1UIHTbM/CyEcf3rSd6Lf3xoBjM+4vm5
-         xstqFstgMKnjhFsF2AQT0X2lIM2TBYfcvLRvmGjAbN+QD8K/TKKpLYIKz+dqn7uulZ
-         ZOjDw90EkWBLSAUQ6WNQgMI2yzOdMZVSEnRPXSSoUPPcqTl7eQPnrdXnOzWJD0NCKR
-         uTy6GcNfPjbXlJXGlTrpF0XTjl8Xxw3C3WaDZshadncV2hZ4ry4MM7BOSKOA64eyeE
-         wM9U7uPGrKCgQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 043C6F03938;
-        Tue, 24 May 2022 19:53:19 +0000 (UTC)
-Subject: Re: [GIT PULL] kernel hardening updates for v5.19-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <202205231146.E8C6085@keescook>
-References: <202205231146.E8C6085@keescook>
-X-PR-Tracked-List-Id: <linux-hardening.vger.kernel.org>
-X-PR-Tracked-Message-Id: <202205231146.E8C6085@keescook>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/kernel-hardening-v5.19-rc1
-X-PR-Tracked-Commit-Id: ed5edd5a70b9525085403f193786395179ea303d
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0bf13a84362e750a90008af259b098d7c0e0755b
-Message-Id: <165342199901.18932.10398964285564438364.pr-tracker-bot@kernel.org>
-Date:   Tue, 24 May 2022 19:53:19 +0000
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        s=k20201202; t=1653430531;
+        bh=A9MhQ1zdr/PKqFxd0NDOhzZqxPvlwBFI325zkFI2P4M=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Ej79J1Zbj5LNO5TpxQ8nlvqwYMJkFjI0FR5ieUnmYR7Vsp6wWEPsF4eGkGsQrdi9P
+         b/Mj8r5Qd6IEsaR8SRoIk8AaZMGz9Uz/vvoCyhsWxrTRku45PprUdAFIb9a/Az54iV
+         aEqqU6wVk7cIOz3RIuxlb9Z67ruTGkg68ViaXk3kYXMyC9G4IwZDTSlDmY155X0m7q
+         qnKMx1BL1XCk/HxnNXlMNd0ROddwj/wkGGcHnOo1Neo8z/WD6bYUmGN3aeLJQrBw/U
+         s4tZ8MmEEi5GsXr2SK8haWRW0E6dU1NyCge4qgjnmiwboVFjpX9kED7c35IG3tE0Zc
+         djvA9Gs+bp0Ig==
+Date:   Tue, 24 May 2022 17:25:05 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Alexander Popov <alex.popov@linux.com>,
-        Bill Wendling <morbo@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Yuanzheng Song <songyuanzheng@huawei.com>
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [GIT PULL] -Wstringop-overflow fixes for 5.19-rc1
+Message-ID: <20220524222505.GA7242@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The pull request you sent on Mon, 23 May 2022 12:10:02 -0700:
+The following changes since commit ce522ba9ef7e2d9fb22a39eb3371c0c64e2a433e:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/kernel-hardening-v5.19-rc1
+  Linux 5.18-rc2 (2022-04-10 14:21:36 -1000)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0bf13a84362e750a90008af259b098d7c0e0755b
+are available in the Git repository at:
 
-Thank you!
+  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/Wstringop-overflow-fixes-5.19-rc1
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+for you to fetch changes up to 336feb502a715909a8136eb6a62a83d7268a353b:
+
+  drm/i915: Fix -Wstringop-overflow warning in call to intel_read_wm_latency() (2022-05-04 14:59:26 -0500)
+
+----------------------------------------------------------------
+Wstringop-overflow fixes for 5.19-rc1
+
+Hi Linus,
+
+Please, pull the following patches that fix some -Wstringop-overflow
+warnings when building with GCC-11. All the patches have been in
+linux-next during the last development cycle.
+
+This is part of the ongoing efforts to globally enable
+-Wstringop-overflow.
+
+Thanks
+--
+Gustavo
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (3):
+      scsi: fcoe: Fix Wstringop-overflow warnings in fcoe_wwn_from_mac()
+      drm/amd/display: Fix Wstringop-overflow warnings in dc_link_dp.c
+      drm/i915: Fix -Wstringop-overflow warning in call to intel_read_wm_latency()
+
+ drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 4 ++--
+ drivers/gpu/drm/amd/display/dc/inc/dc_link_dp.h  | 4 ++--
+ drivers/gpu/drm/i915/intel_pm.c                  | 2 +-
+ drivers/scsi/fcoe/fcoe_ctlr.c                    | 2 +-
+ include/scsi/libfcoe.h                           | 3 ++-
+ 5 files changed, 8 insertions(+), 7 deletions(-)
