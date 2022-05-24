@@ -2,128 +2,120 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEF8C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 May 2022 08:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4E7C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 May 2022 09:51:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229512AbiEXIWn (ORCPT
+        id S235900AbiEXJvN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 May 2022 04:22:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34574 "EHLO
+        Tue, 24 May 2022 05:51:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231690AbiEXIWm (ORCPT
+        with ESMTP id S235894AbiEXJvK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 24 May 2022 04:22:42 -0400
-X-Greylist: delayed 51355 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 24 May 2022 01:22:40 PDT
-Received: from conssluserg-06.nifty.com (conssluserg-06.nifty.com [210.131.2.91])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34DEB6D1B8;
-        Tue, 24 May 2022 01:22:38 -0700 (PDT)
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 24O8M68k006098;
-        Tue, 24 May 2022 17:22:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 24O8M68k006098
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1653380526;
-        bh=q6za3m9RvzaPHhFEyPx6fRCSS/LSE+ziJO/OmsbOCfU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Dl4+r03MQKiOYWwkQd6/wGRucqQOHUjMMP1K09kq9aDCZdWfaAVzjAixKYMEBzeDf
-         VXUFTEtIrRdwbhgbm1bXfrunAYFEfkpyHrIyVnRaIKB6BUipVsA3LtAOcMvEj2Klw5
-         9lZNCmy3vO5Uf8zoX1sBvCQ7arLqs8T40s2a7m3kgwdxv8h+a1wYM5gqo2d7OE44u3
-         pWz7tx6XVmKNpxzoQYmH/CRxuBlsjUBYEd70DqwlkiwB3Nemb9RJb0q8kLc4JMmsy4
-         /3KSe+gncDh6z8ZwD2qaoRysEMq+wPnT8nN1FHyYmNrMTCpaDvDPrZ1HgYcDKA0fvS
-         bmCd27m/fkaiw==
-X-Nifty-SrcIP: [209.85.210.177]
-Received: by mail-pf1-f177.google.com with SMTP id h13so9553008pfq.5;
-        Tue, 24 May 2022 01:22:06 -0700 (PDT)
-X-Gm-Message-State: AOAM53391RVzmNfnsdzrtR9XT3EIN0gha+5NOhJV/LvuSIhT7QuGadBE
-        rXj7VZY+4E7Erkvs0LndnddIx3AVLgYWLZx+53c=
-X-Google-Smtp-Source: ABdhPJy/EXBCdolgpL2fr/ku8aEoHDny91aiZJzwlxFQUWE7v6lP7QfKeByb4K/TLGui8Li/7KWEbwkpmOaJDujAqEQ=
-X-Received: by 2002:a63:9043:0:b0:3f9:6c36:3de3 with SMTP id
- a64-20020a639043000000b003f96c363de3mr15921286pge.616.1653380525571; Tue, 24
- May 2022 01:22:05 -0700 (PDT)
+        Tue, 24 May 2022 05:51:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 38B216464
+        for <linux-hardening@vger.kernel.org>; Tue, 24 May 2022 02:51:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1653385867;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HROxCg3THyAWJg+stBN26H1YCc49DJ6h7IjqQesEu3w=;
+        b=d5S1PqZE2PsAmxmE+QKoUpaO3U1yDdyBdtEvrsr66oLzUM7lWvOBMexNAh0nDiI3VjoD46
+        m/Jdrsopj2TG9QI2rqSqJI/npv0GR1mWe7OvKgKQ7LY0RZ3SvpCGPp38KG9PSP9E7qDXuW
+        t2FMnKX1TbgpkpQcyxa7Yt2ZwXWUl68=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-359-NoezOlAaOa6H30RCWDSVpA-1; Tue, 24 May 2022 05:51:06 -0400
+X-MC-Unique: NoezOlAaOa6H30RCWDSVpA-1
+Received: by mail-pj1-f69.google.com with SMTP id e1-20020a17090a118100b001df53dfd969so9597900pja.2
+        for <linux-hardening@vger.kernel.org>; Tue, 24 May 2022 02:51:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=HROxCg3THyAWJg+stBN26H1YCc49DJ6h7IjqQesEu3w=;
+        b=QRyv8oJGI8tzanVRJHRoIdcS8VXckRUTO2xOh1ZzsfhjGcQA2OBVlN+0hoHa+n98LE
+         d+1AZypXATRhHd3vKwWUVFsOZ9FxC6/9A3OKzSeBXoTsRrO6x4PgJkzR4vue11YMQcUn
+         3Ah2Rbnxua6hWLaiSjNNpFtqA2IKNwjdythDXMkAhLOCoVEfJsEtuxwTEXOSxibXZguC
+         FUmvzLVQY6MF+y2U6g9z/pzbNXYIkEsK0K5oGSdrvAA15FruPF/IVMvhGIfBeTHd8RQW
+         G5ffLanLIytoxHxFpNcEvpGxjrsmMnmdE+Oqm7Zj1PYE3Xz5b+pPFCsEP4fwk7AATOrw
+         +CAA==
+X-Gm-Message-State: AOAM533NTADRidzR8KePpOR4azlAa2avuj6bBIkQEzi4vIZJF4Japq8i
+        C2hiz+4G7b08mtgK6CjX0HB8i1j1PHmKT/nI7clD3hQPJ20pZ3kxlb51L4PwTLGBN4kKEj5Osq+
+        YKGLYquHP/wN2EoRZ1guk5u5Ht4ep
+X-Received: by 2002:a17:90a:c682:b0:1df:c4a8:5db6 with SMTP id n2-20020a17090ac68200b001dfc4a85db6mr3684392pjt.43.1653385865313;
+        Tue, 24 May 2022 02:51:05 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxdBOH+gVDMrgyZ041wJ5jZ+2lLXtmmTzIxw/fZE8mPGpSF9hC5I1Teh6Xt19AWnXqr7+s+0w==
+X-Received: by 2002:a17:90a:c682:b0:1df:c4a8:5db6 with SMTP id n2-20020a17090ac68200b001dfc4a85db6mr3684372pjt.43.1653385865116;
+        Tue, 24 May 2022 02:51:05 -0700 (PDT)
+Received: from [10.72.12.81] ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id z12-20020a17090a7b8c00b001df2f8f0a45sm1308834pjc.1.2022.05.24.02.50.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 May 2022 02:51:04 -0700 (PDT)
+Subject: Re: [PATCH v2] netfs: Fix gcc-12 warning by embedding vfs inode in
+ netfs_i_context
+To:     Jeff Layton <jlayton@kernel.org>,
+        David Howells <dhowells@redhat.com>
+Cc:     keescook@chromium.org, Jonathan Corbet <corbet@lwn.net>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Christian Schoenebeck <linux_oss@crudebyte.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Steve French <smfrench@gmail.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-doc@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1b5daa4695b62795b617049e32c784052deabad4.camel@kernel.org>
+ <165305805651.4094995.7763502506786714216.stgit@warthog.procyon.org.uk>
+ <658391.1653302817@warthog.procyon.org.uk>
+ <e4fcdf88a9b35a9f1ca6e75fdf75ad469f824380.camel@kernel.org>
+From:   Xiubo Li <xiubli@redhat.com>
+Message-ID: <9945711f-c786-2300-9854-ee7734024a2c@redhat.com>
+Date:   Tue, 24 May 2022 17:50:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-References: <20220523200222.711011-1-keescook@chromium.org>
-In-Reply-To: <20220523200222.711011-1-keescook@chromium.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 24 May 2022 17:20:45 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASWUH-ZYU76Xj3YPc1na6ALo0dULSR0UNWe=_L9GcVXjQ@mail.gmail.com>
-Message-ID: <CAK7LNASWUH-ZYU76Xj3YPc1na6ALo0dULSR0UNWe=_L9GcVXjQ@mail.gmail.com>
-Subject: Re: [PATCH] gcc-plugins: Require utsrelease.h before scripts target
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        kernel test robot <lkp@intel.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e4fcdf88a9b35a9f1ca6e75fdf75ad469f824380.camel@kernel.org>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=xiubli@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 24, 2022 at 5:02 AM Kees Cook <keescook@chromium.org> wrote:
+
+On 5/23/22 7:05 PM, Jeff Layton wrote:
+> On Mon, 2022-05-23 at 11:46 +0100, David Howells wrote:
+>> Jeff Layton <jlayton@kernel.org> wrote:
+>>
+>>> Note that there are some conflicts between this patch and some of the
+>>> patches in the current ceph-client/testing branch. Depending on the
+>>> order of merge, one or the other will need to be fixed.
+>> Do you think it could be taken through the ceph tree?
+>>
+>> David
+>>
+> Since this touches a lot of non-ceph code, it may be best to just plan
+> to merge it ASAP, and we'll just base our merge branch on top of it.
 >
-> The "utsrelease.h" target was in parallel with the "scripts" target,
-> which meant -j1 or unlucky parallel builds from a distclean state would
-> fail to build the GCC plugins.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/linux-mm/202205230239.EZxeZ3Fv-lkp@intel.com
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Link: https://lore.kernel.org/lkml/YouX6g1T7w3FDeM8@cmpxchg.org
-> Fixes: 61f60bac8c05 ("gcc-plugins: Change all version strings match kernel")
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: linux-kbuild@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  Makefile                     | 2 +-
->  scripts/gcc-plugins/Makefile | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 91c91fcf3c24..c04420d5aa3d 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1175,7 +1175,7 @@ include/config/kernel.release: FORCE
->  # Carefully list dependencies so we do not try to build scripts twice
->  # in parallel
->  PHONY += scripts
-> -scripts: scripts_basic scripts_dtc
-> +scripts: include/generated/utsrelease.h scripts_basic scripts_dtc
->         $(Q)$(MAKE) $(build)=$(@)
->
->  # Things we need to do before we recursively start building the kernel
-> diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
-> index 6f0aecad5d67..c29334669a16 100644
-> --- a/scripts/gcc-plugins/Makefile
-> +++ b/scripts/gcc-plugins/Makefile
-> @@ -64,5 +64,5 @@ $(foreach m, $(notdir $(plugin-multi)), $(eval $(obj)/$m: $(addprefix $(obj)/, $
->  quiet_cmd_plugin_cxx_o_c = HOSTCXX $@
->        cmd_plugin_cxx_o_c = $(HOSTCXX) $(plugin_cxxflags) -c -o $@ $<
->
-> -$(plugin-objs): $(obj)/%.o: $(src)/%.c FORCE
-> +$(plugin-objs): $(obj)/%.o: $(src)/%.c $(objdir)/include/generated/utsrelease.h FORCE
+> Ilya/Xiubo, do you have an opinion here?
+>   
+
+Yeah, agree with Jeff.
 
 
-This change is unneeded.
-
-The header dependencies are automatically generated
-by the -MMD option.
-
-     plugin_cxxflags = -Wp,-MMD,$(depfile) $(KBUILD_HOSTCXXFLAGS) -fPIC \
-
-
-
-
-
-
->         $(call if_changed_dep,plugin_cxx_o_c)
-> --
-> 2.32.0
->
-
-
--- 
-Best Regards
-Masahiro Yamada
