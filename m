@@ -2,174 +2,104 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFA6C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed, 25 May 2022 01:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A096C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 25 May 2022 09:25:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240505AbiEYBuW (ORCPT
+        id S234261AbiEYJZG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 May 2022 21:50:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57136 "EHLO
+        Wed, 25 May 2022 05:25:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235156AbiEYBuU (ORCPT
+        with ESMTP id S235057AbiEYJZB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 24 May 2022 21:50:20 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE34E15823;
-        Tue, 24 May 2022 18:50:18 -0700 (PDT)
-Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4L7DW24HjLzgYGk;
-        Wed, 25 May 2022 09:48:46 +0800 (CST)
-Received: from [10.67.110.173] (10.67.110.173) by
- dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 25 May 2022 09:50:16 +0800
-Message-ID: <61ffe974-8e15-6682-d53a-90df89dcb28a@huawei.com>
-Date:   Wed, 25 May 2022 09:50:16 +0800
+        Wed, 25 May 2022 05:25:01 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE6C88A30C
+        for <linux-hardening@vger.kernel.org>; Wed, 25 May 2022 02:24:59 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id o80so35282902ybg.1
+        for <linux-hardening@vger.kernel.org>; Wed, 25 May 2022 02:24:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8v8NJ0a8V56vtqLR+SMp9QvjOrvgB+9HAIgTvz0fNJo=;
+        b=dYJhLfBDjkkwdtL7D9ZCvH/HwdunUkHDymiQT/6fOkGfUlgVU79wfDNeKi1FmvO01+
+         sYziFA2LOGAfhRqoHeA2iY+WYLDKijMRBXtk7C9/myzGSV/1yBTPtk6tY5yr6aZknMvq
+         iLgkfAtv9jdC0BFti5DSakNtV6dFv7VSLlkUS50I4bWqisejUClMiEswT8RJnSp4VZ+c
+         2e9Ew7kGjVu2lxGwPu5u5kCugna04xaGgXoBapEPsQM2HR7+zNeTZgGbmlfgei/SwXVk
+         N9y954AfWXnR9J/RQcoJWVcEZsWkqX5qXN+67MuuLLVyBMM5P2KSSCGz8fI/ZDbWqiAr
+         CxTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8v8NJ0a8V56vtqLR+SMp9QvjOrvgB+9HAIgTvz0fNJo=;
+        b=A2uPKU2liA6lVM96EmYpFhXZZTZFCIoQanUhOK2x/tbI4qHPQ4txiMIuBnkDmSZ8BL
+         JrZ2CMd5a2nzqaUkSBIWTOXdljitmVQTrGmvdO43G3dUvh081uWDrEGy6ApjnyUXkLjh
+         3vrnyoaSHNVcBa3YAW8BXRUk5mZz13NQeOvfvcbS/LYC5j8qq6MVeppBz0mn6DRvErEH
+         47cL+0ghFuDzGmebcdWQ9PYd2grQMNQUD3ZdkgbPNJeR5PSo2l0DOHU/BSj1KY5++/o/
+         lBY7+2uXAcX3fHNTjx4udoRxiXUvwI32nN8VpZkI706fX1W5WNYwSa0pXPo/ajeXAjnh
+         s6tQ==
+X-Gm-Message-State: AOAM531MwUxgDlmz6OyCtkrvS0clgegEtGtWaQdfBAHwUSLGTokdXJLk
+        qO/8xKQJDsZyQNrAMjlyLJfg2hGrMECZrOewSNFdUA==
+X-Google-Smtp-Source: ABdhPJyTI8yw+M0YzU0THJ1vYh5OzrMdzgHpVAzvdG4RReWcEDTXHjPdRmztzhwlqmxghfm1UKDV/wUEiUYjP8kA62g=
+X-Received: by 2002:a25:420e:0:b0:655:8817:e6ba with SMTP id
+ p14-20020a25420e000000b006558817e6bamr3360166yba.369.1653470698888; Wed, 25
+ May 2022 02:24:58 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [RESEND] evm: Refector struct evm_xattr
-Content-Language: en-US
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-CC:     <linux-integrity@vger.kernel.org>, <zohar@linux.ibm.com>,
-        <dmitry.kasatkin@gmail.com>, <linux-hardening@vger.kernel.org>
-References: <20220518011439.184809-1-guozihua@huawei.com>
- <20220518051326.GB16144@embeddedor>
-From:   "Guozihua (Scott)" <guozihua@huawei.com>
-In-Reply-To: <20220518051326.GB16144@embeddedor>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.110.173]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemm500024.china.huawei.com (7.185.36.203)
-X-CFilter-Loop: Reflected
+References: <20220419211658.11403-1-apais@linux.microsoft.com> <20220419211658.11403-2-apais@linux.microsoft.com>
+In-Reply-To: <20220419211658.11403-2-apais@linux.microsoft.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 25 May 2022 11:24:46 +0200
+Message-ID: <CACRpkdZ2DFZRPHS1x0=M3_8zYvU-jpCG5Tm3863dXv51EhY+BA@mail.gmail.com>
+Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
+To:     Allen Pais <apais@linux.microsoft.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     olivier.dautricourt@orolia.com, sr@denx.de, vkoul@kernel.org,
+        keescook@chromium.org, linux-hardening@vger.kernel.org,
+        ludovic.desroches@microchip.com, tudor.ambarus@microchip.com,
+        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, nsaenz@kernel.org,
+        paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com,
+        gustavo.pimentel@synopsys.com, vireshk@kernel.org,
+        andriy.shevchenko@linux.intel.com, leoyang.li@nxp.com,
+        zw@zh-kernel.org, wangzhou1@hisilicon.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, sean.wang@mediatek.com,
+        matthias.bgg@gmail.com, afaerber@suse.de, mani@kernel.org,
+        logang@deltatee.com, sanju.mehta@amd.com, daniel@zonque.org,
+        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        krzysztof.kozlowski@linaro.org, green.wan@sifive.com,
+        orsonzhai@gmail.com, baolin.wang7@gmail.com, zhang.lyra@gmail.com,
+        patrice.chotard@foss.st.com, wens@csie.org,
+        jernej.skrabec@gmail.com, samuel@sholland.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2022/5/18 13:13, Gustavo A. R. Silva wrote:
-> On Wed, May 18, 2022 at 09:14:39AM +0800, GUO Zihua wrote:
->> struct evm_xattr is only used for EVM_XATTR_HMAC type evm digest and is
->> glued together one flexible array and one fixed length array. The
->> original intention seems to be shortening the code as the "data" field
->> would always be a SHA1 digest.
->>
->> This implementation is not complying with GCC's specification about
->> flexible array and spars yield the following warning:
-> 
-> The sparse warning has nothing to do with any GCC specification. It's
-> perfectly fine to apply the sizeof operator to a struct-with-flex-array.
-> However, it might be suspicious if the intention is to also get the
-> _dynamic_ size of the flexible array, because in that case the size of
-> the flex array is always zero. See the example below:
-> 
-> 	struct foo {
-> 		uint8_t len;
-> 		struct boo data[];
-> 	};
-> 
-> 	sizeof(struct foo) == 1
-> 
-> Also, you sent this patch twice in the last 24 hours. Give the maintainers
-> time to review your patch (usually a couple of weeks) before resending it.
-> 
->>
->> security/integrity/evm/evm_main.c:852:30: warning: using sizeof on a flexible
->> structure
->> security/integrity/evm/evm_main.c:862:32: warning: using sizeof on a flexible
->> structure
-> 
-> Regarding the warnings above, please take a look at my response to your
-> other patch (the same applies in this case). :)
-> 
-> Thanks
-> --
-> Gustavo
-> 
->>
->> Fix it by:
->> 1. Remove struct evm_xattr and use struct evm_ima_xattr_data directly.
->> 2. Get array size with struct_size instead of sizeof.
->>
->> Reference: https://github.com/KSPP/linux/issues/174
->>
->> Fixes: 6be5cc5246f80 ("evm: add support for different security.evm data types")
->> Signed-off-by: GUO Zihua <guozihua@huawei.com>
->> ---
->>   security/integrity/evm/evm_main.c | 14 ++++++++------
->>   security/integrity/integrity.h    |  6 ------
->>   2 files changed, 8 insertions(+), 12 deletions(-)
->>
->> diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
->> index 7d87772f0ce6..f2c4501a287a 100644
->> --- a/security/integrity/evm/evm_main.c
->> +++ b/security/integrity/evm/evm_main.c
->> @@ -211,7 +211,8 @@ static enum integrity_status evm_verify_hmac(struct dentry *dentry,
->>   	/* check value type */
->>   	switch (xattr_data->type) {
->>   	case EVM_XATTR_HMAC:
->> -		if (xattr_len != sizeof(struct evm_xattr)) {
->> +		if (xattr_len != struct_size(*xattr_data, data,
->> +					     SHA1_DIGEST_SIZE)) {
->>   			evm_status = INTEGRITY_FAIL;
->>   			goto out;
->>   		}
->> @@ -842,24 +843,25 @@ int evm_inode_init_security(struct inode *inode,
->>   				 const struct xattr *lsm_xattr,
->>   				 struct xattr *evm_xattr)
->>   {
->> -	struct evm_xattr *xattr_data;
->> +	struct evm_ima_xattr_data *xattr_data;
->>   	int rc;
->>   
->>   	if (!(evm_initialized & EVM_INIT_HMAC) ||
->>   	    !evm_protected_xattr(lsm_xattr->name))
->>   		return 0;
->>   
->> -	xattr_data = kzalloc(sizeof(*xattr_data), GFP_NOFS);
->> +	xattr_data = kzalloc(struct_size(*xattr_data, data,
->> +			     SHA1_DIGEST_SIZE), GFP_NOFS);
->>   	if (!xattr_data)
->>   		return -ENOMEM;
->>   
->> -	xattr_data->data.type = EVM_XATTR_HMAC;
->> -	rc = evm_init_hmac(inode, lsm_xattr, xattr_data->digest);
->> +	xattr_data->type = EVM_XATTR_HMAC;
->> +	rc = evm_init_hmac(inode, lsm_xattr, xattr_data->data);
->>   	if (rc < 0)
->>   		goto out;
->>   
->>   	evm_xattr->value = xattr_data;
->> -	evm_xattr->value_len = sizeof(*xattr_data);
->> +	evm_xattr->value_len = struct_size(*xattr_data, data, SHA1_DIGEST_SIZE);
->>   	evm_xattr->name = XATTR_EVM_SUFFIX;
->>   	return 0;
->>   out:
->> diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
->> index 3510e413ea17..91b16d620dd9 100644
->> --- a/security/integrity/integrity.h
->> +++ b/security/integrity/integrity.h
->> @@ -86,12 +86,6 @@ struct evm_ima_xattr_data {
->>   	u8 data[];
->>   } __packed;
->>   
->> -/* Only used in the EVM HMAC code. */
->> -struct evm_xattr {
->> -	struct evm_ima_xattr_data data;
->> -	u8 digest[SHA1_DIGEST_SIZE];
->> -} __packed;
->> -
->>   #define IMA_MAX_DIGEST_SIZE	64
->>   
->>   struct ima_digest_data {
->> -- 
->> 2.36.0
->>
-> .
-Thanks Gustavo!
+On Tue, Apr 19, 2022 at 11:17 PM Allen Pais <apais@linux.microsoft.com> wrote:
 
-I'm still pretty new to the community so your feedback is much appreciated!
+> The tasklet is an old API which will be deprecated, workqueue API
+> cab be used instead of them.
+>
+> This patch replaces the tasklet usage in drivers/dma/* with a
+> simple work.
+>
+> Github: https://github.com/KSPP/linux/issues/94
+>
+> Signed-off-by: Allen Pais <apais@linux.microsoft.com>
 
--- 
-Best
-GUO Zihua
+Paging Vincent Guittot and Arnd Bergmann on the following question
+on this patch set:
+
+- Will replacing tasklets with workque like this negatively impact the
+  performance on DMA engine bottom halves?
+
+For reference:
+https://lore.kernel.org/dmaengine/YoI4J8taHehMpjFj@matsya/
+
+Yours,
+Linus Walleij
