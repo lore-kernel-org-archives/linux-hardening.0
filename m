@@ -2,84 +2,174 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7ABC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 May 2022 22:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFA6C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed, 25 May 2022 01:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239143AbiEXWTz (ORCPT
+        id S240505AbiEYBuW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 May 2022 18:19:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60202 "EHLO
+        Tue, 24 May 2022 21:50:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238086AbiEXWTz (ORCPT
+        with ESMTP id S235156AbiEYBuU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 24 May 2022 18:19:55 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE8DE3AA7E;
-        Tue, 24 May 2022 15:19:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8859C617D0;
-        Tue, 24 May 2022 22:19:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 546EEC34100;
-        Tue, 24 May 2022 22:19:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653430792;
-        bh=aQTROfTFdXi36U6mLYseBrPAPoPIYLg9rd9UBL8XdpU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=i3JzHY6x2dWBF05YSG9bArKSvLQu29plyYJe7tqeNGh5mu+JMd3KkovUQW+JqjHRt
-         4PhxqIZxrlHBXDtSAePCyqJ4YihTpVmr5VF5/iTnkqy6Q0/lERxadE0gcXxo0kLOrB
-         zWf+plMdLyG21zKylkSk43f0xMNk00Hf5iQNJ7/o/krI1IlgeeCuiimhGwqjjctYXY
-         NSpar9kQXBjj03S3U4qw2Xs5gti/cfPx0K8hDG+SBmlPvMm2+dI16pP3w36/fQjQaY
-         J/L3xdm2JhiCxEpF0PTRoQH+p6WVBWkcZqKH0tXWBrGs545Al07oamJWs6dshU/EFr
-         QJSJ5jMnkFqMw==
-Date:   Tue, 24 May 2022 17:29:27 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [GIT PULL] checkpatch.pl changes for 5.19-rc1
-Message-ID: <20220524222927.GA7839@embeddedor>
+        Tue, 24 May 2022 21:50:20 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE34E15823;
+        Tue, 24 May 2022 18:50:18 -0700 (PDT)
+Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4L7DW24HjLzgYGk;
+        Wed, 25 May 2022 09:48:46 +0800 (CST)
+Received: from [10.67.110.173] (10.67.110.173) by
+ dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 25 May 2022 09:50:16 +0800
+Message-ID: <61ffe974-8e15-6682-d53a-90df89dcb28a@huawei.com>
+Date:   Wed, 25 May 2022 09:50:16 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [RESEND] evm: Refector struct evm_xattr
+Content-Language: en-US
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+CC:     <linux-integrity@vger.kernel.org>, <zohar@linux.ibm.com>,
+        <dmitry.kasatkin@gmail.com>, <linux-hardening@vger.kernel.org>
+References: <20220518011439.184809-1-guozihua@huawei.com>
+ <20220518051326.GB16144@embeddedor>
+From:   "Guozihua (Scott)" <guozihua@huawei.com>
+In-Reply-To: <20220518051326.GB16144@embeddedor>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.110.173]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm500024.china.huawei.com (7.185.36.203)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The following changes since commit ce522ba9ef7e2d9fb22a39eb3371c0c64e2a433e:
+On 2022/5/18 13:13, Gustavo A. R. Silva wrote:
+> On Wed, May 18, 2022 at 09:14:39AM +0800, GUO Zihua wrote:
+>> struct evm_xattr is only used for EVM_XATTR_HMAC type evm digest and is
+>> glued together one flexible array and one fixed length array. The
+>> original intention seems to be shortening the code as the "data" field
+>> would always be a SHA1 digest.
+>>
+>> This implementation is not complying with GCC's specification about
+>> flexible array and spars yield the following warning:
+> 
+> The sparse warning has nothing to do with any GCC specification. It's
+> perfectly fine to apply the sizeof operator to a struct-with-flex-array.
+> However, it might be suspicious if the intention is to also get the
+> _dynamic_ size of the flexible array, because in that case the size of
+> the flex array is always zero. See the example below:
+> 
+> 	struct foo {
+> 		uint8_t len;
+> 		struct boo data[];
+> 	};
+> 
+> 	sizeof(struct foo) == 1
+> 
+> Also, you sent this patch twice in the last 24 hours. Give the maintainers
+> time to review your patch (usually a couple of weeks) before resending it.
+> 
+>>
+>> security/integrity/evm/evm_main.c:852:30: warning: using sizeof on a flexible
+>> structure
+>> security/integrity/evm/evm_main.c:862:32: warning: using sizeof on a flexible
+>> structure
+> 
+> Regarding the warnings above, please take a look at my response to your
+> other patch (the same applies in this case). :)
+> 
+> Thanks
+> --
+> Gustavo
+> 
+>>
+>> Fix it by:
+>> 1. Remove struct evm_xattr and use struct evm_ima_xattr_data directly.
+>> 2. Get array size with struct_size instead of sizeof.
+>>
+>> Reference: https://github.com/KSPP/linux/issues/174
+>>
+>> Fixes: 6be5cc5246f80 ("evm: add support for different security.evm data types")
+>> Signed-off-by: GUO Zihua <guozihua@huawei.com>
+>> ---
+>>   security/integrity/evm/evm_main.c | 14 ++++++++------
+>>   security/integrity/integrity.h    |  6 ------
+>>   2 files changed, 8 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
+>> index 7d87772f0ce6..f2c4501a287a 100644
+>> --- a/security/integrity/evm/evm_main.c
+>> +++ b/security/integrity/evm/evm_main.c
+>> @@ -211,7 +211,8 @@ static enum integrity_status evm_verify_hmac(struct dentry *dentry,
+>>   	/* check value type */
+>>   	switch (xattr_data->type) {
+>>   	case EVM_XATTR_HMAC:
+>> -		if (xattr_len != sizeof(struct evm_xattr)) {
+>> +		if (xattr_len != struct_size(*xattr_data, data,
+>> +					     SHA1_DIGEST_SIZE)) {
+>>   			evm_status = INTEGRITY_FAIL;
+>>   			goto out;
+>>   		}
+>> @@ -842,24 +843,25 @@ int evm_inode_init_security(struct inode *inode,
+>>   				 const struct xattr *lsm_xattr,
+>>   				 struct xattr *evm_xattr)
+>>   {
+>> -	struct evm_xattr *xattr_data;
+>> +	struct evm_ima_xattr_data *xattr_data;
+>>   	int rc;
+>>   
+>>   	if (!(evm_initialized & EVM_INIT_HMAC) ||
+>>   	    !evm_protected_xattr(lsm_xattr->name))
+>>   		return 0;
+>>   
+>> -	xattr_data = kzalloc(sizeof(*xattr_data), GFP_NOFS);
+>> +	xattr_data = kzalloc(struct_size(*xattr_data, data,
+>> +			     SHA1_DIGEST_SIZE), GFP_NOFS);
+>>   	if (!xattr_data)
+>>   		return -ENOMEM;
+>>   
+>> -	xattr_data->data.type = EVM_XATTR_HMAC;
+>> -	rc = evm_init_hmac(inode, lsm_xattr, xattr_data->digest);
+>> +	xattr_data->type = EVM_XATTR_HMAC;
+>> +	rc = evm_init_hmac(inode, lsm_xattr, xattr_data->data);
+>>   	if (rc < 0)
+>>   		goto out;
+>>   
+>>   	evm_xattr->value = xattr_data;
+>> -	evm_xattr->value_len = sizeof(*xattr_data);
+>> +	evm_xattr->value_len = struct_size(*xattr_data, data, SHA1_DIGEST_SIZE);
+>>   	evm_xattr->name = XATTR_EVM_SUFFIX;
+>>   	return 0;
+>>   out:
+>> diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
+>> index 3510e413ea17..91b16d620dd9 100644
+>> --- a/security/integrity/integrity.h
+>> +++ b/security/integrity/integrity.h
+>> @@ -86,12 +86,6 @@ struct evm_ima_xattr_data {
+>>   	u8 data[];
+>>   } __packed;
+>>   
+>> -/* Only used in the EVM HMAC code. */
+>> -struct evm_xattr {
+>> -	struct evm_ima_xattr_data data;
+>> -	u8 digest[SHA1_DIGEST_SIZE];
+>> -} __packed;
+>> -
+>>   #define IMA_MAX_DIGEST_SIZE	64
+>>   
+>>   struct ima_digest_data {
+>> -- 
+>> 2.36.0
+>>
+> .
+Thanks Gustavo!
 
-  Linux 5.18-rc2 (2022-04-10 14:21:36 -1000)
+I'm still pretty new to the community so your feedback is much appreciated!
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/checkpatch-new-alloc-check-5.19-rc1
-
-for you to fetch changes up to 73f1d07e5f8a1dec989a5ec964f5f2ce5b6f8825:
-
-  checkpatch: add new alloc functions to alloc with multiplies check (2022-04-26 01:30:33 -0500)
-
-----------------------------------------------------------------
-Add new functions to alloc check for 5.19-rc1
-
-Hi Linus,
-
-Please, pull the following patch that adds new alloc functions to alloc
-with multiplies check.
-
-kvmalloc() and kvzalloc() functions have now 2-factor multiplication
-argument forms kvmalloc_array() and kvcalloc().
-
-Add alloc-with-multiplies checks for these new functions.
-
-Thanks
---
-Gustavo
-
-----------------------------------------------------------------
-Gustavo A. R. Silva (1):
-      checkpatch: add new alloc functions to alloc with multiplies check
-
- scripts/checkpatch.pl | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+-- 
+Best
+GUO Zihua
