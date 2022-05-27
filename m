@@ -2,52 +2,54 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6237EC433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 May 2022 12:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94112C433F5
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 May 2022 20:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351270AbiE0MkV (ORCPT
+        id S1354145AbiE0UpL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 May 2022 08:40:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53938 "EHLO
+        Fri, 27 May 2022 16:45:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352304AbiE0Mjz (ORCPT
+        with ESMTP id S1350763AbiE0UpK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 May 2022 08:39:55 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2D94B11CA03
-        for <linux-hardening@vger.kernel.org>; Fri, 27 May 2022 05:27:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1653654462;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RJxrf4ooyTqpiAItg7I/Q/q7XnsebEkQQNQ2A5YOD9I=;
-        b=fDzm90nbj/oz4GJ+oadtyz9BHT6QStbtQmGZxY7mbYVRlsZgsnXc3AgW9UeWCSvr7yJKrL
-        /YORW++m7MTC/tRoqGRq+hJtzXTl7yCF9PEICr8mFNDNuef477PWIVTpj/wWXQWw1QcT7p
-        59GxlXTNrxKfWmag0wej1GM7sTjwsns=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-251-jXjVmR17Pi2O2lmDWrKoXw-1; Fri, 27 May 2022 08:27:38 -0400
-X-MC-Unique: jXjVmR17Pi2O2lmDWrKoXw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 29875101AA45;
-        Fri, 27 May 2022 12:27:37 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2504E1410DD5;
-        Fri, 27 May 2022 12:27:34 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <202205190704.1DC660E5E@keescook>
-References: <202205190704.1DC660E5E@keescook> <165296786831.3591209.12111293034669289733.stgit@warthog.procyon.org.uk>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     dhowells@redhat.com, jlayton@kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
+        Fri, 27 May 2022 16:45:10 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4777A1339EB
+        for <linux-hardening@vger.kernel.org>; Fri, 27 May 2022 13:45:07 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id n8so5108619plh.1
+        for <linux-hardening@vger.kernel.org>; Fri, 27 May 2022 13:45:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+uKoFrA1MB7Px4Hceb9HtqBEm7hxyzDunzaSFZdZ65E=;
+        b=JpMHO7nYYfFDaaxxq/wzIXsc4I/Z9xgwdZE0rzhnywmrdGZcUtKA/KrIyU0IeU6GnG
+         6cD89RcSRO+j9Xoo1ueLijOKuYZGA2nzUwHP9WwPfga0WnX/xc0QfCNn6vNII/OoLrWD
+         KIRjgDhUVv807X+e9rHfxUjNc4U8RMrb5BBBA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+uKoFrA1MB7Px4Hceb9HtqBEm7hxyzDunzaSFZdZ65E=;
+        b=GO3lifcbXAr8yqEgWRquD0crr6sLUsJ9ZbTWZMmgNgjfglP0YOBtir6E1y1UoQfvlx
+         /w4x3Ay8R//XYfQyN4s/1Mqt6cAIV3fu8kS8mmL6378Wuw4RAFmKFOIC72CEoV8dv+JE
+         o3zg1aHZdxQ5HZ9cvEUjCvEAQR83BJDHbK9fzbGNbyyQ0a/ot0WAl/driJU37Uky/vL6
+         SKjt9uEoLoI9NnB3IR+yxxWsU0BnojFwWEAWrdB4lGViD85wnwkrh/71gu6ohAW8IYdC
+         7DNjbdyuzg5tB2sKMv3rtDAbwCPAx6uDxYEaf1u8740CGl57fadfVGOQjQN9zF/jZ0pz
+         xyOA==
+X-Gm-Message-State: AOAM533yNz+1pqA8xZj36/5Bx778tIlgw41YIuiuzAhJYmbVKyun6ip4
+        Z9IfmZ5yidtax5DgYvxYFFO/Ng==
+X-Google-Smtp-Source: ABdhPJwQP43RMakt2LwIAl78pe4ca3GgoTmEwDTY2EZSPcZfvlKlZeVTUOXcUXS3K+fJrEcGQhpsnQ==
+X-Received: by 2002:a17:90b:1c8f:b0:1b8:c6dc:ca61 with SMTP id oo15-20020a17090b1c8f00b001b8c6dcca61mr10068623pjb.13.1653684306778;
+        Fri, 27 May 2022 13:45:06 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o1-20020a170902d4c100b0015e8d4eb20esm141656plg.88.2022.05.27.13.45.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 May 2022 13:45:06 -0700 (PDT)
+Date:   Fri, 27 May 2022 13:45:05 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     jlayton@kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Eric Van Hensbergen <ericvh@gmail.com>,
         Latchesar Ionkov <lucho@ionkov.net>,
         Dominique Martinet <asmadeus@codewreck.org>,
@@ -63,21 +65,30 @@ Cc:     dhowells@redhat.com, jlayton@kernel.org,
         linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
         linux-fsdevek@vger.kernel.org, linux-hardening@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] netfs: Fix gcc-12 warning by embedding vfs inode in netfs_i_context
+Subject: Re: [PATCH] netfs: Fix gcc-12 warning by embedding vfs inode in
+ netfs_i_context
+Message-ID: <202205271344.75AC356A5@keescook>
+References: <202205190704.1DC660E5E@keescook>
+ <165296786831.3591209.12111293034669289733.stgit@warthog.procyon.org.uk>
+ <3598052.1653654453@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3598051.1653654453.1@warthog.procyon.org.uk>
-Date:   Fri, 27 May 2022 13:27:33 +0100
-Message-ID: <3598052.1653654453@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3598052.1653654453@warthog.procyon.org.uk>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
+On Fri, May 27, 2022 at 01:27:33PM +0100, David Howells wrote:
+> Hi Kees,
+> 
+> Is v2 good for you?  I realise I left your R-b attached to it when I posted
+> it, but I can remove that if you don't have time to review it.
 
-Is v2 good for you?  I realise I left your R-b attached to it when I posted
-it, but I can remove that if you don't have time to review it.
+Oh! Yes, it's good. Since you kept the R-b, I didn't reply. It looks
+good to me. Thanks!
 
-David
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
+-- 
+Kees Cook
