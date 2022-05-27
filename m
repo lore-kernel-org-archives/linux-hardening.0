@@ -2,71 +2,175 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A03C4332F
-	for <linux-hardening@archiver.kernel.org>; Thu, 26 May 2022 00:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC1BC433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 May 2022 08:07:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242948AbiEZAJd (ORCPT
+        id S240677AbiE0IHK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 25 May 2022 20:09:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35290 "EHLO
+        Fri, 27 May 2022 04:07:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348089AbiEZAJR (ORCPT
+        with ESMTP id S1349627AbiE0IGi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 25 May 2022 20:09:17 -0400
+        Fri, 27 May 2022 04:06:38 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E42564BD0;
-        Wed, 25 May 2022 17:09:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EBC8AF315;
+        Fri, 27 May 2022 01:06:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 12DD8615EA;
-        Thu, 26 May 2022 00:09:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 70025C34114;
-        Thu, 26 May 2022 00:09:13 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8786A61C01;
+        Fri, 27 May 2022 08:06:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 998CAC34119;
+        Fri, 27 May 2022 08:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653523753;
-        bh=x+U3JZ5aTgUICVEDS7d0aYdVK38Cl20riw5doycOyeA=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=tEalbPVCjWmuH8AePIVherqPIXVJ2inb7Gpm1PuRhG2YQ/vyD6tXJr6FgNqGgFL+0
-         kccVrRAyIgaV1JWtIy7aXu50VQs7TqhvQHrkGe9U71/AOuHrIZljG0lz8gWy7MKB/+
-         6GpHQP+05EEGRNIDFHoi7+K8YB5c0OupPWqdLUbzLztbIGKVVx4uVvwkBt6B+dZT2C
-         Qmz9LFNvg8c0aiY8XekVU+Q6Q2eInkWqO+Nnf30ahnfbDKI23sS/6EPOcAliH6jfQW
-         /dy2gl8u6cBSbH4whhKAoJk/34a97Tqo2sNG/CrMtkx95KsSojb/LUh5OSV3tKhJbB
-         1kHQyVyFtWjjg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5CE31F03942;
-        Thu, 26 May 2022 00:09:13 +0000 (UTC)
-Subject: Re: [GIT PULL] -Wstringop-overflow fixes for 5.19-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220524222505.GA7242@embeddedor>
-References: <20220524222505.GA7242@embeddedor>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220524222505.GA7242@embeddedor>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/Wstringop-overflow-fixes-5.19-rc1
-X-PR-Tracked-Commit-Id: 336feb502a715909a8136eb6a62a83d7268a353b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a3a8b54b4f1a261656eb6c9a517e68e1204cef39
-Message-Id: <165352375337.5177.6020372729867356397.pr-tracker-bot@kernel.org>
-Date:   Thu, 26 May 2022 00:09:13 +0000
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        s=k20201202; t=1653638780;
+        bh=bExDxURONoYyEyd2zIv+DcSXNxKTDMG5tYNYaUYxBJc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QnUb/Iotj6TLwlrFaZEv5Mj1e2uWOatVHI1xeiSd6YPEBYzPq1CPU6lowYeMJ66Xa
+         ED3/aVsH5VNu3w1153cjLlkDukyW2Esl4jKOPSJqIK9236GmTJveEIeOPDbjmsFrt6
+         AronjEdLvrWRBdHmFJIerwC2Kz9GaftGPDDqNQ006N23oST9E4Wl9TJu+/YInV20JL
+         r2Uf2Z9gKCYnKNIIVlSv/FwGFN4Q0ALDwXrRaWJHrImdAcrzKQgqpAxx3PzjBIekbK
+         BQtbM4vc4MQJ+7uF/PUaKHkszShaU/wvTxSwoFHc1b5vJR0P7Yr816NWTr7EeyNcdP
+         mDN1TcO4tL21g==
+Date:   Fri, 27 May 2022 13:36:16 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Allen Pais <apais@linux.microsoft.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        olivier.dautricourt@orolia.com, Stefan Roese <sr@denx.de>,
         Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+        linux-hardening@vger.kernel.org,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Eugeniy.Paltsev@synopsys.com,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Leo Li <leoyang.li@nxp.com>, zw@zh-kernel.org,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Sanjay R Mehta <sanju.mehta@amd.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        green.wan@sifive.com, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Patrice CHOTARD <patrice.chotard@foss.st.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        dmaengine@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
+Message-ID: <YpCGePbo9B/Z7slV@matsya>
+References: <20220419211658.11403-1-apais@linux.microsoft.com>
+ <20220419211658.11403-2-apais@linux.microsoft.com>
+ <CACRpkdZ2DFZRPHS1x0=M3_8zYvU-jpCG5Tm3863dXv51EhY+BA@mail.gmail.com>
+ <CAK8P3a0j_rziihsgHnG5bHMxmPbOkAhT6_+CCE4iFZy7HzQrLw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0j_rziihsgHnG5bHMxmPbOkAhT6_+CCE4iFZy7HzQrLw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The pull request you sent on Tue, 24 May 2022 17:25:05 -0500:
+On 25-05-22, 13:03, Arnd Bergmann wrote:
+> On Wed, May 25, 2022 at 11:24 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > On Tue, Apr 19, 2022 at 11:17 PM Allen Pais <apais@linux.microsoft.com> wrote:
+> >
+> > > The tasklet is an old API which will be deprecated, workqueue API
+> > > cab be used instead of them.
+> > >
+> > > This patch replaces the tasklet usage in drivers/dma/* with a
+> > > simple work.
+> > >
+> > > Github: https://github.com/KSPP/linux/issues/94
+> > >
+> > > Signed-off-by: Allen Pais <apais@linux.microsoft.com>
+> >
+> > Paging Vincent Guittot and Arnd Bergmann on the following question
+> > on this patch set:
+> >
+> > - Will replacing tasklets with workque like this negatively impact the
+> >   performance on DMA engine bottom halves?
+> 
+> I think it will in some cases but not others. The problem I see is that
+> the short patch description makes it sound like a trivial conversion of a
+> single subsystem, but in reality this interacts with all the drivers using
+> DMA engines, including tty/serial, sound, mmc and spi.
+> 
+> In many cases, the change is an improvement, but I can see a number
+> of ways this might go wrong:
+> 
+> - for audio, waiting to schedule the workqueue task may add enough
+>   latency to lead to audible skips
+> 
+> - for serial, transferring a few characters through DMA is probably
+>   more expensive now than using MMIO, which might mean that
+>   there may no longer be a point in using DMA in the first place.
+> 
+> - Some drivers such as dw_mmc schedule another tasklet from the
+>   callback. If the tasklet is turned into a workqueue, this becomes
+>   a bit pointless unless we change the called drivers first.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/Wstringop-overflow-fixes-5.19-rc1
+Yes and there are assumptions in the peripheral drivers about the
+context of callback which right now is tasklet, that needs to be updated
+as well..
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a3a8b54b4f1a261656eb6c9a517e68e1204cef39
+> What might work better in the case of the dmaengine API would
+> be an approach like:
+> 
+> 1. add helper functions to call the callback functions from a
+>     tasklet locally defined in drivers/dma/dmaengine.c to allow
+>     deferring it from hardirq context
+> 
+> 2. Change all  tasklets that are not part of the callback
+>     mechanism to work queue functions, I only see
+>     xilinx_dpdma_chan_err_task in the patch, but there
+>     may be more
+> 
+> 3. change all drivers to move their custom tasklets back into
+>     hardirq context and instead call the new helper for deferring
+>     the callback.
+> 
+> 4. Extend the dmaengine callback API to let slave drivers
+>     pick hardirq, tasklet or task context for the callback.
+>     task context can mean either a workqueue, or a threaded
+>     IRQ here, with the default remaining the tasklet version.
 
-Thank you!
+That does sound a good idea, but I dont know who will use the workqueue
+or a threaded context here, it might be that most would default to
+hardirq or tasklet context for obvious reasons...
+
+> 
+> 5. Change slave drivers to pick either hardirq or task context
+>     depending on their requirements
+> 
+> 6. Remove the tasklet version.
+> 
+> This is of course a lot more complicated than Allen's
+> approach, but I think the end result would be much better.
+> 
+>          Arnd
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+~Vinod
