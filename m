@@ -2,108 +2,103 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FA6C433FE
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 May 2022 21:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8A2C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 May 2022 21:59:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354769AbiE0VaD (ORCPT
+        id S242909AbiE0V7U (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 May 2022 17:30:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44404 "EHLO
+        Fri, 27 May 2022 17:59:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354796AbiE0V36 (ORCPT
+        with ESMTP id S231129AbiE0V7T (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 May 2022 17:29:58 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17A316EC4F
-        for <linux-hardening@vger.kernel.org>; Fri, 27 May 2022 14:29:56 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id v5-20020a17090a7c0500b001df84fa82f8so5387549pjf.5
-        for <linux-hardening@vger.kernel.org>; Fri, 27 May 2022 14:29:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EhXfUexqjilsLMChy39uhcV1ViCwU++I4yhRQJkaZ9M=;
-        b=YikbCdocbI5qO1dQMuyOh0SqpeFVValjgg+9sIP0Hnbdx8vcc35LjVNcaDh2t4siHl
-         DfPHj4nlYG/aBGyg7e/MI2pHbLioW18FalPCT60WQBERxfymZs9Q3tdHVc3fTR59FxWS
-         3Bvpm6l6+dstlEaOlkAU6teMa9GrlMDMa4Sq0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EhXfUexqjilsLMChy39uhcV1ViCwU++I4yhRQJkaZ9M=;
-        b=zvgz7IRWD+zH4ruhev4kBpQ+IpVeGU/nz0/22Or5un8nld1KAoHytYxlwcE879pHFw
-         yJxI62rWeiRHRtsCfSlxL+t6IQM3LNi0+MLCG5hDyUc+XPwzlbZQDZnShzCU2bhYgkuk
-         IM5cV/zrWryt82TZKPIggqogLLqCGHwirVZlYdBMc23cPa+gcOeIDwvaQh2uwpHsyRrw
-         n99HCDEmxUwCkjcTC+T3KNC3RJvTzPjXY0DFeJK5sw85R5f84rIehToURAn5wZOGtTxO
-         Dn5bqZG3Vg1Z35yV4DJMPaUbi9czGvu2i4nCttefX17TuXtyPLF6BiF5DG0vnW4fhGi5
-         fZhg==
-X-Gm-Message-State: AOAM531dXHKbATI4N8eBpb7IL2bemic3hPM2HcpxD/tEZUWn76l6Rl00
-        fVb6vDNUn7rvVPeB1PZcRPdREA==
-X-Google-Smtp-Source: ABdhPJz3HqXfRsgeMrWPsWIMJ38E+s2sWT9IeHysdsoRnUT+uAv5B4J6/nBIgj9+oE/8GN+ldRhKNQ==
-X-Received: by 2002:a17:90b:1b08:b0:1df:f11a:7d51 with SMTP id nu8-20020a17090b1b0800b001dff11a7d51mr10498457pjb.190.1653686995383;
-        Fri, 27 May 2022 14:29:55 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d4-20020a170902c18400b001637d72b314sm4063638pld.10.2022.05.27.14.29.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 May 2022 14:29:55 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Ming Qian <ming.qian@nxp.com>
-Cc:     Kees Cook <keescook@chromium.org>, Shijie Qin <shijie.qin@nxp.com>,
+        Fri, 27 May 2022 17:59:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40AE36622F;
+        Fri, 27 May 2022 14:59:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AF7BB60F8C;
+        Fri, 27 May 2022 21:59:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 818D8C385A9;
+        Fri, 27 May 2022 21:59:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653688757;
+        bh=4FvFvuXe3XVJOjCGf3wxjlycHrRIVzIS0OCClcaFxY4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hIYECQug6gWaqXvoyMN2ql5uhxF8iaevpQj9AgmtqMeaOFArgmCGAIUXhmpnTl2d6
+         ix6vehfeSuJpBdxOorQJRXqI9NMRhViGFRsXbh5vpQWgcpxkIbR2lWPd+FdiWqv0fp
+         t2dvdQBO/8mWaAnIBs78jdis6ps6pL5y9OmnQ9ORp0wo1pi0GebPufqSHDoOrgVawr
+         iWNUX1qGJWh51d+N38NuoHeFBcP74pHp9SZUuZVT4X3r3idpJRUdeZfNUWPunu8TEt
+         C9P3b8NbwnJBJaitfNdNadB/tb/aWV7lEq9fDK0W4fnEcQn2hjz3MBFiP2pDqU+RAP
+         B+3+9hl03qjJw==
+Date:   Fri, 27 May 2022 17:08:54 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Ming Qian <ming.qian@nxp.com>, Shijie Qin <shijie.qin@nxp.com>,
         Zhou Peng <eagle.zhou@nxp.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
         linux-media@vger.kernel.org,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Nicolas Dufresne <nicolas.dufresne@collabora.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] media: amphion: Replace zero-length array with flexible-array member
-Date:   Fri, 27 May 2022 14:29:53 -0700
-Message-Id: <20220527212953.797574-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.32.0
+Subject: Re: [PATCH] media: amphion: Replace zero-length array with
+ flexible-array member
+Message-ID: <20220527220854.GA72220@embeddedor>
+References: <20220527212953.797574-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1378; h=from:subject; bh=nqnneLVAuOT5XH2WR1t/JGWDTSepj3ryGFJRhd1e9ok=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBikULQd851CKNz88uKVchNrNuHHm0hg5svRrMslIp5 rredE36JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYpFC0AAKCRCJcvTf3G3AJvCfD/ 0dREGfK+ZOxhiWJMFctrUirIMxBqf1GXmaCp2v/YfkGXFq0EvC/hZvAEIu2uS1Cp8W62lo9Y6XSEtd 4WRBoKXW9rzILaNK8bSgc1AlMWDL5qn4z2JYKpRYyKVRrSXiIbv8urqUh9LZEexktxwPBYzG9eq4s2 +PyUb2wCPF9mkjvgK6fnjhXvxnzl9ImJpnwl8U7Hc9JnzWr7MIcfLoaE5/Ibmz4VIS3wAnar84Yq1g mdj3p1sp0wnyZjfXG7Jsv5pcHr/+c+oXIS9Gg3It8IlQHZhzNiEnk47HrSqWdywHebzH2vHdnqmWLU qSd4Q3hD47GJyqHVsI9pclDV7swsL6g24UQfuzzWS9AWE+quL2xYq5pRMb4NV6j3+iykgzl2XJeZDd 2p7uFzXmVyo8vsKjp6dUv/T5cjMK2He52fD0oEfmLqhYXgXAMvLWYFc23J5vHkCUdAPVfkEv85Bhgk saRqs+wvHitDjYzE51SjJbTns1MEbTb0tEAmtEyuxq7USFZAN612DBxTX6ykQEQBkOrv5PtJsTBDIh 7QtS7aAJlqt3UD8u6YxqIXoCHWr+jIbaZqwp2BbDw3QjiK7xoJ5eLbc/MTpsQ9yZM61QJVhkTd+vfn 5j2J+zhEUxNzXP8muXgSjnTKIbIgNnp40gPs4cv9v81RRq005RM4tmxp8xgQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220527212953.797574-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-There is a regular need in the kernel to provide a way to declare
-having a dynamically sized set of trailing elements in a structure.
-Kernel code should always use “flexible array members”[1] for these
-cases. The older style of one-element or zero-length arrays should no
-longer be used[2][3].
+On Fri, May 27, 2022 at 02:29:53PM -0700, Kees Cook wrote:
+> There is a regular need in the kernel to provide a way to declare
+> having a dynamically sized set of trailing elements in a structure.
+> Kernel code should always use “flexible array members”[1] for these
+> cases. The older style of one-element or zero-length arrays should no
+> longer be used[2][3].
+> 
+> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> [2] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+> [3] https://github.com/KSPP/linux/issues/78
+> 
+> Fixes: 9f599f351e86 ("media: amphion: add vpu core driver")
+> Cc: Ming Qian <ming.qian@nxp.com>
+> Cc: Shijie Qin <shijie.qin@nxp.com>
+> Cc: Zhou Peng <eagle.zhou@nxp.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Cc: linux-media@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-[1] https://en.wikipedia.org/wiki/Flexible_array_member
-[2] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
-[3] https://github.com/KSPP/linux/issues/78
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Fixes: 9f599f351e86 ("media: amphion: add vpu core driver")
-Cc: Ming Qian <ming.qian@nxp.com>
-Cc: Shijie Qin <shijie.qin@nxp.com>
-Cc: Zhou Peng <eagle.zhou@nxp.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: linux-media@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/media/platform/amphion/vpu_dbg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks
+--
+Gustavo
 
-diff --git a/drivers/media/platform/amphion/vpu_dbg.c b/drivers/media/platform/amphion/vpu_dbg.c
-index da62bd718fb8..f72c8a506b22 100644
---- a/drivers/media/platform/amphion/vpu_dbg.c
-+++ b/drivers/media/platform/amphion/vpu_dbg.c
-@@ -27,7 +27,7 @@ struct print_buf_desc {
- 	u32 bytes;
- 	u32 read;
- 	u32 write;
--	char buffer[0];
-+	char buffer[];
- };
- 
- static char *vb2_stat_name[] = {
--- 
-2.32.0
-
+> ---
+>  drivers/media/platform/amphion/vpu_dbg.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/amphion/vpu_dbg.c b/drivers/media/platform/amphion/vpu_dbg.c
+> index da62bd718fb8..f72c8a506b22 100644
+> --- a/drivers/media/platform/amphion/vpu_dbg.c
+> +++ b/drivers/media/platform/amphion/vpu_dbg.c
+> @@ -27,7 +27,7 @@ struct print_buf_desc {
+>  	u32 bytes;
+>  	u32 read;
+>  	u32 write;
+> -	char buffer[0];
+> +	char buffer[];
+>  };
+>  
+>  static char *vb2_stat_name[] = {
+> -- 
+> 2.32.0
+> 
