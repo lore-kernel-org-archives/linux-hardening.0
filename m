@@ -2,93 +2,108 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94112C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 May 2022 20:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FA6C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 May 2022 21:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354145AbiE0UpL (ORCPT
+        id S1354769AbiE0VaD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 May 2022 16:45:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47696 "EHLO
+        Fri, 27 May 2022 17:30:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350763AbiE0UpK (ORCPT
+        with ESMTP id S1354796AbiE0V36 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 May 2022 16:45:10 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4777A1339EB
-        for <linux-hardening@vger.kernel.org>; Fri, 27 May 2022 13:45:07 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id n8so5108619plh.1
-        for <linux-hardening@vger.kernel.org>; Fri, 27 May 2022 13:45:07 -0700 (PDT)
+        Fri, 27 May 2022 17:29:58 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17A316EC4F
+        for <linux-hardening@vger.kernel.org>; Fri, 27 May 2022 14:29:56 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id v5-20020a17090a7c0500b001df84fa82f8so5387549pjf.5
+        for <linux-hardening@vger.kernel.org>; Fri, 27 May 2022 14:29:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+uKoFrA1MB7Px4Hceb9HtqBEm7hxyzDunzaSFZdZ65E=;
-        b=JpMHO7nYYfFDaaxxq/wzIXsc4I/Z9xgwdZE0rzhnywmrdGZcUtKA/KrIyU0IeU6GnG
-         6cD89RcSRO+j9Xoo1ueLijOKuYZGA2nzUwHP9WwPfga0WnX/xc0QfCNn6vNII/OoLrWD
-         KIRjgDhUVv807X+e9rHfxUjNc4U8RMrb5BBBA=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EhXfUexqjilsLMChy39uhcV1ViCwU++I4yhRQJkaZ9M=;
+        b=YikbCdocbI5qO1dQMuyOh0SqpeFVValjgg+9sIP0Hnbdx8vcc35LjVNcaDh2t4siHl
+         DfPHj4nlYG/aBGyg7e/MI2pHbLioW18FalPCT60WQBERxfymZs9Q3tdHVc3fTR59FxWS
+         3Bvpm6l6+dstlEaOlkAU6teMa9GrlMDMa4Sq0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+uKoFrA1MB7Px4Hceb9HtqBEm7hxyzDunzaSFZdZ65E=;
-        b=GO3lifcbXAr8yqEgWRquD0crr6sLUsJ9ZbTWZMmgNgjfglP0YOBtir6E1y1UoQfvlx
-         /w4x3Ay8R//XYfQyN4s/1Mqt6cAIV3fu8kS8mmL6378Wuw4RAFmKFOIC72CEoV8dv+JE
-         o3zg1aHZdxQ5HZ9cvEUjCvEAQR83BJDHbK9fzbGNbyyQ0a/ot0WAl/driJU37Uky/vL6
-         SKjt9uEoLoI9NnB3IR+yxxWsU0BnojFwWEAWrdB4lGViD85wnwkrh/71gu6ohAW8IYdC
-         7DNjbdyuzg5tB2sKMv3rtDAbwCPAx6uDxYEaf1u8740CGl57fadfVGOQjQN9zF/jZ0pz
-         xyOA==
-X-Gm-Message-State: AOAM533yNz+1pqA8xZj36/5Bx778tIlgw41YIuiuzAhJYmbVKyun6ip4
-        Z9IfmZ5yidtax5DgYvxYFFO/Ng==
-X-Google-Smtp-Source: ABdhPJwQP43RMakt2LwIAl78pe4ca3GgoTmEwDTY2EZSPcZfvlKlZeVTUOXcUXS3K+fJrEcGQhpsnQ==
-X-Received: by 2002:a17:90b:1c8f:b0:1b8:c6dc:ca61 with SMTP id oo15-20020a17090b1c8f00b001b8c6dcca61mr10068623pjb.13.1653684306778;
-        Fri, 27 May 2022 13:45:06 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EhXfUexqjilsLMChy39uhcV1ViCwU++I4yhRQJkaZ9M=;
+        b=zvgz7IRWD+zH4ruhev4kBpQ+IpVeGU/nz0/22Or5un8nld1KAoHytYxlwcE879pHFw
+         yJxI62rWeiRHRtsCfSlxL+t6IQM3LNi0+MLCG5hDyUc+XPwzlbZQDZnShzCU2bhYgkuk
+         IM5cV/zrWryt82TZKPIggqogLLqCGHwirVZlYdBMc23cPa+gcOeIDwvaQh2uwpHsyRrw
+         n99HCDEmxUwCkjcTC+T3KNC3RJvTzPjXY0DFeJK5sw85R5f84rIehToURAn5wZOGtTxO
+         Dn5bqZG3Vg1Z35yV4DJMPaUbi9czGvu2i4nCttefX17TuXtyPLF6BiF5DG0vnW4fhGi5
+         fZhg==
+X-Gm-Message-State: AOAM531dXHKbATI4N8eBpb7IL2bemic3hPM2HcpxD/tEZUWn76l6Rl00
+        fVb6vDNUn7rvVPeB1PZcRPdREA==
+X-Google-Smtp-Source: ABdhPJz3HqXfRsgeMrWPsWIMJ38E+s2sWT9IeHysdsoRnUT+uAv5B4J6/nBIgj9+oE/8GN+ldRhKNQ==
+X-Received: by 2002:a17:90b:1b08:b0:1df:f11a:7d51 with SMTP id nu8-20020a17090b1b0800b001dff11a7d51mr10498457pjb.190.1653686995383;
+        Fri, 27 May 2022 14:29:55 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o1-20020a170902d4c100b0015e8d4eb20esm141656plg.88.2022.05.27.13.45.05
+        by smtp.gmail.com with ESMTPSA id d4-20020a170902c18400b001637d72b314sm4063638pld.10.2022.05.27.14.29.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 May 2022 13:45:06 -0700 (PDT)
-Date:   Fri, 27 May 2022 13:45:05 -0700
+        Fri, 27 May 2022 14:29:55 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     jlayton@kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Steve French <smfrench@gmail.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-doc@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-fsdevek@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] netfs: Fix gcc-12 warning by embedding vfs inode in
- netfs_i_context
-Message-ID: <202205271344.75AC356A5@keescook>
-References: <202205190704.1DC660E5E@keescook>
- <165296786831.3591209.12111293034669289733.stgit@warthog.procyon.org.uk>
- <3598052.1653654453@warthog.procyon.org.uk>
+To:     Ming Qian <ming.qian@nxp.com>
+Cc:     Kees Cook <keescook@chromium.org>, Shijie Qin <shijie.qin@nxp.com>,
+        Zhou Peng <eagle.zhou@nxp.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        linux-media@vger.kernel.org,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] media: amphion: Replace zero-length array with flexible-array member
+Date:   Fri, 27 May 2022 14:29:53 -0700
+Message-Id: <20220527212953.797574-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3598052.1653654453@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1378; h=from:subject; bh=nqnneLVAuOT5XH2WR1t/JGWDTSepj3ryGFJRhd1e9ok=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBikULQd851CKNz88uKVchNrNuHHm0hg5svRrMslIp5 rredE36JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYpFC0AAKCRCJcvTf3G3AJvCfD/ 0dREGfK+ZOxhiWJMFctrUirIMxBqf1GXmaCp2v/YfkGXFq0EvC/hZvAEIu2uS1Cp8W62lo9Y6XSEtd 4WRBoKXW9rzILaNK8bSgc1AlMWDL5qn4z2JYKpRYyKVRrSXiIbv8urqUh9LZEexktxwPBYzG9eq4s2 +PyUb2wCPF9mkjvgK6fnjhXvxnzl9ImJpnwl8U7Hc9JnzWr7MIcfLoaE5/Ibmz4VIS3wAnar84Yq1g mdj3p1sp0wnyZjfXG7Jsv5pcHr/+c+oXIS9Gg3It8IlQHZhzNiEnk47HrSqWdywHebzH2vHdnqmWLU qSd4Q3hD47GJyqHVsI9pclDV7swsL6g24UQfuzzWS9AWE+quL2xYq5pRMb4NV6j3+iykgzl2XJeZDd 2p7uFzXmVyo8vsKjp6dUv/T5cjMK2He52fD0oEfmLqhYXgXAMvLWYFc23J5vHkCUdAPVfkEv85Bhgk saRqs+wvHitDjYzE51SjJbTns1MEbTb0tEAmtEyuxq7USFZAN612DBxTX6ykQEQBkOrv5PtJsTBDIh 7QtS7aAJlqt3UD8u6YxqIXoCHWr+jIbaZqwp2BbDw3QjiK7xoJ5eLbc/MTpsQ9yZM61QJVhkTd+vfn 5j2J+zhEUxNzXP8muXgSjnTKIbIgNnp40gPs4cv9v81RRq005RM4tmxp8xgQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, May 27, 2022 at 01:27:33PM +0100, David Howells wrote:
-> Hi Kees,
-> 
-> Is v2 good for you?  I realise I left your R-b attached to it when I posted
-> it, but I can remove that if you don't have time to review it.
+There is a regular need in the kernel to provide a way to declare
+having a dynamically sized set of trailing elements in a structure.
+Kernel code should always use “flexible array members”[1] for these
+cases. The older style of one-element or zero-length arrays should no
+longer be used[2][3].
 
-Oh! Yes, it's good. Since you kept the R-b, I didn't reply. It looks
-good to me. Thanks!
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+[3] https://github.com/KSPP/linux/issues/78
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Fixes: 9f599f351e86 ("media: amphion: add vpu core driver")
+Cc: Ming Qian <ming.qian@nxp.com>
+Cc: Shijie Qin <shijie.qin@nxp.com>
+Cc: Zhou Peng <eagle.zhou@nxp.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: linux-media@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/media/platform/amphion/vpu_dbg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/media/platform/amphion/vpu_dbg.c b/drivers/media/platform/amphion/vpu_dbg.c
+index da62bd718fb8..f72c8a506b22 100644
+--- a/drivers/media/platform/amphion/vpu_dbg.c
++++ b/drivers/media/platform/amphion/vpu_dbg.c
+@@ -27,7 +27,7 @@ struct print_buf_desc {
+ 	u32 bytes;
+ 	u32 read;
+ 	u32 write;
+-	char buffer[0];
++	char buffer[];
+ };
+ 
+ static char *vb2_stat_name[] = {
 -- 
-Kees Cook
+2.32.0
+
