@@ -2,103 +2,101 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8A2C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 May 2022 21:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5C2C433F5
+	for <linux-hardening@archiver.kernel.org>; Sat, 28 May 2022 08:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242909AbiE0V7U (ORCPT
+        id S231320AbiE1IN5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 May 2022 17:59:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42820 "EHLO
+        Sat, 28 May 2022 04:13:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231129AbiE0V7T (ORCPT
+        with ESMTP id S231189AbiE1IN5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 May 2022 17:59:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40AE36622F;
-        Fri, 27 May 2022 14:59:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AF7BB60F8C;
-        Fri, 27 May 2022 21:59:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 818D8C385A9;
-        Fri, 27 May 2022 21:59:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653688757;
-        bh=4FvFvuXe3XVJOjCGf3wxjlycHrRIVzIS0OCClcaFxY4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hIYECQug6gWaqXvoyMN2ql5uhxF8iaevpQj9AgmtqMeaOFArgmCGAIUXhmpnTl2d6
-         ix6vehfeSuJpBdxOorQJRXqI9NMRhViGFRsXbh5vpQWgcpxkIbR2lWPd+FdiWqv0fp
-         t2dvdQBO/8mWaAnIBs78jdis6ps6pL5y9OmnQ9ORp0wo1pi0GebPufqSHDoOrgVawr
-         iWNUX1qGJWh51d+N38NuoHeFBcP74pHp9SZUuZVT4X3r3idpJRUdeZfNUWPunu8TEt
-         C9P3b8NbwnJBJaitfNdNadB/tb/aWV7lEq9fDK0W4fnEcQn2hjz3MBFiP2pDqU+RAP
-         B+3+9hl03qjJw==
-Date:   Fri, 27 May 2022 17:08:54 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Ming Qian <ming.qian@nxp.com>, Shijie Qin <shijie.qin@nxp.com>,
-        Zhou Peng <eagle.zhou@nxp.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] media: amphion: Replace zero-length array with
- flexible-array member
-Message-ID: <20220527220854.GA72220@embeddedor>
-References: <20220527212953.797574-1-keescook@chromium.org>
+        Sat, 28 May 2022 04:13:57 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FF63298;
+        Sat, 28 May 2022 01:13:56 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id c10-20020a17090a4d0a00b001e283823a00so2838840pjg.0;
+        Sat, 28 May 2022 01:13:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m0Jp11ciNAmXB/3Pf8JdDNa95fWKHhwkSmYD7UsUFGA=;
+        b=PSY5MRuM+7vQLSUanhYSON0qmE76h2jQpxL5Waq+Jr0uf9JrdvzdhDzbwkeKpGpC2u
+         v9PGcKg9O6bm+vBOd910pX+NISgKSnJyyh8spAztkp5whbey7LgRU9QsS/qYS0HjAb9b
+         +DlPCyyM9HEwNosEpG+nKwTEG5dQ0j394k7WRYcK5+Mi6np5dX6Dd3vnVyDQPd4JygAl
+         HM2zsNlrZD3eEljk1PAZn2C1r4IlnnC2vXL8YBVYj09rHQ8c1uzz9/Pr7SctzdhSuYLH
+         qJ2Rh2qmOM5nuE4ZyzGQ9b6PSWKzaw8Ff6Yx9N20RVaku0FHEgueyRz+OLc7bmOxIe9/
+         xvpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m0Jp11ciNAmXB/3Pf8JdDNa95fWKHhwkSmYD7UsUFGA=;
+        b=4isribNPRDDfQL/PBkIO5SwvYeDrjpj4p3aMSYro6gLU+EGmIfA3L3dLU7t7eD9Lxd
+         ppBRRGDD2Kb/FXzWFL9mXcHh/XSTZxC2rGM6E+fDdaPJP37+DdbHAkBtTbwGc8/LM7nE
+         G8oEjI/9LBkUbC94LdECAywKoUdtMWO54KMscT2jZCpXKTlLWmQKYuwmGSRdy+AWR+s9
+         QRUdPIohJuqXk4lUH2aR/vRxrZo5Zy8uJANBPW72mkoyIMP0tFVdsm4LCsuGyA3GDfwd
+         eZd1ghRurmxc/bGOLdfqT1vUm7vgmwavpTRLThmcVINr4BW6jDkTH/Sf9pcziUIBv54Z
+         HNkQ==
+X-Gm-Message-State: AOAM533ck+sujQkIUz7hp0ICvD33ohGcys7j0eNi6wu3fWEjjwDkhqMa
+        1d/+Fe8MphdS8lvO6xZWuMZeHgQ6Re5jxA==
+X-Google-Smtp-Source: ABdhPJzm/AsyK5OPD28rOo/JvvE3CR9OQjk+3MUpDgpx8XJ+vE9sC708IaPeQr8+tsoxLb6x5zKWqA==
+X-Received: by 2002:a17:903:32d2:b0:161:d485:613f with SMTP id i18-20020a17090332d200b00161d485613fmr46749255plr.173.1653725635716;
+        Sat, 28 May 2022 01:13:55 -0700 (PDT)
+Received: from localhost.localdomain ([140.116.104.153])
+        by smtp.gmail.com with ESMTPSA id i12-20020a17090ad34c00b001e0c5da6a51sm2774347pjx.50.2022.05.28.01.13.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 May 2022 01:13:55 -0700 (PDT)
+From:   Yu-Jen Chang <arthurchang09@gmail.com>
+To:     ak@linux.intel.com, jdike@linux.intel.com
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        linux-um@lists.infradead.org, jserv@ccns.ncku.edu.tw,
+        Yu-Jen Chang <arthurchang09@gmail.com>
+Subject: [PATCH 0/2] x86: Optimize memchr() for x86-64 
+Date:   Sat, 28 May 2022 16:12:34 +0800
+Message-Id: <20220528081236.3020-1-arthurchang09@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220527212953.797574-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, May 27, 2022 at 02:29:53PM -0700, Kees Cook wrote:
-> There is a regular need in the kernel to provide a way to declare
-> having a dynamically sized set of trailing elements in a structure.
-> Kernel code should always use “flexible array members”[1] for these
-> cases. The older style of one-element or zero-length arrays should no
-> longer be used[2][3].
-> 
-> [1] https://en.wikipedia.org/wiki/Flexible_array_member
-> [2] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
-> [3] https://github.com/KSPP/linux/issues/78
-> 
-> Fixes: 9f599f351e86 ("media: amphion: add vpu core driver")
-> Cc: Ming Qian <ming.qian@nxp.com>
-> Cc: Shijie Qin <shijie.qin@nxp.com>
-> Cc: Zhou Peng <eagle.zhou@nxp.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Cc: linux-media@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+*** BLURB HERE ***
+These patch series add an optimized "memchr()" for x86-64 and 
+USER-MODE LINUX (UML).
+ 
+There exists an assemebly implementation for x86-32. However, 
+for x86-64, there isn't any optimized version. We implement word-wise 
+comparison so that 8 characters can be compared at the same time on 
+x86-64 CPU. The optimized “memchr()” is nearly 4x faster than the 
+orginal implementation for long strings.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+We test the optimized “memchr()” in UML and also recompile the 5.18 
+Kernel with the optimized “memchr()”. They run correctly.
 
-Thanks
---
-Gustavo
+In this patch we add a new file "string_64.c", which only contains 
+"memchr()". We can add more optimized string functions in it in the 
+future.
 
-> ---
->  drivers/media/platform/amphion/vpu_dbg.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/amphion/vpu_dbg.c b/drivers/media/platform/amphion/vpu_dbg.c
-> index da62bd718fb8..f72c8a506b22 100644
-> --- a/drivers/media/platform/amphion/vpu_dbg.c
-> +++ b/drivers/media/platform/amphion/vpu_dbg.c
-> @@ -27,7 +27,7 @@ struct print_buf_desc {
->  	u32 bytes;
->  	u32 read;
->  	u32 write;
-> -	char buffer[0];
-> +	char buffer[];
->  };
->  
->  static char *vb2_stat_name[] = {
-> -- 
-> 2.32.0
-> 
+Yu-Jen Chang (2):
+  x86/lib: Optimize memchr()
+  x86/um: Use x86_64-optimized memchr
+
+ arch/x86/include/asm/string_64.h |  3 ++
+ arch/x86/lib/Makefile            |  1 +
+ arch/x86/lib/string_64.c         | 78 ++++++++++++++++++++++++++++++++
+ arch/x86/um/Makefile             |  2 +-
+ 4 files changed, 83 insertions(+), 1 deletion(-)
+ create mode 100644 arch/x86/lib/string_64.c
+
+-- 
+2.25.1
+
