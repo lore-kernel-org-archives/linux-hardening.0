@@ -2,128 +2,179 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D31C433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 30 May 2022 11:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57570C433EF
+	for <linux-hardening@archiver.kernel.org>; Tue, 31 May 2022 06:56:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235790AbiE3L23 (ORCPT
+        id S244376AbiEaG4q (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 30 May 2022 07:28:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59768 "EHLO
+        Tue, 31 May 2022 02:56:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235816AbiE3L20 (ORCPT
+        with ESMTP id S232460AbiEaG4q (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 30 May 2022 07:28:26 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AAD450E18
-        for <linux-hardening@vger.kernel.org>; Mon, 30 May 2022 04:28:04 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id l19so2359657ejr.8
-        for <linux-hardening@vger.kernel.org>; Mon, 30 May 2022 04:28:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=tAj71uhfpd7zy3DcY1wrWpNC2HSiY+lz9KoYoOBAv+g=;
-        b=MAul1gaNGk3a5noHPlwKMT4U8N4QwNwOCCMG11QXRNZUuagQK60TVoSFAZ3gH3YGD/
-         0e2xLVoicFMNpUt9IeL9Ro7lBLsEoSvb1uiX/sjCaElFGmaiXOAuyKRKdn3wv/zUOjOT
-         e/8xWo9A8MVK/X6819bIx9HLUpfs/YzFqNgxM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=tAj71uhfpd7zy3DcY1wrWpNC2HSiY+lz9KoYoOBAv+g=;
-        b=hxtayrxOM+ewZyHa0KxPhzp5Hs6ttrN5PnWmaAmCDvdgkcI/THok4BtjAEXdDrP6JO
-         dXbdceEDTvShfbumAce7+nzyS6Sg7D+omjf4e8RMBiIE+MNqkizZNlJnEKiFjPZy1eXf
-         jVejp8j0dWdw2MOQNPeNdSLJMoS1Ocm1wHUMt52tyoHG8HuTfr03bw3oZDAMojKHpKYZ
-         2AvAKpbgWdcarS9bXOUMDKH1JobvY/YMmBEDwwFxCqiTa62P2ENTigwPAs9nZRLdDCXP
-         5fSkpeKHniTZRd3JbYWCVyWFlVk5bt2FnT4e7bSpPt5NYTgkFOaFmFK3wuzZ7OteDSk9
-         1vtg==
-X-Gm-Message-State: AOAM531jwmpy6CucHeZpnxWdH5HEto7+RRxn3iDLj07c40Ydh2VjvuTt
-        J9lMKMybR22e1UE1yJeqclJf4g==
-X-Google-Smtp-Source: ABdhPJySR3Qh0UAwwf+pSKv/+yvslrXpUVHM3TvCzEy8domQUYmGU1UJ53eOkvuWwZq3vxTFjpq3KA==
-X-Received: by 2002:a17:906:6a02:b0:6ff:1dfb:1e2a with SMTP id qw2-20020a1709066a0200b006ff1dfb1e2amr18649571ejc.477.1653910082573;
-        Mon, 30 May 2022 04:28:02 -0700 (PDT)
-Received: from tom-ThinkPad-T14s-Gen-2i (net-2-39-143-183.cust.vodafonedsl.it. [2.39.143.183])
-        by smtp.gmail.com with ESMTPSA id e23-20020a1709062c1700b006f3ef214dd2sm3905507ejh.56.2022.05.30.04.28.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 May 2022 04:28:02 -0700 (PDT)
-Date:   Mon, 30 May 2022 13:27:59 +0200
-From:   Tommaso Merciai <tommaso.merciai@amarulasolutions.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Ming Qian <ming.qian@nxp.com>, Shijie Qin <shijie.qin@nxp.com>,
-        Zhou Peng <eagle.zhou@nxp.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        linux-media@vger.kernel.org,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] media: amphion: Replace zero-length array with
- flexible-array member
-Message-ID: <20220530112759.GC99280@tom-ThinkPad-T14s-Gen-2i>
-References: <20220527212953.797574-1-keescook@chromium.org>
+        Tue, 31 May 2022 02:56:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BDAF10FDE;
+        Mon, 30 May 2022 23:56:44 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2F8D9611EA;
+        Tue, 31 May 2022 06:56:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B29ACC3411D;
+        Tue, 31 May 2022 06:56:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653980203;
+        bh=2UQ3qgaNPc369GMhUN6AfskhbVIaavXK++b0jOePdlY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LhWWZIm9XMv1vuCvkIGBV0DV7cR+pkMSRulKThrzkuWQ1Sxm8tfQ0w0nvYVYAuYD5
+         Y09diPZ2qPlRPyV6noGyHR03G11+FhLdySnGMFTcl0PPvtW8zoytLWxwFpG/3HsRZA
+         JF2vxluM0PV/KGPpArPYJ1oxhKiq0AVkvtSfeletmpLehx+tfFgQ+jD5wspqIEvPNY
+         l/QU+acm0n85/wPBGhRlvRLbuxvhZECNli/2unqW4AE05jJ4nfR5X3DGBo7wCKWCdx
+         SnzHNTbXgnpSIA63+5M6zypPBdATj4ALy2gZQdIXQWNBZF/3kkhBFIJcAPtaNWkPbS
+         iftq7/oqZtInA==
+Date:   Tue, 31 May 2022 12:26:39 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Allen Pais <apais@linux.microsoft.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        olivier.dautricourt@orolia.com, Stefan Roese <sr@denx.de>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Eugeniy.Paltsev@synopsys.com,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Leo Li <leoyang.li@nxp.com>, zw@zh-kernel.org,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Sanjay R Mehta <sanju.mehta@amd.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        green.wan@sifive.com, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Patrice CHOTARD <patrice.chotard@foss.st.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        dmaengine@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
+Message-ID: <YpW8J40hKwc7jwQh@matsya>
+References: <20220419211658.11403-1-apais@linux.microsoft.com>
+ <20220419211658.11403-2-apais@linux.microsoft.com>
+ <CACRpkdZ2DFZRPHS1x0=M3_8zYvU-jpCG5Tm3863dXv51EhY+BA@mail.gmail.com>
+ <CAK8P3a0j_rziihsgHnG5bHMxmPbOkAhT6_+CCE4iFZy7HzQrLw@mail.gmail.com>
+ <YpCGePbo9B/Z7slV@matsya>
+ <CAK8P3a2wD7=hgvqyS14X5p-eP+7Ajk4dFJOXgbOo8Z0r5UNYmg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220527212953.797574-1-keescook@chromium.org>
+In-Reply-To: <CAK8P3a2wD7=hgvqyS14X5p-eP+7Ajk4dFJOXgbOo8Z0r5UNYmg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, May 27, 2022 at 02:29:53PM -0700, Kees Cook wrote:
-> There is a regular need in the kernel to provide a way to declare
-> having a dynamically sized set of trailing elements in a structure.
-> Kernel code should always use “flexible array members”[1] for these
-> cases. The older style of one-element or zero-length arrays should no
-> longer be used[2][3].
+On 27-05-22, 12:59, Arnd Bergmann wrote:
+> On Fri, May 27, 2022 at 10:06 AM Vinod Koul <vkoul@kernel.org> wrote:
+> > On 25-05-22, 13:03, Arnd Bergmann wrote:
+> > > What might work better in the case of the dmaengine API would
+> > > be an approach like:
+> > >
+> > > 1. add helper functions to call the callback functions from a
+> > >     tasklet locally defined in drivers/dma/dmaengine.c to allow
+> > >     deferring it from hardirq context
+> > >
+> > > 2. Change all  tasklets that are not part of the callback
+> > >     mechanism to work queue functions, I only see
+> > >     xilinx_dpdma_chan_err_task in the patch, but there
+> > >     may be more
+> > >
+> > > 3. change all drivers to move their custom tasklets back into
+> > >     hardirq context and instead call the new helper for deferring
+> > >     the callback.
+> > >
+> > > 4. Extend the dmaengine callback API to let slave drivers
+> > >     pick hardirq, tasklet or task context for the callback.
+> > >     task context can mean either a workqueue, or a threaded
+> > >     IRQ here, with the default remaining the tasklet version.
+> >
+> > That does sound a good idea, but I dont know who will use the workqueue
+> > or a threaded context here, it might be that most would default to
+> > hardirq or tasklet context for obvious reasons...
 > 
-> [1] https://en.wikipedia.org/wiki/Flexible_array_member
-> [2] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
-> [3] https://github.com/KSPP/linux/issues/78
+> If the idea is to remove tasklets from the kernel for good, then the
+> choice is only between workqueue and hardirq at this point. The
+> workqueue version is the one that would make sense for any driver
+> that just defers execution from the callback down into task context.
+> If that gets called in task context already, the driver can be simpler.
 > 
-> Fixes: 9f599f351e86 ("media: amphion: add vpu core driver")
-> Cc: Ming Qian <ming.qian@nxp.com>
-> Cc: Shijie Qin <shijie.qin@nxp.com>
-> Cc: Zhou Peng <eagle.zhou@nxp.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Cc: linux-media@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/media/platform/amphion/vpu_dbg.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I took a brief look at the roughly 150 slave drivers, and it does
+> seem like very few of them actually want task context:
 > 
-> diff --git a/drivers/media/platform/amphion/vpu_dbg.c b/drivers/media/platform/amphion/vpu_dbg.c
-> index da62bd718fb8..f72c8a506b22 100644
-> --- a/drivers/media/platform/amphion/vpu_dbg.c
-> +++ b/drivers/media/platform/amphion/vpu_dbg.c
-> @@ -27,7 +27,7 @@ struct print_buf_desc {
->  	u32 bytes;
->  	u32 read;
->  	u32 write;
-> -	char buffer[0];
-> +	char buffer[];
->  };
->  
->  static char *vb2_stat_name[] = {
-> -- 
-> 2.32.0
+> * Over Half the drivers just do a complete(), which could
+>   probably be pulled into the dmaengine layer and done from
+>   hardirq, avoiding the callback entirely
 > 
+> * A lot of the remaining drivers have interrupts disabled for
+>   the entire callback, which means they might as well use
+>   hardirqs, regardless of what they want
+> 
+> * drivers/crypto/* and drivers/mmc/* tend to call another tasklet
+>   to do the real work.
+> 
+> * drivers/ata/sata_dwc_460ex.c and drivers/ntb/ntb_transport.c
+>    probably want task context
+> 
+> * Some drivers like sound/soc/sh/siu_pcm.c start a new DMA
+>   from the callback. Is that allowed from hardirq?
+> 
+> If we do the first three steps above, and then add a 'struct
+> completion' pointer to dma_async_tx_descriptor as an alternative
+> to the callback, that would already reduce the number of drivers
+> that end up in a tasklet significantly and should be completely
+> safe.
 
-Hi,
-Looks good to me, thanks.
+That is a good idea, lot of drivers are waiting for completion which can
+be signalled from hardirq, this would also reduce the hops we have and
+help improve latency a bit. On the downside, some controllers provide
+error information, which would need to be dealt with.
 
-Reviewed-by: Tommaso Merciai <tommaso.merciai@amarulasolutions.com>
+I will prototype this on Qcom boards I have...
+
+> 
+> Unfortunately we can't just move the rest into hardirq
+> context because that breaks anything using spin_lock_bh
+> to protect against concurrent execution of the tasklet.
+> 
+> A possible alternative might be to then replace the global
+> dmaengine tasklet with a custom softirq. Obviously those
+> are not so hot either,  but dmaengine could be considered
+> special enough to fit in the same category as net_rx/tx
+> and block with their global softirqs.
+
+Yes that would be a very reasonable mechanism, thanks for the
+suggestions.
 
 -- 
-Tommaso Merciai
-Embedded Linux Engineer
-tommaso.merciai@amarulasolutions.com
-__________________________________
-
-Amarula Solutions SRL
-Via Le Canevare 30, 31100 Treviso, Veneto, IT
-T. +39 042 243 5310
-info@amarulasolutions.com
-www.amarulasolutions.com
+~Vinod
