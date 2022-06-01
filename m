@@ -2,60 +2,34 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C07C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  1 Jun 2022 05:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB9BC433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  1 Jun 2022 08:25:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231261AbiFAF7G (ORCPT
+        id S1348248AbiFAIZ4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 1 Jun 2022 01:59:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48142 "EHLO
+        Wed, 1 Jun 2022 04:25:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349703AbiFAF7E (ORCPT
+        with ESMTP id S1350708AbiFAIZz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 1 Jun 2022 01:59:04 -0400
-Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B836431209;
-        Tue, 31 May 2022 22:59:01 -0700 (PDT)
-Received: by mail-il1-x12f.google.com with SMTP id a15so544545ilq.12;
-        Tue, 31 May 2022 22:59:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=h7+QuIqIAukkZaII831OWuKCPI8ugWUjDciaU8BwTko=;
-        b=HT/kJ6NtFgEEBDW0k+DzT1D+n3GjvMQV23c5h7hlN0n/HXv6kS8Y2xxfFULvW1QidW
-         IgEieEQ+xQ3veaL7lW9apqLL7ba+tN/x4/9l3Ds3HoEbgAZmAQ4N3hdRzPZd+D5WT3qH
-         t/ufM9hWVCaz7gNemO6PbpQzEsGJo4V5wwEcAIEuXsxM4s4M9B+jATuxt1VofrCmDJmT
-         ZZzm4XXc2FUDbr8lBhEQszE7MNo+/oxz62b8RWAu2qN2ZQfUxVrUw1Fw/Xr/rAahiSPj
-         sRIi4bFY36Rm109PYB+6OZqwfoXOsrqZSCLxEORJ71VMI+HG4AX0Wl3zKK0ykMf2c3SK
-         +vTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=h7+QuIqIAukkZaII831OWuKCPI8ugWUjDciaU8BwTko=;
-        b=cx3L5bkm7pzQicc19krM/8ndIkfm3DzksQ/xyWi36nTKf71S04QTsdtpz9hHKnzzUQ
-         FQAeSuzYlgFARQTgaTYM4cUv2y0Ot6U25G8kNePcSRz4pwSVlHGF4IghzNZAvOzHVJ/c
-         H+0M66nhYkleiivqoLJoDlnmCifTnOkoaTmL8nyG2ZaHTCHC1d1ssnNChO/U8piFZNwJ
-         MKIemrR4rYwjCpZfNd6pZ+9qP9WkDyCN/Aiv4eSCdxricD45CuHihftCwOPoi9TQOKnu
-         nkc504ygzBMT1/CiWFTgrqC4S7zwkMFY6NbfyAoVDLpX6AMVhWnnSpTZct3NJiCPKfHi
-         0gRg==
-X-Gm-Message-State: AOAM5313QIMCBd/c7zAGTctuB8x+FX+t9pTGo10bMOExaG+FvoSl5sk6
-        7zNKWKTSqqnx/zl2UWu2wql87UYSckW326IfLgs=
-X-Google-Smtp-Source: ABdhPJxF18sY9RgAP6Pa4rePvDoMP1cwV2gj6ZS3WfGDvB4mt2p1yZG3o5htvFvgPP4hsc9zGqlBErQtbJ10dRaX/Xk=
-X-Received: by 2002:a05:6e02:174c:b0:2d3:c1e2:36fe with SMTP id
- y12-20020a056e02174c00b002d3c1e236femr3911515ill.121.1654063140900; Tue, 31
- May 2022 22:59:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220528081236.3020-1-arthurchang09@gmail.com>
- <20220528081236.3020-2-arthurchang09@gmail.com> <8b480c85f53c4f3b88bf99ba585e8768@AcuMS.aculab.com>
-In-Reply-To: <8b480c85f53c4f3b88bf99ba585e8768@AcuMS.aculab.com>
-From:   Yu-Jen Chang <arthurchang09@gmail.com>
-Date:   Wed, 1 Jun 2022 13:58:49 +0800
-Message-ID: <CAD4RrFOHaE0NKjPHw3RaUSrD6vZwnpHbY01bcO3emkoia2of6Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86/lib: Optimize memchr()
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "ak@linux.intel.com" <ak@linux.intel.com>,
+        Wed, 1 Jun 2022 04:25:55 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4AE66237F7
+        for <linux-hardening@vger.kernel.org>; Wed,  1 Jun 2022 01:25:52 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-13-F1naXgNMMQ6vpKhGtlWFvA-1; Wed, 01 Jun 2022 09:25:49 +0100
+X-MC-Unique: F1naXgNMMQ6vpKhGtlWFvA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.36; Wed, 1 Jun 2022 09:25:47 +0100
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.036; Wed, 1 Jun 2022 09:25:47 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Yu-Jen Chang' <arthurchang09@gmail.com>
+CC:     "ak@linux.intel.com" <ak@linux.intel.com>,
         "jdike@linux.intel.com" <jdike@linux.intel.com>,
         "tglx@linutronix.de" <tglx@linutronix.de>,
         "mingo@redhat.com" <mingo@redhat.com>,
@@ -70,271 +44,229 @@ Cc:     "ak@linux.intel.com" <ak@linux.intel.com>,
         "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
         "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
         "jserv@ccns.ncku.edu.tw" <jserv@ccns.ncku.edu.tw>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: RE: [PATCH 1/2] x86/lib: Optimize memchr()
+Thread-Topic: [PATCH 1/2] x86/lib: Optimize memchr()
+Thread-Index: AQHYcmroNJne+UgOCEK2wOYbJvL5k603Dq9wgAL1CoCAADiXEA==
+Date:   Wed, 1 Jun 2022 08:25:47 +0000
+Message-ID: <5afc275656764ee6818693dfd39df764@AcuMS.aculab.com>
+References: <20220528081236.3020-1-arthurchang09@gmail.com>
+ <20220528081236.3020-2-arthurchang09@gmail.com>
+ <8b480c85f53c4f3b88bf99ba585e8768@AcuMS.aculab.com>
+ <CAD4RrFOHaE0NKjPHw3RaUSrD6vZwnpHbY01bcO3emkoia2of6Q@mail.gmail.com>
+In-Reply-To: <CAD4RrFOHaE0NKjPHw3RaUSrD6vZwnpHbY01bcO3emkoia2of6Q@mail.gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-David Laight <David.Laight@aculab.com> =E6=96=BC 2022=E5=B9=B45=E6=9C=8830=
-=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=884:10=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> From: Yu-Jen Chang
-> > Sent: 28 May 2022 09:13
-> >
-> > The original assembly version of memchr() is implemented with
-> > the byte-wise comparing technique, which does not fully
-> > use 64-bits registers in x86_64 CPU. We use word-wide
-> > comparing so that 8 characters can be compared at the same time
-> > on x86_64 CPU. First we align the input and then use word-wise
-> > comparing to find the first 64-bit word that contain the target.
-> > Secondly, we compare every byte in the word and get the output.
-> >
-> > We create two files to measure the performance. The first file
-> > contains on average 10 characters ahead the target character.
-> > The second file contains at least 1000 characters ahead the
-> > target character. Our implementation of =E2=80=9Cmemchr()=E2=80=9D is s=
-lightly
-> > better in the first test and nearly 4x faster than the orginal
-> > implementation in the second test.
-> >
-> > Signed-off-by: Yu-Jen Chang <arthurchang09@gmail.com>
-> > Signed-off-by: Ching-Chun (Jim) Huang <jserv@ccns.ncku.edu.tw>
-> > ---
-> >  arch/x86/include/asm/string_64.h |  3 ++
-> >  arch/x86/lib/Makefile            |  1 +
-> >  arch/x86/lib/string_64.c         | 78 ++++++++++++++++++++++++++++++++
-> >  3 files changed, 82 insertions(+)
-> >  create mode 100644 arch/x86/lib/string_64.c
-> >
-> ...
-> > diff --git a/arch/x86/lib/string_64.c b/arch/x86/lib/string_64.c
-> > new file mode 100644
-> > index 000000000..4e067d5be
-> > --- /dev/null
-> > +++ b/arch/x86/lib/string_64.c
-> > @@ -0,0 +1,78 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +#include <linux/string.h>
-> > +#include <linux/export.h>
-> > +#include <linux/align.h>
-> > +
-> > +/* How many bytes are loaded each iteration of the word copy loop */
-> > +#define LBLOCKSIZE (sizeof(long))
-> > +
-> > +#ifdef __HAVE_ARCH_MEMCHR
-> > +
-> > +void *memchr(const void *cs, int c, size_t length)
-> > +{
-> > +     const unsigned char *src =3D (const unsigned char *)cs, d =3D c;
->
-> You don't need the cast.
->
-> > +
-> > +     while (!IS_ALIGNED((long)src, sizeof(long))) {
-> > +             if (!length--)
-> > +                     return NULL;
-> > +             if (*src =3D=3D d)
-> > +                     return (void *)src;
-> > +             src++;
-> > +     }
->
-> There is no point aligning the address.
-> On tests I've done misaligned reads don't even take an extra
-> clock - even if you get the cpu doing two reads/clock.
-> Even if they did the code isn't memory limited.
->
-> > +     if (length >=3D LBLOCKSIZE) {
-> > +             unsigned long mask =3D d << 8 | d;
-> > +             unsigned int i =3D 32;
-> > +             long xor, data;
-> > +             const long consta =3D 0xFEFEFEFEFEFEFEFF,
-> > +                        constb =3D 0x8080808080808080;
-> > +
-> > +             /*
-> > +              * Create a 8-bytes mask for word-wise comparing.
-> > +              * For example, a mask for 'a' is 0x6161616161616161.
-> > +              */
-> > +
-> > +             mask |=3D mask << 16;
-> > +             for (i =3D 32; i < LBLOCKSIZE * 8; i <<=3D 1)
-> > +                     mask |=3D mask << i;
->
-> Given that consta/b only support 64 bit why the loop.
-> Just do mask |=3D mask << 32.
-> I'd also put all 3 calculations together - not hide one
-> in the initialiser.
->
-> > +             /*
-> > +              * We perform word-wise comparing with following operatio=
-n:
-> > +              *      1. Perform xor on the long word @src and @mask
-> > +              *         and put into @xor.
-> > +              *      2. Add @xor with @consta.
-> > +              *      3. ~@xor & @constb.
-> > +              *      4. Perform & with the result of step 2 and 3.
-> > +              *
-> > +              * Step 1 creates a byte which is 0 in the long word if
-> > +              * there is at least one target byte in it.
-> > +              *
-> > +              * Step 2 to Step 4 find if there is a byte with 0 in
-> > +              * the long word.
-> > +              */
-> > +             asm volatile("1:\n\t"
-> > +                          "movq (%0),%1\n\t"
-> > +                          "xorq %6,%1\n\t"
-> > +                          "lea (%1,%4), %2\n\t"
-> > +                          "notq %1\n\t"
-> > +                          "andq %5,%1\n\t"
-> > +                          "testq %1,%2\n\t"
-> > +                          "jne 2f\n\t"
-> > +                          "add $8,%0\n\t"
-> > +                          "sub $8,%3\n\t"
-> > +                          "cmp $7,%3\n\t"
-> > +                          "ja 1b\n\t"
-> > +                          "2:\n\t"
-> > +                          : "=3DD"(src), "=3Dr"(xor), "=3Dr"(data), "=
-=3Dr"(length)
->
-> Why constrain src to %rdi?
+RnJvbTogWXUtSmVuIENoYW5nDQo+IFNlbnQ6IDAxIEp1bmUgMjAyMiAwNjo1OQ0KPiANCj4gRGF2
+aWQgTGFpZ2h0IDxEYXZpZC5MYWlnaHRAYWN1bGFiLmNvbT4g5pa8IDIwMjLlubQ15pyIMzDml6Ug
+6YCx5LiAIOS4i+WNiDQ6MTDlr6vpgZPvvJoNCj4gPg0KPiA+IEZyb206IFl1LUplbiBDaGFuZw0K
+PiA+ID4gU2VudDogMjggTWF5IDIwMjIgMDk6MTMNCj4gPiA+DQo+ID4gPiBUaGUgb3JpZ2luYWwg
+YXNzZW1ibHkgdmVyc2lvbiBvZiBtZW1jaHIoKSBpcyBpbXBsZW1lbnRlZCB3aXRoDQo+ID4gPiB0
+aGUgYnl0ZS13aXNlIGNvbXBhcmluZyB0ZWNobmlxdWUsIHdoaWNoIGRvZXMgbm90IGZ1bGx5DQo+
+ID4gPiB1c2UgNjQtYml0cyByZWdpc3RlcnMgaW4geDg2XzY0IENQVS4gV2UgdXNlIHdvcmQtd2lk
+ZQ0KPiA+ID4gY29tcGFyaW5nIHNvIHRoYXQgOCBjaGFyYWN0ZXJzIGNhbiBiZSBjb21wYXJlZCBh
+dCB0aGUgc2FtZSB0aW1lDQo+ID4gPiBvbiB4ODZfNjQgQ1BVLiBGaXJzdCB3ZSBhbGlnbiB0aGUg
+aW5wdXQgYW5kIHRoZW4gdXNlIHdvcmQtd2lzZQ0KPiA+ID4gY29tcGFyaW5nIHRvIGZpbmQgdGhl
+IGZpcnN0IDY0LWJpdCB3b3JkIHRoYXQgY29udGFpbiB0aGUgdGFyZ2V0Lg0KPiA+ID4gU2Vjb25k
+bHksIHdlIGNvbXBhcmUgZXZlcnkgYnl0ZSBpbiB0aGUgd29yZCBhbmQgZ2V0IHRoZSBvdXRwdXQu
+DQo+ID4gPg0KPiA+ID4gV2UgY3JlYXRlIHR3byBmaWxlcyB0byBtZWFzdXJlIHRoZSBwZXJmb3Jt
+YW5jZS4gVGhlIGZpcnN0IGZpbGUNCj4gPiA+IGNvbnRhaW5zIG9uIGF2ZXJhZ2UgMTAgY2hhcmFj
+dGVycyBhaGVhZCB0aGUgdGFyZ2V0IGNoYXJhY3Rlci4NCj4gPiA+IFRoZSBzZWNvbmQgZmlsZSBj
+b250YWlucyBhdCBsZWFzdCAxMDAwIGNoYXJhY3RlcnMgYWhlYWQgdGhlDQo+ID4gPiB0YXJnZXQg
+Y2hhcmFjdGVyLiBPdXIgaW1wbGVtZW50YXRpb24gb2Yg4oCcbWVtY2hyKCnigJ0gaXMgc2xpZ2h0
+bHkNCj4gPiA+IGJldHRlciBpbiB0aGUgZmlyc3QgdGVzdCBhbmQgbmVhcmx5IDR4IGZhc3RlciB0
+aGFuIHRoZSBvcmdpbmFsDQo+ID4gPiBpbXBsZW1lbnRhdGlvbiBpbiB0aGUgc2Vjb25kIHRlc3Qu
+DQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogWXUtSmVuIENoYW5nIDxhcnRodXJjaGFuZzA5
+QGdtYWlsLmNvbT4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IENoaW5nLUNodW4gKEppbSkgSHVhbmcg
+PGpzZXJ2QGNjbnMubmNrdS5lZHUudHc+DQo+ID4gPiAtLS0NCj4gPiA+ICBhcmNoL3g4Ni9pbmNs
+dWRlL2FzbS9zdHJpbmdfNjQuaCB8ICAzICsrDQo+ID4gPiAgYXJjaC94ODYvbGliL01ha2VmaWxl
+ICAgICAgICAgICAgfCAgMSArDQo+ID4gPiAgYXJjaC94ODYvbGliL3N0cmluZ182NC5jICAgICAg
+ICAgfCA3OCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ID4gIDMgZmlsZXMg
+Y2hhbmdlZCwgODIgaW5zZXJ0aW9ucygrKQ0KPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNo
+L3g4Ni9saWIvc3RyaW5nXzY0LmMNCj4gPiA+DQo+ID4gLi4uDQo+ID4gPiBkaWZmIC0tZ2l0IGEv
+YXJjaC94ODYvbGliL3N0cmluZ182NC5jIGIvYXJjaC94ODYvbGliL3N0cmluZ182NC5jDQo+ID4g
+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+ID4gaW5kZXggMDAwMDAwMDAwLi40ZTA2N2Q1YmUN
+Cj4gPiA+IC0tLSAvZGV2L251bGwNCj4gPiA+ICsrKyBiL2FyY2gveDg2L2xpYi9zdHJpbmdfNjQu
+Yw0KPiA+ID4gQEAgLTAsMCArMSw3OCBAQA0KPiA+ID4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlm
+aWVyOiBHUEwtMi4wDQo+ID4gPiArI2luY2x1ZGUgPGxpbnV4L3N0cmluZy5oPg0KPiA+ID4gKyNp
+bmNsdWRlIDxsaW51eC9leHBvcnQuaD4NCj4gPiA+ICsjaW5jbHVkZSA8bGludXgvYWxpZ24uaD4N
+Cj4gPiA+ICsNCj4gPiA+ICsvKiBIb3cgbWFueSBieXRlcyBhcmUgbG9hZGVkIGVhY2ggaXRlcmF0
+aW9uIG9mIHRoZSB3b3JkIGNvcHkgbG9vcCAqLw0KPiA+ID4gKyNkZWZpbmUgTEJMT0NLU0laRSAo
+c2l6ZW9mKGxvbmcpKQ0KPiA+ID4gKw0KPiA+ID4gKyNpZmRlZiBfX0hBVkVfQVJDSF9NRU1DSFIN
+Cj4gPiA+ICsNCj4gPiA+ICt2b2lkICptZW1jaHIoY29uc3Qgdm9pZCAqY3MsIGludCBjLCBzaXpl
+X3QgbGVuZ3RoKQ0KPiA+ID4gK3sNCj4gPiA+ICsgICAgIGNvbnN0IHVuc2lnbmVkIGNoYXIgKnNy
+YyA9IChjb25zdCB1bnNpZ25lZCBjaGFyICopY3MsIGQgPSBjOw0KPiA+DQo+ID4gWW91IGRvbid0
+IG5lZWQgdGhlIGNhc3QuDQo+ID4NCj4gPiA+ICsNCj4gPiA+ICsgICAgIHdoaWxlICghSVNfQUxJ
+R05FRCgobG9uZylzcmMsIHNpemVvZihsb25nKSkpIHsNCj4gPiA+ICsgICAgICAgICAgICAgaWYg
+KCFsZW5ndGgtLSkNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICByZXR1cm4gTlVMTDsNCj4g
+PiA+ICsgICAgICAgICAgICAgaWYgKCpzcmMgPT0gZCkNCj4gPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICByZXR1cm4gKHZvaWQgKilzcmM7DQo+ID4gPiArICAgICAgICAgICAgIHNyYysrOw0KPiA+
+ID4gKyAgICAgfQ0KPiA+DQo+ID4gVGhlcmUgaXMgbm8gcG9pbnQgYWxpZ25pbmcgdGhlIGFkZHJl
+c3MuDQo+ID4gT24gdGVzdHMgSSd2ZSBkb25lIG1pc2FsaWduZWQgcmVhZHMgZG9uJ3QgZXZlbiB0
+YWtlIGFuIGV4dHJhDQo+ID4gY2xvY2sgLSBldmVuIGlmIHlvdSBnZXQgdGhlIGNwdSBkb2luZyB0
+d28gcmVhZHMvY2xvY2suDQo+ID4gRXZlbiBpZiB0aGV5IGRpZCB0aGUgY29kZSBpc24ndCBtZW1v
+cnkgbGltaXRlZC4NCj4gPg0KPiA+ID4gKyAgICAgaWYgKGxlbmd0aCA+PSBMQkxPQ0tTSVpFKSB7
+DQo+ID4gPiArICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcgbWFzayA9IGQgPDwgOCB8IGQ7DQo+
+ID4gPiArICAgICAgICAgICAgIHVuc2lnbmVkIGludCBpID0gMzI7DQo+ID4gPiArICAgICAgICAg
+ICAgIGxvbmcgeG9yLCBkYXRhOw0KPiA+ID4gKyAgICAgICAgICAgICBjb25zdCBsb25nIGNvbnN0
+YSA9IDB4RkVGRUZFRkVGRUZFRkVGRiwNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICBj
+b25zdGIgPSAweDgwODA4MDgwODA4MDgwODA7DQo+ID4gPiArDQo+ID4gPiArICAgICAgICAgICAg
+IC8qDQo+ID4gPiArICAgICAgICAgICAgICAqIENyZWF0ZSBhIDgtYnl0ZXMgbWFzayBmb3Igd29y
+ZC13aXNlIGNvbXBhcmluZy4NCj4gPiA+ICsgICAgICAgICAgICAgICogRm9yIGV4YW1wbGUsIGEg
+bWFzayBmb3IgJ2EnIGlzIDB4NjE2MTYxNjE2MTYxNjE2MS4NCj4gPiA+ICsgICAgICAgICAgICAg
+ICovDQo+ID4gPiArDQo+ID4gPiArICAgICAgICAgICAgIG1hc2sgfD0gbWFzayA8PCAxNjsNCj4g
+PiA+ICsgICAgICAgICAgICAgZm9yIChpID0gMzI7IGkgPCBMQkxPQ0tTSVpFICogODsgaSA8PD0g
+MSkNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICBtYXNrIHw9IG1hc2sgPDwgaTsNCj4gPg0K
+PiA+IEdpdmVuIHRoYXQgY29uc3RhL2Igb25seSBzdXBwb3J0IDY0IGJpdCB3aHkgdGhlIGxvb3Au
+DQo+ID4gSnVzdCBkbyBtYXNrIHw9IG1hc2sgPDwgMzIuDQo+ID4gSSdkIGFsc28gcHV0IGFsbCAz
+IGNhbGN1bGF0aW9ucyB0b2dldGhlciAtIG5vdCBoaWRlIG9uZQ0KPiA+IGluIHRoZSBpbml0aWFs
+aXNlci4NCj4gPg0KPiA+ID4gKyAgICAgICAgICAgICAvKg0KPiA+ID4gKyAgICAgICAgICAgICAg
+KiBXZSBwZXJmb3JtIHdvcmQtd2lzZSBjb21wYXJpbmcgd2l0aCBmb2xsb3dpbmcgb3BlcmF0aW9u
+Og0KPiA+ID4gKyAgICAgICAgICAgICAgKiAgICAgIDEuIFBlcmZvcm0geG9yIG9uIHRoZSBsb25n
+IHdvcmQgQHNyYyBhbmQgQG1hc2sNCj4gPiA+ICsgICAgICAgICAgICAgICogICAgICAgICBhbmQg
+cHV0IGludG8gQHhvci4NCj4gPiA+ICsgICAgICAgICAgICAgICogICAgICAyLiBBZGQgQHhvciB3
+aXRoIEBjb25zdGEuDQo+ID4gPiArICAgICAgICAgICAgICAqICAgICAgMy4gfkB4b3IgJiBAY29u
+c3RiLg0KPiA+ID4gKyAgICAgICAgICAgICAgKiAgICAgIDQuIFBlcmZvcm0gJiB3aXRoIHRoZSBy
+ZXN1bHQgb2Ygc3RlcCAyIGFuZCAzLg0KPiA+ID4gKyAgICAgICAgICAgICAgKg0KPiA+ID4gKyAg
+ICAgICAgICAgICAgKiBTdGVwIDEgY3JlYXRlcyBhIGJ5dGUgd2hpY2ggaXMgMCBpbiB0aGUgbG9u
+ZyB3b3JkIGlmDQo+ID4gPiArICAgICAgICAgICAgICAqIHRoZXJlIGlzIGF0IGxlYXN0IG9uZSB0
+YXJnZXQgYnl0ZSBpbiBpdC4NCj4gPiA+ICsgICAgICAgICAgICAgICoNCj4gPiA+ICsgICAgICAg
+ICAgICAgICogU3RlcCAyIHRvIFN0ZXAgNCBmaW5kIGlmIHRoZXJlIGlzIGEgYnl0ZSB3aXRoIDAg
+aW4NCj4gPiA+ICsgICAgICAgICAgICAgICogdGhlIGxvbmcgd29yZC4NCj4gPiA+ICsgICAgICAg
+ICAgICAgICovDQo+ID4gPiArICAgICAgICAgICAgIGFzbSB2b2xhdGlsZSgiMTpcblx0Ig0KPiA+
+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgIm1vdnEgKCUwKSwlMVxuXHQiDQo+ID4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAieG9ycSAlNiwlMVxuXHQiDQo+ID4gPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAibGVhICglMSwlNCksICUyXG5cdCINCj4gPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICJub3RxICUxXG5cdCINCj4gPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICJhbmRxICU1LCUxXG5cdCINCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICJ0ZXN0cSAlMSwlMlxuXHQiDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAi
+am5lIDJmXG5cdCINCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICJhZGQgJDgsJTBc
+blx0Ig0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgInN1YiAkOCwlM1xuXHQiDQo+
+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAiY21wICQ3LCUzXG5cdCINCj4gPiA+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICAgICJqYSAxYlxuXHQiDQo+ID4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAiMjpcblx0Ig0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+OiAiPUQiKHNyYyksICI9ciIoeG9yKSwgIj1yIihkYXRhKSwgIj1yIihsZW5ndGgpDQo+ID4NCj4g
+PiBXaHkgY29uc3RyYWluIHNyYyB0byAlcmRpPw0KPiANCj4gQXQgZmlyc3QgSSB0cnkgdG8gdXNl
+IHNvbWUgaW5zdHJ1Y3Rpb25zIHJlbGF0ZWQgdG8gJXJkaSwgYnV0IEkgcmVhbGl6ZQ0KPiB0aGF0
+IEkgd29uJ3QgdXNlIHRoZXNlIGluc3RydWN0aW9ucy4gSXQgaXMgdW5uZWNlc3NhcnkgdG8gY29u
+c3RyYWluDQo+IHNyYyB0byAlcmRpLg0KPiANCj4gPg0KPiA+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgOiAiciIoY29uc3RhKSwgInIiKGNvbnN0YiksICJyIihtYXNrKSwgIjAiKHNyYyks
+DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICIxIih4b3IpLCAiMiIoZGF0YSks
+ICIzIihsZW5ndGgpDQo+ID4NCj4gPiBVc2UgIityIiBpbiB0aGUgb3V0cHV0cyBpbnN0ZWFkIG9m
+IHJlc3BlY2lmeWluZyB0aGUgYXJncy4NCj4gPiBJJ2QgYWxzbyBzdWdnZXN0IHVzaW5nIG5hbWVk
+IGFyZ3VtZW50cyAtIG11Y2ggZWFzaWVyIHRvIHJlYWQuDQo+ID4NCj4gPiA+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICAgIDogIm1lbW9yeSIsICJjYyIpOw0KPiA+DQo+ID4gRG9lc24ndCB0aGUg
+Y29tcGlsZXIgZ2VuZXJhdGUgbXVjaCB0aGUgc2FtZSBjb2RlPw0KPiA+IFlvdSBzaG91bGQgYWxz
+byBiZSBhYmxlIHRvIGNvZGUgd2l0aG91dCBuZWVkaW5nIGFkZCwgc3ViIGFuZCBjbXANCj4gPiBh
+dCB0aGUgZW5kIG9mIHRoZSBsb29wLg0KPiA+IElmIHlvdSB1c2UgbmVnYXRpdmUgb2Zmc2V0cyBm
+cm9tIHRoZSBlbmQgb2YgdGhlIGJ1ZmZlcg0KPiA+IHRoZSBsb29wIGNhbiBiZSBhIHNpbmdsZSBh
+ZGQgYW5kIGpuei4NCj4gPg0KPiA+ICAgICAgICAgRGF2aWQNCj4gPg0KPiA+ID4gKyAgICAgfQ0K
+PiA+ID4gKw0KPiA+ID4gKyAgICAgd2hpbGUgKGxlbmd0aC0tKSB7DQo+ID4gPiArICAgICAgICAg
+ICAgIGlmICgqc3JjID09IGQpDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgcmV0dXJuICh2
+b2lkICopc3JjOw0KPiA+ID4gKyAgICAgICAgICAgICBzcmMrKzsNCj4gPiA+ICsgICAgIH0NCj4g
+PiA+ICsgICAgIHJldHVybiBOVUxMOw0KPiA+ID4gK30NCj4gPiA+ICtFWFBPUlRfU1lNQk9MKG1l
+bWNocik7DQo+ID4gPiArI2VuZGlmDQo+ID4gPiAtLQ0KPiA+ID4gMi4yNS4xDQo+ID4NCj4gPiAt
+DQo+ID4gUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZh
+cm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQo+ID4gUmVnaXN0cmF0aW9uIE5vOiAxMzk3
+Mzg2IChXYWxlcykNCj4gDQo+IEkgcmVtb3ZlIHRoZSBhbGlnbmluZyBhZGRyZXNzIHBhcnQuIE9u
+IG15IHRlc3RzIHRoZSBwZXJmb3JtYW5jZSBhcmUgc2ltaWxhci4NCj4gSGVyZSBJIHJld3JpdGUg
+dGhlIGFzc2VtYmx5IHVzaW5nIG5hbWVkIGFyZ3VtZW50cyBhbmQgSSByZWR1Y2Ugb25lIGluc3Ry
+dWN0aW9uDQo+IGluIHRoZSBsb29wIGJ5IGFkZGluZyB0d28gcGFyYW1ldGVycywgd2hpY2ggYXJl
+ICAnZW5kJyBhbmQgJ2RzdCcuDQo+ICdlbmQnIHN0b3JlcyB0aGUNCj4gYWRkcmVzcyBvZiB0aGUg
+ZW5kIG9mIHRoZSBzdHJpbmcuICdkc3QnIHN0b3JlcyB0aGUgYWRkcmVzcyBvZiB0aGUgZW5kDQo+
+IG9mIHdvcmQtd2lzZQ0KPiBjb21wYXJpc29uLiBBcyBhIHJlc3VsdCwgd2hlbiAnc3JjJyBpcyBl
+cXVhbCB0byAnZHN0JywgdGhlIG51bWJlciBvZiByZW1haW5pbmcNCj4gY2hhcmFjdGVycyBpcyBs
+ZXNzIHRoYW4gOC4gVGhlIGZvbGxvd2luZyB3aGlsZSBsb29wIHdpbGwgZmluZCBpZiB0aGUNCj4g
+dGFyZ2V0IGNoYXJhY3RlciBpcw0KPiBpbiB0aGVzZSByZW1haW5pbmcgY2hhcmFjdGVycy4NCj4g
+DQo+IE9uIG15IHRlc3QgdGhlIHBlcmZvcm1hbmNlIGlzIHNpbWlsYXIgd2l0aCB0aGUgbXkgb3Jp
+Z2luYWwgaW1wbGVtZW50YXRpb24uIE9ubHkNCj4gYSBsaXR0bGUgYml0IGZhc3Qgd2hlbiBnb2lu
+ZyB0aHJvdWdoIGEgdmVyeSBsb25nIHN0cmluZywgd2hpY2ggY29udGFpbnMgMTI4KjEwMjQNCj4g
+Y2hhcmFjdGVycyBhbmQgdGhlIHRhcmdldCBjaGFyYWN0ZXIgaXMgbmVhciB0aGUgZW5kIG9mIHRo
+ZSBzdHJpbmcuDQo+IA0KPiBJIGFsc28gZXhwbGFpbiBob3cgY29uc3RhIGFuZCBjb25zdGIgd29y
+ayBjbGVhcmx5IGluIHRoZSBjb21tZW50cy4gSG9wZSB0aGF0IGl0DQo+IGhlbHBzIHVuZGVyc3Rh
+bmRpbmcuDQo+IA0KPiBUaGUgZm9sbG93aW5nIGNvZGUgaXMgd2hhdCBJIGNoYW5nZS4NCj4gDQo+
+IHZvaWQgKm1lbWNocihjb25zdCB2b2lkICpjcywgaW50IGMsIHNpemVfdCBsZW5ndGgpDQo+IHsN
+Cj4gICAgICBjb25zdCB1bnNpZ25lZCBjaGFyICpzcmMgPSAoY29uc3QgdW5zaWduZWQgY2hhciAq
+KWNzOw0KPiAgICAgIGNvbnN0IHVuc2lnbmVkIGNoYXIgKmVuZCA9IHNyYyArIGxlbmd0aDsNCj4g
+DQo+ICAgICAgaWYgKGxlbmd0aCA+PSBMQkxPQ0tTSVpFKSB7DQo+ICAgICAgICAgICAgICB1bnNp
+Z25lZCBsb25nIG1hc2sgPSBjIDw8IDggfCBjOw0KDQpUaGF0IGlzIHdyb25nIGlmICdjJyBpcyBv
+dXRzaWRlIDAuLjI1NS4NCkkgc3VzcGVjdCBpdCBpcyBiZXN0IHRvIGF0IGxlYXN0IGFsbG93IC0x
+MjguLi0xLg0KDQo+ICAgICAgICAgICAgICBsb25nIHhvciwgZGF0YTsNCj4gICAgICAgICAgICAg
+IGNvbnN0IGxvbmcgY29uc3RhID0gMHhGRUZFRkVGRUZFRkVGRUZGLA0KPiAgICAgICAgICAgICAg
+ICAgICAgICAgICBjb25zdGIgPSAweDgwODA4MDgwODA4MDgwODA7DQo+ICAgICAgICAgICAgICBj
+b25zdCB1bnNpZ25lZCBjaGFyICpkc3QgPSAoY29uc3QgdW5zaWduZWQgY2hhciAqKXNyYyArDQo+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKGxlbmd0aCAm
+IDB4RkZGRkZGRkZGRkZGRkZGOCk7DQo+IA0KPiAgICAgICAgICAgICAgLyoNCj4gICAgICAgICAg
+ICAgICAqIENyZWF0ZSBhIDgtYnl0ZXMgbWFzayBmb3Igd29yZC13aXNlIGNvbXBhcmluZy4NCj4g
+ICAgICAgICAgICAgICAqIEZvciBleGFtcGxlLCBhIG1hc2sgZm9yICdhJyBpcyAweDYxNjE2MTYx
+NjE2MTYxNjEuDQo+ICAgICAgICAgICAgICAgKi8NCj4gDQo+ICAgICAgICAgICAgICBtYXNrIHw9
+IG1hc2sgPDwgMTY7DQo+ICAgICAgICAgICAgICBtYXNrIHw9IG1hc2sgPDwgMzI7DQo+ICAgICAg
+ICAgICAgICAvKg0KPiAgICAgICAgICAgICAgICogV2UgcGVyZm9ybSB3b3JkLXdpc2UgY29tcGFy
+aW5nIHdpdGggZm9sbG93aW5nIG9wZXJhdGlvbjoNCj4gICAgICAgICAgICAgICAqIDEuIFBlcmZv
+cm0geG9yIG9uIHRoZSBsb25nIHdvcmQgQHNyYyBhbmQgQG1hc2sNCj4gICAgICAgICAgICAgICAq
+ICAgIGFuZCBwdXQgaW50byBAeG9yLg0KPiAgICAgICAgICAgICAgICogMi4gQWRkIEB4b3Igd2l0
+aCBAY29uc3RhLg0KPiAgICAgICAgICAgICAgICogMy4gfkB4b3IgJiBAY29uc3RiLg0KPiAgICAg
+ICAgICAgICAgICogNC4gUGVyZm9ybSAmIHdpdGggdGhlIHJlc3VsdCBvZiBzdGVwIDIgYW5kIDMu
+DQo+ICAgICAgICAgICAgICAgKg0KPiAgICAgICAgICAgICAgICogSWYgdGhlcmUgaXMgYSB6ZXJv
+IGJ5dGUgaW4gQHhvciwgc3RlcCAyIHR1cm5zIGl0IGludG8NCj4gICAgICAgICAgICAgICAqIDB4
+RkYuIFRoZW4gc3RlcCAzIGFuZCA0IHR1cm4gaXQgaW50byAweDgwLg0KPiAgICAgICAgICAgICAg
+ICoNCj4gICAgICAgICAgICAgICAqIElmIHRoZXJlIGlzIGEgbm9uZS16ZXJvIGJ5dGUgaW4gQHhv
+ciwgbGV0IGsNCj4gICAgICAgICAgICAgICAqICgwIDw9IGsgPD0gNykgYmUgdGhlIGxvd2VzdCAx
+IGluIHRoaXMgYnl0ZS4gVGhlIGxvd2VzdA0KPiAgICAgICAgICAgICAgICogayBiaXRzIGFyZSAw
+LiBBZnRlciBzdGVwIDIsIHRoZSBieXRlIGVuZHMgaW4gYSBzaW5nbGUNCj4gICAgICAgICAgICAg
+ICAqIGJpdCBvZiB2YWx1ZSAwLiBTdGVwIDMgYW5kIDQgdHVybnMgdGhpcyBieXRlIGludG8gaw0K
+PiAgICAgICAgICAgICAgICogYml0cyBvZiAxLCB3aGljaCBpcyAyXmsgLSAxLCBhdCBmaXJzdC4g
+VGhlbiAmIEBjb25zdGINCj4gICAgICAgICAgICAgICAqIG1ha2VzIGl0IGludG8gMC4NCj4gICAg
+ICAgICAgICAgICAqDQo+ICAgICAgICAgICAgICAgKiBTdGVwIDIgdG8gU3RlcCA0IGZpbmQgaWYg
+dGhlcmUgaXMgYSBieXRlIHdpdGggMCBpbg0KPiAgICAgICAgICAgICAgICogdGhlIGxvbmcgd29y
+ZC4NCj4gICAgICAgICAgICAgICAqLw0KPiAgICAgICAgICAgICAgIGFzbSB2b2xhdGlsZSgiMTpc
+blx0Ig0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIm1vdnEgKCVbc3JjXSksJVt4b3Jd
+XG5cdCINCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICJ4b3JxICVbbWFza10sJVt4b3Jd
+XG5cdCINCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICJsZWEgKCVbeG9yXSwlW2NvbnN0
+X2FdKSwgJVt0bXBdXG5cdCINCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICJub3RxICVb
+eG9yXVxuXHQiDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiYW5kcSAlW2NvbnN0X2Jd
+LCVbeG9yXVxuXHQiDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAidGVzdHEgJVt4b3Jd
+LCVbdG1wXVxuXHQiDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiam56IDJmXG5cdCIN
+Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICJhZGQgJDgsJVtzcmNdXG5cdCINCj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICJjbXAgJVtzcmNdLCAlW2RzdF1cblx0Ig0KPiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgImphIDFiXG5cdCINCj4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICIyOlxuXHQiDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6DQo+ICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBbc3JjXSAiK3IiKHNyYyksIFt4b3JdICIrciIoeG9y
+KSwgW3RtcF0gIityIihkYXRhKQ0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOiBbY29u
+c3RfYV0gInIiKGNvbnN0YSksIFtjb25zdF9iXSAiciIoY29uc3RiKSwNCj4gICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgW21hc2tdICJyIihtYXNrKSwgW2RzdF0gInIiKGRzdCkNCj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIDogIm1lbW9yeSIsICJjYyIpOw0KPiAgICAgICAgIH0N
+Cj4gDQo+ICAgICAgICAgd2hpbGUgKHNyYyA8PSBlbmQpIHsNCj4gICAgICAgICAgICAgIGlmICgq
+c3JjID09IGQpDQoNCkkgdGhpbmsgeW91IG1lYW4gJ2MnLg0KDQo+ICAgICAgICAgICAgICAgICAg
+ICAgIHJldHVybiAodm9pZCAqKXNyYzsNCj4gICAgICAgICAgICAgIHNyYysrOw0KPiAgICAgICAg
+IH0NCj4gICAgICAgICByZXR1cm4gTlVMTDsNCj4gfQ0KPiANCj4gVGhhbmtzLA0KPiBZdS1KZW4g
+Q2hhbmcNCg0KR2NjIGNvbXBpbGVzIHRoaXMgQyB0byB0aGUgc2FtZSBsb29wIGFuZCBpcyBlYXNp
+ZXIgdG8gcmVhZC4NClZhbGlkIG9uIGFsbCBMRSA2NGJpdCBzeXN0ZW1zLg0KDQp2b2lkICptZW1j
+aHIoY29uc3Qgdm9pZCAqcCwgaW50IGMsIHVuc2lnbmVkIGxvbmcgbGVuZ3RoKQ0Kew0KICAgIHVu
+c2lnbmVkIGxvbmcgbWFzaywgdmFsOw0KICAgIGNvbnN0IHZvaWQgKmVuZCA9IHAgKyBsZW5ndGg7
+DQoNCiAgICBjICY9IDB4ZmY7DQogICAgaWYgKHAgPD0gZW5kIC0gOCkgew0KICAgICAgICBtYXNr
+ID0gYyB8IGMgPDwgODsNCiAgICAgICAgbWFzayB8PSBtYXNrIDw8IDE2Ow0KICAgICAgICBtYXNr
+IHw9IG1hc2sgPDwgMzI7DQoNCiAgICAgICAgZm9yICg7IHAgPD0gZW5kIC0gODsgcCArPSA4KSB7
+DQogICAgICAgICAgICB2YWwgPSAqKHVuc2lnbmVkIGxvbmcgKilwIF4gbWFzazsNCiAgICAgICAg
+ICAgIGlmICgodmFsICsgMHhmZWZlZmVmZWZlZmVmZWZmdSkgJiAofnZhbCAmIDB4ODA4MDgwODA4
+MDgwODA4MHUpKQ0KICAgICAgICAgICAgICAgIGJyZWFrOw0KICAgICAgICB9DQogICAgfQ0KDQog
+ICAgZm9yICg7IHAgPCBlbmQ7IHArKykNCiAgICAgICAgaWYgKCoodW5zaWduZWQgY2hhciAqKXAg
+PT0gYykNCiAgICAgICAgICAgIHJldHVybiBwOw0KDQogICAgcmV0dXJuIE5VTEw7DQp9DQoNClNl
+ZSBodHRwczovL2dvZGJvbHQub3JnL3ovNnJxVHFmRXN4DQoNCglEYXZpZA0KDQotDQpSZWdpc3Rl
+cmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtl
+eW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-At first I try to use some instructions related to %rdi, but I realize
-that I won't use these instructions. It is unnecessary to constrain
-src to %rdi.
-
->
-> > +                          : "r"(consta), "r"(constb), "r"(mask), "0"(s=
-rc),
-> > +                            "1"(xor), "2"(data), "3"(length)
->
-> Use "+r" in the outputs instead of respecifying the args.
-> I'd also suggest using named arguments - much easier to read.
->
-> > +                          : "memory", "cc");
->
-> Doesn't the compiler generate much the same code?
-> You should also be able to code without needing add, sub and cmp
-> at the end of the loop.
-> If you use negative offsets from the end of the buffer
-> the loop can be a single add and jnz.
->
->         David
->
-> > +     }
-> > +
-> > +     while (length--) {
-> > +             if (*src =3D=3D d)
-> > +                     return (void *)src;
-> > +             src++;
-> > +     }
-> > +     return NULL;
-> > +}
-> > +EXPORT_SYMBOL(memchr);
-> > +#endif
-> > --
-> > 2.25.1
->
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1=
- 1PT, UK
-> Registration No: 1397386 (Wales)
-
-I remove the aligning address part. On my tests the performance are similar=
-.
-Here I rewrite the assembly using named arguments and I reduce one instruct=
-ion
-in the loop by adding two parameters, which are  'end' and 'dst'.
-'end' stores the
-address of the end of the string. 'dst' stores the address of the end
-of word-wise
-comparison. As a result, when 'src' is equal to 'dst', the number of remain=
-ing
-characters is less than 8. The following while loop will find if the
-target character is
-in these remaining characters.
-
-On my test the performance is similar with the my original implementation. =
-Only
-a little bit fast when going through a very long string, which contains 128=
-*1024
-characters and the target character is near the end of the string.
-
-I also explain how consta and constb work clearly in the comments. Hope tha=
-t it
-helps understanding.
-
-The following code is what I change.
-
-void *memchr(const void *cs, int c, size_t length)
-{
-     const unsigned char *src =3D (const unsigned char *)cs;
-     const unsigned char *end =3D src + length;
-
-     if (length >=3D LBLOCKSIZE) {
-             unsigned long mask =3D c << 8 | c;
-             long xor, data;
-             const long consta =3D 0xFEFEFEFEFEFEFEFF,
-                        constb =3D 0x8080808080808080;
-             const unsigned char *dst =3D (const unsigned char *)src +
-                                               (length & 0xFFFFFFFFFFFFFFF8=
-);
-
-             /*
-              * Create a 8-bytes mask for word-wise comparing.
-              * For example, a mask for 'a' is 0x6161616161616161.
-              */
-
-             mask |=3D mask << 16;
-             mask |=3D mask << 32;
-             /*
-              * We perform word-wise comparing with following operation:
-              * 1. Perform xor on the long word @src and @mask
-              *    and put into @xor.
-              * 2. Add @xor with @consta.
-              * 3. ~@xor & @constb.
-              * 4. Perform & with the result of step 2 and 3.
-              *
-              * If there is a zero byte in @xor, step 2 turns it into
-              * 0xFF. Then step 3 and 4 turn it into 0x80.
-              *
-              * If there is a none-zero byte in @xor, let k
-              * (0 <=3D k <=3D 7) be the lowest 1 in this byte. The lowest
-              * k bits are 0. After step 2, the byte ends in a single
-              * bit of value 0. Step 3 and 4 turns this byte into k
-              * bits of 1, which is 2^k - 1, at first. Then & @constb
-              * makes it into 0.
-              *
-              * Step 2 to Step 4 find if there is a byte with 0 in
-              * the long word.
-              */
-              asm volatile("1:\n\t"
-                            "movq (%[src]),%[xor]\n\t"
-                            "xorq %[mask],%[xor]\n\t"
-                            "lea (%[xor],%[const_a]), %[tmp]\n\t"
-                            "notq %[xor]\n\t"
-                            "andq %[const_b],%[xor]\n\t"
-                            "testq %[xor],%[tmp]\n\t"
-                            "jnz 2f\n\t"
-                            "add $8,%[src]\n\t"
-                            "cmp %[src], %[dst]\n\t"
-                            "ja 1b\n\t"
-                            "2:\n\t"
-                            :
-                            [src] "+r"(src), [xor] "+r"(xor), [tmp] "+r"(da=
-ta)
-                            : [const_a] "r"(consta), [const_b] "r"(constb),
-                              [mask] "r"(mask), [dst] "r"(dst)
-                            : "memory", "cc");
-        }
-
-        while (src <=3D end) {
-             if (*src =3D=3D d)
-                     return (void *)src;
-             src++;
-        }
-        return NULL;
-}
-
-Thanks,
-Yu-Jen Chang
