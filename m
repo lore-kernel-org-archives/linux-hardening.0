@@ -2,134 +2,339 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC7EC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 31 May 2022 19:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C07C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  1 Jun 2022 05:59:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347268AbiEaT16 (ORCPT
+        id S231261AbiFAF7G (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 31 May 2022 15:27:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46780 "EHLO
+        Wed, 1 Jun 2022 01:59:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231594AbiEaT15 (ORCPT
+        with ESMTP id S1349703AbiFAF7E (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 31 May 2022 15:27:57 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F077548E4A;
-        Tue, 31 May 2022 12:27:55 -0700 (PDT)
-Received: from mail-yb1-f174.google.com ([209.85.219.174]) by
- mrelayeu.kundenserver.de (mreue009 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MWzXd-1oKV5n0CHh-00XJVd; Tue, 31 May 2022 21:27:54 +0200
-Received: by mail-yb1-f174.google.com with SMTP id p13so14076781ybm.1;
-        Tue, 31 May 2022 12:27:53 -0700 (PDT)
-X-Gm-Message-State: AOAM532f4dg8HULohbX6nQcM4xAEDG8av11mec3SxxLIq1EMnmBgGVrh
-        SKJI7TDrIIrP+5s+889lTGQuaJ0ndxxsZQupSUA=
-X-Google-Smtp-Source: ABdhPJxyk421E9RkuQAkYxSldlpP0Sx5xvw/SZmoip5B1Zf2Fbf21hH68zXh6tR8O7vabTnD3t2ya1dr8dbyv7ZmpwY=
-X-Received: by 2002:a25:1209:0:b0:65d:63f9:e10a with SMTP id
- 9-20020a251209000000b0065d63f9e10amr2750286ybs.480.1654025272658; Tue, 31 May
- 2022 12:27:52 -0700 (PDT)
+        Wed, 1 Jun 2022 01:59:04 -0400
+Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B836431209;
+        Tue, 31 May 2022 22:59:01 -0700 (PDT)
+Received: by mail-il1-x12f.google.com with SMTP id a15so544545ilq.12;
+        Tue, 31 May 2022 22:59:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=h7+QuIqIAukkZaII831OWuKCPI8ugWUjDciaU8BwTko=;
+        b=HT/kJ6NtFgEEBDW0k+DzT1D+n3GjvMQV23c5h7hlN0n/HXv6kS8Y2xxfFULvW1QidW
+         IgEieEQ+xQ3veaL7lW9apqLL7ba+tN/x4/9l3Ds3HoEbgAZmAQ4N3hdRzPZd+D5WT3qH
+         t/ufM9hWVCaz7gNemO6PbpQzEsGJo4V5wwEcAIEuXsxM4s4M9B+jATuxt1VofrCmDJmT
+         ZZzm4XXc2FUDbr8lBhEQszE7MNo+/oxz62b8RWAu2qN2ZQfUxVrUw1Fw/Xr/rAahiSPj
+         sRIi4bFY36Rm109PYB+6OZqwfoXOsrqZSCLxEORJ71VMI+HG4AX0Wl3zKK0ykMf2c3SK
+         +vTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=h7+QuIqIAukkZaII831OWuKCPI8ugWUjDciaU8BwTko=;
+        b=cx3L5bkm7pzQicc19krM/8ndIkfm3DzksQ/xyWi36nTKf71S04QTsdtpz9hHKnzzUQ
+         FQAeSuzYlgFARQTgaTYM4cUv2y0Ot6U25G8kNePcSRz4pwSVlHGF4IghzNZAvOzHVJ/c
+         H+0M66nhYkleiivqoLJoDlnmCifTnOkoaTmL8nyG2ZaHTCHC1d1ssnNChO/U8piFZNwJ
+         MKIemrR4rYwjCpZfNd6pZ+9qP9WkDyCN/Aiv4eSCdxricD45CuHihftCwOPoi9TQOKnu
+         nkc504ygzBMT1/CiWFTgrqC4S7zwkMFY6NbfyAoVDLpX6AMVhWnnSpTZct3NJiCPKfHi
+         0gRg==
+X-Gm-Message-State: AOAM5313QIMCBd/c7zAGTctuB8x+FX+t9pTGo10bMOExaG+FvoSl5sk6
+        7zNKWKTSqqnx/zl2UWu2wql87UYSckW326IfLgs=
+X-Google-Smtp-Source: ABdhPJxF18sY9RgAP6Pa4rePvDoMP1cwV2gj6ZS3WfGDvB4mt2p1yZG3o5htvFvgPP4hsc9zGqlBErQtbJ10dRaX/Xk=
+X-Received: by 2002:a05:6e02:174c:b0:2d3:c1e2:36fe with SMTP id
+ y12-20020a056e02174c00b002d3c1e236femr3911515ill.121.1654063140900; Tue, 31
+ May 2022 22:59:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220419211658.11403-1-apais@linux.microsoft.com>
- <20220419211658.11403-2-apais@linux.microsoft.com> <CACRpkdZ2DFZRPHS1x0=M3_8zYvU-jpCG5Tm3863dXv51EhY+BA@mail.gmail.com>
- <CAK8P3a0j_rziihsgHnG5bHMxmPbOkAhT6_+CCE4iFZy7HzQrLw@mail.gmail.com>
- <YpCGePbo9B/Z7slV@matsya> <CAK8P3a2wD7=hgvqyS14X5p-eP+7Ajk4dFJOXgbOo8Z0r5UNYmg@mail.gmail.com>
- <YpW8J40hKwc7jwQh@matsya> <0A9EDEDC-9E6C-47F8-89C0-48DCDD3F9DE3@linux.microsoft.com>
- <CAK8P3a3vf_huJ5ysBvFDV=11E-=OxFGiDQ9ND04YKug8g6jV_A@mail.gmail.com> <708F627F-0F7D-477F-BDF7-274424501DA0@linux.microsoft.com>
-In-Reply-To: <708F627F-0F7D-477F-BDF7-274424501DA0@linux.microsoft.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 31 May 2022 21:27:35 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a314SxhTNy6psYr_MzarOPmkjv1_KKGdeVUPpBjVkC5nA@mail.gmail.com>
-Message-ID: <CAK8P3a314SxhTNy6psYr_MzarOPmkjv1_KKGdeVUPpBjVkC5nA@mail.gmail.com>
-Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
-To:     Allen Pais <apais@linux.microsoft.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        olivier.dautricourt@orolia.com, Stefan Roese <sr@denx.de>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Eugeniy.Paltsev@synopsys.com,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Leo Li <leoyang.li@nxp.com>, zw@zh-kernel.org,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Sanjay R Mehta <sanju.mehta@amd.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        green.wan@sifive.com, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Lyra Zhang <zhang.lyra@gmail.com>,
-        Patrice CHOTARD <patrice.chotard@foss.st.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        dmaengine@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20220528081236.3020-1-arthurchang09@gmail.com>
+ <20220528081236.3020-2-arthurchang09@gmail.com> <8b480c85f53c4f3b88bf99ba585e8768@AcuMS.aculab.com>
+In-Reply-To: <8b480c85f53c4f3b88bf99ba585e8768@AcuMS.aculab.com>
+From:   Yu-Jen Chang <arthurchang09@gmail.com>
+Date:   Wed, 1 Jun 2022 13:58:49 +0800
+Message-ID: <CAD4RrFOHaE0NKjPHw3RaUSrD6vZwnpHbY01bcO3emkoia2of6Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] x86/lib: Optimize memchr()
+To:     David Laight <David.Laight@aculab.com>
+Cc:     "ak@linux.intel.com" <ak@linux.intel.com>,
+        "jdike@linux.intel.com" <jdike@linux.intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "richard@nod.at" <richard@nod.at>,
+        "anton.ivanov@cambridgegreys.com" <anton.ivanov@cambridgegreys.com>,
+        "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
+        "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
+        "jserv@ccns.ncku.edu.tw" <jserv@ccns.ncku.edu.tw>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:B22oMGCygCRXUXUiRid2wa6+BPuoeRZrXYWJD0/ExzKDN6lwySO
- xH8HbHRxnH1IlxNnE6ciDtBoQgfNtFTTGS72Pk666yGlIvC/wTZZXUc88QAqizrZ+9YsB+N
- 1D+8hYbJxL7Umn93m51z6RurGdsgjA55XZcdFezzKurxbCBhT3/YRvHY2ku35E8C4tyhspf
- FiDbX0/aJOhDOtD8eom5g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aDK9dosKDUI=:qDjs0bR0Xz30Gn2NaW7Yrc
- CW9vStNFFTN452LbNgA88uS2TixpgufC4Lvc421s0a/s1PM85Ba0a/eRunYQHQ56cuudv2qDK
- MxkS1qqGUEyee/oBkXRYTSgM/A7CNVJgrUELiAR9hm8OW8fthTq8LqlqVR4i+yEhL1wR2M/G0
- TaiYXU6PpLKkRBFFegR1fvNVI9mtrhkFs2+F8Sckeh/sT/25BR/uGMEVpIYCzTwidf++pHO8U
- XnjKdgZMkLg7Fdmf5BgT2+WC7gdBuC4IIypurcdqx+rjJdeQ4Ho02hO+dVlKQmFbjfG7OSbIb
- PDms623pJzX70HggVXajBASwiNMGktAbJjt2kvFalOLm1k7rCno77UnKY68zg/HL9q76GYD+j
- Up5tYU6pUx1z/cuYMnTEO8Uigp2K6zS7HxgeuMojl7yKs3REqWws5nxY+tAj5IjYyfv0160xs
- u/DbAdxY8MpXeKNKE6g6JPpk8qFPGk7uDkETHGA7NK0FdrOLalYp0gdczaW8zCTMQGb1W4Nji
- RsqDvZmEaCPO2TusMI9bMNvkW77+O6qn3zY9oQvWAeygooAiQu4s0i3H6gt6GzNNiSu+K3bcF
- nQ1xnGB3Jd43MTOKKxV5S92Yqp3vTccBCh8i2esC7Jo8ni4FbALwdXn3gCdYjNHmDBLDMJsYR
- MLS301I8EFrAletx0HLKpf8ARqMIc31nT4kYaaheFZrPMhQKAVh8/Gh0bVUi4I4fEC7FvnQnB
- ZNsJ9Plr8/S9uB6k4sfR6jiFOmt7njjUQJUwqKd7c8BK9S85XZ+OdxG+14yQguAo9G3kFFqhz
- oD91QO6zS4Ln7SUpp9XTEiFxjDtrSZNUMwWJjnM/XJRT7V4t0ZG4GDKywjqJocQRtPb1NGp/O
- 08/AR1B0XHi7XYPnGrsQ==
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 31, 2022 at 8:19 PM Allen Pais <apais@linux.microsoft.com> wrote:
-> >>> That is a good idea, lot of drivers are waiting for completion which can
-> >>> be signalled from hardirq, this would also reduce the hops we have and
-> >>> help improve latency a bit. On the downside, some controllers provide
-> >>> error information, which would need to be dealt with.
-> >>
-> >>
-> >>   I am not an expert in dma subsystem, but by using completion from
-> >> Hardirq context be a concern? Especially with latency.
+David Laight <David.Laight@aculab.com> =E6=96=BC 2022=E5=B9=B45=E6=9C=8830=
+=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=884:10=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+> From: Yu-Jen Chang
+> > Sent: 28 May 2022 09:13
 > >
-> > I don't see how: to the task waiting for the completion, there should
-> > be no difference, and for the irq handler sending it, it just avoids
-> > a few cycles going into softirq context.
+> > The original assembly version of memchr() is implemented with
+> > the byte-wise comparing technique, which does not fully
+> > use 64-bits registers in x86_64 CPU. We use word-wide
+> > comparing so that 8 characters can be compared at the same time
+> > on x86_64 CPU. First we align the input and then use word-wise
+> > comparing to find the first 64-bit word that contain the target.
+> > Secondly, we compare every byte in the word and get the output.
+> >
+> > We create two files to measure the performance. The first file
+> > contains on average 10 characters ahead the target character.
+> > The second file contains at least 1000 characters ahead the
+> > target character. Our implementation of =E2=80=9Cmemchr()=E2=80=9D is s=
+lightly
+> > better in the first test and nearly 4x faster than the orginal
+> > implementation in the second test.
+> >
+> > Signed-off-by: Yu-Jen Chang <arthurchang09@gmail.com>
+> > Signed-off-by: Ching-Chun (Jim) Huang <jserv@ccns.ncku.edu.tw>
+> > ---
+> >  arch/x86/include/asm/string_64.h |  3 ++
+> >  arch/x86/lib/Makefile            |  1 +
+> >  arch/x86/lib/string_64.c         | 78 ++++++++++++++++++++++++++++++++
+> >  3 files changed, 82 insertions(+)
+> >  create mode 100644 arch/x86/lib/string_64.c
+> >
+> ...
+> > diff --git a/arch/x86/lib/string_64.c b/arch/x86/lib/string_64.c
+> > new file mode 100644
+> > index 000000000..4e067d5be
+> > --- /dev/null
+> > +++ b/arch/x86/lib/string_64.c
+> > @@ -0,0 +1,78 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +#include <linux/string.h>
+> > +#include <linux/export.h>
+> > +#include <linux/align.h>
+> > +
+> > +/* How many bytes are loaded each iteration of the word copy loop */
+> > +#define LBLOCKSIZE (sizeof(long))
+> > +
+> > +#ifdef __HAVE_ARCH_MEMCHR
+> > +
+> > +void *memchr(const void *cs, int c, size_t length)
+> > +{
+> > +     const unsigned char *src =3D (const unsigned char *)cs, d =3D c;
 >
->   Thanks for clarification.
+> You don't need the cast.
 >
->   If I have understood it correctly, your suggestion is to move the current
-> Callback mechanism out to dmaengine as a generic helper function
-> And introduce completion in dma_async_tx_descriptor to handle what
-> Tasklets currently do.
+> > +
+> > +     while (!IS_ALIGNED((long)src, sizeof(long))) {
+> > +             if (!length--)
+> > +                     return NULL;
+> > +             if (*src =3D=3D d)
+> > +                     return (void *)src;
+> > +             src++;
+> > +     }
+>
+> There is no point aligning the address.
+> On tests I've done misaligned reads don't even take an extra
+> clock - even if you get the cpu doing two reads/clock.
+> Even if they did the code isn't memory limited.
+>
+> > +     if (length >=3D LBLOCKSIZE) {
+> > +             unsigned long mask =3D d << 8 | d;
+> > +             unsigned int i =3D 32;
+> > +             long xor, data;
+> > +             const long consta =3D 0xFEFEFEFEFEFEFEFF,
+> > +                        constb =3D 0x8080808080808080;
+> > +
+> > +             /*
+> > +              * Create a 8-bytes mask for word-wise comparing.
+> > +              * For example, a mask for 'a' is 0x6161616161616161.
+> > +              */
+> > +
+> > +             mask |=3D mask << 16;
+> > +             for (i =3D 32; i < LBLOCKSIZE * 8; i <<=3D 1)
+> > +                     mask |=3D mask << i;
+>
+> Given that consta/b only support 64 bit why the loop.
+> Just do mask |=3D mask << 32.
+> I'd also put all 3 calculations together - not hide one
+> in the initialiser.
+>
+> > +             /*
+> > +              * We perform word-wise comparing with following operatio=
+n:
+> > +              *      1. Perform xor on the long word @src and @mask
+> > +              *         and put into @xor.
+> > +              *      2. Add @xor with @consta.
+> > +              *      3. ~@xor & @constb.
+> > +              *      4. Perform & with the result of step 2 and 3.
+> > +              *
+> > +              * Step 1 creates a byte which is 0 in the long word if
+> > +              * there is at least one target byte in it.
+> > +              *
+> > +              * Step 2 to Step 4 find if there is a byte with 0 in
+> > +              * the long word.
+> > +              */
+> > +             asm volatile("1:\n\t"
+> > +                          "movq (%0),%1\n\t"
+> > +                          "xorq %6,%1\n\t"
+> > +                          "lea (%1,%4), %2\n\t"
+> > +                          "notq %1\n\t"
+> > +                          "andq %5,%1\n\t"
+> > +                          "testq %1,%2\n\t"
+> > +                          "jne 2f\n\t"
+> > +                          "add $8,%0\n\t"
+> > +                          "sub $8,%3\n\t"
+> > +                          "cmp $7,%3\n\t"
+> > +                          "ja 1b\n\t"
+> > +                          "2:\n\t"
+> > +                          : "=3DD"(src), "=3Dr"(xor), "=3Dr"(data), "=
+=3Dr"(length)
+>
+> Why constrain src to %rdi?
 
-Right: around half the callbacks are a trivial version that does nothing
-other than calling complete(), so these will benefit from skipping the
-softirq, while the others still need the callback.
+At first I try to use some instructions related to %rdi, but I realize
+that I won't use these instructions. It is unnecessary to constrain
+src to %rdi.
 
-       Arnd
+>
+> > +                          : "r"(consta), "r"(constb), "r"(mask), "0"(s=
+rc),
+> > +                            "1"(xor), "2"(data), "3"(length)
+>
+> Use "+r" in the outputs instead of respecifying the args.
+> I'd also suggest using named arguments - much easier to read.
+>
+> > +                          : "memory", "cc");
+>
+> Doesn't the compiler generate much the same code?
+> You should also be able to code without needing add, sub and cmp
+> at the end of the loop.
+> If you use negative offsets from the end of the buffer
+> the loop can be a single add and jnz.
+>
+>         David
+>
+> > +     }
+> > +
+> > +     while (length--) {
+> > +             if (*src =3D=3D d)
+> > +                     return (void *)src;
+> > +             src++;
+> > +     }
+> > +     return NULL;
+> > +}
+> > +EXPORT_SYMBOL(memchr);
+> > +#endif
+> > --
+> > 2.25.1
+>
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1=
+ 1PT, UK
+> Registration No: 1397386 (Wales)
+
+I remove the aligning address part. On my tests the performance are similar=
+.
+Here I rewrite the assembly using named arguments and I reduce one instruct=
+ion
+in the loop by adding two parameters, which are  'end' and 'dst'.
+'end' stores the
+address of the end of the string. 'dst' stores the address of the end
+of word-wise
+comparison. As a result, when 'src' is equal to 'dst', the number of remain=
+ing
+characters is less than 8. The following while loop will find if the
+target character is
+in these remaining characters.
+
+On my test the performance is similar with the my original implementation. =
+Only
+a little bit fast when going through a very long string, which contains 128=
+*1024
+characters and the target character is near the end of the string.
+
+I also explain how consta and constb work clearly in the comments. Hope tha=
+t it
+helps understanding.
+
+The following code is what I change.
+
+void *memchr(const void *cs, int c, size_t length)
+{
+     const unsigned char *src =3D (const unsigned char *)cs;
+     const unsigned char *end =3D src + length;
+
+     if (length >=3D LBLOCKSIZE) {
+             unsigned long mask =3D c << 8 | c;
+             long xor, data;
+             const long consta =3D 0xFEFEFEFEFEFEFEFF,
+                        constb =3D 0x8080808080808080;
+             const unsigned char *dst =3D (const unsigned char *)src +
+                                               (length & 0xFFFFFFFFFFFFFFF8=
+);
+
+             /*
+              * Create a 8-bytes mask for word-wise comparing.
+              * For example, a mask for 'a' is 0x6161616161616161.
+              */
+
+             mask |=3D mask << 16;
+             mask |=3D mask << 32;
+             /*
+              * We perform word-wise comparing with following operation:
+              * 1. Perform xor on the long word @src and @mask
+              *    and put into @xor.
+              * 2. Add @xor with @consta.
+              * 3. ~@xor & @constb.
+              * 4. Perform & with the result of step 2 and 3.
+              *
+              * If there is a zero byte in @xor, step 2 turns it into
+              * 0xFF. Then step 3 and 4 turn it into 0x80.
+              *
+              * If there is a none-zero byte in @xor, let k
+              * (0 <=3D k <=3D 7) be the lowest 1 in this byte. The lowest
+              * k bits are 0. After step 2, the byte ends in a single
+              * bit of value 0. Step 3 and 4 turns this byte into k
+              * bits of 1, which is 2^k - 1, at first. Then & @constb
+              * makes it into 0.
+              *
+              * Step 2 to Step 4 find if there is a byte with 0 in
+              * the long word.
+              */
+              asm volatile("1:\n\t"
+                            "movq (%[src]),%[xor]\n\t"
+                            "xorq %[mask],%[xor]\n\t"
+                            "lea (%[xor],%[const_a]), %[tmp]\n\t"
+                            "notq %[xor]\n\t"
+                            "andq %[const_b],%[xor]\n\t"
+                            "testq %[xor],%[tmp]\n\t"
+                            "jnz 2f\n\t"
+                            "add $8,%[src]\n\t"
+                            "cmp %[src], %[dst]\n\t"
+                            "ja 1b\n\t"
+                            "2:\n\t"
+                            :
+                            [src] "+r"(src), [xor] "+r"(xor), [tmp] "+r"(da=
+ta)
+                            : [const_a] "r"(consta), [const_b] "r"(constb),
+                              [mask] "r"(mask), [dst] "r"(dst)
+                            : "memory", "cc");
+        }
+
+        while (src <=3D end) {
+             if (*src =3D=3D d)
+                     return (void *)src;
+             src++;
+        }
+        return NULL;
+}
+
+Thanks,
+Yu-Jen Chang
