@@ -2,461 +2,141 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8912EC43334
-	for <linux-hardening@archiver.kernel.org>; Mon,  6 Jun 2022 03:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C35C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed,  8 Jun 2022 09:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352105AbiFFD0B (ORCPT
+        id S234202AbiFHJ0E (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 5 Jun 2022 23:26:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36314 "EHLO
+        Wed, 8 Jun 2022 05:26:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232025AbiFFD0A (ORCPT
+        with ESMTP id S235052AbiFHJZ2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 5 Jun 2022 23:26:00 -0400
-Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1587C50005;
-        Sun,  5 Jun 2022 20:25:59 -0700 (PDT)
-Received: by mail-il1-x134.google.com with SMTP id f7so11152680ilr.5;
-        Sun, 05 Jun 2022 20:25:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ukIT3B6hBMFSPp16HUKNAMiUDGfxCc3pND9Rxs8UI8Y=;
-        b=DW9rNpFS2MJt6SmT1vldjP10FL6qXbj3+e9zxTfsg53TQaARjVumx2Yoz3BgQ9/TvT
-         ssXrNrclXSQRWTkrwrOwXM/Yc0hpucqaFS4K7V2hCxlCP0G9+soIVYOd8yCaS3Ia9XEN
-         Yo3773ytPJkQpwnLLzhdwszkWIWycxN6W+xbe8M/IZ/1YYGXGCVemQt5gQJzTnfZ00Vq
-         2n6hcJ8FXtFHLO4ewgmiNOJNppGG+ByTkVbvpmA/GuoEPsGLuaFRiv8Nea7CjijUFRuE
-         wh9jlkXTCmv5n5zftumv/sd7fnHCw09b0pKc6M1+b26YZjHfrgmnIz8GK+mnOApHyPt7
-         3bqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ukIT3B6hBMFSPp16HUKNAMiUDGfxCc3pND9Rxs8UI8Y=;
-        b=Yht3eYI5lDBZb7Y4Q7hiVh1JKbT9Sj0SSmkeLDcNgd6J35MayKn2tU7zkMChM3C1+b
-         e/6gfzLRPG1w5OflwSEm4YMRbbFDtnDHDJl2pzpGkFCGnUxLkscSLr+bEm7JPb5lk8Bs
-         HWAGhSXnbaHB/3QyKou90u4xt6hfNEyf1/ith2DZftWc7x91xeBF55E6qRdXTB/bapOx
-         rqP6yFJPRBgxlWNjfCuy01FdjqarJ1O+pMjrKlLS0cvz7S/Vvq+fWsZSRVvDV0hDX8vr
-         HW7GzqpuGOn9XL4bXpBU2ueNiSnSq8HTaPgt1V/YCAx/DlFeJ59D3znbcjPMNCP7BIAI
-         YKRg==
-X-Gm-Message-State: AOAM530r4M6Al8bsSTK54xig5MNOlshopPDCqO9ECzMijsWywhVNFpiU
-        KaDl7aa1BQg41BTl38nvS/XAdRrgW5fsS5qfvlo=
-X-Google-Smtp-Source: ABdhPJyPN3PCuSdBiKHcfEllvw6Dvs+RP1Q83f7g25f/TfIPu9LmjIk5C4TfEyzuAa6RZd4FXBDg4M8aPV9OUTl7pvk=
-X-Received: by 2002:a05:6e02:174c:b0:2d3:c1e2:36fe with SMTP id
- y12-20020a056e02174c00b002d3c1e236femr13826360ill.121.1654485958245; Sun, 05
- Jun 2022 20:25:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220528081236.3020-1-arthurchang09@gmail.com>
- <20220528081236.3020-2-arthurchang09@gmail.com> <8b480c85f53c4f3b88bf99ba585e8768@AcuMS.aculab.com>
- <CAD4RrFOHaE0NKjPHw3RaUSrD6vZwnpHbY01bcO3emkoia2of6Q@mail.gmail.com> <5afc275656764ee6818693dfd39df764@AcuMS.aculab.com>
-In-Reply-To: <5afc275656764ee6818693dfd39df764@AcuMS.aculab.com>
-From:   Yu-Jen Chang <arthurchang09@gmail.com>
-Date:   Mon, 6 Jun 2022 11:25:46 +0800
-Message-ID: <CAD4RrFOtP3VZaszTmA3M7WkEgqc_KxejpZ57BpWRoC8+rs7=bQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86/lib: Optimize memchr()
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "ak@linux.intel.com" <ak@linux.intel.com>,
-        "jdike@linux.intel.com" <jdike@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Wed, 8 Jun 2022 05:25:28 -0400
+Received: from EUR03-VE1-obe.outbound.protection.outlook.com (mail-oln040092072063.outbound.protection.outlook.com [40.92.72.63])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 506FB3BA7A;
+        Wed,  8 Jun 2022 01:48:50 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SnzLMT+0SgXckdd/Xx10238zYU8av5AoQ7fvhWHMFbAU0g8qD9meNd4wJj0kxkVTI4k8VYvDY1y5ZCdKAzbvcsMjnkvt8ubcx4Jd0UIv/YD5Gylswe9NApO++A4gnddm3YE9vQbszz9taUq2dtwShLC0Y8CPTiIYBimgKQ997zPuFSxS7Sb4eRwMfV+kbl79s8EljKN0R93tw/pGWYQLlfkdTogB4clvZR1Byt07E9rJgB4Pya7HQAoa8KP9ANwI4Gu88Y2ZxnDBIXb98ztshGe7dmsAH2gq9ilZpGEQ56D0bwR4e+5GrqT/9Ip6hmueyIAm812Nr+n+WehXOk/vIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=09gjnVFzYjvSZeVyilMwmzrUFV+fxSvm2NKmRVei7/g=;
+ b=hxSYZFR4SZmVJ3BJ77nYxoYIR6hgndAuDJL5flY2JJ9RlyhnajjIIprE0JIx+NdB/J9toU75ldTyBCe0wZpqLNnC5QKZfjxsd298ium1dzHAMIqxyum9zwgSDHGQFzsw0kPRopnokpuneC6ROeGuPRbJXc/dqqRutolguCgH2b+OpT/R2DsJuBU5BCrGLNx/fqdBdCmnUWpcY+4An0zSoYoiDIRssNlBdN1rZSObBDHZfs0glNroZA97hnGdUvyPY47yXrMfBnXkQU8vQ94jOZk+pqBx8kCRTCUtDEjVvt/eW3/iQyxTPm/TABllbnD3YFWxJbrBOjGk5VXldlzOmQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=09gjnVFzYjvSZeVyilMwmzrUFV+fxSvm2NKmRVei7/g=;
+ b=MNJEYB4tWPeMJ6Z+SMWfEJu1ovp0t3465Yich4HeDtZDWrDEEL5p5nyZ8/LrcTU9+8W1nkhSAbsa6aGvAo9/L5YJHO/lzaq+PUvld3tkrQjwHPZW5kSjBJ/H99Cc4gfqxYTgAs7G3b/XVwB4ndW83EuYN2IP5uEKGCMZETFGzyPMZQGVVghIjQFJaAcByhIE5lJSO2za0PTXi7CVsFDpinafVko8ft21DEMezMMy9nNwAQwAESseSkMxvGBPTemBZX6ScAafWYV5McP+h0ymIGdIgNs1bb0S+4ndG4UFiDIAttwJ+X2nTV2/wD1P2Z/L2ICFV1VsF5q1b3JqPVnX9w==
+Received: from DB6P189MB0568.EURP189.PROD.OUTLOOK.COM (2603:10a6:6:31::16) by
+ DB8P189MB0886.EURP189.PROD.OUTLOOK.COM (2603:10a6:10:16c::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5314.12; Wed, 8 Jun 2022 08:48:48 +0000
+Received: from DB6P189MB0568.EURP189.PROD.OUTLOOK.COM
+ ([fe80::9db9:bba4:f81e:9463]) by DB6P189MB0568.EURP189.PROD.OUTLOOK.COM
+ ([fe80::9db9:bba4:f81e:9463%7]) with mapi id 15.20.5332.011; Wed, 8 Jun 2022
+ 08:48:48 +0000
+From:   David Binderman <dcb314@hotmail.com>
+To:     "keescook@chromium.org" <keescook@chromium.org>,
         "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "richard@nod.at" <richard@nod.at>,
-        "anton.ivanov@cambridgegreys.com" <anton.ivanov@cambridgegreys.com>,
-        "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
-        "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
-        "jserv@ccns.ncku.edu.tw" <jserv@ccns.ncku.edu.tw>
-Content-Type: text/plain; charset="UTF-8"
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: kernel bug report and patch
+Thread-Topic: kernel bug report and patch
+Thread-Index: AQHYexQYTf79Ad3m9k6s9VJPw/JRfg==
+Date:   Wed, 8 Jun 2022 08:48:47 +0000
+Message-ID: <DB6P189MB05681E9F4785DF2758B9875B9CA49@DB6P189MB0568.EURP189.PROD.OUTLOOK.COM>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [pQfTnPJTaIpfxNXbkVlWa6hg0JCRjat1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a6714d9a-f702-4a1d-de1f-08da492bb40a
+x-ms-traffictypediagnostic: DB8P189MB0886:EE_
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BnUf4Pvz70SuEydRU8ygOxa+CyBE8g9DLEdx19+PLiLm9T7nqTZnAYPHgTf0s+OBnp9/yEzZG2+fEm8vXZ4qxXNGIR+zhPxCXW5TroSSBG5W9zp7lVVmtEYMR2io0kyn5OuGczIcRM6luZ08dnMnTPG6KCJt9bwoK26HuueSZ5sg1IaUdrBtCjyHveS7/lIPo43+RmU7xxj2yALHDQzCcYN+T6lWC19LFfoOrLx9ORy25ukpGTv7JfzghWmKEBN3033jt808Zy1mg02eF0ioZ5dh59T/TFt1LNdqhpXk1FSlHX8LbXFnpguMSc3/TdFMJXn/85s9x+A3rt3KITx0WX1m33NyPz0GoYgQHajWQcS1A/1efIRMzi2L7emUOtjBXCIRJkdn1kHayfasG9CsZujPSWqTegXzHMI+5ZmG1VCxvVYTP1EfnHfunQZ78axXIyB0USxKJ4WsV6qwNPzsa6f/WBHcpwHdvZUQG1hQ8E3wov1s/7P1p0BeVS1cNQA7F4hkqIT/a7sSFki68wIyCDA1ZYUIyxqj/CjoqwnpAHeXm4Gp6oX8sIzBUvaZx4B9mfBNSC/g1dFPA12ADeyB2Q==
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?Windows-1252?Q?Qos5/4hvsYNHodHTE6Z5sI3c7we0Xl3zshV8oGvFinBWD7On6MHErRrq?=
+ =?Windows-1252?Q?3VZh+FExy1IQJ7eo/hanDHUKsBEwx4ePtTPQoKjJMca+//L3lqbq2nb+?=
+ =?Windows-1252?Q?C4nk8HtyxSbNlorA3ZkPHTTmi2xWv2cc9+oLbZpQplp5aJvlFGXlBCQ7?=
+ =?Windows-1252?Q?goE76ksN5Ib/qxR+4Mz+Y2MUCdgshc7dvNzr3Zn7vIfzLp7GRy9VqcNC?=
+ =?Windows-1252?Q?HksjkYqym+i8yUxz0u17g8OBJduKKgJ+wsQcH2mOElU+BX4rxlZp9il4?=
+ =?Windows-1252?Q?KwpF8ZVZai+fuJd4c3u0AJ5hIUEsRN/f2c7cwMzqwY/r2xMf2G41qbTx?=
+ =?Windows-1252?Q?tJQbUcFk6DKG/kUn7HKoHcSFBSsT5bhL7yj5MlNb+5fGW0hn4KisoteO?=
+ =?Windows-1252?Q?xwwSw2dGgSer7t+gldxwqz1uXU1NzA4qylbuX2XqTpzuUfTHWFsNo+sv?=
+ =?Windows-1252?Q?6CGfsnFbq6NA7N7TSl+vo1p1FHtSXCH9K+ltkqe6wxPoxLeHdQoLG/ks?=
+ =?Windows-1252?Q?Q2nCPKlTiy7oT88tz/1X7WblIOsrlb4kYA3or7B/AAFhXpCNPdvkhhPH?=
+ =?Windows-1252?Q?GSqEeBWoBLoGCZMN0A4dHy80zqdESHjNMO29SoY72jH0GoT21Rz5GPBe?=
+ =?Windows-1252?Q?24olucko6LDyBUI7KfdgZV0J6bHKqdBHXPs1WlyomhbJGud2HglHBxfJ?=
+ =?Windows-1252?Q?nLwvRvo56hbpY51p5EQN55p5zGWMyQFCzzruezKVIDTNy7zEzQYs2VzZ?=
+ =?Windows-1252?Q?ZK9vCDLuwThBmAnDeXEX+BWS7Oi+LUtFFks987ligiWsjtA1cjl0ASsd?=
+ =?Windows-1252?Q?JTZXSIpX1Al8wOEJHg3qRVzsjcbSVYgvnl1VZswym4WmfIuYbS3ig6lL?=
+ =?Windows-1252?Q?S02X4qQC36TEMjZypEtX8MBIxkaUcFqXRNIuYgi3ewCKu0ZrrPUq6sbM?=
+ =?Windows-1252?Q?KvGVAwtNA8hS7TuIKxaFA+sForWf2hLsRe/8y+w+QrVWICTcYdViapDi?=
+ =?Windows-1252?Q?Czg+4A4tsChq9W6lqK9gvAop+XhhWtrztRkqyL5de/78gKWf7o4ukuRB?=
+ =?Windows-1252?Q?FwVl3IoDzXUPW1xMirUfOxTOffcjALm1c/MPlZfPFHqwuRiVNZlB8pse?=
+ =?Windows-1252?Q?nggLVGvQGE1AUc9Qd1LGqI9+W5mHCKTORAFz4uV+0yN0OhKOHdYfdAmy?=
+ =?Windows-1252?Q?gOlrforNrR5TB6Cc2r4IpqZffsemaOigfHbv6Lcz4KYnJd3Ul51j2p3+?=
+ =?Windows-1252?Q?byXhzcUY7vdWa80w/aAAsM7UVX/X6D47HezJ4vzld4GW7xARlsCQj/6z?=
+ =?Windows-1252?Q?ANuniJSsAUJgowzHeckDrMF25PJlFX4nSgIBskQJocdAhDTj6JrnOdqd?=
+ =?Windows-1252?Q?dNYFAOdzwWRIjTlUErRjL/jcxpXfcq/6e6ugavitqiVXrxhuMSe49Q9g?=
+ =?Windows-1252?Q?O6/yk3jVymoKKyTU2tiIl3hFDakAbVtLS4FIS9de1Yin8UJr2ffwVIjA?=
+ =?Windows-1252?Q?ubZqri/IYsokTHgEX8prKl/mQI2S+Q=3D=3D?=
+Content-Type: text/plain; charset="Windows-1252"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: sct-15-20-4734-24-msonline-outlook-c54b5.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB6P189MB0568.EURP189.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6714d9a-f702-4a1d-de1f-08da492bb40a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jun 2022 08:48:47.8910
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8P189MB0886
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-David Laight <David.Laight@aculab.com> =E6=96=BC 2022=E5=B9=B46=E6=9C=881=
-=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:25=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> From: Yu-Jen Chang
-> > Sent: 01 June 2022 06:59
-> >
-> > David Laight <David.Laight@aculab.com> =E6=96=BC 2022=E5=B9=B45=E6=9C=
-=8830=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=884:10=E5=AF=AB=E9=81=93=
-=EF=BC=9A
-> > >
-> > > From: Yu-Jen Chang
-> > > > Sent: 28 May 2022 09:13
-> > > >
-> > > > The original assembly version of memchr() is implemented with
-> > > > the byte-wise comparing technique, which does not fully
-> > > > use 64-bits registers in x86_64 CPU. We use word-wide
-> > > > comparing so that 8 characters can be compared at the same time
-> > > > on x86_64 CPU. First we align the input and then use word-wise
-> > > > comparing to find the first 64-bit word that contain the target.
-> > > > Secondly, we compare every byte in the word and get the output.
-> > > >
-> > > > We create two files to measure the performance. The first file
-> > > > contains on average 10 characters ahead the target character.
-> > > > The second file contains at least 1000 characters ahead the
-> > > > target character. Our implementation of =E2=80=9Cmemchr()=E2=80=9D =
-is slightly
-> > > > better in the first test and nearly 4x faster than the orginal
-> > > > implementation in the second test.
-> > > >
-> > > > Signed-off-by: Yu-Jen Chang <arthurchang09@gmail.com>
-> > > > Signed-off-by: Ching-Chun (Jim) Huang <jserv@ccns.ncku.edu.tw>
-> > > > ---
-> > > >  arch/x86/include/asm/string_64.h |  3 ++
-> > > >  arch/x86/lib/Makefile            |  1 +
-> > > >  arch/x86/lib/string_64.c         | 78 ++++++++++++++++++++++++++++=
-++++
-> > > >  3 files changed, 82 insertions(+)
-> > > >  create mode 100644 arch/x86/lib/string_64.c
-> > > >
-> > > ...
-> > > > diff --git a/arch/x86/lib/string_64.c b/arch/x86/lib/string_64.c
-> > > > new file mode 100644
-> > > > index 000000000..4e067d5be
-> > > > --- /dev/null
-> > > > +++ b/arch/x86/lib/string_64.c
-> > > > @@ -0,0 +1,78 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +#include <linux/string.h>
-> > > > +#include <linux/export.h>
-> > > > +#include <linux/align.h>
-> > > > +
-> > > > +/* How many bytes are loaded each iteration of the word copy loop =
-*/
-> > > > +#define LBLOCKSIZE (sizeof(long))
-> > > > +
-> > > > +#ifdef __HAVE_ARCH_MEMCHR
-> > > > +
-> > > > +void *memchr(const void *cs, int c, size_t length)
-> > > > +{
-> > > > +     const unsigned char *src =3D (const unsigned char *)cs, d =3D=
- c;
-> > >
-> > > You don't need the cast.
-> > >
-> > > > +
-> > > > +     while (!IS_ALIGNED((long)src, sizeof(long))) {
-> > > > +             if (!length--)
-> > > > +                     return NULL;
-> > > > +             if (*src =3D=3D d)
-> > > > +                     return (void *)src;
-> > > > +             src++;
-> > > > +     }
-> > >
-> > > There is no point aligning the address.
-> > > On tests I've done misaligned reads don't even take an extra
-> > > clock - even if you get the cpu doing two reads/clock.
-> > > Even if they did the code isn't memory limited.
-> > >
-> > > > +     if (length >=3D LBLOCKSIZE) {
-> > > > +             unsigned long mask =3D d << 8 | d;
-> > > > +             unsigned int i =3D 32;
-> > > > +             long xor, data;
-> > > > +             const long consta =3D 0xFEFEFEFEFEFEFEFF,
-> > > > +                        constb =3D 0x8080808080808080;
-> > > > +
-> > > > +             /*
-> > > > +              * Create a 8-bytes mask for word-wise comparing.
-> > > > +              * For example, a mask for 'a' is 0x6161616161616161.
-> > > > +              */
-> > > > +
-> > > > +             mask |=3D mask << 16;
-> > > > +             for (i =3D 32; i < LBLOCKSIZE * 8; i <<=3D 1)
-> > > > +                     mask |=3D mask << i;
-> > >
-> > > Given that consta/b only support 64 bit why the loop.
-> > > Just do mask |=3D mask << 32.
-> > > I'd also put all 3 calculations together - not hide one
-> > > in the initialiser.
-> > >
-> > > > +             /*
-> > > > +              * We perform word-wise comparing with following oper=
-ation:
-> > > > +              *      1. Perform xor on the long word @src and @mas=
-k
-> > > > +              *         and put into @xor.
-> > > > +              *      2. Add @xor with @consta.
-> > > > +              *      3. ~@xor & @constb.
-> > > > +              *      4. Perform & with the result of step 2 and 3.
-> > > > +              *
-> > > > +              * Step 1 creates a byte which is 0 in the long word =
-if
-> > > > +              * there is at least one target byte in it.
-> > > > +              *
-> > > > +              * Step 2 to Step 4 find if there is a byte with 0 in
-> > > > +              * the long word.
-> > > > +              */
-> > > > +             asm volatile("1:\n\t"
-> > > > +                          "movq (%0),%1\n\t"
-> > > > +                          "xorq %6,%1\n\t"
-> > > > +                          "lea (%1,%4), %2\n\t"
-> > > > +                          "notq %1\n\t"
-> > > > +                          "andq %5,%1\n\t"
-> > > > +                          "testq %1,%2\n\t"
-> > > > +                          "jne 2f\n\t"
-> > > > +                          "add $8,%0\n\t"
-> > > > +                          "sub $8,%3\n\t"
-> > > > +                          "cmp $7,%3\n\t"
-> > > > +                          "ja 1b\n\t"
-> > > > +                          "2:\n\t"
-> > > > +                          : "=3DD"(src), "=3Dr"(xor), "=3Dr"(data)=
-, "=3Dr"(length)
-> > >
-> > > Why constrain src to %rdi?
-> >
-> > At first I try to use some instructions related to %rdi, but I realize
-> > that I won't use these instructions. It is unnecessary to constrain
-> > src to %rdi.
-> >
-> > >
-> > > > +                          : "r"(consta), "r"(constb), "r"(mask), "=
-0"(src),
-> > > > +                            "1"(xor), "2"(data), "3"(length)
-> > >
-> > > Use "+r" in the outputs instead of respecifying the args.
-> > > I'd also suggest using named arguments - much easier to read.
-> > >
-> > > > +                          : "memory", "cc");
-> > >
-> > > Doesn't the compiler generate much the same code?
-> > > You should also be able to code without needing add, sub and cmp
-> > > at the end of the loop.
-> > > If you use negative offsets from the end of the buffer
-> > > the loop can be a single add and jnz.
-> > >
-> > >         David
-> > >
-> > > > +     }
-> > > > +
-> > > > +     while (length--) {
-> > > > +             if (*src =3D=3D d)
-> > > > +                     return (void *)src;
-> > > > +             src++;
-> > > > +     }
-> > > > +     return NULL;
-> > > > +}
-> > > > +EXPORT_SYMBOL(memchr);
-> > > > +#endif
-> > > > --
-> > > > 2.25.1
-> > >
-> > > -
-> > > Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes,=
- MK1 1PT, UK
-> > > Registration No: 1397386 (Wales)
-> >
-> > I remove the aligning address part. On my tests the performance are sim=
-ilar.
-> > Here I rewrite the assembly using named arguments and I reduce one inst=
-ruction
-> > in the loop by adding two parameters, which are  'end' and 'dst'.
-> > 'end' stores the
-> > address of the end of the string. 'dst' stores the address of the end
-> > of word-wise
-> > comparison. As a result, when 'src' is equal to 'dst', the number of re=
-maining
-> > characters is less than 8. The following while loop will find if the
-> > target character is
-> > in these remaining characters.
-> >
-> > On my test the performance is similar with the my original implementati=
-on. Only
-> > a little bit fast when going through a very long string, which contains=
- 128*1024
-> > characters and the target character is near the end of the string.
-> >
-> > I also explain how consta and constb work clearly in the comments. Hope=
- that it
-> > helps understanding.
-> >
-> > The following code is what I change.
-> >
-> > void *memchr(const void *cs, int c, size_t length)
-> > {
-> >      const unsigned char *src =3D (const unsigned char *)cs;
-> >      const unsigned char *end =3D src + length;
-> >
-> >      if (length >=3D LBLOCKSIZE) {
-> >              unsigned long mask =3D c << 8 | c;
->
-> That is wrong if 'c' is outside 0..255.
-> I suspect it is best to at least allow -128..-1.
->
-> >              long xor, data;
-> >              const long consta =3D 0xFEFEFEFEFEFEFEFF,
-> >                         constb =3D 0x8080808080808080;
-> >              const unsigned char *dst =3D (const unsigned char *)src +
-> >                                                (length & 0xFFFFFFFFFFFF=
-FFF8);
-> >
-> >              /*
-> >               * Create a 8-bytes mask for word-wise comparing.
-> >               * For example, a mask for 'a' is 0x6161616161616161.
-> >               */
-> >
-> >              mask |=3D mask << 16;
-> >              mask |=3D mask << 32;
-> >              /*
-> >               * We perform word-wise comparing with following operation=
-:
-> >               * 1. Perform xor on the long word @src and @mask
-> >               *    and put into @xor.
-> >               * 2. Add @xor with @consta.
-> >               * 3. ~@xor & @constb.
-> >               * 4. Perform & with the result of step 2 and 3.
-> >               *
-> >               * If there is a zero byte in @xor, step 2 turns it into
-> >               * 0xFF. Then step 3 and 4 turn it into 0x80.
-> >               *
-> >               * If there is a none-zero byte in @xor, let k
-> >               * (0 <=3D k <=3D 7) be the lowest 1 in this byte. The low=
-est
-> >               * k bits are 0. After step 2, the byte ends in a single
-> >               * bit of value 0. Step 3 and 4 turns this byte into k
-> >               * bits of 1, which is 2^k - 1, at first. Then & @constb
-> >               * makes it into 0.
-> >               *
-> >               * Step 2 to Step 4 find if there is a byte with 0 in
-> >               * the long word.
-> >               */
-> >               asm volatile("1:\n\t"
-> >                             "movq (%[src]),%[xor]\n\t"
-> >                             "xorq %[mask],%[xor]\n\t"
-> >                             "lea (%[xor],%[const_a]), %[tmp]\n\t"
-> >                             "notq %[xor]\n\t"
-> >                             "andq %[const_b],%[xor]\n\t"
-> >                             "testq %[xor],%[tmp]\n\t"
-> >                             "jnz 2f\n\t"
-> >                             "add $8,%[src]\n\t"
-> >                             "cmp %[src], %[dst]\n\t"
-> >                             "ja 1b\n\t"
-> >                             "2:\n\t"
-> >                             :
-> >                             [src] "+r"(src), [xor] "+r"(xor), [tmp] "+r=
-"(data)
-> >                             : [const_a] "r"(consta), [const_b] "r"(cons=
-tb),
-> >                               [mask] "r"(mask), [dst] "r"(dst)
-> >                             : "memory", "cc");
-> >         }
-> >
-> >         while (src <=3D end) {
-> >              if (*src =3D=3D d)
->
-> I think you mean 'c'.
->
-> >                      return (void *)src;
-> >              src++;
-> >         }
-> >         return NULL;
-> > }
-> >
-> > Thanks,
-> > Yu-Jen Chang
->
-> Gcc compiles this C to the same loop and is easier to read.
-> Valid on all LE 64bit systems.
->
-> void *memchr(const void *p, int c, unsigned long length)
-> {
->     unsigned long mask, val;
->     const void *end =3D p + length;
->
->     c &=3D 0xff;
->     if (p <=3D end - 8) {
->         mask =3D c | c << 8;
->         mask |=3D mask << 16;
->         mask |=3D mask << 32;
->
->         for (; p <=3D end - 8; p +=3D 8) {
->             val =3D *(unsigned long *)p ^ mask;
->             if ((val + 0xfefefefefefefeffu) & (~val & 0x8080808080808080u=
-))
->                 break;
->         }
->     }
->
->     for (; p < end; p++)
->         if (*(unsigned char *)p =3D=3D c)
->             return p;
-
-Here I think we should return (void*) p. So that there is no
-compilation warning.
-
->
->     return NULL;
-> }
->
-> See https://godbolt.org/z/6rqTqfEsx
->
->         David
->
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1=
- 1PT, UK
-> Registration No: 1397386 (Wales)
-
-Your modification is easier to understand. I add the comments to
-explain how it work.
-I will use it in the second version of the patch. Thanks for your advice.
-
-Yu-Jen Chang
-
-void *memchr(const void *p, int c, unsigned long length)
-{
-    unsigned long mask, val;
-    const void *end =3D p + length;
-
-    c &=3D 0xff;
-    if (p <=3D end - 8) {
-
-
-        /*
-         * Create a 8-bytes mask for word-wise comparing.
-         * For example, a mask for 'a' is 0x6161616161616161.
-         */
-
-        mask =3D c | c << 8;
-        mask |=3D mask << 16;
-        mask |=3D mask << 32;
-
-        /*
-         * We perform word-wise comparing with following operation:
-         * 1. Perform xor on the long word @p and @mask
-         *    and put into @val.
-         * 2. Add @val with 0xfefefefefefefeff.
-         * 3. ~@val & 0x8080808080808080
-         * 4. Perform & with the result of step 2 and 3.
-         *
-         * If there is a zero byte in @val, step 2 turns it into
-         * 0xFF. Then step 3 and 4 turn it into 0x80.
-         *
-         * If there is a none-zero byte in @val, let k
-         * (0 <=3D k <=3D 7) be the lowest 1 in this byte. The lowest
-         * k bits are 0. After step 2, the byte ends in a single
-         * bit of value 0. Step 3 and 4 turns this byte into k
-         * bits of 1, which is 2^k - 1, at first. Then &
-         * 0x8080808080808080 makes it into 0
-         */
-
-        for (; p <=3D end - 8; p +=3D 8) {
-            val =3D *(unsigned long *)p ^ mask;
-            if ((val + 0xfefefefefefefeffu) & (~val & 0x8080808080808080u))
-                break;
-        }
-    }
-
-    for (; p < end; p++)
-        if (*(unsigned char *)p =3D=3D c)
-            return (void *)p;
-
-    return NULL;
-}
+Hello there Kees,=0A=
+=0A=
+I've been trying for the last few weeks to compile recent linux kernels wit=
+h=0A=
+development versions of gcc, without success.=0A=
+=0A=
+I keep getting this error:=0A=
+=0A=
+In file included from scripts/gcc-plugins/gcc-common.h:75,=0A=
+=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0from scripts/gcc-plugins/stackleak_plugi=
+n.c:30:=0A=
+/home/dcb/gcc/results.20220604.asan.ubsan/lib/gcc/x86_64-pc-linux-gnu/13.0.=
+0/plugin/include/gimple-fold.h:71:32: error: use of enum =91gsi_iterator_up=
+date=92 without previous declaration=0A=
+=0A=
+I found this patch useful:=0A=
+=0A=
+*** ../linux-5.18/scripts/gcc-plugins/gcc-common.h	2022-03-20 20:14:17.0000=
+=0A=
+00000 +0000=0A=
+--- scripts/gcc-plugins/gcc-common.h	2022-06-08 09:21:21.693178983 +0100=0A=
+***************=0A=
+*** 71,76 ****=0A=
+--- 71,78 ----=0A=
+=A0 #include "varasm.h"=0A=
+=A0 #include "stor-layout.h"=0A=
+=A0 #include "internal-fn.h"=0A=
++ #include "gimple.h"=0A=
++ #include "gimple-iterator.h"=0A=
+=A0 #include "gimple-expr.h"=0A=
+=A0 #include "gimple-fold.h"=0A=
+=A0 #include "context.h"=0A=
+=0A=
+Regards=0A=
+=0A=
+David Binderman=0A=
