@@ -2,141 +2,164 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C35C433EF
-	for <linux-hardening@archiver.kernel.org>; Wed,  8 Jun 2022 09:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC71C43334
+	for <linux-hardening@archiver.kernel.org>; Wed,  8 Jun 2022 21:40:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234202AbiFHJ0E (ORCPT
+        id S235824AbiFHVk3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Jun 2022 05:26:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39376 "EHLO
+        Wed, 8 Jun 2022 17:40:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235052AbiFHJZ2 (ORCPT
+        with ESMTP id S229970AbiFHVk1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Jun 2022 05:25:28 -0400
-Received: from EUR03-VE1-obe.outbound.protection.outlook.com (mail-oln040092072063.outbound.protection.outlook.com [40.92.72.63])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 506FB3BA7A;
-        Wed,  8 Jun 2022 01:48:50 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SnzLMT+0SgXckdd/Xx10238zYU8av5AoQ7fvhWHMFbAU0g8qD9meNd4wJj0kxkVTI4k8VYvDY1y5ZCdKAzbvcsMjnkvt8ubcx4Jd0UIv/YD5Gylswe9NApO++A4gnddm3YE9vQbszz9taUq2dtwShLC0Y8CPTiIYBimgKQ997zPuFSxS7Sb4eRwMfV+kbl79s8EljKN0R93tw/pGWYQLlfkdTogB4clvZR1Byt07E9rJgB4Pya7HQAoa8KP9ANwI4Gu88Y2ZxnDBIXb98ztshGe7dmsAH2gq9ilZpGEQ56D0bwR4e+5GrqT/9Ip6hmueyIAm812Nr+n+WehXOk/vIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=09gjnVFzYjvSZeVyilMwmzrUFV+fxSvm2NKmRVei7/g=;
- b=hxSYZFR4SZmVJ3BJ77nYxoYIR6hgndAuDJL5flY2JJ9RlyhnajjIIprE0JIx+NdB/J9toU75ldTyBCe0wZpqLNnC5QKZfjxsd298ium1dzHAMIqxyum9zwgSDHGQFzsw0kPRopnokpuneC6ROeGuPRbJXc/dqqRutolguCgH2b+OpT/R2DsJuBU5BCrGLNx/fqdBdCmnUWpcY+4An0zSoYoiDIRssNlBdN1rZSObBDHZfs0glNroZA97hnGdUvyPY47yXrMfBnXkQU8vQ94jOZk+pqBx8kCRTCUtDEjVvt/eW3/iQyxTPm/TABllbnD3YFWxJbrBOjGk5VXldlzOmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=09gjnVFzYjvSZeVyilMwmzrUFV+fxSvm2NKmRVei7/g=;
- b=MNJEYB4tWPeMJ6Z+SMWfEJu1ovp0t3465Yich4HeDtZDWrDEEL5p5nyZ8/LrcTU9+8W1nkhSAbsa6aGvAo9/L5YJHO/lzaq+PUvld3tkrQjwHPZW5kSjBJ/H99Cc4gfqxYTgAs7G3b/XVwB4ndW83EuYN2IP5uEKGCMZETFGzyPMZQGVVghIjQFJaAcByhIE5lJSO2za0PTXi7CVsFDpinafVko8ft21DEMezMMy9nNwAQwAESseSkMxvGBPTemBZX6ScAafWYV5McP+h0ymIGdIgNs1bb0S+4ndG4UFiDIAttwJ+X2nTV2/wD1P2Z/L2ICFV1VsF5q1b3JqPVnX9w==
-Received: from DB6P189MB0568.EURP189.PROD.OUTLOOK.COM (2603:10a6:6:31::16) by
- DB8P189MB0886.EURP189.PROD.OUTLOOK.COM (2603:10a6:10:16c::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5314.12; Wed, 8 Jun 2022 08:48:48 +0000
-Received: from DB6P189MB0568.EURP189.PROD.OUTLOOK.COM
- ([fe80::9db9:bba4:f81e:9463]) by DB6P189MB0568.EURP189.PROD.OUTLOOK.COM
- ([fe80::9db9:bba4:f81e:9463%7]) with mapi id 15.20.5332.011; Wed, 8 Jun 2022
- 08:48:48 +0000
-From:   David Binderman <dcb314@hotmail.com>
-To:     "keescook@chromium.org" <keescook@chromium.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: kernel bug report and patch
-Thread-Topic: kernel bug report and patch
-Thread-Index: AQHYexQYTf79Ad3m9k6s9VJPw/JRfg==
-Date:   Wed, 8 Jun 2022 08:48:47 +0000
-Message-ID: <DB6P189MB05681E9F4785DF2758B9875B9CA49@DB6P189MB0568.EURP189.PROD.OUTLOOK.COM>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [pQfTnPJTaIpfxNXbkVlWa6hg0JCRjat1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a6714d9a-f702-4a1d-de1f-08da492bb40a
-x-ms-traffictypediagnostic: DB8P189MB0886:EE_
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BnUf4Pvz70SuEydRU8ygOxa+CyBE8g9DLEdx19+PLiLm9T7nqTZnAYPHgTf0s+OBnp9/yEzZG2+fEm8vXZ4qxXNGIR+zhPxCXW5TroSSBG5W9zp7lVVmtEYMR2io0kyn5OuGczIcRM6luZ08dnMnTPG6KCJt9bwoK26HuueSZ5sg1IaUdrBtCjyHveS7/lIPo43+RmU7xxj2yALHDQzCcYN+T6lWC19LFfoOrLx9ORy25ukpGTv7JfzghWmKEBN3033jt808Zy1mg02eF0ioZ5dh59T/TFt1LNdqhpXk1FSlHX8LbXFnpguMSc3/TdFMJXn/85s9x+A3rt3KITx0WX1m33NyPz0GoYgQHajWQcS1A/1efIRMzi2L7emUOtjBXCIRJkdn1kHayfasG9CsZujPSWqTegXzHMI+5ZmG1VCxvVYTP1EfnHfunQZ78axXIyB0USxKJ4WsV6qwNPzsa6f/WBHcpwHdvZUQG1hQ8E3wov1s/7P1p0BeVS1cNQA7F4hkqIT/a7sSFki68wIyCDA1ZYUIyxqj/CjoqwnpAHeXm4Gp6oX8sIzBUvaZx4B9mfBNSC/g1dFPA12ADeyB2Q==
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?Windows-1252?Q?Qos5/4hvsYNHodHTE6Z5sI3c7we0Xl3zshV8oGvFinBWD7On6MHErRrq?=
- =?Windows-1252?Q?3VZh+FExy1IQJ7eo/hanDHUKsBEwx4ePtTPQoKjJMca+//L3lqbq2nb+?=
- =?Windows-1252?Q?C4nk8HtyxSbNlorA3ZkPHTTmi2xWv2cc9+oLbZpQplp5aJvlFGXlBCQ7?=
- =?Windows-1252?Q?goE76ksN5Ib/qxR+4Mz+Y2MUCdgshc7dvNzr3Zn7vIfzLp7GRy9VqcNC?=
- =?Windows-1252?Q?HksjkYqym+i8yUxz0u17g8OBJduKKgJ+wsQcH2mOElU+BX4rxlZp9il4?=
- =?Windows-1252?Q?KwpF8ZVZai+fuJd4c3u0AJ5hIUEsRN/f2c7cwMzqwY/r2xMf2G41qbTx?=
- =?Windows-1252?Q?tJQbUcFk6DKG/kUn7HKoHcSFBSsT5bhL7yj5MlNb+5fGW0hn4KisoteO?=
- =?Windows-1252?Q?xwwSw2dGgSer7t+gldxwqz1uXU1NzA4qylbuX2XqTpzuUfTHWFsNo+sv?=
- =?Windows-1252?Q?6CGfsnFbq6NA7N7TSl+vo1p1FHtSXCH9K+ltkqe6wxPoxLeHdQoLG/ks?=
- =?Windows-1252?Q?Q2nCPKlTiy7oT88tz/1X7WblIOsrlb4kYA3or7B/AAFhXpCNPdvkhhPH?=
- =?Windows-1252?Q?GSqEeBWoBLoGCZMN0A4dHy80zqdESHjNMO29SoY72jH0GoT21Rz5GPBe?=
- =?Windows-1252?Q?24olucko6LDyBUI7KfdgZV0J6bHKqdBHXPs1WlyomhbJGud2HglHBxfJ?=
- =?Windows-1252?Q?nLwvRvo56hbpY51p5EQN55p5zGWMyQFCzzruezKVIDTNy7zEzQYs2VzZ?=
- =?Windows-1252?Q?ZK9vCDLuwThBmAnDeXEX+BWS7Oi+LUtFFks987ligiWsjtA1cjl0ASsd?=
- =?Windows-1252?Q?JTZXSIpX1Al8wOEJHg3qRVzsjcbSVYgvnl1VZswym4WmfIuYbS3ig6lL?=
- =?Windows-1252?Q?S02X4qQC36TEMjZypEtX8MBIxkaUcFqXRNIuYgi3ewCKu0ZrrPUq6sbM?=
- =?Windows-1252?Q?KvGVAwtNA8hS7TuIKxaFA+sForWf2hLsRe/8y+w+QrVWICTcYdViapDi?=
- =?Windows-1252?Q?Czg+4A4tsChq9W6lqK9gvAop+XhhWtrztRkqyL5de/78gKWf7o4ukuRB?=
- =?Windows-1252?Q?FwVl3IoDzXUPW1xMirUfOxTOffcjALm1c/MPlZfPFHqwuRiVNZlB8pse?=
- =?Windows-1252?Q?nggLVGvQGE1AUc9Qd1LGqI9+W5mHCKTORAFz4uV+0yN0OhKOHdYfdAmy?=
- =?Windows-1252?Q?gOlrforNrR5TB6Cc2r4IpqZffsemaOigfHbv6Lcz4KYnJd3Ul51j2p3+?=
- =?Windows-1252?Q?byXhzcUY7vdWa80w/aAAsM7UVX/X6D47HezJ4vzld4GW7xARlsCQj/6z?=
- =?Windows-1252?Q?ANuniJSsAUJgowzHeckDrMF25PJlFX4nSgIBskQJocdAhDTj6JrnOdqd?=
- =?Windows-1252?Q?dNYFAOdzwWRIjTlUErRjL/jcxpXfcq/6e6ugavitqiVXrxhuMSe49Q9g?=
- =?Windows-1252?Q?O6/yk3jVymoKKyTU2tiIl3hFDakAbVtLS4FIS9de1Yin8UJr2ffwVIjA?=
- =?Windows-1252?Q?ubZqri/IYsokTHgEX8prKl/mQI2S+Q=3D=3D?=
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 8 Jun 2022 17:40:27 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A12E42B12D8
+        for <linux-hardening@vger.kernel.org>; Wed,  8 Jun 2022 14:40:26 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id r1so1521007plo.10
+        for <linux-hardening@vger.kernel.org>; Wed, 08 Jun 2022 14:40:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZBKWev1Rs6wuYROdIel8IsWvzj2P6ShAsqmcV/ovcGg=;
+        b=iOX8V1rvQjU+rJa/UArhmoyO8A5j582JHtbS8KEhoICNmLdqxdZ9lwUic0rhqahLe6
+         p6FRaVRER5XfQ4N1BooBCevqb+WKCVUtlWu0yGaHcSS/Rqzqcyyz73NAs2HeVCgpiwl7
+         qyDf/OOmsaE1wdI6CECAyRuvaRD8ZK2Qo74Rk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZBKWev1Rs6wuYROdIel8IsWvzj2P6ShAsqmcV/ovcGg=;
+        b=DZkaENVEyRYBLzeLErJSoZayFHbzUXwH/biO9XElSFgMqSwFPsbQOwR5UwaDmqvRoT
+         /1AP1rSBPQ8Tt3xl12jF17Zw9B/oA5BkNPHZSf3gQqRs0OcWfGmiRuZbnFwEnCazo/F5
+         i9dGrlYPT0EktSCKFnStX4Nde8qC5DBNtiv4/uCwL8nujvsSs1VS7scTL5DMA5xSBBt6
+         emsptl/d4IFYTdG0PQyXB2sGeB80N3fSZU22TG5KSyMJtedaMxuBV5MOzVkhW3pb0XI1
+         osJKaCV7bGBLVKx3yvtFKgBaocmw+kZS3w7+TnoPedQzpNayY/AzbwUVLyGqPu9DWwoL
+         +C4A==
+X-Gm-Message-State: AOAM53096XBVUvFk+Me33G9EmLkJCWqBtK/VVjaynyxoW+SenhJ3O5V8
+        wODTCzv9/0m35mIo0FyzWwtry2AWsTZNnw==
+X-Google-Smtp-Source: ABdhPJwiDd12cCTBpPRK3Qx+yZmg4OYCNLukhEp72rnTZfahuBCeXEASHYbxM5Lfi1VPIE6ZI5K6PA==
+X-Received: by 2002:a17:902:e34b:b0:166:342f:82c6 with SMTP id p11-20020a170902e34b00b00166342f82c6mr35312017plc.29.1654724426139;
+        Wed, 08 Jun 2022 14:40:26 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y17-20020a1709027c9100b0016223b5d228sm15176202pll.288.2022.06.08.14.40.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jun 2022 14:40:25 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] kasan: test: Silence GCC 12 warnings
+Date:   Wed,  8 Jun 2022 14:40:24 -0700
+Message-Id: <20220608214024.1068451-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-4734-24-msonline-outlook-c54b5.templateTenant
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB6P189MB0568.EURP189.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6714d9a-f702-4a1d-de1f-08da492bb40a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jun 2022 08:48:47.8910
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8P189MB0886
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3431; h=from:subject; bh=f4bWuW0f1isrySVA800mMFtNGe6OzsYc2hHoaLhCD+0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBioRdHHwaRwKKbpz1nkt1hw65Ms2PiFAooSZ7/hdvb /x/msieJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYqEXRwAKCRCJcvTf3G3AJm3yD/ wIJi5uSdbwIZpiSkKpBCwp+MzcWNoQclJTycpr4NCLKbPlepOG19bev3lzzPoAyBLUMRPvono2ZUn7 Z84NKF4HKmEHVEQpOyp3SaZ4LhWCgOeFSF5pNEngCqJNz6YJbITJf0NhsoDEpCuHeCc5kGd9XTXZpJ UU+djeG3geRtSbx2jnO6ralgR89jo02fozbjwp5ej+yVaJ2USgQ+Us1CvwufWlFSPUJbpXOcNTN21O V+Nw1zDXkv1aSORCghOHNQyREFiz466+WssNBEnq5TbsqU9TOM4VfqjRaV8Li70nxGMpXZKplxT7SD 3EXDu8JkTlX/lFQKxpdR7tBjC9+S7K988kneNgVXd1lp8hCuP1fTUNyg7KVAX+6H/Mc3iwQxsmgHMB NFC11iiiI36dIUST4xXEi+4GX2gb6FHTggQG+YIesttUPFDZH9tUbfIinkBW29tLMajecRRDA3EgPB m96Xy2mMe2qPAR1FZJxRNklTHMHZSmD2i96CJw1UsZWv9hC4NUniNGAlB7VzPkuPRK/LqLyiXvl6DU kNkrZGm1juLpUEVWVBsjMUElWb2kt0z+BHUSz/LaDv7Y3cYmXLvV9uHEDwUPKrInYZXulBc2BRwBho y4y/ZKxM8vqXVmqyAo0HoYQOzzC1qKXhumZTYLIF4SOur39wGcNJzUWy7Zcw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello there Kees,=0A=
-=0A=
-I've been trying for the last few weeks to compile recent linux kernels wit=
-h=0A=
-development versions of gcc, without success.=0A=
-=0A=
-I keep getting this error:=0A=
-=0A=
-In file included from scripts/gcc-plugins/gcc-common.h:75,=0A=
-=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0from scripts/gcc-plugins/stackleak_plugi=
-n.c:30:=0A=
-/home/dcb/gcc/results.20220604.asan.ubsan/lib/gcc/x86_64-pc-linux-gnu/13.0.=
-0/plugin/include/gimple-fold.h:71:32: error: use of enum =91gsi_iterator_up=
-date=92 without previous declaration=0A=
-=0A=
-I found this patch useful:=0A=
-=0A=
-*** ../linux-5.18/scripts/gcc-plugins/gcc-common.h	2022-03-20 20:14:17.0000=
-=0A=
-00000 +0000=0A=
---- scripts/gcc-plugins/gcc-common.h	2022-06-08 09:21:21.693178983 +0100=0A=
-***************=0A=
-*** 71,76 ****=0A=
---- 71,78 ----=0A=
-=A0 #include "varasm.h"=0A=
-=A0 #include "stor-layout.h"=0A=
-=A0 #include "internal-fn.h"=0A=
-+ #include "gimple.h"=0A=
-+ #include "gimple-iterator.h"=0A=
-=A0 #include "gimple-expr.h"=0A=
-=A0 #include "gimple-fold.h"=0A=
-=A0 #include "context.h"=0A=
-=0A=
-Regards=0A=
-=0A=
-David Binderman=0A=
+GCC 12 continues to get smarter about array accesses. The KASAN tests
+are expecting to explicitly test out-of-bounds conditions at run-time,
+so hide the variable from GCC, to avoid warnings like:
+
+../lib/test_kasan.c: In function 'ksize_uaf':
+../lib/test_kasan.c:790:61: warning: array subscript 120 is outside array bounds of 'void[120]' [-Warray-bounds]
+  790 |         KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[size]);
+      |                                       ~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+../lib/test_kasan.c:97:9: note: in definition of macro 'KUNIT_EXPECT_KASAN_FAIL'
+   97 |         expression; \
+      |         ^~~~~~~~~~
+
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: kasan-dev@googlegroups.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ lib/test_kasan.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+index c233b1a4e984..58c1b01ccfe2 100644
+--- a/lib/test_kasan.c
++++ b/lib/test_kasan.c
+@@ -131,6 +131,7 @@ static void kmalloc_oob_right(struct kunit *test)
+ 	ptr = kmalloc(size, GFP_KERNEL);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+ 
++	OPTIMIZER_HIDE_VAR(ptr);
+ 	/*
+ 	 * An unaligned access past the requested kmalloc size.
+ 	 * Only generic KASAN can precisely detect these.
+@@ -159,6 +160,7 @@ static void kmalloc_oob_left(struct kunit *test)
+ 	ptr = kmalloc(size, GFP_KERNEL);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+ 
++	OPTIMIZER_HIDE_VAR(ptr);
+ 	KUNIT_EXPECT_KASAN_FAIL(test, *ptr = *(ptr - 1));
+ 	kfree(ptr);
+ }
+@@ -171,6 +173,7 @@ static void kmalloc_node_oob_right(struct kunit *test)
+ 	ptr = kmalloc_node(size, GFP_KERNEL, 0);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+ 
++	OPTIMIZER_HIDE_VAR(ptr);
+ 	KUNIT_EXPECT_KASAN_FAIL(test, ptr[0] = ptr[size]);
+ 	kfree(ptr);
+ }
+@@ -191,6 +194,7 @@ static void kmalloc_pagealloc_oob_right(struct kunit *test)
+ 	ptr = kmalloc(size, GFP_KERNEL);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+ 
++	OPTIMIZER_HIDE_VAR(ptr);
+ 	KUNIT_EXPECT_KASAN_FAIL(test, ptr[size + OOB_TAG_OFF] = 0);
+ 
+ 	kfree(ptr);
+@@ -271,6 +275,7 @@ static void kmalloc_large_oob_right(struct kunit *test)
+ 	ptr = kmalloc(size, GFP_KERNEL);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+ 
++	OPTIMIZER_HIDE_VAR(ptr);
+ 	KUNIT_EXPECT_KASAN_FAIL(test, ptr[size] = 0);
+ 	kfree(ptr);
+ }
+@@ -410,6 +415,8 @@ static void kmalloc_oob_16(struct kunit *test)
+ 	ptr2 = kmalloc(sizeof(*ptr2), GFP_KERNEL);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr2);
+ 
++	OPTIMIZER_HIDE_VAR(ptr1);
++	OPTIMIZER_HIDE_VAR(ptr2);
+ 	KUNIT_EXPECT_KASAN_FAIL(test, *ptr1 = *ptr2);
+ 	kfree(ptr1);
+ 	kfree(ptr2);
+@@ -756,6 +763,8 @@ static void ksize_unpoisons_memory(struct kunit *test)
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+ 	real_size = ksize(ptr);
+ 
++	OPTIMIZER_HIDE_VAR(ptr);
++
+ 	/* This access shouldn't trigger a KASAN report. */
+ 	ptr[size] = 'x';
+ 
+@@ -778,6 +787,7 @@ static void ksize_uaf(struct kunit *test)
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+ 	kfree(ptr);
+ 
++	OPTIMIZER_HIDE_VAR(ptr);
+ 	KUNIT_EXPECT_KASAN_FAIL(test, ksize(ptr));
+ 	KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[0]);
+ 	KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[size]);
+-- 
+2.32.0
+
