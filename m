@@ -2,139 +2,258 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CA0C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 10 Jun 2022 18:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F408C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 10 Jun 2022 23:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349850AbiFJSG6 (ORCPT
+        id S1349148AbiFJXfS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 10 Jun 2022 14:06:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59442 "EHLO
+        Fri, 10 Jun 2022 19:35:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350152AbiFJSGy (ORCPT
+        with ESMTP id S1348567AbiFJXfS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 10 Jun 2022 14:06:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 858E63BF93
-        for <linux-hardening@vger.kernel.org>; Fri, 10 Jun 2022 11:06:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1654884403;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PMsjmdghjftZcHJYxe23lhIe8tlheZvEV884DJ3XaMQ=;
-        b=OsidBkE7hO6we1S11KefcFQHLT7xS+tmt1h5ZSXahByFml5bg/eisVqq1nGJ16mGFgl+MG
-        xJKEv9X0c1w4VOZ62pbbD6ufLtPe9+L9qJo9eMllvCbFxWFZfYNsnWD+b/JhVzUUsbYuZY
-        KyMIVIyK7y27Ov7NHunGn4SA5Is/W+A=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-517-RurBROcsP7ulDRyRjKQieg-1; Fri, 10 Jun 2022 14:06:40 -0400
-X-MC-Unique: RurBROcsP7ulDRyRjKQieg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 055FD1C01B20;
-        Fri, 10 Jun 2022 18:06:39 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.62])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A360018EA7;
-        Fri, 10 Jun 2022 18:06:35 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHk-=wgkwKyNmNdKpQkqZ6DnmUL-x9hp0YBnUGjaPFEAdxDTbw@mail.gmail.com>
-References: <CAHk-=wgkwKyNmNdKpQkqZ6DnmUL-x9hp0YBnUGjaPFEAdxDTbw@mail.gmail.com> <40676.1654807564@warthog.procyon.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Steve French <smfrench@gmail.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        v9fs-developer@lists.sourceforge.net,
-        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical@lists.samba.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Fri, 10 Jun 2022 19:35:18 -0400
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 765E0289A1D
+        for <linux-hardening@vger.kernel.org>; Fri, 10 Jun 2022 16:35:16 -0700 (PDT)
+Received: by mail-pg1-x549.google.com with SMTP id e18-20020a656492000000b003fa4033f9a7so203687pgv.17
+        for <linux-hardening@vger.kernel.org>; Fri, 10 Jun 2022 16:35:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=nsMGvakN23jGJwKQKSNiBedpAQCT/+oZZ53FMvpJmWE=;
+        b=TTSPz9mn3fOB4ve10WTtYfvod1PAt6nWdPvsN17q7/4saeuWmeuexh9VhPgCkS5pDb
+         f5gRy75iYIFhLPMAvisX1Oqd4oD8ZWNaqLTaxxxPtUAHP8Y0ecEOORdAZIU2C/Y/DKOm
+         nyoXugVxssag43IvWS8/pjSe0TCnIP72aYUgpBBAxda48sML5/s4c6m1tYfnik1HhNkH
+         VCNyyM1VHrL4JWanm+XqpeJUg/llXdoZmHhdeF0TE0Y7+EFUsgLS/sGrzW/NxnDX1ad4
+         vAiGN0d/8G6ZXtGM385+MPY4pp9zuYsCQ2EiF1NaDKONdQ9rOlNd8RH6++XT6lt40Tdk
+         OCeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=nsMGvakN23jGJwKQKSNiBedpAQCT/+oZZ53FMvpJmWE=;
+        b=kK3nJ6x/gT+fDoCxZQsNuQxbLeDcsPwUB5QsNg31177EoRxMN/szEY6RrhKrqmzOY3
+         ps6ZboZiIW42BMWdfXvZAyolYDzsO5afulidPj6OvGQiiJteB+XJrWwxqH3SvbC1gcsp
+         r+fI1OtSAG267VAkHCA3iCPfLc4mNkLv/3LHicMi6AP0Qz0Huu9xGPGhxZYQHLHyt7bx
+         pTxmbZ0mql8UHVGyJYDFfFONZqnhuhIl2tI2QNswY6wABbu4HS/H0lGRQ1RJsQJDhwxQ
+         DvkSSnmF3Go/DXz0wmQg2Lg82DZV5zhNQ+ZAdgmNsg4B9CKY1ujO0vxpfjtUsefO3izk
+         j+uQ==
+X-Gm-Message-State: AOAM5317K6HZiwkrywi27dtf4b0ZC3pEiT+/QCof6EhH13viJWN3CXjD
+        vo+ZnG1T75+YY4UUIJ492gqF+X9jTcvQlCnr8AM=
+X-Google-Smtp-Source: ABdhPJzdLof87FxFUwL7nMS7yP1RwHTMWgXL9tW9h4xwKDJuVFdFP6l21cUGZW05T9FvcBnHeDH2g5GB+ZU+RT5MXgw=
+X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f464:6db6:3d47:ed14])
+ (user=samitolvanen job=sendgmr) by 2002:a17:90b:4b90:b0:1e8:48bd:453 with
+ SMTP id lr16-20020a17090b4b9000b001e848bd0453mr2189527pjb.86.1654904115869;
+ Fri, 10 Jun 2022 16:35:15 -0700 (PDT)
+Date:   Fri, 10 Jun 2022 16:34:53 -0700
+Message-Id: <20220610233513.1798771-1-samitolvanen@google.com>
+Mime-Version: 1.0
+X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7489; h=from:subject;
+ bh=nEoLqXNa3ykt1eGfRs/jvdsV+FhVXUy4vtw8erotAL0=; b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBio9UswFKBhBOO2/9SIKqLIDgiaShLWcr9mJQQ6dfI
+ Oi0DjR+JAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYqPVLAAKCRBMtfaEi7xW7svkC/
+ 9n4xT5mUM0FuTK43AIeV3s0iJFI/It59JH+MTCiDiGXGDCEJGkCO0pK9lGCfDDES6dL4PY8iQKF8P1
+ BOif4X/nNa/ykC/ILkxWs7dG5G4iExpiA3Nw14d8c251mLZKGPU6rok5GF7k7H6mQqgv4EYYeJAUC8
+ st9LzJ9EhK3bufhrAiwwIXR9RUlZVx7z3nD6z2XAyd/SSilV/Yy4QzkGO4g0qUmR+z9mkSwuvm2jnN
+ 4vDtRdvGzemSFp8Nj+6j3YCIQn3R+y8vX6Mrloje5lon5XoyAdVERBegFZMQo4NThZl1VPvBM+YjmW
+ e9VbLTEFUMtIeF9BNXaelAZw6gwJEBTiEkz96IIkHIwrSpzCOBJP7dGNpE/clTwzd8x0O9YWDy3Gqg
+ PuLh8K7ozjdJQ/y7qbtQO+Gx7dMEfOA+3GQ8o9OoKouYBVwnqdK3ohasSp2UX8/TkdMbNxl/xNgfNa
+ VG+WTqSZsnFOEv2n68TsYgUcoLR74vqKYZOh9vrWUxlAI=
+X-Mailer: git-send-email 2.36.1.476.g0c4daa206d-goog
+Subject: [RFC PATCH v3 00/20] KCFI support
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Joao Moreira <joao@overdrivepizza.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         linux-hardening@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] netfs: Fix gcc-12 warning by embedding vfs inode in netfs_i_context
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <652127.1654884394.1@warthog.procyon.org.uk>
+        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date:   Fri, 10 Jun 2022 19:06:34 +0100
-Message-ID: <652128.1654884394@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+KCFI is a proposed forward-edge control-flow integrity scheme for
+Clang, which is more suitable for kernel use than the existing CFI
+scheme used by CONFIG_CFI_CLANG. KCFI doesn't require LTO, doesn't
+alter function references to point to a jump table, and won't break
+function address equality. The latest LLVM patch is here:
 
-> Side note: I think this could have been done with an unnamed union as
-> =
+  https://reviews.llvm.org/D119296
 
->         struct my_inode {
->                 union {
->                         struct inode            vfs_inode;
->                         struct netfs_inode netfs_inode;
->                 };
->         [...]
-> =
+This RFC series replaces the current arm64 CFI implementation with
+KCFI and adds support for x86_64.
 
-> instead, with the rule that 'netfs_inode' always starts with a 'struct i=
-node'.
+KCFI requires assembly functions that are indirectly called from C
+code to be annotated with type identifiers. As type information is
+only available in C, the compiler emits expected type identifiers into
+the symbol table, so they can be referenced from assembly without
+having to hardcode type hashes. Patch 6 adds helper macros for
+annotating functions, and patches 8 and 18 add annotations.
 
-I'm slightly wary of that, lest struct netfs_inode gets randomised.  I'm n=
-ot
-sure how likely that would be without netfs_inode getting explicitly marke=
-d.
+In case of a type mismatch, KCFI always traps. To support error
+handling, the compiler generates a .kcfi_traps section for x86_64,
+which contains the locations of each trap, and for arm64, encodes
+the necessary register information to the ESR. Patches 9 and 20 add
+arch-specific error handlers.
 
-> But in a lot of cases you really could do so much better: you *have* a
-> "struct netfs_inode" to begin with, but you converted it to just
-> "struct inode *", and now you're converting it back.
-> =
+To test this series, you'll need to compile your own Clang toolchain
+with the patches linked above. You can also find the complete source
+tree here:
 
-> Look at that AFS code, for example, where we have afs_vnode_cache() doin=
-g
-> =
+  https://github.com/samitolvanen/llvm-project/commits/kcfi-rfc-v3
 
->         return netfs_i_cookie(&vnode->netfs.inode);
-> =
+This series is also available in GitHub:
 
-> and look how it *had* a netfs structure, and it was passing it to a
-> netfs function, but it explicitly passed the WRONG TYPE, so now we've
-> lost the type information and it is using that cast to fake it all
-> back.
+  https://github.com/samitolvanen/linux/commits/kcfi-rfc-v3
 
-Yeah, I didn't look at those as they didn't cause warnings, but you're rig=
-ht -
-those should take struct netfs_inode pointers in some cases, rather than
-struct inode.
+---
+Changes in v3:
+- Merged the patches that split CC_FLAGS_CFI from CC_FLAGS_LTO.
 
-Note that some functions, such as netfs_readpage() and netfs_readpages() d=
-o
-need to take struct inode pointers as I'm trying to get the VFS ops to jum=
-p
-into netfslib and get all the VM interface stuff out of the network
-filesystems - the idea being that the network filesystem will provide netf=
-slib
-primarily with two functions: do a read op and do a write op.
+- Dropped the psci_initcall_t patch as Mark volunteered to send a
+  patch for this. Note that this patch is still needed to boot a
+  CFI kernel on certain arm64 systems:
+  https://lore.kernel.org/lkml/YoNhKaTT3EDukxXY@FVFF77S0Q05N/
 
-I'll have a look at your patch in a bit.
+- Added a patch to remove the now unnecessary workarounds with
+  CFI+ThinLTO in kallsyms.
 
-Thanks,
-David
+- Added an lkdtm patch to ensure the test actually generates an
+  indirect call.
+
+- Changed report_cfi_failure to clearly indicate if we failed to
+  decode target address.
+
+- Switched to relative offsets for .kcfi_traps.
+
+- On x86_64, moved CFI error handling from traps.c to cfi.c, and
+  as we only call memcpy indirectly w/ CONFIG_MODULES, ensured that
+  the compiler emits __kcfi_typeid_memcpy also without modules.
+
+- On x86_64, added a check for the cmpl REX prefix to handle the
+  case where the compiler might not use r8-r15 registers for the
+  call target.
+
+- On the compiler side, ensured that on x86_64 calls are emitted
+  immediately after the CFI check, fixed the __cfi_ preamble
+  linkage, and changed the compiler to emit relative offsets in
+  .kcfi_traps.
+
+Changes in v2:
+- Changed the compiler patch to encode arm64 target and type details
+  in the ESR, and updated the kernel error handling patch accordingly.
+
+- Changed the compiler patch to embed the x86_64 type hash in a valid
+  instruction to avoid special casing objtool instruction decoding, and
+  added a __cfi_ symbol for the preamble. Changed the kernel error
+  handling and manual type annotations to match.
+
+- Dropped the .kcfi_types section as that=E2=80=99s no longer needed by
+  objtool, and changed the objtool patch to simply ignore the __cfi_
+  preambles falling through.
+
+- Dropped the .kcfi_traps section on arm64 as it=E2=80=99s no longer needed=
+,
+  and moved the trap look-up code behind CONFIG_ARCH_USES_CFI_TRAPS,
+  which is selected only for x86_64.
+
+- Dropped __nocfi attributes from arm64 code where CFI was disabled
+  due to address space confusion issues, and added type annotations to
+  relevant assembly functions.
+
+- Dropped __nocfi from __init.
+
+Sami Tolvanen (20):
+  treewide: Filter out CC_FLAGS_CFI
+  scripts/kallsyms: Ignore __kcfi_typeid_
+  cfi: Remove CONFIG_CFI_CLANG_SHADOW
+  cfi: Drop __CFI_ADDRESSABLE
+  cfi: Switch to -fsanitize=3Dkcfi
+  cfi: Add type helper macros
+  lkdtm: Emit an indirect call for CFI tests
+  arm64: Add types to indirect called assembly functions
+  arm64: Add CFI error handling
+  arm64: Drop unneeded __nocfi attributes
+  init: Drop __nocfi from __init
+  treewide: Drop function_nocfi
+  treewide: Drop WARN_ON_FUNCTION_MISMATCH
+  treewide: Drop __cficanonical
+  objtool: Disable CFI warnings
+  kallsyms: Drop CONFIG_CFI_CLANG workarounds
+  x86/tools/relocs: Ignore __kcfi_typeid_ relocations
+  x86: Add types to indirectly called assembly functions
+  x86/purgatory: Disable CFI
+  x86: Add support for CONFIG_CFI_CLANG
+
+ Makefile                                  |  13 +-
+ arch/Kconfig                              |  18 +-
+ arch/arm64/crypto/ghash-ce-core.S         |   5 +-
+ arch/arm64/crypto/sm3-ce-core.S           |   3 +-
+ arch/arm64/include/asm/brk-imm.h          |   6 +
+ arch/arm64/include/asm/ftrace.h           |   2 +-
+ arch/arm64/include/asm/mmu_context.h      |   4 +-
+ arch/arm64/kernel/acpi_parking_protocol.c |   2 +-
+ arch/arm64/kernel/alternative.c           |   2 +-
+ arch/arm64/kernel/cpu-reset.S             |   5 +-
+ arch/arm64/kernel/cpufeature.c            |   4 +-
+ arch/arm64/kernel/ftrace.c                |   2 +-
+ arch/arm64/kernel/machine_kexec.c         |   2 +-
+ arch/arm64/kernel/psci.c                  |   2 +-
+ arch/arm64/kernel/smp_spin_table.c        |   2 +-
+ arch/arm64/kernel/traps.c                 |  47 ++-
+ arch/arm64/kernel/vdso/Makefile           |   3 +-
+ arch/arm64/mm/proc.S                      |   5 +-
+ arch/x86/Kconfig                          |   2 +
+ arch/x86/crypto/blowfish-x86_64-asm_64.S  |   5 +-
+ arch/x86/entry/vdso/Makefile              |   3 +-
+ arch/x86/include/asm/cfi.h                |  22 ++
+ arch/x86/include/asm/linkage.h            |  12 +
+ arch/x86/kernel/Makefile                  |   2 +
+ arch/x86/kernel/cfi.c                     |  83 ++++++
+ arch/x86/kernel/traps.c                   |   4 +-
+ arch/x86/lib/memcpy_64.S                  |   3 +-
+ arch/x86/purgatory/Makefile               |   4 +
+ arch/x86/tools/relocs.c                   |   1 +
+ drivers/firmware/efi/libstub/Makefile     |   2 +
+ drivers/firmware/psci/psci.c              |   4 +-
+ drivers/misc/lkdtm/cfi.c                  |  15 +-
+ drivers/misc/lkdtm/usercopy.c             |   2 +-
+ include/asm-generic/bug.h                 |  16 -
+ include/asm-generic/vmlinux.lds.h         |  37 +--
+ include/linux/cfi.h                       |  59 ++--
+ include/linux/cfi_types.h                 |  57 ++++
+ include/linux/compiler-clang.h            |  14 +-
+ include/linux/compiler.h                  |  16 +-
+ include/linux/compiler_types.h            |   4 -
+ include/linux/init.h                      |   6 +-
+ include/linux/module.h                    |  10 +-
+ include/linux/pci.h                       |   4 +-
+ kernel/cfi.c                              | 342 ++++------------------
+ kernel/kallsyms.c                         |  17 --
+ kernel/kthread.c                          |   3 +-
+ kernel/module/main.c                      |  49 +---
+ kernel/workqueue.c                        |   2 +-
+ scripts/kallsyms.c                        |   1 +
+ scripts/module.lds.S                      |  23 +-
+ tools/objtool/check.c                     |   7 +-
+ 51 files changed, 420 insertions(+), 538 deletions(-)
+ create mode 100644 arch/x86/include/asm/cfi.h
+ create mode 100644 arch/x86/kernel/cfi.c
+ create mode 100644 include/linux/cfi_types.h
+
+--=20
+2.36.1.476.g0c4daa206d-goog
 
