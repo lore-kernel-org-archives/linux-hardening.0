@@ -2,66 +2,52 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93195C43334
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Jun 2022 22:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CA0C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 10 Jun 2022 18:06:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345261AbiFIWGS (ORCPT
+        id S1349850AbiFJSG6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 9 Jun 2022 18:06:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47820 "EHLO
+        Fri, 10 Jun 2022 14:06:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345198AbiFIWGR (ORCPT
+        with ESMTP id S1350152AbiFJSGy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 9 Jun 2022 18:06:17 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 182061F129F
-        for <linux-hardening@vger.kernel.org>; Thu,  9 Jun 2022 15:06:16 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id me5so49553384ejb.2
-        for <linux-hardening@vger.kernel.org>; Thu, 09 Jun 2022 15:06:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6UoMg7XAdZhjLF3+TuyFXMPmzf7hGCGFPyI+PbeCZf8=;
-        b=bg+vgE40WdCztmrYjVSM/YJF9ZXtLor8NrvacxWrs8tmReVOyatbyF3+bwL2eQ+QeM
-         h+OM4NPlRuZy2i1/Ro6kdbLrzQGd7SZNUFH7OSOKsX6tGe3TeNeXQa/eGc0tnjd1Yy2D
-         IwGPT6SLiwVu0vhgUhkqA+ubHnvIUAQpO7X4w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6UoMg7XAdZhjLF3+TuyFXMPmzf7hGCGFPyI+PbeCZf8=;
-        b=Gxktm27ne8HPfMGgKismLcbUvcqVTQfRPCKaN1LE6FYeLoYj3CJahJWCFUV9uCsY3Y
-         JoJlpZ2cRtTX3VhbuiVDbIaE6XihOKLsrrum9TxMpBJrA/SZ3Fg3sqzQW26KwTHxilHb
-         r04W5nl8kod5Qnf5kbza0VubgUNaGmf9G1B/cpfzafN9/9ZgMbrVowMWXO42x9K0PiIp
-         Ju2mVCDnguKM+jhoLmexw/qChKX5tM/fkRE6pJqcpDxnKUqiFGk06zLVWSoiW2UkulbQ
-         NsE6JogZ89nuGFSNkc8fjmrBuHNze2BAALaCEDcTVMhf13fTxrNv3Zwo1RmMA00lEJ2X
-         qMUw==
-X-Gm-Message-State: AOAM530UGBB5fD7oPjqmtMN8/c/SqMm+8NW/CT3uoL9UmiEsgS6nn7su
-        KFgpP2u0ZnkhmEhW//pAEXjUyWLKbqFcyXFoAik=
-X-Google-Smtp-Source: ABdhPJyvrIqNuFojijXysP+jYVz6Kix6HcN5jAuU8ajl04Qv8cq8XcxoieDBTQKXGcvIf8LsgweMzw==
-X-Received: by 2002:a17:907:d29:b0:711:d215:5a5e with SMTP id gn41-20020a1709070d2900b00711d2155a5emr19899885ejc.697.1654812374398;
-        Thu, 09 Jun 2022 15:06:14 -0700 (PDT)
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com. [209.85.128.49])
-        by smtp.gmail.com with ESMTPSA id l9-20020a50cbc9000000b0042ab87ea713sm9748089edi.22.2022.06.09.15.06.13
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jun 2022 15:06:14 -0700 (PDT)
-Received: by mail-wm1-f49.google.com with SMTP id l2-20020a05600c4f0200b0039c55c50482so276091wmq.0
-        for <linux-hardening@vger.kernel.org>; Thu, 09 Jun 2022 15:06:13 -0700 (PDT)
-X-Received: by 2002:a05:600c:42c6:b0:39c:4bfd:a4a9 with SMTP id
- j6-20020a05600c42c600b0039c4bfda4a9mr5442248wme.8.1654812362760; Thu, 09 Jun
- 2022 15:06:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <40676.1654807564@warthog.procyon.org.uk> <CAHk-=wgkwKyNmNdKpQkqZ6DnmUL-x9hp0YBnUGjaPFEAdxDTbw@mail.gmail.com>
+        Fri, 10 Jun 2022 14:06:54 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 858E63BF93
+        for <linux-hardening@vger.kernel.org>; Fri, 10 Jun 2022 11:06:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1654884403;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PMsjmdghjftZcHJYxe23lhIe8tlheZvEV884DJ3XaMQ=;
+        b=OsidBkE7hO6we1S11KefcFQHLT7xS+tmt1h5ZSXahByFml5bg/eisVqq1nGJ16mGFgl+MG
+        xJKEv9X0c1w4VOZ62pbbD6ufLtPe9+L9qJo9eMllvCbFxWFZfYNsnWD+b/JhVzUUsbYuZY
+        KyMIVIyK7y27Ov7NHunGn4SA5Is/W+A=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-517-RurBROcsP7ulDRyRjKQieg-1; Fri, 10 Jun 2022 14:06:40 -0400
+X-MC-Unique: RurBROcsP7ulDRyRjKQieg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 055FD1C01B20;
+        Fri, 10 Jun 2022 18:06:39 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.62])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A360018EA7;
+        Fri, 10 Jun 2022 18:06:35 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
 In-Reply-To: <CAHk-=wgkwKyNmNdKpQkqZ6DnmUL-x9hp0YBnUGjaPFEAdxDTbw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 9 Jun 2022 15:05:46 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whGrrF20LshkNGJ41UmNN13MU6x0_npwaJQi9cr626GQQ@mail.gmail.com>
-Message-ID: <CAHk-=whGrrF20LshkNGJ41UmNN13MU6x0_npwaJQi9cr626GQQ@mail.gmail.com>
-Subject: Re: [PATCH] netfs: Fix gcc-12 warning by embedding vfs inode in netfs_i_context
-To:     David Howells <dhowells@redhat.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
+References: <CAHk-=wgkwKyNmNdKpQkqZ6DnmUL-x9hp0YBnUGjaPFEAdxDTbw@mail.gmail.com> <40676.1654807564@warthog.procyon.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
         Kees Cook <keescook@chromium.org>,
         Jonathan Corbet <corbet@lwn.net>,
         Eric Van Hensbergen <ericvh@gmail.com>,
@@ -83,22 +69,72 @@ Cc:     Jeff Layton <jlayton@kernel.org>,
         linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         linux-hardening@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] netfs: Fix gcc-12 warning by embedding vfs inode in netfs_i_context
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <652127.1654884394.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Fri, 10 Jun 2022 19:06:34 +0100
+Message-ID: <652128.1654884394@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jun 9, 2022 at 3:04 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> IOW, I think you really should do something like the attached on top
-> of this all.
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Just to clarify: I did apply your patch. It's an improvement on what
-used to go on.
+> Side note: I think this could have been done with an unnamed union as
+> =
 
-I just think it wasn't as much of an improvement that it should have
-been, and that largely untested patch I attached is I think another
-step in a better direction.
+>         struct my_inode {
+>                 union {
+>                         struct inode            vfs_inode;
+>                         struct netfs_inode netfs_inode;
+>                 };
+>         [...]
+> =
 
-                      Linus
+> instead, with the rule that 'netfs_inode' always starts with a 'struct i=
+node'.
+
+I'm slightly wary of that, lest struct netfs_inode gets randomised.  I'm n=
+ot
+sure how likely that would be without netfs_inode getting explicitly marke=
+d.
+
+> But in a lot of cases you really could do so much better: you *have* a
+> "struct netfs_inode" to begin with, but you converted it to just
+> "struct inode *", and now you're converting it back.
+> =
+
+> Look at that AFS code, for example, where we have afs_vnode_cache() doin=
+g
+> =
+
+>         return netfs_i_cookie(&vnode->netfs.inode);
+> =
+
+> and look how it *had* a netfs structure, and it was passing it to a
+> netfs function, but it explicitly passed the WRONG TYPE, so now we've
+> lost the type information and it is using that cast to fake it all
+> back.
+
+Yeah, I didn't look at those as they didn't cause warnings, but you're rig=
+ht -
+those should take struct netfs_inode pointers in some cases, rather than
+struct inode.
+
+Note that some functions, such as netfs_readpage() and netfs_readpages() d=
+o
+need to take struct inode pointers as I'm trying to get the VFS ops to jum=
+p
+into netfslib and get all the VM interface stuff out of the network
+filesystems - the idea being that the network filesystem will provide netf=
+slib
+primarily with two functions: do a read op and do a write op.
+
+I'll have a look at your patch in a bit.
+
+Thanks,
+David
+
