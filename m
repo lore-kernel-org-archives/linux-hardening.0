@@ -2,86 +2,97 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76F5C433EF
-	for <linux-hardening@archiver.kernel.org>; Sat, 11 Jun 2022 06:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4CCCCA47F
+	for <linux-hardening@archiver.kernel.org>; Sun, 12 Jun 2022 21:32:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229735AbiFKGBI (ORCPT
+        id S230500AbiFLVcp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 11 Jun 2022 02:01:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42240 "EHLO
+        Sun, 12 Jun 2022 17:32:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229660AbiFKGBF (ORCPT
+        with ESMTP id S236298AbiFLVcn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 11 Jun 2022 02:01:05 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D998108E
-        for <linux-hardening@vger.kernel.org>; Fri, 10 Jun 2022 23:01:02 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id o33-20020a17090a0a2400b001ea806e48c6so1244514pjo.1
-        for <linux-hardening@vger.kernel.org>; Fri, 10 Jun 2022 23:01:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3GFcFwqnFGmcRNmokcZ6QcxITcGcLvGSBnxe2xUhRi8=;
-        b=IhYK9SJrhXq+qv1WiqB9FLLyFfKRj6/LONo25ON2I+xiq7D8kxxiuRj370SIb/01Km
-         4gLaz5vOJBdR/vDD8jKvcf0cfGJsH0IormapMgd6vYFQTTxeSk0C9taU8BoZGD4Jj5fa
-         4u6bRx3oHK3wCWS/+jm6BcndC/WKUqku29P2Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3GFcFwqnFGmcRNmokcZ6QcxITcGcLvGSBnxe2xUhRi8=;
-        b=o39Ri6f1aIXT1T5MJMOjqvDVEP1Uyxw+XCULIrrMrTa/BuDs+SED/vepBD8FYbJGfS
-         113JBJHxoFTrYibDP861+XK5Hy0Z+Tta4d/uAOCZOlFWu2LSaCW2FpLqR+J4z3mpFI5x
-         3wiZmZ4aEUM8PSq3m6WXap3w4Z8U+zxUZiWN9RPSRCBR6V3g9n8CiDrwxTI8rEKnM3Vl
-         cxz2IjXK3Qju6FYHWspmT9icQ044vOmm/ozJRwy/Wxb2Fzqbxzy4ZV1PWHFGZKlFEHRw
-         1bsQiHSTGtciIM0UN5BVYkBjrp6lQ6rVS+0dtDX1NY08i8FJgUDfzV8VKEppiSnZnCae
-         +/Dg==
-X-Gm-Message-State: AOAM533y3ZgEuCTj+thM5QcSBOFBYujQa2QRuzQS0629J/Yo16Cye14l
-        PEIKb/Jb3TqDllVgp7vvPdYCMg==
-X-Google-Smtp-Source: ABdhPJzinXa+z54InZrO9Ii73d7aTXsD66k55pj7PtXI/jz+hh/xNWPtX9cuYHlcPAVY6EjcgVgLAw==
-X-Received: by 2002:a17:902:7611:b0:168:cb95:fd27 with SMTP id k17-20020a170902761100b00168cb95fd27mr1051867pll.126.1654927261517;
-        Fri, 10 Jun 2022 23:01:01 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a7-20020a1709027e4700b00168b4b550f2sm726508pln.54.2022.06.10.23.01.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jun 2022 23:01:00 -0700 (PDT)
-Date:   Fri, 10 Jun 2022 23:01:00 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [RFC PATCH v3 07/20] lkdtm: Emit an indirect call for CFI tests
-Message-ID: <202206102300.26A43F5D8@keescook>
-References: <20220610233513.1798771-1-samitolvanen@google.com>
- <20220610233513.1798771-8-samitolvanen@google.com>
+        Sun, 12 Jun 2022 17:32:43 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 467EF9FDF;
+        Sun, 12 Jun 2022 14:32:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=KF4owYCbPISYV5a61DiGRvGs/L1LMsz9ReyZ7eXT5t8=; b=geEs3gAVKXk3eNcQdArpYi2DVd
+        f/MN4q94FG7FHdgrWVmDI4vEtNGBpS1vD/DP2rHs7ji3PrgfGGHOWvn8A3AAmpRzatm8leS4fNMaR
+        Fs6S3luOZoQnLu1wdgThCd5i4g41xF0vblXF68HK3PGR3NF5mHXwdGlK8f7j8EYhpBEMYEy9oRHEH
+        qlEW7b8tnYQ0rBpT67IXfWPu99LTz+lOBZmsIyf5LrvwXzKFSHCbS4hUlucLJWK2Wrj8/2TQSpg3W
+        i9qz6yiljtaOFgTf83pXjguAzUIl6miPCNqPkGAOUJitBDthtLjXjcCzOkxJg685Cs7EdPJSyQkRX
+        IVlGdg9w==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1o0VC9-00GHpy-EN; Sun, 12 Jun 2022 21:32:29 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, Uladzislau Rezki <urezki@gmail.com>,
+        Zorro Lang <zlang@redhat.com>, linux-xfs@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH 2/3] usercopy: Cast pointer to an integer once
+Date:   Sun, 12 Jun 2022 22:32:26 +0100
+Message-Id: <20220612213227.3881769-3-willy@infradead.org>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20220612213227.3881769-1-willy@infradead.org>
+References: <20220612213227.3881769-1-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220610233513.1798771-8-samitolvanen@google.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jun 10, 2022 at 04:35:00PM -0700, Sami Tolvanen wrote:
-> Clang can convert the indirect calls in lkdtm_CFI_FORWARD_PROTO into
-> direct calls. Move the call into a noinline function that accepts the
-> target address as an argument to ensure the compiler actually emits an
-> indirect call instead.
-> 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Get rid of a lot of annoying casts by setting 'addr' once at the top
+of the function.
 
-Acked-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ mm/usercopy.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
+diff --git a/mm/usercopy.c b/mm/usercopy.c
+index fdd1bed3b90a..31deee7dd2f5 100644
+--- a/mm/usercopy.c
++++ b/mm/usercopy.c
+@@ -161,19 +161,20 @@ static inline void check_bogus_address(const unsigned long ptr, unsigned long n,
+ static inline void check_heap_object(const void *ptr, unsigned long n,
+ 				     bool to_user)
+ {
++	uintptr_t addr = (uintptr_t)ptr;
+ 	struct folio *folio;
+ 
+ 	if (is_kmap_addr(ptr)) {
+-		unsigned long page_end = (unsigned long)ptr | (PAGE_SIZE - 1);
++		unsigned long page_end = addr | (PAGE_SIZE - 1);
+ 
+-		if ((unsigned long)ptr + n - 1 > page_end)
++		if (addr + n - 1 > page_end)
+ 			usercopy_abort("kmap", NULL, to_user,
+ 					offset_in_page(ptr), n);
+ 		return;
+ 	}
+ 
+ 	if (is_vmalloc_addr(ptr)) {
+-		struct vmap_area *area = find_vmap_area((unsigned long)ptr);
++		struct vmap_area *area = find_vmap_area(addr);
+ 		unsigned long offset;
+ 
+ 		if (!area) {
+@@ -183,8 +184,8 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
+ 
+ 		/* XXX: We should also abort for free vmap_areas */
+ 
+-		offset = (unsigned long)ptr - area->va_start;
+-		if ((unsigned long)ptr + n > area->va_end)
++		offset = addr - area->va_start;
++		if (addr + n > area->va_end)
+ 			usercopy_abort("vmalloc", NULL, to_user, offset, n);
+ 		return;
+ 	}
 -- 
-Kees Cook
+2.35.1
+
