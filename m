@@ -2,113 +2,62 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F91CCA473
-	for <linux-hardening@archiver.kernel.org>; Sun, 12 Jun 2022 21:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24755C43334
+	for <linux-hardening@archiver.kernel.org>; Sun, 12 Jun 2022 21:32:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236182AbiFLVcp (ORCPT
+        id S236298AbiFLVcr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 12 Jun 2022 17:32:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50162 "EHLO
+        Sun, 12 Jun 2022 17:32:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235950AbiFLVcn (ORCPT
+        with ESMTP id S236375AbiFLVcn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Sun, 12 Jun 2022 17:32:43 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4692D9FE8;
-        Sun, 12 Jun 2022 14:32:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 844229FFD;
+        Sun, 12 Jun 2022 14:32:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=HTrppkgyoE0jfkD/I3hwHGO9wel7JMRK5JWmxra0aTw=; b=SEdm11PHMGs3xIT5eFgs1AaLQw
-        wBdGhsxowR+3VG3Z0qlqYVd4ShqfwhcvCeXebJDQgFdY21nGO8jGU1DiQ9AnXML62aXC9T9iJ+xqE
-        ZaQFMUEEbXRdl1IMHc60ASgvvamq7MuPHSP1mYdaxzNfDsL6pe3370ki95kajTAbs4E9G8M7XpSva
-        qayDemMjdO4a79683xTqgJLYpn/2Q+rd2YonUuDU7DgtZ7ppIissSTdoJs4IUW+zX/+2vkE+ezHUC
-        tJjdE39HiA2gssJMq9StqsbNVvNpaQY/pdSNrHJbus6q0krzIq7U/nYgXzmP4Q3fh+G+ICbIlUBSl
-        lFYersDQ==;
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=v4mIWqTNLi/H6cmlkOhqCaPgNun/BIW7dc3RoGC1nCY=; b=RCB5aj0M0GTxq97GmTfmw83ojw
+        6Lz0+yDJJVhmt3dLRuQcUvAeQI0hjWuSjpff2j//5DuETvlCYUQNTjVC7GKOLZcY96yNhWKXFKjKr
+        DNvkjqt7GtQXUS3s8qhb1hqvDShj56YIdu6eEfQ6D0KkCOteF4ZqmEH3bSNyP6SmQPk+QahDv1N3o
+        84o8/lp4NngLD7yLlh7Lgn2Vmc+eNN0Wpfg6z7zyON1RrlZMMWBl+PqAyHHd77AgWykWepvY9Sl/F
+        +QlPO0Mc0maVzAY9VXdlpUW2m8lzQMEwxQ5TOQj3LrQnRSxdzzGS12ueggK/EncIqqFrNtPg8R+xI
+        0YRAnZaw==;
 Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1o0VC9-00GHq0-GJ; Sun, 12 Jun 2022 21:32:29 +0000
+        id 1o0VC9-00GHpu-A8; Sun, 12 Jun 2022 21:32:29 +0000
 From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, Uladzislau Rezki <urezki@gmail.com>,
         Zorro Lang <zlang@redhat.com>, linux-xfs@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH 3/3] usercopy: Make usercopy resilient against ridiculously large copies
-Date:   Sun, 12 Jun 2022 22:32:27 +0100
-Message-Id: <20220612213227.3881769-4-willy@infradead.org>
+Subject: [PATCH 0/3] Fixes for usercopy
+Date:   Sun, 12 Jun 2022 22:32:24 +0100
+Message-Id: <20220612213227.3881769-1-willy@infradead.org>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220612213227.3881769-1-willy@infradead.org>
-References: <20220612213227.3881769-1-willy@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-If 'n' is so large that it's negative, we might wrap around and mistakenly
-think that the copy is OK when it's not.  Such a copy would probably
-crash, but just doing the arithmetic in a more simple way lets us detect
-and refuse this case.
+Kees, I'm hoping you'll take these through your tree.  I think they're
+all reasonable fixes to go into 5.19.  The first one is essential;
+it fixes two different bugs that people have hit.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- mm/usercopy.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+Matthew Wilcox (Oracle) (3):
+  usercopy: Handle vm_map_ram() areas
+  usercopy: Cast pointer to an integer once
+  usercopy: Make usercopy resilient against ridiculously large copies
 
-diff --git a/mm/usercopy.c b/mm/usercopy.c
-index 31deee7dd2f5..ff16083cf1c8 100644
---- a/mm/usercopy.c
-+++ b/mm/usercopy.c
-@@ -162,20 +162,18 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
- 				     bool to_user)
- {
- 	uintptr_t addr = (uintptr_t)ptr;
-+	unsigned long offset;
- 	struct folio *folio;
- 
- 	if (is_kmap_addr(ptr)) {
--		unsigned long page_end = addr | (PAGE_SIZE - 1);
--
--		if (addr + n - 1 > page_end)
--			usercopy_abort("kmap", NULL, to_user,
--					offset_in_page(ptr), n);
-+		offset = offset_in_page(ptr);
-+		if (n > PAGE_SIZE - offset)
-+			usercopy_abort("kmap", NULL, to_user, offset, n);
- 		return;
- 	}
- 
- 	if (is_vmalloc_addr(ptr)) {
- 		struct vmap_area *area = find_vmap_area(addr);
--		unsigned long offset;
- 
- 		if (!area) {
- 			usercopy_abort("vmalloc", "no area", to_user, 0, n);
-@@ -184,9 +182,10 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
- 
- 		/* XXX: We should also abort for free vmap_areas */
- 
--		offset = addr - area->va_start;
--		if (addr + n > area->va_end)
-+		if (n > area->va_end - addr) {
-+			offset = addr - area->va_start;
- 			usercopy_abort("vmalloc", NULL, to_user, offset, n);
-+		}
- 		return;
- 	}
- 
-@@ -199,8 +198,8 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
- 		/* Check slab allocator for flags and size. */
- 		__check_heap_object(ptr, n, folio_slab(folio), to_user);
- 	} else if (folio_test_large(folio)) {
--		unsigned long offset = ptr - folio_address(folio);
--		if (offset + n > folio_size(folio))
-+		offset = ptr - folio_address(folio);
-+		if (n > folio_size(folio) - offset)
- 			usercopy_abort("page alloc", NULL, to_user, offset, n);
- 	}
- }
+ include/linux/vmalloc.h |  1 +
+ mm/usercopy.c           | 24 +++++++++++++-----------
+ mm/vmalloc.c            |  2 +-
+ 3 files changed, 15 insertions(+), 12 deletions(-)
+
 -- 
 2.35.1
 
