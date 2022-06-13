@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44111C43334
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Jun 2022 18:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40245CCA47B
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Jun 2022 18:31:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245444AbiFMSbQ (ORCPT
+        id S245451AbiFMSbQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
         Mon, 13 Jun 2022 14:31:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55152 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245545AbiFMSbD (ORCPT
+        with ESMTP id S245506AbiFMSbD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Mon, 13 Jun 2022 14:31:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F4EDB641F
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 07:46:46 -0700 (PDT)
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFAFFB7147
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 07:46:50 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2B66A61121
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 14:46:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 894B6C385A2;
-        Mon, 13 Jun 2022 14:46:43 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 517C9B8105D
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 14:46:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03504C3411B;
+        Mon, 13 Jun 2022 14:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655131605;
-        bh=4fUGT6A0wQkzOLjo7YGQqUPF0YyCSsB6E9CDXhu0XAw=;
+        s=k20201202; t=1655131608;
+        bh=pxy0llk3lU+vE7ZUGCdY3eOFHQYtTICKHWtxJ9n32Jc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nOqaYYNXDrYqasdo0yp+g+A639cra4h8YNwfxvy06Y7vDdBMtQeOi+mpsjr7cGnGl
-         ozmKkvyBhXryuZs0qYS2m8GpBSBMwK7TTqyLiHWPYtH1FLhLZz/oos2XNUIr70EqSQ
-         In0ktm6QFtXux9R9kvqar255hr1NsniVqhcl1yFiK6F9dAhGcFUQtYXQ7FZbXGCxNA
-         VdJK0RjN9TBrNPOSqdo1ARrHiKslSODKFpC3zQY6F901tOoghri3iZXlQ07FfIZuGD
-         tlho2tu2qF3cPEHmhrPkeE7uqU8LFMKahem+1Sa69Jy5udolI+FbSNh0P7+IA41lP4
-         9dKskb1gzOIIQ==
+        b=O5GMee2g1tG1N9JYRkdAPnStzTZNCOlvORYzbcBInolwvmmbJGvq0n9RB3IEEsSRw
+         kJYwQVN88i/aZe6VGA1i9OaQvN8w/44Mxn4HSy3oRbJ3x44iNlrxkuDfj0qaF36Nro
+         0DwiepvQSXjetXFfpZPzlhkOENQumDdhpGpmZ6iMEor6O0QzVNzlpAU5BASRJIZcem
+         Io8FSHRX7G5wR0B17507Z+LvBTGEHLIp5NuWmS5xpXGoV/IlIi1ZFaQBTKu7jhyp3R
+         HnIOUudlrGYXlrNvmsUO3f1aS1TVlOdWTF8Om91hTKhdX0WCDWnRb823LrkvHxG4EL
+         T8Fr5ZebPbQcQ==
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
@@ -42,154 +42,202 @@ Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Mark Brown <broonie@kernel.org>,
         Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: [PATCH v4 17/26] arm64: head: populate kernel page tables with MMU and caches on
-Date:   Mon, 13 Jun 2022 16:45:41 +0200
-Message-Id: <20220613144550.3760857-18-ardb@kernel.org>
+Subject: [PATCH v4 18/26] arm64: head: record CPU boot mode after enabling the MMU
+Date:   Mon, 13 Jun 2022 16:45:42 +0200
+Message-Id: <20220613144550.3760857-19-ardb@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220613144550.3760857-1-ardb@kernel.org>
 References: <20220613144550.3760857-1-ardb@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4295; h=from:subject; bh=4fUGT6A0wQkzOLjo7YGQqUPF0YyCSsB6E9CDXhu0XAw=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBip02NV+6z4U5Wm9BPHtSHvjveEKJTikIyDLJYm9lw QRuagvaJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYqdNjQAKCRDDTyI5ktmPJHwGDA C0CQ+CUiZbyC3l/p5wkqLGL9p+lY+ErVEV6XBUhSKMbH+sL7chRh7mfRD/M3E6TL+Sw2+omfsJxEwB bH84i5RYEPXrdEx1Ws4pfBhNXxpFTwIOx7/GUj60q4XEgGJTB32ex0ofipEOrPPnRP5XFLRpF/+6Ey Ke9Zjbz4Gn9L4DHWy78TxZfY5SwG1gzebH1wNxGsO6gWdiG6cNm/X5hCs96mJrNhlgh8Wz+MVdMUsx gP6LbNTRKytXu3FvTwZavGSTrOuiX3q97Ok2Bxj3zO4XaKAq6LS0DEfEaJuyKCMkN85EiwCyiEDhhm nKYLDyJ7/CgYeMjXv5h0KWz/F8oneENchM1O8id4MzootR5WtOdR3D2mjAovGzxhxxXnrg/+2GY1nO UVW3fkNftlONWLJUghDwZRuvXRYCfR81QkvVvcqdCS1/jXVEGiPBq5O1Up0XaREeleiyZphQgblbda tQpaFTDzhqit32EyZDqyGozrZDoqyM/45QO4qMvotFAX0=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5885; h=from:subject; bh=pxy0llk3lU+vE7ZUGCdY3eOFHQYtTICKHWtxJ9n32Jc=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBip02PejBEZAWtKDoYK9J8rjOdKs5aow9TJyQlJeFY WrykIPmJAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYqdNjwAKCRDDTyI5ktmPJAV4C/ oCZL7/oH3WsuehM/ebly+VeHVYEuPolJPuOYbL036gmWrURFMwmknGuSrVyjrudVaSdcK0VT8Phw6z RT83frkLZgT4beyJuCfdpQ2Js0ggq5tirGIUrJjqDUEJ+wF/7Xwad1XETa+KojCfe9ziZ0rTMGwlUj 3x/lybDrKW64rDyqI/4zOOtYYB9L/84NhujaQr6RhPsTd9xo6ywr9s8Q7xN+W7XL1ws+vSHDY0tfZV k2kIO7u12CHpZOjKIxdqMiQeOOPLlgoMlcRqDUw7K3pwiKMMYyzvb8b1FcPDTkyBbc0txp+U2igqqv RDIObbSFjksjoYlJ0cAzSIOsQSyCYNXIL7BnF7BJhTo+1J1sqLbJJFO0qpoiSUHWt9Ag4mH6Wk0Wfo nhLpZUx+11y+18ARfBXGnpX+pHVC3o6ehbzxTiUZSQEtksXHczZamluQ2rDgsa6fJydDh5fyxdxN1A 9kv8siW5RwTHpp2TYqqfD8jCTbFD+H028MraTC8djUiFY=
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Now that we can access the entire kernel image via the ID map, we can
-execute the page table population code with the MMU and caches enabled.
-The only thing we need to ensure is that translations via TTBR1 remain
-disabled while we are updating the page tables the second time around,
-in case KASLR wants them to be randomized.
+In order to avoid having to touch memory with the MMU and caches
+disabled, and therefore having to invalidate it from the caches
+explicitly, just defer storing the value until after the MMU has been
+turned on, unless we are giving up with an error.
+
+While at it, move the associated variable definitions into C code.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/arm64/kernel/head.S | 62 +++++---------------
- 1 file changed, 16 insertions(+), 46 deletions(-)
+ arch/arm64/kernel/head.S     | 50 +++++---------------
+ arch/arm64/kernel/hyp-stub.S |  4 +-
+ arch/arm64/mm/mmu.c          |  8 ++++
+ 3 files changed, 23 insertions(+), 39 deletions(-)
 
 diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-index d704d0bd8ffc..583cbea865e1 100644
+index 583cbea865e1..8de346dd4470 100644
 --- a/arch/arm64/kernel/head.S
 +++ b/arch/arm64/kernel/head.S
-@@ -85,8 +85,6 @@
+@@ -82,6 +82,7 @@
+ 	 * primary lowlevel boot path:
+ 	 *
+ 	 *  Register   Scope                      Purpose
++	 *  x20        primary_entry() .. __primary_switch()    CPU boot mode
  	 *  x21        primary_entry() .. start_kernel()        FDT pointer passed at boot in x0
  	 *  x22        create_idmap() .. start_kernel()         ID map VA of the DT blob
  	 *  x23        primary_entry() .. start_kernel()        physical misalignment/KASLR offset
--	 *  x28        clear_page_tables()                      callee preserved temp register
--	 *  x19/x20    __primary_switch()                       callee preserved temp registers
- 	 *  x24        __primary_switch() .. relocate_kernel()  current RELR displacement
- 	 *  x28        create_idmap()                           callee preserved temp register
- 	 */
-@@ -96,9 +94,7 @@ SYM_CODE_START(primary_entry)
+@@ -91,9 +92,9 @@
+ SYM_CODE_START(primary_entry)
+ 	bl	preserve_boot_args
+ 	bl	init_kernel_el			// w0=cpu_boot_mode
++	mov	x20, x0
  	adrp	x23, __PHYS_OFFSET
  	and	x23, x23, MIN_KIMG_ALIGN - 1	// KASLR offset, defaults to 0
- 	bl	set_cpu_boot_mode_flag
--	bl	clear_page_tables
+-	bl	set_cpu_boot_mode_flag
  	bl	create_idmap
--	bl	create_kernel_mapping
  
  	/*
- 	 * The following calls CPU setup code, see arch/arm64/mm/proc.S for
-@@ -128,32 +124,14 @@ SYM_CODE_START_LOCAL(preserve_boot_args)
- SYM_CODE_END(preserve_boot_args)
+@@ -429,6 +430,9 @@ SYM_FUNC_START_LOCAL(__primary_switched)
+ 	sub	x4, x4, x0			// the kernel virtual and
+ 	str_l	x4, kimage_voffset, x5		// physical mappings
  
- SYM_FUNC_START_LOCAL(clear_page_tables)
--	mov	x28, lr
++	mov	x0, x20
++	bl	set_cpu_boot_mode_flag
++
+ 	// Clear BSS
+ 	adr_l	x0, __bss_start
+ 	mov	x1, xzr
+@@ -454,6 +458,7 @@ SYM_FUNC_START_LOCAL(__primary_switched)
+ 	ret					// to __primary_switch()
+ 0:
+ #endif
++	mov	x0, x20
+ 	bl	switch_to_vhe			// Prefer VHE if possible
+ 	ldp	x29, x30, [sp], #16
+ 	bl	start_kernel
+@@ -553,52 +558,21 @@ SYM_FUNC_START_LOCAL(set_cpu_boot_mode_flag)
+ 	b.ne	1f
+ 	add	x1, x1, #4
+ 1:	str	w0, [x1]			// Save CPU boot mode
+-	dmb	sy
+-	dc	ivac, x1			// Invalidate potentially stale cache line
+ 	ret
+ SYM_FUNC_END(set_cpu_boot_mode_flag)
+ 
+-/*
+- * These values are written with the MMU off, but read with the MMU on.
+- * Writers will invalidate the corresponding address, discarding up to a
+- * 'Cache Writeback Granule' (CWG) worth of data. The linker script ensures
+- * sufficient alignment that the CWG doesn't overlap another section.
+- */
+-	.pushsection ".mmuoff.data.write", "aw"
+-/*
+- * We need to find out the CPU boot mode long after boot, so we need to
+- * store it in a writable variable.
+- *
+- * This is not in .bss, because we set it sufficiently early that the boot-time
+- * zeroing of .bss would clobber it.
+- */
+-SYM_DATA_START(__boot_cpu_mode)
+-	.long	BOOT_CPU_MODE_EL2
+-	.long	BOOT_CPU_MODE_EL1
+-SYM_DATA_END(__boot_cpu_mode)
+-/*
+- * The booting CPU updates the failed status @__early_cpu_boot_status,
+- * with MMU turned off.
+- */
+-SYM_DATA_START(__early_cpu_boot_status)
+-	.quad 	0
+-SYM_DATA_END(__early_cpu_boot_status)
 -
--	/*
--	 * Invalidate the init page tables to avoid potential dirty cache lines
--	 * being evicted. Other page tables are allocated in rodata as part of
--	 * the kernel image, and thus are clean to the PoC per the boot
--	 * protocol.
--	 */
--	adrp	x0, init_pg_dir
--	adrp	x1, init_pg_end
--	bl	dcache_inval_poc
+-	.popsection
 -
  	/*
- 	 * Clear the init page tables.
+ 	 * This provides a "holding pen" for platforms to hold all secondary
+ 	 * cores are held until we're ready for them to initialise.
  	 */
- 	adrp	x0, init_pg_dir
- 	adrp	x1, init_pg_end
--	sub	x1, x1, x0
--1:	stp	xzr, xzr, [x0], #16
--	stp	xzr, xzr, [x0], #16
--	stp	xzr, xzr, [x0], #16
--	stp	xzr, xzr, [x0], #16
--	subs	x1, x1, #64
--	b.ne	1b
--
--	ret	x28
-+	sub	x2, x1, x0
-+	mov	x1, xzr
-+	b	__pi_memset			// tail call
- SYM_FUNC_END(clear_page_tables)
+ SYM_FUNC_START(secondary_holding_pen)
+ 	bl	init_kernel_el			// w0=cpu_boot_mode
+-	bl	set_cpu_boot_mode_flag
+-	mrs	x0, mpidr_el1
++	mrs	x2, mpidr_el1
+ 	mov_q	x1, MPIDR_HWID_BITMASK
+-	and	x0, x0, x1
++	and	x2, x2, x1
+ 	adr_l	x3, secondary_holding_pen_release
+ pen:	ldr	x4, [x3]
+-	cmp	x4, x0
++	cmp	x4, x2
+ 	b.eq	secondary_startup
+ 	wfe
+ 	b	pen
+@@ -610,7 +584,6 @@ SYM_FUNC_END(secondary_holding_pen)
+ 	 */
+ SYM_FUNC_START(secondary_entry)
+ 	bl	init_kernel_el			// w0=cpu_boot_mode
+-	bl	set_cpu_boot_mode_flag
+ 	b	secondary_startup
+ SYM_FUNC_END(secondary_entry)
+ 
+@@ -618,6 +591,7 @@ SYM_FUNC_START_LOCAL(secondary_startup)
+ 	/*
+ 	 * Common entry point for secondary CPUs.
+ 	 */
++	mov	x20, x0				// preserve boot mode
+ 	bl	switch_to_vhe
+ 	bl	__cpu_secondary_check52bitva
+ 	bl	__cpu_setup			// initialise processor
+@@ -629,6 +603,9 @@ SYM_FUNC_START_LOCAL(secondary_startup)
+ SYM_FUNC_END(secondary_startup)
+ 
+ SYM_FUNC_START_LOCAL(__secondary_switched)
++	mov	x0, x20
++	bl	set_cpu_boot_mode_flag
++	str_l	xzr, __early_cpu_boot_status, x3
+ 	adr_l	x5, vectors
+ 	msr	vbar_el1, x5
+ 	isb
+@@ -691,7 +668,6 @@ SYM_FUNC_START(__enable_mmu)
+ 	b.lt    __no_granule_support
+ 	cmp     x3, #ID_AA64MMFR0_TGRAN_SUPPORTED_MAX
+ 	b.gt    __no_granule_support
+-	update_early_cpu_boot_status 0, x3, x4
+ 	phys_to_ttbr x2, x2
+ 	msr	ttbr0_el1, x2			// load TTBR0
+ 	load_ttbr1 x1, x1, x3
+diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
+index 43d212618834..5bafb53fafb4 100644
+--- a/arch/arm64/kernel/hyp-stub.S
++++ b/arch/arm64/kernel/hyp-stub.S
+@@ -223,11 +223,11 @@ SYM_FUNC_END(__hyp_reset_vectors)
  
  /*
-@@ -399,16 +377,8 @@ SYM_FUNC_START_LOCAL(create_kernel_mapping)
+  * Entry point to switch to VHE if deemed capable
++ *
++ * w0: boot mode, as returned by init_kernel_el()
+  */
+ SYM_FUNC_START(switch_to_vhe)
+ 	// Need to have booted at EL2
+-	adr_l	x1, __boot_cpu_mode
+-	ldr	w0, [x1]
+ 	cmp	w0, #BOOT_CPU_MODE_EL2
+ 	b.ne	1f
  
- 	map_memory x0, x1, x5, x6, x7, x3, (VA_BITS - PGDIR_SHIFT), x10, x11, x12, x13, x14
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index ed3a4b87529b..9828ad826837 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -56,6 +56,14 @@ EXPORT_SYMBOL(kimage_vaddr);
+ u64 kimage_voffset __ro_after_init;
+ EXPORT_SYMBOL(kimage_voffset);
  
--	/*
--	 * Since the page tables have been populated with non-cacheable
--	 * accesses (MMU disabled), invalidate those tables again to
--	 * remove any speculatively loaded cache lines.
--	 */
--	dmb	sy
--
--	adrp	x0, init_pg_dir
--	adrp	x1, init_pg_end
--	b	dcache_inval_poc		// tail call
-+	dsb	ishst				// sync with page table walker
-+	ret
- SYM_FUNC_END(create_kernel_mapping)
- 
- 	/*
-@@ -863,14 +833,15 @@ SYM_FUNC_END(__relocate_kernel)
- #endif
- 
- SYM_FUNC_START_LOCAL(__primary_switch)
--#ifdef CONFIG_RANDOMIZE_BASE
--	mov	x19, x0				// preserve new SCTLR_EL1 value
--	mrs	x20, sctlr_el1			// preserve old SCTLR_EL1 value
--#endif
--
--	adrp	x1, init_pg_dir
-+	adrp	x1, reserved_pg_dir
- 	adrp	x2, init_idmap_pg_dir
- 	bl	__enable_mmu
++u32 __boot_cpu_mode[] = { BOOT_CPU_MODE_EL2, BOOT_CPU_MODE_EL1 };
 +
-+	bl	clear_page_tables
-+	bl	create_kernel_mapping
++/*
++ * The booting CPU updates the failed status @__early_cpu_boot_status,
++ * with MMU turned off.
++ */
++long __section(".mmuoff.data.write") __early_cpu_boot_status;
 +
-+	adrp	x1, init_pg_dir
-+	load_ttbr1 x1, x1, x2
- #ifdef CONFIG_RELOCATABLE
- #ifdef CONFIG_RELR
- 	mov	x24, #0				// no RELR displacement yet
-@@ -886,9 +857,8 @@ SYM_FUNC_START_LOCAL(__primary_switch)
- 	 * to take into account by discarding the current kernel mapping and
- 	 * creating a new one.
- 	 */
--	pre_disable_mmu_workaround
--	msr	sctlr_el1, x20			// disable the MMU
--	isb
-+	adrp	x1, reserved_pg_dir		// Disable translations via TTBR1
-+	load_ttbr1 x1, x1, x2
- 	bl	clear_page_tables
- 	bl	create_kernel_mapping		// Recreate kernel mapping
- 
-@@ -896,8 +866,8 @@ SYM_FUNC_START_LOCAL(__primary_switch)
- 	dsb	nsh
- 	isb
- 
--	set_sctlr_el1	x19			// re-enable the MMU
--
-+	adrp	x1, init_pg_dir			// Re-enable translations via TTBR1
-+	load_ttbr1 x1, x1, x2
- 	bl	__relocate_kernel
- #endif
- #endif
+ /*
+  * Empty_zero_page is a special page that is used for zero-initialized data
+  * and COW.
 -- 
 2.30.2
 
