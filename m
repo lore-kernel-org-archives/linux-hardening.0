@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F419ACCA47F
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Jun 2022 18:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6C5CCA47D
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Jun 2022 18:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245492AbiFMSbO (ORCPT
+        id S245293AbiFMSbP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Jun 2022 14:31:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53244 "EHLO
+        Mon, 13 Jun 2022 14:31:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245293AbiFMSa4 (ORCPT
+        with ESMTP id S244491AbiFMSbA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Jun 2022 14:30:56 -0400
+        Mon, 13 Jun 2022 14:31:00 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1742248D2
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 07:46:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25342B640C
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 07:46:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3F1E7612DF
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 14:46:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FA7CC36AFE;
-        Mon, 13 Jun 2022 14:46:38 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AD90C61121
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 14:46:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A75FC36B01;
+        Mon, 13 Jun 2022 14:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655131600;
-        bh=um43QG7Uixnp9Q4aH+kmw/A/kYTdr1jsi3GWxNDLRw0=;
+        s=k20201202; t=1655131603;
+        bh=S9LYQJwCVtOofosFai5+YO1U27PWPWy//Cw6PdVBb08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RVwK2MPpXQKj6TZG4qz6Cn9lUpPmKqxQrS6R9XrjBWA+SpDO+L62YrgWYJ/7k80il
-         ngAVerQpuft8yNmQdDHgfLkl0a+tqR+mO/H0bt6YBasT/2oJ9E02MhhE6QGpdbXBBK
-         GEK4vyTGWz3ZOhzdyVbjkZJXVzmnHpkpxI7A2Cqm49f8e8mEBP7QXcMBg9y5Av2+ed
-         td4aYR0PKpTKouMjqwBaWUBUzZxADEHflc4CyAINmJVqEJgH8KrZrLihjrN+1Vms6B
-         Bo1BYFYkBk0oIXtDSu6tyAeK6bwIPaxBZDKqUgQ6T+bPj2ItjBJJHuIFebo3aCIX0V
-         fqQDtrsmv7ZPA==
+        b=YJnS2cmE8CdgHIJBH4Hu3DGLGwDLGPpWCmRarDJcO2ryfN3YKpaTCpfAAkh0CWlTr
+         cPufGoFjfRlcPNGsOHWnrAEAFsOpjb8w99+mrF/oIvub4hC8Uu0QEEuYPNGJmNna0l
+         1N+6JJ0wzzb7sH0ifVC3dLe7QSpTzP+YfIGao8Pj6jeBc/9DoUZ16OvElNVLg+GYHP
+         Zn8JCjmZmnDZkNlz1GwTK5TZWQhFrrDtNZmtC6cvcAvocIuaAUzrcM+I/nsDY+By/l
+         AkSFk0+BhWMZxlRPM7GjHPlctcqLQ0FzfLz0BsIzDSB80hWvuKYZztWsuy7X/9KSj9
+         ACl7AFLokJ6VQ==
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
@@ -42,97 +42,82 @@ Cc:     linux-hardening@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Mark Brown <broonie@kernel.org>,
         Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: [PATCH v4 15/26] arm64: idreg-override: use early FDT mapping in ID map
-Date:   Mon, 13 Jun 2022 16:45:39 +0200
-Message-Id: <20220613144550.3760857-16-ardb@kernel.org>
+Subject: [PATCH v4 16/26] arm64: head: factor out TTBR1 assignment into a macro
+Date:   Mon, 13 Jun 2022 16:45:40 +0200
+Message-Id: <20220613144550.3760857-17-ardb@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220613144550.3760857-1-ardb@kernel.org>
 References: <20220613144550.3760857-1-ardb@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2544; h=from:subject; bh=um43QG7Uixnp9Q4aH+kmw/A/kYTdr1jsi3GWxNDLRw0=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBip02KPYJryZ7RskFoMzvysSLYOyZ2ZkPCClfF18Ju YyYnsZ2JAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYqdNigAKCRDDTyI5ktmPJLtDC/ 9jUF/xfdwtuurCZ4YmAGylsnrQiExCmJ4GYn+8Szg+IPPh33HuZkS5sMr/9B90stk2PF0bUr5tmcKy oRiH2XIEomLRSuQDNm7SnULF/9nkTlewtZrbo/yu+jdD1rxsBGJxyCm3KCiIRZYUlWK+WyT44Mk/Vf DAgzDTOkoSihCgShg2v30vuv4ToEhycdgkqeTixfdWVQOOQeY0HHo48Jrg+LLQz9EFk0rajVurV0fD WrECQfXLyddTOH3ZMOhgY5CRhb4FJlpwTQXgSux1rSij2OL+D+eoOdxjopsSXgw7F3eAC+hmVIJpq8 WhbJMvI6jLEdX5Kz6650MgNaMQaXZ/2W9Lf6eGdVTBmalIN8X6v3gMh5CrZXnahF+wagrxrrSVRpE1 f+QoEcSnzlDKwB7xOgZ54XZc7VbBH/O61KNVg3di/OBBY5DgxBeYSPSIGMAFevQcPlk6qLE8mFXBnI nooVzcBB4iuR2tvdrmhSpARmSnW9WivJby8wKPGYuiGFY=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1896; h=from:subject; bh=S9LYQJwCVtOofosFai5+YO1U27PWPWy//Cw6PdVBb08=; b=owEB7QES/pANAwAKAcNPIjmS2Y8kAcsmYgBip02L/ftUuweNGM01fa8DyZ6EK7EUNj8NyNmf74z6 7QKfPa2JAbMEAAEKAB0WIQT72WJ8QGnJQhU3VynDTyI5ktmPJAUCYqdNiwAKCRDDTyI5ktmPJKsfC/ 9M4VKd89dRdoCxh5fbiBxMaP713z9uBf2paJO//SLoXNqAeJQq7hCXnMsrQFlK+4srbvyLCft950r6 b+7/CqF/2NfaSShaahyr8W/4IDUCFgFOiscpe9LLvMUf0xfV/0QzyGu7OPIHAbqWJJGHlGl/MgYFQ7 WXAU9iSZVWLwUALwNMOgp4ANPYjgBgvHfiSIFKZNBLBDjpca542Nl8aWgPxKFmBeGKgFXUnoA6+HXE dt5JYdV+jm6R1h0CnfNMl58xNOn8rEQtea7IOitk0zJ5+bN8/lpkFuCcU6zDNOLqm3bq866Fzd426f X+ZjTIOHgYQKd+u1B2DRFFEaUu/hBzAa1jrASp8aFv8iLq9gn/kdD8PH7XMXNTKkJDoy5JBNBQZ4Qj Vla9/DKDR27b+MfDdDU1WQiNwi6jTeOEbQRY+5BTuyLifwTc1tiSTSiwMyNL0tPhMNUVeazsj2H5ed jLiO84U4FqUR5I2fGgxHm+5ba0tbtihkcK4t5H+R5WTfg=
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Instead of calling into the kernel to map the FDT into the kernel page
-tables before even calling start_kernel(), let's switch to the initial,
-temporary mapping of the device tree that has been added to the ID map.
+Create a macro load_ttbr1 to avoid having to repeat the same instruction
+sequence 3 times in a subsequent patch. No functional change intended.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/arm64/kernel/head.S           |  1 +
- arch/arm64/kernel/idreg-override.c | 17 ++++++-----------
- 2 files changed, 7 insertions(+), 11 deletions(-)
+ arch/arm64/include/asm/assembler.h | 17 +++++++++++++----
+ arch/arm64/kernel/head.S           |  5 +----
+ 2 files changed, 14 insertions(+), 8 deletions(-)
 
+diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+index 9468f45c07a6..b2584709c332 100644
+--- a/arch/arm64/include/asm/assembler.h
++++ b/arch/arm64/include/asm/assembler.h
+@@ -479,6 +479,18 @@ alternative_endif
+ 	_cond_extable .Licache_op\@, \fixup
+ 	.endm
+ 
++/*
++ * load_ttbr1 - install @pgtbl as a TTBR1 page table
++ * pgtbl preserved
++ * tmp1/tmp2 clobbered, either may overlap with pgtbl
++ */
++	.macro		load_ttbr1, pgtbl, tmp1, tmp2
++	phys_to_ttbr	\tmp1, \pgtbl
++	offset_ttbr1 	\tmp1, \tmp2
++	msr		ttbr1_el1, \tmp1
++	isb
++	.endm
++
+ /*
+  * To prevent the possibility of old and new partial table walks being visible
+  * in the tlb, switch the ttbr to a zero page when we invalidate the old
+@@ -492,10 +504,7 @@ alternative_endif
+ 	isb
+ 	tlbi	vmalle1
+ 	dsb	nsh
+-	phys_to_ttbr \tmp, \page_table
+-	offset_ttbr1 \tmp, \tmp2
+-	msr	ttbr1_el1, \tmp
+-	isb
++	load_ttbr1 \page_table, \tmp, \tmp2
+ 	.endm
+ 
+ /*
 diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-index 8283ff848328..64ebff634b83 100644
+index 64ebff634b83..d704d0bd8ffc 100644
 --- a/arch/arm64/kernel/head.S
 +++ b/arch/arm64/kernel/head.S
-@@ -472,6 +472,7 @@ SYM_FUNC_START_LOCAL(__primary_switched)
- #endif
- 	mov	x0, x21				// pass FDT address in x0
- 	bl	early_fdt_map			// Try mapping the FDT early
-+	mov	x0, x22				// pass FDT address in x0
- 	bl	init_feature_override		// Parse cpu feature overrides
- #ifdef CONFIG_RANDOMIZE_BASE
- 	tst	x23, ~(MIN_KIMG_ALIGN - 1)	// already running randomized?
-diff --git a/arch/arm64/kernel/idreg-override.c b/arch/arm64/kernel/idreg-override.c
-index 8a2ceb591686..f92836e196e5 100644
---- a/arch/arm64/kernel/idreg-override.c
-+++ b/arch/arm64/kernel/idreg-override.c
-@@ -201,16 +201,11 @@ static __init void __parse_cmdline(const char *cmdline, bool parse_aliases)
- 	} while (1);
- }
+@@ -722,12 +722,9 @@ SYM_FUNC_START(__enable_mmu)
+ 	cmp     x3, #ID_AA64MMFR0_TGRAN_SUPPORTED_MAX
+ 	b.gt    __no_granule_support
+ 	update_early_cpu_boot_status 0, x3, x4
+-	phys_to_ttbr x1, x1
+ 	phys_to_ttbr x2, x2
+ 	msr	ttbr0_el1, x2			// load TTBR0
+-	offset_ttbr1 x1, x3
+-	msr	ttbr1_el1, x1			// load TTBR1
+-	isb
++	load_ttbr1 x1, x1, x3
  
--static __init const u8 *get_bootargs_cmdline(void)
-+static __init const u8 *get_bootargs_cmdline(const void *fdt)
- {
- 	const u8 *prop;
--	void *fdt;
- 	int node;
+ 	set_sctlr_el1	x0
  
--	fdt = get_early_fdt_ptr();
--	if (!fdt)
--		return NULL;
--
- 	node = fdt_path_offset(fdt, "/chosen");
- 	if (node < 0)
- 		return NULL;
-@@ -222,9 +217,9 @@ static __init const u8 *get_bootargs_cmdline(void)
- 	return strlen(prop) ? prop : NULL;
- }
- 
--static __init void parse_cmdline(void)
-+static __init void parse_cmdline(const void *fdt)
- {
--	const u8 *prop = get_bootargs_cmdline();
-+	const u8 *prop = get_bootargs_cmdline(fdt);
- 
- 	if (IS_ENABLED(CONFIG_CMDLINE_FORCE) || !prop)
- 		__parse_cmdline(CONFIG_CMDLINE, true);
-@@ -234,9 +229,9 @@ static __init void parse_cmdline(void)
- }
- 
- /* Keep checkers quiet */
--void init_feature_override(void);
-+void init_feature_override(const void *fdt);
- 
--asmlinkage void __init init_feature_override(void)
-+asmlinkage void __init init_feature_override(const void *fdt)
- {
- 	int i;
- 
-@@ -247,7 +242,7 @@ asmlinkage void __init init_feature_override(void)
- 		}
- 	}
- 
--	parse_cmdline();
-+	parse_cmdline(fdt);
- 
- 	for (i = 0; i < ARRAY_SIZE(regs); i++) {
- 		if (regs[i]->override)
 -- 
 2.30.2
 
