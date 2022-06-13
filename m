@@ -2,96 +2,93 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8855CC43334
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Jun 2022 19:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0747CCA482
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Jun 2022 19:19:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347036AbiFMTKh (ORCPT
+        id S245610AbiFMTT4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Jun 2022 15:10:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60756 "EHLO
+        Mon, 13 Jun 2022 15:19:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346781AbiFMTIF (ORCPT
+        with ESMTP id S1350725AbiFMTTM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Jun 2022 15:08:05 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7852F2BD0
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 10:04:14 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id 123so6077642pgb.5
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 10:04:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mYjZASrY0U2vsg4+Z3fayp87EJ3UDw4wIJr7nvni9Ek=;
-        b=kNia3fP4ii7v3FKDIFgRBPRWs8JCjCOQhwBs1YRrgihciGcfP3UczdQ1NP3WROY9gc
-         SZq3nrWT95sCnM+OdH/rH54w6vklvee85Zaway/3supSPaXdEbvAZ28Zcq2Eshaug/N/
-         holljJi3raKp7VZN0MKBK/+0OmDZGbgPymy7Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mYjZASrY0U2vsg4+Z3fayp87EJ3UDw4wIJr7nvni9Ek=;
-        b=uBy1MN5cECBczZ99fvlp2XrkHTB+5w6zsJgyeC8rVB70qN4J+VBUogGr7oxNq1ZNOs
-         IxHPTMK72Pj8ZBaPnFhiszmZcQ6Un/lcJNcFOkfcV4KvttZRFzOWKGhDaAo9PZjlBBNv
-         KlNEOmbqr/zL/fyIHd5dJLOSZP5GcGiZbanZychVLSdPdCs+5I0yqBDvTHWemcxNsjoa
-         stGVAb5iDx5KkJKFh19LUaojtKU8o2RrP3LsI/Hkd8cDPo7yaQbLx+auiiMKxFPFQsLr
-         qlR2aSdEADcPNVfZ0GFpXonChT1bNRn1RyBWNlrbgKVgfACZqfS4BVxIE272WZfI+dEM
-         b7Rw==
-X-Gm-Message-State: AOAM531M+zgztykqXfY3dotcQJec+rkLxyTsWABY+Dbp6AfPPhsoP40w
-        vmeQSXRA5Bsetc4DdZsl0toq0g==
-X-Google-Smtp-Source: ABdhPJxK4IuPlzJj4yZnVw7e7eKF60w/wpE1r9dvdOhFJv4qrE5RYKrR7ZvbsO0AYyeNTkD2MhrnGQ==
-X-Received: by 2002:a05:6a00:8d3:b0:51e:740f:8d60 with SMTP id s19-20020a056a0008d300b0051e740f8d60mr269277pfu.55.1655139853944;
-        Mon, 13 Jun 2022 10:04:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h30-20020aa79f5e000000b00519cfca8e30sm5615501pfr.209.2022.06.13.10.04.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jun 2022 10:04:13 -0700 (PDT)
-Date:   Mon, 13 Jun 2022 10:04:12 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        Mon, 13 Jun 2022 15:19:12 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3D593152B
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 10:16:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 711D460C24
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 17:16:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1895C3411B
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 17:16:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655140588;
+        bh=a4a7RQFOWUWwE9jtPWwe8YKTM+ofPY+Fx/fym3wDfeY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=a63LvOLPYKfkzKa+zxRU7QrfDfDzkCu0OM/KnHdP6NalG9DhdUbJ4Ab8QXb5pinc9
+         tv2eVp+cQNsdjhZJ13EM/7F2cItGAVQfxBLy3MB9aa4Xv1Xu2yOQxWrcPXhHtQCjxt
+         6IBYKvLICn7AVi0cvYIUkfFisa8lnhD0oDHKcBFA6IbgR1IvzrbAQPprWe5sBZ398g
+         VgFR1w5DZQna2IS5ARE6Z8QyY/o89Gc2tEJj2ILMvptccYtjkhisM15f7zzLZUkafh
+         cbV4pKbJKXpzc63xrG0poi94L62moAdT/WoV6IfozbMSu73u3QETaTOdBQHwiitm19
+         Ff8SHjBwZI+3g==
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-10113b4c2b5so7568801fac.6
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 10:16:28 -0700 (PDT)
+X-Gm-Message-State: AOAM531LYkoS/998R4TAh4mCmypMlHluFEFXnytGSuS/Hl8pedbq0gpl
+        x1YCht9kIIjumi4mA/0Q2hOwQKC+vWmK/mqMPjg=
+X-Google-Smtp-Source: ABdhPJwVR4cY1qtLaBUUzCiRtELNxPsXKMXJCYniI9YYg66TksE4rlrefLWttoMhddMnaLdp4cvOnn7KQvHP30t2GNU=
+X-Received: by 2002:a05:6870:e98b:b0:fe:219a:2449 with SMTP id
+ r11-20020a056870e98b00b000fe219a2449mr8503163oao.228.1655140588010; Mon, 13
+ Jun 2022 10:16:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220613144550.3760857-1-ardb@kernel.org> <20220613144550.3760857-23-ardb@kernel.org>
+ <202206130959.3C01F529@keescook>
+In-Reply-To: <202206130959.3C01F529@keescook>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 13 Jun 2022 19:16:15 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXG8MsL5NHN61W+58Q2di1o9P3kaxUCNe4D5sXcdLhOkUQ@mail.gmail.com>
+Message-ID: <CAMj1kXG8MsL5NHN61W+58Q2di1o9P3kaxUCNe4D5sXcdLhOkUQ@mail.gmail.com>
+Subject: Re: [PATCH v4 22/26] arm64: mm: move ro_after_init section into the
+ data segment
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-hardening@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [RFC PATCH v3 00/20] KCFI support
-Message-ID: <202206131001.6BA9933C@keescook>
-References: <20220610233513.1798771-1-samitolvanen@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220610233513.1798771-1-samitolvanen@google.com>
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jun 10, 2022 at 04:34:53PM -0700, Sami Tolvanen wrote:
-> KCFI is a proposed forward-edge control-flow integrity scheme for
-> Clang, which is more suitable for kernel use than the existing CFI
-> scheme used by CONFIG_CFI_CLANG. KCFI doesn't require LTO, doesn't
-> alter function references to point to a jump table, and won't break
-> function address equality. The latest LLVM patch is here:
-> 
->   https://reviews.llvm.org/D119296
-> 
-> This RFC series replaces the current arm64 CFI implementation with
-> KCFI and adds support for x86_64.
+On Mon, 13 Jun 2022 at 19:00, Kees Cook <keescook@chromium.org> wrote:
+>
+> On Mon, Jun 13, 2022 at 04:45:46PM +0200, Ard Biesheuvel wrote:
+> > Currently, the ro_after_init sections sits right in the middle of the
+> > text/rodata/inittext segment, making it difficult to map any of those
+> > non-writable during early boot. So instead, move it to the start of
+> > .data, and update the init sequences so that the section is remapped
+> > read-only once startup completes.
+> >
+> > Note that this moves the entire HYP data section into .data as well -
+> > this likely needs to remain as a single block for now, but could perhaps
+> > split into a .rodata and .data..ro_after_init section later.
+>
+> If I'm reading this correctly, this means that .data..ro_after_init now
+> lives between .data and .rodata?
+>
 
-I think the "RFC" prefix for this series can be dropped. :)
+No, between .initdata and .data
 
-It looks to me like all of Peter's concerns have been addressed. I'd say
-let's get the Clang side landed, and once that's done, land this via x86
--tip?
+> Do the various LKDTM tests still pass after this change?
+>
 
-Peter and Will does this sound right to you? It touches arm64, so if
--tip isn't okay, I could take it in one of my trees?
+Good question, I'll check.
 
--- 
-Kees Cook
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+>
+> --
+> Kees Cook
