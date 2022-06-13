@@ -2,89 +2,125 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C554BCCA47F
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Jun 2022 18:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A52C43334
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Jun 2022 19:00:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344678AbiFMS7X (ORCPT
+        id S1346255AbiFMTA6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Jun 2022 14:59:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43064 "EHLO
+        Mon, 13 Jun 2022 15:00:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346453AbiFMS6m (ORCPT
+        with ESMTP id S1343675AbiFMTA3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Jun 2022 14:58:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF74345041;
-        Mon, 13 Jun 2022 09:10:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4827B61517;
-        Mon, 13 Jun 2022 16:10:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11614C34114;
-        Mon, 13 Jun 2022 16:10:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655136645;
-        bh=vDGoVyz7P2imouhGRqKcXTMbxxpUemh4hqy3lJLfAus=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ib6hfQBqRr57ddK363WydGfoo7U25V23nCdwpOGrxXpCFAKVarA1lUuHhtoad7Vfw
-         UGjftOcUsSs8wpTImEfj6ZAEfef0zddkF5GUJbNeVLJ/iJuiSFoH1Jmiv92Tq6MDq7
-         sYXvY+EUZM8szo2wmhJyODYo+gMFwPtq8x1WEL/Qlrw02D0EMJ1aO7Iq4VBVyP4fX6
-         9sM+xoK4oMrZirvXc0k6RrRuafW3ToEvPnXeTDjuU8wAKUCNabXph/SccJosxaB4oK
-         mj5UGRxuLoznh9ZSbgVoBlod7K2djNvhwGzQxhpH58slofsKsMoUHrStQHb3zmQh2e
-         hHcxfOagf9R3w==
-Date:   Mon, 13 Jun 2022 09:10:43 -0700
-From:   Josh Poimboeuf <jpoimboe@kernel.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [RFC PATCH v3 15/20] objtool: Disable CFI warnings
-Message-ID: <20220613161043.4wiqservfyxeme4f@treble>
-References: <20220610233513.1798771-1-samitolvanen@google.com>
- <20220610233513.1798771-16-samitolvanen@google.com>
+        Mon, 13 Jun 2022 15:00:29 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9749D941AA
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 09:20:38 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id hv24-20020a17090ae41800b001e33eebdb5dso8552389pjb.0
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 09:20:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Fv9Kf89P80nTS8jRx5xwcqp7QWqHDjUzDXy4+q7RTRs=;
+        b=JeGGs1YnATx8Vv+GFtJA047Q/zPzpAaxd9eHsJGM0IYtM3MvSXghJMIhN/ArL3S9de
+         L0xj4/y8rNKm2+D8+gtFZzH/Tk6ZN02mZg7AfaurQU3pU6ysjffTJqG1JvP5s8zVi5YT
+         VZjWYEj0Y/zeaasUdoJb4MRmmcgA9+0SECWos=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Fv9Kf89P80nTS8jRx5xwcqp7QWqHDjUzDXy4+q7RTRs=;
+        b=JoaLtk3MuEJGuc24QlVQ5NtR1VUtfNo5JHnvxyFepZ5869/N5PoffEI+QtCx2DHxUo
+         elW8NP5NPr3mEbK+zpmCIr9ufLW0hDgD905uZpWjyc2J3tDfwz/VEYfKGQQC6ZoU7dAN
+         gW/s2SV2c0YrCBOwP7KL0luZeV8Vaawy8g0qFWP9oGTuVMMtjJpXhnt8w4ZTbvqaZpDb
+         o4/cXH/qfwdbYwjE2RFT9v/IzOrE5fB6CLipYkBKfli9PjelDEWQgiyHfM6gPj+7yRxH
+         zOW8AwJWyPfTY/8F3iEwsEF3jmWq1JVEv3ELV3r696qrE3zxpDV7NmF1jEeiDxrgP9le
+         6enQ==
+X-Gm-Message-State: AJIora9qNCWqCIdskwiwOED7kkf1QBSSHF0fNvLJ5xaoly015Qr4HfBw
+        a6DK5Jl6lsfHmD7PgC0LX2Jq2A==
+X-Google-Smtp-Source: AGRyM1tabxeYZZiqqNOqqTnhXNsveanJHNzSk9++p1EBnxih/0j7IO8QhHeRW7x4SngDwpXL2NGbEg==
+X-Received: by 2002:a17:902:ea93:b0:168:bc83:9ae3 with SMTP id x19-20020a170902ea9300b00168bc839ae3mr509176plb.123.1655137238042;
+        Mon, 13 Jun 2022 09:20:38 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e7-20020a170902784700b00163c6ac211fsm5334854pln.111.2022.06.13.09.20.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jun 2022 09:20:37 -0700 (PDT)
+Date:   Mon, 13 Jun 2022 09:20:36 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, Zorro Lang <zlang@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 2/3] usercopy: Cast pointer to an integer once
+Message-ID: <202206130919.BA3952B@keescook>
+References: <20220612213227.3881769-1-willy@infradead.org>
+ <20220612213227.3881769-3-willy@infradead.org>
+ <YqcInB4IHXEM7jpC@pc638.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220610233513.1798771-16-samitolvanen@google.com>
+In-Reply-To: <YqcInB4IHXEM7jpC@pc638.lan>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jun 10, 2022 at 04:35:08PM -0700, Sami Tolvanen wrote:
-> The __cfi_ preambles contain int3 padding and a mov instruction that
-> embeds the KCFI type identifier in the following format:
-> 
->   ; type preamble
->   __cfi_function:
->     int3
->     int3
->     mov <id>, %eax
->     int3
->     int3
->   function:
->     ...
-> 
-> While the preamble symbols are STT_FUNC and contain valid
-> instructions, they are never executed and always fall through. Skip
-> the warning for them.
-> 
-> .kcfi_traps sections point to CFI traps in text sections. Also skip
-> the warning about them referencing !ENDBR instructions.
-> 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+On Mon, Jun 13, 2022 at 11:51:24AM +0200, Uladzislau Rezki wrote:
+> On Sun, Jun 12, 2022 at 10:32:26PM +0100, Matthew Wilcox (Oracle) wrote:
+> > Get rid of a lot of annoying casts by setting 'addr' once at the top
+> > of the function.
+> > 
+> > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> > ---
+> >  mm/usercopy.c | 11 ++++++-----
+> >  1 file changed, 6 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/mm/usercopy.c b/mm/usercopy.c
+> > index fdd1bed3b90a..31deee7dd2f5 100644
+> > --- a/mm/usercopy.c
+> > +++ b/mm/usercopy.c
+> > @@ -161,19 +161,20 @@ static inline void check_bogus_address(const unsigned long ptr, unsigned long n,
+> >  static inline void check_heap_object(const void *ptr, unsigned long n,
+> >  				     bool to_user)
+> >  {
+> > +	uintptr_t addr = (uintptr_t)ptr;
+> >  	struct folio *folio;
+> >  
+> >  	if (is_kmap_addr(ptr)) {
+> > -		unsigned long page_end = (unsigned long)ptr | (PAGE_SIZE - 1);
+> > +		unsigned long page_end = addr | (PAGE_SIZE - 1);
+> >  
+> > -		if ((unsigned long)ptr + n - 1 > page_end)
+> > +		if (addr + n - 1 > page_end)
+> >  			usercopy_abort("kmap", NULL, to_user,
+> >  					offset_in_page(ptr), n);
+> >  		return;
+> >  	}
+> >  
+> >  	if (is_vmalloc_addr(ptr)) {
+> > -		struct vmap_area *area = find_vmap_area((unsigned long)ptr);
+> > +		struct vmap_area *area = find_vmap_area(addr);
+> >  		unsigned long offset;
+> >  
+> >  		if (!area) {
+> > @@ -183,8 +184,8 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
+> >  
+> >  		/* XXX: We should also abort for free vmap_areas */
+> >  
+> > -		offset = (unsigned long)ptr - area->va_start;
+> > -		if ((unsigned long)ptr + n > area->va_end)
+> > +		offset = addr - area->va_start;
+> > +		if (addr + n > area->va_end)
+> >  			usercopy_abort("vmalloc", NULL, to_user, offset, n);
+> >  		return;
+> >  	}
+> > -- 
+> > 2.35.1
+> > 
+> Looks good to me: Reviewed-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 
-Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
+For the future, please put your tags ("Reviewed-by") on a separate line
+or the workflow tools (b4, patchwork, etc) won't see it. :)
 
 -- 
-Josh
+Kees Cook
