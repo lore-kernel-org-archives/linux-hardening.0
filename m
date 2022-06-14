@@ -2,230 +2,200 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A171AC433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Jun 2022 08:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 636B9C43334
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Jun 2022 09:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231139AbiFNIfC (ORCPT
+        id S1355020AbiFNJXy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Jun 2022 04:35:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59994 "EHLO
+        Tue, 14 Jun 2022 05:23:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231596AbiFNIfB (ORCPT
+        with ESMTP id S1355852AbiFNJXH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Jun 2022 04:35:01 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BD503CA52
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Jun 2022 01:35:00 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1852D61540
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Jun 2022 08:35:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65F56C341C0
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Jun 2022 08:34:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655195699;
-        bh=TDuZWw57IjVjkaJI0HVGW5nzj0Xa2Hj/z8qBzOqjYIQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PCO4JuOJQL7SqE672LLlLb25v6UmzON08oLzU0+HpLHvJDaL6vILksBRBGuzc07sU
-         UklNz5+6ZBNJmGknvtJwX8d7NsU5ae+Fjk0rpxhw0DeYoIn9MnIK3EWUDnvLiSRrZy
-         83hxZV9JD5tOxuYEGVK/OKL5x+X3VbwIsNrmSdpVExpx41/J9f1uCGLTeH+iyhTUUY
-         9GRdSNPxfCM8LiqtZH1cROmaGoSAPQKfLBZkc15MrJYxLlPJ/ZtIM9+ZzM76/M+1cg
-         /qlos//m1SlbaW49T2cWrq8bkwuxd7clMPLpWvc1szGjYlHq7oZRiimjjUl9XZYYDl
-         Kw3/8uJwN7URw==
-Received: by mail-oi1-f182.google.com with SMTP id u9so5464433oiv.12
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Jun 2022 01:34:59 -0700 (PDT)
-X-Gm-Message-State: AOAM533IAkI91YgZrdi21xMwWRIPVEkcin9+Osm6DM+fcS8/VO1KY/rn
-        +PLmbM/QpGCWbqKjOOuI7Q/7721IHToljR9KffM=
-X-Google-Smtp-Source: ABdhPJyuzWvO1IjH2igTCqmxSyqkGtW8KxnO2q3ZwjvPfJa91BaUd2uj/6JAHXMN1osbqRSDjJKsr7Tf06GpXy3Zqn4=
-X-Received: by 2002:aca:aad5:0:b0:32f:3b9b:e0f with SMTP id
- t204-20020acaaad5000000b0032f3b9b0e0fmr1506387oie.228.1655195698549; Tue, 14
- Jun 2022 01:34:58 -0700 (PDT)
+        Tue, 14 Jun 2022 05:23:07 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5A8EA2BF6
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Jun 2022 02:22:23 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4703515A1;
+        Tue, 14 Jun 2022 02:22:23 -0700 (PDT)
+Received: from [10.162.40.17] (unknown [10.162.40.17])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F148D3F66F;
+        Tue, 14 Jun 2022 02:22:19 -0700 (PDT)
+Message-ID: <1223d394-cd70-49be-2d27-f245c15709ef@arm.com>
+Date:   Tue, 14 Jun 2022 14:52:17 +0530
 MIME-Version: 1.0
-References: <20220613144550.3760857-1-ardb@kernel.org> <20220613144550.3760857-3-ardb@kernel.org>
- <a3fb8e67-719a-9bf6-407a-1448e3bf21e2@arm.com>
-In-Reply-To: <a3fb8e67-719a-9bf6-407a-1448e3bf21e2@arm.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 14 Jun 2022 10:34:47 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFWm8MbZkhAHsTY_d63wph82CV4vrAUkkRVgcXkR+mJJw@mail.gmail.com>
-Message-ID: <CAMj1kXFWm8MbZkhAHsTY_d63wph82CV4vrAUkkRVgcXkR+mJJw@mail.gmail.com>
-Subject: Re: [PATCH v4 02/26] arm64: mm: make vabits_actual a build time
- constant if possible
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-hardening@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v4 03/26] arm64: head: move assignment of idmap_t0sz to C
+ code
+Content-Language: en-US
+To:     Ard Biesheuvel <ardb@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-hardening@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Kees Cook <keescook@chromium.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Mark Brown <broonie@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20220613144550.3760857-1-ardb@kernel.org>
+ <20220613144550.3760857-4-ardb@kernel.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20220613144550.3760857-4-ardb@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 14 Jun 2022 at 10:25, Anshuman Khandual
-<anshuman.khandual@arm.com> wrote:
->
->
-> On 6/13/22 20:15, Ard Biesheuvel wrote:
-> > Currently, we only support 52-bit virtual addressing on 64k pages
->
-> But going forward, will support on 4K/16K pages as well via FEAT_LPA2.
->
-> > configurations, and in all other cases, vabits_actual is guaranteed to
-> > equal VA_BITS (== VA_BITS_MIN). So get rid of the variable entirely in
-> > that case.
->
-> The change here does not really get rid of vabit_actual in those cases
-> either, it just makes it a build time constant AFAICS.
->
 
-Indeed, and so it ceases to be a variable.
+On 6/13/22 20:15, Ard Biesheuvel wrote:
+> Setting idmap_t0sz involves fiddling with the caches if done with the
+> MMU off. Since we will be creating an initial ID map with the MMU and
+> caches off, and the permanent ID map with the MMU and caches on, let's
+> move this assignment of idmap_t0sz out of the startup code, and replace
+> it with a macro that simply issues the three instructions needed to
+> calculate the value wherever it is needed before the MMU is turned on.
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  arch/arm64/include/asm/assembler.h   | 14 ++++++++++++++
+>  arch/arm64/include/asm/mmu_context.h |  2 +-
+>  arch/arm64/kernel/head.S             | 13 +------------
+>  arch/arm64/mm/mmu.c                  |  5 ++++-
+>  arch/arm64/mm/proc.S                 |  2 +-
+>  5 files changed, 21 insertions(+), 15 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+> index 8c5a61aeaf8e..9468f45c07a6 100644
+> --- a/arch/arm64/include/asm/assembler.h
+> +++ b/arch/arm64/include/asm/assembler.h
+> @@ -359,6 +359,20 @@ alternative_cb_end
+>  	bfi	\valreg, \t1sz, #TCR_T1SZ_OFFSET, #TCR_TxSZ_WIDTH
+>  	.endm
+>  
+> +/*
+> + * idmap_get_t0sz - get the T0SZ value needed to cover the ID map
+> + *
+> + * Calculate the maximum allowed value for TCR_EL1.T0SZ so that the
+> + * entire ID map region can be mapped. As T0SZ == (64 - #bits used),
+> + * this number conveniently equals the number of leading zeroes in
+> + * the physical address of _end.
+> + */
+> +	.macro	idmap_get_t0sz, reg
+> +	adrp	\reg, _end
+> +	orr	\reg, \reg, #(1 << VA_BITS_MIN) - 1
+> +	clz	\reg, \reg
+> +	.endm
 
-> --- a/arch/arm64/include/asm/memory.h
-> +++ b/arch/arm64/include/asm/memory.h
-> @@ -174,7 +174,11 @@
->  #include <linux/types.h>
->  #include <asm/bug.h>
->
-> +#if VA_BITS > 48
->  extern u64                     vabits_actual;
-> +#else
-> +#define vabits_actual          ((u64)VA_BITS)
-> +#endif
->
-> >
-> > While at it, move the assignment out of the asm entry code - it has no
-> > need to be there.
->
-> This also changes when vabits_actual gets evaluated ? Then how would it
-> know, that CPU needs to be stuck in kernel (CPU_STUCK_REASON_52_BIT_VA)
-> in case all secondary CPUs do not support large VA feature ? Looking at
-> the sequence...
->
-> secondary_entry
-> OR
-> secondary_holding_pen
->         secondary_startup
->                 __cpu_secondary_check52bitva
->
-> primary_entry
->         __create_page_tables                    <--- original position
->         __primary_switch
->                 start_kernel
->                         setup_arch
->                                 paging_init     <--- new position
->
-> It might still be possible for the secondary cpu start up sequence to
-> validate LVA support across the platform, but still why even send
-> vabits_actual evaluation down the line until paging_init(). Ideally
-> should not it be evaluated as early as possible during boot. Hence,
-> wondering - what is the real benefit here ?
->
+Is there any particular reason to evaluate idmap t0sz from '__end' and
+VA_BITS_MIN, instead of '__idmap_text_end', as was the case previously.
 
-Why should it be evaluated as early as possible? The whole point is
-deferring it so we don't have to do it from asm code.
+> +
+>  /*
+>   * tcr_compute_pa_size - set TCR.(I)PS to the highest supported
+>   * ID_AA64MMFR0_EL1.PARange value
+> diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
+> index 6770667b34a3..6ac0086ebb1a 100644
+> --- a/arch/arm64/include/asm/mmu_context.h
+> +++ b/arch/arm64/include/asm/mmu_context.h
+> @@ -60,7 +60,7 @@ static inline void cpu_switch_mm(pgd_t *pgd, struct mm_struct *mm)
+>   * TCR_T0SZ(VA_BITS), unless system RAM is positioned very high in
+>   * physical memory, in which case it will be smaller.
+>   */
+> -extern u64 idmap_t0sz;
+> +extern int idmap_t0sz;
+>  extern u64 idmap_ptrs_per_pgd;
+>  
+>  /*
+> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+> index dc07858eb673..7f361bc72d12 100644
+> --- a/arch/arm64/kernel/head.S
+> +++ b/arch/arm64/kernel/head.S
+> @@ -299,22 +299,11 @@ SYM_FUNC_START_LOCAL(__create_page_tables)
+>  	 * physical address space. So for the ID map, use an extended virtual
+>  	 * range in that case, and configure an additional translation level
+>  	 * if needed.
+> -	 *
+> -	 * Calculate the maximum allowed value for TCR_EL1.T0SZ so that the
+> -	 * entire ID map region can be mapped. As T0SZ == (64 - #bits used),
+> -	 * this number conveniently equals the number of leading zeroes in
+> -	 * the physical address of __idmap_text_end.
+>  	 */
+> -	adrp	x5, __idmap_text_end
+> -	clz	x5, x5
+> +	idmap_get_t0sz x5
+>  	cmp	x5, TCR_T0SZ(VA_BITS_MIN) // default T0SZ small enough?
+>  	b.ge	1f			// .. then skip VA range extension
+>  
+> -	adr_l	x6, idmap_t0sz
+> -	str	x5, [x6]
+> -	dmb	sy
+> -	dc	ivac, x6		// Invalidate potentially stale cache line
 
-But I suppose doing it as early as possible from C code (i.e., in
-setup_arch() before arm64_memblock_init() or even before
-early_fixmap_init()) might be better.
+Right, as there is no 'idmap_t0sz' variable to update, cache maintenance
+can be dropped off.
 
-> >
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > ---
-> >  arch/arm64/include/asm/memory.h |  4 ++++
-> >  arch/arm64/kernel/head.S        | 15 +--------------
-> >  arch/arm64/mm/mmu.c             | 15 ++++++++++++++-
-> >  3 files changed, 19 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
-> > index 0af70d9abede..c751cd9b94f8 100644
-> > --- a/arch/arm64/include/asm/memory.h
-> > +++ b/arch/arm64/include/asm/memory.h
-> > @@ -174,7 +174,11 @@
-> >  #include <linux/types.h>
-> >  #include <asm/bug.h>
-> >
-> > +#if VA_BITS > 48
-> >  extern u64                   vabits_actual;
-> > +#else
-> > +#define vabits_actual                ((u64)VA_BITS)
-> > +#endif
-> >
-> >  extern s64                   memstart_addr;
-> >  /* PHYS_OFFSET - the physical address of the start of memory. */
-> > diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-> > index 1cdecce552bb..dc07858eb673 100644
-> > --- a/arch/arm64/kernel/head.S
-> > +++ b/arch/arm64/kernel/head.S
-> > @@ -293,19 +293,6 @@ SYM_FUNC_START_LOCAL(__create_page_tables)
-> >       adrp    x0, idmap_pg_dir
-> >       adrp    x3, __idmap_text_start          // __pa(__idmap_text_start)
-> >
-> > -#ifdef CONFIG_ARM64_VA_BITS_52
-> > -     mrs_s   x6, SYS_ID_AA64MMFR2_EL1
-> > -     and     x6, x6, #(0xf << ID_AA64MMFR2_LVA_SHIFT)
-> > -     mov     x5, #52
-> > -     cbnz    x6, 1f
-> > -#endif
-> > -     mov     x5, #VA_BITS_MIN
-> > -1:
-> > -     adr_l   x6, vabits_actual
-> > -     str     x5, [x6]
-> > -     dmb     sy
-> > -     dc      ivac, x6                // Invalidate potentially stale cache line
-> > -
-> >       /*
-> >        * VA_BITS may be too small to allow for an ID mapping to be created
-> >        * that covers system RAM if that is located sufficiently high in the
-> > @@ -713,7 +700,7 @@ SYM_FUNC_START(__enable_mmu)
-> >  SYM_FUNC_END(__enable_mmu)
-> >
-> >  SYM_FUNC_START(__cpu_secondary_check52bitva)
-> > -#ifdef CONFIG_ARM64_VA_BITS_52
-> > +#if VA_BITS > 48
->
-> Just curious - why this is any better ? Although both (VA_BITS > 48)
-> and CONFIG_ARM64_VA_BITS_52 are build time constants.
->
+> -
+>  #if (VA_BITS < 48)
+>  #define EXTRA_SHIFT	(PGDIR_SHIFT + PAGE_SHIFT - 3)
+>  #define EXTRA_PTRS	(1 << (PHYS_MASK_SHIFT - EXTRA_SHIFT))
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 17b339c1a326..103bf4ae408d 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -43,7 +43,7 @@
+>  #define NO_CONT_MAPPINGS	BIT(1)
+>  #define NO_EXEC_MAPPINGS	BIT(2)	/* assumes FEAT_HPDS is not used */
+>  
+> -u64 idmap_t0sz = TCR_T0SZ(VA_BITS_MIN);
+> +int idmap_t0sz __ro_after_init;
 
-VA_BITS > 48 is a bit more readable, and more likely to remain accurate.
+I guess this is just to reduce 'idmap_t0sz' memory foot print.
 
-> >       ldr_l   x0, vabits_actual
-> >       cmp     x0, #52
-> >       b.ne    2f
-> > diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> > index 7148928e3932..17b339c1a326 100644
-> > --- a/arch/arm64/mm/mmu.c
-> > +++ b/arch/arm64/mm/mmu.c
-> > @@ -46,8 +46,10 @@
-> >  u64 idmap_t0sz = TCR_T0SZ(VA_BITS_MIN);
-> >  u64 idmap_ptrs_per_pgd = PTRS_PER_PGD;
-> >
-> > -u64 __section(".mmuoff.data.write") vabits_actual;
-> > +#if VA_BITS > 48
-> > +u64 vabits_actual __ro_after_init = VA_BITS_MIN;
-> >  EXPORT_SYMBOL(vabits_actual);
-> > +#endif
-> >
-> >  u64 kimage_vaddr __ro_after_init = (u64)&_text;
-> >  EXPORT_SYMBOL(kimage_vaddr);
-> > @@ -772,6 +774,17 @@ void __init paging_init(void)
-> >  {
-> >       pgd_t *pgdp = pgd_set_fixmap(__pa_symbol(swapper_pg_dir));
-> >
-> > +#if VA_BITS > 48
-> > +     if (cpuid_feature_extract_unsigned_field(
-> > +                             read_sysreg_s(SYS_ID_AA64MMFR2_EL1),
-> > +                             ID_AA64MMFR2_LVA_SHIFT))
-> > +             vabits_actual = VA_BITS;
-> > +
-> > +     /* make the variable visible to secondaries with the MMU off */
-> > +     dcache_clean_inval_poc((u64)&vabits_actual,
-> > +                            (u64)&vabits_actual + sizeof(vabits_actual));
-> > +#endif
-> > +
-> >       map_kernel(pgdp);
-> >       map_mem(pgdp);
-> >
+>  u64 idmap_ptrs_per_pgd = PTRS_PER_PGD;
+>  
+>  #if VA_BITS > 48
+> @@ -785,6 +785,9 @@ void __init paging_init(void)
+>  			       (u64)&vabits_actual + sizeof(vabits_actual));
+>  #endif
+>  
+> +	idmap_t0sz = min(63UL - __fls(__pa_symbol(_end)),
+> +			 TCR_T0SZ(VA_BITS_MIN));
+> +
+
+Just curious - but does not this also need some sync for the update
+to be visible across the system ?
+
+#define cpu_set_idmap_tcr_t0sz()        __cpu_set_tcr_t0sz(idmap_t0sz)
+
+static inline void cpu_install_idmap(void)
+{
+        cpu_set_reserved_ttbr0();
+        local_flush_tlb_all();
+        cpu_set_idmap_tcr_t0sz();
+
+        cpu_switch_mm(lm_alias(idmap_pg_dir), &init_mm);
+}
+
+>  	map_kernel(pgdp);
+>  	map_mem(pgdp);
+>  
+> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+> index 972ce8d7f2c5..97cd67697212 100644
+> --- a/arch/arm64/mm/proc.S
+> +++ b/arch/arm64/mm/proc.S
+> @@ -470,7 +470,7 @@ SYM_FUNC_START(__cpu_setup)
+>  	add		x9, x9, #64
+>  	tcr_set_t1sz	tcr, x9
+>  #else
+> -	ldr_l		x9, idmap_t0sz
+> +	idmap_get_t0sz	x9
+>  #endif
+>  	tcr_set_t0sz	tcr, x9
+>  
+
+Avoiding one cache maintenance in __create_page_table(), now makes us
+again evaluate idmap_t0sz in __cpu_setup(), and also capture & update
+idmap_t0sz in paging_init(). This change moves idmap_t0sz outside the
+asm functions but from performance perspecive, is there an improvement ?
