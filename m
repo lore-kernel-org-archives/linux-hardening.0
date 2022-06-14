@@ -2,105 +2,197 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7B7C43334
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Jun 2022 23:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919A0CCA47A
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Jun 2022 08:25:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235061AbiFMXiJ (ORCPT
+        id S1351105AbiFNIZx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Jun 2022 19:38:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42148 "EHLO
+        Tue, 14 Jun 2022 04:25:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235709AbiFMXiI (ORCPT
+        with ESMTP id S238388AbiFNIZt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Jun 2022 19:38:08 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1669C2D1C1
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 16:38:08 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id o6so6392412plg.2
-        for <linux-hardening@vger.kernel.org>; Mon, 13 Jun 2022 16:38:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yYnPEs+7/EXNKs1SsvGN2RDxQEUA+G2bdjO5VBujtGw=;
-        b=S7zd2SJb98eiuS1hTdsLGxZdBfKOAjfqKZDpEP25H9fmqxQ4rH4DVMb5nxf82fJ6e4
-         1I6NmI5I0mMvvSSfdcp9nCgNyzfbAxCVgoBFIvIp/g+v7yI/TMjcjDRg1nqEU+U66dWX
-         B5GIIxBluY3wvR9xHtnc5LMyerTTGJHrN46Ao=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yYnPEs+7/EXNKs1SsvGN2RDxQEUA+G2bdjO5VBujtGw=;
-        b=0zeJMXIFQe8wW8Uv4gZxH+m3jdozpcy7SH5r1/NBpKmx0YwZb86240fgBLUcL/f6QB
-         fY4Uo+H9uPsHLYDN2DEen7cP/apOMvFpUYy9D5TS5+t3fXJwgj7Y6xqvepa4KyagS+7b
-         DzgEskibxvTZ7IOtsSNwLnTkx5/xrGHrLKtbQBfrJRncx3Aef+ZIfubVBRjpV/LBs2f/
-         Jykr7BQecDOI0v2Rit/EdQHtbcLOZ+EMOomoLWJwRAHT2k452llqcL054cVWqB8xJzVP
-         R79fB3Ys0pfD0nISSig5JcEDKR9YQ+WogVWhYTNKDqsAMjlmD+fbXxXOjMfvhIm8SX+C
-         XfjQ==
-X-Gm-Message-State: AJIora/ojsNNmfUDqmcsm3rAd8E4eqfGmrrSkxQRnU2FZIsDlYZTdgrg
-        LKAAJSzJfe2HL2EBt30quwMgHg==
-X-Google-Smtp-Source: AGRyM1swu2ld1DxnRxMPl8aaTtMdbFsCt/DFNKG1CKXGkaGwR9A6TVWvwkIY+y+u84XhPfalzpKLiw==
-X-Received: by 2002:a17:90b:4f81:b0:1e8:84b0:6aaf with SMTP id qe1-20020a17090b4f8100b001e884b06aafmr1278603pjb.66.1655163487586;
-        Mon, 13 Jun 2022 16:38:07 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p16-20020a056a000a1000b0050dc76281b4sm6196710pfh.142.2022.06.13.16.38.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jun 2022 16:38:07 -0700 (PDT)
-Date:   Mon, 13 Jun 2022 16:38:06 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Tue, 14 Jun 2022 04:25:49 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A369E37A3D
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Jun 2022 01:25:47 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C2F723A;
+        Tue, 14 Jun 2022 01:25:47 -0700 (PDT)
+Received: from [10.162.40.17] (unknown [10.162.40.17])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 286513F66F;
+        Tue, 14 Jun 2022 01:25:43 -0700 (PDT)
+Message-ID: <a3fb8e67-719a-9bf6-407a-1448e3bf21e2@arm.com>
+Date:   Tue, 14 Jun 2022 13:55:41 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v4 02/26] arm64: mm: make vabits_actual a build time
+ constant if possible
+Content-Language: en-US
+To:     Ard Biesheuvel <ardb@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-hardening@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH v4 22/26] arm64: mm: move ro_after_init section into the
- data segment
-Message-ID: <202206131630.B6AE6ECEA3@keescook>
+        Mark Brown <broonie@kernel.org>
 References: <20220613144550.3760857-1-ardb@kernel.org>
- <20220613144550.3760857-23-ardb@kernel.org>
- <202206130959.3C01F529@keescook>
- <CAMj1kXG8MsL5NHN61W+58Q2di1o9P3kaxUCNe4D5sXcdLhOkUQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXG8MsL5NHN61W+58Q2di1o9P3kaxUCNe4D5sXcdLhOkUQ@mail.gmail.com>
+ <20220613144550.3760857-3-ardb@kernel.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20220613144550.3760857-3-ardb@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jun 13, 2022 at 07:16:15PM +0200, Ard Biesheuvel wrote:
-> On Mon, 13 Jun 2022 at 19:00, Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Mon, Jun 13, 2022 at 04:45:46PM +0200, Ard Biesheuvel wrote:
-> > > Currently, the ro_after_init sections sits right in the middle of the
-> > > text/rodata/inittext segment, making it difficult to map any of those
-> > > non-writable during early boot. So instead, move it to the start of
-> > > .data, and update the init sequences so that the section is remapped
-> > > read-only once startup completes.
-> > >
-> > > Note that this moves the entire HYP data section into .data as well -
-> > > this likely needs to remain as a single block for now, but could perhaps
-> > > split into a .rodata and .data..ro_after_init section later.
-> >
-> > If I'm reading this correctly, this means that .data..ro_after_init now
-> > lives between .data and .rodata?
-> >
+
+On 6/13/22 20:15, Ard Biesheuvel wrote:
+> Currently, we only support 52-bit virtual addressing on 64k pages
+
+But going forward, will support on 4K/16K pages as well via FEAT_LPA2.
+
+> configurations, and in all other cases, vabits_actual is guaranteed to
+> equal VA_BITS (== VA_BITS_MIN). So get rid of the variable entirely in
+> that case.
+
+The change here does not really get rid of vabit_actual in those cases
+either, it just makes it a build time constant AFAICS.
+
+--- a/arch/arm64/include/asm/memory.h
++++ b/arch/arm64/include/asm/memory.h
+@@ -174,7 +174,11 @@
+ #include <linux/types.h>
+ #include <asm/bug.h>
+ 
++#if VA_BITS > 48
+ extern u64                     vabits_actual;
++#else
++#define vabits_actual          ((u64)VA_BITS)
++#endif
+
 > 
-> No, between .initdata and .data
+> While at it, move the assignment out of the asm entry code - it has no
+> need to be there.
 
-Ah, doesn't this mean more padding (for segment alignment) used? On other
-architectures .data..ro_after_init tried to be near the writable/read-only
-boundary so segment padding was only needed on one side (e.g. it could
-live at the end of .rodata without segment alignment but before .data
-which was segment aligned.) Then when .rodata was made read-only (after
-__init), .data..ro_after_init would also get set read-only.
+This also changes when vabits_actual gets evaluated ? Then how would it
+know, that CPU needs to be stuck in kernel (CPU_STUCK_REASON_52_BIT_VA)
+in case all secondary CPUs do not support large VA feature ? Looking at
+the sequence...
 
-In this case, I think it ends up needing segment alignment both at the
-front and the end, since the .initdata and .data are freed and left
-writable, respectively?
+secondary_entry
+OR
+secondary_holding_pen
+	secondary_startup
+		__cpu_secondary_check52bitva
 
--- 
-Kees Cook
+primary_entry
+	__create_page_tables			<--- original position
+	__primary_switch			 
+		start_kernel
+			setup_arch
+				paging_init	<--- new position
+
+It might still be possible for the secondary cpu start up sequence to
+validate LVA support across the platform, but still why even send
+vabits_actual evaluation down the line until paging_init(). Ideally
+should not it be evaluated as early as possible during boot. Hence,
+wondering - what is the real benefit here ?
+
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  arch/arm64/include/asm/memory.h |  4 ++++
+>  arch/arm64/kernel/head.S        | 15 +--------------
+>  arch/arm64/mm/mmu.c             | 15 ++++++++++++++-
+>  3 files changed, 19 insertions(+), 15 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+> index 0af70d9abede..c751cd9b94f8 100644
+> --- a/arch/arm64/include/asm/memory.h
+> +++ b/arch/arm64/include/asm/memory.h
+> @@ -174,7 +174,11 @@
+>  #include <linux/types.h>
+>  #include <asm/bug.h>
+>  
+> +#if VA_BITS > 48
+>  extern u64			vabits_actual;
+> +#else
+> +#define vabits_actual		((u64)VA_BITS)
+> +#endif
+>  
+>  extern s64			memstart_addr;
+>  /* PHYS_OFFSET - the physical address of the start of memory. */
+> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+> index 1cdecce552bb..dc07858eb673 100644
+> --- a/arch/arm64/kernel/head.S
+> +++ b/arch/arm64/kernel/head.S
+> @@ -293,19 +293,6 @@ SYM_FUNC_START_LOCAL(__create_page_tables)
+>  	adrp	x0, idmap_pg_dir
+>  	adrp	x3, __idmap_text_start		// __pa(__idmap_text_start)
+>  
+> -#ifdef CONFIG_ARM64_VA_BITS_52
+> -	mrs_s	x6, SYS_ID_AA64MMFR2_EL1
+> -	and	x6, x6, #(0xf << ID_AA64MMFR2_LVA_SHIFT)
+> -	mov	x5, #52
+> -	cbnz	x6, 1f
+> -#endif
+> -	mov	x5, #VA_BITS_MIN
+> -1:
+> -	adr_l	x6, vabits_actual
+> -	str	x5, [x6]
+> -	dmb	sy
+> -	dc	ivac, x6		// Invalidate potentially stale cache line
+> -
+>  	/*
+>  	 * VA_BITS may be too small to allow for an ID mapping to be created
+>  	 * that covers system RAM if that is located sufficiently high in the
+> @@ -713,7 +700,7 @@ SYM_FUNC_START(__enable_mmu)
+>  SYM_FUNC_END(__enable_mmu)
+>  
+>  SYM_FUNC_START(__cpu_secondary_check52bitva)
+> -#ifdef CONFIG_ARM64_VA_BITS_52
+> +#if VA_BITS > 48
+
+Just curious - why this is any better ? Although both (VA_BITS > 48)
+and CONFIG_ARM64_VA_BITS_52 are build time constants.
+
+>  	ldr_l	x0, vabits_actual
+>  	cmp	x0, #52
+>  	b.ne	2f
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 7148928e3932..17b339c1a326 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -46,8 +46,10 @@
+>  u64 idmap_t0sz = TCR_T0SZ(VA_BITS_MIN);
+>  u64 idmap_ptrs_per_pgd = PTRS_PER_PGD;
+>  
+> -u64 __section(".mmuoff.data.write") vabits_actual;
+> +#if VA_BITS > 48
+> +u64 vabits_actual __ro_after_init = VA_BITS_MIN;
+>  EXPORT_SYMBOL(vabits_actual);
+> +#endif
+>  
+>  u64 kimage_vaddr __ro_after_init = (u64)&_text;
+>  EXPORT_SYMBOL(kimage_vaddr);
+> @@ -772,6 +774,17 @@ void __init paging_init(void)
+>  {
+>  	pgd_t *pgdp = pgd_set_fixmap(__pa_symbol(swapper_pg_dir));
+>  
+> +#if VA_BITS > 48
+> +	if (cpuid_feature_extract_unsigned_field(
+> +				read_sysreg_s(SYS_ID_AA64MMFR2_EL1),
+> +				ID_AA64MMFR2_LVA_SHIFT))
+> +		vabits_actual = VA_BITS;
+> +
+> +	/* make the variable visible to secondaries with the MMU off */
+> +	dcache_clean_inval_poc((u64)&vabits_actual,
+> +			       (u64)&vabits_actual + sizeof(vabits_actual));
+> +#endif
+> +
+>  	map_kernel(pgdp);
+>  	map_mem(pgdp);
+>  
