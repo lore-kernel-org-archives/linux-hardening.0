@@ -2,93 +2,101 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EABC43334
-	for <linux-hardening@archiver.kernel.org>; Thu, 16 Jun 2022 19:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1BCC43334
+	for <linux-hardening@archiver.kernel.org>; Thu, 16 Jun 2022 23:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230338AbiFPTTS (ORCPT
+        id S1378561AbiFPXPZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 16 Jun 2022 15:19:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40196 "EHLO
+        Thu, 16 Jun 2022 19:15:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229698AbiFPTTR (ORCPT
+        with ESMTP id S231500AbiFPXPY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 16 Jun 2022 15:19:17 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A5AD55350
-        for <linux-hardening@vger.kernel.org>; Thu, 16 Jun 2022 12:19:17 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id h23so4516872ejj.12
-        for <linux-hardening@vger.kernel.org>; Thu, 16 Jun 2022 12:19:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xpcGuEMSHNtJO6AL8yUFZTbd1w1Zp8LDaZt4zG7HQg8=;
-        b=egGfdeT+mpO40XdFqHUt/mNRkwROuAaGPwmvBbc9V8CKQtgzMIeJ5dydpj2F6YqAWD
-         jWaLyXMYcKZAUkbCHTdiuA4JkddfCRJMKfg3Rr2z7QYsJo+0kuIs2gL8w23PGhI7/UU1
-         zp0PY/UWDuWBbGaf5HZQqxyladpYTQRU+gj7E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xpcGuEMSHNtJO6AL8yUFZTbd1w1Zp8LDaZt4zG7HQg8=;
-        b=QkRVuxIQ/6jh1fk8MGSj8iGhq6lmJZTN9l6expEXndUQA/pJtQXtNMtCFjQQ2eHR3j
-         5Fte1JofCvv/9P7f/kTzU/9Y1s/lEM+QJJRk8inuuzOezOd9584pTij4jZhseB1B82FV
-         c/APUAEPyc/RnGYdFitVjPIsoMnjlmRQRV5TKshi/yp2Nt3VgPblJO4e/jmIZm+zy4RE
-         jfVXBmXushMZwx5ztS/Fcwxbd8VwBbpzOYcE6KKp/g7Y38WzG95qY6Pl8Cqa3YtkdXOG
-         /YyIZlPIauN5+nHbPzHEpuAJt4AMn6w/Vof7lTPq4sAYnE0xIhCNxoFEj92jP2YPXpWY
-         NWRQ==
-X-Gm-Message-State: AJIora+pAp5fLp3wyXBuwi75BJVF/SS9L8ZAO2YnvF7/2uyOJiGHd1qA
-        p7foyS3u7xo+nhbIUkPi5y7HSHSf4SNlF/hC
-X-Google-Smtp-Source: AGRyM1uWgkLSTjEFCsWjgspabsxXP68V857mw7BRW0JRH5Ep6ocwSSjcz1qOBwkmtKdttZQyp73iag==
-X-Received: by 2002:a17:907:2d92:b0:711:d229:4b7f with SMTP id gt18-20020a1709072d9200b00711d2294b7fmr5806714ejc.506.1655407155324;
-        Thu, 16 Jun 2022 12:19:15 -0700 (PDT)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
-        by smtp.gmail.com with ESMTPSA id o7-20020a170906600700b006fe8ec44461sm1135885ejj.101.2022.06.16.12.19.14
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jun 2022 12:19:14 -0700 (PDT)
-Received: by mail-wr1-f47.google.com with SMTP id x17so3058075wrg.6
-        for <linux-hardening@vger.kernel.org>; Thu, 16 Jun 2022 12:19:14 -0700 (PDT)
-X-Received: by 2002:a5d:47aa:0:b0:218:5ac8:f3a8 with SMTP id
- 10-20020a5d47aa000000b002185ac8f3a8mr6159072wrb.442.1655407153820; Thu, 16
- Jun 2022 12:19:13 -0700 (PDT)
+        Thu, 16 Jun 2022 19:15:24 -0400
+X-Greylist: delayed 1500 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 16 Jun 2022 16:15:23 PDT
+Received: from gateway22.websitewelcome.com (gateway22.websitewelcome.com [192.185.47.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6355D648
+        for <linux-hardening@vger.kernel.org>; Thu, 16 Jun 2022 16:15:23 -0700 (PDT)
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 942794C69
+        for <linux-hardening@vger.kernel.org>; Thu, 16 Jun 2022 17:26:17 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 1xwPokt5L4SVw1xwPoqxVj; Thu, 16 Jun 2022 17:26:17 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=h5zz4gXmeyKQq141JoXnEndda8Y+1z5nbmNrA8Hh7GI=; b=ZddVWYugTRVwUQ9+xBSOwoZ69g
+        hAnA0CIMArl+brdZzHTgR+mPlYeHw1d0B5EPigNcn+dKjHAtRTLm0jlubb5ZgclL3NcST+CaIYOWr
+        WALaCQJOlvqogBmS8BKirX1Fp26FMgm3zAwdfT9+FvQeid7zjgA8h3AhSPXI8wKmTrgbubh+HwQkL
+        WXAZblsgYOmmL/5vrFocIKlW7Q3wk9+J1pzO4Jx/5pGCiJ1znVKhOjEzvGSH8J+Hr9x98IifLjIO+
+        BdhaEx5H9GjmhnXzpvSyUI4V+x6Es9Ijs0m/KwG01A958+VsnmKwsJTFrcpOhwvy3vHZqG1slFvI2
+        1V0sqDhw==;
+Received: from 193.254.29.93.rev.sfr.net ([93.29.254.193]:36014 helo=[192.168.0.101])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.95)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1o1xwN-002J6q-Me;
+        Thu, 16 Jun 2022 17:26:16 -0500
+Message-ID: <1a60b867-1551-5301-f6f4-19bd93420d36@embeddedor.com>
+Date:   Fri, 17 Jun 2022 00:26:05 +0200
 MIME-Version: 1.0
-References: <20220616143617.449094-1-Jason@zx2c4.com> <YqtAShjjo1zC6EgO@casper.infradead.org>
- <YqtDXPWdFQ/fqgDo@zx2c4.com> <YqtKjAZRPBVjlE8S@casper.infradead.org>
- <CAHk-=wj2OHy-5e+srG1fy+ZU00TmZ1NFp6kFLbVLMXHe7A1d-g@mail.gmail.com>
- <Yqtd6hTS52mbb9+q@casper.infradead.org> <CAHk-=wj_K2MnhC6N_LyY6ezmQyWzqBnfobXC354HJuKdqMePzA@mail.gmail.com>
- <CAHk-=whS3xhJ=quD5bzDb6JsAhKd0vem4K-U=DhUGf-tDJUMHg@mail.gmail.com>
-In-Reply-To: <CAHk-=whS3xhJ=quD5bzDb6JsAhKd0vem4K-U=DhUGf-tDJUMHg@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 16 Jun 2022 12:18:57 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi28vwsG-JNJEz_kc=qwPkYtYfh_14eHOUZsaGESDBDBA@mail.gmail.com>
-Message-ID: <CAHk-=wi28vwsG-JNJEz_kc=qwPkYtYfh_14eHOUZsaGESDBDBA@mail.gmail.com>
-Subject: Re: [PATCH] usercopy: use unsigned long instead of uintptr_t
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-hardening@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH] hinic: Replace memcpy() with direct assignment
+Content-Language: en-US
+To:     Nathan Chancellor <nathan@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, Leon Romanovsky <leon@kernel.org>,
+        Jiri Pirko <jiri@nvidia.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        netdev@vger.kernel.org, llvm@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20220616052312.292861-1-keescook@chromium.org>
+ <YqtmIIAOH7uRNAZ5@dev-arch.thelio-3990X>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <YqtmIIAOH7uRNAZ5@dev-arch.thelio-3990X>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 93.29.254.193
+X-Source-L: No
+X-Exim-ID: 1o1xwN-002J6q-Me
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 193.254.29.93.rev.sfr.net ([192.168.0.101]) [93.29.254.193]:36014
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jun 16, 2022 at 12:14 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> In that situation, we'd probably just see "long long" being 128-bit
-> ("I32LP64LL128").
 
-Looking around, it looks like people prefer "long long long" (or in
-the kernel, just "u128") for this, because so many have already gotten
-used to "long long" being 64-bit, and 32-bit architectures (where
-"long" is 32-bit and "long long" is 64-bit) are still relevant enough
-that people want to keep that.
 
-             Linus
+On 6/16/22 19:19, Nathan Chancellor wrote:
+
+> Tested-by: Nathan Chancellor <nathan@kernel.org> # build
+
+I think in this case the tag should be "Build-tested-by" instead.
+
+Thanks
+--
+Gustavo
