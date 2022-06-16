@@ -2,108 +2,167 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CEDC433EF
-	for <linux-hardening@archiver.kernel.org>; Wed, 15 Jun 2022 04:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413A2CCA479
+	for <linux-hardening@archiver.kernel.org>; Thu, 16 Jun 2022 01:51:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235030AbiFOEc6 (ORCPT
+        id S245717AbiFPBv2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 15 Jun 2022 00:32:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38194 "EHLO
+        Wed, 15 Jun 2022 21:51:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232921AbiFOEc5 (ORCPT
+        with ESMTP id S1355146AbiFPBvP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 15 Jun 2022 00:32:57 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7BD151FCC5
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Jun 2022 21:32:54 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8112F175A;
-        Tue, 14 Jun 2022 21:32:54 -0700 (PDT)
-Received: from [10.163.41.27] (unknown [10.163.41.27])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ACB4B3F792;
-        Tue, 14 Jun 2022 21:32:50 -0700 (PDT)
-Message-ID: <35a8be65-47d5-45b3-3917-44d559778d2a@arm.com>
-Date:   Wed, 15 Jun 2022 10:02:47 +0530
+        Wed, 15 Jun 2022 21:51:15 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1561458E63;
+        Wed, 15 Jun 2022 18:51:09 -0700 (PDT)
+Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LNlRm3Bj7zSh2B;
+        Thu, 16 Jun 2022 09:47:48 +0800 (CST)
+Received: from [10.67.110.112] (10.67.110.112) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 16 Jun 2022 09:51:03 +0800
+Subject: Re: [PATCH -next, v2] powerpc: add support for syscall stack
+ randomization
+To:     Michael Ellerman <mpe@ellerman.id.au>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <npiggin@gmail.com>,
+        <christophe.leroy@csgroup.eu>, <tglx@linutronix.de>,
+        <mark.rutland@arm.com>
+CC:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
+References: <20220516073225.112875-1-xiujianfeng@huawei.com>
+ <e7b0d68b-914d-7283-827c-101988923929@huawei.com>
+ <87sfotlufa.fsf@mpe.ellerman.id.au>
+From:   xiujianfeng <xiujianfeng@huawei.com>
+Message-ID: <7e29db90-480f-5ca3-12e5-a38db73b4d7b@huawei.com>
+Date:   Thu, 16 Jun 2022 09:51:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v4 08/26] arm64: kernel: drop unnecessary PoC cache
- clean+invalidate
-Content-Language: en-US
-To:     Ard Biesheuvel <ardb@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-hardening@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Brown <broonie@kernel.org>
-References: <20220613144550.3760857-1-ardb@kernel.org>
- <20220613144550.3760857-9-ardb@kernel.org>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20220613144550.3760857-9-ardb@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <87sfotlufa.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.110.112]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+在 2022/5/28 20:21, Michael Ellerman 写道:
+> xiujianfeng <xiujianfeng@huawei.com> writes:
+>> friendly ping....
+> I will consider this for v5.20 once the merge window has closed (after
+> v5.19-rc1 is release).
 
+Hi, Michael, thanks for your feedback, and anything needed about this 
+patch please let me know :)
 
-On 6/13/22 20:15, Ard Biesheuvel wrote:
-> Some early boot code runs before the virtual placement of the kernel is
-> finalized, and we used to go back to the very start and recreate the ID
-> map along with the page tables describing the virtual kernel mapping,
-> and this involved setting some global variables with the caches off.
-> 
-> In order to ensure that global state created by the KASLR code is not
-> corrupted by the cache invalidation that occurs in that case, we needed
-> to clean those global variables to the PoC explicitly.
-> 
-> This is no longer needed now that the ID map is created only once (and
-> the associated global variable updates are no longer repeated). So drop
-> the cache maintenance that is no longer necessary.
-> 
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  arch/arm64/kernel/kaslr.c | 11 -----------
->  1 file changed, 11 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/kaslr.c b/arch/arm64/kernel/kaslr.c
-> index 418b2bba1521..d5542666182f 100644
-> --- a/arch/arm64/kernel/kaslr.c
-> +++ b/arch/arm64/kernel/kaslr.c
-> @@ -13,7 +13,6 @@
->  #include <linux/pgtable.h>
->  #include <linux/random.h>
->  
-> -#include <asm/cacheflush.h>
->  #include <asm/fixmap.h>
->  #include <asm/kernel-pgtable.h>
->  #include <asm/memory.h>
-> @@ -72,9 +71,6 @@ u64 __init kaslr_early_init(void)
->  	 * we end up running with module randomization disabled.
->  	 */
->  	module_alloc_base = (u64)_etext - MODULES_VSIZE;
-> -	dcache_clean_inval_poc((unsigned long)&module_alloc_base,
-> -			    (unsigned long)&module_alloc_base +
-> -				    sizeof(module_alloc_base));
->  
->  	/*
->  	 * Try to map the FDT early. If this fails, we simply bail,
-> @@ -174,13 +170,6 @@ u64 __init kaslr_early_init(void)
->  	module_alloc_base += (module_range * (seed & ((1 << 21) - 1))) >> 21;
->  	module_alloc_base &= PAGE_MASK;
->  
-> -	dcache_clean_inval_poc((unsigned long)&module_alloc_base,
-> -			    (unsigned long)&module_alloc_base +
-> -				    sizeof(module_alloc_base));
-> -	dcache_clean_inval_poc((unsigned long)&memstart_offset_seed,
-> -			    (unsigned long)&memstart_offset_seed +
-> -				    sizeof(memstart_offset_seed));
-> -
->  	return offset;
->  }
->  
-
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>
+> cheers
+>
+>> 在 2022/5/16 15:32, Xiu Jianfeng 写道:
+>>> Add support for adding a random offset to the stack while handling
+>>> syscalls. This patch uses mftb() instead of get_random_int() for better
+>>> performance.
+>>>
+>>> In order to avoid unconditional stack canaries on syscall entry (due to
+>>> the use of alloca()), also disable stack protector to avoid triggering
+>>> needless checks and slowing down the entry path. As there is no general
+>>> way to control stack protector coverage with a function attribute, this
+>>> must be disabled at the compilation unit level.
+>>>
+>>> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+>>>
+>>> ---
+>>> Changes in v2:
+>>>     -move choose choose_random_kstack_offset() to the end of system_call_exception
+>>>     -allow full 6 (10) bits of entropy
+>>>     -disable stack-protector for interrupt.c
+>>> ---
+>>>    arch/powerpc/Kconfig            |  1 +
+>>>    arch/powerpc/kernel/Makefile    |  7 +++++++
+>>>    arch/powerpc/kernel/interrupt.c | 19 ++++++++++++++++++-
+>>>    3 files changed, 26 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+>>> index 98309eeae09c..2f0019a0054e 100644
+>>> --- a/arch/powerpc/Kconfig
+>>> +++ b/arch/powerpc/Kconfig
+>>> @@ -192,6 +192,7 @@ config PPC
+>>>    	select HAVE_ARCH_KASAN			if PPC32 && PPC_PAGE_SHIFT <= 14
+>>>    	select HAVE_ARCH_KASAN_VMALLOC		if PPC32 && PPC_PAGE_SHIFT <= 14
+>>>    	select HAVE_ARCH_KFENCE			if PPC_BOOK3S_32 || PPC_8xx || 40x
+>>> +	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
+>>>    	select HAVE_ARCH_KGDB
+>>>    	select HAVE_ARCH_MMAP_RND_BITS
+>>>    	select HAVE_ARCH_MMAP_RND_COMPAT_BITS	if COMPAT
+>>> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+>>> index 4ddd161aef32..5c5e85b8229b 100644
+>>> --- a/arch/powerpc/kernel/Makefile
+>>> +++ b/arch/powerpc/kernel/Makefile
+>>> @@ -40,6 +40,13 @@ CFLAGS_cputable.o += -DDISABLE_BRANCH_PROFILING
+>>>    CFLAGS_btext.o += -DDISABLE_BRANCH_PROFILING
+>>>    endif
+>>>    
+>>> +#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
+>>> +# Remove stack protector to avoid triggering unneeded stack canary
+>>> +# checks due to randomize_kstack_offset.
+>>> +CFLAGS_REMOVE_interrupt.o = -fstack-protector -fstack-protector-strong
+>>> +CFLAGS_interrupt.o += -fno-stack-protector
+>>> +#endif
+>>> +
+>>>    obj-y				:= cputable.o syscalls.o \
+>>>    				   irq.o align.o signal_$(BITS).o pmc.o vdso.o \
+>>>    				   process.o systbl.o idle.o \
+>>> diff --git a/arch/powerpc/kernel/interrupt.c b/arch/powerpc/kernel/interrupt.c
+>>> index 784ea3289c84..d7cdcb6fc336 100644
+>>> --- a/arch/powerpc/kernel/interrupt.c
+>>> +++ b/arch/powerpc/kernel/interrupt.c
+>>> @@ -4,6 +4,7 @@
+>>>    #include <linux/err.h>
+>>>    #include <linux/compat.h>
+>>>    #include <linux/sched/debug.h> /* for show_regs */
+>>> +#include <linux/randomize_kstack.h>
+>>>    
+>>>    #include <asm/kup.h>
+>>>    #include <asm/cputime.h>
+>>> @@ -78,10 +79,12 @@ notrace long system_call_exception(long r3, long r4, long r5,
+>>>    				   long r6, long r7, long r8,
+>>>    				   unsigned long r0, struct pt_regs *regs)
+>>>    {
+>>> +	long ret;
+>>>    	syscall_fn f;
+>>>    
+>>>    	kuap_lock();
+>>>    
+>>> +	add_random_kstack_offset();
+>>>    	regs->orig_gpr3 = r3;
+>>>    
+>>>    	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
+>>> @@ -229,7 +232,21 @@ notrace long system_call_exception(long r3, long r4, long r5,
+>>>    		f = (void *)sys_call_table[r0];
+>>>    	}
+>>>    
+>>> -	return f(r3, r4, r5, r6, r7, r8);
+>>> +	ret = f(r3, r4, r5, r6, r7, r8);
+>>> +	/*
+>>> +	 * Ultimately, this value will get limited by KSTACK_OFFSET_MAX(),
+>>> +	 * so the maximum stack offset is 1k bytes(10 bits).
+>>> +	 *
+>>> +	 * The actual entropy will be further reduced by the compiler when
+>>> +	 * applying stack alignment constraints: the powerpc architecture
+>>> +	 * may have two kinds of stack alignment(16-bytes and 8-bytes).
+>>> +	 *
+>>> +	 * So the resulting 6 or 7 bits of entropy is seen in SP[9:4] or SP[9:3].
+>>> +	 *
+>>> +	 */
+>>> +	choose_random_kstack_offset(mftb());
+>>> +
+>>> +	return ret;
+>>>    }
+>>>    
+>>>    static notrace void booke_load_dbcr0(void)
+> .
