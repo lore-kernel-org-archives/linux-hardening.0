@@ -2,135 +2,90 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEC7C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 16 Jun 2022 11:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48476CCA488
+	for <linux-hardening@archiver.kernel.org>; Thu, 16 Jun 2022 14:36:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376382AbiFPLbi (ORCPT
+        id S1377972AbiFPOgj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 16 Jun 2022 07:31:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45428 "EHLO
+        Thu, 16 Jun 2022 10:36:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229495AbiFPLbi (ORCPT
+        with ESMTP id S1377978AbiFPOgc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 16 Jun 2022 07:31:38 -0400
+        Thu, 16 Jun 2022 10:36:32 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25A0F5E74B
-        for <linux-hardening@vger.kernel.org>; Thu, 16 Jun 2022 04:31:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5D4240925;
+        Thu, 16 Jun 2022 07:36:30 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B6C37619B9
-        for <linux-hardening@vger.kernel.org>; Thu, 16 Jun 2022 11:31:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2968EC36AE2
-        for <linux-hardening@vger.kernel.org>; Thu, 16 Jun 2022 11:31:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655379096;
-        bh=qmsxXBuVVUZg+KQGX3X/FI9nXdFC22b1yAE/7mrm39c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=MdjCnGcQ8JvSykSUAhH4ggh23OioUENEVoIgWyDFKOm44rSLU20av97lPPkZlU9nx
-         jpRe2ow2IuyPuZoSDdXQDswoX4tNs+HH8AnNvFAe7Gn3nzxQzgNAzDvWd5ymtHG6yJ
-         6VkOozjze7snJ2CLuKZ5Dwo7CGTrVfBu/TEyPHplRzM5QJ/Nulz743ND3sm/R7/iQ5
-         iCOHG1CWduj//6/PglPy+ixpdSIUZpMB2NWly1hLKsuIhO6LPRAiCvDFj9PCMstImX
-         hetOuNZcnXgAC6qpVAmpZh4gigiwIj+IJZdVn3qy0ves3Ntz4zlbcSo38F5da18Hf4
-         TlaKD7MSrg+OA==
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-fe539f9afbso1537168fac.5
-        for <linux-hardening@vger.kernel.org>; Thu, 16 Jun 2022 04:31:36 -0700 (PDT)
-X-Gm-Message-State: AJIora9d/WCp9P+7gzvsythSxkMR2JZVpBlQkWrqIYTm8jwWc8GYwHCk
-        9LPFQx91fruN/Cg5yG9cchaALJtWVxbLEXG/ZOg=
-X-Google-Smtp-Source: AGRyM1sFaNSlv1Be0pMK1/+l9deSRGaLWRgEMXuHUR8e3YcPKFTtUYXqszEH85LZwTsvdBfZpgU2e0FBmCw6lFe2FO4=
-X-Received: by 2002:a05:6871:5c8:b0:f3:3c1c:126f with SMTP id
- v8-20020a05687105c800b000f33c1c126fmr2439160oan.126.1655379095285; Thu, 16
- Jun 2022 04:31:35 -0700 (PDT)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 713EE61DDC;
+        Thu, 16 Jun 2022 14:36:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE632C385A2;
+        Thu, 16 Jun 2022 14:36:28 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="DaikPer8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+        t=1655390186;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=HPAtaIeUzFGETtepNlx7oLoJv5QwPzhpAP3HikjfJM0=;
+        b=DaikPer8ueIhZk7aIyzyf4bBdHkIGHkDbS3F2CMbp3CIOT/Y0wncEunWvGF9PHmAdP33A8
+        Wqe2Q441lhxPeQfjd1rTGZn//lhaslF6PN3tH+PDw6TpGE3JsxljsAK46KV7qWlp1/RDt9
+        T+4KQ1Y8Uu/3HsYuXYgY6xnjS8IfrMw=
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 8198e951 (TLSv1.3:AEAD-AES256-GCM-SHA384:256:NO);
+        Thu, 16 Jun 2022 14:36:26 +0000 (UTC)
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     linux-mm@kvack.org, linux-xfs@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>
+Subject: [PATCH] usercopy: use unsigned long instead of uintptr_t
+Date:   Thu, 16 Jun 2022 16:36:17 +0200
+Message-Id: <20220616143617.449094-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-References: <20220613144550.3760857-1-ardb@kernel.org> <20220613144550.3760857-23-ardb@kernel.org>
- <202206130959.3C01F529@keescook> <CAMj1kXG8MsL5NHN61W+58Q2di1o9P3kaxUCNe4D5sXcdLhOkUQ@mail.gmail.com>
- <202206131630.B6AE6ECEA3@keescook>
-In-Reply-To: <202206131630.B6AE6ECEA3@keescook>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 16 Jun 2022 13:31:23 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHP8+yErY8F3wzc8=sWfqUYxCJ_AtW0_Gugng-0cpEXPA@mail.gmail.com>
-Message-ID: <CAMj1kXHP8+yErY8F3wzc8=sWfqUYxCJ_AtW0_Gugng-0cpEXPA@mail.gmail.com>
-Subject: Re: [PATCH v4 22/26] arm64: mm: move ro_after_init section into the
- data segment
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-hardening@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 14 Jun 2022 at 01:38, Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, Jun 13, 2022 at 07:16:15PM +0200, Ard Biesheuvel wrote:
-> > On Mon, 13 Jun 2022 at 19:00, Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Mon, Jun 13, 2022 at 04:45:46PM +0200, Ard Biesheuvel wrote:
-> > > > Currently, the ro_after_init sections sits right in the middle of the
-> > > > text/rodata/inittext segment, making it difficult to map any of those
-> > > > non-writable during early boot. So instead, move it to the start of
-> > > > .data, and update the init sequences so that the section is remapped
-> > > > read-only once startup completes.
-> > > >
-> > > > Note that this moves the entire HYP data section into .data as well -
-> > > > this likely needs to remain as a single block for now, but could perhaps
-> > > > split into a .rodata and .data..ro_after_init section later.
-> > >
-> > > If I'm reading this correctly, this means that .data..ro_after_init now
-> > > lives between .data and .rodata?
-> > >
-> >
-> > No, between .initdata and .data
->
-> Ah, doesn't this mean more padding (for segment alignment) used? On other
-> architectures .data..ro_after_init tried to be near the writable/read-only
-> boundary so segment padding was only needed on one side (e.g. it could
-> live at the end of .rodata without segment alignment but before .data
-> which was segment aligned.) Then when .rodata was made read-only (after
-> __init), .data..ro_after_init would also get set read-only.
->
-> In this case, I think it ends up needing segment alignment both at the
-> front and the end, since the .initdata and .data are freed and left
-> writable, respectively?
->
+A recent commit factored out a series of annoying (unsigned long) casts
+into a single variable declaration, but made the pointer type a
+`uintptr_t` rather than the usual `unsigned long`. This patch changes it
+to be the integer type more typically used by the kernel to represent
+addresses.
 
-We used to have
+Fixes: 35fb9ae4aa2e ("usercopy: Cast pointer to an integer once")
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Uladzislau Rezki <urezki@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Joe Perches <joe@perches.com>
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+---
+ mm/usercopy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-text
---
-rodata
-(ro_after_init)
---
-inittext
---
-initdata
---
-data
-bss
+diff --git a/mm/usercopy.c b/mm/usercopy.c
+index 4e1da708699b..c1ee15a98633 100644
+--- a/mm/usercopy.c
++++ b/mm/usercopy.c
+@@ -161,7 +161,7 @@ static inline void check_bogus_address(const unsigned long ptr, unsigned long n,
+ static inline void check_heap_object(const void *ptr, unsigned long n,
+ 				     bool to_user)
+ {
+-	uintptr_t addr = (uintptr_t)ptr;
++	unsigned long addr = (unsigned long)ptr;
+ 	unsigned long offset;
+ 	struct folio *folio;
+ 
+-- 
+2.35.1
 
-where -- are the segment boundaries, which are always aligned to 64k on arm64
-
-After this patch, we get
-
-text
---
-rodata
---
-inittext
---
-initdata
---
-(ro_after_init)
-data
-bss
-
-so in terms of padding due to alignment, there is not a lot of difference.
-
-The main difference here is the fact that we lose the ability to use
-block mappings, but if anyone cares about that, we could work around
-this by creating a separate segment for ro_after_init.
