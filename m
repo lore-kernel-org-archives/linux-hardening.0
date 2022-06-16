@@ -2,110 +2,141 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB2EC433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 16 Jun 2022 17:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4FBCCA47A
+	for <linux-hardening@archiver.kernel.org>; Thu, 16 Jun 2022 19:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378083AbiFPRTh (ORCPT
+        id S1346839AbiFPTOr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 16 Jun 2022 13:19:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32952 "EHLO
+        Thu, 16 Jun 2022 15:14:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378067AbiFPRTf (ORCPT
+        with ESMTP id S229541AbiFPTOq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 16 Jun 2022 13:19:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E130248E6E;
-        Thu, 16 Jun 2022 10:19:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 00B4C61AA0;
-        Thu, 16 Jun 2022 17:19:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 800D0C34114;
-        Thu, 16 Jun 2022 17:19:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655399971;
-        bh=dVuVhPmEkC9puN9Rze1DZ34ZIAYl9igVaP1wUSkTnZw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UvRzKL82Afj1pQ+Lgxowkk0MRYXG+iBGz/N9ndvOmSmZRkK32/FmzJOgPfyetmDWq
-         o/xgytYUn/+3nkWCrb5RhgDP8qZr6a9USvDoD701VgSJtNg4ldTJR6vGCfyHa7+oFf
-         Dim3Ym/VX/LHRt7gZrV52SmaJ5ZmqLU4/vNyhqqypQDHL9bU9vTRygB5L/Pmm8MsN6
-         uemMupVS1yMnFkCyTNCucZt6RZawSdxdxfpF4pJGQr8kGiMcM8046i++o4LV7ohc7F
-         YDUXJhyEyTLAaNyN1GKBvNhg15bqcX4/P4heFUSSYHuiI4Ee4dFSYcfykA+r/5fTsd
-         zat27tGVbKOgQ==
-Date:   Thu, 16 Jun 2022 10:19:28 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Leon Romanovsky <leon@kernel.org>,
-        Jiri Pirko <jiri@nvidia.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        netdev@vger.kernel.org, llvm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] hinic: Replace memcpy() with direct assignment
-Message-ID: <YqtmIIAOH7uRNAZ5@dev-arch.thelio-3990X>
-References: <20220616052312.292861-1-keescook@chromium.org>
+        Thu, 16 Jun 2022 15:14:46 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B51D248D4
+        for <linux-hardening@vger.kernel.org>; Thu, 16 Jun 2022 12:14:45 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id fu3so4534171ejc.7
+        for <linux-hardening@vger.kernel.org>; Thu, 16 Jun 2022 12:14:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pbV08iBwGfkxmXYoA1VIJvlV2UmK3YzJ41yofRdZyLU=;
+        b=dcdkMcHTJVnxoroJQQyOSQ2hvO4JsUyL9A8pgzbQH+EYSDrJYCrkrswzLz3irfA2j7
+         efMBNu5K1vFadai8pD+FNsVf+1jorrZW261NR6AFq2WVl/6gy2247A+GRqmGxI/sKIAy
+         Edk+iURnurHyyEsKgmgu6hsjFw1Nfh+9lfQlA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pbV08iBwGfkxmXYoA1VIJvlV2UmK3YzJ41yofRdZyLU=;
+        b=qLjZc7mEQUwVA2YKh47m2/yjS+qqA4/rEbdDvDBJPZrxq17SLTvxm0n2EV8Czfcx4P
+         pcTS4iJ74LEykTmfJOUcSSN3WVZmyryHlnMIjgVcSHEa0sIOoi0yryfPpwJCaszZNmXv
+         1x21XK2yXE9EH7oMABGApUF8XCTvs+EGAgzGIViGdDzCgiFK7xJza28yzRreXfsGjdOw
+         GakcdO19pGftefAe+RDk75kWPISzg4pmjwFjOCbbatVhvfQwjwKNtmVML3RCjywlcrr3
+         4TJP1Ffxr+Bx7J6+fzQThdQRYoAbLnW21vINVEjndSEXOYsuWEpNEzpwULIej7vnrVRa
+         iKqQ==
+X-Gm-Message-State: AJIora/kYpXkipm+7rkMtKWM1p2OGphShqiuZgdPcYRkuVHdR1vO/jcW
+        C1UFsD/r7lrfzkgcrEajLuwlw7ZESq9zvXWr
+X-Google-Smtp-Source: AGRyM1u38iloVO24gqHkBEraOJSmsXUh5rM/TV8kc6jmut9Vrefgowm/onNilrYuwPLCEUK1snaSKQ==
+X-Received: by 2002:a17:906:64da:b0:712:11b9:dead with SMTP id p26-20020a17090664da00b0071211b9deadmr5972291ejn.108.1655406883495;
+        Thu, 16 Jun 2022 12:14:43 -0700 (PDT)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com. [209.85.221.48])
+        by smtp.gmail.com with ESMTPSA id bw1-20020a170906c1c100b0070e238ff66fsm1093590ejb.96.2022.06.16.12.14.41
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jun 2022 12:14:41 -0700 (PDT)
+Received: by mail-wr1-f48.google.com with SMTP id x17so3045626wrg.6
+        for <linux-hardening@vger.kernel.org>; Thu, 16 Jun 2022 12:14:41 -0700 (PDT)
+X-Received: by 2002:a5d:48c1:0:b0:21a:3574:e70c with SMTP id
+ p1-20020a5d48c1000000b0021a3574e70cmr3982140wrs.97.1655406881201; Thu, 16 Jun
+ 2022 12:14:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220616052312.292861-1-keescook@chromium.org>
+References: <20220616143617.449094-1-Jason@zx2c4.com> <YqtAShjjo1zC6EgO@casper.infradead.org>
+ <YqtDXPWdFQ/fqgDo@zx2c4.com> <YqtKjAZRPBVjlE8S@casper.infradead.org>
+ <CAHk-=wj2OHy-5e+srG1fy+ZU00TmZ1NFp6kFLbVLMXHe7A1d-g@mail.gmail.com>
+ <Yqtd6hTS52mbb9+q@casper.infradead.org> <CAHk-=wj_K2MnhC6N_LyY6ezmQyWzqBnfobXC354HJuKdqMePzA@mail.gmail.com>
+In-Reply-To: <CAHk-=wj_K2MnhC6N_LyY6ezmQyWzqBnfobXC354HJuKdqMePzA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 16 Jun 2022 12:14:24 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whS3xhJ=quD5bzDb6JsAhKd0vem4K-U=DhUGf-tDJUMHg@mail.gmail.com>
+Message-ID: <CAHk-=whS3xhJ=quD5bzDb6JsAhKd0vem4K-U=DhUGf-tDJUMHg@mail.gmail.com>
+Subject: Re: [PATCH] usercopy: use unsigned long instead of uintptr_t
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-hardening@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 15, 2022 at 10:23:12PM -0700, Kees Cook wrote:
-> Under CONFIG_FORTIFY_SOURCE=y and CONFIG_UBSAN_BOUNDS=y, Clang is bugged
-> here for calculating the size of the destination buffer (0x10 instead of
-> 0x14). This copy is a fixed size (sizeof(struct fw_section_info_st)), with
-> the source and dest being struct fw_section_info_st, so the memcpy should
-> be safe, assuming the index is within bounds, which is UBSAN_BOUNDS's
-> responsibility to figure out.
-> 
-> Avoid the whole thing and just do a direct assignment. This results in
-> no change to the executable code.
-> 
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Tom Rix <trix@redhat.com>
-> Cc: Leon Romanovsky <leon@kernel.org>
-> Cc: Jiri Pirko <jiri@nvidia.com>
-> Cc: Vladimir Oltean <olteanv@gmail.com>
-> Cc: Simon Horman <simon.horman@corigine.com>
-> Cc: netdev@vger.kernel.org
-> Cc: llvm@lists.linux.dev
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1592
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On Thu, Jun 16, 2022 at 9:56 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Out bitmaps and bit fields are also all about "long" - again, entirely
+> unrelated to pointers.
 
-Tested-by: Nathan Chancellor <nathan@kernel.org> # build
+That, btw, has probably been a mistake. It's entirely historical. We
+would have been better off had our bitmap types been defined in terms
+of 32-bit chunks, because now we have the odd situation that 32-bit
+and 64-bit architectures get very different sizes for some flag
+fields.
 
-> ---
->  drivers/net/ethernet/huawei/hinic/hinic_devlink.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_devlink.c b/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
-> index 60ae8bfc5f69..1749d26f4bef 100644
-> --- a/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
-> +++ b/drivers/net/ethernet/huawei/hinic/hinic_devlink.c
-> @@ -43,9 +43,7 @@ static bool check_image_valid(struct hinic_devlink_priv *priv, const u8 *buf,
->  
->  	for (i = 0; i < fw_image->fw_info.fw_section_cnt; i++) {
->  		len += fw_image->fw_section_info[i].fw_section_len;
-> -		memcpy(&host_image->image_section_info[i],
-> -		       &fw_image->fw_section_info[i],
-> -		       sizeof(struct fw_section_info_st));
-> +		host_image->image_section_info[i] = fw_image->fw_section_info[i];
->  	}
->  
->  	if (len != fw_image->fw_len ||
-> -- 
-> 2.32.0
-> 
+It does have a technical reason: it's often better to traverse bitmaps
+in maximally sized chunks (ie scanning for bits set or clear), and in
+that sense defining bitmaps to always act as arrays of "long" has been
+a good thing.
+
+But it then causes pointless problems when people can't really rely on
+more than 32 bits for atomic bit operations, and on 64-bit
+architectures we unnecessarily use "long" and waste the upper bits.
+
+In some places we then take advantage of that ugly difference (ie "we
+have more page flags on 64-bit architectures"), but on the whole it
+has probably been more of a pain than the technical gain. The bitmap
+scanning is probably not worth it, and could have been done
+differently.
+
+And continuing that for some 128-bit architecture is likely just
+making the same mistake even worse.
+
+So I think we have a *lot* of things we should look at, if people
+really get serious about 128-bit computing.
+
+But I personally think it's several decades away, if ever. Looking at
+historical workload growth is probably _very_ misleading - Moore's law
+is dying or dead. We're not that many shrinks away from some very
+fundamental physical limits.
+
+I do expect people will want to do academic test architectures,
+though. It's not clear it's going to be a "double all the widths" kind
+of thing, though, and I don't think there is a lot of sense in
+designing for a future architecture that is very hazy.
+
+It's not entirely unlikely that we'll end up with a situation where we
+do have access to 128-bit operations (because ALU and register width
+is relatively "cheap", and it helps some loads - extended precision
+arithmetic, crypto, integer vectors), but the address space will be
+64-bit (because big pointers are bad for memory and cache use).
+
+In that situation, we'd probably just see "long long" being 128-bit
+("I32LP64LL128").
+
+That's obviously what people thought back in the ILP32/LL64 data
+model. They were wrong back then, and I may well be wrong now. But
+Moore's law limits are fairly undisputable, and a 64-bit address space
+is a *lot* bigger than a 32-bit address space was.
+
+So I personally will take a "let's wait for reality to catch up a bit
+more" approach, because it's not clear what the actual future will
+hold.
+
+                 Linus
