@@ -2,98 +2,183 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E34C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 17 Jun 2022 12:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CB1C43334
+	for <linux-hardening@archiver.kernel.org>; Fri, 17 Jun 2022 16:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236057AbiFQMvW (ORCPT
+        id S1383226AbiFQQ0M (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 17 Jun 2022 08:51:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40412 "EHLO
+        Fri, 17 Jun 2022 12:26:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235938AbiFQMvV (ORCPT
+        with ESMTP id S229602AbiFQQ0L (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 17 Jun 2022 08:51:21 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4865437A84
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Jun 2022 05:51:20 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-155-h3wWc7x7P72brAvjq1zRbg-1; Fri, 17 Jun 2022 13:51:17 +0100
-X-MC-Unique: h3wWc7x7P72brAvjq1zRbg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.36; Fri, 17 Jun 2022 13:51:15 +0100
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.036; Fri, 17 Jun 2022 13:51:15 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Christophe Leroy' <christophe.leroy@csgroup.eu>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Matthew Wilcox <willy@infradead.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        "Kees Cook" <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>
-Subject: RE: [PATCH] usercopy: use unsigned long instead of uintptr_t
-Thread-Topic: [PATCH] usercopy: use unsigned long instead of uintptr_t
-Thread-Index: AQHYgY56+B40USEpAkCPXvMJQcFna61SGkAAgAADqACAAAiSAIAACqGAgAAMdQCAAANVgIAAJpIAgADVkYCAADQtAIAAGqDA
-Date:   Fri, 17 Jun 2022 12:51:15 +0000
-Message-ID: <2b4f67aed7c64abe83eb868c351656dc@AcuMS.aculab.com>
-References: <20220616143617.449094-1-Jason@zx2c4.com>
- <YqtAShjjo1zC6EgO@casper.infradead.org> <YqtDXPWdFQ/fqgDo@zx2c4.com>
- <YqtKjAZRPBVjlE8S@casper.infradead.org>
- <CAHk-=wj2OHy-5e+srG1fy+ZU00TmZ1NFp6kFLbVLMXHe7A1d-g@mail.gmail.com>
- <Yqtd6hTS52mbb9+q@casper.infradead.org>
- <CAHk-=wj_K2MnhC6N_LyY6ezmQyWzqBnfobXC354HJuKdqMePzA@mail.gmail.com>
- <CAHk-=whS3xhJ=quD5bzDb6JsAhKd0vem4K-U=DhUGf-tDJUMHg@mail.gmail.com>
- <CAMuHMdXxAwbCQPn4jg8X=_p5cYkpvNE4bXfQHWk2vz2Y6hL2-w@mail.gmail.com>
- <ec7f0c59-f67e-1d7e-c0b3-b0a409623e98@csgroup.eu>
-In-Reply-To: <ec7f0c59-f67e-1d7e-c0b3-b0a409623e98@csgroup.eu>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 17 Jun 2022 12:26:11 -0400
+X-Greylist: delayed 1452 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 17 Jun 2022 09:26:11 PDT
+Received: from gateway31.websitewelcome.com (gateway31.websitewelcome.com [192.185.143.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F9E836323
+        for <linux-hardening@vger.kernel.org>; Fri, 17 Jun 2022 09:26:11 -0700 (PDT)
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 03C302E76A
+        for <linux-hardening@vger.kernel.org>; Fri, 17 Jun 2022 11:01:59 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 2EP5omwHvkuWH2EP5oHOPC; Fri, 17 Jun 2022 11:00:59 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=XIUdXgSJfyypocXoP+z+UuLIxDgaB0TXJ/fPyZNcNIg=; b=P5j8AhGnfAdyUsMzJ6Lm721pN7
+        cgeOoD/IXjKgoXRqym6UmVAhmAfZBtQ6dz+cK7ACc7nO/yZqVjH4gYR7nJJ6f6smxhTX1Ux45RyvG
+        tLCXpbjCQR3BvLNu/V4D29KbYB99Qktx2XD1VdPjZVHWRuqAuw6dPsWcAvgv/U3fO7W0qqWEch/R8
+        HGB3/V3QrwMGW5KcW2gRdgY092+Q9mo6JzQo8IUHUF63k5eMVyGQyOaLgVyEppEN5JhKgdS2QR/Oc
+        mK3OOfxNxOkHC6gKZtPxx7bymjo7cbHTKOZ+DvljkLi7NF8ljmlra/DpT1j8OFgw0SnUyUZe96MSW
+        NBIzVUnA==;
+Received: from 193.254.29.93.rev.sfr.net ([93.29.254.193]:47192 helo=[192.168.0.101])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.95)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1o2EP4-000UST-MR;
+        Fri, 17 Jun 2022 11:00:58 -0500
+Message-ID: <ee2c8631-6e3f-c113-cc8e-29834bcc348e@embeddedor.com>
+Date:   Fri, 17 Jun 2022 18:00:55 +0200
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [Intel-wired-lan] [PATCH][next] iavf: Replace one-element array
+ in struct virtchnl_iwarp_qvlist_info and iavf_qvlist_info
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20210525230429.GA175658@embeddedor>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20210525230429.GA175658@embeddedor>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 93.29.254.193
+X-Source-L: No
+X-Exim-ID: 1o2EP4-000UST-MR
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 193.254.29.93.rev.sfr.net ([192.168.0.101]) [93.29.254.193]:47192
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-RnJvbTogQ2hyaXN0b3BoZSBMZXJveQ0KPiBTZW50OiAxNyBKdW5lIDIwMjIgMTI6MDYNCj4gDQo+
-IExlIDE3LzA2LzIwMjIgw6AgMDk6NTgsIEdlZXJ0IFV5dHRlcmhvZXZlbiBhIMOpY3JpdMKgOg0K
-PiA+PiBCdXQgaXQgdGhlbiBjYXVzZXMgcG9pbnRsZXNzIHByb2JsZW1zIHdoZW4gcGVvcGxlIGNh
-bid0IHJlYWxseSByZWx5IG9uDQo+ID4+IG1vcmUgdGhhbiAzMiBiaXRzIGZvciBhdG9taWMgYml0
-IG9wZXJhdGlvbnMsIGFuZCBvbiA2NC1iaXQNCj4gPj4gYXJjaGl0ZWN0dXJlcyB3ZSB1bm5lY2Vz
-c2FyaWx5IHVzZSAibG9uZyIgYW5kIHdhc3RlIHRoZSB1cHBlciBiaXRzLg0KPiA+DQo+ID4gV2Vs
-bCwgYXRvbWljIHdvcmtzIHVwIHRvIG5hdGl2ZSB3b3JkIHNpemUsIGkuZS4gbG9uZy4NCj4gPg0K
-PiANCj4gcG93ZXJwYzY0IGhhcyBhIHBhaXIgb2YgaW5zdHJ1Y3Rpb25zIHRvIHBlcmZvcm0gMTI4
-Yml0cyBhdG9taWMNCj4gb3BlcmF0aW9ucyA6IGxxYXJ4IC8gc3RxY3guDQoNCkFzIGRvZXMgeDg2
-LTY0IChhbmQgMzJiaXQgaGFzIGEgNjRiaXQgYXRvbWljIGNvbXBhcmUrZXhjaGFuZ2UpLg0KDQpB
-bm5veWluZ2x5IHRoZSB4ODYtNjQgZG9lc24ndCBoYXZlIDEyOGJpdCByZWFkL3dyaXRlIHJlZ2lz
-dGVyDQpwYWlyIGluc3RydWN0aW9ucyB0aGF0IHdvdWxkIGdlbmVyYXRlIGEgMTI4Yml0IFBDSWUg
-VExQLg0KWW91IGNhbiB1c2UgQVZYIGluc3RydWN0aW9ucyB0byBnZW5lcmF0ZSBsYXJnZSBUTFAg
-LSBidXQgbm90DQppbiB0aGUgbGludXgga2VybmVsIC0geW91IHdhbnQgMSBiaWcgcmVnaXN0ZXIu
-DQoNCkV2ZW4gdGhlIGh1bWJsZSA2ODAyMCBoYXMgYSBjYXMyIGluc3RydWN0aW9uIHRoYXQgd2ls
-bCBkbyBhDQo2NGJpdCBhdG9taWMgb3BlcmF0aW9uLg0KSSBkaWQgbWFuYWdlIHRvIHVzZSBpdCBv
-bmNlLCBidXQgaXQgaXMgZWFzaWVyIHRvIGRpc2FibGUgaW50ZXJydXB0cy4NCkknbSBub3Qgc3Vy
-ZSBob3cgbWFueSBTTVAgNjgwMjAgc3lzdGVtcyB3ZXJlIGV2ZXIgYnVpbHQuDQpZb3UnZCBuZWVk
-IGEgbWF0Y2hlZCBwYWlyIG9mIGNwdSAob3IgZXh0cmVtZSBjYXJlKSBzaW5jZSBpdA0KdGVuZHMg
-dG8gc3RhY2sgbWljcm9jb2RlIGRhdGEgb24gbWlkLWluc3RydWN0aW9uIGZhdWx0cy4NCg0KCURh
-dmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3Vu
-dCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3
-Mzg2IChXYWxlcykNCg==
+Hi all,
 
+Friendly ping (after more than a year after I sent this patch :O):
+
+Who can review and/or take this patch, please?
+
+Thanks
+--
+Gustavo
+
+On 5/26/21 01:04, Gustavo A. R. Silva wrote:
+> There is a regular need in the kernel to provide a way to declare having a
+> dynamically sized set of trailing elements in a structure. Kernel code
+> should always use “flexible array members”[1] for these cases. The older
+> style of one-element or zero-length arrays should no longer be used[2].
+> 
+> Refactor the code according to the use of a flexible-array member in struct
+> virtchnl_iwarp_qvlist_info and iavf_qvlist_info instead of one-element array,
+> and use the flex_array_size() helper.
+> 
+> [1] https://en.wikipedia.org/wiki/Flexible_array_member
+> [2] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
+> 
+> Link: https://github.com/KSPP/linux/issues/79
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>   drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 2 +-
+>   drivers/net/ethernet/intel/iavf/iavf_client.c      | 2 +-
+>   drivers/net/ethernet/intel/iavf/iavf_client.h      | 2 +-
+>   include/linux/avf/virtchnl.h                       | 8 ++++----
+>   4 files changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+> index c0afac8cf33b..6c55fe9cc132 100644
+> --- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+> +++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
+> @@ -515,7 +515,7 @@ static int i40e_config_iwarp_qvlist(struct i40e_vf *vf,
+>   
+>   	kfree(vf->qvlist_info);
+>   	vf->qvlist_info = kzalloc(struct_size(vf->qvlist_info, qv_info,
+> -					      qvlist_info->num_vectors - 1),
+> +					      qvlist_info->num_vectors),
+>   				  GFP_KERNEL);
+>   	if (!vf->qvlist_info) {
+>   		ret = -ENOMEM;
+> diff --git a/drivers/net/ethernet/intel/iavf/iavf_client.c b/drivers/net/ethernet/intel/iavf/iavf_client.c
+> index 0c77e4171808..e70da05ef322 100644
+> --- a/drivers/net/ethernet/intel/iavf/iavf_client.c
+> +++ b/drivers/net/ethernet/intel/iavf/iavf_client.c
+> @@ -470,7 +470,7 @@ static int iavf_client_setup_qvlist(struct iavf_info *ldev,
+>   
+>   	v_qvlist_info = (struct virtchnl_iwarp_qvlist_info *)qvlist_info;
+>   	msg_size = struct_size(v_qvlist_info, qv_info,
+> -			       v_qvlist_info->num_vectors - 1);
+> +			       v_qvlist_info->num_vectors);
+>   
+>   	adapter->client_pending |= BIT(VIRTCHNL_OP_CONFIG_IWARP_IRQ_MAP);
+>   	err = iavf_aq_send_msg_to_pf(&adapter->hw,
+> diff --git a/drivers/net/ethernet/intel/iavf/iavf_client.h b/drivers/net/ethernet/intel/iavf/iavf_client.h
+> index 9a7cf39ea75a..b14a82b65626 100644
+> --- a/drivers/net/ethernet/intel/iavf/iavf_client.h
+> +++ b/drivers/net/ethernet/intel/iavf/iavf_client.h
+> @@ -53,7 +53,7 @@ struct iavf_qv_info {
+>   
+>   struct iavf_qvlist_info {
+>   	u32 num_vectors;
+> -	struct iavf_qv_info qv_info[1];
+> +	struct iavf_qv_info qv_info[];
+>   };
+>   
+>   #define IAVF_CLIENT_MSIX_ALL 0xFFFFFFFF
+> diff --git a/include/linux/avf/virtchnl.h b/include/linux/avf/virtchnl.h
+> index 85a687bc6096..15b982911321 100644
+> --- a/include/linux/avf/virtchnl.h
+> +++ b/include/linux/avf/virtchnl.h
+> @@ -658,10 +658,10 @@ VIRTCHNL_CHECK_STRUCT_LEN(12, virtchnl_iwarp_qv_info);
+>   
+>   struct virtchnl_iwarp_qvlist_info {
+>   	u32 num_vectors;
+> -	struct virtchnl_iwarp_qv_info qv_info[1];
+> +	struct virtchnl_iwarp_qv_info qv_info[];
+>   };
+>   
+> -VIRTCHNL_CHECK_STRUCT_LEN(16, virtchnl_iwarp_qvlist_info);
+> +VIRTCHNL_CHECK_STRUCT_LEN(4, virtchnl_iwarp_qvlist_info);
+>   
+>   /* VF reset states - these are written into the RSTAT register:
+>    * VFGEN_RSTAT on the VF
+> @@ -1069,8 +1069,8 @@ virtchnl_vc_validate_vf_msg(struct virtchnl_version_info *ver, u32 v_opcode,
+>   				err_msg_format = true;
+>   				break;
+>   			}
+> -			valid_len += ((qv->num_vectors - 1) *
+> -				sizeof(struct virtchnl_iwarp_qv_info));
+> +			valid_len += flex_array_size(qv, qv_info,
+> +						     qv->num_vectors);
+>   		}
+>   		break;
+>   	case VIRTCHNL_OP_CONFIG_RSS_KEY:
