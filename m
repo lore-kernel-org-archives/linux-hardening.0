@@ -2,101 +2,127 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1BCC43334
-	for <linux-hardening@archiver.kernel.org>; Thu, 16 Jun 2022 23:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0A9C43334
+	for <linux-hardening@archiver.kernel.org>; Fri, 17 Jun 2022 07:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378561AbiFPXPZ (ORCPT
+        id S1380547AbiFQH7E (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 16 Jun 2022 19:15:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47438 "EHLO
+        Fri, 17 Jun 2022 03:59:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231500AbiFPXPY (ORCPT
+        with ESMTP id S234442AbiFQH7D (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 16 Jun 2022 19:15:24 -0400
-X-Greylist: delayed 1500 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 16 Jun 2022 16:15:23 PDT
-Received: from gateway22.websitewelcome.com (gateway22.websitewelcome.com [192.185.47.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6355D648
-        for <linux-hardening@vger.kernel.org>; Thu, 16 Jun 2022 16:15:23 -0700 (PDT)
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 942794C69
-        for <linux-hardening@vger.kernel.org>; Thu, 16 Jun 2022 17:26:17 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 1xwPokt5L4SVw1xwPoqxVj; Thu, 16 Jun 2022 17:26:17 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=h5zz4gXmeyKQq141JoXnEndda8Y+1z5nbmNrA8Hh7GI=; b=ZddVWYugTRVwUQ9+xBSOwoZ69g
-        hAnA0CIMArl+brdZzHTgR+mPlYeHw1d0B5EPigNcn+dKjHAtRTLm0jlubb5ZgclL3NcST+CaIYOWr
-        WALaCQJOlvqogBmS8BKirX1Fp26FMgm3zAwdfT9+FvQeid7zjgA8h3AhSPXI8wKmTrgbubh+HwQkL
-        WXAZblsgYOmmL/5vrFocIKlW7Q3wk9+J1pzO4Jx/5pGCiJ1znVKhOjEzvGSH8J+Hr9x98IifLjIO+
-        BdhaEx5H9GjmhnXzpvSyUI4V+x6Es9Ijs0m/KwG01A958+VsnmKwsJTFrcpOhwvy3vHZqG1slFvI2
-        1V0sqDhw==;
-Received: from 193.254.29.93.rev.sfr.net ([93.29.254.193]:36014 helo=[192.168.0.101])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.95)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1o1xwN-002J6q-Me;
-        Thu, 16 Jun 2022 17:26:16 -0500
-Message-ID: <1a60b867-1551-5301-f6f4-19bd93420d36@embeddedor.com>
-Date:   Fri, 17 Jun 2022 00:26:05 +0200
+        Fri, 17 Jun 2022 03:59:03 -0400
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FA3D5A2D8;
+        Fri, 17 Jun 2022 00:59:03 -0700 (PDT)
+Received: by mail-qv1-f50.google.com with SMTP id u8so5436144qvj.2;
+        Fri, 17 Jun 2022 00:59:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0TaGn1ZE7rwA4T26FHJ9s8LxCIwOl88lHCKLCSlYvUQ=;
+        b=LXNjfJJqllaVjor/YDeK0bKRyIYZbHUiFT1eJOspk2Zws6fSY7GslXxlOdWO0bDj8J
+         80dvIgPu0qA756buaLA7l+WumsyCn+dikoM04/CcpBgaeh4xPU4dGfprxS6jTrFAL3/b
+         R4JCG4zPUQJ0jT/2IThWnlUIvbqaZkoQttfgMQNMQBzMwAKH64iIIUD9PKm9iROKGzEL
+         6Cppky50uNcJ4B51NnngRLq2Bgd7Fp2k6O9KS+PQHjmtWbqFixuZmHY4NJTxx6NDTKty
+         If6fHuBBN/fV/2fxdOAgGMqF95qLe7gWIT/viv3vrCgE+QzTt2BprX4pEXqtKEugHO0C
+         I5Ww==
+X-Gm-Message-State: AJIora/Ijmc+oxvSquhoGw14NgfDW5m4zMkndw5hcVvE9I5Zd8K9ghxc
+        UNHl57PiTSazLJOkAOXV+pLT/cgzweNdyg==
+X-Google-Smtp-Source: AGRyM1tLSX+9CkS1untlE5eTNKYGYbpS9PZlpsmeN2DhTwYu8QbmRva6vobW+Nm1VadNrgNR107BHg==
+X-Received: by 2002:ac8:570c:0:b0:304:e52c:3c2f with SMTP id 12-20020ac8570c000000b00304e52c3c2fmr7368168qtw.8.1655452742007;
+        Fri, 17 Jun 2022 00:59:02 -0700 (PDT)
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
+        by smtp.gmail.com with ESMTPSA id h15-20020a05620a400f00b006a6d365e9b1sm4133399qko.57.2022.06.17.00.58.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jun 2022 00:58:59 -0700 (PDT)
+Received: by mail-yb1-f169.google.com with SMTP id r3so6033566ybr.6;
+        Fri, 17 Jun 2022 00:58:58 -0700 (PDT)
+X-Received: by 2002:a25:818c:0:b0:664:a584:fafd with SMTP id
+ p12-20020a25818c000000b00664a584fafdmr9236239ybk.543.1655452738571; Fri, 17
+ Jun 2022 00:58:58 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH] hinic: Replace memcpy() with direct assignment
-Content-Language: en-US
-To:     Nathan Chancellor <nathan@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Leon Romanovsky <leon@kernel.org>,
-        Jiri Pirko <jiri@nvidia.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        netdev@vger.kernel.org, llvm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20220616052312.292861-1-keescook@chromium.org>
- <YqtmIIAOH7uRNAZ5@dev-arch.thelio-3990X>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <YqtmIIAOH7uRNAZ5@dev-arch.thelio-3990X>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 93.29.254.193
-X-Source-L: No
-X-Exim-ID: 1o1xwN-002J6q-Me
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 193.254.29.93.rev.sfr.net ([192.168.0.101]) [93.29.254.193]:36014
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20220616143617.449094-1-Jason@zx2c4.com> <YqtAShjjo1zC6EgO@casper.infradead.org>
+ <YqtDXPWdFQ/fqgDo@zx2c4.com> <YqtKjAZRPBVjlE8S@casper.infradead.org>
+ <CAHk-=wj2OHy-5e+srG1fy+ZU00TmZ1NFp6kFLbVLMXHe7A1d-g@mail.gmail.com>
+ <Yqtd6hTS52mbb9+q@casper.infradead.org> <CAHk-=wj_K2MnhC6N_LyY6ezmQyWzqBnfobXC354HJuKdqMePzA@mail.gmail.com>
+ <CAHk-=whS3xhJ=quD5bzDb6JsAhKd0vem4K-U=DhUGf-tDJUMHg@mail.gmail.com>
+In-Reply-To: <CAHk-=whS3xhJ=quD5bzDb6JsAhKd0vem4K-U=DhUGf-tDJUMHg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 17 Jun 2022 09:58:47 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXxAwbCQPn4jg8X=_p5cYkpvNE4bXfQHWk2vz2Y6hL2-w@mail.gmail.com>
+Message-ID: <CAMuHMdXxAwbCQPn4jg8X=_p5cYkpvNE4bXfQHWk2vz2Y6hL2-w@mail.gmail.com>
+Subject: Re: [PATCH] usercopy: use unsigned long instead of uintptr_t
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-hardening@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Hi Linus,
 
+On Thu, Jun 16, 2022 at 9:15 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> On Thu, Jun 16, 2022 at 9:56 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> > Out bitmaps and bit fields are also all about "long" - again, entirely
+> > unrelated to pointers.
+>
+> That, btw, has probably been a mistake. It's entirely historical. We
+> would have been better off had our bitmap types been defined in terms
+> of 32-bit chunks, because now we have the odd situation that 32-bit
+> and 64-bit architectures get very different sizes for some flag
+> fields.
+>
+> It does have a technical reason: it's often better to traverse bitmaps
+> in maximally sized chunks (ie scanning for bits set or clear), and in
+> that sense defining bitmaps to always act as arrays of "long" has been
+> a good thing.
 
-On 6/16/22 19:19, Nathan Chancellor wrote:
+Indeed, as long is the native word size, it's assumed to be the best,
+performance-wise.  For bitmaps, the actual underlying unit doesn't
+matter that much to the user, as bitmaps can span multiple words.
+For bit fields, you're indeed stuck with the 32-vs-64 bit difference.
 
-> Tested-by: Nathan Chancellor <nathan@kernel.org> # build
+> But it then causes pointless problems when people can't really rely on
+> more than 32 bits for atomic bit operations, and on 64-bit
+> architectures we unnecessarily use "long" and waste the upper bits.
 
-I think in this case the tag should be "Build-tested-by" instead.
+Well, atomic works up to native word size, i.e. long.
 
-Thanks
+> It's not entirely unlikely that we'll end up with a situation where we
+> do have access to 128-bit operations (because ALU and register width
+> is relatively "cheap", and it helps some loads - extended precision
+> arithmetic, crypto, integer vectors), but the address space will be
+> 64-bit (because big pointers are bad for memory and cache use).
+>
+> In that situation, we'd probably just see "long long" being 128-bit
+> ("I32LP64LL128").
+
+Regardless of the address space decision (we do have size_t and the
+dreaded uintptr_t to cater for that), keeping long at 64-bit would
+break the "long is the native word size" assumption (as used in lots
+of places, e.g. for syscalls).
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-Gustavo
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
