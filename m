@@ -2,97 +2,82 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD82C43334
-	for <linux-hardening@archiver.kernel.org>; Fri, 17 Jun 2022 09:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3621C43334
+	for <linux-hardening@archiver.kernel.org>; Fri, 17 Jun 2022 10:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380334AbiFQJT0 (ORCPT
+        id S1381838AbiFQKkT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 17 Jun 2022 05:19:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37260 "EHLO
+        Fri, 17 Jun 2022 06:40:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380196AbiFQJTZ (ORCPT
+        with ESMTP id S1381741AbiFQKkS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 17 Jun 2022 05:19:25 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B46FC5AA69
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Jun 2022 02:19:23 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-220-s7RJKPWvOuOU30OW3UVyvA-1; Fri, 17 Jun 2022 10:19:20 +0100
-X-MC-Unique: s7RJKPWvOuOU30OW3UVyvA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.36; Fri, 17 Jun 2022 10:19:17 +0100
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.036; Fri, 17 Jun 2022 10:19:17 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Linus Torvalds' <torvalds@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>
-CC:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        "Kees Cook" <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>
-Subject: RE: [PATCH] usercopy: use unsigned long instead of uintptr_t
-Thread-Topic: [PATCH] usercopy: use unsigned long instead of uintptr_t
-Thread-Index: AQHYgbX7+B40USEpAkCPXvMJQcFna61TTqwg
-Date:   Fri, 17 Jun 2022 09:19:17 +0000
-Message-ID: <169e9522f5494a47bd99c6febf90d931@AcuMS.aculab.com>
-References: <20220616143617.449094-1-Jason@zx2c4.com>
- <YqtAShjjo1zC6EgO@casper.infradead.org> <YqtDXPWdFQ/fqgDo@zx2c4.com>
- <YqtKjAZRPBVjlE8S@casper.infradead.org>
- <CAHk-=wj2OHy-5e+srG1fy+ZU00TmZ1NFp6kFLbVLMXHe7A1d-g@mail.gmail.com>
- <Yqtd6hTS52mbb9+q@casper.infradead.org>
- <CAHk-=wj_K2MnhC6N_LyY6ezmQyWzqBnfobXC354HJuKdqMePzA@mail.gmail.com>
- <CAHk-=whS3xhJ=quD5bzDb6JsAhKd0vem4K-U=DhUGf-tDJUMHg@mail.gmail.com>
- <CAHk-=wi28vwsG-JNJEz_kc=qwPkYtYfh_14eHOUZsaGESDBDBA@mail.gmail.com>
-In-Reply-To: <CAHk-=wi28vwsG-JNJEz_kc=qwPkYtYfh_14eHOUZsaGESDBDBA@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 17 Jun 2022 06:40:18 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96DCD6AA7D;
+        Fri, 17 Jun 2022 03:40:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2CF25B8299D;
+        Fri, 17 Jun 2022 10:40:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A10B9C341CB;
+        Fri, 17 Jun 2022 10:40:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655462414;
+        bh=FfnaDyOU4tBYtXRnV8yExF0syv6ks0IlfB02Ng05kwI=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=JDP5Lyz4LmVub2ntySZweDlwak7EoUJ5kzGJ8p5L4tKwEg2n+mMnWeiUdaXVexZ4L
+         lDpJcVvNJ+rgqdaavVaO8BkuRfDoxX6dFh09VJX8dTeNJHg++zv1ndyTWRm5ZOsAEs
+         7lAGH/5RTIkXpSN5V9pvinY4Rt2OK5eUDB/IxqAGoXjWJgZAkykCHaLkOivRPg4y4e
+         xC6SYexLldfnoppE8cffdchK+HIVqppA5C2iKozZAOLzsJ8VZbNiQu2dziLPNOnaUm
+         u+qmkXwHvAvtLGnr1R9ECndkBdez5XCEY1bvkvKAL5cw+bj2vYqnGfX61WasgD9a/n
+         5FXAAVyGXBo4Q==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8D432E6D466;
+        Fri, 17 Jun 2022 10:40:14 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] hinic: Replace memcpy() with direct assignment
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <165546241457.18293.10133826510983697335.git-patchwork-notify@kernel.org>
+Date:   Fri, 17 Jun 2022 10:40:14 +0000
+References: <20220616052312.292861-1-keescook@chromium.org>
+In-Reply-To: <20220616052312.292861-1-keescook@chromium.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, nathan@kernel.org, ndesaulniers@google.com,
+        trix@redhat.com, leon@kernel.org, jiri@nvidia.com,
+        olteanv@gmail.com, simon.horman@corigine.com,
+        netdev@vger.kernel.org, llvm@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMTYgSnVuZSAyMDIyIDIwOjE5DQo+IA0KPiBP
-biBUaHUsIEp1biAxNiwgMjAyMiBhdCAxMjoxNCBQTSBMaW51cyBUb3J2YWxkcw0KPiA8dG9ydmFs
-ZHNAbGludXgtZm91bmRhdGlvbi5vcmc+IHdyb3RlOg0KPiA+DQo+ID4gSW4gdGhhdCBzaXR1YXRp
-b24sIHdlJ2QgcHJvYmFibHkganVzdCBzZWUgImxvbmcgbG9uZyIgYmVpbmcgMTI4LWJpdA0KPiA+
-ICgiSTMyTFA2NExMMTI4IikuDQo+IA0KPiBMb29raW5nIGFyb3VuZCwgaXQgbG9va3MgbGlrZSBw
-ZW9wbGUgcHJlZmVyICJsb25nIGxvbmcgbG9uZyIgKG9yIGluDQo+IHRoZSBrZXJuZWwsIGp1c3Qg
-InUxMjgiKSBmb3IgdGhpcywgYmVjYXVzZSBzbyBtYW55IGhhdmUgYWxyZWFkeSBnb3R0ZW4NCj4g
-dXNlZCB0byAibG9uZyBsb25nIiBiZWluZyA2NC1iaXQsIGFuZCAzMi1iaXQgYXJjaGl0ZWN0dXJl
-cyAod2hlcmUNCj4gImxvbmciIGlzIDMyLWJpdCBhbmQgImxvbmcgbG9uZyIgaXMgNjQtYml0KSBh
-cmUgc3RpbGwgcmVsZXZhbnQgZW5vdWdoDQo+IHRoYXQgcGVvcGxlIHdhbnQgdG8ga2VlcCB0aGF0
-Lg0KDQpDaGFuZ2luZyAnbG9uZyBsb25nJyB0byAxMjggYml0cyB3aWxsIGJyZWFrIHRoaW5ncy4N
-Ck11Y2ggbGlrZSBhIGNlcnRhaW4gT1MgdGhhdCBpcyBJTDMyUDY0TEw2NCBiZWNhdXNlIHRvbyBt
-dWNoDQpjb2RlIHVzZWQgJ2xvbmcnIHRvIG1lYW4gMzJiaXRzIHdoZW4gaW50IHdhcyAxNiBiaXRz
-LiANCg0KZ2NjIGFscmVhZHkgaGFzIHN1cHBvcnQgZm9yIDEyOGJpdCBpbnRlZ2VycyAob24gNjRi
-aXQgc3lzdGVtcykNCmVtdWxhdGVkIHVzaW5nIHR3byA2NGJpdCByZWdpc3RlcnMgKF9fdTEyOCA/
-PykNCg0KQW55dGhpbmcgd2FudGluZyB0aGVtIHByb2JhYmx5IHdhbnRzIHRoZW0gZXhwbGljaXRs
-eSBhbmQgZXZlbiBkZWNpZGluZw0KdGhhdCB1aW50bWF4X3QgaXMgc3VkZGVubHkgMTI4IGJpdCB3
-aWxsIHByb2JhYmx5IGJyZWFrIHRoaW5ncyENCg0KVGhlIG9ubHkgcGxhY2UgSSBjYW4gaW1hZ2lu
-ZSAnbG9uZyBsb25nIGxvbmcnIGJlaW5nIHVzZWQNCmlzIGFzICIlbGxsZCIgaW4gcHJpbnRmIGZv
-cm1hdHMuDQoNClNpbmNlICdzaG9ydCcgYW5kICdsb25nJyBhcmUgYm90aCB0eXBlcyBhbmQgcXVh
-bGlmaWVycw0KeW91IGNhbiBoYXZlICdsb25nIGNoYXIsICdsb25nIHNob3J0JyBhbmQgJ3Nob3J0
-IGxvbmcnLg0KVGhlc2UgY291bGQgYmUgaW50ZXJlc3Rpbmcgb24gYW4gSTY0TDI1NiBzeXN0ZW0g
-Oi0pDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkg
-Um9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlv
-biBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+Hello:
+
+This patch was applied to netdev/net-next.git (master)
+by David S. Miller <davem@davemloft.net>:
+
+On Wed, 15 Jun 2022 22:23:12 -0700 you wrote:
+> Under CONFIG_FORTIFY_SOURCE=y and CONFIG_UBSAN_BOUNDS=y, Clang is bugged
+> here for calculating the size of the destination buffer (0x10 instead of
+> 0x14). This copy is a fixed size (sizeof(struct fw_section_info_st)), with
+> the source and dest being struct fw_section_info_st, so the memcpy should
+> be safe, assuming the index is within bounds, which is UBSAN_BOUNDS's
+> responsibility to figure out.
+> 
+> [...]
+
+Here is the summary with links:
+  - hinic: Replace memcpy() with direct assignment
+    https://git.kernel.org/netdev/net-next/c/2c0ab32b73cf
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
