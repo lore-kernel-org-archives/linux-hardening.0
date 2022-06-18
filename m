@@ -2,183 +2,100 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CB1C43334
-	for <linux-hardening@archiver.kernel.org>; Fri, 17 Jun 2022 16:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908AFC43334
+	for <linux-hardening@archiver.kernel.org>; Sat, 18 Jun 2022 07:51:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1383226AbiFQQ0M (ORCPT
+        id S235170AbiFRHvl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 17 Jun 2022 12:26:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39646 "EHLO
+        Sat, 18 Jun 2022 03:51:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229602AbiFQQ0L (ORCPT
+        with ESMTP id S230248AbiFRHvk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 17 Jun 2022 12:26:11 -0400
-X-Greylist: delayed 1452 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 17 Jun 2022 09:26:11 PDT
-Received: from gateway31.websitewelcome.com (gateway31.websitewelcome.com [192.185.143.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F9E836323
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Jun 2022 09:26:11 -0700 (PDT)
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 03C302E76A
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Jun 2022 11:01:59 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 2EP5omwHvkuWH2EP5oHOPC; Fri, 17 Jun 2022 11:00:59 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=XIUdXgSJfyypocXoP+z+UuLIxDgaB0TXJ/fPyZNcNIg=; b=P5j8AhGnfAdyUsMzJ6Lm721pN7
-        cgeOoD/IXjKgoXRqym6UmVAhmAfZBtQ6dz+cK7ACc7nO/yZqVjH4gYR7nJJ6f6smxhTX1Ux45RyvG
-        tLCXpbjCQR3BvLNu/V4D29KbYB99Qktx2XD1VdPjZVHWRuqAuw6dPsWcAvgv/U3fO7W0qqWEch/R8
-        HGB3/V3QrwMGW5KcW2gRdgY092+Q9mo6JzQo8IUHUF63k5eMVyGQyOaLgVyEppEN5JhKgdS2QR/Oc
-        mK3OOfxNxOkHC6gKZtPxx7bymjo7cbHTKOZ+DvljkLi7NF8ljmlra/DpT1j8OFgw0SnUyUZe96MSW
-        NBIzVUnA==;
-Received: from 193.254.29.93.rev.sfr.net ([93.29.254.193]:47192 helo=[192.168.0.101])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.95)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1o2EP4-000UST-MR;
-        Fri, 17 Jun 2022 11:00:58 -0500
-Message-ID: <ee2c8631-6e3f-c113-cc8e-29834bcc348e@embeddedor.com>
-Date:   Fri, 17 Jun 2022 18:00:55 +0200
+        Sat, 18 Jun 2022 03:51:40 -0400
+Received: from smtp.smtpout.orange.fr (smtp03.smtpout.orange.fr [80.12.242.125])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7769242EF7
+        for <linux-hardening@vger.kernel.org>; Sat, 18 Jun 2022 00:51:39 -0700 (PDT)
+Received: from [192.168.1.18] ([90.11.190.129])
+        by smtp.orange.fr with ESMTPA
+        id 2TF2oh1xTJXxR2TF2oTUFy; Sat, 18 Jun 2022 09:51:37 +0200
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
+X-ME-Date: Sat, 18 Jun 2022 09:51:37 +0200
+X-ME-IP: 90.11.190.129
+Message-ID: <38d31460-f3e0-1260-05c5-406a05d9fb37@wanadoo.fr>
+Date:   Sat, 18 Jun 2022 09:51:36 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.1
-Subject: Re: [Intel-wired-lan] [PATCH][next] iavf: Replace one-element array
- in struct virtchnl_iwarp_qvlist_info and iavf_qvlist_info
+Subject: Re: [PATCH] staging: rtl8723bs: Allocate full pwep structure
 Content-Language: en-US
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20210525230429.GA175658@embeddedor>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20210525230429.GA175658@embeddedor>
+To:     Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Fabio Aiuto <fabioaiuto83@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-staging@lists.linux.dev,
+        Michael Straube <straube.linux@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20220608215512.1070847-1-keescook@chromium.org>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20220608215512.1070847-1-keescook@chromium.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 93.29.254.193
-X-Source-L: No
-X-Exim-ID: 1o2EP4-000UST-MR
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 193.254.29.93.rev.sfr.net ([192.168.0.101]) [93.29.254.193]:47192
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi all,
-
-Friendly ping (after more than a year after I sent this patch :O):
-
-Who can review and/or take this patch, please?
-
-Thanks
---
-Gustavo
-
-On 5/26/21 01:04, Gustavo A. R. Silva wrote:
-> There is a regular need in the kernel to provide a way to declare having a
-> dynamically sized set of trailing elements in a structure. Kernel code
-> should always use “flexible array members”[1] for these cases. The older
-> style of one-element or zero-length arrays should no longer be used[2].
+Le 08/06/2022 à 23:55, Kees Cook a écrit :
+> The pwep allocation was always being allocated smaller than the true
+> structure size. Avoid this by always allocating the full structure.
+> Found with GCC 12 and -Warray-bounds:
 > 
-> Refactor the code according to the use of a flexible-array member in struct
-> virtchnl_iwarp_qvlist_info and iavf_qvlist_info instead of one-element array,
-> and use the flex_array_size() helper.
+> ../drivers/staging/rtl8723bs/os_dep/ioctl_linux.c: In function 'rtw_set_encryption':
+> ../drivers/staging/rtl8723bs/os_dep/ioctl_linux.c:591:29: warning: array subscript 'struct ndis_802_11_wep[0]' is partly outside array bounds of 'void[25]' [-Warray-bounds]
+>    591 |                         pwep->length = wep_total_len;
+>        |                             ^~
 > 
-> [1] https://en.wikipedia.org/wiki/Flexible_array_member
-> [2] https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
-> 
-> Link: https://github.com/KSPP/linux/issues/79
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Fabio Aiuto <fabioaiuto83@gmail.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: linux-staging@lists.linux.dev
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->   drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 2 +-
->   drivers/net/ethernet/intel/iavf/iavf_client.c      | 2 +-
->   drivers/net/ethernet/intel/iavf/iavf_client.h      | 2 +-
->   include/linux/avf/virtchnl.h                       | 8 ++++----
->   4 files changed, 7 insertions(+), 7 deletions(-)
+>   drivers/staging/rtl8723bs/os_dep/ioctl_linux.c | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-> index c0afac8cf33b..6c55fe9cc132 100644
-> --- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-> +++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-> @@ -515,7 +515,7 @@ static int i40e_config_iwarp_qvlist(struct i40e_vf *vf,
+> diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+> index ece97e37ac91..30374a820496 100644
+> --- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+> +++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+> @@ -90,7 +90,8 @@ static int wpa_set_encryption(struct net_device *dev, struct ieee_param *param,
+>   		if (wep_key_len > 0) {
+>   			wep_key_len = wep_key_len <= 5 ? 5 : 13;
+>   			wep_total_len = wep_key_len + FIELD_OFFSET(struct ndis_802_11_wep, key_material);
+> -			pwep = kzalloc(wep_total_len, GFP_KERNEL);
+> +			/* Allocate a full structure to avoid potentially running off the end. */
+> +			pwep = kzalloc(sizeof(*pwep), GFP_KERNEL);
+>   			if (!pwep) {
+>   				ret = -ENOMEM;
+>   				goto exit;
+> @@ -582,7 +583,8 @@ static int rtw_set_encryption(struct net_device *dev, struct ieee_param *param,
+>   		if (wep_key_len > 0) {
+>   			wep_key_len = wep_key_len <= 5 ? 5 : 13;
+>   			wep_total_len = wep_key_len + FIELD_OFFSET(struct ndis_802_11_wep, key_material);
+> -			pwep = kzalloc(wep_total_len, GFP_KERNEL);
+> +			/* Allocate a full structure to avoid potentially running off the end. */
+> +			pwep = kzalloc(sizeof(*pwep), GFP_KERNEL);
+>   			if (!pwep)
+
+Hi,
+
+while at it (and un-related tyo your patch), I think that 'ret' should 
+also be updated here, otherwise we return 0.
+
+CJ
+
+>   				goto exit;
 >   
->   	kfree(vf->qvlist_info);
->   	vf->qvlist_info = kzalloc(struct_size(vf->qvlist_info, qv_info,
-> -					      qvlist_info->num_vectors - 1),
-> +					      qvlist_info->num_vectors),
->   				  GFP_KERNEL);
->   	if (!vf->qvlist_info) {
->   		ret = -ENOMEM;
-> diff --git a/drivers/net/ethernet/intel/iavf/iavf_client.c b/drivers/net/ethernet/intel/iavf/iavf_client.c
-> index 0c77e4171808..e70da05ef322 100644
-> --- a/drivers/net/ethernet/intel/iavf/iavf_client.c
-> +++ b/drivers/net/ethernet/intel/iavf/iavf_client.c
-> @@ -470,7 +470,7 @@ static int iavf_client_setup_qvlist(struct iavf_info *ldev,
->   
->   	v_qvlist_info = (struct virtchnl_iwarp_qvlist_info *)qvlist_info;
->   	msg_size = struct_size(v_qvlist_info, qv_info,
-> -			       v_qvlist_info->num_vectors - 1);
-> +			       v_qvlist_info->num_vectors);
->   
->   	adapter->client_pending |= BIT(VIRTCHNL_OP_CONFIG_IWARP_IRQ_MAP);
->   	err = iavf_aq_send_msg_to_pf(&adapter->hw,
-> diff --git a/drivers/net/ethernet/intel/iavf/iavf_client.h b/drivers/net/ethernet/intel/iavf/iavf_client.h
-> index 9a7cf39ea75a..b14a82b65626 100644
-> --- a/drivers/net/ethernet/intel/iavf/iavf_client.h
-> +++ b/drivers/net/ethernet/intel/iavf/iavf_client.h
-> @@ -53,7 +53,7 @@ struct iavf_qv_info {
->   
->   struct iavf_qvlist_info {
->   	u32 num_vectors;
-> -	struct iavf_qv_info qv_info[1];
-> +	struct iavf_qv_info qv_info[];
->   };
->   
->   #define IAVF_CLIENT_MSIX_ALL 0xFFFFFFFF
-> diff --git a/include/linux/avf/virtchnl.h b/include/linux/avf/virtchnl.h
-> index 85a687bc6096..15b982911321 100644
-> --- a/include/linux/avf/virtchnl.h
-> +++ b/include/linux/avf/virtchnl.h
-> @@ -658,10 +658,10 @@ VIRTCHNL_CHECK_STRUCT_LEN(12, virtchnl_iwarp_qv_info);
->   
->   struct virtchnl_iwarp_qvlist_info {
->   	u32 num_vectors;
-> -	struct virtchnl_iwarp_qv_info qv_info[1];
-> +	struct virtchnl_iwarp_qv_info qv_info[];
->   };
->   
-> -VIRTCHNL_CHECK_STRUCT_LEN(16, virtchnl_iwarp_qvlist_info);
-> +VIRTCHNL_CHECK_STRUCT_LEN(4, virtchnl_iwarp_qvlist_info);
->   
->   /* VF reset states - these are written into the RSTAT register:
->    * VFGEN_RSTAT on the VF
-> @@ -1069,8 +1069,8 @@ virtchnl_vc_validate_vf_msg(struct virtchnl_version_info *ver, u32 v_opcode,
->   				err_msg_format = true;
->   				break;
->   			}
-> -			valid_len += ((qv->num_vectors - 1) *
-> -				sizeof(struct virtchnl_iwarp_qv_info));
-> +			valid_len += flex_array_size(qv, qv_info,
-> +						     qv->num_vectors);
->   		}
->   		break;
->   	case VIRTCHNL_OP_CONFIG_RSS_KEY:
+
