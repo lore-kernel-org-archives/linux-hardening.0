@@ -2,67 +2,82 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E0DC43334
-	for <linux-hardening@archiver.kernel.org>; Wed, 22 Jun 2022 06:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99652C433EF
+	for <linux-hardening@archiver.kernel.org>; Wed, 22 Jun 2022 18:10:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234254AbiFVGIz (ORCPT
+        id S1377042AbiFVSKP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 22 Jun 2022 02:08:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55506 "EHLO
+        Wed, 22 Jun 2022 14:10:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230006AbiFVGIx (ORCPT
+        with ESMTP id S1377046AbiFVSKO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 22 Jun 2022 02:08:53 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 171E51CB21;
-        Tue, 21 Jun 2022 23:08:53 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id o23so10928834ljg.13;
-        Tue, 21 Jun 2022 23:08:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=S7mjpK/M+Dj2QUAMVzQMxy95Nz35P2kWVi4qmBs9FaI=;
-        b=c8zZsZw4yF2vD84Jltja4RRpT8reCc8d2zsGZN+JAw2NKxHlnoRrcjI9V34HOhYhrq
-         yJybnHfegsg7hw3BdOmAgjmocK5GbfRu2BiUJKZUtSC7De/YGZoi+T0W5JtjTeHNAirH
-         plrQKjHHERe62ewez8bYjDlUV46Cwb5hoaq6AXfSSU3aTs7xeQF3uwWQTSHmVSZf1aG+
-         ztzA8kjRd6Zr5zX2pAmYig55b8hX5lU2YLFzj7beYA78qmjkgJ7E62dx08/9Jz5UUXVZ
-         Pf0zQpKOjXk1Dg+Z59xiB10nXn53xZrq5mNNn+RJ9peIGLXbbdFjgNy4eDhPVI9DCD9q
-         nGJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=S7mjpK/M+Dj2QUAMVzQMxy95Nz35P2kWVi4qmBs9FaI=;
-        b=Zcu3ykLrjeew5KQaXB3bOBkDLQFAxTbxBynBUApTgkTHhKjaUIQNCAUW+IaY7PaMCC
-         AYQmx+F0A0Axalb1bNf64+hwVy7RM+DnQBc2mVnJFDPai8pKLWNCG6X8HfIOOXWkfEIE
-         Jjsqj/CNn6b8MhHS9ZYr99ND3LqZq3GRnb2aRfVVRMo4r7iEBzjb/PnCxs8bOmRSEvag
-         K1KlbhIOsGO8uMXOQIXPcgHDTfT4huQ0tP3SjoVhG0PR3DajSXWcwwAeVhtT9MBJcOjl
-         1IGxiqPz+Z0/8t40TUJnVHRqtScSZ5086FXiVxCpBjL9FSaz2v4q/nnJqwJ3Imc5wHjn
-         fIrQ==
-X-Gm-Message-State: AJIora/1lcmhCUxsIrNqyhXIMgATKE1f1fXMVZ8zTXQVZdDiDuDlABbn
-        3eiQhWb2VnhlpvJjR+h2WGnGitGpieb0pBxFWXozkLF8m/o=
-X-Google-Smtp-Source: AGRyM1vrxPgqDsyEq10YQi7/hA0k/MFiCT6W4kGM/zAv7zqFDWew9S1J/2y1HFNsMJX+ZjPKyZrUt2lxRoprmaXzj2g=
-X-Received: by 2002:a2e:a90c:0:b0:258:edc3:4d2b with SMTP id
- j12-20020a2ea90c000000b00258edc34d2bmr956668ljq.225.1655878130979; Tue, 21
- Jun 2022 23:08:50 -0700 (PDT)
+        Wed, 22 Jun 2022 14:10:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 727043A1AB;
+        Wed, 22 Jun 2022 11:10:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1461B61CCA;
+        Wed, 22 Jun 2022 18:10:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 62C5AC3411D;
+        Wed, 22 Jun 2022 18:10:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655921412;
+        bh=RdMpY98Dovcj8Z5McfPbAv7/dxekKq/qt1Sdz8M2fns=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=M1lnBRZaS91Spw1v4oBV9+wAMRBYZpEKHBZlajh/I4BZwsxJzUq/TN9FYY7dTowck
+         7+XYe0koh8xbcF9qhQfI/hA1fEDchj3QWRnqtfkTv+9B5zIN9fueH47uAqbCy8rCxG
+         D5q0LIP7vLum99NLJIhVaCxA6s2PDrJmAR0YbcAebZVNwxWzZyR8qjtubKkKGDfeMw
+         MUtdS5clzwM/Vo28yYszTNtQbe8QjUXLvQQXc264lUxGBcPXZq5PaY36A8sq9caJG5
+         jFVzNz75LQxpk8mljr6k9eIbV6IOgQh84y+sPRut1RbPi55soJGFQJ5DX4Hgf77lR+
+         7RklIbc4+3DuA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 480A7E7386C;
+        Wed, 22 Jun 2022 18:10:12 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-From:   Muni Sekhar <munisekharrms@gmail.com>
-Date:   Wed, 22 Jun 2022 11:38:39 +0530
-Message-ID: <CAHhAz+jSYb6=x89oFin=AHBrNhg_Q61YQvanb=2ZGkZBDiLyiw@mail.gmail.com>
-Subject: Linux: Use-After-Free exploitation
-To:     linux-hardening@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] hinic: Replace memcpy() with direct assignment
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <165592141229.24504.12499679747935394239.git-patchwork-notify@kernel.org>
+Date:   Wed, 22 Jun 2022 18:10:12 +0000
+References: <20220616052312.292861-1-keescook@chromium.org>
+In-Reply-To: <20220616052312.292861-1-keescook@chromium.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, nathan@kernel.org, ndesaulniers@google.com,
+        trix@redhat.com, leon@kernel.org, jiri@nvidia.com,
+        olteanv@gmail.com, simon.horman@corigine.com,
+        netdev@vger.kernel.org, llvm@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi All,
+Hello:
 
-Use-After-Free bugs result in kernel crashes. If these bugs result in
-kernel crashes then how is it possible to exploit this vulnerability
-for local privilege escalation?
+This patch was applied to netdev/net.git (master)
+by Jakub Kicinski <kuba@kernel.org>:
 
+On Wed, 15 Jun 2022 22:23:12 -0700 you wrote:
+> Under CONFIG_FORTIFY_SOURCE=y and CONFIG_UBSAN_BOUNDS=y, Clang is bugged
+> here for calculating the size of the destination buffer (0x10 instead of
+> 0x14). This copy is a fixed size (sizeof(struct fw_section_info_st)), with
+> the source and dest being struct fw_section_info_st, so the memcpy should
+> be safe, assuming the index is within bounds, which is UBSAN_BOUNDS's
+> responsibility to figure out.
+> 
+> [...]
+
+Here is the summary with links:
+  - hinic: Replace memcpy() with direct assignment
+    https://git.kernel.org/netdev/net/c/1e70212e0315
+
+You are awesome, thank you!
 -- 
-Thanks,
-Sekhar
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
