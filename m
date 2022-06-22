@@ -2,103 +2,67 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EE5C43334
-	for <linux-hardening@archiver.kernel.org>; Tue, 21 Jun 2022 20:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E0DC43334
+	for <linux-hardening@archiver.kernel.org>; Wed, 22 Jun 2022 06:08:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352338AbiFUUnQ (ORCPT
+        id S234254AbiFVGIz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 21 Jun 2022 16:43:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42372 "EHLO
+        Wed, 22 Jun 2022 02:08:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236071AbiFUUnQ (ORCPT
+        with ESMTP id S230006AbiFVGIx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 21 Jun 2022 16:43:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F2D71EC79
-        for <linux-hardening@vger.kernel.org>; Tue, 21 Jun 2022 13:43:15 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F0E606183C
-        for <linux-hardening@vger.kernel.org>; Tue, 21 Jun 2022 20:43:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAA7CC3411C;
-        Tue, 21 Jun 2022 20:43:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1655844194;
-        bh=GWKVBEsO/tXbxNMLHJdAPxHkivjxvNSe4GewFieE1kY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fAJJhUfArX3IzZyRr7R5noH2U8NeDYW1WmP7KGUfD2s5SyDbASZkm6F4O28GHZwFD
-         ExVenUCt2wRcjV4OdQwY8LmU63Ctq1NBzg3ESPlIyueSi3DTK+6dmp4dF1q4tgsT4c
-         /q79XQofKLWAtttEWCgRlKg2tNdEQ2bYCVn0rn24=
-Date:   Tue, 21 Jun 2022 22:43:11 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Coccinelle <cocci@systeme.lip6.fr>,
-        linux-hardening@vger.kernel.org,
-        Julia Lawall <Julia.Lawall@inria.fr>
-Subject: Re: replacing memcpy() calls with direct assignment
-Message-ID: <YrItX5hVSdK6FCjv@kroah.com>
-References: <202206211109.A819E8118@keescook>
- <YrIWgNQkBXkMnKCz@kroah.com>
- <202206211327.F8936F0783@keescook>
+        Wed, 22 Jun 2022 02:08:53 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 171E51CB21;
+        Tue, 21 Jun 2022 23:08:53 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id o23so10928834ljg.13;
+        Tue, 21 Jun 2022 23:08:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=S7mjpK/M+Dj2QUAMVzQMxy95Nz35P2kWVi4qmBs9FaI=;
+        b=c8zZsZw4yF2vD84Jltja4RRpT8reCc8d2zsGZN+JAw2NKxHlnoRrcjI9V34HOhYhrq
+         yJybnHfegsg7hw3BdOmAgjmocK5GbfRu2BiUJKZUtSC7De/YGZoi+T0W5JtjTeHNAirH
+         plrQKjHHERe62ewez8bYjDlUV46Cwb5hoaq6AXfSSU3aTs7xeQF3uwWQTSHmVSZf1aG+
+         ztzA8kjRd6Zr5zX2pAmYig55b8hX5lU2YLFzj7beYA78qmjkgJ7E62dx08/9Jz5UUXVZ
+         Pf0zQpKOjXk1Dg+Z59xiB10nXn53xZrq5mNNn+RJ9peIGLXbbdFjgNy4eDhPVI9DCD9q
+         nGJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=S7mjpK/M+Dj2QUAMVzQMxy95Nz35P2kWVi4qmBs9FaI=;
+        b=Zcu3ykLrjeew5KQaXB3bOBkDLQFAxTbxBynBUApTgkTHhKjaUIQNCAUW+IaY7PaMCC
+         AYQmx+F0A0Axalb1bNf64+hwVy7RM+DnQBc2mVnJFDPai8pKLWNCG6X8HfIOOXWkfEIE
+         Jjsqj/CNn6b8MhHS9ZYr99ND3LqZq3GRnb2aRfVVRMo4r7iEBzjb/PnCxs8bOmRSEvag
+         K1KlbhIOsGO8uMXOQIXPcgHDTfT4huQ0tP3SjoVhG0PR3DajSXWcwwAeVhtT9MBJcOjl
+         1IGxiqPz+Z0/8t40TUJnVHRqtScSZ5086FXiVxCpBjL9FSaz2v4q/nnJqwJ3Imc5wHjn
+         fIrQ==
+X-Gm-Message-State: AJIora/1lcmhCUxsIrNqyhXIMgATKE1f1fXMVZ8zTXQVZdDiDuDlABbn
+        3eiQhWb2VnhlpvJjR+h2WGnGitGpieb0pBxFWXozkLF8m/o=
+X-Google-Smtp-Source: AGRyM1vrxPgqDsyEq10YQi7/hA0k/MFiCT6W4kGM/zAv7zqFDWew9S1J/2y1HFNsMJX+ZjPKyZrUt2lxRoprmaXzj2g=
+X-Received: by 2002:a2e:a90c:0:b0:258:edc3:4d2b with SMTP id
+ j12-20020a2ea90c000000b00258edc34d2bmr956668ljq.225.1655878130979; Tue, 21
+ Jun 2022 23:08:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202206211327.F8936F0783@keescook>
+From:   Muni Sekhar <munisekharrms@gmail.com>
+Date:   Wed, 22 Jun 2022 11:38:39 +0530
+Message-ID: <CAHhAz+jSYb6=x89oFin=AHBrNhg_Q61YQvanb=2ZGkZBDiLyiw@mail.gmail.com>
+Subject: Linux: Use-After-Free exploitation
+To:     linux-hardening@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jun 21, 2022 at 01:31:13PM -0700, Kees Cook wrote:
-> On Tue, Jun 21, 2022 at 09:05:36PM +0200, Greg KH wrote:
-> > On Tue, Jun 21, 2022 at 11:37:10AM -0700, Kees Cook wrote:
-> > > Hello Coccinelle gurus! :)
-> > > 
-> > > I recently spent way too long looking at a weird bug in Clang that I
-> > > eventually worked around by just replacing a memcpy() with a direct
-> > > assignment. It really was very mechanical, and seems like it might be a
-> > > common code pattern in the kernel. Swapping these would make the code
-> > > much more readable, I think. Here's the example:
-> > > 
-> > > 
-> > > https://lore.kernel.org/linux-hardening/20220616052312.292861-1-keescook@chromium.org/
-> > > 
-> > > -		memcpy(&host_image->image_section_info[i],
-> > > -		       &fw_image->fw_section_info[i],
-> > > -		       sizeof(struct fw_section_info_st));
-> > > +		host_image->image_section_info[i] = fw_image->fw_section_info[i];
-> > 
-> > Ick, that hids the fact that you are doing a potentially huge memory
-> > copy here.
-> > 
-> > And would it also prevent the compiler from using our optimized memcpy()
-> > function and replacing it with whatever it wanted to use instead?
-> 
-> What? Uh, quite the reverse, in fact. The compiler is MUCH better about
-> doing those kinds of optimizations. The commit log details that there's
-> no binary difference, in fact, with this change.
+Hi All,
 
-Ah, so we are telling gcc to use our memcpy() implementations then,
-otherwise it could use floating point for built-in things like this
-without us knowing it.
+Use-After-Free bugs result in kernel crashes. If these bugs result in
+kernel crashes then how is it possible to exploit this vulnerability
+for local privilege escalation?
 
-So it's not an optimization either way.
-
-> > What clang bug does this fix such that it warrants us hiding this
-> > information away from the developers?
-> 
-> Hiding? This makes the code significantly more clear. Doing an assignment
-> makes it clear they're the same type, etc, etc. Obscuring all that with
-> a memcpy() makes no sense.
-
-Doing a huge memory copy with a simple '=' assignment does have the
-potential to hide things.  Yes, memory copies are so fast it's not even
-funny these days, but it's like our use of typedef, we don't use it
-because it makes it easier to hide what is really happening.
-
-So do we want to hide this type of thing?  I vote no, but hey, this
-isn't the part of the kernel that I maintain :)
-
-thanks,
-
-greg k-h
+-- 
+Thanks,
+Sekhar
