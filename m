@@ -2,100 +2,85 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AB2C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 24 Jun 2022 14:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3281DCCA473
+	for <linux-hardening@archiver.kernel.org>; Fri, 24 Jun 2022 17:48:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233079AbiFXOkf (ORCPT
+        id S232649AbiFXRso (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 24 Jun 2022 10:40:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41236 "EHLO
+        Fri, 24 Jun 2022 13:48:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233072AbiFXOkd (ORCPT
+        with ESMTP id S232648AbiFXRsn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 24 Jun 2022 10:40:33 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 711EB67E58
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Jun 2022 07:40:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2A9FEB82928
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Jun 2022 14:40:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2578C34114
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Jun 2022 14:40:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656081629;
-        bh=wqqC+Sl/QvDz6aEMg+QncwWVY/RZj/e3vSpkojG6rXc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mL/qEgf+txlTP9KLdfx3Mlky/et4Ot/Oh7F4bROnDOYLsh5s1Uy6Q5aHWKbaDTrwe
-         oxcOacWZGnXCazulre4neBxOmUvHF83HuDptYmZSYYxBDS3YB2nX64kRsQ2VYkT9Vi
-         f/FbazV8BDR3wFhBOhYmSrGZipgPlBzpLDzMMksHMJjrzoYJOAYlrOFe/9+iXUFyIh
-         /9v92tPsX8ENCzrcsGzB+J3QTiu4pxwRSR950tXEYDJbK2G5Xr1B1cXK8yrUZ3qWgX
-         VZyWYiccVqVGM2KEMNfd7Qut67f5hc0kU6kahbXk30rjDrDt9yr0fWHJY5YZSPYmXF
-         SwelpW7SlCFcQ==
-Received: by mail-oi1-f171.google.com with SMTP id s124so3937013oia.0
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Jun 2022 07:40:29 -0700 (PDT)
-X-Gm-Message-State: AJIora9tT4YT9Br03egLR83Hvdj993fVPwIttt8Yqr1eUmV0pcFXSY1r
-        hzuGuc+MxcqMONh0+9UbAWdBzdM6GrvoVlhqNc8=
-X-Google-Smtp-Source: AGRyM1sy/MSLXTU6IyA4prYn1m1W/73YWU32M1lhDP3lVcdOXTvvsezQIQRqyqvAcj4iggSmaQ0UHsZ7jWUGhtXKNrI=
-X-Received: by 2002:a05:6808:300e:b0:32c:425e:df34 with SMTP id
- ay14-20020a056808300e00b0032c425edf34mr2142360oib.126.1656081629092; Fri, 24
- Jun 2022 07:40:29 -0700 (PDT)
+        Fri, 24 Jun 2022 13:48:43 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF7C543EF4
+        for <linux-hardening@vger.kernel.org>; Fri, 24 Jun 2022 10:48:41 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id jb13so2701640plb.9
+        for <linux-hardening@vger.kernel.org>; Fri, 24 Jun 2022 10:48:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zliD2Qsx7OubU1h4LVAM9OejLzFcsBaCjZJRdpEsKrg=;
+        b=Pz4gqJjlBZdH2FUZf+LZ3Zk2c4Q5PjoLHgSJvUIfFCXLQ3s0DQzl2M7apET6Zy18l+
+         gg0BY+PsbRil96ZfM2R0pnbNH0l4VO7BByOsiIJRLMuVeDsIjk5zBu5mdXPAuoNx6L7B
+         hNj9RV6ELW7Ls1GQSQx6AOxZK02AhyVXkIwbg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zliD2Qsx7OubU1h4LVAM9OejLzFcsBaCjZJRdpEsKrg=;
+        b=TKTGDMnEqh6fSSOkH0vHoQu00VBKHYV5Z7Gl9V9zCo/k9a80jViXqPVl544k84o2K8
+         iIQriTOrHxkMmGIW46TfzsG0TaoIGGgJTQBZDFgZBHaqAl58o0ke4q357ufyE6SRvelG
+         0tmBerCUXJ5lKFiclmX1F81iSanBvVvabEIa6N4GPKJ3ConjXJzBUacF+SnXxmjaDFmz
+         4tjFQ4oqGtg1sS6wZCVX2pjmj1fiaAYi4YltJtNcSP4RIgrdwH74dZ/64v2nmgQY47vY
+         IAqbKB/CHyFNGB0ZUgcqvXayMffRKQQfqCaBDn0drE9LHjTuDGjjqDNXf4VOo+x25s+G
+         laFg==
+X-Gm-Message-State: AJIora+LgJdmfp0mOeHM8lWaBBk7JqRB9uPiz/+445tFOVRK/9wrG4pX
+        RMZ47T9oyVS4OKWoH6BLvt9LEA==
+X-Google-Smtp-Source: AGRyM1uURdhPI99lDJvqkOTCp86a8zulQKgFl/xro0YHHIZMRm4Fw3TKtsoXL4ek9b2CUpM+7eruIw==
+X-Received: by 2002:a17:903:2443:b0:16a:2b65:7edd with SMTP id l3-20020a170903244300b0016a2b657eddmr332318pls.20.1656092921012;
+        Fri, 24 Jun 2022 10:48:41 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 2-20020a170902e9c200b00168ba5ac8adsm2111628plk.163.2022.06.24.10.48.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jun 2022 10:48:40 -0700 (PDT)
+Date:   Fri, 24 Jun 2022 10:48:39 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 3/4][next] scsi: megaraid_sas: Replace one-element
+ array with flexible-array member in MR_DRV_RAID_MAP
+Message-ID: <202206241047.903049ED@keescook>
+References: <cover.1628136510.git.gustavoars@kernel.org>
+ <b43d4083d9788bb746dc0b2205d6a67ebb609b0d.1628136510.git.gustavoars@kernel.org>
+ <202206221457.1A12D768EF@keescook>
+ <20220623014533.GA7132@embeddedor>
+ <20220623031401.GA8896@embeddedor>
+ <202206230816.1383511C@keescook>
+ <20220623153825.GA6458@embeddedor>
 MIME-Version: 1.0
-References: <20220613144550.3760857-1-ardb@kernel.org> <20220624131958.GG18561@willie-the-truck>
-In-Reply-To: <20220624131958.GG18561@willie-the-truck>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 24 Jun 2022 16:40:18 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFMG5dNwB9hSPe81KvsJdBgpyj2OqoBSh=kdafsQSW4MQ@mail.gmail.com>
-Message-ID: <CAMj1kXFMG5dNwB9hSPe81KvsJdBgpyj2OqoBSh=kdafsQSW4MQ@mail.gmail.com>
-Subject: Re: [PATCH v4 00/26] arm64: refactor boot flow and add support for WXN
-To:     Will Deacon <will@kernel.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-hardening@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220623153825.GA6458@embeddedor>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 24 Jun 2022 at 15:20, Will Deacon <will@kernel.org> wrote:
->
-> Hi Ard,
->
-> On Mon, Jun 13, 2022 at 04:45:24PM +0200, Ard Biesheuvel wrote:
-> > [ TL;DR this series does the following:
-> >   - move variable definitions and assignments out of early asm code
-> >     where possible, and get rid of explicit cache maintenance;
-> >   - convert initial ID map so it covers the entire loaded image as well
-> >     as the DT blob;
-> >   - create the kernel mapping only once instead of twice (for KASLR),
-> >     and do it with the MMU and caches on;
-> >   - avoid mappings that are both writable and executable entirely;
-> >   - avoid parsing the DT while the kernel text and rodata are still
-> >     mapped writable;
-> >   - allow WXN to be enabled (with an opt-out) so writable mappings are
-> >     never executable. ]
->
-> I really like this series -- it removes quite a few ugly warts from our
-> boot assembly that we've collected over the years and, while functional,
-> they have never been particularly satisfactory. Thank you for putting it
-> together.
->
-> I've left a handful of minor comments on some of the patches and if you
-> can address those then I'd like to queue the first 21 patches ASAP to
-> give them some more exposure before the next merge window.
->
+On Thu, Jun 23, 2022 at 05:38:25PM +0200, Gustavo A. R. Silva wrote:
+> Which object files are you comparing here? because I don't see the zero
+> change when comparing the before and after of megaraid_sas_fp.o with
+> the change you propose.
 
-I'll spin a v5 with just those patches, and we can revisit the
-remaining work at a later time.
+Hm, maybe I did something wrong. But I was looking at megaraid_sas_fp.o
 
-> The remaining patches are the WXN pieces, which I'd like to give others
-> a chance to chime in on first.
->
-> Cheers,
->
-> Will
+-- 
+Kees Cook
