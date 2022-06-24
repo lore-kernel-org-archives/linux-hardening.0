@@ -2,122 +2,167 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B809C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 23 Jun 2022 16:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF92C43334
+	for <linux-hardening@archiver.kernel.org>; Fri, 24 Jun 2022 12:36:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231160AbiFWQ33 (ORCPT
+        id S231238AbiFXMgN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 23 Jun 2022 12:29:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60590 "EHLO
+        Fri, 24 Jun 2022 08:36:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230272AbiFWQ32 (ORCPT
+        with ESMTP id S229830AbiFXMgL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 23 Jun 2022 12:29:28 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7315046B3E
-        for <linux-hardening@vger.kernel.org>; Thu, 23 Jun 2022 09:29:27 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id t3-20020a17090a510300b001ea87ef9a3dso71089pjh.4
-        for <linux-hardening@vger.kernel.org>; Thu, 23 Jun 2022 09:29:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2/BbUVh0cfAq2g3sTTEh1dhxjM0IAKM6s6X7XzEKPTg=;
-        b=VWllvdwMR3kg3Ed9OEhiULEzlVtdbGFjCVqY5hxwaSsPeVO0C4FtOn6i/ejhUxwhK7
-         5BaqtUspFCu1Oo+6JYQP9uzzM5huJBJSyWEXE1dg8jQ+FPKzN9E9Uf9zgpf+iuEHwhay
-         uQAGtCBiZz5u2eJnCGRK72yS3LfhQ+LwphT6Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2/BbUVh0cfAq2g3sTTEh1dhxjM0IAKM6s6X7XzEKPTg=;
-        b=fL13N/0uVe7kiw6u9HcXc9v/09azGXfFP2hQL1ZYYhfYuxsTN2XSXi5B0YZBtLDT+J
-         8BCSLH9cIxsgsz9dDyowQ+omp48fIvJd8MHUYm5wTsin+cXgZXcHaiJStePA1CNF6L54
-         EgqvqSAYlmqGjsP6L0t0fnioARjQe+u5MhlNU9UnFxkQVGLlXNDE8vxSoMbg0vJ7Pe0n
-         BIle14q6kMbYOtN7TUDWgzY1RTKvgjRtKIFFilDhlIG29UgIMCxHNLxStwkFToB7na/H
-         IxwYqbevf+cQdXHpT0nVxacv5EMExMPm0Vz+qi22UpsbOcpCRSn3VtQbYbK4rlyR0qlq
-         v22Q==
-X-Gm-Message-State: AJIora9j8JJvBngXC/6zsMzqsx3xZN0FhFTg+I8exIm8TCDjaIl6R5PU
-        yzaGmX7tOp6PU7Ez8HPOiNdnEQ==
-X-Google-Smtp-Source: AGRyM1sDLE9y8/LYsf2Bs4AoD2epoxqcEYkWHYEs7FdrsqvUm6zri1tArpRTJRcLpuvSTzkiIQvqdg==
-X-Received: by 2002:a17:90a:bb91:b0:1ec:7062:32cc with SMTP id v17-20020a17090abb9100b001ec706232ccmr4827208pjr.231.1656001766975;
-        Thu, 23 Jun 2022 09:29:26 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t66-20020a637845000000b004088f213f68sm15702091pgc.56.2022.06.23.09.29.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jun 2022 09:29:26 -0700 (PDT)
-Date:   Thu, 23 Jun 2022 09:29:25 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 8/8][next] scsi: aacraid: Replace one-element array with
- flexible-array member in struct aac_aifcmd
-Message-ID: <202206230926.8C76CFCC@keescook>
-References: <cover.1645513670.git.gustavoars@kernel.org>
- <7d0571ef5dc87904008c325a942cfed24dbbf42e.1645513670.git.gustavoars@kernel.org>
+        Fri, 24 Jun 2022 08:36:11 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 483964CD4E
+        for <linux-hardening@vger.kernel.org>; Fri, 24 Jun 2022 05:36:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AABC161C36
+        for <linux-hardening@vger.kernel.org>; Fri, 24 Jun 2022 12:36:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59B1FC34114;
+        Fri, 24 Jun 2022 12:36:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656074169;
+        bh=qS0WvydUMGkzxUfEfVLbi+q0Czzas7ZoRxwNwstvl2c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Vz2hrivxRLtV5aOLeMf7nLWH9z5Ory1F2dGbA+WErCEe/9rIkqhxA4DFW+8RBC+Ej
+         786B0J4v4yXPifTTp8P0bWBY2704+x6WmLy1ZDhx2OjlW9cCrtNv6I/xwL8fOiY3j8
+         sors15SBdgFgx2b3bfOZ/yCXz8kYh5bq4ofy0/dAhKbPeAj8kkZN+eYkoZiqhJoHZA
+         l0VcknsX8tupA52F+X3Kz0p6hRp0b1T8SE4yjOJNh1YXi+Lh3biovEiTywI8Clkp4E
+         FZJlWk0XRGIROGmpRwl5VQoNASn8w2wVaKNyl9te0ZzKYDZ81SrjWZQfsTUCCf93CB
+         Cm4tZURApJ7vQ==
+Date:   Fri, 24 Jun 2022 13:36:03 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-hardening@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH v4 03/26] arm64: head: move assignment of idmap_t0sz to C
+ code
+Message-ID: <20220624123602.GC18561@willie-the-truck>
+References: <20220613144550.3760857-1-ardb@kernel.org>
+ <20220613144550.3760857-4-ardb@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7d0571ef5dc87904008c325a942cfed24dbbf42e.1645513670.git.gustavoars@kernel.org>
+In-Reply-To: <20220613144550.3760857-4-ardb@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Feb 22, 2022 at 01:31:07AM -0600, Gustavo A. R. Silva wrote:
-> Replace one-element array with flexible-array member in struct
-> aac_aifcmd.
+On Mon, Jun 13, 2022 at 04:45:27PM +0200, Ard Biesheuvel wrote:
+> Setting idmap_t0sz involves fiddling with the caches if done with the
+> MMU off. Since we will be creating an initial ID map with the MMU and
+> caches off, and the permanent ID map with the MMU and caches on, let's
+> move this assignment of idmap_t0sz out of the startup code, and replace
+> it with a macro that simply issues the three instructions needed to
+> calculate the value wherever it is needed before the MMU is turned on.
 > 
-> This issue was found with the help of Coccinelle and audited and fixed,
-> manually.
-> 
-> Link: https://www.kernel.org/doc/html/v5.16/process/deprecated.html#zero-length-and-one-element-arrays
-> Link: https://github.com/KSPP/linux/issues/79
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 > ---
->  drivers/scsi/aacraid/aacraid.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/arm64/include/asm/assembler.h   | 14 ++++++++++++++
+>  arch/arm64/include/asm/mmu_context.h |  2 +-
+>  arch/arm64/kernel/head.S             | 13 +------------
+>  arch/arm64/mm/mmu.c                  |  5 ++++-
+>  arch/arm64/mm/proc.S                 |  2 +-
+>  5 files changed, 21 insertions(+), 15 deletions(-)
 > 
-> diff --git a/drivers/scsi/aacraid/aacraid.h b/drivers/scsi/aacraid/aacraid.h
-> index 97948cd5f13c..447feabf5360 100644
-> --- a/drivers/scsi/aacraid/aacraid.h
-> +++ b/drivers/scsi/aacraid/aacraid.h
-> @@ -2616,7 +2616,7 @@ struct aac_hba_info {
->  struct aac_aifcmd {
->  	__le32 command;		/* Tell host what type of notify this is */
->  	__le32 seqnum;		/* To allow ordering of reports (if necessary) */
-> -	u8 data[1];		/* Undefined length (from kernel viewpoint) */
-> +	u8 data[];		/* Undefined length (from kernel viewpoint) */
->  };
+> diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+> index 8c5a61aeaf8e..9468f45c07a6 100644
+> --- a/arch/arm64/include/asm/assembler.h
+> +++ b/arch/arm64/include/asm/assembler.h
+> @@ -359,6 +359,20 @@ alternative_cb_end
+>  	bfi	\valreg, \t1sz, #TCR_T1SZ_OFFSET, #TCR_TxSZ_WIDTH
+>  	.endm
 >  
->  /**
-> -- 
-> 2.27.0
-> 
+> +/*
+> + * idmap_get_t0sz - get the T0SZ value needed to cover the ID map
+> + *
+> + * Calculate the maximum allowed value for TCR_EL1.T0SZ so that the
+> + * entire ID map region can be mapped. As T0SZ == (64 - #bits used),
+> + * this number conveniently equals the number of leading zeroes in
+> + * the physical address of _end.
+> + */
+> +	.macro	idmap_get_t0sz, reg
+> +	adrp	\reg, _end
+> +	orr	\reg, \reg, #(1 << VA_BITS_MIN) - 1
+> +	clz	\reg, \reg
+> +	.endm
+> +
+>  /*
+>   * tcr_compute_pa_size - set TCR.(I)PS to the highest supported
+>   * ID_AA64MMFR0_EL1.PARange value
+> diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
+> index 6770667b34a3..6ac0086ebb1a 100644
+> --- a/arch/arm64/include/asm/mmu_context.h
+> +++ b/arch/arm64/include/asm/mmu_context.h
+> @@ -60,7 +60,7 @@ static inline void cpu_switch_mm(pgd_t *pgd, struct mm_struct *mm)
+>   * TCR_T0SZ(VA_BITS), unless system RAM is positioned very high in
+>   * physical memory, in which case it will be smaller.
+>   */
+> -extern u64 idmap_t0sz;
+> +extern int idmap_t0sz;
+>  extern u64 idmap_ptrs_per_pgd;
+>  
+>  /*
+> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+> index dc07858eb673..7f361bc72d12 100644
+> --- a/arch/arm64/kernel/head.S
+> +++ b/arch/arm64/kernel/head.S
+> @@ -299,22 +299,11 @@ SYM_FUNC_START_LOCAL(__create_page_tables)
+>  	 * physical address space. So for the ID map, use an extended virtual
+>  	 * range in that case, and configure an additional translation level
+>  	 * if needed.
+> -	 *
+> -	 * Calculate the maximum allowed value for TCR_EL1.T0SZ so that the
+> -	 * entire ID map region can be mapped. As T0SZ == (64 - #bits used),
+> -	 * this number conveniently equals the number of leading zeroes in
+> -	 * the physical address of __idmap_text_end.
+>  	 */
+> -	adrp	x5, __idmap_text_end
+> -	clz	x5, x5
+> +	idmap_get_t0sz x5
+>  	cmp	x5, TCR_T0SZ(VA_BITS_MIN) // default T0SZ small enough?
+>  	b.ge	1f			// .. then skip VA range extension
+>  
+> -	adr_l	x6, idmap_t0sz
+> -	str	x5, [x6]
+> -	dmb	sy
+> -	dc	ivac, x6		// Invalidate potentially stale cache line
+> -
+>  #if (VA_BITS < 48)
+>  #define EXTRA_SHIFT	(PGDIR_SHIFT + PAGE_SHIFT - 3)
+>  #define EXTRA_PTRS	(1 << (PHYS_MASK_SHIFT - EXTRA_SHIFT))
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 17b339c1a326..103bf4ae408d 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -43,7 +43,7 @@
+>  #define NO_CONT_MAPPINGS	BIT(1)
+>  #define NO_EXEC_MAPPINGS	BIT(2)	/* assumes FEAT_HPDS is not used */
+>  
+> -u64 idmap_t0sz = TCR_T0SZ(VA_BITS_MIN);
+> +int idmap_t0sz __ro_after_init;
+>  u64 idmap_ptrs_per_pgd = PTRS_PER_PGD;
+>  
+>  #if VA_BITS > 48
+> @@ -785,6 +785,9 @@ void __init paging_init(void)
+>  			       (u64)&vabits_actual + sizeof(vabits_actual));
+>  #endif
+>  
+> +	idmap_t0sz = min(63UL - __fls(__pa_symbol(_end)),
+> +			 TCR_T0SZ(VA_BITS_MIN));
 
-FWIW, this patch solves an -Warray-bounds warning that is seen under
--fstrict-flex-arrays=3 (coming soon[1]):
+nit: TCR_T0SZ shifts by TCR_T0SZ_OFFSET, so this is a bit confusing and
+works out because the register offset happens to be zero. Maybe it would
+be clearer to calculate the maximum of fls(__pa_symbol(_end)) and
+VA_BITS_MIN, then subtract that from 64?
 
-../drivers/scsi/aacraid/commsup.c:1166:17: warning: array index 1 is past the end of the array (which contains 1 element) [-Warray-bounds]
-                                (((__le32 *)aifcmd->data)[1] == cpu_to_le32(3));
-                                            ^             ~
-../drivers/scsi/aacraid/aacraid.h:2620:2: note: array 'data' declared here
-        u8 data[1];             /* Undefined length (from kernel viewpoint) */
-        ^
-../drivers/scsi/aacraid/commsup.c:1286:20: warning: array index 3 is past the end of the array (which contains 1 element) [-Warray-bounds]
-                                  ((((__le32 *)aifcmd->data)[3]
-                                               ^             ~
-../drivers/scsi/aacraid/aacraid.h:2620:2: note: array 'data' declared here
-        u8 data[1];             /* Undefined length (from kernel viewpoint) */
-        ^
-
-[1] new flag in GCC and Clang:
-    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836
-    https://reviews.llvm.org/D126864
-
-
--- 
-Kees Cook
+Will
