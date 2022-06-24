@@ -2,56 +2,53 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E51C43334
-	for <linux-hardening@archiver.kernel.org>; Fri, 24 Jun 2022 14:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AB2C433EF
+	for <linux-hardening@archiver.kernel.org>; Fri, 24 Jun 2022 14:40:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232546AbiFXOIn (ORCPT
+        id S233079AbiFXOkf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 24 Jun 2022 10:08:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60978 "EHLO
+        Fri, 24 Jun 2022 10:40:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232542AbiFXOIY (ORCPT
+        with ESMTP id S233072AbiFXOkd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 24 Jun 2022 10:08:24 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75CF11104
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Jun 2022 07:07:56 -0700 (PDT)
+        Fri, 24 Jun 2022 10:40:33 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 711EB67E58
+        for <linux-hardening@vger.kernel.org>; Fri, 24 Jun 2022 07:40:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EEA84B828E1
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Jun 2022 14:07:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B74D1C3411C
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Jun 2022 14:07:53 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2A9FEB82928
+        for <linux-hardening@vger.kernel.org>; Fri, 24 Jun 2022 14:40:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2578C34114
+        for <linux-hardening@vger.kernel.org>; Fri, 24 Jun 2022 14:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656079673;
-        bh=OuO3IGaiMX1jyhV5Q0106ndgwz1dBc9lmNN+E1HKGBY=;
+        s=k20201202; t=1656081629;
+        bh=wqqC+Sl/QvDz6aEMg+QncwWVY/RZj/e3vSpkojG6rXc=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cgY5+FuYq43uPUn1jzs2R54gCAaE9mhDntt8s50jh39StwyBZ5yo0XioaU4sHI5x4
-         cxxUSE5Jt4DiiHw2MJ041hGe4E+Sp+8eZehfiyliy4OmfNJYg9crIFFVX/Wer+mj9a
-         +sq8UFVzxacBa04dGMnW+aIDgMyHFFqdzL8rG9PL3UPoI1zzecr+MpmTXB9Yvw6jYW
-         gvGmv/aq/GJF997C+yU18/Q5kCsnnnyufihveR3b/gvlI3q727XfsURSO3KiCuBwCU
-         HkjNd8JNPFyoIEwxihlOIy9oE+AuzJeDqyY7mBINOFYlhG/HuJxuSYOKX8yU5G6l3n
-         IX36tfOGh6e2A==
-Received: by mail-ot1-f53.google.com with SMTP id s20-20020a056830439400b0060c3e43b548so1938242otv.7
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Jun 2022 07:07:53 -0700 (PDT)
-X-Gm-Message-State: AJIora/nAokL+/NIZShJ9cxhNYlt5JnE7ceAyNGyKUnPm8ql6wMu27Vo
-        LBb4yPzM3SMP5LEpMd74FkwEn+lecnFdKtPSrjg=
-X-Google-Smtp-Source: AGRyM1vEMM/K6j3LIG2OhERL8bSeheFnH55d2zYDIsMIh9R+f74mUI6b5FNUlOTVVYfTqhuOue5jzcud+LjGm6Lru7A=
-X-Received: by 2002:a9d:37a3:0:b0:60c:5427:1f56 with SMTP id
- x32-20020a9d37a3000000b0060c54271f56mr6266545otb.71.1656079672922; Fri, 24
- Jun 2022 07:07:52 -0700 (PDT)
+        b=mL/qEgf+txlTP9KLdfx3Mlky/et4Ot/Oh7F4bROnDOYLsh5s1Uy6Q5aHWKbaDTrwe
+         oxcOacWZGnXCazulre4neBxOmUvHF83HuDptYmZSYYxBDS3YB2nX64kRsQ2VYkT9Vi
+         f/FbazV8BDR3wFhBOhYmSrGZipgPlBzpLDzMMksHMJjrzoYJOAYlrOFe/9+iXUFyIh
+         /9v92tPsX8ENCzrcsGzB+J3QTiu4pxwRSR950tXEYDJbK2G5Xr1B1cXK8yrUZ3qWgX
+         VZyWYiccVqVGM2KEMNfd7Qut67f5hc0kU6kahbXk30rjDrDt9yr0fWHJY5YZSPYmXF
+         SwelpW7SlCFcQ==
+Received: by mail-oi1-f171.google.com with SMTP id s124so3937013oia.0
+        for <linux-hardening@vger.kernel.org>; Fri, 24 Jun 2022 07:40:29 -0700 (PDT)
+X-Gm-Message-State: AJIora9tT4YT9Br03egLR83Hvdj993fVPwIttt8Yqr1eUmV0pcFXSY1r
+        hzuGuc+MxcqMONh0+9UbAWdBzdM6GrvoVlhqNc8=
+X-Google-Smtp-Source: AGRyM1sy/MSLXTU6IyA4prYn1m1W/73YWU32M1lhDP3lVcdOXTvvsezQIQRqyqvAcj4iggSmaQ0UHsZ7jWUGhtXKNrI=
+X-Received: by 2002:a05:6808:300e:b0:32c:425e:df34 with SMTP id
+ ay14-20020a056808300e00b0032c425edf34mr2142360oib.126.1656081629092; Fri, 24
+ Jun 2022 07:40:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220613144550.3760857-1-ardb@kernel.org> <20220613144550.3760857-18-ardb@kernel.org>
- <20220624125631.GD18561@willie-the-truck> <CAMj1kXECtiAudxaWJG1Ve1_JJS_yc29A3cs_7CZj4F=iZ+4D+g@mail.gmail.com>
- <20220624132929.GH18561@willie-the-truck>
-In-Reply-To: <20220624132929.GH18561@willie-the-truck>
+References: <20220613144550.3760857-1-ardb@kernel.org> <20220624131958.GG18561@willie-the-truck>
+In-Reply-To: <20220624131958.GG18561@willie-the-truck>
 From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 24 Jun 2022 16:07:41 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHerHnU9dUS+_T7suv5psmCrZ0HK54UnUNEtNYqSjqO5Q@mail.gmail.com>
-Message-ID: <CAMj1kXHerHnU9dUS+_T7suv5psmCrZ0HK54UnUNEtNYqSjqO5Q@mail.gmail.com>
-Subject: Re: [PATCH v4 17/26] arm64: head: populate kernel page tables with
- MMU and caches on
+Date:   Fri, 24 Jun 2022 16:40:18 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFMG5dNwB9hSPe81KvsJdBgpyj2OqoBSh=kdafsQSW4MQ@mail.gmail.com>
+Message-ID: <CAMj1kXFMG5dNwB9hSPe81KvsJdBgpyj2OqoBSh=kdafsQSW4MQ@mail.gmail.com>
+Subject: Re: [PATCH v4 00/26] arm64: refactor boot flow and add support for WXN
 To:     Will Deacon <will@kernel.org>
 Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
         linux-hardening@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
@@ -65,67 +62,40 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 24 Jun 2022 at 15:29, Will Deacon <will@kernel.org> wrote:
+On Fri, 24 Jun 2022 at 15:20, Will Deacon <will@kernel.org> wrote:
 >
-> On Fri, Jun 24, 2022 at 03:07:44PM +0200, Ard Biesheuvel wrote:
-> > On Fri, 24 Jun 2022 at 14:56, Will Deacon <will@kernel.org> wrote:
-> > >
-> > > On Mon, Jun 13, 2022 at 04:45:41PM +0200, Ard Biesheuvel wrote:
-> > > > Now that we can access the entire kernel image via the ID map, we can
-> > > > execute the page table population code with the MMU and caches enabled.
-> > > > The only thing we need to ensure is that translations via TTBR1 remain
-> > > > disabled while we are updating the page tables the second time around,
-> > > > in case KASLR wants them to be randomized.
-> > > >
-> > > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > > > ---
-> > > >  arch/arm64/kernel/head.S | 62 +++++---------------
-> > > >  1 file changed, 16 insertions(+), 46 deletions(-)
+> Hi Ard,
 >
-> [...]
+> On Mon, Jun 13, 2022 at 04:45:24PM +0200, Ard Biesheuvel wrote:
+> > [ TL;DR this series does the following:
+> >   - move variable definitions and assignments out of early asm code
+> >     where possible, and get rid of explicit cache maintenance;
+> >   - convert initial ID map so it covers the entire loaded image as well
+> >     as the DT blob;
+> >   - create the kernel mapping only once instead of twice (for KASLR),
+> >     and do it with the MMU and caches on;
+> >   - avoid mappings that are both writable and executable entirely;
+> >   - avoid parsing the DT while the kernel text and rodata are still
+> >     mapped writable;
+> >   - allow WXN to be enabled (with an opt-out) so writable mappings are
+> >     never executable. ]
 >
-> > > > @@ -886,9 +857,8 @@ SYM_FUNC_START_LOCAL(__primary_switch)
-> > > >        * to take into account by discarding the current kernel mapping and
-> > > >        * creating a new one.
-> > > >        */
-> > > > -     pre_disable_mmu_workaround
-> > > > -     msr     sctlr_el1, x20                  // disable the MMU
-> > > > -     isb
-> > > > +     adrp    x1, reserved_pg_dir             // Disable translations via TTBR1
-> > > > +     load_ttbr1 x1, x1, x2
-> > >
-> > > I'd have thought we'd need some TLB maintenance here... is that not the
-> > > case?
-> > >
-> >
-> > You mean at this particular point? We are running from the ID map with
-> > TTBR1 translations disabled. We clear the page tables, repopulate
-> > them, and perform a TLBI VMALLE1.
-> >
-> > So are you saying repopulating the page tables while translations are
-> > disabled needs to occur only after doing TLB maintenance?
+> I really like this series -- it removes quite a few ugly warts from our
+> boot assembly that we've collected over the years and, while functional,
+> they have never been particularly satisfactory. Thank you for putting it
+> together.
 >
-> I'm thinking about walk cache entries from the previous page-table, which
-> would make the reserved_pg_dir ineffective. However, if we're clearing the
-> page-table anyway, I'm not even sure why we need reserved_pg_dir at all!
+> I've left a handful of minor comments on some of the patches and if you
+> can address those then I'd like to queue the first 21 patches ASAP to
+> give them some more exposure before the next merge window.
 >
 
-Perhaps not. But this code is removed again two patches later so it
-doesn't matter that much to begin with.
+I'll spin a v5 with just those patches, and we can revisit the
+remaining work at a later time.
 
-> > > Also, it might be a tiny bit easier to clear EPD1 instead of using the
-> > > reserved_pg_dir.
-> > >
-> >
-> > Right. So is there any reason in particular why it would be
-> > appropriate here but not anywhere else? IOW, why do we have
-> > reserved_pg_dir in the first place if we can just flick EPD1 on and
-> > off?
+> The remaining patches are the WXN pieces, which I'd like to give others
+> a chance to chime in on first.
 >
-> I think using a reserved (all zeroes) page-table makes sense when it
-> has its own ASID, as you can switch to/from it without TLB invalidation,
-> but that doesn't seem to be the case here. Anyway, no strong preference,
-> I just thought it might simplify things a bit.
+> Cheers,
 >
-
-Ah right, I hadn't considered ASIDs.
+> Will
