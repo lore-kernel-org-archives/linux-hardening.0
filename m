@@ -2,118 +2,171 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E189CCA481
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Jun 2022 07:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEACC43334
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Jun 2022 09:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243163AbiF1H1w convert rfc822-to-8bit (ORCPT
+        id S244091AbiF1JMI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 28 Jun 2022 03:27:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57784 "EHLO
+        Tue, 28 Jun 2022 05:12:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242985AbiF1H1h (ORCPT
+        with ESMTP id S230321AbiF1JMH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 28 Jun 2022 03:27:37 -0400
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C165B2CE26;
-        Tue, 28 Jun 2022 00:27:35 -0700 (PDT)
-Received: by mail-qv1-f41.google.com with SMTP id i17so18728446qvo.13;
-        Tue, 28 Jun 2022 00:27:35 -0700 (PDT)
+        Tue, 28 Jun 2022 05:12:07 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E179810578
+        for <linux-hardening@vger.kernel.org>; Tue, 28 Jun 2022 02:12:06 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id c6-20020a17090abf0600b001eee794a478so4539584pjs.1
+        for <linux-hardening@vger.kernel.org>; Tue, 28 Jun 2022 02:12:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UFQyZOsSkCrYQ7MZEggCtW+LaHDom066so1nv673ryA=;
+        b=Nka4ZuJZ2ZKAhBMFQN6jpES+mkMWGXoWrCciji+i6o0qhav5iQDrL3sD7Cck3tkZ/s
+         xhQI9XBoyWgvW5yUxOYQGyku1ref0IEz8wmgFLxh+DQz+2vtIf8uMvnB4Wl+fXgRh0ug
+         xW7FrkREFs7zzpMT0GxJJ4LVfWX738fOqELzY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hwgLtruPC06mcRCnQAsf+kJqHCP1mf00hTNnpiQ34M0=;
-        b=3tQxdeTXaeHedyn+zuV/55ACvAhAXmWcP4mEBFJ7jzsyYq6RsSgMON/8hhCXyPFuse
-         MLSN3K1iygLYNzbYfsEUEZlABb1G1eppIZbae+40fb4YMxpctrE+lrJz3qET/ldo5zGd
-         37edeyXGnan1cSc5wL4OCPTZESLkJDeXBVsf5Jitdq4F2SUoLicy4d+r65QQwFBoAQaF
-         rVmUy/gVspn4buiPbwq5cSH0lOm6yf061HBv7eJrhJeCu9Xa08CHGXWzt6wFcbBU42zO
-         cc0C2wJwrVFqggLP3rTWVXzc4tL0SV7qsxw7pHWn+6UvTIPwY9qNnceTZYR/8yu6Ppqr
-         0hkQ==
-X-Gm-Message-State: AJIora91XfpVhN+yRTRlxkAy8ZQagB28kxgOh0hSO/dgpIY4a+cEmxEM
-        RRrXPZ914wNJxYzvqW7oNwha7fO41WOfPA==
-X-Google-Smtp-Source: AGRyM1vuyurBth3w/1QAUlj3nOiF8B4hIrD4wqWY4IUnkxCMfrPNbOyI3fDTEu0sS0pUw3shJaj5og==
-X-Received: by 2002:a05:622a:647:b0:306:6b30:bd0a with SMTP id a7-20020a05622a064700b003066b30bd0amr12004710qtb.327.1656401254977;
-        Tue, 28 Jun 2022 00:27:34 -0700 (PDT)
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
-        by smtp.gmail.com with ESMTPSA id f14-20020a05620a408e00b006a5d2eb58b2sm11643530qko.33.2022.06.28.00.27.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jun 2022 00:27:34 -0700 (PDT)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-3176b6ed923so107319457b3.11;
-        Tue, 28 Jun 2022 00:27:33 -0700 (PDT)
-X-Received: by 2002:a81:a092:0:b0:318:5c89:a935 with SMTP id
- x140-20020a81a092000000b003185c89a935mr20762801ywg.383.1656401253054; Tue, 28
- Jun 2022 00:27:33 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=UFQyZOsSkCrYQ7MZEggCtW+LaHDom066so1nv673ryA=;
+        b=sr63RAU6Zjd9pfHnKbcmqXrFd9DzW/PMul0d7QA4c63xwvpouD0X4C0m03LMNpnCN2
+         I1EQvdKhITNKtUvOofWMKI4vRxZrb/5FbEKprNCl4CD9f7sgie3Ld4evBzbHmUXwLfso
+         V6nlw0hJR4lcPEVV8RJsjmVPQ1i8r1imcXriEEe3f+ai65t1OUr3TTAUdTSmEJ+hdvee
+         1j89BGVV0bzZ1VZXmjrxi+CVz6xvUG6JOIaCdZ7b5t30vNE15+hUIvOUuEHdABxqvnrJ
+         2qoon+VZmSFCm8OU77DgIHqoQUDG82yPvPe9E2hhrFgEVUVAR8Cwx8/DBnOSMDJQ/1za
+         jiyA==
+X-Gm-Message-State: AJIora+FkezP3ZE4843wslZU3xaRNwciRfXE2RoV/M2TiZmh/MVQ78Aw
+        kAdLcKfvfB5BV7KD3MF3Fu+jsSsiFd2lfvEXS1u6Uj/nWf19dU0P
+X-Google-Smtp-Source: AGRyM1sljnanmLVbkWsrQjJWf4hs95fxWBDprIr3a/0OvrXjHDZTivI98eNg/qiZ7qBH5EPJCfU27pTZ6p9ScvBdg0E=
+X-Received: by 2002:a17:903:228d:b0:16a:59bc:6132 with SMTP id
+ b13-20020a170903228d00b0016a59bc6132mr2720704plh.126.1656407526221; Tue, 28
+ Jun 2022 02:12:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220627180432.GA136081@embeddedor>
-In-Reply-To: <20220627180432.GA136081@embeddedor>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 28 Jun 2022 09:27:21 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU27TG_rpd=WTRPRcY22A4j4aN-6d_8OmK2aNpX06G3ig@mail.gmail.com>
-Message-ID: <CAMuHMdU27TG_rpd=WTRPRcY22A4j4aN-6d_8OmK2aNpX06G3ig@mail.gmail.com>
-Subject: Re: [PATCH][next] treewide: uapi: Replace zero-length arrays with
- flexible-array members
+References: <cover.1628136510.git.gustavoars@kernel.org> <b43d4083d9788bb746dc0b2205d6a67ebb609b0d.1628136510.git.gustavoars@kernel.org>
+ <202206221457.1A12D768EF@keescook> <20220623014533.GA7132@embeddedor> <20220623031401.GA8896@embeddedor>
+In-Reply-To: <20220623031401.GA8896@embeddedor>
+From:   Sumit Saxena <sumit.saxena@broadcom.com>
+Date:   Tue, 28 Jun 2022 14:41:40 +0530
+Message-ID: <CAL2rwxpJtu8kTh=ia7-8ih5wad4vseU1WOu8vh--A1DY3gfc9Q@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4][next] scsi: megaraid_sas: Replace one-element
+ array with flexible-array member in MR_DRV_RAID_MAP
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>, dm-devel@redhat.com,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>,
-        linux-can@vger.kernel.org,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux1394-devel@lists.sourceforge.net, io-uring@vger.kernel.org,
-        lvs-devel@vger.kernel.org,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        nvdimm@lists.linux.dev,
-        NetFilter <netfilter-devel@vger.kernel.org>,
-        coreteam@netfilter.org, linux-perf-users@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        scsi <linux-scsi@vger.kernel.org>,
-        target-devel <target-devel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        V9FS Developers <v9fs-developer@lists.sourceforge.net>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="0000000000003b308d05e27e6e1d"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Gustavo,
+--0000000000003b308d05e27e6e1d
+Content-Type: text/plain; charset="UTF-8"
 
-Thanks for your patch!
+>
+> BTW, I'd really like to get some input from the maintainers of this
+> code. :)
+Original patch along with the below change looks good.
 
-On Mon, Jun 27, 2022 at 8:04 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
-> There is a regular need in the kernel to provide a way to declare
-> having a dynamically sized set of trailing elements in a structure.
-> Kernel code should always use “flexible array members”[1] for these
-> cases. The older style of one-element or zero-length arrays should
-> no longer be used[2].
+@@ -1193,7 +1193,7 @@ struct MR_DRV_RAID_MAP {
+ struct MR_DRV_RAID_MAP_ALL {
 
-These rules apply to the kernel, but uapi is not considered part of the
-kernel, so different rules apply.  Uapi header files should work with
-whatever compiler that can be used for compiling userspace.
+        struct MR_DRV_RAID_MAP raidMap;
+-       struct MR_LD_SPAN_MAP ldSpanMap[MAX_LOGICAL_DRIVES_DYN - 1];
++       struct MR_LD_SPAN_MAP ldSpanMap[MAX_LOGICAL_DRIVES_DYN];
+ } __packed;
 
-Gr{oetje,eeting}s,
+I will test it and then can provide an Acked-by/Tested-by tag.
 
-                        Geert
+Thanks,
+Sumit
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+--0000000000003b308d05e27e6e1d
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+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
+GmgWG68YahkDuVSTTt2beZdyMeDwq/KifJFo18EkhcL3e7rmDAh8SniUI/0o3HX6hrgdmUI1wSdz
+uIVL/m6Ok9mIl2U5kvguitOSC0bVaQPfNzlj+7PCKBECAwEAAaOCAdowggHWMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJAYDVR0R
+BB0wG4EZc3VtaXQuc2F4ZW5hQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNV
+HSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUNz+JSIXEXl2uQ4Utcnx7FnFi
+hhowDQYJKoZIhvcNAQELBQADggEBAL0HLbxgPSW4BFbbIMN3A/ifBg4Lzaph8ARJOnZpGQivo9jG
+kQOd95knQi9Lm95JlBAJZCqXXj7QS+dnE71tsFeHWcHNNxHrTSwn4Xi5EqaRjLC6g4IEPyZHWDrD
+zzJidgfwQvfZONkf4IXnnrIEFle+26/gPs2kOjCeLMo6XGkNC4HNla1ol1htToQaNN8974pCqwIC
+rTXcWqD03VkqSOo+oPP/NAgFAZVfpeuBoK2Xv8zYlrF49Q4hxgFpWhaiDsZUSdWIS7vg1ak1n+6L
+3aHRY/lheSkOn/uJWXsqsTDp613hVtOTEDsHSQK32yTGr8jN/oRQgJASuUqQFdD4VzAxggJtMIIC
+aQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQD
+EyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwoQTpBmhDxj9JoN1ow
+DQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIHVvJNSJGI4QzEMesKecjq3cUSYDUPJR
+V7YIudKKp940MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIyMDYy
+ODA5MTIwNlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQC
+ATANBgkqhkiG9w0BAQEFAASCAQAtJ4CFsKLyw8wpHQ/lorMgd64/IuM/zc28yWySGT69a+q/rKsq
+kfEeNOGOtvq9/70ryYSabkQfmrFPlKocTWFd6WXNbru2j3MQU+/Kv3dmcWdbmN8+Sutb7aR3L6ct
+3pm2nYxatBNqqn5mn2roIMRMwHQ9s+NgrHXwgPUczDBFrq6SZapIxK/+DGYvCxktzLJjKymojp4T
+kkY6smoc2wZH3BZl826hvqm60cP3GBOaDdsfkVsOX7wRu7mGb7byoAaNIY4N1HrXqcuexw6y1Vn9
+JCTDMBWdEvrfedLpURkuROIwnJ9An/UyOrKk9+lpyxcAdpOoVdLGK5ItZ7cPGaJJ
+--0000000000003b308d05e27e6e1d--
