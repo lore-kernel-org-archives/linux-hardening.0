@@ -2,27 +2,27 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA90CCA47F
-	for <linux-hardening@archiver.kernel.org>; Fri,  1 Jul 2022 08:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A295DC433EF
+	for <linux-hardening@archiver.kernel.org>; Fri,  1 Jul 2022 08:28:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235608AbiGAI2t (ORCPT
+        id S235195AbiGAI2v (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 1 Jul 2022 04:28:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58988 "EHLO
+        Fri, 1 Jul 2022 04:28:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237043AbiGAI2S (ORCPT
+        with ESMTP id S237068AbiGAI2U (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 1 Jul 2022 04:28:18 -0400
+        Fri, 1 Jul 2022 04:28:20 -0400
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86D2470E43;
-        Fri,  1 Jul 2022 01:27:15 -0700 (PDT)
-Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LZ7Wd62dZzTgCq;
-        Fri,  1 Jul 2022 16:23:41 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51DB370AFE;
+        Fri,  1 Jul 2022 01:27:25 -0700 (PDT)
+Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LZ7Wq6kx8zTgHP;
+        Fri,  1 Jul 2022 16:23:51 +0800 (CST)
 Received: from ubuntu1804.huawei.com (10.67.174.58) by
  dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 1 Jul 2022 16:27:13 +0800
+ 15.1.2375.24; Fri, 1 Jul 2022 16:27:23 +0800
 From:   Xiu Jianfeng <xiujianfeng@huawei.com>
 To:     <mpe@ellerman.id.au>, <benh@kernel.crashing.org>,
         <paulus@samba.org>, <npiggin@gmail.com>,
@@ -30,10 +30,12 @@ To:     <mpe@ellerman.id.au>, <benh@kernel.crashing.org>,
         <mark.rutland@arm.com>
 CC:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
         <linux-hardening@vger.kernel.org>
-Subject: [PATCH -next v3 0/2] powerpc: add support for syscall stack randomization
-Date:   Fri, 1 Jul 2022 16:24:33 +0800
-Message-ID: <20220701082435.126596-1-xiujianfeng@huawei.com>
+Subject: [PATCH -next v3 2/2] powerpc: add support for syscall stack randomization
+Date:   Fri, 1 Jul 2022 16:24:35 +0800
+Message-ID: <20220701082435.126596-3-xiujianfeng@huawei.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20220701082435.126596-1-xiujianfeng@huawei.com>
+References: <20220701082435.126596-1-xiujianfeng@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.174.58]
@@ -44,31 +46,99 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+Add support for adding a random offset to the stack while handling
+syscalls. This patch uses mftb() instead of get_random_int() for better
+performance.
 
-This patchset adds support for syscall stack randomization for
-powerpc, which can make harder the various stack-based attacks that
-rely on deterministic stack structure.
+In order to avoid unconditional stack canaries on syscall entry (due to
+the use of alloca()), also disable stack protector to avoid triggering
+needless checks and slowing down the entry path. As there is no general
+way to control stack protector coverage with a function attribute, this
+must be disabled at the compilation unit level.
 
-Changes in v3:
-  -add a lead-up patch to move system_call_exception() to syscall.c to
-  avoid disabling stack protector for all functions in interrupt.c
-Changes in v2:
-  -move choose choose_random_kstack_offset() to the end of system_call_exception
-  -allow full 6 (10) bits of entropy
-  -disable stack-protector for interrupt.c
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+---
+ arch/powerpc/Kconfig          |  1 +
+ arch/powerpc/kernel/Makefile  |  7 +++++++
+ arch/powerpc/kernel/syscall.c | 19 ++++++++++++++++++-
+ 3 files changed, 26 insertions(+), 1 deletion(-)
 
-Xiu Jianfeng (2):
-  powerpc: Move system_call_exception() to syscall.c
-  powerpc: add support for syscall stack randomization
-
- arch/powerpc/Kconfig            |   1 +
- arch/powerpc/kernel/Makefile    |   9 +-
- arch/powerpc/kernel/interrupt.c | 161 ---------------------------
- arch/powerpc/kernel/syscall.c   | 190 ++++++++++++++++++++++++++++++++
- 4 files changed, 199 insertions(+), 162 deletions(-)
- create mode 100644 arch/powerpc/kernel/syscall.c
-
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index c2ce2e60c8f0..a402b97abc9c 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -195,6 +195,7 @@ config PPC
+ 	select HAVE_ARCH_KASAN			if PPC_RADIX_MMU
+ 	select HAVE_ARCH_KASAN_VMALLOC		if HAVE_ARCH_KASAN
+ 	select HAVE_ARCH_KFENCE			if PPC_BOOK3S_32 || PPC_8xx || 40x
++	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
+ 	select HAVE_ARCH_KGDB
+ 	select HAVE_ARCH_MMAP_RND_BITS
+ 	select HAVE_ARCH_MMAP_RND_COMPAT_BITS	if COMPAT
+diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+index ecfd333b95d1..c29a58ea6e31 100644
+--- a/arch/powerpc/kernel/Makefile
++++ b/arch/powerpc/kernel/Makefile
+@@ -53,6 +53,13 @@ CFLAGS_cputable.o += -DDISABLE_BRANCH_PROFILING
+ CFLAGS_btext.o += -DDISABLE_BRANCH_PROFILING
+ endif
+ 
++#ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
++# Remove stack protector to avoid triggering unneeded stack canary
++# checks due to randomize_kstack_offset.
++CFLAGS_REMOVE_syscall.o = -fstack-protector -fstack-protector-strong
++CFLAGS_syscall.o += -fno-stack-protector
++#endif
++
+ obj-y				:= cputable.o syscalls.o \
+ 				   irq.o align.o signal_$(BITS).o pmc.o vdso.o \
+ 				   process.o systbl.o idle.o \
+diff --git a/arch/powerpc/kernel/syscall.c b/arch/powerpc/kernel/syscall.c
+index 4d5689eeaf25..9a30fe0d3a93 100644
+--- a/arch/powerpc/kernel/syscall.c
++++ b/arch/powerpc/kernel/syscall.c
+@@ -2,6 +2,7 @@
+ 
+ #include <linux/compat.h>
+ #include <linux/context_tracking.h>
++#include <linux/randomize_kstack.h>
+ 
+ #include <asm/interrupt.h>
+ #include <asm/kup.h>
+@@ -18,10 +19,12 @@ notrace long system_call_exception(long r3, long r4, long r5,
+ 				   long r6, long r7, long r8,
+ 				   unsigned long r0, struct pt_regs *regs)
+ {
++	long ret;
+ 	syscall_fn f;
+ 
+ 	kuap_lock();
+ 
++	add_random_kstack_offset();
+ 	regs->orig_gpr3 = r3;
+ 
+ 	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
+@@ -169,5 +172,19 @@ notrace long system_call_exception(long r3, long r4, long r5,
+ 		f = (void *)sys_call_table[r0];
+ 	}
+ 
+-	return f(r3, r4, r5, r6, r7, r8);
++	ret = f(r3, r4, r5, r6, r7, r8);
++	/*
++	 * Ultimately, this value will get limited by KSTACK_OFFSET_MAX(),
++	 * so the maximum stack offset is 1k bytes(10 bits).
++	 *
++	 * The actual entropy will be further reduced by the compiler when
++	 * applying stack alignment constraints: the powerpc architecture
++	 * may have two kinds of stack alignment(16-bytes and 8-bytes).
++	 *
++	 * So the resulting 6 or 7 bits of entropy is seen in SP[9:4] or SP[9:3].
++	 *
++	 */
++	choose_random_kstack_offset(mftb());
++
++	return ret;
+ }
 -- 
 2.17.1
 
