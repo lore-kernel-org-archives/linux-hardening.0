@@ -2,86 +2,67 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13637C43334
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Jul 2022 23:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C66D2C43334
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Jul 2022 07:18:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230238AbiGMX4K (ORCPT
+        id S231887AbiGNHSp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Jul 2022 19:56:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33554 "EHLO
+        Thu, 14 Jul 2022 03:18:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230428AbiGMX4J (ORCPT
+        with ESMTP id S230379AbiGNHSo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Jul 2022 19:56:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAF1D25C68;
-        Wed, 13 Jul 2022 16:56:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5B77061B9F;
-        Wed, 13 Jul 2022 23:56:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43B93C34114;
-        Wed, 13 Jul 2022 23:56:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657756567;
-        bh=w9QDpjFt83SVkoNzE3l0IoLYZGIJ/X2ZtHlBTIBu8Z0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jRi9OIcKQZDIv4bg9ROG7Gk+uipvkviz+N2F5AeEN6E7sWSiLVn0m122+TL2jL66C
-         9js1R0g/eFgVsIlOCFCtFunJW+52xs3cXL7yKUT4bIUWi8zoXV3mUGSyTycRsfflRS
-         OMsvHO8RSZiEzq3++c7SOq1YTAXykY4FsJSFQDc12IVNvFR/Jppbb9Jji90fOwEYEv
-         iPVfg3QUorhkaiw4LWmRgXndKqM/qtAyisTa6M9VgWUG91jAyDQMUm3DhPsu1ecxnd
-         WZHDJljmQW87pJmoPI8A3cJA0pd3rZi4pmTUwEagzBmcTCk60hzuXMcxNuMHE+yHMm
-         WUMljUgRL1utQ==
-Date:   Wed, 13 Jul 2022 16:56:05 -0700
-From:   Josh Poimboeuf <jpoimboe@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        Thu, 14 Jul 2022 03:18:44 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38979B4A6;
+        Thu, 14 Jul 2022 00:18:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=hy6ATVtW3qTg9csBjNFE7NoUXp1j3O11i3rGU3Oly6A=; b=H6ZmTn0ZljpTt2Id6yblR8ab0u
+        ykG1/IVzM05NrHnkE7ht9wJQn/O7nYCSpvliAsz/IAyfd3asLpOrXYrWS+45fgYeB5fT5wZOpZSnp
+        p0PiQIGtAxZ74YzpP+b3vLGuFv+rYYSSTJZMGGsUGK6gIc1AzsZTpPcOPRJD7k+5PV9rhAapm4HNs
+        XPhhiOv4mj3z893lBN2b4sPoREUXuvP0nnGjBzIlnC77Sv85093CrylFMISrWjioGt6/fHy7L1zBQ
+        McaBbPGg7K0XcCbmf0R8iGFoisH0q2rP+NsHi2HPZ9XhSVd0gGpUICv5C0gB8pLEgURi6VPNMApSm
+        BsZnqgJA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=worktop.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oBt6z-003mrT-K3; Thu, 14 Jul 2022 07:18:14 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 69F62980083; Thu, 14 Jul 2022 09:18:12 +0200 (CEST)
+Date:   Thu, 14 Jul 2022 09:18:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        kernel test robot <oliver.sang@intel.com>, x86@kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Song Liu <song@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86/alternative: Report missing return thunk details
-Message-ID: <20220713235605.k5gblq46okdyl6eg@treble>
-References: <20220713213819.460771-1-keescook@chromium.org>
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86: Allow for exclusions in checking RETHUNK
+Message-ID: <Ys/DNIyc+4ju7Qmb@worktop.programming.kicks-ass.net>
+References: <20220713213133.455599-1-keescook@chromium.org>
+ <20220713235556.umnau6nd7u6bz72m@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220713213819.460771-1-keescook@chromium.org>
+In-Reply-To: <20220713235556.umnau6nd7u6bz72m@treble>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jul 13, 2022 at 02:38:19PM -0700, Kees Cook wrote:
-> Debugging missing return thunks is easier if we can see where they're
-> happening.
-> 
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Link: https://lore.kernel.org/lkml/Ys66hwtFcGbYmoiZ@hirez.programming.kicks-ass.net/
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: x86@kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/x86/kernel/alternative.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> index d6858533e6e5..62f6b8b7c4a5 100644
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -555,7 +555,9 @@ void __init_or_module noinline apply_returns(s32 *start, s32 *end)
->  			dest = addr + insn.length + insn.immediate.value;
->  
->  		if (__static_call_fixup(addr, op, dest) ||
-> -		    WARN_ON_ONCE(dest != &__x86_return_thunk))
-> +		    WARN_ONCE(dest != &__x86_return_thunk,
-> +			      "missing return thunk: %pS-%pS: %*ph",
-> +			      addr, dest, 5, addr))
+On Wed, Jul 13, 2022 at 04:55:56PM -0700, Josh Poimboeuf wrote:
+> Here's the ANNOTATE_UNSAFE_RET idea.
 
-String needs a newline?
+Right, I suppose that strictly speaking the compiler can do whatever and
+there's no actual guarantee the annotation hits the RET instruction, in
+practise it should work, esp. since noinstr.
 
--- 
-Josh
+> Most of the diff is moving the
+> annotation macros to objtool.h (where they belong anyway).
+
+Yeah, moving those is a good idea.
+
