@@ -2,38 +2,38 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 525F1C433EF
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Jul 2022 18:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F80C43334
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Jul 2022 18:56:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231500AbiGNSuY (ORCPT
+        id S232411AbiGNS4U (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Jul 2022 14:50:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36074 "EHLO
+        Thu, 14 Jul 2022 14:56:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239182AbiGNSuK (ORCPT
+        with ESMTP id S240857AbiGNS4J (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Jul 2022 14:50:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F53491F1;
-        Thu, 14 Jul 2022 11:50:09 -0700 (PDT)
+        Thu, 14 Jul 2022 14:56:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB7D052FDE;
+        Thu, 14 Jul 2022 11:56:08 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F3B35621B2;
-        Thu, 14 Jul 2022 18:50:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DED97C34114;
-        Thu, 14 Jul 2022 18:50:07 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 67C67621CA;
+        Thu, 14 Jul 2022 18:56:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52A40C34115;
+        Thu, 14 Jul 2022 18:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657824608;
-        bh=TCqABXXcBNiycVEd9peMznw1VBAKPiSMiV1dL+tUSR8=;
+        s=k20201202; t=1657824967;
+        bh=+ZOvdOzIC7YR92oUFLadXRVxAToyaeU6SifrGlQywlw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qzgvOCcsy5Em/AwO9hrbVqhQOgRBWrFIiOIgcaNVJ9zE/4Tkc75GT0w1waJzQ8nVN
-         cx72onxjJwHo5n5TWukISjD2gra+A8Fb9B0swFiOgp1nbvXInA2zeEqrYMgE/MkyFm
-         uoo6e0EqOJ3gCdm6GCkZGbAOKMZ/G8kgejfj6e6M/iGrD1o0casitascKwKh5uU4UE
-         EeGMDEyizBSqtihv7dmpMwFfsFRi2VwtJuIcl+72dqdgZyKqfdpMtmgFOqFFM6OR6Q
-         5W4svVAVQ1O13NIwK3ixKq5amA+2Cft0LmkBo0+GG5VJNnQMRvah/Qao4P932yWYUd
-         pdPt9UN1xX94A==
-Date:   Thu, 14 Jul 2022 11:50:06 -0700
+        b=Vx+66pXmPtRqPnGfb4OJBxq0UEfRc3tvUTS9vbmDlfFmAcASbAtSTESeJzXtYC9Br
+         3Je4BHW58oUg0/qdWp4ErKgP9pQK5L3csvGiwizpFnu2WcLbeej5eIhccUNxt5zZ15
+         4KAoT7ILR21Eu664SM1/v5Qq7EZgUw6gdrv9lO/JjrvA81dFhKeuUL7efCi/IxCMH0
+         Lkr97wudEPAp42XplAjUGOmvuhHpggLcVZ9VP5nCWZViXXB+JM2cO2hErFOfcYiN0h
+         Ph0aCK6tUoZnEWT8I/g642BaWw985Non9HRv2PMAshqteJvU8iFesCoNiZ2Vi2ugW8
+         5zeEYqHGttnMQ==
+Date:   Thu, 14 Jul 2022 11:56:05 -0700
 From:   Josh Poimboeuf <jpoimboe@kernel.org>
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -45,35 +45,39 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] x86: Allow for exclusions in checking RETHUNK
-Message-ID: <20220714185006.6brfnnzhz7p7zw3u@treble>
+Message-ID: <20220714185605.jo5iubnsgz6jr2wb@treble>
 References: <20220713213133.455599-1-keescook@chromium.org>
  <20220713235556.umnau6nd7u6bz72m@treble>
  <Ys/DNIyc+4ju7Qmb@worktop.programming.kicks-ass.net>
+ <20220714185006.6brfnnzhz7p7zw3u@treble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Ys/DNIyc+4ju7Qmb@worktop.programming.kicks-ass.net>
+In-Reply-To: <20220714185006.6brfnnzhz7p7zw3u@treble>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jul 14, 2022 at 09:18:12AM +0200, Peter Zijlstra wrote:
-> On Wed, Jul 13, 2022 at 04:55:56PM -0700, Josh Poimboeuf wrote:
-> > Here's the ANNOTATE_UNSAFE_RET idea.
+On Thu, Jul 14, 2022 at 11:50:08AM -0700, Josh Poimboeuf wrote:
+> On Thu, Jul 14, 2022 at 09:18:12AM +0200, Peter Zijlstra wrote:
+> > On Wed, Jul 13, 2022 at 04:55:56PM -0700, Josh Poimboeuf wrote:
+> > > Here's the ANNOTATE_UNSAFE_RET idea.
+> > 
+> > Right, I suppose that strictly speaking the compiler can do whatever and
+> > there's no actual guarantee the annotation hits the RET instruction, in
+> > practise it should work, esp. since noinstr.
 > 
-> Right, I suppose that strictly speaking the compiler can do whatever and
-> there's no actual guarantee the annotation hits the RET instruction, in
-> practise it should work, esp. since noinstr.
+> Hm, KASAN is introducing a weird function, resulting in a naked return
+> warning since we have RETHUNK_CFLAGS removed on that file.
+> 
+> 0000000000000000 <_sub_I_00099_0>:
+>    0:	e8 00 00 00 00       	call   5 <_sub_I_00099_0+0x5>	1: R_X86_64_PLT32	__tsan_init-0x4
+>    5:	c3                   	ret    
+> 
+> 
+> Looks like the "KASAN_SANITIZE_rodata.o := n" isn't working somehow?
 
-Hm, KASAN is introducing a weird function, resulting in a naked return
-warning since we have RETHUNK_CFLAGS removed on that file.
-
-0000000000000000 <_sub_I_00099_0>:
-   0:	e8 00 00 00 00       	call   5 <_sub_I_00099_0+0x5>	1: R_X86_64_PLT32	__tsan_init-0x4
-   5:	c3                   	ret    
-
-
-Looks like the "KASAN_SANITIZE_rodata.o := n" isn't working somehow?
+Oh never mind, I got KASAN/KCSCAN mixed up.  Needs both disabled :-/
 
 -- 
 Josh
