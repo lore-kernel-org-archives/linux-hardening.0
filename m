@@ -2,87 +2,78 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF7DCCA47C
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Jul 2022 08:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525F1C433EF
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Jul 2022 18:50:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbiGNIzr (ORCPT
+        id S231500AbiGNSuY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Jul 2022 04:55:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49130 "EHLO
+        Thu, 14 Jul 2022 14:50:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237477AbiGNIzq (ORCPT
+        with ESMTP id S239182AbiGNSuK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Jul 2022 04:55:46 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFD06402FF;
-        Thu, 14 Jul 2022 01:55:44 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id b26so1647962wrc.2;
-        Thu, 14 Jul 2022 01:55:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=Pd0s7pfe+tSy6Zgyr/2+hXl9JvN+53ozZq3gL+wyK/M=;
-        b=Xuvter0RBrh9MX3/Pb+Mj7eC1QfF1ydLL9v5qHPRgib4vj+ZdmWEmh2umCkpKJh8SM
-         y8NF4Ki1myo4QkPvgoyORzfGd1SN38VGB2psdRLzp59/VgIgaok29xtIAQ/XQoeKVMu9
-         yL8z4LmxXrH8MTJw28M3Nwo3pXn+TpxtazoomrQTBPeyrGIgphVAIQOTzDD/LLBdNdUV
-         wj5Zvx5TJsBMJTzGX/WlVHV5iDak0nClAYPXY7nACAVOwiC7YxcnZ/gf+OBLa0sanlK3
-         Ii2mMhHlo324/otp/OtGpH7vJKEBAM/6js+a+vPfayyAHZMhoJfNcRzrcj10XJW3EQha
-         AHCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=Pd0s7pfe+tSy6Zgyr/2+hXl9JvN+53ozZq3gL+wyK/M=;
-        b=LtFS9LN26MGtuq/w4Ch/eqaEYwx6QTBbdxKCQB6ML0P4H8CHGP2bU65HzsLgBXmbUi
-         ecU5ZgtZamvpFBjvjJ/Afy5wn09u19+KF+uS5Qf677sB9v/OXVWJ4SQjZp9DBFHkGBR2
-         mEilllDd7OPW3tlVvuCGsoXDu4BlzSKXZbI8JlYetmlRT8C4OFiiIuxWvKraOBoM+Wct
-         4nWBTBmFMEEcF/fvaAtG+7fum9s1ZTRi+9+6DkaJEYEmkjD18ZLx9v5VzES7PA1VeMcm
-         +2I4ox1To9/nILWg1jOj8NYthKxHSsty0HHewqs3HU8HSdoMHILSop1zVGbTczJZNJnh
-         jhlw==
-X-Gm-Message-State: AJIora8Oo5v+Awqgoijjxv3BJ+JjGamLKRvPjEIZuEzACx6gR8nSkHMx
-        bChRk6bv2+i811QHbMzTcLn5Mq3r5QqodQ==
-X-Google-Smtp-Source: AGRyM1utCuahz4E7ykNJPLlcno4icCMBdFOP4g3e7uUfZNXmhAcQ/BHe9adH2rCC0hzyKAM5Eiy37g==
-X-Received: by 2002:a05:6000:1f0b:b0:21d:6dae:7d04 with SMTP id bv11-20020a0560001f0b00b0021d6dae7d04mr7314231wrb.414.1657788943226;
-        Thu, 14 Jul 2022 01:55:43 -0700 (PDT)
-Received: from debian (host-78-150-47-22.as13285.net. [78.150.47.22])
-        by smtp.gmail.com with ESMTPSA id n16-20020a05600c465000b003a03ae64f57sm1173997wmo.8.2022.07.14.01.55.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Jul 2022 01:55:42 -0700 (PDT)
-Date:   Thu, 14 Jul 2022 09:55:40 +0100
-From:   "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: mainline build failure of powerpc allmodconfig for prom_init_check
-Message-ID: <Ys/aDKZNhhsENH9S@debian>
+        Thu, 14 Jul 2022 14:50:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F53491F1;
+        Thu, 14 Jul 2022 11:50:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F3B35621B2;
+        Thu, 14 Jul 2022 18:50:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DED97C34114;
+        Thu, 14 Jul 2022 18:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657824608;
+        bh=TCqABXXcBNiycVEd9peMznw1VBAKPiSMiV1dL+tUSR8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qzgvOCcsy5Em/AwO9hrbVqhQOgRBWrFIiOIgcaNVJ9zE/4Tkc75GT0w1waJzQ8nVN
+         cx72onxjJwHo5n5TWukISjD2gra+A8Fb9B0swFiOgp1nbvXInA2zeEqrYMgE/MkyFm
+         uoo6e0EqOJ3gCdm6GCkZGbAOKMZ/G8kgejfj6e6M/iGrD1o0casitascKwKh5uU4UE
+         EeGMDEyizBSqtihv7dmpMwFfsFRi2VwtJuIcl+72dqdgZyKqfdpMtmgFOqFFM6OR6Q
+         5W4svVAVQ1O13NIwK3ixKq5amA+2Cft0LmkBo0+GG5VJNnQMRvah/Qao4P932yWYUd
+         pdPt9UN1xX94A==
+Date:   Thu, 14 Jul 2022 11:50:06 -0700
+From:   Josh Poimboeuf <jpoimboe@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        kernel test robot <oliver.sang@intel.com>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86: Allow for exclusions in checking RETHUNK
+Message-ID: <20220714185006.6brfnnzhz7p7zw3u@treble>
+References: <20220713213133.455599-1-keescook@chromium.org>
+ <20220713235556.umnau6nd7u6bz72m@treble>
+ <Ys/DNIyc+4ju7Qmb@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <Ys/DNIyc+4ju7Qmb@worktop.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi All,
+On Thu, Jul 14, 2022 at 09:18:12AM +0200, Peter Zijlstra wrote:
+> On Wed, Jul 13, 2022 at 04:55:56PM -0700, Josh Poimboeuf wrote:
+> > Here's the ANNOTATE_UNSAFE_RET idea.
+> 
+> Right, I suppose that strictly speaking the compiler can do whatever and
+> there's no actual guarantee the annotation hits the RET instruction, in
+> practise it should work, esp. since noinstr.
 
-Not sure if it has been reported before but the latest mainline kernel
-branch fails to build for powerpc allmodconfig with gcc-12 and the error is:
+Hm, KASAN is introducing a weird function, resulting in a naked return
+warning since we have RETHUNK_CFLAGS removed on that file.
 
-Error: External symbol 'memset' referenced from prom_init.c
-make[2]: *** [arch/powerpc/kernel/Makefile:204: arch/powerpc/kernel/prom_init_check] Error 1
-
-The commit ca5dabcff1df ("powerpc/prom_init: Fix build failure with
-GCC_PLUGIN_STRUCTLEAK_BYREF_ALL and KASAN") looks similar but the error
-is still there with gcc-12.
-
-Note: I don't see this error with gcc-11.
+0000000000000000 <_sub_I_00099_0>:
+   0:	e8 00 00 00 00       	call   5 <_sub_I_00099_0+0x5>	1: R_X86_64_PLT32	__tsan_init-0x4
+   5:	c3                   	ret    
 
 
-I will be happy to test any patch or provide any extra log if needed.
+Looks like the "KASAN_SANITIZE_rodata.o := n" isn't working somehow?
 
---
-Regards
-Sudip
+-- 
+Josh
