@@ -2,93 +2,122 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4113C433EF
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Jul 2022 03:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08692C43334
+	for <linux-hardening@archiver.kernel.org>; Sun, 17 Jul 2022 09:13:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229809AbiGODXn (ORCPT
+        id S229544AbiGQJNV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Jul 2022 23:23:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44756 "EHLO
+        Sun, 17 Jul 2022 05:13:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229603AbiGODXm (ORCPT
+        with ESMTP id S229476AbiGQJNU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Jul 2022 23:23:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FFE125D5;
-        Thu, 14 Jul 2022 20:23:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B98C4621EF;
-        Fri, 15 Jul 2022 03:23:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FE6DC34115;
-        Fri, 15 Jul 2022 03:23:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657855416;
-        bh=Tiz39a+fQBBvhJrzoj9LYYwXD+rBScSLrHuQAUtB3x8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jXNHDeXXkhakwcPHiZ2+Lwc2iDc9LzG0xw/YavTl0q1s9JxifW/LPdbkBiYgzByco
-         wU+e+IfodY6EFQJpGVb0kuA2hUUxanICcWhhuV0iFJanLycMnRT6rGGMid7FUZ5zEX
-         bcoet+qWEKFxy586hdGObbMoztrmTSLRUcZZNprgdx5Vkx1hr65lA0vshaNEx8gt/r
-         R8nNjgLrqh5yFL4tHppbc3XbgKoqKSMY4DP1bJmItjuxqBwHhyQ+3du6TDDJlEqV29
-         Oy22Acz52xUSTUpPwr574VLwabYsDQx/JUJRXSBe+WkzzGurK84tcV9XsY2xg/SIRR
-         /wAAhhy/WQXvQ==
-Date:   Thu, 14 Jul 2022 20:23:33 -0700
-From:   Josh Poimboeuf <jpoimboe@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        kernel test robot <oliver.sang@intel.com>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86: Allow for exclusions in checking RETHUNK
-Message-ID: <20220715032333.neywlazczbb35w3b@treble>
-References: <20220713213133.455599-1-keescook@chromium.org>
- <20220713235556.umnau6nd7u6bz72m@treble>
- <Ys/DNIyc+4ju7Qmb@worktop.programming.kicks-ass.net>
- <20220714185006.6brfnnzhz7p7zw3u@treble>
- <20220714185605.jo5iubnsgz6jr2wb@treble>
+        Sun, 17 Jul 2022 05:13:20 -0400
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A47214085;
+        Sun, 17 Jul 2022 02:13:19 -0700 (PDT)
+Received: by mail-yb1-xb34.google.com with SMTP id h62so15863752ybb.11;
+        Sun, 17 Jul 2022 02:13:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uk9iE2xqsWDP3C6/qpL06kmkPCSpWSohZEixKNflFx4=;
+        b=FhkQ0Svj/+tJNsDc6DNnIVS70lQM2tZNF65w+E2+XmCspafhyy1ZbmSSxFtKCs62Bw
+         kR5R6AInk+RJVfOdkfa/kxDxYBuWaQa/Sc8Ytq+uOZB1j3NNM9QrG76BPsQa46KrmEaa
+         omQgPKFQ02xqfcQMW2t4OjSVx56fbbMOKRVj1H6IBw4rS09VAU1+9+Z1jLWuYgIp6mlK
+         F0ywUw3XJxW+T1E5aDt2V13U6Ec2zVnGbMRCMXQB0wiaU5RXgCEWnzloEi98Zi4Ox2nk
+         LMv3sOPFciC/RvZtsLr9wC8Ne2u2jSiOA00h7rpHo/0iCk54CmMbCCHmftxi9Z09zdAQ
+         009g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uk9iE2xqsWDP3C6/qpL06kmkPCSpWSohZEixKNflFx4=;
+        b=N1t0Chn1ekDUC6HiZfn/dN6wSilM7TPLUoL1u1Ao3sImJ7a7e25zuURrnQ2Vlc2vH2
+         1S7JpSzkcswHt/rQbo1kzh64Qt+89SOdYmr4qFTRsf0inLYAqhrlX/7jYzqqlV1g/uus
+         Ean+8GmxB2mUAJpM82r2I0DEc54oLdqOpWdjMKsub4vXIiSEyd6Pmd4bIeYtzJYjG4Yv
+         YsizaK+69vPAepM4zMChH9lT+7S9qC2pWsDbho4+edzxbq7qkNnYkh+kMn8ru+tAM2NM
+         Xu/m4v2bk8YMreFuV7qpSDAkw56jqIUAAiBcSLSjkMBqSBJz0/lFSZ1bXK2n+XMMKk4j
+         lurw==
+X-Gm-Message-State: AJIora9kwfALMxItYI9SYnCr2CaLkFFF0fm+aZorcPUx7IMW+ogXpssZ
+        CSpqfUYB/lEny6qFbksmSmdTsslOwKjUcPIH3ug=
+X-Google-Smtp-Source: AGRyM1uPYmGAEYb9p0WCn6+51xo81lzv+WhiEGpAx5V4Q7xhNVkaND+PiOC3wHRn30UHjy08DJZdv0dkPzxmu6zNlW4=
+X-Received: by 2002:a25:3c45:0:b0:664:cf75:c2d6 with SMTP id
+ j66-20020a253c45000000b00664cf75c2d6mr21223452yba.446.1658049198400; Sun, 17
+ Jul 2022 02:13:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220714185605.jo5iubnsgz6jr2wb@treble>
+References: <Ys/aDKZNhhsENH9S@debian>
+In-Reply-To: <Ys/aDKZNhhsENH9S@debian>
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date:   Sun, 17 Jul 2022 10:12:42 +0100
+Message-ID: <CADVatmO9XzFnX+N0TuOtr0FYyxKr1oe5RAhCEJjmnvjteT5QNw@mail.gmail.com>
+Subject: Re: mainline build failure of powerpc allmodconfig for prom_init_check
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jul 14, 2022 at 11:56:07AM -0700, Josh Poimboeuf wrote:
-> On Thu, Jul 14, 2022 at 11:50:08AM -0700, Josh Poimboeuf wrote:
-> > On Thu, Jul 14, 2022 at 09:18:12AM +0200, Peter Zijlstra wrote:
-> > > On Wed, Jul 13, 2022 at 04:55:56PM -0700, Josh Poimboeuf wrote:
-> > > > Here's the ANNOTATE_UNSAFE_RET idea.
-> > > 
-> > > Right, I suppose that strictly speaking the compiler can do whatever and
-> > > there's no actual guarantee the annotation hits the RET instruction, in
-> > > practise it should work, esp. since noinstr.
-> > 
-> > Hm, KASAN is introducing a weird function, resulting in a naked return
-> > warning since we have RETHUNK_CFLAGS removed on that file.
-> > 
-> > 0000000000000000 <_sub_I_00099_0>:
-> >    0:	e8 00 00 00 00       	call   5 <_sub_I_00099_0+0x5>	1: R_X86_64_PLT32	__tsan_init-0x4
-> >    5:	c3                   	ret    
-> > 
-> > 
-> > Looks like the "KASAN_SANITIZE_rodata.o := n" isn't working somehow?
-> 
-> Oh never mind, I got KASAN/KCSCAN mixed up.  Needs both disabled :-/
+On Thu, Jul 14, 2022 at 9:55 AM Sudip Mukherjee (Codethink)
+<sudipm.mukherjee@gmail.com> wrote:
+>
+> Hi All,
+>
+> Not sure if it has been reported before but the latest mainline kernel
+> branch fails to build for powerpc allmodconfig with gcc-12 and the error is:
+>
+> Error: External symbol 'memset' referenced from prom_init.c
+> make[2]: *** [arch/powerpc/kernel/Makefile:204: arch/powerpc/kernel/prom_init_check] Error 1
 
-Well, my ANNOTATE_UNSAFE_RET trick didn't quite work either, as it
-results in .discard.retpoline_safe pointing to .rodata when IBT is
-enabled.
+I was trying to check it. With gcc-11 the assembly code generated is
+not using memset, but using __memset.
+But with gcc-12, I can see the assembly code is using memset. One
+example from the assembly:
 
-Instead I'll just do OBJECT_FILES_NON_STANDARD_rodata.o.  That shouldn't
-break LTO/IBT because the linked code lives in .rodata anyway.
+call_prom:
+        .quad   .call_prom,.TOC.@tocbase,0
+        .previous
+        .size   call_prom,24
+        .type   .call_prom,@function
+.call_prom:
+        mflr 0           #,
+        std 29,-24(1)    #,
+        std 30,-16(1)    #,
+        std 31,-8(1)     #,
+        mr 29,3          # tmp166, service
+        mr 31,4          # nargs, tmp167
+        mr 30,5          # tmp168, nret
+ # arch/powerpc/kernel/prom_init.c:396:         struct prom_args args;
+        li 4,254                 #,
+        li 5,52          #,
+ # arch/powerpc/kernel/prom_init.c:394: {
+        std 0,16(1)      #,
+        stdu 1,-208(1)   #,,
+ # arch/powerpc/kernel/prom_init.c:396:         struct prom_args args;
+        addi 3,1,112     # tmp174,,
+ # arch/powerpc/kernel/prom_init.c:394: {
+        std 9,304(1)     #,
+        std 10,312(1)    #,
+        std 6,280(1)     #,
+        std 7,288(1)     #,
+        std 8,296(1)     #,
+ # arch/powerpc/kernel/prom_init.c:396:         struct prom_args args;
+        bl .memset       #
+        nop
+        rldicl 9,31,0,32         # nargs, nargs
+        addi 9,9,1       # tmp163, nargs,
+        mtctr 9          # tmp163, tmp163
 
-Will have patches tomorrow, if they pass bot testing.
+
 
 -- 
-Josh
+Regards
+Sudip
