@@ -2,150 +2,105 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189A4C43334
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Jul 2022 01:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5AAC433EF
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Jul 2022 03:52:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232286AbiGRBjU (ORCPT
+        id S231138AbiGRDwq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 17 Jul 2022 21:39:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39916 "EHLO
+        Sun, 17 Jul 2022 23:52:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231970AbiGRBjS (ORCPT
+        with ESMTP id S229482AbiGRDwp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 17 Jul 2022 21:39:18 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E50FDF582
-        for <linux-hardening@vger.kernel.org>; Sun, 17 Jul 2022 18:39:17 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id g1so13349096edb.12
-        for <linux-hardening@vger.kernel.org>; Sun, 17 Jul 2022 18:39:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S/uRnOSKXyMWXM6+egeORsxqIKlGjg8aotruYwUMQgQ=;
-        b=f5lTMFAF9RgIRQCSACSOIOb6q62I+EN6h5/4yHht7d4KaQAPe6bswqW9WMWrHQGVkU
-         t+MSmD2LZgUzfWUj/wRsQ3Q5bOlPSG7+EuHqu9plMDF8YmyFNJsl9cp/5Hijy6a55Auk
-         ZF1pR/Ej+pYtQjpkLKl8KKH/AvqFf69lZyZwE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S/uRnOSKXyMWXM6+egeORsxqIKlGjg8aotruYwUMQgQ=;
-        b=xOFIjf8WG6NGfn5g7smv92ImDGP8Yd+iGYlbeWKDxs0WOxBkJI/5S/v4A4AEu2jAnz
-         x5LU3OSHzeu/hfy7iTiIShVbGV5kX1Qr9Y66SgBp3IljmRbweViFlLi73JTCYSNfRMx9
-         /0SHw93P8gLOfexb4pCDPu0uDuhhmLDGqLwYfERePgAKAX2WknHoSLBNEUl3C4QsEcDP
-         cITlBbc36+zStUbqbRYpq8SdW6PVpFJIoTDRvXoaprmI8yMLlKSgB6H2Hppiw28Ljf32
-         J13WpyUeA79XbZdfqnARS9FDA4CjiUFxESG0YtqpnJ6fdI53nz2hAxjxaqWJmbiiafXK
-         HP9g==
-X-Gm-Message-State: AJIora96DCnW7aX1cMJ3Fr2NoOHDANMEeecGsKuJxYXTGn4d1hIhvlgg
-        SAyP9LP9nS1fTz185dHJ4lA/Ye/aFaCC4lQbYfw=
-X-Google-Smtp-Source: AGRyM1sv+H2gdoQ7PjvtFf3dyUKP6dmjxc/jII8EaZsZ4/CiOZAkJLbhZ3SesoH3sAvu2+Y41MThAQ==
-X-Received: by 2002:a05:6402:3681:b0:43a:7c29:466a with SMTP id ej1-20020a056402368100b0043a7c29466amr33792891edb.367.1658108356240;
-        Sun, 17 Jul 2022 18:39:16 -0700 (PDT)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com. [209.85.128.44])
-        by smtp.gmail.com with ESMTPSA id u18-20020a1709061db200b00722e203633esm4868523ejh.122.2022.07.17.18.39.13
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 17 Jul 2022 18:39:14 -0700 (PDT)
-Received: by mail-wm1-f44.google.com with SMTP id o8so6308914wms.2
-        for <linux-hardening@vger.kernel.org>; Sun, 17 Jul 2022 18:39:13 -0700 (PDT)
-X-Received: by 2002:a05:600c:34c9:b0:3a0:5072:9abe with SMTP id
- d9-20020a05600c34c900b003a050729abemr23937555wmq.8.1658108352995; Sun, 17 Jul
- 2022 18:39:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <Ys/aDKZNhhsENH9S@debian> <CADVatmO9XzFnX+N0TuOtr0FYyxKr1oe5RAhCEJjmnvjteT5QNw@mail.gmail.com>
- <CAHk-=whc3Uvhrmrr27xp5=oOhSDjXc5s1ZxC3B7xMYV6oj4WRQ@mail.gmail.com>
- <CADVatmO1V8DiAgWMW9EFHwt+ghwfHhueigXh214tUa_=tVxiug@mail.gmail.com>
- <CAHk-=whjWyoognKy4QUUwf95L6qvPg7MGdp0CxqD2fpvZo7DLw@mail.gmail.com>
- <20220717205615.GC25951@gate.crashing.org> <CAHk-=wg-6b_=XQbwKqEwuAbQCOcXx7_mw78-GopQ5==_TuTPLQ@mail.gmail.com>
- <20220717214508.GD25951@gate.crashing.org>
-In-Reply-To: <20220717214508.GD25951@gate.crashing.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 17 Jul 2022 18:38:56 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg1LeRWPmA-2pit+aH0LKZoBbhnGzmwWrPz6bbchMkCzw@mail.gmail.com>
-Message-ID: <CAHk-=wg1LeRWPmA-2pit+aH0LKZoBbhnGzmwWrPz6bbchMkCzw@mail.gmail.com>
-Subject: Re: mainline build failure of powerpc allmodconfig for prom_init_check
-To:     Segher Boessenkool <segher@kernel.crashing.org>
+        Sun, 17 Jul 2022 23:52:45 -0400
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 049D613CE1;
+        Sun, 17 Jul 2022 20:52:44 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4LmSj62Gn2z4xdJ;
+        Mon, 18 Jul 2022 13:52:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+        s=201909; t=1658116362;
+        bh=PAhbVquV8KMmPT0KbTUCb3rhFdvrE7pS8SUJl2k86NQ=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=abNf9MX4GToZ6jiZBngBosnaGO7J6cYxeNUtHJjScudZr25fDWl24rBpyIX65VBb8
+         UsLGOhmSjfXpcn6B8TuwACWUDoTD+0uOnbXkAK7zW5vL8jMsCQQIrHpH/DKoofWkAJ
+         Wa5uTJqVo6voEQzV+NIjrLGnWPWntFlxcdKDzmte+G7ez220tFzclj2p7XzHQU518/
+         L9h0KiQLxI94FEBrFBpFVy84BHz1Vj69336+PshS8riZ1OA5d4TwpO+ntrmWF8ftlH
+         cUYoLH9Y0AL0ldtOSxCReqfi8u0gC0ITOvkL31Y17LJ/2IBL5EJsQGVCSw2mrBdMC0
+         naA3RyWOj+3dQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Segher Boessenkool <segher@kernel.crashing.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
         Kees Cook <keescook@chromium.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Paul Mackerras <paulus@samba.org>,
+        linux-hardening@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: mainline build failure of powerpc allmodconfig for prom_init_check
+In-Reply-To: <20220717195448.GB25951@gate.crashing.org>
+References: <Ys/aDKZNhhsENH9S@debian>
+ <CADVatmO9XzFnX+N0TuOtr0FYyxKr1oe5RAhCEJjmnvjteT5QNw@mail.gmail.com>
+ <CAHk-=whc3Uvhrmrr27xp5=oOhSDjXc5s1ZxC3B7xMYV6oj4WRQ@mail.gmail.com>
+ <20220717195448.GB25951@gate.crashing.org>
+Date:   Mon, 18 Jul 2022 13:52:38 +1000
+Message-ID: <87k08bdqm1.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Jul 17, 2022 at 2:49 PM Segher Boessenkool
-<segher@kernel.crashing.org> wrote:
+Segher Boessenkool <segher@kernel.crashing.org> writes:
+> On Sun, Jul 17, 2022 at 07:44:22AM -0700, Linus Torvalds wrote:
+>> On Sun, Jul 17, 2022 at 2:13 AM Sudip Mukherjee
+>> <sudipm.mukherjee@gmail.com> wrote:
+>> > I was trying to check it. With gcc-11 the assembly code generated is
+>> > not using memset, but using __memset.
+>> > But with gcc-12, I can see the assembly code is using memset. One
+>> > example from the assembly:
+>> 
+>> You could try making the 'args' array in 'struct prom_args' be marked
+>> 'volatile'.
+>> 
+>> Ie something like this:
+>> 
+>>   --- a/arch/powerpc/kernel/prom_init.c
+>>   +++ b/arch/powerpc/kernel/prom_init.c
+>>   @@ -115,6 +115,6 @@ struct prom_args {
+>>            __be32 service;
+>>            __be32 nargs;
+>>            __be32 nret;
+>>   -          __be32 args[10];
+>>   +        volatile __be32 args[10];
+>>    };
+>> 
+>> because I think it's just the compilers turning the small loop over
+>> those fields into a "memset()".
 >
-> > I can *kind of* see the logic that when you do a whole struct
-> > assignment, it turns into a "memcpy" without regard for volatile
-> > members. You're not actually accessing the volatile members in some
-> > particular order, so the struct assignment arguably does not really
-> > have an access ordering that needs to be preserved.
+> Yes.  See <https://gcc.gnu.org/onlinedocs/gcc/Standards.html#C-Language>
+> near the end:
+>   Most of the compiler support routines used by GCC are present in
+>   libgcc, but there are a few exceptions. GCC requires the freestanding
+>   environment provide memcpy, memmove, memset and memcmp. Finally, if
+>   __builtin_trap is used, and the target does not implement the trap
+>   pattern, then GCC emits a call to abort.
 >
-> The order is not defined, correct.  But a "volatile int" can only be
-> accessed as an int, and an external memcpy will typically use different
-> size accesses, and can even access some fields more than once (or
-> partially); all not okay for a volatile object.
+> Can't we simply have a small simple implementation of these functions in
+> arch/powerpc/boot/?  This stuff is not performance-critical, and this is
+> not the first time we hit these problems.
 
-That is not actually a valid or realistic argument in the general case.
+prom_init.c isn't in arch/powerpc/boot :)
 
-The thing is, an operation on an aggregate type in C is fundamentally
-different from the "do the same operation on the individual parts of
-the struct".
+It's linked into the kernel proper, but we want it to behave like a
+pre-boot environment (because not all boot paths run it) which is why we
+restrict what symbols it can call.
 
-Just to make a very concrete example of that, it's not at all
-unreasonable to have a struct like this:
+We could have a prom_memset() etc. but we'd need to do some tricks to
+rewrite references to memset() to prom_memset() before linking.
 
-    struct io_accessor {
-        union {
-            volatile unsigned char byte[8];
-            volatile unsigned short word[4];
-        ...
-
-and while that wasn't the example here, it's not completely insane as
-a concept to use as a helper type so that you can do volatile accesses
-of different sizes.
-
-And while you'd be right to say that "assigning that kind of struct is
-probably insane", and I wouldn't argue against it, I also think that
-basically *any* union member is basically an argument that a structure
-assignment is *NOT* about "assign all the individual members", and
-never really can be.
-
-In the above union, make one union member be a non-volatile type, and
-suddenly it actually *can* be ok to copy the struct. Even though it
-also has volatile bytes.
-
-So once you start doing structure assignments but argue about
-individual fields being volatile, I think you're on very shaky ground.
-
-And I think "memcpy" is a reasonable way to say "we don't care - and
-in the general case we CANNOT know - what the individual members are,
-so we'll just copy it as one thing".
-
-So the compiler emitting a "memcpy()" to assign a structure sounds
-fine. Even in theory. Because the "but individual fields.." argument
-just cannot work in general.
-
-In contrast, when you access the members individually (like the kernel
-does in this powerpc case), there is no such ambiguity.
-
-There is no way in hell that it is ever ok to do a "memcpy()" when the
-user has done the assignments one volatile member at a time.
-
-So that's why I don't think your test-case with the struct assignment
-is very good. I think it's very reasonable for a compiler person to
-say "you assigned the whole struct, you get what you asked for, you
-get a memcpy".
-
-But when you do a loop that assigns individual volatile fields? No
-such problem. Completely unambiguous that you need to do them one at a
-time as individual accesses.
-
-                Linus
+cheers
