@@ -2,124 +2,96 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A08C433EF
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Jul 2022 04:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC9EC43334
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Jul 2022 07:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229886AbiGRElf (ORCPT
+        id S230179AbiGRHvx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Jul 2022 00:41:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50604 "EHLO
+        Mon, 18 Jul 2022 03:51:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229535AbiGREle (ORCPT
+        with ESMTP id S229783AbiGRHvw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Jul 2022 00:41:34 -0400
-Received: from gandalf.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2F5910551;
-        Sun, 17 Jul 2022 21:41:32 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4LmTnN1vs1z4xhn;
-        Mon, 18 Jul 2022 14:41:28 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-        s=201909; t=1658119288;
-        bh=HfoMlxVHe2GNGL+Z3nwT14HwbjZ1aAk2Dtdo9PNK1VQ=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=CHSSgVtrop/Y7cdYxGnGHQMtrhKN6M4mfFF179p31b8WbnOsj/tE+V4NpwgwwMx6Z
-         lAxnw5V0oEwFWQHxLcv1B6bI5z1F/0jZJUZF8lOXvvdrW2gdzcmjD82sB1YUESQ6/p
-         UdxgKYYEzGQkBFqlT4kEHzSkxqzJLL2NY/5jd5D81xFH+s7tK6VFrwLGcSjuYuCBFx
-         qkWjqmqY6wfvZ2SaiuOOFLRcPhrliuW3A25gQvyztz/W7IdV3Qxi05NsHd07cIIRHj
-         eGjTRoqhbkPIhrlFr2oWYWmlUqM2BZYAWGLTPf8St8pzZX16L+C1KxjYFfSRV9COaQ
-         bJo7pdgo4/H+w==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Mon, 18 Jul 2022 03:51:52 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4FD27CE22
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Jul 2022 00:51:51 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-252-gbDn5GdWMXeh8y7fCCM7XA-1; Mon, 18 Jul 2022 08:51:48 +0100
+X-MC-Unique: gbDn5GdWMXeh8y7fCCM7XA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.36; Mon, 18 Jul 2022 08:51:45 +0100
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.036; Mon, 18 Jul 2022 08:51:45 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Michael Ellerman' <mpe@ellerman.id.au>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Kees Cook <keescook@chromium.org>
-Cc:     linuxppc-dev@lists.ozlabs.org,
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: mainline build failure of powerpc allmodconfig for prom_init_check
-In-Reply-To: <CADVatmO9XzFnX+N0TuOtr0FYyxKr1oe5RAhCEJjmnvjteT5QNw@mail.gmail.com>
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>
+Subject: RE: mainline build failure of powerpc allmodconfig for
+ prom_init_check
+Thread-Topic: mainline build failure of powerpc allmodconfig for
+ prom_init_check
+Thread-Index: AQHYmmCqgiI6vbQbKkWuMJXdAKKy2K2Dv4mw
+Date:   Mon, 18 Jul 2022 07:51:45 +0000
+Message-ID: <72a95f0949d149d1b07bd161f3d59cc1@AcuMS.aculab.com>
 References: <Ys/aDKZNhhsENH9S@debian>
  <CADVatmO9XzFnX+N0TuOtr0FYyxKr1oe5RAhCEJjmnvjteT5QNw@mail.gmail.com>
-Date:   Mon, 18 Jul 2022 14:41:23 +1000
-Message-ID: <87cze3docs.fsf@mpe.ellerman.id.au>
+ <87cze3docs.fsf@mpe.ellerman.id.au>
+In-Reply-To: <87cze3docs.fsf@mpe.ellerman.id.au>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Sudip Mukherjee <sudipm.mukherjee@gmail.com> writes:
-> On Thu, Jul 14, 2022 at 9:55 AM Sudip Mukherjee (Codethink)
-> <sudipm.mukherjee@gmail.com> wrote:
->>
->> Hi All,
->>
->> Not sure if it has been reported before but the latest mainline kernel
->> branch fails to build for powerpc allmodconfig with gcc-12 and the error is:
->>
->> Error: External symbol 'memset' referenced from prom_init.c
->> make[2]: *** [arch/powerpc/kernel/Makefile:204: arch/powerpc/kernel/prom_init_check] Error 1
->
-> I was trying to check it. With gcc-11 the assembly code generated is
-> not using memset, but using __memset.
-> But with gcc-12, I can see the assembly code is using memset. One
-> example from the assembly:
->
-> call_prom:
->         .quad   .call_prom,.TOC.@tocbase,0
->         .previous
->         .size   call_prom,24
->         .type   .call_prom,@function
-> .call_prom:
->         mflr 0           #,
->         std 29,-24(1)    #,
->         std 30,-16(1)    #,
->         std 31,-8(1)     #,
->         mr 29,3          # tmp166, service
->         mr 31,4          # nargs, tmp167
->         mr 30,5          # tmp168, nret
->  # arch/powerpc/kernel/prom_init.c:396:         struct prom_args args;
->         li 4,254                 #,
+From: Michael Ellerman
+> Sent: 18 July 2022 05:41
+...
+> So we're memsetting all of args to 254, not zero.
+> 
+> That's happening because allmodconfig with gcc 12 enables
+> CONFIG_INIT_STACK_ALL_PATTERN, whereas gcc 11 doesn't.
 
-Here we load 254 into r4, which is the 2nd parameter to memset (c).
+I can't help feeling it would be better if that generated
+a call to a memset64() function.
+Saving loads of tests at the top of the function,
+and (most of?) the constant expansion to 64bit.
 
->         li 5,52          #,
+Although and explicit 'stack clear' function would be better
+for the kernel - since it would give the option of patching
+it away at startup.
 
-This is r5, the 3rd parameter (n), ie. the size of the structure.
+I really can't help feeling that initialising on-stack
+arrays will kill performance.
+While kernel stack frames have to be relatively small,
+in userspace very large on-stack arrays can be allocated
+(and correctly bound checked) knowing that the cost is
+minimal (maybe a TLB miss).
 
-That tells us we're memsetting the entire structure, ie. the 10 x 4
-bytes of args.args plus 3 x 4 bytes for the other members.
+	David
 
->  # arch/powerpc/kernel/prom_init.c:394: {
->         std 0,16(1)      #,
->         stdu 1,-208(1)   #,,
->  # arch/powerpc/kernel/prom_init.c:396:         struct prom_args args;
->         addi 3,1,112     # tmp174,,
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-Here we load (calculate) the address of "args" into r3, the first
-parameter to memset.
-
->  # arch/powerpc/kernel/prom_init.c:394: {
->         std 9,304(1)     #,
->         std 10,312(1)    #,
->         std 6,280(1)     #,
->         std 7,288(1)     #,
->         std 8,296(1)     #,
->  # arch/powerpc/kernel/prom_init.c:396:         struct prom_args args;
->         bl .memset       #
-
-So we're memsetting all of args to 254, not zero.
-
-That's happening because allmodconfig with gcc 12 enables
-CONFIG_INIT_STACK_ALL_PATTERN, whereas gcc 11 doesn't.
-
-I think the simplest fix in the short term is to just disable stack
-initialisation for prom_init.c. It only runs at boot so there's no real
-security impact to disabling it.
-
-cheers
