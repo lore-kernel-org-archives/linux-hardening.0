@@ -2,83 +2,142 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DD6C43334
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Jul 2022 21:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC6DC43334
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Jul 2022 22:17:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235506AbiGRVqo (ORCPT
+        id S233767AbiGRWRD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Jul 2022 17:46:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38992 "EHLO
+        Mon, 18 Jul 2022 18:17:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233858AbiGRVqn (ORCPT
+        with ESMTP id S232115AbiGRWRB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Jul 2022 17:46:43 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DF6B2125D;
-        Mon, 18 Jul 2022 14:46:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=gB0Dyj6KD1xR0J9edWlW2XlEQizibh7QqbUWvK+mgdc=; b=eObLTaTy/3Us0YDbQ5gnsRcwcZ
-        DuDFu+DbE2G2jh6j/NlBzj89vGk9Ot9DsAGhGZXwZxAfFuM3xbPLMzHXqe0n3NiJXDAh+zpSyesu0
-        /yIaXYGLlRJLO48Nr+n3Vnlmc79kCqNiUDMJ6/kq4RR2yDSpknB2nX1fT9NxNE9ekd2lgagl20bVH
-        vkOsh1WPu1uZkxgRXHmhJvTsImpDTfQ4JOzW9BxDlhdY3CASpc+BG1b0r1rdMS7KNI8Towfzug/bx
-        d2SFavJYeWYJIZcPdOxkUhWJ/ovM6TuBKEo2rV1Yu1uzV7fjxk6NsX9Nh0koq5YwNtI5MIjCH5lvL
-        nkIsd8tg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oDYZN-00D3tf-Aq; Mon, 18 Jul 2022 21:46:25 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AC3489802A7; Mon, 18 Jul 2022 23:46:24 +0200 (CEST)
-Date:   Mon, 18 Jul 2022 23:46:24 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Mon, 18 Jul 2022 18:17:01 -0400
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C7D531659A;
+        Mon, 18 Jul 2022 15:17:00 -0700 (PDT)
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 26IM8fqS005455;
+        Mon, 18 Jul 2022 17:08:41 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 26IM8dBn005451;
+        Mon, 18 Jul 2022 17:08:39 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Mon, 18 Jul 2022 17:08:39 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
         linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [RFC PATCH v3 00/20] KCFI support
-Message-ID: <YtXUsIjT9IDGKUCv@worktop.programming.kicks-ass.net>
-References: <20220610233513.1798771-1-samitolvanen@google.com>
- <202206131001.6BA9933C@keescook>
-MIME-Version: 1.0
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: Re: mainline build failure of powerpc allmodconfig for prom_init_check
+Message-ID: <20220718220839.GF25951@gate.crashing.org>
+References: <Ys/aDKZNhhsENH9S@debian> <CADVatmO9XzFnX+N0TuOtr0FYyxKr1oe5RAhCEJjmnvjteT5QNw@mail.gmail.com> <87cze3docs.fsf@mpe.ellerman.id.au> <CAHk-=wgJCTaY5FeNpcw6U-c1Z6c-A2WWQfCVa=1WW3Hdf9_eww@mail.gmail.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202206131001.6BA9933C@keescook>
+In-Reply-To: <CAHk-=wgJCTaY5FeNpcw6U-c1Z6c-A2WWQfCVa=1WW3Hdf9_eww@mail.gmail.com>
+User-Agent: Mutt/1.4.2.3i
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jun 13, 2022 at 10:04:12AM -0700, Kees Cook wrote:
-> On Fri, Jun 10, 2022 at 04:34:53PM -0700, Sami Tolvanen wrote:
-> > KCFI is a proposed forward-edge control-flow integrity scheme for
-> > Clang, which is more suitable for kernel use than the existing CFI
-> > scheme used by CONFIG_CFI_CLANG. KCFI doesn't require LTO, doesn't
-> > alter function references to point to a jump table, and won't break
-> > function address equality. The latest LLVM patch is here:
-> > 
-> >   https://reviews.llvm.org/D119296
-> > 
-> > This RFC series replaces the current arm64 CFI implementation with
-> > KCFI and adds support for x86_64.
+On Mon, Jul 18, 2022 at 12:06:52PM -0700, Linus Torvalds wrote:
+> On Sun, Jul 17, 2022 at 9:41 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
+> > >         li 4,254                 #,
+> >
+> > Here we load 254 into r4, which is the 2nd parameter to memset (c).
 > 
-> I think the "RFC" prefix for this series can be dropped. :)
-> 
-> It looks to me like all of Peter's concerns have been addressed. I'd say
-> let's get the Clang side landed, and once that's done, land this via x86
-> -tip?
-> 
-> Peter and Will does this sound right to you? It touches arm64, so if
-> -tip isn't okay, I could take it in one of my trees?
+> I love how even powerpc people know that "4" is bogus, and have to
+> make it clear that it means "r4".
 
-Sorry, I was a bit pre-occupied with this retbleed crud, I'll try and
-have a look at things shortly.
+This is compiler output.  Compiler output is mainly meant for the
+assembler to produce object code from.  It isn't meant to be readable
+(and e.g. -fverbose-asm didn't help much here, that's the "#," ;-) ).
+
+The mnemonic determines what the operands mean.  It is much easier to
+read and write "li 4,254" than "li r4,254" or "li %r4,254", all of which
+are valid.  You can also write "li 3+1,2*127", but not with the other
+forms (this is useful if you use assembler macros, which are way more
+powerful and appropriate than abusing the C preprocessor, when writing
+assembler code).
+
+It matters more if you have three or four or five or six operands to an
+assembler instruction, all the extra line noise makes things illegible.
+
+The "%r4" variant hails from winnt.  It is a bit problematic in inline
+assembler, because you need to escape the % in extended inline asm, but
+not in basic inline asm.  It also is pure line noise to read.
+
+The "r4" variant is problematic if you have symbols named the same.
+When you use the -mregnames assembler option it is taken to mean the
+register; you can write "(r6)" to mean the symbol.  (There also are "sp"
+and "rtos" and "xer" and whatnot, not just "r4").
+
+> I don't understand why the powerpc assembler is so messed up, and uses
+> random integer constants for register "names".
+
+360 was the same.  370 was the same.  390 is the same.  801 was the
+same.  RIOS (aka POWER) was the same.  So yes, PowerPC inherited it, I
+don't know how much thought was put into this, don't change a winning
+team etc.
+
+> And it gets even worse, when you start mixing FP, vector and integer "names".
+
+It is clear from the mnemonic what the operands are: some register, an
+immediate, a constant, etc.  An expression (which can include object
+symbols) can be any of those.
+
+Assembler language is unforgiving.  It isn't easy to write, and most
+mistakes will not be diagnosed.  If the assmbler language makes it
+easier to read the code, that makes it more likely correct code will be
+written, and that correct code will be written in less time.
+
+> I've seen many bad assemblers (in fact, I have *written* a couple of
+> bad assemblers myself), but I have never seen anything quite that
+> broken on any other architecture.
+> 
+> Oddities, yes ("$" as a prefix for register? Alpha asm is also very
+> odd), but nothing *quite* as broken as "simple constants have entirely
+> different meanings depending on the exact instruction and argument
+> position".
+
+What is broken about that?  It makes everything very consistent, and
+very readable.  Sigils are just nasty, and having the register names the
+same as valid symbol names is also problematic.
+
+> It's not even an IBM thing. S390 uses perfectly sane register syntax,
+> and calls things '%r4" etc.
+
+s390 has the same syntax, and even inherited the GAS code for this from
+the ppc port.
+
+> The human-written asm files have those #define's in headers just to
+> make things slightly more legible, because apparently the assembler
+> doesn't even *accept* the sane names.
+
+That was true a long time ago.  And the "#define r0 0" thing caused
+quite a few bugs itself btw.
+
+> So it's not even a "the compiler
+> generates this abbreviated illegible mess". It's literally that the
+> assembler is so horrid.
+
+The disassembler has shown "r4" etc. by default since ages.  The
+assembler needs -mregnames to accept it; enabling this by default would
+be a compatibility break, not acceptable.
+
+> Why do people put up with that?
+
+Why are people misinformed?
+
+Is there anything in particular in the documentation we could improve?
+
+
+Hope this helps,
+
+
+Segher
