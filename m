@@ -2,96 +2,94 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC9EC43334
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Jul 2022 07:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DB4C43334
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Jul 2022 13:44:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230179AbiGRHvx convert rfc822-to-8bit (ORCPT
+        id S230411AbiGRNov (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Jul 2022 03:51:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41556 "EHLO
+        Mon, 18 Jul 2022 09:44:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229783AbiGRHvw (ORCPT
+        with ESMTP id S233482AbiGRNou (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Jul 2022 03:51:52 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4FD27CE22
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Jul 2022 00:51:51 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-252-gbDn5GdWMXeh8y7fCCM7XA-1; Mon, 18 Jul 2022 08:51:48 +0100
-X-MC-Unique: gbDn5GdWMXeh8y7fCCM7XA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.36; Mon, 18 Jul 2022 08:51:45 +0100
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.036; Mon, 18 Jul 2022 08:51:45 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Michael Ellerman' <mpe@ellerman.id.au>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Kees Cook <keescook@chromium.org>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>
-Subject: RE: mainline build failure of powerpc allmodconfig for
- prom_init_check
-Thread-Topic: mainline build failure of powerpc allmodconfig for
- prom_init_check
-Thread-Index: AQHYmmCqgiI6vbQbKkWuMJXdAKKy2K2Dv4mw
-Date:   Mon, 18 Jul 2022 07:51:45 +0000
-Message-ID: <72a95f0949d149d1b07bd161f3d59cc1@AcuMS.aculab.com>
-References: <Ys/aDKZNhhsENH9S@debian>
- <CADVatmO9XzFnX+N0TuOtr0FYyxKr1oe5RAhCEJjmnvjteT5QNw@mail.gmail.com>
- <87cze3docs.fsf@mpe.ellerman.id.au>
+        Mon, 18 Jul 2022 09:44:50 -0400
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF02C19C1C;
+        Mon, 18 Jul 2022 06:44:48 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4LmjrH1XNRz4xZB;
+        Mon, 18 Jul 2022 23:44:47 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+        s=201909; t=1658151887;
+        bh=ct7Bb9TEvoCcCMzYFWgojsTrBCyiQvnckSQyh1hVRXk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pp5pG25f9wQVNn9FX01c5sgo/IisHcF/8CvZa4R8kaqhPha+c9zSoODzcOqIrsJEL
+         3H5Gx6FkwDM1wcu3KzoWndoIH1dj5PwXXPbDgJ3X3KSqLraoFK6+t2H/AEsZ4Rmi6l
+         MGSLSQ3MYkjDvElAC1u/ElxqimB5GsZ7ZMvxTfHcrbIuVw+xg/zVLeiWTK1RBq59uH
+         dih19E9zzkt2HIi1lwCFgc6Tm2O66He0G6LkHbtHt2QH4/sp9XID2qsmRNPrJJcVZS
+         /xA4/Q0UTQfkUHm246ns0jMU4EhzEML6WwTs+5XWttr1GiapF6tjxNVSG6xaJJH09m
+         TwOIO1Tc77JFw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     <linuxppc-dev@lists.ozlabs.org>
+Cc:     sudipm.mukherjee@gmail.com, keescook@chromium.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        torvalds@linux-foundation.org
+Subject: [PATCH] powerpc/64s: Disable stack variable initialisation for prom_init
+Date:   Mon, 18 Jul 2022 23:44:18 +1000
+Message-Id: <20220718134418.354114-1-mpe@ellerman.id.au>
+X-Mailer: git-send-email 2.35.3
 In-Reply-To: <87cze3docs.fsf@mpe.ellerman.id.au>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+References: <87cze3docs.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Michael Ellerman
-> Sent: 18 July 2022 05:41
-...
-> So we're memsetting all of args to 254, not zero.
-> 
-> That's happening because allmodconfig with gcc 12 enables
-> CONFIG_INIT_STACK_ALL_PATTERN, whereas gcc 11 doesn't.
+With GCC 12 allmodconfig prom_init fails to build:
 
-I can't help feeling it would be better if that generated
-a call to a memset64() function.
-Saving loads of tests at the top of the function,
-and (most of?) the constant expansion to 64bit.
+  Error: External symbol 'memset' referenced from prom_init.c
+  make[2]: *** [arch/powerpc/kernel/Makefile:204: arch/powerpc/kernel/prom_init_check] Error 1
 
-Although and explicit 'stack clear' function would be better
-for the kernel - since it would give the option of patching
-it away at startup.
+The allmodconfig build enables KASAN, so all calls to memset in
+prom_init should be converted to __memset by the #ifdefs in
+asm/string.h, because prom_init must use the non-KASAN instrumented
+versions.
 
-I really can't help feeling that initialising on-stack
-arrays will kill performance.
-While kernel stack frames have to be relatively small,
-in userspace very large on-stack arrays can be allocated
-(and correctly bound checked) knowing that the cost is
-minimal (maybe a TLB miss).
+The build failure happens because there's a call to memset that hasn't
+been caught by the pre-processor and converted to __memset. Typically
+that's because it's a memset generated by the compiler itself, and that
+is the case here.
 
-	David
+With GCC 12, allmodconfig enables CONFIG_INIT_STACK_ALL_PATTERN, which
+causes the compiler to emit memset calls to initialise on-stack
+variables with a pattern.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Because prom_init is non-user-facing boot-time only code, as a
+workaround just disable stack variable initialisation to unbreak the
+build.
+
+Reported-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+---
+ arch/powerpc/kernel/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+index f91f0f29a566..c8cf924bf9c0 100644
+--- a/arch/powerpc/kernel/Makefile
++++ b/arch/powerpc/kernel/Makefile
+@@ -20,6 +20,7 @@ CFLAGS_prom.o += $(DISABLE_LATENT_ENTROPY_PLUGIN)
+ CFLAGS_prom_init.o += -fno-stack-protector
+ CFLAGS_prom_init.o += -DDISABLE_BRANCH_PROFILING
+ CFLAGS_prom_init.o += -ffreestanding
++CFLAGS_prom_init.o += $(call cc-option, -ftrivial-auto-var-init=uninitialized)
+ 
+ ifdef CONFIG_FUNCTION_TRACER
+ # Do not trace early boot code
+-- 
+2.35.3
 
