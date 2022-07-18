@@ -2,94 +2,67 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DB4C43334
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Jul 2022 13:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCEAC43334
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Jul 2022 15:04:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230411AbiGRNov (ORCPT
+        id S234989AbiGRPE0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Jul 2022 09:44:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39600 "EHLO
+        Mon, 18 Jul 2022 11:04:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233482AbiGRNou (ORCPT
+        with ESMTP id S233593AbiGRPEZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Jul 2022 09:44:50 -0400
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF02C19C1C;
-        Mon, 18 Jul 2022 06:44:48 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4LmjrH1XNRz4xZB;
-        Mon, 18 Jul 2022 23:44:47 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-        s=201909; t=1658151887;
-        bh=ct7Bb9TEvoCcCMzYFWgojsTrBCyiQvnckSQyh1hVRXk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pp5pG25f9wQVNn9FX01c5sgo/IisHcF/8CvZa4R8kaqhPha+c9zSoODzcOqIrsJEL
-         3H5Gx6FkwDM1wcu3KzoWndoIH1dj5PwXXPbDgJ3X3KSqLraoFK6+t2H/AEsZ4Rmi6l
-         MGSLSQ3MYkjDvElAC1u/ElxqimB5GsZ7ZMvxTfHcrbIuVw+xg/zVLeiWTK1RBq59uH
-         dih19E9zzkt2HIi1lwCFgc6Tm2O66He0G6LkHbtHt2QH4/sp9XID2qsmRNPrJJcVZS
-         /xA4/Q0UTQfkUHm246ns0jMU4EhzEML6WwTs+5XWttr1GiapF6tjxNVSG6xaJJH09m
-         TwOIO1Tc77JFw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     <linuxppc-dev@lists.ozlabs.org>
-Cc:     sudipm.mukherjee@gmail.com, keescook@chromium.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        torvalds@linux-foundation.org
-Subject: [PATCH] powerpc/64s: Disable stack variable initialisation for prom_init
-Date:   Mon, 18 Jul 2022 23:44:18 +1000
-Message-Id: <20220718134418.354114-1-mpe@ellerman.id.au>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <87cze3docs.fsf@mpe.ellerman.id.au>
-References: <87cze3docs.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 18 Jul 2022 11:04:25 -0400
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 63F5610AD;
+        Mon, 18 Jul 2022 08:04:24 -0700 (PDT)
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 26IEu3b6021466;
+        Mon, 18 Jul 2022 09:56:03 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 26IEu2Km021465;
+        Mon, 18 Jul 2022 09:56:02 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Mon, 18 Jul 2022 09:56:01 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linux-hardening@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: mainline build failure of powerpc allmodconfig for prom_init_check
+Message-ID: <20220718145601.GE25951@gate.crashing.org>
+References: <Ys/aDKZNhhsENH9S@debian> <CADVatmO9XzFnX+N0TuOtr0FYyxKr1oe5RAhCEJjmnvjteT5QNw@mail.gmail.com> <CAHk-=whc3Uvhrmrr27xp5=oOhSDjXc5s1ZxC3B7xMYV6oj4WRQ@mail.gmail.com> <20220717195448.GB25951@gate.crashing.org> <87k08bdqm1.fsf@mpe.ellerman.id.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87k08bdqm1.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.4.2.3i
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With GCC 12 allmodconfig prom_init fails to build:
+On Mon, Jul 18, 2022 at 01:52:38PM +1000, Michael Ellerman wrote:
+> Segher Boessenkool <segher@kernel.crashing.org> writes:
+> > Can't we simply have a small simple implementation of these functions in
+> > arch/powerpc/boot/?  This stuff is not performance-critical, and this is
+> > not the first time we hit these problems.
+> 
+> prom_init.c isn't in arch/powerpc/boot :)
 
-  Error: External symbol 'memset' referenced from prom_init.c
-  make[2]: *** [arch/powerpc/kernel/Makefile:204: arch/powerpc/kernel/prom_init_check] Error 1
+Ah duh :-)
 
-The allmodconfig build enables KASAN, so all calls to memset in
-prom_init should be converted to __memset by the #ifdefs in
-asm/string.h, because prom_init must use the non-KASAN instrumented
-versions.
+> It's linked into the kernel proper, but we want it to behave like a
+> pre-boot environment (because not all boot paths run it) which is why we
+> restrict what symbols it can call.
+> 
+> We could have a prom_memset() etc. but we'd need to do some tricks to
+> rewrite references to memset() to prom_memset() before linking.
 
-The build failure happens because there's a call to memset that hasn't
-been caught by the pre-processor and converted to __memset. Typically
-that's because it's a memset generated by the compiler itself, and that
-is the case here.
+You can do it in its linker script?
 
-With GCC 12, allmodconfig enables CONFIG_INIT_STACK_ALL_PATTERN, which
-causes the compiler to emit memset calls to initialise on-stack
-variables with a pattern.
 
-Because prom_init is non-user-facing boot-time only code, as a
-workaround just disable stack variable initialisation to unbreak the
-build.
-
-Reported-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
----
- arch/powerpc/kernel/Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index f91f0f29a566..c8cf924bf9c0 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -20,6 +20,7 @@ CFLAGS_prom.o += $(DISABLE_LATENT_ENTROPY_PLUGIN)
- CFLAGS_prom_init.o += -fno-stack-protector
- CFLAGS_prom_init.o += -DDISABLE_BRANCH_PROFILING
- CFLAGS_prom_init.o += -ffreestanding
-+CFLAGS_prom_init.o += $(call cc-option, -ftrivial-auto-var-init=uninitialized)
- 
- ifdef CONFIG_FUNCTION_TRACER
- # Do not trace early boot code
--- 
-2.35.3
-
+Segher
