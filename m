@@ -2,44 +2,42 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1554C433EF
-	for <linux-hardening@archiver.kernel.org>; Tue, 19 Jul 2022 14:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E820C433EF
+	for <linux-hardening@archiver.kernel.org>; Sat, 23 Jul 2022 11:22:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238034AbiGSONm (ORCPT
+        id S230010AbiGWLWQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 19 Jul 2022 10:13:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53090 "EHLO
+        Sat, 23 Jul 2022 07:22:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237198AbiGSONP (ORCPT
+        with ESMTP id S231377AbiGWLWO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 19 Jul 2022 10:13:15 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51CE559259;
-        Tue, 19 Jul 2022 06:36:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 6D483CE1C01;
-        Tue, 19 Jul 2022 13:36:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5416C341C6;
-        Tue, 19 Jul 2022 13:36:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658237812;
-        bh=LgIus1vM08oJb7atpj/1Ixv/EE+zSIDg/3ScTjK636I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hc8opsDf62QaLIIbJ/8bhboVP/hhdbVhKBYx6dB3I94dx260mmGeQLkcDze6Gq6xI
-         JXBxqA2ycpbxSD/4fyvcKM0qPo/o+JKPLAubROYEwZAjB+BKViK1xiYplGR1qidVdq
-         6dUcaV51IgrKQuzIStBgWxro57Iag2GgeuzVCSQ5FnewwcSZ6aEA1e0PQ3z43iLgH+
-         MrnO9upkv1JiDLCNxxBla63/46x+ttmowfsWhAnWF4w3Jid7rprrfXpHz4WyMD4pbq
-         02c+alBWnJuCYyzpIoxjY0iMNOuKBk90iM5QSm5ViMFIBGZu217ibq9PMmrvUx44M/
-         oV6ts8BZILgzw==
-Date:   Tue, 19 Jul 2022 14:36:45 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        Sat, 23 Jul 2022 07:22:14 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E893DF1F;
+        Sat, 23 Jul 2022 04:22:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=dcy6i7FRX4l5Gbr0LDQ+gwpAZaDUrfwf4W+C0zpF9zY=; b=XzjWAAubT+U3O39VOBD7COtuQo
+        AOf9QP0iEkwskFRAAfV1kC1nLpuLSrszaEmxvEeuo990Q9Rq+UeITy/5G3WtlRuF3o3qfYIaeBMg8
+        9b5IqKho5Nsp9pHrndUHstA+vAhdW1N4gLtDFYGzSWhrW3sU3ksbV2hW7dZIE0Iu9SxnUXBsl96L8
+        WFOii/NhiO75NBOK1USoyAuejuWJw3374X7yUQfbvIaXOw3TUiA0GdfGvKdhdb5ECmh2wiG090taA
+        8/54Ml179UxlGL7PyBjGIsxgu0iY+y8jASEmQaQtaWopJWnfSFOefldSo6UcC/yzTB650j52dVspG
+        6LSRR++A==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=worktop.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oFDCR-0067Mf-Ps; Sat, 23 Jul 2022 11:21:36 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 01AA898016F; Sat, 23 Jul 2022 13:21:33 +0200 (CEST)
+Date:   Sat, 23 Jul 2022 13:21:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
@@ -48,43 +46,36 @@ Cc:     Sami Tolvanen <samitolvanen@google.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-hardening@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [RFC PATCH v3 00/20] KCFI support
-Message-ID: <20220719133645.GA14089@willie-the-truck>
+Subject: Re: [RFC PATCH v3 20/20] x86: Add support for CONFIG_CFI_CLANG
+Message-ID: <YtvZvYHC1BKzEz1p@worktop.programming.kicks-ass.net>
 References: <20220610233513.1798771-1-samitolvanen@google.com>
- <202206131001.6BA9933C@keescook>
+ <20220610233513.1798771-21-samitolvanen@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202206131001.6BA9933C@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20220610233513.1798771-21-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jun 13, 2022 at 10:04:12AM -0700, Kees Cook wrote:
-> On Fri, Jun 10, 2022 at 04:34:53PM -0700, Sami Tolvanen wrote:
-> > KCFI is a proposed forward-edge control-flow integrity scheme for
-> > Clang, which is more suitable for kernel use than the existing CFI
-> > scheme used by CONFIG_CFI_CLANG. KCFI doesn't require LTO, doesn't
-> > alter function references to point to a jump table, and won't break
-> > function address equality. The latest LLVM patch is here:
-> > 
-> >   https://reviews.llvm.org/D119296
-> > 
-> > This RFC series replaces the current arm64 CFI implementation with
-> > KCFI and adds support for x86_64.
-> 
-> I think the "RFC" prefix for this series can be dropped. :)
-> 
-> It looks to me like all of Peter's concerns have been addressed. I'd say
-> let's get the Clang side landed, and once that's done, land this via x86
-> -tip?
-> 
-> Peter and Will does this sound right to you? It touches arm64, so if
-> -tip isn't okay, I could take it in one of my trees?
+On Fri, Jun 10, 2022 at 04:35:13PM -0700, Sami Tolvanen wrote:
 
-The arm64 bits look fine to me. Please just check if it conflicts horribly
-with -next so that we have a chance to figure out a shared branch if
-necessary.
+> +#ifdef CONFIG_CFI_CLANG
+> +#define __CFI_TYPE(name)					\
+> +	.fill 7, 1, 0xCC ASM_NL					\
+> +	SYM_START(__cfi_##name, SYM_L_LOCAL, SYM_A_NONE)	\
+> +	int3 ASM_NL						\
+> +	int3 ASM_NL						\
+> +	mov __kcfi_typeid_##name, %eax ASM_NL			\
+> +	int3 ASM_NL						\
+> +	int3 ASM_NL						\
+> +	SYM_FUNC_END(__cfi_##name)
+> +#endif
 
-Will
+Like said on IRC yesterday, this doesn't generate the right mov
+encoding.
+
+	.byte 0xb8 ; .long __kcfi_typeid_##name ;		\
+
+works. Your LLVM tree already has the ZExt patch you gave me yesterday
+to fix up the linker fallout from this change.
