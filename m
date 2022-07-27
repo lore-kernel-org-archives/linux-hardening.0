@@ -2,68 +2,27 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1C3C19F28
-	for <linux-hardening@archiver.kernel.org>; Wed, 27 Jul 2022 17:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594FBC19F2B
+	for <linux-hardening@archiver.kernel.org>; Wed, 27 Jul 2022 17:16:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229630AbiG0ROy (ORCPT
+        id S241698AbiG0RQv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 27 Jul 2022 13:14:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48690 "EHLO
+        Wed, 27 Jul 2022 13:16:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241650AbiG0ROJ (ORCPT
+        with ESMTP id S241695AbiG0RQP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 27 Jul 2022 13:14:09 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECD6C76EB2
-        for <linux-hardening@vger.kernel.org>; Wed, 27 Jul 2022 09:42:30 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id mf4so32569474ejc.3
-        for <linux-hardening@vger.kernel.org>; Wed, 27 Jul 2022 09:42:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AcPJOkIHEC0icvBEnpWtnVKxz/BvRtFJOpxpTEHoQRg=;
-        b=dnnAblfbBitvVzSIxg4x60tAPSI8URVjg+EFtGQCO+Egbv95vWxxuJA0seKRUNvCni
-         MH/l2lfP3y3m2n82QniX+RZ7l/z/R/u1/iB5fRHweoFmNcwnKUaQHfBq5L2Tk1oDNYlw
-         q+xyWk2wZadVAhHiWbYj77fvxQHCyW96l9uJ0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AcPJOkIHEC0icvBEnpWtnVKxz/BvRtFJOpxpTEHoQRg=;
-        b=P6SSLWjKNEiSkVy7sbpQ9FGOweIJrZeFELyfgIhZRdQBlYY97J6b6SM5d/8pET303E
-         XvOA+K6KaPsujwM7GUDeZL7itHb5bSoctvGsiRceIwX3uPbQxK6lhx3CyQexwGu8X+n5
-         e34j9NDwQZxeK1K4oGQlPaPjH1ddznrI3By9vmSxA7YVU918wh9YHUuJCDfOUOm1RY6W
-         M/aynG+WNhKcGPchb4Xm6nHznlDxyUioos15yuTB2tcmRnkXlKRvW7W/8PJEX+NYiCRj
-         tCeP4UmG+s6WSud4Y8/62pedy3p5YnRFp+H7953ZLUrmpHaZjGZUjqWjN+9N5cX/I2nt
-         BWsA==
-X-Gm-Message-State: AJIora/Dsw4TZBpXXOe8Cdzqp3/AWWzRD92CTXlAg+Y8zcKpTVPVvIg9
-        Te7RvtV7XpvsvBDPoo1ZjbZuLRLU+PdO3SQv
-X-Google-Smtp-Source: AGRyM1uCkVi6PsnouQnRx7BkREn6ZzjHUiOFaa96uST0/KMVreKRc8W3ZXR/Kl5wpC9XEhM+DANjuQ==
-X-Received: by 2002:a17:907:ea1:b0:72f:4443:d322 with SMTP id ho33-20020a1709070ea100b0072f4443d322mr18165548ejc.240.1658940148840;
-        Wed, 27 Jul 2022 09:42:28 -0700 (PDT)
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
-        by smtp.gmail.com with ESMTPSA id 13-20020a170906308d00b0072fb3704e49sm5871050ejv.46.2022.07.27.09.42.28
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Jul 2022 09:42:28 -0700 (PDT)
-Received: by mail-wr1-f42.google.com with SMTP id b26so25346202wrc.2
-        for <linux-hardening@vger.kernel.org>; Wed, 27 Jul 2022 09:42:28 -0700 (PDT)
-X-Received: by 2002:a05:600c:4ed0:b0:3a3:3ef3:c8d1 with SMTP id
- g16-20020a05600c4ed000b003a33ef3c8d1mr3721170wmq.154.1658940137807; Wed, 27
- Jul 2022 09:42:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210929185823.499268-1-alex.popov@linux.com> <d290202d-a72d-0821-9edf-efbecf6f6cef@linux.com>
- <20210929194924.GA880162@paulmck-ThinkPad-P17-Gen-1> <YVWAPXSzFNbHz6+U@alley>
- <CAHk-=widOm3FXMPXXK0cVaoFuy3jCk65=5VweLceQCuWdep=Hg@mail.gmail.com> <7c567acd-1cc1-a480-ca5a-d50a9c5a69ef@ispras.ru>
-In-Reply-To: <7c567acd-1cc1-a480-ca5a-d50a9c5a69ef@ispras.ru>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 27 Jul 2022 09:42:01 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgSyNh2gZTnC-EoiGs5WNtVu99jcHXxLRUvwMabm37iKg@mail.gmail.com>
-Message-ID: <CAHk-=wgSyNh2gZTnC-EoiGs5WNtVu99jcHXxLRUvwMabm37iKg@mail.gmail.com>
+        Wed, 27 Jul 2022 13:16:15 -0400
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 105985B7B6;
+        Wed, 27 Jul 2022 09:43:04 -0700 (PDT)
+Received: from [10.10.2.52] (unknown [10.10.2.52])
+        by mail.ispras.ru (Postfix) with ESMTPSA id 5CDC840737B0;
+        Wed, 27 Jul 2022 16:43:01 +0000 (UTC)
 Subject: Re: [PATCH] Introduce the pkill_on_warn boot parameter
-To:     Alexey Khoroshilov <khoroshilov@ispras.ru>
-Cc:     Petr Mladek <pmladek@suse.com>,
+To:     Jann Horn <jannh@google.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Petr Mladek <pmladek@suse.com>,
         "Paul E. McKenney" <paulmck@kernel.org>,
         Alexander Popov <alex.popov@linux.com>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -83,7 +42,6 @@ Cc:     Petr Mladek <pmladek@suse.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Alexey Kardashevskiy <aik@ozlabs.ru>,
         Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Jann Horn <jannh@google.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Andy Lutomirski <luto@kernel.org>,
@@ -100,45 +58,116 @@ Cc:     Petr Mladek <pmladek@suse.com>,
         "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         notify@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20210929185823.499268-1-alex.popov@linux.com>
+ <d290202d-a72d-0821-9edf-efbecf6f6cef@linux.com>
+ <20210929194924.GA880162@paulmck-ThinkPad-P17-Gen-1> <YVWAPXSzFNbHz6+U@alley>
+ <CAHk-=widOm3FXMPXXK0cVaoFuy3jCk65=5VweLceQCuWdep=Hg@mail.gmail.com>
+ <7c567acd-1cc1-a480-ca5a-d50a9c5a69ef@ispras.ru>
+ <CAG48ez2Sh-kngNVeCF9-X550PQMaNnQaEvS+EAiWaDjWnmoHOg@mail.gmail.com>
+From:   Alexey Khoroshilov <khoroshilov@ispras.ru>
+Autocrypt: addr=khoroshilov@ispras.ru; prefer-encrypt=mutual; keydata=
+ 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
+ kK2E04Fb+Zk1eJvHYRc=
+Message-ID: <1fa12030-ba88-e6e8-6aca-4aedac790cc1@ispras.ru>
+Date:   Wed, 27 Jul 2022 19:43:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CAG48ez2Sh-kngNVeCF9-X550PQMaNnQaEvS+EAiWaDjWnmoHOg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: ru-RU
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jul 27, 2022 at 9:17 AM Alexey Khoroshilov
-<khoroshilov@ispras.ru> wrote:
->
-> We see a number of cases where WARNING is used to inform userspace that
-> it is doing something wrong, e.g.
-> https://elixir.bootlin.com/linux/v5.19-rc8/source/net/can/j1939/socket.c#L181
-> https://elixir.bootlin.com/linux/v5.19-rc8/source/drivers/video/fbdev/core/fbmem.c#L1023
+On 27.07.2022 19:30, Jann Horn wrote:
+> On Wed, Jul 27, 2022 at 6:17 PM Alexey Khoroshilov
+> <khoroshilov@ispras.ru> wrote:
+>> On 01.10.2021 22:59, Linus Torvalds wrote:
+>> Coming back to the discussion of WARN_ON()/pr_warn("WARNING:") semantics.
+>>
+>> We see a number of cases where WARNING is used to inform userspace that
+>> it is doing something wrong, e.g.
+>> https://elixir.bootlin.com/linux/v5.19-rc8/source/net/can/j1939/socket.c#L181
+>> https://elixir.bootlin.com/linux/v5.19-rc8/source/drivers/video/fbdev/core/fbmem.c#L1023
+>>
+>> It is definitely useful, but it does not make sense in case of fuzzing
+>> when the userspace should do wrong things and check if kernel behaves
+>> correctly.
+>>
+>> As a result we have warnings with two different intentions:
+>> - warn that something wrong happens in kernel, but we are able to continue;
+>> - warn userspace that it is doing something wrong.
+>>
+>> During fuzzing we would like to report the former and to ignore the
+>> latter. Are any ideas how these intentions can be recognized automatically?
+> 
+> https://elixir.bootlin.com/linux/v5.19-rc8/source/include/asm-generic/bug.h#L74
+> says:
+> 
+>  * WARN(), WARN_ON(), WARN_ON_ONCE, and so on can be used to report
+>  * significant kernel issues that need prompt attention if they should ever
+>  * appear at runtime.
+>  *
+>  * Do not use these macros when checking for invalid external inputs
+>  * (e.g. invalid system call arguments, or invalid data coming from
+>  * network/devices), and on transient conditions like ENOMEM or EAGAIN.
+>  * These macros should be used for recoverable kernel issues only.
+>  * For invalid external inputs, transient conditions, etc use
+>  * pr_err[_once/_ratelimited]() followed by dump_stack(), if necessary.
+>  * Do not include "BUG"/"WARNING" in format strings manually to make these
+>  * conditions distinguishable from kernel issues.
+> 
+> So if you see drivers intentionally using WARN() or printing
+> "WARNING:" on codepaths that are reachable with bogus inputs from
+> userspace, those codepaths should be fixed to log warnings in a
+> different format.
 
-That first case is entirely bogus.
+Thank you, Jann!
 
-WARN_ON() should only be used for "This cannot happen, but if it does,
-I want to know how we got here".
+I have missed that.
 
-But the second case is fine: Using "pr_warn()" is fine. A kernel
-warning (without a backtrace) is a normal thing for something that is
-deprecated or questionable, and you want to tell the user that "this
-app is doing something wrong".
+--
+Alexey
 
-So if that j1939 thing is something that can be triggered by a user,
-then the backtrace should be reported to the driver maintainer, and
-then either
-
- (a) the WARN_ON_ONCE() should just be removed ("ok, this can happen,
-we understand why it can happen, and it's fine")
-
- (b) the problem the WARN_ON_ONCE() reports about should be made
-impossible some way
-
- (c) it might be downgraded to a pr_warn() if people really want to
-tell user space that "guys, you're doing something wrong" and it's
-considered a useful warning.
-
-Honestly, for something like that j1939 can driver, I doubt (c) is
-ever an option. The "return -EBUSY" is the only real information that
-a user needs.
-
-               Linus
