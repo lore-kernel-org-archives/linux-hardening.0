@@ -2,86 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D080C04A68
-	for <linux-hardening@archiver.kernel.org>; Wed, 27 Jul 2022 20:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DF0C04A68
+	for <linux-hardening@archiver.kernel.org>; Thu, 28 Jul 2022 12:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233603AbiG0UcQ (ORCPT
+        id S234130AbiG1MsZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 27 Jul 2022 16:32:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35794 "EHLO
+        Thu, 28 Jul 2022 08:48:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233539AbiG0UcN (ORCPT
+        with ESMTP id S229725AbiG1MsY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 27 Jul 2022 16:32:13 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11C5E54C86
-        for <linux-hardening@vger.kernel.org>; Wed, 27 Jul 2022 13:32:11 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id f7so172355pjp.0
-        for <linux-hardening@vger.kernel.org>; Wed, 27 Jul 2022 13:32:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kjP70k9t0KxDR7jt1AysqjuIaIYJ8FiZnNeTsn+rTAg=;
-        b=Z7JaTh2SQlfgpSPA/Q0kUcjq/MQmhJcgBlhsTFZiT2WqUSA+YdovEK4ZLpv2i1+Jzi
-         +BL96aly3eCJnRv6rw/T0POK2FweB9Po/Z4mJymG8ie8nNw5r+L5vNX7+B3lu4nraq1E
-         +5hEevqPSvjzXY7kVIBaHPWFGApqnY8Yg/T84=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kjP70k9t0KxDR7jt1AysqjuIaIYJ8FiZnNeTsn+rTAg=;
-        b=4uFeCWVCOdX420YKc35AVXC5EhYIlRZMnmIJRU7OjMRHkOa/NH8Dc75QghwFcrpl9c
-         42+wdvfa5Z2gQjWFnh8Q6PUU29C/dMMnu8Hl1qhsyv+Nh2ZmB4YVJ5HK0PBkmd42yaUz
-         zObXXPXKPdA8cawENCAlCOZEqpwsnVkbISaqKhfCN49nksai58VnUtW4ElIdRwCtvYxR
-         Uc0ciCODXDgUKV561COXVKTsWXJT5sX0lQPCpLlMhqiqkgQDPEQR/nK7tpEI3m3xBh7H
-         smUN6ksk1RxATp8JHf0GUDU76LKdSN18eu7u7MRTAzVJUlIMzR6JGFadYOYquzfcfs/d
-         RTTg==
-X-Gm-Message-State: AJIora/+VPwkVWyFmes/UfkypKOOnOwIqXUDPO6I0xhHSRxC12HaXrzp
-        NgH1cp+/c5m+s9l0jMnlEPDubw==
-X-Google-Smtp-Source: AGRyM1tL3ybzMjXRYP58mGjg0YjcwPF5GkdKSrAUy9bCPWExiEBUk+yEn/bOnOESs02lr8ZGX2hB8A==
-X-Received: by 2002:a17:903:11cc:b0:168:eae:da4a with SMTP id q12-20020a17090311cc00b001680eaeda4amr23356939plh.21.1658953931435;
-        Wed, 27 Jul 2022 13:32:11 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q13-20020a65684d000000b00419cde333eesm12401728pgt.64.2022.07.27.13.32.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Jul 2022 13:32:10 -0700 (PDT)
-Date:   Wed, 27 Jul 2022 13:32:09 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Xiu Jianfeng <xiujianfeng@huawei.com>
-Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        npiggin@gmail.com, christophe.leroy@csgroup.eu, tglx@linutronix.de,
-        mark.rutland@arm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH -next v3 2/2] powerpc: add support for syscall stack
- randomization
-Message-ID: <202207271331.B227002C@keescook>
-References: <20220701082435.126596-1-xiujianfeng@huawei.com>
- <20220701082435.126596-3-xiujianfeng@huawei.com>
+        Thu, 28 Jul 2022 08:48:24 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A4ED29832;
+        Thu, 28 Jul 2022 05:48:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DBF19B8243F;
+        Thu, 28 Jul 2022 12:48:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4B40C433C1;
+        Thu, 28 Jul 2022 12:48:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1659012501;
+        bh=oKG0k/HCujEOjDRj8n7oPM/49lyliRDHFtvxw2due3U=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=fvlzfp7ghRMCmqTdOLLf2dA33B5w/JPPu+qcpHNBy7C6r3tIpxK2bbFmBhL9Ij8QM
+         2xaSzjtvGqWM6WYwHygCYiM1GpbL0SbHlwIDPzp4bUiWnHwAHmxIBPO81JlcIKP2BI
+         MzPHghVbW6WAj4XYbr9OqER6tCDRXZJvSCX+tWv1Ym56mqMfc0jAQatiyt5Hy0VWDh
+         kEuog6oizp9fOcjPfi+Qaz6u6H6Bgk8CcN6IGgI0ruGujAlpCpJgQ/JPfcsP0XAVmq
+         VVCSRlpc9ryeR2WAnQyPe5yrrAhpmW5V6gAWYrulFSlgJi2NlJLK0pR6TOu3T2ATJT
+         gBjZyspmM8snw==
+From:   Mark Brown <broonie@kernel.org>
+To:     Jaroslav Kysela <perex@perex.cz>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+In-Reply-To: <20211006180810.GA913370@embeddedor>
+References: <20211006180810.GA913370@embeddedor>
+Subject: Re: [PATCH][next] ASoC: q6asm: use kcalloc() instead of kzalloc()
+Message-Id: <165901249963.1738594.15790903946126347978.b4-ty@kernel.org>
+Date:   Thu, 28 Jul 2022 13:48:19 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220701082435.126596-3-xiujianfeng@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.10.0-dev-d1cc2
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jul 01, 2022 at 04:24:35PM +0800, Xiu Jianfeng wrote:
-> Add support for adding a random offset to the stack while handling
-> syscalls. This patch uses mftb() instead of get_random_int() for better
-> performance.
+On Wed, 6 Oct 2021 13:08:10 -0500, Gustavo A. R. Silva wrote:
+> Use 2-factor multiplication argument form kcalloc() instead
+> of kzalloc().
 > 
-> In order to avoid unconditional stack canaries on syscall entry (due to
-> the use of alloca()), also disable stack protector to avoid triggering
-> needless checks and slowing down the entry path. As there is no general
-> way to control stack protector coverage with a function attribute, this
-> must be disabled at the compilation unit level.
 > 
-> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Applied to
 
--Kees
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
--- 
-Kees Cook
+Thanks!
+
+[1/1] ASoC: q6asm: use kcalloc() instead of kzalloc()
+      commit: 40d060b8158e26438398bf1132925f666e3b6480
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
