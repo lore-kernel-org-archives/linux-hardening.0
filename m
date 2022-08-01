@@ -2,65 +2,174 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50807C19F2B
-	for <linux-hardening@archiver.kernel.org>; Fri, 29 Jul 2022 13:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C183CC00144
+	for <linux-hardening@archiver.kernel.org>; Mon,  1 Aug 2022 20:31:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236503AbiG2NTc (ORCPT
+        id S233270AbiHAUbf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 29 Jul 2022 09:19:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41256 "EHLO
+        Mon, 1 Aug 2022 16:31:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236492AbiG2NT3 (ORCPT
+        with ESMTP id S232106AbiHAUbf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 29 Jul 2022 09:19:29 -0400
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE3D4558F6;
-        Fri, 29 Jul 2022 06:19:26 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 1 Aug 2022 16:31:35 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD8482A423;
+        Mon,  1 Aug 2022 13:31:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4LvSlw50l5z4x1b;
-        Fri, 29 Jul 2022 23:19:24 +1000 (AEST)
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-To:     mpe@ellerman.id.au, paulus@samba.org, tglx@linutronix.de,
-        npiggin@gmail.com, Xiu Jianfeng <xiujianfeng@huawei.com>,
-        christophe.leroy@csgroup.eu, mark.rutland@arm.com,
-        benh@kernel.crashing.org
-Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-In-Reply-To: <20220701082435.126596-1-xiujianfeng@huawei.com>
-References: <20220701082435.126596-1-xiujianfeng@huawei.com>
-Subject: Re: [PATCH -next v3 0/2] powerpc: add support for syscall stack randomization
-Message-Id: <165909979124.253830.3036774942147857937.b4-ty@ellerman.id.au>
-Date:   Fri, 29 Jul 2022 23:03:11 +1000
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 789F160FDA;
+        Mon,  1 Aug 2022 20:31:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2F11C433C1;
+        Mon,  1 Aug 2022 20:31:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1659385892;
+        bh=B66H8spKic1Gh5ozNhXzWmq4IeBfOMracgjyxFL3DoM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ooXYHh555o/Wx0aZYQ24ocY8wS90+F6phk1WM9A1ZK+VvTua1y2eyHOICkHSH+FLu
+         Wqzj8EvmWkoNd0ZyKaA+RWv+wss1ohXQYnI+jWQTdGRsDLO9my3DXDd/213GUHOwnt
+         ga6Py/NfRZFVQR49LkyEYkuA1CD0AVR8V+vKQ9kWIRHtKDAyD9em3Asq3/z6VkrGD1
+         lZAsurDcFIe0q9+BAsPxg3h+P/ju00SAKJksbNLJt6l7GzzRd+UrZd+uMcY00g6Lwg
+         75SUvtAquEOVcdXm7lv5XFqo9N313ai4DK1fEl8Bm7/J2dkHuBTruOCtoduhJ+UvZo
+         Kma6VhAwPJ3hQ==
+Date:   Mon, 1 Aug 2022 15:31:28 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [GIT PULL] flexible-array transformations in UAPI for 6.0-rc1
+Message-ID: <Yug4IJHugXBzPWFH@work>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 1 Jul 2022 16:24:33 +0800, Xiu Jianfeng wrote:
-> This patchset adds support for syscall stack randomization for
-> powerpc, which can make harder the various stack-based attacks that
-> rely on deterministic stack structure.
-> 
-> Changes in v3:
->   -add a lead-up patch to move system_call_exception() to syscall.c to
->   avoid disabling stack protector for all functions in interrupt.c
-> Changes in v2:
->   -move choose choose_random_kstack_offset() to the end of system_call_exception
->   -allow full 6 (10) bits of entropy
->   -disable stack-protector for interrupt.c
-> 
-> [...]
+The following changes since commit b13baccc3850ca8b8cccbf8ed9912dbaa0fdf7f3:
 
-Applied to powerpc/next.
+  Linux 5.19-rc2 (2022-06-12 16:11:37 -0700)
 
-[1/2] powerpc: Move system_call_exception() to syscall.c
-      https://git.kernel.org/powerpc/c/1547db7d1f4481c1f3ec731f3edc724ef3026ede
-[2/2] powerpc: add support for syscall stack randomization
-      https://git.kernel.org/powerpc/c/f4a0318f278d98d9492916722e85f258c2221f88
+are available in the Git repository at:
 
-cheers
+  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/flexible-array-transformations-UAPI-6.0-rc1
+
+for you to fetch changes up to 94dfc73e7cf4a31da66b8843f0b9283ddd6b8381:
+
+  treewide: uapi: Replace zero-length arrays with flexible-array members (2022-06-28 21:26:05 +0200)
+
+----------------------------------------------------------------
+flexible-array transformations in UAPI for 6.0-rc1
+
+Hi Linus,
+
+Please, pull the following treewide patch that replaces zero-length arrays
+with flexible-array members in UAPI. This patch has been baking in
+linux-next for 5 weeks now.
+
+-fstrict-flex-arrays=3 is coming and we need to land these changes
+to prevent issues like these in the short future:
+
+../fs/minix/dir.c:337:3: warning: 'strcpy' will always overflow; destination buffer has size 0,
+but the source string has length 2 (including NUL byte) [-Wfortify-source]
+		strcpy(de3->name, ".");
+		^
+
+Since these are all [0] to [] changes, the risk to UAPI is nearly zero. If
+this breaks anything, we can use a union with a new member name.
+
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836
+
+Thanks
+--
+Gustavo
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (1):
+      treewide: uapi: Replace zero-length arrays with flexible-array members
+
+ arch/m68k/include/uapi/asm/bootinfo.h           |  4 +-
+ arch/mips/include/uapi/asm/ucontext.h           |  2 +-
+ arch/s390/include/uapi/asm/hwctrset.h           |  6 +--
+ arch/x86/include/uapi/asm/bootparam.h           |  2 +-
+ arch/x86/include/uapi/asm/kvm.h                 | 12 ++---
+ include/uapi/drm/i915_drm.h                     |  6 +--
+ include/uapi/linux/blkzoned.h                   |  2 +-
+ include/uapi/linux/bpf.h                        |  2 +-
+ include/uapi/linux/btrfs.h                      | 10 ++--
+ include/uapi/linux/btrfs_tree.h                 |  2 +-
+ include/uapi/linux/can/bcm.h                    |  2 +-
+ include/uapi/linux/connector.h                  |  2 +-
+ include/uapi/linux/cycx_cfm.h                   |  2 +-
+ include/uapi/linux/dm-ioctl.h                   |  8 +--
+ include/uapi/linux/dm-log-userspace.h           |  2 +-
+ include/uapi/linux/ethtool.h                    | 28 +++++-----
+ include/uapi/linux/fanotify.h                   |  2 +-
+ include/uapi/linux/fiemap.h                     |  2 +-
+ include/uapi/linux/firewire-cdev.h              | 12 ++---
+ include/uapi/linux/fs.h                         |  2 +-
+ include/uapi/linux/if_alg.h                     |  2 +-
+ include/uapi/linux/if_arcnet.h                  |  6 +--
+ include/uapi/linux/if_pppox.h                   |  4 +-
+ include/uapi/linux/if_tun.h                     |  2 +-
+ include/uapi/linux/igmp.h                       |  6 +--
+ include/uapi/linux/inet_diag.h                  |  2 +-
+ include/uapi/linux/inotify.h                    |  2 +-
+ include/uapi/linux/ip.h                         |  4 +-
+ include/uapi/linux/ip_vs.h                      |  4 +-
+ include/uapi/linux/iso_fs.h                     |  4 +-
+ include/uapi/linux/jffs2.h                      |  8 +--
+ include/uapi/linux/kcov.h                       |  2 +-
+ include/uapi/linux/kvm.h                        |  8 +--
+ include/uapi/linux/minix_fs.h                   |  4 +-
+ include/uapi/linux/mmc/ioctl.h                  |  2 +-
+ include/uapi/linux/ndctl.h                      | 10 ++--
+ include/uapi/linux/net_dropmon.h                |  4 +-
+ include/uapi/linux/netfilter/x_tables.h         |  4 +-
+ include/uapi/linux/netfilter_arp/arp_tables.h   |  6 +--
+ include/uapi/linux/netfilter_bridge/ebt_among.h |  2 +-
+ include/uapi/linux/netfilter_ipv4/ip_tables.h   |  6 +--
+ include/uapi/linux/netfilter_ipv6/ip6_tables.h  |  4 +-
+ include/uapi/linux/perf_event.h                 |  2 +-
+ include/uapi/linux/pkt_cls.h                    |  4 +-
+ include/uapi/linux/raid/md_p.h                  |  2 +-
+ include/uapi/linux/random.h                     |  2 +-
+ include/uapi/linux/romfs_fs.h                   |  4 +-
+ include/uapi/linux/rtnetlink.h                  |  2 +-
+ include/uapi/linux/sctp.h                       | 10 ++--
+ include/uapi/linux/seg6.h                       |  2 +-
+ include/uapi/linux/seg6_iptunnel.h              |  2 +-
+ include/uapi/linux/stm.h                        |  2 +-
+ include/uapi/linux/target_core_user.h           |  2 +-
+ include/uapi/linux/usb/audio.h                  |  2 +-
+ include/uapi/linux/usb/cdc.h                    |  6 +--
+ include/uapi/linux/usb/ch9.h                    |  2 +-
+ include/uapi/linux/usb/raw_gadget.h             |  4 +-
+ include/uapi/linux/usbdevice_fs.h               |  4 +-
+ include/uapi/linux/vhost_types.h                |  4 +-
+ include/uapi/linux/virtio_9p.h                  |  2 +-
+ include/uapi/linux/xfrm.h                       | 10 ++--
+ include/uapi/rdma/hfi/hfi1_user.h               |  2 +-
+ include/uapi/rdma/ib_user_verbs.h               | 72 ++++++++++++-------------
+ include/uapi/rdma/rdma_user_cm.h                |  2 +-
+ include/uapi/rdma/rdma_user_ioctl_cmds.h        |  2 +-
+ include/uapi/scsi/fc/fc_els.h                   | 18 +++----
+ include/uapi/scsi/scsi_bsg_fc.h                 |  2 +-
+ include/uapi/sound/asound.h                     |  2 +-
+ include/uapi/sound/firewire.h                   |  6 +--
+ include/uapi/sound/skl-tplg-interface.h         |  2 +-
+ include/uapi/sound/sof/header.h                 |  2 +-
+ include/uapi/sound/usb_stream.h                 |  2 +-
+ tools/arch/x86/include/uapi/asm/kvm.h           | 12 ++---
+ tools/include/uapi/drm/i915_drm.h               |  6 +--
+ tools/include/uapi/linux/fs.h                   |  2 +-
+ tools/include/uapi/linux/if_tun.h               |  2 +-
+ tools/include/uapi/linux/kvm.h                  |  8 +--
+ tools/include/uapi/linux/perf_event.h           |  2 +-
+ tools/include/uapi/linux/pkt_cls.h              |  4 +-
+ tools/include/uapi/linux/seg6.h                 |  4 +-
+ tools/include/uapi/linux/usbdevice_fs.h         |  4 +-
+ tools/include/uapi/sound/asound.h               |  2 +-
+ 82 files changed, 216 insertions(+), 216 deletions(-)
