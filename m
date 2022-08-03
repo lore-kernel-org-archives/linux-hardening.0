@@ -2,71 +2,89 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB1FC19F2B
-	for <linux-hardening@archiver.kernel.org>; Wed,  3 Aug 2022 03:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D54AEC19F2C
+	for <linux-hardening@archiver.kernel.org>; Wed,  3 Aug 2022 14:05:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237492AbiHCDX0 (ORCPT
+        id S237788AbiHCOFD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 2 Aug 2022 23:23:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48908 "EHLO
+        Wed, 3 Aug 2022 10:05:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234855AbiHCDXX (ORCPT
+        with ESMTP id S236494AbiHCOFC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 2 Aug 2022 23:23:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EA464F64A;
-        Tue,  2 Aug 2022 20:23:22 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2B5D861260;
-        Wed,  3 Aug 2022 03:23:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 832BDC4347C;
-        Wed,  3 Aug 2022 03:23:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659497001;
-        bh=VAX3o2tqqQ/Lc6mqVqs+rQqswUZlT391CIHJezobAPE=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=U4EiMBVug8lu19HXVDC5X06WWLE/TvV//WH3sGdbaNPhCv/UiQ39rjyolvYYmtUiQ
-         yZ72qu8hyrUZJN5gvzCdEUua/S4VbP6y4Ngk7W/8yXe4N98w/k/eOY6Vh5yVMTCRaB
-         QmyOXo5D/4bKImBtoEA69ZLf+38/CivQrKvcg3pCZOEIVPVV+ltyrO8MTdOQ9q87lq
-         tOyQxQVFZu83Urr9c73ax4fy5OEnr6rrOu0frXevVP5ccpoa8tUKZLsJDCsFx8QzHj
-         mEwzEOyVOJQFBV/H/NuaJTqPc6v7vC44+/DzG/f/epESPmtFI9Gr594MxEyCF8cFIc
-         z51yyT1GC+pWQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 72376C43142;
-        Wed,  3 Aug 2022 03:23:21 +0000 (UTC)
-Subject: Re: [GIT PULL] flexible-array transformations in UAPI for 6.0-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <Yug4IJHugXBzPWFH@work>
-References: <Yug4IJHugXBzPWFH@work>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <Yug4IJHugXBzPWFH@work>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/flexible-array-transformations-UAPI-6.0-rc1
-X-PR-Tracked-Commit-Id: 94dfc73e7cf4a31da66b8843f0b9283ddd6b8381
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e2b542100719a93f8cdf6d90185410d38a57a4c1
-Message-Id: <165949700145.31205.9669792520884072712.pr-tracker-bot@kernel.org>
-Date:   Wed, 03 Aug 2022 03:23:21 +0000
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+        Wed, 3 Aug 2022 10:05:02 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B782530F57;
+        Wed,  3 Aug 2022 07:05:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1659535501; x=1691071501;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=yg5mD3Dj0CS+uFzrjjVlpHk1BBsTLHtsoJkssWr5R3w=;
+  b=Okch79AIhz+1CYySR46P70UuutIewSUIFebnvZhU3TUUABUNsVGEb4jg
+   /+naCNGvEzRbC4Knb75PAybOxXTbLoVniyqJksqWshri7zvqOwdOmeqLg
+   mk/dAirsQYRJq7PugdK6C7FQv8ACKvLBeF9ZA2U5X0U/1UIc61LqX6TfO
+   kqtN+qMdqxh/9V9sKcHndUM52/+wIjSj/tY9L1oJXvD4xjSgOkKNN0Ict
+   D17DV4YeLWMyQFyvSGOZV6hHuDZvP76Euqq/VXzQLLc5EeQ+iZ2g0e+Ea
+   5QYBlRPI4BcY9vFnEn1vAePasA0XlwfNgZX89EeUQWV9qIpnoTGWN8DxX
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10428"; a="269450184"
+X-IronPort-AV: E=Sophos;i="5.93,214,1654585200"; 
+   d="scan'208";a="269450184"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2022 07:05:01 -0700
+X-IronPort-AV: E=Sophos;i="5.93,214,1654585200"; 
+   d="scan'208";a="631160602"
+Received: from buichris-mobl.amr.corp.intel.com (HELO [10.209.124.150]) ([10.209.124.150])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2022 07:05:00 -0700
+Message-ID: <973736db-2480-bbaa-d2ce-6e1b6dd2ed0c@intel.com>
+Date:   Wed, 3 Aug 2022 07:05:00 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [RFC PATCH 0/8] x86_64: Harden compressed kernel, part 1
+Content-Language: en-US
+To:     Evgeniy Baskov <baskov@ispras.ru>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        linux-hardening@vger.kernel.org
+References: <cover.1659369873.git.baskov@ispras.ru>
+ <e6e7fef1-0dff-ef72-8a17-8ecec89994ca@intel.com>
+ <893da11995f93a7ea8f7485d17bf356a@ispras.ru>
+ <e8342722-20f8-a566-59c5-8e8f7f271d98@intel.com>
+ <29312ea704885f1b8d3c229e1f22dad7@ispras.ru>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <29312ea704885f1b8d3c229e1f22dad7@ispras.ru>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The pull request you sent on Mon, 1 Aug 2022 15:31:28 -0500:
+On 8/2/22 16:45, Evgeniy Baskov wrote:
+> Partially. We do have known issues because kernel PE image is not
+> compliant with the MS PE and COFF specification v8.3 referenced by
+> the UEFI specification. UEFI implementations with stricter PE loaders
+> (e.g. mentioned above) fail to boot Linux kernel.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/flexible-array-transformations-UAPI-6.0-rc1
+That shows me that it's _possible_ to build a more strict PE loader that
+wouldn't load Linux.  But, in practice is anyone using a more strict PE
+loader?  Does anyone actually want that in practice?  Or, again, is this
+more strict PE loader just an academic demonstration?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e2b542100719a93f8cdf6d90185410d38a57a4c1
+The README starts:
 
-Thank you!
+	This branch demonstrates...
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+That doesn't seem like something that's _important_ to deal with.
+Sounds like a proof-of-concept.
+
+Don't get me wrong, I'm all for improving thing, even if the benefits
+are far off.  But, let's not fool ourselves.
