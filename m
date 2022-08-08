@@ -2,92 +2,137 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FB6C19F2A
-	for <linux-hardening@archiver.kernel.org>; Thu,  4 Aug 2022 14:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D26C25B08
+	for <linux-hardening@archiver.kernel.org>; Mon,  8 Aug 2022 17:46:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231335AbiHDO0h (ORCPT
+        id S244175AbiHHRqh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 4 Aug 2022 10:26:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42690 "EHLO
+        Mon, 8 Aug 2022 13:46:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229988AbiHDO0h (ORCPT
+        with ESMTP id S238298AbiHHRqP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 4 Aug 2022 10:26:37 -0400
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DE5465E4;
-        Thu,  4 Aug 2022 07:26:35 -0700 (PDT)
-Received: from mail.ispras.ru (unknown [83.149.199.84])
-        by mail.ispras.ru (Postfix) with ESMTPSA id 1BC4740D403D;
-        Thu,  4 Aug 2022 14:26:33 +0000 (UTC)
+        Mon, 8 Aug 2022 13:46:15 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3E85277
+        for <linux-hardening@vger.kernel.org>; Mon,  8 Aug 2022 10:46:10 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id ha11so9477243pjb.2
+        for <linux-hardening@vger.kernel.org>; Mon, 08 Aug 2022 10:46:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WT0gvMZYO/av++KMudc6Dk4HO66L8Urniksc21Z/06c=;
+        b=HqrXaad1rdwTwFVLqtIf2gsOjqqHSCtra1Op2I+Ip1+B6FPHxPEzwTFH7bXQwHcgET
+         670AgcycqxHJDRROfj5zyTe5NwQtZFhFxYR5FYTupki7enfM8YtWwCxJCV7/nQfmy4cJ
+         IxrZhtFvvcJ66LqIrfUAMfkK7CmlRw5Rv0KXw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WT0gvMZYO/av++KMudc6Dk4HO66L8Urniksc21Z/06c=;
+        b=SndJqvhEF6LLq6xgvaSNVw7dzg/6djHAph/q9w3edHCUmxtVrIpl1+AYn49ytAJMon
+         9vydVXUx1kiBbghVJG2G23Ix8KQxJ3HpDmx/zzq1GfMxfGpUb9Y+R47PtB5gACPrczky
+         zBrYG85QZEuvrR4/pbEo9Vom59YzDmtOY68x7vOn2UTikWWC9FMiSTk6g1Cy4iHap6Oq
+         s35FBXVkfIvMLNh591UYdzo3zjcHdh9kHW68FojX3HJs5HJ7uBWul26MA/9TmRz75Wlm
+         WreFqRSN35p3OgpQ1NyM9Bxpm4QSGF90YnOZQi5+ObRTXYYzwgo350J2Te4v+10/9vj2
+         F0nw==
+X-Gm-Message-State: ACgBeo2b0YSa/2WVePhnsipOh1iqJTaCHsfumw3CqlmnQu/p2MCtvcKO
+        rfYnr3a09CDyMxENbrSmWXGsGA==
+X-Google-Smtp-Source: AA6agR55vq+x0LDDr8mxEbc8OnrHWhZtkoyD+AcW+LYABM9JFgkRs4j4RTu6F017ikC4JmT33xQogA==
+X-Received: by 2002:a17:90b:3c4c:b0:1f3:3d62:39e2 with SMTP id pm12-20020a17090b3c4c00b001f33d6239e2mr29906557pjb.88.1659980770387;
+        Mon, 08 Aug 2022 10:46:10 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d15-20020a17090ad98f00b001f200eabc65sm8394142pjv.41.2022.08.08.10.46.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Aug 2022 10:46:09 -0700 (PDT)
+Date:   Mon, 8 Aug 2022 10:46:08 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     jeffxu@google.com
+Cc:     skhan@linuxfoundation.org, akpm@linux-foundation.org,
+        dmitry.torokhov@gmail.com, dverkamp@chromium.org, hughd@google.com,
+        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        mnissler@chromium.org, jannh@google.com,
+        Jeff Xu <jeffxu@chromium.org>, linux-hardening@vger.kernel.org,
+        Aleksa Sarai <cyphar@cyphar.com>, dev@opencontainers.org,
+        Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH v2 0/5] mm/memfd: MFD_NOEXEC for memfd_create
+Message-ID: <202208081018.9C782F184C@keescook>
+References: <20220805222126.142525-1-jeffxu@google.com>
 MIME-Version: 1.0
-Date:   Thu, 04 Aug 2022 17:26:33 +0300
-From:   Evgeniy Baskov <baskov@ispras.ru>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [RFC PATCH 0/8] x86_64: Harden compressed kernel, part 1
-In-Reply-To: <Yuur2x+H5ESwJmcr@kroah.com>
-References: <cover.1659369873.git.baskov@ispras.ru>
- <e6e7fef1-0dff-ef72-8a17-8ecec89994ca@intel.com>
- <893da11995f93a7ea8f7485d17bf356a@ispras.ru>
- <e8342722-20f8-a566-59c5-8e8f7f271d98@intel.com>
- <29312ea704885f1b8d3c229e1f22dad7@ispras.ru>
- <973736db-2480-bbaa-d2ce-6e1b6dd2ed0c@intel.com>
- <09c1c94fb9c5006199d88caa88f237a3@ispras.ru> <Yuur2x+H5ESwJmcr@kroah.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <c55c2c3b440c05a392230c380dceae79@ispras.ru>
-X-Sender: baskov@ispras.ru
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220805222126.142525-1-jeffxu@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2022-08-04 14:22, Greg KH wrote:
-...
-> Are there any plans on getting those changes merged back upstream to 
-> the
-> main UEFI codebase so that others can test this type of functionality
-> out?
+On Fri, Aug 05, 2022 at 10:21:21PM +0000, jeffxu@google.com wrote:
+> This v2 series MFD_NOEXEC, this series includes:
+> 1> address comments in V1
+> 2> add sysctl (vm.mfd_noexec) to change the default file permissions
+>     of memfd_create to be non-executable.
 > 
-> thanks,
+> Below are cover-level for v1:
 > 
-> greg k-h
+> The default file permissions on a memfd include execute bits, which
+> means that such a memfd can be filled with a executable and passed to
+> the exec() family of functions. This is undesirable on systems where all
+> code is verified and all filesystems are intended to be mounted noexec,
+> since an attacker may be able to use a memfd to load unverified code and
+> execute it.
 
-The initial prototype of the changes were published as a part of the
-tianocore/edk2-staging[1], and a more up-to-date open source version
-was published as a part of the acidanthera/audk. This version is 
-currently
-being integrated with the EDK II build system, and its malfunctioning
-is currently the main technical issue for integrating changes
-into the main branch.
+I would absolutely like to see some kind of protection here. However,
+I'd like a more specific threat model. What are the cases where the X
+bit has been abused (e.g.[1])? What are the cases where the X bit is
+needed (e.g.[2])? With those in mind, it should be possible to draw
+a clear line between the two cases. (e.g. we need to avoid a confused
+deputy attack where an "unprivileged" user can pass an executable memfd
+to a "privileged" user. How those privileges are defined may matter a
+lot based on how memfds are being used. For example, can runc's use of
+executable memfds be distinguished from an attacker's?)
 
-It is hard to estimate when the merge with the edk2 mainline happens,
-but we are committed to doing this. The amount of changes needed
-is quite large, and simply getting approval from all the maintainers
-will take time even if they are all willing to get this in.
-On the good side, several parties, Microsoft in particular,
-were interested in upstreaming this code, so we have moderate
-optimism for the future.
+> Additionally, execution via memfd is a common way to avoid scrutiny for
+> malicious code, since it allows execution of a program without a file
+> ever appearing on disk. This attack vector is not totally mitigated with
+> this new flag, since the default memfd file permissions must remain
+> executable to avoid breaking existing legitimate uses, but it should be
+> possible to use other security mechanisms to prevent memfd_create calls
+> without MFD_NOEXEC on systems where it is known that executable memfds
+> are not necessary.
 
-In case you are interested in the details, there is also academic
-material available, describing the issues and the changes made,
-which can help to shed some light on the implementation[3][4].
+This reminds me of dealing with non-executable stacks. There ended up
+being three states:
 
-[1] 
-https://github.com/tianocore/edk2-staging/tree/2021-gsoc-secure-loader
-[2] https://github.com/acidanthera/audk/tree/secure_pe
-[3] https://arxiv.org/pdf/2012.05471.pdf
-[4] https://github.com/mhaeuser/ISPRASOpen-SecurePE
+- requested to be executable (PT_GNU_STACK X)
+- requested to be non-executable (PT_GNU_STACK NX)
+- undefined (no PT_GNU_STACK)
 
-Thanks,
-Evgeniy Baskov
+The first two are clearly defined, but the third needed a lot of special
+handling. For a "safe by default" world, the third should be "NX", but
+old stuff depended on it being "X".
+
+Here, we have a bit being present or not, so we only have a binary
+state. I'd much rather the default be NX (no bit set) instead of making
+every future (safe) user of memfd have to specify MFD_NOEXEC.
+
+It's also easier on a filtering side to say "disallow memfd_create with
+MFD_EXEC", but how do we deal with the older software?
+
+If the default perms of memfd_create()'s exec bit is controlled by a
+sysctl and the sysctl is set to "leave it executable", how does a user
+create an NX memfd? (i.e. setting MFD_EXEC means "exec" and not setting
+it means "exec" also.) Are two bits needed? Seems wasteful.
+MFD_I_KNOW_HOW_TO_SET_EXEC | MFD_EXEC, etc...
+
+For F_SEAL_EXEC, it seems this should imply F_SEAL_WRITE if forced
+executable to avoid WX mappings (i.e. provide W^X from the start).
+
+-Kees
+
+[1] https://bugs.chromium.org/p/chromium/issues/list?q=type%3Dbug-security%20memfd%20escalation&can=1
+[2] https://lwn.net/Articles/781013/
+
+-- 
+Kees Cook
