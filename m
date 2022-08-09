@@ -2,137 +2,151 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D26C25B08
-	for <linux-hardening@archiver.kernel.org>; Mon,  8 Aug 2022 17:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A511C00140
+	for <linux-hardening@archiver.kernel.org>; Tue,  9 Aug 2022 02:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244175AbiHHRqh (ORCPT
+        id S230406AbiHICpK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 8 Aug 2022 13:46:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47362 "EHLO
+        Mon, 8 Aug 2022 22:45:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238298AbiHHRqP (ORCPT
+        with ESMTP id S229868AbiHICpJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 8 Aug 2022 13:46:15 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3E85277
-        for <linux-hardening@vger.kernel.org>; Mon,  8 Aug 2022 10:46:10 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id ha11so9477243pjb.2
-        for <linux-hardening@vger.kernel.org>; Mon, 08 Aug 2022 10:46:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WT0gvMZYO/av++KMudc6Dk4HO66L8Urniksc21Z/06c=;
-        b=HqrXaad1rdwTwFVLqtIf2gsOjqqHSCtra1Op2I+Ip1+B6FPHxPEzwTFH7bXQwHcgET
-         670AgcycqxHJDRROfj5zyTe5NwQtZFhFxYR5FYTupki7enfM8YtWwCxJCV7/nQfmy4cJ
-         IxrZhtFvvcJ66LqIrfUAMfkK7CmlRw5Rv0KXw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WT0gvMZYO/av++KMudc6Dk4HO66L8Urniksc21Z/06c=;
-        b=SndJqvhEF6LLq6xgvaSNVw7dzg/6djHAph/q9w3edHCUmxtVrIpl1+AYn49ytAJMon
-         9vydVXUx1kiBbghVJG2G23Ix8KQxJ3HpDmx/zzq1GfMxfGpUb9Y+R47PtB5gACPrczky
-         zBrYG85QZEuvrR4/pbEo9Vom59YzDmtOY68x7vOn2UTikWWC9FMiSTk6g1Cy4iHap6Oq
-         s35FBXVkfIvMLNh591UYdzo3zjcHdh9kHW68FojX3HJs5HJ7uBWul26MA/9TmRz75Wlm
-         WreFqRSN35p3OgpQ1NyM9Bxpm4QSGF90YnOZQi5+ObRTXYYzwgo350J2Te4v+10/9vj2
-         F0nw==
-X-Gm-Message-State: ACgBeo2b0YSa/2WVePhnsipOh1iqJTaCHsfumw3CqlmnQu/p2MCtvcKO
-        rfYnr3a09CDyMxENbrSmWXGsGA==
-X-Google-Smtp-Source: AA6agR55vq+x0LDDr8mxEbc8OnrHWhZtkoyD+AcW+LYABM9JFgkRs4j4RTu6F017ikC4JmT33xQogA==
-X-Received: by 2002:a17:90b:3c4c:b0:1f3:3d62:39e2 with SMTP id pm12-20020a17090b3c4c00b001f33d6239e2mr29906557pjb.88.1659980770387;
-        Mon, 08 Aug 2022 10:46:10 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d15-20020a17090ad98f00b001f200eabc65sm8394142pjv.41.2022.08.08.10.46.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Aug 2022 10:46:09 -0700 (PDT)
-Date:   Mon, 8 Aug 2022 10:46:08 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     jeffxu@google.com
-Cc:     skhan@linuxfoundation.org, akpm@linux-foundation.org,
-        dmitry.torokhov@gmail.com, dverkamp@chromium.org, hughd@google.com,
-        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-        mnissler@chromium.org, jannh@google.com,
-        Jeff Xu <jeffxu@chromium.org>, linux-hardening@vger.kernel.org,
-        Aleksa Sarai <cyphar@cyphar.com>, dev@opencontainers.org,
-        Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH v2 0/5] mm/memfd: MFD_NOEXEC for memfd_create
-Message-ID: <202208081018.9C782F184C@keescook>
-References: <20220805222126.142525-1-jeffxu@google.com>
+        Mon, 8 Aug 2022 22:45:09 -0400
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C61CA1E3CB
+        for <linux-hardening@vger.kernel.org>; Mon,  8 Aug 2022 19:45:08 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 667243200911;
+        Mon,  8 Aug 2022 22:45:05 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 08 Aug 2022 22:45:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=russell.cc; h=cc
+        :cc:content-transfer-encoding:date:date:from:from:in-reply-to
+        :message-id:mime-version:reply-to:sender:subject:subject:to:to;
+         s=fm2; t=1660013104; x=1660099504; bh=+h27m9j4U0O4lNS29/OuGeIDE
+        XTqDgqs45fl/9vYv1k=; b=HSVo8q1Zia047lfz9kMOIq73Xzm19Ke72aF8LRDOz
+        VobtqBmQQiKkoDM1XrFIBPvFJHGYY+9RdoppF65dTuTBAYkGAOR9DqXuXpre9F7q
+        CYgP2K8OwUv+j/uJvIF5DvO4w5R4sfX4vcEYJOyvB24XvlSC0Cq2KIYPYiLKqtQz
+        d93AHjbyrZOlxU1ah9HlQbqb4Yi/EzlvPW9tEPWGtFjAF9UlKrDR1T8Jb346FTPG
+        /lfzMzl9Tu4itYa4Zpoi4AaQRyYV6B+6dOUy0Q/r/8hN5qj9Yve9g/zV0yNuFpAd
+        Wy1WfmCLO8UZJ8azMNc8UfbH5D1dOcyrbox9jkmEyGNsA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:message-id
+        :mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+        1660013104; x=1660099504; bh=+h27m9j4U0O4lNS29/OuGeIDEXTqDgqs45f
+        l/9vYv1k=; b=n/PbKRUm9+0NwVzM7jCAc9/BYFWCaWlP1MsbwGUZkf911az9yZv
+        cRw2FqiLFThWc+xnL17U4wbzAyF26xWjlH9miyLzPjyrJlHAhx5yp/3WA7MDTHfI
+        pfOqCGiAHmefxQ7tqSk361QYpw4QVHw1ueLCiqc+0EcFGdBgPkpezI5ArXVNlx7B
+        kGU4tpXuT+1+kk0JyiWtZtniXc5lldYJOGynGnuM1tlIB1eFaCXv0DXZ3T+Jn+B9
+        1XbC+koxc8GodQ6ve3fhZx7n20bIhDKtJ1u6e9Jhn46yQuQMy9NuGbU56rza8Cf8
+        M9kmmz9MSJ4+HUyY2FS+yZE6ldgDj6+KFrQ==
+X-ME-Sender: <xms:L8rxYtpac2Y5WNUnD4dBU5GWYX80W1hAcz_Bkn6uvHYYQU3qx2zzuA>
+    <xme:L8rxYvqmq1fHj1gt4jnkBH1iLAmu5dXeci_gLjc-kUdrzhw6wR2f6yefB9jBRfF5y
+    fqM4x07I0SeqYl_zQ>
+X-ME-Received: <xmr:L8rxYqMM8z08dUgTUZTNqshbn80k5R9WjYvgnwWu7DqNbFBL9MR3dRqj1j7COWbh_I9e0tVA34jFb4WOlOHRDDnX_ZoV2GgSPCev4luJt_XDtw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdefledgieefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdludehmdenucfjughrpefhvf
+    evufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeftuhhsshgvlhhlucevuhhrrhgv
+    hicuoehruhhstghurhesrhhushhsvghllhdrtggtqeenucggtffrrghtthgvrhhnpeevje
+    egieelueeijedvgffhjeevheehfffgjeevffeihedttdevveejffdttefgudenucffohhm
+    rghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprhhushgtuhhrsehruhhsshgvlhhlrdgttg
+X-ME-Proxy: <xmx:MMrxYo4__gJjGG5C4-X1yBr9Zw8A8Y3SkSqmWi5L7HEFBJZ5s9UXJQ>
+    <xmx:MMrxYs5nhqpC068abzZBKcsJ20Tce-7TwCQqjySUidaZ6jfLZnvWFA>
+    <xmx:MMrxYgjjSzPZGzWMKbnkmJPjOBI8eZUzzpAPcMPzv0aZIJzsNhkSjg>
+    <xmx:MMrxYrbjlPUP0hvw5qbVLPsLym2d6Rn_vNgL_ilo63SQtiaxurZuSQ>
+Feedback-ID: i4421424f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 8 Aug 2022 22:45:01 -0400 (EDT)
+From:   Russell Currey <ruscur@russell.cc>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     mpe@ellerman.id.au, ajd@linux.ibm.com, aneesh.kumar@linux.ibm.com,
+        npiggin@gmail.com, anshuman.khandual@arm.com,
+        christophe.leroy@csgroup.eu, linux-hardening@vger.kernel.org,
+        Russell Currey <ruscur@russell.cc>
+Subject: [PATCH v3] powerpc/mm: Support execute-only memory on the Radix MMU
+Date:   Tue,  9 Aug 2022 12:44:33 +1000
+Message-Id: <20220809024433.17644-1-ruscur@russell.cc>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220805222126.142525-1-jeffxu@google.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Aug 05, 2022 at 10:21:21PM +0000, jeffxu@google.com wrote:
-> This v2 series MFD_NOEXEC, this series includes:
-> 1> address comments in V1
-> 2> add sysctl (vm.mfd_noexec) to change the default file permissions
->     of memfd_create to be non-executable.
-> 
-> Below are cover-level for v1:
-> 
-> The default file permissions on a memfd include execute bits, which
-> means that such a memfd can be filled with a executable and passed to
-> the exec() family of functions. This is undesirable on systems where all
-> code is verified and all filesystems are intended to be mounted noexec,
-> since an attacker may be able to use a memfd to load unverified code and
-> execute it.
+The Hash MMU already supports XOM (i.e. mmap with PROT_EXEC only)
+through the execute-only pkey.  A PROT_EXEC-only mapping will actually
+map to RX, and then the pkey will be applied on top of it.
 
-I would absolutely like to see some kind of protection here. However,
-I'd like a more specific threat model. What are the cases where the X
-bit has been abused (e.g.[1])? What are the cases where the X bit is
-needed (e.g.[2])? With those in mind, it should be possible to draw
-a clear line between the two cases. (e.g. we need to avoid a confused
-deputy attack where an "unprivileged" user can pass an executable memfd
-to a "privileged" user. How those privileges are defined may matter a
-lot based on how memfds are being used. For example, can runc's use of
-executable memfds be distinguished from an attacker's?)
+Radix doesn't have pkeys, but it does have execute permissions built-in
+to the MMU, so all we have to do to support XOM is expose it.
 
-> Additionally, execution via memfd is a common way to avoid scrutiny for
-> malicious code, since it allows execution of a program without a file
-> ever appearing on disk. This attack vector is not totally mitigated with
-> this new flag, since the default memfd file permissions must remain
-> executable to avoid breaking existing legitimate uses, but it should be
-> possible to use other security mechanisms to prevent memfd_create calls
-> without MFD_NOEXEC on systems where it is known that executable memfds
-> are not necessary.
+Signed-off-by: Russell Currey <ruscur@russell.cc>
+---
+v3: Incorporate Aneesh's suggestions, leave protection_map untouched
+Basic test: https://github.com/ruscur/junkcode/blob/main/mmap_test.c
 
-This reminds me of dealing with non-executable stacks. There ended up
-being three states:
+ arch/powerpc/include/asm/book3s/64/pgtable.h |  2 ++
+ arch/powerpc/mm/book3s64/pgtable.c           | 11 +++++++++--
+ arch/powerpc/mm/fault.c                      |  6 +++++-
+ 3 files changed, 16 insertions(+), 3 deletions(-)
 
-- requested to be executable (PT_GNU_STACK X)
-- requested to be non-executable (PT_GNU_STACK NX)
-- undefined (no PT_GNU_STACK)
-
-The first two are clearly defined, but the third needed a lot of special
-handling. For a "safe by default" world, the third should be "NX", but
-old stuff depended on it being "X".
-
-Here, we have a bit being present or not, so we only have a binary
-state. I'd much rather the default be NX (no bit set) instead of making
-every future (safe) user of memfd have to specify MFD_NOEXEC.
-
-It's also easier on a filtering side to say "disallow memfd_create with
-MFD_EXEC", but how do we deal with the older software?
-
-If the default perms of memfd_create()'s exec bit is controlled by a
-sysctl and the sysctl is set to "leave it executable", how does a user
-create an NX memfd? (i.e. setting MFD_EXEC means "exec" and not setting
-it means "exec" also.) Are two bits needed? Seems wasteful.
-MFD_I_KNOW_HOW_TO_SET_EXEC | MFD_EXEC, etc...
-
-For F_SEAL_EXEC, it seems this should imply F_SEAL_WRITE if forced
-executable to avoid WX mappings (i.e. provide W^X from the start).
-
--Kees
-
-[1] https://bugs.chromium.org/p/chromium/issues/list?q=type%3Dbug-security%20memfd%20escalation&can=1
-[2] https://lwn.net/Articles/781013/
-
+diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
+index 392ff48f77df..486902aff040 100644
+--- a/arch/powerpc/include/asm/book3s/64/pgtable.h
++++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
+@@ -151,6 +151,8 @@
+ #define PAGE_COPY_X	__pgprot(_PAGE_BASE | _PAGE_READ | _PAGE_EXEC)
+ #define PAGE_READONLY	__pgprot(_PAGE_BASE | _PAGE_READ)
+ #define PAGE_READONLY_X	__pgprot(_PAGE_BASE | _PAGE_READ | _PAGE_EXEC)
++/* Radix only, Hash uses PAGE_READONLY_X + execute-only pkey instead */
++#define PAGE_EXECONLY	__pgprot(_PAGE_BASE | _PAGE_EXEC)
+ 
+ /* Permission masks used for kernel mappings */
+ #define PAGE_KERNEL	__pgprot(_PAGE_BASE | _PAGE_KERNEL_RW)
+diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
+index 7b9966402b25..62f63d344596 100644
+--- a/arch/powerpc/mm/book3s64/pgtable.c
++++ b/arch/powerpc/mm/book3s64/pgtable.c
+@@ -553,8 +553,15 @@ EXPORT_SYMBOL_GPL(memremap_compat_align);
+ 
+ pgprot_t vm_get_page_prot(unsigned long vm_flags)
+ {
+-	unsigned long prot = pgprot_val(protection_map[vm_flags &
+-					(VM_READ|VM_WRITE|VM_EXEC|VM_SHARED)]);
++	unsigned long prot;
++
++	/* Radix supports execute-only, but protection_map maps X -> RX */
++	if (radix_enabled() && ((vm_flags & (VM_READ|VM_WRITE|VM_EXEC)) == VM_EXEC)) {
++		prot = pgprot_val(PAGE_EXECONLY);
++	} else {
++		prot = pgprot_val(protection_map[vm_flags &
++				  (VM_READ|VM_WRITE|VM_EXEC|VM_SHARED)]);
++	}
+ 
+ 	if (vm_flags & VM_SAO)
+ 		prot |= _PAGE_SAO;
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index 014005428687..59e4cbcf3109 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -270,7 +270,11 @@ static bool access_error(bool is_write, bool is_exec, struct vm_area_struct *vma
+ 		return false;
+ 	}
+ 
+-	if (unlikely(!vma_is_accessible(vma)))
++	/* On Radix, a read fault could be from PROT_NONE or PROT_EXEC */
++	if (unlikely(radix_enabled() && !(vma->vm_flags & VM_READ)))
++		return true;
++	/* Check for a PROT_NONE fault on other MMUs */
++	else if (unlikely(!vma_is_accessible(vma)))
+ 		return true;
+ 	/*
+ 	 * We should ideally do the vma pkey access check here. But in the
 -- 
-Kees Cook
+2.37.1
+
