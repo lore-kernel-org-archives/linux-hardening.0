@@ -2,220 +2,197 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD4DC00140
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 Aug 2022 15:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B257EC00140
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 Aug 2022 01:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229452AbiHOPus (ORCPT
+        id S240408AbiHPBoL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 Aug 2022 11:50:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40044 "EHLO
+        Mon, 15 Aug 2022 21:44:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232011AbiHOPui (ORCPT
+        with ESMTP id S240447AbiHPBni (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 Aug 2022 11:50:38 -0400
-Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC2B85F67;
-        Mon, 15 Aug 2022 08:50:35 -0700 (PDT)
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-        id 7CE2A760; Mon, 15 Aug 2022 10:50:34 -0500 (CDT)
-Date:   Mon, 15 Aug 2022 10:50:34 -0500
-From:   "Serge E. Hallyn" <serge@hallyn.com>
-To:     Vegard Nossum <vegard.nossum@oracle.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        Eric Biederman <ebiederm@xmission.com>,
+        Mon, 15 Aug 2022 21:43:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DE581F84F6;
+        Mon, 15 Aug 2022 14:35:27 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C159B611D5;
+        Mon, 15 Aug 2022 21:35:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAB31C433C1;
+        Mon, 15 Aug 2022 21:35:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660599326;
+        bh=WJpJzeWfA2lvPyxEHsoYw4ISY9kus0KMPLf49JB424Y=;
+        h=Date:From:To:Cc:Subject:From;
+        b=clL2MlL/2HrVYwVTdD9BXwzNkWLmzssDTHI9xZO5YD6OlmAKFDJvlQ7brTnbrczwg
+         lgUqfI23njTS8GinsiwxDH1QIirKTNxfZAVLHtmbh2j8APsJRqNdoZhE4IphaOtG8z
+         ds9sCwP8Dxi4DRPpQOszm/E+KC3uX8kCmLpu6vvrMHpoYDUOQ8NR5nr2tSB8SS200r
+         59SNHNoECeA7oqOB/3/8Ow2Bnea5fjnbjYpAX+arKiCMh3PH8OtfLNpSUT0PMwaJve
+         kXqx9qvhC724/KMzW8BIw7tSRq6wddTKjQEmgPaGPDQhn1zdjWDA4meR7W+iHbrizB
+         /1SEHGh646elg==
+Date:   Mon, 15 Aug 2022 16:35:19 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, John Haxby <john.haxby@oracle.com>
-Subject: Re: [PATCH v2] capabilities: new kernel.ns_modules_allowed sysctl
-Message-ID: <20220815155034.GB20944@mail.hallyn.com>
-References: <20220815082753.6088-1-vegard.nossum@oracle.com>
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v3 0/6] Replace one-element arrays with flexible-array members
+Message-ID: <cover.1660592640.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220815082753.6088-1-vegard.nossum@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Aug 15, 2022 at 10:27:53AM +0200, Vegard Nossum wrote:
-> Creating a new user namespace grants you the ability to reach a lot of code
-> (including loading certain kernel modules) that would otherwise be out of
-> reach of an attacker. We can reduce the attack surface and block exploits
-> by ensuring that user namespaces cannot trigger module (auto-)loading.
-> 
-> A cursory search of exploits found online yields the following extremely
-> non-exhaustive list of vulnerabilities, and shows that the technique is
-> both old and still in use:
-> 
-> - CVE-2016-8655
-> - CVE-2017-1000112
-> - CVE-2021-32606
-> - CVE-2022-2588
-> - CVE-2022-27666
-> - CVE-2022-34918
-> 
-> This patch adds a new sysctl, kernel.ns_modules_allowed, which when set to
-> 0 will block requests to load modules when the request originates in a
-> process running in a user namespace.
-> 
-> For backwards compatibility, the default value of the sysctl is set to
-> CONFIG_NS_MODULES_ALLOWED_DEFAULT_ON, which in turn defaults to 1, meaning
-> there should be absolutely no change in behaviour unless you opt in either
-> at compile time or at runtime.
-> 
-> This mitigation obviously offers no protection if the vulnerable module is
-> already loaded, but for many of these exploits the vast majority of users
-> will never actually load or use these modules on purpose; in other words,
-> for the vast majority of users, this would block exploits for the above
-> list of vulnerabilities.
-> 
-> Testing: Running the reproducer for CVE-2022-2588 fails and results in the
-> following message in the kernel log:
-> 
->     [  130.208030] request_module: pid 4107 (a.out) requested kernel module rtnl-link-dummy; denied due to kernel.ns_modules_allowed sysctl
-> 
-> v2:
-> - fix build failure due to missing CONFIG_SYSCTL guard around register_sysctl_init()
-> - use .maxlen = sizeof(int) for proc_dobool()
-> - don't warn when sysctl_ns_modules_allowed == 1
-> 
-> Cc: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-> Cc: Serge Hallyn <serge@hallyn.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: linux-hardening@vger.kernel.org
-> Cc: John Haxby <john.haxby@oracle.com>
-> Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
-> ---
->  Documentation/admin-guide/sysctl/kernel.rst | 11 ++++++
->  init/Kconfig                                | 17 +++++++++
->  kernel/kmod.c                               | 39 +++++++++++++++++++++
->  3 files changed, 67 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-> index ee6572b1edada..1e13f7f1a9550 100644
-> --- a/Documentation/admin-guide/sysctl/kernel.rst
-> +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> @@ -604,6 +604,17 @@ A value of 0 means no change. The default value is 200 meaning the NMI
->  watchdog is set to 30s (based on ``watchdog_thresh`` equal to 10).
->  
->  
-> +ns_modules_allowed
-> +==================
-> +
-> +Control whether processes may trigger module loading inside a user namespace.
-> +
-> += =================================
-> +0 Deny module loading requests.
-> +1 Accept module loading requests.
-> += =================================
-> +
-> +
->  numa_balancing
->  ==============
->  
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 80fe60fa77fba..0b99268da5081 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -1245,6 +1245,23 @@ config USER_NS
->  
->  	  If unsure, say N.
->  
-> +config NS_MODULES_ALLOWED_DEFAULT_ON
-> +	bool "Allow user namespaces to auto-load kernel modules by default"
-> +	depends on MODULES
-> +	depends on USER_NS
-> +	default y
-> +	help
-> +	  This option makes it so that processes running inside user
-> +	  namespaces may auto-load kernel modules.
-> +
-> +	  Say N to mitigate some exploits that rely on being able to
-> +	  auto-load kernel modules; however, this may also cause some
-> +	  legitimate programs to fail unless kernel modules are loaded by
-> +	  hand.
-> +
-> +	  You can write 0 or 1 to /proc/sys/kernel/ns_modules_allowed to
-> +	  change behaviour at run-time.
-> +
->  config PID_NS
->  	bool "PID Namespaces"
->  	default y
-> diff --git a/kernel/kmod.c b/kernel/kmod.c
-> index b717134ebe170..46f8c0ad6c921 100644
-> --- a/kernel/kmod.c
-> +++ b/kernel/kmod.c
-> @@ -25,6 +25,7 @@
->  #include <linux/ptrace.h>
->  #include <linux/async.h>
->  #include <linux/uaccess.h>
-> +#include <linux/sysctl.h>
->  
->  #include <trace/events/module.h>
->  
-> @@ -105,6 +106,12 @@ static int call_modprobe(char *module_name, int wait)
->  	return -ENOMEM;
->  }
->  
-> +/*
-> + * Allow processes running inside namespaces to trigger module loading?
-> + */
-> +static bool sysctl_ns_modules_allowed __read_mostly =
-> +	IS_BUILTIN(CONFIG_NS_MODULES_ALLOWED_DEFAULT_ON);
-> +
->  /**
->   * __request_module - try to load a kernel module
->   * @wait: wait (or not) for the operation to complete
-> @@ -148,6 +155,18 @@ int __request_module(bool wait, const char *fmt, ...)
->  	if (ret)
->  		return ret;
->  
-> +	/*
-> +	 * Disallow if we're in a user namespace and we don't have
-> +	 * CAP_SYS_MODULE in the init namespace.
-> +	 */
-> +	if (current_user_ns() != &init_user_ns &&
-> +	    !capable(CAP_SYS_MODULE) &&
+Hi!
 
-It's monday, so maybe I'm thinking wrongly - but I don't believe that you can
-possible pass capable(CAP_SYS_MODULE) if current_user_ns() != &init_user_ns.
-So I think you can drop the second check.
+This series aims to replace one-element arrays with flexible-array
+members in drivers/scsi/megaraid/
 
-> +	    !sysctl_ns_modules_allowed) {
-> +		pr_warn_ratelimited("request_module: pid %d (%s) in user namespace requested kernel module %s; denied due to kernel.ns_modules_allowed sysctl\n",
-> +			task_pid_nr(current), current->comm, module_name);
-> +		return -EPERM;
-> +	}
-> +
->  	if (atomic_dec_if_positive(&kmod_concurrent_max) < 0) {
->  		pr_warn_ratelimited("request_module: kmod_concurrent_max (%u) close to 0 (max_modprobes: %u), for module %s, throttling...",
->  				    atomic_read(&kmod_concurrent_max),
-> @@ -175,3 +194,23 @@ int __request_module(bool wait, const char *fmt, ...)
->  	return ret;
->  }
->  EXPORT_SYMBOL(__request_module);
-> +
-> +#ifdef CONFIG_SYSCTL
-> +static struct ctl_table kmod_sysctl_table[] = {
-> +	{
-> +		.procname       = "ns_modules_allowed",
-> +		.data           = &sysctl_ns_modules_allowed,
-> +		.maxlen         = sizeof(int),
-> +		.mode           = 0644,
-> +		.proc_handler   = proc_dobool,
-> +	},
-> +	{ }
-> +};
-> +
-> +static int __init kmod_sysctl_init(void)
-> +{
-> +	register_sysctl_init("kernel", kmod_sysctl_table);
-> +	return 0;
-> +}
-> +late_initcall(kmod_sysctl_init);
-> +#endif
-> -- 
-> 2.35.1.46.g38062e73e0
+I followed the below steps in order to verify the changes don't
+significally impact the code (.text) section generated by the compiler,
+for each object file involved:
+
+1. Prepare the build with the following settings and configurations:
+
+        linux$ KBF="KBUILD_BUILD_TIMESTAMP=1970-01-01 KBUILD_BUILD_USER=user
+               KBUILD_BUILD_HOST=host KBUILD_BUILD_VERSION=1"
+        linux$ make $KBF allyesconfig
+        linux$ ./scripts/config -d GCOV_KERNEL -d KCOV -d GCC_PLUGINS \
+                         -d IKHEADERS -d KASAN -d UBSAN \
+                         -d DEBUG_INFO_NONE \
+                         -e DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
+        linux$ make $KBF olddefconfig
+
+2. Build drivers/scsi/megaraid/ with the same settings and configurations
+   as in Step 1, and copy the generated object files in directory before/
+
+        linux$ make -j128 $KBF drivers/scsi/megaraid/
+        linux$ mkdir -p before
+        linux$ cp drivers/scsi/megaraid/*.o before/
+
+3. Implement all the needed changes and create the patch series. In this
+   case, six patches.
+
+        linux$ vi code.c
+               ...do the magic :)
+        linux$ git format-patch ...all the rest
+
+4. Apply a patch at a time (of the previously created series) and, after
+   applying EACH patch, build (as in Step 2) drivers/scsi/megaraid/ and
+   copy the generated object files in directory after/
+
+5. Compare the code section (.text) of each before/file.o and
+   after/file.o. I use the following bash script:
+
+   compare.sh:
+        ARGS="--disassemble --demangle --reloc --no-show-raw-insn --section=.text"
+        for i in $(cd before && echo *.o); do
+                echo $i
+                diff -u <(objdump $ARGS before/$i | sed "0,/^Disassembly/d") \
+                        <(objdump $ARGS after/$i  | sed "0,/^Disassembly/d")
+        done
+
+   linux$ ./compare.sh > code_comparison.diff
+
+6. Open the code_comparison.diff file from the example above, look for
+   any differences that might show up and analyze them in order to
+   determine their impact, and what (if something) should be changed
+   or study further.
+
+The above process (code section comparison of object files) is based on
+this[0] blog post by Kees Cook. The compiler used to build the code was
+GCC-12.
+
+In this series I only found the following sorts of differences in files
+megaraid_sas.o and megaraid_sas_base.o:
+
+...
+...@@ -7094,24 +7094,24 @@
+     6302:      movq   $0x0,0x1e20(%rbx)
+     630d:      test   %r15,%r15
+     6310:      je     6316 <megasas_aen_polling+0x56>
+-                       6312: R_X86_64_PC32     .text.unlikely+0x3ae3
++                       6312: R_X86_64_PC32     .text.unlikely+0x3ae0
+     6316:      mov    0x0(%rip),%eax        # 631c <megasas_aen_polling+0x5c>
+                        6318: R_X86_64_PC32     event_log_level-0x4
+     631c:      mov    0xc(%r15),%r14d
+     6320:      lea    0x2(%rax),%edx
+     6323:      cmp    $0x6,%edx
+     6326:      ja     632c <megasas_aen_polling+0x6c>
+-                       6328: R_X86_64_PC32     .text.unlikely+0x3ac3
++                       6328: R_X86_64_PC32     .text.unlikely+0x3ac0
+     632c:      mov    %r14d,%edx
+     632f:      sar    $0x18,%edx
+     6332:      mov    %edx,%ecx
+     6334:      cmp    %eax,%edx
+     6336:      jge    633c <megasas_aen_polling+0x7c>
+-                       6338: R_X86_64_PC32     .text.unlikely+0x399c
++                       6338: R_X86_64_PC32     .text.unlikely+0x3999
+...
+
+All of them have to do with the relocation of symbols in the
+.text.unlikely subsection and they don't seem to be of any actual
+relevance. So, we can safely ignore them.
+
+Also, notice there is an open issue in bugzilla.kernel.org [1] that's
+seems could be fixed by this series. :)
+
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays [2].
+
+Link: https://en.wikipedia.org/wiki/Flexible_array_member
+Link: https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/109
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=215943 [1]
+Link: https://reviews.llvm.org/D126864 [2]
+
+Thanks
+
+[0] https://outflux.net/blog/archives/2022/06/24/finding-binary-differences/
+
+Changes in v3:
+ - Split the struct_size() changes into a couple of separate patches.
+ - Use objdump to compare the code (.text) sections of the object
+   files before and after the changes.
+ - Modify MR_FW_RAID_MAP_ALL and MR_DRV_RAID_MAP_ALL structures. Change
+   suggested by Kees Cook.
+
+Changes in v2:
+ - Revert changes in struct MR_FW_RAID_MAP_ALL.
+
+Gustavo A. R. Silva (6):
+  scsi: megaraid_sas: Replace one-element array with flexible-array
+    member in MR_FW_RAID_MAP
+  scsi: megaraid_sas: Replace one-element array with flexible-array
+    member in MR_FW_RAID_MAP_DYNAMIC
+  scsi: megaraid_sas: Replace one-element array with flexible-array
+    member in MR_DRV_RAID_MAP
+  scsi: megaraid_sas: Replace one-element array with flexible-array
+    member in MR_PD_CFG_SEQ_NUM_SYNC
+  scsi: megaraid_sas: Use struct_size() in code related to struct
+    MR_FW_RAID_MAP
+  scsi: megaraid_sas: Use struct_size() in code related to struct
+    MR_PD_CFG_SEQ_NUM_SYNC
+
+ drivers/scsi/megaraid/megaraid_sas_base.c   | 20 ++++++++++----------
+ drivers/scsi/megaraid/megaraid_sas_fp.c     |  6 +++---
+ drivers/scsi/megaraid/megaraid_sas_fusion.c |  2 +-
+ drivers/scsi/megaraid/megaraid_sas_fusion.h | 12 ++++++------
+ 4 files changed, 20 insertions(+), 20 deletions(-)
+
+-- 
+2.34.1
+
