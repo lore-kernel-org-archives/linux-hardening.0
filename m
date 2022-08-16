@@ -2,222 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05BAC25B0E
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Aug 2022 19:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BBAC25B0E
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 Aug 2022 19:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237095AbiHPTWS (ORCPT
+        id S236358AbiHPTZd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 Aug 2022 15:22:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41720 "EHLO
+        Tue, 16 Aug 2022 15:25:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236490AbiHPTWR (ORCPT
+        with ESMTP id S237143AbiHPTZ1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 Aug 2022 15:22:17 -0400
+        Tue, 16 Aug 2022 15:25:27 -0400
 Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1FBC844F5
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Aug 2022 12:22:15 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id r22so10087232pgm.5
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Aug 2022 12:22:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EDF95E32B
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Aug 2022 12:25:27 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id v4so5752669pgi.10
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Aug 2022 12:25:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=UfXlr/WbEItN9aSdIJX4iaTq/XlXVZMlLqhc7nhIv50=;
-        b=LbBNhh6bXMzkijgu81RzGbZKVTzjiDsuC90Y7Vv43r/5OmxsedMbMtkBNzDnIgXj0n
-         t9Pqj6ZzUoo0cfUx1TtUhRZsYY2okOkn2/FfdlGNySntuZr4gXxY1hJz7HS5327Hs1xN
-         nHUYO+K+b3YcCguUk0nqTPOJ2LUjJc++72OZU=
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc;
+        bh=a5SjQ9AEC/AYbATxtS93Zgv94cT2xe13yj4SFSKvsIA=;
+        b=Il9X/STp6V9jcUaGx2WOrl/2yrZHrsz8cT7ebvlampboepQs9dAGad0VvgT4Olatjk
+         OlDXwGxAQgmZiUQHOpJeM8neJBE8yN5R1PrOofZJcNJ1sDP2dSicGonwkrMYrdOqqmsW
+         p1Ly68BgWg5AoIE0+KzMypl+WrEopij9J65M4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=UfXlr/WbEItN9aSdIJX4iaTq/XlXVZMlLqhc7nhIv50=;
-        b=x+Rw/7cr7Gd/1iVSP9rbye7828PtajF4gC/JSv1HeiUwWRvgKYkcQSYXpQj4M33SVe
-         mPkdSfVM99NsW75wbjfB6UI/DRHVwsm79uiDMw07Kff0JNuC26GpjfKqCr/hFWbUdSYW
-         32eaA1HwA9pPmO/a4Sp7PpWclE13QDPVnuJKXA+BlZNgdSlICnZpYTzf2bXU4OVUws4f
-         vieoD4fhyCZVjs2XfJIt9zKaolwmTInRfvNS/OiQJvm7/l+Q5sMFLWBk/IdDJcNF4wZg
-         oknaA1YY1PYVhuOCc3igdX9wJMi23o9fOumx3BWbxT7Ebi5DToygtc4moIGIqCES2dqy
-         pi2g==
-X-Gm-Message-State: ACgBeo3aUMnzQtuLOF03PpmK/IU5/C/Sqa0weeEbhBLfjcCZ+mF3Kv6x
-        viRd4uEzjdYl1y5ET1Y3o7c6Aw==
-X-Google-Smtp-Source: AA6agR4ewDb5KpxqmFL9TANETOsh2CoRoqmxiztBenGS5hMalR/nn6+Vm6Yl9PEjQZ4t1VIf1KGtTw==
-X-Received: by 2002:a63:1a53:0:b0:41f:5298:9b5f with SMTP id a19-20020a631a53000000b0041f52989b5fmr18443389pgm.244.1660677735372;
-        Tue, 16 Aug 2022 12:22:15 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
+        bh=a5SjQ9AEC/AYbATxtS93Zgv94cT2xe13yj4SFSKvsIA=;
+        b=MzViNkxhNaMDYcT4ykuMOQPYO0AxKVV+jtno7qQGYe0dGqrx1GZ7zyj4K1j/C2XoFa
+         8NBkoX7ofOOZeBm7vldcYqyALnNggfoexHe6ni/HVo95SVXaxQKH31DqZrwfxglN4TC5
+         IfGsChgb6ppU4AqLQ8ZaK64qUauWN+rI4rE3IbgntrDBGYIepXe7PFlJtdU/SElZpVsD
+         IFLbUV5qJniSVPlcW4T2wvZ/ENsORuy9b5CEF/7GJ6xEkbm/tMdx+pF5DPZ8WUBeyLOE
+         7cM0JDyhihiJaB0h3BwIBstgZvf/0bhcCzbu2hi3f0py/fhAEV+TuaXnm6PZlLYiuMvd
+         u2cA==
+X-Gm-Message-State: ACgBeo0va38UgwDHOLI8Kv2OPssWf8mEluqtf2iNBc6/++nHGSFb73Nf
+        LweyU1Fhgn7R1HZUfqJcMsmyYw==
+X-Google-Smtp-Source: AA6agR6WWo3/u3APAWhN8/0GZ1YW43LvZbtp82A+6RH1w8ZWfwDxYgvZvBY+tvcaBAYnXQRFDompUw==
+X-Received: by 2002:a05:6a00:189d:b0:52d:d4ae:d9f7 with SMTP id x29-20020a056a00189d00b0052dd4aed9f7mr22322238pfh.18.1660677926802;
+        Tue, 16 Aug 2022 12:25:26 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m13-20020a170902db0d00b0016c46ff9741sm9511951plx.67.2022.08.16.12.22.14
+        by smtp.gmail.com with ESMTPSA id m9-20020a17090ade0900b001f3162e4e55sm6643744pjv.35.2022.08.16.12.25.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Aug 2022 12:22:14 -0700 (PDT)
-Date:   Tue, 16 Aug 2022 12:22:13 -0700
+        Tue, 16 Aug 2022 12:25:26 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] Replace one-element arrays with flexible-array
- members
-Message-ID: <202208161220.D225B26C9@keescook>
-References: <cover.1660592640.git.gustavoars@kernel.org>
+To:     linuxppc-dev@lists.ozlabs.org, linux-hardening@vger.kernel.org,
+        ajd@linux.ibm.com
+Cc:     Kees Cook <keescook@chromium.org>, yury.norov@gmail.com,
+        erhard_f@mailbox.org
+Subject: Re: [PATCH] gcc-plugins: Undefine LATENT_ENTROPY_PLUGIN when plugin disabled for a file
+Date:   Tue, 16 Aug 2022 12:25:08 -0700
+Message-Id: <166067790682.7084.237943534143309650.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220816051720.44108-1-ajd@linux.ibm.com>
+References: <20220816051720.44108-1-ajd@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1660592640.git.gustavoars@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Aug 15, 2022 at 04:35:19PM -0500, Gustavo A. R. Silva wrote:
-> Hi!
+On Tue, 16 Aug 2022 15:17:20 +1000, Andrew Donnellan wrote:
+> Commit 36d4b36b6959 ("lib/nodemask: inline next_node_in() and
+> node_random()") refactored some code by moving node_random() from
+> lib/nodemask.c to include/linux/nodemask.h, thus requiring nodemask.h to
+> include random.h, which conditionally defines add_latent_entropy()
+> depending on whether the macro LATENT_ENTROPY_PLUGIN is defined.
 > 
-> This series aims to replace one-element arrays with flexible-array
-> members in drivers/scsi/megaraid/
+> This broke the build on powerpc, where nodemask.h is indirectly included
+> in arch/powerpc/kernel/prom_init.c, part of the early boot machinery that
+> is excluded from the latent entropy plugin using
+> DISABLE_LATENT_ENTROPY_PLUGIN. It turns out that while we add a gcc flag
+> to disable the actual plugin, we don't undefine LATENT_ENTROPY_PLUGIN.
 > 
-> I followed the below steps in order to verify the changes don't
-> significally impact the code (.text) section generated by the compiler,
-> for each object file involved:
-> 
-> 1. Prepare the build with the following settings and configurations:
-> 
->         linux$ KBF="KBUILD_BUILD_TIMESTAMP=1970-01-01 KBUILD_BUILD_USER=user
->                KBUILD_BUILD_HOST=host KBUILD_BUILD_VERSION=1"
->         linux$ make $KBF allyesconfig
->         linux$ ./scripts/config -d GCOV_KERNEL -d KCOV -d GCC_PLUGINS \
->                          -d IKHEADERS -d KASAN -d UBSAN \
->                          -d DEBUG_INFO_NONE \
->                          -e DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT
->         linux$ make $KBF olddefconfig
-> 
-> 2. Build drivers/scsi/megaraid/ with the same settings and configurations
->    as in Step 1, and copy the generated object files in directory before/
-> 
->         linux$ make -j128 $KBF drivers/scsi/megaraid/
->         linux$ mkdir -p before
->         linux$ cp drivers/scsi/megaraid/*.o before/
-> 
-> 3. Implement all the needed changes and create the patch series. In this
->    case, six patches.
-> 
->         linux$ vi code.c
->                ...do the magic :)
->         linux$ git format-patch ...all the rest
-> 
-> 4. Apply a patch at a time (of the previously created series) and, after
->    applying EACH patch, build (as in Step 2) drivers/scsi/megaraid/ and
->    copy the generated object files in directory after/
-> 
-> 5. Compare the code section (.text) of each before/file.o and
->    after/file.o. I use the following bash script:
-> 
->    compare.sh:
->         ARGS="--disassemble --demangle --reloc --no-show-raw-insn --section=.text"
->         for i in $(cd before && echo *.o); do
->                 echo $i
->                 diff -u <(objdump $ARGS before/$i | sed "0,/^Disassembly/d") \
->                         <(objdump $ARGS after/$i  | sed "0,/^Disassembly/d")
->         done
-> 
->    linux$ ./compare.sh > code_comparison.diff
-> 
-> 6. Open the code_comparison.diff file from the example above, look for
->    any differences that might show up and analyze them in order to
->    determine their impact, and what (if something) should be changed
->    or study further.
-> 
-> The above process (code section comparison of object files) is based on
-> this[0] blog post by Kees Cook. The compiler used to build the code was
-> GCC-12.
-> 
-> In this series I only found the following sorts of differences in files
-> megaraid_sas.o and megaraid_sas_base.o:
-> 
-> ...
-> ...@@ -7094,24 +7094,24 @@
->      6302:      movq   $0x0,0x1e20(%rbx)
->      630d:      test   %r15,%r15
->      6310:      je     6316 <megasas_aen_polling+0x56>
-> -                       6312: R_X86_64_PC32     .text.unlikely+0x3ae3
-> +                       6312: R_X86_64_PC32     .text.unlikely+0x3ae0
->      6316:      mov    0x0(%rip),%eax        # 631c <megasas_aen_polling+0x5c>
->                         6318: R_X86_64_PC32     event_log_level-0x4
->      631c:      mov    0xc(%r15),%r14d
->      6320:      lea    0x2(%rax),%edx
->      6323:      cmp    $0x6,%edx
->      6326:      ja     632c <megasas_aen_polling+0x6c>
-> -                       6328: R_X86_64_PC32     .text.unlikely+0x3ac3
-> +                       6328: R_X86_64_PC32     .text.unlikely+0x3ac0
->      632c:      mov    %r14d,%edx
->      632f:      sar    $0x18,%edx
->      6332:      mov    %edx,%ecx
->      6334:      cmp    %eax,%edx
->      6336:      jge    633c <megasas_aen_polling+0x7c>
-> -                       6338: R_X86_64_PC32     .text.unlikely+0x399c
-> +                       6338: R_X86_64_PC32     .text.unlikely+0x3999
-> ...
-> 
-> All of them have to do with the relocation of symbols in the
-> .text.unlikely subsection and they don't seem to be of any actual
-> relevance. So, we can safely ignore them.
+> [...]
 
-If there's a revision of this series, it might make sense to explicitly
-state "no binary code differences" for these changes. (The location of
-the relocations don't matter, as you say.)
+Applied to for-next/hardening, thanks!
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
-> Also, notice there is an open issue in bugzilla.kernel.org [1] that's
-> seems could be fixed by this series. :)
-> 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays [2].
-> 
-> Link: https://en.wikipedia.org/wiki/Flexible_array_member
-> Link: https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://github.com/KSPP/linux/issues/109
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=215943 [1]
-> Link: https://reviews.llvm.org/D126864 [2]
-> 
-> Thanks
-> 
-> [0] https://outflux.net/blog/archives/2022/06/24/finding-binary-differences/
-> 
-> Changes in v3:
->  - Split the struct_size() changes into a couple of separate patches.
->  - Use objdump to compare the code (.text) sections of the object
->    files before and after the changes.
->  - Modify MR_FW_RAID_MAP_ALL and MR_DRV_RAID_MAP_ALL structures. Change
->    suggested by Kees Cook.
-> 
-> Changes in v2:
->  - Revert changes in struct MR_FW_RAID_MAP_ALL.
-> 
-> Gustavo A. R. Silva (6):
->   scsi: megaraid_sas: Replace one-element array with flexible-array
->     member in MR_FW_RAID_MAP
->   scsi: megaraid_sas: Replace one-element array with flexible-array
->     member in MR_FW_RAID_MAP_DYNAMIC
->   scsi: megaraid_sas: Replace one-element array with flexible-array
->     member in MR_DRV_RAID_MAP
->   scsi: megaraid_sas: Replace one-element array with flexible-array
->     member in MR_PD_CFG_SEQ_NUM_SYNC
->   scsi: megaraid_sas: Use struct_size() in code related to struct
->     MR_FW_RAID_MAP
->   scsi: megaraid_sas: Use struct_size() in code related to struct
->     MR_PD_CFG_SEQ_NUM_SYNC
-> 
->  drivers/scsi/megaraid/megaraid_sas_base.c   | 20 ++++++++++----------
->  drivers/scsi/megaraid/megaraid_sas_fp.c     |  6 +++---
->  drivers/scsi/megaraid/megaraid_sas_fusion.c |  2 +-
->  drivers/scsi/megaraid/megaraid_sas_fusion.h | 12 ++++++------
->  4 files changed, 20 insertions(+), 20 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
+[1/1] gcc-plugins: Undefine LATENT_ENTROPY_PLUGIN when plugin disabled for a file
+      https://git.kernel.org/kees/c/2d08c71d2c79
 
 -- 
 Kees Cook
+
