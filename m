@@ -2,148 +2,144 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 071D4C25B0E
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 Aug 2022 12:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E069CC25B0E
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 Aug 2022 12:18:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235440AbiHPMMC (ORCPT
+        id S235497AbiHPMSB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 Aug 2022 08:12:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33456 "EHLO
+        Tue, 16 Aug 2022 08:18:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234407AbiHPMLn (ORCPT
+        with ESMTP id S235502AbiHPMRm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 Aug 2022 08:11:43 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0914B1FCFF
-        for <linux-hardening@vger.kernel.org>; Tue, 16 Aug 2022 05:03:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660651436; x=1692187436;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=+13tkNWBYxlbH60QS9Fg1I468LLm4LMJYgYV0HTnbW0=;
-  b=ljoN52k9ubUyX1vGX91CUhCcNaDYTNUNaHCXKII9ULQaGazh3+8jcn/L
-   cBglFdeKU59tj//fjuxcmoM8riWe9/mmRNAjiyDn2OD3ChdAkTFH1u/YZ
-   rCU3/pBt11HOKiaLsjfEC5cP+WnIm6AgOcY00L2kxzn9/Bs/t4UbVvZJN
-   zL3d+umr5mV13ySD15J2Q2zj8pPbBER5lzIC3SaUTLMdkw0KJEatOU5CE
-   C/JMSaNJOvb+ZsB3UC7vC8A/a8Y7NCuqmmRSEBmJMN0S18/5WmGqj3TKU
-   7L2klfEo1/zCxOv6JJUUKFB0wDaJ+7fUxfnSFk4QM/Py3q/MpCIJeJBtg
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10440"; a="271969690"
-X-IronPort-AV: E=Sophos;i="5.93,240,1654585200"; 
-   d="scan'208";a="271969690"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2022 05:03:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,240,1654585200"; 
-   d="scan'208";a="667082622"
-Received: from lkp-server02.sh.intel.com (HELO 3d2a4d02a2a9) ([10.239.97.151])
-  by fmsmga008.fm.intel.com with ESMTP; 16 Aug 2022 05:03:54 -0700
-Received: from kbuild by 3d2a4d02a2a9 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oNvIY-0001l7-03;
-        Tue, 16 Aug 2022 12:03:54 +0000
-Date:   Tue, 16 Aug 2022 20:02:55 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-m68k@lists.linux-m68k.org, linux-hardening@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:pending-fixes] BUILD SUCCESS WITH WARNING
- ee556793d89d0e3c4bbee8c8ad8d66fc8b390a92
-Message-ID: <62fb876f.TXisXDiHXgSsxZqv%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Tue, 16 Aug 2022 08:17:42 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35BFD77540
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Aug 2022 05:14:36 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id s11so7905260qtx.6
+        for <linux-hardening@vger.kernel.org>; Tue, 16 Aug 2022 05:14:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=yhRepLOuTqhC1k9FZzrru2j5eZeHN5AMK0pdGwM28xw=;
+        b=YoF9dm6yH1cSrDTScq/KLos6Pb0xCjNlhR7PNPwkiYizA5rZ9sTI/6ASizOeRePrIt
+         vdk901fZZ1JI8CXEWNZ5vxjosCVOcWtBBSrEG+IbYs8vvCMV1845yZmxiuOc6G+Bf71F
+         oK9JqQ9ZF1haq8DpqeBUHhT/ISij/N8Mirvmti28VeHrrbc0CdxXfDf2vv4lSsVrOkUG
+         EJah+geQUTMJmzKPIEmaNx5Tn8JJOCL+t+HStEFKnTyt3GOId86oYNeeVbafzPITyy54
+         B2xAFn8hCgR2Ca25OI5Lf3N+Q4RLgOEro/CuAap1UPFqdEiKLXcYVyoOMBjN5cvR9atG
+         okGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=yhRepLOuTqhC1k9FZzrru2j5eZeHN5AMK0pdGwM28xw=;
+        b=wcK4v7DMpBx+mb+Y4tkgC7teTZ6SpN8LB3xPIKjAVkR6VFo12LSOI0hwQw2rVI4BtH
+         ROgX3S7ZxqTizTW12RkSEFTQaLBm8Ec5hoMn2FrkPOa/YIPncT9u6w9qHpf33IIhMgBL
+         FhrgIIwZtxAWj/dbOVv7TnJ84R5/7HcrI7WnaWOscEB88YJ+8nYmYCCWbfSAUVKYQJPl
+         2Z7SUH4WbhLvAlO2Ic4Vgbaw+lsLt/Yr8c7fFeIECSdO7aYT6HMBzwJ/MwCoygTg2eY7
+         ReclRoBveWSXnEmq5seddyvfTfkjuFn/oveCPeRyFMxJrWXNmtV41lrUqCXhjUbhzwX9
+         7t+g==
+X-Gm-Message-State: ACgBeo23SCyudLTM+a5f+n71F4rGhu5n9Vn0Lt994mISYnmkcBffGkZb
+        qvjt0XENYqzlaSCiFdwkLtk=
+X-Google-Smtp-Source: AA6agR4iukqv2XH/ykJObpRXWAXyBdFlc5IsXFpY0lEsNEPLqNCWeW+sMlqunle/62PcnUcUJt+VlQ==
+X-Received: by 2002:a05:622a:447:b0:31e:ea5d:34c2 with SMTP id o7-20020a05622a044700b0031eea5d34c2mr17440034qtx.604.1660652075633;
+        Tue, 16 Aug 2022 05:14:35 -0700 (PDT)
+Received: from localhost ([98.242.65.188])
+        by smtp.gmail.com with ESMTPSA id b32-20020a05620a272000b006bb296e3298sm5510964qkp.20.2022.08.16.05.14.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Aug 2022 05:14:35 -0700 (PDT)
+Date:   Tue, 16 Aug 2022 05:14:34 -0700
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Andrew Donnellan <ajd@linux.ibm.com>
+Cc:     linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Emese Revfy <re.emese@gmail.com>,
+        Erhard Furtner <erhard_f@mailbox.org>
+Subject: Re: [PATCH] gcc-plugins: Undefine LATENT_ENTROPY_PLUGIN when plugin
+ disabled for a file
+Message-ID: <YvuKKngQ/l24+7rH@yury-laptop>
+References: <20220816051720.44108-1-ajd@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20220816051720.44108-1-ajd@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git pending-fixes
-branch HEAD: ee556793d89d0e3c4bbee8c8ad8d66fc8b390a92  Merge branch 'for-linux-next-fixes' of git://anongit.freedesktop.org/drm/drm-misc
+On Tue, Aug 16, 2022 at 03:17:20PM +1000, Andrew Donnellan wrote:
+> Commit 36d4b36b6959 ("lib/nodemask: inline next_node_in() and
+> node_random()") refactored some code by moving node_random() from
+> lib/nodemask.c to include/linux/nodemask.h, thus requiring nodemask.h to
+> include random.h, which conditionally defines add_latent_entropy()
+> depending on whether the macro LATENT_ENTROPY_PLUGIN is defined.
+> 
+> This broke the build on powerpc, where nodemask.h is indirectly included
+> in arch/powerpc/kernel/prom_init.c, part of the early boot machinery that
+> is excluded from the latent entropy plugin using
+> DISABLE_LATENT_ENTROPY_PLUGIN. It turns out that while we add a gcc flag
+> to disable the actual plugin, we don't undefine LATENT_ENTROPY_PLUGIN.
+> 
+> This leads to the following:
+> 
+>     CC      arch/powerpc/kernel/prom_init.o
+>   In file included from ./include/linux/nodemask.h:97,
+>                    from ./include/linux/mmzone.h:17,
+>                    from ./include/linux/gfp.h:7,
+>                    from ./include/linux/xarray.h:15,
 
-Warning reports:
+As a side note, xarray can go with gfp_types.h instead of gfp.h
 
-https://lore.kernel.org/linux-mm/202208110453.zEneXTnn-lkp@intel.com
+>                    from ./include/linux/radix-tree.h:21,
+>                    from ./include/linux/idr.h:15,
+>                    from ./include/linux/kernfs.h:12,
+>                    from ./include/linux/sysfs.h:16,
+>                    from ./include/linux/kobject.h:20,
+>                    from ./include/linux/pci.h:35,
+>                    from arch/powerpc/kernel/prom_init.c:24:
+>   ./include/linux/random.h: In function 'add_latent_entropy':
+>   ./include/linux/random.h:25:46: error: 'latent_entropy' undeclared (first use in this function); did you mean 'add_latent_entropy'?
+>      25 |         add_device_randomness((const void *)&latent_entropy, sizeof(latent_entropy));
+>         |                                              ^~~~~~~~~~~~~~
+>         |                                              add_latent_entropy
+>   ./include/linux/random.h:25:46: note: each undeclared identifier is reported only once for each function it appears in
+>   make[2]: *** [scripts/Makefile.build:249: arch/powerpc/kernel/prom_init.o] Fehler 1
+>   make[1]: *** [scripts/Makefile.build:465: arch/powerpc/kernel] Fehler 2
+>   make: *** [Makefile:1855: arch/powerpc] Error 2
+> 
+> Change the DISABLE_LATENT_ENTROPY_PLUGIN flags to undefine
+> LATENT_ENTROPY_PLUGIN for files where the plugin is disabled.
+> 
+> Cc: Yury Norov <yury.norov@gmail.com>
+> Cc: Emese Revfy <re.emese@gmail.com>
+> Fixes: 36d4b36b6959 ("lib/nodemask: inline next_node_in() and node_random()")
 
-Warning: (recently discovered and may have been fixed)
+I think it rather fixes 38addce8b600ca33 ("gcc-plugins: Add
+latent_entropy plugin").
 
-arch/m68k/include/asm/string.h:64:25: warning: '__builtin_memcmp' specified bound 6 exceeds source size 0 [-Wstringop-overread]
-include/linux/fortify-string.h:44:33: warning: '__builtin_memcmp' specified bound 6 exceeds source size 0 [-Wstringop-overread]
+For the rest,
+Reviewed-by: Yury Norov <yury.norov@gmail.com>
 
-Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- m68k-allmodconfig
-|   `-- arch-m68k-include-asm-string.h:warning:__builtin_memcmp-specified-bound-exceeds-source-size
-|-- m68k-allyesconfig
-|   `-- arch-m68k-include-asm-string.h:warning:__builtin_memcmp-specified-bound-exceeds-source-size
-`-- mips-allyesconfig
-    `-- include-linux-fortify-string.h:warning:__builtin_memcmp-specified-bound-exceeds-source-size
-
-elapsed time: 711m
-
-configs tested: 54
-configs skipped: 2
-
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-i386                                defconfig
-powerpc                          allmodconfig
-x86_64               randconfig-a001-20220815
-arm                                 defconfig
-mips                             allyesconfig
-x86_64               randconfig-a003-20220815
-powerpc                           allnoconfig
-i386                 randconfig-a003-20220815
-arm                              allyesconfig
-x86_64                              defconfig
-i386                 randconfig-a004-20220815
-x86_64               randconfig-a005-20220815
-sh                               allmodconfig
-x86_64               randconfig-a004-20220815
-i386                 randconfig-a006-20220815
-i386                 randconfig-a005-20220815
-arm64                            allyesconfig
-arc                  randconfig-r043-20220815
-i386                 randconfig-a002-20220815
-x86_64               randconfig-a002-20220815
-i386                 randconfig-a001-20220815
-x86_64                               rhel-8.3
-x86_64               randconfig-a006-20220815
-x86_64                           rhel-8.3-kvm
-i386                             allyesconfig
-ia64                             allmodconfig
-x86_64                           allyesconfig
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64                    rhel-8.3-kselftests
-x86_64                           rhel-8.3-syz
-m68k                             allmodconfig
-alpha                            allyesconfig
-arc                              allyesconfig
-m68k                             allyesconfig
-
-clang tested configs:
-hexagon              randconfig-r045-20220815
-riscv                randconfig-r042-20220815
-hexagon              randconfig-r041-20220815
-s390                 randconfig-r044-20220815
-i386                 randconfig-a012-20220815
-x86_64               randconfig-a013-20220815
-i386                 randconfig-a011-20220815
-i386                 randconfig-a013-20220815
-x86_64               randconfig-a012-20220815
-i386                 randconfig-a015-20220815
-x86_64               randconfig-a011-20220815
-i386                 randconfig-a016-20220815
-x86_64               randconfig-a015-20220815
-i386                 randconfig-a014-20220815
-x86_64               randconfig-a014-20220815
-x86_64               randconfig-a016-20220815
-x86_64                          rhel-8.3-rust
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216367
+> Link: https://lore.kernel.org/linuxppc-dev/alpine.DEB.2.22.394.2208152006320.289321@ramsan.of.borg/
+> Reported-by: Erhard Furtner <erhard_f@mailbox.org>
+> Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
+> ---
+>  scripts/Makefile.gcc-plugins | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
+> index 692d64a70542..e4deaf5fa571 100644
+> --- a/scripts/Makefile.gcc-plugins
+> +++ b/scripts/Makefile.gcc-plugins
+> @@ -4,7 +4,7 @@ gcc-plugin-$(CONFIG_GCC_PLUGIN_LATENT_ENTROPY)	+= latent_entropy_plugin.so
+>  gcc-plugin-cflags-$(CONFIG_GCC_PLUGIN_LATENT_ENTROPY)		\
+>  		+= -DLATENT_ENTROPY_PLUGIN
+>  ifdef CONFIG_GCC_PLUGIN_LATENT_ENTROPY
+> -    DISABLE_LATENT_ENTROPY_PLUGIN += -fplugin-arg-latent_entropy_plugin-disable
+> +    DISABLE_LATENT_ENTROPY_PLUGIN += -fplugin-arg-latent_entropy_plugin-disable -ULATENT_ENTROPY_PLUGIN
+>  endif
+>  export DISABLE_LATENT_ENTROPY_PLUGIN
+>  
+> -- 
+> 2.30.2
