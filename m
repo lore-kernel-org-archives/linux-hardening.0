@@ -2,157 +2,192 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706F9C25B08
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 Aug 2022 12:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903DDC25B08
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 Aug 2022 23:08:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235538AbiHQM5W (ORCPT
+        id S232457AbiHQXH7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 Aug 2022 08:57:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55480 "EHLO
+        Wed, 17 Aug 2022 19:07:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236181AbiHQM5W (ORCPT
+        with ESMTP id S231496AbiHQXH6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 Aug 2022 08:57:22 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68AE14BD0F;
-        Wed, 17 Aug 2022 05:57:21 -0700 (PDT)
+        Wed, 17 Aug 2022 19:07:58 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97DF6ABD73;
+        Wed, 17 Aug 2022 16:07:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660741041; x=1692277041;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=gGvQk8xFeEmpv0nXW5obr1EDDK798Me5zo7icMHQssw=;
-  b=c9/lC2x79u+k9TexzRBZ1TghD36dvuQ8si+mXG59ZmimNRm8DFspwCIW
-   S0zw7I1YbgY/v4gHU2HxJM8VgjRe8SxHc2C/2u7HYJS5ZshURoz6Lpq/z
-   AT/Ald2Y4+a3/lPLyyzGPm7lG4ubztRRmklVdM+KP1XaIbwkDf4Eo3l9a
-   CQt69hpR++GyatV4epPeuBGFRmBikNPFUQ71SqqsqWI60E1PD8GXfp0pB
-   HxVTneCPgS4eHB2xKzmQ0K788PrVCTyyYotFyV8W0JhVDyKVYcy/5jwmB
-   I+uEkrRMFsBmXYq1G9uLua73TA+ErIEGsWgPuB1KELUp/RsV5LyI6hrVg
+  t=1660777677; x=1692313677;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=B2ku+g2Lh8nIXn85bLhrd9BVVlmmBEonw0oahk7ctWU=;
+  b=X3Fs0nY7PiTj/FitDd79mgJnHZRwzC14DCrZru3TVfOzPi9JCHfHSSsR
+   Vm0s78MXrpbcz5E1g/Xi06+shylx+bqKzT4X/gPSlY+XGs/rPCQHNuLw5
+   DSsZzDMolK6zoM2huGvQ/gtT6e3FilIew7otvfnrx0xvKvca3ZWoy/XTE
+   6GXgl/LfpGyoEciQt9GG3Wi074GkQZWbSpZsmm1CF1x1bvj557cI4U2qM
+   4Q7UcT2UcXcihzsB9VI3MJ9eOZwYm9yAylzzZg/uvFpBGToInpHC/1fMx
+   TvOn6N8n5XyYvJ6PC/hApR9xxLwh4Vquhm4EWVAowNXS5yTaN5XmpjQ1F
    w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10442"; a="290054299"
-X-IronPort-AV: E=Sophos;i="5.93,243,1654585200"; 
-   d="scan'208";a="290054299"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2022 05:57:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,243,1654585200"; 
-   d="scan'208";a="558115505"
-Received: from lkp-server02.sh.intel.com (HELO 81d7e1ade3ba) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 17 Aug 2022 05:57:19 -0700
-Received: from kbuild by 81d7e1ade3ba with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oOIbm-0000vo-28;
-        Wed, 17 Aug 2022 12:57:18 +0000
-Date:   Wed, 17 Aug 2022 20:56:44 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-m68k@lists.linux-m68k.org, linux-hardening@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:pending-fixes] BUILD SUCCESS WITH WARNING
- 5ca89432fef1fe21d205e71455a40b6b97459a12
-Message-ID: <62fce58c.9A5vnRh+2zBuRSbk%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+X-IronPort-AV: E=McAfee;i="6500,9779,10442"; a="279587741"
+X-IronPort-AV: E=Sophos;i="5.93,244,1654585200"; 
+   d="scan'208";a="279587741"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2022 16:07:57 -0700
+X-IronPort-AV: E=Sophos;i="5.93,244,1654585200"; 
+   d="scan'208";a="636570504"
+Received: from zivlevy-mobl1.ger.corp.intel.com (HELO intel.com) ([10.252.51.119])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2022 16:07:53 -0700
+Date:   Thu, 18 Aug 2022 01:07:29 +0200
+From:   Andi Shyti <andi.shyti@linux.intel.com>
+To:     Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+Cc:     intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, mchehab@kernel.org,
+        chris@chris-wilson.co.uk, matthew.auld@intel.com,
+        thomas.hellstrom@linux.intel.com, jani.nikula@intel.com,
+        nirmoy.das@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        andi.shyti@linux.intel.com, andrzej.hajda@intel.com,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v7 1/8] overflow: Move and add few utility macros into
+ overflow
+Message-ID: <Yv10sQADwdZrIV42@alfio.lan>
+References: <20220816093525.184940-1-gwan-gyeong.mun@intel.com>
+ <20220816093525.184940-2-gwan-gyeong.mun@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220816093525.184940-2-gwan-gyeong.mun@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git pending-fixes
-branch HEAD: 5ca89432fef1fe21d205e71455a40b6b97459a12  Merge branch 'for-linux-next-fixes' of git://anongit.freedesktop.org/drm/drm-misc
+Hi Kees,
 
-Warning reports:
+would you mind taking a look at this patch?
 
-https://lore.kernel.org/linux-mm/202208110453.zEneXTnn-lkp@intel.com
+Thanks,
+Andi
 
-Warning: (recently discovered and may have been fixed)
-
-arch/m68k/include/asm/string.h:64:25: warning: '__builtin_memcmp' specified bound 6 exceeds source size 0 [-Wstringop-overread]
-include/linux/fortify-string.h:44:33: warning: '__builtin_memcmp' specified bound 6 exceeds source size 0 [-Wstringop-overread]
-include/net/bluetooth/bluetooth.h:347:16: warning: 'memcmp' specified bound 6 exceeds source size 0 [-Wstringop-overread]
-
-Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- m68k-allyesconfig
-|   `-- arch-m68k-include-asm-string.h:warning:__builtin_memcmp-specified-bound-exceeds-source-size
-|-- m68k-randconfig-r003-20220816
-|   `-- arch-m68k-include-asm-string.h:warning:__builtin_memcmp-specified-bound-exceeds-source-size
-|-- mips-allyesconfig
-|   `-- include-linux-fortify-string.h:warning:__builtin_memcmp-specified-bound-exceeds-source-size
-`-- openrisc-randconfig-r021-20220815
-    `-- include-net-bluetooth-bluetooth.h:warning:memcmp-specified-bound-exceeds-source-size
-
-elapsed time: 803m
-
-configs tested: 59
-configs skipped: 2
-
-gcc tested configs:
-arc                  randconfig-r043-20220815
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              defconfig
-i386                 randconfig-a003-20220815
-arm                                 defconfig
-i386                                defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64               randconfig-a001-20220815
-arc                              allyesconfig
-x86_64                    rhel-8.3-kselftests
-i386                 randconfig-a002-20220815
-x86_64               randconfig-a003-20220815
-i386                 randconfig-a001-20220815
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-syz
-x86_64                           allyesconfig
-x86_64               randconfig-a002-20220815
-alpha                            allyesconfig
-i386                 randconfig-a004-20220815
-m68k                             allyesconfig
-i386                 randconfig-a006-20220815
-x86_64               randconfig-a006-20220815
-x86_64               randconfig-a005-20220815
-arm64                            allyesconfig
-i386                 randconfig-a005-20220815
-x86_64               randconfig-a004-20220815
-arm                              allyesconfig
-mips                             allyesconfig
-i386                             allyesconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-ia64                             allmodconfig
-csky                              allnoconfig
-arc                               allnoconfig
-alpha                             allnoconfig
-riscv                             allnoconfig
-i386                 randconfig-c001-20220815
-m68k                             allmodconfig
-
-clang tested configs:
-hexagon              randconfig-r041-20220815
-hexagon              randconfig-r045-20220815
-riscv                randconfig-r042-20220815
-s390                 randconfig-r044-20220815
-x86_64               randconfig-a013-20220815
-x86_64               randconfig-a012-20220815
-x86_64               randconfig-a011-20220815
-x86_64               randconfig-a015-20220815
-x86_64               randconfig-a014-20220815
-x86_64               randconfig-a016-20220815
-i386                 randconfig-a012-20220815
-i386                 randconfig-a011-20220815
-i386                 randconfig-a013-20220815
-i386                 randconfig-a014-20220815
-i386                 randconfig-a015-20220815
-i386                 randconfig-a016-20220815
-x86_64                          rhel-8.3-rust
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+On Tue, Aug 16, 2022 at 06:35:18PM +0900, Gwan-gyeong Mun wrote:
+> It moves overflows_type utility macro into overflow header from i915_utils
+> header. The overflows_type can be used to catch the truncation between data
+> types. And it adds safe_conversion() macro which performs a type conversion
+> (cast) of an source value into a new variable, checking that the
+> destination is large enough to hold the source value. And the functionality
+> of overflows_type has been improved to handle the signbit.
+> The is_unsigned_type macro has been added to check the sign bit of the
+> built-in type.
+> 
+> v3: Add is_type_unsigned() macro (Mauro)
+>     Modify overflows_type() macro to consider signed data types (Mauro)
+>     Fix the problem that safe_conversion() macro always returns true
+> v4: Fix kernel-doc markups
+> v6: Move macro addition location so that it can be used by other than drm
+>     subsystem (Jani, Mauro, Andi)
+>     Change is_type_unsigned to is_unsigned_type to have the same name form
+>     as is_signed_type macro
+> 
+> Signed-off-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+> Cc: Thomas Hellström <thomas.hellstrom@linux.intel.com>
+> Cc: Matthew Auld <matthew.auld@intel.com>
+> Cc: Nirmoy Das <nirmoy.das@intel.com>
+> Cc: Jani Nikula <jani.nikula@intel.com>
+> Cc: Andi Shyti <andi.shyti@linux.intel.com>
+> Reviewed-by: Mauro Carvalho Chehab <mchehab@kernel.org> (v5)
+> ---
+>  drivers/gpu/drm/i915/i915_utils.h |  5 +--
+>  include/linux/overflow.h          | 54 +++++++++++++++++++++++++++++++
+>  2 files changed, 55 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/i915_utils.h b/drivers/gpu/drm/i915/i915_utils.h
+> index c10d68cdc3ca..eb0ded23fa9c 100644
+> --- a/drivers/gpu/drm/i915/i915_utils.h
+> +++ b/drivers/gpu/drm/i915/i915_utils.h
+> @@ -32,6 +32,7 @@
+>  #include <linux/types.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/sched/clock.h>
+> +#include <linux/overflow.h>
+>  
+>  #ifdef CONFIG_X86
+>  #include <asm/hypervisor.h>
+> @@ -111,10 +112,6 @@ bool i915_error_injected(void);
+>  #define range_overflows_end_t(type, start, size, max) \
+>  	range_overflows_end((type)(start), (type)(size), (type)(max))
+>  
+> -/* Note we don't consider signbits :| */
+> -#define overflows_type(x, T) \
+> -	(sizeof(x) > sizeof(T) && (x) >> BITS_PER_TYPE(T))
+> -
+>  #define ptr_mask_bits(ptr, n) ({					\
+>  	unsigned long __v = (unsigned long)(ptr);			\
+>  	(typeof(ptr))(__v & -BIT(n));					\
+> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> index f1221d11f8e5..462a03454377 100644
+> --- a/include/linux/overflow.h
+> +++ b/include/linux/overflow.h
+> @@ -35,6 +35,60 @@
+>  #define type_max(T) ((T)((__type_half_max(T) - 1) + __type_half_max(T)))
+>  #define type_min(T) ((T)((T)-type_max(T)-(T)1))
+>  
+> +/**
+> + * is_unsigned_type - helper for checking data type which is an unsigned data
+> + * type or not
+> + * @x: The data type to check
+> + *
+> + * Returns:
+> + * True if the data type is an unsigned data type, false otherwise.
+> + */
+> +#define is_unsigned_type(x) ((typeof(x))-1 >= (typeof(x))0)
+> +
+> +/**
+> + * overflows_type - helper for checking the truncation between data types
+> + * @x: Source for overflow type comparison
+> + * @T: Destination for overflow type comparison
+> + *
+> + * It compares the values and size of each data type between the first and
+> + * second argument to check whether truncation can occur when assigning the
+> + * first argument to the variable of the second argument.
+> + * Source and Destination can be used with or without sign bit.
+> + * Composite data structures such as union and structure are not considered.
+> + * Enum data types are not considered.
+> + * Floating point data types are not considered.
+> + *
+> + * Returns:
+> + * True if truncation can occur, false otherwise.
+> + */
+> +#define overflows_type(x, T) \
+> +	(is_unsigned_type(x) ? \
+> +		is_unsigned_type(T) ? \
+> +			(sizeof(x) > sizeof(T) && (x) >> BITS_PER_TYPE(T)) ? 1 : 0 \
+> +			: (sizeof(x) >= sizeof(T) && (x) >> (BITS_PER_TYPE(T) - 1)) ? 1 : 0 \
+> +	: is_unsigned_type(T) ? \
+> +		((x) < 0) ? 1 : (sizeof(x) > sizeof(T) && (x) >> BITS_PER_TYPE(T)) ? 1 : 0 \
+> +		: (sizeof(x) > sizeof(T)) ? \
+> +			((x) < 0) ? (((x) * -1) >> BITS_PER_TYPE(T)) ? 1 : 0 \
+> +				: ((x) >> BITS_PER_TYPE(T)) ? 1 : 0 \
+> +			: 0)
+> +
+> +/**
+> + * safe_conversion - perform a type conversion (cast) of an source value into
+> + * a new variable, checking that the destination is large enough to hold the
+> + * source value.
+> + * @ptr: Destination pointer address
+> + * @value: Source value
+> + *
+> + * Returns:
+> + * If the value would overflow the destination, it returns false.
+> + */
+> +#define safe_conversion(ptr, value) ({ \
+> +	typeof(value) __v = (value); \
+> +	typeof(ptr) __ptr = (ptr); \
+> +	overflows_type(__v, *__ptr) ? 0 : ((*__ptr = (typeof(*__ptr))__v), 1); \
+> +})
+> +
+>  /*
+>   * Avoids triggering -Wtype-limits compilation warning,
+>   * while using unsigned data types to check a < 0.
+> -- 
+> 2.37.1
