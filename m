@@ -2,234 +2,389 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEFBC25B08
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Aug 2022 00:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E19EC00140
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Aug 2022 07:05:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233930AbiHRAMi (ORCPT
+        id S243793AbiHRHFc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 Aug 2022 20:12:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36420 "EHLO
+        Thu, 18 Aug 2022 03:05:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242086AbiHRAMh (ORCPT
+        with ESMTP id S243795AbiHRHF2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 Aug 2022 20:12:37 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC887A3D48
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Aug 2022 17:12:35 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id s36-20020a17090a69a700b001faad0a7a34so3226142pjj.4
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Aug 2022 17:12:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc;
-        bh=youYpgIRDFxAeu4mwecp1uJBQGmjys1bezqPW12aWgE=;
-        b=UCR5LbWjsytFslgCsE0jphSKIIfHXLrwqVIdtaHJDqbOgD76Dl4Wr+qhYX7/IvKijD
-         4WoEsIzUrGO9kQPjVWIJsenuCTuX+zowr58KIuH8GsCEt2r1CYv4lazX3ywSlxgEYYul
-         kdhWZJQ1Y8XGyCRBm1RimSxKT///eHxsN2DlM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc;
-        bh=youYpgIRDFxAeu4mwecp1uJBQGmjys1bezqPW12aWgE=;
-        b=MMtWtSionD61AHjkQql/fc4vPFmoTK3pVTl48KY4PuawNHPf6yGGPWwG/MDeIHk4cD
-         pwlKz+KoB9lpBTNQ6PtmLgaa4xbHRKTYz9JADID+OhQfhli97YlmZlE2C71zXoP8AASS
-         eaEklrMzIeK5achk+jIstoSrNpvz7H8uBnmcJOHlf7RXybUvi5dCjZukmMDd8hFpLQEK
-         +Dptbwbt4RsoDZsKWw/ZDqkLC0SjeCC+UOPoRFDqb7oqGLGjdFhqgSojkFglMNR0ETrA
-         eLxyc/XdKHXUJjkzbeQnBT9DfSe4yK0hn+7EGXCX27T4J/TvH0vWesFmFqTO7GK12E5v
-         vxAQ==
-X-Gm-Message-State: ACgBeo3MOgpA2BeQ9VO7OYPdKw4i3P6ay+iHOU7WUUmFg/ObQ7k9w9Mt
-        K/VC9hgYfO8fPDXVHKTfDk9++A==
-X-Google-Smtp-Source: AA6agR5mRAF7yxfBbQaw/DoOtsDOwwfqBAVdzxdq+NcFYZRSYoRPkqalUG4Twt7hthHtdMe/eERHLg==
-X-Received: by 2002:a17:902:7682:b0:170:a235:b5a2 with SMTP id m2-20020a170902768200b00170a235b5a2mr328051pll.113.1660781555349;
-        Wed, 17 Aug 2022 17:12:35 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q28-20020a63f95c000000b00428c216467csm65439pgk.32.2022.08.17.17.12.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Aug 2022 17:12:34 -0700 (PDT)
-Date:   Wed, 17 Aug 2022 17:12:33 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andi Shyti <andi.shyti@linux.intel.com>
-Cc:     Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, mchehab@kernel.org,
-        chris@chris-wilson.co.uk, matthew.auld@intel.com,
-        thomas.hellstrom@linux.intel.com, jani.nikula@intel.com,
-        nirmoy.das@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        andrzej.hajda@intel.com, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v7 1/8] overflow: Move and add few utility macros into
- overflow
-Message-ID: <202208171657.63AE7AC@keescook>
-References: <20220816093525.184940-1-gwan-gyeong.mun@intel.com>
- <20220816093525.184940-2-gwan-gyeong.mun@intel.com>
- <Yv10sQADwdZrIV42@alfio.lan>
+        Thu, 18 Aug 2022 03:05:28 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15178883C5
+        for <linux-hardening@vger.kernel.org>; Thu, 18 Aug 2022 00:05:23 -0700 (PDT)
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27I6pnsK015551;
+        Thu, 18 Aug 2022 07:05:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=HAURsoLLMO68sCPiE57Cr46JKxzEar+fGhZlLMEaVc8=;
+ b=gaTSo2oyBGTqug07bo6sZhuaXzd2ftCCVeV1o8kKtnpzzulAJvxy965jNHqngB5mNZWo
+ /TU/0WpMla39BvpMqbw6ROzLqfU+MQ4spZTJTqB6+WU1Fw9bd+40TQcChVvofPklkR0p
+ CycwZVMOwOsApEqLGOwDL0EUuEiuKfXgCf60MQytrT6cmkFXfN3ADCnumIugyZnHTFUI
+ 7xM5AIErQnc/4n+tXnxxEtW/o1E1MZzbihpow/JoSKaZHsCqUVRtDiW4OeiXC7GFpMPh
+ sIZSu7qPZC43HysGIMYKfS4wXvqIk07P2bnPVHlCS6264BDhrQ/OoVwVjzpcTFejf7BP /w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3j1ghfrb6g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Aug 2022 07:05:11 +0000
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 27I6qB8F016252;
+        Thu, 18 Aug 2022 07:05:11 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3j1ghfrb4x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Aug 2022 07:05:11 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 27I6oOTT004483;
+        Thu, 18 Aug 2022 07:05:08 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 3hx3k8wfsu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Aug 2022 07:05:08 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 27I75Pe234406684
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Aug 2022 07:05:25 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7A3AFA4051;
+        Thu, 18 Aug 2022 07:05:06 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CC891A4055;
+        Thu, 18 Aug 2022 07:05:05 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 18 Aug 2022 07:05:05 +0000 (GMT)
+Received: from [9.160.164.176] (unknown [9.160.164.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 4B83860125;
+        Thu, 18 Aug 2022 17:04:54 +1000 (AEST)
+Message-ID: <daffd6e0-7dd7-8699-6136-fa63a15a7b47@linux.ibm.com>
+Date:   Thu, 18 Aug 2022 17:04:36 +1000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Yv10sQADwdZrIV42@alfio.lan>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.1.2
+Subject: Re: [PATCH v4 2/2] selftests/powerpc: Add a test for execute-only
+ memory
+Content-Language: en-US
+To:     Jordan Niethe <jniethe5@gmail.com>,
+        Russell Currey <ruscur@russell.cc>,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     ajd@linux.ibm.com, anshuman.khandual@arm.com,
+        aneesh.kumar@linux.ibm.com, npiggin@gmail.com,
+        linux-hardening@vger.kernel.org
+References: <20220817050640.406017-1-ruscur@russell.cc>
+ <20220817050640.406017-2-ruscur@russell.cc>
+ <faa82449f058e4d57372dc4e7b5ca2dc091cb454.camel@gmail.com>
+From:   Nicholas Miehlbradt <nicholas@linux.ibm.com>
+In-Reply-To: <faa82449f058e4d57372dc4e7b5ca2dc091cb454.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: dZTywz-usbWXi4WV8-Ofi_Z26jnkhxjX
+X-Proofpoint-ORIG-GUID: V1NmPDfDlueEDPhk-2tsp-r4uz57625X
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-08-18_02,2022-08-16_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ adultscore=0 spamscore=0 clxscore=1011 mlxscore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 impostorscore=0 suspectscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2208180021
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 18, 2022 at 01:07:29AM +0200, Andi Shyti wrote:
-> Hi Kees,
+On 17/8/2022 4:15 pm, Jordan Niethe wrote:
+> On Wed, 2022-08-17 at 15:06 +1000, Russell Currey wrote:
+>> From: Nicholas Miehlbradt <nicholas@linux.ibm.com>
+>>
+>> This selftest is designed to cover execute-only protections
+>> on the Radix MMU but will also work with Hash.
+>>
+>> The tests are based on those found in pkey_exec_test with modifications
+>> to use the generic mprotect() instead of the pkey variants.
 > 
-> would you mind taking a look at this patch?
-
-Hi! Thanks for the heads-up!
-
+> Would it make sense to rename pkey_exec_test to exec_test and have this test be apart of that?
 > 
-> Thanks,
-> Andi
+I think might make it unnecessarily complex. The checks needed when 
+testing with pkeys would mean that it would be necessary to check if 
+pkeys are enabled and choose which set of tests to run depending on the 
+result. The differences are substantial enough that it would be 
+challenging to combine them into a single set of tests.
+
+>>
+>> Signed-off-by: Nicholas Miehlbradt <nicholas@linux.ibm.com>
+>> Signed-off-by: Russell Currey <ruscur@russell.cc>
+>> ---
+>> v4: new
+>>
+>>   tools/testing/selftests/powerpc/mm/Makefile   |   3 +-
+>>   .../testing/selftests/powerpc/mm/exec_prot.c  | 231 ++++++++++++++++++
+>>   2 files changed, 233 insertions(+), 1 deletion(-)
+>>   create mode 100644 tools/testing/selftests/powerpc/mm/exec_prot.c
+>>
+>> diff --git a/tools/testing/selftests/powerpc/mm/Makefile b/tools/testing/selftests/powerpc/mm/Makefile
+>> index 27dc09d0bfee..19dd0b2ea397 100644
+>> --- a/tools/testing/selftests/powerpc/mm/Makefile
+>> +++ b/tools/testing/selftests/powerpc/mm/Makefile
+>> @@ -3,7 +3,7 @@ noarg:
+>>   	$(MAKE) -C ../
+>>   
+>>   TEST_GEN_PROGS := hugetlb_vs_thp_test subpage_prot prot_sao segv_errors wild_bctr \
+>> -		  large_vm_fork_separation bad_accesses pkey_exec_prot \
+>> +		  large_vm_fork_separation bad_accesses exec_prot pkey_exec_prot \
+>>   		  pkey_siginfo stack_expansion_signal stack_expansion_ldst \
+>>   		  large_vm_gpr_corruption
+>>   TEST_PROGS := stress_code_patching.sh
+>> @@ -22,6 +22,7 @@ $(OUTPUT)/wild_bctr: CFLAGS += -m64
+>>   $(OUTPUT)/large_vm_fork_separation: CFLAGS += -m64
+>>   $(OUTPUT)/large_vm_gpr_corruption: CFLAGS += -m64
+>>   $(OUTPUT)/bad_accesses: CFLAGS += -m64
+>> +$(OUTPUT)/exec_prot: CFLAGS += -m64
+>>   $(OUTPUT)/pkey_exec_prot: CFLAGS += -m64
+>>   $(OUTPUT)/pkey_siginfo: CFLAGS += -m64
+>>   
+>> diff --git a/tools/testing/selftests/powerpc/mm/exec_prot.c b/tools/testing/selftests/powerpc/mm/exec_prot.c
+>> new file mode 100644
+>> index 000000000000..db75b2225de1
+>> --- /dev/null
+>> +++ b/tools/testing/selftests/powerpc/mm/exec_prot.c
+>> @@ -0,0 +1,231 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +/*
+>> + * Copyright 2022, Nicholas Miehlbradt, IBM Corporation
+>> + * based on pkey_exec_prot.c
+>> + *
+>> + * Test if applying execute protection on pages works as expected.
+>> + */
+>> +
+>> +#define _GNU_SOURCE
+>> +#include <stdio.h>
+>> +#include <stdlib.h>
+>> +#include <string.h>
+>> +#include <signal.h>
+>> +
+>> +#include <unistd.h>
+>> +#include <sys/mman.h>
+>> +
+>> +#include "pkeys.h"
+>> +
+>> +
+>> +#define PPC_INST_NOP	0x60000000
+>> +#define PPC_INST_TRAP	0x7fe00008
+>> +#define PPC_INST_BLR	0x4e800020
+>> +
+>> +static volatile sig_atomic_t fault_code;
+>> +static volatile sig_atomic_t remaining_faults;
+>> +static volatile unsigned int *fault_addr;
+>> +static unsigned long pgsize, numinsns;
+>> +static unsigned int *insns;
+>> +static bool pkeys_supported;
+>> +
+>> +static bool is_fault_expected(int fault_code)
+>> +{
+>> +	if (fault_code == SEGV_ACCERR)
+>> +		return true;
+>> +
+>> +	/* Assume any pkey error is fine since pkey_exec_prot test covers them */
+>> +	if (fault_code == SEGV_PKUERR && pkeys_supported)
+>> +		return true;
+>> +
+>> +	return false;
+>> +}
+>> +
+>> +static void trap_handler(int signum, siginfo_t *sinfo, void *ctx)
+>> +{
+>> +	/* Check if this fault originated from the expected address */
+>> +	if (sinfo->si_addr != (void *)fault_addr)
+>> +		sigsafe_err("got a fault for an unexpected address\n");
+>> +
+>> +	_exit(1);
+>> +}
+>> +
+>> +static void segv_handler(int signum, siginfo_t *sinfo, void *ctx)
+>> +{
+>> +	fault_code = sinfo->si_code;
+>> +
+>> +	/* Check if this fault originated from the expected address */
+>> +	if (sinfo->si_addr != (void *)fault_addr) {
+>> +		sigsafe_err("got a fault for an unexpected address\n");
+>> +		_exit(1);
+>> +	}
+>> +
+>> +	/* Check if too many faults have occurred for a single test case */
+>> +	if (!remaining_faults) {
+>> +		sigsafe_err("got too many faults for the same address\n");
+>> +		_exit(1);
+>> +	}
+>> +
+>> +
+>> +	/* Restore permissions in order to continue */
+>> +	if (is_fault_expected(fault_code)) {
+>> +		if (mprotect(insns, pgsize, PROT_READ | PROT_WRITE | PROT_EXEC)) {
+>> +			sigsafe_err("failed to set access permissions\n");
+>> +			_exit(1);
+>> +		}
+>> +	} else {
+>> +		sigsafe_err("got a fault with an unexpected code\n");
+>> +		_exit(1);
+>> +	}
+>> +
+>> +	remaining_faults--;
+>> +}
+>> +
+>> +static int check_exec_fault(int rights)
+>> +{
+>> +	/*
+>> +	 * Jump to the executable region.
+>> +	 *
+>> +	 * The first iteration also checks if the overwrite of the
+>> +	 * first instruction word from a trap to a no-op succeeded.
+>> +	 */
+>> +	fault_code = -1;
+>> +	remaining_faults = 0;
+>> +	if (!(rights & PROT_EXEC))
+>> +		remaining_faults = 1;
+>> +
+>> +	FAIL_IF(mprotect(insns, pgsize, rights) != 0);
+>> +	asm volatile("mtctr	%0; bctrl" : : "r"(insns));
+>> +
+>> +	FAIL_IF(remaining_faults != 0);
+>> +	if (!(rights & PROT_EXEC))
+>> +		FAIL_IF(!is_fault_expected(fault_code));
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int test(void)
+>> +{
+>> +	struct sigaction segv_act, trap_act;
+>> +	int i;
+>> +
+>> +	/* Skip the test if the CPU doesn't support Radix */
+>> +	SKIP_IF(!have_hwcap2(PPC_FEATURE2_ARCH_3_00));
+>> +
+>> +	/* Check if pkeys are supported */
+>> +	pkeys_supported = pkeys_unsupported() == 0;
+>> +
+>> +	/* Setup SIGSEGV handler */
+>> +	segv_act.sa_handler = 0;
+>> +	segv_act.sa_sigaction = segv_handler;
+>> +	FAIL_IF(sigprocmask(SIG_SETMASK, 0, &segv_act.sa_mask) != 0);
+>> +	segv_act.sa_flags = SA_SIGINFO;
+>> +	segv_act.sa_restorer = 0;
+>> +	FAIL_IF(sigaction(SIGSEGV, &segv_act, NULL) != 0);
+>> +
+>> +	/* Setup SIGTRAP handler */
+>> +	trap_act.sa_handler = 0;
+>> +	trap_act.sa_sigaction = trap_handler;
+>> +	FAIL_IF(sigprocmask(SIG_SETMASK, 0, &trap_act.sa_mask) != 0);
+>> +	trap_act.sa_flags = SA_SIGINFO;
+>> +	trap_act.sa_restorer = 0;
+>> +	FAIL_IF(sigaction(SIGTRAP, &trap_act, NULL) != 0);
+>> +
+>> +	/* Setup executable region */
+>> +	pgsize = getpagesize();
+>> +	numinsns = pgsize / sizeof(unsigned int);
+>> +	insns = (unsigned int *)mmap(NULL, pgsize, PROT_READ | PROT_WRITE,
+>> +				      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+>> +	FAIL_IF(insns == MAP_FAILED);
+>> +
+>> +	/* Write the instruction words */
+>> +	for (i = 1; i < numinsns - 1; i++)
+>> +		insns[i] = PPC_INST_NOP;
+>> +
+>> +	/*
+>> +	 * Set the first instruction as an unconditional trap. If
+>> +	 * the last write to this address succeeds, this should
+>> +	 * get overwritten by a no-op.
+>> +	 */
+>> +	insns[0] = PPC_INST_TRAP;
+>> +
+>> +	/*
+>> +	 * Later, to jump to the executable region, we use a branch
+>> +	 * and link instruction (bctrl) which sets the return address
+>> +	 * automatically in LR. Use that to return back.
+>> +	 */
+>> +	insns[numinsns - 1] = PPC_INST_BLR;
+>> +
+>> +	/*
+>> +	 * Pick the first instruction's address from the executable
+>> +	 * region.
+>> +	 */
+>> +	fault_addr = insns;
+>> +
+>> +	/*
+>> +	 * Read an instruction word from the address when the page
+>> +	 * is execute only. This should generate an access fault.
+>> +	 */
+>> +	fault_code = -1;
+>> +	remaining_faults = 1;
+>> +	printf("Testing read on --x, should fault...");
+>> +	FAIL_IF(mprotect(insns, pgsize, PROT_EXEC) != 0);
+>> +	i = *fault_addr;
+>> +	FAIL_IF(remaining_faults != 0 || !is_fault_expected(fault_code));
+>> +	printf("ok!\n");
+>> +
+>> +	/*
+>> +	 * Write an instruction word to the address when the page
+>> +	 * execute only. This should also generate an access fault.
+>> +	 */
+>> +	fault_code = -1;
+>> +	remaining_faults = 1;
+>> +	printf("Testing write on --x, should fault...");
+>> +	FAIL_IF(mprotect(insns, pgsize, PROT_EXEC) != 0);
+>> +	*fault_addr = PPC_INST_NOP;
+>> +	FAIL_IF(remaining_faults != 0 || !is_fault_expected(fault_code));
+>> +	printf("ok!\n");
+>> +
+>> +	printf("Testing exec on ---, should fault...");
+>> +	FAIL_IF(check_exec_fault(PROT_NONE));
+>> +	printf("ok!\n");
+>> +
+>> +	printf("Testing exec on r--, should fault...");
+>> +	FAIL_IF(check_exec_fault(PROT_READ));
+>> +	printf("ok!\n");
+>> +
+>> +	printf("Testing exec on -w-, should fault...");
+>> +	FAIL_IF(check_exec_fault(PROT_WRITE));
+>> +	printf("ok!\n");
+>> +
+>> +	printf("Testing exec on rw-, should fault...");
+>> +	FAIL_IF(check_exec_fault(PROT_READ | PROT_WRITE));
+>> +	printf("ok!\n");
+>> +
+>> +	printf("Testing exec on --x, should succeed...");
+>> +	FAIL_IF(check_exec_fault(PROT_EXEC));
+>> +	printf("ok!\n");
+>> +
+>> +	printf("Testing exec on r-x, should succeed...");
+>> +	FAIL_IF(check_exec_fault(PROT_READ | PROT_EXEC));
+>> +	printf("ok!\n");
+>> +
+>> +	printf("Testing exec on -wx, should succeed...");
+>> +	FAIL_IF(check_exec_fault(PROT_WRITE | PROT_EXEC));
+>> +	printf("ok!\n");
+>> +
+>> +	printf("Testing exec on rwx, should succeed...");
+>> +	FAIL_IF(check_exec_fault(PROT_READ | PROT_WRITE | PROT_EXEC));
+>> +	printf("ok!\n");
+>> +
+>> +	/* Cleanup */
+>> +	FAIL_IF(munmap((void *)insns, pgsize));
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int main(void)
+>> +{
+>> +	return test_harness(test, "exec_prot");
+>> +}
 > 
-> On Tue, Aug 16, 2022 at 06:35:18PM +0900, Gwan-gyeong Mun wrote:
-> > It moves overflows_type utility macro into overflow header from i915_utils
-> > header. The overflows_type can be used to catch the truncation between data
-> > types. And it adds safe_conversion() macro which performs a type conversion
-> > (cast) of an source value into a new variable, checking that the
-> > destination is large enough to hold the source value. And the functionality
-> > of overflows_type has been improved to handle the signbit.
-> > The is_unsigned_type macro has been added to check the sign bit of the
-> > built-in type.
-> > 
-> > v3: Add is_type_unsigned() macro (Mauro)
-> >     Modify overflows_type() macro to consider signed data types (Mauro)
-> >     Fix the problem that safe_conversion() macro always returns true
-> > v4: Fix kernel-doc markups
-> > v6: Move macro addition location so that it can be used by other than drm
-> >     subsystem (Jani, Mauro, Andi)
-> >     Change is_type_unsigned to is_unsigned_type to have the same name form
-> >     as is_signed_type macro
-> > 
-> > Signed-off-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
-> > Cc: Thomas Hellström <thomas.hellstrom@linux.intel.com>
-> > Cc: Matthew Auld <matthew.auld@intel.com>
-> > Cc: Nirmoy Das <nirmoy.das@intel.com>
-> > Cc: Jani Nikula <jani.nikula@intel.com>
-> > Cc: Andi Shyti <andi.shyti@linux.intel.com>
-> > Reviewed-by: Mauro Carvalho Chehab <mchehab@kernel.org> (v5)
-> > ---
-> >  drivers/gpu/drm/i915/i915_utils.h |  5 +--
-> >  include/linux/overflow.h          | 54 +++++++++++++++++++++++++++++++
-> >  2 files changed, 55 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/i915/i915_utils.h b/drivers/gpu/drm/i915/i915_utils.h
-> > index c10d68cdc3ca..eb0ded23fa9c 100644
-> > --- a/drivers/gpu/drm/i915/i915_utils.h
-> > +++ b/drivers/gpu/drm/i915/i915_utils.h
-> > @@ -32,6 +32,7 @@
-> >  #include <linux/types.h>
-> >  #include <linux/workqueue.h>
-> >  #include <linux/sched/clock.h>
-> > +#include <linux/overflow.h>
-> >  
-> >  #ifdef CONFIG_X86
-> >  #include <asm/hypervisor.h>
-> > @@ -111,10 +112,6 @@ bool i915_error_injected(void);
-> >  #define range_overflows_end_t(type, start, size, max) \
-> >  	range_overflows_end((type)(start), (type)(size), (type)(max))
-> >  
-> > -/* Note we don't consider signbits :| */
-> > -#define overflows_type(x, T) \
-> > -	(sizeof(x) > sizeof(T) && (x) >> BITS_PER_TYPE(T))
-> > -
-> >  #define ptr_mask_bits(ptr, n) ({					\
-> >  	unsigned long __v = (unsigned long)(ptr);			\
-> >  	(typeof(ptr))(__v & -BIT(n));					\
-> > diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> > index f1221d11f8e5..462a03454377 100644
-> > --- a/include/linux/overflow.h
-> > +++ b/include/linux/overflow.h
-> > @@ -35,6 +35,60 @@
-> >  #define type_max(T) ((T)((__type_half_max(T) - 1) + __type_half_max(T)))
-> >  #define type_min(T) ((T)((T)-type_max(T)-(T)1))
-> >  
-> > +/**
-> > + * is_unsigned_type - helper for checking data type which is an unsigned data
-> > + * type or not
-> > + * @x: The data type to check
-> > + *
-> > + * Returns:
-> > + * True if the data type is an unsigned data type, false otherwise.
-> > + */
-> > +#define is_unsigned_type(x) ((typeof(x))-1 >= (typeof(x))0)
-
-I'd rather not have separate logic for this. Instead, I'd like it to be:
-
-#define is_unsigned_type(x) (!is_signed_type(x))
-
-> > +
-> > +/**
-> > + * overflows_type - helper for checking the truncation between data types
-> > + * @x: Source for overflow type comparison
-> > + * @T: Destination for overflow type comparison
-> > + *
-> > + * It compares the values and size of each data type between the first and
-> > + * second argument to check whether truncation can occur when assigning the
-> > + * first argument to the variable of the second argument.
-> > + * Source and Destination can be used with or without sign bit.
-> > + * Composite data structures such as union and structure are not considered.
-> > + * Enum data types are not considered.
-> > + * Floating point data types are not considered.
-> > + *
-> > + * Returns:
-> > + * True if truncation can occur, false otherwise.
-> > + */
-> > +#define overflows_type(x, T) \
-> > +	(is_unsigned_type(x) ? \
-> > +		is_unsigned_type(T) ? \
-> > +			(sizeof(x) > sizeof(T) && (x) >> BITS_PER_TYPE(T)) ? 1 : 0 \
-> > +			: (sizeof(x) >= sizeof(T) && (x) >> (BITS_PER_TYPE(T) - 1)) ? 1 : 0 \
-> > +	: is_unsigned_type(T) ? \
-> > +		((x) < 0) ? 1 : (sizeof(x) > sizeof(T) && (x) >> BITS_PER_TYPE(T)) ? 1 : 0 \
-> > +		: (sizeof(x) > sizeof(T)) ? \
-> > +			((x) < 0) ? (((x) * -1) >> BITS_PER_TYPE(T)) ? 1 : 0 \
-> > +				: ((x) >> BITS_PER_TYPE(T)) ? 1 : 0 \
-> > +			: 0)
-
-Like the other, I'd much rather this was rephrased in terms of the
-existing macros (e.g. type_min()/type_max().)
-
-> > +
-> > +/**
-> > + * safe_conversion - perform a type conversion (cast) of an source value into
-> > + * a new variable, checking that the destination is large enough to hold the
-> > + * source value.
-> > + * @ptr: Destination pointer address
-> > + * @value: Source value
-> > + *
-> > + * Returns:
-> > + * If the value would overflow the destination, it returns false.
-> > + */
-> > +#define safe_conversion(ptr, value) ({ \
-> > +	typeof(value) __v = (value); \
-> > +	typeof(ptr) __ptr = (ptr); \
-> > +	overflows_type(__v, *__ptr) ? 0 : ((*__ptr = (typeof(*__ptr))__v), 1); \
-> > +})
-
-I try to avoid "safe" as an adjective for interface names, since it
-doesn't really answer "safe from what?" This looks more like "assign, but
-zero when out of bounds". And it can be built from existing macros here:
-
-	if (check_add_overflow(0, value, ptr))
-		*ptr = 0;
-
-I actually want to push back on this a bit, because there can still be
-logic bugs built around this kind of primitive. Shouldn't out-of-bounds
-assignments be seen as a direct failure? I would think this would be
-sufficient:
-
-#define check_assign(value, ptr)	check_add_overflow(0, value, ptr)
-
-And callers would do:
-
-	if (check_assign(value, &var))
-		return -EINVAL;
-
-etc.
-
-
--- 
-Kees Cook
