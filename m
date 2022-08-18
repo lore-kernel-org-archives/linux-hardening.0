@@ -2,158 +2,150 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F8CC00140
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 Aug 2022 12:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE51C00140
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 Aug 2022 12:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244468AbiHRMCx (ORCPT
+        id S244648AbiHRM2E (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 Aug 2022 08:02:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53346 "EHLO
+        Thu, 18 Aug 2022 08:28:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244216AbiHRMCx (ORCPT
+        with ESMTP id S244240AbiHRM2D (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 Aug 2022 08:02:53 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5409D43E5C;
-        Thu, 18 Aug 2022 05:02:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660824172; x=1692360172;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=6twQQ5L7960+uNl0KcmdGE2Ed2A3YzdgfJUxFWVxd6s=;
-  b=N9gwZXKgn0AvKzVz9JiDMtmUWej0UxHn4bg46qJYo6YEKNr3MZjn8Nbp
-   +hHI95ko9NCxwdrgvCMFGMG44Wz1MHtEv4aOZML/xRYnS3MEbzqj5w1rC
-   GDcHCIjYUp6HW6GGDATgpOj1Dk/u896zPTTSDt1jmL6NETJfqnyWSuJYr
-   S7C15yE27omVby6SENTfVHkCEZBIG8b/lcdBaqpA2cAKcz3WPmRAKk88R
-   bOYTqmcN3xRAeCg/T5/ts94QfXKl+ffWc1nBouPpMkRofqBF+R5zJuomm
-   YTRknTEFbOvjYqRkrpkNsTSUEjN/3CszFq3NOk+7Pg0Uh45kxshlO2yzW
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10442"; a="272506615"
-X-IronPort-AV: E=Sophos;i="5.93,246,1654585200"; 
-   d="scan'208";a="272506615"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2022 05:02:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,246,1654585200"; 
-   d="scan'208";a="558503024"
-Received: from lkp-server01.sh.intel.com (HELO 6cc724e23301) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 18 Aug 2022 05:02:46 -0700
-Received: from kbuild by 6cc724e23301 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oOeEX-0000Td-1a;
-        Thu, 18 Aug 2022 12:02:45 +0000
-Date:   Thu, 18 Aug 2022 20:02:26 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-m68k@lists.linux-m68k.org, linux-hardening@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:pending-fixes] BUILD SUCCESS WITH WARNING
- bb8b9a4857726b532eaaa9d31c8acfb451227fbf
-Message-ID: <62fe2a52.MDlOyFV1+MFSyOaw%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
+        Thu, 18 Aug 2022 08:28:03 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2054.outbound.protection.outlook.com [40.107.220.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E9CD659C5;
+        Thu, 18 Aug 2022 05:28:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lrnw/e7USW+T1EEF5F+8LSZ6E9bzSaYbuzD4UXk56fMhXnsBm7YKwJBLEyUunewUDfUrpX0EQwHIdgc54qIey0Cs70xr1BUSpCiBvsLE/fmjcEh3B7TUEVEXqlWfiG3mb+Y24BpVa1oBsqZY0GwwnkoHC8PjSbDlwCgpzkX0E4YkkOFEDG30KhPrpIOjHTWeEsDZq47Mxw2nr5+fbOkl4gvYmzxqtKaN+r/k/7RVOVfSBojCJpwfxfkj02JEa7w3NBnJGl8UVjCuvBGZ9hWxqp+Pjm+z/zdu4AWobnNN1P3b+sVikPoti/VPSf3S4fKTSUTA5UZPzGE39RklpodLrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1iC7sNT+PQJaXWb8QYgpkim5IwMnYoUgTExA+8jW07w=;
+ b=iLdA0RhlPIpbS8z5UBBE0jGQ4jsSUVJBD88OCBtgHFmyX3uVs/Iy1vd2eekZiEZCOd97Sl5qiJGQuuPctW7Omtcu76kkBxfnXKWotg1L9xLItgxcylCbtSuHx4wChDgVjucCskj4BG0Z50vVWQXLI+vGfq9n0E8nC05BQybS5qoIRVzmlabj6paOCm09yqR4l1ZoQHHlUkR60x/vxy0M+Itx3QRzXbcKjLXkgda3RuHSwGueutNb29Y0/4IM6WipcU0VVpqBcAcuk9BZe5lnCjk7RMPDCMYoTnuwYzM3nZuT/SeoaNsyjX8qCOwcQZ/+UB1n9nJ5LpiFK0eUAHY1Nw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1iC7sNT+PQJaXWb8QYgpkim5IwMnYoUgTExA+8jW07w=;
+ b=WBeSXxELRSTuyUfE6tVoe+vJQ8l5pNWzdrFBPDahIggRmjaXzZSOT3+7Jixzb1Vln1XCEW/Fqy71AFq4kqdD+z7BLi/0zsVWFp4B7LmGs+lBQlv4pee87Pz2TpfoLETW6FRgxUDjnqMWn/0l0ycllisYukM+wUT4aR2ngN3pfotaLgBNtYT7AXFv+cTuquiBbIKazlmWcY7rTILrvZseW1+mJLktloCJEk94hyM8/8e8LkM0g9Px+FuD/KqVJO+tfuXzvNpQhfWGsra15LqZKHhXUIWEro72YvIU/ed5sLg8TSViMZWrCxrWLiiyBrPlrX9HdfPGUYHEziEYOdoHzQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
+ by BYAPR12MB2854.namprd12.prod.outlook.com (2603:10b6:a03:135::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5525.19; Thu, 18 Aug
+ 2022 12:28:01 +0000
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::462:7fe:f04f:d0d5]) by MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::462:7fe:f04f:d0d5%6]) with mapi id 15.20.5525.019; Thu, 18 Aug 2022
+ 12:28:01 +0000
+Date:   Thu, 18 Aug 2022 09:28:00 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] flexible-array transformations in UAPI for 6.0-rc1
+Message-ID: <Yv4wUJfrkZ0tmCin@nvidia.com>
+References: <Yug4IJHugXBzPWFH@work>
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <Yug4IJHugXBzPWFH@work>
+X-ClientProxiedBy: BLAPR03CA0080.namprd03.prod.outlook.com
+ (2603:10b6:208:329::25) To MN2PR12MB4192.namprd12.prod.outlook.com
+ (2603:10b6:208:1d5::15)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5704cd65-1018-4a48-7945-08da81151772
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2854:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GCTGrcYmEx4XK2qBA14S31/Wd9nXxgl3naWnWkAx0mjjx7wL317n620q246gQwIVIjotD3XnZupyhoXKQ+LVBacc9g/vHBaM7YgA8SVy0R9BoA4/Evson7tqo+wNqcChwk4e42nNnK1LbsFAsNcclg02RlFj1MTyz/9eszeZ4cYuhVbfGLTYsLXpXh9aGT7ehhnEMsvFn0oK4iKuV5XKnvUTKd2Ba8g/L1O32DVJnuS1yQMWsgk0JClWNBtvCPt20wu4V3G8OEwBA+mPKyhcm+oHckacM6EQGNKtKvX1klVw202Cv1k98ckGwxZYGyecVZnSSIP1PzcNZ7YKxMyXOnIrPxIHMu7iDax4K5X0P3Ow67iFkeERdSIrXNZrVh0pqvNJbFEjznEVsocUYR1pY1DpEvpIW8zOFUhzL4s49ZQVn8Mhrj0E7rJe2hOi4rDNJ65YIevU2AkfNTpRcyju7KhWSxvWL4oA9sIvCQArRZrTJrIsQ1H/eHVqkTK2ObFAfL1r4vbUG/GXfySOrmZxpZ2XOHBLcFtj76PMqCuI07c6W1iCgQT31IGGprU/+CW4vDQ8m7h2ykyNolYqioQjOoQn0stwQQX+54fsbJ3SIbBf18aOwviNOAL95u+NyOSuEwK8mbV6C79AauoH3pGWlNjeAx+4fOEvtGqTMAG/p9XMXttVxpLfdT6gAVhK7SsXXqvXW8JkQTnbTBJvENz7XSS86epGf3upYtuKmnbV+Z5bG/dxCBCN0Ms46Ouuiq1ZLHs8kUIPQUOlYk2XFQu2vaGeMq91LXgqAt6qMYb0kKg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(396003)(136003)(376002)(366004)(346002)(26005)(6512007)(38100700002)(2906002)(6506007)(186003)(83380400001)(4326008)(66476007)(66946007)(66556008)(8676002)(36756003)(478600001)(966005)(6486002)(6916009)(54906003)(316002)(86362001)(41300700001)(8936002)(5660300002)(2616005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xj230GJEyg4NVTkdnpLUKB4f0LupFI9gJpVDsMIJcUvCC4qt8sASS3mq+vTK?=
+ =?us-ascii?Q?xTsYZU/EZZ582s78PKyey69L6lWJBkB5GjYGtoA452KSrQwkJ5H+d+ACbDDl?=
+ =?us-ascii?Q?w1fg6XFDqwuOfFDstuczrw2X0tiSD6uprOEbmeMjkm3hQ5FbmmQuliAjG3pF?=
+ =?us-ascii?Q?yuHNAHoY8y2T69t9jJwnKzn4qIgWIlsqtkA3FSIiqh+hgCP/vZ7mKeQUWsOW?=
+ =?us-ascii?Q?PH7hd7fiVmdFK5YDD7TQ5YAmCt9d7XdoOltNy2m/ROR3D4asJAE9lSAoBlyN?=
+ =?us-ascii?Q?1iRwEWHq/mGz3TjZZQiqfWiy0VfEK8gjd7p90v8l0pk3eTcZKdbipefdXTYu?=
+ =?us-ascii?Q?/eg3RQ+/7gvgupGNMcYMS9ALrJUqv8I45DWzdArr2btdghzf/Uir8B+Bn0k5?=
+ =?us-ascii?Q?kjDaErgZc5CEHyBr9euQsGy4ZXE6GVl1tJDLycMk7anCtjVChSGvOEY3aBSF?=
+ =?us-ascii?Q?djsX4uVxOi98lq1+yu1Ni1kKDDCfPSsWVg2Lo2CQceKwjSO4q5zfEHrzUH3S?=
+ =?us-ascii?Q?5UFtlfu1GJRnSzIT3Q+0iJFSERzEIm3hDQoJBlChcVYhRrdF61aRRgERqbUF?=
+ =?us-ascii?Q?6v6gZGa4YYlv3BvbNx/W2+eCdrz+9yiXjdvNGUOjUdPqGNeOwtPrA98emKG+?=
+ =?us-ascii?Q?Z1BE7wnFExBgkSWHFru5+fhJS6RpntdxWkuQmwe3NOBc9Bv9R3ova/HI11bV?=
+ =?us-ascii?Q?yQsZNevCJN+c9j9ofxZmzsXCA/XMhSq9h3dhEYekTfEFzyfURBu2xaOPeao3?=
+ =?us-ascii?Q?hEpOxwWOHgyxZfI/sdsA7pF+Zzq36ETzg0+2h2s9AM0k3w8ActmlkizJl9Rw?=
+ =?us-ascii?Q?Whxifk/eI+CrRDSSLVAfSFy3a8YZT4WJEy3PFwAEefLGUnxJ2f438e8E+cqT?=
+ =?us-ascii?Q?IO3K3oQw8cwqFOHynuquYF/6XzUba+wT7BPetJ3HgBe7lU9iwQhobX3lb/rC?=
+ =?us-ascii?Q?6ig0nq6H/gt4AtPnJzCA602177V1IplQPwmM3yiaLqOVBWrOQGcWd2GytoRx?=
+ =?us-ascii?Q?x8AEZ8rZPMvMjzda9RjCdPz8iJh513ll0jbVPFJy/ouhu4b6R+GhwVlzhsI5?=
+ =?us-ascii?Q?tmUSHo2eH7Ay0Fj7zpqzVuHGTi+6o686qLN1sia9fc9qZCsJd3lsGs7DSmUk?=
+ =?us-ascii?Q?zPX4Ndnm8HwypwwXrAQdd3ZATuZw6fxuCknI/TEeA4uNcqJpqM8Fxkl61X6B?=
+ =?us-ascii?Q?/V0S4G0KhxyNOlA9rVx0lrvS3wD2M0UHuzfFnnW0yohi9913GIkbrJIiTBHt?=
+ =?us-ascii?Q?r7Dhq4KRZTiSR+ZPdQgeTq0XfAv6F6lIbpMKNx+w9uR7rHYIDOYso/AzfSXJ?=
+ =?us-ascii?Q?q6MIaXxggp8I4MvK0VmwVqWxiBTTRJDeW2LzyXec5PKrum9RGkIurbKy1xU5?=
+ =?us-ascii?Q?TtodC6nDS44bqng2+EHtDjOYPUmcJfzzxjAenxcDJKypcoQFtCvPjVDJOmeS?=
+ =?us-ascii?Q?l7S+CBNMGxKkFRsy1B4qDDcV3IaHHrKRdMwblRow0HI3bq6a1QEXLvKSgbZD?=
+ =?us-ascii?Q?mGxRyTxsaKWkoTS7DuFY3sTc02GLnR4A1MYBzwoCVCTMWp8ka9cGO3m3V2Cu?=
+ =?us-ascii?Q?wagwU6zGDLFide/TDguZGDEIZIGU1W58CuTMwP93?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5704cd65-1018-4a48-7945-08da81151772
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2022 12:28:01.5114
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QynO/RpRa2oNo6zTzU5LLPiOf9sO8gwqlVofCV019A9fW4qSbo1XTEF2AnTngQr6
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2854
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git pending-fixes
-branch HEAD: bb8b9a4857726b532eaaa9d31c8acfb451227fbf  Merge branch 'for-linux-next-fixes' of git://anongit.freedesktop.org/drm/drm-misc
+On Mon, Aug 01, 2022 at 03:31:28PM -0500, Gustavo A. R. Silva wrote:
+> The following changes since commit b13baccc3850ca8b8cccbf8ed9912dbaa0fdf7f3:
+> 
+>   Linux 5.19-rc2 (2022-06-12 16:11:37 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/flexible-array-transformations-UAPI-6.0-rc1
+> 
+> for you to fetch changes up to 94dfc73e7cf4a31da66b8843f0b9283ddd6b8381:
+> 
+>   treewide: uapi: Replace zero-length arrays with flexible-array members (2022-06-28 21:26:05 +0200)
+> 
+> ----------------------------------------------------------------
+> flexible-array transformations in UAPI for 6.0-rc1
+> 
+> Hi Linus,
+> 
+> Please, pull the following treewide patch that replaces zero-length arrays
+> with flexible-array members in UAPI. This patch has been baking in
+> linux-next for 5 weeks now.
+> 
+> -fstrict-flex-arrays=3 is coming and we need to land these changes
+> to prevent issues like these in the short future:
+> 
+> ../fs/minix/dir.c:337:3: warning: 'strcpy' will always overflow; destination buffer has size 0,
+> but the source string has length 2 (including NUL byte) [-Wfortify-source]
+> 		strcpy(de3->name, ".");
+> 		^
+> 
+> Since these are all [0] to [] changes, the risk to UAPI is nearly zero. If
+> this breaks anything, we can use a union with a new member name.
 
-Warning reports:
+This has trobuled the RDMA userspace by creating new compiler warnings..
 
-https://lore.kernel.org/linux-mm/202208110453.zEneXTnn-lkp@intel.com
+We discussed this and I thought you agreed not to send these changes?
 
-Warning: (recently discovered and may have been fixed)
+https://lore.kernel.org/linux-rdma/20220628135623.GA25163@embeddedor/
 
-arch/m68k/include/asm/string.h:64:25: warning: '__builtin_memcmp' specified bound 6 exceeds source size 0 [-Wstringop-overread]
-include/linux/fortify-string.h:44:33: warning: '__builtin_memcmp' specified bound 6 exceeds source size 0 [-Wstringop-overread]
-include/net/bluetooth/bluetooth.h:347:16: warning: 'memcmp' specified bound 6 exceeds source size 0 [-Wstringop-overread]
-
-Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- m68k-allmodconfig
-|   `-- arch-m68k-include-asm-string.h:warning:__builtin_memcmp-specified-bound-exceeds-source-size
-|-- m68k-allyesconfig
-|   `-- arch-m68k-include-asm-string.h:warning:__builtin_memcmp-specified-bound-exceeds-source-size
-|-- m68k-randconfig-r031-20220818
-|   `-- arch-m68k-include-asm-string.h:warning:__builtin_memcmp-specified-bound-exceeds-source-size
-|-- mips-allyesconfig
-|   `-- include-linux-fortify-string.h:warning:__builtin_memcmp-specified-bound-exceeds-source-size
-`-- openrisc-randconfig-r013-20220818
-    `-- include-net-bluetooth-bluetooth.h:warning:memcmp-specified-bound-exceeds-source-size
-
-elapsed time: 722m
-
-configs tested: 58
-configs skipped: 2
-
-gcc tested configs:
-x86_64                        randconfig-a004
-arc                              allyesconfig
-x86_64                        randconfig-a002
-i386                                defconfig
-arm                                 defconfig
-alpha                            allyesconfig
-um                           x86_64_defconfig
-x86_64                              defconfig
-m68k                             allyesconfig
-um                             i386_defconfig
-m68k                             allmodconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-arm                              allyesconfig
-x86_64                               rhel-8.3
-arm64                            allyesconfig
-x86_64                        randconfig-a015
-i386                          randconfig-a001
-i386                          randconfig-a003
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64                    rhel-8.3-kselftests
-arc                  randconfig-r043-20220818
-i386                          randconfig-a005
-x86_64                           rhel-8.3-syz
-i386                             allyesconfig
-x86_64                           rhel-8.3-kvm
-x86_64                           allyesconfig
-s390                 randconfig-r044-20220818
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-riscv                randconfig-r042-20220818
-mips                             allyesconfig
-i386                          randconfig-a014
-sh                               allmodconfig
-i386                          randconfig-a012
-i386                          randconfig-a016
-ia64                             allmodconfig
-arc                               allnoconfig
-alpha                             allnoconfig
-csky                              allnoconfig
-riscv                             allnoconfig
-
-clang tested configs:
-x86_64                        randconfig-a005
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a012
-x86_64                        randconfig-a016
-x86_64                        randconfig-a014
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-hexagon              randconfig-r041-20220818
-hexagon              randconfig-r045-20220818
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-x86_64                          rhel-8.3-rust
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Jason
