@@ -2,94 +2,156 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A0CC32771
-	for <linux-hardening@archiver.kernel.org>; Fri, 19 Aug 2022 05:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA0AC32772
+	for <linux-hardening@archiver.kernel.org>; Fri, 19 Aug 2022 17:35:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346473AbiHSFdU (ORCPT
+        id S1354587AbiHSRe5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 19 Aug 2022 01:33:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51736 "EHLO
+        Fri, 19 Aug 2022 13:34:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346464AbiHSFdS (ORCPT
+        with ESMTP id S1354518AbiHSReh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 19 Aug 2022 01:33:18 -0400
-Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E06612A9E;
-        Thu, 18 Aug 2022 22:33:17 -0700 (PDT)
-Received: by mail-vs1-xe2a.google.com with SMTP id l7so3274472vsc.0;
-        Thu, 18 Aug 2022 22:33:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=PJWZ+ww9nWKSQKWZ24nwvV/pHbapUiWjpSIQxLnH82U=;
-        b=jHmkDZoi5mmEoeqCUl50yLnOI0A0M/wRgcOqhvDai8m5bne/mm/ZvWe4sqXYuoN/+o
-         JtLb5eKPOPgV7s6wLUcSUszmbegvR9oKNZ8m1wbAXdqQn9nAz3ed/GeC1eOLRLzTHQx9
-         XBPJpuQNqGzm/RSpdavJmGYf2SGEEhTCi08G5FYkibnMOc390ErQi/C+MGhpFMYApGNa
-         Lu5EdbMYzYZe/2gEIiKWbgE0f7k5IAJC5nF97j1Voo2KPpg7y9N0smceGoO8s+IRtLvf
-         ENdRWoZ0uwNvdHIZykwr+cnyWaYV9Wj8kYNQyAOKeMY6HvZg2zWWPzWCK0nrIyhXwr8g
-         HcLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=PJWZ+ww9nWKSQKWZ24nwvV/pHbapUiWjpSIQxLnH82U=;
-        b=w5n3z6pX5HeU5l6aI1tNykGmvscBA8rNSgvx7vRWclazo04fvsZ+PB+MZAIoL/yDnG
-         4YM0RoObcaBKK0H1J3zCrF0D2rsv8HrlJVgoB+QlJXraohVNcwmCcxpm0fO6wmhtx/Wx
-         RTC//zS0QQgXA+/KN8pQ/7QUoTDfk19aNc5+ijtYdKWPQzFzmiIeMXFpdMAWcJF/LcCg
-         TPjoz/cRG3cEKqjt3OZYGbgahjZsVwAxHSpJL0CzUIzYDIFuT/CzHnXE4UfG7DFDnb26
-         dvrGO/kZ9sUQMHgcKi0Xx56dsG/0xe8DmKTVqgzTCOr6D7E1/E//YMfrUf3hz5U5K8n/
-         z00g==
-X-Gm-Message-State: ACgBeo0GsFsbmHp2j0CenROsJquV8gpGrOkSoF61VFh4zamCQStUNPE0
-        H3ugUj8+jcR7s/2bxqZSy8svvQvHHFAxUg==
-X-Google-Smtp-Source: AA6agR55cZ0M/b99d5Dw/K0cMaGSOr2xQ4g6dkAG1k71T4VyLWjdcHDEGp0R8f2+Ealgju6EgV4IcA==
-X-Received: by 2002:a05:6102:497:b0:388:d95e:771b with SMTP id n23-20020a056102049700b00388d95e771bmr2229227vsa.44.1660887196472;
-        Thu, 18 Aug 2022 22:33:16 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14c:4c2:8202::1001])
-        by smtp.gmail.com with ESMTPSA id w85-20020a1f9458000000b0037d0cd81996sm1999286vkd.37.2022.08.18.22.33.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Aug 2022 22:33:16 -0700 (PDT)
-From:   Tales Aparecida <tales.aparecida@gmail.com>
-To:     Sadiya Kazi <sadiyakazi@google.com>, keescook@chromium.org
-Cc:     linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        davidgow@google.com, corbet@lwn.net, brendan.higgins@linux.dev,
-        Trevor Woerner <twoerner@gmail.com>, siqueirajordao@riseup.net,
-        mwen@igalia.com, andrealmeid@riseup.net, mairacanal@riseup.net,
-        Isabella Basso <isabbasso@riseup.net>, magalilemes00@gmail.com,
-        tales.aparecida@gmail.com, linux-hardening@vger.kernel.org
-Subject: [PATCH 8/8] lib: stackinit: update reference to kunit-tool
-Date:   Fri, 19 Aug 2022 02:32:34 -0300
-Message-Id: <20220819053234.241501-9-tales.aparecida@gmail.com>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20220819053234.241501-1-tales.aparecida@gmail.com>
-References: <20220819053234.241501-1-tales.aparecida@gmail.com>
+        Fri, 19 Aug 2022 13:34:37 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C95781537DD;
+        Fri, 19 Aug 2022 09:53:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1660927999; x=1692463999;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=iOcJREqHTGsAdb5AEkq4hDue4vu5yHBzF6n06gYH86E=;
+  b=oG0MLBPWGCnJiSZs2l0sKFvmqVtlzhc/BfYiXj1BmACNKDJneZGJmUOw
+   +vMskoogoOXtaUKyIt0uDaG89TDDZY+cxaKIX7Tw9HxJuL9q+5VsoMXIo
+   CjBdkH+cFQqIsRnTAuDCaOKZ2CN8Lj6qwur4X8vBxzugibobYv7O2UfzZ
+   2G0z4qaXRb6ryZstuPdOZ3wlwX8CyyMEC/dCEIjU+ggt7j3/qt555eUtN
+   2+3DYtQ9o4s5CIr6i4yqbrhJ6nzbtFbkgU8JxgCQ3KKUHNdAdQYlFshxC
+   TKtzJorWWJecfD66hNCzJ6W38GlA4KMF0ucD+IAk3r5QJSDLmkAlOyAsF
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10444"; a="293053177"
+X-IronPort-AV: E=Sophos;i="5.93,248,1654585200"; 
+   d="scan'208";a="293053177"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2022 09:50:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,248,1654585200"; 
+   d="scan'208";a="936280065"
+Received: from lkp-server01.sh.intel.com (HELO 44b6dac04a33) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 19 Aug 2022 09:50:05 -0700
+Received: from kbuild by 44b6dac04a33 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oP5C8-0001e9-1d;
+        Fri, 19 Aug 2022 16:50:04 +0000
+Date:   Sat, 20 Aug 2022 00:49:54 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-m68k@lists.linux-m68k.org, linux-hardening@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:pending-fixes] BUILD SUCCESS WITH WARNING
+ e68b4a7c00f99b319b84be8849addb8fddf9629b
+Message-ID: <62ffbf32.qqqMdIxDQRBJomQ+%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Replace URL with an updated path to the full Documentation page
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git pending-fixes
+branch HEAD: e68b4a7c00f99b319b84be8849addb8fddf9629b  Merge branch 'for-linux-next-fixes' of git://anongit.freedesktop.org/drm/drm-misc
 
-Signed-off-by: Tales Aparecida <tales.aparecida@gmail.com>
----
- lib/stackinit_kunit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Warning reports:
 
-diff --git a/lib/stackinit_kunit.c b/lib/stackinit_kunit.c
-index 35c69aa425b2..4591d6cf5e01 100644
---- a/lib/stackinit_kunit.c
-+++ b/lib/stackinit_kunit.c
-@@ -3,7 +3,7 @@
-  * Test cases for compiler-based stack variable zeroing via
-  * -ftrivial-auto-var-init={zero,pattern} or CONFIG_GCC_PLUGIN_STRUCTLEAK*.
-  * For example, see:
-- * https://www.kernel.org/doc/html/latest/dev-tools/kunit/kunit-tool.html#configuring-building-and-running-tests
-+ * "Running tests with kunit_tool" at Documentation/dev-tools/kunit/start.rst
-  *	./tools/testing/kunit/kunit.py run stackinit [--raw_output] \
-  *		--make_option LLVM=1 \
-  *		--kconfig_add CONFIG_INIT_STACK_ALL_ZERO=y
+https://lore.kernel.org/linux-mm/202208110453.zEneXTnn-lkp@intel.com
+
+Warning: (recently discovered and may have been fixed)
+
+arch/m68k/include/asm/string.h:64:25: warning: '__builtin_memcmp' specified bound 6 exceeds source size 0 [-Wstringop-overread]
+drivers/usb/dwc3/dwc3-qcom.c:313:25: warning: variable 'hcd' set but not used [-Wunused-but-set-variable]
+include/linux/fortify-string.h:44:33: warning: '__builtin_memcmp' specified bound 6 exceeds source size 0 [-Wstringop-overread]
+
+Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- m68k-allmodconfig
+|   `-- arch-m68k-include-asm-string.h:warning:__builtin_memcmp-specified-bound-exceeds-source-size
+|-- m68k-allyesconfig
+|   `-- arch-m68k-include-asm-string.h:warning:__builtin_memcmp-specified-bound-exceeds-source-size
+|-- mips-allyesconfig
+|   `-- include-linux-fortify-string.h:warning:__builtin_memcmp-specified-bound-exceeds-source-size
+`-- mips-randconfig-r014-20220819
+    `-- drivers-usb-dwc3-dwc3-qcom.c:warning:variable-hcd-set-but-not-used
+
+elapsed time: 728m
+
+configs tested: 58
+configs skipped: 2
+
+gcc tested configs:
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                              defconfig
+i386                                defconfig
+i386                          randconfig-a001
+i386                          randconfig-a003
+arm                                 defconfig
+arc                              allyesconfig
+i386                          randconfig-a005
+arc                  randconfig-r043-20220819
+alpha                            allyesconfig
+m68k                             allmodconfig
+ia64                             allmodconfig
+x86_64                               rhel-8.3
+x86_64                    rhel-8.3-kselftests
+m68k                             allyesconfig
+x86_64                          rhel-8.3-func
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64                         rhel-8.3-kunit
+x86_64                        randconfig-a006
+x86_64                           allyesconfig
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+x86_64                           rhel-8.3-syz
+i386                          randconfig-a014
+x86_64                           rhel-8.3-kvm
+powerpc                          allmodconfig
+i386                          randconfig-a012
+mips                             allyesconfig
+arm                              allyesconfig
+powerpc                           allnoconfig
+i386                          randconfig-a016
+sh                               allmodconfig
+arm64                            allyesconfig
+x86_64                        randconfig-a015
+i386                             allyesconfig
+csky                              allnoconfig
+arc                               allnoconfig
+alpha                             allnoconfig
+riscv                             allnoconfig
+
+clang tested configs:
+i386                          randconfig-a002
+i386                          randconfig-a004
+hexagon              randconfig-r041-20220819
+riscv                randconfig-r042-20220819
+hexagon              randconfig-r045-20220819
+i386                          randconfig-a006
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+s390                 randconfig-r044-20220819
+i386                          randconfig-a013
+x86_64                        randconfig-a012
+i386                          randconfig-a011
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a015
+x86_64                          rhel-8.3-rust
+
 -- 
-2.37.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
