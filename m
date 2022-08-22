@@ -2,59 +2,60 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78532C32792
-	for <linux-hardening@archiver.kernel.org>; Mon, 22 Aug 2022 22:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14391C32792
+	for <linux-hardening@archiver.kernel.org>; Mon, 22 Aug 2022 22:52:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232902AbiHVWh0 (ORCPT
+        id S231482AbiHVWwn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 22 Aug 2022 18:37:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51504 "EHLO
+        Mon, 22 Aug 2022 18:52:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238488AbiHVWfo (ORCPT
+        with ESMTP id S233026AbiHVWwm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 22 Aug 2022 18:35:44 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D3EF49B52;
-        Mon, 22 Aug 2022 15:35:43 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id y4so11218937plb.2;
-        Mon, 22 Aug 2022 15:35:43 -0700 (PDT)
+        Mon, 22 Aug 2022 18:52:42 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F201F50734
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Aug 2022 15:52:39 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id gi31so17623590ejc.5
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Aug 2022 15:52:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=google.com; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc;
-        bh=rc8cqsRTnzKVbLe+4u6IWFZMkSB429i95/8w404EPWQ=;
-        b=C9v0gcH+pAAKJmwtYaqbnICUJYXbyTsyvrR12OkhjV4dbsR/0oMzSGfRQAzlxpm1d8
-         Dmt+3HiGMbFxWEgfCd4fmFmgmrWK289mInmUWOOtmwxFE5+SwFQaH9NGGzt0w3OKGPdz
-         vXUUa43CJw3kKrecXIuAdjW8geC38bKhsMKbMX+PAj0vrK1xs2bgo7csnE7t+6sLjqZM
-         3fjGEhN6KVqUNE6N/GIzYrx/IudpcjXaXLf0wC/yDhocqOb72GAxXgwqtZdnwK6dKkW5
-         gk17ITwOQ6A1PSbon1LNEZGOspF1B5qbnzbqcSl6qQGMltIPNTenTa5fepz8S7TAywWA
-         ZNpA==
+        bh=XLgtLD7vBAyVMD+9VJI2NLAe64xOTMdHlcCW5KZ1j3Q=;
+        b=MPPTHhum2nMwqmEC5B/UTTtOxnE1s2XWYgIYwbTXdf8hZuvbr27Ikh3vl2x6opKRaU
+         mBriuDDp0HYdwQDTLydl+ZXUT/XoEMlUIr0zmM3Fzy340X7dN3T+yiwJPzXyterg0ix6
+         5O1S37l6K+JwcZ4l9wwta5dJK7YDJiEiRstmrUZWbi8Noec41q59uGTiK2TVYYcVqTtb
+         khRyk+bE75HvoHbguCiLq7o79Ica//2MDbEbZKb1Z6N53ewyTqevgtwRHXge6ZDHOsID
+         eFzO+al9/mSBG1k1wzLjPGBaonbbx0gl1Y4MJ5VDSOL41mHg6Vm3f9d0T2j5vWxI5F6U
+         4EIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
-        bh=rc8cqsRTnzKVbLe+4u6IWFZMkSB429i95/8w404EPWQ=;
-        b=C8rFEW14t78ssZduBIqSDCYMHxqXUqiseOLeQ9yIwKqY9oQeDHPltAWypA7ndXxlOq
-         JqANVFx3ZEIX5ihA+r6LB70MnqAQ++5kxgm6QH91JFdR5qfNf4gh/evDtVjQW3GwRjoo
-         6c29xPypiDLFSVpCV9WnIS6jeVgvTGFqQYSDAI3aoYawpMpsWrcaq/lNBnNt0JlotiD8
-         Gxcc75WnYb/+a8/IquovNUD2xLq2Cq/+jhxb46pzyDUXNBNSUXb+XP2PAMG7CbzakvBR
-         cmmKeh8Sa1R4tyBA4dvEKhu1Pr+0lf4l+34GdRC+g1uW7rtXgKi6s0xc3IxbuyxGypSb
-         jfVw==
-X-Gm-Message-State: ACgBeo0eWyJe63AEcKDkFMRVlDQ8sKBuG6fPDjW+vYY9rX8Dk1IJZ8oF
-        1qHNJ06CzQ2MxPkxv+JpnEsNBpUE5pr/DzPVpKM=
-X-Google-Smtp-Source: AA6agR5HQON0R7kHz0tjqUr3jcPfNDAdt1YPSjPZbJ/N0mc3Tn1gnc6CqsodKcvGv2aZcAX8MHRXQddoHGGfn2Gv2s0=
-X-Received: by 2002:a17:902:ce8e:b0:16d:cebc:e92e with SMTP id
- f14-20020a170902ce8e00b0016dcebce92emr22024945plg.85.1661207743072; Mon, 22
- Aug 2022 15:35:43 -0700 (PDT)
+        bh=XLgtLD7vBAyVMD+9VJI2NLAe64xOTMdHlcCW5KZ1j3Q=;
+        b=CVxfgvbySd2mrR9Qe60kXERijEnNXewT6UldEtf6qt4vFHf1s6JAlA6GAC6m0vywLC
+         Q2Jx5XBqaT4E2V0qheR7gR7bQmveZZFroejYVWPsQ/cev8tEqVxXZf0CCLvmJVj559OX
+         b6NjnszLvmlGJcwiBI3rkCExfr/EtheJl0rmgeGhIcxlrhIOCxaxB7npUqQjxwiUQoy4
+         zHtHWMOfOx1wRXZ8gTIJnrfeGPCYrguGbEGQV0S0lSj5I0uuYwengRXaGxAo3tkYObxH
+         8EUHHRx5ggBxhM2yWbwCcJ6ox8Dg3p+6Wwj+3+t/O5SAQB1dim52BnPMh0iwPr2pBe8R
+         XzOg==
+X-Gm-Message-State: ACgBeo04HKpIWFy7ogu9lw2Apr9pC9dx0ycdhHpzGbr4r0SCM+M/3Ddh
+        kfLAliUwDNLobLgShejYNjzn2IWITjSU/GryhIpTxw==
+X-Google-Smtp-Source: AA6agR5J+kdNj9PmydczQ5oLNItQ0V0tD8FpH0QxDQnGVEEvJEcNOj+RxXfhEr4HjEMLIdo7koqhYBMsDrNjLfklQjU=
+X-Received: by 2002:a17:907:7f9e:b0:73c:6f39:7399 with SMTP id
+ qk30-20020a1709077f9e00b0073c6f397399mr12849900ejc.358.1661208758339; Mon, 22
+ Aug 2022 15:52:38 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220819053234.241501-1-tales.aparecida@gmail.com>
  <20220819053234.241501-8-tales.aparecida@gmail.com> <CAGS_qxoVuRPF39kcVBWGuhnmaixfLAkPN6HaDRyuXmDHqmWPXg@mail.gmail.com>
-In-Reply-To: <CAGS_qxoVuRPF39kcVBWGuhnmaixfLAkPN6HaDRyuXmDHqmWPXg@mail.gmail.com>
-From:   Tales <tales.aparecida@gmail.com>
-Date:   Mon, 22 Aug 2022 19:35:06 -0300
-Message-ID: <CAGVoLp6CQO=Vw20GYYoYUEZr4BJM5FS8H8Fi3TgS0aXWVie4Lg@mail.gmail.com>
+ <CAGVoLp6CQO=Vw20GYYoYUEZr4BJM5FS8H8Fi3TgS0aXWVie4Lg@mail.gmail.com>
+In-Reply-To: <CAGVoLp6CQO=Vw20GYYoYUEZr4BJM5FS8H8Fi3TgS0aXWVie4Lg@mail.gmail.com>
+From:   Daniel Latypov <dlatypov@google.com>
+Date:   Mon, 22 Aug 2022 15:52:27 -0700
+Message-ID: <CAGS_qxrGVHWiEQz5b+zWz0JYmUwxnsVaoa_8SYOxb7nsRZ=iSw@mail.gmail.com>
 Subject: Re: [PATCH 7/8] lib: overflow: update reference to kunit-tool
-To:     Daniel Latypov <dlatypov@google.com>
+To:     Tales <tales.aparecida@gmail.com>
 Cc:     Sadiya Kazi <sadiyakazi@google.com>,
         Kees Cook <keescook@chromium.org>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -77,53 +78,59 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Daniel,
-
-Em seg., 22 de ago. de 2022 =C3=A0s 17:09, Daniel Latypov
-<dlatypov@google.com> escreveu:
+On Mon, Aug 22, 2022 at 3:35 PM Tales <tales.aparecida@gmail.com> wrote:
 >
-> On Thu, Aug 18, 2022 at 10:33 PM Tales Aparecida
-> <tales.aparecida@gmail.com> wrote:
+> Hi Daniel,
+>
+> Em seg., 22 de ago. de 2022 =C3=A0s 17:09, Daniel Latypov
+> <dlatypov@google.com> escreveu:
 > >
-> > Replace URL with an updated path to the full Documentation page
+> > On Thu, Aug 18, 2022 at 10:33 PM Tales Aparecida
+> > <tales.aparecida@gmail.com> wrote:
+> > >
+> > > Replace URL with an updated path to the full Documentation page
+> > >
+> > > Signed-off-by: Tales Aparecida <tales.aparecida@gmail.com>
+> > > ---
+> > >  lib/overflow_kunit.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
+> > > index 7e3e43679b73..78075106c0df 100644
+> > > --- a/lib/overflow_kunit.c
+> > > +++ b/lib/overflow_kunit.c
+> > > @@ -1,7 +1,7 @@
+> > >  // SPDX-License-Identifier: GPL-2.0 OR MIT
+> > >  /*
+> > >   * Test cases for arithmetic overflow checks. See:
+> > > - * https://www.kernel.org/doc/html/latest/dev-tools/kunit/kunit-tool=
+.html#configuring-building-and-running-tests
+> > > + * "Running tests with kunit_tool" at Documentation/dev-tools/kunit/=
+start.rst
 > >
-> > Signed-off-by: Tales Aparecida <tales.aparecida@gmail.com>
-> > ---
-> >  lib/overflow_kunit.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > Oh, I thought I had sent a patch out for this.
+> > The rewritten version of the patch is
+> > https://www.kernel.org/doc/html/latest/dev-tools/kunit/run_wrapper.html
+> > That's what I was intending to rewrite this line to point to.
 > >
-> > diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
-> > index 7e3e43679b73..78075106c0df 100644
-> > --- a/lib/overflow_kunit.c
-> > +++ b/lib/overflow_kunit.c
-> > @@ -1,7 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0 OR MIT
-> >  /*
-> >   * Test cases for arithmetic overflow checks. See:
-> > - * https://www.kernel.org/doc/html/latest/dev-tools/kunit/kunit-tool.h=
-tml#configuring-building-and-running-tests
-> > + * "Running tests with kunit_tool" at Documentation/dev-tools/kunit/st=
-art.rst
+> > But if people like a Documentation/ path to start.rst instead, that als=
+o works.
+> >
+> > Daniel
 >
-> Oh, I thought I had sent a patch out for this.
-> The rewritten version of the patch is
-> https://www.kernel.org/doc/html/latest/dev-tools/kunit/run_wrapper.html
-> That's what I was intending to rewrite this line to point to.
->
-> But if people like a Documentation/ path to start.rst instead, that also =
-works.
->
-> Daniel
+> You are absolutely right! You did send and I wasn't aware, sorry.
+> https://lore.kernel.org/all/20220603195626.121922-1-dlatypov@google.com/
+> I guess it stalled after that discussion about *where* it should be appli=
+ed,
+> I got a green flag in IRC and didn't do my due diligence carefully,
+> just tried to find pending patches at linux-kselftest which wasn't
+> CC'd
 
-You are absolutely right! You did send and I wasn't aware, sorry.
-https://lore.kernel.org/all/20220603195626.121922-1-dlatypov@google.com/
-I guess it stalled after that discussion about *where* it should be applied=
-,
-I got a green flag in IRC and didn't do my due diligence carefully,
-just tried to find pending patches at linux-kselftest which wasn't
-CC'd
+Oh right, it was that series where I didn't cc linux-kselftest.
+That was my bad, sorry.
 
-Now, about the change, either way is fine by me.
+But I had forgotten to include a patch in that series to update this
+file still, afaict.
+I could revive that series and add on a version of this patch, if we want?
 
-Kind regards,
-Tales
+Daniel
