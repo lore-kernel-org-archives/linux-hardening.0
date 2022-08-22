@@ -2,87 +2,252 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AE5C25B08
-	for <linux-hardening@archiver.kernel.org>; Sat, 20 Aug 2022 06:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 162B2C28D13
+	for <linux-hardening@archiver.kernel.org>; Mon, 22 Aug 2022 11:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243357AbiHTGa3 (ORCPT
+        id S233949AbiHVLCK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 20 Aug 2022 02:30:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57058 "EHLO
+        Mon, 22 Aug 2022 07:02:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbiHTGa2 (ORCPT
+        with ESMTP id S231190AbiHVLCJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 20 Aug 2022 02:30:28 -0400
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0167DB07D5
-        for <linux-hardening@vger.kernel.org>; Fri, 19 Aug 2022 23:30:26 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4M8pdn2MtGz4x1d;
-        Sat, 20 Aug 2022 16:30:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-        s=201909; t=1660977022;
-        bh=mkvuAfik4MDqQ5XVrCQn6kJD1RXu6Mfh8t/ravQHwKk=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=BTeQ2VjRrhzhruIh4et4Ycp2FT6LZzKzhgcUKku88EadjeRClcB2JQleCyjd+mP9P
-         lRsyS/bkrRSOXI/OqvorTNTASRgTkvh1M04dQ9VV64o3moDPxsGtdVeWAT1QiglhTd
-         KD8VcO6T85kpJNPieIDO+2FlnjdnauUFJMzEm9IT1fvzJOADjbZTN1WmV4QNzcK7he
-         VviN4g9KXHY5+o8kWbrK6fM1eayyoeP62SgQ4j3ikZYprOZHSYPgoYLF/6WQU0BxxA
-         uWEUqmf7AxXMGb39w9ogsWfan0ccEmHfsoJZpdSJMueRPoB8F7MSRpQpgjI5oTnaMj
-         //0TpiGfnCLUQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Nicholas Miehlbradt <nicholas@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Russell Currey <ruscur@russell.cc>,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     ajd@linux.ibm.com, anshuman.khandual@arm.com,
-        aneesh.kumar@linux.ibm.com, npiggin@gmail.com,
+        Mon, 22 Aug 2022 07:02:09 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A65D631DF2;
+        Mon, 22 Aug 2022 04:02:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661166128; x=1692702128;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=ZDyXoOKFLsJWDZrI4atkglbvrUUdtWkTh1x2BJ1kAgI=;
+  b=cgjFHuUIhA+Ge5rLWhS++6HozXbx4k8D0O2DeY2XoTE4BxXAvtG78d9x
+   nCZpPOTmXKg2JZJxuQBsXmkREpzXCl2gyOatcdTwSBfhNdieNZGdj1AZb
+   jhsDKuHbIev4nN6Nic40meGw4fGJbE4rsqs+SkGJVClkHGto4dWcb74gd
+   kuQ9nnmBmcOMl88KIRBl4fAmmknSQloKIk5TEZN3BYAL+aJ2U13sTz4+P
+   +ZL1NEYbg0rGxbqsq6qaQc2eHvoRUSXMBz0kVX1oVshYOGLXIUJM3xV8I
+   fjHXy7LxaMrp8TmESQLzPrui2bCMx5rqIhzfIQV1zLZmWv8komfrwEMJE
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10446"; a="280355115"
+X-IronPort-AV: E=Sophos;i="5.93,254,1654585200"; 
+   d="scan'208";a="280355115"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2022 04:02:08 -0700
+X-IronPort-AV: E=Sophos;i="5.93,254,1654585200"; 
+   d="scan'208";a="669489583"
+Received: from trangnek-mobl.gar.corp.intel.com (HELO localhost) ([10.252.50.159])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2022 04:02:03 -0700
+From:   Jani Nikula <jani.nikula@intel.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Andi Shyti <andi.shyti@linux.intel.com>
+Cc:     Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, mchehab@kernel.org,
+        chris@chris-wilson.co.uk, matthew.auld@intel.com,
+        thomas.hellstrom@linux.intel.com, nirmoy.das@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, andrzej.hajda@intel.com,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] selftests/powerpc: Add a test for execute-only
- memory
-In-Reply-To: <daffd6e0-7dd7-8699-6136-fa63a15a7b47@linux.ibm.com>
-References: <20220817050640.406017-1-ruscur@russell.cc>
- <20220817050640.406017-2-ruscur@russell.cc>
- <faa82449f058e4d57372dc4e7b5ca2dc091cb454.camel@gmail.com>
- <daffd6e0-7dd7-8699-6136-fa63a15a7b47@linux.ibm.com>
-Date:   Sat, 20 Aug 2022 16:30:18 +1000
-Message-ID: <87tu67l951.fsf@mpe.ellerman.id.au>
+Subject: Re: [PATCH v7 1/8] overflow: Move and add few utility macros into
+ overflow
+In-Reply-To: <202208171657.63AE7AC@keescook>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20220816093525.184940-1-gwan-gyeong.mun@intel.com>
+ <20220816093525.184940-2-gwan-gyeong.mun@intel.com>
+ <Yv10sQADwdZrIV42@alfio.lan> <202208171657.63AE7AC@keescook>
+Date:   Mon, 22 Aug 2022 14:02:01 +0300
+Message-ID: <87r118mthy.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Nicholas Miehlbradt <nicholas@linux.ibm.com> writes:
-> On 17/8/2022 4:15 pm, Jordan Niethe wrote:
->> On Wed, 2022-08-17 at 15:06 +1000, Russell Currey wrote:
->>> From: Nicholas Miehlbradt <nicholas@linux.ibm.com>
->>>
->>> This selftest is designed to cover execute-only protections
->>> on the Radix MMU but will also work with Hash.
->>>
->>> The tests are based on those found in pkey_exec_test with modifications
->>> to use the generic mprotect() instead of the pkey variants.
->> 
->> Would it make sense to rename pkey_exec_test to exec_test and have this test be apart of that?
->> 
-> I think might make it unnecessarily complex. The checks needed when 
-> testing with pkeys would mean that it would be necessary to check if 
-> pkeys are enabled and choose which set of tests to run depending on the 
-> result. The differences are substantial enough that it would be 
-> challenging to combine them into a single set of tests.
+On Wed, 17 Aug 2022, Kees Cook <keescook@chromium.org> wrote:
+> On Thu, Aug 18, 2022 at 01:07:29AM +0200, Andi Shyti wrote:
+>> Hi Kees,
+>>=20
+>> would you mind taking a look at this patch?
+>
+> Hi! Thanks for the heads-up!
 
-Yeah I think I agree. Having each test stand on its own is nice for
-debugging also.
+Thanks for your review. This actually reaffirms my belief that we need
+to get these macros out of i915_utils.h and into the common headers,
+where we can get more eyes on them.
 
-In general I'm less bothered about code duplication in tests. We should
-try and share code where we can, but it's more important that we have
-tests at all, rather than blocking new tests because they duplicate some
-code from another test.
+BR,
+Jani.
 
-So I'm inclined to merge this as-is, we can always refactor it to share
-code in future if we think there's enough commonality to warrant it.
 
-cheers
+>
+>>=20
+>> Thanks,
+>> Andi
+>>=20
+>> On Tue, Aug 16, 2022 at 06:35:18PM +0900, Gwan-gyeong Mun wrote:
+>> > It moves overflows_type utility macro into overflow header from i915_u=
+tils
+>> > header. The overflows_type can be used to catch the truncation between=
+ data
+>> > types. And it adds safe_conversion() macro which performs a type conve=
+rsion
+>> > (cast) of an source value into a new variable, checking that the
+>> > destination is large enough to hold the source value. And the function=
+ality
+>> > of overflows_type has been improved to handle the signbit.
+>> > The is_unsigned_type macro has been added to check the sign bit of the
+>> > built-in type.
+>> >=20
+>> > v3: Add is_type_unsigned() macro (Mauro)
+>> >     Modify overflows_type() macro to consider signed data types (Mauro)
+>> >     Fix the problem that safe_conversion() macro always returns true
+>> > v4: Fix kernel-doc markups
+>> > v6: Move macro addition location so that it can be used by other than =
+drm
+>> >     subsystem (Jani, Mauro, Andi)
+>> >     Change is_type_unsigned to is_unsigned_type to have the same name =
+form
+>> >     as is_signed_type macro
+>> >=20
+>> > Signed-off-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+>> > Cc: Thomas Hellstr=C3=B6m <thomas.hellstrom@linux.intel.com>
+>> > Cc: Matthew Auld <matthew.auld@intel.com>
+>> > Cc: Nirmoy Das <nirmoy.das@intel.com>
+>> > Cc: Jani Nikula <jani.nikula@intel.com>
+>> > Cc: Andi Shyti <andi.shyti@linux.intel.com>
+>> > Reviewed-by: Mauro Carvalho Chehab <mchehab@kernel.org> (v5)
+>> > ---
+>> >  drivers/gpu/drm/i915/i915_utils.h |  5 +--
+>> >  include/linux/overflow.h          | 54 +++++++++++++++++++++++++++++++
+>> >  2 files changed, 55 insertions(+), 4 deletions(-)
+>> >=20
+>> > diff --git a/drivers/gpu/drm/i915/i915_utils.h b/drivers/gpu/drm/i915/=
+i915_utils.h
+>> > index c10d68cdc3ca..eb0ded23fa9c 100644
+>> > --- a/drivers/gpu/drm/i915/i915_utils.h
+>> > +++ b/drivers/gpu/drm/i915/i915_utils.h
+>> > @@ -32,6 +32,7 @@
+>> >  #include <linux/types.h>
+>> >  #include <linux/workqueue.h>
+>> >  #include <linux/sched/clock.h>
+>> > +#include <linux/overflow.h>
+>> >=20=20
+>> >  #ifdef CONFIG_X86
+>> >  #include <asm/hypervisor.h>
+>> > @@ -111,10 +112,6 @@ bool i915_error_injected(void);
+>> >  #define range_overflows_end_t(type, start, size, max) \
+>> >  	range_overflows_end((type)(start), (type)(size), (type)(max))
+>> >=20=20
+>> > -/* Note we don't consider signbits :| */
+>> > -#define overflows_type(x, T) \
+>> > -	(sizeof(x) > sizeof(T) && (x) >> BITS_PER_TYPE(T))
+>> > -
+>> >  #define ptr_mask_bits(ptr, n) ({					\
+>> >  	unsigned long __v =3D (unsigned long)(ptr);			\
+>> >  	(typeof(ptr))(__v & -BIT(n));					\
+>> > diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+>> > index f1221d11f8e5..462a03454377 100644
+>> > --- a/include/linux/overflow.h
+>> > +++ b/include/linux/overflow.h
+>> > @@ -35,6 +35,60 @@
+>> >  #define type_max(T) ((T)((__type_half_max(T) - 1) + __type_half_max(T=
+)))
+>> >  #define type_min(T) ((T)((T)-type_max(T)-(T)1))
+>> >=20=20
+>> > +/**
+>> > + * is_unsigned_type - helper for checking data type which is an unsig=
+ned data
+>> > + * type or not
+>> > + * @x: The data type to check
+>> > + *
+>> > + * Returns:
+>> > + * True if the data type is an unsigned data type, false otherwise.
+>> > + */
+>> > +#define is_unsigned_type(x) ((typeof(x))-1 >=3D (typeof(x))0)
+>
+> I'd rather not have separate logic for this. Instead, I'd like it to be:
+>
+> #define is_unsigned_type(x) (!is_signed_type(x))
+>
+>> > +
+>> > +/**
+>> > + * overflows_type - helper for checking the truncation between data t=
+ypes
+>> > + * @x: Source for overflow type comparison
+>> > + * @T: Destination for overflow type comparison
+>> > + *
+>> > + * It compares the values and size of each data type between the firs=
+t and
+>> > + * second argument to check whether truncation can occur when assigni=
+ng the
+>> > + * first argument to the variable of the second argument.
+>> > + * Source and Destination can be used with or without sign bit.
+>> > + * Composite data structures such as union and structure are not cons=
+idered.
+>> > + * Enum data types are not considered.
+>> > + * Floating point data types are not considered.
+>> > + *
+>> > + * Returns:
+>> > + * True if truncation can occur, false otherwise.
+>> > + */
+>> > +#define overflows_type(x, T) \
+>> > +	(is_unsigned_type(x) ? \
+>> > +		is_unsigned_type(T) ? \
+>> > +			(sizeof(x) > sizeof(T) && (x) >> BITS_PER_TYPE(T)) ? 1 : 0 \
+>> > +			: (sizeof(x) >=3D sizeof(T) && (x) >> (BITS_PER_TYPE(T) - 1)) ? 1 =
+: 0 \
+>> > +	: is_unsigned_type(T) ? \
+>> > +		((x) < 0) ? 1 : (sizeof(x) > sizeof(T) && (x) >> BITS_PER_TYPE(T)) =
+? 1 : 0 \
+>> > +		: (sizeof(x) > sizeof(T)) ? \
+>> > +			((x) < 0) ? (((x) * -1) >> BITS_PER_TYPE(T)) ? 1 : 0 \
+>> > +				: ((x) >> BITS_PER_TYPE(T)) ? 1 : 0 \
+>> > +			: 0)
+>
+> Like the other, I'd much rather this was rephrased in terms of the
+> existing macros (e.g. type_min()/type_max().)
+>
+>> > +
+>> > +/**
+>> > + * safe_conversion - perform a type conversion (cast) of an source va=
+lue into
+>> > + * a new variable, checking that the destination is large enough to h=
+old the
+>> > + * source value.
+>> > + * @ptr: Destination pointer address
+>> > + * @value: Source value
+>> > + *
+>> > + * Returns:
+>> > + * If the value would overflow the destination, it returns false.
+>> > + */
+>> > +#define safe_conversion(ptr, value) ({ \
+>> > +	typeof(value) __v =3D (value); \
+>> > +	typeof(ptr) __ptr =3D (ptr); \
+>> > +	overflows_type(__v, *__ptr) ? 0 : ((*__ptr =3D (typeof(*__ptr))__v),=
+ 1); \
+>> > +})
+>
+> I try to avoid "safe" as an adjective for interface names, since it
+> doesn't really answer "safe from what?" This looks more like "assign, but
+> zero when out of bounds". And it can be built from existing macros here:
+>
+> 	if (check_add_overflow(0, value, ptr))
+> 		*ptr =3D 0;
+>
+> I actually want to push back on this a bit, because there can still be
+> logic bugs built around this kind of primitive. Shouldn't out-of-bounds
+> assignments be seen as a direct failure? I would think this would be
+> sufficient:
+>
+> #define check_assign(value, ptr)	check_add_overflow(0, value, ptr)
+>
+> And callers would do:
+>
+> 	if (check_assign(value, &var))
+> 		return -EINVAL;
+>
+> etc.
+
+--=20
+Jani Nikula, Intel Open Source Graphics Center
