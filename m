@@ -2,57 +2,160 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B221CECAA27
-	for <linux-hardening@archiver.kernel.org>; Thu, 25 Aug 2022 19:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB8EECAAD4
+	for <linux-hardening@archiver.kernel.org>; Fri, 26 Aug 2022 13:04:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232070AbiHYTmZ (ORCPT
+        id S240928AbiHZNEE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 25 Aug 2022 15:42:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36820 "EHLO
+        Fri, 26 Aug 2022 09:04:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230418AbiHYTmZ (ORCPT
+        with ESMTP id S229484AbiHZNED (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 25 Aug 2022 15:42:25 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27C78FD71;
-        Thu, 25 Aug 2022 12:42:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=JMhm1+nDvrUGAMNd6dN9zEI9AWNo/oGVfkuEmcPtTh4=; b=fSzzJBEG5W5dJCIUU4qltwoDCP
-        JhgPyWTu3bbw+qozGYx1LqrZRlNlCmfHboO5oW59SqUBCU72zGwX7CP/SLiKgNis3u7sPUn0Cxf9Y
-        OIBz1mhqA8aPKe4DsLzrAyeFJAZ3It17hxUkG65KXW+3XeX+vdLriWEGUrZ29Yz+2czNKSiV89927
-        hSd+zpEDu0MUgK1zs2tgeKXrGUW5IcFby2s7/eYQpgd7WgR7fbMinVGRM0UZnq5HM0f7NQYdN/O0c
-        CGu1V4TZpSts9QpBdC5S4MQ1THptZi9bXv7ah32ugIhEZC6B8CW9UqkodjofSI4FBo0uTDEMrwKSt
-        tek8O9Pw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=worktop.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oRIk3-00HVjD-Pa; Thu, 25 Aug 2022 19:42:15 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 807549800E6; Thu, 25 Aug 2022 21:42:12 +0200 (CEST)
-Date:   Thu, 25 Aug 2022 21:42:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86/mm: Refuse W^X violations
-Message-ID: <YwfQlDFKvN2pic7Y@worktop.programming.kicks-ass.net>
-References: <YwdpwykpV9RB+4tL@worktop.programming.kicks-ass.net>
- <202208251113.B5AFA6D@keescook>
+        Fri, 26 Aug 2022 09:04:03 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45940CCE0D
+        for <linux-hardening@vger.kernel.org>; Fri, 26 Aug 2022 06:04:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661519042; x=1693055042;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TKNYoX/RJCSPsPbxhKRDTfjKPP71dcfvWmqA6HAkbsU=;
+  b=JzGIa0CV1K7mqT7DElnQqJeYW1Jz1/iZLKjggwa0SEkTnR++0WGdDQMu
+   IQA2x6gSb1or7ng6DVEaD3XBxWzymA9BK6x5uCxgZ7ftaeWxtJdGuwIvw
+   KOa6GIj7yZJDvhwZJaKu88b+pMbGagkSf90FnJKNBqbFcnDSBrovqYuY5
+   pN0ieHU6mfxDxxVXWFiOSdPjQive3ador/AJg+GqYKq1XXQeXEQVuNd9e
+   wIs/QKq3JbR7ixP9kvdqPpi5xg7GVwq7A4TfAvuCN8G3Jf3NsDKLOTBIR
+   2MhDTObC1i2ubrL9ZbWl2ulRT7iEOgLhdtW5TOdtO91+oRFY4IU0rDpvo
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="293241542"
+X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
+   d="scan'208";a="293241542"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 06:03:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
+   d="scan'208";a="561431584"
+Received: from lkp-server02.sh.intel.com (HELO 34e741d32628) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 26 Aug 2022 06:03:41 -0700
+Received: from kbuild by 34e741d32628 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oRYzt-00048U-0H;
+        Fri, 26 Aug 2022 13:03:41 +0000
+Date:   Fri, 26 Aug 2022 21:02:55 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-m68k@lists.linux-m68k.org, linux-hardening@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:pending-fixes] BUILD SUCCESS WITH WARNING
+ fe2c49524eb3863b526782620be347bcbecbd2d8
+Message-ID: <6308c47f.6Aqe9XBuWYUM/2nd%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202208251113.B5AFA6D@keescook>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 25, 2022 at 11:16:12AM -0700, Kees Cook wrote:
-> On Thu, Aug 25, 2022 at 02:23:31PM +0200, Peter Zijlstra wrote:
-> > x86 has STRICT_*_RWX, but not even a warning when someone violates it.
-> 
-> Yes please. I assume this is only kernel pages? Doing this globally is
-> nice too, but runs into annoying problems[1].
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git pending-fixes
+branch HEAD: fe2c49524eb3863b526782620be347bcbecbd2d8  Merge branch 'for-linux-next-fixes' of git://anongit.freedesktop.org/drm/drm-misc
 
-Yeah, this interface should only be used on kernel pages.
+Warning reports:
+
+https://lore.kernel.org/linux-mm/202208110453.zEneXTnn-lkp@intel.com
+
+Warning: (recently discovered and may have been fixed)
+
+arch/m68k/include/asm/string.h:64:25: warning: '__builtin_memcmp' specified bound 6 exceeds source size 0 [-Wstringop-overread]
+include/linux/fortify-string.h:44:33: warning: '__builtin_memcmp' specified bound 6 exceeds source size 0 [-Wstringop-overread]
+
+Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- m68k-allmodconfig
+|   `-- arch-m68k-include-asm-string.h:warning:__builtin_memcmp-specified-bound-exceeds-source-size
+|-- m68k-allyesconfig
+|   `-- arch-m68k-include-asm-string.h:warning:__builtin_memcmp-specified-bound-exceeds-source-size
+`-- mips-allyesconfig
+    `-- include-linux-fortify-string.h:warning:__builtin_memcmp-specified-bound-exceeds-source-size
+
+elapsed time: 725m
+
+configs tested: 66
+configs skipped: 2
+
+gcc tested configs:
+arc                                 defconfig
+loongarch                         allnoconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+alpha                               defconfig
+loongarch                           defconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                        randconfig-a002
+i386                                defconfig
+s390                                defconfig
+x86_64                        randconfig-a013
+i386                          randconfig-a001
+powerpc                          allmodconfig
+x86_64                           allyesconfig
+s390                             allmodconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a011
+i386                          randconfig-a003
+arm                                 defconfig
+s390                             allyesconfig
+x86_64                        randconfig-a015
+x86_64                        randconfig-a004
+mips                             allyesconfig
+i386                          randconfig-a005
+powerpc                           allnoconfig
+sh                               allmodconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+arc                  randconfig-r043-20220824
+riscv                randconfig-r042-20220824
+m68k                             allyesconfig
+s390                 randconfig-r044-20220824
+arc                  randconfig-r043-20220825
+i386                          randconfig-a014
+i386                          randconfig-a012
+x86_64                    rhel-8.3-kselftests
+i386                          randconfig-a016
+x86_64                          rhel-8.3-func
+i386                             allyesconfig
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-syz
+arm                              allyesconfig
+arm64                            allyesconfig
+ia64                             allmodconfig
+
+clang tested configs:
+x86_64                        randconfig-a014
+x86_64                        randconfig-a001
+x86_64                        randconfig-a016
+x86_64                        randconfig-a012
+x86_64                        randconfig-a003
+i386                          randconfig-a002
+x86_64                        randconfig-a005
+i386                          randconfig-a006
+i386                          randconfig-a004
+hexagon              randconfig-r041-20220825
+hexagon              randconfig-r045-20220825
+hexagon              randconfig-r041-20220824
+hexagon              randconfig-r045-20220824
+riscv                randconfig-r042-20220825
+s390                 randconfig-r044-20220825
+i386                          randconfig-a013
+i386                          randconfig-a011
+i386                          randconfig-a015
+x86_64                          rhel-8.3-rust
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
