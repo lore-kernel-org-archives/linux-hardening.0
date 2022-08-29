@@ -2,80 +2,87 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7BBECAAD2
-	for <linux-hardening@archiver.kernel.org>; Mon, 29 Aug 2022 21:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEAFECAAD2
+	for <linux-hardening@archiver.kernel.org>; Mon, 29 Aug 2022 22:06:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229878AbiH2VwN (ORCPT
+        id S229960AbiH2WGz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 29 Aug 2022 17:52:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47528 "EHLO
+        Mon, 29 Aug 2022 18:06:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229892AbiH2VwL (ORCPT
+        with ESMTP id S229929AbiH2WGy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 29 Aug 2022 17:52:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E62FC9F8F0;
-        Mon, 29 Aug 2022 14:52:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 82708612A0;
-        Mon, 29 Aug 2022 21:52:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF3DEC43147;
-        Mon, 29 Aug 2022 21:52:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661809929;
-        bh=SLuDKCSxqiHHDmnwI3+58YA9f0120J1/hz6TFh+Tap4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=A63hqZQ7KTiL4okMhc6hTVpb6ErLGiUIk4+WN4Nphl6T64TEAGF+8dqUIhP27Gbih
-         hZv0pfr+ZoFWsA/39vyd80zby7RFugYSA75SfVP0YOLs/qALtf9EOc4N9STMXCKwLB
-         uwlUuEFvEfP2L9Rypr5tVY3uuZ8tiHluuho4EUvzSn67qZ/rAneVlJlnFPWNPbNqBt
-         xK0bJSN1+ZeR6DbIGQ6oEhNozVcFqTJ1h0kU1ZU/AM3acPUw5qoVjx9ig8cl3NpOod
-         bNWRrtZCHYYEhSKkE8iugEKc37PIungBP7bsoh1LkSrYWN6YmTFUJqgqZR5DcmZI5x
-         QItokQItp8okA==
-Date:   Mon, 29 Aug 2022 16:52:03 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Mon, 29 Aug 2022 18:06:54 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9431A7C1A3
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Aug 2022 15:06:52 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id w2so9332318pld.0
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Aug 2022 15:06:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=PVgk1cYgmYdP4/z4FGNSnk6B21vheryH4WleroFD7+c=;
+        b=H1qAkZGA4OVOv6X6d5+8sVRSkog8oFm3MWrQR/VztA7mi2MZAkkNCv8kA981Qq03Fx
+         MUJmWhQAQRkde2/NnKvlNpZIUfiPRfurvuynlPO9SVIBUaNUcv+DBHHCwK9SBZdKgcfP
+         32Hlchfx3ykLEVe0oBHty7ikUk5Ly7kAHhY3w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=PVgk1cYgmYdP4/z4FGNSnk6B21vheryH4WleroFD7+c=;
+        b=VoDXZKq4N4GWNHdzF9IXu+R6oMMowNgfy06PmfcFJplV4hYjJVlr0Bz/aXA/BubwRV
+         iMNH0LRCm/xbxOnNJbyli7dLfuZzKcsFTNDr+2f4ONsvTg3Rc+Fd/KYv6Cw2VyDyR9Z5
+         yk8OreXpoYSAnDA27SoNjxtzw6ARGvR7Xws5RSUfGHel7OzwHU11opol8DCd85LPwh/e
+         xPgGK0ChGlOCutyNwrgsh0CsJSAsj0iEtoBywDg6cb00Uu7i8VE1BO0tIBEUQ7tu1Kfy
+         y0Q7xGS/EVPjRCFzXnsj/aqZUOnGp7gXSN3yU06LvWZ3dYBr7KZPvPoDb1rgu2xU/b7p
+         jr1w==
+X-Gm-Message-State: ACgBeo3UXqQZz9tK2tCteP5UzD8lbLhZyyLUdExsfDW/J+N+AOgrc5ue
+        XLtM0rYroFxyFHCeLEngxgv1UQ==
+X-Google-Smtp-Source: AA6agR5YscpVPaUvYDy7+TR/YvEO+8Cce/NhVhMaYXtHKDHqYrGOwq2jWuhNHtLxJ3DZyjsxf7V8/g==
+X-Received: by 2002:a17:90a:7343:b0:1fd:d6fc:b2f with SMTP id j3-20020a17090a734300b001fdd6fc0b2fmr6219851pjs.65.1661810812073;
+        Mon, 29 Aug 2022 15:06:52 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x10-20020a170902a38a00b0016bdeb58611sm3271966pla.112.2022.08.29.15.06.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Aug 2022 15:06:51 -0700 (PDT)
+Date:   Mon, 29 Aug 2022 15:06:49 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] ALSA: hda/hdmi: Replace zero-length array with
+Subject: Re: [PATCH][next] can: etas_es58x: Replace zero-length array with
  DECLARE_FLEX_ARRAY() helper
-Message-ID: <Yw01A+TvF1FWQ588@work>
+Message-ID: <202208291506.869166F4CE@keescook>
+References: <Yw00w6XRcq7B6ub6@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <Yw00w6XRcq7B6ub6@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Zero-length arrays are deprecated and we are moving towards adopting
-C99 flexible-array members, instead. So, replace zero-length array
-declaration in union audio_infoframe with the new DECLARE_FLEX_ARRAY()
-helper macro.
+On Mon, Aug 29, 2022 at 04:50:59PM -0500, Gustavo A. R. Silva wrote:
+> Zero-length arrays are deprecated and we are moving towards adopting
+> C99 flexible-array members, instead. So, replace zero-length array
+> declaration in union es58x_urb_cmd with the new DECLARE_FLEX_ARRAY()
+> helper macro.
+> 
+> This helper allows for a flexible-array member in a union.
+> 
+> Link: https://github.com/KSPP/linux/issues/193
+> Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-This helper allows for a flexible-array member in a union.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Link: https://github.com/KSPP/linux/issues/193
-Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- sound/pci/hda/patch_hdmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index 6c209cd26c0c..2191d445d74e 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -229,7 +229,7 @@ struct dp_audio_infoframe {
- union audio_infoframe {
- 	struct hdmi_audio_infoframe hdmi;
- 	struct dp_audio_infoframe dp;
--	u8 bytes[0];
-+	DECLARE_FLEX_ARRAY(u8, bytes);
- };
- 
- /*
 -- 
-2.34.1
-
+Kees Cook
