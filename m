@@ -2,113 +2,100 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 341BAECAAA1
-	for <linux-hardening@archiver.kernel.org>; Tue, 30 Aug 2022 19:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B260ECAAA1
+	for <linux-hardening@archiver.kernel.org>; Tue, 30 Aug 2022 20:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231767AbiH3Twl (ORCPT
+        id S229472AbiH3Ux1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 30 Aug 2022 15:52:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57424 "EHLO
+        Tue, 30 Aug 2022 16:53:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231758AbiH3Twj (ORCPT
+        with ESMTP id S230438AbiH3Ux0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 30 Aug 2022 15:52:39 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A1908001B
-        for <linux-hardening@vger.kernel.org>; Tue, 30 Aug 2022 12:52:35 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id bj12so24297472ejb.13
-        for <linux-hardening@vger.kernel.org>; Tue, 30 Aug 2022 12:52:35 -0700 (PDT)
+        Tue, 30 Aug 2022 16:53:26 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 380158606B
+        for <linux-hardening@vger.kernel.org>; Tue, 30 Aug 2022 13:53:23 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-33e1114437fso188416507b3.19
+        for <linux-hardening@vger.kernel.org>; Tue, 30 Aug 2022 13:53:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc;
-        bh=Sy+n+bKGaBE42tMW22JXIKGEDRgNGzu/p2SD3vodKvA=;
-        b=OFP2zrlps/N/cK0IIDLM5wHfe8i+ddoBQoask/MkYh/KTe97GaoHc7x7ozWyEDrR+Y
-         IZ1aHXqfIznrYyqwb/+hC1gSF2Wxxhw1OE41eqvPYxgHCxnMb9XX/qPrv6GAMMgedT+o
-         hk/RAwaKnzwqLNF1P2fJHwIdJLtOWdqfYGKeo=
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc;
+        bh=y+bRnMssrUj/6kbuuva6fXkHo2MrxrsD3o5Kbak+NiU=;
+        b=eZwlVRJt892OWPFcvi3mSbbvEI013rOlwJ8QFYrdL6uKjYm2rCWX6K68pF3YCAeqiZ
+         qgvPewGSY4+Gp/tXYr2XcFTkyewTDkv/8WPDwyCYAD678FgT1G45MEEmFFJsHyGNo9li
+         M170u06nyQlYu659TVabIgtvqCDsqX5PyIVvdS8qYxzp8EvC5H38brNE3E2jYm5bePYx
+         6UFwdh9z2Trb+JL9+RtcuaWjK7YLGRcbursv/mRBHLd5869bB7MYcP01QIc+7YNKXGp/
+         2sr6/L9MsXDF55j4skMQAOaraXUefeIGVU7QPhKNyLAlR6x3dVZnNX+Bl2b88eQw/2FQ
+         FaMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=Sy+n+bKGaBE42tMW22JXIKGEDRgNGzu/p2SD3vodKvA=;
-        b=mvY7L4GQVgAlcY/7+j1GfKYPDTZJkW9r9pDCguIzy5AYh9P49fUueTraYPKJTmd5zM
-         axYxIlpouXn+mtXQDj1MNH6sl1AxqOHob8CJFpI/bQnZ6+rN7bb3rKU8IYg131MxopXj
-         Krb+5OXgGEyqPXWmLMRN3O0tIQUFerpy+30gfr1nK9jQg79ExxweYfU2mNEJMlUNRHiO
-         8C7FuIJgy7Vo0pgv0mHRoYl11/zuhgC/nRMQWe+TFNwwUAa/FycPkw76H22hH09cksQy
-         L6tBLQocx5Cn/TZRVmHCVf2FLbV+FuR8Or28QtAP1RrTc4Kyn0ZX5En5+20pIkeRxXBV
-         EPSg==
-X-Gm-Message-State: ACgBeo0gOI47U72oIUH6QDiMtaqU3N9Xp6yQ+eszOe/puutylR8um9Q5
-        scFbrMW3s4GaTFvDK1HNktcMgg==
-X-Google-Smtp-Source: AA6agR6bctVYI2ptYwu/JLk6xOmy1Vimmt+zKVBzKu5rUwZvA93ALpahpIQKzZLVpdwXnlpMWg5vsg==
-X-Received: by 2002:a17:906:730d:b0:73d:c8a1:a8ee with SMTP id di13-20020a170906730d00b0073dc8a1a8eemr18232325ejc.661.1661889154071;
-        Tue, 30 Aug 2022 12:52:34 -0700 (PDT)
-Received: from [192.168.1.149] ([80.208.71.65])
-        by smtp.gmail.com with ESMTPSA id l17-20020a1709060cd100b0073d81b0882asm6166941ejh.7.2022.08.30.12.52.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Aug 2022 12:52:33 -0700 (PDT)
-Message-ID: <787894a0-b1b7-43c2-c509-f246f94f58f7@rasmusvillemoes.dk>
-Date:   Tue, 30 Aug 2022 21:52:32 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v3] overflow: Allow mixed type arguments
-Content-Language: en-US
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc;
+        bh=y+bRnMssrUj/6kbuuva6fXkHo2MrxrsD3o5Kbak+NiU=;
+        b=zQZMU/xfWTTaspoYgfaoe6o6hO0k/BfphN1uo1Jm3vgpMYHeYxB0OWnyH7sbb2219n
+         Hfyq4w/xTzR55nGEh3jyWlH8y+1/+GzGTzfSsARwZI9wQWMaYeBrbXCK9VfIuH4YcUnv
+         mZGZoa/SeuPA6OI9bPaAaIuyJxzqUaAedxr8YTU2t9h2Xl4MRVFI0DLZrbGrpRUvPY5Y
+         YqSTEEmB/AsvqZNhCvYwD3yUft4BDdBZihYM+6RJKfYzysv33BmbtLz8ujxTwumX1wFX
+         yKKT/mSBN7pjvfSlEixU1mBUHWhtktF+LwgdYbcD7sIkxpDtyptiOfnm3rqinQdadbf6
+         LRig==
+X-Gm-Message-State: ACgBeo1vUchKsjh49k/oEexQGtizul/4NsabodDoxoSQwpXaimoyMPDK
+        2TMtDkKxGIL+egSYutV7dEH57KZuhcAKiKg35TY=
+X-Google-Smtp-Source: AA6agR6LzzDTJp8/LLgR2tYJHvqNLA1ncTKB/GwiQ/kK5y2JZRXJnpE70VKmyZAmXfDvIzDo4To3MyuHVPeXGdtOKfg=
+X-Received: from ndesaulniers1.mtv.corp.google.com ([2620:0:100e:712:422b:cadb:302a:7901])
+ (user=ndesaulniers job=sendgmr) by 2002:a25:7cc2:0:b0:677:5a84:9f79 with SMTP
+ id x185-20020a257cc2000000b006775a849f79mr13577501ybc.518.1661892802516; Tue,
+ 30 Aug 2022 13:53:22 -0700 (PDT)
+Date:   Tue, 30 Aug 2022 13:53:06 -0700
+Mime-Version: 1.0
+X-Developer-Key: i=ndesaulniers@google.com; a=ed25519; pk=lvO/pmg+aaCb6dPhyGC1GyOCvPueDrrc8Zeso5CaGKE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1661892789; l=1211;
+ i=ndesaulniers@google.com; s=20211004; h=from:subject; bh=zURt4cRkM9uRF4OuY2wV5cBpIhomPe0G2hadM5Q8amw=;
+ b=bLH7JZthL0TsoZymjEI/Nxr8slOa9cg2x+NNHCAC3iV2z7Bk+diYAGjVVEJBHUWsrjvF7VXLCwc/
+ a59b5uZjDMXpquiHqECzSVTdCS/k6DqsZi5T4Q7d/+nLj6TzLaa5
+X-Mailer: git-send-email 2.37.2.672.g94769d06f0-goog
+Message-ID: <20220830205309.312864-1-ndesaulniers@google.com>
+Subject: [PATCH 0/3] Fix FORTIFY=y UBSAN_LOCAL_BOUNDS=y
+From:   Nick Desaulniers <ndesaulniers@google.com>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-hardening@vger.kernel.org,
-        Daniel Latypov <dlatypov@google.com>,
-        Vitor Massaru Iha <vitor@massaru.org>,
-        linux-kernel@vger.kernel.org
-References: <20220830192147.47069-1-keescook@chromium.org>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-In-Reply-To: <20220830192147.47069-1-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Cc:     Nathan Chancellor <nathan@kernel.org>, Tom Rix <trix@redhat.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 30/08/2022 21.21, Kees Cook wrote:
-> When the check_[op]_overflow() helpers were introduced, all arguments were
-> required to be the same type to make the fallback macros simpler. However,
-> now that the fallback macros have been removed[1], it is fine to allow
-> mixed types, which makes using the helpers much more useful, as they
-> can be used to test for type-based overflows (e.g. adding two large ints
-> but storing into a u8), as would be handy in the drm core[2].
-> 
-> Remove the restriction, and add additional self-tests that exercise some
-> of the mixed-type overflow cases, and double-check for accidental macro
-> side-effects.
-> 
+With CONFIG_FORTIFY=y and CONFIG_UBSAN_LOCAL_BOUNDS=y enabled, we
+observe a runtime panic while running Android's Compatibility Test
+Suite's (CTS) android.hardware.input.cts.tests.  This is stemming from a
+strlen() call in hidinput_allocate().
 
-> -/*
-> - * For simplicity and code hygiene, the fallback code below insists on
-> - * a, b and *d having the same type (similar to the min() and max()
-> - * macros), whereas gcc's type-generic overflow checkers accept
-> - * different types. Hence we don't just make check_add_overflow an
-> - * alias for __builtin_add_overflow, but add type checks similar to
-> - * below.
-> +/** check_add_overflow() - Calculate addition with overflow checking
-> + *
-> + * @a: first addend
-> + * @b: second addend
-> + * @d: pointer to store sum
-> + *
-> + * Returns 0 on success.
-> + *
-> + * *@d holds the results of the attempted addition, but is not considered
-> + * "safe for use" on a non-zero return value, which indicates that the
-> + * sum has overflowed or been truncated.
+__builtin_object_size(str, 0 or 1) has interesting behavior for C
+strings when str is runtime dependent, and all possible values are known
+at compile time; it evaluates to the maximum of those sizes. This causes
+UBSAN_LOCAL_BOUNDS to insert faults for the smaller values, which we
+trip at runtime.
 
-I don't like that wording. It makes it sound like there's some ambiguity
-or (implementation|un)-definedness involved in what the destination
-holds on overflow. The gcc documentation is perfectly clear that the
-result is the infinite-precision result truncated to N bits, with N
-being the bitwidth of d.
+Patch 1 adds a KCONFIG version check for __builtin_dynamic_object_size,
+and uses that in __compiletime_strlen rather than __builtin_object_size.
+Patch 2 and 3 are cosmetic cleanups, they're not as important to me as
+patch 1 is.
 
-Rasmus
+Nick Desaulniers (3):
+  fortify: use __builtin_dynamic_object_size in __compiletime_strlen
+  fortify: cosmetic cleanups to __compiletime_strlen
+  HID: avoid runtime call to strlen
+
+ drivers/hid/hid-input.c        | 13 ++++++++++++-
+ include/linux/fortify-string.h | 15 ++++++++++-----
+ init/Kconfig                   |  3 +++
+ 3 files changed, 25 insertions(+), 6 deletions(-)
+
+-- 
+2.37.2.672.g94769d06f0-goog
+
