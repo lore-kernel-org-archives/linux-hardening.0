@@ -2,79 +2,84 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CD7ECAAD3
-	for <linux-hardening@archiver.kernel.org>; Tue, 30 Aug 2022 01:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AA9ECAAD5
+	for <linux-hardening@archiver.kernel.org>; Tue, 30 Aug 2022 05:45:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbiH3BPO (ORCPT
+        id S229523AbiH3Fp5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 29 Aug 2022 21:15:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52148 "EHLO
+        Tue, 30 Aug 2022 01:45:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229564AbiH3BPO (ORCPT
+        with ESMTP id S229808AbiH3Fpz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 29 Aug 2022 21:15:14 -0400
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F5921FCD9;
-        Mon, 29 Aug 2022 18:15:12 -0700 (PDT)
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-33dc31f25f9so237806127b3.11;
-        Mon, 29 Aug 2022 18:15:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=YY4EvYlIxF4cRJxUop7qemsLYYOepkMFoFeZ9idYEBg=;
-        b=P1gTJDxVXNI00q3I1CecYMSLhnZg6hBw7u/aGi6awjbaWExPmca84f4u5vDEyLkIxE
-         sGJon5LRrbAfe1tqUcKcCDIysOKBVJUlBkiuWNu668nXdSU9vjmWmvihN+n7BgWUbGND
-         GnD7WyRC2YhKVtTfo2rj627dXVLpwVzl/mTuWQCBCj9OAetbOHa4D7osFfL40uzDPdVK
-         4P1Q68BGt1ifHD+zEhzu3VE/1RIjzWnWHgIN3WFbwsHNggxvl1xYRa/vXtkh3OI0ioGk
-         KIeUunJ8hYpsVeLdTgKYHuKAYqj3SmGTxskaLGxN1zAn64hJchLb/BSb2UWuTYlLPIKg
-         Ga9A==
-X-Gm-Message-State: ACgBeo3dwfMPu8XiHGlqDEshvl82xfjtclXk4bJhbOvJuQHJLd/AbRmw
-        NZA4E+EFlP8/f2VOfzPXytmQe5j4dyH53mgE1S8=
-X-Google-Smtp-Source: AA6agR4Om2tcy5zRqDBUKel7/760x0htS0Cx+Hok9y1x5iN2hyfCCPZZmSQZMyTxoafJe4FXHKfCAkzzFf+VhPzIsi4=
-X-Received: by 2002:a81:6f43:0:b0:335:9e7e:ad25 with SMTP id
- k64-20020a816f43000000b003359e7ead25mr12384196ywc.518.1661822111809; Mon, 29
- Aug 2022 18:15:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <Yw00w6XRcq7B6ub6@work> <202208291506.869166F4CE@keescook>
-In-Reply-To: <202208291506.869166F4CE@keescook>
-From:   Vincent MAILHOL <mailhol.vincent@wanadoo.fr>
-Date:   Tue, 30 Aug 2022 10:15:00 +0900
-Message-ID: <CAMZ6RqJzdrjTR6jDmi4qXwt+YZjwD-5M7LLjaiU5z0xu2tHWXg@mail.gmail.com>
-Subject: Re: [PATCH][next] can: etas_es58x: Replace zero-length array with
- DECLARE_FLEX_ARRAY() helper
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tue, 30 Aug 2022 01:45:55 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97610796A7;
+        Mon, 29 Aug 2022 22:45:53 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 39FCC1F933;
+        Tue, 30 Aug 2022 05:45:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1661838352; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YqbKorGtuIS3BoLpIndm2XA4B0mkE7zTYWV5+s4iNc0=;
+        b=utjal12Z5c+zv9kKTNeiz4jaS87QaR8lmDZh5tNRvUA4FEuWWdHjg+QJnUft3AQuqbxt/m
+        A9ListbRCAXm+GZqXx5b677Q/lcqcTFlBk6a9C9aT+i++U10gy0TCDgLGV+NYPz4o9p2An
+        5d2LTPkro9vodqcXr5Ijg8iHMMLz11A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1661838352;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YqbKorGtuIS3BoLpIndm2XA4B0mkE7zTYWV5+s4iNc0=;
+        b=PVcHLGIjQ31s8tWq5tBokcK9vyIjleKtLb+YQQZ8fQNt9XImqNQ3R4uqXZnp0mqLzQRaRK
+        n/nKVN7saTmefUCw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 075931352A;
+        Tue, 30 Aug 2022 05:45:52 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id qMpkABCkDWM+EgAAMHmgww
+        (envelope-from <tiwai@suse.de>); Tue, 30 Aug 2022 05:45:51 +0000
+Date:   Tue, 30 Aug 2022 07:45:51 +0200
+Message-ID: <87k06q8esw.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH][next] ALSA: hda/hdmi: Replace zero-length array with DECLARE_FLEX_ARRAY() helper
+In-Reply-To: <Yw01A+TvF1FWQ588@work>
+References: <Yw01A+TvF1FWQ588@work>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue. 30 Aug. 2022 at 07:15, Kees Cook <keescook@chromium.org> wrote:
-> On Mon, Aug 29, 2022 at 04:50:59PM -0500, Gustavo A. R. Silva wrote:
-> > Zero-length arrays are deprecated and we are moving towards adopting
-> > C99 flexible-array members, instead. So, replace zero-length array
-> > declaration in union es58x_urb_cmd with the new DECLARE_FLEX_ARRAY()
-> > helper macro.
-> >
-> > This helper allows for a flexible-array member in a union.
-> >
-> > Link: https://github.com/KSPP/linux/issues/193
-> > Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+On Mon, 29 Aug 2022 23:52:03 +0200,
+Gustavo A. R. Silva wrote:
+> 
+> Zero-length arrays are deprecated and we are moving towards adopting
+> C99 flexible-array members, instead. So, replace zero-length array
+> declaration in union audio_infoframe with the new DECLARE_FLEX_ARRAY()
+> helper macro.
+> 
+> This helper allows for a flexible-array member in a union.
+> 
+> Link: https://github.com/KSPP/linux/issues/193
+> Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Acked-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Thanks, applied to for-next branch.
 
 
-Yours sincerely,
-Vincent Mailhol
+Takashi
