@@ -2,264 +2,157 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB70CECAAA1
-	for <linux-hardening@archiver.kernel.org>; Tue, 30 Aug 2022 06:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C84E4ECAAD1
+	for <linux-hardening@archiver.kernel.org>; Tue, 30 Aug 2022 17:29:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230027AbiH3Gkh (ORCPT
+        id S229566AbiH3R3O (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 30 Aug 2022 02:40:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51292 "EHLO
+        Tue, 30 Aug 2022 13:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbiH3Gkf (ORCPT
+        with ESMTP id S231875AbiH3R2x (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 30 Aug 2022 02:40:35 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 580194456E;
-        Mon, 29 Aug 2022 23:40:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661841630; x=1693377630;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=r1rkNqH4NwCMJ8U2+7fF8EZ3qwx3bexNboxUU+Dfyn4=;
-  b=VI4NafG1+X8mhmKkU7fTDr5RJW8Gp0yg/lPPOLPAJ2mQiGLRBTlKU3Ch
-   6EEpDm9IFSXWxLMIwcX9G1JYisGPElWD1TY5zmx2gy4WiWwA78luiMgZX
-   KHP/ViFMgZimQVzIoW9ImIz07f3FVRjTtzZUtHsa5gvFE0Nasz2pv0kkt
-   XwL3rHG1iKgLaTVKfdq4equBgJ98tJOmKQiv1d7HsxcC5SRCPoPH1NVYn
-   v0xWylE6vnUsr/1ChgJudktWbNzmvt+/M73qzphpgdSCLxtvtxGYpJyYf
-   unjX+mCW0v83wttw5EjLGnUeMnnJ+KoB1WbkiEC4BghrY7htPRE+xffB8
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10454"; a="295098495"
-X-IronPort-AV: E=Sophos;i="5.93,274,1654585200"; 
-   d="scan'208";a="295098495"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2022 23:40:29 -0700
-X-IronPort-AV: E=Sophos;i="5.93,274,1654585200"; 
-   d="scan'208";a="641246660"
-Received: from ahajda-mobl.ger.corp.intel.com (HELO [10.213.1.40]) ([10.213.1.40])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2022 23:40:27 -0700
-Message-ID: <8d880425-72f5-6ba6-933f-b8b016da88cd@intel.com>
-Date:   Tue, 30 Aug 2022 08:40:25 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.13.0
-Subject: Re: [PATCH v2] overflow: Allow mixed type arguments
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+        Tue, 30 Aug 2022 13:28:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 501A71670C1;
+        Tue, 30 Aug 2022 10:26:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D91D9617B2;
+        Tue, 30 Aug 2022 17:24:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7D12C4347C;
+        Tue, 30 Aug 2022 17:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661880290;
+        bh=6JmD2+JK8pwdRoPXDm6ONoHrQ/7bSyaKr0JerEnY4Rs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=bFuWWnaqFPON02rz7uU2CAczrW+/GoCDFV8ePY47z/2L+m6q0/q7M1Evc/Pby+cKu
+         KsYKrcMi8vKQ4+YrMZ+KxiDZ4zqMTdvC5LAM320k5bJSQMbx6eZTNC4NL73jbboVg2
+         lRNQxPHsotXE8pFeOCar54RQNeqpMEQo96LUPOjHaGQfiZL6YpFludXm5i4qqfsmfP
+         u651Is2xB4DYRca/KsXBfk2Dl5z3op4MM9XZgWPPIRFISWBoDdIOhnFWxwA3iGjI5k
+         0yonpSwpbcodjzWqD0xeeFFDjQE1jWZMvZFPfHLM0kTf7kimstlTyp3aCcQn7Y+10i
+         lxCxwYy7Mm66Q==
+Date:   Tue, 30 Aug 2022 12:24:44 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-hardening@vger.kernel.org,
-        Daniel Latypov <dlatypov@google.com>,
-        Vitor Massaru Iha <vitor@massaru.org>,
-        linux-kernel@vger.kernel.org
-References: <20220829214550.3443472-1-keescook@chromium.org>
-From:   Andrzej Hajda <andrzej.hajda@intel.com>
-Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298
- Gdansk - KRS 101882 - NIP 957-07-52-316
-In-Reply-To: <20220829214550.3443472-1-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] uapi: net/ipv4: Use __DECLARE_FLEX_ARRAY() helper
+Message-ID: <Yw5H3E3a6mmpuTeT@work>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+We now have a cleaner way to keep compatibility with user-space
+(a.k.a. not breaking it) when we need to keep in place a one-element
+array (for its use in user-space) together with a flexible-array
+member (for its use in kernel-space) without making it hard to read
+at the source level. This is through the use of the new
+__DECLARE_FLEX_ARRAY() helper macro.
 
+The size and memory layout of the structure is preserved after the
+changes. See below.
 
-On 29.08.2022 23:45, Kees Cook wrote:
-> When the check_[op]_overflow() helpers were introduced, all arguments were
-> required to be the same type to make the fallback macros simpler. However,
-> once the fallback macros were removed[1], it is fine to allow mixed
-> types, which makes using the helpers much more useful, as they can be
-> used to test for type-based overflows (e.g. adding two large ints but
-> storing into a u8), as would be handy in the drm core[2].
->
-> Remove the restriction, and add additional self-tests that exercise some
-> of the mixed-type overflow cases.
->
-> [1] https://git.kernel.org/linus/4eb6bd55cfb22ffc20652732340c4962f3ac9a91
-> [2] https://lore.kernel.org/lkml/20220824084514.2261614-2-gwan-gyeong.mun@intel.com
->
-> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Cc: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
-> Cc: Andrzej Hajda <andrzej.hajda@intel.com>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v2: change names to "type1_type2__output-type" for better readability (Rasmus)
-> v1: https://lore.kernel.org/lkml/20220829204729.3409270-1-keescook@chromium.org
-> ---
->   include/linux/overflow.h |  6 ----
->   lib/overflow_kunit.c     | 77 +++++++++++++++++++++++++++++-----------
->   2 files changed, 57 insertions(+), 26 deletions(-)
->
-> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> index 0eb3b192f07a..ad692fb11bf3 100644
-> --- a/include/linux/overflow.h
-> +++ b/include/linux/overflow.h
-> @@ -63,8 +63,6 @@ static inline bool __must_check __must_check_overflow(bool overflow)
->   	typeof(a) __a = (a);			\
->   	typeof(b) __b = (b);			\
->   	typeof(d) __d = (d);			\
-> -	(void) (&__a == &__b);			\
-> -	(void) (&__a == __d);			\
->   	__builtin_add_overflow(__a, __b, __d);	\
->   }))
+Before changes:
 
-Is there a reason to keep all local vars?
-Why not:
-#define check_add_overflow(a, b, d) 
-__must_check_overflow(__builtin_add_overflow((a), (b), (d)))
+$ pahole -C ip_msfilter net/ipv4/igmp.o
+struct ip_msfilter {
+	union {
+		struct {
+			__be32     imsf_multiaddr_aux;   /*     0     4 */
+			__be32     imsf_interface_aux;   /*     4     4 */
+			__u32      imsf_fmode_aux;       /*     8     4 */
+			__u32      imsf_numsrc_aux;      /*    12     4 */
+			__be32     imsf_slist[1];        /*    16     4 */
+		};                                       /*     0    20 */
+		struct {
+			__be32     imsf_multiaddr;       /*     0     4 */
+			__be32     imsf_interface;       /*     4     4 */
+			__u32      imsf_fmode;           /*     8     4 */
+			__u32      imsf_numsrc;          /*    12     4 */
+			__be32     imsf_slist_flex[0];   /*    16     0 */
+		};                                       /*     0    16 */
+	};                                               /*     0    20 */
 
-Similar for other macros.
+	/* size: 20, cachelines: 1, members: 1 */
+	/* last cacheline: 20 bytes */
+};
 
-Regards
-Andrzej
+After changes:
 
->   
-> @@ -72,8 +70,6 @@ static inline bool __must_check __must_check_overflow(bool overflow)
->   	typeof(a) __a = (a);			\
->   	typeof(b) __b = (b);			\
->   	typeof(d) __d = (d);			\
-> -	(void) (&__a == &__b);			\
-> -	(void) (&__a == __d);			\
->   	__builtin_sub_overflow(__a, __b, __d);	\
->   }))
->   
-> @@ -81,8 +77,6 @@ static inline bool __must_check __must_check_overflow(bool overflow)
->   	typeof(a) __a = (a);			\
->   	typeof(b) __b = (b);			\
->   	typeof(d) __d = (d);			\
-> -	(void) (&__a == &__b);			\
-> -	(void) (&__a == __d);			\
->   	__builtin_mul_overflow(__a, __b, __d);	\
->   }))
->   
-> diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
-> index 7e3e43679b73..5e1b51d42e93 100644
-> --- a/lib/overflow_kunit.c
-> +++ b/lib/overflow_kunit.c
-> @@ -16,12 +16,15 @@
->   #include <linux/types.h>
->   #include <linux/vmalloc.h>
->   
-> -#define DEFINE_TEST_ARRAY(t)			\
-> -	static const struct test_ ## t {	\
-> -		t a, b;				\
-> -		t sum, diff, prod;		\
-> -		bool s_of, d_of, p_of;		\
-> -	} t ## _tests[]
-> +#define DEFINE_TEST_ARRAY_TYPED(t1, t2, t)			\
-> +	static const struct test_ ## t1 ## _ ## t2 ## __ ## t {	\
-> +		t1 a;						\
-> +		t2 b;						\
-> +		t sum, diff, prod;				\
-> +		bool s_of, d_of, p_of;				\
-> +	} t1 ## _ ## t2 ## __ ## t ## _tests[]
-> +
-> +#define DEFINE_TEST_ARRAY(t)	DEFINE_TEST_ARRAY_TYPED(t, t, t)
->   
->   DEFINE_TEST_ARRAY(u8) = {
->   	{0, 0, 0, 0, 0, false, false, false},
-> @@ -235,8 +238,8 @@ DEFINE_TEST_ARRAY(s64) = {
->   		a, b, r, _r, #t);				\
->   } while (0)
->   
-> -#define DEFINE_TEST_FUNC(t, fmt)					\
-> -static void do_test_ ## t(struct kunit *test, const struct test_ ## t *p) \
-> +#define DEFINE_TEST_FUNC_TYPED(n, t, fmt)				\
-> +static void do_test_ ## n(struct kunit *test, const struct test_ ## n *p) \
->   {							   		\
->   	check_one_op(t, fmt, add, "+", p->a, p->b, p->sum, p->s_of);	\
->   	check_one_op(t, fmt, add, "+", p->b, p->a, p->sum, p->s_of);	\
-> @@ -245,15 +248,18 @@ static void do_test_ ## t(struct kunit *test, const struct test_ ## t *p) \
->   	check_one_op(t, fmt, mul, "*", p->b, p->a, p->prod, p->p_of);	\
->   }									\
->   									\
-> -static void t ## _overflow_test(struct kunit *test) {			\
-> +static void n ## _overflow_test(struct kunit *test) {			\
->   	unsigned i;							\
->   									\
-> -	for (i = 0; i < ARRAY_SIZE(t ## _tests); ++i)			\
-> -		do_test_ ## t(test, &t ## _tests[i]);			\
-> +	for (i = 0; i < ARRAY_SIZE(n ## _tests); ++i)			\
-> +		do_test_ ## n(test, &n ## _tests[i]);			\
->   	kunit_info(test, "%zu %s arithmetic tests finished\n",		\
-> -		ARRAY_SIZE(t ## _tests), #t);				\
-> +		ARRAY_SIZE(n ## _tests), #n);				\
->   }
->   
-> +#define DEFINE_TEST_FUNC(t, fmt)					\
-> +	DEFINE_TEST_FUNC_TYPED(t ## _ ## t ## __ ## t, t, fmt)
-> +
->   DEFINE_TEST_FUNC(u8, "%d");
->   DEFINE_TEST_FUNC(s8, "%d");
->   DEFINE_TEST_FUNC(u16, "%d");
-> @@ -265,6 +271,33 @@ DEFINE_TEST_FUNC(u64, "%llu");
->   DEFINE_TEST_FUNC(s64, "%lld");
->   #endif
->   
-> +DEFINE_TEST_ARRAY_TYPED(u32, u32, u8) = {
-> +	{0, 0, 0, 0, 0, false, false, false},
-> +	{U8_MAX, 2, 1, U8_MAX - 2, U8_MAX - 1, true, false, true},
-> +	{U8_MAX + 1, 0, 0, 0, 0, true, true, false},
-> +};
-> +DEFINE_TEST_FUNC_TYPED(u32_u32__u8, u8, "%d");
-> +
-> +DEFINE_TEST_ARRAY_TYPED(u32, u32, int) = {
-> +	{0, 0, 0, 0, 0, false, false, false},
-> +	{U32_MAX, 0, -1, -1, 0, true, true, false},
-> +};
-> +DEFINE_TEST_FUNC_TYPED(u32_u32__int, int, "%d");
-> +
-> +DEFINE_TEST_ARRAY_TYPED(u8, u8, int) = {
-> +	{0, 0, 0, 0, 0, false, false, false},
-> +	{U8_MAX, U8_MAX, 2 * U8_MAX, 0, U8_MAX * U8_MAX, false, false, false},
-> +	{1, 2, 3, -1, 2, false, false, false},
-> +};
-> +DEFINE_TEST_FUNC_TYPED(u8_u8__int, int, "%d");
-> +
-> +DEFINE_TEST_ARRAY_TYPED(int, int, u8) = {
-> +	{0, 0, 0, 0, 0, false, false, false},
-> +	{1, 2, 3, U8_MAX, 2, false, true, false},
-> +	{-1, 0, U8_MAX, U8_MAX, 0, true, true, false},
-> +};
-> +DEFINE_TEST_FUNC_TYPED(int_int__u8, u8, "%d");
-> +
->   static void overflow_shift_test(struct kunit *test)
->   {
->   	int count = 0;
-> @@ -649,17 +682,21 @@ static void overflow_size_helpers_test(struct kunit *test)
->   }
->   
->   static struct kunit_case overflow_test_cases[] = {
-> -	KUNIT_CASE(u8_overflow_test),
-> -	KUNIT_CASE(s8_overflow_test),
-> -	KUNIT_CASE(u16_overflow_test),
-> -	KUNIT_CASE(s16_overflow_test),
-> -	KUNIT_CASE(u32_overflow_test),
-> -	KUNIT_CASE(s32_overflow_test),
-> +	KUNIT_CASE(u8_u8__u8_overflow_test),
-> +	KUNIT_CASE(s8_s8__s8_overflow_test),
-> +	KUNIT_CASE(u16_u16__u16_overflow_test),
-> +	KUNIT_CASE(s16_s16__s16_overflow_test),
-> +	KUNIT_CASE(u32_u32__u32_overflow_test),
-> +	KUNIT_CASE(s32_s32__s32_overflow_test),
->   /* Clang 13 and earlier generate unwanted libcalls on 32-bit. */
->   #if BITS_PER_LONG == 64
-> -	KUNIT_CASE(u64_overflow_test),
-> -	KUNIT_CASE(s64_overflow_test),
-> +	KUNIT_CASE(u64_u64__u64_overflow_test),
-> +	KUNIT_CASE(s64_s64__s64_overflow_test),
->   #endif
-> +	KUNIT_CASE(u32_u32__u8_overflow_test),
-> +	KUNIT_CASE(u32_u32__int_overflow_test),
-> +	KUNIT_CASE(u8_u8__int_overflow_test),
-> +	KUNIT_CASE(int_int__u8_overflow_test),
->   	KUNIT_CASE(overflow_shift_test),
->   	KUNIT_CASE(overflow_allocation_test),
->   	KUNIT_CASE(overflow_size_helpers_test),
+$ pahole -C ip_msfilter net/ipv4/igmp.o
+struct ip_msfilter {
+	struct {
+		__be32             imsf_multiaddr;       /*     0     4 */
+		__be32             imsf_interface;       /*     4     4 */
+		__u32              imsf_fmode;           /*     8     4 */
+		__u32              imsf_numsrc;          /*    12     4 */
+		union {
+			__be32     imsf_slist[1];        /*    16     4 */
+			struct {
+				struct {
+				} __empty_imsf_slist_flex; /*    16     0 */
+				__be32 imsf_slist_flex[0]; /*    16     0 */
+			};                               /*    16     0 */
+		};                                       /*    16     4 */
+	};                                               /*     0    20 */
+
+	/* size: 20, cachelines: 1, members: 1 */
+	/* last cacheline: 20 bytes */
+};
+
+In the past, we had to duplicate the whole original structure within
+a union, and update the names of all the members. Now, we just need to
+declare the flexible-array member to be used in kernel-space through
+the __DECLARE_FLEX_ARRAY() helper together with the one-element array,
+within a union. This makes the source code more clean and easier to read.
+
+Link: https://github.com/KSPP/linux/issues/193
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ include/uapi/linux/in.h | 20 +++++++-------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
+
+diff --git a/include/uapi/linux/in.h b/include/uapi/linux/in.h
+index 14168225cecd..fa4dc8f8f081 100644
+--- a/include/uapi/linux/in.h
++++ b/include/uapi/linux/in.h
+@@ -188,20 +188,14 @@ struct ip_mreq_source {
+ };
+ 
+ struct ip_msfilter {
+-	union {
+-		struct {
+-			__be32		imsf_multiaddr_aux;
+-			__be32		imsf_interface_aux;
+-			__u32		imsf_fmode_aux;
+-			__u32		imsf_numsrc_aux;
++	struct {
++		__be32		imsf_multiaddr;
++		__be32		imsf_interface;
++		__u32		imsf_fmode;
++		__u32		imsf_numsrc;
++		union {
+ 			__be32		imsf_slist[1];
+-		};
+-		struct {
+-			__be32		imsf_multiaddr;
+-			__be32		imsf_interface;
+-			__u32		imsf_fmode;
+-			__u32		imsf_numsrc;
+-			__be32		imsf_slist_flex[];
++			__DECLARE_FLEX_ARRAY(__be32, imsf_slist_flex);
+ 		};
+ 	};
+ };
+-- 
+2.34.1
 
