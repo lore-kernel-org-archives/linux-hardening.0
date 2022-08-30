@@ -2,70 +2,70 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 535E5ECAAD5
-	for <linux-hardening@archiver.kernel.org>; Tue, 30 Aug 2022 23:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40183ECAAA1
+	for <linux-hardening@archiver.kernel.org>; Tue, 30 Aug 2022 23:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232391AbiH3Xdn (ORCPT
+        id S232143AbiH3Xdx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 30 Aug 2022 19:33:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42284 "EHLO
+        Tue, 30 Aug 2022 19:33:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232355AbiH3XdQ (ORCPT
+        with ESMTP id S232059AbiH3Xd0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 30 Aug 2022 19:33:16 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB0519C228
-        for <linux-hardening@vger.kernel.org>; Tue, 30 Aug 2022 16:32:23 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-33dc888dc62so190493967b3.4
-        for <linux-hardening@vger.kernel.org>; Tue, 30 Aug 2022 16:32:23 -0700 (PDT)
+        Tue, 30 Aug 2022 19:33:26 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31EBCA2235
+        for <linux-hardening@vger.kernel.org>; Tue, 30 Aug 2022 16:32:29 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-3363b1dffa0so191268797b3.23
+        for <linux-hardening@vger.kernel.org>; Tue, 30 Aug 2022 16:32:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date;
-        bh=dj50MXIaDJBD96/1Gdf430/wXU4xb7a84h2xVZMa0Ew=;
-        b=Qy/xMjE+Z9tI/RI2eW9aQXEE+x9bgipZmkl1TRFX4nG3lQ2Cxw/MGc9YBEMVb79P8x
-         K7ZB6jWVCCidlAiCQ0KHSLobGlEUBTBOYT+IN2cosr4rJjNKEzJDFeo0nWGSZgVhOFnN
-         LnJtK+KQLFx71PgotB16ka4GRRJjpTFnPNLg7HhkuXjEppj+KAqhY9tM//ZHz2AfaJ4E
-         ojP4CyQHCBUPqv0EbNTJy1R5yPCLjtX4xD1E5S+rzObYF7P/nQl/buKNJiO0O+4YpcJO
-         KWS4peUjbZVcIeXOVLV02EwcnTADwVU+JJD9CdooT51s51cyuvBlc8byyEyM9/c9zYEC
-         TUsw==
+        bh=JGJThSQrG14h993s8rjwM8jNb3CuBSnZl7zjhnevu+g=;
+        b=DOh9amPi8sdlIOf+BiQAcIL4C8dBW/B9BWrb3DDZwGjZRuBGPkwG8kg8wpUGEynqN4
+         HbwlJ211/vN250153b8eTEEz+hJGiHPIdyx8Zz5WSB/eRxv4x+R8c6xaiPurZnqHBUe3
+         7eUibXAR1rL0QJGQFURQEgHMRLr+JSZOLcNBOIXbJOXcNuGf4he8R/RcghJuPZwG87Gp
+         L+pDTBkMbM7mIefPA4Unu/iXF4eeVd9tDHBc5q6aRSwecfYH2copC/6dCggsaXuVuvUw
+         fzuv78FCYDYsach0a90W8IsCcCNCzrOKyw5GIQzwfi8hwWvxOfgq6EoJfTjPWYbOy/X8
+         OGkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date;
-        bh=dj50MXIaDJBD96/1Gdf430/wXU4xb7a84h2xVZMa0Ew=;
-        b=iTmGrQvXga9Ut58NM69Sc/r8mlWMs8re/scCmUUCe0qrosllDdcOoWgvcC1TqEv1hF
-         9YX6iXVRFCLnp1+xtPbAcvIznXrV7j42TrcDd0a0mx2a0cFVunXKmFUuFaZHAoM6ca9T
-         2Ar/7C/aNujF3isN2YogzWSt3PD51ngMvxSyuGEa8dwhqsw7XTErKcLSW6fKAUvpEQyQ
-         e6/mT01yoPcLFSVWiiiQJV6G+Y0pRTf81Mj1MpSFb+zLyGtoElpZ24WqXmv80C4fulOj
-         Yx7q4x5njTCIkBFhR6OBuTIoCPhztyZ3iuoWwOjDKRDOnhfb3niTWhgQMKnP8YYRLt/7
-         5o5Q==
-X-Gm-Message-State: ACgBeo1kGQtIP8ynOljL4BeXIfrBssa+N7y4OR60FZqtyZZeK0JA6fpA
-        YR7zSQigOn59mgELANnJFTYbh9AEAf59SoWts6s=
-X-Google-Smtp-Source: AA6agR5LroJ1DHbPpfH8aFh9/G1HMs3AO252ceiCeo1jPAZmf7JXzZYp5Fa4eHZtuGTExuaU7+SLdODaNccTaYcpsSo=
+        bh=JGJThSQrG14h993s8rjwM8jNb3CuBSnZl7zjhnevu+g=;
+        b=JHfWsp0LZOv/rQNc2DbcmvEZEyGLkico+K99a1EMxsDlnIjDdabSeXxO2mrAKWuMBP
+         6WBSxWCXKVRkM/snfmBJonq5PS4m1rRf4P2OmrlcgPvZTGfc6MQrZrKdFSE4LgADRYQj
+         9Se2buULD3LdE2Bm5FtDZviI97Dd92PnElXEWtZoia1uOPYeMGmb6odsh0WsZX+6m48L
+         YhTA2RVzMyQyvfZvt6tIfac3iZFhlg7NZ5vj0+vqR3hvc5ZuJdlBIf4prcYhpcHG6aOb
+         H5NhVbn29rvgB/DVxCBbQe29EuKlDwwSw+3wIRFVcpfHJQj7UYWwKBMLGGl0N/mT4zBY
+         6gkg==
+X-Gm-Message-State: ACgBeo3REttnVKBX2tIWdlEKWGLwro57rZzvkKJaY9ks8AWqEDZQQVHF
+        uPPgP63aG35tqPp3QSFfH+RBCiiwh52/OqEPNVA=
+X-Google-Smtp-Source: AA6agR4PyO0IKBEZVO/AvffiR0akECN3URvghZTslxK3C371SGy+urp8y7XT0ytOb7JDjFdBCeYbfFF5vHW2XgdhiqQ=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:54d9:7143:6a7d:91d])
- (user=samitolvanen job=sendgmr) by 2002:a05:6902:1206:b0:676:e465:24b1 with
- SMTP id s6-20020a056902120600b00676e46524b1mr13676826ybu.323.1661902342496;
- Tue, 30 Aug 2022 16:32:22 -0700 (PDT)
-Date:   Tue, 30 Aug 2022 16:31:26 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a81:d34a:0:b0:31f:4467:4ae0 with SMTP
+ id d10-20020a81d34a000000b0031f44674ae0mr15725365ywl.477.1661902348134; Tue,
+ 30 Aug 2022 16:32:28 -0700 (PDT)
+Date:   Tue, 30 Aug 2022 16:31:28 -0700
 In-Reply-To: <20220830233129.30610-1-samitolvanen@google.com>
-Message-Id: <20220830233129.30610-19-samitolvanen@google.com>
+Message-Id: <20220830233129.30610-21-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20220830233129.30610-1-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=804; i=samitolvanen@google.com;
- h=from:subject; bh=PQGbduDYSHEunY6Nux9oR4b8gX3kqUUQ66z3bs0DO/k=;
- b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBjDp3OHJOh3MpkrcMboNL3mLB+U7xNHC0btjo7mME4
- CgYIObyJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYw6dzgAKCRBMtfaEi7xW7ibxC/
- 9u8tiBUAu11iMi2jQxB88ZoyRd3XcPtlmEJ49ZT4ibCRTKCQwU7x7cDMnDG2jMK91BvisB+yihmg9w
- N/xNoX9Du1hqgmpQ189vSRzZ8B3cTextiO0ei30mC5sYpY4O7ZzhfZ2RUhJ9GhDyhAqAEf/dyh6i7R
- slJI0p2V7MK2rO8Z0jyvl0g73TadyQ3IuIyhqfnc0JWw795W5qT0rTDncrsYsDg9bHqVA69umBLW/E
- JBpKqxPr5+1G3RypfC6VZNWayPrVcMVECCxIeWoI8JfgWyBD5zQ2Zeyjo3El1kUNH/J3pinc2ucgj0
- nCmZucarH0zhjvQSUJC5X8OSCGQyDJClv+hqBEIWhQ0gvLN9UVnXd5Ql7r49YFrN1kk9AWrqjbQ3Sc
- AD5ZEd5SjOGYRv3rAgmv+XiFslu7d+xB6EyKfNX1+EmfFdYMhyVFQNijCiaFZSRvXJJ7dnhc8wF96j
- FE3UOfpxc1eA3nQd4sJS9gasOaTmoIocuonggQXaz5kqM=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=915; i=samitolvanen@google.com;
+ h=from:subject; bh=m63Aw2OCZubNDlnS2Bm9+IxQqtHz35eVVBHmUgLi/wI=;
+ b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBjDp3PBebzwTJ+52Sw6ogCU/KIG0JsWDvzXb2RlSP7
+ p3Tx7bKJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYw6dzwAKCRBMtfaEi7xW7gtjC/
+ 46Gj3n4xq2s5nOkzOlhRg6U2y6bfUnt9ieyOLUS5LwZTt+4P1YtZ1bAy7fXQjlY5N5Jru8Wxiou2NQ
+ XkZHG3/eLGFq67shCldfkkdKJuw3zTrocl0l0U3bI95JISYisD70CC/v6rHsGqKjP/uSRXNRP30aAm
+ 8suLZ5bim00kqnPRf6F4sy1mk6/W6hXGgUi6oz2niBNwvb3cYpY3LEd4WZl8pIbELZtdYdrW7jGWrG
+ jGzA1gDMc6M1m0iQyrWFLfMS8Z/Ox52XdhaR+isbHp7AtJxqO0qbN9Fh/L6E3lJiJiGcQgwAhgGfYw
+ OElKjGI/zYiSnKS1XqBhHYQ44Sy0ZrW3vzzzSSERj0TNDSVk87P9KWRlJ2zsEDrD4S3t8So/m9NEcP
+ 4nl6pCyebjHvO7PMvnuJ5Ds/WxR8rqm5SuxbPGbmdyvl6F+LZ7o+EKzgevJrNFIW3c7+8RRcbkr+OL
+ PaYZxJCu03C4/PK10hnG4Dww9r1ervjssX1vNaeEtQoUw=
 X-Mailer: git-send-email 2.37.2.672.g94769d06f0-goog
-Subject: [PATCH v4 18/21] x86/tools/relocs: Ignore __kcfi_typeid_ relocations
+Subject: [PATCH v4 20/21] x86/purgatory: Disable CFI
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -87,29 +87,32 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The compiler generates __kcfi_typeid_ symbols for annotating assembly
-functions with type information. These are constants that can be
-referenced in assembly code and are resolved by the linker. Ignore
-them in relocs.
+Disable CONFIG_CFI_CLANG for the stand-alone purgatory.ro.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
 ---
- arch/x86/tools/relocs.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/purgatory/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
-index e2c5b296120d..2925074b9a58 100644
---- a/arch/x86/tools/relocs.c
-+++ b/arch/x86/tools/relocs.c
-@@ -56,6 +56,7 @@ static const char * const sym_regex_kernel[S_NSYMTYPES] = {
- 	"^(xen_irq_disable_direct_reloc$|"
- 	"xen_save_fl_direct_reloc$|"
- 	"VDSO|"
-+	"__kcfi_typeid_|"
- 	"__crc_)",
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+index 31c634a22818..58a200dc762d 100644
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -55,6 +55,10 @@ ifdef CONFIG_RETPOLINE
+ PURGATORY_CFLAGS_REMOVE		+= $(RETPOLINE_CFLAGS)
+ endif
  
- /*
++ifdef CONFIG_CFI_CLANG
++PURGATORY_CFLAGS_REMOVE		+= $(CC_FLAGS_CFI)
++endif
++
+ CFLAGS_REMOVE_purgatory.o	+= $(PURGATORY_CFLAGS_REMOVE)
+ CFLAGS_purgatory.o		+= $(PURGATORY_CFLAGS)
+ 
 -- 
 2.37.2.672.g94769d06f0-goog
 
