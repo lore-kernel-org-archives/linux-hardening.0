@@ -2,171 +2,157 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531ECECAAD1
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 Aug 2022 18:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E72DECAAD3
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 Aug 2022 18:38:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232721AbiHaSeD (ORCPT
+        id S233032AbiHaSiU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 Aug 2022 14:34:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49408 "EHLO
+        Wed, 31 Aug 2022 14:38:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232437AbiHaSda (ORCPT
+        with ESMTP id S233023AbiHaSh6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 Aug 2022 14:33:30 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6526CCE1E
-        for <linux-hardening@vger.kernel.org>; Wed, 31 Aug 2022 11:29:01 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id v5so8696932plo.9
-        for <linux-hardening@vger.kernel.org>; Wed, 31 Aug 2022 11:29:01 -0700 (PDT)
+        Wed, 31 Aug 2022 14:37:58 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3865013EB4
+        for <linux-hardening@vger.kernel.org>; Wed, 31 Aug 2022 11:35:00 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id y29so11198479pfq.0
+        for <linux-hardening@vger.kernel.org>; Wed, 31 Aug 2022 11:35:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc;
-        bh=DKqOreZ0IgrWRiSDcLbaBnxAeNHDFdxNZO+CnCRvPwc=;
-        b=W8KAgLyjkNUHAFpMwYF/wvokZ8fdC3RDGm9I/qeGHY0ggAXIaFURxudkLxKkVA9Mgy
-         1mRayAWr8dNDbIGHYpXdjXutEEm9uMgfYQzwMPwyi0tv5TWZAu/HRC/DuT5Fsn4pfq13
-         W/ukaCsatuUL99leXMPFydGRXOIXJYtWUfKOI=
+        bh=BF6HZWh0lIO6JP7Iahnyp/DPpNq7NYWD0O6mpa00wm0=;
+        b=WMT7IblMUP6IbINyxYOTTk3/5C/SsZwEz/PStR1GnxNGEiTOBTx0H0bcoX7mtTZOFs
+         vW/nmQVoxpVJGmhXtPihBudI7bs7hFhQ7NNkMHCNvfgh40a1jYEzzES0ocdqAzWF06W6
+         ereG8wftpqUi6FJJpbNpjoGm7QbHY6Odaz8Fw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=DKqOreZ0IgrWRiSDcLbaBnxAeNHDFdxNZO+CnCRvPwc=;
-        b=ENmwkbpi2CIO5vhSNv2Hc+2D9i6sf8sBN8OgUAbCyG0zQ5XwHg0JM0NhfaThJ5MU5U
-         A6RLO4TmIBXkMuBBj+7fTIeOMc0uM+IjE8nHm8C70LifJnVBM9y/oZhkPCtoQJLkMSo/
-         NLaCpJfS1JgOFEj+Ra6GERSSostJCSs5xr8KBX04XJXc2uLB4juY+dfEjI2O8v0qN8fT
-         k8myxP80a3zOWCvMpVD02HY7iv9Vz93O5TKBHi5zV6yE8J85w/gh9sBl7bhrJT6Q0xRP
-         wFKYx3mcJW2NxuG87UUfh1u/lyAHieOCJByTeQxDXX/YRrhuh2Tv+FiIKhG6tDbRM+0B
-         s6VA==
-X-Gm-Message-State: ACgBeo2P9W3qoqEd7JVNdJfbvRgiVz3tYPabZSaTZiwRZZcGGZ9H4rLq
-        NQ7r0vUuAUS2HkQkcKbwwVlUVQ==
-X-Google-Smtp-Source: AA6agR6OlwRU5wclOlZmixT8IdkrnbM3k8VzZUs+HpxdDpO2AjevToFIOsjaP6IotcHzEgkDsgVrEw==
-X-Received: by 2002:a17:90a:e586:b0:1fa:d28b:ab9b with SMTP id g6-20020a17090ae58600b001fad28bab9bmr4614074pjz.47.1661970516578;
-        Wed, 31 Aug 2022 11:28:36 -0700 (PDT)
+        bh=BF6HZWh0lIO6JP7Iahnyp/DPpNq7NYWD0O6mpa00wm0=;
+        b=SbKZw7+eRKMIGyi00EFFEf4WeP40jTEKUy9k11yNkWs22e3iSkj+Eah7/A3ykki4gT
+         OtN7968qtliE/iKChER5gmYi3TZ1NbAtyYxo6KIInIOuyvgI2vMoUYoorQVx6LJsPLUj
+         9r4Fl90k4pgC8eZmuXSp6J5xkS6Rb/yUUp0wOb62dvPbjpNiOZA1zjZzBp9B+48+8+GM
+         mC87+65qX2IYW4jwfCprfNZTDitK3p8N+6rUPbxfUjLe7x0ILmTwIBPP8wFwYQL/DQk5
+         npeEFsKo2nE/sotNhOEwa83IfXxUZR1bLu6ULuy8liP/N2eUYuQys7mfKpYBDfQreBKR
+         TK0Q==
+X-Gm-Message-State: ACgBeo1l8qzebEiQJTGnnhFL5ezehjm4yruP2sa01F1mgpMpWl13t9c4
+        pFbCasRROSIbsBu9uOcIqs6lfQ==
+X-Google-Smtp-Source: AA6agR7fo6VejIBMks/yQH9zBQhqvzOQ/jVgBeELe620QEE3MIqxdQctdFNdrpDaTK8wEGiOq4adhA==
+X-Received: by 2002:a05:6a00:a90:b0:530:2f3c:da43 with SMTP id b16-20020a056a000a9000b005302f3cda43mr27374922pfl.50.1661970899675;
+        Wed, 31 Aug 2022 11:34:59 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r9-20020aa79ec9000000b0053659f296a0sm11656371pfq.8.2022.08.31.11.28.35
+        by smtp.gmail.com with ESMTPSA id bm26-20020a656e9a000000b0042bd73400b6sm3642659pgb.87.2022.08.31.11.34.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Aug 2022 11:28:36 -0700 (PDT)
-Date:   Wed, 31 Aug 2022 11:28:35 -0700
+        Wed, 31 Aug 2022 11:34:59 -0700 (PDT)
+Date:   Wed, 31 Aug 2022 11:34:58 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 21/21] x86: Add support for CONFIG_CFI_CLANG
-Message-ID: <202208311126.B662F4722@keescook>
-References: <20220830233129.30610-1-samitolvanen@google.com>
- <20220830233129.30610-22-samitolvanen@google.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Chancellor <nathan@kernel.org>, Tom Rix <trix@redhat.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [PATCH 1/3] fortify: use __builtin_dynamic_object_size in
+ __compiletime_strlen
+Message-ID: <202208311132.27EE59B@keescook>
+References: <20220830205309.312864-1-ndesaulniers@google.com>
+ <20220830205309.312864-2-ndesaulniers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220830233129.30610-22-samitolvanen@google.com>
+In-Reply-To: <20220830205309.312864-2-ndesaulniers@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Aug 30, 2022 at 04:31:29PM -0700, Sami Tolvanen wrote:
-> With CONFIG_CFI_CLANG, the compiler injects a type preamble immediately
-> before each function and a check to validate the target function type
-> before indirect calls:
+On Tue, Aug 30, 2022 at 01:53:07PM -0700, Nick Desaulniers wrote:
+> With CONFIG_FORTIFY=y and CONFIG_UBSAN_LOCAL_BOUNDS=y enabled, we
+> observe a runtime panic while running Android's Compatibility Test
+> Suite's (CTS) android.hardware.input.cts.tests.  This is stemming from a
+> strlen() call in hidinput_allocate().
 > 
->   ; type preamble
->   __cfi_function:
->     mov <id>, %eax
->   function:
->     ...
->   ; indirect call check
->     mov     -<id>,%r10d
->     add     -0x4(%r11),%r10d
->     je      .Ltmp1
->     ud2
->   .Ltmp1:
->     call    __x86_indirect_thunk_r11
+> __compiletime_strlen is implemented in terms of __builtin_object_size(),
+> then does an array access to check for NUL-termination. A quirk of
+> __builtin_object_size() is that for strings whose values are runtime
+> dependent, __builtin_object_size(str, 1 or 0) returns the maximum size
+> of possible values when those sizes are determinable at compile time.
+> Example:
 > 
-> Define the __CFI_TYPE helper macro for manually annotating indirectly
-> called assembly function with the identical premable, add error handling
-> code for the ud2 traps emitted for indirect call checks, and allow
-> CONFIG_CFI_CLANG to be selected on x86_64.
+>   static const char *v = "FOO BAR";
+>   static const char *y = "FOO BA";
+>   unsigned long x (int z) {
+>       // Returns 8, which is:
+>       // max(__builtin_object_size(v, 1), __builtin_object_size(y, 1))
+>       return __builtin_object_size(z ? v : y, 1);
+>   }
 > 
-> This produces the following oops on CFI failure (generated using lkdtm):
+> So when FORTIFY is enabled, the current implementation of
+> __compiletime_strlen will try to access beyond the end of y at runtime
+> using the size of v. Mixed with UBSAN_LOCAL_BOUNDS we get a fault.
 > 
-> [   21.441706] CFI failure at lkdtm_indirect_call+0x16/0x20 [lkdtm]
-> (target: lkdtm_increment_int+0x0/0x10 [lkdtm]; expected type: 0x7e0c52a)
-> [   21.444579] invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
-> [   21.445296] CPU: 0 PID: 132 Comm: sh Not tainted
-> 5.19.0-rc8-00020-g9f27360e674c #1
-> [   21.445296] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-> BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
-> [   21.445296] RIP: 0010:lkdtm_indirect_call+0x16/0x20 [lkdtm]
-> [   21.445296] Code: 52 1c c0 48 c7 c1 c5 50 1c c0 e9 25 48 2a cc 0f 1f
-> 44 00 00 49 89 fb 48 c7 c7 50 b4 1c c0 41 ba 5b ad f3 81 45 03 53 f8
-> [   21.445296] RSP: 0018:ffffa9f9c02ffdc0 EFLAGS: 00000292
-> [   21.445296] RAX: 0000000000000027 RBX: ffffffffc01cb300 RCX: 385cbbd2e070a700
-> [   21.445296] RDX: 0000000000000000 RSI: c0000000ffffdfff RDI: ffffffffc01cb450
-> [   21.445296] RBP: 0000000000000006 R08: 0000000000000000 R09: ffffffff8d081610
-> [   21.445296] R10: 00000000bcc90825 R11: ffffffffc01c2fc0 R12: 0000000000000000
-> [   21.445296] R13: ffffa31b827a6000 R14: 0000000000000000 R15: 0000000000000002
-> [   21.445296] FS:  00007f08b42216a0(0000) GS:ffffa31b9f400000(0000)
-> knlGS:0000000000000000
-> [   21.445296] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   21.445296] CR2: 0000000000c76678 CR3: 0000000001940000 CR4: 00000000000006f0
-> [   21.445296] Call Trace:
-> [   21.445296]  <TASK>
-> [   21.445296]  lkdtm_CFI_FORWARD_PROTO+0x30/0x50 [lkdtm]
-> [   21.445296]  direct_entry+0x12d/0x140 [lkdtm]
-> [   21.445296]  full_proxy_write+0x5d/0xb0
-> [   21.445296]  vfs_write+0x144/0x460
-> [   21.445296]  ? __x64_sys_wait4+0x5a/0xc0
-> [   21.445296]  ksys_write+0x69/0xd0
-> [   21.445296]  do_syscall_64+0x51/0xa0
-> [   21.445296]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
-> [   21.445296] RIP: 0033:0x7f08b41a6fe1
-> [   21.445296] Code: be 07 00 00 00 41 89 c0 e8 7e ff ff ff 44 89 c7 89
-> 04 24 e8 91 c6 02 00 8b 04 24 48 83 c4 68 c3 48 63 ff b8 01 00 00 03
-> [   21.445296] RSP: 002b:00007ffcdf65c2e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> [   21.445296] RAX: ffffffffffffffda RBX: 00007f08b4221690 RCX: 00007f08b41a6fe1
-> [   21.445296] RDX: 0000000000000012 RSI: 0000000000c738f0 RDI: 0000000000000001
-> [   21.445296] RBP: 0000000000000001 R08: fefefefefefefeff R09: fefefefeffc5ff4e
-> [   21.445296] R10: 00007f08b42222b0 R11: 0000000000000246 R12: 0000000000c738f0
-> [   21.445296] R13: 0000000000000012 R14: 00007ffcdf65c401 R15: 0000000000c70450
-> [   21.445296]  </TASK>
-> [   21.445296] Modules linked in: lkdtm
-> [   21.445296] Dumping ftrace buffer:
-> [   21.445296]    (ftrace buffer empty)
-> [   21.471442] ---[ end trace 0000000000000000 ]---
-> [   21.471811] RIP: 0010:lkdtm_indirect_call+0x16/0x20 [lkdtm]
-> [   21.472467] Code: 52 1c c0 48 c7 c1 c5 50 1c c0 e9 25 48 2a cc 0f 1f
-> 44 00 00 49 89 fb 48 c7 c7 50 b4 1c c0 41 ba 5b ad f3 81 45 03 53 f8
-> [   21.474400] RSP: 0018:ffffa9f9c02ffdc0 EFLAGS: 00000292
-> [   21.474735] RAX: 0000000000000027 RBX: ffffffffc01cb300 RCX: 385cbbd2e070a700
-> [   21.475664] RDX: 0000000000000000 RSI: c0000000ffffdfff RDI: ffffffffc01cb450
-> [   21.476471] RBP: 0000000000000006 R08: 0000000000000000 R09: ffffffff8d081610
-> [   21.477127] R10: 00000000bcc90825 R11: ffffffffc01c2fc0 R12: 0000000000000000
-> [   21.477959] R13: ffffa31b827a6000 R14: 0000000000000000 R15: 0000000000000002
-> [   21.478657] FS:  00007f08b42216a0(0000) GS:ffffa31b9f400000(0000)
-> knlGS:0000000000000000
-> [   21.479577] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   21.480307] CR2: 0000000000c76678 CR3: 0000000001940000 CR4: 00000000000006f0
-> [   21.481460] Kernel panic - not syncing: Fatal exception
+> hidinput_allocate() has a local C string whose value is control flow
+> dependent on a switch statement, so __builtin_object_size(str, 1)
+> evaluates to the maximum string length, making all other cases fault on
+> the last character check. hidinput_allocate() could be cleaned up to
+> avoid runtime calls to strlen() since the local variable can only have
+> literal values, so there's no benefit to trying to fortify the strlen
+> call site there.
 > 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> Add a Kconfig check for __builtin_dynamic_object_size(), then use that
+> when available (gcc-12+, all supported versions of clang) which avoids
+> this surprising behavior.
+> 
+> Suggested-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+>  include/linux/fortify-string.h | 8 +++++++-
+>  init/Kconfig                   | 3 +++
+>  2 files changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+> index 3b401fa0f374..c5adad596a3f 100644
+> --- a/include/linux/fortify-string.h
+> +++ b/include/linux/fortify-string.h
+> @@ -14,11 +14,17 @@ void __read_overflow2_field(size_t avail, size_t wanted) __compiletime_warning("
+>  void __write_overflow(void) __compiletime_error("detected write beyond size of object (1st parameter)");
+>  void __write_overflow_field(size_t avail, size_t wanted) __compiletime_warning("detected write beyond size of field (1st parameter); maybe use struct_group()?");
+>  
+> +#ifdef CONFIG_CC_HAS_BUILTIN_DYNAMIC_OBJECT_SIZE
+> +#define __object_size __builtin_dynamic_object_size
+> +#else
+> +#define __object_size __builtin_object_size
+> +#endif
 
-This looks great!
+Instead of a Kconfig, how about just:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+#if __has_builtin(__builtin_dynamic_object_size)
+# define __object_size __builtin_dynamic_object_size
+#else
+# define __object_size __builtin_object_size
+#endif
 
-Peter, do you want to take this via -tip, or should I carry this in my
-kernel hardening tree? (It touches arm64 and x86, so hardening might be
-less weird, but it also touches things -tip might want to be building on
-top of, etc...)
+?
+
+> +
+>  #define __compiletime_strlen(p)					\
+>  ({								\
+>  	unsigned char *__p = (unsigned char *)(p);		\
+>  	size_t __ret = (size_t)-1;				\
+> -	size_t __p_size = __builtin_object_size(p, 1);		\
+> +	size_t __p_size = __object_size(p, 1);			\
+>  	if (__p_size != (size_t)-1) {				\
+>  		size_t __p_len = __p_size - 1;			\
+>  		if (__builtin_constant_p(__p[__p_len]) &&	\
+
+The fact that __builtin_object_size() will actually span control flow,
+and produce a size-inclusive result on the possible inputs is ...
+surprising and potentially quite problematic. But I'm satisfied that
+bdos appears to fix it here (since the "compiletime"ness will still get
+filtered by the __builtin_constant_p() check).
+
+-Kees
 
 -- 
 Kees Cook
