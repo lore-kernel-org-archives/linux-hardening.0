@@ -2,93 +2,226 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E013ECAAD1
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 Aug 2022 17:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1F9ECAAD3
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 Aug 2022 18:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230029AbiHaRtO (ORCPT
+        id S232058AbiHaSNy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 Aug 2022 13:49:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35132 "EHLO
+        Wed, 31 Aug 2022 14:13:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231282AbiHaRtM (ORCPT
+        with ESMTP id S231672AbiHaSN2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 Aug 2022 13:49:12 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EFC9D5DDA
-        for <linux-hardening@vger.kernel.org>; Wed, 31 Aug 2022 10:49:09 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id 73so5765455pga.1
-        for <linux-hardening@vger.kernel.org>; Wed, 31 Aug 2022 10:49:09 -0700 (PDT)
+        Wed, 31 Aug 2022 14:13:28 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1CAC13F45
+        for <linux-hardening@vger.kernel.org>; Wed, 31 Aug 2022 11:12:17 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id z187so15184515pfb.12
+        for <linux-hardening@vger.kernel.org>; Wed, 31 Aug 2022 11:12:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=VFkJurdbJUTCWb5htdv9XL8GXl+ooHeGwTuU6qvLebw=;
-        b=VostS88Kk2T9x6tzKXLo0TDqNIb1gPQ3/yzR073wKLNexwMTG22DFuQ+O6EvlCnOd/
-         OgcP5p9wktNxFostue0wrRjsLrG7khl70oMXkKD0a01OaDu6xqWF9GcUVBxHL22V6uPZ
-         SzGoOnicvDtJasw1c4prIQQ8Lu5uYdlCrU2WA=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=+FPB2MKL9v7GjxeLAYremS8ZtsqDh2bdF2F8eQQvlHs=;
+        b=CYlpSIKhg8hDCBcboi29/Tvqjb5Zm+ig8Gn4tZQB3FViqP9YJhm18fpJtHyMewumi8
+         ZmMrFb8Ex7elICsdEpfFFP587DTF3CguVWX5J9nKZb3i/KeuMl78n53t4NUkiA8zge+o
+         ZO5iXNYktQsIsVsidn6zw/2DR5J7zeZhMDRx0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=VFkJurdbJUTCWb5htdv9XL8GXl+ooHeGwTuU6qvLebw=;
-        b=4Iciwzi94whK6breopj3AR/A32uulNBcjVXXN0k/DlwnCkv+5dhgYz8NUFZHReTKxT
-         zha+eWlbdBCsmP9zBhxeY3Eb8givj4cTxmwlLcHEHSns2X1LPF5guEJiLkoq3eilJ+H6
-         OprRbJbIRiA7C3IGraXu5vD55+xbWmPSSpDyLwX1yFkCxxj2/0I9m0ddKTRx6YysEhwf
-         TaPQu5+QVC6sq1NsGUCNfqpSYMokzFQ4sPB8ioSKn6s8HF9j6wHtM5icWHOksUy42dCl
-         3cBp9Sn1RaN3YYsZxpW1B1ufBQGtN3roIq6gbHt+viea9ADsJlCU/QpjZFCpxSp9q3sw
-         S2Mg==
-X-Gm-Message-State: ACgBeo0d53E+ndN7JP2JM+LcaeCciSd/ytivbYWAiDt+h+uQ7z9Oex03
-        RjPernIu7liUp/EhFf4POEZC9g==
-X-Google-Smtp-Source: AA6agR6daGH4O55c1EA2PgDANyYrLnYplMbFqZwe+Sa2xZJSfsxf22bpjN5zJ9lCWZGLXIpgNqWdKw==
-X-Received: by 2002:a63:f011:0:b0:42c:7687:7322 with SMTP id k17-20020a63f011000000b0042c76877322mr9329970pgh.126.1661968148965;
-        Wed, 31 Aug 2022 10:49:08 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=+FPB2MKL9v7GjxeLAYremS8ZtsqDh2bdF2F8eQQvlHs=;
+        b=klGOYcoKltqs75PlRUBflvbDCUECk/gHgB6x70i/cIs7N4IeL5tVvfyMMnxZ/SoDb1
+         Urc8VTYFd/Wo3r6Ltidlb+lKxWhU4FslFpBltrLLn2AN0LnCaV8DeMbPvZdKXRNWZ2ff
+         fqWMEA4gYcnb8KA1Ku0nu27Vq7LsyEHcZVq61ttGY9p7u8te30mwovUSusqqP6v3tl8h
+         Mf5oW1jE2chTTIvL24/Pyp3Ip/FBcCy92fkFlAr/DLWvUwZ5+JkQZ2mbaJA/jPSGzYjB
+         PFGr7ZFPettM2yU1cson3I1INEfpDWylxF7tQkH5luEyREP6iURQdPqA+JUmeHpEW5wf
+         WMyg==
+X-Gm-Message-State: ACgBeo1pX3MJA1J5e3EGyOGMrYnpzb/GrmtB/X19JhxT970jA6chJ56G
+        eCMcVOmZQ4KF/KnIIXhgqB9fnA==
+X-Google-Smtp-Source: AA6agR7W4Dv7enr2z0bknULBTBjIm5oAx4DbBhIBhQBExJIPLPWpvbDYeUSUhnCIKTQRQakEiLNqeA==
+X-Received: by 2002:aa7:8742:0:b0:537:ee75:601a with SMTP id g2-20020aa78742000000b00537ee75601amr21484748pfo.37.1661969503067;
+        Wed, 31 Aug 2022 11:11:43 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c8-20020a170903234800b0016d3935eff0sm10016902plh.176.2022.08.31.10.49.07
+        by smtp.gmail.com with ESMTPSA id u15-20020a170902714f00b0017532e01e3fsm3216199plm.276.2022.08.31.11.11.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Aug 2022 10:49:08 -0700 (PDT)
-Date:   Wed, 31 Aug 2022 10:49:07 -0700
+        Wed, 31 Aug 2022 11:11:42 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-hardening@vger.kernel.org,
+Cc:     Kees Cook <keescook@chromium.org>,
         Daniel Latypov <dlatypov@google.com>,
         Vitor Massaru Iha <vitor@massaru.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] overflow: Allow mixed type arguments
-Message-ID: <202208311040.C6CA8253@keescook>
-References: <20220830192147.47069-1-keescook@chromium.org>
- <787894a0-b1b7-43c2-c509-f246f94f58f7@rasmusvillemoes.dk>
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        kernel test robot <lkp@intel.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] overflow: Split up kunit tests for smaller stack frames
+Date:   Wed, 31 Aug 2022 11:11:40 -0700
+Message-Id: <20220831181140.842093-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <787894a0-b1b7-43c2-c509-f246f94f58f7@rasmusvillemoes.dk>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5672; h=from:subject; bh=aj59+gqQXAf9s4qeTET5coAedgx0HGyX/RR0nO+aMCg=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjD6Rchk49aYbAVzrBbHrkVerP3JFcTIXd/Ju/I8M5 krdGx5uJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYw+kXAAKCRCJcvTf3G3AJhqbD/ 9PObfsj8WgoVsDigCEuZwwuNVZs46+b4s3foKgS53KwcT5KBkWAQp6Uj5QmgHNhme/QSRjWuDlwEmY Lsv107Je+2my3uzD1yiUht/1YU1e9C2hC0CdQ3vffy0PndLTtBb9Sp0r4Qfn+U96FNASYPESrRCDjc ro5P6tO/cXty84WWSodvIF2JSPWGnQ2JnSdDh40x+AxDMgFky00FLL6wl5y2QzCv0R+f0DemCZuMNg U7f2zU+m8rNjSI8AAL7NXFPnhrZHpcmMIVoaYkaE0p3jTOA8EjPfV/yp+FxAJNOAoVRn4AuvdMV4B5 3oXuoWcyTw6GMQ6pGYhcgIFt6fk1wAcXAeG6ZGWalUIbQ08ljadInIT/LbjHKHpbnHoWs+6SAvqu6l 5UDPGMNpV/bsEhSJ44Co0ZiYUvlJYnLz5eFdJJ8HhNuBQgT7H5BfFJD7Ex1lAM1o6ZSJBHPGgAztJu Ow4VKVFV87h7aJsNmZ55B8Lb4k4GqJNeKgM5pk0iqzOK7EeIC10unXnBV7gWiRbQZAO+fOloeYndzv TqUf9gdkmjl4AxEJKMuEaTbvU53e5y13LKUrI98Yg+ARNnhF7uQDul4O1PvsLCgRosYbX/2z07n2fj fU40fzWJNgaVVpjG6rL2V686sroIKdt7SpQSUBF6s6NVa3JY9moiSgVU5S0w==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Aug 30, 2022 at 09:52:32PM +0200, Rasmus Villemoes wrote:
-> On 30/08/2022 21.21, Kees Cook wrote:
-> > [...]
-> > + * *@d holds the results of the attempted addition, but is not considered
-> > + * "safe for use" on a non-zero return value, which indicates that the
-> > + * sum has overflowed or been truncated.
-> 
-> I don't like that wording. It makes it sound like there's some ambiguity
-> or (implementation|un)-definedness involved in what the destination
-> holds on overflow. The gcc documentation is perfectly clear that the
-> result is the infinite-precision result truncated to N bits, with N
-> being the bitwidth of d.
+Under some pathological 32-bit configs, the shift overflow KUnit tests
+create huge stack frames. Split up the function to avoid this,
+separating by rough shift overflow cases.
 
-Hm, well, I think use of *d should be strongly discouraged on overflow.
-How about just adding the specifics to the end?
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Daniel Latypov <dlatypov@google.com>
+Cc: Vitor Massaru Iha <vitor@massaru.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/lkml/202208301850.iuv9VwA8-lkp@intel.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ lib/overflow_kunit.c | 78 +++++++++++++++++++++++++++++---------------
+ 1 file changed, 51 insertions(+), 27 deletions(-)
 
- * *@d holds the result of the attempted addition, but is not considered
- * "safe for use" on a non-zero return value, which indicates that the
- * sum has overflowed or been truncated. (*@d will contain the
- * infinite-precision result truncated to the bitwidth of *@d.)
-
+diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
+index 0d98c9bc75da..f385ca652b74 100644
+--- a/lib/overflow_kunit.c
++++ b/lib/overflow_kunit.c
+@@ -304,10 +304,6 @@ DEFINE_TEST_ARRAY_TYPED(int, int, u8) = {
+ };
+ DEFINE_TEST_FUNC_TYPED(int_int__u8, u8, "%d");
+ 
+-static void overflow_shift_test(struct kunit *test)
+-{
+-	int count = 0;
+-
+ /* Args are: value, shift, type, expected result, overflow expected */
+ #define TEST_ONE_SHIFT(a, s, t, expect, of)	do {			\
+ 	typeof(a) __a = (a);						\
+@@ -331,6 +327,10 @@ static void overflow_shift_test(struct kunit *test)
+ 	count++;							\
+ } while (0)
+ 
++static void shift_sane_test(struct kunit *test)
++{
++	int count = 0;
++
+ 	/* Sane shifts. */
+ 	TEST_ONE_SHIFT(1, 0, u8, 1 << 0, false);
+ 	TEST_ONE_SHIFT(1, 4, u8, 1 << 4, false);
+@@ -373,6 +373,13 @@ static void overflow_shift_test(struct kunit *test)
+ 	TEST_ONE_SHIFT(0, 30, s32, 0, false);
+ 	TEST_ONE_SHIFT(0, 62, s64, 0, false);
+ 
++	kunit_info(test, "%d sane shift tests finished\n", count);
++}
++
++static void shift_overflow_test(struct kunit *test)
++{
++	int count = 0;
++
+ 	/* Overflow: shifted the bit off the end. */
+ 	TEST_ONE_SHIFT(1, 8, u8, 0, true);
+ 	TEST_ONE_SHIFT(1, 16, u16, 0, true);
+@@ -420,6 +427,13 @@ static void overflow_shift_test(struct kunit *test)
+ 	/* 0100000100001000001000000010000001000010000001000100010001001011 */
+ 	TEST_ONE_SHIFT(4686030735197619275LL, 2, s64, 0, true);
+ 
++	kunit_info(test, "%d overflow shift tests finished\n", count);
++}
++
++static void shift_truncate_test(struct kunit *test)
++{
++	int count = 0;
++
+ 	/* Overflow: values larger than destination type. */
+ 	TEST_ONE_SHIFT(0x100, 0, u8, 0, true);
+ 	TEST_ONE_SHIFT(0xFF, 0, s8, 0, true);
+@@ -431,6 +445,33 @@ static void overflow_shift_test(struct kunit *test)
+ 	TEST_ONE_SHIFT(0xFFFFFFFFUL, 0, int, 0, true);
+ 	TEST_ONE_SHIFT(0xFFFFFFFFFFFFFFFFULL, 0, s64, 0, true);
+ 
++	/* Overflow: shifted at or beyond entire type's bit width. */
++	TEST_ONE_SHIFT(0, 8, u8, 0, true);
++	TEST_ONE_SHIFT(0, 9, u8, 0, true);
++	TEST_ONE_SHIFT(0, 8, s8, 0, true);
++	TEST_ONE_SHIFT(0, 9, s8, 0, true);
++	TEST_ONE_SHIFT(0, 16, u16, 0, true);
++	TEST_ONE_SHIFT(0, 17, u16, 0, true);
++	TEST_ONE_SHIFT(0, 16, s16, 0, true);
++	TEST_ONE_SHIFT(0, 17, s16, 0, true);
++	TEST_ONE_SHIFT(0, 32, u32, 0, true);
++	TEST_ONE_SHIFT(0, 33, u32, 0, true);
++	TEST_ONE_SHIFT(0, 32, int, 0, true);
++	TEST_ONE_SHIFT(0, 33, int, 0, true);
++	TEST_ONE_SHIFT(0, 32, s32, 0, true);
++	TEST_ONE_SHIFT(0, 33, s32, 0, true);
++	TEST_ONE_SHIFT(0, 64, u64, 0, true);
++	TEST_ONE_SHIFT(0, 65, u64, 0, true);
++	TEST_ONE_SHIFT(0, 64, s64, 0, true);
++	TEST_ONE_SHIFT(0, 65, s64, 0, true);
++
++	kunit_info(test, "%d truncate shift tests finished\n", count);
++}
++
++static void shift_nonsense_test(struct kunit *test)
++{
++	int count = 0;
++
+ 	/* Nonsense: negative initial value. */
+ 	TEST_ONE_SHIFT(-1, 0, s8, 0, true);
+ 	TEST_ONE_SHIFT(-1, 0, u8, 0, true);
+@@ -455,26 +496,6 @@ static void overflow_shift_test(struct kunit *test)
+ 	TEST_ONE_SHIFT(0, -30, s64, 0, true);
+ 	TEST_ONE_SHIFT(0, -30, u64, 0, true);
+ 
+-	/* Overflow: shifted at or beyond entire type's bit width. */
+-	TEST_ONE_SHIFT(0, 8, u8, 0, true);
+-	TEST_ONE_SHIFT(0, 9, u8, 0, true);
+-	TEST_ONE_SHIFT(0, 8, s8, 0, true);
+-	TEST_ONE_SHIFT(0, 9, s8, 0, true);
+-	TEST_ONE_SHIFT(0, 16, u16, 0, true);
+-	TEST_ONE_SHIFT(0, 17, u16, 0, true);
+-	TEST_ONE_SHIFT(0, 16, s16, 0, true);
+-	TEST_ONE_SHIFT(0, 17, s16, 0, true);
+-	TEST_ONE_SHIFT(0, 32, u32, 0, true);
+-	TEST_ONE_SHIFT(0, 33, u32, 0, true);
+-	TEST_ONE_SHIFT(0, 32, int, 0, true);
+-	TEST_ONE_SHIFT(0, 33, int, 0, true);
+-	TEST_ONE_SHIFT(0, 32, s32, 0, true);
+-	TEST_ONE_SHIFT(0, 33, s32, 0, true);
+-	TEST_ONE_SHIFT(0, 64, u64, 0, true);
+-	TEST_ONE_SHIFT(0, 65, u64, 0, true);
+-	TEST_ONE_SHIFT(0, 64, s64, 0, true);
+-	TEST_ONE_SHIFT(0, 65, s64, 0, true);
+-
+ 	/*
+ 	 * Corner case: for unsigned types, we fail when we've shifted
+ 	 * through the entire width of bits. For signed types, we might
+@@ -490,9 +511,9 @@ static void overflow_shift_test(struct kunit *test)
+ 	TEST_ONE_SHIFT(0, 31, s32, 0, false);
+ 	TEST_ONE_SHIFT(0, 63, s64, 0, false);
+ 
+-	kunit_info(test, "%d shift tests finished\n", count);
+-#undef TEST_ONE_SHIFT
++	kunit_info(test, "%d nonsense shift tests finished\n", count);
+ }
++#undef TEST_ONE_SHIFT
+ 
+ /*
+  * Deal with the various forms of allocator arguments. See comments above
+@@ -703,7 +724,10 @@ static struct kunit_case overflow_test_cases[] = {
+ 	KUNIT_CASE(u32_u32__int_overflow_test),
+ 	KUNIT_CASE(u8_u8__int_overflow_test),
+ 	KUNIT_CASE(int_int__u8_overflow_test),
+-	KUNIT_CASE(overflow_shift_test),
++	KUNIT_CASE(shift_sane_test),
++	KUNIT_CASE(shift_overflow_test),
++	KUNIT_CASE(shift_truncate_test),
++	KUNIT_CASE(shift_nonsense_test),
+ 	KUNIT_CASE(overflow_allocation_test),
+ 	KUNIT_CASE(overflow_size_helpers_test),
+ 	{}
 -- 
-Kees Cook
+2.34.1
+
