@@ -2,139 +2,158 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B346EECAAD4
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 Aug 2022 19:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0A4ECAAD1
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 Aug 2022 19:13:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231215AbiHaTGc (ORCPT
+        id S232127AbiHaTND (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 Aug 2022 15:06:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60032 "EHLO
+        Wed, 31 Aug 2022 15:13:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229751AbiHaTGb (ORCPT
+        with ESMTP id S232002AbiHaTMw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 Aug 2022 15:06:31 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0FAFC9273
-        for <linux-hardening@vger.kernel.org>; Wed, 31 Aug 2022 12:06:28 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id n65-20020a17090a5ac700b001fbb4fad865so209309pji.1
-        for <linux-hardening@vger.kernel.org>; Wed, 31 Aug 2022 12:06:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=4vabnxTMH9N4kijguDzewyk8E7kS2vGaLqNfOIBWjZk=;
-        b=knfiwPAL6lej4jecmDDu4C6Ido4YLWRq7K/4z5xP8Y95HipfVhgz9D5nJlBVxO+T7m
-         rZ65frZHQeugkrkuUSyfMYi8rlLaNBqTao7nj1rIF6hA90aTFqAP4QZljRPK9W9aDkog
-         G7mP4IN5JYMqCNEm6yaf7ctHY/x9O3FT+5Z8U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=4vabnxTMH9N4kijguDzewyk8E7kS2vGaLqNfOIBWjZk=;
-        b=fcfbPAK7WgjB0VZG9uRH3UwtGJC7XoULi1d01TQdYoi8S+xFaybRnDWQGB5Nre82Y2
-         sByfEnd87YjToeznXxfWSxCpfJVO5rgj7WPyqmYyj5BIukcoDZ64oh1FdVqI9GxbCpzE
-         um3BGXywi9TVEQj25zxYCO8Us/fY+ZcqzA8FRaUh/2lxO/x2ivvn5DDdCXD2FW/RjAfk
-         K4hl5I1lXNJU2K23U1zMXeqU7zLpfy+hofzbZVv6/sibWBnAtI1eCPW5++OMhW942zvG
-         PDTxoqiVy+HyKlJEVoHAh29Yb7aF4gEd0U3D6BWCIc47B0EOkI12Rw5pLJqWqy6bwXh9
-         cgyA==
-X-Gm-Message-State: ACgBeo12VS3sv6qtCGgipRrL++Gbkq8OPKriD26liAZqul1t2HG/w2kc
-        dv6NGRgyOrRiAB0J37IfPQkAphJrqY/R/g==
-X-Google-Smtp-Source: AA6agR6dob1FlpsurmMAaUDc1n7xLlFq+7hVuLAeZ0jGTHEY+FVp5+hXY6mm84n2BdL67uQtwFFGqA==
-X-Received: by 2002:a17:903:d5:b0:173:3307:bcf with SMTP id x21-20020a17090300d500b0017333070bcfmr27256352plc.87.1661972788232;
-        Wed, 31 Aug 2022 12:06:28 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id mh16-20020a17090b4ad000b001f8aee0d826sm1633159pjb.53.2022.08.31.12.06.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 Aug 2022 12:06:27 -0700 (PDT)
-Date:   Wed, 31 Aug 2022 12:06:26 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Nathan Chancellor <nathan@kernel.org>, Tom Rix <trix@redhat.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>
-Subject: Re: [PATCH 2/3] fortify: cosmetic cleanups to __compiletime_strlen
-Message-ID: <202208311138.2CA3E54B0D@keescook>
-References: <20220830205309.312864-1-ndesaulniers@google.com>
- <20220830205309.312864-3-ndesaulniers@google.com>
+        Wed, 31 Aug 2022 15:12:52 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AFD5D99D9;
+        Wed, 31 Aug 2022 12:12:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 57012B8229F;
+        Wed, 31 Aug 2022 19:12:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E19D9C433D7;
+        Wed, 31 Aug 2022 19:12:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661973169;
+        bh=ZlVKgKTrX1x0CLe8TUlE5hyyKfAJCRY7X7EjuH+f/KY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NauY8gKc395GmXMkKYgRYOcanRSq67fKagRo2SsvKcny8F8tUOcJ97RH2mV0YmFdU
+         adZHHr0yAzJofxtXBoBcKL/5uVgavG6GwYz3NSJ+oWLqQmAsFnz5an6jrH1saD1sOt
+         g/3GFcT/qwULN8B1WK5V3g0/4086v0pf5F4dCDSmZE2Kh7/ooVp5IlbK1DzPtN+33e
+         Q9C8KpeK6ezNrDX61tTutZgNoVEUE5sKDK8geUvV1MtGcnRc4t8DIw1yOExUIh0yA8
+         2M14x2n+/2B+Er96OdP9IHsBjWy2aBfP9pBi1WtxM2kS/g4fP+ZVyMPyykMXrCyAsS
+         jx6wLNeBuqPoQ==
+Date:   Wed, 31 Aug 2022 14:12:42 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: [PATCH v2][next] net/ipv4: Use __DECLARE_FLEX_ARRAY() helper
+Message-ID: <Yw+yqpCd5A/Q1oo5@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220830205309.312864-3-ndesaulniers@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Aug 30, 2022 at 01:53:08PM -0700, Nick Desaulniers wrote:
-> Two things I noticed in __compiletime_strlen:
+We now have a cleaner way to keep compatibility with user-space
+(a.k.a. not breaking it) when we need to keep in place a one-element
+array (for its use in user-space) together with a flexible-array
+member (for its use in kernel-space) without making it hard to read
+at the source level. This is through the use of the new
+__DECLARE_FLEX_ARRAY() helper macro.
 
-Four? :)
+The size and memory layout of the structure is preserved after the
+changes. See below.
 
-> 1. A temporary, __p, is created+used to avoid repeated side effects from
->    multiple evaluation of the macro parameter, but the macro parameter
->    was being used accidentally in __builtin_object_size.
+Before changes:
 
-__builtin_object_size(), like sizeof() but unlike __builtin_strlen(),
-will not evaluate side-effects: https://godbolt.org/z/Yaa1z7YvK
-And using bos on __p will sometimes mask the actual object, so p needs to
-stay the argument.
+$ pahole -C ip_msfilter net/ipv4/igmp.o
+struct ip_msfilter {
+	union {
+		struct {
+			__be32     imsf_multiaddr_aux;   /*     0     4 */
+			__be32     imsf_interface_aux;   /*     4     4 */
+			__u32      imsf_fmode_aux;       /*     8     4 */
+			__u32      imsf_numsrc_aux;      /*    12     4 */
+			__be32     imsf_slist[1];        /*    16     4 */
+		};                                       /*     0    20 */
+		struct {
+			__be32     imsf_multiaddr;       /*     0     4 */
+			__be32     imsf_interface;       /*     4     4 */
+			__u32      imsf_fmode;           /*     8     4 */
+			__u32      imsf_numsrc;          /*    12     4 */
+			__be32     imsf_slist_flex[0];   /*    16     0 */
+		};                                       /*     0    16 */
+	};                                               /*     0    20 */
 
-> 2. The temporary has a curious signedness and const-less qualification.
->    Just use __auto_type.
+	/* size: 20, cachelines: 1, members: 1 */
+	/* last cacheline: 20 bytes */
+};
 
-__auto_type is pretty rare in the kernel, but does provide the removal
-of "const". Even though the kernel builds with -Wno-pointer-sign, the
-explicit case does fix a potential warnings about signedness differences,
-not just const differences, for __builtin_strlen() which requires "const
-char *", but many arguments are "unsigned char *", "u8 *", etc.
+After changes:
 
-Is __auto_type more readable than the explicit cast? It does seem to
-work fine.
+$ pahole -C ip_msfilter net/ipv4/igmp.o
+struct ip_msfilter {
+	__be32                     imsf_multiaddr;       /*     0     4 */
+	__be32                     imsf_interface;       /*     4     4 */
+	__u32                      imsf_fmode;           /*     8     4 */
+	__u32                      imsf_numsrc;          /*    12     4 */
+	union {
+		__be32             imsf_slist[1];        /*    16     4 */
+		struct {
+			struct {
+			} __empty_imsf_slist_flex;       /*    16     0 */
+			__be32     imsf_slist_flex[0];   /*    16     0 */
+		};                                       /*    16     0 */
+	};                                               /*    16     4 */
 
-> 3. (size_t)-1 is perhaps more readable as -1UL.
+	/* size: 20, cachelines: 1, members: 5 */
+	/* last cacheline: 20 bytes */
+};
 
-That's true, though I kind of prefer (size_t)-1, though yes, it appears
-to be the extreme minority in the kernel.
+In the past, we had to duplicate the whole original structure within
+a union, and update the names of all the members. Now, we just need to
+declare the flexible-array member to be used in kernel-space through
+the __DECLARE_FLEX_ARRAY() helper together with the one-element array,
+within a union. This makes the source code more clean and easier to read.
 
-> 4. __p_size == -1UL when __builtin_object_size can't evaluate the
->    object size at compile time. We could just reuse __ret and use one
->    less variable here.
+Link: https://github.com/KSPP/linux/issues/193
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Remove unnecessary internal anonymous struct. (Kees)
 
-This seems to get entire optimized away by the compiler? I think it's
-more readable to keep the explicit variable.
+ include/uapi/linux/in.h | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
 
--Kees
-
-> 
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
->  include/linux/fortify-string.h | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-> index c5adad596a3f..aaf73575050f 100644
-> --- a/include/linux/fortify-string.h
-> +++ b/include/linux/fortify-string.h
-> @@ -22,11 +22,10 @@ void __write_overflow_field(size_t avail, size_t wanted) __compiletime_warning("
->  
->  #define __compiletime_strlen(p)					\
->  ({								\
-> -	unsigned char *__p = (unsigned char *)(p);		\
-> -	size_t __ret = (size_t)-1;				\
-> -	size_t __p_size = __object_size(p, 1);			\
-> -	if (__p_size != (size_t)-1) {				\
-> -		size_t __p_len = __p_size - 1;			\
-> +	__auto_type __p = (p);					\
-> +	size_t __ret = __object_size(__p, 1);			\
-> +	if (__ret != -1UL) {					\
-> +		size_t __p_len = __ret - 1;			\
->  		if (__builtin_constant_p(__p[__p_len]) &&	\
->  		    __p[__p_len] == '\0')			\
->  			__ret = __builtin_strlen(__p);		\
-> -- 
-> 2.37.2.672.g94769d06f0-goog
-> 
-
+diff --git a/include/uapi/linux/in.h b/include/uapi/linux/in.h
+index 14168225cecd..578daa6f816b 100644
+--- a/include/uapi/linux/in.h
++++ b/include/uapi/linux/in.h
+@@ -188,21 +188,13 @@ struct ip_mreq_source {
+ };
+ 
+ struct ip_msfilter {
++	__be32		imsf_multiaddr;
++	__be32		imsf_interface;
++	__u32		imsf_fmode;
++	__u32		imsf_numsrc;
+ 	union {
+-		struct {
+-			__be32		imsf_multiaddr_aux;
+-			__be32		imsf_interface_aux;
+-			__u32		imsf_fmode_aux;
+-			__u32		imsf_numsrc_aux;
+-			__be32		imsf_slist[1];
+-		};
+-		struct {
+-			__be32		imsf_multiaddr;
+-			__be32		imsf_interface;
+-			__u32		imsf_fmode;
+-			__u32		imsf_numsrc;
+-			__be32		imsf_slist_flex[];
+-		};
++		__be32		imsf_slist[1];
++		__DECLARE_FLEX_ARRAY(__be32, imsf_slist_flex);
+ 	};
+ };
+ 
 -- 
-Kees Cook
+2.34.1
+
