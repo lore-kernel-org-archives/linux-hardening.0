@@ -2,91 +2,208 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 144FDECAAD2
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Sep 2022 20:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB787ECAAD3
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Sep 2022 20:46:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231650AbiIAUF2 (ORCPT
+        id S233410AbiIAUqE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Sep 2022 16:05:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33594 "EHLO
+        Thu, 1 Sep 2022 16:46:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232420AbiIAUF2 (ORCPT
+        with ESMTP id S232910AbiIAUqD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Sep 2022 16:05:28 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ACD653014;
-        Thu,  1 Sep 2022 13:05:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AE28B61EB8;
-        Thu,  1 Sep 2022 20:05:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CCA9C433C1;
-        Thu,  1 Sep 2022 20:05:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662062726;
-        bh=iOc9+0GNgABm7fesjder0qm3JUPhsUZuIxj/BUlS0DY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uLCKRs84bnUbq3xsodIbWHV1rtb9Yjdug6UHeGa0RoKvn32PnxRfPUWUt1tJWXDMp
-         t2uUe7vlx3Kp8TfWGck0MSL4wmTCEZWlIif4W04OAkWN2jTRNr84MCyJKuwoKg3Fyr
-         KLbuHVW8iWbGWSwVXN8Fhzf8fAx11mIEOJPbkvSV1ydcXehE+g4Wf4hulJxpCLpJTx
-         MWTqE+3CUK91jok+H0IcrlhGEmyhmTpmcEShWRLMxYb0cfQ7lP8spNFzIckDCTo72s
-         jbqyvgVJj9hpGJIJyt7Uugeu0dDlbiWG+Cz/p0mCWybjHyIx7w68zv5RMaX0+SrMtV
-         aQprBRIBlH2UQ==
-Date:   Thu, 1 Sep 2022 13:05:23 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH 0/2] fortify: Add run-time WARN for cross-field memcpy()
-Message-ID: <YxEQg+fOpaPuS/NH@dev-arch.thelio-3990X>
-References: <20220901065914.1417829-1-keescook@chromium.org>
+        Thu, 1 Sep 2022 16:46:03 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F20B51407
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Sep 2022 13:46:02 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id x80so233625pgx.0
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Sep 2022 13:46:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=3FATo+4aSu7y8dsoj+GqrdVX/tRMTr67LwXEb3c92qM=;
+        b=JDejjNU/A1CEVLmDw/kbCrNbdJoDEXGLDDaIyV9Igs/XsnOsjR1Dc6yu+mvq7kTeMM
+         cvw4U0gVZCifDlqJhtwiRsOvulrMamJ1N3LMefiLT5hGizjH0dPJDT5JLnQPTaFNqL7+
+         TUAz8UxE1PUEmXH6jTTj+ycsmdoRAwJ7rPHtU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=3FATo+4aSu7y8dsoj+GqrdVX/tRMTr67LwXEb3c92qM=;
+        b=5svyEqKOqDxH4rosxaZ98mr5QBigdKs9Byt25Px/LZ2jeS1Rc0e+W3GRLJZwYcREQv
+         5WBwyqCR8QaVPdD9QMDEDJgroJ6vvhsno9yiPUY+cVt8HodnT15R/UFf9apnYRioZJ0v
+         b5n/iVpVHaXWMhV9Cbq6PaxWl6w1URSu19aXPXw/aMmbYlrJgxOHpsDgRbxe3Vo+PaMj
+         3zP8ZUsOHRXB8NxBq6P1XDZIlpuH30SZzTVf9PaRTzhB22pzPMn2+cFTBHaMhvLHuypn
+         riDM74k+E6tVu7YJ4HZUqbSLD5NzD+5Ni24W8sEex1W7mIsfSc+B/7dI8JRi+1x/yQAW
+         zlsA==
+X-Gm-Message-State: ACgBeo3z5TxSFKRWTWqXGguIszwCSe0Cke3qityYxjFRZ4urL04Sz4OZ
+        xkkAE0MRHFKxfsIJ85hTU+64lA==
+X-Google-Smtp-Source: AA6agR5ZsGlC3fTZ03AIuh04jvZ/ffxqC7vYoNL6qJA03Vhg3EK6HLxeudH2vcuvQD4N+aTvr2burQ==
+X-Received: by 2002:a63:7843:0:b0:42b:4e77:a508 with SMTP id t64-20020a637843000000b0042b4e77a508mr27570344pgc.449.1662065161707;
+        Thu, 01 Sep 2022 13:46:01 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q3-20020aa78423000000b0052d87b76d12sm23827pfn.68.2022.09.01.13.46.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Sep 2022 13:46:00 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Luca Coelho <luciano.coelho@intel.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Andy Lavr <andy.lavr@gmail.com>, Kalle Valo <kvalo@kernel.org>,
+        Gregory Greenman <gregory.greenman@intel.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] iwlwifi: calib: Refactor iwl_calib_result usage for clarity
+Date:   Thu,  1 Sep 2022 13:45:58 -0700
+Message-Id: <20220901204558.2256458-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220901065914.1417829-1-keescook@chromium.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5095; h=from:subject; bh=dXk9FvP8mQV+OU7HzHs8EJnNRxX0VzSl2ssfNfi+TYY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjERoGa6dATzMBuf7tKR2Kr6iz+T5BgWqO5lKzP2H+ tXAHCbyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYxEaBgAKCRCJcvTf3G3AJnCEEA CD5yRk+eEyd95e31q9KVFxtiS/4qWSVLf7kkpCTuMDpudMz7nUxKvg7jTXy2XRiRkpqkwS+UxmsAC0 jrtzN1L/iWsq0KBqjH7uw8Qc0nLos6Ya42Jc+ylzkBMLywoVNW0r2a/JBaMNwCxakQa49fCeKKQpsK ufdhJ/oBicA6OA9NXeGWKu5Wlh/ADv+wvCxadKqd0xwppvmQacyvSjIzuV4choGTHjRuRRkG/BTUBf nVuRVuZ1JVPbwD7nZ+weIPI1WvAW8Ky+Xl8Ly6z72DM66Y2nbldOfg0cz6nnTFeHyZysLmhwT/DS6h YkijlAzekNR90QCKm0Qkn+O54AyhRrRZlGYWnXtObOihyPLgfJpBALGdkCo15y0wQ7HccpBHUItsRS vrAY5y1KYcsPG6pfGCEnNpmU8uqCmqoCTc2rfRc03/LUqsp06vfEi91++48DuBo3iPy0Ny4zeBfpv0 Vib/W0vHtvvuFk5JbC7syM6V25NKeSNzb8u8khHd/MQYJrN42LOWkQb8dQ9KgIHb7MDP5FcPES9K1R pPgRp5CqwkCx7b6QG7Z7apVES3Sv8380ZLHZHw2fdsxwxEEQQhfolh45K6mZS5HBHoUuMboyRDMYwD Dm5x1YW9ST0RxrJmoTfUiDOMy8M9lb0SZMkg9a2zpH8W/cz9BOfYNBov8iFg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
+In preparation for FORTIFY_SOURCE performing run-time destination buffer
+bounds checking for memcpy(), refactor the use of struct iwl_calib_result:
 
-On Wed, Aug 31, 2022 at 11:59:12PM -0700, Kees Cook wrote:
-> Hi,
-> 
-> I'm hoping to at least get this into -next to see how noisy it ends up
-> being. I've tracked down several false positives that are getting fixed,
-> but I'd like to see this get wider testing. For details, see patch 1,
-> but this is the run-time half of the recent FORTIFY_SOURCE memcpy()
-> bounds checking work.
-> 
-> -Kees
-> 
-> Kees Cook (2):
->   fortify: Add run-time WARN for cross-field memcpy()
->   lkdtm: Update tests for memcpy() run-time warnings
-> 
->  drivers/misc/lkdtm/fortify.c            | 96 +++++++++++++++++++++----
->  include/linux/fortify-string.h          | 70 +++++++++++++++++-
->  tools/testing/selftests/lkdtm/tests.txt |  8 ++-
->  3 files changed, 155 insertions(+), 19 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
+- Have struct iwl_calib_result contain struct iwl_calib_cmd since
+  functions expect to operate on the "data" flex array in "cmd", which
+  follows the "hdr" member.
+- Switch argument passing around to use struct iwl_calib_cmd instead of
+  struct iwl_calib_hdr to prepare functions to see the "data" member.
+- Change iwl_calib_set()'s "len" argument to a size_t since it is always
+  unsigned and is normally receiving the output of sizeof().
+- Add an explicit length sanity check in iwl_calib_set().
+- Adjust the memcpy() to avoid copying across the now visible composite
+  flex array structure.
 
-I took these two patches for a spin on four of my test machines (one
-arm64 and three x86_64, kernel compiled with tip of tree clang) and I
-did not see any warnings. Not to say there are not any lurking but my
-set of drivers did not appear to trigger anything.
+This avoids the future run-time warning:
 
-Tested-by: Nathan Chancellor <nathan@kernel.org>
+  memcpy: detected field-spanning write (size 8) of single field "&res->hdr" (size 4)
 
-Cheers,
-Nathan
+Cc: Luca Coelho <luciano.coelho@intel.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Reported-by: Andy Lavr <andy.lavr@gmail.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/net/wireless/intel/iwlwifi/dvm/agn.h  |  2 +-
+ .../net/wireless/intel/iwlwifi/dvm/calib.c    | 22 ++++++++++---------
+ .../net/wireless/intel/iwlwifi/dvm/ucode.c    |  8 +++----
+ 3 files changed, 17 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/agn.h b/drivers/net/wireless/intel/iwlwifi/dvm/agn.h
+index 411a6f6638b4..fefaa414272b 100644
+--- a/drivers/net/wireless/intel/iwlwifi/dvm/agn.h
++++ b/drivers/net/wireless/intel/iwlwifi/dvm/agn.h
+@@ -112,7 +112,7 @@ int iwl_load_ucode_wait_alive(struct iwl_priv *priv,
+ 			      enum iwl_ucode_type ucode_type);
+ int iwl_send_calib_results(struct iwl_priv *priv);
+ int iwl_calib_set(struct iwl_priv *priv,
+-		  const struct iwl_calib_hdr *cmd, int len);
++		  const struct iwl_calib_cmd *cmd, size_t len);
+ void iwl_calib_free_results(struct iwl_priv *priv);
+ int iwl_dump_nic_event_log(struct iwl_priv *priv, bool full_log,
+ 			    char **buf);
+diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/calib.c b/drivers/net/wireless/intel/iwlwifi/dvm/calib.c
+index a11884fa254b..f488620d2844 100644
+--- a/drivers/net/wireless/intel/iwlwifi/dvm/calib.c
++++ b/drivers/net/wireless/intel/iwlwifi/dvm/calib.c
+@@ -19,8 +19,7 @@
+ struct iwl_calib_result {
+ 	struct list_head list;
+ 	size_t cmd_len;
+-	struct iwl_calib_hdr hdr;
+-	/* data follows */
++	struct iwl_calib_cmd cmd;
+ };
+ 
+ struct statistics_general_data {
+@@ -43,12 +42,12 @@ int iwl_send_calib_results(struct iwl_priv *priv)
+ 		int ret;
+ 
+ 		hcmd.len[0] = res->cmd_len;
+-		hcmd.data[0] = &res->hdr;
++		hcmd.data[0] = &res->cmd;
+ 		hcmd.dataflags[0] = IWL_HCMD_DFL_NOCOPY;
+ 		ret = iwl_dvm_send_cmd(priv, &hcmd);
+ 		if (ret) {
+ 			IWL_ERR(priv, "Error %d on calib cmd %d\n",
+-				ret, res->hdr.op_code);
++				ret, res->cmd.hdr.op_code);
+ 			return ret;
+ 		}
+ 	}
+@@ -57,19 +56,22 @@ int iwl_send_calib_results(struct iwl_priv *priv)
+ }
+ 
+ int iwl_calib_set(struct iwl_priv *priv,
+-		  const struct iwl_calib_hdr *cmd, int len)
++		  const struct iwl_calib_cmd *cmd, size_t len)
+ {
+ 	struct iwl_calib_result *res, *tmp;
+ 
+-	res = kmalloc(sizeof(*res) + len - sizeof(struct iwl_calib_hdr),
+-		      GFP_ATOMIC);
++	if (check_sub_overflow(len, sizeof(*cmd), &len))
++		return -ENOMEM;
++
++	res = kmalloc(struct_size(res, cmd.data, len), GFP_ATOMIC);
+ 	if (!res)
+ 		return -ENOMEM;
+-	memcpy(&res->hdr, cmd, len);
+-	res->cmd_len = len;
++	res->cmd = *cmd;
++	memcpy(res->cmd.data, cmd->data, len);
++	res->cmd_len = struct_size(cmd, data, len);
+ 
+ 	list_for_each_entry(tmp, &priv->calib_results, list) {
+-		if (tmp->hdr.op_code == res->hdr.op_code) {
++		if (tmp->cmd.hdr.op_code == res->cmd.hdr.op_code) {
+ 			list_replace(&tmp->list, &res->list);
+ 			kfree(tmp);
+ 			return 0;
+diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/ucode.c b/drivers/net/wireless/intel/iwlwifi/dvm/ucode.c
+index 4b27a53d0bb4..bb13ca5d666c 100644
+--- a/drivers/net/wireless/intel/iwlwifi/dvm/ucode.c
++++ b/drivers/net/wireless/intel/iwlwifi/dvm/ucode.c
+@@ -356,18 +356,18 @@ static bool iwlagn_wait_calib(struct iwl_notif_wait_data *notif_wait,
+ 			      struct iwl_rx_packet *pkt, void *data)
+ {
+ 	struct iwl_priv *priv = data;
+-	struct iwl_calib_hdr *hdr;
++	struct iwl_calib_cmd *cmd;
+ 
+ 	if (pkt->hdr.cmd != CALIBRATION_RES_NOTIFICATION) {
+ 		WARN_ON(pkt->hdr.cmd != CALIBRATION_COMPLETE_NOTIFICATION);
+ 		return true;
+ 	}
+ 
+-	hdr = (struct iwl_calib_hdr *)pkt->data;
++	cmd = (struct iwl_calib_cmd *)pkt->data;
+ 
+-	if (iwl_calib_set(priv, hdr, iwl_rx_packet_payload_len(pkt)))
++	if (iwl_calib_set(priv, cmd, iwl_rx_packet_payload_len(pkt)))
+ 		IWL_ERR(priv, "Failed to record calibration data %d\n",
+-			hdr->op_code);
++			cmd->hdr.op_code);
+ 
+ 	return false;
+ }
+-- 
+2.34.1
+
