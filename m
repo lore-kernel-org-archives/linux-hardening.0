@@ -2,172 +2,74 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0D3ECAAD2
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Sep 2022 21:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B84FECAAD2
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Sep 2022 21:34:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232879AbiIAVUE (ORCPT
+        id S232879AbiIAVe3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Sep 2022 17:20:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60240 "EHLO
+        Thu, 1 Sep 2022 17:34:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233260AbiIAVUD (ORCPT
+        with ESMTP id S232865AbiIAVe2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Sep 2022 17:20:03 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D339EB7DF;
-        Thu,  1 Sep 2022 14:19:59 -0700 (PDT)
+        Thu, 1 Sep 2022 17:34:28 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3631647C2;
+        Thu,  1 Sep 2022 14:34:27 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D59AEB828FE;
-        Thu,  1 Sep 2022 21:19:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1F67C433D6;
-        Thu,  1 Sep 2022 21:19:55 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6040DB82912;
+        Thu,  1 Sep 2022 21:34:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FE7DC433D6;
+        Thu,  1 Sep 2022 21:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662067196;
-        bh=vMb1A3guwJfkcgp2wFM6aQ+0d0wJbRK9xbl0lDcSsXE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VTZhURJB7FcXq4vEMq3qYBJDhOmwcxGOTAJaqqsWSyikaZid+5ZkLas5D1py8FOp0
-         WsXLHctTUrVEkZv9mrXyP0kMCsLX+eeeqa2K49qzWNFdFtIHSYoWaqNUCLe0BX+p+D
-         at2eVTTJ305vZmKxzy0S4AWPtRMRp50vKl39zRfDuh2YLHpxC7AIDv4DAYIeULxL1w
-         91lwTIa/VkpoZSR0y8BjhWAQFP8t5ehXbG6f+YkYe6Wcc1jRtet+KTOpdZDOkLuNbN
-         8UsJ4T0Eqbl/qHvGWd/qjJb5nYOdlaZe51lC7nnnI2ROkgGVDx2vPYX9cjVdOTpiJY
-         mvZeLRcfGwIFg==
-Date:   Thu, 1 Sep 2022 14:19:54 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 00/21] KCFI support
-Message-ID: <YxEh+pLyOyPalW1u@dev-arch.thelio-3990X>
-References: <20220830233129.30610-1-samitolvanen@google.com>
+        s=k20201202; t=1662068065;
+        bh=QDEyvqWC8nhNHLRGUxwIJUlPQJaJftGhKLRNzHJ5P74=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=es4wWPyEBqXs7O5cniqk0ZQDYixX2uAvihc+bhGyIsh2JyGFpyUygc/Qxju1MLtN7
+         Magu0PQEAq2JAV6jUTObQnbTum7WH/3v+XSKhRyA9Gmxe8xG7lAB4IzNrOLrNXYjhs
+         ixVzGX29jNSis7E19atE4wEEHC7sfk4CXExqgHh+SgvxRqDs2kFb+3Am8OQLvfDp3X
+         zjp3UgyC+wokraQRgGfuowmFitx7M/x0B6IlmbdS0plhPi9CBOYdEasAgRGNh/gXPs
+         H4IyjbCju9jrmgWQKFye5GxfofpflIIUUztsS/o8THE3DfYE8fVipt1/ZuKHp+RS4k
+         YXG+yWtj96cbQ==
+Date:   Thu, 1 Sep 2022 14:34:23 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org,
+        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] netlink: Bounds-check struct nlmsgerr creation
+Message-ID: <20220901143423.2abc0ab0@kernel.org>
+In-Reply-To: <20220901071336.1418572-1-keescook@chromium.org>
+References: <20220901071336.1418572-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220830233129.30610-1-samitolvanen@google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Sami,
+On Thu,  1 Sep 2022 00:13:36 -0700 Kees Cook wrote:
+>  	rep = __nlmsg_put(skb, NETLINK_CB(in_skb).portid, nlh->nlmsg_seq,
+>  			  NLMSG_ERROR, payload, flags);
 
-On Tue, Aug 30, 2022 at 04:31:08PM -0700, Sami Tolvanen wrote:
-> KCFI is a forward-edge control-flow integrity scheme in the upcoming
-> Clang 16 release, which is more suitable for kernel use than the
-> existing CFI scheme used by CONFIG_CFI_CLANG. KCFI doesn't require
-> LTO, doesn't alter function references to point to a jump table, and
-> won't break function address equality.
-> 
-> This series replaces the current arm64 CFI implementation with KCFI
-> and adds support for x86_64.
-> 
-> KCFI requires assembly functions that are indirectly called from C
-> code to be annotated with type identifiers. As type information is
-> only available in C, the compiler emits expected type identifiers
-> into the symbol table, so they can be referenced from assembly
-> without having to hardcode type hashes. Patch 6 adds helper macros
-> for annotating functions, and patches 9 and 19 add annotations.
-> 
-> In case of a type mismatch, KCFI always traps. To support error
-> handling, the compiler generates a .kcfi_traps section for x86_64,
-> which contains the locations of each trap, and for arm64, encodes
-> the necessary register information to the ESR. Patches 10 and 21 add
-> arch-specific error handlers.
-> 
-> To test this series, you'll a ToT Clang toolchain. The series is
-> also available in GitHub:
-> 
->   https://github.com/samitolvanen/linux/commits/kcfi-v4
+All we should need here is __nlmsg_put() -> nlmsg_put(),
+that's idiomatic for netlink.
 
-I took this series for a spin on arm64 and x86_64.
-
-I did not see any runtime issues on my arm64 or AMD test machines but I
-do see a set of failures on my two Intel test machines when accessing
-the files in /sys/devices/pci0000:00/0000:00:02.0/drm/card0/gt/gt0:
-
-  $ ls -1 /sys/devices/pci0000:00/0000:00:02.0/drm/card0/gt/gt0
-  id
-  punit_req_freq_mhz
-  rc6_enable
-  rc6_residency_ms
-  rps_act_freq_mhz
-  rps_boost_freq_mhz
-  rps_cur_freq_mhz
-  rps_max_freq_mhz
-  rps_min_freq_mhz
-  rps_rp0_freq_mhz
-  rps_rp1_freq_mhz
-  rps_rpn_freq_mhz
-  throttle_reason_pl1
-  throttle_reason_pl2
-  throttle_reason_pl4
-  throttle_reason_prochot
-  throttle_reason_ratl
-  throttle_reason_status
-  throttle_reason_thermal
-  throttle_reason_vr_tdc
-  throttle_reason_vr_thermalert
-
-  $ cat /sys/devices/pci0000:00/0000:00:02.0/drm/card0/gt/gt0/*
-  ...
-
-  $ sudo dmesg | rg "CFI failure at"
-  [  481.234522] CFI failure at kobj_attr_show+0x19/0x30 (target: max_freq_mhz_show+0x0/0xe0 [i915]; expected type: 0xc527b809)
-  [  481.234699] CFI failure at kobj_attr_show+0x19/0x30 (target: act_freq_mhz_show+0x0/0xe0 [i915]; expected type: 0xc527b809)
-  [  481.235067] CFI failure at kobj_attr_show+0x19/0x30 (target: boost_freq_mhz_show+0x0/0xe0 [i915]; expected type: 0xc527b809)
-  [  481.235194] CFI failure at kobj_attr_show+0x19/0x30 (target: min_freq_mhz_show+0x0/0xe0 [i915]; expected type: 0xc527b809)
-  [  481.235320] CFI failure at kobj_attr_show+0x19/0x30 (target: punit_req_freq_mhz_show+0x0/0x40 [i915]; expected type: 0xc527b809)
-  [  481.235447] CFI failure at kobj_attr_show+0x19/0x30 (target: throttle_reason_bool_show+0x0/0x50 [i915]; expected type: 0xc527b809)
-  [  481.235570] CFI failure at kobj_attr_show+0x19/0x30 (target: id_show+0x0/0x70 [i915]; expected type: 0xc527b809)
-  [  481.235694] CFI failure at kobj_attr_show+0x19/0x30 (target: throttle_reason_bool_show+0x0/0x50 [i915]; expected type: 0xc527b809)
-  [  481.235821] CFI failure at kobj_attr_show+0x19/0x30 (target: throttle_reason_bool_show+0x0/0x50 [i915]; expected type: 0xc527b809)
-  [  481.235945] CFI failure at kobj_attr_show+0x19/0x30 (target: cur_freq_mhz_show+0x0/0xe0 [i915]; expected type: 0xc527b809)
-  [  481.236075] CFI failure at kobj_attr_show+0x19/0x30 (target: throttle_reason_bool_show+0x0/0x50 [i915]; expected type: 0xc527b809)
-  [  481.236201] CFI failure at kobj_attr_show+0x19/0x30 (target: rc6_enable_show+0x0/0x40 [i915]; expected type: 0xc527b809)
-  [  481.236327] CFI failure at kobj_attr_show+0x19/0x30 (target: throttle_reason_bool_show+0x0/0x50 [i915]; expected type: 0xc527b809)
-  [  481.236453] CFI failure at kobj_attr_show+0x19/0x30 (target: RP0_freq_mhz_show+0x0/0xe0 [i915]; expected type: 0xc527b809)
-  [  481.236582] CFI failure at kobj_attr_show+0x19/0x30 (target: throttle_reason_bool_show+0x0/0x50 [i915]; expected type: 0xc527b809)
-  [  481.236707] CFI failure at kobj_attr_show+0x19/0x30 (target: throttle_reason_bool_show+0x0/0x50 [i915]; expected type: 0xc527b809)
-  [  481.236836] CFI failure at kobj_attr_show+0x19/0x30 (target: throttle_reason_bool_show+0x0/0x50 [i915]; expected type: 0xc527b809)
-  [  481.236958] CFI failure at kobj_attr_show+0x19/0x30 (target: RPn_freq_mhz_show+0x0/0xe0 [i915]; expected type: 0xc527b809)
-  [  481.237079] CFI failure at kobj_attr_show+0x19/0x30 (target: RP1_freq_mhz_show+0x0/0xe0 [i915]; expected type: 0xc527b809)
-  [  481.237224] CFI failure at kobj_attr_show+0x19/0x30 (target: throttle_reason_bool_show+0x0/0x50 [i915]; expected type: 0xc527b809)
-  [  481.237377] CFI failure at kobj_attr_show+0x19/0x30 (target: rc6_residency_ms_show+0x0/0x270 [i915]; expected type: 0xc527b809)
-
-The source of those is drivers/gpu/drm/i915/gt/intel_gt_sysfs_pm.c. I
-have not looked too closely yet but the fix should be something along
-the lines of commit 58606220a2f1 ("drm/i915: Fix CFI violation with
-show_dynamic_id()"). I will note that the 'dev' variable does appear to
-be used so the fix might not be as trivial as that one. Not sure I will
-have a chance to look into it before Plumbers but I am happy to test a
-patch if you happen to see an obvious fix.
-
-Interestingly, I do not see the KVM failure [1] that I reported anymore.
-I do not see an obvious fix for it in this series or -next though, could
-it have been an issue with an earlier revision of kCFI on the compiler
-side?
-
-I do see a few new objtool warnings as well:
-
-vmlinux.o: warning: objtool: apply_relocate_add+0x34: relocation to !ENDBR: memcpy+0x0
-vmlinux.o: warning: objtool: ___ksymtab+__memcpy+0x0: data relocation to !ENDBR: memcpy+0x0
-vmlinux.o: warning: objtool: ___ksymtab+memcpy+0x0: data relocation to !ENDBR: memcpy+0x0
-
-As a result of the above:
-
-Tested-by: Nathan Chancellor <nathan@kernel.org>
-
-[1]: https://github.com/ClangBuiltLinux/linux/issues/1644
-
-Cheers,
-Nathan
+>  	errmsg = nlmsg_data(rep);
+>  	errmsg->error = err;
+> -	memcpy(&errmsg->msg, nlh, payload > sizeof(*errmsg) ? nlh->nlmsg_len : sizeof(*nlh));
+> +	unsafe_memcpy(&errmsg->msg, nlh, payload > sizeof(*errmsg)
+> +					 ?  nlh->nlmsg_len : sizeof(*nlh),
+> +		      /* "payload" was bounds checked against nlh->nlmsg_len,
+> +		       * and overflow-checked as tlvlen was constructed.
+> +		       */);
