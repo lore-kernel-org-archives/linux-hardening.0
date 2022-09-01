@@ -2,208 +2,102 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB787ECAAD3
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Sep 2022 20:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA99DECAAD2
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Sep 2022 20:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233410AbiIAUqE (ORCPT
+        id S233901AbiIAUyh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Sep 2022 16:46:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38384 "EHLO
+        Thu, 1 Sep 2022 16:54:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232910AbiIAUqD (ORCPT
+        with ESMTP id S232840AbiIAUyg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Sep 2022 16:46:03 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F20B51407
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Sep 2022 13:46:02 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id x80so233625pgx.0
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Sep 2022 13:46:02 -0700 (PDT)
+        Thu, 1 Sep 2022 16:54:36 -0400
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B857598D03
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Sep 2022 13:54:34 -0700 (PDT)
+Received: by mail-yb1-xb2f.google.com with SMTP id 193so461701ybc.10
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Sep 2022 13:54:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc;
-        bh=3FATo+4aSu7y8dsoj+GqrdVX/tRMTr67LwXEb3c92qM=;
-        b=JDejjNU/A1CEVLmDw/kbCrNbdJoDEXGLDDaIyV9Igs/XsnOsjR1Dc6yu+mvq7kTeMM
-         cvw4U0gVZCifDlqJhtwiRsOvulrMamJ1N3LMefiLT5hGizjH0dPJDT5JLnQPTaFNqL7+
-         TUAz8UxE1PUEmXH6jTTj+ycsmdoRAwJ7rPHtU=
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=4jlXXthmnZbjTZtiVrsRSCOXepCwvjAKaezedZTf+1M=;
+        b=dww8G34SkCKoX5t98auUmen/B2j+GBXp6v4tE5lPg8O17Ou+bYMY7NGL0+OFiLmfPX
+         KB5TW3Hg05olsDbU2CzwQ+b0l2lXaobxlM0bqgJd9XPq2lkwiMhtg268U0LR1pgENUyg
+         mw9NHDwFHa5UrvAydPu1H6hHymu7U37QFWsbhjRhtTy3sd/4bQQDVlT2RD4CEIgqicfq
+         3vAOEfU4qC2vZ5VlgP4L4MGQSEnf35XUEk7uw7FC2H2NRZMCpev2bF2irrAkr91s2SgH
+         cZP7vWAiNZggz+AuEqXG93mTZqAu8LM40i5ToAdS8XYVSMYFvx/sLwdWdFANCqCL8K9k
+         UJtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc;
-        bh=3FATo+4aSu7y8dsoj+GqrdVX/tRMTr67LwXEb3c92qM=;
-        b=5svyEqKOqDxH4rosxaZ98mr5QBigdKs9Byt25Px/LZ2jeS1Rc0e+W3GRLJZwYcREQv
-         5WBwyqCR8QaVPdD9QMDEDJgroJ6vvhsno9yiPUY+cVt8HodnT15R/UFf9apnYRioZJ0v
-         b5n/iVpVHaXWMhV9Cbq6PaxWl6w1URSu19aXPXw/aMmbYlrJgxOHpsDgRbxe3Vo+PaMj
-         3zP8ZUsOHRXB8NxBq6P1XDZIlpuH30SZzTVf9PaRTzhB22pzPMn2+cFTBHaMhvLHuypn
-         riDM74k+E6tVu7YJ4HZUqbSLD5NzD+5Ni24W8sEex1W7mIsfSc+B/7dI8JRi+1x/yQAW
-         zlsA==
-X-Gm-Message-State: ACgBeo3z5TxSFKRWTWqXGguIszwCSe0Cke3qityYxjFRZ4urL04Sz4OZ
-        xkkAE0MRHFKxfsIJ85hTU+64lA==
-X-Google-Smtp-Source: AA6agR5ZsGlC3fTZ03AIuh04jvZ/ffxqC7vYoNL6qJA03Vhg3EK6HLxeudH2vcuvQD4N+aTvr2burQ==
-X-Received: by 2002:a63:7843:0:b0:42b:4e77:a508 with SMTP id t64-20020a637843000000b0042b4e77a508mr27570344pgc.449.1662065161707;
-        Thu, 01 Sep 2022 13:46:01 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q3-20020aa78423000000b0052d87b76d12sm23827pfn.68.2022.09.01.13.46.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Sep 2022 13:46:00 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Luca Coelho <luciano.coelho@intel.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Andy Lavr <andy.lavr@gmail.com>, Kalle Valo <kvalo@kernel.org>,
-        Gregory Greenman <gregory.greenman@intel.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] iwlwifi: calib: Refactor iwl_calib_result usage for clarity
-Date:   Thu,  1 Sep 2022 13:45:58 -0700
-Message-Id: <20220901204558.2256458-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=4jlXXthmnZbjTZtiVrsRSCOXepCwvjAKaezedZTf+1M=;
+        b=DNd+kAbHwmcTgSoS90c8F5pBWgeEPVqygBR2zqN1DSeLHbkp/+r2ys/aKf+3/ghgpQ
+         Ebf1iiKObRX0E7g1JJPGX6BCAV7KmdUmT2OTxwiW8dTawdPGTyp6yKLcVepslS0O/k8E
+         3NwDs3w7R7MYqc7x1PI3L4eRod8qqFQuYdgg9NtIbwhZP4vpIKuUmRZm0Eq5aLFhHOEa
+         x8ci6xDAk7gQy+m4UR85VhdhMY6x8RqFLolFlzcMW9hO5N3c4F9iXPvOfXu+bEFPncWA
+         LxHuwV47p8Ksw5MJz10L+LDKUeUoHqtzYb9I3YkvT/ZY5K7y9fbqh9fkO0m6xtqAkaul
+         DhYA==
+X-Gm-Message-State: ACgBeo0vcNoZ9hwwVcDl2ylABgpRqaBjRT9YpCNNi2P2gmbUIr0ic07H
+        7HGQ8eLSWAt3YeMuKpqPsjj1rXdTliQQLjFIeMnVQw==
+X-Google-Smtp-Source: AA6agR6jgLiIHymOoujt2bkT4znI6OH8iUHG1AMhcO6J1HbWzop1c6DYcRaGmYydlzzhjkJk39ilU83dzTQekkbMduQ=
+X-Received: by 2002:a25:84cd:0:b0:67a:699e:4e84 with SMTP id
+ x13-20020a2584cd000000b0067a699e4e84mr20165239ybm.407.1662065673654; Thu, 01
+ Sep 2022 13:54:33 -0700 (PDT)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5095; h=from:subject; bh=dXk9FvP8mQV+OU7HzHs8EJnNRxX0VzSl2ssfNfi+TYY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjERoGa6dATzMBuf7tKR2Kr6iz+T5BgWqO5lKzP2H+ tXAHCbyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYxEaBgAKCRCJcvTf3G3AJnCEEA CD5yRk+eEyd95e31q9KVFxtiS/4qWSVLf7kkpCTuMDpudMz7nUxKvg7jTXy2XRiRkpqkwS+UxmsAC0 jrtzN1L/iWsq0KBqjH7uw8Qc0nLos6Ya42Jc+ylzkBMLywoVNW0r2a/JBaMNwCxakQa49fCeKKQpsK ufdhJ/oBicA6OA9NXeGWKu5Wlh/ADv+wvCxadKqd0xwppvmQacyvSjIzuV4choGTHjRuRRkG/BTUBf nVuRVuZ1JVPbwD7nZ+weIPI1WvAW8Ky+Xl8Ly6z72DM66Y2nbldOfg0cz6nnTFeHyZysLmhwT/DS6h YkijlAzekNR90QCKm0Qkn+O54AyhRrRZlGYWnXtObOihyPLgfJpBALGdkCo15y0wQ7HccpBHUItsRS vrAY5y1KYcsPG6pfGCEnNpmU8uqCmqoCTc2rfRc03/LUqsp06vfEi91++48DuBo3iPy0Ny4zeBfpv0 Vib/W0vHtvvuFk5JbC7syM6V25NKeSNzb8u8khHd/MQYJrN42LOWkQb8dQ9KgIHb7MDP5FcPES9K1R pPgRp5CqwkCx7b6QG7Z7apVES3Sv8380ZLHZHw2fdsxwxEEQQhfolh45K6mZS5HBHoUuMboyRDMYwD Dm5x1YW9ST0RxrJmoTfUiDOMy8M9lb0SZMkg9a2zpH8W/cz9BOfYNBov8iFg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20220901030610.1121299-1-keescook@chromium.org>
+ <20220901030610.1121299-2-keescook@chromium.org> <20220831201825.378d748d@kernel.org>
+ <202208312324.F2F8B28CA@keescook> <20220901124915.24ebc067@kernel.org>
+In-Reply-To: <20220901124915.24ebc067@kernel.org>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Thu, 1 Sep 2022 13:54:22 -0700
+Message-ID: <CANn89iLPLu=cP0zu5r+hsXudSjMzieWke=nh0YwccH1QJUnzog@mail.gmail.com>
+Subject: Re: [PATCH 1/2] netlink: Bounds-check nlmsg_len()
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        syzbot <syzkaller@googlegroups.com>,
+        Yajun Deng <yajun.deng@linux.dev>,
+        netdev <netdev@vger.kernel.org>, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, Oliver Hartkopp <socketcan@hartkopp.net>,
+        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE performing run-time destination buffer
-bounds checking for memcpy(), refactor the use of struct iwl_calib_result:
+On Thu, Sep 1, 2022 at 12:49 PM Jakub Kicinski <kuba@kernel.org> wrote:
+>
+> On Wed, 31 Aug 2022 23:27:08 -0700 Kees Cook wrote:
+> > This would catch corrupted values...
+> >
+> > Is the concern the growth in image size? The check_sub_overflow() isn't
+> > large at all -- it's just adding a single overflow bit test. The WARNs
+> > are heavier, but they're all out-of-line.
+>
+> It turns the most obvious function into a noodle bar :(
+>
+> Looking at this function in particular is quite useful, because
+> it clearly indicates that the nlmsg_len includes the header.
+>
+> How about we throw in a
+>
+>         WARN_ON_ONCE(nlh->nlmsg_len < NLMSG_HDRLEN ||
+>                      nlh->nlmsg_len > INT_MAX);
+>
+> but leave the actual calculation human readable C?
 
-- Have struct iwl_calib_result contain struct iwl_calib_cmd since
-  functions expect to operate on the "data" flex array in "cmd", which
-  follows the "hdr" member.
-- Switch argument passing around to use struct iwl_calib_cmd instead of
-  struct iwl_calib_hdr to prepare functions to see the "data" member.
-- Change iwl_calib_set()'s "len" argument to a size_t since it is always
-  unsigned and is normally receiving the output of sizeof().
-- Add an explicit length sanity check in iwl_calib_set().
-- Adjust the memcpy() to avoid copying across the now visible composite
-  flex array structure.
+This is inlined, and will add a lot of extra code. We are making the
+kernel slower at each release.
 
-This avoids the future run-time warning:
+What about letting fuzzers like syzbot find the potential issues ?
 
-  memcpy: detected field-spanning write (size 8) of single field "&res->hdr" (size 4)
-
-Cc: Luca Coelho <luciano.coelho@intel.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Johannes Berg <johannes.berg@intel.com>
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Reported-by: Andy Lavr <andy.lavr@gmail.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/wireless/intel/iwlwifi/dvm/agn.h  |  2 +-
- .../net/wireless/intel/iwlwifi/dvm/calib.c    | 22 ++++++++++---------
- .../net/wireless/intel/iwlwifi/dvm/ucode.c    |  8 +++----
- 3 files changed, 17 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/agn.h b/drivers/net/wireless/intel/iwlwifi/dvm/agn.h
-index 411a6f6638b4..fefaa414272b 100644
---- a/drivers/net/wireless/intel/iwlwifi/dvm/agn.h
-+++ b/drivers/net/wireless/intel/iwlwifi/dvm/agn.h
-@@ -112,7 +112,7 @@ int iwl_load_ucode_wait_alive(struct iwl_priv *priv,
- 			      enum iwl_ucode_type ucode_type);
- int iwl_send_calib_results(struct iwl_priv *priv);
- int iwl_calib_set(struct iwl_priv *priv,
--		  const struct iwl_calib_hdr *cmd, int len);
-+		  const struct iwl_calib_cmd *cmd, size_t len);
- void iwl_calib_free_results(struct iwl_priv *priv);
- int iwl_dump_nic_event_log(struct iwl_priv *priv, bool full_log,
- 			    char **buf);
-diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/calib.c b/drivers/net/wireless/intel/iwlwifi/dvm/calib.c
-index a11884fa254b..f488620d2844 100644
---- a/drivers/net/wireless/intel/iwlwifi/dvm/calib.c
-+++ b/drivers/net/wireless/intel/iwlwifi/dvm/calib.c
-@@ -19,8 +19,7 @@
- struct iwl_calib_result {
- 	struct list_head list;
- 	size_t cmd_len;
--	struct iwl_calib_hdr hdr;
--	/* data follows */
-+	struct iwl_calib_cmd cmd;
- };
- 
- struct statistics_general_data {
-@@ -43,12 +42,12 @@ int iwl_send_calib_results(struct iwl_priv *priv)
- 		int ret;
- 
- 		hcmd.len[0] = res->cmd_len;
--		hcmd.data[0] = &res->hdr;
-+		hcmd.data[0] = &res->cmd;
- 		hcmd.dataflags[0] = IWL_HCMD_DFL_NOCOPY;
- 		ret = iwl_dvm_send_cmd(priv, &hcmd);
- 		if (ret) {
- 			IWL_ERR(priv, "Error %d on calib cmd %d\n",
--				ret, res->hdr.op_code);
-+				ret, res->cmd.hdr.op_code);
- 			return ret;
- 		}
- 	}
-@@ -57,19 +56,22 @@ int iwl_send_calib_results(struct iwl_priv *priv)
- }
- 
- int iwl_calib_set(struct iwl_priv *priv,
--		  const struct iwl_calib_hdr *cmd, int len)
-+		  const struct iwl_calib_cmd *cmd, size_t len)
- {
- 	struct iwl_calib_result *res, *tmp;
- 
--	res = kmalloc(sizeof(*res) + len - sizeof(struct iwl_calib_hdr),
--		      GFP_ATOMIC);
-+	if (check_sub_overflow(len, sizeof(*cmd), &len))
-+		return -ENOMEM;
-+
-+	res = kmalloc(struct_size(res, cmd.data, len), GFP_ATOMIC);
- 	if (!res)
- 		return -ENOMEM;
--	memcpy(&res->hdr, cmd, len);
--	res->cmd_len = len;
-+	res->cmd = *cmd;
-+	memcpy(res->cmd.data, cmd->data, len);
-+	res->cmd_len = struct_size(cmd, data, len);
- 
- 	list_for_each_entry(tmp, &priv->calib_results, list) {
--		if (tmp->hdr.op_code == res->hdr.op_code) {
-+		if (tmp->cmd.hdr.op_code == res->cmd.hdr.op_code) {
- 			list_replace(&tmp->list, &res->list);
- 			kfree(tmp);
- 			return 0;
-diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/ucode.c b/drivers/net/wireless/intel/iwlwifi/dvm/ucode.c
-index 4b27a53d0bb4..bb13ca5d666c 100644
---- a/drivers/net/wireless/intel/iwlwifi/dvm/ucode.c
-+++ b/drivers/net/wireless/intel/iwlwifi/dvm/ucode.c
-@@ -356,18 +356,18 @@ static bool iwlagn_wait_calib(struct iwl_notif_wait_data *notif_wait,
- 			      struct iwl_rx_packet *pkt, void *data)
- {
- 	struct iwl_priv *priv = data;
--	struct iwl_calib_hdr *hdr;
-+	struct iwl_calib_cmd *cmd;
- 
- 	if (pkt->hdr.cmd != CALIBRATION_RES_NOTIFICATION) {
- 		WARN_ON(pkt->hdr.cmd != CALIBRATION_COMPLETE_NOTIFICATION);
- 		return true;
- 	}
- 
--	hdr = (struct iwl_calib_hdr *)pkt->data;
-+	cmd = (struct iwl_calib_cmd *)pkt->data;
- 
--	if (iwl_calib_set(priv, hdr, iwl_rx_packet_payload_len(pkt)))
-+	if (iwl_calib_set(priv, cmd, iwl_rx_packet_payload_len(pkt)))
- 		IWL_ERR(priv, "Failed to record calibration data %d\n",
--			hdr->op_code);
-+			cmd->hdr.op_code);
- 
- 	return false;
- }
--- 
-2.34.1
-
+DEBUG_NET_WARN_ON_ONCE(...);
