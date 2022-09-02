@@ -2,48 +2,49 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3502C6FA82
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Sep 2022 20:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606C3ECAAA1
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Sep 2022 20:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229806AbiIBUn6 (ORCPT
+        id S230199AbiIBUn7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Sep 2022 16:43:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56476 "EHLO
+        Fri, 2 Sep 2022 16:43:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229490AbiIBUn5 (ORCPT
+        with ESMTP id S230135AbiIBUn6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Sep 2022 16:43:57 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D61DFBA7B
-        for <linux-hardening@vger.kernel.org>; Fri,  2 Sep 2022 13:43:55 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id q63so2902726pga.9
+        Fri, 2 Sep 2022 16:43:58 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21DAFFC303
+        for <linux-hardening@vger.kernel.org>; Fri,  2 Sep 2022 13:43:56 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id m2so2980499pls.4
         for <linux-hardening@vger.kernel.org>; Fri, 02 Sep 2022 13:43:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=sZPJfqcD09tvFWjEDYBYtlverxsHoy9T0oKZRLJUCZw=;
-        b=RcxxWZ8vJO7OOe7TRyJWIB8EKufFUt/BANSI6FckcuAJSqV+5BqTwmzhzUmZEEr266
-         3ob18RJkj9OgboGXczxe2uro/5hu89u/onO4cqjWVwJzFGaQa+T8fVEvyIvoIAhgCWn2
-         yJdpFXGizjAZqAwR2Ebb2vBxehrWn+t4C9Rag=
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
+        bh=11eq7C02DkLHkN1mpM6ixOmAQBAalq2XQGnZ/0wFgUE=;
+        b=YekDNkaDEXx3tOwqZSpb28rswmxi6VukTDlHFMFbuzo4drdNePzLNrvB8BSgxPbwzr
+         Sw7t3v65kjlbaJcfVwI/9f7FEpNB5AvNv9+V0DRA6TDdmhZVKwto4ecN+D4Vakhbors0
+         O4diPe0rk0iti//UvXUxKbvepriRjKqo7GO44=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=sZPJfqcD09tvFWjEDYBYtlverxsHoy9T0oKZRLJUCZw=;
-        b=UBGUyQD9/UrBSLZG9Cgto33eRH3bfGqHowSdFyrebI7wp+FmBYLdyucQpvLQx+B/Zn
-         On3URkyQ/xbyn6EXUqQFmLpWuNwnqMUfuiDJo9zU58LJi6n2rmdblMdDygJCENwwrvCb
-         ZOA/rQHlxp/iI+wNU13U5OvUVORIe+cbVwfceiFI6+g8nYbuPh3QXyMDo5HiTndfmTjf
-         HCJg2ALi+T7/vu5ftgsv4Biu8okgrQq1nhMh4LwY6d5tTsJiVwRquufjETK/TJZtN9I4
-         4ZlvWzsTIaejn2GfQ6fqayB/RfJIOeZQ8UJW9oh/sK1akmXfPI1gUZWixSPB2P8ErY/g
-         PJmw==
-X-Gm-Message-State: ACgBeo0PF8QYxsC1siB9qXZ0GBwbm5D8+4+25AbJiQswCbu4oH/J6Dfv
-        URKJtfr7kxN5cHYYf05mZeR+VA==
-X-Google-Smtp-Source: AA6agR6nzUnv8s3tYa6U3qjvQ33SRYe9uYKj8nq7VQgVg32KbD23BCuTNZI27c470CsjPkNAaAa3Lg==
-X-Received: by 2002:a05:6a02:10e:b0:42a:b42b:5692 with SMTP id bg14-20020a056a02010e00b0042ab42b5692mr31618973pgb.67.1662151434670;
-        Fri, 02 Sep 2022 13:43:54 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=11eq7C02DkLHkN1mpM6ixOmAQBAalq2XQGnZ/0wFgUE=;
+        b=4ahmLeT6knGVRIPY4hnazjmA0jrf0z6uig2YrOLiZZbjlUP+sREXBEb9UOFihs1Hzl
+         kvLy71Vpyc3x5aJSRhwoTUf0ZEwZEfaJ9IdydyBjK1IFzfKBsNKH8u47C7/CGs8as2md
+         buZnFMO9kys6cUfHh2dXyqJCFRCNbAzHL3D/wiXIcQNtlDNjxcbp9e3kyNX5ai8lhV1i
+         wFMPx7kEy1VASEPLVkMY8YVyK0cNQZg7NggVcSZpuWH7DZb2d7YqGqphhVhBqZNgkA3b
+         gjZ9Py6VppT2+vXGms39v9mrUYj7eqkq/Cc//yizC2s4AAAigQmeTxj0d4mOrr5D4O2S
+         6kfQ==
+X-Gm-Message-State: ACgBeo3mmtaz+PeVt6p7hDZ9WRHoZDgCK3tJP/dthXXFrTXa2XDEny3k
+        eX3AG7YbBs2kO4r7NeyI2ttnyw==
+X-Google-Smtp-Source: AA6agR5EIIBM1SzL1l5QK6QislgosQ1gopreWOv6IaGskuQlsesx6oKdIhDCE2fIibxIAgqPEIXrqw==
+X-Received: by 2002:a17:903:11c7:b0:170:cde7:d24a with SMTP id q7-20020a17090311c700b00170cde7d24amr37435905plh.91.1662151435118;
+        Fri, 02 Sep 2022 13:43:55 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k1-20020aa79981000000b005380bbac1ccsm2261184pfh.167.2022.09.02.13.43.53
+        by smtp.gmail.com with ESMTPSA id j4-20020a170902da8400b0017297a6b39dsm2107978plx.265.2022.09.02.13.43.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 02 Sep 2022 13:43:53 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -58,6 +59,7 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Yury Norov <yury.norov@gmail.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Sander Vanheule <sander@svanheule.net>,
+        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
         Peter Zijlstra <peterz@infradead.org>,
         Josh Poimboeuf <jpoimboe@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -65,58 +67,172 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Eric Dumazet <edumazet@google.com>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Eric Biggers <ebiggers@google.com>,
-        Hannes Reinecke <hare@suse.de>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: [PATCH v2 0/3] Fix FORTIFY=y UBSAN_LOCAL_BOUNDS=y
-Date:   Fri,  2 Sep 2022 13:43:48 -0700
-Message-Id: <20220902204351.2521805-1-keescook@chromium.org>
+        Hannes Reinecke <hare@suse.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/3] fortify: Add KUnit test for FORTIFY_SOURCE internals
+Date:   Fri,  2 Sep 2022 13:43:50 -0700
+Message-Id: <20220902204351.2521805-3-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220902204351.2521805-1-keescook@chromium.org>
+References: <20220902204351.2521805-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1524; h=from:subject; bh=IYVjOR693wr8XRnktZsErNSDDWNwlRQ3EaApRtdh/Ps=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjEmsG2nNhyhGivRpgongJJqo/B6A2cCOPihZgYFON NG5cf02JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYxJrBgAKCRCJcvTf3G3AJiOpD/ 0TvgWPk2SjA9DTyp3AA0HHfWkPf/604NIKqre/iSAlX/cXFYeGXjO3+YiDA1lVKR+XrEHE6l0+Ux11 8AfFFoWv30iwq3A1CfgOdK2615+orGpMJ9SjFeh4kGndvKrUUQcbZ7edpo9WqTS3csverQhhb7Nklx tvH2nCRmX3lbTX095rDL2abW3MhDF2wciYNB/t7nNkWUAIrcUjRe1KvvC+uxxfNoF39BIk4W2iVkVH 7oKsv6Hpyc9kdIXR9NNk7gVywdKl5nAIc8vGc2U8ej0d+QA4bqwYLM0eY8/FhMKjnskTTjW5CWICBh cSqDPr8SK9tKuCF1c4iwlxHs0xnEbzi0nmBSkGwwJEawG+CX06IkJS5a15TBshfD/+e5LfvQQ0oG3v NlwYZtY19lhohbQq3xWg7UD+ex9ivYO9vryff8C5PpuwaDgjbgNxxZHC5vPHTjlBWcp6GapsCR9NAW CC71svMdDFe8Ibn2rlxvOvnvCL0ad6YIYedLojauVDwmYBpnMaz96i37hfkiVFAIvTjmz3N6iGvZXg HH+5gbwr9zA+InmMJNeIBb/r+X4PsMJGKNbWM9JOpJHSB+FO7WXr5QuaHYYFCtbFURg3WaU9p6bOh7 /VGKHEb2X4ZdRwds9X+uRRkWQLXXKYB16TLPBLXQZmFxEZonzvYP8bEfVidg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5052; h=from:subject; bh=EhBou5R7iywWQm92DBW52vtC8yIHPBoPeRV2MePXGPs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjEmsHkVjN+RQcAgkUEMuTHUDCp68OjSiaM44cDvJo 0E3u/CSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYxJrBwAKCRCJcvTf3G3AJmN5EA Cd3Ipn2P0PeDGd5LAmQjiUDnlS0Rd4tQKQ4Hpmk59gXWJs4yTG9tpBJBVeWrRgWXVGNEaa1b3GOWzU TSj/pa/BUlkoIGHep9AuZHfO97eaDz8d5RY9K6QSd/RmE+oZ7netglOF7KQxHvAeyTseNR+xkEeuLc Y8GxSowoYzISzgA3+giN4pHHZ9D+ekb7wk+L/YR/wYP1MF9OLvz8Y8AMk76urAPTp381TfOhW+p81S jI53/LMHNwGwIWxBCM3b/+6582Zpu2916LHtYdx+oIn7HyApPNyZeGadvilheiUVFLzG93/wD/kvLR l4ZnJzecvKIr/kAVRCpmk3t2CXc4ONOkiyvTAdV4NwLeJa3HJY7AfBePRfZ8C2kSDqq6uVMBbXvtUV dC5OrQlIUIxHOs3HFTr3ZC/K7LRzPfRGpVeq8DkCaQuwKmQB5s5qkKOI2jmvr28hrGv6JHS6eAHHSE E4KZaWI3/blzV/kUHE3k8DNaO2B7lLnkk1ypltg/uWJzw4odve2oRl24DBGYDzU0bkK4ZdRJLMDfju cX8sQU+3Dt8iVag+HGm001Y9aLpFZhjfSwrDCErbmgzXTEMwOgD2PcSquny73x2ncADSz4nWuEwUtB SMEIa7Zh02gVoAKaBia2CgBDLpYddX6HlaGfh5Qy47K5Ko/Ftxs7YSJR4fuA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With CONFIG_FORTIFY=y and CONFIG_UBSAN_LOCAL_BOUNDS=y enabled, we
-observe a runtime panic while running Android's Compatibility Test
-Suite's (CTS) android.hardware.input.cts.tests. This is stemming from a
-strlen() call in hidinput_allocate().
+Add lib/fortify_kunit.c KUnit test for checking the expected behavioral
+characteristics of FORTIFY_SOURCE internals.
 
-__builtin_object_size(str, 0 or 1) has interesting behavior for C
-strings when str is runtime dependent, and all possible values are known
-at compile time; it evaluates to the maximum of those sizes. This causes
-UBSAN_LOCAL_BOUNDS to insert faults for the smaller values, which we
-trip at runtime.
-
-Patch 1 is the actual fix, using a 0-index __builtin_constant_p() check
-to short-circuit the runtime check.
-Patch 2 is a KUnit test to validate this behavior going forward.
-Patch 3 is is a cosmetic cleanup to use SIZE_MAX instead of (size_t)-1
-
--Kees
-
-v2:
- - different solution
- - add KUnit test
- - expand scope of cosmetic cleanup
-v1: https://lore.kernel.org/lkml/20220830205309.312864-1-ndesaulniers@google.com
-
-Kees Cook (3):
-  fortify: Fix __compiletime_strlen() under UBSAN_BOUNDS_LOCAL
-  fortify: Add KUnit test for FORTIFY_SOURCE internals
-  fortify: Use SIZE_MAX instead of (size_t)-1
-
- MAINTAINERS                    |  1 +
- include/linux/fortify-string.h | 29 ++++++-------
- lib/Kconfig.debug              |  9 ++++
- lib/Makefile                   |  1 +
- lib/fortify_kunit.c            | 77 ++++++++++++++++++++++++++++++++++
- 5 files changed, 103 insertions(+), 14 deletions(-)
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Tom Rix <trix@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Cc: David Gow <davidgow@google.com>
+Cc: Yury Norov <yury.norov@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Sander Vanheule <sander@svanheule.net>
+Cc: linux-hardening@vger.kernel.org
+Cc: llvm@lists.linux.dev
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ MAINTAINERS         |  1 +
+ lib/Kconfig.debug   |  9 ++++++
+ lib/Makefile        |  1 +
+ lib/fortify_kunit.c | 77 +++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 88 insertions(+)
  create mode 100644 lib/fortify_kunit.c
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9d7f64dc0efe..640115472199 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8002,6 +8002,7 @@ L:	linux-hardening@vger.kernel.org
+ S:	Supported
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
+ F:	include/linux/fortify-string.h
++F:	lib/fortify_kunit.c
+ F:	lib/test_fortify/*
+ F:	scripts/test_fortify.sh
+ K:	\b__NO_FORTIFY\b
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 36455953d306..1f267c0ddffd 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2542,6 +2542,15 @@ config STACKINIT_KUNIT_TEST
+ 	  CONFIG_GCC_PLUGIN_STRUCTLEAK, CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF,
+ 	  or CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL.
+ 
++config FORTIFY_KUNIT_TEST
++	tristate "Test fortified str*() and mem*() function internals at runtime" if !KUNIT_ALL_TESTS
++	depends on KUNIT && FORTIFY_SOURCE
++	default KUNIT_ALL_TESTS
++	help
++	  Builds unit tests for checking internals of FORTIFY_SOURCE as used
++	  by the str*() and mem*() family of functions. For testing runtime
++	  traps of FORTIFY_SOURCE, see LKDTM's "FORTIFY_*" tests.
++
+ config TEST_UDELAY
+ 	tristate "udelay test driver"
+ 	help
+diff --git a/lib/Makefile b/lib/Makefile
+index f545140ed9e7..4ee1ceae945a 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -381,6 +381,7 @@ obj-$(CONFIG_IS_SIGNED_TYPE_KUNIT_TEST) += is_signed_type_kunit.o
+ obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow_kunit.o
+ CFLAGS_stackinit_kunit.o += $(call cc-disable-warning, switch-unreachable)
+ obj-$(CONFIG_STACKINIT_KUNIT_TEST) += stackinit_kunit.o
++obj-$(CONFIG_FORTIFY_KUNIT_TEST) += fortify_kunit.o
+ 
+ obj-$(CONFIG_GENERIC_LIB_DEVMEM_IS_ALLOWED) += devmem_is_allowed.o
+ 
+diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
+new file mode 100644
+index 000000000000..4d7930b65107
+--- /dev/null
++++ b/lib/fortify_kunit.c
+@@ -0,0 +1,77 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Runtime test cases for CONFIG_FORTIFY_SOURCE that aren't expected to
++ * Oops th kernel on success. (For those, see drivers/misc/lkdtm/fortify.c)
++ *
++ * For corner cases with UBSAN, try testing with:
++ *
++ * ./tools/testing/kunit/kunit.py run --arch=x86_64 \
++ *	--kconfig_add CONFIG_FORTIFY_SOURCE=y \
++ *	--kconfig_add CONFIG_UBSAN=y \
++ *	--kconfig_add CONFIG_UBSAN_TRAP=y \
++ *	--kconfig_add CONFIG_UBSAN_BOUNDS=y \
++ *	--kconfig_add CONFIG_UBSAN_LOCAL_BOUNDS=y \
++ *	--make_options LLVM=1 fortify
++ */
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <kunit/test.h>
++#include <linux/string.h>
++#include <linux/init.h>
++
++static const char array_of_10[] = "this is 10";
++static const char *ptr_of_11 = "this is 11!";
++static char array_unknown[] = "compiler thinks I might change";
++
++static void known_sizes_test(struct kunit *test)
++{
++	KUNIT_EXPECT_EQ(test, __compiletime_strlen("88888888"), 8);
++	KUNIT_EXPECT_EQ(test, __compiletime_strlen(array_of_10), 10);
++	KUNIT_EXPECT_EQ(test, __compiletime_strlen(ptr_of_11), 11);
++
++	KUNIT_EXPECT_EQ(test, __compiletime_strlen(array_unknown), SIZE_MAX);
++	/* Externally defined and dynamically sized string pointer: */
++	KUNIT_EXPECT_EQ(test, __compiletime_strlen(saved_command_line), SIZE_MAX);
++}
++
++/* This is volatile so the optimizer can't perform DCE below. */
++static volatile int pick;
++
++/* Not inline to keep optimizer from figuring out which string we want. */
++static noinline size_t want_minus_one(int pick)
++{
++	const char *str;
++
++	switch (pick) {
++	case 1:
++		str = "4444";
++		break;
++	case 2:
++		str = "333";
++		break;
++	default:
++		str = "1";
++		break;
++	}
++	return __compiletime_strlen(str);
++}
++
++static void control_flow_split_test(struct kunit *test)
++{
++	KUNIT_EXPECT_EQ(test, want_minus_one(pick), SIZE_MAX);
++}
++
++static struct kunit_case fortify_test_cases[] = {
++	KUNIT_CASE(known_sizes_test),
++	KUNIT_CASE(control_flow_split_test),
++	{}
++};
++
++static struct kunit_suite fortify_test_suite = {
++	.name = "fortify",
++	.test_cases = fortify_test_cases,
++};
++
++kunit_test_suite(fortify_test_suite);
++
++MODULE_LICENSE("GPL");
 -- 
 2.34.1
 
