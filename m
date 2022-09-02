@@ -2,122 +2,98 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E73CC38145
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Sep 2022 01:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B27F3ECAAD2
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Sep 2022 03:20:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230411AbiIBBxm (ORCPT
+        id S235063AbiIBDUv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Sep 2022 21:53:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52842 "EHLO
+        Thu, 1 Sep 2022 23:20:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230091AbiIBBxl (ORCPT
+        with ESMTP id S229804AbiIBDUl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Sep 2022 21:53:41 -0400
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D05EA927A;
-        Thu,  1 Sep 2022 18:53:40 -0700 (PDT)
-Received: by mail-pg1-x52c.google.com with SMTP id s206so723263pgs.3;
-        Thu, 01 Sep 2022 18:53:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=AO+iD8/ND+0+YgmXrFc7bXRlSy/yl/dmt5F+NlX7ri0=;
-        b=op8Taa6drdciJKjFm46xGztxaYxY6UY11Y7IBFgfd/2C+pbRhmFlz8EH48Lnh1qa9p
-         KVxI2NAXssheZNNVVEHBRxoIPc0QPTyfZZmccm4rn+ZmVl8XbyKZJIlk2IunXL6EjflQ
-         uPQ1owHyBpNIqa/h5GCi9lwOtiEF1Dxwt08TQtKFHcyNP5223g25IyynhgBFzvTBi8tB
-         YwClvnCGR7UUgPpJuSslqwXNPXDQf0UO2OTR1PJyhPerz02SM5bbmENgQa0R0Yw18R1D
-         FQ/YSKFciCu8nCxwtqf8imOiPpxGDLP3C17kAMGCcG0iB0uFzO/JTu8nMsGEZMMjCsHk
-         Gf5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=AO+iD8/ND+0+YgmXrFc7bXRlSy/yl/dmt5F+NlX7ri0=;
-        b=YpXjZ10F3Fha0oOyav4J86sWMeOTe2h2UPaP+BSsDsbV595VJX920cfZppqy888Ipl
-         RiU/i/lXlOhw/vHavApCsCKyMB9ItyznlQyTL2nvMvdBZ/B2JL3KFMYevGf/QptTc+UU
-         FkxcQENWuc9E16u+iQo2xnGjplwLUvNdPEmdM4QZ5+h5fteF73niebDbCbWurgmS7aGf
-         OH7h7jjXPFCnfP11RnSktOuhY+bGWqhdy7Or0s6NETSLtvzXJj6ROWmkyyahybhxnCGz
-         rmPbtBbV57JgOOizq+Q8mWKE2SW7m2h8yD4wQtCfGO2IyjPVYLVGVpdajvdiqL6vXJCp
-         I8pQ==
-X-Gm-Message-State: ACgBeo3KsVAZCJqIBNZymlRt60GeEQkf9UtlaqcY2cX5ec8nX64zpPRM
-        PD/rJ/dlwO37yNPLEJYXuvQ=
-X-Google-Smtp-Source: AA6agR55VB8kobBINExhpqw6xUyQgHx5tu5ajEBmpC+2oGJQSX7q6Q+GJVQkNw2f21a3Zb1yKew05w==
-X-Received: by 2002:a62:b614:0:b0:537:6d2:85e0 with SMTP id j20-20020a62b614000000b0053706d285e0mr33826053pff.40.1662083619775;
-        Thu, 01 Sep 2022 18:53:39 -0700 (PDT)
-Received: from [192.168.43.80] (subs28-116-206-12-57.three.co.id. [116.206.12.57])
-        by smtp.gmail.com with ESMTPSA id n10-20020a170902d2ca00b001755ac7dd0asm232158plc.290.2022.09.01.18.53.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Sep 2022 18:53:39 -0700 (PDT)
-Message-ID: <88e8b096-aa04-2447-cb21-a83b5e57e963@gmail.com>
-Date:   Fri, 2 Sep 2022 08:53:34 +0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH v2] string: Introduce strtomem() and strtomem_pad()
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Len Baker <len.baker@gmx.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Francis Laniel <laniel_francis@privacyrequired.com>,
+        Thu, 1 Sep 2022 23:20:41 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 424C62DD;
+        Thu,  1 Sep 2022 20:20:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id F28A9B82980;
+        Fri,  2 Sep 2022 03:20:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1C0DC433C1;
+        Fri,  2 Sep 2022 03:20:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662088836;
+        bh=YCJr9iHj+jHwZFgouCTxuRVFKnFA7bJfiUzOTkjxtlU=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=dYSc+wLxPM3Yxq6Tepm+O2b5CE0LnE/uLcuB3UF7dpSrUCNiaq1IjDnAKB3j5h6Od
+         kde0sBLDinZONd4n/Gd2VmnhXEUL8d2coEnSIqCEye2PPPhtpgvRy+JClBsqQ5yD3B
+         uF2QlkmbEr714wxnl/dzRNK95n5BZunlBWJ+bDTJq8br8+Lj1hMlfXwxko4d4Xb7Bv
+         KU5pvdluBstPOvjtNT2SFQYC1zrftKAuMoQhgjnz07Rke5QZcpPvFNtRCcM0XhRDpN
+         kw7U7gYdianibdtrotsZJbh/dB2Tb3elNYjYf+AQxjaD/1vJmD6XhP2IC+uISPj2Mj
+         zhsHiqcmU66AQ==
+From:   Kalle Valo <kvalo@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Luca Coelho <luciano.coelho@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Andy Lavr <andy.lavr@gmail.com>,
+        Gregory Greenman <gregory.greenman@intel.com>,
+        Eric Dumazet <edumazet@google.com>,
         Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20220901190952.2229696-1-keescook@chromium.org>
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <20220901190952.2229696-1-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] iwlwifi: calib: Refactor iwl_calib_result usage for clarity
+References: <20220901204558.2256458-1-keescook@chromium.org>
+Date:   Fri, 02 Sep 2022 06:20:26 +0300
+In-Reply-To: <20220901204558.2256458-1-keescook@chromium.org> (Kees Cook's
+        message of "Thu, 1 Sep 2022 13:45:58 -0700")
+Message-ID: <87ilm6ea2t.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 9/2/22 02:09, Kees Cook wrote:
-> One of the "legitimate" uses of strncpy() is copying a NUL-terminated
-> string into a fixed-size non-NUL-terminated character array. To avoid
-> the weaknesses and ambiguity of intent when using strncpy(), provide
-> replacement functions that explicitly distinguish between trailing
-> padding and not, and require the destination buffer size be discoverable
-> by the compiler.
->> For example:
-> 
-> struct obj {
-> 	int foo;
-> 	char small[4] __nonstring;
-> 	char big[8] __nonstring;
-> 	int bar;
-> };
-> 
-> struct obj p;
-> 
-> /* This will truncate to 4 chars with no trailing NUL */
-> strncpy(p.small, "hello", sizeof(p.small));
-> /* p.small contains 'h', 'e', 'l', 'l' */
-> 
-> /* This will NUL pad to 8 chars. */
-> strncpy(p.big, "hello", sizeof(p.big));
-> /* p.big contains 'h', 'e', 'l', 'l', 'o', '\0', '\0', '\0' */
-> 
-> When the "__nonstring" attributes are missing, the intent of the
-> programmer becomes ambiguous for whether the lack of a trailing NUL
-> in the p.small copy is a bug. Additionally, it's not clear whether
-> the trailing padding in the p.big copy is _needed_. Both cases
-> become unambiguous with:
-> 
-> strtomem(p.small, "hello");
-> strtomem_pad(p.big, "hello", 0);
-> 
-> See also https://github.com/KSPP/linux/issues/90
-> 
+Kees Cook <keescook@chromium.org> writes:
 
-Should'nt strscpy() do the job?
+> In preparation for FORTIFY_SOURCE performing run-time destination buffer
+> bounds checking for memcpy(), refactor the use of struct iwl_calib_result:
+>
+> - Have struct iwl_calib_result contain struct iwl_calib_cmd since
+>   functions expect to operate on the "data" flex array in "cmd", which
+>   follows the "hdr" member.
+> - Switch argument passing around to use struct iwl_calib_cmd instead of
+>   struct iwl_calib_hdr to prepare functions to see the "data" member.
+> - Change iwl_calib_set()'s "len" argument to a size_t since it is always
+>   unsigned and is normally receiving the output of sizeof().
+> - Add an explicit length sanity check in iwl_calib_set().
+> - Adjust the memcpy() to avoid copying across the now visible composite
+>   flex array structure.
+>
+> This avoids the future run-time warning:
+>
+>   memcpy: detected field-spanning write (size 8) of single field "&res->hdr" (size 4)
+>
+> Cc: Luca Coelho <luciano.coelho@intel.com>
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Johannes Berg <johannes.berg@intel.com>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Reported-by: Andy Lavr <andy.lavr@gmail.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Gregory, as this fixes a future warning can I take this directly to
+wireless-next?
 
 -- 
-An old man doll... just what I always wanted! - Clara
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
