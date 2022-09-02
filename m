@@ -2,102 +2,121 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E41ECAAD5
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Sep 2022 15:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3502C6FA82
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Sep 2022 20:43:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236739AbiIBPuT (ORCPT
+        id S229806AbiIBUn6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Sep 2022 11:50:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57778 "EHLO
+        Fri, 2 Sep 2022 16:43:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236904AbiIBPty (ORCPT
+        with ESMTP id S229490AbiIBUn5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Sep 2022 11:49:54 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C6F5280A
-        for <linux-hardening@vger.kernel.org>; Fri,  2 Sep 2022 08:40:11 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id z2so3237613edc.1
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Sep 2022 08:40:11 -0700 (PDT)
+        Fri, 2 Sep 2022 16:43:57 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D61DFBA7B
+        for <linux-hardening@vger.kernel.org>; Fri,  2 Sep 2022 13:43:55 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id q63so2902726pga.9
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Sep 2022 13:43:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=ZZViECBQIPeE26/U6PwpBaWGPbv4WEHDCGVI4qLmJb4=;
-        b=Hng+Qdrwf6aoRL5qjOrDdX9dneBrnXK9dEZGpGEBFIBlyH39qCfY8ZchTBiQ96Q0QZ
-         mo1ow8E2D91zJz9YHExUeoBbqrfgZfUkW/zpThocnMs6/uZURRu3lnitylvOlee0a2YS
-         lKyPusHcdynwJfmX3iErtGSVR6WZ0pz0wERuQ+gOVoitU+TXKIMwyvIXxJ6kk3/xB1YN
-         jVYY2LL5WiN4duAlJTouZHUSOGLWZAnS3r024F5fHcDu6W/sH2j8IaYiIBvia+Jl5ABU
-         AzAcOSRqtsQoQZ3ygVlgucKeGyZsGK/jQqOSKFjZ+4s4BXtjIAoDokHMGxn5B73siZhJ
-         rs6w==
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=sZPJfqcD09tvFWjEDYBYtlverxsHoy9T0oKZRLJUCZw=;
+        b=RcxxWZ8vJO7OOe7TRyJWIB8EKufFUt/BANSI6FckcuAJSqV+5BqTwmzhzUmZEEr266
+         3ob18RJkj9OgboGXczxe2uro/5hu89u/onO4cqjWVwJzFGaQa+T8fVEvyIvoIAhgCWn2
+         yJdpFXGizjAZqAwR2Ebb2vBxehrWn+t4C9Rag=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=ZZViECBQIPeE26/U6PwpBaWGPbv4WEHDCGVI4qLmJb4=;
-        b=kexyHYNPlzdZCxNKEItHmT6pnkhXEFg8FlUumglpf5pfIVCYZTOg4WnEsPPIAklDje
-         Lgu3lnxcODEOA8pWw3+C0XA3cGvezHxaahleuBme1Rjb0eVknPjmAU5tha4Ogf9qUwy1
-         9qXECzxecA5bvYtiSTTdYyL+j/fijX6DnHHl1qpkKdM8p4mFd3W8wwr8GUhJM5ymkI3J
-         Nn3WcL1h01uRgfuBwESxN9MM0zwtdGZhRaV3p0WMeerubAYsFZlG24oH125ZYXit/umP
-         TfZeq6V5HIVvDsGZkTFnREvJjA3nhd6mazjls58cTlOCOIpfmm3tAmOaD0EZoP0cGYg9
-         s9rw==
-X-Gm-Message-State: ACgBeo0pwk5BtMgTlxgy2boOy+ZZePo6q2R18Y22NWas6zDS8Se9nSVw
-        OhKTDUeC5ZL7aWKBn2JAWKOatm8i9dWkW/HbadGiJw==
-X-Google-Smtp-Source: AA6agR4xxlZQqkE3iOmxpnuJDnHFAJqpyc3JD/HdUdWEisfmE3Z6rtHXdERjcLrMLI5v9gj6USv11x2Cp3VoRzACFOg=
-X-Received: by 2002:a05:6402:3227:b0:448:706c:185d with SMTP id
- g39-20020a056402322700b00448706c185dmr20812932eda.357.1662133205628; Fri, 02
- Sep 2022 08:40:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220830233129.30610-1-samitolvanen@google.com>
- <YxEh+pLyOyPalW1u@dev-arch.thelio-3990X> <CABCJKucP5nXGiCTTCEPUGYo5Z9A9qaQkJ6_kXTOfw-o-=TYH0g@mail.gmail.com>
- <YxG2DUEBnIpAMKF2@hirez.programming.kicks-ass.net>
-In-Reply-To: <YxG2DUEBnIpAMKF2@hirez.programming.kicks-ass.net>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Fri, 2 Sep 2022 08:39:29 -0700
-Message-ID: <CABCJKudRywi7FgNOb8V7vmS39k59fbO1D3dwfmMZmBpApRX5eQ@mail.gmail.com>
-Subject: Re: [PATCH v4 00/21] KCFI support
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, X86 ML <x86@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=sZPJfqcD09tvFWjEDYBYtlverxsHoy9T0oKZRLJUCZw=;
+        b=UBGUyQD9/UrBSLZG9Cgto33eRH3bfGqHowSdFyrebI7wp+FmBYLdyucQpvLQx+B/Zn
+         On3URkyQ/xbyn6EXUqQFmLpWuNwnqMUfuiDJo9zU58LJi6n2rmdblMdDygJCENwwrvCb
+         ZOA/rQHlxp/iI+wNU13U5OvUVORIe+cbVwfceiFI6+g8nYbuPh3QXyMDo5HiTndfmTjf
+         HCJg2ALi+T7/vu5ftgsv4Biu8okgrQq1nhMh4LwY6d5tTsJiVwRquufjETK/TJZtN9I4
+         4ZlvWzsTIaejn2GfQ6fqayB/RfJIOeZQ8UJW9oh/sK1akmXfPI1gUZWixSPB2P8ErY/g
+         PJmw==
+X-Gm-Message-State: ACgBeo0PF8QYxsC1siB9qXZ0GBwbm5D8+4+25AbJiQswCbu4oH/J6Dfv
+        URKJtfr7kxN5cHYYf05mZeR+VA==
+X-Google-Smtp-Source: AA6agR6nzUnv8s3tYa6U3qjvQ33SRYe9uYKj8nq7VQgVg32KbD23BCuTNZI27c470CsjPkNAaAa3Lg==
+X-Received: by 2002:a05:6a02:10e:b0:42a:b42b:5692 with SMTP id bg14-20020a056a02010e00b0042ab42b5692mr31618973pgb.67.1662151434670;
+        Fri, 02 Sep 2022 13:43:54 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k1-20020aa79981000000b005380bbac1ccsm2261184pfh.167.2022.09.02.13.43.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Sep 2022 13:43:53 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Tom Rix <trix@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+        David Gow <davidgow@google.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Sander Vanheule <sander@svanheule.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Isabella Basso <isabbasso@riseup.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Eric Biggers <ebiggers@google.com>,
+        Hannes Reinecke <hare@suse.de>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
         llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH v2 0/3] Fix FORTIFY=y UBSAN_LOCAL_BOUNDS=y
+Date:   Fri,  2 Sep 2022 13:43:48 -0700
+Message-Id: <20220902204351.2521805-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1524; h=from:subject; bh=IYVjOR693wr8XRnktZsErNSDDWNwlRQ3EaApRtdh/Ps=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjEmsG2nNhyhGivRpgongJJqo/B6A2cCOPihZgYFON NG5cf02JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYxJrBgAKCRCJcvTf3G3AJiOpD/ 0TvgWPk2SjA9DTyp3AA0HHfWkPf/604NIKqre/iSAlX/cXFYeGXjO3+YiDA1lVKR+XrEHE6l0+Ux11 8AfFFoWv30iwq3A1CfgOdK2615+orGpMJ9SjFeh4kGndvKrUUQcbZ7edpo9WqTS3csverQhhb7Nklx tvH2nCRmX3lbTX095rDL2abW3MhDF2wciYNB/t7nNkWUAIrcUjRe1KvvC+uxxfNoF39BIk4W2iVkVH 7oKsv6Hpyc9kdIXR9NNk7gVywdKl5nAIc8vGc2U8ej0d+QA4bqwYLM0eY8/FhMKjnskTTjW5CWICBh cSqDPr8SK9tKuCF1c4iwlxHs0xnEbzi0nmBSkGwwJEawG+CX06IkJS5a15TBshfD/+e5LfvQQ0oG3v NlwYZtY19lhohbQq3xWg7UD+ex9ivYO9vryff8C5PpuwaDgjbgNxxZHC5vPHTjlBWcp6GapsCR9NAW CC71svMdDFe8Ibn2rlxvOvnvCL0ad6YIYedLojauVDwmYBpnMaz96i37hfkiVFAIvTjmz3N6iGvZXg HH+5gbwr9zA+InmMJNeIBb/r+X4PsMJGKNbWM9JOpJHSB+FO7WXr5QuaHYYFCtbFURg3WaU9p6bOh7 /VGKHEb2X4ZdRwds9X+uRRkWQLXXKYB16TLPBLXQZmFxEZonzvYP8bEfVidg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 2, 2022 at 12:51 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Sep 01, 2022 at 05:33:29PM -0700, Sami Tolvanen wrote:
->
-> > > I do see a few new objtool warnings as well:
-> > >
-> > > vmlinux.o: warning: objtool: apply_relocate_add+0x34: relocation to !ENDBR: memcpy+0x0
-> > > vmlinux.o: warning: objtool: ___ksymtab+__memcpy+0x0: data relocation to !ENDBR: memcpy+0x0
-> > > vmlinux.o: warning: objtool: ___ksymtab+memcpy+0x0: data relocation to !ENDBR: memcpy+0x0
-> >
-> > That's interesting. I can only reproduce this warning with
-> > allmodconfig+LTO, even though the relocation exists in all builds (the
-> > code makes an indirect call to memcpy) and memcpy (aliased to
-> > __memcpy) doesn't start with endbr. I'll have to take a closer look at
-> > why this warning only appears with LTO.
->
-> From just looking at the patches I'd say patch #19 breaks it. IIRC you
-> forgot to make the SYM_TYPED_FUNC things emit ENDBR.
->
-> Look at how x86/asm/linkage.h is overriding SYM_FUNC_START*().
+With CONFIG_FORTIFY=y and CONFIG_UBSAN_LOCAL_BOUNDS=y enabled, we
+observe a runtime panic while running Android's Compatibility Test
+Suite's (CTS) android.hardware.input.cts.tests. This is stemming from a
+strlen() call in hidinput_allocate().
 
-Yes, that's the reason, I'll fix this next week. I was mostly
-wondering why I'm not getting this warning with my other test configs,
-but it looks like IBT isn't enabled by default.
+__builtin_object_size(str, 0 or 1) has interesting behavior for C
+strings when str is runtime dependent, and all possible values are known
+at compile time; it evaluates to the maximum of those sizes. This causes
+UBSAN_LOCAL_BOUNDS to insert faults for the smaller values, which we
+trip at runtime.
 
-Sami
+Patch 1 is the actual fix, using a 0-index __builtin_constant_p() check
+to short-circuit the runtime check.
+Patch 2 is a KUnit test to validate this behavior going forward.
+Patch 3 is is a cosmetic cleanup to use SIZE_MAX instead of (size_t)-1
+
+-Kees
+
+v2:
+ - different solution
+ - add KUnit test
+ - expand scope of cosmetic cleanup
+v1: https://lore.kernel.org/lkml/20220830205309.312864-1-ndesaulniers@google.com
+
+Kees Cook (3):
+  fortify: Fix __compiletime_strlen() under UBSAN_BOUNDS_LOCAL
+  fortify: Add KUnit test for FORTIFY_SOURCE internals
+  fortify: Use SIZE_MAX instead of (size_t)-1
+
+ MAINTAINERS                    |  1 +
+ include/linux/fortify-string.h | 29 ++++++-------
+ lib/Kconfig.debug              |  9 ++++
+ lib/Makefile                   |  1 +
+ lib/fortify_kunit.c            | 77 ++++++++++++++++++++++++++++++++++
+ 5 files changed, 103 insertions(+), 14 deletions(-)
+ create mode 100644 lib/fortify_kunit.c
+
+-- 
+2.34.1
+
