@@ -2,56 +2,57 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56139ECAAA1
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Sep 2022 20:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AB5C6FA82
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Sep 2022 20:56:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230362AbiIBUwm (ORCPT
+        id S229876AbiIBU4p (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Sep 2022 16:52:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45042 "EHLO
+        Fri, 2 Sep 2022 16:56:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230352AbiIBUwk (ORCPT
+        with ESMTP id S229484AbiIBU4o (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Sep 2022 16:52:40 -0400
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C185CFE35C
-        for <linux-hardening@vger.kernel.org>; Fri,  2 Sep 2022 13:52:38 -0700 (PDT)
-Received: by mail-pg1-x530.google.com with SMTP id 73so2952492pga.1
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Sep 2022 13:52:38 -0700 (PDT)
+        Fri, 2 Sep 2022 16:56:44 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7A7FD2B10
+        for <linux-hardening@vger.kernel.org>; Fri,  2 Sep 2022 13:56:43 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id v4so2919910pgi.10
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Sep 2022 13:56:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=Xrq0xaJscCe2LFXho6Z5SMg88GSPjvsfWB0TByS7koM=;
-        b=dW6kpbSaQbTaWbefqRhfls6POnB8wBk8wGzkDF9+nJ5/pcLz8aoEXVHn1hfwQ8qSmI
-         gTUfl8RmLPi4xMR/CEUEejkZt9/CrkSBMb1JENOoRm/X6w2XKKYXhRg/L5kU7h+bf6R/
-         dMY+E+nekbCc6QVsSHSYwXdscdb6ETn1htOiI=
+        bh=NkWBtoQgaFgitib08Hogz597NWzZXTmetYtlLX3bjJM=;
+        b=BuT9IDve2TGSeyV2xVrLtW1biKQx/mFIgbGZypdATS1Z7uDnehqhR3zvfRFwE85N2l
+         geqNC5btX4GgaZhP8ikwsupUe67WhX8d6hDyKdw4uS9NunFY0rcsPCP2ffiqH8jSx3yb
+         iJ+hq0Yo6Va/+sDjrKL6o2Vt9gNtqFRmK+zEo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=Xrq0xaJscCe2LFXho6Z5SMg88GSPjvsfWB0TByS7koM=;
-        b=ri5fie9VzbQiSw1S6oTL+/VG+WGK7pyJijAmDpcDAGJTdG4mhVvk7NHEorn8dN3KUC
-         xuuX92hV/rz9rqpNKtXSVJdnTKknRD9OlDAKN/4un8BJYQZ2OEAYVbOQMbbRp3+6auLM
-         eQF3UFagPdpu3wMGOtLVdkv9I51VEugyJNM4Vb5n9Zp1nE1mx2Zheb0Tua40lMCRLOoo
-         i7pO+/12nsoEcEzinGgFZPRpUk9MpobelutRjdOjta0OB2vkybaiqSiy+ONDJuJyr8j4
-         yJEUq1/g2d4U1Wtziic//c2p4APw6CG2TgfK/50xxStC6RZ8vDLPAL9pugU4LDu51cxh
-         nHog==
-X-Gm-Message-State: ACgBeo07V8bEXNlHJPASnEr1YszkvpOXt/z+ouA4zjjBvDBvlfBgBUCT
-        i5mxdQvcOYyadBTBqRY0i1X6kg==
-X-Google-Smtp-Source: AA6agR6/sc1utJRqox+EQ93nbssyjmVQ0KWuz5zOB6kpLHeqaFwQE7wdrUV35UzfGFi9zmreSk3vTw==
-X-Received: by 2002:a65:4c09:0:b0:430:8422:9642 with SMTP id u9-20020a654c09000000b0043084229642mr7559187pgq.322.1662151958218;
-        Fri, 02 Sep 2022 13:52:38 -0700 (PDT)
+        bh=NkWBtoQgaFgitib08Hogz597NWzZXTmetYtlLX3bjJM=;
+        b=kIC0VOTUA5s6YjK973A9x14aKlqmXd7ibAjC8a/HWJKjovgV+weurY5A1beBQs/yAC
+         r2VQoYPUrd0o1V2ib/cudAeFFEDoPyT6XH3AHS2aaxN3uLrgCRlCHZ1pQOQwXHfXbN+9
+         H7sTAW6qQHUn69yIUhOFKrqDr0MHFLGYcbU2Q30nqAmUIsHccBWkrFK5r+mUs3u6ibsV
+         hYLkA7uor8iRhQGWp1AeqPazKk1IP6T6x/siSCpUNQuUBKkt/cXKBphFa383Hw0jlg/j
+         bX/mUpPnCAc/lzPme+GmCxzK1mXZefultjwEa+liKvAn+qHipYkqYRF356t51V0g533n
+         lCtg==
+X-Gm-Message-State: ACgBeo2UfFlV+6srJwS0KgZQvJeOeOJ8MwdM7hLvD4ellNHrigAlzw3k
+        DMYUpjed/GDnrwhpupnbYYDdwQ==
+X-Google-Smtp-Source: AA6agR7UPfToOXkX6y0bP59PLNMacjH+/Eg/CEcBCC0g8WRpn5gE1sHE+FxsKJfPgd77J60smN7UPQ==
+X-Received: by 2002:a62:1ac1:0:b0:535:87d:d63f with SMTP id a184-20020a621ac1000000b00535087dd63fmr38496405pfa.74.1662152203362;
+        Fri, 02 Sep 2022 13:56:43 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i71-20020a639d4a000000b0041b667a1b69sm1867398pgd.36.2022.09.02.13.52.36
+        by smtp.gmail.com with ESMTPSA id u3-20020a170902e80300b0016c57657977sm2086294plg.41.2022.09.02.13.56.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Sep 2022 13:52:37 -0700 (PDT)
-Date:   Fri, 2 Sep 2022 13:52:35 -0700
+        Fri, 02 Sep 2022 13:56:42 -0700 (PDT)
+Date:   Fri, 2 Sep 2022 13:56:41 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Guenter Roeck <linux@roeck-us.net>
+To:     Bagas Sanjaya <bagasdotme@gmail.com>
 Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Jonathan Corbet <corbet@lwn.net>,
         Len Baker <len.baker@gmx.com>,
@@ -60,42 +61,81 @@ Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v2] string: Introduce strtomem() and strtomem_pad()
-Message-ID: <202209021351.13203B669@keescook>
+Message-ID: <202209021352.549A5D5@keescook>
 References: <20220901190952.2229696-1-keescook@chromium.org>
- <ba161718-bc61-57b8-dfbe-dee666fd06e8@roeck-us.net>
+ <88e8b096-aa04-2447-cb21-a83b5e57e963@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ba161718-bc61-57b8-dfbe-dee666fd06e8@roeck-us.net>
+In-Reply-To: <88e8b096-aa04-2447-cb21-a83b5e57e963@gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 01, 2022 at 12:34:34PM -0700, Guenter Roeck wrote:
-> On 9/1/22 12:09, Kees Cook wrote:
-> > [...]
-> > -If a caller is using non-NUL-terminated strings, strncpy() can
-> > -still be used, but destinations should be marked with the `__nonstring
-> > +If a caller is using non-NUL-terminated strings, strtomem() should be
-> > +be used, and the destinations should be marked with the `__nonstring
+On Fri, Sep 02, 2022 at 08:53:34AM +0700, Bagas Sanjaya wrote:
+> On 9/2/22 02:09, Kees Cook wrote:
+> > One of the "legitimate" uses of strncpy() is copying a NUL-terminated
+> > string into a fixed-size non-NUL-terminated character array. To avoid
+> > the weaknesses and ambiguity of intent when using strncpy(), provide
+> > replacement functions that explicitly distinguish between trailing
+> > padding and not, and require the destination buffer size be discoverable
+> > by the compiler.
+> >> For example:
+> > 
+> > struct obj {
+> > 	int foo;
+> > 	char small[4] __nonstring;
+> > 	char big[8] __nonstring;
+> > 	int bar;
+> > };
+> > 
+> > struct obj p;
+> > 
+> > /* This will truncate to 4 chars with no trailing NUL */
+> > strncpy(p.small, "hello", sizeof(p.small));
+> > /* p.small contains 'h', 'e', 'l', 'l' */
+> > 
+> > /* This will NUL pad to 8 chars. */
+> > strncpy(p.big, "hello", sizeof(p.big));
+> > /* p.big contains 'h', 'e', 'l', 'l', 'o', '\0', '\0', '\0' */
+> > 
+> > When the "__nonstring" attributes are missing, the intent of the
+> > programmer becomes ambiguous for whether the lack of a trailing NUL
+> > in the p.small copy is a bug. Additionally, it's not clear whether
+> > the trailing padding in the p.big copy is _needed_. Both cases
+> > become unambiguous with:
+> > 
+> > strtomem(p.small, "hello");
+> > strtomem_pad(p.big, "hello", 0);
+> > 
+> > See also https://github.com/KSPP/linux/issues/90
+> > 
 > 
-> s/be //
+> Should'nt strscpy() do the job?
 
-Thanks!
+strscpy() will always NUL-terminate. If someone is moving a
+NUL-terminated string to a fixed-length buffer (that is _not_
+NUL-terminated), using strscpy() will force the final byte to be 0x00,
+which will likely be a regression. For example:
 
-> > [...]
-> > +++ b/include/linux/fortify-string.h
-> > @@ -77,6 +77,36 @@ extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size)
-> >   #define POS	__pass_object_size(1)
-> >   #define POS0	__pass_object_size(0)
-> > +/** strncpy - Copy a string to memory with non-guaranteed NUL padding
-> 
-> Does that need a newline before strncpy() ?
+struct wifi_driver {
+	...
+	char essid[8];
+	...
+};
 
-What do you mean here? I think this is valid kerndoc, but I'll
-double-check. (And will continue in the neighboring htmldoc build thread.)
+struct wifi_driver fw;
 
--Kees
+char *essed = "12345678";
+
+strncpy(fw.essid, essid, sizeof(fw.essid));
+
+	fw.essid will contain: 1 2 3 4 5 6 7 8
+
+strscpy(fw.essid, essid, sizeof(fw.essid)):
+
+	fw.essid will contain: 1 2 3 4 5 6 7 '\0'
+
 
 -- 
 Kees Cook
