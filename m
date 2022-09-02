@@ -2,204 +2,137 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D79C6FA82
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Sep 2022 22:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23011ECAAA1
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Sep 2022 23:08:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229946AbiIBWvg (ORCPT
+        id S229511AbiIBXIJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Sep 2022 18:51:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57292 "EHLO
+        Fri, 2 Sep 2022 19:08:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbiIBWve (ORCPT
+        with ESMTP id S229436AbiIBXIF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Sep 2022 18:51:34 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E656F0759;
-        Fri,  2 Sep 2022 15:51:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662159093; x=1693695093;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=c/19cmV74+lMDRhNQPWjhl5pMjXYVED88nc4t0Rx8I8=;
-  b=EosBp1qwiJKW3q66gUE6SacWayrsWWesYaPjv9sjIdi7wLZc4ufcl70N
-   cw0YYI1yDs57Kre4xUKS21tioq1oB0XlM1duKQT6pYVMxsWg5/8kp3U/7
-   oknjI52lPPvFwXIRNrj19hl3L84qj540L713/sX2yl9q/FzbBha8iSh4q
-   oCWKK8p6e2wPXBmGzq9Arcm7YXm+anMsfenBc3Es9GhfZwvDZ5pZ8smHZ
-   oTQ55WPsAXviCVBvlqAkzLhVMc/SyfwhOyGtIFek+MPA/RKnND1Inn9bX
-   n8dIirdNcRm7kel/6yEGCEnDLqOMo+lM0ZBLp+0OgyXnXoB6966Pesoft
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10458"; a="360060348"
-X-IronPort-AV: E=Sophos;i="5.93,285,1654585200"; 
-   d="scan'208";a="360060348"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2022 15:51:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,285,1654585200"; 
-   d="scan'208";a="613191709"
-Received: from lkp-server02.sh.intel.com (HELO 95dfd251caa2) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 02 Sep 2022 15:51:27 -0700
-Received: from kbuild by 95dfd251caa2 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oUFVX-0000gt-0M;
-        Fri, 02 Sep 2022 22:51:27 +0000
-Date:   Sat, 3 Sep 2022 06:50:55 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Cc:     kbuild-all@lists.01.org, Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Tom Rix <trix@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
-        David Gow <davidgow@google.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Sander Vanheule <sander@svanheule.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Isabella Basso <isabbasso@riseup.net>,
+        Fri, 2 Sep 2022 19:08:05 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F3EBEA32F
+        for <linux-hardening@vger.kernel.org>; Fri,  2 Sep 2022 16:08:04 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id 78so3126198pgb.13
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Sep 2022 16:08:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=2Y8DDYCQ2otafS/ANml07S73pAs/kgkgSqxooJ7MzEo=;
+        b=gZymZsu4nzF/sx2Kz8zdZO31rMaivj6sqqslSfIi8ycb86aOj28XmAjpjIbdkCFQ7r
+         1skyr/j6bBsNu89R3L78IRSsABgw3ZrAO6Vc19tV0nU8nt2luO9ZtwPs5x/v28CNEn/2
+         k4161ORZTExXAnMbY7/dBGXpFV6cKkAhVn9Hw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=2Y8DDYCQ2otafS/ANml07S73pAs/kgkgSqxooJ7MzEo=;
+        b=two/JqHYQtYiCntjDwFmZBdKg7Cb6cwdVyJPoWcKDaX9YhwAINFeNsCYmTJw7g1zBR
+         G+0FxsjuuQaDGrDbu14ZdT1ZKp4c4CwRccJYPSCeOnE5Z4XfT4ID3pqUG74ApGy6oIZR
+         NlBxcIA9F9bNBZpZbnrn5N8UoxZRPAfE3GggtVRlqfWN1bJC3lSS6zAUtyglOXhrP8MG
+         npDkZI2D/KitMe3WgLJ4O+8e02jyL4FZELSLXxDfdb2YbsEc/VDppLJtGXpOA81TRiWK
+         sRVD3MiuwqxaGo/czpI4NijEipMXo7noX6EYwxI4/eHm+tPPCE0Byfe4zNO2vilxkq8d
+         NfBA==
+X-Gm-Message-State: ACgBeo1gA8H7Nb3K6NxFnQN/VdduvRdDejP6OR+BnAfZrNf6oh61kcYv
+        Gs2BOilgi3E0/DlQg0dgGS2dmQ==
+X-Google-Smtp-Source: AA6agR6G3F1xMyBZPBMpPkGlBoDBrXr4WjKwOB3BRE0dZXW8W2Nl66PYsdn9DsbS0atfylWEgULAbw==
+X-Received: by 2002:a63:41c5:0:b0:42c:6b7f:6d95 with SMTP id o188-20020a6341c5000000b0042c6b7f6d95mr19124355pga.175.1662160084174;
+        Fri, 02 Sep 2022 16:08:04 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q23-20020a170902bd9700b0016dbaf3ff2esm2207368pls.22.2022.09.02.16.08.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Sep 2022 16:08:03 -0700 (PDT)
+Date:   Fri, 2 Sep 2022 16:08:01 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biggers <ebiggers@google.com>,
-        Hannes Reinecke <hare@suse.de>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v2 3/3] fortify: Use SIZE_MAX instead of (size_t)-1
-Message-ID: <202209030625.wdoOhjAW-lkp@intel.com>
-References: <20220902204351.2521805-4-keescook@chromium.org>
+        Paolo Abeni <pabeni@redhat.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org,
+        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] netlink: Bounds-check struct nlmsgerr creation
+Message-ID: <202209021555.9EE2FBD3A@keescook>
+References: <20220901071336.1418572-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220902204351.2521805-4-keescook@chromium.org>
+In-Reply-To: <20220901071336.1418572-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
+On Thu, Sep 01, 2022 at 12:13:36AM -0700, Kees Cook wrote:
+> For 32-bit systems, it might be possible to wrap lnmsgerr content
+> lengths beyond SIZE_MAX. Explicitly test for all overflows, and mark the
+> memcpy() as being unable to internally diagnose overflows.
+> 
+> This also excludes netlink from the coming runtime bounds check on
+> memcpy(), since it's an unusual case of open-coded sizing and
+> allocation. Avoid this future run-time warning:
+> 
+>   memcpy: detected field-spanning write (size 32) of single field "&errmsg->msg" at net/netlink/af_netlink.c:2447 (size 16)
 
-I love your patch! Yet something to improve:
+To get rid of the above warning...
 
-[auto build test ERROR on akpm-mm/mm-everything]
-[also build test ERROR on linus/master kees/for-next/pstore v6.0-rc3 next-20220901]
-[cannot apply to kees/for-next/hardening]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> [...]
+> -		memcpy(&errmsg->msg, nlh, nlh->nlmsg_len);
+> +		unsafe_memcpy(&errmsg->msg, nlh, nlh->nlmsg_len,
+> +			      /* "payload" was explicitly bounds-checked, based on
+> +			       * the size of nlh->nlmsg_len.
+> +			       */);
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kees-Cook/Fix-FORTIFY-y-UBSAN_LOCAL_BOUNDS-y/20220903-044622
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-config: powerpc-allyesconfig (https://download.01.org/0day-ci/archive/20220903/202209030625.wdoOhjAW-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/6c991b3511a531e44e856fdf2b64020b70fd7b22
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Kees-Cook/Fix-FORTIFY-y-UBSAN_LOCAL_BOUNDS-y/20220903-044622
-        git checkout 6c991b3511a531e44e856fdf2b64020b70fd7b22
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=powerpc prepare
+above is the "fix", since the compiler has no way to know how to bounds
+check the arguments. But, to write that comment, I added all these
+things:
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+> [...]
+> -	if (extack->cookie_len)
+> -		tlvlen += nla_total_size(extack->cookie_len);
+> +	if (extack->_msg &&
+> +	    check_add_overflow(*tlvlen, nla_total_size(strlen(extack->_msg) + 1), tlvlen))
+> +		return false;
 
-All errors (new ones prefixed by >>):
+If that's not desirable, then I guess the question I want to ask is
+"what can I put in the unsafe_memcpy() comment above that proves these
+values have been sanity checked? In other words, how do we know that
+tlvlen hasn't overflowed? (I don't know what other sanity checking may
+have already happened, so I'm looking directly at the size calculations
+here.)
 
-   scripts/genksyms/parse.y: warning: 9 shift/reduce conflicts [-Wconflicts-sr]
-   scripts/genksyms/parse.y: warning: 5 reduce/reduce conflicts [-Wconflicts-rr]
-   scripts/genksyms/parse.y: note: rerun with option '-Wcounterexamples' to generate conflict counterexamples
-   In file included from include/linux/string.h:253,
-                    from include/linux/uuid.h:12,
-                    from include/linux/mod_devicetable.h:13,
-                    from scripts/mod/devicetable-offsets.c:3:
-   include/linux/fortify-string.h: In function 'strcat':
->> include/linux/fortify-string.h:98:23: error: 'SIZE_MAX' undeclared (first use in this function)
-      98 |         if (p_size == SIZE_MAX)
-         |                       ^~~~~~~~
-   include/linux/fortify-string.h:6:1: note: 'SIZE_MAX' is defined in header '<stdint.h>'; did you forget to '#include <stdint.h>'?
-       5 | #include <linux/const.h>
-     +++ |+#include <stdint.h>
-       6 | 
-   include/linux/fortify-string.h:98:23: note: each undeclared identifier is reported only once for each function it appears in
-      98 |         if (p_size == SIZE_MAX)
-         |                       ^~~~~~~~
-   include/linux/fortify-string.h: In function 'strnlen':
-   include/linux/fortify-string.h:20:24: error: 'SIZE_MAX' undeclared (first use in this function)
-      20 |         size_t __ret = SIZE_MAX;                                \
-         |                        ^~~~~~~~
-   include/linux/fortify-string.h:109:24: note: in expansion of macro '__compiletime_strlen'
-     109 |         size_t p_len = __compiletime_strlen(p);
-         |                        ^~~~~~~~~~~~~~~~~~~~
-   include/linux/fortify-string.h:20:24: note: 'SIZE_MAX' is defined in header '<stdint.h>'; did you forget to '#include <stdint.h>'?
-      20 |         size_t __ret = SIZE_MAX;                                \
-         |                        ^~~~~~~~
-   include/linux/fortify-string.h:109:24: note: in expansion of macro '__compiletime_strlen'
-     109 |         size_t p_len = __compiletime_strlen(p);
-         |                        ^~~~~~~~~~~~~~~~~~~~
-   include/linux/fortify-string.h: In function '__fortify_strlen':
-   include/linux/fortify-string.h:141:23: error: 'SIZE_MAX' undeclared (first use in this function)
-     141 |         if (p_size == SIZE_MAX)
-         |                       ^~~~~~~~
-   include/linux/fortify-string.h:141:23: note: 'SIZE_MAX' is defined in header '<stdint.h>'; did you forget to '#include <stdint.h>'?
-   include/linux/fortify-string.h: In function 'strlcpy':
-   include/linux/fortify-string.h:158:23: error: 'SIZE_MAX' undeclared (first use in this function)
-     158 |         if (p_size == SIZE_MAX && q_size == SIZE_MAX)
-         |                       ^~~~~~~~
-   include/linux/fortify-string.h:158:23: note: 'SIZE_MAX' is defined in header '<stdint.h>'; did you forget to '#include <stdint.h>'?
-   include/linux/fortify-string.h: In function 'strscpy':
-   include/linux/fortify-string.h:186:23: error: 'SIZE_MAX' undeclared (first use in this function)
-     186 |         if (p_size == SIZE_MAX && q_size == SIZE_MAX)
-         |                       ^~~~~~~~
-   include/linux/fortify-string.h:186:23: note: 'SIZE_MAX' is defined in header '<stdint.h>'; did you forget to '#include <stdint.h>'?
-   include/linux/fortify-string.h: In function 'strncat':
-   include/linux/fortify-string.h:231:23: error: 'SIZE_MAX' undeclared (first use in this function)
-     231 |         if (p_size == SIZE_MAX && q_size == SIZE_MAX)
-         |                       ^~~~~~~~
-   include/linux/fortify-string.h:231:23: note: 'SIZE_MAX' is defined in header '<stdint.h>'; did you forget to '#include <stdint.h>'?
-   include/linux/fortify-string.h: In function 'fortify_memset_chk':
-   include/linux/fortify-string.h:275:23: error: 'SIZE_MAX' undeclared (first use in this function)
-     275 |         if (p_size != SIZE_MAX && p_size < size)
-         |                       ^~~~~~~~
-   include/linux/fortify-string.h:275:23: note: 'SIZE_MAX' is defined in header '<stdint.h>'; did you forget to '#include <stdint.h>'?
-   include/linux/fortify-string.h: In function 'fortify_memcpy_chk':
-   include/linux/fortify-string.h:369:24: error: 'SIZE_MAX' undeclared (first use in this function)
-     369 |         if ((p_size != SIZE_MAX && p_size < size) ||
-         |                        ^~~~~~~~
-   include/linux/fortify-string.h:369:24: note: 'SIZE_MAX' is defined in header '<stdint.h>'; did you forget to '#include <stdint.h>'?
-   include/linux/fortify-string.h: In function 'strcpy':
-   include/linux/fortify-string.h:469:23: error: 'SIZE_MAX' undeclared (first use in this function)
-     469 |         if (p_size == SIZE_MAX && q_size == SIZE_MAX)
-         |                       ^~~~~~~~
-   include/linux/fortify-string.h:469:23: note: 'SIZE_MAX' is defined in header '<stdint.h>'; did you forget to '#include <stdint.h>'?
-   make[2]: *** [scripts/Makefile.build:117: scripts/mod/devicetable-offsets.s] Error 1
-   make[2]: Target '__build' not remade because of errors.
-   make[1]: *** [Makefile:1204: prepare0] Error 2
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:222: __sub-make] Error 2
-   make: Target 'prepare' not remade because of errors.
+I assume this isn't more desirable:
 
+-	if (extack->cookie_len)
+-		tlvlen += nla_total_size(extack->cookie_len);
++	if (extack->cookie_len) {
++		size_t len = nla_total_size(extack->cookie_len);
++
++		if (WARN_ON_ONCE(len > SIZE_MAX - tlvlen))
++			return 0;
++		tlvlen += len;
++	}
 
-vim +/SIZE_MAX +98 include/linux/fortify-string.h
+Or maybe wrap it nicely with a local macro and return 0 instead of
+trying to pass an error up a layer?
 
-    92	
-    93	__FORTIFY_INLINE __diagnose_as(__builtin_strcat, 1, 2)
-    94	char *strcat(char * const POS p, const char *q)
-    95	{
-    96		size_t p_size = __builtin_object_size(p, 1);
-    97	
-  > 98		if (p_size == SIZE_MAX)
-    99			return __underlying_strcat(p, q);
-   100		if (strlcat(p, q, p_size) >= p_size)
-   101			fortify_panic(__func__);
-   102		return p;
-   103	}
-   104	
++#define TLVADD(amount)	do { \
++	if (WARN_ON_ONCE(check_add_overflow(tlvlen, amount, &tlvlen))) \
++		return 0; \
++} while (0)
+
+...
+	if (extack->cookie_len)
+-		tlvlen += nla_total_size(extack->cookie_len);
++		TLVADD(nla_total_size(extack->cookie_len));
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Kees Cook
