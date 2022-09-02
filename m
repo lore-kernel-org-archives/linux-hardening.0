@@ -2,54 +2,54 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B016C6FA83
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Sep 2022 20:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F16C6FA82
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Sep 2022 20:44:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229975AbiIBUoA (ORCPT
+        id S230144AbiIBUoB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Sep 2022 16:44:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56504 "EHLO
+        Fri, 2 Sep 2022 16:44:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230144AbiIBUn6 (ORCPT
+        with ESMTP id S230186AbiIBUn6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Fri, 2 Sep 2022 16:43:58 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9263FC316
-        for <linux-hardening@vger.kernel.org>; Fri,  2 Sep 2022 13:43:56 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id v5so2954995plo.9
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Sep 2022 13:43:56 -0700 (PDT)
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 977BAFC319
+        for <linux-hardening@vger.kernel.org>; Fri,  2 Sep 2022 13:43:57 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id z187so2985898pfb.12
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Sep 2022 13:43:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=nXV/kYcxRGP4+PC/wC/E1WmMIMB/DEMUyjUxzaTreGw=;
-        b=cHlmGDucWugffybtU1NXRpK84RfhetNHSyxRNpz4OPVFMNCPebRN6HUazGQvm8DxjM
-         Ca5mMNM8lTvPGRnENwR8gECD6NiKDnXKaP2gbjBA6Inj1r56/1vaqNqDUIMbaxigFFBO
-         AqXXJDP7flKezJmMXtpBKDn54dIz26/0Tg1ck=
+        bh=GpdR6dhKOYDIHWBT59g1Wvjno+duAayEnuXKzDvi7Ds=;
+        b=h749UXyzLbcoxluZ9NcjTjAgLd1HqAnSuGDh0as6NFUu5+tf/+dIsD3GaQHzP85DCQ
+         09TV1a6urYRynR0mKtclPQQbcxqeEKPmeDNKC4wGNBbIW07+epZ5tIBpNYrPTpzFC2TJ
+         x48QAdCJADJFdnY5OKcR4y54nPl9qtoP2R10U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=nXV/kYcxRGP4+PC/wC/E1WmMIMB/DEMUyjUxzaTreGw=;
-        b=iM9jDuMbTZhTmV+lkD2Ujaqz4eAW/tAxz1Addyc/ZWYsN3e0N23e99jkMaP5ZEZDpq
-         4iAaR7uVgMBMZ0nPNR0Kvg9JDazFjDtBt0B77XUXoxI7+u2KSWVmgf+s9Ip1uHy4sQtq
-         x3ruBl7C+kwdq2Emi53/epnqvzmok1TX8Q/aT+wVyHxRX3rVwRECcCFQB7+tGaPq9/ig
-         QSqgL8cT9KfOoiYgAA5AmAnelS1y1czPEfviuMzCkvBga3E/SprGKaWjtKrmX7DGOpYi
-         cZno2FwRgKGTkvgOovemDug6Xcz1sGl5pE3/aCcWbE1o/YeVFx9DQGCqlN1B9gZhtRUV
-         htDg==
-X-Gm-Message-State: ACgBeo2RKp3A8vT7dCFPi8hHHAXeiBweq7p34s5TX1dTMtTub9Ndj4iP
-        UZTomE21Zjtm1vHNav+oKYulYA==
-X-Google-Smtp-Source: AA6agR4OTKbaTPmi+l9Osgr3f3/iWEvZcmM5T5mq8YCP3H+BKdqRtF3oXu9Ht4jAVa9+ZFw4qzTJiA==
-X-Received: by 2002:a17:903:32cd:b0:16f:c31:7034 with SMTP id i13-20020a17090332cd00b0016f0c317034mr36867541plr.126.1662151436441;
+        bh=GpdR6dhKOYDIHWBT59g1Wvjno+duAayEnuXKzDvi7Ds=;
+        b=Qnq800i19MSVd3xiMgrB1Aoc7O1uAgtBWImk5KpM6poD3yP5WqdyAYwZGeKYMJnv/m
+         pLwmFyMDU+MieIjolhSCA5Gu5StD+ub9mAO3czVVEg+SqIvJz2fNXkTG4XbTj0J12t1O
+         v9oAwxPyMDqRJ6OfiFIopiDoaYs99eOU67l4oGB8bQzYOVekggGD9qSP7oQFbZSNsRLq
+         QIiwR4BEeCqdGKcVJiskF7dtzNeOPVl72vYAcBL2xIFOepfdQcq0d+eJSnNc5NIaSyNr
+         jcv+qGcIvZFSxyJX8BHo+gfSbaoozpR8mfXEPEeu/mbsfPCi3p8ScijCC21wkbItkhil
+         kyWQ==
+X-Gm-Message-State: ACgBeo0ax3BSDdYEinLtRo0yYl1TIRDbklAXtxRu06jZ3MXrNGA1Ai8o
+        Hh/5m/Ya8s5fJcdZQpbHdqJAZA==
+X-Google-Smtp-Source: AA6agR5IhZwbrCaOXKK1TWm9SsIGoXh0AjdQgm3ck3mlstEsQ9cd19CWxuvtbfxICBszMpFtEUiUXw==
+X-Received: by 2002:a63:5616:0:b0:42b:689e:5166 with SMTP id k22-20020a635616000000b0042b689e5166mr31058897pgb.385.1662151436997;
         Fri, 02 Sep 2022 13:43:56 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p5-20020aa79e85000000b0053826eaa1c7sm2242366pfq.22.2022.09.02.13.43.53
+        by smtp.gmail.com with ESMTPSA id k1-20020aa79981000000b005380bbac1ccsm2261188pfh.167.2022.09.02.13.43.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 02 Sep 2022 13:43:53 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
         Nathan Chancellor <nathan@kernel.org>,
         Tom Rix <trix@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -59,7 +59,6 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Yury Norov <yury.norov@gmail.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Sander Vanheule <sander@svanheule.net>,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
         Peter Zijlstra <peterz@infradead.org>,
         Josh Poimboeuf <jpoimboe@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -67,90 +66,138 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Eric Dumazet <edumazet@google.com>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Eric Biggers <ebiggers@google.com>,
-        Hannes Reinecke <hare@suse.de>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] fortify: Fix __compiletime_strlen() under UBSAN_BOUNDS_LOCAL
-Date:   Fri,  2 Sep 2022 13:43:49 -0700
-Message-Id: <20220902204351.2521805-2-keescook@chromium.org>
+        Hannes Reinecke <hare@suse.de>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: [PATCH v2 3/3] fortify: Use SIZE_MAX instead of (size_t)-1
+Date:   Fri,  2 Sep 2022 13:43:51 -0700
+Message-Id: <20220902204351.2521805-4-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220902204351.2521805-1-keescook@chromium.org>
 References: <20220902204351.2521805-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3151; h=from:subject; bh=DcSHHHF6kn1GliVVBN0Pagg+IpCny/Ui+zrhTxFh/Ig=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjEmsGk86XdtCYEmOQCgPx8egB0fdSS3e9m2VZTI23 uTv0O9uJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYxJrBgAKCRCJcvTf3G3AJuYcD/ 46zM6qv3smVwB5rZ2yT5KmQ/6rKo6NAA9bRqTf+cVhi63JuonH9xJUJIGZG+MoTCKjisfYwnMSQzxC JzaNXj7WkEtgdnD0FwG7abuEJKIfgtU0XaT1fFJE99rSCXoGFWzhdvyDwLnhbPqN5xM7bKjP6fs8/i HA4rfsFA2io/zAKOKbS0LcUohuLvzpmhh1FooGaDJNFpmkJEp5NIInreEiryFnGjvFV/9u8ICW8qX0 jQRNsTRh/oUF/wY0O25PWfyGOHq+pdb2z54/j+NOAWzjvSC09LbnOygH+6S692/psVAj5EggYDO/jF f8Lnz+jjlp/EVUqaYqsolrBOll6bfzSPd0c2Ot/oNu0XcyCyDA88YD64pWvgJCl/kXs3Vi05qm2hKW rfGR2CUtas8Cde1LUKAq9J7g4RNLjvGpZFXPMdB2K2uNw3BrNl0AmxaxJuT96wAAi2Ugv6MuSu8It7 Pbll63lCPLIlUSq9WOFBnKwgmbE0EqA3Z+f7s2i68q+8cLdESF7EDzMJYLkY+oKbrUin5IwJsrNMx5 aYmXCyvApdqpJQxT0ApO0GH7YxI0gTCLPb62iCjDvlsyb4ekhTCgPwxydRAx6fujxccIrOhnhVCAMV +WTnx3IlX62a2AP+WQ7hZQiKnc4G2GYlnWz1ydiMrJAX0gNyARjrGALryXSA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4790; h=from:subject; bh=HV5Dy8SZEhq6+/rQqbYutEFxTR8zxek5M5kiisvIgH0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjEmsHLCqUbdwiDj2xEYoNTUzHnhPqUNltCgBybyug nZykpLGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYxJrBwAKCRCJcvTf3G3AJuA8D/ 48wah7w3V7SEe1dfMKosk2R/dJEjm+HloADoGeQcgeJsYUmLb3VdRAyMxQO70fb3fFAy39o4tOwBoV 0jcF/qjB0kiiDz7rcaxgd4uo7AeRFLELhvjvuYAe9/EI/Tt4Ja8dqknh1xtALnbQuLUs1CGc3XSXGY DtcSIHoy+EJ13pdt3x8qfinqRE/my6F0B/x01+qpg6id8Gw7bLinKrzvwiwRfx+QcfwquTpp938j0W dYQma5DIva2bGK9lIrIIXTdXxYBQkKz4C86REXQPnFql+3Xa0JBpNORkKxxzCE9T6TuP/ZJeU4WYU4 NEM/NWTds28XCIZoqqFNQrtbuc368abzR7G5j2/+7wQD+3IbszmmfqVW0SO/UE5h2oFP46FrgtKDtL XNSXnlruH30OGg1cUunNluV62Oefkp0rydIRtoMsRTN359fgVum+FBDjr4kv///t4VVfhohKfEpH2F Pq0RZbO50IWdRvDtFjlRwzjLChWbaEkvz4ktp+Bx6AHOXcEYMPJDcuYmsZj9x51+D2MEoSqu4RrC0S Y1EsCJhMBsavWbzDQAKUN6oZLBWYh+ADgttRwT5s850pn2uDbc3iClEbXV1og9jRzPiKaTmsi3LuhA a2LaW66FJc3yiTixFJzeAP8YRfTsG4bTLFoV3i0cvAsHCqP0pBs6f34W49Xw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With CONFIG_FORTIFY=y and CONFIG_UBSAN_LOCAL_BOUNDS=y enabled, we observe
-a runtime panic while running Android's Compatibility Test Suite's (CTS)
-android.hardware.input.cts.tests. This is stemming from a strlen()
-call in hidinput_allocate().
+Clean up uses of "(size_t)-1" in favor of SIZE_MAX.
 
-__compiletime_strlen() is implemented in terms of __builtin_object_size(),
-then does an array access to check for NUL-termination. A quirk of
-__builtin_object_size() is that for strings whose values are runtime
-dependent, __builtin_object_size(str, 1 or 0) returns the maximum size
-of possible values when those sizes are determinable at compile time.
-Example:
-
-  static const char *v = "FOO BAR";
-  static const char *y = "FOO BA";
-  unsigned long x (int z) {
-      // Returns 8, which is:
-      // max(__builtin_object_size(v, 1), __builtin_object_size(y, 1))
-      return __builtin_object_size(z ? v : y, 1);
-  }
-
-So when FORTIFY_SOURCE is enabled, the current implementation of
-__compiletime_strlen() will try to access beyond the end of y at runtime
-using the size of v. Mixed with UBSAN_LOCAL_BOUNDS we get a fault.
-
-hidinput_allocate() has a local C string whose value is control flow
-dependent on a switch statement, so __builtin_object_size(str, 1)
-evaluates to the maximum string length, making all other cases fault on
-the last character check. hidinput_allocate() could be cleaned up to
-avoid runtime calls to strlen() since the local variable can only have
-literal values, so there's no benefit to trying to fortify the strlen
-call site there.
-
-Perform a __builtin_constant_p() check against index 0 earlier in the
-macro to filter out the control-flow-dependant case. Add a KUnit test
-for checking the expected behavioral characteristics of FORTIFY_SOURCE
-internals.
-
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Tom Rix <trix@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-Cc: David Gow <davidgow@google.com>
-Cc: Yury Norov <yury.norov@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Sander Vanheule <sander@svanheule.net>
 Cc: linux-hardening@vger.kernel.org
-Cc: llvm@lists.linux.dev
-Co-developed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/fortify-string.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/fortify-string.h | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-index eed2119b23c5..07d5d1921eff 100644
+index 07d5d1921eff..8f2b6b1cb848 100644
 --- a/include/linux/fortify-string.h
 +++ b/include/linux/fortify-string.h
-@@ -19,7 +19,8 @@ void __write_overflow_field(size_t avail, size_t wanted) __compiletime_warning("
+@@ -17,9 +17,9 @@ void __write_overflow_field(size_t avail, size_t wanted) __compiletime_warning("
+ #define __compiletime_strlen(p)					\
+ ({								\
  	unsigned char *__p = (unsigned char *)(p);		\
- 	size_t __ret = (size_t)-1;				\
+-	size_t __ret = (size_t)-1;				\
++	size_t __ret = SIZE_MAX;				\
  	size_t __p_size = __builtin_object_size(p, 1);		\
--	if (__p_size != (size_t)-1) {				\
-+	if (__p_size != (size_t)-1 &&				\
-+	    __builtin_constant_p(*__p)) {			\
+-	if (__p_size != (size_t)-1 &&				\
++	if (__p_size != SIZE_MAX &&				\
+ 	    __builtin_constant_p(*__p)) {			\
  		size_t __p_len = __p_size - 1;			\
  		if (__builtin_constant_p(__p[__p_len]) &&	\
- 		    __p[__p_len] == '\0')			\
+@@ -125,7 +125,7 @@ char *strcat(char * const POS p, const char *q)
+ {
+ 	size_t p_size = __builtin_object_size(p, 1);
+ 
+-	if (p_size == (size_t)-1)
++	if (p_size == SIZE_MAX)
+ 		return __underlying_strcat(p, q);
+ 	if (strlcat(p, q, p_size) >= p_size)
+ 		fortify_panic(__func__);
+@@ -140,7 +140,7 @@ __FORTIFY_INLINE __kernel_size_t strnlen(const char * const POS p, __kernel_size
+ 	size_t ret;
+ 
+ 	/* We can take compile-time actions when maxlen is const. */
+-	if (__builtin_constant_p(maxlen) && p_len != (size_t)-1) {
++	if (__builtin_constant_p(maxlen) && p_len != SIZE_MAX) {
+ 		/* If p is const, we can use its compile-time-known len. */
+ 		if (maxlen >= p_size)
+ 			return p_len;
+@@ -168,7 +168,7 @@ __kernel_size_t __fortify_strlen(const char * const POS p)
+ 	size_t p_size = __builtin_object_size(p, 1);
+ 
+ 	/* Give up if we don't know how large p is. */
+-	if (p_size == (size_t)-1)
++	if (p_size == SIZE_MAX)
+ 		return __underlying_strlen(p);
+ 	ret = strnlen(p, p_size);
+ 	if (p_size <= ret)
+@@ -185,7 +185,7 @@ __FORTIFY_INLINE size_t strlcpy(char * const POS p, const char * const POS q, si
+ 	size_t q_len;	/* Full count of source string length. */
+ 	size_t len;	/* Count of characters going into destination. */
+ 
+-	if (p_size == (size_t)-1 && q_size == (size_t)-1)
++	if (p_size == SIZE_MAX && q_size == SIZE_MAX)
+ 		return __real_strlcpy(p, q, size);
+ 	q_len = strlen(q);
+ 	len = (q_len >= size) ? size - 1 : q_len;
+@@ -213,7 +213,7 @@ __FORTIFY_INLINE ssize_t strscpy(char * const POS p, const char * const POS q, s
+ 	size_t q_size = __builtin_object_size(q, 1);
+ 
+ 	/* If we cannot get size of p and q default to call strscpy. */
+-	if (p_size == (size_t) -1 && q_size == (size_t) -1)
++	if (p_size == SIZE_MAX && q_size == SIZE_MAX)
+ 		return __real_strscpy(p, q, size);
+ 
+ 	/*
+@@ -258,7 +258,7 @@ char *strncat(char * const POS p, const char * const POS q, __kernel_size_t coun
+ 	size_t p_size = __builtin_object_size(p, 1);
+ 	size_t q_size = __builtin_object_size(q, 1);
+ 
+-	if (p_size == (size_t)-1 && q_size == (size_t)-1)
++	if (p_size == SIZE_MAX && q_size == SIZE_MAX)
+ 		return __underlying_strncat(p, q, count);
+ 	p_len = strlen(p);
+ 	copy_len = strnlen(q, count);
+@@ -299,10 +299,10 @@ __FORTIFY_INLINE void fortify_memset_chk(__kernel_size_t size,
+ 	/*
+ 	 * Always stop accesses beyond the struct that contains the
+ 	 * field, when the buffer's remaining size is known.
+-	 * (The -1 test is to optimize away checks where the buffer
++	 * (The SIZE_MAX test is to optimize away checks where the buffer
+ 	 * lengths are unknown.)
+ 	 */
+-	if (p_size != (size_t)(-1) && p_size < size)
++	if (p_size != SIZE_MAX && p_size < size)
+ 		fortify_panic("memset");
+ }
+ 
+@@ -393,11 +393,11 @@ __FORTIFY_INLINE void fortify_memcpy_chk(__kernel_size_t size,
+ 	/*
+ 	 * Always stop accesses beyond the struct that contains the
+ 	 * field, when the buffer's remaining size is known.
+-	 * (The -1 test is to optimize away checks where the buffer
++	 * (The SIZE_MAX test is to optimize away checks where the buffer
+ 	 * lengths are unknown.)
+ 	 */
+-	if ((p_size != (size_t)(-1) && p_size < size) ||
+-	    (q_size != (size_t)(-1) && q_size < size))
++	if ((p_size != SIZE_MAX && p_size < size) ||
++	    (q_size != SIZE_MAX && q_size < size))
+ 		fortify_panic(func);
+ }
+ 
+@@ -496,7 +496,7 @@ char *strcpy(char * const POS p, const char * const POS q)
+ 	size_t size;
+ 
+ 	/* If neither buffer size is known, immediately give up. */
+-	if (p_size == (size_t)-1 && q_size == (size_t)-1)
++	if (p_size == SIZE_MAX && q_size == SIZE_MAX)
+ 		return __underlying_strcpy(p, q);
+ 	size = strlen(q) + 1;
+ 	/* Compile-time check for const size overflow. */
 -- 
 2.34.1
 
