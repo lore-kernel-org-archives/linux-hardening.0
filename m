@@ -2,102 +2,121 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0327AECAAA1
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Sep 2022 23:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EE3C38145
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Sep 2022 23:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229893AbiIBXmW (ORCPT
+        id S229511AbiIBX7o (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Sep 2022 19:42:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48750 "EHLO
+        Fri, 2 Sep 2022 19:59:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbiIBXmV (ORCPT
+        with ESMTP id S230178AbiIBX7n (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Sep 2022 19:42:21 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 714DFE396A
-        for <linux-hardening@vger.kernel.org>; Fri,  2 Sep 2022 16:42:17 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id w2so3348014pld.0
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Sep 2022 16:42:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=yLY1ejrRMFBfwfiTLCUWmHI559ulys0U/bajbSkKPRA=;
-        b=lI3k1MvqFtz0RmNR86j11DAck9+4Yt2ox89NAsHGWkHjeDGyZuqjFbw8k0HwcNxyrF
-         OWteMND8jXbAm0dKHOFMq4wOcamDnga4W1npPuLx7yXMVXV3jM3yFtOTblzuHDPqkeNb
-         NcfQJ2bz8X+LpJzjdJrbfbAxxCcJ5PBnWWqvI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=yLY1ejrRMFBfwfiTLCUWmHI559ulys0U/bajbSkKPRA=;
-        b=HB71eTbsmI/Z5JkIvMkzf1i8J3LXJow1jl7mhChbC/gLTlUlD7XXbFxzl82QmYccSP
-         wOx4SGCnbUWfwO1Zoe1/e8RbJzg4t7gaTVz8AIPfVMRnggoyLBlVm0TLI7XbGyDdyKKR
-         pQY+fpNpuyV/C7CtGDltjA7pMopTjvQArXjw64AIAxyt6d3c6SWyKk2YmPe5A7AgfdSn
-         V6T4PvmEkmv534Rr0meeGouKuNhfPpzLq+Bz5WARtiIxIy86BVRGxWiM8pbyhn+OWSX8
-         KeQrEVMA79SMjftLZUpQ0SyCZPDpfmd8216OwiQ1yf2OFQTbIFgNcOcIFHJK37HKvcwn
-         CezQ==
-X-Gm-Message-State: ACgBeo0VFCqTaXQftjfAUEtCg3/9S21MWTILBkYxlH6lGI6YBivmm0vA
-        ZbSD1EsIeTZxLvPtToCRjAe6iQ==
-X-Google-Smtp-Source: AA6agR5onhP71dq8nqAUQs3ys+4lKThdEj5Rk73p5/KLhwxW0zPWs+OiG8CWpGbMXIbfcQJY76uy5Q==
-X-Received: by 2002:a17:902:ce88:b0:174:e20a:8ef2 with SMTP id f8-20020a170902ce8800b00174e20a8ef2mr23853927plg.51.1662162137001;
-        Fri, 02 Sep 2022 16:42:17 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r12-20020aa7988c000000b0053612ec8859sm2346490pfl.209.2022.09.02.16.42.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Sep 2022 16:42:16 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] x86/Kconfig: Enable kernel IBT by default
-Date:   Fri,  2 Sep 2022 16:42:13 -0700
-Message-Id: <20220902234213.3034396-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
+        Fri, 2 Sep 2022 19:59:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB23564F7;
+        Fri,  2 Sep 2022 16:59:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6A7F46201B;
+        Fri,  2 Sep 2022 23:59:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25388C433D6;
+        Fri,  2 Sep 2022 23:59:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662163181;
+        bh=W8ti3zVsha1L/AuHd1jDm7TAZKo5OlYXymvwuJgcnwU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=l9jtwONRVIVTIJa3K7WkVc/D1kdK/D6TwoCMfUVuAoH1ZA7cP/yop/OX8voudx6VY
+         6/diT/UQ61Pl1qXTaqXxi+ZluebGjPnRucjzG/rIWAomcUfNgnI5R7G2zlNPxxRNSX
+         Ee8MWIpkEiGbbK63H7lT5t9plciDdADlP0uWUjfon3RiYR6H/H9sZKbLdXaXevwIod
+         Qch7ZJ12/fI3kEYzttCHkZ73k5EmREeuVHTbzSaEsLoLoKO0/i3rxCgj2eWS4wEChs
+         ICjFCb0XzziiTLFcnFwBJ1HomvhX138/swPaqdQ6zbrdMfo2BIgH2YFjGai52mvgwf
+         rPSTmP1lj6FQw==
+Date:   Sat, 3 Sep 2022 00:59:36 +0100
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc:     ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] ocfs2: Replace zero-length arrays with
+ DECLARE_FLEX_ARRAY() helper
+Message-ID: <YxKY6O2hmdwNh8r8@work>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1152; h=from:subject; bh=QnLzs1GDPCKo06FTPfmk5xw+8Ls7C8rAgTMmLburhjw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjEpTVMyugRDWXY06xWHTBIcEYvUEirn6Nof13Xwku Cp5eGcWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYxKU1QAKCRCJcvTf3G3AJo4ND/ 9tN+2yiM4HJZNfQ+uIxziGc3CXz2sK3A1WmppXH1QlAGlq5OPGOBE5VQRgu6sHaPZmDo78CCieJ9oq +4zGAIqsXTSi1YNaEHjHcnmfkAxd9HPKWfsV3nHYjpi2kP8uy37GILkBoiqYKxnsJw3oMcoghroFUZ Cq/6mduend+DJdSd1TXQxKwlfEfT0KVMgB5IQyQvJJUXXJqa8ERbvE2V46JiPfdi8XiB9qRHdMXeLu 8gRYWszUyUVF5SSFzL7bKIKLPvBTbaQ6/NmOoMW75l6xpqCY6a3JmqfUpVe374SDUyNoIPM9rhlWFE zOGZB19kjDfqItJK1OIdN39oRfAMm9CFe11e4zdZbs/UnKcYgOkxZJIcRnvesXXE3YYgB5cVAqpyFa AHXPufl7pkI4LbYc6j6aBCjsbs/HuFi5IoqAN9kM+CJBzAukiw+mxD74CpFZ1PVIULlC0ilHSAws+l iEQ0TDZ3QLVC9b0b76IF3OUgpdwc/wBtEcsDiZKNCN4uDbXIWAZW8483da+qHH0417Rbn8kQwalk0v acAM/HUGnE8cSFUPQH0kZe8zddK2osWKvlHbI174zBp1+iwDvDrfiogFQ1dt8BA8rHe+asMdFjrjJ2 Vr9aGqPssTMZSBWy5WS5y0PBVSDVnt2Dr5ABlIGwOWFtNCUNg0kd9lqc64Rw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-This security defense is runtime enabled via CPU ID, so build it in by
-default. It will be enabled if the CPU supports it. The build takes
-2 seconds longer, which seems a small price to pay for gaining this
-coverage by default.
+Zero-length arrays are deprecated and we are moving towards adopting
+C99 flexible-array members, instead. So, replace zero-length array
+declarations in a couple of structures and unions with the new
+DECLARE_FLEX_ARRAY() helper macro.
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Suggested-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+This helper allows for a flexible-array member in a union and as
+only member in a structure.
+
+Also, this addresses multiple warnings reported when building with
+Clang-15 and -Wzero-length-array.
+
+Lastly, this will also help memcpy (in a coming hardening update)
+execute proper bounds-checking on variable length object i_symlink
+at fs/ocfs2/namei.c:1973:
+
+fs/ocfs2/namei.c:
+1973                 memcpy((char *) fe->id2.i_symlink, symname, l);
+
+Link: https://github.com/KSPP/linux/issues/21
+Link: https://github.com/KSPP/linux/issues/193
+Link: https://github.com/KSPP/linux/issues/197
+Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- arch/x86/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ocfs2/ocfs2_fs.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index f9920f1341c8..b48fd28cba4a 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1837,7 +1837,7 @@ config CC_HAS_IBT
- 
- config X86_KERNEL_IBT
- 	prompt "Indirect Branch Tracking"
--	bool
-+	def_bool y
- 	depends on X86_64 && CC_HAS_IBT && HAVE_OBJTOOL
- 	# https://github.com/llvm/llvm-project/commit/9d7001eba9c4cb311e03cd8cdc231f9e579f2d0f
- 	depends on !LD_IS_LLD || LLD_VERSION >= 140000
+diff --git a/fs/ocfs2/ocfs2_fs.h b/fs/ocfs2/ocfs2_fs.h
+index 638d875eccc7..7aebdbf5cc0a 100644
+--- a/fs/ocfs2/ocfs2_fs.h
++++ b/fs/ocfs2/ocfs2_fs.h
+@@ -527,7 +527,7 @@ struct ocfs2_extent_block
+  * value -1 (0xFFFF) is OCFS2_INVALID_SLOT.  This marks a slot empty.
+  */
+ struct ocfs2_slot_map {
+-/*00*/	__le16 sm_slots[0];
++/*00*/	DECLARE_FLEX_ARRAY(__le16, sm_slots);
+ /*
+  * Actual on-disk size is one block.  OCFS2_MAX_SLOTS is 255,
+  * 255 * sizeof(__le16) == 512B, within the 512B block minimum blocksize.
+@@ -548,7 +548,7 @@ struct ocfs2_extended_slot {
+  * i_size.
+  */
+ struct ocfs2_slot_map_extended {
+-/*00*/	struct ocfs2_extended_slot se_slots[0];
++/*00*/	DECLARE_FLEX_ARRAY(struct ocfs2_extended_slot, se_slots);
+ /*
+  * Actual size is i_size of the slot_map system file.  It should
+  * match s_max_slots * sizeof(struct ocfs2_extended_slot)
+@@ -727,7 +727,7 @@ struct ocfs2_dinode {
+ 		struct ocfs2_extent_list	i_list;
+ 		struct ocfs2_truncate_log	i_dealloc;
+ 		struct ocfs2_inline_data	i_data;
+-		__u8               		i_symlink[0];
++		DECLARE_FLEX_ARRAY(__u8,	i_symlink);
+ 	} id2;
+ /* Actual on-disk size is one block */
+ };
+@@ -892,7 +892,7 @@ struct ocfs2_group_desc
+ /*30*/	struct ocfs2_block_check bg_check;	/* Error checking */
+ 	__le64   bg_reserved2;
+ /*40*/	union {
+-		__u8    bg_bitmap[0];
++		DECLARE_FLEX_ARRAY(__u8, bg_bitmap);
+ 		struct {
+ 			/*
+ 			 * Block groups may be discontiguous when
 -- 
 2.34.1
 
