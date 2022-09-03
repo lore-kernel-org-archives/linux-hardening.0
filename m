@@ -2,111 +2,73 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F7CC6FA82
-	for <linux-hardening@archiver.kernel.org>; Sat,  3 Sep 2022 08:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E2FECAAD4
+	for <linux-hardening@archiver.kernel.org>; Sat,  3 Sep 2022 11:49:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232659AbiICIrx (ORCPT
+        id S230507AbiICLs7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 3 Sep 2022 04:47:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54372 "EHLO
+        Sat, 3 Sep 2022 07:48:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231911AbiICIrw (ORCPT
+        with ESMTP id S231128AbiICLs4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 3 Sep 2022 04:47:52 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE11050061;
-        Sat,  3 Sep 2022 01:47:51 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5C0BA60FA7;
-        Sat,  3 Sep 2022 08:47:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06FBCC433C1;
-        Sat,  3 Sep 2022 08:47:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662194870;
-        bh=AKBx+RhnvYKvFKdZQt/dEcm891uO5Cn8M8h92FFEGTI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sHkhHl0uEUvytTxeXc1eeKQ+XoZ8DGypdOqQB/Dixpw976IgCju01fDH5B+VctrIB
-         Ub3ROq0XcjWFl3TWoI01hphDuDeb0hUwPhVr0FLXSy+w7Zk3cVAaKnh9FPaXNRVGiR
-         QKoBbvgB+60CGxJTmz895zb+8k4QHL+zRw6XsicolClCQG0egEFC3w4+lsjeT4uNTV
-         ZvMbrjVfty+xhMGRIVSlLddwM7cJbu76ZtKjynWqonYii3wmBrP3GpTtAilEZG8FE7
-         LxDYZ37R6uwj56vpQgHjMct3dBEK2sdfq3HQ9ir9WRLG7glVe4TSM2l4n989zQbVYT
-         GxjdBSnAsgFFQ==
-Date:   Sat, 3 Sep 2022 09:47:44 +0100
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Bradley Grove <linuxdrivers@attotech.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] esas2r: Use flex array destination for memcpy()
-Message-ID: <YxMUsGW0ZYt9rmKd@work>
-References: <20220901205729.2260982-1-keescook@chromium.org>
+        Sat, 3 Sep 2022 07:48:56 -0400
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83A18754AD;
+        Sat,  3 Sep 2022 04:48:52 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0VOBAkhS_1662205727;
+Received: from 30.32.109.203(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0VOBAkhS_1662205727)
+          by smtp.aliyun-inc.com;
+          Sat, 03 Sep 2022 19:48:48 +0800
+Message-ID: <a3b32e71-a345-40d3-feee-fa4c5aab42af@linux.alibaba.com>
+Date:   Sat, 3 Sep 2022 19:48:47 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220901205729.2260982-1-keescook@chromium.org>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.13.0
+Subject: Re: [PATCH][next] ocfs2: Replace zero-length arrays with
+ DECLARE_FLEX_ARRAY() helper
+Content-Language: en-US
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        akpm <akpm@linux-foundation.org>
+Cc:     ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <YxKY6O2hmdwNh8r8@work>
+From:   Joseph Qi <joseph.qi@linux.alibaba.com>
+In-Reply-To: <YxKY6O2hmdwNh8r8@work>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 01, 2022 at 01:57:29PM -0700, Kees Cook wrote:
-> In preparation for FORTIFY_SOURCE performing run-time destination buffer
-> bounds checking for memcpy(), specify the destination output buffer
-> explicitly, instead of asking memcpy() to write past the end of what
-> looked like a fixed-size object. Silences future run-time warning:
-> 
->   memcpy: detected field-spanning write (size 80) of single field "trc + 1" (size 64)
-> 
-> There is no binary code output differences from this change.
-> 
-> Cc: Bradley Grove <linuxdrivers@attotech.com>
-> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Cc: linux-scsi@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Thanks
---
-Gustavo
+On 9/3/22 7:59 AM, Gustavo A. R. Silva wrote:
+> Zero-length arrays are deprecated and we are moving towards adopting
+> C99 flexible-array members, instead. So, replace zero-length array
+> declarations in a couple of structures and unions with the new
+> DECLARE_FLEX_ARRAY() helper macro.
+> 
+> This helper allows for a flexible-array member in a union and as
+> only member in a structure.
+> 
+> Also, this addresses multiple warnings reported when building with
+> Clang-15 and -Wzero-length-array.
+> 
+> Lastly, this will also help memcpy (in a coming hardening update)
+> execute proper bounds-checking on variable length object i_symlink
+> at fs/ocfs2/namei.c:1973:
+> 
+> fs/ocfs2/namei.c:
+> 1973                 memcpy((char *) fe->id2.i_symlink, symname, l);
+> 
+> Link: https://github.com/KSPP/linux/issues/21
+> Link: https://github.com/KSPP/linux/issues/193
+> Link: https://github.com/KSPP/linux/issues/197
+> Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-> ---
->  drivers/scsi/esas2r/atioctl.h      | 1 +
->  drivers/scsi/esas2r/esas2r_ioctl.c | 3 +--
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/scsi/esas2r/atioctl.h b/drivers/scsi/esas2r/atioctl.h
-> index ff2ad9b38575..dd3437412ffc 100644
-> --- a/drivers/scsi/esas2r/atioctl.h
-> +++ b/drivers/scsi/esas2r/atioctl.h
-> @@ -831,6 +831,7 @@ struct __packed atto_hba_trace {
->  	u32 total_length;
->  	u32 trace_mask;
->  	u8 reserved2[48];
-> +	u8 contents[];
->  };
->  
->  #define ATTO_FUNC_SCSI_PASS_THRU     0x04
-> diff --git a/drivers/scsi/esas2r/esas2r_ioctl.c b/drivers/scsi/esas2r/esas2r_ioctl.c
-> index 08f4e43c7d9e..e003d923acbf 100644
-> --- a/drivers/scsi/esas2r/esas2r_ioctl.c
-> +++ b/drivers/scsi/esas2r/esas2r_ioctl.c
-> @@ -947,10 +947,9 @@ static int hba_ioctl_callback(struct esas2r_adapter *a,
->  					break;
->  				}
->  
-> -				memcpy(trc + 1,
-> +				memcpy(trc->contents,
->  				       a->fw_coredump_buff + offset,
->  				       len);
-> -
->  				hi->data_length = len;
->  			} else if (trc->trace_func == ATTO_TRC_TF_RESET) {
->  				memset(a->fw_coredump_buff, 0,
-> -- 
-> 2.34.1
-> 
+Looks good.
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
