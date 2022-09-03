@@ -2,121 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EE3C38145
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Sep 2022 23:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08ED0C38145
+	for <linux-hardening@archiver.kernel.org>; Sat,  3 Sep 2022 02:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229511AbiIBX7o (ORCPT
+        id S231443AbiICCxb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Sep 2022 19:59:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46996 "EHLO
+        Fri, 2 Sep 2022 22:53:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230178AbiIBX7n (ORCPT
+        with ESMTP id S231363AbiICCxa (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Sep 2022 19:59:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB23564F7;
-        Fri,  2 Sep 2022 16:59:42 -0700 (PDT)
+        Fri, 2 Sep 2022 22:53:30 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBE7A86C2A;
+        Fri,  2 Sep 2022 19:53:28 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6A7F46201B;
-        Fri,  2 Sep 2022 23:59:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25388C433D6;
-        Fri,  2 Sep 2022 23:59:39 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A2C54B82D0E;
+        Sat,  3 Sep 2022 02:53:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9524C433D6;
+        Sat,  3 Sep 2022 02:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662163181;
-        bh=W8ti3zVsha1L/AuHd1jDm7TAZKo5OlYXymvwuJgcnwU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=l9jtwONRVIVTIJa3K7WkVc/D1kdK/D6TwoCMfUVuAoH1ZA7cP/yop/OX8voudx6VY
-         6/diT/UQ61Pl1qXTaqXxi+ZluebGjPnRucjzG/rIWAomcUfNgnI5R7G2zlNPxxRNSX
-         Ee8MWIpkEiGbbK63H7lT5t9plciDdADlP0uWUjfon3RiYR6H/H9sZKbLdXaXevwIod
-         Qch7ZJ12/fI3kEYzttCHkZ73k5EmREeuVHTbzSaEsLoLoKO0/i3rxCgj2eWS4wEChs
-         ICjFCb0XzziiTLFcnFwBJ1HomvhX138/swPaqdQ6zbrdMfo2BIgH2YFjGai52mvgwf
-         rPSTmP1lj6FQw==
-Date:   Sat, 3 Sep 2022 00:59:36 +0100
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc:     ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] ocfs2: Replace zero-length arrays with
- DECLARE_FLEX_ARRAY() helper
-Message-ID: <YxKY6O2hmdwNh8r8@work>
+        s=k20201202; t=1662173606;
+        bh=OUYx9zqyVhkPwKlBXjzCx3T9nSj8tuR4ByliWLPFxNM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LyWkGIYwv2Gpf20eWkMR5EpzxrZuPMrWhZ6Y8KlZzD+vLhsfN5a+A7/9k99ZGslxe
+         ganDQ8ch4bBysvmjAGq831CecqiRy3GHP6u5qSGQnne7YpVH3m4A5G0VPSrqyYc6uJ
+         hcxCh5zoPbJKk77ZwmYNhGOlEi5p1KR51RGjto5VG0bkwERGv8IO1hsyQ6U86lIqw1
+         LBMAFUmwCNgtHpYAWBRLYaOhg3yxqsLgzOBlxZLBZy4T4F+l7Iu4qS51goF9xHNOuf
+         tOJRghHz0+T43wkVhLJiQKRdtExWhwWLW3dd6yhXudD6ULme1lRIfzO3dmDQjxgCe9
+         nLI2K/UQYm/6Q==
+Date:   Fri, 2 Sep 2022 19:53:24 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org,
+        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] netlink: Bounds-check struct nlmsgerr creation
+Message-ID: <20220902195324.15a9ae30@kernel.org>
+In-Reply-To: <202209021555.9EE2FBD3A@keescook>
+References: <20220901071336.1418572-1-keescook@chromium.org>
+        <202209021555.9EE2FBD3A@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Zero-length arrays are deprecated and we are moving towards adopting
-C99 flexible-array members, instead. So, replace zero-length array
-declarations in a couple of structures and unions with the new
-DECLARE_FLEX_ARRAY() helper macro.
+On Fri, 2 Sep 2022 16:08:01 -0700 Kees Cook wrote:
+> > -	if (extack->cookie_len)
+> > -		tlvlen += nla_total_size(extack->cookie_len);
+> > +	if (extack->_msg &&
+> > +	    check_add_overflow(*tlvlen, nla_total_size(strlen(extack->_msg) + 1), tlvlen))
+> > +		return false;  
+> 
+> If that's not desirable, then I guess the question I want to ask is
+> "what can I put in the unsafe_memcpy() comment above that proves these
+> values have been sanity checked? In other words, how do we know that
+> tlvlen hasn't overflowed? (I don't know what other sanity checking may
+> have already happened, so I'm looking directly at the size calculations
+> here.)
 
-This helper allows for a flexible-array member in a union and as
-only member in a structure.
+The netlink helpers for adding attributes check whether there is enough
+space left in the skb. So if the calculation overflows, so be it. We'll
+hit EMSGSIZE in the writing phase and unwind. The writing should make
+no assumptions about the skb size. In fact all dumps will routinely hit
+EMSGSIZE as we try to fit as many objects into a skb as possible, so we
+unwind the one that would go over. Unwinding is well exercised in a lot
+of netlink code (not here, MSG_DONE/MSG_ERROR ain't a dump).
 
-Also, this addresses multiple warnings reported when building with
-Clang-15 and -Wzero-length-array.
+The pre-calculation is just an estimate, if the message size ends up
+being insane it really doesn't matter if the calculation is 0, INT_MAX
+or random(). User is not gonna get a response, anyway.
 
-Lastly, this will also help memcpy (in a coming hardening update)
-execute proper bounds-checking on variable length object i_symlink
-at fs/ocfs2/namei.c:1973:
-
-fs/ocfs2/namei.c:
-1973                 memcpy((char *) fe->id2.i_symlink, symname, l);
-
-Link: https://github.com/KSPP/linux/issues/21
-Link: https://github.com/KSPP/linux/issues/193
-Link: https://github.com/KSPP/linux/issues/197
-Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- fs/ocfs2/ocfs2_fs.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/fs/ocfs2/ocfs2_fs.h b/fs/ocfs2/ocfs2_fs.h
-index 638d875eccc7..7aebdbf5cc0a 100644
---- a/fs/ocfs2/ocfs2_fs.h
-+++ b/fs/ocfs2/ocfs2_fs.h
-@@ -527,7 +527,7 @@ struct ocfs2_extent_block
-  * value -1 (0xFFFF) is OCFS2_INVALID_SLOT.  This marks a slot empty.
-  */
- struct ocfs2_slot_map {
--/*00*/	__le16 sm_slots[0];
-+/*00*/	DECLARE_FLEX_ARRAY(__le16, sm_slots);
- /*
-  * Actual on-disk size is one block.  OCFS2_MAX_SLOTS is 255,
-  * 255 * sizeof(__le16) == 512B, within the 512B block minimum blocksize.
-@@ -548,7 +548,7 @@ struct ocfs2_extended_slot {
-  * i_size.
-  */
- struct ocfs2_slot_map_extended {
--/*00*/	struct ocfs2_extended_slot se_slots[0];
-+/*00*/	DECLARE_FLEX_ARRAY(struct ocfs2_extended_slot, se_slots);
- /*
-  * Actual size is i_size of the slot_map system file.  It should
-  * match s_max_slots * sizeof(struct ocfs2_extended_slot)
-@@ -727,7 +727,7 @@ struct ocfs2_dinode {
- 		struct ocfs2_extent_list	i_list;
- 		struct ocfs2_truncate_log	i_dealloc;
- 		struct ocfs2_inline_data	i_data;
--		__u8               		i_symlink[0];
-+		DECLARE_FLEX_ARRAY(__u8,	i_symlink);
- 	} id2;
- /* Actual on-disk size is one block */
- };
-@@ -892,7 +892,7 @@ struct ocfs2_group_desc
- /*30*/	struct ocfs2_block_check bg_check;	/* Error checking */
- 	__le64   bg_reserved2;
- /*40*/	union {
--		__u8    bg_bitmap[0];
-+		DECLARE_FLEX_ARRAY(__u8, bg_bitmap);
- 		struct {
- 			/*
- 			 * Block groups may be discontiguous when
--- 
-2.34.1
-
+... unless someone uses the unsafe helpers like __nlmsg_put() rather
+than nlmsg_put(), hence my suggestion in the other email.
