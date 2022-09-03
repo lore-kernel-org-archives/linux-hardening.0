@@ -2,148 +2,85 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2261C38145
-	for <linux-hardening@archiver.kernel.org>; Sat,  3 Sep 2022 04:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5957ECAAD4
+	for <linux-hardening@archiver.kernel.org>; Sat,  3 Sep 2022 05:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231862AbiICEiE (ORCPT
+        id S231968AbiICFKI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 3 Sep 2022 00:38:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39762 "EHLO
+        Sat, 3 Sep 2022 01:10:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231771AbiICEiD (ORCPT
+        with ESMTP id S231862AbiICFKH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 3 Sep 2022 00:38:03 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 779F3F61BC
-        for <linux-hardening@vger.kernel.org>; Fri,  2 Sep 2022 21:38:01 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id t5so3770676pjs.0
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Sep 2022 21:38:01 -0700 (PDT)
+        Sat, 3 Sep 2022 01:10:07 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FFBF2A957
+        for <linux-hardening@vger.kernel.org>; Fri,  2 Sep 2022 22:10:04 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id z187so3744062pfb.12
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Sep 2022 22:10:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=8nxHAJjNJIWIS9zp8ReO9CFJ5l6F+DeHqEeikcdRx8A=;
-        b=X3lVsVyiXuVeUrPc0SfBRYXsv+r0wXnzDinfXhWzg0rcwgVH00dNuGxyp8ILJbrzKe
-         FhVA4UE2lXfoDl2VC5CrLsJyA1NrdVmISCVYcMuorCm5ahdWpcFshtng/mI+zvKlZuEX
-         3dD3MkRXOKpFlUQo6Yp0wZyGx9Jm/4p2eTryw=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=aOcDSKXlp0EJ6t3kZwqTuaD2pTzkFcj1dQ5Ha/6SqwE=;
+        b=i3ztzSid1AsHGEQ246ZoUt18dJ2RfGY6Su/dIYUVyB3Zvl2oeioAtwvdwtZMszaMev
+         Pwjx+rKu5ojbHnkpdEKrMW8T3Ukcf+6YOTriKmJsz1/nLHBSzSYOViUnsURhU2kmekB2
+         zmhmYrgwLYhHDRIi3IQYfiZbEMW5Wbs/9pm7Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=8nxHAJjNJIWIS9zp8ReO9CFJ5l6F+DeHqEeikcdRx8A=;
-        b=blWYtJRV+fJml21UWZzNdfDb/V+3TKUXs5qDjp5p+UMDVao1Cmli0vBvzA7kFYY0CO
-         HWNJTnmVOKwqLsOgtPW6O2ucMXdUHfKgtua1WUxGp4i2PN8MO8CejFTWQ6URSoZaQ0Bf
-         VmpwkMkMp0pZIt8lhx7fGvmZxgq3yXSBYZnvAOEHnNpoZKOzEwfpmQZM47+T27Vg8Lfe
-         7V9+9vO6dV/iwQKO00MDBSlM5209ToJ6HjMKHFTz/JGW/yhTHz5vW9ZXnNeyHA3z5V2G
-         xPNPSdF7wQgJx2ZxcnmVa3ZASN46A5nvO3SwMd5V9YEi5a6wNkgsJYu6uV2Z7F0DeP+6
-         EP6g==
-X-Gm-Message-State: ACgBeo0zMlUv0ZrHJMabFMaU1J0C4lEU79+FnBSa88Fhob57SsfbBlPr
-        4F9Q4avg1EEzom/qImxGl3kqYw==
-X-Google-Smtp-Source: AA6agR4tHbhmttrlfXXBLnYW6bC7tSeb/QIaCb2aEofXok4fszW2M01DOX72YVzujYwLN4janJeuvg==
-X-Received: by 2002:a17:90b:4f44:b0:1f5:1310:9e7f with SMTP id pj4-20020a17090b4f4400b001f513109e7fmr8267103pjb.235.1662179880957;
-        Fri, 02 Sep 2022 21:38:00 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=aOcDSKXlp0EJ6t3kZwqTuaD2pTzkFcj1dQ5Ha/6SqwE=;
+        b=xKdoB9yB0A0KHEyUhNUszKTCD0pSEeD2aQ7KBkyb6AJiGHbynNHDUlyglpGB2qMBnE
+         ptIorKjnCW/0Mq7YTJqoEJGZK3+FJt9T3DW0TsfK2EpLYsGr8RgCVyuOjz4u3NPB3rLi
+         v5x82j6kzOSvZpEfhmYJ/I549fVfyl+vAiYCmuurWFGTf2oWyjC2UmWb3CqovxfKUDZO
+         ZDy3/2TU+3I/5BvXpJD/x0P1wpAE3nbWNlgA920mU+PObeGQ4+hl2LmcWvqJLIIoMfHe
+         aZvCC46ekCGp7Q4fEDw6Z5stNdhPyBafbKpPS7uht/wpTrPCCGZ7COynqwA7uX7ae71r
+         ojpw==
+X-Gm-Message-State: ACgBeo0q3pYnOtxQKq3lZaFZ0GRDfchspSRnINMzbgFaEEwOY8Z2wXCT
+        WvY9+1DFCC84ptFppbZXFDMRhA==
+X-Google-Smtp-Source: AA6agR7hj5LdKaxooA4zyBk6NlsbsPsKSPfupmfzoKtd0brgGX3zgS/v9zqJPwxZxtXjN6+Xu5J67A==
+X-Received: by 2002:a65:44c1:0:b0:428:ab8f:62dd with SMTP id g1-20020a6544c1000000b00428ab8f62ddmr33545276pgs.211.1662181803523;
+        Fri, 02 Sep 2022 22:10:03 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id ot17-20020a17090b3b5100b001fb3522d53asm6106848pjb.34.2022.09.02.21.37.59
+        by smtp.gmail.com with ESMTPSA id e2-20020a17090301c200b0017545ee859esm2610168plh.8.2022.09.02.22.10.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Sep 2022 21:37:59 -0700 (PDT)
+        Fri, 02 Sep 2022 22:10:02 -0700 (PDT)
+Date:   Fri, 2 Sep 2022 22:10:01 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, Oliver Hartkopp <socketcan@hartkopp.net>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v4] netlink: Bounds-check struct nlmsgerr creation
-Date:   Fri,  2 Sep 2022 21:37:49 -0700
-Message-Id: <20220903043749.3102675-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        ;
+Illegal-Object: Syntax error in Cc: address found on vger.kernel.org:
+        Cc:     ;
+                        ^-missing semicolon to end mail group, extraneous tokens in mailbox, missing end of mailbox
+Subject: Re: [PATCH][next] exportfs: Replace zero-length array with
+ DECLARE_FLEX_ARRAY() helper
+Message-ID: <202209022209.ABAD4C8899@keescook>
+References: <YxKNA/3add4wxI3R@work>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3165; h=from:subject; bh=+867zmYG0ld3KfCtaWXXbDBtt9S0k+MtCYquudNfT9Q=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjEtocUmRItUSNtW/RTth/KU3s4KwnEmu+44cDc5a/ nPduHrKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYxLaHAAKCRCJcvTf3G3AJvy3EA C0NT7YlazAAErZVQ5th3Ygbrxza2BA+hg90Sou5UwTF20tyTpRMy2yyXiLuObjL+ztWexEY4y7y1e+ t+iC7eg5RiLysFTGfbBAHoRzvnA+2RsINYiG6jzux01QYm0cfdyIRjO3+kmBsqXamAe10yey74wyEy 51SFpBVb3oUf1nelP/JwsZfQbworKmB3uvhc/eGV/nFItFNk/zwLTeCHjxKKfPOlU5QPhhb67XlJt0 2bUH3UMOqNE7k3ksE4Evem4E5TkgvbqntVcE5U1ND7P0SnGeUaYP8iFisX8TMVk5GImU1T6lcyhMk/ uwhy+ULjLiDaDIH9dvMqsV4Zu1E+vJmgmL0WVRB2/fLA6pUkR0/7+GB2GmCpHay1yK1NsQLHtmZOWl rBO02Io72jB2ID91gCgkSHFrleBBWUqUg06+PCYcmpAK+CzQch4nW+KNU6rbU/10nVYkJtB+S72KFn TQP/6uSRqyim3bMMjYyE85iMq+AeMSMAfCtIF6NAoT/YSNa/Tj4n6Wv3EtLdHDLy3wFV1njy+vkWkI ATBbd/OSj9xMUtIzHdnJBRD5jyaYPGqH5z6N9pUkNHVoYT+9GNxRnjBsuOMF3HS65I/FxnjIj0ZBkq zwo/flWB1PpdNUBcCbi+F/bSsl3mDFlWiqBXdHturSUMBuyC2ZOm3DxFfkEg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YxKNA/3add4wxI3R@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for FORTIFY_SOURCE doing bounds-check on memcpy(),
-switch from __nlmsg_put to nlmsg_put(), and explain the bounds check
-for dealing with the memcpy() across a composite flexible array struct.
-Avoids this future run-time warning:
+On Sat, Sep 03, 2022 at 12:08:51AM +0100, Gustavo A. R. Silva wrote:
+> Zero-length arrays are deprecated and we are moving towards adopting
+> C99 flexible-array members instead. So, replace zero-length array
+> declaration in struct fid with the new DECLARE_FLEX_ARRAY()
+> helper macro.
+> 
+> This helper allows for a flexible-array member in a union.
+> 
+> Link: https://github.com/KSPP/linux/issues/21
+> Link: https://github.com/KSPP/linux/issues/193
+> Link: https://github.com/KSPP/linux/issues/197
+> Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-  memcpy: detected field-spanning write (size 32) of single field "&errmsg->msg" at net/netlink/af_netlink.c:2447 (size 16)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Pablo Neira Ayuso <pablo@netfilter.org>
-Cc: Jozsef Kadlecsik <kadlec@netfilter.org>
-Cc: Florian Westphal <fw@strlen.de>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: syzbot <syzkaller@googlegroups.com>
-Cc: netfilter-devel@vger.kernel.org
-Cc: coreteam@netfilter.org
-Cc: netdev@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20220901071336.1418572-1-keescook@chromium.org
----
-v4:
- - switch to nlmsg_put() instead of __nlmsg_put() (kuba)
-v3: https://lore.kernel.org/lkml/20220901071336.1418572-1-keescook@chromium.org
-v2: https://lore.kernel.org/lkml/20220901064858.1417126-1-keescook@chromium.org
-v1: https://lore.kernel.org/lkml/20220901030610.1121299-3-keescook@chromium.org
----
- net/netfilter/ipset/ip_set_core.c | 8 +++++---
- net/netlink/af_netlink.c          | 8 +++++---
- 2 files changed, 10 insertions(+), 6 deletions(-)
-
-diff --git a/net/netfilter/ipset/ip_set_core.c b/net/netfilter/ipset/ip_set_core.c
-index 16ae92054baa..6b31746f9be3 100644
---- a/net/netfilter/ipset/ip_set_core.c
-+++ b/net/netfilter/ipset/ip_set_core.c
-@@ -1719,11 +1719,13 @@ call_ad(struct net *net, struct sock *ctnl, struct sk_buff *skb,
- 		skb2 = nlmsg_new(payload, GFP_KERNEL);
- 		if (!skb2)
- 			return -ENOMEM;
--		rep = __nlmsg_put(skb2, NETLINK_CB(skb).portid,
--				  nlh->nlmsg_seq, NLMSG_ERROR, payload, 0);
-+		rep = nlmsg_put(skb2, NETLINK_CB(skb).portid,
-+				nlh->nlmsg_seq, NLMSG_ERROR, payload, 0);
- 		errmsg = nlmsg_data(rep);
- 		errmsg->error = ret;
--		memcpy(&errmsg->msg, nlh, nlh->nlmsg_len);
-+		unsafe_memcpy(&errmsg->msg, nlh, nlh->nlmsg_len,
-+			      /* Bounds checked by the skb layer. */);
-+
- 		cmdattr = (void *)&errmsg->msg + min_len;
- 
- 		ret = nla_parse(cda, IPSET_ATTR_CMD_MAX, cmdattr,
-diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
-index f89ba302ac6e..a662e8a5ff84 100644
---- a/net/netlink/af_netlink.c
-+++ b/net/netlink/af_netlink.c
-@@ -2494,11 +2494,13 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
- 		return;
- 	}
- 
--	rep = __nlmsg_put(skb, NETLINK_CB(in_skb).portid, nlh->nlmsg_seq,
--			  NLMSG_ERROR, payload, flags);
-+	rep = nlmsg_put(skb, NETLINK_CB(in_skb).portid, nlh->nlmsg_seq,
-+			NLMSG_ERROR, payload, flags);
- 	errmsg = nlmsg_data(rep);
- 	errmsg->error = err;
--	memcpy(&errmsg->msg, nlh, payload > sizeof(*errmsg) ? nlh->nlmsg_len : sizeof(*nlh));
-+	unsafe_memcpy(&errmsg->msg, nlh, payload > sizeof(*errmsg)
-+					 ? nlh->nlmsg_len : sizeof(*nlh),
-+		      /* Bounds checked by the skb layer. */);
- 
- 	if (tlvlen)
- 		netlink_ack_tlv_fill(in_skb, skb, nlh, err, extack);
 -- 
-2.34.1
-
+Kees Cook
