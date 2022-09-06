@@ -2,23 +2,23 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B297C6FA91
-	for <linux-hardening@archiver.kernel.org>; Tue,  6 Sep 2022 10:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6025C38145
+	for <linux-hardening@archiver.kernel.org>; Tue,  6 Sep 2022 10:42:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239511AbiIFKmI (ORCPT
+        id S239598AbiIFKmK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 6 Sep 2022 06:42:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56862 "EHLO
+        Tue, 6 Sep 2022 06:42:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239017AbiIFKl6 (ORCPT
+        with ESMTP id S238792AbiIFKl5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 6 Sep 2022 06:41:58 -0400
+        Tue, 6 Sep 2022 06:41:57 -0400
 Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DEC961103;
-        Tue,  6 Sep 2022 03:41:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71C2F5FF68;
+        Tue,  6 Sep 2022 03:41:47 -0700 (PDT)
 Received: from localhost.localdomain (unknown [83.149.199.65])
-        by mail.ispras.ru (Postfix) with ESMTPSA id B0B314076260;
-        Tue,  6 Sep 2022 10:41:39 +0000 (UTC)
+        by mail.ispras.ru (Postfix) with ESMTPSA id C3DFC4076258;
+        Tue,  6 Sep 2022 10:41:38 +0000 (UTC)
 From:   Evgeniy Baskov <baskov@ispras.ru>
 To:     Ard Biesheuvel <ardb@kernel.org>
 Cc:     Evgeniy Baskov <baskov@ispras.ru>, Borislav Petkov <bp@alien8.de>,
@@ -31,9 +31,9 @@ Cc:     Evgeniy Baskov <baskov@ispras.ru>, Borislav Petkov <bp@alien8.de>,
         lvc-project@linuxtesting.org, x86@kernel.org,
         linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH 13/16] efi/x86: Support extracting kernel from libstub
-Date:   Tue,  6 Sep 2022 13:41:17 +0300
-Message-Id: <502bf9da77574d6b2edeee0abec3df6b1510aaa0.1662459668.git.baskov@ispras.ru>
+Subject: [PATCH 06/16] x86/boot: Setup memory protection for bzImage code
+Date:   Tue,  6 Sep 2022 13:41:10 +0300
+Message-Id: <2fd61a79a1e6885dc47ec826b62a936dd88a0a16.1662459668.git.baskov@ispras.ru>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <cover.1662459668.git.baskov@ispras.ru>
 References: <cover.1662459668.git.baskov@ispras.ru>
@@ -43,515 +43,499 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Doing it that way allows setting up stricter memory attributes,
-simplifies boot code path and removes potential relocation
-of kernel image.
-
-Wire up required interfaces and minimally initialize zero page
-fields needed for it to function correctly.
+Use previously added code to use 4KB pages for mapping. Map compressed
+and uncompressed kernel with appropriate memory protection attributes.
+For compressed kernel set them up manually. For uncompressed kernel
+used flags specified in ELF header.
 
 Signed-off-by: Evgeniy Baskov <baskov@ispras.ru>
 
- create mode 100644 arch/x86/include/asm/shared/extract.h
- create mode 100644 drivers/firmware/efi/libstub/x86-extract-direct.c
+ delete mode 100644 arch/x86/boot/compressed/pgtable.h
+ create mode 100644 arch/x86/include/asm/shared/pgtable.h
 ---
- arch/x86/boot/compressed/head_32.S            |   6 +-
- arch/x86/boot/compressed/head_64.S            |  45 ++++
- arch/x86/include/asm/shared/extract.h         |  25 ++
- drivers/firmware/efi/Kconfig                  |  14 ++
- drivers/firmware/efi/libstub/Makefile         |   1 +
- drivers/firmware/efi/libstub/efistub.h        |   5 +
- .../firmware/efi/libstub/x86-extract-direct.c | 220 ++++++++++++++++++
- drivers/firmware/efi/libstub/x86-stub.c       |  45 ++--
- 8 files changed, 343 insertions(+), 18 deletions(-)
- create mode 100644 arch/x86/include/asm/shared/extract.h
- create mode 100644 drivers/firmware/efi/libstub/x86-extract-direct.c
+ arch/x86/boot/compressed/head_64.S      | 25 ++++++-
+ arch/x86/boot/compressed/ident_map_64.c | 96 ++++++++++++++++---------
+ arch/x86/boot/compressed/misc.c         | 63 ++++++++++++++--
+ arch/x86/boot/compressed/misc.h         | 16 ++++-
+ arch/x86/boot/compressed/pgtable.h      | 20 ------
+ arch/x86/boot/compressed/pgtable_64.c   |  2 +-
+ arch/x86/boot/compressed/sev.c          |  6 +-
+ arch/x86/include/asm/shared/pgtable.h   | 29 ++++++++
+ 8 files changed, 193 insertions(+), 64 deletions(-)
+ delete mode 100644 arch/x86/boot/compressed/pgtable.h
+ create mode 100644 arch/x86/include/asm/shared/pgtable.h
 
-diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index b46a1c4109cf..d2866f06bc9f 100644
---- a/arch/x86/boot/compressed/head_32.S
-+++ b/arch/x86/boot/compressed/head_32.S
-@@ -155,7 +155,11 @@ SYM_FUNC_START(efi32_stub_entry)
- 	add	$0x4, %esp
- 	movl	8(%esp), %esi	/* save boot_params pointer */
- 	call	efi_main
--	/* efi_main returns the possibly relocated address of startup_32 */
-+
-+	/*
-+	 * efi_main returns the possibly
-+	 * relocated address of exteracted kernel entry point.
-+	 */
- 	jmp	*%eax
- SYM_FUNC_END(efi32_stub_entry)
- SYM_FUNC_ALIAS(efi_stub_entry, efi32_stub_entry)
 diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 37ce094571b5..b6bae8e7ee71 100644
+index 5273367283b7..889ca7176aa7 100644
 --- a/arch/x86/boot/compressed/head_64.S
 +++ b/arch/x86/boot/compressed/head_64.S
-@@ -555,9 +555,54 @@ SYM_FUNC_START(efi64_stub_entry)
- 	and	$~0xf, %rsp			/* realign the stack */
- 	movq	%rdx, %rbx			/* save boot_params pointer */
- 	call	efi_main
-+
-+#ifdef CONFIG_EFI_STUB_EXTRACT_DIRECT
-+	cld
-+	cli
-+
-+	movq	%rbx, %rdi /* boot_params */
-+	movq	%rax, %rsi /* decompressed kernel address */
-+
-+	/* Make sure we have GDT with 32-bit code segment */
-+	leaq	gdt64(%rip), %rax
-+	addq	%rax, 2(%rax)
-+	lgdt	(%rax)
-+
-+	/* Setup data segments. */
-+	xorl	%eax, %eax
-+	movl	%eax, %ds
-+	movl	%eax, %es
-+	movl	%eax, %ss
-+	movl	%eax, %fs
-+	movl	%eax, %gs
-+
-+	pushq	%rsi
-+	pushq	%rdi
-+
-+	call startup32_enable_nx_if_supported
-+
-+	call	trampoline_pgtable_init
-+	movq	%rax, %rdx
-+
-+
-+	/* Swap %rsi and %rsi */
-+	popq	%rsi
-+	popq	%rdi
-+
-+	/* Save the trampoline address in RCX */
-+	movq	trampoline_32bit(%rip), %rcx
-+
-+	/* Switch to compatibility mode (CS.L = 0 CS.D = 1) via far return */
-+	pushq	$__KERNEL32_CS
-+	leaq	TRAMPOLINE_32BIT_CODE_OFFSET(%rcx), %rax
-+	pushq	%rax
-+	lretq
-+#else
- 	movq	%rbx,%rsi
- 	leaq	rva(startup_64)(%rax), %rax
+@@ -35,7 +35,7 @@
+ #include <asm/bootparam.h>
+ #include <asm/desc_defs.h>
+ #include <asm/trapnr.h>
+-#include "pgtable.h"
++#include <asm/shared/pgtable.h>
+ 
+ /*
+  * Locally defined symbols should be marked hidden:
+@@ -578,6 +578,7 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+ 	pushq	%rsi
+ 	call	load_stage2_idt
+ 
++	call	startup32_enable_nx_if_supported
+ 	/* Pass boot_params to initialize_identity_maps() */
+ 	movq	(%rsp), %rdi
+ 	call	initialize_identity_maps
+@@ -602,6 +603,28 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
  	jmp	*%rax
-+#endif
+ SYM_FUNC_END(.Lrelocated)
+ 
++SYM_FUNC_START_LOCAL_NOALIGN(startup32_enable_nx_if_supported)
++	pushq	%rbx
 +
- SYM_FUNC_END(efi64_stub_entry)
- SYM_FUNC_ALIAS(efi_stub_entry, efi64_stub_entry)
++	leaq	has_nx(%rip), %rcx
++
++	mov	$0x80000001, %eax
++	cpuid
++	btl	$20, %edx
++	jnc	.Lnonx
++
++	movl	$1, (%rcx)
++
++	movl	$MSR_EFER, %ecx
++	rdmsr
++	btsl	$_EFER_NX, %eax
++	wrmsr
++
++.Lnonx:
++	popq	%rbx
++	RET
++SYM_FUNC_END(startup32_enable_nx_if_supported)
++
+ 	.code32
+ /*
+  * This is the 32-bit trampoline that will be copied over to low memory.
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index d4a314cc50d6..880e08293023 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -28,6 +28,7 @@
+ #include <asm/trap_pf.h>
+ #include <asm/trapnr.h>
+ #include <asm/init.h>
++#include <asm/shared/pgtable.h>
+ /* Use the static base for this part of the boot process */
+ #undef __PAGE_OFFSET
+ #define __PAGE_OFFSET __PAGE_OFFSET_BASE
+@@ -86,24 +87,46 @@ phys_addr_t physical_mask = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
+  * Due to relocation, pointers must be assigned at run time not build time.
+  */
+ static struct x86_mapping_info mapping_info;
++int has_nx;
+ 
+ /*
+  * Adds the specified range to the identity mappings.
+  */
+-void kernel_add_identity_map(unsigned long start, unsigned long end)
++unsigned long kernel_add_identity_map(unsigned long start,
++				      unsigned long end,
++				      unsigned int flags)
+ {
+ 	int ret;
+ 
+ 	/* Align boundary to 2M. */
+-	start = round_down(start, PMD_SIZE);
+-	end = round_up(end, PMD_SIZE);
++	start = round_down(start, PAGE_SIZE);
++	end = round_up(end, PAGE_SIZE);
+ 	if (start >= end)
+-		return;
++		return start;
++
++	/* Enforce W^X -- just stop booting with error on violation. */
++	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) &&
++	    (flags & (MAP_EXEC | MAP_WRITE)) == (MAP_EXEC | MAP_WRITE))
++		error("Error: W^X violation\n");
++
++	bool nx = !(flags & MAP_EXEC) && has_nx;
++	bool ro = !(flags & MAP_WRITE);
++
++	mapping_info.page_flag = sme_me_mask | (nx ?
++		(ro ? __PAGE_KERNEL_RO : __PAGE_KERNEL) :
++		(ro ? __PAGE_KERNEL_ROX : __PAGE_KERNEL_EXEC));
+ 
+ 	/* Build the mapping. */
+-	ret = kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt, start, end);
++	ret = kernel_ident_mapping_init(&mapping_info,
++					(pgd_t *)top_level_pgt,
++					start, end);
+ 	if (ret)
+ 		error("Error: kernel_ident_mapping_init() failed\n");
++
++	if (!(flags & MAP_NOFLUSH))
++		write_cr3(top_level_pgt);
++
++	return start;
+ }
+ 
+ /* Locates and clears a region for a new top level page table. */
+@@ -112,14 +135,17 @@ void initialize_identity_maps(void *rmode)
+ 	unsigned long cmdline;
+ 	struct setup_data *sd;
+ 
++	boot_params = rmode;
++
+ 	/* Exclude the encryption mask from __PHYSICAL_MASK */
+ 	physical_mask &= ~sme_me_mask;
+ 
+ 	/* Init mapping_info with run-time function/buffer pointers. */
+ 	mapping_info.alloc_pgt_page = alloc_pgt_page;
+ 	mapping_info.context = &pgt_data;
+-	mapping_info.page_flag = __PAGE_KERNEL_LARGE_EXEC | sme_me_mask;
++	mapping_info.page_flag = __PAGE_KERNEL_EXEC | sme_me_mask;
+ 	mapping_info.kernpg_flag = _KERNPG_TABLE;
++	mapping_info.allow_4kpages = 1;
+ 
+ 	/*
+ 	 * It should be impossible for this not to already be true,
+@@ -154,15 +180,34 @@ void initialize_identity_maps(void *rmode)
+ 	/*
+ 	 * New page-table is set up - map the kernel image, boot_params and the
+ 	 * command line. The uncompressed kernel requires boot_params and the
+-	 * command line to be mapped in the identity mapping. Map them
+-	 * explicitly here in case the compressed kernel does not touch them,
+-	 * or does not touch all the pages covering them.
++	 * command line to be mapped in the identity mapping.
++	 * Every other accessed memory region is mapped later, if required.
+ 	 */
+-	kernel_add_identity_map((unsigned long)_head, (unsigned long)_end);
+-	boot_params = rmode;
+-	kernel_add_identity_map((unsigned long)boot_params, (unsigned long)(boot_params + 1));
++	extern char _head[], _ehead[];
++	kernel_add_identity_map((unsigned long)_head,
++				(unsigned long)_ehead, MAP_EXEC | MAP_NOFLUSH);
++
++	extern char _compressed[], _ecompressed[];
++	kernel_add_identity_map((unsigned long)_compressed,
++				(unsigned long)_ecompressed, MAP_WRITE | MAP_NOFLUSH);
++
++	extern char _text[], _etext[];
++	kernel_add_identity_map((unsigned long)_text,
++				(unsigned long)_etext, MAP_EXEC | MAP_NOFLUSH);
++
++	extern char _rodata[], _erodata[];
++	kernel_add_identity_map((unsigned long)_rodata,
++				(unsigned long)_erodata, MAP_NOFLUSH);
++
++	extern char _data[], _end[];
++	kernel_add_identity_map((unsigned long)_data,
++				(unsigned long)_end, MAP_WRITE | MAP_NOFLUSH);
++
++	kernel_add_identity_map((unsigned long)boot_params,
++				(unsigned long)(boot_params + 1), MAP_WRITE | MAP_NOFLUSH);
++
+ 	cmdline = get_cmd_line_ptr();
+-	kernel_add_identity_map(cmdline, cmdline + COMMAND_LINE_SIZE);
++	kernel_add_identity_map(cmdline, cmdline + COMMAND_LINE_SIZE, MAP_NOFLUSH);
+ 
+ 	/*
+ 	 * Also map the setup_data entries passed via boot_params in case they
+@@ -172,7 +217,7 @@ void initialize_identity_maps(void *rmode)
+ 	while (sd) {
+ 		unsigned long sd_addr = (unsigned long)sd;
+ 
+-		kernel_add_identity_map(sd_addr, sd_addr + sizeof(*sd) + sd->len);
++		kernel_add_identity_map(sd_addr, sd_addr + sizeof(*sd) + sd->len, MAP_NOFLUSH);
+ 		sd = (struct setup_data *)sd->next;
+ 	}
+ 
+@@ -185,26 +230,11 @@ void initialize_identity_maps(void *rmode)
+ static pte_t *split_large_pmd(struct x86_mapping_info *info,
+ 			      pmd_t *pmdp, unsigned long __address)
+ {
+-	unsigned long page_flags;
+-	unsigned long address;
+-	pte_t *pte;
+-	pmd_t pmd;
+-	int i;
+-
+-	pte = (pte_t *)info->alloc_pgt_page(info->context);
++	unsigned long address = __address & PMD_MASK;
++	pte_t *pte = ident_split_large_pmd(info, pmdp, address);
+ 	if (!pte)
+ 		return NULL;
+ 
+-	address     = __address & PMD_MASK;
+-	/* No large page - clear PSE flag */
+-	page_flags  = info->page_flag & ~_PAGE_PSE;
+-
+-	/* Populate the PTEs */
+-	for (i = 0; i < PTRS_PER_PMD; i++) {
+-		set_pte(&pte[i], __pte(address | page_flags));
+-		address += PAGE_SIZE;
+-	}
+-
+ 	/*
+ 	 * Ideally we need to clear the large PMD first and do a TLB
+ 	 * flush before we write the new PMD. But the 2M range of the
+@@ -214,7 +244,7 @@ static pte_t *split_large_pmd(struct x86_mapping_info *info,
+ 	 * also the only user of the page-table, so there is no chance
+ 	 * of a TLB multihit.
+ 	 */
+-	pmd = __pmd((unsigned long)pte | info->kernpg_flag);
++	pmd_t pmd = __pmd((unsigned long)pte | info->kernpg_flag);
+ 	set_pmd(pmdp, pmd);
+ 	/* Flush TLB to establish the new PMD */
+ 	write_cr3(top_level_pgt);
+@@ -377,5 +407,5 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
+ 	 * Error code is sane - now identity map the 2M region around
+ 	 * the faulting address.
+ 	 */
+-	kernel_add_identity_map(address, end);
++	kernel_add_identity_map(address, end, MAP_WRITE);
+ }
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index cf690d8712f4..d377e434c4e3 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -14,10 +14,10 @@
+ 
+ #include "misc.h"
+ #include "error.h"
+-#include "pgtable.h"
+ #include "../string.h"
+ #include "../voffset.h"
+ #include <asm/bootparam_utils.h>
++#include <asm/shared/pgtable.h>
+ 
+ /*
+  * WARNING!!
+@@ -277,7 +277,8 @@ static inline void handle_relocations(void *output, unsigned long output_len,
+ { }
  #endif
-diff --git a/arch/x86/include/asm/shared/extract.h b/arch/x86/include/asm/shared/extract.h
+ 
+-static void parse_elf(void *output)
++static void parse_elf(void *output, unsigned long output_len,
++		      unsigned long virt_addr)
+ {
+ #ifdef CONFIG_X86_64
+ 	Elf64_Ehdr ehdr;
+@@ -287,6 +288,7 @@ static void parse_elf(void *output)
+ 	Elf32_Phdr *phdrs, *phdr;
+ #endif
+ 	void *dest;
++	unsigned long addr;
+ 	int i;
+ 
+ 	memcpy(&ehdr, output, sizeof(ehdr));
+@@ -323,10 +325,50 @@ static void parse_elf(void *output)
+ #endif
+ 			memmove(dest, output + phdr->p_offset, phdr->p_filesz);
+ 			break;
+-		default: /* Ignore other PT_* */ break;
++		default:
++			/* Ignore other PT_* */
++			break;
++		}
++	}
++
++	handle_relocations(output, output_len, virt_addr);
++
++	if (!IS_ENABLED(CONFIG_RANDOMIZE_BASE))
++		goto skip_protect;
++
++	for (i = 0; i < ehdr.e_phnum; i++) {
++		phdr = &phdrs[i];
++
++		switch (phdr->p_type) {
++		case PT_LOAD:
++#ifdef CONFIG_RELOCATABLE
++			addr = (unsigned long)output;
++			addr += (phdr->p_paddr - LOAD_PHYSICAL_ADDR);
++#else
++			addr = phdr->p_paddr;
++#endif
++			/*
++			 * Simultaneously readable and writable segments are
++			 * violating W^X, and should not be present in vmlinux image.
++			 */
++			if ((phdr->p_flags & (PF_X | PF_W)) == (PF_X | PF_W))
++				error("W^X violation for ELF segment");
++
++			unsigned int flags = MAP_PROTECT;
++			if (phdr->p_flags & PF_X)
++				flags |= MAP_EXEC;
++			if (phdr->p_flags & PF_W)
++				flags |= MAP_WRITE;
++
++			kernel_add_identity_map(addr, addr + phdr->p_memsz, flags);
++			break;
++		default:
++			/* Ignore other PT_* */
++			break;
+ 		}
+ 	}
+ 
++skip_protect:
+ 	free(phdrs);
+ }
+ 
+@@ -434,6 +476,18 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+ 				needed_size,
+ 				&virt_addr);
+ 
++	unsigned long phys_addr = (unsigned long)output;
++
++	/*
++	 * If KASLR is disabled input and output regions may overlap.
++	 * In this case we need to map region excutable as well.
++	 */
++	unsigned long map_flags = MAP_ALLOC | MAP_WRITE |
++			(IS_ENABLED(CONFIG_RANDOMIZE_BASE) ? 0 : MAP_EXEC);
++	output = (unsigned char *)kernel_add_identity_map(phys_addr,
++							  phys_addr + needed_size,
++							  map_flags);
++
+ 	/* Validate memory location choices. */
+ 	if ((unsigned long)output & (MIN_KERNEL_ALIGN - 1))
+ 		error("Destination physical address inappropriately aligned");
+@@ -456,8 +510,7 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+ 	debug_putstr("\nDecompressing Linux... ");
+ 	__decompress(input_data, input_len, NULL, NULL, output, output_len,
+ 			NULL, error);
+-	parse_elf(output);
+-	handle_relocations(output, output_len, virt_addr);
++	parse_elf(output, output_len, virt_addr);
+ 	debug_putstr("done.\nBooting the kernel.\n");
+ 
+ 	/* Disable exception handling before booting the kernel */
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index 62208ec04ca4..a4f99516f310 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -171,8 +171,20 @@ static inline int count_immovable_mem_regions(void) { return 0; }
+ #ifdef CONFIG_X86_5LEVEL
+ extern unsigned int __pgtable_l5_enabled, pgdir_shift, ptrs_per_p4d;
+ #endif
+-extern void kernel_add_identity_map(unsigned long start, unsigned long end);
+-
++#ifdef CONFIG_X86_64
++extern unsigned long kernel_add_identity_map(unsigned long start,
++					     unsigned long end,
++					     unsigned int flags);
++#else
++static inline unsigned long kernel_add_identity_map(unsigned long start,
++						    unsigned long end,
++						    unsigned int flags)
++{
++	(void)flags;
++	(void)end;
++	return start;
++}
++#endif
+ /* Used by PAGE_KERN* macros: */
+ extern pteval_t __default_kernel_pte_mask;
+ 
+diff --git a/arch/x86/boot/compressed/pgtable.h b/arch/x86/boot/compressed/pgtable.h
+deleted file mode 100644
+index cc9b2529a086..000000000000
+--- a/arch/x86/boot/compressed/pgtable.h
++++ /dev/null
+@@ -1,20 +0,0 @@
+-#ifndef BOOT_COMPRESSED_PAGETABLE_H
+-#define BOOT_COMPRESSED_PAGETABLE_H
+-
+-#define TRAMPOLINE_32BIT_SIZE		(2 * PAGE_SIZE)
+-
+-#define TRAMPOLINE_32BIT_PGTABLE_OFFSET	0
+-
+-#define TRAMPOLINE_32BIT_CODE_OFFSET	PAGE_SIZE
+-#define TRAMPOLINE_32BIT_CODE_SIZE	0x80
+-
+-#define TRAMPOLINE_32BIT_STACK_END	TRAMPOLINE_32BIT_SIZE
+-
+-#ifndef __ASSEMBLER__
+-
+-extern unsigned long *trampoline_32bit;
+-
+-extern void trampoline_32bit_src(void *return_ptr);
+-
+-#endif /* __ASSEMBLER__ */
+-#endif /* BOOT_COMPRESSED_PAGETABLE_H */
+diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
+index 2ac12ff4111b..c7cf5a1059a8 100644
+--- a/arch/x86/boot/compressed/pgtable_64.c
++++ b/arch/x86/boot/compressed/pgtable_64.c
+@@ -2,7 +2,7 @@
+ #include "misc.h"
+ #include <asm/e820/types.h>
+ #include <asm/processor.h>
+-#include "pgtable.h"
++#include <asm/shared/pgtable.h>
+ #include "../string.h"
+ #include "efi.h"
+ 
+diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+index c93930d5ccbd..99f3ad0b30f3 100644
+--- a/arch/x86/boot/compressed/sev.c
++++ b/arch/x86/boot/compressed/sev.c
+@@ -13,6 +13,7 @@
+ #include "misc.h"
+ 
+ #include <asm/pgtable_types.h>
++#include <asm/shared/pgtable.h>
+ #include <asm/sev.h>
+ #include <asm/trapnr.h>
+ #include <asm/trap_pf.h>
+@@ -435,10 +436,11 @@ void sev_prep_identity_maps(unsigned long top_level_pgt)
+ 		unsigned long cc_info_pa = boot_params->cc_blob_address;
+ 		struct cc_blob_sev_info *cc_info;
+ 
+-		kernel_add_identity_map(cc_info_pa, cc_info_pa + sizeof(*cc_info));
++		kernel_add_identity_map(cc_info_pa, cc_info_pa + sizeof(*cc_info), MAP_NOFLUSH);
+ 
+ 		cc_info = (struct cc_blob_sev_info *)cc_info_pa;
+-		kernel_add_identity_map(cc_info->cpuid_phys, cc_info->cpuid_phys + cc_info->cpuid_len);
++		kernel_add_identity_map(cc_info->cpuid_phys,
++					cc_info->cpuid_phys + cc_info->cpuid_len, MAP_NOFLUSH);
+ 	}
+ 
+ 	sev_verify_cbit(top_level_pgt);
+diff --git a/arch/x86/include/asm/shared/pgtable.h b/arch/x86/include/asm/shared/pgtable.h
 new file mode 100644
-index 000000000000..163678145884
+index 000000000000..6527dadf39d6
 --- /dev/null
-+++ b/arch/x86/include/asm/shared/extract.h
-@@ -0,0 +1,25 @@
++++ b/arch/x86/include/asm/shared/pgtable.h
+@@ -0,0 +1,29 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef ASM_SHARED_EXTRACT_H
-+#define ASM_SHARED_EXTRACT_H
++#ifndef ASM_SHARED_PAGETABLE_H
++#define ASM_SHARED_PAGETABLE_H
 +
 +#define MAP_WRITE	0x02 /* Writable memory */
 +#define MAP_EXEC	0x04 /* Executable memory */
 +#define MAP_ALLOC	0x10 /* Range needs to be allocated */
 +#define MAP_PROTECT	0x20 /* Set exact memory attributes for memory range */
++#define MAP_NOFLUSH	0x40 /* Avoid flushing TLB */
 +
-+struct efi_iofunc {
-+	void (*putstr)(const char *msg);
-+	void (*puthex)(unsigned long x);
-+	unsigned long (*map_range)(unsigned long start,
-+				   unsigned long end,
-+				   unsigned int flags);
-+};
++#define TRAMPOLINE_32BIT_SIZE		(3 * PAGE_SIZE)
 +
-+void *efi_extract_kernel(struct boot_params *rmode,
-+			 struct efi_iofunc *iofunc,
-+			 unsigned char *input_data,
-+			 unsigned long input_len,
-+			 unsigned char *output,
-+			 unsigned long output_len);
++#define TRAMPOLINE_32BIT_PLACEMENT_MAX	(0xA0000)
 +
-+#endif /* ASM_SHARED_EXTRACT_H */
-diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-index 6cb7384ad2ac..2418402a0bda 100644
---- a/drivers/firmware/efi/Kconfig
-+++ b/drivers/firmware/efi/Kconfig
-@@ -91,6 +91,20 @@ config EFI_DXE_MEM_ATTRIBUTES
- 	  Use DXE services to check and alter memory protection
- 	  attributes during boot via EFISTUB to ensure that memory
- 	  ranges used by the kernel are writable and executable.
-+	  This option also enables stricter memory attributes
-+	  on compressed kernel PE image.
++#define TRAMPOLINE_32BIT_PGTABLE_OFFSET	0
 +
-+config EFI_STUB_EXTRACT_DIRECT
-+	bool "Extract kernel directly from UEFI environment"
-+	depends on EFI && EFI_STUB && X86_64
-+	default y
-+	help
-+	  Extract kernel before exiting EFI boot services
-+	  This allows maintaining W^X for kernel image for
-+	  the whole execution of compressed kernel code.
-+	  This also slightly improves efficiency of extraction
-+	  code by removing the need to copy the kernel around
-+	  and rebuild page tables.
- 
- config EFI_PARAMS_FROM_FDT
- 	bool
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index d0537573501e..1cea7d913356 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -69,6 +69,7 @@ lib-$(CONFIG_EFI_GENERIC_STUB)	+= efi-stub.o fdt.o string.o \
- lib-$(CONFIG_ARM)		+= arm32-stub.o
- lib-$(CONFIG_ARM64)		+= arm64-stub.o
- lib-$(CONFIG_X86)		+= x86-stub.o
-+lib-$(CONFIG_EFI_STUB_EXTRACT_DIRECT)	+= x86-extract-direct.o
- lib-$(CONFIG_RISCV)		+= riscv-stub.o
- CFLAGS_arm32-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
- 
-diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index 22fe28385db7..cdd1bb50c786 100644
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -968,6 +968,11 @@ static inline void
- efi_enable_reset_attack_mitigation(void) { }
- #endif
- 
-+#ifdef CONFIG_X86
-+unsigned long extract_kernel_direct(struct boot_params *boot_params);
-+void startup_32(struct boot_params *boot_params);
-+#endif
++#define TRAMPOLINE_32BIT_CODE_OFFSET	PAGE_SIZE
++#define TRAMPOLINE_32BIT_CODE_SIZE	0x80
 +
- void efi_retrieve_tpm2_eventlog(void);
- 
- #endif
-diff --git a/drivers/firmware/efi/libstub/x86-extract-direct.c b/drivers/firmware/efi/libstub/x86-extract-direct.c
-new file mode 100644
-index 000000000000..6076bd75cfd6
---- /dev/null
-+++ b/drivers/firmware/efi/libstub/x86-extract-direct.c
-@@ -0,0 +1,220 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++#define TRAMPOLINE_32BIT_STACK_END	TRAMPOLINE_32BIT_SIZE
 +
-+#include <linux/acpi.h>
-+#include <linux/efi.h>
-+#include <linux/elf.h>
-+#include <linux/stddef.h>
++#ifndef __ASSEMBLER__
 +
-+#include <asm/efi.h>
-+#include <asm/e820/types.h>
-+#include <asm/desc.h>
-+#include <asm/boot.h>
-+#include <asm/bootparam_utils.h>
-+#include <asm/shared/extract.h>
-+#include <asm/shared/pgtable.h>
++extern unsigned long *trampoline_32bit;
 +
-+#include "efistub.h"
++extern void trampoline_32bit_src(void *return_ptr);
 +
-+static void do_puthex(unsigned long value);
-+static void do_putstr(const char *msg);
-+
-+static unsigned long do_map_range(unsigned long start,
-+				  unsigned long end,
-+				  unsigned int flags)
-+{
-+	efi_status_t status;
-+
-+	unsigned long size = end - start;
-+
-+	if (flags & MAP_ALLOC) {
-+		if (start == (unsigned long)startup_32)
-+			start = LOAD_PHYSICAL_ADDR;
-+
-+		unsigned long addr;
-+
-+		status = efi_low_alloc_above(size, CONFIG_PHYSICAL_ALIGN,
-+					     &addr, start);
-+		if (status != EFI_SUCCESS)
-+			efi_err("Unable to allocate memory for uncompressed kernel");
-+
-+		if (start != addr) {
-+			efi_debug("Unable to allocate at given address"
-+				  " (desired=0x%lx, actual=0x%lx)",
-+				  (unsigned long)start, addr);
-+			start = addr;
-+		}
-+	}
-+
-+	if (flags & (MAP_PROTECT | MAP_ALLOC)) {
-+		unsigned long attr = 0;
-+
-+		if (!(flags & MAP_EXEC))
-+			attr |= EFI_MEMORY_XP;
-+
-+		if (!(flags & MAP_WRITE))
-+			attr |= EFI_MEMORY_RO;
-+
-+		status = efi_adjust_memory_range_protection(start,
-+							    end - start,
-+							    attr);
-+		if (status != EFI_SUCCESS)
-+			efi_err("Unable to protect memory range");
-+	}
-+
-+	return start;
-+}
-+
-+/*
-+ * Trampoline takes 3 pages and can be loaded in first megabyte of memory
-+ * with its end placed between 0 and 640k where BIOS might start.
-+ * (see arch/x86/boot/compressed/pgtable_64.c)
-+ */
-+
-+#ifdef CONFIG_64BIT
-+static efi_status_t prepare_trampoline(void)
-+{
-+	efi_status_t status;
-+
-+	status = efi_allocate_pages(TRAMPOLINE_32BIT_SIZE,
-+				    (unsigned long *)&trampoline_32bit,
-+				    TRAMPOLINE_32BIT_PLACEMENT_MAX);
-+
-+	if (status != EFI_SUCCESS)
-+		return status;
-+
-+	unsigned long trampoline_start = (unsigned long)trampoline_32bit;
-+
-+	memset(trampoline_32bit, 0, TRAMPOLINE_32BIT_SIZE);
-+
-+	/* First page of trampoline is a top level page table */
-+	efi_adjust_memory_range_protection(trampoline_start,
-+					   PAGE_SIZE,
-+					   EFI_MEMORY_XP);
-+
-+	/* Second page of trampoline is the code (with a padding) */
-+
-+	void *caddr = (void *)trampoline_32bit + TRAMPOLINE_32BIT_CODE_OFFSET;
-+
-+	memcpy(caddr, trampoline_32bit_src, TRAMPOLINE_32BIT_CODE_SIZE);
-+
-+	efi_adjust_memory_range_protection((unsigned long)caddr,
-+					   PAGE_SIZE,
-+					   EFI_MEMORY_RO);
-+
-+	/* And the last page of trampoline is the stack */
-+
-+	efi_adjust_memory_range_protection(trampoline_start + 2 * PAGE_SIZE,
-+					   PAGE_SIZE,
-+					   EFI_MEMORY_XP);
-+
-+	return EFI_SUCCESS;
-+}
-+#else
-+static inline efi_status_t prepare_trampoline(void)
-+{
-+	return EFI_SUCCESS;
-+}
-+#endif
-+
-+static efi_status_t init_loader_data(struct boot_params *params)
-+{
-+	struct efi_info *efi = (void *)&params->efi_info;
-+	efi_status_t status;
-+
-+	unsigned long map_size, desc_size, buff_size;
-+	u32 desc_ver;
-+	efi_memory_desc_t *mmap;
-+
-+	struct efi_boot_memmap map = {
-+		.map		= &mmap,
-+		.map_size	= &map_size,
-+		.desc_size	= &desc_size,
-+		.desc_ver	= &desc_ver,
-+		.key_ptr	= NULL,
-+		.buff_size	= &buff_size,
-+	};
-+
-+	status = efi_get_memory_map(&map);
-+
-+	if (status != EFI_SUCCESS) {
-+		efi_err("Unable to get EFI memory map...\n");
-+		return status;
-+	}
-+
-+	const char *signature = efi_is_64bit() ? EFI64_LOADER_SIGNATURE
-+					       : EFI32_LOADER_SIGNATURE;
-+
-+	memcpy(&efi->efi_loader_signature, signature, sizeof(__u32));
-+
-+	efi->efi_memdesc_size = desc_size;
-+	efi->efi_memdesc_version = desc_ver;
-+	efi->efi_memmap_size = map_size;
-+
-+	efi_set_u64_split((unsigned long)mmap,
-+			  &efi->efi_memmap, &efi->efi_memmap_hi);
-+
-+	efi_set_u64_split((unsigned long)efi_system_table,
-+			  &efi->efi_systab, &efi->efi_systab_hi);
-+
-+	return EFI_SUCCESS;
-+}
-+
-+static void free_loader_data(struct boot_params *params)
-+{
-+	struct efi_info *efi = (void *)&params->efi_info;
-+	unsigned long mmap = efi->efi_memmap;
-+
-+#ifdef CONFIG_64BIT
-+	mmap |= ((unsigned long)efi->efi_memmap_hi << 32);
-+#endif
-+
-+	efi_bs_call(free_pool, (void *)mmap);
-+
-+	efi->efi_memdesc_size = 0;
-+	efi->efi_memdesc_version = 0;
-+	efi->efi_memmap_size = 0;
-+	efi_set_u64_split(0, &efi->efi_memmap, &efi->efi_memmap_hi);
-+}
-+
-+unsigned long extract_kernel_direct(struct boot_params *params)
-+{
-+
-+	extern unsigned char input_data[];
-+	extern unsigned int output_len, input_len;
-+
-+	void *res;
-+	efi_status_t status;
-+	struct efi_iofunc iof = { 0 };
-+
-+	status = prepare_trampoline();
-+
-+	if (status != EFI_SUCCESS)
-+		return 0;
-+
-+	/* Prepare environment for do_extract_kernel() call */
-+	status = init_loader_data(params);
-+
-+	if (status != EFI_SUCCESS)
-+		return 0;
-+
-+	iof.puthex = do_puthex;
-+	iof.putstr = do_putstr;
-+	iof.map_range = do_map_range;
-+
-+	res = efi_extract_kernel(params, &iof, input_data, input_len,
-+				 (unsigned char *)startup_32, output_len);
-+
-+	free_loader_data(params);
-+
-+	return (unsigned long)res;
-+}
-+
-+static void do_puthex(unsigned long value)
-+{
-+	efi_printk("%08lx", value);
-+}
-+
-+static void do_putstr(const char *msg)
-+{
-+	efi_printk("%s", msg);
-+}
-diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index 678f9c2ccafc..680184034cb7 100644
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -230,26 +230,25 @@ static void
- setup_memory_protection(unsigned long image_base, unsigned long image_size)
- {
- 	/*
--	 * Allow execution of possible trampoline used
--	 * for switching between 4- and 5-level page tables
--	 * and relocated kernel image.
--	 */
-+	* Allow execution of possible trampoline used
-+	* for switching between 4- and 5-level page tables
-+	* and relocated kernel image.
-+	*/
- 
- 	efi_adjust_memory_range_protection(TRAMPOLINE_PLACEMENT_BASE,
- 					   TRAMPOLINE_PLACEMENT_SIZE, 0);
- 
- #ifdef CONFIG_64BIT
--	if (image_base != (unsigned long)startup_32)
--		efi_adjust_memory_range_protection(image_base, image_size, 0);
-+	efi_adjust_memory_range_protection(image_base, image_size, 0);
- #else
- 	/*
--	 * Clear protection flags on a whole range of possible
--	 * addresses used for KASLR. We don't need to do that
--	 * on x86_64, since KASLR/extraction is performed after
--	 * dedicated identity page tables are built and we only
--	 * need to remove possible protection on relocated image
--	 * itself disregarding further relocations.
--	 */
-+	* Clear protection flags on a whole range of possible
-+	* addresses used for KASLR. We don't need to do that
-+	* on x86_64, since KASLR/extraction is performed after
-+	* dedicated identity page tables are built and we only
-+	* need to remove possible protection on relocated image
-+	* itself disregarding further relocations.
-+	*/
- 	efi_adjust_memory_range_protection(LOAD_PHYSICAL_ADDR,
- 					   KERNEL_IMAGE_SIZE - LOAD_PHYSICAL_ADDR,
- 					   0);
-@@ -270,8 +269,10 @@ static void setup_quirks(struct boot_params *boot_params,
- 			retrieve_apple_device_properties(boot_params);
- 	}
- 
--	if (IS_ENABLED(CONFIG_EFI_DXE_MEM_ATTRIBUTES))
-+	if (IS_ENABLED(CONFIG_EFI_DXE_MEM_ATTRIBUTES) &&
-+	    !IS_ENABLED(CONFIG_EFI_STUB_EXTRACT_DIRECT)) {
- 		setup_memory_protection(image_base, image_size);
-+	}
- }
- 
- /*
-@@ -710,8 +711,10 @@ static efi_status_t exit_boot(struct boot_params *boot_params, void *handle)
- }
- 
- /*
-- * On success, we return the address of startup_32, which has potentially been
-- * relocated by efi_relocate_kernel.
-+ * On success, we return:
-+ *   - the address of startup_32, which has potentially been
-+ *     relocated by efi_relocate_kernel, if libstub direct extraction is disabled.
-+ *   - extracted kernel entry point if libstub direct extraction is enabled.
-  * On failure, we exit to the firmware via efi_exit instead of returning.
-  */
- unsigned long efi_main(efi_handle_t handle,
-@@ -736,6 +739,7 @@ unsigned long efi_main(efi_handle_t handle,
- 		efi_dxe_table = NULL;
- 	}
- 
-+#ifndef CONFIG_EFI_STUB_EXTRACT_DIRECT
- 	/*
- 	 * If the kernel isn't already loaded at a suitable address,
- 	 * relocate it.
-@@ -789,6 +793,7 @@ unsigned long efi_main(efi_handle_t handle,
- 		 */
- 		image_offset = 0;
- 	}
-+#endif
- 
- #ifdef CONFIG_CMDLINE_BOOL
- 	status = efi_parse_options(CONFIG_CMDLINE);
-@@ -845,7 +850,13 @@ unsigned long efi_main(efi_handle_t handle,
- 
- 	setup_efi_pci(boot_params);
- 
--	setup_quirks(boot_params, bzimage_addr, buffer_end - buffer_start);
-+	setup_quirks(boot_params, buffer_start, buffer_end - buffer_start);
-+
-+#ifdef CONFIG_EFI_STUB_EXTRACT_DIRECT
-+	bzimage_addr = extract_kernel_direct(boot_params);
-+	if (!bzimage_addr)
-+		goto fail;
-+#endif
- 
- 	status = exit_boot(boot_params, handle);
- 	if (status != EFI_SUCCESS) {
++#endif /* __ASSEMBLER__ */
++#endif /* ASM_SHARED_PAGETABLE_H */
 -- 
 2.35.1
 
