@@ -2,82 +2,102 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7C0C54EE9
-	for <linux-hardening@archiver.kernel.org>; Mon,  5 Sep 2022 14:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EA0C6FA83
+	for <linux-hardening@archiver.kernel.org>; Tue,  6 Sep 2022 06:30:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238058AbiIEOAV (ORCPT
+        id S232915AbiIFGaS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 5 Sep 2022 10:00:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45048 "EHLO
+        Tue, 6 Sep 2022 02:30:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238252AbiIEOAT (ORCPT
+        with ESMTP id S232179AbiIFGaR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 5 Sep 2022 10:00:19 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C0AA101E9;
-        Mon,  5 Sep 2022 07:00:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 11269B811E0;
-        Mon,  5 Sep 2022 14:00:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AF067C433D6;
-        Mon,  5 Sep 2022 14:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662386414;
-        bh=XSSZTD2ALu36RR1GIQU7d/Edf2hF0Lo9I0MxTJEt9wk=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=AsRmGm9gXizIaHVFqbK7m9xJApGH6O4wmI0ylwbO0Xrb3mdn8Aj+1sbaT7pCyQPpJ
-         x6o6vLq/Ape+j/U0tLaIEhgpdD55wBhq4ZASeMHXwxA2E3xnFyHqdzQ3sJ/VyJWM2s
-         ok/XmsBeqavC5vIWqByFiTfJQbHI3i14CcOG4hJZ9YRIXjc5bqpu0bPW6kb7svE8A7
-         nmyTOBIStY/1NLYFHcU30gtwC9ixY81GxnZqGPZR+nEwHbDibbVjRAwyyVRng+nDYI
-         I6cOZA1vOHhG1H+dNqM8/rAas0oE3F4m1+8Cwz/Xwq8/q9j6Jr2DOCsnOkwi4HA9B+
-         4b4GlJrYj/AJg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 994F3C73FE8;
-        Mon,  5 Sep 2022 14:00:14 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 6 Sep 2022 02:30:17 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70EC812A8A
+        for <linux-hardening@vger.kernel.org>; Mon,  5 Sep 2022 23:30:16 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1oVS5y-0006S3-TP; Tue, 06 Sep 2022 08:30:02 +0200
+Received: from pengutronix.de (unknown [IPv6:2a0a:edc0:0:701:a3ba:d49d:1749:550])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        (Authenticated sender: mkl-all@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id C2AF9DB56C;
+        Tue,  6 Sep 2022 06:30:00 +0000 (UTC)
+Date:   Tue, 6 Sep 2022 08:29:58 +0200
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] can: etas_es58x: Replace zero-length array with
+ DECLARE_FLEX_ARRAY() helper
+Message-ID: <20220906062958.bevxqhg3azvkky5l@pengutronix.de>
+References: <Yw00w6XRcq7B6ub6@work>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v4] netlink: Bounds-check struct nlmsgerr creation
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <166238641462.11602.3818616103545497339.git-patchwork-notify@kernel.org>
-Date:   Mon, 05 Sep 2022 14:00:14 +0000
-References: <20220903043749.3102675-1-keescook@chromium.org>
-In-Reply-To: <20220903043749.3102675-1-keescook@chromium.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     kuba@kernel.org, pablo@netfilter.org, kadlec@netfilter.org,
-        fw@strlen.de, davem@davemloft.net, edumazet@google.com,
-        pabeni@redhat.com, syzkaller@googlegroups.com,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, socketcan@hartkopp.net,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fzdtkz7rshitpii6"
+Content-Disposition: inline
+In-Reply-To: <Yw00w6XRcq7B6ub6@work>
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
 
-This patch was applied to netdev/net-next.git (master)
-by David S. Miller <davem@davemloft.net>:
+--fzdtkz7rshitpii6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri,  2 Sep 2022 21:37:49 -0700 you wrote:
-> In preparation for FORTIFY_SOURCE doing bounds-check on memcpy(),
-> switch from __nlmsg_put to nlmsg_put(), and explain the bounds check
-> for dealing with the memcpy() across a composite flexible array struct.
-> Avoids this future run-time warning:
-> 
->   memcpy: detected field-spanning write (size 32) of single field "&errmsg->msg" at net/netlink/af_netlink.c:2447 (size 16)
-> 
-> [...]
+On 29.08.2022 16:50:59, Gustavo A. R. Silva wrote:
+> Zero-length arrays are deprecated and we are moving towards adopting
+> C99 flexible-array members, instead. So, replace zero-length array
+> declaration in union es58x_urb_cmd with the new DECLARE_FLEX_ARRAY()
+> helper macro.
+>=20
+> This helper allows for a flexible-array member in a union.
+>=20
+> Link: https://github.com/KSPP/linux/issues/193
+> Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Here is the summary with links:
-  - [v4] netlink: Bounds-check struct nlmsgerr creation
-    https://git.kernel.org/netdev/net-next/c/710d21fdff9a
+Applied to linux-can-next.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Thanks,
+Marc
 
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
 
+--fzdtkz7rshitpii6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEBsvAIBsPu6mG7thcrX5LkNig010FAmMW6OMACgkQrX5LkNig
+010r6wf+K9aVetaGedEST1E6cBqeWfNruF0sfYhbgsJjK/8Omrpz67b5yTJZU8vH
+4d6LCf9swiZlfyOg7rs5gPa5kqtlqwht9GDxW6B1JjPIIXTAw603e8kqI0JKzLo8
+VJ3BPoWYy9FM/oMwtgiGTiAM+gmiXNOyCLBm+lkFbpNTXY+/kUjnttRGg5DOXQWW
+Ki2LUQO/hhDis4u1Cm1fFSqkTm4rGMURufm+eVDLGN6QAiegVJ4NiF6drLzUGx23
+L3wXQysf8zXzhH/r6UrxLK4PyQN3IgDo3ZGhoqM4iFLl2wta9ESN/y96NJk8MYxw
+QceEIjFLM6SJlM0lXvngUt7T/fSRvQ==
+=JFZH
+-----END PGP SIGNATURE-----
+
+--fzdtkz7rshitpii6--
