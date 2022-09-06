@@ -2,540 +2,437 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6025C38145
-	for <linux-hardening@archiver.kernel.org>; Tue,  6 Sep 2022 10:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1EDC6FA83
+	for <linux-hardening@archiver.kernel.org>; Tue,  6 Sep 2022 16:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239598AbiIFKmK (ORCPT
+        id S233026AbiIFQWe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 6 Sep 2022 06:42:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56908 "EHLO
+        Tue, 6 Sep 2022 12:22:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238792AbiIFKl5 (ORCPT
+        with ESMTP id S233512AbiIFQWG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 6 Sep 2022 06:41:57 -0400
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71C2F5FF68;
-        Tue,  6 Sep 2022 03:41:47 -0700 (PDT)
-Received: from localhost.localdomain (unknown [83.149.199.65])
-        by mail.ispras.ru (Postfix) with ESMTPSA id C3DFC4076258;
-        Tue,  6 Sep 2022 10:41:38 +0000 (UTC)
-From:   Evgeniy Baskov <baskov@ispras.ru>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Evgeniy Baskov <baskov@ispras.ru>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        lvc-project@linuxtesting.org, x86@kernel.org,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH 06/16] x86/boot: Setup memory protection for bzImage code
-Date:   Tue,  6 Sep 2022 13:41:10 +0300
-Message-Id: <2fd61a79a1e6885dc47ec826b62a936dd88a0a16.1662459668.git.baskov@ispras.ru>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <cover.1662459668.git.baskov@ispras.ru>
-References: <cover.1662459668.git.baskov@ispras.ru>
+        Tue, 6 Sep 2022 12:22:06 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2FEB88DEA;
+        Tue,  6 Sep 2022 08:50:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662479448; x=1694015448;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=MmtupbQVoleGylosPPA8hqScPfbuh+QUNUjEeIS7yZo=;
+  b=Im/6/mGvp3gmcWEv0lHXqJgzIyVloHisJ5YL31SeRuHnLWuIUrOYBEXk
+   tNTOZ7ZYIWgP5U3Fjdr8HAJsiJf6clzBCyRoo1316hpURj2MXKqeK1bY5
+   o98VwkQ6uxjwy0jbYsYSo/16+fQZv8jxUY4nE5HrnZ3/8lE4gX91KihU/
+   RCdCkveitETV6PqEK3vcwd5kZcHVpXtq8Y7g6xHN6dgTFeviwUoMmvAOQ
+   I5etPzNdaaY4JPTauWH2G29y5kFyR5ujbNQvNG1fQV6IO2gc7lQ2T+DCH
+   BrcDhyF/eykp3mpE0zQAWl7c6JOx31cn70kqVMmhIEGSHM09Z4b5v6GnO
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="322805084"
+X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
+   d="scan'208";a="322805084"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 08:50:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
+   d="scan'208";a="739942908"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orsmga004.jf.intel.com with ESMTP; 06 Sep 2022 08:50:47 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 6 Sep 2022 08:50:46 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 6 Sep 2022 08:50:43 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Tue, 6 Sep 2022 08:50:43 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.108)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Tue, 6 Sep 2022 08:50:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RVBP5ucJTRkVIC22ARHZIxhYOxzyUXU7ykma022gX/FYRuhm5xqWUKAA6cRWv4RFMUMbw13iceQXOYNoC8B/PoehXUKDUj4Y0ajZ1emQXfnhkF5eq09JykGvij94jYkjIuH0P8Q9LLlBtZ1nnzIoZc1GJavf6WtEjSp3nQ6bJ58UGJBPtJp4dx5TYsrwPty5+Yt0lbgFWr7XDsNYVxyCQNb4UIgUkEXyrXi578ZqD27fUxABNgAYFCzDsj2OBoy5OO6HZqaQmU4tBeVBAithmYKPts3VNqzaOZixGcHzvuvIsIYUmcfmHzubZFx6YZ3qpbLkWbvu/WGo/fRCL+6M3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=liN8jIHLfWAmPa5rGsI42NxablikhQPQKSof/VpGS00=;
+ b=Ph/VFzGhD769mdVgddfyAvpdKtiYV4QuMQ293BWrRpZe1ZTeyYkzD2/XA0vWhyURHLTeDO10Hr5oJF0ixZ/DSSmLL81Il844BQ6E7IUkZccJkopbkImvvtl3GHK0/qUvtYkWiK2KHfYKa2roNXW6hjdMB9Y0Mfl34hYQTAF9VM9d0hh+Lo07Do3bUpleTQSqRih7OATpZTqqVwvAvTilhwetnwOGKtCM+0nyAKV0sH0u1ewrPy/RqT3TKJFVoqYzrK1NGMCvGGU7hc/kD20lFPiiL89bEEdC7jajGHHZJdugoGl8lem7XRitorTk/5aDIK1fN/E3XZEJVX6bi6eFBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB5424.namprd11.prod.outlook.com (2603:10b6:5:39c::8) by
+ BN7PR11MB2753.namprd11.prod.outlook.com (2603:10b6:406:b0::23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5588.10; Tue, 6 Sep 2022 15:50:40 +0000
+Received: from DM4PR11MB5424.namprd11.prod.outlook.com
+ ([fe80::850b:fa11:b53e:c5a4]) by DM4PR11MB5424.namprd11.prod.outlook.com
+ ([fe80::850b:fa11:b53e:c5a4%6]) with mapi id 15.20.5588.018; Tue, 6 Sep 2022
+ 15:50:40 +0000
+Message-ID: <7eec0b6b-060b-159a-e334-6fafd0cb2a9f@intel.com>
+Date:   Wed, 7 Sep 2022 00:50:17 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH v3] overflow: Allow mixed type arguments
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+CC:     Andrzej Hajda <andrzej.hajda@intel.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        <linux-hardening@vger.kernel.org>,
+        Daniel Latypov <dlatypov@google.com>,
+        Vitor Massaru Iha <vitor@massaru.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20220830192147.47069-1-keescook@chromium.org>
+From:   Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+In-Reply-To: <20220830192147.47069-1-keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0083.namprd03.prod.outlook.com
+ (2603:10b6:a03:331::28) To DM4PR11MB5424.namprd11.prod.outlook.com
+ (2603:10b6:5:39c::8)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8b7de37e-1300-423c-b6cc-08da901f8cab
+X-MS-TrafficTypeDiagnostic: BN7PR11MB2753:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2yBa5xVgTgPHhhACjQlqIjDn+jd7OaXKO40xACfmyGSN+h7EePzSt9FdyI+rDWsolYWmra+Ti3m9dzzBsCfO9HdfO6msou9FWZnU/Wc0iB62Sjs7HxBoeorg6gcXFWVW2bFrTZQb86YOrMqMNNBQdrmxm+eSRr1Immu2ACOt49DpQBTLUnSj3y/gj517hcspLFg7ftLB2l8R10l5gKC5KCyknFNMOEy8VJf5D2cYkfFeiCZTp6qsR2LV6clN3GxwrcunNwHaIzqrgn8ROs/b7ZZWccIYrCF3j7Ef5G3YcSelitLA8I7SCZFJzE8uWLxWF8MIP1/CWIpdfsP5oJSGOCnLxBnYL+4muyFg/Tg1G9KaXjgAPCFq3VON7G2w5vS7aUQHcU2fbkRg0uaK6NLZNGbeSA4QohzzBBbuxJbHvTMELUU93/UykIOVCfyL6mILFSJXTGieeKDUoYeKWEdgCCZAQv0fI/CFN2f6C18uf+0/jBNAw4g6JDZlG9mBzSpP1cibGUUmR3IoEZwNlqsgAzYDmUPhcHuqscXhLqxcsASj7399RXftwZOPxT+MqngwJNkbM3H/IFeZH6g2f3iNBSdYfB7lMR/liyFlpCwrDYDCWMoSWMqUyOmebhxAxVXs0HzyJkzcyZ1NiWZAI9IFwBpWEaZh0/0JJq6oOIXL58z94GNhhRFpoXfgkIORAfJyL0rV7WeNNG80MmzkCVrtVBRa93OtPx2yT7/vCV0dy+yaDJsK+HsCipMkeLwTNxHtCWGkVeoPnKdARLNzqzI2Yx8IxJeQs5SbgD3ysT7P9oK3soI0tJYz3QP2wT37xOFNwptXcvhl/9/WKpE/lTM25rRDtylbGEuX2BN2nNIc5Sk=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5424.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(346002)(396003)(39860400002)(136003)(376002)(66476007)(966005)(66556008)(38100700002)(66946007)(4326008)(8676002)(478600001)(316002)(6486002)(31696002)(2616005)(86362001)(186003)(6666004)(8936002)(30864003)(53546011)(6512007)(26005)(6506007)(83380400001)(2906002)(31686004)(54906003)(82960400001)(110136005)(5660300002)(41300700001)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NkNoTDVyK3crVjVRbkRGZVNzV2cyWkVxNWd4UzhpZWZBR0xmWVZaUjVCYnlX?=
+ =?utf-8?B?aC92UmlOczZlbHRIckF5cHZ2dkxqbzFjSTRQQXBvV0JKMjlNT25kTGJuNFNo?=
+ =?utf-8?B?N2dLSkk1aEoxd2JUempRRlpvd1RoYXljMFFpTVJILytUeHA5aEgyZ2IxTU5a?=
+ =?utf-8?B?eEpwOUs3aHVQNS9PYkVwckNNNEpUUmpHNnRCTk1wL0I1SllRcjl6NmRSaVQ4?=
+ =?utf-8?B?SDdmTEZ1OVhmSWx1UDErSGtMUUdhYk5oejY2OXc5bFM0V0cwYlBvU0JXTnRW?=
+ =?utf-8?B?ZHdzUW5tN2xPaVF5ZzloTGJ6WE1CNlF2Z25ZWFRsSUVuZ2ljRzZnZkVURzdW?=
+ =?utf-8?B?R253OVdjbVo1SENxY2FjZ2VlWGhZMXhOTHowUDdIVk44UEpZNVphdW5sY0lu?=
+ =?utf-8?B?M09pZ2ZtUDdyZGozN3U4VmZTVVptNnpYb3o2MGlDZ0RxbXJ3QlprZGFQLzVL?=
+ =?utf-8?B?VWVzWlFLa0l3cDJPNWk2V3gxeE9BUVIwYU5tQW1CS2E1YWFUcHdILzEzQ1A0?=
+ =?utf-8?B?SEZQY25mb0NTSDRQK1BvYTdxZUVzcDlIdzF2eVBaK2ZOVEZ1M3UzZnBjNzVp?=
+ =?utf-8?B?YWt5a2RlSnZrNnlKUlRvdFFUYUVSclJQcFlFalVldHp0WHhOeERkSmRnVGFC?=
+ =?utf-8?B?bHh5L0hlbStsY3gxcnBHMzFtNm5sZXNsYUZ1WVlTVXBNU2gxWnFGUkdmVjZU?=
+ =?utf-8?B?ZGxFbGFBNzlFY3AzL3dBS0VPMGZveWJrSUJxMHJtWFAxa1JzNjcvZkw5SVZF?=
+ =?utf-8?B?T25adlZuMld4Z2xDRVI3V0o5MTJ4bTdPWU9mandQdnVuMW02clRnU3ZVZlp2?=
+ =?utf-8?B?WXNTd0g2U2I5M2NwR3VweXd5aDdIK0ZDZlpCVlZFbFFOdFA3QjVoelVyWXBv?=
+ =?utf-8?B?dVNuR0NXTjh5bElHdklTWmlkb1NTbm42ZUo1OEx3RjB2RWMvNHNsQk1tUkhV?=
+ =?utf-8?B?dk9ZUFdYeDFqbVJmUmpxNDVxdEV6c1p6SzRoNU9GRHpIUWx3RDM2SEFYTHc5?=
+ =?utf-8?B?a0tGaW9LbHdGcXdHRHJPeWxGdlVCdkhLWmhZTVJsWWI5QTdyTHY5eW02MEVa?=
+ =?utf-8?B?cmM0b2diczl4QzduenNzT1NlbHErY0hoSDBPeUQwUDEzZTJxT1BzMVRhdnp2?=
+ =?utf-8?B?RUR3VW9wbC9ldUlxY20rZVVyRWw4aGlPajZWM2NHL1lnS1V4YVZ1bW1uKzI0?=
+ =?utf-8?B?LzM4RElUNzhGckpLYTVwa1pob1oyRVJCbTR0NVJUb3lhU2RKeWlHN0tiWmFp?=
+ =?utf-8?B?YVgwdGRDNmd2R2ZBUERkKzMraXd3M2tjQWlaYzliODJBVWk5OXY1SXNnN0pt?=
+ =?utf-8?B?LzZCMDZzVGlJQzZiMGt3ZThmQUQzYTc2V3pUSE9jUXM1N1dMWTc0OEV4VmZJ?=
+ =?utf-8?B?R0g4RVUwUXZiS2lFY2hnajRDWFV5M1NQTG5CZjNoclRnbmcxa3RQQ09acnFL?=
+ =?utf-8?B?R1BqOXVsM1ZMc051dVlYM084aGM1SlYzb0lDYmlYQ0RreFZyaExrMUpPait0?=
+ =?utf-8?B?dnBLSTdEM2pFMGpqYTZDRlI5eEpFYmpUcWt6VzZCcXppUFJrSjlsVGUrVVlK?=
+ =?utf-8?B?SFY5NFJWaENxN3crL3NqcnZjaWo5MlhOdWl3d3ArOUxscDY3dWVkOU9aaW92?=
+ =?utf-8?B?TU04c1dFVVVSU05LcXdOMEdsM0ZOQjlwd29MYVlvbXE4Wm03MHMrNDF5aUhv?=
+ =?utf-8?B?TXo1dlRiUktiWkliYjc4VzUveUFLekhQSVcxc21GMVlpVGp3U1cvWTRkYldP?=
+ =?utf-8?B?Qm5naU4vRHNBamNabWF1OFAxSEpUVVh5R3Bjbk5QaVRsR0pabVZJUGEwSXVx?=
+ =?utf-8?B?ZTQvWGUzSTB5Ty9LY2dsUWNsWEpZOUNoUjBZelBxR0VlaVNQcTM0TDhxZjBU?=
+ =?utf-8?B?WnY1NVd3SnVDcG5pYzVHSm5tK29YWFBUQUlnRDJKdjVZdFBqT2FLdTFYeDRn?=
+ =?utf-8?B?cmxRTXFGczJkeFlNakFGcDA3NHc3NWFkZG9lZFRGZk83dTVSRFJodll2TTZQ?=
+ =?utf-8?B?Qnkyb3FOQ1FqdEoyMUY0MThSOXRqRjlQdVVvN2RNa3R3bjRZc3c2a2wvd0w0?=
+ =?utf-8?B?SU96QUxscWRDKzltOU5ES3NrcXBaMzRJR3NzeWorWVB3MTdNcmYrU0Z3NUc1?=
+ =?utf-8?B?c0lpbGQxODVaVEZvMHIwNlpma1NZV0ZuVDBNMEtMM1lwS2NTN1loY2N4anpH?=
+ =?utf-8?B?NHc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b7de37e-1300-423c-b6cc-08da901f8cab
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5424.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Sep 2022 15:50:40.7920
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7Hmiqpj9bc+v8bVsnxmy0Qg7Q+VTwWFpA+B+8AkcbATE+B4o7NOq9Gu+GDjDniMhietY7Ep2YR9cqx7g51BHP1QAt3bIdltousSKQAxFFQk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR11MB2753
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Use previously added code to use 4KB pages for mapping. Map compressed
-and uncompressed kernel with appropriate memory protection attributes.
-For compressed kernel set them up manually. For uncompressed kernel
-used flags specified in ELF header.
+Looks good to me.
+Tested with overflow kunit test
+command: ./tools/testing/kunit/kunit.py run overflow
 
-Signed-off-by: Evgeniy Baskov <baskov@ispras.ru>
+Reviewed-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+Tested-by:  Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
 
- delete mode 100644 arch/x86/boot/compressed/pgtable.h
- create mode 100644 arch/x86/include/asm/shared/pgtable.h
----
- arch/x86/boot/compressed/head_64.S      | 25 ++++++-
- arch/x86/boot/compressed/ident_map_64.c | 96 ++++++++++++++++---------
- arch/x86/boot/compressed/misc.c         | 63 ++++++++++++++--
- arch/x86/boot/compressed/misc.h         | 16 ++++-
- arch/x86/boot/compressed/pgtable.h      | 20 ------
- arch/x86/boot/compressed/pgtable_64.c   |  2 +-
- arch/x86/boot/compressed/sev.c          |  6 +-
- arch/x86/include/asm/shared/pgtable.h   | 29 ++++++++
- 8 files changed, 193 insertions(+), 64 deletions(-)
- delete mode 100644 arch/x86/boot/compressed/pgtable.h
- create mode 100644 arch/x86/include/asm/shared/pgtable.h
-
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 5273367283b7..889ca7176aa7 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -35,7 +35,7 @@
- #include <asm/bootparam.h>
- #include <asm/desc_defs.h>
- #include <asm/trapnr.h>
--#include "pgtable.h"
-+#include <asm/shared/pgtable.h>
- 
- /*
-  * Locally defined symbols should be marked hidden:
-@@ -578,6 +578,7 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
- 	pushq	%rsi
- 	call	load_stage2_idt
- 
-+	call	startup32_enable_nx_if_supported
- 	/* Pass boot_params to initialize_identity_maps() */
- 	movq	(%rsp), %rdi
- 	call	initialize_identity_maps
-@@ -602,6 +603,28 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
- 	jmp	*%rax
- SYM_FUNC_END(.Lrelocated)
- 
-+SYM_FUNC_START_LOCAL_NOALIGN(startup32_enable_nx_if_supported)
-+	pushq	%rbx
-+
-+	leaq	has_nx(%rip), %rcx
-+
-+	mov	$0x80000001, %eax
-+	cpuid
-+	btl	$20, %edx
-+	jnc	.Lnonx
-+
-+	movl	$1, (%rcx)
-+
-+	movl	$MSR_EFER, %ecx
-+	rdmsr
-+	btsl	$_EFER_NX, %eax
-+	wrmsr
-+
-+.Lnonx:
-+	popq	%rbx
-+	RET
-+SYM_FUNC_END(startup32_enable_nx_if_supported)
-+
- 	.code32
- /*
-  * This is the 32-bit trampoline that will be copied over to low memory.
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index d4a314cc50d6..880e08293023 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -28,6 +28,7 @@
- #include <asm/trap_pf.h>
- #include <asm/trapnr.h>
- #include <asm/init.h>
-+#include <asm/shared/pgtable.h>
- /* Use the static base for this part of the boot process */
- #undef __PAGE_OFFSET
- #define __PAGE_OFFSET __PAGE_OFFSET_BASE
-@@ -86,24 +87,46 @@ phys_addr_t physical_mask = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
-  * Due to relocation, pointers must be assigned at run time not build time.
-  */
- static struct x86_mapping_info mapping_info;
-+int has_nx;
- 
- /*
-  * Adds the specified range to the identity mappings.
-  */
--void kernel_add_identity_map(unsigned long start, unsigned long end)
-+unsigned long kernel_add_identity_map(unsigned long start,
-+				      unsigned long end,
-+				      unsigned int flags)
- {
- 	int ret;
- 
- 	/* Align boundary to 2M. */
--	start = round_down(start, PMD_SIZE);
--	end = round_up(end, PMD_SIZE);
-+	start = round_down(start, PAGE_SIZE);
-+	end = round_up(end, PAGE_SIZE);
- 	if (start >= end)
--		return;
-+		return start;
-+
-+	/* Enforce W^X -- just stop booting with error on violation. */
-+	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) &&
-+	    (flags & (MAP_EXEC | MAP_WRITE)) == (MAP_EXEC | MAP_WRITE))
-+		error("Error: W^X violation\n");
-+
-+	bool nx = !(flags & MAP_EXEC) && has_nx;
-+	bool ro = !(flags & MAP_WRITE);
-+
-+	mapping_info.page_flag = sme_me_mask | (nx ?
-+		(ro ? __PAGE_KERNEL_RO : __PAGE_KERNEL) :
-+		(ro ? __PAGE_KERNEL_ROX : __PAGE_KERNEL_EXEC));
- 
- 	/* Build the mapping. */
--	ret = kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt, start, end);
-+	ret = kernel_ident_mapping_init(&mapping_info,
-+					(pgd_t *)top_level_pgt,
-+					start, end);
- 	if (ret)
- 		error("Error: kernel_ident_mapping_init() failed\n");
-+
-+	if (!(flags & MAP_NOFLUSH))
-+		write_cr3(top_level_pgt);
-+
-+	return start;
- }
- 
- /* Locates and clears a region for a new top level page table. */
-@@ -112,14 +135,17 @@ void initialize_identity_maps(void *rmode)
- 	unsigned long cmdline;
- 	struct setup_data *sd;
- 
-+	boot_params = rmode;
-+
- 	/* Exclude the encryption mask from __PHYSICAL_MASK */
- 	physical_mask &= ~sme_me_mask;
- 
- 	/* Init mapping_info with run-time function/buffer pointers. */
- 	mapping_info.alloc_pgt_page = alloc_pgt_page;
- 	mapping_info.context = &pgt_data;
--	mapping_info.page_flag = __PAGE_KERNEL_LARGE_EXEC | sme_me_mask;
-+	mapping_info.page_flag = __PAGE_KERNEL_EXEC | sme_me_mask;
- 	mapping_info.kernpg_flag = _KERNPG_TABLE;
-+	mapping_info.allow_4kpages = 1;
- 
- 	/*
- 	 * It should be impossible for this not to already be true,
-@@ -154,15 +180,34 @@ void initialize_identity_maps(void *rmode)
- 	/*
- 	 * New page-table is set up - map the kernel image, boot_params and the
- 	 * command line. The uncompressed kernel requires boot_params and the
--	 * command line to be mapped in the identity mapping. Map them
--	 * explicitly here in case the compressed kernel does not touch them,
--	 * or does not touch all the pages covering them.
-+	 * command line to be mapped in the identity mapping.
-+	 * Every other accessed memory region is mapped later, if required.
- 	 */
--	kernel_add_identity_map((unsigned long)_head, (unsigned long)_end);
--	boot_params = rmode;
--	kernel_add_identity_map((unsigned long)boot_params, (unsigned long)(boot_params + 1));
-+	extern char _head[], _ehead[];
-+	kernel_add_identity_map((unsigned long)_head,
-+				(unsigned long)_ehead, MAP_EXEC | MAP_NOFLUSH);
-+
-+	extern char _compressed[], _ecompressed[];
-+	kernel_add_identity_map((unsigned long)_compressed,
-+				(unsigned long)_ecompressed, MAP_WRITE | MAP_NOFLUSH);
-+
-+	extern char _text[], _etext[];
-+	kernel_add_identity_map((unsigned long)_text,
-+				(unsigned long)_etext, MAP_EXEC | MAP_NOFLUSH);
-+
-+	extern char _rodata[], _erodata[];
-+	kernel_add_identity_map((unsigned long)_rodata,
-+				(unsigned long)_erodata, MAP_NOFLUSH);
-+
-+	extern char _data[], _end[];
-+	kernel_add_identity_map((unsigned long)_data,
-+				(unsigned long)_end, MAP_WRITE | MAP_NOFLUSH);
-+
-+	kernel_add_identity_map((unsigned long)boot_params,
-+				(unsigned long)(boot_params + 1), MAP_WRITE | MAP_NOFLUSH);
-+
- 	cmdline = get_cmd_line_ptr();
--	kernel_add_identity_map(cmdline, cmdline + COMMAND_LINE_SIZE);
-+	kernel_add_identity_map(cmdline, cmdline + COMMAND_LINE_SIZE, MAP_NOFLUSH);
- 
- 	/*
- 	 * Also map the setup_data entries passed via boot_params in case they
-@@ -172,7 +217,7 @@ void initialize_identity_maps(void *rmode)
- 	while (sd) {
- 		unsigned long sd_addr = (unsigned long)sd;
- 
--		kernel_add_identity_map(sd_addr, sd_addr + sizeof(*sd) + sd->len);
-+		kernel_add_identity_map(sd_addr, sd_addr + sizeof(*sd) + sd->len, MAP_NOFLUSH);
- 		sd = (struct setup_data *)sd->next;
- 	}
- 
-@@ -185,26 +230,11 @@ void initialize_identity_maps(void *rmode)
- static pte_t *split_large_pmd(struct x86_mapping_info *info,
- 			      pmd_t *pmdp, unsigned long __address)
- {
--	unsigned long page_flags;
--	unsigned long address;
--	pte_t *pte;
--	pmd_t pmd;
--	int i;
--
--	pte = (pte_t *)info->alloc_pgt_page(info->context);
-+	unsigned long address = __address & PMD_MASK;
-+	pte_t *pte = ident_split_large_pmd(info, pmdp, address);
- 	if (!pte)
- 		return NULL;
- 
--	address     = __address & PMD_MASK;
--	/* No large page - clear PSE flag */
--	page_flags  = info->page_flag & ~_PAGE_PSE;
--
--	/* Populate the PTEs */
--	for (i = 0; i < PTRS_PER_PMD; i++) {
--		set_pte(&pte[i], __pte(address | page_flags));
--		address += PAGE_SIZE;
--	}
--
- 	/*
- 	 * Ideally we need to clear the large PMD first and do a TLB
- 	 * flush before we write the new PMD. But the 2M range of the
-@@ -214,7 +244,7 @@ static pte_t *split_large_pmd(struct x86_mapping_info *info,
- 	 * also the only user of the page-table, so there is no chance
- 	 * of a TLB multihit.
- 	 */
--	pmd = __pmd((unsigned long)pte | info->kernpg_flag);
-+	pmd_t pmd = __pmd((unsigned long)pte | info->kernpg_flag);
- 	set_pmd(pmdp, pmd);
- 	/* Flush TLB to establish the new PMD */
- 	write_cr3(top_level_pgt);
-@@ -377,5 +407,5 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
- 	 * Error code is sane - now identity map the 2M region around
- 	 * the faulting address.
- 	 */
--	kernel_add_identity_map(address, end);
-+	kernel_add_identity_map(address, end, MAP_WRITE);
- }
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index cf690d8712f4..d377e434c4e3 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -14,10 +14,10 @@
- 
- #include "misc.h"
- #include "error.h"
--#include "pgtable.h"
- #include "../string.h"
- #include "../voffset.h"
- #include <asm/bootparam_utils.h>
-+#include <asm/shared/pgtable.h>
- 
- /*
-  * WARNING!!
-@@ -277,7 +277,8 @@ static inline void handle_relocations(void *output, unsigned long output_len,
- { }
- #endif
- 
--static void parse_elf(void *output)
-+static void parse_elf(void *output, unsigned long output_len,
-+		      unsigned long virt_addr)
- {
- #ifdef CONFIG_X86_64
- 	Elf64_Ehdr ehdr;
-@@ -287,6 +288,7 @@ static void parse_elf(void *output)
- 	Elf32_Phdr *phdrs, *phdr;
- #endif
- 	void *dest;
-+	unsigned long addr;
- 	int i;
- 
- 	memcpy(&ehdr, output, sizeof(ehdr));
-@@ -323,10 +325,50 @@ static void parse_elf(void *output)
- #endif
- 			memmove(dest, output + phdr->p_offset, phdr->p_filesz);
- 			break;
--		default: /* Ignore other PT_* */ break;
-+		default:
-+			/* Ignore other PT_* */
-+			break;
-+		}
-+	}
-+
-+	handle_relocations(output, output_len, virt_addr);
-+
-+	if (!IS_ENABLED(CONFIG_RANDOMIZE_BASE))
-+		goto skip_protect;
-+
-+	for (i = 0; i < ehdr.e_phnum; i++) {
-+		phdr = &phdrs[i];
-+
-+		switch (phdr->p_type) {
-+		case PT_LOAD:
-+#ifdef CONFIG_RELOCATABLE
-+			addr = (unsigned long)output;
-+			addr += (phdr->p_paddr - LOAD_PHYSICAL_ADDR);
-+#else
-+			addr = phdr->p_paddr;
-+#endif
-+			/*
-+			 * Simultaneously readable and writable segments are
-+			 * violating W^X, and should not be present in vmlinux image.
-+			 */
-+			if ((phdr->p_flags & (PF_X | PF_W)) == (PF_X | PF_W))
-+				error("W^X violation for ELF segment");
-+
-+			unsigned int flags = MAP_PROTECT;
-+			if (phdr->p_flags & PF_X)
-+				flags |= MAP_EXEC;
-+			if (phdr->p_flags & PF_W)
-+				flags |= MAP_WRITE;
-+
-+			kernel_add_identity_map(addr, addr + phdr->p_memsz, flags);
-+			break;
-+		default:
-+			/* Ignore other PT_* */
-+			break;
- 		}
- 	}
- 
-+skip_protect:
- 	free(phdrs);
- }
- 
-@@ -434,6 +476,18 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
- 				needed_size,
- 				&virt_addr);
- 
-+	unsigned long phys_addr = (unsigned long)output;
-+
-+	/*
-+	 * If KASLR is disabled input and output regions may overlap.
-+	 * In this case we need to map region excutable as well.
-+	 */
-+	unsigned long map_flags = MAP_ALLOC | MAP_WRITE |
-+			(IS_ENABLED(CONFIG_RANDOMIZE_BASE) ? 0 : MAP_EXEC);
-+	output = (unsigned char *)kernel_add_identity_map(phys_addr,
-+							  phys_addr + needed_size,
-+							  map_flags);
-+
- 	/* Validate memory location choices. */
- 	if ((unsigned long)output & (MIN_KERNEL_ALIGN - 1))
- 		error("Destination physical address inappropriately aligned");
-@@ -456,8 +510,7 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
- 	debug_putstr("\nDecompressing Linux... ");
- 	__decompress(input_data, input_len, NULL, NULL, output, output_len,
- 			NULL, error);
--	parse_elf(output);
--	handle_relocations(output, output_len, virt_addr);
-+	parse_elf(output, output_len, virt_addr);
- 	debug_putstr("done.\nBooting the kernel.\n");
- 
- 	/* Disable exception handling before booting the kernel */
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 62208ec04ca4..a4f99516f310 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -171,8 +171,20 @@ static inline int count_immovable_mem_regions(void) { return 0; }
- #ifdef CONFIG_X86_5LEVEL
- extern unsigned int __pgtable_l5_enabled, pgdir_shift, ptrs_per_p4d;
- #endif
--extern void kernel_add_identity_map(unsigned long start, unsigned long end);
--
-+#ifdef CONFIG_X86_64
-+extern unsigned long kernel_add_identity_map(unsigned long start,
-+					     unsigned long end,
-+					     unsigned int flags);
-+#else
-+static inline unsigned long kernel_add_identity_map(unsigned long start,
-+						    unsigned long end,
-+						    unsigned int flags)
-+{
-+	(void)flags;
-+	(void)end;
-+	return start;
-+}
-+#endif
- /* Used by PAGE_KERN* macros: */
- extern pteval_t __default_kernel_pte_mask;
- 
-diff --git a/arch/x86/boot/compressed/pgtable.h b/arch/x86/boot/compressed/pgtable.h
-deleted file mode 100644
-index cc9b2529a086..000000000000
---- a/arch/x86/boot/compressed/pgtable.h
-+++ /dev/null
-@@ -1,20 +0,0 @@
--#ifndef BOOT_COMPRESSED_PAGETABLE_H
--#define BOOT_COMPRESSED_PAGETABLE_H
--
--#define TRAMPOLINE_32BIT_SIZE		(2 * PAGE_SIZE)
--
--#define TRAMPOLINE_32BIT_PGTABLE_OFFSET	0
--
--#define TRAMPOLINE_32BIT_CODE_OFFSET	PAGE_SIZE
--#define TRAMPOLINE_32BIT_CODE_SIZE	0x80
--
--#define TRAMPOLINE_32BIT_STACK_END	TRAMPOLINE_32BIT_SIZE
--
--#ifndef __ASSEMBLER__
--
--extern unsigned long *trampoline_32bit;
--
--extern void trampoline_32bit_src(void *return_ptr);
--
--#endif /* __ASSEMBLER__ */
--#endif /* BOOT_COMPRESSED_PAGETABLE_H */
-diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
-index 2ac12ff4111b..c7cf5a1059a8 100644
---- a/arch/x86/boot/compressed/pgtable_64.c
-+++ b/arch/x86/boot/compressed/pgtable_64.c
-@@ -2,7 +2,7 @@
- #include "misc.h"
- #include <asm/e820/types.h>
- #include <asm/processor.h>
--#include "pgtable.h"
-+#include <asm/shared/pgtable.h>
- #include "../string.h"
- #include "efi.h"
- 
-diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index c93930d5ccbd..99f3ad0b30f3 100644
---- a/arch/x86/boot/compressed/sev.c
-+++ b/arch/x86/boot/compressed/sev.c
-@@ -13,6 +13,7 @@
- #include "misc.h"
- 
- #include <asm/pgtable_types.h>
-+#include <asm/shared/pgtable.h>
- #include <asm/sev.h>
- #include <asm/trapnr.h>
- #include <asm/trap_pf.h>
-@@ -435,10 +436,11 @@ void sev_prep_identity_maps(unsigned long top_level_pgt)
- 		unsigned long cc_info_pa = boot_params->cc_blob_address;
- 		struct cc_blob_sev_info *cc_info;
- 
--		kernel_add_identity_map(cc_info_pa, cc_info_pa + sizeof(*cc_info));
-+		kernel_add_identity_map(cc_info_pa, cc_info_pa + sizeof(*cc_info), MAP_NOFLUSH);
- 
- 		cc_info = (struct cc_blob_sev_info *)cc_info_pa;
--		kernel_add_identity_map(cc_info->cpuid_phys, cc_info->cpuid_phys + cc_info->cpuid_len);
-+		kernel_add_identity_map(cc_info->cpuid_phys,
-+					cc_info->cpuid_phys + cc_info->cpuid_len, MAP_NOFLUSH);
- 	}
- 
- 	sev_verify_cbit(top_level_pgt);
-diff --git a/arch/x86/include/asm/shared/pgtable.h b/arch/x86/include/asm/shared/pgtable.h
-new file mode 100644
-index 000000000000..6527dadf39d6
---- /dev/null
-+++ b/arch/x86/include/asm/shared/pgtable.h
-@@ -0,0 +1,29 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef ASM_SHARED_PAGETABLE_H
-+#define ASM_SHARED_PAGETABLE_H
-+
-+#define MAP_WRITE	0x02 /* Writable memory */
-+#define MAP_EXEC	0x04 /* Executable memory */
-+#define MAP_ALLOC	0x10 /* Range needs to be allocated */
-+#define MAP_PROTECT	0x20 /* Set exact memory attributes for memory range */
-+#define MAP_NOFLUSH	0x40 /* Avoid flushing TLB */
-+
-+#define TRAMPOLINE_32BIT_SIZE		(3 * PAGE_SIZE)
-+
-+#define TRAMPOLINE_32BIT_PLACEMENT_MAX	(0xA0000)
-+
-+#define TRAMPOLINE_32BIT_PGTABLE_OFFSET	0
-+
-+#define TRAMPOLINE_32BIT_CODE_OFFSET	PAGE_SIZE
-+#define TRAMPOLINE_32BIT_CODE_SIZE	0x80
-+
-+#define TRAMPOLINE_32BIT_STACK_END	TRAMPOLINE_32BIT_SIZE
-+
-+#ifndef __ASSEMBLER__
-+
-+extern unsigned long *trampoline_32bit;
-+
-+extern void trampoline_32bit_src(void *return_ptr);
-+
-+#endif /* __ASSEMBLER__ */
-+#endif /* ASM_SHARED_PAGETABLE_H */
--- 
-2.35.1
-
+On 8/31/22 4:21 AM, Kees Cook wrote:
+> When the check_[op]_overflow() helpers were introduced, all arguments were
+> required to be the same type to make the fallback macros simpler. However,
+> now that the fallback macros have been removed[1], it is fine to allow
+> mixed types, which makes using the helpers much more useful, as they
+> can be used to test for type-based overflows (e.g. adding two large ints
+> but storing into a u8), as would be handy in the drm core[2].
+> 
+> Remove the restriction, and add additional self-tests that exercise some
+> of the mixed-type overflow cases, and double-check for accidental macro
+> side-effects.
+> 
+> [1] https://git.kernel.org/linus/4eb6bd55cfb22ffc20652732340c4962f3ac9a91
+> [2] https://lore.kernel.org/lkml/20220824084514.2261614-2-gwan-gyeong.mun@intel.com
+> 
+> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Cc: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+> Cc: Andrzej Hajda <andrzej.hajda@intel.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> v3: drop needless local variables (Andrzej)
+> v2: https://lore.kernel.org/lkml/20220829214550.3443472-1-keescook@chromium.org
+> v1: https://lore.kernel.org/lkml/20220829204729.3409270-1-keescook@chromium.org
+> ---
+>   include/linux/overflow.h |  72 ++++++++++++++++------------
+>   lib/overflow_kunit.c     | 101 ++++++++++++++++++++++++++++-----------
+>   2 files changed, 113 insertions(+), 60 deletions(-)
+> 
+> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> index 0eb3b192f07a..19dfdd74835e 100644
+> --- a/include/linux/overflow.h
+> +++ b/include/linux/overflow.h
+> @@ -51,40 +51,50 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+>   	return unlikely(overflow);
+>   }
+>   
+> -/*
+> - * For simplicity and code hygiene, the fallback code below insists on
+> - * a, b and *d having the same type (similar to the min() and max()
+> - * macros), whereas gcc's type-generic overflow checkers accept
+> - * different types. Hence we don't just make check_add_overflow an
+> - * alias for __builtin_add_overflow, but add type checks similar to
+> - * below.
+> +/** check_add_overflow() - Calculate addition with overflow checking
+> + *
+> + * @a: first addend
+> + * @b: second addend
+> + * @d: pointer to store sum
+> + *
+> + * Returns 0 on success.
+> + *
+> + * *@d holds the results of the attempted addition, but is not considered
+> + * "safe for use" on a non-zero return value, which indicates that the
+> + * sum has overflowed or been truncated.
+>    */
+> -#define check_add_overflow(a, b, d) __must_check_overflow(({	\
+> -	typeof(a) __a = (a);			\
+> -	typeof(b) __b = (b);			\
+> -	typeof(d) __d = (d);			\
+> -	(void) (&__a == &__b);			\
+> -	(void) (&__a == __d);			\
+> -	__builtin_add_overflow(__a, __b, __d);	\
+> -}))
+> +#define check_add_overflow(a, b, d)	\
+> +	__must_check_overflow(__builtin_add_overflow(a, b, d))
+>   
+> -#define check_sub_overflow(a, b, d) __must_check_overflow(({	\
+> -	typeof(a) __a = (a);			\
+> -	typeof(b) __b = (b);			\
+> -	typeof(d) __d = (d);			\
+> -	(void) (&__a == &__b);			\
+> -	(void) (&__a == __d);			\
+> -	__builtin_sub_overflow(__a, __b, __d);	\
+> -}))
+> +/** check_sub_overflow() - Calculate subtraction with overflow checking
+> + *
+> + * @a: minuend; value to subtract from
+> + * @b: subtrahend; value to subtract from @a
+> + * @d: pointer to store difference
+> + *
+> + * Returns 0 on success.
+> + *
+> + * *@d holds the results of the attempted subtraction, but is not considered
+> + * "safe for use" on a non-zero return value, which indicates that the
+> + * difference has underflowed or been truncated.
+> + */
+> +#define check_sub_overflow(a, b, d)	\
+> +	__must_check_overflow(__builtin_sub_overflow(a, b, d))
+>   
+> -#define check_mul_overflow(a, b, d) __must_check_overflow(({	\
+> -	typeof(a) __a = (a);			\
+> -	typeof(b) __b = (b);			\
+> -	typeof(d) __d = (d);			\
+> -	(void) (&__a == &__b);			\
+> -	(void) (&__a == __d);			\
+> -	__builtin_mul_overflow(__a, __b, __d);	\
+> -}))
+> +/** check_mul_overflow() - Calculate multiplication with overflow checking
+> + *
+> + * @a: first factor
+> + * @b: second factor
+> + * @d: pointer to store product
+> + *
+> + * Returns 0 on success.
+> + *
+> + * *@d holds the results of the attempted multiplication, but is not
+> + * considered "safe for use" on a non-zero return value, which indicates
+> + * that the product has overflowed or been truncated.
+> + */
+> +#define check_mul_overflow(a, b, d)	\
+> +	__must_check_overflow(__builtin_mul_overflow(a, b, d))
+>   
+>   /** check_shl_overflow() - Calculate a left-shifted value and check overflow
+>    *
+> diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
+> index 7e3e43679b73..0d98c9bc75da 100644
+> --- a/lib/overflow_kunit.c
+> +++ b/lib/overflow_kunit.c
+> @@ -16,12 +16,15 @@
+>   #include <linux/types.h>
+>   #include <linux/vmalloc.h>
+>   
+> -#define DEFINE_TEST_ARRAY(t)			\
+> -	static const struct test_ ## t {	\
+> -		t a, b;				\
+> -		t sum, diff, prod;		\
+> -		bool s_of, d_of, p_of;		\
+> -	} t ## _tests[]
+> +#define DEFINE_TEST_ARRAY_TYPED(t1, t2, t)			\
+> +	static const struct test_ ## t1 ## _ ## t2 ## __ ## t {	\
+> +		t1 a;						\
+> +		t2 b;						\
+> +		t sum, diff, prod;				\
+> +		bool s_of, d_of, p_of;				\
+> +	} t1 ## _ ## t2 ## __ ## t ## _tests[]
+> +
+> +#define DEFINE_TEST_ARRAY(t)	DEFINE_TEST_ARRAY_TYPED(t, t, t)
+>   
+>   DEFINE_TEST_ARRAY(u8) = {
+>   	{0, 0, 0, 0, 0, false, false, false},
+> @@ -222,21 +225,27 @@ DEFINE_TEST_ARRAY(s64) = {
+>   };
+>   #endif
+>   
+> -#define check_one_op(t, fmt, op, sym, a, b, r, of) do {		\
+> -	t _r;							\
+> -	bool _of;						\
+> -								\
+> -	_of = check_ ## op ## _overflow(a, b, &_r);		\
+> -	KUNIT_EXPECT_EQ_MSG(test, _of, of,			\
+> +#define check_one_op(t, fmt, op, sym, a, b, r, of) do {			\
+> +	int _a_orig = a, _a_bump = a + 1;				\
+> +	int _b_orig = b, _b_bump = b + 1;				\
+> +	bool _of;							\
+> +	t _r;								\
+> +									\
+> +	_of = check_ ## op ## _overflow(a, b, &_r);			\
+> +	KUNIT_EXPECT_EQ_MSG(test, _of, of,				\
+>   		"expected "fmt" "sym" "fmt" to%s overflow (type %s)\n",	\
+> -		a, b, of ? "" : " not", #t);			\
+> -	KUNIT_EXPECT_EQ_MSG(test, _r, r,			\
+> +		a, b, of ? "" : " not", #t);				\
+> +	KUNIT_EXPECT_EQ_MSG(test, _r, r,				\
+>   		"expected "fmt" "sym" "fmt" == "fmt", got "fmt" (type %s)\n", \
+> -		a, b, r, _r, #t);				\
+> +		a, b, r, _r, #t);					\
+> +	/* Check for internal macro side-effects. */			\
+> +	_of = check_ ## op ## _overflow(_a_orig++, _b_orig++, &_r);	\
+> +	KUNIT_EXPECT_EQ_MSG(test, _a_orig, _a_bump, "Unexpected " #op " macro side-effect!\n"); \
+> +	KUNIT_EXPECT_EQ_MSG(test, _b_orig, _b_bump, "Unexpected " #op " macro side-effect!\n"); \
+>   } while (0)
+>   
+> -#define DEFINE_TEST_FUNC(t, fmt)					\
+> -static void do_test_ ## t(struct kunit *test, const struct test_ ## t *p) \
+> +#define DEFINE_TEST_FUNC_TYPED(n, t, fmt)				\
+> +static void do_test_ ## n(struct kunit *test, const struct test_ ## n *p) \
+>   {							   		\
+>   	check_one_op(t, fmt, add, "+", p->a, p->b, p->sum, p->s_of);	\
+>   	check_one_op(t, fmt, add, "+", p->b, p->a, p->sum, p->s_of);	\
+> @@ -245,15 +254,18 @@ static void do_test_ ## t(struct kunit *test, const struct test_ ## t *p) \
+>   	check_one_op(t, fmt, mul, "*", p->b, p->a, p->prod, p->p_of);	\
+>   }									\
+>   									\
+> -static void t ## _overflow_test(struct kunit *test) {			\
+> +static void n ## _overflow_test(struct kunit *test) {			\
+>   	unsigned i;							\
+>   									\
+> -	for (i = 0; i < ARRAY_SIZE(t ## _tests); ++i)			\
+> -		do_test_ ## t(test, &t ## _tests[i]);			\
+> +	for (i = 0; i < ARRAY_SIZE(n ## _tests); ++i)			\
+> +		do_test_ ## n(test, &n ## _tests[i]);			\
+>   	kunit_info(test, "%zu %s arithmetic tests finished\n",		\
+> -		ARRAY_SIZE(t ## _tests), #t);				\
+> +		ARRAY_SIZE(n ## _tests), #n);				\
+>   }
+>   
+> +#define DEFINE_TEST_FUNC(t, fmt)					\
+> +	DEFINE_TEST_FUNC_TYPED(t ## _ ## t ## __ ## t, t, fmt)
+> +
+>   DEFINE_TEST_FUNC(u8, "%d");
+>   DEFINE_TEST_FUNC(s8, "%d");
+>   DEFINE_TEST_FUNC(u16, "%d");
+> @@ -265,6 +277,33 @@ DEFINE_TEST_FUNC(u64, "%llu");
+>   DEFINE_TEST_FUNC(s64, "%lld");
+>   #endif
+>   
+> +DEFINE_TEST_ARRAY_TYPED(u32, u32, u8) = {
+> +	{0, 0, 0, 0, 0, false, false, false},
+> +	{U8_MAX, 2, 1, U8_MAX - 2, U8_MAX - 1, true, false, true},
+> +	{U8_MAX + 1, 0, 0, 0, 0, true, true, false},
+> +};
+> +DEFINE_TEST_FUNC_TYPED(u32_u32__u8, u8, "%d");
+> +
+> +DEFINE_TEST_ARRAY_TYPED(u32, u32, int) = {
+> +	{0, 0, 0, 0, 0, false, false, false},
+> +	{U32_MAX, 0, -1, -1, 0, true, true, false},
+> +};
+> +DEFINE_TEST_FUNC_TYPED(u32_u32__int, int, "%d");
+> +
+> +DEFINE_TEST_ARRAY_TYPED(u8, u8, int) = {
+> +	{0, 0, 0, 0, 0, false, false, false},
+> +	{U8_MAX, U8_MAX, 2 * U8_MAX, 0, U8_MAX * U8_MAX, false, false, false},
+> +	{1, 2, 3, -1, 2, false, false, false},
+> +};
+> +DEFINE_TEST_FUNC_TYPED(u8_u8__int, int, "%d");
+> +
+> +DEFINE_TEST_ARRAY_TYPED(int, int, u8) = {
+> +	{0, 0, 0, 0, 0, false, false, false},
+> +	{1, 2, 3, U8_MAX, 2, false, true, false},
+> +	{-1, 0, U8_MAX, U8_MAX, 0, true, true, false},
+> +};
+> +DEFINE_TEST_FUNC_TYPED(int_int__u8, u8, "%d");
+> +
+>   static void overflow_shift_test(struct kunit *test)
+>   {
+>   	int count = 0;
+> @@ -649,17 +688,21 @@ static void overflow_size_helpers_test(struct kunit *test)
+>   }
+>   
+>   static struct kunit_case overflow_test_cases[] = {
+> -	KUNIT_CASE(u8_overflow_test),
+> -	KUNIT_CASE(s8_overflow_test),
+> -	KUNIT_CASE(u16_overflow_test),
+> -	KUNIT_CASE(s16_overflow_test),
+> -	KUNIT_CASE(u32_overflow_test),
+> -	KUNIT_CASE(s32_overflow_test),
+> +	KUNIT_CASE(u8_u8__u8_overflow_test),
+> +	KUNIT_CASE(s8_s8__s8_overflow_test),
+> +	KUNIT_CASE(u16_u16__u16_overflow_test),
+> +	KUNIT_CASE(s16_s16__s16_overflow_test),
+> +	KUNIT_CASE(u32_u32__u32_overflow_test),
+> +	KUNIT_CASE(s32_s32__s32_overflow_test),
+>   /* Clang 13 and earlier generate unwanted libcalls on 32-bit. */
+>   #if BITS_PER_LONG == 64
+> -	KUNIT_CASE(u64_overflow_test),
+> -	KUNIT_CASE(s64_overflow_test),
+> +	KUNIT_CASE(u64_u64__u64_overflow_test),
+> +	KUNIT_CASE(s64_s64__s64_overflow_test),
+>   #endif
+> +	KUNIT_CASE(u32_u32__u8_overflow_test),
+> +	KUNIT_CASE(u32_u32__int_overflow_test),
+> +	KUNIT_CASE(u8_u8__int_overflow_test),
+> +	KUNIT_CASE(int_int__u8_overflow_test),
+>   	KUNIT_CASE(overflow_shift_test),
+>   	KUNIT_CASE(overflow_allocation_test),
+>   	KUNIT_CASE(overflow_size_helpers_test),
