@@ -2,102 +2,101 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EA0C6FA83
-	for <linux-hardening@archiver.kernel.org>; Tue,  6 Sep 2022 06:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE46AECAAA1
+	for <linux-hardening@archiver.kernel.org>; Tue,  6 Sep 2022 10:41:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232915AbiIFGaS (ORCPT
+        id S234197AbiIFKl5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 6 Sep 2022 02:30:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51006 "EHLO
+        Tue, 6 Sep 2022 06:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232179AbiIFGaR (ORCPT
+        with ESMTP id S233699AbiIFKlp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 6 Sep 2022 02:30:17 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70EC812A8A
-        for <linux-hardening@vger.kernel.org>; Mon,  5 Sep 2022 23:30:16 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1oVS5y-0006S3-TP; Tue, 06 Sep 2022 08:30:02 +0200
-Received: from pengutronix.de (unknown [IPv6:2a0a:edc0:0:701:a3ba:d49d:1749:550])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        (Authenticated sender: mkl-all@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id C2AF9DB56C;
-        Tue,  6 Sep 2022 06:30:00 +0000 (UTC)
-Date:   Tue, 6 Sep 2022 08:29:58 +0200
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tue, 6 Sep 2022 06:41:45 -0400
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD7F5F224;
+        Tue,  6 Sep 2022 03:41:43 -0700 (PDT)
+Received: from localhost.localdomain (unknown [83.149.199.65])
+        by mail.ispras.ru (Postfix) with ESMTPSA id 90F7F4076254;
+        Tue,  6 Sep 2022 10:41:38 +0000 (UTC)
+From:   Evgeniy Baskov <baskov@ispras.ru>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Evgeniy Baskov <baskov@ispras.ru>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        lvc-project@linuxtesting.org, x86@kernel.org,
+        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] can: etas_es58x: Replace zero-length array with
- DECLARE_FLEX_ARRAY() helper
-Message-ID: <20220906062958.bevxqhg3azvkky5l@pengutronix.de>
-References: <Yw00w6XRcq7B6ub6@work>
+Subject: [PATCH 04/16] x86/boot: Increase boot page table size
+Date:   Tue,  6 Sep 2022 13:41:08 +0300
+Message-Id: <e4dd6f83a49551d72682ad399dba8feeea955fb4.1662459668.git.baskov@ispras.ru>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <cover.1662459668.git.baskov@ispras.ru>
+References: <cover.1662459668.git.baskov@ispras.ru>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fzdtkz7rshitpii6"
-Content-Disposition: inline
-In-Reply-To: <Yw00w6XRcq7B6ub6@work>
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Previous calculations ignored pages implicitly mapped by ACPI code,
+so theoretical upper limit is higher than was set.
 
---fzdtkz7rshitpii6
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Using 4KB pages is desirable for better memory protection granularity.
+Approximately twice as much memory is required for those.
 
-On 29.08.2022 16:50:59, Gustavo A. R. Silva wrote:
-> Zero-length arrays are deprecated and we are moving towards adopting
-> C99 flexible-array members, instead. So, replace zero-length array
-> declaration in union es58x_urb_cmd with the new DECLARE_FLEX_ARRAY()
-> helper macro.
->=20
-> This helper allows for a flexible-array member in a union.
->=20
-> Link: https://github.com/KSPP/linux/issues/193
-> Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Increase initial page table size to 64 4KB page tables.
 
-Applied to linux-can-next.
+Signed-off-by: Evgeniy Baskov <baskov@ispras.ru>
+---
+ arch/x86/include/asm/boot.h | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-Thanks,
-Marc
+diff --git a/arch/x86/include/asm/boot.h b/arch/x86/include/asm/boot.h
+index 9191280d9ea3..024d972c248e 100644
+--- a/arch/x86/include/asm/boot.h
++++ b/arch/x86/include/asm/boot.h
+@@ -41,22 +41,24 @@
+ # define BOOT_STACK_SIZE	0x4000
+ 
+ # define BOOT_INIT_PGT_SIZE	(6*4096)
+-# ifdef CONFIG_RANDOMIZE_BASE
+ /*
+  * Assuming all cross the 512GB boundary:
+  * 1 page for level4
+- * (2+2)*4 pages for kernel, param, cmd_line, and randomized kernel
+- * 2 pages for first 2M (video RAM: CONFIG_X86_VERBOSE_BOOTUP).
+- * Total is 19 pages.
++ * (3+3)*2 pages for param and cmd_line
++ * (2+2+S)*2 pages for kernel and randomized kernel, where S is total number
++ *     of sections of kernel. Explanation: 2+2 are upper level page tables.
++ *     We can have only S unaligned parts of section: 1 at the end of the kernel
++ *     and (S-1) at the section borders. The start address of the kernel is
++ *     aligned, so an extra page table. There are at most S=6 sections in
++ *     vmlinux ELF image.
++ * 3 pages for first 2M (video RAM: CONFIG_X86_VERBOSE_BOOTUP).
++ * Total is 36 pages.
++ *
++ * Some pages are also required for UEFI memory map and
++ * ACPI table mappings, so we need to add extra space.
++ * FIXME: Figure out exact amount of pages.
+  */
+-#  ifdef CONFIG_X86_VERBOSE_BOOTUP
+-#   define BOOT_PGT_SIZE	(19*4096)
+-#  else /* !CONFIG_X86_VERBOSE_BOOTUP */
+-#   define BOOT_PGT_SIZE	(17*4096)
+-#  endif
+-# else /* !CONFIG_RANDOMIZE_BASE */
+-#  define BOOT_PGT_SIZE		BOOT_INIT_PGT_SIZE
+-# endif
++# define BOOT_PGT_SIZE		(64*4096)
+ 
+ #else /* !CONFIG_X86_64 */
+ # define BOOT_STACK_SIZE	0x1000
+-- 
+2.35.1
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
-
---fzdtkz7rshitpii6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEBsvAIBsPu6mG7thcrX5LkNig010FAmMW6OMACgkQrX5LkNig
-010r6wf+K9aVetaGedEST1E6cBqeWfNruF0sfYhbgsJjK/8Omrpz67b5yTJZU8vH
-4d6LCf9swiZlfyOg7rs5gPa5kqtlqwht9GDxW6B1JjPIIXTAw603e8kqI0JKzLo8
-VJ3BPoWYy9FM/oMwtgiGTiAM+gmiXNOyCLBm+lkFbpNTXY+/kUjnttRGg5DOXQWW
-Ki2LUQO/hhDis4u1Cm1fFSqkTm4rGMURufm+eVDLGN6QAiegVJ4NiF6drLzUGx23
-L3wXQysf8zXzhH/r6UrxLK4PyQN3IgDo3ZGhoqM4iFLl2wta9ESN/y96NJk8MYxw
-QceEIjFLM6SJlM0lXvngUt7T/fSRvQ==
-=JFZH
------END PGP SIGNATURE-----
-
---fzdtkz7rshitpii6--
