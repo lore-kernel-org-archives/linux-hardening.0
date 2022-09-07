@@ -2,131 +2,91 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2F6ECAAD3
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Sep 2022 08:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECBEC38145
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Sep 2022 18:55:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229846AbiIGIu4 (ORCPT
+        id S229711AbiIGSzy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 7 Sep 2022 04:50:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33644 "EHLO
+        Wed, 7 Sep 2022 14:55:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229906AbiIGIuz (ORCPT
+        with ESMTP id S229526AbiIGSzx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 7 Sep 2022 04:50:55 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC8BE72860;
-        Wed,  7 Sep 2022 01:50:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=M9ffSCcPAJFL/NG3iecTA6XnLuNGeYKgtteM2yRjbw8=; b=RkCkoGesMVEcRNleJvacW27ZN9
-        eY6mqXlLytLmnVTUKkvVx8upYmP36N0nVMK6OGviCGk0MrGxxqvCKFQ2sVRWckFQAB5ga87K5lECr
-        7m0wErxJQXSkUWe0P3Qq31N3F9tBcfUN2tNLtWayNUzwxQGjlG35NgtA8f1SDxw4a6Bx/48ySEszA
-        KPjszB/XFsGfcyya0D92vkgmt8MBtS9AeDfzrSfDWIxuZ8jnpXh+c9RTwBZWtiuuZHUMtPsReO5PX
-        Cud2D6l2SHerN+rFL9hFmy6zneagpc7A2yy9HT/ovVqtGCSOiWRuqX7kFvwVUvfahUbviFXUq9k90
-        gaDEFQVA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oVql3-00APB3-3s; Wed, 07 Sep 2022 08:50:05 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C72E130013F;
-        Wed,  7 Sep 2022 10:50:03 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9DD9B20134FB3; Wed,  7 Sep 2022 10:50:03 +0200 (CEST)
-Date:   Wed, 7 Sep 2022 10:50:03 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Bill Wendling <morbo@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Juergen Gross <jgross@suse.com>,
-        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        virtualization@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        clang-built-linux <llvm@lists.linux.dev>,
+        Wed, 7 Sep 2022 14:55:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F5780371;
+        Wed,  7 Sep 2022 11:55:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1A3BC619A2;
+        Wed,  7 Sep 2022 18:55:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8819BC433C1;
+        Wed,  7 Sep 2022 18:55:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662576950;
+        bh=dpJMvDdBTLp5BymS0AQR0+IWGQyDaRp/R/kXNsuQsfY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Evgabar0ezseNAy0a/spJe6h3v5c5D8n2L5/t0KrF4Y+5GUAaR+cCcBwbjtkKGFsi
+         n12JjIQjkMcpLWaoYDs3xkbzLWsD9zZFgf1Xz08lWEo0/2U9TMvKZZs7FhkpJXLvi8
+         NoEHuhpd+5bDAAmZARsf6DOYFq56wwIokoJo7cgmwRM8HRaV20VpZeU8c6evnZpfEM
+         2BUMZeSIpzXCyCn/GPrCHOopWogbPSfKmfvZ53ZJZU3AxYuv+V/pw/GWUDIQrxY/xx
+         imTpJPXmX1Khkuxi8Xkg0ZdRCutA0mrRt1gfbE6Sd8N+qunjYohIE1Jzp9awk5EDoM
+         HWG/G8FOxK9gA==
+Date:   Wed, 7 Sep 2022 19:55:44 +0100
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/2] x86/paravirt: add extra clobbers with
- ZERO_CALL_USED_REGS enabled
-Message-ID: <YxhbO1YZPMHutw48@hirez.programming.kicks-ass.net>
-References: <20220902213750.1124421-1-morbo@google.com>
- <20220902213750.1124421-3-morbo@google.com>
- <202209022251.B14BD50B29@keescook>
- <CAGG=3QXpK+bFOSYZkdNNFGzNfgJSSADGTRWYRv6z0vfBAgQvWQ@mail.gmail.com>
- <CAKwvOdm+kVTrqMrSPHwTa0NrG9qwTcFkGnikjYjk0ctFGBfeRA@mail.gmail.com>
+Subject: [PATCH][next] media: usb: pwc-uncompress: Use flex array destination
+ for memcpy()
+Message-ID: <YxjpMMUb3WP5Rbu7@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdm+kVTrqMrSPHwTa0NrG9qwTcFkGnikjYjk0ctFGBfeRA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 06, 2022 at 11:00:07PM -0700, Nick Desaulniers wrote:
-> On Sun, Sep 4, 2022 at 11:02 PM Bill Wendling <morbo@google.com> wrote:
-> >
-> > On Sat, Sep 3, 2022 at 12:18 AM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Fri, Sep 02, 2022 at 09:37:50PM +0000, Bill Wendling wrote:
-> > > > [...]
-> > > >         callq   *pv_ops+536(%rip)
-> > >
-> > > Do you know which pv_ops function is this? I can't figure out where
-> > > pte_offset_kernel() gets converted into a pv_ops call....
-> > >
-> > This one is _paravirt_ident_64, I believe. I think that the original
-> > issue Nathan was seeing was with another seemingly innocuous function.
-> 
-> _paravirt_ident_64 is marked noinstr, which makes me suspect that it
-> really needs to not be touched at all by the compiler for
-> these...special features.
+In preparation for FORTIFY_SOURCE performing run-time destination buffer
+bounds checking for memcpy(), specify the destination output buffer
+explicitly, instead of asking memcpy() to write past the end of what looked
+like a fixed-size object.
 
-My source tree sayeth:
+Notice that raw_frame is a pointer to a structure that contains
+flexible-array member rawframe[]:
 
-  u64 notrace _paravirt_ident_64(u64 x)
+drivers/media/usb/pwc/pwc.h:
+190 struct pwc_raw_frame {
+191         __le16 type;            /* type of the webcam */
+192         __le16 vbandlength;     /* Size of 4 lines compressed (used by the
+193                                    decompressor) */
+194         __u8   cmd[4];          /* the four byte of the command (in case of
+195                                    nala, only the first 3 bytes is filled) */
+196         __u8   rawframe[];      /* frame_size = H / 4 * vbandlength */
+197 } __packed;
 
-And that function is only ever called at boot, after alternatives runs
-it's patched with:
+Link: https://github.com/KSPP/linux/issues/200
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/media/usb/pwc/pwc-uncompress.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  mov %_ASM_ARG1, %_ASM_AX
+diff --git a/drivers/media/usb/pwc/pwc-uncompress.c b/drivers/media/usb/pwc/pwc-uncompress.c
+index faf44cdeb268..cf2591a9675c 100644
+--- a/drivers/media/usb/pwc/pwc-uncompress.c
++++ b/drivers/media/usb/pwc/pwc-uncompress.c
+@@ -39,7 +39,7 @@ int pwc_decompress(struct pwc_device *pdev, struct pwc_frame_buf *fbuf)
+ 			 * first 3 bytes is filled (Nala case). We can
+ 			 * determine this using the type of the webcam */
+ 		memcpy(raw_frame->cmd, pdev->cmd_buf, 4);
+-		memcpy(raw_frame+1, yuv, pdev->frame_size);
++		memcpy(raw_frame->rawframe, yuv, pdev->frame_size);
+ 		vb2_set_plane_payload(&fbuf->vb.vb2_buf, 0,
+ 			struct_size(raw_frame, rawframe, pdev->frame_size));
+ 		return 0;
+-- 
+2.34.1
 
-Anyway, if you want to take it away from the compiler, something like
-so should do.
-
-
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index 7ca2d46c08cc..8922e2887779 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -80,11 +80,16 @@ static unsigned paravirt_patch_call(void *insn_buff, const void *target,
- }
- 
- #ifdef CONFIG_PARAVIRT_XXL
--/* identity function, which can be inlined */
--u64 notrace _paravirt_ident_64(u64 x)
--{
--	return x;
--}
-+extern u64 _paravirt_ident_64(u64 x);
-+asm (".pushsection .entry.text, \"ax\"\n"
-+     ".global _paravirt_ident_64\n"
-+     "_paravirt_ident_64:\n\t"
-+     ASM_ENDBR
-+     "mov %" _ASM_ARG1 ", %" _ASM_AX "\n\t"
-+     ASM_RET
-+     ".size _paravirt_ident_64, . - _paravirt_ident_64\n\t"
-+     ".type _paravirt_ident_64, @function\n\t"
-+     ".popsection");
- #endif
- 
- DEFINE_STATIC_KEY_TRUE(virt_spin_lock_key);
