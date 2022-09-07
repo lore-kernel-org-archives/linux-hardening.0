@@ -2,83 +2,135 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0DFC38145
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Sep 2022 23:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA239C54EE9
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Sep 2022 23:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229536AbiIGXeq (ORCPT
+        id S229795AbiIGXnx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 7 Sep 2022 19:34:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46896 "EHLO
+        Wed, 7 Sep 2022 19:43:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230097AbiIGXem (ORCPT
+        with ESMTP id S230179AbiIGXnv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 7 Sep 2022 19:34:42 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58BFF25596
-        for <linux-hardening@vger.kernel.org>; Wed,  7 Sep 2022 16:34:41 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id t3so11030211ply.2
-        for <linux-hardening@vger.kernel.org>; Wed, 07 Sep 2022 16:34:41 -0700 (PDT)
+        Wed, 7 Sep 2022 19:43:51 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9037C58CB
+        for <linux-hardening@vger.kernel.org>; Wed,  7 Sep 2022 16:43:49 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id 14so7402448pfu.9
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Sep 2022 16:43:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=XSbBGffu2FVIOAcIwkeNSD8KuaOdq+iesnGMUCwAeTU=;
-        b=KY+PrU0lGhQtTLQNN2pWFqcE1LnBpbbWDb0rbOdjRcryAGRzT10mekKUQs/hx5IWfc
-         NFnigMwimobNFGgyI+x3a1uPOyWp+GJ57NrlduGzWlADCIfmi4DEvVyxP3klvjGSmK6S
-         bIsg/2Kj75aYsnpvzhm/uSVj330L5WzCT/lBE=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=0j1lHitkKI8zv51OUe9458yaWImQE2hxQA4HJtTxYWo=;
+        b=c9b5CpoWXlrs9X03b01sYu4lTuPjMHcbbZrSo5iSuZ5t9r3WDJItacptAyxC4dzWZ5
+         AN9GNBvABvMYkaGq1We41VsnepNRSQ/9bhzJhJNIS9H0WrkJMLiJpYfH1PToCY4tDuvX
+         jns87ldIbakoKv/wGO91Ib7yyTTR+NPaswaL0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=XSbBGffu2FVIOAcIwkeNSD8KuaOdq+iesnGMUCwAeTU=;
-        b=wnNxwzoHKOSlBz3RnQgrDVU0onOTuDdAJfP9gJw3n3F6LCIJEL1GjrEyeCT5MMpL2U
-         TzAQ0ORgIjbXIyb2qwZFQgABt2uOoyJXCOytZvZXpnthTJRZSGNp4aP/+XYLIVMTyYQ1
-         jIRDtr7B6QyPM1CyjVSxPQbvzk4c0VmdnD5VOLg7zr5pCevd+YR3OyXc4Mh1bRviFSbY
-         smJmG9VawDmOjpsM5mIZcLQJWruxiif5fxsKeMIiGiDFqvRKKWmr4NZ7KNjLG3N66FUu
-         s2BWeTwBEzkgqNwSbQSdxHi2pcEoFyVgmTxb4JAZVKqUUFf1UNOhJ1+gwoH56SgnG8wN
-         m5tA==
-X-Gm-Message-State: ACgBeo0z/bklxjuHHgRKClwzc1wYhfN5Ax13lQIHrHPoRvQ2mKN/kOjY
-        iaaBAgNCaqk3REvgpwJvb+lFSQ==
-X-Google-Smtp-Source: AA6agR6Rj3Ng4uD4eI/0C1clYjJ/SoLai8r45C+puUVjcvUnjiFrRX0IS6jpxhbi09w8xzFyK3bhEg==
-X-Received: by 2002:a17:902:d2cd:b0:177:4940:cc03 with SMTP id n13-20020a170902d2cd00b001774940cc03mr4538114plc.98.1662593680649;
-        Wed, 07 Sep 2022 16:34:40 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=0j1lHitkKI8zv51OUe9458yaWImQE2hxQA4HJtTxYWo=;
+        b=UEjIisWxK2rOJJN7v+i9Gs1ZDTp470n7CZ7Wh3nBEk03j8kl6N20iguDemu+K2g5I/
+         I2Rm85DuJzlmgJJI6I/f73NjDBGTzc76NOngm7wLeE/lHw32d4n70/UkgzlKPyURZUpU
+         1pJ4Bws7PCQumfHiWSJq3vYdY0VdzNSHWstZBm1ka7l9vxGANh0SsmMeXND/eOo/P6jy
+         swdjpZP2V41ZQZyBGKsQAP2+9j64LsJE8PVBZ8ASr/Lzt97CT+F2Qtzg4ttH4f7xQNJF
+         qF/zNynbN3cufIQDGMECvE5yYDQX83oOsoXIZku63yRGb2O4EZi3FwfMEz/BzGpqcuIP
+         sFdQ==
+X-Gm-Message-State: ACgBeo0RIqz+6/eX34SQXjWSRFajgGAFTd4J0Hj5Q2ZnYgso38luCrRq
+        /NHuwkxNwmDckKuOXBgVij7o7w==
+X-Google-Smtp-Source: AA6agR7O73sdlbx3cf83+5ueyHxyw4n4CPWTHPjWl54z9+lXcdG4/C1MBOd5qJ8fa91F/+kZ65hVkQ==
+X-Received: by 2002:a63:484b:0:b0:41d:9ddd:ade with SMTP id x11-20020a63484b000000b0041d9ddd0ademr5257628pgk.540.1662594229272;
+        Wed, 07 Sep 2022 16:43:49 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l10-20020a63da4a000000b0042c0ffa0e62sm11192333pgj.47.2022.09.07.16.34.39
+        by smtp.gmail.com with ESMTPSA id g9-20020aa79f09000000b005383a0d9699sm13685497pfr.144.2022.09.07.16.43.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Sep 2022 16:34:39 -0700 (PDT)
-Date:   Wed, 7 Sep 2022 16:34:38 -0700
+        Wed, 07 Sep 2022 16:43:48 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Scott Wood <oss@buserror.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc:     Kees Cook <keescook@chromium.org>, Rich Felker <dalias@libc.org>,
+        linux-sh@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Mundt <lethal@linux-sh.org>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] powerpc: Fix fall-through warning for Clang
-Message-ID: <202209071634.7CEEF9A@keescook>
-References: <Yxe8XTY5C9qJLd0Z@work>
+Subject: [PATCH] sh: machvec: Use char[] for section boundaries
+Date:   Wed,  7 Sep 2022 16:43:45 -0700
+Message-Id: <20220907234345.96798-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yxe8XTY5C9qJLd0Z@work>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2689; h=from:subject; bh=VZiYjvR44EJrL43OjO6/kVB+zyBxpEcmV4VSvS2gY7M=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjGSyxwU78M7qHr/kbU1BnTKhKqsZPN/KhR7KHhdww LvoofFGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYxkssQAKCRCJcvTf3G3AJsjWD/ 4z6YJ8958oetqjO+jDQOZ2cNv/kH8FvINrvfVQFDDaG6itCtm0ruTe//BckDtNgrIsE8RTbpqZqzz4 mvFqC8DXT/wcD5gOGJU7OHekgCcCdp3DaKc7a7Rn/LTBmF9HzGFMH8ADMhIyxjWjR3Uvlu8Jn8Qz4b ZCcML8jrACpc/GTQ1p7+PecKedfNWbgnQyxjG/6SOsm3IhAIMV57PJD8fu/0bmNBEy/0OxNGq0nmXW 35TfEPm7THDj40axqRfQUCz/gbdaq6xXwRRcP0lK07zlTJc6DvPBXOl2XyTvY9YJ4J0c6Pj3fZVCjs bdHEHwztvuGun0roSCrzLXYDfyaHr6X++J4eIEU4QjT0bECMNj+frRpkrov1532EdC+Tc/WpQFpuRp lHyBW4J039trGwcxkOIiOyrzVlbt1d5h7rjxdGf3RtXOmy9zh/mJ8Qs6sYPE5RxD5psD/vMuyCPH3G XBWsA2MPs+UEw/lVAvfoMFK41fSI2gk2n92oSx8syex76Rsn1VqSLsE5YNorGItHTVOlwSU+8TkgeG sf90gM9mgEgtNkt826mC5WBXRSz4dTb7DpXvUkBgd6am3EkwSMXKzMJppV/YxPXLXviBebWiGzjnxT ZO+k2/uOYd5d3mL2euZSYi7z9I0qR1ZZplqgFnxzqjaigMsiEJCkLiECxOXg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 06, 2022 at 10:32:13PM +0100, Gustavo A. R. Silva wrote:
-> Fix the following fallthrough warning:
-> 
-> arch/powerpc/platforms/85xx/mpc85xx_cds.c:161:3: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
-> 
-> Link: https://github.com/KSPP/linux/issues/198
-> Reported-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/lkml/202209061224.KxORRGVg-lkp@intel.com/
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+As done for other sections, define the extern as a character array,
+which relaxes many of the compiler-time object size checks, which would
+otherwise assume it's a single long. Solves the following build error:
 
-Thanks!
+arch/sh/kernel/machvec.c: error: array subscript 'struct sh_machine_vector[0]' is partly outside array bounds of 'long int[1]' [-Werror=array-bounds]:  => 105:33
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: linux-sh@vger.kernel.org
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Link: https://lore.kernel.org/lkml/alpine.DEB.2.22.394.2209050944290.964530@ramsan.of.borg/
+Fixes: 9655ad03af2d ("sh: Fixup machvec support.")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/sh/include/asm/sections.h |  2 +-
+ arch/sh/kernel/machvec.c       | 10 +++++-----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/arch/sh/include/asm/sections.h b/arch/sh/include/asm/sections.h
+index 8edb824049b9..0cb0ca149ac3 100644
+--- a/arch/sh/include/asm/sections.h
++++ b/arch/sh/include/asm/sections.h
+@@ -4,7 +4,7 @@
+ 
+ #include <asm-generic/sections.h>
+ 
+-extern long __machvec_start, __machvec_end;
++extern char __machvec_start[], __machvec_end[];
+ extern char __uncached_start, __uncached_end;
+ extern char __start_eh_frame[], __stop_eh_frame[];
+ 
+diff --git a/arch/sh/kernel/machvec.c b/arch/sh/kernel/machvec.c
+index d606679a211e..57efaf5b82ae 100644
+--- a/arch/sh/kernel/machvec.c
++++ b/arch/sh/kernel/machvec.c
+@@ -20,8 +20,8 @@
+ #define MV_NAME_SIZE 32
+ 
+ #define for_each_mv(mv) \
+-	for ((mv) = (struct sh_machine_vector *)&__machvec_start; \
+-	     (mv) && (unsigned long)(mv) < (unsigned long)&__machvec_end; \
++	for ((mv) = (struct sh_machine_vector *)__machvec_start; \
++	     (mv) && (unsigned long)(mv) < (unsigned long)__machvec_end; \
+ 	     (mv)++)
+ 
+ static struct sh_machine_vector * __init get_mv_byname(const char *name)
+@@ -87,8 +87,8 @@ void __init sh_mv_setup(void)
+ 	if (!machvec_selected) {
+ 		unsigned long machvec_size;
+ 
+-		machvec_size = ((unsigned long)&__machvec_end -
+-				(unsigned long)&__machvec_start);
++		machvec_size = ((unsigned long)__machvec_end -
++				(unsigned long)__machvec_start);
+ 
+ 		/*
+ 		 * Sanity check for machvec section alignment. Ensure
+@@ -102,7 +102,7 @@ void __init sh_mv_setup(void)
+ 		 * vector (usually the only one) from .machvec.init.
+ 		 */
+ 		if (machvec_size >= sizeof(struct sh_machine_vector))
+-			sh_mv = *(struct sh_machine_vector *)&__machvec_start;
++			sh_mv = *(struct sh_machine_vector *)__machvec_start;
+ 	}
+ 
+ 	pr_notice("Booting machvec: %s\n", get_system_type());
 -- 
-Kees Cook
+2.34.1
+
