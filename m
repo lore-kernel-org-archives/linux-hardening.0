@@ -2,106 +2,109 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5842CC54EE9
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Sep 2022 22:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C52ECAAD3
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Sep 2022 23:06:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229517AbiIGWz3 (ORCPT
+        id S229663AbiIGXGD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 7 Sep 2022 18:55:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49984 "EHLO
+        Wed, 7 Sep 2022 19:06:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229531AbiIGWz2 (ORCPT
+        with ESMTP id S229647AbiIGXGD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 7 Sep 2022 18:55:28 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E2EA4BD28
-        for <linux-hardening@vger.kernel.org>; Wed,  7 Sep 2022 15:55:27 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id j12so3621123pfi.11
-        for <linux-hardening@vger.kernel.org>; Wed, 07 Sep 2022 15:55:27 -0700 (PDT)
+        Wed, 7 Sep 2022 19:06:03 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09A1AC32E8
+        for <linux-hardening@vger.kernel.org>; Wed,  7 Sep 2022 16:06:00 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id j6-20020a17090a694600b00200bba67dadso449215pjm.5
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Sep 2022 16:06:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date;
-        bh=Q7pmrL+4wpGBCbVasMs4fSOlbSdHMQaBsvngND+c1lM=;
-        b=Gbv62ufdc9ZHs+vkgxl3i8Wyc5jfPcgwUwck9cmVn2Unq5TqW0stEiF2Yh/9KvqGbR
-         Bdom5pBR+tYMsrhM5doM4A4wRnJWX50FGhNIoTiWS3hqaikoYbEbIoyQbS28DhSo8qvI
-         Z7qzB/b6HBkttLvXs5hbISf/DY4+kNqtBw3E8=
+        bh=CIqDWj1JvWJuDQPIjOujIFiz2fQWA0hkz8EJEg+XinU=;
+        b=kx+MgDSeb251HFeVAk0FRyyIoIhqwIWyCXO5uM6kvqgoV1sHnM3bVMLSP1MFXY3i9a
+         +MAoZ6SEFRWv0QPURkz2ZzBzJuiNu/AQmBO+mQ6yMYnvqP65hOsFK8Mvgl234akvmQRl
+         U9KwDoMbrc+4KFn0/WDWHlJ7y1vQ3/St0hPA4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=Q7pmrL+4wpGBCbVasMs4fSOlbSdHMQaBsvngND+c1lM=;
-        b=SpOM50F8zh5IelCC4a7uDksN+qxeq41xhvfUo2oVRFE9vHiQHxleAM5GCp4xAG3Y2C
-         cxBaUkRgGtYGZIIhBuUTwuCQgoNXsdRa7903k8aZHhq6Vhd1E2xtcdUk7RmBlLr2Gfs+
-         3tGa76P2+Uy1QZ8wdoUPk9fcwat/74SqA66KvA3Jw3OQw0d7rSwrVWc+J9CTIpWH1HBb
-         cCYZ4WSjuo+Ixdlybjtqas9w1wvFmTBY2tnUJUhQ4jHUTvJteYs4oUfI8yUKLl41GVhU
-         noc+GIKzoEVNKE5KbZvmvpUwiSOqmueag8Drf0eu8cbpmw3vhuP43mxn4nFMT6tJyxTX
-         9fGQ==
-X-Gm-Message-State: ACgBeo0tOsAuijVexgesyN0HdmhJJJMeW5QT0JL+vOuCWZQcru55Aazm
-        fK3DaKg95yx54M9oSoSI4EbG+XHdkKzlLQ==
-X-Google-Smtp-Source: AA6agR4iPretcBm0dZThuzVqecZwXG9MyW8TFBNEW/TtH75AoPT84tbbR6bcda0YeCEWeNHbGzfU/Q==
-X-Received: by 2002:a63:f547:0:b0:434:e1b8:45ef with SMTP id e7-20020a63f547000000b00434e1b845efmr5207647pgk.620.1662591327017;
-        Wed, 07 Sep 2022 15:55:27 -0700 (PDT)
+        bh=CIqDWj1JvWJuDQPIjOujIFiz2fQWA0hkz8EJEg+XinU=;
+        b=4USNdLWag93zLWkGDGDba/fs/QqxLWY2B6mzt/9JqtPrXVwrPS6E0/IbmASB9TSkGE
+         rT1D/y6L/Fx9ZB0vBiEU/ItQ8seQnGJFbAf3w+h8va9gM7qQ2LKuwTq+WLDgseKy20Zf
+         R18n3kByPg5hE3xM4PMXuZFS/tPa8p/GgCzevUKDIDIBFefwB2qtpygB/sc6WzKGQ4qs
+         ujVuzWRARlyvAkCO1en1f2qNaJOXY4Y6UddJ+a2CLrPZoBz3eE6lZfzvMPtspjvE9WYp
+         r78jGG6fSvQUTqyxodUDdgyd6ryHqygnoSWEA72xC22cnGaSuQMd5BZdx0qENaRAta+d
+         QvQg==
+X-Gm-Message-State: ACgBeo0/OE66/dLm37pNkt1HPBX6SMp/p5Xat1t6ABNLuEeYH1GfD3p4
+        ZHgx6bjfXkexyfpBdeZVL1wOsg==
+X-Google-Smtp-Source: AA6agR5HbMH8Bnlqyvj1i1WVQbJowWlLSj55fNiv1IcXiwJbSfrqLmDiQQga1/RvXkiIZSsvo0o2cw==
+X-Received: by 2002:a17:902:e5d1:b0:16f:15a1:6dbc with SMTP id u17-20020a170902e5d100b0016f15a16dbcmr6206140plf.73.1662591959818;
+        Wed, 07 Sep 2022 16:05:59 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id ik26-20020a170902ab1a00b00172d0c7edf4sm10440172plb.106.2022.09.07.15.55.26
+        by smtp.gmail.com with ESMTPSA id a126-20020a624d84000000b0053b8ea1c4f3sm10428028pfb.135.2022.09.07.16.05.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Sep 2022 15:55:26 -0700 (PDT)
+        Wed, 07 Sep 2022 16:05:59 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Russell King <linux@armlinux.org.uk>
+To:     Hauke Mehrtens <hauke@hauke-m.de>
 Cc:     Kees Cook <keescook@chromium.org>,
-        kernel test robot <lkp@intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Chris Down <chris@chrisdown.name>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] ARM: decompressor: Include .data.rel.ro.local
-Date:   Wed,  7 Sep 2022 15:55:20 -0700
-Message-Id: <20220907225520.55855-1-keescook@chromium.org>
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        llvm@lists.linux.dev, kernel test robot <lkp@intel.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] MIPS: BCM47XX: Cast memcmp() of function to (void *)
+Date:   Wed,  7 Sep 2022 16:05:56 -0700
+Message-Id: <20220907230556.73536-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1585; h=from:subject; bh=ALlFctFnZceo9yABdixwcNtBAmKlABPuY5GvGOh0ppI=; b=owEBbAKT/ZANAwAKAYly9N/cbcAmAcsmYgBjGSFY1rlJ6AQJtVRC1NVyScvP4dCo4yiu/ywMziAD d4iSe56JAjIEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYxkhWAAKCRCJcvTf3G3AJvm1D/ UYwfAMV9EwisJ8hT8C5PdYlmAVN1ymHS5fIzWpmqDh2iusCjeyOziuZ6NoniwHCeXqKoFKDyb6Ry3u aJBjEFGKMdYGYGc8eCLZ2GMRRubyQ6K/lHylV3jVPauuLv2qWgt6LCEACjt4cq6x5Wkd85+AduCVml DqkkhvpbwK5KqFv+bdWcF9Do8caNuZz5xRe2+enLPp5ETWy6uG1oSxYzFXF5GIQvuxhpJXJSUos5fB 8tG3n/EV2p4lX3MFGi1qSgxjU9mrxwv8Hit9ycuWqWa+VSOgCDV5CQBb41tM2RGkrPmJFGUd85P096 05zwShEKrFtZJv/MiUOIo46e3IH6i0R/4gspJDaM9e2HFyIB0LD+vrrVRwdFLjlRlTjBttIHFmuolW Xq223PeibLpMTF0LRGqMq+QG6EFbfG15kDYSGCwo0InzFFv2MgvlF2bS2y7rMlrsQjZ1ZD5aCQSgnY O00Vxuz41oGen66/ogh8SMYOwSV7GgGXOUdCNisL4PyFTAqurVydNE3QgxXp6yEZpvuKK1u3yP9VAx PHHfM0SnDOfVAiY9hODQrvpPtwkyFa88yArjcOqCK6ExHfNWX0OZwmoVDqpblLGF08ZBzXGwxlGzkd zM4LXI8RkGxChI/PwLPIKRV9By5jiUe1JcvAOF5ilS8HaGIJo58PG+S+0h
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1565; h=from:subject; bh=HYwgIejLQejwtexj/VpuhMzJ1buPjL4x2gO6mUrU5Po=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjGSPUN5jNrKYHmyqMQrrZbes4AOSST0rSbvdaOEAu MY+6Qn6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYxkj1AAKCRCJcvTf3G3AJq4TD/ 4v77aKoHlGHVpUH2iPHDCB55Gh0KdX3GH+8S6yIe4gB1x/7dxBvdXZFIiGAbOS1dLGscvnVnpdy4Te Sj+DuKb0AUtcVsIcaFW0C6ZmCsnWewgIuqxz+/FT9oFN7D/q+E2A82GDHsc32Icw5ZkMFSw/3njzFQ wF2S2hgRHR+o//fli2/gMyR27oR8jMF3Eurm4AJF42gNEoOewKrfdXvpvzKcGjNfEZ2k1P9XNO9Cd7 Z8E9Gs+nQaA1P2yOe44NOUnGes7tiFubnZeyjhPnWpAlX39lN/AdQWIw0aSA+rei+WpCAv0dedlAS2 kix1/ddChcFM6qiXLM7GEDAwtZ9AB1MuxbS5H/O+ne5cXKVGju+gRuZQ7tyBJJGwUAlxtMRpbPXXWs dhI6h2z51BwAhHHGWXjEJtD1r0GnbAmttPjOAXx0QOu9a04lnSuQ+2G03KE/oVbSkBWPCScHgeBtEu 7hlUc0Y9M+cJ6jHpszBYJJHHtOy/bUadRwYfwV5g8hmR07gjyT7Wp/+oB3pXbOujwlm8j64Ql/ax70 ZWZ96nUXx0CSOTnFrEueoaX5Ojau2xAzmcpBjR3XrdkW2Y5fXIx5Rp4q7voFQZTRNLtWCLLqIfi64g ohzc4zpMzybvjmL2qMZg00Wz5ro+XwOzS1nmVugIFBfDqRonQWahLhb4/i0w==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The .data.rel.ro.local section has the same semantics as .data.rel.ro
-here, so include it in the .rodata section of the decompressor.
-Additionally, Since the .printk_index section isn't usable outside of
-the core kernel, discard it in the decompressor. Avoids these warnings:
+Clang is especially sensitive about argument type matching when using
+__overloaded functions (like memcmp(), etc). Help it see that function
+pointers are just "void *". Avoids this error:
 
-arm-linux-gnueabi-ld: warning: orphan section `.data.rel.ro.local' from `arch/arm/boot/compressed/fdt_rw.o' being placed in section `.data.rel.ro.local'
-arm-linux-gnueabi-ld: warning: orphan section `.printk_index' from `arch/arm/boot/compressed/fdt_rw.o' being placed in section `.printk_index'
+arch/mips/bcm47xx/prom.c:89:8: error: no matching function for call to 'memcmp'
+                   if (!memcmp(prom_init, prom_init + mem, 32))
+                        ^~~~~~
+include/linux/string.h:156:12: note: candidate function not viable: no known conversion from 'void (void)' to 'const void *' for 1st argument extern int memcmp(const void *,const void *,__kernel_size_t);
 
+Cc: Hauke Mehrtens <hauke@hauke-m.de>
+Cc: "Rafał Miłecki" <zajec5@gmail.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-mips@vger.kernel.org
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: llvm@lists.linux.dev
 Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/linux-mm/202209080545.qMIVj7YM-lkp@intel.com
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org
+Link: https://lore.kernel.org/lkml/202209080652.sz2d68e5-lkp@intel.com
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm/boot/compressed/vmlinux.lds.S | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/bcm47xx/prom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/compressed/vmlinux.lds.S b/arch/arm/boot/compressed/vmlinux.lds.S
-index 1bcb68ac4b01..3fcb3e62dc56 100644
---- a/arch/arm/boot/compressed/vmlinux.lds.S
-+++ b/arch/arm/boot/compressed/vmlinux.lds.S
-@@ -23,6 +23,7 @@ SECTIONS
-     *(.ARM.extab*)
-     *(.note.*)
-     *(.rel.*)
-+    *(.printk_index)
-     /*
-      * Discard any r/w data - this produces a link error if we have any,
-      * which is required for PIC decompression.  Local data generates
-@@ -57,6 +58,7 @@ SECTIONS
-     *(.rodata)
-     *(.rodata.*)
-     *(.data.rel.ro)
-+    *(.data.rel.ro.*)
-   }
-   .piggydata : {
-     *(.piggydata)
+diff --git a/arch/mips/bcm47xx/prom.c b/arch/mips/bcm47xx/prom.c
+index ab203e66ba0d..eb5c04a24531 100644
+--- a/arch/mips/bcm47xx/prom.c
++++ b/arch/mips/bcm47xx/prom.c
+@@ -86,7 +86,7 @@ static __init void prom_init_mem(void)
+ 			pr_debug("Assume 128MB RAM\n");
+ 			break;
+ 		}
+-		if (!memcmp(prom_init, prom_init + mem, 32))
++		if (!memcmp((void *)prom_init, (void *)prom_init + mem, 32))
+ 			break;
+ 	}
+ 	lowmem = mem;
 -- 
 2.34.1
 
