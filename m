@@ -2,102 +2,91 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6363C38145
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Sep 2022 07:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BB9ECAAD3
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Sep 2022 07:39:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229720AbiIGHQq (ORCPT
+        id S229878AbiIGHjc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 7 Sep 2022 03:16:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41594 "EHLO
+        Wed, 7 Sep 2022 03:39:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229702AbiIGHQp (ORCPT
+        with ESMTP id S229540AbiIGHjb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 7 Sep 2022 03:16:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD1AEA2DBE;
-        Wed,  7 Sep 2022 00:16:42 -0700 (PDT)
+        Wed, 7 Sep 2022 03:39:31 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3595421A4;
+        Wed,  7 Sep 2022 00:39:29 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4511A6160B;
-        Wed,  7 Sep 2022 07:16:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AC0AC433D7;
-        Wed,  7 Sep 2022 07:16:38 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DC04BB81B86;
+        Wed,  7 Sep 2022 07:39:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66683C433C1;
+        Wed,  7 Sep 2022 07:39:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662535001;
-        bh=MrpRDWXHho8O9dUoFZ11Bt8djGB4NUss+3ZdVZoSHVc=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=hihLo+HAEXzylR9hMj7Sf4Vq9G0K8zZGgAT0/kM0VQkxGK0fvoJ9pKznCrPla8ole
-         eWgdfNNzUGuaUOOzisB8KLGko3WSU0XVphWKKPGBqABR0KVhn7q2kAKLSh3aYtFif7
-         JZwXS3HX3cXrfxFPdZT+jBp0H3vLMiybGeVdCMpy1gyjILedkIqapFPcs0jtGsHo5V
-         YYs9J9vOr+8k9wvMmmt8nJz3H7Hj826/sAk58HAeTxDI1nI7hPvuwej/9X/sGrhusP
-         AznfQWq38y24d6lV6QPF/9uL91EYADu8fxAvMfBhnlb7kFBMa7eC49SI0X0OUVhTKe
-         kNVGTZvhpp2aw==
-Content-Type: text/plain; charset="utf-8"
+        s=k20201202; t=1662536366;
+        bh=xNfSQnW79KxqmfMU3riHt3rK2p4MSBkj0ld5YS0oz24=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y0uBDL/jbGzS7X7lNWheLRCf9TVNVsmOg1T8RgibbuLY+KrjZn+hI4PG47GbQmlNz
+         SyPz/sWDenrfOklvPa8lUy2L72Lbmk1W4iEe789bR+4sh/ndN8uTY/nrUDUZsEqE7M
+         Bjc6WujRLAiUEeJ7rv4X5yzh1lwcehWY8a1lMvbD8cf1EBj45vaBdT3AJjNSSgM3JJ
+         Y79Y54ITDfnuljIAqs4zVv8QKmZRDGm7JOumH7Sn6dagnJTts8suuESWct/zgvHgMk
+         wuXz4AlxEns2rwHq/q1LcwEuWogxuSKhyQ+JghWziowDBuHaKlIxIhi6jZVSb+xxtb
+         e3NH4yYnX6pnA==
+Date:   Wed, 7 Sep 2022 08:39:19 +0100
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     kernel test robot <oliver.sang@intel.com>
+Cc:     Kees Cook <keescook@chromium.org>, lkp@lists.01.org, lkp@intel.com,
+        linux-hardening@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [fortify]  728833277d:
+ WARNING:at_net/netlink/af_netlink.c:#netlink_ack
+Message-ID: <YxhKp4n7K4h3aMQt@work>
+References: <20220901065914.1417829-2-keescook@chromium.org>
+ <202209071317.245c5751-oliver.sang@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: wifi: iwlwifi: calib: Refactor iwl_calib_result usage for clarity
-From:   Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <20220901204558.2256458-1-keescook@chromium.org>
-References: <20220901204558.2256458-1-keescook@chromium.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Luca Coelho <luciano.coelho@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Andy Lavr <andy.lavr@gmail.com>,
-        Gregory Greenman <gregory.greenman@intel.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-ID: <166253499319.23292.401375353887849776.kvalo@kernel.org>
-Date:   Wed,  7 Sep 2022 07:16:38 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202209071317.245c5751-oliver.sang@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> wrote:
+On Wed, Sep 07, 2022 at 01:42:16PM +0800, kernel test robot wrote:
 
-> In preparation for FORTIFY_SOURCE performing run-time destination buffer
-> bounds checking for memcpy(), refactor the use of struct iwl_calib_result:
+Hi!
+
 > 
-> - Have struct iwl_calib_result contain struct iwl_calib_cmd since
->   functions expect to operate on the "data" flex array in "cmd", which
->   follows the "hdr" member.
-> - Switch argument passing around to use struct iwl_calib_cmd instead of
->   struct iwl_calib_hdr to prepare functions to see the "data" member.
-> - Change iwl_calib_set()'s "len" argument to a size_t since it is always
->   unsigned and is normally receiving the output of sizeof().
-> - Add an explicit length sanity check in iwl_calib_set().
-> - Adjust the memcpy() to avoid copying across the now visible composite
->   flex array structure.
+> Hi Kees Cook,
 > 
-> This avoids the future run-time warning:
+> the patch "[PATCH 1/2] fortify: Add run-time WARN for cross-field memcpy()"
+> raises a persistent WARNING as below report in our tests.
 > 
->   memcpy: detected field-spanning write (size 8) of single field "&res->hdr" (size 4)
+> according to commit message, we understand this is kind of expected. but
+> we don't have enough knowledge if it reveals a real issue in kernel source
+> code and what the next step could be.
 > 
-> Cc: Luca Coelho <luciano.coelho@intel.com>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Johannes Berg <johannes.berg@intel.com>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Reported-by: Andy Lavr <andy.lavr@gmail.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> so we still report FYI.
+> 
+> if you think it's unnecessary for us to make out this kind of report, please
+> let us know. we will consider how to refine our report rules. Thanks a lot!
+> 
+> below is the full report.
 
-Patch applied to wireless-next.git, thanks.
+It seems that the idea is to continue reporting these warnings, as they
+help us identify the places that need to be audited and determine how to
+refactor the code (in case it's a false positive), or how to properly fix
+it (in case it's an actual bug).
 
-0d24201f47c4 wifi: iwlwifi: calib: Refactor iwl_calib_result usage for clarity
+In this case, it seems that the issue was already addressed by this patch:
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20220901204558.2256458-1-keescook@chromium.org/
+https://lore.kernel.org/linux-hardening/20220903043749.3102675-1-keescook@chromium.org/
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Thanks
+--
+Gustavo
