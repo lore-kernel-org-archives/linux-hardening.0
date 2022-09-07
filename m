@@ -2,82 +2,102 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03976ECAAD3
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Sep 2022 06:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6363C38145
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Sep 2022 07:16:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229852AbiIGGDG (ORCPT
+        id S229720AbiIGHQq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 7 Sep 2022 02:03:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47736 "EHLO
+        Wed, 7 Sep 2022 03:16:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229719AbiIGGDF (ORCPT
+        with ESMTP id S229702AbiIGHQp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 7 Sep 2022 02:03:05 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1855A89826
-        for <linux-hardening@vger.kernel.org>; Tue,  6 Sep 2022 23:03:04 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id bj14so5393486wrb.12
-        for <linux-hardening@vger.kernel.org>; Tue, 06 Sep 2022 23:03:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=FYczuPxi1SjOxRTyYdaZAVwl03tDQ3quqbW2UiDSc58=;
-        b=bSjza7uUyEFLBzo0vLRVL5O0eppMtSJAjTzKE5hrP/r1zb/jUo+utz5iZvdxtAFl2A
-         jXA2taZd5sxk8ROyfw68D+7XvmM7jP1ZhwEiqnsg+bSS8ocR8ZEIHr+PmlguwLe7l+aq
-         8+23Ma9e6mnYXXw8Vx4ruVN+w+qyfatuwKL6NUvKNs2U6+ZiUIwMSVx8uTN9A/S4iHZo
-         I+jROlIhjFdlsQRqE4Tm7CqPoFlACJs4ZgindMp4/kcu6SgnMMhmR0ULVvwMa1VG/Wvp
-         GZcoaWLLXcRT9fihVbBztEyir9sEoie8vsp8mBBbRvPtG6578Z2P4SONsZFEhrq9i9dw
-         FXQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=FYczuPxi1SjOxRTyYdaZAVwl03tDQ3quqbW2UiDSc58=;
-        b=tAoJEnUsAENAL83GQ9vzThp49CWua34U39/FmHMWZ/7m14b36IOBFsMa+pH9tcR2Ca
-         4gICI7bfHIBgqWiF+jYmTRQFkg9JqDqS30MdpucFAH7ySuhF0lZQWrurISZdMg4kNgvp
-         rHjUtg7HGkMaisxYr5inNSWIRPxNRXRavI4MWq1vEO88Yte/EFemNtw9UO2kKUukftad
-         H8WdaVTEGkrBQgJF2v1Z2OK31R5ujOE8tOIpGkI0ZHlX8mb+hP1oFg18r3WF05w0hX/W
-         +afZUwxF1wKyffvqMoKmzbAQ1jIb8HwpXp0QYYs+9YJegza0Iv+DT/cQASYj+U+H+qdj
-         rceQ==
-X-Gm-Message-State: ACgBeo3+o9Xu5e14GFaXtz7ktKQlSN/hYLfmoTF7yLktw9v3d6b8UgxV
-        c2A36TWQoENELkJcWXyX1kF3H+xIWMd5is9312AvZA==
-X-Google-Smtp-Source: AA6agR4W5ki12nxKxG7SUsvFAJ9Vc06JdpwPpOn7lpjTtVQ1YIwlCDryeTo4ZJMAjr2T4O+Z79WvK4aPUPirmx8Fuow=
-X-Received: by 2002:a05:6000:10cf:b0:228:df93:a9b1 with SMTP id
- b15-20020a05600010cf00b00228df93a9b1mr989499wrx.4.1662530582482; Tue, 06 Sep
- 2022 23:03:02 -0700 (PDT)
+        Wed, 7 Sep 2022 03:16:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD1AEA2DBE;
+        Wed,  7 Sep 2022 00:16:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4511A6160B;
+        Wed,  7 Sep 2022 07:16:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AC0AC433D7;
+        Wed,  7 Sep 2022 07:16:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662535001;
+        bh=MrpRDWXHho8O9dUoFZ11Bt8djGB4NUss+3ZdVZoSHVc=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=hihLo+HAEXzylR9hMj7Sf4Vq9G0K8zZGgAT0/kM0VQkxGK0fvoJ9pKznCrPla8ole
+         eWgdfNNzUGuaUOOzisB8KLGko3WSU0XVphWKKPGBqABR0KVhn7q2kAKLSh3aYtFif7
+         JZwXS3HX3cXrfxFPdZT+jBp0H3vLMiybGeVdCMpy1gyjILedkIqapFPcs0jtGsHo5V
+         YYs9J9vOr+8k9wvMmmt8nJz3H7Hj826/sAk58HAeTxDI1nI7hPvuwej/9X/sGrhusP
+         AznfQWq38y24d6lV6QPF/9uL91EYADu8fxAvMfBhnlb7kFBMa7eC49SI0X0OUVhTKe
+         kNVGTZvhpp2aw==
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20220907021751.GA30945@inn2.lkp.intel.com> <332d9d42-c4ae-47a8-b3d6-32907eddb7ba@intel.com>
-In-Reply-To: <332d9d42-c4ae-47a8-b3d6-32907eddb7ba@intel.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 6 Sep 2022 23:02:50 -0700
-Message-ID: <CAKwvOdk8R9HS_aJfFPKyuka8TM9jPpnT21TTvQ8ffv_p+RcGUw@mail.gmail.com>
-Subject: Re: [fortify] ab66e7d1d8: BUG:kernel_failed_in_early-boot_stage,last_printk:Booting_the_kernel
-To:     kernel test robot <yujie.liu@intel.com>
-Cc:     lkp@lists.01.org, 0day robot <lkp@intel.com>,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: wifi: iwlwifi: calib: Refactor iwl_calib_result usage for clarity
+From:   Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <20220901204558.2256458-1-keescook@chromium.org>
+References: <20220901204558.2256458-1-keescook@chromium.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Luca Coelho <luciano.coelho@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Andy Lavr <andy.lavr@gmail.com>,
+        Gregory Greenman <gregory.greenman@intel.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.7.3
+Message-ID: <166253499319.23292.401375353887849776.kvalo@kernel.org>
+Date:   Wed,  7 Sep 2022 07:16:38 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 6, 2022 at 10:54 PM kernel test robot <yujie.liu@intel.com> wrote:
->
-> Greeting,
->
-> FYI, we noticed the following commit (built with gcc-11):
->
-> commit: ab66e7d1d8a90f6addac0da9b3ae13d77f095f76 ("[PATCH 2/3] fortify: cosmetic cleanups to __compiletime_strlen")
-> url: https://github.com/intel-lab-lkp/linux/commits/Nick-Desaulniers/Fix-FORTIFY-y-UBSAN_LOCAL_BOUNDS-y/20220831-045536
-> base: https://git.kernel.org/cgit/linux/kernel/git/kees/linux.git for-next/hardening
-> patch link: https://lore.kernel.org/linux-hardening/20220830205309.312864-3-ndesaulniers@google.com
+Kees Cook <keescook@chromium.org> wrote:
 
-Thanks for the report! Series dropped! Kees sent a v2.
+> In preparation for FORTIFY_SOURCE performing run-time destination buffer
+> bounds checking for memcpy(), refactor the use of struct iwl_calib_result:
+> 
+> - Have struct iwl_calib_result contain struct iwl_calib_cmd since
+>   functions expect to operate on the "data" flex array in "cmd", which
+>   follows the "hdr" member.
+> - Switch argument passing around to use struct iwl_calib_cmd instead of
+>   struct iwl_calib_hdr to prepare functions to see the "data" member.
+> - Change iwl_calib_set()'s "len" argument to a size_t since it is always
+>   unsigned and is normally receiving the output of sizeof().
+> - Add an explicit length sanity check in iwl_calib_set().
+> - Adjust the memcpy() to avoid copying across the now visible composite
+>   flex array structure.
+> 
+> This avoids the future run-time warning:
+> 
+>   memcpy: detected field-spanning write (size 8) of single field "&res->hdr" (size 4)
+> 
+> Cc: Luca Coelho <luciano.coelho@intel.com>
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Johannes Berg <johannes.berg@intel.com>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Reported-by: Andy Lavr <andy.lavr@gmail.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Patch applied to wireless-next.git, thanks.
+
+0d24201f47c4 wifi: iwlwifi: calib: Refactor iwl_calib_result usage for clarity
+
 -- 
-Thanks,
-~Nick Desaulniers
+https://patchwork.kernel.org/project/linux-wireless/patch/20220901204558.2256458-1-keescook@chromium.org/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
