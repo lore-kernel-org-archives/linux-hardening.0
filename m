@@ -2,126 +2,128 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B33ECAAA1
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Sep 2022 02:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 789AAC38145
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Sep 2022 06:00:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229830AbiIGChA (ORCPT
+        id S229803AbiIGGAX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 6 Sep 2022 22:37:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58476 "EHLO
+        Wed, 7 Sep 2022 02:00:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbiIGCg7 (ORCPT
+        with ESMTP id S229472AbiIGGAW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 6 Sep 2022 22:36:59 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAF0E91D1C
-        for <linux-hardening@vger.kernel.org>; Tue,  6 Sep 2022 19:36:58 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id e20so18151999wri.13
-        for <linux-hardening@vger.kernel.org>; Tue, 06 Sep 2022 19:36:58 -0700 (PDT)
+        Wed, 7 Sep 2022 02:00:22 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B37F4275EC
+        for <linux-hardening@vger.kernel.org>; Tue,  6 Sep 2022 23:00:20 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id n23-20020a7bc5d7000000b003a62f19b453so11097291wmk.3
+        for <linux-hardening@vger.kernel.org>; Tue, 06 Sep 2022 23:00:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=JGQk4Yytf6Zg4zT4gEe/PL2ZkzZ8fPqkUsY9qVM+pqs=;
-        b=RbYSUwdDs2C68JbvIHxEXs2vUhp1qhiqoa4K/9IEZcZonH3tlSWdevFewCl22OlVDS
-         5aQxIEpvxo7MQfQuTxDjyq/vIFITZWPawPLV2tqEM+NS73R4MEuESsG8QQjvTELCnnDI
-         f/fbQDc6sPrGu3BX2TPwjq5fZH3Hkxm57BdLCN+vJbKgTPDnEh0ui39pcfGGQl2uKlPQ
-         SCstofc0gxWJc07XVhSNvl27saMWn2qfqpc7YhXJOmMYe+ac+IIg08XGNirQ/hx/xLA9
-         ElMUMPoONnipjWdoorq49p0aYn0ucwAWu82x8w1DcplDou/pOulAYciYHk3fK4gWNOIM
-         Fe/g==
+        bh=EVRMZUvSq6xdhiNGVwAMQ7WuOP9ljPbQMnIekWicfSw=;
+        b=N5bYCEfkkrWyuEJPBnbTK/P4VF0qrJCydMxRgw41WsKreSUINlmQeNsJ/YPB5bBIFK
+         SsQpepIKHI/EMjLdctJZb50mtWece3w2MYGIzGroJVKn/KYLRj2sZa7XEFWeOxkWj1bj
+         7Xs/uYI8e4ObXhXJCLOc+IJG14T1N5SQM51tpw6CPYpEmTkd61bi5O06qN49dj0eC1bT
+         IOr8MYSainsRvm7SpOLbsjDYPGs+bIDh4CwMiO9btuTPQzdr+1M6f2h0/BgtlBGwljRL
+         es56etYDfYgVvxz4cr0R370WFJYutF+T50asjfOODsInyZBTG/LasVBGYcqd5mr29Wck
+         eicg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=JGQk4Yytf6Zg4zT4gEe/PL2ZkzZ8fPqkUsY9qVM+pqs=;
-        b=Mq9Zqwupix+p1b+g5TBFLIDWKuqO1DLHK2i8YYpFSZLFHPUtRda0/rA0zD27O9T6MY
-         CChjIECeIEbJM6XzqrgAq5DJ3JUXqfWJ1/fPCKT9ViH3Qk0oY3onQaOKhSCwP3c3QMnv
-         PdsNx1JrFoCrzDx0QzXdhO1MhZVCj4un5yJd32PLXdQUw/VQxTXeMQLB6xWKdewPjoBS
-         7DgCzo7oY3lpr9ZYwBToFtNVfXEOj48gmz4KbkOX0epftAUvCpu1iauJ4jdSlh1FTDe8
-         w8kh7y0QlzDL7m2sYqDoBremThX+0yAxl/q5Vs8+Xmt9PbsEhNmRV/63MBsxC9TVauBj
-         bwSA==
-X-Gm-Message-State: ACgBeo2Ze2Q/LBz5YSBwp2PLrynoaTKT0mIfd1MQLAcd2qiTJhQAL3xe
-        QSGv8w5Arqp4Be6+cK6s37sulumKPbxbGbbG8QbJaw==
-X-Google-Smtp-Source: AA6agR6ZHmV5opBNE6+QYR8MCxikmETVbfAhDyULrVR6PaJX8J7kUYKWe3MS1oGyiPTUmdDCEW8xNpH+HI1qsoLZrZs=
-X-Received: by 2002:a5d:6084:0:b0:228:67c1:e160 with SMTP id
- w4-20020a5d6084000000b0022867c1e160mr597899wrt.83.1662518217295; Tue, 06 Sep
- 2022 19:36:57 -0700 (PDT)
+        bh=EVRMZUvSq6xdhiNGVwAMQ7WuOP9ljPbQMnIekWicfSw=;
+        b=W4lx+Xvn6fj3PwBeLVnmioQdxZXo0xHjJRg1Bq4sIQARiYt2t3zMbESnSHeWYBD6cA
+         lNbROmWZzxHkTdDXVjqLzD0Lv+iWoex6LlM/GCUufAEYIpXtAx8nirPOZHuPpgBdsae0
+         RrE4EsXpZ0oIr78dpO4LBQb6ZitacRvs2t15kAPHcvelg1u5AkfTeo8SjqMefYFh97Y6
+         iOMvOTBdAZEOfzTPbItRNMI0U+hYl6tQJ0kuxBKD8Ms+d+0EAAMpmixejWRTLLCjQ899
+         89205q9qpIRR08YykuhtF9QcD82coGr9dsfUFE+kRrWe66+Md0kXe3dHHcSf9OdU08P4
+         49gw==
+X-Gm-Message-State: ACgBeo2PW66kSUmDdBHHI772KJIQaz0c3Xk3BcdPnS/Ti2FXGM90FbhX
+        /J1Y6kXA1++UK12v+FVpB9i7aVXQdttZdoir/gwfZg==
+X-Google-Smtp-Source: AA6agR6B3gQeycz+50jNE1EjqvKOK6DVZ6AZkhyR7V48tJgKgBWRV2R4ljnfmvXEtAbxKaCEOo921MMA+cgAFlUvbqE=
+X-Received: by 2002:a05:600c:4ca3:b0:3a6:1616:e591 with SMTP id
+ g35-20020a05600c4ca300b003a61616e591mr862526wmp.99.1662530419174; Tue, 06 Sep
+ 2022 23:00:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220902204351.2521805-1-keescook@chromium.org> <20220902204351.2521805-2-keescook@chromium.org>
-In-Reply-To: <20220902204351.2521805-2-keescook@chromium.org>
+References: <20220902213750.1124421-1-morbo@google.com> <20220902213750.1124421-3-morbo@google.com>
+ <202209022251.B14BD50B29@keescook> <CAGG=3QXpK+bFOSYZkdNNFGzNfgJSSADGTRWYRv6z0vfBAgQvWQ@mail.gmail.com>
+In-Reply-To: <CAGG=3QXpK+bFOSYZkdNNFGzNfgJSSADGTRWYRv6z0vfBAgQvWQ@mail.gmail.com>
 From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 6 Sep 2022 19:36:46 -0700
-Message-ID: <CAKwvOdmeaUQYkd9kZPgwK0kK5BRxFi8aszyFzw8TA4JFF6y8EQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] fortify: Fix __compiletime_strlen() under UBSAN_BOUNDS_LOCAL
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Nathan Chancellor <nathan@kernel.org>, Tom Rix <trix@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
-        David Gow <davidgow@google.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Sander Vanheule <sander@svanheule.net>,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Isabella Basso <isabbasso@riseup.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biggers <ebiggers@google.com>,
-        Hannes Reinecke <hare@suse.de>, linux-kernel@vger.kernel.org
+Date:   Tue, 6 Sep 2022 23:00:07 -0700
+Message-ID: <CAKwvOdm+kVTrqMrSPHwTa0NrG9qwTcFkGnikjYjk0ctFGBfeRA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86/paravirt: add extra clobbers with
+ ZERO_CALL_USED_REGS enabled
+To:     Bill Wendling <morbo@google.com>
+Cc:     Kees Cook <keescook@chromium.org>, Juergen Gross <jgross@suse.com>,
+        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        virtualization@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        clang-built-linux <llvm@lists.linux.dev>,
+        linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 2, 2022 at 1:43 PM Kees Cook <keescook@chromium.org> wrote:
+On Sun, Sep 4, 2022 at 11:02 PM Bill Wendling <morbo@google.com> wrote:
 >
-> Co-developed-by: Nick Desaulniers <ndesaulniers@google.com>
+> On Sat, Sep 3, 2022 at 12:18 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Fri, Sep 02, 2022 at 09:37:50PM +0000, Bill Wendling wrote:
+> > > [...]
+> > >         callq   *pv_ops+536(%rip)
+> >
+> > Do you know which pv_ops function is this? I can't figure out where
+> > pte_offset_kernel() gets converted into a pv_ops call....
+> >
+> This one is _paravirt_ident_64, I believe. I think that the original
+> issue Nathan was seeing was with another seemingly innocuous function.
 
-That's overly generous of you!
+_paravirt_ident_64 is marked noinstr, which makes me suspect that it
+really needs to not be touched at all by the compiler for
+these...special features.
 
-Anyways, the disassembly LGTM and the bot also came back green.
+Maybe the definition of noinstr in include/linux/compiler_types.h
+should be adding __attribute__((zero_call_used_regs(skip)))?
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Android Treehugger Robot
-Link: https://android-review.googlesource.com/c/kernel/common/+/2206839
+Untested:
 
-Another thought, Nikita suggested that you could also compare mode 1 vs mode 3:
-https://github.com/llvm/llvm-project/issues/57510#issuecomment-1235126343
+```
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 4f2a819fd60a..a51ab77e2da8 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -226,10 +226,17 @@ struct ftrace_likely_data {
+ #define __no_sanitize_or_inline __always_inline
+ #endif
 
-That said, since mode 3 returns 0 for "unknown" I'd imagine that
-wouldn't be pretty since it wouldn't be a direct comparison against
-__p_size.
++#ifdef CONFIG_ZERO_CALL_USED_REGS
++#define __no_zero_call_used_regs __attribute__((__zero_call_used_reg__(skip)))
++#else
++#define __no_zero_call_used_regs
++#endif
++
+ /* Section for code which can't be instrumented at all */
+ #define noinstr
+         \
+        noinline notrace __attribute((__section__(".noinstr.text")))    \
+-       __no_kcsan __no_sanitize_address __no_profile __no_sanitize_coverage
++       __no_kcsan __no_sanitize_address __no_profile                   \
++       __no_sanitize_coverage __no_zero_call_used_regs
 
-Thanks again for the patch!
-
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  include/linux/fortify-string.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-> index eed2119b23c5..07d5d1921eff 100644
-> --- a/include/linux/fortify-string.h
-> +++ b/include/linux/fortify-string.h
-> @@ -19,7 +19,8 @@ void __write_overflow_field(size_t avail, size_t wanted) __compiletime_warning("
->         unsigned char *__p = (unsigned char *)(p);              \
->         size_t __ret = (size_t)-1;                              \
->         size_t __p_size = __builtin_object_size(p, 1);          \
-> -       if (__p_size != (size_t)-1) {                           \
-> +       if (__p_size != (size_t)-1 &&                           \
-> +           __builtin_constant_p(*__p)) {                       \
->                 size_t __p_len = __p_size - 1;                  \
->                 if (__builtin_constant_p(__p[__p_len]) &&       \
->                     __p[__p_len] == '\0')                       \
-> --
-> 2.34.1
->
-
-
+ #endif /* __KERNEL__ */
+```
+Or use __has_attribute in include/linux/compiler_attributes.h.
 -- 
 Thanks,
 ~Nick Desaulniers
