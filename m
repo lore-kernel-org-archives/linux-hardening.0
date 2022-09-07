@@ -2,153 +2,92 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5251DECAAA1
-	for <linux-hardening@archiver.kernel.org>; Tue,  6 Sep 2022 21:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5F8ECAAD5
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Sep 2022 02:25:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229978AbiIFVmq (ORCPT
+        id S229657AbiIGCZS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 6 Sep 2022 17:42:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40154 "EHLO
+        Tue, 6 Sep 2022 22:25:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229963AbiIFVmo (ORCPT
+        with ESMTP id S229651AbiIGCZQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 6 Sep 2022 17:42:44 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A863A8B2EA
-        for <linux-hardening@vger.kernel.org>; Tue,  6 Sep 2022 14:42:39 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id 145so12712297pfw.4
-        for <linux-hardening@vger.kernel.org>; Tue, 06 Sep 2022 14:42:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=qqaQNOdpehqVq2XrweTVHqYoJcLxU4LOqgxU+UY60WQ=;
-        b=Qs7dLb2pL3V3HdrG3Pv00KmIHSZrRFEQqdYflAlJUmtdciWsItEQ8Htkv6YneSBYwY
-         Hs5g69MtDio3wFYWyiMv+3vQXaoDbTS74stSTnR7vUz9O65mWgC5c5hVw9AM8sXQ2wRx
-         VTRNK5albonxpliONnuWIYHNI/t4MHcs1gF/o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=qqaQNOdpehqVq2XrweTVHqYoJcLxU4LOqgxU+UY60WQ=;
-        b=wi3hUIleM3P7copPEfFHxLY5CM8MYTmvzdjy4iKiRqnkh+dFL6O/FZqiaaiQD9Ogj5
-         nRjvfqpchMOM7SPqexF8G5DWIK6ktgb1Mg8Y2iOGxTTIFx4oF/pGjEzEmy0kVGnCzIbp
-         vdKDJbun1mbXbQRk72sHn33XKbjTxiheczFveeDnfITtX7Wu5Ch2iZ7a12DOeJkB0K3c
-         e3/Yz+vXEzvQVJLnr60CfBzLksd1nU8OONVq5MzEHP29qZvAZNtnAnG+NPj3KdPo2jDe
-         Dah94gQwpVDMDHtlghwNZQllgL7VepizwpmayJWsDaiE7HcJdnSVAPZU+6fgq6dn46MF
-         uGKg==
-X-Gm-Message-State: ACgBeo12rO3015qQ2Pxc8cANXFIyoDrtR721toAkgHa2yoamyXNOAG8E
-        vcPcgluQZebcfJdlZYUo0lOFVw==
-X-Google-Smtp-Source: AA6agR6IVbl9vhYt8tQVvWX6Bhb8qmGSNxPpRhfN16MoqKCPZoC5QRPOOz4Jr5nirm//GtXy6ukk6w==
-X-Received: by 2002:a63:2208:0:b0:429:9444:85be with SMTP id i8-20020a632208000000b00429944485bemr597770pgi.236.1662500558614;
-        Tue, 06 Sep 2022 14:42:38 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j3-20020a170902da8300b001752216ca51sm10545234plx.39.2022.09.06.14.42.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Sep 2022 14:42:37 -0700 (PDT)
-Date:   Tue, 6 Sep 2022 14:42:36 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, linux-s390@vger.kernel.org,
+        Tue, 6 Sep 2022 22:25:16 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F5447F24C;
+        Tue,  6 Sep 2022 19:25:16 -0700 (PDT)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 286Ld8W2014578;
+        Wed, 7 Sep 2022 02:25:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2022-7-12;
+ bh=K3S8MgRjg+L8r0Eza/TZbflDGw2/Yd/gtalqoBPG+wo=;
+ b=EI5GCWhcJAFCyXq4viIBQSoQvAHikRKbBBYt5eMitmZYTyarpqCwXmTB9sCaNgleff8C
+ PMVDJaypDgc68EOxItIucmONDug0ycvl5KtfgO1jv24YZB1OABgQpKj0J5jRsYBBs63R
+ hGP4DS4krYLq9DNDAfXY7rgQil4tjgEWC/LV829GVNA13EuFeAPSu1qEcsDePEjhwZOT
+ DV/lZfimITUN2NgnOFEVCH7pKadDRhBh2BGVTxS9TItdOv70a6ze5svinkzpxagcPSx4
+ oaVAQRSQiJlfG0I1cF2wk3gFX5GPHhkipzROv9uyvNE34RUYkB7iccs5FmYhMwivof8W KA== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3jbwh1fk47-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 07 Sep 2022 02:25:09 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2871gLpi039802;
+        Wed, 7 Sep 2022 02:25:08 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3jbwc9yxwx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 07 Sep 2022 02:25:08 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2872P7xp034666;
+        Wed, 7 Sep 2022 02:25:07 GMT
+Received: from ca-mkp.ca.oracle.com (dhcp-10-39-192-227.vpn.oracle.com [10.39.192.227])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3jbwc9yxwb-1;
+        Wed, 07 Sep 2022 02:25:07 +0000
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Bradley Grove <linuxdrivers@attotech.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: Build regressions/improvements in v6.0-rc4
-Message-ID: <202209061432.FFF96789B@keescook>
-References: <CAHk-=wiqix9N5P0BXrSSOXjPZxMh=wDDRJ3sgf=hutoTUx0nZQ@mail.gmail.com>
- <20220905071915.2312316-1-geert@linux-m68k.org>
- <alpine.DEB.2.22.394.2209050944290.964530@ramsan.of.borg>
+Subject: Re: [PATCH] esas2r: Use flex array destination for memcpy()
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1pmg7gbux.fsf@ca-mkp.ca.oracle.com>
+References: <20220901205729.2260982-1-keescook@chromium.org>
+Date:   Tue, 06 Sep 2022 22:25:06 -0400
+In-Reply-To: <20220901205729.2260982-1-keescook@chromium.org> (Kees Cook's
+        message of "Thu, 1 Sep 2022 13:57:29 -0700")
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.22.394.2209050944290.964530@ramsan.of.borg>
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-06_11,2022-09-06_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=734
+ phishscore=0 mlxscore=0 spamscore=0 malwarescore=0 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2209070009
+X-Proofpoint-GUID: 3N2Nd_Bh8zhH4lzPBqkpixz_ElO88pG2
+X-Proofpoint-ORIG-GUID: 3N2Nd_Bh8zhH4lzPBqkpixz_ElO88pG2
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 05, 2022 at 09:46:01AM +0200, Geert Uytterhoeven wrote:
-> On Mon, 5 Sep 2022, Geert Uytterhoeven wrote:
-> > JFYI, when comparing v6.0-rc4[1] to v6.0-rc3[3], the summaries are:
-> >  - build errors: +3/-16
-> 
->   + /kisskb/src/arch/sh/kernel/machvec.c: error: array subscript 'struct sh_machine_vector[0]' is partly outside array bounds of 'long int[1]' [-Werror=array-bounds]:  => 105:33
-> 
-> sh4-gcc11/sh-allyesconfig (-Werror)
 
-Interesting -- I wonder why this suddenly appeared. I think the fix is
-the common "linker addresses need to be char arrays" fix:
+Kees,
 
-diff --git a/arch/sh/include/asm/sections.h b/arch/sh/include/asm/sections.h
-index 8edb824049b9..0cb0ca149ac3 100644
---- a/arch/sh/include/asm/sections.h
-+++ b/arch/sh/include/asm/sections.h
-@@ -4,7 +4,7 @@
- 
- #include <asm-generic/sections.h>
- 
--extern long __machvec_start, __machvec_end;
-+extern char __machvec_start[], __machvec_end[];
- extern char __uncached_start, __uncached_end;
- extern char __start_eh_frame[], __stop_eh_frame[];
- 
-diff --git a/arch/sh/kernel/machvec.c b/arch/sh/kernel/machvec.c
-index d606679a211e..57efaf5b82ae 100644
---- a/arch/sh/kernel/machvec.c
-+++ b/arch/sh/kernel/machvec.c
-@@ -20,8 +20,8 @@
- #define MV_NAME_SIZE 32
- 
- #define for_each_mv(mv) \
--	for ((mv) = (struct sh_machine_vector *)&__machvec_start; \
--	     (mv) && (unsigned long)(mv) < (unsigned long)&__machvec_end; \
-+	for ((mv) = (struct sh_machine_vector *)__machvec_start; \
-+	     (mv) && (unsigned long)(mv) < (unsigned long)__machvec_end; \
- 	     (mv)++)
- 
- static struct sh_machine_vector * __init get_mv_byname(const char *name)
-@@ -87,8 +87,8 @@ void __init sh_mv_setup(void)
- 	if (!machvec_selected) {
- 		unsigned long machvec_size;
- 
--		machvec_size = ((unsigned long)&__machvec_end -
--				(unsigned long)&__machvec_start);
-+		machvec_size = ((unsigned long)__machvec_end -
-+				(unsigned long)__machvec_start);
- 
- 		/*
- 		 * Sanity check for machvec section alignment. Ensure
-@@ -102,7 +102,7 @@ void __init sh_mv_setup(void)
- 		 * vector (usually the only one) from .machvec.init.
- 		 */
- 		if (machvec_size >= sizeof(struct sh_machine_vector))
--			sh_mv = *(struct sh_machine_vector *)&__machvec_start;
-+			sh_mv = *(struct sh_machine_vector *)__machvec_start;
- 	}
- 
- 	pr_notice("Booting machvec: %s\n", get_system_type());
+> In preparation for FORTIFY_SOURCE performing run-time destination
+> buffer bounds checking for memcpy(), specify the destination output
+> buffer explicitly, instead of asking memcpy() to write past the end of
+> what looked like a fixed-size object. Silences future run-time
+> warning:
+>
+>   memcpy: detected field-spanning write (size 80) of single field "trc + 1" (size 64)
+>
+> There is no binary code output differences from this change.
 
-> 
->   + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn32/display_mode_vba_32.c: error: the frame size of 2144 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 3768:1
-> 
-> x86_64-gcc8/x86-allmodconfig (in function dml32_ModeSupportAndSystemConfigurationFull())
-
-This I don't know about it, but looks like a recent commit: dda4fb85e433f
-Given it's a 2000 line function, I assume it could be improved! :)
-
->   + /kisskb/src/include/linux/fortify-string.h: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]:  => 258:25
-> 
-> s390x-gcc11/s390-allyesconfig (inlined from 'copy_process' at /kisskb/src/kernel/fork.c:2200:2)
-
-This is:
-
-        memset(&p->irqtrace, 0, sizeof(p->irqtrace));
-
-p->irqtrace is:
-
-        struct irqtrace_events          irqtrace;
-
-But that's a whole object destination... why would only s390 warn?
-
--Kees
+Applied to 6.1/scsi-staging, thanks!
 
 -- 
-Kees Cook
+Martin K. Petersen	Oracle Linux Engineering
