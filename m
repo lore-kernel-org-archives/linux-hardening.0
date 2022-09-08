@@ -2,70 +2,70 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CA8C38145
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Sep 2022 21:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218BAC6FA82
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Sep 2022 21:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230237AbiIHV5H (ORCPT
+        id S230010AbiIHV5I (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 8 Sep 2022 17:57:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42868 "EHLO
+        Thu, 8 Sep 2022 17:57:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230010AbiIHV4Y (ORCPT
+        with ESMTP id S230244AbiIHV4Y (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Thu, 8 Sep 2022 17:56:24 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 641DD12BFA5
-        for <linux-hardening@vger.kernel.org>; Thu,  8 Sep 2022 14:55:49 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-345158b6641so123030817b3.8
-        for <linux-hardening@vger.kernel.org>; Thu, 08 Sep 2022 14:55:48 -0700 (PDT)
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 420DF12BF98
+        for <linux-hardening@vger.kernel.org>; Thu,  8 Sep 2022 14:55:48 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id j11-20020a05690212cb00b006454988d225so9942ybu.10
+        for <linux-hardening@vger.kernel.org>; Thu, 08 Sep 2022 14:55:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date;
-        bh=usXbLw1pM2KvyZoDBuKyHSuX2iW4zvZIVdDHW6Ts0ZY=;
-        b=AE4JUukv8f9Zob1CSZjp3nG8WCaj3ktDo/dMYs0duivx37HcX6QQwPd62gAfqdbaOp
-         ptanisTDbgqESxDW0iDctlddt1gBINtCfgVxMm3AorZg6MHImPBAGieJc7i1uOt7Ic5u
-         e2EnKCy0bJiG/q+SSXxzDIswsm+9j3fTQhgLDvainjBzLtGVH7pqzyDI0rCIir4aTOlL
-         JL7f8C8gUvah7VB+5UzO6n5ibwm2KLG8F9D2rMwm84+DU46EsQ4CHToWmPNIYB8qnjfA
-         S7aP3kqsWt0J/j/dl6au199648A6c81VVr0lt1CkqxXM+61lSRu/wnEGVe/8d4zJGZMe
-         2+QA==
+        bh=P5XeXy2GIaSKYLkYAqglVvjH3kuWJ9tPWJSwe0Lo+wY=;
+        b=hx62HzwiHzddRJHYtkXI4QajxL+odl+FO37dBOwfzxb8NNyzv4/yv9wyRADQYJHrDX
+         JWYICnxQ4HQoyr+yvMUobWEYirWtQ3HKANeu1Y10LPfeC8jSnGodKUs0g3EtRQ4kT6Qd
+         0D/oc6nRgHCzFZSC18Qkj01D2+egHql1wXi106mydKoVY9hY4FURlxCXXnmzShibH931
+         phOl2Z0Pl+pvetz46HRs02jeeQFZkr5T3Ek1VjoeP/LjPvf1uU0rMP/1kLJXm6t+6ap/
+         LclWruX1iYwlH8NynScn/a6VSNGCyHyGI3XOynkr7rwXG4AHts4qQprn8mhR8A+VZd33
+         cRqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date;
-        bh=usXbLw1pM2KvyZoDBuKyHSuX2iW4zvZIVdDHW6Ts0ZY=;
-        b=1fnvk+9qoJ4INgB2Tigiunv9S8vrp+7BMmBUioSWdOq4F2m3ZEa/ImXxh01z4grzQv
-         UDcpQyXej3Znup449ezHcJALcKzutgEqkn2vGydjGYhdtCo9JLAV98NTKAXdLJ5ydKx9
-         EvfxM8ycOcrEr0nrYIHh4oA4lwp9l5N7orEMYeeLz3mXE7JAfXgZ4CD1UU4fSNqkdm7U
-         Gs3jPi9gQQzkYrDl4EeiuUfPD3TwBKT4eTldrQYkKuN7DBeYyRIpzADj7al9efkA/cS5
-         ey8Q1i6hOZTMrkFMwb/1D7wSbnn/w2Bu2RKRUY6HonMBRQ0c2AdF9NbcjFANFw+Ioz82
-         xkSQ==
-X-Gm-Message-State: ACgBeo372M5J+oYHEYBG/tzCqIqS/+MrqL1BqEps5RZGsn1A0wgYhoDJ
-        zghilEwGEbVSC6bWLQ4ZNENqDweHtDa5E3zXJ1g=
-X-Google-Smtp-Source: AA6agR5WT7zakLIVotfkCP+Ltu8T016sdQ/qMO5CU/j3xR9ORhLtwu6lkBY4eBv6Q8pR6ikFX1Dtzbh+lC7Opjk3qVA=
+        bh=P5XeXy2GIaSKYLkYAqglVvjH3kuWJ9tPWJSwe0Lo+wY=;
+        b=XQlriSvKosMLDUiuZvrH/8Hnrnsjhwt3uaWoRPXmTVGusr2843qjmxtwy/vF0iCWye
+         zY/OjsNP6eSJ41nY/eemRNYAo2vQ4gV4Yw113IM04YBX01kSD3JyGDkL9XDW1kw7io8x
+         PF1YRX7ONC168HQRSMPBuow95BAh+c2Kdm2pnvR+aCpTmOi3xTIgQ+Gm8dBAwa35nfJ5
+         WcDvAXEZUXhfiuCeDjYYRIUMNAu6dYQlHzblj1xaXvrIMOTI+kmqlNiOmoFAypNTqCPV
+         RSInXXDhT/u1qYv2YVe+Y7JlGJMEoEfVVqS/zPhqucbOo1an1pHEtS6YhOwgkK+T2CKJ
+         Hh2A==
+X-Gm-Message-State: ACgBeo3YxV7AH2dusZVKjNOJP1S2NGm/88tj8QyDWP9lDxQjqhWKg6Wq
+        iZ7oPvhmu4gzD2jAs8lC4RKT9wDP7BDIYsm+Xdc=
+X-Google-Smtp-Source: AA6agR4HGxS3+r7EWurz3pEdejYHxzCA4+e4KopmW1I2S8OfDWvRZ5OIQmq1djGZpkTpe4gyzuVYJnGHX359T2kom9w=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:a4e4:e6ec:9fdd:1bdd])
- (user=samitolvanen job=sendgmr) by 2002:a81:6f43:0:b0:335:9e7e:ad25 with SMTP
- id k64-20020a816f43000000b003359e7ead25mr9472870ywc.518.1662674148732; Thu,
- 08 Sep 2022 14:55:48 -0700 (PDT)
-Date:   Thu,  8 Sep 2022 14:54:58 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a05:6902:10c2:b0:6ae:131a:eac3 with
+ SMTP id w2-20020a05690210c200b006ae131aeac3mr6582686ybu.276.1662674146355;
+ Thu, 08 Sep 2022 14:55:46 -0700 (PDT)
+Date:   Thu,  8 Sep 2022 14:54:57 -0700
 In-Reply-To: <20220908215504.3686827-1-samitolvanen@google.com>
-Message-Id: <20220908215504.3686827-17-samitolvanen@google.com>
+Message-Id: <20220908215504.3686827-16-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20220908215504.3686827-1-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1445; i=samitolvanen@google.com;
- h=from:subject; bh=OojUc6gvhYO7/nvSgMu6gZvuX/wXQ7p5p2ix4YG74Ww=;
- b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBjGmS18ATy8CgQuYAQJpe1UeWUw98XLd/V3+KW2F/u
- 4Z+6kC2JAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYxpktQAKCRBMtfaEi7xW7lSuC/
- 4sfH5L4f5/2SJ64jvWTm+1lc49S13k5MpSk0eZ/UEsUKzTgzzu4i3s7Q9UqdkRmWmqhbZylhnZgFbP
- GNleTbZK4sC/NyBAMN9DqIujnWeWRIghfmZSMzF1NWoHIa8Si19YuRXRTnnVfB/KWCwcAi5MDKfWQE
- eqwZCJKcO9hjR3Pnxe25vrAj54m6F3Q0bk1QY0bfYbfyMhC3XAW6WEGUJaI73A08owc1LxwtpRVj1N
- MYDySP7kr7EF6/9u1H8SjmdLJlLCins4r3I/1dbOPQ5eAMqCW4LV/SbIdF+yDRhRMOfV2VjFyfAbxr
- mdleL7w8DTTDlCbr+Klc/IenrmmnOOwDQDZwysQbJ7Ovt0tbfNphd/tAdItunYuMjg3U+GiGuWEG2j
- 5M0n4Vyh7DU44YcziEwli2nYR/R/UUgv+RJpgz2QqW3Ld05ic5w8yjfU65prGhAypzJzeqx9BnOZg6
- hZR3WFUEeET3Wqby5DqrJb95y73h3aP44Ssz5htKs3W8Q=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2291; i=samitolvanen@google.com;
+ h=from:subject; bh=mON8m7x3rUfa1D0nlNPBxEehMr1A/zDxXAQAEngsFEg=;
+ b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBjGmS1cVYdHINNLoBeCZ9uFVNyEFfBwFNRQPTvzufN
+ DW569WSJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYxpktQAKCRBMtfaEi7xW7n1fC/
+ 9ntySdFzUO3oTsyY2vU09I6p+wIqQMm9FgTwxmaQG1446FzMM4pSm/SX4JhZE9j5JO8X+roj+rnp/z
+ hoLKBrMvE4bR6IyFTxO7Mvy3qSC20smGCBNQEzlDovULvMTBcz9vOxRopVfnk1UYwSrW9ctflDk9nk
+ 4LAs9n5qb3YgtVh/R/Z8eYLffSUyid4RzFUP2hrOI9q4u8FDJmS4YcLXzXQXdrINqm1HCS+DuVZb2M
+ cdX+RhevB8yVxZTIf7jZ/lUySTbyUOmjWUD8pHjbJcoo1ntxHci8Vmq1K4CjD6c3APzuxeX590QJkn
+ KBYWzy/6MpMlQgqnqc+zSj9GPWNf3cOKfDlgR7zqw8OW/C1YzhnW9F1HGhVHZFo+7ezUBee0CAFSQI
+ gcxtb0a8Df7ZA5bqq/2Fvw+mJSr2Po2uEi1HUVMcMh0t2DWkOSFxvudPDClnFcZve5BqD8NPpHJYmZ
+ eVj3Qsqgk+JqnpMPVr/Oucx4m4puzPjSBwSLTyV7Uh0w4=
 X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
-Subject: [PATCH v5 16/22] objtool: Preserve special st_shndx indexes in elf_update_symbol
+Subject: [PATCH v5 15/22] treewide: Drop __cficanonical
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -87,43 +87,68 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-elf_update_symbol fails to preserve the special st_shndx values
-between [SHN_LORESERVE, SHN_HIRESERVE], which results in it
-converting SHN_ABS entries into SHN_UNDEF, for example. Explicitly
-check for the special indexes and ensure these symbols are not
-marked undefined.
+CONFIG_CFI_CLANG doesn't use a jump table anymore and therefore,
+won't change function references to point elsewhere. Remove the
+__cficanonical attribute and all uses of it.
 
-Fixes: ead165fa1042 ("objtool: Fix symbol creation")
+Note that the Clang definition of the attribute was removed earlier,
+just clean up the no-op definition and users.
+
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Tested-by: Kees Cook <keescook@chromium.org>
+Tested-by: Nathan Chancellor <nathan@kernel.org>
 ---
- tools/objtool/elf.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ include/linux/compiler_types.h | 4 ----
+ include/linux/init.h           | 4 ++--
+ include/linux/pci.h            | 4 ++--
+ 3 files changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index c25e957c1e52..7e24b09b1163 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -619,6 +619,11 @@ static int elf_update_symbol(struct elf *elf, struct section *symtab,
- 	Elf64_Xword entsize = symtab->sh.sh_entsize;
- 	int max_idx, idx = sym->idx;
- 	Elf_Scn *s, *t = NULL;
-+	bool is_special_shndx = sym->sym.st_shndx >= SHN_LORESERVE &&
-+				sym->sym.st_shndx != SHN_XINDEX;
-+
-+	if (is_special_shndx)
-+		shndx = sym->sym.st_shndx;
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 4f2a819fd60a..6f2ec0976e2d 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -265,10 +265,6 @@ struct ftrace_likely_data {
+ # define __nocfi
+ #endif
  
- 	s = elf_getscn(elf->elf, symtab->idx);
- 	if (!s) {
-@@ -704,7 +709,7 @@ static int elf_update_symbol(struct elf *elf, struct section *symtab,
- 	}
+-#ifndef __cficanonical
+-# define __cficanonical
+-#endif
+-
+ /*
+  * Any place that could be marked with the "alloc_size" attribute is also
+  * a place to be marked with the "malloc" attribute. Do this as part of the
+diff --git a/include/linux/init.h b/include/linux/init.h
+index 88f2964097f5..a0a90cd73ebe 100644
+--- a/include/linux/init.h
++++ b/include/linux/init.h
+@@ -220,8 +220,8 @@ extern bool initcall_debug;
+ 	__initcall_name(initstub, __iid, id)
  
- 	/* setup extended section index magic and write the symbol */
--	if (shndx >= SHN_UNDEF && shndx < SHN_LORESERVE) {
-+	if ((shndx >= SHN_UNDEF && shndx < SHN_LORESERVE) || is_special_shndx) {
- 		sym->sym.st_shndx = shndx;
- 		if (!shndx_data)
- 			shndx = 0;
+ #define __define_initcall_stub(__stub, fn)			\
+-	int __init __cficanonical __stub(void);			\
+-	int __init __cficanonical __stub(void)			\
++	int __init __stub(void);				\
++	int __init __stub(void)					\
+ 	{ 							\
+ 		return fn();					\
+ 	}							\
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 060af91bafcd..5da0846aa3c1 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2019,8 +2019,8 @@ enum pci_fixup_pass {
+ #ifdef CONFIG_LTO_CLANG
+ #define __DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
+ 				  class_shift, hook, stub)		\
+-	void __cficanonical stub(struct pci_dev *dev);			\
+-	void __cficanonical stub(struct pci_dev *dev)			\
++	void stub(struct pci_dev *dev);					\
++	void stub(struct pci_dev *dev)					\
+ 	{ 								\
+ 		hook(dev); 						\
+ 	}								\
 -- 
 2.37.2.789.g6183377224-goog
 
