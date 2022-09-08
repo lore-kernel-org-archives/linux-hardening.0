@@ -2,70 +2,70 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1065AC54EE9
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Sep 2022 21:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A699C38145
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Sep 2022 21:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230235AbiIHV4W (ORCPT
+        id S229786AbiIHV4Z (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 8 Sep 2022 17:56:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44686 "EHLO
+        Thu, 8 Sep 2022 17:56:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230158AbiIHVzx (ORCPT
+        with ESMTP id S230181AbiIHVz4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 8 Sep 2022 17:55:53 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB70C6942
-        for <linux-hardening@vger.kernel.org>; Thu,  8 Sep 2022 14:55:31 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id f12-20020a25b6cc000000b0069a9e36de26so14632801ybm.16
-        for <linux-hardening@vger.kernel.org>; Thu, 08 Sep 2022 14:55:31 -0700 (PDT)
+        Thu, 8 Sep 2022 17:55:56 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0041CCE2E
+        for <linux-hardening@vger.kernel.org>; Thu,  8 Sep 2022 14:55:33 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-33dc888dc62so155248487b3.4
+        for <linux-hardening@vger.kernel.org>; Thu, 08 Sep 2022 14:55:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date;
-        bh=kd7nRdxqflfjkfBCCsD2lZrnoq302piOWQSyjQDRjtM=;
-        b=rCh4lr1ufkzl4yS8kF+nfMcpwrlAzOVRSRecjzWmLGhjmCv9VTxM06OUyO8ZyYsMuv
-         iE7KV9UdwWWI1W7jhW4fA3vXVwkgh+S5HxsyLNXQ6sQJO9KnXJhew6G0ucbCHk+1UzJp
-         KmEHPLdMXhsbCOP8FapKLPiMxGMriLHn4RIb7/bVitT/Onx8woP45mW6I6E3qnvyjpvU
-         IVHo6anrbJEBbjhNSckgwkMhLCuLf34ij48QwW8Lm/UkCUCAv15Euq1bKDi/95ss8kqt
-         vwpJYHxrsLgV3A4xMpTiEOr9bs4MocSIMUWHRaYCUZ43Kyj8m08y1c7GmluFkLfFq7HR
-         PT1Q==
+        bh=xUIiGKSm4wduWg23Tu0syDKyb899Hy/7xlDBrVmam7Q=;
+        b=dOoGcHJVg127tDE6kjSdTfMsgzXzcqub02GrdOZQzyIJFfFX3Dzk4sgyyp/QY395Ts
+         mH/ZbZXT1NEp8GEcjCJ0n4kO8gontmtFMPoLU+0ecx6tHoic3N1kie9uYmDWndODx3SU
+         3AZwI10g4IR/s7QvDVqawVh5EJhOnHtA22/JpSZWqOp0BLWnmZ2hcyBkPPZ+cCmehgX4
+         Osh6088+SIG2c6gcj+dfoyABrZWN9/bglT/6kuJvJaqyCcXi8z3+3p8VgAE3KklAr+pG
+         uhVhoBXbMtSmCnoSKgM5wmod9uhv45NYDypqOcRWMEnO4cilWfZsMc8mZm5FXsdhwx6b
+         9bJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date;
-        bh=kd7nRdxqflfjkfBCCsD2lZrnoq302piOWQSyjQDRjtM=;
-        b=eu2ypUPQ55uILATMackJxd+Q29fk5sNX8h73U3rCzjhLvAjGvEQkj4hM3711tyZWlR
-         Qsp0GKSUKPSeO9YrzxPXol+1f1XXAYTT/Bdi5MXyovhLxK+nuFRXa2wJBaaV7O5P8hCc
-         OFrMP5FdpaeLTEfTmS2+nhk9XbcQ/rgGYTH+C1bmc6llMCIYPfR4tlMYcPAqPBLl2T9p
-         We0yXkh0s/YhyigBjJtpqa7aA7E6KT3hrAKsUjRzlX21kuMI2NQUND+IxWeTZ523rL9k
-         9m9Iwv4cEZHvDSPAiH/vyVWSMEh+w4RHUYe9pY2lbFc4uxcUXMhsKYWIH021Y8gRcZMJ
-         WkCw==
-X-Gm-Message-State: ACgBeo1b7Su3s/Fc84rmZMMUdWPTtO7Z+Ls4FsD+SuQbbkYbQJjq4+c3
-        pJDRqJxlumFPNqHphoM2QMTl2++KTW4VkCLyyXo=
-X-Google-Smtp-Source: AA6agR4KPWa5oXR9Ayg51w4kgTXhrwlsnnIwkIfkpKq1aF2MmA18JoPmR1m2Vj4mtaD5P058LPjkenrWxG9bUpOnOPo=
+        bh=xUIiGKSm4wduWg23Tu0syDKyb899Hy/7xlDBrVmam7Q=;
+        b=S665V09+FtCP2aqH1zLoOcl289iOXh+o/aG9+ezWm699iy07N1hj19dEbk1torW1d/
+         U9hQj6MFwjGGkIquqSMrtgIU1Yqi81GJFsfNQ3f6xhfqi7p11QWyyH9Stz3xGHvznzLS
+         SmB6pKq4X0EHmpZNsGVm6YyYMd0J4BZlrUWSorOcYjY7bko+yZh5up2dA6ph8l5FGUOK
+         79jSZrBIRJ33dROE1knSgcWDE8KbDEnfBE9MmRb+Ic9SUe4AhZMgg7PfIQ1kEwsTTyKu
+         UwKptgGt58RTF0sx7/SlWoFzRM4k3tuyVKVQxlgkwuqz+Xf0N3zoJxGWZEsKeNwTdLUF
+         f5tA==
+X-Gm-Message-State: ACgBeo19oymy1ri+2kwgE2X/CBuYw4avQm6HvBc5jeNpeq4+iTlPqEJg
+        gx1Xznn+m3Jf/VgIHvrWsywah8Vl4QLheZFa3ro=
+X-Google-Smtp-Source: AA6agR4vUDRVfqHUaReM1w5Kq0C6YAR1yqQtsuNTjhE1wQty1NhZxF2XtFK0o05oiiyebsiqQoGqIYzwRprCNlYaocM=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:a4e4:e6ec:9fdd:1bdd])
- (user=samitolvanen job=sendgmr) by 2002:a0d:d5d1:0:b0:345:31d1:89af with SMTP
- id x200-20020a0dd5d1000000b0034531d189afmr9736636ywd.456.1662674130884; Thu,
- 08 Sep 2022 14:55:30 -0700 (PDT)
-Date:   Thu,  8 Sep 2022 14:54:51 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a81:d34e:0:b0:336:7428:dac8 with SMTP
+ id d14-20020a81d34e000000b003367428dac8mr9601628ywl.94.1662674133445; Thu, 08
+ Sep 2022 14:55:33 -0700 (PDT)
+Date:   Thu,  8 Sep 2022 14:54:52 -0700
 In-Reply-To: <20220908215504.3686827-1-samitolvanen@google.com>
-Message-Id: <20220908215504.3686827-10-samitolvanen@google.com>
+Message-Id: <20220908215504.3686827-11-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20220908215504.3686827-1-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4469; i=samitolvanen@google.com;
- h=from:subject; bh=ZXDeWwVnHEvuHIlmhqXxiwu6hNYWmJItX6GE8bo4AiE=;
- b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBjGmS0ngozdPycUs52NDlFvKM6/yfKrCRvnRnqh9tm
- VzwT4tmJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYxpktAAKCRBMtfaEi7xW7iBmC/
- 44MOwJkkMAY9jfQS3hg2NgxpRx1Cqnq56fPQZCNbTFhgw+X9TuavRXXudgD2TNdcMlgmfj5R8pFL20
- WO22k4Q0+dowr7xau/bDAlqC21Dt5VFqbhkQEk9dayxnkebGEIU2Oon993gW9+qTPEIuoQm2PWE4Cz
- F8Xqt3AsD2NbJE2pQlVht2stSPGDVMWli7P1u2w9JF+3zDT5oKHeNXoHGIKEEq3uuX/BH5zC6KDsgA
- a3k/RB3By7mzhF/2LDQkZ0hStWDPelx8WL0QMToeU9oqWlhTSggEwFHv96NCAA9wRPNoEYeb+SRuN2
- HjRrQWMXpHFYEnGNn/O/i8b5IZF+NzzpheLKi0f7v//WUMJSroCGFrim7FxAY6GHw+OrfRiAcQXUtB
- 3Kv9nRuXNj4thhhE+FOYai/D+ghfrC/yTsqLZy5wb0Z4vWDAUft5cJ66Hla7IjCYVQkrtbUjxhjIiR
- Yd0k9DwonyvbgyuK4wjcYpQKxK20YJWvITEf9mTCfYm3w=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6625; i=samitolvanen@google.com;
+ h=from:subject; bh=XyaKOjBIyR6ipHRlO473Yg9X007Ywd+Fmw0kdF0HI3M=;
+ b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBjGmS0ASWNwETssmwBh5NxM4y8wY0XXHT/43rDPqGd
+ 8Ukdeo6JAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYxpktAAKCRBMtfaEi7xW7h4pC/
+ 0XqDoxj/PKBgq5swD0AxtBotx8Kc1w3kQb7O2RPMJWTse4Kd+PGOqS54jAH3LbS/aZXl4YLukAegj6
+ vXqR3JMXIuef7nEWUkymKAIrsDNh2wxSo5iRfZdY7SLEfI2rR+1v28+edSWtvBRt8zHcmHOiWCvgjD
+ ZKb9PHcvS04XX+G6PRpF821r8QrB5+hlbqf9MePw/OVFXNkZH05uYmHgRfBayF1jRipnLLori2U5qK
+ Vlj0E7flyBe+KTeNYKj/bd6IXuvJrcWOyhskDGWe2dDiIcnBNOiR1ZRR0+kupspuOV88ozhqFjJejL
+ Z95DGowPaFcWRNNlAk05INALkgtm2mOd8uGAvbAUHPcQeHm+XanKcO5gTPA3Dne1iZIklgdy6o3kgN
+ CCJ/VoAOFZg/sO4xjUbgw9deevs6TllbQDFPY1RE/GzQP4iNnc7YgsSUFHaA+Ewc6yi8UeGdMNUOcN
+ PkRjMCV/BthVjYiD+Yj1S9oIndBZoJeS/ETK6in0OfP3I=
 X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
-Subject: [PATCH v5 09/22] arm64: Add types to indirect called assembly functions
+Subject: [PATCH v5 10/22] arm64: Add CFI error handling
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -87,142 +87,174 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With CONFIG_CFI_CLANG, assembly functions indirectly called from C
-code must be annotated with type identifiers to pass CFI checking. Use
-SYM_TYPED_FUNC_START for the indirectly called functions, and ensure
-we emit `bti c` also with SYM_TYPED_FUNC_START.
+With -fsanitize=kcfi, CFI always traps. Add arm64 support for handling CFI
+failures. The registers containing the target address and the expected type
+are encoded in the first ten bits of the ESR as follows:
 
+ - 0-4: n, where the register Xn contains the target address
+ - 5-9: m, where the register Wm contains the type hash
+
+This produces the following oops on CFI failure (generated using lkdtm):
+
+[   21.885179] CFI failure at lkdtm_indirect_call+0x2c/0x44 [lkdtm]
+(target: lkdtm_increment_int+0x0/0x1c [lkdtm]; expected type: 0x7e0c52a)
+[   21.886593] Internal error: Oops - CFI: 0 [#1] PREEMPT SMP
+[   21.891060] Modules linked in: lkdtm
+[   21.893363] CPU: 0 PID: 151 Comm: sh Not tainted
+5.19.0-rc1-00021-g852f4e48dbab #1
+[   21.895560] Hardware name: linux,dummy-virt (DT)
+[   21.896543] pstate: 80400009 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   21.897583] pc : lkdtm_indirect_call+0x2c/0x44 [lkdtm]
+[   21.898551] lr : lkdtm_CFI_FORWARD_PROTO+0x3c/0x6c [lkdtm]
+[   21.899520] sp : ffff8000083a3c50
+[   21.900191] x29: ffff8000083a3c50 x28: ffff0000027e0ec0 x27: 0000000000000000
+[   21.902453] x26: 0000000000000000 x25: ffffc2aa3d07e7b0 x24: 0000000000000002
+[   21.903736] x23: ffffc2aa3d079088 x22: ffffc2aa3d07e7b0 x21: ffff000003379000
+[   21.905062] x20: ffff8000083a3dc0 x19: 0000000000000012 x18: 0000000000000000
+[   21.906371] x17: 000000007e0c52a5 x16: 000000003ad55aca x15: ffffc2aa60d92138
+[   21.907662] x14: ffffffffffffffff x13: 2e2e2e2065707974 x12: 0000000000000018
+[   21.909775] x11: ffffc2aa62322b88 x10: ffffc2aa62322aa0 x9 : c7e305fb5195d200
+[   21.911898] x8 : ffffc2aa3d077e20 x7 : 6d20676e696c6c61 x6 : 43203a6d74646b6c
+[   21.913108] x5 : ffffc2aa6266c9df x4 : ffffc2aa6266c9e1 x3 : ffff8000083a3968
+[   21.914358] x2 : 80000000fffff122 x1 : 00000000fffff122 x0 : ffffc2aa3d07e8f8
+[   21.915827] Call trace:
+[   21.916375]  lkdtm_indirect_call+0x2c/0x44 [lkdtm]
+[   21.918060]  lkdtm_CFI_FORWARD_PROTO+0x3c/0x6c [lkdtm]
+[   21.919030]  lkdtm_do_action+0x34/0x4c [lkdtm]
+[   21.919920]  direct_entry+0x170/0x1ac [lkdtm]
+[   21.920772]  full_proxy_write+0x84/0x104
+[   21.921759]  vfs_write+0x188/0x3d8
+[   21.922387]  ksys_write+0x78/0xe8
+[   21.922986]  __arm64_sys_write+0x1c/0x2c
+[   21.923696]  invoke_syscall+0x58/0x134
+[   21.924554]  el0_svc_common+0xb4/0xf4
+[   21.925603]  do_el0_svc+0x2c/0xb4
+[   21.926563]  el0_svc+0x2c/0x7c
+[   21.927147]  el0t_64_sync_handler+0x84/0xf0
+[   21.927985]  el0t_64_sync+0x18c/0x190
+[   21.929133] Code: 728a54b1 72afc191 6b11021f 54000040 (d4304500)
+[   21.930690] ---[ end trace 0000000000000000 ]---
+[   21.930971] Kernel panic - not syncing: Oops - CFI: Fatal exception
+
+Suggested-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 Tested-by: Kees Cook <keescook@chromium.org>
 Tested-by: Nathan Chancellor <nathan@kernel.org>
 ---
- arch/arm64/crypto/ghash-ce-core.S | 5 +++--
- arch/arm64/crypto/sm3-ce-core.S   | 3 ++-
- arch/arm64/include/asm/linkage.h  | 4 ++++
- arch/arm64/kernel/cpu-reset.S     | 5 +++--
- arch/arm64/mm/proc.S              | 5 +++--
- 5 files changed, 15 insertions(+), 7 deletions(-)
+ arch/arm64/include/asm/brk-imm.h |  6 ++++
+ arch/arm64/kernel/traps.c        | 47 ++++++++++++++++++++++++++++++--
+ 2 files changed, 50 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/crypto/ghash-ce-core.S b/arch/arm64/crypto/ghash-ce-core.S
-index 7868330dd54e..ebe5558929b7 100644
---- a/arch/arm64/crypto/ghash-ce-core.S
-+++ b/arch/arm64/crypto/ghash-ce-core.S
-@@ -6,6 +6,7 @@
+diff --git a/arch/arm64/include/asm/brk-imm.h b/arch/arm64/include/asm/brk-imm.h
+index ec7720dbe2c8..6e000113e508 100644
+--- a/arch/arm64/include/asm/brk-imm.h
++++ b/arch/arm64/include/asm/brk-imm.h
+@@ -17,6 +17,7 @@
+  * 0x401: for compile time BRK instruction
+  * 0x800: kernel-mode BUG() and WARN() traps
+  * 0x9xx: tag-based KASAN trap (allowed values 0x900 - 0x9ff)
++ * 0x8xxx: Control-Flow Integrity traps
   */
+ #define KPROBES_BRK_IMM			0x004
+ #define UPROBES_BRK_IMM			0x005
+@@ -28,4 +29,9 @@
+ #define KASAN_BRK_IMM			0x900
+ #define KASAN_BRK_MASK			0x0ff
  
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- #include <asm/assembler.h>
- 
- 	SHASH		.req	v0
-@@ -350,11 +351,11 @@ CPU_LE(	rev64		T1.16b, T1.16b	)
- 	 * void pmull_ghash_update(int blocks, u64 dg[], const char *src,
- 	 *			   struct ghash_key const *k, const char *head)
- 	 */
--SYM_FUNC_START(pmull_ghash_update_p64)
-+SYM_TYPED_FUNC_START(pmull_ghash_update_p64)
- 	__pmull_ghash	p64
- SYM_FUNC_END(pmull_ghash_update_p64)
- 
--SYM_FUNC_START(pmull_ghash_update_p8)
-+SYM_TYPED_FUNC_START(pmull_ghash_update_p8)
- 	__pmull_ghash	p8
- SYM_FUNC_END(pmull_ghash_update_p8)
- 
-diff --git a/arch/arm64/crypto/sm3-ce-core.S b/arch/arm64/crypto/sm3-ce-core.S
-index ef97d3187cb7..ca70cfacd0d0 100644
---- a/arch/arm64/crypto/sm3-ce-core.S
-+++ b/arch/arm64/crypto/sm3-ce-core.S
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- #include <asm/assembler.h>
- 
- 	.irp		b, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
-@@ -73,7 +74,7 @@
- 	 *                       int blocks)
- 	 */
- 	.text
--SYM_FUNC_START(sm3_ce_transform)
-+SYM_TYPED_FUNC_START(sm3_ce_transform)
- 	/* load state */
- 	ld1		{v8.4s-v9.4s}, [x0]
- 	rev64		v8.4s, v8.4s
-diff --git a/arch/arm64/include/asm/linkage.h b/arch/arm64/include/asm/linkage.h
-index 43f8c25b3fda..1436fa1cde24 100644
---- a/arch/arm64/include/asm/linkage.h
-+++ b/arch/arm64/include/asm/linkage.h
-@@ -39,4 +39,8 @@
- 	SYM_START(name, SYM_L_WEAK, SYM_A_NONE)		\
- 	bti c ;
- 
-+#define SYM_TYPED_FUNC_START(name)				\
-+	SYM_TYPED_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)	\
-+	bti c ;
++#define CFI_BRK_IMM_TARGET		GENMASK(4, 0)
++#define CFI_BRK_IMM_TYPE		GENMASK(9, 5)
++#define CFI_BRK_IMM_BASE		0x8000
++#define CFI_BRK_IMM_MASK		(CFI_BRK_IMM_TARGET | CFI_BRK_IMM_TYPE)
 +
  #endif
-diff --git a/arch/arm64/kernel/cpu-reset.S b/arch/arm64/kernel/cpu-reset.S
-index 48a8af97faa9..6b752fe89745 100644
---- a/arch/arm64/kernel/cpu-reset.S
-+++ b/arch/arm64/kernel/cpu-reset.S
-@@ -8,6 +8,7 @@
-  */
+diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+index b7fed33981f7..3c026da95bbc 100644
+--- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -26,6 +26,7 @@
+ #include <linux/syscalls.h>
+ #include <linux/mm_types.h>
+ #include <linux/kasan.h>
++#include <linux/cfi.h>
  
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- #include <asm/assembler.h>
- #include <asm/sysreg.h>
- #include <asm/virt.h>
-@@ -28,7 +29,7 @@
-  * branch to what would be the reset vector. It must be executed with the
-  * flat identity mapping.
-  */
--SYM_CODE_START(cpu_soft_restart)
-+SYM_TYPED_FUNC_START(cpu_soft_restart)
- 	mov_q	x12, INIT_SCTLR_EL1_MMU_OFF
- 	pre_disable_mmu_workaround
- 	/*
-@@ -47,6 +48,6 @@ SYM_CODE_START(cpu_soft_restart)
- 	mov	x1, x3				// arg1
- 	mov	x2, x4				// arg2
- 	br	x8
--SYM_CODE_END(cpu_soft_restart)
-+SYM_FUNC_END(cpu_soft_restart)
+ #include <asm/atomic.h>
+ #include <asm/bug.h>
+@@ -991,6 +992,38 @@ static struct break_hook bug_break_hook = {
+ 	.imm = BUG_BRK_IMM,
+ };
  
- .popsection
-diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-index 7837a69524c5..8b9f419fcad9 100644
---- a/arch/arm64/mm/proc.S
-+++ b/arch/arm64/mm/proc.S
-@@ -10,6 +10,7 @@
- #include <linux/init.h>
- #include <linux/linkage.h>
- #include <linux/pgtable.h>
-+#include <linux/cfi_types.h>
- #include <asm/assembler.h>
- #include <asm/asm-offsets.h>
- #include <asm/asm_pointer_auth.h>
-@@ -185,7 +186,7 @@ SYM_FUNC_END(cpu_do_resume)
-  * This is the low-level counterpart to cpu_replace_ttbr1, and should not be
-  * called by anything else. It can only be executed from a TTBR0 mapping.
-  */
--SYM_FUNC_START(idmap_cpu_replace_ttbr1)
-+SYM_TYPED_FUNC_START(idmap_cpu_replace_ttbr1)
- 	save_and_disable_daif flags=x2
++#ifdef CONFIG_CFI_CLANG
++static int cfi_handler(struct pt_regs *regs, unsigned long esr)
++{
++	unsigned long target;
++	u32 type;
++
++	target = pt_regs_read_reg(regs, FIELD_GET(CFI_BRK_IMM_TARGET, esr));
++	type = (u32)pt_regs_read_reg(regs, FIELD_GET(CFI_BRK_IMM_TYPE, esr));
++
++	switch (report_cfi_failure(regs, regs->pc, &target, type)) {
++	case BUG_TRAP_TYPE_BUG:
++		die("Oops - CFI", regs, 0);
++		break;
++
++	case BUG_TRAP_TYPE_WARN:
++		break;
++
++	default:
++		return DBG_HOOK_ERROR;
++	}
++
++	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
++	return DBG_HOOK_HANDLED;
++}
++
++static struct break_hook cfi_break_hook = {
++	.fn = cfi_handler,
++	.imm = CFI_BRK_IMM_BASE,
++	.mask = CFI_BRK_IMM_MASK,
++};
++#endif /* CONFIG_CFI_CLANG */
++
+ static int reserved_fault_handler(struct pt_regs *regs, unsigned long esr)
+ {
+ 	pr_err("%s generated an invalid instruction at %pS!\n",
+@@ -1052,6 +1085,9 @@ static struct break_hook kasan_break_hook = {
+ };
+ #endif
  
- 	__idmap_cpu_set_reserved_ttbr1 x1, x3
-@@ -253,7 +254,7 @@ SYM_FUNC_END(idmap_cpu_replace_ttbr1)
- SYM_DATA(__idmap_kpti_flag, .long 1)
- 	.popsection
- 
--SYM_FUNC_START(idmap_kpti_install_ng_mappings)
-+SYM_TYPED_FUNC_START(idmap_kpti_install_ng_mappings)
- 	cpu		.req	w0
- 	temp_pte	.req	x0
- 	num_cpus	.req	w1
++
++#define esr_comment(esr) ((esr) & ESR_ELx_BRK64_ISS_COMMENT_MASK)
++
+ /*
+  * Initial handler for AArch64 BRK exceptions
+  * This handler only used until debug_traps_init().
+@@ -1059,10 +1095,12 @@ static struct break_hook kasan_break_hook = {
+ int __init early_brk64(unsigned long addr, unsigned long esr,
+ 		struct pt_regs *regs)
+ {
++#ifdef CONFIG_CFI_CLANG
++	if ((esr_comment(esr) & ~CFI_BRK_IMM_MASK) == CFI_BRK_IMM_BASE)
++		return cfi_handler(regs, esr) != DBG_HOOK_HANDLED;
++#endif
+ #ifdef CONFIG_KASAN_SW_TAGS
+-	unsigned long comment = esr & ESR_ELx_BRK64_ISS_COMMENT_MASK;
+-
+-	if ((comment & ~KASAN_BRK_MASK) == KASAN_BRK_IMM)
++	if ((esr_comment(esr) & ~KASAN_BRK_MASK) == KASAN_BRK_IMM)
+ 		return kasan_handler(regs, esr) != DBG_HOOK_HANDLED;
+ #endif
+ 	return bug_handler(regs, esr) != DBG_HOOK_HANDLED;
+@@ -1071,6 +1109,9 @@ int __init early_brk64(unsigned long addr, unsigned long esr,
+ void __init trap_init(void)
+ {
+ 	register_kernel_break_hook(&bug_break_hook);
++#ifdef CONFIG_CFI_CLANG
++	register_kernel_break_hook(&cfi_break_hook);
++#endif
+ 	register_kernel_break_hook(&fault_break_hook);
+ #ifdef CONFIG_KASAN_SW_TAGS
+ 	register_kernel_break_hook(&kasan_break_hook);
 -- 
 2.37.2.789.g6183377224-goog
 
