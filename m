@@ -2,70 +2,70 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD3BC54EE9
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Sep 2022 21:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CA8C38145
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Sep 2022 21:57:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230031AbiIHV4v (ORCPT
+        id S230237AbiIHV5H (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 8 Sep 2022 17:56:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44670 "EHLO
+        Thu, 8 Sep 2022 17:57:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230228AbiIHV4M (ORCPT
+        with ESMTP id S230010AbiIHV4Y (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 8 Sep 2022 17:56:12 -0400
+        Thu, 8 Sep 2022 17:56:24 -0400
 Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DCDA114A5E
-        for <linux-hardening@vger.kernel.org>; Thu,  8 Sep 2022 14:55:44 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-3451e7b0234so118795907b3.23
-        for <linux-hardening@vger.kernel.org>; Thu, 08 Sep 2022 14:55:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 641DD12BFA5
+        for <linux-hardening@vger.kernel.org>; Thu,  8 Sep 2022 14:55:49 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-345158b6641so123030817b3.8
+        for <linux-hardening@vger.kernel.org>; Thu, 08 Sep 2022 14:55:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date;
-        bh=rhfWVw2Tt6GniVljFSWWIZP6qvrP1Bt+EpFQklJviQg=;
-        b=rBEPQ4+OEMorFD29QkedGsA5RpGHUqTP7GLuQ0VPeUKArjbKJU8SW+fxXED2Vd5a1h
-         JJUUSU520wi2pjhCxnuq64qsHd7eeRMOLTOxRcJREUzEeMCnZffzC9Sejn5br6Dp3oRI
-         VtYNY/fx0j2QmFk6XksNtrBgzLzZc7TZuBNeE1R7P3dhP8AW0152lJLseebduBWoGVwY
-         56ZWPGa+w9Poid6Sqb4ezZ8XSDwmza2TOXUIpjx5plHpJsxzs8aTSsCu3tvyVQfzL4Yq
-         +vz6teO2Y1xnr+a4/sJVXBA8aGm7OpXVW/b+4LPfwoav6RhVJFXhZfDrJxw8jeUR7dLb
-         c0SA==
+        bh=usXbLw1pM2KvyZoDBuKyHSuX2iW4zvZIVdDHW6Ts0ZY=;
+        b=AE4JUukv8f9Zob1CSZjp3nG8WCaj3ktDo/dMYs0duivx37HcX6QQwPd62gAfqdbaOp
+         ptanisTDbgqESxDW0iDctlddt1gBINtCfgVxMm3AorZg6MHImPBAGieJc7i1uOt7Ic5u
+         e2EnKCy0bJiG/q+SSXxzDIswsm+9j3fTQhgLDvainjBzLtGVH7pqzyDI0rCIir4aTOlL
+         JL7f8C8gUvah7VB+5UzO6n5ibwm2KLG8F9D2rMwm84+DU46EsQ4CHToWmPNIYB8qnjfA
+         S7aP3kqsWt0J/j/dl6au199648A6c81VVr0lt1CkqxXM+61lSRu/wnEGVe/8d4zJGZMe
+         2+QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date;
-        bh=rhfWVw2Tt6GniVljFSWWIZP6qvrP1Bt+EpFQklJviQg=;
-        b=6wMC14ACZDBjWhGlXdd40lkzE44AEuoTFROSQudni/4A7Gp2y83yyr2g+aeQEHXOC3
-         JMkoJLyhqk1TPCNs3ZhSRbFlWONhrHf7TDdoHXvN3421m4NMPTB34qx6wcV5Y9znnnbS
-         RubiJMXMHiaDZmUbjB0I3XihbBVi41WmF2S1QkFNfR4ftpbVPlK5MFzR0JVCdZOv6/+0
-         iLdRnHlKfhQjq3E3BnTgJh9pt3Rwfy7hb2Z/LBy7V/sqLySvlH99L7BEJ6ZgwW/8uGGA
-         2ZcTyFTAe3cS78v0T6EMh8XnsIMWkRnPW65j25ayHowq8ypWpEm8Xbi87KuV37G1Fdm5
-         D7Dw==
-X-Gm-Message-State: ACgBeo1PS0afyOWPm3M3newvNh3AFwDP4rrJ4lJ+uDTfiU+Y+GrgM9H3
-        HboFYo87QdeVI7nrbnnSsSDH0D96lcn3BIWWYuY=
-X-Google-Smtp-Source: AA6agR4VEuPwY0OLtERuEFUSCoro8TKqIchnXzuH3Fn0GxKp01Y7VKyK5nLSYCSe8NlEN8Re6tpG69iiBtglmydYWFk=
+        bh=usXbLw1pM2KvyZoDBuKyHSuX2iW4zvZIVdDHW6Ts0ZY=;
+        b=1fnvk+9qoJ4INgB2Tigiunv9S8vrp+7BMmBUioSWdOq4F2m3ZEa/ImXxh01z4grzQv
+         UDcpQyXej3Znup449ezHcJALcKzutgEqkn2vGydjGYhdtCo9JLAV98NTKAXdLJ5ydKx9
+         EvfxM8ycOcrEr0nrYIHh4oA4lwp9l5N7orEMYeeLz3mXE7JAfXgZ4CD1UU4fSNqkdm7U
+         Gs3jPi9gQQzkYrDl4EeiuUfPD3TwBKT4eTldrQYkKuN7DBeYyRIpzADj7al9efkA/cS5
+         ey8Q1i6hOZTMrkFMwb/1D7wSbnn/w2Bu2RKRUY6HonMBRQ0c2AdF9NbcjFANFw+Ioz82
+         xkSQ==
+X-Gm-Message-State: ACgBeo372M5J+oYHEYBG/tzCqIqS/+MrqL1BqEps5RZGsn1A0wgYhoDJ
+        zghilEwGEbVSC6bWLQ4ZNENqDweHtDa5E3zXJ1g=
+X-Google-Smtp-Source: AA6agR5WT7zakLIVotfkCP+Ltu8T016sdQ/qMO5CU/j3xR9ORhLtwu6lkBY4eBv6Q8pR6ikFX1Dtzbh+lC7Opjk3qVA=
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:a4e4:e6ec:9fdd:1bdd])
- (user=samitolvanen job=sendgmr) by 2002:a81:a055:0:b0:345:1b99:ed4e with SMTP
- id x82-20020a81a055000000b003451b99ed4emr9315882ywg.328.1662674143700; Thu,
- 08 Sep 2022 14:55:43 -0700 (PDT)
-Date:   Thu,  8 Sep 2022 14:54:56 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a81:6f43:0:b0:335:9e7e:ad25 with SMTP
+ id k64-20020a816f43000000b003359e7ead25mr9472870ywc.518.1662674148732; Thu,
+ 08 Sep 2022 14:55:48 -0700 (PDT)
+Date:   Thu,  8 Sep 2022 14:54:58 -0700
 In-Reply-To: <20220908215504.3686827-1-samitolvanen@google.com>
-Message-Id: <20220908215504.3686827-15-samitolvanen@google.com>
+Message-Id: <20220908215504.3686827-17-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20220908215504.3686827-1-samitolvanen@google.com>
 X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2636; i=samitolvanen@google.com;
- h=from:subject; bh=w7QGhX+Lm2u0dGfo5IkCUJxEEQABg5P9ss63DNtvmfM=;
- b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBjGmS1pTQ7rbPML1xK3u3MyRnli2UqPoMtOjmJxcUm
- IFPo2WSJAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYxpktQAKCRBMtfaEi7xW7l+3C/
- 9AJdP32IFBSwJ7l2Qym+RBRnr2ygFJQYgT1jNXFKJ9xpuJIadyULM6tlc8ytuNOwFEV+GZmK7GAUzY
- fl9ZCj5ZBpeNQD2a9xAEEqKgTyWFYTNcMoGQo5PiHm7rWb5AQ+nvPPnf85/qKp+rwgzULwfVIld+eD
- FWRTqltYYgZAzgpZYfOCpRrGPOaqR9In1p9rLuyY8Be1/2J1L+Ee1GwtSs/sWW+AlnQ8ZzJs9qrK2m
- dLb084sArMyaehwUYetynBFE7OB75y2bxXFJ/xThRF8muTmxxh5kabj/uKOqaSE+fcD0ozIZQlmtlt
- g+T3ZgD3tKdwL16ckdrWO4h/QV4q9xl4kwT1DrUyt+PRxclovxjt//IUNblQ6qc6zbvpt9Oa6qk4p3
- YF0hXH2cZQ27IY2KxWq2Yux8LPDHQFIsN1eSOo1TZ5eh14FO8rq8Caf8fkJ6NmCKZVh+AZ0d+fW1r6
- kNPtER09RCEOJgr553VIBlOmBbi0KAwQohDMzytED2ld8=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1445; i=samitolvanen@google.com;
+ h=from:subject; bh=OojUc6gvhYO7/nvSgMu6gZvuX/wXQ7p5p2ix4YG74Ww=;
+ b=owEB7QES/pANAwAKAUy19oSLvFbuAcsmYgBjGmS18ATy8CgQuYAQJpe1UeWUw98XLd/V3+KW2F/u
+ 4Z+6kC2JAbMEAAEKAB0WIQQ1zPtjsoPW0663g5RMtfaEi7xW7gUCYxpktQAKCRBMtfaEi7xW7lSuC/
+ 4sfH5L4f5/2SJ64jvWTm+1lc49S13k5MpSk0eZ/UEsUKzTgzzu4i3s7Q9UqdkRmWmqhbZylhnZgFbP
+ GNleTbZK4sC/NyBAMN9DqIujnWeWRIghfmZSMzF1NWoHIa8Si19YuRXRTnnVfB/KWCwcAi5MDKfWQE
+ eqwZCJKcO9hjR3Pnxe25vrAj54m6F3Q0bk1QY0bfYbfyMhC3XAW6WEGUJaI73A08owc1LxwtpRVj1N
+ MYDySP7kr7EF6/9u1H8SjmdLJlLCins4r3I/1dbOPQ5eAMqCW4LV/SbIdF+yDRhRMOfV2VjFyfAbxr
+ mdleL7w8DTTDlCbr+Klc/IenrmmnOOwDQDZwysQbJ7Ovt0tbfNphd/tAdItunYuMjg3U+GiGuWEG2j
+ 5M0n4Vyh7DU44YcziEwli2nYR/R/UUgv+RJpgz2QqW3Ld05ic5w8yjfU65prGhAypzJzeqx9BnOZg6
+ hZR3WFUEeET3Wqby5DqrJb95y73h3aP44Ssz5htKs3W8Q=
 X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
-Subject: [PATCH v5 14/22] treewide: Drop WARN_ON_FUNCTION_MISMATCH
+Subject: [PATCH v5 16/22] objtool: Preserve special st_shndx indexes in elf_update_symbol
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -87,74 +87,43 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-CONFIG_CFI_CLANG no longer breaks cross-module function address
-equality, which makes WARN_ON_FUNCTION_MISMATCH unnecessary. Remove
-the definition and switch back to WARN_ON_ONCE.
+elf_update_symbol fails to preserve the special st_shndx values
+between [SHN_LORESERVE, SHN_HIRESERVE], which results in it
+converting SHN_ABS entries into SHN_UNDEF, for example. Explicitly
+check for the special indexes and ensure these symbols are not
+marked undefined.
 
+Fixes: ead165fa1042 ("objtool: Fix symbol creation")
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Tested-by: Kees Cook <keescook@chromium.org>
-Tested-by: Nathan Chancellor <nathan@kernel.org>
 ---
- include/asm-generic/bug.h | 16 ----------------
- kernel/kthread.c          |  3 +--
- kernel/workqueue.c        |  2 +-
- 3 files changed, 2 insertions(+), 19 deletions(-)
+ tools/objtool/elf.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
-index ba1f860af38b..4050b191e1a9 100644
---- a/include/asm-generic/bug.h
-+++ b/include/asm-generic/bug.h
-@@ -220,22 +220,6 @@ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
- # define WARN_ON_SMP(x)			({0;})
- #endif
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index c25e957c1e52..7e24b09b1163 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -619,6 +619,11 @@ static int elf_update_symbol(struct elf *elf, struct section *symtab,
+ 	Elf64_Xword entsize = symtab->sh.sh_entsize;
+ 	int max_idx, idx = sym->idx;
+ 	Elf_Scn *s, *t = NULL;
++	bool is_special_shndx = sym->sym.st_shndx >= SHN_LORESERVE &&
++				sym->sym.st_shndx != SHN_XINDEX;
++
++	if (is_special_shndx)
++		shndx = sym->sym.st_shndx;
  
--/*
-- * WARN_ON_FUNCTION_MISMATCH() warns if a value doesn't match a
-- * function address, and can be useful for catching issues with
-- * callback functions, for example.
-- *
-- * With CONFIG_CFI_CLANG, the warning is disabled because the
-- * compiler replaces function addresses taken in C code with
-- * local jump table addresses, which breaks cross-module function
-- * address equality.
-- */
--#if defined(CONFIG_CFI_CLANG) && defined(CONFIG_MODULES)
--# define WARN_ON_FUNCTION_MISMATCH(x, fn) ({ 0; })
--#else
--# define WARN_ON_FUNCTION_MISMATCH(x, fn) WARN_ON_ONCE((x) != (fn))
--#endif
--
- #endif /* __ASSEMBLY__ */
+ 	s = elf_getscn(elf->elf, symtab->idx);
+ 	if (!s) {
+@@ -704,7 +709,7 @@ static int elf_update_symbol(struct elf *elf, struct section *symtab,
+ 	}
  
- #endif
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index 3c677918d8f2..28a6b7ab4a0f 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -1050,8 +1050,7 @@ static void __kthread_queue_delayed_work(struct kthread_worker *worker,
- 	struct timer_list *timer = &dwork->timer;
- 	struct kthread_work *work = &dwork->work;
- 
--	WARN_ON_FUNCTION_MISMATCH(timer->function,
--				  kthread_delayed_work_timer_fn);
-+	WARN_ON_ONCE(timer->function != kthread_delayed_work_timer_fn);
- 
- 	/*
- 	 * If @delay is 0, queue @dwork->work immediately.  This is for
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index aeea9731ef80..16df315d2a3d 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -1651,7 +1651,7 @@ static void __queue_delayed_work(int cpu, struct workqueue_struct *wq,
- 	struct work_struct *work = &dwork->work;
- 
- 	WARN_ON_ONCE(!wq);
--	WARN_ON_FUNCTION_MISMATCH(timer->function, delayed_work_timer_fn);
-+	WARN_ON_ONCE(timer->function != delayed_work_timer_fn);
- 	WARN_ON_ONCE(timer_pending(timer));
- 	WARN_ON_ONCE(!list_empty(&work->entry));
- 
+ 	/* setup extended section index magic and write the symbol */
+-	if (shndx >= SHN_UNDEF && shndx < SHN_LORESERVE) {
++	if ((shndx >= SHN_UNDEF && shndx < SHN_LORESERVE) || is_special_shndx) {
+ 		sym->sym.st_shndx = shndx;
+ 		if (!shndx_data)
+ 			shndx = 0;
 -- 
 2.37.2.789.g6183377224-goog
 
