@@ -2,119 +2,182 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B25C54EE9
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Sep 2022 22:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D2AC6FA89
+	for <linux-hardening@archiver.kernel.org>; Fri,  9 Sep 2022 05:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229455AbiIHWbA (ORCPT
+        id S230207AbiIIFIn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 8 Sep 2022 18:31:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56008 "EHLO
+        Fri, 9 Sep 2022 01:08:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229736AbiIHWa5 (ORCPT
+        with ESMTP id S230204AbiIIFIl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 8 Sep 2022 18:30:57 -0400
-X-Greylist: delayed 913 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 08 Sep 2022 15:30:54 PDT
-Received: from brightrain.aerifal.cx (brightrain.aerifal.cx [216.12.86.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12097F653D
-        for <linux-hardening@vger.kernel.org>; Thu,  8 Sep 2022 15:30:53 -0700 (PDT)
-Date:   Thu, 8 Sep 2022 18:15:39 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-sh@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Mundt <lethal@linux-sh.org>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] sh: machvec: Use char[] for section boundaries
-Message-ID: <20220908221538.GD8773@brightrain.aerifal.cx>
-References: <20220907234345.96798-1-keescook@chromium.org>
+        Fri, 9 Sep 2022 01:08:41 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BBAE125185;
+        Thu,  8 Sep 2022 22:08:39 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id s206so547432pgs.3;
+        Thu, 08 Sep 2022 22:08:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date;
+        bh=H6g0zw3x4uhdRShDitcctRPwuYOehec1y5QBtGADziI=;
+        b=AT+UNya2KqPtonAW2GUdtaoo3iFkrMfKIoqAq0Gw8GeyMrKL1lMSLpf+2w4LkFVSmd
+         rF5ZkbBN8oRUfZaS3wOuba33F07ttW5ivZYhvYDdDHVLOzs80JFedoPISk7NUMhu74MA
+         Zr/QcYtDp7TLq3sudBFrI77fT5mKT9vmlPLD59egzWKS7ugwJNTUrbbg4Z/BldIyEylR
+         CYkSS9owOSN59B9v6OHSagL6zyQwqTrLdMYxo6RuyfPF/WAtm7deFAXPMn0hDhilFSY9
+         okSqyCWxlt+Cks/WpfEHYTdcncqYv253gOZoYF/yQPqZ6fI/XHK0s1uUfKIGdBZldpiX
+         tE3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=H6g0zw3x4uhdRShDitcctRPwuYOehec1y5QBtGADziI=;
+        b=ONh9KvNDA/yAT1Dlqt3Pb7wg8GVmPi4XXQBBpPiGB4nnjKMg9t8LDlyyV8Z1pNoy9W
+         DKRMe2y8f3O5+22s+whMsxs/DaBvCqv/VVBLCDvComM0GhwggEclTOm0MrGPUJseM1tV
+         uZl4gg96T+GZdrunhn9l6ZPfYbWc1WWVDC849w+YLfnS6bCJQjTBSxsyddD9/QoiYKe6
+         0jMMzvfEfm8wKBgPCYWC1xi6df5L7ycCxAr6LOUVjtcYAhhjRiRgXNvuGfBIAgJfw06A
+         LTgsrWnMfvyaolM1q2exbgwl+8e0BtMPAkGPIWaTjMUGFuhADMTdIgAH/BPl1S4gselh
+         y0sA==
+X-Gm-Message-State: ACgBeo3yfnldA03vRUXS8MDw7FSqSKB3/H7mdTYZFS3z8bF4b15lV85U
+        MD49mswIUXZlH8M/ogjRg7E=
+X-Google-Smtp-Source: AA6agR7gN7EshBqO1ylnbrWnBbL9+E1IKd2SVzOkBZFoasIfE3oF3x9tt81XF1xqi+eQ5iv1XatfyQ==
+X-Received: by 2002:a65:5688:0:b0:3c2:1015:988e with SMTP id v8-20020a655688000000b003c21015988emr10719184pgs.280.1662700118976;
+        Thu, 08 Sep 2022 22:08:38 -0700 (PDT)
+Received: from [192.168.11.9] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id b81-20020a621b54000000b005380832c1fesm605544pfb.10.2022.09.08.22.08.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Sep 2022 22:08:38 -0700 (PDT)
+Message-ID: <d1af650a-1e0b-a650-4cda-57fb1d54f1af@gmail.com>
+Date:   Fri, 9 Sep 2022 14:08:30 +0900
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220907234345.96798-1-keescook@chromium.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+To:     Kees Cook <keescook@chromium.org>
+Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mchehab@kernel.org, Akira Yokosawa <akiyks@gmail.com>
+References: <20220902223507.2537469-1-keescook@chromium.org>
+Subject: Re: [RFC] docs: Define c_paren_attributes for attributes with
+ arguments
+Content-Language: en-US
+From:   Akira Yokosawa <akiyks@gmail.com>
+In-Reply-To: <20220902223507.2537469-1-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Sep 07, 2022 at 04:43:45PM -0700, Kees Cook wrote:
-> As done for other sections, define the extern as a character array,
-> which relaxes many of the compiler-time object size checks, which would
-> otherwise assume it's a single long. Solves the following build error:
+Hi Kees,
+
+I expected some responses from Jon, but looks like he's been busy
+elsewhere. Let me chime in.
+
+On Fri,  2 Sep 2022 15:35:07 -0700, Kees Cook wrote:
+> While Sphinx's "c_id_attributes" is needed for basic attributes, any
+> attributes with arguments need to be defined in "c_paren_attributes"
+> to avoid errors like:
 > 
-> arch/sh/kernel/machvec.c: error: array subscript 'struct sh_machine_vector[0]' is partly outside array bounds of 'long int[1]' [-Werror=array-bounds]:  => 105:33
+> include/linux/fortify-string.h:116: warning: Function parameter or member '__builtin_strncpy' not described in '__diagnose_as'
+> include/linux/fortify-string.h:116: warning: Function parameter or member '1' not described in '__diagnose_as'
+> include/linux/fortify-string.h:116: warning: Function parameter or member '2' not described in '__diagnose_as'
+> include/linux/fortify-string.h:116: warning: Function parameter or member '3' not described in '__diagnose_as'
 
-LGMT. This is the approach I recommend for this general type of
-mechanism. So,
+These warnings are from ./scripts/kernel-doc.
+So I think you need to teach the script about "__diagnose_as" so that
+the kernel-doc comment of strncpy() can be converted to reST doc
+which Sphinx can understand.
 
-Acked-by: Rich Felker <dalias@libc.org>
+Past changes in ./scripts/kernel-doc might give you some hints.
 
-Since I haven't been on top of collating patches for upstreaming, I'd
-be happy if anyone else wants to take this in their tree before I get
-back to it.
+That said, I think Jon should be able to provide a pin-point suggestion.
 
-Rich
+HTH,
 
+        Thanks, akira
 
-> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Cc: Rich Felker <dalias@libc.org>
-> Cc: linux-sh@vger.kernel.org
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Link: https://lore.kernel.org/lkml/alpine.DEB.2.22.394.2209050944290.964530@ramsan.of.borg/
-> Fixes: 9655ad03af2d ("sh: Fixup machvec support.")
+> 
+> Move such attributes to "c_paren_attributes" and add __alloc_size
+> and __diagnose_as to the list.> 
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: linux-doc@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  arch/sh/include/asm/sections.h |  2 +-
->  arch/sh/kernel/machvec.c       | 10 +++++-----
->  2 files changed, 6 insertions(+), 6 deletions(-)
+> This patch is a lie (the above warning is actually not fixed), but I
+> was hoping someone could help with this. The Sphinx documentation says:> 
+> c_paren_attributes
+>   A list of strings that the parser additionally should accept as
+>   attributes with one argument. That is, if my_align_as is in the list,
+>   then my_align_as(X) is parsed as an attribute for all strings X that
+>   have balanced braces ((), [], and {}). This can for example be used
+>   when attributes have been #define d for portability.
 > 
-> diff --git a/arch/sh/include/asm/sections.h b/arch/sh/include/asm/sections.h
-> index 8edb824049b9..0cb0ca149ac3 100644
-> --- a/arch/sh/include/asm/sections.h
-> +++ b/arch/sh/include/asm/sections.h
-> @@ -4,7 +4,7 @@
+> However, this appears to only work for attributes with literally a single
+> argument not "all strings X", so things like __printf and __diagnose_as
+> don't work.
+> 
+> Does this need fixing in Sphinx? Or am I missing something?
+> ---
+>  Documentation/conf.py | 20 +++++++++++++++-----
+>  1 file changed, 15 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/conf.py b/Documentation/conf.py
+> index 934727e23e0e..17f996e3709f 100644
+> --- a/Documentation/conf.py
+> +++ b/Documentation/conf.py
+> @@ -59,18 +59,14 @@ if major >= 3:
 >  
->  #include <asm-generic/sections.h>
+>              # include/linux/compiler_attributes.h:
+>              "__alias",
+> -            "__aligned",
+>              "__aligned_largest",
+>              "__always_inline",
+> -            "__assume_aligned",
+>              "__cold",
+>              "__attribute_const__",
+>              "__copy",
+>              "__pure",
+>              "__designated_init",
+>              "__visible",
+> -            "__printf",
+> -            "__scanf",
+>              "__gnu_inline",
+>              "__malloc",
+>              "__mode",
+> @@ -80,7 +76,6 @@ if major >= 3:
+>              "__noreturn",
+>              "__packed",
+>              "__pure",
+> -            "__section",
+>              "__always_unused",
+>              "__maybe_unused",
+>              "__used",
+> @@ -97,6 +92,21 @@ if major >= 3:
 >  
-> -extern long __machvec_start, __machvec_end;
-> +extern char __machvec_start[], __machvec_end[];
->  extern char __uncached_start, __uncached_end;
->  extern char __start_eh_frame[], __stop_eh_frame[];
+>              # include/linux/linkage.h:
+>              "asmlinkage",
+> +
+> +            # include/linux/fortify-string.h:
+> +            "__FORTIFY_INLINE",
+> +        ]
+> +
+> +        # Same as c_id_attributes above, but for those with arguments.
+> +        c_paren_attributes = [
+> +            # include/linux/compiler_attributes.h:
+> +            "__aligned",
+> +            "__alloc_size",
+> +            "__assume_aligned",
+> +            "__diagnose_as",
+> +            "__printf",
+> +            "__scanf",
+> +            "__section",
+>          ]
 >  
-> diff --git a/arch/sh/kernel/machvec.c b/arch/sh/kernel/machvec.c
-> index d606679a211e..57efaf5b82ae 100644
-> --- a/arch/sh/kernel/machvec.c
-> +++ b/arch/sh/kernel/machvec.c
-> @@ -20,8 +20,8 @@
->  #define MV_NAME_SIZE 32
->  
->  #define for_each_mv(mv) \
-> -	for ((mv) = (struct sh_machine_vector *)&__machvec_start; \
-> -	     (mv) && (unsigned long)(mv) < (unsigned long)&__machvec_end; \
-> +	for ((mv) = (struct sh_machine_vector *)__machvec_start; \
-> +	     (mv) && (unsigned long)(mv) < (unsigned long)__machvec_end; \
->  	     (mv)++)
->  
->  static struct sh_machine_vector * __init get_mv_byname(const char *name)
-> @@ -87,8 +87,8 @@ void __init sh_mv_setup(void)
->  	if (!machvec_selected) {
->  		unsigned long machvec_size;
->  
-> -		machvec_size = ((unsigned long)&__machvec_end -
-> -				(unsigned long)&__machvec_start);
-> +		machvec_size = ((unsigned long)__machvec_end -
-> +				(unsigned long)__machvec_start);
->  
->  		/*
->  		 * Sanity check for machvec section alignment. Ensure
-> @@ -102,7 +102,7 @@ void __init sh_mv_setup(void)
->  		 * vector (usually the only one) from .machvec.init.
->  		 */
->  		if (machvec_size >= sizeof(struct sh_machine_vector))
-> -			sh_mv = *(struct sh_machine_vector *)&__machvec_start;
-> +			sh_mv = *(struct sh_machine_vector *)__machvec_start;
->  	}
->  
->  	pr_notice("Booting machvec: %s\n", get_system_type());
+>  else:
 > -- 
 > 2.34.1
