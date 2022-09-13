@@ -2,90 +2,97 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0585C6FA82
-	for <linux-hardening@archiver.kernel.org>; Tue, 13 Sep 2022 18:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B982C54EE9
+	for <linux-hardening@archiver.kernel.org>; Tue, 13 Sep 2022 22:05:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232231AbiIMSVN (ORCPT
+        id S229511AbiIMWFZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 13 Sep 2022 14:21:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46216 "EHLO
+        Tue, 13 Sep 2022 18:05:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230145AbiIMSU7 (ORCPT
+        with ESMTP id S229785AbiIMWFP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 13 Sep 2022 14:20:59 -0400
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D9FE792F3
-        for <linux-hardening@vger.kernel.org>; Tue, 13 Sep 2022 10:34:24 -0700 (PDT)
-Received: by mail-pg1-x530.google.com with SMTP id s206so11997579pgs.3
-        for <linux-hardening@vger.kernel.org>; Tue, 13 Sep 2022 10:34:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=uO/mhGpBvAVk5S3pHCn4SwusJy9TfgShbx1qBp7awcQ=;
-        b=k/MI1AT0ciC5+jhj+8ehW3cp31w7klZqC7ECHlSIkEkVsC8dqaTetBsJ1v3MM4FloS
-         EEvDWS5FWDd3j72+R/FUdhnA6ATiC8tWW1q1W9UW94s329RU5iXplH0kW8G5bnhIoF8G
-         YDWAXh5UPyICfERQwKg09SK+24quBJfkWjMIg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=uO/mhGpBvAVk5S3pHCn4SwusJy9TfgShbx1qBp7awcQ=;
-        b=mxo4961d4IJuEkS+OSliHVKFb4Apt48gbFReppRAO+FI7H1AAtB6d+Eujxj9ye3UYI
-         FGytB105fo3dYY+tjB0BSn8bNMsg0GGYTQscACFd8m5401oi/PVJ+gwdgwdVX/OcmThh
-         cQwZ7eSkRyS/hVjaGFl187g3402SFm2Y+V5a1dzRCjBIq/Iy1l37lQ6teL8UgNGJWM1i
-         gmZPcWBYRXEQz+Q/zlFu9sV/tLO4ZqeODz+NbpUM7F8nSjdj5eLoOoZZsemyKR0/dG17
-         jifhtrPMt1yAgaSflwqw/b5BEBkCBPgyT/uTsbItPfSVCZQiNmnUKn3xBUAA8pX5a05+
-         fBZw==
-X-Gm-Message-State: ACgBeo30afd8SIgFC30I0M69cVBrEHg0nsiVN208I4wpq2qWEZzH3mPg
-        TWqLntDarng8dkwDE9Gd6jSucg==
-X-Google-Smtp-Source: AA6agR5C3NZU0uYQLHCaS9tlgX4IKdBEgEFeMfYXwB1Fo0OfkDNNHX703H7ospZYi7j/VRaq8UvXEQ==
-X-Received: by 2002:a05:6a00:1695:b0:53b:2f0c:4d33 with SMTP id k21-20020a056a00169500b0053b2f0c4d33mr34131043pfc.7.1663090463663;
-        Tue, 13 Sep 2022 10:34:23 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a8-20020a1709027e4800b00176cdd7e4c6sm8742032pln.50.2022.09.13.10.34.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Sep 2022 10:34:22 -0700 (PDT)
-Date:   Tue, 13 Sep 2022 10:34:21 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Rich Felker <dalias@libc.org>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-sh@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Mundt <lethal@linux-sh.org>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] sh: machvec: Use char[] for section boundaries
-Message-ID: <202209131033.EDED655DA4@keescook>
-References: <20220907234345.96798-1-keescook@chromium.org>
- <20220908221538.GD8773@brightrain.aerifal.cx>
+        Tue, 13 Sep 2022 18:05:15 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95AE324F27;
+        Tue, 13 Sep 2022 15:05:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1E8D1615F7;
+        Tue, 13 Sep 2022 22:05:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42E47C433C1;
+        Tue, 13 Sep 2022 22:05:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663106712;
+        bh=svJ3QhlZ+eGSIesk3Dcw3WZz5vdXV48Ff+Kt607rrhk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EwcGfadL8HcQKw0kb7zpOybsZcZYrz+7h/pCRqtcgjx2u8FdowQ0GmxYY6yTwT0TU
+         oQs1N6RCdk2X/1UNNe4b5xIv6UzHeWgKQW80G3C3Qs3vp+22WMjDxwwdjjbDa9/gr5
+         JE8++v+deMI7PsgPvuZJimqSdQL4XJcRzITdr9RLYLGEyfI6kSlBCwpfsJNGh0NEx7
+         jrzukbyPgJ4LDe8hMi1vfp1+psW6bbV40daCjeBH8OyZaOGer08pZPpvOnMLLeWXgT
+         D9iXSVxyn7GVm0qNrR1e31YkgShkCp+701nspO9iSKjnET+/2QTEEfJHboWy4pqp6n
+         qgHnWbNyrnsgA==
+Date:   Tue, 13 Sep 2022 15:05:10 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org, David Gow <davidgow@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fortify: Adjust KUnit test for modular build
+Message-ID: <YyD+lu7Kq/Ga0N/V@dev-arch.thelio-3990X>
+References: <20220913173136.1926909-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220908221538.GD8773@brightrain.aerifal.cx>
+In-Reply-To: <20220913173136.1926909-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 08, 2022 at 06:15:39PM -0400, Rich Felker wrote:
-> On Wed, Sep 07, 2022 at 04:43:45PM -0700, Kees Cook wrote:
-> > As done for other sections, define the extern as a character array,
-> > which relaxes many of the compiler-time object size checks, which would
-> > otherwise assume it's a single long. Solves the following build error:
-> > 
-> > arch/sh/kernel/machvec.c: error: array subscript 'struct sh_machine_vector[0]' is partly outside array bounds of 'long int[1]' [-Werror=array-bounds]:  => 105:33
+On Tue, Sep 13, 2022 at 10:31:36AM -0700, Kees Cook wrote:
+> A much better "unknown size" string pointer is available directly from
+> struct test, so use that instead of a global that isn't shared with
+> modules.
 > 
-> LGMT. This is the approach I recommend for this general type of
-> mechanism. So,
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Link: https://lore.kernel.org/lkml/YyCOHOchVuE/E7vS@dev-arch.thelio-3990X
+> Fixes: 875bfd5276f3 ("fortify: Add KUnit test for FORTIFY_SOURCE internals")
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> Whoops! Thanks Nathan! :) This fixes it for your reproducer.
+
+Confirmed :)
+
+Build-tested-by: Nathan Chancellor <nathan@kernel.org>
+
+Thanks for the quick fix!
+
+> ---
+>  lib/fortify_kunit.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> Acked-by: Rich Felker <dalias@libc.org>
+> diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
+> index 99bc0ea60d27..409af07f340a 100644
+> --- a/lib/fortify_kunit.c
+> +++ b/lib/fortify_kunit.c
+> @@ -17,7 +17,6 @@
+>  
+>  #include <kunit/test.h>
+>  #include <linux/string.h>
+> -#include <linux/init.h>
+>  
+>  static const char array_of_10[] = "this is 10";
+>  static const char *ptr_of_11 = "this is 11!";
+> @@ -31,7 +30,7 @@ static void known_sizes_test(struct kunit *test)
+>  
+>  	KUNIT_EXPECT_EQ(test, __compiletime_strlen(array_unknown), SIZE_MAX);
+>  	/* Externally defined and dynamically sized string pointer: */
+> -	KUNIT_EXPECT_EQ(test, __compiletime_strlen(saved_command_line), SIZE_MAX);
+> +	KUNIT_EXPECT_EQ(test, __compiletime_strlen(test->name), SIZE_MAX);
+>  }
+>  
+>  /* This is volatile so the optimizer can't perform DCE below. */
+> -- 
+> 2.34.1
 > 
-> Since I haven't been on top of collating patches for upstreaming, I'd
-> be happy if anyone else wants to take this in their tree before I get
-> back to it.
-
-Great; thanks! I'll take it via my tree. :)
-
--Kees
-
--- 
-Kees Cook
