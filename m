@@ -2,182 +2,220 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D2AC6FA89
-	for <linux-hardening@archiver.kernel.org>; Fri,  9 Sep 2022 05:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6055C54EE9
+	for <linux-hardening@archiver.kernel.org>; Tue, 13 Sep 2022 14:05:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230207AbiIIFIn (ORCPT
+        id S232403AbiIMOFY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 9 Sep 2022 01:08:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46782 "EHLO
+        Tue, 13 Sep 2022 10:05:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230204AbiIIFIl (ORCPT
+        with ESMTP id S232398AbiIMOFX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 9 Sep 2022 01:08:41 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BBAE125185;
-        Thu,  8 Sep 2022 22:08:39 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id s206so547432pgs.3;
-        Thu, 08 Sep 2022 22:08:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date;
-        bh=H6g0zw3x4uhdRShDitcctRPwuYOehec1y5QBtGADziI=;
-        b=AT+UNya2KqPtonAW2GUdtaoo3iFkrMfKIoqAq0Gw8GeyMrKL1lMSLpf+2w4LkFVSmd
-         rF5ZkbBN8oRUfZaS3wOuba33F07ttW5ivZYhvYDdDHVLOzs80JFedoPISk7NUMhu74MA
-         Zr/QcYtDp7TLq3sudBFrI77fT5mKT9vmlPLD59egzWKS7ugwJNTUrbbg4Z/BldIyEylR
-         CYkSS9owOSN59B9v6OHSagL6zyQwqTrLdMYxo6RuyfPF/WAtm7deFAXPMn0hDhilFSY9
-         okSqyCWxlt+Cks/WpfEHYTdcncqYv253gOZoYF/yQPqZ6fI/XHK0s1uUfKIGdBZldpiX
-         tE3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=H6g0zw3x4uhdRShDitcctRPwuYOehec1y5QBtGADziI=;
-        b=ONh9KvNDA/yAT1Dlqt3Pb7wg8GVmPi4XXQBBpPiGB4nnjKMg9t8LDlyyV8Z1pNoy9W
-         DKRMe2y8f3O5+22s+whMsxs/DaBvCqv/VVBLCDvComM0GhwggEclTOm0MrGPUJseM1tV
-         uZl4gg96T+GZdrunhn9l6ZPfYbWc1WWVDC849w+YLfnS6bCJQjTBSxsyddD9/QoiYKe6
-         0jMMzvfEfm8wKBgPCYWC1xi6df5L7ycCxAr6LOUVjtcYAhhjRiRgXNvuGfBIAgJfw06A
-         LTgsrWnMfvyaolM1q2exbgwl+8e0BtMPAkGPIWaTjMUGFuhADMTdIgAH/BPl1S4gselh
-         y0sA==
-X-Gm-Message-State: ACgBeo3yfnldA03vRUXS8MDw7FSqSKB3/H7mdTYZFS3z8bF4b15lV85U
-        MD49mswIUXZlH8M/ogjRg7E=
-X-Google-Smtp-Source: AA6agR7gN7EshBqO1ylnbrWnBbL9+E1IKd2SVzOkBZFoasIfE3oF3x9tt81XF1xqi+eQ5iv1XatfyQ==
-X-Received: by 2002:a65:5688:0:b0:3c2:1015:988e with SMTP id v8-20020a655688000000b003c21015988emr10719184pgs.280.1662700118976;
-        Thu, 08 Sep 2022 22:08:38 -0700 (PDT)
-Received: from [192.168.11.9] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
-        by smtp.gmail.com with ESMTPSA id b81-20020a621b54000000b005380832c1fesm605544pfb.10.2022.09.08.22.08.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Sep 2022 22:08:38 -0700 (PDT)
-Message-ID: <d1af650a-1e0b-a650-4cda-57fb1d54f1af@gmail.com>
-Date:   Fri, 9 Sep 2022 14:08:30 +0900
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
+        Tue, 13 Sep 2022 10:05:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B2DA1C11A;
+        Tue, 13 Sep 2022 07:05:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BE363614A5;
+        Tue, 13 Sep 2022 14:05:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A243C433D6;
+        Tue, 13 Sep 2022 14:05:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663077919;
+        bh=l+g8X+5c9ZV49QCN0e48clP+/b2LReYleUFUA2MJqk4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u5DQ5p36wAYtlKQPGvG+TFdcomyrLnxf2LurnnNlzmhAS/z9t/qcvL+BFugsDrKb1
+         vZOKNEElLVvbp3okXuzouJ+cPuCfjYG22bMD49PrXPN04MJpsYyIO2GFMakNQU3IR9
+         tU7J+Mcu49eZvyRbbLGH1KUjXopp6d5jR/2SAaLrnYrx8Le5TEhHDYUu9CNe0lOjMw
+         k+doJa/ziXNaGoHJxX0VO/ofzdNEhwCJSP4CZ7RPiLX7Lvk4lByhpe6zN36w9LtbqW
+         02ilV0Z6cXdkZBo+v4RSA/bGtaxsOelTNYD8IuJQzjEw46ORoJtGjXRSN166/nrrn0
+         unoFDCbwbPWCg==
+Date:   Tue, 13 Sep 2022 07:05:16 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mchehab@kernel.org, Akira Yokosawa <akiyks@gmail.com>
-References: <20220902223507.2537469-1-keescook@chromium.org>
-Subject: Re: [RFC] docs: Define c_paren_attributes for attributes with
- arguments
-Content-Language: en-US
-From:   Akira Yokosawa <akiyks@gmail.com>
-In-Reply-To: <20220902223507.2537469-1-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+        David Gow <davidgow@google.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Sander Vanheule <sander@svanheule.net>,
+        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Isabella Basso <isabbasso@riseup.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Eric Biggers <ebiggers@google.com>,
+        Hannes Reinecke <hare@suse.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] fortify: Add KUnit test for FORTIFY_SOURCE
+ internals
+Message-ID: <YyCOHOchVuE/E7vS@dev-arch.thelio-3990X>
+References: <20220902204351.2521805-1-keescook@chromium.org>
+ <20220902204351.2521805-3-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220902204351.2521805-3-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 Hi Kees,
 
-I expected some responses from Jon, but looks like he's been busy
-elsewhere. Let me chime in.
-
-On Fri,  2 Sep 2022 15:35:07 -0700, Kees Cook wrote:
-> While Sphinx's "c_id_attributes" is needed for basic attributes, any
-> attributes with arguments need to be defined in "c_paren_attributes"
-> to avoid errors like:
+On Fri, Sep 02, 2022 at 01:43:50PM -0700, Kees Cook wrote:
+> Add lib/fortify_kunit.c KUnit test for checking the expected behavioral
+> characteristics of FORTIFY_SOURCE internals.
 > 
-> include/linux/fortify-string.h:116: warning: Function parameter or member '__builtin_strncpy' not described in '__diagnose_as'
-> include/linux/fortify-string.h:116: warning: Function parameter or member '1' not described in '__diagnose_as'
-> include/linux/fortify-string.h:116: warning: Function parameter or member '2' not described in '__diagnose_as'
-> include/linux/fortify-string.h:116: warning: Function parameter or member '3' not described in '__diagnose_as'
-
-These warnings are from ./scripts/kernel-doc.
-So I think you need to teach the script about "__diagnose_as" so that
-the kernel-doc comment of strncpy() can be converted to reST doc
-which Sphinx can understand.
-
-Past changes in ./scripts/kernel-doc might give you some hints.
-
-That said, I think Jon should be able to provide a pin-point suggestion.
-
-HTH,
-
-        Thanks, akira
-
-> 
-> Move such attributes to "c_paren_attributes" and add __alloc_size
-> and __diagnose_as to the list.> 
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: linux-doc@vger.kernel.org
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Tom Rix <trix@redhat.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> Cc: David Gow <davidgow@google.com>
+> Cc: Yury Norov <yury.norov@gmail.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Sander Vanheule <sander@svanheule.net>
+> Cc: linux-hardening@vger.kernel.org
+> Cc: llvm@lists.linux.dev
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
-> This patch is a lie (the above warning is actually not fixed), but I
-> was hoping someone could help with this. The Sphinx documentation says:> 
-> c_paren_attributes
->   A list of strings that the parser additionally should accept as
->   attributes with one argument. That is, if my_align_as is in the list,
->   then my_align_as(X) is parsed as an attribute for all strings X that
->   have balanced braces ((), [], and {}). This can for example be used
->   when attributes have been #define d for portability.
+>  MAINTAINERS         |  1 +
+>  lib/Kconfig.debug   |  9 ++++++
+>  lib/Makefile        |  1 +
+>  lib/fortify_kunit.c | 77 +++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 88 insertions(+)
+>  create mode 100644 lib/fortify_kunit.c
 > 
-> However, this appears to only work for attributes with literally a single
-> argument not "all strings X", so things like __printf and __diagnose_as
-> don't work.
-> 
-> Does this need fixing in Sphinx? Or am I missing something?
-> ---
->  Documentation/conf.py | 20 +++++++++++++++-----
->  1 file changed, 15 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/conf.py b/Documentation/conf.py
-> index 934727e23e0e..17f996e3709f 100644
-> --- a/Documentation/conf.py
-> +++ b/Documentation/conf.py
-> @@ -59,18 +59,14 @@ if major >= 3:
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9d7f64dc0efe..640115472199 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8002,6 +8002,7 @@ L:	linux-hardening@vger.kernel.org
+>  S:	Supported
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
+>  F:	include/linux/fortify-string.h
+> +F:	lib/fortify_kunit.c
+>  F:	lib/test_fortify/*
+>  F:	scripts/test_fortify.sh
+>  K:	\b__NO_FORTIFY\b
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 36455953d306..1f267c0ddffd 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -2542,6 +2542,15 @@ config STACKINIT_KUNIT_TEST
+>  	  CONFIG_GCC_PLUGIN_STRUCTLEAK, CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF,
+>  	  or CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL.
 >  
->              # include/linux/compiler_attributes.h:
->              "__alias",
-> -            "__aligned",
->              "__aligned_largest",
->              "__always_inline",
-> -            "__assume_aligned",
->              "__cold",
->              "__attribute_const__",
->              "__copy",
->              "__pure",
->              "__designated_init",
->              "__visible",
-> -            "__printf",
-> -            "__scanf",
->              "__gnu_inline",
->              "__malloc",
->              "__mode",
-> @@ -80,7 +76,6 @@ if major >= 3:
->              "__noreturn",
->              "__packed",
->              "__pure",
-> -            "__section",
->              "__always_unused",
->              "__maybe_unused",
->              "__used",
-> @@ -97,6 +92,21 @@ if major >= 3:
->  
->              # include/linux/linkage.h:
->              "asmlinkage",
+> +config FORTIFY_KUNIT_TEST
+> +	tristate "Test fortified str*() and mem*() function internals at runtime" if !KUNIT_ALL_TESTS
+> +	depends on KUNIT && FORTIFY_SOURCE
+> +	default KUNIT_ALL_TESTS
+> +	help
+> +	  Builds unit tests for checking internals of FORTIFY_SOURCE as used
+> +	  by the str*() and mem*() family of functions. For testing runtime
+> +	  traps of FORTIFY_SOURCE, see LKDTM's "FORTIFY_*" tests.
 > +
-> +            # include/linux/fortify-string.h:
-> +            "__FORTIFY_INLINE",
-> +        ]
-> +
-> +        # Same as c_id_attributes above, but for those with arguments.
-> +        c_paren_attributes = [
-> +            # include/linux/compiler_attributes.h:
-> +            "__aligned",
-> +            "__alloc_size",
-> +            "__assume_aligned",
-> +            "__diagnose_as",
-> +            "__printf",
-> +            "__scanf",
-> +            "__section",
->          ]
+>  config TEST_UDELAY
+>  	tristate "udelay test driver"
+>  	help
+> diff --git a/lib/Makefile b/lib/Makefile
+> index f545140ed9e7..4ee1ceae945a 100644
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -381,6 +381,7 @@ obj-$(CONFIG_IS_SIGNED_TYPE_KUNIT_TEST) += is_signed_type_kunit.o
+>  obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow_kunit.o
+>  CFLAGS_stackinit_kunit.o += $(call cc-disable-warning, switch-unreachable)
+>  obj-$(CONFIG_STACKINIT_KUNIT_TEST) += stackinit_kunit.o
+> +obj-$(CONFIG_FORTIFY_KUNIT_TEST) += fortify_kunit.o
 >  
->  else:
-> -- 
-> 2.34.1
+>  obj-$(CONFIG_GENERIC_LIB_DEVMEM_IS_ALLOWED) += devmem_is_allowed.o
+>  
+> diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
+> new file mode 100644
+> index 000000000000..4d7930b65107
+> --- /dev/null
+> +++ b/lib/fortify_kunit.c
+> @@ -0,0 +1,77 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Runtime test cases for CONFIG_FORTIFY_SOURCE that aren't expected to
+> + * Oops th kernel on success. (For those, see drivers/misc/lkdtm/fortify.c)
+> + *
+> + * For corner cases with UBSAN, try testing with:
+> + *
+> + * ./tools/testing/kunit/kunit.py run --arch=x86_64 \
+> + *	--kconfig_add CONFIG_FORTIFY_SOURCE=y \
+> + *	--kconfig_add CONFIG_UBSAN=y \
+> + *	--kconfig_add CONFIG_UBSAN_TRAP=y \
+> + *	--kconfig_add CONFIG_UBSAN_BOUNDS=y \
+> + *	--kconfig_add CONFIG_UBSAN_LOCAL_BOUNDS=y \
+> + *	--make_options LLVM=1 fortify
+> + */
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <kunit/test.h>
+> +#include <linux/string.h>
+> +#include <linux/init.h>
+> +
+> +static const char array_of_10[] = "this is 10";
+> +static const char *ptr_of_11 = "this is 11!";
+> +static char array_unknown[] = "compiler thinks I might change";
+> +
+> +static void known_sizes_test(struct kunit *test)
+> +{
+> +	KUNIT_EXPECT_EQ(test, __compiletime_strlen("88888888"), 8);
+> +	KUNIT_EXPECT_EQ(test, __compiletime_strlen(array_of_10), 10);
+> +	KUNIT_EXPECT_EQ(test, __compiletime_strlen(ptr_of_11), 11);
+> +
+> +	KUNIT_EXPECT_EQ(test, __compiletime_strlen(array_unknown), SIZE_MAX);
+> +	/* Externally defined and dynamically sized string pointer: */
+> +	KUNIT_EXPECT_EQ(test, __compiletime_strlen(saved_command_line), SIZE_MAX);
+> +}
+
+I noticed that my allmodconfig + ThinLTO builds broke with this change:
+
+  $ make -skj"$(nproc)" ARCH=arm64 KCONFIG_ALLCONFIG=<(printf "CONFIG_%s=n\nCONFIG_%s=n\nCONFIG_%s=y\nCONFIG_%s=n\n" GCOV_KERNEL KASAN LTO_CLANG_THIN WERROR) LLVM=1 mrproper allmodconfig all
+  ...
+  ERROR: modpost: "saved_command_line" [lib/fortify_kunit.ko] undefined!
+  ...
+
+saved_command_line is not exported to modules. This appears to be
+related to the fact that CONFIG_KCSAN gets enabled due to the way
+KCONFIG_ALLCONFIG works, as the issue does not show up in our CI, which
+uses merge_config.sh.
+
+A smaller reproducer on top of defconfig:
+
+  $ make -skj"$(nproc)" ARCH=arm64 LLVM=1 defconfig
+
+  $ scripts/config \
+  -d LTO_NONE \
+  -e EXPERT \
+  -e FORTIFY_SOURCE \
+  -e KCSAN \
+  -e LTO_CLANG_THIN \
+  -m FORTIFY_KUNIT_TEST \
+  -m KUNIT
+
+  $ make -skj"$(nproc)" ARCH=arm64 LLVM=1 olddefconfig all
+  ...
+  ERROR: modpost: "saved_command_line" [lib/fortify_kunit.ko] undefined!
+  ...
+
+I don't see this without LTO. Is this a compiler problem?
+
+Small note, Marco's patch is needed to avoid a separate linking error
+with ToT LLVM:
+
+https://lore.kernel.org/20220912094541.929856-1-elver@google.com/
+
+Cheers,
+Nathan
