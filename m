@@ -2,220 +2,103 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6055C54EE9
-	for <linux-hardening@archiver.kernel.org>; Tue, 13 Sep 2022 14:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 224B4C54EE9
+	for <linux-hardening@archiver.kernel.org>; Tue, 13 Sep 2022 18:20:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232403AbiIMOFY (ORCPT
+        id S231699AbiIMSUP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 13 Sep 2022 10:05:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48562 "EHLO
+        Tue, 13 Sep 2022 14:20:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232398AbiIMOFX (ORCPT
+        with ESMTP id S231797AbiIMSTw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 13 Sep 2022 10:05:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B2DA1C11A;
-        Tue, 13 Sep 2022 07:05:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BE363614A5;
-        Tue, 13 Sep 2022 14:05:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A243C433D6;
-        Tue, 13 Sep 2022 14:05:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663077919;
-        bh=l+g8X+5c9ZV49QCN0e48clP+/b2LReYleUFUA2MJqk4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u5DQ5p36wAYtlKQPGvG+TFdcomyrLnxf2LurnnNlzmhAS/z9t/qcvL+BFugsDrKb1
-         vZOKNEElLVvbp3okXuzouJ+cPuCfjYG22bMD49PrXPN04MJpsYyIO2GFMakNQU3IR9
-         tU7J+Mcu49eZvyRbbLGH1KUjXopp6d5jR/2SAaLrnYrx8Le5TEhHDYUu9CNe0lOjMw
-         k+doJa/ziXNaGoHJxX0VO/ofzdNEhwCJSP4CZ7RPiLX7Lvk4lByhpe6zN36w9LtbqW
-         02ilV0Z6cXdkZBo+v4RSA/bGtaxsOelTNYD8IuJQzjEw46ORoJtGjXRSN166/nrrn0
-         unoFDCbwbPWCg==
-Date:   Tue, 13 Sep 2022 07:05:16 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
-        David Gow <davidgow@google.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Sander Vanheule <sander@svanheule.net>,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Isabella Basso <isabbasso@riseup.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biggers <ebiggers@google.com>,
-        Hannes Reinecke <hare@suse.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] fortify: Add KUnit test for FORTIFY_SOURCE
- internals
-Message-ID: <YyCOHOchVuE/E7vS@dev-arch.thelio-3990X>
-References: <20220902204351.2521805-1-keescook@chromium.org>
- <20220902204351.2521805-3-keescook@chromium.org>
+        Tue, 13 Sep 2022 14:19:52 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29BFB11836
+        for <linux-hardening@vger.kernel.org>; Tue, 13 Sep 2022 10:31:44 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id t3so12551812ply.2
+        for <linux-hardening@vger.kernel.org>; Tue, 13 Sep 2022 10:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=Gw0b/81HfJ5tL+5LyBxFbpOnUFRI9K6fakOJwgdIs4w=;
+        b=L/oqvvV6GOLA1AiyhHGZl5HHSX6HegtB0t/8UtsP/YHCaFwH7cWF5SpmdWwRqigHnD
+         rHbIidBu/xcmFbrHUWVkzxrLS4BadO+8BSR+/u9V12SsRldZIpeXH9dDiQxm49TRaOUP
+         UV+V2bgYOE+YruaDs2eV0GMSqSL5Z3bJibdjM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=Gw0b/81HfJ5tL+5LyBxFbpOnUFRI9K6fakOJwgdIs4w=;
+        b=XWOl/w6GAXhEhrt3l3rTmLzwglm7/cZskpIAAgKj4mIDjSdSf33cVvDMl4GD6AL7/A
+         To+O2pf83Uvy+LIrwcI5K6Nrm8ksJJsqwwPVPzyF9hEKkRfoiFrujdyKBJUbe7YHDz9L
+         LxmKjvty9dmFT9B23HGNOSNknmjcYUMs786Gyb5pMKNjaKdbH+Ls/FZLnl/7K9BwomXQ
+         PuN5Xi+cUs5N0spqBEtDncxVnHGKSPM415KjDIfdUuVdwW3h578niuLcZ6j3AREC5IkE
+         Ng0IiucXDEDk+DSWp3GCfLEPveGbJ/muKloDhHHkZvx7OQ7e5QqV0F3LZZfVhRHQ+tez
+         Us/g==
+X-Gm-Message-State: ACgBeo3A7/Cn4Y+wxvNwIFo3sV8GvlSIeSh686o/OBtbeu5t9MhtD14r
+        nphdht04BdWfi0GRgU/nO+Qf1Q==
+X-Google-Smtp-Source: AA6agR7epHxme3Qu6qPXLD/c5OHjVB8E45VPdhCLrqtLAHcFdhR6bw+VOK+ulm5XxPOfDDqRx7qt0g==
+X-Received: by 2002:a17:902:d4d2:b0:178:491b:40d with SMTP id o18-20020a170902d4d200b00178491b040dmr3658887plg.79.1663090303562;
+        Tue, 13 Sep 2022 10:31:43 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c199-20020a624ed0000000b0053ea0e5556esm8145068pfb.186.2022.09.13.10.31.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Sep 2022 10:31:42 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-hardening@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] fortify: Adjust KUnit test for modular build
+Date:   Tue, 13 Sep 2022 10:31:36 -0700
+Message-Id: <20220913173136.1926909-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220902204351.2521805-3-keescook@chromium.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1397; h=from:subject; bh=DVKixzI/1Uq9/WcWKrACKKNlNlq3870R18e1hHH3W/s=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjIL538mxMOqQRTEL1TpLdBSueUkOmgI4R2uu80ed8 u7VM+fuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYyC+dwAKCRCJcvTf3G3AJgFrD/ 43l3P5+2WCgY4LemxD7cZFJj22YwHfA7mLqBfkLnb/yOQpYk3WMvFc/x29tLsf/amlNX4E+oR871DU YCDueRMLNaNUmQo9IKyoK9kvbW3+vh5OqHBaM95S3y9FFPV3n1l/AFwwOU5b+Hq26k6bqLXM0ChGN7 qUeO5KajI4lsL6YuQfPr5wwxeB34ki63D0qiJYjJA5yKSKdko/aklacyY0Y4uNqT7FgF3RWpMSe50c AtqpuXhnvrfcC1It2EsV/ncAE4vjagxczAIMlZZHk+lkL0x22ukZZaeRm5TZQajnjBXW2xj5xsvc9s Du8SZ9l2Qlk0YVyMdXD6PvlFGvihKh6j+Bp8OaTej8ln1s2eFe7hRq0GUZaYgEoRamihHNPFvo+Wkt EzK7fy7Tnezck711uNYYinuhTX9pjvWpLGnloCTO7ph5XBdqI/s2GGMnLoOFICnVRXhci/1046+jSx P7+VJNLFnffcdHFbIb5OUZTKN6xuIY+0LRYK4BlEU9a9K7FMHPM1BfjYXvreOA9UDyw0jBAw2TdK1j 4SPRnGI5G67MRMcvaEDkkQFYX1xOYUAVvznJ7iSRHvT3nBcuCgk3Wbe2nGDD0P6/MDSDNsZ4u3boDj hZwOEBbRA6S57fZSFTBoTGw9xL58HJcq5AxwIH5r1ZHWPaM9MJWDjfWvqI1A==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
+A much better "unknown size" string pointer is available directly from
+struct test, so use that instead of a global that isn't shared with
+modules.
 
-On Fri, Sep 02, 2022 at 01:43:50PM -0700, Kees Cook wrote:
-> Add lib/fortify_kunit.c KUnit test for checking the expected behavioral
-> characteristics of FORTIFY_SOURCE internals.
-> 
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Tom Rix <trix@redhat.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> Cc: David Gow <davidgow@google.com>
-> Cc: Yury Norov <yury.norov@gmail.com>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Sander Vanheule <sander@svanheule.net>
-> Cc: linux-hardening@vger.kernel.org
-> Cc: llvm@lists.linux.dev
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  MAINTAINERS         |  1 +
->  lib/Kconfig.debug   |  9 ++++++
->  lib/Makefile        |  1 +
->  lib/fortify_kunit.c | 77 +++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 88 insertions(+)
->  create mode 100644 lib/fortify_kunit.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 9d7f64dc0efe..640115472199 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8002,6 +8002,7 @@ L:	linux-hardening@vger.kernel.org
->  S:	Supported
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
->  F:	include/linux/fortify-string.h
-> +F:	lib/fortify_kunit.c
->  F:	lib/test_fortify/*
->  F:	scripts/test_fortify.sh
->  K:	\b__NO_FORTIFY\b
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 36455953d306..1f267c0ddffd 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -2542,6 +2542,15 @@ config STACKINIT_KUNIT_TEST
->  	  CONFIG_GCC_PLUGIN_STRUCTLEAK, CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF,
->  	  or CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL.
->  
-> +config FORTIFY_KUNIT_TEST
-> +	tristate "Test fortified str*() and mem*() function internals at runtime" if !KUNIT_ALL_TESTS
-> +	depends on KUNIT && FORTIFY_SOURCE
-> +	default KUNIT_ALL_TESTS
-> +	help
-> +	  Builds unit tests for checking internals of FORTIFY_SOURCE as used
-> +	  by the str*() and mem*() family of functions. For testing runtime
-> +	  traps of FORTIFY_SOURCE, see LKDTM's "FORTIFY_*" tests.
-> +
->  config TEST_UDELAY
->  	tristate "udelay test driver"
->  	help
-> diff --git a/lib/Makefile b/lib/Makefile
-> index f545140ed9e7..4ee1ceae945a 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -381,6 +381,7 @@ obj-$(CONFIG_IS_SIGNED_TYPE_KUNIT_TEST) += is_signed_type_kunit.o
->  obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow_kunit.o
->  CFLAGS_stackinit_kunit.o += $(call cc-disable-warning, switch-unreachable)
->  obj-$(CONFIG_STACKINIT_KUNIT_TEST) += stackinit_kunit.o
-> +obj-$(CONFIG_FORTIFY_KUNIT_TEST) += fortify_kunit.o
->  
->  obj-$(CONFIG_GENERIC_LIB_DEVMEM_IS_ALLOWED) += devmem_is_allowed.o
->  
-> diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
-> new file mode 100644
-> index 000000000000..4d7930b65107
-> --- /dev/null
-> +++ b/lib/fortify_kunit.c
-> @@ -0,0 +1,77 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Runtime test cases for CONFIG_FORTIFY_SOURCE that aren't expected to
-> + * Oops th kernel on success. (For those, see drivers/misc/lkdtm/fortify.c)
-> + *
-> + * For corner cases with UBSAN, try testing with:
-> + *
-> + * ./tools/testing/kunit/kunit.py run --arch=x86_64 \
-> + *	--kconfig_add CONFIG_FORTIFY_SOURCE=y \
-> + *	--kconfig_add CONFIG_UBSAN=y \
-> + *	--kconfig_add CONFIG_UBSAN_TRAP=y \
-> + *	--kconfig_add CONFIG_UBSAN_BOUNDS=y \
-> + *	--kconfig_add CONFIG_UBSAN_LOCAL_BOUNDS=y \
-> + *	--make_options LLVM=1 fortify
-> + */
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <kunit/test.h>
-> +#include <linux/string.h>
-> +#include <linux/init.h>
-> +
-> +static const char array_of_10[] = "this is 10";
-> +static const char *ptr_of_11 = "this is 11!";
-> +static char array_unknown[] = "compiler thinks I might change";
-> +
-> +static void known_sizes_test(struct kunit *test)
-> +{
-> +	KUNIT_EXPECT_EQ(test, __compiletime_strlen("88888888"), 8);
-> +	KUNIT_EXPECT_EQ(test, __compiletime_strlen(array_of_10), 10);
-> +	KUNIT_EXPECT_EQ(test, __compiletime_strlen(ptr_of_11), 11);
-> +
-> +	KUNIT_EXPECT_EQ(test, __compiletime_strlen(array_unknown), SIZE_MAX);
-> +	/* Externally defined and dynamically sized string pointer: */
-> +	KUNIT_EXPECT_EQ(test, __compiletime_strlen(saved_command_line), SIZE_MAX);
-> +}
+Reported-by: Nathan Chancellor <nathan@kernel.org>
+Link: https://lore.kernel.org/lkml/YyCOHOchVuE/E7vS@dev-arch.thelio-3990X
+Fixes: 875bfd5276f3 ("fortify: Add KUnit test for FORTIFY_SOURCE internals")
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Whoops! Thanks Nathan! :) This fixes it for your reproducer.
+---
+ lib/fortify_kunit.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-I noticed that my allmodconfig + ThinLTO builds broke with this change:
+diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
+index 99bc0ea60d27..409af07f340a 100644
+--- a/lib/fortify_kunit.c
++++ b/lib/fortify_kunit.c
+@@ -17,7 +17,6 @@
+ 
+ #include <kunit/test.h>
+ #include <linux/string.h>
+-#include <linux/init.h>
+ 
+ static const char array_of_10[] = "this is 10";
+ static const char *ptr_of_11 = "this is 11!";
+@@ -31,7 +30,7 @@ static void known_sizes_test(struct kunit *test)
+ 
+ 	KUNIT_EXPECT_EQ(test, __compiletime_strlen(array_unknown), SIZE_MAX);
+ 	/* Externally defined and dynamically sized string pointer: */
+-	KUNIT_EXPECT_EQ(test, __compiletime_strlen(saved_command_line), SIZE_MAX);
++	KUNIT_EXPECT_EQ(test, __compiletime_strlen(test->name), SIZE_MAX);
+ }
+ 
+ /* This is volatile so the optimizer can't perform DCE below. */
+-- 
+2.34.1
 
-  $ make -skj"$(nproc)" ARCH=arm64 KCONFIG_ALLCONFIG=<(printf "CONFIG_%s=n\nCONFIG_%s=n\nCONFIG_%s=y\nCONFIG_%s=n\n" GCOV_KERNEL KASAN LTO_CLANG_THIN WERROR) LLVM=1 mrproper allmodconfig all
-  ...
-  ERROR: modpost: "saved_command_line" [lib/fortify_kunit.ko] undefined!
-  ...
-
-saved_command_line is not exported to modules. This appears to be
-related to the fact that CONFIG_KCSAN gets enabled due to the way
-KCONFIG_ALLCONFIG works, as the issue does not show up in our CI, which
-uses merge_config.sh.
-
-A smaller reproducer on top of defconfig:
-
-  $ make -skj"$(nproc)" ARCH=arm64 LLVM=1 defconfig
-
-  $ scripts/config \
-  -d LTO_NONE \
-  -e EXPERT \
-  -e FORTIFY_SOURCE \
-  -e KCSAN \
-  -e LTO_CLANG_THIN \
-  -m FORTIFY_KUNIT_TEST \
-  -m KUNIT
-
-  $ make -skj"$(nproc)" ARCH=arm64 LLVM=1 olddefconfig all
-  ...
-  ERROR: modpost: "saved_command_line" [lib/fortify_kunit.ko] undefined!
-  ...
-
-I don't see this without LTO. Is this a compiler problem?
-
-Small note, Marco's patch is needed to avoid a separate linking error
-with ToT LLVM:
-
-https://lore.kernel.org/20220912094541.929856-1-elver@google.com/
-
-Cheers,
-Nathan
