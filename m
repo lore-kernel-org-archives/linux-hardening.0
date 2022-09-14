@@ -2,122 +2,93 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0435BECAAD8
-	for <linux-hardening@archiver.kernel.org>; Wed, 14 Sep 2022 12:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A60ECAAD3
+	for <linux-hardening@archiver.kernel.org>; Wed, 14 Sep 2022 13:59:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229484AbiINMnt (ORCPT
+        id S229809AbiINN7h (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 14 Sep 2022 08:43:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37980 "EHLO
+        Wed, 14 Sep 2022 09:59:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbiINMnf (ORCPT
+        with ESMTP id S229734AbiINN7f (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 14 Sep 2022 08:43:35 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A5BB6F549
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Sep 2022 05:43:34 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id b23so14782562pfp.9
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Sep 2022 05:43:34 -0700 (PDT)
+        Wed, 14 Sep 2022 09:59:35 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2067D1CF
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Sep 2022 06:59:27 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id i19so11129627pgi.1
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Sep 2022 06:59:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date;
-        bh=6HaMASJeI7VMr+J/w1U/7Y+iVc+bp9rpXJjlWqnTPLw=;
-        b=YIzBzY+v6xs/YMxj4iWLDwa/3sG54JjLXtKkP9SzybDnugjQ28MomQ7Q/1eCEwNC0l
-         VjL/D3oz6nEQD4tjY7KbciMn3W941OhfguH0LVJkHs54gr+hW0n/a4HySJ0ImiyiOKzZ
-         AsfRjH/LDlJLXTpTJ/BNyk9Bzi3jUoZVhK4Dc=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=wavsrAyG6NiOWTam0JHv7PKYgavbpXhgMRnb2r58pdo=;
+        b=kH4L3gqh4xzjn+C8/0iA1Uc6n5BYUDTf66L2gvMLHiPbaL03lhM8U+vvbFU6sEp7kv
+         1mKFE3Mttqx8cGHXnYEBcLO+pObY56ATqdnlLUZWvRYItE2D58jJtYg4lTNIFXn1kw15
+         T1KkgtxGGBdDxPkiThQyvg8500khkMUeZL0Eg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=6HaMASJeI7VMr+J/w1U/7Y+iVc+bp9rpXJjlWqnTPLw=;
-        b=s9GqKUBEvp/gX0ZiiYkjlUHUn4yKaIA7ghNTnH36OAMIn0BiFtRtKil0T23n8jeHFa
-         WJirtL7tUYqHv1n4DofaT4iEKoLevZ5gJldu/jsCZCdBL2aAf99iGrvfLmH3q+zUwXCU
-         /nCNq3b4mEdITk0qw6eG3GlI1Scr/7iDN250rY7UT3b3LNZ35Jx0c7vJuS8DhnvOMPnf
-         a4mudFtMWke60M2uRXK5uuRiyVJnbpMrbAlVo8UOzjYI70xf6ShoQA+7ZJH+omkehPwK
-         RHGRGmGvCh1Wfnjuhrquju9aQdKpPNbc8nFBHRkMOP4OC+Lf//er6H+Rj1UDbq1w2WTG
-         KrQg==
-X-Gm-Message-State: ACgBeo1mb0+qXBiPBhDMlgaI4oOeMBFusAK6cz4VKkpW99FBNlZFM533
-        HIoFBmtJkiOcN5FLSAMYr0FwCQ==
-X-Google-Smtp-Source: AA6agR4TiCsN6kfTl9U6YZK5ujamfmLJAVu9hWCyUWJgdB0M34FkD50z4FEUai9qGVAHCkR35ai09w==
-X-Received: by 2002:a05:6a00:2449:b0:528:3a29:e79d with SMTP id d9-20020a056a00244900b005283a29e79dmr37892836pfj.39.1663159413849;
-        Wed, 14 Sep 2022 05:43:33 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=wavsrAyG6NiOWTam0JHv7PKYgavbpXhgMRnb2r58pdo=;
+        b=fD1yjikpgKkh9fy0lhHsNHZIs4Y+mSDwWEx7YImZo0O/GZ8vIhJTbXO3+GdV5cZYk7
+         tezhCKoSEACMr7+prqux+Kc6K4hMaA0UDfPycJdsnjxFDM09GNh0XUaVsO2/GrOe01c9
+         ucFZsZl5HZfw7WCQhpRd5jD9Xt8oZrwliKqw+sZMS8Wka+wy6wyQE3o2nmPpj6y7tqSR
+         jLNznshVA5byP+0mlJRHTP6CLXjcG2EAig6/83GtTYWsId+JL9kZ9KUmMIXjq99z6qbq
+         nFmOqQiHe4YYxtfgOIoSdVqglYfNR6XKkh0YP6dVSCgLvoajvnBs+IhVWZOhVOp/LeIv
+         nYcg==
+X-Gm-Message-State: ACgBeo0+/qvbQe4+f7l2eFp7m2VFKflrwNtgwVWBx7JWRLDh3vYS1J0A
+        83UGniPMl/JlDThILKp6bUDqtPUG4DYhEE5H
+X-Google-Smtp-Source: AA6agR6y4ULei98zaMifYBH1DzZDIoH+v39NLO21Q/U5CM0RCjhTsjHyJqiAC+NtcWxFmIgg5xCBFQ==
+X-Received: by 2002:a62:5443:0:b0:53b:b934:ee8e with SMTP id i64-20020a625443000000b0053bb934ee8emr38389448pfb.10.1663163966560;
+        Wed, 14 Sep 2022 06:59:26 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r12-20020a63440c000000b00439103a6c3bsm5614212pga.94.2022.09.14.05.43.32
+        by smtp.gmail.com with ESMTPSA id p8-20020a170902780800b001780cdade11sm10653354pll.51.2022.09.14.06.59.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Sep 2022 05:43:33 -0700 (PDT)
-Date:   Wed, 14 Sep 2022 05:43:32 -0700
+        Wed, 14 Sep 2022 06:59:25 -0700 (PDT)
+Date:   Wed, 14 Sep 2022 06:59:24 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     David Malcolm <dmalcolm@redhat.com>
-Cc:     linux-hardening@vger.kernel.org, j.koschel@vu.nl
-Subject: -fanalyzer thoughts
-Message-ID: <202209140501.412181C969@keescook>
+To:     David Gow <davidgow@google.com>
+Cc:     linux-hardening@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] fortify: Adjust KUnit test for modular build
+Message-ID: <202209140658.A471548@keescook>
+References: <20220913173136.1926909-1-keescook@chromium.org>
+ <CABVgOSnSsMxHQJNPs77rzA729wW1k6o17_ERqGvszFVkQ-hv_Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CABVgOSnSsMxHQJNPs77rzA729wW1k6o17_ERqGvszFVkQ-hv_Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi!
+On Wed, Sep 14, 2022 at 06:13:59PM +0800, David Gow wrote:
+> On Wed, Sep 14, 2022 at 1:31 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > A much better "unknown size" string pointer is available directly from
+> > struct test, so use that instead of a global that isn't shared with
+> > modules.
+> >
+> > Reported-by: Nathan Chancellor <nathan@kernel.org>
+> > Link: https://lore.kernel.org/lkml/YyCOHOchVuE/E7vS@dev-arch.thelio-3990X
+> > Fixes: 875bfd5276f3 ("fortify: Add KUnit test for FORTIFY_SOURCE internals")
+> > Cc: linux-hardening@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> > Whoops! Thanks Nathan! :) This fixes it for your reproducer.
+> 
+> Ah, this is better than saved_command_line, IMO. I don't think it'd
+> necessarily be a _disaster_ to just introduce a new dynamically-sized
+> string here, which would be more explicit, but test->name is at least
+> obviously related to this file anyway.
 
-Thanks for the talk today! I sent a patch for the aic79xx_osm.c issue
-you mentioned:
-https://lore.kernel.org/linux-hardening/20220914115953.3854029-1-keescook@chromium.org/
+Yeah, and I'm trying to explicitly use a string that the compiler won't
+immediately be able to see through, so best to get it from an external
+source.
 
-I didn't have a chance to add some more comments and ask a question
-before the session ended, so here I am in email, CCing the kernel
-hardening list in case other folks want to chime in. :)
-
-You asked, "Should I try to have GCC type-check __user vs __kernel,
-or leave it to sparse?" I would *love* to get this in the compiler
-proper. Not nearly enough people are running sparse, so its output has
-become quite noisy, which means more and more regressions are slipping
-into the kernel. I was surprised a while back to discover that kernel's
-use of the address_space and noderef attributes weren't supported by
-GCC. It does seems like it'd make a good attribute (for which there
-is existing precedent), rather than polluting the global namespace,
-as AVR does:
-https://gcc.gnu.org/onlinedocs/gcc/Named-Address-Spaces.html
-
-Clang seems to support the address_space and noderef attributes:
-https://clang.llvm.org/docs/LanguageExtensions.html#memory-references-to-specified-segments
-https://clang.llvm.org/docs/AttributeReference.html#noderef
-But when I tried a while back to make it work, it fell over:
-https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=clang/address_space&id=beff911c13390a71b3f7921fd82ec6a71ca75c02
-If these get implemented in GCC, it'd be good to coordinate with Clang
-too, to make sure it works sanely in the kernel.
-
-
-The question I had was if you had seen this LPC presentation:
-https://lpc.events/event/16/contributions/1211/
-"How I started chasing speculative type confusion bugs in the kernel and
-ended up with 'real' ones"
-
-The authors used Clang's "Data Flow Sanitizer" and built a working
-taint/sink system that seems like it could be used for MUCH more analysis
-than just what they were looking it (as they hint at too).
-https://clang.llvm.org/docs/DataFlowSanitizer.html
-https://github.com/vusec/kdfsan-linux/commit/45614ee1a3a0d7b98c5cecb1b747184279bc615c
-
-I wonder if DFSan could be ported to GCC? It seems to overlap logically
-with some of the -fanalyzer work, but I don't know the internals for
-either, so I likely have no idea what I'm talking about. ;)
-
-
-Related, I wonder if LTO builds would help with -fanalyzer's control
-flow analysis? (DFSan requires LTO.) Getting the kernel built with LTO
-under GCC seems to be an on-going project, but no pull requests have
-been sent lately:
-https://git.kernel.org/pub/scm/linux/kernel/git/jirislaby/linux.git/log/?h=lto
-Maybe poking them from your side might help that get landed? I think
-people are interested in having LTO for the kernel for the performance
-gains it can provide.
-
-The second-to-last slide in my presentation (in the "bonus slides"
-section) has slightly more context about LTO and the kernel:
-https://lpc.events/event/16/contributions/1173/
-https://outflux.net/slides/2022/lpc/features.pdf
+> Reviewed-by: David Gow <davidgow@google.com>
 
 Thanks!
 
