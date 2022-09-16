@@ -2,237 +2,157 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6B9ECAAA1
-	for <linux-hardening@archiver.kernel.org>; Thu, 15 Sep 2022 07:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5051ECAAA1
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Sep 2022 02:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229905AbiIOHBV (ORCPT
+        id S229715AbiIPCH0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 15 Sep 2022 03:01:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40472 "EHLO
+        Thu, 15 Sep 2022 22:07:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbiIOHA6 (ORCPT
+        with ESMTP id S229881AbiIPCHX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 15 Sep 2022 03:00:58 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 754CB6EF24;
-        Wed, 14 Sep 2022 23:59:53 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 2FE6834408;
-        Thu, 15 Sep 2022 06:59:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1663225184; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kdnXllucHTBxA/9FI9xK/SZO/LJMpNDoSBwXpB+lP/U=;
-        b=iij8+nSqwufZdvdJ2t334oHkzyxe58whIyBuaEg0+Bsh+w9NBTymS7lTSjW35nSwVIkcYN
-        jW7kBeB1HQmshMtjLZuMFzf1TvvTBcHe0HVncT3ZvjlYH1htoPbfVSElrmDjwvyc1nWFTp
-        LeyZlh5G4xs1eL+OuFdwF+ON3WYeA1I=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DF2F2139C8;
-        Thu, 15 Sep 2022 06:59:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 4k04NF/NImN8VQAAMHmgww
-        (envelope-from <jgross@suse.com>); Thu, 15 Sep 2022 06:59:43 +0000
-Message-ID: <fa6df43b-8a1a-8ad1-0236-94d2a0b588fa@suse.com>
-Date:   Thu, 15 Sep 2022 08:59:43 +0200
+        Thu, 15 Sep 2022 22:07:23 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D279091080;
+        Thu, 15 Sep 2022 19:07:21 -0700 (PDT)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28G1wwrS013432;
+        Fri, 16 Sep 2022 02:02:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : content-type :
+ mime-version; s=corp-2022-7-12;
+ bh=scCH+h51keDgOLhbGIcaAGqj3bs+A1rdoNJQN/gdVAE=;
+ b=sGvV3thvz/YuXYXUh/OlKxfzkSxMm5xDivaU5JMpYFocfr1bLCbpiJE4ohAC7nXmUvma
+ C+JEwV2uFtJMUW4fjhv1ez9lPbT6/fTEEGqYMA4apVMkNKaHLL/3RLzwOMpdXeCN+WCr
+ stc18szhkbpy5zWPHkgNp0FgCCvDjJOCHB2mQPiN/sBIf3PjptQWqWYLNvCTmwEtFBGL
+ DZTVuYokjSfTOORC7prrLziIt5N8KkWnxF3BekzS5DPcH8q6pHkZoAQsMA31pheLvkjT
+ STXrYxcenrdEjX0age9JdAuTEyfQaS9PCfRGdMtLTll0Rov8dhDE5bybdEmDaEPhJkuB aQ== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3jm8xb94dj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Sep 2022 02:02:12 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 28G0OxxF040138;
+        Fri, 16 Sep 2022 02:02:11 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3jm8x6ngut-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Sep 2022 02:02:11 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YlCjNpJysfpCf5jMie/Eal7OlCF7P5yPo+R4l+W7ulrM48/eL1FV2Q1AJUWXYQ6sUzr7WOaMQPGuYzjuoVBextWprbVYktLVTa32eIWTkJAiEf1wbPHnGI+9tI+2AuAmG18H70bEB1T5Bmu7eKZVCthfOLir/E+RkZNSO9rowFwjuQAKsGL0y6xDNrKt0Dhliyyo+N4Ra75rRm06kQxPN7NcetfL7l+MVDtAnYm/zZUCMJUNxKLDwWFKvA4xukmOlYbXA+36hkdDNaXlfyjmf9EICmtnRGyj0/n1qgXDF+I0zn4A85pL4Xjo+u7EEe5fV9n7eBHceODoGxF6ONE8HQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=scCH+h51keDgOLhbGIcaAGqj3bs+A1rdoNJQN/gdVAE=;
+ b=HeS+ClqZOM8H+GLC1PZtCJ+DoGObvv5ApIy7YFxsHa/1qlWfXdDRIsw4ZkDpCrlMBjP5PxKfVozDoI+WlWx0R+Lh0/1Yz/2Lc8lo1coZYvumFw2xoX0TMj01F0NVIBDRCstBsf1urNV56qQ/o7AXyrcy3KnIxSNm5zSwFGtZ9OKVevXee4maIkPTwN5lZPZ0UGUD7a0QCZmOmrWrZRc0wFOxbz2GWzF+M3qeR4D8aCviZqMrSQh7fWYdnT1L4Z83DmtJntm4ZlwkJo9rP4fUvQivvrfkHgp6tqHBpL34N2KoXwBjdEvYGmDIRc3eZnrqhhh2HD2p8RKRIpN0H21oUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=scCH+h51keDgOLhbGIcaAGqj3bs+A1rdoNJQN/gdVAE=;
+ b=rCCNVL81pdGrZCqIcvsvAe44SSJficRBIjX85JU9kR5bDJpiNhSE4aEND65DTQX5pVQOFv6rlacqG+u47WmYtCAlHVeYcUejj9wE1pMOdHC8rHy3Aui1Ark1rhTsxvkiARkkH6DuT0DGwWj15iuErNLw85nFHziGIUy+tElaewA=
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by DM4PR10MB6013.namprd10.prod.outlook.com (2603:10b6:8:ae::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5612.19; Fri, 16 Sep 2022 02:02:09 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::297f:836:f424:cd75]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::297f:836:f424:cd75%3]) with mapi id 15.20.5632.015; Fri, 16 Sep 2022
+ 02:02:09 +0000
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Hannes Reinecke <hare@suse.com>,
+        David Malcolm <dmalcolm@redhat.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] scsi: aic79xx: Use __ro_after_init explicitly
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq17d242i26.fsf@ca-mkp.ca.oracle.com>
+References: <20220914115953.3854029-1-keescook@chromium.org>
+Date:   Thu, 15 Sep 2022 22:02:06 -0400
+In-Reply-To: <20220914115953.3854029-1-keescook@chromium.org> (Kees Cook's
+        message of "Wed, 14 Sep 2022 04:59:53 -0700")
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR05CA0015.namprd05.prod.outlook.com
+ (2603:10b6:a03:c0::28) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH v2 1/1] x86/paravirt: write paravirt ident function in
- assembly
-Content-Language: en-US
-To:     Bill Wendling <morbo@google.com>, linux-hardening@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        x86@kernel.org, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nathan Chancellor <nathan@kernel.org>
-References: <20220902213750.1124421-1-morbo@google.com>
- <20220914162149.71271-1-morbo@google.com>
-From:   Juergen Gross <jgross@suse.com>
-In-Reply-To: <20220914162149.71271-1-morbo@google.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------0vgYhJCAdT99yLwH4iU1YHhU"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|DM4PR10MB6013:EE_
+X-MS-Office365-Filtering-Correlation-Id: de61fb2a-dd4c-4f1d-0ca1-08da978776b0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: BODlKSsPJM8/7LGufMCT4LbmoXOScbQP4p0PUseRaJF+6/U+LmKXrCNsBxjLKpiFHCbydOlMauZLiaTRc7DgQUsSBeVorGopfCtx3d5kScX1FEd12cJfvED6rFcWyLC0ibTcu7x7Lz454NBDZi1yC/fS2Zr0E/Gc0ROza64qwceFFWwWzOQ9+s9dSFt1muSBVLfl5EZq/dwRmO9pAAq08Dh11IE9bP2zcZfrlC/RVfLBJalvcdSjY5b2VnDGLZThBssCu6d8oljUOge3/tTxVE1YmU4tFWnX8Y5rqtzwxJZ7No1Y5AjY4xKfi14xXs/pJZJX7h6Y7Q56SFKsaDDab36NJfZrSOANevq5B29Egv7auM6PTdTAVUZoeClGMpD18lLs3+PFlokL4MlilOaUxFq2mhxp++vfEac45WMd/3B3Abm06vevBKoOXaY5uJrBvmFC0l34VB62gLPywLXim1rxJ3HP5bpWwr9Koz14Irwya7tJnlFi4qXtAjuFssTlZQhyOWayu6+8/64Yco+T6m0pHe6NFpVomjr/tzOw3LRzqYh25J9Ny3rR690Zy3Zt/rWiEylqItXWt4YohhkkErtC6QHcW8o/4r07fq32nJ22ZQvd3BtxiaohRujJ489b9zoUfFwo+WBW21TH7wV1K2ipFw88IQ5tBnvBMcNyvZj5kcHT9yA0u3qplDJk6lnankdjNzG0SrR9351uN86Hlw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(346002)(376002)(39860400002)(366004)(396003)(451199015)(478600001)(2906002)(4744005)(316002)(86362001)(36916002)(66946007)(8676002)(6666004)(8936002)(6506007)(4326008)(6512007)(66556008)(66476007)(6486002)(6916009)(38100700002)(54906003)(26005)(41300700001)(186003)(5660300002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?haOrWD8XIEOC9nn0c4Yoh27ixLLKCJf5GtqH/P033etxdSCc3bA+kD9ik7uC?=
+ =?us-ascii?Q?rHQe65xyFBZgYeD6ouGinPnFdfl+F1yjhHAM3quIVVffuuiHHT4q6YuRC7kK?=
+ =?us-ascii?Q?lPGfeIsEDrLASWBfGYaUEmy6IulRKczpRhAkbyyCJWQZzls8lDFhHFhidaq5?=
+ =?us-ascii?Q?AnuVD7C9GpWT4/ss3od+pm1pWQWmKnWa674jCEpwqscgUERdYkUg58BTfdSQ?=
+ =?us-ascii?Q?DtB2hlX6OgRai18xZp7vwsunDjjzZ9MXd1NirEBqkdSqilPzkEiTn0DHI2PY?=
+ =?us-ascii?Q?QqNZBdneb3HLFfZRM+mwvy5hZBPflJ782DugMMehP111QH+y2IpOrCMrrjMY?=
+ =?us-ascii?Q?XRGdnuBuwgtCD0XKoDjvbcwrGRUGH9g56u5AWYanRTrrWk8wArEdtnc29i/D?=
+ =?us-ascii?Q?WSyuifikLmqRNl21acWBT+uikjPfv5afz+nTOAllEkjNHxOvoGw1Abo2HMij?=
+ =?us-ascii?Q?cSLttuc5xpDAJtSLvnvsm0XWV4IaP4HAwrJGk6JW9QFpfLvfp3Wu++I7SDrr?=
+ =?us-ascii?Q?Uw5Yi/+BbsO/KpSbOoCMeuO0OLJBJREIPuaD6912ZzAC0keGTAgXcupgeQPw?=
+ =?us-ascii?Q?z8odIo4cpgzAp6nBW660ctxcrrgG20dfwDZw9Jwzads7O+41Iu+xZI+fsBqg?=
+ =?us-ascii?Q?yJb7vn1DsDtiTZ5NzcfVY1SzJU+mBJRcEpI7wpuGcxcIXXUJOdfjeI1fbbiJ?=
+ =?us-ascii?Q?Jhbp6A9s+AgCOAKwPx8f61GtdPDrFXRc6FI95MWHh/JdKXjB3S3t+JFT6X3Y?=
+ =?us-ascii?Q?pFLwjUw/tSTL/+EgeVXyW3Vd8puRJSinK+0owUo52vwZ/sEbvl2wp111J+QP?=
+ =?us-ascii?Q?ojHm4uemmQgvpNryLocXGVlkClE6BYvdSDjK0ShNDqEHvBgK8W9zfsldFG1p?=
+ =?us-ascii?Q?pdphAwPW0SraeTKM4FIJ8Qqh9/w60uPh9h3S3criS19uhtnrNIn+Aqsxpzu4?=
+ =?us-ascii?Q?Umco2E3A/84gKPWOmIzaO8s5oEEPFGm83tM3zkN6vR4nFtUGN71kKqxrDhyL?=
+ =?us-ascii?Q?nPdj2UmX8QJYKF/fcbIOst2GFcTH3FeExrHDUOna3lsRhSDffxRtgHKi8gqT?=
+ =?us-ascii?Q?hg/javTngGT+TUMdK0sOPOWevdvCscB9zdee1Sr0/pjf93H+eLPDb3TdhLsk?=
+ =?us-ascii?Q?+QKuz73NircBZR7o5Asjh7UEsSqVunKVCf3R7WoxDU90dPNP9zrdMKlzCgH1?=
+ =?us-ascii?Q?K10MTHJG+TjipFcr+Xeank+V782tq21+Wfrj99j12xHHo6NQJoB+w1mCK1vG?=
+ =?us-ascii?Q?MLDg1ssj1p6DXmoEcRmI6BUSnukkXneMP+5pAezPbpZgw/tM0xn/808mBxv7?=
+ =?us-ascii?Q?3QJZZELAK8C1p/ZiND6YZ/8kOy95xeNDMNtxVA8BqhNlWNIDRhN7XWBz5249?=
+ =?us-ascii?Q?dIyw06LQwceXNy8POyJuR2+ejGOmKPj5Wp0/8/nZI7vmln6ZY39qUxWe8zKM?=
+ =?us-ascii?Q?0mbI4PCKeYCuEVf25e6JbMPSNJ8+q3oCCEzfCHxsWCYjWlELB6vGpA0d5kHq?=
+ =?us-ascii?Q?OrrieFiwj2A+Vli9Be6SKDbAYrJP3k4PvcNrKdTBnvDHMxMke9PTemRnpDbG?=
+ =?us-ascii?Q?PSs2uacidV0ogasJEF6EKCeuTeQP2JJZ8uk+i42G1bgMrx4aj09SW7fQntBU?=
+ =?us-ascii?Q?0w=3D=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: de61fb2a-dd4c-4f1d-0ca1-08da978776b0
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2022 02:02:09.6161
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uxhODeOpk/dpd84CmylCwwhzxqS6I0VENdbKDU5w/jsHgmwoyZWZNLGRI/5L1lwIXB9d7rGzMYXnnOYEUkzOIjAukH6vtADC0LF/DVkblh8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB6013
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-15_10,2022-09-14_04,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=842 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2209130000
+ definitions=main-2209160013
+X-Proofpoint-ORIG-GUID: X7ku0oNU4dLm0IDC3cHtCs0j9vUglGz2
+X-Proofpoint-GUID: X7ku0oNU4dLm0IDC3cHtCs0j9vUglGz2
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------0vgYhJCAdT99yLwH4iU1YHhU
-Content-Type: multipart/mixed; boundary="------------xYaDk5VXNS0yYjga337i39Ay";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Bill Wendling <morbo@google.com>, linux-hardening@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>,
- Nick Desaulniers <ndesaulniers@google.com>,
- "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
- Alexey Makhalov <amakhalov@vmware.com>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- VMware PV-Drivers Reviewers <pv-drivers@vmware.com>, x86@kernel.org,
- virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>,
- Nathan Chancellor <nathan@kernel.org>
-Message-ID: <fa6df43b-8a1a-8ad1-0236-94d2a0b588fa@suse.com>
-Subject: Re: [PATCH v2 1/1] x86/paravirt: write paravirt ident function in
- assembly
-References: <20220902213750.1124421-1-morbo@google.com>
- <20220914162149.71271-1-morbo@google.com>
-In-Reply-To: <20220914162149.71271-1-morbo@google.com>
 
---------------xYaDk5VXNS0yYjga337i39Ay
-Content-Type: multipart/mixed; boundary="------------auY0lbM04uuXeWa1GPAl40xG"
+Kees,
 
---------------auY0lbM04uuXeWa1GPAl40xG
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+> ahd_linux_setup_iocell_info() intentionally writes to the const-marked
+> aic79xx_iocell_info array, but is called during __init, so the
+> location is actually writable at this point on most
+> architectures. Annotate this explicitly with __ro_after_init to avoid
+> static analysis confusion.
 
-T24gMTQuMDkuMjIgMTg6MjEsIEJpbGwgV2VuZGxpbmcgd3JvdGU6DQo+IFRoZSBaRVJPX0NB
-TExfVVNFRF9SRUdTIGZlYXR1cmUgbWF5IHplcm8gb3V0IGNhbGxlci1zYXZlZCByZWdpc3Rl
-cnMNCj4gYmVmb3JlIHJldHVybmluZy4gSG93ZXZlciwgYWx0ZXJuYXRlIGNvZGUgbWF5IGNh
-bGwgdGhpcyBmdW5jdGlvbiB3aXRob3V0DQo+IGZpcnN0IHNhdmluZyAlW3JlXWRpLCBiZWNh
-dXNlIHRoZSBwcm9wZXIgY2xvYmJlcnMgYXJlbid0IHRha2VuIGludG8NCj4gYWNjb3VudC4N
-Cj4gDQo+IFRoaXMgc2hvd3MgdXAgaW4gc3B1cmlvdXNfa2VybmVsX2ZhdWx0KCkgd2hlcmUg
-dGhlICJwdGVfb2Zmc2V0X2tlcm5lbCgpIg0KPiBjYWxsIHJlc3VsdHMgaW4gdGhpcyBhc3Nl
-bWJseSBjb2RlOg0KPiANCj4gLkx0bXAxNTE6DQo+ICAgICAgICAgICNBUFANCj4gICAgICAg
-ICAgIyBBTFQ6IG9sZG5zdHINCj4gLkx0bXAxNTI6DQo+IC5MdG1wMTUzOg0KPiAuTHRtcDE1
-NDoNCj4gICAgICAgICAgLnNlY3Rpb24gICAgICAgIC5kaXNjYXJkLnJldHBvbGluZV9zYWZl
-LCIiLEBwcm9nYml0cw0KPiAgICAgICAgICAucXVhZCAgIC5MdG1wMTU0DQo+ICAgICAgICAg
-IC50ZXh0DQo+IA0KPiAgICAgICAgICBjYWxscSAgICpwdl9vcHMrNTM2KCVyaXApDQo+IA0K
-PiAuTHRtcDE1NToNCj4gICAgICAgICAgLnNlY3Rpb24gICAgICAgIC5wYXJhaW5zdHJ1Y3Rp
-b25zLCJhIixAcHJvZ2JpdHMNCj4gICAgICAgICAgLnAyYWxpZ24gICAgICAgIDMsIDB4MA0K
-PiAgICAgICAgICAucXVhZCAgIC5MdG1wMTUzDQo+ICAgICAgICAgIC5ieXRlICAgNjcNCj4g
-ICAgICAgICAgLmJ5dGUgICAuTHRtcDE1NS0uTHRtcDE1Mw0KPiAgICAgICAgICAuc2hvcnQg
-IDENCj4gICAgICAgICAgLnRleHQNCj4gLkx0bXAxNTY6DQo+ICAgICAgICAgICMgQUxUOiBw
-YWRkaW5nDQo+ICAgICAgICAgIC56ZXJvICAgKC0oKCguTHRtcDE1Ny0uTHRtcDE1OCktKC5M
-dG1wMTU2LS5MdG1wMTUyKSk+MCkpKigoLkx0bXAxNTctLkx0bXAxNTgpLSguTHRtcDE1Ni0u
-THRtcDE1MikpLDE0NA0KPiAuTHRtcDE1OToNCj4gICAgICAgICAgLnNlY3Rpb24gICAgICAg
-IC5hbHRpbnN0cnVjdGlvbnMsImEiLEBwcm9nYml0cw0KPiAuTHRtcDE2MDoNCj4gICAgICAg
-ICAgLmxvbmcgICAuTHRtcDE1Mi0uTHRtcDE2MA0KPiAuTHRtcDE2MToNCj4gICAgICAgICAg
-LmxvbmcgICAuTHRtcDE1OC0uTHRtcDE2MQ0KPiAgICAgICAgICAuc2hvcnQgIDMzMDQwDQo+
-ICAgICAgICAgIC5ieXRlICAgLkx0bXAxNTktLkx0bXAxNTINCj4gICAgICAgICAgLmJ5dGUg
-ICAuTHRtcDE1Ny0uTHRtcDE1OA0KPiAgICAgICAgICAudGV4dA0KPiANCj4gICAgICAgICAg
-LnNlY3Rpb24gICAgICAgIC5hbHRpbnN0cl9yZXBsYWNlbWVudCwiYXgiLEBwcm9nYml0cw0K
-PiAgICAgICAgICAjIEFMVDogcmVwbGFjZW1lbnQgMQ0KPiAuTHRtcDE1ODoNCj4gICAgICAg
-ICAgbW92cSAgICAlcmRpLCAlcmF4DQo+IC5MdG1wMTU3Og0KPiAgICAgICAgICAudGV4dA0K
-PiAgICAgICAgICAjTk9fQVBQDQo+IC5MdG1wMTYyOg0KPiAgICAgICAgICB0ZXN0YiAgICQt
-MTI4LCAlZGlsDQo+IA0KPiBUaGUgJWRpbCByZWdpc3RlciB3YXMgemVyb2VkIG91dCBieSB0
-aGUgY2FsbCB0byAiKnB2X29wcys1MzYoJXJpcCkiLg0KPiANCj4gSW4gZ2VuZXJhbCwgdGhl
-IF9wYXJhdmlydF9pZGVudF82NCgpIGZ1bmN0aW9uIGFwcGVhcnMgbGlrZSBpdCBzaG91bGRu
-J3QNCj4gaGF2ZSBhbnkgaW5zdHJ1bWVudGF0aW9uIG9yIG90aGVyIG1vZGlmaWNhdGlvbnMg
-YXBwbGllZCB0byBpdC4gVGh1cyBqdXN0DQo+IHdyaXRlIGl0IGluIGFzc2VtYmx5IHRvIGF2
-b2lkIGhhdmluZyB0byBjb250aW51YWxseSBtb2RpZnkgaXQgd2hlbmV2ZXIgYQ0KPiBuZXcg
-ZmVhdHVyZSBjb21lcyBhbG9uZy4NCj4gDQo+IExpbms6IGh0dHBzOi8vZ2l0aHViLmNvbS9L
-U1BQL2xpbnV4L2lzc3Vlcy8xOTINCj4gQ2M6IEtlZXMgQ29vayA8a2Vlc2Nvb2tAY2hyb21p
-dW0ub3JnPg0KPiBDYzogTmljayBEZXNhdWxuaWVycyA8bmRlc2F1bG5pZXJzQGdvb2dsZS5j
-b20+DQo+IENjOiBKdWVyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+DQo+IENjOiAiU3Jp
-dmF0c2EgUy4gQmhhdCAoVk13YXJlKSIgPHNyaXZhdHNhQGNzYWlsLm1pdC5lZHU+DQo+IENj
-OiBBbGV4ZXkgTWFraGFsb3YgPGFtYWtoYWxvdkB2bXdhcmUuY29tPg0KPiBDYzogVGhvbWFz
-IEdsZWl4bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+DQo+IENjOiBJbmdvIE1vbG5hciA8bWlu
-Z29AcmVkaGF0LmNvbT4NCj4gQ2M6IEJvcmlzbGF2IFBldGtvdiA8YnBAYWxpZW44LmRlPg0K
-PiBDYzogRGF2ZSBIYW5zZW4gPGRhdmUuaGFuc2VuQGxpbnV4LmludGVsLmNvbT4NCj4gQ2M6
-ICJILiBQZXRlciBBbnZpbiIgPGhwYUB6eXRvci5jb20+DQo+IENjOiBWTXdhcmUgUFYtRHJp
-dmVycyBSZXZpZXdlcnMgPHB2LWRyaXZlcnNAdm13YXJlLmNvbT4NCj4gQ2M6IHg4NkBrZXJu
-ZWwub3JnDQo+IENjOiB2aXJ0dWFsaXphdGlvbkBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9y
-Zw0KPiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBDYzogbGx2bUBsaXN0
-cy5saW51eC5kZXYNCj4gU2lnbmVkLW9mZi1ieTogQmlsbCBXZW5kbGluZyA8bW9yYm9AZ29v
-Z2xlLmNvbT4NCj4gU3VnZ2VzdGVkLWJ5OiBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJh
-ZGVhZC5vcmc+DQo+IFJlcG9ydGVkLWFuZC10ZXN0ZWQtYnk6IE5hdGhhbiBDaGFuY2VsbG9y
-IDxuYXRoYW5Aa2VybmVsLm9yZz4NCg0KUmV2aWV3ZWQtYnk6IEp1ZXJnZW4gR3Jvc3MgPGpn
-cm9zc0BzdXNlLmNvbT4NCg0KDQpKdWVyZ2VuDQo=
---------------auY0lbM04uuXeWa1GPAl40xG
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Applied to 6.1/scsi-staging, thanks!
 
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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
-jR/i1DG86lem3iBDXzXsZDn8R38=3D
-=3D2wuH
------END PGP PUBLIC KEY BLOCK-----
-
---------------auY0lbM04uuXeWa1GPAl40xG--
-
---------------xYaDk5VXNS0yYjga337i39Ay--
-
---------------0vgYhJCAdT99yLwH4iU1YHhU
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmMizV8FAwAAAAAACgkQsN6d1ii/Ey+S
-ngf6AiUmo44nTAiwuyj5V7vut20xvukrRy36fFE4rN0XcEe+T7S2FyXNgKHuFyg8yhBDQYJRPk1k
-vh399GNEFTCZv2N+OoNydC9GbUnjoI1bc7u1ePak3ECVuJhsuqN7S+8DjSBaIBMY6zevMo/lj0fc
-h6SakTejcSXZHV59n8cNvSqXdRPL4OlhN8uu2SlF2kJh3fadPlixGLFJ7x5HtV4fAe0JQoEDPjGa
-1YJyLUoT1p1qxb1kpSRy4z0ivyGug02xUILR2NLB2AjdXYz5fHEDrt+cfW83Mlbex+ldx9016e8J
-EXjNCdMhgQ3G7MUobi7lmvDZRY+oR6EXJ7Itd5zSpw==
-=MqkD
------END PGP SIGNATURE-----
-
---------------0vgYhJCAdT99yLwH4iU1YHhU--
+-- 
+Martin K. Petersen	Oracle Linux Engineering
