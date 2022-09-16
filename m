@@ -2,96 +2,87 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F44EECAAD8
-	for <linux-hardening@archiver.kernel.org>; Fri, 16 Sep 2022 14:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4E2C54EE9
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Sep 2022 14:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230164AbiIPOPQ (ORCPT
+        id S231175AbiIPOm7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 16 Sep 2022 10:15:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56746 "EHLO
+        Fri, 16 Sep 2022 10:42:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231325AbiIPOPN (ORCPT
+        with ESMTP id S230449AbiIPOm6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 16 Sep 2022 10:15:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EA833CBD6;
-        Fri, 16 Sep 2022 07:15:11 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 597066277E;
-        Fri, 16 Sep 2022 14:15:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2302C433D6;
-        Fri, 16 Sep 2022 14:15:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663337709;
-        bh=ZP/LxkFN5dV5vhW4DgkYG+8YyHxvLgZVftkuiKVPu7M=;
-        h=Date:From:To:Cc:Subject:From;
-        b=j2UFEmLJdjhCi7rpTJe3YiWaumoVT7ncJfH1W+mqqPrQmS0A2NAC8tc2Mi9fVUal/
-         MVCNPOqdgl6SIUYDPBti2lPFcGA0UxNYMe5WqjITsvIFgoCVaTDmMvUSwQlmOgs6SP
-         mqB2usFMLP47Qw8doPEduBZ/+6Quyk05vMhF694Vz2j5TALOyhxEsC5/wPac2kCxhC
-         s6hnaPHw4ICg5bachbAgoGma8zf098TFxYPZfsB9cB6TADN4rWwcUg/pHkGegF267o
-         NOKzeD7o4tCWNJljcMVUn9lnLRsRUy1qpKLlyS6W2EezwpzI76sqNf6JKmIi/zyCog
-         ZemiUfmafvcMQ==
-Date:   Fri, 16 Sep 2022 15:15:04 +0100
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Fri, 16 Sep 2022 10:42:58 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 645414E607
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Sep 2022 07:42:57 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id w13so5992342plp.1
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Sep 2022 07:42:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date;
+        bh=CczDj0L6fyErXarjYUw/nJButDiDyt2jg/VsMlHD9x0=;
+        b=OulnIc0PtMHK6HBr/Ps6pXumK5u3z46zD9qTpwgCt3YZ9WlxymyQYofzW2uXiYqD68
+         l+1dCUz9ozdNUjkvCBpAKBX7kXamXafBqAitnxJWe/mgSPrKxR+LqZz1ASr2cVF+MT0i
+         FqQW0UwdPP0m9XW+ODPsEEuMnSXwGDAiQYCCg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=CczDj0L6fyErXarjYUw/nJButDiDyt2jg/VsMlHD9x0=;
+        b=MGRMB4z0+lcCpjNJTXC/yPtWsZo7X5nuK4RLVdu6D1PNsjIIzw3u3LDRRxDWT9Q6DZ
+         NQ1+cQ4HHM0PbwzGJMZpV+pjzLBzRco8DHGoezKkb/Y0A4ZjuPXDEHk+0NpbgvWxKFi3
+         jsD3wE+qnMxs3JnaGFmuNWomE0V3N+3D6naNWEvHwwRFAio7fGfTQoqfOwGTmFuvR+Ln
+         y5119m4vxX4HHVTULry8dzWRkk9I2Otm3tiiLR9s1mNlaZP7bjGNIH9nkJ2WAgPEY4RX
+         Yb0gYKwKvlqh3zG5SzNhxv4HCSNqQtSKvN7BCp85coZFXlrInFkoLi1Uz2bTXIYoNC1K
+         BQTQ==
+X-Gm-Message-State: ACrzQf1K9gdZkBJm0V7ewLfQNW8URxq13F+SWk5bO96X6MASHXX0rckr
+        kEitzjDXmTDbrT+oTpYXL3amCg==
+X-Google-Smtp-Source: AMsMyM6fN+pgEnc/ncnyOHdVfzsAk03A4QioD6WtmLqIzn6JzDwi9BxnF+gf8QmMz6pDubaM926hUw==
+X-Received: by 2002:a17:902:b693:b0:178:5fa6:4b3 with SMTP id c19-20020a170902b69300b001785fa604b3mr170800pls.63.1663339376925;
+        Fri, 16 Sep 2022 07:42:56 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m17-20020a637d51000000b0042ff6b0cf4dsm13491251pgn.58.2022.09.16.07.42.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Sep 2022 07:42:56 -0700 (PDT)
+Date:   Fri, 16 Sep 2022 07:42:55 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
         Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] powerpc/xmon: Fix -Wswitch-unreachable warning in
+Subject: Re: [PATCH][next] powerpc/xmon: Fix -Wswitch-unreachable warning in
  bpt_cmds
-Message-ID: <YySE6FHiOcbWWR+9@work>
+Message-ID: <202209160742.81BE54E@keescook>
+References: <YySE6FHiOcbWWR+9@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <YySE6FHiOcbWWR+9@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-When building with automatic stack variable initialization, GCC 12
-complains about variables defined outside of switch case statements.
-Move the variable into the case that uses it, which silences the warning:
+On Fri, Sep 16, 2022 at 03:15:04PM +0100, Gustavo A. R. Silva wrote:
+> When building with automatic stack variable initialization, GCC 12
+> complains about variables defined outside of switch case statements.
+> Move the variable into the case that uses it, which silences the warning:
+> 
+> arch/powerpc/xmon/xmon.c: In function ‘bpt_cmds’:
+> arch/powerpc/xmon/xmon.c:1529:13: warning: statement will never be executed [-Wswitch-unreachable]
+>  1529 |         int mode;
+>       |             ^~~~
+> 
+> Fixes: 09b6c1129f89 ("powerpc/xmon: Fix compile error with PPC_8xx=y")
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-arch/powerpc/xmon/xmon.c: In function ‘bpt_cmds’:
-arch/powerpc/xmon/xmon.c:1529:13: warning: statement will never be executed [-Wswitch-unreachable]
- 1529 |         int mode;
-      |             ^~~~
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Fixes: 09b6c1129f89 ("powerpc/xmon: Fix compile error with PPC_8xx=y")
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- arch/powerpc/xmon/xmon.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
-index 26ef3388c24c..df91dfc7ff72 100644
---- a/arch/powerpc/xmon/xmon.c
-+++ b/arch/powerpc/xmon/xmon.c
-@@ -1525,9 +1525,9 @@ bpt_cmds(void)
- 	cmd = inchar();
- 
- 	switch (cmd) {
--	static const char badaddr[] = "Only kernel addresses are permitted for breakpoints\n";
--	int mode;
--	case 'd':	/* bd - hardware data breakpoint */
-+	case 'd': {	/* bd - hardware data breakpoint */
-+		static const char badaddr[] = "Only kernel addresses are permitted for breakpoints\n";
-+		int mode;
- 		if (xmon_is_ro) {
- 			printf(xmon_ro_msg);
- 			break;
-@@ -1560,6 +1560,7 @@ bpt_cmds(void)
- 
- 		force_enable_xmon();
- 		break;
-+	}
- 
- 	case 'i':	/* bi - hardware instr breakpoint */
- 		if (xmon_is_ro) {
 -- 
-2.34.1
-
+Kees Cook
