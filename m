@@ -2,102 +2,128 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BAAC54EE9
-	for <linux-hardening@archiver.kernel.org>; Fri, 16 Sep 2022 13:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74902C54EE9
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Sep 2022 14:01:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231621AbiIPNbw (ORCPT
+        id S229703AbiIPOBq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 16 Sep 2022 09:31:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38260 "EHLO
+        Fri, 16 Sep 2022 10:01:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231571AbiIPNbu (ORCPT
+        with ESMTP id S231792AbiIPOBi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 16 Sep 2022 09:31:50 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 894E872FC1
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Sep 2022 06:31:49 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id d64-20020a17090a6f4600b00202ce056566so16257799pjk.4
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Sep 2022 06:31:49 -0700 (PDT)
+        Fri, 16 Sep 2022 10:01:38 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79B9DAEDBE
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Sep 2022 07:01:36 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id iw17so21560916plb.0
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Sep 2022 07:01:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=KgBYor1Htf/vgvjRNDzZz0OSBXCS1g2qA2z8v/wMsdQ=;
-        b=duV1RS8TM2EGZ6omH4ubcEo80bgH2kyZd5qyDXZXa3PhTBC8+KG+to4g1PhL106fEN
-         2Ce5cVmi6xX3gbz38EE8qox07VoXA4Av+FZJ80wWOZ6UV6i5CZqldo0nA14gKiagdGWT
-         bAcrvdodiN1cfiDHSyxQittJvsK3g6HcGnXF8=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=dshUPBRJIl5fQ3m+ssb6SG/5FdHYdXyc9t5E5ytWG7A=;
+        b=KJywVQRZtjplc5TGof+5IB3YhDZ1cj4PaRPTirKpaoAWiDyUT37EbdBi/Y6B5Gkr8z
+         ZDGs/2FeL1kKj4BlkwYnaHp7WI0rXBLKeFN8+DRFRPbwxeTpjaP1Wch813VfZj3402OV
+         NBI/x++MrNCGX13ciSjAaHPqJlIQFUpAaYvDs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=KgBYor1Htf/vgvjRNDzZz0OSBXCS1g2qA2z8v/wMsdQ=;
-        b=JTFL7/8lgLdSdFL2ikQcYeVt8dbGaFM8Su8IVgNaVk4KaKN+aJzwFAqTixFXxCT2jo
-         +VqONxGBiPik/y5h2/3+tBkiR1sQwWPI8fIShzCFuSoTeZXGzzh1MgkelQw5QcGdaJS1
-         DR0Q0+f+Xk1eECTWgtdgIMJh9lBTvEhQt8hXWh6NzfSon39DjlI7vojM+kfr2N+OQ41T
-         iHIVbIYVhgXOxvqKW3zm6I+Em7TJGvxamgzKJ4QXiBOVjOgGYLD/rBsJQELqfS/YMxGZ
-         8jpOKyQmVM4Kj6bNhcKz34/Dae9VrSXgO14m3D08+S5n4bEv7G06e7ATK0DB3Rk2HdBx
-         L06Q==
-X-Gm-Message-State: ACrzQf3+9JGukfKF88L7X3ib3X3qaSa5Iy0oTSa8tk8OTq/dAkZh9F9Q
-        alPn52Lm63Oi6gm69v574JFxS3bi/cYAPH3q
-X-Google-Smtp-Source: AMsMyM7bICOZH0WwwuU7fNoFf+LgOTWBrxWtoTyS+ATZwpycmOgrlRhY8fZfiOYOKBnDvxk46dEb3g==
-X-Received: by 2002:a17:903:110f:b0:178:8756:6e5e with SMTP id n15-20020a170903110f00b0017887566e5emr938412plh.12.1663335108874;
-        Fri, 16 Sep 2022 06:31:48 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=dshUPBRJIl5fQ3m+ssb6SG/5FdHYdXyc9t5E5ytWG7A=;
+        b=ySqxfrtfGYY2v2DM+qO4xikdLPDeVUYNwtqbWwx4tRRCPuH5D6ozsXqC7h6r9yRfRb
+         mKdDU0Wc9pHQLxYqOxME/Zoy9x8O+RAX3cPpjAOcVw/HvqqgijTqbz+/xO/7Lox07nRv
+         FEUJqPgwJFNNSN10qDwVUSEJDVj0VdgyMds96Y/oj9TyXRGV0iA6mVKz0nAA6AyT5/Tm
+         YbDMZOaHUq/r5CE4DQeLm4bO8s35ZvOhbKKLxXvDFz9eqAAQ0io+InCqj/TS2uYlDtiS
+         HquqmpnLV14b/W/pi7t2GNfvQrTBGCmZ5SeLSYJ+w/+LlGAqGF+WvJXHNcl4+Wi0n5IY
+         qGiQ==
+X-Gm-Message-State: ACrzQf1dJy3yyQU1p3HfSBNnVLrmQ9pQvxpm6FpGymnU2lbzOSmwKi+j
+        dI1VdDMiglmomw+wNXQXosxj/Q==
+X-Google-Smtp-Source: AMsMyM7FPr3ttzTgQ3tdx2Q+bJSysj1THjM5T1H6W7iKbf+UddOl/uTNkl6+XFWhGvTzSAnFX79yeA==
+X-Received: by 2002:a17:902:7586:b0:172:d0de:7a3c with SMTP id j6-20020a170902758600b00172d0de7a3cmr32332pll.38.1663336895957;
+        Fri, 16 Sep 2022 07:01:35 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s15-20020a63524f000000b00434acf7a05fsm13723090pgl.45.2022.09.16.06.31.46
+        by smtp.gmail.com with ESMTPSA id b6-20020a170903228600b0017693bb573bsm14977334plh.219.2022.09.16.07.01.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Sep 2022 06:31:46 -0700 (PDT)
-Date:   Fri, 16 Sep 2022 06:31:45 -0700
+        Fri, 16 Sep 2022 07:01:26 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] i2c: mux: harden i2c_mux_alloc() against integer
- overflows
-Message-ID: <202209160630.CF7AE9708D@keescook>
-References: <YyMM8iVSHJ4ammsg@kili>
- <YyMt2cWtHC2SeG62@work>
- <YyMyKQnWgu0SL6jj@kadam>
- <202209160101.2A240E9@keescook>
- <YyQyfaI0WCsQ8F48@kadam>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yu Zhao <yuzhao@google.com>, dev@der-flo.net,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: [PATCH 0/3] x86/dumpstack: Inline copy_from_user_nmi()
+Date:   Fri, 16 Sep 2022 06:59:51 -0700
+Message-Id: <20220916135953.1320601-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YyQyfaI0WCsQ8F48@kadam>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2403; h=from:subject; bh=jSBWpoIe+6cXWMHiTXIhWphUWHU4ykwNIRUXr/4DVx4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjJIFYo65hwFSmDvAvVocaTPb9H0pjJ5jbJ7o1uk2n 7dnNUeyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYySBWAAKCRCJcvTf3G3AJn3rD/ 9E8k/SZ03fsh80iTtJMwqtgbWeq4LfkrcDgACQDybAdhEFe8UHobkHfxFqe6Z7tB1wx1vROAEIMkv9 OrPukObMRJnjWlBukozI//Ks1UA9gQ3KJn7BbLOEGbxc9AMfj7Wop2uuKRIOggTLyxe3tdhzGyykf5 bhkr2yF1yC9qMEDhRZc3HSEPVb7OEONYglnwtkW1kYNxp6oxLocVk2cAic+RN30J2kTVBD3eh7cc1k PIsEwvnF5H5tYncJ3OuXpeOr8bNwOBowuiIz+GZjpjAZbIOo46wxO1Vr+nk7EsvnJOitcIshSkSXIN l6NITgMsLU/1+lKx8HewHzXqdxutwRZHQSR2ktPvG9Iz4BPlk5IYve4WaGayIGX3XJtl8+dhWFq3mS aBjA/aeSmI/+C49lcOiRqtaSe9++BLdnXoxn76HMoSeu+zvratvPEr1qquwMW9zd1bDy1Rs85XPDDS v6KoaYTS7+tYjgb+7O0UbVD4gcQSjy7WIdZIKAAEbR8Ndy4rIN11XJUBUjmRVFrA3KHRgVSJswyH+B 24ev76tRD9itGgmlrzqJ8J52zbYZeHFfnP75AomCUdEmHSmE+BRq8QqZl4PtZAi1BMhPupcPrRa+Nz 0vC/C3W6/62vDvtjpsXdYhWvTyMhYjvTmeW7lyuBJqY6RKIjzU+i+yrN+Idw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 16, 2022 at 11:23:25AM +0300, Dan Carpenter wrote:
-> [...]
-> net/ipv6/mcast.c:450 ip6_mc_source() saving 'size_add' to type 'int'
+Hi,
 
-Interesting! Are you able to report the consumer? e.g. I think a bunch
-of these would be fixed by:
+This fixes a find_vmap_area() deadlock. The main fix is patch 2, repeated here:
+
+    The check_object_size() helper under CONFIG_HARDENED_USERCOPY is
+    designed to skip any checks where the length is known at compile time as
+    a reasonable heuristic to avoid "likely known-good" cases. However, it can
+    only do this when the copy_*_user() helpers are, themselves, inline too.
+
+    Using find_vmap_area() requires taking a spinlock. The check_object_size()
+    helper can call find_vmap_area() when the destination is in vmap memory.
+    If show_regs() is called in interrupt context, it will attempt a call to
+    copy_from_user_nmi(), which may call check_object_size() and then
+    find_vmap_area(). If something in normal context happens to be in the
+    middle of calling find_vmap_area() (with the spinlock held), the interrupt
+    handler will hang forever.
+
+    The copy_from_user_nmi() call is actually being called with a fixed-size
+    length, so check_object_size() should never have been called in the
+    first place. In order for check_object_size() to see that the length is
+    a fixed size, inline copy_from_user_nmi(), as already done with all the
+    other uaccess helpers.
+
+    Reported-by: Yu Zhao <yuzhao@google.com>
+    Link: https://lore.kernel.org/all/CAOUHufaPshtKrTWOz7T7QFYUNVGFm0JBjvM700Nhf9qEL9b3EQ@mail.gmail.com
+    Reported-by: dev@der-flo.net
+
+Patch 1 is a refactor for patch 2, and patch 3 should make sure we avoid
+future deadlocks.
+
+Thanks,
+
+-Kees
 
 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 4cb957d934a2..f004c4d411e3 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -2552,10 +2552,11 @@ struct sk_buff *sock_omalloc(struct sock *sk, unsigned long size,
- /*
-  * Allocate a memory block from the socket's option memory buffer.
-  */
--void *sock_kmalloc(struct sock *sk, int size, gfp_t priority)
-+void *sock_kmalloc(struct sock *sk, size_t size, gfp_t priority)
- {
--	if ((unsigned int)size <= sysctl_optmem_max &&
--	    atomic_read(&sk->sk_omem_alloc) + size < sysctl_optmem_max) {
-+	if (size > INT_MAX || size > sysctl_optmem_max)
-+		return NULL;
-+	if (atomic_read(&sk->sk_omem_alloc) < sysctl_optmem_max - size) {
- 		void *mem;
- 		/* First do the add, to avoid the race if kmalloc
- 		 * might sleep.
+Kees Cook (3):
+  x86/uaccess: Move nmi_uaccess_okay() into uaccess.h
+  x86/dumpstack: Inline copy_from_user_nmi()
+  usercopy: Add find_vmap_area_try() to avoid deadlocks
 
+ arch/x86/events/core.c          |  1 -
+ arch/x86/include/asm/tlbflush.h |  3 --
+ arch/x86/include/asm/uaccess.h  |  5 ++--
+ arch/x86/kernel/dumpstack.c     |  4 +--
+ arch/x86/lib/Makefile           |  2 +-
+ arch/x86/lib/usercopy.c         | 52 ---------------------------------
+ include/asm-generic/tlb.h       |  9 ------
+ include/linux/uaccess.h         | 50 +++++++++++++++++++++++++++++++
+ include/linux/vmalloc.h         |  1 +
+ kernel/trace/bpf_trace.c        |  2 --
+ mm/usercopy.c                   | 11 ++++++-
+ mm/vmalloc.c                    | 11 +++++++
+ 12 files changed, 78 insertions(+), 73 deletions(-)
+ delete mode 100644 arch/x86/lib/usercopy.c
 
 -- 
-Kees Cook
+2.34.1
+
