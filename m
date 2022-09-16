@@ -2,98 +2,94 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F20C6FA90
-	for <linux-hardening@archiver.kernel.org>; Fri, 16 Sep 2022 19:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30235ECAAA1
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Sep 2022 21:31:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229893AbiIPT51 (ORCPT
+        id S229614AbiIPVba (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 16 Sep 2022 15:57:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51102 "EHLO
+        Fri, 16 Sep 2022 17:31:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229684AbiIPT50 (ORCPT
+        with ESMTP id S229454AbiIPVba (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 16 Sep 2022 15:57:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2EC4B6D68;
-        Fri, 16 Sep 2022 12:57:25 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5E48562CA2;
-        Fri, 16 Sep 2022 19:57:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4599FC433D6;
-        Fri, 16 Sep 2022 19:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-        s=korg; t=1663358244;
-        bh=toDD/DKP6ej2h13IFCfqAwO2xnElND7IEzQWcWOhAqI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fhlmuao9gEG+AEm6I2K7+XKwGMFg0YwspJcIDXhJE3SqUlTamt3OveKskBKFPKz7e
-         7vt/kU0mHM9Nzc0uzQSp9mKiWSIbf+Mbfsy6aLoW1h0glwmkKUk8EaeFBHea3rxm0I
-         QJQ64gI3IHdtu9eZ+E6nOBptuTupvwO0jn6Rffoc=
-Date:   Fri, 16 Sep 2022 12:57:23 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Yu Zhao <yuzhao@google.com>, dev@der-flo.net,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH 0/3] x86/dumpstack: Inline copy_from_user_nmi()
-Message-Id: <20220916125723.b4c189d09bcd8fd211a73c32@linux-foundation.org>
-In-Reply-To: <20220916135953.1320601-1-keescook@chromium.org>
-References: <20220916135953.1320601-1-keescook@chromium.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 16 Sep 2022 17:31:30 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEF2BA6AC9
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Sep 2022 14:31:25 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id s206so21506717pgs.3
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Sep 2022 14:31:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=gAOpf4VaiyzuyzEgBlSDI/rb/mxIT2fGVc3O4sRyz8Q=;
+        b=ESaZCkLet+Qy6/RvuyqCTnQHokSf4VLHnPureVwo7ogYklmGP1Sztila7n66Rd4Rpx
+         p8mM7GZYSPEVPVnneskMYs3iQhwxLf9yo9KPvmptyMHSHdIHgLLpttwzX2mDEzYLLpST
+         vioqg93hpJQCo9Uc4aIg3ueQPLLjc07hHzXxk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=gAOpf4VaiyzuyzEgBlSDI/rb/mxIT2fGVc3O4sRyz8Q=;
+        b=sh/eiCpgmyAxhOi071KeMUemd2wHdWZuZSCTXWquHtia+P1DF4GvJZM3cmWHCmcrRl
+         XUBv8QX+pKMI2xgexhpjDrLVJEpHXctA1LlnmtSnfrJwIRfVjnYPvOQH+R3edKbq8F8q
+         IJkjengDIUStJJ1zTQlfNWtSeQEXp+i1UmT1OFPBvB22djXTz9qeC5yBFXNMfyzAAK3a
+         NqtpW8kI5mEbrcn/4JDmCQ/QdYW9ItXI0bpkUBrV+UiuB3neDe2y3bI0dmyvka14aWOh
+         cye+HpeCjl8HXsXAKsUXRHi59PKJBs+tOdVLv9tJhXN59DgrCf9wVb4xnfcFqENB8ZQ0
+         5+gQ==
+X-Gm-Message-State: ACrzQf2gjuHgGFowx+uYNHAdsjZ+355ETV3Lwe9/pETHNbVpNutYCkTY
+        U+0jY/gBYhGpVIhwnaAwSTqbFA==
+X-Google-Smtp-Source: AMsMyM6NXdExmvfrm3oknYIgGPotEd25We5Echz9dev/PyZDMj2iXCY/P49FQgqOgPGc3Lo0M3EjBQ==
+X-Received: by 2002:a05:6a02:309:b0:434:d151:639e with SMTP id bn9-20020a056a02030900b00434d151639emr6100944pgb.124.1663363885331;
+        Fri, 16 Sep 2022 14:31:25 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z11-20020a170902cccb00b00173cfaed233sm15307582ple.62.2022.09.16.14.31.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Sep 2022 14:31:23 -0700 (PDT)
+Date:   Fri, 16 Sep 2022 14:31:22 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] i2c: mux: harden i2c_mux_alloc() against integer
+ overflows
+Message-ID: <202209160812.2B4AB7FC@keescook>
+References: <YyMM8iVSHJ4ammsg@kili>
+ <YyMt2cWtHC2SeG62@work>
+ <YyMyKQnWgu0SL6jj@kadam>
+ <202209160101.2A240E9@keescook>
+ <YyQyfaI0WCsQ8F48@kadam>
+ <202209160630.CF7AE9708D@keescook>
+ <YySOewo2YUY+fk1l@kadam>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YySOewo2YUY+fk1l@kadam>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 16 Sep 2022 06:59:51 -0700 Kees Cook <keescook@chromium.org> wrote:
-
-> Hi,
+On Fri, Sep 16, 2022 at 05:55:55PM +0300, Dan Carpenter wrote:
+> On Fri, Sep 16, 2022 at 06:31:45AM -0700, Kees Cook wrote:
+> > On Fri, Sep 16, 2022 at 11:23:25AM +0300, Dan Carpenter wrote:
+> > > [...]
+> > > net/ipv6/mcast.c:450 ip6_mc_source() saving 'size_add' to type 'int'
+> > 
+> > Interesting! Are you able to report the consumer? e.g. I think a bunch
+> > of these would be fixed by:
+> > 
 > 
-> This fixes a find_vmap_area() deadlock. The main fix is patch 2, repeated here:
-> 
->     The check_object_size() helper under CONFIG_HARDENED_USERCOPY is
->     designed to skip any checks where the length is known at compile time as
->     a reasonable heuristic to avoid "likely known-good" cases. However, it can
->     only do this when the copy_*_user() helpers are, themselves, inline too.
-> 
->     Using find_vmap_area() requires taking a spinlock. The check_object_size()
->     helper can call find_vmap_area() when the destination is in vmap memory.
->     If show_regs() is called in interrupt context, it will attempt a call to
->     copy_from_user_nmi(), which may call check_object_size() and then
->     find_vmap_area(). If something in normal context happens to be in the
->     middle of calling find_vmap_area() (with the spinlock held), the interrupt
->     handler will hang forever.
-> 
->     The copy_from_user_nmi() call is actually being called with a fixed-size
->     length, so check_object_size() should never have been called in the
->     first place. In order for check_object_size() to see that the length is
->     a fixed size, inline copy_from_user_nmi(), as already done with all the
->     other uaccess helpers.
-> 
+> Are you asking if I can add "passed to sock_kmalloc()" to the report?
 
-Why is this so complicated.
+Yeah.
 
-There's virtually zero value in running all those debug checks from within
-copy_from_user_nmi().
+> It's possible but it's kind of a headache the way this code is written.
 
---- a/arch/x86/lib/usercopy.c~a
-+++ a/arch/x86/lib/usercopy.c
-@@ -44,7 +44,7 @@ copy_from_user_nmi(void *to, const void
- 	 * called from other contexts.
- 	 */
- 	pagefault_disable();
--	ret = __copy_from_user_inatomic(to, from, n);
-+	ret = raw_copy_from_user(to, from, n);
- 	pagefault_enable();
- 
- 	return ret;
-_
+Okay, no worries -- I was curious if it would be "easy". I can happily
+just spit out the source line.
 
+-- 
+Kees Cook
