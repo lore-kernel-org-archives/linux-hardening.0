@@ -2,106 +2,92 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 968DDC6FA90
-	for <linux-hardening@archiver.kernel.org>; Mon, 19 Sep 2022 14:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35ACFC6FA91
+	for <linux-hardening@archiver.kernel.org>; Mon, 19 Sep 2022 14:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbiISOq4 (ORCPT
+        id S229842AbiISOvK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 19 Sep 2022 10:46:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57964 "EHLO
+        Mon, 19 Sep 2022 10:51:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229713AbiISOqz (ORCPT
+        with ESMTP id S229570AbiISOvI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 19 Sep 2022 10:46:55 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61439EE1A;
-        Mon, 19 Sep 2022 07:46:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Ce3z96Js4LblxY5GROf+dxFvOAIV9SCqQWmJq0OtdtQ=; b=vSGtfB9YKERIyQrYTSjZ55U2gE
-        TWBwcP7KMMvUwB1p6Sed9omokTt09xfC8Qy6BNR4kIxwnex9L9vdPVO1SWHnn7o0cD0Oj1tPWGuEo
-        P6Z1HbOd72vni2tci7W7nl4FF+7BXfsS0iw3Dj39+aR36KeUi+uOGZ/p9W/9jHrUSlkbqdZlBAPtt
-        LyqBzXtgU+Wam/XDyijoi3GjytkxszSwGq/RG4pSghV3ugangfI6cHJy/swlUlzE2vGXFpxrPEyUU
-        IDmAGT45DdSi6on+e7EMdBfR2GqwrqtD1PVxOElaXUDK5zvehVO4+jI9wsGHQ12EoS852WGnSg/x3
-        os5LmJvQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oaI2k-004mep-Or; Mon, 19 Sep 2022 14:46:43 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BDA9F300202;
-        Mon, 19 Sep 2022 16:46:39 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A2DB32BAC7765; Mon, 19 Sep 2022 16:46:39 +0200 (CEST)
-Date:   Mon, 19 Sep 2022 16:46:39 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Yu Zhao <yuzhao@google.com>, dev@der-flo.net,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH 0/3] x86/dumpstack: Inline copy_from_user_nmi()
-Message-ID: <YyiAz4gs4TvTqrvI@hirez.programming.kicks-ass.net>
-References: <20220916135953.1320601-1-keescook@chromium.org>
- <20220916125723.b4c189d09bcd8fd211a73c32@linux-foundation.org>
+        Mon, 19 Sep 2022 10:51:08 -0400
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C97C810FDD;
+        Mon, 19 Sep 2022 07:51:02 -0700 (PDT)
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1oaI6u-0005ft-05; Mon, 19 Sep 2022 16:51:00 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id BAE67C12F2; Mon, 19 Sep 2022 16:49:36 +0200 (CEST)
+Date:   Mon, 19 Sep 2022 16:49:36 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Hauke Mehrtens <hauke@hauke-m.de>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        linux-mips@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        llvm@lists.linux.dev, kernel test robot <lkp@intel.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] MIPS: BCM47XX: Cast memcmp() of function to (void *)
+Message-ID: <20220919144936.GE7674@alpha.franken.de>
+References: <20220907230556.73536-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220916125723.b4c189d09bcd8fd211a73c32@linux-foundation.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220907230556.73536-1-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 16, 2022 at 12:57:23PM -0700, Andrew Morton wrote:
-> On Fri, 16 Sep 2022 06:59:51 -0700 Kees Cook <keescook@chromium.org> wrote:
+On Wed, Sep 07, 2022 at 04:05:56PM -0700, Kees Cook wrote:
+> Clang is especially sensitive about argument type matching when using
+> __overloaded functions (like memcmp(), etc). Help it see that function
+> pointers are just "void *". Avoids this error:
 > 
-> > Hi,
-> > 
-> > This fixes a find_vmap_area() deadlock. The main fix is patch 2, repeated here:
-> > 
-> >     The check_object_size() helper under CONFIG_HARDENED_USERCOPY is
-> >     designed to skip any checks where the length is known at compile time as
-> >     a reasonable heuristic to avoid "likely known-good" cases. However, it can
-> >     only do this when the copy_*_user() helpers are, themselves, inline too.
-> > 
-> >     Using find_vmap_area() requires taking a spinlock. The check_object_size()
-> >     helper can call find_vmap_area() when the destination is in vmap memory.
-> >     If show_regs() is called in interrupt context, it will attempt a call to
-> >     copy_from_user_nmi(), which may call check_object_size() and then
-> >     find_vmap_area(). If something in normal context happens to be in the
-> >     middle of calling find_vmap_area() (with the spinlock held), the interrupt
-> >     handler will hang forever.
-> > 
-> >     The copy_from_user_nmi() call is actually being called with a fixed-size
-> >     length, so check_object_size() should never have been called in the
-> >     first place. In order for check_object_size() to see that the length is
-> >     a fixed size, inline copy_from_user_nmi(), as already done with all the
-> >     other uaccess helpers.
-> > 
+> arch/mips/bcm47xx/prom.c:89:8: error: no matching function for call to 'memcmp'
+>                    if (!memcmp(prom_init, prom_init + mem, 32))
+>                         ^~~~~~
+> include/linux/string.h:156:12: note: candidate function not viable: no known conversion from 'void (void)' to 'const void *' for 1st argument extern int memcmp(const void *,const void *,__kernel_size_t);
 > 
-> Why is this so complicated.
+> Cc: Hauke Mehrtens <hauke@hauke-m.de>
+> Cc: "Rafał Miłecki" <zajec5@gmail.com>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: linux-mips@vger.kernel.org
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: llvm@lists.linux.dev
+> Reported-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/lkml/202209080652.sz2d68e5-lkp@intel.com
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/mips/bcm47xx/prom.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> There's virtually zero value in running all those debug checks from within
-> copy_from_user_nmi().
-> 
-> --- a/arch/x86/lib/usercopy.c~a
-> +++ a/arch/x86/lib/usercopy.c
-> @@ -44,7 +44,7 @@ copy_from_user_nmi(void *to, const void
->  	 * called from other contexts.
->  	 */
->  	pagefault_disable();
-> -	ret = __copy_from_user_inatomic(to, from, n);
-> +	ret = raw_copy_from_user(to, from, n);
->  	pagefault_enable();
->  
->  	return ret;
+> diff --git a/arch/mips/bcm47xx/prom.c b/arch/mips/bcm47xx/prom.c
+> index ab203e66ba0d..eb5c04a24531 100644
+> --- a/arch/mips/bcm47xx/prom.c
+> +++ b/arch/mips/bcm47xx/prom.c
+> @@ -86,7 +86,7 @@ static __init void prom_init_mem(void)
+>  			pr_debug("Assume 128MB RAM\n");
+>  			break;
+>  		}
+> -		if (!memcmp(prom_init, prom_init + mem, 32))
+> +		if (!memcmp((void *)prom_init, (void *)prom_init + mem, 32))
+>  			break;
+>  	}
+>  	lowmem = mem;
+> -- 
+> 2.34.1
 
-I'm with Andrew here; this looks a *LOT* saner than all the other stuff.
+applied to mips-next with the second memcmp(prom_init changed as well.
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
