@@ -2,35 +2,46 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB9FDC6FA82
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Sep 2022 07:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B197CC6FA82
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Sep 2022 07:39:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231202AbiITHPu (ORCPT
+        id S231137AbiITHj1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Sep 2022 03:15:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41232 "EHLO
+        Tue, 20 Sep 2022 03:39:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231209AbiITHPT (ORCPT
+        with ESMTP id S230448AbiITHjR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Sep 2022 03:15:19 -0400
-X-Greylist: delayed 424 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 20 Sep 2022 00:14:54 PDT
-Received: from mx.der-flo.net (mx.der-flo.net [193.160.39.236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4316D402F5;
-        Tue, 20 Sep 2022 00:14:53 -0700 (PDT)
-Received: by mx.der-flo.net (Postfix, from userid 110)
-        id CCA17160F1A; Tue, 20 Sep 2022 09:07:47 +0200 (CEST)
-Received: from localhost (unknown [IPv6:2a02:1210:22e1:1f00:fb89:69cb:433e:eb56])
+        Tue, 20 Sep 2022 03:39:17 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B796110A;
+        Tue, 20 Sep 2022 00:39:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=EPYrlVGiKpdpbA6kdaZ0jwplt5Pre4ouMyusTzUeVIw=; b=TTjE5iXBhwOeWW8cH5+inlMWz6
+        VyILMbPz2WbM62keQkmVEZNv6aaIG6qxReKBQL06UCfhcjOVaL/tiFkV7Ukhoz4pmlaojIody+6Cj
+        VXdUOzWQOWRJMOMRCMaDy2ZVEWrjIlOFgb6JWUvegtbjCnb0vfHUCxhAQRu9/PzgjvCvLd161WX1Q
+        YRBownaz/IhHrSWKJMngqQo2LzXHbQzYDhfRb49WmKpj/oj0ECv8c9YlXmpdoFuJfaotXU29c3t7M
+        xaWJUhA8/N0uksTCA4n1ngGEyqgcVzQcYI38HeQijZuQiS+I6Shpd8+X5S9KnAyAyrVu4gCUeTDLk
+        6Glkun3g==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oaXqQ-005MEW-6B; Tue, 20 Sep 2022 07:39:02 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
-        (No client certificate requested)
-        by mx.der-flo.net (Postfix) with ESMTPSA id 537E2160145;
-        Tue, 20 Sep 2022 09:07:45 +0200 (CEST)
-Date:   Tue, 20 Sep 2022 09:07:44 +0200
-From:   Florian Lehner <dev@der-flo.net>
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C069B300074;
+        Tue, 20 Sep 2022 09:38:58 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 769E42BB3E534; Tue, 20 Sep 2022 09:38:58 +0200 (CEST)
+Date:   Tue, 20 Sep 2022 09:38:58 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Matthew Wilcox <willy@infradead.org>, Yu Zhao <yuzhao@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        dev@der-flo.net, Andrew Morton <akpm@linux-foundation.org>,
         Josh Poimboeuf <jpoimboe@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
         stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
@@ -40,10 +51,10 @@ Cc:     Matthew Wilcox <willy@infradead.org>, Yu Zhao <yuzhao@google.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v2] x86/uaccess: Avoid check_object_size() in
  copy_from_user_nmi()
-Message-ID: <YylmwJOyDCPP11fg@der-flo.net>
+Message-ID: <YyluEuFn/ejLgvYk@hirez.programming.kicks-ass.net>
 References: <20220919201648.2250764-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20220919201648.2250764-1-keescook@chromium.org>
 Precedence: bulk
@@ -84,9 +95,9 @@ On Mon, Sep 19, 2022 at 01:16:48PM -0700, Kees Cook wrote:
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
-> v2: drop the call explicitly instead of using inline to do it
-> v1: https://lore.kernel.org/lkml/20220916135953.1320601-1-keescook@chromium.org
-> ---
+
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
 >  arch/x86/lib/usercopy.c | 3 ++-
 >  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
@@ -107,8 +118,3 @@ On Mon, Sep 19, 2022 at 01:16:48PM -0700, Kees Cook wrote:
 > -- 
 > 2.34.1
 > 
-
-Thanks!
-
-Tested-by: Florian Lehner <dev@der-flo.net>
-
