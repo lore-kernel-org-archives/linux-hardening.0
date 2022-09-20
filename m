@@ -2,119 +2,124 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B197CC6FA82
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Sep 2022 07:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64235C54EE9
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Sep 2022 19:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231137AbiITHj1 (ORCPT
+        id S231232AbiITTWM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Sep 2022 03:39:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46554 "EHLO
+        Tue, 20 Sep 2022 15:22:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230448AbiITHjR (ORCPT
+        with ESMTP id S230371AbiITTWK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Sep 2022 03:39:17 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B796110A;
-        Tue, 20 Sep 2022 00:39:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=EPYrlVGiKpdpbA6kdaZ0jwplt5Pre4ouMyusTzUeVIw=; b=TTjE5iXBhwOeWW8cH5+inlMWz6
-        VyILMbPz2WbM62keQkmVEZNv6aaIG6qxReKBQL06UCfhcjOVaL/tiFkV7Ukhoz4pmlaojIody+6Cj
-        VXdUOzWQOWRJMOMRCMaDy2ZVEWrjIlOFgb6JWUvegtbjCnb0vfHUCxhAQRu9/PzgjvCvLd161WX1Q
-        YRBownaz/IhHrSWKJMngqQo2LzXHbQzYDhfRb49WmKpj/oj0ECv8c9YlXmpdoFuJfaotXU29c3t7M
-        xaWJUhA8/N0uksTCA4n1ngGEyqgcVzQcYI38HeQijZuQiS+I6Shpd8+X5S9KnAyAyrVu4gCUeTDLk
-        6Glkun3g==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oaXqQ-005MEW-6B; Tue, 20 Sep 2022 07:39:02 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C069B300074;
-        Tue, 20 Sep 2022 09:38:58 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 769E42BB3E534; Tue, 20 Sep 2022 09:38:58 +0200 (CEST)
-Date:   Tue, 20 Sep 2022 09:38:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Matthew Wilcox <willy@infradead.org>, Yu Zhao <yuzhao@google.com>,
-        dev@der-flo.net, Andrew Morton <akpm@linux-foundation.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] x86/uaccess: Avoid check_object_size() in
- copy_from_user_nmi()
-Message-ID: <YyluEuFn/ejLgvYk@hirez.programming.kicks-ass.net>
-References: <20220919201648.2250764-1-keescook@chromium.org>
+        Tue, 20 Sep 2022 15:22:10 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 974FE28E0E
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Sep 2022 12:22:09 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id fs14so4107922pjb.5
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Sep 2022 12:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
+        bh=mRkb49hJ/o7sUzNJw/zHfFKhjBVcyGD1caVksculA00=;
+        b=PCUI69eggGWeXyBeTxep9IHUaH7o4uqq9Tn6NaYKT/NYgVgrpRX6+8DhNeX3ewe9ey
+         clzFXuBXIjdIDBwAb0H1OJggBDLLvppduw51miVUkus5CCOXfCg6GLFkPmuoAUvBdVwx
+         pWo63368x3lb04WlSCci+u5M/slQQLEVz5BeA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=mRkb49hJ/o7sUzNJw/zHfFKhjBVcyGD1caVksculA00=;
+        b=1r1hHXPff6qh96gJ+6FsanwE1IaWlIyiHbNP3VAJG/BQuvIJ668yX1F2hZ52AvEcjn
+         bjdh2hrsKZCL+YA7DgsedbXRY4XVsegd0jQPTl29oVIoct2BqHXgzerHouh1N1qQMeDE
+         LvlJ1mHpt5pWRtWcMigGzA0ug0sD81azQ5hvoKLFz2zTjYPVbM/MG5ZA9H7FWYU3UG5T
+         7Iob8bAbU00ZrRmo5RZffMnupVXhMhkSRgqoIvPWQ1erHvStisVDykcu2Hc3Cp0IXwuz
+         v4lm0HQ05gTRSrn0UbFNc3O7D2jqHCzehKdK4BsDD2NPNbMNYmEpKXDYfzNP1iBbo+aw
+         OU2w==
+X-Gm-Message-State: ACrzQf3yWaTnjqE8rplpJe6FkKHmS5QI6UNhd/XrZ7LS2f1tDOep1Yfl
+        2u+j1sYa8zOgx97ktK+a0BlojfumOYydXA==
+X-Google-Smtp-Source: AMsMyM761d7Fl9dtnwBzIqTJhW7NDE0KfYgW2Z3zOf5cFMrONbSUwHk2/D83vjqkbY1Tqo6olp+d4w==
+X-Received: by 2002:a17:903:1248:b0:172:f3c7:97a6 with SMTP id u8-20020a170903124800b00172f3c797a6mr1097776plh.128.1663701729091;
+        Tue, 20 Sep 2022 12:22:09 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i62-20020a17090a3dc400b001facf455c91sm286910pjc.21.2022.09.20.12.22.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Sep 2022 12:22:08 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-hardening@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        xen-devel@lists.xenproject.org, llvm@lists.linux.dev,
+        Siddhesh Poyarekar <siddhesh@gotplt.org>,
+        Arnd Bergmann <arnd@arndb.de>, Tom Rix <trix@redhat.com>,
+        Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] x86/entry: Work around Clang __bdos() bug
+Date:   Tue, 20 Sep 2022 12:21:59 -0700
+Message-Id: <20220920192202.190793-2-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220920192202.190793-1-keescook@chromium.org>
+References: <20220920192202.190793-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220919201648.2250764-1-keescook@chromium.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1979; h=from:subject; bh=4MnVaPsx8mraEdez/1qUw/f+9P/3EjkrM/1wqdGlA2Y=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjKhLZE7kAhe/OxfUVwh8eyd4pKAVAQvW03irD5DAW qRCvxvmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYyoS2QAKCRCJcvTf3G3AJuSWD/ 0YU5lJR6Qasvy4L3d9D2h5U5JWrfw5lBGb341IHXohJFP1UnzRH0CT/UnomvYDoLvjhR2joksvkjkn BNTSv7VoRq4RwprCdKG4kgHD8PGjx57z3qsj73lXyfUXt1MwvQB9y+YDpD/SE2IuUFQpf+4iZ2uEtn LvLw9kT0MNmAnaM2dSR5lA6wrcdt9dcqBf4C1O80RyWBKBnfJN2tT3TskZggBrAyk2Y4VxfAOg9UF2 vTENn7pVEn7EisxLJ6/wCFt835Ov9Op7ldWqez4GSVVxpyhYW3zjEzqFOZ1Jwto62iUKdM+V83O8ew rjJ/WRDJT6EN225b5IvYvTHVC742B3/OkrjefYwWsKruTy7sR4aGoXrx6gtHOCfsncloYhZnF1ayiE /BA9ncPIH958gJ01gz7eZndZ2kkOAFTm3BBIZ/Rm8ISXObKAWBd6rFb0MBYeVza2e4fbwvVJfgTG9H tv86FQuDi0OhoT1JbgJrNbf/GhLz8PegmQUKUoAhXk9LrWby/jti9NoGokj6bJKjjtuORb0ETDHUJU WM+b2N7anNSPw/Sovfcx5bkbvOrenXO1PW7ByUj5o5/nal3mnvLFtWS7g3Z17XB5ybO8nxngnjb9NG Fcmwv0P7fktHuuT0QNwTw4WG5vmaMeqDZTTYXOKsbqzpoOfwlI1qO6qXA0jQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 19, 2022 at 01:16:48PM -0700, Kees Cook wrote:
-> The check_object_size() helper under CONFIG_HARDENED_USERCOPY is
-> designed to skip any checks where the length is known at compile time as
-> a reasonable heuristic to avoid "likely known-good" cases. However, it can
-> only do this when the copy_*_user() helpers are, themselves, inline too.
-> 
-> Using find_vmap_area() requires taking a spinlock. The check_object_size()
-> helper can call find_vmap_area() when the destination is in vmap memory.
-> If show_regs() is called in interrupt context, it will attempt a call to
-> copy_from_user_nmi(), which may call check_object_size() and then
-> find_vmap_area(). If something in normal context happens to be in the
-> middle of calling find_vmap_area() (with the spinlock held), the interrupt
-> handler will hang forever.
-> 
-> The copy_from_user_nmi() call is actually being called with a fixed-size
-> length, so check_object_size() should never have been called in
-> the first place. Given the narrow constraints, just replace the
-> __copy_from_user_inatomic() call with an open-coded version that calls
-> only into the sanitizers and not check_object_size(), followed by a call
-> to raw_copy_from_user().
-> 
-> Reported-by: Yu Zhao <yuzhao@google.com>
-> Link: https://lore.kernel.org/all/CAOUHufaPshtKrTWOz7T7QFYUNVGFm0JBjvM700Nhf9qEL9b3EQ@mail.gmail.com
-> Reported-by: dev@der-flo.net
-> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Josh Poimboeuf <jpoimboe@kernel.org>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: x86@kernel.org
-> Fixes: 0aef499f3172 ("mm/usercopy: Detect vmalloc overruns")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
+After expanding bounds checking to use __builtin_dynamic_object_size(),
+Clang produces a false positive when building with CONFIG_FORTIFY_SOURCE=y
+and CONFIG_UBSAN_BOUNDS=y when operating on an array with a dynamic
+offset. Work around this by using a direct assignment of an empty
+instance. Avoids this warning:
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+../include/linux/fortify-string.h:309:4: warning: call to __write_overflow_field declared with 'warn
+ing' attribute: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wat
+tribute-warning]
+                        __write_overflow_field(p_size_field, size);
+                        ^
 
->  arch/x86/lib/usercopy.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/lib/usercopy.c b/arch/x86/lib/usercopy.c
-> index ad0139d25401..d2aff9b176cf 100644
-> --- a/arch/x86/lib/usercopy.c
-> +++ b/arch/x86/lib/usercopy.c
-> @@ -44,7 +44,8 @@ copy_from_user_nmi(void *to, const void __user *from, unsigned long n)
->  	 * called from other contexts.
->  	 */
->  	pagefault_disable();
-> -	ret = __copy_from_user_inatomic(to, from, n);
-> +	instrument_copy_from_user(to, from, n);
-> +	ret = raw_copy_from_user(to, from, n);
->  	pagefault_enable();
->  
->  	return ret;
-> -- 
-> 2.34.1
-> 
+which was isolated to the memset() call in xen_load_idt().
+
+Note that this looks very much like another bug that was worked around:
+https://github.com/ClangBuiltLinux/linux/issues/1592
+
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: xen-devel@lists.xenproject.org
+Cc: llvm@lists.linux.dev
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/x86/xen/enlighten_pv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 0ed2e487a693..9b1a58dda935 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -765,6 +765,7 @@ static void xen_load_idt(const struct desc_ptr *desc)
+ {
+ 	static DEFINE_SPINLOCK(lock);
+ 	static struct trap_info traps[257];
++	static const struct trap_info zero = { };
+ 	unsigned out;
+ 
+ 	trace_xen_cpu_load_idt(desc);
+@@ -774,7 +775,7 @@ static void xen_load_idt(const struct desc_ptr *desc)
+ 	memcpy(this_cpu_ptr(&idt_desc), desc, sizeof(idt_desc));
+ 
+ 	out = xen_convert_trap_info(desc, traps, false);
+-	memset(&traps[out], 0, sizeof(traps[0]));
++	traps[out] = zero;
+ 
+ 	xen_mc_flush();
+ 	if (HYPERVISOR_set_trap_table(traps))
+-- 
+2.34.1
+
