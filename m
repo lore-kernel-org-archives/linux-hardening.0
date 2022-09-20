@@ -2,54 +2,34 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDF1ECAAA1
-	for <linux-hardening@archiver.kernel.org>; Mon, 19 Sep 2022 20:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB9FDC6FA82
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Sep 2022 07:15:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229602AbiISUQ4 (ORCPT
+        id S231202AbiITHPu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 19 Sep 2022 16:16:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44604 "EHLO
+        Tue, 20 Sep 2022 03:15:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229605AbiISUQy (ORCPT
+        with ESMTP id S231209AbiITHPT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 19 Sep 2022 16:16:54 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AA4543326
-        for <linux-hardening@vger.kernel.org>; Mon, 19 Sep 2022 13:16:53 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id iw17so313651plb.0
-        for <linux-hardening@vger.kernel.org>; Mon, 19 Sep 2022 13:16:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=WBdO0q1Vu+HcHQ9Ius//czL20IevKrEflqwUrM1KSMM=;
-        b=Ty4gKC/4TkZyRQW6CBD1IAeVodTeekkH+uQUEdrLdpgsUtXRVv97YXKiMUDHCDxZnP
-         2vkfdFDS6lvAZp/jLT4JmyuroGp4Tq9fViFjRX89s9sGUUcb2tCW5rfBiejSduKzztcS
-         219dy0VIFHHi6CRdTC1dgeR5yORE4DCU/wnGU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=WBdO0q1Vu+HcHQ9Ius//czL20IevKrEflqwUrM1KSMM=;
-        b=im/ggrRgAOXSNeca+sMfw9kDQn0AFVdEzpt4WA/k7Cssq4LwP4oIexeJ2FexAasO1a
-         ilVxMKrFzbMBchoKClesbDfpeV3eUkzNVEzrvoiDMUAtB0NbKuLZfw9GPp/B0lxVxEFV
-         vhAqO/vipBD+Qv6HJZWr9c4GZWU8PIp+7F/o5ypiyRrk+uKn7X+B0lldPZ5zqtGVl2My
-         9J6g5+FLznLXZRvfMZSj8Ow+3QlA0T8Ncwtjw/8OjhoT3xvBngwugAHdABsWpwQxETG3
-         z6yMZInjE/yBiUzOG9bl3plvN/I0D6Da3NJEEpBuCBcCcaxVY476pFd2YYeoJZVIgG0V
-         8S3A==
-X-Gm-Message-State: ACrzQf1g/kGML6HBX/RVNCAR/zbbzSCo9byx89SvcpLv+aHQGfzcGIS4
-        JV3XSIFPWYZmwLd6kyCDjg9vRA==
-X-Google-Smtp-Source: AMsMyM45J8dUTKuzhH8ytcQIk4o7i5T+/qBS3EdVAReIHWoir0iQpQeHo617CNtpN3P7qw3uOkozUg==
-X-Received: by 2002:a17:90b:4ac4:b0:202:6d3d:3b60 with SMTP id mh4-20020a17090b4ac400b002026d3d3b60mr21678691pjb.197.1663618613077;
-        Mon, 19 Sep 2022 13:16:53 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j7-20020a17090276c700b00176acd80f69sm14926223plt.102.2022.09.19.13.16.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Sep 2022 13:16:52 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>, Yu Zhao <yuzhao@google.com>,
-        dev@der-flo.net, Andrew Morton <akpm@linux-foundation.org>,
+        Tue, 20 Sep 2022 03:15:19 -0400
+X-Greylist: delayed 424 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 20 Sep 2022 00:14:54 PDT
+Received: from mx.der-flo.net (mx.der-flo.net [193.160.39.236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4316D402F5;
+        Tue, 20 Sep 2022 00:14:53 -0700 (PDT)
+Received: by mx.der-flo.net (Postfix, from userid 110)
+        id CCA17160F1A; Tue, 20 Sep 2022 09:07:47 +0200 (CEST)
+Received: from localhost (unknown [IPv6:2a02:1210:22e1:1f00:fb89:69cb:433e:eb56])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
+        (No client certificate requested)
+        by mx.der-flo.net (Postfix) with ESMTPSA id 537E2160145;
+        Tue, 20 Sep 2022 09:07:45 +0200 (CEST)
+Date:   Tue, 20 Sep 2022 09:07:44 +0200
+From:   Florian Lehner <dev@der-flo.net>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Matthew Wilcox <willy@infradead.org>, Yu Zhao <yuzhao@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Josh Poimboeuf <jpoimboe@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
@@ -58,71 +38,77 @@ Cc:     Kees Cook <keescook@chromium.org>, Yu Zhao <yuzhao@google.com>,
         "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
         Al Viro <viro@zeniv.linux.org.uk>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] x86/uaccess: Avoid check_object_size() in copy_from_user_nmi()
-Date:   Mon, 19 Sep 2022 13:16:48 -0700
-Message-Id: <20220919201648.2250764-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH v2] x86/uaccess: Avoid check_object_size() in
+ copy_from_user_nmi()
+Message-ID: <YylmwJOyDCPP11fg@der-flo.net>
+References: <20220919201648.2250764-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2452; h=from:subject; bh=xBKIj8xDAkGKVbJ5AWdGFtVHxKNqrP8mAf0eb08IA9w=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjKM4w/mv+2+IcarOwGG7EEYI5jpmWaMgZlKFemi3f dvVG79qJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYyjOMAAKCRCJcvTf3G3AJkCtD/ 9gxNevZi6/8CjjkhkW1FOwIhJRnPq08fMU7/cTBdLVodGWPb7yeZpTUXKXlaQvTdAdnLA91kgGieDT cdloPkkcfj9C0+9lA5CfMcOAQuYePYmEKgPe7IKZjoioalpufUON+2Ao4LQL70hlaPmWLQEmUG/taT B7JFZinDvdig3zr/lRxunypycGLgyxnI2MTQTPYtV3kl+pQn+owMb7t7YptMhjgOwOsCnEdITmeZNZ 2LqKke1qRAptdOOGNbNBxVLQ/b3phKGtdwHcm2gPOXNTNe9u3vZwq12CFqmI4VyEcee26QKkgRSxbq x95BSUxKyLdWsPUIbgL+1URX0XZFzQvUhj/4h+0DUjNio7/3CG5GOpnDeB9QIUkEEiN/T9gCHRpAnQ jkKBnTow1mRV4kU8FXo0Acd9g6WYyUB/9vqHrrNTJvOgjw+GJqtceS8Xr9pZweh27yjdh9r9IqdEZW r5woqIsunQA+hdoS6CutBI4zQOW33URy9bcsh95kBU7bGdnlBm/izWhSdDPzgc6/44WV/cDte/52K1 o7EzKmj/007c9dx0susXEG3GTFY83uXyOA3/KZaj4jsX6DfldnJDJj50zLkWPki5IZ+qNSPKP4OEKl 6zvZPwZY9m+bbb+DSU1LNIP3/xhSOSoo1rQRMfgb5m5KQ5G7uTYECFxKyk7g==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20220919201648.2250764-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The check_object_size() helper under CONFIG_HARDENED_USERCOPY is
-designed to skip any checks where the length is known at compile time as
-a reasonable heuristic to avoid "likely known-good" cases. However, it can
-only do this when the copy_*_user() helpers are, themselves, inline too.
+On Mon, Sep 19, 2022 at 01:16:48PM -0700, Kees Cook wrote:
+> The check_object_size() helper under CONFIG_HARDENED_USERCOPY is
+> designed to skip any checks where the length is known at compile time as
+> a reasonable heuristic to avoid "likely known-good" cases. However, it can
+> only do this when the copy_*_user() helpers are, themselves, inline too.
+> 
+> Using find_vmap_area() requires taking a spinlock. The check_object_size()
+> helper can call find_vmap_area() when the destination is in vmap memory.
+> If show_regs() is called in interrupt context, it will attempt a call to
+> copy_from_user_nmi(), which may call check_object_size() and then
+> find_vmap_area(). If something in normal context happens to be in the
+> middle of calling find_vmap_area() (with the spinlock held), the interrupt
+> handler will hang forever.
+> 
+> The copy_from_user_nmi() call is actually being called with a fixed-size
+> length, so check_object_size() should never have been called in
+> the first place. Given the narrow constraints, just replace the
+> __copy_from_user_inatomic() call with an open-coded version that calls
+> only into the sanitizers and not check_object_size(), followed by a call
+> to raw_copy_from_user().
+> 
+> Reported-by: Yu Zhao <yuzhao@google.com>
+> Link: https://lore.kernel.org/all/CAOUHufaPshtKrTWOz7T7QFYUNVGFm0JBjvM700Nhf9qEL9b3EQ@mail.gmail.com
+> Reported-by: dev@der-flo.net
+> Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: x86@kernel.org
+> Fixes: 0aef499f3172 ("mm/usercopy: Detect vmalloc overruns")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> v2: drop the call explicitly instead of using inline to do it
+> v1: https://lore.kernel.org/lkml/20220916135953.1320601-1-keescook@chromium.org
+> ---
+>  arch/x86/lib/usercopy.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/lib/usercopy.c b/arch/x86/lib/usercopy.c
+> index ad0139d25401..d2aff9b176cf 100644
+> --- a/arch/x86/lib/usercopy.c
+> +++ b/arch/x86/lib/usercopy.c
+> @@ -44,7 +44,8 @@ copy_from_user_nmi(void *to, const void __user *from, unsigned long n)
+>  	 * called from other contexts.
+>  	 */
+>  	pagefault_disable();
+> -	ret = __copy_from_user_inatomic(to, from, n);
+> +	instrument_copy_from_user(to, from, n);
+> +	ret = raw_copy_from_user(to, from, n);
+>  	pagefault_enable();
+>  
+>  	return ret;
+> -- 
+> 2.34.1
+> 
 
-Using find_vmap_area() requires taking a spinlock. The check_object_size()
-helper can call find_vmap_area() when the destination is in vmap memory.
-If show_regs() is called in interrupt context, it will attempt a call to
-copy_from_user_nmi(), which may call check_object_size() and then
-find_vmap_area(). If something in normal context happens to be in the
-middle of calling find_vmap_area() (with the spinlock held), the interrupt
-handler will hang forever.
+Thanks!
 
-The copy_from_user_nmi() call is actually being called with a fixed-size
-length, so check_object_size() should never have been called in
-the first place. Given the narrow constraints, just replace the
-__copy_from_user_inatomic() call with an open-coded version that calls
-only into the sanitizers and not check_object_size(), followed by a call
-to raw_copy_from_user().
-
-Reported-by: Yu Zhao <yuzhao@google.com>
-Link: https://lore.kernel.org/all/CAOUHufaPshtKrTWOz7T7QFYUNVGFm0JBjvM700Nhf9qEL9b3EQ@mail.gmail.com
-Reported-by: dev@der-flo.net
-Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: x86@kernel.org
-Fixes: 0aef499f3172 ("mm/usercopy: Detect vmalloc overruns")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v2: drop the call explicitly instead of using inline to do it
-v1: https://lore.kernel.org/lkml/20220916135953.1320601-1-keescook@chromium.org
----
- arch/x86/lib/usercopy.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/lib/usercopy.c b/arch/x86/lib/usercopy.c
-index ad0139d25401..d2aff9b176cf 100644
---- a/arch/x86/lib/usercopy.c
-+++ b/arch/x86/lib/usercopy.c
-@@ -44,7 +44,8 @@ copy_from_user_nmi(void *to, const void __user *from, unsigned long n)
- 	 * called from other contexts.
- 	 */
- 	pagefault_disable();
--	ret = __copy_from_user_inatomic(to, from, n);
-+	instrument_copy_from_user(to, from, n);
-+	ret = raw_copy_from_user(to, from, n);
- 	pagefault_enable();
- 
- 	return ret;
--- 
-2.34.1
+Tested-by: Florian Lehner <dev@der-flo.net>
 
