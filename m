@@ -2,85 +2,74 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C55A9C32771
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Sep 2022 20:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6762DECAAD8
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Sep 2022 21:01:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229788AbiIUU7K (ORCPT
+        id S230127AbiIUVBE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Sep 2022 16:59:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53878 "EHLO
+        Wed, 21 Sep 2022 17:01:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229688AbiIUU7J (ORCPT
+        with ESMTP id S229587AbiIUVAx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Sep 2022 16:59:09 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE236A285D;
-        Wed, 21 Sep 2022 13:59:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663793948; x=1695329948;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=okstNxHnKywUUm6/cGGyWmjLYuItLGJ2g7P+uU67io4=;
-  b=mrwBT5o9oht96xyZ92SfCCf/+FTKIAdiku6UcD1In8UcUPWRtoSszeMJ
-   qJmNS+a0+jvHCw3yeyjVEwnq4+T5gVJdV4PuIANidE+fxIwPN/3Zew+Hz
-   YgchmiymrffBbWsNgnea5tTmw82r8IXU325qUr9nctNPekjaL5SZLO1Ux
-   ZuCio+W4N5SgiEAdzRVm4DxcAfuxhlxBaMOWUFvDFDcCHt5T+FP+Wys7h
-   dfsi6w1rKCF5tvsH2Lh2lpQmcQP5WkNn9PD0dLmZ4mUVdcgY16742dP3S
-   aodu5DR7bS/1w/3AOIfrkiCW/bGaEudflFNHwpQ52UOk+jnOdSCHZed1S
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="361885412"
-X-IronPort-AV: E=Sophos;i="5.93,334,1654585200"; 
-   d="scan'208";a="361885412"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 13:59:08 -0700
-X-IronPort-AV: E=Sophos;i="5.93,334,1654585200"; 
-   d="scan'208";a="681933472"
-Received: from nchaplot-mobl1.amr.corp.intel.com (HELO [10.209.89.231]) ([10.209.89.231])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 13:59:07 -0700
-Message-ID: <4dd594ad-490a-68ee-9e32-fbd9f135bd54@intel.com>
-Date:   Wed, 21 Sep 2022 13:59:06 -0700
+        Wed, 21 Sep 2022 17:00:53 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40407A0271
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 14:00:50 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:281:8300:73::5f6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id BE8B3536;
+        Wed, 21 Sep 2022 21:00:38 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net BE8B3536
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+        t=1663794039; bh=7isKC+YSrGaask6vUXhGDpDQnw8IL3toZv6gUCLE72s=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=rEOiBVfntAQvQ1GXrONqpjs813fenB0/n52jEVdwxQ1YknIczxpIKHAmyjezOCPxg
+         o1aKp2E2GraujCxZmQ+hGhSFbda0QsqNhQOj0OpcfE3Qbjo7lUgAz34y0IzS14BEK7
+         JOzPWrqIVvpVOHqYgJS270Gv5p1JcGSp7WT7anNLntwFeqjh23hk5glbEAWcAbXpOT
+         cafgxu3hHWtRwGBV2u/aggSOC6rIoQO9ks5ckVyCCqXdL3qziATkQ+9qvqzAih1iVR
+         DdkkTgrwNZzHDyrnHRnsjtc8qduw3CAYr8++oGI0UC0Ho/9Rp4XqnEFZW6psFNuCEL
+         mDFM0l/VGvb7A==
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [RFC] docs: Define c_paren_attributes for attributes with
+ arguments
+In-Reply-To: <20220902223507.2537469-1-keescook@chromium.org>
+References: <20220902223507.2537469-1-keescook@chromium.org>
+Date:   Wed, 21 Sep 2022 15:00:36 -0600
+Message-ID: <87mtastpcb.fsf@meer.lwn.net>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2] x86/mm: Refuse W^X violations
-Content-Language: en-US
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, keescook@chromium.org,
-        Sean Christopherson <seanjc@google.com>
-References: <YwySW3ROc21hN7g9@hirez.programming.kicks-ass.net>
- <20220921200726.GA3094503@roeck-us.net>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <20220921200726.GA3094503@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 9/21/22 13:07, Guenter Roeck wrote:
-> [    2.042861] CPA refuse W^X violation: 8000000000000063 -> 0000000000000063 range: 0x00000000c00a0000 - 0x00000000c00a0fff PFN a0
-> ILLOPC: cbc65efa: 0f 0b
-> [    2.043267] WARNING: CPU: 0 PID: 1 at arch/x86/mm/pat/set_memory.c:600 __change_page_attr_set_clr+0xdca/0xdd0
-...
-> [    2.050307] ---[ end trace 0000000000000000 ]---
-> [    2.050762] PCI: PCI BIOS area is rw and x. Use pci=nobios if you want it NX.
-> [    2.051115] kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
-> [    2.051115] BUG: unable to handle page fault for address: c00fd2bf
+Kees Cook <keescook@chromium.org> writes:
 
-This _looks_ like it is working as intended.  The PCI BIOS code tried to
-make a RWX page.  The CPA code refused to do it and presumably returned
-an error, leaving a RW page, non-executable page.  The PCI code didn't
-check the set_memory_x() return code and tried to go execute anyway.
-That resulted in the oops.
+> While Sphinx's "c_id_attributes" is needed for basic attributes, any
+> attributes with arguments need to be defined in "c_paren_attributes"
+> to avoid errors like:
+>
+> include/linux/fortify-string.h:116: warning: Function parameter or member '__builtin_strncpy' not described in '__diagnose_as'
+> include/linux/fortify-string.h:116: warning: Function parameter or member '1' not described in '__diagnose_as'
+> include/linux/fortify-string.h:116: warning: Function parameter or member '2' not described in '__diagnose_as'
+> include/linux/fortify-string.h:116: warning: Function parameter or member '3' not described in '__diagnose_as'
+>
+> Move such attributes to "c_paren_attributes" and add __alloc_size
+> and __diagnose_as to the list.
 
-I was able to reproduce this pretty easily.  The workaround from dmesg
-is pci=nobios.  That seems to do the trick for me, although that advise
-was sandwiched between a warning and an oops, so not the easiest to find.
+So which tree are those warnings coming from?  I can't reproduce them
+with linux-next.
 
-I'm a bit torn what to do on this one.  Breaking the boot is bad, but so
-is leaving RWX memory around.
+As Akira noted, the kernel-doc script is the source of those warnings,
+so changing the Sphinx configuration is unlikely to help.  I think we
+just need to teach kernel-doc to ignore those attributes.
 
-Thoughts?
+Thanks,
+
+jon
