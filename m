@@ -2,150 +2,144 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED56C54EE9
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 13:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06959C54EE9
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 14:52:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231588AbiIVNpg (ORCPT
+        id S230271AbiIVOwB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Sep 2022 09:45:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53370 "EHLO
+        Thu, 22 Sep 2022 10:52:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231299AbiIVNp0 (ORCPT
+        with ESMTP id S229970AbiIVOwA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Sep 2022 09:45:26 -0400
-Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26C454D144
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Sep 2022 06:45:23 -0700 (PDT)
-Received: by mail-qk1-x733.google.com with SMTP id g2so6187764qkk.1
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Sep 2022 06:45:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=lTLxj593wgb0rSkyx/kVpkcZN0XitEmW0vMjErWHotA=;
-        b=FyJaKv2cOaRg6P7yvu8zs1jVRm/8RMTbc6dfECJ+ZO5o/HmyZWXx30/9G58nVbrc5b
-         uilHyUda0dD/kYG1qtguthEwDaL9y8JeP+HPCBHfMWclRlKZoOK/NXZxzGUfoaxervvy
-         D0TcePhLr6rEHe3E5Hlf5A5QN/T9th71F+ymU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=lTLxj593wgb0rSkyx/kVpkcZN0XitEmW0vMjErWHotA=;
-        b=1UzDiQP4dQKCVX9iGllLv0vh4JAwSXoBT8v7U3G7vipCr6hVnsPcBj6zJqqqUCPseI
-         oDZ/H4jGzeiTmOUepbX5LmXM1bH8pqoXuOIGG21GNO+tnGjtfLTppR3xAcMVBMlDGDlt
-         8ik6p2efEmVpvzMZgs/x/hci8dCFiT1b+rU5EzAxbbZcXJ/Gr7TZsnLe6yOCi9QGG+Sh
-         wpeETdmEFVHaYfwm2ZR5lzLbgNCHuSxOmVovLT3xQvjJDMB1Q1rD4aQDBk3/Xj5LNM12
-         VfdbPphWS4lFOu+ZHY4xcUX5Iun/pNd2ek1ARt9jcMOPyp8hJ2WA9WuGSones1q37Y4i
-         apsg==
-X-Gm-Message-State: ACrzQf1Tj7PtE39d9pH9jrwc6/tonEYB4QVNqXcINKjVtleeDGk4IYQ/
-        geRfKib6/O7Hf8y2v2oyiEESTg==
-X-Google-Smtp-Source: AMsMyM6DBqbYqDsHBnddfGDZuwycGpoIY7LinhBIG4+l+K0bdEu/uf1UKptO3KnL1trAn9LU6bZY/Q==
-X-Received: by 2002:a05:620a:f15:b0:6cf:2130:88e3 with SMTP id v21-20020a05620a0f1500b006cf213088e3mr2093263qkl.519.1663854322211;
-        Thu, 22 Sep 2022 06:45:22 -0700 (PDT)
-Received: from [172.22.22.4] ([98.61.227.136])
-        by smtp.googlemail.com with ESMTPSA id w7-20020ac857c7000000b0035bbb6268e2sm3902332qta.67.2022.09.22.06.45.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Sep 2022 06:45:21 -0700 (PDT)
-Message-ID: <4d75a9fd-1b94-7208-9de8-5a0102223e68@ieee.org>
-Date:   Thu, 22 Sep 2022 08:45:19 -0500
+        Thu, 22 Sep 2022 10:52:00 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E15ED4DD3;
+        Thu, 22 Sep 2022 07:51:58 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 6E14F42137;
+        Thu, 22 Sep 2022 14:45:10 +0000 (UTC)
+Received: from pdx1-sub0-mail-a304 (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 4990E41FEE;
+        Thu, 22 Sep 2022 14:45:09 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1663857909; a=rsa-sha256;
+        cv=none;
+        b=0LmZkMVID3cHw88umcSwqyfbTs9dctjU5meekkjxzhu396zqRZWmIVWll6DLCFmzMLK/YW
+        lhNuOAg8Msfgu8/QMivqD4UNAL6/hWqFu3zI+9NjObyJbIvws/bzIg5e1ekCQDqS6VAA+M
+        rkmYDf/sh2guVYn5na9BCpu61Nw0de7HDGGChBgt3ngqQvpMV+1nRla1dWhJMZW884ynif
+        iIyphQNFCZPTDZNuNcMis6FA+O1jYpK1D6RoGqD1c7mQiGOkH1eMmRUY5PHC1VSFsS7lLU
+        SrYqU1LQdDnwOKYJNCWAsCbZY/jB2pqAQ9LSF2Lf59REB8aEkQ4n7JOTjxyMaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1663857909;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=xghhsyINLuqLaVcS7ccFn+Lr2S2KTsZvKraPs0CAUyo=;
+        b=L/PRgfU5hubvi8kLooeywHrVVWr/2x/cQnzQprVES98eilwHA1mW+SbCiqGZia3dyoYq8+
+        8gz2xClRnlSlW5eSnZwMt0Y8uQM57qg4bmdP//q8HX4KKUDu7FOTHzHCoXDyE1oe20yjVv
+        wwNzWmjZqOfi8ikgHjra3ImTKZ6Zn49W7e6UkqAcDUoMnVEkXr6BYFtfKzJZcYe9LsOSf/
+        sP9pY2CK4L3lPnYjIG2VPqupdnVc2ZYbtITZQOAyuZZUXrcQncfLjeiUATPdx/9GrweWJL
+        fzkwkdBxIH8lJCjssz3i/d2FrwB6WmqcITt4sHTu3MSLB9CB2L8RguObMfD6jQ==
+ARC-Authentication-Results: i=1;
+        rspamd-f776c45b8-n6pdg;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=siddhesh@gotplt.org
+X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|siddhesh@gotplt.org
+X-MailChannels-Auth-Id: dreamhost
+X-Wiry-Versed: 583809950bb2ad8d_1663857909818_554295810
+X-MC-Loop-Signature: 1663857909818:4056437340
+X-MC-Ingress-Time: 1663857909818
+Received: from pdx1-sub0-mail-a304 (pop.dreamhost.com [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.120.183.79 (trex/6.7.1);
+        Thu, 22 Sep 2022 14:45:09 +0000
+Received: from [192.168.0.182] (bras-vprn-toroon4834w-lp130-16-184-147-84-238.dsl.bell.ca [184.147.84.238])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: siddhesh@gotplt.org)
+        by pdx1-sub0-mail-a304 (Postfix) with ESMTPSA id 4MYJ3Q3x1Zz3m;
+        Thu, 22 Sep 2022 07:45:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gotplt.org;
+        s=dreamhost; t=1663857908;
+        bh=xghhsyINLuqLaVcS7ccFn+Lr2S2KTsZvKraPs0CAUyo=;
+        h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
+        b=sDuand+a/XJS5s78apGW69loriemQlZJQ7rpOUgRf24nsWGEKRpES6+MRu23z28g9
+         bKACu3T0LzFp3cVqyL+qnrcVMgit+Fo3mE5cxMwb0vxpP3y9I50ub3lmeC9etjP7sE
+         0ximi6cWqSLtvkGdwQwEavRdrkcGSnrSx8SNAAgcEAQLdiJ+sOdvkjzWcGZ26jlP3a
+         hEqFXgfYLOC0knlo2rtskNHSwm8bhU/Bc/RWt5A3Ts0Sdn5c2Nxi0SQLAkQXjC2fjG
+         ccmOVzTQAWodpCYvzVC2p5PPPpSmhmTzc7Q82Yrg06dgO9X3XECC0k+4g5OPaMAASe
+         w3YkuN+avYk9Q==
+Message-ID: <450c41a1-9713-0928-338a-3f3d659b9894@gotplt.org>
+Date:   Thu, 22 Sep 2022 10:45:05 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 03/12] net: ipa: Proactively round up to kmalloc bucket
- size
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 4/4] fortify: Use __builtin_dynamic_object_size() when
+ available
 Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>, Vlastimil Babka <vbabka@suse.cz>
-Cc:     Alex Elder <elder@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Jacob Shin <jacob.shin@amd.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, dev@openvswitch.org,
-        x86@kernel.org, linux-wireless@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20220922031013.2150682-1-keescook@chromium.org>
- <20220922031013.2150682-4-keescook@chromium.org>
-From:   Alex Elder <elder@ieee.org>
-In-Reply-To: <20220922031013.2150682-4-keescook@chromium.org>
+        Nathan Chancellor <nathan@kernel.org>,
+        Tom Rix <trix@redhat.com>, llvm@lists.linux.dev,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        linux-kernel@vger.kernel.org
+References: <20220920192202.190793-1-keescook@chromium.org>
+ <20220920192202.190793-5-keescook@chromium.org>
+ <9d80e0a3-3fcc-0676-4529-79743f418557@gotplt.org>
+ <202209212032.5F392F42@keescook>
+From:   Siddhesh Poyarekar <siddhesh@gotplt.org>
+In-Reply-To: <202209212032.5F392F42@keescook>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 9/21/22 10:10 PM, Kees Cook wrote:
-> Instead of discovering the kmalloc bucket size _after_ allocation, round
-> up proactively so the allocation is explicitly made for the full size,
-> allowing the compiler to correctly reason about the resulting size of
-> the buffer through the existing __alloc_size() hint.
+On 2022-09-21 23:33, Kees Cook wrote:
+> On Wed, Sep 21, 2022 at 07:43:17AM -0400, Siddhesh Poyarekar wrote:
+>> On 2022-09-20 15:22, Kees Cook wrote:
+>>> Since the commits starting with c37495d6254c ("slab: add __alloc_size
+>>> attributes for better bounds checking"), the compilers have runtime
+>>> allocation size hints available in some places. This was immediately
+>>> available to CONFIG_UBSAN_BOUNDS, but CONFIG_FORTIFY_SOURCE needed
+>>> updating to explicitly make use the hints via the associated
+>>> __builtin_dynamic_object_size() helper. Detect and use the builtin when
+>>> it is available, increasing the accuracy of the mitigation. When runtime
+>>> sizes are not available, __builtin_dynamic_object_size() falls back to
+>>> __builtin_object_size(), leaving the existing bounds checking unchanged.
+>>
+>> I don't know yet what the overhead is for __builtin_dynamic_object_size vs
+>> __builtin_object_size, were you able to measure it somehow for the kernel?
+>> If there's a significant tradeoff, it may make sense to provide a user
+>> override.
 > 
-> Cc: Alex Elder <elder@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->   drivers/net/ipa/gsi_trans.c | 7 +++++--
->   1 file changed, 5 insertions(+), 2 deletions(-)
+> So far I've not seen any measurable performance difference, but I just
+> may not be creative enough yet.
 > 
-> diff --git a/drivers/net/ipa/gsi_trans.c b/drivers/net/ipa/gsi_trans.c
-> index 18e7e8c405be..cec968854dcf 100644
-> --- a/drivers/net/ipa/gsi_trans.c
-> +++ b/drivers/net/ipa/gsi_trans.c
-> @@ -89,6 +89,7 @@ int gsi_trans_pool_init(struct gsi_trans_pool *pool, size_t size, u32 count,
->   			u32 max_alloc)
->   {
->   	void *virt;
-> +	size_t allocate;
+> So far, the tunable is building a kernel with or without FORTIFY_SOURCE
+> and UBSAN_BOUNDS. :)
+> 
 
-I don't care about this but the reverse Christmas tree
-convention would put the "allocate" variable definition
-above "virt".
+The overhead should only be noticeable in, e.g. fortified calls inside a 
+hot loop.  In theory expressions to compute sizes could be arbitrarily 
+complex, but I haven't seen any cases yet that were large enough to be a 
+bother.  I reckon if we find such use cases, it'll be in the kernel but 
+even then it may not be worth downgrading fortification across all 
+sources just for those specific hot paths.  So I agree, the user 
+override isn't critically necessary.
 
-Whether you fix that or not, this patch looks good to me.
+FWIW,
 
-Reviewed-by: Alex Elder <elder@linaro.org>
+Reviewed-by: Siddhesh Poyarekar <siddhesh@gotplt.org>
 
->   	if (!size)
->   		return -EINVAL;
-> @@ -104,13 +105,15 @@ int gsi_trans_pool_init(struct gsi_trans_pool *pool, size_t size, u32 count,
->   	 * If there aren't enough entries starting at the free index,
->   	 * we just allocate free entries from the beginning of the pool.
->   	 */
-> -	virt = kcalloc(count + max_alloc - 1, size, GFP_KERNEL);
-> +	allocate = size_mul(count + max_alloc - 1, size);
-> +	allocate = kmalloc_size_roundup(allocate);
-> +	virt = kzalloc(allocate, GFP_KERNEL);
->   	if (!virt)
->   		return -ENOMEM;
->   
->   	pool->base = virt;
->   	/* If the allocator gave us any extra memory, use it */
-> -	pool->count = ksize(pool->base) / size;
-> +	pool->count = allocate / size;
->   	pool->free = 0;
->   	pool->max_alloc = max_alloc;
->   	pool->size = size;
-
+Thanks,
+Sid
