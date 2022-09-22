@@ -2,84 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C820ECAAD8
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 19:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541B9C54EE9
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 19:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230127AbiIVTaj (ORCPT
+        id S232320AbiIVTkp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Sep 2022 15:30:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47544 "EHLO
+        Thu, 22 Sep 2022 15:40:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229969AbiIVTah (ORCPT
+        with ESMTP id S232242AbiIVTko (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Sep 2022 15:30:37 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 215527F0A0;
-        Thu, 22 Sep 2022 12:30:37 -0700 (PDT)
+        Thu, 22 Sep 2022 15:40:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C874C100AAF;
+        Thu, 22 Sep 2022 12:40:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C582CB83A37;
-        Thu, 22 Sep 2022 19:30:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB6FDC433D6;
-        Thu, 22 Sep 2022 19:30:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 64EF7637B5;
+        Thu, 22 Sep 2022 19:40:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45829C433C1;
+        Thu, 22 Sep 2022 19:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663875034;
-        bh=vqFQno4mcDNf9adb3pKJgK0yhZw6i/lB0mWMPuO/jgo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ej6nGhbI6wgK7QB9ktkzYQYIVLi6f0tvrt13oKgLQnfuiFgLVef4FwW4Ox5Vj8T2F
-         9IkpcCdIXAIIdBt8e25w8zX+PlSeCE0Mcy1WzTIleF47YhRowp7TRtvx7lXwEhWii0
-         DAJEGyhUjqZxg5MYdephpf69O7VpTdOxRlL/9vz/vNuejBgiAOsc4uKmZmtC6mPL5K
-         rm5gfCf41/N4FFMxXTYY5dqYCiEqTfaoNmvDuFxOui/qlkuCEmQIzobs+MaXLepyFk
-         jB/bild6k65pPkADSFDgaJI96IvLu+bRJ19XpvA6jcZrOAnphiZtpBhcWd5elPhljW
-         9hq1CeCIrpBnw==
-Date:   Thu, 22 Sep 2022 14:30:28 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jack Wang <jinpu.wang@cloud.ionos.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] scsi: pm8001: Replace one-element array with flexible-array
- member
-Message-ID: <Yyy31OuBza1FJCXP@work>
+        s=k20201202; t=1663875641;
+        bh=Iu+ioVZAl++oTxE1oI47t/6oQuwifWn8lmpY1yCr8J4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YC8ixN8EP0aZI0e+nDZs91siEij37VrKEmFWG3Ty2t8usgwjVxksauo5Og7qifkq5
+         ESf2BqmXtU9USNgh+H2YKJEXRWpyu7EDcgicu3AJOn2B/4WayyL94dp8xbokjZvmw2
+         M56qmrIx+uvo2sUUrQmzfQ5/ucT/pOiWMPHGNcLJ6IIzRCYzVRcutddcWgSvzdbhZM
+         fcZkJSFboZpZl7fu6RLNBgaLlv3gbFkR4ETLqK750bOZ4J5pst6/eAIZH31PhhVZLn
+         QMHkEcQOXS8pXwYt/LtILex4KMGS/VXDhD7XC9erQbOO/ciNySxRd4PP7XyTR4i5Zs
+         1sdrT7lGqR5Mw==
+Date:   Thu, 22 Sep 2022 12:40:39 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Elder <elder@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Jacob Shin <jacob.shin@amd.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, dev@openvswitch.org,
+        x86@kernel.org, linux-wireless@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 02/12] skbuff: Proactively round up to kmalloc bucket
+ size
+Message-ID: <20220922124039.688be0b8@kernel.org>
+In-Reply-To: <20220922031013.2150682-3-keescook@chromium.org>
+References: <20220922031013.2150682-1-keescook@chromium.org>
+        <20220922031013.2150682-3-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-One-element arrays are deprecated, and we are replacing them with flexible
-array members instead. So, replace one-element array with flexible-array
-member in struct fw_control_info.
+On Wed, 21 Sep 2022 20:10:03 -0700 Kees Cook wrote:
+> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+> index 974bbbbe7138..4fe4c7544c1d 100644
+> --- a/net/core/skbuff.c
+> +++ b/net/core/skbuff.c
+> @@ -427,14 +427,15 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp_t gfp_mask,
+>  	 */
+>  	size = SKB_DATA_ALIGN(size);
+>  	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+> -	data = kmalloc_reserve(size, gfp_mask, node, &pfmemalloc);
+> -	if (unlikely(!data))
+> -		goto nodata;
+> -	/* kmalloc(size) might give us more room than requested.
+> +	/* kmalloc(size) might give us more room than requested, so
+> +	 * allocate the true bucket size up front.
+>  	 * Put skb_shared_info exactly at the end of allocated zone,
+>  	 * to allow max possible filling before reallocation.
+>  	 */
+> -	osize = ksize(data);
+> +	osize = kmalloc_size_roundup(size);
+> +	data = kmalloc_reserve(osize, gfp_mask, node, &pfmemalloc);
+> +	if (unlikely(!data))
+> +		goto nodata;
+>  	size = SKB_WITH_OVERHEAD(osize);
+>  	prefetchw(data + size);
 
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-routines on memcpy() and help us make progress towards globally
-enabling -fstrict-flex-arrays=3 [1].
+I'd rename osize here to alloc_size for consistency but one could 
+argue either way :)
 
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://github.com/KSPP/linux/issues/207
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/scsi/pm8001/pm8001_sas.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/pm8001/pm8001_sas.h b/drivers/scsi/pm8001/pm8001_sas.h
-index c5e3f380a01c..b08f52673889 100644
---- a/drivers/scsi/pm8001/pm8001_sas.h
-+++ b/drivers/scsi/pm8001/pm8001_sas.h
-@@ -612,7 +612,7 @@ struct fw_control_info {
- 	operations.*/
- 	u32			reserved;/* padding required for 64 bit
- 	alignment */
--	u8			buffer[1];/* Start of buffer */
-+	u8			buffer[];/* Start of buffer */
- };
- struct fw_control_ex {
- 	struct fw_control_info *fw_control;
--- 
-2.34.1
-
+Acked-by: Jakub Kicinski <kuba@kernel.org>
