@@ -2,78 +2,109 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7549DC54EE9
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 17:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E32C6FA8B
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 17:41:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229673AbiIVRAz (ORCPT
+        id S231206AbiIVRlW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Sep 2022 13:00:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50448 "EHLO
+        Thu, 22 Sep 2022 13:41:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbiIVRAz (ORCPT
+        with ESMTP id S229641AbiIVRlV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Sep 2022 13:00:55 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40234F2773;
-        Thu, 22 Sep 2022 10:00:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F35D4B803F3;
-        Thu, 22 Sep 2022 17:00:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F4DDC433D6;
-        Thu, 22 Sep 2022 17:00:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663866051;
-        bh=2WF+oCjweKMMdy0hxBDSueIZNZ6Go1kccHSoK1QX4/M=;
-        h=Date:From:To:Cc:Subject:From;
-        b=KSsRxLsQwHm4a+VVjxQIj5CUD9E1XI+oUvioOrTjUzdg8adoDQk34azZ+f1dooYiz
-         JdYjtYhDfCaDWDchupKulGbWMkx84ljXZzLpX2b7NElQOKjBInQ8MJ/XX+jIT/Dyo+
-         rUa207uFLcR8IrDIEFLdqhtn70gog3Uuij2/FTNcEFJSNevLVqxYomGrRhkDVm0xmf
-         TCa7pupd9hGaC18me4dgbZu8y+kCtwqxPv5faGzir0KSCnRYQ/JM6HxV5Dutx30O9+
-         1Ir9DRazt5IK/zZ5hICgjmebvU9ihlge+RbVHRD6E2I/ww3d9Fpr+lT1KrreUyr/hF
-         9OhPXJ4cN8Xxw==
-Date:   Thu, 22 Sep 2022 12:00:46 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] scsi: hptiop: Replace one-element array with
- flexible-array member in struct hpt_iop_request_ioctl_command
-Message-ID: <YyyUvuId7dAZadej@work>
+        Thu, 22 Sep 2022 13:41:21 -0400
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33192E11B6;
+        Thu, 22 Sep 2022 10:41:19 -0700 (PDT)
+Received: by mail-il1-x132.google.com with SMTP id d14so4205986ilf.2;
+        Thu, 22 Sep 2022 10:41:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=AsxpWsr5dzcIncNfx/+Sw1HyEwfMiBKVAKBEW7wNeQA=;
+        b=HG1BCa9aD7EruuXSP8vfBpl2xSAcB9NgvDE4n3t4WegezK8iPhrhfTbs3Xxfdxp/aP
+         0j4XfOQ90rYJJLxvR5Fxutq+CKSR+3NwG5g3gHNWC0rGeSJkCPwM1qeiyt5MoX9kie1E
+         Ogc+09wvN660uSYqTrtW/DY7BHEKikOuBqjuMNkdFuICid58Qmi9sfyROy/V1LgkIpE7
+         e2Nv1gEo4Vp0GQpWl3bRqM1059jceqcIcZbW6os/ZnPJ8J1PnWKNgSi8e2+WYP/WJpYk
+         +8abyMsCFGIX1fgDuD8Pv5kCGUDjVFxUFNtnD5auEWqa0LNmLWv9bnrrUipYT443cCtB
+         +LNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=AsxpWsr5dzcIncNfx/+Sw1HyEwfMiBKVAKBEW7wNeQA=;
+        b=SILhDhsclPTFIm+N7bd9WIBU5yzLvANvhie9ePp8AY5zYqBcGEadNwbWw7l/Cs+S3q
+         EvYaoF8Xsrt3ocT4iVCUPYlXg9z+U7rmD6Z1as2fV8F1evoRGxejjostj01Ap7cvSrjF
+         w8az17etfgg8XmpOm5ttEBbPbaUNDy2mKkSHGsA0bWKO68SQTHev65IAxmqO9D4CEcTb
+         TCEv7VIvgZIAt4ExPOKG9Nehhmv47XOr9JRDlSwkhdFzhwv1Bzz0cJjp0HEBwJr8pbsF
+         s4wGk5lNoXdGtP1UlvzdMuAoApS2rfH7awQAzT63oukEmmNm26x6AIBEYB02sIcKDC6f
+         Bo5g==
+X-Gm-Message-State: ACrzQf3aUUJYVKFd6LpTLv/hbVKzpO6O9ne2ZCviMkpzHE0AZKe5JVJ0
+        F1HhJu1TeBJbHISbmWMGvJrQwQvSKVNSZ67IoE4=
+X-Google-Smtp-Source: AMsMyM5Iawxjt3SoOGTNllk8NVk3tyvcsl1U/lS7sz1j/GB7JoPgBuMEGvT0T6zJ1tbupUccXP7nLvzrv1dgRwQijjQ=
+X-Received: by 2002:a05:6e02:152a:b0:2f6:58ae:ff0c with SMTP id
+ i10-20020a056e02152a00b002f658aeff0cmr2429401ilu.237.1663868478589; Thu, 22
+ Sep 2022 10:41:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20220922031013.2150682-1-keescook@chromium.org>
+ <20220922031013.2150682-12-keescook@chromium.org> <CANiq72=m9VngFH9jE3s0RV7MpjX0a=ekJN4pZwcDksBkSRR_1w@mail.gmail.com>
+ <202209220855.B8DA16E@keescook>
+In-Reply-To: <202209220855.B8DA16E@keescook>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 22 Sep 2022 19:41:07 +0200
+Message-ID: <CANiq72=unhDJOGTg+ja4UdVRp8sG7Wc+_rqQhvJideA=WNjbFA@mail.gmail.com>
+Subject: Re: [PATCH 11/12] slab: Remove __malloc attribute from realloc functions
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Hao Luo <haoluo@google.com>, Marco Elver <elver@google.com>,
+        linux-mm@kvack.org, "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Elder <elder@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Yonghong Song <yhs@fb.com>, Miguel Ojeda <ojeda@kernel.org>,
+        Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, dev@openvswitch.org,
+        x86@kernel.org, linux-wireless@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-One-element arrays are deprecated, and we are replacing them with flexible
-array members instead. So, replace one-element array with flexible-array
-member in struct hpt_iop_request_ioctl_command.
+On Thu, Sep 22, 2022 at 5:56 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> I wasn't sure if this "composite macro" was sane there, especially since
+> it would be using __malloc before it was defined, etc. Would you prefer
+> I move it?
 
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://github.com/KSPP/linux/issues/205
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/scsi/hptiop.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hmm... On one hand, they end up being attributes, so it could make
+sense to have them there (after all, the big advantage of that header
+is that there is no `#ifdef` nest like in others, and that it is only
+for attributes).
 
-diff --git a/drivers/scsi/hptiop.h b/drivers/scsi/hptiop.h
-index ef2f2aca598c..394ef6aa469e 100644
---- a/drivers/scsi/hptiop.h
-+++ b/drivers/scsi/hptiop.h
-@@ -237,7 +237,7 @@ struct hpt_iop_request_ioctl_command {
- 	__le32 inbuf_size;
- 	__le32 outbuf_size;
- 	__le32 bytes_returned;
--	u8     buf[1];
-+	u8     buf[];
- 	/* out data should be put at buf[(inbuf_size+3)&~3] */
- };
- 
--- 
-2.34.1
+On the other hand, you are right that the file so far is intended to
+be as simple as possible (`__always_inline` having an extra `inline`
+and `fallthrough` would be closest outliers), so if we do it, I would
+prefer to do so in an independent series that carries its own rationale.
 
+So I would leave the patch as it is here.
+
+Cheers,
+Miguel
