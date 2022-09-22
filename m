@@ -2,119 +2,133 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E115C6FA82
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 15:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62701C54EE9
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 15:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231851AbiIVPAl (ORCPT
+        id S231496AbiIVPz2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Sep 2022 11:00:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45394 "EHLO
+        Thu, 22 Sep 2022 11:55:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231924AbiIVPAh (ORCPT
+        with ESMTP id S229794AbiIVPzZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Sep 2022 11:00:37 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 415CB7FE5F;
-        Thu, 22 Sep 2022 08:00:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663858834; x=1695394834;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to;
-  bh=7nTZfbTgKcz59wrRRvudFFGIKXffwGgjjoVkivFvTMU=;
-  b=eEHR8imMRhQq6SgQ4l977jKIgY9/lav+SjrI/OCWVskYz9m0LseD+ivC
-   tLJ9uMTjLIMgDB4hFQrmPtrEr6cC8eq6n37RakUvTzRAfHiu3n5ISM6ag
-   JFbr4MJcnT+Wo2DUm39+Hpd43Mx20obaWx3Gr6v+O4/Lo5PrXHAIbvvQE
-   zEICr78/g88qG/aq0cM8cA8VuyRw6VnhCu1hlUoSKu+AZreC3zqYl1NWE
-   TB5pyDoUNBw2hlZ8lQVvO26kyCb1J8BIyJzM9rvFQbiaH1+crfdoQnL7/
-   fJEBnLe1LQPBKgLRhVDRef90sKAYFotvdP3Ro3AxQiGRURpzVIw0O55G7
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10478"; a="280037362"
-X-IronPort-AV: E=Sophos;i="5.93,335,1654585200"; 
-   d="scan'208";a="280037362"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 08:00:33 -0700
-X-IronPort-AV: E=Sophos;i="5.93,335,1654585200"; 
-   d="scan'208";a="795119864"
-Received: from sponnura-mobl1.amr.corp.intel.com (HELO [10.209.58.200]) ([10.209.58.200])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 08:00:33 -0700
-Content-Type: multipart/mixed; boundary="------------DoTHMuKmmWMwpKZvzR33ZrhJ"
-Message-ID: <44b4b20a-550c-6337-3f7d-8283498f76f2@intel.com>
-Date:   Thu, 22 Sep 2022 08:00:33 -0700
+        Thu, 22 Sep 2022 11:55:25 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F5C3AA4F1
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Sep 2022 08:55:21 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id d11so1764930pll.8
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Sep 2022 08:55:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date;
+        bh=5YOa+gv1sIPcp5S2eMDxZrJPz51jsjFGvspNVL+ych0=;
+        b=LEFzWbqksCDh4S4OiJrbR7XAYMyOC2rDNgEzxm4wNn6u+IvIuPSxz7ChVzcXYCA9kN
+         JUv48f4jgPup+CHrzZf6w+AfSyBn13B+QQpM2W85KtMMefowgfzF6SEkXu9wDa88gO2B
+         nN2k3CYK4Hh5e/4TzZfHnbEaM6zaDEwuByIkk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=5YOa+gv1sIPcp5S2eMDxZrJPz51jsjFGvspNVL+ych0=;
+        b=5gsPlEzQphaJduhu5hJNLA2wnLLYRrvcq2QuCAsCSwgcfAYYOJz4v7ecaO/Y2pqAe7
+         AKDjBHM3qpbkbiPJFtmRRsIf58/houVx6t8lERFOXRFBnvNJqajo9RhAA53XnSMbg6R3
+         lEOFHnC/hn/WTmKSRjIHCStkK8gy6A2MIuVTx9TvSYg7jb/hWcVC+9Eksgg0OT+e8skl
+         SMRD6dgnC68RQC+UstXT7Pknipmi1YAd2bT3deC/pKve3Ec/dZId4ZoVnMPeBbUTCGI1
+         9htRpbz6+YyOJQ7bnzYHTI4iqMTozydFojR0awvA10WGSvxd+t+xkWhS1PtDnvOgqF/k
+         OwoA==
+X-Gm-Message-State: ACrzQf0lebarNFuie0kgprYI5y9BittQTqpfHkLvAG0s8WoOgpMDLwmF
+        dqaeH8IXVerW7i2HVxbporGFVA==
+X-Google-Smtp-Source: AMsMyM6pj2YmcAiXg6SonP+gJGRIk20ZQXjacFA/fb+08tqqdtojyBlUHrRZT8F0Z+9OyQ05xLAwxg==
+X-Received: by 2002:a17:90b:3ec9:b0:203:246e:4370 with SMTP id rm9-20020a17090b3ec900b00203246e4370mr15665429pjb.221.1663862121161;
+        Thu, 22 Sep 2022 08:55:21 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b7-20020a170902650700b001754fa42065sm4270774plk.143.2022.09.22.08.55.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Sep 2022 08:55:20 -0700 (PDT)
+Date:   Thu, 22 Sep 2022 08:55:19 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Pekka Enberg <penberg@kernel.org>,
+        Feng Tang <feng.tang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Alex Elder <elder@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
+        Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, netdev@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-fsdevel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        dev@openvswitch.org, x86@kernel.org,
+        linux-wireless@vger.kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 00/12] slab: Introduce kmalloc_size_roundup()
+Message-ID: <202209220845.2F7A050@keescook>
+References: <20220922031013.2150682-1-keescook@chromium.org>
+ <673e425d-1692-ef47-052b-0ff2de0d9c1d@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2] x86/mm: Refuse W^X violations
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, keescook@chromium.org,
-        Sean Christopherson <seanjc@google.com>
-References: <YwySW3ROc21hN7g9@hirez.programming.kicks-ass.net>
- <20220921200726.GA3094503@roeck-us.net>
- <4dd594ad-490a-68ee-9e32-fbd9f135bd54@intel.com>
- <1a6e7165-cdae-6c8c-f57d-159fdb68897b@roeck-us.net>
- <d8cd7c7e-24c1-7f70-24a9-91c77aa634af@roeck-us.net>
- <YywS0keUorHwJJPt@hirez.programming.kicks-ass.net>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <YywS0keUorHwJJPt@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <673e425d-1692-ef47-052b-0ff2de0d9c1d@amd.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------DoTHMuKmmWMwpKZvzR33ZrhJ
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 9/22/22 00:46, Peter Zijlstra wrote:
-> On Wed, Sep 21, 2022 at 08:09:13PM -0700, Guenter Roeck wrote:
+On Thu, Sep 22, 2022 at 09:10:56AM +0200, Christian König wrote:
+> Am 22.09.22 um 05:10 schrieb Kees Cook:
+> > Hi,
+> > 
+> > This series fixes up the cases where callers of ksize() use it to
+> > opportunistically grow their buffer sizes, which can run afoul of the
+> > __alloc_size hinting that CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE
+> > use to perform dynamic buffer bounds checking.
 > 
->> Oh well, that "helped" to hide one of the crashes. Here is another one.
->> This is with PAE enabled and booting through efi32.
+> Good cleanup, but one question: What other use cases we have for ksize()
+> except the opportunistically growth of buffers?
+
+The remaining cases all seem to be using it as a "do we need to resize
+yet?" check, where they don't actually track the allocation size
+themselves and want to just depend on the slab cache to answer it. This
+is most clearly seen in the igp code:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/ethernet/intel/igb/igb_main.c?h=v6.0-rc6#n1204
+
+My "solution" there kind of side-steps it, and leaves ksize() as-is:
+https://lore.kernel.org/linux-hardening/20220922031013.2150682-8-keescook@chromium.org/
+
+The more correct solution would be to add per-v_idx size tracking,
+similar to the other changes I sent:
+https://lore.kernel.org/linux-hardening/20220922031013.2150682-11-keescook@chromium.org/
+
+I wonder if perhaps I should just migrate some of this code to using
+something like struct membuf.
+
+> Off hand I can't see any.
 > 
->> [    1.086592]  efi_runtime_update_mappings+0x36/0x42
->> [    1.086717]  efi_enter_virtual_mode+0x351/0x36e
->> [    1.086860]  start_kernel+0x57d/0x60f
->> [    1.086956]  ? set_intr_gate+0x42/0x55
->> [    1.087079]  i386_start_kernel+0x43/0x45
->> [    1.087272]  startup_32_smp+0x161/0x164
-> 
-> Does this help? Dave; perhaps we should just let i386 be i386 and let it
-> bitrot :/
+> So when this patch set is about to clean up this use case it should probably
+> also take care to remove ksize() or at least limit it so that it won't be
+> used for this use case in the future.
 
-How about we just turn off enforcement for now so that the poor i386
-folks can at least boot?  I have the feeling we're going to get bored
-with even the warnings if they persist for too long, though.
+Yeah, my goal would be to eliminate ksize(), and it seems possible if
+other cases are satisfied with tracking their allocation sizes directly.
 
-Untested patch to make i386 violations harmless is attached.
---------------DoTHMuKmmWMwpKZvzR33ZrhJ
-Content-Type: text/x-patch; charset=UTF-8; name="norefuse.patch"
-Content-Disposition: attachment; filename="norefuse.patch"
-Content-Transfer-Encoding: base64
+-Kees
 
-ZGlmZiAtLWdpdCBhL2FyY2gveDg2L21tL3BhdC9zZXRfbWVtb3J5LmMgYi9hcmNoL3g4Ni9t
-bS9wYXQvc2V0X21lbW9yeS5jCmluZGV4IDIwYjFlMjRiYWE4NS4uYzg5OWM1NWQ4MzA0IDEw
-MDY0NAotLS0gYS9hcmNoL3g4Ni9tbS9wYXQvc2V0X21lbW9yeS5jCisrKyBiL2FyY2gveDg2
-L21tL3BhdC9zZXRfbWVtb3J5LmMKQEAgLTU4NSw2ICs1ODUsOCBAQCBzdGF0aWMgaW5saW5l
-IHBncHJvdF90IHN0YXRpY19wcm90ZWN0aW9ucyhwZ3Byb3RfdCBwcm90LCB1bnNpZ25lZCBs
-b25nIHN0YXJ0LAogc3RhdGljIGlubGluZSBwZ3Byb3RfdCB2ZXJpZnlfcnd4KHBncHJvdF90
-IG9sZCwgcGdwcm90X3QgbmV3LCB1bnNpZ25lZCBsb25nIHN0YXJ0LAogCQkJCSAgdW5zaWdu
-ZWQgbG9uZyBwZm4sIHVuc2lnbmVkIGxvbmcgbnBnKQogeworCS8qIEp1c3Qgd2FybiBvbiBp
-Mzg2LCB0aGVyZSBhcmUgc3RpbGwgdG9vIG1hbnkgaXNzdWVzIHRoZXJlOiAqLworCWJvb2wg
-cmVmdXNlID0gSVNfRU5BQkxFRChDT05GSUdfWDg2XzY0KTsKIAl1bnNpZ25lZCBsb25nIGVu
-ZDsKIAogCS8qIE9ubHkgZW5mb3JjZSB3aGVuIE5YIGlzIHN1cHBvcnRlZDogKi8KQEAgLTU5
-OCwxMyArNjAwLDE3IEBAIHN0YXRpYyBpbmxpbmUgcGdwcm90X3QgdmVyaWZ5X3J3eChwZ3By
-b3RfdCBvbGQsIHBncHJvdF90IG5ldywgdW5zaWduZWQgbG9uZyBzdGFyCiAJCXJldHVybiBu
-ZXc7CiAKIAllbmQgPSBzdGFydCArIG5wZyAqIFBBR0VfU0laRSAtIDE7Ci0JV0FSTl9PTkNF
-KDEsICJDUEEgcmVmdXNlIFdeWCB2aW9sYXRpb246ICUwMTZsbHggLT4gJTAxNmxseCByYW5n
-ZTogMHglMDE2bHggLSAweCUwMTZseCBQRk4gJWx4XG4iLAorCVdBUk5fT05DRSgxLCAiQ1BB
-ICVzV15YIHZpb2xhdGlvbjogJTAxNmxseCAtPiAlMDE2bGx4IHJhbmdlOiAweCUwMTZseCAt
-IDB4JTAxNmx4IFBGTiAlbHhcbiIsCisJCSAgcmVmdXNlID8gInJlZnVzZSAiIDogIiIsCiAJ
-CSAgKHVuc2lnbmVkIGxvbmcgbG9uZylwZ3Byb3RfdmFsKG9sZCksCiAJCSAgKHVuc2lnbmVk
-IGxvbmcgbG9uZylwZ3Byb3RfdmFsKG5ldyksCiAJCSAgc3RhcnQsIGVuZCwgcGZuKTsKIAog
-CS8qIHJlZnVzZSB0aGUgdHJhbnNpdGlvbiBpbnRvIFdYICovCi0JcmV0dXJuIG9sZDsKKwlp
-ZiAocmVmdXNlKQorCQlyZXR1cm4gb2xkOworCisJcmV0dXJuIG5ldzsKIH0KIAogLyoK
-
---------------DoTHMuKmmWMwpKZvzR33ZrhJ--
+-- 
+Kees Cook
