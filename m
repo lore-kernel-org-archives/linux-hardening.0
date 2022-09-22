@@ -2,64 +2,65 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A330EC6FA90
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 03:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0922EC32771
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 03:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231159AbiIVDLl (ORCPT
+        id S231316AbiIVDL7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Sep 2022 23:11:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44860 "EHLO
+        Wed, 21 Sep 2022 23:11:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231178AbiIVDKd (ORCPT
+        with ESMTP id S230072AbiIVDL0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Sep 2022 23:10:33 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C793D82D3C
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 20:10:26 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id w2so8007738pfb.0
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 20:10:26 -0700 (PDT)
+        Wed, 21 Sep 2022 23:11:26 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C92D52E55
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 20:10:29 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id s206so7871628pgs.3
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 20:10:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=9y2lxcjKWi6kM02eOSoQVeQPXSl5vobQ22c95G6mEc4=;
-        b=agBKCvV0iC7GQIcf8sz7UOH3dVItREZG7jPdBvtdPy2YLOE0+XAy2KLGvZyzWCldr+
-         eBmNfNQZyJ71RW93/RqEBJpErudlrwRKiB3G8SDyrXVW40aMl2oo1k6YG1lfeIUUjh9P
-         GUamhTzL1Eje9pLqolXG4/wF2iRxonrtVdIpw=
+        bh=8ihjvmU6X32IA3g0n6Ob0CbMhk1X+mcnfaE/5Wfmhd8=;
+        b=YKrPYMNBSJFFHg571lPm5+W8CN7DnIcMIRdXREqQlAZ+eLEk9A8maJxy/vrjrQP/eu
+         TYffJ29H5vDdp6sidFBvQbhMXABopPXRk6i9GT1lOsVVh5dTUpn3JKlyT+VRKM4PpYM3
+         aDSZJo/bWB/q00QaHXbLQBN7xuQW5YNdYkiuA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=9y2lxcjKWi6kM02eOSoQVeQPXSl5vobQ22c95G6mEc4=;
-        b=z3w24wW9hih4u5B3cExJeothfEEdEVzIS4LHtgacMdb3nuZj8GGu4Q42sBNoWqikaE
-         h9mJBxp8PNfGocMlyldeEj8qecS9w7OIoaI8KCh/bdixTq31IyyAP9a+PZXog9gbOu6Q
-         swAb7wP1/iJlOpIcW6zmyEkSNRYBozo4CntB2j2DbRtd+YwIAwzHvAl2DSn6GnvRZPNr
-         Sbte8SHma/atxv3wgilMy/t3rXNaGwI4c5kFL1+bAU5h/dCpyv5NsOKxIarMxLdvyvZm
-         lI2Vf4ht0+9yiVYxpYFPbaQQTTXbwtXn/Uj1roGu7GRl7Am44kLiGK13CoNHVxbJTGvb
-         eSNw==
-X-Gm-Message-State: ACrzQf3dNFDdnqrTuy3wNPjEpLOS2Y9Kb3l2J9ZGoFWzWceV155vOK8W
-        1cem06sgL+9Lj+SRls1jbUTlLg==
-X-Google-Smtp-Source: AMsMyM7fmjxAfGTycH9CaoCA2DJAnd13bu5HArBXnwB99jjW/VrHSPoTFEUdZfu+ReZxNaNi1nSSsA==
-X-Received: by 2002:a05:6a00:14d3:b0:546:e93c:4768 with SMTP id w19-20020a056a0014d300b00546e93c4768mr1278425pfu.36.1663816226130;
-        Wed, 21 Sep 2022 20:10:26 -0700 (PDT)
+        bh=8ihjvmU6X32IA3g0n6Ob0CbMhk1X+mcnfaE/5Wfmhd8=;
+        b=whyZNFukNJ0T0B4ecWdh5WmwDBYJjajlSs2pMFcPV3+LygjZzBvG9xG+LLvKc3Bdfh
+         /n8aHcpbPo+lYnLzm1/adFEhM/RpsET4lYvBkd3LeLVbafd/0ztPULZwEkIkgc5laiE9
+         4q45ZmdxjKyGf5HeVlkNgIQyPjo8t//CwPqcKRpxUYIY/KV+DVN6AArFO0gbddj+thmh
+         L+KUybYW3gpcddGI7rQb/mD08UB8WYoyEA2dlNTfvCY4zBxgBfuS1ps5Sb75vtq85QiU
+         jjJRuEm4NAblALWCOnToQl2I3Y6DftJYeD6U2ATgWkWUfNpmiW3yedfA8LFKNduVHF1V
+         86OA==
+X-Gm-Message-State: ACrzQf3ZgXY0WlMh/Q5Zv3suaIQcRLLlRf9MWOREh2gA062dvkNDLcXS
+        yB622rzJ03+/lHce62sO/mibDg==
+X-Google-Smtp-Source: AMsMyM76eF8+VNznj7IzekXG0QSV+my0aV1DgaIJkS6htzHMwsh1R3Wrb+39lk5TYLYW7ESUsWFZBQ==
+X-Received: by 2002:a63:e305:0:b0:439:6e0c:f81e with SMTP id f5-20020a63e305000000b004396e0cf81emr1277721pgh.50.1663816228246;
+        Wed, 21 Sep 2022 20:10:28 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b15-20020a63d30f000000b004393cb720afsm2684116pgg.38.2022.09.21.20.10.22
+        by smtp.gmail.com with ESMTPSA id i62-20020a17090a3dc400b001facf455c91sm2649631pjc.21.2022.09.21.20.10.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Sep 2022 20:10:22 -0700 (PDT)
+        Wed, 21 Sep 2022 20:10:26 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Kees Cook <keescook@chromium.org>, Alex Elder <elder@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+Cc:     Kees Cook <keescook@chromium.org>, linux-fsdevel@vger.kernel.org,
         Pekka Enberg <penberg@kernel.org>,
         David Rientjes <rientjes@google.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
+        Alex Elder <elder@kernel.org>,
         Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>,
         Sumit Semwal <sumit.semwal@linaro.org>,
@@ -69,20 +70,20 @@ Cc:     Kees Cook <keescook@chromium.org>, Alex Elder <elder@kernel.org>,
         Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
         Miguel Ojeda <ojeda@kernel.org>,
         Jacob Shin <jacob.shin@amd.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, netdev@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
         intel-wired-lan@lists.osuosl.org, dev@openvswitch.org,
         x86@kernel.org, linux-wireless@vger.kernel.org,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: [PATCH 03/12] net: ipa: Proactively round up to kmalloc bucket size
-Date:   Wed, 21 Sep 2022 20:10:04 -0700
-Message-Id: <20220922031013.2150682-4-keescook@chromium.org>
+Subject: [PATCH 06/12] coredump: Proactively round up to kmalloc bucket size
+Date:   Wed, 21 Sep 2022 20:10:07 -0700
+Message-Id: <20220922031013.2150682-7-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220922031013.2150682-1-keescook@chromium.org>
 References: <20220922031013.2150682-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1741; h=from:subject; bh=N6cTYse7nKSOYOPwHuuyZ39Ee5FBmcRJBaahsbeuoYs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjK9ISVSHfuaLwQgHhIfT+G4+ZNlvTp+tw3ysmjP49 mcPajiqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYyvSEgAKCRCJcvTf3G3AJoHDD/ 9MEz1x/p8W1mV4RgWnzrofQu8Rnt8S3z6RAn+Qe1cSDrxAzlEofmKXpYWiJ+/LrW8d+DMyEPH/qhiv Z0a3iYatcr1nh3CMNcUGNtMmB0uLZf4MMZQ184oh/sUT8PfviA8YvnEqJsU39RxjaNFpvevCU+UIhE ampATmMNn3x9mz3MinyvwRAeCqjlprv9qGhZP19uivXAzi7A5LdGcnY9/yU4NERLhAyGSQzZMoevL5 foxanGNGMhF7lJpEQx7SiHJ5/UGNfHDmQUAWnnIkH/iu4aw6z8wFCMrDe26riTARf1OhVgycx3C53y RsfcyayukdwLx9qBoxlSnrXwcUJmn8ly2s9mOX2jMHadZIKMM3erpLkcz5K5LzoAcHlMME0ZTa6H4I r+U57Oid2/dp01vdDgMvdb84JzOixL5JoQHu938RHKYP30IYQwkmhzBuFTkeMJzZsGS4WER47knxxd 45A6nI1zHNqipyFcbwqyCP0c9FHuUWJex4p1UkuPhpfl9BEy2OV28T7pqLJh6gYsDDqnVtz/7bvacg zQ8eV1paLCDfmSbshlpEBTxLnGWlSfPt0cPNLOqHf+Rw64Ee8lJY4M1B9xEIc9508QU/bABpMn7ngE vWtwJ0BkH0HMufph7v+73fhgqm8PD3cLFKaT53fQXDIr4zxoPqlAoJbGBvtQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1167; h=from:subject; bh=pDNvsGLyQA8RpBfkkqJxHruRXSdA8gdZalovRqbX85w=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjK9IT/n4E1MQAIRbO7TQnliesxT9vRRUjnB997VqU NfNmMx2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYyvSEwAKCRCJcvTf3G3AJv1uD/ 0UeTRzC7PYbrNFpo0erBLhfyq0OXI7KWJPUznMmMf+cAop1hoIyAS6RCvOy3P43EFrYY2LvmcGU3Aj SICc7baXEFvYdMhDJ8d101AolLKruLzinzUGntwccPS2dZe2w/x8T733W5uMnEOoDIW14/zr4IUtRh Vlx7PoTaeYeaEQPZwbWSdxU7qtxeqxD9LsQu+HlBYfR1k5rQ/OwJUa0VLmxQS3VuLxNzcqUFIRrz3E N9wSWjXJ1fpBM5rUyeWWd8dLef4aKwvQUrxvsQ2VWqLB5t57NofX/QpwkS3ypabCJnUg2eUl37eba5 OV6vc8FtBSMSsXXhnZ0qRfqcqAOpIlqc5fvFIq+bl3f4xCiJNeEM7atqS3LN6ZEK9rF9EWiIyjfIU1 rFgqaXZ47QKcNt6D+tThDEVTDgBDzW+/xD6gFm/gAUYLMU55Xrc41oHohWX310hGuJ4uQfMnkpzfJD l7QDNBoaF6Eo/aHjjnO/L/2LHxrNen15gNgss8f3Pbl5cYUEIwKYQTUHz4t+WuflfhJ72ydBaVxPhi nvK5XI8oXLZUTCjvvJ0NvdCQbKmYhFiTddotTbfTvs9VyXcsa4oRA58e65OY4nlgV9+2HJHYaTy3u4 CX+OyRwkHX1tSGbw74SSBv0sSXX5LiEItWNDNN9XJyygxijXQxQ7uWbdLfNg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -94,47 +95,37 @@ up proactively so the allocation is explicitly made for the full size,
 allowing the compiler to correctly reason about the resulting size of
 the buffer through the existing __alloc_size() hint.
 
-Cc: Alex Elder <elder@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/ipa/gsi_trans.c | 7 +++++--
+ fs/coredump.c | 7 +++++--
  1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ipa/gsi_trans.c b/drivers/net/ipa/gsi_trans.c
-index 18e7e8c405be..cec968854dcf 100644
---- a/drivers/net/ipa/gsi_trans.c
-+++ b/drivers/net/ipa/gsi_trans.c
-@@ -89,6 +89,7 @@ int gsi_trans_pool_init(struct gsi_trans_pool *pool, size_t size, u32 count,
- 			u32 max_alloc)
+diff --git a/fs/coredump.c b/fs/coredump.c
+index 9f4aae202109..0894b2c35d98 100644
+--- a/fs/coredump.c
++++ b/fs/coredump.c
+@@ -68,7 +68,10 @@ struct core_name {
+ 
+ static int expand_corename(struct core_name *cn, int size)
  {
- 	void *virt;
-+	size_t allocate;
+-	char *corename = krealloc(cn->corename, size, GFP_KERNEL);
++	char *corename;
++
++	size = kmalloc_size_roundup(size);
++	corename = krealloc(cn->corename, size, GFP_KERNEL);
  
- 	if (!size)
- 		return -EINVAL;
-@@ -104,13 +105,15 @@ int gsi_trans_pool_init(struct gsi_trans_pool *pool, size_t size, u32 count,
- 	 * If there aren't enough entries starting at the free index,
- 	 * we just allocate free entries from the beginning of the pool.
- 	 */
--	virt = kcalloc(count + max_alloc - 1, size, GFP_KERNEL);
-+	allocate = size_mul(count + max_alloc - 1, size);
-+	allocate = kmalloc_size_roundup(allocate);
-+	virt = kzalloc(allocate, GFP_KERNEL);
- 	if (!virt)
+ 	if (!corename)
  		return -ENOMEM;
+@@ -76,7 +79,7 @@ static int expand_corename(struct core_name *cn, int size)
+ 	if (size > core_name_size) /* racy but harmless */
+ 		core_name_size = size;
  
- 	pool->base = virt;
- 	/* If the allocator gave us any extra memory, use it */
--	pool->count = ksize(pool->base) / size;
-+	pool->count = allocate / size;
- 	pool->free = 0;
- 	pool->max_alloc = max_alloc;
- 	pool->size = size;
+-	cn->size = ksize(corename);
++	cn->size = size;
+ 	cn->corename = corename;
+ 	return 0;
+ }
 -- 
 2.34.1
 
