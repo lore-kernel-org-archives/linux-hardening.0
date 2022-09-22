@@ -2,128 +2,145 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCA6C54EE9
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 20:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21662C6FA82
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 21:05:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229535AbiIVU1D (ORCPT
+        id S230269AbiIVVFv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Sep 2022 16:27:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53348 "EHLO
+        Thu, 22 Sep 2022 17:05:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229512AbiIVU1D (ORCPT
+        with ESMTP id S229537AbiIVVFu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Sep 2022 16:27:03 -0400
-Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03AAC110B0A;
-        Thu, 22 Sep 2022 13:26:59 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id E3806E0D0F;
-        Thu, 22 Sep 2022 20:26:58 +0000 (UTC)
-Received: from pdx1-sub0-mail-a304 (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 91923E0969;
-        Thu, 22 Sep 2022 20:26:57 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1663878417; a=rsa-sha256;
-        cv=none;
-        b=0N1xJPA19d3g/7XSq1TDi5gK5QkWtsFzlBoGXCXaKgvnAMRo/aSKLz+LvTEZEBb91IUhf4
-        kePAdZk1WSHWmBChXjjLfneLYErYDG7l707iyxxT9Q+NlBChNSwRdsVaZh4ea885qCx0lT
-        q1eNyzjob9xfRw62+BzzGjxZarqwQKN/EtDk3yAoa4ALlYec5eKKzNoLroq8qxNZihM/gf
-        feaR4VUdhOZZcIhJSRfZPGcVLIUgZQac9BEEyclNcpANzLyijIpmSbs3AI34JWKYwxkxbo
-        tJqlOJ4s1Cpb4H6D5U/r+sXpx5St1GWwLOaqhjvVpb843hyVGtGTHiuNOyintQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1663878417;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=GWlJfwNbM+RBUcr+LC1OwrrEPQoaeo4v3LxR/u+AkoU=;
-        b=MB6IEeJu1fY5/1eQHZb+Y7vQ4KLTdYk7bRAA8r7kxsAMXldDv1OlbcNuO/qcqEWpKHkioV
-        mJ3h4b6vxxM5dhbhz6Tp0fGpblIM1Ni3S7AIKVP9XSCvinWb5Uo4X83maamXYrOxnNGwSm
-        UFb1oLXnhp/SeqKJRfkQAOV5iNeCAaaBfdyILhCn43N7U5VSoZAc7/wUfzhn0AJ6UzNDos
-        Hl3cAjFepbh020PIYMvl9cuhDnZSYtEThzOnQjcHX63u2BncXHH+SbgYuRYlut7bE8aN7J
-        U1DPXE5xf9kfcgIhvue2lOb541KMjuwXxHkEaALBVV6g8Lk+g2QIkWU4TloPgA==
-ARC-Authentication-Results: i=1;
-        rspamd-64f49dbfc4-tqm99;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=siddhesh@gotplt.org
-X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|siddhesh@gotplt.org
-X-MailChannels-Auth-Id: dreamhost
-X-Robust-Thread: 549f3fc70ee53b42_1663878418000_474975912
-X-MC-Loop-Signature: 1663878418000:1607438317
-X-MC-Ingress-Time: 1663878417999
-Received: from pdx1-sub0-mail-a304 (pop.dreamhost.com [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.126.240.206 (trex/6.7.1);
-        Thu, 22 Sep 2022 20:26:57 +0000
-Received: from [192.168.0.182] (bras-vprn-toroon4834w-lp130-16-184-147-84-238.dsl.bell.ca [184.147.84.238])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Thu, 22 Sep 2022 17:05:50 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC2A310CA5F;
+        Thu, 22 Sep 2022 14:05:49 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        (Authenticated sender: siddhesh@gotplt.org)
-        by pdx1-sub0-mail-a304 (Postfix) with ESMTPSA id 4MYRdr0XNtzB3;
-        Thu, 22 Sep 2022 13:26:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gotplt.org;
-        s=dreamhost; t=1663878417;
-        bh=GWlJfwNbM+RBUcr+LC1OwrrEPQoaeo4v3LxR/u+AkoU=;
-        h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
-        b=xynVUy7ve+n+dzMALyLMksOuiXJZJBKdcBotnnpAEYjBA0eEOEW31TrSR/TOQ3Me1
-         Idbmw035xgwwfeD89ROdj5SufEP1T6T11GpAmmilp5GKItiERD4BLjBQbWEUbI2g8k
-         528SFXG8Q3LY4HWedXr4OnJfBlUKqmoMqIGr+qu1jMNYQv+GYJIjd8xSSIVYKYONcY
-         XQBnIpy2Fp4prAcCHlAiMDanzr4Kxa0h2D6VWpNzvElOmi0dJLdwadkahoUQN6C8pj
-         whWl6WxIy7PjzKHNYjEOIFleuISRwo9hsQk0tpsLAGewfk93wAOD7HkJOG2oqb00F/
-         nBSY8IBdQ5Otg==
-Message-ID: <e2a0debe-e99f-2259-1cb9-35193c387c82@gotplt.org>
-Date:   Thu, 22 Sep 2022 16:26:54 -0400
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 4788F1F8BD;
+        Thu, 22 Sep 2022 21:05:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1663880748; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XKo+i59z16xYCKZljHHhrwZOK4kULyS2cn+2CLRfUM0=;
+        b=yYZqXMGxzMVH0hLKeYU8DtcEW5z+72E8D8wluVkMB38JNQ6mVtvWYW44sf9Qr+ZQm+We5X
+        ZxoqRMYTP+O1T/rNawICmYwKgqmViLi4WF8AuUeX1BOp9TwGPEwvLg1O9HhwZMa65TkR9W
+        yGHcw9EwWtJmQERB8NRzG2kYdmwST+U=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1663880748;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XKo+i59z16xYCKZljHHhrwZOK4kULyS2cn+2CLRfUM0=;
+        b=kaD9JOgsDV+IpQlfyoPslHKu+574Yw//haDJvp79fZBtXqIgPNRCscY2PniCUaAEZMnwWD
+        sPWSH1zmuGYRGABQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B86DF1346B;
+        Thu, 22 Sep 2022 21:05:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id QI4BLCvOLGP2JwAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Thu, 22 Sep 2022 21:05:47 +0000
+Message-ID: <cb38655c-2107-bda6-2fa8-f5e1e97eab14@suse.cz>
+Date:   Thu, 22 Sep 2022 23:05:47 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH 0/4] fortify: Use __builtin_dynamic_object_size() when
- available
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH 00/12] slab: Introduce kmalloc_size_roundup()
 Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
-Cc:     Nathan Chancellor <nathan@kernel.org>,
+To:     Kees Cook <keescook@chromium.org>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Cc:     Pekka Enberg <penberg@kernel.org>, Feng Tang <feng.tang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Tom Rix <trix@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-References: <20220920192202.190793-1-keescook@chromium.org>
-From:   Siddhesh Poyarekar <siddhesh@gotplt.org>
-In-Reply-To: <20220920192202.190793-1-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Alex Elder <elder@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
+        Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, netdev@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-fsdevel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        dev@openvswitch.org, x86@kernel.org,
+        linux-wireless@vger.kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Feng Tang <feng.tang@intel.com>
+References: <20220922031013.2150682-1-keescook@chromium.org>
+ <673e425d-1692-ef47-052b-0ff2de0d9c1d@amd.com>
+ <202209220845.2F7A050@keescook>
+From:   Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <202209220845.2F7A050@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2022-09-20 15:21, Kees Cook wrote:
-> Hi,
+On 9/22/22 17:55, Kees Cook wrote:
+> On Thu, Sep 22, 2022 at 09:10:56AM +0200, Christian König wrote:
+>> Am 22.09.22 um 05:10 schrieb Kees Cook:
+>> > Hi,
+>> > 
+>> > This series fixes up the cases where callers of ksize() use it to
+>> > opportunistically grow their buffer sizes, which can run afoul of the
+>> > __alloc_size hinting that CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE
+>> > use to perform dynamic buffer bounds checking.
+>> 
+>> Good cleanup, but one question: What other use cases we have for ksize()
+>> except the opportunistically growth of buffers?
 > 
-> This adjusts CONFIG_FORTIFY_SOURCE's coverage to include greater runtime
-> size checking from GCC and Clang's __builtin_dynamic_object_size(), which
-> the compilers can track either via code flow or from __alloc_size() hints.
+> The remaining cases all seem to be using it as a "do we need to resize
+> yet?" check, where they don't actually track the allocation size
+> themselves and want to just depend on the slab cache to answer it. This
+> is most clearly seen in the igp code:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/ethernet/intel/igb/igb_main.c?h=v6.0-rc6#n1204
+> 
+> My "solution" there kind of side-steps it, and leaves ksize() as-is:
+> https://lore.kernel.org/linux-hardening/20220922031013.2150682-8-keescook@chromium.org/
+> 
+> The more correct solution would be to add per-v_idx size tracking,
+> similar to the other changes I sent:
+> https://lore.kernel.org/linux-hardening/20220922031013.2150682-11-keescook@chromium.org/
+> 
+> I wonder if perhaps I should just migrate some of this code to using
+> something like struct membuf.
+> 
+>> Off hand I can't see any.
+>> 
+>> So when this patch set is about to clean up this use case it should probably
+>> also take care to remove ksize() or at least limit it so that it won't be
+>> used for this use case in the future.
+> 
+> Yeah, my goal would be to eliminate ksize(), and it seems possible if
+> other cases are satisfied with tracking their allocation sizes directly.
+
+I think we could leave ksize() to determine the size without a need for
+external tracking, but from now on forbid callers from using that hint to
+overflow the allocation size they actually requested? Once we remove the
+kasan/kfence hooks in ksize() that make the current kinds of usage possible,
+we should be able to catch any offenders of the new semantics that would appear?
+
+> -Kees
 > 
 
-FTR, I ran a linux build using gcc with allyesconfig and 
-fortify-metrics[1] to get a sense of how much object size coverage would 
-improve with __builtin_dynamic_object_size.  With a total of 3,877 
-__builtin_object_size calls, about 11.37% succeed in getting a result 
-that is not (size_t)-1.  If they were replaced by 
-__builtin_dynamic_object_size as this patch proposes, the success rate 
-improves to 16.25%, which is a ~1.4x improvement.
-
-This is a decent improvement by itself but it can be amplified further 
-by adding __attribute__((access (...)))[2] to function prototypes and 
-definitions, especially for functions that take in buffers and their 
-sizes as arguments since __builtin_dynamic_object_size in gcc is capable 
-of recognizing that and using it for object size determination (and 
-hence to fortify calls) within those functions.
-
-Thanks,
-Sid
-
-[1] https://github.com/siddhesh/fortify-metrics
-[2] https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html
