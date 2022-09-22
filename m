@@ -2,105 +2,80 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBC6C54EE9
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 04:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9FEC6FA82
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 04:26:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229771AbiIVETJ (ORCPT
+        id S229635AbiIVE0o (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Sep 2022 00:19:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37546 "EHLO
+        Thu, 22 Sep 2022 00:26:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230247AbiIVETG (ORCPT
+        with ESMTP id S229624AbiIVE0n (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Sep 2022 00:19:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35995A221B;
-        Wed, 21 Sep 2022 21:19:05 -0700 (PDT)
+        Thu, 22 Sep 2022 00:26:43 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38E10AE9CA;
+        Wed, 21 Sep 2022 21:26:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C0F2D62FAD;
-        Thu, 22 Sep 2022 04:19:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C3BEC433D6;
-        Thu, 22 Sep 2022 04:18:55 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DD240B8225A;
+        Thu, 22 Sep 2022 04:26:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA3D3C433D6;
+        Thu, 22 Sep 2022 04:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663820344;
-        bh=8xodEWMTndBecZO1JG0sANGtdcIZJhdCKz1ZoOkxjMk=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=uW+exXsXSGrew87ZojaTnnu2Pv1UtGXzQqjjLX2b7oGph4+PQelJUJX11FgjpqatQ
-         ELoqv5pR8bSV3/7535PDpBw6BVY4bi59s4BaKlJSIYVXzNRY6aDLmLKhJLPFtzieTO
-         iB7297vU052/FKz0Dc21FYTixE1ykO1VrtaDUUK3SkYuK3biSXS0J7OKhhQjo/eWra
-         7mj2sPUPAmfSHWCc1MV6VYkGtcRnMWzr/LNBb6lPibVdaMWLqUzHsztksp0W4hjZYv
-         zIN6846mujkb0CwMdnKoomN+OWU5pYCeMqp4QWw7CJvtecSieKja+ya7GWiRyAj90B
-         2nqT/vaz2aB1w==
-From:   Kalle Valo <kvalo@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Gregory Greenman <gregory.greenman@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Alex Elder <elder@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian =?utf-8?Q?K=C3=B6nig?= <christian.koenig@amd.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Jacob Shin <jacob.shin@amd.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, dev@openvswitch.org,
-        x86@kernel.org, llvm@lists.linux.dev,
+        s=k20201202; t=1663820799;
+        bh=h/gWxVwFGF8y1DWQKw50ktTmRYac11ZGNHJ3I0HSjwk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qaSE8faMuf45dfzKy5oiaS1Iecj+0dBguqPvVpVeWBFW+4ENZREvE3E9ldFUPyKxc
+         gAUiyU50Q8cMfXShnymiFa3bYWkD01oNmprTOebONPhwN2Z4T8R4w8WK32ggRCI343
+         zRqLAKxYVuHHKnhwTdxQnpcMcqClEtFIw3yqRJJxF8LE8eV6yAPpo6qAndDM1Q9/CV
+         z0JRjaI5BThIrXSbF6BxaL2NuQxu2RoyIvEQA7BCEdSlPpBRCKiVo+jL/kHwqSUe9j
+         ZHYwhphgKFDsYC0B3WqmIvx57WkuaOWkxYu3sRzsGq71aiuRRAx11i2vfcyq6OrsDZ
+         3x5i4jwrxkjVQ==
+Date:   Wed, 21 Sep 2022 23:26:33 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kevin Barnett <kevin.barnett@microsemi.com>,
+        Don Brace <don.brace@microchip.com>, storagedev@microchip.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 10/12] iwlwifi: Track scan_cmd allocation size explicitly
-References: <20220922031013.2150682-1-keescook@chromium.org>
-        <20220922031013.2150682-11-keescook@chromium.org>
-Date:   Thu, 22 Sep 2022 07:18:51 +0300
-In-Reply-To: <20220922031013.2150682-11-keescook@chromium.org> (Kees Cook's
-        message of "Wed, 21 Sep 2022 20:10:11 -0700")
-Message-ID: <87fsgk6nys.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+Subject: [PATCH 0/3][next] scsi: smartpqi: Replace one-element arrays with
+ flexible-array members
+Message-ID: <cover.1663816572.git.gustavoars@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
+Hi!
 
-> In preparation for reducing the use of ksize(), explicitly track the
-> size of scan_cmd allocations. This also allows for noticing if the scan
-> size changes unexpectedly. Note that using ksize() was already incorrect
-> here, in the sense that ksize() would not match the actual allocation
-> size, which would trigger future run-time allocation bounds checking.
-> (In other words, memset() may know how large scan_cmd was allocated for,
-> but ksize() will return the upper bounds of the actually allocated memory,
-> causing a run-time warning about an overflow.)
->
-> Cc: Gregory Greenman <gregory.greenman@intel.com>
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: Johannes Berg <johannes.berg@intel.com>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+This series aims to replace one-element arrays with flexible-array
+members in drivers/scsi/smartpqi/smartpqi.h
 
-Via which tree is this iwlwifi patch going? Normally via wireless-next
-or something else?
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [1].
+
+Link: https://en.wikipedia.org/wiki/Flexible_array_member
+Link: https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/109
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
+
+Gustavo A. R. Silva (3):
+  scsi: smartpqi: Replace one-element array with flexible-array member
+  scsi: smartpqi: Replace one-element arrays with flexible-array members
+  scsi: smartpqi: Use struct_size() helper in pqi_report_phys_luns()
+
+ drivers/scsi/smartpqi/smartpqi.h      |  6 +++---
+ drivers/scsi/smartpqi/smartpqi_init.c | 12 ++++--------
+ 2 files changed, 7 insertions(+), 11 deletions(-)
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+2.34.1
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
