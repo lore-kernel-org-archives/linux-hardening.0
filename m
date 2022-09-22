@@ -2,106 +2,128 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 541B9C54EE9
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 19:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCA6C54EE9
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 20:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232320AbiIVTkp (ORCPT
+        id S229535AbiIVU1D (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Sep 2022 15:40:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33546 "EHLO
+        Thu, 22 Sep 2022 16:27:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232242AbiIVTko (ORCPT
+        with ESMTP id S229512AbiIVU1D (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Sep 2022 15:40:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C874C100AAF;
-        Thu, 22 Sep 2022 12:40:42 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 22 Sep 2022 16:27:03 -0400
+Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03AAC110B0A;
+        Thu, 22 Sep 2022 13:26:59 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id E3806E0D0F;
+        Thu, 22 Sep 2022 20:26:58 +0000 (UTC)
+Received: from pdx1-sub0-mail-a304 (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 91923E0969;
+        Thu, 22 Sep 2022 20:26:57 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1663878417; a=rsa-sha256;
+        cv=none;
+        b=0N1xJPA19d3g/7XSq1TDi5gK5QkWtsFzlBoGXCXaKgvnAMRo/aSKLz+LvTEZEBb91IUhf4
+        kePAdZk1WSHWmBChXjjLfneLYErYDG7l707iyxxT9Q+NlBChNSwRdsVaZh4ea885qCx0lT
+        q1eNyzjob9xfRw62+BzzGjxZarqwQKN/EtDk3yAoa4ALlYec5eKKzNoLroq8qxNZihM/gf
+        feaR4VUdhOZZcIhJSRfZPGcVLIUgZQac9BEEyclNcpANzLyijIpmSbs3AI34JWKYwxkxbo
+        tJqlOJ4s1Cpb4H6D5U/r+sXpx5St1GWwLOaqhjvVpb843hyVGtGTHiuNOyintQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1663878417;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=GWlJfwNbM+RBUcr+LC1OwrrEPQoaeo4v3LxR/u+AkoU=;
+        b=MB6IEeJu1fY5/1eQHZb+Y7vQ4KLTdYk7bRAA8r7kxsAMXldDv1OlbcNuO/qcqEWpKHkioV
+        mJ3h4b6vxxM5dhbhz6Tp0fGpblIM1Ni3S7AIKVP9XSCvinWb5Uo4X83maamXYrOxnNGwSm
+        UFb1oLXnhp/SeqKJRfkQAOV5iNeCAaaBfdyILhCn43N7U5VSoZAc7/wUfzhn0AJ6UzNDos
+        Hl3cAjFepbh020PIYMvl9cuhDnZSYtEThzOnQjcHX63u2BncXHH+SbgYuRYlut7bE8aN7J
+        U1DPXE5xf9kfcgIhvue2lOb541KMjuwXxHkEaALBVV6g8Lk+g2QIkWU4TloPgA==
+ARC-Authentication-Results: i=1;
+        rspamd-64f49dbfc4-tqm99;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=siddhesh@gotplt.org
+X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|siddhesh@gotplt.org
+X-MailChannels-Auth-Id: dreamhost
+X-Robust-Thread: 549f3fc70ee53b42_1663878418000_474975912
+X-MC-Loop-Signature: 1663878418000:1607438317
+X-MC-Ingress-Time: 1663878417999
+Received: from pdx1-sub0-mail-a304 (pop.dreamhost.com [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.126.240.206 (trex/6.7.1);
+        Thu, 22 Sep 2022 20:26:57 +0000
+Received: from [192.168.0.182] (bras-vprn-toroon4834w-lp130-16-184-147-84-238.dsl.bell.ca [184.147.84.238])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 64EF7637B5;
-        Thu, 22 Sep 2022 19:40:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45829C433C1;
-        Thu, 22 Sep 2022 19:40:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663875641;
-        bh=Iu+ioVZAl++oTxE1oI47t/6oQuwifWn8lmpY1yCr8J4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YC8ixN8EP0aZI0e+nDZs91siEij37VrKEmFWG3Ty2t8usgwjVxksauo5Og7qifkq5
-         ESf2BqmXtU9USNgh+H2YKJEXRWpyu7EDcgicu3AJOn2B/4WayyL94dp8xbokjZvmw2
-         M56qmrIx+uvo2sUUrQmzfQ5/ucT/pOiWMPHGNcLJ6IIzRCYzVRcutddcWgSvzdbhZM
-         fcZkJSFboZpZl7fu6RLNBgaLlv3gbFkR4ETLqK750bOZ4J5pst6/eAIZH31PhhVZLn
-         QMHkEcQOXS8pXwYt/LtILex4KMGS/VXDhD7XC9erQbOO/ciNySxRd4PP7XyTR4i5Zs
-         1sdrT7lGqR5Mw==
-Date:   Thu, 22 Sep 2022 12:40:39 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        David Rientjes <rientjes@google.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alex Elder <elder@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Jacob Shin <jacob.shin@amd.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, dev@openvswitch.org,
-        x86@kernel.org, linux-wireless@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 02/12] skbuff: Proactively round up to kmalloc bucket
- size
-Message-ID: <20220922124039.688be0b8@kernel.org>
-In-Reply-To: <20220922031013.2150682-3-keescook@chromium.org>
-References: <20220922031013.2150682-1-keescook@chromium.org>
-        <20220922031013.2150682-3-keescook@chromium.org>
+        (Authenticated sender: siddhesh@gotplt.org)
+        by pdx1-sub0-mail-a304 (Postfix) with ESMTPSA id 4MYRdr0XNtzB3;
+        Thu, 22 Sep 2022 13:26:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gotplt.org;
+        s=dreamhost; t=1663878417;
+        bh=GWlJfwNbM+RBUcr+LC1OwrrEPQoaeo4v3LxR/u+AkoU=;
+        h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
+        b=xynVUy7ve+n+dzMALyLMksOuiXJZJBKdcBotnnpAEYjBA0eEOEW31TrSR/TOQ3Me1
+         Idbmw035xgwwfeD89ROdj5SufEP1T6T11GpAmmilp5GKItiERD4BLjBQbWEUbI2g8k
+         528SFXG8Q3LY4HWedXr4OnJfBlUKqmoMqIGr+qu1jMNYQv+GYJIjd8xSSIVYKYONcY
+         XQBnIpy2Fp4prAcCHlAiMDanzr4Kxa0h2D6VWpNzvElOmi0dJLdwadkahoUQN6C8pj
+         whWl6WxIy7PjzKHNYjEOIFleuISRwo9hsQk0tpsLAGewfk93wAOD7HkJOG2oqb00F/
+         nBSY8IBdQ5Otg==
+Message-ID: <e2a0debe-e99f-2259-1cb9-35193c387c82@gotplt.org>
+Date:   Thu, 22 Sep 2022 16:26:54 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 0/4] fortify: Use __builtin_dynamic_object_size() when
+ available
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Tom Rix <trix@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+References: <20220920192202.190793-1-keescook@chromium.org>
+From:   Siddhesh Poyarekar <siddhesh@gotplt.org>
+In-Reply-To: <20220920192202.190793-1-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 21 Sep 2022 20:10:03 -0700 Kees Cook wrote:
-> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-> index 974bbbbe7138..4fe4c7544c1d 100644
-> --- a/net/core/skbuff.c
-> +++ b/net/core/skbuff.c
-> @@ -427,14 +427,15 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp_t gfp_mask,
->  	 */
->  	size = SKB_DATA_ALIGN(size);
->  	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
-> -	data = kmalloc_reserve(size, gfp_mask, node, &pfmemalloc);
-> -	if (unlikely(!data))
-> -		goto nodata;
-> -	/* kmalloc(size) might give us more room than requested.
-> +	/* kmalloc(size) might give us more room than requested, so
-> +	 * allocate the true bucket size up front.
->  	 * Put skb_shared_info exactly at the end of allocated zone,
->  	 * to allow max possible filling before reallocation.
->  	 */
-> -	osize = ksize(data);
-> +	osize = kmalloc_size_roundup(size);
-> +	data = kmalloc_reserve(osize, gfp_mask, node, &pfmemalloc);
-> +	if (unlikely(!data))
-> +		goto nodata;
->  	size = SKB_WITH_OVERHEAD(osize);
->  	prefetchw(data + size);
+On 2022-09-20 15:21, Kees Cook wrote:
+> Hi,
+> 
+> This adjusts CONFIG_FORTIFY_SOURCE's coverage to include greater runtime
+> size checking from GCC and Clang's __builtin_dynamic_object_size(), which
+> the compilers can track either via code flow or from __alloc_size() hints.
+> 
 
-I'd rename osize here to alloc_size for consistency but one could 
-argue either way :)
+FTR, I ran a linux build using gcc with allyesconfig and 
+fortify-metrics[1] to get a sense of how much object size coverage would 
+improve with __builtin_dynamic_object_size.  With a total of 3,877 
+__builtin_object_size calls, about 11.37% succeed in getting a result 
+that is not (size_t)-1.  If they were replaced by 
+__builtin_dynamic_object_size as this patch proposes, the success rate 
+improves to 16.25%, which is a ~1.4x improvement.
 
-Acked-by: Jakub Kicinski <kuba@kernel.org>
+This is a decent improvement by itself but it can be amplified further 
+by adding __attribute__((access (...)))[2] to function prototypes and 
+definitions, especially for functions that take in buffers and their 
+sizes as arguments since __builtin_dynamic_object_size in gcc is capable 
+of recognizing that and using it for object size determination (and 
+hence to fortify calls) within those functions.
+
+Thanks,
+Sid
+
+[1] https://github.com/siddhesh/fortify-metrics
+[2] https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html
