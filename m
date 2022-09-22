@@ -2,64 +2,63 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED42DC6FA8E
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 03:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7999C32771
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 03:13:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230307AbiIVDN1 (ORCPT
+        id S231433AbiIVDNe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Sep 2022 23:13:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45098 "EHLO
+        Wed, 21 Sep 2022 23:13:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231179AbiIVDLq (ORCPT
+        with ESMTP id S230058AbiIVDLw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Sep 2022 23:11:46 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEEC46DAC2
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 20:10:30 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id t3so7553356ply.2
+        Wed, 21 Sep 2022 23:11:52 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D6FF6E2F1
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 20:10:31 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id o99-20020a17090a0a6c00b002039c4fce53so827781pjo.2
         for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 20:10:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=TDASAml4kCnGP6A0dhCkNjKPm18x/T6dZyC75aPZacc=;
-        b=WPgEF+jupR4SGB4DLno2k2bBCbZ8b8f+ZrlxKcIQeEbCtj5WBgsCFhiT+NIX1Fpq8q
-         RVzdxz0WZY9Xy+TjHVDvowfkPuPW/OFy/IlUhIW+WjLJlx/oYe632OrUVLWT43o6LOap
-         J1uHENSlV+a7neJtjBRovZ5eH4VN/4Sv8DcCs=
+        bh=qxVZgozpxUqw/OCmt2hiw12U/0MyvSZtu5qBBtiyWvw=;
+        b=YceqUeE5vYLBI4ZX8VHDnLZLf4LI9m/umYwz5bsG0CsZBYwVRKID0Xij6KROSl4WW+
+         /TrR0tpL0v+DF8mfo3NenZgJCDlxojKf81TDxbqYAGTS/Z+tsMmbhRNDYO79WP6ExIu9
+         zC6fMXi3wRzqyMx5oelK9O9SszqI+SIirgmsc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=TDASAml4kCnGP6A0dhCkNjKPm18x/T6dZyC75aPZacc=;
-        b=RbWWXVHDvnbxZbncdllcqcR1ms0U79bshURNXHYxzqX0Ce41c67+cLAblyVX40NDeq
-         BPCCbsi8hNv9xUIT9BYlSWycsLxT40Up2RWHbaYg4rKYcE6Nf3gmReuzwr6rigPx+7SL
-         c5672x79UsTlOuXj/NrukE9BuTQCiJoayFCCZTfJi/PsHslSvHRwEURCBrB3SfBYNfZo
-         v170sVQ+PbCsnr5TjVnWuSOepmYoAkGD53faw/S5EY5N/r9hZwyyX5A9wccpfGJuBzqB
-         oJMJr8iVtRTuevxFk4Cd0X9dxVmIQQe6X4L9n/DxK1zniLaASXzZFQFE6Lgm7xIVZry5
-         MbXA==
-X-Gm-Message-State: ACrzQf0wYIpdI8/0s+5GVcRMqhBks8iIJn8q2Eq9scf7CIyQbrYwxlK7
-        sWbYapj7m0IQmKfsL6JbPSXM8w==
-X-Google-Smtp-Source: AMsMyM6FwJ0f+Bofi6cEtpiWEB7NdUhtmrkt85vC8m03N7qUc6HActCoKwZbZiJ520VUx/+qozuRZA==
-X-Received: by 2002:a17:902:ec85:b0:178:8a69:45fb with SMTP id x5-20020a170902ec8500b001788a6945fbmr1346743plg.130.1663816229473;
-        Wed, 21 Sep 2022 20:10:29 -0700 (PDT)
+        bh=qxVZgozpxUqw/OCmt2hiw12U/0MyvSZtu5qBBtiyWvw=;
+        b=41+zhbJ63OQOQG3IoPGMlyqXsmHpLqZcljKyiob2L6E+qpML0LEHahsN2TvRClShq/
+         4O+7leB6TYEczw64IfFoE/Mpg4yKmOm7hV3qxCfjR6+cWgMA6+vVozPfIRIQaNQ55m3T
+         GcfvyUnU4tffnQpR5d9f5Su1ZhXdSakXssaAnVqBYEowC+Gje4IDwreWtWdC/0+N7sBl
+         5ryI1TEsG3sE6HcvLRVTuIrNnaUw4LTsC15MJL478+kOVR80xGbpYnoa146qhVQZcG68
+         +bZbTqk4zFHY2UPfrp1nmzB9IbD/+FtpfR/JBFAnsmqSD72SFlQBbUFFaeiMSd5n7cJi
+         +QnA==
+X-Gm-Message-State: ACrzQf3x4EBebNHmqyn6NMjsL0kOiQ/vFMqbKd66Ckfgr5t3gmO31jjN
+        vNs64vl2xNQNpU7TwxCKBaXLaQ==
+X-Google-Smtp-Source: AMsMyM5eu+CoD5QA+YWTzFQPQA65ZAQe9wx2y8um8qAtQyx/81XSGYYdjISHnZdAlryk2cpvPh097g==
+X-Received: by 2002:a17:902:7e83:b0:177:e667:7841 with SMTP id z3-20020a1709027e8300b00177e6677841mr1282723pla.18.1663816230671;
+        Wed, 21 Sep 2022 20:10:30 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t11-20020a170902e84b00b001782a6fbcacsm2768353plg.101.2022.09.21.20.10.24
+        by smtp.gmail.com with ESMTPSA id w23-20020a1709026f1700b001783a917b9asm673159plk.127.2022.09.21.20.10.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 21 Sep 2022 20:10:26 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Vlastimil Babka <vbabka@suse.cz>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Pravin B Shelar <pshelar@ovn.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        dev@openvswitch.org, Pekka Enberg <penberg@kernel.org>,
+        Pekka Enberg <penberg@kernel.org>,
         David Rientjes <rientjes@google.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mm@kvack.org, "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Alex Elder <elder@kernel.org>,
         Josef Bacik <josef@toxicpanda.com>,
@@ -71,61 +70,58 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
         Miguel Ojeda <ojeda@kernel.org>,
         Jacob Shin <jacob.shin@amd.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-btrfs@vger.kernel.org,
         linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, x86@kernel.org,
-        linux-wireless@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH 08/12] openvswitch: Proactively round up to kmalloc bucket size
-Date:   Wed, 21 Sep 2022 20:10:09 -0700
-Message-Id: <20220922031013.2150682-9-keescook@chromium.org>
+        intel-wired-lan@lists.osuosl.org, dev@openvswitch.org,
+        x86@kernel.org, linux-wireless@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: [PATCH 12/12] slab: Restore __alloc_size attribute to __kmalloc_track_caller
+Date:   Wed, 21 Sep 2022 20:10:13 -0700
+Message-Id: <20220922031013.2150682-13-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220922031013.2150682-1-keescook@chromium.org>
 References: <20220922031013.2150682-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1419; h=from:subject; bh=BnVOhrGnWnn0qmsrneuatz5VZroW3iZYMrlDdw6WzZA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjK9ITSglsXN14oMtyaHSvyKAfYqb/jU+ua3WQ3QDI +BCEy4WJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYyvSEwAKCRCJcvTf3G3AJuckD/ 0fC2DD7jgGoKpFD7s52Imf5skay/p4qVmK0rvZNjkGAmNGvUFsTnir5GI3TMV3p/FWB9oxlzjn3lRJ YbQuqElrhpv1aHtZF5nq2pNe2WeidRtExDsumfRW/9rwf58N/wfxbElAY9GHoqVRc3lUIV9oQYeOhK 1kJwstuo1zV2TYN4g0iYTTSXNQhbPXQ513gM0PP9l/YiITmzLOgjZgDFaN+QjDNsRclDp6Yt0t3KK0 u44yaM81Tj4s/G/cazw7Jsf6TLb2WBPqCt8tdGe27UEsHIqsFjpRY7nmsAAp8iG8Xem8x+/oYI/Wbk HgMgUuw1m5UkfchSrwCJfeis+j1yNloKfOqqnWkCkG+hSthHxri16TT3gYtEK81SyX7qdZEi0YzWC1 HzPQNdrH6o3PN6vMQOI+fCDeICkvey7UrPwFg21Eqq5d0i1Q/IjdJkPIS5rxpe10rGou2R7M83TPCj g7LmoCyTxmRqFzEzRuBHtLLGVMHa5PjJy+FD8ubMoYHOzgg+Mw1qV+65O4LUccNAhythMxiYUkwGsA 5/JlFokXB6JtqWVHa5OTlymJF5c70uDllOyQsXSHJV/6Th+1UpurayKJIgQFsm/OxxbzV0XgUK3Dam UhsIlzfHslsALppIqri1WH09qAL4uxlG1Se3WTFKlmYiDtPENjS7L1iOMWDg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1539; h=from:subject; bh=OIiXewiJtJloKAX8DOwo5WpUjhu8p3BhQEgjb94POmU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjK9IUphiC6b+jlnve6/WNpL7tI32u/OY+d1HLdPMo annUuq2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYyvSFAAKCRCJcvTf3G3AJlTRD/ 9zGxikcJjFFHdBDIRC8el1bT8i8MIl1Oz2r6j4svUQE/cn0btongvxnGDbygRuZC43lwApaQa0M8Pt AvmL/hvvYmdFiuzN6An0FZ4ORvTCLn1uzH4EirSEKQxkllpH0r1YW2hqSLpqcaY86iquT8vB02Tv16 e13SWQA7nA1/QWGk0qUxi0YLrW0hOtkH2mg2fITcspULau1LHMsUmc37gU0TbvIrbx9hN87N2NnOzz alo6xwbNstj0cru/3QyQ5TJdhcVKP54qndI7drNEdhl8YWC7CNhwu0vFdbZ/LfLgxO2PtTl9nz23b0 fDmn0WywY/tJQOqhYvvIWsDN69+iEub68yvR3WWj2bKYgwuaZ89nPNObeP4LOThYNTFoEclKMY7Rja jkOQc8wAtgZmSKL9TVY3alYeLpe9CQJEnOq4oSVlfTwIftpgULM6xBq459EK/qrpUHyyV8vmzyoEjv Pz/49h7U3Q7bYxnoWIkIniYWWT6d9d1DH3MtHi4eCTaj2iVTLdQRLx7Zw2/KJ4VvLPA3/587G7zFdJ OzdFQo4VVfEuH6S3EaIPg5mtVX0AbNqQxBEV1EkPNU2qQK6x6coo691bRHOWqgucqydaoj3YDERK1B 3pAijp4vU8wsUovuHXrgjKcWnIuVw656YURrFma1ktTDOShGFqP+WQ5kIpqw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Instead of having a mismatch between the requested allocation size and
-the actual kmalloc bucket size, which is examined later via ksize(),
-round up proactively so the allocation is explicitly made for the full
-size, allowing the compiler to correctly reason about the resulting size
-of the buffer through the existing __alloc_size() hint.
+With skbuff's post-allocation use of ksize() rearranged to use
+kmalloc_size_round() prior to allocation, the compiler can correctly
+reason about the size of these allocations. The prior mismatch had caused
+buffer overflow mitigations to erroneously fire under CONFIG_UBSAN_BOUNDS,
+requiring a partial revert of the __alloc_size attributes. Restore the
+attribute that had been removed in commit 93dd04ab0b2b ("slab: remove
+__alloc_size attribute from __kmalloc_track_caller").
 
-Cc: Pravin B Shelar <pshelar@ovn.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
-Cc: dev@openvswitch.org
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-mm@kvack.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- net/openvswitch/flow_netlink.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/linux/slab.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/openvswitch/flow_netlink.c b/net/openvswitch/flow_netlink.c
-index 4c09cf8a0ab2..11b2e2c94c7e 100644
---- a/net/openvswitch/flow_netlink.c
-+++ b/net/openvswitch/flow_netlink.c
-@@ -2306,10 +2306,12 @@ int ovs_nla_put_mask(const struct sw_flow *flow, struct sk_buff *skb)
- static struct sw_flow_actions *nla_alloc_flow_actions(int size)
- {
- 	struct sw_flow_actions *sfa;
-+	int alloc_size;
- 
- 	WARN_ON_ONCE(size > MAX_ACTIONS_BUFSIZE);
- 
--	sfa = kmalloc(sizeof(*sfa) + size, GFP_KERNEL);
-+	alloc_size = kmalloc_size_roundup(sizeof(*sfa) + size);
-+	sfa = kmalloc(alloc_size, GFP_KERNEL);
- 	if (!sfa)
- 		return ERR_PTR(-ENOMEM);
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index ac3832b50dbb..dd50ed7207c9 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -693,7 +693,8 @@ static inline __alloc_size(1, 2) void *kcalloc(size_t n, size_t size, gfp_t flag
+  * allocator where we care about the real place the memory allocation
+  * request comes from.
+  */
+-extern void *__kmalloc_track_caller(size_t size, gfp_t flags, unsigned long caller);
++extern void *__kmalloc_track_caller(size_t size, gfp_t flags, unsigned long caller)
++				   __alloc_size(1);
+ #define kmalloc_track_caller(size, flags) \
+ 	__kmalloc_track_caller(size, flags, _RET_IP_)
  
 -- 
 2.34.1
