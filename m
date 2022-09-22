@@ -2,65 +2,64 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0535C32771
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 03:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF88C6FA8E
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 03:12:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231344AbiIVDMh (ORCPT
+        id S231225AbiIVDMt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Sep 2022 23:12:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46948 "EHLO
+        Wed, 21 Sep 2022 23:12:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231193AbiIVDLf (ORCPT
+        with ESMTP id S231236AbiIVDLh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Sep 2022 23:11:35 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAA7D6AA1D
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 20:10:28 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id a80so7953181pfa.4
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 20:10:28 -0700 (PDT)
+        Wed, 21 Sep 2022 23:11:37 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D3FD9322B
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 20:10:29 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id w10so6664182pll.11
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 20:10:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=KtJQxM97YBw1ybtvuETSvn7dCGYbbNyL/TMT/+SzmmU=;
-        b=FXq499jerICaOIudNJl9X9HvncqoZ26Rey2ZEcTHwfOsxqpZ88m1AcMNvabITl7ktf
-         otabATcFdrn9uUfQaBz54ORv9CLq2BALyhNuHATyi853KWeUJJODBiaOX2We8TBvbr3R
-         089SGfE8g5vUSB25WVvFLrng0+Ij1LNA8tvzE=
+        bh=nllmYacJVnWYWyMDuOWg+UhFJID/1u9fgEUSXV9a/I0=;
+        b=ObVBgj10USdxX2qau03B/fvKSrj9pfzNX++HX3pR1Ku6Ct/c+Mn8B6TC2gGByEksOv
+         ftM/dSMzexkJk0pSadbJzyromjdrIDks1988E0vt92N7zZIkoEa3uLvIJsqtFfZmvRDx
+         8dl5wBNFG6y2ajB8JRxgoslRMstHrNUREimgg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=KtJQxM97YBw1ybtvuETSvn7dCGYbbNyL/TMT/+SzmmU=;
-        b=Zt88SZWhaytBK+ZZk0xMDxUnVJKGvWEfyCRSDvJW22/XSwLvRTpmNVYEntX7X/K6iQ
-         6cFSs2Iu0q0I0Om+PxBIkwdMzhWzV4lTx5wOY8CMaKEyDKsz57E7vDNJfJyhOXpKjr/l
-         DqEQiSkiZ8FKnm4Bj4l+D3H+O3SfZ1HOzvQpyyhgB+i089g3YqP0TjTOuEsqgZxeeHw7
-         /7rMpKS8fwFb/zDRS9MhOpQfIA7JN5+kT1wPofr+TvnXOpcIJ15pjLlNE2fAOU8kfQM+
-         lSj+piMuuefCMuD2NvE+zlAZEB/gZug1ZDwv597xv2a/40eSESIDSgxpSrG2mj1Fb+40
-         tAtA==
-X-Gm-Message-State: ACrzQf1pozkthwUNrezsv0vsh8zSS4FAQ3IBY5+4/qf603vbV/13Ojyq
-        Dh+xJ3Mr3a289G6Ajr5UsGkOqQ==
-X-Google-Smtp-Source: AMsMyM5DFDxK0WCMKFDuZxvtbntvdP6o5W4EoaVjl4WwV6+EDjakr1hsYDIL2vLeT0yZPL8CvbXBgA==
-X-Received: by 2002:a05:6a00:174f:b0:537:6845:8b1a with SMTP id j15-20020a056a00174f00b0053768458b1amr1476359pfc.68.1663816227626;
-        Wed, 21 Sep 2022 20:10:27 -0700 (PDT)
+        bh=nllmYacJVnWYWyMDuOWg+UhFJID/1u9fgEUSXV9a/I0=;
+        b=XobKCW/ca1sv72tOMNGCu01QrG1si6UhhQ8WIPEQbGCdoyT/L//5Us+jP0b9V2Q71u
+         3XgLCap3DsC2SVIp+MJ8sDc1MukNJ9BsFLJs0Q0hoYel6B9HVCWJ9w4EcDSpG6TsXkzV
+         C69Vp8LBrN8VKnQEYZUurZXDDMP1x/Qg8rNcRukTJbX/OBav42Ed+nc9CHq3nr7O82Me
+         0ppD0h/TKdy5MMP+Gmkk7mYNf1BOZTv3Iegqx3R0J7MSDQ5VdR+zn6+Zc744n22ibw+X
+         EKtJz+vZ2m7JKAKGeA/ogvWEJ9LJsQppTnbzo/coAYAWkEi8vPJnBW7lIYi4EJmD57Xs
+         KJRw==
+X-Gm-Message-State: ACrzQf01yFvMbxEcOY81dl4+WcvqAaC12jvZhja+rrCNTvFsfy/Sbq6H
+        LlrDkUkLMmGCBEpmS+oVPxMMSg==
+X-Google-Smtp-Source: AMsMyM49XhohtYBkjYXAytE2XFYLdWSstHIvAKOydHl9P7CLdwWaHlEa/nts1aXdGwMJ6p2JjPZrLw==
+X-Received: by 2002:a17:90b:180a:b0:202:ae1f:328a with SMTP id lw10-20020a17090b180a00b00202ae1f328amr13239578pjb.78.1663816228865;
+        Wed, 21 Sep 2022 20:10:28 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g2-20020a17090a9b8200b002001c9bf22esm2650047pjp.8.2022.09.21.20.10.24
+        by smtp.gmail.com with ESMTPSA id d18-20020a170902ced200b001783f964fe3sm2766723plg.113.2022.09.21.20.10.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 21 Sep 2022 20:10:26 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Vlastimil Babka <vbabka@suse.cz>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        Daniel Micay <danielmicay@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
         Pekka Enberg <penberg@kernel.org>,
         David Rientjes <rientjes@google.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Alex Elder <elder@kernel.org>,
@@ -68,61 +67,81 @@ Cc:     Kees Cook <keescook@chromium.org>,
         David Sterba <dsterba@suse.com>,
         Sumit Semwal <sumit.semwal@linaro.org>,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Daniel Micay <danielmicay@gmail.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
         Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
         Miguel Ojeda <ojeda@kernel.org>,
         Jacob Shin <jacob.shin@amd.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        dev@openvswitch.org, x86@kernel.org,
-        linux-wireless@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH 07/12] igb: Proactively round up to kmalloc bucket size
-Date:   Wed, 21 Sep 2022 20:10:08 -0700
-Message-Id: <20220922031013.2150682-8-keescook@chromium.org>
+        linux-mm@kvack.org, netdev@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-fsdevel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        dev@openvswitch.org, linux-wireless@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: [PATCH 09/12] x86/microcode/AMD: Track patch allocation size explicitly
+Date:   Wed, 21 Sep 2022 20:10:10 -0700
+Message-Id: <20220922031013.2150682-10-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220922031013.2150682-1-keescook@chromium.org>
 References: <20220922031013.2150682-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1355; h=from:subject; bh=GnGo60Q8Ey4t/45rZVkHHXQYJiJECnGYVFTtoXWQ73Y=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjK9ITjdxbzH7GftOj5prz+63FJ1nPbhwlH4IVeCtD 8ED2tMyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYyvSEwAKCRCJcvTf3G3AJjCiD/ wMJri5QLOOqouOEh6gNHJttRS42p0Og0uXHFXBpfBrQHVdMA/pZ7vM6aplEkCSzfpBRS9ns48N68wS jcAXVJGdtoRra0fSdkwT4D/eNkhKa/DLtxD0AIjix8HXBLfF0xblfFujjMTn2AcNU0TIoJNpYb7VgX k5ga7gxgqR6sqMlNaFb5qthk1BfSfBFjP5XdVSZtQjZHuc1xAXbYyBzlTYP5PHfAzBhZdVwZxDKAoh HLy++A+AphN0n4DVADlQ2Pn0+VZTZBXDRRAYBIKxn4mFfjNlexbTZx9K9vi+BB/QWW7WFQR851SPy2 H0AIW6jGUmqOlFp42ZjG32ra+NQrzMdB3SHS0UCKvWrHcgGOij3jZloSaDZ9TqEk86JUA2eNTV8EsO H2dRnVfemfa8X8YeGg5PS19OLC7pnOJYipxZfBdX5FrqP2SnHC2IqAqpLlOfeapo5yjFQdZZY/QeMW aYDixd+87XW69dT3Y8AMCAHA74UZNFOpQ96K/S/nwAMoGRQVUKRicu3fOrBwssRCIoAd24pldFMqg3 1lPT3qVVTF1IPhnR4vQ3RQJihuPUWjOP3S+3lH2U15ueKvZmGmjl7MCHI2RUE87+c+TqOb87PwG6fW eepaAJi+LmbVjbB1PG3ptYHjsDDSkTgUtQRqZ0fL/ZAxrsHf91M5rKLsQBig==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2149; h=from:subject; bh=LRLPHeutQvsvCqROzEs3/rr/P6uPQnPuMyr/7IE9r2g=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjK9IUgfEF5Q67qoI3XgFPEX8J4smU+peBuyPzdpCc nIEpFpaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYyvSFAAKCRCJcvTf3G3AJsUGD/ 4jiZQIVRjbRNvUVUl7QhNkO/5LbO1QHELDOu9VeAlksbBy6XuO+qlBw7CoqEHO44r9YLdeZFAssNud wYDnzHSwrmpVT9VOZKujYIXUu4jVQeSmpRL+/zi2WAX5dpAscIDYzhoFkFQuW/aQn9nvVlwwWv2G5A GfumYAURZ8BP94NLhlaTRLKHc10AEhWJ08FZCbBy/NXE7LT5VZa1H9zYppFy1ulRzYa4xiX1Weubkg o7PsRtqxx2jPKi9ywlm4JL33MLhQ7Hl1dObUN2bhp8DRTalPx6Bc6SUbteYJPbwKYEr7+5pD3iT+ek 78esKD6WsOGfBLAZ8pf8lCldD0XPYRApJVGasz+zBeg9LCqumUaDwNzE9GNpHfaorgWXNBuXeuKFif 5rYMN95t+ygRdOvQdNJlCJ0JlPfMcJajLzKyYKCvSlICPcTlaGpjjCGXtVFMSUZgvkbvhOZnwoRTfP LCMqYLu+xX8m1YKOnipcqlhorAe+A8u41dR2tlI0HUW4UYrUIZQ5O+CQqG80Ge713Eg5bk43crrhKD YsmBHTsJ/g7EuL/mG/+BltzwRQSF9KUT12J1eO+hSib+I+7XiE4mW8dN4M4JLJmSxvAa5G/pJSmhKH 6ZKIBAfSeBqo6VbAeV28Lkl0KnRiBwVDbQ08NwltR1YuONRBkYjOqYRx4S+w==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Instead of having a mismatch between the requested allocation size and
-the actual kmalloc bucket size, which is examined later via ksize(),
-round up proactively so the allocation is explicitly made for the full
-size, allowing the compiler to correctly reason about the resulting size
-of the buffer through the existing __alloc_size() hint.
+In preparation for reducing the use of ksize(), record the actual
+allocation size for later memcpy(). This avoids copying extra
+(uninitialized!) bytes into the patch buffer when the requested allocation
+size isn't exactly the size of a kmalloc bucket. Additionally fixes
+potential future issues where runtime bounds checking will notice that
+the buffer was allocated to a smaller value than returned by ksize().
 
-Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: intel-wired-lan@lists.osuosl.org
-Cc: netdev@vger.kernel.org
+Suggested-by: Daniel Micay <danielmicay@gmail.com>
+Link: https://lore.kernel.org/lkml/CA+DvKQ+bp7Y7gmaVhacjv9uF6Ar-o4tet872h4Q8RPYPJjcJQA@mail.gmail.com/
+Fixes: 757885e94a22 ("x86, microcode, amd: Early microcode patch loading support for AMD")
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/ethernet/intel/igb/igb_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/microcode.h    | 1 +
+ arch/x86/kernel/cpu/microcode/amd.c | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index 2796e81d2726..4d70ee5b0f79 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -1196,6 +1196,7 @@ static int igb_alloc_q_vector(struct igb_adapter *adapter,
+diff --git a/arch/x86/include/asm/microcode.h b/arch/x86/include/asm/microcode.h
+index 0c3d3440fe27..aa675783412f 100644
+--- a/arch/x86/include/asm/microcode.h
++++ b/arch/x86/include/asm/microcode.h
+@@ -9,6 +9,7 @@
+ struct ucode_patch {
+ 	struct list_head plist;
+ 	void *data;		/* Intel uses only this one */
++	unsigned int size;
+ 	u32 patch_id;
+ 	u16 equiv_cpu;
+ };
+diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+index 8b2fcdfa6d31..615bc6efa1dd 100644
+--- a/arch/x86/kernel/cpu/microcode/amd.c
++++ b/arch/x86/kernel/cpu/microcode/amd.c
+@@ -788,6 +788,7 @@ static int verify_and_add_patch(u8 family, u8 *fw, unsigned int leftover,
+ 		kfree(patch);
+ 		return -EINVAL;
+ 	}
++	patch->size = *patch_size;
  
- 	ring_count = txr_count + rxr_count;
- 	size = struct_size(q_vector, ring, ring_count);
-+	size = kmalloc_size_roundup(size);
+ 	mc_hdr      = (struct microcode_header_amd *)(fw + SECTION_HDR_SIZE);
+ 	proc_id     = mc_hdr->processor_rev_id;
+@@ -869,7 +870,7 @@ load_microcode_amd(bool save, u8 family, const u8 *data, size_t size)
+ 		return ret;
  
- 	/* allocate q_vector and rings */
- 	q_vector = adapter->q_vector[v_idx];
+ 	memset(amd_ucode_patch, 0, PATCH_MAX_SIZE);
+-	memcpy(amd_ucode_patch, p->data, min_t(u32, ksize(p->data), PATCH_MAX_SIZE));
++	memcpy(amd_ucode_patch, p->data, min_t(u32, p->size, PATCH_MAX_SIZE));
+ 
+ 	return ret;
+ }
 -- 
 2.34.1
 
