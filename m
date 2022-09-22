@@ -2,109 +2,141 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E32C6FA8B
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 17:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D68AC54EE9
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 19:08:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231206AbiIVRlW (ORCPT
+        id S232322AbiIVTIx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Sep 2022 13:41:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54852 "EHLO
+        Thu, 22 Sep 2022 15:08:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbiIVRlV (ORCPT
+        with ESMTP id S232278AbiIVTIw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Sep 2022 13:41:21 -0400
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33192E11B6;
-        Thu, 22 Sep 2022 10:41:19 -0700 (PDT)
-Received: by mail-il1-x132.google.com with SMTP id d14so4205986ilf.2;
-        Thu, 22 Sep 2022 10:41:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=AsxpWsr5dzcIncNfx/+Sw1HyEwfMiBKVAKBEW7wNeQA=;
-        b=HG1BCa9aD7EruuXSP8vfBpl2xSAcB9NgvDE4n3t4WegezK8iPhrhfTbs3Xxfdxp/aP
-         0j4XfOQ90rYJJLxvR5Fxutq+CKSR+3NwG5g3gHNWC0rGeSJkCPwM1qeiyt5MoX9kie1E
-         Ogc+09wvN660uSYqTrtW/DY7BHEKikOuBqjuMNkdFuICid58Qmi9sfyROy/V1LgkIpE7
-         e2Nv1gEo4Vp0GQpWl3bRqM1059jceqcIcZbW6os/ZnPJ8J1PnWKNgSi8e2+WYP/WJpYk
-         +8abyMsCFGIX1fgDuD8Pv5kCGUDjVFxUFNtnD5auEWqa0LNmLWv9bnrrUipYT443cCtB
-         +LNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=AsxpWsr5dzcIncNfx/+Sw1HyEwfMiBKVAKBEW7wNeQA=;
-        b=SILhDhsclPTFIm+N7bd9WIBU5yzLvANvhie9ePp8AY5zYqBcGEadNwbWw7l/Cs+S3q
-         EvYaoF8Xsrt3ocT4iVCUPYlXg9z+U7rmD6Z1as2fV8F1evoRGxejjostj01Ap7cvSrjF
-         w8az17etfgg8XmpOm5ttEBbPbaUNDy2mKkSHGsA0bWKO68SQTHev65IAxmqO9D4CEcTb
-         TCEv7VIvgZIAt4ExPOKG9Nehhmv47XOr9JRDlSwkhdFzhwv1Bzz0cJjp0HEBwJr8pbsF
-         s4wGk5lNoXdGtP1UlvzdMuAoApS2rfH7awQAzT63oukEmmNm26x6AIBEYB02sIcKDC6f
-         Bo5g==
-X-Gm-Message-State: ACrzQf3aUUJYVKFd6LpTLv/hbVKzpO6O9ne2ZCviMkpzHE0AZKe5JVJ0
-        F1HhJu1TeBJbHISbmWMGvJrQwQvSKVNSZ67IoE4=
-X-Google-Smtp-Source: AMsMyM5Iawxjt3SoOGTNllk8NVk3tyvcsl1U/lS7sz1j/GB7JoPgBuMEGvT0T6zJ1tbupUccXP7nLvzrv1dgRwQijjQ=
-X-Received: by 2002:a05:6e02:152a:b0:2f6:58ae:ff0c with SMTP id
- i10-20020a056e02152a00b002f658aeff0cmr2429401ilu.237.1663868478589; Thu, 22
- Sep 2022 10:41:18 -0700 (PDT)
+        Thu, 22 Sep 2022 15:08:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 507A4FCA70;
+        Thu, 22 Sep 2022 12:08:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DF34663792;
+        Thu, 22 Sep 2022 19:08:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 996B5C433D7;
+        Thu, 22 Sep 2022 19:08:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663873730;
+        bh=RvoDarC6U/fJABhMRerQJHoq4Ys6450eyjNtBdNlByk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Qp8tGMn8EsST1hu+HRRx8YpEJqMvJSGxm2n68qULxO7b0Au25DDkHLpqI7P3v/zQa
+         en7biq6cVEUKGmy9aaxgqbOU0N36ML/sg/CeHFzOoViBhyXKitDTyhvfmaSOIvypcX
+         9sAsUjBqkSGKfGpPfp5KJe0HUJhtoOE3OBhKMwyYU8Zd9bCovV21SWb77cUZZzKKrC
+         z2OKXi/rOFf31CkXUm85AMwvhvXZX2DU3Y3EEyBae507rAAbQeW0BlDWGPOuJLK25A
+         xAkUKlQzyjvwGlcBfw6IB35jewCqv41ykEAK8u74QHQgrMTDeG07hxWvHwgpWIGm2V
+         qNwLCBbKjJPHA==
+Date:   Thu, 22 Sep 2022 14:08:44 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Adam Radford <aradford@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] scsi: 3w-xxxx: Replace one-element array with
+ flexible-array member
+Message-ID: <YyyyvB30jnjRaw/F@work>
 MIME-Version: 1.0
-References: <20220922031013.2150682-1-keescook@chromium.org>
- <20220922031013.2150682-12-keescook@chromium.org> <CANiq72=m9VngFH9jE3s0RV7MpjX0a=ekJN4pZwcDksBkSRR_1w@mail.gmail.com>
- <202209220855.B8DA16E@keescook>
-In-Reply-To: <202209220855.B8DA16E@keescook>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 22 Sep 2022 19:41:07 +0200
-Message-ID: <CANiq72=unhDJOGTg+ja4UdVRp8sG7Wc+_rqQhvJideA=WNjbFA@mail.gmail.com>
-Subject: Re: [PATCH 11/12] slab: Remove __malloc attribute from realloc functions
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Hao Luo <haoluo@google.com>, Marco Elver <elver@google.com>,
-        linux-mm@kvack.org, "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alex Elder <elder@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Yonghong Song <yhs@fb.com>, Miguel Ojeda <ojeda@kernel.org>,
-        Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, dev@openvswitch.org,
-        x86@kernel.org, linux-wireless@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 22, 2022 at 5:56 PM Kees Cook <keescook@chromium.org> wrote:
->
-> I wasn't sure if this "composite macro" was sane there, especially since
-> it would be using __malloc before it was defined, etc. Would you prefer
-> I move it?
+One-element arrays are deprecated, and we are replacing them with flexible
+array members instead. So, replace one-element array with flexible-array
+member in struct TAG_TW_New_Ioctl and refactor the rest of the code,
+accordingly.
 
-Hmm... On one hand, they end up being attributes, so it could make
-sense to have them there (after all, the big advantage of that header
-is that there is no `#ifdef` nest like in others, and that it is only
-for attributes).
+Notice that, in multiple places, the subtraction of 1 from
+sizeof(TW_New_Ioctl) is removed, as this operation is now implicit
+after the flex-array transformation.
 
-On the other hand, you are right that the file so far is intended to
-be as simple as possible (`__always_inline` having an extra `inline`
-and `fallthrough` would be closest outliers), so if we do it, I would
-prefer to do so in an independent series that carries its own rationale.
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/206
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/scsi/3w-xxxx.c | 14 +++++++-------
+ drivers/scsi/3w-xxxx.h |  2 +-
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-So I would leave the patch as it is here.
+diff --git a/drivers/scsi/3w-xxxx.c b/drivers/scsi/3w-xxxx.c
+index a853c5497af6..ffdecb12d654 100644
+--- a/drivers/scsi/3w-xxxx.c
++++ b/drivers/scsi/3w-xxxx.c
+@@ -912,7 +912,7 @@ static long tw_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long a
+ 	data_buffer_length_adjusted = (data_buffer_length + 511) & ~511;
+ 
+ 	/* Now allocate ioctl buf memory */
+-	cpu_addr = dma_alloc_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted+sizeof(TW_New_Ioctl) - 1, &dma_handle, GFP_KERNEL);
++	cpu_addr = dma_alloc_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted + sizeof(TW_New_Ioctl), &dma_handle, GFP_KERNEL);
+ 	if (cpu_addr == NULL) {
+ 		retval = -ENOMEM;
+ 		goto out;
+@@ -921,7 +921,7 @@ static long tw_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long a
+ 	tw_ioctl = (TW_New_Ioctl *)cpu_addr;
+ 
+ 	/* Now copy down the entire ioctl */
+-	if (copy_from_user(tw_ioctl, argp, data_buffer_length + sizeof(TW_New_Ioctl) - 1))
++	if (copy_from_user(tw_ioctl, argp, data_buffer_length + sizeof(TW_New_Ioctl)))
+ 		goto out2;
+ 
+ 	passthru = (TW_Passthru *)&tw_ioctl->firmware_command;
+@@ -966,15 +966,15 @@ static long tw_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long a
+ 			/* Load the sg list */
+ 			switch (TW_SGL_OUT(tw_ioctl->firmware_command.opcode__sgloffset)) {
+ 			case 2:
+-				tw_ioctl->firmware_command.byte8.param.sgl[0].address = dma_handle + sizeof(TW_New_Ioctl) - 1;
++				tw_ioctl->firmware_command.byte8.param.sgl[0].address = dma_handle + sizeof(TW_New_Ioctl);
+ 				tw_ioctl->firmware_command.byte8.param.sgl[0].length = data_buffer_length_adjusted;
+ 				break;
+ 			case 3:
+-				tw_ioctl->firmware_command.byte8.io.sgl[0].address = dma_handle + sizeof(TW_New_Ioctl) - 1;
++				tw_ioctl->firmware_command.byte8.io.sgl[0].address = dma_handle + sizeof(TW_New_Ioctl);
+ 				tw_ioctl->firmware_command.byte8.io.sgl[0].length = data_buffer_length_adjusted;
+ 				break;
+ 			case 5:
+-				passthru->sg_list[0].address = dma_handle + sizeof(TW_New_Ioctl) - 1;
++				passthru->sg_list[0].address = dma_handle + sizeof(TW_New_Ioctl);
+ 				passthru->sg_list[0].length = data_buffer_length_adjusted;
+ 				break;
+ 			}
+@@ -1017,12 +1017,12 @@ static long tw_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long a
+ 	}
+ 
+ 	/* Now copy the response to userspace */
+-	if (copy_to_user(argp, tw_ioctl, sizeof(TW_New_Ioctl) + data_buffer_length - 1))
++	if (copy_to_user(argp, tw_ioctl, sizeof(TW_New_Ioctl) + data_buffer_length))
+ 		goto out2;
+ 	retval = 0;
+ out2:
+ 	/* Now free ioctl buf memory */
+-	dma_free_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted+sizeof(TW_New_Ioctl) - 1, cpu_addr, dma_handle);
++	dma_free_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted + sizeof(TW_New_Ioctl), cpu_addr, dma_handle);
+ out:
+ 	mutex_unlock(&tw_dev->ioctl_lock);
+ 	mutex_unlock(&tw_mutex);
+diff --git a/drivers/scsi/3w-xxxx.h b/drivers/scsi/3w-xxxx.h
+index e8f3f081b7d8..120a087bdf3c 100644
+--- a/drivers/scsi/3w-xxxx.h
++++ b/drivers/scsi/3w-xxxx.h
+@@ -348,7 +348,7 @@ typedef struct TAG_TW_New_Ioctl {
+ 	unsigned int data_buffer_length;
+ 	unsigned char padding [508];
+ 	TW_Command firmware_command;
+-	char data_buffer[1];
++	char data_buffer[];
+ } TW_New_Ioctl;
+ 
+ /* GetParam descriptor */
+-- 
+2.34.1
 
-Cheers,
-Miguel
