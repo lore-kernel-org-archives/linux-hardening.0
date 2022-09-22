@@ -2,84 +2,121 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 903E1ECAAD8
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 04:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEF4C6FA90
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 05:26:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230442AbiIVEaz (ORCPT
+        id S230030AbiIVF0c (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Sep 2022 00:30:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50828 "EHLO
+        Thu, 22 Sep 2022 01:26:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230188AbiIVEay (ORCPT
+        with ESMTP id S229771AbiIVF0b (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Sep 2022 00:30:54 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AAE889919;
-        Wed, 21 Sep 2022 21:30:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 317466297A;
-        Thu, 22 Sep 2022 04:30:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7EC4C433D6;
-        Thu, 22 Sep 2022 04:30:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663821052;
-        bh=0cVqkxRIHZH/P1nh/IXYkahOysAuOUCnPG3hBtZWP0w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XaJU/KLbUgzRdlQZzvBM7wB+8RTQtz5ChgAMlN3Qw5DRuHed7o2AfnyfttSPAG5+L
-         xuyGR4zWo1TVSeBcXl6z2RdoNRs1H4hAfh54Cz0b4NvkMeduseC+bkXdNR9MynnHii
-         dLlybO0OANRTYJ/ECUfRIFXIhcDh9sU4iEIiP3R3IZOVXrTFguPXL1OKnj0+QLLHAw
-         4o2hv/CsmiKek3kD68yGpu9qEUmjI410Mf8YMg8yYkNoYl3JdUjzZ7r971Gxjcj8oa
-         m0p/XkijFO+l7PzA8L1VDkgySjBXBGgXrREclLf+nzQaxaQmXk4p7pLPDHqsy4seys
-         hOpZ/BZ395Hsw==
-Date:   Wed, 21 Sep 2022 23:30:47 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kevin Barnett <kevin.barnett@microsemi.com>,
-        Don Brace <don.brace@microchip.com>, storagedev@microchip.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Thu, 22 Sep 2022 01:26:31 -0400
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7039AA1D26
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 22:26:29 -0700 (PDT)
+Received: by mail-pg1-x536.google.com with SMTP id 3so8086394pga.1
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 22:26:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=1AAj0jz/3WOf/ZinmBg4e5WZyKIExnDIP+4ApRXDWXk=;
+        b=E6vw8sjIHY/i68R43dGnMLa/5LLUaNZd7XsoFQWcc3w5wUJdtXNsxsEfsPht7kxdNG
+         JJ1tXBTf3XQqnlgOex/RZ+o0XMhSMgfcjsVoIr6koV6H3KyiaZ1lUXPNyODzP4yferwZ
+         bLRSqfuB8yrx2QNr5YGtL8EgG0hPZHJq7V7xk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=1AAj0jz/3WOf/ZinmBg4e5WZyKIExnDIP+4ApRXDWXk=;
+        b=X7sMBDUGvQQMo20zhbRBqoi4eoSy42i++/No4sI8RdD2feptmI5XCO85VnxpBM6hsg
+         PEY5SJgQ0/ltlA5zx7DRrvdHYYicKhD4eOo67s4Tzz+xiI85/gBKBx0kSD0lTwAasRsX
+         bcpDRFGEz1L+wdALjkN91mv0jlhU21Wf1uhWQfb22JJMCcTM1szOqU8BPkiD1HeWHTET
+         R+Uc/plfFGl2teA0aE9ZUN3wS7P/embf42lID8J2sdMYV1vMwcN16OABpcNca/kmIzGe
+         ETpoPRrrgX+9GYKUOsEZS8CymyvYc86hfMuN30FTqH7pbFtlLJWSQRLFMq/bP8j9AfDn
+         8XCw==
+X-Gm-Message-State: ACrzQf3Vt84VcfgwYkk+kbwxhCqS86TBQG8JE6D5YGM0jA9J8Q0Zo7/v
+        9HtLyIwStCrCjiqP9ODeGH6hPQ==
+X-Google-Smtp-Source: AMsMyM4a+GHcnQt0UeqKstHRefYZ2pfi5aegxBG+GRLeLtm77LwF22DDWI605QZJjTDKHxZFsdcd6w==
+X-Received: by 2002:a63:cf56:0:b0:439:41ed:78fc with SMTP id b22-20020a63cf56000000b0043941ed78fcmr1597609pgj.419.1663824388949;
+        Wed, 21 Sep 2022 22:26:28 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l10-20020a170903120a00b0016f196209c9sm3102876plh.123.2022.09.21.22.26.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Sep 2022 22:26:28 -0700 (PDT)
+Date:   Wed, 21 Sep 2022 22:26:27 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Kalle Valo <kvalo@kernel.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Gregory Greenman <gregory.greenman@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Alex Elder <elder@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Jacob Shin <jacob.shin@amd.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, dev@openvswitch.org,
+        x86@kernel.org, llvm@lists.linux.dev,
         linux-hardening@vger.kernel.org
-Subject: [PATCH 3/3][next] scsi: smartpqi: Use struct_size() helper in
- pqi_report_phys_luns()
-Message-ID: <b6a23dbc136710e98580ac01daa39ad971eecb5d.1663816572.git.gustavoars@kernel.org>
-References: <cover.1663816572.git.gustavoars@kernel.org>
+Subject: Re: [PATCH 10/12] iwlwifi: Track scan_cmd allocation size explicitly
+Message-ID: <202209212224.A2F1DB798@keescook>
+References: <20220922031013.2150682-1-keescook@chromium.org>
+ <20220922031013.2150682-11-keescook@chromium.org>
+ <87fsgk6nys.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1663816572.git.gustavoars@kernel.org>
+In-Reply-To: <87fsgk6nys.fsf@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Prefer struct_size() over open-coded versions of idiom:
+On Thu, Sep 22, 2022 at 07:18:51AM +0300, Kalle Valo wrote:
+> Kees Cook <keescook@chromium.org> writes:
+> 
+> > In preparation for reducing the use of ksize(), explicitly track the
+> > size of scan_cmd allocations. This also allows for noticing if the scan
+> > size changes unexpectedly. Note that using ksize() was already incorrect
+> > here, in the sense that ksize() would not match the actual allocation
+> > size, which would trigger future run-time allocation bounds checking.
+> > (In other words, memset() may know how large scan_cmd was allocated for,
+> > but ksize() will return the upper bounds of the actually allocated memory,
+> > causing a run-time warning about an overflow.)
+> >
+> > Cc: Gregory Greenman <gregory.greenman@intel.com>
+> > Cc: Kalle Valo <kvalo@kernel.org>
+> > Cc: Johannes Berg <johannes.berg@intel.com>
+> > Cc: linux-wireless@vger.kernel.org
+> > Cc: netdev@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> Via which tree is this iwlwifi patch going? Normally via wireless-next
+> or something else?
 
-sizeof(struct-with-flex-array) + sizeof(typeof-flex-array-elements) * count
+This doesn't depend on the kmalloc_size_roundup() helper at all, so I
+would be happy for it to go via wireless-next if the patch seems
+reasonable.
 
-where count is the max number of items the flexible array is supposed to
-contain.
-
-Link: https://github.com/KSPP/linux/issues/160
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/scsi/smartpqi/smartpqi_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-index 544cd18a90d7..17bdc8b3f161 100644
---- a/drivers/scsi/smartpqi/smartpqi_init.c
-+++ b/drivers/scsi/smartpqi/smartpqi_init.c
-@@ -1192,7 +1192,7 @@ static inline int pqi_report_phys_luns(struct pqi_ctrl_info *ctrl_info, void **b
- 
- 	rpl_8byte_wwid_list = rpl_list;
- 	num_physicals = get_unaligned_be32(&rpl_8byte_wwid_list->header.list_length) / sizeof(rpl_8byte_wwid_list->lun_entries[0]);
--	rpl_16byte_wwid_list_length = sizeof(struct report_lun_header) + (num_physicals * sizeof(struct report_phys_lun_16byte_wwid));
-+	rpl_16byte_wwid_list_length = struct_size(rpl_16byte_wwid_list, lun_entries, num_physicals);
- 
- 	rpl_16byte_wwid_list = kmalloc(rpl_16byte_wwid_list_length, GFP_KERNEL);
- 	if (!rpl_16byte_wwid_list)
 -- 
-2.34.1
-
+Kees Cook
