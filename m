@@ -2,122 +2,104 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B71C6FA8B
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 21:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF5FC54EE9
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 22:24:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231578AbiIVVtP (ORCPT
+        id S231378AbiIVWYZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Sep 2022 17:49:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51766 "EHLO
+        Thu, 22 Sep 2022 18:24:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231504AbiIVVtN (ORCPT
+        with ESMTP id S231382AbiIVWYF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Sep 2022 17:49:13 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D89EF3FA8
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Sep 2022 14:49:11 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id x1-20020a17090ab00100b001fda21bbc90so3799306pjq.3
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Sep 2022 14:49:11 -0700 (PDT)
+        Thu, 22 Sep 2022 18:24:05 -0400
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0143EDF6B3;
+        Thu, 22 Sep 2022 15:22:59 -0700 (PDT)
+Received: by mail-qv1-xf2f.google.com with SMTP id g4so7888150qvo.3;
+        Thu, 22 Sep 2022 15:22:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date;
-        bh=HR7XDnra6aPtamhjv2ZebPHNXJTov7JqNOvsimryjio=;
-        b=SzXIxv6C1tCw5E3cmrWDJ/hT6jlBfbW+dFuRj81LBsGuMMA1AsgUJRpxwVsVSvwR2s
-         HjojE3kOc43go5tDIXGrMTl5j+2eCPTyOeyLkDKEdQ6zWs58EaHgr7cs3m2ezx/7gyPH
-         QYSAs2hvSa7UX6V/rYFn8OuKvubD7Tx83ZZcc=
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=saa8hbo25uKBMMnwllcdWtUt/fTmT1MDVrESCvd9sc0=;
+        b=m9IYzd96OwCCGbZKlOlHILYET6GEZh8HJ7g1jfrPgeWuB/Zl3zvc9VnSS2nL/z56MF
+         vYLMEaeoSno4oWIfY6CYZx1Ld4xTGq9EgMRH31BOUDoD0t6tZwgQ8bVZQqLtwrGufge1
+         MppvjwBuvp6mAltIi1PGARevxAMYJGk0mBytrRMUE16+f2gPF96ZnTWJ7rVCMDQcVMJ8
+         gutJa/08z3G9fEixvtQgu2MpSAPXVp0vBjpvqwH+nDddtPIvNYxYiyvI5C/2EWh2OOrD
+         7puvduluaG2MDY7gSslGHnDUlJ11GfhssZnoTMOOnwcam9o6LwI+tyXJM8EOpgqhy2Tz
+         YINg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=HR7XDnra6aPtamhjv2ZebPHNXJTov7JqNOvsimryjio=;
-        b=lNt0AweVWrAUAG7hTRf6N0CGJQYzUzweS6c41KU0eZOqiEU/o52NRxpQXyxFF+QA49
-         id/6egB8wDZGZa4eGO3IoHgLbSKsjdSmb3pzGXSzWW3OU9m4lE0AsDF6l8EPM3rqxzkC
-         06SWWqvpuKalO2sByn1ifvwOZ0OUkqTkXOi8F3Eq0dyGVPzJMo0edCFINnmpP1q3or7J
-         f1LZsoz2ASmn4FesZHbJinE2ZtV1mRyF/E+ShuRbUBcdx1i9av/KMDrkzSKrGcsWD149
-         5N6W0orOohzmBV/3UklP2CHabjUdmQgADHeT1bkjT/mgfmMT2EiqsS5R00D7WZmSo9f1
-         Bw0A==
-X-Gm-Message-State: ACrzQf2sWjhArWq/oGHGAjgiWpY9P1hc9KRDWKEMPAzUKaz6wZMQOeSW
-        liWQ+vOxV/ZKKc3ilOeP8fzo1Q==
-X-Google-Smtp-Source: AMsMyM7EVCvewBY8ReI9lCX0qEaIkOeoxfNJfZf95NgQUB74fHJwtUZioqBUOFwe31SWjNTGJEPjqg==
-X-Received: by 2002:a17:902:d2d2:b0:177:4940:cc0f with SMTP id n18-20020a170902d2d200b001774940cc0fmr5257349plc.4.1663883350927;
-        Thu, 22 Sep 2022 14:49:10 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j6-20020a170902da8600b00176acc23a73sm4597636plx.281.2022.09.22.14.49.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Sep 2022 14:49:10 -0700 (PDT)
-Date:   Thu, 22 Sep 2022 14:49:08 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Feng Tang <feng.tang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Alex Elder <elder@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
-        Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, netdev@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-fsdevel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        dev@openvswitch.org, x86@kernel.org,
-        linux-wireless@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Subject: Re: [PATCH 00/12] slab: Introduce kmalloc_size_roundup()
-Message-ID: <202209221446.5E90AEED@keescook>
-References: <20220922031013.2150682-1-keescook@chromium.org>
- <673e425d-1692-ef47-052b-0ff2de0d9c1d@amd.com>
- <202209220845.2F7A050@keescook>
- <cb38655c-2107-bda6-2fa8-f5e1e97eab14@suse.cz>
+        bh=saa8hbo25uKBMMnwllcdWtUt/fTmT1MDVrESCvd9sc0=;
+        b=oe+E46kDRhv3JLf0tmvOLaHyNsMkcQZNK0laxIZ7dN4p5RA2sig3FtR+A2F08Cw43P
+         YnVgYh443YhZ13qQAReIb44X9KnlK2Dhu/EXBf1VSYcXJG3pJdWVzHx8vIjr7IE4bRxJ
+         vW3JLby60xn2L+iLusvhx4abEGgoWHzKhv1+mnDmmNSXR/8uN+Bjm8YtjAubBBeaWwIq
+         BYYSeiUHE3geKapXSnNpMwE39OarknKyQwv0Cw1MRghmFYNkOS+GB4YcZIaQiq/c2MHF
+         uWI2dlbWY0eNYqp5PUZS77c7Yf9DfU3Yu6ukNE/d4u6coAlI5YqW+GZaWuEfBOGs6wU0
+         qT6Q==
+X-Gm-Message-State: ACrzQf2NeJl7vWpqLsHRPL8WT9Ds5s6JRMBeQT1vM2g9VlV0YWNSljG2
+        cF2TyVj6HtVtnIAUTYTEErY=
+X-Google-Smtp-Source: AMsMyM4AhmVrlNhzspkffG7J1M2X5fjKSA1cZOr6DRvbJTSPZJuCxDQ9YHUwVOL15V3tpUF/YfM3vw==
+X-Received: by 2002:a05:6214:2528:b0:4ad:6fa4:4170 with SMTP id gg8-20020a056214252800b004ad6fa44170mr4491105qvb.113.1663885378872;
+        Thu, 22 Sep 2022 15:22:58 -0700 (PDT)
+Received: from [10.69.46.142] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id m17-20020a05620a291100b006cdd0939ffbsm4738880qkp.86.2022.09.22.15.22.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Sep 2022 15:22:58 -0700 (PDT)
+Message-ID: <87648374-a8fe-8830-793e-eb3c15e4ac54@gmail.com>
+Date:   Thu, 22 Sep 2022 15:22:56 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cb38655c-2107-bda6-2fa8-f5e1e97eab14@suse.cz>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH] scsi: scsi_transport_fc: Adjust struct fc_nl_event flex
+ array usage
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc:     Sachin Sant <sachinp@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20220921205155.1451649-1-keescook@chromium.org>
+From:   James Smart <jsmart2021@gmail.com>
+In-Reply-To: <20220921205155.1451649-1-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 22, 2022 at 11:05:47PM +0200, Vlastimil Babka wrote:
-> On 9/22/22 17:55, Kees Cook wrote:
-> > On Thu, Sep 22, 2022 at 09:10:56AM +0200, Christian König wrote:
-> > [...]
-> > > So when this patch set is about to clean up this use case it should probably
-> > > also take care to remove ksize() or at least limit it so that it won't be
-> > > used for this use case in the future.
-> > 
-> > Yeah, my goal would be to eliminate ksize(), and it seems possible if
-> > other cases are satisfied with tracking their allocation sizes directly.
+On 9/21/2022 1:51 PM, Kees Cook wrote:
+> In order to help the compiler reason about the destination buffer in
+> struct fc_nl_event, add a flexible array member for this purpose.
+> However, since the header is UAPI, it must not change size or layout, so
+> a union is used.
 > 
-> I think we could leave ksize() to determine the size without a need for
-> external tracking, but from now on forbid callers from using that hint to
-> overflow the allocation size they actually requested? Once we remove the
-> kasan/kfence hooks in ksize() that make the current kinds of usage possible,
-> we should be able to catch any offenders of the new semantics that would appear?
+> The allocation size calculations are also corrected (it was potentially
+> allocating an extra 8 bytes), and the padding is zeroed to avoid leaking
+> kernel heap memory contents.
+> 
+> Detected at run-time by the recently added memcpy() bounds checking:
+> 
+>    memcpy: detected field-spanning write (size 8) of single field "&event->event_data" at drivers/scsi/scsi_transport_fc.c:581 (size 4)
+> 
+> Reported-by: Sachin Sant <sachinp@linux.ibm.com>
+> Link: https://lore.kernel.org/linux-next/42404B5E-198B-4FD3-94D6-5E16CF579EF3@linux.ibm.com/
+> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+> Cc: linux-scsi@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
 
-That's correct. I spent the morning working my way through the rest of
-the ksize() users I didn't clean up yesterday, and in several places I
-just swapped in __ksize(). But that wouldn't even be needed if we just
-removed the kasan unpoisoning from ksize(), etc.
+Kinda crazy way to resolve it, but looks fine.
 
-I am tempted to leave it __ksize(), though, just to reinforce that it's
-not supposed to be used "normally". What do you think?
+Reviewed-by: James Smart <jsmart2021@gmail.com>
 
--- 
-Kees Cook
+-- james
+
+
