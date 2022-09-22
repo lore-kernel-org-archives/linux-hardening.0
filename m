@@ -2,58 +2,55 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AA1C32771
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 03:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD05ECAAD8
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 03:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229745AbiIVDMB (ORCPT
+        id S231334AbiIVDMQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Sep 2022 23:12:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44776 "EHLO
+        Wed, 21 Sep 2022 23:12:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230210AbiIVDL0 (ORCPT
+        with ESMTP id S230347AbiIVDLe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Sep 2022 23:11:26 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8E6796FE4
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 20:10:30 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id i15-20020a17090a4b8f00b0020073b4ac27so765665pjh.3
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 20:10:30 -0700 (PDT)
+        Wed, 21 Sep 2022 23:11:34 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15DB8861EE
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 20:10:27 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id y11so8415939pjv.4
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Sep 2022 20:10:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=Jz+Ostx8EixhSjUkAJ1MIUDEmgukIDR1YF6R1GI6RoI=;
-        b=fPTKJgOJ8MKfbMiXIpgZmZo5TbbArv5BmXt+LwFRkAzQw4Qu/q6syj7IcUEyuUSLZC
-         yNdKZEHFMNqZF6mSMR/upLZfvUDc4OsZWUqA6LMkXiGnDuz3LTWtfDKv8R/sczIGTB4b
-         PPPxu9tlVDDIbwvlIxQ4U87Tuu07hPZSUMAUs=
+        bh=rwUBwzi7xfMGM3gnlz2nJv+3JsC676oosCJWmNEJmq8=;
+        b=HOmSehjQy+kC6oCpZ6SUxpIPlijDlparMa9cZ7awXPTJLs7/4j0owgFxRWDzn2zsIB
+         IAG9YOoiEmpC79+56phr0pTunmEY9rE4X71d6vAGzfT6Uf9X4Z+qt1yXQHhb3bWLA/Uv
+         Cx/HPbXhrdOJJX9w53uN9mKOp6WP5Gv2LT5oo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=Jz+Ostx8EixhSjUkAJ1MIUDEmgukIDR1YF6R1GI6RoI=;
-        b=UTryNGhg6EQ6zQJtTl1WaVA8dci0B/kHhKD+l//xGkK3HT+4wCnIo+nGPen8RGnzfZ
-         1+Bddhde/hgo3EhmFy5zPJTDNSvHNk2MOv1nIiQkUE+n1TSWwDt+UFKy1jwPNNiTa+Ai
-         OH8gNgvHjW5ULW9tSm0qmjNclFnvazBLtpVyBJbXB+EFo0bd1e4EXkQdtttEX7YgbkTX
-         cnP9gSvjO3ebytaMFKd1XHNM8f/W3CE6vsU6j+pb44TvFQTOam1F8y4qGPVWBsO/SaX4
-         +pT2n/qoQs53yN+6Xldlk7clr2stK27wOshq+g8XSNLkMMmNdbQHKYi3oNNCGfA9/MvG
-         dY7g==
-X-Gm-Message-State: ACrzQf3igwHM5gR35nwmosQb4KDib9o/dcATlc62YPAjSei2fSszCBqa
-        sxC0DlmmgLMN2ksfzsvpUT+k1g==
-X-Google-Smtp-Source: AMsMyM5tC/t7wLfYhNs5GORrj4kxZVraGAFSpN+CcYK58sR/ai9S8jVYHP0V/B17TTj8XqmzOIYYvg==
-X-Received: by 2002:a17:902:f08d:b0:178:e0ba:dbfa with SMTP id p13-20020a170902f08d00b00178e0badbfamr1329661pla.160.1663816230080;
-        Wed, 21 Sep 2022 20:10:30 -0700 (PDT)
+        bh=rwUBwzi7xfMGM3gnlz2nJv+3JsC676oosCJWmNEJmq8=;
+        b=HbbxrzLXnMZHdaPeE32/Wb+ejqoqEpgmE0WDGxp4zp836OEpOKkALPAeu9mw+14Y+H
+         UqYqFjw7TnVmrNOZGtzKJxLbjjTRNmJYnKHqUG1vBZ9XSQIHcRIB/4B9r94ZN/4L8wMB
+         W0MGktMOMml8H9FDAxgNaYSC/nN+rMOeICywxI5AWOkbt/g+phIFUHslp/Mej9nWh3lV
+         lzbnAtx9tCLlUEcqqyAJGYrI+e49JM5/Q6/ytqx0yiI1vqsdGvB9Pn2qJY1vLt1RDKzW
+         wCl4rEUOlVrgLZiDQxUE5HNClJlu7zEc8u6rmpilziD/kJbSYJNYBI82Kkd9J1KENgAl
+         wIjA==
+X-Gm-Message-State: ACrzQf1c2laSOPaJjFazMi2eGOif4FtTg8riZvel0rNiNRp8dTPwBQim
+        lne/LpwLJbnSoEE13dT62fnwFQ==
+X-Google-Smtp-Source: AMsMyM6ZljnCrU0qh0+e7vc+HuV1x+ArU+n+M48jxv5R3lt8UQZqPTf6/v1OyEJJWiwBGfdDSixUTw==
+X-Received: by 2002:a17:902:c245:b0:178:3912:f1f7 with SMTP id 5-20020a170902c24500b001783912f1f7mr1161429plg.75.1663816227182;
+        Wed, 21 Sep 2022 20:10:27 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f21-20020a623815000000b0053e85a4a2c9sm2967625pfa.5.2022.09.21.20.10.24
+        by smtp.gmail.com with ESMTPSA id i8-20020a170902c94800b00178143a728esm2758861pla.275.2022.09.21.20.10.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 21 Sep 2022 20:10:26 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Gregory Greenman <gregory.greenman@intel.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+Cc:     Kees Cook <keescook@chromium.org>, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
         Pekka Enberg <penberg@kernel.org>,
         David Rientjes <rientjes@google.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
@@ -74,164 +71,63 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
         Miguel Ojeda <ojeda@kernel.org>,
         Jacob Shin <jacob.shin@amd.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, netdev@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         intel-wired-lan@lists.osuosl.org, dev@openvswitch.org,
-        x86@kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH 10/12] iwlwifi: Track scan_cmd allocation size explicitly
-Date:   Wed, 21 Sep 2022 20:10:11 -0700
-Message-Id: <20220922031013.2150682-11-keescook@chromium.org>
+        x86@kernel.org, linux-wireless@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: [PATCH 05/12] dma-buf: Proactively round up to kmalloc bucket size
+Date:   Wed, 21 Sep 2022 20:10:06 -0700
+Message-Id: <20220922031013.2150682-6-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220922031013.2150682-1-keescook@chromium.org>
 References: <20220922031013.2150682-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6042; h=from:subject; bh=/2MF0zaqjNiY4mBxcqwtNff5CpXhf0ch+CZ/OsL6Iys=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjK9IUpAWmHsY7kNqv64d6KlpPF5EGDYQVGtcVBB8E RiKZrCqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYyvSFAAKCRCJcvTf3G3AJshrD/ 9Q/SIlHUs29NDsmOcljm9C//gN/xxOAY2HM3QP/8nnro1TzHM/dYk6y6fxinyM/FT3a+5rXC4uBc+v LwPu4gwCCxl7xgmEDH1Nvu1rsWajAtwwQqRb+2p10qvqadnerRtSBg76SLZ6yfjddJfabq5nhj5e47 hpU71yCZaGYynPZmJt/PCDMP/w8k2CcwQr6fXuTrj7IihrDXBB1BAQDnu3Fz+xBFsAzgMlmFedsz+L NYQ2PWzeMnR6dNJIsbJi4xfITVOOmalIXP8EOr2LQlXhvK+haHv3VydbbWlEtWo0gFVl+OWhzvCTpA tvw9KSut04RjTKOmYxr//XumjuRUsc7xe0DCBZC8Q07WUSg0U1Fx1IwwXVrTru2WhJbNp+DhdhHU/h yQ1vHJStx9qNRhhdqrorX/Rb+qnPWPzOY5wVtxVsdE6bzcncMOrTmNwjhbwJyFQAvZsEW/zlxmxcQR xRlmfZ7/QdJ4MONHIzN2gzeCr2r+mf4Oa1qvJByIy+yJ2spuLI47uJxNrihVh4Ce9d1dacTBmQy8LN xom1841wxeimKr7/vpOSZFc1D5paqI+KkR9cNjpdWW25CL30X1WsB04ZMBWJbp2alfj1Tuax1Nb/cE O0hD0MGN2WZXISj7I1q4I2U27RiAI1UDAw9FJFoF7ec3RgnwwE00lyfJb1Dg==
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1448; h=from:subject; bh=58mLiyNPt53YHcQiP0NJ/gcO5KVNHG9xKF/nxWP5lU4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjK9IT0VAPWCWir3uMps9kCdjSMILjRU6yciDG9uFs fWbeIjWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYyvSEwAKCRCJcvTf3G3AJuZ5EA CTJrl1LYI7CQAG4pCtipLkuzhhHVBFayO1cJ9nr4E0Jm4P1ZR+BSgD/HPdeicWCgV2fEGCG3A3qzTO bp/9wj/VPvNh93gqjrf2HSe113aZFNagRxlssfUYxwkKTY+LPLzDzin95QfiHah48Jg0HBw8zKWEmX dZTJH7KlwTcHEy9Bz5p3PA4qx+B3pkBrNQ0zdb4io0a7ErunaXVRCSpt2tZNukDe/wt1CXiR/32N+T 1euSAVbSYv0W0fFslnfEqztbrNKxL91NWnvy3XzftablM4/PXqSNUqv6xYBt7IY33WxxP+/g2Fn7HD 6QmdkXUhTr9armjFjNYZMQo0prwqkn0FJaXEIed35vePpH2uibYbE4OwOA2Dyo4lUtHPs/KAKQYEB3 6oCNer7mpHEc9oOoqN35lm+ZhZ9UmAPZl/X1Np9gol6eRnt/yo2BbllRVW8PfKLVzPclAS1ny/vZEN uVJmqmDUdiq2OpecYEKuqhvI07vawcYvhSB6Au1f9Ys6viXBeeurbiQKrvf0oP7kADVYUzN9YCua/x a6zit1PoOjCMh44PKnVGgBRCRhU0CfvSYrhoxA8P45Ye7BiKkBm0StH0S/n/9duZxNKqbCFgYNdviR h0OHIRRNJYqc0Tw95yUM7tJKCf1eAwytfKrF8F6YwYcUQ/V1S+/AOfGfUWHQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for reducing the use of ksize(), explicitly track the
-size of scan_cmd allocations. This also allows for noticing if the scan
-size changes unexpectedly. Note that using ksize() was already incorrect
-here, in the sense that ksize() would not match the actual allocation
-size, which would trigger future run-time allocation bounds checking.
-(In other words, memset() may know how large scan_cmd was allocated for,
-but ksize() will return the upper bounds of the actually allocated memory,
-causing a run-time warning about an overflow.)
+Instead of discovering the kmalloc bucket size _after_ allocation, round
+up proactively so the allocation is explicitly made for the full size,
+allowing the compiler to correctly reason about the resulting size of
+the buffer through the existing __alloc_size() hint.
 
-Cc: Gregory Greenman <gregory.greenman@intel.com>
-Cc: Kalle Valo <kvalo@kernel.org>
-Cc: Johannes Berg <johannes.berg@intel.com>
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
+Cc: linux-media@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linaro-mm-sig@lists.linaro.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/wireless/intel/iwlwifi/dvm/dev.h  |  1 +
- drivers/net/wireless/intel/iwlwifi/dvm/scan.c | 10 ++++++++--
- drivers/net/wireless/intel/iwlwifi/mvm/mvm.h  |  3 ++-
- drivers/net/wireless/intel/iwlwifi/mvm/ops.c  |  3 ++-
- drivers/net/wireless/intel/iwlwifi/mvm/scan.c |  6 +++---
- 5 files changed, 16 insertions(+), 7 deletions(-)
+ drivers/dma-buf/dma-resv.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/dev.h b/drivers/net/wireless/intel/iwlwifi/dvm/dev.h
-index bbd574091201..1a9eadace188 100644
---- a/drivers/net/wireless/intel/iwlwifi/dvm/dev.h
-+++ b/drivers/net/wireless/intel/iwlwifi/dvm/dev.h
-@@ -696,6 +696,7 @@ struct iwl_priv {
- 	/* Scan related variables */
- 	unsigned long scan_start;
- 	unsigned long scan_start_tsf;
-+	size_t scan_cmd_size;
- 	void *scan_cmd;
- 	enum nl80211_band scan_band;
- 	struct cfg80211_scan_request *scan_request;
-diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/scan.c b/drivers/net/wireless/intel/iwlwifi/dvm/scan.c
-index 2d38227dfdd2..a7e85c5c8c72 100644
---- a/drivers/net/wireless/intel/iwlwifi/dvm/scan.c
-+++ b/drivers/net/wireless/intel/iwlwifi/dvm/scan.c
-@@ -626,7 +626,7 @@ static int iwlagn_request_scan(struct iwl_priv *priv, struct ieee80211_vif *vif)
- 	u8 active_chains;
- 	u8 scan_tx_antennas = priv->nvm_data->valid_tx_ant;
- 	int ret;
--	int scan_cmd_size = sizeof(struct iwl_scan_cmd) +
-+	size_t scan_cmd_size = sizeof(struct iwl_scan_cmd) +
- 			    MAX_SCAN_CHANNEL * sizeof(struct iwl_scan_channel) +
- 			    priv->fw->ucode_capa.max_probe_length;
- 	const u8 *ssid = NULL;
-@@ -649,9 +649,15 @@ static int iwlagn_request_scan(struct iwl_priv *priv, struct ieee80211_vif *vif)
- 				       "fail to allocate memory for scan\n");
- 			return -ENOMEM;
- 		}
-+		priv->scan_cmd_size = scan_cmd_size;
-+	}
-+	if (priv->scan_cmd_size < scan_cmd_size) {
-+		IWL_DEBUG_SCAN(priv,
-+			       "memory needed for scan grew unexpectedly\n");
-+		return -ENOMEM;
- 	}
- 	scan = priv->scan_cmd;
--	memset(scan, 0, scan_cmd_size);
-+	memset(scan, 0, priv->scan_cmd_size);
- 
- 	scan->quiet_plcp_th = IWL_PLCP_QUIET_THRESH;
- 	scan->quiet_time = IWL_ACTIVE_QUIET_TIME;
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-index bf35e130c876..214b8a525cc6 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-@@ -860,6 +860,7 @@ struct iwl_mvm {
- 
- 	/* Scan status, cmd (pre-allocated) and auxiliary station */
- 	unsigned int scan_status;
-+	size_t scan_cmd_size;
- 	void *scan_cmd;
- 	struct iwl_mcast_filter_cmd *mcast_filter_cmd;
- 	/* For CDB this is low band scan type, for non-CDB - type. */
-@@ -1705,7 +1706,7 @@ int iwl_mvm_update_quotas(struct iwl_mvm *mvm, bool force_upload,
- int iwl_mvm_reg_scan_start(struct iwl_mvm *mvm, struct ieee80211_vif *vif,
- 			   struct cfg80211_scan_request *req,
- 			   struct ieee80211_scan_ies *ies);
--int iwl_mvm_scan_size(struct iwl_mvm *mvm);
-+size_t iwl_mvm_scan_size(struct iwl_mvm *mvm);
- int iwl_mvm_scan_stop(struct iwl_mvm *mvm, int type, bool notify);
- int iwl_mvm_max_scan_ie_len(struct iwl_mvm *mvm);
- void iwl_mvm_report_scan_aborted(struct iwl_mvm *mvm);
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/ops.c b/drivers/net/wireless/intel/iwlwifi/mvm/ops.c
-index db43c8a83a31..b9cbb18b0dcb 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/ops.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/ops.c
-@@ -1065,7 +1065,7 @@ iwl_op_mode_mvm_start(struct iwl_trans *trans, const struct iwl_cfg *cfg,
- 	static const u8 no_reclaim_cmds[] = {
- 		TX_CMD,
- 	};
--	int scan_size;
-+	size_t scan_size;
- 	u32 min_backoff;
- 	struct iwl_mvm_csme_conn_info *csme_conn_info __maybe_unused;
- 
-@@ -1299,6 +1299,7 @@ iwl_op_mode_mvm_start(struct iwl_trans *trans, const struct iwl_cfg *cfg,
- 	mvm->scan_cmd = kmalloc(scan_size, GFP_KERNEL);
- 	if (!mvm->scan_cmd)
- 		goto out_free;
-+	mvm->scan_cmd_size = scan_size;
- 
- 	/* invalidate ids to prevent accidental removal of sta_id 0 */
- 	mvm->aux_sta.sta_id = IWL_MVM_INVALID_STA;
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/scan.c b/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
-index 582a95ffc7ab..acd8803dbcdd 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/scan.c
-@@ -2626,7 +2626,7 @@ static int iwl_mvm_build_scan_cmd(struct iwl_mvm *mvm,
- 	u8 scan_ver;
- 
- 	lockdep_assert_held(&mvm->mutex);
--	memset(mvm->scan_cmd, 0, ksize(mvm->scan_cmd));
-+	memset(mvm->scan_cmd, 0, mvm->scan_cmd_size);
- 
- 	if (!fw_has_capa(&mvm->fw->ucode_capa, IWL_UCODE_TLV_CAPA_UMAC_SCAN)) {
- 		hcmd->id = SCAN_OFFLOAD_REQUEST_CMD;
-@@ -3091,7 +3091,7 @@ static int iwl_mvm_scan_stop_wait(struct iwl_mvm *mvm, int type)
- 				     1 * HZ);
- }
- 
--static int iwl_scan_req_umac_get_size(u8 scan_ver)
-+static size_t iwl_scan_req_umac_get_size(u8 scan_ver)
+diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
+index 205acb2c744d..a20f6db99b8f 100644
+--- a/drivers/dma-buf/dma-resv.c
++++ b/drivers/dma-buf/dma-resv.c
+@@ -98,12 +98,17 @@ static void dma_resv_list_set(struct dma_resv_list *list,
+ static struct dma_resv_list *dma_resv_list_alloc(unsigned int max_fences)
  {
- 	switch (scan_ver) {
- 	case 12:
-@@ -3104,7 +3104,7 @@ static int iwl_scan_req_umac_get_size(u8 scan_ver)
- 	return 0;
- }
+ 	struct dma_resv_list *list;
++	size_t size = struct_size(list, table, max_fences);
  
--int iwl_mvm_scan_size(struct iwl_mvm *mvm)
-+size_t iwl_mvm_scan_size(struct iwl_mvm *mvm)
- {
- 	int base_size, tail_size;
- 	u8 scan_ver = iwl_fw_lookup_cmd_ver(mvm->fw, SCAN_REQ_UMAC,
+-	list = kmalloc(struct_size(list, table, max_fences), GFP_KERNEL);
++	/* Round up to the next kmalloc bucket size. */
++	size = kmalloc_size_roundup(size);
++
++	list = kmalloc(size, GFP_KERNEL);
+ 	if (!list)
+ 		return NULL;
+ 
+-	list->max_fences = (ksize(list) - offsetof(typeof(*list), table)) /
++	/* Given the resulting bucket size, recalculated max_fences. */
++	list->max_fences = (size - offsetof(typeof(*list), table)) /
+ 		sizeof(*list->table);
+ 
+ 	return list;
 -- 
 2.34.1
 
