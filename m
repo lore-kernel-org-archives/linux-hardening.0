@@ -2,104 +2,119 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF5FC54EE9
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Sep 2022 22:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08658ECAAD8
+	for <linux-hardening@archiver.kernel.org>; Fri, 23 Sep 2022 00:20:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231378AbiIVWYZ (ORCPT
+        id S231174AbiIWAU4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Sep 2022 18:24:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38756 "EHLO
+        Thu, 22 Sep 2022 20:20:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231382AbiIVWYF (ORCPT
+        with ESMTP id S231172AbiIWAUz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Sep 2022 18:24:05 -0400
-Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0143EDF6B3;
-        Thu, 22 Sep 2022 15:22:59 -0700 (PDT)
-Received: by mail-qv1-xf2f.google.com with SMTP id g4so7888150qvo.3;
-        Thu, 22 Sep 2022 15:22:59 -0700 (PDT)
+        Thu, 22 Sep 2022 20:20:55 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17884C888C
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Sep 2022 17:20:54 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id q15-20020a17090a304f00b002002ac83485so3841525pjl.0
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Sep 2022 17:20:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=saa8hbo25uKBMMnwllcdWtUt/fTmT1MDVrESCvd9sc0=;
-        b=m9IYzd96OwCCGbZKlOlHILYET6GEZh8HJ7g1jfrPgeWuB/Zl3zvc9VnSS2nL/z56MF
-         vYLMEaeoSno4oWIfY6CYZx1Ld4xTGq9EgMRH31BOUDoD0t6tZwgQ8bVZQqLtwrGufge1
-         MppvjwBuvp6mAltIi1PGARevxAMYJGk0mBytrRMUE16+f2gPF96ZnTWJ7rVCMDQcVMJ8
-         gutJa/08z3G9fEixvtQgu2MpSAPXVp0vBjpvqwH+nDddtPIvNYxYiyvI5C/2EWh2OOrD
-         7puvduluaG2MDY7gSslGHnDUlJ11GfhssZnoTMOOnwcam9o6LwI+tyXJM8EOpgqhy2Tz
-         YINg==
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=fE8nCD0AAGL6m11CnMBfi2PNly3cqHNqiT4DGj6b5Gc=;
+        b=ZcgEPa5GX4lJbCqdaQIoVzgDaAGB2ncYfRY5U+Q2yAy9IywhwFoEoy1uuMIfswt3ny
+         794u3NbJDIPlXO3iAM9o8Z2XldjYuBr70GXIXXMpFKlmSoVyLitAOvWbioDxzj83ipsx
+         dnX65KS5JpCN9hZliXHZZTTpOarXoM17UEoGc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=saa8hbo25uKBMMnwllcdWtUt/fTmT1MDVrESCvd9sc0=;
-        b=oe+E46kDRhv3JLf0tmvOLaHyNsMkcQZNK0laxIZ7dN4p5RA2sig3FtR+A2F08Cw43P
-         YnVgYh443YhZ13qQAReIb44X9KnlK2Dhu/EXBf1VSYcXJG3pJdWVzHx8vIjr7IE4bRxJ
-         vW3JLby60xn2L+iLusvhx4abEGgoWHzKhv1+mnDmmNSXR/8uN+Bjm8YtjAubBBeaWwIq
-         BYYSeiUHE3geKapXSnNpMwE39OarknKyQwv0Cw1MRghmFYNkOS+GB4YcZIaQiq/c2MHF
-         uWI2dlbWY0eNYqp5PUZS77c7Yf9DfU3Yu6ukNE/d4u6coAlI5YqW+GZaWuEfBOGs6wU0
-         qT6Q==
-X-Gm-Message-State: ACrzQf2NeJl7vWpqLsHRPL8WT9Ds5s6JRMBeQT1vM2g9VlV0YWNSljG2
-        cF2TyVj6HtVtnIAUTYTEErY=
-X-Google-Smtp-Source: AMsMyM4AhmVrlNhzspkffG7J1M2X5fjKSA1cZOr6DRvbJTSPZJuCxDQ9YHUwVOL15V3tpUF/YfM3vw==
-X-Received: by 2002:a05:6214:2528:b0:4ad:6fa4:4170 with SMTP id gg8-20020a056214252800b004ad6fa44170mr4491105qvb.113.1663885378872;
-        Thu, 22 Sep 2022 15:22:58 -0700 (PDT)
-Received: from [10.69.46.142] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id m17-20020a05620a291100b006cdd0939ffbsm4738880qkp.86.2022.09.22.15.22.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Sep 2022 15:22:58 -0700 (PDT)
-Message-ID: <87648374-a8fe-8830-793e-eb3c15e4ac54@gmail.com>
-Date:   Thu, 22 Sep 2022 15:22:56 -0700
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=fE8nCD0AAGL6m11CnMBfi2PNly3cqHNqiT4DGj6b5Gc=;
+        b=vPdjhWCQIE6iXoxRrcUn7s0qrHGT9G7zOlf0ODUIR1NxmBy71oXHk0L4ZCg8htSbR4
+         4pDsv+8o/FJzuHnG0CiVVWCXHQzV8sloDDaQWye4B2bJ7Jcm2NJEn5Mi4PGlr+4j9x6e
+         Hd9ob6LxUF8Rrm+iyPHjTmUQeDm9PEKjHTcIILzc7zaxFhHXn8Gpv4+6YS2ml1ebA4ew
+         zP3UFKgODRKyhvoPDXTDzFulrCB4C4EZdmWWdHhDrViZ2aCy2UfVnnX6sgrZO/rjlPCM
+         sOQke8D6j8ZnyaBDbdzPDAA619AeRlowUX0uKnKdsvvkDnix3jdVJAwYJKIEHKsmnFTj
+         GTAg==
+X-Gm-Message-State: ACrzQf2ZuBwqfucqq0ObFUJRLT/2ChZcL6e74DHULtpwQ8tQVUk4R/ws
+        AZzmTXIiTEKgcWnfgRqsXMXYuRRT72kl1Q==
+X-Google-Smtp-Source: AMsMyM7i+eNakcX48qpc7Mn5PvOUozzI8YxksEJeQObNVkyr/89+42nVUtZy0igEPuZyD7dfedjxXw==
+X-Received: by 2002:a17:90b:4a85:b0:202:4f3f:1f65 with SMTP id lp5-20020a17090b4a8500b002024f3f1f65mr6397691pjb.241.1663892453590;
+        Thu, 22 Sep 2022 17:20:53 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k60-20020a17090a4cc200b002006f15ad4fsm378261pjh.10.2022.09.22.17.20.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Sep 2022 17:20:52 -0700 (PDT)
+Date:   Thu, 22 Sep 2022 17:20:51 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Siddhesh Poyarekar <siddhesh@gotplt.org>
+Cc:     linux-hardening@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Tom Rix <trix@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH 0/4] fortify: Use __builtin_dynamic_object_size() when
+ available
+Message-ID: <202209221714.1D792FE6@keescook>
+References: <20220920192202.190793-1-keescook@chromium.org>
+ <e2a0debe-e99f-2259-1cb9-35193c387c82@gotplt.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH] scsi: scsi_transport_fc: Adjust struct fc_nl_event flex
- array usage
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc:     Sachin Sant <sachinp@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20220921205155.1451649-1-keescook@chromium.org>
-From:   James Smart <jsmart2021@gmail.com>
-In-Reply-To: <20220921205155.1451649-1-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e2a0debe-e99f-2259-1cb9-35193c387c82@gotplt.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 9/21/2022 1:51 PM, Kees Cook wrote:
-> In order to help the compiler reason about the destination buffer in
-> struct fc_nl_event, add a flexible array member for this purpose.
-> However, since the header is UAPI, it must not change size or layout, so
-> a union is used.
+On Thu, Sep 22, 2022 at 04:26:54PM -0400, Siddhesh Poyarekar wrote:
+> On 2022-09-20 15:21, Kees Cook wrote:
+> > Hi,
+> > 
+> > This adjusts CONFIG_FORTIFY_SOURCE's coverage to include greater runtime
+> > size checking from GCC and Clang's __builtin_dynamic_object_size(), which
+> > the compilers can track either via code flow or from __alloc_size() hints.
+> > 
 > 
-> The allocation size calculations are also corrected (it was potentially
-> allocating an extra 8 bytes), and the padding is zeroed to avoid leaking
-> kernel heap memory contents.
-> 
-> Detected at run-time by the recently added memcpy() bounds checking:
-> 
->    memcpy: detected field-spanning write (size 8) of single field "&event->event_data" at drivers/scsi/scsi_transport_fc.c:581 (size 4)
-> 
-> Reported-by: Sachin Sant <sachinp@linux.ibm.com>
-> Link: https://lore.kernel.org/linux-next/42404B5E-198B-4FD3-94D6-5E16CF579EF3@linux.ibm.com/
-> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Cc: linux-scsi@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
+> FTR, I ran a linux build using gcc with allyesconfig and fortify-metrics[1]
+> to get a sense of how much object size coverage would improve with
+> __builtin_dynamic_object_size.  With a total of 3,877 __builtin_object_size
+> calls, about 11.37% succeed in getting a result that is not (size_t)-1.  If
+> they were replaced by __builtin_dynamic_object_size as this patch proposes,
+> the success rate improves to 16.25%, which is a ~1.4x improvement.
 
-Kinda crazy way to resolve it, but looks fine.
+Thanks for check that! Yeah, a 40% increase in coverage is nice. :0
 
-Reviewed-by: James Smart <jsmart2021@gmail.com>
+> This is a decent improvement by itself but it can be amplified further by
+> adding __attribute__((access (...)))[2] to function prototypes and
+> definitions, especially for functions that take in buffers and their sizes
+> as arguments since __builtin_dynamic_object_size in gcc is capable of
+> recognizing that and using it for object size determination (and hence to
+> fortify calls) within those functions.
 
--- james
+Yeah, this could be another interest set of additions. It seems like it
+might be more "coder friendly" if, in the future that has the
+__element_count__ attribute, it could be used in function parameters
+too, like:
 
+If we had:
 
+int do_something(struct context *ctx, u32 *data, int count)
+
+this seems less easy to read to me:
+
+int __access(read_write, 2, 3) do_something(struct context *ctx, u32 *data, int count)
+
+as this seems more readable to me, though I guess the access-mode
+information is lost:
+
+int do_something(struct context *ctx, u32 * __element_count(count) data, int count)
+
+But yes, this would be excellent to start adding!
+
+-Kees
+
+-- 
+Kees Cook
