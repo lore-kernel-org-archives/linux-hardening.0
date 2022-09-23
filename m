@@ -2,53 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08658ECAAD8
-	for <linux-hardening@archiver.kernel.org>; Fri, 23 Sep 2022 00:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BC1ECAAD8
+	for <linux-hardening@archiver.kernel.org>; Fri, 23 Sep 2022 00:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231174AbiIWAU4 (ORCPT
+        id S231583AbiIWAzR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Sep 2022 20:20:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58634 "EHLO
+        Thu, 22 Sep 2022 20:55:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231172AbiIWAUz (ORCPT
+        with ESMTP id S231537AbiIWAzP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Sep 2022 20:20:55 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17884C888C
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Sep 2022 17:20:54 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id q15-20020a17090a304f00b002002ac83485so3841525pjl.0
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Sep 2022 17:20:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=fE8nCD0AAGL6m11CnMBfi2PNly3cqHNqiT4DGj6b5Gc=;
-        b=ZcgEPa5GX4lJbCqdaQIoVzgDaAGB2ncYfRY5U+Q2yAy9IywhwFoEoy1uuMIfswt3ny
-         794u3NbJDIPlXO3iAM9o8Z2XldjYuBr70GXIXXMpFKlmSoVyLitAOvWbioDxzj83ipsx
-         dnX65KS5JpCN9hZliXHZZTTpOarXoM17UEoGc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=fE8nCD0AAGL6m11CnMBfi2PNly3cqHNqiT4DGj6b5Gc=;
-        b=vPdjhWCQIE6iXoxRrcUn7s0qrHGT9G7zOlf0ODUIR1NxmBy71oXHk0L4ZCg8htSbR4
-         4pDsv+8o/FJzuHnG0CiVVWCXHQzV8sloDDaQWye4B2bJ7Jcm2NJEn5Mi4PGlr+4j9x6e
-         Hd9ob6LxUF8Rrm+iyPHjTmUQeDm9PEKjHTcIILzc7zaxFhHXn8Gpv4+6YS2ml1ebA4ew
-         zP3UFKgODRKyhvoPDXTDzFulrCB4C4EZdmWWdHhDrViZ2aCy2UfVnnX6sgrZO/rjlPCM
-         sOQke8D6j8ZnyaBDbdzPDAA619AeRlowUX0uKnKdsvvkDnix3jdVJAwYJKIEHKsmnFTj
-         GTAg==
-X-Gm-Message-State: ACrzQf2ZuBwqfucqq0ObFUJRLT/2ChZcL6e74DHULtpwQ8tQVUk4R/ws
-        AZzmTXIiTEKgcWnfgRqsXMXYuRRT72kl1Q==
-X-Google-Smtp-Source: AMsMyM7i+eNakcX48qpc7Mn5PvOUozzI8YxksEJeQObNVkyr/89+42nVUtZy0igEPuZyD7dfedjxXw==
-X-Received: by 2002:a17:90b:4a85:b0:202:4f3f:1f65 with SMTP id lp5-20020a17090b4a8500b002024f3f1f65mr6397691pjb.241.1663892453590;
-        Thu, 22 Sep 2022 17:20:53 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k60-20020a17090a4cc200b002006f15ad4fsm378261pjh.10.2022.09.22.17.20.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Sep 2022 17:20:52 -0700 (PDT)
-Date:   Thu, 22 Sep 2022 17:20:51 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Siddhesh Poyarekar <siddhesh@gotplt.org>
+        Thu, 22 Sep 2022 20:55:15 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E783D5AC76;
+        Thu, 22 Sep 2022 17:55:08 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 46BA32A2372;
+        Fri, 23 Sep 2022 00:55:08 +0000 (UTC)
+Received: from pdx1-sub0-mail-a307 (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id EEF2C2A23FF;
+        Fri, 23 Sep 2022 00:55:06 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1663894507; a=rsa-sha256;
+        cv=none;
+        b=kmKbPjnXVZOAJWd1dfwGPtDR93Sx4IrxW2DU17oYZC1NeznzK0Acuy3SHkUL64KeqhbQEy
+        knwhc/eRx6FPv0T+WXfvuw4B1Uso67njEHnCbjYxsiL/u1ig/aF4fVKemugZwWCoGxXHeV
+        eqr5z42ynLHoXaMw44cTK0KfoXQDFkeD52tcKbDrhzkuWduf1MJQ8ByadVS9nPQ3OaPSRC
+        3Nnnytx/sheQo/SNG4bzbVQYs37lUyunWBnStWnD8y0nqrfU4CixHXoWYb07cWVuCoc6dM
+        FguXfFzg4ztvs4gAZlchLBYG/vi3V22USvHRD4AbX7ir5spV2KawI/O0XdJ/Nw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1663894507;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=NJOv1GZ9ChsVc8WwI5/0ebbSN1q2BAy6Ktze6dEKf3U=;
+        b=XSKuHDeovNzQIivv1Jtx3sEdNxqDaCnHoiDq5Uk2lf9tbiJpmyTyrQihfB7rBEqBsjV2cc
+        2UDZp5/6bshhph8lbMcjhnvM34d12X8+fu6TpoCb7P1uFzbXnXlB/qIaSYzNqszEEj9atF
+        aIgmvO9iIM8++UPR/WOcFb6njpdSvBtMw037S8FCZJDI0vSHbJzipcCR4WaBx1S8oOjGmU
+        xgHCw/OxCvwDv0aEDyJGaEKZEAV5vaVNVrpq8bMszTmQ8e3Sb8PGRuri0UQulRkE0YtMp1
+        KZifVBoiSithLTZNFfib6RKmqu0+rLNj0tuOP0IgD7vxEWZRIEHf8l1YfdbKww==
+ARC-Authentication-Results: i=1;
+        rspamd-64f49dbfc4-kn9w5;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=siddhesh@gotplt.org
+X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|siddhesh@gotplt.org
+X-MailChannels-Auth-Id: dreamhost
+X-Wide-Eyed-Industry: 1aa0a90b1793987a_1663894507478_2110057017
+X-MC-Loop-Signature: 1663894507478:1481827794
+X-MC-Ingress-Time: 1663894507477
+Received: from pdx1-sub0-mail-a307 (pop.dreamhost.com [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.98.207.159 (trex/6.7.1);
+        Fri, 23 Sep 2022 00:55:07 +0000
+Received: from [192.168.0.182] (bras-vprn-toroon4834w-lp130-16-184-147-84-238.dsl.bell.ca [184.147.84.238])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: siddhesh@gotplt.org)
+        by pdx1-sub0-mail-a307 (Postfix) with ESMTPSA id 4MYYbC1sLyzYH;
+        Thu, 22 Sep 2022 17:55:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gotplt.org;
+        s=dreamhost; t=1663894506;
+        bh=IYzaid1zIMxed8ACVzO1GtnRCaPzyovdpKRBURN9jFc=;
+        h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
+        b=xNqRleZDWPQKFRgPuc6+Hgec4akieUu/OuSNnZdagx6tMRHy6JuO8AS/XcGjQxPOd
+         ky4axQwWzs4iyF92Yo0vXtQRyz0Rru11NDYsvBMUkqDwTkBZb4l/SdPbYFqgSwVWFi
+         l2NBcRjF0eyWf4Pnz5k1nNsrqiUiGJUYvUQ4PXBl8JZXgs+5Xi47SUcv5RM8YiXfWZ
+         M9A1s6YoYBieXfIillMv6bJjeWufVnGCsUtemzjfuw/0S6IXIHTUcYwwJfnMSAPPe5
+         oGE23ipAmunHfh6k0mDTPk2yxJWHjv1BBEVOHwZ4TdMOgycqLWITGrnJCbiHJ7mW2Y
+         SLfxbBswGXQ9g==
+Message-ID: <760dbc4d-625b-ca31-ab89-a7d44a68483b@gotplt.org>
+Date:   Thu, 22 Sep 2022 20:55:01 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 0/4] fortify: Use __builtin_dynamic_object_size() when
+ available
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>
 Cc:     linux-hardening@vger.kernel.org,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
@@ -56,65 +91,46 @@ Cc:     linux-hardening@vger.kernel.org,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Tom Rix <trix@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
         linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH 0/4] fortify: Use __builtin_dynamic_object_size() when
- available
-Message-ID: <202209221714.1D792FE6@keescook>
 References: <20220920192202.190793-1-keescook@chromium.org>
  <e2a0debe-e99f-2259-1cb9-35193c387c82@gotplt.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e2a0debe-e99f-2259-1cb9-35193c387c82@gotplt.org>
+ <202209221714.1D792FE6@keescook>
+From:   Siddhesh Poyarekar <siddhesh@gotplt.org>
+In-Reply-To: <202209221714.1D792FE6@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 22, 2022 at 04:26:54PM -0400, Siddhesh Poyarekar wrote:
-> On 2022-09-20 15:21, Kees Cook wrote:
-> > Hi,
-> > 
-> > This adjusts CONFIG_FORTIFY_SOURCE's coverage to include greater runtime
-> > size checking from GCC and Clang's __builtin_dynamic_object_size(), which
-> > the compilers can track either via code flow or from __alloc_size() hints.
-> > 
+On 2022-09-22 20:20, Kees Cook wrote:
+> Yeah, this could be another interest set of additions. It seems like it
+> might be more "coder friendly" if, in the future that has the
+> __element_count__ attribute, it could be used in function parameters
+> too, like:
 > 
-> FTR, I ran a linux build using gcc with allyesconfig and fortify-metrics[1]
-> to get a sense of how much object size coverage would improve with
-> __builtin_dynamic_object_size.  With a total of 3,877 __builtin_object_size
-> calls, about 11.37% succeed in getting a result that is not (size_t)-1.  If
-> they were replaced by __builtin_dynamic_object_size as this patch proposes,
-> the success rate improves to 16.25%, which is a ~1.4x improvement.
+> If we had:
+> 
+> int do_something(struct context *ctx, u32 *data, int count)
+> 
+> this seems less easy to read to me:
+> 
+> int __access(read_write, 2, 3) do_something(struct context *ctx, u32 *data, int count)
+> 
+> as this seems more readable to me, though I guess the access-mode
+> information is lost:
+> 
+> int do_something(struct context *ctx, u32 * __element_count(count) data, int count)
 
-Thanks for check that! Yeah, a 40% increase in coverage is nice. :0
+It doesn't *have* to lose access mode info:
 
-> This is a decent improvement by itself but it can be amplified further by
-> adding __attribute__((access (...)))[2] to function prototypes and
-> definitions, especially for functions that take in buffers and their sizes
-> as arguments since __builtin_dynamic_object_size in gcc is capable of
-> recognizing that and using it for object size determination (and hence to
-> fortify calls) within those functions.
+int do_something(struct context *ctx,
+		 u32 * __element_count(count, __read_only__) data,
+		 int count)
+{
+...
+}
 
-Yeah, this could be another interest set of additions. It seems like it
-might be more "coder friendly" if, in the future that has the
-__element_count__ attribute, it could be used in function parameters
-too, like:
+where omitting the access mode could imply __read_write__.
 
-If we had:
-
-int do_something(struct context *ctx, u32 *data, int count)
-
-this seems less easy to read to me:
-
-int __access(read_write, 2, 3) do_something(struct context *ctx, u32 *data, int count)
-
-as this seems more readable to me, though I guess the access-mode
-information is lost:
-
-int do_something(struct context *ctx, u32 * __element_count(count) data, int count)
-
-But yes, this would be excellent to start adding!
-
--Kees
-
--- 
-Kees Cook
+Thanks,
+Sid
