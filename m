@@ -2,69 +2,67 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F270C6FA8E
-	for <linux-hardening@archiver.kernel.org>; Fri, 23 Sep 2022 20:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FDFC6FA83
+	for <linux-hardening@archiver.kernel.org>; Fri, 23 Sep 2022 20:32:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233112AbiIWUcu (ORCPT
+        id S233127AbiIWUcx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 23 Sep 2022 16:32:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47568 "EHLO
+        Fri, 23 Sep 2022 16:32:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232877AbiIWUc2 (ORCPT
+        with ESMTP id S232427AbiIWUcb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 23 Sep 2022 16:32:28 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57296149797
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Sep 2022 13:28:26 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id t3so1188574ply.2
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Sep 2022 13:28:26 -0700 (PDT)
+        Fri, 23 Sep 2022 16:32:31 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8E77149D11
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Sep 2022 13:28:28 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id x1so1175665plv.5
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Sep 2022 13:28:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=YGvtsu71vtHcP1IwH8KHiY99VHKmYF+/gM9Vu/q9kHU=;
-        b=IFb3o6XSbaR/uQunXfgk/OAgUcbyiUG/neLZN7u63Mb8Dqi7z6PDoN9BNOVaTqa26y
-         SRlzwgeKQKd7R1FctE6Aq8Of9Rx/sgZevcaBDxM7zwYZdr/ifKEynY9SIWqMo8+dRdxg
-         Y1YODqFn9CHpITGWx8VNcWimDUOWaa7761v9Y=
+        bh=WvdKcFRqdjuCQfT0JD0gE0+SmtwNOrU+Pg1jOBHe3u4=;
+        b=HrEaRqblEiynLI80qIODRxODwTegHwanOC+vBRaT+N4CuyIyDnT1Ka3u4nfVp9IIHd
+         diT0lWeZvMtZhxZoszDpodW+IF3HNONiVLb+u/CcrtF0chbqY7ZgfyXXY3bccBOo8VEU
+         9aWzIy88EGpAGDtPIK6TJqjioaB1k1Ced9PHo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=YGvtsu71vtHcP1IwH8KHiY99VHKmYF+/gM9Vu/q9kHU=;
-        b=jn142Xg6MUfzwwgNqX8lB7mLgZCwAD7tfa7uH+g6GQdEP3CfJ9srkgBBTibE7Csh8C
-         n5loL24NDfmgPwi+pB+PdfKwPlewm8Yg4RJlhonyvM+OfOI/v4synivbhUPpEd1R0FdU
-         sJBaaiINqXvWEToG95CTdTAEtmnXbmUuaz8fVn3u5ibcVpm4nQyYu8DisGubsSo9DtsZ
-         4iXEgFpzYRNpFLH37HFfoT/oDll5ih5zyLH+mU69mLTbMDjeVDWVYBOk0pXkliNGiIB9
-         1sjpECNTbStLc77m80lFVLFloOUufNnR0kbCIxa4/g4+in6mCORDU0mP8gyD8MNwJUZx
-         87sA==
-X-Gm-Message-State: ACrzQf03ipuDl/LK9OEX0S4DzBlvQXPrY6tnKRZ+3FbqgumHqSniRHtb
-        /DiLGWNE62kw4EyK4ONM30TAfQ==
-X-Google-Smtp-Source: AMsMyM4GlI4eTJyA9jGLi9lKSnvEwSBc6wqIcYDsgYSV7Hnp4hgp4C2mRxXo8b79UHawMzdaoq59kQ==
-X-Received: by 2002:a17:90a:e7c5:b0:200:ab1a:f32 with SMTP id kb5-20020a17090ae7c500b00200ab1a0f32mr22617314pjb.100.1663964905845;
-        Fri, 23 Sep 2022 13:28:25 -0700 (PDT)
+        bh=WvdKcFRqdjuCQfT0JD0gE0+SmtwNOrU+Pg1jOBHe3u4=;
+        b=EecEVk87LujV0ob3eVswvUMeFDA8W+c6uiW8XzOPyOjNBV/utSuk6kcjo7fLsElie7
+         ApcTk22U/UeeBBFSn9GWFhd/5OFUcZEfTro6XCIWSAKOntBi+mtlOe1uTRtM+PG8nToz
+         jQtEEpS/a9+9G6M7TVluEZ563zkIf0nIK6zg8xIaoL5y98Z3K+tJ0/q8KpA9eh02HKx7
+         oGsMEOVZPJ10Y/8EKdtNHkHRxCxwdyQ3hzQS1joo8+KN61x/r7jUF1Bs2kh50hUEVxKR
+         fITZwrAreG+XmPD3yAfjStelC6Q7fOsUBJUw+08iPRPAgUH30mypD3BH9vVgK07qiTxL
+         Cr5A==
+X-Gm-Message-State: ACrzQf31Bhet718POhFtur+b/aXNOtSEU8JZv+GXDubQnKNupSAA2sRq
+        lvvUGcybYGXIgFg+nCyElTRcwA==
+X-Google-Smtp-Source: AMsMyM4ngI9FRR1eL+yZ6uwD2KKL58Y//80JdSNI55TW3osObzJLJuYdaOAbceb8ExT348oeslycRw==
+X-Received: by 2002:a17:90b:1d12:b0:200:461c:fa7d with SMTP id on18-20020a17090b1d1200b00200461cfa7dmr11526582pjb.38.1663964907877;
+        Fri, 23 Sep 2022 13:28:27 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q9-20020a17090311c900b0017829f986a5sm6477104plh.133.2022.09.23.13.28.24
+        by smtp.gmail.com with ESMTPSA id l11-20020a170902f68b00b0017832c8cc85sm6427549plg.292.2022.09.23.13.28.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 23 Sep 2022 13:28:25 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Vlastimil Babka <vbabka@suse.cz>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Marco Elver <elver@google.com>, linux-mm@kvack.org,
-        "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
+        David Rientjes <rientjes@google.com>,
+        "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Alex Elder <elder@kernel.org>,
         Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>,
@@ -72,129 +70,258 @@ Cc:     Kees Cook <keescook@chromium.org>,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Jesse Brandeburg <jesse.brandeburg@intel.com>,
         Daniel Micay <danielmicay@gmail.com>,
-        Yonghong Song <yhs@fb.com>, Miguel Ojeda <ojeda@kernel.org>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-fsdevel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        dev@openvswitch.org, x86@kernel.org, llvm@lists.linux.dev,
+        Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
+        Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, dev@openvswitch.org,
+        x86@kernel.org, llvm@lists.linux.dev,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 01/16] slab: Remove __malloc attribute from realloc functions
-Date:   Fri, 23 Sep 2022 13:28:07 -0700
-Message-Id: <20220923202822.2667581-2-keescook@chromium.org>
+Subject: [PATCH v2 03/16] skbuff: Proactively round up to kmalloc bucket size
+Date:   Fri, 23 Sep 2022 13:28:09 -0700
+Message-Id: <20220923202822.2667581-4-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220923202822.2667581-1-keescook@chromium.org>
 References: <20220923202822.2667581-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4158; h=from:subject; bh=MMNKX5wNJYq+FFEmxyLeG88Y0pnaYb/m5JRZI7mnarg=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjLhbj8zMWKpgfJIfLMPzhNCTicodYe34AHw5xM3H6 j5Q5e5iJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYy4W4wAKCRCJcvTf3G3AJkqXEA C0CZsQPuFBR2/YBQC6kBOKXs3AnUbDd1vBqtB/SiXvO/znjATFPdq/AAaSBC59HBiMKMePM5lvoiuf aYrT/n/J7UMzadTeGJDsCFyc95mxXFpunUjeXGaTgZojjSgAVg4DABiW54DaumW0lAWFAYegD26yeW JBuJYikNr/QTKW2lM4rlUyCE6YeklCEU+t6NysjAG5alyIx4W0dgH5pUSaAsO6hX65jz8XnK6X4gIg /ftbvkJQdCA8yp6HbKj3bRnJNwHhei3Ew8kR8tRkxr/QCstK0qco60yvO2mmfdDhJOTt8ljlhX+99P ki8iAJ2IUxqLrohWV0+vBNh/UwJAT/E2xl9J7vSz0a5lE1JDaJni0l7B9aWJ6wdTRIlb2RIw/25CU3 2jH0hGLqeXUGTIW8ZuajWL/FWv6nUhF3N+Zql34CZfjXaiVB/8urV6hGJYu0PjR4RhPJtooFtvcGnc NN4P/rvByw1L7/4EGJFqF8KQolNWMu558pdQ29AecI/zn4E9FW41pu2k0zXuekf9ZHdzPr//MRq0VK jji3tNn5ZbZXQWzbxXbbkECT6CK1qfq6Re4GlmJrjPbAnkWCC4gXdw7JW6JIg/Km6CtttHx519iZge eYs/03ai/ytBwKoKeQmOX9IHVAAm1pTNUYNBd0RtV+OAb1aVL8B7TsN5Okig==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8786; h=from:subject; bh=/55In49mcQKg/1B/2W03m4b/pZThn3d5JbnnA49Rm6I=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjLhbkHxh06F0h70CVmnqi/5BazOvRlOHWM3KgI6U5 EH+6FCyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYy4W5AAKCRCJcvTf3G3AJhURD/ 9I6XEF+He0Ww+60DOgfxrHQg5rlWLQ0kqhBM44ODly9CeGSh3lhyoVQ/h9WpsVZNuLWimeIaArOgsM IAW1lVoADGZnBF9ATBVtZo64La+i6ahcPdQ7LBs/s6pDjZeopNi7al0Bt1YzlRe0VOSUjYGy82cVtY WOaobW8pTWoyLTjo3iTpHKyFaKQN1MKp1Y3EqG0/B05W8mFeqsmuQ0qy6EIiP8Zs4iEfvR/7UrSGb0 BVshxfoJapBmV7hlF/1qXAMi4Nva19VNb6+8aYgQRWD6SHG43lz++GxcOt3rERzf1S1B61G/WpKdPE OmQF4aoA0KyjqK6KPG9b+IKbK9H4qTgxuIMqrcyFVniVxLQqm8OZeZ7G8Sc/RmyqeiIp4dcT2wfHlo 9rn+/pIzx3dZkhHIt1dBi6oGIYcft5FhSjoTBRNpDCbB3q6t7Z6v+2tx9BprHS7rO3CCsH36HQEZ7B UKU1zH31UqO/iWiGbvto4ioPgRV91yQV1fmC9MAvO70ri2/E2LfLPOhO5Ie/MQ1W6dyCRLrTbXBryi qvuZGLPA690eYRPxm2oVZ54qQE6SU2XdbPMDsuG9ONR6QSv2mTERQ9OgeKQnOPu3Yznrzyd99lObTv OIpbLfaEVj2GDT+fQjDKwgYif/bE416Ch2kM90zcPNidPn2ZZH/+EY2ye6/A==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The __malloc attribute should not be applied to "realloc" functions, as
-the returned pointer may alias the storage of the prior pointer. Instead
-of splitting __malloc from __alloc_size, which would be a huge amount of
-churn, just create __realloc_size for the few cases where it is needed.
+Instead of discovering the kmalloc bucket size _after_ allocation, round
+up proactively so the allocation is explicitly made for the full size,
+allowing the compiler to correctly reason about the resulting size of
+the buffer through the existing __alloc_size() hint.
 
-Additionally removes the conditional test for __alloc_size__, which is
-always defined now.
+This will allow for kernels built with CONFIG_UBSAN_BOUNDS or the
+coming dynamic bounds checking under CONFIG_FORTIFY_SOURCE to gain
+back the __alloc_size() hints that were temporarily reverted in commit
+93dd04ab0b2b ("slab: remove __alloc_size attribute from __kmalloc_track_caller")
 
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
+Additionally tries to normalize size variables to u32 from int. Most
+interfaces are using "int", but notably __alloc_skb uses unsigned int.
+
+Also fix some reverse Christmas tree and comments while touching nearby
+code.
+
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
 Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc: Marco Elver <elver@google.com>
-Cc: linux-mm@kvack.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/compiler_types.h | 13 +++++--------
- include/linux/slab.h           | 12 ++++++------
- mm/slab_common.c               |  4 ++--
- 3 files changed, 13 insertions(+), 16 deletions(-)
+ include/linux/skbuff.h |  5 +---
+ net/core/skbuff.c      | 64 +++++++++++++++++++++---------------------
+ 2 files changed, 33 insertions(+), 36 deletions(-)
 
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index 4f2a819fd60a..f141a6f6b9f6 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -271,15 +271,12 @@ struct ftrace_likely_data {
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index ca8afa382bf2..5a16177f38b5 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -1234,7 +1234,7 @@ void kfree_skb_partial(struct sk_buff *skb, bool head_stolen);
+ bool skb_try_coalesce(struct sk_buff *to, struct sk_buff *from,
+ 		      bool *fragstolen, int *delta_truesize);
  
- /*
-  * Any place that could be marked with the "alloc_size" attribute is also
-- * a place to be marked with the "malloc" attribute. Do this as part of the
-- * __alloc_size macro to avoid redundant attributes and to avoid missing a
-- * __malloc marking.
-+ * a place to be marked with the "malloc" attribute, except those that may
-+ * be performing a _reallocation_, as that may alias the existing pointer.
-+ * For these, use __realloc_size().
-  */
--#ifdef __alloc_size__
--# define __alloc_size(x, ...)	__alloc_size__(x, ## __VA_ARGS__) __malloc
--#else
--# define __alloc_size(x, ...)	__malloc
--#endif
-+#define __alloc_size(x, ...)	__alloc_size__(x, ## __VA_ARGS__) __malloc
-+#define __realloc_size(x, ...)	__alloc_size__(x, ## __VA_ARGS__)
+-struct sk_buff *__alloc_skb(unsigned int size, gfp_t priority, int flags,
++struct sk_buff *__alloc_skb(unsigned int bytes, gfp_t priority, int flags,
+ 			    int node);
+ struct sk_buff *__build_skb(void *data, unsigned int frag_size);
+ struct sk_buff *build_skb(void *data, unsigned int frag_size);
+@@ -1870,9 +1870,6 @@ static inline int skb_unclone(struct sk_buff *skb, gfp_t pri)
  
- #ifndef asm_volatile_goto
- #define asm_volatile_goto(x...) asm goto(x)
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index 0fefdf528e0d..41bd036e7551 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -184,7 +184,7 @@ int kmem_cache_shrink(struct kmem_cache *s);
- /*
-  * Common kmalloc functions provided by all allocators
+ /* This variant of skb_unclone() makes sure skb->truesize
+  * and skb_end_offset() are not changed, whenever a new skb->head is needed.
+- *
+- * Indeed there is no guarantee that ksize(kmalloc(X)) == ksize(kmalloc(X))
+- * when various debugging features are in place.
   */
--void * __must_check krealloc(const void *objp, size_t new_size, gfp_t flags) __alloc_size(2);
-+void * __must_check krealloc(const void *objp, size_t new_size, gfp_t flags) __realloc_size(2);
- void kfree(const void *objp);
- void kfree_sensitive(const void *objp);
- size_t __ksize(const void *objp);
-@@ -647,10 +647,10 @@ static inline __alloc_size(1, 2) void *kmalloc_array(size_t n, size_t size, gfp_
-  * @new_size: new size of a single member of the array
-  * @flags: the type of memory to allocate (see kmalloc)
+ int __skb_unclone_keeptruesize(struct sk_buff *skb, gfp_t pri);
+ static inline int skb_unclone_keeptruesize(struct sk_buff *skb, gfp_t pri)
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 974bbbbe7138..0b30fbdbd0d0 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -343,19 +343,23 @@ EXPORT_SYMBOL(napi_build_skb);
+  * the caller if emergency pfmemalloc reserves are being used. If it is and
+  * the socket is later found to be SOCK_MEMALLOC then PFMEMALLOC reserves
+  * may be used. Otherwise, the packet data may be discarded until enough
+- * memory is free
++ * memory is free.
   */
--static inline __alloc_size(2, 3) void * __must_check krealloc_array(void *p,
--								    size_t new_n,
--								    size_t new_size,
--								    gfp_t flags)
-+static inline __realloc_size(2, 3) void * __must_check krealloc_array(void *p,
-+								      size_t new_n,
-+								      size_t new_size,
-+								      gfp_t flags)
+-static void *kmalloc_reserve(size_t size, gfp_t flags, int node,
++static void *kmalloc_reserve(u32 *size, gfp_t flags, int node,
+ 			     bool *pfmemalloc)
  {
- 	size_t bytes;
+ 	void *obj;
+ 	bool ret_pfmemalloc = false;
  
-@@ -774,7 +774,7 @@ static inline __alloc_size(1, 2) void *kvcalloc(size_t n, size_t size, gfp_t fla
- }
++	/* kmalloc(size) might give us more room than requested, so
++	 * allocate the true bucket size up front.
++	 */
++	*size = kmalloc_size_roundup(*size);
+ 	/*
+ 	 * Try a regular allocation, when that fails and we're not entitled
+ 	 * to the reserves, fail.
+ 	 */
+-	obj = kmalloc_node_track_caller(size,
++	obj = kmalloc_node_track_caller(*size,
+ 					flags | __GFP_NOMEMALLOC | __GFP_NOWARN,
+ 					node);
+ 	if (obj || !(gfp_pfmemalloc_allowed(flags)))
+@@ -363,7 +367,7 @@ static void *kmalloc_reserve(size_t size, gfp_t flags, int node,
  
- extern void *kvrealloc(const void *p, size_t oldsize, size_t newsize, gfp_t flags)
--		      __alloc_size(3);
-+		      __realloc_size(3);
- extern void kvfree(const void *addr);
- extern void kvfree_sensitive(const void *addr, size_t len);
+ 	/* Try again but now we are using pfmemalloc reserves */
+ 	ret_pfmemalloc = true;
+-	obj = kmalloc_node_track_caller(size, flags, node);
++	obj = kmalloc_node_track_caller(*size, flags, node);
  
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 17996649cfe3..457671ace7eb 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -1134,8 +1134,8 @@ module_init(slab_proc_init);
+ out:
+ 	if (pfmemalloc)
+@@ -380,7 +384,7 @@ static void *kmalloc_reserve(size_t size, gfp_t flags, int node,
  
- #endif /* CONFIG_SLAB || CONFIG_SLUB_DEBUG */
- 
--static __always_inline void *__do_krealloc(const void *p, size_t new_size,
--					   gfp_t flags)
-+static __always_inline __realloc_size(2) void *
-+__do_krealloc(const void *p, size_t new_size, gfp_t flags)
+ /**
+  *	__alloc_skb	-	allocate a network buffer
+- *	@size: size to allocate
++ *	@bytes: minimum bytes to allocate
+  *	@gfp_mask: allocation mask
+  *	@flags: If SKB_ALLOC_FCLONE is set, allocate from fclone cache
+  *		instead of head cache and allocate a cloned (child) skb.
+@@ -395,12 +399,12 @@ static void *kmalloc_reserve(size_t size, gfp_t flags, int node,
+  *	Buffers may only be allocated from interrupts using a @gfp_mask of
+  *	%GFP_ATOMIC.
+  */
+-struct sk_buff *__alloc_skb(unsigned int size, gfp_t gfp_mask,
++struct sk_buff *__alloc_skb(unsigned int bytes, gfp_t gfp_mask,
+ 			    int flags, int node)
  {
- 	void *ret;
- 	size_t ks;
+ 	struct kmem_cache *cache;
+ 	struct sk_buff *skb;
+-	unsigned int osize;
++	u32 size = bytes;
+ 	bool pfmemalloc;
+ 	u8 *data;
+ 
+@@ -427,15 +431,13 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp_t gfp_mask,
+ 	 */
+ 	size = SKB_DATA_ALIGN(size);
+ 	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+-	data = kmalloc_reserve(size, gfp_mask, node, &pfmemalloc);
+-	if (unlikely(!data))
+-		goto nodata;
+-	/* kmalloc(size) might give us more room than requested.
+-	 * Put skb_shared_info exactly at the end of allocated zone,
++	/* Put skb_shared_info exactly at the end of allocated zone,
+ 	 * to allow max possible filling before reallocation.
+ 	 */
+-	osize = ksize(data);
+-	size = SKB_WITH_OVERHEAD(osize);
++	data = kmalloc_reserve(&size, gfp_mask, node, &pfmemalloc);
++	if (unlikely(!data))
++		goto nodata;
++	size = SKB_WITH_OVERHEAD(size);
+ 	prefetchw(data + size);
+ 
+ 	/*
+@@ -444,7 +446,7 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp_t gfp_mask,
+ 	 * the tail pointer in struct sk_buff!
+ 	 */
+ 	memset(skb, 0, offsetof(struct sk_buff, tail));
+-	__build_skb_around(skb, data, osize);
++	__build_skb_around(skb, data, size);
+ 	skb->pfmemalloc = pfmemalloc;
+ 
+ 	if (flags & SKB_ALLOC_FCLONE) {
+@@ -1708,7 +1710,7 @@ int pskb_expand_head(struct sk_buff *skb, int nhead, int ntail,
+ 		     gfp_t gfp_mask)
+ {
+ 	int i, osize = skb_end_offset(skb);
+-	int size = osize + nhead + ntail;
++	u32 size = osize + nhead + ntail;
+ 	long off;
+ 	u8 *data;
+ 
+@@ -1722,11 +1724,11 @@ int pskb_expand_head(struct sk_buff *skb, int nhead, int ntail,
+ 
+ 	if (skb_pfmemalloc(skb))
+ 		gfp_mask |= __GFP_MEMALLOC;
+-	data = kmalloc_reserve(size + SKB_DATA_ALIGN(sizeof(struct skb_shared_info)),
+-			       gfp_mask, NUMA_NO_NODE, NULL);
++	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
++	data = kmalloc_reserve(&size, gfp_mask, NUMA_NO_NODE, NULL);
+ 	if (!data)
+ 		goto nodata;
+-	size = SKB_WITH_OVERHEAD(ksize(data));
++	size = SKB_WITH_OVERHEAD(size);
+ 
+ 	/* Copy only real data... and, alas, header. This should be
+ 	 * optimized for the cases when header is void.
+@@ -6060,22 +6062,21 @@ EXPORT_SYMBOL(alloc_skb_with_frags);
+ static int pskb_carve_inside_header(struct sk_buff *skb, const u32 off,
+ 				    const int headlen, gfp_t gfp_mask)
+ {
+-	int i;
+-	int size = skb_end_offset(skb);
++	u32 size = skb_end_offset(skb);
+ 	int new_hlen = headlen - off;
+ 	u8 *data;
++	int i;
+ 
+ 	size = SKB_DATA_ALIGN(size);
+ 
+ 	if (skb_pfmemalloc(skb))
+ 		gfp_mask |= __GFP_MEMALLOC;
+-	data = kmalloc_reserve(size +
+-			       SKB_DATA_ALIGN(sizeof(struct skb_shared_info)),
+-			       gfp_mask, NUMA_NO_NODE, NULL);
++	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
++	data = kmalloc_reserve(&size, gfp_mask, NUMA_NO_NODE, NULL);
+ 	if (!data)
+ 		return -ENOMEM;
+ 
+-	size = SKB_WITH_OVERHEAD(ksize(data));
++	size = SKB_WITH_OVERHEAD(size);
+ 
+ 	/* Copy real data, and all frags */
+ 	skb_copy_from_linear_data_offset(skb, off, data, new_hlen);
+@@ -6179,23 +6180,22 @@ static int pskb_carve_frag_list(struct sk_buff *skb,
+ static int pskb_carve_inside_nonlinear(struct sk_buff *skb, const u32 off,
+ 				       int pos, gfp_t gfp_mask)
+ {
+-	int i, k = 0;
+-	int size = skb_end_offset(skb);
+-	u8 *data;
+ 	const int nfrags = skb_shinfo(skb)->nr_frags;
+ 	struct skb_shared_info *shinfo;
++	u32 size = skb_end_offset(skb);
++	int i, k = 0;
++	u8 *data;
+ 
+ 	size = SKB_DATA_ALIGN(size);
+ 
+ 	if (skb_pfmemalloc(skb))
+ 		gfp_mask |= __GFP_MEMALLOC;
+-	data = kmalloc_reserve(size +
+-			       SKB_DATA_ALIGN(sizeof(struct skb_shared_info)),
+-			       gfp_mask, NUMA_NO_NODE, NULL);
++	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
++	data = kmalloc_reserve(&size, gfp_mask, NUMA_NO_NODE, NULL);
+ 	if (!data)
+ 		return -ENOMEM;
+ 
+-	size = SKB_WITH_OVERHEAD(ksize(data));
++	size = SKB_WITH_OVERHEAD(size);
+ 
+ 	memcpy((struct skb_shared_info *)(data + size),
+ 	       skb_shinfo(skb), offsetof(struct skb_shared_info, frags[0]));
 -- 
 2.34.1
 
