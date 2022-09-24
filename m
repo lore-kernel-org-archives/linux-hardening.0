@@ -2,106 +2,98 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273ACC6FA82
-	for <linux-hardening@archiver.kernel.org>; Sat, 24 Sep 2022 03:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F970C07E9D
+	for <linux-hardening@archiver.kernel.org>; Sat, 24 Sep 2022 03:52:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233190AbiIXDmt (ORCPT
+        id S233102AbiIXDwa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 23 Sep 2022 23:42:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34114 "EHLO
+        Fri, 23 Sep 2022 23:52:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbiIXDms (ORCPT
+        with ESMTP id S233048AbiIXDw3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 23 Sep 2022 23:42:48 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1655E14D317;
-        Fri, 23 Sep 2022 20:42:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AB6CBB8199D;
-        Sat, 24 Sep 2022 03:42:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AA22C433D6;
-        Sat, 24 Sep 2022 03:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663990964;
-        bh=UZOAPTlVabY7P0hSYNsc/yA3YhazOT0B6LxSHAwpGqI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HuuJfOAfDuj9hFY/tfRAlzTS5PHbufipn/DmbmlaP3cgSoEHXJ5VGPYGAhbszluRo
-         w+TR0pGOUdWn0TtJytOxNsIofCi3TGKmvtLYzRLtLgs79N91QdCmEZ63965xMpRJbm
-         DZMczAfctyoxqsdUk+TxR1xSwmb6aiWdZ2IeTme8a6VHcBUv5abowdkLWMzfd38Otd
-         pp30Q4TqxIYLl3zfD2wEK2/Dbs27+Bgdyj+j8xfYOWTj1iX/YIloutxzzfBFkaiEv8
-         cr8bPcL2cGidpyWwVOnUqbefFVtjM2y8NrjJQkqcCUGJFOyLzTkvxo5kbv5dnpvVOW
-         cPyivOnPypGAg==
-Date:   Fri, 23 Sep 2022 22:42:38 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        linux-hyperv@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
+        Fri, 23 Sep 2022 23:52:29 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 248E5DCEAF
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Sep 2022 20:52:29 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id g1-20020a17090a708100b00203c1c66ae3so1937971pjk.2
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Sep 2022 20:52:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=3G1VrrLvYJ7MrbsK19m22XFQRvd7YcWq9IeFy6ACQL8=;
+        b=ZGVol1yELnKxk4dcEnCedM7bJb/8peWOv3+7+hiWKQwLeztgyVcfkwVQreKRbVccXK
+         JngNzDQVyqvPU+pSQoMSuEfT5jOn2lmjRVSWmaKYsc50NcAe1qcsVsij7rwik5PliFov
+         191rStdu4autyXYfBDxuuxq5RSsqW86+qWqhc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=3G1VrrLvYJ7MrbsK19m22XFQRvd7YcWq9IeFy6ACQL8=;
+        b=0kaLi3P6kzLifTUqv9IYydbMluUsszSucrLbdqRk6cfp8CMjxHkxZk6ZXQ+Ab34egy
+         l/1D/kWfzlTVBcjBNyFimuzzpJ0jPizdASyyq/8aObSrCVH/wUzndxuRpIhLjpjUK7ke
+         PVBUU7eHKwzrrje4KoYeT/zxAlRYeY5mpqE4vUIV56URnj7eS71VMLGnTkd+9HxQqREu
+         u2D9EPtRybxRoVUMBDnaOWSU2T9voJvQDQLasPl52bz/tJN2j6XSv8FfSi/wwPc5QiRm
+         lgnJjhcOEWYNraoXDmuhIuLV7n2vYOjR0v2fBirsgFH81HUXh6otkaLNodE9g7Hc2q7K
+         BHEQ==
+X-Gm-Message-State: ACrzQf0p2qJf0xaccDICqqNbjYhAdIWb28sjhSDFMFoYVkmVa95okXk9
+        cR5nf7P6GjcqJiRT0nLYaQUuMg==
+X-Google-Smtp-Source: AMsMyM7rnV2yIjKRf0nltcgFw8A9YXNZErvQrcy80Et2nD0M74m5fnkvIhGCvlr8i5XgmYrnMTnW2Q==
+X-Received: by 2002:a17:90b:4f90:b0:202:9be9:2c92 with SMTP id qe16-20020a17090b4f9000b002029be92c92mr24644365pjb.140.1663991548677;
+        Fri, 23 Sep 2022 20:52:28 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a6-20020aa795a6000000b0053abb15b3d9sm7492138pfk.19.2022.09.23.20.52.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Sep 2022 20:52:28 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Christine Caulfield <ccaulfie@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        David Teigland <teigland@redhat.com>, cluster-devel@redhat.com,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] Drivers: hv: vmbus: Split memcpy of flex-array
-Message-ID: <Yy58rt9N0+dHrNtt@work>
-References: <20220924030741.3345349-1-keescook@chromium.org>
+Subject: [PATCH] dlm: Split memcpy() of struct dlm_message flexible array
+Date:   Fri, 23 Sep 2022 20:52:26 -0700
+Message-Id: <20220924035226.3359297-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220924030741.3345349-1-keescook@chromium.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1267; h=from:subject; bh=e/Y6GTN0SCVQ259nA/pYwlFozQeGo0Cl6K1VpFhG2NE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjLn75X8LVs9287oq0AOqk6fbfl+f5Dh2O94OSeNFT BKSCt3iJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYy5++QAKCRCJcvTf3G3AJtFrD/ 9Auvgp4BKi9bKLLuhvLc/e/O1WDJsOFfuNo6xlL0Xxa1D97BC+ujNjbyj/GdCB94rJesYm9EjqgR9r pElxGT9NyZ+UiAThiQZEwy7SLXa2Yo6qq5eR99rppLpm1JtU/SduOCUqUEc06k6AqNBizpJyLwwTXz t12Mn9xZYWjzZrgr7syXWkFSjQAIqiy3xmDbYeFZzRc3SyWbu/K3jCrJwZfRFnxCngJ9dKHtvLBsCU 4lFASXpkFsPGvWy51J3wAFTccWeqg7u/mJLIq6sG8N+MWUXVqOkdSBReA/koc21tIknyinJKvhcxc1 vy9iRiQrEhG4czlnJStU2wv/YK48Jrz9jpvPWGgioWkGeHj9GX9IvcN5vJES/4uyJRe+y3QGops8Ch m3Vtm9AviVzNO6hkLBFgNbE9QyFjp6DfNJerwNrn9X4TN9M0heZmNkLDtM9wEMzFa/2ebOUauYzcIk llXFIXE74Xmfn+hAs2gwW8CI6CDVe7pQsC8Eew2fri1vXFtJjwV/Lg3/wzpxxKKixCoN/J1Z/ZoFqz OmE08kuUfMPGbCE+dfkMRt5a7aD0xuSrbTzIhnLa4R1r6m2y/j2/RBofyLao1CpX1tRBbVmka+bLBh BpYILJHURIleLwR3p8UBMg5WMtI9M+UzAFy4NhXoWCkDr12hhvS3tpk1BiEQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 23, 2022 at 08:07:41PM -0700, Kees Cook wrote:
-> To work around a misbehavior of the compiler's ability to see into
-> composite flexible array structs (as detailed in the coming memcpy()
-> hardening series[1]), split the memcpy() of the header and the payload
-> so no false positive run-time overflow warning will be generated. As it
-> turns out, this appears to actually reduce the text size:
-> 
-> $ size drivers/hv/vmbus_drv.o.before drivers/hv/vmbus_drv.o
->    text    data     bss     dec     hex filename
->   22968    5239     232   28439    6f17 drivers/hv/vmbus_drv.o.before
->   23032    5239     232   28503    6f57 drivers/hv/vmbus_drv.o
-> 
-> [1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org/
-> 
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> Cc: Wei Liu <wei.liu@kernel.org>
-> Cc: Dexuan Cui <decui@microsoft.com>
-> Cc: linux-hyperv@vger.kernel.org
-> Reported-by: Nathan Chancellor <nathan@kernel.org>
-> Reported-by: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+To work around a misbehavior of the compiler's ability to see into
+composite flexible array structs (as detailed in the coming memcpy()
+hardening series[1]), split the memcpy() of the header and the payload
+so no false positive run-time overflow warning will be generated.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+[1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org/
 
-Thanks!
---
-Gustavo
+Cc: Christine Caulfield <ccaulfie@redhat.com>
+Cc: David Teigland <teigland@redhat.com>
+Cc: cluster-devel@redhat.com
+Reported-by: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/dlm/requestqueue.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> ---
->  drivers/hv/vmbus_drv.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 23c680d1a0f5..9b111a8262e3 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -1131,7 +1131,8 @@ void vmbus_on_msg_dpc(unsigned long data)
->  			return;
->  
->  		INIT_WORK(&ctx->work, vmbus_onmessage_work);
-> -		memcpy(&ctx->msg, &msg_copy, sizeof(msg->header) + payload_size);
-> +		ctx->msg.header = msg_copy.header;
-> +		memcpy(&ctx->msg.payload, msg_copy.u.payload, payload_size);
->  
->  		/*
->  		 * The host can generate a rescind message while we
-> -- 
-> 2.34.1
-> 
+diff --git a/fs/dlm/requestqueue.c b/fs/dlm/requestqueue.c
+index 036a9a0078f6..63f45c3c53a2 100644
+--- a/fs/dlm/requestqueue.c
++++ b/fs/dlm/requestqueue.c
+@@ -44,7 +44,8 @@ void dlm_add_requestqueue(struct dlm_ls *ls, int nodeid, struct dlm_message *ms)
+ 
+ 	e->recover_seq = ls->ls_recover_seq & 0xFFFFFFFF;
+ 	e->nodeid = nodeid;
+-	memcpy(&e->request, ms, le16_to_cpu(ms->m_header.h_length));
++	e->request = *ms;
++	memcpy(&e->request.m_extra, ms->m_extra, length);
+ 
+ 	atomic_inc(&ls->ls_requestqueue_cnt);
+ 	mutex_lock(&ls->ls_requestqueue_mutex);
+-- 
+2.34.1
+
