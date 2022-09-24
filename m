@@ -2,111 +2,94 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9CAC07E9D
-	for <linux-hardening@archiver.kernel.org>; Sat, 24 Sep 2022 04:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E2EC07E9D
+	for <linux-hardening@archiver.kernel.org>; Sat, 24 Sep 2022 05:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233206AbiIXE2P (ORCPT
+        id S233325AbiIXFVj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 24 Sep 2022 00:28:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50406 "EHLO
+        Sat, 24 Sep 2022 01:21:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233053AbiIXE2N (ORCPT
+        with ESMTP id S231864AbiIXFVi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 24 Sep 2022 00:28:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21332F8C04;
-        Fri, 23 Sep 2022 21:28:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B17C660A73;
-        Sat, 24 Sep 2022 04:28:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 078E9C433D6;
-        Sat, 24 Sep 2022 04:28:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663993692;
-        bh=86eW6iIqE0bM9Xt04DpkiC+DSve+XgiN712S/FIk0CI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k9BS9Az+Bf6cGWLFRHh1FvsgvpmrpzfqXc2HNs2RJbdTxTmxspK5NUKHb4Kh64oQR
-         Sfj890V+mJJxCXY7jCadT/JV9s5fK9TMMGPKyNT3J8R6wUNhCPJKFS9ebeTYwT4PyL
-         1eRfvCbuRedXzCY42rWYrbak1Mb8/yvTcLghSv6URJKjVe2qN+7FCduvb5AzK2VBo3
-         CROnPmPdIudYPRyepAzJHF7sxxcd8pm33DGCBPCtu6LW1sqaupTet1iX3slgXw9RNB
-         XmeBd9nuKOEW5qOeyVnSqvVpd0kSZZ/FCEqgl/S8oA6AzB3Li05izfqkBaR4d46kOl
-         +8KN69wSExZOg==
-Date:   Fri, 23 Sep 2022 23:28:05 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] NFC: hci: Split memcpy() of struct hcp_message flexible
- array
-Message-ID: <Yy6HVVMGdSCyEHbZ@work>
-References: <20220924040835.3364912-1-keescook@chromium.org>
+        Sat, 24 Sep 2022 01:21:38 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BBAA13A3B1
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Sep 2022 22:21:36 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id b75so1922944pfb.7
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Sep 2022 22:21:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=PPRXlLTYZ3zKwK3ad/AozhJnwUlEmFf37ZAwcK6Vux0=;
+        b=bRJXy8HIQ7D6BUQDEqhfdStJXXZPFcATdYsA3rCgRlPoLjgYgY5pIsXL1oREfpTrlq
+         r+HKkeru+wwduG9JSy6j462a31Q+ODUAvGRE0Nzs/yT/tmihFFPGrSRBuAng65iiMuzv
+         Ys9IftdSKHBvGu0i0NGbCSw0nd2mCLt5qQj5o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=PPRXlLTYZ3zKwK3ad/AozhJnwUlEmFf37ZAwcK6Vux0=;
+        b=BCXhlOTqwxJcxlUVa87yGYFOg8Kza33rUx5+njQJK7bVtS/mXjIQTKRFobr9J/bwqg
+         q8ZDJeu72hbK2HmivmLQlVbFEyubfjVufZAyz1wRLBTbu/LNJ+8RIkJDRyqTSNDNtkJh
+         76dMbddtwofcK9cnuMYn4VtZIYDMprETdCyCosKKk1Se2Yu9QPi1VfAxAWNbOi9Io1Dn
+         W788reZq3FAnTfRKPtpYHddpqZ7YL/l0wllSD+6BK05oqw9CXVE/XDMIIeUoDFS0y53E
+         7sJdOwFe44I1CGc70Ds2v/NIlNHzrsJ0/PhQ6FPOrZgUxkxD9Uak68eWIxTxLcxuEqCd
+         5mFA==
+X-Gm-Message-State: ACrzQf1YiRmvZDUaB+CstjGl3VN4G8HDeWwWytxo4RmZlJzkzgVU7zat
+        xZeuxCaekL+Aw/GaNRnZ5CSgTqSq1PgdMQ==
+X-Google-Smtp-Source: AMsMyM4XsIuTS/5fCoS42BuVeEKj1MdwRkTAi8gz+gbjVvEbLwrI//toZFaRVR1w62R1BSjWFLQd9w==
+X-Received: by 2002:a05:6a00:2409:b0:54e:a3ad:d32d with SMTP id z9-20020a056a00240900b0054ea3add32dmr12611930pfh.70.1663996895927;
+        Fri, 23 Sep 2022 22:21:35 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w16-20020a170902e89000b00176d8e33601sm6937804plg.203.2022.09.23.22.21.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Sep 2022 22:21:35 -0700 (PDT)
+Date:   Fri, 23 Sep 2022 22:21:34 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jack Wang <jinpu.wang@cloud.ionos.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] scsi: pm8001: Replace one-element array with
+ flexible-array member
+Message-ID: <202209232203.2F77ADD1CA@keescook>
+References: <Yyy31OuBza1FJCXP@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220924040835.3364912-1-keescook@chromium.org>
+In-Reply-To: <Yyy31OuBza1FJCXP@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 23, 2022 at 09:08:35PM -0700, Kees Cook wrote:
-> To work around a misbehavior of the compiler's ability to see into
-> composite flexible array structs (as detailed in the coming memcpy()
-> hardening series[1]), split the memcpy() of the header and the payload
-> so no false positive run-time overflow warning will be generated. This
-> split already existed for the "firstfrag" case, so just generalize the
-> logic further.
-> 
-> [1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org/
-> 
-> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: netdev@vger.kernel.org
-> Reported-by: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On Thu, Sep 22, 2022 at 02:30:28PM -0500, Gustavo A. R. Silva wrote:
+> One-element arrays are deprecated, and we are replacing them with flexible
+> array members instead. So, replace one-element array with flexible-array
+> member in struct fw_control_info.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+I think this changelog should include some explanation of why this change
+is safe. As far as I can see, it would be:
 
-Thanks!
---
-Gustavo
+This is the only change needed; struct fw_control_info is only ever used
+for casting to existing allocations. No sizeof() is used on any of the
+resulting variables.
 
-> ---
->  net/nfc/hci/hcp.c | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
 > 
-> diff --git a/net/nfc/hci/hcp.c b/net/nfc/hci/hcp.c
-> index 05c60988f59a..4902f5064098 100644
-> --- a/net/nfc/hci/hcp.c
-> +++ b/net/nfc/hci/hcp.c
-> @@ -73,14 +73,12 @@ int nfc_hci_hcp_message_tx(struct nfc_hci_dev *hdev, u8 pipe,
->  		if (firstfrag) {
->  			firstfrag = false;
->  			packet->message.header = HCP_HEADER(type, instruction);
-> -			if (ptr) {
-> -				memcpy(packet->message.data, ptr,
-> -				       data_link_len - 1);
-> -				ptr += data_link_len - 1;
-> -			}
->  		} else {
-> -			memcpy(&packet->message, ptr, data_link_len);
-> -			ptr += data_link_len;
-> +			packet->message.header = *ptr++;
-> +		}
-> +		if (ptr) {
-> +			memcpy(packet->message.data, ptr, data_link_len - 1);
-> +			ptr += data_link_len - 1;
->  		}
->  
->  		/* This is the last fragment, set the cb bit */
-> -- 
-> 2.34.1
-> 
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/207
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Another one down! :)
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
