@@ -2,123 +2,105 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77311C07E9D
-	for <linux-hardening@archiver.kernel.org>; Sat, 24 Sep 2022 00:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B04C07E9D
+	for <linux-hardening@archiver.kernel.org>; Sat, 24 Sep 2022 02:31:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232204AbiIXARm (ORCPT
+        id S232984AbiIXCbW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 23 Sep 2022 20:17:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48054 "EHLO
+        Fri, 23 Sep 2022 22:31:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232959AbiIXARl (ORCPT
+        with ESMTP id S232812AbiIXCbV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 23 Sep 2022 20:17:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E51D7EE653;
-        Fri, 23 Sep 2022 17:17:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 80E0F6168D;
-        Sat, 24 Sep 2022 00:17:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E716CC433C1;
-        Sat, 24 Sep 2022 00:17:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663978658;
-        bh=RglP0sjMnOR1hc6TIJCoeMPAc2wN4kSJ67XF1tAfF2E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vImghcZU/hJ17HG3yO/PDlLHqL5acbajdtbhZJRSEAjL6+lt2+ct+TwM2UBv5Z5D1
-         Rg4PAaZSpJpcGsPxqA+lFYu921g2cs0C4sfQWAGgQvTdZ5KWYX/suyGCwNNiPQIud3
-         dIx68JfffpnO+z1kO41X4hp6/XDqsEkxOnccZkpNsCjz1OnVQvaJ+enVaf0Che5Lyx
-         CN1xj+2Q6Mn2ZC+CHcvlSjYwMlG9QsGM4RqIVlcgH2hiswGlAv6nVAQpdd0BEcJeRc
-         /fz3835kh0ghHquMft/qpKPnAEQjo+ThguXySuQ9/42WyY1zy7R4NmDnfWZBIdj4oM
-         7nmqSDXmC8vZg==
-Date:   Fri, 23 Sep 2022 19:17:31 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Miguel Ojeda <ojeda@kernel.org>,
-        Siddhesh Poyarekar <siddhesh@gotplt.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Tom Rix <trix@redhat.com>, llvm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] Compiler Attributes: Introduce __access_*() function
- attribute
-Message-ID: <Yy5MmwVWD7IxCQi2@work>
-References: <20220923235424.3303486-1-keescook@chromium.org>
+        Fri, 23 Sep 2022 22:31:21 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B8C4ED5C6;
+        Fri, 23 Sep 2022 19:31:20 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id a5-20020a17090aa50500b002008eeb040eso8755871pjq.1;
+        Fri, 23 Sep 2022 19:31:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=PlrfWlpdqt+xjgKL+9XUICyPlvBbkUl0DMPU2Xl4+oc=;
+        b=Q7ZkxgV/zpidkkl8W5NQ9L17EWFBen+v6rHHNZhWZeObfzSJYsm5LtFtAfu/tX5R13
+         OialadSdL+h7AunTW40BC5eE3YQAdv8BCPPHMP7fieqHd/NT/RYt+49rvKw/UU63JNSZ
+         MtAgwo6W1G69cWLTgDdHtFmK3dDp5xwM0Vokoqcx69SmwN7QYQ39gcBBMflKY0Mk1/gm
+         z5WIaiQ9oU79KYeoBZuBa7l0kuv1MgLtxfozDt4qtbm0d5AGqW9KHp921W23zq2OxjeZ
+         ytvSpnYblDxatYSl+XB9lzwe2lV6EtKPzaBceWBD0zaen7kswqvWVrQc/OtyJaMARPzO
+         S5Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=PlrfWlpdqt+xjgKL+9XUICyPlvBbkUl0DMPU2Xl4+oc=;
+        b=4rYU/fN8RaozX0zjaa8SUQx6kHPAzPGtZApTS1B+D4Gm6ukXNdOvFevOSJ7grqUrj3
+         /oGkYLoPNE8gveiRvnkn0WbkOYsg4dVIbePXfNSjryXeW45It/sJ5kU5z031dugkks0G
+         p+TGdo/tqC7qZHuGxXWlCQ+Nzju0xKz4UB7GpPBT0n9yBe5Jbu6cQhO9RAvtlmEbU0je
+         WauyDCnjLFjdPZ4sF0cTij93IkwQVvKnz3N52GlowLsCsbHMPP2uJkLXO6SxmYM4wij2
+         QkdN1oEh0xd3mr0puu6RNd58xYxteObV3PSY9Q5j+hVRy6CfRUgCOxPCaui/DTCpQ/Y8
+         qzSg==
+X-Gm-Message-State: ACrzQf2uC63rA6XWjIWX/6v2DuhSPh0M0DX/jl0sYdLF2rO0rUBTOHMM
+        /ik35P0HluVmCLGCXxyu28Q=
+X-Google-Smtp-Source: AMsMyM6jvUot8t6GrHmTP41IkTux0bIlddfaTyuuU2n8pCxP/xihsPczbyUjdGWhHOIsNbeIbXyhaQ==
+X-Received: by 2002:a17:902:efd2:b0:176:b888:2481 with SMTP id ja18-20020a170902efd200b00176b8882481mr11128332plb.144.1663986679861;
+        Fri, 23 Sep 2022 19:31:19 -0700 (PDT)
+Received: from [192.168.11.9] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id e23-20020aa79817000000b00540b35628a4sm7230424pfl.123.2022.09.23.19.31.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Sep 2022 19:31:19 -0700 (PDT)
+Message-ID: <d9e15a0b-0ec9-894b-b0a6-3425af2ddeff@gmail.com>
+Date:   Sat, 24 Sep 2022 11:31:16 +0900
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220923235424.3303486-1-keescook@chromium.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] string: Rewrite and add more kern-doc for the str*()
+ functions
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Akira Yokosawa <akiyks@gmail.com>
+References: <20220922062817.2283352-1-keescook@chromium.org>
+From:   Akira Yokosawa <akiyks@gmail.com>
+In-Reply-To: <20220922062817.2283352-1-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 23, 2022 at 04:54:24PM -0700, Kees Cook wrote:
-> Added in GCC 10.1, the "access" function attribute to mark pointer
-> arguments for how they are expected to be accessed in a given function.
-> Both their access type (read/write, read-only, or write-only) and bounds
-> are specified. While it is legal to provide only the pointer argument
-> position and access type, design the kernel macros to require also the
-> bounds (element count) argument position: if a function has no bounds
-> argument, refactor the code to include one.
+Hi Kees,
+
+On Wed, 21 Sep 2022 23:28:17 -0700, Kees Cook wrote:
+> While there were varying degrees of kern-doc for various str*()-family
+> functions, many needed updating and clarification, or to just be
+> entirely written. Update (and relocate) existing kern-doc and add missing
+> functions, sadly shaking my head at how many times I have written "Do
+> not use this function". Include the results in the core kernel API doc.
 > 
-> These can be used multiple times. For example:
-> 
-> __access_wo(2, 3) __access_ro(4, 5)
-> int copy_something(struct context *ctx, u32 *dst, size_t dst_count,
-> 		   u8 *src, int src_len);
-> 
-> (And if "dst" will also be read, it could use __access_rw(2, 3) instead.)
-> 
-> These can inform the compile-time diagnostics of GCC including
-> -Warray-bounds, -Wstringop-overflow, etc, and can affect
-> __builtin_dynamic_object_size() results.
-> 
-> Cc: Miguel Ojeda <ojeda@kernel.org>
-> Cc: Siddhesh Poyarekar <siddhesh@gotplt.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Tom Rix <trix@redhat.com>
-> Cc: llvm@lists.linux.dev
 > Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> Follow up to https://lore.kernel.org/lkml/20220902223507.2537469-1-keescook@chromium.org
+> Note that this is on top of my recent fortify-string.h series:
+> https://lore.kernel.org/lkml/20220920192202.190793-1-keescook@chromium.org/
+I wanted to test this change, but I've not able to find a good commit
+where the fortify-string.h series and this one can be applied cleanly.
 
-Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Would you mind creating a topic branch somewhere on your git tree
+and sharing it?
 
---
-Gustavo
+Regards,
+Akira
 
 > ---
->  include/linux/compiler_attributes.h | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  Documentation/core-api/kernel-api.rst |   3 +
+>  include/linux/fortify-string.h        | 133 ++++++++++++++++++++++++--
+>  lib/string.c                          |  82 ----------------
+>  scripts/kernel-doc                    |   4 +
+>  4 files changed, 130 insertions(+), 92 deletions(-)
 > 
-> diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-> index 9a9907fad6fd..6f3d40f7ee5e 100644
-> --- a/include/linux/compiler_attributes.h
-> +++ b/include/linux/compiler_attributes.h
-> @@ -20,6 +20,22 @@
->   * Provide links to the documentation of each supported compiler, if it exists.
->   */
->  
-> +/*
-> + * Optional: only supported since gcc >= 10
-> + * Optional: not supported by Clang
-> + *
-> + *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-access-function-attribute
-> + */
-> +#if __has_attribute(__access__)
-> +#define __access_rw(ptr, count)	__attribute__((__access__(read_write, ptr, count)))
-> +#define __access_ro(ptr, count)	__attribute__((__access__(read_only,  ptr, count)))
-> +#define __access_wo(ptr, count)	__attribute__((__access__(write_only, ptr, count)))
-> +#else
-> +#define __access_rw(ptr, count)
-> +#define __access_ro(ptr, count)
-> +#define __access_wo(ptr, count)
-> +#endif
-> +
->  /*
->   *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-alias-function-attribute
->   */
-> -- 
-> 2.34.1
-> 
+[...]
