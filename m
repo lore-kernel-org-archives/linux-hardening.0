@@ -2,141 +2,109 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA1FC07E9D
-	for <linux-hardening@archiver.kernel.org>; Sat, 24 Sep 2022 07:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AABC32771
+	for <linux-hardening@archiver.kernel.org>; Sat, 24 Sep 2022 07:33:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232228AbiIXHOE (ORCPT
+        id S233530AbiIXHdW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 24 Sep 2022 03:14:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46342 "EHLO
+        Sat, 24 Sep 2022 03:33:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229556AbiIXHOD (ORCPT
+        with ESMTP id S233412AbiIXHdV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 24 Sep 2022 03:14:03 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A18EE109B;
-        Sat, 24 Sep 2022 00:14:02 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id fv3so1984758pjb.0;
-        Sat, 24 Sep 2022 00:14:02 -0700 (PDT)
+        Sat, 24 Sep 2022 03:33:21 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D527B6009
+        for <linux-hardening@vger.kernel.org>; Sat, 24 Sep 2022 00:33:20 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id w20so1997129ply.12
+        for <linux-hardening@vger.kernel.org>; Sat, 24 Sep 2022 00:33:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=zc39r/JUk5EXO1aNoPPyS+CIqOIgtl4S9VWPOk1JNao=;
-        b=Ehi+afHuxdncG0EVs/whkNJ7qs3LYN5hnk51tmc+bGUYzoI1Mwu4LPafrpUY/wm+5d
-         I6K8+h1FBwOuj7whpuDl+TGIywjop+57FeX/u/dHQ+2AK57D2EFxssv0SBTQQUmLkPCn
-         3jfKnLC8lxEgUmRIK5wzoNKWx40TgCeywM/DBszC/OG/u+w/VVGJdgBz3DUMmDkYQg5L
-         /yeG0l+wcz5qkaX0lmkr4G7Y02VXNhPw3jcwPHmwmLPEBbf5eWFCS7wpPiDMUySP4/5f
-         WP/Z5Y02tTPi5gUxxPT8gBhi/V+QBAgLbHWAKIRnZjkkjJSKrBWNHaXhwYigH1lLXDwt
-         i+bw==
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=ZMVsUMBAKMeduU+ys2KO9Tzke8RIAJ6IXsSd88ClynM=;
+        b=VexB8OMgivKHIQttJFnZ9yevpt5OqU1P2L/CoE5HKTeqDzxuckcZufT68YFWJVSRKa
+         mXGwdC6OK15QOHlaUILroAyLFQmLyBMBStlRMtzrny1Wfcf/uV2mh3WfC56QE/z/UtBk
+         5+EqsikYVRmR3yylEBySsgNSZsN3+9O84H8sc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=zc39r/JUk5EXO1aNoPPyS+CIqOIgtl4S9VWPOk1JNao=;
-        b=vCxM4xkZRHl0suQ04oMOWdCPV1G3J+ivlf8nK2qWAlUcgR2TlM9EJtGNFilzLJvuug
-         llKq5jefvFqhUHHBXOmeTgs7GTTFYUS9Dlln4nmrCGwhF2qp4Dn1m3gZqZxZ3DYr/2me
-         qpTzhAFoXTnrttQe56DeXSSFoWnBagn4wfnBjfH0GuA+LswuOCHyc9RG9FZJMsNbOt5r
-         OhsmTKwSa/0KfXB/Ytq9yrwCCSfG1pwlSvmiWleAQesSznZRAYkzGAXPCInZACReR165
-         HwN/zPCopblrvX7s74AITACh39ROefqY2Pf8rJX+xM1Hv9bVqoz9t5aWhR0vy/PVciOD
-         BpPQ==
-X-Gm-Message-State: ACrzQf3cS/7PkVsOXKLoW27VH6eTjNIR7DyoU+kTM2zyHzUuSiIMqQt9
-        b7zFgL+CXkXOoOEXYfSST0nf5wXcOmc=
-X-Google-Smtp-Source: AMsMyM7jyKBnAPqZXemkkirmSaSEssiA5qljF9xjKhmEO/ZR4LstEalDQycc1WjYdl8e3XkC7vUtMQ==
-X-Received: by 2002:a17:90a:4688:b0:1ef:a94:7048 with SMTP id z8-20020a17090a468800b001ef0a947048mr13679726pjf.244.1664003642010;
-        Sat, 24 Sep 2022 00:14:02 -0700 (PDT)
-Received: from [192.168.11.9] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
-        by smtp.gmail.com with ESMTPSA id x10-20020aa7956a000000b0053e439c08c1sm7586182pfq.74.2022.09.24.00.13.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 24 Sep 2022 00:14:01 -0700 (PDT)
-Message-ID: <9b0cf584-01b3-3013-b800-1ef59fe82476@gmail.com>
-Date:   Sat, 24 Sep 2022 16:13:57 +0900
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=ZMVsUMBAKMeduU+ys2KO9Tzke8RIAJ6IXsSd88ClynM=;
+        b=4uB8GCq9d/ivrFPi8fXZH2g8tqc6x1LGW4eGXojPzUqRzjoIG8iH+uuPVJXLlk5rSP
+         IqnnU+ACg+PCo6wBmRbVrKOlOMCRMaR6GCyBVNBhE0/br9f41Zf4RWa2ZdiDQir9KtVa
+         sWPd1zKo8d52DpYTxY9ChGDrzsa/87yAo44L3fjtVpkS+ENEaHi3OQCHmna1rz1qI6YR
+         /B3YbMc6Vpsu85xoDmxBpLvRyZpP9h9mAmcOz4hrK58XttMK0sSCAr/jwhU69UMWDz5S
+         jomuvNe6hCwCoGNMKgENpXBIBke8tsy6RQCZyoS91VVPVROJ/bitD/RQzIO1y70V567n
+         RFDg==
+X-Gm-Message-State: ACrzQf0noaGXay3K1hD7uq6+Mn3a2okPm0gmwiHGSICubQhAXyrFj5Di
+        vs1NNY8iDaU1M+7yCIbdB6yZZKafEkS8uA==
+X-Google-Smtp-Source: AMsMyM5dtkPYTYddrXNhG6ecfeRdFrVSWAw3E/y5q/8pGqLf6wSqaBYgu/mZR6ehjD0wqT3DD8x55g==
+X-Received: by 2002:a17:902:ec85:b0:178:8a69:45fb with SMTP id x5-20020a170902ec8500b001788a6945fbmr12137091plg.130.1664004799686;
+        Sat, 24 Sep 2022 00:33:19 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t185-20020a6378c2000000b0042c0ffa0e62sm6741145pgc.47.2022.09.24.00.33.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Sep 2022 00:33:18 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Kees Cook <keescook@chromium.org>, linux-unionfs@vger.kernel.org,
+        syzbot+9d14351a171d0d1c7955@syzkaller.appspotmail.com,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] ovl: Use "buf" flexible array for memcpy() destination
+Date:   Sat, 24 Sep 2022 00:33:15 -0700
+Message-Id: <20220924073315.3593031-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] string: Rewrite and add more kern-doc for the str*()
- functions
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Akira Yokosawa <akiyks@gmail.com>
-References: <20220922062817.2283352-1-keescook@chromium.org>
-From:   Akira Yokosawa <akiyks@gmail.com>
-In-Reply-To: <20220922062817.2283352-1-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1518; h=from:subject; bh=6sc208vuicFU4j8f7/nNB0JUDwsqAqSCJXpZ1EpVcfA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjLrK73g/2u1z6Qo/0wbshT3zKYTCL0tirpBYjt0di TZlH9uSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYy6yuwAKCRCJcvTf3G3AJjWoD/ 9cpL/UxMQ3K7MgktDwxw4j1kV05thlGrqOrVhAt3OpsYa4oIe0WXK1G+UjF6BYlIkcWC8XynTIwBjj ZfmM/rQ3h4J1cjkWuGJUgHlAPvzsREZd0F/dAjYaF7O/lG65jMrVgOc/rkR5akfVjANgXZAPwkkSw5 K8PC11mmJkqIgOEwubt6fnJkBWKqjEDxgiswF75F9Xeg/XGe9S5AzAez4e2BRqpcSwtVHhztqeoktZ XX+N/47aHo9p/uuxcfFf4N1J2silCBgaVSJmjHywm6N/h5ZiK3Is9f0VfY4U7LZNZaUCE62GnjK4bD yrlOGc1XE6SRejHHIgAM4ev2GyokGwZJVMiff66WMomyzCTMRANXsePRNj+VLfqE8F/oczbKg/hGVw F134cU4/d/mb98CfKaCyddD82KWqUc0d9kIuyPGmOb0tDFsiYVYY2GXKiXqSD/f5Z2P9dTA5Nrn3eU w3O8OxgddbTmXgCwpXAaDRaykKAcl3PiQrK4lbZA2chRSVt0AtSda8nRJR+1mKlWVHHA/wPG70rFKc JqDG8MqGe2IWwMHASp4z+i8HNoQH2vjYROqq2+4cf7ILKRc0rTKxCVv3QK+cXKOlJbtlpSldo/zrxO bRWMT8NZKyDKUiwq1lOF6TLAoUa6wuszJLocHzK0lJKfGzdlies8D8TUjG+w==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
-Thank you for sharing your devel branch.
+The "buf" flexible array needs to be the memcpy() destination to avoid
+false positive run-time warning from the recent FORTIFY_SOURCE
+hardening:
 
-On Wed, 21 Sep 2022 23:28:17 -0700, Kees Cook wrote:
-> While there were varying degrees of kern-doc for various str*()-family
-> functions, many needed updating and clarification, or to just be
-> entirely written. Update (and relocate) existing kern-doc and add missing
-> functions, sadly shaking my head at how many times I have written "Do
-> not use this function". Include the results in the core kernel API doc.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> Follow up to https://lore.kernel.org/lkml/20220902223507.2537469-1-keescook@chromium.org
-> Note that this is on top of my recent fortify-string.h series:
-> https://lore.kernel.org/lkml/20220920192202.190793-1-keescook@chromium.org/
-[...]
-> diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-> index 8bb89deb9a91..adbc4d307770 100755
-> --- a/scripts/kernel-doc
-> +++ b/scripts/kernel-doc
-> @@ -1448,6 +1448,8 @@ sub create_parameterlist($$$$) {
->      foreach my $arg (split($splitter, $args)) {
->  	# strip comments
->  	$arg =~ s/\/\*.*\*\///;
-> +	# ignore argument attributes
-> +	$arg =~ s/\sPOS0?\s/ /;
->  	# strip leading/trailing spaces
->  	$arg =~ s/^\s*//;
->  	$arg =~ s/\s*$//;
-> @@ -1657,6 +1659,7 @@ sub dump_function($$) {
->      $prototype =~ s/^__inline +//;
->      $prototype =~ s/^__always_inline +//;
->      $prototype =~ s/^noinline +//;
-> +    $prototype =~ s/^__FORTIFY_INLINE +//;
->      $prototype =~ s/__init +//;
->      $prototype =~ s/__init_or_module +//;
->      $prototype =~ s/__deprecated +//;
-> @@ -1667,6 +1670,7 @@ sub dump_function($$) {
->      $prototype =~ s/__sched +//;
->      $prototype =~ s/__printf\s*\(\s*\d*\s*,\s*\d*\s*\) +//;
->      $prototype =~ s/__(?:re)?alloc_size\s*\(\s*\d+\s*(?:,\s*\d+\s*)?\) +//;
-> +    $prototype =~ s/__diagnose_as\s*\(\s*\S+\s*(?:,\s*\d+\s*)*\) +//;
->      my $define = $prototype =~ s/^#\s*define\s+//; #ak added
->      $prototype =~ s/__attribute_const__ +//;
->      $prototype =~ s/__attribute__\s*\(\(
+  memcpy: detected field-spanning write (size 93) of single field "&fh->fb" at fs/overlayfs/export.c:799 (size 21)
 
-This hunk in the corresponding commit 87cb97a66ae9 of your devel branch
-looks a little different:
+Cc: Miklos Szeredi <miklos@szeredi.hu>
+Cc: linux-unionfs@vger.kernel.org
+Reported-by: syzbot+9d14351a171d0d1c7955@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/all/000000000000763a6c05e95a5985@google.com/
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/overlayfs/export.c    | 2 +-
+ fs/overlayfs/overlayfs.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-@@ -1666,7 +1669,8 @@ sub dump_function($$) {
-     $prototype =~ s/__weak +//;
-     $prototype =~ s/__sched +//;
-     $prototype =~ s/__printf\s*\(\s*\d*\s*,\s*\d*\s*\) +//;
--    $prototype =~ s/__alloc_size\s*\(\s*\d+\s*(?:,\s*\d+\s*)?\) +//;
-+    $prototype =~ s/__(?:re)?alloc_size\s*\(\s*\d+\s*(?:,\s*\d+\s*)?\) +//;
-+    $prototype =~ s/__diagnose_as\s*\(\s*\S+\s*(?:,\s*\d+\s*)*\) +//;
-     my $define = $prototype =~ s/^#\s*define\s+//; #ak added
-     $prototype =~ s/__attribute_const__ +//;
-     $prototype =~ s/__attribute__\s*\(\(
+diff --git a/fs/overlayfs/export.c b/fs/overlayfs/export.c
+index e065a5b9a442..ac9c3ad04016 100644
+--- a/fs/overlayfs/export.c
++++ b/fs/overlayfs/export.c
+@@ -796,7 +796,7 @@ static struct ovl_fh *ovl_fid_to_fh(struct fid *fid, int buflen, int fh_type)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	/* Copy unaligned inner fh into aligned buffer */
+-	memcpy(&fh->fb, fid, buflen - OVL_FH_WIRE_OFFSET);
++	memcpy(fh->buf, fid, buflen - OVL_FH_WIRE_OFFSET);
+ 	return fh;
+ }
+ 
+diff --git a/fs/overlayfs/overlayfs.h b/fs/overlayfs/overlayfs.h
+index 87759165d32b..a0e450313ea4 100644
+--- a/fs/overlayfs/overlayfs.h
++++ b/fs/overlayfs/overlayfs.h
+@@ -108,7 +108,7 @@ struct ovl_fh {
+ 	u8 padding[3];	/* make sure fb.fid is 32bit aligned */
+ 	union {
+ 		struct ovl_fb fb;
+-		u8 buf[0];
++		DECLARE_FLEX_ARRAY(u8, buf);
+ 	};
+ } __packed;
+ 
+-- 
+2.34.1
 
-This was what prevented me from applying the patch.
-
-Anyway, "make htmldocs" works just fine now. FWIW,
-
-Tested-by: Akira Yokosawa <akiyks@gmail.com>
-
-        Thanks, Akira
