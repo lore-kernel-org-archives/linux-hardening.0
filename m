@@ -2,129 +2,104 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD45CC32771
-	for <linux-hardening@archiver.kernel.org>; Sat, 24 Sep 2022 15:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BECC32771
+	for <linux-hardening@archiver.kernel.org>; Sat, 24 Sep 2022 16:33:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233535AbiIXPHd (ORCPT
+        id S231300AbiIXQdD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 24 Sep 2022 11:07:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52650 "EHLO
+        Sat, 24 Sep 2022 12:33:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233361AbiIXPH0 (ORCPT
+        with ESMTP id S230451AbiIXQdC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 24 Sep 2022 11:07:26 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D448A3440
-        for <linux-hardening@vger.kernel.org>; Sat, 24 Sep 2022 08:07:24 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id go6so2633452pjb.2
-        for <linux-hardening@vger.kernel.org>; Sat, 24 Sep 2022 08:07:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=Yv8qMtUOFq9U9xG8MPRumD6xwRqoGuunAGd7S0VMH2Y=;
-        b=AvVXSksJKyZ8iaUtBC5R6+Yo8434vSJde3Szzt0vGU6PG1F/CwrMD0mJMSve9zxAbf
-         3Bp5gHLk38xPM3X/CWgwnA8NkVT+V6oBQEHik5Fgu9vyUylBf3pX7F8zqiNopAUwv7wV
-         9mLZpBZRTKOf6VxEv6L9VFSib+jHDmDpquNfc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=Yv8qMtUOFq9U9xG8MPRumD6xwRqoGuunAGd7S0VMH2Y=;
-        b=NBx5tC4JhPBaQobZRtI4HftfijrrTFDVOVZke32U0Rwj4/0mWxKTxFzTNoEZ3llooZ
-         vZo16L1KQa57FCa8J/oDK3sDTE93cG3RLyN//uWYA7V0AjWwmA/+8weebuFEapOTCaf3
-         r+hd+NZEAr+4YZ5bcf2glvX+yPvs/DulxP6dcx3IpU43QZdl2XBmAwXPeLU1iiI/wZ+g
-         LJ8/NVZ6Qc1HXTYhbBGTiYoSd450heCVVyKfd2XzsTbr3l3iciqv6hoXH6LrFCreAmHL
-         2xlLIJRY/TUHajoFxqyEVPi7SCcRCsMt8OzzWsZpALtqpaQNx6OqsNlqXcMDF005Igvn
-         Ri1w==
-X-Gm-Message-State: ACrzQf36lSKiT4L/cb8Uv2o/J/+/rdfT2pBdqKgiZbVEH3lRcuyueTWb
-        ht6ttFQon+lGmLyswyLSfqhEZA==
-X-Google-Smtp-Source: AMsMyM6IW6pmgxKM3t96ncNA4SXZplLw5nLDILnctdz8HYaHHdDoTWx8HPCFYQrwBu2G9rNkvs2zPA==
-X-Received: by 2002:a17:90b:1b4c:b0:202:c05f:6e7b with SMTP id nv12-20020a17090b1b4c00b00202c05f6e7bmr15485387pjb.200.1664032043998;
-        Sat, 24 Sep 2022 08:07:23 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q12-20020aa7960c000000b00538056de6ecsm8541003pfg.52.2022.09.24.08.07.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Sep 2022 08:07:23 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Miguel Ojeda <ojeda@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Tom Rix <trix@redhat.com>, llvm@lists.linux.dev,
+        Sat, 24 Sep 2022 12:33:02 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4D9E67440;
+        Sat, 24 Sep 2022 09:33:01 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7C189B80687;
+        Sat, 24 Sep 2022 16:33:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D72F3C433C1;
+        Sat, 24 Sep 2022 16:32:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664037179;
+        bh=eDvZ24I+VwB0DHpkH5Ck7T+J+ic8MD34cgwf6xb0jRM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uQeJTf1RYI/ZbQfhH2m/NC/v1SafpCBdOJK8fW7ydFR8PcZLhGsv8P62B4RY2Duh/
+         mpJiYkCbirm5JDz8zNoU4/Z+YrA5TOTMYIwoJ0LeK3z8PH7Lfbqc3yjlLv6i0FQZ9e
+         5W15s61HmqFG4oRQjRC5uSZIBGn3/fJzXi3Wb/dzBix/m7OvwqFJXUVKo2hKl3re01
+         tAyjPZv8x54fiZ85Ui6LN31IXsvCk0zPo9vhGoDbSvTS7HjxGji/vWSTbe8cMaovLl
+         H/NMC0wEgCyvmQCbx5G7UvUCu8+nFyNgIGMuG3OVLCHHcd8eBxksUxdNIPBFnmsWpW
+         f/TN+1cPkApEQ==
+Date:   Sat, 24 Sep 2022 11:32:54 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>, linux-unionfs@vger.kernel.org,
+        syzbot+9d14351a171d0d1c7955@syzkaller.appspotmail.com,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] Compiler Attributes: Introduce __access_*() function attribute
-Date:   Sat, 24 Sep 2022 08:07:15 -0700
-Message-Id: <20220924150715.247417-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH] ovl: Use "buf" flexible array for memcpy() destination
+Message-ID: <Yy8xNjsZ1N/wbV8s@work>
+References: <20220924073315.3593031-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2420; h=from:subject; bh=9QUAPr+LbmvLvzHSrwCAgoD3MCPZJCJazSX2ioWcsdE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjLx0j8ULLJEiPU0qsDsKV96TCM3n8cUwh6oIFuNl8 SbbGAy2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYy8dIwAKCRCJcvTf3G3AJrdGEA CO++jFiNa3s+RuBTTfHT6xP89L/2GDxIq/xASFQoS9OOpt88jHJvbYlwpK/IngVsPgXkXoCiGn66Ku H9Wq8o5w/cYfSNIptPKlAYJ/VOhHld8Y2MU5IG5aoJmNdBJHtKDFbOoyeBoQn1heeV88ejRNpmu+TF EEcDRFnXXMX3MX/7cfK8QCrtXFZ3EFsfga269rVljvJnbwjRciCD60MYEopOCZvrBJLUmzXLj8/C+L KGoMFgk4UNwohjPgrB9MiRefrm4ArRULwTByQU/3TZkJuYOtQI/nNDdOAS5XuuUHnrO2AXP/nvwxwb 6k16l4aW2N8h3U6VXzsR09r7Ou4f7ZNuZKreaTH4rLVy3sT7kvwqsYMTQktPZRXgSHTXwIWhG1iQci S4vSZywi9VKK9TZioPvpXOVYNlRTh/CsFxGpMYg5CtrA3Hvb/6jwhxaChVSmbF7n3SZm071+dWDSyM n91dLPzOHlJt8rJ7AgyvoYLy7twQ35ZzFVxYlfjSk6mSiMPN9mwDoNMq/2zEG5ol2Qm+VlV3r51Icg ZGbPkJf4PCrPZF7hKE8tgxKDxAPPXcH2MmMW/pyupB5HnlFQc5KFiWP8v7FNpYunYmpLjQol8iORiF 0X6wjDDO2FiePVsENhG/lu8g/eXSvXMh6T4RAewvtT+C5MMLJ9fM949VyeRQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220924073315.3593031-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Added in GCC 10.1, the "access" function attribute is used to mark pointer
-arguments for how they are expected to be accessed in a given function.
-Both their access type (read/write, read-only, or write-only) and bounds
-are specified.
+On Sat, Sep 24, 2022 at 12:33:15AM -0700, Kees Cook wrote:
+> The "buf" flexible array needs to be the memcpy() destination to avoid
+> false positive run-time warning from the recent FORTIFY_SOURCE
+> hardening:
+> 
+>   memcpy: detected field-spanning write (size 93) of single field "&fh->fb" at fs/overlayfs/export.c:799 (size 21)
+> 
+> Cc: Miklos Szeredi <miklos@szeredi.hu>
+> Cc: linux-unionfs@vger.kernel.org
+> Reported-by: syzbot+9d14351a171d0d1c7955@syzkaller.appspotmail.com
+> Link: https://lore.kernel.org/all/000000000000763a6c05e95a5985@google.com/
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-These can improve GCC's compile-time diagnostics including -Warray-bounds,
--Wstringop-overflow, etc, and can affect __builtin_dynamic_object_size()
-results.
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Cc: Miguel Ojeda <ojeda@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Tom Rix <trix@redhat.com>
-Cc: llvm@lists.linux.dev
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/linux/compiler_attributes.h | 30 +++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+Thanks!
+--
+Gustavo
 
-diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-index 9a9907fad6fd..465be5f072ff 100644
---- a/include/linux/compiler_attributes.h
-+++ b/include/linux/compiler_attributes.h
-@@ -20,6 +20,36 @@
-  * Provide links to the documentation of each supported compiler, if it exists.
-  */
- 
-+/*
-+ * Optional: only supported since gcc >= 10
-+ * Optional: not supported by Clang
-+ *
-+ *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-access-function-attribute
-+ *
-+ * While it is legal to provide only the pointer argument position and
-+ * access type, the kernel macros are designed to require also the bounds
-+ * (element count) argument position; if a function has no bounds argument,
-+ * refactor the code to include one.
-+ *
-+ * These can be used multiple times. For example:
-+ *
-+ * __access_wo(2, 3) __access_ro(4, 5)
-+ * int copy_something(struct context *ctx, u32 *dst, size_t dst_count,
-+ *		      const u8 *src, int src_len);
-+ *
-+ * If "dst" will also be read from, it could use __access_rw(2, 3) instead.
-+ *
-+ */
-+#if __has_attribute(__access__)
-+# define __access_rw(ptr, count)	__attribute__((__access__(read_write, ptr, count)))
-+# define __access_ro(ptr, count)	__attribute__((__access__(read_only,  ptr, count)))
-+# define __access_wo(ptr, count)	__attribute__((__access__(write_only, ptr, count)))
-+#else
-+# define __access_rw(ptr, count)
-+# define __access_ro(ptr, count)
-+# define __access_wo(ptr, count)
-+#endif
-+
- /*
-  *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-alias-function-attribute
-  */
--- 
-2.34.1
-
+> ---
+>  fs/overlayfs/export.c    | 2 +-
+>  fs/overlayfs/overlayfs.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/overlayfs/export.c b/fs/overlayfs/export.c
+> index e065a5b9a442..ac9c3ad04016 100644
+> --- a/fs/overlayfs/export.c
+> +++ b/fs/overlayfs/export.c
+> @@ -796,7 +796,7 @@ static struct ovl_fh *ovl_fid_to_fh(struct fid *fid, int buflen, int fh_type)
+>  		return ERR_PTR(-ENOMEM);
+>  
+>  	/* Copy unaligned inner fh into aligned buffer */
+> -	memcpy(&fh->fb, fid, buflen - OVL_FH_WIRE_OFFSET);
+> +	memcpy(fh->buf, fid, buflen - OVL_FH_WIRE_OFFSET);
+>  	return fh;
+>  }
+>  
+> diff --git a/fs/overlayfs/overlayfs.h b/fs/overlayfs/overlayfs.h
+> index 87759165d32b..a0e450313ea4 100644
+> --- a/fs/overlayfs/overlayfs.h
+> +++ b/fs/overlayfs/overlayfs.h
+> @@ -108,7 +108,7 @@ struct ovl_fh {
+>  	u8 padding[3];	/* make sure fb.fid is 32bit aligned */
+>  	union {
+>  		struct ovl_fb fb;
+> -		u8 buf[0];
+> +		DECLARE_FLEX_ARRAY(u8, buf);
+>  	};
+>  } __packed;
+>  
+> -- 
+> 2.34.1
+> 
