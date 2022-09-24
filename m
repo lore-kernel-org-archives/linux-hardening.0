@@ -2,116 +2,92 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1872C32771
-	for <linux-hardening@archiver.kernel.org>; Sat, 24 Sep 2022 04:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A04C07E9D
+	for <linux-hardening@archiver.kernel.org>; Sat, 24 Sep 2022 04:24:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233121AbiIXEIl (ORCPT
+        id S232984AbiIXEYD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 24 Sep 2022 00:08:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58690 "EHLO
+        Sat, 24 Sep 2022 00:24:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232968AbiIXEIj (ORCPT
+        with ESMTP id S231379AbiIXEXp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 24 Sep 2022 00:08:39 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 117A413EE86
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Sep 2022 21:08:39 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id w13so1810077plp.1
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Sep 2022 21:08:39 -0700 (PDT)
+        Sat, 24 Sep 2022 00:23:45 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA48155648
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Sep 2022 21:22:58 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id s90-20020a17090a2f6300b00203a685a1aaso1983796pjd.1
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Sep 2022 21:22:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=KTpXWyUfll++z7HAP03By+eA9GIaY84D+3kNuRJY2h8=;
-        b=EKUUevtGtyBMzrNFQzypBqYj20XXKLIIjEykNJuC6WbBX77P4whhxWmu/HidER0vfh
-         hY47+ITassozPqvsIj5G6eOmByCur8iVlGihQ4EscY8gDO9VX8tiSb/aDKgWOwCIt9Ab
-         JO8de+j0fVZPNG+xGUc1ofG17CXcmR2YFe364=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=JwdiKuWAXIR8s1mqhbb5lF09zKLRfTe1ZSaNoLOpjDI=;
+        b=oWoq2NjHlI/t3Diujc7ttYvYtrCisBNDQUTDlFoLB8VPZgvUALrsFw/OoDClOBR291
+         AILumiFzf9WDEmol8HsZRTVubx6ntw1tPkflegrT3lFadCdSgeYJS+l5JmbMIxD+jXDy
+         ndxSnBDjihGj9HljWl6R8G7MMPk8WgA/5phGI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=KTpXWyUfll++z7HAP03By+eA9GIaY84D+3kNuRJY2h8=;
-        b=eY1aKAplst6hybPtp6EVaVQEYErOoXO59CVoEVux41WCMpo5xy9kQENAXES5bKFRp3
-         zXNUP3iTZ42I+j2GDKoqtrAgEU/QoUKFJeqVLA9HBmx+v7KvxfaaxV7xI2VDWF485kdT
-         1MB/0P3YuR+tbyg4tic+FyRLbhZWixryMj8kbKfE/Yyjq1Njks8Z/K8SIKVc2/kzEC+o
-         Hn9pUQ/UA6ubltyIhbkTBYPp3iS/z4IRzq0/Na3/zPAjRicrwAswJ+7C+jRXx6eWEO8M
-         qlGW6Ji3J3LxuhE8Y2ckJEukwYHP0nMY9kRm+stUYzZkftIbnkfJFxlJjdgiYR+vUQiF
-         sd7w==
-X-Gm-Message-State: ACrzQf0xFmyDCrGx4ATaZTdSjt2A/1JFxZOlfRuWKI3fEyUZQTTxVI/s
-        aZySweg1e82uDede/tvWkX2aDg==
-X-Google-Smtp-Source: AMsMyM71MzhI6cppP1wRrRHYJPrClOj8l4ZKb0OLA8RhQdAePaq9ZRI4HNFyzeBwHwsstrixVbdU2A==
-X-Received: by 2002:a17:902:e494:b0:178:5b6d:636 with SMTP id i20-20020a170902e49400b001785b6d0636mr11292050ple.64.1663992518563;
-        Fri, 23 Sep 2022 21:08:38 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=JwdiKuWAXIR8s1mqhbb5lF09zKLRfTe1ZSaNoLOpjDI=;
+        b=DZ8ta/pqNSBerFIPD0HjcbZXkh0Rd9ljdFLOx/JjwItakydkHDNU0YsOPw7Mkp/kC7
+         9dOMkURKY0/COV0pwOS+wlTFSa8zdF1tmtqtou2EiQea47XF1Uf8kbG2eLyVWcvV9dD1
+         9GmkqYyRbsODB9g5z83elymj30TsVPGP+9TD+HfpZobIsR4JzOyG1ccryM39hDG67uxq
+         0vvm4SOjpRXOQIPOXeTEUHawWBKWcMiRQVTjrpdV/pSf0pivdbTAeX2Yu1dLbGZ8iTEh
+         s51KG1+e5oypRTuIyvYyZUIcESlobqW+f6cPwIZHnSrhNFdKrZKtJrQhra359sZwpklm
+         v0/A==
+X-Gm-Message-State: ACrzQf3J1AC5MNDQhrBEmV4bSJngh3oOvdsml4GCKrktTp3yaWV7qNYh
+        48TOGiGYCfWZBV91BJseS9GfrA==
+X-Google-Smtp-Source: AMsMyM7B40I/ueFyxxvn+uDhEdzY1SgeaoqoqTKep+usyR+Fzu79Zywg/YOiskfedSeS4h4RunuEhg==
+X-Received: by 2002:a17:902:bb88:b0:178:24f6:4dfc with SMTP id m8-20020a170902bb8800b0017824f64dfcmr11526773pls.169.1663993377361;
+        Fri, 23 Sep 2022 21:22:57 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z12-20020a6553cc000000b0041d6d37deb5sm6413190pgr.81.2022.09.23.21.08.37
+        by smtp.gmail.com with ESMTPSA id q19-20020aa79833000000b00540c3b6f32fsm7227822pfl.49.2022.09.23.21.22.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Sep 2022 21:08:37 -0700 (PDT)
+        Fri, 23 Sep 2022 21:22:56 -0700 (PDT)
+Date:   Fri, 23 Sep 2022 21:22:55 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+To:     "K. Y. Srinivasan" <kys@microsoft.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        linux-hyperv@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] NFC: hci: Split memcpy() of struct hcp_message flexible array
-Date:   Fri, 23 Sep 2022 21:08:35 -0700
-Message-Id: <20220924040835.3364912-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH] Drivers: hv: vmbus: Split memcpy of flex-array
+Message-ID: <202209232119.E32C14857@keescook>
+References: <20220924030741.3345349-1-keescook@chromium.org>
+ <Yy58rt9N0+dHrNtt@work>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1692; h=from:subject; bh=L3jycFmba5E2CH09pA5cygiCtitH/bmlm+CqI6heXOk=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjLoLD0YsYw2J2xQ0tZE9KGrEoJ8NYLRlKPkcvzZqz yQEQEbyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYy6CwwAKCRCJcvTf3G3AJk4LEA ClWkoy6IOy1qfx50hwizKTjj+BKE2WJ46hPcko+MF5I0MZ6Q4ZATjEiGbraCyQGgtwYzk8cLV9p8gQ 8GKPpSW0UJojL6M7Hc3ucQo7yVKecKiBbJnVHX41ZLSARp5binAPgqa5RbCttvbBwbznrihcKb7DTs w/5Wkc0UBwh+yUMHTpvzMGwtamUHlQXDKNIoS26Osa4pBT5M3AD3rsJWcuDEVTSrQOMxBvcJwHkaIY xvXsS00hHt1OK/JRz290YhG0SN/sORY5owHBJAUGwoRo7lwoqcJPWyG/ejOCJLk1wOxXFdAUE2sUMY mTt3ewUROH/wBSuhk3tjZbEVGrzokGmfhiLLoMRZyBvc96zzi34I3JuEU1rOWaC05ufU2FLv7yIwur UrwkV3GHMIxXi0+Yx37Ty5KhZaQydPHbZwLfaJnpaIq3FU0ay2BGVnI1eaPQzewRe/Z6XixsBh5tBs d5Qx3+G46QMvlLNIPsRYn+tuH+6tUuCKPPA6ySkZaSfp3a69YISMghumcZLBFMTh9TPejpmy8/ECWq IgqQ6y0Jq4xC1WE06cgdkiHTJNpAC85uTT8hj+wCOSqtbkjpoSPyUAbHn/DtjyEhXoWsf0QsRdC+t2 rIQSEM25WqhwuUwEipx/MEvW3e8Jhwd/X8f4lmiT5SfwTV4GuVeqO820uA5g==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Yy58rt9N0+dHrNtt@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-To work around a misbehavior of the compiler's ability to see into
-composite flexible array structs (as detailed in the coming memcpy()
-hardening series[1]), split the memcpy() of the header and the payload
-so no false positive run-time overflow warning will be generated. This
-split already existed for the "firstfrag" case, so just generalize the
-logic further.
+On Fri, Sep 23, 2022 at 10:42:38PM -0500, Gustavo A. R. Silva wrote:
+> On Fri, Sep 23, 2022 at 08:07:41PM -0700, Kees Cook wrote:
+> > To work around a misbehavior of the compiler's ability to see into
+> > composite flexible array structs (as detailed in the coming memcpy()
+> > hardening series[1]), split the memcpy() of the header and the payload
+> > so no false positive run-time overflow warning will be generated. As it
+> > turns out, this appears to actually reduce the text size:
 
-[1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org/
+Er, actually, I can't read/math. ;) It _does_ grow the text size. (That's
+2_3_ not 22 at the start of the text size...) On examination, it appears
+to unroll the already inlined memcpy further.
 
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
-Reported-by: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- net/nfc/hci/hcp.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+> > 
+> > $ size drivers/hv/vmbus_drv.o.before drivers/hv/vmbus_drv.o
+> >    text    data     bss     dec     hex filename
+> >   22968    5239     232   28439    6f17 drivers/hv/vmbus_drv.o.before
+> >   23032    5239     232   28503    6f57 drivers/hv/vmbus_drv.o
+       ^
 
-diff --git a/net/nfc/hci/hcp.c b/net/nfc/hci/hcp.c
-index 05c60988f59a..4902f5064098 100644
---- a/net/nfc/hci/hcp.c
-+++ b/net/nfc/hci/hcp.c
-@@ -73,14 +73,12 @@ int nfc_hci_hcp_message_tx(struct nfc_hci_dev *hdev, u8 pipe,
- 		if (firstfrag) {
- 			firstfrag = false;
- 			packet->message.header = HCP_HEADER(type, instruction);
--			if (ptr) {
--				memcpy(packet->message.data, ptr,
--				       data_link_len - 1);
--				ptr += data_link_len - 1;
--			}
- 		} else {
--			memcpy(&packet->message, ptr, data_link_len);
--			ptr += data_link_len;
-+			packet->message.header = *ptr++;
-+		}
-+		if (ptr) {
-+			memcpy(packet->message.data, ptr, data_link_len - 1);
-+			ptr += data_link_len - 1;
- 		}
- 
- 		/* This is the last fragment, set the cb bit */
+-Kees
+
 -- 
-2.34.1
-
+Kees Cook
