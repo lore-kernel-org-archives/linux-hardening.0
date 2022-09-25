@@ -2,161 +2,79 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7384FC04A95
-	for <linux-hardening@archiver.kernel.org>; Sun, 25 Sep 2022 07:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28310C04A95
+	for <linux-hardening@archiver.kernel.org>; Sun, 25 Sep 2022 11:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229608AbiIYHRx (ORCPT
+        id S231362AbiIYLgg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 25 Sep 2022 03:17:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44618 "EHLO
+        Sun, 25 Sep 2022 07:36:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbiIYHRw (ORCPT
+        with ESMTP id S230128AbiIYLge (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 25 Sep 2022 03:17:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D20FB32DA7
-        for <linux-hardening@vger.kernel.org>; Sun, 25 Sep 2022 00:17:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1664090269;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FnuW0+nquE7jeCs1wGd25t/HgD5sAtMc07QK9kih2sQ=;
-        b=B97KTn2dpYAt61kIInCLOK/2Ro6Wst4uMijGFSzgHYRdcZYdeHN2Z3ugLtJoUKxafz8yNC
-        sWsj/xIEwaV1yrv9Q1SsmiCxhVHRLyjrG7MDBtCipNp9CsQ1df0T63dAJdIXFk2HpFvimj
-        SNz8dinnXFQVzc5AwMsgibAO84z47E8=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-265-ib_VGAT7NQKnD0Ur4T2csw-1; Sun, 25 Sep 2022 03:17:48 -0400
-X-MC-Unique: ib_VGAT7NQKnD0Ur4T2csw-1
-Received: by mail-qt1-f199.google.com with SMTP id bn4-20020a05622a1dc400b0035d24923a7fso2724954qtb.0
-        for <linux-hardening@vger.kernel.org>; Sun, 25 Sep 2022 00:17:48 -0700 (PDT)
+        Sun, 25 Sep 2022 07:36:34 -0400
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF1CA24BE5;
+        Sun, 25 Sep 2022 04:36:33 -0700 (PDT)
+Received: by mail-il1-x136.google.com with SMTP id y15so2287025ilq.4;
+        Sun, 25 Sep 2022 04:36:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=xWL9H7Cbc4v2FgRfmr8f53bQANuU95GmvHgWHVu51kI=;
+        b=nuGAnz718hTIDG8x472iASsuCuAR1frKWhu53XAd1i9txp0dG29y/aoRGt5VKod55V
+         vZz/RqrH9CCdn319zMhWhnv8/BNHvfsvHOhNNpcaNtlBneQMJLqSKcxNp/TdZDmWy9Qg
+         qE8jBWmjyTpZbC/qRsMV5QdCKG8KCJzFAWSALEe33rhemjKgxmyyzGz44++IZ1ryiwD2
+         RW0FnRvlr/KZP7bE4gnDFLhIxwIUdqxWs7kX8+3TKpG+3x7WDlJippRa8w0+reTpA/+3
+         2msHr29RdRvRSq5S6j0mGLZSEZWCq1tcfRUfvObSsIJfv/F6MNpQWl4KOs8UbUtb8Zuh
+         fL2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date;
-        bh=FnuW0+nquE7jeCs1wGd25t/HgD5sAtMc07QK9kih2sQ=;
-        b=KErsYXSm4wgkQyIVSHJixp0s5e0GBpnUpdes3vvYwFWTnoC1VXF8X2bQV1ldRF3L1M
-         NFpnZcbpoc3WsU9BuUfxBUGLSvipGN4nm6HhmxrAmd+zblXxidSjWkT3lR38OGnXtGLn
-         x+64AZnp3opy+2HUVpLLkiR0fYBCtjdc2v6hALDLDrFNwtg3ChHQZtTcWq+0mrKkX3PI
-         1OPzySGDhrBeeqvbDcd1crin4X6STgP71CyZp2p8Y/FCbvhm064cv8fVNt0AWbPPNb/3
-         DO7M68JgXjHWA7iE6u1atGZuEeyVT0TwiI154PEicFRGk76gW43LuDDRhEvWEx4HzmwI
-         wWcQ==
-X-Gm-Message-State: ACrzQf3RKVaeQCZHQvzq5ZyeYs8F+YcbSGUwFGRbr8LHq5njMmQvD5wt
-        biayKhk4yMVvTDIrdgXCrZXRbJfv/+m0LElJMJVjUkFuYYc5TiXIArzZQecaQufsfx+//Nc6WeV
-        ST8jY/11v5Uw4e3iSHnqx3b8HANb0
-X-Received: by 2002:a05:620a:c8f:b0:6cb:e329:b5b9 with SMTP id q15-20020a05620a0c8f00b006cbe329b5b9mr10667171qki.95.1664090268094;
-        Sun, 25 Sep 2022 00:17:48 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM4u6YF4dJIrwAN1QRZGgvTOpwH6qKYsc23O//LxYiiudu83+P6fv+LpA21i63RBBqqlayo//g==
-X-Received: by 2002:a05:620a:c8f:b0:6cb:e329:b5b9 with SMTP id q15-20020a05620a0c8f00b006cbe329b5b9mr10667159qki.95.1664090267816;
-        Sun, 25 Sep 2022 00:17:47 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-97-96.dyn.eolo.it. [146.241.97.96])
-        by smtp.gmail.com with ESMTPSA id bp30-20020a05620a459e00b006c479acd82fsm10375465qkb.7.2022.09.25.00.17.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Sep 2022 00:17:47 -0700 (PDT)
-Message-ID: <e340d993bce8e1b2742fba52ac6383771cfaddae.camel@redhat.com>
-Subject: Re: [PATCH v2 04/16] skbuff: Phase out ksize() fallback for
- frag_size
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     Kees Cook <keescook@chromium.org>, Vlastimil Babka <vbabka@suse.cz>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Alex Elder <elder@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
-        Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, dev@openvswitch.org,
-        x86@kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Date:   Sun, 25 Sep 2022 09:17:40 +0200
-In-Reply-To: <20220923202822.2667581-5-keescook@chromium.org>
-References: <20220923202822.2667581-1-keescook@chromium.org>
-         <20220923202822.2667581-5-keescook@chromium.org>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=xWL9H7Cbc4v2FgRfmr8f53bQANuU95GmvHgWHVu51kI=;
+        b=rCL/pOOB68/kdb+LVz+4OnRD+TYFRxGVBPYazlgeZrlgpn/wg/ujT44nKLP/oqRsWL
+         oSwqjti9EsVn8oIT9azo5gWDHLCGg7lfPBYib46h0ylEuRbIJFSMyvU/P9chSJh5DQN4
+         oC0whRdMw2AHqc/s+D6gdHxycRylrI+ixCWZ9sCOeAMnBL0FXi6USJhrcsIya2iH/qvT
+         CaPY/mTIZkOWkFsIFtcrjzmR6GQ0ZE4NVQonrG0PzAz+T6AQXOiihzW7cNBeLlODSRdE
+         TDDln0kFgsCn5vsxl+k3mzCFpNSLzKeYonlAcF5JBJmYMeU5+T9rwalaOPxY3k97LdTk
+         zn9Q==
+X-Gm-Message-State: ACrzQf3tC81U6C59+ttrr3biazjcORt8Bvokigx4nTsFobesf0AcDRWX
+        Z4XrBF79ukey2f90+ltNu3iHFIcHxlQvL9XsS/MTzb29Zyg=
+X-Google-Smtp-Source: AMsMyM4vRE6qPYMJjiHtzUWaCajCHFCkHMbT9IoMTG3Rgnkno8rn4gbQDbOuIROT4NaBUTn27/6ZKLFBRK+0f4o5+OE=
+X-Received: by 2002:a05:6e02:152a:b0:2f6:58ae:ff0c with SMTP id
+ i10-20020a056e02152a00b002f658aeff0cmr8531069ilu.237.1664105793350; Sun, 25
+ Sep 2022 04:36:33 -0700 (PDT)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+References: <20220924150715.247417-1-keescook@chromium.org> <Yy/dLihBWSFzZdyq@dev-arch.thelio-3990X>
+In-Reply-To: <Yy/dLihBWSFzZdyq@dev-arch.thelio-3990X>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Sun, 25 Sep 2022 13:36:22 +0200
+Message-ID: <CANiq72nb8s0odCEfCEeWDKjJ7=aj_JxO9iaR8Jmn6LB1aSGifQ@mail.gmail.com>
+Subject: Re: [PATCH v2] Compiler Attributes: Introduce __access_*() function attribute
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, Miguel Ojeda <ojeda@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, llvm@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 2022-09-23 at 13:28 -0700, Kees Cook wrote:
-> All callers of APIs that allowed a 0-sized frag_size appear to be
-> passing actual size information already
+On Sun, Sep 25, 2022 at 6:46 AM Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> The GCC docs say it is 'access', instead of '__access__'. I assume it is
+> probably okay so:
 
-AFAICS, not yet:
+Yeah, attributes can be used either with or without double
+underscores, see
+https://gcc.gnu.org/onlinedocs/gcc/Attribute-Syntax.html#Attribute-Syntax.
 
-drivers/net/ethernet/qlogic/qed/qed_ll2.c:
-	skb = build_skb(buffer->data, 0); // -> __build_skb(..., 0) 
-		// ->  __build_skb_around()
+In this file, we always use the underscore ones to minimize the chance
+of collisions, since the idea is that the rest of the kernel uses the
+shorthands provided here.
 
-drivers/net/ethernet/broadcom/bnx2.c:
-	skb = build_skb(data, 0);
-
-I guess some more drivers have calls leading to 
-
-	__build_skb_around(...,  0)
-
-there are several call path to checks...
-
-
-> , so this use of ksize() can
-> be removed. However, just in case there is something still depending
-> on this behavior, issue a WARN and fall back to as before to ksize()
-> which means we'll also potentially get KASAN warnings.
-> 
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  net/core/skbuff.c | 18 ++++++++++--------
->  1 file changed, 10 insertions(+), 8 deletions(-)
-> 
-> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-> index 0b30fbdbd0d0..84ca89c781cd 100644
-> --- a/net/core/skbuff.c
-> +++ b/net/core/skbuff.c
-> @@ -195,7 +195,11 @@ static void __build_skb_around(struct sk_buff *skb, void *data,
->  			       unsigned int frag_size)
->  {
->  	struct skb_shared_info *shinfo;
-> -	unsigned int size = frag_size ? : ksize(data);
-> +	unsigned int size = frag_size;
-> +
-> +	/* All callers should be setting frag size now? */
-> +	if (WARN_ON_ONCE(size == 0))
-> +		size = ksize(data);
-
-At some point in the future, I guess we could even drop this check,
-right?
-
-Thanks!
-
-Paolo
-
+Cheers,
+Miguel
