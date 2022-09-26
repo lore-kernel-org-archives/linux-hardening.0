@@ -2,267 +2,130 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C0CC07E9D
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 18:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BECFC32771
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 18:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230074AbiIZSYr (ORCPT
+        id S230281AbiIZS01 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 14:24:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45386 "EHLO
+        Mon, 26 Sep 2022 14:26:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230033AbiIZSYL (ORCPT
+        with ESMTP id S229744AbiIZS0H (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 14:24:11 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 359A94A808
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 11:22:08 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id u69so7313046pgd.2
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 11:22:08 -0700 (PDT)
+        Mon, 26 Sep 2022 14:26:07 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C18D4DB7D
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 11:24:40 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d82so7502844pfd.10
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 11:24:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=LiwNBqos6xaaK3YWH+/WPpsFGSo0QKCNP2I5hOKKSHY=;
-        b=W9WSI3Nwcwrph87qzlHpUjhV5B6OODRNvOzC6vexa/UESpjpG7jTsHIx0+dsDGLtKR
-         zJqvoqugZ7MjUnsdhsGI90brtn4o4SRlAYpJYIeq4SCgIPRlDLYRAnGGnNWvjmIIQxoZ
-         F+/ipxQlCyP3+G+FOADo6OpWnmSf3AREj32Xw=
+        bh=4OBTQRXHJygCpY/2rBSvNKQlNNozBBa3mtJlOeJ/EyY=;
+        b=cSzvTXKu85TucB7q+g9CQdjC/FdnYJW7ESEBDVMDQZhpqkoHzMT6tB5vmqaaVmtq+c
+         HBo/BI5kdAn7jf+xxq5MiOLWI7cJumnHX29hS+SWLXo9wgZxYqgGZ4IjXwCG6/+UPFiS
+         mSjP6/8kEubWj+KXOsoeUGGJwGHBMRMvzL4Ek=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=LiwNBqos6xaaK3YWH+/WPpsFGSo0QKCNP2I5hOKKSHY=;
-        b=GTb2U9sDoRKvHXdkRjcr6Nw6Qkz4gSzVFFqRKCiX9SYMGFTeHURLAXIuqOtsPVpMDz
-         gb5HKRZSxDvExtkSInaY9uFbrWaEkZPB/N8Q6kGvtliXmnUScGusZvufzL5wzcwGGBdJ
-         XlgxNY2AWlbm4YwtzYWgke113Z0WN6zNamQsUZZG1PNr6fdckZOFkrhTs2Ya5V5RdaVs
-         eBMixNmpl14yKnliRNqKahe53nOxyL4JOLh1V17pPjbFzFCbUe/POD9ykxagE1MLFT8T
-         zFEYUtuiYqmvbqu239zb1twWEil8cUYEIfBW/HpUX19eQog+Yb+OfVgaZT/ktTSVguBi
-         cPtA==
-X-Gm-Message-State: ACrzQf3uAgRV8b/boAkpBqAl6NuJt23KmD9pvFQKItaPuZ6/2yHy9EXb
-        hCl4wmJwZYLk/VMs665ZtSEtMw==
-X-Google-Smtp-Source: AMsMyM5P7fwrg4YBL2UFBL9sfng2RuwtvISGX9Ppkmp0AV+/dWK9yRSfS3mblCpuGyPXBRxSMXeDTw==
-X-Received: by 2002:a63:f917:0:b0:439:1c07:d1da with SMTP id h23-20020a63f917000000b004391c07d1damr21017743pgi.13.1664216527669;
-        Mon, 26 Sep 2022 11:22:07 -0700 (PDT)
+        bh=4OBTQRXHJygCpY/2rBSvNKQlNNozBBa3mtJlOeJ/EyY=;
+        b=MpgR/z+vaIbcv5iCL/VXzKozg3c3tlJw2p+qIH3JfQhAEPX6cKZJC9VM6qwlKGkt+x
+         Rcb9hbwwyVoxj3Jvt9zVn8otNKrewoXKfpCLPRH0VnmdMFSiqoBAJ4Gf1fvQXZ5PSxSG
+         UqYaHhef1C+S5PknrE+KO5Jo+lovit8CMzNc4SSSYziCAPNRnewaQ7ohpaFoHWsBVTzp
+         02qwG2mWVwAG7Aa9BPjEbspMa80HMD1OpjxK2R/GYmClgJsbTsZk6vZSF21s/IHupQ2V
+         vix1lz2pzxLwetWfFlilzgt/jLwIePaTYQdbhXjXGwOYt2WFW1/BAmVL7RFOoRK0S1O0
+         UyIg==
+X-Gm-Message-State: ACrzQf0W0ELWEWHfFdiSxOwKzNC26OGGxDJBIZPhnYXBO6TphswW0lxI
+        GXdSrynXfUwD1fVXHXqeJ1+NNA==
+X-Google-Smtp-Source: AMsMyM6gzz3RlLPDBF6eEAacYBSNNxOrYYdXLeQNzcYYWROPiLY1NScn4aUnW3BZuZbnjPt9v5tgLQ==
+X-Received: by 2002:a63:4750:0:b0:43c:dac:9e4b with SMTP id w16-20020a634750000000b0043c0dac9e4bmr21137736pgk.300.1664216679159;
+        Mon, 26 Sep 2022 11:24:39 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q16-20020a63cc50000000b0043be31d490dsm10768624pgi.67.2022.09.26.11.22.06
+        by smtp.gmail.com with ESMTPSA id p2-20020a170902c70200b0016f85feae65sm11305644plp.87.2022.09.26.11.24.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 11:22:06 -0700 (PDT)
-Date:   Mon, 26 Sep 2022 11:22:05 -0700
+        Mon, 26 Sep 2022 11:24:38 -0700 (PDT)
+Date:   Mon, 26 Sep 2022 11:24:37 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Alex Elder <elder@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
+        Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, dev@openvswitch.org,
+        x86@kernel.org, llvm@lists.linux.dev,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] random: split initialization into early arch step and
- later non-arch step
-Message-ID: <202209261105.9C6AEEEE1@keescook>
-References: <20220926160332.1473462-1-Jason@zx2c4.com>
+Subject: Re: [PATCH v2 13/16] mempool: Use kmalloc_size_roundup() to match
+ ksize() usage
+Message-ID: <202209261123.B2CBAE87E0@keescook>
+References: <20220923202822.2667581-1-keescook@chromium.org>
+ <20220923202822.2667581-14-keescook@chromium.org>
+ <f4fc52c4-7c18-1d76-0c7a-4058ea2486b9@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220926160332.1473462-1-Jason@zx2c4.com>
+In-Reply-To: <f4fc52c4-7c18-1d76-0c7a-4058ea2486b9@suse.cz>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 06:03:32PM +0200, Jason A. Donenfeld wrote:
-> The full RNG initialization relies on some timestamps, made possible
-> with general functions like time_init() and timekeeping_init(). However,
-> these are only available rather late in initialization. Meanwhile, other
-> things, such as memory allocator functions, make use of the RNG much
-> earlier.
+On Mon, Sep 26, 2022 at 03:50:43PM +0200, Vlastimil Babka wrote:
+> On 9/23/22 22:28, Kees Cook wrote:
+> > Round up allocations with kmalloc_size_roundup() so that mempool's use
+> > of ksize() is always accurate and no special handling of the memory is
+> > needed by KASAN, UBSAN_BOUNDS, nor FORTIFY_SOURCE.
+> > 
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: linux-mm@kvack.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >   mm/mempool.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/mm/mempool.c b/mm/mempool.c
+> > index 96488b13a1ef..0f3107b28e6b 100644
+> > --- a/mm/mempool.c
+> > +++ b/mm/mempool.c
+> > @@ -526,7 +526,7 @@ EXPORT_SYMBOL(mempool_free_slab);
+> >    */
+> >   void *mempool_kmalloc(gfp_t gfp_mask, void *pool_data)
+> >   {
+> > -	size_t size = (size_t)pool_data;
+> > +	size_t size = kmalloc_size_roundup((size_t)pool_data);
 > 
-> So split RNG initialization into two phases. We can give arch randomness
-> very early on, and then later, after timekeeping and such are available,
-> initialize the rest.
+> Hm it is kinda wasteful to call into kmalloc_size_roundup for every
+> allocation that has the same input. We could do it just once in
+> mempool_init_node() for adjusting pool->pool_data ?
 > 
-> This ensures that, for example, slabs are properly randomized if RDRAND
-> is available. Another positive consequence is that on systems with
-> RDRAND, running with CONFIG_WARN_ALL_UNSEEDED_RANDOM=y results in no
-> warnings at all.
+> But looking more closely, I wonder why poison_element() and
+> kasan_unpoison_element() in mm/mempool.c even have to use ksize()/__ksize()
+> and not just operate on the requested size (again, pool->pool_data). If no
+> kmalloc mempool's users use ksize() to write beyond requested size, then we
+> don't have to unpoison/poison that area either?
 
-Nice! I like it. Notes below...
-
-> 
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> ---
-> I intend to take this through the random.git tree, but reviews/acks
-> would be appreciated, given that I'm touching init/main.c.
-> 
->  drivers/char/random.c  | 47 ++++++++++++++++++++++++------------------
->  include/linux/random.h |  3 ++-
->  init/main.c            | 17 +++++++--------
->  3 files changed, 37 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/char/random.c b/drivers/char/random.c
-> index a90d96f4b3bb..1cb53495e8f7 100644
-> --- a/drivers/char/random.c
-> +++ b/drivers/char/random.c
-> @@ -772,18 +772,13 @@ static int random_pm_notification(struct notifier_block *nb, unsigned long actio
->  static struct notifier_block pm_notifier = { .notifier_call = random_pm_notification };
->  
->  /*
-> - * The first collection of entropy occurs at system boot while interrupts
-> - * are still turned off. Here we push in latent entropy, RDSEED, a timestamp,
-> - * utsname(), and the command line. Depending on the above configuration knob,
-> - * RDSEED may be considered sufficient for initialization. Note that much
-> - * earlier setup may already have pushed entropy into the input pool by the
-> - * time we get here.
-> + * This is called extremely early, before time keeping functionality is
-> + * available, but arch randomness is. Interrupts are not yet enabled.
->   */
-> -int __init random_init(const char *command_line)
-> +void __init random_init_early(const char *command_line)
->  {
-> -	ktime_t now = ktime_get_real();
-> -	size_t i, longs, arch_bits;
->  	unsigned long entropy[BLAKE2S_BLOCK_SIZE / sizeof(long)];
-> +	size_t i, longs, arch_bits;
->  
->  #if defined(LATENT_ENTROPY_PLUGIN)
->  	static const u8 compiletime_seed[BLAKE2S_BLOCK_SIZE] __initconst __latent_entropy;
-> @@ -803,34 +798,46 @@ int __init random_init(const char *command_line)
->  			i += longs;
->  			continue;
->  		}
-
-Can find a way to get efi_get_random_bytes() in here too? (As a separate
-patch.) I don't see where that actually happens anywhere currently,
-and we should have it available at this point in the boot, yes?
-
-> -		entropy[0] = random_get_entropy();
-> -		_mix_pool_bytes(entropy, sizeof(*entropy));
->  		arch_bits -= sizeof(*entropy) * 8;
->  		++i;
->  	}
-> -	_mix_pool_bytes(&now, sizeof(now));
-> -	_mix_pool_bytes(utsname(), sizeof(*(utsname())));
-
-Hm, can't we keep utsname in the early half by using init_utsname() ?
-
-> +
->  	_mix_pool_bytes(command_line, strlen(command_line));
-> +
-> +	if (trust_cpu)
-> +		credit_init_bits(arch_bits);
-> +}
-> +
-> +/*
-> + * This is called a little bit after the prior function, and now there is
-> + * access to timestamps counters. Interrupts are not yet enabled.
-> + */
-> +void __init random_init(void)
-> +{
-> +	unsigned long entropy = random_get_entropy();
-> +	ktime_t now = ktime_get_real();
-> +
-> +	_mix_pool_bytes(utsname(), sizeof(*(utsname())));
-
-(...and then obviously don't repeat it here.)
-
-> +	_mix_pool_bytes(&now, sizeof(now));
-> +	_mix_pool_bytes(&entropy, sizeof(entropy));
->  	add_latent_entropy();
->  
->  	/*
-> -	 * If we were initialized by the bootloader before jump labels are
-> -	 * initialized, then we should enable the static branch here, where
-> +	 * If we were initialized by the cpu or bootloader before jump labels
-> +	 * are initialized, then we should enable the static branch here, where
->  	 * it's guaranteed that jump labels have been initialized.
->  	 */
->  	if (!static_branch_likely(&crng_is_ready) && crng_init >= CRNG_READY)
->  		crng_set_ready(NULL);
->  
-> +	/* Reseed if already seeded by earlier phases. */
->  	if (crng_ready())
->  		crng_reseed();
-> -	else if (trust_cpu)
-> -		_credit_init_bits(arch_bits);
->  
->  	WARN_ON(register_pm_notifier(&pm_notifier));
->  
-> -	WARN(!random_get_entropy(), "Missing cycle counter and fallback timer; RNG "
-> -				    "entropy collection will consequently suffer.");
-> -	return 0;
-> +	WARN(!entropy, "Missing cycle counter and fallback timer; RNG "
-> +		       "entropy collection will consequently suffer.");
->  }
->  
->  /*
-> diff --git a/include/linux/random.h b/include/linux/random.h
-> index 3fec206487f6..a9e6e16f9774 100644
-> --- a/include/linux/random.h
-> +++ b/include/linux/random.h
-> @@ -72,7 +72,8 @@ static inline unsigned long get_random_canary(void)
->  	return get_random_long() & CANARY_MASK;
->  }
->  
-> -int __init random_init(const char *command_line);
-> +void __init random_init_early(const char *command_line);
-> +void __init random_init(void);
->  bool rng_is_initialized(void);
->  int wait_for_random_bytes(void);
->  
-> diff --git a/init/main.c b/init/main.c
-> index 1fe7942f5d4a..611886430e28 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -976,6 +976,9 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
->  		parse_args("Setting extra init args", extra_init_args,
->  			   NULL, 0, -1, -1, NULL, set_init_arg);
->  
-> +	/* Call before any memory or allocators are initialized */
-
-Maybe for greater clarity:
-
-	/* Pre-time-keeping entropy collection before allocator init. */
-
-> +	random_init_early(command_line);
-> +
->  	/*
->  	 * These use large bootmem allocations and must precede
->  	 * kmem_cache_init()
-> @@ -1035,17 +1038,13 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
->  	hrtimers_init();
->  	softirq_init();
->  	timekeeping_init();
-> -	kfence_init();
->  	time_init();
-
-Was there a reason kfence_init() was happening before time_init()?
-
->  
-> -	/*
-> -	 * For best initial stack canary entropy, prepare it after:
-> -	 * - setup_arch() for any UEFI RNG entropy and boot cmdline access
-> -	 * - timekeeping_init() for ktime entropy used in random_init()
-> -	 * - time_init() for making random_get_entropy() work on some platforms
-> -	 * - random_init() to initialize the RNG from from early entropy sources
-> -	 */
-> -	random_init(command_line);
-> +	/* This must be after timekeeping is initialized */
-> +	random_init();
-> +
-> +	/* These make use of the initialized randomness */
-
-I'd clarify this more:
-
-	/* These make use of the fully initialized randomness entropy. */
-
-> +	kfence_init();
->  	boot_init_stack_canary();
->  
->  	perf_event_init();
-> -- 
-> 2.37.3
-> 
+Yeah, I think that's a fair point. I will adjust this.
 
 -- 
 Kees Cook
