@@ -2,131 +2,93 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D083C07E9D
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 21:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C87C07E9D
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 21:09:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231326AbiIZVHW (ORCPT
+        id S229570AbiIZVJO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 17:07:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38552 "EHLO
+        Mon, 26 Sep 2022 17:09:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231332AbiIZVHS (ORCPT
+        with ESMTP id S230269AbiIZVJN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 17:07:18 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5F2CA1D55
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 14:07:16 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d82so7889519pfd.10
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 14:07:16 -0700 (PDT)
+        Mon, 26 Sep 2022 17:09:13 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09FC9A1D74
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 14:09:13 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id a80so7922375pfa.4
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 14:09:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=VUYHQIv2vL8pY0r5skq1FuqyyfYP1QoMOYkxGZwbp6o=;
-        b=TxQD2fJTodac/gzds749N6eKDMqdv7Q8g+tPhsOiW/sX3qUzP3f31tYswj1cNjhZ+P
-         GZ26rUT4PfJw2GQKkiXkOXyDG3qoXJdjcDtY3ngV/e6Eip/wNz2SxOqyLUFoEqou289d
-         65H2ej14mtX4cRsJfIOnYU6qdCyop+wYz0PRE=
+        bh=z2N8LaF32sVo0MzpvnaJgrHDNgj6iB+hPRs2AGkWfto=;
+        b=iNU6fF1RWdROt/mKhKh4y/8mQA0kXSsvh1U2vUwg0opVJI50FrW0nhkdSisbS+YFN9
+         B8Gv0OIsH5ynOXaMK89XrVLTRyEeZ4gikeERElQneRjRrgHWrUGTYPtORP/zSK1VOOZj
+         wsqw+bXF8lV8ERMgHOCH+e2L1ZvocMDhekVx8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=VUYHQIv2vL8pY0r5skq1FuqyyfYP1QoMOYkxGZwbp6o=;
-        b=vIp1pnlHocTL82LRnRsSb0HZzQq60qKt5Wbh/fYSBIoh9mCsqVej+im32aYcgUVcHs
-         fb8sn0mRTnoPzduycKJhXzW1jedWnOZud1vTcJB/ONI7HhyUIMwvA6yqGx5FC5hpDqv8
-         McnTP2r8eTbm5ZWjssaei9+9OJTFHyKo7avEPEgbSh/jhuSPI/5s+kanyORANkYVeB0P
-         /MOmIuF7fgMJxE0u6IhxAeYQGbjrG7zD+rDGsT+G6odDH7CZtbeW5OYtg0al38A2bQAt
-         gLoyWXmjwm0frfzevDzQj7PD4WFNnV07VBWa1N4xZUu/KXmWRd2fS24nA8QrFv64x9+n
-         jV3Q==
-X-Gm-Message-State: ACrzQf3ZYsjMLlsDyaNBLMVwaOnwZtsY+kcFcMvAMRfh+eXi0pxP7zP6
-        JlMOV9ugOm42ua0+2B0GyViZAg==
-X-Google-Smtp-Source: AMsMyM6ac5PcbdyiCXdkvj0iGPsWyVMYvQOqt4HWPCMIqT7ijtbq72queIktQfLMWxfsTRb46FTITA==
-X-Received: by 2002:a63:441b:0:b0:439:103b:25a4 with SMTP id r27-20020a63441b000000b00439103b25a4mr21064706pga.487.1664226436243;
-        Mon, 26 Sep 2022 14:07:16 -0700 (PDT)
+        bh=z2N8LaF32sVo0MzpvnaJgrHDNgj6iB+hPRs2AGkWfto=;
+        b=5uro2F8GRC8pIEatkZy+BlMY2BywdK/95LFYMr0tUbA8ttR99QjChFSb7cOG1iN5A8
+         F/eaJQ1o5iVwyslC7h8SP1AkD2X6d8dAM2+DBZ4abhYvWlHSY3gzvsJVKSVL+83hAyw0
+         RQjj40KL/xu2vjiStjY6/6S10WX0Edod5OJN6O3EIqGzKBWJnvotOTYa0oq4NDSdjwY3
+         0FqkOh9EVfcbqu8JkxU4bS3Nqu2Gu/5jKpJpIdn6zbJg5f9WIDZqCPrzYBEWkcKVSbcI
+         N0tV8VVMYAxeAktxJd5QdJov0oLNz9XAZmt4vqmZZVsZMu9x8ls9dSRbLmp59JTssBvN
+         Yc7A==
+X-Gm-Message-State: ACrzQf0eHrSXOa4kVh/lvvV0PIphmwZRUial+hHOOzhiOmsiKkGBPEVb
+        A3o1fGN/AXMSS0VdB/kPcdc+lQ==
+X-Google-Smtp-Source: AMsMyM5WIe3hqBa57RBis752CH191gAYntlDiD5fJNhEuECKTcn7TB+Nt6Sb9VomPqk1ExNiN3sNcg==
+X-Received: by 2002:a63:3348:0:b0:439:db24:8b02 with SMTP id z69-20020a633348000000b00439db248b02mr21236503pgz.425.1664226552446;
+        Mon, 26 Sep 2022 14:09:12 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h6-20020aa79f46000000b00540ffb28da0sm13290247pfr.91.2022.09.26.14.07.15
+        by smtp.gmail.com with ESMTPSA id p7-20020aa79e87000000b005459e8a103asm12569831pfq.167.2022.09.26.14.09.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 14:07:15 -0700 (PDT)
-Date:   Mon, 26 Sep 2022 14:07:14 -0700
+        Mon, 26 Sep 2022 14:09:11 -0700 (PDT)
+Date:   Mon, 26 Sep 2022 14:09:10 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Tom Rix <trix@redhat.com>,
-        Daniel Latypov <dlatypov@google.com>,
-        Vitor Massaru Iha <vitor@massaru.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-sparse@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>
-Subject: Re: [PATCH v2] overflow: Introduce overflows_type() and
- castable_to_type()
-Message-ID: <202209261405.619441AC2F@keescook>
-References: <20220926191109.1803094-1-keescook@chromium.org>
- <CAKwvOdmCjAQpaF40VStbFNf1ZqmTxTTZzy2v4TwSF0LVO08GYw@mail.gmail.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Akira Yokosawa <akiyks@gmail.com>, linux-doc@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] overflow: Fix kern-doc markup for functions
+Message-ID: <202209261408.59F78C0D@keescook>
+References: <20220926194713.1806917-1-keescook@chromium.org>
+ <YzIUS/+H2YA7RBvA@casper.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdmCjAQpaF40VStbFNf1ZqmTxTTZzy2v4TwSF0LVO08GYw@mail.gmail.com>
+In-Reply-To: <YzIUS/+H2YA7RBvA@casper.infradead.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 01:17:18PM -0700, Nick Desaulniers wrote:
-> + Arnd
+On Mon, Sep 26, 2022 at 10:06:19PM +0100, Matthew Wilcox wrote:
+> On Mon, Sep 26, 2022 at 12:47:13PM -0700, Kees Cook wrote:
+> > -/** check_add_overflow() - Calculate addition with overflow checking
+> > +/**
+> > + * check_add_overflow - Calculate addition with overflow checking
+> >   *
+> >   * @a: first addend
+> >   * @b: second addend
 > 
-> On Mon, Sep 26, 2022 at 12:11 PM Kees Cook <keescook@chromium.org> wrote:
-> > ---
-> > v2:
-> >  - fix comment typo
-> >  - wrap clang pragma to avoid GCC warnings
-> >  - style nit cleanups
-> >  - rename __castable_to_type() to castable_to_type()
-> >  - remove prior overflows_type() definition
-> > v1: https://lore.kernel.org/lkml/20220926003743.409911-1-keescook@chromium.org
-> > diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
-> > index f385ca652b74..fffc3f86181d 100644
-> > --- a/lib/overflow_kunit.c
-> > +++ b/lib/overflow_kunit.c
-> > @@ -16,6 +16,11 @@
-> >  #include <linux/types.h>
-> >  #include <linux/vmalloc.h>
-> >
-> > +/* We're expecting to do a lot of "always true" or "always false" tests. */
-> > +#ifdef CONFIG_CC_IS_CLANG
-> > +#pragma clang diagnostic ignored "-Wtautological-constant-out-of-range-compare"
-> > +#endif
+> Why did you remove the ()?  And why didn't you delete the blank line?
+> According to our documentation, the canonical form is:
 > 
-> Any chance we can reuse parts of __diag_ignore or __diag_clang from
-> include/linux/compiler_types.h or include/linux/compiler-clang.h
-> respectively?
-
-Hm, I'm not sure how those are supposed to be used. Those defines don't
-seem to be used externally?
-
-> Those are needed for pragmas within preprocessor macros, which we
-> don't have here, but I suspect they may be more concise to use here.
-
-Yeah, I was surprised when I had to wrap it in #ifdef given "clang" is
-part of the string.
-
+>   /**
+>    * function_name() - Brief description of function.
+>    * @arg1: Describe the first argument.
+>    * @arg2: Describe the second argument.
+>    *        One can provide multiple line descriptions
+>    *        for arguments.
 > 
-> > +#define TEST_SAME_TYPE(t1, t2, same)                   do {    \
-> > +       typeof(t1) __t1h = type_max(t1);                        \
-> > +       typeof(t1) __t1l = type_min(t1);                        \
-> > +       typeof(t2) __t2h = type_max(t2);                        \
-> > +       typeof(t2) __t2l = type_min(t2);                        \
-> 
-> Can we use __auto_type here rather than typeof(macro expansion)?
+> I don't usually complain about people getting that wrong, but when
+> people correct it to be wrong ...
 
-I'd rather it stay explicit -- otherwise we start to wander into "oops,
-we got lucky" territory for what should be a really distinct test case.
+Hunh, everywhere I'd looked didn't have the "()" (which seems
+redundant). The blank line was entirely aesthetics for me. If it's
+supposed to be without a blank, I can fix it up everwhere.
 
 -- 
 Kees Cook
