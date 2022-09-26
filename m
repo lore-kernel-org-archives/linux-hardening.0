@@ -2,110 +2,91 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB40FC32771
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 22:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7A6C32771
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 22:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229669AbiIZWj7 (ORCPT
+        id S230234AbiIZW61 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 18:39:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56714 "EHLO
+        Mon, 26 Sep 2022 18:58:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229622AbiIZWj7 (ORCPT
+        with ESMTP id S230209AbiIZW60 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 18:39:59 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2886E1EEC8;
-        Mon, 26 Sep 2022 15:39:58 -0700 (PDT)
+        Mon, 26 Sep 2022 18:58:26 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E06AA405D;
+        Mon, 26 Sep 2022 15:58:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E2EA2B815A2;
-        Mon, 26 Sep 2022 22:39:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDCEBC433D7;
-        Mon, 26 Sep 2022 22:39:53 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7B9C0B815A2;
+        Mon, 26 Sep 2022 22:58:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8EBCC433D6;
+        Mon, 26 Sep 2022 22:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664231995;
-        bh=Z5wnR/iO+6eqE2b+akQ3tVxGbit/SIgqvm30VUmQ3u4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IwurO2TmcBUfW69VH7nzv1u5qdAKnYupn33jWDtzxx7gKkqVHrbhkA4NS2/vXUfXv
-         bydlqcCiC2NMdsvQWGjwxRqpNkefMQfkGtDaFo3TvKj6t/j9RtRpRQTQq1JczTT+eB
-         8dV8OPOuVQYbgM2aH0uZxHwhSsDlwtrcAADnGSBhfXTKkFLkZqXD1lmG7IBVPCxUWO
-         BkedOe0/dul8i3VbEHCEOCAOjRLpuaFPjn7MWVSAVaqLfUU2/kV0WA1kgTzTh8CwGB
-         PCRKHfM0Y2FS2uO6JZpPrmUNCTGGxAnVWVdA5WItTNIj21bUQK87BaBT16mvcIiW5N
-         LQtDnC4W+ZcbQ==
-Date:   Mon, 26 Sep 2022 23:39:50 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] ASoC: SOF: control.h: Replace zero-length array
- with DECLARE_FLEX_ARRAY() helper
-Message-ID: <YzIqNqhTIuaWZrOl@sirena.org.uk>
-References: <YzIcZ11k8RiQtS2T@work>
- <YzIj6tdtDe9YrX+I@sirena.org.uk>
- <81af0106-a732-ce45-bb1c-c45db9e1aeb9@embeddedor.com>
+        s=k20201202; t=1664233103;
+        bh=xDYjoFR+NtGG53i9TMTNgZOELVNnrshin7Kn4ONKlzY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=nbj97LKUb6NIti9AtwZWlD4v8BVQ1Wh6mke62KVOELQdDAUJGJpOYxdkf129L43lR
+         X+VkTgscuP4NlWdojyibYcOcW+ArKTQVhdI7RYhRXjVn8LJuMofZi4Ap/s5n67RUnj
+         k8s+1IPYKS2BhVaM8EYtqhNyxVzuB4HtGWZmpkawV7FFLUA3gD3vsuHD0KT2aw0LFL
+         byc2HwpWgw0agVPklgdpbbW0OXlaF4OsQgQxiPjkM84RSfyHSf55qtkXw9U84pSorN
+         c2eJQIepC0mdx54aftNQowHrMLssVDKYI24NvkLOQfhmBhSc87iBkMOcAIp2/IsOA0
+         yae3/wKpkKRSw==
+Date:   Mon, 26 Sep 2022 17:58:17 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] ASoC: Intel: Skylake: Replace zero-length arrays with
+ DECLARE_FLEX_ARRAY() helper
+Message-ID: <YzIuiUul2CwPlkKh@work>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bo6iFE6H5R63k7d1"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <81af0106-a732-ce45-bb1c-c45db9e1aeb9@embeddedor.com>
-X-Cookie: You may be recognized soon.  Hide.
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Zero-length arrays are deprecated and we are moving towards adopting
+C99 flexible-array members, instead. So, replace zero-length arrays
+declarations in anonymous union with the new DECLARE_FLEX_ARRAY()
+helper macro.
 
---bo6iFE6H5R63k7d1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This helper allows for flexible-array members in unions.
 
-On Mon, Sep 26, 2022 at 05:27:41PM -0500, Gustavo A. R. Silva wrote:
-> On 9/26/22 17:12, Mark Brown wrote:
-> > On Mon, Sep 26, 2022 at 04:40:55PM -0500, Gustavo A. R. Silva wrote:
+Link: https://github.com/KSPP/linux/issues/193
+Link: https://github.com/KSPP/linux/issues/226
+Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ sound/soc/intel/skylake/skl-topology.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> > As documented in submitting-patches.rst please send patches to the
-> > maintainers for the code you would like to change.  The normal kernel
-> > workflow is that people apply patches from their inboxes, if they aren't
-> > copied they are likely to not see the patch at all and it is much more
-> > difficult to apply patches.
+diff --git a/sound/soc/intel/skylake/skl-topology.h b/sound/soc/intel/skylake/skl-topology.h
+index a5bccf2fcd88..017ac0ef324d 100644
+--- a/sound/soc/intel/skylake/skl-topology.h
++++ b/sound/soc/intel/skylake/skl-topology.h
+@@ -233,8 +233,8 @@ struct skl_uuid_inst_map {
+ struct skl_kpb_params {
+ 	u32 num_modules;
+ 	union {
+-		struct skl_mod_inst_map map[0];
+-		struct skl_uuid_inst_map map_uuid[0];
++		DECLARE_FLEX_ARRAY(struct skl_mod_inst_map, map);
++		DECLARE_FLEX_ARRAY(struct skl_uuid_inst_map, map_uuid);
+ 	} u;
+ };
+ 
+-- 
+2.34.1
 
-> That's exactly what I intended to do:
-
-> $ scripts/get_maintainer.pl --nokeywords --nogit --nogit-fallback include=
-/sound/sof/control.h
->=20
-> Jaroslav Kysela <perex@perex.cz> (maintainer:SOUND)
->=20
-> Takashi Iwai <tiwai@suse.com> (maintainer:SOUND)
->=20
-> alsa-devel@alsa-project.org (moderated list:SOUND)
->=20
-> linux-kernel@vger.kernel.org (open list)
->=20
-> Did you see anything wrong with this or something...?
-
-Yes, you should've also included me and the SOF maintainers.  It looks
-like the MAINTAINERS patterns aren't entirely up to date there
-unfortunately.  Though that said given that you'd picked up on the
-subject line I'd have expected the signoffs on the commits to also be
-pointing at the right tree as well.
-
---bo6iFE6H5R63k7d1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmMyKjUACgkQJNaLcl1U
-h9BBnAf/TPF9R6N8StyDAkuK97mbw3QppdICYdpg3hc30FGONCG1l7j4OKCzcaYu
-BnZtgEPFlDS9KiczSbE44u2+VmUbFET3fho5hHTh5hakya3I+Q4DwOCiYVafzCYC
-cnVXwBTWYfN87/yZ8zzQ2wgqK8UNWDtFPRofbEb5Xit3EHpMKj1Zf6gmwywWoabk
-OtkwMF3s6KnAWepveZmGgpMtiAGzfaPXzB1SiK6SVH1nTU0fnq7mjTTBiJ5ycM4p
-JkCHGqZ1sVFzA04aVZODw7hPpeO4SIWxleHDJGeZZcYx/pV7EJhn781WBDIQQ9mI
-0nztCD2ZquEvp+ceVljaVTs5BehCVw==
-=+Su8
------END PGP SIGNATURE-----
-
---bo6iFE6H5R63k7d1--
