@@ -2,98 +2,144 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA7AC32771
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 08:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E30CC32771
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 09:30:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229613AbiIZIDl (ORCPT
+        id S234952AbiIZJat (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 04:03:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44220 "EHLO
+        Mon, 26 Sep 2022 05:30:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234186AbiIZICn (ORCPT
+        with ESMTP id S234953AbiIZJa1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 04:02:43 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 077C6167C2;
-        Mon, 26 Sep 2022 01:00:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6E967B8191D;
-        Mon, 26 Sep 2022 08:00:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15004C433C1;
-        Mon, 26 Sep 2022 07:59:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664179199;
-        bh=BKaJB74cTuefD7ABjII+u7AOgXdfZ6IIrKwYO+YFiwA=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=Hyc7Yt4JMRaV93ujZXcbA6K75iKsTxLlkmSgCVt36DaZp09gGDnmN4EJbeayeQ/qN
-         3jEp8KLozDsB5an81OOeR7jhTN01D7/6umcHN2nNtowRyX35dtCAQ1JDHTjuEn9ULL
-         oV6buTY/Pjh1znzJxLvS71sf46j3L57ogNSxUesw9iGcpVHQsL42CAtv1Z3RnZbW/b
-         wtR6XNhWhaxNVau5wCZto1o8qodSKDM+Z7JI7nMB1jSI9rSqql3wOZYycygUYlXKZH
-         GQNLjqJ66xRAjmjKK8LN9zfpa2pje/YYTyfFmuy955aTcDQUZ9Q9L5IscH5qYVfdnj
-         yWy6pOoZhiNcw==
-From:   Kalle Valo <kvalo@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Gregory Greenman <gregory.greenman@intel.com>,
+        Mon, 26 Sep 2022 05:30:27 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1824812AB2;
+        Mon, 26 Sep 2022 02:29:26 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id a41so8151939edf.4;
+        Mon, 26 Sep 2022 02:29:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=RRTzEh4eX7QJuMr9PBYcSE6qe2YnKNQ4s+EeI3ZLOR8=;
+        b=N2CdQZ5DidOd7rXorrAHwsU7REyGYjsVLRQw24k5i/zVnwxTVLXi79SokmwMPQ23dG
+         ltHADiZ2Xdl1ZpGJHcq9sCz91HuEiXsn5cgUkN6cCcc0qhs3gJdO6JtWSNxOVKAm2maA
+         RUP45w5trMH4BmzGD7P4bYWDoQ80fJ5gk/tTcqUWNZwxEVqilkjzRE/DXJj2o9eLrnMT
+         Eibb/G/CFzTjUYyiTkzjs9+xpKaddZrQr2Ady4gPnOt6q/+8sfnBsKlTNnNA0nWB58c5
+         OZTJtHQ5pIa7jnF722Q6qFBJveO3Wd9eH06jY4XW0T30bgmjP4abl+o8prFN+WFIDcbp
+         QH5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=RRTzEh4eX7QJuMr9PBYcSE6qe2YnKNQ4s+EeI3ZLOR8=;
+        b=TNPn9AYtmnngjVCdi87k1yFv6XJAA7gE4e+/fYSch7edyqffp+EnbWn3XHD1o+M85a
+         fYtu8kC1g/SiVIqgEX788FPBKsDctBwY2OoP72sJH6CReKNHoSlMH7wbNXnSVvKIHm57
+         E6TQ2wANT8JWxGQyVm9Z8Dr+NzczUByxK9nMJ/qnQhyHZDrUphrObp/km7ZQ+sTHIcod
+         uTDUnxsnbcfQ7FvjrVZAehFenluMtjjyPPE+1tfQtFSAzmko60nhmY4htX9B58ZLw1i1
+         hA2kqxIEnZmxePDoIwXVAO3lC+p25ncv1r4zVea8loWHMfKB2BVVGB7nid3xZTT1cczw
+         3WTA==
+X-Gm-Message-State: ACrzQf1w3KfGKXMtj93HKRC+GRO7asNNy5Vkd/Oe4WszXv1h/DgZfxpf
+        GFgbuRKN+giNOt4A3pjD9vw=
+X-Google-Smtp-Source: AMsMyM7SuVBgSYWy5kh1HhAcVXy6Llss6obNUjIA/ZoXJgkE8T8RGaoTb9VPoRu5QX3Pg6i6kN2O6A==
+X-Received: by 2002:a05:6402:2489:b0:454:11de:7698 with SMTP id q9-20020a056402248900b0045411de7698mr21490387eda.214.1664184564514;
+        Mon, 26 Sep 2022 02:29:24 -0700 (PDT)
+Received: from [192.168.178.21] (p4fc20ebf.dip0.t-ipconnect.de. [79.194.14.191])
+        by smtp.gmail.com with ESMTPSA id lh3-20020a170906f8c300b00782ee6b34f2sm3710039ejb.183.2022.09.26.02.29.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Sep 2022 02:29:24 -0700 (PDT)
+Message-ID: <a07c4a5e-1668-3609-334c-8aee2834ff90@gmail.com>
+Date:   Mon, 26 Sep 2022 11:29:20 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [Linaro-mm-sig] [PATCH v2 08/16] dma-buf: Proactively round up to
+ kmalloc bucket size
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>, Vlastimil Babka <vbabka@suse.cz>
+Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org,
+        "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-        Ilan Peer <ilan.peer@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Nathan Errera <nathan.errera@intel.com>,
-        Mordechay Goodstein <mordechay.goodstein@intel.com>,
-        Mike Golant <michael.golant@intel.com>,
-        Ayala Beker <ayala.beker@intel.com>,
-        Avraham Stern <avraham.stern@intel.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] iwlwifi: Track scan_cmd allocation size explicitly
-References: <20220923220853.3302056-1-keescook@chromium.org>
-Date:   Mon, 26 Sep 2022 10:59:52 +0300
-In-Reply-To: <20220923220853.3302056-1-keescook@chromium.org> (Kees Cook's
-        message of "Fri, 23 Sep 2022 15:08:53 -0700")
-Message-ID: <874jwu4lc7.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Alex Elder <elder@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
+        Miguel Oj eda <ojeda@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        netdev@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        dev@openvswitch.org, x86@kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+References: <20220923202822.2667581-1-keescook@chromium.org>
+ <20220923202822.2667581-9-keescook@chromium.org>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
+In-Reply-To: <20220923202822.2667581-9-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
-
-> In preparation for reducing the use of ksize(), explicitly track the
-> size of scan_cmd allocations. This also allows for noticing if the scan
-> size changes unexpectedly. Note that using ksize() was already incorrect
-> here, in the sense that ksize() would not match the actual allocation
-> size, which would trigger future run-time allocation bounds checking.
-> (In other words, memset() may know how large scan_cmd was allocated for,
-> but ksize() will return the upper bounds of the actually allocated memory,
-> causing a run-time warning about an overflow.)
+Am 23.09.22 um 22:28 schrieb Kees Cook:
+> Instead of discovering the kmalloc bucket size _after_ allocation, round
+> up proactively so the allocation is explicitly made for the full size,
+> allowing the compiler to correctly reason about the resulting size of
+> the buffer through the existing __alloc_size() hint.
 >
-> Cc: Gregory Greenman <gregory.greenman@intel.com>
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: Luca Coelho <luciano.coelho@intel.com>
-> Cc: Johannes Berg <johannes.berg@intel.com>
-> Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-> Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>
-> Cc: Ilan Peer <ilan.peer@intel.com>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Cc: "Christian König" <christian.koenig@amd.com>
+> Cc: linux-media@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linaro-mm-sig@lists.linaro.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Gregory, can I take this directly to wireless-next?
+Reviewed-by: Christian König <christian.koenig@amd.com>
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+> ---
+>   drivers/dma-buf/dma-resv.c | 9 +++++++--
+>   1 file changed, 7 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
+> index 205acb2c744d..5b0a4b8830ff 100644
+> --- a/drivers/dma-buf/dma-resv.c
+> +++ b/drivers/dma-buf/dma-resv.c
+> @@ -98,12 +98,17 @@ static void dma_resv_list_set(struct dma_resv_list *list,
+>   static struct dma_resv_list *dma_resv_list_alloc(unsigned int max_fences)
+>   {
+>   	struct dma_resv_list *list;
+> +	size_t size;
+>   
+> -	list = kmalloc(struct_size(list, table, max_fences), GFP_KERNEL);
+> +	/* Round up to the next kmalloc bucket size. */
+> +	size = kmalloc_size_roundup(struct_size(list, table, max_fences));
+> +
+> +	list = kmalloc(size, GFP_KERNEL);
+>   	if (!list)
+>   		return NULL;
+>   
+> -	list->max_fences = (ksize(list) - offsetof(typeof(*list), table)) /
+> +	/* Given the resulting bucket size, recalculated max_fences. */
+> +	list->max_fences = (size - offsetof(typeof(*list), table)) /
+>   		sizeof(*list->table);
+>   
+>   	return list;
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
