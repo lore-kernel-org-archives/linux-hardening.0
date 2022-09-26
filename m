@@ -2,90 +2,84 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A546FC32771
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 22:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7D6C6FA82
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 22:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229483AbiIZWPy (ORCPT
+        id S231508AbiIZWQ6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 18:15:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52560 "EHLO
+        Mon, 26 Sep 2022 18:16:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231328AbiIZWPn (ORCPT
+        with ESMTP id S230136AbiIZWQk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 18:15:43 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 782BA43E58;
-        Mon, 26 Sep 2022 15:15:23 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 366D0B812A5;
-        Mon, 26 Sep 2022 22:13:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D6D0C433D6;
-        Mon, 26 Sep 2022 22:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664230382;
-        bh=2Qt3W8FkIMIE55ctoj3YAHUay0CBFTZXAHMd7mn4hp8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uSbK6VxMdhw8e8KNUVvQk9DkPang+WcxCaiI8iR6i0u49/s7tfeSlA1U3qzG3PP7E
-         0hLSTj7XSuBf+iaaSaVTCQnf/b8SWpXqgygr7nPZ1N0ZYsuyn5yozA0OaQ0owDr4U2
-         14DUv7Cwf7I12Z49AD/pWdzVKIaa4aDGRC9lnEfIGlPhAGsnOpqAdpdDBrRn0Zatl6
-         P8tbfFj01gpS7UaWt/nHhBio+KU3IwCbfigYZMlUw7B/T2VVO8ehrhwEjnfhdANoi5
-         o6cSjiEIgIntgdVhhDQs5AWedaOX4MtFDDHxHcMs4D6TcyuW3DlVxZWyv2AZKPTIop
-         Y8jWhLS7QmvAg==
-Date:   Mon, 26 Sep 2022 23:12:58 +0100
-From:   Mark Brown <broonie@kernel.org>
+        Mon, 26 Sep 2022 18:16:40 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66C0C69F7B;
+        Mon, 26 Sep 2022 15:16:18 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id j6-20020a17090a694600b00200bba67dadso8289211pjm.5;
+        Mon, 26 Sep 2022 15:16:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=oazF4s5eiGXcwOUykRDQFfxqhajqTyICeqJarqKGY9o=;
+        b=XIL2PTlm/aqtXqyPueCBxESVe5QozV+ibeioAVgVOXvX8CFxHDzxZqc+HqvBBbVPlO
+         7hEwOoDvWz5/WblTR8+kYCbEAdKidxykLItG6THXD3yI0oi3VcKIlLIy88jVAxLR76V5
+         OLxwgi8ka6TkoX1o3rVBdRaXgJlSKArR3iGwJ0jXWcXsHF8MDwKXamWH8ivk2Pc9amaL
+         vHWgkUGRpnMDkNp++e68yUxirXwyftAW5Ga3iQ7AMKJJxh//Gt9MZqo83a1ufFeqQk/a
+         g/7UUb9NL5OO3vff+JGWq9OPs0oo3YbStcZ8/Umi8fPNQGBo+8MQwBnnSR+3g9UFSTtk
+         O55g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=oazF4s5eiGXcwOUykRDQFfxqhajqTyICeqJarqKGY9o=;
+        b=PcXzbQthSxb47YH9UnqMuwAY7EmzaYl0qmk2pGFgQyZxpqMFE4A+B/Vbyzzqcwj/Dj
+         2LzXEx0tYamHfSlTJideHjkB/Itv2RrZnk2X+6fbI1jZuWdeJNVpcaH0U3USEmS4g4XR
+         dV86kGGzsmvtJyXjE8HCX9f8qxcqoJl8AA1NgkxhA41pLm9s3eRc6XU1jrVVKEh+0Nuf
+         iA7acNtJ7PjlHCTNrd14oEO8lppa1fy9va1w3Fe+mStjSX2JVh2ClajHZdHorXQKw8j3
+         Tmbh3IaE4RHEdH+Ql71TNbap1KSySvWloVReg/7qEZJXjq8/EE5CYv3uy+eUbt3MyrFS
+         E0mA==
+X-Gm-Message-State: ACrzQf3etno3bCmmijWHNj4poTFhD6XFa3xn2JDbhtVsj7NdsTZQlw2+
+        wtMNb/gIGV884jzaRRF89MI=
+X-Google-Smtp-Source: AMsMyM4zfCOrW6c8dFVl/lqGTyuO4UDdrKbCCcxvswu52P/TOUvfT9507iH9VI3WF5H6nFzZ/TOp1w==
+X-Received: by 2002:a17:902:e5c3:b0:178:192c:6b3b with SMTP id u3-20020a170902e5c300b00178192c6b3bmr24707881plf.92.1664230510936;
+        Mon, 26 Sep 2022 15:15:10 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:7e1b:858c:19dc:934])
+        by smtp.gmail.com with ESMTPSA id k10-20020a170902c40a00b001782aee4881sm11857355plk.153.2022.09.26.15.15.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Sep 2022 15:15:10 -0700 (PDT)
+Date:   Mon, 26 Sep 2022 15:15:07 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] ASoC: SOF: control.h: Replace zero-length array
- with DECLARE_FLEX_ARRAY() helper
-Message-ID: <YzIj6tdtDe9YrX+I@sirena.org.uk>
-References: <YzIcZ11k8RiQtS2T@work>
+Subject: Re: [PATCH][next] Input: applespi - replace zero-length array with
+ DECLARE_FLEX_ARRAY() helper
+Message-ID: <YzIkawisbFn7njJQ@google.com>
+References: <YzIeJeqU73G+UI8g@work>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="34yM7OTcCN4YfrhM"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YzIcZ11k8RiQtS2T@work>
-X-Cookie: You may be recognized soon.  Hide.
+In-Reply-To: <YzIeJeqU73G+UI8g@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
---34yM7OTcCN4YfrhM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Sep 26, 2022 at 04:40:55PM -0500, Gustavo A. R. Silva wrote:
+On Mon, Sep 26, 2022 at 04:48:21PM -0500, Gustavo A. R. Silva wrote:
 > Zero-length arrays are deprecated and we are moving towards adopting
 > C99 flexible-array members, instead. So, replace zero-length arrays
 > declarations in anonymous union with the new DECLARE_FLEX_ARRAY()
 > helper macro.
->=20
+> 
 > This helper allows for flexible-array members in unions.
+> 
+> Link: https://github.com/KSPP/linux/issues/193
+> Link: https://github.com/KSPP/linux/issues/219
+> Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-As documented in submitting-patches.rst please send patches to the=20
-maintainers for the code you would like to change.  The normal kernel
-workflow is that people apply patches from their inboxes, if they aren't
-copied they are likely to not see the patch at all and it is much more
-difficult to apply patches.
+Applied, thank you.
 
---34yM7OTcCN4YfrhM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmMyI+kACgkQJNaLcl1U
-h9Bl2Af/eq17arOKqHYbB+7ToUShw/rDWN00EYpGJ1L4MTJ0Hrt4JHoK/KoB0pVo
-D4zPrWxnFc/aIvlHvf5zkwHqQvhNMsL+FfB++tS8oLWXdskaSwdZAJOHqU2t5sfb
-6whvYoNoYUD/5acGyMfX2RLCQbIxIAz8q6J7bJY+QfqbXVUHxMHbNSKJ5rkHJTnN
-Bsx1DpzXc10p1PwhVhepbCuJXl+shGRXw6WgjyubQtHjmSWNACm9QF+Hm7w3z3DB
-2dIWI7LQ6x63u+i5vxsInZczO1qWLQmqWHlse4UKKekRIDrfBCVJdS0NEqT48Zpn
-f6yov8ZJ3+TQx64+wsjISFZriatSQw==
-=fi4G
------END PGP SIGNATURE-----
-
---34yM7OTcCN4YfrhM--
+-- 
+Dmitry
