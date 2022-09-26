@@ -2,130 +2,146 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BECFC32771
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 18:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A259C32771
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 18:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230281AbiIZS01 (ORCPT
+        id S230429AbiIZSxC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 14:26:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51722 "EHLO
+        Mon, 26 Sep 2022 14:53:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbiIZS0H (ORCPT
+        with ESMTP id S230321AbiIZSxB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 14:26:07 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C18D4DB7D
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 11:24:40 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d82so7502844pfd.10
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 11:24:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=4OBTQRXHJygCpY/2rBSvNKQlNNozBBa3mtJlOeJ/EyY=;
-        b=cSzvTXKu85TucB7q+g9CQdjC/FdnYJW7ESEBDVMDQZhpqkoHzMT6tB5vmqaaVmtq+c
-         HBo/BI5kdAn7jf+xxq5MiOLWI7cJumnHX29hS+SWLXo9wgZxYqgGZ4IjXwCG6/+UPFiS
-         mSjP6/8kEubWj+KXOsoeUGGJwGHBMRMvzL4Ek=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=4OBTQRXHJygCpY/2rBSvNKQlNNozBBa3mtJlOeJ/EyY=;
-        b=MpgR/z+vaIbcv5iCL/VXzKozg3c3tlJw2p+qIH3JfQhAEPX6cKZJC9VM6qwlKGkt+x
-         Rcb9hbwwyVoxj3Jvt9zVn8otNKrewoXKfpCLPRH0VnmdMFSiqoBAJ4Gf1fvQXZ5PSxSG
-         UqYaHhef1C+S5PknrE+KO5Jo+lovit8CMzNc4SSSYziCAPNRnewaQ7ohpaFoHWsBVTzp
-         02qwG2mWVwAG7Aa9BPjEbspMa80HMD1OpjxK2R/GYmClgJsbTsZk6vZSF21s/IHupQ2V
-         vix1lz2pzxLwetWfFlilzgt/jLwIePaTYQdbhXjXGwOYt2WFW1/BAmVL7RFOoRK0S1O0
-         UyIg==
-X-Gm-Message-State: ACrzQf0W0ELWEWHfFdiSxOwKzNC26OGGxDJBIZPhnYXBO6TphswW0lxI
-        GXdSrynXfUwD1fVXHXqeJ1+NNA==
-X-Google-Smtp-Source: AMsMyM6gzz3RlLPDBF6eEAacYBSNNxOrYYdXLeQNzcYYWROPiLY1NScn4aUnW3BZuZbnjPt9v5tgLQ==
-X-Received: by 2002:a63:4750:0:b0:43c:dac:9e4b with SMTP id w16-20020a634750000000b0043c0dac9e4bmr21137736pgk.300.1664216679159;
-        Mon, 26 Sep 2022 11:24:39 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p2-20020a170902c70200b0016f85feae65sm11305644plp.87.2022.09.26.11.24.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 11:24:38 -0700 (PDT)
-Date:   Mon, 26 Sep 2022 11:24:37 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Alex Elder <elder@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
-        Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, dev@openvswitch.org,
-        x86@kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 13/16] mempool: Use kmalloc_size_roundup() to match
- ksize() usage
-Message-ID: <202209261123.B2CBAE87E0@keescook>
-References: <20220923202822.2667581-1-keescook@chromium.org>
- <20220923202822.2667581-14-keescook@chromium.org>
- <f4fc52c4-7c18-1d76-0c7a-4058ea2486b9@suse.cz>
+        Mon, 26 Sep 2022 14:53:01 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 924AE5A3F2;
+        Mon, 26 Sep 2022 11:52:59 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 45D95B80C75;
+        Mon, 26 Sep 2022 18:52:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88184C433D7;
+        Mon, 26 Sep 2022 18:52:56 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="GHUYsDZj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+        t=1664218372;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pDXoUOQlmNgJmVAlYuuj5yi+ly/HlT4KdcY9eEm5eBQ=;
+        b=GHUYsDZj+cm4D1n4dLRNKXHPhilooi8feGkJettGK5fiNcs+gvB/Bk72j7l0NqbSLBiqIE
+        WGz+iPEKKUu5kvVQwesBPBXD0LCeILsbUkn6NfW3zsrfC0kr6qVa9YOG68L1MR6iNls7lN
+        Sw9ikwYwNU+FwMx2Vt7HI62m0Cbm3SI=
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id e118ec30 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Mon, 26 Sep 2022 18:52:51 +0000 (UTC)
+Received: by mail-vk1-f180.google.com with SMTP id h5so3871624vkc.5;
+        Mon, 26 Sep 2022 11:52:51 -0700 (PDT)
+X-Gm-Message-State: ACrzQf1a8lLyEaWHqIZydOxPGjOAl2daulcUJbnJ9qZdn5xg1NCvzeIL
+        OaOsUl/srNo65rV7l2fl+1k+PixaW4qSD9fEOR4=
+X-Google-Smtp-Source: AMsMyM6MHWzeqHmsiYCOhngqPYdkAndT7nfSLKC6I8G4EtrXNPMgzKjp0w6ATQj2NfFo9A4t0o/eV9+hI7aFbrIf4rg=
+X-Received: by 2002:a1f:1b45:0:b0:3a7:ba13:11ce with SMTP id
+ b66-20020a1f1b45000000b003a7ba1311cemr3104747vkb.3.1664218370625; Mon, 26 Sep
+ 2022 11:52:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f4fc52c4-7c18-1d76-0c7a-4058ea2486b9@suse.cz>
+References: <20220926160332.1473462-1-Jason@zx2c4.com> <202209261105.9C6AEEEE1@keescook>
+In-Reply-To: <202209261105.9C6AEEEE1@keescook>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Mon, 26 Sep 2022 20:52:39 +0200
+X-Gmail-Original-Message-ID: <CAHmME9pFDzyKJd5ixyB9E05jkZvHShFimbiQsGTcdQO1E5R0QQ@mail.gmail.com>
+Message-ID: <CAHmME9pFDzyKJd5ixyB9E05jkZvHShFimbiQsGTcdQO1E5R0QQ@mail.gmail.com>
+Subject: Re: [PATCH] random: split initialization into early arch step and
+ later non-arch step
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 03:50:43PM +0200, Vlastimil Babka wrote:
-> On 9/23/22 22:28, Kees Cook wrote:
-> > Round up allocations with kmalloc_size_roundup() so that mempool's use
-> > of ksize() is always accurate and no special handling of the memory is
-> > needed by KASAN, UBSAN_BOUNDS, nor FORTIFY_SOURCE.
-> > 
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: linux-mm@kvack.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >   mm/mempool.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/mm/mempool.c b/mm/mempool.c
-> > index 96488b13a1ef..0f3107b28e6b 100644
-> > --- a/mm/mempool.c
-> > +++ b/mm/mempool.c
-> > @@ -526,7 +526,7 @@ EXPORT_SYMBOL(mempool_free_slab);
-> >    */
-> >   void *mempool_kmalloc(gfp_t gfp_mask, void *pool_data)
-> >   {
-> > -	size_t size = (size_t)pool_data;
-> > +	size_t size = kmalloc_size_roundup((size_t)pool_data);
-> 
-> Hm it is kinda wasteful to call into kmalloc_size_roundup for every
-> allocation that has the same input. We could do it just once in
-> mempool_init_node() for adjusting pool->pool_data ?
-> 
-> But looking more closely, I wonder why poison_element() and
-> kasan_unpoison_element() in mm/mempool.c even have to use ksize()/__ksize()
-> and not just operate on the requested size (again, pool->pool_data). If no
-> kmalloc mempool's users use ksize() to write beyond requested size, then we
-> don't have to unpoison/poison that area either?
+On Mon, Sep 26, 2022 at 8:22 PM Kees Cook <keescook@chromium.org> wrote:
+> Can find a way to get efi_get_random_bytes() in here too? (As a separate
+> patch.) I don't see where that actually happens anywhere currently,
+> and we should have it available at this point in the boot, yes?
 
-Yeah, I think that's a fair point. I will adjust this.
+No, absolutely not. That is not how EFI works. EFI gets its seed to
+random.c much earlier by way of add_bootloader_randomness().
 
--- 
-Kees Cook
+> > -             entropy[0] = random_get_entropy();
+> > -             _mix_pool_bytes(entropy, sizeof(*entropy));
+> >               arch_bits -= sizeof(*entropy) * 8;
+> >               ++i;
+> >       }
+> > -     _mix_pool_bytes(&now, sizeof(now));
+> > -     _mix_pool_bytes(utsname(), sizeof(*(utsname())));
+>
+> Hm, can't we keep utsname in the early half by using init_utsname() ?
+
+Yes, we could maybe *change* to using init_utsname if we wanted. That
+seems kind of different though. So I'd prefer that to be a different
+patch, which would require looking at the interaction with early
+hostname setting and such. If you want to do that work, I'd certainly
+welcome the patch.
+
+> > @@ -976,6 +976,9 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
+> >               parse_args("Setting extra init args", extra_init_args,
+> >                          NULL, 0, -1, -1, NULL, set_init_arg);
+> >
+> > +     /* Call before any memory or allocators are initialized */
+>
+> Maybe for greater clarity:
+>
+>         /* Pre-time-keeping entropy collection before allocator init. */
+
+Will do.
+
+>
+> > +     random_init_early(command_line);
+> > +
+> >       /*
+> >        * These use large bootmem allocations and must precede
+> >        * kmem_cache_init()
+> > @@ -1035,17 +1038,13 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
+> >       hrtimers_init();
+> >       softirq_init();
+> >       timekeeping_init();
+> > -     kfence_init();
+> >       time_init();
+>
+> Was there a reason kfence_init() was happening before time_init()?
+
+Historically there was, I think, because random_init() used to make
+weird allocations. But that's been gone for a while. At this point
+it's a mistake, and removing it allows me to do this:
+
+https://groups.google.com/g/kasan-dev/c/jhExcSv_Pj4
+
+>
+> >
+> > -     /*
+> > -      * For best initial stack canary entropy, prepare it after:
+> > -      * - setup_arch() for any UEFI RNG entropy and boot cmdline access
+> > -      * - timekeeping_init() for ktime entropy used in random_init()
+> > -      * - time_init() for making random_get_entropy() work on some platforms
+> > -      * - random_init() to initialize the RNG from from early entropy sources
+> > -      */
+> > -     random_init(command_line);
+> > +     /* This must be after timekeeping is initialized */
+> > +     random_init();
+> > +
+> > +     /* These make use of the initialized randomness */
+>
+> I'd clarify this more:
+>
+>         /* These make use of the fully initialized randomness entropy. */
+
+Okay will do.
+
+Jason
