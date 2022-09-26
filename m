@@ -2,246 +2,122 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C1BC07E9D
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 19:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2236CC07E9D
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 20:16:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229528AbiIZTrz (ORCPT
+        id S229985AbiIZUQn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 15:47:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46734 "EHLO
+        Mon, 26 Sep 2022 16:16:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230135AbiIZTrb (ORCPT
+        with ESMTP id S229928AbiIZUQm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 15:47:31 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EAD54B4BD
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 12:47:16 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id r62so3652234pgr.12
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 12:47:16 -0700 (PDT)
+        Mon, 26 Sep 2022 16:16:42 -0400
+Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 372269F0D6;
+        Mon, 26 Sep 2022 13:16:41 -0700 (PDT)
+Received: by mail-qv1-xf2e.google.com with SMTP id i15so5027922qvp.5;
+        Mon, 26 Sep 2022 13:16:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=ZlICVrogearv1SNrgNdDyrmevECXfWWv2T83Z8YgO/0=;
-        b=N72HnbW5sMb92Q4N/bHZzDTNdb4ybAcE8r9IeS1ZaUm4g+VCbclqW5dTR4hrxICF+U
-         XRIx7I6cBdy72OPPbY1ryHlJIyGz6jDtjoDGXSoUfO9xiC+yQvPw5QkzyfTYSil/J6BQ
-         arId7t6AQzxGSEyQQhF8/jC26EXyDtkCM1DD8=
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=1Moyt/DbH/5iuPJVPo0l2zngLADkERtzxSHb4NVriH8=;
+        b=HBpzIKbJYJ+oekfthYe9ri/AoeyGwsq1SMaCghcPawpU5GXiK9OGFo9vCGYe7wpmMO
+         8hqU4Gn6qQVNVUb7tzambM46pngSPbV3qSl50fx70TjEstH2g0NHCbT2Zw5H/0DKXDCr
+         1jw+8GCSZQrUIdslPbpk3DFQURycnqylkzFe0EnrZc+V/EPxxjFi/uyNCnMQbnUb/NIE
+         FQ1Vy/QI8WmgtjLk0ftVrLQIKhEszGmHSr2D4Nfn3I58qjLvXlG6GqnrZiva99qILvue
+         wEyQ0ziHPTSa7NuF615NDX6NymIQMS1EYj5nWoLyYrl24QqrdbcdlguOxNSSS73Q7v8a
+         HLXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=ZlICVrogearv1SNrgNdDyrmevECXfWWv2T83Z8YgO/0=;
-        b=tbA0Msr/N3Jbd5by3ZqX4zjucHKq+zb/SSKwLQWoJiVaqhpjiNz4FGmPa8OZ8oSvzM
-         qiBOB/PIDY/Z6aGIgcfBiqzDFURzAT/RzoNV6Q/Lyr1PW3kb/2b2MgKYuK0UPBzie9hd
-         c0MkXf3tgfGhwbmuECpPUtvGQtf8tZteu6N7UOQgDczwmAnpfLysaJ40WV09UKjScGKs
-         LXNPxxOIgk0hpTChlNCA1uygMn8y51QvSHoexQwv4tqJ2E5On2wzmCfs7NsUylksEq8A
-         NduNXVTncRN9nR50bIFLDygl9XMumBI8uw16lp7z6Js+IOEyGHftMF0rByziwsBzqyf/
-         KDuA==
-X-Gm-Message-State: ACrzQf151mSNZdbitrulguxGT9J9zM1wJwATEqjyZbIb8qq2SLntJPV7
-        B4gVBITeNiRKUS1boRSuDfJYSQ==
-X-Google-Smtp-Source: AMsMyM46ZKCBt4vnZ6cvNv2xFJ4zMtqYAExJV1tiwALAiTO2eAifiY9luw1EWNA5MhmGUBA0BtqajQ==
-X-Received: by 2002:a05:6a00:a05:b0:534:b1ad:cfac with SMTP id p5-20020a056a000a0500b00534b1adcfacmr25053072pfh.35.1664221635658;
-        Mon, 26 Sep 2022 12:47:15 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y6-20020a17090322c600b0016ed8af2ec0sm11748282plg.29.2022.09.26.12.47.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 12:47:14 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Akira Yokosawa <akiyks@gmail.com>, linux-doc@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] overflow: Fix kern-doc markup for functions
-Date:   Mon, 26 Sep 2022 12:47:13 -0700
-Message-Id: <20220926194713.1806917-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=1Moyt/DbH/5iuPJVPo0l2zngLADkERtzxSHb4NVriH8=;
+        b=2XWAweqiI3COTaXBGB4A/yOFAg9qdwWvuv7QYnOUKoMd8DPSadUHiS1zRajmNljp9n
+         j5rdtzzl6R0ml73pAgdcWvynjCQyDmSGcibvMj5yOZJACzwxh9a8WnoLqw2D16KKITsJ
+         GF6x3FC5cfRtwRKrFwFwjJevvdFVFdMkl5BXy3wQzz9DqcqH6jfKQ6X/Gwz1Yx1ArcmL
+         OcNPRynIONqfVpUdhIM9z0GgpLpN7mexOQGuhytzEhKUQrK8o8RAU1keU2tDOTEUl/Zx
+         p9vrVIL25MLfXgreoiPAWl+N/tAXieWscAMsKInEJZLLI7zN7MIhJEgjw3x2DTdA8v0h
+         yuZw==
+X-Gm-Message-State: ACrzQf14beScdYalkezh054TwltoxliPB+q2hA7xUpi0J28DeI+UGhbw
+        IbdshMxYB44ULgSVfK1zjqOoy8seoEg0UYKsM4g=
+X-Google-Smtp-Source: AMsMyM6DhG4RasO1+FbqYOQ1CqhS3aV4iMooc3GPKm2Hvn7tZ5OppInt59qu+j3AxY1JJT9ta+O3XQ31vXsABDXUtDA=
+X-Received: by 2002:a05:6214:d0e:b0:4ad:5e35:329a with SMTP id
+ 14-20020a0562140d0e00b004ad5e35329amr18560172qvh.28.1664223400300; Mon, 26
+ Sep 2022 13:16:40 -0700 (PDT)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6889; h=from:subject; bh=0PMShzQ6EtJF+kRUqPhXtNPnTNusvCqcZvTzeg25ZSg=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjMgHAcuS1Ak0XX+ChZpczDofMNNUiFb6phvm+EPXJ vd1yFnWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYzIBwAAKCRCJcvTf3G3AJsVAD/ wPqoGRtTA9mVe6LhiBA9MsJ2zOFjvc9MWJ7nqqm7gsu0vHwGZ/H0xL02y31F2dxCIwmIJUw0cpmQem 8/KwdDgvz9TWCO5xX6Uqv5Su/JrMmOAStgvqA63TfF+5YqWemyjZrM5y9HnaCAXN56gWbg28hWmGxo MqvJjxkrI2Ke0uQJC7M6SxAgQVSyqzilFwzSf70B3MVz3dKwDi7pMn3rdbnEy0KMNT5mHeRpFglOxd +mekH+Ch/3aNQhFX8xI7y3a3qjp3shLEF5kEDxX+zaDT7MaJIKGyxWNxhX4yRdzroZl1w1Qxl19+lt 9WlQX1zNjmpnhGaerzVIuRRtZl3cK3aOBQUeUsExG8jBSebGbv9fvsqAPesbFShQgLApITemZCYE4S FhkMLm/4XNK97w/VMGjHAtunZraG6O2wMTRjQgUocENw4mGodTNZV8BBDlvGc0RTL7bwumsL0UbZba yhsRI/01KZiPDYOAFYnA7XmiMeVUEuNQSQYC0cYxTcyKJA9SZaOr9g+hLn+eVsbV/nbG48EBW1EW0Y JQ2guS/fEZ5lOvw1zcGDDFRyNUJVSKd2+cqBH9C3w0msq0V6mlRcj9xiMEUnaQAvkHK2HywbK3YDJh 1BCC83tR43TGWjgeuYbNXUnZFpj+Q1Wc3lRBgx37rgIFiaDHP7nKuh1qs6nA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20220908215504.3686827-1-samitolvanen@google.com> <YzGdeYzoZ1uC1CO/@hirez.programming.kicks-ass.net>
+In-Reply-To: <YzGdeYzoZ1uC1CO/@hirez.programming.kicks-ass.net>
+From:   "H.J. Lu" <hjl.tools@gmail.com>
+Date:   Mon, 26 Sep 2022 13:16:04 -0700
+Message-ID: <CAMe9rOrHe9XD2D+pZJrKo1DxkLMQggDOFXQJfTgEO+xp0dybdw@mail.gmail.com>
+Subject: Re: [PATCH v5 00/22] KCFI support
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Joao Moreira <joao@overdrivepizza.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Fix the kern-doc markings for several of the overflow helpers and move
-their location into the core kernel API documentation, where it belongs
-(it's not driver-specific).
+On Mon, Sep 26, 2022 at 5:39 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, Sep 08, 2022 at 02:54:42PM -0700, Sami Tolvanen wrote:
+> > KCFI is a forward-edge control-flow integrity scheme in the upcoming
+> > Clang 16 release, which is more suitable for kernel use than the
+> > existing CFI scheme used by CONFIG_CFI_CLANG. KCFI doesn't require
+> > LTO, doesn't alter function references to point to a jump table, and
+> > won't break function address equality.
+> >
+> > This series replaces the current arm64 CFI implementation with KCFI
+> > and adds support for x86_64.
+> >
+> > KCFI requires assembly functions that are indirectly called from C
+> > code to be annotated with type identifiers. As type information is
+> > only available in C, the compiler emits expected type identifiers
+> > into the symbol table, so they can be referenced from assembly
+> > without having to hardcode type hashes. Patch 6 adds helper macros
+> > for annotating functions, and patches 9 and 20 add annotations.
+> >
+> > In case of a type mismatch, KCFI always traps. To support error
+> > handling, the compiler generates a .kcfi_traps section for x86_64,
+> > which contains the locations of each trap, and for arm64, encodes
+> > the necessary register information to the ESR. Patches 10 and 22 add
+> > arch-specific error handlers.
+> >
+> > To test this series, you'll need a ToT Clang toolchain. The series
+> > is also available pn GitHub:
+> >
+> >   https://github.com/samitolvanen/linux/commits/kcfi-v5
+>
+> As mentioned at plumbers, my only concern is somewhat excessive use of
+> CFI_CLANG as oposed to something more compiler neutral. But I suppose
+> that's something we can cleanup/fix when GCC grows support for this.
+>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Tested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>
+> (as in I ran kCFI + call-depth-tracking + FineIBT on a bunch of
+> hardware)
+>
+> HJL, can you look at adding kCFI support to GCC ?
 
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Akira Yokosawa <akiyks@gmail.com>
-Cc: linux-doc@vger.kernel.org
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- Documentation/core-api/kernel-api.rst |  6 ++++
- Documentation/driver-api/basics.rst   |  3 --
- include/linux/overflow.h              | 43 +++++++++++++++------------
- 3 files changed, 30 insertions(+), 22 deletions(-)
+Adding -fsanitize=kcfi to GCC is a big effort.  Please open a
+GCC bug:
 
-diff --git a/Documentation/core-api/kernel-api.rst b/Documentation/core-api/kernel-api.rst
-index 20569f26dde1..0d0c4f87057c 100644
---- a/Documentation/core-api/kernel-api.rst
-+++ b/Documentation/core-api/kernel-api.rst
-@@ -121,6 +121,12 @@ Text Searching
- CRC and Math Functions in Linux
- ===============================
- 
-+Arithmetic Overflow Checking
-+----------------------------
-+
-+.. kernel-doc:: include/linux/overflow.h
-+   :internal:
-+
- CRC Functions
- -------------
- 
-diff --git a/Documentation/driver-api/basics.rst b/Documentation/driver-api/basics.rst
-index 3e2dae954898..4b4d8e28d3be 100644
---- a/Documentation/driver-api/basics.rst
-+++ b/Documentation/driver-api/basics.rst
-@@ -107,9 +107,6 @@ Kernel utility functions
- .. kernel-doc:: kernel/panic.c
-    :export:
- 
--.. kernel-doc:: include/linux/overflow.h
--   :internal:
--
- Device Resource Management
- --------------------------
- 
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index 58eb34aa2af9..4b5b3ec91233 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -51,7 +51,8 @@ static inline bool __must_check __must_check_overflow(bool overflow)
- 	return unlikely(overflow);
- }
- 
--/** check_add_overflow() - Calculate addition with overflow checking
-+/**
-+ * check_add_overflow - Calculate addition with overflow checking
-  *
-  * @a: first addend
-  * @b: second addend
-@@ -66,7 +67,8 @@ static inline bool __must_check __must_check_overflow(bool overflow)
- #define check_add_overflow(a, b, d)	\
- 	__must_check_overflow(__builtin_add_overflow(a, b, d))
- 
--/** check_sub_overflow() - Calculate subtraction with overflow checking
-+/**
-+ * check_sub_overflow - Calculate subtraction with overflow checking
-  *
-  * @a: minuend; value to subtract from
-  * @b: subtrahend; value to subtract from @a
-@@ -81,7 +83,8 @@ static inline bool __must_check __must_check_overflow(bool overflow)
- #define check_sub_overflow(a, b, d)	\
- 	__must_check_overflow(__builtin_sub_overflow(a, b, d))
- 
--/** check_mul_overflow() - Calculate multiplication with overflow checking
-+/**
-+ * check_mul_overflow - Calculate multiplication with overflow checking
-  *
-  * @a: first factor
-  * @b: second factor
-@@ -96,7 +99,8 @@ static inline bool __must_check __must_check_overflow(bool overflow)
- #define check_mul_overflow(a, b, d)	\
- 	__must_check_overflow(__builtin_mul_overflow(a, b, d))
- 
--/** check_shl_overflow() - Calculate a left-shifted value and check overflow
-+/**
-+ * check_shl_overflow - Calculate a left-shifted value and check overflow
-  *
-  * @a: Value to be shifted
-  * @s: How many bits left to shift
-@@ -104,15 +108,16 @@ static inline bool __must_check __must_check_overflow(bool overflow)
-  *
-  * Computes *@d = (@a << @s)
-  *
-- * Returns true if '*d' cannot hold the result or when 'a << s' doesn't
-+ * Returns true if '*@d' cannot hold the result or when '@a << @s' doesn't
-  * make sense. Example conditions:
-- * - 'a << s' causes bits to be lost when stored in *d.
-- * - 's' is garbage (e.g. negative) or so large that the result of
-- *   'a << s' is guaranteed to be 0.
-- * - 'a' is negative.
-- * - 'a << s' sets the sign bit, if any, in '*d'.
-  *
-- * '*d' will hold the results of the attempted shift, but is not
-+ * - '@a << @s' causes bits to be lost when stored in *@d.
-+ * - '@s' is garbage (e.g. negative) or so large that the result of
-+ *   '@a << @s' is guaranteed to be 0.
-+ * - '@a' is negative.
-+ * - '@a << @s' sets the sign bit, if any, in '*@d'.
-+ *
-+ * '*@d' will hold the results of the attempted shift, but is not
-  * considered "safe for use" if true is returned.
-  */
- #define check_shl_overflow(a, s, d) __must_check_overflow(({		\
-@@ -176,7 +181,7 @@ static inline bool __must_check __must_check_overflow(bool overflow)
- 			      __same_type(n, T))
- 
- /**
-- * size_mul() - Calculate size_t multiplication with saturation at SIZE_MAX
-+ * size_mul - Calculate size_t multiplication with saturation at SIZE_MAX
-  *
-  * @factor1: first factor
-  * @factor2: second factor
-@@ -196,7 +201,7 @@ static inline size_t __must_check size_mul(size_t factor1, size_t factor2)
- }
- 
- /**
-- * size_add() - Calculate size_t addition with saturation at SIZE_MAX
-+ * size_add - Calculate size_t addition with saturation at SIZE_MAX
-  *
-  * @addend1: first addend
-  * @addend2: second addend
-@@ -216,7 +221,7 @@ static inline size_t __must_check size_add(size_t addend1, size_t addend2)
- }
- 
- /**
-- * size_sub() - Calculate size_t subtraction with saturation at SIZE_MAX
-+ * size_sub - Calculate size_t subtraction with saturation at SIZE_MAX
-  *
-  * @minuend: value to subtract from
-  * @subtrahend: value to subtract from @minuend
-@@ -239,7 +244,7 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
- }
- 
- /**
-- * array_size() - Calculate size of 2-dimensional array.
-+ * array_size - Calculate size of 2-dimensional array.
-  *
-  * @a: dimension one
-  * @b: dimension two
-@@ -252,7 +257,7 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
- #define array_size(a, b)	size_mul(a, b)
- 
- /**
-- * array3_size() - Calculate size of 3-dimensional array.
-+ * array3_size - Calculate size of 3-dimensional array.
-  *
-  * @a: dimension one
-  * @b: dimension two
-@@ -266,8 +271,8 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
- #define array3_size(a, b, c)	size_mul(size_mul(a, b), c)
- 
- /**
-- * flex_array_size() - Calculate size of a flexible array member
-- *                     within an enclosing structure.
-+ * flex_array_size - Calculate size of a flexible array member
-+ *                   within an enclosing structure.
-  *
-  * @p: Pointer to the structure.
-  * @member: Name of the flexible array member.
-@@ -284,7 +289,7 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
- 		size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
- 
- /**
-- * struct_size() - Calculate size of structure with trailing flexible array.
-+ * struct_size - Calculate size of structure with trailing flexible array.
-  *
-  * @p: Pointer to the structure.
-  * @member: Name of the array member.
+https://gcc.gnu.org/bugzilla/enter_bug.cgi?product=gcc
+
 -- 
-2.34.1
-
+H.J.
