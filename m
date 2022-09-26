@@ -2,52 +2,52 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30C7C32771
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 21:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2C8C07E9D
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 21:45:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229600AbiIZVoF (ORCPT
+        id S229834AbiIZVpQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 17:44:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51804 "EHLO
+        Mon, 26 Sep 2022 17:45:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229559AbiIZVoE (ORCPT
+        with ESMTP id S230250AbiIZVpH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 17:44:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27277A260B;
-        Mon, 26 Sep 2022 14:44:03 -0700 (PDT)
+        Mon, 26 Sep 2022 17:45:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09F8AA4B3E;
+        Mon, 26 Sep 2022 14:45:04 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B5E4C61387;
-        Mon, 26 Sep 2022 21:44:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB347C433D6;
-        Mon, 26 Sep 2022 21:43:59 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F202C61472;
+        Mon, 26 Sep 2022 21:45:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 959DAC433B5;
+        Mon, 26 Sep 2022 21:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664228642;
-        bh=l/lWJrT4cHiOPDK7ygIeGv7vATX25bNh8bpEBLU1M/w=;
+        s=k20201202; t=1664228703;
+        bh=+Y0sv9EVA4FqX8Y8XRokZjKKQ2LuMoLdfY5z5p8QA+Q=;
         h=Date:From:To:Cc:Subject:From;
-        b=dHWzkwPfoc2i2YpAkIG5D2BDig+nx/fYd4f/IQrpYPFIpvruiuOk81hfIKJkGwdEL
-         Pyg3Oa3zG8VIvPBQDALhZ8OkDPekTW9kcFGK3xWmwsQdwOjkz775V7bSDkOuOmAIH1
-         EL92Jut+cMYQUBRd8UgjrCbQSZ6eBP6naEC9dd/2h15dF8S11kUeqIShFtQMV/ftxy
-         wu9ijQqg6HdX0J6UTL6zQudoK2brincVUaAeuIgj12CpY9rOBOljabLrUftrFShKkJ
-         0NyEjF605JhLBX7RFBd0CocLPP1BOdDhOCaJoQdfdAj7oy9+pZ0wDl72NINYMDo8KE
-         dPyIesWa6qtcg==
-Date:   Mon, 26 Sep 2022 16:43:56 -0500
+        b=YmOESp3i1XstTxOo9vtfKCKVjOsylGX+KyQJnPQ9ZdUgdT+GCLOIfd+NaYYPabGf/
+         Kx/n87dltynjj1Uwhni6B6vHgx+XHk3QKMsnunD3rDT3lN/a7UGEnF2tYfIpBvBkRy
+         bHySwYcfInk4GCG2fvE4K36Jxu2nS/77sUTAt8k99dQQsk9zd8zDiszoKxKgVeXseY
+         ibBMzDO35dQttB/nHYzcsH3chQsUtBSGj56UxqXN1K3a1aWQ8Wdc7Oq5IAN2XGiT8m
+         IL0OFNyWcOjQB9krgS/1lwroTTImpspEur3wlAdBRQXoY/gm9Kofra1KWfhv8npNJR
+         60Hn3rbHXuJ2A==
+Date:   Mon, 26 Sep 2022 16:44:57 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+To:     Christian Lamparter <chunkeey@googlemail.com>,
+        Kalle Valo <kvalo@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] can: ucan: Replace zero-length array with
+Subject: [PATCH][next] carl9170: Replace zero-length array with
  DECLARE_FLEX_ARRAY() helper
-Message-ID: <YzIdHDdz30BH4SAv@work>
+Message-ID: <YzIdWc8QSdZFHBYg@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -63,26 +63,25 @@ helper macro.
 This helper allows for flexible-array members in unions.
 
 Link: https://github.com/KSPP/linux/issues/193
-Link: https://github.com/KSPP/linux/issues/214
+Link: https://github.com/KSPP/linux/issues/215
 Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/can/usb/ucan.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/carl9170/wlan.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/can/usb/ucan.c b/drivers/net/can/usb/ucan.c
-index 7c35f50fda4e..b53e709943bc 100644
---- a/drivers/net/can/usb/ucan.c
-+++ b/drivers/net/can/usb/ucan.c
-@@ -245,7 +245,8 @@ struct ucan_message_in {
- 		/* CAN transmission complete
- 		 * (type == UCAN_IN_TX_COMPLETE)
- 		 */
--		struct ucan_tx_complete_entry_t can_tx_complete_msg[0];
-+		DECLARE_FLEX_ARRAY(struct ucan_tx_complete_entry_t,
-+				   can_tx_complete_msg);
- 	} __aligned(0x4) msg;
- } __packed __aligned(0x4);
+diff --git a/drivers/net/wireless/ath/carl9170/wlan.h b/drivers/net/wireless/ath/carl9170/wlan.h
+index 0a4e42e806b9..ded2c6d0a759 100644
+--- a/drivers/net/wireless/ath/carl9170/wlan.h
++++ b/drivers/net/wireless/ath/carl9170/wlan.h
+@@ -271,7 +271,7 @@ struct ar9170_tx_frame {
+ 
+ 	union {
+ 		struct ieee80211_hdr i3e;
+-		u8 payload[0];
++		DECLARE_FLEX_ARRAY(u8, payload);
+ 	} data;
+ } __packed;
  
 -- 
 2.34.1
