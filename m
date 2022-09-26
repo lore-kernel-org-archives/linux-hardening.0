@@ -2,54 +2,48 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7A6C32771
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 22:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F06C07E9D
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 23:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230234AbiIZW61 (ORCPT
+        id S230203AbiIZXBS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 18:58:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54982 "EHLO
+        Mon, 26 Sep 2022 19:01:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230209AbiIZW60 (ORCPT
+        with ESMTP id S229779AbiIZXBQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 18:58:26 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E06AA405D;
-        Mon, 26 Sep 2022 15:58:25 -0700 (PDT)
+        Mon, 26 Sep 2022 19:01:16 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B415EA5C6B;
+        Mon, 26 Sep 2022 16:01:15 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7B9C0B815A2;
-        Mon, 26 Sep 2022 22:58:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8EBCC433D6;
-        Mon, 26 Sep 2022 22:58:20 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5DB01B815C6;
+        Mon, 26 Sep 2022 23:01:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7653C433D6;
+        Mon, 26 Sep 2022 23:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664233103;
-        bh=xDYjoFR+NtGG53i9TMTNgZOELVNnrshin7Kn4ONKlzY=;
+        s=k20201202; t=1664233273;
+        bh=DP2/l6tR4P/DfoghYnDGEAWd4w5n5Txnre0toNJR3B4=;
         h=Date:From:To:Cc:Subject:From;
-        b=nbj97LKUb6NIti9AtwZWlD4v8BVQ1Wh6mke62KVOELQdDAUJGJpOYxdkf129L43lR
-         X+VkTgscuP4NlWdojyibYcOcW+ArKTQVhdI7RYhRXjVn8LJuMofZi4Ap/s5n67RUnj
-         k8s+1IPYKS2BhVaM8EYtqhNyxVzuB4HtGWZmpkawV7FFLUA3gD3vsuHD0KT2aw0LFL
-         byc2HwpWgw0agVPklgdpbbW0OXlaF4OsQgQxiPjkM84RSfyHSf55qtkXw9U84pSorN
-         c2eJQIepC0mdx54aftNQowHrMLssVDKYI24NvkLOQfhmBhSc87iBkMOcAIp2/IsOA0
-         yae3/wKpkKRSw==
-Date:   Mon, 26 Sep 2022 17:58:17 -0500
+        b=boCq+yQ/8137uehBc9l2Vg8fH0UtZiV/BTfOw5Pliv/p3ReaZul1LbHdkZ+kETELP
+         JNMJXaw65cWY5KBy57F76JdC3PVvqn2eIjIkHrb9fwZu66N6hzDL43oFrkW7rs8Ky+
+         XFvTUKOsJ/xYtApAUBZwwy8czhvK7ZpUpRi1GMxzOGBM2OQnZqfMPvpeIfiRCmBSxI
+         Ss46Z0hBLn19YxHSK8RzCQzZv0aORaqH9vU3oF9ovqM+UbH+C26QcIyf8wh6hGS6Pc
+         w9q9ccZKPDVw6ohQhzAawjdDPWFItsVzVAjSue4yW7udf+9Fk9uOobqGkEK7FtFfcX
+         clIFfgYpsQdng==
+Date:   Mon, 26 Sep 2022 18:01:08 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] ASoC: Intel: Skylake: Replace zero-length arrays with
+Subject: [PATCH][next] soc: qcom: smd-rpm: Replace zero-length array with
  DECLARE_FLEX_ARRAY() helper
-Message-ID: <YzIuiUul2CwPlkKh@work>
+Message-ID: <YzIvNIyPhWaG2DTr@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -65,26 +59,23 @@ helper macro.
 This helper allows for flexible-array members in unions.
 
 Link: https://github.com/KSPP/linux/issues/193
-Link: https://github.com/KSPP/linux/issues/226
-Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+Link: https://github.com/KSPP/linux/issues/224
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- sound/soc/intel/skylake/skl-topology.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/soc/qcom/smd-rpm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/intel/skylake/skl-topology.h b/sound/soc/intel/skylake/skl-topology.h
-index a5bccf2fcd88..017ac0ef324d 100644
---- a/sound/soc/intel/skylake/skl-topology.h
-+++ b/sound/soc/intel/skylake/skl-topology.h
-@@ -233,8 +233,8 @@ struct skl_uuid_inst_map {
- struct skl_kpb_params {
- 	u32 num_modules;
+diff --git a/drivers/soc/qcom/smd-rpm.c b/drivers/soc/qcom/smd-rpm.c
+index 413f9f4ae9cd..125cb456a5dc 100644
+--- a/drivers/soc/qcom/smd-rpm.c
++++ b/drivers/soc/qcom/smd-rpm.c
+@@ -75,7 +75,7 @@ struct qcom_rpm_message {
+ 	__le32 length;
  	union {
--		struct skl_mod_inst_map map[0];
--		struct skl_uuid_inst_map map_uuid[0];
-+		DECLARE_FLEX_ARRAY(struct skl_mod_inst_map, map);
-+		DECLARE_FLEX_ARRAY(struct skl_uuid_inst_map, map_uuid);
- 	} u;
+ 		__le32 msg_id;
+-		u8 message[0];
++		DECLARE_FLEX_ARRAY(u8, message);
+ 	};
  };
  
 -- 
