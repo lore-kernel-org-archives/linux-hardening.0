@@ -2,145 +2,98 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 228D5C6FA82
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 00:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA7AC32771
+	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 08:03:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233220AbiIZAla (ORCPT
+        id S229613AbiIZIDl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 25 Sep 2022 20:41:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53354 "EHLO
+        Mon, 26 Sep 2022 04:03:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233215AbiIZAl3 (ORCPT
+        with ESMTP id S234186AbiIZICn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 25 Sep 2022 20:41:29 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C75A72B1B2
-        for <linux-hardening@vger.kernel.org>; Sun, 25 Sep 2022 17:41:26 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id o99-20020a17090a0a6c00b002039c4fce53so10903151pjo.2
-        for <linux-hardening@vger.kernel.org>; Sun, 25 Sep 2022 17:41:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date;
-        bh=Ee6jY7viFUfMjAsx1AOZFi9ykD0TZlKjDDVt7+BAWpA=;
-        b=Tymc3mQ6yYtKo/fUwb0pntTGEsuDmA3KGe5ZainSrzJcqfvTUXGD6g4AS/QDrdEz1m
-         IPp9Tld0kqL2gFrY1NTkahNxDsLTe8rCfVZ7Sf6Yy58l+LrHh3LtaZFzBUsKT5oECTI8
-         ASxk03BGu9JGtTcAH5Y41r1unU3COw5iwE/sg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=Ee6jY7viFUfMjAsx1AOZFi9ykD0TZlKjDDVt7+BAWpA=;
-        b=BoZyKNCOnFknIVNlcUPedNovXhXPVb9bUQXgVNMMIZoUiKCL+K1mzVaU81OMB8+wb4
-         s//UDlYmUQQnJAXA3fSQDqcHqy2Hu23Xou2sg5IX/J6LEJfHPjOyTjMjgmJzA5NEWI00
-         jufnR/mfAOzRAY2DV/XszUC6/UJ2/CZ8ZR2E+nZFdBcNSJf+um2S64V9PXU2iYOy3hjZ
-         whjwKsKvHoj+4tj7pBz9eG1rH1RhXGqTrETZeLWsSBPcA69Ha49O9kI8OoOpVJYTuUNj
-         xm7Rl+eaJZZHSsC2LxdS2zSl0JiwOMz3p/Yr1CuN0Wvf5yfkkT2kxmPS7Wki/3XA1WQ4
-         v1kg==
-X-Gm-Message-State: ACrzQf0SEghACpydFvWK0yrwOeajsxtN4vE80U5qAxr8GJaQLOmokyVL
-        rmsI1Le6EdOIgTUOYMJwv2be+A==
-X-Google-Smtp-Source: AMsMyM5VpMx54A01n2IxbeNYegjZcGYyyX6uNC/69UJfyYAh5+QLjokwGVSlu1kDsKsMHY6BwDZQuA==
-X-Received: by 2002:a17:902:ea0e:b0:178:3d49:45ad with SMTP id s14-20020a170902ea0e00b001783d4945admr19810833plg.103.1664152885590;
-        Sun, 25 Sep 2022 17:41:25 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l7-20020a622507000000b0053ebafa7c42sm10576331pfl.79.2022.09.25.17.41.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Sep 2022 17:41:24 -0700 (PDT)
-Date:   Sun, 25 Sep 2022 17:41:23 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Paolo Abeni <pabeni@redhat.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Mon, 26 Sep 2022 04:02:43 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 077C6167C2;
+        Mon, 26 Sep 2022 01:00:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6E967B8191D;
+        Mon, 26 Sep 2022 08:00:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15004C433C1;
+        Mon, 26 Sep 2022 07:59:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664179199;
+        bh=BKaJB74cTuefD7ABjII+u7AOgXdfZ6IIrKwYO+YFiwA=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=Hyc7Yt4JMRaV93ujZXcbA6K75iKsTxLlkmSgCVt36DaZp09gGDnmN4EJbeayeQ/qN
+         3jEp8KLozDsB5an81OOeR7jhTN01D7/6umcHN2nNtowRyX35dtCAQ1JDHTjuEn9ULL
+         oV6buTY/Pjh1znzJxLvS71sf46j3L57ogNSxUesw9iGcpVHQsL42CAtv1Z3RnZbW/b
+         wtR6XNhWhaxNVau5wCZto1o8qodSKDM+Z7JI7nMB1jSI9rSqql3wOZYycygUYlXKZH
+         GQNLjqJ66xRAjmjKK8LN9zfpa2pje/YYTyfFmuy955aTcDQUZ9Q9L5IscH5qYVfdnj
+         yWy6pOoZhiNcw==
+From:   Kalle Valo <kvalo@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Gregory Greenman <gregory.greenman@intel.com>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Alex Elder <elder@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Yonghong Song <yhs@fb.com>, Marco Elver <elver@google.com>,
-        Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, dev@openvswitch.org,
-        x86@kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 04/16] skbuff: Phase out ksize() fallback for frag_size
-Message-ID: <202209251738.2E6B9C29D@keescook>
-References: <20220923202822.2667581-1-keescook@chromium.org>
- <20220923202822.2667581-5-keescook@chromium.org>
- <e340d993bce8e1b2742fba52ac6383771cfaddae.camel@redhat.com>
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+        Ilan Peer <ilan.peer@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Nathan Errera <nathan.errera@intel.com>,
+        Mordechay Goodstein <mordechay.goodstein@intel.com>,
+        Mike Golant <michael.golant@intel.com>,
+        Ayala Beker <ayala.beker@intel.com>,
+        Avraham Stern <avraham.stern@intel.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] iwlwifi: Track scan_cmd allocation size explicitly
+References: <20220923220853.3302056-1-keescook@chromium.org>
+Date:   Mon, 26 Sep 2022 10:59:52 +0300
+In-Reply-To: <20220923220853.3302056-1-keescook@chromium.org> (Kees Cook's
+        message of "Fri, 23 Sep 2022 15:08:53 -0700")
+Message-ID: <874jwu4lc7.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e340d993bce8e1b2742fba52ac6383771cfaddae.camel@redhat.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Sep 25, 2022 at 09:17:40AM +0200, Paolo Abeni wrote:
-> On Fri, 2022-09-23 at 13:28 -0700, Kees Cook wrote:
-> > All callers of APIs that allowed a 0-sized frag_size appear to be
-> > passing actual size information already
-> 
-> AFAICS, not yet:
-> 
-> drivers/net/ethernet/qlogic/qed/qed_ll2.c:
-> 	skb = build_skb(buffer->data, 0); // -> __build_skb(..., 0) 
-> 		// ->  __build_skb_around()
-> 
-> drivers/net/ethernet/broadcom/bnx2.c:
-> 	skb = build_skb(data, 0);
-> 
-> I guess some more drivers have calls leading to 
-> 
-> 	__build_skb_around(...,  0)
-> 
-> there are several call path to checks...
+Kees Cook <keescook@chromium.org> writes:
 
-Ah-ha! Thank you. I will try to hunt these down -- I think we can't
-remove the "secret resizing" effect of ksize() without fixing these.
+> In preparation for reducing the use of ksize(), explicitly track the
+> size of scan_cmd allocations. This also allows for noticing if the scan
+> size changes unexpectedly. Note that using ksize() was already incorrect
+> here, in the sense that ksize() would not match the actual allocation
+> size, which would trigger future run-time allocation bounds checking.
+> (In other words, memset() may know how large scan_cmd was allocated for,
+> but ksize() will return the upper bounds of the actually allocated memory,
+> causing a run-time warning about an overflow.)
+>
+> Cc: Gregory Greenman <gregory.greenman@intel.com>
+> Cc: Kalle Valo <kvalo@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Luca Coelho <luciano.coelho@intel.com>
+> Cc: Johannes Berg <johannes.berg@intel.com>
+> Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+> Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+> Cc: Ilan Peer <ilan.peer@intel.com>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-> > [...]
-> > diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-> > index 0b30fbdbd0d0..84ca89c781cd 100644
-> > --- a/net/core/skbuff.c
-> > +++ b/net/core/skbuff.c
-> > @@ -195,7 +195,11 @@ static void __build_skb_around(struct sk_buff *skb, void *data,
-> >  			       unsigned int frag_size)
-> >  {
-> >  	struct skb_shared_info *shinfo;
-> > -	unsigned int size = frag_size ? : ksize(data);
-> > +	unsigned int size = frag_size;
-> > +
-> > +	/* All callers should be setting frag size now? */
-> > +	if (WARN_ON_ONCE(size == 0))
-> > +		size = ksize(data);
-> 
-> At some point in the future, I guess we could even drop this check,
-> right?
-
-Alternatively, we might be able to ask the slab if "data" came from
-kmalloc or a kmem_cache, and if the former, do:
-
-	data = krealloc(kmalloc_size_roundup(ksize(data), ...)
-
-But that seems ugly...
+Gregory, can I take this directly to wireless-next?
 
 -- 
-Kees Cook
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
