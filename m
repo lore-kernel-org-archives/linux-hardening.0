@@ -2,88 +2,189 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C3DC07E9D
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 10:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B22C6FA90
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 10:36:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231377AbiI0K1T (ORCPT
+        id S229942AbiI0KgC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Sep 2022 06:27:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48100 "EHLO
+        Tue, 27 Sep 2022 06:36:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231349AbiI0K1R (ORCPT
+        with ESMTP id S229493AbiI0KgB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Sep 2022 06:27:17 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8C3B9AFE2;
-        Tue, 27 Sep 2022 03:27:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 863F1B81A0D;
-        Tue, 27 Sep 2022 10:27:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ADC0C433C1;
-        Tue, 27 Sep 2022 10:27:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664274434;
-        bh=sHy1niP5mWeKiI5hNQSfEcl+Pb8zcROHMZX9U2cp76M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R3zWl5Vfxe0vj+iHX9oOS9CyMVJ7LMndKtydoCsHhDU8xfxypu6brL/DRMyHxlSMT
-         Wt86tC/HeRhQ1mfSr9sgh7fsNgbmOS1l25QJqAZevCgkzhVfbLmINXV/vobpzAKZX1
-         tGaHvQE+V4/+uj/gHN5NtPO9XxwqE9QUvx0bfdr0ThL27rA486CjcAfGEAOdwo7ZuG
-         Mh6imPq0S6ODt8nORXZe2Nk+2nxEY2DKTqsJ4yjU76b1auGq4HSbiBfa0nux5EJkub
-         hbiarybQFAjh+ljV3MFojhdRXun0f/G9MFqkg4h+KKJuB5ni/TjocDzmnfdX2lXU0b
-         QClUcrNnphbmQ==
-Date:   Tue, 27 Sep 2022 11:27:07 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] ASoC: SOF: control.h: Replace zero-length array
- with DECLARE_FLEX_ARRAY() helper
-Message-ID: <YzLP+wH5UjKmkgEJ@sirena.org.uk>
-References: <YzIcZ11k8RiQtS2T@work>
- <YzIj6tdtDe9YrX+I@sirena.org.uk>
- <81af0106-a732-ce45-bb1c-c45db9e1aeb9@embeddedor.com>
- <YzIqNqhTIuaWZrOl@sirena.org.uk>
- <202209262009.D1377D0C3@keescook>
+        Tue, 27 Sep 2022 06:36:01 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F230C5E674;
+        Tue, 27 Sep 2022 03:36:00 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d10so8186648pfh.6;
+        Tue, 27 Sep 2022 03:36:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date;
+        bh=2IJ0GUrWSfVuXvjku1aZYWTTFoICjkcjAz4qRr8Pokg=;
+        b=G+GLpRcaDYyeYSjg+lm6dRsVDaEJke+ToAbc4BJnbwmNCu7Gpm/Oq6DrdvNAgAw65p
+         b1dfIoB7+TRi/Du52w843IuwOFN8rQ1Wy71WsX/QG+OdmCO6dUa/WYyseMBBAklU1/QC
+         0OPV4dJxzDCed3jT3hvSjqk+YrVt1suDO75kb0LF1REmW3A0FexPsG/ir1ebTpXsFXPx
+         ivrEbsn0xLe/WNRZUAMUzEfzLTfSCeBoR9kOkW1zl6WSnKQvSJI7uYx7SXhPTG07CVof
+         EohWqGtioCxXitoYuUMvLiS23/5ySpS6hqwRiTr4cFQnAOIFLtOn8t+o1ve3GRtdsOuQ
+         W20Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=2IJ0GUrWSfVuXvjku1aZYWTTFoICjkcjAz4qRr8Pokg=;
+        b=ztG6ykf55C+KMnOuptheOWYasuxi5s0kxEqGgwz/3RuBIst63vDC5VjD46kHwlUdnT
+         wdbpt04/VImrxWE9Cnn2MZ42o2nvNHALkAb/UQkKRxeyuppdRq078iE2b86yqAFDbVfD
+         RhAuMInIJpMzg9m53WxC9Y3bvESbNlVtyys6pQTnQFXaKpLBfbaDuP2HDxYhRIB7rVsZ
+         mVjJu9i5up8/aQ3cjcKZp45TxutJr/komVvLIzqzfDXZZPzZpInAFpXLYNj6Xj81o8uN
+         4GFC2R37sqBm7l1deM/lc2DQP+6/HgL536jDkZ5eCfdu7yxFdWKhyOxiBHWCBhAxSbc9
+         DKEw==
+X-Gm-Message-State: ACrzQf2dukJye69KHb0Ti9ylXItSepRz+7pFOxBex+qeM5x2n+W8jrJa
+        negvY2k1/1WBOENUZlvJCys=
+X-Google-Smtp-Source: AMsMyM54ou2TtGKukpmfWvtabIrcijf70iFeioZQMw64840b5golUIUyHYO2fU3JoU9g7kRmCoVVvw==
+X-Received: by 2002:a65:44c1:0:b0:428:ab8f:62dd with SMTP id g1-20020a6544c1000000b00428ab8f62ddmr24173397pgs.211.1664274960504;
+        Tue, 27 Sep 2022 03:36:00 -0700 (PDT)
+Received: from [192.168.11.9] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id k129-20020a628487000000b0053e5daf1a25sm1401933pfd.45.2022.09.27.03.35.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Sep 2022 03:35:59 -0700 (PDT)
+Message-ID: <69fc1b11-d26b-de44-ebee-cbb17cc2c893@gmail.com>
+Date:   Tue, 27 Sep 2022 19:35:55 +0900
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="W1mEP/YeLmI8MbXS"
-Content-Disposition: inline
-In-Reply-To: <202209262009.D1377D0C3@keescook>
-X-Cookie: Vote anarchist.
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+From:   Akira Yokosawa <akiyks@gmail.com>
+Subject: Re: [PATCH] overflow: Fix kern-doc markup for functions
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Matthew Wilcox <willy@infradead.org>, linux-doc@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <20220926194713.1806917-1-keescook@chromium.org>
+ <YzIUS/+H2YA7RBvA@casper.infradead.org> <202209261408.59F78C0D@keescook>
+ <ada70afe-64d5-ccab-242e-9a3c3c85e6c4@gmail.com>
+ <202209261959.A202D045@keescook>
+Content-Language: en-US
+In-Reply-To: <202209261959.A202D045@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Hi,
 
---W1mEP/YeLmI8MbXS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, 26 Sep 2022 20:02:16 -0700, Kees Cook wrote:
+> On Tue, Sep 27, 2022 at 11:53:38AM +0900, Akira Yokosawa wrote:
+>> Hi,
+>>
+>> Somehow Kees added me in Cc:, so let me comment.  :-)
+>>
+>> On Mon, 26 Sep 2022 14:09:10 -0700, Kees Cook wrote:
+>>> On Mon, Sep 26, 2022 at 10:06:19PM +0100, Matthew Wilcox wrote:
+>>>> On Mon, Sep 26, 2022 at 12:47:13PM -0700, Kees Cook wrote:
+>>>>> -/** check_add_overflow() - Calculate addition with overflow checking
+>>>>> +/**
+>>>>> + * check_add_overflow - Calculate addition with overflow checking
+>>>>>   *
+>>>>>   * @a: first addend
+>>>>>   * @b: second addend
+>>>>
+>>>> Why did you remove the ()?  And why didn't you delete the blank line?
+>>>> According to our documentation, the canonical form is:
+>>>>
+>>>>   /**
+>>>>    * function_name() - Brief description of function.
+>>>>    * @arg1: Describe the first argument.
+>>>>    * @arg2: Describe the second argument.
+>>>>    *        One can provide multiple line descriptions
+>>>>    *        for arguments.
+>>
+>> Matthew, you call it the "canonical form", my take is more of a "template
+>> that is known to work".
+> 
+> Out of curiosity, why is the trailing "()" part of the standard
+> template? Isn't it redundant? Or is trying to help differentiate between
+> things that are non-callable? (i.e. a variable, etc.)
 
-On Mon, Sep 26, 2022 at 08:16:16PM -0700, Kees Cook wrote:
+I don't know the historic background of this template and I have done
+some digging of Git history. I'm afraid this won't be straight answers
+to your questions.
 
-> Seems like it's worth getting the MAINTAINERS regex updated? Is this
-> right?
+This template originated from commit 0842b245a8e6 ("doc: document the
+kernel-doc conventions for kernel hackers") back in 2008 and is more
+or less unchanged with later additions of "Context:" and "Return:" keywords.
 
-Yes, looks about right.
+As far as I can see, the kernel-doc script removes "()" in the early phase
+of parsing kernel-doc comments. So yes, "()" is redundant.
 
---W1mEP/YeLmI8MbXS
-Content-Type: application/pgp-signature; name="signature.asc"
+Up until v5.17 (ever since the epoch of v2.6.12-rc2), there was a comment
+block on the format of function comments in the kernel-doc script and there
+was no mention of "()", as quoted below:
 
------BEGIN PGP SIGNATURE-----
+    # So .. the trivial example would be:
+    #
+    # /**
+    #  * my_function
+    #  */
+    #
+    # If the Description: header tag is omitted, then there must be a blank line
+    # after the last parameter specification.
+    # e.g.
+    # /**
+    #  * my_function - does my stuff
+    #  * @my_arg: its mine damnit
+    #  *
+    #  * Does my stuff explained.
+    #  */
+    #
+    #  or, could also use:
+    # /**
+    #  * my_function - does my stuff
+    #  * @my_arg: its mine damnit
+    #  * Description: Does my stuff explained.
+    #  */
+    # etc.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmMyz/oACgkQJNaLcl1U
-h9Cofgf/c1psLUiMDxR0MRIUMEeS+1ev/8ITyrbroJ1mCXJul5ZSsVuZaluhhXNb
-rpHnfwWgZwYvzXeCuOI/MQ2gzZHBYkcKUhrn+dbeomhRtSmHSA7G0Xb3zdEc7xhL
-fevVzsb5rXXiNVO4xVZ+IBSy3I8sN4sip6BXTrAOE9Ltk4uuPdqPncRh0uucnDI7
-3R46mIU9xk6mRkWMH8ugJ4qZPpaLk32mkfr/qb0ztj1HlBC+F1PQPCdLuHtjW4VX
-j99wXosQMvqOfAbxo8UpmX/IfIUWBk9i0HEV5/+xV24uSNI/bgR8hBRAlb/SjiMH
-mvB6kGk6wuKa+FCm9d0tAhLV60tShA==
-=ie0Q
------END PGP SIGNATURE-----
+Which suggests "()" has always been redundant since early days.
 
---W1mEP/YeLmI8MbXS--
+(Note: Nowadays, the first example without brief description will cause
+a warning.)
+
+This comment block was removed in commit 258092a89085 ("scripts:
+kernel-doc: Drop obsolete comments"). Its changelog says:
+
+    4. The "format of comments" comment block
+    
+    As suggested by Jani Nikula in a reply to my first version of this
+    transformation, Documentation/doc-guide/kernel-doc.rst can serve as the
+    information hub for comment formatting. The section DESCRIPTION already
+    points there, so the original comment block can just be removed.
+
+It sounds to me like the removal was premature at that time, because some
+of those format variations were (and still are) not properly covered in
+kernel-doc.rst.
+
+> 
+>>> Hunh, everywhere I'd looked didn't have the "()" (which seems
+>>> redundant). The blank line was entirely aesthetics for me. If it's
+>>> supposed to be without a blank, I can fix it up everwhere.
+>>
+>> So, I think this is more of a territory of preference or consistency
+>> rather than that of correctness.  Those extra blank lines can be confusing
+>> as most people expect it in front of description part.
+>>
+>> get_maintainer.pl says Kees is the sole maintainer of overflow.h, so
+>> it's his call, I guess.
+> 
+> Well, maintainer or not, I want to make sure stuff is as readable as
+> possible by everyone else too. :) I'm happy to skip the blank lines!
+
+Yeah, that sounds nice to me!
+
+        Thanks, Akira
+
+> 
