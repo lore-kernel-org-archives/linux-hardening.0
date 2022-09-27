@@ -2,130 +2,122 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B15CC6FA86
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 03:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F8BC32771
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 03:24:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229773AbiI0DRK (ORCPT
+        id S231560AbiI0DYz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 23:17:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56536 "EHLO
+        Mon, 26 Sep 2022 23:24:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229946AbiI0DQf (ORCPT
+        with ESMTP id S231245AbiI0DYD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 23:16:35 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A40F80BED
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 20:16:18 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id s26so8244704pgv.7
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 20:16:18 -0700 (PDT)
+        Mon, 26 Sep 2022 23:24:03 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D38C38C02E
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 20:23:59 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id lx7so1622871pjb.0
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 20:23:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=cQ6zVkpqugLa9891w98RVMCjnbNxIhz4C6HrHMJZK8I=;
-        b=Ys70lYwi0UuItAyKdztaa/QvN/zNeHvK+DYTxNBDjsJxCxH44M11cP9jPnxzHQPNjb
-         igvguKL8YyFJNtFEBrZ5W6daU3oui1F9DXIVaw4aE/szAfv+15cUzVL5WS2GxWMW7Yt8
-         IPCeEYWTOOuxdVg8giuH8nTC6Yhi4Ev8pRtpc=
+        bh=6qnuVXzVK4CfrmKG46F4wOs5bWFBYOAqV06iNpVAm8Q=;
+        b=j18dmHaA/jdXoSKrM6wf3lTURBrXi6pP37nOyBWWmRoVQYR2icnLVrpvyM2AWwLein
+         ioq6z80/lNYQTLifhwMz3ZA0IqB77Vro2L2rVHec3mTeF6xEFTopr/+i8+OW9nR5csgu
+         o9dfU1FxwgQkjMxTmP5cgi2MONn2MkdI87ewA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=cQ6zVkpqugLa9891w98RVMCjnbNxIhz4C6HrHMJZK8I=;
-        b=mNdDKD6wN4DbVN7CHelt0YwCXC2qTjwoAXGGlFr1qK3uQcA/wDDZMSbGRE2EBE2eRQ
-         CPC2UqRf3lORFF2s/AofOh4wxMXOxJER1YuQb+jZQn4mWvsph6ADJKTK6YxM97DfwURK
-         UMtRmk+vITiM3nnY+U3b/ftysqb4z+637rJpWDiZ9pfPAtLKTj4blP9Q7DdYG6begIzB
-         +1r3bLIxoZ6/7C+Ly8H824xyeNUKG7vP2BLgGh1TgEG1EIX3/HIPjKxTn/71b8g6GJ9x
-         3Jl8tzmGitccYdkww9gZw2uq/PIoXBpuS2uS3KDYGyzw/fAaISKPmrXLykuEDR12ztMT
-         hNTg==
-X-Gm-Message-State: ACrzQf0YbMEie9e5PuXZZzKhi9RtnAaL8tLtmszNV9+8wuX3HZporKBJ
-        8V0Q6u2K7nyRqeltrD+2K3wCHg==
-X-Google-Smtp-Source: AMsMyM4aPQZJmufIlgB90yFaVfoE50JmAVMSvaBvUb81fg56HsalOTyKUNoRqQO6/X3VOyQ7j9y52w==
-X-Received: by 2002:a05:6a00:c89:b0:543:edb9:9dbc with SMTP id a9-20020a056a000c8900b00543edb99dbcmr27379913pfv.50.1664248577744;
-        Mon, 26 Sep 2022 20:16:17 -0700 (PDT)
+        bh=6qnuVXzVK4CfrmKG46F4wOs5bWFBYOAqV06iNpVAm8Q=;
+        b=iouculgz4qsDXnev9kNvQ3c+6/9CO3m0fb9wuaCCTT3wxeCUv3fwEnyNvFuCzcVfAF
+         tD/JXyh5LtO0JLVul7co8DvONvnjqP+vCWG7rnq9mKMRl+9shGwiyE3aBjLvxT3IVrR0
+         x5qHFB4Cf0Gule1Egd0eII3jR5PKZSgGWYBA1NebODjowRBA0kN+ddIMOoqXUj1iwwW1
+         5j8u06Y6Yc5wCgXROhjRFOkK7ngD6mESyikmkiCP6NCt6/whSmm5n0R6mvJzYg+5Ll4w
+         lSXsfYGy4rMjzDnw6XRe/9VKd455tGAs3B2S4XWc17qc1oTWwRwgWaNaIzaSs6CnRP9S
+         smSg==
+X-Gm-Message-State: ACrzQf0BVcilQ4UWi2tLlQxjHEnrBEwWZ5pTEJwMr1bHKweWDSiyyzQs
+        uS+n5wpkkqD2aHqSVaec0dEw9Q==
+X-Google-Smtp-Source: AMsMyM6jADNKBfzb6PVX/gjDuojxQtNxZ95zNpojuwR1E1012rYK21sQaLtCU3gP8HjP0Ga8PhJKog==
+X-Received: by 2002:a17:903:18d:b0:178:28d1:4a13 with SMTP id z13-20020a170903018d00b0017828d14a13mr25170592plg.160.1664249039360;
+        Mon, 26 Sep 2022 20:23:59 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 82-20020a621955000000b0053812f35a41sm269573pfz.194.2022.09.26.20.16.16
+        by smtp.gmail.com with ESMTPSA id lt21-20020a17090b355500b002002f9eb8c4sm238643pjb.12.2022.09.26.20.23.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 20:16:17 -0700 (PDT)
-Date:   Mon, 26 Sep 2022 20:16:16 -0700
+        Mon, 26 Sep 2022 20:23:58 -0700 (PDT)
+Date:   Mon, 26 Sep 2022 20:23:57 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] ASoC: SOF: control.h: Replace zero-length array
- with DECLARE_FLEX_ARRAY() helper
-Message-ID: <202209262009.D1377D0C3@keescook>
-References: <YzIcZ11k8RiQtS2T@work>
- <YzIj6tdtDe9YrX+I@sirena.org.uk>
- <81af0106-a732-ce45-bb1c-c45db9e1aeb9@embeddedor.com>
- <YzIqNqhTIuaWZrOl@sirena.org.uk>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] random: split initialization into early arch step and
+ later non-arch step
+Message-ID: <202209262017.D751DDC38F@keescook>
+References: <20220926160332.1473462-1-Jason@zx2c4.com>
+ <202209261105.9C6AEEEE1@keescook>
+ <CAHmME9pFDzyKJd5ixyB9E05jkZvHShFimbiQsGTcdQO1E5R0QQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YzIqNqhTIuaWZrOl@sirena.org.uk>
+In-Reply-To: <CAHmME9pFDzyKJd5ixyB9E05jkZvHShFimbiQsGTcdQO1E5R0QQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 11:39:50PM +0100, Mark Brown wrote:
-> On Mon, Sep 26, 2022 at 05:27:41PM -0500, Gustavo A. R. Silva wrote:
-> > On 9/26/22 17:12, Mark Brown wrote:
-> > > On Mon, Sep 26, 2022 at 04:40:55PM -0500, Gustavo A. R. Silva wrote:
+On Mon, Sep 26, 2022 at 08:52:39PM +0200, Jason A. Donenfeld wrote:
+> On Mon, Sep 26, 2022 at 8:22 PM Kees Cook <keescook@chromium.org> wrote:
+> > Can find a way to get efi_get_random_bytes() in here too? (As a separate
+> > patch.) I don't see where that actually happens anywhere currently,
+> > and we should have it available at this point in the boot, yes?
 > 
-> > > As documented in submitting-patches.rst please send patches to the
-> > > maintainers for the code you would like to change.  The normal kernel
-> > > workflow is that people apply patches from their inboxes, if they aren't
-> > > copied they are likely to not see the patch at all and it is much more
-> > > difficult to apply patches.
+> No, absolutely not. That is not how EFI works. EFI gets its seed to
+> random.c much earlier by way of add_bootloader_randomness().
+
+Ah! Okay, so, yes, it _does_ get entropy in there, just via a path I
+didn't see?
+
 > 
-> > That's exactly what I intended to do:
-> > 
-> > $ scripts/get_maintainer.pl --nokeywords --nogit --nogit-fallback include/sound/sof/control.h
-> > Jaroslav Kysela <perex@perex.cz> (maintainer:SOUND)
-> > Takashi Iwai <tiwai@suse.com> (maintainer:SOUND)
-> > alsa-devel@alsa-project.org (moderated list:SOUND)
-> > linux-kernel@vger.kernel.org (open list)
-> > 
-> > Did you see anything wrong with this or something...?
+> > > -             entropy[0] = random_get_entropy();
+> > > -             _mix_pool_bytes(entropy, sizeof(*entropy));
+> > >               arch_bits -= sizeof(*entropy) * 8;
+> > >               ++i;
+> > >       }
+> > > -     _mix_pool_bytes(&now, sizeof(now));
+> > > -     _mix_pool_bytes(utsname(), sizeof(*(utsname())));
+> >
+> > Hm, can't we keep utsname in the early half by using init_utsname() ?
 > 
-> Yes, you should've also included me and the SOF maintainers.  It looks
-> like the MAINTAINERS patterns aren't entirely up to date there
-> unfortunately.  Though that said given that you'd picked up on the
-> subject line I'd have expected the signoffs on the commits to also be
-> pointing at the right tree as well.
+> Yes, we could maybe *change* to using init_utsname if we wanted. That
+> seems kind of different though. So I'd prefer that to be a different
+> patch, which would require looking at the interaction with early
+> hostname setting and such. If you want to do that work, I'd certainly
+> welcome the patch.
 
-Subject line heuristics look at X-many commits, but it looks like
-get_maintainers stops looking at git history by default after 1 year,
-which seems kind of odd. I had to work at it to get it to emit your
-name. :)
+Er, isn't that _WAY_ later? Like, hostname isn't set until sysctls up
+and running, etc. I haven't actually verified 100% but it looks like
+current->utsname is exactly init_utsname currently.
 
-scripts/get_maintainer.pl --git --git-since=3-years-ago
+But if not, I guess it could just get added in both places. I'd be nice
+to keep kernel version as part of the pre-time-keeping entropy stuffing.
 
-Seems like it's worth getting the MAINTAINERS regex updated? Is this
-right?
+> > Was there a reason kfence_init() was happening before time_init()?
+> 
+> Historically there was, I think, because random_init() used to make
+> weird allocations. But that's been gone for a while. At this point
+> it's a mistake, and removing it allows me to do this:
+> 
+> https://groups.google.com/g/kasan-dev/c/jhExcSv_Pj4
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a34ec41fbf7a..2560dded0e3e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19261,6 +19261,7 @@ F:	Documentation/devicetree/bindings/sound/
- F:	Documentation/sound/soc/
- F:	include/dt-bindings/sound/
- F:	include/sound/soc*
-+F:	include/sound/sof/
- F:	sound/soc/
- 
- SOUND - SOUND OPEN FIRMWARE (SOF) DRIVERS
-@@ -19275,6 +19276,7 @@ L:	sound-open-firmware@alsa-project.org (moderated for non-subscribers)
- S:	Supported
- W:	https://github.com/thesofproject/linux/
- F:	sound/soc/sof/
-+F:	include/sound/sof/
- 
- SOUNDWIRE SUBSYSTEM
- M:	Vinod Koul <vkoul@kernel.org>
+Cool. Is that true for all the -stable releases this is aimed at?
+
+Anyway, just to repeat before: yay! I really like seeing this split up.
+:)
 
 -- 
 Kees Cook
