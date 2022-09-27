@@ -2,93 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4064C32771
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 02:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81853C07E9D
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 02:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229660AbiI0CPY (ORCPT
+        id S229552AbiI0CWf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 22:15:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56454 "EHLO
+        Mon, 26 Sep 2022 22:22:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229563AbiI0CPX (ORCPT
+        with ESMTP id S229458AbiI0CWd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 22:15:23 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 343F3550B7
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 19:15:22 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id bu5-20020a17090aee4500b00202e9ca2182so514427pjb.0
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 19:15:22 -0700 (PDT)
+        Mon, 26 Sep 2022 22:22:33 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3ED4AA3D7
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 19:22:32 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id y136so8461475pfb.3
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 19:22:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=7F5iDqpSb/3NowJ9vBWtXROgMKuieJmMYin6qJsoTgE=;
-        b=Ez3YY7hf2oS+EvshS/Fc66PWW7ZIGfVbhM2KHC+tQfDXeGjcwUPxSzImeFj+DcnUR9
-         hs4fgk8RYR1XxKTg9qjl+IDuBgoe9XF1ZTBEpPX7GFbgZ6X1VCgTxA38U9Nn2rR+JU/j
-         LXfDoUNkotn2dJ/fyuxD8ZsGRf4OrfwBxqcnQ=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=4u3DF202lZRW0YOPuz3zxb4HZyH1RZ22Lsn3DoaRjKE=;
+        b=JeE3U11iOk0uuiMw6Ukzurncyh213htFxID3LVptKPtm/h9sEEUbPC1B0I1b7CEKQS
+         GBDx+APAnctavyUBFGJ7JdxI+VOAPGzR7NzYl/4/aLh7ojYEz77xZVqEOnhySNJCVRN9
+         tNh0bUJCXbCN0go3kUhaovd3r62M4f10vHeuk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=7F5iDqpSb/3NowJ9vBWtXROgMKuieJmMYin6qJsoTgE=;
-        b=M+lNxDniRh6oSQrGMmApYcD4nBa+DdBSpSyvjV3RwZ8YQQStGmnt62t75mnej7JyOU
-         BrMcE57GSg6SpdhffAolANTWTdFFqWk0tZaqs4uKKRAHmVkddp8xiMkLKmIEdfjKmODt
-         7HZOSZpIE0Y1DJLKE2TGViPpSwGaosf+XEZaVdOtGWzkcC1eaqnvvQNHJ5U2avwcj5uC
-         vTpVKSgcoWGamLIvivGcp336jNtCZbJNojtfnkqiHCMXNqxYc/ntGbfbNj3QSsg6yim/
-         tLyu+k6hOI3WsnveWA7xM4z3drfSa4wzUAnsvMl7Lmgoebyd3fUh5zeHCroJzPdz+33V
-         Fofw==
-X-Gm-Message-State: ACrzQf0tsBmpmuq9Zz0X5c1SlII0i2NML+1Kt54O7+3VUNpn1C/J+Lbf
-        dZG1CqmsEyvqguVco/SZt43MMCln4eYY1g==
-X-Google-Smtp-Source: AMsMyM6NSHeJ54V/XuI2azAxMqKNn7RgfZoPeBhZIHx7QGUELr+H/nkB7+e3wf8LySCfGIfnM0ogyA==
-X-Received: by 2002:a17:902:ccc2:b0:178:29f9:5c5c with SMTP id z2-20020a170902ccc200b0017829f95c5cmr24458623ple.19.1664244921560;
-        Mon, 26 Sep 2022 19:15:21 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=4u3DF202lZRW0YOPuz3zxb4HZyH1RZ22Lsn3DoaRjKE=;
+        b=lAzipetDIMfMU+YThWxLv2aRgLShjxgN+gI6qDcWuUAoHTdm65CsptOkEKbdCkh6YS
+         z1q7YOYvg2jxyz3ybo9iz876kQI2gTN+Jzui4Je27yd7PHSDXk8Kc9Rh4cO3X/fb1Ojc
+         K8FK+Csc8hYrCZx/PSAG7gtFY3gZAw8Dt8hzOifD36cJ13qHKuIs2MJIycESTYygpHZ3
+         DqDY9dnAtxNOcmCgwEfgD+Jf2e1UR/45AAc/W+RVxg74n/Rlfm2fi1Ax+lTVHeRAd6IK
+         DUIbKp5xRINM8lV/lpMm1WmGE5rcH0R2tDWmnqgfO8W6ktE4JgVqREsSR8vB+CYXgqL8
+         ty/w==
+X-Gm-Message-State: ACrzQf02pJCdNjqjddHJVc4X4uMLDCx6m3XUf2uj1qZHyoKnr5PCXfh3
+        6e76ghqEOzmAWO7v1lthoWGX1A==
+X-Google-Smtp-Source: AMsMyM4XIvwSnoqajH9j/PTPQ5c5zIvRChiseWAkIXp1b211TTbIE+Xwz/yjVPu3Po52v+Jq5u9gPQ==
+X-Received: by 2002:a65:6e4a:0:b0:438:874c:53fd with SMTP id be10-20020a656e4a000000b00438874c53fdmr23105047pgb.355.1664245352087;
+        Mon, 26 Sep 2022 19:22:32 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y12-20020a17090322cc00b00176d6ad3cd4sm68234plg.100.2022.09.26.19.15.20
+        by smtp.gmail.com with ESMTPSA id bg8-20020a056a02010800b004348bd693a8sm189625pgb.31.2022.09.26.19.22.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 19:15:20 -0700 (PDT)
+        Mon, 26 Sep 2022 19:22:31 -0700 (PDT)
+Date:   Mon, 26 Sep 2022 19:22:30 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Andy Whitcroft <apw@canonical.com>
-Cc:     Kees Cook <keescook@chromium.org>, Joe Perches <joe@perches.com>,
-        Dwaipayan Ray <dwaipayanray1@gmail.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Subash Abhinov Kasiviswanathan <quic_subashab@quicinc.com>,
+        Sean Tranchetti <quic_stranche@quicinc.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] checkpatch: Don't count URLs for "line too long"
-Date:   Mon, 26 Sep 2022 19:15:17 -0700
-Message-Id: <20220927021517.1952202-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH][next] net: ethernet: rmnet: Replace zero-length array
+ with DECLARE_FLEX_ARRAY() helper
+Message-ID: <202209261920.3A2EA07D4@keescook>
+References: <YzIei3tLO1IWtMjs@work>
+ <202209261502.7DB9C7119@keescook>
+ <20220926172604.71a20b7d@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=952; h=from:subject; bh=yAWd4XKJpk8MN/Q4+hlhqes0hfZgokxxQF/B9ZCPxYQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjMly1V6lhtN8KpibJqti2iNcZrBN+SYWizUVAwtDs wMDaqVGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYzJctQAKCRCJcvTf3G3AJvJREA CHL57PNuX2NQlygSHCRoCfa3NmbQKAATGivmy7I4AFzHMHPmWLbU79rzZu6hI1gf9zyDTo2FkCAlJw flzzjJDMwKld5R80QnlWAE/ZZBRNQuPZJj9ssBZw3MxrJo3F4xYxD8b6wxRV79OMd5eQjHIpqDfQTp 2guFraPPnAaX97Aeb0K0BOW8RZeb9bzEOzgxspuWSfbZcLOu7qt7DAjz0mX2IgTlFROqGbVgMA3am9 Y1tr4235vHqD9aLyI6d6adnUENYPr0JhM0BGVj13cbVC8WcbTE7WSpIDA1WinSRisa3EoVcA5dQSDb 5+66mOsCFLFl9KFr8OHd18buaQ/Z2rrrg4ECx9GOtIm2R+6JIXd+gjUPHi7t1LfpNdrSSP0EKmwpiT sTGecnfYH2vwHE43fi3fMSwC1pi4dt8aDl71auBo0ghYLSLgY1s5l/xeAtJWIXv2kvfygDAZdtWLRA ql7pbX9m5XFDx1LnmZwUKimKNfC9y5U87RCqv1NsvVZIO3KxHuFSVqTPbpUf2XYKjY2GDpMIfS2Cy/ hEeEn5XYehN3wcCH212/lnRl6TZGuN+M/dPHbtypUKuihRvKnlqmWp1/4KxmP0U+eNr6w4IhvQr7IH GOhh5bqfhU9rPBistfMvHUjPBB+z5CzrYcabtLWos/w022259ewJqV2LQlxw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220926172604.71a20b7d@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-URLs (not in a Link: field) should be ignored for "line too long"
-warnings. Allow any line containing "https://" or "http://".
+On Mon, Sep 26, 2022 at 05:26:04PM -0700, Jakub Kicinski wrote:
+> On Mon, 26 Sep 2022 15:02:48 -0700 Kees Cook wrote:
+> > On Mon, Sep 26, 2022 at 04:50:03PM -0500, Gustavo A. R. Silva wrote:
+> > > Zero-length arrays are deprecated and we are moving towards adopting
+> > > C99 flexible-array members, instead. So, replace zero-length arrays
+> > > declarations in anonymous union with the new DECLARE_FLEX_ARRAY()
+> > > helper macro.
+> > > 
+> > > This helper allows for flexible-array members in unions.
+> > > 
+> > > Link: https://github.com/KSPP/linux/issues/193
+> > > Link: https://github.com/KSPP/linux/issues/221
+> > > Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>  
+> > 
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+> Not directly related to this patch, but I just had to look at pahole
+> output for sk_buff and the struct_group() stuff makes is really painful
+> to read :/ Offsets for the members are relative to the "group" and they
+> are all repeated.
+> 
+> Is there any chance you could fix that? Before we sprinkle more pixie
+> dust around, perhaps?
 
-Cc: Andy Whitcroft <apw@canonical.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: Dwaipayan Ray <dwaipayanray1@gmail.com>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- scripts/checkpatch.pl | 2 ++
- 1 file changed, 2 insertions(+)
+Unfortunately I don't see a way around it until we can make changes to
+the C language spec, and that's measured in decades. :(
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 79e759aac543..d4dec90673b7 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -3175,6 +3175,8 @@ sub process {
- 					# file delta changes
- 		      $line =~ /^\s*(?:[\w\.\-\+]*\/)++[\w\.\-\+]+:/ ||
- 					# filename then :
-+		      $line =~ /https?:\/\// ||
-+					# URLs
- 		      $line =~ /^\s*(?:Fixes:|Link:|$signature_tags)/i ||
- 					# A Fixes: or Link: line or signature tag line
- 		      $commit_log_possible_stack_dump)) {
+Perhaps we could add some kind of heuristic to pahole to "hide" one of
+the internal struct_group() copies, and to hide the empty flexible-array
+wrapper structs? (pahole already can't tell the difference between a
+0-length array and a flexible-array.) Would that be workable?
+
 -- 
-2.34.1
-
+Kees Cook
