@@ -2,108 +2,90 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAEEC6FA82
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 02:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F3CC32771
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 02:30:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230214AbiI0C3m (ORCPT
+        id S230198AbiI0Cau (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 22:29:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52916 "EHLO
+        Mon, 26 Sep 2022 22:30:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230203AbiI0C32 (ORCPT
+        with ESMTP id S230175AbiI0Cat (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 22:29:28 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3965AAC394
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 19:29:26 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id 8-20020a17090a0b8800b00205d8564b11so380061pjr.5
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 19:29:26 -0700 (PDT)
+        Mon, 26 Sep 2022 22:30:49 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E86CB2847
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 19:30:48 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id iw17so7915192plb.0
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 19:30:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=HkG5DDzOTjCT+STCoSnaLb6sU8To/yLBmMx+e5BAYr4=;
-        b=l30XfCY9tFyykLEHQUXZXzs+C9ThZtl5dRyE1N5osCy57G9qi8PsyotFwEV7Q3EpO2
-         a6oez/kXWoVi5on7ipYsOIBKZxqjG0mmF4eIxwBHSY2x6K1EnWWhYzUUvn07s+M5UF0z
-         iXXvL2W2m/QO1oq7pvuZqG7TLR2CA1/KoFpTs=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=M6ZjbEpb/UdQZtA16p01zlM8hWd+9RIaPah6OiYEF9s=;
+        b=JLnoASLUHeDPUf6dI39o1+5rs9AzhUtl9AApNwejURiKdFKySH7qwrWxoCD8281JdM
+         s5VZBA3uCrzXB/vkhMOC5uX2WZ+020yhDkhV3nLWWe84wG1IrVbTXzd7loPubISbr7Lq
+         REDFu0hTtFb8HmZWdQO+0sCSW2tjfT1AFwfcU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=HkG5DDzOTjCT+STCoSnaLb6sU8To/yLBmMx+e5BAYr4=;
-        b=Q7CqojHI45fD//axMHDcQ0eOFUhcIMQ59BJscmaXIvwZ4iPI7aPf0phr0eqSXn64S4
-         v2IKB0Ua4Eeu9FHYVmDwfT2b3KMkVaYvwLFim4/N0bm/ild/xC/ie270+FtQeuNMe7mG
-         3eD+T3mVQd7FDXJjPjsyvfGox2qv7t8jUp3+0783XnI5ij0u6SVlbuj5QT6z+XRneVhG
-         Q70f5O2twLFiLTXRNNDQZK3z6Sc9EC3L6/eNjBIyfhu0G8GkPlXvwRXQPQtd2D1Kx7NK
-         qjHvKu96eresRHorcYsMO/lQ0nq1nxNkEhpbsOYGm/0WRyxVGgjGzDuC3uzczmlvSRs1
-         wOLw==
-X-Gm-Message-State: ACrzQf2mM85DzQyEhu7UA1IMJkAr/CbwyPsdy0BHBben/j8gIHLovPTG
-        rOf3eNoWU6a7/JQoxK6vy4188Q==
-X-Google-Smtp-Source: AMsMyM4xJPjTZPujx7xMCWGZbF9BnM9hvgko7haE0v+9a5Wrvi1kCxrMKe0GWEcmA3LQ2oAq7dwnbg==
-X-Received: by 2002:a17:902:db12:b0:178:1f91:74e6 with SMTP id m18-20020a170902db1200b001781f9174e6mr25393937plx.100.1664245765635;
-        Mon, 26 Sep 2022 19:29:25 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=M6ZjbEpb/UdQZtA16p01zlM8hWd+9RIaPah6OiYEF9s=;
+        b=eX4GfeazU/94clePLqmd2HmX7K/pXLRobjkdZASmN2JtZZpSTBLG7Y5syQT7wfGn4t
+         47NLTEdD6BEkzab5vKyv8igqhVExu2+9liSE83n6AYKDsDK764ZiWioyMjQD3EDgZrTJ
+         af7b9TVQrJmew8y6NiPRHQMb4k1OjJdkqPY/Fp1vjawbWag/5V/rzlZT8rmC0Zf/CPNj
+         00RG25gOBmyFJ2aq5OM0m8UEq9wjsBhRogxmqsjwQ7dYLuGvnM3oGs33OAbOqawZ1rpP
+         8PuXVJFoZQzQVRP9psyp15NlfGmU28kM2GH01NqU0TXAfwWPBtM7lPm4y72NKgzM/Ow7
+         +CmQ==
+X-Gm-Message-State: ACrzQf0heWbMuLxeky9rC1L8zNXy8Bq7O9qWsRe9l67ald/c7/A1oybA
+        ej87OgDSt65MkHtKyeR/Q7z4JA==
+X-Google-Smtp-Source: AMsMyM4fVILya89l/buI/6YDmjZuGWn9S4tka+jx7icqv87/971kE+MPYocVhEp623vm5hAMuZB50Q==
+X-Received: by 2002:a17:90b:4c8b:b0:203:5db5:8b71 with SMTP id my11-20020a17090b4c8b00b002035db58b71mr1933594pjb.51.1664245847736;
+        Mon, 26 Sep 2022 19:30:47 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d14-20020a17090a3b0e00b002009db534d1sm162794pjc.24.2022.09.26.19.29.24
+        by smtp.gmail.com with ESMTPSA id t6-20020a1709027fc600b00176dc72ad88sm117601plb.287.2022.09.26.19.30.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 19:29:25 -0700 (PDT)
+        Mon, 26 Sep 2022 19:30:46 -0700 (PDT)
+Date:   Mon, 26 Sep 2022 19:30:46 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] wifi: nl80211: Split memcpy() of struct nl80211_wowlan_tcp_data_token flexible array
-Date:   Mon, 26 Sep 2022 19:29:23 -0700
-Message-Id: <20220927022923.1956205-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH][next] ASoC: Intel: Skylake: Replace zero-length arrays
+ with DECLARE_FLEX_ARRAY() helper
+Message-ID: <202209261930.A40876B@keescook>
+References: <YzIuiUul2CwPlkKh@work>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1471; h=from:subject; bh=JH3nHmX97RrKwbrYnh+CkGDW8T/FyqjEp+7uXQKUIY4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjMmACR0B3zP+7TGPHd2I2yN+GXV+Fdp/seF7yyoWT qNxfGkWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYzJgAgAKCRCJcvTf3G3AJosfD/ wP7GvxgVeGTAOiAl1tDUS/8VQ+Pc/tLzsp1DqjvxHY6zV598jUyMDm5eLmvfl55V6W72r2t8PnoOTX X/q6VLlK0tJI8ryPD6wTLPjAIzQhxailq94i0IRNnm8bGbt7Ykq9T385zTbORgRPjSe5fnXksldmfM fJNPhqduy6yAXz/4juijaEZ+tpuZkEgGQzNafIAz30SyqLme/0gQqH9LedN11YWtJOFoomEeD+oWz+ obu86NOHsaKxUXEIv3F1wEe5tXvEpcsHxMq6xFOnp02r3SkgwcF1ypEld0gBgtU52S0ym2hPjm1SsY 2YA2P6wEqQcBkrgr/N4dAiMBpy3CXXjZ16WQUETA/x9X45IdFAhCKYbHhnMIY2W5/peZKWmNlZ7ulM 2phamcmzOM2FFs/e+cy0ASSarJK3uw6c1ZBk93uOXkOufz8/50J0QmXddKriDvpewAlAbA5AgA3iUp OYh+Fxw4ig9KZYovtkm7URcwcJlzR7rNoclWkSNClRWvlfcGJbB8SY6+aq83tsuiuFZ+CtZxg7Mg43 VNXi3lvRLDSNqMfDN+3EUIu/3g0rB/f8+1mR8xj6dtPMlW5/+ji5uR31yShYyoQoY9f6GQ8bcDF3Qg 2PhaANaBZMU5PDkBync0nlFu960PTrV/e6FTakuOJ4ezc4obRf3xiTyy0ErA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YzIuiUul2CwPlkKh@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-To work around a misbehavior of the compiler's ability to see into
-composite flexible array structs (as detailed in the coming memcpy()
-hardening series[1]), split the memcpy() of the header and the payload
-so no false positive run-time overflow warning will be generated.
+On Mon, Sep 26, 2022 at 05:58:17PM -0500, Gustavo A. R. Silva wrote:
+> Zero-length arrays are deprecated and we are moving towards adopting
+> C99 flexible-array members, instead. So, replace zero-length arrays
+> declarations in anonymous union with the new DECLARE_FLEX_ARRAY()
+> helper macro.
+> 
+> This helper allows for flexible-array members in unions.
+> 
+> Link: https://github.com/KSPP/linux/issues/193
+> Link: https://github.com/KSPP/linux/issues/226
+> Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-[1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org/
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v2: - fix typo leading "+" (Gustavo)
-v1: https://lore.kernel.org/lkml/20220927003903.1941873-1-keescook@chromium.org
----
- net/wireless/nl80211.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 2705e3ee8fc4..169e3ec33466 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -13171,7 +13171,9 @@ static int nl80211_parse_wowlan_tcp(struct cfg80211_registered_device *rdev,
- 	       wake_mask_size);
- 	if (tok) {
- 		cfg->tokens_size = tokens_size;
--		memcpy(&cfg->payload_tok, tok, sizeof(*tok) + tokens_size);
-+		cfg->payload_tok = *tok;
-+		memcpy(cfg->payload_tok.token_stream, tok->token_stream,
-+		       tokens_size);
- 	}
- 
- 	trig->tcp = cfg;
 -- 
-2.34.1
-
+Kees Cook
