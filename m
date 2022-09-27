@@ -2,105 +2,102 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAAAC07E9D
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 00:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA3CC32771
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 01:10:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229775AbiI0Akw (ORCPT
+        id S229447AbiI0BKW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 20:40:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41450 "EHLO
+        Mon, 26 Sep 2022 21:10:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230097AbiI0Akk (ORCPT
+        with ESMTP id S229488AbiI0BKW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 20:40:40 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADD502A432
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 17:40:36 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id b5so8001541pgb.6
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 17:40:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=VJtCPwVDtwDjIooJZ4y0gRwQCahGRpaJT9wGcWMjORs=;
-        b=VvuZQBTYao8dMp/XcrA6B5eGOq5huNfpsyfiYiH+2ZtLSq+BmDtB8jbNPZ6pFfMICQ
-         +gBsND5fUECaHOcd7odlIE5mK4qJaPiVBjhxhhsCePIl06KYSL8MMrKHAGTMVIQjM52w
-         ASs2h4yKd/r0HOLw9J9Odu+2wM5mZ/AQK8ZKg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=VJtCPwVDtwDjIooJZ4y0gRwQCahGRpaJT9wGcWMjORs=;
-        b=sDJ1ZAxKs7iSxkl0mMe2oVvHaVbghX0YA+/SzjWYRMWvcsct0HlHLSeO42T2dZ9Qjn
-         EKC6jFR9x+RQGcmtYB9vCHkQot8MUtTlROawDu/r+u+Po26/cdFoAxrl+uBibpvE7+dg
-         XobBstaus8XjTmJfzYZ9KWVmK3wP78ojq8MjZwC/A7sOazNYWFGLC78YA42eu9qqwkq3
-         7yGvXmTaH3ahBCu/MhcEdb4hidTt44vqff76yf3zEbFK5WI+0uguIIgQKy+tZa3ATZun
-         iO+8NvVYUr4Dc6SaUEZUWzgpdmmrcFyPJXiMP6f6X3b1ELPgsMZFp4WK19Ws5hwBvF6u
-         utJg==
-X-Gm-Message-State: ACrzQf16fWUxLk/+QVo1SBEADla45eS/yUAXxDVZzn1VTW6OLShalP5e
-        Ov7s3IgZ3vRjuKmNqXwK9ySiZw==
-X-Google-Smtp-Source: AMsMyM6lAcW419M+QieduWpZQ5tgxZTYWWxDyq0gne5Ik9qQ4QewnuhqSDR3T1g1KxvW29apUwnURQ==
-X-Received: by 2002:a05:6a00:1990:b0:545:aa9e:be3d with SMTP id d16-20020a056a00199000b00545aa9ebe3dmr26702722pfl.59.1664239236206;
-        Mon, 26 Sep 2022 17:40:36 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f35-20020a17090a28a600b00203125b6394sm53549pjd.40.2022.09.26.17.40.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 17:40:35 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Ido Schimmel <idosch@nvidia.com>
-Cc:     Kees Cook <keescook@chromium.org>, Petr Machata <petrm@nvidia.com>,
+        Mon, 26 Sep 2022 21:10:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C94895FC;
+        Mon, 26 Sep 2022 18:10:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 782C5614AE;
+        Tue, 27 Sep 2022 01:10:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 338EAC433D6;
+        Tue, 27 Sep 2022 01:10:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664241019;
+        bh=j62kZQvZjX2MamKzJ/+2NC/9HEZsfcjCjPmXppmw/ak=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CRuS58M9M+FfroV0sQPqfmHUUVvXOqFwVGgzs32D9um7RsRmxhFQ7Nv82cFf+4sY1
+         1gjxMKqjMZ2snLZfN6iuHQm4ZBS8aiS7Yie8dghI4kv6BMe+da/eVcasQTwMVIBNYh
+         4n1+N9/vsEuehVP17xTUkJZLMVffj+rlYZudbfp3DJAZWrswhbZLmYHAKaTe3eedTo
+         NeyqB3EKIzH4QjQmCg5SVxPGDWUe8uSKetVJ/bNUnCzrjxJm++JsgeW+EXsk784w4m
+         t+z1nEO+ciQVGm8N9W8mG+Rwaa06WrYBfmrXnYncQTGuCQW9558/CHH0+cdYFgIgVl
+         60AGILne4eOcQ==
+Date:   Mon, 26 Sep 2022 20:10:11 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] mlxsw: core_acl_flex_actions: Split memcpy() of struct flow_action_cookie flexible array
-Date:   Mon, 26 Sep 2022 17:40:33 -0700
-Message-Id: <20220927004033.1942992-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH] mlxsw: core_acl_flex_actions: Split memcpy() of struct
+ flow_action_cookie flexible array
+Message-ID: <YzJNc1P5c2lbD8vC@work>
+References: <20220927004033.1942992-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1634; h=from:subject; bh=anKrQLY+XsXKgHz694GQioMoU17jgmFoTynuopZyaGg=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjMkaBfu8qN5shW54b50aHf+icSE8mqDj2fL3Oe3rs UiET1fGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYzJGgQAKCRCJcvTf3G3AJkJwD/ 4uuK+VZ1mJBwvloZTYwkWWvwMD6O3YJ7TlM8I3YOOzoU110PcLcBRFA7Fc/yXBhhfWyeu8zxZz4mG0 BJvV+bms9nxA+oed4ATwwaSmDBHEA+T+SNurvu3uC+aN5KYlnb1yE/jDO13fvSqQv0I803i+jEcyVO lk+W0UdsTTMivSv6LF80i6YZpfUokBfj1sRj02fhQCXLmxLE1YtiYyf/8kH2c6FM1nDHvTonWV+vyX bTTJeN2PG7tWse9aH2IJSIrCiRmQfLa9WzC2aYTNXaBvepHo+K65zWwJcVnVSn1jdOXD/ExTuFskWf pfdKMPEhjrf/aYNOYT8xk84SsDil50pYL+fpkUPj/qyU0qScRKPwwm5n82NvbbV5o79tn4oW8oqBu/ LGgLek3r0oxVr9ywDqwldNvEDtR3JMSTSyI/wcTWBtP1d1AZqNQHVsYFh3DJ17cDS2NXKYm6bBQkXx gLmYCl8Kp/LfWWxEJXHap6W8Lb1GXO/v1ccXCC3vmNU239OKe4vV2hpfYKLjY1u6KfpVBlo3VclLHV LxPrIANqJQby71uZk10OdGr8G0OgVSBTwGnRC6eIXC45o1pJwUpVXEgBILgskr8F5H0zPsMCtnfG+w KXZrR+CL6okF4VYg791WIUh1eRy9thQpt+y6zi663njUo/Pj39cmCR7+RQHQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220927004033.1942992-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-To work around a misbehavior of the compiler's ability to see into
-composite flexible array structs (as detailed in the coming memcpy()
-hardening series[1]), split the memcpy() of the header and the payload
-so no false positive run-time overflow warning will be generated.
+On Mon, Sep 26, 2022 at 05:40:33PM -0700, Kees Cook wrote:
+> To work around a misbehavior of the compiler's ability to see into
+> composite flexible array structs (as detailed in the coming memcpy()
+> hardening series[1]), split the memcpy() of the header and the payload
+> so no false positive run-time overflow warning will be generated.
+> 
+> [1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org
+> 
+> Cc: Ido Schimmel <idosch@nvidia.com>
+> Cc: Petr Machata <petrm@nvidia.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-[1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org
 
-Cc: Ido Schimmel <idosch@nvidia.com>
-Cc: Petr Machata <petrm@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c b/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c
-index 636db9a87457..9dfe7148199f 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c
-@@ -737,8 +737,9 @@ mlxsw_afa_cookie_create(struct mlxsw_afa *mlxsw_afa,
- 	if (!cookie)
- 		return ERR_PTR(-ENOMEM);
- 	refcount_set(&cookie->ref_count, 1);
--	memcpy(&cookie->fa_cookie, fa_cookie,
--	       sizeof(*fa_cookie) + fa_cookie->cookie_len);
-+	cookie->fa_cookie = *fa_cookie;
-+	memcpy(cookie->fa_cookie.cookie, fa_cookie->cookie,
-+	       fa_cookie->cookie_len);
- 
- 	err = rhashtable_insert_fast(&mlxsw_afa->cookie_ht, &cookie->ht_node,
- 				     mlxsw_afa_cookie_ht_params);
--- 
-2.34.1
+Thanks!
+--
+Gustavo
 
+> ---
+>  drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c b/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c
+> index 636db9a87457..9dfe7148199f 100644
+> --- a/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c
+> +++ b/drivers/net/ethernet/mellanox/mlxsw/core_acl_flex_actions.c
+> @@ -737,8 +737,9 @@ mlxsw_afa_cookie_create(struct mlxsw_afa *mlxsw_afa,
+>  	if (!cookie)
+>  		return ERR_PTR(-ENOMEM);
+>  	refcount_set(&cookie->ref_count, 1);
+> -	memcpy(&cookie->fa_cookie, fa_cookie,
+> -	       sizeof(*fa_cookie) + fa_cookie->cookie_len);
+> +	cookie->fa_cookie = *fa_cookie;
+> +	memcpy(cookie->fa_cookie.cookie, fa_cookie->cookie,
+> +	       fa_cookie->cookie_len);
+>  
+>  	err = rhashtable_insert_fast(&mlxsw_afa->cookie_ht, &cookie->ht_node,
+>  				     mlxsw_afa_cookie_ht_params);
+> -- 
+> 2.34.1
+> 
