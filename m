@@ -2,113 +2,108 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B37C07E9D
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 02:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAEEC6FA82
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 02:29:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230124AbiI0C1l (ORCPT
+        id S230214AbiI0C3m (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 22:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50440 "EHLO
+        Mon, 26 Sep 2022 22:29:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230075AbiI0C1j (ORCPT
+        with ESMTP id S230203AbiI0C32 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 22:27:39 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73367A4855
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 19:27:36 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id a5-20020a17090aa50500b002008eeb040eso262898pjq.1
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 19:27:36 -0700 (PDT)
+        Mon, 26 Sep 2022 22:29:28 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3965AAC394
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 19:29:26 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id 8-20020a17090a0b8800b00205d8564b11so380061pjr.5
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 19:29:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=yh4k/+se1wnprbaFwf3y9UrMWyP2Ly9Nz5pe8mFcVUc=;
-        b=e6eayjyrHm5XrdIh1OcHBEJ08A4pvPm7BXZWutfJ2UN7ju3Ho7RL06qZiIqAKvih2T
-         7dfyurt1vDY9nz4qYBQjDgSIfIrtr44qG9aOUe8TSt18GeG0ZRjkLNzh4f3Zk5loNYNk
-         tpP8ib6hS35/vbkHmkEp5MmpSV0wVjuVb5lUs=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=HkG5DDzOTjCT+STCoSnaLb6sU8To/yLBmMx+e5BAYr4=;
+        b=l30XfCY9tFyykLEHQUXZXzs+C9ThZtl5dRyE1N5osCy57G9qi8PsyotFwEV7Q3EpO2
+         a6oez/kXWoVi5on7ipYsOIBKZxqjG0mmF4eIxwBHSY2x6K1EnWWhYzUUvn07s+M5UF0z
+         iXXvL2W2m/QO1oq7pvuZqG7TLR2CA1/KoFpTs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=yh4k/+se1wnprbaFwf3y9UrMWyP2Ly9Nz5pe8mFcVUc=;
-        b=C64/pJrz+L+2okohV7m/Z59CtXZz8gNVfZySewkBd/ZBw9Gd7Oz+yK/pKOOsl8BU3F
-         78U64sRtMKxhTbzeK2GCrSlGOCpJeFzHqMoGWDMhGWj3CfmvC/vm+yKoFUc9tDbdZHuJ
-         JjIrY5zgWhw6qMvLqlieVwNc8GL2QJJ9uCX4Yb9HvCILqMR/p9hNyVDxNnREauqd4n6h
-         k0FIxdRH6Sp8w4qaTe4e1v6piuAGNNvTlZQiuhJtuTw1YmMJIv6xJsihsAInQiKc8MbN
-         kJ5Wik+sDlOUDQhHbpJv0fDwTak4RwCRDrdIB6XSqJtswmWFuRpzfL17huDfAfPtgjD6
-         o0gw==
-X-Gm-Message-State: ACrzQf08RkRygLmiAyPT48Wvk7hz0xSnF2qV4ar6jgOU6rYuQ1N7ll8m
-        mCr6KHa210uG4Q5zgSLvZdukTQ==
-X-Google-Smtp-Source: AMsMyM48zQ7Ab7sC5WDoRUZeJpQG6yDZPfYRxg9D0izA0fBqb8oCfTzahNCYl6stimP8gJ+EQmvElQ==
-X-Received: by 2002:a17:90b:388c:b0:205:7966:c13c with SMTP id mu12-20020a17090b388c00b002057966c13cmr1936397pjb.49.1664245656015;
-        Mon, 26 Sep 2022 19:27:36 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=HkG5DDzOTjCT+STCoSnaLb6sU8To/yLBmMx+e5BAYr4=;
+        b=Q7CqojHI45fD//axMHDcQ0eOFUhcIMQ59BJscmaXIvwZ4iPI7aPf0phr0eqSXn64S4
+         v2IKB0Ua4Eeu9FHYVmDwfT2b3KMkVaYvwLFim4/N0bm/ild/xC/ie270+FtQeuNMe7mG
+         3eD+T3mVQd7FDXJjPjsyvfGox2qv7t8jUp3+0783XnI5ij0u6SVlbuj5QT6z+XRneVhG
+         Q70f5O2twLFiLTXRNNDQZK3z6Sc9EC3L6/eNjBIyfhu0G8GkPlXvwRXQPQtd2D1Kx7NK
+         qjHvKu96eresRHorcYsMO/lQ0nq1nxNkEhpbsOYGm/0WRyxVGgjGzDuC3uzczmlvSRs1
+         wOLw==
+X-Gm-Message-State: ACrzQf2mM85DzQyEhu7UA1IMJkAr/CbwyPsdy0BHBben/j8gIHLovPTG
+        rOf3eNoWU6a7/JQoxK6vy4188Q==
+X-Google-Smtp-Source: AMsMyM4xJPjTZPujx7xMCWGZbF9BnM9hvgko7haE0v+9a5Wrvi1kCxrMKe0GWEcmA3LQ2oAq7dwnbg==
+X-Received: by 2002:a17:902:db12:b0:178:1f91:74e6 with SMTP id m18-20020a170902db1200b001781f9174e6mr25393937plx.100.1664245765635;
+        Mon, 26 Sep 2022 19:29:25 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a5-20020a170902ecc500b00176acd80f69sm152371plh.102.2022.09.26.19.27.35
+        by smtp.gmail.com with ESMTPSA id d14-20020a17090a3b0e00b002009db534d1sm162794pjc.24.2022.09.26.19.29.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 19:27:35 -0700 (PDT)
-Date:   Mon, 26 Sep 2022 19:27:34 -0700
+        Mon, 26 Sep 2022 19:29:25 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Kees Cook <keescook@chromium.org>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] wifi: nl80211: Split memcpy() of struct
- nl80211_wowlan_tcp_data_token flexible array
-Message-ID: <202209261924.BE1E0F29FA@keescook>
-References: <20220927003903.1941873-1-keescook@chromium.org>
- <YzJS+wRX0nu3qE4F@work>
+Subject: [PATCH v2] wifi: nl80211: Split memcpy() of struct nl80211_wowlan_tcp_data_token flexible array
+Date:   Mon, 26 Sep 2022 19:29:23 -0700
+Message-Id: <20220927022923.1956205-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YzJS+wRX0nu3qE4F@work>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1471; h=from:subject; bh=JH3nHmX97RrKwbrYnh+CkGDW8T/FyqjEp+7uXQKUIY4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjMmACR0B3zP+7TGPHd2I2yN+GXV+Fdp/seF7yyoWT qNxfGkWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYzJgAgAKCRCJcvTf3G3AJosfD/ wP7GvxgVeGTAOiAl1tDUS/8VQ+Pc/tLzsp1DqjvxHY6zV598jUyMDm5eLmvfl55V6W72r2t8PnoOTX X/q6VLlK0tJI8ryPD6wTLPjAIzQhxailq94i0IRNnm8bGbt7Ykq9T385zTbORgRPjSe5fnXksldmfM fJNPhqduy6yAXz/4juijaEZ+tpuZkEgGQzNafIAz30SyqLme/0gQqH9LedN11YWtJOFoomEeD+oWz+ obu86NOHsaKxUXEIv3F1wEe5tXvEpcsHxMq6xFOnp02r3SkgwcF1ypEld0gBgtU52S0ym2hPjm1SsY 2YA2P6wEqQcBkrgr/N4dAiMBpy3CXXjZ16WQUETA/x9X45IdFAhCKYbHhnMIY2W5/peZKWmNlZ7ulM 2phamcmzOM2FFs/e+cy0ASSarJK3uw6c1ZBk93uOXkOufz8/50J0QmXddKriDvpewAlAbA5AgA3iUp OYh+Fxw4ig9KZYovtkm7URcwcJlzR7rNoclWkSNClRWvlfcGJbB8SY6+aq83tsuiuFZ+CtZxg7Mg43 VNXi3lvRLDSNqMfDN+3EUIu/3g0rB/f8+1mR8xj6dtPMlW5/+ji5uR31yShYyoQoY9f6GQ8bcDF3Qg 2PhaANaBZMU5PDkBync0nlFu960PTrV/e6FTakuOJ4ezc4obRf3xiTyy0ErA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 08:33:47PM -0500, Gustavo A. R. Silva wrote:
-> On Mon, Sep 26, 2022 at 05:39:03PM -0700, Kees Cook wrote:
-> > To work around a misbehavior of the compiler's ability to see into
-> > composite flexible array structs (as detailed in the coming memcpy()
-> > hardening series[1]), split the memcpy() of the header and the payload
-> > so no false positive run-time overflow warning will be generated.
-> > 
-> > [1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org/
-> > 
-> > Cc: Johannes Berg <johannes@sipsolutions.net>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Eric Dumazet <edumazet@google.com>
-> > Cc: Jakub Kicinski <kuba@kernel.org>
-> > Cc: Paolo Abeni <pabeni@redhat.com>
-> > Cc: linux-wireless@vger.kernel.org
-> > Cc: netdev@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  net/wireless/nl80211.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-> > index 2705e3ee8fc4..461897933e92 100644
-> > --- a/net/wireless/nl80211.c
-> > +++ b/net/wireless/nl80211.c
-> > @@ -13171,7 +13171,8 @@ static int nl80211_parse_wowlan_tcp(struct cfg80211_registered_device *rdev,
-> >  	       wake_mask_size);
-> >  	if (tok) {
-> >  		cfg->tokens_size = tokens_size;
-> > -		memcpy(&cfg->payload_tok, tok, sizeof(*tok) + tokens_size);
-> > +		cfg->payload_tok = *tok;
-> > +		memcpy(cfg->payload_tok.token_stream, tok->token_stream, + tokens_size);
-> 
-> There is a spurious '+' here............................................^^^
+To work around a misbehavior of the compiler's ability to see into
+composite flexible array structs (as detailed in the coming memcpy()
+hardening series[1]), split the memcpy() of the header and the payload
+so no false positive run-time overflow warning will be generated.
 
-HUnh. Well. I learned a new C-ism today. A leading "+" is just accepted.
-I build-tested this, and it was happy. I just double-checked, and sure
-enough, it is actually parsing that line. I will send a v2. Thanks for
-catching that! ... That's such a weird typo we don't even have a
-checkpatch rule for it. :P
+[1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org/
 
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v2: - fix typo leading "+" (Gustavo)
+v1: https://lore.kernel.org/lkml/20220927003903.1941873-1-keescook@chromium.org
+---
+ net/wireless/nl80211.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 2705e3ee8fc4..169e3ec33466 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -13171,7 +13171,9 @@ static int nl80211_parse_wowlan_tcp(struct cfg80211_registered_device *rdev,
+ 	       wake_mask_size);
+ 	if (tok) {
+ 		cfg->tokens_size = tokens_size;
+-		memcpy(&cfg->payload_tok, tok, sizeof(*tok) + tokens_size);
++		cfg->payload_tok = *tok;
++		memcpy(cfg->payload_tok.token_stream, tok->token_stream,
++		       tokens_size);
+ 	}
+ 
+ 	trig->tcp = cfg;
 -- 
-Kees Cook
+2.34.1
+
