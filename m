@@ -2,85 +2,80 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1129C07E9D
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Sep 2022 23:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2DCC07E9D
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 00:26:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230445AbiIZXTf (ORCPT
+        id S229611AbiI0A0K (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 19:19:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36596 "EHLO
+        Mon, 26 Sep 2022 20:26:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230455AbiIZXSw (ORCPT
+        with ESMTP id S229483AbiI0A0I (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 19:18:52 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7060CA8324;
-        Mon, 26 Sep 2022 16:18:51 -0700 (PDT)
+        Mon, 26 Sep 2022 20:26:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F4B0481D5;
+        Mon, 26 Sep 2022 17:26:06 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id AD45ECE13E6;
-        Mon, 26 Sep 2022 23:18:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFEB4C433C1;
-        Mon, 26 Sep 2022 23:18:45 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 09D246150E;
+        Tue, 27 Sep 2022 00:26:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 028D1C433C1;
+        Tue, 27 Sep 2022 00:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664234327;
-        bh=Ve1292BFbx4M8vgKxaCxSGexhyBekTzktp5oNYWPKb8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Nz6cDimDIowy15ehXN7S8a3ttyMPzFNiN/Trx+4htJdmpst2LKfRaOuZiOvoEfnyb
-         cptyIcVD6GrNIzuXUxowzxse3keIKNENcQ5fd64EzwRLHj41l45nuzTG6k+Yaqg/pf
-         szCn1dm5yfeEAowiX0ThMouuWEKoGioh/TG/KGTEUgfIGydYARzBDutyzdQCJ1v8SN
-         jWMyrbIy6tX03qaJYSEg2Ff3/huri6qMKVIe/V5AeZJW/Yd4M2cyyZyssN/HV4d4Py
-         n2tiozKXEuZTTbyx6k0j4/8WusKNYvSmX2QQwulMMmyTdKOqazAsI1AHKlivOIYuoE
-         xWRURrAPjchdQ==
-Date:   Mon, 26 Sep 2022 18:18:42 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] ASoC: uapi: Replace zero-length arrays with
- __DECLARE_FLEX_ARRAY() helper
-Message-ID: <YzIzUjUuJKf0mkKg@work>
+        s=k20201202; t=1664238365;
+        bh=FHkcN7R9GGHmGrOxMAmo1xDiazo90Bo1Ak/FokHEzxI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TiZ/X3kWH15nUxMpsaW2hKW6bL/xC0XOajsQzyRYQnjTVOf/D6hYva9Sdu2GJX2rS
+         TOerVUZmh4CM3YoBmHhLeekv4iihXbMpS/94kmf8Vjj8QuncDt9GvJDvPIb5xtA93y
+         T33wh1jbfKj90QU9RkhbHDmSnEUTa4G2Wpn5qqw+CfvjFohvJhdWiqokyOVFOiVvgh
+         9hPKQjFH5YlhrERfsSL9EDUaAZAcIlzNl+/qjCtYwhejsxYKjUmUKkdOiVsMZAQdVF
+         C3+5lbUw7PD6LYL3XNyFpYIKTK/1Zfiy0V3NH+4EeayKu3jaPk0lKtCz/hxvpnndTX
+         31+z0XaIRb5xQ==
+Date:   Mon, 26 Sep 2022 17:26:04 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Subash Abhinov Kasiviswanathan <quic_subashab@quicinc.com>,
+        Sean Tranchetti <quic_stranche@quicinc.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] net: ethernet: rmnet: Replace zero-length array
+ with DECLARE_FLEX_ARRAY() helper
+Message-ID: <20220926172604.71a20b7d@kernel.org>
+In-Reply-To: <202209261502.7DB9C7119@keescook>
+References: <YzIei3tLO1IWtMjs@work>
+        <202209261502.7DB9C7119@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Zero-length arrays are deprecated and we are moving towards adopting
-C99 flexible-array members, instead. So, replace zero-length arrays
-declarations in anonymous union with the new __DECLARE_FLEX_ARRAY()
-helper macro.
+On Mon, 26 Sep 2022 15:02:48 -0700 Kees Cook wrote:
+> On Mon, Sep 26, 2022 at 04:50:03PM -0500, Gustavo A. R. Silva wrote:
+> > Zero-length arrays are deprecated and we are moving towards adopting
+> > C99 flexible-array members, instead. So, replace zero-length arrays
+> > declarations in anonymous union with the new DECLARE_FLEX_ARRAY()
+> > helper macro.
+> > 
+> > This helper allows for flexible-array members in unions.
+> > 
+> > Link: https://github.com/KSPP/linux/issues/193
+> > Link: https://github.com/KSPP/linux/issues/221
+> > Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>  
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-This helper allows for flexible-array members in unions.
+Not directly related to this patch, but I just had to look at pahole
+output for sk_buff and the struct_group() stuff makes is really painful
+to read :/ Offsets for the members are relative to the "group" and they
+are all repeated.
 
-Link: https://github.com/KSPP/linux/issues/193
-Link: https://github.com/KSPP/linux/issues/227
-Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- include/uapi/sound/asoc.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/include/uapi/sound/asoc.h b/include/uapi/sound/asoc.h
-index 053949287ce8..dd8ad790fc15 100644
---- a/include/uapi/sound/asoc.h
-+++ b/include/uapi/sound/asoc.h
-@@ -226,9 +226,9 @@ struct snd_soc_tplg_vendor_array {
- 	__le32 type;	/* SND_SOC_TPLG_TUPLE_TYPE_ */
- 	__le32 num_elems;	/* number of elements in array */
- 	union {
--		struct snd_soc_tplg_vendor_uuid_elem uuid[0];
--		struct snd_soc_tplg_vendor_value_elem value[0];
--		struct snd_soc_tplg_vendor_string_elem string[0];
-+		__DECLARE_FLEX_ARRAY(struct snd_soc_tplg_vendor_uuid_elem, uuid);
-+		__DECLARE_FLEX_ARRAY(struct snd_soc_tplg_vendor_value_elem, value);
-+		__DECLARE_FLEX_ARRAY(struct snd_soc_tplg_vendor_string_elem, string);
- 	};
- } __attribute__((packed));
- 
--- 
-2.34.1
-
+Is there any chance you could fix that? Before we sprinkle more pixie
+dust around, perhaps?
