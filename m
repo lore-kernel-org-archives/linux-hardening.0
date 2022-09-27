@@ -2,215 +2,116 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC3DC6FA83
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 08:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9E5C07E9D
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 08:35:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230190AbiI0IcP (ORCPT
+        id S229603AbiI0IfI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Sep 2022 04:32:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41674 "EHLO
+        Tue, 27 Sep 2022 04:35:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229693AbiI0IcO (ORCPT
+        with ESMTP id S231321AbiI0Ieh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Sep 2022 04:32:14 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95AD231346;
-        Tue, 27 Sep 2022 01:32:12 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id x1-20020a17090ab00100b001fda21bbc90so14887570pjq.3;
-        Tue, 27 Sep 2022 01:32:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=Z8rSg6dmSRUhDrv1i/BVR40v9x+7rBEf82xJDnX4Oso=;
-        b=Wmj3cSD/p9IDn1/7DnPbsH8zUc4XAWQL8vicPT9oXALsB0Io+NFEwZfFSw867lZk+d
-         icbVV5RjHm3GzxT48No3ZCxlBeyPoGi8tMB3LePqpwRb6a4vy6W2LTa11kFYUACqC3Lh
-         XsW+9yoA70Iu+gninE5KUMUdxJmtu2Ee4NGI4deCog56gltPmdjBkuJ6b2JfelhXgE10
-         C4jK0/aTq06w+QxzBz4hzonSoL2823v2SKvr/vitDQoI8C7YDXHKw2gn/ayon5mmmQqq
-         pwbJkgxSL25a/dhTdMuRYSDpx1Q5/U5s/BtiVey14bNKiaDgfDcSgjpCQTHUu1SwNVUD
-         KSkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=Z8rSg6dmSRUhDrv1i/BVR40v9x+7rBEf82xJDnX4Oso=;
-        b=2yX1hR4l95BGwGiowhhAhTbNbAbT1slejAii7dC+pgJxhlLcgrUYrg7lQTgTcgQIxw
-         hYT7vwnawyEvYTDXHenSY6pAia8HQH694uJmCXvtp+XmwJKhnlvpww9bUO5DCxeTxZs8
-         vv7YR+g17WPVjN/D7adt/2JiEYsjweg9fnmnpN66Q12w4vtljjcSzLTmEcH4DGgkBG8w
-         SyEgUG0uJmCHuc3WDTMufFPw3ZlR5/71N7DuSmYcJHGmBhysZtcy6Jzas2B7WMGrfejg
-         nGFftkOdPPMfZhj7M0i68VOtqAd4r3wyXS2SmJR0Ll3/kPedKDtkYUXcDIwN73LJW6Op
-         /4ng==
-X-Gm-Message-State: ACrzQf3OZ2FUQGUjRExALn2/EHba9L+yFYSmTMLitvVDc0CjHL1qQrBI
-        qHKCfU7y0itzhfGRL9TU7InVP9z1pqE=
-X-Google-Smtp-Source: AMsMyM4JQNaxJsqMUcQpmtgXORo5ugwbGjuHkg7Eyo3J8Yvdsb+bRRiIMqksIR3WJZd036gQ5CzHrQ==
-X-Received: by 2002:a17:902:d58a:b0:179:ec1d:9ead with SMTP id k10-20020a170902d58a00b00179ec1d9eadmr1994854plh.158.1664267531430;
-        Tue, 27 Sep 2022 01:32:11 -0700 (PDT)
-Received: from [192.168.43.80] (subs28-116-206-12-32.three.co.id. [116.206.12.32])
-        by smtp.gmail.com with ESMTPSA id d2-20020a631d02000000b0043a09d5c32bsm898781pgd.74.2022.09.27.01.32.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Sep 2022 01:32:10 -0700 (PDT)
-Message-ID: <479bd33b-f68c-aceb-49e0-122a2e99d5c1@gmail.com>
-Date:   Tue, 27 Sep 2022 15:32:07 +0700
+        Tue, 27 Sep 2022 04:34:37 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88BE91CB;
+        Tue, 27 Sep 2022 01:34:34 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EABCC616C3;
+        Tue, 27 Sep 2022 08:34:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02144C433B5;
+        Tue, 27 Sep 2022 08:34:32 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="BeuQ3Qnt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+        t=1664267669;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ls3g6qEVoyxJ/LRppKHOZrlHupBiDmkmlvpmcbvCVBg=;
+        b=BeuQ3QntwPhr3dKqVxdDwUjrlGxCYXy6cgNvqsA3bYZGavIAh6kv44f+JYd6qCDunb2BPp
+        Eh/DDxL6qQ/SeM4NV3xxGbp+oz0f4eKMjaRSz46jfJqdgvbcUBMq1bD+v1EOBynQz9nMvF
+        1kdTBaM2t9QhG4LwqdXM4EJ0UgELQek=
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id f2e7f81e (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Tue, 27 Sep 2022 08:34:28 +0000 (UTC)
+Received: by mail-ua1-f42.google.com with SMTP id s2so964500uae.1;
+        Tue, 27 Sep 2022 01:34:28 -0700 (PDT)
+X-Gm-Message-State: ACrzQf1iGF/bF/qAKOt24JaZw17o/2sskckXvK7BIz4Am9unXZOXkCSL
+        6X7FaVjlwzJO32ef3ufk4hXmfUCHPBF6iIJm2u4=
+X-Google-Smtp-Source: AMsMyM5zZc0GSJoMj25i2Bh88A0n1LAxv8890igtLA6QhnkuCbHokR818i1MqXLf53Ved5KTqhIWgp66jBz7aAZiJM0=
+X-Received: by 2002:ab0:758a:0:b0:3af:2b2d:dae7 with SMTP id
+ q10-20020ab0758a000000b003af2b2ddae7mr11153931uap.24.1664267667770; Tue, 27
+ Sep 2022 01:34:27 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH] overflow: Fix kern-doc markup for functions
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>
-Cc:     Akira Yokosawa <akiyks@gmail.com>, linux-doc@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220926194713.1806917-1-keescook@chromium.org>
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <20220926194713.1806917-1-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20220926160332.1473462-1-Jason@zx2c4.com> <202209261105.9C6AEEEE1@keescook>
+ <CAHmME9pFDzyKJd5ixyB9E05jkZvHShFimbiQsGTcdQO1E5R0QQ@mail.gmail.com> <202209262017.D751DDC38F@keescook>
+In-Reply-To: <202209262017.D751DDC38F@keescook>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Tue, 27 Sep 2022 10:34:16 +0200
+X-Gmail-Original-Message-ID: <CAHmME9qTf+aDmBen2dFXPmbDGkn1E4=oXqqeBRiguLCo7K9EhQ@mail.gmail.com>
+Message-ID: <CAHmME9qTf+aDmBen2dFXPmbDGkn1E4=oXqqeBRiguLCo7K9EhQ@mail.gmail.com>
+Subject: Re: [PATCH] random: split initialization into early arch step and
+ later non-arch step
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 9/27/22 02:47, Kees Cook wrote:
-> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> index 58eb34aa2af9..4b5b3ec91233 100644
-> --- a/include/linux/overflow.h
-> +++ b/include/linux/overflow.h
-> @@ -51,7 +51,8 @@ static inline bool __must_check __must_check_overflow(bool overflow)
->  	return unlikely(overflow);
->  }
->  
-> -/** check_add_overflow() - Calculate addition with overflow checking
-> +/**
-> + * check_add_overflow - Calculate addition with overflow checking
->   *
->   * @a: first addend
->   * @b: second addend
-> @@ -66,7 +67,8 @@ static inline bool __must_check __must_check_overflow(bool overflow)
->  #define check_add_overflow(a, b, d)	\
->  	__must_check_overflow(__builtin_add_overflow(a, b, d))
->  
-> -/** check_sub_overflow() - Calculate subtraction with overflow checking
-> +/**
-> + * check_sub_overflow - Calculate subtraction with overflow checking
->   *
->   * @a: minuend; value to subtract from
->   * @b: subtrahend; value to subtract from @a
-> @@ -81,7 +83,8 @@ static inline bool __must_check __must_check_overflow(bool overflow)
->  #define check_sub_overflow(a, b, d)	\
->  	__must_check_overflow(__builtin_sub_overflow(a, b, d))
->  
-> -/** check_mul_overflow() - Calculate multiplication with overflow checking
-> +/**
-> + * check_mul_overflow - Calculate multiplication with overflow checking
->   *
->   * @a: first factor
->   * @b: second factor
-> @@ -96,7 +99,8 @@ static inline bool __must_check __must_check_overflow(bool overflow)
->  #define check_mul_overflow(a, b, d)	\
->  	__must_check_overflow(__builtin_mul_overflow(a, b, d))
->  
-> -/** check_shl_overflow() - Calculate a left-shifted value and check overflow
-> +/**
-> + * check_shl_overflow - Calculate a left-shifted value and check overflow
->   *
->   * @a: Value to be shifted
->   * @s: How many bits left to shift
-> @@ -104,15 +108,16 @@ static inline bool __must_check __must_check_overflow(bool overflow)
->   *
->   * Computes *@d = (@a << @s)
->   *
-> - * Returns true if '*d' cannot hold the result or when 'a << s' doesn't
-> + * Returns true if '*@d' cannot hold the result or when '@a << @s' doesn't
->   * make sense. Example conditions:
-> - * - 'a << s' causes bits to be lost when stored in *d.
-> - * - 's' is garbage (e.g. negative) or so large that the result of
-> - *   'a << s' is guaranteed to be 0.
-> - * - 'a' is negative.
-> - * - 'a << s' sets the sign bit, if any, in '*d'.
->   *
-> - * '*d' will hold the results of the attempted shift, but is not
-> + * - '@a << @s' causes bits to be lost when stored in *@d.
-> + * - '@s' is garbage (e.g. negative) or so large that the result of
-> + *   '@a << @s' is guaranteed to be 0.
-> + * - '@a' is negative.
-> + * - '@a << @s' sets the sign bit, if any, in '*@d'.
-> + *
-> + * '*@d' will hold the results of the attempted shift, but is not
->   * considered "safe for use" if true is returned.
->   */
->  #define check_shl_overflow(a, s, d) __must_check_overflow(({		\
-> @@ -176,7 +181,7 @@ static inline bool __must_check __must_check_overflow(bool overflow)
->  			      __same_type(n, T))
->  
->  /**
-> - * size_mul() - Calculate size_t multiplication with saturation at SIZE_MAX
-> + * size_mul - Calculate size_t multiplication with saturation at SIZE_MAX
->   *
->   * @factor1: first factor
->   * @factor2: second factor
-> @@ -196,7 +201,7 @@ static inline size_t __must_check size_mul(size_t factor1, size_t factor2)
->  }
->  
->  /**
-> - * size_add() - Calculate size_t addition with saturation at SIZE_MAX
-> + * size_add - Calculate size_t addition with saturation at SIZE_MAX
->   *
->   * @addend1: first addend
->   * @addend2: second addend
-> @@ -216,7 +221,7 @@ static inline size_t __must_check size_add(size_t addend1, size_t addend2)
->  }
->  
->  /**
-> - * size_sub() - Calculate size_t subtraction with saturation at SIZE_MAX
-> + * size_sub - Calculate size_t subtraction with saturation at SIZE_MAX
->   *
->   * @minuend: value to subtract from
->   * @subtrahend: value to subtract from @minuend
-> @@ -239,7 +244,7 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
->  }
->  
->  /**
-> - * array_size() - Calculate size of 2-dimensional array.
-> + * array_size - Calculate size of 2-dimensional array.
->   *
->   * @a: dimension one
->   * @b: dimension two
-> @@ -252,7 +257,7 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
->  #define array_size(a, b)	size_mul(a, b)
->  
->  /**
-> - * array3_size() - Calculate size of 3-dimensional array.
-> + * array3_size - Calculate size of 3-dimensional array.
->   *
->   * @a: dimension one
->   * @b: dimension two
-> @@ -266,8 +271,8 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
->  #define array3_size(a, b, c)	size_mul(size_mul(a, b), c)
->  
->  /**
-> - * flex_array_size() - Calculate size of a flexible array member
-> - *                     within an enclosing structure.
-> + * flex_array_size - Calculate size of a flexible array member
-> + *                   within an enclosing structure.
->   *
->   * @p: Pointer to the structure.
->   * @member: Name of the flexible array member.
-> @@ -284,7 +289,7 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
->  		size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
->  
->  /**
-> - * struct_size() - Calculate size of structure with trailing flexible array.
-> + * struct_size - Calculate size of structure with trailing flexible array.
->   *
->   * @p: Pointer to the structure.
->   * @member: Name of the array member.
+On Tue, Sep 27, 2022 at 5:23 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Mon, Sep 26, 2022 at 08:52:39PM +0200, Jason A. Donenfeld wrote:
+> > On Mon, Sep 26, 2022 at 8:22 PM Kees Cook <keescook@chromium.org> wrote:
+> > > Can find a way to get efi_get_random_bytes() in here too? (As a separate
+> > > patch.) I don't see where that actually happens anywhere currently,
+> > > and we should have it available at this point in the boot, yes?
+> >
+> > No, absolutely not. That is not how EFI works. EFI gets its seed to
+> > random.c much earlier by way of add_bootloader_randomness().
+>
+> Ah! Okay, so, yes, it _does_ get entropy in there, just via a path I
+> didn't see?
 
-Hmm...
+Yes.
 
-I can't apply this patch for testing. On what tree (and what commit) this
-patch is based on?
+> > Yes, we could maybe *change* to using init_utsname if we wanted. That
+> > seems kind of different though. So I'd prefer that to be a different
+> > patch, which would require looking at the interaction with early
+> > hostname setting and such. If you want to do that work, I'd certainly
+> > welcome the patch.
+>
+> Er, isn't that _WAY_ later? Like, hostname isn't set until sysctls up
+> and running, etc. I haven't actually verified 100% but it looks like
+> current->utsname is exactly init_utsname currently.
 
-Thanks.
+If init_utsname()==utsname() and all is fine, can you please send a
+patch atop random.git adjusting that and explaining why? I would
+happily take such a patch. If your suspicion is correct, it would make
+a most welcome improvement.
 
--- 
-An old man doll... just what I always wanted! - Clara
+> > > Was there a reason kfence_init() was happening before time_init()?
+> >
+> > Historically there was, I think, because random_init() used to make
+> > weird allocations. But that's been gone for a while. At this point
+> > it's a mistake, and removing it allows me to do this:
+> >
+> > https://groups.google.com/g/kasan-dev/c/jhExcSv_Pj4
+>
+> Cool. Is that true for all the -stable releases this is aimed at?
+
+Yes.
+
+Though I'll likely drop the stable@ tag for this, and instead visit
+backporting it later in 6.1's cycle, or even after. There's no need to
+rush it, and this is an area that has been historically temperamental.
+
+Jason
