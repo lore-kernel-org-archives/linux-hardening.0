@@ -2,124 +2,107 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3687DC54EE9
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 20:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 498FCC54EE9
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 20:47:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229886AbiI0Uj2 convert rfc822-to-8bit (ORCPT
+        id S232322AbiI0Uq7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Sep 2022 16:39:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41686 "EHLO
+        Tue, 27 Sep 2022 16:46:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230445AbiI0UjW (ORCPT
+        with ESMTP id S233247AbiI0Uqm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Sep 2022 16:39:22 -0400
-X-Greylist: delayed 53907 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 27 Sep 2022 13:39:21 PDT
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FB19481DE;
-        Tue, 27 Sep 2022 13:39:20 -0700 (PDT)
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-        by unirelay02.hostedemail.com (Postfix) with ESMTP id 89DBD120FDF;
-        Tue, 27 Sep 2022 20:39:19 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf05.hostedemail.com (Postfix) with ESMTPA id 2404E2000E;
-        Tue, 27 Sep 2022 20:39:05 +0000 (UTC)
-Message-ID: <9de78c46ad8da9e4c59ba6206d9dcc51bc984db1.camel@perches.com>
-Subject: Re: [PATCH] checkpatch: Don't count URLs for "line too long"
-From:   Joe Perches <joe@perches.com>
-To:     Kees Cook <keescook@chromium.org>,
-        ditya Srivastava <yashsri421@gmail.com>
-Cc:     Andy Whitcroft <apw@canonical.com>,
-        Dwaipayan Ray <dwaipayanray1@gmail.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Tue, 27 Sep 2022 16:46:42 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0D5110250F;
+        Tue, 27 Sep 2022 13:46:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3AFAE61BA0;
+        Tue, 27 Sep 2022 20:46:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E2F5C433D6;
+        Tue, 27 Sep 2022 20:46:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664311583;
+        bh=Sf7VqaaR4EHHX4vlNDI8Uh3V4OoviqEGs4OJjkuPMvE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KEZNNzr3KpkbCjZX/ZJvREb7swZiFyJmXl/NY8R03swHRszivrMyt8UXetSuBhtXd
+         5oTFBlMOpoM0xPzKElfZiZ9HqsDOEdXMaH58puZj0ftn0AH1999qKgdglrfiMjpme6
+         OlsOQXgXmF1Fgk9j/Uc81h8vjUF1GEEYgOC/jQGh6dulYlyL8D9WfRinK06JqPkSlB
+         7RSlS+UXGulwqb/XN3WfsCluvdhhkx06VP3KejufHndo5WGag9Hg0Usn6FALCWBgtr
+         xCt5qZaraQDWoDHrHh671GeaD5i0Uiq8rwG1rc8BtPTKfa80o0mpStizA7VaRy0iCK
+         uBHYh5WuJ9KBA==
+Date:   Tue, 27 Sep 2022 13:46:21 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        linux-hyperv@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Date:   Tue, 27 Sep 2022 13:39:16 -0700
-In-Reply-To: <202209270706.DADC6346@keescook>
-References: <20220927021517.1952202-1-keescook@chromium.org>
-         <91bb341a01ad5cfe4269ef6857387cf3db9619d0.camel@perches.com>
-         <202209270706.DADC6346@keescook>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
+Subject: Re: [PATCH] Drivers: hv: vmbus: Split memcpy of flex-array
+Message-ID: <YzNhHZOLB0T8iqHE@dev-arch.thelio-3990X>
+References: <20220924030741.3345349-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Stat-Signature: kjdqog96ubk9spa5taq7iaqhouyo6i1f
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 2404E2000E
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX19QDelsqtmAtoEUOlWktk0mUigBaUpMn9k=
-X-HE-Tag: 1664311144-921371
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220924030741.3345349-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 2022-09-27 at 07:07 -0700, Kees Cook wrote:
-> On Mon, Sep 26, 2022 at 10:40:50PM -0700, Joe Perches wrote:
-> > On Mon, 2022-09-26 at 19:15 -0700, Kees Cook wrote:
-> > > URLs (not in a Link: field) should be ignored for "line too long"
-> > > warnings. Allow any line containing "https://" or "http://".
-> > 
-> > More generally, this should be for any URI
-> > 
-> > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > []
-> > > @@ -3175,6 +3175,8 @@ sub process {
-> > >  					# file delta changes
-> > >  		      $line =~ /^\s*(?:[\w\.\-\+]*\/)++[\w\.\-\+]+:/ ||
-> > >  					# filename then :
-> > > +		      $line =~ /https?:\/\// ||
-> > > +					# URLs
-> > >  		      $line =~ /^\s*(?:Fixes:|Link:|$signature_tags)/i ||
-> > >  					# A Fixes: or Link: line or signature tag line
-> > >  		      $commit_log_possible_stack_dump)) {
-> > 
-> > And I don't recollect why this wasn't applied, but I think it's a rather better,
-> > more complete, patch:
-> > 
-> > https://lore.kernel.org/lkml/20210114073513.15773-2-yashsri421@gmail.com/
-> > 
-> > I believe I did ack it and forward it to Andrew Morton, but I don't
-> > see it on a lore list.
+On Fri, Sep 23, 2022 at 08:07:41PM -0700, Kees Cook wrote:
+> To work around a misbehavior of the compiler's ability to see into
+> composite flexible array structs (as detailed in the coming memcpy()
+> hardening series[1]), split the memcpy() of the header and the payload
+> so no false positive run-time overflow warning will be generated. As it
+> turns out, this appears to actually reduce the text size:
 > 
-> Many patches have internal references in the commit log (that aren't
-> appropriate for "Link:") like:
+> $ size drivers/hv/vmbus_drv.o.before drivers/hv/vmbus_drv.o
+>    text    data     bss     dec     hex filename
+>   22968    5239     232   28439    6f17 drivers/hv/vmbus_drv.o.before
+>   23032    5239     232   28503    6f57 drivers/hv/vmbus_drv.o
 > 
-> [1] https://some.domain/path/
+> [1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org/
 > 
-> It seems more flexible to just ignore lines with "http" in it...
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Wei Liu <wei.liu@kernel.org>
+> Cc: Dexuan Cui <decui@microsoft.com>
+> Cc: linux-hyperv@vger.kernel.org
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Reported-by: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-URLs vs URIs which can have multiple forms.
+I was waiting for another -next update to test this in WSL2; now that
+said update has happened, I can see that this does resolve the runtime
+warning that I saw.
 
-Take a look at the results of this grep:
+Tested-by: Nathan Chancellor <nathan@kernel.org>
 
-$ git log -1000000 --format=email --no-merges --grep='://' | grep '://' | \
-  grep -v -P 'https?://' | grep -P -oh '\b\w+://' | \
-  sort | uniq -c | sort -rn
-    422 git://
-     46 ftp://
-     15 file://
-     10 smb://
-      5 c://
-      3 usbip://
-      2 svn://
-      2 rsync://
-      2 pvr://
-      1 ttp://
-      1 systemd://
-      1 server://
-      1 radio://
-      1 nbd://
-      1 irc://
-      1 intel_bts://
-      1 htp://
-      1 40176://
-
-The more inclusve search pattern finds many uses of git:// and ftp:// 
-(and probably a few typos too)
-
-Assuming the URI scheme uses ://, it's perhaps reasonable to change the
-suggested search in Aditya's patch from
-
-+			if ($line =~ /^\s*([a-z][\w\.\+\-]*:\/\/\S+)/i) {
-
-to maybe something like this so the URI's use of :// is more obvious
-
-+			if ($line =~ m@^.*\b([a-z][\w\.\+\-]*://\S+)@i) {
-
+> ---
+>  drivers/hv/vmbus_drv.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 23c680d1a0f5..9b111a8262e3 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -1131,7 +1131,8 @@ void vmbus_on_msg_dpc(unsigned long data)
+>  			return;
+>  
+>  		INIT_WORK(&ctx->work, vmbus_onmessage_work);
+> -		memcpy(&ctx->msg, &msg_copy, sizeof(msg->header) + payload_size);
+> +		ctx->msg.header = msg_copy.header;
+> +		memcpy(&ctx->msg.payload, msg_copy.u.payload, payload_size);
+>  
+>  		/*
+>  		 * The host can generate a rescind message while we
+> -- 
+> 2.34.1
+> 
+> 
