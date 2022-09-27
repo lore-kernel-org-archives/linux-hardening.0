@@ -2,118 +2,103 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14086C07E9D
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 07:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F9FC6FA86
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 07:36:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230044AbiI0HaO (ORCPT
+        id S230407AbiI0HgZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Sep 2022 03:30:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41386 "EHLO
+        Tue, 27 Sep 2022 03:36:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbiI0HaN (ORCPT
+        with ESMTP id S230321AbiI0HgI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Sep 2022 03:30:13 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 776DD20BEC;
-        Tue, 27 Sep 2022 00:30:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=tls49PLjZOzAeRxCnxqtOV072QtfY6ihsqweRWOv07c=; b=bJWcivEsmM2FcxwzWZpWJxbPSh
-        8f/Vx3JR1uW7SRoOH1n+ALAE7l/EAofilHwoZUZkVO9rVAHbrRXEic7AmZaaub+Qxth90vNV2XkOs
-        EOrIS4oTZt2XIEqhE0YHAWB0XYYm6YYulqSY6q18Lglwkm6d3UP8Kx64koPk/md3ZzGG5YvP3OM12
-        hmfuylbAjgYQQGnHucDxXAGc04Yaxg8XPEHw28DE1s0n6f1UhGzwkuxWSVzr7dBujRBNt/vqhU2Cu
-        SmbPFQdQIs8nuZ1TFxNtHVKa6aPX01t4Z31J+KgoB/4KoiiJWcqkbWCf0ioHcMd9WUZ45P4JohRTl
-        7mLiCVOw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1od52L-00BEXq-Bw; Tue, 27 Sep 2022 07:29:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 96ABF3001D6;
-        Tue, 27 Sep 2022 09:29:44 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5ACE22022F86A; Tue, 27 Sep 2022 09:29:44 +0200 (CEST)
-Date:   Tue, 27 Sep 2022 09:29:44 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "H.J. Lu" <hjl.tools@gmail.com>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joao Moreira <joao@overdrivepizza.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v5 00/22] KCFI support
-Message-ID: <YzKmaCczYFk6k8S/@hirez.programming.kicks-ass.net>
-References: <20220908215504.3686827-1-samitolvanen@google.com>
- <YzGdeYzoZ1uC1CO/@hirez.programming.kicks-ass.net>
- <CAMe9rOrHe9XD2D+pZJrKo1DxkLMQggDOFXQJfTgEO+xp0dybdw@mail.gmail.com>
+        Tue, 27 Sep 2022 03:36:08 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83323491C6;
+        Tue, 27 Sep 2022 00:36:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664264165; x=1695800165;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=nWRhK5+WAsVRbdRrm7e6YA/MoeAuFkRulWcszj149yU=;
+  b=Asnb0cl4o5+6rXrOuTvHK+fNCUAytw6ie47d6Imos5Cc3ThcozkFQwrO
+   0cbTtsSYMMUwLMneAXPiBc9OkLLs9cJGr04Ux21roBVLEoDuVRjJwUfbl
+   JrNEgFfIYl6iiEocHV4a+gCENMgyX4HWNsh/FX50a2Z6q9pRp4SD6PH0E
+   NnnHk21Gy4v4sO9YPlb/91mgxtT2zCXKa8/R6L7gDbkge5scnQl6sK3Cv
+   nRwB53xQe+lRweYLXIx5Vjg/TlkF0jQ96HkAwJj3HV7o4aGJw2LJphoqv
+   ZBIL7DFXEUAb5jYV1NCHnuVAEpB94NY7VUSIVCAcnpg0HQ12lZnZTH/hx
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="302728047"
+X-IronPort-AV: E=Sophos;i="5.93,348,1654585200"; 
+   d="scan'208";a="302728047"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 00:35:47 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10482"; a="572558720"
+X-IronPort-AV: E=Sophos;i="5.93,348,1654585200"; 
+   d="scan'208";a="572558720"
+Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.99.249.206]) ([10.99.249.206])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 00:35:43 -0700
+Message-ID: <4d7caa50-9271-b062-2e0d-ad200b8a95f7@linux.intel.com>
+Date:   Tue, 27 Sep 2022 09:35:41 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMe9rOrHe9XD2D+pZJrKo1DxkLMQggDOFXQJfTgEO+xp0dybdw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH][next] ASoC: Intel: Skylake: Replace zero-length arrays
+ with DECLARE_FLEX_ARRAY() helper
+Content-Language: en-US
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <YzIuiUul2CwPlkKh@work>
+From:   =?UTF-8?Q?Amadeusz_S=c5=82awi=c5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+In-Reply-To: <YzIuiUul2CwPlkKh@work>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 01:16:04PM -0700, H.J. Lu wrote:
-> On Mon, Sep 26, 2022 at 5:39 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Thu, Sep 08, 2022 at 02:54:42PM -0700, Sami Tolvanen wrote:
-> > > KCFI is a forward-edge control-flow integrity scheme in the upcoming
-> > > Clang 16 release, which is more suitable for kernel use than the
-> > > existing CFI scheme used by CONFIG_CFI_CLANG. KCFI doesn't require
-> > > LTO, doesn't alter function references to point to a jump table, and
-> > > won't break function address equality.
-> > >
-> > > This series replaces the current arm64 CFI implementation with KCFI
-> > > and adds support for x86_64.
-> > >
-> > > KCFI requires assembly functions that are indirectly called from C
-> > > code to be annotated with type identifiers. As type information is
-> > > only available in C, the compiler emits expected type identifiers
-> > > into the symbol table, so they can be referenced from assembly
-> > > without having to hardcode type hashes. Patch 6 adds helper macros
-> > > for annotating functions, and patches 9 and 20 add annotations.
-> > >
-> > > In case of a type mismatch, KCFI always traps. To support error
-> > > handling, the compiler generates a .kcfi_traps section for x86_64,
-> > > which contains the locations of each trap, and for arm64, encodes
-> > > the necessary register information to the ESR. Patches 10 and 22 add
-> > > arch-specific error handlers.
-> > >
-> > > To test this series, you'll need a ToT Clang toolchain. The series
-> > > is also available pn GitHub:
-> > >
-> > >   https://github.com/samitolvanen/linux/commits/kcfi-v5
-> >
-> > As mentioned at plumbers, my only concern is somewhat excessive use of
-> > CFI_CLANG as oposed to something more compiler neutral. But I suppose
-> > that's something we can cleanup/fix when GCC grows support for this.
-> >
-> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Tested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> >
-> > (as in I ran kCFI + call-depth-tracking + FineIBT on a bunch of
-> > hardware)
-> >
-> > HJL, can you look at adding kCFI support to GCC ?
+On 9/27/2022 12:58 AM, Gustavo A. R. Silva wrote:
+> Zero-length arrays are deprecated and we are moving towards adopting
+> C99 flexible-array members, instead. So, replace zero-length arrays
+> declarations in anonymous union with the new DECLARE_FLEX_ARRAY()
+> helper macro.
 > 
-> Adding -fsanitize=kcfi to GCC is a big effort.  Please open a
-> GCC bug:
+> This helper allows for flexible-array members in unions.
 > 
-> https://gcc.gnu.org/bugzilla/enter_bug.cgi?product=gcc
+> Link: https://github.com/KSPP/linux/issues/193
+> Link: https://github.com/KSPP/linux/issues/226
+> Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>   sound/soc/intel/skylake/skl-topology.h | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/sound/soc/intel/skylake/skl-topology.h b/sound/soc/intel/skylake/skl-topology.h
+> index a5bccf2fcd88..017ac0ef324d 100644
+> --- a/sound/soc/intel/skylake/skl-topology.h
+> +++ b/sound/soc/intel/skylake/skl-topology.h
+> @@ -233,8 +233,8 @@ struct skl_uuid_inst_map {
+>   struct skl_kpb_params {
+>   	u32 num_modules;
+>   	union {
+> -		struct skl_mod_inst_map map[0];
+> -		struct skl_uuid_inst_map map_uuid[0];
+> +		DECLARE_FLEX_ARRAY(struct skl_mod_inst_map, map);
+> +		DECLARE_FLEX_ARRAY(struct skl_uuid_inst_map, map_uuid);
+>   	} u;
+>   };
+>   
 
-Here goes:
-
-  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=107048
+Reviewed-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
