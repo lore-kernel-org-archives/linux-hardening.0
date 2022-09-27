@@ -2,134 +2,83 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D63C07E9D
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 13:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DB0C07E9D
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 14:07:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232498AbiI0NPr (ORCPT
+        id S231993AbiI0OHI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Sep 2022 09:15:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34084 "EHLO
+        Tue, 27 Sep 2022 10:07:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232504AbiI0NPh (ORCPT
+        with ESMTP id S231628AbiI0OHI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Sep 2022 09:15:37 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D36E5FD8
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Sep 2022 06:15:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1664284534;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YG830RNjkEtnpnaFh8Xp0Sr5T2atOHoB+aLCGfBa7L4=;
-        b=UR4IAhY6YOfYaHJo9oXI5c1qvl8Qz8C2u2d6wtFNBFsnFieinq4m7rTTLJheESOcynolZE
-        zAhiNyjOCL05x/nCd5p44259MT7VBtaESsDj/xl2EQuzgalIK7XlrgMoa50iTBA+XsMoWN
-        +RHp0E6fFd1wUcbR84e+N65YlhRDlpc=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-121-J-A6q9DfMwSrqaYyBrYqmQ-1; Tue, 27 Sep 2022 09:15:33 -0400
-X-MC-Unique: J-A6q9DfMwSrqaYyBrYqmQ-1
-Received: by mail-ed1-f70.google.com with SMTP id z13-20020a05640240cd00b0045276a79364so7727667edb.2
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Sep 2022 06:15:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=YG830RNjkEtnpnaFh8Xp0Sr5T2atOHoB+aLCGfBa7L4=;
-        b=dr59tkrVGuGg2V5AnnQ+bp4WewmbMKml9eAzGEw6XFIkwSUycFJE/PO1zpYRRK0dYu
-         yH2f84wfMhRmBggfOnLYLr/+8IvS0ETCdas3D29aTTd4LBmTXSXAGr1uDepXTjJiawMH
-         bClUhyB29Sm5FxCjvCDx3/WKTtYM+hmvnfj6W4CRnmQWugf3PpwBKnQKjjiF8MXBH5kx
-         742q2fkEpI2/uDjy13DiWqfJ3fP31yAa+IUtTpyNXHXU9Nsvr5HTRfB44rdP15zUqloz
-         HOScFKgwJIw3JymDtVgevgQfUlTCZIRMax+Hsivxr0g+tbIoyvc2qDdBlwEDEDdmGatj
-         /KAw==
-X-Gm-Message-State: ACrzQf1TacaP6L1GpiqGgIunmnwoypt9t2R9L9w0EjJg1nTj9zDM1f4Y
-        zrAi40oxFHZqd1WybxjDMTOKhvZL/TctAKPQjcoNj9hIIHdx3V7ZAUQuX6eWzvtLHHhcPSn9Xos
-        8Yp9Aci42S1IE0aANS3dZ2KCVbNzb
-X-Received: by 2002:a05:6402:2489:b0:454:11de:7698 with SMTP id q9-20020a056402248900b0045411de7698mr27881452eda.214.1664284532185;
-        Tue, 27 Sep 2022 06:15:32 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM6WRE1um0JP7ZvO78Ux6QnKgEFnIaBzjBceT9Puib3zcNo/CSOhHzoREvV7PNzyjRN38Oa8NQ==
-X-Received: by 2002:a05:6402:2489:b0:454:11de:7698 with SMTP id q9-20020a056402248900b0045411de7698mr27881433eda.214.1664284531980;
-        Tue, 27 Sep 2022 06:15:31 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id 2-20020a170906318200b0078116c361d9sm814628ejy.10.2022.09.27.06.15.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Sep 2022 06:15:31 -0700 (PDT)
-Message-ID: <62b2133e-05ec-1a09-8214-b2b847c0e97e@redhat.com>
-Date:   Tue, 27 Sep 2022 15:15:30 +0200
+        Tue, 27 Sep 2022 10:07:08 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04BC69E890;
+        Tue, 27 Sep 2022 07:07:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9FAE4B81BE3;
+        Tue, 27 Sep 2022 14:07:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E108BC433D6;
+        Tue, 27 Sep 2022 14:07:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664287624;
+        bh=FHPwFJeY9xWzW2Uk+ZnQDGf3FYmwkr51wCUPbEMEj3k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LtB0EZLRO4gsesP4oqdp9LWO1rEq6ilefO8qkDxElaPVeV0KPLwOvEYoLabyouJSb
+         zxK6QQKtBbsWcAszvfSsGBAt+ryT6J8lGt2nnwWN0u1LqYEZnF374bhUcyfP97tqVW
+         ed05mxqIfbMLK70xty2z78o61uGM1qmC4DBBM2uvsrw+S8he8LOleVF0RuWbY/9X0x
+         QyS1Irs5V+1jv2LawotH9adV7k3v5filWe1mgz/jT9jIj3LP7+5+M3+hOOHxnEYYB4
+         VbdW+YeMIK3V27ug/p9SKnRwY6XjqDNgbI0m95gcFKDoi4FK79j82hzk9K9us1lypI
+         IEqOR4FG+/EKw==
+Date:   Tue, 27 Sep 2022 07:07:02 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Subash Abhinov Kasiviswanathan <quic_subashab@quicinc.com>,
+        Sean Tranchetti <quic_stranche@quicinc.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH][next] net: ethernet: rmnet: Replace zero-length array
+ with DECLARE_FLEX_ARRAY() helper
+Message-ID: <20220927070702.1c2da2b8@kernel.org>
+In-Reply-To: <202209261920.3A2EA07D4@keescook>
+References: <YzIei3tLO1IWtMjs@work>
+        <202209261502.7DB9C7119@keescook>
+        <20220926172604.71a20b7d@kernel.org>
+        <202209261920.3A2EA07D4@keescook>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: [PATCH] platform/surface: Split memcpy() of struct ssam_event
- flexible array
-To:     Kees Cook <keescook@chromium.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20220927004011.1942739-1-keescook@chromium.org>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220927004011.1942739-1-keescook@chromium.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
-
-On 9/27/22 02:40, Kees Cook wrote:
-> To work around a misbehavior of the compiler's ability to see into
-> composite flexible array structs (as detailed in the coming memcpy()
-> hardening series[1]), split the memcpy() of the header and the payload
-> so no false positive run-time overflow warning will be generated.
+On Mon, 26 Sep 2022 19:22:30 -0700 Kees Cook wrote:
+> > Not directly related to this patch, but I just had to look at pahole
+> > output for sk_buff and the struct_group() stuff makes is really painful
+> > to read :/ Offsets for the members are relative to the "group" and they
+> > are all repeated.
+> > 
+> > Is there any chance you could fix that? Before we sprinkle more pixie
+> > dust around, perhaps?  
 > 
-> [1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org
-> 
-> Cc: Maximilian Luz <luzmaximilian@gmail.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Mark Gross <markgross@kernel.org>
-> Cc: platform-driver-x86@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Unfortunately I don't see a way around it until we can make changes to
+> the C language spec, and that's measured in decades. :(
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+I think BPF folks have had some success adding C extensions, like
+tagging. Some form of attribute would really look so much better than
+this DECLARE_FLEX_ARRAY() macro indirection. Maybe it's just me :(
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+> Perhaps we could add some kind of heuristic to pahole to "hide" one of
+> the internal struct_group() copies, and to hide the empty flexible-array
+> wrapper structs? (pahole already can't tell the difference between a
+> 0-length array and a flexible-array.) Would that be workable?
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-> ---
->  drivers/platform/surface/surface_acpi_notify.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/surface/surface_acpi_notify.c b/drivers/platform/surface/surface_acpi_notify.c
-> index 44e317970557..50500e562963 100644
-> --- a/drivers/platform/surface/surface_acpi_notify.c
-> +++ b/drivers/platform/surface/surface_acpi_notify.c
-> @@ -355,7 +355,8 @@ static u32 san_evt_bat_nf(struct ssam_event_notifier *nf,
->  	INIT_DELAYED_WORK(&work->work, san_evt_bat_workfn);
->  	work->dev = d->dev;
->  
-> -	memcpy(&work->event, event, sizeof(struct ssam_event) + event->length);
-> +	work->event = *event;
-> +	memcpy(work->event.data, event->data, event->length);
->  
->  	queue_delayed_work(san_wq, &work->work, delay);
->  	return SSAM_NOTIF_HANDLED;
-
-
+That'd be my knee-jerk fix, too. Or at least render the offsets for 
+the anonymous side of the union as absolute rather than relative.
