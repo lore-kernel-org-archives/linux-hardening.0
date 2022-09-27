@@ -2,67 +2,63 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A13CFC07E9D
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 00:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94623C32771
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 00:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229801AbiI0AkA (ORCPT
+        id S230024AbiI0AkW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 20:40:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39374 "EHLO
+        Mon, 26 Sep 2022 20:40:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229552AbiI0Aj7 (ORCPT
+        with ESMTP id S229987AbiI0AkR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 20:39:59 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 282ED1C928
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 17:39:56 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id i15-20020a17090a4b8f00b0020073b4ac27so8556301pjh.3
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 17:39:56 -0700 (PDT)
+        Mon, 26 Sep 2022 20:40:17 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C212F33A3D
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 17:40:14 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id c7so7984332pgt.11
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 17:40:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date;
-        bh=gjxDtq0Rs25czueJLh+kJywKCTsPWEllkeEaIximls0=;
-        b=Qt+pUXJLWWjyzrTWNLVv+IQOkUSuFq6QCzrTd+bfNJnEC/mlmP7mJ1ZUPsX+Z6hY3m
-         UM7tKgEFBDCquZJfU17BA8hgD9xba/Apk87oVo5NgbL4bDm6u2I2ISuoXK3+DTdTX8VJ
-         rzbW/CRrTHVIGYT5eCnI9w3mgYaszxwfLJYmk=
+        bh=pGt51fVnZ3EKLkKkT429v72La88Y6sW9WqI8weW67S8=;
+        b=Oq1JA4L/avWEqaRp3w58mg2z0PM4qsnliNUIsoKBlDE6tSA8D0QVjfVvKz0ZJJigRX
+         XZsQLFTfMeXNBQ0fCNu8mHYPxUh7urDzyBF8UsgJ3LeHGmxtJvANVPv5iykuK0+wjL/i
+         QEXkx5mq8tx8c8LxIDbjsg74TaDzSdDe/Tg6E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=gjxDtq0Rs25czueJLh+kJywKCTsPWEllkeEaIximls0=;
-        b=gOnPw+hzitxgte2mfeAnv9wMnE5iOb3V2KWT2zhZCfq92j5zJ09/H3SeeRgVJLTO/i
-         w5kFAzRKTwfmjzjQcp3y9a0BshQfFVHVv46grRdeF7MXoqV4G31w2B+E9ewnxI8SN0sU
-         WzY/7u7FtTdUjioSJq++z6gMTIov/Ia2YcKTp93ydYSI10TyOy2fV4zSDwLAhiXtVH20
-         WR8QsrUjlCatZJTLFwdxGZKb/w4xSjhro+CyRdcbGXVPIFUDp/FJIM0HqO+u8ib2yrwF
-         je/VLwQlLQtZ1ck+2RtkYmM+GFHAFCIm6elb80roxdc3AfzOS/2GLExun+CgKMRSRgvs
-         ObIQ==
-X-Gm-Message-State: ACrzQf16WcPOEkJhrkEhN5PmiYbzE108r9UWnaB6hjgsZF66GWiYzLsh
-        uj5Gsta6tXi/qoVzEgb4Xcm+qHsw2L9PYA==
-X-Google-Smtp-Source: AMsMyM5pQdcBoOOjpvAnHrRCRpqxxSRTU/ZRyp8BkwhdPdn40BuanqBBOrCLJUQGCUnzyKSBznk1fQ==
-X-Received: by 2002:a17:903:2005:b0:178:3a78:80f5 with SMTP id s5-20020a170903200500b001783a7880f5mr24986789pla.174.1664239195767;
-        Mon, 26 Sep 2022 17:39:55 -0700 (PDT)
+        bh=pGt51fVnZ3EKLkKkT429v72La88Y6sW9WqI8weW67S8=;
+        b=Ko8IbPNDjPNtJy08y8c4Olfn9KXhuvd+pzpduaU/FPDv0aSMX65Nf09SO+xc7KZC6/
+         soSWRftZWNMpBcOHc2ZAL1BUmFkIqWWfq+dGYQ4CdEYlHBjvAzPD0YOrBua2BV4/lCt7
+         sj1DEXBEq8+USTC2wjY+GghBw0fFUwl3aB4XmhpOQ++g9BOu4DZU08WetAfWa4gbnUQL
+         sh/ecYYBy19+ADHlUr2fDo2bP/cwIVBCI6ceJ35nLob7VoQRViw/hcgYoGCX+ZfDnmJh
+         eS4stmx31uoDz6FH5SV7L/mTEiNDNUYAgYTsmWFbPCtemEUX8/yDAvk/4mihLNBCLjRb
+         h4aA==
+X-Gm-Message-State: ACrzQf2NF2OhWewmfB8qFpA49qDktFOfm3UtyiNOzW5nZJ3dIDds3y2E
+        K//wxGeFxcq4BeSTFjTmbBrjrg==
+X-Google-Smtp-Source: AMsMyM4DBwkJt9JgEwKhJyofsVCuApgj47vMcTyXAjbHT1YTCJiKsvKiWnfGQnHOgfU0c79wTb3QLw==
+X-Received: by 2002:a62:2983:0:b0:54e:7cd5:adb3 with SMTP id p125-20020a622983000000b0054e7cd5adb3mr25944829pfp.38.1664239213900;
+        Mon, 26 Sep 2022 17:40:13 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h13-20020aa796cd000000b00540a346477csm133564pfq.76.2022.09.26.17.39.54
+        by smtp.gmail.com with ESMTPSA id z187-20020a6265c4000000b005367c28fd32sm113065pfb.185.2022.09.26.17.40.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 17:39:55 -0700 (PDT)
+        Mon, 26 Sep 2022 17:40:13 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Alexandra Winter <wintera@linux.ibm.com>
+To:     Maximilian Luz <luzmaximilian@gmail.com>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Wenjia Zhang <wenjia@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] s390/qeth: Split memcpy() of struct qeth_ipacmd_addr_change flexible array
-Date:   Mon, 26 Sep 2022 17:39:53 -0700
-Message-Id: <20220927003953.1942442-1-keescook@chromium.org>
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] platform/surface: Split memcpy() of struct ssam_event flexible array
+Date:   Mon, 26 Sep 2022 17:40:11 -0700
+Message-Id: <20220927004011.1942739-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1525; h=from:subject; bh=bUXptYsfn3QynH+ULXH8Hc9/lgFc7+jyEV9USOVT9ms=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjMkZYJo3tqJvuRRvDT0Kc6P0APNVENYY0JXVpJPN6 o6X87pSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYzJGWAAKCRCJcvTf3G3AJoKLD/ 4pR/ZckZK4sdm9vPPPFA6WxL7A7xzH3EEfNBZ9NGAtkbm3elkZ/DRy0ULpzf7cp9z3/+g8ELZZio3Q llnRP2YMWF2GtNjMvhOctWgPQs7E3S80c5K3o5/j8A4PCZYo1RZli9eCra34cEQVrtKBXRRkspKGkv OjOrwLys51OAEu1HlZi3JckcCBQjGMjGQdDY+kk08Gt2XJv7N7iUxvy4kpp4bF6jobSVhmpKkyvDZt Mv4ydOMUF0j03BktcAJ4z/EtNf4JRPYuoVZIm1+JQiG51ewlVlndEhZ6kCiiIQPdq+RkkR/sMMC0s1 tsByRgpVn4jm95vXnuFV6lzdXnFSlsLQnTsjktuThpW+Nl5Cy0BVubYDZlOUlEcwP8u7PFiOkPcoWo 6Alczo9emoomb9jpWVbfd1Y5E2mW+mwukZlPd5z561oY2BDXC5oPLjCf5pDiRrM1pej99tT9ecFlTc ntLfR9LdRzBrQoyya648IpdOWzMgF5/VqJAaijut2pe7EYXILso1I6wKy0pvf1HLwE2DEv5kKUrMkm CfjGvONdqD3v0wbW3/p5bxPOac1ZgjsdxeF5a83y+Yn4MaY1MQRE4oQg/8DptmBvHLCooSHxqfRaG9 R8ITRB0DB14zuluOnP1MMssvrXDnUVNElfF2eAUJLu5LYQ9dEMKNeDvKstJA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1376; h=from:subject; bh=GL45TSDgSn7yiaUVdMr7d6+dV1xEwuSn6eIvk11kXhk=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjMkZrIBbhM5eJ5F0lk3GSzc2tJpcGHkoXsVR+1CSD Z+kqhDiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYzJGawAKCRCJcvTf3G3AJuYgD/ 42fEX1+srsvR9Fgixh0DPqR9AHu3bbG8VczVkxaEs0PIPA9m/U1oa61vODyMGQFvVpGTdtwtOqusao Lc0TCL8cxkBG9r985lB7EOFK5m6GOJq0qaATQVjyCgshaFJpd9i4KuZzj1OrUhyfFV11y1RPrZDeMx xZDjWfWyYmoJPjri9wFWsmxYh+wuDO2ZdhGUGcpF7UKEEfuLOQ5TdHvse0W5mgVr7vh6VgZsSQ8pwd YPJbaWfki0IsvGngCDXWd6WUkhHSbZXLCUiyL+xVk9jW4c3Q9mjyvseSyutd8l1Rweb8Z+nUSEyqjT pKZDSZyNqiNv/H0m7GfmguCiIaS2mp8ZGfarUOCqPK61YmiWzf/zr/7d+4A20CHcdiflyL49s0POov d7cldX6lZfTOQQh0Qy+/ObfAVmYRiG6Up1r/GB7sTM+YkKmqbfjtfvYfirXmBWFGFskZ20FvQ9Yc7E OdIV+frZTc8m36X9cNmWgcYd0XDtBxwQ5azt3DVdEnrTsD+L2qj/+nViU/PU07lghiFXiUmD6osc8q gmWLw8zA568medg+59ii7Zd5veCr+4xrl7pT9dLrx/Zo/e1PtV7GXSwHBPlP9lm4+1m0LRuEN1OSqc oWogHgOAb5bPrgyaAiQGoeO3xRS7a58Mzm3jVl2f6iYKmZ+3GTQrKeyoYUhQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -74,37 +70,31 @@ composite flexible array structs (as detailed in the coming memcpy()
 hardening series[1]), split the memcpy() of the header and the payload
 so no false positive run-time overflow warning will be generated.
 
-[1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org/
+[1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org
 
-Cc: Alexandra Winter <wintera@linux.ibm.com>
-Cc: Wenjia Zhang <wenjia@linux.ibm.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: Sven Schnelle <svens@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org
-Cc: netdev@vger.kernel.org
+Cc: Maximilian Luz <luzmaximilian@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Gross <markgross@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/s390/net/qeth_l2_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/surface/surface_acpi_notify.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index 2d4436cbcb47..0ce635b7b472 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -1530,8 +1530,8 @@ static void qeth_addr_change_event(struct qeth_card *card,
- 	else
- 		INIT_DELAYED_WORK(&data->dwork, qeth_l2_dev2br_worker);
- 	data->card = card;
--	memcpy(&data->ac_event, hostevs,
--			sizeof(struct qeth_ipacmd_addr_change) + extrasize);
-+	data->ac_event = *hostevs;
-+	memcpy(data->ac_event.entry, hostevs->entry, extrasize);
- 	queue_delayed_work(card->event_wq, &data->dwork, 0);
- }
+diff --git a/drivers/platform/surface/surface_acpi_notify.c b/drivers/platform/surface/surface_acpi_notify.c
+index 44e317970557..50500e562963 100644
+--- a/drivers/platform/surface/surface_acpi_notify.c
++++ b/drivers/platform/surface/surface_acpi_notify.c
+@@ -355,7 +355,8 @@ static u32 san_evt_bat_nf(struct ssam_event_notifier *nf,
+ 	INIT_DELAYED_WORK(&work->work, san_evt_bat_workfn);
+ 	work->dev = d->dev;
  
+-	memcpy(&work->event, event, sizeof(struct ssam_event) + event->length);
++	work->event = *event;
++	memcpy(work->event.data, event->data, event->length);
+ 
+ 	queue_delayed_work(san_wq, &work->work, delay);
+ 	return SSAM_NOTIF_HANDLED;
 -- 
 2.34.1
 
