@@ -2,60 +2,67 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B38C07E9D
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 00:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A13CFC07E9D
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 00:40:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229459AbiI0Ajd (ORCPT
+        id S229801AbiI0AkA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 20:39:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36624 "EHLO
+        Mon, 26 Sep 2022 20:40:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229462AbiI0Ajc (ORCPT
+        with ESMTP id S229552AbiI0Aj7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 20:39:32 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EBBE2AA
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 17:39:30 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id a5-20020a17090aa50500b002008eeb040eso124536pjq.1
-        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 17:39:30 -0700 (PDT)
+        Mon, 26 Sep 2022 20:39:59 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 282ED1C928
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 17:39:56 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id i15-20020a17090a4b8f00b0020073b4ac27so8556301pjh.3
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 17:39:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date;
-        bh=VX2MaE9LikBhqm6H7NNpI0lGV1JO9WgBYPEB/xrhSCo=;
-        b=YwtHnhJceFnNIVilGBVx9cSvCigPxI59ZkQ1T0nGE0v1mNNFb2G5Hz1qzcj9ujfxgI
-         c9vpPUYgPJQ+qzKRsFIZ2Yd1YH+r04WMIDBsSKrTO6myvpcZLQl9f6gzAx3cclMr25jc
-         Hwsrg2mnYMRCu9fy9IGbdt+ajb4PDfLs7xRlQ=
+        bh=gjxDtq0Rs25czueJLh+kJywKCTsPWEllkeEaIximls0=;
+        b=Qt+pUXJLWWjyzrTWNLVv+IQOkUSuFq6QCzrTd+bfNJnEC/mlmP7mJ1ZUPsX+Z6hY3m
+         UM7tKgEFBDCquZJfU17BA8hgD9xba/Apk87oVo5NgbL4bDm6u2I2ISuoXK3+DTdTX8VJ
+         rzbW/CRrTHVIGYT5eCnI9w3mgYaszxwfLJYmk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=VX2MaE9LikBhqm6H7NNpI0lGV1JO9WgBYPEB/xrhSCo=;
-        b=FTktLH4BSepoTPC+OFmqpSCP0/hgfwOp0Ep/x5CurAr4H6C6Yvlq5UZToHg/I0VAbF
-         7mzF/ITKp8GmFcOJT4BuZh7eGt0a/+bQ9d7ezYbicUBN84/steoUTtyh/DkOOf9rw+xt
-         oB5BEb2Tihwr2MjyqtCfV15Km9kINZEg4iTeC69K7h5SaZI/AoPg+WEikfvjfhfpJb38
-         UzPQN13TxKdkz3kSTVAFIplBQ9TBRdURzkseSvDWFAkKTDMXXCPyfiAotSpsbDk6DOAm
-         7DritbdUAJPnxM48IJHdtDHuZx3uKB2Ul71jWbXRG6oN3IluHxp+fVL+zhTipY7ZwpSc
-         F0kA==
-X-Gm-Message-State: ACrzQf2LNYxKjtj8bJeoTww6Vcy+PLfIu87uvhl14XF1N3WbUzr2IXsd
-        vVRVYhAV7320hbxnQrphdJGlCw==
-X-Google-Smtp-Source: AMsMyM5DVURFTCAOIIMHItb2UrnHwYT2a0/eoTPPSiuYYk+8kcKUVmLnzZHx/NHQdiEOvoh+g8qfdA==
-X-Received: by 2002:a17:902:d4ce:b0:177:fe49:19d2 with SMTP id o14-20020a170902d4ce00b00177fe4919d2mr24786788plg.4.1664239169812;
-        Mon, 26 Sep 2022 17:39:29 -0700 (PDT)
+        bh=gjxDtq0Rs25czueJLh+kJywKCTsPWEllkeEaIximls0=;
+        b=gOnPw+hzitxgte2mfeAnv9wMnE5iOb3V2KWT2zhZCfq92j5zJ09/H3SeeRgVJLTO/i
+         w5kFAzRKTwfmjzjQcp3y9a0BshQfFVHVv46grRdeF7MXoqV4G31w2B+E9ewnxI8SN0sU
+         WzY/7u7FtTdUjioSJq++z6gMTIov/Ia2YcKTp93ydYSI10TyOy2fV4zSDwLAhiXtVH20
+         WR8QsrUjlCatZJTLFwdxGZKb/w4xSjhro+CyRdcbGXVPIFUDp/FJIM0HqO+u8ib2yrwF
+         je/VLwQlLQtZ1ck+2RtkYmM+GFHAFCIm6elb80roxdc3AfzOS/2GLExun+CgKMRSRgvs
+         ObIQ==
+X-Gm-Message-State: ACrzQf16WcPOEkJhrkEhN5PmiYbzE108r9UWnaB6hjgsZF66GWiYzLsh
+        uj5Gsta6tXi/qoVzEgb4Xcm+qHsw2L9PYA==
+X-Google-Smtp-Source: AMsMyM5pQdcBoOOjpvAnHrRCRpqxxSRTU/ZRyp8BkwhdPdn40BuanqBBOrCLJUQGCUnzyKSBznk1fQ==
+X-Received: by 2002:a17:903:2005:b0:178:3a78:80f5 with SMTP id s5-20020a170903200500b001783a7880f5mr24986789pla.174.1664239195767;
+        Mon, 26 Sep 2022 17:39:55 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k129-20020a628487000000b0053e5daf1a25sm139467pfd.45.2022.09.26.17.39.28
+        by smtp.gmail.com with ESMTPSA id h13-20020aa796cd000000b00540a346477csm133564pfq.76.2022.09.26.17.39.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 17:39:29 -0700 (PDT)
+        Mon, 26 Sep 2022 17:39:55 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Evgeniy Polyakov <zbr@ioremap.net>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] w1: Split memcpy() of struct cn_msg flexible array
-Date:   Mon, 26 Sep 2022 17:39:27 -0700
-Message-Id: <20220927003927.1942170-1-keescook@chromium.org>
+To:     Alexandra Winter <wintera@linux.ibm.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Wenjia Zhang <wenjia@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] s390/qeth: Split memcpy() of struct qeth_ipacmd_addr_change flexible array
+Date:   Mon, 26 Sep 2022 17:39:53 -0700
+Message-Id: <20220927003953.1942442-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1188; h=from:subject; bh=S5QP3TPQ007bwTwLGs3iHsjr0YjJtqD/x5tIisFrd8k=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjMkY+50POBINt2mFF6tH8OhzUmiluofkXebM++j5G Vgtu0j2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYzJGPgAKCRCJcvTf3G3AJquWEA CNazGUUbkJni6TliGwbV4IEgK1WC1RFd1apveljb1lfn3tDGpufcLn4Q9V94nilYf8GeNi3qbg95/y S9lwOAF74Jg1+34s7K/Wzz5/J07EQtndDPEoMZ+JUxt8MoG9E9JW+0rEJmBJ8jLPNQPkqklgo+8ep1 8QETDirCbP1PNhcqS2nHr9dO4JJRaNJcP4RnId/TTdb88i4foxxu0p0kQRX8IB8EvzL777eoMA70gR omlaTJJOKJS5+ZUnM4mOoZPbXbhGT9pewc038LA7092mIGTip9LhWY9FxUlAuMMPu4R6bp9tKrHPPm lEqgKo76aSqOre1c/TiyXRSMgd27XjoyEjN5AUWQm1iKyg0tTo2rCH1VEqK9+F0Ns0qEW3bXAN0AMH rqoFVZ8kKp6Ebo08CfC5P6LlQjJxdi4Ix3qE0ZHOg1MQvE7RjvdMLVoN8iI29hvfBsPKsdyza1MdZz e9Hgy7rJg9PF8VjT2SxDRPvp6cORUf8lBUMPigf4ejrKb5mOjNdZImir0WpQFBXgGxmhtWLuG1E9VI 8uV2GvFBvRymlgoJczQ5e+fAjaAS3diFMnnH9tNm4yrdJZTXTEtZjyGqT8QdhYVJw6+SRhDvL/c1Wm DbmfhGedHB35z+BhSKXKf10xmRJAsJjCxnmYuHm8X9xP0IIvjyIPfgbUIhrQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1525; h=from:subject; bh=bUXptYsfn3QynH+ULXH8Hc9/lgFc7+jyEV9USOVT9ms=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjMkZYJo3tqJvuRRvDT0Kc6P0APNVENYY0JXVpJPN6 o6X87pSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYzJGWAAKCRCJcvTf3G3AJoKLD/ 4pR/ZckZK4sdm9vPPPFA6WxL7A7xzH3EEfNBZ9NGAtkbm3elkZ/DRy0ULpzf7cp9z3/+g8ELZZio3Q llnRP2YMWF2GtNjMvhOctWgPQs7E3S80c5K3o5/j8A4PCZYo1RZli9eCra34cEQVrtKBXRRkspKGkv OjOrwLys51OAEu1HlZi3JckcCBQjGMjGQdDY+kk08Gt2XJv7N7iUxvy4kpp4bF6jobSVhmpKkyvDZt Mv4ydOMUF0j03BktcAJ4z/EtNf4JRPYuoVZIm1+JQiG51ewlVlndEhZ6kCiiIQPdq+RkkR/sMMC0s1 tsByRgpVn4jm95vXnuFV6lzdXnFSlsLQnTsjktuThpW+Nl5Cy0BVubYDZlOUlEcwP8u7PFiOkPcoWo 6Alczo9emoomb9jpWVbfd1Y5E2mW+mwukZlPd5z561oY2BDXC5oPLjCf5pDiRrM1pej99tT9ecFlTc ntLfR9LdRzBrQoyya648IpdOWzMgF5/VqJAaijut2pe7EYXILso1I6wKy0pvf1HLwE2DEv5kKUrMkm CfjGvONdqD3v0wbW3/p5bxPOac1ZgjsdxeF5a83y+Yn4MaY1MQRE4oQg/8DptmBvHLCooSHxqfRaG9 R8ITRB0DB14zuluOnP1MMssvrXDnUVNElfF2eAUJLu5LYQ9dEMKNeDvKstJA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -69,26 +76,35 @@ so no false positive run-time overflow warning will be generated.
 
 [1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org/
 
-Cc: Evgeniy Polyakov <zbr@ioremap.net>
+Cc: Alexandra Winter <wintera@linux.ibm.com>
+Cc: Wenjia Zhang <wenjia@linux.ibm.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+Cc: Sven Schnelle <svens@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/w1/w1_netlink.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/s390/net/qeth_l2_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/w1/w1_netlink.c b/drivers/w1/w1_netlink.c
-index fa490aa4407c..db110cc442b1 100644
---- a/drivers/w1/w1_netlink.c
-+++ b/drivers/w1/w1_netlink.c
-@@ -611,7 +611,8 @@ static void w1_cn_callback(struct cn_msg *cn, struct netlink_skb_parms *nsp)
- 		}
- 		atomic_set(&block->refcnt, 1);
- 		block->portid = nsp->portid;
--		memcpy(&block->request_cn, cn, sizeof(*cn) + cn->len);
-+		block->request_cn = *cn;
-+		memcpy(block->request_cn.data, cn->data, cn->len);
- 		node = (struct w1_cb_node *)(block->request_cn.data + cn->len);
+diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
+index 2d4436cbcb47..0ce635b7b472 100644
+--- a/drivers/s390/net/qeth_l2_main.c
++++ b/drivers/s390/net/qeth_l2_main.c
+@@ -1530,8 +1530,8 @@ static void qeth_addr_change_event(struct qeth_card *card,
+ 	else
+ 		INIT_DELAYED_WORK(&data->dwork, qeth_l2_dev2br_worker);
+ 	data->card = card;
+-	memcpy(&data->ac_event, hostevs,
+-			sizeof(struct qeth_ipacmd_addr_change) + extrasize);
++	data->ac_event = *hostevs;
++	memcpy(data->ac_event.entry, hostevs->entry, extrasize);
+ 	queue_delayed_work(card->event_wq, &data->dwork, 0);
+ }
  
- 		/* Sneeky, when not bundling, reply_size is the allocated space
 -- 
 2.34.1
 
