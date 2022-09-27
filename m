@@ -2,80 +2,104 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2DCC07E9D
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 00:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260C0C32771
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 00:39:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229611AbiI0A0K (ORCPT
+        id S229688AbiI0AjI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Sep 2022 20:26:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40228 "EHLO
+        Mon, 26 Sep 2022 20:39:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229483AbiI0A0I (ORCPT
+        with ESMTP id S229511AbiI0AjI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Sep 2022 20:26:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F4B0481D5;
-        Mon, 26 Sep 2022 17:26:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 09D246150E;
-        Tue, 27 Sep 2022 00:26:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 028D1C433C1;
-        Tue, 27 Sep 2022 00:26:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664238365;
-        bh=FHkcN7R9GGHmGrOxMAmo1xDiazo90Bo1Ak/FokHEzxI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TiZ/X3kWH15nUxMpsaW2hKW6bL/xC0XOajsQzyRYQnjTVOf/D6hYva9Sdu2GJX2rS
-         TOerVUZmh4CM3YoBmHhLeekv4iihXbMpS/94kmf8Vjj8QuncDt9GvJDvPIb5xtA93y
-         T33wh1jbfKj90QU9RkhbHDmSnEUTa4G2Wpn5qqw+CfvjFohvJhdWiqokyOVFOiVvgh
-         9hPKQjFH5YlhrERfsSL9EDUaAZAcIlzNl+/qjCtYwhejsxYKjUmUKkdOiVsMZAQdVF
-         C3+5lbUw7PD6LYL3XNyFpYIKTK/1Zfiy0V3NH+4EeayKu3jaPk0lKtCz/hxvpnndTX
-         31+z0XaIRb5xQ==
-Date:   Mon, 26 Sep 2022 17:26:04 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Subash Abhinov Kasiviswanathan <quic_subashab@quicinc.com>,
-        Sean Tranchetti <quic_stranche@quicinc.com>,
+        Mon, 26 Sep 2022 20:39:08 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E350E6E8AF
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 17:39:06 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id 78so7973037pgb.13
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Sep 2022 17:39:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=gQu7elRjtkCVA25XrVVbJfx6p1CMn4Ad596tpddKVlI=;
+        b=YHebRPudhMY4JpJy26i+5DvYruGoNwqaW5ZMAt0vWMfaa8s/7dXu8M/fl4fQa19Gnz
+         vLzC143K2ga7QJlxaNKDJUvpvf0cLBbgX1EjUrJpB6Z3t4WpacTX3HoTMqOpemeTum9T
+         9oFif1air1pJeo6iuwNTEWyXGmy0dYAd6eQW8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=gQu7elRjtkCVA25XrVVbJfx6p1CMn4Ad596tpddKVlI=;
+        b=H5ampQ6s0TveHiL54M22GoY4QsIVK9q9HdGy99oGboNGCXQNG93wbKM2Cxmklz2MmU
+         WP6aE2kPlrJS+SsbjO4m9vAaJvKcCeCxOCcvQaTtDKTv+O1zlHvw7ItdHGw6XGl4nnrM
+         dFLq2NMuLvk4jlcyUBLrncTGZ+pF0EbEjNbPBvWrsIDUycLlb8VPdssUW1KXzs+TrqaZ
+         Cjz4Gbbm+fYlfd5aF0rRAokZbZA26FApCDcnme04ZMlFq3u5LEfD+Q05AEP6/DLOg8kO
+         jE+VXyQHrJr+H1bdkR+DU7Y8nd2pnLbjU1/6DoPU8keZBM93aGVNt4YxHIWmq9sLkQZR
+         CBaQ==
+X-Gm-Message-State: ACrzQf2R8wYFJFQwH5IvyJFwEaqQJ37BhIMsj2QI6ig+WDAmKpkb6E1I
+        K9PYmJYwuezpovBWLHe/vzDlpg==
+X-Google-Smtp-Source: AMsMyM6q0zPqAMRND+djOBD0BQnRq2QDhkvE4RH/RgvnTgUqDK1CruQVfWtNLbKRzhdMj1eVuuvJSw==
+X-Received: by 2002:aa7:838a:0:b0:536:101a:9ccf with SMTP id u10-20020aa7838a000000b00536101a9ccfmr26231438pfm.18.1664239146413;
+        Mon, 26 Sep 2022 17:39:06 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id mm10-20020a17090b358a00b002005f5ab6a8sm7093317pjb.29.2022.09.26.17.39.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Sep 2022 17:39:05 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Kees Cook <keescook@chromium.org>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] net: ethernet: rmnet: Replace zero-length array
- with DECLARE_FLEX_ARRAY() helper
-Message-ID: <20220926172604.71a20b7d@kernel.org>
-In-Reply-To: <202209261502.7DB9C7119@keescook>
-References: <YzIei3tLO1IWtMjs@work>
-        <202209261502.7DB9C7119@keescook>
+Subject: [PATCH] wifi: nl80211: Split memcpy() of struct nl80211_wowlan_tcp_data_token flexible array
+Date:   Mon, 26 Sep 2022 17:39:03 -0700
+Message-Id: <20220927003903.1941873-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1337; h=from:subject; bh=AcWKG6SkGHm1gQFQvlTO3I8cYnqLZrK49tPiWkFFMpw=; b=owEBbAKT/ZANAwAKAYly9N/cbcAmAcsmYgBjMkYnfizOgUmpq7MUHlsWh6gWfRW7q3xItKmsLGpl X8AuJEaJAjIEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYzJGJwAKCRCJcvTf3G3AJiMaD/ jjVEt170Tm/FPxJt7hfeZS5dWFWiFhm9o0lQDNKfZK7An5FYM5rxs1tgw/uBVrxDpn9nHxo3PianPB vkFHHGCJK3XYlgOf8kGfaCaDo4rd4eCKH0fh8dNfCPfZuoshRMTwMfpqaf2G3X6gDrUXCAo4NKAyCU VLKuI/qPdbJ3Cl8XU18DPmS+D5/u+O08vZZG2RRNsR5FLlrRXK2x8+bOSmUogRQ23GS89lDWRrw35+ WFkwJYm5YOiNRlKUmGkHaJdgibMOdzz/3ZLW1lkQJZ9M5zGsDmL7e5FdfpuMaLmN4OJsuskcOxqllk vzG+wP6+lih/tlhgYC076dbmea4o5xo0K2CoRr5V9NBQE9yPQmRwx13eM9JC7APzJgIXclrRj/lFFZ QpPBSWyhRZmlfeVmAQX7wQTXAZAl103DViGGZZNe5Mq3KGc3h9w4nLN/lEfBW+SDERbJmfclTpMjUY jt8z8a/MqcNZnoj/HArxoQaHAA6lGE6Q/83AqwGsJfiBmoRe8ulOnsrAyK/M+9C2mhd46bTIuxyXLn ywC+aXxVFVGxKL92NTCk3jhVVZRVqASA1xGs2b7Xy1jMHtl6rIhVTZ9sDOCi6fPFMLrrkDey5pt4pC 4REvbF0sq67ulYGwx6TXOFS1/UFnzmuyi2ZbVtuJgt0sMYDfY8Jg7PXJWG
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 26 Sep 2022 15:02:48 -0700 Kees Cook wrote:
-> On Mon, Sep 26, 2022 at 04:50:03PM -0500, Gustavo A. R. Silva wrote:
-> > Zero-length arrays are deprecated and we are moving towards adopting
-> > C99 flexible-array members, instead. So, replace zero-length arrays
-> > declarations in anonymous union with the new DECLARE_FLEX_ARRAY()
-> > helper macro.
-> > 
-> > This helper allows for flexible-array members in unions.
-> > 
-> > Link: https://github.com/KSPP/linux/issues/193
-> > Link: https://github.com/KSPP/linux/issues/221
-> > Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>  
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+To work around a misbehavior of the compiler's ability to see into
+composite flexible array structs (as detailed in the coming memcpy()
+hardening series[1]), split the memcpy() of the header and the payload
+so no false positive run-time overflow warning will be generated.
 
-Not directly related to this patch, but I just had to look at pahole
-output for sk_buff and the struct_group() stuff makes is really painful
-to read :/ Offsets for the members are relative to the "group" and they
-are all repeated.
+[1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org/
 
-Is there any chance you could fix that? Before we sprinkle more pixie
-dust around, perhaps?
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ net/wireless/nl80211.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 2705e3ee8fc4..461897933e92 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -13171,7 +13171,8 @@ static int nl80211_parse_wowlan_tcp(struct cfg80211_registered_device *rdev,
+ 	       wake_mask_size);
+ 	if (tok) {
+ 		cfg->tokens_size = tokens_size;
+-		memcpy(&cfg->payload_tok, tok, sizeof(*tok) + tokens_size);
++		cfg->payload_tok = *tok;
++		memcpy(cfg->payload_tok.token_stream, tok->token_stream, + tokens_size);
+ 	}
+ 
+ 	trig->tcp = cfg;
+-- 
+2.34.1
+
