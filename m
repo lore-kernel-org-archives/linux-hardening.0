@@ -2,113 +2,147 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5D7C6FA82
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 11:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8176AC54EE9
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Sep 2022 11:54:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231522AbiI0LSX (ORCPT
+        id S231888AbiI0Lym (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Sep 2022 07:18:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35144 "EHLO
+        Tue, 27 Sep 2022 07:54:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231966AbiI0LSF (ORCPT
+        with ESMTP id S230209AbiI0Lyi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Sep 2022 07:18:05 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92CDA11BCDD;
-        Tue, 27 Sep 2022 04:17:37 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id m3so12701437eda.12;
-        Tue, 27 Sep 2022 04:17:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=5+kF5Y0/203zzrdLAOZ9QTBoJ3rERNsk4sXaumVZuYA=;
-        b=P1pr7qRYb3951aLNn/CBQ8BqiBgzZ1kad+bR3TfANi+ZSu6uwdQ6EEpnR59OnNd8TF
-         MjC8/3hV5xTTqni2mubK+aEfbxmfXd8RXzDMVB+qd+Vq5By5znhsLcSpH1TmvKqsQaCK
-         ru1nw5fXw+0rVBx/gNRV59cNoQpQXtwcqPFXhPUMU6luhkhlaS8tfMeCExPcwMxflka5
-         +ooTe81Df7g6xdLrjZX4d8/cCWo0wa7LuGnl9/lAWLUcZ/s6SO0O5HEnTi2p8zkkQKcm
-         dz4AuZuOnfwstR6DjyoCUR81W4sHXnJ2HsqpWGg79ZftZ0+V/hTqnJp/UazY1EZdFpeT
-         WaEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=5+kF5Y0/203zzrdLAOZ9QTBoJ3rERNsk4sXaumVZuYA=;
-        b=vbah14I7F4GSkin+x0bHCQAsHaRYJuX2RJTha8I3XIEJngz2GAaLEvVz5RZNFcSKM6
-         u5c3sSMh7VsKP9rU/kIYfXxNl670OTMK3h3H97Cx0fKjUyISzUhzY9lO7eavS7oQ/jxq
-         L091EiAQNyUCtKJxsQuVNY0bCLSssO7RttyiKBFEvlA6Rf7NGgsyytG/0a211jXtoxC6
-         c9Lp7HdcNZfzSradtlg3586IjPqqmN1ftr3ZLj9lAsdkuXDzhx9OV4HfssM+m1dLTDvT
-         zsaN5JWB+6Fm3cx1UtNWfSVp9Cyky08Fj9KWt2vjsuXaKRIKncUQ2juzGfJT6J/4N9xT
-         DjMQ==
-X-Gm-Message-State: ACrzQf1/zBAIgRYAGHebeddcqEs8HeC+gQQJBZBkze+uK+3wC0/n2bKT
-        ruO1KyixNKDSO5GCbmsnoJxTPKtRbms=
-X-Google-Smtp-Source: AMsMyM7Ba26gbv0elp/pmHXdzEJc+KV4yTb3jSaLl1tIyeaybPhJvPLItfQ4DfNN8miR7/bjWmHp5w==
-X-Received: by 2002:a05:6402:3552:b0:451:2037:639e with SMTP id f18-20020a056402355200b004512037639emr27811797edd.136.1664277455225;
-        Tue, 27 Sep 2022 04:17:35 -0700 (PDT)
-Received: from [10.23.0.4] ([37.120.217.82])
-        by smtp.gmail.com with ESMTPSA id r17-20020a17090609d100b00781d411a63csm624283eje.151.2022.09.27.04.17.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Sep 2022 04:17:34 -0700 (PDT)
-Message-ID: <93a51c6f-40f4-1808-dbd6-4cd57bbaa3ed@gmail.com>
-Date:   Tue, 27 Sep 2022 13:17:33 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH] platform/surface: Split memcpy() of struct ssam_event
- flexible array
+        Tue, 27 Sep 2022 07:54:38 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 625DE32EC9;
+        Tue, 27 Sep 2022 04:54:37 -0700 (PDT)
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28RBroAh015071;
+        Tue, 27 Sep 2022 11:54:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=xLsQWoQYEmSnbRzAfDyJ0GosO+ncb/MY/54nvuNAncY=;
+ b=jvMOG30kZWLXWnxFa1bRIaAeEM+52Yms3ru2FpsOoeFuuuankwbnlwWwMxRFrLNoPZzO
+ syvhWINRVewZZ2WFOEkI1GbFADfMTJn4Y7ffgDY9tRyqz6hQpaxN24cik9AP48rwvWPD
+ 5hmjH7n50yewRbJ/ALGVtNdn1S6bbR4iUHo3jTs+mjXQGkMqUFFshnyV2YVrIfIMCHf7
+ /f8mmxRgwZKT0K4/DQCIGlHQ+Own5IInFqhc2zuf8PQvEU+0X/2fYNAO6MHauaUkzlSr
+ 65S1L0Lys4HeMBsgd4FOVEMOHZs4ag0qRlEAq4DSkK5I3o5GXciJe3rcd6jx1qyDAor3 UQ== 
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jv0pr00bf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Sep 2022 11:54:33 +0000
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28RBoEuH031152;
+        Tue, 27 Sep 2022 11:54:31 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma05fra.de.ibm.com with ESMTP id 3jssh8ttsc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Sep 2022 11:54:31 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28RBoFkW46203376
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 27 Sep 2022 11:50:15 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 64C9C4204B;
+        Tue, 27 Sep 2022 11:54:28 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0944C42045;
+        Tue, 27 Sep 2022 11:54:28 +0000 (GMT)
+Received: from [9.152.224.236] (unknown [9.152.224.236])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 27 Sep 2022 11:54:27 +0000 (GMT)
+Message-ID: <23b905f8-2836-8879-fe9f-9521e0f8674e@linux.ibm.com>
+Date:   Tue, 27 Sep 2022 13:54:27 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.13.1
+Subject: Re: [PATCH] s390/qeth: Split memcpy() of struct
+ qeth_ipacmd_addr_change flexible array
 Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20220927004011.1942739-1-keescook@chromium.org>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <20220927004011.1942739-1-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Wenjia Zhang <wenjia@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20220927003953.1942442-1-keescook@chromium.org>
+ <YzJO0f7v7N4Z+9Dk@work>
+From:   Alexandra Winter <wintera@linux.ibm.com>
+In-Reply-To: <YzJO0f7v7N4Z+9Dk@work>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: RBvWxvqcdxstuJ3M2seMtC6vRdy9bNz0
+X-Proofpoint-GUID: RBvWxvqcdxstuJ3M2seMtC6vRdy9bNz0
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-27_03,2022-09-27_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 mlxscore=0 clxscore=1011 lowpriorityscore=0 spamscore=0
+ phishscore=0 impostorscore=0 mlxlogscore=999 adultscore=0 bulkscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2209130000 definitions=main-2209270069
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 9/27/22 02:40, Kees Cook wrote:
-> To work around a misbehavior of the compiler's ability to see into
-> composite flexible array structs (as detailed in the coming memcpy()
-> hardening series[1]), split the memcpy() of the header and the payload
-> so no false positive run-time overflow warning will be generated.
+
+
+On 27.09.22 03:16, Gustavo A. R. Silva wrote:
+> On Mon, Sep 26, 2022 at 05:39:53PM -0700, Kees Cook wrote:
+>> To work around a misbehavior of the compiler's ability to see into
+>> composite flexible array structs (as detailed in the coming memcpy()
+>> hardening series[1]), split the memcpy() of the header and the payload
+>> so no false positive run-time overflow warning will be generated.
+>>
+>> [1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org/
+>>
+>> Cc: Alexandra Winter <wintera@linux.ibm.com>
+>> Cc: Wenjia Zhang <wenjia@linux.ibm.com>
+>> Cc: Heiko Carstens <hca@linux.ibm.com>
+>> Cc: Vasily Gorbik <gor@linux.ibm.com>
+>> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+>> Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+>> Cc: Sven Schnelle <svens@linux.ibm.com>
+>> Cc: linux-s390@vger.kernel.org
+>> Cc: netdev@vger.kernel.org
+>> Signed-off-by: Kees Cook <keescook@chromium.org>
 > 
-> [1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> Cc: Maximilian Luz <luzmaximilian@gmail.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Mark Gross <markgross@kernel.org>
-> Cc: platform-driver-x86@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Thanks!
-
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
-
-Regards,
-Max
-
-> ---
->   drivers/platform/surface/surface_acpi_notify.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+> Thanks!
+> --
+> Gustavo
 > 
-> diff --git a/drivers/platform/surface/surface_acpi_notify.c b/drivers/platform/surface/surface_acpi_notify.c
-> index 44e317970557..50500e562963 100644
-> --- a/drivers/platform/surface/surface_acpi_notify.c
-> +++ b/drivers/platform/surface/surface_acpi_notify.c
-> @@ -355,7 +355,8 @@ static u32 san_evt_bat_nf(struct ssam_event_notifier *nf,
->   	INIT_DELAYED_WORK(&work->work, san_evt_bat_workfn);
->   	work->dev = d->dev;
->   
-> -	memcpy(&work->event, event, sizeof(struct ssam_event) + event->length);
-> +	work->event = *event;
-> +	memcpy(work->event.data, event->data, event->length);
->   
->   	queue_delayed_work(san_wq, &work->work, delay);
->   	return SSAM_NOTIF_HANDLED;
+Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
+
+Thank you
+Alexandra
+>> ---
+>>  drivers/s390/net/qeth_l2_main.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
+>> index 2d4436cbcb47..0ce635b7b472 100644
+>> --- a/drivers/s390/net/qeth_l2_main.c
+>> +++ b/drivers/s390/net/qeth_l2_main.c
+>> @@ -1530,8 +1530,8 @@ static void qeth_addr_change_event(struct qeth_card *card,
+>>  	else
+>>  		INIT_DELAYED_WORK(&data->dwork, qeth_l2_dev2br_worker);
+>>  	data->card = card;
+>> -	memcpy(&data->ac_event, hostevs,
+>> -			sizeof(struct qeth_ipacmd_addr_change) + extrasize);
+>> +	data->ac_event = *hostevs;
+>> +	memcpy(data->ac_event.entry, hostevs->entry, extrasize);
+>>  	queue_delayed_work(card->event_wq, &data->dwork, 0);
+>>  }
+>>  
+>> -- 
+>> 2.34.1
+>>
