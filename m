@@ -2,94 +2,81 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA365C54EE9
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Sep 2022 00:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604C7C07E9D
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Sep 2022 02:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230506AbiI1AGi (ORCPT
+        id S232367AbiI1CAV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Sep 2022 20:06:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34492 "EHLO
+        Tue, 27 Sep 2022 22:00:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230305AbiI1AGh (ORCPT
+        with ESMTP id S231759AbiI1CAU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Sep 2022 20:06:37 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 407B0AA35A
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Sep 2022 17:06:36 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id c24so10466908plo.3
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Sep 2022 17:06:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=nNIu9MOBq5hXpqXGFXeNQOwTfuesFp67Vbi5mmPF+QI=;
-        b=kUwqWtNdY2Mx+kov5RP9qUMeaw9c0wV/DbWRtl6+wKMW67Md/xEb8If18qATSTY2ID
-         e+Ax3xY4AQZK6N+imYuOmXYh//oDf5MNsqX5aTYbRlJV93tHwARlNLEuufspzFwCCJH+
-         2BPdFfciME/AAhJE1tzapdjZStaFl9NVHIDGo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=nNIu9MOBq5hXpqXGFXeNQOwTfuesFp67Vbi5mmPF+QI=;
-        b=F4x67y6t/M8IbmWmuWs2N6aZhD90OONa5v75hcglqvKVBIx3GX3wLLJMBWUPzsiJaa
-         ENnscFpH3PpNBN2r6Lo7l3RXDQAvHaZOc9l5gdiSVWSGrneMd6lnMR4LwSUB9zUeRF7s
-         Bq2mRyYgq8SNvZTax90rP8mBkmweIKD6steXPUvomH8zmITf5E1PWp4N7tXaJXcVcDk7
-         fbEvU//JhIhKp6Nffp+1wPJID4jNWx2EQN2FzCte5c+TVnQnLXJXYnsG+IRySY6TPgUh
-         IO9z5s+i/C5OuqkuNCh1m6Q/4GhNzR0Mk2lLktCNnb8crEev3cr2oR58umfR7ZH5nTTk
-         Wz0g==
-X-Gm-Message-State: ACrzQf2Wr3vQE94UB7FvKLyhSrBO7CAoKNIpVy4l15tmLYPUP1kWO65T
-        gSmEDIfvlbmhtxwWj1PxtppaH7xA6Oq6KQ==
-X-Google-Smtp-Source: AMsMyM5lBc6cgMPxALJU5BgfuW4pY/gvxhlTJwS9euToRkedOuI3DRtl5bdU+XtVB97UJZQrTxd5Dw==
-X-Received: by 2002:a17:902:b415:b0:178:2835:29e7 with SMTP id x21-20020a170902b41500b00178283529e7mr29921888plr.86.1664323595769;
-        Tue, 27 Sep 2022 17:06:35 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f22-20020a63f116000000b0042a713dd68csm2226542pgi.53.2022.09.27.17.06.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Sep 2022 17:06:34 -0700 (PDT)
-Date:   Tue, 27 Sep 2022 17:06:34 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     cocci@inria.fr, linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [cocci] spatch --jobs N missing matches?
-Message-ID: <202209271425.50502D365C@keescook>
-References: <202209260912.8DCCD70@keescook>
- <alpine.DEB.2.22.394.2209262259030.2915@hadrien>
- <202209261505.9AE38B8@keescook>
- <alpine.DEB.2.22.394.2209272235060.2842@hadrien>
- <alpine.DEB.2.22.394.2209272304030.2842@hadrien>
+        Tue, 27 Sep 2022 22:00:20 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1135161CD7;
+        Tue, 27 Sep 2022 19:00:19 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 48E7E61C4B;
+        Wed, 28 Sep 2022 02:00:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9548CC4347C;
+        Wed, 28 Sep 2022 02:00:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664330418;
+        bh=C2/ags9atpaX4TGKxqEvxbE7WIB0bOC3jCQn+XcnZDk=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=B29KIaB47VKv3cI9VFnGfu3KfhdUBCbOPnhZefoeslkrwx30ah5oSL6KKOejQYLwW
+         v9ETdFjsd9XsHaQ5EHhLHEtMMkX9oEXuzFfuIx/RaHiqRdUoXrmCj9G0YEWCRgMMdL
+         p+VXL1/nQo6C8ZdSv/3oRc2aMM9Aw8qlmQHIK9PsNweX8z9wT4DVssUvpb0B6tqSNc
+         Cov9sykcgC6/j4U5UuYN6FxRsbL85SfYDjraMKy3FOEHsSCfGNs22DDiLPf222OxQC
+         QJnas2eaf7OV6U5aGct/UFS+qKk1N0a2M9/OWnH8gP/QV4xERZDDdd1CktxvwzPiZA
+         9vFQeevyXLmYQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 71DDDE21EC6;
+        Wed, 28 Sep 2022 02:00:18 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.22.394.2209272304030.2842@hadrien>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] mlxsw: core_acl_flex_actions: Split memcpy() of struct
+ flow_action_cookie flexible array
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <166433041846.32421.13784055301688350147.git-patchwork-notify@kernel.org>
+Date:   Wed, 28 Sep 2022 02:00:18 +0000
+References: <20220927004033.1942992-1-keescook@chromium.org>
+In-Reply-To: <20220927004033.1942992-1-keescook@chromium.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     idosch@nvidia.com, petrm@nvidia.com, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Hello:
 
-On Tue, Sep 27, 2022 at 11:09:35PM +0200, Julia Lawall wrote:
-> The problem is fixed in github.  Coccinelle was doing some caching of
-> header files, that was not desirable in the case where one actually wants
-> to match the code, and not just get type information.
+This patch was applied to netdev/net-next.git (master)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Thank you for the fix! I can confirm things appear to be working
-correctly now. (And took 124 minutes to run.)
-
-> [...]
-> Actually, there are not that many memcpys in the considered code.  Then
-> there are not that many that refer to the last element of a structure.  If
-> level2 produces nothing, then level 1 should not be applied.
+On Mon, 26 Sep 2022 17:40:33 -0700 you wrote:
+> To work around a misbehavior of the compiler's ability to see into
+> composite flexible array structs (as detailed in the coming memcpy()
+> hardening series[1]), split the memcpy() of the header and the payload
+> so no false positive run-time overflow warning will be generated.
 > 
-> In the original rule order, all of the pairs of a flexible structure and
-> any structure are considered, regardless of whether any memcpys are
-> present.
+> [1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org
+> 
+> [...]
 
-Ah! Yes, I keep forgetting to start with the narrowest part first. :P
+Here is the summary with links:
+  - mlxsw: core_acl_flex_actions: Split memcpy() of struct flow_action_cookie flexible array
+    https://git.kernel.org/netdev/net-next/c/d89318bbdf2b
 
-I also forget that I can do a "depends" on something that has no other
-matches, but if it's built on prior rules that I use in later rules,
-then it limits that rule directly. I haven't quite managed to think
-sideways hard enough. :)
-
+You are awesome, thank you!
 -- 
-Kees Cook
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
