@@ -2,107 +2,163 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE2FC04A95
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Sep 2022 08:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF46C32771
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Sep 2022 09:02:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229785AbiI1IvS (ORCPT
+        id S232112AbiI1JCX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Sep 2022 04:51:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59578 "EHLO
+        Wed, 28 Sep 2022 05:02:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232684AbiI1IvL (ORCPT
+        with ESMTP id S231702AbiI1JCW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Sep 2022 04:51:11 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46027E28;
-        Wed, 28 Sep 2022 01:51:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664355070; x=1695891070;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=eltQSsd00+eTulXtPk3YMa9SYpcWVAR8VjdLyZ6mqho=;
-  b=g+PbDW6SKZlFByra2hY2STr3Dutu5gFwIa3DIE7xLwV/0xWpQwANVJl1
-   MOGF1ienEmCI0MaRg3kii0Y7hAac2FOZFYEdc+Ozso1bXsh8fkfCHzR1k
-   DuIzL5kqSS+fIBQwKCXpw2vFb7Ifx0kdBTXvJp8RDOMhDfCwC7oqDlZme
-   IfWaRz4rQTtQ1S5jPSlUOE6z62QGWEVFr+gcCcImh3vklp9MtsPitnBdt
-   KWa4S83H3uJcMa6R98SrAO//o/7Yq+42tlSW8lN55skq6JuMoiF7B7n7D
-   0tQmTjdY+byTqaj06CJUaDb3u5zllaMwaoeFIY3SEhfbYrBtKlK2pyuaS
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="365593509"
-X-IronPort-AV: E=Sophos;i="5.93,351,1654585200"; 
-   d="scan'208";a="365593509"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2022 01:51:09 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="866895387"
-X-IronPort-AV: E=Sophos;i="5.93,351,1654585200"; 
-   d="scan'208";a="866895387"
-Received: from novermar-mobl.ger.corp.intel.com (HELO localhost) ([10.252.61.30])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2022 01:51:03 -0700
-From:   Jani Nikula <jani.nikula@intel.com>
-To:     Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        intel-gfx@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        mchehab@kernel.org, chris@chris-wilson.co.uk,
-        matthew.auld@intel.com, thomas.hellstrom@linux.intel.com,
-        nirmoy.das@intel.com, airlied@redhat.com, daniel@ffwll.ch,
-        andi.shyti@linux.intel.com, andrzej.hajda@intel.com,
-        keescook@chromium.org, mauro.chehab@linux.intel.com,
-        linux@rasmusvillemoes.dk, vitor@massaru.org, dlatypov@google.com,
-        ndesaulniers@google.com, trix@redhat.com, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org, linux-sparse@vger.kernel.org,
-        nathan@kernel.org, gustavoars@kernel.org,
-        luc.vanoostenryck@gmail.com
-Subject: Re: [PATCH v13 5/9] drm/i915: Check for integer truncation on
- scatterlist creation
-In-Reply-To: <20220928081300.101516-6-gwan-gyeong.mun@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20220928081300.101516-1-gwan-gyeong.mun@intel.com>
- <20220928081300.101516-6-gwan-gyeong.mun@intel.com>
-Date:   Wed, 28 Sep 2022 11:51:00 +0300
-Message-ID: <87edvvzxu3.fsf@intel.com>
+        Wed, 28 Sep 2022 05:02:22 -0400
+Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 544D8DF6B5;
+        Wed, 28 Sep 2022 02:02:21 -0700 (PDT)
+Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-131a7bce1acso1066092fac.7;
+        Wed, 28 Sep 2022 02:02:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:reply-to:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=UD/bWW+0wk4E9lEqOO5K0o6p06TOy6G7+0fEDj4qYW0=;
+        b=qjE+g0WJ+O6OJPoUPIflSlEuB+MqVoceg7Ja+WcNRQUk7OHgS0AbOuQcpF/sNhWH3B
+         Lgnj8+2dA7AETcw1J1bB9rR58nnABnh6jaM2aq6/EksGdoiG9822CkeDcLGPipE3kSO7
+         YpSANJuKK3XWKV70xh8YlvQb1ZvH/q3iYKPxgyJfI5MOLvlMyNhODmVqTiwDpC82S1A1
+         AbU7uGYML+/gAh0oRf3aqAPUx6BI0qneafHJtGwj1IA8/WBapms3qsXHg9kL6XcL/MKG
+         4V3B7qNJ2l/f6XuK0tFjdHVx0UuKa1CIREe4XWyuZj9utwnljVvsWK2l6GCVsO4UdJF+
+         ByFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:reply-to:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=UD/bWW+0wk4E9lEqOO5K0o6p06TOy6G7+0fEDj4qYW0=;
+        b=ZthEPV0r+SJ9/oOMH15t9Nfp4nU+ovzFi/c0YeUY6Azk6FisjgToWhvxSh35UWgef9
+         MJ0CRdP+b4epLm9c6v6Ka7bWND9TSW3gtFrYy0DYt+FPZ0z97BiOOEolb1aWLt3BINyh
+         F/4gqWKHyDa6QPMT2GYFOT/y4oihCR4MJ+CC4bgzMXvXqB1OrS++ovK1z2VKp6Rfs/rv
+         V5kqqJ3jmkVN0Zz6tT/RpSsIv0eDUC86elcrk8TbRt1r2Iforxq5TMaBrgGtfDVPtNdH
+         r6nhkIAZk9fbJWyeqZ4Q8cAkP0qFVHeU+S6XWnJEkQuChMVBVFhHI+0gSpgdiq96NMAe
+         uNyg==
+X-Gm-Message-State: ACrzQf1SbKqeCOorrnGczkX7tk/2tg1rbKq5IbR6IuWB76HENyCfnkI6
+        MsVZwQCXzJX3gFi0IH0mJmaDyq5G1hiRPVt+o9I=
+X-Google-Smtp-Source: AMsMyM5ujk+Oc81+S+ewdw/Ez4+jZI0RZxdZDv4LAzGgfXYpMXmjOK0UXxMKyUnobDtlYUDZAdDMBEgl68vhlfn3Rgk=
+X-Received: by 2002:a05:6870:461a:b0:12a:e54e:c8a2 with SMTP id
+ z26-20020a056870461a00b0012ae54ec8a2mr4780900oao.252.1664355740443; Wed, 28
+ Sep 2022 02:02:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20220908215504.3686827-1-samitolvanen@google.com> <166421282763.1683223.5035885857817205401.b4-ty@chromium.org>
+In-Reply-To: <166421282763.1683223.5035885857817205401.b4-ty@chromium.org>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 28 Sep 2022 11:01:44 +0200
+Message-ID: <CA+icZUUjy7HFQVZ0iUDmGxfazobow1iwcagWX_Opht-7F+BRrg@mail.gmail.com>
+Subject: Re: [PATCH v5 00/22] KCFI support
+To:     Kees Cook <keescook@chromium.org>
+Cc:     samitolvanen@google.com, peterz@infradead.org,
+        ndesaulniers@google.com, linux-arm-kernel@lists.infradead.org,
+        will@kernel.org, joao@overdrivepizza.com, nathan@kernel.org,
+        llvm@lists.linux.dev, mark.rutland@arm.com,
+        linux-hardening@vger.kernel.org,
+        Josh Poimboeuf <jpoimboe@kernel.org>, catalin.marinas@arm.com,
+        rostedt@goodmis.org, x86@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 28 Sep 2022, Gwan-gyeong Mun <gwan-gyeong.mun@intel.com> wrote:
-> diff --git a/drivers/gpu/drm/i915/i915_scatterlist.h b/drivers/gpu/drm/i915/i915_scatterlist.h
-> index 9ddb3e743a3e..1d1802beb42b 100644
-> --- a/drivers/gpu/drm/i915/i915_scatterlist.h
-> +++ b/drivers/gpu/drm/i915/i915_scatterlist.h
-> @@ -220,4 +220,15 @@ struct i915_refct_sgt *i915_rsgt_from_buddy_resource(struct ttm_resource *res,
->  						     u64 region_start,
->  						     u32 page_alignment);
->  
-> +/* Wrap scatterlist.h to sanity check for integer truncation */
-> +typedef unsigned int __sg_size_t; /* see linux/scatterlist.h */
-> +#define sg_alloc_table(sgt, nents, gfp) \
-> +	overflows_type(nents, __sg_size_t) ? -E2BIG \
-> +		: ((sg_alloc_table)(sgt, (__sg_size_t)(nents), gfp))
-> +
-> +#define sg_alloc_table_from_pages_segment(sgt, pages, npages, offset, size, max_segment, gfp) \
-> +	overflows_type(npages, __sg_size_t) ? -E2BIG \
-> +		: ((sg_alloc_table_from_pages_segment)(sgt, pages, (__sg_size_t)(npages), offset, \
-> +						       size, max_segment, gfp))
-> +
->  #endif
+On Mon, Sep 26, 2022 at 7:21 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Thu, 8 Sep 2022 14:54:42 -0700, Sami Tolvanen wrote:
+> > KCFI is a forward-edge control-flow integrity scheme in the upcoming
+> > Clang 16 release, which is more suitable for kernel use than the
+> > existing CFI scheme used by CONFIG_CFI_CLANG. KCFI doesn't require
+> > LTO, doesn't alter function references to point to a jump table, and
+> > won't break function address equality.
+> >
+> > This series replaces the current arm64 CFI implementation with KCFI
+> > and adds support for x86_64.
+> >
+> > [...]
+>
+> I assume that Peter's Ack means I should carry the tree, so, to that end:
+>
+> Applied to for-next/kcfi, thanks!
+>
 
-No. I don't think we should shadow sg_alloc_table() and
-sg_alloc_table_from_pages_segment().
+Hi,
 
-Either get this in scatterlist.h (preferred) or prefix with i915_ or
-whatever to indicate it's our local thing.
+I did regularly KCFI testing.
 
-i915_scatterlist.h already has too much scatterlist "namespace" abuse
-that I'd rather see gone than violated more.
+1. Used Sami's samitolvanen.github#linux/kcfi Git on the Linux side.
 
+2. Used *not* LLVM-16 (including KCFI) but with LLVM-15 from
+samitolvanen.github#llvm-project/15.x/kcfi Git on the toolchain side.
 
-BR,
-Jani.
+My last testing was with [1] (Linux v6.0-rc7 + KCFI) and [2] (LLVM
+v15.0.1 + KCFI) plus drm-i915-gt/KCFI for Linux v6.0-rc7 patch from
+Nathan (see [3]).
+Thanks Sami for updating 15.x/kcfi on LLVM side on my request.
 
+So, feel free to add my:
 
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com> # LLVM-15 (with KCFI
+support) on x86-64
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Thanks to all involved people!
+
+Best regards,
+-Sedat-
+
+[1] https://github.com/samitolvanen/linux/commits/kcfi
+[2] https://github.com/samitolvanen/llvm-project/commits/15.x/kcfi
+[3] https://github.com/ClangBuiltLinux/linux/issues/1716#issuecomment-1257311327
+
+> [01/22] treewide: Filter out CC_FLAGS_CFI
+>         https://git.kernel.org/kees/c/f143ff397a3f
+> [02/22] scripts/kallsyms: Ignore __kcfi_typeid_
+>         https://git.kernel.org/kees/c/d0f9562ee43a
+> [03/22] cfi: Remove CONFIG_CFI_CLANG_SHADOW
+>         https://git.kernel.org/kees/c/9fca7115827b
+> [04/22] cfi: Drop __CFI_ADDRESSABLE
+>         https://git.kernel.org/kees/c/92efda8eb152
+> [05/22] cfi: Switch to -fsanitize=kcfi
+>         https://git.kernel.org/kees/c/89245600941e
+> [06/22] cfi: Add type helper macros
+>         https://git.kernel.org/kees/c/e84e008e7b02
+> [07/22] lkdtm: Emit an indirect call for CFI tests
+>         https://git.kernel.org/kees/c/cf90d0383560
+> [08/22] psci: Fix the function type for psci_initcall_t
+>         https://git.kernel.org/kees/c/44f665b69c67
+> [09/22] arm64: Add types to indirect called assembly functions
+>         https://git.kernel.org/kees/c/c50d32859e70
+> [10/22] arm64: Add CFI error handling
+>         https://git.kernel.org/kees/c/b26e484b8bb3
+> [11/22] arm64: Drop unneeded __nocfi attributes
+>         https://git.kernel.org/kees/c/5f20997c194e
+> [12/22] init: Drop __nocfi from __init
+>         https://git.kernel.org/kees/c/5dbbb3eaa2a7
+> [13/22] treewide: Drop function_nocfi
+>         https://git.kernel.org/kees/c/607289a7cd7a
+> [14/22] treewide: Drop WARN_ON_FUNCTION_MISMATCH
+>         https://git.kernel.org/kees/c/4b24356312fb
+> [15/22] treewide: Drop __cficanonical
+>         https://git.kernel.org/kees/c/5659b598b4dc
+> [16/22] objtool: Preserve special st_shndx indexes in elf_update_symbol
+>         https://git.kernel.org/kees/c/5141d3a06b2d
+> [17/22] objtool: Disable CFI warnings
+>         https://git.kernel.org/kees/c/3c68a92d17ad
+> [18/22] kallsyms: Drop CONFIG_CFI_CLANG workarounds
+>         https://git.kernel.org/kees/c/dfb352ab1162
+> [19/22] x86/tools/relocs: Ignore __kcfi_typeid_ relocations
+>         https://git.kernel.org/kees/c/ca7e10bff196
+> [20/22] x86: Add types to indirectly called assembly functions
+>         https://git.kernel.org/kees/c/ccace936eec7
+> [21/22] x86/purgatory: Disable CFI
+>         https://git.kernel.org/kees/c/a4b7a12c5594
+> [22/22] x86: Add support for CONFIG_CFI_CLANG
+>         https://git.kernel.org/kees/c/3c516f89e17e
+>
+> --
+> Kees Cook
+>
