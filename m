@@ -2,163 +2,92 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF46C32771
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Sep 2022 09:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EB0C32771
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Sep 2022 13:36:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232112AbiI1JCX (ORCPT
+        id S233134AbiI1NgN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Sep 2022 05:02:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55748 "EHLO
+        Wed, 28 Sep 2022 09:36:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231702AbiI1JCW (ORCPT
+        with ESMTP id S233889AbiI1NgM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Sep 2022 05:02:22 -0400
-Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 544D8DF6B5;
-        Wed, 28 Sep 2022 02:02:21 -0700 (PDT)
-Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-131a7bce1acso1066092fac.7;
-        Wed, 28 Sep 2022 02:02:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:reply-to:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=UD/bWW+0wk4E9lEqOO5K0o6p06TOy6G7+0fEDj4qYW0=;
-        b=qjE+g0WJ+O6OJPoUPIflSlEuB+MqVoceg7Ja+WcNRQUk7OHgS0AbOuQcpF/sNhWH3B
-         Lgnj8+2dA7AETcw1J1bB9rR58nnABnh6jaM2aq6/EksGdoiG9822CkeDcLGPipE3kSO7
-         YpSANJuKK3XWKV70xh8YlvQb1ZvH/q3iYKPxgyJfI5MOLvlMyNhODmVqTiwDpC82S1A1
-         AbU7uGYML+/gAh0oRf3aqAPUx6BI0qneafHJtGwj1IA8/WBapms3qsXHg9kL6XcL/MKG
-         4V3B7qNJ2l/f6XuK0tFjdHVx0UuKa1CIREe4XWyuZj9utwnljVvsWK2l6GCVsO4UdJF+
-         ByFA==
+        Wed, 28 Sep 2022 09:36:12 -0400
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD9828F94F;
+        Wed, 28 Sep 2022 06:36:10 -0700 (PDT)
+Received: by mail-wm1-f43.google.com with SMTP id e18so8534611wmq.3;
+        Wed, 28 Sep 2022 06:36:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:reply-to:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=UD/bWW+0wk4E9lEqOO5K0o6p06TOy6G7+0fEDj4qYW0=;
-        b=ZthEPV0r+SJ9/oOMH15t9Nfp4nU+ovzFi/c0YeUY6Azk6FisjgToWhvxSh35UWgef9
-         MJ0CRdP+b4epLm9c6v6Ka7bWND9TSW3gtFrYy0DYt+FPZ0z97BiOOEolb1aWLt3BINyh
-         F/4gqWKHyDa6QPMT2GYFOT/y4oihCR4MJ+CC4bgzMXvXqB1OrS++ovK1z2VKp6Rfs/rv
-         V5kqqJ3jmkVN0Zz6tT/RpSsIv0eDUC86elcrk8TbRt1r2Iforxq5TMaBrgGtfDVPtNdH
-         r6nhkIAZk9fbJWyeqZ4Q8cAkP0qFVHeU+S6XWnJEkQuChMVBVFhHI+0gSpgdiq96NMAe
-         uNyg==
-X-Gm-Message-State: ACrzQf1SbKqeCOorrnGczkX7tk/2tg1rbKq5IbR6IuWB76HENyCfnkI6
-        MsVZwQCXzJX3gFi0IH0mJmaDyq5G1hiRPVt+o9I=
-X-Google-Smtp-Source: AMsMyM5ujk+Oc81+S+ewdw/Ez4+jZI0RZxdZDv4LAzGgfXYpMXmjOK0UXxMKyUnobDtlYUDZAdDMBEgl68vhlfn3Rgk=
-X-Received: by 2002:a05:6870:461a:b0:12a:e54e:c8a2 with SMTP id
- z26-20020a056870461a00b0012ae54ec8a2mr4780900oao.252.1664355740443; Wed, 28
- Sep 2022 02:02:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220908215504.3686827-1-samitolvanen@google.com> <166421282763.1683223.5035885857817205401.b4-ty@chromium.org>
-In-Reply-To: <166421282763.1683223.5035885857817205401.b4-ty@chromium.org>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 28 Sep 2022 11:01:44 +0200
-Message-ID: <CA+icZUUjy7HFQVZ0iUDmGxfazobow1iwcagWX_Opht-7F+BRrg@mail.gmail.com>
-Subject: Re: [PATCH v5 00/22] KCFI support
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=+upmZyPR8pGaGWg3qGrftmKuUaoiKJ3WqmjmIjDKj5A=;
+        b=bxYWQhxUAA+cMpbiJJiaAzimhOrUQs9oQGvBQaN+HEPJ3+fOHZA7hDfC4M/srApOSW
+         +/5svgfd8WAgTqCm+d/IyK/W0x3P6A7cAVYlW1bjmpsXKAI3WYMU21T0Y4I6lWik4hdG
+         4XEQ+JNY40+RbljsjdGhXfZxMAQjPOG9O5pZpe+psvkVJkMZvaF2jsClbZQBVgbdYPS+
+         tGFMB8+fCvSrzauJTvDqZr9SuLq08vrLyy+MLJEN4PqOxp/ru+/ZlDiWZC/am4/iUuRd
+         tTE9wrPjVg3hQR+23X2MkEN0GIQFKHD91gjujIncmWebo11gM15vCkVvs3QjAGMG795E
+         rbyA==
+X-Gm-Message-State: ACrzQf0En1t4hwwhlbAO/twGl60acwXylO30bRo+EKDMsRIAxX/+uwLa
+        qOUXC7qVvY01t/AW3kgBJ/N+dNuFp6k=
+X-Google-Smtp-Source: AMsMyM5ovkU45Hb+UhdT9G4vPLHy2nketpUXDU/UlqlM/OAJFNTmeY50h/wIWr4zAo4geMlNy7Anyg==
+X-Received: by 2002:a05:600c:3c8a:b0:3b4:eff4:a94f with SMTP id bg10-20020a05600c3c8a00b003b4eff4a94fmr6698611wmb.105.1664372169187;
+        Wed, 28 Sep 2022 06:36:09 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id m11-20020a05600c4f4b00b003b31c560a0csm1818654wmq.12.2022.09.28.06.36.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Sep 2022 06:36:08 -0700 (PDT)
+Date:   Wed, 28 Sep 2022 13:36:06 +0000
+From:   Wei Liu <wei.liu@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     samitolvanen@google.com, peterz@infradead.org,
-        ndesaulniers@google.com, linux-arm-kernel@lists.infradead.org,
-        will@kernel.org, joao@overdrivepizza.com, nathan@kernel.org,
-        llvm@lists.linux.dev, mark.rutland@arm.com,
-        linux-hardening@vger.kernel.org,
-        Josh Poimboeuf <jpoimboe@kernel.org>, catalin.marinas@arm.com,
-        rostedt@goodmis.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        linux-hyperv@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] Drivers: hv: vmbus: Split memcpy of flex-array
+Message-ID: <YzRNxs6bVtNZdtNH@liuwe-devbox-debian-v2>
+References: <20220927211736.3241175-1-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220927211736.3241175-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 7:21 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Thu, 8 Sep 2022 14:54:42 -0700, Sami Tolvanen wrote:
-> > KCFI is a forward-edge control-flow integrity scheme in the upcoming
-> > Clang 16 release, which is more suitable for kernel use than the
-> > existing CFI scheme used by CONFIG_CFI_CLANG. KCFI doesn't require
-> > LTO, doesn't alter function references to point to a jump table, and
-> > won't break function address equality.
-> >
-> > This series replaces the current arm64 CFI implementation with KCFI
-> > and adds support for x86_64.
-> >
-> > [...]
->
-> I assume that Peter's Ack means I should carry the tree, so, to that end:
->
-> Applied to for-next/kcfi, thanks!
->
+On Tue, Sep 27, 2022 at 02:17:36PM -0700, Kees Cook wrote:
+> To work around a misbehavior of the compiler's ability to see into
+> composite flexible array structs (as detailed in the coming memcpy()
+> hardening series[1]), split the memcpy() of the header and the payload
+> so no false positive run-time overflow warning will be generated. This
+> results in the already inlined memcpy getting unrolled a little more,
+> which very slightly increases text size:
+> 
+> $ size drivers/hv/vmbus_drv.o.before drivers/hv/vmbus_drv.o
+>    text    data     bss     dec     hex filename
+>   22968    5239     232   28439    6f17 drivers/hv/vmbus_drv.o.before
+>   23032    5239     232   28503    6f57 drivers/hv/vmbus_drv.o
+> 
+> Avoids the run-time false-positive warning:
+> 
+>   memcpy: detected field-spanning write (size 212) of single field "&ctx->msg" at drivers/hv/vmbus_drv.c:1133 (size 16)
+> 
+> [1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org/
+> 
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Wei Liu <wei.liu@kernel.org>
+> Cc: Dexuan Cui <decui@microsoft.com>
+> Cc: linux-hyperv@vger.kernel.org
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Reported-by: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Tested-by: Nathan Chancellor <nathan@kernel.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Hi,
-
-I did regularly KCFI testing.
-
-1. Used Sami's samitolvanen.github#linux/kcfi Git on the Linux side.
-
-2. Used *not* LLVM-16 (including KCFI) but with LLVM-15 from
-samitolvanen.github#llvm-project/15.x/kcfi Git on the toolchain side.
-
-My last testing was with [1] (Linux v6.0-rc7 + KCFI) and [2] (LLVM
-v15.0.1 + KCFI) plus drm-i915-gt/KCFI for Linux v6.0-rc7 patch from
-Nathan (see [3]).
-Thanks Sami for updating 15.x/kcfi on LLVM side on my request.
-
-So, feel free to add my:
-
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com> # LLVM-15 (with KCFI
-support) on x86-64
-
-Thanks to all involved people!
-
-Best regards,
--Sedat-
-
-[1] https://github.com/samitolvanen/linux/commits/kcfi
-[2] https://github.com/samitolvanen/llvm-project/commits/15.x/kcfi
-[3] https://github.com/ClangBuiltLinux/linux/issues/1716#issuecomment-1257311327
-
-> [01/22] treewide: Filter out CC_FLAGS_CFI
->         https://git.kernel.org/kees/c/f143ff397a3f
-> [02/22] scripts/kallsyms: Ignore __kcfi_typeid_
->         https://git.kernel.org/kees/c/d0f9562ee43a
-> [03/22] cfi: Remove CONFIG_CFI_CLANG_SHADOW
->         https://git.kernel.org/kees/c/9fca7115827b
-> [04/22] cfi: Drop __CFI_ADDRESSABLE
->         https://git.kernel.org/kees/c/92efda8eb152
-> [05/22] cfi: Switch to -fsanitize=kcfi
->         https://git.kernel.org/kees/c/89245600941e
-> [06/22] cfi: Add type helper macros
->         https://git.kernel.org/kees/c/e84e008e7b02
-> [07/22] lkdtm: Emit an indirect call for CFI tests
->         https://git.kernel.org/kees/c/cf90d0383560
-> [08/22] psci: Fix the function type for psci_initcall_t
->         https://git.kernel.org/kees/c/44f665b69c67
-> [09/22] arm64: Add types to indirect called assembly functions
->         https://git.kernel.org/kees/c/c50d32859e70
-> [10/22] arm64: Add CFI error handling
->         https://git.kernel.org/kees/c/b26e484b8bb3
-> [11/22] arm64: Drop unneeded __nocfi attributes
->         https://git.kernel.org/kees/c/5f20997c194e
-> [12/22] init: Drop __nocfi from __init
->         https://git.kernel.org/kees/c/5dbbb3eaa2a7
-> [13/22] treewide: Drop function_nocfi
->         https://git.kernel.org/kees/c/607289a7cd7a
-> [14/22] treewide: Drop WARN_ON_FUNCTION_MISMATCH
->         https://git.kernel.org/kees/c/4b24356312fb
-> [15/22] treewide: Drop __cficanonical
->         https://git.kernel.org/kees/c/5659b598b4dc
-> [16/22] objtool: Preserve special st_shndx indexes in elf_update_symbol
->         https://git.kernel.org/kees/c/5141d3a06b2d
-> [17/22] objtool: Disable CFI warnings
->         https://git.kernel.org/kees/c/3c68a92d17ad
-> [18/22] kallsyms: Drop CONFIG_CFI_CLANG workarounds
->         https://git.kernel.org/kees/c/dfb352ab1162
-> [19/22] x86/tools/relocs: Ignore __kcfi_typeid_ relocations
->         https://git.kernel.org/kees/c/ca7e10bff196
-> [20/22] x86: Add types to indirectly called assembly functions
->         https://git.kernel.org/kees/c/ccace936eec7
-> [21/22] x86/purgatory: Disable CFI
->         https://git.kernel.org/kees/c/a4b7a12c5594
-> [22/22] x86: Add support for CONFIG_CFI_CLANG
->         https://git.kernel.org/kees/c/3c516f89e17e
->
-> --
-> Kees Cook
->
+Applied to hyperv-next. Thanks.
