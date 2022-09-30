@@ -2,84 +2,76 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2402FC433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 30 Sep 2022 06:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98730C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 30 Sep 2022 08:03:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229620AbiI3GcI (ORCPT
+        id S229718AbiI3IDZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 30 Sep 2022 02:32:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35374 "EHLO
+        Fri, 30 Sep 2022 04:03:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230079AbiI3GcG (ORCPT
+        with ESMTP id S229882AbiI3IDW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 30 Sep 2022 02:32:06 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C978140F29;
-        Thu, 29 Sep 2022 23:32:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C119FB82750;
-        Fri, 30 Sep 2022 06:32:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 319D5C433D6;
-        Fri, 30 Sep 2022 06:31:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664519522;
-        bh=T9dC/HN79/DV+nRzTJI8gIGMCmG0JWdym4OCQAzTBEk=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=reDRkwVCoNYdIzvsrLWowvtxCgc4rqmladYi3QzhXsRjvU2U2j5dzga9Kf+8BnqFZ
-         9SsNdsIDqMLdNRY0hm+ElHdd1lHAZP20oEqT8nnTdvlJBy8fngkAX2/M+aMB2JUda3
-         JNIrL98ycwrNZYsjfMPMSGktC8NZ5lma+J3mBeam2KZ47tsXHrJUcGMiEysc/KyDUE
-         2LULu9lh+vyhNRodgdNHJ69RhXOZzKeAXpgPQSvfJgx0sMxjGjVQUmtS95tEZCTMp/
-         yIqn/oR4/zG6UeS5J1ns0nMzL/mpqZBGoBaBhItnxVKm0TfWFsgC11uSi4lrKNe9hl
-         f1H/+3yKoG3GA==
-Content-Type: text/plain; charset="utf-8"
+        Fri, 30 Sep 2022 04:03:22 -0400
+X-Greylist: delayed 437 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 30 Sep 2022 01:03:22 PDT
+Received: from mail.lefinish.com (mail.lefinish.com [45.86.209.157])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DB01129FCE
+        for <linux-hardening@vger.kernel.org>; Fri, 30 Sep 2022 01:03:22 -0700 (PDT)
+Received: by mail.lefinish.com (Postfix, from userid 1001)
+        id 8969783A1B; Fri, 30 Sep 2022 09:55:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lefinish.com; s=mail;
+        t=1664524565; bh=gfWmJwOZk+B/IN1TMPg7emKhIvoExrJdUiyEL8yd2Jk=;
+        h=Date:From:To:Subject:From;
+        b=OTch33XufFBz8Bw3hSEYTdgQtAMWDblsD22pUaWwGKujEQe8k4dOsMqKy+9zeYmTs
+         T79+ANht8TDD4GyZgdunh88xjo46v5opP+TXUnMzKG1v6WheKGTC07YCVDBm0W9FrE
+         6ypOo9XiFNEHNe0llmIAcJBQPGTyLmYcKKPZfhnheYLzRgMHm+Si44h2C0iom1fLQZ
+         opd+3S6g/rIht+uVWB473e61EHOy6t1+AOD4cZEm+FHlagJlym3nyIftoDRc7QzeiS
+         R2OvK3C5dUmXdSA6Xpuccsx7msQoEeFxq/jYvQ3wtHuZk5XbDE5PXXR5Uyf1zkKVR/
+         YTQk34CMqUOKw==
+Received: by mail.lefinish.com for <linux-hardening@vger.kernel.org>; Fri, 30 Sep 2022 07:55:46 GMT
+Message-ID: <20220930084500-0.1.1x.8wmo.0.qr18y5o88n@lefinish.com>
+Date:   Fri, 30 Sep 2022 07:55:46 GMT
+From:   "Corey Webb" <corey.webb@lefinish.com>
+To:     <linux-hardening@vger.kernel.org>
+Subject: Help with the project
+X-Mailer: mail.lefinish.com
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] carl9170: Replace zero-length array with
- DECLARE_FLEX_ARRAY() helper
-From:   Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <YzIdWc8QSdZFHBYg@work>
-References: <YzIdWc8QSdZFHBYg@work>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Christian Lamparter <chunkeey@googlemail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-ID: <166451949633.6083.142608063936593125.kvalo@kernel.org>
-Date:   Fri, 30 Sep 2022 06:31:59 +0000 (UTC)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+Hi,=20
 
-> Zero-length arrays are deprecated and we are moving towards adopting
-> C99 flexible-array members, instead. So, replace zero-length arrays
-> declarations in anonymous union with the new DECLARE_FLEX_ARRAY()
-> helper macro.
-> 
-> This helper allows for flexible-array members in unions.
-> 
-> Link: https://github.com/KSPP/linux/issues/193
-> Link: https://github.com/KSPP/linux/issues/215
-> Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+I would like to reach the person responsible for the implementation of yo=
+ur company's goals, vision and mission or the decision-maker in the devel=
+opment of your technology strategy.
 
-Patch applied to ath-next branch of ath.git, thanks.
+I represent provider of lucrative IT solutions that remove the barriers t=
+o process development resulting from limited access to appropriate IT res=
+ources.
 
-9ec6e20776ab carl9170: Replace zero-length array with DECLARE_FLEX_ARRAY() helper
+We guarantee you access to the knowledge and experience of outstanding 3,=
+000 software developers from Poland and 500 professional consultants and =
+senior developers in the United States and other Western countries. =20
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/YzIdWc8QSdZFHBYg@work/
+We respond to a variety of needs, ranging from expanding your project tea=
+m with specialists with specific skills to supporting project managers, e=
+xperienced innovation teams to creating a Minimum Viable Project (MVP).
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+The comprehensiveness of our services guarantees you dynamic software dev=
+elopment including creation, testing and implementation systems that are =
+the backbone of effective management of the entire organization.
+
+A partnership that lasts for years is the best proof that our clients mee=
+t their unique requirements within a specific timeframe, introduce new op=
+portunities and grow their business while we solve their problems.
+
+Are you available for a brief call? I will be looking forward to hearing =
+from you.
+
+
+Best regards
+Corey Webb
 
