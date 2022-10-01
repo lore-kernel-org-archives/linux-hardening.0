@@ -2,186 +2,210 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34777C433F5
-	for <linux-hardening@archiver.kernel.org>; Fri, 30 Sep 2022 22:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782E2C433F5
+	for <linux-hardening@archiver.kernel.org>; Sat,  1 Oct 2022 16:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232406AbiI3Wlp (ORCPT
+        id S229663AbiJAQKG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 30 Sep 2022 18:41:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35044 "EHLO
+        Sat, 1 Oct 2022 12:10:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232260AbiI3Wlk (ORCPT
+        with ESMTP id S229445AbiJAQKF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 30 Sep 2022 18:41:40 -0400
-Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B89B1A0D02;
-        Fri, 30 Sep 2022 15:41:38 -0700 (PDT)
-Received: by mail-vk1-xa2f.google.com with SMTP id h5so2992957vkc.5;
-        Fri, 30 Sep 2022 15:41:38 -0700 (PDT)
+        Sat, 1 Oct 2022 12:10:05 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7CF227DD3;
+        Sat,  1 Oct 2022 09:10:00 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id d24so6382647pls.4;
+        Sat, 01 Oct 2022 09:10:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=qK+1XpXUeWz7DtUYCbCDJ17OfbroQAjc/ksiMC53YMY=;
-        b=Ib8cTz2+ZET/AStcmt1JDQDWqC2XijOXDxP4bIAOCQrn8/TuIAXIFYeEEy1RAF535U
-         rSbAuRdlLCj7ZYF4ooB5cWln9pnvaW7e7upPU2JyTrVtFWS+6mrNCFPYXvLIUhNjZkKP
-         6ORWDQGpfc2SzOz8g2ovQXe1WK/yFNJMwxm0G//xMSQSKMzPBmoQilLasSct+lvfYxfV
-         UJQoVd1qzc+9Jk61CNO3nCgzp2ELHhhpWT8C5ZEkPe+sd9zfVOILUEzR7gRyxVJG0U4x
-         XtZKrgDq4mELlSQFFDmbX/XHzZhYdtHC7+kSa0+x3Qhuttka4JFhg/XPDeVMJVOWBPnx
-         DODg==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=ZFt50GDqlKIYM4l8mECHUWC3f4w34q3ItwBbk2NFmik=;
+        b=K3if3PVJ5bvcTJ9M0NPajRsS9R22PhUV8mt1DF9aSjhi92xxGX68nw1fQOdsnfeW88
+         RYDbvN3GquD6aYJG58Lch5x17v+7Fbew3pLZMAkWt1+ooRJfi37RQADA2PXlVWpJ0CkC
+         Tph9mkBw10QRI/4GlEXa2GIU/ewaCJw+Q5bhNbWEldyfKXsiimIOVSMffXQx+3tGU4Mj
+         dJvzomia0B+Wj46FPagEpyfhrlYIDzrrtNbXqmnTPZIsHCWjn0Q7IxiKUPw+lNuqO8YW
+         mhgisps0Go9/DKTKISmZAxZzmxBVutsjUNJDrnOyzW3IiQoFEADN8PzV+SFx5mJvo2bv
+         Sq2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=qK+1XpXUeWz7DtUYCbCDJ17OfbroQAjc/ksiMC53YMY=;
-        b=y7LSDmRxDnkC5ZRpIL9CAamJyXtE5/rB5jboNPunKHdGdTuc/LmfeWf8Pts02n8DXy
-         XU9nfzCcZpN/e/9+C4qW1aYXRKOMuMq2UGuj32tmZXSQDcCseoAQgHteqOLF9Nivfdzt
-         889dEUSCoa8u+lx/DdBelreF3kMtwDz+jP1upKNK+sOq5yPPojI089U3Dfx5DXfl7xIT
-         Xw3VYqIGO9GcOGR0xfvx9SwmkkALIQofq7zXc527OeJle3JocichDoIh+x/qj1YTL4Dd
-         xLGHjg4t5fBIyZPdKqvpCfG8EJVSD0UdcLcW6sSbF4PY4UiHT+PFixeeICi2g7g2oeSI
-         +vAQ==
-X-Gm-Message-State: ACrzQf0QSeANPD5wJbLLHmhzXSB50/foFqxdxA+7oOWgWTySQ8rVpuv2
-        Yae1NEX3Gk7ZAoypcICK9eU=
-X-Google-Smtp-Source: AMsMyM5KPzilcw8oR2MJNhr9bNGTR52EZrlN9/UQwQXn9X6ZItZkWgDMUGK1dkDiNlGG8P3w6xwjaA==
-X-Received: by 2002:a05:6122:17a4:b0:3a4:e5ca:dfa with SMTP id o36-20020a05612217a400b003a4e5ca0dfamr5490677vkf.32.1664577697278;
-        Fri, 30 Sep 2022 15:41:37 -0700 (PDT)
-Received: from macondo.. ([2804:431:e7cc:d13c:46d7:2f3e:5663:520a])
-        by smtp.gmail.com with ESMTPSA id t12-20020ab0688c000000b0039f94d9d39fsm2445973uar.6.2022.09.30.15.41.35
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=ZFt50GDqlKIYM4l8mECHUWC3f4w34q3ItwBbk2NFmik=;
+        b=c5jAmLeP6Y8YFdsIgQMbsieNEPdAxKsNFmnv/Fsq/rNo0p5J33j8pmrShGaes5/iuz
+         CL0SR7uONTP0nfyaAb5cCLwqrL+kCjd6HPBoKxHTLkI7mqqZ56nxzf8inda3ISoF7Rft
+         fDILH7h8ctoST2en0t8SMOynG1wN/KPzBy8LXYmtS0TyIwl+Eg3wKJPxCFBOnDWoULh0
+         SO9nAukb5PIU4zIcmEwIZg+NcPSBH240bARWs+m8WDCSFnQDZFLWKL8CrEVdmQOmR1zw
+         0L3rIB5PJUPmzTN/qJ4t5bzOSFDtf/FwrVtA666ojgi9z0tBKYjJPCQMetv6N2qMd0DJ
+         7dFQ==
+X-Gm-Message-State: ACrzQf08TtNsiSdzKQnRBbwrKZ98QmhF/PEtnp/JzTgTEbgvJh3L6EGW
+        H6rbPkglhh/G6kezKQvwzTo=
+X-Google-Smtp-Source: AMsMyM4LFEW8r3bJhaCxZm3hZ+BJ6mFgt6vMylhuSPGZuSYFmA+LZrM5m1U3puB9ewICj0JZLSgwTQ==
+X-Received: by 2002:a17:903:246:b0:179:96b5:1ad2 with SMTP id j6-20020a170903024600b0017996b51ad2mr14161925plh.37.1664640600299;
+        Sat, 01 Oct 2022 09:10:00 -0700 (PDT)
+Received: from hyeyoo ([114.29.91.56])
+        by smtp.gmail.com with ESMTPSA id y9-20020a17090a474900b0020a28156e11sm3000108pjg.26.2022.10.01.09.09.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Sep 2022 15:41:37 -0700 (PDT)
-From:   Rafael Mendonca <rafaelmendsr@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "Hans J. Koch" <hjk@hansjkoch.de>,
-        Damian Hobson-Garcia <dhobsong@igel.co.jp>
-Cc:     Rafael Mendonca <rafaelmendsr@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH 1/3] uio: uio_dmem_genirq: Fix missing unlock in irq configuration
-Date:   Fri, 30 Sep 2022 19:40:57 -0300
-Message-Id: <20220930224100.816175-2-rafaelmendsr@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220930224100.816175-1-rafaelmendsr@gmail.com>
-References: <20220930224100.816175-1-rafaelmendsr@gmail.com>
+        Sat, 01 Oct 2022 09:09:59 -0700 (PDT)
+Date:   Sun, 2 Oct 2022 01:09:47 +0900
+From:   Hyeonggon Yoo <42.hyeyoo@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Marco Elver <elver@google.com>, linux-mm@kvack.org,
+        "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Alex Elder <elder@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Yonghong Song <yhs@fb.com>, Miguel Ojeda <ojeda@kernel.org>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-fsdevel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        dev@openvswitch.org, x86@kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 01/16] slab: Remove __malloc attribute from realloc
+ functions
+Message-ID: <YzhmSxKFzOXhUZ2Z@hyeyoo>
+References: <20220923202822.2667581-1-keescook@chromium.org>
+ <20220923202822.2667581-2-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220923202822.2667581-2-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Commit b74351287d4b ("uio: fix a sleep-in-atomic-context bug in
-uio_dmem_genirq_irqcontrol()") started calling disable_irq() without
-holding the spinlock because it can sleep. However, that fix introduced
-another bug: if interrupt is already disabled and a new disable request
-comes in, then the spinlock is not unlocked:
+On Fri, Sep 23, 2022 at 01:28:07PM -0700, Kees Cook wrote:
+> The __malloc attribute should not be applied to "realloc" functions, as
+> the returned pointer may alias the storage of the prior pointer. Instead
+> of splitting __malloc from __alloc_size, which would be a huge amount of
+> churn, just create __realloc_size for the few cases where it is needed.
+> 
+> Additionally removes the conditional test for __alloc_size__, which is
+> always defined now.
+> 
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Pekka Enberg <penberg@kernel.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Roman Gushchin <roman.gushchin@linux.dev>
+> Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+> Cc: Marco Elver <elver@google.com>
+> Cc: linux-mm@kvack.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  include/linux/compiler_types.h | 13 +++++--------
+>  include/linux/slab.h           | 12 ++++++------
+>  mm/slab_common.c               |  4 ++--
+>  3 files changed, 13 insertions(+), 16 deletions(-)
+> 
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> index 4f2a819fd60a..f141a6f6b9f6 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -271,15 +271,12 @@ struct ftrace_likely_data {
+>  
+>  /*
+>   * Any place that could be marked with the "alloc_size" attribute is also
+> - * a place to be marked with the "malloc" attribute. Do this as part of the
+> - * __alloc_size macro to avoid redundant attributes and to avoid missing a
+> - * __malloc marking.
+> + * a place to be marked with the "malloc" attribute, except those that may
+> + * be performing a _reallocation_, as that may alias the existing pointer.
+> + * For these, use __realloc_size().
+>   */
+> -#ifdef __alloc_size__
+> -# define __alloc_size(x, ...)	__alloc_size__(x, ## __VA_ARGS__) __malloc
+> -#else
+> -# define __alloc_size(x, ...)	__malloc
+> -#endif
+> +#define __alloc_size(x, ...)	__alloc_size__(x, ## __VA_ARGS__) __malloc
+> +#define __realloc_size(x, ...)	__alloc_size__(x, ## __VA_ARGS__)
+>  
+>  #ifndef asm_volatile_goto
+>  #define asm_volatile_goto(x...) asm goto(x)
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> index 0fefdf528e0d..41bd036e7551 100644
+> --- a/include/linux/slab.h
+> +++ b/include/linux/slab.h
+> @@ -184,7 +184,7 @@ int kmem_cache_shrink(struct kmem_cache *s);
+>  /*
+>   * Common kmalloc functions provided by all allocators
+>   */
+> -void * __must_check krealloc(const void *objp, size_t new_size, gfp_t flags) __alloc_size(2);
+> +void * __must_check krealloc(const void *objp, size_t new_size, gfp_t flags) __realloc_size(2);
+>  void kfree(const void *objp);
+>  void kfree_sensitive(const void *objp);
+>  size_t __ksize(const void *objp);
+> @@ -647,10 +647,10 @@ static inline __alloc_size(1, 2) void *kmalloc_array(size_t n, size_t size, gfp_
+>   * @new_size: new size of a single member of the array
+>   * @flags: the type of memory to allocate (see kmalloc)
+>   */
+> -static inline __alloc_size(2, 3) void * __must_check krealloc_array(void *p,
+> -								    size_t new_n,
+> -								    size_t new_size,
+> -								    gfp_t flags)
+> +static inline __realloc_size(2, 3) void * __must_check krealloc_array(void *p,
+> +								      size_t new_n,
+> +								      size_t new_size,
+> +								      gfp_t flags)
+>  {
+>  	size_t bytes;
+>  
+> @@ -774,7 +774,7 @@ static inline __alloc_size(1, 2) void *kvcalloc(size_t n, size_t size, gfp_t fla
+>  }
+>  
+>  extern void *kvrealloc(const void *p, size_t oldsize, size_t newsize, gfp_t flags)
+> -		      __alloc_size(3);
+> +		      __realloc_size(3);
+>  extern void kvfree(const void *addr);
+>  extern void kvfree_sensitive(const void *addr, size_t len);
+>  
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index 17996649cfe3..457671ace7eb 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -1134,8 +1134,8 @@ module_init(slab_proc_init);
+>  
+>  #endif /* CONFIG_SLAB || CONFIG_SLUB_DEBUG */
+>  
+> -static __always_inline void *__do_krealloc(const void *p, size_t new_size,
+> -					   gfp_t flags)
+> +static __always_inline __realloc_size(2) void *
+> +__do_krealloc(const void *p, size_t new_size, gfp_t flags)
+>  {
+>  	void *ret;
+>  	size_t ks;
+> -- 
+> 2.34.1
+> 
 
-root@localhost:~# printf '\x00\x00\x00\x00' > /dev/uio0
-root@localhost:~# printf '\x00\x00\x00\x00' > /dev/uio0
-root@localhost:~# [   14.851538] BUG: scheduling while atomic: bash/223/0x00000002
-[   14.851991] Modules linked in: uio_dmem_genirq uio myfpga(OE) bochs drm_vram_helper drm_ttm_helper ttm drm_kms_helper drm snd_pcm ppdev joydev psmouse snd_timer snd e1000fb_sys_fops syscopyarea parport sysfillrect soundcore sysimgblt input_leds pcspkr i2c_piix4 serio_raw floppy evbug qemu_fw_cfg mac_hid pata_acpi ip_tables x_tables autofs4 [last unloaded: parport_pc]
-[   14.854206] CPU: 0 PID: 223 Comm: bash Tainted: G           OE      6.0.0-rc7 #21
-[   14.854786] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
-[   14.855664] Call Trace:
-[   14.855861]  <TASK>
-[   14.856025]  dump_stack_lvl+0x4d/0x67
-[   14.856325]  dump_stack+0x14/0x1a
-[   14.856583]  __schedule_bug.cold+0x4b/0x5c
-[   14.856915]  __schedule+0xe81/0x13d0
-[   14.857199]  ? idr_find+0x13/0x20
-[   14.857456]  ? get_work_pool+0x2d/0x50
-[   14.857756]  ? __flush_work+0x233/0x280
-[   14.858068]  ? __schedule+0xa95/0x13d0
-[   14.858307]  ? idr_find+0x13/0x20
-[   14.858519]  ? get_work_pool+0x2d/0x50
-[   14.858798]  schedule+0x6c/0x100
-[   14.859009]  schedule_hrtimeout_range_clock+0xff/0x110
-[   14.859335]  ? tty_write_room+0x1f/0x30
-[   14.859598]  ? n_tty_poll+0x1ec/0x220
-[   14.859830]  ? tty_ldisc_deref+0x1a/0x20
-[   14.860090]  schedule_hrtimeout_range+0x17/0x20
-[   14.860373]  do_select+0x596/0x840
-[   14.860627]  ? __kernel_text_address+0x16/0x50
-[   14.860954]  ? poll_freewait+0xb0/0xb0
-[   14.861235]  ? poll_freewait+0xb0/0xb0
-[   14.861517]  ? rpm_resume+0x49d/0x780
-[   14.861798]  ? common_interrupt+0x59/0xa0
-[   14.862127]  ? asm_common_interrupt+0x2b/0x40
-[   14.862511]  ? __uart_start.isra.0+0x61/0x70
-[   14.862902]  ? __check_object_size+0x61/0x280
-[   14.863255]  core_sys_select+0x1c6/0x400
-[   14.863575]  ? vfs_write+0x1c9/0x3d0
-[   14.863853]  ? vfs_write+0x1c9/0x3d0
-[   14.864121]  ? _copy_from_user+0x45/0x70
-[   14.864526]  do_pselect.constprop.0+0xb3/0xf0
-[   14.864893]  ? do_syscall_64+0x6d/0x90
-[   14.865228]  ? do_syscall_64+0x6d/0x90
-[   14.865556]  __x64_sys_pselect6+0x76/0xa0
-[   14.865906]  do_syscall_64+0x60/0x90
-[   14.866214]  ? syscall_exit_to_user_mode+0x2a/0x50
-[   14.866640]  ? do_syscall_64+0x6d/0x90
-[   14.866972]  ? do_syscall_64+0x6d/0x90
-[   14.867286]  ? do_syscall_64+0x6d/0x90
-[   14.867626]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
-[...] stripped
-[   14.872959]  </TASK>
+This is now squashed with later one. (so undefined __alloc_size__ issues are fixed)
+for the latest version of this patch:
 
-('myfpga' is a simple 'uio_dmem_genirq' driver I wrote to test this)
+Looks good to me,
+Acked-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
 
-The implementation of "uio_dmem_genirq" was based on "uio_pdrv_genirq" and
-it is used in a similar manner to the "uio_pdrv_genirq" driver with respect
-to interrupt configuration and handling. At the time "uio_dmem_genirq" was
-introduced, both had the same implementation of the 'uio_info' handlers
-irqcontrol() and handler(). Then commit 34cb27528398 ("UIO: Fix concurrency
-issue"), which was only applied to "uio_pdrv_genirq", ended up making them
-a little different. That commit, among other things, changed disable_irq()
-to disable_irq_nosync() in the implementation of irqcontrol(). The
-motivation there was to avoid a deadlock between irqcontrol() and
-handler(), since it added a spinlock in the irq handler, and disable_irq()
-waits for the completion of the irq handler.
-
-By changing disable_irq() to disable_irq_nosync() in irqcontrol(), we also
-avoid the sleeping-while-atomic bug that commit b74351287d4b ("uio: fix a
-sleep-in-atomic-context bug in uio_dmem_genirq_irqcontrol()") was trying to
-fix. Thus, this fixes the missing unlock in irqcontrol() by importing the
-implementation of irqcontrol() handler from the "uio_pdrv_genirq" driver.
-In the end, it reverts commit b74351287d4b ("uio: fix a
-sleep-in-atomic-context bug in uio_dmem_genirq_irqcontrol()") and change
-disable_irq() to disable_irq_nosync().
-
-It is worth noting that this still does not address the concurrency issue
-fixed by commit 34cb27528398 ("UIO: Fix concurrency issue"). It will be
-addressed separately in the next commits.
-
-Split out from commit 34cb27528398 ("UIO: Fix concurrency issue").
-
-Fixes: b74351287d4b ("uio: fix a sleep-in-atomic-context bug in uio_dmem_genirq_irqcontrol()")
-Signed-off-by: Rafael Mendonca <rafaelmendsr@gmail.com>
----
- drivers/uio/uio_dmem_genirq.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
-index 1106f3376404..cb283ee36eaa 100644
---- a/drivers/uio/uio_dmem_genirq.c
-+++ b/drivers/uio/uio_dmem_genirq.c
-@@ -132,13 +132,11 @@ static int uio_dmem_genirq_irqcontrol(struct uio_info *dev_info, s32 irq_on)
- 	if (irq_on) {
- 		if (test_and_clear_bit(0, &priv->flags))
- 			enable_irq(dev_info->irq);
--		spin_unlock_irqrestore(&priv->lock, flags);
- 	} else {
--		if (!test_and_set_bit(0, &priv->flags)) {
--			spin_unlock_irqrestore(&priv->lock, flags);
--			disable_irq(dev_info->irq);
--		}
-+		if (!test_and_set_bit(0, &priv->flags))
-+			disable_irq_nosync(dev_info->irq);
- 	}
-+	spin_unlock_irqrestore(&priv->lock, flags);
- 
- 	return 0;
- }
 -- 
-2.34.1
-
+Thanks,
+Hyeonggon
