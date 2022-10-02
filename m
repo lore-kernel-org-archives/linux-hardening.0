@@ -2,514 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AA3C433F5
-	for <linux-hardening@archiver.kernel.org>; Sun,  2 Oct 2022 03:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E3BC4332F
+	for <linux-hardening@archiver.kernel.org>; Sun,  2 Oct 2022 10:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229461AbiJBDYg (ORCPT
+        id S229449AbiJBKdw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 1 Oct 2022 23:24:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60744 "EHLO
+        Sun, 2 Oct 2022 06:33:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229482AbiJBDYe (ORCPT
+        with ESMTP id S229552AbiJBKdq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 1 Oct 2022 23:24:34 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5031F36081
-        for <linux-hardening@vger.kernel.org>; Sat,  1 Oct 2022 20:24:32 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id x29so2099618pfp.7
-        for <linux-hardening@vger.kernel.org>; Sat, 01 Oct 2022 20:24:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=fSR9tr3IwX1tkbkpVY+1zw1bk2cLXOmKwUnSwhQ0SuM=;
-        b=AtP7T+amBhMrHBwXqDoBTJFPt4t7OM5OK+yhYgO44yKlueXqMfmhk2Kl8qTVVv1Ud8
-         vbTyd52E0Ro1e/26wi0Z7WDgCBBO4LGQRH6VaSGzZtF2mAZDz+hajyKKinndGUbXRaYO
-         9ILZd4u2D9hw/vLVCQ5ZN+c/BsJvXdcIuLrno=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=fSR9tr3IwX1tkbkpVY+1zw1bk2cLXOmKwUnSwhQ0SuM=;
-        b=mF58eVLt/7J7tVTipx7rSmKxragDMvt3QEwZRNbXnH107KEsnWxf1QpyzvOGWxb5sS
-         mC87Dc3sZlgWI/1hID+pgaDDaDx5X3Dpm5FPGgRkT/g9m9nB546OMEVx0bwaYVuDb4o4
-         5dfjUCzKQo8KsLqae3Wx5MmLhS01uAzlQ+3eT3aIZgYmZ39hA+wdbp+/4CNn1akBls3Q
-         LEl1+VlzMmveGFKlzpIpYbTTvi5QN4xwAcr/f7bQLgPNiKZ/AySLpnVFqok7fd+RGZLN
-         qbQWzJsR2NoOWarH96AcJ8SpYQx3XpHeB/mampx41GPdQXu3KfAU5SqXh8IPCyeUsJBo
-         9nhg==
-X-Gm-Message-State: ACrzQf0Z9pFC/a9E5eV1LMEMAoWbQ66P6M6UdPNi8jaUg7fuZn2PmJ/y
-        KE/N1BJo8ofjmhogbEHakFq4qw==
-X-Google-Smtp-Source: AMsMyM4y8n3hAlwbtzsmaWU4vQ+stg6atlQ1aejG9mePtQ+mzUQ1AAhK6WZspOl3jzNc6qfJQ20u/A==
-X-Received: by 2002:a63:2221:0:b0:43b:f4a3:80cc with SMTP id i33-20020a632221000000b0043bf4a380ccmr13647354pgi.367.1664681071729;
-        Sat, 01 Oct 2022 20:24:31 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p5-20020a170902e74500b00176ab6a0d5fsm4692975plf.54.2022.10.01.20.24.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Oct 2022 20:24:31 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Simon Kelley <simon@thekelleys.org.uk>
-Cc:     Kees Cook <keescook@chromium.org>, Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: [PATCH] wifi: atmel: Avoid clashing function prototypes
-Date:   Sat,  1 Oct 2022 20:24:28 -0700
-Message-Id: <20221002032428.4091540-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
+        Sun, 2 Oct 2022 06:33:46 -0400
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEC623FEC7;
+        Sun,  2 Oct 2022 03:33:30 -0700 (PDT)
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 890431C0016; Sun,  2 Oct 2022 12:33:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+        t=1664706809;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=sL//6B25nNw0Y4iq69YQZ+ORINfToWI2jMeD5zLOJ6Y=;
+        b=Wcoxvgrb9ADpe5BdcRrI1rChvOFEJAl1KxvnFblPpbRqRbLdivige8kxRdj+rjUmn/jjjU
+        PF+i1AiH3zo0DRkwF3sG3YJ2ZJuFeWRsjeuShZOy2g/wC9uwecGwnji+AV9TaJtBVsWmFM
+        5SKTJdQJzsz37EDeU86hrFin/sIYfAU=
+Date:   Sun, 2 Oct 2022 12:33:13 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        keescook@chromium.org, Sean Christopherson <seanjc@google.com>
+Subject: Re: [PATCH v2] x86/mm: Refuse W^X violations
+Message-ID: <20221002095516.GA10085@duo.ucw.cz>
+References: <YwySW3ROc21hN7g9@hirez.programming.kicks-ass.net>
+ <20220921200726.GA3094503@roeck-us.net>
+ <4dd594ad-490a-68ee-9e32-fbd9f135bd54@intel.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=16307; h=from:subject; bh=jI9bh0H+4r82lB7BibHcFC61+KWxOWMNoe73/Orrzfc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjOQRsnL4GRjC2rE98Ed/HWfwp6IFzpSqo6JyzTtxI n9K/uwSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYzkEbAAKCRCJcvTf3G3AJlcVD/ 4j+i8KudB7xs4a2P+w//yEV05pHV7yZGf4/ZSVXy09uwSM7KQxAVkNIDJ+wun/A16TZlpJRaoMyp4L WjwvTdyq99AXUPUgLmPPw5hh49xe16UEeTtgkrahMSTAtt4T442xT+JycSIxDODksDWmGtHRW9NkLb 8G/INMjHU9dFq4Vvhmomd1K6sB2yoPd+d26e8TWep2hiD7C1/kTPW1m37ddkuCu8ZfUoqJiroPJ7u1 ylo5OCAVBHaetkHN4VO5VXi2bsYxMooZjlCq8n7RVadzd459kDbuqSolwcMBuPhxGZYNTgSH2bzd1Y LGpKcE3e1zoIP1bsi4V0oqiFBF3ooTZXRzd0vECS0mhOKc58Tm743GpClroROptn1fBAYRT8AfGqrg 8c6hy00NnhmageP2HjxdNC7XpBB32YJ6fukqPf65mQGz81xOB5Q0tS98HfJL1cnGtTSnFDYoSXY4SO 7v15s6DGNW7aOZoPUaOmogMKJ0gyeAKidh5oPU4AFAwNfq9pG4dR8+k3iF2GaACt53cs/WboyJOIir 8A5KBLRbHrtQGsVO//ztFWyg+fSOQ2nPOH3QMoL6A5X4hcQWVR3anhwkoCFFJ8PNzP7VDVycPCavQc HzKkTop9ydBaL9ni/V7/FomcYU34tYMnnaQ+IK+8H5QbWBO7uKEfvXVnZlyg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="veXX9dWIonWZEC6h"
+Content-Disposition: inline
+In-Reply-To: <4dd594ad-490a-68ee-9e32-fbd9f135bd54@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-When built with Control Flow Integrity, function prototypes between
-caller and function declaration must match. These mismatches are visible
-at compile time with the new -Wcast-function-type-strict in Clang[1].
 
-Of the 1549 warnings found, 188 come from the atmel driver. For example:
+--veXX9dWIonWZEC6h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-drivers/net/wireless/atmel/atmel.c:2518:2: warning: cast from 'int (*)(struct net_device *, struct iw_request_info *, void *, char *)' to 'iw_handler' (aka 'int (*)(struct net_device *, struct iw_request_info *, union iwreq_data *, char *)') converts to incompatible function type [-Wcast-function-type-strict]
-        (iw_handler) atmel_config_commit,       /* SIOCSIWCOMMIT */
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+On Wed 2022-09-21 13:59:06, Dave Hansen wrote:
+> On 9/21/22 13:07, Guenter Roeck wrote:
+> > [    2.042861] CPA refuse W^X violation: 8000000000000063 -> 0000000000=
+000063 range: 0x00000000c00a0000 - 0x00000000c00a0fff PFN a0
+> > ILLOPC: cbc65efa: 0f 0b
+> > [    2.043267] WARNING: CPU: 0 PID: 1 at arch/x86/mm/pat/set_memory.c:6=
+00 __change_page_attr_set_clr+0xdca/0xdd0
+> ...
+> > [    2.050307] ---[ end trace 0000000000000000 ]---
+> > [    2.050762] PCI: PCI BIOS area is rw and x. Use pci=3Dnobios if you =
+want it NX.
+> > [    2.051115] kernel tried to execute NX-protected page - exploit atte=
+mpt? (uid: 0)
+> > [    2.051115] BUG: unable to handle page fault for address: c00fd2bf
+>=20
+> This _looks_ like it is working as intended.  The PCI BIOS code tried to
+> make a RWX page.  The CPA code refused to do it and presumably returned
+> an error, leaving a RW page, non-executable page.  The PCI code didn't
+> check the set_memory_x() return code and tried to go execute anyway.
+> That resulted in the oops.
+>=20
+> I was able to reproduce this pretty easily.  The workaround from dmesg
+> is pci=3Dnobios.  That seems to do the trick for me, although that advise
+> was sandwiched between a warning and an oops, so not the easiest to find.
+>=20
+> I'm a bit torn what to do on this one.  Breaking the boot is bad, but so
+> is leaving RWX memory around.
 
-The atmel Wireless Extension handler callbacks (iw_handler) use a union
-for the data argument. Actually use the union and perform explicit
-member selection in the function body instead of having a function
-prototype mismatch. There are no resulting binary differences.
+Well, the original patch is bad. Boot regressions are not acceptable.
 
-This patch is a cleanup based on Brad Spengler/PaX Team's modifications
-to the atmel driver in their last public patch of grsecurity/PaX based
-on my understanding of the code. Changes or omissions from the original
-code are mine and don't reflect the original grsecurity/PaX code.
+We should first add an WARN_ON(), debug and fix the failures, then we
+can start refusing the transitions.
 
-[1] https://reviews.llvm.org/D134831
+Best regards,
+								Pavel
 
-Cc: Simon Kelley <simon@thekelleys.org.uk>
-Cc: Kalle Valo <kvalo@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/wireless/atmel/atmel.c | 164 ++++++++++++++---------------
- 1 file changed, 80 insertions(+), 84 deletions(-)
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
 
-diff --git a/drivers/net/wireless/atmel/atmel.c b/drivers/net/wireless/atmel/atmel.c
-index 0361c8eb2008..7823220686e6 100644
---- a/drivers/net/wireless/atmel/atmel.c
-+++ b/drivers/net/wireless/atmel/atmel.c
-@@ -1643,9 +1643,10 @@ EXPORT_SYMBOL(stop_atmel_card);
- 
- static int atmel_set_essid(struct net_device *dev,
- 			   struct iw_request_info *info,
--			   struct iw_point *dwrq,
-+			   union iwreq_data *wrqu,
- 			   char *extra)
- {
-+	struct iw_point *dwrq = &wrqu->essid;
- 	struct atmel_private *priv = netdev_priv(dev);
- 
- 	/* Check if we asked for `any' */
-@@ -1671,9 +1672,10 @@ static int atmel_set_essid(struct net_device *dev,
- 
- static int atmel_get_essid(struct net_device *dev,
- 			   struct iw_request_info *info,
--			   struct iw_point *dwrq,
-+			   union iwreq_data *wrqu,
- 			   char *extra)
- {
-+	struct iw_point *dwrq = &wrqu->essid;
- 	struct atmel_private *priv = netdev_priv(dev);
- 
- 	/* Get the current SSID */
-@@ -1692,9 +1694,10 @@ static int atmel_get_essid(struct net_device *dev,
- 
- static int atmel_get_wap(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 struct sockaddr *awrq,
-+			 union iwreq_data *wrqu,
- 			 char *extra)
- {
-+	struct sockaddr *awrq = &wrqu->ap_addr;
- 	struct atmel_private *priv = netdev_priv(dev);
- 	memcpy(awrq->sa_data, priv->CurrentBSSID, ETH_ALEN);
- 	awrq->sa_family = ARPHRD_ETHER;
-@@ -1704,9 +1707,10 @@ static int atmel_get_wap(struct net_device *dev,
- 
- static int atmel_set_encode(struct net_device *dev,
- 			    struct iw_request_info *info,
--			    struct iw_point *dwrq,
-+			    union iwreq_data *wrqu,
- 			    char *extra)
- {
-+	struct iw_point *dwrq = &wrqu->encoding;
- 	struct atmel_private *priv = netdev_priv(dev);
- 
- 	/* Basic checking: do we have a key to set ?
-@@ -1793,9 +1797,10 @@ static int atmel_set_encode(struct net_device *dev,
- 
- static int atmel_get_encode(struct net_device *dev,
- 			    struct iw_request_info *info,
--			    struct iw_point *dwrq,
-+			    union iwreq_data *wrqu,
- 			    char *extra)
- {
-+	struct iw_point *dwrq = &wrqu->encoding;
- 	struct atmel_private *priv = netdev_priv(dev);
- 	int index = (dwrq->flags & IW_ENCODE_INDEX) - 1;
- 
-@@ -2003,18 +2008,19 @@ static int atmel_get_auth(struct net_device *dev,
- 
- static int atmel_get_name(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  char *cwrq,
-+			  union iwreq_data *wrqu,
- 			  char *extra)
- {
--	strcpy(cwrq, "IEEE 802.11-DS");
-+	strcpy(wrqu->name, "IEEE 802.11-DS");
- 	return 0;
- }
- 
- static int atmel_set_rate(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  struct iw_param *vwrq,
-+			  union iwreq_data *wrqu,
- 			  char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->bitrate;
- 	struct atmel_private *priv = netdev_priv(dev);
- 
- 	if (vwrq->fixed == 0) {
-@@ -2053,9 +2059,10 @@ static int atmel_set_rate(struct net_device *dev,
- 
- static int atmel_set_mode(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  __u32 *uwrq,
-+			  union iwreq_data *wrqu,
- 			  char *extra)
- {
-+	__u32 *uwrq = &wrqu->mode;
- 	struct atmel_private *priv = netdev_priv(dev);
- 
- 	if (*uwrq != IW_MODE_ADHOC && *uwrq != IW_MODE_INFRA)
-@@ -2067,9 +2074,10 @@ static int atmel_set_mode(struct net_device *dev,
- 
- static int atmel_get_mode(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  __u32 *uwrq,
-+			  union iwreq_data *wrqu,
- 			  char *extra)
- {
-+	__u32 *uwrq = &wrqu->mode;
- 	struct atmel_private *priv = netdev_priv(dev);
- 
- 	*uwrq = priv->operating_mode;
-@@ -2078,9 +2086,10 @@ static int atmel_get_mode(struct net_device *dev,
- 
- static int atmel_get_rate(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 struct iw_param *vwrq,
-+			 union iwreq_data *wrqu,
- 			 char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->bitrate;
- 	struct atmel_private *priv = netdev_priv(dev);
- 
- 	if (priv->auto_tx_rate) {
-@@ -2108,9 +2117,10 @@ static int atmel_get_rate(struct net_device *dev,
- 
- static int atmel_set_power(struct net_device *dev,
- 			   struct iw_request_info *info,
--			   struct iw_param *vwrq,
-+			   union iwreq_data *wrqu,
- 			   char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->power;
- 	struct atmel_private *priv = netdev_priv(dev);
- 	priv->power_mode = vwrq->disabled ? 0 : 1;
- 	return -EINPROGRESS;
-@@ -2118,9 +2128,10 @@ static int atmel_set_power(struct net_device *dev,
- 
- static int atmel_get_power(struct net_device *dev,
- 			   struct iw_request_info *info,
--			   struct iw_param *vwrq,
-+			   union iwreq_data *wrqu,
- 			   char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->power;
- 	struct atmel_private *priv = netdev_priv(dev);
- 	vwrq->disabled = priv->power_mode ? 0 : 1;
- 	vwrq->flags = IW_POWER_ON;
-@@ -2129,9 +2140,10 @@ static int atmel_get_power(struct net_device *dev,
- 
- static int atmel_set_retry(struct net_device *dev,
- 			   struct iw_request_info *info,
--			   struct iw_param *vwrq,
-+			   union iwreq_data *wrqu,
- 			   char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->retry;
- 	struct atmel_private *priv = netdev_priv(dev);
- 
- 	if (!vwrq->disabled && (vwrq->flags & IW_RETRY_LIMIT)) {
-@@ -2152,9 +2164,10 @@ static int atmel_set_retry(struct net_device *dev,
- 
- static int atmel_get_retry(struct net_device *dev,
- 			   struct iw_request_info *info,
--			   struct iw_param *vwrq,
-+			   union iwreq_data *wrqu,
- 			   char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->retry;
- 	struct atmel_private *priv = netdev_priv(dev);
- 
- 	vwrq->disabled = 0;      /* Can't be disabled */
-@@ -2175,9 +2188,10 @@ static int atmel_get_retry(struct net_device *dev,
- 
- static int atmel_set_rts(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 struct iw_param *vwrq,
-+			 union iwreq_data *wrqu,
- 			 char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->rts;
- 	struct atmel_private *priv = netdev_priv(dev);
- 	int rthr = vwrq->value;
- 
-@@ -2193,9 +2207,10 @@ static int atmel_set_rts(struct net_device *dev,
- 
- static int atmel_get_rts(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 struct iw_param *vwrq,
-+			 union iwreq_data *wrqu,
- 			 char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->rts;
- 	struct atmel_private *priv = netdev_priv(dev);
- 
- 	vwrq->value = priv->rts_threshold;
-@@ -2207,9 +2222,10 @@ static int atmel_get_rts(struct net_device *dev,
- 
- static int atmel_set_frag(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  struct iw_param *vwrq,
-+			  union iwreq_data *wrqu,
- 			  char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->frag;
- 	struct atmel_private *priv = netdev_priv(dev);
- 	int fthr = vwrq->value;
- 
-@@ -2226,9 +2242,10 @@ static int atmel_set_frag(struct net_device *dev,
- 
- static int atmel_get_frag(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  struct iw_param *vwrq,
-+			  union iwreq_data *wrqu,
- 			  char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->frag;
- 	struct atmel_private *priv = netdev_priv(dev);
- 
- 	vwrq->value = priv->frag_threshold;
-@@ -2240,9 +2257,10 @@ static int atmel_get_frag(struct net_device *dev,
- 
- static int atmel_set_freq(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  struct iw_freq *fwrq,
-+			  union iwreq_data *wrqu,
- 			  char *extra)
- {
-+	struct iw_freq *fwrq = &wrqu->freq;
- 	struct atmel_private *priv = netdev_priv(dev);
- 	int rc = -EINPROGRESS;		/* Call commit handler */
- 
-@@ -2270,9 +2288,10 @@ static int atmel_set_freq(struct net_device *dev,
- 
- static int atmel_get_freq(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  struct iw_freq *fwrq,
-+			  union iwreq_data *wrqu,
- 			  char *extra)
- {
-+	struct iw_freq *fwrq = &wrqu->freq;
- 	struct atmel_private *priv = netdev_priv(dev);
- 
- 	fwrq->m = priv->channel;
-@@ -2282,7 +2301,7 @@ static int atmel_get_freq(struct net_device *dev,
- 
- static int atmel_set_scan(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  struct iw_point *dwrq,
-+			  union iwreq_data *dwrq,
- 			  char *extra)
- {
- 	struct atmel_private *priv = netdev_priv(dev);
-@@ -2320,9 +2339,10 @@ static int atmel_set_scan(struct net_device *dev,
- 
- static int atmel_get_scan(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  struct iw_point *dwrq,
-+			  union iwreq_data *wrqu,
- 			  char *extra)
- {
-+	struct iw_point *dwrq = &wrqu->data;
- 	struct atmel_private *priv = netdev_priv(dev);
- 	int i;
- 	char *current_ev = extra;
-@@ -2391,9 +2411,10 @@ static int atmel_get_scan(struct net_device *dev,
- 
- static int atmel_get_range(struct net_device *dev,
- 			   struct iw_request_info *info,
--			   struct iw_point *dwrq,
-+			   union iwreq_data *wrqu,
- 			   char *extra)
- {
-+	struct iw_point *dwrq = &wrqu->data;
- 	struct atmel_private *priv = netdev_priv(dev);
- 	struct iw_range *range = (struct iw_range *) extra;
- 	int k, i, j;
-@@ -2465,9 +2486,10 @@ static int atmel_get_range(struct net_device *dev,
- 
- static int atmel_set_wap(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 struct sockaddr *awrq,
-+			 union iwreq_data *wrqu,
- 			 char *extra)
- {
-+	struct sockaddr *awrq = &wrqu->ap_addr;
- 	struct atmel_private *priv = netdev_priv(dev);
- 	int i;
- 	static const u8 any[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-@@ -2507,7 +2529,7 @@ static int atmel_set_wap(struct net_device *dev,
- 
- static int atmel_config_commit(struct net_device *dev,
- 			       struct iw_request_info *info,	/* NULL */
--			       void *zwrq,			/* NULL */
-+			       union iwreq_data *zwrq,		/* NULL */
- 			       char *extra)			/* NULL */
- {
- 	return atmel_open(dev);
-@@ -2515,66 +2537,40 @@ static int atmel_config_commit(struct net_device *dev,
- 
- static const iw_handler atmel_handler[] =
- {
--	(iw_handler) atmel_config_commit,	/* SIOCSIWCOMMIT */
--	(iw_handler) atmel_get_name,		/* SIOCGIWNAME */
--	(iw_handler) NULL,			/* SIOCSIWNWID */
--	(iw_handler) NULL,			/* SIOCGIWNWID */
--	(iw_handler) atmel_set_freq,		/* SIOCSIWFREQ */
--	(iw_handler) atmel_get_freq,		/* SIOCGIWFREQ */
--	(iw_handler) atmel_set_mode,		/* SIOCSIWMODE */
--	(iw_handler) atmel_get_mode,		/* SIOCGIWMODE */
--	(iw_handler) NULL,			/* SIOCSIWSENS */
--	(iw_handler) NULL,			/* SIOCGIWSENS */
--	(iw_handler) NULL,			/* SIOCSIWRANGE */
--	(iw_handler) atmel_get_range,           /* SIOCGIWRANGE */
--	(iw_handler) NULL,			/* SIOCSIWPRIV */
--	(iw_handler) NULL,			/* SIOCGIWPRIV */
--	(iw_handler) NULL,			/* SIOCSIWSTATS */
--	(iw_handler) NULL,			/* SIOCGIWSTATS */
--	(iw_handler) NULL,			/* SIOCSIWSPY */
--	(iw_handler) NULL,			/* SIOCGIWSPY */
--	(iw_handler) NULL,			/* -- hole -- */
--	(iw_handler) NULL,			/* -- hole -- */
--	(iw_handler) atmel_set_wap,		/* SIOCSIWAP */
--	(iw_handler) atmel_get_wap,		/* SIOCGIWAP */
--	(iw_handler) NULL,			/* -- hole -- */
--	(iw_handler) NULL,			/* SIOCGIWAPLIST */
--	(iw_handler) atmel_set_scan,		/* SIOCSIWSCAN */
--	(iw_handler) atmel_get_scan,		/* SIOCGIWSCAN */
--	(iw_handler) atmel_set_essid,		/* SIOCSIWESSID */
--	(iw_handler) atmel_get_essid,		/* SIOCGIWESSID */
--	(iw_handler) NULL,			/* SIOCSIWNICKN */
--	(iw_handler) NULL,			/* SIOCGIWNICKN */
--	(iw_handler) NULL,			/* -- hole -- */
--	(iw_handler) NULL,			/* -- hole -- */
--	(iw_handler) atmel_set_rate,		/* SIOCSIWRATE */
--	(iw_handler) atmel_get_rate,		/* SIOCGIWRATE */
--	(iw_handler) atmel_set_rts,		/* SIOCSIWRTS */
--	(iw_handler) atmel_get_rts,		/* SIOCGIWRTS */
--	(iw_handler) atmel_set_frag,		/* SIOCSIWFRAG */
--	(iw_handler) atmel_get_frag,		/* SIOCGIWFRAG */
--	(iw_handler) NULL,			/* SIOCSIWTXPOW */
--	(iw_handler) NULL,			/* SIOCGIWTXPOW */
--	(iw_handler) atmel_set_retry,		/* SIOCSIWRETRY */
--	(iw_handler) atmel_get_retry,		/* SIOCGIWRETRY */
--	(iw_handler) atmel_set_encode,		/* SIOCSIWENCODE */
--	(iw_handler) atmel_get_encode,		/* SIOCGIWENCODE */
--	(iw_handler) atmel_set_power,		/* SIOCSIWPOWER */
--	(iw_handler) atmel_get_power,		/* SIOCGIWPOWER */
--	(iw_handler) NULL,			/* -- hole -- */
--	(iw_handler) NULL,			/* -- hole -- */
--	(iw_handler) NULL,			/* SIOCSIWGENIE */
--	(iw_handler) NULL,			/* SIOCGIWGENIE */
--	(iw_handler) atmel_set_auth,		/* SIOCSIWAUTH */
--	(iw_handler) atmel_get_auth,		/* SIOCGIWAUTH */
--	(iw_handler) atmel_set_encodeext,	/* SIOCSIWENCODEEXT */
--	(iw_handler) atmel_get_encodeext,	/* SIOCGIWENCODEEXT */
--	(iw_handler) NULL,			/* SIOCSIWPMKSA */
-+	IW_HANDLER(SIOCSIWCOMMIT,	atmel_config_commit),
-+	IW_HANDLER(SIOCGIWNAME,		atmel_get_name),
-+	IW_HANDLER(SIOCSIWFREQ,		atmel_set_freq),
-+	IW_HANDLER(SIOCGIWFREQ,		atmel_get_freq),
-+	IW_HANDLER(SIOCSIWMODE,		atmel_set_mode),
-+	IW_HANDLER(SIOCGIWMODE,		atmel_get_mode),
-+	IW_HANDLER(SIOCGIWRANGE,	atmel_get_range),
-+	IW_HANDLER(SIOCSIWAP,		atmel_set_wap),
-+	IW_HANDLER(SIOCGIWAP,		atmel_get_wap),
-+	IW_HANDLER(SIOCSIWSCAN,		atmel_set_scan),
-+	IW_HANDLER(SIOCGIWSCAN,		atmel_get_scan),
-+	IW_HANDLER(SIOCSIWESSID,	atmel_set_essid),
-+	IW_HANDLER(SIOCGIWESSID,	atmel_get_essid),
-+	IW_HANDLER(SIOCSIWRATE,		atmel_set_rate),
-+	IW_HANDLER(SIOCGIWRATE,		atmel_get_rate),
-+	IW_HANDLER(SIOCSIWRTS,		atmel_set_rts),
-+	IW_HANDLER(SIOCGIWRTS,		atmel_get_rts),
-+	IW_HANDLER(SIOCSIWFRAG,		atmel_set_frag),
-+	IW_HANDLER(SIOCGIWFRAG,		atmel_get_frag),
-+	IW_HANDLER(SIOCSIWRETRY,	atmel_set_retry),
-+	IW_HANDLER(SIOCGIWRETRY,	atmel_get_retry),
-+	IW_HANDLER(SIOCSIWENCODE,	atmel_set_encode),
-+	IW_HANDLER(SIOCGIWENCODE,	atmel_get_encode),
-+	IW_HANDLER(SIOCSIWPOWER,	atmel_set_power),
-+	IW_HANDLER(SIOCGIWPOWER,	atmel_get_power),
-+	IW_HANDLER(SIOCSIWAUTH,		atmel_set_auth),
-+	IW_HANDLER(SIOCGIWAUTH,		atmel_get_auth),
-+	IW_HANDLER(SIOCSIWENCODEEXT,	atmel_set_encodeext),
-+	IW_HANDLER(SIOCGIWENCODEEXT,	atmel_get_encodeext),
- };
- 
- static const iw_handler atmel_private_handler[] =
- {
--	NULL,				/* SIOCIWFIRSTPRIV */
-+	IW_HANDLER(SIOCIWFIRSTPRIV,	NULL),
- };
- 
- struct atmel_priv_ioctl {
-@@ -2614,8 +2610,8 @@ static const struct iw_handler_def atmel_handler_def = {
- 	.num_standard	= ARRAY_SIZE(atmel_handler),
- 	.num_private	= ARRAY_SIZE(atmel_private_handler),
- 	.num_private_args = ARRAY_SIZE(atmel_private_args),
--	.standard	= (iw_handler *) atmel_handler,
--	.private	= (iw_handler *) atmel_private_handler,
-+	.standard	= atmel_handler,
-+	.private	= atmel_private_handler,
- 	.private_args	= (struct iw_priv_args *) atmel_private_args,
- 	.get_wireless_stats = atmel_get_wireless_stats
- };
--- 
-2.34.1
+--veXX9dWIonWZEC6h
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCYzlo6QAKCRAw5/Bqldv6
+8vZ3AJ9nEa1qzDyVCUdWg8V5OCDTqCwgrwCggLKJ7UAySYFOkZwYuUunmIYkL8k=
+=hn0t
+-----END PGP SIGNATURE-----
+
+--veXX9dWIonWZEC6h--
