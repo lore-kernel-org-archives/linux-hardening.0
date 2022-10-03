@@ -2,106 +2,142 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E3BC4332F
-	for <linux-hardening@archiver.kernel.org>; Sun,  2 Oct 2022 10:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C66D4C433F5
+	for <linux-hardening@archiver.kernel.org>; Mon,  3 Oct 2022 16:42:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229449AbiJBKdw (ORCPT
+        id S229963AbiJCQmT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 2 Oct 2022 06:33:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47354 "EHLO
+        Mon, 3 Oct 2022 12:42:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229552AbiJBKdq (ORCPT
+        with ESMTP id S229967AbiJCQle (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 2 Oct 2022 06:33:46 -0400
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEC623FEC7;
-        Sun,  2 Oct 2022 03:33:30 -0700 (PDT)
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 890431C0016; Sun,  2 Oct 2022 12:33:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-        t=1664706809;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=sL//6B25nNw0Y4iq69YQZ+ORINfToWI2jMeD5zLOJ6Y=;
-        b=Wcoxvgrb9ADpe5BdcRrI1rChvOFEJAl1KxvnFblPpbRqRbLdivige8kxRdj+rjUmn/jjjU
-        PF+i1AiH3zo0DRkwF3sG3YJ2ZJuFeWRsjeuShZOy2g/wC9uwecGwnji+AV9TaJtBVsWmFM
-        5SKTJdQJzsz37EDeU86hrFin/sIYfAU=
-Date:   Sun, 2 Oct 2022 12:33:13 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        keescook@chromium.org, Sean Christopherson <seanjc@google.com>
-Subject: Re: [PATCH v2] x86/mm: Refuse W^X violations
-Message-ID: <20221002095516.GA10085@duo.ucw.cz>
-References: <YwySW3ROc21hN7g9@hirez.programming.kicks-ass.net>
- <20220921200726.GA3094503@roeck-us.net>
- <4dd594ad-490a-68ee-9e32-fbd9f135bd54@intel.com>
+        Mon, 3 Oct 2022 12:41:34 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA5471CFCD;
+        Mon,  3 Oct 2022 09:41:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 91E4DB80D89;
+        Mon,  3 Oct 2022 16:41:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C55DAC433C1;
+        Mon,  3 Oct 2022 16:41:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664815281;
+        bh=ewRIHxFHQnpnU+77QvY0efvP5IYmrYF1YUCXFo+oQUw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ObCftzAOdYjUvr9qOMLruH34zB69a8teiZ4pyncy9G1zYaSLtr23c9a0KjJclRexZ
+         F/8W27RkAL5CqSEVqsJRaid8iW7LVfzITG8cAsxFV0rs16ihk+Sj/Azj3Mnh3MJ0Ia
+         tleI8op8c5grkm1q7k0wmPCPZsj4qOozn+9D0i3j0P0CYxBDffMKuS9dJEMqaBykXG
+         Mtl+SiJmmPR963j7imay5w4JIPkrz/CEimvcOE8/kpNXJGe1S+9MxgTGN3QUKB6Ir+
+         S4a5VhYH/XRu9S6ek+dW35L8OMg6q2mFukS1zOL5meswXWDPnBznvhvurD7NtvlB+g
+         PfGHX3DF7Jg6A==
+Date:   Mon, 3 Oct 2022 09:41:19 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kbuild@vger.kernel.org, llvm@lists.linux.dev,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] hardening: Remove Clang's enable flag for
+ -ftrivial-auto-var-init=zero
+Message-ID: <YzsQr/DqrNzJILkr@dev-arch.thelio-3990X>
+References: <20220930060624.2411883-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="veXX9dWIonWZEC6h"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4dd594ad-490a-68ee-9e32-fbd9f135bd54@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20220930060624.2411883-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Thu, Sep 29, 2022 at 11:06:24PM -0700, Kees Cook wrote:
+> Now that Clang's -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang
+> option is no longer required, remove it from the command line. Clang 16
+> and later will warn when it is used, which will cause Kconfig to think
+> it can't use -ftrivial-auto-var-init=zero at all. Check for whether it
+> is required and only use it when so.
+> 
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: linux-kbuild@vger.kernel.org
+> Cc: llvm@lists.linux.dev
+> Cc: stable@vger.kernel.org
+> Fixes: f02003c860d9 ("hardening: Avoid harmless Clang option under CONFIG_INIT_STACK_ALL_ZERO")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
---veXX9dWIonWZEC6h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for sending this change!
 
-On Wed 2022-09-21 13:59:06, Dave Hansen wrote:
-> On 9/21/22 13:07, Guenter Roeck wrote:
-> > [    2.042861] CPA refuse W^X violation: 8000000000000063 -> 0000000000=
-000063 range: 0x00000000c00a0000 - 0x00000000c00a0fff PFN a0
-> > ILLOPC: cbc65efa: 0f 0b
-> > [    2.043267] WARNING: CPU: 0 PID: 1 at arch/x86/mm/pat/set_memory.c:6=
-00 __change_page_attr_set_clr+0xdca/0xdd0
-> ...
-> > [    2.050307] ---[ end trace 0000000000000000 ]---
-> > [    2.050762] PCI: PCI BIOS area is rw and x. Use pci=3Dnobios if you =
-want it NX.
-> > [    2.051115] kernel tried to execute NX-protected page - exploit atte=
-mpt? (uid: 0)
-> > [    2.051115] BUG: unable to handle page fault for address: c00fd2bf
->=20
-> This _looks_ like it is working as intended.  The PCI BIOS code tried to
-> make a RWX page.  The CPA code refused to do it and presumably returned
-> an error, leaving a RW page, non-executable page.  The PCI code didn't
-> check the set_memory_x() return code and tried to go execute anyway.
-> That resulted in the oops.
->=20
-> I was able to reproduce this pretty easily.  The workaround from dmesg
-> is pci=3Dnobios.  That seems to do the trick for me, although that advise
-> was sandwiched between a warning and an oops, so not the easiest to find.
->=20
-> I'm a bit torn what to do on this one.  Breaking the boot is bad, but so
-> is leaving RWX memory around.
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Tested-by: Nathan Chancellor <nathan@kernel.org>
 
-Well, the original patch is bad. Boot regressions are not acceptable.
+Please consider getting this to Linus ASAP so that this can start
+filtering into stable now that the LLVM change has landed, as I lost the
+ability to use CONFIG_INIT_STACK_ALL_ZERO after upgrading my toolchain
+over the weekend :)
 
-We should first add an WARN_ON(), debug and fix the failures, then we
-can start refusing the transitions.
+Additionally, I am not sure the fixes tag is going to ensure that this
+change automatically makes it back to 5.15 and 5.10, which have
+commit f0fe00d4972a ("security: allow using Clang's zero initialization
+for stack variables") but not commit f02003c860d9 ("hardening: Avoid
+harmless Clang option under CONFIG_INIT_STACK_ALL_ZERO"). I guess if I
+am reading the stable documentation right, we could do something like:
 
-Best regards,
-								Pavel
+Cc: stable@vger.kernel.org # dcb7c0b9461c + f02003c860d9
+Fixes: f0fe00d4972a ("security: allow using Clang's zero initialization for stack variables")
 
---=20
-People of Russia, stop Putin before his war on Ukraine escalates.
+but I am not sure. I guess we can always just send manual backports
+once it is merged.
 
---veXX9dWIonWZEC6h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCYzlo6QAKCRAw5/Bqldv6
-8vZ3AJ9nEa1qzDyVCUdWg8V5OCDTqCwgrwCggLKJ7UAySYFOkZwYuUunmIYkL8k=
-=hn0t
------END PGP SIGNATURE-----
-
---veXX9dWIonWZEC6h--
+> ---
+>  Makefile                   |  4 ++--
+>  security/Kconfig.hardening | 14 ++++++++++----
+>  2 files changed, 12 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Makefile b/Makefile
+> index c7705f749601..02c857e2243c 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -831,8 +831,8 @@ endif
+>  # Initialize all stack variables with a zero value.
+>  ifdef CONFIG_INIT_STACK_ALL_ZERO
+>  KBUILD_CFLAGS	+= -ftrivial-auto-var-init=zero
+> -ifdef CONFIG_CC_IS_CLANG
+> -# https://bugs.llvm.org/show_bug.cgi?id=45497
+> +ifdef CONFIG_CC_HAS_AUTO_VAR_INIT_ZERO_ENABLER
+> +# https://github.com/llvm/llvm-project/issues/44842
+>  KBUILD_CFLAGS	+= -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang
+>  endif
+>  endif
+> diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+> index bd2aabb2c60f..995bc42003e6 100644
+> --- a/security/Kconfig.hardening
+> +++ b/security/Kconfig.hardening
+> @@ -22,11 +22,17 @@ menu "Memory initialization"
+>  config CC_HAS_AUTO_VAR_INIT_PATTERN
+>  	def_bool $(cc-option,-ftrivial-auto-var-init=pattern)
+>  
+> -config CC_HAS_AUTO_VAR_INIT_ZERO
+> -	# GCC ignores the -enable flag, so we can test for the feature with
+> -	# a single invocation using the flag, but drop it as appropriate in
+> -	# the Makefile, depending on the presence of Clang.
+> +config CC_HAS_AUTO_VAR_INIT_ZERO_BARE
+> +	def_bool $(cc-option,-ftrivial-auto-var-init=zero)
+> +
+> +config CC_HAS_AUTO_VAR_INIT_ZERO_ENABLER
+> +	# Clang 16 and later warn about using the -enable flag, but it
+> +	# is required before then.
+>  	def_bool $(cc-option,-ftrivial-auto-var-init=zero -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang)
+> +	depends on !CC_HAS_AUTO_VAR_INIT_ZERO_BARE
+> +
+> +config CC_HAS_AUTO_VAR_INIT_ZERO
+> +	def_bool CC_HAS_AUTO_VAR_INIT_ZERO_BARE || CC_HAS_AUTO_VAR_INIT_ZERO_ENABLER
+>  
+>  choice
+>  	prompt "Initialize kernel stack variables at function entry"
+> -- 
+> 2.34.1
+> 
