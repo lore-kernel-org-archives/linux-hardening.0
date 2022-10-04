@@ -2,40 +2,53 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D959AC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue,  4 Oct 2022 17:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DC6C4332F
+	for <linux-hardening@archiver.kernel.org>; Tue,  4 Oct 2022 23:40:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229744AbiJDRnC (ORCPT
+        id S230174AbiJDXkk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 4 Oct 2022 13:43:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50730 "EHLO
+        Tue, 4 Oct 2022 19:40:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbiJDRm6 (ORCPT
+        with ESMTP id S230155AbiJDXkh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 4 Oct 2022 13:42:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED52B21E32;
-        Tue,  4 Oct 2022 10:42:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B6493614CB;
-        Tue,  4 Oct 2022 17:42:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B54E3C433D6;
-        Tue,  4 Oct 2022 17:42:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664905375;
-        bh=I4p81oGMlPEM6Os4yrqYtTn2/8Jqieq/v6DTOXcC3Uc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Mn3twGAsZi4al5Dy4Z1BvuhQkmv2Jo3dsBcxjIG087OQdTr7tP0B5GNhLRaph4QLM
-         zQI/27qpII5AHCdpwD5cXKmCuC1ou5QGA6uS3dEOqDC4QoI57zOxyfNJkyzvVjm77N
-         FruauZhtA5KoesyXxO5DQEdgoiiB1YhlIfKcdKXLoBGlFNc2DyvzaDqa825ww4iS9N
-         djgNwtlSuFxLBz4GKXHnLF4qd2np8fiDXT75jOjHbv8NUKgLTm+FrAvlCyB9E6fvhd
-         68HTGiSpyVWZUdt9lN3BirZsjWvxp/mAEzt/V705fSmfaUQ+vWPCsyLCiJamfdk99Q
-         83zBPqkbAr9AA==
-Date:   Tue, 4 Oct 2022 10:42:53 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
+        Tue, 4 Oct 2022 19:40:37 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7272122508
+        for <linux-hardening@vger.kernel.org>; Tue,  4 Oct 2022 16:40:35 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id f140so9185424pfa.1
+        for <linux-hardening@vger.kernel.org>; Tue, 04 Oct 2022 16:40:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=17uTSVuuH+QTHxsm/5IIJEGw/N/AJ/QfjhcHMhmV5Bw=;
+        b=KCCGkjg/lm1I/zU2VnaKZvjj97yaGn5OBj3n66fMdLxVmMrJJ6Yocazsuba3bdyfQ9
+         L1wO4a/xf44XhTcz367hEFaLh8U8uedvXglZuxKzbA4o9S/6QSlKbHzBKtBFpZLMJgbC
+         693tqs58REMqBOuxhP6VZHOVjEYnO+785/y2k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=17uTSVuuH+QTHxsm/5IIJEGw/N/AJ/QfjhcHMhmV5Bw=;
+        b=y2uYSedk/fss/NLvq4aXFDBRs0gX4PjN3lcTqiVuViNuvBvCRuxfni6ctCX4cMBFRI
+         yANeoPlENNp/xwdGcc1E6EksB2sAytEd89xuq8k9YUufZgkvWrcUqKqjz6xRbKWC3A+q
+         AqexYdsmTUNkc0O5QgubeBQPwYNr+y4rvJyFs1RKA9Ej8SYXtwFDnWyvFzcDHNjiAm9i
+         imx+MoiHvdu98WqKd2zc26SCc8Z97XNbUN58Jo0mQ84KvAa/Ysy8/7ZXo1tLLkAWxlDZ
+         vjM1qnPi70KRgVIEbSQEZWbeFU6QxSeJWCpN5WEftHGUUK42LDloCgLeu+2E9sYfH1uu
+         ocKg==
+X-Gm-Message-State: ACrzQf1PZDpVMHbbrLpsqarbQ0IWGS54ob8djYlSt8EzxXVOBPSfRAhI
+        mcNgOKbpywLCPwewF3KFH1d77Q==
+X-Google-Smtp-Source: AMsMyM7WAfq/aH0wDvhMGQSNUe7IyTA2uq5JB0ACPuIMSUMupOqWdtqYLvvHAnFap3beGzRu6PbVkg==
+X-Received: by 2002:a63:e04e:0:b0:44b:97e8:101f with SMTP id n14-20020a63e04e000000b0044b97e8101fmr13556229pgj.330.1664926834682;
+        Tue, 04 Oct 2022 16:40:34 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s82-20020a632c55000000b0043be31d490dsm8809977pgs.67.2022.10.04.16.40.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Oct 2022 16:40:33 -0700 (PDT)
+Date:   Tue, 4 Oct 2022 16:40:32 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jakub Kicinski <kuba@kernel.org>
 Cc:     Dmitry Vyukov <dvyukov@google.com>,
         syzbot <syzbot+3a080099974c271cd7e9@syzkaller.appspotmail.com>,
         bpf@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
@@ -44,112 +57,155 @@ Cc:     Dmitry Vyukov <dvyukov@google.com>,
         pabeni@redhat.com, syzkaller-bugs@googlegroups.com,
         linux-hardening@vger.kernel.org
 Subject: Re: [syzbot] upstream boot error: WARNING in netlink_ack
-Message-ID: <20221004104253.29c1f3c7@kernel.org>
-In-Reply-To: <F58E0701-8F53-46FE-8324-4DEA7A806C20@chromium.org>
+Message-ID: <202210041600.7C90DF917@keescook>
 References: <000000000000a793cc05ea313b87@google.com>
-        <CACT4Y+a8b-knajrXWs8OnF1ijCansRxEicU=YJz6PRk-JuSKvg@mail.gmail.com>
-        <F58E0701-8F53-46FE-8324-4DEA7A806C20@chromium.org>
+ <CACT4Y+a8b-knajrXWs8OnF1ijCansRxEicU=YJz6PRk-JuSKvg@mail.gmail.com>
+ <F58E0701-8F53-46FE-8324-4DEA7A806C20@chromium.org>
+ <20221004104253.29c1f3c7@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221004104253.29c1f3c7@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 04 Oct 2022 07:36:55 -0700 Kees Cook wrote:
-> This is fixed in the pending netdev tree coming for the merge window.
+On Tue, Oct 04, 2022 at 10:42:53AM -0700, Jakub Kicinski wrote:
+> On Tue, 04 Oct 2022 07:36:55 -0700 Kees Cook wrote:
+> > This is fixed in the pending netdev tree coming for the merge window.
+> 
+> This has been weighing on my conscience a little, I don't like how we
+> still depend on putting one length in the skb and then using a
+> different one for the actual memcpy(). How would you feel about this
+> patch on top (untested):
 
-This has been weighing on my conscience a little, I don't like how we
-still depend on putting one length in the skb and then using a
-different one for the actual memcpy(). How would you feel about this
-patch on top (untested):
+tl;dr: yes, I like it. Please add a nlmsg_contents member. :)
 
-diff --git a/include/net/netlink.h b/include/net/netlink.h
-index 4418b1981e31..6ad671441dff 100644
---- a/include/net/netlink.h
-+++ b/include/net/netlink.h
-@@ -931,6 +931,29 @@ static inline struct nlmsghdr *nlmsg_put(struct sk_buff *skb, u32 portid, u32 se
- 	return __nlmsg_put(skb, portid, seq, type, payload, flags);
- }
- 
-+/**
-+ * nlmsg_append - Add more data to a nlmsg in a skb
-+ * @skb: socket buffer to store message in
-+ * @nlh: message header
-+ * @payload: length of message payload
-+ *
-+ * Append data to an existing nlmsg, used when constructing a message
-+ * with multiple fixed-format headers (which is rare).
-+ * Returns NULL if the tailroom of the skb is insufficient to store
-+ * the extra payload.
-+ */
-+static inline void *nlmsg_append(struct sk_buff *skb, struct nlmsghdr *nlh,
-+				 u32 size)
-+{
-+	if (unlikely(skb_tailroom(skb) < NLMSG_ALIGN(size)))
-+		return NULL;
-+
-+	if (!__builtin_constant_p(size) || NLMSG_ALIGN(size) - size != 0)
-+		memset(skb_tail_pointer(skb) + size, 0,
-+		       NLMSG_ALIGN(size) - size);
-+	return __skb_put(NLMSG_ALIGN(size));
-+}
-+
- /**
-  * nlmsg_put_answer - Add a new callback based netlink message to an skb
-  * @skb: socket buffer to store message in
-diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
-index a662e8a5ff84..bb3d855d1f57 100644
---- a/net/netlink/af_netlink.c
-+++ b/net/netlink/af_netlink.c
-@@ -2488,19 +2488,28 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
- 		flags |= NLM_F_ACK_TLVS;
- 
- 	skb = nlmsg_new(payload + tlvlen, GFP_KERNEL);
--	if (!skb) {
--		NETLINK_CB(in_skb).sk->sk_err = ENOBUFS;
--		sk_error_report(NETLINK_CB(in_skb).sk);
--		return;
--	}
-+	if (!skb)
-+		goto err_bad_put;
- 
- 	rep = nlmsg_put(skb, NETLINK_CB(in_skb).portid, nlh->nlmsg_seq,
--			NLMSG_ERROR, payload, flags);
-+			NLMSG_ERROR, sizeof(*errmsg), flags);
-+	if (!rep)
-+		goto err_bad_put;
- 	errmsg = nlmsg_data(rep);
- 	errmsg->error = err;
--	unsafe_memcpy(&errmsg->msg, nlh, payload > sizeof(*errmsg)
--					 ? nlh->nlmsg_len : sizeof(*nlh),
--		      /* Bounds checked by the skb layer. */);
-+	memcpy(&errmsg->msg, nlh, sizeof(*nlh));
-+
-+	if (!(flags & NLM_F_CAPPED)) {
-+		size_t data_len = nlh->nlmsg_len - sizeof(*nlh);
-+		void *data;
-+
-+		data = nlmsg_append(skb, rep, data_len);
-+		if (!data)
-+			goto err_bad_put;
-+
-+		/* the nlh + 1 is probably going to make you unhappy? */
-+		memcpy(data, nlh + 1, data_len);
-+	}
- 
- 	if (tlvlen)
- 		netlink_ack_tlv_fill(in_skb, skb, nlh, err, extack);
-@@ -2508,6 +2517,12 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
- 	nlmsg_end(skb, rep);
- 
- 	nlmsg_unicast(in_skb->sk, skb, NETLINK_CB(in_skb).portid);
-+
-+	return;
-+
-+err_bad_put:
-+	NETLINK_CB(in_skb).sk->sk_err = ENOBUFS;
-+	sk_error_report(NETLINK_CB(in_skb).sk);
- }
- EXPORT_SYMBOL(netlink_ack);
- 
+Rambling below...
+
+> 
+> diff --git a/include/net/netlink.h b/include/net/netlink.h
+> index 4418b1981e31..6ad671441dff 100644
+> --- a/include/net/netlink.h
+> +++ b/include/net/netlink.h
+> @@ -931,6 +931,29 @@ static inline struct nlmsghdr *nlmsg_put(struct sk_buff *skb, u32 portid, u32 se
+>  	return __nlmsg_put(skb, portid, seq, type, payload, flags);
+>  }
+>  
+> +/**
+> + * nlmsg_append - Add more data to a nlmsg in a skb
+> + * @skb: socket buffer to store message in
+> + * @nlh: message header
+> + * @payload: length of message payload
+> + *
+> + * Append data to an existing nlmsg, used when constructing a message
+> + * with multiple fixed-format headers (which is rare).
+> + * Returns NULL if the tailroom of the skb is insufficient to store
+> + * the extra payload.
+> + */
+> +static inline void *nlmsg_append(struct sk_buff *skb, struct nlmsghdr *nlh,
+
+nlh not needed here?
+
+> +				 u32 size)
+> +{
+> +	if (unlikely(skb_tailroom(skb) < NLMSG_ALIGN(size)))
+> +		return NULL;
+> +
+> +	if (!__builtin_constant_p(size) || NLMSG_ALIGN(size) - size != 0)
+
+why does a fixed size mean no memset?
+
+> +		memset(skb_tail_pointer(skb) + size, 0,
+> +		       NLMSG_ALIGN(size) - size);
+> +	return __skb_put(NLMSG_ALIGN(size));
+> +}
+> +
+>  /**
+>   * nlmsg_put_answer - Add a new callback based netlink message to an skb
+>   * @skb: socket buffer to store message in
+> diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
+> index a662e8a5ff84..bb3d855d1f57 100644
+> --- a/net/netlink/af_netlink.c
+> +++ b/net/netlink/af_netlink.c
+> @@ -2488,19 +2488,28 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
+>  		flags |= NLM_F_ACK_TLVS;
+>  
+>  	skb = nlmsg_new(payload + tlvlen, GFP_KERNEL);
+> -	if (!skb) {
+> -		NETLINK_CB(in_skb).sk->sk_err = ENOBUFS;
+> -		sk_error_report(NETLINK_CB(in_skb).sk);
+> -		return;
+> -	}
+> +	if (!skb)
+> +		goto err_bad_put;
+>  
+>  	rep = nlmsg_put(skb, NETLINK_CB(in_skb).portid, nlh->nlmsg_seq,
+> -			NLMSG_ERROR, payload, flags);
+> +			NLMSG_ERROR, sizeof(*errmsg), flags);
+> +	if (!rep)
+> +		goto err_bad_put;
+>  	errmsg = nlmsg_data(rep);
+>  	errmsg->error = err;
+> -	unsafe_memcpy(&errmsg->msg, nlh, payload > sizeof(*errmsg)
+> -					 ? nlh->nlmsg_len : sizeof(*nlh),
+> -		      /* Bounds checked by the skb layer. */);
+> +	memcpy(&errmsg->msg, nlh, sizeof(*nlh));
+> +
+> +	if (!(flags & NLM_F_CAPPED)) {
+
+Should it test this flag, or test if the sizes show the need for "extra"
+payload length?
+
+I always found the progression of sizes here to be confusing. "payload"
+starts as sizeof(*errmsg), and gets nlmsg_len(nlh) added but only when if
+"(err && !(nlk->flags & NETLINK_F_CAP_ACK)" was true. Why is
+nlmsg_len(nlh) _wrong_ if the rest of its contents are correct? If this
+was "0" in the other state, the logic would just be:
+
+	nlh_bytes = nlmsg_len(nlh);
+	total  = sizeof(*errmsg);
+	total += nlh_bytes;
+	total += tlvlen;
+
+and:
+
+	nlmsg_new(total, ...);
+	... nlmsg_put(..., sizeof(*errmsg), ...);
+	...
+	errmsg->error = err;
+	errmsg->nlh = *nlh;
+	if (nlh_bytes) {
+		data = nlmsg_append(..., nlh_bytes), ...);
+		...
+		memcpy(data, nlh->nlmsg_contents, nlh_bytes);
+	}
+
+> +		size_t data_len = nlh->nlmsg_len - sizeof(*nlh);
+
+I think data_len here is also "payload - sizeof(*errmsg)"? So if it's >0,
+we need to append the nlh contents.
+
+> +		void *data;
+> +
+> +		data = nlmsg_append(skb, rep, data_len);
+> +		if (!data)
+> +			goto err_bad_put;
+> +
+> +		/* the nlh + 1 is probably going to make you unhappy? */
+
+Right, the compiler may think it is an object no larger than sizeof(*nlh).
+My earliest attempt at changes here introduced a flex-array for the
+contents, and split the memcpy:
+https://lore.kernel.org/lkml/d7251d92-150b-5346-6237-52afc154bb00@rasmusvillemoes.dk/
+which is basically the solution you have here, except it wasn't having
+the nlmsg_*-helpers do the bounds checking.
+
+> +		memcpy(data, nlh + 1, data_len);
+
+So with the struct nlmsghdr::nlmsg_contents member, this becomes:
+
+		memcpy(data, nlh->nlmsg_contents, data_len);
+
+-- 
+Kees Cook
