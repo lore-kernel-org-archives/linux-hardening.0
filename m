@@ -2,108 +2,154 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED67FC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue,  4 Oct 2022 14:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D959AC433FE
+	for <linux-hardening@archiver.kernel.org>; Tue,  4 Oct 2022 17:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229845AbiJDOhB (ORCPT
+        id S229744AbiJDRnC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 4 Oct 2022 10:37:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36524 "EHLO
+        Tue, 4 Oct 2022 13:43:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229669AbiJDOg7 (ORCPT
+        with ESMTP id S229641AbiJDRm6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 4 Oct 2022 10:36:59 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FFAA61718
-        for <linux-hardening@vger.kernel.org>; Tue,  4 Oct 2022 07:36:58 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id c24so12846198plo.3
-        for <linux-hardening@vger.kernel.org>; Tue, 04 Oct 2022 07:36:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date;
-        bh=G8HC/qdsdkCz+7nlQ+/5nMVixHm7s58AKwQk+/RzHE8=;
-        b=LYQKdrQ0Jqy6tX7oRGZ9vSrT2Jm0TF3Jh5uqOznz4wYL4XHGchcbWu2fBwM+kZPqsI
-         Dckj5FmcQO5rTtjuVrGv6TIVY6QSRvBRDxQdUGedBkj8JWyfo8VRldN3Few/qfYgSrZU
-         48a20g1oNbkllVVfCO4inz6cg8RObiLO/Us+k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date;
-        bh=G8HC/qdsdkCz+7nlQ+/5nMVixHm7s58AKwQk+/RzHE8=;
-        b=4gT4+nKZsqkwC+Di3l10YU41c3K/3asXRcJvQqdTIPyGla9rk10tQ906SYXL0mMNN9
-         UXMO2UI7FdipJo+QS+Hf5wDCxQpX4ijHPv0La6u6PhPLQfLl/ZFTNUUDnnbbYtO02OjJ
-         0d3KLCC+zXWvzUdOYl04mWI/tgGtM2zv+zmYa4CJPxswGVPeApMfyAb3tNrG8A5I3XtA
-         OiRYqUxKCG18W9qsY1JZOuq4QmVF61xnAxTmksS9f41zPQRpTeeGDPexDOA70hexho4Q
-         hyJ3rhkpGRUTQIY2LNC95jNC/aUmLoHpjBIePFxOjMsiC3/ACjeq3z5uoSqHh1LyRDdM
-         QYbg==
-X-Gm-Message-State: ACrzQf2Ur1zykNTLu1jOQ+bUOGXeA3XhvgAQVzmIwgEF2IeB0SZeodaq
-        ZCepbPA8EaNuFxlTZ4RK8+XfEZnHNyu28A==
-X-Google-Smtp-Source: AMsMyM4wbJ+ie7ot867nR4SuDtNWyvqfBc+uKwrli/A4yP9ItGLF1K7sJhlc9+CMWYcwmUfspjVLqQ==
-X-Received: by 2002:a17:902:768c:b0:17a:ec9:51da with SMTP id m12-20020a170902768c00b0017a0ec951damr27738002pll.159.1664894218120;
-        Tue, 04 Oct 2022 07:36:58 -0700 (PDT)
-Received: from [127.0.0.1] (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i7-20020a63b307000000b0042aca53b4cesm8646731pgf.70.2022.10.04.07.36.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Oct 2022 07:36:57 -0700 (PDT)
-Date:   Tue, 04 Oct 2022 07:36:55 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+3a080099974c271cd7e9@syzkaller.appspotmail.com>
-CC:     bpf@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-        fw@strlen.de, harshit.m.mogalapalli@oracle.com, kuba@kernel.org,
+        Tue, 4 Oct 2022 13:42:58 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED52B21E32;
+        Tue,  4 Oct 2022 10:42:56 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B6493614CB;
+        Tue,  4 Oct 2022 17:42:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B54E3C433D6;
+        Tue,  4 Oct 2022 17:42:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664905375;
+        bh=I4p81oGMlPEM6Os4yrqYtTn2/8Jqieq/v6DTOXcC3Uc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Mn3twGAsZi4al5Dy4Z1BvuhQkmv2Jo3dsBcxjIG087OQdTr7tP0B5GNhLRaph4QLM
+         zQI/27qpII5AHCdpwD5cXKmCuC1ou5QGA6uS3dEOqDC4QoI57zOxyfNJkyzvVjm77N
+         FruauZhtA5KoesyXxO5DQEdgoiiB1YhlIfKcdKXLoBGlFNc2DyvzaDqa825ww4iS9N
+         djgNwtlSuFxLBz4GKXHnLF4qd2np8fiDXT75jOjHbv8NUKgLTm+FrAvlCyB9E6fvhd
+         68HTGiSpyVWZUdt9lN3BirZsjWvxp/mAEzt/V705fSmfaUQ+vWPCsyLCiJamfdk99Q
+         83zBPqkbAr9AA==
+Date:   Tue, 4 Oct 2022 10:42:53 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+3a080099974c271cd7e9@syzkaller.appspotmail.com>,
+        bpf@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+        fw@strlen.de, harshit.m.mogalapalli@oracle.com,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         pabeni@redhat.com, syzkaller-bugs@googlegroups.com,
         linux-hardening@vger.kernel.org
 Subject: Re: [syzbot] upstream boot error: WARNING in netlink_ack
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CACT4Y+a8b-knajrXWs8OnF1ijCansRxEicU=YJz6PRk-JuSKvg@mail.gmail.com>
-References: <000000000000a793cc05ea313b87@google.com> <CACT4Y+a8b-knajrXWs8OnF1ijCansRxEicU=YJz6PRk-JuSKvg@mail.gmail.com>
-Message-ID: <F58E0701-8F53-46FE-8324-4DEA7A806C20@chromium.org>
+Message-ID: <20221004104253.29c1f3c7@kernel.org>
+In-Reply-To: <F58E0701-8F53-46FE-8324-4DEA7A806C20@chromium.org>
+References: <000000000000a793cc05ea313b87@google.com>
+        <CACT4Y+a8b-knajrXWs8OnF1ijCansRxEicU=YJz6PRk-JuSKvg@mail.gmail.com>
+        <F58E0701-8F53-46FE-8324-4DEA7A806C20@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Tue, 04 Oct 2022 07:36:55 -0700 Kees Cook wrote:
+> This is fixed in the pending netdev tree coming for the merge window.
 
+This has been weighing on my conscience a little, I don't like how we
+still depend on putting one length in the skb and then using a
+different one for the actual memcpy(). How would you feel about this
+patch on top (untested):
 
-On October 4, 2022 1:33:30 AM PDT, Dmitry Vyukov <dvyukov@google=2Ecom> wr=
-ote:
->On Tue, 4 Oct 2022 at 10:27, syzbot
-><syzbot+3a080099974c271cd7e9@syzkaller=2Eappspotmail=2Ecom> wrote:
->>
->> Hello,
->>
->> syzbot found the following issue on:
->>
->> HEAD commit:    725737e7c21d Merge tag 'statx-dioalign-for-linus' of gi=
-t:/=2E=2E
->> git tree:       upstream
->> console output: https://syzkaller=2Eappspot=2Ecom/x/log=2Etxt?x=3D10257=
-034880000
->> kernel config:  https://syzkaller=2Eappspot=2Ecom/x/=2Econfig?x=3D486af=
-5e221f55835
->> dashboard link: https://syzkaller=2Eappspot=2Ecom/bug?extid=3D3a0800999=
-74c271cd7e9
->> compiler:       gcc (Debian 10=2E2=2E1-6) 10=2E2=2E1 20210110, GNU ld (=
-GNU Binutils for Debian) 2=2E35=2E2
->>
->> IMPORTANT: if you fix the issue, please add the following tag to the co=
-mmit:
->> Reported-by: syzbot+3a080099974c271cd7e9@syzkaller=2Eappspotmail=2Ecom
->
->+linux-hardening
->
->> ------------[ cut here ]------------
->> memcpy: detected field-spanning write (size 28) of single field "&errms=
-g->msg" at net/netlink/af_netlink=2Ec:2447 (size 16)
-
-This is fixed in the pending netdev tree coming for the merge window=2E
-
---=20
-Kees Cook
+diff --git a/include/net/netlink.h b/include/net/netlink.h
+index 4418b1981e31..6ad671441dff 100644
+--- a/include/net/netlink.h
++++ b/include/net/netlink.h
+@@ -931,6 +931,29 @@ static inline struct nlmsghdr *nlmsg_put(struct sk_buff *skb, u32 portid, u32 se
+ 	return __nlmsg_put(skb, portid, seq, type, payload, flags);
+ }
+ 
++/**
++ * nlmsg_append - Add more data to a nlmsg in a skb
++ * @skb: socket buffer to store message in
++ * @nlh: message header
++ * @payload: length of message payload
++ *
++ * Append data to an existing nlmsg, used when constructing a message
++ * with multiple fixed-format headers (which is rare).
++ * Returns NULL if the tailroom of the skb is insufficient to store
++ * the extra payload.
++ */
++static inline void *nlmsg_append(struct sk_buff *skb, struct nlmsghdr *nlh,
++				 u32 size)
++{
++	if (unlikely(skb_tailroom(skb) < NLMSG_ALIGN(size)))
++		return NULL;
++
++	if (!__builtin_constant_p(size) || NLMSG_ALIGN(size) - size != 0)
++		memset(skb_tail_pointer(skb) + size, 0,
++		       NLMSG_ALIGN(size) - size);
++	return __skb_put(NLMSG_ALIGN(size));
++}
++
+ /**
+  * nlmsg_put_answer - Add a new callback based netlink message to an skb
+  * @skb: socket buffer to store message in
+diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
+index a662e8a5ff84..bb3d855d1f57 100644
+--- a/net/netlink/af_netlink.c
++++ b/net/netlink/af_netlink.c
+@@ -2488,19 +2488,28 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
+ 		flags |= NLM_F_ACK_TLVS;
+ 
+ 	skb = nlmsg_new(payload + tlvlen, GFP_KERNEL);
+-	if (!skb) {
+-		NETLINK_CB(in_skb).sk->sk_err = ENOBUFS;
+-		sk_error_report(NETLINK_CB(in_skb).sk);
+-		return;
+-	}
++	if (!skb)
++		goto err_bad_put;
+ 
+ 	rep = nlmsg_put(skb, NETLINK_CB(in_skb).portid, nlh->nlmsg_seq,
+-			NLMSG_ERROR, payload, flags);
++			NLMSG_ERROR, sizeof(*errmsg), flags);
++	if (!rep)
++		goto err_bad_put;
+ 	errmsg = nlmsg_data(rep);
+ 	errmsg->error = err;
+-	unsafe_memcpy(&errmsg->msg, nlh, payload > sizeof(*errmsg)
+-					 ? nlh->nlmsg_len : sizeof(*nlh),
+-		      /* Bounds checked by the skb layer. */);
++	memcpy(&errmsg->msg, nlh, sizeof(*nlh));
++
++	if (!(flags & NLM_F_CAPPED)) {
++		size_t data_len = nlh->nlmsg_len - sizeof(*nlh);
++		void *data;
++
++		data = nlmsg_append(skb, rep, data_len);
++		if (!data)
++			goto err_bad_put;
++
++		/* the nlh + 1 is probably going to make you unhappy? */
++		memcpy(data, nlh + 1, data_len);
++	}
+ 
+ 	if (tlvlen)
+ 		netlink_ack_tlv_fill(in_skb, skb, nlh, err, extack);
+@@ -2508,6 +2517,12 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
+ 	nlmsg_end(skb, rep);
+ 
+ 	nlmsg_unicast(in_skb->sk, skb, NETLINK_CB(in_skb).portid);
++
++	return;
++
++err_bad_put:
++	NETLINK_CB(in_skb).sk->sk_err = ENOBUFS;
++	sk_error_report(NETLINK_CB(in_skb).sk);
+ }
+ EXPORT_SYMBOL(netlink_ack);
+ 
