@@ -2,118 +2,142 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFCCC4332F
-	for <linux-hardening@archiver.kernel.org>; Mon,  3 Oct 2022 20:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B55C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue,  4 Oct 2022 08:33:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229659AbiJCU6F (ORCPT
+        id S230203AbiJDIdv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 3 Oct 2022 16:58:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37544 "EHLO
+        Tue, 4 Oct 2022 04:33:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229614AbiJCU55 (ORCPT
+        with ESMTP id S229464AbiJDIdr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 3 Oct 2022 16:57:57 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C58D4AD4C
-        for <linux-hardening@vger.kernel.org>; Mon,  3 Oct 2022 13:57:55 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id n7so10745559plp.1
-        for <linux-hardening@vger.kernel.org>; Mon, 03 Oct 2022 13:57:55 -0700 (PDT)
+        Tue, 4 Oct 2022 04:33:47 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8FC93F1F9
+        for <linux-hardening@vger.kernel.org>; Tue,  4 Oct 2022 01:33:44 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id 25so9821255lft.9
+        for <linux-hardening@vger.kernel.org>; Tue, 04 Oct 2022 01:33:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=ku6V0uIMACEoIGbJ5aRjuUpzl2e0iFbWX6RQH44sWX0=;
-        b=P4qZU0rxjthTT1WyI1k5fzDz6fUkOmv0yf4SjPl8Dz6WsrcZfuYXAZ4zKn8b2mEllU
-         6MvuK60tViVQN4OGOd0kzNlRFcd8Xt+jO+LeIR95c9Th9d86j6q3BML6q7RQ3Ari/Q4I
-         RZm1SVelMLTBf7LFMZf5BpXatRLMaV6LFBnQ8=
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=+8hVM6HR++8q936TONWT6d0jevmukWGXODV759VzDRA=;
+        b=jLctIR4y518R/nQR2YaufShK6n8oyJY46XHnZ7WMrXocoXNnxJpLyZsmxCxx2PHRI5
+         yGxbJIoALZfofky45QkuJX65NNa8IgQpOf3RY5eYgDjiAns1pvtopl9xGa4hmd/kvtpN
+         OikhrcF9PMLUhVCuEGxwBas1b1CaV2axNm1XG8HYYIf3fqDsAKmEe55LxUrC0bxr5jDU
+         Yr2J+1rFCwZIbD2Ec9svp+6iNzxhafan8emjvd2KCZqskK3hmlig0I6uqnEdbIF8FHjg
+         G8b+VHpmQeMfkJ+fxj5agNj89sF5pk651wbfqk2bPhQp4NszypGJmeEJBtWoGAnhCOZl
+         ++ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=ku6V0uIMACEoIGbJ5aRjuUpzl2e0iFbWX6RQH44sWX0=;
-        b=6gBc67ojFz5c+R6GjIgXF/p7/MZmMgiI5ObG0HZy8vea9aWn4JtYNQJMxeC1fnsacn
-         6YGdfC2ReScv3iQ6eCLUAZ6bbAj6bBqOMTzLc/zvP5Vsaz+ZyDVfeS+s/jH9kCQsi+lf
-         VLR3kl5Fatf5nvk2mvHuLfE3J4VwwVEEcblAOUVGH2H1ZWf46pgCNLHrMo0kPF5UkfXp
-         FkgaN78dqahe8ZVO5oCZeJiU4IU3ZshP/WHOf1RstNk5LG00EOBJbjgKHYFBqu98b/Be
-         mzUp8ppo25PimYE6BczagRfYsSVmKwjPxmpyr4kvPEqjdon65QD1Emx2Du7JYNnUX1Fd
-         1PrQ==
-X-Gm-Message-State: ACrzQf3Gd/N7Tm2KFmLUMTC6AUCXHnbQeBZSumXLn7gmPTmZAT3uF2y/
-        tiHuugpeT1+ArlOrkad549xDlg==
-X-Google-Smtp-Source: AMsMyM4mJRybC6nqfHNqmr0/NlnExJovhirAQBcmovq5U1cGY5pmsKlLbbrllGAlzfcxIpgHGgV5fQ==
-X-Received: by 2002:a17:90b:254a:b0:200:53f:891d with SMTP id nw10-20020a17090b254a00b00200053f891dmr14196360pjb.168.1664830674759;
-        Mon, 03 Oct 2022 13:57:54 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m10-20020a17090a668a00b00203ab277966sm10527636pjj.7.2022.10.03.13.57.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Oct 2022 13:57:54 -0700 (PDT)
-Date:   Mon, 3 Oct 2022 13:57:53 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nathan Chancellor <nathan@kernel.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kbuild@vger.kernel.org, llvm@lists.linux.dev,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] hardening: Remove Clang's enable flag for
- -ftrivial-auto-var-init=zero
-Message-ID: <202210031356.C32F69B6@keescook>
-References: <20220930060624.2411883-1-keescook@chromium.org>
- <YzsQr/DqrNzJILkr@dev-arch.thelio-3990X>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=+8hVM6HR++8q936TONWT6d0jevmukWGXODV759VzDRA=;
+        b=cG39AP4G0/ccHvevz7iJcafhwrLAllvslpHjeamuxFuMQCqtKr1PHOd66BGnwn+ufw
+         V4sKYlfhfe9hedrbDbI1dID5Tsqpc8Cp429mS7xyNhR5H3KyXO/hq2g5jnAY342QTTde
+         gHHCxrdXdCtcaYgkkF+phY7S6fwRvzqPB6Gl/ez5FH5K+SuEnXcNfaEbQfYvKgXp4Zk7
+         1CGnrVI4Ko3Ph45tvQByBAYzHzQfD88IrRis7fOJeawH0hMX5gHiRT/nu/RmcVdyjcLC
+         sYI0vFUkYv/rkMUvAqQnYNz3vJT+b1a7fKrS8zgpaNt6Ie2CcBqTfzhghr3hOxWnHmn0
+         a0IQ==
+X-Gm-Message-State: ACrzQf33J3ghYeJ+wpinEs0qltfoKyDb+H8OEuNWg0D78fdb1VMd0tuW
+        zEKea8Ul8zwfoVLSMVUZBYoTHFd8ziw/h2D1UoOIAA==
+X-Google-Smtp-Source: AMsMyM4nJnedZCUC0dWs7ejaV1sHLAZYvqt1NKxmzsE0sN7ddq/eUSSYEli5hLEoMARNaI8TZ+nPZknBqs15WzZAFb0=
+X-Received: by 2002:a19:f70f:0:b0:4a2:391d:71c2 with SMTP id
+ z15-20020a19f70f000000b004a2391d71c2mr3706163lfe.376.1664872422413; Tue, 04
+ Oct 2022 01:33:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YzsQr/DqrNzJILkr@dev-arch.thelio-3990X>
+References: <000000000000a793cc05ea313b87@google.com>
+In-Reply-To: <000000000000a793cc05ea313b87@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 4 Oct 2022 10:33:30 +0200
+Message-ID: <CACT4Y+a8b-knajrXWs8OnF1ijCansRxEicU=YJz6PRk-JuSKvg@mail.gmail.com>
+Subject: Re: [syzbot] upstream boot error: WARNING in netlink_ack
+To:     syzbot <syzbot+3a080099974c271cd7e9@syzkaller.appspotmail.com>
+Cc:     bpf@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+        fw@strlen.de, harshit.m.mogalapalli@oracle.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        pabeni@redhat.com, syzkaller-bugs@googlegroups.com,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Oct 03, 2022 at 09:41:19AM -0700, Nathan Chancellor wrote:
-> On Thu, Sep 29, 2022 at 11:06:24PM -0700, Kees Cook wrote:
-> > Now that Clang's -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang
-> > option is no longer required, remove it from the command line. Clang 16
-> > and later will warn when it is used, which will cause Kconfig to think
-> > it can't use -ftrivial-auto-var-init=zero at all. Check for whether it
-> > is required and only use it when so.
-> > 
-> > Cc: Nathan Chancellor <nathan@kernel.org>
-> > Cc: Masahiro Yamada <masahiroy@kernel.org>
-> > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > Cc: linux-kbuild@vger.kernel.org
-> > Cc: llvm@lists.linux.dev
-> > Cc: stable@vger.kernel.org
-> > Fixes: f02003c860d9 ("hardening: Avoid harmless Clang option under CONFIG_INIT_STACK_ALL_ZERO")
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> Thanks for sending this change!
-> 
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-> Tested-by: Nathan Chancellor <nathan@kernel.org>
+On Tue, 4 Oct 2022 at 10:27, syzbot
+<syzbot+3a080099974c271cd7e9@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    725737e7c21d Merge tag 'statx-dioalign-for-linus' of git:/..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10257034880000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=486af5e221f55835
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3a080099974c271cd7e9
+> compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+3a080099974c271cd7e9@syzkaller.appspotmail.com
 
-Thanks!
++linux-hardening
 
-> 
-> Please consider getting this to Linus ASAP so that this can start
-> filtering into stable now that the LLVM change has landed, as I lost the
-> ability to use CONFIG_INIT_STACK_ALL_ZERO after upgrading my toolchain
-> over the weekend :)
-
-Yup -- it's in my PR for the hardening tree sent on Saturday.
-
-> Additionally, I am not sure the fixes tag is going to ensure that this
-> change automatically makes it back to 5.15 and 5.10, which have
-> commit f0fe00d4972a ("security: allow using Clang's zero initialization
-> for stack variables") but not commit f02003c860d9 ("hardening: Avoid
-> harmless Clang option under CONFIG_INIT_STACK_ALL_ZERO"). I guess if I
-> am reading the stable documentation right, we could do something like:
-> 
-> Cc: stable@vger.kernel.org # dcb7c0b9461c + f02003c860d9
-> Fixes: f0fe00d4972a ("security: allow using Clang's zero initialization for stack variables")
-> 
-> but I am not sure. I guess we can always just send manual backports
-> once it is merged.
-
-Ah, good point. Yeah, probably just do backports of f02003c860d9 and
-this one.
-
--- 
-Kees Cook
+> ------------[ cut here ]------------
+> memcpy: detected field-spanning write (size 28) of single field "&errmsg->msg" at net/netlink/af_netlink.c:2447 (size 16)
+> WARNING: CPU: 3 PID: 3351 at net/netlink/af_netlink.c:2447 netlink_ack+0x8ac/0xb10 net/netlink/af_netlink.c:2447
+> Modules linked in:
+> CPU: 3 PID: 3351 Comm: dhcpcd Not tainted 6.0.0-syzkaller-00593-g725737e7c21d #0
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.14.0-2 04/01/2014
+> RIP: 0010:netlink_ack+0x8ac/0xb10 net/netlink/af_netlink.c:2447
+> Code: fa ff ff e8 36 c3 e5 f9 b9 10 00 00 00 4c 89 ee 48 c7 c2 20 3f fb 8a 48 c7 c7 80 3f fb 8a c6 05 e8 98 34 06 01 e8 26 77 a6 01 <0f> 0b e9 3a fa ff ff 41 be 00 01 00 00 41 bd 14 00 00 00 e9 ea fd
+> RSP: 0018:ffffc900220e7758 EFLAGS: 00010282
+> RAX: 0000000000000000 RBX: ffff88801a798a80 RCX: 0000000000000000
+> RDX: ffff8880151c0180 RSI: ffffffff81611cb8 RDI: fffff5200441cedd
+> RBP: ffff88801ed850c0 R08: 0000000000000005 R09: 0000000000000000
+> R10: 0000000080000000 R11: 0000000000000000 R12: 0000000000000000
+> R13: 000000000000001c R14: ffff88801ec8e400 R15: ffff88801ec8e414
+> FS:  00007faef0af8740(0000) GS:ffff88802cb00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007fff6adbe000 CR3: 0000000027683000 CR4: 0000000000150ee0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  netlink_rcv_skb+0x33d/0x420 net/netlink/af_netlink.c:2507
+>  genl_rcv+0x24/0x40 net/netlink/genetlink.c:803
+>  netlink_unicast_kernel net/netlink/af_netlink.c:1319 [inline]
+>  netlink_unicast+0x543/0x7f0 net/netlink/af_netlink.c:1345
+>  netlink_sendmsg+0x917/0xe10 net/netlink/af_netlink.c:1921
+>  sock_sendmsg_nosec net/socket.c:714 [inline]
+>  sock_sendmsg+0xcf/0x120 net/socket.c:734
+>  ____sys_sendmsg+0x712/0x8c0 net/socket.c:2482
+>  ___sys_sendmsg+0x110/0x1b0 net/socket.c:2536
+>  __sys_sendmsg+0xf3/0x1c0 net/socket.c:2565
+>  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+>  do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
+>  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+> RIP: 0033:0x7faef0bf0163
+> Code: 64 89 02 48 c7 c0 ff ff ff ff eb b7 66 2e 0f 1f 84 00 00 00 00 00 90 64 8b 04 25 18 00 00 00 85 c0 75 14 b8 2e 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 55 c3 0f 1f 40 00 48 83 ec 28 89 54 24 1c 48
+> RSP: 002b:00007fff6adbdc48 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007faef0bf0163
+> RDX: 0000000000000000 RSI: 00007fff6adbdc90 RDI: 0000000000000010
+> RBP: 00007fff6adc1ed8 R08: 0000000000000000 R09: 0000000000000000
+> R10: 00007faef0c6ffc0 R11: 0000000000000246 R12: 0000000000000010
+> R13: 00007fff6adc1cf0 R14: 0000000000000000 R15: 000055e5ebce0290
+>  </TASK>
+>
+>
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000a793cc05ea313b87%40google.com.
