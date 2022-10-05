@@ -2,61 +2,61 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFF7C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 Oct 2022 03:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF92C4332F
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 Oct 2022 07:02:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230168AbiJEDfC (ORCPT
+        id S229844AbiJEHCA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 4 Oct 2022 23:35:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46326 "EHLO
+        Wed, 5 Oct 2022 03:02:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230165AbiJEDej (ORCPT
+        with ESMTP id S229760AbiJEHB7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 4 Oct 2022 23:34:39 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D27376440;
-        Tue,  4 Oct 2022 20:30:32 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id k2so2850606ejr.2;
-        Tue, 04 Oct 2022 20:30:32 -0700 (PDT)
+        Wed, 5 Oct 2022 03:01:59 -0400
+Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAFEB6DFAF;
+        Wed,  5 Oct 2022 00:01:57 -0700 (PDT)
+Received: by mail-ua1-x92e.google.com with SMTP id i16so2470244uak.1;
+        Wed, 05 Oct 2022 00:01:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=AhtD3Nxeo233ijtaBGAkFch/kfp5ptj7ps5Ve0jS3rE=;
-        b=PwXAORUakcWhQUOq+9BdIiqm5+8hgckUXnhGYtenuGEQKFD2WR5BXzI0aZjcNWIcW2
-         MLfOfhA+zo30sbiASXK/KLXM7FVB5qiT46CvHWSYUYXZIUCwbK8JUuWjm8j1dqxJnfaO
-         /nvIQ4pO5tXkPmtMW1vMP8jbeiHjGBgtPJVfICYQYeZUbBdxblgGPg0ofZDan4t6vOhp
-         luGdjgmmxpJ+ExWCcy6VEx4YfvNhXk5ezdF/APujX0Xj4TsXwz5o3WUacfKba0nHvGId
-         tGi/n/EKJUpVUzgz8LTcQyCO2q2fBEEAnWBYPYHfNthW7BfVU+1wKMcg3ZYDDrqXzu35
-         YUSA==
+         :mime-version:from:to:cc:subject:date;
+        bh=UHE5t3RzuZq9XWIvg02NUOpVAjCk9hgPmV9IZeL6AF0=;
+        b=kP3f4YiUiDivevu4zAGXlYrKAOJlutMNKn6F5yIFF00YcICIH5rjJl0LBZT5GCCjsY
+         69s/Bby2S72Hh7TBgL7MwHdMO0YQpgUh7FevpScA+LznPtgic6mmLxWx8UzxnKfRLKAV
+         noMyp9oDFwwtsdzsxtp//jreujUdk889nkHGqvPg909Cp/3u12fgcN+CeroJg7y05qgK
+         OXodXbrPEFrYc5ZJDbU/kvd7z9ZcivDaJ3Eude90UhwXHOZTQiKiQI1869Rc1KWBlzfR
+         NSdzTujvLTApSxjzmBEQ3XMwKlaLluwAsp133cg9cK5dTJBw+NZjAY6OA5EMIkSx/Irp
+         hDsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AhtD3Nxeo233ijtaBGAkFch/kfp5ptj7ps5Ve0jS3rE=;
-        b=yNjIJBDm8R0aEQahc4jXeztosRgJdsaK9Q3SoqIhMlzUkUeDtYQdoSSpqaxhwIVgSp
-         n5OHb046teQonXEmNDYsJuBofSHjpLLepdYEBI7+9KtTURjCLEKL3QhMfzwH/Ho2OTmt
-         CKUGaHQU6Q5MIIbBxoe2rcn9Ut9azi4zMJMJWg0iTigxZ98lD7ow1CdBpCKO/RryZ+x7
-         iJgDzTZPUBrP3lbuy2Y5J2Hlo9lqhV3DGqUqu0XcfDnKuEjzFMo3J8wnCiWONQn2Q1Dn
-         Wp0ivW3fKbUMFp2wV4KI/oVK9rJCEnVeM9Mp4TD7KSr+2+RovnEbaPW0YIfw9JYFyMdI
-         eirw==
-X-Gm-Message-State: ACrzQf3Kyez85U7cFoPUciuJHCGiCPaiN63TJ/X3xegV5EINg5Z/4qlb
-        4oRc+alCuaXu9sUgpm/e5tYoKy0v5jTS6CCLFCw=
-X-Google-Smtp-Source: AMsMyM5A5Rg0fahdHRX2NmyF9xDhTtT+izdF3OpQ519ZZD4mACJaPW88EtlUSodvSQxp8WVYYjo2cDNK1yEUWgDtkB8=
-X-Received: by 2002:a17:907:7b95:b0:731:113a:d7a2 with SMTP id
- ne21-20020a1709077b9500b00731113ad7a2mr21333233ejc.377.1664940624371; Tue, 04
- Oct 2022 20:30:24 -0700 (PDT)
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=UHE5t3RzuZq9XWIvg02NUOpVAjCk9hgPmV9IZeL6AF0=;
+        b=NXFe7GJ62E0Yu1tPiMR0Xk6FAgBF2LOXX6RZIKqn1ugNCgAvjPyUmVBNLxQWkEVxZM
+         6pAoN807nLFUNhdJEGK7tdqgzWGaecDYpjd1+fym71rSQrFGwQRKIFuVzM5ji4lydPfa
+         rHREojp+wrO1PbrnAioaG7nE0daMEGCHzdXfcWAouTf7OhH9xYKLix5xzHOwqPIreBi2
+         LBWOz62acdRqvd+UkNkb17RJ6KxSpC7/KsbXvrLfG1G5g6Xqdynr6BTg3m3ARKT/TatC
+         TqTBcdq71zZVN75sym4f5FAZyGiaKrNo2KqQ1S31c3Xo2a7Pim/ufDoYxG+xpbxYm0fA
+         IeIw==
+X-Gm-Message-State: ACrzQf32vWa8zSnvbBIDIbuDcOIXr6QbHtzcCUnWuQSIIrc7qtjraNWd
+        SZtTMDZE/ikioQd5no59eNk0Wq+o48JODSSIJJM=
+X-Google-Smtp-Source: AMsMyM7opRWyJTc9JIX5uLYrdIGDJWkxhKLOsdSnzRVdpu9POeg0Wb6Q0q1K2dyoWLvENxdOt6ZXyzNGD5uCI3sPYcg=
+X-Received: by 2002:ab0:992:0:b0:3cb:c597:48ff with SMTP id
+ x18-20020ab00992000000b003cbc59748ffmr14169017uag.19.1664953316796; Wed, 05
+ Oct 2022 00:01:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <YzzjKyHDuFoQAVCu@work>
-In-Reply-To: <YzzjKyHDuFoQAVCu@work>
-From:   ronnie sahlberg <ronniesahlberg@gmail.com>
-Date:   Wed, 5 Oct 2022 13:30:11 +1000
-Message-ID: <CAN05THRcwWjJiYyBdVuVZrvqgK4VP7LKiNQ=XVMg5oOy5u9kzg@mail.gmail.com>
+References: <YzzjKyHDuFoQAVCu@work> <202210042006.9A12D208@keescook>
+In-Reply-To: <202210042006.9A12D208@keescook>
+From:   Steve French <smfrench@gmail.com>
+Date:   Wed, 5 Oct 2022 02:01:45 -0500
+Message-ID: <CAH2r5muz9cGwtX5HF5wL0g9ix=cKs6C35BZObqMr6dgL-sOF-g@mail.gmail.com>
 Subject: Re: [PATCH][next] cifs: Replace a couple of one-element arrays with
  flexible-array members
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>,
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>,
         Ronnie Sahlberg <lsahlber@redhat.com>,
         Shyam Prasad N <sprasad@microsoft.com>,
         Tom Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org,
@@ -67,86 +67,46 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 5 Oct 2022 at 12:31, Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
->
-> One-element arrays are deprecated, and we are replacing them with flexible
-> array members instead. So, replace one-element arrays with flexible-array
-> member in structs negotiate_req and extended_response, and refactor the
-> rest of the code, accordingly.
->
-> Also, make use of the DECLARE_FLEX_ARRAY() helper to declare flexible
-> array member EncryptionKey in union u. This new helper allows for
-> flexible-array members in unions.
->
-> Change pointer notation to proper array notation in a call to memcpy()
-> where flexible-array member DialectsArray is being used as destination
-> argument.
->
-> Important to mention is that doing a build before/after this patch results
-> in no binary output differences.
+merged into cifs-2.6.git for-next
 
-Looks good to me.
-Reviewed-by me
-
-Thanks for verifying that it does not change the binary utput.
-
+On Tue, Oct 4, 2022 at 10:17 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3 [1].
+> On Tue, Oct 04, 2022 at 08:51:39PM -0500, Gustavo A. R. Silva wrote:
+> > One-element arrays are deprecated, and we are replacing them with flexible
+> > array members instead. So, replace one-element arrays with flexible-array
+> > member in structs negotiate_req and extended_response, and refactor the
+> > rest of the code, accordingly.
+> >
+> > Also, make use of the DECLARE_FLEX_ARRAY() helper to declare flexible
+> > array member EncryptionKey in union u. This new helper allows for
+> > flexible-array members in unions.
+> >
+> > Change pointer notation to proper array notation in a call to memcpy()
+> > where flexible-array member DialectsArray is being used as destination
+> > argument.
+> >
+> > Important to mention is that doing a build before/after this patch results
+> > in no binary output differences.
+> >
+> > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> > routines on memcpy() and help us make progress towards globally
+> > enabling -fstrict-flex-arrays=3 [1].
+> >
+> > Link: https://github.com/KSPP/linux/issues/79
+> > Link: https://github.com/KSPP/linux/issues/229
+> > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 >
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://github.com/KSPP/linux/issues/229
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  fs/cifs/cifspdu.h | 7 ++++---
->  fs/cifs/cifssmb.c | 2 +-
->  2 files changed, 5 insertions(+), 4 deletions(-)
+> Looks good to me; thanks!
 >
-> diff --git a/fs/cifs/cifspdu.h b/fs/cifs/cifspdu.h
-> index aeba371c4c70..d1abaeea974a 100644
-> --- a/fs/cifs/cifspdu.h
-> +++ b/fs/cifs/cifspdu.h
-> @@ -483,7 +483,7 @@ put_bcc(__u16 count, struct smb_hdr *hdr)
->  typedef struct negotiate_req {
->         struct smb_hdr hdr;     /* wct = 0 */
->         __le16 ByteCount;
-> -       unsigned char DialectsArray[1];
-> +       unsigned char DialectsArray[];
->  } __attribute__((packed)) NEGOTIATE_REQ;
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 >
->  #define MIN_TZ_ADJ (15 * 60) /* minimum grid for timezones in seconds */
-> @@ -508,13 +508,14 @@ typedef struct negotiate_rsp {
->         __u8 EncryptionKeyLength;
->         __u16 ByteCount;
->         union {
-> -               unsigned char EncryptionKey[1]; /* cap extended security off */
-> +               /* cap extended security off */
-> +               DECLARE_FLEX_ARRAY(unsigned char, EncryptionKey);
->                 /* followed by Domain name - if extended security is off */
->                 /* followed by 16 bytes of server GUID */
->                 /* then security blob if cap_extended_security negotiated */
->                 struct {
->                         unsigned char GUID[SMB1_CLIENT_GUID_SIZE];
-> -                       unsigned char SecurityBlob[1];
-> +                       unsigned char SecurityBlob[];
->                 } __attribute__((packed)) extended_response;
->         } __attribute__((packed)) u;
->  } __attribute__((packed)) NEGOTIATE_RSP;
-> diff --git a/fs/cifs/cifssmb.c b/fs/cifs/cifssmb.c
-> index 7aa91e272027..7a808e41b1b8 100644
-> --- a/fs/cifs/cifssmb.c
-> +++ b/fs/cifs/cifssmb.c
-> @@ -465,7 +465,7 @@ CIFSSMBNegotiate(const unsigned int xid,
->         for (i = 0; i < CIFS_NUM_PROT; i++) {
->                 size_t len = strlen(protocols[i].name) + 1;
->
-> -               memcpy(pSMB->DialectsArray+count, protocols[i].name, len);
-> +               memcpy(&pSMB->DialectsArray[count], protocols[i].name, len);
->                 count += len;
->         }
->         inc_rfc1001_len(pSMB, count);
 > --
-> 2.34.1
->
+> Kees Cook
+
+
+
+-- 
+Thanks,
+
+Steve
