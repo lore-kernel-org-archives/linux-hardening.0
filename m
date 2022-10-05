@@ -2,103 +2,204 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5664CC433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 Oct 2022 07:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA101C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 Oct 2022 21:41:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229928AbiJEHvQ (ORCPT
+        id S231316AbiJEVlG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 5 Oct 2022 03:51:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41056 "EHLO
+        Wed, 5 Oct 2022 17:41:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229923AbiJEHvO (ORCPT
+        with ESMTP id S231292AbiJEVk6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 5 Oct 2022 03:51:14 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BAF35D11F;
-        Wed,  5 Oct 2022 00:51:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 404A5B81B49;
-        Wed,  5 Oct 2022 07:51:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E14AAC433C1;
-        Wed,  5 Oct 2022 07:51:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664956270;
-        bh=aE9etRiOEVxYZXgsGYS0VimxiIbgJuJ/6jugX8sMxWU=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=DqV1X5GB+NH9fM/qMl7lhz2eeHtCoZETQS9jk092yvCkqxgMeVfIg/2EdYx+4ZHvJ
-         lpbZZbs8LiR1VkWbqWSimeWK1tvqJdaEx8TMUoAC/DKJ17CQWjw5SWPWGR0JbpwRKp
-         sP1UwPsvInN+I1cC9SfdfJW+Vp9vSqEzUQoXuLB3WyST/s+eiDnqxM6VftliIDX8Nl
-         sGNFS47PiCFW4AicE8/GBti8Mk4m7o182b+0HIzqBTmEcj9VwuMYtbAMq8u4AihFJp
-         k6esy8BbH+2bpSIeLeQM19pyOPGQYicfWZJRUyp2DgtNyPKFBSBQIVGZZx2H3R6bm8
-         CXoSAcHGu+hUA==
-Content-Type: text/plain; charset="utf-8"
+        Wed, 5 Oct 2022 17:40:58 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FA5382751
+        for <linux-hardening@vger.kernel.org>; Wed,  5 Oct 2022 14:40:54 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id n7so16656629plp.1
+        for <linux-hardening@vger.kernel.org>; Wed, 05 Oct 2022 14:40:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date;
+        bh=MItuJ5U/2RAuamrpV6dJrOpoREvF5mLnZAeERt7QUpU=;
+        b=IQUOC6y4QS/1LJfIO+vG9o/CPBWD5e54SmOeTeyrJqB6bUYuF0izwbTdMi7bA1J1Fh
+         etQiUuUCnWoLZd2GRHYSN3n0ZVwtGhvz8IM8aFScPktSnV+HZdTW0vKVHQzxhNZrXgYt
+         2c+lRPRD9wMtrAxCwbIS29NXosETEHd/8d+YI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=MItuJ5U/2RAuamrpV6dJrOpoREvF5mLnZAeERt7QUpU=;
+        b=lZR4R6Ilu+Mvma1dHRkqGrKNhbMjhe6zOG7KYi7NnHCK8c2N8H7r1yb4XFPyeQ+BKh
+         X+mW9+U4rsO+a8zN7vxIPLgCsKumFVH3XvUscW5FUAlOx708j3wlZguiUSlqjaCbtxD8
+         DOcrilKYlAg7k9gH5mOaasSfBd7W1SOgNMSvz6uQrprYq75K+6Sq31RS8s1sJ21GcCkc
+         xiIvz0qnOVpVB67xIVyTKJ6jlQt3r1w8IWBmeubyN9bB/uCdm9gFe6aDeavA9MwIrRfo
+         SzgZRx42yfMlePNC6SHf+4RQKRoC6rWB0rCOS96e/2YCj8O0SY3EhOzNRWqzL1EnSsV7
+         Q11Q==
+X-Gm-Message-State: ACrzQf3VAmS5I73OKVjNTkfRNpwAgSN0ITe6dg/CMp1EC9WUKkcL5QF3
+        epK7U8uv8PUx9obQF1v0C5Ga+NcjRY4FEg==
+X-Google-Smtp-Source: AMsMyM7cSL26dSE3CXWoQ0qiFwm2O0CzjBvcZF7agSSDbSM5ddrspprFf7/dzHuJM87kAkSbDlUzxQ==
+X-Received: by 2002:a17:90b:4b11:b0:202:998b:71b1 with SMTP id lx17-20020a17090b4b1100b00202998b71b1mr1809685pjb.208.1665006053997;
+        Wed, 05 Oct 2022 14:40:53 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e29-20020a63501d000000b004582e25a595sm220201pgb.41.2022.10.05.14.40.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Oct 2022 14:40:53 -0700 (PDT)
+Date:   Wed, 5 Oct 2022 14:40:52 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] mm/pgtable: Fix multiple -Wstringop-overflow
+ warnings
+Message-ID: <202210051107.720F1F835@keescook>
+References: <Yytb67xvrnctxnEe@work>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] wifi: atmel: Avoid clashing function prototypes
-From:   Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <20221002032428.4091540-1-keescook@chromium.org>
-References: <20221002032428.4091540-1-keescook@chromium.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Simon Kelley <simon@thekelleys.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-ID: <166495626187.5945.10399695218838618829.kvalo@kernel.org>
-Date:   Wed,  5 Oct 2022 07:51:06 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Yytb67xvrnctxnEe@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> wrote:
+On Wed, Sep 21, 2022 at 01:46:03PM -0500, Gustavo A. R. Silva wrote:
+> The actual size of the following arrays at run-time depends on
+> CONFIG_X86_PAE.
+> 
+> 427         pmd_t *u_pmds[MAX_PREALLOCATED_USER_PMDS];
+> 428         pmd_t *pmds[MAX_PREALLOCATED_PMDS];
+> 
+> If CONFIG_X86_PAE is not enabled, their final size will be zero. In that
+> case, the compiler complains about trying to access objects of size zero
+> when calling functions where these objects are passed as arguments.
 
-> When built with Control Flow Integrity, function prototypes between
-> caller and function declaration must match. These mismatches are visible
-> at compile time with the new -Wcast-function-type-strict in Clang[1].
-> 
-> Of the 1549 warnings found, 188 come from the atmel driver. For example:
-> 
-> drivers/net/wireless/atmel/atmel.c:2518:2: warning: cast from 'int (*)(struct net_device *, struct iw_request_info *, void *, char *)' to 'iw_handler' (aka 'int (*)(struct net_device *, struct iw_request_info *, union iwreq_data *, char *)') converts to incompatible function type [-Wcast-function-type-strict]
->         (iw_handler) atmel_config_commit,       /* SIOCSIWCOMMIT */
->         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> The atmel Wireless Extension handler callbacks (iw_handler) use a union
-> for the data argument. Actually use the union and perform explicit
-> member selection in the function body instead of having a function
-> prototype mismatch. There are no resulting binary differences.
-> 
-> This patch is a cleanup based on Brad Spengler/PaX Team's modifications
-> to the atmel driver in their last public patch of grsecurity/PaX based
-> on my understanding of the code. Changes or omissions from the original
-> code are mine and don't reflect the original grsecurity/PaX code.
-> 
-> [1] https://reviews.llvm.org/D134831
-> 
-> Cc: Simon Kelley <simon@thekelleys.org.uk>
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+The main point is that a zero-length array isn't considered to have legal
+storage by C -- strictly speaking, a compiler isn't wrong to complain
+about this (and it has in the past too, for this code):
 
-Patch applied to wireless-next.git, thanks.
+static void pgd_prepopulate_pmd(struct mm_struct *mm, pgd_t *pgd, pmd_t *pmds[])
+{
+        p4d_t *p4d;
+        pud_t *pud;
+        int i;
 
-8af9d4068e86 wifi: atmel: Avoid clashing function prototypes
+        if (PREALLOCATED_PMDS == 0) /* Work around gcc-3.4.x bug */
+                return;
+...
+
+But gcc has gotten smart enough to say "you can't pass this as an array
+because it doesn't actually exist". No amount of inlining, etc, helps
+because it's strictly looking at the function arguments and the local
+storage declaration.
+
+Note that this is basically one of the last warnings generated by
+-Wstringop-overflow -- many of the other warnings that were fixed as
+part of getting this option enabled have been real bugs. We want this
+warning enabled, even if it's a bit more strict than some code is happy
+about. :)
+
+> Fix this by sanity-checking the size of those arrays just before the
+> function calls. Also, the following warnings are fixed by these changes
+> when building with GCC-11 and -Wstringop-overflow enabled:
+
+And with GCC-12 too.
+
+> arch/x86/mm/pgtable.c:437:13: warning: ‘preallocate_pmds.constprop’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+> arch/x86/mm/pgtable.c:440:13: warning: ‘preallocate_pmds.constprop’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+> arch/x86/mm/pgtable.c:462:9: warning: ‘free_pmds.constprop’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+> arch/x86/mm/pgtable.c:455:9: warning: ‘pgd_prepopulate_user_pmd’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+> arch/x86/mm/pgtable.c:464:9: warning: ‘free_pmds.constprop’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+> 
+> This helps with the ongoing efforts to globally enable
+> -Wstringop-overflow.
+> 
+> Link: https://github.com/KSPP/linux/issues/203
+> Link: https://github.com/KSPP/linux/issues/181
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+BTW, this should be considered "v3", and include links to the history:
+
+v2: https://lore.kernel.org/lkml/20220509194541.GA91598@embeddedor/
+v1: https://lore.kernel.org/lkml/20220401005834.GA182932@embeddedor/
+
+> ---
+>  arch/x86/mm/pgtable.c | 19 +++++++++++++------
+>  1 file changed, 13 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+> index 8525f2876fb4..5116df6a308c 100644
+> --- a/arch/x86/mm/pgtable.c
+> +++ b/arch/x86/mm/pgtable.c
+> @@ -434,10 +434,12 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
+>  
+>  	mm->pgd = pgd;
+>  
+> -	if (preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
+> +	if (sizeof(pmds) != 0 &&
+> +			preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
+>  		goto out_free_pgd;
+>  
+> -	if (preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
+> +	if (sizeof(u_pmds) != 0 &&
+> +			preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
+>  		goto out_free_pmds;
+
+The alternative to this is to make the originally suggested change
+from v1: change the pmds argument from an array pointer to a pointer
+pointer. That situation is considered "legal" for C in the sense that
+it does not have a way to reason about the storage. i.e.:
+
+-static void pgd_prepopulate_pmd(struct mm_struct *mm, pgd_t *pgd, pmd_t *pmds[])
++static void pgd_prepopulate_pmd(struct mm_struct *mm, pgd_t *pgd, pmd_t **pmds)
+
+With the above change, there's no difference in binary output, and the
+compiler warning is silenced.
+
+However, with this email's patch, the compiler can actually figure out
+that it isn't using the code at all, and it gets dropped:
+
+   text    data     bss     dec     hex filename
+   8218     718      32    8968    2308 arch/x86/mm/pgtable.o.before
+   7765     694      32    8491    212b arch/x86/mm/pgtable.o.after
+
+Given that result (fixing a warning and reducing image size), this look
+like a distinct win.
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+Note, we can add this change:
+
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index a932d7712d85..b311e4aa42fc 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -299,9 +299,6 @@ static void pgd_prepopulate_pmd(struct mm_struct *mm, pgd_t *pgd, pmd_t *pmds[])
+ 	pud_t *pud;
+ 	int i;
+ 
+-	if (PREALLOCATED_PMDS == 0) /* Work around gcc-3.4.x bug */
+-		return;
+-
+ 	p4d = p4d_offset(pgd, 0);
+ 	pud = pud_offset(p4d, 0);
+ 
+
+Which would get us to even more lines removed:
+
+  1 file changed, 13 insertions(+), 9 deletions(-)
+
+:)
+
+-Kees
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20221002032428.4091540-1-keescook@chromium.org/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Kees Cook
