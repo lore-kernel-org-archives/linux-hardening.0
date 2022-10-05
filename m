@@ -2,190 +2,100 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC235C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 Oct 2022 03:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62472C433F5
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 Oct 2022 03:06:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229463AbiJEDDy (ORCPT
+        id S229530AbiJEDGp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 4 Oct 2022 23:03:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60610 "EHLO
+        Tue, 4 Oct 2022 23:06:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229566AbiJEDDx (ORCPT
+        with ESMTP id S229470AbiJEDGo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 4 Oct 2022 23:03:53 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 193A15D11F
-        for <linux-hardening@vger.kernel.org>; Tue,  4 Oct 2022 20:03:50 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id d11so14313223pll.8
-        for <linux-hardening@vger.kernel.org>; Tue, 04 Oct 2022 20:03:50 -0700 (PDT)
+        Tue, 4 Oct 2022 23:06:44 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7905666138
+        for <linux-hardening@vger.kernel.org>; Tue,  4 Oct 2022 20:06:43 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id h10so11592331plb.2
+        for <linux-hardening@vger.kernel.org>; Tue, 04 Oct 2022 20:06:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=aP95bKWiKwfkowGhCeZHvZSzzx4vDFEtGUhbJZ58BVs=;
-        b=iHuEAr1jQRkJk7UMid9KXukN+CUzKUUuqCSfNOTGl1fTgkJ8erSEr2uEnoyxG+LAnW
-         FVLcMAO+3HddaLBf6O7yCrhYfos2jIydv79VyLd7JgXqic5cACZDBcJPm0+eXfHKpmYe
-         86IQGd2pHKUG6MAQttJLLkxkIwZU2GeyIWGrA=
+        bh=q/zGlhb/6/D5Xkd4KCi7Y207Q24GuRcEqCbd/ccpKzo=;
+        b=SKokA0th/dXHfDQS3nsb8z2Z2ppZDeuiQhw1p/wBd32fJemgyvsCAt3bgQrTsKKYqm
+         sYvv8mev2CZGsmAPDpcwakRg7aVXj6WJcATx3M0Pj3y6yLACKmqpQ+31/GaGC+CA9SiP
+         PihlLDYUcY3R+DZFe1vMFUA4jUZdXlBR6vW5w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=aP95bKWiKwfkowGhCeZHvZSzzx4vDFEtGUhbJZ58BVs=;
-        b=rz+F50SwP3qEtZpXHXJKIM5lp8dHI9HK4CZXdDj2rEFkSdwpVmBagm4a1/j0McLH75
-         HA9UEjCLJ4SrZxQT7vUWfftgA6K8UYLW4ZB6DLLOVVN8qDouhJvT14Nx/lr7+2b7DP/9
-         YaSWxhVDTiXHuAS+WqeupKRyA1xkurMjOCm/S6uNOU7hcLNAwJHQQp2nYhb7VanLcF7E
-         7Kb10uM5eXMVoXnRhEK5OPfJFgbmMTLLJYNM2WQEkXHXugJYO7/fzBZdra20CISZY9gz
-         ZsQe5NpAod3cjboPDuNZkk9GDhZcAAMdAdmaT0L8WLFznYHI/p7xFeKORlh3lWVcTc4m
-         Abbw==
-X-Gm-Message-State: ACrzQf3zjxciduN2rg1PBvIdlp5MYIQ0NZ1ITLvbVsUTObvhSL7XhisW
-        O9AUL8dQ8J3CDT5XZgNslKy0IQ==
-X-Google-Smtp-Source: AMsMyM5/tFBSnDzNkaDJGlsm3jS0p7ylLnjrrbXy9Y0O5uixYzXyy7DK60ryooTo24o26tNnFPbbXA==
-X-Received: by 2002:a17:903:22c2:b0:178:3c7c:18af with SMTP id y2-20020a17090322c200b001783c7c18afmr29975895plg.134.1664939030387;
-        Tue, 04 Oct 2022 20:03:50 -0700 (PDT)
+        bh=q/zGlhb/6/D5Xkd4KCi7Y207Q24GuRcEqCbd/ccpKzo=;
+        b=QQHGOR3wSM9PbUl2ODLWen19gNSotl4pxHHvzXVWFxXPTGBnCaPm7Dy+Q4OD0Mnnxc
+         rnvK4HAmIrZ6Hh7oIFsn0/PV+s6g+ZFIaSQSda8onh1mauYT2EWw4uoTt5MZ+Dt22bXW
+         MfDoUc9wZV5+w5kDdBULITILDfhRErL5vOOTikZViEmzMIQrL6G/fwZfGu8VPlVOROq1
+         KzMQXsE6pCZ9RVJ8WSmAXVF0ipEz1giNYHnfBYFIA8V065eSP+Q+vHxU24a+fBXuWGyf
+         4Mo92mK//CLDtDlxXq9ppgL6Ft8j7dhxPVw2m3uVqsuafk5ShkuLWJJaH6M/6R8uGpe9
+         fhiA==
+X-Gm-Message-State: ACrzQf30xObCMedhRsKY6OW39SD9NooZYkiHVlC+Vbq924a3dt2D+Not
+        fJGddStKRAU5xFuCCPuFq2suiA==
+X-Google-Smtp-Source: AMsMyM57nv7ccnMuOcGPE169V0innj8Ek7XT9d7ddkrET+x+x7ZIMJkEIJ4x3msMla3GdYi0FFvCeQ==
+X-Received: by 2002:a17:902:e946:b0:179:d084:bbe1 with SMTP id b6-20020a170902e94600b00179d084bbe1mr30088816pll.97.1664939202905;
+        Tue, 04 Oct 2022 20:06:42 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d5-20020a170902654500b0017c7fe4718asm9095256pln.213.2022.10.04.20.03.49
+        by smtp.gmail.com with ESMTPSA id n18-20020a170902e55200b0017ca9f4d22fsm8991473plf.209.2022.10.04.20.06.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Oct 2022 20:03:49 -0700 (PDT)
-Date:   Tue, 4 Oct 2022 20:03:37 -0700
+        Tue, 04 Oct 2022 20:06:42 -0700 (PDT)
+Date:   Tue, 4 Oct 2022 20:06:41 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [RFC] netlink: split up copies in the ack construction
-Message-ID: <202210041959.3654E4C@keescook>
-References: <202210041600.7C90DF917@keescook>
- <20221005002814.2233715-1-kuba@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Tom Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] cifs: Replace a couple of one-element arrays with
+ flexible-array members
+Message-ID: <202210042006.9A12D208@keescook>
+References: <YzzjKyHDuFoQAVCu@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221005002814.2233715-1-kuba@kernel.org>
+In-Reply-To: <YzzjKyHDuFoQAVCu@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Oct 04, 2022 at 05:28:14PM -0700, Jakub Kicinski wrote:
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> ---
->  include/net/netlink.h        | 21 +++++++++++++++++++++
->  include/uapi/linux/netlink.h |  2 ++
->  net/netlink/af_netlink.c     | 30 +++++++++++++++++++++---------
->  3 files changed, 44 insertions(+), 9 deletions(-)
+On Tue, Oct 04, 2022 at 08:51:39PM -0500, Gustavo A. R. Silva wrote:
+> One-element arrays are deprecated, and we are replacing them with flexible
+> array members instead. So, replace one-element arrays with flexible-array
+> member in structs negotiate_req and extended_response, and refactor the
+> rest of the code, accordingly.
 > 
-> diff --git a/include/net/netlink.h b/include/net/netlink.h
-> index 4418b1981e31..46c40fabd2b5 100644
-> --- a/include/net/netlink.h
-> +++ b/include/net/netlink.h
-> @@ -931,6 +931,27 @@ static inline struct nlmsghdr *nlmsg_put(struct sk_buff *skb, u32 portid, u32 se
->  	return __nlmsg_put(skb, portid, seq, type, payload, flags);
->  }
->  
-> +/**
-> + * nlmsg_append - Add more data to a nlmsg in a skb
-> + * @skb: socket buffer to store message in
-> + * @payload: length of message payload
-> + *
-> + * Append data to an existing nlmsg, used when constructing a message
-> + * with multiple fixed-format headers (which is rare).
-> + * Returns NULL if the tailroom of the skb is insufficient to store
-> + * the extra payload.
-> + */
-> +static inline void *nlmsg_append(struct sk_buff *skb, u32 size)
-> +{
-> +	if (unlikely(skb_tailroom(skb) < NLMSG_ALIGN(size)))
-> +		return NULL;
-> +
-> +	if (NLMSG_ALIGN(size) - size)
-> +		memset(skb_tail_pointer(skb) + size, 0,
-> +		       NLMSG_ALIGN(size) - size);
-> +	return __skb_put(skb, NLMSG_ALIGN(size));
-> +}
-> +
->  /**
->   * nlmsg_put_answer - Add a new callback based netlink message to an skb
->   * @skb: socket buffer to store message in
-> diff --git a/include/uapi/linux/netlink.h b/include/uapi/linux/netlink.h
-> index e2ae82e3f9f7..fba3ca8152fa 100644
-> --- a/include/uapi/linux/netlink.h
-> +++ b/include/uapi/linux/netlink.h
-> @@ -48,6 +48,7 @@ struct sockaddr_nl {
->   * @nlmsg_flags: Additional flags
->   * @nlmsg_seq:   Sequence number
->   * @nlmsg_pid:   Sending process port ID
-> + * @nlmsg_data:  Message payload
->   */
->  struct nlmsghdr {
->  	__u32		nlmsg_len;
-> @@ -55,6 +56,7 @@ struct nlmsghdr {
->  	__u16		nlmsg_flags;
->  	__u32		nlmsg_seq;
->  	__u32		nlmsg_pid;
-> +	__DECLARE_FLEX_ARRAY(char, nlmsg_data);
+> Also, make use of the DECLARE_FLEX_ARRAY() helper to declare flexible
+> array member EncryptionKey in union u. This new helper allows for
+> flexible-array members in unions.
+> 
+> Change pointer notation to proper array notation in a call to memcpy()
+> where flexible-array member DialectsArray is being used as destination
+> argument.
+> 
+> Important to mention is that doing a build before/after this patch results
+> in no binary output differences.
+> 
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
+> 
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/229
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Since the flex array isn't part of a union, it can just be declared
-"normally":
+Looks good to me; thanks!
 
-	__u8		nlmsg_data[];
-
-I'd also suggest u8 (rather than signed char) because compilers hate us,
-and I've been burned too many times by having char arrays do stupid
-things with the signed bit.
-
->  };
->  
->  /* Flags values */
-> diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
-> index a662e8a5ff84..f8c94454b916 100644
-> --- a/net/netlink/af_netlink.c
-> +++ b/net/netlink/af_netlink.c
-> @@ -2488,19 +2488,25 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
->  		flags |= NLM_F_ACK_TLVS;
->  
->  	skb = nlmsg_new(payload + tlvlen, GFP_KERNEL);
-> -	if (!skb) {
-> -		NETLINK_CB(in_skb).sk->sk_err = ENOBUFS;
-> -		sk_error_report(NETLINK_CB(in_skb).sk);
-> -		return;
-> -	}
-> +	if (!skb)
-> +		goto err_bad_put;
->  
->  	rep = nlmsg_put(skb, NETLINK_CB(in_skb).portid, nlh->nlmsg_seq,
-> -			NLMSG_ERROR, payload, flags);
-> +			NLMSG_ERROR, sizeof(*errmsg), flags);
-> +	if (!rep)
-> +		goto err_bad_put;
->  	errmsg = nlmsg_data(rep);
->  	errmsg->error = err;
-> -	unsafe_memcpy(&errmsg->msg, nlh, payload > sizeof(*errmsg)
-> -					 ? nlh->nlmsg_len : sizeof(*nlh),
-> -		      /* Bounds checked by the skb layer. */);
-> +	errmsg->msg = *nlh;
-> +
-> +	if (!(flags & NLM_F_CAPPED)) {
-> +		if (!nlmsg_append(skb, nlmsg_len(nlh)))
-> +			goto err_bad_put;
-> +
-> +		/* the nlh + 1 is probably going to make you unhappy? */
-> +		memcpy(errmsg->msg.nlmsg_data, nlh->nlmsg_data,
-> +		       nlmsg_len(nlh));
-> +	}
->  
->  	if (tlvlen)
->  		netlink_ack_tlv_fill(in_skb, skb, nlh, err, extack);
-> @@ -2508,6 +2514,12 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
->  	nlmsg_end(skb, rep);
->  
->  	nlmsg_unicast(in_skb->sk, skb, NETLINK_CB(in_skb).portid);
-> +
-> +	return;
-> +
-> +err_bad_put:
-> +	NETLINK_CB(in_skb).sk->sk_err = ENOBUFS;
-> +	sk_error_report(NETLINK_CB(in_skb).sk);
->  }
->  EXPORT_SYMBOL(netlink_ack);
-
-The rest looks great! :) I suspect you'll want to do close to the same
-conversion in net/netfilter/ipset/ip_set_core.c in call_ad() too.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
