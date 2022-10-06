@@ -2,154 +2,243 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B77C433F5
-	for <linux-hardening@archiver.kernel.org>; Thu,  6 Oct 2022 20:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0789DC433FE
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Oct 2022 23:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231207AbiJFUUo (ORCPT
+        id S231725AbiJFXA3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 6 Oct 2022 16:20:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48156 "EHLO
+        Thu, 6 Oct 2022 19:00:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229642AbiJFUUl (ORCPT
+        with ESMTP id S230527AbiJFXAZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 6 Oct 2022 16:20:41 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92FBE17279A
-        for <linux-hardening@vger.kernel.org>; Thu,  6 Oct 2022 13:20:38 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id h8-20020a17090a054800b00205ccbae31eso5353085pjf.5
-        for <linux-hardening@vger.kernel.org>; Thu, 06 Oct 2022 13:20:38 -0700 (PDT)
+        Thu, 6 Oct 2022 19:00:25 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEB3213DD1
+        for <linux-hardening@vger.kernel.org>; Thu,  6 Oct 2022 16:00:23 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id b5so3106107pgb.6
+        for <linux-hardening@vger.kernel.org>; Thu, 06 Oct 2022 16:00:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date;
-        bh=Rk5zz4A39+pbcgAoB20NzVrsEawygpTbgx4vBx4ppIs=;
-        b=BYx3cjQRaQ61qD4kci8lj8sUlKGwxBQTGugOVwVFovwHCmI/LQDbCjb+DkICpsvW4m
-         STdWXo4QVJpb8zGJImpu91r/m8zGJm3KZaeFnkzRlgCgjI+0GDcxB5MTmrhucCW633IN
-         I6hYYHjSrLy5aixD/PhLwPqvTzNVP1wuQopiQ=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=Pn8fcUlKY0mYD9k9yXJJA4/wPvgxmMVXtOKhuvaDv08=;
+        b=X0/oSN+NgcBE9LzK/xFfsNZg9g1Rx0vWlrIcwfj2oCW5GUiDTWoqGSDNB/5dHNuJj1
+         sFoZCnvc87wzVXiYR+syjJ+tLMFeBXfNVZNfxye1tOeElsXM/o1mcdWFhVfSd9e1UOYS
+         41VjDTqiMRon+kJj1sV7DZI3cGWS6Mi/o7/xU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=Rk5zz4A39+pbcgAoB20NzVrsEawygpTbgx4vBx4ppIs=;
-        b=QvXT4/Ki+BEgLZlDbiX/Y4+4j1MAlsNUhk/Om/XFO0GAp8N1dqWXUiORjZqRgqqj29
-         GNUmWM8SzdloM8yzRpIGhfjaDekAh58mF+cyunGefZt/fj5AQQGX0tD2TMjeMfZvnUkP
-         /sPLPxagQ9X/k5yyJ3nGiPHDv1cO1xYNMINQYl+xEDJf9bk8IgG4svKVKF2lrM7AJ1Z/
-         65Hi22eNkKp3kDN9E+wyaf/1w2AXxk+7XZzWNqEm2gDm+OLOJQtAMT0X/4Yl/HsfJHOd
-         L3RLs4jtB3RKwuwGEl45/nqe4JCakyqR8T+ves/NFvTtPj7Iw674BI9TvP2vj3WgO33S
-         geXw==
-X-Gm-Message-State: ACrzQf0MDFk/mpFIXBIvZXEXqQYgXDWvU2YIeTbBBYBqa5sj+hLtUBjM
-        iDDpxrZRGHfkaalcKWGnUNpqYQ==
-X-Google-Smtp-Source: AMsMyM6jQK6faWu8ciVNIyHuo5DdhGUHU792hu5M2+fkiWdd1JDFyJ7HN7J/+hDDUVtrL381rrTPHQ==
-X-Received: by 2002:a17:902:864c:b0:179:fe02:611e with SMTP id y12-20020a170902864c00b00179fe02611emr1539895plt.10.1665087637621;
-        Thu, 06 Oct 2022 13:20:37 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=Pn8fcUlKY0mYD9k9yXJJA4/wPvgxmMVXtOKhuvaDv08=;
+        b=gCM+0CVA5IDAKdN8tlxbO4tfQcCsywImV6wweLJS1eqYDrDVtrmJqW/nhVNIwEqvYx
+         9Uw/idpmTTdyeo/ey86ZEZpdEAyn16O8fZ6oEs9MXpxU3Q89lO7h1fJ72mqymrHwXiEr
+         5AGDJXP00YwLJBnTSzJgxLjT+eQAUIDRutZT3MJWeEcT6zAxkrGN1ekQ1PNmi53U9AT7
+         6kFMPIyVS3qZ4Im/PkHBqyXXg+Qy5HUee/yVP/6IxErBKkzXF9Gl9KO3CzD4C3hhTa8M
+         LxQL7HgsZkCu1yPRvGAnvaBgPd8h+u668ejdGpDXntqxbRCY1gxhiZOUpUZ0XL1GdpAF
+         brPg==
+X-Gm-Message-State: ACrzQf2eJziMJL3Kr12lkFYCGCEaPlRMX4cPGLeAvzPJqU3SFSl3SObo
+        yRSuuyQ4Y5Ptc1eaRjxFhS45Gw==
+X-Google-Smtp-Source: AMsMyM4Ckf5cj04XnOcnSqGJpTFhoYdbvGQpwjY9d/nzsMIDyoUMaVibbqp4SWiQ+1Jwh1O0zAxZsQ==
+X-Received: by 2002:a05:6a00:f0f:b0:562:3169:eba1 with SMTP id cr15-20020a056a000f0f00b005623169eba1mr1975042pfb.59.1665097223233;
+        Thu, 06 Oct 2022 16:00:23 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p8-20020a635b08000000b0045328df8bd0sm148201pgb.71.2022.10.06.13.20.36
+        by smtp.gmail.com with ESMTPSA id q27-20020aa7983b000000b005625d5ae760sm172534pfl.11.2022.10.06.16.00.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Oct 2022 13:20:36 -0700 (PDT)
-Date:   Thu, 6 Oct 2022 13:20:35 -0700
+        Thu, 06 Oct 2022 16:00:22 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Jorge Merlino <jorge.merlino@canonical.com>
-Cc:     Christian Brauner <brauner@kernel.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org,
-        John Johansen <john.johansen@canonical.com>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Richard Haines <richard_c_haines@btinternet.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Todd Kjos <tkjos@google.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Prashanth Prahlad <pprahlad@redhat.com>,
-        Micah Morton <mortonm@chromium.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Andrei Vagin <avagin@gmail.com>, linux-kernel@vger.kernel.org,
-        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] Fix race condition when exec'ing setuid files
-Message-ID: <202210061301.207A20C8E5@keescook>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Tom Rix <trix@redhat.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+        llvm@lists.linux.dev, Vitor Massaru Iha <vitor@massaru.org>,
+        kernel test robot <lkp@intel.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] overflow: Refactor test skips for Clang-specific issues
+Date:   Thu,  6 Oct 2022 16:00:17 -0700
+Message-Id: <20221006230017.1833458-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202209131456.76A13BC5E4@keescook>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6247; h=from:subject; bh=j/3CMmy55Kdm3/X782SP6kTirnk/8cojn34Zi1xcMKs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjP14AcEaP52jAhjBzmN95Tg9NNgDVNYSdf19Loaxq qnzI5jaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYz9eAAAKCRCJcvTf3G3AJh3fD/ 4n4TxICbE9hSAohxcs9hLF/IkcxjBIPcVy8GnJ/FTJlYL6h9p7F0Lq/3IIVqXU02BptNhqcfoMIHKv +ehFrpslUvXHPYIO+VbD3GlJYQPvNLMcGOUN9tre6WVHQ1rcYCEd9D0KhESlIldEUMYybT4yrno/Fh 5fqnEKJR5qWjd9paYp/VREtLFlx4d7knNFaLgYLEeF0uERNkIdVLUXJPl3nCmcoiZrBj3KLsccVdhv H+IuVqIYEsoEvtJNlMpXin1K91h5QjWt3a75DmD6u/vKBxTbn+NOu4rbPFq2ogwCXrpjl/GBYZFi/+ InTdXGeresTM7+EWW919kwaX3OT1mpiwWJcAk+tO48NOPUClBMEymH3yNKd448vsLF9Dv5NRvY4I46 lAJHF9laNPhSqbQQNEAKnU0SnAXL0C+3FWdWZlHmI8X52tMynWTq1Yk3bJ77Aqhor5CGtPhab1qtiO Wjovi21uSQAEz+7Gu2agZin46hANSs7/O8SMh1lM3HBnf7ScMdQC5Qe8jdbZTbinPZuFdDN+Msizle 0vO8eFdUGhgdj4iXyNLAb2F7a/rjxuOoYoFvCcKRN4ezyM0LtC1DYiwFJgKlyxhgMXTvQ2Eyum7XtL N4yO0gLjT0aW3jNRKbXl6GrXsL1WKYXTO5K0tmGyMbOBxUdc48m+dA7Ef5jQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 13, 2022 at 15:03:38 -0700, Kees Cook wrote:
-> It seems quite unusual to have a high-load heavily threaded
-> process decide to exec.
+Convert test exclusion into test skipping. This brings the logic for
+why a test is being skipped into the test itself, instead of having to
+spread ifdefs around the code. This will make cleanup easier as minimum
+tests get raised. Drop __maybe_unused so missed tests will be noticed
+again and clean up whitespace.
 
-In looking at this a bunch more, I actually think everything is working
-as intended. If a process is actively launching threads while also trying
-to exec, they're going to create races for themselves.
+For example, clang-11 on i386:
 
-So the question, then, is "why are they trying to exec while actively
-spawning new threads?" That appears to be the core problem here, and as
-far as I can tell, the kernel has behaved this way for a very long time.
-I don't think the kernel should fix this, either, because it leads to a
-very weird state for userspace, where the thread spawner may suddenly
-die due to the exec happening in another thread. This really looks like
-something userspace needs to handle correctly (i.e. don't try to exec
-while actively spawning threads).
+[15:52:32] ================== overflow (18 subtests) ==================
+[15:52:32] [PASSED] u8_u8__u8_overflow_test
+[15:52:32] [PASSED] s8_s8__s8_overflow_test
+[15:52:32] [PASSED] u16_u16__u16_overflow_test
+[15:52:32] [PASSED] s16_s16__s16_overflow_test
+[15:52:32] [PASSED] u32_u32__u32_overflow_test
+[15:52:32] [PASSED] s32_s32__s32_overflow_test
+[15:52:32] [SKIPPED] u64_u64__u64_overflow_test
+[15:52:32] [SKIPPED] s64_s64__s64_overflow_test
+[15:52:32] [SKIPPED] u32_u32__int_overflow_test
+[15:52:32] [PASSED] u32_u32__u8_overflow_test
+[15:52:32] [PASSED] u8_u8__int_overflow_test
+[15:52:32] [PASSED] int_int__u8_overflow_test
+[15:52:32] [PASSED] shift_sane_test
+[15:52:32] [PASSED] shift_overflow_test
+[15:52:32] [PASSED] shift_truncate_test
+[15:52:32] [PASSED] shift_nonsense_test
+[15:52:32] [PASSED] overflow_allocation_test
+[15:52:32] [PASSED] overflow_size_helpers_test
+[15:52:32] ==================== [PASSED] overflow =====================
+[15:52:32] ============================================================
+[15:52:32] Testing complete. Ran 18 tests: passed: 15, skipped: 3
 
-For example, here's a fix to the original PoC:
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Tom Rix <trix@redhat.com>
+Cc: Daniel Latypov <dlatypov@google.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
+Cc: llvm@lists.linux.dev
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ lib/overflow_kunit.c | 52 +++++++++++++++++++++++++++++---------------
+ 1 file changed, 35 insertions(+), 17 deletions(-)
 
---- a.c.original        2022-10-06 13:07:13.279845619 -0700
-+++ a.c 2022-10-06 13:10:27.702941645 -0700
-@@ -8,8 +8,10 @@
-        return NULL;
- }
+diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
+index 2914c9d36b0f..3062b33e4bb1 100644
+--- a/lib/overflow_kunit.c
++++ b/lib/overflow_kunit.c
+@@ -16,6 +16,34 @@
+ #include <linux/types.h>
+ #include <linux/vmalloc.h>
  
-+int stop_spawning;
++#define SKIP(cond, reason)		do {			\
++	if (cond) {						\
++		kunit_skip(test, reason);			\
++		return;						\
++	}							\
++} while (0)
 +
- void *target(void *p) {
--       for (;;) {
-+       while (!stop_spawning) {
-                pthread_t t;
-                if (pthread_create(&t, NULL, nothing, NULL) == 0)
-                        pthread_join(t, NULL);
-@@ -17,18 +19,26 @@
-        return NULL;
- }
++/*
++ * Clang 11 and earlier generate unwanted libcalls for signed output
++ * on unsigned input.
++ */
++#if defined(CONFIG_CC_IS_CLANG) && __clang_major__ <= 11
++# define SKIP_SIGN_MISMATCH(t)	SKIP(t, "Clang 11 unwanted libcalls")
++#else
++# define SKIP_SIGN_MISMATCH(t)	do { } while (0)
++#endif
++
++/*
++ * Clang 13 and earlier generate unwanted libcalls for 64-bit tests on
++ * 32-bit hosts.
++ */
++#if defined(CONFIG_CC_IS_CLANG) && __clang_major__ <= 13 &&	\
++    BITS_PER_LONG != 64
++# define SKIP_64_ON_32(t)	SKIP(t, "Clang 13 unwanted libcalls")
++#else
++# define SKIP_64_ON_32(t)	do { } while (0)
++#endif
++
+ #define DEFINE_TEST_ARRAY_TYPED(t1, t2, t)			\
+ 	static const struct test_ ## t1 ## _ ## t2 ## __ ## t {	\
+ 		t1 a;						\
+@@ -94,7 +122,6 @@ DEFINE_TEST_ARRAY(u32) = {
+ 	{-4U, 5U, 1U, -9U, -20U, true, false, true},
+ };
  
-+#define MAX_THREADS    10
-+
- int main(void)
- {
-+       pthread_t threads[MAX_THREADS];
-        struct timespec tv;
-        int i;
+-#if BITS_PER_LONG == 64
+ DEFINE_TEST_ARRAY(u64) = {
+ 	{0, 0, 0, 0, 0, false, false, false},
+ 	{1, 1, 2, 0, 1, false, false, false},
+@@ -118,7 +145,6 @@ DEFINE_TEST_ARRAY(u64) = {
+ 	 false, true, false},
+ 	{-15ULL, 10ULL, -5ULL, -25ULL, -150ULL, false, false, true},
+ };
+-#endif
  
--       for (i = 0; i < 10; i++) {
--               pthread_t t;
--               pthread_create(&t, NULL, target, NULL);
-+       for (i = 0; i < MAX_THREADS; i++) {
-+               pthread_create(&threads[i], NULL, target, NULL);
-        }
-        tv.tv_sec = 0;
-        tv.tv_nsec = 100000;
-        nanosleep(&tv, NULL);
-+
-+       /* Signal shut down, and collect spawners. */
-+       stop_spawning = 1;
-+       for (i = 0; i < MAX_THREADS; i++)
-+               pthread_join(threads[i], NULL);
-+
-        if (execl("./b", "./b", NULL) < 0)
-                perror("execl");
-        return 0;
-
-
+ DEFINE_TEST_ARRAY(s8) = {
+ 	{0, 0, 0, 0, 0, false, false, false},
+@@ -194,7 +220,6 @@ DEFINE_TEST_ARRAY(s32) = {
+ 	{S32_MAX, S32_MAX, -2, 0, 1, true, false, true},
+ };
+ 
+-#if BITS_PER_LONG == 64
+ DEFINE_TEST_ARRAY(s64) = {
+ 	{0, 0, 0, 0, 0, false, false, false},
+ 
+@@ -223,7 +248,6 @@ DEFINE_TEST_ARRAY(s64) = {
+ 	{-128, -1, -129, -127, 128, false, false, false},
+ 	{0, -S64_MAX, -S64_MAX, S64_MAX, 0, false, false, false},
+ };
+-#endif
+ 
+ #define check_one_op(t, fmt, op, sym, a, b, r, of) do {			\
+ 	int _a_orig = a, _a_bump = a + 1;				\
+@@ -246,7 +270,7 @@ DEFINE_TEST_ARRAY(s64) = {
+ 
+ #define DEFINE_TEST_FUNC_TYPED(n, t, fmt)				\
+ static void do_test_ ## n(struct kunit *test, const struct test_ ## n *p) \
+-{							   		\
++{									\
+ 	check_one_op(t, fmt, add, "+", p->a, p->b, p->sum, p->s_of);	\
+ 	check_one_op(t, fmt, add, "+", p->b, p->a, p->sum, p->s_of);	\
+ 	check_one_op(t, fmt, sub, "-", p->a, p->b, p->diff, p->d_of);	\
+@@ -254,10 +278,15 @@ static void do_test_ ## n(struct kunit *test, const struct test_ ## n *p) \
+ 	check_one_op(t, fmt, mul, "*", p->b, p->a, p->prod, p->p_of);	\
+ }									\
+ 									\
+-__maybe_unused								\
+ static void n ## _overflow_test(struct kunit *test) {			\
+ 	unsigned i;							\
+ 									\
++	SKIP_64_ON_32(__same_type(t, u64));				\
++	SKIP_64_ON_32(__same_type(t, s64));				\
++	SKIP_SIGN_MISMATCH(__same_type(n ## _tests[0].a, u32) &&	\
++			   __same_type(n ## _tests[0].b, u32) &&	\
++			   __same_type(n ## _tests[0].sum, int));	\
++									\
+ 	for (i = 0; i < ARRAY_SIZE(n ## _tests); ++i)			\
+ 		do_test_ ## n(test, &n ## _tests[i]);			\
+ 	kunit_info(test, "%zu %s arithmetic tests finished\n",		\
+@@ -273,10 +302,8 @@ DEFINE_TEST_FUNC(u16, "%d");
+ DEFINE_TEST_FUNC(s16, "%d");
+ DEFINE_TEST_FUNC(u32, "%u");
+ DEFINE_TEST_FUNC(s32, "%d");
+-#if BITS_PER_LONG == 64
+ DEFINE_TEST_FUNC(u64, "%llu");
+ DEFINE_TEST_FUNC(s64, "%lld");
+-#endif
+ 
+ DEFINE_TEST_ARRAY_TYPED(u32, u32, u8) = {
+ 	{0, 0, 0, 0, 0, false, false, false},
+@@ -716,18 +743,9 @@ static struct kunit_case overflow_test_cases[] = {
+ 	KUNIT_CASE(s16_s16__s16_overflow_test),
+ 	KUNIT_CASE(u32_u32__u32_overflow_test),
+ 	KUNIT_CASE(s32_s32__s32_overflow_test),
+-/* Clang 13 and earlier generate unwanted libcalls on 32-bit. */
+-#if BITS_PER_LONG == 64
+ 	KUNIT_CASE(u64_u64__u64_overflow_test),
+ 	KUNIT_CASE(s64_s64__s64_overflow_test),
+-#endif
+-/*
+- * Clang 11 and earlier generate unwanted libcalls for signed output, unsigned
+- * input.
+- */
+-#if !(defined(CONFIG_CC_IS_CLANG) && __clang_major__ <= 11)
+ 	KUNIT_CASE(u32_u32__int_overflow_test),
+-#endif
+ 	KUNIT_CASE(u32_u32__u8_overflow_test),
+ 	KUNIT_CASE(u8_u8__int_overflow_test),
+ 	KUNIT_CASE(int_int__u8_overflow_test),
 -- 
-Kees Cook
+2.34.1
+
