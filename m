@@ -2,204 +2,214 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA101C433F5
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 Oct 2022 21:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A883EC433F5
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Oct 2022 08:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231316AbiJEVlG (ORCPT
+        id S229813AbiJFI1w (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 5 Oct 2022 17:41:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54768 "EHLO
+        Thu, 6 Oct 2022 04:27:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231292AbiJEVk6 (ORCPT
+        with ESMTP id S230030AbiJFI1r (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 5 Oct 2022 17:40:58 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FA5382751
-        for <linux-hardening@vger.kernel.org>; Wed,  5 Oct 2022 14:40:54 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id n7so16656629plp.1
-        for <linux-hardening@vger.kernel.org>; Wed, 05 Oct 2022 14:40:54 -0700 (PDT)
+        Thu, 6 Oct 2022 04:27:47 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91415265A
+        for <linux-hardening@vger.kernel.org>; Thu,  6 Oct 2022 01:27:41 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id 67so1381846pfz.12
+        for <linux-hardening@vger.kernel.org>; Thu, 06 Oct 2022 01:27:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date;
-        bh=MItuJ5U/2RAuamrpV6dJrOpoREvF5mLnZAeERt7QUpU=;
-        b=IQUOC6y4QS/1LJfIO+vG9o/CPBWD5e54SmOeTeyrJqB6bUYuF0izwbTdMi7bA1J1Fh
-         etQiUuUCnWoLZd2GRHYSN3n0ZVwtGhvz8IM8aFScPktSnV+HZdTW0vKVHQzxhNZrXgYt
-         2c+lRPRD9wMtrAxCwbIS29NXosETEHd/8d+YI=
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
+        bh=JXTirUT/Csg4APgKb6IoBxbOkY1M1FiylJ4snUxz0UA=;
+        b=MV1Xq/Ck5nDq5FkA2A/UwIV8B30dvCVwZwYBMaY5KkmjN8HzeobdGijbvEPdreTL0I
+         hVhs0leFZmmgwsEcyYJ5LKRD3rksRH/MX05zPgzCuhL2mf5faZobGVDXhr0NK0y3ncts
+         WDg5Irmwiclv1+TuKbuqMlK939w/T3VPQBGLU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=MItuJ5U/2RAuamrpV6dJrOpoREvF5mLnZAeERt7QUpU=;
-        b=lZR4R6Ilu+Mvma1dHRkqGrKNhbMjhe6zOG7KYi7NnHCK8c2N8H7r1yb4XFPyeQ+BKh
-         X+mW9+U4rsO+a8zN7vxIPLgCsKumFVH3XvUscW5FUAlOx708j3wlZguiUSlqjaCbtxD8
-         DOcrilKYlAg7k9gH5mOaasSfBd7W1SOgNMSvz6uQrprYq75K+6Sq31RS8s1sJ21GcCkc
-         xiIvz0qnOVpVB67xIVyTKJ6jlQt3r1w8IWBmeubyN9bB/uCdm9gFe6aDeavA9MwIrRfo
-         SzgZRx42yfMlePNC6SHf+4RQKRoC6rWB0rCOS96e/2YCj8O0SY3EhOzNRWqzL1EnSsV7
-         Q11Q==
-X-Gm-Message-State: ACrzQf3VAmS5I73OKVjNTkfRNpwAgSN0ITe6dg/CMp1EC9WUKkcL5QF3
-        epK7U8uv8PUx9obQF1v0C5Ga+NcjRY4FEg==
-X-Google-Smtp-Source: AMsMyM7cSL26dSE3CXWoQ0qiFwm2O0CzjBvcZF7agSSDbSM5ddrspprFf7/dzHuJM87kAkSbDlUzxQ==
-X-Received: by 2002:a17:90b:4b11:b0:202:998b:71b1 with SMTP id lx17-20020a17090b4b1100b00202998b71b1mr1809685pjb.208.1665006053997;
-        Wed, 05 Oct 2022 14:40:53 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=JXTirUT/Csg4APgKb6IoBxbOkY1M1FiylJ4snUxz0UA=;
+        b=DRz+uWflH5r1EWYKFoOhqlI5FAMW6/C+XQ9gTf7nUqCo5tMbW1f6OkBqyGpDUxPxaz
+         oXretk2+6js/w9nTdSQ/W69GBouSyhDQ8btd4E1XFhLy8RUQf0xbBInK5MfSpavhZGuH
+         VXFWDTVNk7m8fyiMgbqHJZoq6uVE2AwWlxQlb0i3S/sXj6BvkaI5JQ59DLG7WsULeyXt
+         s5/eYZnvbjYwcud8gR9/4H+7IyUfl3cxKf5+0QF6nm0h1mH23Dor0Hm3Qe8Z53PeRIry
+         5/5bypQH0ElqiQr+Sh44pzdcrU5XkN4Ds4PLEMFb6n+lYSAVIKRxBSABfX1fLqk3+5dR
+         IBNg==
+X-Gm-Message-State: ACrzQf1BvDIDgC2eS1OoRcWuWXBzeDdDWg/+tJsxwsCQjUtiJkTGl5YC
+        3OrQgMJ8wDPDm1nmPR/V4z22/A==
+X-Google-Smtp-Source: AMsMyM6W5XwnXecNI4zSPGpyeZlol/ZTonmHl763803Md18AZocxPoiswNswpf1uUPT4OHuojpgkmA==
+X-Received: by 2002:a63:d54a:0:b0:454:395a:73d6 with SMTP id v10-20020a63d54a000000b00454395a73d6mr3545058pgi.531.1665044860838;
+        Thu, 06 Oct 2022 01:27:40 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e29-20020a63501d000000b004582e25a595sm220201pgb.41.2022.10.05.14.40.52
+        by smtp.gmail.com with ESMTPSA id v9-20020a17090a4ec900b00200b2894648sm2344795pjl.52.2022.10.06.01.27.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Oct 2022 14:40:53 -0700 (PDT)
-Date:   Wed, 5 Oct 2022 14:40:52 -0700
+        Thu, 06 Oct 2022 01:27:39 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+To:     Eric Biederman <ebiederm@xmission.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        John Johansen <john.johansen@canonical.com>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Richard Haines <richard_c_haines@btinternet.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Todd Kjos <tkjos@google.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org,
+        Jorge Merlino <jorge.merlino@canonical.com>,
+        "Christian Brauner (Microsoft)" <brauner@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] mm/pgtable: Fix multiple -Wstringop-overflow
- warnings
-Message-ID: <202210051107.720F1F835@keescook>
-References: <Yytb67xvrnctxnEe@work>
+        Andy Lutomirski <luto@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Prashanth Prahlad <pprahlad@redhat.com>,
+        Micah Morton <mortonm@chromium.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Andrei Vagin <avagin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH 2/2] exec: Remove LSM_UNSAFE_SHARE
+Date:   Thu,  6 Oct 2022 01:27:35 -0700
+Message-Id: <20221006082735.1321612-3-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221006082735.1321612-1-keescook@chromium.org>
+References: <20221006082735.1321612-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3927; h=from:subject; bh=ekDs8TYo6gmnVS2X5P/NZPdmVTJQlJO9uXeDqf2iTeY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjPpF336GBqTJk2qjgX5GvQ3feqQTP3mEtrz77nvir edCOPRuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYz6RdwAKCRCJcvTf3G3AJpwJEA CMrwF69qIO3OxGZxaGmmHUH3737CPlmPn0pDmdy3Hdb4vdmhacgZe56ZODfZEIOyku5HRei4EgW9Un lzYhSJLyWOrRjwPEVTKM0BlRqY1HItnaiqVWowS5JKvfxL2L9IQpY0QYtxCwvnJ2W0k8AQ+p6+Ki4o F/g2Je0/gx6G4S7AF/T2dVFNrC1I2c87k6eL23rFSo0OQU9LR7LjdrpSZJ30+nBivjJGu5sgi4eHwn pQXXIhLFBaII7ltA8d62vwj7rKBAAeQoRzpY95pA1nciM5YG4B9P8aJHsgdBADxRZbVXQlepYcvdRf VlawFag7VNsY3EDHQsFYuVxU3jfNQ9aWYiQm3IId5UVkzpseGi1cp/VAH10ttHQtajYjO5MIM/tKh4 7ms3y2FKhLnnEdyE3WSdd8mSgawrXjpmeuEpDI2vMZ6BlhuIx3kFGvg0wwXPKmuhKRF/KTQ+Xm7Q1B whkflq3t78dZ8X+TqDC5voTQ0W1A8o3EMLBJCNfs19t51e9ZWpL+GFM2xZlZeUGxY+arOWBjkl68yH hBgpFgFl3+Ti42WCPYzFfu3pVGyV/VYFC3VWIh0k2UTi9ncMlCncCVMVt+w+NSHYYLQzTADe44E3kX fF3/UQMXjAf4VO+FWmoBpvB2CbVa1VW942hoVo6zyef2e+sodtvRAZwUdA1w==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Yytb67xvrnctxnEe@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Sep 21, 2022 at 01:46:03PM -0500, Gustavo A. R. Silva wrote:
-> The actual size of the following arrays at run-time depends on
-> CONFIG_X86_PAE.
-> 
-> 427         pmd_t *u_pmds[MAX_PREALLOCATED_USER_PMDS];
-> 428         pmd_t *pmds[MAX_PREALLOCATED_PMDS];
-> 
-> If CONFIG_X86_PAE is not enabled, their final size will be zero. In that
-> case, the compiler complains about trying to access objects of size zero
-> when calling functions where these objects are passed as arguments.
+With fs_struct explicitly unshared during exec, it is no longer possible
+to have unexpected shared state, and LSM_UNSAFE_SHARE can be entirely
+removed.
 
-The main point is that a zero-length array isn't considered to have legal
-storage by C -- strictly speaking, a compiler isn't wrong to complain
-about this (and it has in the past too, for this code):
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: John Johansen <john.johansen@canonical.com>
+Cc: Paul Moore <paul@paul-moore.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc: Eric Paris <eparis@parisplace.org>
+Cc: Richard Haines <richard_c_haines@btinternet.com>
+Cc: Casey Schaufler <casey@schaufler-ca.com>
+Cc: Xin Long <lucien.xin@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Ondrej Mosnacek <omosnace@redhat.com>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: apparmor@lists.ubuntu.com
+Cc: linux-security-module@vger.kernel.org
+Cc: selinux@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/exec.c                  | 17 +----------------
+ include/linux/security.h   |  5 ++---
+ security/apparmor/domain.c |  5 -----
+ security/selinux/hooks.c   | 10 ----------
+ 4 files changed, 3 insertions(+), 34 deletions(-)
 
-static void pgd_prepopulate_pmd(struct mm_struct *mm, pgd_t *pgd, pmd_t *pmds[])
-{
-        p4d_t *p4d;
-        pud_t *pud;
-        int i;
-
-        if (PREALLOCATED_PMDS == 0) /* Work around gcc-3.4.x bug */
-                return;
-...
-
-But gcc has gotten smart enough to say "you can't pass this as an array
-because it doesn't actually exist". No amount of inlining, etc, helps
-because it's strictly looking at the function arguments and the local
-storage declaration.
-
-Note that this is basically one of the last warnings generated by
--Wstringop-overflow -- many of the other warnings that were fixed as
-part of getting this option enabled have been real bugs. We want this
-warning enabled, even if it's a bit more strict than some code is happy
-about. :)
-
-> Fix this by sanity-checking the size of those arrays just before the
-> function calls. Also, the following warnings are fixed by these changes
-> when building with GCC-11 and -Wstringop-overflow enabled:
-
-And with GCC-12 too.
-
-> arch/x86/mm/pgtable.c:437:13: warning: ‘preallocate_pmds.constprop’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
-> arch/x86/mm/pgtable.c:440:13: warning: ‘preallocate_pmds.constprop’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
-> arch/x86/mm/pgtable.c:462:9: warning: ‘free_pmds.constprop’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
-> arch/x86/mm/pgtable.c:455:9: warning: ‘pgd_prepopulate_user_pmd’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
-> arch/x86/mm/pgtable.c:464:9: warning: ‘free_pmds.constprop’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
-> 
-> This helps with the ongoing efforts to globally enable
-> -Wstringop-overflow.
-> 
-> Link: https://github.com/KSPP/linux/issues/203
-> Link: https://github.com/KSPP/linux/issues/181
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-BTW, this should be considered "v3", and include links to the history:
-
-v2: https://lore.kernel.org/lkml/20220509194541.GA91598@embeddedor/
-v1: https://lore.kernel.org/lkml/20220401005834.GA182932@embeddedor/
-
-> ---
->  arch/x86/mm/pgtable.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-> index 8525f2876fb4..5116df6a308c 100644
-> --- a/arch/x86/mm/pgtable.c
-> +++ b/arch/x86/mm/pgtable.c
-> @@ -434,10 +434,12 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
->  
->  	mm->pgd = pgd;
->  
-> -	if (preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
-> +	if (sizeof(pmds) != 0 &&
-> +			preallocate_pmds(mm, pmds, PREALLOCATED_PMDS) != 0)
->  		goto out_free_pgd;
->  
-> -	if (preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
-> +	if (sizeof(u_pmds) != 0 &&
-> +			preallocate_pmds(mm, u_pmds, PREALLOCATED_USER_PMDS) != 0)
->  		goto out_free_pmds;
-
-The alternative to this is to make the originally suggested change
-from v1: change the pmds argument from an array pointer to a pointer
-pointer. That situation is considered "legal" for C in the sense that
-it does not have a way to reason about the storage. i.e.:
-
--static void pgd_prepopulate_pmd(struct mm_struct *mm, pgd_t *pgd, pmd_t *pmds[])
-+static void pgd_prepopulate_pmd(struct mm_struct *mm, pgd_t *pgd, pmd_t **pmds)
-
-With the above change, there's no difference in binary output, and the
-compiler warning is silenced.
-
-However, with this email's patch, the compiler can actually figure out
-that it isn't using the code at all, and it gets dropped:
-
-   text    data     bss     dec     hex filename
-   8218     718      32    8968    2308 arch/x86/mm/pgtable.o.before
-   7765     694      32    8491    212b arch/x86/mm/pgtable.o.after
-
-Given that result (fixing a warning and reducing image size), this look
-like a distinct win.
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
-Note, we can add this change:
-
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index a932d7712d85..b311e4aa42fc 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -299,9 +299,6 @@ static void pgd_prepopulate_pmd(struct mm_struct *mm, pgd_t *pgd, pmd_t *pmds[])
- 	pud_t *pud;
- 	int i;
+diff --git a/fs/exec.c b/fs/exec.c
+index 7d5f63f03c58..3cd058711098 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1563,8 +1563,7 @@ EXPORT_SYMBOL(bprm_change_interp);
+  */
+ static void check_unsafe_exec(struct linux_binprm *bprm)
+ {
+-	struct task_struct *p = current, *t;
+-	unsigned n_fs;
++	struct task_struct *p = current;
  
--	if (PREALLOCATED_PMDS == 0) /* Work around gcc-3.4.x bug */
--		return;
+ 	if (p->ptrace)
+ 		bprm->unsafe |= LSM_UNSAFE_PTRACE;
+@@ -1575,20 +1574,6 @@ static void check_unsafe_exec(struct linux_binprm *bprm)
+ 	 */
+ 	if (task_no_new_privs(current))
+ 		bprm->unsafe |= LSM_UNSAFE_NO_NEW_PRIVS;
 -
- 	p4d = p4d_offset(pgd, 0);
- 	pud = pud_offset(p4d, 0);
+-	t = p;
+-	n_fs = 1;
+-	spin_lock(&p->fs->lock);
+-	rcu_read_lock();
+-	while_each_thread(p, t) {
+-		if (t->fs == p->fs)
+-			n_fs++;
+-	}
+-	rcu_read_unlock();
+-
+-	if (p->fs->users > n_fs)
+-		bprm->unsafe |= LSM_UNSAFE_SHARE;
+-	spin_unlock(&p->fs->lock);
+ }
  
-
-Which would get us to even more lines removed:
-
-  1 file changed, 13 insertions(+), 9 deletions(-)
-
-:)
-
--Kees
-
+ static void bprm_fill_uid(struct linux_binprm *bprm, struct file *file)
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 1bc362cb413f..db508a8c3cc7 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -215,9 +215,8 @@ struct sched_param;
+ struct request_sock;
+ 
+ /* bprm->unsafe reasons */
+-#define LSM_UNSAFE_SHARE	1
+-#define LSM_UNSAFE_PTRACE	2
+-#define LSM_UNSAFE_NO_NEW_PRIVS	4
++#define LSM_UNSAFE_PTRACE	BIT(0)
++#define LSM_UNSAFE_NO_NEW_PRIVS	BIT(1)
+ 
+ #ifdef CONFIG_MMU
+ extern int mmap_min_addr_handler(struct ctl_table *table, int write,
+diff --git a/security/apparmor/domain.c b/security/apparmor/domain.c
+index 91689d34d281..1b2c0bb4d9ae 100644
+--- a/security/apparmor/domain.c
++++ b/security/apparmor/domain.c
+@@ -924,11 +924,6 @@ int apparmor_bprm_creds_for_exec(struct linux_binprm *bprm)
+ 		goto audit;
+ 	}
+ 
+-	if (bprm->unsafe & LSM_UNSAFE_SHARE) {
+-		/* FIXME: currently don't mediate shared state */
+-		;
+-	}
+-
+ 	if (bprm->unsafe & (LSM_UNSAFE_PTRACE)) {
+ 		/* TODO: test needs to be profile of label to new */
+ 		error = may_change_ptraced_domain(new, &info);
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 79573504783b..3ec80cc8ad1c 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -2349,16 +2349,6 @@ static int selinux_bprm_creds_for_exec(struct linux_binprm *bprm)
+ 		if (rc)
+ 			return rc;
+ 
+-		/* Check for shared state */
+-		if (bprm->unsafe & LSM_UNSAFE_SHARE) {
+-			rc = avc_has_perm(&selinux_state,
+-					  old_tsec->sid, new_tsec->sid,
+-					  SECCLASS_PROCESS, PROCESS__SHARE,
+-					  NULL);
+-			if (rc)
+-				return -EPERM;
+-		}
+-
+ 		/* Make sure that anyone attempting to ptrace over a task that
+ 		 * changes its SID has the appropriate permit */
+ 		if (bprm->unsafe & LSM_UNSAFE_PTRACE) {
 -- 
-Kees Cook
+2.34.1
+
