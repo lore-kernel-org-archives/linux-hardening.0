@@ -2,80 +2,104 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AC6C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu,  6 Oct 2022 23:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21C9C4332F
+	for <linux-hardening@archiver.kernel.org>; Fri,  7 Oct 2022 01:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232184AbiJFXqE (ORCPT
+        id S231672AbiJGBlp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 6 Oct 2022 19:46:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33090 "EHLO
+        Thu, 6 Oct 2022 21:41:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232125AbiJFXqC (ORCPT
+        with ESMTP id S230315AbiJGBlo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 6 Oct 2022 19:46:02 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90B6697EEA
-        for <linux-hardening@vger.kernel.org>; Thu,  6 Oct 2022 16:46:00 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id p3-20020a17090a284300b0020a85fa3ffcso5754719pjf.2
-        for <linux-hardening@vger.kernel.org>; Thu, 06 Oct 2022 16:46:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=SXIyK1qhAFzYku+XMAwTO5SsuTiW+z+CUM/bi0M+oVY=;
-        b=cQNQsZN5V0cLpfD+qReSmh6yMS6vg9zkat2mnEwqEeL5JrMsu9LFdFPmp8KYq5kOQo
-         xZQI0ZQNZ9gc1cT/DnIZQFHa9qVi4AXXJax/b4L633fAcfYqKCACD+sXvYyxY1pnh8tC
-         d2vLw53KGHixXtXAm9YLsn9NJVGU/F0OrFNlI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=SXIyK1qhAFzYku+XMAwTO5SsuTiW+z+CUM/bi0M+oVY=;
-        b=pmVKM/VdsWHN+IFmKH+m4Q+dK6lw/gVV+gVkknvRUZhzKU51kN93VEZaEcIHkW/0sD
-         oGiVLWbkcnVC2S0RKbBAx/OlMgALe++WjJpUFF4RyzTxuVAVGqJtOstnqNtVpqVGMiL1
-         b+EjP8uEUjhbHFlvkv0vFW8bvItKaqwBJuJO5uQxClePLn9DtY3Vl5OT3s21PLPFGSI8
-         uCP66Arip8Ow4aIBaPIsjbj4g9kIj93gKyq7gdU/zcM6TuonASEdJ7SzYTDA3sC2+rkr
-         B7YnNcc5yaoB6S8/8iRzLAe86RxgHIUy0Dgq7PsPyEBEbsaK1pyljM04pW/UzhGl/50K
-         Iw+w==
-X-Gm-Message-State: ACrzQf1IsI/3ZQNdWBK4BVYEkr1lFHqucOO6xn22CiXKV25xOKFjCHuw
-        FGna4cte3qroK/BWtUUmw9g6tw==
-X-Google-Smtp-Source: AMsMyM7S0DLXGaLHUTHuIwrz5s3/eHznEXFoLvCJF4JxofB+RnHtoNnvjhbdN1UqX7UB5q2C9Gctvg==
-X-Received: by 2002:a17:903:110f:b0:178:a07e:e643 with SMTP id n15-20020a170903110f00b00178a07ee643mr1822628plh.41.1665099960119;
-        Thu, 06 Oct 2022 16:46:00 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e13-20020a170902d38d00b00178b6ccc8a0sm196000pld.51.2022.10.06.16.45.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Oct 2022 16:45:59 -0700 (PDT)
-Date:   Thu, 6 Oct 2022 16:45:58 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] pstore: migrate to crypto acomp interface (take 2)
-Message-ID: <202210061645.1BA58DED4D@keescook>
-References: <20221006234138.1835739-1-keescook@chromium.org>
+        Thu, 6 Oct 2022 21:41:44 -0400
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8F73F2536;
+        Thu,  6 Oct 2022 18:41:42 -0700 (PDT)
+Received: from cwcc.thunk.org (pool-173-48-120-46.bstnma.fios.verizon.net [173.48.120.46])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 2971ecnl032685
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 6 Oct 2022 21:40:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+        t=1665106847; bh=qaGXQZPJ+DMM6m33/wU4mECLmQpjFLtDJn6CdcOWtKQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=KSalaJnH4Pyw9am3lmnE824Wr2kBhNth9uCO4mXO5AzKtequoJLzjonneUAC8ZhxR
+         4Hz1eaUw7xthlsGZIvbrKDmeqfMsaZL0mX9jE1bwkYelTLIujVkzCQre3la+eHpRvk
+         jehUy8nGH756ojGWF+Lya0ILI+OcQWLFjLYpTrHqGQ5P8VsLDrkkyMAy5y7ZgOktww
+         VOQvAZIroJGMqt4qSIuhel3Tn9O/0JEpicFLNkngkAJ7T5kP6qkzL5z4U+3ELVIhC1
+         z6ZBz5xcg7Vu7b4LWp9pQf8jyIsi6uPKcXUiiBI32krkxUNWm4c1/xFR2R+71IKcQi
+         mHXaABEZ7m0DA==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+        id C2CF515C35F2; Thu,  6 Oct 2022 21:40:38 -0400 (EDT)
+Date:   Thu, 6 Oct 2022 21:40:38 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jorge Merlino <jorge.merlino@canonical.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Jann Horn <jannh@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org,
+        John Johansen <john.johansen@canonical.com>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Richard Haines <richard_c_haines@btinternet.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Todd Kjos <tkjos@google.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Prashanth Prahlad <pprahlad@redhat.com>,
+        Micah Morton <mortonm@chromium.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Andrei Vagin <avagin@gmail.com>, linux-kernel@vger.kernel.org,
+        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] Fix race condition when exec'ing setuid files
+Message-ID: <Yz+Dln7AAMU+Oj9X@mit.edu>
+References: <202209131456.76A13BC5E4@keescook>
+ <202210061301.207A20C8E5@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221006234138.1835739-1-keescook@chromium.org>
+In-Reply-To: <202210061301.207A20C8E5@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Oct 06, 2022 at 04:41:38PM -0700, Kees Cook wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
+On Thu, Oct 06, 2022 at 01:20:35PM -0700, Kees Cook wrote:
 > 
-> The crypto 'compress' interface is deprecated, so before adding new
-> features, migrate to the acomp interface. Note that we are only using
-> synchronous implementations of acomp, so we don't have to deal with
-> asynchronous completion.
-> 
-> [ Tweaked error paths to avoid memory leak, as pointed out byGuilherme
-                                                              ^^
-gah, I'll fix this typo locally. :P
+> So the question, then, is "why are they trying to exec while actively
+> spawning new threads?" That appears to be the core problem here, and as
+> far as I can tell, the kernel has behaved this way for a very long time.
+> I don't think the kernel should fix this, either, because it leads to a
+> very weird state for userspace, where the thread spawner may suddenly
+> die due to the exec happening in another thread. This really looks like
+> something userspace needs to handle correctly (i.e. don't try to exec
+> while actively spawning threads).
 
--- 
-Kees Cook
+One of the classic failure modes is when a threaded program calls a
+library, and that library might try to do a fork/exec (or call
+system(3) to run some command.  e.g., such as running "lvm create ..."
+or to spawn some kind of helper daemon.
+
+There are a number of stack overflow questions about this, and there
+are some solutions to _some_ of the problems, such as using
+pthread_atfork(), and knowing that you are about to call fork/exec,
+and use some out of band mechanism to to make sure no threads get
+spawned until the fork/exec is completed --- but if you don't know
+that a library is going to do a fork/exec, well, life is tough. 
+
+One technique even advocated by a stack overflow article is "avoid
+using threads whenver possible".  :-/
+
+	       	       	  	   - Ted
