@@ -2,73 +2,68 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3BBC433F5
-	for <linux-hardening@archiver.kernel.org>; Sat,  8 Oct 2022 23:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1D9C433FE
+	for <linux-hardening@archiver.kernel.org>; Sat,  8 Oct 2022 23:17:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229459AbiJHXGb (ORCPT
+        id S229505AbiJHXRq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 8 Oct 2022 19:06:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41246 "EHLO
+        Sat, 8 Oct 2022 19:17:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229699AbiJHXGa (ORCPT
+        with ESMTP id S229450AbiJHXRp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 8 Oct 2022 19:06:30 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A57D2ED76;
-        Sat,  8 Oct 2022 16:06:29 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id w2so7923871pfb.0;
-        Sat, 08 Oct 2022 16:06:29 -0700 (PDT)
+        Sat, 8 Oct 2022 19:17:45 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DD5B17A8F;
+        Sat,  8 Oct 2022 16:17:44 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d24so7508633pls.4;
+        Sat, 08 Oct 2022 16:17:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=AirYPYi/2kll1AHcM0ztn9kSYL8G4yKhDOoOahy35K0=;
-        b=bCl0pRUBoOhiBNuNQ3ecmx+py80LkrsqoQD6nptc01qH0dgmqiWSS5WJj2m+OukRDn
-         Ag5n+BFeDqbFuLjYapnKrbjKmRT8IPAkruzZj2EllQjRGmyRqEj52b26wk9r6BknGY3g
-         qZn7dbpQ3OIESVqnIjF94ERkp2dpgp2m0hvUhpNAkMvkP14CF3XN8+3HvQENF+mPYIFc
-         ewgXYjtiWE8R8Da16baIruk+OM11xeBaHqtD/rgxdBmpEyRitBnpSTwsV7zpzdDVJNf4
-         ujm0qE/UVw+LEPMa+FB8e5UsSa9joH6MmjCmRlKNWLGRe7OnCjwQO9iLAfL/eWOdm68k
-         cfvQ==
+        bh=lULkEACMGXAqLMVro1NAmGHqDFrc11oNE+hqnHHNv9k=;
+        b=Of0rgZhZNm/DOfl8gCGmaW0Z9i/p50pUPg86vCNuYcDOiRzCHe4hsqzkPU04pVf/tm
+         n2E2j835OaHbUT7Z6HqWoUskm4hv4g+mi8UWz2G18AG9103fXphC7VJuHoBLwMMZfdON
+         2ssEr5cIGmU9k0lwvN1jiTWb7rdOi4bgb17N9ZmMxE/F4FtGNw7uKn0px9aXx5PNCM22
+         Xjyb64G2cjZF+UsnyJ91CDYI3OaoahaMyo91TMmSsckTLM2+o8w9UBHWGB7iWVQVynKm
+         A+LAS4oUZ7mbibX+JjDc+DIJbXAucgnPidb9eZcjGNKraUkJ+v7WvFFMWDPMeBsgM7od
+         cKKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AirYPYi/2kll1AHcM0ztn9kSYL8G4yKhDOoOahy35K0=;
-        b=cKwINk+sLdh2otVYRW4oMFYPmV7K6dxDnwWrgK46sYcPLhMB6zhH7ReUrcjJnOXYMb
-         LuZ94LR1WXTZArys5hvkhz5l0qBfTEEn4fSyjZBYOrhvgSRuAqyb2H7v+rdxt3vZwQy8
-         tlPz8JYxFzExeQ+hyRIBoH2t++zl4WYVy6Qs8oDHa7WqnCPYImdjDWmtnfePSY3Fs+ET
-         czSaFy3wr1p7NkFOA71l+ZhfcyQ5Riu3QD5XtU0NpRjNzKZFbTnfMPYyi6dx3G+JStYp
-         kM3+0P9FbNwTL40SaoX5+pA7sORRse3VtOIb1bX9bXf6XDBYlsUWp5i+f0m7xJgaDv4r
-         AAfw==
-X-Gm-Message-State: ACrzQf0++cauWSrGZL2bFcEdPtQQNDuBqLQjQndkyecAdxlGH3KmyvxF
-        Ks8qFbUqqvUeaxgIXYPdHK0=
-X-Google-Smtp-Source: AMsMyM5N354TmScoJU2TEkFjLXkHpfI10flXsPo8lyHL/86uyqw2joTl9L98++PPn9nUbXMKmq0t9Q==
-X-Received: by 2002:a63:82c6:0:b0:460:a691:356 with SMTP id w189-20020a6382c6000000b00460a6910356mr2970772pgd.621.1665270388860;
-        Sat, 08 Oct 2022 16:06:28 -0700 (PDT)
+        bh=lULkEACMGXAqLMVro1NAmGHqDFrc11oNE+hqnHHNv9k=;
+        b=rz/7m52M+ru2JL4VKSprYYX3p8/REs1MjgkosXGl5UWwFgoRrG2BTuMz9TafLnwjvm
+         fGdTPuAt/+q8cAHSr7pJm/72cs9d+BbqRhWR7TsB3pvv+kok025kR+Iun+FC4nuPnSuP
+         6gkYBtmA//a9ld63DhTDs3WUGY9r4PDBRqgjMcnmKaGtySCeVsRg2k6chV13uAS2FN0i
+         Q2fm9YiR69zQhbt+xR+Aa4/YwAAntvw3HHNbYZtG0N50l15wz+rdtpVz58lgsMhSFth8
+         INnfz1ZAKZAGmHFMnoQCk+aoMTvZlkeoR5jI77JW+TPf9SKt9UlI+MNs0NUBKT9T0nSD
+         dziw==
+X-Gm-Message-State: ACrzQf0dcx0oHMFHeXVMkC17Kfg69b4/79gNRNGlzRNe7hgJ0BonnZX3
+        d/jv5vRR1A3R8h/eDuEmz7w=
+X-Google-Smtp-Source: AMsMyM4xCPYXMXi1Te7y4oshOQYKBRSbFnKh+S3fc5qSiQRjfgq0SfUO8kmr+SCApTGZiY4s8dHRlA==
+X-Received: by 2002:a17:902:bc8c:b0:178:a406:72ea with SMTP id bb12-20020a170902bc8c00b00178a40672eamr11495880plb.56.1665271064101;
+        Sat, 08 Oct 2022 16:17:44 -0700 (PDT)
 Received: from mail.google.com (122-58-209-93-fibre.sparkbb.co.nz. [122.58.209.93])
-        by smtp.gmail.com with ESMTPSA id e13-20020a170902784d00b00180a7ff78ccsm2185894pln.126.2022.10.08.16.06.24
+        by smtp.gmail.com with ESMTPSA id c17-20020a170903235100b00180daa59314sm1963597plh.125.2022.10.08.16.17.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Oct 2022 16:06:28 -0700 (PDT)
-Date:   Sun, 9 Oct 2022 12:06:21 +1300
+        Sat, 08 Oct 2022 16:17:43 -0700 (PDT)
+Date:   Sun, 9 Oct 2022 12:17:37 +1300
 From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
 To:     Christine Caulfield <ccaulfie@redhat.com>,
         David Teigland <teigland@redhat.com>, cluster-devel@redhat.com
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH][next] dlm: Replace one-element array with flexible-array
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        paulo.miguel.almeida.rodenas@gmail.com
+Subject: [PATCH v2][next] dlm: Replace one-element array with flexible-array
  member
-Message-ID: <Y0ICbf8tCtXMn+W0@mail.google.com>
+Message-ID: <Y0IFEUjwXGZFf7bB@mail.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
-
-paulo.miguel.almeida.rodenas@gmail.com
-Bcc: 
-Subject: [PATCH][next] dlm: Replace one-element array with flexible-array
- member
-Reply-To: 
 
 One-element arrays are deprecated, and we are replacing them with
 flexible array members instead. So, replace one-element array with
@@ -124,6 +119,12 @@ Link: https://github.com/KSPP/linux/issues/228
 Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
 
 Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+---
+My apologies for v2, there was an accidental <Cr> I added on
+the CC line which messed up the body of my previus email. 
+
+This patch sets it right.
+
 ---
  fs/dlm/dlm_internal.h | 2 +-
  fs/dlm/lockspace.c    | 2 +-
