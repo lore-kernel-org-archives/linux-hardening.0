@@ -2,160 +2,193 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1D9C433FE
-	for <linux-hardening@archiver.kernel.org>; Sat,  8 Oct 2022 23:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4324AC433FE
+	for <linux-hardening@archiver.kernel.org>; Sun,  9 Oct 2022 00:18:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229505AbiJHXRq (ORCPT
+        id S229668AbiJIASk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 8 Oct 2022 19:17:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53468 "EHLO
+        Sat, 8 Oct 2022 20:18:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbiJHXRp (ORCPT
+        with ESMTP id S229459AbiJIASj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 8 Oct 2022 19:17:45 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DD5B17A8F;
-        Sat,  8 Oct 2022 16:17:44 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d24so7508633pls.4;
-        Sat, 08 Oct 2022 16:17:44 -0700 (PDT)
+        Sat, 8 Oct 2022 20:18:39 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DC222870A
+        for <linux-hardening@vger.kernel.org>; Sat,  8 Oct 2022 17:18:38 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id d7-20020a17090a2a4700b0020d268b1f02so824452pjg.1
+        for <linux-hardening@vger.kernel.org>; Sat, 08 Oct 2022 17:18:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lULkEACMGXAqLMVro1NAmGHqDFrc11oNE+hqnHHNv9k=;
-        b=Of0rgZhZNm/DOfl8gCGmaW0Z9i/p50pUPg86vCNuYcDOiRzCHe4hsqzkPU04pVf/tm
-         n2E2j835OaHbUT7Z6HqWoUskm4hv4g+mi8UWz2G18AG9103fXphC7VJuHoBLwMMZfdON
-         2ssEr5cIGmU9k0lwvN1jiTWb7rdOi4bgb17N9ZmMxE/F4FtGNw7uKn0px9aXx5PNCM22
-         Xjyb64G2cjZF+UsnyJ91CDYI3OaoahaMyo91TMmSsckTLM2+o8w9UBHWGB7iWVQVynKm
-         A+LAS4oUZ7mbibX+JjDc+DIJbXAucgnPidb9eZcjGNKraUkJ+v7WvFFMWDPMeBsgM7od
-         cKKA==
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kA0HUMgJdt2O8o8SG2VJ7q/PSPreCGT8pIhZWTT7H7M=;
+        b=jfzgUwpRyLto7mRdV23aSgE7IWBpIGaZqOV2k76H3oqtg+pbd+uxXwk8ocGLWGGHmi
+         ZOxYkloG5psC7MF+uZ6uqNUM+sjcSbL9avc27DLRGK0sMODzwqzYVL4K14C4usM4DZvZ
+         rxVHWG+HNFoTUZvBY71yzfLJjYvpODLuJFWkk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lULkEACMGXAqLMVro1NAmGHqDFrc11oNE+hqnHHNv9k=;
-        b=rz/7m52M+ru2JL4VKSprYYX3p8/REs1MjgkosXGl5UWwFgoRrG2BTuMz9TafLnwjvm
-         fGdTPuAt/+q8cAHSr7pJm/72cs9d+BbqRhWR7TsB3pvv+kok025kR+Iun+FC4nuPnSuP
-         6gkYBtmA//a9ld63DhTDs3WUGY9r4PDBRqgjMcnmKaGtySCeVsRg2k6chV13uAS2FN0i
-         Q2fm9YiR69zQhbt+xR+Aa4/YwAAntvw3HHNbYZtG0N50l15wz+rdtpVz58lgsMhSFth8
-         INnfz1ZAKZAGmHFMnoQCk+aoMTvZlkeoR5jI77JW+TPf9SKt9UlI+MNs0NUBKT9T0nSD
-         dziw==
-X-Gm-Message-State: ACrzQf0dcx0oHMFHeXVMkC17Kfg69b4/79gNRNGlzRNe7hgJ0BonnZX3
-        d/jv5vRR1A3R8h/eDuEmz7w=
-X-Google-Smtp-Source: AMsMyM4xCPYXMXi1Te7y4oshOQYKBRSbFnKh+S3fc5qSiQRjfgq0SfUO8kmr+SCApTGZiY4s8dHRlA==
-X-Received: by 2002:a17:902:bc8c:b0:178:a406:72ea with SMTP id bb12-20020a170902bc8c00b00178a40672eamr11495880plb.56.1665271064101;
-        Sat, 08 Oct 2022 16:17:44 -0700 (PDT)
-Received: from mail.google.com (122-58-209-93-fibre.sparkbb.co.nz. [122.58.209.93])
-        by smtp.gmail.com with ESMTPSA id c17-20020a170903235100b00180daa59314sm1963597plh.125.2022.10.08.16.17.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Oct 2022 16:17:43 -0700 (PDT)
-Date:   Sun, 9 Oct 2022 12:17:37 +1300
-From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To:     Christine Caulfield <ccaulfie@redhat.com>,
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kA0HUMgJdt2O8o8SG2VJ7q/PSPreCGT8pIhZWTT7H7M=;
+        b=E5mAC6BLTomDoEe/k2/gFoOdvC70YLva9bth7DCsW0/quvZKWN4LXuZtUxzcZKmdyu
+         kJ68Ethe7uMoWRBYddIhmZbCWG5n4wH+ZzMiXQgoQsHqyFfoZvRJvMqQ9e9M8pf8oSff
+         byGJRz7Apg02CRCRAFZGWNeTly4Y2AWpR4dFE2wpy8JrjiD7qlKBOa0R4h+c6MIZREKp
+         ANoBMwverljSj1PhsvKVfh7e7Q8twHXmC5uooYNjOZQkQqXGdELPowZKiGMk+f3k46T3
+         9y85Gs9RJ4vU/XQn8tZfyMZ8TwUerdseVr0DMZE6GIAGTNcq1T4FydwUglDSwC22Yz0V
+         rpjA==
+X-Gm-Message-State: ACrzQf2y5KCjdIebmNwV1lmdkWbgbWPEsFq883uSvMNF8qn7R1IHskBW
+        Q+seajd0XcRylYqptre7k5/k9A==
+X-Google-Smtp-Source: AMsMyM6OprtZR9DEBnCoqhxK/4A16BNErCSxZZW+JRdGni+bZY3KMwPDYi2OmP3iaFAYzhdquX7Gbw==
+X-Received: by 2002:a17:902:e883:b0:17f:5e7f:2bbf with SMTP id w3-20020a170902e88300b0017f5e7f2bbfmr11845201plg.150.1665274717912;
+        Sat, 08 Oct 2022 17:18:37 -0700 (PDT)
+Received: from ?IPv6:::1? ([2607:fb90:338b:87a3:6e32:4dc5:2126:f18e])
+        by smtp.gmail.com with ESMTPSA id f1-20020a625101000000b00561b53512b0sm3986475pfb.195.2022.10.08.17.18.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Oct 2022 17:18:37 -0700 (PDT)
+Date:   Sat, 08 Oct 2022 17:18:35 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>,
+        Christine Caulfield <ccaulfie@redhat.com>,
         David Teigland <teigland@redhat.com>, cluster-devel@redhat.com
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+CC:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
         paulo.miguel.almeida.rodenas@gmail.com
-Subject: [PATCH v2][next] dlm: Replace one-element array with flexible-array
- member
-Message-ID: <Y0IFEUjwXGZFf7bB@mail.google.com>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2=5D=5Bnext=5D_dlm=3A_Replace_one-e?= =?US-ASCII?Q?lement_array_with_flexible-array_member?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <Y0IFEUjwXGZFf7bB@mail.google.com>
+References: <Y0IFEUjwXGZFf7bB@mail.google.com>
+Message-ID: <378C6BDE-0A68-4938-86CD-495BD5F35BE6@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-One-element arrays are deprecated, and we are replacing them with
-flexible array members instead. So, replace one-element array with
-flexible-array member in struct dlm_ls, and refactor the rest of the
-code, accordingly.
-
-We strive to make changes that don't produce any before/after binary
-output differeces as that makes it easier for the reviewer to accept the
-patch. In this particular instance, it wasn't possible to achieve this
-due to the fact that the ls_name[1] size, which is used as the
-NUL-terminator space, was hidden within the struct's padding as shown
-below.
-
-$ diff <(objdump -M intel -j .text -D dlm.old) <(objdump -M intel -j
-.text -D dlm.new)
-
-13778c13778
-<     c693:	49 8d bc 24 c0 08 00 	lea    rdi,[r12+0x8c0]
----
->     c693:	49 8d bc 24 c1 08 00 	lea    rdi,[r12+0x8c1]
-
-$ pahole dlm.old -C dlm_ls
-...
-	int                        ls_namelen;           /*  2232     4 */
-	char                       ls_name[1];           /*  2236     1 */
-
-	/* size: 2240, cachelines: 35, members: 90 */
-	/* sum members: 2166, holes: 17, sum holes: 71 */
-	/* padding: 3 */
-	/* paddings: 3, sum paddings: 17 */
-	/* forced alignments: 1 */
-} __attribute__((__aligned__(8)));
-
-$ pahole dlm.new -C dlm_ls
-...
-	int                        ls_namelen;           /*  2232     4 */
-	char                       ls_name[];            /*  2236     0 */
-
-	/* size: 2240, cachelines: 35, members: 90 */
-	/* sum members: 2165, holes: 17, sum holes: 71 */
-	/* padding: 4 */
-	/* paddings: 3, sum paddings: 17 */
-	/* forced alignments: 1 */
-} __attribute__((__aligned__(8)));
 
 
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-routines on memcpy() and help us make progress towards globally
-enabling -fstrict-flex-arrays=3 [1].
+On October 8, 2022 4:17:37 PM PDT, Paulo Miguel Almeida <paulo=2Emiguel=2E=
+almeida=2Erodenas@gmail=2Ecom> wrote:
+>One-element arrays are deprecated, and we are replacing them with
+>flexible array members instead=2E So, replace one-element array with
+>flexible-array member in struct dlm_ls, and refactor the rest of the
+>code, accordingly=2E
 
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://github.com/KSPP/linux/issues/228
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
+Thanks for working on this!
 
-Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
----
-My apologies for v2, there was an accidental <Cr> I added on
-the CC line which messed up the body of my previus email. 
+>
+>We strive to make changes that don't produce any before/after binary
+>output differeces as that makes it easier for the reviewer to accept the
+>patch=2E In this particular instance, it wasn't possible to achieve this
+>due to the fact that the ls_name[1] size, which is used as the
+>NUL-terminator space, was hidden within the struct's padding as shown
+>below=2E
+>
+>$ diff <(objdump -M intel -j =2Etext -D dlm=2Eold) <(objdump -M intel -j
+>=2Etext -D dlm=2Enew)
 
-This patch sets it right.
+I'd suggest different options here, this is harder to map back to the sour=
+ce line=2E
+See https://outflux=2Enet/blog/archives/2022/06/24/finding-binary-differen=
+ces/
+for lots of details=2E :)
 
----
- fs/dlm/dlm_internal.h | 2 +-
- fs/dlm/lockspace.c    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+>
+>13778c13778
+><     c693:	49 8d bc 24 c0 08 00 	lea    rdi,[r12+0x8c0]
+>---
+>>     c693:	49 8d bc 24 c1 08 00 	lea    rdi,[r12+0x8c1]
 
-diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
-index e34c3d2639a5..ce2e32ed2ede 100644
---- a/fs/dlm/dlm_internal.h
-+++ b/fs/dlm/dlm_internal.h
-@@ -670,7 +670,7 @@ struct dlm_ls {
- 	void			*ls_ops_arg;
- 
- 	int			ls_namelen;
--	char			ls_name[1];
-+	char			ls_name[];
- };
- 
- /*
-diff --git a/fs/dlm/lockspace.c b/fs/dlm/lockspace.c
-index bae050df7abf..c3a36f3197da 100644
---- a/fs/dlm/lockspace.c
-+++ b/fs/dlm/lockspace.c
-@@ -473,7 +473,7 @@ static int new_lockspace(const char *name, const char *cluster,
- 
- 	error = -ENOMEM;
- 
--	ls = kzalloc(sizeof(struct dlm_ls) + namelen, GFP_NOFS);
-+	ls = kzalloc(sizeof(struct dlm_ls) + namelen + 1, GFP_NOFS);
- 	if (!ls)
- 		goto out;
- 	memcpy(ls->ls_name, name, namelen);
--- 
-2.37.3
+This implies something unexpected changed=2E
 
+>
+>$ pahole dlm=2Eold -C dlm_ls
+>=2E=2E=2E
+>	int                        ls_namelen;           /*  2232     4 */
+>	char                       ls_name[1];           /*  2236     1 */
+>
+>	/* size: 2240, cachelines: 35, members: 90 */
+>	/* sum members: 2166, holes: 17, sum holes: 71 */
+>	/* padding: 3 */
+>	/* paddings: 3, sum paddings: 17 */
+>	/* forced alignments: 1 */
+>} __attribute__((__aligned__(8)));
+>
+>$ pahole dlm=2Enew -C dlm_ls
+>=2E=2E=2E
+>	int                        ls_namelen;           /*  2232     4 */
+>	char                       ls_name[];            /*  2236     0 */
+>
+>	/* size: 2240, cachelines: 35, members: 90 */
+>	/* sum members: 2165, holes: 17, sum holes: 71 */
+>	/* padding: 4 */
+>	/* paddings: 3, sum paddings: 17 */
+>	/* forced alignments: 1 */
+>} __attribute__((__aligned__(8)));
+
+This has trailing padding, so the struct size didn't actually change=2E
+
+>This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+>routines on memcpy() and help us make progress towards globally
+>enabling -fstrict-flex-arrays=3D3 [1]=2E
+>
+>Link: https://github=2Ecom/KSPP/linux/issues/79
+>Link: https://github=2Ecom/KSPP/linux/issues/228
+>Link: https://gcc=2Egnu=2Eorg/bugzilla/show_bug=2Ecgi?id=3D101836 [1]
+>
+>Signed-off-by: Paulo Miguel Almeida <paulo=2Emiguel=2Ealmeida=2Erodenas@g=
+mail=2Ecom>
+>---
+>My apologies for v2, there was an accidental <Cr> I added on
+>the CC line which messed up the body of my previus email=2E=20
+>
+>This patch sets it right=2E
+>
+>---
+> fs/dlm/dlm_internal=2Eh | 2 +-
+> fs/dlm/lockspace=2Ec    | 2 +-
+> 2 files changed, 2 insertions(+), 2 deletions(-)
+>
+>diff --git a/fs/dlm/dlm_internal=2Eh b/fs/dlm/dlm_internal=2Eh
+>index e34c3d2639a5=2E=2Ece2e32ed2ede 100644
+>--- a/fs/dlm/dlm_internal=2Eh
+>+++ b/fs/dlm/dlm_internal=2Eh
+>@@ -670,7 +670,7 @@ struct dlm_ls {
+> 	void			*ls_ops_arg;
+>=20
+> 	int			ls_namelen;
+>-	char			ls_name[1];
+>+	char			ls_name[];
+> };
+>=20
+> /*
+>diff --git a/fs/dlm/lockspace=2Ec b/fs/dlm/lockspace=2Ec
+>index bae050df7abf=2E=2Ec3a36f3197da 100644
+>--- a/fs/dlm/lockspace=2Ec
+>+++ b/fs/dlm/lockspace=2Ec
+>@@ -473,7 +473,7 @@ static int new_lockspace(const char *name, const char=
+ *cluster,
+>=20
+> 	error =3D -ENOMEM;
+>=20
+>-	ls =3D kzalloc(sizeof(struct dlm_ls) + namelen, GFP_NOFS);
+>+	ls =3D kzalloc(sizeof(struct dlm_ls) + namelen + 1, GFP_NOFS);
+
+This is allocating 1 more byte than before, since the struct size didn't c=
+hange=2E But this has always allocated too much space, due to the struct pa=
+dding=2E For a "no binary changes" patch, the above "+ 1" needs to be left =
+off=2E
+
+I would expect the correct allocation size to be:
+offsetof(typeof(*ls), ls_name) + namelen
+
+Question, though: is ls_name _expected_ to be %NUL terminated, and was the=
+ prior 3 bytes of extra allocation accidentally required?
+
+-Kees
+
+--=20
+Kees Cook
