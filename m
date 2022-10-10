@@ -2,143 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE6AC433F5
-	for <linux-hardening@archiver.kernel.org>; Sun,  9 Oct 2022 20:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEFAC433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 10 Oct 2022 07:43:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230505AbiJIUy0 (ORCPT
+        id S231716AbiJJHnU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 9 Oct 2022 16:54:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44960 "EHLO
+        Mon, 10 Oct 2022 03:43:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230310AbiJIUxh (ORCPT
+        with ESMTP id S232511AbiJJHmh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 9 Oct 2022 16:53:37 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA4C830557;
-        Sun,  9 Oct 2022 13:52:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DAA47B80DC4;
-        Sun,  9 Oct 2022 20:52:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 090B9C433D6;
-        Sun,  9 Oct 2022 20:52:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665348758;
-        bh=hzbiDCjgP4PWpxtEpRK2mCWbxYUpFdc6paCISbBKNxg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VPmd5hluPJe5Mjr6czZ3IznGYFbRVwrIKDmKnxVxc23tY4G7sGy1WW3Qiw+KzZSex
-         n2NAmDA97sZkqAUhcs69JZx3A4m7AQN9lfxGCVQKp6HhbDBl1cJuqXlsOkQBzWHtOl
-         MT8uP4LjnKH5ZJpDQ/6devxq24ipNwOAnzeGCF6+1Nrvd9Hu7C03I/7C16pBYUwV3o
-         zDvN2r7MT6gbN156fgW9ZgQHTvB/GD+NDy+VrAxxdb59Y3VRgP5BZHBBU2MxDE2gCd
-         0DLQ+LCt1Wsbw9yQdJbLuyMIQmVHV7nkE0zQGJsUeoYL4fxyT81hKNwo98tazDyn5b
-         qT7MU4Bho0RGQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
+        Mon, 10 Oct 2022 03:42:37 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F3AB1A3AB;
+        Mon, 10 Oct 2022 00:38:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1eRxM63YBnLGny/uQKmG8pvw2aWvkBhE+yRLA3VSCIo=; b=alpCk4Y7XDeobV7r9Ze3bANnuZ
+        YsatUfSY7waSevjuZjzkz3TguPyg0CPr0q7Sdh1FM3A9UKmyKoGsbt2tHp1xhwhKzwvX6+rdEEKnz
+        1QJO/1bqiFsf7Gl0cTI1GlzTcsU7DHlfUXMtDcrUR5CSy7N4AgeEigb6wtZUmfKNI3DpobUKdy3Vs
+        UlpYBoonNFHS1b0622NexQMFh9oRy0sCvMKQac3Lv+IXtzScVawVEtrv24Qu1su8zPcgq3VCoMwWM
+        DWfBdcmm3xTOnPYu2XEz4HSORmDKdRBDNzkaoqAMvOLRAi982hFCPcrI9LRDtGlQgEXGtiI1dJ7XS
+        k7yzt+NQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1ohnMe-0042uk-GF; Mon, 10 Oct 2022 07:38:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8F0183001CB;
+        Mon, 10 Oct 2022 09:38:11 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7BFC12BF1DAC2; Mon, 10 Oct 2022 09:38:11 +0200 (CEST)
+Date:   Mon, 10 Oct 2022 09:38:11 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
         Nathan Chancellor <nathan@kernel.org>,
-        Tom Rix <trix@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
-        David Gow <davidgow@google.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Sander Vanheule <sander@svanheule.net>,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.19 06/16] fortify: Fix __compiletime_strlen() under UBSAN_BOUNDS_LOCAL
-Date:   Sun,  9 Oct 2022 16:52:15 -0400
-Message-Id: <20221009205226.1202133-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221009205226.1202133-1-sashal@kernel.org>
-References: <20221009205226.1202133-1-sashal@kernel.org>
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] sched: Introduce struct balance_callback to avoid CFI
+ mismatches
+Message-ID: <Y0PL4zKWyS6z6OX2@hirez.programming.kicks-ass.net>
+References: <20221008000758.2957718-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221008000758.2957718-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+On Fri, Oct 07, 2022 at 05:07:58PM -0700, Kees Cook wrote:
+> Introduce distinct struct balance_callback instead of performing function
+> pointer casting which will trip CFI. Avoids warnings as found by Clang's
+> future -Wcast-function-type-strict option:
+> 
+> In file included from kernel/sched/core.c:84:
+> kernel/sched/sched.h:1755:15: warning: cast from 'void (*)(struct rq *)' to 'void (*)(struct callback_head *)' converts to incompatible function type [-Wcast-function-type-strict]
+>         head->func = (void (*)(struct callback_head *))func;
+>                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> No binary differences result from this change.
+> 
+> This patch is a cleanup based on Brad Spengler/PaX Team's modifications
+> to sched code in their last public patch of grsecurity/PaX based on my
+> understanding of the code. Changes or omissions from the original code
+> are mine and don't reflect the original grsecurity/PaX code.
+> 
+> Reported-by: Sami Tolvanen <samitolvanen@google.com>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1724
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  kernel/sched/core.c     | 24 ++++++++++++------------
+>  kernel/sched/deadline.c |  4 ++--
+>  kernel/sched/rt.c       |  4 ++--
+>  kernel/sched/sched.h    | 14 ++++++++++----
+>  4 files changed, 26 insertions(+), 20 deletions(-)
 
-[ Upstream commit d07c0acb4f41cc42a0d97530946965b3e4fa68c1 ]
-
-With CONFIG_FORTIFY=y and CONFIG_UBSAN_LOCAL_BOUNDS=y enabled, we observe
-a runtime panic while running Android's Compatibility Test Suite's (CTS)
-android.hardware.input.cts.tests. This is stemming from a strlen()
-call in hidinput_allocate().
-
-__compiletime_strlen() is implemented in terms of __builtin_object_size(),
-then does an array access to check for NUL-termination. A quirk of
-__builtin_object_size() is that for strings whose values are runtime
-dependent, __builtin_object_size(str, 1 or 0) returns the maximum size
-of possible values when those sizes are determinable at compile time.
-Example:
-
-  static const char *v = "FOO BAR";
-  static const char *y = "FOO BA";
-  unsigned long x (int z) {
-      // Returns 8, which is:
-      // max(__builtin_object_size(v, 1), __builtin_object_size(y, 1))
-      return __builtin_object_size(z ? v : y, 1);
-  }
-
-So when FORTIFY_SOURCE is enabled, the current implementation of
-__compiletime_strlen() will try to access beyond the end of y at runtime
-using the size of v. Mixed with UBSAN_LOCAL_BOUNDS we get a fault.
-
-hidinput_allocate() has a local C string whose value is control flow
-dependent on a switch statement, so __builtin_object_size(str, 1)
-evaluates to the maximum string length, making all other cases fault on
-the last character check. hidinput_allocate() could be cleaned up to
-avoid runtime calls to strlen() since the local variable can only have
-literal values, so there's no benefit to trying to fortify the strlen
-call site there.
-
-Perform a __builtin_constant_p() check against index 0 earlier in the
-macro to filter out the control-flow-dependant case. Add a KUnit test
-for checking the expected behavioral characteristics of FORTIFY_SOURCE
-internals.
-
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Tom Rix <trix@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-Cc: David Gow <davidgow@google.com>
-Cc: Yury Norov <yury.norov@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Sander Vanheule <sander@svanheule.net>
-Cc: linux-hardening@vger.kernel.org
-Cc: llvm@lists.linux.dev
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Android Treehugger Robot
-Link: https://android-review.googlesource.com/c/kernel/common/+/2206839
-Co-developed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/fortify-string.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-index 3b401fa0f374..fce2fb2fc962 100644
---- a/include/linux/fortify-string.h
-+++ b/include/linux/fortify-string.h
-@@ -19,7 +19,8 @@ void __write_overflow_field(size_t avail, size_t wanted) __compiletime_warning("
- 	unsigned char *__p = (unsigned char *)(p);		\
- 	size_t __ret = (size_t)-1;				\
- 	size_t __p_size = __builtin_object_size(p, 1);		\
--	if (__p_size != (size_t)-1) {				\
-+	if (__p_size != (size_t)-1 &&				\
-+	    __builtin_constant_p(*__p)) {			\
- 		size_t __p_len = __p_size - 1;			\
- 		if (__builtin_constant_p(__p[__p_len]) &&	\
- 		    __p[__p_len] == '\0')			\
--- 
-2.35.1
-
+Thanks!
