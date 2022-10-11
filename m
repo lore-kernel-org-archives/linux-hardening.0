@@ -2,123 +2,115 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A71CFC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 16:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B962C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 18:44:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbiJKQiT (ORCPT
+        id S229675AbiJKSop (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 Oct 2022 12:38:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37524 "EHLO
+        Tue, 11 Oct 2022 14:44:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbiJKQiS (ORCPT
+        with ESMTP id S229764AbiJKSoo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 Oct 2022 12:38:18 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF795A222E
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Oct 2022 09:38:16 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id d7-20020a17090a2a4700b0020d268b1f02so7146420pjg.1
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Oct 2022 09:38:16 -0700 (PDT)
+        Tue, 11 Oct 2022 14:44:44 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26511CE29;
+        Tue, 11 Oct 2022 11:44:41 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id q9so13534423pgq.8;
+        Tue, 11 Oct 2022 11:44:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+pJIEIqUm9cUj1SmYNhJXGpR39cH9SzoM6WilMBeHUU=;
-        b=RI4IIQSaXvRAb3D7QnzzQgHHdlPdXjhRr76L6bS2fFS2B2K0X0E2GmmJxgwx/qLV3l
-         yAYEdEGcpr+zjx1++mP03jsZr9PabHIvXRlMg7Bq5mh0PEqRzXt+hxsXKh6bH7ySHKEU
-         GW5JFVv57eZRspJ2mU2BPpnuIaaEEy3NZsLp4=
+        bh=So4abhNWYFcv274xdP8VWRO69sa0lbWIaXDw4c76tcc=;
+        b=QwMCFkGmf5as4oMRr2s+37sf65O2IYJ2UP3HAVQXmkkXH4nasGoL7TRCxhS1z7gbl+
+         2mu+JxE54CWqTnCGlzT/AvSduYAsygWPUNwQihLuyVA/0hnTQOk1psxC7Jytj+93KYNw
+         IacvgWz4SrBwzG2Ty4dSeA2/5eop9yFreMk+0sJviXQriX/9ytGH0QT5QvCO34ADyS4u
+         cBqZ2I4KcNKpxPJbHIr4+DCveLOAkbscD5Xn9yLxs+MaeUiudE4pRexfcwYrWA6Ye9Hn
+         j+rACATg8O30iyyuK4Pbd7msDZrcEVEiVzy31Datxlc77hyeImOJmay1tCvcKtE50Hg7
+         PANg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+pJIEIqUm9cUj1SmYNhJXGpR39cH9SzoM6WilMBeHUU=;
-        b=aghp9XIMkClciU6GNNoz0yoTgIJB4UIjfEJaVqE/7ESPthVeEUNP6AN8yXOb0V+gnJ
-         7b1Ihcw8cBI84Vf4hGls8VHC8Eb7dKMq8lCpTQPDNQPxuSiIdvlNxtPPT9Q+w0NNr0uf
-         4YHumKuVuWJck1XKKpDGmB80k0Xf53MptrpBpyYpaSvBVxhpDOI/lK7yTLAyI3cvt3Vt
-         6Kkg16AmcNdhokRjNV0jxWILg/UsxlPX6iGSfjgiy/B142KPMCWw4pLzMuyDq3HuLwg3
-         iXEAp9flwDTBv9WV3mVHBAcQ2hxGNFF75OnLeqsEYEwpTGtk1Zyy/ki3rRwN85eApllw
-         IWRQ==
-X-Gm-Message-State: ACrzQf2qLyJTwpvfxGKP9q10uVPmu0GZCIL/xsQKlxKgvAdwJDzDnO5Z
-        u+w6RAk+q3Px8/B1rPqfEkDnRA==
-X-Google-Smtp-Source: AMsMyM6B0D0fQ6NLX5y+52iwlwAK3HZGC+HhYAnBPVJ76NqrBUDrJeJIbYTwa3ClTfrHZ7hH8lrL/Q==
-X-Received: by 2002:a17:902:b94c:b0:178:336f:13d6 with SMTP id h12-20020a170902b94c00b00178336f13d6mr26369645pls.64.1665506296312;
-        Tue, 11 Oct 2022 09:38:16 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s15-20020a170902ea0f00b0016d72804664sm8881631plg.205.2022.10.11.09.38.15
+        bh=So4abhNWYFcv274xdP8VWRO69sa0lbWIaXDw4c76tcc=;
+        b=cfe78BFPr8sS13dldq/Hb490opaiwOGi+o85eRXUwc1l5tCS+EjvCnHTbzZaVMbL4G
+         nmfYdH/J7p7hhywCvxNZZpfQrX2Z3o3rQPKVnHCYY9GPmsCePxhxGr7XiJ0Bpp9QasCY
+         Kl3CmI2zENvqKFT+nXtK2vV7gk/sa16dMyPnseFTEsQUuRA45vV7vC7DuPzdMAkCmPpf
+         P8ULNyrjRaDFm+Cysw2rTybyru6o9wOY3PusLj0SS1stK19jHhP3SvdjuOslGlLNAdUI
+         nBHwIJ92eZy8Syi6Z3XTNvMwjbU3j5f+fVqTqDXVjSJKCI0zYkaCaYazB+7dr42E6PZf
+         q97Q==
+X-Gm-Message-State: ACrzQf2XjYal7no/Dhwl5smJBGc0OKk2c/3KEtEvHK8GLIlo4n8XXcpc
+        NAVhGit4bTd8VkIyTCSq6V4=
+X-Google-Smtp-Source: AMsMyM7BJ8CB9EKNxnOSbRKrT7LpY6uE4q/wqvNSLI9/+llW7wxWlnmGpp25dt/3hYuvgPu5aaBIBQ==
+X-Received: by 2002:a63:4753:0:b0:462:b3f0:a984 with SMTP id w19-20020a634753000000b00462b3f0a984mr9116030pgk.501.1665513879789;
+        Tue, 11 Oct 2022 11:44:39 -0700 (PDT)
+Received: from mail.google.com (122-58-209-93-fibre.sparkbb.co.nz. [122.58.209.93])
+        by smtp.gmail.com with ESMTPSA id t4-20020a17090abc4400b0020d352dc81fsm4565078pjv.54.2022.10.11.11.44.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Oct 2022 09:38:15 -0700 (PDT)
-Date:   Tue, 11 Oct 2022 09:38:14 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc:     kernel test robot <yujie.liu@intel.com>,
-        Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] NFS: Avoid memcpy() run-time warning for struct sockaddr
- overflows
-Message-ID: <202210110934.AA4F52C77@keescook>
-References: <20221011065243.583650-1-keescook@chromium.org>
- <Y0WK3MZvxpoXS24n@work>
+        Tue, 11 Oct 2022 11:44:38 -0700 (PDT)
+Date:   Wed, 12 Oct 2022 07:44:30 +1300
+From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+To:     David Teigland <teigland@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Christine Caulfield <ccaulfie@redhat.com>,
+        cluster-devel@redhat.com, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] dlm: Replace one-element array with
+ flexible-array member
+Message-ID: <Y0W5jkiXUkpNl4ap@mail.google.com>
+References: <Y0IFEUjwXGZFf7bB@mail.google.com>
+ <378C6BDE-0A68-4938-86CD-495BD5F35BE6@chromium.org>
+ <Y0IsXXYnS4DnWkMW@mail.google.com>
+ <202210082044.51106145BD@keescook>
+ <20221010210039.GA30273@redhat.com>
+ <202210101534.BA51029@keescook>
+ <20221011152031.GA11089@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y0WK3MZvxpoXS24n@work>
+In-Reply-To: <20221011152031.GA11089@redhat.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Oct 11, 2022 at 10:25:16AM -0500, Gustavo A. R. Silva wrote:
-> On Mon, Oct 10, 2022 at 11:52:43PM -0700, Kees Cook wrote:
-> > The 'nfs_server' and 'mount_server' structures include a union of
-> > 'struct sockaddr' (with the older 16 bytes max address size) and
-> > 'struct sockaddr_storage' which is large enough to hold all the supported
-> > sa_family types (128 bytes max size). The runtime memcpy() buffer overflow
-> > checker is seeing attempts to write beyond the 16 bytes as an overflow,
-> > but the actual expected size is that of 'struct sockaddr_storage'. Adjust
-> > the pointers to the correct union member. Avoids this false positive
-> > run-time warning under CONFIG_FORTIFY_SOURCE:
+On Tue, Oct 11, 2022 at 10:20:31AM -0500, David Teigland wrote:
+> On Mon, Oct 10, 2022 at 03:35:24PM -0700, Kees Cook wrote:
+> > On Mon, Oct 10, 2022 at 04:00:39PM -0500, David Teigland wrote:
+> > > On Sat, Oct 08, 2022 at 09:03:28PM -0700, Kees Cook wrote:
+> > > > On Sun, Oct 09, 2022 at 03:05:17PM +1300, Paulo Miguel Almeida wrote:
+> > > > > On Sat, Oct 08, 2022 at 05:18:35PM -0700, Kees Cook wrote:
+> > > > > > This is allocating 1 more byte than before, since the struct size didn't change. But this has always allocated too much space, due to the struct padding. For a "no binary changes" patch, the above "+ 1" needs to be left off.
+> > > > > 
+> > > > > That's true. I agree that leaving "+ 1" would work and produce a
+> > > > > no-binary-changes patch due to the existing padding that the structure
+> > > > > has. OTOH, I thought that relying on that space could bite us in the
+> > > > > future if anyone tweaks the struct again...so my reaction was to ensure 
+> > > > > that the NUL-terminator space was always guaranteed to be there.
+> > > > > Hence, the change on c693 (objdump above).
+> > > > > 
+> > > > > What do you think? Should we keep or leave the above
+> > > > > "+ 1" after the rationale above?
+> > > > 
+> > > > I think it depends on what's expected from this allocation. Christine or
+> > > > David, can you speak to this?
+> > > 
+> > > Hi, thanks for picking through that.  Most likely the intention was to
+> > > allow up to 64 (DLM_LOCKSPACE_LEN) character names, and then use the
+> > > ls_name[1] for the terminating byte.  I'd be happy to take the patch
 > > 
-> >   memcpy: detected field-spanning write (size 28) of single field "&ctx->nfs_server.address" at fs/nfs/namespace.c:178 (size 16)
+> > Should this just use:
 > > 
-> > Reported-by: kernel test robot <yujie.liu@intel.com>
-> > Link: https://lore.kernel.org/all/202210110948.26b43120-yujie.liu@intel.com
-> > Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > Cc: Anna Schumaker <anna@kernel.org>
-> > Cc: linux-nfs@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > 	char			ls_name[DLM_LOCKSPACE_LEN + 1];
+> > 
+> > instead, or is the byte savings worth keeping it dynamically sized?
 > 
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Yes, I think that's the best option.
+> Dave
+> 
 
-Thanks!
+Thanks for the reply Dave; Thanks for the suggestion Kees;
+I'll send a new patch for it :)
 
-> > ---
-> >  fs/nfs/fs_context.c | 2 +-
-> >  fs/nfs/namespace.c  | 2 +-
-> >  fs/nfs/super.c      | 4 ++--
-> >  3 files changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-> > index 4da701fd1424..bffa31bb35b9 100644
-> > --- a/fs/nfs/fs_context.c
-> > +++ b/fs/nfs/fs_context.c
-> > @@ -1540,7 +1540,7 @@ static int nfs_init_fs_context(struct fs_context *fc)
-> >  		ctx->version		= nfss->nfs_client->rpc_ops->version;
-> >  		ctx->minorversion	= nfss->nfs_client->cl_minorversion;
-> >  
-> > -		memcpy(&ctx->nfs_server.address, &nfss->nfs_client->cl_addr,
-> > +		memcpy(&ctx->nfs_server._address, &nfss->nfs_client->cl_addr,
-> >  			ctx->nfs_server.addrlen);
-
-So, I spent a bunch more time looking at the plumbing of struct sockaddr
-vs struct sockaddr_storage. In NFS, everything I could find is actually
-already backed by a full sockaddr_storage, so I think a more complete
-fix here would actually be to update all the internals to pass
-sockaddr_storage instead of sockaddr. The interfaces to other things
-(e.g. rpc) can cast back to sockaddr for now. It is a pretty reasonable
-cleanup, IMO.
-
-I'll send a follow-up that makes this change on top of this patch,
-though they could be squashed if that was desired.
-
--- 
-Kees Cook
+Paulo A.
