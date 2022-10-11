@@ -2,121 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC17C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 20:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8E0C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 20:26:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229516AbiJKUXX (ORCPT
+        id S229814AbiJKU0R (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 Oct 2022 16:23:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48580 "EHLO
+        Tue, 11 Oct 2022 16:26:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbiJKUXW (ORCPT
+        with ESMTP id S229607AbiJKU0Q (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 Oct 2022 16:23:22 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92283FD01;
-        Tue, 11 Oct 2022 13:23:21 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id 3so13019021pfw.4;
-        Tue, 11 Oct 2022 13:23:21 -0700 (PDT)
+        Tue, 11 Oct 2022 16:26:16 -0400
+Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 579BC796BE
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Oct 2022 13:26:15 -0700 (PDT)
+Received: by mail-il1-x129.google.com with SMTP id a17so7780002ilq.1
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Oct 2022 13:26:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vuYB1bfLBT/BybnhJAIKow6KEoVAgUejtP+5COBxF5k=;
-        b=XgZtbw/pvujrQCJ4DONsbbA4J9Kfb3we6T6FJXUZa8feVGgigOuY50VDR9XWfC3EtV
-         xcHsiBAIT4fXMAL5niqGV8PV6s8/V2jmJderQYwORIXfiKwKkAwC7OMybu0kn+Wz83YT
-         nuZO/vf2MGLNITcai+mhkBhmlRyGitvhK3f9djvRSreD1LU5hikPlOZF4JC9306xO/2i
-         gSoUl1Zy7NL+4ZqtADq/WyWlnxNvkxWwIwWfShONLTO17NJG45eHle1JMu0zRiHyVPyy
-         FVXSb4R6MV43SiR0yD8X8J4FB69OaCX1hoS9iDfD/UstjlFnXh5QivmO1WXp6HCKAPXZ
-         r8Gg==
+        d=android.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=po1IjVvNbfbkNgObAIQZQOCa9GvhgYqjWMEtcnXnmpc=;
+        b=d6MtaVm6pP0yHYkMSOsLFHOxH5SVe6fGiLgMrrPMUGQpwYsNyBwYRXGyfmQ7V/MOHU
+         josGyFZE7meSowi4YBlN2kf5OMx39SfNGpGa5ATdwq7h7jn8VpDjhlVfxUudxl62Vx33
+         dzz0bUXSI3nF4o2FJ3Z1wxWzuUEasjt0+/IcYF6R58BaE/5p5U0JyBiCA73ODjYHi5GG
+         vUrDDvSioW6eXlvBK1WGiSqHjeXA31Xxd61QfEF8tjtIkT0NvZbQArsewaW0kkrmYJzT
+         spleOTxpeRlgFDIuE/oRQCZumpd0WAcvXD8QecHLaShxRVY0arhBGQyBewnh4HDWh3og
+         kBRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=vuYB1bfLBT/BybnhJAIKow6KEoVAgUejtP+5COBxF5k=;
-        b=7Gvaxo7vOWAV6le5+jVjNAL50mkqyDqdTar6QgiDdYKzkhh48YXE1igczaO4i3oaJ8
-         IXf8LmrzdFWhh6jzKhfRYDBYs2ZYscl9GstinQ3v1PvzJriee0fH4XTSGRkOdBzHU4MD
-         V+dzUFeJ1QS27GTg4q0KrFjvoL44c5uFi+nsEGkbNnWAqT9kb9UKacGEHWSvkShBMgKE
-         1Oft8epUxq2zOWZk+7aw629S2JJXbxOY8GXFUj9DjYfOhgOll41K1B0+ho6GslphIeqY
-         vb8fblGowOXiIfzP4rLTWDmGEVEnQlxjIOOb9YR9m9GjtD6mJY/bzphcayWf6k5oEe14
-         Ns1A==
-X-Gm-Message-State: ACrzQf0LM6qaAG0f7Fy3XWr46PE/84wGmIetBJ0FVBG5YR954qSLtgC3
-        k9rXXRsrGyrF/95tNF5lqVaifYruJSWiiQ==
-X-Google-Smtp-Source: AMsMyM7aZBwmnOQaMKYMww1thIRvLjyiBjPkD1azfYPOnr2//Eyj2e0j+qLVme8PE1t+Bz6rowqokw==
-X-Received: by 2002:aa7:810a:0:b0:55b:674d:d123 with SMTP id b10-20020aa7810a000000b0055b674dd123mr27740591pfi.52.1665519801056;
-        Tue, 11 Oct 2022 13:23:21 -0700 (PDT)
-Received: from mail.google.com (122-58-209-93-fibre.sparkbb.co.nz. [122.58.209.93])
-        by smtp.gmail.com with ESMTPSA id 24-20020a631558000000b0045feab454f6sm6387757pgv.51.2022.10.11.13.23.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Oct 2022 13:23:20 -0700 (PDT)
-Date:   Wed, 12 Oct 2022 09:23:14 +1300
-From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To:     Christine Caulfield <ccaulfie@redhat.com>,
-        David Teigland <teigland@redhat.com>, cluster-devel@redhat.com
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        paulo.miguel.almeida.rodenas@gmail.com
-Subject: [PATCH v5] [next] dlm: replace one-element array with fixed size
- array
-Message-ID: <Y0XQsqdRzlrSpgOh@mail.google.com>
+        bh=po1IjVvNbfbkNgObAIQZQOCa9GvhgYqjWMEtcnXnmpc=;
+        b=1+usd/m/tj8mC2g4zRuyXzP9EV6qhUDtmcwUR6+leOIv+3J2H3yq8gUwhFvXN5Ptah
+         HZntpOz7WBuys8LHp/cvaxYi+1iYl1kVb3yGFzncGwsgWl5ALMAmnxAPszv3k9wQAaYD
+         vHZaJTl1li8Vv0z9ro2GZ0v/xL03fhqRXp2UDaj23ek7yw07APWPZYe4TWMaYy5OcWhQ
+         jiWs8VGzrcwFe0xPS0feybk2tcoNMHxxhemzv6yIfc6xEE2vUzpXRxcZqNQ1APmvle1r
+         ioa74zeEN45A+H29DbTD5W17KcijNpOKaXAdTF4tyHHn4nFxA1XwqhEshahZo69ZJ3y6
+         lSXA==
+X-Gm-Message-State: ACrzQf31bGLWAd524lw464Of2oRBMzRQ4PjH/RqX8v5aob6jhix2c8GQ
+        7pIgZOis9U0dBi4xezmfD8W2dfFK20zh8hD3zEvY8ZmwDoE=
+X-Google-Smtp-Source: AMsMyM415+lMvVbX7yZEq7tZlWUuO3juBcQw6UXdl44PBZ6p/6LEI1BZ/phvFx/2s2QBTyfEqvspvNeGvv9GRetnYqg=
+X-Received: by 2002:a92:6506:0:b0:2fc:37fb:60c2 with SMTP id
+ z6-20020a926506000000b002fc37fb60c2mr6188696ilb.244.1665519974463; Tue, 11
+ Oct 2022 13:26:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202210111305.743F591@keescook>
+References: <20221011200112.731334-1-keescook@chromium.org> <20221011200112.731334-6-keescook@chromium.org>
+In-Reply-To: <20221011200112.731334-6-keescook@chromium.org>
+From:   Colin Cross <ccross@android.com>
+Date:   Tue, 11 Oct 2022 13:26:02 -0700
+Message-ID: <CAMbhsRT2KafJ8-mvKbi1MkY8T-0sZFdCg-Rb8FoUGorGH6jipg@mail.gmail.com>
+Subject: Re: [PATCH 5/5] MAINTAINERS: Update pstore maintainers
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org,
+        Anton Vorontsov <anton@enomsg.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Paramjit Oberoi <pso@chromium.org>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-One-element arrays are deprecated. So, replace one-element array with
-fixed size array member in struct dlm_ls, and refactor the rest of the
-code, accordingly.
+On Tue, Oct 11, 2022 at 1:01 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> Update pstore to better reflect reality of active contributors:
+>
+> - Remove Anton and Colin (thank you for your help through the years!)
+> - Move Tony to Reviewer
+> - Add Guilherme as Reviewer
+> - Add mailing list
+> - Upgrade to Supported
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  MAINTAINERS | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9d7f64dc0efe..bb18a6c91c4e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16458,10 +16458,10 @@ F:    net/psample
+>
+>  PSTORE FILESYSTEM
+>  M:     Kees Cook <keescook@chromium.org>
+> -M:     Anton Vorontsov <anton@enomsg.org>
+> -M:     Colin Cross <ccross@android.com>
+> -M:     Tony Luck <tony.luck@intel.com>
+> -S:     Maintained
+> +R:     Tony Luck <tony.luck@intel.com>
+> +R:     Guilherme G. Piccoli <gpiccoli@igalia.com>
+> +L:     linux-hardening@vger.kernel.org
+> +S:     Supported
+>  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/pstore
+>  F:     Documentation/admin-guide/ramoops.rst
+>  F:     Documentation/admin-guide/pstore-blk.rst
+> --
+> 2.34.1
+>
 
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://github.com/KSPP/linux/issues/228
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836
-Link: https://lore.kernel.org/lkml/Y0W5jkiXUkpNl4ap@mail.google.com/
-
-Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
----
-Changelog:
-
-v5: use preferred sizeof style. Req: Gustavo Silva
-v4: resend patch using the right version number. Req: Gustavo Silva
-v3: replace one-element array with a fixed size array. Req: Kees Cook
-v2: patch resent as I had an issue with a <CRLF> char in my mail client
-v1: https://lore.kernel.org/lkml/Y0ICbf8tCtXMn+W0@mail.google.com/
----
-
- fs/dlm/dlm_internal.h | 2 +-
- fs/dlm/lockspace.c    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
-index e34c3d2639a5..94fadb619ba0 100644
---- a/fs/dlm/dlm_internal.h
-+++ b/fs/dlm/dlm_internal.h
-@@ -670,7 +670,7 @@ struct dlm_ls {
- 	void			*ls_ops_arg;
- 
- 	int			ls_namelen;
--	char			ls_name[1];
-+	char			ls_name[DLM_LOCKSPACE_LEN + 1];
- };
- 
- /*
-diff --git a/fs/dlm/lockspace.c b/fs/dlm/lockspace.c
-index bae050df7abf..9479c8110979 100644
---- a/fs/dlm/lockspace.c
-+++ b/fs/dlm/lockspace.c
-@@ -473,7 +473,7 @@ static int new_lockspace(const char *name, const char *cluster,
- 
- 	error = -ENOMEM;
- 
--	ls = kzalloc(sizeof(struct dlm_ls) + namelen, GFP_NOFS);
-+	ls = kzalloc(sizeof(*ls), GFP_NOFS);
- 	if (!ls)
- 		goto out;
- 	memcpy(ls->ls_name, name, namelen);
--- 
-2.37.3
-
+Acked-by: Colin Cross <ccross@android.com>
