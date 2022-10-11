@@ -2,85 +2,140 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA5FC433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 06:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09852C4332F
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 06:52:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229691AbiJKGSO (ORCPT
+        id S229880AbiJKGwu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 Oct 2022 02:18:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41720 "EHLO
+        Tue, 11 Oct 2022 02:52:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229699AbiJKGSC (ORCPT
+        with ESMTP id S229451AbiJKGws (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 Oct 2022 02:18:02 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A46F876AF
-        for <linux-hardening@vger.kernel.org>; Mon, 10 Oct 2022 23:18:01 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id n18-20020a17090ade9200b0020b0012097cso915465pjv.0
-        for <linux-hardening@vger.kernel.org>; Mon, 10 Oct 2022 23:18:01 -0700 (PDT)
+        Tue, 11 Oct 2022 02:52:48 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9710814D3
+        for <linux-hardening@vger.kernel.org>; Mon, 10 Oct 2022 23:52:46 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id y8so12668121pfp.13
+        for <linux-hardening@vger.kernel.org>; Mon, 10 Oct 2022 23:52:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PL23sMexpwn40kFVUCoq7aeOuxcWfa90L83fdjYFkLY=;
-        b=f6DL3dxWhfQZmKFmUHwx772NtYi0pI9Iju4bXuzYcNgU9tZRwWO23ZROjn/BdwYph8
-         zS5kHOuhegb7qVyT8JCE/zjOjVJQhGat2ZD/xfafy/Nwct8qKjWTUMZrD0uWLayoRBv2
-         rpvXb5DG+C65jUvr+BcKzqEJk7FpvjtXZEWX0=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IhQCr2/mj1To+oAjfcYwW5DtgdU/tRz+Z1vgx/smBpw=;
+        b=EIoaKf6Yioci3SpU35lj7pBWNJWY29BnptxpIevAzLWRb0fMQXSAVg9RZeBejpc3b/
+         K6wswV5lkxcUX4noYIDUBvyRvXOK6DPTR/4tj1vT3l3HGO5FM2HjorhVjmt6xdSWwky9
+         uMqRZskWt17tEX3HrKN2vJQhvQ2SrbWzknXc0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PL23sMexpwn40kFVUCoq7aeOuxcWfa90L83fdjYFkLY=;
-        b=C20sNZcxkiU5unrN38caRRJFbtV9RD3pVyviUdZAMop0znqRAQEtPR6T1gvGu/0QZG
-         C1mHBugEU8xaNyo91zMwQijIWaDUdI+GEEcrReJOjE1EyDAu/3ZEzwkJGb7aBn+Mo83q
-         1bq7QzvE+gbBMCE0sPPETr5fI/78qL6IpwWvqorU9p4nsbJEMsm6C2FxkSABX9UxxMRw
-         YUV/icm3CUexExJ1T49zJOGL2J1IWJgOWlaYiuj+uHfwAjapL7+Y9dPyr5lkgQJtAS7Y
-         vCZo0AQPs6dkS/flYUUiiv2KrdDa5OnK902WK7T12RPm740ZdC6EpyIKj+qR4WZ/3jUX
-         YpjQ==
-X-Gm-Message-State: ACrzQf0JSPOIqivMyMXY63mbi8rAcjNezukmDTnbXtsa5nALIaXkaBlp
-        Ndfe2j7kR+NsmjS5SYOMTUgNxg==
-X-Google-Smtp-Source: AMsMyM4LISwAIppjAhD1g2j73VCLB7YWcSS9szvYVpDWrK9Gq7TZ7qkMS3VVH6g/Hn7wVmEdsXnrbg==
-X-Received: by 2002:a17:903:32d2:b0:17f:9224:6e11 with SMTP id i18-20020a17090332d200b0017f92246e11mr23387269plr.116.1665469080745;
-        Mon, 10 Oct 2022 23:18:00 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IhQCr2/mj1To+oAjfcYwW5DtgdU/tRz+Z1vgx/smBpw=;
+        b=PWRllebIym48N54oDB+MVBNx3LdQclPTVWvTW58IojYWDMdbmFBicH0TTj1RIBqAB9
+         Wap/eJgBi7zaCXV8r05xxw6D5finGfILy8ee+gUg5f8fQeMATQaG+fEEetHFLhbA5iBI
+         4wyzefY9RqowDsHZj+LSpvhPJi4EXPNrdQyKPi0M3K+kiCVyAmlzhY6yaldiJn6yI4wu
+         vrYIhcHojOSNS5my75BUXhB+n/x9/eq1CjOFuMVqAO39VswJQe4wKqr9WnJasI8zSpxa
+         cSo9LJGGsR0cqer1O7sl/Dve0ZOXTPUctfaHCdyElCNKd3V3YxBmoPZeNds8XZwRGRrP
+         xC0Q==
+X-Gm-Message-State: ACrzQf2xwL02HBqX4tBKCUVsCq77KJNeQds8SpAZ9hI4e9cjfy4QRRsl
+        Rp/soT3MVxdBxsm3yoYfFjgrk+nIuF8bDA==
+X-Google-Smtp-Source: AMsMyM6Kqhfv3NRPyt5rnHl2Q1aXOBuD+1vkAjs24JUi0+hR4+9li1k2ug5+2Md9Hy66LdAUpxUW6w==
+X-Received: by 2002:a05:6a00:e1b:b0:537:7c74:c405 with SMTP id bq27-20020a056a000e1b00b005377c74c405mr23253507pfb.43.1665471166164;
+        Mon, 10 Oct 2022 23:52:46 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c19-20020a621c13000000b00562b811bb42sm7916863pfc.49.2022.10.10.23.17.59
+        by smtp.gmail.com with ESMTPSA id n12-20020a170902e54c00b0017ca9f4d22fsm7812359plf.209.2022.10.10.23.52.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Oct 2022 23:17:59 -0700 (PDT)
-Date:   Mon, 10 Oct 2022 23:17:58 -0700
+        Mon, 10 Oct 2022 23:52:45 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     kernel test robot <yujie.liu@intel.com>
-Cc:     lkp@lists.01.org, lkp@intel.com, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Hawkins Jiawei <yin31149@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        linux-wireless@vger.kernel.org
-Subject: Re: [fortify] 54d9469bc5:
- WARNING:at_net/wireless/wext-core.c:#wireless_send_event
-Message-ID: <202210102312.1CC8197@keescook>
-References: <202210110943.6f16f1ea-yujie.liu@intel.com>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        kernel test robot <yujie.liu@intel.com>,
+        Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] NFS: Avoid memcpy() run-time warning for struct sockaddr overflows
+Date:   Mon, 10 Oct 2022 23:52:43 -0700
+Message-Id: <20221011065243.583650-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202210110943.6f16f1ea-yujie.liu@intel.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3123; h=from:subject; bh=jFWeG4mKZjaCTmVttsBT+shSjRAcSAR+gkBCMpwmSmY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjRRK7yqXTcuhapb8wt0RJRmg09UAG/TKO7oglxRdW fUaVX0eJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY0USuwAKCRCJcvTf3G3AJvslD/ 9rMzqrDJsGp2lh6GKEvBs28bCjDeXE2T7Cxi/kcY7Ig0nB2jUPlBR154A5lHiv13nNOwzwYRI8KyzS EY4dr1JmOCtv+YV8friFXHDCl/XZH/sgm5ZORmxYe6eOhEtirlIUrtNX6L2H7OQaEZNJaxs95oTIcn YbVhs1hld/dcMc59jYatSH3UvFuxEtJuyYnSRrOShtEswSY7LN0JOlH4A/obtgk/TMuUAaPoSz5AGp 1eKqmPrd+J5xsxjSBgtpMai2oXbOCNGPKl32MVK4dtw+6q/TrOQefDa2Vuzyjiw/jQKyUPXCjkIaku uo+eA0VlKL38fsrRvDCWq/cnmMPLEhrhnre7qxrUPdXACIy/wmnDK/k0fyv89RZsJDM9mUris0UeQh 2K4j8XalOzH/JRH1fCx18YAEmk1S++Np4r+JZcljnvMTZxMQlbeBkGsC15XIbrnBKZHPn/zG/HVW6n ze9+P+Cw8kHf70qSXdAhM05uuXIPOCA1sWdgyj+dPDBO+e9y83MomkH2GLt+5M8fXvH2R52BwsRVyt Rf4KB0xdwYx411OgsdlBB7xBIHvxsZu7ifi9sism/ahCDpaE+IKFQofw2dadbmqQWO3hQU+oBCktaV uyC7fxejf/vGiBTuy7wdoKunj/0T2Z3k1r/qZvsT7MupKRZ3/hClJhm5HQFQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Oct 11, 2022 at 11:46:21AM +0800, kernel test robot wrote:
-> commit: 54d9469bc515dc5fcbc20eecbe19cea868b70d68 ("fortify: Add run-time WARN for cross-field memcpy()")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> [...]
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> [...]
-> [   95.913726][   T36] memcpy: detected field-spanning write (size 16) of single field "&compat_event->pointer" at net/wireless/wext-core.c:623 (size 4)
+The 'nfs_server' and 'mount_server' structures include a union of
+'struct sockaddr' (with the older 16 bytes max address size) and
+'struct sockaddr_storage' which is large enough to hold all the supported
+sa_family types (128 bytes max size). The runtime memcpy() buffer overflow
+checker is seeing attempts to write beyond the 16 bytes as an overflow,
+but the actual expected size is that of 'struct sockaddr_storage'. Adjust
+the pointers to the correct union member. Avoids this false positive
+run-time warning under CONFIG_FORTIFY_SOURCE:
 
-This was fixed with:
-e3e6e1d16a4c ("wifi: wext: use flex array destination for memcpy()")
+  memcpy: detected field-spanning write (size 28) of single field "&ctx->nfs_server.address" at fs/nfs/namespace.c:178 (size 16)
 
-I expect this will land before -rc1 closes, but Johannes will know more
-about the schedule.
+Reported-by: kernel test robot <yujie.liu@intel.com>
+Link: https://lore.kernel.org/all/202210110948.26b43120-yujie.liu@intel.com
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/nfs/fs_context.c | 2 +-
+ fs/nfs/namespace.c  | 2 +-
+ fs/nfs/super.c      | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index 4da701fd1424..bffa31bb35b9 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -1540,7 +1540,7 @@ static int nfs_init_fs_context(struct fs_context *fc)
+ 		ctx->version		= nfss->nfs_client->rpc_ops->version;
+ 		ctx->minorversion	= nfss->nfs_client->cl_minorversion;
+ 
+-		memcpy(&ctx->nfs_server.address, &nfss->nfs_client->cl_addr,
++		memcpy(&ctx->nfs_server._address, &nfss->nfs_client->cl_addr,
+ 			ctx->nfs_server.addrlen);
+ 
+ 		if (fc->net_ns != net) {
+diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
+index 3295af4110f1..2f336ace7555 100644
+--- a/fs/nfs/namespace.c
++++ b/fs/nfs/namespace.c
+@@ -175,7 +175,7 @@ struct vfsmount *nfs_d_automount(struct path *path)
+ 	}
+ 
+ 	/* for submounts we want the same server; referrals will reassign */
+-	memcpy(&ctx->nfs_server.address, &client->cl_addr, client->cl_addrlen);
++	memcpy(&ctx->nfs_server._address, &client->cl_addr, client->cl_addrlen);
+ 	ctx->nfs_server.addrlen	= client->cl_addrlen;
+ 	ctx->nfs_server.port	= server->port;
+ 
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 82944e14fcea..8ea7dfdea427 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -823,7 +823,7 @@ static int nfs_request_mount(struct fs_context *fc,
+ 	struct nfs_fs_context *ctx = nfs_fc2context(fc);
+ 	struct nfs_mount_request request = {
+ 		.sap		= (struct sockaddr *)
+-						&ctx->mount_server.address,
++						&ctx->mount_server._address,
+ 		.dirpath	= ctx->nfs_server.export_path,
+ 		.protocol	= ctx->mount_server.protocol,
+ 		.fh		= root_fh,
+@@ -854,7 +854,7 @@ static int nfs_request_mount(struct fs_context *fc,
+ 	 * Construct the mount server's address.
+ 	 */
+ 	if (ctx->mount_server.address.sa_family == AF_UNSPEC) {
+-		memcpy(request.sap, &ctx->nfs_server.address,
++		memcpy(request.sap, &ctx->nfs_server._address,
+ 		       ctx->nfs_server.addrlen);
+ 		ctx->mount_server.addrlen = ctx->nfs_server.addrlen;
+ 	}
 -- 
-Kees Cook
+2.34.1
+
