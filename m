@@ -2,80 +2,98 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38276C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 07:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924C8C433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 15:32:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229698AbiJKHAV (ORCPT
+        id S231715AbiJKPcT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 Oct 2022 03:00:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43342 "EHLO
+        Tue, 11 Oct 2022 11:32:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229675AbiJKHAT (ORCPT
+        with ESMTP id S231768AbiJKPbm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 Oct 2022 03:00:19 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB74E20374;
-        Tue, 11 Oct 2022 00:00:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-        Resent-Cc:Resent-Message-ID; bh=xRh5EidNMM8jWX56bJG2POpLa4tTba0hWVv95MhnLA4=;
-        t=1665471614; x=1666681214; b=hRLsYr8Q71169x9BSUib8BLrXqxRC4e8ZlF7xdQSpfGjA23
-        6X/vYZ6SiGdyLCZDODSad8LJV/u85Q2O7cLccQ2VdJ6aNEVzbJgaSFL2+5XjJXSAfEjhToytxi0DI
-        IE2VjcIaT5VwvcQAXKfeTUwahnCfZHvCTSycOSNgux/MvanRd7iejYkq3ks5YL09qysH+HliX+Kej
-        1ssHjGnrAPL0fwSf0QPh6/9kf2mKNDAuVM+rySAZLbxI32T/sylhpwfDmvzmDWhJIx5UK1tK6hkwH
-        xmYhHAg6BIGNnk+fUluBv0gJynwHn8logpmiyiq9+n6cGkVpVcI8VwRaljBWj8xQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.96)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1oi9F0-003rPq-2O;
-        Tue, 11 Oct 2022 08:59:50 +0200
-Message-ID: <0d8be2bcb891a56c42760c8e955877841046458b.camel@sipsolutions.net>
-Subject: Re: [fortify] 54d9469bc5:
- WARNING:at_net/wireless/wext-core.c:#wireless_send_event
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Kees Cook <keescook@chromium.org>,
-        kernel test robot <yujie.liu@intel.com>
-Cc:     lkp@lists.01.org, lkp@intel.com, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Hawkins Jiawei <yin31149@gmail.com>,
-        linux-wireless@vger.kernel.org
-Date:   Tue, 11 Oct 2022 08:59:49 +0200
-In-Reply-To: <202210102312.1CC8197@keescook>
-References: <202210110943.6f16f1ea-yujie.liu@intel.com>
-         <202210102312.1CC8197@keescook>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
+        Tue, 11 Oct 2022 11:31:42 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1D2013E1E
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Oct 2022 08:21:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1665501637;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=6KCuFp3jrifWyK2sqLjqh/Wy4NtoZKT4LCqwl1/miSQ=;
+        b=ga33f2XQzgh/65FH7zcBa8bsCobVCX2FV2ElgzjRpnF588yadcuALU4Wxd2jcJKgcHRzgY
+        uagpTre1knAHGI+UJymZlrp/7rdBTmo8CLqdnyg3Fn2ZS8hYxlTBjhtzyDijYFpdcrxmsS
+        Qz4EqmIR2UQDWRUK1SYXVgLj2RKglcg=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-151-DjhkgqcpOHC9gPiA4EyAyA-1; Tue, 11 Oct 2022 11:20:34 -0400
+X-MC-Unique: DjhkgqcpOHC9gPiA4EyAyA-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 88D88101E148;
+        Tue, 11 Oct 2022 15:20:33 +0000 (UTC)
+Received: from redhat.com (null.msp.redhat.com [10.15.80.136])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3621C4A9256;
+        Tue, 11 Oct 2022 15:20:33 +0000 (UTC)
+Date:   Tue, 11 Oct 2022 10:20:31 -0500
+From:   David Teigland <teigland@redhat.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>,
+        Christine Caulfield <ccaulfie@redhat.com>,
+        cluster-devel@redhat.com, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] dlm: Replace one-element array with
+ flexible-array member
+Message-ID: <20221011152031.GA11089@redhat.com>
+References: <Y0IFEUjwXGZFf7bB@mail.google.com>
+ <378C6BDE-0A68-4938-86CD-495BD5F35BE6@chromium.org>
+ <Y0IsXXYnS4DnWkMW@mail.google.com>
+ <202210082044.51106145BD@keescook>
+ <20221010210039.GA30273@redhat.com>
+ <202210101534.BA51029@keescook>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202210101534.BA51029@keescook>
+User-Agent: Mutt/1.8.3 (2017-05-23)
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 2022-10-10 at 23:17 -0700, Kees Cook wrote:
-> On Tue, Oct 11, 2022 at 11:46:21AM +0800, kernel test robot wrote:
-> > commit: 54d9469bc515dc5fcbc20eecbe19cea868b70d68 ("fortify: Add run-tim=
-e WARN for cross-field memcpy()")
-> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> > [...]
-> > caused below changes (please refer to attached dmesg/kmsg for entire lo=
-g/backtrace):
-> > [...]
-> > [   95.913726][   T36] memcpy: detected field-spanning write (size 16) =
-of single field "&compat_event->pointer" at net/wireless/wext-core.c:623 (s=
-ize 4)
->=20
-> This was fixed with:
-> e3e6e1d16a4c ("wifi: wext: use flex array destination for memcpy()")
->=20
-> I expect this will land before -rc1 closes, but Johannes will know more
-> about the schedule.
->=20
+On Mon, Oct 10, 2022 at 03:35:24PM -0700, Kees Cook wrote:
+> On Mon, Oct 10, 2022 at 04:00:39PM -0500, David Teigland wrote:
+> > On Sat, Oct 08, 2022 at 09:03:28PM -0700, Kees Cook wrote:
+> > > On Sun, Oct 09, 2022 at 03:05:17PM +1300, Paulo Miguel Almeida wrote:
+> > > > On Sat, Oct 08, 2022 at 05:18:35PM -0700, Kees Cook wrote:
+> > > > > This is allocating 1 more byte than before, since the struct size didn't change. But this has always allocated too much space, due to the struct padding. For a "no binary changes" patch, the above "+ 1" needs to be left off.
+> > > > 
+> > > > That's true. I agree that leaving "+ 1" would work and produce a
+> > > > no-binary-changes patch due to the existing padding that the structure
+> > > > has. OTOH, I thought that relying on that space could bite us in the
+> > > > future if anyone tweaks the struct again...so my reaction was to ensure 
+> > > > that the NUL-terminator space was always guaranteed to be there.
+> > > > Hence, the change on c693 (objdump above).
+> > > > 
+> > > > What do you think? Should we keep or leave the above
+> > > > "+ 1" after the rationale above?
+> > > 
+> > > I think it depends on what's expected from this allocation. Christine or
+> > > David, can you speak to this?
+> > 
+> > Hi, thanks for picking through that.  Most likely the intention was to
+> > allow up to 64 (DLM_LOCKSPACE_LEN) character names, and then use the
+> > ls_name[1] for the terminating byte.  I'd be happy to take the patch
+> 
+> Should this just use:
+> 
+> 	char			ls_name[DLM_LOCKSPACE_LEN + 1];
+> 
+> instead, or is the byte savings worth keeping it dynamically sized?
 
-Yes, we're planning to send a pull request today, so that should go to
-Linus with the net pull request tomorrow.
+Yes, I think that's the best option.
+Dave
 
-johannes
