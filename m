@@ -2,115 +2,109 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B962C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 18:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD05C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 19:15:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229675AbiJKSop (ORCPT
+        id S229557AbiJKTP1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 Oct 2022 14:44:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50980 "EHLO
+        Tue, 11 Oct 2022 15:15:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229764AbiJKSoo (ORCPT
+        with ESMTP id S229483AbiJKTPZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 Oct 2022 14:44:44 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26511CE29;
-        Tue, 11 Oct 2022 11:44:41 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id q9so13534423pgq.8;
-        Tue, 11 Oct 2022 11:44:40 -0700 (PDT)
+        Tue, 11 Oct 2022 15:15:25 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBD25491FA;
+        Tue, 11 Oct 2022 12:15:24 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id 3so12863493pfw.4;
+        Tue, 11 Oct 2022 12:15:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=So4abhNWYFcv274xdP8VWRO69sa0lbWIaXDw4c76tcc=;
-        b=QwMCFkGmf5as4oMRr2s+37sf65O2IYJ2UP3HAVQXmkkXH4nasGoL7TRCxhS1z7gbl+
-         2mu+JxE54CWqTnCGlzT/AvSduYAsygWPUNwQihLuyVA/0hnTQOk1psxC7Jytj+93KYNw
-         IacvgWz4SrBwzG2Ty4dSeA2/5eop9yFreMk+0sJviXQriX/9ytGH0QT5QvCO34ADyS4u
-         cBqZ2I4KcNKpxPJbHIr4+DCveLOAkbscD5Xn9yLxs+MaeUiudE4pRexfcwYrWA6Ye9Hn
-         j+rACATg8O30iyyuK4Pbd7msDZrcEVEiVzy31Datxlc77hyeImOJmay1tCvcKtE50Hg7
-         PANg==
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=edKKOOO5SuH1hvF3YhfEYTEEKOx9kniO7RvnTL4z9JA=;
+        b=feEO4VhYQSWYHVL2uNHk31XxxIgvtfdcw0erpzFt1qt/5VfQ+nu+k/Q5bD43zofoB6
+         S6rYf9aBiXUJVTvCsLWv6RfAQv9EBpnzn47Sy5O9fID3e5pTC1pff0IIAJYJ0yqWv03a
+         9gRLkK11KOHz0/OFu1sxLUTmX5NH6gIhqLE+tt5ZNbQ3FaI7qqlGBsLmu3lwt3lLdrjV
+         P6yzPWC+CyfyuSkCbnchW79FIz5A235fNSg/ZAjIRJce/zBpfeckDkyKkpyIIkZBxeJQ
+         +zUTcNBKI5JpULdJfsChj5M7tdb33H3fpe/a4o7ghrOFYfOtWmBkbmX3/6hBQe24JIAx
+         2xcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=So4abhNWYFcv274xdP8VWRO69sa0lbWIaXDw4c76tcc=;
-        b=cfe78BFPr8sS13dldq/Hb490opaiwOGi+o85eRXUwc1l5tCS+EjvCnHTbzZaVMbL4G
-         nmfYdH/J7p7hhywCvxNZZpfQrX2Z3o3rQPKVnHCYY9GPmsCePxhxGr7XiJ0Bpp9QasCY
-         Kl3CmI2zENvqKFT+nXtK2vV7gk/sa16dMyPnseFTEsQUuRA45vV7vC7DuPzdMAkCmPpf
-         P8ULNyrjRaDFm+Cysw2rTybyru6o9wOY3PusLj0SS1stK19jHhP3SvdjuOslGlLNAdUI
-         nBHwIJ92eZy8Syi6Z3XTNvMwjbU3j5f+fVqTqDXVjSJKCI0zYkaCaYazB+7dr42E6PZf
-         q97Q==
-X-Gm-Message-State: ACrzQf2XjYal7no/Dhwl5smJBGc0OKk2c/3KEtEvHK8GLIlo4n8XXcpc
-        NAVhGit4bTd8VkIyTCSq6V4=
-X-Google-Smtp-Source: AMsMyM7BJ8CB9EKNxnOSbRKrT7LpY6uE4q/wqvNSLI9/+llW7wxWlnmGpp25dt/3hYuvgPu5aaBIBQ==
-X-Received: by 2002:a63:4753:0:b0:462:b3f0:a984 with SMTP id w19-20020a634753000000b00462b3f0a984mr9116030pgk.501.1665513879789;
-        Tue, 11 Oct 2022 11:44:39 -0700 (PDT)
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=edKKOOO5SuH1hvF3YhfEYTEEKOx9kniO7RvnTL4z9JA=;
+        b=fbiULdxhYDVKsEvpgaQ7XGDJBdTDZwyGFuOuiWL4i08RSxxnUDgA/o22v1lA4LWkZ9
+         O4gYsN+b9bGzil2+/4QQ9C9Tp36oSfTkNuX7fLEJZ+cgvCJSZepRNqvuB17IuOCfBgDG
+         8Czb5f2M4+EoZzWtHX1cVdF9iLDWL4RtPTmREfP1BpJw8CK1fuNYx7qZZygGsC84IDPR
+         Jyhy7mOFvzRC1fLrj2V1VUwuoR4WNSlDyDp7xYVnW7dX6Qd3L0fB11IoZnx5nfIV3bgB
+         nbMB7ealQ8Ly3si66kEg+GYU/nOSm99MbhhrV3IGjHprpktffLmJfcItOVp4h7Pz0YIE
+         X4vw==
+X-Gm-Message-State: ACrzQf2oEZ8LfXnHDARzplRp2t7g4m1mKQerFQuen5Sdv9XeTlwloPHU
+        hBQLnHMnX4rUS7TRMckxnwA=
+X-Google-Smtp-Source: AMsMyM7zdApOlOum9a26wp9I+VCjgDp3iYH5QhsGbwtjii1hTZEHDAISUGSZTFksd37y/0kwW+IZhg==
+X-Received: by 2002:a63:6285:0:b0:461:686a:f747 with SMTP id w127-20020a636285000000b00461686af747mr12817692pgb.403.1665515724412;
+        Tue, 11 Oct 2022 12:15:24 -0700 (PDT)
 Received: from mail.google.com (122-58-209-93-fibre.sparkbb.co.nz. [122.58.209.93])
-        by smtp.gmail.com with ESMTPSA id t4-20020a17090abc4400b0020d352dc81fsm4565078pjv.54.2022.10.11.11.44.34
+        by smtp.gmail.com with ESMTPSA id i72-20020a639d4b000000b0044ed37dbca8sm8137242pgd.2.2022.10.11.12.15.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Oct 2022 11:44:38 -0700 (PDT)
-Date:   Wed, 12 Oct 2022 07:44:30 +1300
+        Tue, 11 Oct 2022 12:15:23 -0700 (PDT)
+Date:   Wed, 12 Oct 2022 08:15:17 +1300
 From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To:     David Teigland <teigland@redhat.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Christine Caulfield <ccaulfie@redhat.com>,
-        cluster-devel@redhat.com, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] dlm: Replace one-element array with
- flexible-array member
-Message-ID: <Y0W5jkiXUkpNl4ap@mail.google.com>
-References: <Y0IFEUjwXGZFf7bB@mail.google.com>
- <378C6BDE-0A68-4938-86CD-495BD5F35BE6@chromium.org>
- <Y0IsXXYnS4DnWkMW@mail.google.com>
- <202210082044.51106145BD@keescook>
- <20221010210039.GA30273@redhat.com>
- <202210101534.BA51029@keescook>
- <20221011152031.GA11089@redhat.com>
+To:     Christine Caulfield <ccaulfie@redhat.com>,
+        David Teigland <teigland@redhat.com>, cluster-devel@redhat.com
+Cc:     paulo.miguel.almeida.rodenas@gmail.com,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] [next] dlm: replace one-element array with fixed size array
+Message-ID: <Y0XAxX4g/9N6qdnD@mail.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221011152031.GA11089@redhat.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Oct 11, 2022 at 10:20:31AM -0500, David Teigland wrote:
-> On Mon, Oct 10, 2022 at 03:35:24PM -0700, Kees Cook wrote:
-> > On Mon, Oct 10, 2022 at 04:00:39PM -0500, David Teigland wrote:
-> > > On Sat, Oct 08, 2022 at 09:03:28PM -0700, Kees Cook wrote:
-> > > > On Sun, Oct 09, 2022 at 03:05:17PM +1300, Paulo Miguel Almeida wrote:
-> > > > > On Sat, Oct 08, 2022 at 05:18:35PM -0700, Kees Cook wrote:
-> > > > > > This is allocating 1 more byte than before, since the struct size didn't change. But this has always allocated too much space, due to the struct padding. For a "no binary changes" patch, the above "+ 1" needs to be left off.
-> > > > > 
-> > > > > That's true. I agree that leaving "+ 1" would work and produce a
-> > > > > no-binary-changes patch due to the existing padding that the structure
-> > > > > has. OTOH, I thought that relying on that space could bite us in the
-> > > > > future if anyone tweaks the struct again...so my reaction was to ensure 
-> > > > > that the NUL-terminator space was always guaranteed to be there.
-> > > > > Hence, the change on c693 (objdump above).
-> > > > > 
-> > > > > What do you think? Should we keep or leave the above
-> > > > > "+ 1" after the rationale above?
-> > > > 
-> > > > I think it depends on what's expected from this allocation. Christine or
-> > > > David, can you speak to this?
-> > > 
-> > > Hi, thanks for picking through that.  Most likely the intention was to
-> > > allow up to 64 (DLM_LOCKSPACE_LEN) character names, and then use the
-> > > ls_name[1] for the terminating byte.  I'd be happy to take the patch
-> > 
-> > Should this just use:
-> > 
-> > 	char			ls_name[DLM_LOCKSPACE_LEN + 1];
-> > 
-> > instead, or is the byte savings worth keeping it dynamically sized?
-> 
-> Yes, I think that's the best option.
-> Dave
-> 
+One-element arrays are deprecated. So, replace one-element array with
+fixed size array member in struct dlm_ls, and refactor the rest of the
+code, accordingly.
 
-Thanks for the reply Dave; Thanks for the suggestion Kees;
-I'll send a new patch for it :)
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/228
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836
+Link: https://lore.kernel.org/lkml/Y0W5jkiXUkpNl4ap@mail.google.com/
 
-Paulo A.
+Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+---
+ fs/dlm/dlm_internal.h | 2 +-
+ fs/dlm/lockspace.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
+index e34c3d2639a5..94fadb619ba0 100644
+--- a/fs/dlm/dlm_internal.h
++++ b/fs/dlm/dlm_internal.h
+@@ -670,7 +670,7 @@ struct dlm_ls {
+ 	void			*ls_ops_arg;
+ 
+ 	int			ls_namelen;
+-	char			ls_name[1];
++	char			ls_name[DLM_LOCKSPACE_LEN + 1];
+ };
+ 
+ /*
+diff --git a/fs/dlm/lockspace.c b/fs/dlm/lockspace.c
+index bae050df7abf..23de0d47cbc1 100644
+--- a/fs/dlm/lockspace.c
++++ b/fs/dlm/lockspace.c
+@@ -473,7 +473,7 @@ static int new_lockspace(const char *name, const char *cluster,
+ 
+ 	error = -ENOMEM;
+ 
+-	ls = kzalloc(sizeof(struct dlm_ls) + namelen, GFP_NOFS);
++	ls = kzalloc(sizeof(struct dlm_ls), GFP_NOFS);
+ 	if (!ls)
+ 		goto out;
+ 	memcpy(ls->ls_name, name, namelen);
+-- 
+2.37.3
+
