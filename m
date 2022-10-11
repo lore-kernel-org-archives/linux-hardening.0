@@ -2,98 +2,135 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924C8C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 15:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DFFC4332F
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 15:36:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231715AbiJKPcT (ORCPT
+        id S231137AbiJKPg6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 Oct 2022 11:32:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50458 "EHLO
+        Tue, 11 Oct 2022 11:36:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231768AbiJKPbm (ORCPT
+        with ESMTP id S231153AbiJKPgl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 Oct 2022 11:31:42 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1D2013E1E
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Oct 2022 08:21:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1665501637;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6KCuFp3jrifWyK2sqLjqh/Wy4NtoZKT4LCqwl1/miSQ=;
-        b=ga33f2XQzgh/65FH7zcBa8bsCobVCX2FV2ElgzjRpnF588yadcuALU4Wxd2jcJKgcHRzgY
-        uagpTre1knAHGI+UJymZlrp/7rdBTmo8CLqdnyg3Fn2ZS8hYxlTBjhtzyDijYFpdcrxmsS
-        Qz4EqmIR2UQDWRUK1SYXVgLj2RKglcg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-151-DjhkgqcpOHC9gPiA4EyAyA-1; Tue, 11 Oct 2022 11:20:34 -0400
-X-MC-Unique: DjhkgqcpOHC9gPiA4EyAyA-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 11 Oct 2022 11:36:41 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDEAB2613F;
+        Tue, 11 Oct 2022 08:25:58 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 88D88101E148;
-        Tue, 11 Oct 2022 15:20:33 +0000 (UTC)
-Received: from redhat.com (null.msp.redhat.com [10.15.80.136])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3621C4A9256;
-        Tue, 11 Oct 2022 15:20:33 +0000 (UTC)
-Date:   Tue, 11 Oct 2022 10:20:31 -0500
-From:   David Teigland <teigland@redhat.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 54C02611CB;
+        Tue, 11 Oct 2022 15:25:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4C7DC433C1;
+        Tue, 11 Oct 2022 15:25:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665501926;
+        bh=zigySSphTJZp9lr24dvtduewqmrbx3E1Xf1G7eWmO9Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e9zMjpEwpvHxazOA8ZaJCtOyU4VtdurNaMqfkh7bZsv98bs4w332p9srfLLsfEEQK
+         BIKeyPPOwaolUQKnga5Np/wSEecoMqQXU/FAyKZroOhfNMXKuCbCFWOS4M56XdSy80
+         f4Bzv6aPnCTiLnDpH7ckeq6V9scPDm47uwmNQXPKoA8Y4M/97cF5GxLiEAV08ecysZ
+         89oKV7qsGvU797Ls8C5AHIGtGSXLlD0ZVCxRzmKbY15oMlnZ4Dq0M1Q655UXm4TnsO
+         KhdcI6JLEO4FFWlB+gYn6fTVJ97ACBBUtlqa5Q99BoH2s5XAzi0ke5LUtCe0knr7KH
+         HmYV4GmdTmB/g==
+Date:   Tue, 11 Oct 2022 10:25:16 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>,
-        Christine Caulfield <ccaulfie@redhat.com>,
-        cluster-devel@redhat.com, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] dlm: Replace one-element array with
- flexible-array member
-Message-ID: <20221011152031.GA11089@redhat.com>
-References: <Y0IFEUjwXGZFf7bB@mail.google.com>
- <378C6BDE-0A68-4938-86CD-495BD5F35BE6@chromium.org>
- <Y0IsXXYnS4DnWkMW@mail.google.com>
- <202210082044.51106145BD@keescook>
- <20221010210039.GA30273@redhat.com>
- <202210101534.BA51029@keescook>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        kernel test robot <yujie.liu@intel.com>,
+        Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] NFS: Avoid memcpy() run-time warning for struct sockaddr
+ overflows
+Message-ID: <Y0WK3MZvxpoXS24n@work>
+References: <20221011065243.583650-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202210101534.BA51029@keescook>
-User-Agent: Mutt/1.8.3 (2017-05-23)
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+In-Reply-To: <20221011065243.583650-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Oct 10, 2022 at 03:35:24PM -0700, Kees Cook wrote:
-> On Mon, Oct 10, 2022 at 04:00:39PM -0500, David Teigland wrote:
-> > On Sat, Oct 08, 2022 at 09:03:28PM -0700, Kees Cook wrote:
-> > > On Sun, Oct 09, 2022 at 03:05:17PM +1300, Paulo Miguel Almeida wrote:
-> > > > On Sat, Oct 08, 2022 at 05:18:35PM -0700, Kees Cook wrote:
-> > > > > This is allocating 1 more byte than before, since the struct size didn't change. But this has always allocated too much space, due to the struct padding. For a "no binary changes" patch, the above "+ 1" needs to be left off.
-> > > > 
-> > > > That's true. I agree that leaving "+ 1" would work and produce a
-> > > > no-binary-changes patch due to the existing padding that the structure
-> > > > has. OTOH, I thought that relying on that space could bite us in the
-> > > > future if anyone tweaks the struct again...so my reaction was to ensure 
-> > > > that the NUL-terminator space was always guaranteed to be there.
-> > > > Hence, the change on c693 (objdump above).
-> > > > 
-> > > > What do you think? Should we keep or leave the above
-> > > > "+ 1" after the rationale above?
-> > > 
-> > > I think it depends on what's expected from this allocation. Christine or
-> > > David, can you speak to this?
-> > 
-> > Hi, thanks for picking through that.  Most likely the intention was to
-> > allow up to 64 (DLM_LOCKSPACE_LEN) character names, and then use the
-> > ls_name[1] for the terminating byte.  I'd be happy to take the patch
+On Mon, Oct 10, 2022 at 11:52:43PM -0700, Kees Cook wrote:
+> The 'nfs_server' and 'mount_server' structures include a union of
+> 'struct sockaddr' (with the older 16 bytes max address size) and
+> 'struct sockaddr_storage' which is large enough to hold all the supported
+> sa_family types (128 bytes max size). The runtime memcpy() buffer overflow
+> checker is seeing attempts to write beyond the 16 bytes as an overflow,
+> but the actual expected size is that of 'struct sockaddr_storage'. Adjust
+> the pointers to the correct union member. Avoids this false positive
+> run-time warning under CONFIG_FORTIFY_SOURCE:
 > 
-> Should this just use:
+>   memcpy: detected field-spanning write (size 28) of single field "&ctx->nfs_server.address" at fs/nfs/namespace.c:178 (size 16)
 > 
-> 	char			ls_name[DLM_LOCKSPACE_LEN + 1];
-> 
-> instead, or is the byte savings worth keeping it dynamically sized?
+> Reported-by: kernel test robot <yujie.liu@intel.com>
+> Link: https://lore.kernel.org/all/202210110948.26b43120-yujie.liu@intel.com
+> Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Cc: Anna Schumaker <anna@kernel.org>
+> Cc: linux-nfs@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Yes, I think that's the best option.
-Dave
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
+Thanks!
+--
+Gustavo
+
+> ---
+>  fs/nfs/fs_context.c | 2 +-
+>  fs/nfs/namespace.c  | 2 +-
+>  fs/nfs/super.c      | 4 ++--
+>  3 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+> index 4da701fd1424..bffa31bb35b9 100644
+> --- a/fs/nfs/fs_context.c
+> +++ b/fs/nfs/fs_context.c
+> @@ -1540,7 +1540,7 @@ static int nfs_init_fs_context(struct fs_context *fc)
+>  		ctx->version		= nfss->nfs_client->rpc_ops->version;
+>  		ctx->minorversion	= nfss->nfs_client->cl_minorversion;
+>  
+> -		memcpy(&ctx->nfs_server.address, &nfss->nfs_client->cl_addr,
+> +		memcpy(&ctx->nfs_server._address, &nfss->nfs_client->cl_addr,
+>  			ctx->nfs_server.addrlen);
+>  
+>  		if (fc->net_ns != net) {
+> diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
+> index 3295af4110f1..2f336ace7555 100644
+> --- a/fs/nfs/namespace.c
+> +++ b/fs/nfs/namespace.c
+> @@ -175,7 +175,7 @@ struct vfsmount *nfs_d_automount(struct path *path)
+>  	}
+>  
+>  	/* for submounts we want the same server; referrals will reassign */
+> -	memcpy(&ctx->nfs_server.address, &client->cl_addr, client->cl_addrlen);
+> +	memcpy(&ctx->nfs_server._address, &client->cl_addr, client->cl_addrlen);
+>  	ctx->nfs_server.addrlen	= client->cl_addrlen;
+>  	ctx->nfs_server.port	= server->port;
+>  
+> diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+> index 82944e14fcea..8ea7dfdea427 100644
+> --- a/fs/nfs/super.c
+> +++ b/fs/nfs/super.c
+> @@ -823,7 +823,7 @@ static int nfs_request_mount(struct fs_context *fc,
+>  	struct nfs_fs_context *ctx = nfs_fc2context(fc);
+>  	struct nfs_mount_request request = {
+>  		.sap		= (struct sockaddr *)
+> -						&ctx->mount_server.address,
+> +						&ctx->mount_server._address,
+>  		.dirpath	= ctx->nfs_server.export_path,
+>  		.protocol	= ctx->mount_server.protocol,
+>  		.fh		= root_fh,
+> @@ -854,7 +854,7 @@ static int nfs_request_mount(struct fs_context *fc,
+>  	 * Construct the mount server's address.
+>  	 */
+>  	if (ctx->mount_server.address.sa_family == AF_UNSPEC) {
+> -		memcpy(request.sap, &ctx->nfs_server.address,
+> +		memcpy(request.sap, &ctx->nfs_server._address,
+>  		       ctx->nfs_server.addrlen);
+>  		ctx->mount_server.addrlen = ctx->nfs_server.addrlen;
+>  	}
+> -- 
+> 2.34.1
+> 
