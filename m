@@ -2,66 +2,63 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC24C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 20:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC17C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 20:23:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229834AbiJKUL7 (ORCPT
+        id S229516AbiJKUXX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 Oct 2022 16:11:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59232 "EHLO
+        Tue, 11 Oct 2022 16:23:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229715AbiJKUL6 (ORCPT
+        with ESMTP id S229452AbiJKUXW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 Oct 2022 16:11:58 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 741E95E322;
-        Tue, 11 Oct 2022 13:11:57 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id h10so14273040plb.2;
-        Tue, 11 Oct 2022 13:11:57 -0700 (PDT)
+        Tue, 11 Oct 2022 16:23:22 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92283FD01;
+        Tue, 11 Oct 2022 13:23:21 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id 3so13019021pfw.4;
+        Tue, 11 Oct 2022 13:23:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mBCyAW+INIk97qkLgDzPBSuktm9tDmQTnvrDcqdwFdY=;
-        b=mI8N8Jym7k6IewpZjJmjwJZD8AJXs6wN+y62IV8nGv+brXyaEn0ZH4blxJxGdbC56s
-         PY5q47ZcO1+7p/EWsqqkVVmmfDK6IIMlFFySe8iQ0pZPVn/yJFzyx8D0qIa3E1ZLweyF
-         VnD9jngrPuk/s/pqvpGfYlEvRvyxBWSYkjaZTuSC7SjykxUG2b7t9SCVp3u9MtoJHYKs
-         k17DMi28DhLi0GxXu9O7Yj/KOnOQo9JRVTAXtDDCZ87Ztyv/vDa1+MYZKwKQSP/FQEMd
-         ieSAVju7GPYIxyNe7Q5b07QRKwaQW8BBzyxJlUR7QUTwtdQd2VT5BuV241GtZJvHv1o7
-         EO9w==
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vuYB1bfLBT/BybnhJAIKow6KEoVAgUejtP+5COBxF5k=;
+        b=XgZtbw/pvujrQCJ4DONsbbA4J9Kfb3we6T6FJXUZa8feVGgigOuY50VDR9XWfC3EtV
+         xcHsiBAIT4fXMAL5niqGV8PV6s8/V2jmJderQYwORIXfiKwKkAwC7OMybu0kn+Wz83YT
+         nuZO/vf2MGLNITcai+mhkBhmlRyGitvhK3f9djvRSreD1LU5hikPlOZF4JC9306xO/2i
+         gSoUl1Zy7NL+4ZqtADq/WyWlnxNvkxWwIwWfShONLTO17NJG45eHle1JMu0zRiHyVPyy
+         FVXSb4R6MV43SiR0yD8X8J4FB69OaCX1hoS9iDfD/UstjlFnXh5QivmO1WXp6HCKAPXZ
+         r8Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mBCyAW+INIk97qkLgDzPBSuktm9tDmQTnvrDcqdwFdY=;
-        b=Z7fXLmJCY30jI5dc5BVo32eqBxw3knYb7P+FDs+NYoHRaL/FeQrUar6YeOXazwAlQ4
-         lNbPbM15dm30OR4fjiu6ccBhvfu6ZAFB7YX1BDjUJAwtHxo8w7z5GLPCW0SEM1Ud+9iV
-         M5gNQdj+1rEbe2u6NTJde+exukaRNQq1X5mNaNAo3FdubC7DZb/IPyS+z5FVGmix4n9b
-         d3IsgRUrpLbQko4EJP0Uab/6NqGFahrlZZHLfGbmWX0y3TaNHtjUdD51fQsvlM1nhhuy
-         +JPaaphD9PDoLV/u+Kd/S5kYyJMQPcGhkIIxMBhzVEZ64ejFa76zAskpEVSadkZcjdR5
-         kyUQ==
-X-Gm-Message-State: ACrzQf0gDUIezLsJm6ziovE0gCW7FM38/p6O5izq3EdZy3gmKVc9HREa
-        XQbV5I09NqigeYx8eR15Cco=
-X-Google-Smtp-Source: AMsMyM7F1iCyF0evOIhoqF1XoSiOdl4sOwS9KWU2FbBLwXllY8ofMR4g69lCAXCxoF1D1OH28H31Bw==
-X-Received: by 2002:a17:902:724a:b0:177:fd96:37bf with SMTP id c10-20020a170902724a00b00177fd9637bfmr24471774pll.25.1665519112138;
-        Tue, 11 Oct 2022 13:11:52 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vuYB1bfLBT/BybnhJAIKow6KEoVAgUejtP+5COBxF5k=;
+        b=7Gvaxo7vOWAV6le5+jVjNAL50mkqyDqdTar6QgiDdYKzkhh48YXE1igczaO4i3oaJ8
+         IXf8LmrzdFWhh6jzKhfRYDBYs2ZYscl9GstinQ3v1PvzJriee0fH4XTSGRkOdBzHU4MD
+         V+dzUFeJ1QS27GTg4q0KrFjvoL44c5uFi+nsEGkbNnWAqT9kb9UKacGEHWSvkShBMgKE
+         1Oft8epUxq2zOWZk+7aw629S2JJXbxOY8GXFUj9DjYfOhgOll41K1B0+ho6GslphIeqY
+         vb8fblGowOXiIfzP4rLTWDmGEVEnQlxjIOOb9YR9m9GjtD6mJY/bzphcayWf6k5oEe14
+         Ns1A==
+X-Gm-Message-State: ACrzQf0LM6qaAG0f7Fy3XWr46PE/84wGmIetBJ0FVBG5YR954qSLtgC3
+        k9rXXRsrGyrF/95tNF5lqVaifYruJSWiiQ==
+X-Google-Smtp-Source: AMsMyM7aZBwmnOQaMKYMww1thIRvLjyiBjPkD1azfYPOnr2//Eyj2e0j+qLVme8PE1t+Bz6rowqokw==
+X-Received: by 2002:aa7:810a:0:b0:55b:674d:d123 with SMTP id b10-20020aa7810a000000b0055b674dd123mr27740591pfi.52.1665519801056;
+        Tue, 11 Oct 2022 13:23:21 -0700 (PDT)
 Received: from mail.google.com (122-58-209-93-fibre.sparkbb.co.nz. [122.58.209.93])
-        by smtp.gmail.com with ESMTPSA id x6-20020a170902a38600b00178b9c997e5sm9076452pla.138.2022.10.11.13.11.47
+        by smtp.gmail.com with ESMTPSA id 24-20020a631558000000b0045feab454f6sm6387757pgv.51.2022.10.11.13.23.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Oct 2022 13:11:50 -0700 (PDT)
-Date:   Wed, 12 Oct 2022 09:11:44 +1300
+        Tue, 11 Oct 2022 13:23:20 -0700 (PDT)
+Date:   Wed, 12 Oct 2022 09:23:14 +1300
 From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christine Caulfield <ccaulfie@redhat.com>,
-        David Teigland <teigland@redhat.com>, cluster-devel@redhat.com,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4] [next] dlm: replace one-element array with fixed size
+To:     Christine Caulfield <ccaulfie@redhat.com>,
+        David Teigland <teigland@redhat.com>, cluster-devel@redhat.com
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        paulo.miguel.almeida.rodenas@gmail.com
+Subject: [PATCH v5] [next] dlm: replace one-element array with fixed size
  array
-Message-ID: <Y0XOAAOLPfj/VHco@mail.google.com>
-References: <Y0W5jkiXUkpNl4ap@mail.google.com>
- <Y0XMP2RMkE4MWNPE@mail.google.com>
- <202210111305.743F591@keescook>
+Message-ID: <Y0XQsqdRzlrSpgOh@mail.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -70,19 +67,56 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Oct 11, 2022 at 01:06:32PM -0700, Kees Cook wrote:
-> On Wed, Oct 12, 2022 at 09:04:15AM +1300, Paulo Miguel Almeida wrote:
-> >  	error = -ENOMEM;
-> >  
-> > -	ls = kzalloc(sizeof(struct dlm_ls) + namelen, GFP_NOFS);
-> > +	ls = kzalloc(sizeof(struct dlm_ls), GFP_NOFS);
->                      ^^^^^^^^^^^^^^^^^^^^
-> I think you forgot the suggestion Gustavo had here. :) Preferred style would
-> be:
-> 	sizeof(*ls)
-> 
-Ooops, I hadn't seen that one =O 
+One-element arrays are deprecated. So, replace one-element array with
+fixed size array member in struct dlm_ls, and refactor the rest of the
+code, accordingly.
 
-Alright, v5 in the making
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/228
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836
+Link: https://lore.kernel.org/lkml/Y0W5jkiXUkpNl4ap@mail.google.com/
 
-Paulo A.
+Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+---
+Changelog:
+
+v5: use preferred sizeof style. Req: Gustavo Silva
+v4: resend patch using the right version number. Req: Gustavo Silva
+v3: replace one-element array with a fixed size array. Req: Kees Cook
+v2: patch resent as I had an issue with a <CRLF> char in my mail client
+v1: https://lore.kernel.org/lkml/Y0ICbf8tCtXMn+W0@mail.google.com/
+---
+
+ fs/dlm/dlm_internal.h | 2 +-
+ fs/dlm/lockspace.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
+index e34c3d2639a5..94fadb619ba0 100644
+--- a/fs/dlm/dlm_internal.h
++++ b/fs/dlm/dlm_internal.h
+@@ -670,7 +670,7 @@ struct dlm_ls {
+ 	void			*ls_ops_arg;
+ 
+ 	int			ls_namelen;
+-	char			ls_name[1];
++	char			ls_name[DLM_LOCKSPACE_LEN + 1];
+ };
+ 
+ /*
+diff --git a/fs/dlm/lockspace.c b/fs/dlm/lockspace.c
+index bae050df7abf..9479c8110979 100644
+--- a/fs/dlm/lockspace.c
++++ b/fs/dlm/lockspace.c
+@@ -473,7 +473,7 @@ static int new_lockspace(const char *name, const char *cluster,
+ 
+ 	error = -ENOMEM;
+ 
+-	ls = kzalloc(sizeof(struct dlm_ls) + namelen, GFP_NOFS);
++	ls = kzalloc(sizeof(*ls), GFP_NOFS);
+ 	if (!ls)
+ 		goto out;
+ 	memcpy(ls->ls_name, name, namelen);
+-- 
+2.37.3
+
