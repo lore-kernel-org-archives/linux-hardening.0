@@ -2,167 +2,85 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00761C433F5
-	for <linux-hardening@archiver.kernel.org>; Mon, 10 Oct 2022 23:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA5FC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 06:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229854AbiJJXWy (ORCPT
+        id S229691AbiJKGSO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 10 Oct 2022 19:22:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55896 "EHLO
+        Tue, 11 Oct 2022 02:18:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230015AbiJJXWw (ORCPT
+        with ESMTP id S229699AbiJKGSC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 10 Oct 2022 19:22:52 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4D247E30A
-        for <linux-hardening@vger.kernel.org>; Mon, 10 Oct 2022 16:22:50 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id q10-20020a17090a304a00b0020b1d5f6975so10497085pjl.0
-        for <linux-hardening@vger.kernel.org>; Mon, 10 Oct 2022 16:22:50 -0700 (PDT)
+        Tue, 11 Oct 2022 02:18:02 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A46F876AF
+        for <linux-hardening@vger.kernel.org>; Mon, 10 Oct 2022 23:18:01 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id n18-20020a17090ade9200b0020b0012097cso915465pjv.0
+        for <linux-hardening@vger.kernel.org>; Mon, 10 Oct 2022 23:18:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QF7MJOsOtlsQC0EmDUWgyeJyWHdhi+4+5WgA2w3JC3g=;
-        b=BkShfqF8SyhtiqZT6gE3y8zPoxJMuIQH4Onh7QKoPkYRNvKmcggwoJaeo/uV3YctSC
-         wtbL9DvhBagPC2lx2jXewV6r0qCXPwsLj3TgJKvqISfzlnBLfhGIlFZ9UGxKHKFzorrm
-         Zr43goG23541zjyV+AcKGtPLj/KIvCcNlePAc=
+        bh=PL23sMexpwn40kFVUCoq7aeOuxcWfa90L83fdjYFkLY=;
+        b=f6DL3dxWhfQZmKFmUHwx772NtYi0pI9Iju4bXuzYcNgU9tZRwWO23ZROjn/BdwYph8
+         zS5kHOuhegb7qVyT8JCE/zjOjVJQhGat2ZD/xfafy/Nwct8qKjWTUMZrD0uWLayoRBv2
+         rpvXb5DG+C65jUvr+BcKzqEJk7FpvjtXZEWX0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QF7MJOsOtlsQC0EmDUWgyeJyWHdhi+4+5WgA2w3JC3g=;
-        b=WKNNDBDreokayPWzB71j98cvv/kRwQ14yxlxdGXx+pmliS+5plFtzoAxBJEkBjxtv+
-         YpG1mJWQUT9YyrMGECOHvagoCC7sl3GTvXDNHaOj3I8bY5zJ2RGyUqrN1P6H8rLzC9K8
-         Px26wiaCPVF7Hin5mdXf9WJUSHBXnzSX4CQViP3wZQctvCJSaL+JnGCgHVj7eemEMPK/
-         rzd1LPHutBMZXYFeHQ0aRJwLej5AR8XYmmklv6Ur/kuRIEuv9CWINaLjXyN0Ac63oBWB
-         rnlR1+JkXPNcdKUV5MMZHy+w3kj1TQTjEshKXZKN97Pxo4aI6ob8vuxbdMMr/CHAFOXI
-         GKgw==
-X-Gm-Message-State: ACrzQf3rcFydysG+9DCDN0KY94MY/VbReAl9iBlnR3DpmIABmHEA0Ewl
-        XpSN7ZMyn3HTu/ipdrpz0xF3ZjjjPSEtSA==
-X-Google-Smtp-Source: AMsMyM5/cujdcT78gRxEog7IR5B+lzupMRJjfjRQboVnh0oymMYyQqzGt6abkUA4YnXyYMd+Nr6iug==
-X-Received: by 2002:a17:902:f70e:b0:178:8895:d1fb with SMTP id h14-20020a170902f70e00b001788895d1fbmr21795386plo.166.1665444170373;
-        Mon, 10 Oct 2022 16:22:50 -0700 (PDT)
+        bh=PL23sMexpwn40kFVUCoq7aeOuxcWfa90L83fdjYFkLY=;
+        b=C20sNZcxkiU5unrN38caRRJFbtV9RD3pVyviUdZAMop0znqRAQEtPR6T1gvGu/0QZG
+         C1mHBugEU8xaNyo91zMwQijIWaDUdI+GEEcrReJOjE1EyDAu/3ZEzwkJGb7aBn+Mo83q
+         1bq7QzvE+gbBMCE0sPPETr5fI/78qL6IpwWvqorU9p4nsbJEMsm6C2FxkSABX9UxxMRw
+         YUV/icm3CUexExJ1T49zJOGL2J1IWJgOWlaYiuj+uHfwAjapL7+Y9dPyr5lkgQJtAS7Y
+         vCZo0AQPs6dkS/flYUUiiv2KrdDa5OnK902WK7T12RPm740ZdC6EpyIKj+qR4WZ/3jUX
+         YpjQ==
+X-Gm-Message-State: ACrzQf0JSPOIqivMyMXY63mbi8rAcjNezukmDTnbXtsa5nALIaXkaBlp
+        Ndfe2j7kR+NsmjS5SYOMTUgNxg==
+X-Google-Smtp-Source: AMsMyM4LISwAIppjAhD1g2j73VCLB7YWcSS9szvYVpDWrK9Gq7TZ7qkMS3VVH6g/Hn7wVmEdsXnrbg==
+X-Received: by 2002:a17:903:32d2:b0:17f:9224:6e11 with SMTP id i18-20020a17090332d200b0017f92246e11mr23387269plr.116.1665469080745;
+        Mon, 10 Oct 2022 23:18:00 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id mp17-20020a17090b191100b0020d24ea4400sm3658254pjb.38.2022.10.10.16.22.49
+        by smtp.gmail.com with ESMTPSA id c19-20020a621c13000000b00562b811bb42sm7916863pfc.49.2022.10.10.23.17.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Oct 2022 16:22:49 -0700 (PDT)
-Date:   Mon, 10 Oct 2022 16:22:48 -0700
+        Mon, 10 Oct 2022 23:17:59 -0700 (PDT)
+Date:   Mon, 10 Oct 2022 23:17:58 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-Cc:     kernel-hardening@lists.openwall.com,
-        linux-hardening@vger.kernel.org, cgel.zte@gmail.com
-Subject: Re: [Self-introduction] - Paulo Almeida
-Message-ID: <202210101536.A46A0690@keescook>
-References: <Y0JrBsGthQIiSzp+@mail.google.com>
+To:     kernel test robot <yujie.liu@intel.com>
+Cc:     lkp@lists.01.org, lkp@intel.com, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Hawkins Jiawei <yin31149@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        linux-wireless@vger.kernel.org
+Subject: Re: [fortify] 54d9469bc5:
+ WARNING:at_net/wireless/wext-core.c:#wireless_send_event
+Message-ID: <202210102312.1CC8197@keescook>
+References: <202210110943.6f16f1ea-yujie.liu@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y0JrBsGthQIiSzp+@mail.google.com>
+In-Reply-To: <202210110943.6f16f1ea-yujie.liu@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Oct 09, 2022 at 07:32:38PM +1300, Paulo Miguel Almeida wrote:
-> My name is Paulo Almeida and as per the instructions listed on the KSPP
-> page, this is my self-introduction email :)
+On Tue, Oct 11, 2022 at 11:46:21AM +0800, kernel test robot wrote:
+> commit: 54d9469bc515dc5fcbc20eecbe19cea868b70d68 ("fortify: Add run-time WARN for cross-field memcpy()")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> [...]
+> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> [...]
+> [   95.913726][   T36] memcpy: detected field-spanning write (size 16) of single field "&compat_event->pointer" at net/wireless/wext-core.c:623 (size 4)
 
-Hello! Welcome to the circus. :)
+This was fixed with:
+e3e6e1d16a4c ("wifi: wext: use flex array destination for memcpy()")
 
-> I will keep it short. 
-> 
-> - My background is in HPC and AI 
-> - I've been writing software for around 20 years now
-> - I've written my x86-64 hobbyist OS for fun and in my spare time I've
->   writing a MOS 6502 emulator for the same reason.
-
-Heh, nice. That made me wonder if there was a QEmu port, but it seems
-it hasn't been touched in a decade?
-https://github.com/AVEx-6502/qemu-6502
-
-Is there a particular 6502 system you're working to emulate?
-
-> - Contributing to KSPP is going to be a side project of mine that I plan
->   to do outside of business hours... so expect a dedication of a few
->   hours per week.
-
-Excellent! We're always glad to have folks helping.
-
-> Q: What topics are you interested in?
-> A: kernel driver development, x86 & ARM hardware architecture, Math, Data
-> structures, Rust and virtualisation.
-> 
-> Q: What do you want to learn about?
-> A: I see the KSPP project/initiative as a way to get exposed to pieces
-> of code that I wouldn't normally come across which is always
-> appreciated :)
-
-Yeah, you'll end up uncovering some really weird stuff, as you seem to
-have already found[1]. ;)
-
-> I am also aware of the calibre of developers I will be dealing with and
-> I'm sure that I will be learning really a lot from them :)
-
-One of the double-edged swords with KSPP is while you get to work with
-all the kernel's subsystem maintainers, you also have to work with all
-the kernel's subsystem maintainers. ;) You'll learn a lot, but you can
-also end up discovering very different requirements as you send patches.
-
-> Q: What experience do you have with security, the kernel, programming, 
-> 	or anything else you think is important.
-> A: 
-> I've contributed to the kernel a few times time in the past for both
-> adding features and janitorial tasks.
-
-Excellent! Yeah, it looks like you've been helping clean up some staging
-drivers[2].
-
-I see you touched rtl8192u -- there's a lot of duplicate code spread
-around in the rtl* drivers. It would be interesting to see those
-consolidated some day. If you're interested, it may be worth asking
-about it on the wireless list.
-
-> I took the Linux Kernel Internals (LF420) and the Linux Kernel Debugging
-> and Security (LF44) courses by the Linux Foundation.
-
-Cool -- did anything stand out for you in those courses?
-
-> As for other experiences, due to the fact that I wrote my hobbyist OS, I
-> do have a decent experience with the x86/x86-64 architecture. I also
-> spent quite sometime writing static analysis parsers.... so should those
-> experiences help anyone or any possible future plan for the KSPP, please
-> count on me.
-
-Great! One area that needs some review and testing that is x86-specific
-is the userspace CET support[3]. That spans a wide range of from chipset
-all the way up through compiler, kernel, and glibc. Getting more people
-to try that series out and post results ("it works for me" or "I
-couldn't trigger the protection", etc) would be very welcome.
-
-You've already found the "remove the 1-element arrays" work, and there
-are plenty more like that on the issue tracker. Trying to really put an
-end to strlcpy[4] is ongoing[5] too, as there has been a fairly
-concerted effort to remove them lately:
-
-Count of "git grep strlcpy | wc -l" over recent releases:
-
-         v5.17:  1535
-         v5.18:  1525
-         v5.19:  1507
-          v6.0:  1379
-        master:   544
- next-20221010:   401
-
-Thanks for introducing yourself!
-
--Kees
-
-[1] https://lore.kernel.org/linux-hardening/Y0IsXXYnS4DnWkMW@mail.google.com/
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=author&q=Paulo+Miguel+Almeida
-[3] https://lore.kernel.org/lkml/Y0IsXXYnS4DnWkMW@mail.google.com/
-[4] https://github.com/KSPP/linux/issues/89
-[5] https://lore.kernel.org/lkml/?q=s%3A%22use+strscpy%22
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=grep&q=strlcpy
+I expect this will land before -rc1 closes, but Johannes will know more
+about the schedule.
 
 -- 
 Kees Cook
