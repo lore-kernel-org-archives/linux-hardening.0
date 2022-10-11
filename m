@@ -2,114 +2,99 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CF9C433F5
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 20:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EBAC433F5
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 20:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbiJKU1K (ORCPT
+        id S230041AbiJKUgh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 Oct 2022 16:27:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57792 "EHLO
+        Tue, 11 Oct 2022 16:36:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229675AbiJKU1J (ORCPT
+        with ESMTP id S230025AbiJKUgN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 Oct 2022 16:27:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BB197AC17;
-        Tue, 11 Oct 2022 13:27:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 36855612B1;
-        Tue, 11 Oct 2022 20:27:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E95CAC433D6;
-        Tue, 11 Oct 2022 20:27:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665520027;
-        bh=4mjeGZWjzdltaknQh2xEAk5S7/0E0scidfMTONRIA+g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aE22t2xlXwPF01/LBFR23LFlHwFonaxKAI6BaGe7TGNrMLq2g2vOPLsaHVZtO0qEm
-         hCibw3ac+chbdV9UCFpQTt+kf7O9Dkr9Akb+rmCRETw6XIYkRqqpu71M16E0Z+qU+0
-         XbnkbzQsK3okMPuZ1LZGImou+ytsqBc36FOjpd/4GqFACT4UsUtxgJ6yTZH5zyb+Zr
-         v5L9ZykZFVETjP3cPXXpMaHXV8gXJrqoUiI8dFgXAk2NVR6Hg1qWkjqhr6XUcutSkd
-         04fZSbByF+MNJm6YceKxucaT0CjIAYLYnPJL8o7KxEuqWcMZxI3eNlXDa4DMkLuc5T
-         4PkpaqTDGcjhA==
-Date:   Tue, 11 Oct 2022 15:26:57 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-Cc:     Christine Caulfield <ccaulfie@redhat.com>,
-        David Teigland <teigland@redhat.com>, cluster-devel@redhat.com,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v5] [next] dlm: replace one-element array with fixed size
- array
-Message-ID: <Y0XRkWvc2uey+IJh@work>
-References: <202210111305.743F591@keescook>
- <Y0XQsqdRzlrSpgOh@mail.google.com>
+        Tue, 11 Oct 2022 16:36:13 -0400
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAB7D1B78D;
+        Tue, 11 Oct 2022 13:36:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=WYpblXeqgH5l2vWWxUISGGhQDP6GQt/mv4HUK04XBbI=; b=cupYyh77e5T5swv28go4kCSCgP
+        T5HLCgrdjFI60AWfds81KGnNRDQqFq3C1fdcppz03j0bhBlpzN+nCqvkYkeZ55aq+4J6yA5C6vMl2
+        QMGViALEpTagxueG3YqQ/ay8MBLOSIHFaPp5bOVrkntXMrglnCzsMp1QGTYOFk6jjSBqshbaJAuju
+        NU1/GP1iEtG2w3Ph/u/zp75JsmqYf8jgWObvfSXNyVsBsMmUutK1yx56Jpj6asRzkd+OHZvstC022
+        q8GijfJy/49vozwhX47VX/N8+j4tFX31syZxTEsoSNVN0fJ8NFOcEX4viiCuPZC0uqVOkfHlpVPDX
+        Wje3RaOA==;
+Received: from 201-43-120-40.dsl.telesp.net.br ([201.43.120.40] helo=[192.168.1.60])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1oiLys-00HOn1-BD; Tue, 11 Oct 2022 22:36:02 +0200
+Message-ID: <b06cdd10-3372-0613-6719-21c2fc664d05@igalia.com>
+Date:   Tue, 11 Oct 2022 17:35:48 -0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y0XQsqdRzlrSpgOh@mail.google.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.2
+Subject: Re: [PATCH 5/5] MAINTAINERS: Update pstore maintainers
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
+Cc:     Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Paramjit Oberoi <pso@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
+References: <20221011200112.731334-1-keescook@chromium.org>
+ <20221011200112.731334-6-keescook@chromium.org>
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20221011200112.731334-6-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Oct 12, 2022 at 09:23:14AM +1300, Paulo Miguel Almeida wrote:
-> One-element arrays are deprecated. So, replace one-element array with
-> fixed size array member in struct dlm_ls, and refactor the rest of the
-> code, accordingly.
+On 11/10/2022 17:01, Kees Cook wrote:
+> Update pstore to better reflect reality of active contributors:
 > 
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://github.com/KSPP/linux/issues/228
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836
-> Link: https://lore.kernel.org/lkml/Y0W5jkiXUkpNl4ap@mail.google.com/
+> - Remove Anton and Colin (thank you for your help through the years!)
+> - Move Tony to Reviewer
+> - Add Guilherme as Reviewer
+> - Add mailing list
+> - Upgrade to Supported
 > 
-> Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks!
---
-Gustavo
-
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
-> Changelog:
+>  MAINTAINERS | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> v5: use preferred sizeof style. Req: Gustavo Silva
-> v4: resend patch using the right version number. Req: Gustavo Silva
-> v3: replace one-element array with a fixed size array. Req: Kees Cook
-> v2: patch resent as I had an issue with a <CRLF> char in my mail client
-> v1: https://lore.kernel.org/lkml/Y0ICbf8tCtXMn+W0@mail.google.com/
-> ---
-> 
->  fs/dlm/dlm_internal.h | 2 +-
->  fs/dlm/lockspace.c    | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
-> index e34c3d2639a5..94fadb619ba0 100644
-> --- a/fs/dlm/dlm_internal.h
-> +++ b/fs/dlm/dlm_internal.h
-> @@ -670,7 +670,7 @@ struct dlm_ls {
->  	void			*ls_ops_arg;
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9d7f64dc0efe..bb18a6c91c4e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16458,10 +16458,10 @@ F:	net/psample
 >  
->  	int			ls_namelen;
-> -	char			ls_name[1];
-> +	char			ls_name[DLM_LOCKSPACE_LEN + 1];
->  };
->  
->  /*
-> diff --git a/fs/dlm/lockspace.c b/fs/dlm/lockspace.c
-> index bae050df7abf..9479c8110979 100644
-> --- a/fs/dlm/lockspace.c
-> +++ b/fs/dlm/lockspace.c
-> @@ -473,7 +473,7 @@ static int new_lockspace(const char *name, const char *cluster,
->  
->  	error = -ENOMEM;
->  
-> -	ls = kzalloc(sizeof(struct dlm_ls) + namelen, GFP_NOFS);
-> +	ls = kzalloc(sizeof(*ls), GFP_NOFS);
->  	if (!ls)
->  		goto out;
->  	memcpy(ls->ls_name, name, namelen);
-> -- 
-> 2.37.3
-> 
+>  PSTORE FILESYSTEM
+>  M:	Kees Cook <keescook@chromium.org>
+> -M:	Anton Vorontsov <anton@enomsg.org>
+> -M:	Colin Cross <ccross@android.com>
+> -M:	Tony Luck <tony.luck@intel.com>
+> -S:	Maintained
+> +R:	Tony Luck <tony.luck@intel.com>
+> +R:	Guilherme G. Piccoli <gpiccoli@igalia.com>
+> +L:	linux-hardening@vger.kernel.org
+> +S:	Supported
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/pstore
+>  F:	Documentation/admin-guide/ramoops.rst
+>  F:	Documentation/admin-guide/pstore-blk.rst
+
+Thanks Kees!
+Acked-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+
+
+Just curious, why linux-hardening was the picked list?
+Cheers,
+
+
+Guilherme
