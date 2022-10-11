@@ -2,50 +2,50 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6F8C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 20:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FA4C43217
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Oct 2022 20:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229771AbiJKUBU (ORCPT
+        id S229729AbiJKUBW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 Oct 2022 16:01:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37044 "EHLO
+        Tue, 11 Oct 2022 16:01:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbiJKUBT (ORCPT
+        with ESMTP id S229689AbiJKUBU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 Oct 2022 16:01:19 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43E349A9ED
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Oct 2022 13:01:17 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id 10so14308914pli.0
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Oct 2022 13:01:17 -0700 (PDT)
+        Tue, 11 Oct 2022 16:01:20 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F8299AF80
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Oct 2022 13:01:18 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id 3so12970596pfw.4
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Oct 2022 13:01:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5ImRFY/kQc3nbzwRtMOnxxuLMo6+tsKsP7uuwYA4BR0=;
-        b=GdbesdzwaCWqgkLNAsV5KfVktbL3UaDzzdoWc3A/Uid9TPzLobcqUwMusm+WjS1FsK
-         IGTPQ99DcXwxs6onD0+bKHwk60UlUNZ4AW77I99kA0ebc3oTNyHNLytG/ozVvrER7cuI
-         Vf1GyUYTANCxeX7vc06y0gxJqvo5X+ZuHFgmE=
+        bh=M4TJwuezge9Mh06wwbhfzGnSBhH+7qHpmKOCGYYt5js=;
+        b=NAyYyKndvGerX3OhbNfX4E1T1IG9GxkYlz4nDLBUVurjW8EKYLMbdE23o4eaNEStF5
+         eB88AsLwfbV41kQjBOO/Dxe+EFhgAj18GIe53KHvCXjRFFVlku3JMSwWnpDenf24lhlr
+         AbnIvMER8N2Z4o0HCnIOgvu0/xptLWhn2mb9E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5ImRFY/kQc3nbzwRtMOnxxuLMo6+tsKsP7uuwYA4BR0=;
-        b=M8fxvt+bWP7pOIa9ajNr3fE22QpZm7OR1m5/vj0JPqQRKfgcEbbfe01J7j0EQgSG1T
-         70kswxrVCUCxDElv960+MPlqtiM7VoNZp4TRQ49mMiLiVdkMg+YyIovYcmdATlh9b+3c
-         317S1g+rwk6/78wGR94lBsPh1Hj4gEG+njRfpKWr1M0utFyMQ64uT2v61SZQbqnrqXNn
-         Wp5pc67IFEHh/5xAxruw7xGzqBLiGZsay9GYMKzf8LQS/wd7+ftqjR5uBTXsxk38H6Fa
-         w4tm56Uw2UtaAgDm5Vtbs5whZm9nPKGhZJBUP9UIyNow3O90n+IPLNyVClSIhvEiQ7jx
-         2NOg==
-X-Gm-Message-State: ACrzQf39s710pYJ0BBk+AmLs/kTlrLUOIjIq4T7H647UJQvFNhX82fgr
-        UJSV5YNJsglkmsO1dsgybRNrdA==
-X-Google-Smtp-Source: AMsMyM7a3zBz6ADcgsNbPrpNPfDdQ9wFNVD9/cbamGp+fK1w86YjAePIu1woS0FTC0RVmaT+LaOqOg==
-X-Received: by 2002:a17:903:41c3:b0:17f:8def:dc92 with SMTP id u3-20020a17090341c300b0017f8defdc92mr25919272ple.7.1665518476781;
-        Tue, 11 Oct 2022 13:01:16 -0700 (PDT)
+        bh=M4TJwuezge9Mh06wwbhfzGnSBhH+7qHpmKOCGYYt5js=;
+        b=LT9N7t0+SzpD3OtXn+Xs6ER485hvdJN0TAPU+CH3vV/k0ckMsZGD5h9Jb/I3uMHKcI
+         Ox7PmEVH7kQE90Qzrjw55QJPUwwKe9z3CA2wXOsMWgnbezAsa45A06HY4ejyX17PhQzp
+         +ZsNldUyu8iYeXnDdAgcRSw/Sz21rVxy/uXqFmN8UQ58UfEX23TPP1bYxGWLwaB1yMZW
+         5MAa2KLZfyIdMBdFEEUjqmM+UCGgiAsSa08lxakMwaXBAKbyxgwseFoIECWpuQssAYJP
+         neZMAaCpswZFaXxjOzimK55r4orHe+FkqfyqYTsH+yaLLwsZf/Bv8i0kF87DHZC10cKX
+         oEgw==
+X-Gm-Message-State: ACrzQf3JftlvTXEPouee53QbU0fCgGejcodOypQeZOL8Tudw/I/qQ9H3
+        AiLt1Ph1rcjRLWt00QFWS1iEJw==
+X-Google-Smtp-Source: AMsMyM5kvs8CSEikdaNqPsNTkrOn5iGKqs5oNUUwZZVu4WwGJ92PFzSu0xJko+00sORNOLaqfaJPhg==
+X-Received: by 2002:a63:f706:0:b0:462:4961:9a11 with SMTP id x6-20020a63f706000000b0046249619a11mr10481657pgh.462.1665518477706;
+        Tue, 11 Oct 2022 13:01:17 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n10-20020a170902d2ca00b00172897952a0sm9075354plc.283.2022.10.11.13.01.15
+        by smtp.gmail.com with ESMTPSA id 189-20020a6205c6000000b00562adeac326sm9396039pff.102.2022.10.11.13.01.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 11 Oct 2022 13:01:16 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -57,101 +57,295 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Paramjit Oberoi <pso@chromium.org>,
         "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
         Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] pstore/ram: Consolidate kfree() paths
-Date:   Tue, 11 Oct 2022 13:01:08 -0700
-Message-Id: <20221011200112.731334-2-keescook@chromium.org>
+Subject: [PATCH 3/5] pstore/ram: Move internal definitions out of kernel-wide include
+Date:   Tue, 11 Oct 2022 13:01:10 -0700
+Message-Id: <20221011200112.731334-4-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20221011200112.731334-1-keescook@chromium.org>
 References: <20221011200112.731334-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2352; h=from:subject; bh=mEys1/rsMBHmicDuT/PsrbPdqAOP6FbA5qrs0C/Aook=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjRcuGkYaMuiV1/iqYJVxiQLWWJdgT/EO2hGLXvCmv f1roR0+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY0XLhgAKCRCJcvTf3G3AJmIJD/ 9YFybwXm4L9u+XUPazEJkw+K98z+r3+XGqgpk3nmGI6xxI4nJQgRqRn4GmlGBcUHr/osiLps9UShHn jr7WoywJyiwhPJfCeE0nj8drYxyiGoNXVk3iGKxwOBa+mA3HuRBxm3Dqv3C1pWImZ+8+4JogFP+Knn utLQSoKMw8Is7uGgJ8cbITYcrBU6k5vKYkVZ8Bt/gFR4j1xvcJEH34AAdtWk8lhdI33+WHjyZq0uwb lbFAta32vWqN0VZ3KD0Eu8KaL26IsSC3azgr3NAyoxZBOILh9Hun55SzC62SMupjIo6GGiZElr+7HF +V54LJfiNMAkD14iDvRxE2SOm61lT1VYM51gr6AR8qqcgivrE3wboJ2pjN937d4kVjQ1pMckd5Amjq 8QMVN+oLXyJO84jq8fZ7MXp048Uzh5Ur2KFB8S8ySuTv+MAy9J8i4WZw33ogCBDFrgZztOtGJ3hoI/ /JpaDtaAmSnmxQW9SrNlrh/s8/YHXhkvll3yTJeuVB2pX913iv78NZADfPHba/TBjaQIQt2RBpcnNE +RN0+TE5ROe/voSF6gKmnqfqXv0eYEolf5YGRw4o9U3A+/5qjDTX/KecPwKGyHIahZwsoRpSFLyzLf zRp7ckYYdmVt2po2Yp0XnYkpjlBcqqILqkSGfDCVhbC444cauyk10bWrS8VA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8843; h=from:subject; bh=LmJeC/PUQwSJn7nPeE53VD7aB+ZaBpI84i+Sx32jgYQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjRcuH1cA4HUNXpnFdiESiQwbNsrS7Yhj08TlaarYL x6G7qFmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY0XLhwAKCRCJcvTf3G3AJlDkEA CfOhUK9wRIS0Fm0hlwbkgi57FaGFCz2w9XNVS2zYGuExCPIwu58CF0GsubEAKP1a9Dxn90zYmSQSsB nYMBdGpDHLzuK53wfgXXefFDvAXWOegqVzd2SQqKVwRBOS3jLGvex2k2EQWVAkgVNeBx2LHgCOQgTl 056Ub4HtS0opl0huj8ubp6aUMjJO8NsyN/9c6/RUDotziDxFTDqFA3hfWptQnG8LuHElH6YGGA6kBS 58nJ8r3qwZuJ4ZmAa/2M8WEqCdUYJWmOMqfOS983XCtvPl01YV9xhQysq5HDWwOrjeW91+Zq28EHX1 vzZEl3QHOVs92/9krTJ/Sy6VAid1MZ3emcc9aSLQkGBewI3WLfm/C+Phzf5Y5RZMqJY5zAiXHv2BE9 rXyD7+LFukmh8vOfpKiT8VsaBmvQW67tuU1YaKOzo5aJETjIPxVn3jIPBVzxsx9PV1zsvIaJ4ZesV7 hq8dfWfP5rgjDWWLnj40FExtdZP1BUbbHJ7aCVsNgnFu5fLCqYks/uheU5iCj3YwRoNMj7pwAkfc3U ax9fFkBKOvDyIkjVXVVzw28cnk4gMj0r8j2gJ3oPILDhjBT0JjoZu4vw5ULIqQcKn5s/BnzFham1bQ dM3KwFwm/l/WWLJufSxbvUsump9OP3jRjVX1mBEw1P4Y1zYJiL66aqLXXHqA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-There's no reason to keep separate kfree() paths: either all allocations
-succeeded, or not. Everything is torn down in the case of failure, so
-adjust the callers to reflect this.
+Most of the details of the ram backend are entirely internal to the
+backend itself. Leave only what is needed to instantiate a ram backend
+in the kernel-wide header.
 
 Cc: Anton Vorontsov <anton@enomsg.org>
 Cc: Colin Cross <ccross@android.com>
 Cc: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/pstore/ram.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ fs/pstore/ram.c            |  3 +-
+ fs/pstore/ram_core.c       |  3 +-
+ fs/pstore/ram_internal.h   | 98 +++++++++++++++++++++++++++++++++++++
+ include/linux/pstore_ram.h | 99 --------------------------------------
+ 4 files changed, 102 insertions(+), 101 deletions(-)
+ create mode 100644 fs/pstore/ram_internal.h
 
 diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index fefe3d391d3a..348820a3ce88 100644
+index 2f18563c8141..f5bf360cf905 100644
 --- a/fs/pstore/ram.c
 +++ b/fs/pstore/ram.c
-@@ -451,6 +451,12 @@ static void ramoops_free_przs(struct ramoops_context *cxt)
- {
- 	int i;
- 
-+	/* Free pmsg PRZ */
-+	persistent_ram_free(cxt->mprz);
+@@ -18,10 +18,11 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/compiler.h>
+-#include <linux/pstore_ram.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
 +
-+	/* Free console PRZ */
-+	persistent_ram_free(cxt->cprz);
+ #include "internal.h"
++#include "ram_internal.h"
+ 
+ #define RAMOOPS_KERNMSG_HDR "===="
+ #define MIN_MEM_SIZE 4096UL
+diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
+index a89e33719fcf..9e1047f4316d 100644
+--- a/fs/pstore/ram_core.c
++++ b/fs/pstore/ram_core.c
+@@ -13,13 +13,14 @@
+ #include <linux/kernel.h>
+ #include <linux/list.h>
+ #include <linux/memblock.h>
+-#include <linux/pstore_ram.h>
+ #include <linux/rslib.h>
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
+ #include <linux/vmalloc.h>
+ #include <asm/page.h>
+ 
++#include "ram_internal.h"
 +
- 	/* Free dump PRZs */
- 	if (cxt->dprzs) {
- 		for (i = 0; i < cxt->max_dump_cnt; i++)
-@@ -772,12 +778,12 @@ static int ramoops_probe(struct platform_device *pdev)
- 				dump_mem_sz, cxt->record_size,
- 				&cxt->max_dump_cnt, 0, 0);
- 	if (err)
--		goto fail_out;
-+		goto fail_init;
+ /**
+  * struct persistent_ram_buffer - persistent circular RAM buffer
+  *
+diff --git a/fs/pstore/ram_internal.h b/fs/pstore/ram_internal.h
+new file mode 100644
+index 000000000000..440ee7a35e10
+--- /dev/null
++++ b/fs/pstore/ram_internal.h
+@@ -0,0 +1,98 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2010 Marco Stornelli <marco.stornelli@gmail.com>
++ * Copyright (C) 2011 Kees Cook <keescook@chromium.org>
++ * Copyright (C) 2011 Google, Inc.
++ */
++
++#include <linux/pstore_ram.h>
++
++/*
++ * Choose whether access to the RAM zone requires locking or not.  If a zone
++ * can be written to from different CPUs like with ftrace for example, then
++ * PRZ_FLAG_NO_LOCK is used. For all other cases, locking is required.
++ */
++#define PRZ_FLAG_NO_LOCK	BIT(0)
++/*
++ * If a PRZ should only have a single-boot lifetime, this marks it as
++ * getting wiped after its contents get copied out after boot.
++ */
++#define PRZ_FLAG_ZAP_OLD	BIT(1)
++
++/**
++ * struct persistent_ram_zone - Details of a persistent RAM zone (PRZ)
++ *                              used as a pstore backend
++ *
++ * @paddr:	physical address of the mapped RAM area
++ * @size:	size of mapping
++ * @label:	unique name of this PRZ
++ * @type:	frontend type for this PRZ
++ * @flags:	holds PRZ_FLAGS_* bits
++ *
++ * @buffer_lock:
++ *	locks access to @buffer "size" bytes and "start" offset
++ * @buffer:
++ *	pointer to actual RAM area managed by this PRZ
++ * @buffer_size:
++ *	bytes in @buffer->data (not including any trailing ECC bytes)
++ *
++ * @par_buffer:
++ *	pointer into @buffer->data containing ECC bytes for @buffer->data
++ * @par_header:
++ *	pointer into @buffer->data containing ECC bytes for @buffer header
++ *	(i.e. all fields up to @data)
++ * @rs_decoder:
++ *	RSLIB instance for doing ECC calculations
++ * @corrected_bytes:
++ *	ECC corrected bytes accounting since boot
++ * @bad_blocks:
++ *	ECC uncorrectable bytes accounting since boot
++ * @ecc_info:
++ *	ECC configuration details
++ *
++ * @old_log:
++ *	saved copy of @buffer->data prior to most recent wipe
++ * @old_log_size:
++ *	bytes contained in @old_log
++ *
++ */
++struct persistent_ram_zone {
++	phys_addr_t paddr;
++	size_t size;
++	void *vaddr;
++	char *label;
++	enum pstore_type_id type;
++	u32 flags;
++
++	raw_spinlock_t buffer_lock;
++	struct persistent_ram_buffer *buffer;
++	size_t buffer_size;
++
++	char *par_buffer;
++	char *par_header;
++	struct rs_control *rs_decoder;
++	int corrected_bytes;
++	int bad_blocks;
++	struct persistent_ram_ecc_info ecc_info;
++
++	char *old_log;
++	size_t old_log_size;
++};
++
++struct persistent_ram_zone *persistent_ram_new(phys_addr_t start, size_t size,
++			u32 sig, struct persistent_ram_ecc_info *ecc_info,
++			unsigned int memtype, u32 flags, char *label);
++void persistent_ram_free(struct persistent_ram_zone *prz);
++void persistent_ram_zap(struct persistent_ram_zone *prz);
++
++int persistent_ram_write(struct persistent_ram_zone *prz, const void *s,
++			 unsigned int count);
++int persistent_ram_write_user(struct persistent_ram_zone *prz,
++			      const void __user *s, unsigned int count);
++
++void persistent_ram_save_old(struct persistent_ram_zone *prz);
++size_t persistent_ram_old_size(struct persistent_ram_zone *prz);
++void *persistent_ram_old(struct persistent_ram_zone *prz);
++void persistent_ram_free_old(struct persistent_ram_zone *prz);
++ssize_t persistent_ram_ecc_string(struct persistent_ram_zone *prz,
++	char *str, size_t len);
+diff --git a/include/linux/pstore_ram.h b/include/linux/pstore_ram.h
+index 9f16afec7290..9d65ff94e216 100644
+--- a/include/linux/pstore_ram.h
++++ b/include/linux/pstore_ram.h
+@@ -8,28 +8,7 @@
+ #ifndef __LINUX_PSTORE_RAM_H__
+ #define __LINUX_PSTORE_RAM_H__
  
- 	err = ramoops_init_prz("console", dev, cxt, &cxt->cprz, &paddr,
- 			       cxt->console_size, 0);
- 	if (err)
--		goto fail_init_cprz;
-+		goto fail_init;
+-#include <linux/compiler.h>
+-#include <linux/device.h>
+-#include <linux/init.h>
+-#include <linux/kernel.h>
+-#include <linux/list.h>
+ #include <linux/pstore.h>
+-#include <linux/types.h>
+-
+-/*
+- * Choose whether access to the RAM zone requires locking or not.  If a zone
+- * can be written to from different CPUs like with ftrace for example, then
+- * PRZ_FLAG_NO_LOCK is used. For all other cases, locking is required.
+- */
+-#define PRZ_FLAG_NO_LOCK	BIT(0)
+-/*
+- * If a PRZ should only have a single-boot lifetime, this marks it as
+- * getting wiped after its contents get copied out after boot.
+- */
+-#define PRZ_FLAG_ZAP_OLD	BIT(1)
+-
+-struct persistent_ram_buffer;
+-struct rs_control;
  
- 	cxt->max_ftrace_cnt = (cxt->flags & RAMOOPS_FLAG_FTRACE_PER_CPU)
- 				? nr_cpu_ids
-@@ -788,12 +794,12 @@ static int ramoops_probe(struct platform_device *pdev)
- 				(cxt->flags & RAMOOPS_FLAG_FTRACE_PER_CPU)
- 					? PRZ_FLAG_NO_LOCK : 0);
- 	if (err)
--		goto fail_init_fprz;
-+		goto fail_init;
+ struct persistent_ram_ecc_info {
+ 	int block_size;
+@@ -39,84 +18,6 @@ struct persistent_ram_ecc_info {
+ 	uint16_t *par;
+ };
  
- 	err = ramoops_init_prz("pmsg", dev, cxt, &cxt->mprz, &paddr,
- 				cxt->pmsg_size, 0);
- 	if (err)
--		goto fail_init_mprz;
-+		goto fail_init;
- 
- 	cxt->pstore.data = cxt;
- 	/*
-@@ -857,11 +863,7 @@ static int ramoops_probe(struct platform_device *pdev)
- 	kfree(cxt->pstore.buf);
- fail_clear:
- 	cxt->pstore.bufsize = 0;
--	persistent_ram_free(cxt->mprz);
--fail_init_mprz:
--fail_init_fprz:
--	persistent_ram_free(cxt->cprz);
--fail_init_cprz:
-+fail_init:
- 	ramoops_free_przs(cxt);
- fail_out:
- 	return err;
-@@ -876,8 +878,6 @@ static int ramoops_remove(struct platform_device *pdev)
- 	kfree(cxt->pstore.buf);
- 	cxt->pstore.bufsize = 0;
- 
--	persistent_ram_free(cxt->mprz);
--	persistent_ram_free(cxt->cprz);
- 	ramoops_free_przs(cxt);
- 
- 	return 0;
+-/**
+- * struct persistent_ram_zone - Details of a persistent RAM zone (PRZ)
+- *                              used as a pstore backend
+- *
+- * @paddr:	physical address of the mapped RAM area
+- * @size:	size of mapping
+- * @label:	unique name of this PRZ
+- * @type:	frontend type for this PRZ
+- * @flags:	holds PRZ_FLAGS_* bits
+- *
+- * @buffer_lock:
+- *	locks access to @buffer "size" bytes and "start" offset
+- * @buffer:
+- *	pointer to actual RAM area managed by this PRZ
+- * @buffer_size:
+- *	bytes in @buffer->data (not including any trailing ECC bytes)
+- *
+- * @par_buffer:
+- *	pointer into @buffer->data containing ECC bytes for @buffer->data
+- * @par_header:
+- *	pointer into @buffer->data containing ECC bytes for @buffer header
+- *	(i.e. all fields up to @data)
+- * @rs_decoder:
+- *	RSLIB instance for doing ECC calculations
+- * @corrected_bytes:
+- *	ECC corrected bytes accounting since boot
+- * @bad_blocks:
+- *	ECC uncorrectable bytes accounting since boot
+- * @ecc_info:
+- *	ECC configuration details
+- *
+- * @old_log:
+- *	saved copy of @buffer->data prior to most recent wipe
+- * @old_log_size:
+- *	bytes contained in @old_log
+- *
+- */
+-struct persistent_ram_zone {
+-	phys_addr_t paddr;
+-	size_t size;
+-	void *vaddr;
+-	char *label;
+-	enum pstore_type_id type;
+-	u32 flags;
+-
+-	raw_spinlock_t buffer_lock;
+-	struct persistent_ram_buffer *buffer;
+-	size_t buffer_size;
+-
+-	char *par_buffer;
+-	char *par_header;
+-	struct rs_control *rs_decoder;
+-	int corrected_bytes;
+-	int bad_blocks;
+-	struct persistent_ram_ecc_info ecc_info;
+-
+-	char *old_log;
+-	size_t old_log_size;
+-};
+-
+-struct persistent_ram_zone *persistent_ram_new(phys_addr_t start, size_t size,
+-			u32 sig, struct persistent_ram_ecc_info *ecc_info,
+-			unsigned int memtype, u32 flags, char *label);
+-void persistent_ram_free(struct persistent_ram_zone *prz);
+-void persistent_ram_zap(struct persistent_ram_zone *prz);
+-
+-int persistent_ram_write(struct persistent_ram_zone *prz, const void *s,
+-			 unsigned int count);
+-int persistent_ram_write_user(struct persistent_ram_zone *prz,
+-			      const void __user *s, unsigned int count);
+-
+-void persistent_ram_save_old(struct persistent_ram_zone *prz);
+-size_t persistent_ram_old_size(struct persistent_ram_zone *prz);
+-void *persistent_ram_old(struct persistent_ram_zone *prz);
+-void persistent_ram_free_old(struct persistent_ram_zone *prz);
+-ssize_t persistent_ram_ecc_string(struct persistent_ram_zone *prz,
+-	char *str, size_t len);
+-
+ /*
+  * Ramoops platform data
+  * @mem_size	memory size for ramoops
 -- 
 2.34.1
 
