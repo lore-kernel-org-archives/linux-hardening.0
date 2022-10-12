@@ -2,53 +2,53 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05047C4332F
-	for <linux-hardening@archiver.kernel.org>; Wed, 12 Oct 2022 19:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663F1C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed, 12 Oct 2022 19:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229495AbiJLTon (ORCPT
+        id S229540AbiJLTp3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 Oct 2022 15:44:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39126 "EHLO
+        Wed, 12 Oct 2022 15:45:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229589AbiJLTol (ORCPT
+        with ESMTP id S229621AbiJLTp2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 Oct 2022 15:44:41 -0400
+        Wed, 12 Oct 2022 15:45:28 -0400
 Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 698E5D8EE1;
-        Wed, 12 Oct 2022 12:44:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFC3220193;
+        Wed, 12 Oct 2022 12:45:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
         s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
         References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=jDZ4I851LxUdiiu7BOsIO9+z+vse5KTGadLoaWtLdh4=; b=RR4TAXO9r99InPuIYcVWRn13tS
-        Zknncza69nRXINqO+JkA5O6uvwH5DuCovhE7tjj+iHdkEE+n9Y8XCycNWzubW4Q1uIm2daPRJrYdH
-        SLbcCEzr+FPzdvv6+DBWR5gjpUoPTKuw0ixZVkqnE1yDBbI7dV08pRZE/84ZYi5xNZrTWX10Qdqrj
-        b7cHo6jYdDwWibfY5pAYkIo5TWkfDYMPXMy+hw6aANsRYzWnzMprVuM+FeJZC2VEg8RMQ6ejGnNiO
-        Bdy6LzXDj7iEWi90I242qZP1vTCzuGyYAmuNL2hEM7p3oK6Jn+4xSzpSC0iTNXznU9eOhK+V9GLDO
-        wAPeYexg==;
+        bh=gFAmAkOYwXyRxUyhMA4f3R3/S6aTfOsWKqz4Ft0mgyM=; b=VdvChzVYSaUvDGnKMSGcZftAyQ
+        FUinifD4cMXYyTKb29dc92zTvbzoMym9AQge/w42B2bC4t9qnrlB3/UWw7M40mj+NLYig3YatS0qj
+        hwogvTWxVCrTVi95yz0GK3qANBsW/X06v37WTWbiJWfl+clFiFKbFwKlLEDOzGWvAsRX3fdUyazci
+        nIiC2XsGkZcNL8ABJ6ut5c/Yeeo1jeD9jLSe76lFxp5duq20ZvK1AWxP7YfpmoU7FvCi7NIjGA54T
+        p7oPaU0Q36KdKpTgbZoudSiBMgoKAHR4AWhytpacf291UohUk0z9h2rN0obLXFG9tzmtA22tCuhml
+        aySqdA1A==;
 Received: from 201-43-120-40.dsl.telesp.net.br ([201.43.120.40] helo=[192.168.1.60])
         by fanzine2.igalia.com with esmtpsa 
         (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1oiheT-000OMs-NC; Wed, 12 Oct 2022 21:44:26 +0200
-Message-ID: <fb46724b-f696-c672-fed0-53d844c79151@igalia.com>
-Date:   Wed, 12 Oct 2022 16:44:12 -0300
+        id 1oihfQ-000OOu-Fo; Wed, 12 Oct 2022 21:45:24 +0200
+Message-ID: <a49365e3-3b4c-2f82-99dc-0114e4dc64a1@igalia.com>
+Date:   Wed, 12 Oct 2022 16:45:10 -0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.2
-Subject: Re: [PATCH 4/5] pstore/ram: Set freed addresses to NULL
+Subject: Re: [PATCH 2/5] pstore/ram: Move pmsg init earlier
 Content-Language: en-US
 To:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
-Cc:     Anton Vorontsov <anton@enomsg.org>,
+Cc:     Paramjit Oberoi <pso@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>,
-        Paramjit Oberoi <pso@chromium.org>,
         Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
 References: <20221011200112.731334-1-keescook@chromium.org>
- <20221011200112.731334-5-keescook@chromium.org>
+ <20221011200112.731334-3-keescook@chromium.org>
 From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20221011200112.731334-5-keescook@chromium.org>
+In-Reply-To: <20221011200112.731334-3-keescook@chromium.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -56,21 +56,21 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 On 11/10/2022 17:01, Kees Cook wrote:
-> For good measure, set all the freed addresses to NULL when managing
-> przs.
+> Since the ftrace area can vary in size based on CPU count, move pmsg
+> initialization earlier so it will have a stable location.
 > 
+> Suggested-by: Paramjit Oberoi <pso@chromium.org>
 > Cc: Anton Vorontsov <anton@enomsg.org>
 > Cc: Colin Cross <ccross@android.com>
 > Cc: Tony Luck <tony.luck@intel.com>
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
 
-Reviewed-and-tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Reviewed: Guilherme G. Piccoli <gpiccoli@igalia.com>
 
-Tested by building / booting and triggering crashes with efi and ramoops
-backends.
+Since I'm not using pmsg my tests are of limited scope here, so better
+to consider I just reviewed the patch heh
 Cheers,
 
 
 Guilherme
-
