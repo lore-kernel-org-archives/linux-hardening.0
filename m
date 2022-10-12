@@ -2,53 +2,54 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663F1C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 12 Oct 2022 19:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3C5C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed, 12 Oct 2022 19:47:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229540AbiJLTp3 (ORCPT
+        id S229659AbiJLTrD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 Oct 2022 15:45:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44974 "EHLO
+        Wed, 12 Oct 2022 15:47:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229621AbiJLTp2 (ORCPT
+        with ESMTP id S229682AbiJLTrC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 Oct 2022 15:45:28 -0400
+        Wed, 12 Oct 2022 15:47:02 -0400
 Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFC3220193;
-        Wed, 12 Oct 2022 12:45:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F80937B1;
+        Wed, 12 Oct 2022 12:46:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
         s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
         References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=gFAmAkOYwXyRxUyhMA4f3R3/S6aTfOsWKqz4Ft0mgyM=; b=VdvChzVYSaUvDGnKMSGcZftAyQ
-        FUinifD4cMXYyTKb29dc92zTvbzoMym9AQge/w42B2bC4t9qnrlB3/UWw7M40mj+NLYig3YatS0qj
-        hwogvTWxVCrTVi95yz0GK3qANBsW/X06v37WTWbiJWfl+clFiFKbFwKlLEDOzGWvAsRX3fdUyazci
-        nIiC2XsGkZcNL8ABJ6ut5c/Yeeo1jeD9jLSe76lFxp5duq20ZvK1AWxP7YfpmoU7FvCi7NIjGA54T
-        p7oPaU0Q36KdKpTgbZoudSiBMgoKAHR4AWhytpacf291UohUk0z9h2rN0obLXFG9tzmtA22tCuhml
-        aySqdA1A==;
+        bh=yhi88whDAxkWtc01TIA26aAnE8AEbY8JfuWtgY57GaA=; b=hMNCB6gZDp6F59CsajRPU0/7h2
+        oeTM39B5vi3VOY49PQAF+Xt9+Fqk9KDUzjZmydubfspBFMk7BVR26RVgw3kgni+UOETgLIpLcFEtU
+        RKMeDTV+HqROe6DRDoWYf2d+zKll8dp/FmytDgsGtfFsCBiXEoW4Gfa306GVoh/AwZBO1PI6leH9R
+        8bDmdYsGBrHjrGwUlLx4YQdmezR4Ng+maWYFBZQHH3qnKTpkifkfhGETvWMBkWQ/LX7x59sShyhbn
+        RTJVGNg2I9DhYnqK2AFypmbfT38zswHL3HJ7Is1XI/6HmHu6EhyYcveB5zGlrFhkDkjfJeWJeowgh
+        aSKxy1Og==;
 Received: from 201-43-120-40.dsl.telesp.net.br ([201.43.120.40] helo=[192.168.1.60])
         by fanzine2.igalia.com with esmtpsa 
         (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1oihfQ-000OOu-Fo; Wed, 12 Oct 2022 21:45:24 +0200
-Message-ID: <a49365e3-3b4c-2f82-99dc-0114e4dc64a1@igalia.com>
-Date:   Wed, 12 Oct 2022 16:45:10 -0300
+        id 1oihgv-000OQ0-MM; Wed, 12 Oct 2022 21:46:57 +0200
+Message-ID: <5fdffa8b-04cb-b42f-e29a-03e9e9045424@igalia.com>
+Date:   Wed, 12 Oct 2022 16:46:44 -0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.2
-Subject: Re: [PATCH 2/5] pstore/ram: Move pmsg init earlier
+Subject: Re: [PATCH 3/5] pstore/ram: Move internal definitions out of
+ kernel-wide include
 Content-Language: en-US
 To:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
-Cc:     Paramjit Oberoi <pso@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
+Cc:     Anton Vorontsov <anton@enomsg.org>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>,
+        Paramjit Oberoi <pso@chromium.org>,
         Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
 References: <20221011200112.731334-1-keescook@chromium.org>
- <20221011200112.731334-3-keescook@chromium.org>
+ <20221011200112.731334-4-keescook@chromium.org>
 From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20221011200112.731334-3-keescook@chromium.org>
+In-Reply-To: <20221011200112.731334-4-keescook@chromium.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -56,21 +57,24 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 On 11/10/2022 17:01, Kees Cook wrote:
-> Since the ftrace area can vary in size based on CPU count, move pmsg
-> initialization earlier so it will have a stable location.
+> Most of the details of the ram backend are entirely internal to the
+> backend itself. Leave only what is needed to instantiate a ram backend
+> in the kernel-wide header.
 > 
-> Suggested-by: Paramjit Oberoi <pso@chromium.org>
 > Cc: Anton Vorontsov <anton@enomsg.org>
 > Cc: Colin Cross <ccross@android.com>
 > Cc: Tony Luck <tony.luck@intel.com>
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
 
-Reviewed: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Reviewed-and-tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 
-Since I'm not using pmsg my tests are of limited scope here, so better
-to consider I just reviewed the patch heh
+Tested by building and booting the kernel - since it's just header file
+rework, guess this is enough right?
+
+BTW, let me know if you prefer me to respond on the series once or per
+patch Kees (as I'm doing here).
+
 Cheers,
-
 
 Guilherme
