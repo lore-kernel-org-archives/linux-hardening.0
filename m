@@ -2,124 +2,79 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC963C43217
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Oct 2022 21:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8EFC4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Oct 2022 21:07:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229812AbiJMVHQ (ORCPT
+        id S229846AbiJMVHS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 Oct 2022 17:07:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35896 "EHLO
+        Thu, 13 Oct 2022 17:07:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229550AbiJMVHQ (ORCPT
+        with ESMTP id S229838AbiJMVHR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 Oct 2022 17:07:16 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25F33183DB8;
-        Thu, 13 Oct 2022 14:07:15 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id fy4so6565008ejc.5;
-        Thu, 13 Oct 2022 14:07:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IZ5njUsMjpaWj9YOz1Vm++un7O5+eC1XTxzvAZerpow=;
-        b=faWAR8yx9y/ximCfiagbNCy/0PAKrBsY8wEvnxUxd7VFrwze8WrW/LXuOEsD1B1MgC
-         bmzapz1zdHF1jE76T+mA54DNMXKki/cswG3sXkx6RAEOiC9LYHXvBWUkBqkVC/OutC6w
-         TBoPedYKZEP4+ld5ZJzts0nQv+3AjeM1WBzF9oIZsaGYMjz2koC525mlMh4cImsSStp6
-         XSWzJkXeoFofq4dZ0tkjtoHD4Jl4nliDAg9B+Vd6RKf38AjPS//hn7h+QcZjjgk0xM+g
-         X3Q+S3ElOX8GsPkSJbBAoFNFKK+vjKbNMwCVHL9RQlOConV4BRjaHXXF9yIEoDbdhF1L
-         19Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IZ5njUsMjpaWj9YOz1Vm++un7O5+eC1XTxzvAZerpow=;
-        b=JrAgMraWu9PHel5PSEmuAjHc+NRsWwuD5UjI2njwqbWzvA1+e+qRablmULnEt+5Ehp
-         HVGYkMUYyOW1hDjuHGuAQjSQJkPbF1QiLhlrogPEL8xKnrQExHCQiDRtO1DN+OBi2BXt
-         qDsbCCFE5ZNBxqFZq54bz9kna9uqR42Z2fmurVJXB620vharTvZtAS2FVXUGPHIuhcfm
-         93hDFB+BoMfZ6G8MwfkRUbHSm6zc1hpn2gKKiorhmkqWzbtepSYpQ1vBzMYgM821anga
-         empHjWbIPb67nKnpc6DatZaZybQsGlwQQpQ8vgBhA+9JXm+rsnFdGFSpoSY+TZf9pCIk
-         ZXqw==
-X-Gm-Message-State: ACrzQf0sAnlrVlRbJntAcXjAF0s/AnFkWJQzhhqYZVhgJuFDmXtQnrL6
-        INeu+/dGUimt90HmsPEbeoA=
-X-Google-Smtp-Source: AMsMyM4cU3vLsTSiWCSsbEcY7UV+UJBrC5a07f1dY57EL9s1EUxZ5n3i98uvEdXbgJXpbA6zfUHWAw==
-X-Received: by 2002:a17:907:980e:b0:78d:b6d5:661e with SMTP id ji14-20020a170907980e00b0078db6d5661emr1253849ejc.46.1665695233566;
+        Thu, 13 Oct 2022 17:07:17 -0400
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 029D4183DBE;
         Thu, 13 Oct 2022 14:07:13 -0700 (PDT)
-Received: from localhost.localdomain (host-95-250-231-122.retail.telecomitalia.it. [95.250.231.122])
-        by smtp.gmail.com with ESMTPSA id v25-20020a17090651d900b0078da24ea9c7sm443973ejk.17.2022.10.13.14.07.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Oct 2022 14:07:12 -0700 (PDT)
-From:   "Fabio M. De Francesco" <fmdefrancesco@gmail.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Christian Brauner <brauner@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Kees Cook <keescook@chromium.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        linux-hwmon@vger.kernel.org, linux-hardening@vger.kernel.org
-Cc:     "Fabio M. De Francesco" <fmdefrancesco@gmail.com>,
-        "Venkataramanan, Anirudh" <anirudh.venkataramanan@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>
-Subject: [PATCH] drm/radeon: Replace kmap() with kmap_local_page()
-Date:   Thu, 13 Oct 2022 23:07:14 +0200
-Message-Id: <20221013210714.16320-1-fmdefrancesco@gmail.com>
-X-Mailer: git-send-email 2.37.3
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:
+        Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=tRw94o76Jt1YDr6z4Zx8zuKiI+Bw9m67g8hCPngyLQs=; b=LMUJeCEMyRlUbeAPvkVlgfgC3Y
+        J0ImZQLdztclRIrtZRhNYcKGSCwf4jHxzGBcFk8GyL3JEHA3yfS/w51khU7KWKiV9JnQSMU0J4Zz0
+        07NslbqgGAT4K1jUekF8KsqsLuA2w+WPRuTssnlGsfGwBn1w1nQ0Z0yJe4bTB/1VojJLJLEQ+GxLS
+        KHBxtg2zEkrwKNi5TopwhRC9n2b4tOpqrxqT9d6NYZUO8Pka9EOc1+51IdYpgdezmONL/+NcdusnB
+        BzFRbZ/dt1nupkRAyUF+eez1g0NGkcDT+cAzPRo5lmbUgYN6ZTF6ZJ0PJpfNIWgeYXoCE1voaPxUE
+        JxNGhq8g==;
+Received: from 201-43-120-40.dsl.telesp.net.br ([201.43.120.40] helo=localhost)
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+        id 1oj5Q1-0010sn-R8; Thu, 13 Oct 2022 23:07:06 +0200
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+To:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-efi@vger.kernel.org,
+        kernel-dev@igalia.com, kernel@gpiccoli.net, keescook@chromium.org,
+        anton@enomsg.org, ccross@android.com, tony.luck@intel.com,
+        ardb@kernel.org, "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Subject: [PATCH V2 0/3] Some pstore improvements V2
+Date:   Thu, 13 Oct 2022 18:06:45 -0300
+Message-Id: <20221013210648.137452-1-gpiccoli@igalia.com>
+X-Mailer: git-send-email 2.38.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The use of kmap() is being deprecated in favor of kmap_local_page().
+Hi Kees / Ard and all pstore/efi folks,
 
-There are two main problems with kmap(): (1) It comes with an overhead as
-the mapping space is restricted and protected by a global lock for
-synchronization and (2) it also requires global TLB invalidation when the
-kmap’s pool wraps and it might block when the mapping space is fully
-utilized until a slot becomes available.
+this is the second iteration of the patchset with modifications
+in some patches, one patch dropped and applied on top of the first
+3 patches in the old series [0] (since they were already picked
+by Kees).
 
-With kmap_local_page() the mappings are per thread, CPU local, can take
-page faults, and can be called from any context (including interrupts).
-It is faster than kmap() in kernels with HIGHMEM enabled. Furthermore,
-the tasks can be preempted and, when they are scheduled to run again, the
-kernel virtual addresses are restored and still valid.
+I've tested this with QEMU guest using OVMF and both ramoops and
+efi-pstore backends. Reviews and comments are greatly appreciated!
+Cheers,
 
-Therefore, replace kmap() with kmap_local_page() in radeon_ttm_gtt_read().
 
-Cc: "Venkataramanan, Anirudh" <anirudh.venkataramanan@intel.com>
-Suggested-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Fabio M. De Francesco <fmdefrancesco@gmail.com>
----
- drivers/gpu/drm/radeon/radeon_ttm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Guilherme
 
-diff --git a/drivers/gpu/drm/radeon/radeon_ttm.c b/drivers/gpu/drm/radeon/radeon_ttm.c
-index d33fec488713..bdb4c0e0736b 100644
---- a/drivers/gpu/drm/radeon/radeon_ttm.c
-+++ b/drivers/gpu/drm/radeon/radeon_ttm.c
-@@ -869,11 +869,11 @@ static ssize_t radeon_ttm_gtt_read(struct file *f, char __user *buf,
- 
- 		page = rdev->gart.pages[p];
- 		if (page) {
--			ptr = kmap(page);
-+			ptr = kmap_local_page(page);
- 			ptr += off;
- 
- 			r = copy_to_user(buf, ptr, cur_size);
--			kunmap(rdev->gart.pages[p]);
-+			kunmap_local(ptr);
- 		} else
- 			r = clear_user(buf, cur_size);
- 
+
+[0] https://lore.kernel.org/lkml/20221006224212.569555-1-gpiccoli@igalia.com/
+
+
+Guilherme G. Piccoli (3):
+  pstore: Alert on backend write error
+  efi: pstore: Follow convention for the efi-pstore backend name
+  efi: pstore: Add module parameter for setting the record size
+
+ drivers/firmware/efi/efi-pstore.c | 25 ++++++++++++++++++-------
+ fs/pstore/platform.c              | 10 ++++++++++
+ 2 files changed, 28 insertions(+), 7 deletions(-)
+
 -- 
-2.37.3
+2.38.0
 
