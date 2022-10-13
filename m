@@ -2,108 +2,278 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B069C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Oct 2022 15:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B173C433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Oct 2022 20:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229633AbiJMP1X (ORCPT
+        id S229459AbiJMUAJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 Oct 2022 11:27:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45722 "EHLO
+        Thu, 13 Oct 2022 16:00:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229518AbiJMP1W (ORCPT
+        with ESMTP id S229548AbiJMUAJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 Oct 2022 11:27:22 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B87E3055F
-        for <linux-hardening@vger.kernel.org>; Thu, 13 Oct 2022 08:27:20 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id l6so1837915pgu.7
-        for <linux-hardening@vger.kernel.org>; Thu, 13 Oct 2022 08:27:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aUZ/46ycsp3DJEfmK/6AVnhgzohCjDWCaVCuiIUcej8=;
-        b=Jgmk+CV61Utx3BgV0FoFGaeTX//b36caqIBOSaoe2IFWSx0k33sfei8VRnkfVCeiGz
-         J0uv9Vuk6SRA3YthFh2pZEwbgs7cU97QjAU0cqPbrm+wNw+E6X/btYzkiKvKoxQp0IRr
-         9wSCeGwuje917RHOZeMzpmGtV5/YbEcYLcHls=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aUZ/46ycsp3DJEfmK/6AVnhgzohCjDWCaVCuiIUcej8=;
-        b=4mom7MhPG+tX7tYGaXUPMrCxKvAa/6PWJXGyeFTFPwCjNH6U8+0EjQD7cho7zsCw4r
-         COv8wmYPVwlH/69GtgGg0MGrpHRvanZ89za+nS9LYRYZqS2v9d1r65L80nn2GASj9Kxt
-         KHFL7m8EVveZN42oolRfO6uozbj7ZauQ2PNN0zSYbZrO73w2m53FNWIPlRPllw0ft1E6
-         L9rHX2Oe2gdUoGUSDDjwDsnxO8yvAaxTAQK6xh8ZRFCDGPjG4EhkVluwoucH4QYW8US6
-         XFHAxrSEfwcvoD977rk6BpDSfi9p48pCBR0pdxMGan9jbEnEEiL2tHMd8hKrZm0RdoFL
-         BDKQ==
-X-Gm-Message-State: ACrzQf2P3wB2hETPBR9HXtIytqXaxl5stbUH4AxC7YowovS2h0TMmMJf
-        ToLH9x/YvkXz/Wjm1Y+5bLQLqw==
-X-Google-Smtp-Source: AMsMyM72ldvuO255gINJBzXpo3KG6ewB9Swic+SfkzzawRKS2qaM9Xre3yPOmNA0KJy4jNA0bqV1TA==
-X-Received: by 2002:a63:c4e:0:b0:45f:795:c20a with SMTP id 14-20020a630c4e000000b0045f0795c20amr329465pgm.559.1665674839506;
-        Thu, 13 Oct 2022 08:27:19 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i3-20020a17090a2a0300b0020a1f091a0asm3367125pjd.55.2022.10.13.08.27.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Oct 2022 08:27:18 -0700 (PDT)
-From:   coverity-bot <keescook@chromium.org>
-X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date:   Thu, 13 Oct 2022 08:27:17 -0700
-To:     Ronnie Sahlberg <lsahlber@redhat.com>
-Cc:     Steve French <stfrench@microsoft.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: invalidate_all_cached_dirs(): Concurrent data access
- violations
-Message-ID: <202210130827.48F03E2A39@keescook>
+        Thu, 13 Oct 2022 16:00:09 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E5A34DF0F;
+        Thu, 13 Oct 2022 13:00:06 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CBEB2B82026;
+        Thu, 13 Oct 2022 20:00:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 627D8C433C1;
+        Thu, 13 Oct 2022 20:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665691203;
+        bh=lT0xCcs8gPxn4mJZ8eC38qELd8nIUAX3/Iu/+Z8ntUQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TzodfSjWq/+9Bifv5u45YZFRR2G6PjG4XW1GyGJS4w87dw/1tQmO5YCputmrmAP/n
+         vXCSJ2mpCreCBTlFmDdP2lNj+MxzixOmhKa5F80QP7pL0RDRbxQkapvOu8mSz9Tjif
+         LrLSoSMXpYI0BkA4tvs7kWFq3QCmCwFj+FVnhnFyN7NYG1sRF4lE4JTfMzYMBydVke
+         OMZfDKU7isbX9YKkNB0WeYMeF+mGK2JZLtz2xIcQQ3v9TtBi8r+y/oFbFg2LIXSYkr
+         MhLfKZVDg8+EzxjFDnZRN8CXL4Pc0z3htMWpOtwuWupOUgGWSSeaPSsw957NcPuwfb
+         XJZTNJO02h58A==
+Date:   Thu, 13 Oct 2022 13:00:00 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] sched: Introduce struct balance_callback to avoid CFI
+ mismatches
+Message-ID: <Y0huQNtO8bA2j98Y@dev-arch.thelio-3990X>
+References: <20221008000758.2957718-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20221008000758.2957718-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello!
+On Fri, Oct 07, 2022 at 05:07:58PM -0700, Kees Cook wrote:
+> Introduce distinct struct balance_callback instead of performing function
+> pointer casting which will trip CFI. Avoids warnings as found by Clang's
+> future -Wcast-function-type-strict option:
+> 
+> In file included from kernel/sched/core.c:84:
+> kernel/sched/sched.h:1755:15: warning: cast from 'void (*)(struct rq *)' to 'void (*)(struct callback_head *)' converts to incompatible function type [-Wcast-function-type-strict]
+>         head->func = (void (*)(struct callback_head *))func;
+>                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> No binary differences result from this change.
+> 
+> This patch is a cleanup based on Brad Spengler/PaX Team's modifications
+> to sched code in their last public patch of grsecurity/PaX based on my
+> understanding of the code. Changes or omissions from the original code
+> are mine and don't reflect the original grsecurity/PaX code.
+> 
+> Reported-by: Sami Tolvanen <samitolvanen@google.com>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1724
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-This is an experimental semi-automated report about issues detected by
-Coverity from a scan of next-20221013 as part of the linux-next scan project:
-https://scan.coverity.com/projects/linux-next-weekly-scan
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
 
-You're getting this email because you were associated with the identified
-lines of code (noted below) that were touched by commits:
-
-  Wed Oct 12 16:54:23 2022 -0500
-    a350d6e73f5e ("cifs: enable caching of directories for which a lease is held")
-
-Coverity reported the following:
-
-*** CID 1525256:  Concurrent data access violations  (MISSING_LOCK)
-/fs/cifs/cached_dir.c: 396 in invalidate_all_cached_dirs()
-390     		/* To prevent race with smb2_cached_lease_break() */
-391     		kref_get(&cfid->refcount);
-392     	}
-393     	spin_unlock(&cfids->cfid_list_lock);
-394
-395     	list_for_each_entry_safe(cfid, q, &entry, entry) {
-vvv     CID 1525256:  Concurrent data access violations  (MISSING_LOCK)
-vvv     Accessing "cfid->on_list" without holding lock "cached_fids.cfid_list_lock". Elsewhere, "cached_fid.on_list" is accessed with "cached_fids.cfid_list_lock" held 5 out of 6 times.
-396     		cfid->on_list = false;
-397     		list_del(&cfid->entry);
-398     		cancel_work_sync(&cfid->lease_break);
-399     		if (cfid->has_lease) {
-400     			/*
-401     			 * We lease was never cancelled from the server so we
-
-If this is a false positive, please let us know so we can mark it as
-such, or teach the Coverity rules to be smarter. If not, please make
-sure fixes get into linux-next. :) For patches fixing this, please
-include these lines (but double-check the "Fixes" first):
-
-Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1525256 ("Concurrent data access violations")
-Fixes: a350d6e73f5e ("cifs: enable caching of directories for which a lease is held")
-
-Thanks for your attention!
-
--- 
-Coverity-bot
+> ---
+>  kernel/sched/core.c     | 24 ++++++++++++------------
+>  kernel/sched/deadline.c |  4 ++--
+>  kernel/sched/rt.c       |  4 ++--
+>  kernel/sched/sched.h    | 14 ++++++++++----
+>  4 files changed, 26 insertions(+), 20 deletions(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index ee28253c9ac0..911db628092e 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -4815,10 +4815,10 @@ static inline void finish_task(struct task_struct *prev)
+>  
+>  #ifdef CONFIG_SMP
+>  
+> -static void do_balance_callbacks(struct rq *rq, struct callback_head *head)
+> +static void do_balance_callbacks(struct rq *rq, struct balance_callback *head)
+>  {
+>  	void (*func)(struct rq *rq);
+> -	struct callback_head *next;
+> +	struct balance_callback *next;
+>  
+>  	lockdep_assert_rq_held(rq);
+>  
+> @@ -4845,15 +4845,15 @@ static void balance_push(struct rq *rq);
+>   * This abuse is tolerated because it places all the unlikely/odd cases behind
+>   * a single test, namely: rq->balance_callback == NULL.
+>   */
+> -struct callback_head balance_push_callback = {
+> +struct balance_callback balance_push_callback = {
+>  	.next = NULL,
+> -	.func = (void (*)(struct callback_head *))balance_push,
+> +	.func = balance_push,
+>  };
+>  
+> -static inline struct callback_head *
+> +static inline struct balance_callback *
+>  __splice_balance_callbacks(struct rq *rq, bool split)
+>  {
+> -	struct callback_head *head = rq->balance_callback;
+> +	struct balance_callback *head = rq->balance_callback;
+>  
+>  	if (likely(!head))
+>  		return NULL;
+> @@ -4875,7 +4875,7 @@ __splice_balance_callbacks(struct rq *rq, bool split)
+>  	return head;
+>  }
+>  
+> -static inline struct callback_head *splice_balance_callbacks(struct rq *rq)
+> +static inline struct balance_callback *splice_balance_callbacks(struct rq *rq)
+>  {
+>  	return __splice_balance_callbacks(rq, true);
+>  }
+> @@ -4885,7 +4885,7 @@ static void __balance_callbacks(struct rq *rq)
+>  	do_balance_callbacks(rq, __splice_balance_callbacks(rq, false));
+>  }
+>  
+> -static inline void balance_callbacks(struct rq *rq, struct callback_head *head)
+> +static inline void balance_callbacks(struct rq *rq, struct balance_callback *head)
+>  {
+>  	unsigned long flags;
+>  
+> @@ -4902,12 +4902,12 @@ static inline void __balance_callbacks(struct rq *rq)
+>  {
+>  }
+>  
+> -static inline struct callback_head *splice_balance_callbacks(struct rq *rq)
+> +static inline struct balance_callback *splice_balance_callbacks(struct rq *rq)
+>  {
+>  	return NULL;
+>  }
+>  
+> -static inline void balance_callbacks(struct rq *rq, struct callback_head *head)
+> +static inline void balance_callbacks(struct rq *rq, struct balance_callback *head)
+>  {
+>  }
+>  
+> @@ -6179,7 +6179,7 @@ static void sched_core_balance(struct rq *rq)
+>  	preempt_enable();
+>  }
+>  
+> -static DEFINE_PER_CPU(struct callback_head, core_balance_head);
+> +static DEFINE_PER_CPU(struct balance_callback, core_balance_head);
+>  
+>  static void queue_core_balance(struct rq *rq)
+>  {
+> @@ -7410,7 +7410,7 @@ static int __sched_setscheduler(struct task_struct *p,
+>  	int oldpolicy = -1, policy = attr->sched_policy;
+>  	int retval, oldprio, newprio, queued, running;
+>  	const struct sched_class *prev_class;
+> -	struct callback_head *head;
+> +	struct balance_callback *head;
+>  	struct rq_flags rf;
+>  	int reset_on_fork;
+>  	int queue_flags = DEQUEUE_SAVE | DEQUEUE_MOVE | DEQUEUE_NOCLOCK;
+> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> index 0ab79d819a0d..6498951b7d41 100644
+> --- a/kernel/sched/deadline.c
+> +++ b/kernel/sched/deadline.c
+> @@ -644,8 +644,8 @@ static inline bool need_pull_dl_task(struct rq *rq, struct task_struct *prev)
+>  	return rq->online && dl_task(prev);
+>  }
+>  
+> -static DEFINE_PER_CPU(struct callback_head, dl_push_head);
+> -static DEFINE_PER_CPU(struct callback_head, dl_pull_head);
+> +static DEFINE_PER_CPU(struct balance_callback, dl_push_head);
+> +static DEFINE_PER_CPU(struct balance_callback, dl_pull_head);
+>  
+>  static void push_dl_tasks(struct rq *);
+>  static void pull_dl_task(struct rq *);
+> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> index 55f39c8f4203..ad020a2a72f3 100644
+> --- a/kernel/sched/rt.c
+> +++ b/kernel/sched/rt.c
+> @@ -410,8 +410,8 @@ static inline int has_pushable_tasks(struct rq *rq)
+>  	return !plist_head_empty(&rq->rt.pushable_tasks);
+>  }
+>  
+> -static DEFINE_PER_CPU(struct callback_head, rt_push_head);
+> -static DEFINE_PER_CPU(struct callback_head, rt_pull_head);
+> +static DEFINE_PER_CPU(struct balance_callback, rt_push_head);
+> +static DEFINE_PER_CPU(struct balance_callback, rt_pull_head);
+>  
+>  static void push_rt_tasks(struct rq *);
+>  static void pull_rt_task(struct rq *);
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index e26688d387ae..54971a57a4ea 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -953,6 +953,12 @@ struct uclamp_rq {
+>  DECLARE_STATIC_KEY_FALSE(sched_uclamp_used);
+>  #endif /* CONFIG_UCLAMP_TASK */
+>  
+> +struct rq;
+> +struct balance_callback {
+> +	struct balance_callback *next;
+> +	void (*func)(struct rq *rq);
+> +};
+> +
+>  /*
+>   * This is the main, per-CPU runqueue data structure.
+>   *
+> @@ -1051,7 +1057,7 @@ struct rq {
+>  	unsigned long		cpu_capacity;
+>  	unsigned long		cpu_capacity_orig;
+>  
+> -	struct callback_head	*balance_callback;
+> +	struct balance_callback *balance_callback;
+>  
+>  	unsigned char		nohz_idle_balance;
+>  	unsigned char		idle_balance;
+> @@ -1559,7 +1565,7 @@ struct rq_flags {
+>  #endif
+>  };
+>  
+> -extern struct callback_head balance_push_callback;
+> +extern struct balance_callback balance_push_callback;
+>  
+>  /*
+>   * Lockdep annotation that avoids accidental unlocks; it's like a
+> @@ -1739,7 +1745,7 @@ init_numa_balancing(unsigned long clone_flags, struct task_struct *p)
+>  
+>  static inline void
+>  queue_balance_callback(struct rq *rq,
+> -		       struct callback_head *head,
+> +		       struct balance_callback *head,
+>  		       void (*func)(struct rq *rq))
+>  {
+>  	lockdep_assert_rq_held(rq);
+> @@ -1752,7 +1758,7 @@ queue_balance_callback(struct rq *rq,
+>  	if (unlikely(head->next || rq->balance_callback == &balance_push_callback))
+>  		return;
+>  
+> -	head->func = (void (*)(struct callback_head *))func;
+> +	head->func = func;
+>  	head->next = rq->balance_callback;
+>  	rq->balance_callback = head;
+>  }
+> -- 
+> 2.34.1
+> 
