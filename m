@@ -2,117 +2,155 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890B7C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Oct 2022 06:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F5BC433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Oct 2022 06:35:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229600AbiJMGTd (ORCPT
+        id S229613AbiJMGfl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 Oct 2022 02:19:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34254 "EHLO
+        Thu, 13 Oct 2022 02:35:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbiJMGTb (ORCPT
+        with ESMTP id S229612AbiJMGfi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 Oct 2022 02:19:31 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C46A711C6D9;
-        Wed, 12 Oct 2022 23:19:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1665641960;
-        bh=a0YnP1i9bs24lEAd8uB+UTB2NYRN+cwhuNptzzc/nQ8=;
-        h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
-        b=GHguRvzBB+ziM0CmXN1+HKdB1gzPyALRagkF0Yrq2VwoGUy2eANlms05SB9Kdvqny
-         uu8xB1iCPbekOCP9atz9QKnAh57gQIx+W4lCQbUUQLenpyxElBG2/Yxt//yIDkp1N1
-         c7CEd3isiWe9X/F7MzycnbzlPGvU4fU1kKl6lrHs=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.20.60] ([92.116.165.150]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MFbRm-1owaGs1Cnu-00H40M; Thu, 13
- Oct 2022 08:19:20 +0200
-Message-ID: <68f42463-e4b8-d4ce-51c7-3e0e5dc468ec@gmx.de>
-Date:   Thu, 13 Oct 2022 08:19:18 +0200
+        Thu, 13 Oct 2022 02:35:38 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9486012503D
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Oct 2022 23:35:34 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id r3-20020a05600c35c300b003b4b5f6c6bdso739174wmq.2
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Oct 2022 23:35:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ad6t0uqGWVJ44zoze6OqxJ+0EbFaaFeDJhLvuHxelJE=;
+        b=gDZTDHiBofgyauaDwnqK6zQAfw+OCNIJIPu9vPc6qja1dciBLmpAgCFrjGifJ1s081
+         P5s/9/i2Uvqtg7QkdvDS1tgNDfIIeAR/O1MfLpY0tqsAnBxjRF6rk8Ywrv/Slxs8QJIv
+         Mk2koqyyZomyZ1/zXgAPOss4Y8V8uPPN9tQLtGzFfyIAUJ2Xoa/AaHlPE+n16XjSgvkA
+         6ykhLRpdN5b+M6tLQilm4nxYWeCwi1yxqQpM9X8OEpyhpJgkeLXfvfjuGvMnpD5ZGA9A
+         R6O8joG3vQB5klrMm7t5m+xDYhVBG63zkT7KYRYt0qoi+3pMuABV7FNKwQJc9kGGThCb
+         BV0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ad6t0uqGWVJ44zoze6OqxJ+0EbFaaFeDJhLvuHxelJE=;
+        b=dA99LB5gBZr9e6wwC6quI7TbsX1+TsttO5R0mAWpmMwVeEiCkm7nRaH3QtPgvK8OLK
+         BJAkDQLyDeuhIIYNzX4mZg/gjOkfkMPddes9xmzmms4TNJRMtr9zu/cslut27sIG1Kl2
+         jh+whdJSzvz9oC4ZqDuVINvGYNxdKsttZJ494h0xuHD6Q7Q1SnEC7eOOqnL3g910Isgp
+         I6VPrrA1SGPZwSBplWB9yP8+Dh9dvvL6qWBjhlsM3NHtXWAVVjj4FwePmjHNyRMLs3id
+         BZU5beSFGQt9hdVPvHxYff3XxKqpmhnmb75mpIxOK7G02cc4kLh6loQISEcxYcEoy8+H
+         veFw==
+X-Gm-Message-State: ACrzQf1oC0NWvT0wGOBjZ93kD5Evu6y2Duej1z8+A8R8sV63YG8Js9s1
+        rNabE1tpgSM6cW8bs0mh7OCeKw==
+X-Google-Smtp-Source: AMsMyM7PeoryycruOSk5MAIFALAVpRMJZCn11Lyo/I45FavURextDXrWr/zktLQ2xOhVoujOtdzxoA==
+X-Received: by 2002:a05:600c:548a:b0:3c6:dd03:2d31 with SMTP id iv10-20020a05600c548a00b003c6dd032d31mr1275616wmb.95.1665642933077;
+        Wed, 12 Oct 2022 23:35:33 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:cb49:9049:c0a5:d695? ([2a01:e0a:982:cbb0:cb49:9049:c0a5:d695])
+        by smtp.gmail.com with ESMTPSA id az12-20020a05600c600c00b003a62052053csm4263521wmb.18.2022.10.12.23.35.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Oct 2022 23:35:31 -0700 (PDT)
+Message-ID: <53df94fe-3a86-fa27-c32c-3177bc7080df@linaro.org>
+Date:   Thu, 13 Oct 2022 08:35:30 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Subject: Re: [PATCH] fbdev: MIPS supports iomem addresses
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH] firmware: meson_sm: Fix memcpy vs iomem type warnings
 Content-Language: en-US
 To:     Kees Cook <keescook@chromium.org>
-Cc:     kernel test robot <lkp@intel.com>, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+Cc:     kernel test robot <lkp@intel.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-References: <20221012191838.never.778-kees@kernel.org>
-From:   Helge Deller <deller@gmx.de>
-In-Reply-To: <20221012191838.never.778-kees@kernel.org>
+References: <20221012185234.never.936-kees@kernel.org>
+Organization: Linaro Developer Services
+In-Reply-To: <20221012185234.never.936-kees@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:vDcabaU0FvyZkkoeOJq7OcA4uY6T7+64cJDAjSyNahFXoqQNd6i
- 6eW+msz0PAr0dD8WrqU3hBi/1b/Qs8w6d4Kp3I19UMvLyWR3VYYBh9OfykqWDloacLcIXCC
- xBJmqUCiT2ou5I2moDYDXsfe5KYV6mzkypSLS59rDcHPEE91NGC4FEdkGv3MCKLA3cz5QoL
- NkcAMJuYNnSjOXN3K97KA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aQjIGP8/pcU=:uhRQsZy7MG5QYeAAc6JeIB
- Oz6cN768Ay+Lw214rT4P+iadTMRbZ7lpnE/mtIj437CgbRwkOXg4IQP3jb2PXIRJHUEuS7nBO
- gUHZH/9ykXdZ8ex6HTzAQjYgq9W1esosOUp9W2n4SNhawFQ/Jm6abmwbaDSXitMg4UA9g6soF
- plBa9zU9P7RgSyfNWqsmbyJexozoWuzLibzJzvhmq2XXQy+FlnpkBuA821f0mRMy39MgQ3lTH
- 97kKNWsHIKWA8YfxiTBK9SUrNT6N2ngdwsgJwlzXrMSv0YL1MwxlYXYpwCusteaXdOrpTNTGW
- id+bWVjml1LpSt+SztAJtgj7YIaQhez3zJ+fmspXDOyTDO41twhqTyh7VagzjF00ia48dPAbu
- CmREW2T1NeHtQwpcdvRu8EjfwNauFGKX1TSxVhjzalkLqk9chRRS5Vj5fao4XCB/1ulfWNeW0
- SdXoySoeyajtcwzJpEr/bB9t5OWHICSX5DKoM4hvACE3RsQYBi9YWMb9oRoBwdThN/lV8tLzy
- ZKJ5p+X6JXFp9P4F1QUtJRVHFQi8xr4Dv/xcCuO1MDBczuaX8whxpej7qZO0LnHJ1qgZnQGXs
- 3kLtQYQmNXgCXq42nlnADcDnVvfQ8iXGJtFA5p/BhVZa+VvzUy23m/5INdDQY6uRMpsUcwV8H
- JHnZ/RbGTohKiNpDPB7s3fkhjvsURRsNwGgnOqy1z6LcZWeaYetU/MB6rN3PrO8gkOP5bGyhG
- uD92xRNfCOsK+XTyU5W1PGvucAJWklr1Xn6B/VM46RLbhpV58SNo322pQnY94ObO8dbUFE9Ug
- K60so/nYvPnAzP9nuLV8J0KAp9FaVHGJzprXL2a6NgNq8YsLxWVa3EZsMjzZaUClIiuzMl7d/
- Wa1HAkWTbr85FBlCkiQZ6MPC/v1LG1/DqL0oY3IfubOf+XtgmuwJxZE8TwVNSS8xlHVulo3s8
- XUrjK9ws1aIr7z9XqiVHVS+0zdIeoiu4F9+SpYRnJ1CS/HEdAmuU1UqtvUVuNpj3ZQU2+1eKE
- xizEm/xayJf7jeAYDgJOMyUb/YtBwEbzJh2KzxNEVI8IwDjpngySNkBFSEBr9vJoZpTm2bOns
- 3UTjBVHaFziGzTfBg168q80xls89+l6u56Ge+8EvIfZETs7p+gcEJ8X5lVNygWDlQSy3yqzf2
- ya3tEwOTBZYtnJ4TmlLzWr9TiDPoo7cT6rXqejm66iZ2DCY59nW7LWsgUuuaqem8vcXDJ5yVf
- Qvj9m6q8dXvuPq9C6DzVzE/MwCVxUrn8lar9afpK4+aSHUnvqSPH1VovkVUDFhKjErdT+M9sG
- mcwQDei6PGqFJzK8RO/8VGwekmJ1/dZ9KAHLaDBQJah2+5mPQo5E8+ImxENTsGkl4GROQc5IU
- sRvyGYVBJCSBwTkwkZqiZhsB0grGGR43tqA2r34e/yRox428mYiRQfD4yq6ZFNm5X8zvzb3er
- eUFnLGUUB33RMDx70UmkIiMy6yaw5cpOJjilo5Ho7rVlCSetayIPZQqN5jAXtYAfTT5rj82NY
- nIp5zzmoexjozcpBHyp+TwDOUnfKcgDE1EdQgACJr4XL4
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 10/12/22 21:18, Kees Cook wrote:
-> Add MIPS to fb_* helpers list for iomem addresses. This silences Sparse
-> warnings about lacking __iomem address space casts:
->
-> drivers/video/fbdev/pvr2fb.c:800:9: sparse: sparse: incorrect type in ar=
-gument 1 (different address spaces)
-> drivers/video/fbdev/pvr2fb.c:800:9: sparse:     expected void const *
-> drivers/video/fbdev/pvr2fb.c:800:9: sparse:     got char [noderef] __iom=
-em *screen_base
->
+On 12/10/2022 20:53, Kees Cook wrote:
+> Use memcpy_{toio,fromio}() instead of memcpy(). Silences warnings from
+> Sparse:
+> 
+> drivers/firmware/meson/meson_sm.c:170:17: warning: incorrect type in argument 1 (different address spaces)
+> drivers/firmware/meson/meson_sm.c:170:17:    expected void const *
+> drivers/firmware/meson/meson_sm.c:170:17:    got void [noderef] __iomem *sm_shmem_out_base
+> drivers/firmware/meson/meson_sm.c:170:17: warning: incorrect type in argument 2 (different address spaces)
+> drivers/firmware/meson/meson_sm.c:170:17:    expected void const *
+> drivers/firmware/meson/meson_sm.c:170:17:    got void [noderef] __iomem *sm_shmem_out_base
+> drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+> drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
+> drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+> drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+> drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
+> drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+> drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+> drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
+> drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+> drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+> drivers/firmware/meson/meson_sm.c:206:9:    expected void *
+> drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+> 
+> While here, fix this warning as well:
+> 
+> drivers/firmware/meson/meson_sm.c:85:24: warning: Using plain integer as NULL pointer
+> 
 > Reported-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/lkml/202210100209.tR2Iqbqk-lkp@intel.com/
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
+> Link: https://lore.kernel.org/lkml/202210122023.zF56nCzM-lkp@intel.com
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Cc: Jerome Brunet <jbrunet@baylibre.com>
+> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-amlogic@lists.infradead.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-
-applied to fbdev git tree.
-
-Thanks!
-Helge
-
 > ---
->   include/linux/fb.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/linux/fb.h b/include/linux/fb.h
-> index 07fcd0e56682..3822734a38c7 100644
-> --- a/include/linux/fb.h
-> +++ b/include/linux/fb.h
-> @@ -555,7 +555,7 @@ static inline struct apertures_struct *alloc_apertur=
-es(unsigned int max_num) {
->
->   #elif defined(__i386__) || defined(__alpha__) || defined(__x86_64__) |=
-|	\
->   	defined(__hppa__) || defined(__sh__) || defined(__powerpc__) ||	\
-> -	defined(__arm__) || defined(__aarch64__)
-> +	defined(__arm__) || defined(__aarch64__) || defined(__mips__)
->
->   #define fb_readb __raw_readb
->   #define fb_readw __raw_readw
+>   drivers/firmware/meson/meson_sm.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/firmware/meson/meson_sm.c b/drivers/firmware/meson/meson_sm.c
+> index 77aa5c6398aa..4efde225a580 100644
+> --- a/drivers/firmware/meson/meson_sm.c
+> +++ b/drivers/firmware/meson/meson_sm.c
+> @@ -82,7 +82,7 @@ static void __iomem *meson_sm_map_shmem(u32 cmd_shmem, unsigned int size)
+>   
+>   	sm_phy_base = __meson_sm_call(cmd_shmem, 0, 0, 0, 0, 0);
+>   	if (!sm_phy_base)
+> -		return 0;
+> +		return NULL;
+>   
+>   	return ioremap_cache(sm_phy_base, size);
+>   }
+> @@ -167,7 +167,7 @@ int meson_sm_call_read(struct meson_sm_firmware *fw, void *buffer,
+>   		size = bsize;
+>   
+>   	if (buffer)
+> -		memcpy(buffer, fw->sm_shmem_out_base, size);
+> +		memcpy_fromio(buffer, fw->sm_shmem_out_base, size);
+>   
+>   	return ret;
+>   }
+> @@ -203,7 +203,7 @@ int meson_sm_call_write(struct meson_sm_firmware *fw, void *buffer,
+>   	if (!fw->chip->cmd_shmem_in_base)
+>   		return -EINVAL;
+>   
+> -	memcpy(fw->sm_shmem_in_base, buffer, size);
+> +	memcpy_toio(fw->sm_shmem_in_base, buffer, size);
+>   
+>   	if (meson_sm_call(fw, cmd_index, &written, arg0, arg1, arg2, arg3, arg4) < 0)
+>   		return -EINVAL;
 
+Thanks,
+
+Acked-by: Neil Armstrong <neil.armstrong@linaro.org>
