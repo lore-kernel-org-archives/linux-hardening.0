@@ -2,61 +2,59 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B02C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Oct 2022 22:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5139AC4321E
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Oct 2022 22:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229773AbiJMWhM (ORCPT
+        id S229541AbiJMWhO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 Oct 2022 18:37:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43624 "EHLO
+        Thu, 13 Oct 2022 18:37:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229775AbiJMWhG (ORCPT
+        with ESMTP id S229682AbiJMWhG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Thu, 13 Oct 2022 18:37:06 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 052E2BC630
-        for <linux-hardening@vger.kernel.org>; Thu, 13 Oct 2022 15:37:00 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id h185so2750546pgc.10
-        for <linux-hardening@vger.kernel.org>; Thu, 13 Oct 2022 15:37:00 -0700 (PDT)
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8991C19C042
+        for <linux-hardening@vger.kernel.org>; Thu, 13 Oct 2022 15:37:04 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id q9so2752997pgq.8
+        for <linux-hardening@vger.kernel.org>; Thu, 13 Oct 2022 15:37:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RwwHIW9ubgGCNZI9bpt1owrfiGZeXb5wwl1H6trWtBY=;
-        b=NPbuugnsa8ZjJmuKOsOOSrzjod1kIYqRgRjmTGaTWJUUqeqq4o26Thx5EwcjH8ntOg
-         2FXLuaMoSoMJWiLmgy0LqmQpFgBGbd/D2jky5NbREy2VZpMXlHQhUgKFk4GR4LHv+2Yh
-         AhE40vgIjDEMlzjYgT0H7Xngnyh4qql/BXqpA=
+        bh=NfEEfwgV0r1esosEkP9F/ee8FXM+KPxMeG8W8EWcy+c=;
+        b=JW1eReH2xnq/C7+qm0+Z9UsAitzAXfF7GB0HYN1tCAYKUKow3bX0dKmchXFpJokbg8
+         8ulCWFvoB+AlAS/hs/dQjHvgdTJZWh8sTWXS57Kyfm6/B4XXSIb3Y0YtToM6dnSU+K9I
+         1uP8vopBMgYMNvwEnNqbcKWN4XM7T4uvLVwTY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RwwHIW9ubgGCNZI9bpt1owrfiGZeXb5wwl1H6trWtBY=;
-        b=kmmxVmJjAT0ZuMNhdUBw22OfjJr6GbguNcpzD9Qfwwa3TfP7HtmvhMmqNjtYrukcQh
-         91EOWyD87MeR+q/dYWDsLLa5V1/XOEP52QMa6LE+jNnsA7kHc5NIS4uEFRYbeZ6A+D76
-         GMctcILoO7C59X2c/xZDoPj3UxIGqSlJ+gboxZElA+UTs3rrGCCP7nBpbxZwbZTfXhjd
-         Zyl+sPEG1sxfhQlxhYGHak0V5f9BZ0fmlRUM7k2yjyRkBg1qNmM4EwpJ9D0IM+QOmQzv
-         8R1zs/wuZFl6qqQaGny2CXPBNYh8H0yLouygvPCdtGO+6Hcfe8P/35kT75/2PWa0rz97
-         DVXA==
-X-Gm-Message-State: ACrzQf2TznzQaF1Km0bq9AXpSIlnRpvY4g8zxNtQ7OssNHjrPAUM7fDp
-        axpJy5WFnKXFFgewvA9wbyYxkGvOkaINlA==
-X-Google-Smtp-Source: AMsMyM7usifpi6LURddo97Cesgs33dYbMjwLNWCksMM3VKB/UvdMIMsKuI4q2JXtvsvm+MCed0mIbA==
-X-Received: by 2002:a63:4753:0:b0:462:b3f0:a984 with SMTP id w19-20020a634753000000b00462b3f0a984mr1760357pgk.501.1665700619583;
-        Thu, 13 Oct 2022 15:36:59 -0700 (PDT)
+        bh=NfEEfwgV0r1esosEkP9F/ee8FXM+KPxMeG8W8EWcy+c=;
+        b=3XvL8H0KqLCD2+maJ+4zFG3NxXwFOFWaYi7Kjx60xSQ+WhwBEnbuJWu2GBJUIoNEYa
+         PlQb2t7NYIvRGEh5FuuH411d8c2n5wjYDKlsTe8HPhbPTIrksF7u37iIOW/3dehauspi
+         C2ZAzdyM8A3fBBixJVOJOLZ6MByJyUAulCLwHQ/+OgcOho5aDG0NUDGBWBe6DazhxCa6
+         p+JmuLOSO26jCscqxvbcYheCiz+SPXrZEnaXDfv0IBYr/SmWPTPWmzx5DwfEod8TXger
+         E9awcZ30WHHcWJVa1H8F3GaOovj5OMJ4mIy+DFPj4suk+vLIfbw/Ibot1G5MxJAmdt92
+         kkDw==
+X-Gm-Message-State: ACrzQf2JBTE3avrxxUiyEsoJsXBB5saWtzEWDsOwY2pcC/RIm0L72Yxo
+        0BiqW4+g8Yh6g5oDD/BI37tYAQ==
+X-Google-Smtp-Source: AMsMyM6ixmF/Cza7ZgkkuryxEzoa1v2tdo5DyCND7oB7+nJU7GcCrnsApxrn3IdkHVa2ykn4dDvzKA==
+X-Received: by 2002:a65:4508:0:b0:43c:e3c6:d1c2 with SMTP id n8-20020a654508000000b0043ce3c6d1c2mr1821471pgq.582.1665700623894;
+        Thu, 13 Oct 2022 15:37:03 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a6-20020a170902710600b0016d773aae60sm363047pll.19.2022.10.13.15.36.55
+        by smtp.gmail.com with ESMTPSA id 201-20020a6215d2000000b00563933243adsm207496pfv.85.2022.10.13.15.36.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Oct 2022 15:36:56 -0700 (PDT)
+        Thu, 13 Oct 2022 15:37:00 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Mimi Zohar <zohar@linux.ibm.com>
 Cc:     Kees Cook <keescook@chromium.org>,
         Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
         Paul Moore <paul@paul-moore.com>,
         James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, Petr Vorel <pvorel@suse.cz>,
-        Jonathan McDowell <noodles@fb.com>,
-        Borislav Petkov <bp@suse.de>, Takashi Iwai <tiwai@suse.de>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
         linux-integrity@vger.kernel.org,
         linux-security-module@vger.kernel.org,
         =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
@@ -64,98 +62,73 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Casey Schaufler <casey@schaufler-ca.com>,
         John Johansen <john.johansen@canonical.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH 4/9] ima: Move ima_file_free() into LSM
-Date:   Thu, 13 Oct 2022 15:36:49 -0700
-Message-Id: <20221013223654.659758-4-keescook@chromium.org>
+Subject: [PATCH 9/9] integrity: Move integrity_inode_get() out of global header
+Date:   Thu, 13 Oct 2022 15:36:54 -0700
+Message-Id: <20221013223654.659758-9-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20221013222702.never.990-kees@kernel.org>
 References: <20221013222702.never.990-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3106; h=from:subject; bh=j7SUgkDxPUE08MqOt4a9Z07kxHXSo2qyUDZKl6O5dvY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjSJME98uVBOBVBjxVK8UcpHvXl8yakzz5L2nvmUUm /7U1ct+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY0iTBAAKCRCJcvTf3G3AJlXUD/ 9LlocRqLBjy5RTiLduzQ0vovRa//i2jiaWLU4i+ih50alFhDMD02D29Huhx1Bpfkxw3tEd5uirD4Qm woZnL++HqvBws+6hGWHagdC04silwQ+UneqsQ9+EwvYKkgPjAXUf8EqEiroy2E5PW6tvyWQGp7DE04 5fMsRSD1C33QHyVeVM7PoXVrtGzW7ZXZRlq9qLdxpIfMps7lsUPsMQTc2kI0mXBsFDmzmFC+dvs9Kk TBA2b7kANBV4ws5RZBLHQlcNlcorhUbixldb3SD4Igl+MJgA67JGenetiOgFwYTBZT1K73uJbk5yUk WZQc601AOB4dC1ijypfacOlZMsqn3UAybG24Vl3JBK6k9KVLuk//880teg87CIZ3aouwk8oaGFjJCb MGXsSIxvhXFzaDBaD+6ZerRPCd6plADAlHpnOft2dB4URCIbURA0fsBQocvf8yBHNcbIDACPNQ+vsD o2HdBbh3bSEvxx+IZz7MNSOJtcgg19X9ybRdJ2DWUahXj4tAVcVFScJ9Y59q3grUFY4qHgtvQuDUsV VXEVwWI71XFXuUiZWOk3URctGgJ8R6g+ke4PyNtO7Os8N9dDI8SUiFqBidQyChnIfDZLrBJ3kZBTvq Fucu8VZ0mHiRAoMrfyl5lQR9vABa7Kxyt11ZCZCO9fEMV4YrarDv6b7dG5ZA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1875; h=from:subject; bh=FjECzdw5vk4KbUumDxIRN5saJ9SkT4eAnWhKYkWPT8g=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjSJMFeyBOTwM/Gd1K9I43czpeG1w4C1JSQ7QXid4d 6uJrx+6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY0iTBQAKCRCJcvTf3G3AJvg9D/ oCYzGgLf4XwARfk6jZrk9TCXMGlneCjrt3Gciwcp8nh2moA085Sy+H0pocKDwzK2B6x1FgES5wCFaj ip2gVoCE8odPeGoYFCvO9A8xfM67uTH8W+BFNRnZIBnpMyWTlg4yCMMmaH5j1PPHWo7woQjrPdQPbf 0robFn9Qwaof2KTzywOGeALzfmUxWyjJGYrTbIrC1RyVwsnb1TvJVA7s6C2vU8zE7v6B0SL0x4VtKc ZzV8KpARqMpRIsLRclCbmJMRhCI+12kyHo+JNa/aHQlFNrHd2R8H5ej6kDY7UQ702ENB2Ud0I9hJjC 6fljP9Veexa4NXymEnDY8h3l+8DbAcH0/K1fSCzsU5oTNg9gd0/O8wHYUvuI82Pmz7+aXNlrUDYKVS kpce6gLgeLYBHgzuEbHJSx/R6ll1rWcsuEsiH9xvZeUwd64HbldzGDIdzwLIIjIU/hU61wBSyWFkOb o8z7/uYYAl1LKsa+7RQxRyVg6N5EWswXFNV59ThfGsrd9KR40lIeODNjy1OIcr5HGfxrNi3YsZH3aB pKdtGVi+VacVhfIu36bTLd2C+jDeHa+QkZBj4SuxgrAaWqKwGK0cWUlFZ2pDwsZVxP28zx6Ob12ZCu Mqoav641GmnwnvGBx6N8pWg45UosfbKi5OHrlP/eO0f5KAWbN42ubgkcp+ig==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The file_free_security hook already exists for managing notification of
-released files. Use the LSM hook instead of open-coded stacking.
+The function integrity_inode_get() does not need to be shared with the
+rest of the kernel, so move it into the internal integrity.h header.
 
 Cc: Mimi Zohar <zohar@linux.ibm.com>
 Cc: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
 Cc: Paul Moore <paul@paul-moore.com>
 Cc: James Morris <jmorris@namei.org>
 Cc: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: Petr Vorel <pvorel@suse.cz>
-Cc: Jonathan McDowell <noodles@fb.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Takashi Iwai <tiwai@suse.de>
 Cc: linux-integrity@vger.kernel.org
 Cc: linux-security-module@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/file_table.c                   | 1 -
- include/linux/ima.h               | 6 ------
- security/integrity/ima/ima_main.c | 3 ++-
- 3 files changed, 2 insertions(+), 8 deletions(-)
+ include/linux/integrity.h      | 11 +----------
+ security/integrity/integrity.h |  1 +
+ 2 files changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/fs/file_table.c b/fs/file_table.c
-index 99c6796c9f28..fa707d221a43 100644
---- a/fs/file_table.c
-+++ b/fs/file_table.c
-@@ -311,7 +311,6 @@ static void __fput(struct file *file)
- 	eventpoll_release(file);
- 	locks_remove_file(file);
+diff --git a/include/linux/integrity.h b/include/linux/integrity.h
+index c86bcf6b866b..4c6fd79b5bf8 100644
+--- a/include/linux/integrity.h
++++ b/include/linux/integrity.h
+@@ -21,19 +21,10 @@ enum integrity_status {
  
--	ima_file_free(file);
- 	if (unlikely(file->f_flags & FASYNC)) {
- 		if (file->f_op->fasync)
- 			file->f_op->fasync(-1, file, 0);
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 6dc5143f89f2..9f18df366064 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -19,7 +19,6 @@ extern enum hash_algo ima_get_current_hash_algo(void);
- extern int ima_file_check(struct file *file, int mask);
- extern void ima_post_create_tmpfile(struct user_namespace *mnt_userns,
- 				    struct inode *inode);
--extern void ima_file_free(struct file *file);
- extern void ima_post_path_mknod(struct user_namespace *mnt_userns,
- 				struct dentry *dentry);
- extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
-@@ -56,11 +55,6 @@ static inline void ima_post_create_tmpfile(struct user_namespace *mnt_userns,
- {
- }
- 
--static inline void ima_file_free(struct file *file)
+ /* List of EVM protected security xattrs */
+ #ifdef CONFIG_INTEGRITY
+-extern struct integrity_iint_cache *integrity_inode_get(struct inode *inode);
+ extern void __init integrity_load_keys(void);
+-
+ #else
+-static inline struct integrity_iint_cache *
+-				integrity_inode_get(struct inode *inode)
 -{
--	return;
+-	return NULL;
 -}
 -
- static inline void ima_post_path_mknod(struct user_namespace *mnt_userns,
- 				       struct dentry *dentry)
- {
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index b3b79d030a67..94379ba40b58 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -183,7 +183,7 @@ static void ima_check_last_writer(struct integrity_iint_cache *iint,
-  *
-  * Flag files that changed, based on i_version
+ static inline void integrity_load_keys(void)
+-{
+-}
++{ }
+ #endif /* CONFIG_INTEGRITY */
+ 
+ #endif /* _LINUX_INTEGRITY_H */
+diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
+index 93f35b208809..acd904c12f87 100644
+--- a/security/integrity/integrity.h
++++ b/security/integrity/integrity.h
+@@ -178,6 +178,7 @@ struct integrity_iint_cache {
+  * integrity data associated with an inode.
   */
--void ima_file_free(struct file *file)
-+static void ima_file_free(struct file *file)
- {
- 	struct inode *inode = file_inode(file);
- 	struct integrity_iint_cache *iint;
-@@ -1085,6 +1085,7 @@ static struct security_hook_list ima_hooks[] __lsm_ro_after_init = {
- 	LSM_HOOK_INIT(bprm_check_security, ima_bprm_check),
- 	LSM_HOOK_INIT(mmap_file, ima_file_mmap),
- 	LSM_HOOK_INIT(file_mprotect, ima_file_mprotect),
-+	LSM_HOOK_INIT(file_free_security, ima_file_free),
- 	LSM_HOOK_INIT(kernel_read_file, ima_read_file),
- 	LSM_HOOK_INIT(kernel_post_read_file, ima_post_read_file),
- 	LSM_HOOK_INIT(kernel_load_data, ima_load_data),
+ struct integrity_iint_cache *integrity_iint_find(struct inode *inode);
++struct integrity_iint_cache *integrity_inode_get(struct inode *inode);
+ 
+ int integrity_kernel_read(struct file *file, loff_t offset,
+ 			  void *addr, unsigned long count);
 -- 
 2.34.1
 
