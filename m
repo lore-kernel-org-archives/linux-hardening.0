@@ -2,82 +2,103 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E50C433FE
-	for <linux-hardening@archiver.kernel.org>; Fri, 14 Oct 2022 20:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD78C43219
+	for <linux-hardening@archiver.kernel.org>; Fri, 14 Oct 2022 22:03:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229602AbiJNUAL (ORCPT
+        id S229540AbiJNWD0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 14 Oct 2022 16:00:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56168 "EHLO
+        Fri, 14 Oct 2022 18:03:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbiJNUAK (ORCPT
+        with ESMTP id S229507AbiJNWDZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 14 Oct 2022 16:00:10 -0400
-X-Greylist: delayed 530 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 14 Oct 2022 13:00:07 PDT
-Received: from mail.postadigitale.org (mail.postadigitale.org [IPv6:2a01:4f8:200:34ed::25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A5AD474D6
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Oct 2022 13:00:06 -0700 (PDT)
-Received: from hostpad (p5490ffec.dip0.t-ipconnect.de [84.144.255.236])
-        by mail.postadigitale.org (Postfix) with ESMTPSA id 21C761B888
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Oct 2022 21:51:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postadigitale.de;
-        s=20180517; t=1665777073;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type;
-        bh=HFaeA+wUVWjM4Ud+YuLqAJrZPhM2ET6pBiH1t8QPuH4=;
-        b=DxR28wAeLyOXzhu3sWW+7AuZNhaxJ2PDrQ4DZ5QNO1dAWVSbK6URo23kAk/EdYWdO7OD/r
-        CMxDow89QGEp+1eg0XYhjVXEa0dYUpb/qi/+0IIG7HCBJqB5UqcwjmgDObBcpL2afm30OV
-        4ArtOf+Mi18jEbcbzK0RjdxjaouwEbM=
-Date:   Fri, 14 Oct 2022 19:51:11 +0000
-From:   Simon Brand <simon.brand@postadigitale.de>
-To:     linux-hardening@vger.kernel.org
-Subject: Reconsider possibility to disable icotl TIOCSTI
-Message-ID: <Y0m9l52AKmw6Yxi1@hostpad>
+        Fri, 14 Oct 2022 18:03:25 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8501217653E
+        for <linux-hardening@vger.kernel.org>; Fri, 14 Oct 2022 15:03:23 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-317-JETZyr0OPF-X3dTWyLgaXA-1; Fri, 14 Oct 2022 23:03:20 +0100
+X-MC-Unique: JETZyr0OPF-X3dTWyLgaXA-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.38; Fri, 14 Oct
+ 2022 23:03:18 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.040; Fri, 14 Oct 2022 23:03:18 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Andy Lutomirski' <luto@kernel.org>, Jann Horn <jannh@google.com>,
+        Christian Brauner <brauner@kernel.org>
+CC:     Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Jorge Merlino <jorge.merlino@canonical.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "John Johansen" <john.johansen@canonical.com>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Richard Haines <richard_c_haines@btinternet.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Todd Kjos <tkjos@google.com>,
+        "Ondrej Mosnacek" <omosnace@redhat.com>,
+        Prashanth Prahlad <pprahlad@redhat.com>,
+        Micah Morton <mortonm@chromium.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "apparmor@lists.ubuntu.com" <apparmor@lists.ubuntu.com>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: RE: [PATCH 1/2] fs/exec: Explicitly unshare fs_struct on exec
+Thread-Topic: [PATCH 1/2] fs/exec: Explicitly unshare fs_struct on exec
+Thread-Index: AQHY33u3rva59bT1H02MahRCUmFfoq4Ocehg
+Date:   Fri, 14 Oct 2022 22:03:18 +0000
+Message-ID: <d2a6ccdd8a734d36ae88866a4c16019b@AcuMS.aculab.com>
+References: <20221006082735.1321612-1-keescook@chromium.org>
+ <20221006082735.1321612-2-keescook@chromium.org>
+ <20221006090506.paqjf537cox7lqrq@wittgenstein>
+ <CAG48ez0sEkmaez9tYqgMXrkREmXZgxC9fdQD3mzF9cGo_=Tfyg@mail.gmail.com>
+ <2032f766-1704-486b-8f24-a670c0b3cb32@app.fastmail.com>
+In-Reply-To: <2032f766-1704-486b-8f24-a670c0b3cb32@app.fastmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Good day,
+From: Andy Lutomirski
+> Sent: 14 October 2022 04:18
+...
+> But seriously, this makes no sense at all.  It should not be possible to exec a program and then,
+> without ptrace, change its cwd out from under it.  Do we really need to preserve this behavior?
 
-please reconsider to add a possibility to disable icotl TIOCSTI.
-In the past there have been attempts to restrict the TIOCSTI ioctl. [0, 1]
-None of them are present in the current kernel.
-Since those tries there have been some security issues (sandbox
-escapes in flatpak (CVE-2019-10063) [2] and snap (CVE 2019-7303) [3],
-runuser [4], su [5]).
+it maybe ok if the exec'ed program also 'bought-in' to the
+fact that its cwd and open files might get changed.
+But imagine someone doing it to a login shell!
 
-I ask to merge the patches from linux-hardening [6, 7] so users can
-opt out of this behavior. These patches provide the
-`SECURITY_TIOCSTI_RESTRICT` Kconfig (default no) and a
-`tiocsti_restrict` sysctl.
+	David
 
-Escapes can be reproduced easiliy (on archlinux) via a python script:
-```
-import fcntl
-import termios
-with open("/dev/tty", "w") as fd:
-    for c in "id\n":
-        fcntl.ioctl(fd, termios.TIOCSTI, c)
-```
-Now run as root:
-# su user
-$ python3 /path/to/script.py ; exit
-uid=0(root) ...
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-I asked it before on kernelnewbies mailing list. [8]
-
-Best and thank you,
-Simon
-
-[0] https://lkml.kernel.org/lkml/CAG48ez1NBnrsPnHN6D9nbOJP6+Q6zEV9vfx9q7ME4Eti-vRmhQ@mail.gmail.com/T/
-[1] https://lkml.kernel.org/lkml/20170420174100.GA16822@mail.hallyn.com/T/
-[2] https://github.com/flatpak/flatpak/issues/2782
-[3] https://wiki.ubuntu.com/SecurityTeam/KnowledgeBase/SnapIoctlTIOCSTI
-[4] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=815922
-[5] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=628843
-[6] https://github.com/anthraxx/linux-hardened/commit/d0e49deb1a39dc64e7c7db3340579
-[7] https://github.com/anthraxx/linux-hardened/commit/ea8f20602a993c90125bf08da3989
-[8] https://www.spinics.net/lists/newbies/msg64019.html
