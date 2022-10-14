@@ -2,116 +2,97 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E89AC43217
-	for <linux-hardening@archiver.kernel.org>; Fri, 14 Oct 2022 17:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF450C43217
+	for <linux-hardening@archiver.kernel.org>; Fri, 14 Oct 2022 17:59:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229638AbiJNRnL (ORCPT
+        id S230024AbiJNR7s (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 14 Oct 2022 13:43:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37522 "EHLO
+        Fri, 14 Oct 2022 13:59:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230110AbiJNRmi (ORCPT
+        with ESMTP id S229827AbiJNR7q (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 14 Oct 2022 13:42:38 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD3301D29B2
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Oct 2022 10:42:36 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id l4so5389603plb.8
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Oct 2022 10:42:36 -0700 (PDT)
+        Fri, 14 Oct 2022 13:59:46 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 587F95F42
+        for <linux-hardening@vger.kernel.org>; Fri, 14 Oct 2022 10:59:38 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id o17-20020a17090aac1100b0020d98b0c0f4so7214831pjq.4
+        for <linux-hardening@vger.kernel.org>; Fri, 14 Oct 2022 10:59:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2SZjirI6vVJY9sKNEfqT5Dc0rwPH+nmIM479xThjSRE=;
-        b=lBJRxtkCK/EuZxHO3XQKMCpV1v5nQdz3iTgQtPakGL9M7lePJjXkwG8KHaYd4yyBFX
-         ztK1TvSXjGjkRFE17jiS17eYmRAaLKVuGWMpGDh24rhbXTHRzKDBHuutPaG0VGUkJSzY
-         Ui/RBTeBQApRjnUnrFQcwA6UrqPl15Du3+dBI=
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=lIA5kCd21RHEnMbxdNImt2sQ/3g725z4r3mMj6tBAeg=;
+        b=hfa/QWPjWqnauRAj8LTTvkLH8F/ZfZmIPDY/huHYxu5usQnH2THr+sGzN/cWVm8Hg4
+         hi3JZA4hN2jg9g1okYOWDiwT/CAMzepro+6AZLKfW7vNz8Rp+A8Q9bPaTIzbcberVsYN
+         2A0sqgFqWi0uCLu/Ii+aL2/kLXUD86KYe2af4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2SZjirI6vVJY9sKNEfqT5Dc0rwPH+nmIM479xThjSRE=;
-        b=4qBhhMc+F7r90HzrybkUGdPNPSqtIpWfhlOFzDGZ9W4W9Wjkyv+zJ+/+A306RW1mEJ
-         ksyB4AiHwYWE1wztWvCR2P+6EHbqjoYI7K01vY08gIW9N3+nDZiDqyw92pT1VIxRBGNk
-         9Q+mdmpD1b0PUuVx/8JQoPpyFjwrpEWLE3xNlxvAK7KZjvVlxkFbRpbTs5xKPcjIKh+j
-         DHNlXwjP++ASEL+N/NQNJ6oHTSVEFkxba04fQXXl9lJiznJVPAqg4OsjlEvBn7hpOV1l
-         3AADZmZrMy4Myn2ROED2NxbEpvdAx/OAyeCk2Q+S/R0gX2X238N65xtwiS8C7YvsnB45
-         9N8w==
-X-Gm-Message-State: ACrzQf0P1xmW8DjUd9WKeq41iKAwusJT/B8Vzwrif2dUX53NPS69FiOr
-        9moDKdAr+ntDudyoxPhLHfFrew==
-X-Google-Smtp-Source: AMsMyM6hu4kmwaALaxLHOKrZ+BvQpGrPeyRy9QzrgBkKAwnx9gDzRH3CslRjEFHCb3WjliopGPBLMw==
-X-Received: by 2002:a17:90b:4a8f:b0:20d:2f93:3bb with SMTP id lp15-20020a17090b4a8f00b0020d2f9303bbmr18537027pjb.149.1665769356136;
-        Fri, 14 Oct 2022 10:42:36 -0700 (PDT)
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lIA5kCd21RHEnMbxdNImt2sQ/3g725z4r3mMj6tBAeg=;
+        b=BUllE/ctbRKKYJ52ev6Fp4mumuK6eaLCDQy6qp7ZITLbsBocuzL5mUjpej8ykUiWxC
+         xYVdpYmQkct8R5LuXZ1i8fzIbp+jcSQaJypLAiigrdB+nP5rh84nxRpf5AryLiPFVY+F
+         7YaV+VFg8SOsC+J8BZUEA7WnCAsFNwyexKLiqRARcakXNXP2WtSsK1yPEQtGhJEaOZQ0
+         3pKuHl0sCoHOKKdFtC6v2beEHrbCgeCsQ2UMa7K1WRO80xZaGeYI2iffndcJI9u+bb6u
+         GJSSD2Y2ow6FcfBqpT55MTkU3AJVaUejCY1Rbe1Ws5NowrOR4+EkGPOQIWSqf1pRG7qI
+         jwCQ==
+X-Gm-Message-State: ACrzQf2ZEiJTINuKOEk7rqQJYB/9fJG1S5YVfnNPlrjYVO3EKZPmKlkM
+        W11bd7IxCb+krlzLBFPpBl5wSw==
+X-Google-Smtp-Source: AMsMyM4TRh2gr+kOS0rnlcc/KQKS33NEffPf3pWG7t7imgdj7HB2jOO7UNnIZR4eUJsSLYpCw3FUVA==
+X-Received: by 2002:a17:90b:3d8:b0:20a:8e90:8e8c with SMTP id go24-20020a17090b03d800b0020a8e908e8cmr6907001pjb.138.1665770377827;
+        Fri, 14 Oct 2022 10:59:37 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r24-20020aa79638000000b00562eff85594sm2055790pfg.121.2022.10.14.10.42.35
+        by smtp.gmail.com with ESMTPSA id w11-20020a170902ca0b00b0017f7fa6808csm2015707pld.87.2022.10.14.10.59.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Oct 2022 10:42:35 -0700 (PDT)
-Date:   Fri, 14 Oct 2022 10:42:34 -0700
+        Fri, 14 Oct 2022 10:59:36 -0700 (PDT)
+Date:   Fri, 14 Oct 2022 10:59:35 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-efi@vger.kernel.org,
-        kernel-dev@igalia.com, kernel@gpiccoli.net, anton@enomsg.org,
-        ccross@android.com, tony.luck@intel.com, ardb@kernel.org
-Subject: Re: [PATCH V2 3/3] efi: pstore: Add module parameter for setting the
- record size
-Message-ID: <202210141042.E4689636@keescook>
-References: <20221013210648.137452-1-gpiccoli@igalia.com>
- <20221013210648.137452-4-gpiccoli@igalia.com>
+To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>, Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, KP Singh <kpsingh@kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        John Johansen <john.johansen@canonical.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/9] integrity: Prepare for having "ima" and "evm"
+ available in "integrity" LSM
+Message-ID: <202210141050.A8DF7D10@keescook>
+References: <20221013222702.never.990-kees@kernel.org>
+ <20221013223654.659758-1-keescook@chromium.org>
+ <08a8b202-69b4-e154-28f5-337a898acf61@digikod.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20221013210648.137452-4-gpiccoli@igalia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <08a8b202-69b4-e154-28f5-337a898acf61@digikod.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Oct 13, 2022 at 06:06:48PM -0300, Guilherme G. Piccoli wrote:
-> By default, the efi-pstore backend hardcode the UEFI variable size
-> as 1024 bytes. The historical reasons for that were discussed by
-> Ard in threads [0][1]:
-> 
-> "there is some cargo cult from prehistoric EFI times going
-> on here, it seems. Or maybe just misinterpretation of the maximum
-> size for the variable *name* vs the variable itself.".
-> 
-> "OVMF has
-> OvmfPkg/OvmfPkgX64.dsc:
-> gEfiMdeModulePkgTokenSpaceGuid.PcdMaxVariableSize|0x2000
-> OvmfPkg/OvmfPkgX64.dsc:
-> gEfiMdeModulePkgTokenSpaceGuid.PcdMaxVariableSize|0x8400
-> 
-> where the first one is without secure boot and the second with secure
-> boot. Interestingly, the default is
-> 
-> gEfiMdeModulePkgTokenSpaceGuid.PcdMaxVariableSize|0x400
-> 
-> so this is probably where this 1k number comes from."
-> 
-> With that, and since there is not such a limit in the UEFI spec, we
-> have the confidence to hereby add a module parameter to enable advanced
-> users to change the UEFI record size for efi-pstore data collection,
-> this way allowing a much easier reading of the collected log, which is
-> not scattered anymore among many small files.
-> 
-> Through empirical analysis we observed that extreme low values (like 8
-> bytes) could eventually cause writing issues, so given that and the OVMF
-> default discussed, we limited the minimum value to 1024 bytes, which also
-> is still the default.
-> 
-> [0] https://lore.kernel.org/lkml/CAMj1kXF4UyRMh2Y_KakeNBHvkHhTtavASTAxXinDO1rhPe_wYg@mail.gmail.com/
-> [1] https://lore.kernel.org/lkml/CAMj1kXFy-2KddGu+dgebAdU9v2sindxVoiHLWuVhqYw+R=kqng@mail.gmail.com/
-> 
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+On Fri, Oct 14, 2022 at 04:40:01PM +0200, Mickaël Salaün wrote:
+> This is not backward compatible
 
-With the var length change recommended by Ard, yeah, looks good to me.
-:)
+Why? Nothing will be running LSM hooks until init finishes, at which
+point the integrity inode cache will be allocated. And ima and evm don't
+start up until lateinit.
 
-Thanks!
+>, but can easily be fixed thanks to
+> DEFINE_LSM().order
 
--Kees
+That forces the LSM to be enabled, which may not be desired?
+
+> Side node: I proposed an alternative to that but it was Nacked:
+> https://lore.kernel.org/all/20210222150608.808146-1-mic@digikod.net/
+
+Yeah, for the reasons pointed out -- that can't work. The point is to
+not have The Default LSM. I do think Casey's NAK was rather prickly,
+though. ;)
 
 -- 
 Kees Cook
