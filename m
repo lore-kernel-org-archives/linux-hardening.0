@@ -2,121 +2,104 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AFAC433FE
-	for <linux-hardening@archiver.kernel.org>; Fri, 14 Oct 2022 01:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16444C43219
+	for <linux-hardening@archiver.kernel.org>; Fri, 14 Oct 2022 02:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229783AbiJNBQw (ORCPT
+        id S229666AbiJNClo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 Oct 2022 21:16:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39230 "EHLO
+        Thu, 13 Oct 2022 22:41:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229712AbiJNBQv (ORCPT
+        with ESMTP id S229594AbiJNCln (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 Oct 2022 21:16:51 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FE3D164BD5;
-        Thu, 13 Oct 2022 18:16:49 -0700 (PDT)
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29E0KFF0028757;
-        Fri, 14 Oct 2022 01:16:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=Djt0j2YY8eLspCwplixscJuyUe4sdhNs1Xue9zl8EPE=;
- b=UbMl+5169njfxT+8aLwm//M4yo8ifGBrfRNq9tYCGXkUdLRn74v44PIsQeHG1um5S2gW
- cNG422qhiV4K0qNDtxvxYvB6MqDmSaTkcE5b6oYudHpqnvUHA6aVNVcCzFAsvpnDxpT5
- 98qKbpqxZluC+Du9f/vzmCY168ZEnfwecFDaCLBV8ylowWTgGuc4lkoAGsL5/8451MGJ
- SMjR2I6uVtJ8eU8jQp7u4L7PCuJGmbdDQCpgwri3K4bxbZxo+HFwv2NVBagUJvBeAfFZ
- iFcGMMs11s0D7U6kAQgB3wqwu+rm+I9LFF3z1oN9sV/XKlOtjd3YRCU69I/45EHIJX7c oA== 
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3k6gw1fqdm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Oct 2022 01:16:35 +0000
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 29E15udY001139;
-        Fri, 14 Oct 2022 01:16:34 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma05wdc.us.ibm.com with ESMTP id 3k30ub366q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Oct 2022 01:16:34 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com ([9.208.128.112])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 29E1GXlC18088482
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Oct 2022 01:16:34 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 461FF5805A;
-        Fri, 14 Oct 2022 01:16:33 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 38A895805D;
-        Fri, 14 Oct 2022 01:16:32 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.3.142])
-        by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-        Fri, 14 Oct 2022 01:16:32 +0000 (GMT)
-Message-ID: <d5081ccecf3ffd5562d9a66a5663b236870605ce.camel@linux.ibm.com>
-Subject: Re: [PATCH 0/9] integrity: Move hooks into LSM
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Paul Moore <paul@paul-moore.com>, Kees Cook <keescook@chromium.org>
-Cc:     =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        KP Singh <kpsingh@kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        John Johansen <john.johansen@canonical.com>,
-        James Morris <jmorris@namei.org>, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-hardening@vger.kernel.org
-Date:   Thu, 13 Oct 2022 21:16:31 -0400
-In-Reply-To: <CAHC9VhR1kGT0+zM3smAQMEzGQLmVNhHu40f=YK3qavuYvcQYQQ@mail.gmail.com>
-References: <20221013222702.never.990-kees@kernel.org>
-         <CAHC9VhR1kGT0+zM3smAQMEzGQLmVNhHu40f=YK3qavuYvcQYQQ@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: P7chmgREeO9Uz69kIbAfjMH3LwnZ-m54
-X-Proofpoint-GUID: P7chmgREeO9Uz69kIbAfjMH3LwnZ-m54
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-10-13_10,2022-10-13_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
- priorityscore=1501 impostorscore=0 suspectscore=0 mlxscore=0
- malwarescore=0 phishscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
- adultscore=0 mlxlogscore=971 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2209130000 definitions=main-2210140004
+        Thu, 13 Oct 2022 22:41:43 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08D9F196B61
+        for <linux-hardening@vger.kernel.org>; Thu, 13 Oct 2022 19:41:41 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id l4so3503902plb.8
+        for <linux-hardening@vger.kernel.org>; Thu, 13 Oct 2022 19:41:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ZJ1ZupV4pNYtfLm2nRk080Y8SXTuWCwx9eOCEUYrnLk=;
+        b=mOTc8KRBadMqtPwLlQpMoDRG7Y/LhVh3ONQQ0+J/2DeJP9z2WBpqzM2zCbruFAwGQ2
+         Cg9NrAsdBApxkVi7G6+/BmIIhGYCILZRVDKJgLmeZAjnkd+DscSYsrIh2d0DhZEicFJ4
+         JC0NBSOAxXyESKVnAJK6Z1UcYpKzjFbwvjdW4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZJ1ZupV4pNYtfLm2nRk080Y8SXTuWCwx9eOCEUYrnLk=;
+        b=JC9WHxUUWMuPBEiFXZCvX+E5WitjNqmAHYNdM0An1cImRON4kBPu6rJktdUpPgLtDZ
+         iS6IGvyCZkrBnjCZE8Ig9Ly5svPM/Hrqpj94hsbZj39Lv8K2siZG3Gty8ChPxPt4W56j
+         lZuy+cmrc2DynxLroCDG1X2VGZiFzNtELI3HwpJrQvhRlLyzbOByJlRMHFPsZC06Uves
+         tELddRbX7wSBoVetZo9uE75ySW7y2EvlVw35F0s8AVezFAmrsZLPYgYPahD4v8dWkPfs
+         nS+hkdGoE4IcWn3THPFW7xkz37e9+wjZ4RYLDshIWuthsfqX7wPbiS603YUs2nA8vyU9
+         m6BA==
+X-Gm-Message-State: ACrzQf3nCV4w1l3ntziXdWb2aczHlMrMgXmTSRmMuZZy9vgkNa3kx9fl
+        n6DXrxvqI+qAx/gS2Mipcy1cgw==
+X-Google-Smtp-Source: AMsMyM4+EvyJIPbh8SsjJ5/w//6R6z4mUB4NPnFpN2sJpNlsISjzDqMI4t1DceTMwEIjNQHzGR0rDg==
+X-Received: by 2002:a17:90a:d983:b0:20a:ec04:e028 with SMTP id d3-20020a17090ad98300b0020aec04e028mr14425285pjv.122.1665715301104;
+        Thu, 13 Oct 2022 19:41:41 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o2-20020a170902d4c200b001708c4ebbaesm467745plg.309.2022.10.13.19.41.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Oct 2022 19:41:40 -0700 (PDT)
+Date:   Thu, 13 Oct 2022 19:41:39 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Fabio M. De Francesco" <fmdefrancesco@gmail.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Christian Brauner <brauner@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        linux-hwmon@vger.kernel.org, linux-hardening@vger.kernel.org,
+        "Venkataramanan, Anirudh" <anirudh.venkataramanan@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH] drm/radeon: Replace kmap() with kmap_local_page()
+Message-ID: <202210131941.5D2AD4403E@keescook>
+References: <20221013210714.16320-1-fmdefrancesco@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221013210714.16320-1-fmdefrancesco@gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 2022-10-13 at 18:47 -0400, Paul Moore wrote:
-> On Thu, Oct 13, 2022 at 6:36 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Hi,
-> >
-> > It's been over 4 years since LSM stack was introduced. The integrity
-> > subsystem is long overdue for moving to this infrastructure. Here's my
-> > first pass at converting integrity and ima (and some of evm) into LSM
-> > hooks. This should be enough of an example to finish evm, and introduce
-> > the missing hooks for both. For example, after this, it looks like ima
-> > only has a couple places it's still doing things outside of the LSM. At
-> > least these stood out:
-> >
-> > fs/namei.c:     ima_post_create_tmpfile(mnt_userns, inode);
-> > fs/namei.c:                             ima_post_path_mknod(mnt_userns, dentry);
-> >
-> > Mimi, can you please take this series and finish the conversion for
-> > what's missing in ima and evm?
-> >
-> > I would also call attention to "175 insertions(+), 240 deletions(-)" --
-> > as expected, this is a net reduction in code.
-> >
-> > Thanks!
+On Thu, Oct 13, 2022 at 11:07:14PM +0200, Fabio M. De Francesco wrote:
+> The use of kmap() is being deprecated in favor of kmap_local_page().
 > 
-> Without looking at any of the code, I just want to say this 100% gets
-> my vote; this is something we need to make happen at some point.
+> There are two main problems with kmap(): (1) It comes with an overhead as
+> the mapping space is restricted and protected by a global lock for
+> synchronization and (2) it also requires global TLB invalidation when the
+> kmap’s pool wraps and it might block when the mapping space is fully
+> utilized until a slot becomes available.
 > 
-> Thanks Kees!
+> With kmap_local_page() the mappings are per thread, CPU local, can take
+> page faults, and can be called from any context (including interrupts).
+> It is faster than kmap() in kernels with HIGHMEM enabled. Furthermore,
+> the tasks can be preempted and, when they are scheduled to run again, the
+> kernel virtual addresses are restored and still valid.
+> 
+> Therefore, replace kmap() with kmap_local_page() in radeon_ttm_gtt_read().
+> 
+> Cc: "Venkataramanan, Anirudh" <anirudh.venkataramanan@intel.com>
+> Suggested-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Fabio M. De Francesco <fmdefrancesco@gmail.com>
 
-Sorry I'm on vacation this week and the beginning of next week, but
-will look at it when I get back.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Mimi
-
+-- 
+Kees Cook
