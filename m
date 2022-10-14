@@ -2,104 +2,135 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16444C43219
-	for <linux-hardening@archiver.kernel.org>; Fri, 14 Oct 2022 02:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 962EEC43219
+	for <linux-hardening@archiver.kernel.org>; Fri, 14 Oct 2022 03:19:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229666AbiJNClo (ORCPT
+        id S229507AbiJNDS6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 Oct 2022 22:41:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44844 "EHLO
+        Thu, 13 Oct 2022 23:18:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229594AbiJNCln (ORCPT
+        with ESMTP id S229769AbiJNDSc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 Oct 2022 22:41:43 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08D9F196B61
-        for <linux-hardening@vger.kernel.org>; Thu, 13 Oct 2022 19:41:41 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id l4so3503902plb.8
-        for <linux-hardening@vger.kernel.org>; Thu, 13 Oct 2022 19:41:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZJ1ZupV4pNYtfLm2nRk080Y8SXTuWCwx9eOCEUYrnLk=;
-        b=mOTc8KRBadMqtPwLlQpMoDRG7Y/LhVh3ONQQ0+J/2DeJP9z2WBpqzM2zCbruFAwGQ2
-         Cg9NrAsdBApxkVi7G6+/BmIIhGYCILZRVDKJgLmeZAjnkd+DscSYsrIh2d0DhZEicFJ4
-         JC0NBSOAxXyESKVnAJK6Z1UcYpKzjFbwvjdW4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZJ1ZupV4pNYtfLm2nRk080Y8SXTuWCwx9eOCEUYrnLk=;
-        b=JC9WHxUUWMuPBEiFXZCvX+E5WitjNqmAHYNdM0An1cImRON4kBPu6rJktdUpPgLtDZ
-         iS6IGvyCZkrBnjCZE8Ig9Ly5svPM/Hrqpj94hsbZj39Lv8K2siZG3Gty8ChPxPt4W56j
-         lZuy+cmrc2DynxLroCDG1X2VGZiFzNtELI3HwpJrQvhRlLyzbOByJlRMHFPsZC06Uves
-         tELddRbX7wSBoVetZo9uE75ySW7y2EvlVw35F0s8AVezFAmrsZLPYgYPahD4v8dWkPfs
-         nS+hkdGoE4IcWn3THPFW7xkz37e9+wjZ4RYLDshIWuthsfqX7wPbiS603YUs2nA8vyU9
-         m6BA==
-X-Gm-Message-State: ACrzQf3nCV4w1l3ntziXdWb2aczHlMrMgXmTSRmMuZZy9vgkNa3kx9fl
-        n6DXrxvqI+qAx/gS2Mipcy1cgw==
-X-Google-Smtp-Source: AMsMyM4+EvyJIPbh8SsjJ5/w//6R6z4mUB4NPnFpN2sJpNlsISjzDqMI4t1DceTMwEIjNQHzGR0rDg==
-X-Received: by 2002:a17:90a:d983:b0:20a:ec04:e028 with SMTP id d3-20020a17090ad98300b0020aec04e028mr14425285pjv.122.1665715301104;
-        Thu, 13 Oct 2022 19:41:41 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o2-20020a170902d4c200b001708c4ebbaesm467745plg.309.2022.10.13.19.41.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Oct 2022 19:41:40 -0700 (PDT)
-Date:   Thu, 13 Oct 2022 19:41:39 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Fabio M. De Francesco" <fmdefrancesco@gmail.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Christian Brauner <brauner@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        linux-hwmon@vger.kernel.org, linux-hardening@vger.kernel.org,
-        "Venkataramanan, Anirudh" <anirudh.venkataramanan@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH] drm/radeon: Replace kmap() with kmap_local_page()
-Message-ID: <202210131941.5D2AD4403E@keescook>
-References: <20221013210714.16320-1-fmdefrancesco@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221013210714.16320-1-fmdefrancesco@gmail.com>
+        Thu, 13 Oct 2022 23:18:32 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 020BF1119CB;
+        Thu, 13 Oct 2022 20:18:30 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 60263619D6;
+        Fri, 14 Oct 2022 03:18:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE094C43470;
+        Fri, 14 Oct 2022 03:18:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665717509;
+        bh=XdPGgMOKnebM+bZev/ZKP6wiusPUf6c3wma5ZTnpm0o=;
+        h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
+        b=TCqLtjMUhY3E6hf1ob6xgOd/SwpJweBv3tU3uwDefMm4A/ahGMxIC1fYKYYfBlwsp
+         c4OzGNUkyZI/EWcYPFYJKey7rW0cEUkZE+LOkpGV19buQ6rtAwI/hLX5iw1NyHEOWp
+         FqFekRHYzRsrNlju7lbJW+OBW4KWCrNhryyrvGL4FXB9xq9XMqweABSa7E89pobMDj
+         dhbr4pgnLECh4yJxmSvj30PN6CSkv/1SL630AvtuHSSPF+716FXaWyEJPJV5YfWvUX
+         AcpoA4Go3xPK5zpt0aNt/TWRQOKwqnAINiTRleYiI5qW8pa8hRcvsqQddsl387N9qW
+         FvzX+DBznhG0Q==
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 7304527C0054;
+        Thu, 13 Oct 2022 23:18:27 -0400 (EDT)
+Received: from imap48 ([10.202.2.98])
+  by compute2.internal (MEProxy); Thu, 13 Oct 2022 23:18:27 -0400
+X-ME-Sender: <xms:AdVIYzOOj40fYDS1rOvXIoESyi161w0DmwR247bhjuKHqLFeT9OiDA>
+    <xme:AdVIY99529hlGQo-8KK9C30W0jlvvwwm75Z23pVzj3dmAFAsNJ7f6r-P3PWWqRCOA
+    Phzta6qNL1zttkMjs8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeekuddgieelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehn
+    ugihucfnuhhtohhmihhrshhkihdfuceolhhuthhosehkvghrnhgvlhdrohhrgheqnecugg
+    ftrfgrthhtvghrnhepgeejhfehkeejleffheetkefhtdduuedtieehheekgfekudeggfff
+    udejuddufeeknecuffhomhgrihhnpegthhhrohhmihhumhdrohhrghenucevlhhushhtvg
+    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhguhidomhgvshhmthhp
+    rghuthhhphgvrhhsohhnrghlihhthidqudduiedukeehieefvddqvdeifeduieeitdekqd
+    hluhhtoheppehkvghrnhgvlhdrohhrgheslhhinhhugidrlhhuthhordhush
+X-ME-Proxy: <xmx:AdVIYySW5Tdj3xc9QCIj2mq3H0rlkZatHo_4MuZZWFFBYFhYq8rSyA>
+    <xmx:AdVIY3uxuPeTfHWQd84oguwbXb3jq_lpHxPlgcluwo9B3Bp9AzVjRg>
+    <xmx:AdVIY7fXv-y_hn4d5Su6ASkwBxzA9fYhaSJ9rz-aLpvt3ull2hzjEQ>
+    <xmx:A9VIY5GVCHHHXumAGXj3B2GHtzhL21R2t0gobETwrTSxeyRxILj7NXJ9Hqc>
+Feedback-ID: ieff94742:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 878A331A03F7; Thu, 13 Oct 2022 23:18:25 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-1047-g9e4af4ada4-fm-20221005.001-g9e4af4ad
+Mime-Version: 1.0
+Message-Id: <2032f766-1704-486b-8f24-a670c0b3cb32@app.fastmail.com>
+In-Reply-To: <CAG48ez0sEkmaez9tYqgMXrkREmXZgxC9fdQD3mzF9cGo_=Tfyg@mail.gmail.com>
+References: <20221006082735.1321612-1-keescook@chromium.org>
+ <20221006082735.1321612-2-keescook@chromium.org>
+ <20221006090506.paqjf537cox7lqrq@wittgenstein>
+ <CAG48ez0sEkmaez9tYqgMXrkREmXZgxC9fdQD3mzF9cGo_=Tfyg@mail.gmail.com>
+Date:   Thu, 13 Oct 2022 20:18:04 -0700
+From:   "Andy Lutomirski" <luto@kernel.org>
+To:     "Jann Horn" <jannh@google.com>,
+        "Christian Brauner" <brauner@kernel.org>
+Cc:     "Kees Cook" <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Jorge Merlino" <jorge.merlino@canonical.com>,
+        "Al Viro" <viro@zeniv.linux.org.uk>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>,
+        "Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org,
+        "John Johansen" <john.johansen@canonical.com>,
+        "Paul Moore" <paul@paul-moore.com>,
+        "James Morris" <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Stephen Smalley" <stephen.smalley.work@gmail.com>,
+        "Eric Paris" <eparis@parisplace.org>,
+        "Richard Haines" <richard_c_haines@btinternet.com>,
+        "Casey Schaufler" <casey@schaufler-ca.com>,
+        "Xin Long" <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Todd Kjos" <tkjos@google.com>,
+        "Ondrej Mosnacek" <omosnace@redhat.com>,
+        "Prashanth Prahlad" <pprahlad@redhat.com>,
+        "Micah Morton" <mortonm@chromium.org>,
+        "Fenghua Yu" <fenghua.yu@intel.com>,
+        "Andrei Vagin" <avagin@gmail.com>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/2] fs/exec: Explicitly unshare fs_struct on exec
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Oct 13, 2022 at 11:07:14PM +0200, Fabio M. De Francesco wrote:
-> The use of kmap() is being deprecated in favor of kmap_local_page().
-> 
-> There are two main problems with kmap(): (1) It comes with an overhead as
-> the mapping space is restricted and protected by a global lock for
-> synchronization and (2) it also requires global TLB invalidation when the
-> kmap’s pool wraps and it might block when the mapping space is fully
-> utilized until a slot becomes available.
-> 
-> With kmap_local_page() the mappings are per thread, CPU local, can take
-> page faults, and can be called from any context (including interrupts).
-> It is faster than kmap() in kernels with HIGHMEM enabled. Furthermore,
-> the tasks can be preempted and, when they are scheduled to run again, the
-> kernel virtual addresses are restored and still valid.
-> 
-> Therefore, replace kmap() with kmap_local_page() in radeon_ttm_gtt_read().
-> 
-> Cc: "Venkataramanan, Anirudh" <anirudh.venkataramanan@intel.com>
-> Suggested-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Fabio M. De Francesco <fmdefrancesco@gmail.com>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
 
--- 
-Kees Cook
+On Thu, Oct 6, 2022, at 7:13 AM, Jann Horn wrote:
+> On Thu, Oct 6, 2022 at 11:05 AM Christian Brauner <brauner@kernel.org> wrote:
+>> On Thu, Oct 06, 2022 at 01:27:34AM -0700, Kees Cook wrote:
+>> > The check_unsafe_exec() counting of n_fs would not add up under a heavily
+>> > threaded process trying to perform a suid exec, causing the suid portion
+>> > to fail. This counting error appears to be unneeded, but to catch any
+>> > possible conditions, explicitly unshare fs_struct on exec, if it ends up
+>>
+>> Isn't this a potential uapi break? Afaict, before this change a call to
+>> clone{3}(CLONE_FS) followed by an exec in the child would have the
+>> parent and child share fs information. So if the child e.g., changes the
+>> working directory post exec it would also affect the parent. But after
+>> this change here this would no longer be true. So a child changing a
+>> workding directoro would not affect the parent anymore. IOW, an exec is
+>> accompanied by an unshare(CLONE_FS). Might still be worth trying ofc but
+>> it seems like a non-trivial uapi change but there might be few users
+>> that do clone{3}(CLONE_FS) followed by an exec.
+>
+> I believe the following code in Chromium explicitly relies on this
+> behavior, but I'm not sure whether this code is in active use anymore:
+>
+> https://source.chromium.org/chromium/chromium/src/+/main:sandbox/linux/suid/sandbox.c;l=101?q=CLONE_FS&sq=&ss=chromium
+
+Wait, this is absolutely nucking futs.  On a very quick inspection, the sharable things like this are fs, files, sighand, and io.    files and sighand get unshared, which makes sense.  fs supposedly checks for extra refs and prevents gaining privilege.  io is... ignored!  At least it's not immediately obvious that io is a problem.
+
+But seriously, this makes no sense at all.  It should not be possible to exec a program and then, without ptrace, change its cwd out from under it.  Do we really need to preserve this behavior?
+
+--Andy
