@@ -2,97 +2,82 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF450C43217
-	for <linux-hardening@archiver.kernel.org>; Fri, 14 Oct 2022 17:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E50C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 14 Oct 2022 20:00:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230024AbiJNR7s (ORCPT
+        id S229602AbiJNUAL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 14 Oct 2022 13:59:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44414 "EHLO
+        Fri, 14 Oct 2022 16:00:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229827AbiJNR7q (ORCPT
+        with ESMTP id S229460AbiJNUAK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 14 Oct 2022 13:59:46 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 587F95F42
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Oct 2022 10:59:38 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id o17-20020a17090aac1100b0020d98b0c0f4so7214831pjq.4
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Oct 2022 10:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lIA5kCd21RHEnMbxdNImt2sQ/3g725z4r3mMj6tBAeg=;
-        b=hfa/QWPjWqnauRAj8LTTvkLH8F/ZfZmIPDY/huHYxu5usQnH2THr+sGzN/cWVm8Hg4
-         hi3JZA4hN2jg9g1okYOWDiwT/CAMzepro+6AZLKfW7vNz8Rp+A8Q9bPaTIzbcberVsYN
-         2A0sqgFqWi0uCLu/Ii+aL2/kLXUD86KYe2af4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lIA5kCd21RHEnMbxdNImt2sQ/3g725z4r3mMj6tBAeg=;
-        b=BUllE/ctbRKKYJ52ev6Fp4mumuK6eaLCDQy6qp7ZITLbsBocuzL5mUjpej8ykUiWxC
-         xYVdpYmQkct8R5LuXZ1i8fzIbp+jcSQaJypLAiigrdB+nP5rh84nxRpf5AryLiPFVY+F
-         7YaV+VFg8SOsC+J8BZUEA7WnCAsFNwyexKLiqRARcakXNXP2WtSsK1yPEQtGhJEaOZQ0
-         3pKuHl0sCoHOKKdFtC6v2beEHrbCgeCsQ2UMa7K1WRO80xZaGeYI2iffndcJI9u+bb6u
-         GJSSD2Y2ow6FcfBqpT55MTkU3AJVaUejCY1Rbe1Ws5NowrOR4+EkGPOQIWSqf1pRG7qI
-         jwCQ==
-X-Gm-Message-State: ACrzQf2ZEiJTINuKOEk7rqQJYB/9fJG1S5YVfnNPlrjYVO3EKZPmKlkM
-        W11bd7IxCb+krlzLBFPpBl5wSw==
-X-Google-Smtp-Source: AMsMyM4TRh2gr+kOS0rnlcc/KQKS33NEffPf3pWG7t7imgdj7HB2jOO7UNnIZR4eUJsSLYpCw3FUVA==
-X-Received: by 2002:a17:90b:3d8:b0:20a:8e90:8e8c with SMTP id go24-20020a17090b03d800b0020a8e908e8cmr6907001pjb.138.1665770377827;
-        Fri, 14 Oct 2022 10:59:37 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w11-20020a170902ca0b00b0017f7fa6808csm2015707pld.87.2022.10.14.10.59.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Oct 2022 10:59:36 -0700 (PDT)
-Date:   Fri, 14 Oct 2022 10:59:35 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, KP Singh <kpsingh@kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        John Johansen <john.johansen@canonical.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/9] integrity: Prepare for having "ima" and "evm"
- available in "integrity" LSM
-Message-ID: <202210141050.A8DF7D10@keescook>
-References: <20221013222702.never.990-kees@kernel.org>
- <20221013223654.659758-1-keescook@chromium.org>
- <08a8b202-69b4-e154-28f5-337a898acf61@digikod.net>
+        Fri, 14 Oct 2022 16:00:10 -0400
+X-Greylist: delayed 530 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 14 Oct 2022 13:00:07 PDT
+Received: from mail.postadigitale.org (mail.postadigitale.org [IPv6:2a01:4f8:200:34ed::25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A5AD474D6
+        for <linux-hardening@vger.kernel.org>; Fri, 14 Oct 2022 13:00:06 -0700 (PDT)
+Received: from hostpad (p5490ffec.dip0.t-ipconnect.de [84.144.255.236])
+        by mail.postadigitale.org (Postfix) with ESMTPSA id 21C761B888
+        for <linux-hardening@vger.kernel.org>; Fri, 14 Oct 2022 21:51:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postadigitale.de;
+        s=20180517; t=1665777073;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type;
+        bh=HFaeA+wUVWjM4Ud+YuLqAJrZPhM2ET6pBiH1t8QPuH4=;
+        b=DxR28wAeLyOXzhu3sWW+7AuZNhaxJ2PDrQ4DZ5QNO1dAWVSbK6URo23kAk/EdYWdO7OD/r
+        CMxDow89QGEp+1eg0XYhjVXEa0dYUpb/qi/+0IIG7HCBJqB5UqcwjmgDObBcpL2afm30OV
+        4ArtOf+Mi18jEbcbzK0RjdxjaouwEbM=
+Date:   Fri, 14 Oct 2022 19:51:11 +0000
+From:   Simon Brand <simon.brand@postadigitale.de>
+To:     linux-hardening@vger.kernel.org
+Subject: Reconsider possibility to disable icotl TIOCSTI
+Message-ID: <Y0m9l52AKmw6Yxi1@hostpad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <08a8b202-69b4-e154-28f5-337a898acf61@digikod.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Oct 14, 2022 at 04:40:01PM +0200, Mickaël Salaün wrote:
-> This is not backward compatible
+Good day,
 
-Why? Nothing will be running LSM hooks until init finishes, at which
-point the integrity inode cache will be allocated. And ima and evm don't
-start up until lateinit.
+please reconsider to add a possibility to disable icotl TIOCSTI.
+In the past there have been attempts to restrict the TIOCSTI ioctl. [0, 1]
+None of them are present in the current kernel.
+Since those tries there have been some security issues (sandbox
+escapes in flatpak (CVE-2019-10063) [2] and snap (CVE 2019-7303) [3],
+runuser [4], su [5]).
 
->, but can easily be fixed thanks to
-> DEFINE_LSM().order
+I ask to merge the patches from linux-hardening [6, 7] so users can
+opt out of this behavior. These patches provide the
+`SECURITY_TIOCSTI_RESTRICT` Kconfig (default no) and a
+`tiocsti_restrict` sysctl.
 
-That forces the LSM to be enabled, which may not be desired?
+Escapes can be reproduced easiliy (on archlinux) via a python script:
+```
+import fcntl
+import termios
+with open("/dev/tty", "w") as fd:
+    for c in "id\n":
+        fcntl.ioctl(fd, termios.TIOCSTI, c)
+```
+Now run as root:
+# su user
+$ python3 /path/to/script.py ; exit
+uid=0(root) ...
 
-> Side node: I proposed an alternative to that but it was Nacked:
-> https://lore.kernel.org/all/20210222150608.808146-1-mic@digikod.net/
+I asked it before on kernelnewbies mailing list. [8]
 
-Yeah, for the reasons pointed out -- that can't work. The point is to
-not have The Default LSM. I do think Casey's NAK was rather prickly,
-though. ;)
+Best and thank you,
+Simon
 
--- 
-Kees Cook
+[0] https://lkml.kernel.org/lkml/CAG48ez1NBnrsPnHN6D9nbOJP6+Q6zEV9vfx9q7ME4Eti-vRmhQ@mail.gmail.com/T/
+[1] https://lkml.kernel.org/lkml/20170420174100.GA16822@mail.hallyn.com/T/
+[2] https://github.com/flatpak/flatpak/issues/2782
+[3] https://wiki.ubuntu.com/SecurityTeam/KnowledgeBase/SnapIoctlTIOCSTI
+[4] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=815922
+[5] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=628843
+[6] https://github.com/anthraxx/linux-hardened/commit/d0e49deb1a39dc64e7c7db3340579
+[7] https://github.com/anthraxx/linux-hardened/commit/ea8f20602a993c90125bf08da3989
+[8] https://www.spinics.net/lists/newbies/msg64019.html
