@@ -2,601 +2,145 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AB7C433FE
-	for <linux-hardening@archiver.kernel.org>; Mon, 17 Oct 2022 20:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FF7C4332F
+	for <linux-hardening@archiver.kernel.org>; Mon, 17 Oct 2022 21:01:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231703AbiJQUkD (ORCPT
+        id S229623AbiJQVBw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 Oct 2022 16:40:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42808 "EHLO
+        Mon, 17 Oct 2022 17:01:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230476AbiJQUj0 (ORCPT
+        with ESMTP id S229606AbiJQVBu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 Oct 2022 16:39:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAC9F7437F;
-        Mon, 17 Oct 2022 13:36:58 -0700 (PDT)
+        Mon, 17 Oct 2022 17:01:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D8CE1DA73;
+        Mon, 17 Oct 2022 14:01:49 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2A6E061280;
-        Mon, 17 Oct 2022 20:36:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6873CC433C1;
-        Mon, 17 Oct 2022 20:36:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 39B0C61267;
+        Mon, 17 Oct 2022 21:01:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99C5BC43142;
+        Mon, 17 Oct 2022 21:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666038989;
-        bh=8750zFEwFVNAjzVEB/qQuvRZAcia7DBMMJZC9I72k5g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JBDjXlRt9lKmF7p3KvZ1zR8MFGWbZcgJTW19bhyQHAMUg/IA466A9F3PSHJdhkzTt
-         v5K7cxcdQziZerLEnb8M9AWvHeESdpp15Fh0H0+DeYQdUZ8waxh9bSdrlKmxnv2k1K
-         wpe42i075BIULjmIAcrMZR1V8UoDuNIPVZfghxB1q3SpuTppTtRsIhhP0UYRZqdUv+
-         uKI1gzDfzjOee+6invQQHC48hqSAcocX/ovBeNgleMI4TA4eWGz5elOcWW/cyUy3FD
-         hKewJsrGH5I7cQSq7ytyGOiIrMrODhQJLKOshZneEWgjv35Z0bPdoIOoN9C78DD8rw
-         Gr3M3cyCQORKA==
-Date:   Mon, 17 Oct 2022 15:36:20 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH 6/6][next] airo: Avoid clashing function prototypes
-Message-ID: <ab0047382e6fd20c694e4ca14de8ca2c2a0e19d0.1666038048.git.gustavoars@kernel.org>
-References: <cover.1666038048.git.gustavoars@kernel.org>
+        s=k20201202; t=1666040508;
+        bh=Z2H8cPp0/ZthnN/3soOj8NGIPmpILuFfUY3SKclznMM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bQFdhgdGa8T6xK3ZGvWAaBR3zFFFVPzB2/8SLdMRUffkIrGvoTskAz/vasWUGhd4Z
+         jS+KJi/nrImaHttSgtj5f3Q7qm1HNPPVuNKAldKwj9ylERWqP9bJmH0GyfkuwqBNX4
+         tym+v6go3gOnjQfXLJYp94fDkw9xGI6FzjM5h9HDWna5nabRgqX60Fu/fWO/+wh3Hs
+         EaZtsB9RD2pOc+R1G3iPLLr24M3Rz2002q2/AT5MQpF2EUUghqjBU4P+LtZDeUXq2H
+         jfOFrMXImvPU0h6uFSOFv3hrHwTFJ8X+XeJawjhaFtLm8Ol1sGOgAT7A+KqbHsvXbY
+         39RzdPPoPdspA==
+Received: by mail-lj1-f171.google.com with SMTP id bs14so15509099ljb.9;
+        Mon, 17 Oct 2022 14:01:48 -0700 (PDT)
+X-Gm-Message-State: ACrzQf3ewYdIyo5CiJ7DWiDxPgEvU0A2oYoyxs7H0sbHFeWaSXyTadtH
+        +BCupAORwLAtj33crh9vYbUAFZE1/9BT4smZ/7U=
+X-Google-Smtp-Source: AMsMyM7tWWA4XbRsgaNTss/+oEgDlhBOXKvTPLmyKEDTPmcMJ/XG1HhlNakIQ7nMs5d1QzO4Id4anJaGzkXXZqA2nhY=
+X-Received: by 2002:a2e:9a81:0:b0:26c:5b63:7a83 with SMTP id
+ p1-20020a2e9a81000000b0026c5b637a83mr5054864lji.291.1666040506574; Mon, 17
+ Oct 2022 14:01:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1666038048.git.gustavoars@kernel.org>
+References: <20221006234138.1835739-1-keescook@chromium.org>
+ <191ec24d-35d4-e4e5-85f7-d7301984e647@igalia.com> <202210171100.5BAC4A5CC8@keescook>
+ <CAMj1kXHzrRTVcxb5+hgUPV3tjekPcDWzVf6cG_Mc9JJmYBz2Mw@mail.gmail.com>
+ <202210171227.35ED875219@keescook> <CAMj1kXEJQ8gh-iXZNL8bNcmV=JCmKHNp5BnhYthhSOyR5h79_g@mail.gmail.com>
+ <202210171237.DF5D4A3FD7@keescook> <CAMj1kXGmsJNg7En-55aRF+ApicPD_Opkh8Jw+oTorSOSO+cfuw@mail.gmail.com>
+ <202210171307.32A5D9C07@keescook> <CAMj1kXHced1khwsrHqMUmECh_7irYOckFd+Sx3z9KSmsL7tPxw@mail.gmail.com>
+ <202210171333.309A3D9@keescook>
+In-Reply-To: <202210171333.309A3D9@keescook>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 17 Oct 2022 23:01:35 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHTxc2PM1mz3pm-UEcmch9YG5QKF+JKAUNe9b+1L0OnfA@mail.gmail.com>
+Message-ID: <CAMj1kXHTxc2PM1mz3pm-UEcmch9YG5QKF+JKAUNe9b+1L0OnfA@mail.gmail.com>
+Subject: Re: [PATCH] pstore: migrate to crypto acomp interface (take 2)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-When built with Control Flow Integrity, function prototypes between
-caller and function declaration must match. These mismatches are visible
-at compile time with the new -Wcast-function-type-strict in Clang[1].
+On Mon, 17 Oct 2022 at 22:36, Kees Cook <keescook@chromium.org> wrote:
+>
+> On Mon, Oct 17, 2022 at 10:13:52PM +0200, Ard Biesheuvel wrote:
+> > On Mon, 17 Oct 2022 at 22:11, Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > On Mon, Oct 17, 2022 at 09:45:08PM +0200, Ard Biesheuvel wrote:
+> > > > On Mon, 17 Oct 2022 at 21:40, Kees Cook <keescook@chromium.org> wrote:
+> > > > > Okay, so strictly speaking, eliminating the per-CPU allocation is an
+> > > > > improvement. Keeping scomp and doing in-place compression will let
+> > > > > pstore use "any" compressions method.
+> > > >
+> > > > I'm not following the point you are making here.
+> > >
+> > > Sorry, I mean to say that if I leave scomp in pstore, nothing is "worse"
+> > > (i.e. the per-cpu allocation is present in both scomp and acomp). i.e.
+> > > no regression either way, but if we switch to a distinct library call,
+> > > it's an improvement on the memory utilization front.
+> > >
+> > > > > Is there a crypto API that does _not_ preallocate the per-CPU stuff?
+> > > > > Because, as you say, it's a huge amount of memory on the bigger
+> > > > > systems...
+> > > >
+> > > > The library interface for each of the respective algorithms.
+> > >
+> > > Where is the crypto API for just using the library interfaces, so I
+> > > don't have to be tied to a specific algo?
+> > >
+> >
+> > That doesn't exist, that is the point.
+>
+> Shouldn't something like that exist, though?
+>
 
-Fix a total of 32 warnings like these:
+Well, if what you have in mind is a pluggable API where abstract
+compress() invocations can be backed by different implementations,
+you'll soon find that you don't want to compile every alternative into
+the kernel statically, and you'll need some kind of module dispatch.
+That brings you very close to the crypto API already.
 
-../drivers/net/wireless/cisco/airo.c:7570:2: warning: cast from 'int (*)(struct net_device *, struct iw_request_info *, void *, char *)' to 'iw_handler' (aka 'int (*)(struct net_device *, struct iw_request_info *, union iwreq_data *, char *)') converts to incompatible function type [-Wcast-function-type-strict]
-        (iw_handler) airo_config_commit,        /* SIOCSIWCOMMIT */
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+However, the main mismatch between the crypto API and a library
+interface is the use of scatterlists, and this is the reason we have
+those per-cpu buffers in the first place, as the underlying algos
+don't operate on scatterlists, and so you need a scratch buffer to
+hold the data. Another complication is that you cannot test for
+in-place operation as easily by comparing src and dst pointers, given
+that distinct scatterlists for src and may still describe the same
+buffer in memory.
 
-The airo Wireless Extension handler callbacks (iw_handler) use a
-union for the data argument. Actually use the union and perform explicit
-member selection in the function body instead of having a function
-prototype mismatch. No significant binary differences were seen
-before/after changes.
+All this complexity is there to abstract from the differences between
+software algos and h/w accelerators, but there only exists a single
+instance of the latter in the tree, for HiSilicon SoCs, so this is
+obviously not a resounding success.
 
-Link: https://github.com/KSPP/linux/issues/236
-Link: https://reviews.llvm.org/D134831 [1]
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/wireless/cisco/airo.c | 203 ++++++++++++++++--------------
- 1 file changed, 107 insertions(+), 96 deletions(-)
+In summary, we're better off sticking with the legacy comp interface,
+but unfortunately, due to the way that has been plumbed into the
+scomp/acomp with scatterlists version, that doesn't really help us get
+rid of the memory overhead.
 
-diff --git a/drivers/net/wireless/cisco/airo.c b/drivers/net/wireless/cisco/airo.c
-index 10daef81c355..b04c586943f3 100644
---- a/drivers/net/wireless/cisco/airo.c
-+++ b/drivers/net/wireless/cisco/airo.c
-@@ -4807,7 +4807,8 @@ static int get_dec_u16(char *buffer, int *start, int limit)
- }
- 
- static int airo_config_commit(struct net_device *dev,
--			      struct iw_request_info *info, void *zwrq,
-+			      struct iw_request_info *info,
-+			      union iwreq_data *wrqu,
- 			      char *extra);
- 
- static inline int sniffing_mode(struct airo_info *ai)
-@@ -5804,10 +5805,10 @@ static int airo_get_quality (StatusRid *status_rid, CapabilityRid *cap_rid)
-  */
- static int airo_get_name(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 char *cwrq,
-+			 union iwreq_data *cwrq,
- 			 char *extra)
- {
--	strcpy(cwrq, "IEEE 802.11-DS");
-+	strcpy(cwrq->name, "IEEE 802.11-DS");
- 	return 0;
- }
- 
-@@ -5817,9 +5818,10 @@ static int airo_get_name(struct net_device *dev,
-  */
- static int airo_set_freq(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 struct iw_freq *fwrq,
-+			 union iwreq_data *wrqu,
- 			 char *extra)
- {
-+	struct iw_freq *fwrq = &wrqu->freq;
- 	struct airo_info *local = dev->ml_priv;
- 	int rc = -EINPROGRESS;		/* Call commit handler */
- 
-@@ -5858,9 +5860,10 @@ static int airo_set_freq(struct net_device *dev,
-  */
- static int airo_get_freq(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 struct iw_freq *fwrq,
-+			 union iwreq_data *wrqu,
- 			 char *extra)
- {
-+	struct iw_freq *fwrq = &wrqu->freq;
- 	struct airo_info *local = dev->ml_priv;
- 	StatusRid status_rid;		/* Card status info */
- 	int ch;
-@@ -5890,9 +5893,10 @@ static int airo_get_freq(struct net_device *dev,
-  */
- static int airo_set_essid(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  struct iw_point *dwrq,
-+			  union iwreq_data *wrqu,
- 			  char *extra)
- {
-+	struct iw_point *dwrq = &wrqu->essid;
- 	struct airo_info *local = dev->ml_priv;
- 	SsidRid SSID_rid;		/* SSIDs */
- 
-@@ -5935,9 +5939,10 @@ static int airo_set_essid(struct net_device *dev,
-  */
- static int airo_get_essid(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  struct iw_point *dwrq,
-+			  union iwreq_data *wrqu,
- 			  char *extra)
- {
-+	struct iw_point *dwrq = &wrqu->essid;
- 	struct airo_info *local = dev->ml_priv;
- 	StatusRid status_rid;		/* Card status info */
- 
-@@ -5963,9 +5968,10 @@ static int airo_get_essid(struct net_device *dev,
-  */
- static int airo_set_wap(struct net_device *dev,
- 			struct iw_request_info *info,
--			struct sockaddr *awrq,
-+			union iwreq_data *wrqu,
- 			char *extra)
- {
-+	struct sockaddr *awrq = &wrqu->ap_addr;
- 	struct airo_info *local = dev->ml_priv;
- 	Cmd cmd;
- 	Resp rsp;
-@@ -5998,9 +6004,10 @@ static int airo_set_wap(struct net_device *dev,
-  */
- static int airo_get_wap(struct net_device *dev,
- 			struct iw_request_info *info,
--			struct sockaddr *awrq,
-+			union iwreq_data *wrqu,
- 			char *extra)
- {
-+	struct sockaddr *awrq = &wrqu->ap_addr;
- 	struct airo_info *local = dev->ml_priv;
- 	StatusRid status_rid;		/* Card status info */
- 
-@@ -6019,9 +6026,10 @@ static int airo_get_wap(struct net_device *dev,
-  */
- static int airo_set_nick(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 struct iw_point *dwrq,
-+			 union iwreq_data *wrqu,
- 			 char *extra)
- {
-+	struct iw_point *dwrq = &wrqu->data;
- 	struct airo_info *local = dev->ml_priv;
- 
- 	/* Check the size of the string */
-@@ -6042,9 +6050,10 @@ static int airo_set_nick(struct net_device *dev,
-  */
- static int airo_get_nick(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 struct iw_point *dwrq,
-+			 union iwreq_data *wrqu,
- 			 char *extra)
- {
-+	struct iw_point *dwrq = &wrqu->data;
- 	struct airo_info *local = dev->ml_priv;
- 
- 	readConfigRid(local, 1);
-@@ -6061,9 +6070,10 @@ static int airo_get_nick(struct net_device *dev,
-  */
- static int airo_set_rate(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 struct iw_param *vwrq,
-+			 union iwreq_data *wrqu,
- 			 char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->bitrate;
- 	struct airo_info *local = dev->ml_priv;
- 	CapabilityRid cap_rid;		/* Card capability info */
- 	u8	brate = 0;
-@@ -6131,9 +6141,10 @@ static int airo_set_rate(struct net_device *dev,
-  */
- static int airo_get_rate(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 struct iw_param *vwrq,
-+			 union iwreq_data *wrqu,
- 			 char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->bitrate;
- 	struct airo_info *local = dev->ml_priv;
- 	StatusRid status_rid;		/* Card status info */
- 
-@@ -6153,9 +6164,10 @@ static int airo_get_rate(struct net_device *dev,
-  */
- static int airo_set_rts(struct net_device *dev,
- 			struct iw_request_info *info,
--			struct iw_param *vwrq,
-+			union iwreq_data *wrqu,
- 			char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->rts;
- 	struct airo_info *local = dev->ml_priv;
- 	int rthr = vwrq->value;
- 
-@@ -6177,9 +6189,10 @@ static int airo_set_rts(struct net_device *dev,
-  */
- static int airo_get_rts(struct net_device *dev,
- 			struct iw_request_info *info,
--			struct iw_param *vwrq,
-+			union iwreq_data *wrqu,
- 			char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->rts;
- 	struct airo_info *local = dev->ml_priv;
- 
- 	readConfigRid(local, 1);
-@@ -6196,9 +6209,9 @@ static int airo_get_rts(struct net_device *dev,
-  */
- static int airo_set_frag(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 struct iw_param *vwrq,
--			 char *extra)
-+			 union iwreq_data *wrqu, char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->frag;
- 	struct airo_info *local = dev->ml_priv;
- 	int fthr = vwrq->value;
- 
-@@ -6221,9 +6234,10 @@ static int airo_set_frag(struct net_device *dev,
-  */
- static int airo_get_frag(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 struct iw_param *vwrq,
-+			 union iwreq_data *wrqu,
- 			 char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->frag;
- 	struct airo_info *local = dev->ml_priv;
- 
- 	readConfigRid(local, 1);
-@@ -6240,7 +6254,7 @@ static int airo_get_frag(struct net_device *dev,
-  */
- static int airo_set_mode(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 __u32 *uwrq,
-+			 union iwreq_data *uwrq,
- 			 char *extra)
- {
- 	struct airo_info *local = dev->ml_priv;
-@@ -6250,7 +6264,7 @@ static int airo_set_mode(struct net_device *dev,
- 	if (sniffing_mode(local))
- 		reset = 1;
- 
--	switch(*uwrq) {
-+	switch(uwrq->mode) {
- 		case IW_MODE_ADHOC:
- 			local->config.opmode &= ~MODE_CFG_MASK;
- 			local->config.opmode |= MODE_STA_IBSS;
-@@ -6303,7 +6317,7 @@ static int airo_set_mode(struct net_device *dev,
-  */
- static int airo_get_mode(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 __u32 *uwrq,
-+			 union iwreq_data *uwrq,
- 			 char *extra)
- {
- 	struct airo_info *local = dev->ml_priv;
-@@ -6312,16 +6326,16 @@ static int airo_get_mode(struct net_device *dev,
- 	/* If not managed, assume it's ad-hoc */
- 	switch (local->config.opmode & MODE_CFG_MASK) {
- 		case MODE_STA_ESS:
--			*uwrq = IW_MODE_INFRA;
-+			uwrq->mode = IW_MODE_INFRA;
- 			break;
- 		case MODE_AP:
--			*uwrq = IW_MODE_MASTER;
-+			uwrq->mode = IW_MODE_MASTER;
- 			break;
- 		case MODE_AP_RPTR:
--			*uwrq = IW_MODE_REPEAT;
-+			uwrq->mode = IW_MODE_REPEAT;
- 			break;
- 		default:
--			*uwrq = IW_MODE_ADHOC;
-+			uwrq->mode = IW_MODE_ADHOC;
- 	}
- 
- 	return 0;
-@@ -6338,9 +6352,10 @@ static inline int valid_index(struct airo_info *ai, int index)
-  */
- static int airo_set_encode(struct net_device *dev,
- 			   struct iw_request_info *info,
--			   struct iw_point *dwrq,
-+			   union iwreq_data *wrqu,
- 			   char *extra)
- {
-+	struct iw_point *dwrq = &wrqu->encoding;
- 	struct airo_info *local = dev->ml_priv;
- 	int perm = (dwrq->flags & IW_ENCODE_TEMP ? 0 : 1);
- 	__le16 currentAuthType = local->config.authType;
-@@ -6437,9 +6452,10 @@ static int airo_set_encode(struct net_device *dev,
-  */
- static int airo_get_encode(struct net_device *dev,
- 			   struct iw_request_info *info,
--			   struct iw_point *dwrq,
-+			   union iwreq_data *wrqu,
- 			   char *extra)
- {
-+	struct iw_point *dwrq = &wrqu->encoding;
- 	struct airo_info *local = dev->ml_priv;
- 	int index = (dwrq->flags & IW_ENCODE_INDEX) - 1;
- 	int wep_key_len;
-@@ -6784,9 +6800,10 @@ static int airo_get_auth(struct net_device *dev,
-  */
- static int airo_set_txpow(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  struct iw_param *vwrq,
-+			  union iwreq_data *wrqu,
- 			  char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->txpower;
- 	struct airo_info *local = dev->ml_priv;
- 	CapabilityRid cap_rid;		/* Card capability info */
- 	int i;
-@@ -6821,9 +6838,10 @@ static int airo_set_txpow(struct net_device *dev,
-  */
- static int airo_get_txpow(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  struct iw_param *vwrq,
-+			  union iwreq_data *wrqu,
- 			  char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->txpower;
- 	struct airo_info *local = dev->ml_priv;
- 
- 	readConfigRid(local, 1);
-@@ -6841,9 +6859,10 @@ static int airo_get_txpow(struct net_device *dev,
-  */
- static int airo_set_retry(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  struct iw_param *vwrq,
-+			  union iwreq_data *wrqu,
- 			  char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->retry;
- 	struct airo_info *local = dev->ml_priv;
- 	int rc = -EINVAL;
- 
-@@ -6879,9 +6898,10 @@ static int airo_set_retry(struct net_device *dev,
-  */
- static int airo_get_retry(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  struct iw_param *vwrq,
-+			  union iwreq_data *wrqu,
- 			  char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->retry;
- 	struct airo_info *local = dev->ml_priv;
- 
- 	vwrq->disabled = 0;      /* Can't be disabled */
-@@ -6910,9 +6930,10 @@ static int airo_get_retry(struct net_device *dev,
-  */
- static int airo_get_range(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  struct iw_point *dwrq,
-+			  union iwreq_data *wrqu,
- 			  char *extra)
- {
-+	struct iw_point *dwrq = &wrqu->data;
- 	struct airo_info *local = dev->ml_priv;
- 	struct iw_range *range = (struct iw_range *) extra;
- 	CapabilityRid cap_rid;		/* Card capability info */
-@@ -7036,9 +7057,9 @@ static int airo_get_range(struct net_device *dev,
-  */
- static int airo_set_power(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  struct iw_param *vwrq,
--			  char *extra)
-+			  union iwreq_data *wrqu, char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->power;
- 	struct airo_info *local = dev->ml_priv;
- 
- 	readConfigRid(local, 1);
-@@ -7094,9 +7115,10 @@ static int airo_set_power(struct net_device *dev,
-  */
- static int airo_get_power(struct net_device *dev,
- 			  struct iw_request_info *info,
--			  struct iw_param *vwrq,
-+			  union iwreq_data *wrqu,
- 			  char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->power;
- 	struct airo_info *local = dev->ml_priv;
- 	__le16 mode;
- 
-@@ -7125,9 +7147,10 @@ static int airo_get_power(struct net_device *dev,
-  */
- static int airo_set_sens(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 struct iw_param *vwrq,
-+			 union iwreq_data *wrqu,
- 			 char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->sens;
- 	struct airo_info *local = dev->ml_priv;
- 
- 	readConfigRid(local, 1);
-@@ -7144,9 +7167,10 @@ static int airo_set_sens(struct net_device *dev,
-  */
- static int airo_get_sens(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 struct iw_param *vwrq,
-+			 union iwreq_data *wrqu,
- 			 char *extra)
- {
-+	struct iw_param *vwrq = &wrqu->sens;
- 	struct airo_info *local = dev->ml_priv;
- 
- 	readConfigRid(local, 1);
-@@ -7164,9 +7188,10 @@ static int airo_get_sens(struct net_device *dev,
-  */
- static int airo_get_aplist(struct net_device *dev,
- 			   struct iw_request_info *info,
--			   struct iw_point *dwrq,
-+			   union iwreq_data *wrqu,
- 			   char *extra)
- {
-+	struct iw_point *dwrq = &wrqu->data;
- 	struct airo_info *local = dev->ml_priv;
- 	struct sockaddr *address = (struct sockaddr *) extra;
- 	struct iw_quality *qual;
-@@ -7242,7 +7267,7 @@ static int airo_get_aplist(struct net_device *dev,
-  */
- static int airo_set_scan(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 struct iw_point *dwrq,
-+			 union iwreq_data *wrqu,
- 			 char *extra)
- {
- 	struct airo_info *ai = dev->ml_priv;
-@@ -7473,9 +7498,10 @@ static inline char *airo_translate_scan(struct net_device *dev,
-  */
- static int airo_get_scan(struct net_device *dev,
- 			 struct iw_request_info *info,
--			 struct iw_point *dwrq,
-+			 union iwreq_data *wrqu,
- 			 char *extra)
- {
-+	struct iw_point *dwrq = &wrqu->data;
- 	struct airo_info *ai = dev->ml_priv;
- 	BSSListElement *net;
- 	int err = 0;
-@@ -7517,7 +7543,7 @@ static int airo_get_scan(struct net_device *dev,
-  */
- static int airo_config_commit(struct net_device *dev,
- 			      struct iw_request_info *info,	/* NULL */
--			      void *zwrq,			/* NULL */
-+			      union iwreq_data *wrqu,		/* NULL */
- 			      char *extra)			/* NULL */
- {
- 	struct airo_info *local = dev->ml_priv;
-@@ -7567,61 +7593,46 @@ static const struct iw_priv_args airo_private_args[] = {
- 
- static const iw_handler		airo_handler[] =
- {
--	(iw_handler) airo_config_commit,	/* SIOCSIWCOMMIT */
--	(iw_handler) airo_get_name,		/* SIOCGIWNAME */
--	(iw_handler) NULL,			/* SIOCSIWNWID */
--	(iw_handler) NULL,			/* SIOCGIWNWID */
--	(iw_handler) airo_set_freq,		/* SIOCSIWFREQ */
--	(iw_handler) airo_get_freq,		/* SIOCGIWFREQ */
--	(iw_handler) airo_set_mode,		/* SIOCSIWMODE */
--	(iw_handler) airo_get_mode,		/* SIOCGIWMODE */
--	(iw_handler) airo_set_sens,		/* SIOCSIWSENS */
--	(iw_handler) airo_get_sens,		/* SIOCGIWSENS */
--	(iw_handler) NULL,			/* SIOCSIWRANGE */
--	(iw_handler) airo_get_range,		/* SIOCGIWRANGE */
--	(iw_handler) NULL,			/* SIOCSIWPRIV */
--	(iw_handler) NULL,			/* SIOCGIWPRIV */
--	(iw_handler) NULL,			/* SIOCSIWSTATS */
--	(iw_handler) NULL,			/* SIOCGIWSTATS */
--	iw_handler_set_spy,			/* SIOCSIWSPY */
--	iw_handler_get_spy,			/* SIOCGIWSPY */
--	iw_handler_set_thrspy,			/* SIOCSIWTHRSPY */
--	iw_handler_get_thrspy,			/* SIOCGIWTHRSPY */
--	(iw_handler) airo_set_wap,		/* SIOCSIWAP */
--	(iw_handler) airo_get_wap,		/* SIOCGIWAP */
--	(iw_handler) NULL,			/* -- hole -- */
--	(iw_handler) airo_get_aplist,		/* SIOCGIWAPLIST */
--	(iw_handler) airo_set_scan,		/* SIOCSIWSCAN */
--	(iw_handler) airo_get_scan,		/* SIOCGIWSCAN */
--	(iw_handler) airo_set_essid,		/* SIOCSIWESSID */
--	(iw_handler) airo_get_essid,		/* SIOCGIWESSID */
--	(iw_handler) airo_set_nick,		/* SIOCSIWNICKN */
--	(iw_handler) airo_get_nick,		/* SIOCGIWNICKN */
--	(iw_handler) NULL,			/* -- hole -- */
--	(iw_handler) NULL,			/* -- hole -- */
--	(iw_handler) airo_set_rate,		/* SIOCSIWRATE */
--	(iw_handler) airo_get_rate,		/* SIOCGIWRATE */
--	(iw_handler) airo_set_rts,		/* SIOCSIWRTS */
--	(iw_handler) airo_get_rts,		/* SIOCGIWRTS */
--	(iw_handler) airo_set_frag,		/* SIOCSIWFRAG */
--	(iw_handler) airo_get_frag,		/* SIOCGIWFRAG */
--	(iw_handler) airo_set_txpow,		/* SIOCSIWTXPOW */
--	(iw_handler) airo_get_txpow,		/* SIOCGIWTXPOW */
--	(iw_handler) airo_set_retry,		/* SIOCSIWRETRY */
--	(iw_handler) airo_get_retry,		/* SIOCGIWRETRY */
--	(iw_handler) airo_set_encode,		/* SIOCSIWENCODE */
--	(iw_handler) airo_get_encode,		/* SIOCGIWENCODE */
--	(iw_handler) airo_set_power,		/* SIOCSIWPOWER */
--	(iw_handler) airo_get_power,		/* SIOCGIWPOWER */
--	(iw_handler) NULL,			/* -- hole -- */
--	(iw_handler) NULL,			/* -- hole -- */
--	(iw_handler) NULL,			/* SIOCSIWGENIE */
--	(iw_handler) NULL,			/* SIOCGIWGENIE */
--	(iw_handler) airo_set_auth,		/* SIOCSIWAUTH */
--	(iw_handler) airo_get_auth,		/* SIOCGIWAUTH */
--	(iw_handler) airo_set_encodeext,	/* SIOCSIWENCODEEXT */
--	(iw_handler) airo_get_encodeext,	/* SIOCGIWENCODEEXT */
--	(iw_handler) NULL,			/* SIOCSIWPMKSA */
-+	IW_HANDLER(SIOCSIWCOMMIT,	airo_config_commit),
-+	IW_HANDLER(SIOCGIWNAME,		airo_get_name),
-+	IW_HANDLER(SIOCSIWFREQ,		airo_set_freq),
-+	IW_HANDLER(SIOCGIWFREQ,		airo_get_freq),
-+	IW_HANDLER(SIOCSIWMODE,		airo_set_mode),
-+	IW_HANDLER(SIOCGIWMODE,		airo_get_mode),
-+	IW_HANDLER(SIOCSIWSENS,		airo_set_sens),
-+	IW_HANDLER(SIOCGIWSENS,		airo_get_sens),
-+	IW_HANDLER(SIOCGIWRANGE,	airo_get_range),
-+	IW_HANDLER(SIOCSIWSPY,		iw_handler_set_spy),
-+	IW_HANDLER(SIOCGIWSPY,		iw_handler_get_spy),
-+	IW_HANDLER(SIOCSIWTHRSPY,	iw_handler_set_thrspy),
-+	IW_HANDLER(SIOCGIWTHRSPY,	iw_handler_get_thrspy),
-+	IW_HANDLER(SIOCSIWAP,		airo_set_wap),
-+	IW_HANDLER(SIOCGIWAP,		airo_get_wap),
-+	IW_HANDLER(SIOCGIWAPLIST,	airo_get_aplist),
-+	IW_HANDLER(SIOCSIWSCAN,		airo_set_scan),
-+	IW_HANDLER(SIOCGIWSCAN,		airo_get_scan),
-+	IW_HANDLER(SIOCSIWESSID,	airo_set_essid),
-+	IW_HANDLER(SIOCGIWESSID,	airo_get_essid),
-+	IW_HANDLER(SIOCSIWNICKN,	airo_set_nick),
-+	IW_HANDLER(SIOCGIWNICKN,	airo_get_nick),
-+	IW_HANDLER(SIOCSIWRATE,		airo_set_rate),
-+	IW_HANDLER(SIOCGIWRATE,		airo_get_rate),
-+	IW_HANDLER(SIOCSIWRTS,		airo_set_rts),
-+	IW_HANDLER(SIOCGIWRTS,		airo_get_rts),
-+	IW_HANDLER(SIOCSIWFRAG,		airo_set_frag),
-+	IW_HANDLER(SIOCGIWFRAG,		airo_get_frag),
-+	IW_HANDLER(SIOCSIWTXPOW,	airo_set_txpow),
-+	IW_HANDLER(SIOCGIWTXPOW,	airo_get_txpow),
-+	IW_HANDLER(SIOCSIWRETRY,	airo_set_retry),
-+	IW_HANDLER(SIOCGIWRETRY,	airo_get_retry),
-+	IW_HANDLER(SIOCSIWENCODE,	airo_set_encode),
-+	IW_HANDLER(SIOCGIWENCODE,	airo_get_encode),
-+	IW_HANDLER(SIOCSIWPOWER,	airo_set_power),
-+	IW_HANDLER(SIOCGIWPOWER,	airo_get_power),
-+	IW_HANDLER(SIOCSIWAUTH,		airo_set_auth),
-+	IW_HANDLER(SIOCGIWAUTH,		airo_get_auth),
-+	IW_HANDLER(SIOCSIWENCODEEXT,	airo_set_encodeext),
-+	IW_HANDLER(SIOCGIWENCODEEXT,	airo_get_encodeext),
- };
- 
- /* Note : don't describe AIROIDIFC and AIROOLDIDIFC in here.
--- 
-2.34.1
 
+> > But how does the algo matter when you are dealing with mere kilobytes
+> > of ASCII text?
+>
+> Sure, though, this is how we got here -- every couple of years, someone
+> added another library interface to another compression aglo.
+
+But why? How does that make a meaningful difference for compressing kernel logs?
+
+> I tore all
+> that out so we could avoid having to choose a single one, but was left
+> with the zbufsize mess (that, yes, doesn't matter). So now pstore can
+> just not care what compression is chosen.
+>
+
+What I propose is to simply hard wire pstore to a single existing
+library implementation, and forget about the crypto API entirely.
+
+We know the pros, given the above. So what would we lose that is
+valuable by doing this?
