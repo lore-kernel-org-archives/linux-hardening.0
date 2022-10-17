@@ -2,99 +2,77 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A42BCC433FE
-	for <linux-hardening@archiver.kernel.org>; Mon, 17 Oct 2022 18:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F23B6C433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 17 Oct 2022 18:23:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229748AbiJQSOa (ORCPT
+        id S229908AbiJQSXU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 Oct 2022 14:14:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35854 "EHLO
+        Mon, 17 Oct 2022 14:23:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229794AbiJQSOa (ORCPT
+        with ESMTP id S229738AbiJQSXT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 Oct 2022 14:14:30 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75D0695A2;
-        Mon, 17 Oct 2022 11:14:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 12E66611F0;
-        Mon, 17 Oct 2022 18:14:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73D20C433C1;
-        Mon, 17 Oct 2022 18:14:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666030467;
-        bh=Z7Uwug6k5qEwWDN4mEOJmsmTE37uy3yD2SlcrHBOjfo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JhbKcd8nBgltA2cUxf6NC8Sd1Lkj61y8yc7blRAS5/r2etietj/cYYde5jgRzzHMc
-         yZA8SacFxyO6z8aSp+Atm5UFshdSmFv8RQghZn6jvijtR45T6jFFVRGhAhUEv6dCl1
-         sW5v06KtI/bSSCB1U7fV75UOUOLHMAi1RSODePWj6rK3GcfHp4lhfv85ddjv+tS2JB
-         9h9NuwjM4rhgaOpvos94L3I4iK46U+5CGOiCBXLJ1+pRO495oVfSGf0VDJNPq7qFfO
-         lPH1B5uQubHSTFkgyMdAfnR+0BZW525Nx8Y1gfe8edTnxUkJFHva+o7NSIS3txXgMd
-         49cvX5hC90T4w==
-Received: by mail-lf1-f48.google.com with SMTP id bu25so18848292lfb.3;
-        Mon, 17 Oct 2022 11:14:27 -0700 (PDT)
-X-Gm-Message-State: ACrzQf1qHsh7hZDZUHLLEzne7CAA+hoZ6CqviWyJx5v6HhNUOy0QPxc5
-        dt7ZFUADka+OvDSYo63/Y6UEKGkXP/KFDezeauM=
-X-Google-Smtp-Source: AMsMyM4/H3HQax1mbJP34lo4x+Pmo9RUHwIASnn6faiAlgbBz7yBzStFDye5LFJLAze7tVEr2i5XVPWAuQlEKIIufjk=
-X-Received: by 2002:a19:c20b:0:b0:4a2:40e5:78b1 with SMTP id
- l11-20020a19c20b000000b004a240e578b1mr4345794lfc.228.1666030465499; Mon, 17
- Oct 2022 11:14:25 -0700 (PDT)
+        Mon, 17 Oct 2022 14:23:19 -0400
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72A5074CD6;
+        Mon, 17 Oct 2022 11:23:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=4sjMP/FaCWS6/v5Psiixs4qxgbGH/KhPN7NTx1p/cno=; b=WZ93flY+KU0E2pZufHWHm+W89T
+        s9xuK5kqwtWxM2+s6XYSdN2S0ucx3V9zguClaM8SPzT3gIu8hvIcrUehDCurxD7/nGoQVDkY5ANqf
+        Yt9SSets4ldeWBjviqX4Tizj18VgMGi/ulpR5L5++ldDu6s/667syAgRH+JjXf939w0k7WUuLBCAM
+        8m/eq3mcd4rNa6PIS1PG5vroiQ583SHriA1MdGJH1F+h0sxpCRV6i+P6UYxEATaadgwvYzZobyJps
+        V/3vN6Krf9i9Y2TX8Y9xRkj9LIGjp4RpaB0Zykw13RR1AheVKW8eZgTZ9KwRz4fSoRzz6sNlBFB57
+        9Q+RrSqg==;
+Received: from [179.113.159.85] (helo=[192.168.1.60])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1okUlR-000XXG-TA; Mon, 17 Oct 2022 20:23:01 +0200
+Message-ID: <798f0911-5c54-ebe0-9d44-64bec0c96a72@igalia.com>
+Date:   Mon, 17 Oct 2022 15:22:48 -0300
 MIME-Version: 1.0
-References: <20221006234138.1835739-1-keescook@chromium.org>
- <191ec24d-35d4-e4e5-85f7-d7301984e647@igalia.com> <202210171100.5BAC4A5CC8@keescook>
-In-Reply-To: <202210171100.5BAC4A5CC8@keescook>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 17 Oct 2022 20:14:14 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHzrRTVcxb5+hgUPV3tjekPcDWzVf6cG_Mc9JJmYBz2Mw@mail.gmail.com>
-Message-ID: <CAMj1kXHzrRTVcxb5+hgUPV3tjekPcDWzVf6cG_Mc9JJmYBz2Mw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.2
 Subject: Re: [PATCH] pstore: migrate to crypto acomp interface (take 2)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Anton Vorontsov <anton@enomsg.org>,
+Content-Language: en-US
+To:     Ard Biesheuvel <ardb@kernel.org>, Kees Cook <keescook@chromium.org>
+Cc:     Anton Vorontsov <anton@enomsg.org>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20221006234138.1835739-1-keescook@chromium.org>
+ <191ec24d-35d4-e4e5-85f7-d7301984e647@igalia.com>
+ <202210171100.5BAC4A5CC8@keescook>
+ <CAMj1kXHzrRTVcxb5+hgUPV3tjekPcDWzVf6cG_Mc9JJmYBz2Mw@mail.gmail.com>
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <CAMj1kXHzrRTVcxb5+hgUPV3tjekPcDWzVf6cG_Mc9JJmYBz2Mw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 17 Oct 2022 at 20:01, Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, Oct 17, 2022 at 01:26:12PM -0300, Guilherme G. Piccoli wrote:
-> > On 06/10/2022 20:41, Kees Cook wrote:
-> > > From: Ard Biesheuvel <ardb@kernel.org>
-> > >
-> > > The crypto 'compress' interface is deprecated, so before adding new
-> > > features, migrate to the acomp interface. Note that we are only using
-> > > synchronous implementations of acomp, so we don't have to deal with
-> > > asynchronous completion.
->
-> Ard, given your observation about all the per-cpu memory allocation,
-> should pstore still go ahead with this conversion?
->
+On 17/10/2022 15:14, Ard Biesheuvel wrote:
+> [...]
+> 
+> So at that point, I wondered what the point is of all this complexity.
+> Do we really need 6 different algorithms to compress a couple of K of
+> ASCII text on a code path that is ice cold by definition? Wouldn't it
+> be better to drop the crypto API altogether here, and just use GZIP
+> via the library interface?
 
-Well, the reason for doing this conversion was so that we could move
-the 'worst case buffer size' logic into the individual drivers, as
-Herbert would't allow that for legacy comp.
+Skipping all the interesting and more complex parts, I'd just want to
+consider zstd maybe? Quite fast and efficient - it's what we're using by
+default on Steam Deck.
 
-But as we found, we don't really care about the theoretical worst case
-of an input that is incompressible - we can just pass the uncompressed
-size as the upper bound, and if the crypto fails, we just store the
-data uncompressed (which never happens in the first place with ASCII
-text)
+I'm not sure what is the gzip library interface - you mean skipping the
+scomp/legacy comp interface, and make use directly of gzip?
 
-So once we use the same size for input and output, I was curious
-whether we could encrypt in place, and get rid of the big_oops_buf.
-And the answer is 'yes', precisely because we have this horrid per-CPU
-allocation which serves as a bounce buffer. And this is not specific
-to acomp, the old comp algorithms get wrapped in scomps which receive
-the same treatment.
+Cheers,
 
-So at that point, I wondered what the point is of all this complexity.
-Do we really need 6 different algorithms to compress a couple of K of
-ASCII text on a code path that is ice cold by definition? Wouldn't it
-be better to drop the crypto API altogether here, and just use GZIP
-via the library interface?
+
+Guilherme
