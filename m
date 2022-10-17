@@ -2,137 +2,108 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC33C4332F
-	for <linux-hardening@archiver.kernel.org>; Mon, 17 Oct 2022 16:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F936C4332F
+	for <linux-hardening@archiver.kernel.org>; Mon, 17 Oct 2022 18:01:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229870AbiJQQwY (ORCPT
+        id S230022AbiJQSBq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 Oct 2022 12:52:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35934 "EHLO
+        Mon, 17 Oct 2022 14:01:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229772AbiJQQwX (ORCPT
+        with ESMTP id S229770AbiJQSBp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 Oct 2022 12:52:23 -0400
-Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E86CF031;
-        Mon, 17 Oct 2022 09:52:22 -0700 (PDT)
-Received: by mail-oi1-x233.google.com with SMTP id n130so12753068oia.6;
-        Mon, 17 Oct 2022 09:52:22 -0700 (PDT)
+        Mon, 17 Oct 2022 14:01:45 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38A5962916
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Oct 2022 11:01:42 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id 70so11664065pjo.4
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Oct 2022 11:01:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+1LwX5bRFQXNkq6PB+GJkYIHW1maFFhRT+npXlh3EBU=;
-        b=Wli2+vCUPK20VH6qBK0/9u0+D86Cprn715QA3rGfohk6lLxfaKQ/gr2fBPGeUKivfV
-         9scv3keMMR40vWDmdGPV9mBFqcrR3IHAjiKgk9g2HFz+2GzmZeYm2V80n+MJ78WVfpcT
-         yeYzVTE/N/xMeay1FUkdDXp4VjEEugswL6+/mgtjc3koOgAHsXFOFPuqyxYHHSkwavDv
-         C+M6uSoIBnLjtzFoB6Ioq0cJQ0heFLwsSXacVrlHTrT1UMeP6VkCilRtw5NikcgJK2rM
-         52sgzEMrbJk98DoOJk/9P8dvOgrS6rFCixGcl08kKYuIS08WWQTsUWkkSY90XgZi+dpx
-         Y0Pg==
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0dPSILD0fz6+hHDKRa0DrcnmU24d1fwAr5y/3mLAghY=;
+        b=mtxvCNrQHeFU2z7E52M6ReIfWOUx4f1Vt/0bBEhqoaLmsuIn38ne/1mVK2kth7WrqG
+         VzhnEYQ/wCAvweINwfQk5bTcyUoZA4At01PZZUpRLs8PvOZ6Gf4AzrffzwoIrVYlhmyr
+         7wXP+tBBLd1EMI+jW/o3qkR5qrK2YPVQN4e4I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+1LwX5bRFQXNkq6PB+GJkYIHW1maFFhRT+npXlh3EBU=;
-        b=XSSNn23qw/E0UN8ffxR5ZpQNZdHRIaPHIlYMLIJLCONrfLQIoossvJu098Kea8vvO2
-         G5p0I6/uftBfotA8cjJf1RSS0ZeRM4B9pHLzgW8N+nchKJAXMWS9WnQQFOTveSrmpFz1
-         LJPzUWMqtgLdQtCg0YO8ErZTb441Rw1H8ESpjpJiHgKoE5ECP7HdobC1fwvUMO3TAvjP
-         o/EDCPb3qkytJQsjKDCbXVFoZ+ndFgO9eU7vwm+UTQaFqOF0G9bPxY3cZD5AJ+eFWmzN
-         rQGK5eJtpMmx5zuNYmewxjPQORkDlSBPuPafKz6olaQw88m5DdqcbqJrPPXdMhnbL8Go
-         CDJw==
-X-Gm-Message-State: ACrzQf1nQvzPzYESHAA6ACxGrbAm0A5rvo5pjGpqaWYFcDUskChRdIP0
-        78bH5vQJ4wLob1gR+FTOcHKKCv3ma4n03pcuBIM=
-X-Google-Smtp-Source: AMsMyM7pkfs8YvaEJ3rXNBXJfzbthWWMDK+JMBHXzoIgFykCTCTTewwkS0A48fh2TzykUTENTQtzoKPd6PQhlDPFwow=
-X-Received: by 2002:a05:6808:14d2:b0:354:c733:abd3 with SMTP id
- f18-20020a05680814d200b00354c733abd3mr5577155oiw.96.1666025541711; Mon, 17
- Oct 2022 09:52:21 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0dPSILD0fz6+hHDKRa0DrcnmU24d1fwAr5y/3mLAghY=;
+        b=NgMCrgBC9n6wdBV+9P8LiuOtbFRxKuXDBBlpMo7U2PAHgz4RxW2VdxptFzieS9dH1V
+         I5hahSvjQsIow0CBqTB40wrVBa+RaHieK4k2mtkxB7V4/NZvCcbb+yi4O9syKFInnaBJ
+         LEJ87laK5DqOzdr7235042X6/7YQIGmKPll0GO+l4C2mWdJnyRzGtBrR37P9ydUX4Tjy
+         OtYEN0X7ljbhG1aIQYyTwyuwxXHpoctPxtKPi+pa/3ypLKPL7DqECD0vtzXXwKdUriaN
+         V5cv2rbc7qF0pLXOJO8NwkWiLm0Hi9FoB1HgvVHMPVvPUDlSe78u+ni7wp+lpWf9nxoC
+         pbHQ==
+X-Gm-Message-State: ACrzQf3YOYLqqpBwzygkB/X0CppVac2EIxT1XFyuRYZHIP/ji1dStu3A
+        bTzNVTEpCd8l4bQJg8QtPltbE7x/klXdYw==
+X-Google-Smtp-Source: AMsMyM4kblho2j2or0iiU5gOYmPCRjaRxTYSNnheSLa4H+zvGlp3SbU0MsPiwxniAAbFp9Hjbf0SDQ==
+X-Received: by 2002:a17:90a:f192:b0:20d:2ea6:4b18 with SMTP id bv18-20020a17090af19200b0020d2ea64b18mr15216803pjb.27.1666029701638;
+        Mon, 17 Oct 2022 11:01:41 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x20-20020a17090300d400b0017f95efe62esm6851112plc.13.2022.10.17.11.01.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Oct 2022 11:01:40 -0700 (PDT)
+Date:   Mon, 17 Oct 2022 11:01:39 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] pstore: migrate to crypto acomp interface (take 2)
+Message-ID: <202210171100.5BAC4A5CC8@keescook>
+References: <20221006234138.1835739-1-keescook@chromium.org>
+ <191ec24d-35d4-e4e5-85f7-d7301984e647@igalia.com>
 MIME-Version: 1.0
-References: <20221013210714.16320-1-fmdefrancesco@gmail.com> <fb0b7389-7121-04f8-176d-1ababe0ad8f2@amd.com>
-In-Reply-To: <fb0b7389-7121-04f8-176d-1ababe0ad8f2@amd.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 17 Oct 2022 12:52:10 -0400
-Message-ID: <CADnq5_PP3VCXQ5rbC0-8Qsi5W7Ew87U_bRknz4=qxbrPxVQ+qA@mail.gmail.com>
-Subject: Re: [PATCH] drm/radeon: Replace kmap() with kmap_local_page()
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     "Fabio M. De Francesco" <fmdefrancesco@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Christian Brauner <brauner@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Kees Cook <keescook@chromium.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        linux-hwmon@vger.kernel.org, linux-hardening@vger.kernel.org,
-        "Venkataramanan, Anirudh" <anirudh.venkataramanan@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <191ec24d-35d4-e4e5-85f7-d7301984e647@igalia.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Applied.  Thanks!
+On Mon, Oct 17, 2022 at 01:26:12PM -0300, Guilherme G. Piccoli wrote:
+> On 06/10/2022 20:41, Kees Cook wrote:
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> > 
+> > The crypto 'compress' interface is deprecated, so before adding new
+> > features, migrate to the acomp interface. Note that we are only using
+> > synchronous implementations of acomp, so we don't have to deal with
+> > asynchronous completion.
 
-On Fri, Oct 14, 2022 at 3:03 AM Christian K=C3=B6nig
-<christian.koenig@amd.com> wrote:
->
-> Am 13.10.22 um 23:07 schrieb Fabio M. De Francesco:
-> > The use of kmap() is being deprecated in favor of kmap_local_page().
-> >
-> > There are two main problems with kmap(): (1) It comes with an overhead =
-as
-> > the mapping space is restricted and protected by a global lock for
-> > synchronization and (2) it also requires global TLB invalidation when t=
-he
-> > kmap=E2=80=99s pool wraps and it might block when the mapping space is =
-fully
-> > utilized until a slot becomes available.
-> >
-> > With kmap_local_page() the mappings are per thread, CPU local, can take
-> > page faults, and can be called from any context (including interrupts).
-> > It is faster than kmap() in kernels with HIGHMEM enabled. Furthermore,
-> > the tasks can be preempted and, when they are scheduled to run again, t=
-he
-> > kernel virtual addresses are restored and still valid.
-> >
-> > Therefore, replace kmap() with kmap_local_page() in radeon_ttm_gtt_read=
-().
-> >
-> > Cc: "Venkataramanan, Anirudh" <anirudh.venkataramanan@intel.com>
-> > Suggested-by: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: Fabio M. De Francesco <fmdefrancesco@gmail.com>
->
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
->
+Ard, given your observation about all the per-cpu memory allocation,
+should pstore still go ahead with this conversion?
+
+-Kees
+
+> > 
+> > [ Tweaked error paths to avoid memory leak, as pointed out byGuilherme
+> >   G. Piccoli <gpiccoli@igalia.com>, and fixed pstore_compress()
+> >   return value -kees ]
+> > 
+> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > Link: https://lore.kernel.org/lkml/CAMj1kXFnoqj+cn-0dT8fg0kgLvVx+Q2Ex-4CUjSnA9yRprmC-w@mail.gmail.com/
+> > Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
 > > ---
-> >   drivers/gpu/drm/radeon/radeon_ttm.c | 4 ++--
-> >   1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/radeon/radeon_ttm.c b/drivers/gpu/drm/rade=
-on/radeon_ttm.c
-> > index d33fec488713..bdb4c0e0736b 100644
-> > --- a/drivers/gpu/drm/radeon/radeon_ttm.c
-> > +++ b/drivers/gpu/drm/radeon/radeon_ttm.c
-> > @@ -869,11 +869,11 @@ static ssize_t radeon_ttm_gtt_read(struct file *f=
-, char __user *buf,
-> >
-> >               page =3D rdev->gart.pages[p];
-> >               if (page) {
-> > -                     ptr =3D kmap(page);
-> > +                     ptr =3D kmap_local_page(page);
-> >                       ptr +=3D off;
-> >
-> >                       r =3D copy_to_user(buf, ptr, cur_size);
-> > -                     kunmap(rdev->gart.pages[p]);
-> > +                     kunmap_local(ptr);
-> >               } else
-> >                       r =3D clear_user(buf, cur_size);
-> >
->
+> >  fs/pstore/platform.c | 74 ++++++++++++++++++++++++++++++++++----------
+> >  1 file changed, 57 insertions(+), 17 deletions(-)
+> > 
+> 
+> Hi Kees, thanks for re-sending this one.
+> 
+> Just tested it on top of v6.0, with efi-pstore/ramoops, using zstd, lz4
+> and deflate - everything working as expected.
+> So, with the typo fixed, have my:
+> 
+> Tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+
+Thanks!
+
+-- 
+Kees Cook
