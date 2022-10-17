@@ -2,223 +2,130 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E609C433FE
-	for <linux-hardening@archiver.kernel.org>; Mon, 17 Oct 2022 15:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39565C433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 17 Oct 2022 15:25:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231176AbiJQPPP (ORCPT
+        id S231337AbiJQPZT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 Oct 2022 11:15:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51946 "EHLO
+        Mon, 17 Oct 2022 11:25:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230185AbiJQPPN (ORCPT
+        with ESMTP id S230498AbiJQPZR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 Oct 2022 11:15:13 -0400
-Received: from na01-obe.outbound.protection.outlook.com (mail-eastusazon11021015.outbound.protection.outlook.com [52.101.52.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A7CA326E9;
-        Mon, 17 Oct 2022 08:15:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LkpT5g4tbtJvnU84J4iAhqREf+j6A+Il8JKn9cuE7LXuWKMkV0kbN2AkhrHyFxf+B6uwAE+TzAOKG6GI6yUdHoxd3Q9Fh9G8JyaYSc1MANdFp0TrcFsDjBadhriMaVPzUWStXchWUsz8RsKnv2Y8tLNr4mF3teTdW4xeJwQsEE5s6wNmaK91zFx0Wbz8Tunr/OBS3Empt95WvJfraxHsTeEjMJrzYXFdMRs+uaoSnY487ot73oQEISxNkKFTjl4EmGJNLvJL6VLVoF/OTj1SufFIrMTkisRxH+Or6le1h/1PKrlV6/HWaH0ULjEJ0J0EWpzVa2H3KBUPRUB5iR8SNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OTBkmVGrMchqZDylxhibw/0J2m1TXOoXcWjfe4uzI88=;
- b=e4Ttxw/crOaDvrZzmFPked/+jiN8YxCFA+2VeqeYx4QXF/pt2eX/+GzJy+jnuiU0Dz2GQP/YUow3tzmAQM2L45Zlov/VMkciGEVge2pmOvyloyFNnpiUJBGtNnywKijVnhQJ5bV3nNWIbmzD8YGyKe/GJ8Wzlb9sH2VEQ+bev7hETr6t61eylJRg+pFal6LugzR+iZXQ3ZQoNky53IKZ0rpMQ9zgnhuI94GrFjm+k8yHthF8Epvw+AdxjomOcd2qVYMRsHnImNtq5Ymxa+KGBvWGzcTlUWUywdpCPF29UIVe6hef5KFDL1PmCJ4+fSC54LZPILHNG7SurG0WCjpVZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OTBkmVGrMchqZDylxhibw/0J2m1TXOoXcWjfe4uzI88=;
- b=BgOf82X21AOzzzocTaRe7h3ylN/kDzGzqvDFyL39eeGrfYDs/GxabmRRqwkaoGGyNcxmuofYrdd0u1GUEuJ16N21GgsXot2kI3cVGy5pBz6XOBUUUvuVt1jkaolZgvm2KvuHGBfwSBkddun0chCzJrw/akglQgQH+hk+W9KCEYU=
-Received: from SN6PR2101MB1693.namprd21.prod.outlook.com
- (2603:10b6:805:55::19) by CH2PR21MB1430.namprd21.prod.outlook.com
- (2603:10b6:610:80::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.15; Mon, 17 Oct
- 2022 15:15:04 +0000
-Received: from SN6PR2101MB1693.namprd21.prod.outlook.com
- ([fe80::af9b:5444:77eb:448d]) by SN6PR2101MB1693.namprd21.prod.outlook.com
- ([fe80::af9b:5444:77eb:448d%7]) with mapi id 15.20.5746.009; Mon, 17 Oct 2022
- 15:15:04 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH] [next] HID: hyperv: Replace one-element array with
- flexible-array member
-Thread-Topic: [PATCH] [next] HID: hyperv: Replace one-element array with
- flexible-array member
-Thread-Index: AQHY4f1NVEkUfmHplUioVuVVmpSZoa4SsbJA
-Date:   Mon, 17 Oct 2022 15:15:04 +0000
-Message-ID: <SN6PR2101MB1693AFDA151C35DE148FECAAD7299@SN6PR2101MB1693.namprd21.prod.outlook.com>
-References: <Y00JenqCzKRrcTiF@mail.google.com>
-In-Reply-To: <Y00JenqCzKRrcTiF@mail.google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c1252ce6-ae16-4fdf-a7f5-e362a779f3f0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-10-17T15:12:14Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR2101MB1693:EE_|CH2PR21MB1430:EE_
-x-ms-office365-filtering-correlation-id: 87a4d2e1-81bb-48bc-c663-08dab0525e3a
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: b0oc1hvSPC2ZLesto2Y6A9l9SVm6/izP0ClsGPTpSxnAe2d+XA4YXVFu5ky07sHOk1lcTZtr8HSmaRrEvD7Mt5eU8qnweBbMOGKHgD922NfMAgqHxnJ8GSO98EjZjqyZwE9gsQGQNqw3EI64PBhnV8u/bCrVAkCLKz+eUPAeDp/P2HjQXuLoJBq5+BDfBuGIl/oy1WlsGJeI2ctdx+9oo2Z+V68tg/yUkKocYOpoqt9OBN6qU16veXwsf5oRmebEn7D3NqSBXOkFt3SZiRO+Ow+3hxGvajjdeXLf/ZZhH/zn1CQq612wKjnSoxcd/cxUqlkooxTwOxdvq2x+f2NAP2CjqDzZ0PjMxOWBYyA1dlJDV6ip8zY1UNnMyN3ZtaeWFN21jytmGt5Rml97bzMLns124Zbc/9ttV5X60N4F4TRpPWLBNo2OPUecZLorrYZwOxJEEhteWBDevjugrFQ5hbKUUwsto1vP/zLl2sTcOB8dNZELB0bfc/6bcyUddWWTsl//GYZaBsyJ/GhrqeVt5v+ap3VuZWNEW7R+aFAfIiQ2EyJMqMj0EHIIjgeU/kLff3Y6HNUMkMjkxuJkT1eIIrrEHTAZd6BRknxDsboOgutwfdTDy/pcEwf+osmcGKNztMzV/WkN0620VF8iWsFd+xiQza++ae26cx01uWjSnCrEmXY4N3MnTszLE92r7N1+I7TBJ2HjH5/WuksZkbhiqk2iDho3kHj3hy9lEGJuQlhbtXJhM60RuJAKkhgLtQd594rhZ4BvbIGCwvtvovq6Bq8QPqXgs8sI8ynx+eyGHgo9ObOo1T6wsKPqIgyOsiI3j6eTp/if6BnCK0KjKWpN0iK/Ew2SOaTmIhEihtc36U3nDGD/21i+kvNE46lDguoFHvzH2PBidY7G7LFICDZwDA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR2101MB1693.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(396003)(376002)(39860400002)(346002)(366004)(451199015)(186003)(2906002)(7696005)(6506007)(9686003)(122000001)(5660300002)(54906003)(10290500003)(316002)(86362001)(38100700002)(26005)(41300700001)(82950400001)(82960400001)(66446008)(66476007)(64756008)(8676002)(921005)(8990500004)(66556008)(66946007)(76116006)(33656002)(83380400001)(4326008)(966005)(55016003)(52536014)(8936002)(110136005)(38070700005)(478600001)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?1XbBqUyI8YEyzn0P/CJBniGThOoVkrBwzUz+1EcFHfDZ1Gg7Nd2c0XkCYimN?=
- =?us-ascii?Q?LQQiCgw6lpnFFVdXCNcrCtz+nPQgO7u8eqWolvljGV0PGAm2iKt4M/If7BkX?=
- =?us-ascii?Q?M9HMIHUrZYcAkgCoOOZBUtKCmKqsKqVmOkUkdzAk0gZ8bgAR9d61g9nMWZeG?=
- =?us-ascii?Q?l0o525Eow/ioKE28Qsb3OlRekAWygl55NrjpxTodTSAs8wk5mYgLHIfDa1vO?=
- =?us-ascii?Q?84GPPgiq7zy8VzKh2iMllTFNPWAz7esd5KwqlniPfrP6y0a62REXnu1fyZRF?=
- =?us-ascii?Q?gtvsCA5LBdye8mlbTxx0v+Nl0hg7M19s/Y2dewhE0gl0f/qNZ3JbaecEK6pM?=
- =?us-ascii?Q?RqU0Q4mBqvPq6RgDEr4VU+3NKPEG9DnUmmzaf3AhEPVKFXLOPLOwlI7YJR9d?=
- =?us-ascii?Q?pt1PSWdaG/LFA/h8pGM80J+49rWbp0wR0bSeohHsXYTpe9Hq0JUsQyTNXt1l?=
- =?us-ascii?Q?r+eSXKYMrrGi4R53SBi9FhmBoECDlM6cJH5KuutgnfFTy0f6mbZ3QREx5GFv?=
- =?us-ascii?Q?JDetfO3Hyj9MYtHfo9pENoN4DyQFOzd9Nkrva8DcqH+gW175IGlK5aGLOfmn?=
- =?us-ascii?Q?U2Pks0A85WWRVewlzHIVrVbNa+H8MWtPXrxPlSitUuJzFjggyaXX2YDf8z2p?=
- =?us-ascii?Q?OeOEJOxVjmmIB9mS/EZYuMyFRRPHqlzw0gHv2LOpfR9dnHR4m7TWcZKoFLDz?=
- =?us-ascii?Q?s5r+apv9SCSa/TazgU1lWYHOTIlJDttTewH0XrlPjE9p1pnfnA97UCOkGmIf?=
- =?us-ascii?Q?/TbNTb9PNOajmafPSo/Zk+PRBNIS7O7qSOBKY2vEYi78uzWg/C3dB+S6nnMV?=
- =?us-ascii?Q?OhC19N39Z8ZyPVCDa7Egk4aq232hA/jJZb+Z/hEA4a47zF/zo+j+StfV/ax6?=
- =?us-ascii?Q?ca3Qf82y0Q31fWT/AVU5zWIKio0APSRjDZDbcQWfsPH8FoMvRN9JOhk9+2AY?=
- =?us-ascii?Q?UhJr2s5NecQ31l1azkQKIPfUfXtgdNz68mAUabngnHWDt/RCerXVPX2+g++z?=
- =?us-ascii?Q?BrxZG/gqx/iJZAK911MhoYD880ujxhRtbHIsmyoZnP2FZkrhwm/YqBVmmmdS?=
- =?us-ascii?Q?726qb9UemzkgoknFM4RMga/zuYg07ta4iyhjIBuO5o567JQ3sBL+xhepQvNC?=
- =?us-ascii?Q?GDxB2b/MBUlwEzXRAcTZEXFUqly2BiEtoYLr7L8DddGnZ6htDnhCWxKxNNpp?=
- =?us-ascii?Q?puPXqFuQTvktl65w59X5D5YddATIrw/IiRMRqJKuEqTQ79DOelyNyGJvjFaV?=
- =?us-ascii?Q?92f6S4xGZOq99avNSltjDXELywkg7eTdObVHDpCce0s9skSh41L80BDGuAdP?=
- =?us-ascii?Q?TbRvx/+P5r8cnisDACPiOhSVYfSQZYo8RsQMictbcqehemCb7tSZDZkCZLLd?=
- =?us-ascii?Q?P6lZ0kDUwH1+HeD7JiLdo7ktRVLk/doDLGRc1bYattXtm81XeksR9x0z6UBg?=
- =?us-ascii?Q?RFaNP39AV2P0XmZmTJQBVY8XDa3qaa68V4nKHjbP1FQgQzAIIWO/rmEF4VhC?=
- =?us-ascii?Q?sLqoPp2b4TLOhrQssMe9b+2S8oNkx/AwMHpM604Q8P8MDf9xg3M3xXFemB0L?=
- =?us-ascii?Q?D2cTSAEUWkUjqorq1uwewuz/E24+4JmEOatEqAYCIKuChT+VAp7TPP7s0vjZ?=
- =?us-ascii?Q?tw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 17 Oct 2022 11:25:17 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B2252EF1C
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Oct 2022 08:25:15 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id a3so19091799wrt.0
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Oct 2022 08:25:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VZYVsksDtqwMhKI9pLO96NsNwXlR/Zc6fECSUWcfYvM=;
+        b=loV8pcQ0VH7CSJZBQKJNUBD5gUGjphK138G2Vr0pUFl2hnQjhDNQsmcxOUMHVjZdNS
+         kp6rLFoXEEZlMKcL018jlO+y3l2Mrp4Jhboi4EwUkUsib0YhBEusEvf31v2voSd90j+x
+         RYCnGy22RpUw88J+/P4j1A3vSyzTwga/FtH7lyNU6PFMxuzP0uh72hQArEJhDcPYUk75
+         g/QrFG7tmLmllRJWp+2XmsxP1vTIZnVcRfYFlA2ohe9A9yslYIZj8ov0iOUjBcQBm2Fk
+         s3j+P9ur4/2ZezPhxzHUzydUoBxp+6dkJf7E9SAzCDI90tNzZBsNH759pk976J2xfQlq
+         Tvzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VZYVsksDtqwMhKI9pLO96NsNwXlR/Zc6fECSUWcfYvM=;
+        b=mWQyNduh7B7WQsJuWn+1Cz0Nh/prZTrVzLYHjeQcs5Y8l4l2V/CFWZfgpBbZpngtF2
+         aFJt9tZ1gxLM7yNR9F6z+CizND0fN/Km+cYWGGYjcNTOuA+gIgZInqybYYy5YROSPV7U
+         tI7J3qNmoId6sQQBnqNuYD/VHybRa0IMKgeiFL89GRX8AF42GoIU9XoE57fI2acXqGFF
+         FVA9hCXPLlC90Wlp2PjOJ4uzMYNDxnhFEeVJjq1IiM138iYD5IML6Gd0RVNziCISlIu2
+         VfgyOErHBmH2j0hErgxG+4izLEaTilXHEyH5+NRctmgNFUegX38LciUzSwHSld+XTgPw
+         UX1w==
+X-Gm-Message-State: ACrzQf1C/zxWE3uZfLlMig9I3l31O3obPi1sbcDmCsWKP1Buc3srf0T2
+        JGAy2ddbeF5AA1ApN9M4RUzsaDepPpdx+FMx
+X-Google-Smtp-Source: AMsMyM77wWshVlky9KSI5+U5hfTIhi0l0mEFqE4J649NfP0lv0covsJc7zie3crYcrA5ylJ0MK860A==
+X-Received: by 2002:adf:fc10:0:b0:22e:55e5:9bb5 with SMTP id i16-20020adffc10000000b0022e55e59bb5mr6540090wrr.112.1666020313851;
+        Mon, 17 Oct 2022 08:25:13 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id g2-20020a05600c000200b003c5571c27a1sm12894977wmc.32.2022.10.17.08.25.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Oct 2022 08:25:13 -0700 (PDT)
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel test robot <lkp@intel.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+In-Reply-To: <20221012185234.never.936-kees@kernel.org>
+References: <20221012185234.never.936-kees@kernel.org>
+Subject: Re: [PATCH] firmware: meson_sm: Fix memcpy vs iomem type warnings
+Message-Id: <166602031304.3572695.12870664862275915316.b4-ty@linaro.org>
+Date:   Mon, 17 Oct 2022 17:25:13 +0200
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR2101MB1693.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87a4d2e1-81bb-48bc-c663-08dab0525e3a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2022 15:15:04.0438
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zzYWGET2glSnTPcSYS4AO9CaJebxHimqw5nKvQLMukbqigTUvRjS/iPUJqMZTEIsxmw181y7Ie43d22GJs2TFxh2z17P9SDTkye+0j8ntqE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR21MB1430
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.10.1
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com> Sent: M=
-onday, October 17, 2022 12:51 AM
->=20
-> One-element arrays are deprecated, and we are replacing them with
-> flexible array members instead. So, replace one-element array with
-> flexible-array member in structs synthhid_msg, synthhid_input_report,
-> pipe_prt_msg and refactor the rest of the code accordingly.
->=20
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3D3 [1].
->=20
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://github.com/KSPP/linux/issues/210
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D101836 [1]
->=20
-> Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.c=
-om>
-> ---
->  drivers/hid/hid-hyperv.c | 17 +++++++----------
->  1 file changed, 7 insertions(+), 10 deletions(-)
->=20
-> diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
-> index e0bc73124196..208cf8d981a5 100644
-> --- a/drivers/hid/hid-hyperv.c
-> +++ b/drivers/hid/hid-hyperv.c
-> @@ -61,7 +61,7 @@ struct synthhid_msg_hdr {
->=20
->  struct synthhid_msg {
->  	struct synthhid_msg_hdr header;
-> -	char data[1]; /* Enclosed message */
-> +	char data[]; /* Enclosed message */
->  };
->=20
->  union synthhid_version {
-> @@ -99,7 +99,7 @@ struct synthhid_device_info_ack {
->=20
->  struct synthhid_input_report {
->  	struct synthhid_msg_hdr header;
-> -	char buffer[1];
-> +	char buffer[];
->  };
->=20
->  #pragma pack(pop)
-> @@ -118,7 +118,7 @@ enum pipe_prot_msg_type {
->  struct pipe_prt_msg {
->  	enum pipe_prot_msg_type type;
->  	u32 size;
-> -	char data[1];
-> +	char data[];
->  };
->=20
->  struct  mousevsc_prt_msg {
-> @@ -232,7 +232,7 @@ static void mousevsc_on_receive_device_info(struct
-> mousevsc_dev *input_device,
->=20
->  	ret =3D vmbus_sendpacket(input_device->device->channel,
->  			&ack,
-> -			sizeof(struct pipe_prt_msg) - sizeof(unsigned char) +
-> +			sizeof(struct pipe_prt_msg) +
->  			sizeof(struct synthhid_device_info_ack),
->  			(unsigned long)&ack,
->  			VM_PKT_DATA_INBAND,
-> @@ -271,16 +271,14 @@ static void mousevsc_on_receive(struct hv_device *d=
-evice,
->  		 * malicious/buggy hypervisor/host, add a check here to
->  		 * ensure we don't corrupt memory.
->  		 */
-> -		if ((pipe_msg->size + sizeof(struct pipe_prt_msg)
-> -			- sizeof(unsigned char))
-> +		if (struct_size(pipe_msg, data, pipe_msg->size)
->  			> sizeof(struct mousevsc_prt_msg)) {
->  			WARN_ON(1);
->  			break;
->  		}
->=20
->  		memcpy(&input_dev->protocol_resp, pipe_msg,
-> -		       pipe_msg->size + sizeof(struct pipe_prt_msg) -
-> -		       sizeof(unsigned char));
-> +				struct_size(pipe_msg, data, pipe_msg->size));
->  		complete(&input_dev->wait_event);
->  		break;
->=20
-> @@ -359,8 +357,7 @@ static int mousevsc_connect_to_vsp(struct hv_device *=
-device)
->  	request->request.version_requested.version =3D SYNTHHID_INPUT_VERSION;
->=20
->  	ret =3D vmbus_sendpacket(device->channel, request,
-> -				sizeof(struct pipe_prt_msg) -
-> -				sizeof(unsigned char) +
-> +				sizeof(struct pipe_prt_msg) +
->  				sizeof(struct synthhid_protocol_request),
->  				(unsigned long)request,
->  				VM_PKT_DATA_INBAND,
-> --
-> 2.37.3
+Hi,
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+On Wed, 12 Oct 2022 11:53:16 -0700, Kees Cook wrote:
+> Use memcpy_{toio,fromio}() instead of memcpy(). Silences warnings from
+> Sparse:
+> 
+> drivers/firmware/meson/meson_sm.c:170:17: warning: incorrect type in argument 1 (different address spaces)
+> drivers/firmware/meson/meson_sm.c:170:17:    expected void const *
+> drivers/firmware/meson/meson_sm.c:170:17:    got void [noderef] __iomem *sm_shmem_out_base
+> drivers/firmware/meson/meson_sm.c:170:17: warning: incorrect type in argument 2 (different address spaces)
+> drivers/firmware/meson/meson_sm.c:170:17:    expected void const *
+> drivers/firmware/meson/meson_sm.c:170:17:    got void [noderef] __iomem *sm_shmem_out_base
+> drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+> drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
+> drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+> drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+> drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
+> drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+> drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+> drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
+> drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+> drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+> drivers/firmware/meson/meson_sm.c:206:9:    expected void *
+> drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+> 
+> [...]
 
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.2/drivers)
+
+[1/1] firmware: meson_sm: Fix memcpy vs iomem type warnings
+      https://git.kernel.org/amlogic/c/7dc69c7d073e6004a281db8f7f15cf6ebf702ea0
+
+These changes has been applied on the intermediate git tree [1].
+
+The v6.2/drivers branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
+
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
+
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
+
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
+-- 
+Neil
