@@ -2,77 +2,90 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23B6C433FE
-	for <linux-hardening@archiver.kernel.org>; Mon, 17 Oct 2022 18:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947DAC433FE
+	for <linux-hardening@archiver.kernel.org>; Mon, 17 Oct 2022 19:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229908AbiJQSXU (ORCPT
+        id S229778AbiJQTLZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 Oct 2022 14:23:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54570 "EHLO
+        Mon, 17 Oct 2022 15:11:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229738AbiJQSXT (ORCPT
+        with ESMTP id S229770AbiJQTLZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 Oct 2022 14:23:19 -0400
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72A5074CD6;
-        Mon, 17 Oct 2022 11:23:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=4sjMP/FaCWS6/v5Psiixs4qxgbGH/KhPN7NTx1p/cno=; b=WZ93flY+KU0E2pZufHWHm+W89T
-        s9xuK5kqwtWxM2+s6XYSdN2S0ucx3V9zguClaM8SPzT3gIu8hvIcrUehDCurxD7/nGoQVDkY5ANqf
-        Yt9SSets4ldeWBjviqX4Tizj18VgMGi/ulpR5L5++ldDu6s/667syAgRH+JjXf939w0k7WUuLBCAM
-        8m/eq3mcd4rNa6PIS1PG5vroiQ583SHriA1MdGJH1F+h0sxpCRV6i+P6UYxEATaadgwvYzZobyJps
-        V/3vN6Krf9i9Y2TX8Y9xRkj9LIGjp4RpaB0Zykw13RR1AheVKW8eZgTZ9KwRz4fSoRzz6sNlBFB57
-        9Q+RrSqg==;
-Received: from [179.113.159.85] (helo=[192.168.1.60])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1okUlR-000XXG-TA; Mon, 17 Oct 2022 20:23:01 +0200
-Message-ID: <798f0911-5c54-ebe0-9d44-64bec0c96a72@igalia.com>
-Date:   Mon, 17 Oct 2022 15:22:48 -0300
+        Mon, 17 Oct 2022 15:11:25 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0177646211;
+        Mon, 17 Oct 2022 12:11:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2C854B81A1F;
+        Mon, 17 Oct 2022 19:11:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7908C43142;
+        Mon, 17 Oct 2022 19:11:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666033875;
+        bh=tO7/kt0swniWp6AN8F5z4QekxmdDOMH5ltqVkHH8tJQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=o/rAfKpVRQvkY3TxYYC97bnbwI9hpdDb/iUiHBlpFgAvqY3ktJXvK4QDW/iszFXNA
+         z8euNNs93j5391o4Xh1LDCQWBqn3Mgdc5UtBDeQSFTAGawJr2NKn+Ybwqlr2hL9C5C
+         IJpcJELO9fc3zVGBHiFmD9tO+k9sFP2QAdwC/0C8vdePiqWH838SQruYhu/vWa+QZ7
+         og2rYaiaZW9ZXvQn7QESbCx2cwiNoKwi3vwKWcclIcQAtpmasMS0kpL9gNwtX1weSW
+         t+/23CST3fuf5anYDcV1sBBYwzHT10QOTCogC4qUybk6rwfVdEo7hZZWuxkTaFRgMU
+         YrcB3hm6qCSzw==
+Received: by mail-lj1-f180.google.com with SMTP id a25so15211585ljk.0;
+        Mon, 17 Oct 2022 12:11:15 -0700 (PDT)
+X-Gm-Message-State: ACrzQf1Hqf/YPAiUJ+O+jnpLORxiWvHBNqhgfJdXDTNSnTgLu7iKehD3
+        lWUz+S/9luq7CJPSmdKx8td4wLtpxhxGzKqw6zg=
+X-Google-Smtp-Source: AMsMyM6ReGmue1UrWjjx0gRLm2Y/eII3tEd7FI1SW56Gj77wGe+3iLjgGtHDtB46XCNVCBN2nHO/rcVJ1y9163LIpaY=
+X-Received: by 2002:a05:651c:4d0:b0:26f:cd9b:419f with SMTP id
+ e16-20020a05651c04d000b0026fcd9b419fmr4342897lji.415.1666033873850; Mon, 17
+ Oct 2022 12:11:13 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
+References: <20221006234138.1835739-1-keescook@chromium.org>
+ <191ec24d-35d4-e4e5-85f7-d7301984e647@igalia.com> <202210171100.5BAC4A5CC8@keescook>
+ <CAMj1kXHzrRTVcxb5+hgUPV3tjekPcDWzVf6cG_Mc9JJmYBz2Mw@mail.gmail.com> <798f0911-5c54-ebe0-9d44-64bec0c96a72@igalia.com>
+In-Reply-To: <798f0911-5c54-ebe0-9d44-64bec0c96a72@igalia.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 17 Oct 2022 21:11:02 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGxNP+hnN5yo9Pb_kQC+tcDn+9d30h5QNAUm3JYgoGiwQ@mail.gmail.com>
+Message-ID: <CAMj1kXGxNP+hnN5yo9Pb_kQC+tcDn+9d30h5QNAUm3JYgoGiwQ@mail.gmail.com>
 Subject: Re: [PATCH] pstore: migrate to crypto acomp interface (take 2)
-Content-Language: en-US
-To:     Ard Biesheuvel <ardb@kernel.org>, Kees Cook <keescook@chromium.org>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
         Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-References: <20221006234138.1835739-1-keescook@chromium.org>
- <191ec24d-35d4-e4e5-85f7-d7301984e647@igalia.com>
- <202210171100.5BAC4A5CC8@keescook>
- <CAMj1kXHzrRTVcxb5+hgUPV3tjekPcDWzVf6cG_Mc9JJmYBz2Mw@mail.gmail.com>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <CAMj1kXHzrRTVcxb5+hgUPV3tjekPcDWzVf6cG_Mc9JJmYBz2Mw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 17/10/2022 15:14, Ard Biesheuvel wrote:
-> [...]
-> 
-> So at that point, I wondered what the point is of all this complexity.
-> Do we really need 6 different algorithms to compress a couple of K of
-> ASCII text on a code path that is ice cold by definition? Wouldn't it
-> be better to drop the crypto API altogether here, and just use GZIP
-> via the library interface?
+On Mon, 17 Oct 2022 at 20:23, Guilherme G. Piccoli <gpiccoli@igalia.com> wrote:
+>
+> On 17/10/2022 15:14, Ard Biesheuvel wrote:
+> > [...]
+> >
+> > So at that point, I wondered what the point is of all this complexity.
+> > Do we really need 6 different algorithms to compress a couple of K of
+> > ASCII text on a code path that is ice cold by definition? Wouldn't it
+> > be better to drop the crypto API altogether here, and just use GZIP
+> > via the library interface?
+>
+> Skipping all the interesting and more complex parts, I'd just want to
+> consider zstd maybe?
 
-Skipping all the interesting and more complex parts, I'd just want to
-consider zstd maybe? Quite fast and efficient - it's what we're using by
-default on Steam Deck.
+I just made the point that it doesn't matter. So on the one hand, I
+don't have any objections to ZSTD per se. But I do wonder if it is the
+best choice when it comes to code size etc. Perhaps one of the
+compression algorithms is guaranteed to be compiled in anyway?
 
-I'm not sure what is the gzip library interface - you mean skipping the
-scomp/legacy comp interface, and make use directly of gzip?
+> Quite fast and efficient - it's what we're using by
+> default on Steam Deck.
+>
+> I'm not sure what is the gzip library interface - you mean skipping the
+> scomp/legacy comp interface, and make use directly of gzip?
+>
 
-Cheers,
-
-
-Guilherme
+zlib_deflate() and friends.
