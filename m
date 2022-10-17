@@ -2,120 +2,94 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4F0C433FE
-	for <linux-hardening@archiver.kernel.org>; Mon, 17 Oct 2022 09:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2962BC4332F
+	for <linux-hardening@archiver.kernel.org>; Mon, 17 Oct 2022 09:33:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229822AbiJQJao (ORCPT
+        id S231191AbiJQJdC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 Oct 2022 05:30:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40498 "EHLO
+        Mon, 17 Oct 2022 05:33:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230075AbiJQJam (ORCPT
+        with ESMTP id S230071AbiJQJcu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 Oct 2022 05:30:42 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E660F186DC;
-        Mon, 17 Oct 2022 02:30:41 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id h185so9932157pgc.10;
-        Mon, 17 Oct 2022 02:30:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rM95b+lprcA9+IBLMDF1xffisgCBjIYYF9osRjetg7c=;
-        b=ThJ4ieVN61+E41mdaF9bnScV8EbGmdfmwDs+xkIiPqOBjTaOztvpnnLEySALiJrs/q
-         OTPi0TaGXbnBgYVYZftNtFDmzAhQdbJhRi/Tc6KPimdkKHJ2QNzUUQ86nuUwEmcK3YiE
-         FzBKhYTR5uP1C6IrxVOp3f8q9+o0XzOmpu1yBT3fo9Nw0kgtZdDMTRv5dy6EAcR+C0CX
-         W1LRj3hwbKq7py3NJgCiVff7ekY4r5hvmhSi/doSFKD340rE35T6G2cCKGO2i2ZbOiCJ
-         9UgvRCDVqq31Gr6YfRrhdEQzgb3rrpiv8Oe+Q2k29recJbt5ZsFwUoa4KiAlfo1uPLhu
-         DLQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rM95b+lprcA9+IBLMDF1xffisgCBjIYYF9osRjetg7c=;
-        b=zOdYAcwp0+gDGcZfWK4CU6B10x/C0qAYSaRG3lUulZ1NTjApPMYzGYgpssU7l2ir7J
-         Dvh2rgRV6OKY0h9xyajh5H0g82PLF9UmR2JmenglhZ/YaAQCrvlvY8LPBTZBHEPY7hpZ
-         j2UXVzg5ckmYg2VaLr+mRVMuHmcLqPaUBG4hlTXL6q2OOMP6TxjaxZkdbhrrRpGTZFRp
-         AuLZ4ve+FMy5T688kQmHycWHompsBoLDvWCDOLQn+Jhg8vSMAlzLKpbKGDkfSSVA2vC0
-         MMAoL32eNrm33BxvUkdr8oRNbZr5vl6ON/5gZEelkQ9N+S/rmtdiE7NAJUpdTRDYGOVh
-         LAvQ==
-X-Gm-Message-State: ACrzQf1NE/a1dTc+KQZ2AFv4mO+jW6Cz0dLlCR0pG3VGjruKy3KOSGXB
-        h+9t1Xi6w8FXWAkXbJ52SmgpZNRbOqO27A==
-X-Google-Smtp-Source: AMsMyM5aRPItposyqZJVKykHnnA3U2YC1YgIJxSjJ57ZAxZxZTi5Tl5HsWTnkwZJ2HnfVOT0VdcjhA==
-X-Received: by 2002:a05:6a00:a22:b0:54e:6a90:fbef with SMTP id p34-20020a056a000a2200b0054e6a90fbefmr11555589pfh.53.1665999041347;
-        Mon, 17 Oct 2022 02:30:41 -0700 (PDT)
-Received: from mail.google.com (122-58-209-93-fibre.sparkbb.co.nz. [122.58.209.93])
-        by smtp.gmail.com with ESMTPSA id p3-20020a170902780300b001811a197797sm6105820pll.194.2022.10.17.02.30.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Oct 2022 02:30:40 -0700 (PDT)
-Date:   Mon, 17 Oct 2022 22:30:33 +1300
-From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Jiri Kosina <jikos@kernel.org>, linux-hyperv@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] [next] HID: hyperv: Replace one-element array with
- flexible-array member
-Message-ID: <Y00guZiaxDbFaGhX@mail.google.com>
-References: <Y00JenqCzKRrcTiF@mail.google.com>
- <CAO-hwJ+q+fsmjKY=BjDazBjUDD3755VhRxWw628=xxC9ePWzqA@mail.gmail.com>
+        Mon, 17 Oct 2022 05:32:50 -0400
+X-Greylist: delayed 360 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 17 Oct 2022 02:32:48 PDT
+Received: from smtp-8fac.mail.infomaniak.ch (smtp-8fac.mail.infomaniak.ch [IPv6:2001:1600:4:17::8fac])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 342C546632;
+        Mon, 17 Oct 2022 02:32:48 -0700 (PDT)
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4MrWpZ0skczMq6HQ;
+        Mon, 17 Oct 2022 11:26:46 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [23.97.221.149])
+        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4MrWpX6ttJzMppMq;
+        Mon, 17 Oct 2022 11:26:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+        s=20191114; t=1665998806;
+        bh=Dtqqx/if1ibvMMPRjJERffrtCsRUnCY7m3rsjyXBRgM=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=ZXlehtNi2gROMyNPvpn6xEoGYafMaWeNVUohoi9gv1Z4tBj0H/9jnrJ5/voT2jG4y
+         LBugl+JkVyZXe5aAVsNkGo5lqG8xC04RjwAsOu046lQhjfSnh2SaV0yVJbyLBGznpH
+         02GvexwKNa0ZQ7DAq2kAwMOrfv5LdSU1KP9zpX7w=
+Message-ID: <0d2b9d34-2eda-8aa6-d596-eb1899645192@digikod.net>
+Date:   Mon, 17 Oct 2022 11:26:44 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAO-hwJ+q+fsmjKY=BjDazBjUDD3755VhRxWw628=xxC9ePWzqA@mail.gmail.com>
+User-Agent: 
+Subject: Re: [PATCH 1/9] integrity: Prepare for having "ima" and "evm"
+ available in "integrity" LSM
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>, Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, KP Singh <kpsingh@kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        John Johansen <john.johansen@canonical.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20221013222702.never.990-kees@kernel.org>
+ <20221013223654.659758-1-keescook@chromium.org>
+ <08a8b202-69b4-e154-28f5-337a898acf61@digikod.net>
+ <202210141050.A8DF7D10@keescook>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+In-Reply-To: <202210141050.A8DF7D10@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Oct 17, 2022 at 10:30:54AM +0200, Benjamin Tissoires wrote:
-> On Mon, Oct 17, 2022 at 9:51 AM Paulo Miguel Almeida
-> <paulo.miguel.almeida.rodenas@gmail.com> wrote:
-> >
-> > One-element arrays are deprecated, and we are replacing them with
-> > flexible array members instead. So, replace one-element array with
-> > flexible-array member in structs synthhid_msg, synthhid_input_report,
-> > pipe_prt_msg and refactor the rest of the code accordingly.
-> >
-> > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> > routines on memcpy() and help us make progress towards globally
-> > enabling -fstrict-flex-arrays=3 [1].
-> >
-> > Link: https://github.com/KSPP/linux/issues/79
-> > Link: https://github.com/KSPP/linux/issues/210
-> > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
-> >
-> > Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-> > ---
-> 
-> FWIW, this is
-> Reviewed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> 
-Thanks for reviewing this patch :-)
 
-> > +++ b/drivers/hid/hid-hyperv.c
-> > @@ -61,7 +61,7 @@ struct synthhid_msg_hdr {
-> >
-> >  struct synthhid_msg {
-> >         struct synthhid_msg_hdr header;
-> > -       char data[1]; /* Enclosed message */
-> > +       char data[]; /* Enclosed message */
-> >  };
+On 14/10/2022 19:59, Kees Cook wrote:
+> On Fri, Oct 14, 2022 at 04:40:01PM +0200, Mickaël Salaün wrote:
+>> This is not backward compatible
 > 
-> IMO that struct has no real use. We just use it in
-> mousevsc_on_receive() to dereference the first field only, the header.
-> So how about we have a followup cleanup patch that just removes it and
-> in mousevsc_on_receive() we convert those usages directly to struct
-> synthhid_msg_hdr?
+> Why? Nothing will be running LSM hooks until init finishes, at which
+> point the integrity inode cache will be allocated. And ima and evm don't
+> start up until lateinit.
 > 
-> Cheers,
-> Benjamin
+>> , but can easily be fixed thanks to
+>> DEFINE_LSM().order
+> 
+> That forces the LSM to be enabled, which may not be desired?
 
-I'm happy to send a followup cleanup patch for that.
+This is not backward compatible because currently IMA is enabled 
+independently of the "lsm=" cmdline, which means that for all installed 
+systems using IMA and also with a custom "lsm=" cmdline, updating the 
+kernel with this patch will (silently) disable IMA. Using ".order =
+LSM_ORDER_FIRST," should keep this behavior.
 
-Paulo A.
+BTW, I think we should set such order (but maybe rename it) for LSMs 
+that do nothing unless configured (e.g. Yama, Landlock).
+
+
+> 
+>> Side node: I proposed an alternative to that but it was Nacked:
+>> https://lore.kernel.org/all/20210222150608.808146-1-mic@digikod.net/
+> 
+> Yeah, for the reasons pointed out -- that can't work. The point is to
+> not have The Default LSM. I do think Casey's NAK was rather prickly,
+> though. ;)
+
+I don't agree, there is no "the default LSM", and this new behavior is 
+under an LSM_AUTO configuration option.
