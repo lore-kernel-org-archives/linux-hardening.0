@@ -2,95 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E19F0C433FE
-	for <linux-hardening@archiver.kernel.org>; Mon, 17 Oct 2022 20:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 193EBC4332F
+	for <linux-hardening@archiver.kernel.org>; Mon, 17 Oct 2022 20:36:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231355AbiJQUQd (ORCPT
+        id S231171AbiJQUg2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 Oct 2022 16:16:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55468 "EHLO
+        Mon, 17 Oct 2022 16:36:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231359AbiJQUQJ (ORCPT
+        with ESMTP id S232441AbiJQUfj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 Oct 2022 16:16:09 -0400
+        Mon, 17 Oct 2022 16:35:39 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C172D4F193;
-        Mon, 17 Oct 2022 13:15:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BC8D7D781;
+        Mon, 17 Oct 2022 13:33:57 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 24A346125E;
-        Mon, 17 Oct 2022 20:14:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ACE8C433D6;
-        Mon, 17 Oct 2022 20:14:05 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D95FE61272;
+        Mon, 17 Oct 2022 20:32:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 842E2C433D6;
+        Mon, 17 Oct 2022 20:32:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666037645;
-        bh=fv8LcVgLmvJ3fsy6a+z06fkZwSDK7CSRoZb3xPTfeO8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=F1bwEppZHzPyGGsS2pppvRC09r4ZMo7HWar1tH7wUXaByRZVRhx1ZCs4bEax7Y0pf
-         r7N8sNd5VQX5IB8M9rKKjMRS5qo4A8NiEZgzfiqzate+UE0GX3/bjk8tlZNMShdz/S
-         MJY6JABMRnP9vV3nRYtHmsLnQlDcVkCEYsfbQ3YKTRyp0Aa7tRXFOiXDKKrxZd6p+/
-         o0f+JKwHPDAWbtVKs7G534YaNPQnI8NThVrdljt2VjZGYZ9MrGxlxpQo4tLvwZPgbo
-         ZE/N8PMLbFwGw7KWltwgEAgGymp5zp4ykrgUt7LU//Y6dPxpWV0VZYVebjhTRW2GH7
-         eBIiCzD+EVGNA==
-Received: by mail-lf1-f52.google.com with SMTP id b2so19277515lfp.6;
-        Mon, 17 Oct 2022 13:14:05 -0700 (PDT)
-X-Gm-Message-State: ACrzQf3qUcqim8dZKh5zxBnwS1F7KldX+RiO3Pa4ItcVGY4YB8SHTT1S
-        iWEkDQEYSftIha+gcKLWkbIg7qxObqxxv1ATIyU=
-X-Google-Smtp-Source: AMsMyM4fxm/vhiCKENBxbsUccQii5PYdkgAJ9zmEt4HisJJ+xMwA2uDfYLOSDI+xwYyc9izXrZkfd6Zp716BdC0NpU0=
-X-Received: by 2002:a05:6512:3119:b0:4a2:d749:ff82 with SMTP id
- n25-20020a056512311900b004a2d749ff82mr4790631lfb.637.1666037643562; Mon, 17
- Oct 2022 13:14:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221006234138.1835739-1-keescook@chromium.org>
- <191ec24d-35d4-e4e5-85f7-d7301984e647@igalia.com> <202210171100.5BAC4A5CC8@keescook>
- <CAMj1kXHzrRTVcxb5+hgUPV3tjekPcDWzVf6cG_Mc9JJmYBz2Mw@mail.gmail.com>
- <202210171227.35ED875219@keescook> <CAMj1kXEJQ8gh-iXZNL8bNcmV=JCmKHNp5BnhYthhSOyR5h79_g@mail.gmail.com>
- <202210171237.DF5D4A3FD7@keescook> <CAMj1kXGmsJNg7En-55aRF+ApicPD_Opkh8Jw+oTorSOSO+cfuw@mail.gmail.com>
- <202210171307.32A5D9C07@keescook>
-In-Reply-To: <202210171307.32A5D9C07@keescook>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 17 Oct 2022 22:13:52 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHced1khwsrHqMUmECh_7irYOckFd+Sx3z9KSmsL7tPxw@mail.gmail.com>
-Message-ID: <CAMj1kXHced1khwsrHqMUmECh_7irYOckFd+Sx3z9KSmsL7tPxw@mail.gmail.com>
-Subject: Re: [PATCH] pstore: migrate to crypto acomp interface (take 2)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
+        s=k20201202; t=1666038754;
+        bh=O51h1IkbGHXc8GoS+R+788LmBhDQsi4CZfclbd5koes=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Y3tuAH0laMBhDZUpROhTGF3IH1W1zh6ILuZV8ddO26YvkbfnMWI+V62qNOj9BcNta
+         iyPqAIGBQk62p6t4HT4tmyaRC2rhnMXSpv8HcTI3XJi0eSpLIgIAT1OcxE+xbVBicP
+         3dg1EUGG4jsi5IJ58crRv7JkFBawGsC6cW2Gs4lVCZTAKkoDlObIh5WmxMuuCRl/mh
+         ssZtwvC2N9tAnBGaj/8QlHYcxxkxs+dwBCbZmEkTCVqsZYDgJZuM0itSbK6zTfilyM
+         HnrmWucoBaJ9UyrCxmnUFkuFpBGl8HKi80T3tt3ukp90yz8p7sGDtkTxDbtXeEv50q
+         /GiAK8ymVzcZA==
+Date:   Mon, 17 Oct 2022 15:32:25 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jouni Malinen <j@w1.fi>,
+        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH 0/6][next] Avoid clashing function prototypes
+Message-ID: <cover.1666038048.git.gustavoars@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 17 Oct 2022 at 22:11, Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, Oct 17, 2022 at 09:45:08PM +0200, Ard Biesheuvel wrote:
-> > On Mon, 17 Oct 2022 at 21:40, Kees Cook <keescook@chromium.org> wrote:
-> > > Okay, so strictly speaking, eliminating the per-CPU allocation is an
-> > > improvement. Keeping scomp and doing in-place compression will let
-> > > pstore use "any" compressions method.
-> >
-> > I'm not following the point you are making here.
->
-> Sorry, I mean to say that if I leave scomp in pstore, nothing is "worse"
-> (i.e. the per-cpu allocation is present in both scomp and acomp). i.e.
-> no regression either way, but if we switch to a distinct library call,
-> it's an improvement on the memory utilization front.
->
-> > > Is there a crypto API that does _not_ preallocate the per-CPU stuff?
-> > > Because, as you say, it's a huge amount of memory on the bigger
-> > > systems...
-> >
-> > The library interface for each of the respective algorithms.
->
-> Where is the crypto API for just using the library interfaces, so I
-> don't have to be tied to a specific algo?
->
+When built with Control Flow Integrity, function prototypes between
+caller and function declaration must match. These mismatches are visible
+at compile time with the new -Wcast-function-type-strict in Clang[1].
 
-That doesn't exist, that is the point.
+This series fixes a total of 170 -Wcast-function-type-strict warnings.
 
-But how does the algo matter when you are dealing with mere kilobytes
-of ASCII text?
+Link: https://reviews.llvm.org/D134831 [1]
+
+Gustavo A. R. Silva (6):
+  orinoco: Avoid clashing function prototypes
+  cfg80211: Avoid clashing function prototypes
+  ipw2x00: Remove unnecessary cast to iw_handler in ipw_wx_handlers
+  hostap: Avoid clashing function prototypes
+  zd1201: Avoid clashing function prototypes
+  airo: Avoid clashing function prototypes
+
+ drivers/net/wireless/cisco/airo.c             | 203 ++++++++-------
+ drivers/net/wireless/intel/ipw2x00/ipw2200.c  |   2 +-
+ .../wireless/intersil/hostap/hostap_ioctl.c   | 245 ++++++++++--------
+ drivers/net/wireless/intersil/orinoco/wext.c  | 131 +++++-----
+ drivers/net/wireless/zydas/zd1201.c           | 173 +++++++------
+ include/net/cfg80211-wext.h                   |  20 +-
+ net/wireless/scan.c                           |   3 +-
+ net/wireless/wext-compat.c                    | 180 ++++++-------
+ net/wireless/wext-compat.h                    |   8 +-
+ net/wireless/wext-sme.c                       |   5 +-
+ 10 files changed, 503 insertions(+), 467 deletions(-)
+
+-- 
+2.34.1
+
