@@ -2,75 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CC2C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 14:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0772C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 14:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231430AbiJROMF (ORCPT
+        id S231589AbiJROjK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 10:12:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52792 "EHLO
+        Tue, 18 Oct 2022 10:39:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231381AbiJROLg (ORCPT
+        with ESMTP id S230478AbiJROiz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 10:11:36 -0400
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38AE97D78E;
-        Tue, 18 Oct 2022 07:11:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=j86gyI86b1ZCBfCx7LMeZ2ebnxH6k+wMdKl4XDSS43U=; b=JGiKivI9rOFU0nX92BHk01p0ZO
-        tnzVZKP+YZFd2bNPGOkKSmXr5oH/8XIs+/y3U5M3zKAD2nG0jWezbwcZFmqoUs/Pli3e5Sqqp5QFN
-        SJYsWCca1jAuUGuupyWk2e8eUXmmDUzbalU8W/ym/udYJ8+QzSWepguZYvMk1bRgHCFUeZ3wOOR+6
-        XWCqDlPbRod/fMF46OxnbAH+zkBCg0bTqUjz3fhsDEDNKNNXJ0DLWtRHOn4GpENFIulckmDNUy70V
-        jI4N5hLkUSZMY6cG6VNsCjeq0W20dSNNvC/E1DqVvhPG0Mp2kCf5I28COq33/QUDwYxxB1URbydT/
-        /73I0g7Q==;
-Received: from [179.113.159.85] (helo=[192.168.1.60])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1oknJ6-0013bB-B1; Tue, 18 Oct 2022 16:11:00 +0200
-Message-ID: <8d40dad4-4b20-2ec3-a8e1-706dd415f0d2@igalia.com>
-Date:   Tue, 18 Oct 2022 11:10:53 -0300
+        Tue, 18 Oct 2022 10:38:55 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8FC8D7E28;
+        Tue, 18 Oct 2022 07:38:53 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8534861587;
+        Tue, 18 Oct 2022 14:38:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E374FC43140;
+        Tue, 18 Oct 2022 14:38:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666103932;
+        bh=mO+3YfEd7CFPsfy4iAyYaopzc+dReNXPT5+RUek7450=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Ibm8S8g8XF47ujhZ0Tm02CueB4sq6GJNOY4w47jExwJdQijyWEO3PxsZDi3dipGeN
+         eBwvzT9JTP5nJJu4SouMCAj47b+YrG5PnjyBib1DlQK04qmlTdEgZdZBpl3gDM16zK
+         NW/E0AEgQn7kUaygf2Nhv0pCDEzihjo7hD5p2gmn1aIMVOA5k7S0hoVkmg3HLeS2ZC
+         YQWvJF8478M8X3QcKpqp8Bp3q5sQNvqAv3aLcylvnQykj4jr+xQMqY9JNhQNAWbkvD
+         vw+XAqcYnDUHfx2sbFHjmYfm4Apq/5z/iJM9iBjwPN53Y8WlWLqp31EPy5JvTyn0hG
+         ErRdbcezqwsvQ==
+Received: by mail-lf1-f41.google.com with SMTP id o12so14395553lfq.9;
+        Tue, 18 Oct 2022 07:38:52 -0700 (PDT)
+X-Gm-Message-State: ACrzQf2BNXe8cobL3o7yWp/1Ij1W0YjCAqJ77jLM+E6i59iPcy+WX9Wj
+        FI+F739pkmqqIZHPFfrX/4nhoViBPcLcwc7Kj7U=
+X-Google-Smtp-Source: AMsMyM503hANnruuWN4dlsslERqCgimDSRwovgrBuXxY2dal5SbxnKLqTuQyAoJ3cuK3c0Mp6v60xoLP82G/EVBcV1c=
+X-Received: by 2002:a05:6512:314a:b0:4a2:d0b9:aa20 with SMTP id
+ s10-20020a056512314a00b004a2d0b9aa20mr1262475lfi.110.1666103930868; Tue, 18
+ Oct 2022 07:38:50 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
+References: <20221018020519.never.337-kees@kernel.org> <CAMj1kXGjF63wK7m8BqC=WX6sA425BTVwQWk9ERN3gG8s==4mjw@mail.gmail.com>
+ <8d40dad4-4b20-2ec3-a8e1-706dd415f0d2@igalia.com>
+In-Reply-To: <8d40dad4-4b20-2ec3-a8e1-706dd415f0d2@igalia.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 18 Oct 2022 16:38:39 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXF4D8fWV2hNa+R9-c_dLBCo37_qQjB2zBM2DvNG69oCxw@mail.gmail.com>
+Message-ID: <CAMj1kXF4D8fWV2hNa+R9-c_dLBCo37_qQjB2zBM2DvNG69oCxw@mail.gmail.com>
 Subject: Re: [PATCH 0/5] pstore: Use zstd directly by default for compression
-To:     Ard Biesheuvel <ardb@kernel.org>, Kees Cook <keescook@chromium.org>
-Cc:     Tony Luck <tony.luck@intel.com>, Nick Terrell <terrelln@fb.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20221018020519.never.337-kees@kernel.org>
- <CAMj1kXGjF63wK7m8BqC=WX6sA425BTVwQWk9ERN3gG8s==4mjw@mail.gmail.com>
-Content-Language: en-US
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <CAMj1kXGjF63wK7m8BqC=WX6sA425BTVwQWk9ERN3gG8s==4mjw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+        Nick Terrell <terrelln@fb.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 18/10/2022 05:20, Ard Biesheuvel wrote:
-> [...]
-> So again, I suggest to simply drop this non-feature, and standardize
-> on either zlib or zstd using the library interface exclusively. If
-> someone present a compelling use case, we can always consider adding
-> it back in some form.
-> 
-> As for the choice of algorithm, given the equal performance using the
-> default compression level, and the difference in code size, I don't
-> see why zstd should be preferred here. If anything, it only increases
-> the likelihood of hitting another error if we are panicking due to
-> some memory corruption issue.
+On Tue, 18 Oct 2022 at 16:11, Guilherme G. Piccoli <gpiccoli@igalia.com> wrote:
+>
+> On 18/10/2022 05:20, Ard Biesheuvel wrote:
+> > [...]
+> > So again, I suggest to simply drop this non-feature, and standardize
+> > on either zlib or zstd using the library interface exclusively. If
+> > someone present a compelling use case, we can always consider adding
+> > it back in some form.
+> >
+> > As for the choice of algorithm, given the equal performance using the
+> > default compression level, and the difference in code size, I don't
+> > see why zstd should be preferred here. If anything, it only increases
+> > the likelihood of hitting another error if we are panicking due to
+> > some memory corruption issue.
+>
+> I think it's a good argument - would zlib be simpler in code than zstd?
 
-I think it's a good argument - would zlib be simpler in code than zstd?
-I've checked the zstd patch from Kees - not complex per se, but would be
-great if we could have a simple mechanism, without the need of the ifdef
-there for example...
+I think it should be rather straight-forward. Note that this is what
+we had before 2016 when all the 'features' were starting to get added.
 
-Cheers,
-
-
-Guilherme
+> I've checked the zstd patch from Kees - not complex per se, but would be
+> great if we could have a simple mechanism, without the need of the ifdef
+> there for example...
+>
+> Cheers,
+>
+>
+> Guilherme
