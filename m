@@ -2,140 +2,104 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C9FC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 02:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C061CC433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 02:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230224AbiJRC0K (ORCPT
+        id S230166AbiJRCiH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 Oct 2022 22:26:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54658 "EHLO
+        Mon, 17 Oct 2022 22:38:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230070AbiJRC0J (ORCPT
+        with ESMTP id S229892AbiJRCiG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 Oct 2022 22:26:09 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E47C792E0
-        for <linux-hardening@vger.kernel.org>; Mon, 17 Oct 2022 19:26:08 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id h185so12078621pgc.10
-        for <linux-hardening@vger.kernel.org>; Mon, 17 Oct 2022 19:26:08 -0700 (PDT)
+        Mon, 17 Oct 2022 22:38:06 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1504592F7F
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Oct 2022 19:38:04 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id x31-20020a17090a38a200b0020d2afec803so12707736pjb.2
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Oct 2022 19:38:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/KZhy//nHZxzt7N+DIXJ4f0oPILyzcXc82OGC+Wmp/k=;
-        b=BNQoXVjyQzateVtvrG7WFBq7bZIutgY4fn3PO7YW7fW4F6ZKob4YvPwsZfSuxZJJ1y
-         9qT6OBPYy22bDT0dfOMnEP06BZRtXWBq+hH2RCqBJNeU5TScoTKF3IZzSlopKwtV6GIc
-         j7ydQqNtqK8FDU47mblyFvt4BnTs+KHl4e/Es=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z/sbw9esP61gV6/BLjaGWBnk+miYGbzeL/QwROnEOEk=;
+        b=H2b63KJVBO2GdMY0nV/dRf6TlFnJ9QK+L5IU7T5QQXV42NprTy4I0+Hy0Pf735/iXm
+         3lx/MrbJ0PvxxE1zwSSXG6I4SG/bhHsWeltVfRw3pEPGkm6o5LHtvIygegVL/ABhfNkG
+         VFoyQeZYn8eVRg5UyTUrqWgY/up6MImhm2A28=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/KZhy//nHZxzt7N+DIXJ4f0oPILyzcXc82OGC+Wmp/k=;
-        b=ayGnGA3eDGGXVrBOOFOK/yltCiNjpqez2IzLwyC2afcVd7qYsEmDj1dRq1jBpDKUde
-         qGmNgn4jeknzxrRT/D8URMbu2qVCC4OlNs4wQscjsYi6HiuZ4XQdph5dqgOCMfeV2TSA
-         LBKQlnZS7CiWyDGMgg7A1RBinU5IIFgO2mYKHj8/l16FlrEzhFu4HpUt/eusA4iZ7A3x
-         LvIdNkiUVT2nu2b1DUE6/1xb9/WfC4wbNGLeL4KqcKjAHYorfx0LOwTCrPuCNbHgtHl0
-         T+uKiSyARGbFJsLLFilYkAzsos5YpIBRwdCjVxZAb2Z/KbpukJYKXmJv7vcAt0ilnIiy
-         1+hw==
-X-Gm-Message-State: ACrzQf1Q9d9lafDY1RdpQ9Bes+ZWCTvBzGP31JuhT6winpd9LWScF2+u
-        EYJp7seQxk3vb1ktiSQ/F3lGOQ==
-X-Google-Smtp-Source: AMsMyM44tI9T+OrjStrhBakQHZqVAo+drzSjAJZvAYJDXZdKqjPYu8K6XRQt6u2BFVqHJsVCsEwuww==
-X-Received: by 2002:a63:1f5c:0:b0:469:d0e6:dac0 with SMTP id q28-20020a631f5c000000b00469d0e6dac0mr681043pgm.427.1666059967533;
-        Mon, 17 Oct 2022 19:26:07 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z/sbw9esP61gV6/BLjaGWBnk+miYGbzeL/QwROnEOEk=;
+        b=4eNABhXFHecfqSrirCNUv8FPvu6zWRM/0pKf5f0XyLphCQOUJxIYEb2BH0PHKjV/fK
+         kmlembTTmVgOYEElCY31p9LDrqHT7Xov+kDZZ8fnPpvW91vPTaSA6A1jnVKHD9TECBv7
+         TzDS9N1Ys6wUvk5bTeq1hHugcE8cozJOwrIRiLr8AMH4wnbjeSZCkzI5AtHOsFp9ByRu
+         pI9GNXwlZrZjd30KJ/tv3eqtL8HJt2Qq9Nvl15WjJd2AmLC6uU3ex5u8yVhTkjDpBR+v
+         sFISsEjo18ZhzHXa/aZAK/gkqBtqb0v+8jbydmpP8gazAXlP05uQ5R2npW+iKPgvgynq
+         Pgtg==
+X-Gm-Message-State: ACrzQf1vH+OV0uXjSow3+rXXKOMhUG+Tizbaz2u5+geEJAqWaX7Fa8HG
+        fHDG6PKmT2BekQMqgNrU3pR9bQ==
+X-Google-Smtp-Source: AMsMyM6s2Ekj+FmLeqNvK1NM2HJla6ZcerERHHYbU3/pACFrqZ+Ucd9P8aD3+AQE3rjZ6laoBn05Dg==
+X-Received: by 2002:a17:903:11c4:b0:178:634b:1485 with SMTP id q4-20020a17090311c400b00178634b1485mr715059plh.142.1666060683550;
+        Mon, 17 Oct 2022 19:38:03 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i196-20020a636dcd000000b00434abd19eeasm6778334pgc.78.2022.10.17.19.26.06
+        by smtp.gmail.com with ESMTPSA id p24-20020a170902a41800b00172b87d97cbsm7315559plq.67.2022.10.17.19.38.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Oct 2022 19:26:06 -0700 (PDT)
-Date:   Mon, 17 Oct 2022 19:26:05 -0700
+        Mon, 17 Oct 2022 19:38:02 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Kalle Valo <kvalo@kernel.org>,
+To:     Simon Kelley <simon@thekelleys.org.uk>
+Cc:     Kees Cook <keescook@chromium.org>, Kalle Valo <kvalo@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/6][next] orinoco: Avoid clashing function prototypes
-Message-ID: <202210171914.B3E5CE55@keescook>
-References: <cover.1666038048.git.gustavoars@kernel.org>
- <2387e02ae7f31388f24041cae8d02d5e12151708.1666038048.git.gustavoars@kernel.org>
+        Paolo Abeni <pabeni@redhat.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH][next] atmel: Fix atmel_private_handler array size
+Date:   Mon, 17 Oct 2022 19:37:59 -0700
+Message-Id: <20221018023732.never.700-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2387e02ae7f31388f24041cae8d02d5e12151708.1666038048.git.gustavoars@kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1211; h=from:subject:message-id; bh=Dxza05rOmp3v/aLKDNxxdoNSiFdbo0KfFIwpTTS9BCk=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjThGHNro1AgkFkolg4wYwZle8Iky3GKlCqcc25/rt uZHSEsmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY04RhwAKCRCJcvTf3G3AJpZLEA CFUjDExOqbpd2QqGOnokVzYUb9oUUeGMozp2aB0M0LWltq2+sESFlbav9rDITqdSV4an+tRFToGfmL 11+p3ENB1hcZVYN7beLUiiMjBEmU+wQa0/aO8XWS6PDLV+HX1YZaqLCKjE8B0SWD3EGvHXGNWQgBVQ 6j9QtQfWuVq8hE9fsN+lxUshnVUhTJruaV71sPXTyS4uMKeH8FJpb5CiuIDSVSGyu7opBEJRK0AQZk LRjG0PbadvFMM8q+V04WGy9sqIhs13rAOeBFREysnBG3n/tmHhJ9/C9X4BHRH+zVKfDy4xgvCedl57 2VXVizkyBXsbRPBhVO4qWSyyefCIBPVKzTKXVTX5qYQM3r7lzg/zcA3frKW/sUDdZKpHPgdVpzproJ FZS3QRO/zyXQck8HFyi+OWYDOhE/Xl710sh1yRnYMItWOQYMprMaUZyHsRYAG5w8l3IJvrQ+6daOes UqjLO+Ak74KEgnc2e3ZCXgEBlgIROxyk0pqtxd2zjwUDd4mjp+jl3Nh8iqnTK53z/MA8kPPCj7fXQN wQ6YVZkXlO++4qetIMNVa0yHu0IFJf1Qpg7oi6jMixyGhyChjQRGsCC+e6hOsnbzmnzMyyE7693fPI f2RZJoA7CFsMmZl2uRS3NHVSyM/sv1v3hZyNb6/9cCEUPtNgzcy9B4olDoRg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Oct 17, 2022 at 03:33:01PM -0500, Gustavo A. R. Silva wrote:
-> When built with Control Flow Integrity, function prototypes between
-> caller and function declaration must match. These mismatches are visible
-> at compile time with the new -Wcast-function-type-strict in Clang[1].
-> 
-> Fix a total of 53 warnings like these:
-> 
-> drivers/net/wireless/intersil/orinoco/wext.c:1379:27: warning: cast from 'int (*)(struct net_device *, struct iw_request_info *, struct iw_param *, char *)' to 'iw_handler' (aka 'int (*)(struct net_device *, struct iw_request_info *, union iwreq_data *, char *)') converts to incompatible function type [-Wcast-function-type-strict]
->         IW_HANDLER(SIOCGIWPOWER,        (iw_handler)orinoco_ioctl_getpower),
->                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> ../net/wireless/wext-compat.c:1607:33: warning: cast from 'int (*)(struct net_device *, struct iw_request_info *, struct iw_point *, char *)' to 'iw_handler' (aka 'int (*)(struct net_device *, struct iw_request_info *, union iwreq_data *, char *)') converts to incompatible function type [-Wcast-function-type-strict]
->         [IW_IOCTL_IDX(SIOCSIWGENIE)]    = (iw_handler) cfg80211_wext_siwgenie,
->                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Fix the atmel_private_handler to correctly sized (1 element) again. (I
+should have checked the data segment for differences.) This had no
+behavioral impact (no private callbacks), but it made a very large
+zero-filled array.
 
-Thank you for working on these! Was this conversion done manually, via
-coccinelle, or something else?
+Cc: Simon Kelley <simon@thekelleys.org.uk>
+Cc: Kalle Valo <kvalo@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Fixes: 8af9d4068e86 ("wifi: atmel: Avoid clashing function prototypes")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/net/wireless/atmel/atmel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> The orinoco Wireless Extension handler callbacks (iw_handler) use a
-> union for the data argument. Actually use the union and perform explicit
-> member selection in the function body instead of having a function
-> prototype mismatch. No significant binary differences were seen
-> before/after changes.
-
-What does "significant" mean here? :P Anything related to line counts
-can just be ignored. But I'd expect the .text output of
-drivers/net/wireless/intersil/orinoco/wext.o before/after to be
-identical.
-
-> [...]
->  	IW_HANDLER(SIOCSIWRTS,		(iw_handler)cfg80211_wext_siwrts),
-^^^ I think these are fixed explicitly later, but maybe better to just
-collapse them into this patch?
-
-> [...]
-> @@ -1391,15 +1406,15 @@ static const iw_handler	orinoco_handler[] = {
->    Added typecasting since we no longer use iwreq_data -- Moustafa
->   */
->  static const iw_handler	orinoco_private_handler[] = {
-> -	[0] = (iw_handler)orinoco_ioctl_reset,
-> -	[1] = (iw_handler)orinoco_ioctl_reset,
-> -	[2] = (iw_handler)orinoco_ioctl_setport3,
-> -	[3] = (iw_handler)orinoco_ioctl_getport3,
-> -	[4] = (iw_handler)orinoco_ioctl_setpreamble,
-> -	[5] = (iw_handler)orinoco_ioctl_getpreamble,
-> -	[6] = (iw_handler)orinoco_ioctl_setibssport,
-> -	[7] = (iw_handler)orinoco_ioctl_getibssport,
-> -	[9] = (iw_handler)orinoco_ioctl_getrid,
-> +	[0] = orinoco_ioctl_reset,
-> +	[1] = orinoco_ioctl_reset,
-> +	[2] = orinoco_ioctl_setport3,
-> +	[3] = orinoco_ioctl_getport3,
-> +	[4] = orinoco_ioctl_setpreamble,
-> +	[5] = orinoco_ioctl_getpreamble,
-> +	[6] = orinoco_ioctl_setibssport,
-> +	[7] = orinoco_ioctl_getibssport,
-> +	[9] = orinoco_ioctl_getrid,
-
-Oops, I broke atmel. These really are 0-indexed...
-
+diff --git a/drivers/net/wireless/atmel/atmel.c b/drivers/net/wireless/atmel/atmel.c
+index ed430b91e2aa..7c2d1c588156 100644
+--- a/drivers/net/wireless/atmel/atmel.c
++++ b/drivers/net/wireless/atmel/atmel.c
+@@ -2570,7 +2570,7 @@ static const iw_handler atmel_handler[] =
+ 
  static const iw_handler atmel_private_handler[] =
  {
--	NULL,				/* SIOCIWFIRSTPRIV */
-+	IW_HANDLER(SIOCIWFIRSTPRIV,	NULL),
+-	IW_HANDLER(SIOCIWFIRSTPRIV,	NULL),
++	NULL,				/* SIOCIWFIRSTPRIV */
  };
  
-I'll send a fix!
-
+ struct atmel_priv_ioctl {
 -- 
-Kees Cook
+2.34.1
+
