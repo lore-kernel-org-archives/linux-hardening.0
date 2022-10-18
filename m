@@ -2,131 +2,355 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE5AC4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 19:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E31FC433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 20:08:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229741AbiJRTbs (ORCPT
+        id S230049AbiJRUID (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 15:31:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50258 "EHLO
+        Tue, 18 Oct 2022 16:08:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229665AbiJRTbp (ORCPT
+        with ESMTP id S230043AbiJRUIA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 15:31:45 -0400
-Received: from omta37.uswest2.a.cloudfilter.net (omta37.uswest2.a.cloudfilter.net [35.89.44.36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F93F6C745
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 12:31:44 -0700 (PDT)
-Received: from eig-obgw-5015a.ext.cloudfilter.net ([10.0.29.155])
-        by cmsmtp with ESMTP
-        id kOh1oUcTwqEICksJToeuBB; Tue, 18 Oct 2022 19:31:43 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTP
-        id ksJDo4DWNmDtJksJEo4kQr; Tue, 18 Oct 2022 19:31:28 +0000
-X-Authority-Analysis: v=2.4 cv=Se/ky9du c=1 sm=1 tr=0 ts=634eff10
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=VLn1U4HDsV/kFU42pi1uTw==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=Qawa6l4ZSaYA:10
- a=wYkD_t78qR0A:10 a=cak1eodxRRWiubympP0A:9 a=QEXdDO2ut3YA:10
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=B8sItrIzPT1FhGdQ0ENveK914e997Na/QHZvsstLhtM=; b=EtFXKgE3/C7QhFoXgAIqcn+mHq
-        n0jpJ1yc89SZFk3QRIYWQbQFlkZdKqHQVNmC25NtWS58DqjR9hP8X7VDgpmbZ5z9sPBo78pcP7MAk
-        lTqwTU8S2sLegbh6wRASDikI9wq5d5HT/2cXKFlzchDXxggEfq6ayJ5Ilamr1vBho8EU0ef/ogJKM
-        YBMxKWwKUop1rMOwjLtEFiD+UVGKYS2AwP+8ex28C0DBva22ITFJsYwS3LH59OxtuaMrUIgVfpCrx
-        iWHsqSFZKD3WenFiqyFkTrKo3lMyMEXfdNeKKlDBWZrd9FWi4zDzBNtc+T6o3Kz1deV1SN+Xh7ImB
-        mfQVRQ2Q==;
-Received: from [187.184.159.238] (port=8860 helo=[192.168.0.24])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.95)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1oksJ4-0006S8-1O;
-        Tue, 18 Oct 2022 14:31:18 -0500
-Message-ID: <71935a08-e9d3-5f9e-5b9a-7847bd38b756@embeddedor.com>
-Date:   Tue, 18 Oct 2022 14:31:12 -0500
+        Tue, 18 Oct 2022 16:08:00 -0400
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FD71ABD6E
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 13:07:57 -0700 (PDT)
+Received: by mail-io1-xd36.google.com with SMTP id d142so12725025iof.7
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 13:07:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JpelpJ2RUBl2/Qi1M4Vh9Y2HxJjWm0G/aDT41HqmUC0=;
+        b=Nhb4jvAWqE76yCRqMYzFtE7u5krQ1EroS4E6lrrT5u9AWGE1JixNm1tenfB6JXiGP0
+         Z3aButljmymrLRAPcXFV2zQJjsCsBLXfDR1PznRboJ3pXOj0nKgeTf3uVX3KOi66PLMt
+         Ps8TTVhWJdaYlt2Z0n7ktlGnWdIUF0XvgDWLokz0841zcoaq+wn1SSzkiP7u5BFqFAte
+         ezhLManXjpuz/yEKHH5ygbCFQ+qv9oG6Mg80+cIEOtrPVkK//9KaLntuYc4VcS60qkTI
+         KTUsBzqSUAq6nkWAMmumpuR+kWHT0mieYgAgxHzICkxW5WKbPxnKMD+KykfgFgd7dlCv
+         ch+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JpelpJ2RUBl2/Qi1M4Vh9Y2HxJjWm0G/aDT41HqmUC0=;
+        b=tW1JyQTFm/5YG2mzfHBbij3REQljEDWWSIv5CwgETAYlkZSZISSrO5Ybin9WQZMUQf
+         uQ2Yy9+lYX2zbXOUBVRNLS5tm4oHQKUQ+SmlnPVHkr9fNSGMXHwJcLPPS8ZAPSrN8au0
+         NSc7am64vep4xh5eu7vXzuHM50RC9C29ouE9KCa2GMpdvWu023n78b2+v//tR6fHQWKj
+         6+yG8i447GQ/RF7lEf56jrHTLBFHaDl98Ecemv5hWFF52F7LYRZzK8HHnedX7XuJ5X64
+         noY3mRjdyOeDSJBbF6KddMh3yQ30Bd3WEG/R16i+x0b4cRKO2E0xzQbvw/P7Sku/z9dA
+         /l1w==
+X-Gm-Message-State: ACrzQf2TxRIcg6OwvYQIuT1Hf+T8kinsX3Grks961gDj3xvtOHspHGoO
+        OXnY7FawUbhVCOsZcyBTeneSloyf64ebG62vP1PF6A==
+X-Google-Smtp-Source: AMsMyM7f5t5YB3dzGMSGQALGtHyDA7exsywYWD85nS9KuB0Cdebt7cScXuaC1piSYHkZNDhpdVaamLIMiiX1zNZP0r4=
+X-Received: by 2002:a05:6638:1455:b0:363:d1a9:5cc0 with SMTP id
+ l21-20020a056638145500b00363d1a95cc0mr3123218jad.288.1666123676863; Tue, 18
+ Oct 2022 13:07:56 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH 2/6][next] cfg80211: Avoid clashing function prototypes
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <cover.1666038048.git.gustavoars@kernel.org>
- <291de76bc7cd5c21dc2f2471382ab0caaf625b22.1666038048.git.gustavoars@kernel.org>
- <202210171939.61FFBE79A7@keescook>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202210171939.61FFBE79A7@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.184.159.238
-X-Source-L: No
-X-Exim-ID: 1oksJ4-0006S8-1O
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.24]) [187.184.159.238]:8860
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfFWZmIuXsc88rouhFJP9cO7Dg9j2QVR7fwYeTrpevYC+asbbh1yl9vSTiGrliNnHF+rLH/mOlXvv/iDM/5VpDI3+XWL0KKnvxqe/S5CZ+SGphJkKvXgq
- 0wf+Ywc2JqAdtrOx9ZjJpM9P9QqrKcqaa/j+jWMx/xRZLX1exwV5A1NNjjd1ivgUGoOwWZ959nmEeNCHpRuX5Per3kOzG5UvHZtys3O27gqigiGMP9IxcAq4
+References: <20221018090550.never.834-kees@kernel.org> <Y07raim32wOBRGPi@google.com>
+ <202210181110.CD92A00@keescook>
+In-Reply-To: <202210181110.CD92A00@keescook>
+From:   Stanislav Fomichev <sdf@google.com>
+Date:   Tue, 18 Oct 2022 13:07:45 -0700
+Message-ID: <CAKH8qBvwKfhMYjHV=rizA0ZinArHKmBP6U_N63HTcZTmM=QQ+g@mail.gmail.com>
+Subject: Re: [PATCH] bpf: Use kmalloc_size_roundup() to match ksize() usage
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>,
+        Jiri Olsa <jolsa@kernel.org>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Tue, Oct 18, 2022 at 11:19 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Tue, Oct 18, 2022 at 11:07:38AM -0700, sdf@google.com wrote:
+> > On 10/18, Kees Cook wrote:
+> > > Round up allocations with kmalloc_size_roundup() so that the verifier's
+> > > use of ksize() is always accurate and no special handling of the memory
+> > > is needed by KASAN, UBSAN_BOUNDS, nor FORTIFY_SOURCE. Pass the new size
+> > > information back up to callers so they can use the space immediately,
+> > > so array resizing to happen less frequently as well. Explicitly zero
+> > > any trailing bytes in new allocations.
+> >
+> > > Additionally fix a memory allocation leak: if krealloc() fails, "arr"
+> > > wasn't freed, but NULL was return to the caller of realloc_array() would
+> > > be writing NULL to the lvalue, losing the reference to the original
+> > > memory.
+> >
+> > > Cc: Alexei Starovoitov <ast@kernel.org>
+> > > Cc: Daniel Borkmann <daniel@iogearbox.net>
+> > > Cc: John Fastabend <john.fastabend@gmail.com>
+> > > Cc: Andrii Nakryiko <andrii@kernel.org>
+> > > Cc: Martin KaFai Lau <martin.lau@linux.dev>
+> > > Cc: Song Liu <song@kernel.org>
+> > > Cc: Yonghong Song <yhs@fb.com>
+> > > Cc: KP Singh <kpsingh@kernel.org>
+> > > Cc: Stanislav Fomichev <sdf@google.com>
+> > > Cc: Hao Luo <haoluo@google.com>
+> > > Cc: Jiri Olsa <jolsa@kernel.org>
+> > > Cc: bpf@vger.kernel.org
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >   kernel/bpf/verifier.c | 49 +++++++++++++++++++++++++++----------------
+> > >   1 file changed, 31 insertions(+), 18 deletions(-)
+> >
+> > > diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> > > index 014ee0953dbd..8a0b60207d0e 100644
+> > > --- a/kernel/bpf/verifier.c
+> > > +++ b/kernel/bpf/verifier.c
+> > > @@ -1000,42 +1000,53 @@ static void print_insn_state(struct
+> > > bpf_verifier_env *env,
+> > >    */
+> > >   static void *copy_array(void *dst, const void *src, size_t n, size_t
+> > > size, gfp_t flags)
+> > >   {
+> > > -   size_t bytes;
+> > > +   size_t src_bytes, dst_bytes;
+> >
+> > >     if (ZERO_OR_NULL_PTR(src))
+> > >             goto out;
+> >
+> > > -   if (unlikely(check_mul_overflow(n, size, &bytes)))
+> > > +   if (unlikely(check_mul_overflow(n, size, &src_bytes)))
+> > >             return NULL;
+> >
+> > > -   if (ksize(dst) < bytes) {
+> > > +   dst_bytes = kmalloc_size_roundup(src_bytes);
+> > > +   if (ksize(dst) < dst_bytes) {
+> >
+> > Why not simply do the following here?
+> >
+> >       if (ksize(dst) < ksize(src)) {
+> >
+> > ?
+>
+> Yeah, if src always passes through rounding-up allocation path, that
+> might work. I need to double-check that there isn't a case where "size"
+> makes this go weird -- e.g. a rounded up "src" may be larger than
+> "n * size", but I think that's okay because the memcpy/memset does the
+> right thing.
+>
+> > It seems like we care about src_bytes/bytes only in this case, so maybe
+> > move that check_mul_overflow under this branch as well?
+> >
+> >
+> > >             kfree(dst);
+> > > -           dst = kmalloc_track_caller(bytes, flags);
+> > > +           dst = kmalloc_track_caller(dst_bytes, flags);
+> > >             if (!dst)
+> > >                     return NULL;
+> > >     }
+> >
+> > > -   memcpy(dst, src, bytes);
+> > > +   memcpy(dst, src, src_bytes);
+> > > +   memset(dst + src_bytes, 0, dst_bytes - src_bytes);
+> > >   out:
+> > >     return dst ? dst : ZERO_SIZE_PTR;
+> > >   }
+> >
+> > > -/* resize an array from old_n items to new_n items. the array is
+> > > reallocated if it's too
+> > > - * small to hold new_n items. new items are zeroed out if the array
+> > > grows.
+> > > +/* Resize an array from old_n items to *new_n items. The array is
+> > > reallocated if it's too
+> > > + * small to hold *new_n items. New items are zeroed out if the array
+> > > grows. Allocation
+> > > + * is rounded up to next kmalloc bucket size to reduce frequency of
+> > > resizing. *new_n
+> > > + * contains the new total number of items that will fit.
+> > >    *
+> > > - * Contrary to krealloc_array, does not free arr if new_n is zero.
+> > > + * Contrary to krealloc, does not free arr if new_n is zero.
+> > >    */
+> > > -static void *realloc_array(void *arr, size_t old_n, size_t new_n,
+> > > size_t size)
+> > > +static void *realloc_array(void *arr, size_t old_n, size_t *new_n,
+> > > size_t size)
+> > >   {
+> > > -   if (!new_n || old_n == new_n)
+> > > +   void *old_arr = arr;
+> > > +   size_t alloc_size;
+> > > +
+> > > +   if (!new_n || !*new_n || old_n == *new_n)
+> > >             goto out;
+> >
+> >
+> > [..]
+> >
+> > > -   arr = krealloc_array(arr, new_n, size, GFP_KERNEL);
+> > > -   if (!arr)
+> > > +   alloc_size = kmalloc_size_roundup(size_mul(*new_n, size));
+> > > +   arr = krealloc(old_arr, alloc_size, GFP_KERNEL);
+> > > +   if (!arr) {
+> > > +           kfree(old_arr);
+> > >             return NULL;
+> > > +   }
+> >
+> > Any reason not do hide this complexity behind krealloc_array? Why can't
+> > it take care of those roundup details?
+>
+> It might be possible to do this with a macro, yes, but then callers
+> aren't in a position to take advantage of the new size. Maybe we need
+> something like:
+>
+>         arr = krealloc_up(old_arr, alloc_size, &new_size, GFP_KERNEL);
 
+Maybe even krealloc_array_up(arr, &new_n, size, flags) or similar
+where we return a new size?
+Though I don't know if there are any other places in the kernel to
+reuse it and warrant a new function..
 
-On 10/17/22 21:41, Kees Cook wrote:
+> Thanks for looking this over!
+>
+> --
+> Kees Cook
 
->>   
->>   static const iw_handler	orinoco_handler[] = {
->>   	IW_HANDLER(SIOCSIWCOMMIT,	orinoco_ioctl_commit),
->> -	IW_HANDLER(SIOCGIWNAME,		(iw_handler)cfg80211_wext_giwname),
->> +	IW_HANDLER(SIOCGIWNAME,		cfg80211_wext_giwname),
-> 
-> This hunk should be in the orinoco patch, I think?
-
-I just didn't want to have this huge patch touching multiple
-different files. That's why I decided to split it up into three
-separate patches.
-
-But yeah; now it seems like a good idea to merge patches 1 to 3
-into just a single patch.
-
-> 
-> 
->> [...]
->> +	[IW_IOCTL_IDX(SIOCGIWRETRY)]    = cfg80211_wext_giwretry,
-> 
-> The common practice seems to be to use IW_HANDLER instead of open-coding
-> it like this.
-> 
-> 	IW_HANDLER(SIOCGIWRETRY,	cfg80211_wext_giwretry),
-
-Yeah; I forget this after reverting Sami's changes:
-
-32fc4a9ad56f ("cfg80211: fix callback type mismatches in wext-compat")
-
-I'll fix it up. :)
-
-Thanks for the feedback!
---
-Gustavo
+On Tue, Oct 18, 2022 at 11:19 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Tue, Oct 18, 2022 at 11:07:38AM -0700, sdf@google.com wrote:
+> > On 10/18, Kees Cook wrote:
+> > > Round up allocations with kmalloc_size_roundup() so that the verifier's
+> > > use of ksize() is always accurate and no special handling of the memory
+> > > is needed by KASAN, UBSAN_BOUNDS, nor FORTIFY_SOURCE. Pass the new size
+> > > information back up to callers so they can use the space immediately,
+> > > so array resizing to happen less frequently as well. Explicitly zero
+> > > any trailing bytes in new allocations.
+> >
+> > > Additionally fix a memory allocation leak: if krealloc() fails, "arr"
+> > > wasn't freed, but NULL was return to the caller of realloc_array() would
+> > > be writing NULL to the lvalue, losing the reference to the original
+> > > memory.
+> >
+> > > Cc: Alexei Starovoitov <ast@kernel.org>
+> > > Cc: Daniel Borkmann <daniel@iogearbox.net>
+> > > Cc: John Fastabend <john.fastabend@gmail.com>
+> > > Cc: Andrii Nakryiko <andrii@kernel.org>
+> > > Cc: Martin KaFai Lau <martin.lau@linux.dev>
+> > > Cc: Song Liu <song@kernel.org>
+> > > Cc: Yonghong Song <yhs@fb.com>
+> > > Cc: KP Singh <kpsingh@kernel.org>
+> > > Cc: Stanislav Fomichev <sdf@google.com>
+> > > Cc: Hao Luo <haoluo@google.com>
+> > > Cc: Jiri Olsa <jolsa@kernel.org>
+> > > Cc: bpf@vger.kernel.org
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >   kernel/bpf/verifier.c | 49 +++++++++++++++++++++++++++----------------
+> > >   1 file changed, 31 insertions(+), 18 deletions(-)
+> >
+> > > diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> > > index 014ee0953dbd..8a0b60207d0e 100644
+> > > --- a/kernel/bpf/verifier.c
+> > > +++ b/kernel/bpf/verifier.c
+> > > @@ -1000,42 +1000,53 @@ static void print_insn_state(struct
+> > > bpf_verifier_env *env,
+> > >    */
+> > >   static void *copy_array(void *dst, const void *src, size_t n, size_t
+> > > size, gfp_t flags)
+> > >   {
+> > > -   size_t bytes;
+> > > +   size_t src_bytes, dst_bytes;
+> >
+> > >     if (ZERO_OR_NULL_PTR(src))
+> > >             goto out;
+> >
+> > > -   if (unlikely(check_mul_overflow(n, size, &bytes)))
+> > > +   if (unlikely(check_mul_overflow(n, size, &src_bytes)))
+> > >             return NULL;
+> >
+> > > -   if (ksize(dst) < bytes) {
+> > > +   dst_bytes = kmalloc_size_roundup(src_bytes);
+> > > +   if (ksize(dst) < dst_bytes) {
+> >
+> > Why not simply do the following here?
+> >
+> >       if (ksize(dst) < ksize(src)) {
+> >
+> > ?
+>
+> Yeah, if src always passes through rounding-up allocation path, that
+> might work. I need to double-check that there isn't a case where "size"
+> makes this go weird -- e.g. a rounded up "src" may be larger than
+> "n * size", but I think that's okay because the memcpy/memset does the
+> right thing.
+>
+> > It seems like we care about src_bytes/bytes only in this case, so maybe
+> > move that check_mul_overflow under this branch as well?
+> >
+> >
+> > >             kfree(dst);
+> > > -           dst = kmalloc_track_caller(bytes, flags);
+> > > +           dst = kmalloc_track_caller(dst_bytes, flags);
+> > >             if (!dst)
+> > >                     return NULL;
+> > >     }
+> >
+> > > -   memcpy(dst, src, bytes);
+> > > +   memcpy(dst, src, src_bytes);
+> > > +   memset(dst + src_bytes, 0, dst_bytes - src_bytes);
+> > >   out:
+> > >     return dst ? dst : ZERO_SIZE_PTR;
+> > >   }
+> >
+> > > -/* resize an array from old_n items to new_n items. the array is
+> > > reallocated if it's too
+> > > - * small to hold new_n items. new items are zeroed out if the array
+> > > grows.
+> > > +/* Resize an array from old_n items to *new_n items. The array is
+> > > reallocated if it's too
+> > > + * small to hold *new_n items. New items are zeroed out if the array
+> > > grows. Allocation
+> > > + * is rounded up to next kmalloc bucket size to reduce frequency of
+> > > resizing. *new_n
+> > > + * contains the new total number of items that will fit.
+> > >    *
+> > > - * Contrary to krealloc_array, does not free arr if new_n is zero.
+> > > + * Contrary to krealloc, does not free arr if new_n is zero.
+> > >    */
+> > > -static void *realloc_array(void *arr, size_t old_n, size_t new_n,
+> > > size_t size)
+> > > +static void *realloc_array(void *arr, size_t old_n, size_t *new_n,
+> > > size_t size)
+> > >   {
+> > > -   if (!new_n || old_n == new_n)
+> > > +   void *old_arr = arr;
+> > > +   size_t alloc_size;
+> > > +
+> > > +   if (!new_n || !*new_n || old_n == *new_n)
+> > >             goto out;
+> >
+> >
+> > [..]
+> >
+> > > -   arr = krealloc_array(arr, new_n, size, GFP_KERNEL);
+> > > -   if (!arr)
+> > > +   alloc_size = kmalloc_size_roundup(size_mul(*new_n, size));
+> > > +   arr = krealloc(old_arr, alloc_size, GFP_KERNEL);
+> > > +   if (!arr) {
+> > > +           kfree(old_arr);
+> > >             return NULL;
+> > > +   }
+> >
+> > Any reason not do hide this complexity behind krealloc_array? Why can't
+> > it take care of those roundup details?
+>
+> It might be possible to do this with a macro, yes, but then callers
+> aren't in a position to take advantage of the new size. Maybe we need
+> something like:
+>
+>         arr = krealloc_up(old_arr, alloc_size, &new_size, GFP_KERNEL);
+>
+> Thanks for looking this over!
+>
+> --
+> Kees Cook
