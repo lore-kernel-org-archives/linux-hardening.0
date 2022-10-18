@@ -2,91 +2,93 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F60C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 09:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED7DC4332F
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 09:04:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229785AbiJRJDo (ORCPT
+        id S231225AbiJRJER (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 05:03:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33754 "EHLO
+        Tue, 18 Oct 2022 05:04:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231176AbiJRJDi (ORCPT
+        with ESMTP id S231220AbiJRJEO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 05:03:38 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA411A98CA
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 02:03:32 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id 70so13383071pjo.4
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 02:03:32 -0700 (PDT)
+        Tue, 18 Oct 2022 05:04:14 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE0F0A99DF
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 02:04:13 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id q1so12739576pgl.11
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 02:04:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PCPU7pjQsz2sISTfhiNbNnCu1P7dpEEV5lOobjZTacw=;
-        b=gZGBjepH5r2X+kIH//9LW2XXDTFAYAsaVgXEYEJK60U8oTCCVoxBMnaYlbtC9+tU6J
-         XkHOloaO+NzRJd6URyy702ekQTbvE4YcYM/hIXgfgmb5Wa5L6BKj8ftW/974Z5oeZxtB
-         bYeSUZGddQ2ZQcyNnHg59O6hqF7mUHWYr4c5I=
+        bh=b6jXP5rr3Q3qr2aS0J/xPsH/umdUTreFu1h1A3gs3aQ=;
+        b=QD4p8BVwUzYqkWzz2ygyWHyNq1FIy96vtCbm2AnS4pnHfAaMUZBACOmUP723SmnxmG
+         6CN/3G3T88NUXcyQt+k7UJXGvpKbncl+CvCjf9vBmAiGym3FoibWLy5TLCOwLu80Kxdy
+         wwHNIk3ih9Cgte0TRQoUo8aYLFcu0hF5V5dY0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PCPU7pjQsz2sISTfhiNbNnCu1P7dpEEV5lOobjZTacw=;
-        b=LO/BtK857ydDLXtJCPDGtBKRVnzo3y8GZBgHUoSVMutWzKMtlZZ4jYBeJ1erbbHR2T
-         t3eIMN/jncnAt7Oynhlx9c6giJAPgZBf5dvJuqUSPwSMp/B6RbWTy5QqCcvGTSEac205
-         xikYUqmDPGgRwz3dfPAJ9iABmDErTmJCUvBau/+VKneVSz8AVgN/RR5pZHSTM0u0NWIQ
-         re0pOdKI4i0HVf1YjW5V+rd6ZhWwhKfIF7TS+3zsWtBqaZq+3J2XnmbSQlCy8XdQG/oU
-         UTStSXKYs3M2tdDdWUvjjRKYzUgYrXyWAirTlSOFPU4HiWz0mGC6muRX9WIkukqZgB+5
-         dvVA==
-X-Gm-Message-State: ACrzQf3YcjaJneLj+eXpqjkhMRLMHoYqx+cF0D49C98RlCg5F86qn19u
-        SI+UJoOBW4amIR+JBdV7/OkLLQ==
-X-Google-Smtp-Source: AMsMyM5Tl9lIxuUj+N7gpJfouylM1Fk3M8j58mbVynyHz69C5+DaYz5jhwd5MS8ldzPFdZ+TWZRM3g==
-X-Received: by 2002:a17:903:22c1:b0:184:983f:11b2 with SMTP id y1-20020a17090322c100b00184983f11b2mr2253510plg.40.1666083811925;
-        Tue, 18 Oct 2022 02:03:31 -0700 (PDT)
+        bh=b6jXP5rr3Q3qr2aS0J/xPsH/umdUTreFu1h1A3gs3aQ=;
+        b=6wnvOlk+zWjbKHAR/4QYvd4gdqDcnJk9AULo2laXj2MiMInTBZVmUwVvItUfMpeAxZ
+         wEELzgsaDBuwcX7P5rGb62SFhPvtu+Qt9INOnNS/w2eOisAdilacND2Qe1D8lmSwGSdC
+         KA7k63hDfKPO1xonY2ZJ1drwCs3jFIyloZQPL2vf7NwcNe1fSdpCaReM5MsmsV7lgTXu
+         f+MBaDulSEdxtrmwHDz5Q1YAlKQlnjNp6FxGQEy1oWnMzIZmR1Gvr+DN0pB1QCpRm2xW
+         ebYHJJLIBOBd3sW+/5GRZS+AWahITwgl/xGXY1iWy5+O8n/Wk4CfkUn0MM1XMZKv9OXF
+         y6qA==
+X-Gm-Message-State: ACrzQf3i9O6j9CZxuAwETZnJX85ji3G79dK/9Yg87X4zpgD1Wy8jsXYE
+        JCHPdfRcM3m13pgs+TIYeGz5SQ==
+X-Google-Smtp-Source: AMsMyM5tncSStMmm7cz0EpJNuUki11273cPYl4K7HZtPwAdktvxqKe+AvV3DtABdJHBV+yJGxWiTrQ==
+X-Received: by 2002:a05:6a00:148a:b0:566:10d8:9404 with SMTP id v10-20020a056a00148a00b0056610d89404mr2197357pfu.84.1666083853227;
+        Tue, 18 Oct 2022 02:04:13 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 185-20020a6206c2000000b00562677968aesm8643891pfg.72.2022.10.18.02.03.31
+        by smtp.gmail.com with ESMTPSA id g17-20020aa796b1000000b00561b3ee73f6sm8816229pfk.144.2022.10.18.02.04.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Oct 2022 02:03:31 -0700 (PDT)
+        Tue, 18 Oct 2022 02:04:12 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] mempool: Use kmalloc_size_roundup() to match ksize() usage
-Date:   Tue, 18 Oct 2022 02:03:29 -0700
-Message-Id: <20221018090323.never.897-kees@kernel.org>
+Subject: [PATCH] devres: Use kmalloc_size_roundup() to match ksize() usage
+Date:   Tue, 18 Oct 2022 02:04:10 -0700
+Message-Id: <20221018090406.never.856-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=821; h=from:subject:message-id; bh=1Gas3SCsMDWgBChil0VwFgY9Fr6zuZgi/zbZ+v/amZU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjTmvhvbPT002El9aaoLE6dlJ1BcKpLWc+O7EYysMd Ev7i92uJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY05r4QAKCRCJcvTf3G3AJogxD/ 9d7YYM6vgBMsPh9pT1fJNW7vfocSmAMT8F3ueYojz9WVnJcdTz4G6UTlzKEPMXnTFQ+Ikut04037AM NUphveN6gJG094sCiDV2QDpK0kSqR6i7v6d6JeEajHqk5ivmQuvl9Xxk5BIJiPOmxHyNojFSxrbbKN e+iRyuL5xpsUHfuXFiVK0dMJ/+9l3C80nyNzHE/HuonrrNoDkxZgc2J+fAq0Ash3kPcaXvhVvIXUju nP4346E5t2mcJcm6cR52lLSW/eTUcB6UiGgAIcsnXGFXO9NSn8gUnQFuQhQ1mrSrxWLvco/+1mp3cU V+KrcVbRpWH2rtSgi8OU6xC1Api7QyYLEyq6a9VTlimKmoIlM75cXkj4tARmB4UueSbM/ARefUaCG1 6PWRHihJ/gxr8+HP+Q1FlPGSHxjZxnDsDP2uXwL0tpQnXxsR4aASftsIDiqAgek3isv+EW/3JwfxNa B3hLlwkMxfNlFx78NJJUJgdWYarJnoEAwlhdTBKZhIR1A5sNolKb4rYi15jpco36fD0UwkE4PRujGx gdztNv0oTxBVRojBwTlF5bdFd21CMoDhzP46Yr84bu9hTWmmu7QADa563bPM4L8LcFHkBdsoeGOoO8 0YrAD3OFWESSnxBCgesvoy18zdneTz5LKHqQN/Tu7YHczc0sxrLOnwSVXuWw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=845; h=from:subject:message-id; bh=VRjJ85d7FRzO9QdnNALjjPmlohFMyyDeN2Qy48G2Wdc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjTmwK5HjmNau/2Z8OSw58zvrURKnB0+VP8PGWljZU GGlZDbCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY05sCgAKCRCJcvTf3G3AJmVID/ oDsrYusLzCt85XakVLHBFAmwjiMokMARd8n10E7KTaSxXIUmltwvhx4/yIRmnqwhaXd7y0AG7kNTBy wEb9lwJ8TLrPox+5gjU5C9+NWbMecYR7jAtYyMTtiViFf22JpUc8oSfmrEOzzRX5HlcjTeWgHcyMY+ 4D2Hg4s1XVdHW3uTUy4QMueoZl+svJ1tNYTcd8cQHgbU3l8NtUMh0HN1V7q496B71EsV05Z2QxLV/m 8RX61dFy7n7npWNnwOnnUj1HAvgY8y1SanH2MwhzrkyYWFJ8LEY0EZgXhPGG679HeWfLj5DBcps6UL ZDZRmuJ7bwnvjeivE8L8MS95G0KOc8rgaeX0B0P5rwmQQu738HB0PbVoGR7UBxPc1+nYE0yRvUaWaM rzoIUrtKPapTaiQD2iPKR62e4cBWVQtH0KnJj2NYRuV8WdrY1HRTk/tgQc7A6k8FCMomzmI0MraGuK 22kLZEe8+19L39ybrgAp4E2DR/XHpi3k/ar/Yx0HBXppFR8WtYhSLzF7AbcpREds4r29I7+DwslIuE c1b3gf6dUcUEk+56nb1seyE9vfobXTTW+lWYjDuNrHJWTUrYx4F+iK1CAVM/v7+M8aJ9BQUi0MD/vf ruH8lfb1WQRLCoWlKhUi4rRajDs9+hZC+gDj6xcDzVyZJf3Bq1dArIflUgEw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Round up allocations with kmalloc_size_roundup() so that mempool's use
+Round up allocations with kmalloc_size_roundup() so that devres's use
 of ksize() is always accurate and no special handling of the memory is
 needed by KASAN, UBSAN_BOUNDS, nor FORTIFY_SOURCE.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- mm/mempool.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/base/devres.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/mm/mempool.c b/mm/mempool.c
-index 96488b13a1ef..0f3107b28e6b 100644
---- a/mm/mempool.c
-+++ b/mm/mempool.c
-@@ -526,7 +526,7 @@ EXPORT_SYMBOL(mempool_free_slab);
-  */
- void *mempool_kmalloc(gfp_t gfp_mask, void *pool_data)
- {
--	size_t size = (size_t)pool_data;
-+	size_t size = kmalloc_size_roundup((size_t)pool_data);
- 	return kmalloc(size, gfp_mask);
+diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+index 4ab2b50ee38f..c0e100074aa3 100644
+--- a/drivers/base/devres.c
++++ b/drivers/base/devres.c
+@@ -101,6 +101,9 @@ static bool check_dr_size(size_t size, size_t *tot_size)
+ 					size, tot_size)))
+ 		return false;
+ 
++	/* Actually allocate the full kmalloc bucket size. */
++	*tot_size = kmalloc_size_roundup(*tot_size);
++
+ 	return true;
  }
- EXPORT_SYMBOL(mempool_kmalloc);
+ 
 -- 
 2.34.1
 
