@@ -2,178 +2,121 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89C3C4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 07:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFB4C4332F
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 07:17:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229891AbiJRHPs (ORCPT
+        id S230108AbiJRHRc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 03:15:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51560 "EHLO
+        Tue, 18 Oct 2022 03:17:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230121AbiJRHPr (ORCPT
+        with ESMTP id S230077AbiJRHRb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 03:15:47 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BC11192BB
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 00:15:27 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id q10-20020a17090a304a00b0020b1d5f6975so13222894pjl.0
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 00:15:27 -0700 (PDT)
+        Tue, 18 Oct 2022 03:17:31 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C368BCBD
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 00:17:29 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id a5-20020a17090aa50500b002008eeb040eso810027pjq.1
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 00:17:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GWpp9H1EZop5nfcRDk8gH8fsXSS8/W/uxQB86i2A+io=;
-        b=j28wJE/SlkqN0MjnlHNEnwUchiYmES1JAhp9HN8BuDU8EpRBzurMvOIs9LRp5sNeZf
-         RftAfN/hdX/ko7MA6Biz+yBsd+AY5JU/+ShMBxe1d7lvQN2y4lPWbXReV5V4nqGAWHx9
-         ot5LcqpDE7s6Lgyg7GIon+2kl38P5UpfMJVWc=
+        bh=+WPhMYfNHJ7IkVsrnLKCMI0knahjH/ILooZWa3gsnak=;
+        b=AmW4E1j4T7QfPNnh9U/FRHyDVB+LaUhI1xOg81gtwVTbvpoocoLxgq7zX/jEU20pv5
+         Y/9n4N8KVrAzaWYS96wbeS7fj2oIDMGSBJi3M7OL/SXoou2qh49F6dHqxWCWwGTCX1st
+         pfWGKfn8pROfh3m0U5u4COYdcn5UjZFQb2oMM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=GWpp9H1EZop5nfcRDk8gH8fsXSS8/W/uxQB86i2A+io=;
-        b=etPGv8n5F8oOb1zHcI+POKugT2zIRlua47ZdXQJd1wbVtmq5ZwKXrL3/I2WuHENYT5
-         Kdy+vmSDo+entzE0tiMuuitBc+bBKsc0/CJUrGAxYAc1gw0kUfMoLui9z3ijfkRFBl0h
-         jif/c0heqqY3idkK2scpsmNnHgQw/THAvvlS6+NAJkgm7JiGN21/u9iXwPmvnTw8Z3ri
-         LHjwhESlFBo2x+8IADh6bJM2l6GR7GNoKSehB/kam21Eq1tO6SMjt/+ANEVAzjC83A+d
-         ybEtBQlcYFfdXa0fha/tpJ+OM8XYhHnqO8QEc/kO4jsy7kZ0tjKxyZhfZyErWNKScdZL
-         G0Zw==
-X-Gm-Message-State: ACrzQf1qUPCOyuijfSWh44C7RZbtP9dalQauU9/Ddy3kG8Xj4DkcgdRs
-        zhKjkJ/mtDXE/2RMH/fv0u+btw==
-X-Google-Smtp-Source: AMsMyM4eIF23D71VJssjlr620WzH9QKDOFN2h7T73Uvfdaj9OE3aQlt7wJsDmvK0Kf+7dlDWw6biQw==
-X-Received: by 2002:a17:902:d504:b0:184:87ca:7856 with SMTP id b4-20020a170902d50400b0018487ca7856mr1676641plg.14.1666077266556;
-        Tue, 18 Oct 2022 00:14:26 -0700 (PDT)
+        bh=+WPhMYfNHJ7IkVsrnLKCMI0knahjH/ILooZWa3gsnak=;
+        b=uiB+bbscz71n3sJMngwyiDQqKIBkNwHjvTyXWowJbNicQ9fQQzS01WK3dgG0j0imJ2
+         gxlErCphTgptb4ghQelII8Btg8hMs5L4t78rYkUE+o2oIeG8PA1d1hK5PRHFXWxkpvRG
+         9V8NEqYFqxexgKMEdVyjyoy+5FKERunxl6wY+uQrQu2dqr6ZXdweyqnXfP8ukhLFdUbQ
+         L7ZwNOZ6GW2P11JEqYSC3RMJFqp/SXQCSRH69V5D6xf6O4i6XuDN+Y20x+Jjcntg5220
+         CdYLJfZeClLPdJNPdkuBmqV3um0w52TNkKrSkpQg5wyRNxiNG3fbHVVsFSrSbvl9z7Qr
+         cnHA==
+X-Gm-Message-State: ACrzQf2fol3Gg+ItTIYYG4Li9p3E/5cWojR5CtdklY7aARWumjuj4va0
+        PCIwVgqw4hf5YMKpvN2k2Ymcig==
+X-Google-Smtp-Source: AMsMyM7xr6hwP8NO4ur8MkkcpcspVQKhsLOgY6G/7SFFF36Kni+LmOb4oMRL+cv3iCHdxCD2vcC1Gg==
+X-Received: by 2002:a17:903:246:b0:179:96b5:1ad2 with SMTP id j6-20020a170903024600b0017996b51ad2mr1689962plh.37.1666077448997;
+        Tue, 18 Oct 2022 00:17:28 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r24-20020aa79638000000b00562eff85594sm8488909pfg.121.2022.10.18.00.14.25
+        by smtp.gmail.com with ESMTPSA id 1-20020a620601000000b005626a1c77c8sm8334879pfg.80.2022.10.18.00.17.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Oct 2022 00:14:25 -0700 (PDT)
+        Tue, 18 Oct 2022 00:17:28 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Eric Biederman <ebiederm@xmission.com>
 Cc:     Kees Cook <keescook@chromium.org>, linux-fsdevel@vger.kernel.org,
+        Jann Horn <jannh@google.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        David Laight <David.Laight@ACULAB.COM>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] binfmt: Fix whitespace issues
-Date:   Tue, 18 Oct 2022 00:14:20 -0700
-Message-Id: <20221018071350.never.230-kees@kernel.org>
+Subject: [PATCH] exec: Add comments on check_unsafe_exec() fs counting
+Date:   Tue, 18 Oct 2022 00:17:24 -0700
+Message-Id: <20221018071537.never.662-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3571; h=from:subject:message-id; bh=cE+i46jrzxiQX8hRWgipHvknKIEvjBwuE256znMEhAA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjTlJMQjP+BFOX9loYawD8HXVcEROtQbdET4WeOsOD cZ4e/PWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY05STAAKCRCJcvTf3G3AJkrcD/ sFtj1A9f+SIqBDSukZmOj1y+sKcip8qY324JfvKAKVMUBhHgMNYycYLvFgN4PL9VaulC6Og9XQNrRT x8+/bYmLOFyVj6io0h++mn7RXZppKHA7bbHGbR65H75K+adr4MjigqXjr46wFpQ6TSQnbxaNvYVOwN RsGBKaC30dGgZ+RgY3ZMDGKR9bGvzy+Wsk8EZjOE7+CyY9CQkWXK6zmMztiy6xgzLKM/shDN7RETzn hAy8tau5WoDxetf/dD3H/4vDw814pQmvNAytqHdL2N21gvA+RKuP2EOPA7TtgokhurBIMqZL1tKpSk JZyHx9s3rrj6w4kQc2ZGs+bwIX8mFLCqRXzmptgVxPmTcLyl1joXLJaciRKwOo5ld0c7mF9AxaWAYr 9mWmrp9xvEpn5u+HqRvtqwoFgWPRgJ8aNXKmA9AzJt96h+1SSWINhnohcIuJPmaBj0tOgdvgRT50j/ eaCL8MmvU+ClJAfNB+vHT7jBhAaj7UYJErkAOGpuavNtQwb5OUAt0YfdRsvfhSK5ObH9H+4DuRtR3J 71aSWQTotYTtCKwXGkVLNTaHEIHbL44Wmb2ezbYPRaBbz3DUnZr3k+mFHfx+aP9hGn5nLynAJh3wyB A6TlSKrPXFR74vHV4K31OynzNpgIIa6dv1VjGIqMdNoR6if304OxtLjVAWXw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1688; h=from:subject:message-id; bh=2swpYsczlaIuQF3JhkoEYj/apHe5tfn1etEA/2Jg8CE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjTlMDiVTpJfOh2CK4GfTNinAtSvCBsM52w9sFjjLW slnuGpSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY05TAwAKCRCJcvTf3G3AJqwyD/ 40TMoaejoCKGnR0OBHDCsxwwCOSAb+WJZWQgT2n89vfSQ5UK5FFm/rdx7Xyk5nu+g4m5Ov61Q7ob2p 91gck3XKFRrxkCMPOCZhh639pC8lcB/871uLLTU+NFNAfHrlfsyXnyNMG7DS4uDSR+Qo8Vqc21aigo /2EHaVg7aZPSYXpUliPxWtMHzKOdFP9om159xQyZD/9CawmpEtcr03tFl/wzzoMuJYArTLBjpNbn11 D2aubvDJS+eHIIv7cJ59SR7q8FsJaLR8VB/9XcuY+QsVp9hEnVr/f/MwwXw3k/tEH6W/3RVSCJ05pJ LLFvfX4E/pqe9q+Deagysf1pX6gjtv6qH5uSPlZwWoZnyxgfOh2awSeDDNXtQzzDIT+xKjyMk4TG/h aXu5njuWMceTFT1GvOZtHLL4Uhceb23khZvpWaK+J1/bYBXMP++c4hqpxJPwkj6GzPG5e1W7ENG+Az hMae9jAPSuYhCyK09uqcBXS49HkOro7dcZib8IopcbrKcDIa4hdu8SiZP9t42Ipq8Polo36ZqqVoU7 eRCIHsNnWfxO8TNnE/2EuN0EjVGDtWsKXjGMPwx1qNjXruJIdPzCbPUnbMEoLz0VoxKi0Oaln2m2Ne gyaK4NFHYR3MjftTXWC08z6eK3Y/CJcKuhnnl38a0dMpPIaSRfplM3wp5jbQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Fix the annoying whitespace issues that have been following these files
-around for years.
+Add some comments about what the fs counting is doing in
+check_unsafe_exec() and how it relates to the call graph.
+Specifically, we can't force an unshare of the fs because
+of at least Chrome:
+https://lore.kernel.org/lkml/86CE201B-5632-4BB7-BCF6-7CB2C2895409@chromium.org/
 
+Cc: Eric Biederman <ebiederm@xmission.com>
 Cc: linux-fsdevel@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/binfmt_elf.c          | 14 +++++++-------
- fs/binfmt_elf_fdpic.c    |  2 +-
- fs/exec.c                |  2 +-
- include/uapi/linux/elf.h |  2 +-
- 4 files changed, 10 insertions(+), 10 deletions(-)
+ fs/exec.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 63c7ebb0da89..72f0672b4b74 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -248,7 +248,7 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
- 	} while (0)
- 
- #ifdef ARCH_DLINFO
--	/* 
-+	/*
- 	 * ARCH_DLINFO must come first so PPC can do its special alignment of
- 	 * AUXV.
- 	 * update AT_VECTOR_SIZE_ARCH if the number of NEW_AUX_ENT() in
-@@ -1020,7 +1020,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 				 executable_stack);
- 	if (retval < 0)
- 		goto out_free_dentry;
--	
-+
- 	elf_bss = 0;
- 	elf_brk = 0;
- 
-@@ -1043,7 +1043,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 
- 		if (unlikely (elf_brk > elf_bss)) {
- 			unsigned long nbyte;
--	            
-+
- 			/* There was a PT_LOAD segment with p_memsz > p_filesz
- 			   before this one. Map anonymous pages, if needed,
- 			   and clear the area.  */
-@@ -1520,7 +1520,7 @@ static void fill_elf_note_phdr(struct elf_phdr *phdr, int sz, loff_t offset)
- 	phdr->p_align = 0;
- }
- 
--static void fill_note(struct memelfnote *note, const char *name, int type, 
-+static void fill_note(struct memelfnote *note, const char *name, int type,
- 		unsigned int sz, void *data)
- {
- 	note->name = name;
-@@ -2003,8 +2003,8 @@ static int elf_dump_thread_status(long signr, struct elf_thread_status *t)
- 	t->num_notes = 0;
- 
- 	fill_prstatus(&t->prstatus.common, p, signr);
--	elf_core_copy_task_regs(p, &t->prstatus.pr_reg);	
--	
-+	elf_core_copy_task_regs(p, &t->prstatus.pr_reg);
-+
- 	fill_note(&t->notes[0], "CORE", NT_PRSTATUS, sizeof(t->prstatus),
- 		  &(t->prstatus));
- 	t->num_notes++;
-@@ -2294,7 +2294,7 @@ static int elf_core_dump(struct coredump_params *cprm)
- 	if (!elf_core_write_extra_phdrs(cprm, offset))
- 		goto end_coredump;
- 
-- 	/* write out the notes section */
-+	/* write out the notes section */
- 	if (!write_note_info(&info, cprm))
- 		goto end_coredump;
- 
-diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-index 08d0c8797828..e90c1192dec6 100644
---- a/fs/binfmt_elf_fdpic.c
-+++ b/fs/binfmt_elf_fdpic.c
-@@ -1603,7 +1603,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 	if (!elf_core_write_extra_phdrs(cprm, offset))
- 		goto end_coredump;
- 
-- 	/* write out the notes section */
-+	/* write out the notes section */
- 	if (!writenote(thread_list->notes, cprm))
- 		goto end_coredump;
- 	if (!writenote(&psinfo_note, cprm))
 diff --git a/fs/exec.c b/fs/exec.c
-index 0284a5f3925e..902bce45b116 100644
+index 902bce45b116..01659c2ac7d8 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -173,7 +173,7 @@ SYSCALL_DEFINE1(uselib, const char __user *, library)
- exit:
- 	fput(file);
- out:
--  	return error;
-+	return error;
- }
- #endif /* #ifdef CONFIG_USELIB */
+@@ -1571,6 +1571,12 @@ static void check_unsafe_exec(struct linux_binprm *bprm)
+ 	if (task_no_new_privs(current))
+ 		bprm->unsafe |= LSM_UNSAFE_NO_NEW_PRIVS;
  
-diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-index 775a17b5b8ac..4c6a8fa5e7ed 100644
---- a/include/uapi/linux/elf.h
-+++ b/include/uapi/linux/elf.h
-@@ -91,7 +91,7 @@ typedef __s64	Elf64_Sxword;
- #define DT_INIT		12
- #define DT_FINI		13
- #define DT_SONAME	14
--#define DT_RPATH 	15
-+#define DT_RPATH	15
- #define DT_SYMBOLIC	16
- #define DT_REL	        17
- #define DT_RELSZ	18
++	/*
++	 * If another task is sharing our fs, we cannot safely
++	 * suid exec because the differently privileged task
++	 * will be able to manipulate the current directory, etc.
++	 * It would be nice to force an unshare instead...
++	 */
+ 	t = p;
+ 	n_fs = 1;
+ 	spin_lock(&p->fs->lock);
+@@ -1752,6 +1758,7 @@ static int search_binary_handler(struct linux_binprm *bprm)
+ 	return retval;
+ }
+ 
++/* binfmt handlers will call back into begin_new_exec() on success. */
+ static int exec_binprm(struct linux_binprm *bprm)
+ {
+ 	pid_t old_pid, old_vpid;
+@@ -1810,6 +1817,11 @@ static int bprm_execve(struct linux_binprm *bprm,
+ 	if (retval)
+ 		return retval;
+ 
++	/*
++	 * Check for unsafe execution states before exec_binprm(), which
++	 * will call back into begin_new_exec(), into bprm_creds_from_file(),
++	 * where setuid-ness is evaluated.
++	 */
+ 	check_unsafe_exec(bprm);
+ 	current->in_execve = 1;
+ 
 -- 
 2.34.1
 
