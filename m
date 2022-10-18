@@ -2,61 +2,64 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF0EC4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 09:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09337C4332F
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 09:10:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230371AbiJRJHL (ORCPT
+        id S229767AbiJRJKR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 05:07:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47286 "EHLO
+        Tue, 18 Oct 2022 05:10:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230320AbiJRJHJ (ORCPT
+        with ESMTP id S229839AbiJRJKQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 05:07:09 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6208F5F123
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 02:07:08 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id z20so13198275plb.10
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 02:07:08 -0700 (PDT)
+        Tue, 18 Oct 2022 05:10:16 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5F517A749
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 02:10:14 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id x1-20020a17090ab00100b001fda21bbc90so16731823pjq.3
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 02:10:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9ik/E//QP4NdBbqi/JKK2jChzoYGdVf04VQO8QaZ2oI=;
-        b=OJ6MXnK+VlPl3Gcy1ZICT+bgZamtzoDgN7vzGSxP1iIfM23MZk+tkti34Hy31Qeri9
-         TNMsi9ce+ddpAZLgmHjUEVLD8tv4P/osTJMT8z/x6jwe6BSRX1sbbyvcPUei9564v75q
-         yWzWdeHCQUAekASByz1Jt35L/5AFk42tL9jXs=
+        bh=ukoFf7wEa/GfUfveeUzu2PUBZk7HPVe9cL2u/UltyEU=;
+        b=csXExqhBkarPFPg6wEBtNxdgATZM8UopsHo3GUeTmwW04QbJH4NX5y5046JrhCf66H
+         OS0czsOqU3JxwafgRAZIi/JmUa4SB4MFcsWb6JIv40cZWC5kkr9pC+tJUljFXEwRJ0fy
+         cnX/HOTJHiOBudJTp5MtFv4L99UUXYYVX7yLg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9ik/E//QP4NdBbqi/JKK2jChzoYGdVf04VQO8QaZ2oI=;
-        b=sksTCa4ULvGYlrAAmTKxqhMJfb8u7j9n5RyyoohD7s1S1cXugkrjO4kbQ16eyXfzrx
-         YnDI9XdUWKMvIIy+I6HL8L5YNOIWN/JtHtuU7tFWRDfSV2Cdm2v9atkWlDfO+eUp68nM
-         7IDFOHLWKsYho2mP1szpvxPLF4LAmMZyUVR2P3yT4gx96QJtQDrQoWKPga9HCsHPxI9B
-         IiK9tgjC6/eeo0QVno4Ap9VPsrkfncevV6vuTILZ9nkQffGq2cP4V/xbpyrk/VTDvJEH
-         LB5A15djRgNZUxuMv0npl7B2DZABWYAVhBynRn4Iyp/zA/DJqVB2325JqDBU5Hsnc8Fc
-         3fzw==
-X-Gm-Message-State: ACrzQf2pAmfHUYVB7x/ESKrdXoFS+QeMQY+Fa/jS8PfeNSv4nTarF7+W
-        SXjq8sGtqdD5uI2UkUeiRa3hew==
-X-Google-Smtp-Source: AMsMyM6CIFIQbM4Lw/W6bIJwv433YVB+M6640oaCuA20xl6UHbu1b0zu7j1SEKv1OoEBTwDfHlePPA==
-X-Received: by 2002:a17:90b:392:b0:20b:2c3b:547f with SMTP id ga18-20020a17090b039200b0020b2c3b547fmr2529481pjb.116.1666084027916;
-        Tue, 18 Oct 2022 02:07:07 -0700 (PDT)
+        bh=ukoFf7wEa/GfUfveeUzu2PUBZk7HPVe9cL2u/UltyEU=;
+        b=Z8MUbV/pMMlmW97gDE9SIY5rxVynCLxPeeC3qrZD0wi8B9WfgNLeGoE+SauXHyYBph
+         m5SPM4eOtjnXfqJZw7yoU2OB24rYj3D5Yw7YEG1NYR9h0BszWW7vFe8cNEBE028E4EJ8
+         OE9eH/SPGgzR38+jnSNqmWUW6YQUXLwT83hz7ddkFoJ2V1EGRYLHXyBXOR9gJqVSobXe
+         XxElMWA9C2pufYigEkBI8xqwV4xGgYCD07idO752sSK3VZteVD3+p4XJdidnqHQYqGNR
+         CGilZEGD7CkKvCWi+Pnwaak0cD+4sSpqq/aPtdoH4/C/+z0s8COb7zVp2OOVvN2L5u2w
+         c4ag==
+X-Gm-Message-State: ACrzQf3z3J0oyZns0ug4NR9A2ZADZ6Rp/QjC8yzMzmtBl5dCIg6E8ISy
+        CF4G0ecrdoIJlS7GaV2FT8zk4Q==
+X-Google-Smtp-Source: AMsMyM6AMqxalz2EiUvSsTLj683MBoAwpQpreDb/Xeav5jgLr57NynSC9KI51LhT7Kytdced3HqcMQ==
+X-Received: by 2002:a17:90b:3588:b0:20b:590:46a2 with SMTP id mm8-20020a17090b358800b0020b059046a2mr2491865pjb.14.1666084214343;
+        Tue, 18 Oct 2022 02:10:14 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w4-20020a17090a6b8400b0020d6fc00072sm11241693pjj.9.2022.10.18.02.07.06
+        by smtp.gmail.com with ESMTPSA id h10-20020a170902680a00b0017300ec80b0sm8058997plk.308.2022.10.18.02.10.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Oct 2022 02:07:07 -0700 (PDT)
+        Tue, 18 Oct 2022 02:10:13 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Kees Cook <keescook@chromium.org>, linux-fsdevel@vger.kernel.org,
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] coredump: Proactively round up to kmalloc bucket size
-Date:   Tue, 18 Oct 2022 02:07:05 -0700
-Message-Id: <20221018090701.never.996-kees@kernel.org>
+Subject: [PATCH v3] dma-buf: Proactively round up to kmalloc bucket size
+Date:   Tue, 18 Oct 2022 02:10:11 -0700
+Message-Id: <20221018090858.never.941-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1213; h=from:subject:message-id; bh=p+MmonEVAKFmpb5iqSHacNcvTbIa15T8BRPfROxVUy8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjTmy5m8JCx9/BE56DDkyWbIsGqGD7nmhWHa2GZ8l+ Hy6FbFKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY05suQAKCRCJcvTf3G3AJnEsEA CScUD9FTn1d8hXufUPd/FUQzE357ebRSIeX+m2v0ED9JXLrqJmh1gZrjrKHLkKiHTSnAn/jgoD2dgW U/YOQFrV7yyoQ4kKZzShL7FQ0s1Kki5m9LIqY/0HwPR8+tkdVVoG9a1PJoy3TBtZBDSTBQyojqxd0X Du2BbO4D0kz4QxdO1Zwl5lldGIOh7poGa2tmqXjvxG55wMNBP4WyRTNS5Id5ZMVNW2qOS0yN3rF+ac HT2LfblPNvdimyrWPwhl/2C6Ae+75yrDwn4P3d5DncHEDWBLrCqAXG5tOl2M2fLXjp7aBDKCn9t84Z yI5N3lIzvVqgzmFoQg9Z1WPlj0LmmJv49Pd/3FEGHrFdAeq4q4cKUJjclOyHapGm+NvcmkVvJWk4FU +jEB83ZhUMSqNUBe+ck7MRnOTSjsK+dJ5cau90wJyEpods3antluvAuYwQLpZxjLF+M4HvNSpJGVIE HNFPx13lmOsyt2MVaIQdGy7sm1yi8zfE/1DnLogCFzRasB3JoVBh012nXOhnl4dF0o49scKZrY1cge DGhZ0pVgCpql0gGtmm2Abphd95b4ufD7Np9gAWqH2xgvsGGicJEtY15OqOv/r61tRSwp5ieebceKfX PIOt9137ZR+Rxj7a4MQ+iIpvMA+gJDGhPYdlPr3J6MHr0kpiM4ZLE3QyUOZw==
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1673; h=from:subject:message-id; bh=8hepCmu6KkNCIQiT6ONpaMe4VoHSy9sRDnadRc3o6dY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjTm1zq8jKCG/tc7/8bPvsM44d+bw8pliNmUV1nYs9 oZ3UNCqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY05tcwAKCRCJcvTf3G3AJh7AEA CTcI1pdlR5PlvYxNvP2WDxxU4tjQpCYFU8DL3QIbpSPAGCSHnu/fLH6mOTmflitrQ/DsyHD4LRh+Gc MNL44FREEbJ4PDUi+k2SbLlkCESNKduXwzMSU4AzBIbf3TD2GmvqnQc6663oVj/0gCMK1PtcnYqkkK 7dOrQHMvouIoxWrgiOoK8U8K+6pHwwJK66vChECKJN261DcRu+LrteWxTMCEuwWexFa8DVde3NAK9Z rBLz4Cq8ZdLitk/OXx0Dq5Sr+lvsTuhgodexasrD6PbK4g3XSSyHuqSiRLwSb+WgKJaOQ/FwHA/zxz N1ktC3FGVv0rs3PTxdAwcI0FNVEpUdZUkQI0UfFotI03jATt3Ar/11oa77oln6OVD4p86J25TmPSsL 5mbkclNofm6EXo/VniQoq6dc6Bt4acmroVMeYDxRuAwfwxW0tBusHyGG0uUaczhMLcI+8aB7B9Ww5w Z1tpDuQLaTSmDAfOskStapWlFTBdZczM8RsO88iM5k/TH/00g53wBnDEHyYBXaMZWIc+rSuGFChZzf H0+guk6+nfMF3k18/pY3Ysj5RPQE3FF4i1DOJ1aqc9zQLB9+BV8bbsTxy/GCHGenjhYmFipzHZeJat dOlM+mCyFQ3zOAYDS2ZW+1sW0Gfg5Xqh5qC7jyxMfqfwVjvzt1oaXABQEm0g==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -68,38 +71,43 @@ up proactively so the allocation is explicitly made for the full size,
 allowing the compiler to correctly reason about the resulting size of
 the buffer through the existing __alloc_size() hint.
 
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: linux-fsdevel@vger.kernel.org
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: linux-media@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linaro-mm-sig@lists.linaro.org
+Reviewed-by: Christian König <christian.koenig@amd.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/coredump.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+v3: added reviewed-by, rebase to v6.1-rc1
+v2: https://lore.kernel.org/lkml/20220923202822.2667581-9-keescook@chromium.org/
+---
+ drivers/dma-buf/dma-resv.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/coredump.c b/fs/coredump.c
-index 7bad7785e8e6..97eaee325251 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -68,7 +68,10 @@ struct core_name {
- 
- static int expand_corename(struct core_name *cn, int size)
+diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
+index e3885c90a3ac..1c76aed8e262 100644
+--- a/drivers/dma-buf/dma-resv.c
++++ b/drivers/dma-buf/dma-resv.c
+@@ -98,12 +98,17 @@ static void dma_resv_list_set(struct dma_resv_list *list,
+ static struct dma_resv_list *dma_resv_list_alloc(unsigned int max_fences)
  {
--	char *corename = krealloc(cn->corename, size, GFP_KERNEL);
-+	char *corename;
+ 	struct dma_resv_list *list;
++	size_t size;
+ 
+-	list = kmalloc(struct_size(list, table, max_fences), GFP_KERNEL);
++	/* Round up to the next kmalloc bucket size. */
++	size = kmalloc_size_roundup(struct_size(list, table, max_fences));
 +
-+	size = kmalloc_size_roundup(size);
-+	corename = krealloc(cn->corename, size, GFP_KERNEL);
++	list = kmalloc(size, GFP_KERNEL);
+ 	if (!list)
+ 		return NULL;
  
- 	if (!corename)
- 		return -ENOMEM;
-@@ -76,7 +79,7 @@ static int expand_corename(struct core_name *cn, int size)
- 	if (size > core_name_size) /* racy but harmless */
- 		core_name_size = size;
+-	list->max_fences = (ksize(list) - offsetof(typeof(*list), table)) /
++	/* Given the resulting bucket size, recalculated max_fences. */
++	list->max_fences = (size - offsetof(typeof(*list), table)) /
+ 		sizeof(*list->table);
  
--	cn->size = ksize(corename);
-+	cn->size = size;
- 	cn->corename = corename;
- 	return 0;
- }
+ 	return list;
 -- 
 2.34.1
 
