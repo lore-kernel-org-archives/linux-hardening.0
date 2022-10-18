@@ -2,88 +2,211 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE60EC4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 21:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDFEC433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 21:50:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229665AbiJRVGO (ORCPT
+        id S229612AbiJRVuX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 17:06:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56038 "EHLO
+        Tue, 18 Oct 2022 17:50:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229574AbiJRVGN (ORCPT
+        with ESMTP id S229572AbiJRVuW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 17:06:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C35D9A9E5
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 14:06:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666127171;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kUAo3dL9hhBdy5lWB8FHvKsjCOg7DiowFZ/MAPIKBRo=;
-        b=AX9oq+gw5t3tGvTIuSUq/vq7gDnB24YKcl+tSXs5LCXnYDPCDlgL5sHjId/4qJPjhlb44J
-        bxlN+NudfzAM6TEU8VBql1i1s0oGS8wMKNRWYAeUbrO9nEQ1VfvdArOH3gXEnwy7E8/rkl
-        TKiv7JereKKK8KnSX5stTyrvB1JbCmk=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-3-s4HuxjnEOT2bgY5OaJH7oA-1; Tue, 18 Oct 2022 17:04:52 -0400
-X-MC-Unique: s4HuxjnEOT2bgY5OaJH7oA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1D2E93814580;
-        Tue, 18 Oct 2022 21:04:49 +0000 (UTC)
-Received: from redhat.com (unknown [10.2.17.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9095B2166BAD;
-        Tue, 18 Oct 2022 21:04:48 +0000 (UTC)
-Date:   Tue, 18 Oct 2022 17:04:47 -0400
-From:   Peter Jones <pjones@redhat.com>
-To:     Evgeniy Baskov <baskov@ispras.ru>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        lvc-project@linuxtesting.org, x86@kernel.org,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 00/16] x86_64: Improvements at compressed kernel stage
-Message-ID: <20221018210447.sg3tddaujre6orgc@redhat.com>
-References: <cover.1662459668.git.baskov@ispras.ru>
+        Tue, 18 Oct 2022 17:50:22 -0400
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 649F3BE2CA
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 14:50:21 -0700 (PDT)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-35ad0584879so150269197b3.7
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 14:50:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AIr7KjAmozy1+mptmG8zUIs0U34qjGCIt4EFZOuEuCk=;
+        b=5f3V5CFbBtYQzFwXyNKCtmHUsSs6PleEF9QYhzBNQyPCAOBQQ7wRyShF61qnHvhnXR
+         WWl0Z/IdTAEj+fxpEpNtyFWqWWr7WZmYtjerF5tejZWr1RJgS0yuJiUJzzHi61jcF/KZ
+         BU0jbVCth4HcARi8pjqi61F1J6ONctR44KX6dEkfG5JSROjhfJaDkyBfprGYTQBjQaL6
+         2IwgzNBzQmvJezqVAxgQDPHR6Wmp0q/xT5Fei4dyGcevoiH7jrLyT11MV3tge35vu/vH
+         fzDPq/4djA+oAdGOxZwih54asofz3oOO9g+wGwKYIO9q9KqonBxVj2Y+GXQ0Ltd0q9HP
+         uYSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AIr7KjAmozy1+mptmG8zUIs0U34qjGCIt4EFZOuEuCk=;
+        b=RRnsRdE8oxtShbH/HuMBm2jupqABU2vUntnZ13rAwLzzkeoWG3jm7YSGkWMVkC96vo
+         aU5vEq9HPgqcxsesvB/y6YLkRrIuCeJr+nAsB0L9joTzE5BZUua9knRHMQyBRk1xCIhe
+         9VBClujpVDJfvZK2en8crxurXAj+8+vqteA/8WrKh8Ma1kEcCkhdY0qEptfKqEq34bFJ
+         qjLkxw+hAhAPfp8wf08VVN5tFWquyMH27W8GXchCnENt3eKGmvMgs+7ECTKPk5pS0T3O
+         KpFUnWVOJ2LrAgykk8zHVQ0wYd5x66Yq4TyAwyYC9y25XR+5NArYzCnIJoBZ+z46eUpX
+         Ih+g==
+X-Gm-Message-State: ACrzQf1obRwPCjRkk6SSc358AELHfOcIESYZnSrFzpkgWqGNumqSsBwh
+        1hgUOav5js5opJ1j07pvKFAJZcXzQlk2y7GreDmUvPvkS3Gc
+X-Google-Smtp-Source: AMsMyM5NfkpAOvLZjGDxdzPb/OC0/MaTUz1pWaeIBwOlU9fjOACUua9kgkrL36mApne0JEiWoq0uBRRaX5lv56vO1Tw=
+X-Received: by 2002:a0d:ebc1:0:b0:360:5a77:4d78 with SMTP id
+ u184-20020a0debc1000000b003605a774d78mr4196697ywe.336.1666129820531; Tue, 18
+ Oct 2022 14:50:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cover.1662459668.git.baskov@ispras.ru>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+References: <20221018064825.never.323-kees@kernel.org>
+In-Reply-To: <20221018064825.never.323-kees@kernel.org>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 18 Oct 2022 17:50:09 -0400
+Message-ID: <CAHC9VhTScG513+-_GDN+nzBQjASW31LrE8juU3c03=0fJ_csGw@mail.gmail.com>
+Subject: Re: [PATCH] LSM: Better reporting of actual LSMs at boot
+To:     Kees Cook <keescook@chromium.org>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 06, 2022 at 01:41:04PM +0300, Evgeniy Baskov wrote:
-> This patchset is aimed
-> * to improve UEFI compatibility of compressed kernel code for x86_64
-> * to setup proper memory access attributes for code and rodata sections
-> * to implement W^X protection policy throughout the whole execution 
->   of compressed kernel for EFISTUB code path. 
+On Tue, Oct 18, 2022 at 2:48 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> Enhance the details reported by "lsm.debug" in several ways:
+>
+> - report contents of "security="
+> - report contents of "CONFIG_LSM"
+> - report contents of "lsm="
+> - report any early LSM details
+> - whitespace-align the output of similar phases for easier visual parsing
+> - change "disabled" to more accurate "skipped"
+> - explain what "skipped" and "ignored" mean in a parenthetical
+>
+> Upgrade the "security= is ignored" warning from pr_info to pr_warn,
+> and include full arguments list to make the cause even more clear.
+>
+> Replace static "Security Framework initializing" pr_info with specific
+> list of the resulting order of enabled LSMs.
+>
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: James Morris <jmorris@namei.org>
+> Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> Cc: linux-security-module@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  security/security.c | 61 +++++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 54 insertions(+), 7 deletions(-)
 
-Hi Evgeniy,
+I don't know about you, but when I'm reading commit descriptions about
+how a patch changes the user visible output of something, e.g. console
+messages, I always enjoy seeing an example of the new output, both in
+normal and debug mode (hint, hint) ;)
 
-I've tested this set of patches with the Mu firmware that supports the W^X
-feature and a modified bootloader to also support it, and also with an
-existing firmware and the grub2 build in fedora 36.  On the firmware
-without W^X support, this all works for me.  With W^X support, it works
-so long as I use CONFIG_EFI_STUB_EXTRACT_DIRECT, though I still need
-some changes in grub's loader.  IMO that's a big step forward.
+More comments below ...
 
-I can't currently make it work with W^X enabled but without direct
-extraction, and I'm still investigating why not, but I figured I'd give
-you a heads up.
+> diff --git a/security/security.c b/security/security.c
+> index 9696dd64095e..6f6079dec270 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -159,7 +159,7 @@ static void __init append_ordered_lsm(struct lsm_info *lsm, const char *from)
+>                 lsm->enabled = &lsm_enabled_true;
+>         ordered_lsms[last_lsm++] = lsm;
+>
+> -       init_debug("%s ordering: %s (%sabled)\n", from, lsm->name,
+> +       init_debug("%s ordered: %s (%sabled)\n", from, lsm->name,
+>                    is_enabled(lsm) ? "en" : "dis");
+
+This isn't your fault, but since you're changing this line let's get
+rid of the "en"/"dis" and do a proper "enabled"/"disabled" string to
+make it slightly easier to find string while grep'ing through the
+sources.  Example:
+
+  init_debug("... %s\n", (is_enabled(lsm) ? "enabled" : "disabled"));
+
+> @@ -307,7 +308,8 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
+>                 if (exists_ordered_lsm(lsm))
+>                         continue;
+>                 set_enabled(lsm, false);
+> -               init_debug("%s disabled: %s\n", origin, lsm->name);
+> +               init_debug("%s skipped: %s (not in requested order)\n",
+> +                          origin, lsm->name);
+
+I'm not sure the distinction between "disabled" and "skipped" above is
+that significant, and in fact I tend to think "disabled" is more
+appropriate.  There is also some (minor) advantage to keeping the user
+visible log messages consistent.
+
+However, I do think the parenthetical explanations are a nice addition.
+
+(If we did go the "skipped" route, I think we should also change the
+"security=%s disabled: %s\n" further up the function for the sake of
+consistent language.)
+
+> @@ -318,6 +320,44 @@ static void __init lsm_early_task(struct task_struct *task);
+>
+>  static int lsm_append(const char *new, char **result);
+>
+> +static void __init report_lsm_order(void)
+> +{
+> +       struct lsm_info **lsm, *early;
+> +       size_t size = 0;
+> +       char *effective, *step, *end;
+> +
+> +       /* Count the length of each enabled LSM name. */
+> +       for (early = __start_early_lsm_info; early < __end_early_lsm_info; early++)
+> +               if (is_enabled(early))
+> +                       size += strlen(early->name) + 1;
+> +       for (lsm = ordered_lsms; *lsm; lsm++)
+> +               if (is_enabled(*lsm))
+> +                       size += strlen((*lsm)->name) + 1;
+> +
+> +       /* Allocate space with trailing %NUL or give up. */
+> +       size += 1;
+> +       effective = kzalloc(size, GFP_KERNEL);
+> +       if (!effective)
+> +               return;
+> +       end = effective + size;
+> +       step = effective;
+> +
+> +       /* Append each enabled LSM name. */
+> +       for (early = __start_early_lsm_info; early < __end_early_lsm_info; early++)
+> +               if (is_enabled(early))
+> +                       step += scnprintf(step, end - step, "%s%s",
+> +                                         step == effective ? "" : ",",
+> +                                         early->name);
+> +       for (lsm = ordered_lsms; *lsm; lsm++)
+> +               if (is_enabled(*lsm))
+> +                       step += scnprintf(step, end - step, "%s%s",
+> +                                         step == effective ? "" : ",",
+> +                                         (*lsm)->name);
+> +
+> +       pr_info("initializing lsm=%s\n", effective);
+
+Instead of going through all the trouble of determining the string
+size and formatting the string via a series of scnprintf() calls, why
+not cut out the intermediate string buffer and use
+pr_info()/pr_cont()?  What am I missing?
+
+> @@ -393,13 +436,17 @@ int __init security_init(void)
+>  {
+>         struct lsm_info *lsm;
+>
+> -       pr_info("Security Framework initializing\n");
+> +       init_debug("legacy security=%s\n", chosen_major_lsm ?: " *unspecified*");
+> +       init_debug("  CONFIG_LSM=%s\n", builtin_lsm_order);
+> +       init_debug("boot arg lsm=%s\n", chosen_lsm_order ?: " *unspecified*");
+>
+>         /*
+>          * Append the names of the early LSM modules now that kmalloc() is
+>          * available
+>          */
+>         for (lsm = __start_early_lsm_info; lsm < __end_early_lsm_info; lsm++) {
+> +               init_debug("  early started: %s (%sabled)\n", lsm->name,
+> +                          is_enabled(lsm) ? "en" : "dis");
+
+See the earlier comment about "en"/"dis" versus "enabled"/"disabled".
+
+However, I wonder how useful the above debug message is when you
+consider report_lsm_order().  Since report_lsm_order() dumps both the
+early and normal LSMs, perhaps it makes more sense to annotate the
+output there to indicate early vs normal LSM loading?
+
+(This is one of the reasons why it can be nice to see an example of
+the output in the commit description.)
 
 -- 
-        Peter
-
+paul-moore.com
