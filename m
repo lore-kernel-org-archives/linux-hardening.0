@@ -2,354 +2,165 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0200BC4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 08:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4BFC433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 08:20:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230325AbiJRIHr (ORCPT
+        id S229832AbiJRIU4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 04:07:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35772 "EHLO
+        Tue, 18 Oct 2022 04:20:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230310AbiJRIHo (ORCPT
+        with ESMTP id S229506AbiJRIUz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 04:07:44 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F07A18983E
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 01:07:41 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id b2so13100937plc.7
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 01:07:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=r386XTy94I8XmKFnphrGlHjUNN4wxmg9QYVFoKxy77U=;
-        b=kGS1GguWb4lC6DBAMQdrHJ/ymwsOEmeOSuLUmFZGdeWIpzsg2ztl6nj2uBt3DrPKAB
-         lIrXrmD8eY63AZEe8W0aW5qQMcQCbnZj6hUBODId3M/AGs5HEk7FdGZmv/MGXv4bLHGu
-         SisEUVcq0BlybPK79O8A9VJI6VrFCThzpHD84=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r386XTy94I8XmKFnphrGlHjUNN4wxmg9QYVFoKxy77U=;
-        b=JEFCd++F8WMnzqFgXuL+qZr3JAotiC4KxxjgG24n03RZ3nhcF3NBnnqY/o9tmoYIs+
-         MmSelG7BJrQaRw0WF3LFn8oQ+eE+2j4/MyM3GmWD8NsW3qxIlrzMaIFF+A+bbJ6X22oK
-         227STSbtkpzHO5/I5hlf3AAPclv6w0glUnNnexUYhHCwbzfEP9yqJoWVsojSkAM8k9sg
-         jPi1VPxnZfpYtQ3H0PJgPq5l+aNqKaQ/fZmBuPR28Qhp/G6JyC116ZZQyCplNjHSfvNx
-         qJPyE+KXu5+SyIDGR+UtL204Nj+KenCqCRPjLSQIQicZAe2E/9MTaxktvhhyFuhXDiVp
-         sixA==
-X-Gm-Message-State: ACrzQf1madkV4D/i7barCj6x2CkIvNlpRjKnuIZb1cvtZ8zcdWRVVKsc
-        i1ndvglu0vuMH4xRuu8QRBaRfw==
-X-Google-Smtp-Source: AMsMyM5jspj+8kC7yhp4usBgy3FAOwLCNMfPWAqrfdp+mVitJn79Ooh8xEPtFvZnxqFsP/DRhUb6tQ==
-X-Received: by 2002:a17:902:eccc:b0:185:4ff6:fef8 with SMTP id a12-20020a170902eccc00b001854ff6fef8mr1964168plh.93.1666080460870;
-        Tue, 18 Oct 2022 01:07:40 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y24-20020aa79438000000b0056281da3bcbsm8800097pfo.149.2022.10.18.01.07.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Oct 2022 01:07:39 -0700 (PDT)
-Date:   Tue, 18 Oct 2022 01:07:38 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kunit/memcpy: Adding dynamic size and window tests
-Message-ID: <202210180102.2845B66@keescook>
-References: <20220929030846.1060818-1-keescook@chromium.org>
- <CAKwvOd=aCGPP54qxoO4-K8MDBB8VEmXpUdo156FiBVxkpdxirg@mail.gmail.com>
+        Tue, 18 Oct 2022 04:20:55 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2837B80F55;
+        Tue, 18 Oct 2022 01:20:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A1054614B9;
+        Tue, 18 Oct 2022 08:20:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06662C4347C;
+        Tue, 18 Oct 2022 08:20:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666081253;
+        bh=lzJoGCCoxM2N2aUxL+sofQ9Ewzh0rmNyHzU7j6u9ujo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Ree7kUlqn6RF/C4bM0Sj/IsHoNhG+v0cnCz5A1u2DUNOmkY4497va9zNMQlAuEBse
+         Wj6f3+CiNo1lKSthD69b2WP52nTyr+SbLIYOevYnQUqqAefXhkZ/iiRPEgc4b7mhQ1
+         FyUSJsoZXpyDYRt4Qq4MgcOWEcE5B6aAV4ZqJMDW02xaVAQyyDkDfcqEDqsNM+POH/
+         apMOZ17fpW5Pp+YkHbcU+d+wCnMdfKKe/yTiFYyhvs0TBH82K9UhTSkUg0VdApfV9F
+         IR0OfF/FK7t2v1xLHYZsgcZCF4lUTaWsT+Hx8d+yGhtX/9EYzrLI4jGs9kIXXtmizT
+         VjLlutQ2RMuxg==
+Received: by mail-lf1-f50.google.com with SMTP id b1so21306230lfs.7;
+        Tue, 18 Oct 2022 01:20:52 -0700 (PDT)
+X-Gm-Message-State: ACrzQf2KV/gPzxOTQKaqhVklSyb8AH+11KbryZtVmcT0OIBdb/+VfOfp
+        0dcaH06HRapHCCFHTeLtthid26yjYkvy9OMFna4=
+X-Google-Smtp-Source: AMsMyM6L84iqkEwGUEuZU4ZaF6a6BvThJMz5KNlsHr6VosJotCoQ0vFz6PesWH97RzAGQVXE0KAd6HKJ++ek8GMi+fI=
+X-Received: by 2002:a05:6512:150e:b0:492:d9fd:9bdf with SMTP id
+ bq14-20020a056512150e00b00492d9fd9bdfmr567295lfb.583.1666081250880; Tue, 18
+ Oct 2022 01:20:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd=aCGPP54qxoO4-K8MDBB8VEmXpUdo156FiBVxkpdxirg@mail.gmail.com>
+References: <20221018020519.never.337-kees@kernel.org>
+In-Reply-To: <20221018020519.never.337-kees@kernel.org>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 18 Oct 2022 10:20:39 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGjF63wK7m8BqC=WX6sA425BTVwQWk9ERN3gG8s==4mjw@mail.gmail.com>
+Message-ID: <CAMj1kXGjF63wK7m8BqC=WX6sA425BTVwQWk9ERN3gG8s==4mjw@mail.gmail.com>
+Subject: Re: [PATCH 0/5] pstore: Use zstd directly by default for compression
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Nick Terrell <terrelln@fb.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 29, 2022 at 02:02:05PM -0700, Nick Desaulniers wrote:
-> On Wed, Sep 28, 2022 at 8:08 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > The "side effects" memmove() test accidentally found a corner case in
-> > the recent refactoring of the i386 assembly memmove(), but missed
-> > another corner case. Instead of hoping to get lucky next time, implement
-> > much more complete tests of memcpy() and memmove() -- especially the
-> > moving window overlap for memmove() -- which catches all the issues
-> > encountered and should catch anything new.
-> >
-> > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > Link: https://lore.kernel.org/lkml/CAKwvOdkaKTa2aiA90VzFrChNQM6O_ro+b7VWs=op70jx-DKaXA@mail.gmail.com
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> Regardless of my comments, I ran this through:
-> 
-> $ ./tools/testing/kunit/kunit.py run --arch=i386 memcpy --make_options LLVM=1
-> $ ./tools/testing/kunit/kunit.py run --arch=arm64 memcpy --make_options LLVM=1
-> $ ./tools/testing/kunit/kunit.py run --arch=arm memcpy --make_options LLVM=1
-> $ ./tools/testing/kunit/kunit.py run --arch=x86_64 memcpy --make_options LLVM=1
-> All were green for me.
-> 
-> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+On Tue, 18 Oct 2022 at 04:08, Kees Cook <keescook@chromium.org> wrote:
+>
+> Hi,
+>
+> Okay, here is a very lightly tested version of using zstd directly, which
+> should save 128KB per CPU compare to using crypto API. This leaves the
+> crypto API available, though, if someone wants to use it instead. Even
+> supporting both, this is a net reduction in code, due to dropping all
+> the zbufsize logic.
+>
+> How does this look?
+>
 
-Thanks!
+The code changes all look correct and reasonable to me.
 
-> Do you have any thoughts on the test in my v4 wrt. potential for
-> conflicts in -next?
-> https://lore.kernel.org/lkml/20220928210512.642594-1-ndesaulniers@google.com/
+As for supporting both the library and the crypto API interface: I did
+a little digging, and it turns out all additional compression modes
+were added by the same contributor, with no justification other than
+'this might be useful to some people' (see below)
 
-I designed this patch to avoid conflicts with your changes. (Has anyone
-picked up the memmove refactor for -next yet?)
+However, I did a quick experiment with the output of dmesg on my
+workstation, and these are the results I am getting
 
-> It looks like even without this patch of yours,
-> $ ./tools/testing/kunit/kunit.py run --arch=i386 memcpy --make_options LLVM=1
-> demonstrates the bug in my v3.
+Input file:
+-rw-r--r-- 1 ard ard 111792 Oct 18 09:23 uncompressed
 
-Yeah, it got lucky, mainly. :)
+Default compression
+-rw-r--r-- 1 ard ard  21810 Oct 18 09:23 uncompressed.gz
+-rw-r--r-- 1 ard ard  33923 Oct 18 09:23 uncompressed.lz4
+-rw-r--r-- 1 ard ard  34238 Oct 18 09:23 uncompressed.lzo
+-rw-r--r-- 1 ard ard  21599 Oct 18 09:23 uncompressed.zst
 
-> I also tested my v4 on top of this change with the above command line;
-> it passes. :)
+Max compression (-9)
+-rw-r--r-- 1 ard ard  21589 Oct 18 09:23 uncompressed.gz
+-rw-r--r-- 1 ard ard  28848 Oct 18 09:25 uncompressed.lz4 (== lz4hc?)
+-rw-r--r-- 1 ard ard  26917 Oct 18 09:23 uncompressed.lzo
+-rw-r--r-- 1 ard ard  19883 Oct 18 09:23 uncompressed.zst
 
-Perfecto! :)
+So the patches in question don't actually fulfill their claim of
+improving the compression ratio. Only zstd, which was added later,
+improves upon zlib, but not significantly unless you override the
+compression level (which we don't).
 
-> 
-> > ---
-> >  lib/memcpy_kunit.c | 187 +++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 187 insertions(+)
-> >
-> > diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
-> > index 2b5cc70ac53f..f15daa66c6a6 100644
-> > --- a/lib/memcpy_kunit.c
-> > +++ b/lib/memcpy_kunit.c
-> > @@ -270,6 +270,190 @@ static void memset_test(struct kunit *test)
-> >  #undef TEST_OP
-> >  }
-> >
-> > +static u8 large_src[1024];
-> > +static u8 large_dst[2048];
-> > +static const u8 large_zero[2048];
-> > +
-> > +static void init_large(struct kunit *test)
-> > +{
-> > +       int failed_rng = 0;
-> > +
-> > +       /* Get many bit patterns. */
-> > +       get_random_bytes(large_src, sizeof(large_src));
-> 
-> I know sizeof == ARRAY_SIZE when we have an array of u8, but please
-> consider using ARRAY_SIZE.
+So I seriously doubt that those patches were inspired by the need to
+solve an actual problem anyone was experiencing at the time, given
+that they don't. It just seems that nobody bothered to ask the 'why?'
+question.
 
-Yeah, I will break myself of this habit yet. Fixed.
+So again, I suggest to simply drop this non-feature, and standardize
+on either zlib or zstd using the library interface exclusively. If
+someone present a compelling use case, we can always consider adding
+it back in some form.
 
-> 
-> > +
-> > +       /* Make sure we have non-zero edges. */
-> > +       while (large_src[0] == 0) {
-> > +               get_random_bytes(large_src, 1);
-> > +               KUNIT_ASSERT_LT_MSG(test, failed_rng++, 100,
-> > +                                   "Is the RNG broken?");
-> > +       }
-> > +       while (large_src[sizeof(large_src) - 1] == 0) {
-> > +               get_random_bytes(&large_src[sizeof(large_src) - 1], 1);
-> > +               KUNIT_ASSERT_LT_MSG(test, failed_rng++, 100,
-> > +                                   "Is the RNG broken?");
-> > +       }
-> 
-> The above duplication could probably be separated out into another
-> static function where you pass in the address of the array element to
-> set to non-zero.
+As for the choice of algorithm, given the equal performance using the
+default compression level, and the difference in code size, I don't
+see why zstd should be preferred here. If anything, it only increases
+the likelihood of hitting another error if we are panicking due to
+some memory corruption issue.
 
-Done in v2.
+$ size  lib/zstd/zstd_compress.ko lib/zlib_deflate/zlib_deflate.ko
+   text    data     bss     dec     hex filename
+ 218411     768       0 219179   3582b lib/zstd/zstd_compress.ko
+  16231     876    2288   19395    4bc3 lib/zlib_deflate/zlib_deflate.ko
 
-> 
-> > +
-> > +       /* Explicitly zero the entire destination. */
-> > +       memset(large_dst, 0, sizeof(large_dst));
-> > +}
-> > +
-> > +/*
-> > + * Instead of an indirect function call for "copy" or a giant macro,
-> > + * use a bool to pick memcpy or memmove.
-> > + */
-> > +static void copy_large_test(struct kunit *test, bool use_memmove)
-> > +{
-> > +       init_large(test);
-> > +
-> > +       /* Copy a growing number of non-overlapping bytes ... */
-> > +       for (int bytes = 1; bytes <= sizeof(large_src); bytes++) {
-> > +               /* Over a shifting destination window ... */
-> > +               for (int offset = 0; offset < sizeof(large_src); offset++) {
-> > +                       int right_zero_pos = offset + bytes;
-> > +                       int right_zero_size = sizeof(large_dst) - right_zero_pos;
-> > +
-> > +                       /* Copy! */
-> > +                       if (use_memmove)
-> > +                               memmove(large_dst + offset, large_src, bytes);
-> > +                       else
-> > +                               memcpy(large_dst + offset, large_src, bytes);
-> > +
-> > +                       /* Did we touch anything before the copy area? */
-> > +                       KUNIT_ASSERT_EQ_MSG(test, memcmp(large_dst, large_zero, offset), 0,
-> > +                                           "with size %d at offset %d", bytes, offset);
-> > +                       /* Did we touch anything after the copy area? */
-> > +                       KUNIT_ASSERT_EQ_MSG(test, memcmp(&large_dst[right_zero_pos], large_zero, right_zero_size), 0,
-> > +                                           "with size %d at offset %d", bytes, offset);
-> > +
-> > +                       /* Are we byte-for-byte exact across the copy? */
-> > +                       KUNIT_ASSERT_EQ_MSG(test, memcmp(large_dst + offset, large_src, bytes), 0,
-> > +                                           "with size %d at offset %d", bytes, offset);
-> > +
-> > +                       /* Zero out what we copied for the next cycle. */
-> > +                       memset(large_dst + offset, 0, bytes);
-> > +               }
-> > +               /* Avoid stall warnings. */
-> > +               cond_resched();
-> 
-> I'm just curious what that is? ^
-> Should it go in the inner loop?
 
-This is to keep the soft-lockup detector from yelling about this
-extremely slow test. :P I put it here because it's seems the right
-balance between doing in too much (inner loop) and not at all.
 
-> 
-> > +       }
-> > +}
-> > +
-> > +static void memcpy_large_test(struct kunit *test)
-> > +{
-> > +       copy_large_test(test, false);
-> > +}
-> > +
-> > +static void memmove_large_test(struct kunit *test)
-> > +{
-> > +       copy_large_test(test, true);
-> > +}
-> > +
-> > +/*
-> > + * Take a single step if within "inc" of the start or end,
-> > + * otherwise, take a full "inc" steps.
-> 
-> I still have a hard time following what this logic is doing,
-> particularly the clamping to 1. Can you elaborate more in this
-> comment?
 
-Sure! I've tried to flesh this out in v2.
 
-> 
-> > + */
-> > +static inline int next_step(int idx, int start, int end, int inc)
-> 
-> Please drop the inline keyword here.
 
-Done.
+commit 8cfc8ddc99df9509a46043b14af81f5c6a223eab
+Author:     Geliang Tang <geliangtang@163.com>
+AuthorDate: Thu Feb 18 22:04:22 2016 +0800
+Commit:     Kees Cook <keescook@chromium.org>
+CommitDate: Thu Jun 2 10:59:31 2016 -0700
 
-> 
-> > +{
-> > +       start += inc;
-> > +       end -= inc;
-> > +
-> > +       if (idx < start || idx + inc > end)
-> > +               inc = 1;
-> > +       return idx + inc;
-> > +}
-> > +
-> > +static void memmove_overlap_test(struct kunit *test)
-> > +{
-> > +       /*
-> > +        * Running all possible offset and overlap combinations takes a
-> > +        * very long time. Instead, only check up to 128 bytes offset
-> > +        * into the destintation buffer (which should result in crossing
-> 
-> typo: s/destintation/destination/
+    pstore: add lzo/lz4 compression support
 
-Fixed :)
+    Like zlib compression in pstore, this patch added lzo and lz4
+    compression support so that users can have more options and better
+    compression ratio.
 
-> 
-> > +        * cachelines), with a step size of 1 through 7 to try to skip some
-> > +        * redundancy.
-> > +        */
-> > +       static const int offset_max = 128; /* sizeof(large_src); */
-> 
-> I thought large_src was 1024? Perhaps this comment is stale or
-> contradictory to the comment in the block above the variable
-> definition?
+commit 239b716199d9aff0d09444b0086e23aacd6bd445
+Author:     Geliang Tang <geliangtang@gmail.com>
+AuthorDate: Tue Feb 13 14:40:39 2018 +0800
+Commit:     Kees Cook <keescook@chromium.org>
+CommitDate: Tue Mar 6 15:06:11 2018 -0800
 
-This was a left-over note about how big it actually was while I was
-tuning it for sane run-times. I've updated the comment.
+    pstore: Add lz4hc and 842 compression support
 
-> 
-> > +       static const int bytes_step = 7;
-> > +       static const int window_step = 7;
-> > +
-> > +       static const int bytes_start = 1;
-> > +       static const int bytes_end = sizeof(large_src) + 1;
-> > +
-> > +       init_large(test);
-> > +
-> > +       /* Copy a growing number of overlapping bytes ... */
-> > +       for (int bytes = bytes_start; bytes < bytes_end;
-> > +            bytes = next_step(bytes, bytes_start, bytes_end, bytes_step)) {
-> > +
-> > +               /* Over a shifting destination window ... */
-> > +               for (int d_off = 0; d_off < offset_max; d_off++) {
-> > +                       int s_start = max(d_off - bytes, 0);
-> > +                       int s_end = min_t(int, d_off + bytes, sizeof(large_src));
-> > +
-> > +                       /* Over a shifting source window ... */
-> > +                       for (int s_off = s_start; s_off < s_end;
-> > +                            s_off = next_step(s_off, s_start, s_end, window_step)) {
-> 
-> Might a while loop with a distinct update statement look cleaner than
-> a multiline for predicate?
 
-I originally tried it either way, and I found the "while" even uglier. :)
-
-> 
-> > +                               int left_zero_pos, left_zero_size;
-> > +                               int right_zero_pos, right_zero_size;
-> > +                               int src_pos, src_orig_pos, src_size;
-> > +                               int pos;
-> > +
-> > +                               /* Place the source in the destination buffer. */
-> > +                               memcpy(&large_dst[s_off], large_src, bytes);
-> > +
-> > +                               /* Copy to destination offset. */
-> > +                               memmove(&large_dst[d_off], &large_dst[s_off], bytes);
-> > +
-> > +                               /* Make sure destination entirely matches. */
-> > +                               KUNIT_ASSERT_EQ_MSG(test, memcmp(&large_dst[d_off], large_src, bytes), 0,
-> > +                                       "with size %d at src offset %d and dest offset %d",
-> > +                                       bytes, s_off, d_off);
-> > +
-> > +                               /* Calculate the expected zero spans. */
-> > +                               if (s_off < d_off) {
-> > +                                       left_zero_pos = 0;
-> > +                                       left_zero_size = s_off;
-> > +
-> > +                                       right_zero_pos = d_off + bytes;
-> > +                                       right_zero_size = sizeof(large_dst) - right_zero_pos;
-> > +
-> > +                                       src_pos = s_off;
-> > +                                       src_orig_pos = 0;
-> > +                                       src_size = d_off - s_off;
-> > +                               } else {
-> > +                                       left_zero_pos = 0;
-> > +                                       left_zero_size = d_off;
-> > +
-> > +                                       right_zero_pos = s_off + bytes;
-> > +                                       right_zero_size = sizeof(large_dst) - right_zero_pos;
-> > +
-> > +                                       src_pos = d_off + bytes;
-> > +                                       src_orig_pos = src_pos - s_off;
-> > +                                       src_size = right_zero_pos - src_pos;
-> > +                               }
-> 
-> Looking at the arms of these branches, I see a fair amount of
-> duplication. Mind deduplicating some of the statements here? The
-> assignments of left_zero_pos and right_zero_size look invariant of the
-> predicate.
-
-I did this originally too, but I found it easier to reason by keeping
-all of the bounds calculations separated like this for readability. Any
-duplication will get optimized away. :)
-
-Thanks for the review!
-
--- 
-Kees Cook
+>
+> Kees Cook (5):
+>   pstore: Remove worse-case compression size logic
+>   pstore: Allow for arbitrary compression algorithm
+>   pstore: Use size_t for compress/decompression type widths
+>   pstore: Refactor compression initialization
+>   pstore: Use zstd directly by default for compression
+>
+>  fs/pstore/Kconfig    | 131 +++++-----------
+>  fs/pstore/platform.c | 358 ++++++++++++++++++++-----------------------
+>  2 files changed, 209 insertions(+), 280 deletions(-)
+>
+> --
+> 2.34.1
+>
