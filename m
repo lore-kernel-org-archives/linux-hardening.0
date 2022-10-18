@@ -2,94 +2,140 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78275C4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 02:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C9FC433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 02:26:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231324AbiJRCLC (ORCPT
+        id S230224AbiJRC0K (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 Oct 2022 22:11:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38268 "EHLO
+        Mon, 17 Oct 2022 22:26:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231373AbiJRCKt (ORCPT
+        with ESMTP id S230070AbiJRC0J (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 Oct 2022 22:10:49 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AF785006F
-        for <linux-hardening@vger.kernel.org>; Mon, 17 Oct 2022 19:09:57 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id o9-20020a17090a0a0900b0020ad4e758b3so12631946pjo.4
-        for <linux-hardening@vger.kernel.org>; Mon, 17 Oct 2022 19:09:57 -0700 (PDT)
+        Mon, 17 Oct 2022 22:26:09 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E47C792E0
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Oct 2022 19:26:08 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id h185so12078621pgc.10
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Oct 2022 19:26:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jiyLEWpU5Vr8UNvHaI2P6jWrDxYlYjUoltJSjloVH1I=;
-        b=hX0obQ/EZm8Pl/NdNDUk3PWb0v9ZnyxW4jGAKyYBOMy/QF+aY3BkbN/bFyiU29BdyG
-         0Sft8RgezxoohSYTfnh6tT+8bxHNJK5Z4rvWiLbIS0HLpDqQQ5p1INRGVmM1R+Hfk6xG
-         JtsXhnWrV8oePjEH150pfzyQPEXPJOHPD7a58=
+        bh=/KZhy//nHZxzt7N+DIXJ4f0oPILyzcXc82OGC+Wmp/k=;
+        b=BNQoXVjyQzateVtvrG7WFBq7bZIutgY4fn3PO7YW7fW4F6ZKob4YvPwsZfSuxZJJ1y
+         9qT6OBPYy22bDT0dfOMnEP06BZRtXWBq+hH2RCqBJNeU5TScoTKF3IZzSlopKwtV6GIc
+         j7ydQqNtqK8FDU47mblyFvt4BnTs+KHl4e/Es=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jiyLEWpU5Vr8UNvHaI2P6jWrDxYlYjUoltJSjloVH1I=;
-        b=uTdWMFVfTvoACnE6eQMs+UJ+H7poUIo/TIaDb3kY+xQJ6mtgBAqEQJ/tKqVNL26JMY
-         /3x4XE9UXEG9O6kaUQwKsrR9lMPZQ+T6R+dSN+jKhsN9qQq5uCX2pXs6ZRC5zQNOom17
-         M0xLHxs0ua5KnylL+F+jSB+AH/aESvlm8TsMs/6EPadj4eezOnpHWf18ISnD8RPN+uZc
-         D4uOTUY/SFl1yO29SyreVndx8o1frjPiAnAXIXG/XbIV/KXa9JET/6wOqRwFlIFY36Vn
-         1GKTERjslYKaCKA3n3mw5tUy4BcChooa0Jp337E+6AryW/945Kixw+A1LT9DKNDG/t1D
-         Q3mQ==
-X-Gm-Message-State: ACrzQf2yUj5DqaZGd7MB+Ma/zAVfa6B/zq/A4hviwcV1k7JqE+E4pkFa
-        g6xmGVTyCjEUcFqDb/5hfCeTTA==
-X-Google-Smtp-Source: AMsMyM76Iwrloo6pXjHpP+l4o1Nu/SlNFgkPEzmA2JfePmZI4bka2pMHfzkcmzlsg/0cbux1EOTczQ==
-X-Received: by 2002:a17:902:8b83:b0:17f:5de5:c5ff with SMTP id ay3-20020a1709028b8300b0017f5de5c5ffmr675629plb.52.1666058986011;
-        Mon, 17 Oct 2022 19:09:46 -0700 (PDT)
+        bh=/KZhy//nHZxzt7N+DIXJ4f0oPILyzcXc82OGC+Wmp/k=;
+        b=ayGnGA3eDGGXVrBOOFOK/yltCiNjpqez2IzLwyC2afcVd7qYsEmDj1dRq1jBpDKUde
+         qGmNgn4jeknzxrRT/D8URMbu2qVCC4OlNs4wQscjsYi6HiuZ4XQdph5dqgOCMfeV2TSA
+         LBKQlnZS7CiWyDGMgg7A1RBinU5IIFgO2mYKHj8/l16FlrEzhFu4HpUt/eusA4iZ7A3x
+         LvIdNkiUVT2nu2b1DUE6/1xb9/WfC4wbNGLeL4KqcKjAHYorfx0LOwTCrPuCNbHgtHl0
+         T+uKiSyARGbFJsLLFilYkAzsos5YpIBRwdCjVxZAb2Z/KbpukJYKXmJv7vcAt0ilnIiy
+         1+hw==
+X-Gm-Message-State: ACrzQf1Q9d9lafDY1RdpQ9Bes+ZWCTvBzGP31JuhT6winpd9LWScF2+u
+        EYJp7seQxk3vb1ktiSQ/F3lGOQ==
+X-Google-Smtp-Source: AMsMyM44tI9T+OrjStrhBakQHZqVAo+drzSjAJZvAYJDXZdKqjPYu8K6XRQt6u2BFVqHJsVCsEwuww==
+X-Received: by 2002:a63:1f5c:0:b0:469:d0e6:dac0 with SMTP id q28-20020a631f5c000000b00469d0e6dac0mr681043pgm.427.1666059967533;
+        Mon, 17 Oct 2022 19:26:07 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p2-20020a17090a284200b0020dafceec65sm7453398pjf.13.2022.10.17.19.09.45
+        by smtp.gmail.com with ESMTPSA id i196-20020a636dcd000000b00434abd19eeasm6778334pgc.78.2022.10.17.19.26.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Oct 2022 19:09:45 -0700 (PDT)
-Date:   Mon, 17 Oct 2022 19:09:44 -0700
+        Mon, 17 Oct 2022 19:26:06 -0700 (PDT)
+Date:   Mon, 17 Oct 2022 19:26:05 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Akira Yokosawa <akiyks@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-hardening@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Yanteng Si <siyanteng@loongson.cn>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] overflow: Fix kern-doc markup for functions
-Message-ID: <202210171909.65FFFB5601@keescook>
-References: <20221017035732.1968394-1-keescook@chromium.org>
- <6f8aa670-fb4f-3ff9-bcd9-8490e752b349@gmail.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/6][next] orinoco: Avoid clashing function prototypes
+Message-ID: <202210171914.B3E5CE55@keescook>
+References: <cover.1666038048.git.gustavoars@kernel.org>
+ <2387e02ae7f31388f24041cae8d02d5e12151708.1666038048.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6f8aa670-fb4f-3ff9-bcd9-8490e752b349@gmail.com>
+In-Reply-To: <2387e02ae7f31388f24041cae8d02d5e12151708.1666038048.git.gustavoars@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Oct 18, 2022 at 10:11:43AM +0900, Akira Yokosawa wrote:
-> Hi,
+On Mon, Oct 17, 2022 at 03:33:01PM -0500, Gustavo A. R. Silva wrote:
+> When built with Control Flow Integrity, function prototypes between
+> caller and function declaration must match. These mismatches are visible
+> at compile time with the new -Wcast-function-type-strict in Clang[1].
 > 
-> On Sun, 16 Oct 2022 20:57:32 -0700, Kees Cook wrote:
-> > Fix the kern-doc markings for several of the overflow helpers and move
-> > their location into the core kernel API documentation, where it belongs
-> > (it's not driver-specific).
-> > 
-> > Cc: Jonathan Corbet <corbet@lwn.net>
-> > Cc: Akira Yokosawa <akiyks@gmail.com>
-> LGTM,
+> Fix a total of 53 warnings like these:
 > 
-> Reviewed-by: Akira Yokosawa <akiyks@gmail.com>
+> drivers/net/wireless/intersil/orinoco/wext.c:1379:27: warning: cast from 'int (*)(struct net_device *, struct iw_request_info *, struct iw_param *, char *)' to 'iw_handler' (aka 'int (*)(struct net_device *, struct iw_request_info *, union iwreq_data *, char *)') converts to incompatible function type [-Wcast-function-type-strict]
+>         IW_HANDLER(SIOCGIWPOWER,        (iw_handler)orinoco_ioctl_getpower),
+>                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> ../net/wireless/wext-compat.c:1607:33: warning: cast from 'int (*)(struct net_device *, struct iw_request_info *, struct iw_point *, char *)' to 'iw_handler' (aka 'int (*)(struct net_device *, struct iw_request_info *, union iwreq_data *, char *)') converts to incompatible function type [-Wcast-function-type-strict]
+>         [IW_IOCTL_IDX(SIOCSIWGENIE)]    = (iw_handler) cfg80211_wext_siwgenie,
+>                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Thanks!
+Thank you for working on these! Was this conversion done manually, via
+coccinelle, or something else?
 
-> Kees, which tree do you expect this one to go through?
+> The orinoco Wireless Extension handler callbacks (iw_handler) use a
+> union for the data argument. Actually use the union and perform explicit
+> member selection in the function body instead of having a function
+> prototype mismatch. No significant binary differences were seen
+> before/after changes.
 
-If the Documentation/* changes look okay, I'd rather carry it in my tree
-since I'm going to be poking at more functions in there soon.
+What does "significant" mean here? :P Anything related to line counts
+can just be ignored. But I'd expect the .text output of
+drivers/net/wireless/intersil/orinoco/wext.o before/after to be
+identical.
+
+> [...]
+>  	IW_HANDLER(SIOCSIWRTS,		(iw_handler)cfg80211_wext_siwrts),
+^^^ I think these are fixed explicitly later, but maybe better to just
+collapse them into this patch?
+
+> [...]
+> @@ -1391,15 +1406,15 @@ static const iw_handler	orinoco_handler[] = {
+>    Added typecasting since we no longer use iwreq_data -- Moustafa
+>   */
+>  static const iw_handler	orinoco_private_handler[] = {
+> -	[0] = (iw_handler)orinoco_ioctl_reset,
+> -	[1] = (iw_handler)orinoco_ioctl_reset,
+> -	[2] = (iw_handler)orinoco_ioctl_setport3,
+> -	[3] = (iw_handler)orinoco_ioctl_getport3,
+> -	[4] = (iw_handler)orinoco_ioctl_setpreamble,
+> -	[5] = (iw_handler)orinoco_ioctl_getpreamble,
+> -	[6] = (iw_handler)orinoco_ioctl_setibssport,
+> -	[7] = (iw_handler)orinoco_ioctl_getibssport,
+> -	[9] = (iw_handler)orinoco_ioctl_getrid,
+> +	[0] = orinoco_ioctl_reset,
+> +	[1] = orinoco_ioctl_reset,
+> +	[2] = orinoco_ioctl_setport3,
+> +	[3] = orinoco_ioctl_getport3,
+> +	[4] = orinoco_ioctl_setpreamble,
+> +	[5] = orinoco_ioctl_getpreamble,
+> +	[6] = orinoco_ioctl_setibssport,
+> +	[7] = orinoco_ioctl_getibssport,
+> +	[9] = orinoco_ioctl_getrid,
+
+Oops, I broke atmel. These really are 0-indexed...
+
+ static const iw_handler atmel_private_handler[] =
+ {
+-	NULL,				/* SIOCIWFIRSTPRIV */
++	IW_HANDLER(SIOCIWFIRSTPRIV,	NULL),
+ };
+ 
+I'll send a fix!
 
 -- 
 Kees Cook
