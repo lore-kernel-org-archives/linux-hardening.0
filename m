@@ -2,111 +2,195 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAEEC43219
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 08:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4372AC43219
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 08:28:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230470AbiJRIWt (ORCPT
+        id S230037AbiJRI2d (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 04:22:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41576 "EHLO
+        Tue, 18 Oct 2022 04:28:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230458AbiJRIWp (ORCPT
+        with ESMTP id S229454AbiJRI16 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 04:22:45 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3415997D6A
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 01:22:45 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id 78so12669830pgb.13
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 01:22:45 -0700 (PDT)
+        Tue, 18 Oct 2022 04:27:58 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D389C224
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 01:27:46 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d24so13143107pls.4
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 01:27:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GnqNHNhYyLH9Wo68LD4x3bwQRhcMnm8gL4scZhF5muk=;
-        b=g+M0tP4FeC0OrEgQxOE3oJjv9pUB6oD9RgZ+XBPsA0B85VsOEiUZa6cSIgQOnwn/bl
-         PMcN3F6LLRPoLDCxP3nuCJikCNGhdt00VAuMFuO3rxW1gs8KlSrBeB+vNyMB4cCCH/Gc
-         kvdVgkwL8LfHNJuSEL7+LJTehFvWBdJr0abNA=
+        bh=6JQMxkXv8mQ1Cge7g4D4yz8kxz9e6M1Q1dbsKZa3FJ8=;
+        b=DmO0/d1FaXa15fY0eqVEvCoCZc0mb8i0//GzZGUK2c6JyZNioWLkj2m70HawoalhXa
+         c4pZZOpbrOmQV0ftJ1jqiOZg8nS213MMPtPqsHND+TMd8szVH/PArflOMD460MCKNYpk
+         FPPkPefJZ/o7KipOfsBRTR0WiG+ZiQn8VEBEM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=GnqNHNhYyLH9Wo68LD4x3bwQRhcMnm8gL4scZhF5muk=;
-        b=cbBxM/04QDi1/UCh4MAJ/ol3TNhsomYiw6yFGaP5+HKHo2cE3/rExOjyRvMdXuWIdg
-         G7F2WAKzIYAxy3LzWCiBcr8Zm5WxG8UmEVQ39zGtyNQ2yavlxEY563nzTOii2N134bYF
-         lWFK5YEwyedpiiWY3lIybEhp+FiH1TWthpaG3MdjAMM2zkRbfDLKifxLDxW98Rv/h6YA
-         jj4U/7nGTgC6BtySUyM8MmdbKj7eLRUfwtCw1lqKl60Fb9UkBI8fc79a38AQ70FhVMds
-         GXUVSI71d4XESUTWY8J+LEbtheajEPowj+5CC/u9Tg7DiueE1GmysN2qo9QPgZbQTzFv
-         PXYw==
-X-Gm-Message-State: ACrzQf1C6B8FLNLVv6daw5V4dqIeG/lHtRZ5NsJaY3YHHenfuDbzKbgd
-        4oCS8H22rncCom0B7GbyZGgSsg==
-X-Google-Smtp-Source: AMsMyM72YdgZRaJDiZ9MU6bvh+RA5iQHpj06/whPZsYV2r2RwYl4tM6cKQGl0WtEaQrAYe7tdQtb5Q==
-X-Received: by 2002:a63:4283:0:b0:457:dced:8ba3 with SMTP id p125-20020a634283000000b00457dced8ba3mr1711359pga.220.1666081364707;
-        Tue, 18 Oct 2022 01:22:44 -0700 (PDT)
+        bh=6JQMxkXv8mQ1Cge7g4D4yz8kxz9e6M1Q1dbsKZa3FJ8=;
+        b=RLwT3N8Pn2e5ecAkbc4sCE2FWxSRAqymfGFKOn6ZTh8l+JWqZZaDQCi1V9XkPqKYfo
+         vl5pxogfWWb/n1DPoeyOGBq+2d8eCHh73DG6epO4QE0R6OGjlqEqvb9EpW+iUt4mp3dC
+         lOhMe0E0tfLe7StOl1BT9DySyG7h2d3chkCastsbYyfpamhaLj4RkfHZg2O9CuhHj2RL
+         scNgDE4Lh/91/g9Tv4DAqZizvIAjXqbS51ETxa4gFNXKU8GZ7QBc0aHO6LV9AolwNXdz
+         OkX4RQ1v4ikV/RA5Nt2UScn3yh/6flQVvbKmrpslu1tP8WJRQ0NP7BAY4JlVtQs0uAce
+         3MPg==
+X-Gm-Message-State: ACrzQf07Cb5HuGebaPSSwvQO/RRcyWdB582xrLxeskuz2PmVVW9xQxi6
+        RSxUxUYdrznolDnpuRostm9P3lIiwNERBA==
+X-Google-Smtp-Source: AMsMyM6pCqqmb1I5bzi98XAQmVznaqmBVGuzMs6GMGfK8QP3gDGY25J1ZLhOEIwi5cAJtRmx4HQptQ==
+X-Received: by 2002:a17:90b:1c0a:b0:20a:7393:d8e9 with SMTP id oc10-20020a17090b1c0a00b0020a7393d8e9mr36753419pjb.188.1666081665083;
+        Tue, 18 Oct 2022 01:27:45 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m2-20020a170902db0200b0017d97d13b18sm8026045plx.65.2022.10.18.01.22.43
+        by smtp.gmail.com with ESMTPSA id x6-20020a170902ec8600b001755e4278a6sm8101733plg.261.2022.10.18.01.27.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Oct 2022 01:22:44 -0700 (PDT)
+        Tue, 18 Oct 2022 01:27:44 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-hardening@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+Cc:     Kees Cook <keescook@chromium.org>, David Gow <davidgow@google.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] string: Add __alloc_size hint to kmemdup()
-Date:   Tue, 18 Oct 2022 01:22:41 -0700
-Message-Id: <20221018082232.never.213-kees@kernel.org>
+Subject: [PATCH] kunit/fortify: Validate __alloc_size attribute results
+Date:   Tue, 18 Oct 2022 01:27:41 -0700
+Message-Id: <20221018082559.never.406-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1853; h=from:subject:message-id; bh=SgzbSvS/b5ZrTbA0wJ9E9tBFT9DRkYwk8ZJEQZFVEak=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjTmJRV6GiRT0HuXsWsQSPL85x/s8fMsdifykSjHzh OlUuKfmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY05iUQAKCRCJcvTf3G3AJj8rD/ 9KYnzy5bqIwa32boPh44jUw+r1zKss52V+nzSaViIRwLNMVToZqpHJ2eZ7cIQKOwfMoHYAPiOhhFCE yUV8wPUrPSzXQSc6Y/4etatCvIVMl6/LpGjfjELhI5SOKGmfpMTI77z45BTRoZJFabztTn3aSt18hX AF6wjRN8M/oLYCX8lws5Jm1x/CwOnb8Y9yLaLaVRFpaloXmTNijmKNDioJ3qCyX9D/zvSQZ2o7TAi7 0jA+eem6Aq8EIFBeRb9axI7myTreYHszRjIFO+Z10WSLfh9MpvZ78HuK2WDTjbFr1iX/pPqGl+7Zc6 qCa+lJfFF7IjkI3mG7SYwUyVktGy5BqO61c/T2TS+V9XKORhBy4rmyA50/RMt1DfMW6ETiWuCMGp2u VdRwBsZ8qNwaq3nx/51bwQXEFc1U056LcUYBH25qctK872Y7LQVFzJ/WA4HmZmj1hlT8cqb57AVP/3 dIAQI5YZz6PKJpg97tjLaO5ccXGqXrNbSVck7v+h49vz+UUTQdtYUtCOUQ+Bze4KRdjJWqhpZI3r5N dLB9ifjVvhwjnAjuPJIWE6eKu1uC/lqjhZBxmCByUWw64JZGQKjx6LDf3HN+ZD7R//tYqoPM6Vnk9u FddwMhg6qb1FNSRb+45QtPu0FB+r4Fe7JhjpR+EPEYO1XheosCSb3ouIA/+w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4584; h=from:subject:message-id; bh=cqnD43HvNxjTrJeCb4jyi/kcbzUkumxTTwgCBYcw0BY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjTmN98gW0SnFSk2qn1CuOo+7cEzOifQl8lBoZx6SR rPQahgaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY05jfQAKCRCJcvTf3G3AJv8eEA CUjOW1IXRuFdP9d/7g+yZv73vDBK8Q+ZnK6xQs5kvnSISGrZv+N1pzNmGreolYErvoHrjAmWfW9pw+ hElJDfq4Tq+7ZgdhErGmAmuZWHDvs23c4K+MX1AdAGKYuaUpgcMDAiIM/+O3WLYWrAP3RkSB9hiR71 yFBo/0UYslUl3XHgnDnlpU/vuky5j9yicO5wG1aAZzUgKh/2p2KVghJonf1bDDewoP/I+uzXVd0o/H sBYQMumJRJmtN21FHuXXAHw44FzbILRrDuoXAdCXFsoYYE39IbYcZ2splT5EWbXpOW1jrRgDsGDeHI OxPc5novssNJwzPxEtaOwTCsaqs/djNYXod79VYkjkoMiV8tYcHT5ke/3pDXsxb9UD2pL4wbjJIA/B DZUw1/7XWlURodBEFFKa14euT861B2HMPgsyHLAUAkny8awYPYznJC0p+Ib0vl2lLwPyQIy0pFoZZk 6Yu04dVOY2qZkjHO57iUJ6u7jVOnyc3zoiCFc5SWpIEpEkxDWu3pRsvWes28xEipcM2VaIWcEZ24T/ 2fWOfeS5WYh7+Jwzb0F0GNKDLAzUDR9SPVhc1L/8RDjycipBk5iFfGSRtIJe+8NtWG2eHnygSYOZ66 MtEDgS2VvLsdiYvQl3nrxOa+WzQ1eeH/CzL4EmHOpTJVEmsfNxsUNq6Cg8ng==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add __alloc_size() hint to kmemdup() so the compiler can reason about
-the length of the returned buffer.
+Validate the effect of the __alloc_size attribute on allocators. If the
+compiler doesn't support __builtin_dynamic_object_size(), skip the test.
 
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/fortify-string.h | 3 ++-
- include/linux/string.h         | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+To pass this depends on the following patches:
+https://lore.kernel.org/lkml/20221018073430.never.551-kees@kernel.org/
+https://lore.kernel.org/lkml/20221018082232.never.213-kees@kernel.org/
+To not be skipped, either GCC 12 or Clang is needed.
+---
+ lib/fortify_kunit.c | 92 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
 
-diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-index b166364ce3e0..aa1a50009632 100644
---- a/include/linux/fortify-string.h
-+++ b/include/linux/fortify-string.h
-@@ -661,7 +661,8 @@ __FORTIFY_INLINE void *memchr_inv(const void * const POS0 p, int c, size_t size)
- 	return __real_memchr_inv(p, c, size);
+diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
+index 409af07f340a..5076ba11adfd 100644
+--- a/lib/fortify_kunit.c
++++ b/lib/fortify_kunit.c
+@@ -16,7 +16,10 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <kunit/test.h>
++#include <linux/device.h>
+ #include <linux/string.h>
++#include <linux/slab.h>
++#include <linux/vmalloc.h>
+ 
+ static const char array_of_10[] = "this is 10";
+ static const char *ptr_of_11 = "this is 11!";
+@@ -60,9 +63,98 @@ static void control_flow_split_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, want_minus_one(pick), SIZE_MAX);
  }
  
--extern void *__real_kmemdup(const void *src, size_t len, gfp_t gfp) __RENAME(kmemdup);
-+extern void *__real_kmemdup(const void *src, size_t len, gfp_t gfp) __RENAME(kmemdup)
-+								    __alloc_size(2);
- __FORTIFY_INLINE void *kmemdup(const void * const POS0 p, size_t size, gfp_t gfp)
- {
- 	size_t p_size = __struct_size(p);
-diff --git a/include/linux/string.h b/include/linux/string.h
-index cf7607b32102..af1d69e5610e 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -176,7 +176,7 @@ extern void kfree_const(const void *x);
- extern char *kstrdup(const char *s, gfp_t gfp) __malloc;
- extern const char *kstrdup_const(const char *s, gfp_t gfp);
- extern char *kstrndup(const char *s, size_t len, gfp_t gfp);
--extern void *kmemdup(const void *src, size_t len, gfp_t gfp);
-+extern void *kmemdup(const void *src, size_t len, gfp_t gfp) __alloc_size(2);
- extern char *kmemdup_nul(const char *s, size_t len, gfp_t gfp);
++#define check_alloc(alloc, free)	do {				\
++	size_t expected = size;						\
++	void *p = alloc;						\
++	KUNIT_EXPECT_TRUE_MSG(test, p != NULL, #alloc " failed?!\n");	\
++	KUNIT_EXPECT_EQ_MSG(test, __builtin_dynamic_object_size(p, 1),	\
++		expected,						\
++		"__alloc_size() not working with " #alloc "\n");	\
++	free;								\
++} while (0)
++
++static volatile size_t unknown_size = 50;
++
++static void alloc_size_test(struct kunit *test)
++{
++#if !__has_builtin(__builtin_dynamic_object_size)
++	kunit_skip(test, "Compiler is missing __builtin_dynamic_object_size() support\n");
++#else
++	const char device_name[] = "fortify-test";
++	struct device *dev;
++	gfp_t gfp = GFP_KERNEL | __GFP_NOWARN;
++	size_t size = unknown_size, prev_size;
++	void *orig;
++
++	/* kmalloc()-family */
++	check_alloc(kmalloc(size++, gfp),			kfree(p));
++	check_alloc(kmalloc_node(size++, gfp, NUMA_NO_NODE),	kfree(p));
++	check_alloc(kzalloc(size++, gfp),			kfree(p));
++	check_alloc(kzalloc_node(size++, gfp, NUMA_NO_NODE),	kfree(p));
++	check_alloc(kcalloc(1, size++, gfp),			kfree(p));
++	check_alloc(kcalloc_node(1, size++, gfp, NUMA_NO_NODE),	kfree(p));
++	check_alloc(kmalloc_array(1, size++, gfp),		kfree(p));
++	check_alloc(kmalloc_array_node(1, size++, gfp, NUMA_NO_NODE), kfree(p));
++	check_alloc(__kmalloc(size++, gfp),			kfree(p));
++	check_alloc(__kmalloc_node(size++, gfp, NUMA_NO_NODE),	kfree(p));
++
++	/* kmemdup() */
++	prev_size = size;
++	size = 11;
++	check_alloc(kmemdup("hello there", size, gfp),		kfree(p));
++	size = prev_size + 1;
++
++	/* krealloc()-family */
++	orig = kmalloc(size++, gfp);
++	check_alloc(krealloc(orig, size++, gfp),		kfree(p));
++	orig = kmalloc(size++, gfp);
++	check_alloc(krealloc_array(orig, 1, size++, gfp),	kfree(p));
++
++	/* vmalloc()-family */
++	check_alloc(vmalloc(size++),				vfree(p));
++	check_alloc(vzalloc(size++),				vfree(p));
++	check_alloc(__vmalloc(size++, gfp),			vfree(p));
++
++	/* kvalloc()-family */
++	check_alloc(kvmalloc(size++, gfp),			kvfree(p));
++	check_alloc(kvmalloc_node(size++, gfp, NUMA_NO_NODE),	kvfree(p));
++	check_alloc(kvzalloc(size++, gfp),			kvfree(p));
++	check_alloc(kvzalloc_node(size++, gfp, NUMA_NO_NODE),	kvfree(p));
++	check_alloc(kvcalloc(1, size++, gfp),			kvfree(p));
++	check_alloc(kvmalloc_array(1, size++, gfp),		kvfree(p));
++
++	/* kvrealloc() */
++	prev_size = size++;
++	orig = kvmalloc(prev_size, gfp);
++	check_alloc(kvrealloc(orig, prev_size, size++, gfp),	kfree(p));
++
++	/* Create dummy device for devm_kmalloc()-family tests. */
++	dev = root_device_register(device_name);
++	KUNIT_ASSERT_FALSE_MSG(test, IS_ERR(dev),
++			       "Cannot register test device\n");
++
++	/* devm_kmalloc()-family */
++	check_alloc(devm_kmalloc(dev, size++, gfp),		devm_kfree(dev, p));
++	check_alloc(devm_kzalloc(dev, size++, gfp),		devm_kfree(dev, p));
++
++	/* devm_kmemdup() */
++	prev_size = size;
++	size = 4;
++	check_alloc(devm_kmemdup(dev, "Ohai", size, gfp),	devm_kfree(dev, p));
++	size = prev_size + 1;
++
++	/* devm_kremalloc() */
++	orig = devm_kmalloc(dev, size++, gfp);
++	check_alloc(devm_krealloc(dev, orig, size++, gfp),	devm_kfree(dev, p));
++
++	device_unregister(dev);
++#endif
++}
++
+ static struct kunit_case fortify_test_cases[] = {
+ 	KUNIT_CASE(known_sizes_test),
+ 	KUNIT_CASE(control_flow_split_test),
++	KUNIT_CASE(alloc_size_test),
+ 	{}
+ };
  
- extern char **argv_split(gfp_t gfp, const char *str, int *argcp);
 -- 
 2.34.1
 
