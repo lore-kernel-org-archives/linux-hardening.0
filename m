@@ -2,100 +2,243 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAA7C4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 17:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CCEC4332F
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 18:07:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229835AbiJRRPL (ORCPT
+        id S230168AbiJRSHn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 13:15:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56378 "EHLO
+        Tue, 18 Oct 2022 14:07:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229769AbiJRRPK (ORCPT
+        with ESMTP id S229808AbiJRSHm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 13:15:10 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DFDC659D6;
-        Tue, 18 Oct 2022 10:15:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 4AD85CE1EEC;
-        Tue, 18 Oct 2022 17:15:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0657EC433D7;
-        Tue, 18 Oct 2022 17:14:58 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="kE0dAHKc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-        t=1666113296;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QTxwDDkBi7Nfmm7TAv1OXY/ZLApGbnvU9OAPNLtk0Xg=;
-        b=kE0dAHKcK7SrsLfWKGaibg1ejzoF8w0Vgb0eMX2VJWuv8+EEARLxzUChB72sbslVzsEM+k
-        VXzNL6jCm6IRboffpl5tf23Ks+OSH7ltPaTnSTHeG7vekYkzd96SqUBsk99wIC92TgZQlV
-        S3fKTYo8E/zjp8gJwSU27yOlybyiqHk=
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id abc57c68 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Tue, 18 Oct 2022 17:14:56 +0000 (UTC)
-Received: by mail-vs1-f50.google.com with SMTP id 1so11151629vsx.1;
-        Tue, 18 Oct 2022 10:14:56 -0700 (PDT)
-X-Gm-Message-State: ACrzQf0iAQ+vvHU7UHd3BAs7XnhuxtIg9h9MjwhMVAJSpT0vDVLj4+bM
-        vLQ+aDcldICpuIgpbpEveI+ObSUf0ZwC0jQLUlY=
-X-Google-Smtp-Source: AMsMyM7B5gbmBOed9B0LhHaEjBvK0LfJG6SscWu/f4mfb7WZohB2Cko3AEvh9sbs3SZn9nilN+dHm7JQDdoKLlCqk/g=
-X-Received: by 2002:a05:6102:7c9:b0:3a7:6261:935 with SMTP id
- y9-20020a05610207c900b003a762610935mr2159460vsg.73.1666113294705; Tue, 18 Oct
- 2022 10:14:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221018100510.never.479-kees@kernel.org> <Y07bqnZVrA9FO03z@zx2c4.com>
- <202210181011.EA0B964@keescook>
-In-Reply-To: <202210181011.EA0B964@keescook>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Tue, 18 Oct 2022 11:14:43 -0600
-X-Gmail-Original-Message-ID: <CAHmME9r+9MPH6zk3Vn=buEMSbQiWMFryqqzerKarmjYk+tHLJA@mail.gmail.com>
-Message-ID: <CAHmME9r+9MPH6zk3Vn=buEMSbQiWMFryqqzerKarmjYk+tHLJA@mail.gmail.com>
-Subject: Re: [PATCH] siphash: Convert selftest to KUnit
+        Tue, 18 Oct 2022 14:07:42 -0400
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A40505E30F
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 11:07:40 -0700 (PDT)
+Received: by mail-pl1-x649.google.com with SMTP id l11-20020a170902f68b00b0018545b06649so7371461plg.2
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 11:07:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fuVjSplyBXIPd7uWO393ugBi/njAUtKrGdSOK72nMMo=;
+        b=oCN1jDfBFe0TZVpGUlaA/ZZtrXqmMoDyg2Xic0OjjoRanJrpKg517yTqDVe7dRqy1z
+         AECFSeXfdl6b3KJLmBTghr1pR/Nr9a8QYIF5TCOoHrJK6RyQOIJP4v7VtxdfhiMZGiMe
+         azHmeZmV5QC73wA/YZ5PxwDh1ZrG07R8yXJ5aBcHUDYiFEFs8G0EEhOn4mHrf9S2Qa8D
+         D9CjqmSfzRR87v/AwVqgXtnheJOW8h3zbqyn6O05QmNYCFyuwkJFD0kdqFt6UzlcZhV8
+         kGT1vGW4q+ZuieONJelSFhWDo9sjwExgKB0x75CtI6xQsti11GJN+yl9VLGsueaCA/zM
+         IsRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fuVjSplyBXIPd7uWO393ugBi/njAUtKrGdSOK72nMMo=;
+        b=PNOQX66QRP6mjN65/cpbggPkFr5lRb2200MLhT94AjZgTGt3Pi+x/GejMLvuFGoUFp
+         ufJQr7DjJSk3Wcv1S+l94NPQIpu7sfvqpCDw/JYFEIDqmQQL+jpdzUIipCxK0JtMj9Kc
+         lRK4eASy406ihOy4X3VBIM9L2s0sjE6FdcVPkx/IMkLE7XKDkAhfwCFaxfk5g/juvzX+
+         CzKKWWxO3MlakYkjVAPFA3350PPSs4Fu5tYwSB7S5xBCEKRdOnBkKnxr1zIrQxUDja4I
+         KqM9XY/JcWtx6SbfnD5md5n62KxHwLBZp+r4f+BTiDpSgdcZQrNblKQ5uYeNeC0lnsLQ
+         ucww==
+X-Gm-Message-State: ACrzQf1sGKmyv0JIyA0P5uLZgQmQVaksb7SZXlg6bvptrodrdA/QRdOp
+        OFE/fj3ELvmEX7w8GxgJij8TBv4=
+X-Google-Smtp-Source: AMsMyM4kTW3fLnTML3Zt8GdvqSub4ZsxSFSiIsHj8w9JHnGzIiT4SuAdzosdCmimydC5OKOcFwwsCZs=
+X-Received: from sdf.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5935])
+ (user=sdf job=sendgmr) by 2002:a05:6a00:1707:b0:562:e790:dfc3 with SMTP id
+ h7-20020a056a00170700b00562e790dfc3mr4484929pfc.59.1666116460090; Tue, 18 Oct
+ 2022 11:07:40 -0700 (PDT)
+Date:   Tue, 18 Oct 2022 11:07:38 -0700
+In-Reply-To: <20221018090550.never.834-kees@kernel.org>
+Mime-Version: 1.0
+References: <20221018090550.never.834-kees@kernel.org>
+Message-ID: <Y07raim32wOBRGPi@google.com>
+Subject: Re: [PATCH] bpf: Use kmalloc_size_roundup() to match ksize() usage
+From:   sdf@google.com
 To:     Kees Cook <keescook@chromium.org>
-Cc:     David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>,
+        Jiri Olsa <jolsa@kernel.org>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Oct 18, 2022 at 11:13 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Tue, Oct 18, 2022 at 11:00:26AM -0600, Jason A. Donenfeld wrote:
-> > On Tue, Oct 18, 2022 at 03:05:46AM -0700, Kees Cook wrote:
-> > > Convert the siphash self-test to KUnit so it will be included in "all
-> > > KUnit tests" coverage, and can be run individually still:
-> > >
-> > > $ ./tools/testing/kunit/kunit.py run siphash
-> > > ...
-> > > [02:58:45] Starting KUnit Kernel (1/1)...
-> > > [02:58:45] ============================================================
-> > > [02:58:45] =================== siphash (1 subtest) ====================
-> > > [02:58:45] [PASSED] siphash_test
-> > > [02:58:45] ===================== [PASSED] siphash =====================
-> > > [02:58:45] ============================================================
-> > > [02:58:45] Testing complete. Ran 1 tests: passed: 1
-> > > [02:58:45] Elapsed time: 21.421s total, 4.306s configuring, 16.947s building, 0.148s running
-> > >
-> > > Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-> > > Cc: David Gow <davidgow@google.com>
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> >
-> > I'll queue this up. Thanks for the conversion. Appears to work well.
->
-> Cool! Thanks for looking it over. If we want to avoid some tree
-> collisions, I could carry it in my tree? I've got some other conversions
-> in progress. Though maybe this begs the question of "how should kunit
-> tests be ordered in the Kconfig and Makefile?" so that collisions are
-> obvious about how to order...
+On 10/18, Kees Cook wrote:
+> Round up allocations with kmalloc_size_roundup() so that the verifier's
+> use of ksize() is always accurate and no special handling of the memory
+> is needed by KASAN, UBSAN_BOUNDS, nor FORTIFY_SOURCE. Pass the new size
+> information back up to callers so they can use the space immediately,
+> so array resizing to happen less frequently as well. Explicitly zero
+> any trailing bytes in new allocations.
 
-No problem:
+> Additionally fix a memory allocation leak: if krealloc() fails, "arr"
+> wasn't freed, but NULL was return to the caller of realloc_array() would
+> be writing NULL to the lvalue, losing the reference to the original
+> memory.
 
-Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: John Fastabend <john.fastabend@gmail.com>
+> Cc: Andrii Nakryiko <andrii@kernel.org>
+> Cc: Martin KaFai Lau <martin.lau@linux.dev>
+> Cc: Song Liu <song@kernel.org>
+> Cc: Yonghong Song <yhs@fb.com>
+> Cc: KP Singh <kpsingh@kernel.org>
+> Cc: Stanislav Fomichev <sdf@google.com>
+> Cc: Hao Luo <haoluo@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: bpf@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>   kernel/bpf/verifier.c | 49 +++++++++++++++++++++++++++----------------
+>   1 file changed, 31 insertions(+), 18 deletions(-)
 
-Please use a lowercase "convert" in the commit subject, like the other
-siphash commits.
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index 014ee0953dbd..8a0b60207d0e 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+> @@ -1000,42 +1000,53 @@ static void print_insn_state(struct  
+> bpf_verifier_env *env,
+>    */
+>   static void *copy_array(void *dst, const void *src, size_t n, size_t  
+> size, gfp_t flags)
+>   {
+> -	size_t bytes;
+> +	size_t src_bytes, dst_bytes;
 
-Jason
+>   	if (ZERO_OR_NULL_PTR(src))
+>   		goto out;
+
+> -	if (unlikely(check_mul_overflow(n, size, &bytes)))
+> +	if (unlikely(check_mul_overflow(n, size, &src_bytes)))
+>   		return NULL;
+
+> -	if (ksize(dst) < bytes) {
+> +	dst_bytes = kmalloc_size_roundup(src_bytes);
+> +	if (ksize(dst) < dst_bytes) {
+
+Why not simply do the following here?
+
+	if (ksize(dst) < ksize(src)) {
+
+?
+
+It seems like we care about src_bytes/bytes only in this case, so maybe
+move that check_mul_overflow under this branch as well?
+
+
+>   		kfree(dst);
+> -		dst = kmalloc_track_caller(bytes, flags);
+> +		dst = kmalloc_track_caller(dst_bytes, flags);
+>   		if (!dst)
+>   			return NULL;
+>   	}
+
+> -	memcpy(dst, src, bytes);
+> +	memcpy(dst, src, src_bytes);
+> +	memset(dst + src_bytes, 0, dst_bytes - src_bytes);
+>   out:
+>   	return dst ? dst : ZERO_SIZE_PTR;
+>   }
+
+> -/* resize an array from old_n items to new_n items. the array is  
+> reallocated if it's too
+> - * small to hold new_n items. new items are zeroed out if the array  
+> grows.
+> +/* Resize an array from old_n items to *new_n items. The array is  
+> reallocated if it's too
+> + * small to hold *new_n items. New items are zeroed out if the array  
+> grows. Allocation
+> + * is rounded up to next kmalloc bucket size to reduce frequency of  
+> resizing. *new_n
+> + * contains the new total number of items that will fit.
+>    *
+> - * Contrary to krealloc_array, does not free arr if new_n is zero.
+> + * Contrary to krealloc, does not free arr if new_n is zero.
+>    */
+> -static void *realloc_array(void *arr, size_t old_n, size_t new_n, size_t  
+> size)
+> +static void *realloc_array(void *arr, size_t old_n, size_t *new_n,  
+> size_t size)
+>   {
+> -	if (!new_n || old_n == new_n)
+> +	void *old_arr = arr;
+> +	size_t alloc_size;
+> +
+> +	if (!new_n || !*new_n || old_n == *new_n)
+>   		goto out;
+
+
+[..]
+
+> -	arr = krealloc_array(arr, new_n, size, GFP_KERNEL);
+> -	if (!arr)
+> +	alloc_size = kmalloc_size_roundup(size_mul(*new_n, size));
+> +	arr = krealloc(old_arr, alloc_size, GFP_KERNEL);
+> +	if (!arr) {
+> +		kfree(old_arr);
+>   		return NULL;
+> +	}
+
+Any reason not do hide this complexity behind krealloc_array? Why can't
+it take care of those roundup details?
+
+
+> -	if (new_n > old_n)
+> -		memset(arr + old_n * size, 0, (new_n - old_n) * size);
+> +	*new_n = alloc_size / size;
+> +	if (*new_n > old_n)
+> +		memset(arr + old_n * size, 0, (*new_n - old_n) * size);
+
+>   out:
+>   	return arr ? arr : ZERO_SIZE_PTR;
+> @@ -1067,7 +1078,7 @@ static int copy_stack_state(struct bpf_func_state  
+> *dst, const struct bpf_func_st
+
+>   static int resize_reference_state(struct bpf_func_state *state, size_t n)
+>   {
+> -	state->refs = realloc_array(state->refs, state->acquired_refs, n,
+> +	state->refs = realloc_array(state->refs, state->acquired_refs, &n,
+>   				    sizeof(struct bpf_reference_state));
+>   	if (!state->refs)
+>   		return -ENOMEM;
+> @@ -1083,11 +1094,11 @@ static int grow_stack_state(struct bpf_func_state  
+> *state, int size)
+>   	if (old_n >= n)
+>   		return 0;
+
+> -	state->stack = realloc_array(state->stack, old_n, n, sizeof(struct  
+> bpf_stack_state));
+> +	state->stack = realloc_array(state->stack, old_n, &n, sizeof(struct  
+> bpf_stack_state));
+>   	if (!state->stack)
+>   		return -ENOMEM;
+
+> -	state->allocated_stack = size;
+> +	state->allocated_stack = n * BPF_REG_SIZE;
+>   	return 0;
+>   }
+
+> @@ -2499,9 +2510,11 @@ static int push_jmp_history(struct  
+> bpf_verifier_env *env,
+>   {
+>   	u32 cnt = cur->jmp_history_cnt;
+>   	struct bpf_idx_pair *p;
+> +	size_t size;
+
+>   	cnt++;
+> -	p = krealloc(cur->jmp_history, cnt * sizeof(*p), GFP_USER);
+> +	size = kmalloc_size_roundup(size_mul(cnt, sizeof(*p)));
+> +	p = krealloc(cur->jmp_history, size, GFP_USER);
+>   	if (!p)
+>   		return -ENOMEM;
+>   	p[cnt - 1].idx = env->insn_idx;
+> --
+> 2.34.1
+
