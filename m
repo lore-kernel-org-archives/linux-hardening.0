@@ -2,160 +2,70 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEA0C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 12:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B81C4332F
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 13:48:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229945AbiJRM4c (ORCPT
+        id S231130AbiJRNs0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 08:56:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60714 "EHLO
+        Tue, 18 Oct 2022 09:48:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230272AbiJRM4b (ORCPT
+        with ESMTP id S230500AbiJRNsZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 08:56:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FAE9733FD;
-        Tue, 18 Oct 2022 05:56:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Tue, 18 Oct 2022 09:48:25 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 485EACD5EE;
+        Tue, 18 Oct 2022 06:48:24 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:281:8300:73::5f6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2E4136153F;
-        Tue, 18 Oct 2022 12:56:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15559C433C1;
-        Tue, 18 Oct 2022 12:56:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666097786;
-        bh=/vHNygegziKCA4VNx1TW5Fmp5dKqLbj1UZYsAAqZAeo=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=EtZTt+G9DOU4CSgbn8arUlALvx79zUkfj+olr5bhKDXDfLPy1T06DiJOymCNdQ7JY
-         WSveE5OEC5STK4QoCWaVtx6k/E0FWgfnmjXml0P3PGMGK0zuNEMQUnUmtyE3UsBLEL
-         TT+rlXUo3QFn5Nh8XZnybCd8KH5R27cUVTgnMdilHJnPuL2ALn66OUEsQfZu4JTsZT
-         C5NhvNOCkEVrLIFyzXCbpg2qXemLTar1JzAIp9pHA9pcEvZTfvYddRwkjV2+hcC3nY
-         86AtVLZDtyA2jTTeMP7rUkM5eSWYiSmkGhlF/UwEoTqrBfMnJdPMXFYFMmS0a1JS1I
-         jO3Azr+4B1y9A==
-Date:   Tue, 18 Oct 2022 14:56:21 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-cc:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH] [next] HID: hyperv: Replace one-element array with
- flexible-array member
-In-Reply-To: <SN6PR2101MB1693AFDA151C35DE148FECAAD7299@SN6PR2101MB1693.namprd21.prod.outlook.com>
-Message-ID: <nycvar.YFH.7.76.2210181456150.29912@cbobk.fhfr.pm>
-References: <Y00JenqCzKRrcTiF@mail.google.com> <SN6PR2101MB1693AFDA151C35DE148FECAAD7299@SN6PR2101MB1693.namprd21.prod.outlook.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        by ms.lwn.net (Postfix) with ESMTPSA id 2C0412D7;
+        Tue, 18 Oct 2022 13:48:22 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 2C0412D7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+        t=1666100902; bh=VtE0W9gKmiji3m+fBP4JE6QV2uJ5JjdMxX9jo/Mx+Ek=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=ZdOy1taLoW3g3bN2YMjLwgeGRII+Qg3vJgSQL2YkJ7v/ANgVj6T7xzfePkj46ORkq
+         1JnEbGcN11QqFKsaVQn7FiBEQov+ryevQLPu5sUk4DrMzIi8O3hoKcsXLypAW1CxTD
+         zWgHF9XrkHovqPhJXfOx2/ulc6bZOay9OKzj5sRrYyHnkrV3HM9SKQ8rrlx5PVzHvm
+         gWpXqBhVEqxsaG3v8FzwSntFKHTFSZgA3qDACbG1+bHLKtDcNiqiPQFfr8KY9Tp4S8
+         HCd3eIaceWLARP3GsBrAlqtTrRYmgBIIRBeC0yuUlSIK5tvtTzJR6o0qU/sk9gU9H1
+         MxdXE0RXorskQ==
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Kees Cook <keescook@chromium.org>,
+        Akira Yokosawa <akiyks@gmail.com>
+Cc:     linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Yanteng Si <siyanteng@loongson.cn>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] overflow: Fix kern-doc markup for functions
+In-Reply-To: <202210171909.65FFFB5601@keescook>
+References: <20221017035732.1968394-1-keescook@chromium.org>
+ <6f8aa670-fb4f-3ff9-bcd9-8490e752b349@gmail.com>
+ <202210171909.65FFFB5601@keescook>
+Date:   Tue, 18 Oct 2022 07:48:21 -0600
+Message-ID: <87ilkhdyze.fsf@meer.lwn.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 17 Oct 2022, Michael Kelley (LINUX) wrote:
+Kees Cook <keescook@chromium.org> writes:
 
-> > One-element arrays are deprecated, and we are replacing them with
-> > flexible array members instead. So, replace one-element array with
-> > flexible-array member in structs synthhid_msg, synthhid_input_report,
-> > pipe_prt_msg and refactor the rest of the code accordingly.
-> > 
-> > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> > routines on memcpy() and help us make progress towards globally
-> > enabling -fstrict-flex-arrays=3 [1].
-> > 
-> > Link: https://github.com/KSPP/linux/issues/79
-> > Link: https://github.com/KSPP/linux/issues/210
-> > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
-> > 
-> > Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-> > ---
-> >  drivers/hid/hid-hyperv.c | 17 +++++++----------
-> >  1 file changed, 7 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
-> > index e0bc73124196..208cf8d981a5 100644
-> > --- a/drivers/hid/hid-hyperv.c
-> > +++ b/drivers/hid/hid-hyperv.c
-> > @@ -61,7 +61,7 @@ struct synthhid_msg_hdr {
-> > 
-> >  struct synthhid_msg {
-> >  	struct synthhid_msg_hdr header;
-> > -	char data[1]; /* Enclosed message */
-> > +	char data[]; /* Enclosed message */
-> >  };
-> > 
-> >  union synthhid_version {
-> > @@ -99,7 +99,7 @@ struct synthhid_device_info_ack {
-> > 
-> >  struct synthhid_input_report {
-> >  	struct synthhid_msg_hdr header;
-> > -	char buffer[1];
-> > +	char buffer[];
-> >  };
-> > 
-> >  #pragma pack(pop)
-> > @@ -118,7 +118,7 @@ enum pipe_prot_msg_type {
-> >  struct pipe_prt_msg {
-> >  	enum pipe_prot_msg_type type;
-> >  	u32 size;
-> > -	char data[1];
-> > +	char data[];
-> >  };
-> > 
-> >  struct  mousevsc_prt_msg {
-> > @@ -232,7 +232,7 @@ static void mousevsc_on_receive_device_info(struct
-> > mousevsc_dev *input_device,
-> > 
-> >  	ret = vmbus_sendpacket(input_device->device->channel,
-> >  			&ack,
-> > -			sizeof(struct pipe_prt_msg) - sizeof(unsigned char) +
-> > +			sizeof(struct pipe_prt_msg) +
-> >  			sizeof(struct synthhid_device_info_ack),
-> >  			(unsigned long)&ack,
-> >  			VM_PKT_DATA_INBAND,
-> > @@ -271,16 +271,14 @@ static void mousevsc_on_receive(struct hv_device *device,
-> >  		 * malicious/buggy hypervisor/host, add a check here to
-> >  		 * ensure we don't corrupt memory.
-> >  		 */
-> > -		if ((pipe_msg->size + sizeof(struct pipe_prt_msg)
-> > -			- sizeof(unsigned char))
-> > +		if (struct_size(pipe_msg, data, pipe_msg->size)
-> >  			> sizeof(struct mousevsc_prt_msg)) {
-> >  			WARN_ON(1);
-> >  			break;
-> >  		}
-> > 
-> >  		memcpy(&input_dev->protocol_resp, pipe_msg,
-> > -		       pipe_msg->size + sizeof(struct pipe_prt_msg) -
-> > -		       sizeof(unsigned char));
-> > +				struct_size(pipe_msg, data, pipe_msg->size));
-> >  		complete(&input_dev->wait_event);
-> >  		break;
-> > 
-> > @@ -359,8 +357,7 @@ static int mousevsc_connect_to_vsp(struct hv_device *device)
-> >  	request->request.version_requested.version = SYNTHHID_INPUT_VERSION;
-> > 
-> >  	ret = vmbus_sendpacket(device->channel, request,
-> > -				sizeof(struct pipe_prt_msg) -
-> > -				sizeof(unsigned char) +
-> > +				sizeof(struct pipe_prt_msg) +
-> >  				sizeof(struct synthhid_protocol_request),
-> >  				(unsigned long)request,
-> >  				VM_PKT_DATA_INBAND,
-> > --
-> > 2.37.3
-> 
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> If the Documentation/* changes look okay, I'd rather carry it in my tree
+> since I'm going to be poking at more functions in there soon.
 
-Thanks, applied.
+That seems like as good a path for it as any.  Feel free to add
 
--- 
-Jiri Kosina
-SUSE Labs
+Acked-by: Jonathan Corbet <corbet@lwn.net>
 
+...if you want.
+
+Thanks,
+
+jon
