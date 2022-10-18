@@ -2,178 +2,177 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FBAC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 10:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AF4C43217
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 11:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229556AbiJRKnP (ORCPT
+        id S230064AbiJRLTm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 06:43:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51248 "EHLO
+        Tue, 18 Oct 2022 07:19:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbiJRKnP (ORCPT
+        with ESMTP id S230046AbiJRLTk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 06:43:15 -0400
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-eopbgr60125.outbound.protection.outlook.com [40.107.6.125])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45094B44BC;
-        Tue, 18 Oct 2022 03:43:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aWXsO8jZkWX8DLJ6838s32K5SOSvFmrloFnROEWkQvZTbbE1lUKuVBE/lO8OdumIzuDtJNaB+weYilC3Nhp2jck3w8XDsgDT3pWM0oOBDW8HEJPwT2v4bCqQ8gF8zHY8i/Ce3dkYIPhkj0DlhnpxyvBC5vgPQOLYCtES30w25VibEqgc97l1t2gH7JW9YZrzjd77cyDKXufhRj6Yf59cKL14VDDdzO6y+dGsx5mMgdKT5BfJGnrMyuVTl0YpLGMl6NR+LNy94NoRWCz4Myd/rIcjcUkYBC94nY5sSEFlacCC+pC7SwB90BliO/HILnFiOcBpK3GsSo3pBjrF5oYNew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Rbtd4vmjQG+cxMecYvCUhpl5nFIJvQ7q9HgNKSPXIik=;
- b=RpFOjXrvtWnL5iMIExp8iEPfet8z6tQK/jY9ZKZA71WjomuWuCNWRmClLLKoT133ZhaDQ6x6obGB8iwwWsVjHi4LdKl245y4ZsFQiBXwgFFfwoBUz7DBjWkQZcHsh5cpr3KnWQjky+jw9wZYbTZpwGdVjdVp2SRp9SvDpGy917LmhOCt2zBXYw7kwauQP3VANOcVBNmGYiOgtd+W8TZ689CuVrN83pqeZcjrmDAbDne7aZ5/YhQEYT/7s3YvuWkXl92OrgiAP57/0+gka9E4ZHLYB6BW3FDYVdfL2Wl0UpvAZTc0/sXu37PP5QJeZUb5Ie6ZmPXRCzm+RVA/cqeRUQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
- dkim=pass header.d=prevas.dk; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rbtd4vmjQG+cxMecYvCUhpl5nFIJvQ7q9HgNKSPXIik=;
- b=J2phiAnfx/6/B//Ki7YO7jUfXDimMIDCypJvUYrDrfJo03PEyrc2GR4OLDOvL8mfV29JkygkATWZXr4lZ1MjTeLHWxvFhEO2y0eLjl+WqB+pUq1VIN63aJVdTV0+nDOMHnDUfYWpCRkkJcpNUeaNI9Cz/PuJ4kuOjSnHEzf2oQE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=prevas.dk;
-Received: from DU0PR10MB5266.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:34a::22)
- by AS8PR10MB7065.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:5a8::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.30; Tue, 18 Oct
- 2022 10:43:11 +0000
-Received: from DU0PR10MB5266.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::732f:4316:a0be:bdbc]) by DU0PR10MB5266.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::732f:4316:a0be:bdbc%3]) with mapi id 15.20.5723.033; Tue, 18 Oct 2022
- 10:43:11 +0000
-Message-ID: <71dfb645-430a-07d8-62c9-a95a8fdd5ed1@prevas.dk>
-Date:   Tue, 18 Oct 2022 12:43:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] driver core: Add __alloc_size hint to devm allocators
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Nishanth Menon <nm@ti.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Won Chung <wonchung@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20221018073430.never.551-kees@kernel.org>
- <d199c2af-06af-8a50-a6a1-00eefa0b67b4@prevas.dk>
- <202210180310.A13EAA7@keescook>
-From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-In-Reply-To: <202210180310.A13EAA7@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MM0P280CA0035.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:190:b::23) To DU0PR10MB5266.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:10:34a::22)
+        Tue, 18 Oct 2022 07:19:40 -0400
+Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C1119C2E
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 04:19:37 -0700 (PDT)
+Received: by mail-il1-x12a.google.com with SMTP id u2so7267042ilv.6
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 04:19:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fAhbWS2r+kZh1CW1h6OenJ9QjBTytqKLyQ/pXA2P2K0=;
+        b=EIk/Kpc4vGn1CCgUwxqJ0g9qrIF8uy+2DQFZx6/0JpAeX9DYMTx5JXVkPBYtgQPrZD
+         w5ckB2FyJECCFZ7TR5oVdLKM3JLtg8LbrnuzoEXxcJQrlWrBJhDOqqunlGUkyYiYusmg
+         4pZkzmwM+9f/7V2lVghKTwiM+YaQh3cp9ZZvUSDOsWutc4janERggmG80EYtDBsmm5FR
+         3Qexg8CkIUzBKrmcgVunCJJTsDfpAftOZMfOV1FpySB9PQZpPxpWdrR2KhN6f8f5sev9
+         BOvCNSY0IU2n3X0trRvB4A9oGJsk1h0bFLOBqjFDLcPxyl2bl058Kyw+oCFBFADmeDKL
+         3t1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fAhbWS2r+kZh1CW1h6OenJ9QjBTytqKLyQ/pXA2P2K0=;
+        b=xU46Ab5/U/afwAK7x21Ydp9I2ZLLMR6pzVjGiBE5eVIaZNFOaVLwsFFHC3JTvrzXMW
+         ObkzQq9F86m/+Dm9J1L9sQO3D+MjbOzpp+2GB8EjD23r652VMCOSsGokJ3urFK/CG0iU
+         +pd/351ljzQL61SObRhNuH9mL4xrPtaOLzbMMpY0r0VSsjVxYLq2pQfk+jEAG+rcWpNC
+         rtAZV1UOOxqMvnUHHZdlggZDMW5pyQFdu8QnJ7gM98RCnUjl14k9MPbWeh/Gwit2rUIK
+         c3sXzxUE0O4zOfT8DCOevcR+h3yAMj0OR0k6X4jtRYsDmrtf3VygeELD/U1MNL5eoAww
+         ryDQ==
+X-Gm-Message-State: ACrzQf06p1FIUg2YLiuAgxdpfVLBmnO6oM+DkZx3pT8zQGKyU6aRMU8F
+        DsoB/1fE/fqGt8D9JtWBYg5/iG8hkjO5TiaDMs24Nw==
+X-Google-Smtp-Source: AMsMyM5JK/czEGcdqbcmVXAa+iPQxFN5IfdfeKyvqXfD69WzM51dWHMxMw0qfiz3oZW7DVcBpgcr/vJENhoNl1bXbqk=
+X-Received: by 2002:a05:6e02:930:b0:2f9:9d1b:2525 with SMTP id
+ o16-20020a056e02093000b002f99d1b2525mr1392129ilt.173.1666091977094; Tue, 18
+ Oct 2022 04:19:37 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU0PR10MB5266:EE_|AS8PR10MB7065:EE_
-X-MS-Office365-Filtering-Correlation-Id: be5c422d-2682-49a0-313b-08dab0f58d2c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: c473RkjX8bFIAoZEMcYTgFK+i111xlwQmNk26xFNXfmRR+NSnpcLL/it7hG7kamr8Rhy9dZyzayjL67jQ7d65WIjpNfGtA9pYOSJ+wPNY8EsznSIMW0VBXSkGINlGvgYOjue16Vjh5+qFIGe/LqCtiHWPm7iUxogI+kYvF/jnpnkLmTO37qcP/9zAkJskA/t0eL+tDkSGctoQr9OKNW+4IDB6f247XN30Ld4qpSaJLSweuZIbA9LPtL4VuSGxXNv6580R2rSRC+DnHMprvaaw6tgGyXC3Vq38bhb3Vbm69w/iUd8sXphJWD5hW/cTaNC7ABlRdh3ZD+espYbCcHMrOJezhPeaT63G3ik0o3x6G2tbmVdQ8VFa4hh+NkK+E7xBtbfBfGxnnyVWMY9bojZsF0zv/yTXMuZNJFGgQF3v9jAxeg7EX/8ekOJLo7S+g2PvysbOMbpUl/KBxLmEhcvU/RifirVgKEkLQuvGzdNTGzaqyak+Vsm8wowHxfNzH0d2DhlUTrScltD1yD7+0RBj2G3gf+vjpdankRM48hbJlM62hWOANx6aFWo5lVsNXSC3i/u+5h6u1Z8tJ8B4fW//Bd9aBLThEoLriRm8iqvS/v/OjJVJKqlmD3n5BFPtVoG+hstEqRnkEV42509wWBauOIPC7VDFNIrFpYbb2VrhIpjIpsH5wuXofum0qskcIeMEWer9k5eUFGY6dIUVe6LdayNz6dXV1Ywzj6gsUDIZP5U9up1OzgOCzI0Vdhxa+WGC+A7zwXOisxdPnSRuJeEhE1/dO19GQwZ1EQLw7Q2MHyN3dVREDdRkIGclis9x0lID8MkSeAf2okONA0kmIxTI1p4oXV/6vl3oZovjOPGXtw=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR10MB5266.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230022)(346002)(396003)(366004)(39840400004)(376002)(136003)(451199015)(6916009)(6486002)(2616005)(186003)(86362001)(31696002)(38350700002)(38100700002)(7416002)(2906002)(5660300002)(44832011)(4326008)(8976002)(41300700001)(8676002)(8936002)(6666004)(966005)(6512007)(478600001)(6506007)(26005)(316002)(52116002)(66476007)(66946007)(66556008)(54906003)(31686004)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ak5lL3RvVyt2cUdWY3VvcUVCbkRyYlo3MDMrMk1jUWdwSjdBcDZVcDF4dy9w?=
- =?utf-8?B?dm5VaThYVStoTjNnTkMrWnRVb2dONVF6aWRzQlRjSU9JRFdVYWVBZ1B6N2c3?=
- =?utf-8?B?bU1mSVpSVlZRMjBuWGIwakRDb0pycmVha1pxaWtYMVpnRFhnNmwrWE9qd0JM?=
- =?utf-8?B?b2J4SmhXR09LTTBFZ3NiMkxIVzI2eXRpamxSNFdhbUFZNGt4aU1Fc21MTHFk?=
- =?utf-8?B?OTYwaWJzMlVFaFFOKzk5VG5lMFdGdXJUSHRkcEl3QWRtMHoybnkxWXR1RE9N?=
- =?utf-8?B?MWk4VEEvejZxTklTcmJTaktIdjlBdUtIcXJZRmZqdUgxU3Bmdm1pOEZDaFlT?=
- =?utf-8?B?dWVrbVNjMUcybEtJMXA1eHh2cnFRSlNNRlhWYjFHN0YwTkdmV3Z4ZDRmK1l3?=
- =?utf-8?B?UmRLNStrbFQwdHFWZVdoalNTUUJEWGZGQUplaldUOVNJYmM0VWpsUUtZRERM?=
- =?utf-8?B?L0NYOUFwY3VBaGdrdnRVL3FMR0VUTDFOQkVzYStuU0hveDdURHFrcnErUHl0?=
- =?utf-8?B?WW1MK0UrNFgzN2laWkp5cm5tL0VoTWhxZFFQQXRnMFpYSldZQ3lrcjJnc2hN?=
- =?utf-8?B?a3J0T3E5MlRMcEFLR3JoQnNDQzZpZGtCUHF1SGFLMlBydG93YXIzYjJKNkpl?=
- =?utf-8?B?am4vNExXQ3lidEJhTE9rekxTRko1ZG1HSlhHYzFOY210N01uTmkyTnVkQmZz?=
- =?utf-8?B?c0lkRlRmNjZkNXQwMkpRckNucGJ4NmZONEZUMnk3eW1NNXdwSERLZzNVdHlP?=
- =?utf-8?B?Rm5JQUIxQUVvdmZIdVZuVm93N25vRVcyL1NRcndSOE9NSGorR0VIQWlQK3pH?=
- =?utf-8?B?bTJERjcyK3hxbmppbVYzc2pzSmYyQk9jbEM0ZVZ6cENlb1l6bk92Qkh6UXA4?=
- =?utf-8?B?YzVVdkczU0xUWHNRQVNCK2tDL1hwTnNkV3VCRm1pYWtVUDEvWnBnTkRhYm5l?=
- =?utf-8?B?V2NqWm1JaUxpQWhrbnhnSThKd0h0TkZBYWJmQ05keHV6WmVwS1M1bjdTUDIv?=
- =?utf-8?B?RldwK3VGSDZoNW1Ob2tTQTRkVkJkWjMxUXh1ZlZzVmRkRDJRSHFKOU5nVm1E?=
- =?utf-8?B?T0ZjYkRQazluclVFWTVxWmNiK0J0K2ovWmtJZ3dRUWZ2VW1oT2MvK2o1T3hu?=
- =?utf-8?B?QnEvdSthZi9TU2RSdHNpY2NjT2xHN3BSN1hxd0ZWblFmWlFCSUJFZm1CUDlX?=
- =?utf-8?B?Z3U5ZzBmZlZLOFJwWTMwOW9OUmpjU3hZWGdHMHpUV1dOZGM1V2xmK0ErNEJ6?=
- =?utf-8?B?UWVKYmFlL25GWld6aTR1Zklkek42eVp5NHEvRzQzelhRZmNBYWFzNkFKMXJP?=
- =?utf-8?B?anZ1SkM3QkxMWDd1Zm4vYzlvYmU4dS9ub1VaSEcvRk43UU1zWHFZek5sNkla?=
- =?utf-8?B?dEUyeldtVi9lUmVRV1lTY0dDQ1hncG1MaE41cHVsRWp0dkJGRDFJanlxS0l2?=
- =?utf-8?B?aDI3cVdlSmtOeko5M2RTMVFpMC9NNmxXd0J2TWYxb2xkNUdwZlduaytQcURz?=
- =?utf-8?B?N3BJdHlIL1FpMWNidTNyOVdFR3NNbFh4elcxbFFqS0s0M3MzMkluMEJ3eDV0?=
- =?utf-8?B?TzZKd2JjcWcrUVlsQ0Rwa1RhV3pzNVd3blBiVTRaOTVFRktPaFB6bGpWc2NL?=
- =?utf-8?B?L0d5ZVZvenZ4bTZZYkFBMU14WGNmSWtIT0xtTGF3Y21YL1Y0UTU5SHpqT1Mx?=
- =?utf-8?B?MmJtRUNSQ0xnWHdZbzF1Z1NxTXFraVRMS0U5NCtCWlRjcEtKc2M0UUgyVGo4?=
- =?utf-8?B?SlRVc0loQmdkWklHMzA0REh2VnpsVVJ3U3RQaHJ1em5FMTZtN3hqZ2tpRmVV?=
- =?utf-8?B?cCtybDNJc0thc1FDVjBNbFM5Z21kbXJwTVFJeUgxSFhUTiswdjlNYVVQWHVY?=
- =?utf-8?B?bUpPL0t3WFNqc244TGN6bzlabytJak5yMVA4WXVoekRjc2Q1OS83aUVOTCs1?=
- =?utf-8?B?MUJFZDlXKzJFYTdGcFRRZGtEcFVCQ1FkZGtCWGNtRVZzVW5jd3hxNkxGYmtm?=
- =?utf-8?B?cDVqZ1drMzNlVTVWdTgrVE4rR1pDUGM4bGs4cTVWVnBrSzZvaStxNGRnV2VV?=
- =?utf-8?B?cFIzMzdjRE9BdHhpUXhiYXdxVkpjNjlKTmJHWmRqdEk5VWVLcWduNFBuRmUr?=
- =?utf-8?B?eEhFYXpubWd3ckpLUk02QjkwTDJDUStHbkF2VVBkSmtnYWtXcmZ0azdBNlMy?=
- =?utf-8?B?VVE9PQ==?=
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: be5c422d-2682-49a0-313b-08dab0f58d2c
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR10MB5266.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2022 10:43:11.0024
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bYClegX/EEQVBYvdNMxEsiGZqhRefxOgUsOAyAxcXSFiSj3fXwQP4zef8Ybynz3J6rotkGNIHDNnCkyXZrEv0rD4bLUhagP/EHUQAbWYt1k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR10MB7065
+References: <20221006082735.1321612-1-keescook@chromium.org>
+ <20221006082735.1321612-2-keescook@chromium.org> <20221006090506.paqjf537cox7lqrq@wittgenstein>
+ <CAG48ez0sEkmaez9tYqgMXrkREmXZgxC9fdQD3mzF9cGo_=Tfyg@mail.gmail.com>
+ <2032f766-1704-486b-8f24-a670c0b3cb32@app.fastmail.com> <CAG48ez3hM+-V39QpFaNfRJxVrQVBu2Dm-B-xFN2GEt9p81Vd2Q@mail.gmail.com>
+ <202210172359.EDF8021407@keescook>
+In-Reply-To: <202210172359.EDF8021407@keescook>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 18 Oct 2022 13:19:00 +0200
+Message-ID: <CAG48ez1xqguRrWT+KrjkyUHGZPVFDbMM3f__71VE-L38kQri9A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] fs/exec: Explicitly unshare fs_struct on exec
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <brauner@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Jorge Merlino <jorge.merlino@canonical.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org,
+        John Johansen <john.johansen@canonical.com>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Richard Haines <richard_c_haines@btinternet.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Todd Kjos <tkjos@google.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Prashanth Prahlad <pprahlad@redhat.com>,
+        Micah Morton <mortonm@chromium.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 18/10/2022 12.15, Kees Cook wrote:
-> On Tue, Oct 18, 2022 at 12:09:30PM +0200, Rasmus Villemoes wrote:
->> On 18/10/2022 09.34, Kees Cook wrote:
->>> Mark the devm_*alloc()-family of allocations with appropriate
->>> __alloc_size() hints so the compiler can attempt to reason about buffer
->>> lengths from allocations.
->>>
->>
->>> @@ -226,7 +226,8 @@ static inline void *devm_kcalloc(struct device *dev,
->>>  void devm_kfree(struct device *dev, const void *p);
->>>  char *devm_kstrdup(struct device *dev, const char *s, gfp_t gfp) __malloc;
->>>  const char *devm_kstrdup_const(struct device *dev, const char *s, gfp_t gfp);
->>> -void *devm_kmemdup(struct device *dev, const void *src, size_t len, gfp_t gfp);
->>> +void *devm_kmemdup(struct device *dev, const void *src, size_t len, gfp_t gfp)
->>> +	__alloc_size(3);
->>
->> I think it's wrong to apply the __malloc attribute to kmemdup() and
->> variants.
->>
->> 'malloc'
->>      This tells the compiler that a function is 'malloc'-like, i.e.,
->>      that the pointer P returned by the function cannot alias any other
->>      pointer valid when the function returns, and moreover no pointers
->>      to valid objects occur in any storage addressed by P.
-> 
-> Oh, ew, it defines rules about _contents_ as well. Thank you for
-> pointing that out!
-> 
-> I suppose we can use __realloc_size for these cases then?
+On Tue, Oct 18, 2022 at 9:09 AM Kees Cook <keescook@chromium.org> wrote:
+> On Fri, Oct 14, 2022 at 05:35:26PM +0200, Jann Horn wrote:
+> > On Fri, Oct 14, 2022 at 5:18 AM Andy Lutomirski <luto@kernel.org> wrote=
+:
+> > > On Thu, Oct 6, 2022, at 7:13 AM, Jann Horn wrote:
+> > > > On Thu, Oct 6, 2022 at 11:05 AM Christian Brauner <brauner@kernel.o=
+rg> wrote:
+> > > >> On Thu, Oct 06, 2022 at 01:27:34AM -0700, Kees Cook wrote:
+> > > >> > The check_unsafe_exec() counting of n_fs would not add up under =
+a heavily
+> > > >> > threaded process trying to perform a suid exec, causing the suid=
+ portion
+> > > >> > to fail. This counting error appears to be unneeded, but to catc=
+h any
+> > > >> > possible conditions, explicitly unshare fs_struct on exec, if it=
+ ends up
+> > > >>
+> > > >> Isn't this a potential uapi break? Afaict, before this change a ca=
+ll to
+> > > >> clone{3}(CLONE_FS) followed by an exec in the child would have the
+> > > >> parent and child share fs information. So if the child e.g., chang=
+es the
+> > > >> working directory post exec it would also affect the parent. But a=
+fter
+> > > >> this change here this would no longer be true. So a child changing=
+ a
+> > > >> workding directoro would not affect the parent anymore. IOW, an ex=
+ec is
+> > > >> accompanied by an unshare(CLONE_FS). Might still be worth trying o=
+fc but
+> > > >> it seems like a non-trivial uapi change but there might be few use=
+rs
+> > > >> that do clone{3}(CLONE_FS) followed by an exec.
+> > > >
+> > > > I believe the following code in Chromium explicitly relies on this
+> > > > behavior, but I'm not sure whether this code is in active use anymo=
+re:
+> > > >
+> > > > https://source.chromium.org/chromium/chromium/src/+/main:sandbox/li=
+nux/suid/sandbox.c;l=3D101?q=3DCLONE_FS&sq=3D&ss=3Dchromium
+> > >
+> > > Wait, this is absolutely nucking futs.  On a very quick inspection, t=
+he sharable things like this are fs, files, sighand, and io.    files and s=
+ighand get unshared, which makes sense.  fs supposedly checks for extra ref=
+s and prevents gaining privilege.  io is... ignored!  At least it's not imm=
+ediately obvious that io is a problem.
+> > >
+> > > But seriously, this makes no sense at all.  It should not be possible=
+ to exec a program and then, without ptrace, change its cwd out from under =
+it.  Do we really need to preserve this behavior?
+> >
+> > I agree that this is pretty wild.
+> >
+> > The single user I'm aware of is Chrome, and as far as I know, they use
+> > it for establishing their sandbox on systems where unprivileged user
+> > namespaces are disabled - see
+> > <https://chromium.googlesource.com/chromium/src/+/main/docs/linux/suid_=
+sandbox.md>.
+> > They also have seccomp-based sandboxing, but IIRC there are some small
+> > holes that mean it's still useful for them to be able to set up
+> > namespaces, like how sendmsg() on a unix domain socket can specify a
+> > file path as the destination address.
+> >
+> > (By the way, I think maybe Chrome wouldn't need this wacky trick with
+> > the shared fs_struct if the "NO_NEW_PRIVS permits chroot()" thing had
+> > ever landed that you
+> > (https://lore.kernel.org/lkml/0e2f0f54e19bff53a3739ecfddb4ffa9a6dbde4d.=
+1327858005.git.luto@amacapital.net/)
+> > and Micka=C3=ABl Sala=C3=BCn proposed in the past... or alternatively, =
+if there
+> > was a way to properly filter all the syscalls that Chrome has to
+> > permit for renderers.)
+> >
+> > (But also, to be clear, I don't speak for Chrome, this is just my
+> > understanding of how their stuff works.)
+>
+> Chrome seems to just want a totally empty filesystem view, yes?
+> Let's land the nnp+chroot change. :P Only 10 years late! Then we can
+> have Chrome use this and we can unshare fs on exec...
 
-Probably, but it's gonna be mighty confusing for people reading the code.
-
-I was never really a fan of including __malloc in __alloc_size in the
-first place, this is the kind of confusion that comes from having one
-attribute include another without having the developer forced to think
-about whether both actually apply in a given situation.
-
-And that malloc documentation (both the old and the fixed) even came up
-in what I assume is the thread that led up to that
-
-    Since anything marked with __alloc_size would also qualify for marking
-    with __malloc, just include __malloc along with it to avoid redundant
-    markings.  (Suggested by Linus Torvalds.)
-
-in commit 86cffecd, namely
-https://lore.kernel.org/mm-commits/202109101138.53FCADF5C@keescook/ .
-
-Rasmus
+Someone should check with Chrome first though to make sure what I said
+accurately represents what they think...
