@@ -2,65 +2,66 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEC2C4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 09:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A912C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 09:01:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229839AbiJRJAM (ORCPT
+        id S231138AbiJRJBB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 05:00:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49598 "EHLO
+        Tue, 18 Oct 2022 05:01:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229691AbiJRI7y (ORCPT
+        with ESMTP id S229919AbiJRJBA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 04:59:54 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B83AE1C107
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 01:59:32 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id p3-20020a17090a284300b0020a85fa3ffcso16725109pjf.2
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 01:59:32 -0700 (PDT)
+        Tue, 18 Oct 2022 05:01:00 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 967D124961
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 02:00:53 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id f23so13212554plr.6
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 02:00:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SyYgnWapL79xSGbWpqYMsssi6Z5UWEMZCCJiBQWYB4E=;
-        b=HESG1GP8bzrjSt/N/3biOxlPGGIiOnjZz7pL+YQNIzKoN6I+tjDC2Pp/uhHC2z4Vs5
-         aGzRvgHCUubVN8NGAjkTNHZ87zzBdFYkpHDd3e4o8LjWLUqMjpqz3WlVjyqFQs2gPvwO
-         j+TfsLtFgE7q5r2dDeTn1JsFxJEDhZiBVK/VY=
+        bh=98TbBLWDOIP9iM561Q2o7phm/lwEe/LRJztlwtQ6oow=;
+        b=ExDU5AF7y8Ljod9TeBX85oH8I8YhbhYsRiSHlDhLAaNBXhU207TyGnIOU1YFjue4xn
+         YTULwM+Ng8TmwtpND720aRpXBzXrXzJS0HE6YytS6hUhYgB9iwOdEwBzcFXDJdx9n17C
+         +QZmcuf3P9UD0LHt91EIjjKInqd1HdhFibKts=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=SyYgnWapL79xSGbWpqYMsssi6Z5UWEMZCCJiBQWYB4E=;
-        b=d1GFMae2dE+08ues2mULqLh9ugrc8p0eb/5/rKXUp1trAJhvgAYF0H04Apw1mA621a
-         xPYEBqDdlfvpOoXyYs61KQFBD29erBQXBTjULs0pqB5mVQhtherXpYf/uuqH4vTSKiRX
-         IJD0iUhjP6d4n1o4hC03OQZkYSHUbjA1NZLmR6HlX/fpcdLSCVHgujlEs0wym6Qy4oUD
-         dV8LSZkwtLfo2+fFWtsvsFPd/wztUE6NChAj1G7XuCQfB+Ay3YTPjBCtPlv1vpnpAT52
-         aS9kAM5R/S/PueAxTX7SOcoYIKWm2bN/v1Ju6U554D0S1WIDrEywUkWO1YakKbCTOGeI
-         t37Q==
-X-Gm-Message-State: ACrzQf3CwIM0wmcy9elvnP9Jk6zdl4uAq65vMIXHPaA4qP9sIRQBK+z5
-        qAXcGgY0Us7gYvemCz0DRFuQOA==
-X-Google-Smtp-Source: AMsMyM4nSRh7exYZnqzoianMYgY8zRtCYF+gY02raaBn1ZvuKqIPaVLoRweAhr1hoJ0whFsFPiYQPA==
-X-Received: by 2002:a17:903:2410:b0:17a:b32:dbec with SMTP id e16-20020a170903241000b0017a0b32dbecmr1919815plo.163.1666083571999;
-        Tue, 18 Oct 2022 01:59:31 -0700 (PDT)
+        bh=98TbBLWDOIP9iM561Q2o7phm/lwEe/LRJztlwtQ6oow=;
+        b=214JYwiq1tZlNBgypJb3xgI3nnxOlZjJ8CCdptknnDc5qJ7mbb3VRpmE7yyqchs/I8
+         9vJdTmZApPCRi9en2Xb/oyzAaANr7t0XsdpW6qOFaw1TeIEMnQAmGzrGYR7Vddk6m0rW
+         67xVZy1s/YYjK+VmlGzYilXEwtwWcNbaS7OcKi5GDCpMThUlJ0rRVqzpuqjzs2ADXQIw
+         W3qJ1Tq6oLoFriTVON4FjEbUQW6rGujihS+r9OVMn0+TR6kZBWkpN6ySqghDNao8UjyB
+         mYatOEQYa2Yv8Q6YW8pefkN8MrR+IBA8JBGg7u8UOq4qcNgr2COir5A8yiYz1Ghw73KE
+         3uXA==
+X-Gm-Message-State: ACrzQf3hBjdXBDCNrrbWl6w+FrSD63FocBHN66b+5F2pVEye+2DtE1lo
+        RrmjhM9/DtaK4mZgWcCqSzgf/A==
+X-Google-Smtp-Source: AMsMyM5su6GLmd3wVNJsyS2KxLEl2Sk6pk5VZJ9yUf8GGHfjD8HJ0MkSbQIwlxJwAqNg+d9TDzyy8Q==
+X-Received: by 2002:a17:902:ef83:b0:17c:a2f:1e3 with SMTP id iz3-20020a170902ef8300b0017c0a2f01e3mr1992176plb.35.1666083651847;
+        Tue, 18 Oct 2022 02:00:51 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d25-20020aa797b9000000b00561f8fdba8esm8997458pfq.12.2022.10.18.01.59.31
+        by smtp.gmail.com with ESMTPSA id h5-20020a628305000000b00562a90f9875sm8630912pfe.167.2022.10.18.02.00.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Oct 2022 01:59:31 -0700 (PDT)
+        Tue, 18 Oct 2022 02:00:50 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Rasesh Mody <rmody@marvell.com>
-Cc:     Kees Cook <keescook@chromium.org>, GR-Linux-NIC-Dev@marvell.com,
+To:     Ariel Elior <aelior@marvell.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Manish Chopra <manishc@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] bnx2: Pass allocation size to build_skb()
-Date:   Tue, 18 Oct 2022 01:59:29 -0700
-Message-Id: <20221018085911.never.761-kees@kernel.org>
+Subject: [PATCH] qed: Track allocation size of qed_ll2_buffer
+Date:   Tue, 18 Oct 2022 02:00:48 -0700
+Message-Id: <20221018090027.never.700-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1102; h=from:subject:message-id; bh=0iHouSVWi0PwtUaYPQkq5H19VoFAe1X0ZNyWzn5SCiM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjTmrxhlbZceUvuakDoLe7hd916D4/myuLK08nIiua YaUGddiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY05q8QAKCRCJcvTf3G3AJpR4EA CSTtT9LieM6D3o4tx5ZJ7a+zK3I/9WqHD2KIdka3We7XaR1IpSrnbypJUI70xheIXyARK5Zn80tsLE k7/i2X/PNQNJv9jzpb026t0x2BXhHogl/tlXrP4PrLQlYvBAL7XEn23/bri3WzBRbhgSsoPkeNfhlQ QKGVsgMLCItyteG6u/d5pTfNIh98Tm1hf9jG/GL6WAe/7+D8BF8BZGBwAOjiOv3Q8GbrSEHX0U/6pH /hg88vrHL6GJT8mTrn9dc6pgNB3fsn5fhIYs4/MLZ1Ahq2x81aqlRYfa5EaeSkAUEt9OQpm8TmjWQ2 nXpSqNi259io2cnMCSNpiSYSTPQ5ZhMQdDJnuwo4XCFN34OCPo3OZZu3Oyc3ZwTwmZmjrqElELGdY4 SfwSJAr3fuDULYYC3lL12WtPpGPRvJDVaODhLTcD7GLTOPDSCQx+twqsxNCH95pVm8YlHIpQ0yTSbZ bvjv9wViG6B0yqtZE+W1buh4DWWGIDVAJN1U0jCul+euwN0z8+hhYTtUDmDucD8JJyY2VEAQsqFdlZ D1xiDdO0FrU6GNtxtlAA85AfBfkUJlSKZSTDQjldvi8L//k34b7eK6Mok96/EqRa2qGd0TYnFnd1P+ ShmDVyS57kEFJJnIC/Y6S0Hp0E+cSRlSXShV8nJUBGoJsvYcz0yiQ1KeHnPA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4379; h=from:subject:message-id; bh=UyyxwN+spSmWTLahrOtBvcs2kdSsrHvIxeq7xjgzxAc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjTms/afJfd6NFoOASWSA5BvOB/d/kv7yz76GU3kTy 96NR43eJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY05rPwAKCRCJcvTf3G3AJnyoD/ 96Puqc3mwbifAok8jYR51omfrSTOzcnIy+24Lc+hWCEUI0X9Mae3T32iaf3M6MQamz58gRkFhYh8ag OioYvgTc5Z9ZMhrOPN3kth8r6vWTl9siGhOgrfvzDaa4tfzS4zUVBzSjA1obL603yhgneYGv8+fsJ7 NDeYRcco36RkgG8hkh9qz5J/5HWV5CHXDxBojXtsRAHqdBM8FMWAMUk0MMoxv/VOCMrMirZaJS40Xx 4yxWMu3fpNx1xklAzwOOgC+knGVlSmoqtLFN0AWge2/nrrrf/IDbV4bCBQ51Zyo1L7F4MWDBxAyeks M3OU6g4maAYxUfomo7qg1AjGYmor+dmTBPL4u17+Y6GChIop+1At3TirvQBhZhmzw1MXsBEk1+MRN4 eMiFOsHxlRKM82T3mRyRNC/qnjfmAMYRzyKaDerE9tgYiB+IyUN1GidNYC+oi1POesNztp+USd09pM E9t0ITfKI8f3Rtqs4v4XOXn5DCbhfSVtug8Y5pt30uMEbqBvfrmCqsNGHcIpGgP0uAX/5t8ax7LyyF u/jQbTjXGgvsApnDWB2lPKpIlbYC6SRUDNpRSyv5DtC+9tTJs3zyIS5Rj+eTUJPWurmUwFCLF6Cvzu ampL8iyaIFIF4uoYM6Ki6dQqzPnM1npki4AYALAlwduLJ8zlQ1qrue1N6PfA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -68,11 +69,13 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 In preparation for requiring that build_skb() have a non-zero size
-argument, pass the actual data allocation size explicitly into
-build_skb().
+argument, track the qed_ll2_buffer data allocation size explicitly
+and pass it into build_skb(). To retain the original result of using
+the ksize() side-effect on the skb size, explicitly round up the size
+during allocation.
 
-Cc: Rasesh Mody <rmody@marvell.com>
-Cc: GR-Linux-NIC-Dev@marvell.com
+Cc: Ariel Elior <aelior@marvell.com>
+Cc: Manish Chopra <manishc@marvell.com>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Eric Dumazet <edumazet@google.com>
 Cc: Jakub Kicinski <kuba@kernel.org>
@@ -80,23 +83,115 @@ Cc: Paolo Abeni <pabeni@redhat.com>
 Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/ethernet/broadcom/bnx2.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qed/qed_ll2.c | 37 ++++++++++++-----------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2.c b/drivers/net/ethernet/broadcom/bnx2.c
-index fec57f1982c8..0b2d4972343a 100644
---- a/drivers/net/ethernet/broadcom/bnx2.c
-+++ b/drivers/net/ethernet/broadcom/bnx2.c
-@@ -3045,7 +3045,8 @@ bnx2_rx_skb(struct bnx2 *bp, struct bnx2_rx_ring_info *rxr, u8 *data,
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_ll2.c b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
+index ed274f033626..750391e4d80a 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_ll2.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
+@@ -62,6 +62,7 @@ struct qed_cb_ll2_info {
+ struct qed_ll2_buffer {
+ 	struct list_head list;
+ 	void *data;
++	u32 len;
+ 	dma_addr_t phys_addr;
+ };
  
- 	dma_unmap_single(&bp->pdev->dev, dma_addr, bp->rx_buf_use_size,
- 			 DMA_FROM_DEVICE);
--	skb = build_skb(data, 0);
-+
-+	skb = build_skb(data, bp->rx_buf_size);
+@@ -111,20 +112,23 @@ static void qed_ll2b_complete_tx_packet(void *cxt,
+ }
+ 
+ static int qed_ll2_alloc_buffer(struct qed_dev *cdev,
+-				u8 **data, dma_addr_t *phys_addr)
++				struct qed_ll2_buffer *buffer)
+ {
+-	*data = kmalloc(cdev->ll2->rx_size, GFP_ATOMIC);
+-	if (!(*data)) {
++	buffer->len = kmalloc_size_roundup(cdev->ll2->rx_size);
++	buffer->data = kmalloc(buffer->len, GFP_ATOMIC);
++	if (!buffer->data) {
+ 		DP_INFO(cdev, "Failed to allocate LL2 buffer data\n");
++		buffer->len = 0;
+ 		return -ENOMEM;
+ 	}
+ 
+-	*phys_addr = dma_map_single(&cdev->pdev->dev,
+-				    ((*data) + NET_SKB_PAD),
+-				    cdev->ll2->rx_size, DMA_FROM_DEVICE);
+-	if (dma_mapping_error(&cdev->pdev->dev, *phys_addr)) {
++	buffer->phys_addr = dma_map_single(&cdev->pdev->dev,
++					   buffer->data + NET_SKB_PAD,
++					   buffer->len, DMA_FROM_DEVICE);
++	if (dma_mapping_error(&cdev->pdev->dev, buffer->phys_addr)) {
+ 		DP_INFO(cdev, "Failed to map LL2 buffer data\n");
+-		kfree((*data));
++		kfree(buffer->data);
++		buffer->len = 0;
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -139,6 +143,7 @@ static int qed_ll2_dealloc_buffer(struct qed_dev *cdev,
+ 	dma_unmap_single(&cdev->pdev->dev, buffer->phys_addr,
+ 			 cdev->ll2->rx_size, DMA_FROM_DEVICE);
+ 	kfree(buffer->data);
++	buffer->len = 0;
+ 	list_del(&buffer->list);
+ 
+ 	cdev->ll2->rx_cnt--;
+@@ -164,11 +169,10 @@ static void qed_ll2b_complete_rx_packet(void *cxt,
+ 	struct qed_hwfn *p_hwfn = cxt;
+ 	struct qed_ll2_buffer *buffer = data->cookie;
+ 	struct qed_dev *cdev = p_hwfn->cdev;
+-	dma_addr_t new_phys_addr;
++	struct qed_ll2_buffer new_buffer = { };
+ 	struct sk_buff *skb;
+ 	bool reuse = false;
+ 	int rc = -EINVAL;
+-	u8 *new_data;
+ 
+ 	DP_VERBOSE(p_hwfn,
+ 		   (NETIF_MSG_RX_STATUS | QED_MSG_STORAGE | NETIF_MSG_PKTDATA),
+@@ -191,8 +195,7 @@ static void qed_ll2b_complete_rx_packet(void *cxt,
+ 
+ 	/* Allocate a replacement for buffer; Reuse upon failure */
+ 	if (!reuse)
+-		rc = qed_ll2_alloc_buffer(p_hwfn->cdev, &new_data,
+-					  &new_phys_addr);
++		rc = qed_ll2_alloc_buffer(p_hwfn->cdev, &new_buffer);
+ 
+ 	/* If need to reuse or there's no replacement buffer, repost this */
+ 	if (rc)
+@@ -200,7 +203,7 @@ static void qed_ll2b_complete_rx_packet(void *cxt,
+ 	dma_unmap_single(&cdev->pdev->dev, buffer->phys_addr,
+ 			 cdev->ll2->rx_size, DMA_FROM_DEVICE);
+ 
+-	skb = build_skb(buffer->data, 0);
++	skb = build_skb(buffer->data, buffer->len);
  	if (!skb) {
- 		kfree(data);
- 		goto error;
+ 		DP_INFO(cdev, "Failed to build SKB\n");
+ 		kfree(buffer->data);
+@@ -235,8 +238,9 @@ static void qed_ll2b_complete_rx_packet(void *cxt,
+ 
+ out_post1:
+ 	/* Update Buffer information and update FW producer */
+-	buffer->data = new_data;
+-	buffer->phys_addr = new_phys_addr;
++	buffer->data = new_buffer.data;
++	buffer->len = new_buffer.len;
++	buffer->phys_addr = new_buffer.phys_addr;
+ 
+ out_post:
+ 	rc = qed_ll2_post_rx_buffer(p_hwfn, cdev->ll2->handle,
+@@ -2608,8 +2612,7 @@ static int qed_ll2_start(struct qed_dev *cdev, struct qed_ll2_params *params)
+ 			goto err0;
+ 		}
+ 
+-		rc = qed_ll2_alloc_buffer(cdev, (u8 **)&buffer->data,
+-					  &buffer->phys_addr);
++		rc = qed_ll2_alloc_buffer(cdev, buffer);
+ 		if (rc) {
+ 			kfree(buffer);
+ 			goto err0;
 -- 
 2.34.1
 
