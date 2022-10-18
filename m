@@ -2,362 +2,82 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 016D0C4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 10:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D2EC433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 10:09:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230192AbiJRKFz (ORCPT
+        id S229886AbiJRKJj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 06:05:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56776 "EHLO
+        Tue, 18 Oct 2022 06:09:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230280AbiJRKFy (ORCPT
+        with ESMTP id S229828AbiJRKJi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 06:05:54 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59EB93AE41
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 03:05:50 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id n7so13372404plp.1
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 03:05:50 -0700 (PDT)
+        Tue, 18 Oct 2022 06:09:38 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ADE11A385
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 03:09:35 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id cl1so13447160pjb.1
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 03:09:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xpXkUl+z1zNizj9vgkTXvIWAiqD+SGhYAW2dD7JSoQI=;
-        b=DzVSaK73+xGrwYowzaegLcBLY3WpmQ4r/uHTmcLTaNlBWKKxQr2IT/3y/a3k9tPfZS
-         KhT3I0ScX2Eduz6NBVOLf9qrDJNVKGA/dwt+FQYHUgwItAv3B2JtFjCM664IWOpsZoIx
-         5unKNvKHT26Yb/i3SalFenyqelwKbaEVOVHYE=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zKUSHBzIV9AmjcAPIwH4d1e4/pivyZO+yk3jBrIXqik=;
+        b=Og8qUuzdDioBAnndTRdVzqW2TKX37JQVBINZ/GxEZMvHmg91nkbp/PJcaf8RpNdIEr
+         CX+xnORcAVblgI6/GK7I1zT5c5+88KvTGhc96WQKY4nHKe4MQ34CBQjvxc4GiiK13BwG
+         JbpG2Xjma0DFxR3gRlBpequA1KZ/aXUeyFs4o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xpXkUl+z1zNizj9vgkTXvIWAiqD+SGhYAW2dD7JSoQI=;
-        b=5OYAVH7nRQuHOlfLZTTkiIV4eEWSn+trWHwPUI+250/dz0mChGbHEYGqbb4FksH5Ot
-         WG0EXePANnmwCTytybwaDkC0tUGL0aS2ydknxlCWI+ScDWbwFSE6TK69K0kFAiqCddY7
-         8Gm/JJWFgsRmWdkOAvqmvMKDYYcUg6edXHmKTdTwoEyDMoVavDqRYgzurP/DjaVd1HCn
-         UdIEO+nKobFhE9aPmtS2IHl0B92wPf+A7pgj8AoJpudL5Q5PDnnHVPPbSW11HCwcbqn9
-         J20Kyz+wqs6X+hryZ6vzpxshk28mxFwKqdm2+vlaV8yfaioRMuE6n6iNmaiAe0819mow
-         BzdQ==
-X-Gm-Message-State: ACrzQf10yrloNgCE1wLh6b9dL2ZhM8XOfZFxo/dRIgfQJ8kkfH0cVO86
-        UspxwBOBB1P/cp0FWv2V4mqAhQ==
-X-Google-Smtp-Source: AMsMyM4nwgopl4PThVGH3PQzxQrGrADwJg4nz7UwMJTN07fHWiz3gkdMa8WvOowOmT5Y2CmBQtra9Q==
-X-Received: by 2002:a17:90b:f18:b0:20a:9d2b:b75a with SMTP id br24-20020a17090b0f1800b0020a9d2bb75amr38512829pjb.95.1666087549092;
-        Tue, 18 Oct 2022 03:05:49 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zKUSHBzIV9AmjcAPIwH4d1e4/pivyZO+yk3jBrIXqik=;
+        b=PYEPthoIy7tPEJr04ko/fowJwn2UDDFBKDsJMzUpACrMIkFuDhdCpIiKI08Syd/2zq
+         /CkJQJri8+uyWG74WqbwqB+y2Kq3lxc0R8OBvOJ+Uljgv8T0EYWBQO6zO9MPymy6wtGE
+         rFmtODG8jhtcSgXUyEayKesvdHiXs/K7hLB7gmNx0Cb+Ua9h4uDHzf5mPZT5MBBZrZlA
+         2NQWXpktOzz0nEnZ8DaEsFr6mh6Pu+dSs8zsq9dIAldsAT1+tQl06+4yohqa9IKyOVJJ
+         +y4w/p5B0Gsu+EK+G7nxno6tydLBg7TU4kPUiWrg6a/GRkiLhAHI15cIhSqw9VxTdKnC
+         o5Vw==
+X-Gm-Message-State: ACrzQf2dd0Hk9IOu5rQtc1kf78O8vEdIIzYhS1TTWRj6g2dSizrtKYsV
+        HnWbD6qGEV9lPWw/jnGE5IMHOQ==
+X-Google-Smtp-Source: AMsMyM5wU1XEsuBMrD5Wn9zq3F5URSQDleuB2+Yfz06/29+vEOi6q0FdiYAl8IeHpZIEEsdsNB+sDA==
+X-Received: by 2002:a17:90b:1c11:b0:20d:459b:ef0e with SMTP id oc17-20020a17090b1c1100b0020d459bef0emr38396657pjb.129.1666087774961;
+        Tue, 18 Oct 2022 03:09:34 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b12-20020aa78ecc000000b005627470944dsm8730232pfr.189.2022.10.18.03.05.48
+        by smtp.gmail.com with ESMTPSA id x1-20020a170902ec8100b0017da2798025sm8337107plg.295.2022.10.18.03.09.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Oct 2022 03:05:48 -0700 (PDT)
+        Tue, 18 Oct 2022 03:09:33 -0700 (PDT)
+Date:   Tue, 18 Oct 2022 03:09:33 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Kees Cook <keescook@chromium.org>, David Gow <davidgow@google.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] siphash: Convert selftest to KUnit
-Date:   Tue, 18 Oct 2022 03:05:46 -0700
-Message-Id: <20221018100510.never.479-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To:     Michael J Ruhl <michael.j.ruhl@intel.com>
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] igb: Proactively round up to kmalloc bucket size
+Message-ID: <202210180307.484A016FE0@keescook>
+References: <20221018092340.never.556-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10466; h=from:subject:message-id; bh=bXI7LVTcU0TAHuxQIqyN9rCLQTorw9vOeWRXpjgDiWg=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjTnp6J5XHOzMkOwH0LYtAmytll5RTblS0h+meiDm5 BjB73MyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY056egAKCRCJcvTf3G3AJrqMD/ 4yeqkx0Y7HF7pRyX1vJu3yxpcWz2agRNsxMWFQrTAXiAA8tI6yz1+8WqPxtiByPxJGcGl4aJQXgYBL ARR9TsrlEOYTDX1xwWP7/uFr59YB67XHzAq6hJauvGs6Au9X1u+x7gfzYKUURQgJ2Cwgs4PmkZodoe jxTpWi/6Tp5u3WTiq7Wnx9RBN8/v2F9FYFthj5q0VHoox9eDaAgZc3FF7RTg9WhmdaxjLD9iyJGiwA gJgDQLd+YCTKE/30rc6mZ/CHB+0IC7jTz6JKNES7rVFa4KhQRHbZeoWJclJb0cg77IhWA/nweK8t51 o0cNA4dVPzN9pPmTYV2vVbA2N7VhrRbT1YCpjqrUquYibLoWMpw2fJ2SHTy1p7sscPs/iR6GOUyE8k Uys8QoCTbLx43g7SrHSXDz2jGWdiOR5di30Tih1ys4XtqQOenvn48g7TmqMt7cfycuaNdlc8/hEpbr C4E7BK8ThPbjn9vR36MHfUQmoNFcgjYQ8moJOQ/CgvhEBPIKlvbgIaPV0UJyfS2d+B9zrEoczonJSb Z4wS/8JIa68MOhBoYJfpUfWparRsivtgHBxVzzrXlpzsxdqpZPhHmj2dmHjZXZ9zb7K/4FL3g5+mYM +sGLuSgR9oZoMEGas2QC4aUOILG1g+t1m982aQDosqhkiP0/b0WCDW8t0+qg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221018092340.never.556-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Convert the siphash self-test to KUnit so it will be included in "all
-KUnit tests" coverage, and can be run individually still:
+On Tue, Oct 18, 2022 at 02:25:23AM -0700, Kees Cook wrote:
+> Kees Cook (2):
+>   igb: Do not free q_vector unless new one was allocated
+>   igb: Proactively round up to kmalloc bucket size
+> 
+>  drivers/net/ethernet/intel/igb/igb_main.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 
-$ ./tools/testing/kunit/kunit.py run siphash
-...
-[02:58:45] Starting KUnit Kernel (1/1)...
-[02:58:45] ============================================================
-[02:58:45] =================== siphash (1 subtest) ====================
-[02:58:45] [PASSED] siphash_test
-[02:58:45] ===================== [PASSED] siphash =====================
-[02:58:45] ============================================================
-[02:58:45] Testing complete. Ran 1 tests: passed: 1
-[02:58:45] Elapsed time: 21.421s total, 4.306s configuring, 16.947s building, 0.148s running
+Ugh, yay for my MUA vs commas. Sorry for any future typo bounce spam. :(
 
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: David Gow <davidgow@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- MAINTAINERS                             |   2 +-
- lib/Kconfig.debug                       |  20 +--
- lib/Makefile                            |   2 +-
- lib/{test_siphash.c => siphash_kunit.c} | 165 ++++++++++--------------
- 4 files changed, 83 insertions(+), 106 deletions(-)
- rename lib/{test_siphash.c => siphash_kunit.c} (60%)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cf0f18502372..037466b9a027 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18862,7 +18862,7 @@ M:	Jason A. Donenfeld <Jason@zx2c4.com>
- S:	Maintained
- F:	include/linux/siphash.h
- F:	lib/siphash.c
--F:	lib/test_siphash.c
-+F:	lib/siphash_kunit.c
- 
- SIS 190 ETHERNET DRIVER
- M:	Francois Romieu <romieu@fr.zoreil.com>
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 3fc7abffc7aa..65593675cd5a 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2247,15 +2247,6 @@ config TEST_RHASHTABLE
- 
- 	  If unsure, say N.
- 
--config TEST_SIPHASH
--	tristate "Perform selftest on siphash functions"
--	help
--	  Enable this option to test the kernel's siphash (<linux/siphash.h>) hash
--	  functions on boot (or module load).
--
--	  This is intended to help people writing architecture-specific
--	  optimized versions.  If unsure, say N.
--
- config TEST_IDA
- 	tristate "Perform selftest on IDA functions"
- 
-@@ -2583,6 +2574,17 @@ config HW_BREAKPOINT_KUNIT_TEST
- 
- 	  If unsure, say N.
- 
-+config SIPHASH_KUNIT_TEST
-+	tristate "Perform selftest on siphash functions" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Enable this option to test the kernel's siphash (<linux/siphash.h>) hash
-+	  functions on boot (or module load).
-+
-+	  This is intended to help people writing architecture-specific
-+	  optimized versions.  If unsure, say N.
-+
- config TEST_UDELAY
- 	tristate "udelay test driver"
- 	help
-diff --git a/lib/Makefile b/lib/Makefile
-index 161d6a724ff7..bca02ac1adf8 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -62,7 +62,6 @@ obj-$(CONFIG_TEST_BITOPS) += test_bitops.o
- CFLAGS_test_bitops.o += -Werror
- obj-$(CONFIG_CPUMASK_KUNIT_TEST) += cpumask_kunit.o
- obj-$(CONFIG_TEST_SYSCTL) += test_sysctl.o
--obj-$(CONFIG_TEST_SIPHASH) += test_siphash.o
- obj-$(CONFIG_HASH_KUNIT_TEST) += test_hash.o
- obj-$(CONFIG_TEST_IDA) += test_ida.o
- obj-$(CONFIG_TEST_UBSAN) += test_ubsan.o
-@@ -380,6 +379,7 @@ obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow_kunit.o
- CFLAGS_stackinit_kunit.o += $(call cc-disable-warning, switch-unreachable)
- obj-$(CONFIG_STACKINIT_KUNIT_TEST) += stackinit_kunit.o
- obj-$(CONFIG_FORTIFY_KUNIT_TEST) += fortify_kunit.o
-+obj-$(CONFIG_SIPHASH_KUNIT_TEST) += siphash_kunit.o
- 
- obj-$(CONFIG_GENERIC_LIB_DEVMEM_IS_ALLOWED) += devmem_is_allowed.o
- 
-diff --git a/lib/test_siphash.c b/lib/siphash_kunit.c
-similarity index 60%
-rename from lib/test_siphash.c
-rename to lib/siphash_kunit.c
-index a96788d0141d..a3c697e8be35 100644
---- a/lib/test_siphash.c
-+++ b/lib/siphash_kunit.c
-@@ -13,6 +13,7 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <kunit/test.h>
- #include <linux/siphash.h>
- #include <linux/kernel.h>
- #include <linux/string.h>
-@@ -109,114 +110,88 @@ static const u32 test_vectors_hsiphash[64] = {
- };
- #endif
- 
--static int __init siphash_test_init(void)
-+#define chk(hash, vector, fmt...)			\
-+	KUNIT_EXPECT_EQ_MSG(test, hash, vector, fmt)
-+
-+static void siphash_test(struct kunit *test)
- {
- 	u8 in[64] __aligned(SIPHASH_ALIGNMENT);
- 	u8 in_unaligned[65] __aligned(SIPHASH_ALIGNMENT);
- 	u8 i;
--	int ret = 0;
- 
- 	for (i = 0; i < 64; ++i) {
- 		in[i] = i;
- 		in_unaligned[i + 1] = i;
--		if (siphash(in, i, &test_key_siphash) !=
--						test_vectors_siphash[i]) {
--			pr_info("siphash self-test aligned %u: FAIL\n", i + 1);
--			ret = -EINVAL;
--		}
--		if (siphash(in_unaligned + 1, i, &test_key_siphash) !=
--						test_vectors_siphash[i]) {
--			pr_info("siphash self-test unaligned %u: FAIL\n", i + 1);
--			ret = -EINVAL;
--		}
--		if (hsiphash(in, i, &test_key_hsiphash) !=
--						test_vectors_hsiphash[i]) {
--			pr_info("hsiphash self-test aligned %u: FAIL\n", i + 1);
--			ret = -EINVAL;
--		}
--		if (hsiphash(in_unaligned + 1, i, &test_key_hsiphash) !=
--						test_vectors_hsiphash[i]) {
--			pr_info("hsiphash self-test unaligned %u: FAIL\n", i + 1);
--			ret = -EINVAL;
--		}
--	}
--	if (siphash_1u64(0x0706050403020100ULL, &test_key_siphash) !=
--						test_vectors_siphash[8]) {
--		pr_info("siphash self-test 1u64: FAIL\n");
--		ret = -EINVAL;
--	}
--	if (siphash_2u64(0x0706050403020100ULL, 0x0f0e0d0c0b0a0908ULL,
--			 &test_key_siphash) != test_vectors_siphash[16]) {
--		pr_info("siphash self-test 2u64: FAIL\n");
--		ret = -EINVAL;
-+		chk(siphash(in, i, &test_key_siphash),
-+		    test_vectors_siphash[i],
-+		    "siphash self-test aligned %u: FAIL", i + 1);
-+		chk(siphash(in_unaligned + 1, i, &test_key_siphash),
-+		    test_vectors_siphash[i],
-+		    "siphash self-test unaligned %u: FAIL", i + 1);
-+		chk(hsiphash(in, i, &test_key_hsiphash),
-+		    test_vectors_hsiphash[i],
-+		    "hsiphash self-test aligned %u: FAIL", i + 1);
-+		chk(hsiphash(in_unaligned + 1, i, &test_key_hsiphash),
-+		    test_vectors_hsiphash[i],
-+		    "hsiphash self-test unaligned %u: FAIL", i + 1);
- 	}
--	if (siphash_3u64(0x0706050403020100ULL, 0x0f0e0d0c0b0a0908ULL,
--			 0x1716151413121110ULL, &test_key_siphash) !=
--						test_vectors_siphash[24]) {
--		pr_info("siphash self-test 3u64: FAIL\n");
--		ret = -EINVAL;
--	}
--	if (siphash_4u64(0x0706050403020100ULL, 0x0f0e0d0c0b0a0908ULL,
-+	chk(siphash_1u64(0x0706050403020100ULL, &test_key_siphash),
-+	    test_vectors_siphash[8],
-+	    "siphash self-test 1u64: FAIL");
-+	chk(siphash_2u64(0x0706050403020100ULL, 0x0f0e0d0c0b0a0908ULL,
-+			 &test_key_siphash),
-+	    test_vectors_siphash[16],
-+	    "siphash self-test 2u64: FAIL");
-+	chk(siphash_3u64(0x0706050403020100ULL, 0x0f0e0d0c0b0a0908ULL,
-+			 0x1716151413121110ULL, &test_key_siphash),
-+	    test_vectors_siphash[24],
-+	    "siphash self-test 3u64: FAIL");
-+	chk(siphash_4u64(0x0706050403020100ULL, 0x0f0e0d0c0b0a0908ULL,
- 			 0x1716151413121110ULL, 0x1f1e1d1c1b1a1918ULL,
--			 &test_key_siphash) != test_vectors_siphash[32]) {
--		pr_info("siphash self-test 4u64: FAIL\n");
--		ret = -EINVAL;
--	}
--	if (siphash_1u32(0x03020100U, &test_key_siphash) !=
--						test_vectors_siphash[4]) {
--		pr_info("siphash self-test 1u32: FAIL\n");
--		ret = -EINVAL;
--	}
--	if (siphash_2u32(0x03020100U, 0x07060504U, &test_key_siphash) !=
--						test_vectors_siphash[8]) {
--		pr_info("siphash self-test 2u32: FAIL\n");
--		ret = -EINVAL;
--	}
--	if (siphash_3u32(0x03020100U, 0x07060504U,
--			 0x0b0a0908U, &test_key_siphash) !=
--						test_vectors_siphash[12]) {
--		pr_info("siphash self-test 3u32: FAIL\n");
--		ret = -EINVAL;
--	}
--	if (siphash_4u32(0x03020100U, 0x07060504U,
--			 0x0b0a0908U, 0x0f0e0d0cU, &test_key_siphash) !=
--						test_vectors_siphash[16]) {
--		pr_info("siphash self-test 4u32: FAIL\n");
--		ret = -EINVAL;
--	}
--	if (hsiphash_1u32(0x03020100U, &test_key_hsiphash) !=
--						test_vectors_hsiphash[4]) {
--		pr_info("hsiphash self-test 1u32: FAIL\n");
--		ret = -EINVAL;
--	}
--	if (hsiphash_2u32(0x03020100U, 0x07060504U, &test_key_hsiphash) !=
--						test_vectors_hsiphash[8]) {
--		pr_info("hsiphash self-test 2u32: FAIL\n");
--		ret = -EINVAL;
--	}
--	if (hsiphash_3u32(0x03020100U, 0x07060504U,
--			  0x0b0a0908U, &test_key_hsiphash) !=
--						test_vectors_hsiphash[12]) {
--		pr_info("hsiphash self-test 3u32: FAIL\n");
--		ret = -EINVAL;
--	}
--	if (hsiphash_4u32(0x03020100U, 0x07060504U,
--			  0x0b0a0908U, 0x0f0e0d0cU, &test_key_hsiphash) !=
--						test_vectors_hsiphash[16]) {
--		pr_info("hsiphash self-test 4u32: FAIL\n");
--		ret = -EINVAL;
--	}
--	if (!ret)
--		pr_info("self-tests: pass\n");
--	return ret;
-+			 &test_key_siphash),
-+	    test_vectors_siphash[32],
-+	    "siphash self-test 4u64: FAIL");
-+	chk(siphash_1u32(0x03020100U, &test_key_siphash),
-+	    test_vectors_siphash[4],
-+	    "siphash self-test 1u32: FAIL");
-+	chk(siphash_2u32(0x03020100U, 0x07060504U, &test_key_siphash),
-+	    test_vectors_siphash[8],
-+	    "siphash self-test 2u32: FAIL");
-+	chk(siphash_3u32(0x03020100U, 0x07060504U,
-+			 0x0b0a0908U, &test_key_siphash),
-+	    test_vectors_siphash[12],
-+	    "siphash self-test 3u32: FAIL");
-+	chk(siphash_4u32(0x03020100U, 0x07060504U,
-+			 0x0b0a0908U, 0x0f0e0d0cU, &test_key_siphash),
-+	    test_vectors_siphash[16],
-+	    "siphash self-test 4u32: FAIL");
-+	chk(hsiphash_1u32(0x03020100U, &test_key_hsiphash),
-+	    test_vectors_hsiphash[4],
-+	    "hsiphash self-test 1u32: FAIL");
-+	chk(hsiphash_2u32(0x03020100U, 0x07060504U, &test_key_hsiphash),
-+	    test_vectors_hsiphash[8],
-+	    "hsiphash self-test 2u32: FAIL");
-+	chk(hsiphash_3u32(0x03020100U, 0x07060504U,
-+			  0x0b0a0908U, &test_key_hsiphash),
-+	    test_vectors_hsiphash[12],
-+	    "hsiphash self-test 3u32: FAIL");
-+	chk(hsiphash_4u32(0x03020100U, 0x07060504U,
-+			  0x0b0a0908U, 0x0f0e0d0cU, &test_key_hsiphash),
-+	    test_vectors_hsiphash[16],
-+	    "hsiphash self-test 4u32: FAIL");
- }
- 
--static void __exit siphash_test_exit(void)
--{
--}
-+static struct kunit_case siphash_test_cases[] = {
-+	KUNIT_CASE(siphash_test),
-+	{}
-+};
-+
-+static struct kunit_suite siphash_test_suite = {
-+	.name = "siphash",
-+	.test_cases = siphash_test_cases,
-+};
- 
--module_init(siphash_test_init);
--module_exit(siphash_test_exit);
-+kunit_test_suite(siphash_test_suite);
- 
- MODULE_AUTHOR("Jason A. Donenfeld <Jason@zx2c4.com>");
- MODULE_LICENSE("Dual BSD/GPL");
 -- 
-2.34.1
-
+Kees Cook
