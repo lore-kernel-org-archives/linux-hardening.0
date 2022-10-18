@@ -2,184 +2,147 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B14C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 15:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F6CC433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 16:29:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230348AbiJRPxV (ORCPT
+        id S230132AbiJRQ3i (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 11:53:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38514 "EHLO
+        Tue, 18 Oct 2022 12:29:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230260AbiJRPxT (ORCPT
+        with ESMTP id S230107AbiJRQ3f (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 11:53:19 -0400
-Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD0D8C97EA;
-        Tue, 18 Oct 2022 08:53:04 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.18.147.227])
-        by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4MsHls6RwJz9xrpj;
-        Tue, 18 Oct 2022 23:27:05 +0800 (CST)
-Received: from roberto-ThinkStation-P620 (unknown [10.204.63.22])
-        by APP2 (Coremail) with SMTP id GxC2BwD3fgUbx05jE5UGAA--.19528S2;
-        Tue, 18 Oct 2022 16:32:53 +0100 (CET)
-Message-ID: <1b41c633bbd31b82b02fdbae718f2f11ac862181.camel@huaweicloud.com>
-Subject: Re: [PATCH 4/9] ima: Move ima_file_free() into LSM
-From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
-To:     Christian Brauner <brauner@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, Petr Vorel <pvorel@suse.cz>,
-        Jonathan McDowell <noodles@fb.com>,
-        Borislav Petkov <bp@suse.de>, Takashi Iwai <tiwai@suse.de>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        KP Singh <kpsingh@kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        John Johansen <john.johansen@canonical.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Date:   Tue, 18 Oct 2022 17:32:40 +0200
-In-Reply-To: <20221018150213.7n4sv7rtsh6lshd5@wittgenstein>
-References: <20221013222702.never.990-kees@kernel.org>
-         <20221013223654.659758-4-keescook@chromium.org>
-         <20221018150213.7n4sv7rtsh6lshd5@wittgenstein>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        Tue, 18 Oct 2022 12:29:35 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0613F09;
+        Tue, 18 Oct 2022 09:29:21 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id 13so33541911ejn.3;
+        Tue, 18 Oct 2022 09:29:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3kT33+mNIFBJ/DJxtGCpSH0GNDOQJK7DLYP/xqwSgzc=;
+        b=W7swoyXzIJAHfFFkFgPm0e9j3tls98PDd/9hIvON+rJrVUxtMkTv+jROg9rKGKsRBF
+         i0fcSjrgRuxJoHU0pBU6mwl6ZjMPAUry3qhgIPLMjTcG8DTLCofddLB3ZhMrmAtnWPWU
+         B+dLe/0vtuwGiYAPn30BKWQ4BFjVeQRFX4FEFyO4wzTd0dGtBiRadwuakNq9OAHJvZp5
+         N8yV8BFYDWJJvvMZyuToLMSqIUTbg2ri6zCHJGViW64L5TP5NsIZltxb/3ODoQ4zSB6y
+         Onm55aSiSJF1r1RWIinOmyHYppAKoFgYNW52I4EhHWojxO3P8q6LdtSqapaLPjozfD5R
+         0UPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3kT33+mNIFBJ/DJxtGCpSH0GNDOQJK7DLYP/xqwSgzc=;
+        b=XpcW88gO8I8Rk47Y/W98lDHZ9qQsnUA50QO2ZIzmB+tQUm91TMILpvIArS/xWXM9U6
+         puwP2W2fDSDfqY4fuYnYAVXDmgPP5tqN4iPPmMUtvgL5nRPk1jDsdObEQWRElQKLZ4aq
+         KoqnnEEfe0CXELIui7nqw9Z+lYLwK2OE7bhpJzeLrFulJM/sdAFY76no5B3IsGFeaI0D
+         HaDffHIGddo7775lGJ4FPDQ+Hcfbc/aoVmuMuzL+jzajSRSRmOV5E9KiJ2Z93LOcZhdS
+         IlRc0gwF0pB+5OvqdMuJ8vLvYjTibswiBNa1DIgTP732xLe9/hDtMP8+c+zn/WNvQoDr
+         JHgA==
+X-Gm-Message-State: ACrzQf14QQ6dy53EJ/wy8P1RO9CSpZLJGdtC9B4iKWQbA+nr9mDFjOyM
+        9aA7fpQwZK7Ztp/0wzhrcW6+Q+Aw1WKZa5bmp2w=
+X-Google-Smtp-Source: AMsMyM5WoWjJQAvW3IeWbUZgz575QczId7A8erat7mPlN60+d3oZxLYKHrysfuufSZGov0mVWUAwtVnQ3hHQSgHOLvM=
+X-Received: by 2002:a17:907:7f93:b0:791:91a6:5615 with SMTP id
+ qk19-20020a1709077f9300b0079191a65615mr3246670ejc.708.1666110558666; Tue, 18
+ Oct 2022 09:29:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: GxC2BwD3fgUbx05jE5UGAA--.19528S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxXr1ktw18Kr1rJr43Gr4UJwb_yoWrAr43pF
-        s3t3W5Crn3Jryjgr97Canrua4Fg39agryxuFyrW348tFnxtFyvvFy3Cr1Y9F4UJry0krWx
-        tF4UKry5Z3WjyaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkIb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x
-        0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02
-        F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4I
-        kC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IY
-        c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-        026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF
-        0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIx
-        AIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E
-        87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7IU1rMa5UUUUU==
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAJBF1jj4BjMQACsu
-X-CFilter-Loop: Reflected
+References: <20221018090205.never.090-kees@kernel.org>
+In-Reply-To: <20221018090205.never.090-kees@kernel.org>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 18 Oct 2022 09:29:07 -0700
+Message-ID: <CAADnVQKBfPeDqHE8U6f79XKqrQsLWysRQMweBhwBd-qRP0FDpw@mail.gmail.com>
+Subject: Re: [PATCH] bpf, test_run: Track allocation size of data
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 2022-10-18 at 17:02 +0200, Christian Brauner wrote:
-> On Thu, Oct 13, 2022 at 03:36:49PM -0700, Kees Cook wrote:
-> > The file_free_security hook already exists for managing
-> > notification of
-> > released files. Use the LSM hook instead of open-coded stacking.
-> > 
-> > Cc: Mimi Zohar <zohar@linux.ibm.com>
-> > Cc: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-> > Cc: Paul Moore <paul@paul-moore.com>
-> > Cc: James Morris <jmorris@namei.org>
-> > Cc: "Serge E. Hallyn" <serge@hallyn.com>
-> > Cc: Petr Vorel <pvorel@suse.cz>
-> > Cc: Jonathan McDowell <noodles@fb.com>
-> > Cc: Borislav Petkov <bp@suse.de>
-> > Cc: Takashi Iwai <tiwai@suse.de>
-> > Cc: linux-integrity@vger.kernel.org
-> > Cc: linux-security-module@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  fs/file_table.c                   | 1 -
-> >  include/linux/ima.h               | 6 ------
-> >  security/integrity/ima/ima_main.c | 3 ++-
-> >  3 files changed, 2 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/fs/file_table.c b/fs/file_table.c
-> > index 99c6796c9f28..fa707d221a43 100644
-> > --- a/fs/file_table.c
-> > +++ b/fs/file_table.c
-> > @@ -311,7 +311,6 @@ static void __fput(struct file *file)
-> >  	eventpoll_release(file);
-> >  	locks_remove_file(file);
-> >  
-> > -	ima_file_free(file);
-> >  	if (unlikely(file->f_flags & FASYNC)) {
-> >  		if (file->f_op->fasync)
-> >  			file->f_op->fasync(-1, file, 0);
-> > diff --git a/include/linux/ima.h b/include/linux/ima.h
-> > index 6dc5143f89f2..9f18df366064 100644
-> > --- a/include/linux/ima.h
-> > +++ b/include/linux/ima.h
-> > @@ -19,7 +19,6 @@ extern enum hash_algo
-> > ima_get_current_hash_algo(void);
-> >  extern int ima_file_check(struct file *file, int mask);
-> >  extern void ima_post_create_tmpfile(struct user_namespace
-> > *mnt_userns,
-> >  				    struct inode *inode);
-> > -extern void ima_file_free(struct file *file);
-> >  extern void ima_post_path_mknod(struct user_namespace *mnt_userns,
-> >  				struct dentry *dentry);
-> >  extern int ima_file_hash(struct file *file, char *buf, size_t
-> > buf_size);
-> > @@ -56,11 +55,6 @@ static inline void
-> > ima_post_create_tmpfile(struct user_namespace *mnt_userns,
-> >  {
-> >  }
-> >  
-> > -static inline void ima_file_free(struct file *file)
-> > -{
-> > -	return;
-> > -}
-> > -
-> >  static inline void ima_post_path_mknod(struct user_namespace
-> > *mnt_userns,
-> >  				       struct dentry *dentry)
-> >  {
-> > diff --git a/security/integrity/ima/ima_main.c
-> > b/security/integrity/ima/ima_main.c
-> > index b3b79d030a67..94379ba40b58 100644
-> > --- a/security/integrity/ima/ima_main.c
-> > +++ b/security/integrity/ima/ima_main.c
-> > @@ -183,7 +183,7 @@ static void ima_check_last_writer(struct
-> > integrity_iint_cache *iint,
-> >   *
-> >   * Flag files that changed, based on i_version
-> >   */
-> > -void ima_file_free(struct file *file)
-> > +static void ima_file_free(struct file *file)
-> >  {
-> >  	struct inode *inode = file_inode(file);
-> >  	struct integrity_iint_cache *iint;
-> > @@ -1085,6 +1085,7 @@ static struct security_hook_list ima_hooks[]
-> > __lsm_ro_after_init = {
-> >  	LSM_HOOK_INIT(bprm_check_security, ima_bprm_check),
-> >  	LSM_HOOK_INIT(mmap_file, ima_file_mmap),
-> >  	LSM_HOOK_INIT(file_mprotect, ima_file_mprotect),
-> > +	LSM_HOOK_INIT(file_free_security, ima_file_free),
-> 
-> This doesn't work afaict. If the file is opened for writing ima may
-> update xattrs. But by the time security_file_free() is called
-> put_file_access() has already been called which will have given up
-> write
-> access to the file's mount.
-> 
-> So you would have to - just one of the possibilities - have to move
-> security_file_free() out of file_free() and into the old
-> ima_file_free()
-> location. But that might cause semantic changes for other LSMs.
+On Tue, Oct 18, 2022 at 2:02 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> In preparation for requiring that build_skb() have a non-zero size
+> argument, track the data allocation size explicitly and pass it into
+> build_skb(). To retain the original result of using the ksize()
+> side-effect on the skb size, explicitly round up the size during
+> allocation.
+>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: Andrii Nakryiko <andrii@kernel.org>
+> Cc: Martin KaFai Lau <martin.lau@linux.dev>
+> Cc: Song Liu <song@kernel.org>
+> Cc: Yonghong Song <yhs@fb.com>
+> Cc: John Fastabend <john.fastabend@gmail.com>
+> Cc: KP Singh <kpsingh@kernel.org>
+> Cc: Stanislav Fomichev <sdf@google.com>
+> Cc: Hao Luo <haoluo@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Jesper Dangaard Brouer <hawk@kernel.org>
+> Cc: bpf@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  net/bpf/test_run.c | 84 +++++++++++++++++++++++++---------------------
+>  1 file changed, 46 insertions(+), 38 deletions(-)
+>
+> diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
+> index 13d578ce2a09..299ff102f516 100644
+> --- a/net/bpf/test_run.c
+> +++ b/net/bpf/test_run.c
+> @@ -762,28 +762,38 @@ BTF_ID_FLAGS(func, bpf_kfunc_call_test_ref, KF_TRUSTED_ARGS)
+>  BTF_ID_FLAGS(func, bpf_kfunc_call_test_destructive, KF_DESTRUCTIVE)
+>  BTF_SET8_END(test_sk_check_kfunc_ids)
+>
+> -static void *bpf_test_init(const union bpf_attr *kattr, u32 user_size,
+> -                          u32 size, u32 headroom, u32 tailroom)
+> +struct bpfalloc {
+> +       size_t len;
+> +       void  *data;
+> +};
+> +
+> +static int bpf_test_init(struct bpfalloc *alloc,
+> +                        const union bpf_attr *kattr, u32 user_size,
+> +                        u32 size, u32 headroom, u32 tailroom)
+>  {
+>         void __user *data_in = u64_to_user_ptr(kattr->test.data_in);
+> -       void *data;
+>
+>         if (size < ETH_HLEN || size > PAGE_SIZE - headroom - tailroom)
+> -               return ERR_PTR(-EINVAL);
+> +               return -EINVAL;
+>
+>         if (user_size > size)
+> -               return ERR_PTR(-EMSGSIZE);
+> +               return -EMSGSIZE;
+>
+> -       data = kzalloc(size + headroom + tailroom, GFP_USER);
+> -       if (!data)
+> -               return ERR_PTR(-ENOMEM);
+> +       alloc->len = kmalloc_size_roundup(size + headroom + tailroom);
+> +       alloc->data = kzalloc(alloc->len, GFP_USER);
 
-Hi
-
-I also did this work before. In my implementation, I created a new
-security hook called security_file_pre_free().
-
-https://github.com/robertosassu/linux/commit/692c9d36fff865435b23b3cb765d31f3584f6263
-
-If useful, the whole patch set is available at:
-
-https://github.com/robertosassu/linux/commits/ima-evm-lsm-v1-devel-v3
-
-Roberto
-
+Don't you need to do this generalically in many places in the kernel?
