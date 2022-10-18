@@ -2,89 +2,75 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E166C43219
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 14:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CC2C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 14:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231370AbiJROLP (ORCPT
+        id S231430AbiJROMF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 10:11:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51074 "EHLO
+        Tue, 18 Oct 2022 10:12:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231371AbiJROK5 (ORCPT
+        with ESMTP id S231381AbiJROLg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 10:10:57 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD685647D2;
-        Tue, 18 Oct 2022 07:10:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EC3D5B81F70;
-        Tue, 18 Oct 2022 14:10:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15560C433C1;
-        Tue, 18 Oct 2022 14:10:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666102243;
-        bh=GZeQhv33D3zVDt2g8J7jPKYmYI7gz3wmR3KSKFf0vnw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BGIhmEWaQ5FBxgU4u024LOBNRwMkOMH4NXh5l3nxCa9p9kL6rgLm1hwQBlnoRVbr9
-         pNf86TL9ccIPRc9Z6xrM8Eik0t0ZCjBZu1xhNBF2lPtfUX6XKkjq2Esz+oZCEgIQ6B
-         R6nyhjMgr8KnMVOIj+QCAcjETjzff9eMhLT3w/CoJdn/NCRTPNy7EkvvXfUSVslyRv
-         h11S73PY3I2B51V72f8i1UrHR062I4g/yZMhA04yVx4BMLzkOKJVMgy5uTSZ11FVCT
-         hn+81PKB8KuGAZsFRSulGEv0fbNKx3M9jm+tK4/GR7M2xNpxZIGk9XJsOiT+xmCyLB
-         PB/yAg9vRgXdA==
-Date:   Tue, 18 Oct 2022 16:10:37 +0200
-From:   Christian Brauner <brauner@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        John Johansen <john.johansen@canonical.com>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        KP Singh <kpsingh@kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 6/9] fs: Introduce file_to_perms() helper
-Message-ID: <20221018141037.zzpfjzutqbutbpiy@wittgenstein>
-References: <20221013222702.never.990-kees@kernel.org>
- <20221013223654.659758-6-keescook@chromium.org>
+        Tue, 18 Oct 2022 10:11:36 -0400
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38AE97D78E;
+        Tue, 18 Oct 2022 07:11:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=j86gyI86b1ZCBfCx7LMeZ2ebnxH6k+wMdKl4XDSS43U=; b=JGiKivI9rOFU0nX92BHk01p0ZO
+        tnzVZKP+YZFd2bNPGOkKSmXr5oH/8XIs+/y3U5M3zKAD2nG0jWezbwcZFmqoUs/Pli3e5Sqqp5QFN
+        SJYsWCca1jAuUGuupyWk2e8eUXmmDUzbalU8W/ym/udYJ8+QzSWepguZYvMk1bRgHCFUeZ3wOOR+6
+        XWCqDlPbRod/fMF46OxnbAH+zkBCg0bTqUjz3fhsDEDNKNNXJ0DLWtRHOn4GpENFIulckmDNUy70V
+        jI4N5hLkUSZMY6cG6VNsCjeq0W20dSNNvC/E1DqVvhPG0Mp2kCf5I28COq33/QUDwYxxB1URbydT/
+        /73I0g7Q==;
+Received: from [179.113.159.85] (helo=[192.168.1.60])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1oknJ6-0013bB-B1; Tue, 18 Oct 2022 16:11:00 +0200
+Message-ID: <8d40dad4-4b20-2ec3-a8e1-706dd415f0d2@igalia.com>
+Date:   Tue, 18 Oct 2022 11:10:53 -0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20221013223654.659758-6-keescook@chromium.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.2
+Subject: Re: [PATCH 0/5] pstore: Use zstd directly by default for compression
+To:     Ard Biesheuvel <ardb@kernel.org>, Kees Cook <keescook@chromium.org>
+Cc:     Tony Luck <tony.luck@intel.com>, Nick Terrell <terrelln@fb.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20221018020519.never.337-kees@kernel.org>
+ <CAMj1kXGjF63wK7m8BqC=WX6sA425BTVwQWk9ERN3gG8s==4mjw@mail.gmail.com>
+Content-Language: en-US
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <CAMj1kXGjF63wK7m8BqC=WX6sA425BTVwQWk9ERN3gG8s==4mjw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Oct 13, 2022 at 03:36:51PM -0700, Kees Cook wrote:
-> Extract the logic used by LSM file hooks to be able to reconstruct the
-> access mode permissions from an open.
+On 18/10/2022 05:20, Ard Biesheuvel wrote:
+> [...]
+> So again, I suggest to simply drop this non-feature, and standardize
+> on either zlib or zstd using the library interface exclusively. If
+> someone present a compelling use case, we can always consider adding
+> it back in some form.
 > 
-> Cc: John Johansen <john.johansen@canonical.com>
-> Cc: Paul Moore <paul@paul-moore.com>
-> Cc: James Morris <jmorris@namei.org>
-> Cc: "Serge E. Hallyn" <serge@hallyn.com>
-> Cc: linux-security-module@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  include/linux/fs.h               | 22 ++++++++++++++++++++++
->  security/apparmor/include/file.h | 18 ++++--------------
->  2 files changed, 26 insertions(+), 14 deletions(-)
-> 
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 9eced4cc286e..814f10d4132e 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -993,6 +993,28 @@ static inline struct file *get_file(struct file *f)
->  #define get_file_rcu(x) atomic_long_inc_not_zero(&(x)->f_count)
->  #define file_count(x)	atomic_long_read(&(x)->f_count)
->  
-> +/* Calculate the basic MAY_* flags needed for a given file. */
-> +static inline u8 file_to_perms(struct file *file)
+> As for the choice of algorithm, given the equal performance using the
+> default compression level, and the difference in code size, I don't
+> see why zstd should be preferred here. If anything, it only increases
+> the likelihood of hitting another error if we are panicking due to
+> some memory corruption issue.
 
-As long as there aren't multiple users of this and especially none in
-the vfs proper please don't move this into fs.h. It's overloaded enough
-as it is and we have vague plans on splitting it further in the future.
+I think it's a good argument - would zlib be simpler in code than zstd?
+I've checked the zstd patch from Kees - not complex per se, but would be
+great if we could have a simple mechanism, without the need of the ifdef
+there for example...
+
+Cheers,
+
+
+Guilherme
