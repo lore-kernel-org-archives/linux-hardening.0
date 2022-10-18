@@ -2,318 +2,111 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F14C4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 08:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAEEC43219
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 08:22:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbiJRIVI (ORCPT
+        id S230470AbiJRIWt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 04:21:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40478 "EHLO
+        Tue, 18 Oct 2022 04:22:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230381AbiJRIVG (ORCPT
+        with ESMTP id S230458AbiJRIWp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 04:21:06 -0400
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C9B494115
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 01:21:04 -0700 (PDT)
-Received: by mail-pg1-x530.google.com with SMTP id 129so12684708pgc.5
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 01:21:04 -0700 (PDT)
+        Tue, 18 Oct 2022 04:22:45 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3415997D6A
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 01:22:45 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id 78so12669830pgb.13
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 01:22:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pUtA6btORbAdE+YaY98PEwi36A6sFJfxGGBzovfz7Rs=;
-        b=deRHvwdEcNRbxn+cuNFFqyLPnJvCPcoODGG7Q9YmvPkHFiW7E5cdJWURP54aSOwrPZ
-         FijiU5J5jx9qvKv/SrLZtjgScZ4KD+lQphuFcScTBqhT7Gazr+/M4WiQp/wc/Mn7nzWX
-         D2bK6v1fgRYHUjtlqDPMx7nUYtAztOnfaCJjY=
+        bh=GnqNHNhYyLH9Wo68LD4x3bwQRhcMnm8gL4scZhF5muk=;
+        b=g+M0tP4FeC0OrEgQxOE3oJjv9pUB6oD9RgZ+XBPsA0B85VsOEiUZa6cSIgQOnwn/bl
+         PMcN3F6LLRPoLDCxP3nuCJikCNGhdt00VAuMFuO3rxW1gs8KlSrBeB+vNyMB4cCCH/Gc
+         kvdVgkwL8LfHNJuSEL7+LJTehFvWBdJr0abNA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pUtA6btORbAdE+YaY98PEwi36A6sFJfxGGBzovfz7Rs=;
-        b=xVo+TQx1YQzRtXt0aOyDXjHL5/0b5MzJvAC5ihVW7k6zy22B151/9Tl8+JdMOyeN8X
-         vU7XnbOqDuJaJFIeEKuQUJx/1uypARdgZ5EoM0YF0SWMvENn95fZnnl15BVk7yO/0ikr
-         2plraMXf/d/FWVVfcs/lbc1oSXraikGu7R3ImAzQuh82o9FfwYL3t5WekvBBfsgybroQ
-         xjZ9TMJOfNElCEvbgklHATrZJyNPHRqDzGFYAzK/bUS7+fCnh/WErQom1bP1TOUcf3le
-         pcwgR0nk7u7TYghLw0A/Bsv8lOVm4GGqkqWEo2oKO3F3Z/nt/ZRRIveijbcAGK0q4ZNm
-         ye/Q==
-X-Gm-Message-State: ACrzQf0KM3iTJfodJLo8Fw+I7HujG+SDuhDjrx+t1ODEZLgy37Hz6iul
-        Cpu3L+Wdtz/Td/RJyQVA9i/71XxgeDY/0Q==
-X-Google-Smtp-Source: AMsMyM7Ma9BpP/KNLzk7JyJyzbUW8fB6TrhNZQJP2UX3rBpbhPXaDgNoGuVrB4SvjtaSVP+st6h79g==
-X-Received: by 2002:a05:6a00:b83:b0:565:caea:38be with SMTP id g3-20020a056a000b8300b00565caea38bemr1792804pfj.72.1666081263722;
-        Tue, 18 Oct 2022 01:21:03 -0700 (PDT)
+        bh=GnqNHNhYyLH9Wo68LD4x3bwQRhcMnm8gL4scZhF5muk=;
+        b=cbBxM/04QDi1/UCh4MAJ/ol3TNhsomYiw6yFGaP5+HKHo2cE3/rExOjyRvMdXuWIdg
+         G7F2WAKzIYAxy3LzWCiBcr8Zm5WxG8UmEVQ39zGtyNQ2yavlxEY563nzTOii2N134bYF
+         lWFK5YEwyedpiiWY3lIybEhp+FiH1TWthpaG3MdjAMM2zkRbfDLKifxLDxW98Rv/h6YA
+         jj4U/7nGTgC6BtySUyM8MmdbKj7eLRUfwtCw1lqKl60Fb9UkBI8fc79a38AQ70FhVMds
+         GXUVSI71d4XESUTWY8J+LEbtheajEPowj+5CC/u9Tg7DiueE1GmysN2qo9QPgZbQTzFv
+         PXYw==
+X-Gm-Message-State: ACrzQf1C6B8FLNLVv6daw5V4dqIeG/lHtRZ5NsJaY3YHHenfuDbzKbgd
+        4oCS8H22rncCom0B7GbyZGgSsg==
+X-Google-Smtp-Source: AMsMyM72YdgZRaJDiZ9MU6bvh+RA5iQHpj06/whPZsYV2r2RwYl4tM6cKQGl0WtEaQrAYe7tdQtb5Q==
+X-Received: by 2002:a63:4283:0:b0:457:dced:8ba3 with SMTP id p125-20020a634283000000b00457dced8ba3mr1711359pga.220.1666081364707;
+        Tue, 18 Oct 2022 01:22:44 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y5-20020aa78f25000000b0053ae018a91esm8881417pfr.173.2022.10.18.01.21.02
+        by smtp.gmail.com with ESMTPSA id m2-20020a170902db0200b0017d97d13b18sm8026045plx.65.2022.10.18.01.22.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Oct 2022 01:21:02 -0700 (PDT)
+        Tue, 18 Oct 2022 01:22:44 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v2] kunit/memcpy: Adding dynamic size and window tests
-Date:   Tue, 18 Oct 2022 01:20:59 -0700
-Message-Id: <20221018082038.gonna.300-kees@kernel.org>
+To:     linux-hardening@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] string: Add __alloc_size hint to kmemdup()
+Date:   Tue, 18 Oct 2022 01:22:41 -0700
+Message-Id: <20221018082232.never.213-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8313; h=from:subject:message-id; bh=p9iuNbTUlskl3mdx46dt5TCsPKjpBEKbouSQmgcBARA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjTmHrMH+hy5p7zZ1lmYlr4FpESDLjPHUlpOyi5oIa Kh204WOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY05h6wAKCRCJcvTf3G3AJjHNEA CbCNYvftxDmaNVZJdxwNx116BSjgLcODb/dGEL/d9UxlqM1CfnYlgPZ5EY1WppqYky17gj3XeMN/FP sC8kWhgQw8//mM903CYPcgd+YxVYlxN5uJOj1U3jvaG+LPdITD8pKASMIbPBPv3Ey/NrJjtGH63TTp eSV0klfV7c71YIYQCQDlhpVHrVuDQ5Y7VD1oeZG3D/rwzXMSIh95TSGGv9iDNbvvKIZYU/z3wyYOv+ dTYq0IlsTEPpoA+hMeGfYF5bzAQahg+IO+nzIbsG9kDKofOPHLQyPdb47hP8JOaT5kkeSBsWN0uIJk ZCWmgBNZiPqtlwXyHK7PsTWHW/fyO93TV0k/4otj33axh6J3viH/b/h+fdVLePyLfsHMaHiGrSRDzB G78ck4MjdIzFreI3kvxHhuPSBXBhudUlo6RArHH3glazyPSYntSN3isknDrMSIsv+oodkexgre3aOt zSi/7jhKhmplAO2rmyRlk3KTeEDgX4GSbLONcJ1hxJnMUgWlNwpnqKyVTlqpzogAwgDpTjGfYNajf0 Wor98LLP+aZyqBZsuHhJkxTnUPEZgwIdPl0gjcgchFoXbCqqKCa6YbhXVuEuk2DCcwzh9zSlncYQGy zFadtaoXeXNIase1JlTGO+fRyR2AK+9PP4RgQccmwE5ztIZS10k27POTWTZA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1853; h=from:subject:message-id; bh=SgzbSvS/b5ZrTbA0wJ9E9tBFT9DRkYwk8ZJEQZFVEak=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjTmJRV6GiRT0HuXsWsQSPL85x/s8fMsdifykSjHzh OlUuKfmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY05iUQAKCRCJcvTf3G3AJj8rD/ 9KYnzy5bqIwa32boPh44jUw+r1zKss52V+nzSaViIRwLNMVToZqpHJ2eZ7cIQKOwfMoHYAPiOhhFCE yUV8wPUrPSzXQSc6Y/4etatCvIVMl6/LpGjfjELhI5SOKGmfpMTI77z45BTRoZJFabztTn3aSt18hX AF6wjRN8M/oLYCX8lws5Jm1x/CwOnb8Y9yLaLaVRFpaloXmTNijmKNDioJ3qCyX9D/zvSQZ2o7TAi7 0jA+eem6Aq8EIFBeRb9axI7myTreYHszRjIFO+Z10WSLfh9MpvZ78HuK2WDTjbFr1iX/pPqGl+7Zc6 qCa+lJfFF7IjkI3mG7SYwUyVktGy5BqO61c/T2TS+V9XKORhBy4rmyA50/RMt1DfMW6ETiWuCMGp2u VdRwBsZ8qNwaq3nx/51bwQXEFc1U056LcUYBH25qctK872Y7LQVFzJ/WA4HmZmj1hlT8cqb57AVP/3 dIAQI5YZz6PKJpg97tjLaO5ccXGqXrNbSVck7v+h49vz+UUTQdtYUtCOUQ+Bze4KRdjJWqhpZI3r5N dLB9ifjVvhwjnAjuPJIWE6eKu1uC/lqjhZBxmCByUWw64JZGQKjx6LDf3HN+ZD7R//tYqoPM6Vnk9u FddwMhg6qb1FNSRb+45QtPu0FB+r4Fe7JhjpR+EPEYO1XheosCSb3ouIA/+w==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The "side effects" memmove() test accidentally found[1] a corner case in
-the recent refactoring of the i386 assembly memmove(), but missed another
-corner case. Instead of hoping to get lucky next time, implement much
-more complete tests of memcpy() and memmove() -- especially the moving
-window overlap for memmove() -- which catches all the issues encountered
-and should catch anything new.
+Add __alloc_size() hint to kmemdup() so the compiler can reason about
+the length of the returned buffer.
 
-[1] https://lore.kernel.org/lkml/CAKwvOdkaKTa2aiA90VzFrChNQM6O_ro+b7VWs=op70jx-DKaXA@mail.gmail.com
-
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- MAINTAINERS        |   1 +
- lib/memcpy_kunit.c | 205 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 206 insertions(+)
+ include/linux/fortify-string.h | 3 ++-
+ include/linux/string.h         | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cf0f18502372..9dd8d74c4df0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8044,6 +8044,7 @@ S:	Supported
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
- F:	include/linux/fortify-string.h
- F:	lib/fortify_kunit.c
-+F:	lib/memcpy_kunit.c
- F:	lib/test_fortify/*
- F:	scripts/test_fortify.sh
- K:	\b__NO_FORTIFY\b
-diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
-index 2b5cc70ac53f..c4a7107edd43 100644
---- a/lib/memcpy_kunit.c
-+++ b/lib/memcpy_kunit.c
-@@ -270,6 +270,208 @@ static void memset_test(struct kunit *test)
- #undef TEST_OP
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index b166364ce3e0..aa1a50009632 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -661,7 +661,8 @@ __FORTIFY_INLINE void *memchr_inv(const void * const POS0 p, int c, size_t size)
+ 	return __real_memchr_inv(p, c, size);
  }
  
-+static u8 large_src[1024];
-+static u8 large_dst[2048];
-+static const u8 large_zero[2048];
-+
-+static void set_random_nonzero(struct kunit *test, u8 *byte)
-+{
-+	int failed_rng = 0;
-+
-+	while (*byte == 0) {
-+		get_random_bytes(byte, 1);
-+		KUNIT_ASSERT_LT_MSG(test, failed_rng++, 100,
-+				    "Is the RNG broken?");
-+	}
-+}
-+
-+static void init_large(struct kunit *test)
-+{
-+
-+	/* Get many bit patterns. */
-+	get_random_bytes(large_src, ARRAY_SIZE(large_src));
-+
-+	/* Make sure we have non-zero edges. */
-+	set_random_nonzero(test, &large_src[0]);
-+	set_random_nonzero(test, &large_src[ARRAY_SIZE(large_src) - 1]);
-+
-+	/* Explicitly zero the entire destination. */
-+	memset(large_dst, 0, ARRAY_SIZE(large_dst));
-+}
-+
-+/*
-+ * Instead of an indirect function call for "copy" or a giant macro,
-+ * use a bool to pick memcpy or memmove.
-+ */
-+static void copy_large_test(struct kunit *test, bool use_memmove)
-+{
-+	init_large(test);
-+
-+	/* Copy a growing number of non-overlapping bytes ... */
-+	for (int bytes = 1; bytes <= ARRAY_SIZE(large_src); bytes++) {
-+		/* Over a shifting destination window ... */
-+		for (int offset = 0; offset < ARRAY_SIZE(large_src); offset++) {
-+			int right_zero_pos = offset + bytes;
-+			int right_zero_size = ARRAY_SIZE(large_dst) - right_zero_pos;
-+
-+			/* Copy! */
-+			if (use_memmove)
-+				memmove(large_dst + offset, large_src, bytes);
-+			else
-+				memcpy(large_dst + offset, large_src, bytes);
-+
-+			/* Did we touch anything before the copy area? */
-+			KUNIT_ASSERT_EQ_MSG(test,
-+				memcmp(large_dst, large_zero, offset), 0,
-+				"with size %d at offset %d", bytes, offset);
-+			/* Did we touch anything after the copy area? */
-+			KUNIT_ASSERT_EQ_MSG(test,
-+				memcmp(&large_dst[right_zero_pos], large_zero, right_zero_size), 0,
-+				"with size %d at offset %d", bytes, offset);
-+
-+			/* Are we byte-for-byte exact across the copy? */
-+			KUNIT_ASSERT_EQ_MSG(test,
-+				memcmp(large_dst + offset, large_src, bytes), 0,
-+				"with size %d at offset %d", bytes, offset);
-+
-+			/* Zero out what we copied for the next cycle. */
-+			memset(large_dst + offset, 0, bytes);
-+		}
-+		/* Avoid stall warnings if this loop gets slow. */
-+		cond_resched();
-+	}
-+}
-+
-+static void memcpy_large_test(struct kunit *test)
-+{
-+	copy_large_test(test, false);
-+}
-+
-+static void memmove_large_test(struct kunit *test)
-+{
-+	copy_large_test(test, true);
-+}
-+
-+/*
-+ * On the assumption that boundary conditions are going to be the most
-+ * sensitive, instead of taking a full step (inc) each iteration,
-+ * take single index steps for at least the first "inc"-many indexes
-+ * from the "start" and at least the last "inc"-many indexes before
-+ * the "end". When in the middle, take full "inc"-wide steps. For
-+ * example, calling next_step(idx, 1, 15, 3) with idx starting at 0
-+ * would see the following pattern: 1 2 3 4 7 10 11 12 13 14 15.
-+ */
-+static int next_step(int idx, int start, int end, int inc)
-+{
-+	start += inc;
-+	end -= inc;
-+
-+	if (idx < start || idx + inc > end)
-+		inc = 1;
-+	return idx + inc;
-+}
-+
-+static void inner_loop(struct kunit *test, int bytes, int d_off, int s_off)
-+{
-+	int left_zero_pos, left_zero_size;
-+	int right_zero_pos, right_zero_size;
-+	int src_pos, src_orig_pos, src_size;
-+	int pos;
-+
-+	/* Place the source in the destination buffer. */
-+	memcpy(&large_dst[s_off], large_src, bytes);
-+
-+	/* Copy to destination offset. */
-+	memmove(&large_dst[d_off], &large_dst[s_off], bytes);
-+
-+	/* Make sure destination entirely matches. */
-+	KUNIT_ASSERT_EQ_MSG(test, memcmp(&large_dst[d_off], large_src, bytes), 0,
-+		"with size %d at src offset %d and dest offset %d",
-+		bytes, s_off, d_off);
-+
-+	/* Calculate the expected zero spans. */
-+	if (s_off < d_off) {
-+		left_zero_pos = 0;
-+		left_zero_size = s_off;
-+
-+		right_zero_pos = d_off + bytes;
-+		right_zero_size = ARRAY_SIZE(large_dst) - right_zero_pos;
-+
-+		src_pos = s_off;
-+		src_orig_pos = 0;
-+		src_size = d_off - s_off;
-+	} else {
-+		left_zero_pos = 0;
-+		left_zero_size = d_off;
-+
-+		right_zero_pos = s_off + bytes;
-+		right_zero_size = ARRAY_SIZE(large_dst) - right_zero_pos;
-+
-+		src_pos = d_off + bytes;
-+		src_orig_pos = src_pos - s_off;
-+		src_size = right_zero_pos - src_pos;
-+	}
-+
-+	/* Check non-overlapping source is unchanged.*/
-+	KUNIT_ASSERT_EQ_MSG(test,
-+		memcmp(&large_dst[src_pos], &large_src[src_orig_pos], src_size), 0,
-+		"with size %d at src offset %d and dest offset %d",
-+		bytes, s_off, d_off);
-+
-+	/* Check leading buffer contents are zero. */
-+	KUNIT_ASSERT_EQ_MSG(test,
-+		memcmp(&large_dst[left_zero_pos], large_zero, left_zero_size), 0,
-+		"with size %d at src offset %d and dest offset %d",
-+		bytes, s_off, d_off);
-+	/* Check trailing buffer contents are zero. */
-+	KUNIT_ASSERT_EQ_MSG(test,
-+		memcmp(&large_dst[right_zero_pos], large_zero, right_zero_size), 0,
-+		"with size %d at src offset %d and dest offset %d",
-+		bytes, s_off, d_off);
-+
-+	/* Zero out everything not already zeroed.*/
-+	pos = left_zero_pos + left_zero_size;
-+	memset(&large_dst[pos], 0, right_zero_pos - pos);
-+}
-+
-+static void memmove_overlap_test(struct kunit *test)
-+{
-+	/*
-+	 * Running all possible offset and overlap combinations takes a
-+	 * very long time. Instead, only check up to 128 bytes offset
-+	 * into the destination buffer (which should result in crossing
-+	 * cachelines), with a step size of 1 through 7 to try to skip some
-+	 * redundancy.
-+	 */
-+	static const int offset_max = 128; /* less than ARRAY_SIZE(large_src); */
-+	static const int bytes_step = 7;
-+	static const int window_step = 7;
-+
-+	static const int bytes_start = 1;
-+	static const int bytes_end = ARRAY_SIZE(large_src) + 1;
-+
-+	init_large(test);
-+
-+	/* Copy a growing number of overlapping bytes ... */
-+	for (int bytes = bytes_start; bytes < bytes_end;
-+	     bytes = next_step(bytes, bytes_start, bytes_end, bytes_step)) {
-+
-+		/* Over a shifting destination window ... */
-+		for (int d_off = 0; d_off < offset_max; d_off++) {
-+			int s_start = max(d_off - bytes, 0);
-+			int s_end = min_t(int, d_off + bytes, ARRAY_SIZE(large_src));
-+
-+			/* Over a shifting source window ... */
-+			for (int s_off = s_start; s_off < s_end;
-+			     s_off = next_step(s_off, s_start, s_end, window_step))
-+				inner_loop(test, bytes, d_off, s_off);
-+
-+			/* Avoid stall warnings. */
-+			cond_resched();
-+		}
-+	}
-+}
-+
- static void strtomem_test(struct kunit *test)
+-extern void *__real_kmemdup(const void *src, size_t len, gfp_t gfp) __RENAME(kmemdup);
++extern void *__real_kmemdup(const void *src, size_t len, gfp_t gfp) __RENAME(kmemdup)
++								    __alloc_size(2);
+ __FORTIFY_INLINE void *kmemdup(const void * const POS0 p, size_t size, gfp_t gfp)
  {
- 	static const char input[sizeof(unsigned long)] = "hi";
-@@ -325,7 +527,10 @@ static void strtomem_test(struct kunit *test)
- static struct kunit_case memcpy_test_cases[] = {
- 	KUNIT_CASE(memset_test),
- 	KUNIT_CASE(memcpy_test),
-+	KUNIT_CASE(memcpy_large_test),
- 	KUNIT_CASE(memmove_test),
-+	KUNIT_CASE(memmove_large_test),
-+	KUNIT_CASE(memmove_overlap_test),
- 	KUNIT_CASE(strtomem_test),
- 	{}
- };
+ 	size_t p_size = __struct_size(p);
+diff --git a/include/linux/string.h b/include/linux/string.h
+index cf7607b32102..af1d69e5610e 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -176,7 +176,7 @@ extern void kfree_const(const void *x);
+ extern char *kstrdup(const char *s, gfp_t gfp) __malloc;
+ extern const char *kstrdup_const(const char *s, gfp_t gfp);
+ extern char *kstrndup(const char *s, size_t len, gfp_t gfp);
+-extern void *kmemdup(const void *src, size_t len, gfp_t gfp);
++extern void *kmemdup(const void *src, size_t len, gfp_t gfp) __alloc_size(2);
+ extern char *kmemdup_nul(const char *s, size_t len, gfp_t gfp);
+ 
+ extern char **argv_split(gfp_t gfp, const char *str, int *argcp);
 -- 
 2.34.1
 
