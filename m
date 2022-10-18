@@ -2,115 +2,354 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5688CC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 07:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0200BC4332F
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 08:07:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230101AbiJRHe4 (ORCPT
+        id S230325AbiJRIHr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 03:34:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41248 "EHLO
+        Tue, 18 Oct 2022 04:07:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230252AbiJRHew (ORCPT
+        with ESMTP id S230310AbiJRIHo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 03:34:52 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 938A0220C5
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 00:34:51 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id u71so12620354pgd.2
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 00:34:51 -0700 (PDT)
+        Tue, 18 Oct 2022 04:07:44 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F07A18983E
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 01:07:41 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id b2so13100937plc.7
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 01:07:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LlsuHZmleDlGS7hXnmTuG4KQrPThOgrPcWg+CPNzZ2Y=;
-        b=lbc5UKDbqNoCtYKP519m1+Nh5+thrYMQcy0LlJI8WQVPOOebBqFmQNzsq92hnwGkzn
-         3PVd6AetOnLncoxE4j0FqlexwwNWGZLQj+FUIopGxBZeb8O7t7RXlORIhxxP6rjDxd6P
-         VNi2rPCGtNrRgaRJ9balyeEtPKBM0VeQKnexM=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=r386XTy94I8XmKFnphrGlHjUNN4wxmg9QYVFoKxy77U=;
+        b=kGS1GguWb4lC6DBAMQdrHJ/ymwsOEmeOSuLUmFZGdeWIpzsg2ztl6nj2uBt3DrPKAB
+         lIrXrmD8eY63AZEe8W0aW5qQMcQCbnZj6hUBODId3M/AGs5HEk7FdGZmv/MGXv4bLHGu
+         SisEUVcq0BlybPK79O8A9VJI6VrFCThzpHD84=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LlsuHZmleDlGS7hXnmTuG4KQrPThOgrPcWg+CPNzZ2Y=;
-        b=DywYFVllOOZEHWsXkcyBjAG7x0VHYyhBpAQXnjM3Lo565G2bU/Aoiw1RDetZSkPgdm
-         H+1gB9LWztUlxLorrNyFyhnodNYuwtXWdLnZ7uyun0i0kHliFK1MKA4jSOBjRTefqaJz
-         sLkvFcapuVY/ayBZoDOEJswKNw1WXW5A5xjyAWHTCQTZrQCGLwINl7pNHrPcf636jwmC
-         5qz68DE8AVPzsEd9oU38WYFwEeodlsJte0Y2ekvlnm/n5xPqi4Fdj5lewsGpfkUtnvLR
-         +OLd0aQ+rSiajLNTFEZj8WVgemDeMy4LKiY4v4dFsha6kLBUsDc6pEVmIW0LhybTP5xd
-         hadg==
-X-Gm-Message-State: ACrzQf2UnvPNhVsHD+ZH5KGabEWcNq32s+n2gXcWxVpj2zqCkCFVkK/x
-        q02UDSVnjRB2rlD4HhJk52gnZg==
-X-Google-Smtp-Source: AMsMyM78EuSXkDC01QK0wX7MgEhcw+6IbE7/bRqAaJhG7eThBIWHw0pu//3whOpPr9NHeVGABU9tsw==
-X-Received: by 2002:a63:2221:0:b0:43b:f4a3:80cc with SMTP id i33-20020a632221000000b0043bf4a380ccmr1543022pgi.367.1666078491096;
-        Tue, 18 Oct 2022 00:34:51 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r386XTy94I8XmKFnphrGlHjUNN4wxmg9QYVFoKxy77U=;
+        b=JEFCd++F8WMnzqFgXuL+qZr3JAotiC4KxxjgG24n03RZ3nhcF3NBnnqY/o9tmoYIs+
+         MmSelG7BJrQaRw0WF3LFn8oQ+eE+2j4/MyM3GmWD8NsW3qxIlrzMaIFF+A+bbJ6X22oK
+         227STSbtkpzHO5/I5hlf3AAPclv6w0glUnNnexUYhHCwbzfEP9yqJoWVsojSkAM8k9sg
+         jPi1VPxnZfpYtQ3H0PJgPq5l+aNqKaQ/fZmBuPR28Qhp/G6JyC116ZZQyCplNjHSfvNx
+         qJPyE+KXu5+SyIDGR+UtL204Nj+KenCqCRPjLSQIQicZAe2E/9MTaxktvhhyFuhXDiVp
+         sixA==
+X-Gm-Message-State: ACrzQf1madkV4D/i7barCj6x2CkIvNlpRjKnuIZb1cvtZ8zcdWRVVKsc
+        i1ndvglu0vuMH4xRuu8QRBaRfw==
+X-Google-Smtp-Source: AMsMyM5jspj+8kC7yhp4usBgy3FAOwLCNMfPWAqrfdp+mVitJn79Ooh8xEPtFvZnxqFsP/DRhUb6tQ==
+X-Received: by 2002:a17:902:eccc:b0:185:4ff6:fef8 with SMTP id a12-20020a170902eccc00b001854ff6fef8mr1964168plh.93.1666080460870;
+        Tue, 18 Oct 2022 01:07:40 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o63-20020a62cd42000000b0056258a3606csm8378759pfg.215.2022.10.18.00.34.49
+        by smtp.gmail.com with ESMTPSA id y24-20020aa79438000000b0056281da3bcbsm8800097pfo.149.2022.10.18.01.07.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Oct 2022 00:34:50 -0700 (PDT)
+        Tue, 18 Oct 2022 01:07:39 -0700 (PDT)
+Date:   Tue, 18 Oct 2022 01:07:38 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Nishanth Menon <nm@ti.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Won Chung <wonchung@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] driver core: Add __alloc_size hint to devm allocators
-Date:   Tue, 18 Oct 2022 00:34:47 -0700
-Message-Id: <20221018073430.never.551-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] kunit/memcpy: Adding dynamic size and window tests
+Message-ID: <202210180102.2845B66@keescook>
+References: <20220929030846.1060818-1-keescook@chromium.org>
+ <CAKwvOd=aCGPP54qxoO4-K8MDBB8VEmXpUdo156FiBVxkpdxirg@mail.gmail.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2035; h=from:subject:message-id; bh=bz9s+ekJyLE4FWcnomuQSloLzhEk4e+5O8t5nTvLkPw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjTlcWPmKRYJExrJMYBfXkIFPZXjLaDn+MpfMNiKR0 Y3SacTyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY05XFgAKCRCJcvTf3G3AJk2HD/ 91RjYQfqDb06XAma88pJqfLxntl+ZmLIK6HoEa9cpfJlpOb0VrM2NUsth9NuPqSYxrE43QWZ+oATUG yBItJ7YVQPmJHbWjdn/S04rMjB1lcbjft1TPm4HGV7eMXPfWIR6mTgv4cNEUrfGn5f30hgT7BFUMvg OEQtVKyRigOonq/AaAZqIkAPfctm1mTr3LBpmBraQKrezwe6qQRRizPCHAQRY7msd0EO9KSn9q8+s9 TFh1a4n7Zwa06deQ2wVZaD53WXpc9er+c5HNplcin9+NJFz2pMCc79aNkRIFvs09jGnllzdtQ3zX+K MW53U0n3s/4mr2/HSYOor1f2TkA0ysz+dpj69VzeoRkKJnVXNZ8BDzXbmKFvndsao0AA+Y0CfZoBw7 04KoMRC/b9tzyBJW7lfmM46WXaPgsMGXBLlMH9NHBazXIepofyWFd4uJAZwNDBJcerVU1LhMjdGNKB vzKH31svHifUgUStFk08b0gALDpawNjMq2NdyqO9DL1upbWU+HM8P/djAwVifovATK6I7Q65R3mcli lz+qKxw4rPIH7HrpgAYapQ31rRZCHhdiqyg7U8LES8ZSU8jtUau1L7bI4a95w8+sN6Aq7NMkWleB2W jL2jOaI3BbLbea62IROIE8Ox5s4FKOG4jBbsLw1ppYTGb8QOCWO72DCnXHLA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=aCGPP54qxoO4-K8MDBB8VEmXpUdo156FiBVxkpdxirg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Mark the devm_*alloc()-family of allocations with appropriate
-__alloc_size() hints so the compiler can attempt to reason about buffer
-lengths from allocations.
+On Thu, Sep 29, 2022 at 02:02:05PM -0700, Nick Desaulniers wrote:
+> On Wed, Sep 28, 2022 at 8:08 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > The "side effects" memmove() test accidentally found a corner case in
+> > the recent refactoring of the i386 assembly memmove(), but missed
+> > another corner case. Instead of hoping to get lucky next time, implement
+> > much more complete tests of memcpy() and memmove() -- especially the
+> > moving window overlap for memmove() -- which catches all the issues
+> > encountered and should catch anything new.
+> >
+> > Cc: Nick Desaulniers <ndesaulniers@google.com>
+> > Link: https://lore.kernel.org/lkml/CAKwvOdkaKTa2aiA90VzFrChNQM6O_ro+b7VWs=op70jx-DKaXA@mail.gmail.com
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> Regardless of my comments, I ran this through:
+> 
+> $ ./tools/testing/kunit/kunit.py run --arch=i386 memcpy --make_options LLVM=1
+> $ ./tools/testing/kunit/kunit.py run --arch=arm64 memcpy --make_options LLVM=1
+> $ ./tools/testing/kunit/kunit.py run --arch=arm memcpy --make_options LLVM=1
+> $ ./tools/testing/kunit/kunit.py run --arch=x86_64 memcpy --make_options LLVM=1
+> All were green for me.
+> 
+> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Nishanth Menon <nm@ti.com>
-Cc: Michael Kelley <mikelley@microsoft.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Won Chung <wonchung@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/linux/device.h | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Thanks!
 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 424b55df0272..a1cbbab9a57a 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -197,9 +197,9 @@ void devres_remove_group(struct device *dev, void *id);
- int devres_release_group(struct device *dev, void *id);
- 
- /* managed devm_k.alloc/kfree for device drivers */
--void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp) __malloc;
-+void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp) __alloc_size(2);
- void *devm_krealloc(struct device *dev, void *ptr, size_t size,
--		    gfp_t gfp) __must_check;
-+		    gfp_t gfp) __must_check __realloc_size(3);
- __printf(3, 0) char *devm_kvasprintf(struct device *dev, gfp_t gfp,
- 				     const char *fmt, va_list ap) __malloc;
- __printf(3, 4) char *devm_kasprintf(struct device *dev, gfp_t gfp,
-@@ -226,7 +226,8 @@ static inline void *devm_kcalloc(struct device *dev,
- void devm_kfree(struct device *dev, const void *p);
- char *devm_kstrdup(struct device *dev, const char *s, gfp_t gfp) __malloc;
- const char *devm_kstrdup_const(struct device *dev, const char *s, gfp_t gfp);
--void *devm_kmemdup(struct device *dev, const void *src, size_t len, gfp_t gfp);
-+void *devm_kmemdup(struct device *dev, const void *src, size_t len, gfp_t gfp)
-+	__alloc_size(3);
- 
- unsigned long devm_get_free_pages(struct device *dev,
- 				  gfp_t gfp_mask, unsigned int order);
+> Do you have any thoughts on the test in my v4 wrt. potential for
+> conflicts in -next?
+> https://lore.kernel.org/lkml/20220928210512.642594-1-ndesaulniers@google.com/
+
+I designed this patch to avoid conflicts with your changes. (Has anyone
+picked up the memmove refactor for -next yet?)
+
+> It looks like even without this patch of yours,
+> $ ./tools/testing/kunit/kunit.py run --arch=i386 memcpy --make_options LLVM=1
+> demonstrates the bug in my v3.
+
+Yeah, it got lucky, mainly. :)
+
+> I also tested my v4 on top of this change with the above command line;
+> it passes. :)
+
+Perfecto! :)
+
+> 
+> > ---
+> >  lib/memcpy_kunit.c | 187 +++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 187 insertions(+)
+> >
+> > diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
+> > index 2b5cc70ac53f..f15daa66c6a6 100644
+> > --- a/lib/memcpy_kunit.c
+> > +++ b/lib/memcpy_kunit.c
+> > @@ -270,6 +270,190 @@ static void memset_test(struct kunit *test)
+> >  #undef TEST_OP
+> >  }
+> >
+> > +static u8 large_src[1024];
+> > +static u8 large_dst[2048];
+> > +static const u8 large_zero[2048];
+> > +
+> > +static void init_large(struct kunit *test)
+> > +{
+> > +       int failed_rng = 0;
+> > +
+> > +       /* Get many bit patterns. */
+> > +       get_random_bytes(large_src, sizeof(large_src));
+> 
+> I know sizeof == ARRAY_SIZE when we have an array of u8, but please
+> consider using ARRAY_SIZE.
+
+Yeah, I will break myself of this habit yet. Fixed.
+
+> 
+> > +
+> > +       /* Make sure we have non-zero edges. */
+> > +       while (large_src[0] == 0) {
+> > +               get_random_bytes(large_src, 1);
+> > +               KUNIT_ASSERT_LT_MSG(test, failed_rng++, 100,
+> > +                                   "Is the RNG broken?");
+> > +       }
+> > +       while (large_src[sizeof(large_src) - 1] == 0) {
+> > +               get_random_bytes(&large_src[sizeof(large_src) - 1], 1);
+> > +               KUNIT_ASSERT_LT_MSG(test, failed_rng++, 100,
+> > +                                   "Is the RNG broken?");
+> > +       }
+> 
+> The above duplication could probably be separated out into another
+> static function where you pass in the address of the array element to
+> set to non-zero.
+
+Done in v2.
+
+> 
+> > +
+> > +       /* Explicitly zero the entire destination. */
+> > +       memset(large_dst, 0, sizeof(large_dst));
+> > +}
+> > +
+> > +/*
+> > + * Instead of an indirect function call for "copy" or a giant macro,
+> > + * use a bool to pick memcpy or memmove.
+> > + */
+> > +static void copy_large_test(struct kunit *test, bool use_memmove)
+> > +{
+> > +       init_large(test);
+> > +
+> > +       /* Copy a growing number of non-overlapping bytes ... */
+> > +       for (int bytes = 1; bytes <= sizeof(large_src); bytes++) {
+> > +               /* Over a shifting destination window ... */
+> > +               for (int offset = 0; offset < sizeof(large_src); offset++) {
+> > +                       int right_zero_pos = offset + bytes;
+> > +                       int right_zero_size = sizeof(large_dst) - right_zero_pos;
+> > +
+> > +                       /* Copy! */
+> > +                       if (use_memmove)
+> > +                               memmove(large_dst + offset, large_src, bytes);
+> > +                       else
+> > +                               memcpy(large_dst + offset, large_src, bytes);
+> > +
+> > +                       /* Did we touch anything before the copy area? */
+> > +                       KUNIT_ASSERT_EQ_MSG(test, memcmp(large_dst, large_zero, offset), 0,
+> > +                                           "with size %d at offset %d", bytes, offset);
+> > +                       /* Did we touch anything after the copy area? */
+> > +                       KUNIT_ASSERT_EQ_MSG(test, memcmp(&large_dst[right_zero_pos], large_zero, right_zero_size), 0,
+> > +                                           "with size %d at offset %d", bytes, offset);
+> > +
+> > +                       /* Are we byte-for-byte exact across the copy? */
+> > +                       KUNIT_ASSERT_EQ_MSG(test, memcmp(large_dst + offset, large_src, bytes), 0,
+> > +                                           "with size %d at offset %d", bytes, offset);
+> > +
+> > +                       /* Zero out what we copied for the next cycle. */
+> > +                       memset(large_dst + offset, 0, bytes);
+> > +               }
+> > +               /* Avoid stall warnings. */
+> > +               cond_resched();
+> 
+> I'm just curious what that is? ^
+> Should it go in the inner loop?
+
+This is to keep the soft-lockup detector from yelling about this
+extremely slow test. :P I put it here because it's seems the right
+balance between doing in too much (inner loop) and not at all.
+
+> 
+> > +       }
+> > +}
+> > +
+> > +static void memcpy_large_test(struct kunit *test)
+> > +{
+> > +       copy_large_test(test, false);
+> > +}
+> > +
+> > +static void memmove_large_test(struct kunit *test)
+> > +{
+> > +       copy_large_test(test, true);
+> > +}
+> > +
+> > +/*
+> > + * Take a single step if within "inc" of the start or end,
+> > + * otherwise, take a full "inc" steps.
+> 
+> I still have a hard time following what this logic is doing,
+> particularly the clamping to 1. Can you elaborate more in this
+> comment?
+
+Sure! I've tried to flesh this out in v2.
+
+> 
+> > + */
+> > +static inline int next_step(int idx, int start, int end, int inc)
+> 
+> Please drop the inline keyword here.
+
+Done.
+
+> 
+> > +{
+> > +       start += inc;
+> > +       end -= inc;
+> > +
+> > +       if (idx < start || idx + inc > end)
+> > +               inc = 1;
+> > +       return idx + inc;
+> > +}
+> > +
+> > +static void memmove_overlap_test(struct kunit *test)
+> > +{
+> > +       /*
+> > +        * Running all possible offset and overlap combinations takes a
+> > +        * very long time. Instead, only check up to 128 bytes offset
+> > +        * into the destintation buffer (which should result in crossing
+> 
+> typo: s/destintation/destination/
+
+Fixed :)
+
+> 
+> > +        * cachelines), with a step size of 1 through 7 to try to skip some
+> > +        * redundancy.
+> > +        */
+> > +       static const int offset_max = 128; /* sizeof(large_src); */
+> 
+> I thought large_src was 1024? Perhaps this comment is stale or
+> contradictory to the comment in the block above the variable
+> definition?
+
+This was a left-over note about how big it actually was while I was
+tuning it for sane run-times. I've updated the comment.
+
+> 
+> > +       static const int bytes_step = 7;
+> > +       static const int window_step = 7;
+> > +
+> > +       static const int bytes_start = 1;
+> > +       static const int bytes_end = sizeof(large_src) + 1;
+> > +
+> > +       init_large(test);
+> > +
+> > +       /* Copy a growing number of overlapping bytes ... */
+> > +       for (int bytes = bytes_start; bytes < bytes_end;
+> > +            bytes = next_step(bytes, bytes_start, bytes_end, bytes_step)) {
+> > +
+> > +               /* Over a shifting destination window ... */
+> > +               for (int d_off = 0; d_off < offset_max; d_off++) {
+> > +                       int s_start = max(d_off - bytes, 0);
+> > +                       int s_end = min_t(int, d_off + bytes, sizeof(large_src));
+> > +
+> > +                       /* Over a shifting source window ... */
+> > +                       for (int s_off = s_start; s_off < s_end;
+> > +                            s_off = next_step(s_off, s_start, s_end, window_step)) {
+> 
+> Might a while loop with a distinct update statement look cleaner than
+> a multiline for predicate?
+
+I originally tried it either way, and I found the "while" even uglier. :)
+
+> 
+> > +                               int left_zero_pos, left_zero_size;
+> > +                               int right_zero_pos, right_zero_size;
+> > +                               int src_pos, src_orig_pos, src_size;
+> > +                               int pos;
+> > +
+> > +                               /* Place the source in the destination buffer. */
+> > +                               memcpy(&large_dst[s_off], large_src, bytes);
+> > +
+> > +                               /* Copy to destination offset. */
+> > +                               memmove(&large_dst[d_off], &large_dst[s_off], bytes);
+> > +
+> > +                               /* Make sure destination entirely matches. */
+> > +                               KUNIT_ASSERT_EQ_MSG(test, memcmp(&large_dst[d_off], large_src, bytes), 0,
+> > +                                       "with size %d at src offset %d and dest offset %d",
+> > +                                       bytes, s_off, d_off);
+> > +
+> > +                               /* Calculate the expected zero spans. */
+> > +                               if (s_off < d_off) {
+> > +                                       left_zero_pos = 0;
+> > +                                       left_zero_size = s_off;
+> > +
+> > +                                       right_zero_pos = d_off + bytes;
+> > +                                       right_zero_size = sizeof(large_dst) - right_zero_pos;
+> > +
+> > +                                       src_pos = s_off;
+> > +                                       src_orig_pos = 0;
+> > +                                       src_size = d_off - s_off;
+> > +                               } else {
+> > +                                       left_zero_pos = 0;
+> > +                                       left_zero_size = d_off;
+> > +
+> > +                                       right_zero_pos = s_off + bytes;
+> > +                                       right_zero_size = sizeof(large_dst) - right_zero_pos;
+> > +
+> > +                                       src_pos = d_off + bytes;
+> > +                                       src_orig_pos = src_pos - s_off;
+> > +                                       src_size = right_zero_pos - src_pos;
+> > +                               }
+> 
+> Looking at the arms of these branches, I see a fair amount of
+> duplication. Mind deduplicating some of the statements here? The
+> assignments of left_zero_pos and right_zero_size look invariant of the
+> predicate.
+
+I did this originally too, but I found it easier to reason by keeping
+all of the bounds calculations separated like this for readability. Any
+duplication will get optimized away. :)
+
+Thanks for the review!
+
 -- 
-2.34.1
-
+Kees Cook
