@@ -2,83 +2,104 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B57C4332F
-	for <linux-hardening@archiver.kernel.org>; Mon, 17 Oct 2022 21:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F28A0C43219
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 01:11:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229942AbiJQVZa (ORCPT
+        id S230274AbiJRBL6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 Oct 2022 17:25:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59372 "EHLO
+        Mon, 17 Oct 2022 21:11:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229793AbiJQVZ3 (ORCPT
+        with ESMTP id S231229AbiJRBLs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 Oct 2022 17:25:29 -0400
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC95E7C1DB;
-        Mon, 17 Oct 2022 14:25:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=SK2IIiJtqurXP7/5Xu549vObhZku8RTsovOn/ZfaVWE=; b=R08nc1umIGS0960uO2p317g4WR
-        WPhkVeDEP4DEx3+6Vgl1y8PZxF41bmD+OBUM9imOdzhnKpiYGuD9DUBu2RU7iUz9XD0DXYfpWs1Pu
-        UdeejJKQWC4F774Eyxzg02q87LDsgApCLM/fzCxBdDFphGojMjf3xy6L8qNeOeyDIM13noVWEwS6k
-        E+l3W3Xo8JNZvitXgZnGjlcQE0RxEIy/ZNGatbZN3qbQByUqXnXZpgbnj77cp1rKjZkkro0/jY6m9
-        MbspOETuqDIKANEz1nebJzASPvmDYQ77tPGYS4HMNIWgk7mRTj8Dbb0aQcku5dqKz+w9crbggaRR7
-        WIvzropw==;
-Received: from [179.113.159.85] (helo=[192.168.1.60])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1okXbp-000cjZ-6i; Mon, 17 Oct 2022 23:25:17 +0200
-Message-ID: <dbcc136d-7993-884e-f1de-ac696ae4bd0f@igalia.com>
-Date:   Mon, 17 Oct 2022 18:25:01 -0300
+        Mon, 17 Oct 2022 21:11:48 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 203CB1172;
+        Mon, 17 Oct 2022 18:11:48 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id cl1so12457196pjb.1;
+        Mon, 17 Oct 2022 18:11:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1SznCcMXglU6qBXz+hAGaPsCnaJwQX00dxnYrwKOqxo=;
+        b=BAWK424W2URGZYYa6yXP3alZc+SZIoQoG01R/b1jZxAHAX98y0g0cqRums1t+Ly0uK
+         4epKNq0jaDzWtJJhLuagD20/74EM5fNx8OwjZ0vsTR/P7M659CURK34zFwVYc5TUnHBN
+         8uRqzg/KgZDEye+TAzKyNBJn7sHDkv1hNXn6e1DHyr8Ecn8S8Nom/6keyJRQsZ6NNgZ9
+         sDKisOPIMrnVMRQK+TPTDKCb4qz9ReAFVBqNcEJcVIBc45/9i81CDsaHhnOlkbI/s83q
+         A0gNlRY0//5DUL9Cq1uIjGHxIOBdb2TpRWvZQmqtHnHiHTa1fwW5wYrAdHz91Pf7hLa/
+         uYYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1SznCcMXglU6qBXz+hAGaPsCnaJwQX00dxnYrwKOqxo=;
+        b=yKjFCo5ZBvm6umZBONmoiPnVWmqtr9ujMcwD05KvVMJx0gNHBYQ5rb0Bgl42ROLiWg
+         ophzerZCWzWUrN8fo65tljimWFH/iKEeyvo5uVqBi2A0UYuF7EPc8HDBWN3FFoEupf6h
+         ini6ev40Ys/4/1LRcGqKClewmLBkDLotov1ItIdOlSD6Q+GyXtQvHluno8KncWBhNJis
+         o0viFwwRJCi+sOVsKzby4PoetxHLnpCw7kfXD9LVWVhzwR4rRU2VAW8BkhnUh/R0P6XA
+         ktGOOP3VRnlu1kNEEurU9ZMgeaaIxRTWcYKtRypRrbSvx3CBw1e5z1+8UyB8eAJtppkA
+         c7pQ==
+X-Gm-Message-State: ACrzQf2fsTC923tnJ4G9zPDlL9ygQ3wY8g7CCpIQtYM9K3cB7gLI5Nem
+        gpYu5XnA1dtanZRDNV8ryPo=
+X-Google-Smtp-Source: AMsMyM5mOgU6WKJ6otDDjamUlMvt4XCJA5hLos0QfEE2YJGafiqKSvbVCbJIvlq+z0WD0eiYXBK8xQ==
+X-Received: by 2002:a17:90b:2250:b0:20d:9587:45c4 with SMTP id hk16-20020a17090b225000b0020d958745c4mr634960pjb.17.1666055507516;
+        Mon, 17 Oct 2022 18:11:47 -0700 (PDT)
+Received: from [192.168.11.9] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id cq14-20020a17090af98e00b001fe39bda429sm6732186pjb.38.2022.10.17.18.11.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Oct 2022 18:11:47 -0700 (PDT)
+Message-ID: <6f8aa670-fb4f-3ff9-bcd9-8490e752b349@gmail.com>
+Date:   Tue, 18 Oct 2022 10:11:43 +0900
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH] pstore: migrate to crypto acomp interface (take 2)
+ Thunderbird/102.2.2
+From:   Akira Yokosawa <akiyks@gmail.com>
+Subject: Re: [PATCH v2] overflow: Fix kern-doc markup for functions
+To:     Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Yanteng Si <siyanteng@loongson.cn>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>
+References: <20221017035732.1968394-1-keescook@chromium.org>
 Content-Language: en-US
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20221006234138.1835739-1-keescook@chromium.org>
- <191ec24d-35d4-e4e5-85f7-d7301984e647@igalia.com>
- <202210171100.5BAC4A5CC8@keescook>
- <CAMj1kXHzrRTVcxb5+hgUPV3tjekPcDWzVf6cG_Mc9JJmYBz2Mw@mail.gmail.com>
- <202210171227.35ED875219@keescook>
- <CAMj1kXEJQ8gh-iXZNL8bNcmV=JCmKHNp5BnhYthhSOyR5h79_g@mail.gmail.com>
- <202210171237.DF5D4A3FD7@keescook>
- <CAMj1kXGmsJNg7En-55aRF+ApicPD_Opkh8Jw+oTorSOSO+cfuw@mail.gmail.com>
- <202210171307.32A5D9C07@keescook>
- <CAMj1kXHced1khwsrHqMUmECh_7irYOckFd+Sx3z9KSmsL7tPxw@mail.gmail.com>
- <202210171333.309A3D9@keescook>
- <CAMj1kXHTxc2PM1mz3pm-UEcmch9YG5QKF+JKAUNe9b+1L0OnfA@mail.gmail.com>
- <cb44c124-c940-6f5f-d195-bdf133008ba1@igalia.com>
- <CAMj1kXGA=kBdahDTuFDPzZKf5bbvxH2Ns7Ows+5D-PAx8rwP2w@mail.gmail.com>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <CAMj1kXGA=kBdahDTuFDPzZKf5bbvxH2Ns7Ows+5D-PAx8rwP2w@mail.gmail.com>
+In-Reply-To: <20221017035732.1968394-1-keescook@chromium.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 17/10/2022 18:16, Ard Biesheuvel wrote:
-> On Mon, 17 Oct 2022 at 23:10, Guilherme G. Piccoli <gpiccoli@igalia.com> wrote:
->> [...]
->> Out of curiosity, do you have a number here, like X kilobytes per active
->> CPU?
-> 
-> 2x128 KB per CPU, which makes 128  KB also the maximum input/output
-> size per request when using this interface. (SCOMP_SCRATCH_SIZE)
-> 
-> On my 32x4 CPU workstation, this amounts to 32 MB permanently locked
-> up for nothing when the pstore driver is loaded (with compression
-> enabled)
+Hi,
 
-Thanks! This is really something...
+On Sun, 16 Oct 2022 20:57:32 -0700, Kees Cook wrote:
+> Fix the kern-doc markings for several of the overflow helpers and move
+> their location into the core kernel API documentation, where it belongs
+> (it's not driver-specific).
+> 
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Akira Yokosawa <akiyks@gmail.com>
+LGTM,
+
+Reviewed-by: Akira Yokosawa <akiyks@gmail.com>
+
+Kees, which tree do you expect this one to go through?
+
+        Thanks, Akira
+
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  Documentation/core-api/kernel-api.rst |  6 +++++
+>  Documentation/driver-api/basics.rst   |  3 ---
+>  include/linux/overflow.h              | 38 +++++++++++----------------
+>  3 files changed, 22 insertions(+), 25 deletions(-)
+> 
 
