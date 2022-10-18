@@ -2,349 +2,432 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE8FC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 18:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC42BC433FE
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 18:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229648AbiJRSkL (ORCPT
+        id S229463AbiJRSyk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 14:40:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54636 "EHLO
+        Tue, 18 Oct 2022 14:54:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230085AbiJRSkG (ORCPT
+        with ESMTP id S229584AbiJRSyi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 14:40:06 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 937354456B
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 11:40:02 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id l4so14667866plb.8
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 11:40:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=F4eD4rv8AiiMXaxAhbdeV46dd3yYa3AhkQEwj0mAajQ=;
-        b=KFK9t6HLlzZyDhtW3A4hfP/doAvobb3pchBBuBuSCE95IpvfME/jsHXV+JzO3npy9p
-         FlQPCMT7S68QUiix2drxX61yDq8jn/vFY8LysHe/765t4u5Prj+syRWrF71pxH4O9vFG
-         Zt9OjtfPVjW/kk9TF1e4THmvCX5L3WmJAYIvNbZ2i5Z7TMUVlpBct644rQeA2REOhHSQ
-         xbl98rNKsaRcjUpFQBcZpFSerPX2YE8z8Poe6NX1dGEFr4vXCybMMG8APgFIAenD7uGH
-         kbrSSAreGMD/v9uihynLYsrff39si5+pvdsENmiZYVoNeL4cI3wCkDc2VTC5CLuO5R2W
-         tC9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F4eD4rv8AiiMXaxAhbdeV46dd3yYa3AhkQEwj0mAajQ=;
-        b=cUbhT7j14PoyREOG1BJkPSjjlO0Vd+tCGJha1zUO+2l2qINPMIBHeEPBVHDHX4aAwt
-         7IH0WSBoMUUO+OZ9k5305/EdhX1jvF7iXUOdP330Vl4ueONsX44ZmkzLP2LwOGmBuShJ
-         9wNTODNfIZxdTidYs63uZrjkWsULPjgKLR4rE4nV/30unoAesQSjcMyDqTv86IXa2PxG
-         lXoY84Cucl1ay+Q51zp6BZDsGfbplpRQoaWK/kXxNBhsIx92XHY58Kn04yhMvtpBSkW4
-         kNuPlOGzC02ZbBFxhyldbmxEcHBCRsHXT0nSKS0NC/xmLC+lDXfGsI1fen9HtefPbySq
-         pDIQ==
-X-Gm-Message-State: ACrzQf3hLbaDCTRnetGQ+ZkFmsW8bEUPfhhlAob5xYuNhavNb9Dv1M7q
-        CTItvMED5JnW424ze0zuhaPORJnzoKulmUwcBB+y2A==
-X-Google-Smtp-Source: AMsMyM5wZQ0xZpC//R2A/iaSnFL0H/24M1Q0whOO/N5iWExP4leMdNgBqX8O/7CAxnfKKN1fJRrxHUR/X3utMG6iIsY=
-X-Received: by 2002:a17:90b:1a8d:b0:20d:be0b:a320 with SMTP id
- ng13-20020a17090b1a8d00b0020dbe0ba320mr26480711pjb.107.1666118401853; Tue, 18
- Oct 2022 11:40:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221018082038.gonna.300-kees@kernel.org>
-In-Reply-To: <20221018082038.gonna.300-kees@kernel.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 18 Oct 2022 11:39:50 -0700
-Message-ID: <CAKwvOdnHz9yW1XcnY_hAz9ux5TPeXrzUyDxmmR+mxzntG+XZuQ@mail.gmail.com>
-Subject: Re: [PATCH v2] kunit/memcpy: Adding dynamic size and window tests
+        Tue, 18 Oct 2022 14:54:38 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF9EC1A83E;
+        Tue, 18 Oct 2022 11:54:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 532CAB820F6;
+        Tue, 18 Oct 2022 18:54:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AFF3C433D6;
+        Tue, 18 Oct 2022 18:54:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666119271;
+        bh=v8Itd6Fz0syPe9fb8LADCktcVV+EcUlrLj8xBs6lhRI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cpGLFwnlnYKvKVhzALPqm7k/ZmHGBMRoj0YLUwmx+yTGqbFxl0pJwkFJ8AMk86ljL
+         cWHpZENSnrcrFr5mrSzB5d/DHMpeq+VBb2OIO1SeRmpEEs0VnZDhvNPH1jsFa/5TT0
+         /Z7OH/oaCos2/R+asp9YcFgHFuWjUr9hSuiT055mjHK/PxdNa7STZVgSzgQWHtl420
+         HLnDuWTdNixqhijWCu0Z8CJ2tu0M/VAXS9yV6dDsA0WMVMmFdcnRx1MUpZk+QoKYyt
+         G02dhQpVH+eKTqW1SyrwJku6saHodwD+EVp4vYXb3tanVshXnwEw1gf7SKV4wofQZz
+         1zsB+vCedT7Vw==
+Date:   Tue, 18 Oct 2022 11:54:28 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     David Gow <davidgow@google.com>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] string: Convert strscpy() self-test to KUnit
+Message-ID: <Y072ZMk/hNkfwqMv@dev-arch.thelio-3990X>
+References: <20221018082824.never.845-kees@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221018082824.never.845-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
- On Tue, Oct 18, 2022 at 1:21 AM Kees Cook <keescook@chromium.org> wrote:
->
-> The "side effects" memmove() test accidentally found[1] a corner case in
-> the recent refactoring of the i386 assembly memmove(), but missed another
-> corner case. Instead of hoping to get lucky next time, implement much
-> more complete tests of memcpy() and memmove() -- especially the moving
-> window overlap for memmove() -- which catches all the issues encountered
-> and should catch anything new.
->
-> [1] https://lore.kernel.org/lkml/CAKwvOdkaKTa2aiA90VzFrChNQM6O_ro+b7VWs=op70jx-DKaXA@mail.gmail.com
->
+On Tue, Oct 18, 2022 at 01:28:59AM -0700, Kees Cook wrote:
+> Convert the strscpy() self-test to a KUnit test.
+> 
+> Cc: David Gow <davidgow@google.com>
+> Cc: Tobin C. Harding <tobin@kernel.org>
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+I ran the following commands and they all passed:
 
-Minor comments on qualifiers/storage/int vs stize_t below.
+$ tools/testing/kunit/kunit.py run --arch arm64 --cross_compile aarch64-linux-gnu- strscpy
+
+$ tools/testing/kunit/kunit.py run --arch arm64 --make_options LLVM=1 strscpy
+
+$ tools/testing/kunit/kunit.py run --arch x86_64 strscpy
+
+$ tools/testing/kunit/kunit.py run --arch x86_64 --make_options LLVM=1 strscpy
+
+Tested-by: Nathan Chancellor <nathan@kernel.org>
 
 > ---
->  MAINTAINERS        |   1 +
->  lib/memcpy_kunit.c | 205 +++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 206 insertions(+)
->
+>  MAINTAINERS         |   1 +
+>  lib/Kconfig.debug   |   8 ++-
+>  lib/Makefile        |   2 +-
+>  lib/strscpy_kunit.c | 129 +++++++++++++++++++++++++++++++++++++
+>  lib/test_strscpy.c  | 150 --------------------------------------------
+>  5 files changed, 136 insertions(+), 154 deletions(-)
+>  create mode 100644 lib/strscpy_kunit.c
+>  delete mode 100644 lib/test_strscpy.c
+> 
 > diff --git a/MAINTAINERS b/MAINTAINERS
-> index cf0f18502372..9dd8d74c4df0 100644
+> index 9dd8d74c4df0..232d78340d79 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
-> @@ -8044,6 +8044,7 @@ S:        Supported
->  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
->  F:     include/linux/fortify-string.h
->  F:     lib/fortify_kunit.c
-> +F:     lib/memcpy_kunit.c
->  F:     lib/test_fortify/*
->  F:     scripts/test_fortify.sh
->  K:     \b__NO_FORTIFY\b
-> diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
-> index 2b5cc70ac53f..c4a7107edd43 100644
-> --- a/lib/memcpy_kunit.c
-> +++ b/lib/memcpy_kunit.c
-> @@ -270,6 +270,208 @@ static void memset_test(struct kunit *test)
->  #undef TEST_OP
->  }
->
-> +static u8 large_src[1024];
-> +static u8 large_dst[2048];
-> +static const u8 large_zero[2048];
+> @@ -8045,6 +8045,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/har
+>  F:	include/linux/fortify-string.h
+>  F:	lib/fortify_kunit.c
+>  F:	lib/memcpy_kunit.c
+> +F:	lib/strscpy_kunit.c
+>  F:	lib/test_fortify/*
+>  F:	scripts/test_fortify.sh
+>  K:	\b__NO_FORTIFY\b
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 3fc7abffc7aa..e0a4d52e434c 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -2215,9 +2215,6 @@ config STRING_SELFTEST
+>  config TEST_STRING_HELPERS
+>  	tristate "Test functions located in the string_helpers module at runtime"
+>  
+> -config TEST_STRSCPY
+> -	tristate "Test strscpy*() family of functions at runtime"
+> -
+>  config TEST_KSTRTOX
+>  	tristate "Test kstrto*() family of functions at runtime"
+>  
+> @@ -2583,6 +2580,11 @@ config HW_BREAKPOINT_KUNIT_TEST
+>  
+>  	  If unsure, say N.
+>  
+> +config STRSCPY_KUNIT_TEST
+> +	tristate "Test strscpy*() family of functions at runtime" if !KUNIT_ALL_TESTS
+> +	depends on KUNIT
+> +	default KUNIT_ALL_TESTS
 > +
-> +static void set_random_nonzero(struct kunit *test, u8 *byte)
-> +{
-> +       int failed_rng = 0;
+>  config TEST_UDELAY
+>  	tristate "udelay test driver"
+>  	help
+> diff --git a/lib/Makefile b/lib/Makefile
+> index 161d6a724ff7..1905e5c26849 100644
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -82,7 +82,6 @@ obj-$(CONFIG_TEST_DYNAMIC_DEBUG) += test_dynamic_debug.o
+>  obj-$(CONFIG_TEST_PRINTF) += test_printf.o
+>  obj-$(CONFIG_TEST_SCANF) += test_scanf.o
+>  obj-$(CONFIG_TEST_BITMAP) += test_bitmap.o
+> -obj-$(CONFIG_TEST_STRSCPY) += test_strscpy.o
+>  obj-$(CONFIG_TEST_UUID) += test_uuid.o
+>  obj-$(CONFIG_TEST_XARRAY) += test_xarray.o
+>  obj-$(CONFIG_TEST_PARMAN) += test_parman.o
+> @@ -380,6 +379,7 @@ obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow_kunit.o
+>  CFLAGS_stackinit_kunit.o += $(call cc-disable-warning, switch-unreachable)
+>  obj-$(CONFIG_STACKINIT_KUNIT_TEST) += stackinit_kunit.o
+>  obj-$(CONFIG_FORTIFY_KUNIT_TEST) += fortify_kunit.o
+> +obj-$(CONFIG_STRSCPY_KUNIT_TEST) += strscpy_kunit.o
+>  
+>  obj-$(CONFIG_GENERIC_LIB_DEVMEM_IS_ALLOWED) += devmem_is_allowed.o
+>  
+> diff --git a/lib/strscpy_kunit.c b/lib/strscpy_kunit.c
+> new file mode 100644
+> index 000000000000..98523f828d3a
+> --- /dev/null
+> +++ b/lib/strscpy_kunit.c
+> @@ -0,0 +1,129 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Kernel module for testing 'strscpy' family of functions.
+> + */
 > +
-> +       while (*byte == 0) {
-> +               get_random_bytes(byte, 1);
-> +               KUNIT_ASSERT_LT_MSG(test, failed_rng++, 100,
-> +                                   "Is the RNG broken?");
-> +       }
-> +}
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 > +
-> +static void init_large(struct kunit *test)
-> +{
-> +
-> +       /* Get many bit patterns. */
-> +       get_random_bytes(large_src, ARRAY_SIZE(large_src));
-> +
-> +       /* Make sure we have non-zero edges. */
-> +       set_random_nonzero(test, &large_src[0]);
-> +       set_random_nonzero(test, &large_src[ARRAY_SIZE(large_src) - 1]);
-> +
-> +       /* Explicitly zero the entire destination. */
-> +       memset(large_dst, 0, ARRAY_SIZE(large_dst));
-> +}
+> +#include <kunit/test.h>
+> +#include <linux/string.h>
 > +
 > +/*
-> + * Instead of an indirect function call for "copy" or a giant macro,
-> + * use a bool to pick memcpy or memmove.
+> + * tc() - Run a specific test case.
+> + * @src: Source string, argument to strscpy_pad()
+> + * @count: Size of destination buffer, argument to strscpy_pad()
+> + * @expected: Expected return value from call to strscpy_pad()
+> + * @terminator: 1 if there should be a terminating null byte 0 otherwise.
+> + * @chars: Number of characters from the src string expected to be
+> + *         written to the dst buffer.
+> + * @pad: Number of pad characters expected (in the tail of dst buffer).
+> + *       (@pad does not include the null terminator byte.)
+> + *
+> + * Calls strscpy_pad() and verifies the return value and state of the
+> + * destination buffer after the call returns.
 > + */
-> +static void copy_large_test(struct kunit *test, bool use_memmove)
+> +static void tc(struct kunit *test, char *src, int count, int expected,
+> +	       int chars, int terminator, int pad)
 > +{
-> +       init_large(test);
+> +	int nr_bytes_poison;
+> +	int max_expected;
+> +	int max_count;
+> +	int written;
+> +	char buf[6];
+> +	int index, i;
+> +	const char POISON = 'z';
 > +
-> +       /* Copy a growing number of non-overlapping bytes ... */
-> +       for (int bytes = 1; bytes <= ARRAY_SIZE(large_src); bytes++) {
-> +               /* Over a shifting destination window ... */
-> +               for (int offset = 0; offset < ARRAY_SIZE(large_src); offset++) {
-> +                       int right_zero_pos = offset + bytes;
-> +                       int right_zero_size = ARRAY_SIZE(large_dst) - right_zero_pos;
+> +	KUNIT_ASSERT_TRUE_MSG(test, src != NULL,
+> +			      "null source string not supported");
 > +
-> +                       /* Copy! */
-> +                       if (use_memmove)
-> +                               memmove(large_dst + offset, large_src, bytes);
-> +                       else
-> +                               memcpy(large_dst + offset, large_src, bytes);
+> +	memset(buf, POISON, sizeof(buf));
+> +	/* Future proofing test suite, validate args */
+> +	max_count = sizeof(buf) - 2; /* Space for null and to verify overflow */
+> +	max_expected = count - 1;    /* Space for the null */
 > +
-> +                       /* Did we touch anything before the copy area? */
-> +                       KUNIT_ASSERT_EQ_MSG(test,
-> +                               memcmp(large_dst, large_zero, offset), 0,
-> +                               "with size %d at offset %d", bytes, offset);
-> +                       /* Did we touch anything after the copy area? */
-> +                       KUNIT_ASSERT_EQ_MSG(test,
-> +                               memcmp(&large_dst[right_zero_pos], large_zero, right_zero_size), 0,
-> +                               "with size %d at offset %d", bytes, offset);
+> +	KUNIT_ASSERT_LE_MSG(test, count, max_count,
+> +		"count (%d) is too big (%d) ... aborting", count, max_count);
+> +	KUNIT_EXPECT_LE_MSG(test, expected, max_expected,
+> +		"expected (%d) is bigger than can possibly be returned (%d)",
+> +		expected, max_expected);
 > +
-> +                       /* Are we byte-for-byte exact across the copy? */
-> +                       KUNIT_ASSERT_EQ_MSG(test,
-> +                               memcmp(large_dst + offset, large_src, bytes), 0,
-> +                               "with size %d at offset %d", bytes, offset);
+> +	written = strscpy_pad(buf, src, count);
+> +	KUNIT_ASSERT_EQ(test, written, expected);
 > +
-> +                       /* Zero out what we copied for the next cycle. */
-> +                       memset(large_dst + offset, 0, bytes);
-> +               }
-> +               /* Avoid stall warnings if this loop gets slow. */
-> +               cond_resched();
-> +       }
+> +	if (count && written == -E2BIG) {
+> +		KUNIT_ASSERT_EQ_MSG(test, 0, strncmp(buf, src, count - 1),
+> +			"buffer state invalid for -E2BIG");
+> +		KUNIT_ASSERT_EQ_MSG(test, buf[count - 1], '\0',
+> +			"too big string is not null terminated correctly");
+> +	}
+> +
+> +	for (i = 0; i < chars; i++)
+> +		KUNIT_ASSERT_EQ_MSG(test, buf[i], src[i],
+> +			"buf[i]==%c != src[i]==%c", buf[i], src[i]);
+> +
+> +	if (terminator)
+> +		KUNIT_ASSERT_EQ_MSG(test, buf[count - 1], '\0',
+> +			"string is not null terminated correctly");
+> +
+> +	for (i = 0; i < pad; i++) {
+> +		index = chars + terminator + i;
+> +		KUNIT_ASSERT_EQ_MSG(test, buf[index], '\0',
+> +			"padding missing at index: %d", i);
+> +	}
+> +
+> +	nr_bytes_poison = sizeof(buf) - chars - terminator - pad;
+> +	for (i = 0; i < nr_bytes_poison; i++) {
+> +		index = sizeof(buf) - 1 - i; /* Check from the end back */
+> +		KUNIT_ASSERT_EQ_MSG(test, buf[index], POISON,
+> +			"poison value missing at index: %d", i);
+> +	}
 > +}
 > +
-> +static void memcpy_large_test(struct kunit *test)
+> +static void strscpy_test(struct kunit *test)
 > +{
-> +       copy_large_test(test, false);
+> +	/*
+> +	 * tc() uses a destination buffer of size 6 and needs at
+> +	 * least 2 characters spare (one for null and one to check for
+> +	 * overflow).  This means we should only call tc() with
+> +	 * strings up to a maximum of 4 characters long and 'count'
+> +	 * should not exceed 4.  To test with longer strings increase
+> +	 * the buffer size in tc().
+> +	 */
+> +
+> +	/* tc(test, src, count, expected, chars, terminator, pad) */
+> +	tc(test, "a", 0, -E2BIG, 0, 0, 0);
+> +	tc(test, "",  0, -E2BIG, 0, 0, 0);
+> +
+> +	tc(test, "a", 1, -E2BIG, 0, 1, 0);
+> +	tc(test, "",  1, 0,	 0, 1, 0);
+> +
+> +	tc(test, "ab", 2, -E2BIG, 1, 1, 0);
+> +	tc(test, "a",  2, 1,	  1, 1, 0);
+> +	tc(test, "",   2, 0,	  0, 1, 1);
+> +
+> +	tc(test, "abc", 3, -E2BIG, 2, 1, 0);
+> +	tc(test, "ab",  3, 2,	   2, 1, 0);
+> +	tc(test, "a",   3, 1,	   1, 1, 1);
+> +	tc(test, "",    3, 0,	   0, 1, 2);
+> +
+> +	tc(test, "abcd", 4, -E2BIG, 3, 1, 0);
+> +	tc(test, "abc",  4, 3,	    3, 1, 0);
+> +	tc(test, "ab",   4, 2,	    2, 1, 1);
+> +	tc(test, "a",    4, 1,	    1, 1, 2);
+> +	tc(test, "",     4, 0,	    0, 1, 3);
 > +}
 > +
-> +static void memmove_large_test(struct kunit *test)
-> +{
-> +       copy_large_test(test, true);
-> +}
+> +static struct kunit_case strscpy_test_cases[] = {
+> +	KUNIT_CASE(strscpy_test),
+> +	{}
+> +};
 > +
-> +/*
-> + * On the assumption that boundary conditions are going to be the most
-> + * sensitive, instead of taking a full step (inc) each iteration,
-> + * take single index steps for at least the first "inc"-many indexes
-> + * from the "start" and at least the last "inc"-many indexes before
-> + * the "end". When in the middle, take full "inc"-wide steps. For
-> + * example, calling next_step(idx, 1, 15, 3) with idx starting at 0
-> + * would see the following pattern: 1 2 3 4 7 10 11 12 13 14 15.
-> + */
-> +static int next_step(int idx, int start, int end, int inc)
-> +{
-> +       start += inc;
-> +       end -= inc;
+> +static struct kunit_suite strscpy_test_suite = {
+> +	.name = "strscpy",
+> +	.test_cases = strscpy_test_cases,
+> +};
 > +
-> +       if (idx < start || idx + inc > end)
-> +               inc = 1;
-> +       return idx + inc;
-> +}
-
-How painful would it be to request that you use size_t for these
-(d_off, s_off, most of the variables in inner_loop) rather than int?
-It looks like none of the values should be less than 0 IIUC, but I
-think it would help make this code more robust if we reuse or update
-it in the future.
-
+> +kunit_test_suite(strscpy_test_suite);
 > +
-> +static void inner_loop(struct kunit *test, int bytes, int d_off, int s_off)
-> +{
-> +       int left_zero_pos, left_zero_size;
-> +       int right_zero_pos, right_zero_size;
-> +       int src_pos, src_orig_pos, src_size;
-> +       int pos;
-> +
-> +       /* Place the source in the destination buffer. */
-> +       memcpy(&large_dst[s_off], large_src, bytes);
-> +
-> +       /* Copy to destination offset. */
-> +       memmove(&large_dst[d_off], &large_dst[s_off], bytes);
-> +
-> +       /* Make sure destination entirely matches. */
-> +       KUNIT_ASSERT_EQ_MSG(test, memcmp(&large_dst[d_off], large_src, bytes), 0,
-> +               "with size %d at src offset %d and dest offset %d",
-> +               bytes, s_off, d_off);
-> +
-> +       /* Calculate the expected zero spans. */
-> +       if (s_off < d_off) {
-> +               left_zero_pos = 0;
-> +               left_zero_size = s_off;
-> +
-> +               right_zero_pos = d_off + bytes;
-> +               right_zero_size = ARRAY_SIZE(large_dst) - right_zero_pos;
-> +
-> +               src_pos = s_off;
-> +               src_orig_pos = 0;
-> +               src_size = d_off - s_off;
-> +       } else {
-> +               left_zero_pos = 0;
-> +               left_zero_size = d_off;
-> +
-> +               right_zero_pos = s_off + bytes;
-> +               right_zero_size = ARRAY_SIZE(large_dst) - right_zero_pos;
-> +
-> +               src_pos = d_off + bytes;
-> +               src_orig_pos = src_pos - s_off;
-> +               src_size = right_zero_pos - src_pos;
-> +       }
-> +
-> +       /* Check non-overlapping source is unchanged.*/
-> +       KUNIT_ASSERT_EQ_MSG(test,
-> +               memcmp(&large_dst[src_pos], &large_src[src_orig_pos], src_size), 0,
-> +               "with size %d at src offset %d and dest offset %d",
-> +               bytes, s_off, d_off);
-> +
-> +       /* Check leading buffer contents are zero. */
-> +       KUNIT_ASSERT_EQ_MSG(test,
-> +               memcmp(&large_dst[left_zero_pos], large_zero, left_zero_size), 0,
-> +               "with size %d at src offset %d and dest offset %d",
-> +               bytes, s_off, d_off);
-> +       /* Check trailing buffer contents are zero. */
-> +       KUNIT_ASSERT_EQ_MSG(test,
-> +               memcmp(&large_dst[right_zero_pos], large_zero, right_zero_size), 0,
-> +               "with size %d at src offset %d and dest offset %d",
-> +               bytes, s_off, d_off);
-> +
-> +       /* Zero out everything not already zeroed.*/
-> +       pos = left_zero_pos + left_zero_size;
-> +       memset(&large_dst[pos], 0, right_zero_pos - pos);
-> +}
-> +
-> +static void memmove_overlap_test(struct kunit *test)
-> +{
-> +       /*
-> +        * Running all possible offset and overlap combinations takes a
-> +        * very long time. Instead, only check up to 128 bytes offset
-> +        * into the destination buffer (which should result in crossing
-> +        * cachelines), with a step size of 1 through 7 to try to skip some
-> +        * redundancy.
-> +        */
-> +       static const int offset_max = 128; /* less than ARRAY_SIZE(large_src); */
-> +       static const int bytes_step = 7;
-> +       static const int window_step = 7;
-> +
-> +       static const int bytes_start = 1;
-> +       static const int bytes_end = ARRAY_SIZE(large_src) + 1;
-
-Sorry I missed this in v1, but I don't think you meant to use static
-storage for these variables?
-
-> +
-> +       init_large(test);
-> +
-> +       /* Copy a growing number of overlapping bytes ... */
-> +       for (int bytes = bytes_start; bytes < bytes_end;
-> +            bytes = next_step(bytes, bytes_start, bytes_end, bytes_step)) {
-> +
-> +               /* Over a shifting destination window ... */
-> +               for (int d_off = 0; d_off < offset_max; d_off++) {
-> +                       int s_start = max(d_off - bytes, 0);
-> +                       int s_end = min_t(int, d_off + bytes, ARRAY_SIZE(large_src));
-
-^ These could probably be const.  Looking at the patch, so could
-right_zero_pos and right_zero_size in copy_large_test(), and maybe a
-few function parameters.  Doesn't matter to me; I can be overzealous
-in my use of const, which makes refactoring more difficult. But if
-code is using const (like memmove_overlap_testis is above), it might
-be worth visiting whether the qualifier is applied everywhere it
-could/should be.  Up to you how much const you want, but there could
-be more, as a heads up.
-
-> +
-> +                       /* Over a shifting source window ... */
-> +                       for (int s_off = s_start; s_off < s_end;
-> +                            s_off = next_step(s_off, s_start, s_end, window_step))
-> +                               inner_loop(test, bytes, d_off, s_off);
-> +
-> +                       /* Avoid stall warnings. */
-> +                       cond_resched();
-> +               }
-> +       }
-> +}
-> +
->  static void strtomem_test(struct kunit *test)
->  {
->         static const char input[sizeof(unsigned long)] = "hi";
-> @@ -325,7 +527,10 @@ static void strtomem_test(struct kunit *test)
->  static struct kunit_case memcpy_test_cases[] = {
->         KUNIT_CASE(memset_test),
->         KUNIT_CASE(memcpy_test),
-> +       KUNIT_CASE(memcpy_large_test),
->         KUNIT_CASE(memmove_test),
-> +       KUNIT_CASE(memmove_large_test),
-> +       KUNIT_CASE(memmove_overlap_test),
->         KUNIT_CASE(strtomem_test),
->         {}
->  };
-> --
+> +MODULE_AUTHOR("Tobin C. Harding <tobin@kernel.org>");
+> +MODULE_LICENSE("GPL");
+> diff --git a/lib/test_strscpy.c b/lib/test_strscpy.c
+> deleted file mode 100644
+> index a827f94601f5..000000000000
+> --- a/lib/test_strscpy.c
+> +++ /dev/null
+> @@ -1,150 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> -
+> -#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> -
+> -#include <linux/string.h>
+> -
+> -#include "../tools/testing/selftests/kselftest_module.h"
+> -
+> -/*
+> - * Kernel module for testing 'strscpy' family of functions.
+> - */
+> -
+> -KSTM_MODULE_GLOBALS();
+> -
+> -/*
+> - * tc() - Run a specific test case.
+> - * @src: Source string, argument to strscpy_pad()
+> - * @count: Size of destination buffer, argument to strscpy_pad()
+> - * @expected: Expected return value from call to strscpy_pad()
+> - * @terminator: 1 if there should be a terminating null byte 0 otherwise.
+> - * @chars: Number of characters from the src string expected to be
+> - *         written to the dst buffer.
+> - * @pad: Number of pad characters expected (in the tail of dst buffer).
+> - *       (@pad does not include the null terminator byte.)
+> - *
+> - * Calls strscpy_pad() and verifies the return value and state of the
+> - * destination buffer after the call returns.
+> - */
+> -static int __init tc(char *src, int count, int expected,
+> -		     int chars, int terminator, int pad)
+> -{
+> -	int nr_bytes_poison;
+> -	int max_expected;
+> -	int max_count;
+> -	int written;
+> -	char buf[6];
+> -	int index, i;
+> -	const char POISON = 'z';
+> -
+> -	total_tests++;
+> -
+> -	if (!src) {
+> -		pr_err("null source string not supported\n");
+> -		return -1;
+> -	}
+> -
+> -	memset(buf, POISON, sizeof(buf));
+> -	/* Future proofing test suite, validate args */
+> -	max_count = sizeof(buf) - 2; /* Space for null and to verify overflow */
+> -	max_expected = count - 1;    /* Space for the null */
+> -	if (count > max_count) {
+> -		pr_err("count (%d) is too big (%d) ... aborting", count, max_count);
+> -		return -1;
+> -	}
+> -	if (expected > max_expected) {
+> -		pr_warn("expected (%d) is bigger than can possibly be returned (%d)",
+> -			expected, max_expected);
+> -	}
+> -
+> -	written = strscpy_pad(buf, src, count);
+> -	if ((written) != (expected)) {
+> -		pr_err("%d != %d (written, expected)\n", written, expected);
+> -		goto fail;
+> -	}
+> -
+> -	if (count && written == -E2BIG) {
+> -		if (strncmp(buf, src, count - 1) != 0) {
+> -			pr_err("buffer state invalid for -E2BIG\n");
+> -			goto fail;
+> -		}
+> -		if (buf[count - 1] != '\0') {
+> -			pr_err("too big string is not null terminated correctly\n");
+> -			goto fail;
+> -		}
+> -	}
+> -
+> -	for (i = 0; i < chars; i++) {
+> -		if (buf[i] != src[i]) {
+> -			pr_err("buf[i]==%c != src[i]==%c\n", buf[i], src[i]);
+> -			goto fail;
+> -		}
+> -	}
+> -
+> -	if (terminator) {
+> -		if (buf[count - 1] != '\0') {
+> -			pr_err("string is not null terminated correctly\n");
+> -			goto fail;
+> -		}
+> -	}
+> -
+> -	for (i = 0; i < pad; i++) {
+> -		index = chars + terminator + i;
+> -		if (buf[index] != '\0') {
+> -			pr_err("padding missing at index: %d\n", i);
+> -			goto fail;
+> -		}
+> -	}
+> -
+> -	nr_bytes_poison = sizeof(buf) - chars - terminator - pad;
+> -	for (i = 0; i < nr_bytes_poison; i++) {
+> -		index = sizeof(buf) - 1 - i; /* Check from the end back */
+> -		if (buf[index] != POISON) {
+> -			pr_err("poison value missing at index: %d\n", i);
+> -			goto fail;
+> -		}
+> -	}
+> -
+> -	return 0;
+> -fail:
+> -	failed_tests++;
+> -	return -1;
+> -}
+> -
+> -static void __init selftest(void)
+> -{
+> -	/*
+> -	 * tc() uses a destination buffer of size 6 and needs at
+> -	 * least 2 characters spare (one for null and one to check for
+> -	 * overflow).  This means we should only call tc() with
+> -	 * strings up to a maximum of 4 characters long and 'count'
+> -	 * should not exceed 4.  To test with longer strings increase
+> -	 * the buffer size in tc().
+> -	 */
+> -
+> -	/* tc(src, count, expected, chars, terminator, pad) */
+> -	KSTM_CHECK_ZERO(tc("a", 0, -E2BIG, 0, 0, 0));
+> -	KSTM_CHECK_ZERO(tc("", 0, -E2BIG, 0, 0, 0));
+> -
+> -	KSTM_CHECK_ZERO(tc("a", 1, -E2BIG, 0, 1, 0));
+> -	KSTM_CHECK_ZERO(tc("", 1, 0, 0, 1, 0));
+> -
+> -	KSTM_CHECK_ZERO(tc("ab", 2, -E2BIG, 1, 1, 0));
+> -	KSTM_CHECK_ZERO(tc("a", 2, 1, 1, 1, 0));
+> -	KSTM_CHECK_ZERO(tc("", 2, 0, 0, 1, 1));
+> -
+> -	KSTM_CHECK_ZERO(tc("abc", 3, -E2BIG, 2, 1, 0));
+> -	KSTM_CHECK_ZERO(tc("ab", 3, 2, 2, 1, 0));
+> -	KSTM_CHECK_ZERO(tc("a", 3, 1, 1, 1, 1));
+> -	KSTM_CHECK_ZERO(tc("", 3, 0, 0, 1, 2));
+> -
+> -	KSTM_CHECK_ZERO(tc("abcd", 4, -E2BIG, 3, 1, 0));
+> -	KSTM_CHECK_ZERO(tc("abc", 4, 3, 3, 1, 0));
+> -	KSTM_CHECK_ZERO(tc("ab", 4, 2, 2, 1, 1));
+> -	KSTM_CHECK_ZERO(tc("a", 4, 1, 1, 1, 2));
+> -	KSTM_CHECK_ZERO(tc("", 4, 0, 0, 1, 3));
+> -}
+> -
+> -KSTM_MODULE_LOADERS(test_strscpy);
+> -MODULE_AUTHOR("Tobin C. Harding <tobin@kernel.org>");
+> -MODULE_LICENSE("GPL");
+> -- 
 > 2.34.1
->
-
-
--- 
-Thanks,
-~Nick Desaulniers
+> 
