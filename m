@@ -2,70 +2,89 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B81C4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 13:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E166C43219
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Oct 2022 14:11:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231130AbiJRNs0 (ORCPT
+        id S231370AbiJROLP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 09:48:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47950 "EHLO
+        Tue, 18 Oct 2022 10:11:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230500AbiJRNsZ (ORCPT
+        with ESMTP id S231371AbiJROK5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 09:48:25 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 485EACD5EE;
-        Tue, 18 Oct 2022 06:48:24 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:281:8300:73::5f6])
+        Tue, 18 Oct 2022 10:10:57 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD685647D2;
+        Tue, 18 Oct 2022 07:10:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 2C0412D7;
-        Tue, 18 Oct 2022 13:48:22 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 2C0412D7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-        t=1666100902; bh=VtE0W9gKmiji3m+fBP4JE6QV2uJ5JjdMxX9jo/Mx+Ek=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=ZdOy1taLoW3g3bN2YMjLwgeGRII+Qg3vJgSQL2YkJ7v/ANgVj6T7xzfePkj46ORkq
-         1JnEbGcN11QqFKsaVQn7FiBEQov+ryevQLPu5sUk4DrMzIi8O3hoKcsXLypAW1CxTD
-         zWgHF9XrkHovqPhJXfOx2/ulc6bZOay9OKzj5sRrYyHnkrV3HM9SKQ8rrlx5PVzHvm
-         gWpXqBhVEqxsaG3v8FzwSntFKHTFSZgA3qDACbG1+bHLKtDcNiqiPQFfr8KY9Tp4S8
-         HCd3eIaceWLARP3GsBrAlqtTrRYmgBIIRBeC0yuUlSIK5tvtTzJR6o0qU/sk9gU9H1
-         MxdXE0RXorskQ==
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Kees Cook <keescook@chromium.org>,
-        Akira Yokosawa <akiyks@gmail.com>
-Cc:     linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Yanteng Si <siyanteng@loongson.cn>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] overflow: Fix kern-doc markup for functions
-In-Reply-To: <202210171909.65FFFB5601@keescook>
-References: <20221017035732.1968394-1-keescook@chromium.org>
- <6f8aa670-fb4f-3ff9-bcd9-8490e752b349@gmail.com>
- <202210171909.65FFFB5601@keescook>
-Date:   Tue, 18 Oct 2022 07:48:21 -0600
-Message-ID: <87ilkhdyze.fsf@meer.lwn.net>
+        by ams.source.kernel.org (Postfix) with ESMTPS id EC3D5B81F70;
+        Tue, 18 Oct 2022 14:10:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15560C433C1;
+        Tue, 18 Oct 2022 14:10:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666102243;
+        bh=GZeQhv33D3zVDt2g8J7jPKYmYI7gz3wmR3KSKFf0vnw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BGIhmEWaQ5FBxgU4u024LOBNRwMkOMH4NXh5l3nxCa9p9kL6rgLm1hwQBlnoRVbr9
+         pNf86TL9ccIPRc9Z6xrM8Eik0t0ZCjBZu1xhNBF2lPtfUX6XKkjq2Esz+oZCEgIQ6B
+         R6nyhjMgr8KnMVOIj+QCAcjETjzff9eMhLT3w/CoJdn/NCRTPNy7EkvvXfUSVslyRv
+         h11S73PY3I2B51V72f8i1UrHR062I4g/yZMhA04yVx4BMLzkOKJVMgy5uTSZ11FVCT
+         hn+81PKB8KuGAZsFRSulGEv0fbNKx3M9jm+tK4/GR7M2xNpxZIGk9XJsOiT+xmCyLB
+         PB/yAg9vRgXdA==
+Date:   Tue, 18 Oct 2022 16:10:37 +0200
+From:   Christian Brauner <brauner@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        John Johansen <john.johansen@canonical.com>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        KP Singh <kpsingh@kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 6/9] fs: Introduce file_to_perms() helper
+Message-ID: <20221018141037.zzpfjzutqbutbpiy@wittgenstein>
+References: <20221013222702.never.990-kees@kernel.org>
+ <20221013223654.659758-6-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20221013223654.659758-6-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
+On Thu, Oct 13, 2022 at 03:36:51PM -0700, Kees Cook wrote:
+> Extract the logic used by LSM file hooks to be able to reconstruct the
+> access mode permissions from an open.
+> 
+> Cc: John Johansen <john.johansen@canonical.com>
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: James Morris <jmorris@namei.org>
+> Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> Cc: linux-security-module@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  include/linux/fs.h               | 22 ++++++++++++++++++++++
+>  security/apparmor/include/file.h | 18 ++++--------------
+>  2 files changed, 26 insertions(+), 14 deletions(-)
+> 
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 9eced4cc286e..814f10d4132e 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -993,6 +993,28 @@ static inline struct file *get_file(struct file *f)
+>  #define get_file_rcu(x) atomic_long_inc_not_zero(&(x)->f_count)
+>  #define file_count(x)	atomic_long_read(&(x)->f_count)
+>  
+> +/* Calculate the basic MAY_* flags needed for a given file. */
+> +static inline u8 file_to_perms(struct file *file)
 
-> If the Documentation/* changes look okay, I'd rather carry it in my tree
-> since I'm going to be poking at more functions in there soon.
-
-That seems like as good a path for it as any.  Feel free to add
-
-Acked-by: Jonathan Corbet <corbet@lwn.net>
-
-...if you want.
-
-Thanks,
-
-jon
+As long as there aren't multiple users of this and especially none in
+the vfs proper please don't move this into fs.h. It's overloaded enough
+as it is and we have vague plans on splitting it further in the future.
