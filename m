@@ -2,89 +2,128 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71459C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 19 Oct 2022 22:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E37AC4332F
+	for <linux-hardening@archiver.kernel.org>; Wed, 19 Oct 2022 23:41:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231252AbiJSWiE (ORCPT
+        id S231477AbiJSXl3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 19 Oct 2022 18:38:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43566 "EHLO
+        Wed, 19 Oct 2022 19:41:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230387AbiJSWiD (ORCPT
+        with ESMTP id S230110AbiJSXl2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 19 Oct 2022 18:38:03 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5DCB181DA2
-        for <linux-hardening@vger.kernel.org>; Wed, 19 Oct 2022 15:38:00 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id h14so1594207pjv.4
-        for <linux-hardening@vger.kernel.org>; Wed, 19 Oct 2022 15:38:00 -0700 (PDT)
+        Wed, 19 Oct 2022 19:41:28 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15FA0147047
+        for <linux-hardening@vger.kernel.org>; Wed, 19 Oct 2022 16:41:27 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id c24so18740909plo.3
+        for <linux-hardening@vger.kernel.org>; Wed, 19 Oct 2022 16:41:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lBEtTaAMvaSVn1ITSrKOBCy/b3omP7IO7py5Uypc2JQ=;
-        b=YtPguPBsqbzHiJBZmqQfjIeT52slR6ndyGuAXfl44ARkWA9NULyA+2QqydjigRpSTs
-         lyVKOKTTnflLR8Sek2vfoaJoy9j4PpPPAquGUnzG2NdEkViMuIAj5c2w/ZlDIwNbcoKm
-         Lna3d6H0MNw4DqWdDagnAQEKiQkMLGd5BH2Zs=
+        bh=qX77FXyzwayFF9UY0kQ94xcxC8zc5o5xZJ+OHBo+nXw=;
+        b=Y4c78npINNGc2QcgMRzyCsFkTEr0YNwe6nb8+17Ld14itsUfYnuxBiAKLDQWvRkvz/
+         b/Cklkto5pe0144n31+aBie4TyVGLJSsNmotT0xP2VZagNsXi+xTgX54BKi/vG8xRfPf
+         jmuRM36LaNj8pa+15UGWNBJMEdtO5ZnIIYoDc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lBEtTaAMvaSVn1ITSrKOBCy/b3omP7IO7py5Uypc2JQ=;
-        b=C6kj+gbz2U2U6BX2pG2nBX6thspYY2LLuF+86fbmvafhl6M5HXFNzTKQH2hxLwATJA
-         4EceCZKHvGmPUvfzYb2bdUf5focxQ+mAy4iwiD+PyT26VB4ZcKuGQyE3cyOzGN+aCF5v
-         4RFwbS7sKVuPecDe/FPbGGwzyQB32ZkBVvNVpxZIpglmqVF+CB7a03fCSnjOY02CWwne
-         4bce24lR47fM6PUDBI88fwLZXxztMzisuYLOEFWIsmSzQqjNpr4wKCIt36AES5OorJq2
-         6oVGY+vnNpRSHDpkiZzUB1lEEJxSwc9siAF31tOD2aGn7l9lbFj5eNPOJONgW4HoYB2i
-         MNVQ==
-X-Gm-Message-State: ACrzQf39vuQ5aQlDR620/RoutwBjZrTLf6HM5ZdyHVuca5HzFOyB6Was
-        O/ySwXWguuZZARfook3T6AEgtA==
-X-Google-Smtp-Source: AMsMyM42q4hukWJ8s+87Aom8F/ySTX80xNdBtjpESQf9Tfre9QYa5V+kAdwE25fC62er7sXOZ90JzA==
-X-Received: by 2002:a17:902:f541:b0:181:83e4:4910 with SMTP id h1-20020a170902f54100b0018183e44910mr10811623plf.109.1666219079876;
-        Wed, 19 Oct 2022 15:37:59 -0700 (PDT)
+        bh=qX77FXyzwayFF9UY0kQ94xcxC8zc5o5xZJ+OHBo+nXw=;
+        b=Fvg3E9ZTGzGqhZMAR5iaIWni2cg2AwvW6Bs+sqIPkKaik7pgF9ibdOBYykb8Ww6hz/
+         DIbZGZSDM9zlM3GxkI8a2Wtst57BI2i5QD1Q0/LfOjZykYfmJSRwQlW1fEoQWelfATYO
+         0jhSrAH6jINbH4DrunjRIgjJ9Lh30ua04/bi2PMXf2NkFYH7ZChHBRNzlbaWgXC0j3t6
+         o+ROU8sDACcit3kyVjbXhGeeWzzFDtcj2gYycG/ypSk+wHH4cDvu3VbVEeFOEFPM7MnK
+         9vjtKInIg4kR6P1Tg4vo4+heG0MJpzgRpR+YNPNQLe7kmkJteLKMPBfYu0MkjTq9/uFR
+         /oEw==
+X-Gm-Message-State: ACrzQf3j+3qLGcfLuptqfktYlrqKXBHR0ldgkLo318Gqc7iTX2QOuEku
+        p2p2m8A4y2N+0m3ni8zeSyYGVg==
+X-Google-Smtp-Source: AMsMyM6kdlVjxdbyAUw47freAA4rwdcnkIgWe1sFX3Mu8/Zo8iPS678Z597JrSKFoCHrDoY70W4ivw==
+X-Received: by 2002:a17:902:db05:b0:185:537a:7440 with SMTP id m5-20020a170902db0500b00185537a7440mr10893824plx.13.1666222886578;
+        Wed, 19 Oct 2022 16:41:26 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g12-20020a65594c000000b0043a1c0a0ab1sm10677165pgu.83.2022.10.19.15.37.58
+        by smtp.gmail.com with ESMTPSA id g8-20020a631108000000b00462612c2699sm10497716pgl.86.2022.10.19.16.41.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Oct 2022 15:37:59 -0700 (PDT)
-Date:   Wed, 19 Oct 2022 15:37:57 -0700
+        Wed, 19 Oct 2022 16:41:25 -0700 (PDT)
+Date:   Wed, 19 Oct 2022 16:41:24 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
+Cc:     Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
         "Serge E. Hallyn" <serge@hallyn.com>,
         Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Petr Vorel <pvorel@suse.cz>, Borislav Petkov <bp@suse.de>,
+        Takashi Iwai <tiwai@suse.de>,
+        Jonathan McDowell <noodles@fb.com>,
         linux-security-module@vger.kernel.org,
         linux-integrity@vger.kernel.org, KP Singh <kpsingh@kernel.org>,
         Casey Schaufler <casey@schaufler-ca.com>,
         John Johansen <john.johansen@canonical.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/9] integrity: Prepare for having "ima" and "evm"
- available in "integrity" LSM
-Message-ID: <202210191219.EEEA3E20C@keescook>
+Subject: Re: [PATCH 2/9] security: Move trivial IMA hooks into LSM
+Message-ID: <202210191639.58F18F1AA@keescook>
 References: <20221013222702.never.990-kees@kernel.org>
- <20221013223654.659758-1-keescook@chromium.org>
- <08a8b202-69b4-e154-28f5-337a898acf61@digikod.net>
- <202210141050.A8DF7D10@keescook>
- <0d2b9d34-2eda-8aa6-d596-eb1899645192@digikod.net>
- <202210191129.BFBF8035@keescook>
- <2ce5e63dc4f15b8015fd7499120ff4256ad1f619.camel@linux.ibm.com>
+ <20221013223654.659758-2-keescook@chromium.org>
+ <16e008b3709f3c85dbad1accb9fce8ddad552205.camel@linux.ibm.com>
+ <202210191134.FC646AFC71@keescook>
+ <ffa58bb09df15a9debc45aaf0ed51f2b34f5c225.camel@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2ce5e63dc4f15b8015fd7499120ff4256ad1f619.camel@linux.ibm.com>
+In-Reply-To: <ffa58bb09df15a9debc45aaf0ed51f2b34f5c225.camel@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Oct 19, 2022 at 03:13:34PM -0400, Mimi Zohar wrote:
-> Most people were/are still using the "security=" boot command line
-> option, not "lsm=".  This previously wasn't a problem with "security=",
-> but became a problem with "lsm=".
+On Wed, Oct 19, 2022 at 04:45:41PM -0400, Mimi Zohar wrote:
+> On Wed, 2022-10-19 at 11:59 -0700, Kees Cook wrote:
+> > On Wed, Oct 19, 2022 at 10:34:48AM -0400, Mimi Zohar wrote:
+> > > On Thu, 2022-10-13 at 15:36 -0700, Kees Cook wrote:
+> > > > This moves the trivial hard-coded stacking of IMA LSM hooks into the
+> > > > existing LSM infrastructure.
+> > > 
+> > > The only thing trivial about making IMA and EVM LSMs is moving them to
+> > > LSM hooks.  Although static files may be signed and the signatures
+> > > distributed with the file data through the normal distribution
+> > > mechanisms (e.g. RPM), other files cannot be signed remotely (e.g.
+> > > configuration files).  For these files, both IMA and EVM may be
+> > > configured to maintain persistent file state stored as security xattrs
+> > > in the form of security.ima file hashes or security.evm HMACs.  The LSM
+> > > flexibility of enabling/disabling IMA or EVM on a per boot basis breaks
+> > > this usage, potentially preventing subsequent boots.
+> > 
+> > I'm not suggesting IMA and EVM don't have specific behaviors that need to
+> > be correctly integrated into the LSM infrastructure. In fact, I spent a
+> > lot of time designing that infrastructure to be flexible enough to deal
+> > with these kinds of things. (e.g. plumbing "enablement", etc.) As I
+> > mentioned, this was more of trying to provide a head-start on the
+> > conversion. I don't intend to drive this -- please take whatever is
+> > useful from this example and use it. :) I'm happy to help construct any
+> > missing infrastructure needed (e.g. LSM_ORDER_LAST, etc).
+> > 
+> > As for preventing subsequent boots, this is already true with other LSMs
+> > that save state that affects system behavior (like SELinux tags, AppArmor
+> > policy). IMA and EVM are not special in that regard conceptually.
+> 
+> > Besides, it also looks like it's already possible to boot with IMA or EVM
+> > disabled ("ima_appraise=off", or "evm=fix"), so there's no regression
+> > conceptually for having "integrity" get dropped from the lsm= list at
+> > boot. And if you want it not to be silent disabling, that's fine --
+> > just panic during initialization if "integrity" is disabled, as is
+> > already happening.
+> 
+> Being able to specify "ima_appraise=" on the boot command line requires
+> IMA_APPRAISE_BOOTPARAM to be configured.  Even when specified, if the
+> system is booted with secure-boot mode enabled, it also cannot be
+> modified.   With the ability of randomly enabling/disabling LSMs, these
+> protections are useless.
 
-How are people still using "security=" for IMA/EVM? It only interacts
-with LSMs marked with LSM_FLAG_LEGACY_MAJOR.
+Sure, so let's get lsm= added to the lockdown list, etc. My point is for
+us to work through each of these concerns and address them. I am not an
+IMA/EVM expert, but I do understand the LSM infrastructure deeply, so
+I'd like to help you get these changes made.
 
 -- 
 Kees Cook
