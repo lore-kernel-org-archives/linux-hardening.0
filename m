@@ -2,145 +2,213 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6613AC433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 19 Oct 2022 05:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC67C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed, 19 Oct 2022 06:30:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229763AbiJSF73 (ORCPT
+        id S229784AbiJSGaF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 19 Oct 2022 01:59:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33282 "EHLO
+        Wed, 19 Oct 2022 02:30:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229949AbiJSF72 (ORCPT
+        with ESMTP id S229870AbiJSGaB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 19 Oct 2022 01:59:28 -0400
-Received: from omta033.useast.a.cloudfilter.net (omta033.useast.a.cloudfilter.net [44.202.169.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11FC6BD1
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 22:59:21 -0700 (PDT)
-Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
-        by cmsmtp with ESMTP
-        id l256o6r1uh3t8l26qoRcnq; Wed, 19 Oct 2022 05:59:21 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTP
-        id l26aoiEIpKiw6l26aoBHk9; Wed, 19 Oct 2022 05:59:04 +0000
-X-Authority-Analysis: v=2.4 cv=RaCDtnhv c=1 sm=1 tr=0 ts=634f9229
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=VLn1U4HDsV/kFU42pi1uTw==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=Qawa6l4ZSaYA:10
- a=wYkD_t78qR0A:10 a=cm27Pg_UAAAA:8 a=VwQbUJbxAAAA:8 a=Qgz39EsCW-LGziui3z8A:9
- a=QEXdDO2ut3YA:10 a=xmb-EsYY8bH0VWELuYED:22 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=cO2pMH5o5rFNjaegSUZJR5RRzkW1PCUC3AUJ+Q7uoNc=; b=ycvo3HFILiKjWdun33pRJ01AvN
-        s2rgU8+eozWvKOZlVv/R6Y4pQ6+kVtzGPOD+oQ6EucZwZvx0XWTdExWl6ATWYX1CYflpMCa/VjoNV
-        5a0ift/n1buAOyhhk/u20x9ys5iUSQwy7o6BTXeplBIzsZfFzRIegDPu2SKnijxd96LfZQTqHvv2o
-        wFz/MYfGycnJ0h3rF847pOJiBj44n54oP0PsJepme72nlMV0LPRjyDWjl2MaJaeKo9I73vKtfGC5u
-        OMORO9rhwQcJ0axs7C4BCKpk4L0Bjy4QcvhZDzmzxSsDuRaJar5C/i9fwfGdu9YSx2foF2DYWgsVY
-        g1n8VHrQ==;
-Received: from [187.184.159.238] (port=9278 helo=[192.168.0.24])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.95)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1ol26T-0001NQ-Sd;
-        Wed, 19 Oct 2022 00:58:58 -0500
-Message-ID: <f134c4ff-aac0-eb79-871e-73cff18a57c8@embeddedor.com>
-Date:   Wed, 19 Oct 2022 00:58:50 -0500
+        Wed, 19 Oct 2022 02:30:01 -0400
+Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA6337F90
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 23:29:57 -0700 (PDT)
+Received: by mail-ua1-x936.google.com with SMTP id h25so6634613uao.13
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 23:29:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=WO7BsK5DpnSO6Nm64A8lJ13hOjutvEHo3IbSt82zwn0=;
+        b=tGHkSey3h0Jb5vKl8QhAURPHbmfN0cT9oKbxT09ZRoggnfPU9gaM4iREOSDl+plFn1
+         Jy5btsxvZHzaw/glJ7X4tSSYEsf+/zRvw76S04N5IBwtpuwhY97+mLLHcQSTu/JLJTA+
+         Pc//9ugQLUAW0XvXy/u4f81p0JwZe6vMMP6GZWTTmg2CdyPDUIzHlGEn+qdFfJffcrei
+         xHTq3dUkZs6oJvb6jJlvECtAf2krQM4uvD3RNSosCJjcbxJeekHJQMh0nWttUnQ0n50b
+         GQAWIrn5x2bwHIJ1zPKqEhGc0mIYeY1BlmpX+MUXZgDfYN2SXGSkdT8ghSEsEVpKFmNO
+         d6rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WO7BsK5DpnSO6Nm64A8lJ13hOjutvEHo3IbSt82zwn0=;
+        b=NepHoV6tkAFApKr6LzmokUimVDrUcNi5VxZeB0aE6CQWGIDSp4PDWytsj5MKkXSJ1R
+         qaTSZle/le5m2FDKlHFx46Cy8z0/TLRhsakc5KaBsqI6nn/BcaEGPIBmIQl2y0YBYW9c
+         hFQ2521gtLoXh283OI/RChPUxD65NDYodqPngijjoFmkgvfzCQbjLFUi8lxU04aDTi9N
+         O9Qj77AJ/YKdF9/33/PFxvq4/Mx6MEEOLfqp4f4zIXNAnlDVS+CJtVFTJMOICKoZfZ7i
+         2DDVQ4GRLwsQwKzigVukDSPzF/yxd7V4m9D6gWay4bu3b4adgMsg98dbAnLe1buRkrbX
+         q2jA==
+X-Gm-Message-State: ACrzQf2AyhDPvorquvJIeoVYCFwB2vctI5WIZSa4o+PIy0hOAtCT/IES
+        /8DhC9QyFAzQ1XBaJmJzzSZCNZDqU8MBnsVxMLtpbi/KIOE/+Q==
+X-Google-Smtp-Source: AMsMyM57OjNPrBzasL7MvBgHPVlgDs7vzVuYRSl/mLXTqX46aCt3RAsB53y6ehEESCc5sckcA4XquEE3Wz88cyvcgGc=
+X-Received: by 2002:ab0:5a98:0:b0:3e6:5e47:3702 with SMTP id
+ w24-20020ab05a98000000b003e65e473702mr3503114uae.104.1666160996231; Tue, 18
+ Oct 2022 23:29:56 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH 6/6][next] airo: Avoid clashing function prototypes
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <cover.1666038048.git.gustavoars@kernel.org>
- <ab0047382e6fd20c694e4ca14de8ca2c2a0e19d0.1666038048.git.gustavoars@kernel.org>
- <202210171950.B5F2676D7F@keescook>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202210171950.B5F2676D7F@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.184.159.238
-X-Source-L: No
-X-Exim-ID: 1ol26T-0001NQ-Sd
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.24]) [187.184.159.238]:9278
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCPTzEoE27hJzdkPPnoUdBt7DwufKgplahacqsm4puWujDWQ52u9HZANzM4YVmIfLdrKGydHVq7MU+GW36GdX0KZEFXllyRDOdANERYK23BUqt9bDqkr
- f1Mxv53ceG/5jZXoMjeKZtTI6ryMDHZevNO671tclF6nLhg1YXGJa+Phfjr4pvNcD0X1BnTuwKkIPbBpyEfwRn8RKXgrxREL3mM//OLq02Spz4Eogf2VeYcX
+References: <20221018082559.never.406-kees@kernel.org> <CABVgOSneaxVgAQH=bN0pxOkN3irtpYVwFhPhNJRoyTcRfEoWhQ@mail.gmail.com>
+ <202210182237.C65BCCE2@keescook>
+In-Reply-To: <202210182237.C65BCCE2@keescook>
+From:   David Gow <davidgow@google.com>
+Date:   Wed, 19 Oct 2022 14:29:44 +0800
+Message-ID: <CABVgOSn359J8W4DFBO4n8SW=L=-PaVKi9G4R9u67jSBs1zGoGQ@mail.gmail.com>
+Subject: Re: [PATCH] kunit/fortify: Validate __alloc_size attribute results
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Wed, Oct 19, 2022 at 1:45 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Wed, Oct 19, 2022 at 11:35:40AM +0800, David Gow wrote:
+> > On Tue, Oct 18, 2022 at 4:27 PM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > Validate the effect of the __alloc_size attribute on allocators. If the
+> > > compiler doesn't support __builtin_dynamic_object_size(), skip the test.
+> > >
+> > > Cc: linux-hardening@vger.kernel.org
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > > To pass this depends on the following patches:
+> > > https://lore.kernel.org/lkml/20221018073430.never.551-kees@kernel.org/
+> > > https://lore.kernel.org/lkml/20221018082232.never.213-kees@kernel.org/
+> > > To not be skipped, either GCC 12 or Clang is needed.
+> > > ---
+> >
+> > While this _looks_ good, I can't actually get the tests to pass on my
+> > machine, with the following all having a
+> > __builtin_dynamic_object_size() of -1:
+> > - kmalloc_node(size++, gfp, NUMA_NO_NODE)
+> > - kzalloc(size++, gfp)
+> > - kzalloc_node(size++, gfp, NUMA_NO_NODE)
+> > - kcalloc(1, size++, gfp)
+> > - kcalloc_node(1, size++, gfp, NUMA_NO_NODE)
+> > - kmalloc_array(1, size++, gfp)
+> > - kmalloc_array_node(1, size++, gfp, NUMA_NO_NODE)
+> >
+> > I've been using the following command to run the tests:
+> > ./tools/testing/kunit/kunit.py run --kconfig_add CONFIG_FORTIFY_SOURCE=y
+> >
+> > And I've also tried it on x86_64 and arm64 under qemu, with both gcc
+> > 12.2.0 and clang 14.0.6-2, with the same failures.
+> >
+> > Is there a dependency somewhere I've missed? (I've tried it on the
+> > ksefltest/kunit branch, with the mentioned dependencies applied, and
+> > also on your for-next/hardening branch, with the missing patches
+> > applied.)
+>
+> I would expect this to pass with v6.1-rc1 when used with the above two
+> patches added, but it seems those _did_ pass, but not the k*alloc()
+> helpers for you? That is curious. Here's my testing:
+>
+> $ ./tools/testing/kunit/kunit.py run --arch x86_64 \
+>         --kconfig_add CONFIG_FORTIFY_SOURCE=y --make_options LLVM=1 fortify
+> ...
+> [22:43:32] =================== fortify (3 subtests) ===================
+> [22:43:32] [PASSED] known_sizes_test
+> [22:43:32] [PASSED] control_flow_split_test
+> [22:43:32] [PASSED] alloc_size_test
+> [22:43:32] ===================== [PASSED] fortify =====================
+> [22:43:32] ============================================================
+> [22:43:32] Testing complete. Ran 3 tests: passed: 3
+> [22:43:32] Elapsed time: 33.210s total, 3.369s configuring, 28.367s
+> building, 0.799s running
+>
+> $ clang --version
+> ClangBuiltLinux clang version 16.0.0 (https://github.com/llvm/llvm-project.git 3291eac12340f465084f347720d99352241f621c)
+>
+>
 
+Running the exact same command here gives the following output (spam incoming):
+[13:55:34] Configuring KUnit Kernel ...
+[13:55:34] Building KUnit Kernel ...
+Populating config with:
+$ make ARCH=x86_64 O=.kunit olddefconfig LLVM=1
+Building with:
+$ make ARCH=x86_64 O=.kunit --jobs=48 LLVM=1
+[13:55:43] Starting KUnit Kernel (1/1)...
+[13:55:43] ============================================================
+Running tests with:
+$ qemu-system-x86_64 -nodefaults -m 1024 -kernel
+.kunit/arch/x86/boot/bzImage -append 'kunit.filter_glob=fortify
+kunit.enable=1 console=ttyS0 kunit_shutdown=reboot' -no-reboot
+-nographic -serial stdio
+[13:55:44] =================== fortify (3 subtests) ===================
+[13:55:44] [PASSED] known_sizes_test
+[13:55:44] [PASSED] control_flow_split_test
+[13:55:44] # alloc_size_test: EXPECTATION FAILED at lib/fortify_kunit.c:91
+[13:55:44] Expected __builtin_dynamic_object_size(p, 1) == expected, but
+[13:55:44] __builtin_dynamic_object_size(p, 1) == -1
+[13:55:44] expected == 51
+[13:55:44] __alloc_size() not working with kmalloc_node(size++, gfp,
+NUMA_NO_NODE)
+[13:55:44] # alloc_size_test: EXPECTATION FAILED at lib/fortify_kunit.c:92
+[13:55:44] Expected __builtin_dynamic_object_size(p, 1) == expected, but
+[13:55:44] __builtin_dynamic_object_size(p, 1) == -1
+[13:55:44] expected == 52
+[13:55:44] __alloc_size() not working with kzalloc(size++, gfp)
+[13:55:44] # alloc_size_test: EXPECTATION FAILED at lib/fortify_kunit.c:93
+[13:55:44] Expected __builtin_dynamic_object_size(p, 1) == expected, but
+[13:55:44] __builtin_dynamic_object_size(p, 1) == -1
+[13:55:44] expected == 53
+[13:55:44] __alloc_size() not working with kzalloc_node(size++, gfp,
+NUMA_NO_NODE)
+[13:55:44] # alloc_size_test: EXPECTATION FAILED at lib/fortify_kunit.c:94
+[13:55:44] Expected __builtin_dynamic_object_size(p, 1) == expected, but
+[13:55:44] __builtin_dynamic_object_size(p, 1) == -1
+[13:55:44] expected == 54
+[13:55:44] __alloc_size() not working with kcalloc(1, size++, gfp)
+[13:55:44] # alloc_size_test: EXPECTATION FAILED at lib/fortify_kunit.c:95
+[13:55:44] Expected __builtin_dynamic_object_size(p, 1) == expected, but
+[13:55:44] __builtin_dynamic_object_size(p, 1) == -1
+[13:55:44] expected == 55
+[13:55:44] __alloc_size() not working with kcalloc_node(1, size++,
+gfp, NUMA_NO_NODE)
+[13:55:44] # alloc_size_test: EXPECTATION FAILED at lib/fortify_kunit.c:96
+[13:55:44] Expected __builtin_dynamic_object_size(p, 1) == expected, but
+[13:55:44] __builtin_dynamic_object_size(p, 1) == -1
+[13:55:44] expected == 56
+[13:55:44] __alloc_size() not working with kmalloc_array(1, size++, gfp)
+[13:55:44] # alloc_size_test: EXPECTATION FAILED at lib/fortify_kunit.c:97
+[13:55:44] Expected __builtin_dynamic_object_size(p, 1) == expected, but
+[13:55:44] __builtin_dynamic_object_size(p, 1) == -1
+[13:55:44] expected == 57
+[13:55:44] __alloc_size() not working with kmalloc_array_node(1,
+size++, gfp, NUMA_NO_NODE)
+[13:55:44] not ok 3 - alloc_size_test
+[13:55:44] [FAILED] alloc_size_test
+[13:55:44] # Subtest: fortify
+[13:55:44] 1..3
+[13:55:44] # fortify: pass:2 fail:1 skip:0 total:3
+[13:55:44] # Totals: pass:2 fail:1 skip:0 total:3
+[13:55:44] not ok 1 - fortify
+[13:55:44] ===================== [FAILED] fortify =====================
+[13:55:44] ============================================================
+[13:55:44] Testing complete. Ran 3 tests: passed: 2, failed: 1
+[13:55:45] Elapsed time: 10.424s total, 0.002s configuring, 8.950s
+building, 0.835s running
 
-On 10/17/22 21:53, Kees Cook wrote:
-> On Mon, Oct 17, 2022 at 03:36:20PM -0500, Gustavo A. R. Silva wrote:
->> [...]
->> @@ -6312,16 +6326,16 @@ static int airo_get_mode(struct net_device *dev,
->>   	/* If not managed, assume it's ad-hoc */
->>   	switch (local->config.opmode & MODE_CFG_MASK) {
->>   		case MODE_STA_ESS:
->> -			*uwrq = IW_MODE_INFRA;
->> +			uwrq->mode = IW_MODE_INFRA;
->>   			break;
->>   		case MODE_AP:
->> -			*uwrq = IW_MODE_MASTER;
->> +			uwrq->mode = IW_MODE_MASTER;
->>   			break;
->>   		case MODE_AP_RPTR:
->> -			*uwrq = IW_MODE_REPEAT;
->> +			uwrq->mode = IW_MODE_REPEAT;
->>   			break;
->>   		default:
->> -			*uwrq = IW_MODE_ADHOC;
->> +			uwrq->mode = IW_MODE_ADHOC;
->>   	}
->>   
->>   	return 0;
-> 
-> Sometimes you use the union directly, sometimes not. What was your
-> heuristic for that?
+With:
+clang --version
+Debian clang version 14.0.6-2
+Target: x86_64-pc-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
 
-Oh it is just that I had previously used a new variable in function airo_set_mode(),
-and then I immediately ran into this similar scenario (function airo_get_mode) and
-I said "wait a second, why don't I directly use the union, instead? :thinking_face:"
-and I did, and moved on. :P
+Same thing with gcc:
+gcc (Debian 12.2.0-1) 12.2.0
+Copyright (C) 2022 Free Software Foundation, Inc.
 
-> 
-> Regardless, looks good!
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
+I can also reproduce it on a different machine, running openSUSE
+Tumbleweed's gcc 12.2 and clang 15.0.2.
 
-Thanks for this!
+It also fails the same way with just the mentioned patches, applied to
+torvalds/master at aae803b02f92.
 
-BTW, I already have a new series (this time a 4-patch series, instead of 6), with
-the latest fixes, here:
+Do you have a specific working tree somewhere public I should try?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/log/?h=6.1-rc1-Wcast-function-type-strict
-
-I think we could quickly review it tomorrow before I send it out. :)
-
---
-Gustavo
+-- David
