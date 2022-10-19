@@ -2,213 +2,99 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC67C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 19 Oct 2022 06:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D361EC4332F
+	for <linux-hardening@archiver.kernel.org>; Wed, 19 Oct 2022 06:56:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229784AbiJSGaF (ORCPT
+        id S229490AbiJSG4i (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 19 Oct 2022 02:30:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58482 "EHLO
+        Wed, 19 Oct 2022 02:56:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229870AbiJSGaB (ORCPT
+        with ESMTP id S229554AbiJSG4h (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 19 Oct 2022 02:30:01 -0400
-Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA6337F90
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 23:29:57 -0700 (PDT)
-Received: by mail-ua1-x936.google.com with SMTP id h25so6634613uao.13
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 23:29:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WO7BsK5DpnSO6Nm64A8lJ13hOjutvEHo3IbSt82zwn0=;
-        b=tGHkSey3h0Jb5vKl8QhAURPHbmfN0cT9oKbxT09ZRoggnfPU9gaM4iREOSDl+plFn1
-         Jy5btsxvZHzaw/glJ7X4tSSYEsf+/zRvw76S04N5IBwtpuwhY97+mLLHcQSTu/JLJTA+
-         Pc//9ugQLUAW0XvXy/u4f81p0JwZe6vMMP6GZWTTmg2CdyPDUIzHlGEn+qdFfJffcrei
-         xHTq3dUkZs6oJvb6jJlvECtAf2krQM4uvD3RNSosCJjcbxJeekHJQMh0nWttUnQ0n50b
-         GQAWIrn5x2bwHIJ1zPKqEhGc0mIYeY1BlmpX+MUXZgDfYN2SXGSkdT8ghSEsEVpKFmNO
-         d6rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WO7BsK5DpnSO6Nm64A8lJ13hOjutvEHo3IbSt82zwn0=;
-        b=NepHoV6tkAFApKr6LzmokUimVDrUcNi5VxZeB0aE6CQWGIDSp4PDWytsj5MKkXSJ1R
-         qaTSZle/le5m2FDKlHFx46Cy8z0/TLRhsakc5KaBsqI6nn/BcaEGPIBmIQl2y0YBYW9c
-         hFQ2521gtLoXh283OI/RChPUxD65NDYodqPngijjoFmkgvfzCQbjLFUi8lxU04aDTi9N
-         O9Qj77AJ/YKdF9/33/PFxvq4/Mx6MEEOLfqp4f4zIXNAnlDVS+CJtVFTJMOICKoZfZ7i
-         2DDVQ4GRLwsQwKzigVukDSPzF/yxd7V4m9D6gWay4bu3b4adgMsg98dbAnLe1buRkrbX
-         q2jA==
-X-Gm-Message-State: ACrzQf2AyhDPvorquvJIeoVYCFwB2vctI5WIZSa4o+PIy0hOAtCT/IES
-        /8DhC9QyFAzQ1XBaJmJzzSZCNZDqU8MBnsVxMLtpbi/KIOE/+Q==
-X-Google-Smtp-Source: AMsMyM57OjNPrBzasL7MvBgHPVlgDs7vzVuYRSl/mLXTqX46aCt3RAsB53y6ehEESCc5sckcA4XquEE3Wz88cyvcgGc=
-X-Received: by 2002:ab0:5a98:0:b0:3e6:5e47:3702 with SMTP id
- w24-20020ab05a98000000b003e65e473702mr3503114uae.104.1666160996231; Tue, 18
- Oct 2022 23:29:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221018082559.never.406-kees@kernel.org> <CABVgOSneaxVgAQH=bN0pxOkN3irtpYVwFhPhNJRoyTcRfEoWhQ@mail.gmail.com>
- <202210182237.C65BCCE2@keescook>
-In-Reply-To: <202210182237.C65BCCE2@keescook>
-From:   David Gow <davidgow@google.com>
-Date:   Wed, 19 Oct 2022 14:29:44 +0800
-Message-ID: <CABVgOSn359J8W4DFBO4n8SW=L=-PaVKi9G4R9u67jSBs1zGoGQ@mail.gmail.com>
-Subject: Re: [PATCH] kunit/fortify: Validate __alloc_size attribute results
+        Wed, 19 Oct 2022 02:56:37 -0400
+Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ACBB74E00;
+        Tue, 18 Oct 2022 23:56:36 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.18.147.227])
+        by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4MshF607dCz9xrq3;
+        Wed, 19 Oct 2022 14:50:18 +0800 (CST)
+Received: from roberto-ThinkStation-P620 (unknown [10.204.63.22])
+        by APP2 (Coremail) with SMTP id GxC2BwAnrgR5n09jwF4JAA--.26227S2;
+        Wed, 19 Oct 2022 07:56:04 +0100 (CET)
+Message-ID: <00bf4f189e4ec3b98130451f40e77ead8f28179e.camel@huaweicloud.com>
+Subject: Re: [PATCH 4/9] ima: Move ima_file_free() into LSM
+From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Christian Brauner <brauner@kernel.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, Petr Vorel <pvorel@suse.cz>,
+        Jonathan McDowell <noodles@fb.com>,
+        Borislav Petkov <bp@suse.de>, Takashi Iwai <tiwai@suse.de>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        KP Singh <kpsingh@kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        John Johansen <john.johansen@canonical.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Date:   Wed, 19 Oct 2022 08:55:49 +0200
+In-Reply-To: <202210181126.E58AB4A0F@keescook>
+References: <20221013222702.never.990-kees@kernel.org>
+         <20221013223654.659758-4-keescook@chromium.org>
+         <20221018150213.7n4sv7rtsh6lshd5@wittgenstein>
+         <1b41c633bbd31b82b02fdbae718f2f11ac862181.camel@huaweicloud.com>
+         <202210181126.E58AB4A0F@keescook>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: GxC2BwAnrgR5n09jwF4JAA--.26227S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZr4ktw48CFyDGr13Aw1DWrg_yoWfXFb_GF
+        WjyrZ2yFn8JF1kKanavFW3Gr4DWrWUXr4Yvw4fJrnxZw4Svw47XFs7CF93C3WrJw4av3Zx
+        Ja4avayxta17tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb78YFVCjjxCrM7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E6xAIw20E
+        Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+        A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+        67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r1j6r4UM28EF7xvwVC2z280aVCY1x0267
+        AKxVW8JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
+        j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
+        kEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x0E
+        wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+        80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0
+        I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04
+        k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+        1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU13rcDUUUUU==
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAKBF1jj4RlmgAAsF
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Oct 19, 2022 at 1:45 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Wed, Oct 19, 2022 at 11:35:40AM +0800, David Gow wrote:
-> > On Tue, Oct 18, 2022 at 4:27 PM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > Validate the effect of the __alloc_size attribute on allocators. If the
-> > > compiler doesn't support __builtin_dynamic_object_size(), skip the test.
-> > >
-> > > Cc: linux-hardening@vger.kernel.org
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > > To pass this depends on the following patches:
-> > > https://lore.kernel.org/lkml/20221018073430.never.551-kees@kernel.org/
-> > > https://lore.kernel.org/lkml/20221018082232.never.213-kees@kernel.org/
-> > > To not be skipped, either GCC 12 or Clang is needed.
-> > > ---
-> >
-> > While this _looks_ good, I can't actually get the tests to pass on my
-> > machine, with the following all having a
-> > __builtin_dynamic_object_size() of -1:
-> > - kmalloc_node(size++, gfp, NUMA_NO_NODE)
-> > - kzalloc(size++, gfp)
-> > - kzalloc_node(size++, gfp, NUMA_NO_NODE)
-> > - kcalloc(1, size++, gfp)
-> > - kcalloc_node(1, size++, gfp, NUMA_NO_NODE)
-> > - kmalloc_array(1, size++, gfp)
-> > - kmalloc_array_node(1, size++, gfp, NUMA_NO_NODE)
-> >
-> > I've been using the following command to run the tests:
-> > ./tools/testing/kunit/kunit.py run --kconfig_add CONFIG_FORTIFY_SOURCE=y
-> >
-> > And I've also tried it on x86_64 and arm64 under qemu, with both gcc
-> > 12.2.0 and clang 14.0.6-2, with the same failures.
-> >
-> > Is there a dependency somewhere I've missed? (I've tried it on the
-> > ksefltest/kunit branch, with the mentioned dependencies applied, and
-> > also on your for-next/hardening branch, with the missing patches
-> > applied.)
->
-> I would expect this to pass with v6.1-rc1 when used with the above two
-> patches added, but it seems those _did_ pass, but not the k*alloc()
-> helpers for you? That is curious. Here's my testing:
->
-> $ ./tools/testing/kunit/kunit.py run --arch x86_64 \
->         --kconfig_add CONFIG_FORTIFY_SOURCE=y --make_options LLVM=1 fortify
-> ...
-> [22:43:32] =================== fortify (3 subtests) ===================
-> [22:43:32] [PASSED] known_sizes_test
-> [22:43:32] [PASSED] control_flow_split_test
-> [22:43:32] [PASSED] alloc_size_test
-> [22:43:32] ===================== [PASSED] fortify =====================
-> [22:43:32] ============================================================
-> [22:43:32] Testing complete. Ran 3 tests: passed: 3
-> [22:43:32] Elapsed time: 33.210s total, 3.369s configuring, 28.367s
-> building, 0.799s running
->
-> $ clang --version
-> ClangBuiltLinux clang version 16.0.0 (https://github.com/llvm/llvm-project.git 3291eac12340f465084f347720d99352241f621c)
->
->
+On Tue, 2022-10-18 at 11:29 -0700, Kees Cook wrote:
+> On Tue, Oct 18, 2022 at 05:32:40PM +0200, Roberto Sassu wrote:
+> > I also did this work before. In my implementation, I created a new
+> > security hook called security_file_pre_free().
+> > 
+> > https://github.com/robertosassu/linux/commit/692c9d36fff865435b23b3cb765d31f3584f6263
+> > 
+> > If useful, the whole patch set is available at:
+> > 
+> > https://github.com/robertosassu/linux/commits/ima-evm-lsm-v1-devel-v3
+> 
+> Ah, lovely! Can you pick this back up and run with it? I mainly did
+> these a proof-of-concept, but it looks like you got further.
 
-Running the exact same command here gives the following output (spam incoming):
-[13:55:34] Configuring KUnit Kernel ...
-[13:55:34] Building KUnit Kernel ...
-Populating config with:
-$ make ARCH=x86_64 O=.kunit olddefconfig LLVM=1
-Building with:
-$ make ARCH=x86_64 O=.kunit --jobs=48 LLVM=1
-[13:55:43] Starting KUnit Kernel (1/1)...
-[13:55:43] ============================================================
-Running tests with:
-$ qemu-system-x86_64 -nodefaults -m 1024 -kernel
-.kunit/arch/x86/boot/bzImage -append 'kunit.filter_glob=fortify
-kunit.enable=1 console=ttyS0 kunit_shutdown=reboot' -no-reboot
--nographic -serial stdio
-[13:55:44] =================== fortify (3 subtests) ===================
-[13:55:44] [PASSED] known_sizes_test
-[13:55:44] [PASSED] control_flow_split_test
-[13:55:44] # alloc_size_test: EXPECTATION FAILED at lib/fortify_kunit.c:91
-[13:55:44] Expected __builtin_dynamic_object_size(p, 1) == expected, but
-[13:55:44] __builtin_dynamic_object_size(p, 1) == -1
-[13:55:44] expected == 51
-[13:55:44] __alloc_size() not working with kmalloc_node(size++, gfp,
-NUMA_NO_NODE)
-[13:55:44] # alloc_size_test: EXPECTATION FAILED at lib/fortify_kunit.c:92
-[13:55:44] Expected __builtin_dynamic_object_size(p, 1) == expected, but
-[13:55:44] __builtin_dynamic_object_size(p, 1) == -1
-[13:55:44] expected == 52
-[13:55:44] __alloc_size() not working with kzalloc(size++, gfp)
-[13:55:44] # alloc_size_test: EXPECTATION FAILED at lib/fortify_kunit.c:93
-[13:55:44] Expected __builtin_dynamic_object_size(p, 1) == expected, but
-[13:55:44] __builtin_dynamic_object_size(p, 1) == -1
-[13:55:44] expected == 53
-[13:55:44] __alloc_size() not working with kzalloc_node(size++, gfp,
-NUMA_NO_NODE)
-[13:55:44] # alloc_size_test: EXPECTATION FAILED at lib/fortify_kunit.c:94
-[13:55:44] Expected __builtin_dynamic_object_size(p, 1) == expected, but
-[13:55:44] __builtin_dynamic_object_size(p, 1) == -1
-[13:55:44] expected == 54
-[13:55:44] __alloc_size() not working with kcalloc(1, size++, gfp)
-[13:55:44] # alloc_size_test: EXPECTATION FAILED at lib/fortify_kunit.c:95
-[13:55:44] Expected __builtin_dynamic_object_size(p, 1) == expected, but
-[13:55:44] __builtin_dynamic_object_size(p, 1) == -1
-[13:55:44] expected == 55
-[13:55:44] __alloc_size() not working with kcalloc_node(1, size++,
-gfp, NUMA_NO_NODE)
-[13:55:44] # alloc_size_test: EXPECTATION FAILED at lib/fortify_kunit.c:96
-[13:55:44] Expected __builtin_dynamic_object_size(p, 1) == expected, but
-[13:55:44] __builtin_dynamic_object_size(p, 1) == -1
-[13:55:44] expected == 56
-[13:55:44] __alloc_size() not working with kmalloc_array(1, size++, gfp)
-[13:55:44] # alloc_size_test: EXPECTATION FAILED at lib/fortify_kunit.c:97
-[13:55:44] Expected __builtin_dynamic_object_size(p, 1) == expected, but
-[13:55:44] __builtin_dynamic_object_size(p, 1) == -1
-[13:55:44] expected == 57
-[13:55:44] __alloc_size() not working with kmalloc_array_node(1,
-size++, gfp, NUMA_NO_NODE)
-[13:55:44] not ok 3 - alloc_size_test
-[13:55:44] [FAILED] alloc_size_test
-[13:55:44] # Subtest: fortify
-[13:55:44] 1..3
-[13:55:44] # fortify: pass:2 fail:1 skip:0 total:3
-[13:55:44] # Totals: pass:2 fail:1 skip:0 total:3
-[13:55:44] not ok 1 - fortify
-[13:55:44] ===================== [FAILED] fortify =====================
-[13:55:44] ============================================================
-[13:55:44] Testing complete. Ran 3 tests: passed: 2, failed: 1
-[13:55:45] Elapsed time: 10.424s total, 0.002s configuring, 8.950s
-building, 0.835s running
+It was some time ago. If I remember correctly, I got to the point of
+running IMA/EVM and passing basic tests.
 
-With:
-clang --version
-Debian clang version 14.0.6-2
-Target: x86_64-pc-linux-gnu
-Thread model: posix
-InstalledDir: /usr/bin
+Will take a look at your patches and comments, and integrate in mines
+if something is missing.
 
-Same thing with gcc:
-gcc (Debian 12.2.0-1) 12.2.0
-Copyright (C) 2022 Free Software Foundation, Inc.
+Will also send again the prerequisite patch set.
 
-I can also reproduce it on a different machine, running openSUSE
-Tumbleweed's gcc 12.2 and clang 15.0.2.
+Roberto
 
-It also fails the same way with just the mentioned patches, applied to
-torvalds/master at aae803b02f92.
-
-Do you have a specific working tree somewhere public I should try?
-
--- David
