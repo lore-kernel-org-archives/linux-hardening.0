@@ -2,458 +2,84 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB47C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 19 Oct 2022 04:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B99B0C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed, 19 Oct 2022 05:37:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229543AbiJSEjX (ORCPT
+        id S229463AbiJSFhM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 19 Oct 2022 00:39:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40876 "EHLO
+        Wed, 19 Oct 2022 01:37:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbiJSEjW (ORCPT
+        with ESMTP id S229606AbiJSFhM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 19 Oct 2022 00:39:22 -0400
-Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADAD0B21
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 21:39:19 -0700 (PDT)
-Received: by mail-ua1-x92f.google.com with SMTP id p89so6532830uap.12
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 21:39:19 -0700 (PDT)
+        Wed, 19 Oct 2022 01:37:12 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3483A4E196
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 22:37:10 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id 67so16203820pfz.12
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 22:37:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DUV7LtYN23XkdrRjcupT/SktZUbdh+bPheu6PkvqxEg=;
-        b=SF4OTnGdFvxG0fPDqyCpmy9BBAxXTAzlI8AFHDi3VzS24Lw9H4ayFDf9n2Usp2jsw6
-         z5f1OxbHqOpF0ymeLt7+fVKqOyYUJ+HssTL11i1Uvj3pIXReqncySBB14PnXiO823wB0
-         y2029B3obos5xakSDqOK1jDAVobv8P3UqFkjgng/lBeEUoENaJ5nOfyrdyiFxxv1a1+y
-         xcTGcy2GuZ+EtdBc52ZsUP5E5U3GaIBdWvMN+U6Iz5F0mVlhfKSQA7xRCpM0nyqNWeAU
-         uXhmmPQb/xX+tyns/xcfqVbSQ8GRHRyUS1TIkJVh+KWVxmdmWNqZLuPX2RYeEPkqyNJW
-         bdcA==
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gaB7r0jtcqd2LLd1zpImUKzyF4vb0y3pjRPBPmzYZ4Y=;
+        b=A50nB2myoBrpOIvb3e4Ap+0R9BCF2YinNE2QnvkCYhYLCUUM7DBKYMS6gk092eZU3O
+         B2/fZxbo7disNyN568ZmLcCeHRhHlCeI8yn2kVzs5e32APmmUAzE0roYLmvwX7uXrWTK
+         sK9lV4oZrZg6wGNBET8UFhqJe7sBndgRlCUaE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DUV7LtYN23XkdrRjcupT/SktZUbdh+bPheu6PkvqxEg=;
-        b=bgiH9sZRFyZLaV8HEVtix2F8jdqPpWkkCkvaDBdQ8Pvt8w8+3/Ee073DYQ+6TZ9QhR
-         iHhpPno294K1BI0FTD4vxP0Ez+l2aKm4VCcPC4JH03HuSqMlI05//DrMGELiqWshEFFt
-         hTv2C3q2pWdbYDBzjiwEjbRn/WLw4L4hPud8YnaxsAKkwSFcAmrIOOHiBmQNcWgItvRv
-         q1mCpqA1tc7DFLmL+fy13u9J25BxMLgHx8uHwH5ig4eiUg6Y0g+fiAWNx9AWR1mzH54m
-         yRtWnnQpJBKu4VPFx1xCYQAA9ZU53gngEntWKn+nokYcxdTrB6Ky1tvsN/Gpgn0HOxfc
-         mkPA==
-X-Gm-Message-State: ACrzQf1gg874K5jxqc1NyGl7jL9DKdUeoZgs6AUQ2OxFVYyGV/hDNwzv
-        uaQoinAWahRT/JQsFOt+x/3HYq15Wo6CCE+yfxJ8P1Op14lkhw==
-X-Google-Smtp-Source: AMsMyM6HT94pXkxXz2E4zNo9Py7nGdAZhk77uMBRha9c1tX6bK8h7tuWkcXkxIR/chyGeYhTUQBGjcEqKH7w8pJGJrA=
-X-Received: by 2002:ab0:5a98:0:b0:3e6:5e47:3702 with SMTP id
- w24-20020ab05a98000000b003e65e473702mr3376772uae.104.1666154358634; Tue, 18
- Oct 2022 21:39:18 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gaB7r0jtcqd2LLd1zpImUKzyF4vb0y3pjRPBPmzYZ4Y=;
+        b=wd+txNhI6jvi7XSsln9QNmWcmr8VUCBY70FWdN4UGUp6R1BPWUZ6dzz5Q+w6y/jSro
+         GKCarh0OSGB4r3bm+hmK2rL7TQ51BRqRmulOIaSVOYbRHWu7eZnm7kPm5/ZSSirjdJ9v
+         uCF/pK1dawI5f7AP1Uqp6cebKGEy+kBJHd8Ar2Hs1gmz7VN9R2EKasQYGzPLHoCoHBzB
+         i/8NoNuZrQ6eha9PGH6T3+2/RIdPML67ORSknPIVsC8SIw4x11Sj3vqs/IusPsLIXMRB
+         cVEd0ehpHsAhTwLVmJuZHw45lm3z0HHSJGk6GAaZUYJZ0cq7xgRL9/azKaVJOurp4D7/
+         peNg==
+X-Gm-Message-State: ACrzQf052HL7gGRcT/lC+idU4KTcsh5Um8lp17x+eKDLDGccL8oi0eeu
+        N73tR0hQWqXrpHIeMERLNoxNc/dk1gUwrg==
+X-Google-Smtp-Source: AMsMyM7fiBtyRBbHFGloOmwtzRNGHuoxgWogV6EAP5VJPWG6EE61GeFExwx/EPTvx0a3W+O4+gXIog==
+X-Received: by 2002:a63:ed0a:0:b0:442:2514:95f5 with SMTP id d10-20020a63ed0a000000b00442251495f5mr5867397pgi.402.1666157829640;
+        Tue, 18 Oct 2022 22:37:09 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d8-20020a170902cec800b0017f7b6e970esm9799332plg.146.2022.10.18.22.37.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Oct 2022 22:37:08 -0700 (PDT)
+Date:   Tue, 18 Oct 2022 22:37:07 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] mempool: Use kmalloc_size_roundup() to match ksize()
+ usage
+Message-ID: <202210182235.3B19DFCB28@keescook>
+References: <20221018090323.never.897-kees@kernel.org>
+ <20221018155137.f6898d165aade2e3a5f0b2d3@linux-foundation.org>
 MIME-Version: 1.0
-References: <20221018082824.never.845-kees@kernel.org>
-In-Reply-To: <20221018082824.never.845-kees@kernel.org>
-From:   David Gow <davidgow@google.com>
-Date:   Wed, 19 Oct 2022 12:39:06 +0800
-Message-ID: <CABVgOSm_6nBuSNy=ao=edDRFHd-=D7jupcD9nvOFBqjsr8bQDQ@mail.gmail.com>
-Subject: Re: [PATCH] string: Convert strscpy() self-test to KUnit
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Tobin C . Harding" <tobin@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221018155137.f6898d165aade2e3a5f0b2d3@linux-foundation.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Oct 18, 2022 at 4:29 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Convert the strscpy() self-test to a KUnit test.
->
-> Cc: David Gow <davidgow@google.com>
-> Cc: Tobin C. Harding <tobin@kernel.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
+On Tue, Oct 18, 2022 at 03:51:37PM -0700, Andrew Morton wrote:
+> On Tue, 18 Oct 2022 02:03:29 -0700 Kees Cook <keescook@chromium.org> wrote:
+> 
+> > Round up allocations with kmalloc_size_roundup() so that mempool's use
+> > of ksize() is always accurate and no special handling of the memory is
+> > needed by KASAN, UBSAN_BOUNDS, nor FORTIFY_SOURCE.
+> 
+> Confused.  If the special handling is not needed, why doesn't the patch
+> removed the no longer needed special handling?
 
-This looks fine, and works here, but I wonder if this is not better
-suited to a parameterised test? That'd make it a bit easier to
-interpret the results if only one or two of the "subtests" failed.
+The special handling is in the ksize() implementation, so it can't be
+removed[1] until all the ksize()-affected users are updated to see their
+true allocation sizes first.
 
-Basically, you give KUnit a test function alongside an array of data
-(typically a struct), as well as a helper function to "describe" the
-test, and KUnit will treat all executions of that function as
-"subtests", and print out results.
-The fat timestamp tests here are a good example:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/fat/fat_test.c#n23
+[1] https://lore.kernel.org/lkml/20220923202822.2667581-16-keescook@chromium.org/
 
-Now, I suspect that this isn't an _ideal_ case for parameterised tests
-(the individual cases are a little awkward to describe), so I'm okay
-with it either way, but I think taking advantage of the parameterised
-test infrastructure would be a little "cleaner" than the repeated
-calls to the "tc" function.
-
-Thoughts?
-
-Regardless, this is:
-Tested-by: David Gow <davidgow@google.com>
-
--- David
-
->  MAINTAINERS         |   1 +
->  lib/Kconfig.debug   |   8 ++-
->  lib/Makefile        |   2 +-
->  lib/strscpy_kunit.c | 129 +++++++++++++++++++++++++++++++++++++
->  lib/test_strscpy.c  | 150 --------------------------------------------
->  5 files changed, 136 insertions(+), 154 deletions(-)
->  create mode 100644 lib/strscpy_kunit.c
->  delete mode 100644 lib/test_strscpy.c
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 9dd8d74c4df0..232d78340d79 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8045,6 +8045,7 @@ T:        git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/har
->  F:     include/linux/fortify-string.h
->  F:     lib/fortify_kunit.c
->  F:     lib/memcpy_kunit.c
-> +F:     lib/strscpy_kunit.c
->  F:     lib/test_fortify/*
->  F:     scripts/test_fortify.sh
->  K:     \b__NO_FORTIFY\b
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 3fc7abffc7aa..e0a4d52e434c 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -2215,9 +2215,6 @@ config STRING_SELFTEST
->  config TEST_STRING_HELPERS
->         tristate "Test functions located in the string_helpers module at runtime"
->
-> -config TEST_STRSCPY
-> -       tristate "Test strscpy*() family of functions at runtime"
-> -
->  config TEST_KSTRTOX
->         tristate "Test kstrto*() family of functions at runtime"
->
-> @@ -2583,6 +2580,11 @@ config HW_BREAKPOINT_KUNIT_TEST
->
->           If unsure, say N.
->
-> +config STRSCPY_KUNIT_TEST
-> +       tristate "Test strscpy*() family of functions at runtime" if !KUNIT_ALL_TESTS
-> +       depends on KUNIT
-> +       default KUNIT_ALL_TESTS
-> +
->  config TEST_UDELAY
->         tristate "udelay test driver"
->         help
-> diff --git a/lib/Makefile b/lib/Makefile
-> index 161d6a724ff7..1905e5c26849 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -82,7 +82,6 @@ obj-$(CONFIG_TEST_DYNAMIC_DEBUG) += test_dynamic_debug.o
->  obj-$(CONFIG_TEST_PRINTF) += test_printf.o
->  obj-$(CONFIG_TEST_SCANF) += test_scanf.o
->  obj-$(CONFIG_TEST_BITMAP) += test_bitmap.o
-> -obj-$(CONFIG_TEST_STRSCPY) += test_strscpy.o
->  obj-$(CONFIG_TEST_UUID) += test_uuid.o
->  obj-$(CONFIG_TEST_XARRAY) += test_xarray.o
->  obj-$(CONFIG_TEST_PARMAN) += test_parman.o
-> @@ -380,6 +379,7 @@ obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow_kunit.o
->  CFLAGS_stackinit_kunit.o += $(call cc-disable-warning, switch-unreachable)
->  obj-$(CONFIG_STACKINIT_KUNIT_TEST) += stackinit_kunit.o
->  obj-$(CONFIG_FORTIFY_KUNIT_TEST) += fortify_kunit.o
-> +obj-$(CONFIG_STRSCPY_KUNIT_TEST) += strscpy_kunit.o
->
->  obj-$(CONFIG_GENERIC_LIB_DEVMEM_IS_ALLOWED) += devmem_is_allowed.o
->
-> diff --git a/lib/strscpy_kunit.c b/lib/strscpy_kunit.c
-> new file mode 100644
-> index 000000000000..98523f828d3a
-> --- /dev/null
-> +++ b/lib/strscpy_kunit.c
-> @@ -0,0 +1,129 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Kernel module for testing 'strscpy' family of functions.
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <kunit/test.h>
-> +#include <linux/string.h>
-> +
-> +/*
-> + * tc() - Run a specific test case.
-> + * @src: Source string, argument to strscpy_pad()
-> + * @count: Size of destination buffer, argument to strscpy_pad()
-> + * @expected: Expected return value from call to strscpy_pad()
-> + * @terminator: 1 if there should be a terminating null byte 0 otherwise.
-> + * @chars: Number of characters from the src string expected to be
-> + *         written to the dst buffer.
-> + * @pad: Number of pad characters expected (in the tail of dst buffer).
-> + *       (@pad does not include the null terminator byte.)
-> + *
-> + * Calls strscpy_pad() and verifies the return value and state of the
-> + * destination buffer after the call returns.
-> + */
-> +static void tc(struct kunit *test, char *src, int count, int expected,
-> +              int chars, int terminator, int pad)
-> +{
-> +       int nr_bytes_poison;
-> +       int max_expected;
-> +       int max_count;
-> +       int written;
-> +       char buf[6];
-> +       int index, i;
-> +       const char POISON = 'z';
-> +
-> +       KUNIT_ASSERT_TRUE_MSG(test, src != NULL,
-> +                             "null source string not supported");
-> +
-> +       memset(buf, POISON, sizeof(buf));
-> +       /* Future proofing test suite, validate args */
-> +       max_count = sizeof(buf) - 2; /* Space for null and to verify overflow */
-> +       max_expected = count - 1;    /* Space for the null */
-> +
-> +       KUNIT_ASSERT_LE_MSG(test, count, max_count,
-> +               "count (%d) is too big (%d) ... aborting", count, max_count);
-> +       KUNIT_EXPECT_LE_MSG(test, expected, max_expected,
-> +               "expected (%d) is bigger than can possibly be returned (%d)",
-> +               expected, max_expected);
-> +
-> +       written = strscpy_pad(buf, src, count);
-> +       KUNIT_ASSERT_EQ(test, written, expected);
-> +
-> +       if (count && written == -E2BIG) {
-> +               KUNIT_ASSERT_EQ_MSG(test, 0, strncmp(buf, src, count - 1),
-> +                       "buffer state invalid for -E2BIG");
-> +               KUNIT_ASSERT_EQ_MSG(test, buf[count - 1], '\0',
-> +                       "too big string is not null terminated correctly");
-> +       }
-> +
-> +       for (i = 0; i < chars; i++)
-> +               KUNIT_ASSERT_EQ_MSG(test, buf[i], src[i],
-> +                       "buf[i]==%c != src[i]==%c", buf[i], src[i]);
-> +
-> +       if (terminator)
-> +               KUNIT_ASSERT_EQ_MSG(test, buf[count - 1], '\0',
-> +                       "string is not null terminated correctly");
-> +
-> +       for (i = 0; i < pad; i++) {
-> +               index = chars + terminator + i;
-> +               KUNIT_ASSERT_EQ_MSG(test, buf[index], '\0',
-> +                       "padding missing at index: %d", i);
-> +       }
-> +
-> +       nr_bytes_poison = sizeof(buf) - chars - terminator - pad;
-> +       for (i = 0; i < nr_bytes_poison; i++) {
-> +               index = sizeof(buf) - 1 - i; /* Check from the end back */
-> +               KUNIT_ASSERT_EQ_MSG(test, buf[index], POISON,
-> +                       "poison value missing at index: %d", i);
-> +       }
-> +}
-> +
-> +static void strscpy_test(struct kunit *test)
-> +{
-> +       /*
-> +        * tc() uses a destination buffer of size 6 and needs at
-> +        * least 2 characters spare (one for null and one to check for
-> +        * overflow).  This means we should only call tc() with
-> +        * strings up to a maximum of 4 characters long and 'count'
-> +        * should not exceed 4.  To test with longer strings increase
-> +        * the buffer size in tc().
-> +        */
-> +
-> +       /* tc(test, src, count, expected, chars, terminator, pad) */
-> +       tc(test, "a", 0, -E2BIG, 0, 0, 0);
-> +       tc(test, "",  0, -E2BIG, 0, 0, 0);
-> +
-> +       tc(test, "a", 1, -E2BIG, 0, 1, 0);
-> +       tc(test, "",  1, 0,      0, 1, 0);
-> +
-> +       tc(test, "ab", 2, -E2BIG, 1, 1, 0);
-> +       tc(test, "a",  2, 1,      1, 1, 0);
-> +       tc(test, "",   2, 0,      0, 1, 1);
-> +
-> +       tc(test, "abc", 3, -E2BIG, 2, 1, 0);
-> +       tc(test, "ab",  3, 2,      2, 1, 0);
-> +       tc(test, "a",   3, 1,      1, 1, 1);
-> +       tc(test, "",    3, 0,      0, 1, 2);
-> +
-> +       tc(test, "abcd", 4, -E2BIG, 3, 1, 0);
-> +       tc(test, "abc",  4, 3,      3, 1, 0);
-> +       tc(test, "ab",   4, 2,      2, 1, 1);
-> +       tc(test, "a",    4, 1,      1, 1, 2);
-> +       tc(test, "",     4, 0,      0, 1, 3);
-> +}
-> +
-> +static struct kunit_case strscpy_test_cases[] = {
-> +       KUNIT_CASE(strscpy_test),
-> +       {}
-> +};
-> +
-> +static struct kunit_suite strscpy_test_suite = {
-> +       .name = "strscpy",
-> +       .test_cases = strscpy_test_cases,
-> +};
-> +
-> +kunit_test_suite(strscpy_test_suite);
-> +
-> +MODULE_AUTHOR("Tobin C. Harding <tobin@kernel.org>");
-> +MODULE_LICENSE("GPL");
-> diff --git a/lib/test_strscpy.c b/lib/test_strscpy.c
-> deleted file mode 100644
-> index a827f94601f5..000000000000
-> --- a/lib/test_strscpy.c
-> +++ /dev/null
-> @@ -1,150 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0+
-> -
-> -#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> -
-> -#include <linux/string.h>
-> -
-> -#include "../tools/testing/selftests/kselftest_module.h"
-> -
-> -/*
-> - * Kernel module for testing 'strscpy' family of functions.
-> - */
-> -
-> -KSTM_MODULE_GLOBALS();
-> -
-> -/*
-> - * tc() - Run a specific test case.
-> - * @src: Source string, argument to strscpy_pad()
-> - * @count: Size of destination buffer, argument to strscpy_pad()
-> - * @expected: Expected return value from call to strscpy_pad()
-> - * @terminator: 1 if there should be a terminating null byte 0 otherwise.
-> - * @chars: Number of characters from the src string expected to be
-> - *         written to the dst buffer.
-> - * @pad: Number of pad characters expected (in the tail of dst buffer).
-> - *       (@pad does not include the null terminator byte.)
-> - *
-> - * Calls strscpy_pad() and verifies the return value and state of the
-> - * destination buffer after the call returns.
-> - */
-> -static int __init tc(char *src, int count, int expected,
-> -                    int chars, int terminator, int pad)
-> -{
-> -       int nr_bytes_poison;
-> -       int max_expected;
-> -       int max_count;
-> -       int written;
-> -       char buf[6];
-> -       int index, i;
-> -       const char POISON = 'z';
-> -
-> -       total_tests++;
-> -
-> -       if (!src) {
-> -               pr_err("null source string not supported\n");
-> -               return -1;
-> -       }
-> -
-> -       memset(buf, POISON, sizeof(buf));
-> -       /* Future proofing test suite, validate args */
-> -       max_count = sizeof(buf) - 2; /* Space for null and to verify overflow */
-> -       max_expected = count - 1;    /* Space for the null */
-> -       if (count > max_count) {
-> -               pr_err("count (%d) is too big (%d) ... aborting", count, max_count);
-> -               return -1;
-> -       }
-> -       if (expected > max_expected) {
-> -               pr_warn("expected (%d) is bigger than can possibly be returned (%d)",
-> -                       expected, max_expected);
-> -       }
-> -
-> -       written = strscpy_pad(buf, src, count);
-> -       if ((written) != (expected)) {
-> -               pr_err("%d != %d (written, expected)\n", written, expected);
-> -               goto fail;
-> -       }
-> -
-> -       if (count && written == -E2BIG) {
-> -               if (strncmp(buf, src, count - 1) != 0) {
-> -                       pr_err("buffer state invalid for -E2BIG\n");
-> -                       goto fail;
-> -               }
-> -               if (buf[count - 1] != '\0') {
-> -                       pr_err("too big string is not null terminated correctly\n");
-> -                       goto fail;
-> -               }
-> -       }
-> -
-> -       for (i = 0; i < chars; i++) {
-> -               if (buf[i] != src[i]) {
-> -                       pr_err("buf[i]==%c != src[i]==%c\n", buf[i], src[i]);
-> -                       goto fail;
-> -               }
-> -       }
-> -
-> -       if (terminator) {
-> -               if (buf[count - 1] != '\0') {
-> -                       pr_err("string is not null terminated correctly\n");
-> -                       goto fail;
-> -               }
-> -       }
-> -
-> -       for (i = 0; i < pad; i++) {
-> -               index = chars + terminator + i;
-> -               if (buf[index] != '\0') {
-> -                       pr_err("padding missing at index: %d\n", i);
-> -                       goto fail;
-> -               }
-> -       }
-> -
-> -       nr_bytes_poison = sizeof(buf) - chars - terminator - pad;
-> -       for (i = 0; i < nr_bytes_poison; i++) {
-> -               index = sizeof(buf) - 1 - i; /* Check from the end back */
-> -               if (buf[index] != POISON) {
-> -                       pr_err("poison value missing at index: %d\n", i);
-> -                       goto fail;
-> -               }
-> -       }
-> -
-> -       return 0;
-> -fail:
-> -       failed_tests++;
-> -       return -1;
-> -}
-> -
-> -static void __init selftest(void)
-> -{
-> -       /*
-> -        * tc() uses a destination buffer of size 6 and needs at
-> -        * least 2 characters spare (one for null and one to check for
-> -        * overflow).  This means we should only call tc() with
-> -        * strings up to a maximum of 4 characters long and 'count'
-> -        * should not exceed 4.  To test with longer strings increase
-> -        * the buffer size in tc().
-> -        */
-> -
-> -       /* tc(src, count, expected, chars, terminator, pad) */
-> -       KSTM_CHECK_ZERO(tc("a", 0, -E2BIG, 0, 0, 0));
-> -       KSTM_CHECK_ZERO(tc("", 0, -E2BIG, 0, 0, 0));
-> -
-> -       KSTM_CHECK_ZERO(tc("a", 1, -E2BIG, 0, 1, 0));
-> -       KSTM_CHECK_ZERO(tc("", 1, 0, 0, 1, 0));
-> -
-> -       KSTM_CHECK_ZERO(tc("ab", 2, -E2BIG, 1, 1, 0));
-> -       KSTM_CHECK_ZERO(tc("a", 2, 1, 1, 1, 0));
-> -       KSTM_CHECK_ZERO(tc("", 2, 0, 0, 1, 1));
-> -
-> -       KSTM_CHECK_ZERO(tc("abc", 3, -E2BIG, 2, 1, 0));
-> -       KSTM_CHECK_ZERO(tc("ab", 3, 2, 2, 1, 0));
-> -       KSTM_CHECK_ZERO(tc("a", 3, 1, 1, 1, 1));
-> -       KSTM_CHECK_ZERO(tc("", 3, 0, 0, 1, 2));
-> -
-> -       KSTM_CHECK_ZERO(tc("abcd", 4, -E2BIG, 3, 1, 0));
-> -       KSTM_CHECK_ZERO(tc("abc", 4, 3, 3, 1, 0));
-> -       KSTM_CHECK_ZERO(tc("ab", 4, 2, 2, 1, 1));
-> -       KSTM_CHECK_ZERO(tc("a", 4, 1, 1, 1, 2));
-> -       KSTM_CHECK_ZERO(tc("", 4, 0, 0, 1, 3));
-> -}
-> -
-> -KSTM_MODULE_LOADERS(test_strscpy);
-> -MODULE_AUTHOR("Tobin C. Harding <tobin@kernel.org>");
-> -MODULE_LICENSE("GPL");
-> --
-> 2.34.1
->
+-- 
+Kees Cook
