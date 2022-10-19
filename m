@@ -2,117 +2,140 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE87CC43219
-	for <linux-hardening@archiver.kernel.org>; Wed, 19 Oct 2022 14:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8A6C43217
+	for <linux-hardening@archiver.kernel.org>; Wed, 19 Oct 2022 15:42:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231339AbiJSOtj (ORCPT
+        id S232540AbiJSPm4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 19 Oct 2022 10:49:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39150 "EHLO
+        Wed, 19 Oct 2022 11:42:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230239AbiJSOtX (ORCPT
+        with ESMTP id S231166AbiJSPmV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 19 Oct 2022 10:49:23 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A68FF88D9;
-        Wed, 19 Oct 2022 07:37:00 -0700 (PDT)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29JEWCub008964;
-        Wed, 19 Oct 2022 14:36:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=gQ0LrSPPMFn2K044cE0uzaLohVsC19QuIJLiPg813JU=;
- b=ndV8MqyCeIU1XL0FTgxXLnIvLXFxWbHVYZfPDYVVwdUVkMbBXrq7wRw9yQGzvkirsIaf
- 2gyNf++2jz3JLIUzatlz/h3YFrESBDEM3dxBewDCjt7o5iVZoxMbR3M/VGpccmqXluR+
- RYBjUKdz0J0ZZ0CYrO+GXQlTxCk609ZwoV9AZ+UTlnTMVKaxRPpqtZf2H5VUjV0dNUge
- iAfs/GX/8Yw0S5ZccC+MSc5ZdbGinZXQI+QJpesI9hSViw2ZRIDxt6N5R+VntCO9yy/Z
- 03gJWHUsYg4I4rz3QeaYTg3xZLn4BvxBTxdVw6VFUzQ940/fXIKdZ859vnxZxtXpg/5A Cg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kak330d0n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Oct 2022 14:36:39 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 29JEX7Ig013830;
-        Wed, 19 Oct 2022 14:35:40 GMT
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3kak3309md-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Oct 2022 14:35:40 +0000
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 29JEKIfR011292;
-        Wed, 19 Oct 2022 14:34:52 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma02dal.us.ibm.com with ESMTP id 3k7mgabb0p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Oct 2022 14:34:52 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com ([9.208.128.116])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 29JEYpcx983658
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Oct 2022 14:34:51 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CC9F05805E;
-        Wed, 19 Oct 2022 14:34:50 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3382D58056;
-        Wed, 19 Oct 2022 14:34:49 +0000 (GMT)
-Received: from sig-9-65-252-68.ibm.com (unknown [9.65.252.68])
-        by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Oct 2022 14:34:49 +0000 (GMT)
-Message-ID: <16e008b3709f3c85dbad1accb9fce8ddad552205.camel@linux.ibm.com>
-Subject: Re: [PATCH 2/9] security: Move trivial IMA hooks into LSM
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Petr Vorel <pvorel@suse.cz>, Borislav Petkov <bp@suse.de>,
-        Takashi Iwai <tiwai@suse.de>,
-        Jonathan McDowell <noodles@fb.com>,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, KP Singh <kpsingh@kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        John Johansen <john.johansen@canonical.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Date:   Wed, 19 Oct 2022 10:34:48 -0400
-In-Reply-To: <20221013223654.659758-2-keescook@chromium.org>
-References: <20221013222702.never.990-kees@kernel.org>
-         <20221013223654.659758-2-keescook@chromium.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: yCJxJtC0CR0Mftu0gWwsAb5HlVqwg9E1
-X-Proofpoint-ORIG-GUID: LqgPk_vOKUjAebx2xuWDzUINYmLiEH59
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-10-19_08,2022-10-19_03,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- adultscore=0 bulkscore=0 lowpriorityscore=0 mlxscore=0 mlxlogscore=999
- malwarescore=0 suspectscore=0 spamscore=0 priorityscore=1501 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2209130000
- definitions=main-2210190081
+        Wed, 19 Oct 2022 11:42:21 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F56017426;
+        Wed, 19 Oct 2022 08:38:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5160EB824B0;
+        Wed, 19 Oct 2022 15:37:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79A20C4347C;
+        Wed, 19 Oct 2022 15:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666193842;
+        bh=JRwAyHnjrSY03iEK2UKGtcgr2ehNnH9vwZJpBiLAoiY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=rdDLnjfbZF01xbQOhru7EnqH+Ewbk9fsNyDOUpL3Y4xRw0b61GJ5SXvEcKn7qZm10
+         i9gOgMcvjdqZAL0zhZqN2Xiq4OweM8IcwJKC4hvgllOmamT3Gzbcb9Z1KroSX2dQfm
+         ZlZrsCHoT+Ww2bSM6WN9Elic9hpx8qkl8iGcWjhW8u83fxwyER1+rVZiVEH+A0RU0O
+         /cVQ5LIXHJ2Tmx3KYx7V6KVawsnV610LmNyHjNnk6s4EylkQpiar/HVBxXkJgIosQG
+         IdaeuMuso4QH2fIZGUO4mDxYu+6je++vaRD+fSerOnaNpRrVF3YniHhsA4v9LtE4Id
+         PGa/VPMFLXDlQ==
+Date:   Wed, 19 Oct 2022 08:37:19 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Kees Cook <keescook@chromium.org>,
+        Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, kasan-dev@googlegroups.com,
+        linux-mm@kvack.org
+Subject: -Wmacro-redefined in include/linux/fortify-string.h
+Message-ID: <Y1AZr01X1wvg5Klu@dev-arch.thelio-3990X>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 2022-10-13 at 15:36 -0700, Kees Cook wrote:
-> This moves the trivial hard-coded stacking of IMA LSM hooks into the
-> existing LSM infrastructure.
+Hi all,
 
-The only thing trivial about making IMA and EVM LSMs is moving them to
-LSM hooks.  Although static files may be signed and the signatures
-distributed with the file data through the normal distribution
-mechanisms (e.g. RPM), other files cannot be signed remotely (e.g.
-configuration files).  For these files, both IMA and EVM may be
-configured to maintain persistent file state stored as security xattrs
-in the form of security.ima file hashes or security.evm HMACs.  The LSM
-flexibility of enabling/disabling IMA or EVM on a per boot basis breaks
-this usage, potentially preventing subsequent boots.
--- 
-thanks,
+I am seeing the following set of warnings when building an x86_64
+configuration that has CONFIG_FORTIFY_SOURCE=y and CONFIG_KMSAN=y:
 
-Mimi
+  In file included from scripts/mod/devicetable-offsets.c:3:
+  In file included from ./include/linux/mod_devicetable.h:13:
+  In file included from ./include/linux/uuid.h:12:
+  In file included from ./include/linux/string.h:253:
+  ./include/linux/fortify-string.h:496:9: error: 'memcpy' macro redefined [-Werror,-Wmacro-redefined]
+  #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
+          ^
+  ./arch/x86/include/asm/string_64.h:17:9: note: previous definition is here
+  #define memcpy __msan_memcpy
+          ^
+  In file included from scripts/mod/devicetable-offsets.c:3:
+  In file included from ./include/linux/mod_devicetable.h:13:
+  In file included from ./include/linux/uuid.h:12:
+  In file included from ./include/linux/string.h:253:
+  ./include/linux/fortify-string.h:500:9: error: 'memmove' macro redefined [-Werror,-Wmacro-redefined]
+  #define memmove(p, q, s)  __fortify_memcpy_chk(p, q, s,                 \
+          ^
+  ./arch/x86/include/asm/string_64.h:73:9: note: previous definition is here
+  #define memmove __msan_memmove
+          ^
+  2 errors generated.
 
+I can see that commit ff901d80fff6 ("x86: kmsan: use __msan_ string
+functions where possible.") appears to include a fix up for this warning
+with memset() but not memcpy() or memmove(). If I apply a similar fix up
+like so:
+
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index 4029fe368a4f..718ee17b31e3 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -493,6 +493,7 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+  * __struct_size() vs __member_size() must be captured here to avoid
+  * evaluating argument side-effects further into the macro layers.
+  */
++#ifndef CONFIG_KMSAN
+ #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,			\
+ 		__struct_size(p), __struct_size(q),			\
+ 		__member_size(p), __member_size(q),			\
+@@ -501,6 +502,7 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+ 		__struct_size(p), __struct_size(q),			\
+ 		__member_size(p), __member_size(q),			\
+ 		memmove)
++#endif
+ 
+ extern void *__real_memscan(void *, int, __kernel_size_t) __RENAME(memscan);
+ __FORTIFY_INLINE void *memscan(void * const POS0 p, int c, __kernel_size_t size)
+
+Then the instances of -Wmacro-redefined disappear but the fortify tests
+no longer pass for somewhat obvious reasons:
+
+  warning: unsafe memcpy() usage lacked '__read_overflow2' symbol in lib/test_fortify/read_overflow2-memcpy.c
+  warning: unsafe memmove() usage lacked '__read_overflow2' symbol in lib/test_fortify/read_overflow2-memmove.c
+  warning: unsafe memcpy() usage lacked '__read_overflow2_field' symbol in lib/test_fortify/read_overflow2_field-memcpy.c
+  warning: unsafe memmove() usage lacked '__read_overflow2_field' symbol in lib/test_fortify/read_overflow2_field-memmove.c
+  warning: unsafe memcpy() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-memcpy.c
+  warning: unsafe memmove() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-memmove.c
+  warning: unsafe memset() usage lacked '__write_overflow' symbol in lib/test_fortify/write_overflow-memset.c
+  warning: unsafe memcpy() usage lacked '__write_overflow_field' symbol in lib/test_fortify/write_overflow_field-memcpy.c
+  warning: unsafe memmove() usage lacked '__write_overflow_field' symbol in lib/test_fortify/write_overflow_field-memmove.c
+  warning: unsafe memset() usage lacked '__write_overflow_field' symbol in lib/test_fortify/write_overflow_field-memset.c
+
+Should CONFIG_KMSAN depend on CONFIG_FORTIFY_SOURCE=n like so? It seems
+like the two features are incompatible if I am reading ff901d80fff6
+correctly.
+
+diff --git a/lib/Kconfig.kmsan b/lib/Kconfig.kmsan
+index b2489dd6503f..6a681621e3c5 100644
+--- a/lib/Kconfig.kmsan
++++ b/lib/Kconfig.kmsan
+@@ -11,7 +11,7 @@ config HAVE_KMSAN_COMPILER
+ config KMSAN
+ 	bool "KMSAN: detector of uninitialized values use"
+ 	depends on HAVE_ARCH_KMSAN && HAVE_KMSAN_COMPILER
+-	depends on SLUB && DEBUG_KERNEL && !KASAN && !KCSAN
++	depends on SLUB && DEBUG_KERNEL && !KASAN && !KCSAN && !FORTIFY_SOURCE
+ 	select STACKDEPOT
+ 	select STACKDEPOT_ALWAYS_INIT
+ 	help
+
+or is there a different obvious fix that I am missing?
+
+Cheers,
+Nathan
