@@ -2,221 +2,90 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85260C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 19 Oct 2022 03:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA927C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed, 19 Oct 2022 04:06:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229456AbiJSDf4 (ORCPT
+        id S229606AbiJSEGE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Oct 2022 23:35:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57094 "EHLO
+        Wed, 19 Oct 2022 00:06:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbiJSDfy (ORCPT
+        with ESMTP id S229498AbiJSEGC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Oct 2022 23:35:54 -0400
-Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D9C05B521
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 20:35:53 -0700 (PDT)
-Received: by mail-vs1-xe2e.google.com with SMTP id s28so408919vsr.10
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 20:35:53 -0700 (PDT)
+        Wed, 19 Oct 2022 00:06:02 -0400
+Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FE8B79ECA
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 21:06:00 -0700 (PDT)
+Received: by mail-ua1-x929.google.com with SMTP id e22so6514807uar.5
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Oct 2022 21:06:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=01MkUrtz06iY1/5W2LF1Z1hSoqZsoYSY8CNKXyHUaX4=;
-        b=ZjnFdCr+UJWr8f2qFAFv0uKyT6ulpur4KlqbbdlINtShXHogZHR5adUYqMTEU2mDzW
-         QEyA0EnLDXEXiRaa2kK0JzOblrfjEyH9fz05MD0wLhxmljUvFfEJf0LyN5c3fL1sPz8u
-         hvquQ97f8SUJOYCpkYOU+fTPFevDqKNwvs8Bqt4wvQ1D9g2xg5TjkRzMkBnKiZwU/IUy
-         sCfXxL+VGX2B06gLBUYS0eIbVHdmfw41Hs2/GyKKGp2aC+2rGHF95kIQPiQjILlDTVTc
-         nTcioONL7dl+zhPPozusBIUnLjE0bZ2gh4dBgl/S2kd4ppdvvBD3Ptn3VWfAjpBCPgPf
-         +9kg==
+        bh=Rt/UcBSCq3ctx1DKdxEOe9zXd6vUi6e+DDOW65PuwO4=;
+        b=RKe187DKCSoCTURbr9ZAU0yWdaK9ahuEJWINssob59FtsoOG+hMisVufWysSTUF2ao
+         22JQPrz0XvwsEz7xmdXKqpHpp8PG3Fd2ZDl4zFE6v4VZojqqADhaperM0Qua9qpIs9e4
+         038jg+zd6IyH3g6hZmKeR4A2ZAuD8qwX1NAFzvVgaX5287/5SjLnkjmZ7UaXR5F9qe7k
+         8Ze4JscErl62Z0ZW5Yep3GI/r7XLub/cgMvKMDoNXTDBKur0RQbuVnihbZqSTcy4QCIR
+         xkPNMH4faws2wX8FOdDcLSjQ3n1vKJ9fWI4pR3htOGy0Asm3FiYO5U8K64vkbAGxRJkO
+         lTDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=01MkUrtz06iY1/5W2LF1Z1hSoqZsoYSY8CNKXyHUaX4=;
-        b=m3LpQsRowK+zAJKP/1s8mqJPlXV3p2cCoJsgBFyDe6imVF1npcbLH50pn2DfT+X3n7
-         FP+ACt9dqycZf3wpv3iZ7Qkxyg9x6GVxu1Ne4c9Q9Hvp/gdKF+4uUSEH6RSlgcMxJetK
-         AP4kycOv2icWxzzywU8Jn+AHFHnIpYRKy+YF/CCsg106a3AAqsf8qzmgGfL/tcAQ7xnm
-         PuMkOnzmmf7urBlWg2JOz0ClgtYoqhtD821RxzZPzXPkPvKqSZb61K+8FLlfnwyHy9tC
-         vyQdbMiCKLepJ8sp+cbYVVtUJMBQhSvrK/LoXcYy4cX9LPutG7OSFJSGq2QKH74lSoR1
-         WUCw==
-X-Gm-Message-State: ACrzQf3e0Ar0l/F1zx498x1/7oOK3ytb25iehvPm8ZDu8wlAnqZSPGF/
-        g4YVhIJEai9iOHNV2Zwy4X/3xx6fTcSEK5kQgZMBhDYYrxljeA==
-X-Google-Smtp-Source: AMsMyM42qKx7H2OEDR8qmDbn2PqlzYhTtY+gpImi6zS3XYvpht8BWN2XRLhEYvM+MRB+k0TGucjmAs0rOEPHzHV7WYw=
-X-Received: by 2002:a67:d20b:0:b0:3a7:2b99:bab8 with SMTP id
- y11-20020a67d20b000000b003a72b99bab8mr3104458vsi.35.1666150552345; Tue, 18
- Oct 2022 20:35:52 -0700 (PDT)
+        bh=Rt/UcBSCq3ctx1DKdxEOe9zXd6vUi6e+DDOW65PuwO4=;
+        b=ytw/5/aYAHzFsf1axQB0DOCpvRmC473VfXxzPTxHpu9PhWbc2qIxritp3H0p7rXgOU
+         BMeiLm90rfPK4TXCI0yp2YY8buP61ZZF3Qt2lixV8q34xfhcL0rmrXOMEYSA9JoL7JEr
+         CC2klxE+L3kqrO6S1fTwMMKBaTnfimtpS4ii57vFbXXjhdmDehTuC5qoTdF95UAtMFZX
+         /Ip+gGOXnWHHGhk7EI+dOmcOlaf95AqcHYrwjguEO2+fA8ZPtnuaCPn25rw4r6P5VYQh
+         MiaacO0ZdVoOiL8D7s3HIpPlhDURwLX27Ps+xsBUqkgSy3O0+lfvNonqkY+GH6Q+cBRY
+         OU8Q==
+X-Gm-Message-State: ACrzQf3Zj+VusTiOy9MD8ZcUP5VPiDpGW85cmKLHneqkPKArpKIUtt2c
+        dWMImbmssVDCjh4N2eiday5jeWtyZINvsKMhrArWag==
+X-Google-Smtp-Source: AMsMyM42bURtQBgKrnpb7sjx/vFddcQMeV8rl3jwrihWTbA8d8xRUQa6Dvo4aXngxEtzihHgTWasga503vRyGkalxRA=
+X-Received: by 2002:ab0:132b:0:b0:3e4:ac2d:9e0f with SMTP id
+ g40-20020ab0132b000000b003e4ac2d9e0fmr3458525uae.107.1666152359194; Tue, 18
+ Oct 2022 21:05:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221018082559.never.406-kees@kernel.org>
-In-Reply-To: <20221018082559.never.406-kees@kernel.org>
+References: <20221018100510.never.479-kees@kernel.org>
+In-Reply-To: <20221018100510.never.479-kees@kernel.org>
 From:   David Gow <davidgow@google.com>
-Date:   Wed, 19 Oct 2022 11:35:40 +0800
-Message-ID: <CABVgOSneaxVgAQH=bN0pxOkN3irtpYVwFhPhNJRoyTcRfEoWhQ@mail.gmail.com>
-Subject: Re: [PATCH] kunit/fortify: Validate __alloc_size attribute results
+Date:   Wed, 19 Oct 2022 12:05:46 +0800
+Message-ID: <CABVgOSmT7y7uNqLb+uyJpsHy4sezFdm_UWrFZvGQ90d+xYbcVw@mail.gmail.com>
+Subject: Re: [PATCH] siphash: Convert selftest to KUnit
 To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Oct 18, 2022 at 4:27 PM Kees Cook <keescook@chromium.org> wrote:
+On Tue, Oct 18, 2022 at 6:05 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> Validate the effect of the __alloc_size attribute on allocators. If the
-> compiler doesn't support __builtin_dynamic_object_size(), skip the test.
+> Convert the siphash self-test to KUnit so it will be included in "all
+> KUnit tests" coverage, and can be run individually still:
 >
-> Cc: linux-hardening@vger.kernel.org
+> $ ./tools/testing/kunit/kunit.py run siphash
+> ...
+> [02:58:45] Starting KUnit Kernel (1/1)...
+> [02:58:45] ============================================================
+> [02:58:45] =================== siphash (1 subtest) ====================
+> [02:58:45] [PASSED] siphash_test
+> [02:58:45] ===================== [PASSED] siphash =====================
+> [02:58:45] ============================================================
+> [02:58:45] Testing complete. Ran 1 tests: passed: 1
+> [02:58:45] Elapsed time: 21.421s total, 4.306s configuring, 16.947s building, 0.148s running
+>
+> Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+> Cc: David Gow <davidgow@google.com>
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
-> To pass this depends on the following patches:
-> https://lore.kernel.org/lkml/20221018073430.never.551-kees@kernel.org/
-> https://lore.kernel.org/lkml/20221018082232.never.213-kees@kernel.org/
-> To not be skipped, either GCC 12 or Clang is needed.
-> ---
 
-While this _looks_ good, I can't actually get the tests to pass on my
-machine, with the following all having a
-__builtin_dynamic_object_size() of -1:
-- kmalloc_node(size++, gfp, NUMA_NO_NODE)
-- kzalloc(size++, gfp)
-- kzalloc_node(size++, gfp, NUMA_NO_NODE)
-- kcalloc(1, size++, gfp)
-- kcalloc_node(1, size++, gfp, NUMA_NO_NODE)
-- kmalloc_array(1, size++, gfp)
-- kmalloc_array_node(1, size++, gfp, NUMA_NO_NODE)
+Works fine here, and looks good from a KUnit point-of-view.
 
-I've been using the following command to run the tests:
-./tools/testing/kunit/kunit.py run --kconfig_add CONFIG_FORTIFY_SOURCE=y
-
-And I've also tried it on x86_64 and arm64 under qemu, with both gcc
-12.2.0 and clang 14.0.6-2, with the same failures.
-
-Is there a dependency somewhere I've missed? (I've tried it on the
-ksefltest/kunit branch, with the mentioned dependencies applied, and
-also on your for-next/hardening branch, with the missing patches
-applied.)
+Tested-by: David Gow <davidgow@google.com>
 
 Cheers,
 -- David
-
->  lib/fortify_kunit.c | 92 +++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 92 insertions(+)
->
-> diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
-> index 409af07f340a..5076ba11adfd 100644
-> --- a/lib/fortify_kunit.c
-> +++ b/lib/fortify_kunit.c
-> @@ -16,7 +16,10 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->
->  #include <kunit/test.h>
-> +#include <linux/device.h>
->  #include <linux/string.h>
-> +#include <linux/slab.h>
-> +#include <linux/vmalloc.h>
->
->  static const char array_of_10[] = "this is 10";
->  static const char *ptr_of_11 = "this is 11!";
-> @@ -60,9 +63,98 @@ static void control_flow_split_test(struct kunit *test)
->         KUNIT_EXPECT_EQ(test, want_minus_one(pick), SIZE_MAX);
->  }
->
-> +#define check_alloc(alloc, free)       do {                            \
-> +       size_t expected = size;                                         \
-> +       void *p = alloc;                                                \
-> +       KUNIT_EXPECT_TRUE_MSG(test, p != NULL, #alloc " failed?!\n");   \
-> +       KUNIT_EXPECT_EQ_MSG(test, __builtin_dynamic_object_size(p, 1),  \
-> +               expected,                                               \
-> +               "__alloc_size() not working with " #alloc "\n");        \
-> +       free;                                                           \
-> +} while (0)
-> +
-> +static volatile size_t unknown_size = 50;
-> +
-> +static void alloc_size_test(struct kunit *test)
-> +{
-> +#if !__has_builtin(__builtin_dynamic_object_size)
-> +       kunit_skip(test, "Compiler is missing __builtin_dynamic_object_size() support\n");
-> +#else
-> +       const char device_name[] = "fortify-test";
-> +       struct device *dev;
-> +       gfp_t gfp = GFP_KERNEL | __GFP_NOWARN;
-> +       size_t size = unknown_size, prev_size;
-> +       void *orig;
-> +
-> +       /* kmalloc()-family */
-> +       check_alloc(kmalloc(size++, gfp),                       kfree(p));
-> +       check_alloc(kmalloc_node(size++, gfp, NUMA_NO_NODE),    kfree(p));
-> +       check_alloc(kzalloc(size++, gfp),                       kfree(p));
-> +       check_alloc(kzalloc_node(size++, gfp, NUMA_NO_NODE),    kfree(p));
-> +       check_alloc(kcalloc(1, size++, gfp),                    kfree(p));
-> +       check_alloc(kcalloc_node(1, size++, gfp, NUMA_NO_NODE), kfree(p));
-> +       check_alloc(kmalloc_array(1, size++, gfp),              kfree(p));
-> +       check_alloc(kmalloc_array_node(1, size++, gfp, NUMA_NO_NODE), kfree(p));
-> +       check_alloc(__kmalloc(size++, gfp),                     kfree(p));
-> +       check_alloc(__kmalloc_node(size++, gfp, NUMA_NO_NODE),  kfree(p));
-> +
-> +       /* kmemdup() */
-> +       prev_size = size;
-> +       size = 11;
-> +       check_alloc(kmemdup("hello there", size, gfp),          kfree(p));
-> +       size = prev_size + 1;
-> +
-> +       /* krealloc()-family */
-> +       orig = kmalloc(size++, gfp);
-> +       check_alloc(krealloc(orig, size++, gfp),                kfree(p));
-> +       orig = kmalloc(size++, gfp);
-> +       check_alloc(krealloc_array(orig, 1, size++, gfp),       kfree(p));
-> +
-> +       /* vmalloc()-family */
-> +       check_alloc(vmalloc(size++),                            vfree(p));
-> +       check_alloc(vzalloc(size++),                            vfree(p));
-> +       check_alloc(__vmalloc(size++, gfp),                     vfree(p));
-> +
-> +       /* kvalloc()-family */
-> +       check_alloc(kvmalloc(size++, gfp),                      kvfree(p));
-> +       check_alloc(kvmalloc_node(size++, gfp, NUMA_NO_NODE),   kvfree(p));
-> +       check_alloc(kvzalloc(size++, gfp),                      kvfree(p));
-> +       check_alloc(kvzalloc_node(size++, gfp, NUMA_NO_NODE),   kvfree(p));
-> +       check_alloc(kvcalloc(1, size++, gfp),                   kvfree(p));
-> +       check_alloc(kvmalloc_array(1, size++, gfp),             kvfree(p));
-> +
-> +       /* kvrealloc() */
-> +       prev_size = size++;
-> +       orig = kvmalloc(prev_size, gfp);
-> +       check_alloc(kvrealloc(orig, prev_size, size++, gfp),    kfree(p));
-> +
-> +       /* Create dummy device for devm_kmalloc()-family tests. */
-> +       dev = root_device_register(device_name);
-> +       KUNIT_ASSERT_FALSE_MSG(test, IS_ERR(dev),
-> +                              "Cannot register test device\n");
-> +
-> +       /* devm_kmalloc()-family */
-> +       check_alloc(devm_kmalloc(dev, size++, gfp),             devm_kfree(dev, p));
-> +       check_alloc(devm_kzalloc(dev, size++, gfp),             devm_kfree(dev, p));
-> +
-> +       /* devm_kmemdup() */
-> +       prev_size = size;
-> +       size = 4;
-> +       check_alloc(devm_kmemdup(dev, "Ohai", size, gfp),       devm_kfree(dev, p));
-> +       size = prev_size + 1;
-> +
-> +       /* devm_kremalloc() */
-> +       orig = devm_kmalloc(dev, size++, gfp);
-> +       check_alloc(devm_krealloc(dev, orig, size++, gfp),      devm_kfree(dev, p));
-> +
-> +       device_unregister(dev);
-> +#endif
-> +}
-> +
->  static struct kunit_case fortify_test_cases[] = {
->         KUNIT_CASE(known_sizes_test),
->         KUNIT_CASE(control_flow_split_test),
-> +       KUNIT_CASE(alloc_size_test),
->         {}
->  };
->
-> --
-> 2.34.1
->
