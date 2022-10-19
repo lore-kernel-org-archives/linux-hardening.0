@@ -2,99 +2,121 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D361EC4332F
-	for <linux-hardening@archiver.kernel.org>; Wed, 19 Oct 2022 06:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2BCC4332F
+	for <linux-hardening@archiver.kernel.org>; Wed, 19 Oct 2022 07:01:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229490AbiJSG4i (ORCPT
+        id S229788AbiJSHBo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 19 Oct 2022 02:56:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35232 "EHLO
+        Wed, 19 Oct 2022 03:01:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229554AbiJSG4h (ORCPT
+        with ESMTP id S229670AbiJSHBn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 19 Oct 2022 02:56:37 -0400
-Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ACBB74E00;
-        Tue, 18 Oct 2022 23:56:36 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.18.147.227])
-        by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4MshF607dCz9xrq3;
-        Wed, 19 Oct 2022 14:50:18 +0800 (CST)
-Received: from roberto-ThinkStation-P620 (unknown [10.204.63.22])
-        by APP2 (Coremail) with SMTP id GxC2BwAnrgR5n09jwF4JAA--.26227S2;
-        Wed, 19 Oct 2022 07:56:04 +0100 (CET)
-Message-ID: <00bf4f189e4ec3b98130451f40e77ead8f28179e.camel@huaweicloud.com>
-Subject: Re: [PATCH 4/9] ima: Move ima_file_free() into LSM
-From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christian Brauner <brauner@kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, Petr Vorel <pvorel@suse.cz>,
-        Jonathan McDowell <noodles@fb.com>,
-        Borislav Petkov <bp@suse.de>, Takashi Iwai <tiwai@suse.de>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        KP Singh <kpsingh@kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        John Johansen <john.johansen@canonical.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Date:   Wed, 19 Oct 2022 08:55:49 +0200
-In-Reply-To: <202210181126.E58AB4A0F@keescook>
-References: <20221013222702.never.990-kees@kernel.org>
-         <20221013223654.659758-4-keescook@chromium.org>
-         <20221018150213.7n4sv7rtsh6lshd5@wittgenstein>
-         <1b41c633bbd31b82b02fdbae718f2f11ac862181.camel@huaweicloud.com>
-         <202210181126.E58AB4A0F@keescook>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        Wed, 19 Oct 2022 03:01:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70CD375FF1;
+        Wed, 19 Oct 2022 00:01:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 38BEE6178A;
+        Wed, 19 Oct 2022 07:01:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FC0EC43143;
+        Wed, 19 Oct 2022 07:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666162899;
+        bh=TPYrh4CPVfRLN+C3/bGZqWeNBfavnKMli+K2H62eo98=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=r6mSyjUGVoTdv9Yo6KSTDZ6Oz3pcJmMy0oOJj5rDiey6VaRYCh43jamIxcw0pBmFR
+         VuRv3t57d/u5+68Ftr4A3sbfFuaC31GE7MqxdNy8Y3BmqpLf+wrk92myewdy7WKR2A
+         xpDzvwBk1Vp2XyQ1FS0Yi5zs4VQ1aGrQovdL0ga4ffp0az5tPsGHzB/qRLAn4rNVNC
+         ll8GisAM4s8NFnhlRQHsKegqWZY/dUJj8HccK3KxTO1IWxT5stVNnmQVm+Wz7M06DP
+         R/iMJ8hA9E2pPBlUyFip11luDwcD3ONLZVEdXJke7f21vZYhvEBL/snUAr05exFl82
+         rhntEjOmI96nA==
+Received: by mail-lj1-f170.google.com with SMTP id b18so20923298ljr.13;
+        Wed, 19 Oct 2022 00:01:39 -0700 (PDT)
+X-Gm-Message-State: ACrzQf10zmaCBsIcYH3GOVq3V+sCeSmqdZIyFkBvHXRI2bzV5x2xfoUT
+        6/dwr8+Q+5XfYVVCvqb7V15WiBeMRoasXNWo8RI=
+X-Google-Smtp-Source: AMsMyM506RGH9G3NdyMul3lvhmbWpeKvEwDgRV1WsboI8duToRQWQD7R0E3bo5pfnbDro1GvEkw5HysL/RLMJSCZ+5o=
+X-Received: by 2002:a05:651c:4d0:b0:26f:cd9b:419f with SMTP id
+ e16-20020a05651c04d000b0026fcd9b419fmr2225881lji.415.1666162897461; Wed, 19
+ Oct 2022 00:01:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: GxC2BwAnrgR5n09jwF4JAA--.26227S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrZr4ktw48CFyDGr13Aw1DWrg_yoWfXFb_GF
-        WjyrZ2yFn8JF1kKanavFW3Gr4DWrWUXr4Yvw4fJrnxZw4Svw47XFs7CF93C3WrJw4av3Zx
-        Ja4avayxta17tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb78YFVCjjxCrM7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E6xAIw20E
-        Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-        A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x02
-        67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r1j6r4UM28EF7xvwVC2z280aVCY1x0267
-        AKxVW8JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
-        j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
-        kEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x0E
-        wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
-        80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0
-        I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04
-        k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-        1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU13rcDUUUUU==
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAKBF1jj4RlmgAAsF
-X-CFilter-Loop: Reflected
+References: <cover.1662459668.git.baskov@ispras.ru> <27a078f43742063cc30e706b196fb5fff5d5c37e.1662459668.git.baskov@ispras.ru>
+In-Reply-To: <27a078f43742063cc30e706b196fb5fff5d5c37e.1662459668.git.baskov@ispras.ru>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 19 Oct 2022 09:01:26 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGUvUwy__wD-DtHtpVMoCJsc=G2mvWLe2a7ib2ckqzpow@mail.gmail.com>
+Message-ID: <CAMj1kXGUvUwy__wD-DtHtpVMoCJsc=G2mvWLe2a7ib2ckqzpow@mail.gmail.com>
+Subject: Re: [PATCH 01/16] x86/boot: Align vmlinuz sections on page size
+To:     Evgeniy Baskov <baskov@ispras.ru>
+Cc:     Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        lvc-project@linuxtesting.org, x86@kernel.org,
+        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 2022-10-18 at 11:29 -0700, Kees Cook wrote:
-> On Tue, Oct 18, 2022 at 05:32:40PM +0200, Roberto Sassu wrote:
-> > I also did this work before. In my implementation, I created a new
-> > security hook called security_file_pre_free().
-> > 
-> > https://github.com/robertosassu/linux/commit/692c9d36fff865435b23b3cb765d31f3584f6263
-> > 
-> > If useful, the whole patch set is available at:
-> > 
-> > https://github.com/robertosassu/linux/commits/ima-evm-lsm-v1-devel-v3
-> 
-> Ah, lovely! Can you pick this back up and run with it? I mainly did
-> these a proof-of-concept, but it looks like you got further.
+On Tue, 6 Sept 2022 at 12:41, Evgeniy Baskov <baskov@ispras.ru> wrote:
+>
+> To protect sections on page table level each section
+> needs to be aligned on page size (4KB).
+>
+> Set sections alignment in linker script.
+>
+> Signed-off-by: Evgeniy Baskov <baskov@ispras.ru>
+> ---
+>  arch/x86/boot/compressed/vmlinux.lds.S | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+> index 112b2375d021..6be90f1a1198 100644
+> --- a/arch/x86/boot/compressed/vmlinux.lds.S
+> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+> @@ -27,21 +27,27 @@ SECTIONS
+>                 HEAD_TEXT
+>                 _ehead = . ;
+>         }
+> +       . = ALIGN(PAGE_SIZE);
+>         .rodata..compressed : {
+> +               _compressed = .;
 
-It was some time ago. If I remember correctly, I got to the point of
-running IMA/EVM and passing basic tests.
+Why are you adding these?
 
-Will take a look at your patches and comments, and integrate in mines
-if something is missing.
+>                 *(.rodata..compressed)
+> +               _ecompressed = .;
+>         }
+> +       . = ALIGN(PAGE_SIZE);
 
-Will also send again the prerequisite patch set.
+On other EFI architectures, we only distinguish between R-X and RW-
+regions, and alignment between .rodata and .text is unnecessary. Do we
+really need to deviate from that here?
 
-Roberto
 
+>         .text : {
+>                 _text = .;      /* Text */
+>                 *(.text)
+>                 *(.text.*)
+>                 _etext = . ;
+>         }
+> +       . = ALIGN(PAGE_SIZE);
+>         .rodata : {
+>                 _rodata = . ;
+>                 *(.rodata)       /* read-only data */
+>                 *(.rodata.*)
+>                 _erodata = . ;
+>         }
+> +       . = ALIGN(PAGE_SIZE);
+>         .data : {
+>                 _data = . ;
+>                 *(.data)
+> --
+> 2.35.1
+>
