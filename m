@@ -2,208 +2,167 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB17CC433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 20 Oct 2022 16:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E42C43217
+	for <linux-hardening@archiver.kernel.org>; Thu, 20 Oct 2022 17:29:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229785AbiJTQvO (ORCPT
+        id S229800AbiJTR3T (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 20 Oct 2022 12:51:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59214 "EHLO
+        Thu, 20 Oct 2022 13:29:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229751AbiJTQvL (ORCPT
+        with ESMTP id S229685AbiJTR3T (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 20 Oct 2022 12:51:11 -0400
-Received: from esa4.hc3370-68.iphmx.com (esa4.hc3370-68.iphmx.com [216.71.155.144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38004159A25;
-        Thu, 20 Oct 2022 09:51:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1666284667;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=HoclpAS6meJHJIAwilAVKrCp2hWEi0qJWDnwxNjZl+8=;
-  b=iJrnreAN4g9ZRjRJkDPe5mRY6RgF2IDhlivQlqAokc1ZA+srYXryAbnM
-   uuuExkU9nNICirVzJeHQOaxasP6uv5UBjuS/D1R/DgXgEYZoxZ0e9/wHO
-   Fo9fYk5OUjXj7/L+PtkYMm7vyWVdI19rrL2UVLWWrPH6x2BDrNmLVIByq
-   Q=;
-X-IronPort-RemoteIP: 104.47.70.101
-X-IronPort-MID: 85706991
-X-IronPort-Reputation: None
-X-IronPort-Listener: OutboundMail
-X-IronPort-SenderGroup: RELAY_O365
-X-IronPort-MailFlowPolicy: $RELAYED
-IronPort-Data: A9a23:J/AtSKLzOWn/z2SvFE+RypUlxSXFcZb7ZxGr2PjKsXjdYENS1mYFx
- jROUGGOaPiLMGejft4kPI6z9R9Tv5HXnIRkSFdlqX01Q3x08seUXt7xwmUcnc+xBpaaEB84t
- ZV2hv3odp1coqr0/0/1WlTZhSAgk/vOHtIQMcacUghpXwhoVSw9vhxqnu89k+ZAjMOwRgiAo
- rsemeWGULOe82MyYz98B56r8ks15q2q4mtA5DTSWNgQ1LPgvyhNZH4gDfnZw0vQGuF8AuO8T
- uDf+7C1lkuxE8AFU47Nfh7TKyXmc5aKVeS8oiM+t5uK23CukhcawKcjXMfwXG8M49m/c3Kd/
- /0W3XC4YV9B0qQhA43xWTEAe811FfUuFLMqvRFTGCFcpqHLWyKE/hlgMK05FdxG+cBwXERRz
- MY3byoPMhC6ltupwpvuH4GAhux7RCXqFKU2nyg4iBv/UrMhS52FRLjW79hF2jt2ntpJAfvVe
- 8seb3xocQjEZBpMfFwQDfrSns/x3iW5L2Ie9wrT/PJui4TQ5FUZPLzFGdzZYNGVA+5SmV6Vv
- Dnu9GXlGBAKcteYzFJp91r827CXw3KqAer+EpWJ+sZL20St9FYtIxcMZFC6uaiQgxehDoc3x
- 0s8v3BGQbIJ3EaiVdr6QTW5u2aetwVaQcc4O+Qg5AulyafO5QudQG8eQVZpYsQOvcs3SDp6k
- FOE9/vtGCBomL6YU3SQ8vGTtzzaESQcM2JEZSYCVgYDy93ippwjyBPJUttnVqWyi7XdHDD2z
- DeitiUyh7wPy8UM0s2T5V3bjii+jpnPQBQ86gjeUiSi9AwRTJKqY5yA7Vnd8OpaK4CYXh+Ns
- RAsmMiZ9ucVDZCJkzKlQf4VBriyoeyYWBXYn1UqB4Mm9Tmm51anfIZN8C1zP1toNMlCfiXmC
- GfD6V1555JJOnauK6htbOqZD8Us0LilGNrkfu7bY8AIYZVrcgKDuiZ0aia422HrjVhpkqwlP
- 5qfWdijAGxcCql9yjeyAeAH3tcDwiE42HOWRZnhwxmh0LyRTGCaRK1DM1aUaO09qqSer23oH
- 813MsKLz1BVVrL4ayyOqYoLdwlSdD48GIz8rNFReqibOA16FWo9CvjXh7Q8Z4himKcTneDNl
- p2gZnJlJJPErSWvAW23hrpLMdsDgb4XQaoHABER
-IronPort-HdrOrdr: A9a23:80blDqpCSkEgGGr2+N5XjhIaV5uIL9V00zEX/kB9WHVpm5Oj+v
- xGzc5w6farsl0ssSkb6Ku90KnpewK+yXbsibNhcItKLzOWwldAS7sSobcKogeQUREWk9Qw6U
- 4OSdkYNDSdNzlHZIPBkXGF+rUbsZa6GcKT9IHjJh5WJGkEBZ2IrT0JczpzeXcGJjWucKBJcK
- Z0kfA3wgZIF052Uu2LQl0+G8TTrdzCk5zrJTQcAQQ81QWIhTS0rJbnDhmxxH4lInJy6IZn1V
- KAvx3y562lvf3+4ATbzXXv45Nfn8ak4sdfBfaLltMeJlzX+0aVjcVaKv6/VQIO0aSSAWUR4Z
- 3xStAbToNOAkbqDyOISN3Wqk/dOXgVmibfIBSj8AbeSITCNU4H4ox69Mxkm1LimjQdVJsX6t
- M140uJ85VQFh/OhyL7+pzBUAxrjFO9pT44nfcUlGE3a/pWVFZ9l/1pwKpuKuZ3IAvqrIQ8VO
- V+BsDV4/hbNVuccnDCp2FqhNihRG46EBuKSlUL/pX96UkcoFlpi08DgMAPlHYJ85wwD5FC+u
- TfK6xt0LVDVNUfY65xDPoIBcG3FmvOSxTRN3/6GyWuKIgXf3bW75Ln6rQ84++nPJQO0ZspgZ
- zEFEhVsGYjEnieffFmHKc7hywlbF/NLggFkPsulqSRkoeMNIbDIGmEVE0kldemrrEWHtDbMs
- zDSq5rPw==
-X-IronPort-AV: E=Sophos;i="5.95,199,1661832000"; 
-   d="scan'208";a="85706991"
-Received: from mail-bn7nam10lp2101.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.101])
-  by ob1.hc3370-68.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 20 Oct 2022 12:51:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nI6Z6Ck4cfUYWGbGK5AArW0wU1lizR17ogaQFBtWCLnU7AJIouUdoChnBPFrM1z4ctcuUp9l9qKqcfUu2aGsVxxY5iaH61pU6DVwDrMAkUui/rZDcOjAV52IzuKG2+2q3MfwhQ/CXTOW2egi9SrHmlvHBaG09C7J3cR4Pnlj3VUL37QEnfYN3W/SacGFxgHIVXpaaBg6WRLSrOKE/gqtAVpByww0KAA3ckccTXCa/NJHdBFgvgXEMF5wezey42b8THzW0wlyQQJVTTk6cBZEz5sI/NZsidG8mrpyX/BnrVHsLRXUWLUM83UktSeBwy3y5phofvsZL5ph0ho/xeI4NA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HoclpAS6meJHJIAwilAVKrCp2hWEi0qJWDnwxNjZl+8=;
- b=PmfvLjgkqSElp5ypFGB4ESayhwiplssMAg/PaKGHG8jGMDWA5IbDoz5f1e+KgIdo0RIdIyIhHgXuqr8pcmGUvUx6J9g+1uU63/UbBUK6TGBMNoM7qvP7bnBxkHbunRGXxAZ/WZj5DFkX6QReXBF/50vvaNVCa9qmxuNTB2fJIQmpYq5B5ezYYZ7VmB5H8oFDKppXHLIDlKoUCx6RnCbhpTVdaQFw6pPghUJoqYo/T0Dwixp4XAsbKZo3fstZ7sGULRsLio1+2eHev0q4HByajtpqr49/46D6LypXIj30mkRSNvuUvubyjyCAEECx6q8pcpgT2XlAWwbEQ4xW2JAXcw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=citrix.com; dmarc=pass action=none header.from=citrix.com;
- dkim=pass header.d=citrix.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=citrix.onmicrosoft.com; s=selector2-citrix-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HoclpAS6meJHJIAwilAVKrCp2hWEi0qJWDnwxNjZl+8=;
- b=Ei7bucqqDw4HDvTYyKfHDCAnAIqUpRV9PeL+q7g3LxQsUny+nJ+iJeRE6mNUzdUdzwvwq5CWqxIYrIwE2RK+KhkWAZlvfbg9vFjc6IiPSA6mTi/y45/PRpS+akcYHaqnEbUMeRG9b+DsiyabqvlTS54vT52ftlRquW3MjqpBZKg=
-Received: from BYAPR03MB3623.namprd03.prod.outlook.com (2603:10b6:a02:aa::12)
- by CO3PR03MB6759.namprd03.prod.outlook.com (2603:10b6:303:179::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.34; Thu, 20 Oct
- 2022 16:51:00 +0000
-Received: from BYAPR03MB3623.namprd03.prod.outlook.com
- ([fe80::1328:69bd:efac:4d44]) by BYAPR03MB3623.namprd03.prod.outlook.com
- ([fe80::1328:69bd:efac:4d44%3]) with mapi id 15.20.5723.034; Thu, 20 Oct 2022
- 16:51:00 +0000
-From:   Andrew Cooper <Andrew.Cooper3@citrix.com>
-To:     Evgeniy Baskov <baskov@ispras.ru>
-CC:     Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        "lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        Andrew Cooper <Andrew.Cooper3@citrix.com>
-Subject: Re: [PATCH 06/16] x86/boot: Setup memory protection for bzImage code
-Thread-Topic: [PATCH 06/16] x86/boot: Setup memory protection for bzImage code
-Thread-Index: AQHY41CKr442H/SWZESOFZ70/2CWgK4VWl0AgAHvOwCAADgJgA==
-Date:   Thu, 20 Oct 2022 16:51:00 +0000
-Message-ID: <0201e64a-1aa8-3e84-a973-4a572c1df3e4@citrix.com>
-References: <cover.1662459668.git.baskov@ispras.ru>
- <2fd61a79a1e6885dc47ec826b62a936dd88a0a16.1662459668.git.baskov@ispras.ru>
- <58b9f97c-36d5-6b9e-5336-14ad3a09ad18@citrix.com>
- <ed8c18e42870da96afc9ce1222816189@ispras.ru>
-In-Reply-To: <ed8c18e42870da96afc9ce1222816189@ispras.ru>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=citrix.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR03MB3623:EE_|CO3PR03MB6759:EE_
-x-ms-office365-filtering-correlation-id: 517d583f-5686-4071-cc37-08dab2bb445d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: i6FYFdLJrl4fcgXE9hoqQtqpNZer7ba6chjQ9bAicdYb6G7uXlB5FSTkRbxt/dDGgRwgk4DeXU8lsUgx4gtn4+TFD8EWCDPrAI6OzXPjoU41VgMSJ+SG6sOgxXHvVVuDJtwphBfU7as2d4n5fCH9UhD1vPBZE00pf5GArVbUYX+rmz1RV4x9AJM1WBVp1JkemANXj62xi1FgnyAINnZ2V7TahONvaifBwtIeGdBi98VwwE8yJ2w5Ripg8O+CKvb5zQIzVRsWYgr1WXmDTEJy4DbGMoQQpEfBenm/rqzEx/wceS5qi8ok6+CAO3ZipYLTOrG9zkR3JPoT+4ex4zMnSLTBH9S7PN+AjDsZcuqRIiS09Saoxpt83blU9uUBr9JNY7o/5U5qnVniKVdwspjH4bmUFr7VAaqPm/OcESUPp7wJjVBX62gns5gIKEwl5LNdWiN95aIq5nXGp3m0qJzfJ6ZeMTITN4TIo6esH8teB76bNMr0cYYQtbbKCnsMycnARI2e+Al8qDTppk2T4oScG1sHrBlu8WTiH40tzRPVjbiNTfqszzIOC0JFYGmD5nawEWhFwxDIcVu2rpT/UgSDHHw6f1bAJHbx5VxV31jivc3xRmy1H7tbRFnw59VFnjHaLLbw/LU82jJLQlKPkQ/6GnqHhRb2c5/5LNJRC3Ol74YGVTPyqJXHHru61PoWJ7mleNLG0kmeNt34iHQDqXQKCuH10od5vCXn0mA+flIcTKJPnmKRHgFoKEhbHgQN5dQ5Kw0ZdNhn7Qx+Dsl1QJevv4YDWiqukQOQu9EQCnW3TNBFo8sBOn5xl9v/4kxDhrex3YboCbGNpGIAOVfmNgW2KA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3623.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(39860400002)(396003)(346002)(366004)(376002)(451199015)(186003)(82960400001)(2906002)(71200400001)(6486002)(4001150100001)(122000001)(478600001)(38070700005)(2616005)(66476007)(66446008)(66946007)(66556008)(64756008)(8676002)(4326008)(6916009)(38100700002)(54906003)(86362001)(6512007)(76116006)(91956017)(8936002)(31686004)(107886003)(36756003)(26005)(31696002)(41300700001)(6506007)(316002)(5660300002)(53546011)(7416002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SEM0WGFmbWZrSDUvK2tjdVUxTU1pYzNiNHdEOW54blVOYWdKVUQ5ZDFkZ2M1?=
- =?utf-8?B?SGhGWEJTeTZEWFJlTXpaZ1c2Y2oxL0hma3NCTHBXKzVja0piL3lGa3l0K3ha?=
- =?utf-8?B?T0VIWlhrV2VKMmVyY2IyNDFIMCtCWVhlOWVXcm5Wc2xyY040cDQ3MXhSMWR5?=
- =?utf-8?B?RmJYcGZYZGNzclhFSldTUEpjWFlSbnFNVCtncTIwcjZoUVVYT1JkcmNSU2xk?=
- =?utf-8?B?dzM3QWsvdXZKc2VQejRmVDhKTU1XV3RzdEFDcCtnT1VEY1BzR2pWeG1RUjUw?=
- =?utf-8?B?N0VmY1VnTlI1eTFVRTJnZExHOGE0Rk84OHo1eHZQRTYvdURvL3I1RXdIMGpW?=
- =?utf-8?B?NUtvckRidW9icXZqTnhEVWVsZmc3WmJReEltRHBxNXpxcW5ET1VGOVdXMDdO?=
- =?utf-8?B?bWNzajJERUZBMnBJOXpIaE1CS2VmRUtHTUxXT1FyKzFLNWJZOTRaS1VEVHRI?=
- =?utf-8?B?a0ZwMlhHbmZsbld1U3g4QTc0T2FtRklZaHpJOEFkVm5LN2RJaEtsKzJ3aXFW?=
- =?utf-8?B?MVdQRmZFOHpHcjhYSWtnaFkray92eWdGbE9SMEFMWlNwV0pyRm5iUjJtNTRp?=
- =?utf-8?B?T3BYV0VBT1RVVTkvcytWZFh6RGFDUG1JUnNqZzFCdGFqd0xSZ1JrMzBFU3NQ?=
- =?utf-8?B?R1lib3NNSE90c25mZTRaOE01UGlxaVg4UU1HV0l4QnEzdEc3Q2JJbU0rcDI3?=
- =?utf-8?B?LzdVOEpzc1Z3WmZhc0JqaEdzeW9FTWdNTjlMZWl3WEVSZFJpemlMS0dXU0lk?=
- =?utf-8?B?d3dIb2xJeXE4MXlzS0tNc21way9kcG1LVERrU0xPekl0SGo3MjI2bGhYRC9u?=
- =?utf-8?B?djhsZGh2UndhNDh3VnFNakt4NThIMFdzSmtva0RNRUxRZHRPZmJvWmFRVGR0?=
- =?utf-8?B?dUVQZGJwdnFwQTlOckorSGVNdVpEVzA3dVM0Umh1amtKVmFTaDA4QzJ4T0xy?=
- =?utf-8?B?WU56VnkwRnUxalgwNDFFUFNpRFBTYzRCajdKMDBPRFpYdjlURXpNN242MzNP?=
- =?utf-8?B?MGlXYmFpeXR3NGFIZk8vbit4RXNsR0FhU0o1c1hZQW5oUmxyNFo0eFBFR2Iv?=
- =?utf-8?B?ckVSV21aOTRtWGh1Q0U3QXcxUWliNFkvUVc1aTdJaVpORTVtMEc2c0VnUnBL?=
- =?utf-8?B?QXdmaXJ4R21lMkN3QUJqTjhJcGVUeitSd2ZYVDBxQUxJczZGWC93ZGVsM2xL?=
- =?utf-8?B?VXRmbVJrWjNhSi9zZVZiZWhEQzV0WmpkcXhLU28vcWNsWjhLK1FObWRrQUpI?=
- =?utf-8?B?aVNPYkpBckNhYTk1UEZrcEVieWczSXdyZzV1bjQ5ZWVTL25ieTNSd0Y0NlV4?=
- =?utf-8?B?anBxZ1BzZkpnQmNRMUoySGhrUkw2OUhnZ2hBcmx0bFFvZ1ZZRWtJTlFtbnZk?=
- =?utf-8?B?R0ZidzQ1YkNLaTIvTGVGeE1pREZDVzFnMmpGUjRhVTRwT1ExWHYvT2tFSjI3?=
- =?utf-8?B?TllHcDY4U2orUk5NZE5iQmdiTy9mbS9LU2w3WE9UdVJCRzlkaVZPbndyZGZN?=
- =?utf-8?B?U3hUNTJaYkxqRnhibE53V0l3VW43cm1VelJhaXVjaWZqYitDTVhrSmxKTTVy?=
- =?utf-8?B?aDZnaE1TUk9uZk5sWmpnbUxlNW85OVB0K2JiU0YzUnBTYlVoRFBpa2tjVTdi?=
- =?utf-8?B?T0w5T0s3VHdSZ2dQV0diNXBRY0wzL0hCbit4QnoxSlBrUWk1MHNqaGVUQ2xz?=
- =?utf-8?B?YjViYXJtQkFxYkJIa2xMSG1rckdVaVhuY1Z3djNBeFY2V1l3QTJLZzF1RGZR?=
- =?utf-8?B?WDYwS0JvVnAvQ2tPY3FPOC85WElNSW9FS1p4UTkrWVEvVzEyOWFDeTEzTGhG?=
- =?utf-8?B?bm96QUt6WnNabFA3cWxsdlFydUJ1bXBXendUVStlbnZBWndzQk9OWHZtQmp5?=
- =?utf-8?B?Q041OTMxeXloTExKalYyUE0rQkJWSktka3dSSzNNQ1RzcS83OVp4Qko0MEJp?=
- =?utf-8?B?RDRERFFxaWVUS1diazdtN3dPRXBOeXEwS2hnMHhRbGswS2JpVUp4ZXBWdXZu?=
- =?utf-8?B?b3FnSG81bER5d1hHVm1DUVc1MkJ1T25SbnNKRFM1UEtzeFJnYnRWT243dEJt?=
- =?utf-8?B?U3ZIODMydnIvUEpUUDZCaW1HWHhIbjQ5ZkV2cmluRjA5d1UxY1FxRDJpektP?=
- =?utf-8?B?TDZrNnBiTk4xMVczRmNZL3VOOXd4Z1RyWTZZTDBRN0YrNWlRRzhjVWVzSnlC?=
- =?utf-8?B?Vmc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <13F2525C5D559E4EA7A94C8C631FBA09@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 20 Oct 2022 13:29:19 -0400
+Received: from sonic306-27.consmr.mail.ne1.yahoo.com (sonic306-27.consmr.mail.ne1.yahoo.com [66.163.189.89])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C62111DAA0
+        for <linux-hardening@vger.kernel.org>; Thu, 20 Oct 2022 10:29:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1666286955; bh=dmxcPBytFnzLe2E1XkMxdUFlJa/2N5M2eqaiKWidtac=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=C0lepjEpFmkrbwpYKS+VffZclpTvCu93vj3ccZzFokYK//xEVOLHoX9+E2aq4LTKjLJe5Uvdi492twyMgv5bCx0fpAM/2M2mplaEDGOCnp0Eez439gIcW4aYTrdca4uC5o661XswIQdt7bjEyjjmr4E/DfCDCEQXzZHPma1j4+3kyS1xuWPoSeCbi3U7LpC9YWaI+SB8pd9cD9G3dS77nwrYs/kRBRdSdmot0mYBd/2mH3Xgf83AS686IsGdEO5hnv7cxulJvR/ykA+6M4yRHr7ZNwgqYCDKJV34Rk8S2iPOFmRgdKwfRhO/cZDc+Rhut6uCfa3r0fqzmEw3UG8sYA==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1666286955; bh=Ui7N1xG9MaFLSYbU8D1IaQOLBc89Dc4vTJjS4Y8o1Ha=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=AhW4Ccd8fCtQ1aCtARGg8JlaXmI77M43y7cDS95VXlN9tW7iX8qcwVpSukKl4Wpm6HUuw1zTO907jZUp84n6pBeCDTDldpQ0lVicmqHvqFoW8cwwx13OvhsajARx5JRY4B7pNZEdak78i/GSilhu+EySzeorz7zRWtaW9UeEjbulq8+BJFiqbMZq0neHH+HmO7V5aaETeO7jtTCCzTDq+KRByROjm+os/0Brwy3m3ATCyr81M741Tbouu4xpZQj9B2Z7juPBT0v96EmlkEHygadKjlVfs/eAtonlaYcmmAFM4gn/aXJ53uGM+Do+ryh2zQPOHNE6dIEdc6lPnwXvFQ==
+X-YMail-OSG: QzXv1.4VM1nMOB56LwM.gs1QCkNGwW4frHEvwEe7SFpE_c8qp8D7CfsLoDLh0St
+ WPw4Pbqbor5voeQcFrqj6k_TFq3Psxa18vFiThtBA8MktEswMfOCR_LzZK8Lz937M3STM5AKLP7h
+ 5wulNuoLXZisINjdonlgaVJTOdRT0dNg1HCVL0CP7gzlVKmkXYai21knVu3i.2_cNDN3K3Q7WqgC
+ xjr15g3GnKr.U3PpVRsU0TkBYzokqdozG0TB.Xha7OGw3tbw5k2UTfqSCQ2NZVzzekocIQD7RQPr
+ cVFezSj4VlXSWyE.Vqyxnemcgo594YMggthbTUIMUuhnuL7xbNyq1f9Kq6K18m0S8FSS30Al4KyA
+ 1.ujWo_hBXEW2F1c_SiHx2es844hS0ATODfiLrJ.uafHD0sg20EuGG81olBPTpAXdU4yVy0p1csJ
+ UyVRRJYzWu9nzbO1N8OPuA9AYgsBGfOF8O8adFf3MI4cV8zCfYX9abRg8qa2luNCdlbNl3.Gc9cZ
+ USLMK.0d13UekvLpy906EiRlZ2A6eMi9SDgLh.YcjPxFR_90v2GRxLhxvbLptlZdX_RiULm8cw2l
+ IB9SS30d6XW2LfZdWdJhsK6eMRFvjtDX5q1gO3QZ8gtrexDE8Aw72g2G3D9jolPFdWD1iI2DryG_
+ kcq.cRwrdjja.UlI3t888vn_A9FOUwrBlW2z4y8GPNSdc48LLVod8fvLNlkJOI54FWF_4tI1MxX_
+ .TjAQkOUcLQ2ZpzyFt6UptVReVQQXw7vPVfhDwx.YXZMkozvfr3kLvYuORMq8jyGTqps7Rmd832l
+ PZFxeLid7HRuEjGmlAdyP0fBGUHTEcCWFEwcA0p.e61xfPFBsa2O7GDTJ_wl2HsyaF3XKcixuqBb
+ mZu8g0Kanemxna9dMlYdAZrtUE7w2Ee8lsr4hRRcEu_KgLNCz04a1g7Znk662aGF3I4OwcKefdkS
+ pKVM0LCnsawivJXpjqRULPvGNtZrjEz4JKScGCpgj_oZylOq_pcJhvUXtTJI3OPWXTbvjeB0x4pu
+ 7kyaQki_TMOIlYfM2oXc3pxIkBztKozEzosO7HF0Yr8LzsrRDBagtrj6sZmwfOx2MC5yhPy0lgpL
+ 9UXQpdqVMBFTzGsWxKPUAfxCeUpVLqaRxpVxqhAAnTXhFz8ATDltHLcv0O4lGugAT1Q9q_dQ5ncV
+ GK5fYiIgIYfS2LQzW6.vr9OsmzJWvx9jQVisH1p6v9OvxV8V6yWDTWCIo6IDc9VdcJTyRuC8wKFV
+ N7s35JJ.wWvkk_0mEJKBN094xB2gK4vNHBTLEVD9CKRu.8yMeSKLCY5eTNtkR_L2XHfK9r.8.7t1
+ i3m0GVz5OHx.qv6TEtLilehorrIrrGjvsf83dMX0V.Oz0Rydq3X9DOOxRuaqECrdRUjY7fL3a5Jp
+ JJ8pajiCbFIrNEOu9Ngq7XjReZph7nBgmJJv1VT8gpW2n0ePuv2H2sd22W1hnfacaAuJysWdORV_
+ l3LHpAlmsQqa2gduI_fl3d5k5QAtoLu5K8vOCnOpcP3dxNTUHIrLAm8FzYF6n3EYt2J2h0L2RYhv
+ JYkcf4YDYHNL2q14RlE2VrktZkkChUnNal4G6xU1GTZHepOSSJFpseEOHQENkB8dbalcv15x_P_e
+ K8.vlGR1DIUTZ31u_5dS4gE_tdyt.5602T3hWIXQ3tpR8UEGSakUUOjqvgrFb50rvLpNr5XzS6qE
+ lTmJ9VSO8xDkf3chY_jEzH5s1eRupLvU.N3Qq9A0OnQNfdAKkdtuT52LZ0RDmM6txss7q3BiFpWp
+ 0IJ44xB9qb8UE_iaBcpwYmgvgpZr2LYTu1TbID0ZcJ2d85AKLx6Qf_wJ3Lg4abdnKs8ULobzxWE_
+ 6FDji2OCk5C1BfeRT2Kuqe5O4uCtRdcJx.IC_pCJxA.v5jF_mjH4nEIh7dAbFJ6sNPnGf9BMzKkt
+ kE_BRjBvieoySIHtqr4LTLqT8zX6QwopuZq9cgcBxBb0qCXWxsIQGIAxPE2tFv49cwG9JvgXDLTQ
+ LbyaiIt028pAPIJHECoXrc7s4WQIdVHkNrDeaXYSsum5Kbk.LbfYVoTHq.oeIKipBpp.0ywL5WEC
+ ZfkRewjJlAb1.FQcBI4tX7m.S_x_EONA4Lgm5mWbDb9GoQ6Kvve.VDktXPD14BGIzYBqxasQDvCj
+ ooupwuASsR2FbHQFcxMy6PWesWu.4d6kwYZrRb.1UqTFP9DS9B1kJjVEdgH69S6OJkzXN2Mv1Yv5
+ Mt6CpQVbLGWzKzq5jqfLJbMa8ToYfuoUvCUHQKsE5fJW1uaLJtA--
+X-Sonic-MF: <casey@schaufler-ca.com>
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.ne1.yahoo.com with HTTP; Thu, 20 Oct 2022 17:29:15 +0000
+Received: by hermes--production-gq1-754cb59848-dxw7w (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID da65b2d877440166aa7461bdf22645bd;
+          Thu, 20 Oct 2022 17:29:09 +0000 (UTC)
+Message-ID: <34084e9a-b4c0-95b7-1132-ca95294c8063@schaufler-ca.com>
+Date:   Thu, 20 Oct 2022 10:29:08 -0700
 MIME-Version: 1.0
-X-OriginatorOrg: citrix.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3623.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 517d583f-5686-4071-cc37-08dab2bb445d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Oct 2022 16:51:00.1660
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335836de-42ef-43a2-b145-348c2ee9ca5b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: heImUpedPIF+3ruWz3gavhQdXc1H472f2e4IS87EVMMCoGYtV5f2tRtpfhobqtHUnZ38gYsBIuD13B3z7rMqiwJPT8PGQEaBXtPXaGoES8k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO3PR03MB6759
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH 6/9] fs: Introduce file_to_perms() helper
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>, Mimi Zohar <zohar@linux.ibm.com>
+Cc:     John Johansen <john.johansen@canonical.com>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        KP Singh <kpsingh@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-hardening@vger.kernel.org,
+        casey@schaufler-ca.com
+References: <20221013222702.never.990-kees@kernel.org>
+ <20221013223654.659758-6-keescook@chromium.org>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <20221013223654.659758-6-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.20754 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-T24gMjAvMTAvMjAyMiAxNDozMCwgRXZnZW5peSBCYXNrb3Ygd3JvdGU6DQo+IE9uIDIwMjItMTAt
-MTkgMTA6NTcsIEFuZHJldyBDb29wZXIgd3JvdGU6DQo+PiBPbiAwNi8wOS8yMDIyIDExOjQxLCBF
-dmdlbml5IEJhc2tvdiB3cm90ZToNCj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvYm9vdC9jb21w
-cmVzc2VkL2hlYWRfNjQuUw0KPj4+IGIvYXJjaC94ODYvYm9vdC9jb21wcmVzc2VkL2hlYWRfNjQu
-Uw0KPj4+IGluZGV4IDUyNzMzNjcyODNiNy4uODg5Y2E3MTc2YWE3IDEwMDY0NA0KPj4+IC0tLSBh
-L2FyY2gveDg2L2Jvb3QvY29tcHJlc3NlZC9oZWFkXzY0LlMNCj4+PiArKysgYi9hcmNoL3g4Ni9i
-b290L2NvbXByZXNzZWQvaGVhZF82NC5TDQo+Pj4gQEAgLTYwMiw2ICs2MDMsMjggQEAgU1lNX0ZV
-TkNfU1RBUlRfTE9DQUxfTk9BTElHTiguTHJlbG9jYXRlZCkNCj4+PiDCoMKgwqDCoCBqbXDCoMKg
-wqAgKiVyYXgNCj4+PiDCoFNZTV9GVU5DX0VORCguTHJlbG9jYXRlZCkNCj4+Pg0KPj4+ICtTWU1f
-RlVOQ19TVEFSVF9MT0NBTF9OT0FMSUdOKHN0YXJ0dXAzMl9lbmFibGVfbnhfaWZfc3VwcG9ydGVk
-KQ0KPj4+ICvCoMKgwqAgcHVzaHHCoMKgwqAgJXJieA0KPj4+ICsNCj4+PiArwqDCoMKgIGxlYXHC
-oMKgwqAgaGFzX254KCVyaXApLCAlcmN4DQo+Pj4gKw0KPj4+ICvCoMKgwqAgbW92wqDCoMKgICQw
-eDgwMDAwMDAxLCAlZWF4DQo+Pj4gK8KgwqDCoCBjcHVpZA0KPj4+ICvCoMKgwqAgYnRswqDCoMKg
-ICQyMCwgJWVkeA0KPj4NCj4+IGJ0bCAkKFg4Nl9GRUFUVVJFX05YICYgMzEpLCAlZWR4DQo+Pg0K
-Pj4gQnV0IGFsc28gbmVlZCB0byBjaGVjayBmb3IgdGhlIGF2YWlsYWJpbGl0eSBvZiB0aGUgZXh0
-ZW5kZWQgbGVhZiBpbiB0aGUNCj4+IGZpcnN0IHBsYWNlLg0KPg0KPiBZZXMsIHRoYW5rIHlvdSBm
-b3Igc3VnZ2VzdGlvbiwgdGhhdCBsb29rcyBtb3JlIHJlYWRhYmxlLiBJIHdpbGwNCj4gYWxzbyBh
-ZGQgdGhlIGxlYWYgbm9kZSBjaGVjay4gSXMgdGhlcmUgYW55IHByb2Nlc3NvciB0aG91Z2ggdGhh
-dA0KPiBzdXBwb3J0cyBsb25nIG1vZGUgYW5kIGRvZXMgbm90IHN1cHBvcnQgMHg4MDAwMDAwMSBs
-ZWFmIG5vZGU/DQoNCk5vLCBnb29kIHBvaW50LsKgIFRoZSBMb25nIE1vZGUgZmVhdHVyZSBiaXQg
-aXMgaW4gdGhpcyBsZWFmIHRvby4NCg0KfkFuZHJldw0K
+On 10/13/2022 3:36 PM, Kees Cook wrote:
+> Extract the logic used by LSM file hooks to be able to reconstruct the
+> access mode permissions from an open.
+>
+> Cc: John Johansen <john.johansen@canonical.com>
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: James Morris <jmorris@namei.org>
+> Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> Cc: linux-security-module@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  include/linux/fs.h               | 22 ++++++++++++++++++++++
+>  security/apparmor/include/file.h | 18 ++++--------------
+>  2 files changed, 26 insertions(+), 14 deletions(-)
+
+Smack uses its own definitions for MAY_SOMETHING. Making
+AppArmor's values global is going to clash. If you want to
+do this there needs to be a grand consolidation. It could
+go in security/lsm_hooks.h. I can't see anyone other than
+Smack wanting MAY_LOCK, so I can't say the concept really
+makes much sense.
+
+>
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 9eced4cc286e..814f10d4132e 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -993,6 +993,28 @@ static inline struct file *get_file(struct file *f)
+>  #define get_file_rcu(x) atomic_long_inc_not_zero(&(x)->f_count)
+>  #define file_count(x)	atomic_long_read(&(x)->f_count)
+>  
+> +/* Calculate the basic MAY_* flags needed for a given file. */
+> +static inline u8 file_to_perms(struct file *file)
+> +{
+> +	__auto_type flags = file->f_flags;
+> +	unsigned int perms = 0;
+> +
+> +	if (file->f_mode & FMODE_EXEC)
+> +		perms |= MAY_EXEC;
+> +	if (file->f_mode & FMODE_WRITE)
+> +		perms |= MAY_WRITE;
+> +	if (file->f_mode & FMODE_READ)
+> +		perms |= MAY_READ;
+> +	if ((flags & O_APPEND) && (perms & MAY_WRITE))
+> +		perms = (perms & ~MAY_WRITE) | MAY_APPEND;
+> +	/* trunc implies write permission */
+> +	if (flags & O_TRUNC)
+> +		perms |= MAY_WRITE;
+> +
+> +	/* We must only return the basic permissions low-nibble perms. */
+> +	return (perms | (MAY_EXEC | MAY_WRITE | MAY_READ | MAY_APPEND));
+> +}
+> +
+>  #define	MAX_NON_LFS	((1UL<<31) - 1)
+>  
+>  /* Page cache limit. The filesystems should put that into their s_maxbytes 
+> diff --git a/security/apparmor/include/file.h b/security/apparmor/include/file.h
+> index 029cb20e322d..505d6da02af3 100644
+> --- a/security/apparmor/include/file.h
+> +++ b/security/apparmor/include/file.h
+> @@ -218,20 +218,10 @@ static inline void aa_free_file_rules(struct aa_file_rules *rules)
+>   */
+>  static inline u32 aa_map_file_to_perms(struct file *file)
+>  {
+> -	int flags = file->f_flags;
+> -	u32 perms = 0;
+> -
+> -	if (file->f_mode & FMODE_WRITE)
+> -		perms |= MAY_WRITE;
+> -	if (file->f_mode & FMODE_READ)
+> -		perms |= MAY_READ;
+> -
+> -	if ((flags & O_APPEND) && (perms & MAY_WRITE))
+> -		perms = (perms & ~MAY_WRITE) | MAY_APPEND;
+> -	/* trunc implies write permission */
+> -	if (flags & O_TRUNC)
+> -		perms |= MAY_WRITE;
+> -	if (flags & O_CREAT)
+> +	u32 perms = file_to_perms(file);
+> +
+> +	/* Also want to check O_CREAT */
+> +	if (file->f_flags & O_CREAT)
+>  		perms |= AA_MAY_CREATE;
+>  
+>  	return perms;
