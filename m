@@ -2,149 +2,131 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B3AC4332F
-	for <linux-hardening@archiver.kernel.org>; Thu, 20 Oct 2022 03:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEC9C433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 20 Oct 2022 06:05:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230229AbiJTDFq (ORCPT
+        id S229664AbiJTGFP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 19 Oct 2022 23:05:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37326 "EHLO
+        Thu, 20 Oct 2022 02:05:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230017AbiJTDFo (ORCPT
+        with ESMTP id S229543AbiJTGFO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 19 Oct 2022 23:05:44 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE964491C0
-        for <linux-hardening@vger.kernel.org>; Wed, 19 Oct 2022 20:05:41 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id 3so19053110pfw.4
-        for <linux-hardening@vger.kernel.org>; Wed, 19 Oct 2022 20:05:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wEl73zYiyCZRYeY8GRbvNLUlF2BoygoZ6siYepxupO4=;
-        b=KyPf4YSo2fdSCuwLXXoELT8f8hoq/6mHp/coYbuC98NMxNmwuU9b15osetPysrUspu
-         sktHt+jFnzxGv3Xgd5NQgO3spfYDiFNFhHR9qAM0AQV2LW+uS38wzheH/mBRNqEJFy6C
-         1//1803iUOgFMx34XOUfk8WHzV95V4D4CU3h0=
+        Thu, 20 Oct 2022 02:05:14 -0400
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29FECFF8F0;
+        Wed, 19 Oct 2022 23:05:09 -0700 (PDT)
+Received: by mail-ej1-f42.google.com with SMTP id y14so44855268ejd.9;
+        Wed, 19 Oct 2022 23:05:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wEl73zYiyCZRYeY8GRbvNLUlF2BoygoZ6siYepxupO4=;
-        b=wpdXK9InFOZz7fP0VJpFrGfhp7lAYkqUNGhkmJWcEQgszt2YUPBGBhNV5ZHD5RdvCI
-         UTXTDivG+7cfTDl3RU4vzg7CezxBnkpwEeZ3MxlrCvj6MfkXHGi0fXRzTtaFERDiWLss
-         D5XWvFJkRURdpDuY960aJVdk28ROKme6QquBFNzXrYd6DFsQF9tbo3rGaDCLkSgYWaat
-         BSgQwM50nCOyA/tu6XuhdZI1gj2p/tJqoLnPHVsYY22JPPvQVFyJ16bs/Pk8ppruOp7E
-         5Zx7NCjtfAl4ZBvrHdAeZWV3me8NPWHoPV7ao9gNAJCREbqVUGbtfggzXRyDeDz26TJP
-         JjYA==
-X-Gm-Message-State: ACrzQf0HUYZLkcaGAkCNcQH/hKjUE3IUZCB20Y/nXnlJwx/NUOnM8IIm
-        GjKck2CTuMLzdmzbfGavwWD0CQ==
-X-Google-Smtp-Source: AMsMyM6uy8Kmc6qC8QV/oF1BPpkrAO9MeeKAf0ZcO9TExbpShBsd4Rzn8zwt5IS5jogmvOcpAp6iJw==
-X-Received: by 2002:a05:6a00:1707:b0:566:15a1:8b07 with SMTP id h7-20020a056a00170700b0056615a18b07mr11661937pfc.34.1666235140900;
-        Wed, 19 Oct 2022 20:05:40 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z20-20020a17090a8b9400b001fdcb792181sm611435pjn.43.2022.10.19.20.05.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Oct 2022 20:05:40 -0700 (PDT)
-Date:   Wed, 19 Oct 2022 20:05:38 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     xfs <linux-xfs@vger.kernel.org>, Zorro Lang <zlang@redhat.com>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [RFC PATCH] xfs: fix FORTIFY_SOURCE complaints about log item
- memcpy
-Message-ID: <202210191948.FF93D98E0B@keescook>
-References: <Y1CQe9FWctRg3OZI@magnolia>
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kwjSEOpe7mHzthxwfuxysqsqwQDWl1d/LvKM1CZaM5E=;
+        b=NPQPTNcPkgffEVvjvKo0lEWk4DgMOnAos6WnlJnqYEoEedHxgJZZXjMsLNbq+jWauv
+         ptfwHLb/U4+lVYGCW0/Ip6OA/ve7JlAnTfvqJNz7hWJmPJDfystBwQ39fVwoZt8Mu4D4
+         LBq79nO21U5gFt15THaqVU4PD5Zw3QPk2XgsOrphbA+9m01wP3g/nmrz6/GXAE/1w2jI
+         IT6iak7VOrUrk9f1PnYESIHo9+eFUVWU24o8GuU6MIj9diu454Gj4XNvgD/4gohzXq63
+         kb1MTUjCRUfAunUMjxpWLWituqwpeacg2x1xuibxmU17aAmVduW1xGgtSpDaMrGXnIjP
+         9y5Q==
+X-Gm-Message-State: ACrzQf0UsS7wRl7D41pqjZgoyltZSmhqo6X9YVGExYZsuScxcpqmfFhJ
+        4OTwY8Lomim3bOKPmVZwTuU=
+X-Google-Smtp-Source: AMsMyM6fBZH7SpXjJCw6/NgFHYk5wCZmfPXBL/j0ctZfLaLQpWxqyBOxcZxali/zTvw5wAKFeU7RYQ==
+X-Received: by 2002:a17:907:7da5:b0:78e:2c3b:55a2 with SMTP id oz37-20020a1709077da500b0078e2c3b55a2mr9475916ejc.96.1666245907470;
+        Wed, 19 Oct 2022 23:05:07 -0700 (PDT)
+Received: from ?IPV6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
+        by smtp.gmail.com with ESMTPSA id c21-20020aa7df15000000b0045c76120e61sm11493268edy.54.2022.10.19.23.05.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Oct 2022 23:05:06 -0700 (PDT)
+Message-ID: <0be4e5da-fca4-ffd2-e4d0-65f8e5c35acf@kernel.org>
+Date:   Thu, 20 Oct 2022 08:05:05 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y1CQe9FWctRg3OZI@magnolia>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Simon Brand <simon.brand@postadigitale.de>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20221015064222.gonna.435-kees@kernel.org>
+ <20221015064517.1554119-2-keescook@chromium.org>
+From:   Jiri Slaby <jirislaby@kernel.org>
+Subject: Re: [PATCH v2 2/2] tty: Allow TIOCSTI to be disabled
+In-Reply-To: <20221015064517.1554119-2-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Oct 19, 2022 at 05:04:11PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
+Hi,
+
+On 15. 10. 22, 8:45, Kees Cook wrote:
+> TIOCSTI continues its long history of being used in privilege escalation
+> attacks[1]. Prior attempts to provide a mechanism to disable this have
+> devolved into discussions around creating full-blown LSMs to provide
+> arbitrary ioctl filtering, which is hugely over-engineered -- only
+> TIOCSTI is being used this way. 3 years ago OpenBSD entirely removed
+> TIOCSTI[2], Android has had it filtered for longer[3], and the tools that
+> had historically used TIOCSTI either do not need it, are not commonly
+> built with it, or have had its use removed.
 > 
-> Starting in 6.1, CONFIG_FORTIFY_SOURCE checks the length parameter of
-> memcpy.  Unfortunately, it doesn't handle VLAs correctly:
-
-Nit-pick on terminology: these are "flexible array structures" (structures
-that end with a "flexible array member"); VLAs are a different (removed
-from the kernel) beast.
-
-> memcpy: detected field-spanning write (size 48) of single field "dst_bui_fmt" at fs/xfs/xfs_bmap_item.c:628 (size 16)
-
-Step right up; XFS is next to trip[1] this check. Let's get this fixed...
-
-> We know the memcpy going
-> on here is correct because I've run all the log recovery tests with
-> KASAN turned on, and it does not detect actual memory misuse.
-
-Yup, this is a false positive.
-
-> My first attempt to work around this problem was to cast the arguments
-> [...]
-> My second attempt changed the cast to a (void *), with the same results
-> [...]
-> My third attempt was to pass the void pointers directly into
-> [...]
-> My fourth attempt collapsed the _copy_format function into the callers
-> [...]
-
-The point here is to use a better API, which is fallible and has the
-ability to perform the bounds checking itself. I had proposed an initial
-version of this idea here[2].
-
-[1] https://lore.kernel.org/all/?q=%22field-spanning+write%22
-[2] https://lore.kernel.org/llvm/20220504014440.3697851-3-keescook@chromium.org/
-
-> "These cases end up appearing to the compiler to be sized as if the
-> flexible array had 0 elements. :( For more details see:
-> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101832
-> https://godbolt.org/z/vW6x8vh4P ".
+> Provide a simple CONFIG and global sysctl to disable this for the system
+> builders who have wanted this functionality for literally decades now,
+> much like the ldisc_autoload CONFIG and sysctl.
 > 
-> I don't /quite/ think that turning off CONFIG_FORTIFY_SOURCE is the
-> right solution here, but in the meantime this is causing a lot of fstest
-> failures, and I really need to get back to fixing user reported data
-> corruption problems instead of dealing with gcc stupidity. :(
+> [1] https://lore.kernel.org/linux-hardening/Y0m9l52AKmw6Yxi1@hostpad
+> [2] https://undeadly.org/cgi?action=article;sid=20170701132619
+> [3] https://lore.kernel.org/lkml/CAFJ0LnFGRuEEn1tCLhoki8ZyWrKfktbF+rwwN7WzyC_kBFoQVA@mail.gmail.com/
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Jiri Slaby <jirislaby@kernel.org>
+> Cc: Simon Brand <simon.brand@postadigitale.de>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+...
+> --- a/drivers/tty/tty_io.c
+> +++ b/drivers/tty/tty_io.c
+> @@ -2275,11 +2275,15 @@ static int tty_fasync(int fd, struct file *filp, int on)
+>    *  * Called functions take tty_ldiscs_lock
+>    *  * current->signal->tty check is safe without locks
+>    */
+> +static int tty_legacy_tiocsti __read_mostly = IS_BUILTIN(CONFIG_LEGACY_TIOCSTI);
 
-I think XFS could be a great first candidate for using something close
-to the proposed flex_cpy() API. What do you think of replacing the
-memcpy() calls with something like this instead:
+This can be bool, right? And IS_ENABLED() sounds more appropriate here.
 
--	if (buf->i_len == len) {
--		memcpy(dst_bui_fmt, src_bui_fmt, len);
--		return 0;
--	}
-+	if (buf->i_len == len &&
-+	    flex_cpy(dst_bui_fmt, src_bui_fmt,
-+		     bui_nextents, bui_extents) == 0)
-		return 0;
-	XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_LOW, NULL);
-	return -EFSCORRUPTED;
+>   static int tiocsti(struct tty_struct *tty, char __user *p)
+>   {
+>   	char ch, mbz = 0;
+>   	struct tty_ldisc *ld;
+>   
+> +	if (!tty_legacy_tiocsti)
+> +		return -EIO;
+> +
+>   	if ((current->signal->tty != tty) && !capable(CAP_SYS_ADMIN))
+>   		return -EPERM;
+>   	if (get_user(ch, p))
+> @@ -3582,6 +3586,15 @@ void console_sysfs_notify(void)
+>   }
+>   
+>   static struct ctl_table tty_table[] = {
+> +	{
+> +		.procname	= "legacy_tiocsti",
+> +		.data		= &tty_legacy_tiocsti,
+> +		.maxlen		= sizeof(tty_legacy_tiocsti),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
 
-To avoid passing in the element count and element array fields, the
-alias macros could be used:
+Then this becomes just proc_dobool without extras.
 
-struct xfs_bui_log_format {
-	uint16_t		bui_type;	/* bui log item type */
-	uint16_t		bui_size;	/* size of this item */
-	/* # extents to free */
-	DECLARE_FLEX_ARRAY_ELEMENTS_COUNT(uint32_t, bui_nextents);
-	uint64_t		bui_id;		/* bui identifier */
-	/* array of extents to bmap */
-	DECLARE_FLEX_ARRAY_ELEMENTS(struct xfs_map_extent, bui_extents);
-};
+Or we can leave it as int, allow 0, 1, and 2. 2 would log_limited the 
+caller's comm before EIO. Just thinking loudly. Maybe the EIO is enough 
+for users to notice. Likely…
 
-What do you think about these options? In the meantime, unsafe_memcpy()
-should be fine for v6.1.
-
-BTW, this FORTIFY_SOURCE change was present in linux-next for the entire
-prior development cycle. Are the xfstests not run on -next kernels?
-
--Kees
-
+thanks,
 -- 
-Kees Cook
+js
+suse labs
+
