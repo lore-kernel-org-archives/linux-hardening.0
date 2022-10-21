@@ -2,92 +2,220 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF7DC433FE
-	for <linux-hardening@archiver.kernel.org>; Fri, 21 Oct 2022 16:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D791DC433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 21 Oct 2022 23:49:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230180AbiJUQfp (ORCPT
+        id S229864AbiJUXtr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 21 Oct 2022 12:35:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50380 "EHLO
+        Fri, 21 Oct 2022 19:49:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230159AbiJUQfp (ORCPT
+        with ESMTP id S229834AbiJUXto (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 21 Oct 2022 12:35:45 -0400
-X-Greylist: delayed 1798 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 21 Oct 2022 09:35:41 PDT
-Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6E36C203570;
-        Fri, 21 Oct 2022 09:35:39 -0700 (PDT)
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 29LEroap015522;
-        Fri, 21 Oct 2022 09:53:50 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 29LErmuU015521;
-        Fri, 21 Oct 2022 09:53:48 -0500
-Date:   Fri, 21 Oct 2022 09:53:48 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Micka?l Sala?n <mic@digikod.net>, Petr Vorel <pvorel@suse.cz>,
-        Borislav Petkov <bp@suse.de>, Takashi Iwai <tiwai@suse.de>,
-        Jonathan McDowell <noodles@fb.com>,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, KP Singh <kpsingh@kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        John Johansen <john.johansen@canonical.com>,
+        Fri, 21 Oct 2022 19:49:44 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B1BA36871
+        for <linux-hardening@vger.kernel.org>; Fri, 21 Oct 2022 16:49:42 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id x1-20020a17090ab00100b001fda21bbc90so8064676pjq.3
+        for <linux-hardening@vger.kernel.org>; Fri, 21 Oct 2022 16:49:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8BvgID2Mlp1LOZxFRRSQflp2rM/AmsvDLSJ/CidGjBk=;
+        b=SipCePk/H4Ki27ow1q+KXNmCpWZJrBEfUawrVZrBsrf5flcWPAmOAbGluKxY12Iw/G
+         bVtX/aW+LoBt1hQNS5jlDmWnBHFYNm84mGdiUKexkqYKjorbdT9UX3ZNLwsHmrTBQPvx
+         YQ0XzkJG+Y1al9YY/M3wkrM4PXev+5RvO+WJc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8BvgID2Mlp1LOZxFRRSQflp2rM/AmsvDLSJ/CidGjBk=;
+        b=dBQHD0AdnqQRxZ175Ew5Ws5meHt9zvwf3QSf8HwlNefMlrhUItT2gUchqDjfmNEG5q
+         4BndpmQAoPKNrC/EcM50bc1ZIoqA0mnB/77U6AyvWDve1kLpYVtY00STiTnPY+VpgkyW
+         q0hdTOO7Ctx6leSktkHFWq97Ly06XSP4HU70K1DodeA/gmSyxRcjOw+GgXA6hQi8A3Ny
+         upddtpbMSMYOGejydDB1tw/GQmxvpNnHqIUGQMynVn0lTAnJUyCM9AR7Fqav6e2bDj1+
+         /LUS/OwkyTwsxQOnOIC4EDe8/4WRL68UwiI/rIRlF0EIE53Qq0Hj1kO5Ib9nqc/Vhhkf
+         7aig==
+X-Gm-Message-State: ACrzQf1MlKSakYKSdJ1g8MD4eV9Zqs+rwUCwbKNtzuSbgGo64lOn6RWG
+        kiQUceVaDQedIiLiyNCb/EcTwA==
+X-Google-Smtp-Source: AMsMyM4/tYwwOvCUIhmt8St2bueqQMk53krDt6Pxm+2ScI1STCM9fObrX/gRa0a5O/cIC5IEGbZKew==
+X-Received: by 2002:a17:90a:e297:b0:212:dc30:7fed with SMTP id d23-20020a17090ae29700b00212dc307fedmr2146955pjz.90.1666396181692;
+        Fri, 21 Oct 2022 16:49:41 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n21-20020a63ee55000000b00439d071c110sm13864837pgk.43.2022.10.21.16.49.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Oct 2022 16:49:40 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Menglong Dong <imagedong@tencent.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/9] security: Move trivial IMA hooks into LSM
-Message-ID: <20221021145348.GA15390@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20221013222702.never.990-kees@kernel.org> <20221013223654.659758-2-keescook@chromium.org> <16e008b3709f3c85dbad1accb9fce8ddad552205.camel@linux.ibm.com> <202210191134.FC646AFC71@keescook>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202210191134.FC646AFC71@keescook>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Fri, 21 Oct 2022 09:53:50 -0500 (CDT)
+Subject: [PATCH v4] skbuff: Proactively round up to kmalloc bucket size
+Date:   Fri, 21 Oct 2022 16:49:36 -0700
+Message-Id: <20221021234713.you.031-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5254; h=from:subject:message-id; bh=mBqppqtvL2/WoVg/f5+5q7YdX/5rZQrDaP9jvq5SNds=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjUzAQj4YnF7sfaNOXHp6h942Zp2pVBhavIZsxhufy hDpdcbqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY1MwEAAKCRCJcvTf3G3AJlswD/ 9Y3r9CwzM02Mmy50J+PYZcLUgI4ibXyNuMNwupIkwi6KUI2W9fvMVSawsAkM5b/x+M1CWBOI0Y8Koe YtS6rlW11Th17D7xxNhqDh2MViFxJSFl9x1j5zs7OR895024SdmRLS/eT+GonMGTWn65cJoNCutmED 7tuxvlsf4mYqHJkQT/f6ewQ18P9JVGQhhu+aR1dFaiEAHE/2WuZflnqMP6crdv/DEfH2pc6kwKXjy/ 97qL1b2eKrjXbKQX3EydGxGUPRVD0ceddrFUGftCdz0J2H4sZHhFMCQRzbcCrJDNSiAAIVqdbyvrvI Jt+jYK4+8/K5qUobuq2jd85Yrp9gyfx7TX5TmMMWPq9ylU3VD8rCk3x//Wcf0+gJH8QzVFEbPas4OS XK8PyLEgI+uqZZhyHZCbo1hND4yu4lSZfeoRYp3nn3vyqOzaX6+CAPOJUD7+Yl4FSBZZa2EwDVkwKe FfNAS6xx79PI5Fvkyu2+hz6JPiOauASQTiFUe9wC/G+drcJFepnqlm8uPEqlCf02NGzyRrQUnkzDL7 rCEZs2bEF/laMbAR8K1Jq6vke2ET07GdEDOYiheaSE0SM6XfAq5rcn9hTReprIdJWKY6qJsB6986Qv nkOewbajlHJi/78QLUwtnxa+p096QwNqqhJpAAolsFrvQVy2XY5vLah1Snnw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Oct 19, 2022 at 11:59:40AM -0700, Kees Cook wrote:
+Instead of discovering the kmalloc bucket size _after_ allocation, round
+up proactively so the allocation is explicitly made for the full size,
+allowing the compiler to correctly reason about the resulting size of
+the buffer through the existing __alloc_size() hint.
 
-Good morning, I hope the week is ending well for everyone.
+This will allow for kernels built with CONFIG_UBSAN_BOUNDS or the
+coming dynamic bounds checking under CONFIG_FORTIFY_SOURCE to gain
+back the __alloc_size() hints that were temporarily reverted in commit
+93dd04ab0b2b ("slab: remove __alloc_size attribute from __kmalloc_track_caller")
 
-> On Wed, Oct 19, 2022 at 10:34:48AM -0400, Mimi Zohar wrote:
-> >
-> > The only thing trivial about making IMA and EVM LSMs is moving
-> > them to LSM hooks.  Although static files may be signed and the
-> > signatures distributed with the file data through the normal
-> > distribution mechanisms (e.g. RPM), other files cannot be signed
-> > remotely (e.g.  configuration files).  For these files, both IMA
-> > and EVM may be configured to maintain persistent file state stored
-> > as security xattrs in the form of security.ima file hashes or
-> > security.evm HMACs.  The LSM flexibility of enabling/disabling IMA
-> > or EVM on a per boot basis breaks this usage, potentially
-> > preventing subsequent boots.
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v4: use kmalloc_size_roundup() in callers, not kmalloc_reserve()
+v3: https://lore.kernel.org/lkml/20221018093005.give.246-kees@kernel.org
+v2: https://lore.kernel.org/lkml/20220923202822.2667581-4-keescook@chromium.org
+---
+ net/core/skbuff.c | 50 +++++++++++++++++++++++------------------------
+ 1 file changed, 25 insertions(+), 25 deletions(-)
 
-> I'm not suggesting IMA and EVM don't have specific behaviors that
-> need to be correctly integrated into the LSM infrastructure. In
-> fact, I spent a lot of time designing that infrastructure to be
-> flexible enough to deal with these kinds of things. (e.g. plumbing
-> "enablement", etc.) As I mentioned, this was more of trying to
-> provide a head-start on the conversion. I don't intend to drive this
-> -- please take whatever is useful from this example and use it. :)
-> I'm happy to help construct any missing infrastructure needed
-> (e.g. LSM_ORDER_LAST, etc).
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 651a82d30b09..77af430296e2 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -508,14 +508,14 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp_t gfp_mask,
+ 	 */
+ 	size = SKB_DATA_ALIGN(size);
+ 	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+-	data = kmalloc_reserve(size, gfp_mask, node, &pfmemalloc);
++	osize = kmalloc_size_roundup(size);
++	data = kmalloc_reserve(osize, gfp_mask, node, &pfmemalloc);
+ 	if (unlikely(!data))
+ 		goto nodata;
+ 	/* kmalloc(size) might give us more room than requested.
+ 	 * Put skb_shared_info exactly at the end of allocated zone,
+ 	 * to allow max possible filling before reallocation.
+ 	 */
+-	osize = ksize(data);
+ 	size = SKB_WITH_OVERHEAD(osize);
+ 	prefetchw(data + size);
+ 
+@@ -1816,10 +1816,11 @@ EXPORT_SYMBOL(__pskb_copy_fclone);
+ int pskb_expand_head(struct sk_buff *skb, int nhead, int ntail,
+ 		     gfp_t gfp_mask)
+ {
+-	int i, osize = skb_end_offset(skb);
+-	int size = osize + nhead + ntail;
++	unsigned int osize = skb_end_offset(skb);
++	unsigned int size = osize + nhead + ntail;
+ 	long off;
+ 	u8 *data;
++	int i;
+ 
+ 	BUG_ON(nhead < 0);
+ 
+@@ -1827,15 +1828,16 @@ int pskb_expand_head(struct sk_buff *skb, int nhead, int ntail,
+ 
+ 	skb_zcopy_downgrade_managed(skb);
+ 
+-	size = SKB_DATA_ALIGN(size);
+-
+ 	if (skb_pfmemalloc(skb))
+ 		gfp_mask |= __GFP_MEMALLOC;
+-	data = kmalloc_reserve(size + SKB_DATA_ALIGN(sizeof(struct skb_shared_info)),
+-			       gfp_mask, NUMA_NO_NODE, NULL);
++
++	size = SKB_DATA_ALIGN(size);
++	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
++	size = kmalloc_size_roundup(size);
++	data = kmalloc_reserve(size, gfp_mask, NUMA_NO_NODE, NULL);
+ 	if (!data)
+ 		goto nodata;
+-	size = SKB_WITH_OVERHEAD(ksize(data));
++	size = SKB_WITH_OVERHEAD(size);
+ 
+ 	/* Copy only real data... and, alas, header. This should be
+ 	 * optimized for the cases when header is void.
+@@ -6169,21 +6171,20 @@ static int pskb_carve_inside_header(struct sk_buff *skb, const u32 off,
+ 				    const int headlen, gfp_t gfp_mask)
+ {
+ 	int i;
+-	int size = skb_end_offset(skb);
++	unsigned int size = skb_end_offset(skb);
+ 	int new_hlen = headlen - off;
+ 	u8 *data;
+ 
+-	size = SKB_DATA_ALIGN(size);
+-
+ 	if (skb_pfmemalloc(skb))
+ 		gfp_mask |= __GFP_MEMALLOC;
+-	data = kmalloc_reserve(size +
+-			       SKB_DATA_ALIGN(sizeof(struct skb_shared_info)),
+-			       gfp_mask, NUMA_NO_NODE, NULL);
++
++	size = SKB_DATA_ALIGN(size);
++	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
++	size = kmalloc_size_roundup(size);
++	data = kmalloc_reserve(size, gfp_mask, NUMA_NO_NODE, NULL);
+ 	if (!data)
+ 		return -ENOMEM;
+-
+-	size = SKB_WITH_OVERHEAD(ksize(data));
++	size = SKB_WITH_OVERHEAD(size);
+ 
+ 	/* Copy real data, and all frags */
+ 	skb_copy_from_linear_data_offset(skb, off, data, new_hlen);
+@@ -6288,22 +6289,21 @@ static int pskb_carve_inside_nonlinear(struct sk_buff *skb, const u32 off,
+ 				       int pos, gfp_t gfp_mask)
+ {
+ 	int i, k = 0;
+-	int size = skb_end_offset(skb);
++	unsigned int size = skb_end_offset(skb);
+ 	u8 *data;
+ 	const int nfrags = skb_shinfo(skb)->nr_frags;
+ 	struct skb_shared_info *shinfo;
+ 
+-	size = SKB_DATA_ALIGN(size);
+-
+ 	if (skb_pfmemalloc(skb))
+ 		gfp_mask |= __GFP_MEMALLOC;
+-	data = kmalloc_reserve(size +
+-			       SKB_DATA_ALIGN(sizeof(struct skb_shared_info)),
+-			       gfp_mask, NUMA_NO_NODE, NULL);
++
++	size = SKB_DATA_ALIGN(size);
++	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
++	size = kmalloc_size_roundup(size);
++	data = kmalloc_reserve(size, gfp_mask, NUMA_NO_NODE, NULL);
+ 	if (!data)
+ 		return -ENOMEM;
+-
+-	size = SKB_WITH_OVERHEAD(ksize(data));
++	size = SKB_WITH_OVERHEAD(size);
+ 
+ 	memcpy((struct skb_shared_info *)(data + size),
+ 	       skb_shinfo(skb), offsetof(struct skb_shared_info, frags[0]));
+-- 
+2.34.1
 
-We are 2-3 weeks out from submitting for review and inclusion in the
-kernel, a new LSM, and an associated userspace stack, that will have a
-high degree of significance with respect to these conversations.
-
-> Kees Cook
-
-Best wishes for a pleasant fall weekend.
-
-As always,
-
-Dr. Greg
-The Quixote Project - Flailing at the Travails of Cybersecurity
