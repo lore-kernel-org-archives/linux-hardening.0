@@ -2,102 +2,92 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1EEFA373D
-	for <linux-hardening@archiver.kernel.org>; Fri, 21 Oct 2022 16:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF7DC433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 21 Oct 2022 16:35:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230196AbiJUQKc (ORCPT
+        id S230180AbiJUQfp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 21 Oct 2022 12:10:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54888 "EHLO
+        Fri, 21 Oct 2022 12:35:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230063AbiJUQK3 (ORCPT
+        with ESMTP id S230159AbiJUQfp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 21 Oct 2022 12:10:29 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201101ABA2E
-        for <linux-hardening@vger.kernel.org>; Fri, 21 Oct 2022 09:10:23 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id l4so2761571plb.8
-        for <linux-hardening@vger.kernel.org>; Fri, 21 Oct 2022 09:10:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FDqnpfZF/Nba9iYmW6afwPV/BMJnF3T8pQZy3ug2lYs=;
-        b=VhgDsydIsST92Z8iLWFT8d537teN8JdhwWV9Y5XaFP3t43g8INhBSMM4r2y9VtiyqJ
-         KcVTFWIpbQ9V8f1FNT9bkfza/ITvG0mrZmI1U4ngEjEenk8ZvFon0Ny8Qj8gR2aheBFM
-         PLhy3siwCWSHxwLVevJILDvYx1txt2fYHVIdk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FDqnpfZF/Nba9iYmW6afwPV/BMJnF3T8pQZy3ug2lYs=;
-        b=3GPnwMMCCpJ7ksmomeIZLtYsdp5Q5nzT5T2I0mRbZgLMc8pHI/TcIoI+R/Sly6Zk+w
-         lFuQzmG8xbqeFjvZTlFm10+NOGM9bbzzesPFvfUwA9OA5uSS/+djopMb3tjP02QU13VP
-         tbIAGPgEEzySALc0zhZlwGOHyRQ4/7Yq+DF7pa1z+OynTXuZNeJ3HHG5KTfL+cmD7BJG
-         3C5D6AA1TJfIIR5FfRRLZQ3dcphZVBe4E4Q+X6FhYalY2Ne/97NIaqieY0W1Ou6zP2aD
-         IjLQz668zXm4TO7AbE29JXglKRxGO/6hwXYzOeC4fSVVEOBKZzUO1c0mKekEhW+lzKYg
-         4U0Q==
-X-Gm-Message-State: ACrzQf2hEAt8HNQePBYF8RMMHtwl8vEwfUpzQoREXrthLKYxq8Ui9kgf
-        9swXDeJVXo6S0+rhSxrXOxY/iQ==
-X-Google-Smtp-Source: AMsMyM6M95hLAa5MMJ+J4YgUSd5tsutQHFC5gF7615PbGgrbbJFxj0hfKDmnrgng3LBBSLDfIP/MKg==
-X-Received: by 2002:a17:902:cf01:b0:186:810c:d994 with SMTP id i1-20020a170902cf0100b00186810cd994mr2366202plg.151.1666368622967;
-        Fri, 21 Oct 2022 09:10:22 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o125-20020a62cd83000000b00561c179e17dsm15345794pfg.76.2022.10.21.09.10.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Oct 2022 09:10:22 -0700 (PDT)
-Date:   Fri, 21 Oct 2022 09:10:21 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Paolo Abeni <pabeni@redhat.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        David Rientjes <rientjes@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Menglong Dong <imagedong@tencent.com>,
+        Fri, 21 Oct 2022 12:35:45 -0400
+X-Greylist: delayed 1798 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 21 Oct 2022 09:35:41 PDT
+Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6E36C203570;
+        Fri, 21 Oct 2022 09:35:39 -0700 (PDT)
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 29LEroap015522;
+        Fri, 21 Oct 2022 09:53:50 -0500
+Received: (from greg@localhost)
+        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 29LErmuU015521;
+        Fri, 21 Oct 2022 09:53:48 -0500
+Date:   Fri, 21 Oct 2022 09:53:48 -0500
+From:   "Dr. Greg" <greg@enjellic.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>, Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Micka?l Sala?n <mic@digikod.net>, Petr Vorel <pvorel@suse.cz>,
+        Borislav Petkov <bp@suse.de>, Takashi Iwai <tiwai@suse.de>,
+        Jonathan McDowell <noodles@fb.com>,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, KP Singh <kpsingh@kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        John Johansen <john.johansen@canonical.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3][next] skbuff: Proactively round up to kmalloc bucket
- size
-Message-ID: <202210210909.76CDB7A2@keescook>
-References: <20221018093005.give.246-kees@kernel.org>
- <0ea1fc165a6c6117f982f4f135093e69cb884930.camel@redhat.com>
-MIME-Version: 1.0
+Subject: Re: [PATCH 2/9] security: Move trivial IMA hooks into LSM
+Message-ID: <20221021145348.GA15390@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20221013222702.never.990-kees@kernel.org> <20221013223654.659758-2-keescook@chromium.org> <16e008b3709f3c85dbad1accb9fce8ddad552205.camel@linux.ibm.com> <202210191134.FC646AFC71@keescook>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0ea1fc165a6c6117f982f4f135093e69cb884930.camel@redhat.com>
+In-Reply-To: <202210191134.FC646AFC71@keescook>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Fri, 21 Oct 2022 09:53:50 -0500 (CDT)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Oct 20, 2022 at 10:42:47AM +0200, Paolo Abeni wrote:
-> >  	size = SKB_DATA_ALIGN(size);
-> >  	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
-> > -	data = kmalloc_reserve(size, gfp_mask, node, &pfmemalloc);
-> > -	if (unlikely(!data))
-> > -		goto nodata;
-> 
-> I'm sorry for not noticing the above in the previous iteration, but I
-> think this revision will produce worse code than the V1, as
-> kmalloc_reserve() now pollutes an additional register.
-> 
-> Why did you prefer adding an additional parameter to kmalloc_reserve()?
-> I think computing the alloc_size in the caller is even more readable.
-> 
-> Additionally, as a matter of personal preference, I would not introduce
-> an additional variable for alloc_size, just:
-> 
-> 	// ...
-> 	size = kmalloc_size_roundup(size);
-> 	data = kmalloc_reserve(size, gfp_mask, node, &pfmemalloc);
-> 
-> The rationale is smaller diff, and consistent style with the existing
-> code where 'size' is already adjusted multiple times icrementally.
+On Wed, Oct 19, 2022 at 11:59:40AM -0700, Kees Cook wrote:
 
-Sure, I can do that. I will respin it. :)
+Good morning, I hope the week is ending well for everyone.
 
--- 
-Kees Cook
+> On Wed, Oct 19, 2022 at 10:34:48AM -0400, Mimi Zohar wrote:
+> >
+> > The only thing trivial about making IMA and EVM LSMs is moving
+> > them to LSM hooks.  Although static files may be signed and the
+> > signatures distributed with the file data through the normal
+> > distribution mechanisms (e.g. RPM), other files cannot be signed
+> > remotely (e.g.  configuration files).  For these files, both IMA
+> > and EVM may be configured to maintain persistent file state stored
+> > as security xattrs in the form of security.ima file hashes or
+> > security.evm HMACs.  The LSM flexibility of enabling/disabling IMA
+> > or EVM on a per boot basis breaks this usage, potentially
+> > preventing subsequent boots.
+
+> I'm not suggesting IMA and EVM don't have specific behaviors that
+> need to be correctly integrated into the LSM infrastructure. In
+> fact, I spent a lot of time designing that infrastructure to be
+> flexible enough to deal with these kinds of things. (e.g. plumbing
+> "enablement", etc.) As I mentioned, this was more of trying to
+> provide a head-start on the conversion. I don't intend to drive this
+> -- please take whatever is useful from this example and use it. :)
+> I'm happy to help construct any missing infrastructure needed
+> (e.g. LSM_ORDER_LAST, etc).
+
+We are 2-3 weeks out from submitting for review and inclusion in the
+kernel, a new LSM, and an associated userspace stack, that will have a
+high degree of significance with respect to these conversations.
+
+> Kees Cook
+
+Best wishes for a pleasant fall weekend.
+
+As always,
+
+Dr. Greg
+The Quixote Project - Flailing at the Travails of Cybersecurity
