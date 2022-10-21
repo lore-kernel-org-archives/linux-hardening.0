@@ -2,129 +2,102 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9D7FA373E
-	for <linux-hardening@archiver.kernel.org>; Fri, 21 Oct 2022 16:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1EEFA373D
+	for <linux-hardening@archiver.kernel.org>; Fri, 21 Oct 2022 16:10:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230249AbiJUQGW (ORCPT
+        id S230196AbiJUQKc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 21 Oct 2022 12:06:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44390 "EHLO
+        Fri, 21 Oct 2022 12:10:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230160AbiJUQGR (ORCPT
+        with ESMTP id S230063AbiJUQK3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 21 Oct 2022 12:06:17 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 628D7208835;
-        Fri, 21 Oct 2022 09:06:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 16A9FB82C9E;
-        Fri, 21 Oct 2022 16:06:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D3DAC433D6;
-        Fri, 21 Oct 2022 16:06:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666368373;
-        bh=d+RQViHBNozSfSewYG8uHxYw17M1OeSizbHCJSkl61U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dniWlnDt2TDtart5T4StcSPwOSyho0nRul66IBG3LH3nC8vGXY9km47vbS4jNWZoS
-         dylRZ/Lu6ugaCdrOgWAGlA3fJ6ntguVx8HZDqVPeUQjn3oNeelq6Po4lYV0EhaWmVH
-         SQhEfh1hAR2WPmX+3jwxD/Rc4LqLcrRpP6NdGjQgF81Lw4n2WmM87eYsmdKllEjNxt
-         gjCfgkAK70/KoteWMqVlfq9F9LZPdL3A/54//IiA5a3JqLyAA+bT7A1I2b3lELMmmj
-         yrBI3Zu6unqiWtGlD+1SeBaUlt40gV7jR+/JZiPxKdcZpB1iHgVue7fcZ+8EVvzlHB
-         HV2WzNhN/7+EA==
-Date:   Fri, 21 Oct 2022 09:06:10 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
-Cc:     keescook@chromium.org, luc.vanoostenryck@gmail.com,
-        ndesaulniers@google.com, trix@redhat.com, dlatypov@google.com,
-        vitor@massaru.org, gustavoars@kernel.org,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, tvrtko.ursulin@linux.intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-sparse@vger.kernel.org, arnd@kernel.org, mchehab@kernel.org,
-        mauro.chehab@linux.intel.com
-Subject: Re: [PATCH v4] overflow: Introduce overflows_type() and
- castable_to_type()
-Message-ID: <Y1LDctjps1M8MuK8@dev-arch.thelio-3990X>
-References: <20220926191109.1803094-1-keescook@chromium.org>
- <20221021083333.646269-1-gwan-gyeong.mun@intel.com>
+        Fri, 21 Oct 2022 12:10:29 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201101ABA2E
+        for <linux-hardening@vger.kernel.org>; Fri, 21 Oct 2022 09:10:23 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id l4so2761571plb.8
+        for <linux-hardening@vger.kernel.org>; Fri, 21 Oct 2022 09:10:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FDqnpfZF/Nba9iYmW6afwPV/BMJnF3T8pQZy3ug2lYs=;
+        b=VhgDsydIsST92Z8iLWFT8d537teN8JdhwWV9Y5XaFP3t43g8INhBSMM4r2y9VtiyqJ
+         KcVTFWIpbQ9V8f1FNT9bkfza/ITvG0mrZmI1U4ngEjEenk8ZvFon0Ny8Qj8gR2aheBFM
+         PLhy3siwCWSHxwLVevJILDvYx1txt2fYHVIdk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FDqnpfZF/Nba9iYmW6afwPV/BMJnF3T8pQZy3ug2lYs=;
+        b=3GPnwMMCCpJ7ksmomeIZLtYsdp5Q5nzT5T2I0mRbZgLMc8pHI/TcIoI+R/Sly6Zk+w
+         lFuQzmG8xbqeFjvZTlFm10+NOGM9bbzzesPFvfUwA9OA5uSS/+djopMb3tjP02QU13VP
+         tbIAGPgEEzySALc0zhZlwGOHyRQ4/7Yq+DF7pa1z+OynTXuZNeJ3HHG5KTfL+cmD7BJG
+         3C5D6AA1TJfIIR5FfRRLZQ3dcphZVBe4E4Q+X6FhYalY2Ne/97NIaqieY0W1Ou6zP2aD
+         IjLQz668zXm4TO7AbE29JXglKRxGO/6hwXYzOeC4fSVVEOBKZzUO1c0mKekEhW+lzKYg
+         4U0Q==
+X-Gm-Message-State: ACrzQf2hEAt8HNQePBYF8RMMHtwl8vEwfUpzQoREXrthLKYxq8Ui9kgf
+        9swXDeJVXo6S0+rhSxrXOxY/iQ==
+X-Google-Smtp-Source: AMsMyM6M95hLAa5MMJ+J4YgUSd5tsutQHFC5gF7615PbGgrbbJFxj0hfKDmnrgng3LBBSLDfIP/MKg==
+X-Received: by 2002:a17:902:cf01:b0:186:810c:d994 with SMTP id i1-20020a170902cf0100b00186810cd994mr2366202plg.151.1666368622967;
+        Fri, 21 Oct 2022 09:10:22 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o125-20020a62cd83000000b00561c179e17dsm15345794pfg.76.2022.10.21.09.10.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Oct 2022 09:10:22 -0700 (PDT)
+Date:   Fri, 21 Oct 2022 09:10:21 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Paolo Abeni <pabeni@redhat.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Menglong Dong <imagedong@tencent.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3][next] skbuff: Proactively round up to kmalloc bucket
+ size
+Message-ID: <202210210909.76CDB7A2@keescook>
+References: <20221018093005.give.246-kees@kernel.org>
+ <0ea1fc165a6c6117f982f4f135093e69cb884930.camel@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221021083333.646269-1-gwan-gyeong.mun@intel.com>
+In-Reply-To: <0ea1fc165a6c6117f982f4f135093e69cb884930.camel@redhat.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Gwan-gyeong,
-
-On Fri, Oct 21, 2022 at 11:33:33AM +0300, Gwan-gyeong Mun wrote:
-> From: Kees Cook <keescook@chromium.org>
+On Thu, Oct 20, 2022 at 10:42:47AM +0200, Paolo Abeni wrote:
+> >  	size = SKB_DATA_ALIGN(size);
+> >  	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+> > -	data = kmalloc_reserve(size, gfp_mask, node, &pfmemalloc);
+> > -	if (unlikely(!data))
+> > -		goto nodata;
 > 
-> Implement a robust overflows_type() macro to test if a variable or
-> constant value would overflow another variable or type. This can be
-> used as a constant expression for static_assert() (which requires a
-> constant expression[1][2]) when used on constant values. This must be
-> constructed manually, since __builtin_add_overflow() does not produce
-> a constant expression[3].
+> I'm sorry for not noticing the above in the previous iteration, but I
+> think this revision will produce worse code than the V1, as
+> kmalloc_reserve() now pollutes an additional register.
 > 
-> Additionally adds castable_to_type(), similar to __same_type(), but for
-> checking if a constant value would overflow if cast to a given type.
+> Why did you prefer adding an additional parameter to kmalloc_reserve()?
+> I think computing the alloc_size in the caller is even more readable.
 > 
-> Add unit tests for overflows_type(), __same_type(), and castable_to_type()
-> to the existing KUnit "overflow" test.
+> Additionally, as a matter of personal preference, I would not introduce
+> an additional variable for alloc_size, just:
 > 
-> [1] https://en.cppreference.com/w/c/language/_Static_assert
-> [2] C11 standard (ISO/IEC 9899:2011): 6.7.10 Static assertions
-> [3] https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html
->     6.56 Built-in Functions to Perform Arithmetic with Overflow Checking
->     Built-in Function: bool __builtin_add_overflow (type1 a, type2 b,
+> 	// ...
+> 	size = kmalloc_size_roundup(size);
+> 	data = kmalloc_reserve(size, gfp_mask, node, &pfmemalloc);
 > 
-> Cc: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Tom Rix <trix@redhat.com>
-> Cc: Daniel Latypov <dlatypov@google.com>
-> Cc: Vitor Massaru Iha <vitor@massaru.org>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: Jani Nikula <jani.nikula@intel.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: linux-hardening@vger.kernel.org
-> Cc: llvm@lists.linux.dev
-> Co-developed-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
-> Signed-off-by: Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> The rationale is smaller diff, and consistent style with the existing
+> code where 'size' is already adjusted multiple times icrementally.
 
-<snip>
+Sure, I can do that. I will respin it. :)
 
-> diff --git a/lib/Makefile b/lib/Makefile
-> index 161d6a724ff7..e061aad90539 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -376,6 +376,10 @@ obj-$(CONFIG_CMDLINE_KUNIT_TEST) += cmdline_kunit.o
->  obj-$(CONFIG_SLUB_KUNIT_TEST) += slub_kunit.o
->  obj-$(CONFIG_MEMCPY_KUNIT_TEST) += memcpy_kunit.o
->  obj-$(CONFIG_IS_SIGNED_TYPE_KUNIT_TEST) += is_signed_type_kunit.o
-> +# We're expecting to do a lot of "always true" or "always false" tests.
-> +ifdef CONFIG_CC_IS_CLANG
-> +CFLAGS_overflow_kunit.o += $(call cc-disable-warning, tautological-constant-out-of-range-compare)
-
-If you are going to wrap this in CONFIG_CC_IS_CLANG (which is good),
-drop the cc-disable-warning and just disable the warning directly.
-
-CFLAGS_overflow_kunit.o += -Wno-tautological-constant-out-of-range-compare
-
-All kernel supported clang versions support this warning so there is no
-point in checking for its existence before disabling it with
-cc-disable-warning. scripts/Makefile.extrawarn does this as well.
-
-> +endif
->  obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow_kunit.o
->  CFLAGS_stackinit_kunit.o += $(call cc-disable-warning, switch-unreachable)
->  obj-$(CONFIG_ST&ACKINIT_KUNIT_TEST) += stackinit_kunit.o
-
-Cheers,
-Nathan
+-- 
+Kees Cook
