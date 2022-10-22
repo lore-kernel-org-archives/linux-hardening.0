@@ -2,235 +2,112 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08613C433FE
-	for <linux-hardening@archiver.kernel.org>; Sat, 22 Oct 2022 18:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F12C04A95
+	for <linux-hardening@archiver.kernel.org>; Sat, 22 Oct 2022 18:29:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229711AbiJVSIj (ORCPT
+        id S229929AbiJVS34 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 22 Oct 2022 14:08:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54748 "EHLO
+        Sat, 22 Oct 2022 14:29:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229588AbiJVSIi (ORCPT
+        with ESMTP id S229761AbiJVS3y (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 22 Oct 2022 14:08:38 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3B7F4A116
-        for <linux-hardening@vger.kernel.org>; Sat, 22 Oct 2022 11:08:37 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id e129so5281327pgc.9
-        for <linux-hardening@vger.kernel.org>; Sat, 22 Oct 2022 11:08:37 -0700 (PDT)
+        Sat, 22 Oct 2022 14:29:54 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C19E3FA2A
+        for <linux-hardening@vger.kernel.org>; Sat, 22 Oct 2022 11:29:52 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id i3-20020a17090a3d8300b00212cf2e2af9so4650703pjc.1
+        for <linux-hardening@vger.kernel.org>; Sat, 22 Oct 2022 11:29:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1a2EeARYSnWxiJw6oHJsoY33Y0se207PXHB1ow0Ga1Y=;
-        b=Hzo7fVyDyFo2PJFAkfNzn9H8cbKapupAWZ5PWbxzDFu82rpQAFcp0pBFsW8R7uFijG
-         4c6NctRkB0FBvA2D/ZwyDwgS67NBZmZ/NShhOqVLXgDYeK1U/eot0KlY2WnH1VrVn4U9
-         5EzUbeK2TvySp/qbXSuO7krMs86UA1bsVsSZc=
+        bh=ke5eIvvI5eCtYNiwclKDnikzCwvckbCDiYPF6Tj1imc=;
+        b=QfWGXv74zHYsCEKCzs3pzxyb+u6ZpsB0kuEN3EiocCOVBZ5RpHvOthGsvzoJbhiDXQ
+         2XMHJYJu9Ww8+t0b5jg8cRXaJp40iqUSwQ4xnY4FKIwoKitZnWES01K4AcZacx5WNnxg
+         bQTy+Ulra75+KaiIu0XQNYaUOVZs6/tuHBi1w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=1a2EeARYSnWxiJw6oHJsoY33Y0se207PXHB1ow0Ga1Y=;
-        b=T23lDcVkPEZiBPEOjJ+BFhfOh44JID1RdM0UB1b5azNLjllm/LAz+qBm6NSYPFnar6
-         sfrWeazlT3liD1NeILaTMGCTLgX08QcQt8LKDglXh4FVxAVk1ytA1tPbH3OgZaZmXW3r
-         2EAoYf7Bb+tdXpO14uSJou9zS8bdBL/cptZdkuJxU0fspghgSgCSzMVk7V4WhFIsMQWe
-         rOVC/1A4qL6qGEoEb5hw1W8fZxKxploqe3qiFKIAJ+gtP8vnG7bcMEmkAThs5M5WkBW4
-         nWOJQDQwVWp5RI/8Dabx9d9muuJYBL8N5H/sDIAYzLEWsFhV1JWN1Ko+KT6DHRVTPVUE
-         bQ/A==
-X-Gm-Message-State: ACrzQf2eWtDa4poNuhWWk311kOiM46Kxh1Jr8plXJBY97kfRiuiC1SP/
-        dp3c/VpE2ooF8bZGIJeNAkw2ag==
-X-Google-Smtp-Source: AMsMyM4Nue+tbOGtKU+IRmf58DnKvAfMKg6+agJyUnqspmk2WdNO1OCFohOfwRpBp0gIJxQaEwwR5w==
-X-Received: by 2002:a05:6a00:2485:b0:561:c0a5:88aa with SMTP id c5-20020a056a00248500b00561c0a588aamr25296071pfv.51.1666462117133;
-        Sat, 22 Oct 2022 11:08:37 -0700 (PDT)
+        bh=ke5eIvvI5eCtYNiwclKDnikzCwvckbCDiYPF6Tj1imc=;
+        b=eLVBGZttjo9qzeFlBm710w7zSF+isJPQE+J+ep2egRx2X+iFfpWFbWU0++LUKZSW0d
+         yPmiyzzPlHJ4dgtWgdXglqF1wL3ynH6W+ajd/LIYBsC8/fF0dVy2JHq+codae/EFvcYt
+         Vh3pVyhFCRVnqM73UbETFv8YFeUPIfE0vAOQ2bKwOZuEVCksc/agvy0SVyUN30Uk5wuW
+         qFqbPpqI6pqklzCop/4Tm1Jy9i5FbxEOBjsX5ygr1toVlt0wfxIHSG2HLKI9czvXGO6L
+         8acGwBnl6s6khwGuJNBEb87LD7Ne9P9srn62hnydt479wFqygCQyxXdcibQYWhCuESuO
+         QeTQ==
+X-Gm-Message-State: ACrzQf3F/WcTSIB5JRAgSLosbS9uZZkDwlZQWVvZPwRWLKOUl+ghXYVW
+        Dc2EVwnHP3CY+Ly5iVd8SBqXVdkbUQSjMg==
+X-Google-Smtp-Source: AMsMyM75WuszreNn1hsHB7Pxuapw+PwlrCbIloKlGUfcGQMN628JRLLilodjU+kZh72YpXF7fQVdTw==
+X-Received: by 2002:a17:902:d3cc:b0:186:9720:b19b with SMTP id w12-20020a170902d3cc00b001869720b19bmr1498965plb.3.1666463391490;
+        Sat, 22 Oct 2022 11:29:51 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w9-20020a628209000000b0056276519e8fsm10507248pfd.73.2022.10.22.11.08.35
+        by smtp.gmail.com with ESMTPSA id h16-20020a170902f55000b001755ac7dd0asm17211091plf.290.2022.10.22.11.29.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Oct 2022 11:08:36 -0700 (PDT)
+        Sat, 22 Oct 2022 11:29:50 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Christoph Lameter <cl@linux.com>,
-        Dmitry Vyukov <dvyukov@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-mm@kvack.org, kasan-dev@googlegroups.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] mm: Make ksize() a reporting-only function
-Date:   Sat, 22 Oct 2022 11:08:15 -0700
-Message-Id: <20221022180455.never.023-kees@kernel.org>
+        Jiri Slaby <jirislaby@kernel.org>,
+        Simon Brand <simon.brand@postadigitale.de>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v3 0/2] tty: Allow TIOCSTI to be disabled
+Date:   Sat, 22 Oct 2022 11:29:47 -0700
+Message-Id: <20221022182828.give.717-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5852; h=from:subject:message-id; bh=HZuoaDzt6/LPxyvOVuzqy3FtD9MM88oVQvBYI2b7PvI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjVDGPT373RHlxlNzRB3FSVMPSd+3N5IOFs8nbEih6 a4JcCZSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY1QxjwAKCRCJcvTf3G3AJg0sEA CJQgeNhzT7kGutiZ6DfvUQ98sYDiSG8cy5fz0XvctLjXFa0E+0jHWMYAU49DaTSiJAPjvkJtC3eGqU 6H9Yhzx9OnK6+3Pf6CkgpLB2j2roioL0N9/uKNk3O/B2Zg1vC5X5WSChvXQKKYa/DWRZFjm1hYuSe6 eJtnb4TJbTlAswbsKtrfUiRdurXNZNeo93YLboPpjS3Oui2Zmkjs3yXUfQ0wbI1EAg7/Lt76SiyOEk xNIhZchALtO+3yxGXJbt5/E4CJQNgHyzMQ3zidIrYmZSMr0kRDJiFI7yTRmMMI0lBclAXkUM9DX4qW hRRkLsDseezDlETYXdhqTUlsufdXvAkrRPatPCnP/z66b+G0HAlR4Op/K5RMvloMen54XAbuXSCb3f szujhc7zJ0Ivi0uis3misDev9gs4NVzX6jAIfK9HQaWVf5ybskYfX13uIDyQUgrDAJ2zz9nkWvzhs2 4hTLhJWpQfeMm38oPVkvCP7IbG6I4mdB1J5OdiYiA8VeriacD3+wR/UupDY/Jj8Jg7UfZ1mOVC8sv5 om+rocuJfmZOlkrezs1scXeeSujkP68ukOUtcdRMlNVkHBcNBzjUQ0SGgx0J2ToE0V2CFsQEG4XXjz 833VvH5PsOTeK7/T5CefUcbv4z3/iq4+gl9YtUf8Rd5EvVizs2QIsOzNYy2g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1786; h=from:subject:message-id; bh=iR9JEWgQAWvHWSX99nEJpgLePgBlLNOFiur1YPdjibQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjVDac31LObe+GNfv3yrM/Q03eDe7/+zs//PYJn4/G MUdzvBSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY1Q2nAAKCRCJcvTf3G3AJrNuEA CMljYUKxXfT5CJr4I06XcaaWVGW3cyeVLcKSJrY5HisrklFSz2k5LB2CHUV6s6q4BTB3XYjDj80Qcx 71CmuKS4+GI5OPslOgWYtse9jcUY5K8ThaayhCb3aWyTAENxXcaS5Grc8RT+dimb6Pw7R0Q7W/KbX2 YJIXKNnBPzj8OMRjEixt38CCWTZQg5+J1JTuaKhu9HNNRE+IOiQyANAKz5WoTtvZDhbJGY8Ilk52/p cfUEgLssA0ekTy4vuaHecxpDj7/Z9OJqRiD4l48ivKXgS1BXkW4BmdZRPfreeZ+4S9h019nFED7i2K HMrTW97+ZoE9hA+agq0UDYhYk+YgTC0pk2wjL4TjMEezNMSperQB96f/s38F3JDSetS3ImorQpWOFl 3O0jJK+07hbKogfytaa0YMDEMU4mxA4071amKllxrcpCpEZq4lSNOA1zQB6F6nc56o4W1IBcigs8di lVMHO+totAbiVv89nAZ39nvzv9lUvND9G0afK4LivTadK8R4VXafY8+dKIOH/L88ppAyGrhkh1hSea la92nxd+VY9HxvDWwBgp7nGQcOdH5Sjgqq4hbPxKkAUUS5h3vxiGgbCJrWTTa8hgRJ4riE52dvBAbn G16yfHMmdcaDfkK++mgUGR/injEMhDT59adWLdZXNuZ9XT04up3OmPvBFChA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With all "silently resizing" callers of ksize() refactored, remove the
-logic in ksize() that would allow it to be used to effectively change
-the size of an allocation (bypassing __alloc_size hints, etc). Users
-wanting this feature need to either use kmalloc_size_roundup() before an
-allocation, or use krealloc() directly.
+Hi,
 
-For kfree_sensitive(), move the unpoisoning logic inline. Replace the
-some of the partially open-coded ksize() in __do_krealloc with ksize()
-now that it doesn't perform unpoisoning.
+v3: make sysctl a bool (Jiri)
+v2: https://lore.kernel.org/lkml/20221015064222.gonna.435-kees@kernel.org
+v1: https://lore.kernel.org/lkml/20221015041352.never.966-kees@kernel.org/
 
-Adjust the KUnit tests to match the new ksize() behavior.
+This is so very long over-due. We just need to do this and put an end
+to this legacy operation.
 
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: linux-mm@kvack.org
-Cc: kasan-dev@googlegroups.com
-Cc: netdev@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-This requires at least this be landed first:
-https://lore.kernel.org/lkml/20221021234713.you.031-kees@kernel.org/
-I suspect given that is the most central ksize() user, this ksize()
-fix might be best to land through the netdev tree...
----
- mm/kasan/kasan_test.c |  8 +++++---
- mm/slab_common.c      | 33 ++++++++++++++-------------------
- 2 files changed, 19 insertions(+), 22 deletions(-)
+Repeating the commit log from patch 2:
 
-diff --git a/mm/kasan/kasan_test.c b/mm/kasan/kasan_test.c
-index 0d59098f0876..cb5c54adb503 100644
---- a/mm/kasan/kasan_test.c
-+++ b/mm/kasan/kasan_test.c
-@@ -783,7 +783,7 @@ static void kasan_global_oob_left(struct kunit *test)
- 	KUNIT_EXPECT_KASAN_FAIL(test, *(volatile char *)p);
- }
- 
--/* Check that ksize() makes the whole object accessible. */
-+/* Check that ksize() does NOT unpoison whole object. */
- static void ksize_unpoisons_memory(struct kunit *test)
- {
- 	char *ptr;
-@@ -791,15 +791,17 @@ static void ksize_unpoisons_memory(struct kunit *test)
- 
- 	ptr = kmalloc(size, GFP_KERNEL);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-+
- 	real_size = ksize(ptr);
-+	KUNIT_EXPECT_GT(test, real_size, size);
- 
- 	OPTIMIZER_HIDE_VAR(ptr);
- 
- 	/* This access shouldn't trigger a KASAN report. */
--	ptr[size] = 'x';
-+	ptr[size - 1] = 'x';
- 
- 	/* This one must. */
--	KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size]);
-+	KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size - 1]);
- 
- 	kfree(ptr);
- }
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 33b1886b06eb..eabd66fcabd0 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -1333,11 +1333,11 @@ __do_krealloc(const void *p, size_t new_size, gfp_t flags)
- 	void *ret;
- 	size_t ks;
- 
--	/* Don't use instrumented ksize to allow precise KASAN poisoning. */
-+	/* Check for double-free before calling ksize. */
- 	if (likely(!ZERO_OR_NULL_PTR(p))) {
- 		if (!kasan_check_byte(p))
- 			return NULL;
--		ks = kfence_ksize(p) ?: __ksize(p);
-+		ks = ksize(p);
- 	} else
- 		ks = 0;
- 
-@@ -1405,8 +1405,10 @@ void kfree_sensitive(const void *p)
- 	void *mem = (void *)p;
- 
- 	ks = ksize(mem);
--	if (ks)
-+	if (ks) {
-+		kasan_unpoison_range(mem, ks);
- 		memzero_explicit(mem, ks);
-+	}
- 	kfree(mem);
- }
- EXPORT_SYMBOL(kfree_sensitive);
-@@ -1415,10 +1417,11 @@ EXPORT_SYMBOL(kfree_sensitive);
-  * ksize - get the actual amount of memory allocated for a given object
-  * @objp: Pointer to the object
-  *
-- * kmalloc may internally round up allocations and return more memory
-+ * kmalloc() may internally round up allocations and return more memory
-  * than requested. ksize() can be used to determine the actual amount of
-- * memory allocated. The caller may use this additional memory, even though
-- * a smaller amount of memory was initially specified with the kmalloc call.
-+ * allocated memory. The caller may NOT use this additional memory, unless
-+ * it calls krealloc(). To avoid an alloc/realloc cycle, callers can use
-+ * kmalloc_size_roundup() to find the size of the associated kmalloc bucket.
-  * The caller must guarantee that objp points to a valid object previously
-  * allocated with either kmalloc() or kmem_cache_alloc(). The object
-  * must not be freed during the duration of the call.
-@@ -1427,13 +1430,11 @@ EXPORT_SYMBOL(kfree_sensitive);
-  */
- size_t ksize(const void *objp)
- {
--	size_t size;
--
- 	/*
--	 * We need to first check that the pointer to the object is valid, and
--	 * only then unpoison the memory. The report printed from ksize() is
--	 * more useful, then when it's printed later when the behaviour could
--	 * be undefined due to a potential use-after-free or double-free.
-+	 * We need to first check that the pointer to the object is valid.
-+	 * The KASAN report printed from ksize() is more useful, then when
-+	 * it's printed later when the behaviour could be undefined due to
-+	 * a potential use-after-free or double-free.
- 	 *
- 	 * We use kasan_check_byte(), which is supported for the hardware
- 	 * tag-based KASAN mode, unlike kasan_check_read/write().
-@@ -1447,13 +1448,7 @@ size_t ksize(const void *objp)
- 	if (unlikely(ZERO_OR_NULL_PTR(objp)) || !kasan_check_byte(objp))
- 		return 0;
- 
--	size = kfence_ksize(objp) ?: __ksize(objp);
--	/*
--	 * We assume that ksize callers could use whole allocated area,
--	 * so we need to unpoison this area.
--	 */
--	kasan_unpoison_range(objp, size);
--	return size;
-+	return kfence_ksize(objp) ?: __ksize(objp);
- }
- EXPORT_SYMBOL(ksize);
- 
+    TIOCSTI continues its long history of being used in privilege escalation
+    attacks[1]. Prior attempts to provide a mechanism to disable this have
+    devolved into discussions around creating full-blown LSMs to provide
+    arbitrary ioctl filtering, which is hugely over-engineered -- only
+    TIOCSTI is being used this way. 3 years ago OpenBSD entirely removed
+    TIOCSTI[2], Android has had it filtered for longer[3], and the tools that
+    had historically used TIOCSTI either do not need it, are not commonly
+    built with it, or have had its use removed.
+
+    Provide a simple CONFIG and global sysctl to disable this for the system
+    builders who have wanted this functionality for literally decades now,
+    much like the ldisc_autoload CONFIG and sysctl.
+
+    [1] https://lore.kernel.org/linux-hardening/Y0m9l52AKmw6Yxi1@hostpad
+    [2] https://undeadly.org/cgi?action=article;sid=20170701132619
+    [3] https://lore.kernel.org/lkml/CAFJ0LnFGRuEEn1tCLhoki8ZyWrKfktbF+rwwN7WzyC_kBFoQVA@mail.gmail.com/
+
+Thanks,
+
+-Kees
+
+
+Kees Cook (2):
+  tty: Move sysctl setup into "core" tty logic
+  tty: Allow TIOCSTI to be disabled
+
+ drivers/tty/Kconfig     | 19 +++++++++++++++++
+ drivers/tty/tty.h       |  2 +-
+ drivers/tty/tty_io.c    | 45 +++++++++++++++++++++++++++++++++++++++--
+ drivers/tty/tty_ldisc.c | 38 +---------------------------------
+ 4 files changed, 64 insertions(+), 40 deletions(-)
+
 -- 
 2.34.1
 
