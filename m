@@ -2,205 +2,237 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C402EFA373F
-	for <linux-hardening@archiver.kernel.org>; Sat, 22 Oct 2022 18:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CA0C04A95
+	for <linux-hardening@archiver.kernel.org>; Sat, 22 Oct 2022 19:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229761AbiJVS34 (ORCPT
+        id S229728AbiJVTtN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 22 Oct 2022 14:29:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46676 "EHLO
+        Sat, 22 Oct 2022 15:49:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229783AbiJVS3y (ORCPT
+        with ESMTP id S229937AbiJVTtI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 22 Oct 2022 14:29:54 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 664F93FEE3
-        for <linux-hardening@vger.kernel.org>; Sat, 22 Oct 2022 11:29:52 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id e4so1646172pfl.2
-        for <linux-hardening@vger.kernel.org>; Sat, 22 Oct 2022 11:29:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lhK+n74IwfoEYJVpbYYVgx8zMlbePkYd2jvvQVl1DNI=;
-        b=S24Vm63cnb/pQmXYC/Ji63qErM6N77P6FtUKv7pvhBPH9G2MNErakkWEYF4lZkUjPK
-         afrGZX5qWhYQMm0S7qGGO3J7KvVYD0wYfO9ZN48fYvf6rdOnHxhfMsgAgMN1q7TS8VVV
-         TP9HD40o8yDBNqSFof/ACZ0yRJUF5TWBEEVEY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lhK+n74IwfoEYJVpbYYVgx8zMlbePkYd2jvvQVl1DNI=;
-        b=5StDnxb5MlxeRms/eKtzYtJ5KH+u7Q4wplCAhZqhWNOEnyLRfWSSJQH7d/c/8dd0YY
-         MiSAbVrWMc5nfq0UtKWjkP+ROfqMzi4PK+4XpUk70XwbrNfYiuemhFEXHUCx6e3Oqr3J
-         9SuMoAZlcL9etg196IDll79uV4dp8V2NMVfV1FWoBW2UAg7wucOe1p0i2JlbC225GFfG
-         goqRVu4siTB+/3erl/iUoujvyLDO4awASzy7HEJYiyswE8nybxvMh/PDedk1FDTHz6Nn
-         SG8+vo3fKWIQakZWNQRR4Hjo600mJJjzUW6zkxhH9XTE35hEs1/iRKKy+ffIsjNv1Vmk
-         GFwA==
-X-Gm-Message-State: ACrzQf3VZ8aVIASYNKRPeJnLm+mba0kQifdF+zAaxn4ZzGCoSH9jyMJc
-        TgdXxQVG7JqKdMO8kB9OVjX09A==
-X-Google-Smtp-Source: AMsMyM4uvRb7t66BcaoZTcBtmGv4XGRHd4gPsGXjh2vTSaHbYHsQ00QsQt+mWBhgTyvrBoBiY+7+WA==
-X-Received: by 2002:a05:6a00:21ce:b0:569:9dc2:a6c7 with SMTP id t14-20020a056a0021ce00b005699dc2a6c7mr12205646pfj.38.1666463391890;
-        Sat, 22 Oct 2022 11:29:51 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h9-20020a170902f54900b001788ccecbf5sm17117951plf.31.2022.10.22.11.29.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Oct 2022 11:29:50 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Simon Brand <simon.brand@postadigitale.de>,
+        Sat, 22 Oct 2022 15:49:08 -0400
+X-Greylist: delayed 374 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 22 Oct 2022 12:49:05 PDT
+Received: from relay02.th.seeweb.it (relay02.th.seeweb.it [5.144.164.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95483132E8C
+        for <linux-hardening@vger.kernel.org>; Sat, 22 Oct 2022 12:49:05 -0700 (PDT)
+Received: from localhost.localdomain (95.49.32.126.neoplus.adsl.tpnet.pl [95.49.32.126])
+        by m-r1.th.seeweb.it (Postfix) with ESMTPA id 3A20C1F9CF;
+        Sat, 22 Oct 2022 21:42:48 +0200 (CEST)
+From:   Konrad Dybcio <konrad.dybcio@somainline.org>
+To:     ~postmarketos/upstreaming@lists.sr.ht
+Cc:     martin.botka@somainline.org,
+        angelogioacchino.delregno@somainline.org,
+        marijn.suijten@somainline.org, jamipkettunen@somainline.org,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v3 1/2] tty: Move sysctl setup into "core" tty logic
-Date:   Sat, 22 Oct 2022 11:29:48 -0700
-Message-Id: <20221022182949.2684794-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221022182828.give.717-kees@kernel.org>
-References: <20221022182828.give.717-kees@kernel.org>
+Subject: [PATCH 4/4] arm64: dts: qcom: Add device tree for Sony Xperia 10 IV
+Date:   Sat, 22 Oct 2022 21:42:17 +0200
+Message-Id: <20221022194218.210941-4-konrad.dybcio@somainline.org>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20221022194218.210941-1-konrad.dybcio@somainline.org>
+References: <20221022194218.210941-1-konrad.dybcio@somainline.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3545; h=from:subject; bh=Nyuo2IvupAQIigzsfxaAoDN3LMdaMzP0RYaZjpUzMxE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjVDac8Ddo6K7F5HHzJjCDjWjPgrobDOvuScnUkqg3 YkeqaLSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY1Q2nAAKCRCJcvTf3G3AJkdwD/ 4rcSf2MSyYi0KOsvmUZvR/2jPe8raIT9H7agWXL6ThO/s75kx/SSFKDBhGBbsDRq7HK4Trla4qCCeR yyU71/X2FDErb6ika6NGdmD7ew5SAYke3TWP8VHWZvz3F/iSEY+lJB5vKl5jitIbyVinP9IHM0BfAA VvUSjntsswdXvEBRTHPihaijb/SSkGtC8VHT43fnOmowYi0WJIchQUAaivkexO9N3rchAKveGQO/+k wzjVTZ9mp+kUNm/KbK5scDpPYHm6enZM43NhkzEYlaRpYYm9hRRJxgg44pCLbQl/fMnK3Y1nZ+NKHX aMrm0X//dDKsyU4vYSD1ZKRkFzZRLdfeDZLDBMMhn5SFv1u+ShuguGtvu3SwsXcf2q4MLTJBJgr/GD Yxs1aPnYaex2Xb+wAKN22VRcK9FrFPVTX6GGSNpcDbSHq6eOdoaYKDkBGDNAIl/uvDucrzqFgPcgoU P4PzbRur4uA+UrO8FeOB9mr17gZofZB+USuNjOKM5wYoIjyKdD9dkwZRflmhZlRmRAop+3PvVhb3iC C1z4TrBwaOeSp4BUenQ5boYBpKZgES1iMJzN9RWL7OsH3N7YyTbsxdSLgInoWK2ocsYhyLAWGnQ2l2 x/7tro215lOVgCOUU+jhVRcwDEZjAQKub/j3MYB66XMAguVP/Ybj8bBlJqjQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for adding another sysctl to the tty subsystem, move the
-tty setup code into the "core" tty code, which contains tty_init() itself.
+Add support for Sony Xperia 10 IV, a.k.a PDX225. This device is a part
+of the SoMC SM6375 Murray platform and currently it is the only
+device based on that board, so no -common DTSI is created until (if?)
+other Murray devices appear.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+This commit brings support for:
+* USB (only USB2 for now)
+* Display via simplefb
+
+To create a working boot image, you need to run:
+cat arch/arm64/boot/Image.gz arch/arm64/boot/dts/qcom/sm6375-sony-xperia-\
+murray-pdx225.dtb > .Image.gz-dtb
+
+mkbootimg \
+--kernel .Image.gz-dtb \
+--ramdisk some_initrd.img \
+--pagesize 4096 \
+--base 0x0 \
+--kernel_offset 0x8000 \
+--ramdisk_offset 0x1000000 \
+--tags_offset 0x100 \
+--cmdline "SOME_CMDLINE" \
+--dtb_offset 0x1f00000 \
+--header_version 1 \
+--os_version 12 \
+--os_patch_level 2022-04 \ # or newer
+-o boot.img-sony-xperia-pdx225
+
+Then, you need to flash it on the device and get rid of all the
+vendor_boot/dtbo mess:
+
+First, you need to get rid of vendor_boot. However, the bootloader
+is utterly retarded and it will not let you neither flash nor erase it.
+There are a couple ways to handle this: you can either dd /dev/zero to
+it from Android (if you have root) or a custom recovery or from fastbootd
+(fastboot/adb reboot fastboot). You will not be able to boot Android
+images on your phone unless you lock the bootloader (fastboot oem lock)
+and restore the factory image with Xperia Companion
+Windows-and-macOS-only software.
+
+The best way so far is probably to use the second (_b) slot and flash
+mainline there. This will however require you to flash some partitions
+manually, as they are not populated from factory:
+
+(boot_b, dtbo_b, vendor_boot_b, vbmeta_b, vbmeta_system_b) - these we
+don't really care about as we nuke/replace them
+
+(dsp_b, imagefv_b, modem_b, oem_b, rdimage_b) - these you NEED to populate
+to get a successful boot on slot B, otherwise you will have limited / no
+functionality.
+
+To switch slots, simply run:
+
+fastboot --set-active=a //or =b
+
+The rest assumes you are on slot A.
+
+// You have to either pull vbmeta{"","_system"} from
+// /dev/block/bootdevice/by-name/ or build one as a part of AOSP
+fastboot --disable-verity --disable-verification flash vbmeta_b vbmeta.img
+fastboot --disable-verity --disable-verification flash vbmeta_system_b \
+vbmeta_system.img
+
+fastboot flash boot_b boot.img-sony-xperia-pdx225
+fastboot reboot fastboot // entering fastbootd
+fastboot flash vendor_boot_b emptything.img
+fastboot flash dtbo_b emptything.img
+fastboot reboot bootloader // entering bootloader fastboot
+fastboot --set-active=b
+fastboot reboot // mainline time!
+
+Where emptything.img is a tiny file that consists of 2 bytes (all zeroes),
+doing a "fastboot erase" won't cut it, the bootloader will go crazy and
+things will fall apart when it tries to overlay random bytes from an empty
+partition onto a perfectly good appended DTB.
+
+From there on you can flash new mainline builds by simply flashing
+boot.img that you create after each kernel rebuild.
+
+Signed-off-by: Konrad Dybcio <konrad.dybcio@somainline.org>
 ---
- drivers/tty/tty.h       |  2 +-
- drivers/tty/tty_io.c    | 34 ++++++++++++++++++++++++++++++++--
- drivers/tty/tty_ldisc.c | 38 +-------------------------------------
- 3 files changed, 34 insertions(+), 40 deletions(-)
+ arch/arm64/boot/dts/qcom/Makefile             |  1 +
+ .../qcom/sm6375-sony-xperia-murray-pdx225.dts | 82 +++++++++++++++++++
+ 2 files changed, 83 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx225.dts
 
-diff --git a/drivers/tty/tty.h b/drivers/tty/tty.h
-index 1c08c9b67b16..f45cd683c02e 100644
---- a/drivers/tty/tty.h
-+++ b/drivers/tty/tty.h
-@@ -93,7 +93,7 @@ void tty_ldisc_release(struct tty_struct *tty);
- int __must_check tty_ldisc_init(struct tty_struct *tty);
- void tty_ldisc_deinit(struct tty_struct *tty);
- 
--void tty_sysctl_init(void);
-+extern int tty_ldisc_autoload;
- 
- /* tty_audit.c */
- #ifdef CONFIG_AUDIT
-diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-index de06c3c2ff70..fe77a3d41326 100644
---- a/drivers/tty/tty_io.c
-+++ b/drivers/tty/tty_io.c
-@@ -3572,13 +3572,44 @@ void console_sysfs_notify(void)
- 		sysfs_notify(&consdev->kobj, NULL, "active");
- }
- 
-+static struct ctl_table tty_table[] = {
-+	{
-+		.procname	= "ldisc_autoload",
-+		.data		= &tty_ldisc_autoload,
-+		.maxlen		= sizeof(tty_ldisc_autoload),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE,
-+	},
-+	{ }
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index b0558d3389e5..0292d116c25b 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -144,6 +144,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-samsung-w737.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-sony-xperia-seine-pdx201.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm6350-sony-xperia-lena-pdx213.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sm6375-sony-xperia-murray-pdx225.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm7225-fairphone-fp4.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-hdk.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-microsoft-surface-duo.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx225.dts b/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx225.dts
+new file mode 100644
+index 000000000000..24f9e71688ff
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx225.dts
+@@ -0,0 +1,82 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2022, Konrad Dybcio <konrad.dybcio@somainline.org>
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include "sm6375.dtsi"
++#include "pmr735a.dtsi"
++
++/ {
++	model = "Sony Xperia 10 IV";
++	compatible = "sony,pdx225", "qcom,sm6375";
++	chassis-type = "handset";
++
++	chosen {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		framebuffer: framebuffer@85200000 {
++			compatible = "simple-framebuffer";
++			reg = <0 0x85200000 0 0xc00000>;
++
++			width = <1080>;
++			height = <2520>;
++			stride = <(1080 * 4)>;
++			format = "a8r8g8b8";
++			/*
++			 * That's (going to be) a lot of clocks, but it's necessary due
++			 * to unused clk cleanup & no panel driver yet
++			 */
++			clocks = <&gcc GCC_DISP_AHB_CLK>,
++				 <&gcc GCC_DISP_HF_AXI_CLK>,
++				 <&gcc GCC_DISP_THROTTLE_CORE_CLK>,
++				 <&gcc GCC_DISP_GPLL0_DIV_CLK_SRC>;
++		};
++	};
++
++	reserved-memory {
++		cont_splash_mem: memory@85200000 {
++			reg = <0 0x85200000 0 0xc00000>;
++			no-map;
++		};
++
++		ramoops@ffc40000 {
++			compatible = "ramoops";
++			reg = <0 0xffc40000 0 0xb0000>;
++			record-size = <0x10000>;
++			console-size = <0x60000>;
++			ftrace-size = <0x10000>;
++			pmsg-size = <0x20000>;
++			ecc-size = <16>;
++		};
++	};
++
++	vph_pwr: vph-pwr-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vph_pwr";
++		regulator-min-microvolt = <3700000>;
++		regulator-max-microvolt = <3700000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
 +};
 +
-+static struct ctl_table tty_dir_table[] = {
-+	{
-+		.procname	= "tty",
-+		.mode		= 0555,
-+		.child		= tty_table,
-+	},
-+	{ }
++&tlmm {
++	gpio-reserved-ranges = <13 4>;
 +};
 +
-+static struct ctl_table tty_root_table[] = {
-+	{
-+		.procname	= "dev",
-+		.mode		= 0555,
-+		.child		= tty_dir_table,
-+	},
-+	{ }
++&usb_1 {
++	status = "okay";
 +};
 +
- /*
-  * Ok, now we can initialize the rest of the tty devices and can count
-  * on memory allocations, interrupts etc..
-  */
- int __init tty_init(void)
- {
--	tty_sysctl_init();
-+	register_sysctl_table(tty_root_table);
- 	cdev_init(&tty_cdev, &tty_fops);
- 	if (cdev_add(&tty_cdev, MKDEV(TTYAUX_MAJOR, 0), 1) ||
- 	    register_chrdev_region(MKDEV(TTYAUX_MAJOR, 0), 1, "/dev/tty") < 0)
-@@ -3600,4 +3631,3 @@ int __init tty_init(void)
- #endif
- 	return 0;
- }
--
-diff --git a/drivers/tty/tty_ldisc.c b/drivers/tty/tty_ldisc.c
-index 776d8a62f77c..e758f44729e7 100644
---- a/drivers/tty/tty_ldisc.c
-+++ b/drivers/tty/tty_ldisc.c
-@@ -117,7 +117,7 @@ static void put_ldops(struct tty_ldisc_ops *ldops)
- 	raw_spin_unlock_irqrestore(&tty_ldiscs_lock, flags);
- }
- 
--static int tty_ldisc_autoload = IS_BUILTIN(CONFIG_LDISC_AUTOLOAD);
-+int tty_ldisc_autoload = IS_BUILTIN(CONFIG_LDISC_AUTOLOAD);
- 
- /**
-  * tty_ldisc_get	-	take a reference to an ldisc
-@@ -817,39 +817,3 @@ void tty_ldisc_deinit(struct tty_struct *tty)
- 		tty_ldisc_put(tty->ldisc);
- 	tty->ldisc = NULL;
- }
--
--static struct ctl_table tty_table[] = {
--	{
--		.procname	= "ldisc_autoload",
--		.data		= &tty_ldisc_autoload,
--		.maxlen		= sizeof(tty_ldisc_autoload),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
--		.extra1		= SYSCTL_ZERO,
--		.extra2		= SYSCTL_ONE,
--	},
--	{ }
--};
--
--static struct ctl_table tty_dir_table[] = {
--	{
--		.procname	= "tty",
--		.mode		= 0555,
--		.child		= tty_table,
--	},
--	{ }
--};
--
--static struct ctl_table tty_root_table[] = {
--	{
--		.procname	= "dev",
--		.mode		= 0555,
--		.child		= tty_dir_table,
--	},
--	{ }
--};
--
--void tty_sysctl_init(void)
--{
--	register_sysctl_table(tty_root_table);
--}
++&usb_1_dwc3 {
++	dr_mode = "peripheral";
++};
++
++&usb_1_hsphy {
++	status = "okay";
++};
 -- 
-2.34.1
+2.38.1
 
