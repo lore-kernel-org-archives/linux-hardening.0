@@ -2,49 +2,50 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F12C04A95
-	for <linux-hardening@archiver.kernel.org>; Sat, 22 Oct 2022 18:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D05FA3740
+	for <linux-hardening@archiver.kernel.org>; Sat, 22 Oct 2022 18:29:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229929AbiJVS34 (ORCPT
+        id S229783AbiJVS35 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 22 Oct 2022 14:29:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46674 "EHLO
+        Sat, 22 Oct 2022 14:29:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229761AbiJVS3y (ORCPT
+        with ESMTP id S229930AbiJVS3z (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 22 Oct 2022 14:29:54 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C19E3FA2A
-        for <linux-hardening@vger.kernel.org>; Sat, 22 Oct 2022 11:29:52 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id i3-20020a17090a3d8300b00212cf2e2af9so4650703pjc.1
-        for <linux-hardening@vger.kernel.org>; Sat, 22 Oct 2022 11:29:52 -0700 (PDT)
+        Sat, 22 Oct 2022 14:29:55 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3984445239
+        for <linux-hardening@vger.kernel.org>; Sat, 22 Oct 2022 11:29:53 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id l6so1456378pjj.0
+        for <linux-hardening@vger.kernel.org>; Sat, 22 Oct 2022 11:29:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ke5eIvvI5eCtYNiwclKDnikzCwvckbCDiYPF6Tj1imc=;
-        b=QfWGXv74zHYsCEKCzs3pzxyb+u6ZpsB0kuEN3EiocCOVBZ5RpHvOthGsvzoJbhiDXQ
-         2XMHJYJu9Ww8+t0b5jg8cRXaJp40iqUSwQ4xnY4FKIwoKitZnWES01K4AcZacx5WNnxg
-         bQTy+Ulra75+KaiIu0XQNYaUOVZs6/tuHBi1w=
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HHhvxulLghF+vBS1CMcuNS4a1S3LavBD3tiqXSCICpE=;
+        b=AafR3/M+ug0+nvsEqQpBtXxnG8Fx6fJvb/F5VyxLfeKxTkcaQRxNy9widlva+POEd2
+         l69QoIeWbB9nX1uzjqJXWpYutRLXsbUxyzlWQ9SE9mF4hCanBut+nLIWrs2L5zhasmVH
+         56Rz4NuzJPs89s7gTDjFKxKTXCwnmz2nVjAns=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ke5eIvvI5eCtYNiwclKDnikzCwvckbCDiYPF6Tj1imc=;
-        b=eLVBGZttjo9qzeFlBm710w7zSF+isJPQE+J+ep2egRx2X+iFfpWFbWU0++LUKZSW0d
-         yPmiyzzPlHJ4dgtWgdXglqF1wL3ynH6W+ajd/LIYBsC8/fF0dVy2JHq+codae/EFvcYt
-         Vh3pVyhFCRVnqM73UbETFv8YFeUPIfE0vAOQ2bKwOZuEVCksc/agvy0SVyUN30Uk5wuW
-         qFqbPpqI6pqklzCop/4Tm1Jy9i5FbxEOBjsX5ygr1toVlt0wfxIHSG2HLKI9czvXGO6L
-         8acGwBnl6s6khwGuJNBEb87LD7Ne9P9srn62hnydt479wFqygCQyxXdcibQYWhCuESuO
-         QeTQ==
-X-Gm-Message-State: ACrzQf3F/WcTSIB5JRAgSLosbS9uZZkDwlZQWVvZPwRWLKOUl+ghXYVW
-        Dc2EVwnHP3CY+Ly5iVd8SBqXVdkbUQSjMg==
-X-Google-Smtp-Source: AMsMyM75WuszreNn1hsHB7Pxuapw+PwlrCbIloKlGUfcGQMN628JRLLilodjU+kZh72YpXF7fQVdTw==
-X-Received: by 2002:a17:902:d3cc:b0:186:9720:b19b with SMTP id w12-20020a170902d3cc00b001869720b19bmr1498965plb.3.1666463391490;
-        Sat, 22 Oct 2022 11:29:51 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HHhvxulLghF+vBS1CMcuNS4a1S3LavBD3tiqXSCICpE=;
+        b=6uURcrQSulax86wv2ov8mg8mkfK0CqGysDotwgONrMyxSpmiEkglkqKwOGtMkwk0vT
+         VjMDQh/b97P/CCriJraaSmRFMNHgRLPio2Iu0gsLBTEgqfllZtPZD8k1dSceiM8qXiCc
+         zOos85O8LzanHAfv+bdyyzSWjb+D0FF/1ihlGYFmInCDicAdS1tdqx5k4pN7EaR7Z+LI
+         cPXSuFxS2+JG32IAsxL0UWVLuZpEYQIiavJt4KOU3Jsv04ztWJpKap8tj3juyz06cnDB
+         5D8U/P8BIBAn7LXQeTXO6nKymRTGsc4wdxyPuureYV8F7jKS8uIEwMB0bUOH+J//vC74
+         LDzg==
+X-Gm-Message-State: ACrzQf2lu8ymeNGM311VgwsQzGQXFSSFDKNRbu90xgOImBS8RTkJc9hG
+        WoZgQecxAEGJ5DDNNb5eFsYmCg==
+X-Google-Smtp-Source: AMsMyM77bUlNqCeWOt/w09z1nhThIFKbIhxtQytvJhsUBig7bRTueopUQti5/Gsbn/S+Ctot3glaWw==
+X-Received: by 2002:a17:90b:2812:b0:20d:7a3b:df3e with SMTP id qb18-20020a17090b281200b0020d7a3bdf3emr65327223pjb.169.1666463392500;
+        Sat, 22 Oct 2022 11:29:52 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h16-20020a170902f55000b001755ac7dd0asm17211091plf.290.2022.10.22.11.29.50
+        by smtp.gmail.com with ESMTPSA id p7-20020a170902780700b0017bb38e4591sm3822240pll.41.2022.10.22.11.29.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Sat, 22 Oct 2022 11:29:50 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -53,61 +54,110 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Jiri Slaby <jirislaby@kernel.org>,
         Simon Brand <simon.brand@postadigitale.de>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v3 0/2] tty: Allow TIOCSTI to be disabled
-Date:   Sat, 22 Oct 2022 11:29:47 -0700
-Message-Id: <20221022182828.give.717-kees@kernel.org>
+Subject: [PATCH v3 2/2] tty: Allow TIOCSTI to be disabled
+Date:   Sat, 22 Oct 2022 11:29:49 -0700
+Message-Id: <20221022182949.2684794-2-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221022182828.give.717-kees@kernel.org>
+References: <20221022182828.give.717-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1786; h=from:subject:message-id; bh=iR9JEWgQAWvHWSX99nEJpgLePgBlLNOFiur1YPdjibQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjVDac31LObe+GNfv3yrM/Q03eDe7/+zs//PYJn4/G MUdzvBSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY1Q2nAAKCRCJcvTf3G3AJrNuEA CMljYUKxXfT5CJr4I06XcaaWVGW3cyeVLcKSJrY5HisrklFSz2k5LB2CHUV6s6q4BTB3XYjDj80Qcx 71CmuKS4+GI5OPslOgWYtse9jcUY5K8ThaayhCb3aWyTAENxXcaS5Grc8RT+dimb6Pw7R0Q7W/KbX2 YJIXKNnBPzj8OMRjEixt38CCWTZQg5+J1JTuaKhu9HNNRE+IOiQyANAKz5WoTtvZDhbJGY8Ilk52/p cfUEgLssA0ekTy4vuaHecxpDj7/Z9OJqRiD4l48ivKXgS1BXkW4BmdZRPfreeZ+4S9h019nFED7i2K HMrTW97+ZoE9hA+agq0UDYhYk+YgTC0pk2wjL4TjMEezNMSperQB96f/s38F3JDSetS3ImorQpWOFl 3O0jJK+07hbKogfytaa0YMDEMU4mxA4071amKllxrcpCpEZq4lSNOA1zQB6F6nc56o4W1IBcigs8di lVMHO+totAbiVv89nAZ39nvzv9lUvND9G0afK4LivTadK8R4VXafY8+dKIOH/L88ppAyGrhkh1hSea la92nxd+VY9HxvDWwBgp7nGQcOdH5Sjgqq4hbPxKkAUUS5h3vxiGgbCJrWTTa8hgRJ4riE52dvBAbn G16yfHMmdcaDfkK++mgUGR/injEMhDT59adWLdZXNuZ9XT04up3OmPvBFChA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3522; h=from:subject; bh=JIl7HOU/ElX414nbe5g4/ExXJarRYqkuhmz9GGmO2pw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjVDaccwzraGBf+oCRGY9wtTvemKlYckYVJh940e1k Fpe8K/iJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY1Q2nAAKCRCJcvTf3G3AJlydD/ 9ekv6HRzYt9CJtEJ2xHytL/yPSnjzvfeUNKwGzahN6kuwiLRtM8fFfjsYMFnCKRIjyDd05VpYo28fY IyRz3jvMIMaS2vF8CGekYplbhzbpMtyIsi2nu5v2FIufVHyBzgQ6PsIYKh8oFa70JW9LBKTrnb/Ilv nFZfLtKgnG581LreZy4D63ejpIyAsisGZHMs510EVFWTLsLw/eh5v3WDcLPoP+9/zzfpvrmyQJFkv0 2TNHyeF2C0Rn+I4nueCzQyHuzzmg/dmQNicIgtbKLCSJ1582jlZbfNFfYBH5XQj2jhYhqpZ7au1yMl qWLOYI1K9WxMmakKwtpaCsE0VTntNY7JA8YrBHsrmhVe0j0AdD9HQ/Hwf72JgyMbK7t1nEKsXVWx2w fSdsSQjM7XW0ihcQ2Z7PuZjTtB4JTUsuG10LvtUE6vq9Ad6L0x0nMkwI9A2VkmaPxcpGKODWiwavnC FoMGr0xMiozIJz7bHSxs3nwwVZp9ccJj8l5dmQvCtVjOwK10atr5jOkVInCt4/CNG+S30N1pjnbld5 NUdV8irF2YG8OZxEh9Emd9n2milDAsAWev/KYSlj1VWGmGvDDlzbUZ2OcyLW/UzImWF0gdldy9iTQy AQ0TPHVKpK8hVPqZerX5gj4B/N3uYfObMlEz9N+8sZk5BbRIp78ZXxx0yGKg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+TIOCSTI continues its long history of being used in privilege escalation
+attacks[1]. Prior attempts to provide a mechanism to disable this have
+devolved into discussions around creating full-blown LSMs to provide
+arbitrary ioctl filtering, which is hugely over-engineered -- only
+TIOCSTI is being used this way. 3 years ago OpenBSD entirely removed
+TIOCSTI[2], Android has had it filtered for longer[3], and the tools that
+had historically used TIOCSTI either do not need it, are not commonly
+built with it, or have had its use removed.
 
-v3: make sysctl a bool (Jiri)
-v2: https://lore.kernel.org/lkml/20221015064222.gonna.435-kees@kernel.org
-v1: https://lore.kernel.org/lkml/20221015041352.never.966-kees@kernel.org/
+Provide a simple CONFIG and global sysctl to disable this for the system
+builders who have wanted this functionality for literally decades now,
+much like the ldisc_autoload CONFIG and sysctl.
 
-This is so very long over-due. We just need to do this and put an end
-to this legacy operation.
+[1] https://lore.kernel.org/linux-hardening/Y0m9l52AKmw6Yxi1@hostpad
+[2] https://undeadly.org/cgi?action=article;sid=20170701132619
+[3] https://lore.kernel.org/lkml/CAFJ0LnFGRuEEn1tCLhoki8ZyWrKfktbF+rwwN7WzyC_kBFoQVA@mail.gmail.com/
 
-Repeating the commit log from patch 2:
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>
+Cc: Simon Brand <simon.brand@postadigitale.de>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/tty/Kconfig  | 19 +++++++++++++++++++
+ drivers/tty/tty_io.c | 11 +++++++++++
+ 2 files changed, 30 insertions(+)
 
-    TIOCSTI continues its long history of being used in privilege escalation
-    attacks[1]. Prior attempts to provide a mechanism to disable this have
-    devolved into discussions around creating full-blown LSMs to provide
-    arbitrary ioctl filtering, which is hugely over-engineered -- only
-    TIOCSTI is being used this way. 3 years ago OpenBSD entirely removed
-    TIOCSTI[2], Android has had it filtered for longer[3], and the tools that
-    had historically used TIOCSTI either do not need it, are not commonly
-    built with it, or have had its use removed.
-
-    Provide a simple CONFIG and global sysctl to disable this for the system
-    builders who have wanted this functionality for literally decades now,
-    much like the ldisc_autoload CONFIG and sysctl.
-
-    [1] https://lore.kernel.org/linux-hardening/Y0m9l52AKmw6Yxi1@hostpad
-    [2] https://undeadly.org/cgi?action=article;sid=20170701132619
-    [3] https://lore.kernel.org/lkml/CAFJ0LnFGRuEEn1tCLhoki8ZyWrKfktbF+rwwN7WzyC_kBFoQVA@mail.gmail.com/
-
-Thanks,
-
--Kees
-
-
-Kees Cook (2):
-  tty: Move sysctl setup into "core" tty logic
-  tty: Allow TIOCSTI to be disabled
-
- drivers/tty/Kconfig     | 19 +++++++++++++++++
- drivers/tty/tty.h       |  2 +-
- drivers/tty/tty_io.c    | 45 +++++++++++++++++++++++++++++++++++++++--
- drivers/tty/tty_ldisc.c | 38 +---------------------------------
- 4 files changed, 64 insertions(+), 40 deletions(-)
-
+diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
+index cc30ff93e2e4..d35fc068da74 100644
+--- a/drivers/tty/Kconfig
++++ b/drivers/tty/Kconfig
+@@ -149,6 +149,25 @@ config LEGACY_PTY_COUNT
+ 	  When not in use, each legacy PTY occupies 12 bytes on 32-bit
+ 	  architectures and 24 bytes on 64-bit architectures.
+ 
++config LEGACY_TIOCSTI
++	bool "Allow legacy TIOCSTI usage"
++	default y
++	help
++	  Historically the kernel has allowed TIOCSTI, which will push
++	  characters into a controlling TTY. This continues to be used
++	  as a malicious privilege escalation mechanism, and provides no
++	  meaningful real-world utility any more. Its use is considered
++	  a dangerous legacy operation, and can be disabled on most
++	  systems.
++
++	  Say 'Y here only if you have confirmed that your system's
++	  userspace depends on this functionality to continue operating
++	  normally.
++
++	  This functionality can be changed at runtime with the
++	  dev.tty.legacy_tiocsti sysctl. This configuration option sets
++	  the default value of the sysctl.
++
+ config LDISC_AUTOLOAD
+ 	bool "Automatically load TTY Line Disciplines"
+ 	default y
+diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+index fe77a3d41326..a6a16cf986b7 100644
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -2268,11 +2268,15 @@ static int tty_fasync(int fd, struct file *filp, int on)
+  *  * Called functions take tty_ldiscs_lock
+  *  * current->signal->tty check is safe without locks
+  */
++static bool tty_legacy_tiocsti __read_mostly = IS_ENABLED(CONFIG_LEGACY_TIOCSTI);
+ static int tiocsti(struct tty_struct *tty, char __user *p)
+ {
+ 	char ch, mbz = 0;
+ 	struct tty_ldisc *ld;
+ 
++	if (!tty_legacy_tiocsti)
++		return -EIO;
++
+ 	if ((current->signal->tty != tty) && !capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
+ 	if (get_user(ch, p))
+@@ -3573,6 +3577,13 @@ void console_sysfs_notify(void)
+ }
+ 
+ static struct ctl_table tty_table[] = {
++	{
++		.procname	= "legacy_tiocsti",
++		.data		= &tty_legacy_tiocsti,
++		.maxlen		= sizeof(tty_legacy_tiocsti),
++		.mode		= 0644,
++		.proc_handler	= proc_dobool,
++	},
+ 	{
+ 		.procname	= "ldisc_autoload",
+ 		.data		= &tty_ldisc_autoload,
 -- 
 2.34.1
 
