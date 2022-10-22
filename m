@@ -2,120 +2,109 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1195FC433FE
-	for <linux-hardening@archiver.kernel.org>; Sat, 22 Oct 2022 01:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A9BC38A2D
+	for <linux-hardening@archiver.kernel.org>; Sat, 22 Oct 2022 02:06:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229763AbiJVBwo (ORCPT
+        id S229535AbiJVCG3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 21 Oct 2022 21:52:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55060 "EHLO
+        Fri, 21 Oct 2022 22:06:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229711AbiJVBwn (ORCPT
+        with ESMTP id S229732AbiJVCG3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 21 Oct 2022 21:52:43 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE5B325D644
-        for <linux-hardening@vger.kernel.org>; Fri, 21 Oct 2022 18:52:41 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id 3-20020a17090a0f8300b00212d5cd4e5eso2583357pjz.4
-        for <linux-hardening@vger.kernel.org>; Fri, 21 Oct 2022 18:52:41 -0700 (PDT)
+        Fri, 21 Oct 2022 22:06:29 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 357C229E9B7
+        for <linux-hardening@vger.kernel.org>; Fri, 21 Oct 2022 19:06:28 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id m14-20020a17090a3f8e00b00212dab39bcdso1786729pjc.0
+        for <linux-hardening@vger.kernel.org>; Fri, 21 Oct 2022 19:06:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=afdPZP8v0TX/Zy/NVaOu1EQ1KzFRj9XO5sdt02N1QIw=;
-        b=byBUNwzD8BfQT9gPd+UCau35i3Ec29XlEf03viviGcFtuMa8DoaRnaCDMKhdTiatp8
-         5dQWKnm+fZbZN4Vmkd4XLd73XU6Vzb6AR5kS9QxTBuDw+YrG5xKFVjsWgwTFndV+RIZC
-         Uf0XNfm4mPIBksl8MOtKh14ETZpxxZjKMiFoc=
+        bh=TiUp4piOdBE0maAv9D6j0EmLO5rQgO8m+x9nCI9z2U4=;
+        b=PD/UGksFkaEjjFdUVP6cQJdDtfIUa1SAjIa3OtMSoP0WdQKcPjGO4ZS3lMnyE5e5jR
+         gHCjntt2Pb8yo17eqJh1+kPLAT3UYAlcdOkL+mHEo+xNgpgDB2p+6I9uQVC6KwBVua95
+         ECg0oGVmL6lNc/JCFRTDllWlcfu2E2oSgaOeM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=afdPZP8v0TX/Zy/NVaOu1EQ1KzFRj9XO5sdt02N1QIw=;
-        b=mTXFnm/prr6+Js2gozp90eKTxtV+RDbkJ3qy9jXre6ER+6PRzp/H3UA1EVtAAjrxYZ
-         im4S64UFg8TIpRbRd1hkkgsVcKZg8VuSNLs6zOI6ifh8dGq1ZBVhTN83HjvN4U0Rceeq
-         1BI6TazJ+jiPqKriXoGAudLBI7DBvx9IQwLubcVRfmOAEAAISmkXdfAb5fVbXLjbjg1Z
-         e1jY7EQFGKXeIz0P79AfGEZwNcnIURDjKehXoA49e3sYC/p1KSsVQI1kZgPPZ2mdz306
-         2Pek6/zHMzfa9ZJxLxSrE1PPDLS/Pig0SnkPOpptlu2zO3K9cEo3hyrIyQJou/OtI8Qp
-         2SBw==
-X-Gm-Message-State: ACrzQf3EuQ625FEmVu6jEG8cVlp46JkSAYr6eAwRx2fmzy/RDzYJRfBQ
-        IjLXoExdIJPAiudnHHvCNnfkf2CNrAK5WQ==
-X-Google-Smtp-Source: AMsMyM7l25D5mnCDMTSTKy8YeC1DWpS7hmUeK83OHYzC79a0fjn9W2pNlDjM9O49hOYPIB1DCr7NCw==
-X-Received: by 2002:a17:902:d2ce:b0:185:3f05:acf4 with SMTP id n14-20020a170902d2ce00b001853f05acf4mr22427322plc.35.1666403561336;
-        Fri, 21 Oct 2022 18:52:41 -0700 (PDT)
+        bh=TiUp4piOdBE0maAv9D6j0EmLO5rQgO8m+x9nCI9z2U4=;
+        b=LNXYgHQ8xPS98GOogzy7koUzcLeFF9hSagy/nWohjnN6ZUS5NxWwmvUJk/NYaaH+b8
+         pdDIFRolViJAajl8OYTczhgYDMKVtmKT/4oxw5jz9wcObtW7KUcLqALSgNl9+2UY3EBv
+         8rFvR0S9pLyIG/QbYpuMuLLntNHYhLNKranBwoaRbyjLUK/pZmrz0xEsZyGkWq/cdoJP
+         Ua85T95GBcYAOBc4QndCMS7vZghuSAddqnX1E4LWelE20riUuHfzu+10x4yxtvuBz0ik
+         CEwhK5Wmsq/wyTQfmzVrDwtZLNHJ+h/dPZPa+9//QWGllOszFVgyuN7mAoxySsPQyGJc
+         I7TQ==
+X-Gm-Message-State: ACrzQf1o/DhtFAZBKfw6+M0hjSFAbtYumVr4gZXMtWA6jhVco9gupFa9
+        ABj3h6BVbaSqPtG/tFxgLsswFeP4aoGfkQ==
+X-Google-Smtp-Source: AMsMyM74+HSsSGycWSt36x33weY8oc9gA/0sU5ilwCgdlRRmLo/cBpSnJmMHYpOgVqwyf+1EjpM2Rg==
+X-Received: by 2002:a17:90b:4d08:b0:20a:6861:352c with SMTP id mw8-20020a17090b4d0800b0020a6861352cmr25403550pjb.225.1666404387745;
+        Fri, 21 Oct 2022 19:06:27 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id pf9-20020a17090b1d8900b00212cf2fe8c3sm3180998pjb.1.2022.10.21.18.52.40
+        by smtp.gmail.com with ESMTPSA id z11-20020a170903018b00b00172ea8ff334sm15500193plg.7.2022.10.21.19.06.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Oct 2022 18:52:40 -0700 (PDT)
-Date:   Fri, 21 Oct 2022 18:52:39 -0700
+        Fri, 21 Oct 2022 19:06:27 -0700 (PDT)
+Date:   Fri, 21 Oct 2022 19:06:26 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Paolo Abeni <pabeni@redhat.com>
-Cc:     Jakub Kicinski <kuba@kernel.org>,
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Rasesh Mody <rmody@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        David Ahern <dsahern@kernel.org>,
-        Dylan Yudaken <dylany@fb.com>,
-        Yajun Deng <yajun.deng@linux.dev>,
-        Petr Machata <petrm@nvidia.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        syzbot <syzkaller@googlegroups.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        netdev@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        "D. Wythe" <alibuda@linux.alibaba.com>,
-        Jeremy Kerr <jk@codeconstruct.com.au>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Menglong Dong <imagedong@tencent.com>,
-        Kuniyuki Iwashima <kuniyu@amazon.com>,
-        Congyu Liu <liu3101@purdue.edu>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ziyang Xuan <william.xuanziyang@huawei.com>,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] net: dev: Convert sa_data to flexible array in
- struct sockaddr
-Message-ID: <202210211841.031AB46@keescook>
-References: <20221018095503.never.671-kees@kernel.org>
- <bd11473cd4e2a92c4ce2a32d370800522862ad4b.camel@redhat.com>
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] bnx2: Pass allocation size to build_skb()
+Message-ID: <202210211853.99AE1276A4@keescook>
+References: <20221018085911.never.761-kees@kernel.org>
+ <20221019170255.100f41c7@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bd11473cd4e2a92c4ce2a32d370800522862ad4b.camel@redhat.com>
+In-Reply-To: <20221019170255.100f41c7@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Oct 20, 2022 at 10:58:50AM +0200, Paolo Abeni wrote:
-> On Tue, 2022-10-18 at 02:56 -0700, Kees Cook wrote:
-> > [...]
-> >  struct sockaddr {
-> >  	sa_family_t	sa_family;	/* address family, AF_xxx	*/
-> > -	char		sa_data[14];	/* 14 bytes of protocol address	*/
-> > +	union {
-> > +		char sa_data_min[14];		/* Minimum 14 bytes of protocol address	*/
-> > +		DECLARE_FLEX_ARRAY(char, sa_data);
+On Wed, Oct 19, 2022 at 05:02:55PM -0700, Jakub Kicinski wrote:
+> On Tue, 18 Oct 2022 01:59:29 -0700 Kees Cook wrote:
+> > In preparation for requiring that build_skb() have a non-zero size
+> > argument, pass the actual data allocation size explicitly into
+> > build_skb().
 > 
-> Any special reason to avoid preserving the old name for the array and
-> e.g. using sa_data_flex for the new field, so we don't have to touch
-> the sockaddr users?
+> build_skb(, 0) has the special meaning of "head buf has been kmalloc'd",
+> rather than alloc_page(). Was this changed and I missed it?
 
-Yes -- the reason is exactly to not touch the sockaddr users (who
-generally treat sa_data as a fake flexible array). By switching it to a
-flex-array the behavior will stay the same (especially under the coming
--fstrict-flex-arrays option), except that it breaks sizeof(). But the
-broken sizeof() allows us to immediately find all the places where the
-code explicitly depends on sa_data being 14 bytes. And for those cases,
-we switch to sizeof(sa_data_min).
+Hm, I'm not clear on it. I see ksize() being called, but I guess that
+works for alloc_page() allocations too?
 
-If we went the reverse route (and added -fstrict-flex-arrays) we might
-end up adding a bunch of false positives all at once, because the places
-that treated it as a flex-array would suddenly all begin behaving as a
-14-byte array.
+build_skb
+	__build_skb:
+		__build_skb_around:
+		        unsigned int size = frag_size ? : ksize(data);
+
+So I guess in this case, this patch is wrong, and should instead be this
+to match the ksize() used in build_skb():
+
+diff --git a/drivers/net/ethernet/broadcom/bnx2.c
+b/drivers/net/ethernet/broadcom/bnx2.c
+index fec57f1982c8..dbe310144780 100644
+--- a/drivers/net/ethernet/broadcom/bnx2.c
++++ b/drivers/net/ethernet/broadcom/bnx2.c
+@@ -5415,8 +5415,9 @@ bnx2_set_rx_ring_size(struct bnx2 *bp, u32 size)
+ 
+        bp->rx_buf_use_size = rx_size;
+        /* hw alignment + build_skb() overhead*/
+-       bp->rx_buf_size = SKB_DATA_ALIGN(bp->rx_buf_use_size + BNX2_RX_ALIGN) +
+-               NET_SKB_PAD + SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
++       bp->rx_buf_size = kmalloc_size_roundup(
++               SKB_DATA_ALIGN(bp->rx_buf_use_size + BNX2_RX_ALIGN) +
++               NET_SKB_PAD + SKB_DATA_ALIGN(sizeof(struct skb_shared_info)));
+        bp->rx_jumbo_thresh = rx_size - BNX2_RX_OFFSET;
+        bp->rx_ring_size = size;
+        bp->rx_max_ring = bnx2_find_max_ring(size, BNX2_MAX_RX_RINGS);
+
 
 -- 
 Kees Cook
