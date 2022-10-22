@@ -2,107 +2,143 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A6BC04A95
-	for <linux-hardening@archiver.kernel.org>; Sat, 22 Oct 2022 03:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 551A6C04A95
+	for <linux-hardening@archiver.kernel.org>; Sat, 22 Oct 2022 08:45:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229596AbiJVDoR (ORCPT
+        id S234391AbiJVIpb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 21 Oct 2022 23:44:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35766 "EHLO
+        Sat, 22 Oct 2022 04:45:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229494AbiJVDoP (ORCPT
+        with ESMTP id S235174AbiJVIot (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 21 Oct 2022 23:44:15 -0400
+        Sat, 22 Oct 2022 04:44:49 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8DA629F670;
-        Fri, 21 Oct 2022 20:44:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8D492CB8C5;
+        Sat, 22 Oct 2022 01:08:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 507BD60EF3;
-        Sat, 22 Oct 2022 03:44:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47679C433D7;
-        Sat, 22 Oct 2022 03:44:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666410253;
-        bh=QGrqJRmKrC7n5l6fNgBt+ie5cOhLSDLj6WeJbXbViyc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MEqiYHsPX7aAFtksae/zz0Xsa6afIqIFG806rmrbiTaGRLTL98Qee561UwvDWB1yM
-         DkmTzJk/JkS4PcqZTcXXKqOwHtuItlUymv3tEBj1wVra1Y7ia9EmIRsC2RD6J8O7Df
-         iCOPIJ2XnMdqMgypUz23rfmR8Tyw+Llestd1VmHeVAlYivPcBN90XVXvrkVAKLmUhB
-         8Dnep7niBddb/BgvnsD4kGo2UuauOfpweAaqkCHV+Wjcwslrx3JTptbb3weQRsDWWf
-         oJJDM4oalFvkJHVvGQ26+4eLWkbGY4FQXrgTHoMXvUYunRbKJOXikS4StfdmSrgXCP
-         Y9Myz9K7WS9ww==
-Date:   Fri, 21 Oct 2022 20:44:12 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Rasesh Mody <rmody@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] bnx2: Pass allocation size to build_skb()
-Message-ID: <20221021204412.4ee726c8@kernel.org>
-In-Reply-To: <202210211853.99AE1276A4@keescook>
-References: <20221018085911.never.761-kees@kernel.org>
-        <20221019170255.100f41c7@kernel.org>
-        <202210211853.99AE1276A4@keescook>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 50A7460B1B;
+        Sat, 22 Oct 2022 07:59:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25724C433C1;
+        Sat, 22 Oct 2022 07:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1666425573;
+        bh=hzbiDCjgP4PWpxtEpRK2mCWbxYUpFdc6paCISbBKNxg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mDrZeKLDuXuU9SGEfDqfISMNuvMjWQ5T2r+ThsxvajZw67xFR2nI+jpYlHd7xSaEJ
+         0soQ2Eu4YGWUg75v0nF594EGklSJc9hMimMofwyRhVIRgie5cab2IGjlHyjZPRozqi
+         aSbdX1B4YJMfnlX1DX5DTMqNe+Hcoyl3XwoAb484=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+        Tom Rix <trix@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+        David Gow <davidgow@google.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Sander Vanheule <sander@svanheule.net>,
+        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.19 545/717] fortify: Fix __compiletime_strlen() under UBSAN_BOUNDS_LOCAL
+Date:   Sat, 22 Oct 2022 09:27:04 +0200
+Message-Id: <20221022072522.458343012@linuxfoundation.org>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20221022072415.034382448@linuxfoundation.org>
+References: <20221022072415.034382448@linuxfoundation.org>
+User-Agent: quilt/0.67
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 21 Oct 2022 19:06:26 -0700 Kees Cook wrote:
-> On Wed, Oct 19, 2022 at 05:02:55PM -0700, Jakub Kicinski wrote:
-> > On Tue, 18 Oct 2022 01:59:29 -0700 Kees Cook wrote:  
-> > > In preparation for requiring that build_skb() have a non-zero size
-> > > argument, pass the actual data allocation size explicitly into
-> > > build_skb().  
-> > 
-> > build_skb(, 0) has the special meaning of "head buf has been kmalloc'd",
-> > rather than alloc_page(). Was this changed and I missed it?  
-> 
-> Hm, I'm not clear on it. I see ksize() being called, but I guess that
-> works for alloc_page() allocations too?
-> 
-> build_skb
-> 	__build_skb:
-> 		__build_skb_around:
-> 		        unsigned int size = frag_size ? : ksize(data);
+From: Kees Cook <keescook@chromium.org>
 
-Hm, what I'm saying is the definition of the frag_size is - the size of
-the frag if page-backed, or 0 if kmalloc-backed.
+[ Upstream commit d07c0acb4f41cc42a0d97530946965b3e4fa68c1 ]
 
-So the ternary op above applies ksize only in the kmalloc case.
+With CONFIG_FORTIFY=y and CONFIG_UBSAN_LOCAL_BOUNDS=y enabled, we observe
+a runtime panic while running Android's Compatibility Test Suite's (CTS)
+android.hardware.input.cts.tests. This is stemming from a strlen()
+call in hidinput_allocate().
 
-> So I guess in this case, this patch is wrong, and should instead be this
-> to match the ksize() used in build_skb():
-> 
-> diff --git a/drivers/net/ethernet/broadcom/bnx2.c
-> b/drivers/net/ethernet/broadcom/bnx2.c
-> index fec57f1982c8..dbe310144780 100644
-> --- a/drivers/net/ethernet/broadcom/bnx2.c
-> +++ b/drivers/net/ethernet/broadcom/bnx2.c
-> @@ -5415,8 +5415,9 @@ bnx2_set_rx_ring_size(struct bnx2 *bp, u32 size)
->  
->         bp->rx_buf_use_size = rx_size;
->         /* hw alignment + build_skb() overhead*/
-> -       bp->rx_buf_size = SKB_DATA_ALIGN(bp->rx_buf_use_size + BNX2_RX_ALIGN) +
-> -               NET_SKB_PAD + SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
-> +       bp->rx_buf_size = kmalloc_size_roundup(
-> +               SKB_DATA_ALIGN(bp->rx_buf_use_size + BNX2_RX_ALIGN) +
-> +               NET_SKB_PAD + SKB_DATA_ALIGN(sizeof(struct skb_shared_info)));
->         bp->rx_jumbo_thresh = rx_size - BNX2_RX_OFFSET;
->         bp->rx_ring_size = size;
->         bp->rx_max_ring = bnx2_find_max_ring(size, BNX2_MAX_RX_RINGS);
+__compiletime_strlen() is implemented in terms of __builtin_object_size(),
+then does an array access to check for NUL-termination. A quirk of
+__builtin_object_size() is that for strings whose values are runtime
+dependent, __builtin_object_size(str, 1 or 0) returns the maximum size
+of possible values when those sizes are determinable at compile time.
+Example:
 
-IIUC you want the size of the allocation to match exactly to the result
-of ksize()?  In that case - yup, the above looks good.
+  static const char *v = "FOO BAR";
+  static const char *y = "FOO BA";
+  unsigned long x (int z) {
+      // Returns 8, which is:
+      // max(__builtin_object_size(v, 1), __builtin_object_size(y, 1))
+      return __builtin_object_size(z ? v : y, 1);
+  }
 
-FWIW the kmalloc backed heads are actually a performance bottleneck 
-so we'd be doing everyone a favor if we just converted the two drivers
-which do this to use pages and killed the "feature".
+So when FORTIFY_SOURCE is enabled, the current implementation of
+__compiletime_strlen() will try to access beyond the end of y at runtime
+using the size of v. Mixed with UBSAN_LOCAL_BOUNDS we get a fault.
 
-But the roundup works well enough.
+hidinput_allocate() has a local C string whose value is control flow
+dependent on a switch statement, so __builtin_object_size(str, 1)
+evaluates to the maximum string length, making all other cases fault on
+the last character check. hidinput_allocate() could be cleaned up to
+avoid runtime calls to strlen() since the local variable can only have
+literal values, so there's no benefit to trying to fortify the strlen
+call site there.
+
+Perform a __builtin_constant_p() check against index 0 earlier in the
+macro to filter out the control-flow-dependant case. Add a KUnit test
+for checking the expected behavioral characteristics of FORTIFY_SOURCE
+internals.
+
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Tom Rix <trix@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Cc: David Gow <davidgow@google.com>
+Cc: Yury Norov <yury.norov@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Sander Vanheule <sander@svanheule.net>
+Cc: linux-hardening@vger.kernel.org
+Cc: llvm@lists.linux.dev
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Android Treehugger Robot
+Link: https://android-review.googlesource.com/c/kernel/common/+/2206839
+Co-developed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/fortify-string.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index 3b401fa0f374..fce2fb2fc962 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -19,7 +19,8 @@ void __write_overflow_field(size_t avail, size_t wanted) __compiletime_warning("
+ 	unsigned char *__p = (unsigned char *)(p);		\
+ 	size_t __ret = (size_t)-1;				\
+ 	size_t __p_size = __builtin_object_size(p, 1);		\
+-	if (__p_size != (size_t)-1) {				\
++	if (__p_size != (size_t)-1 &&				\
++	    __builtin_constant_p(*__p)) {			\
+ 		size_t __p_len = __p_size - 1;			\
+ 		if (__builtin_constant_p(__p[__p_len]) &&	\
+ 		    __p[__p_len] == '\0')			\
+-- 
+2.35.1
+
+
+
