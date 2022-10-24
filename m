@@ -2,117 +2,124 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C84ECAAA1
-	for <linux-hardening@archiver.kernel.org>; Mon, 24 Oct 2022 16:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D72C9C38A2D
+	for <linux-hardening@archiver.kernel.org>; Mon, 24 Oct 2022 18:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231821AbiJXQsu (ORCPT
+        id S232296AbiJXSlB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 24 Oct 2022 12:48:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55754 "EHLO
+        Mon, 24 Oct 2022 14:41:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231161AbiJXQrM (ORCPT
+        with ESMTP id S232157AbiJXSk2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 Oct 2022 12:47:12 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D0EF1BF876;
-        Mon, 24 Oct 2022 08:31:34 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 27E30B815EB;
-        Mon, 24 Oct 2022 15:27:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA4BFC433D6;
-        Mon, 24 Oct 2022 15:27:20 +0000 (UTC)
-Date:   Mon, 24 Oct 2022 11:27:30 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        keescook@chromium.org, Sean Christopherson <seanjc@google.com>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/mm: Refuse W^X violations
-Message-ID: <20221024112730.180916b3@gandalf.local.home>
-In-Reply-To: <YwySW3ROc21hN7g9@hirez.programming.kicks-ass.net>
-References: <YwySW3ROc21hN7g9@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Mon, 24 Oct 2022 14:40:28 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E10474CD9
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Oct 2022 10:22:19 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id l6so5014317pjj.0
+        for <linux-hardening@vger.kernel.org>; Mon, 24 Oct 2022 10:22:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rfwpvweGi1Ucx8HQshpxviuI+RQIpmr8edZSxz2ZyS8=;
+        b=cRHBNse3LDl7knerfXifthateEO5UMiwl8a2j41s/BW6mt9+2V3xiOBC2HFZioyyJH
+         i+yc2YUJzK2L4RQsm7M3cbP6yJybDkXRaeZV/j2urLVjf0krimJh45HbXtqBVhQL1Iqq
+         JmXAxZ1V4PIuXYnDklyo4doMEr87jbivpe/Vc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rfwpvweGi1Ucx8HQshpxviuI+RQIpmr8edZSxz2ZyS8=;
+        b=i3TMzG+8f0TqRTZ4O33rlmu99eg3Kgm5us5PfJ9sMOsbs9hd8T5zJFCkqfOPgHGwfQ
+         62GFX+DK8Pbejfg2OV3yp69PufiVZdHhJj6PpbPRcSYDr2N2VGuxXiZybn7I+pJNQbPk
+         TE7uHnAGy6EFosXglmaypci1aUq0XvJapsF+1JhsQBwwUrIxPFAhPwweHtqL4fP11yaJ
+         bBsbMgZwq0QHUTGeJ9tLI3YXZLCr95kL68EwHvLv/+vyzSt3mboRPxyj1XABAJArxWK7
+         b5YxCt4OHWY3T9qXm5huTWvCZEVse+nm3fq/9X0ON74fiB/K6GLmgm2q7B/3afKsk+4n
+         6KHQ==
+X-Gm-Message-State: ACrzQf10A53+kSUOH2AEIovI6tYSEO0fM7mM7uLCrVUPr71ZBqXwC8ZH
+        yMcLrHGgRVF3iz80447ZHD15dQ==
+X-Google-Smtp-Source: AMsMyM7PFXJJIVqkR6UWadHj6ls9b0femM8h8ZBqzJ3mOQ08s0OS0x6/s1Yef5s8sJBjNsSBl/joMw==
+X-Received: by 2002:a17:903:2307:b0:181:e618:b4c5 with SMTP id d7-20020a170903230700b00181e618b4c5mr33087193plh.172.1666632060401;
+        Mon, 24 Oct 2022 10:21:00 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i188-20020a626dc5000000b0056262811c5fsm72421pfc.59.2022.10.24.10.20.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Oct 2022 10:20:59 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     "Darrick J . Wong" <djwong@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, Zorro Lang <zlang@redhat.com>,
+        linux-xfs@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Keith Packard <keithp@keithp.com>,
+        Francis Laniel <laniel_francis@privacyrequired.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Tadeusz Struk <tadeusz.struk@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH 2/2] xfs: Use flex_cpy() to check extent copying
+Date:   Mon, 24 Oct 2022 10:20:58 -0700
+Message-Id: <20221024172058.534477-2-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221024171848.never.522-kees@kernel.org>
+References: <20221024171848.never.522-kees@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1465; h=from:subject; bh=x7Rm68JdcafZ41E9GsTynBW1VglPIkAcCBWjMgC1XZs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjVsl5e3fUqEVHLRTWTi07FP0i2KlufVIIqNEwvzK+ yPgcmKOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY1bJeQAKCRCJcvTf3G3AJpMWEA CCEj7newKc7qcVZhldSpFBK/EeIB9fXY4+iLuVdu3LFqPY13Hef3MaSmkB/Y4IRnNYMG1z40nYXPIX BRl9opcuI31xnN1rs9ZUql+0uHLhCbkvPekMurdx40/rXV8JSpfAawk6g/Hu4CzhhSEZPdV2BCmaA2 gPls9t3srVcaoPQcet6h5Vl878GD2tUPabyGLFzf2zrvkrYFuVG9Vcf8M6rzhWjAgTUrKXTOgGosnk yGdKK2sRbrNnAI3hLfunqyLQKTE2SM35KEak96gL9DDY4Yj+Jir7NkBast9okeDQfOYj3pfkyZyvVv yq3vnuORIfjZgdqMs/p+kv8pQKeOqwBTmplsuSM9xrTvOT1ElTE4P2+4hKNvRivsAlyme/BYPaUdW/ sUfyLqIoCWWsRNTtJ1BkJsPqnHMTxkelyCDmn5xTuYv+GAbx/2UG13vPbNvmJUPLxYTw+YeksRdUYl ZrMgfde6Ifb4yzbsuerEt/fkpd6/85Y7vJ4vf/GtZOdVt/QN4BDxlETGpas8pgV+Bs4tqMNFPpHRHm eFd8JmG9/qGYmtuaMepu/Rn7zhnwIYUevSDwoH+OanWEGdftSxXaQyEO28EEoMYEGbyWDTqkz04/4O zC5bLw/JhL8gPbVuJHIo7cu+CcKMc0HdtDfDGHW0LDUBdHrqREEUb2tKT8hw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 29 Aug 2022 12:18:03 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+Use flex_cpy() instead of memcpy() to copy the bui_fmt flexible array
+structure, which will perform bounds checking internally. Avoids the
+false positive warning seen under FORTIFY_SOURCE:
 
-> x86 has STRICT_*_RWX, but not even a warning when someone violates it.
-> 
-> Add this warning and fully refuse the transition.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+  memcpy: detected field-spanning write (size 48) of single field "dst_bui_fmt" at fs/xfs/xfs_bmap_item.c:628 (size 16)
 
-So, this now triggers on enabling function tracing at boot up:
+Reported-by: Zorro Lang <zlang@redhat.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=216563
+Cc: "Darrick J. Wong" <djwong@kernel.org>
+Cc: linux-xfs@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/xfs/xfs_bmap_item.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-  "ftrace=function"
+diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
+index 51f66e982484..5f135893df66 100644
+--- a/fs/xfs/xfs_bmap_item.c
++++ b/fs/xfs/xfs_bmap_item.c
+@@ -24,6 +24,7 @@
+ #include "xfs_error.h"
+ #include "xfs_log_priv.h"
+ #include "xfs_log_recover.h"
++#include <linux/flex_array.h>
+ 
+ struct kmem_cache	*xfs_bui_cache;
+ struct kmem_cache	*xfs_bud_cache;
+@@ -624,10 +625,10 @@ xfs_bui_copy_format(
+ 	src_bui_fmt = buf->i_addr;
+ 	len = xfs_bui_log_format_sizeof(src_bui_fmt->bui_nextents);
+ 
+-	if (buf->i_len == len) {
+-		memcpy(dst_bui_fmt, src_bui_fmt, len);
++	if (buf->i_len == len &&
++	    __flex_cpy(dst_bui_fmt, src_bui_fmt,
++		       bui_extents, bui_nextents, __passthru) == 0)
+ 		return 0;
+-	}
+ 	XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_LOW, NULL);
+ 	return -EFSCORRUPTED;
+ }
+-- 
+2.34.1
 
-This:
-
-SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
-Kernel/User page tables isolation: enabled
-ftrace: allocating 68738 entries in 269 pages
-ftrace: allocated 269 pages with 4 groups
-Starting tracer 'function'
-------------[ cut here ]------------
-CPA detected W^X violation: 8000000000000063 -> 0000000000000063 range: 0xffffffffc0013000 - 0xffffffffc0013fff PFN 10031b
-WARNING: CPU: 0 PID: 0 at arch/x86/mm/pat/set_memory.c:609 verify_rwx+0x61/0x6d
-Modules linked in:
-CPU: 0 PID: 0 Comm: swapper Not tainted 6.1.0-rc1-test+ #3
-Hardware name: MSI MS-7823/CSM-H87M-G43 (MS-7823), BIOS V1.6 02/22/2014
-RIP: 0010:verify_rwx+0x61/0x6d
-Code: e5 01 00 75 27 49 c1 e0 0c 48 89 d1 48 89 fe 48 c7 c7 5b b3 92 84 4e 8d 44 02 ff 48 89 da c6 05 71 29 e5 01 01 e8 35 90 e2 00 <0f> 0b 48 89 d8 5b 5d e9 6f 95 1a 01 0f 1f 44 00 00 55 48 89 e5 53
-RSP: 0000:ffffffff84c03b08 EFLAGS: 00010086
-RAX: 0000000000000000 RBX: 0000000000000063 RCX: 0000000000000003
-RDX: 0000000000000003 RSI: ffffffff84c039b0 RDI: 0000000000000001
-RBP: ffffffff84c03b10 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000025 R12: ffff8e730031c098
-R13: 000000000010031b R14: 800000010031b063 R15: 8000000000000063
-FS:  0000000000000000(0000) GS:ffff8e7416a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff8e73fd801000 CR3: 00000001fcc22001 CR4: 00000000000606f0
-Call Trace:
- <TASK>
- __change_page_attr_set_clr+0x146/0x8a6
- ? __mutex_unlock_slowpath+0x41/0x213
- ? mutex_unlock+0x12/0x18
- ? _vm_unmap_aliases+0x126/0x136
- change_page_attr_set_clr+0x135/0x268
- ? find_vmap_area+0x32/0x3e
- ? __fentry__+0x10/0x10
- change_page_attr_clear.constprop.0+0x16/0x1c
- set_memory_x+0x2c/0x32
- arch_ftrace_update_trampoline+0x218/0x2db
- ? ftrace_caller_op_ptr+0x17/0x17
- ftrace_update_trampoline+0x16/0xa1
- ? tracing_gen_ctx+0x1c/0x1c
- __register_ftrace_function+0x93/0xb2
- ftrace_startup+0x21/0xf0
- ? tracing_gen_ctx+0x1c/0x1c
- register_ftrace_function_nolock+0x26/0x40
- register_ftrace_function+0x4e/0x143
- ? mutex_unlock+0x12/0x18
- ? tracing_gen_ctx+0x1c/0x1c
- function_trace_init+0x7d/0xc3
- tracer_init+0x23/0x2c
- tracing_set_tracer+0x1d5/0x206
- register_tracer+0x1c0/0x1e4
- init_function_trace+0x90/0x96
- early_trace_init+0x25c/0x352
- start_kernel+0x424/0x6e4
- x86_64_start_reservations+0x24/0x2a
- x86_64_start_kernel+0x8c/0x95
- secondary_startup_64_no_verify+0xe0/0xeb
- </TASK>
----[ end trace 0000000000000000 ]---
-
-
--- Steve
