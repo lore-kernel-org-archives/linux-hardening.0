@@ -2,138 +2,82 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39926ECAAA1
-	for <linux-hardening@archiver.kernel.org>; Mon, 24 Oct 2022 19:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46097C67871
+	for <linux-hardening@archiver.kernel.org>; Mon, 24 Oct 2022 19:34:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229800AbiJXTVv (ORCPT
+        id S230299AbiJXTet (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 24 Oct 2022 15:21:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39362 "EHLO
+        Mon, 24 Oct 2022 15:34:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231206AbiJXTU6 (ORCPT
+        with ESMTP id S233433AbiJXTeO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 Oct 2022 15:20:58 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C5612DAB7;
-        Mon, 24 Oct 2022 10:56:42 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        Mon, 24 Oct 2022 15:34:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B41EF786F7;
+        Mon, 24 Oct 2022 11:04:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id F339D1FDA7;
-        Mon, 24 Oct 2022 17:56:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1666634166; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/4AsP2lH5VLRlMfCDU8gypauekMVyVorINlnPMIld2U=;
-        b=NwYY16UVbu0Qf9CD5Uf4XGmdYIdwelYRbEAYjhqsDilgO2tetDQdlOE+5nkt50vXfPLrCC
-        IQ0zVd4V122Oyq5G5yp9b/f/VDlm7L7fBTpoBLfj0TW+bYbmxUVjwijSqf/I6mmrwhESIc
-        208fQlSQ0MM3C2R3NcCKcSjSuWpVNTM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1666634166;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/4AsP2lH5VLRlMfCDU8gypauekMVyVorINlnPMIld2U=;
-        b=UNKXMSF60pToCIgoUKZ5sgBRBY89POUDW/+xz3htk59YQWXppXxCDsNsKfLiPdbCE/qV/G
-        E5S/5pRictJz5FAA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C1D0813357;
-        Mon, 24 Oct 2022 17:56:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id cH6CLrXRVmOmEAAAMHmgww
-        (envelope-from <vbabka@suse.cz>); Mon, 24 Oct 2022 17:56:05 +0000
-Message-ID: <f8d72aa1-3f64-b1a1-b776-f8c181f09ca4@suse.cz>
-Date:   Mon, 24 Oct 2022 19:56:05 +0200
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C13CE6151C;
+        Mon, 24 Oct 2022 18:03:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 224FEC433D6;
+        Mon, 24 Oct 2022 18:03:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666634617;
+        bh=fqL8dwseMRVhi3wyP08JG12vPtKS12OItkJ7NcHZ3TM=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=XRkRjx9VrhV0zPkEHQkJOJqGesOUCi89qvD4Fu61tCrkRJ5YwtO0UwD1DIbQgGi53
+         9PneUXID2icTaFnbjWl8m/Yl85icwz6COfCS40mAZ8NN/JvejTCgr7KeQusnn5xJw9
+         pIrRYzeszd3KG8n5uUsG1mVSkuuD/wPcnIIk/ZNRRo3zI0l+x0jSREYioPFv6s/BP9
+         aXf3Kv4mVd4uOz286X1Pa21psFvyA6y0plIC8NZfP78oOWkqTVKivfhMlP4mrLmzUO
+         JW5XmlHEPLOhNBt+iopR3KVeiC//YQ3p/Kc7Uwq4el80UPLR7THQ11NunOdSnXwED5
+         0WqubDEcbBACA==
+Message-ID: <a9c6c111-d92f-f76f-1b7a-f6220d755eeb@kernel.org>
+Date:   Mon, 24 Oct 2022 20:03:34 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.3
-Subject: Re: [PATCH v4] skbuff: Proactively round up to kmalloc bucket size
+Subject: Re: [PATCH] mempool: Use kmalloc_size_roundup() to match ksize()
+ usage
 Content-Language: en-US
 To:     Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        David Rientjes <rientjes@google.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Menglong Dong <imagedong@tencent.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20221021234713.you.031-kees@kernel.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20221021234713.you.031-kees@kernel.org>
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20221018090323.never.897-kees@kernel.org>
+ <20221018155137.f6898d165aade2e3a5f0b2d3@linux-foundation.org>
+ <202210182235.3B19DFCB28@keescook>
+From:   "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+In-Reply-To: <202210182235.3B19DFCB28@keescook>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 10/22/22 01:49, Kees Cook wrote:
-> Instead of discovering the kmalloc bucket size _after_ allocation, round
-> up proactively so the allocation is explicitly made for the full size,
-> allowing the compiler to correctly reason about the resulting size of
-> the buffer through the existing __alloc_size() hint.
+On 10/19/22 07:37, Kees Cook wrote:
+> On Tue, Oct 18, 2022 at 03:51:37PM -0700, Andrew Morton wrote:
+>> On Tue, 18 Oct 2022 02:03:29 -0700 Kees Cook <keescook@chromium.org> wrote:
+>> 
+>> > Round up allocations with kmalloc_size_roundup() so that mempool's use
+>> > of ksize() is always accurate and no special handling of the memory is
+>> > needed by KASAN, UBSAN_BOUNDS, nor FORTIFY_SOURCE.
+>> 
+>> Confused.  If the special handling is not needed, why doesn't the patch
+>> removed the no longer needed special handling?
 > 
-> This will allow for kernels built with CONFIG_UBSAN_BOUNDS or the
-> coming dynamic bounds checking under CONFIG_FORTIFY_SOURCE to gain
-> back the __alloc_size() hints that were temporarily reverted in commit
-> 93dd04ab0b2b ("slab: remove __alloc_size attribute from __kmalloc_track_caller")
+> The special handling is in the ksize() implementation, so it can't be
+> removed[1] until all the ksize()-affected users are updated to see their
+> true allocation sizes first.
 > 
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: netdev@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> [1] https://lore.kernel.org/lkml/20220923202822.2667581-16-keescook@chromium.org/
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+But in the previous version I was wondering if we can just stop doing
+ksize()-like poison handling in mempool completely, if no mempool consumers
+call ksize() to expand their use of the allocated objects. You seemed to
+agree but this version is uncahnged?
 
-Nit below:
+https://lore.kernel.org/all/f4fc52c4-7c18-1d76-0c7a-4058ea2486b9@suse.cz/
 
-> ---
-> v4: use kmalloc_size_roundup() in callers, not kmalloc_reserve()
-> v3: https://lore.kernel.org/lkml/20221018093005.give.246-kees@kernel.org
-> v2: https://lore.kernel.org/lkml/20220923202822.2667581-4-keescook@chromium.org
-> ---
->  net/core/skbuff.c | 50 +++++++++++++++++++++++------------------------
->  1 file changed, 25 insertions(+), 25 deletions(-)
-> 
-> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-> index 651a82d30b09..77af430296e2 100644
-> --- a/net/core/skbuff.c
-> +++ b/net/core/skbuff.c
-> @@ -508,14 +508,14 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp_t gfp_mask,
->  	 */
->  	size = SKB_DATA_ALIGN(size);
->  	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
-> -	data = kmalloc_reserve(size, gfp_mask, node, &pfmemalloc);
-> +	osize = kmalloc_size_roundup(size);
-> +	data = kmalloc_reserve(osize, gfp_mask, node, &pfmemalloc);
->  	if (unlikely(!data))
->  		goto nodata;
->  	/* kmalloc(size) might give us more room than requested.
-
-The line above should now say kmalloc_size_roundup(size), or maybe could be
-deleted completely now?
-
->  	 * Put skb_shared_info exactly at the end of allocated zone,
->  	 * to allow max possible filling before reallocation.
->  	 */
-> -	osize = ksize(data);
->  	size = SKB_WITH_OVERHEAD(osize);
->  	prefetchw(data + size);
->  
 
