@@ -2,161 +2,148 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E642C38A2D
-	for <linux-hardening@archiver.kernel.org>; Mon, 24 Oct 2022 23:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0650C67871
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Oct 2022 00:07:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230164AbiJXXS3 (ORCPT
+        id S230440AbiJYAHB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 24 Oct 2022 19:18:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51018 "EHLO
+        Mon, 24 Oct 2022 20:07:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231400AbiJXXSM (ORCPT
+        with ESMTP id S230472AbiJYAGp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 Oct 2022 19:18:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC2C015B123;
-        Mon, 24 Oct 2022 14:38:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 40F9B615C4;
-        Mon, 24 Oct 2022 21:38:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95B6FC433D7;
-        Mon, 24 Oct 2022 21:38:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666647494;
-        bh=uHa5U08f1LHZvhPtJrNezxQpZXhzvlx3HDfATrAE/BU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pNZBkykuqYeYfX6xBXTTeX6rY1yOibfkJvc9hynTDpnZyS+37d+UOAMsQpYIDweON
-         IS6Jfx0wzxizq7WwTOPjoN4Y6U6So7LuQ1zn9gQ4wn/vPERy/NDKsNyBMRDbdqsLYf
-         faBuOkjNkvRDj/tIMATW2eey2d6cJ/a84V52yRlD+k0LSvkLvhIuudhALxmXNZ5jKB
-         cCXdhEs++1DTkgB/adP3tnu1qR/W/TGSE1nrKw8pdT7NwOMstzXMUBAB1ZE4+wtIMy
-         RfgFCM1E45C9OB76fy1K/KTRn0zzm2/PViR54prAh+gNvDISsNOi/+vr78WHZVKziP
-         TuYdYE5lXFcZw==
-Date:   Mon, 24 Oct 2022 14:38:14 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Kees Cook <keescook@chromium.org>, h@magnolia
-Cc:     xfs <linux-xfs@vger.kernel.org>, Zorro Lang <zlang@redhat.com>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [RFC PATCH] xfs: fix FORTIFY_SOURCE complaints about log item
- memcpy
-Message-ID: <Y1cFxnea750izJd7@magnolia>
-References: <Y1CQe9FWctRg3OZI@magnolia>
- <202210240937.A1404E5@keescook>
+        Mon, 24 Oct 2022 20:06:45 -0400
+X-Greylist: delayed 4144 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 24 Oct 2022 15:23:54 PDT
+Received: from elaine.keithp.com (home.keithp.com [63.227.221.253])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E665FAB;
+        Mon, 24 Oct 2022 15:23:53 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by elaine.keithp.com (Postfix) with ESMTP id 7417D3F337D5;
+        Mon, 24 Oct 2022 11:35:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=keithp.com; s=mail;
+        t=1666636504; bh=fE4YzItjZnxgJ2So2TV1go9hLn+lPre32wOumOrKUws=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=J7N7Q1zvtKPbtjJxuO8SPhuU6eB/sSiuxi7eHHlYqfr5p54G6TTYPR5/fdDy2oO/u
+         bDKxsE1xSaHWZTPR7GpzUAVoPRNs0q1GjObMcP6ooAgW7AhveBujGvz0zzxm7P5MRC
+         iS8+qTZ4YFUZjR/yDcUcSmXbXfEWvQDQi0lYlN9cFeeWmnpB2VT/ig79qMLZaVHm+a
+         sIFxcKS0V1qMOtWTuWRhmflduMPf3IKdAy3peoMNNG66ckZqXOB22eB98S064573zY
+         N6YzZAd4DSRKCt46xCvJ9dxTgPq4MN7AGqw/XPf6EjqJvksgNjydgKPzvm3sBWR0//
+         L5QIp3LgqMSdw==
+X-Virus-Scanned: Debian amavisd-new at keithp.com
+Received: from elaine.keithp.com ([127.0.0.1])
+        by localhost (elaine.keithp.com [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id EXR7_NEv1jGg; Mon, 24 Oct 2022 11:35:04 -0700 (PDT)
+Received: from keithp.com (koto.keithp.com [192.168.11.2])
+        by elaine.keithp.com (Postfix) with ESMTPSA id 0D46C3F337D4;
+        Mon, 24 Oct 2022 11:35:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=keithp.com; s=mail;
+        t=1666636504; bh=fE4YzItjZnxgJ2So2TV1go9hLn+lPre32wOumOrKUws=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=J7N7Q1zvtKPbtjJxuO8SPhuU6eB/sSiuxi7eHHlYqfr5p54G6TTYPR5/fdDy2oO/u
+         bDKxsE1xSaHWZTPR7GpzUAVoPRNs0q1GjObMcP6ooAgW7AhveBujGvz0zzxm7P5MRC
+         iS8+qTZ4YFUZjR/yDcUcSmXbXfEWvQDQi0lYlN9cFeeWmnpB2VT/ig79qMLZaVHm+a
+         sIFxcKS0V1qMOtWTuWRhmflduMPf3IKdAy3peoMNNG66ckZqXOB22eB98S064573zY
+         N6YzZAd4DSRKCt46xCvJ9dxTgPq4MN7AGqw/XPf6EjqJvksgNjydgKPzvm3sBWR0//
+         L5QIp3LgqMSdw==
+Received: by keithp.com (Postfix, from userid 1000)
+        id 95E081E601CE; Mon, 24 Oct 2022 11:35:03 -0700 (PDT)
+From:   Keith Packard <keithp@keithp.com>
+To:     Kees Cook <keescook@chromium.org>,
+        "Darrick J . Wong" <djwong@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Francis Laniel <laniel_francis@privacyrequired.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Tadeusz Struk <tadeusz.struk@linaro.org>,
+        Zorro Lang <zlang@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] Introduce flexible array struct helpers
+In-Reply-To: <20221024172058.534477-1-keescook@chromium.org>
+References: <20221024171848.never.522-kees@kernel.org>
+ <20221024172058.534477-1-keescook@chromium.org>
+Date:   Mon, 24 Oct 2022 11:35:03 -0700
+Message-ID: <87k04pf4tk.fsf@keithp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202210240937.A1404E5@keescook>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Oct 24, 2022 at 09:59:08AM -0700, Kees Cook wrote:
-> On Wed, Oct 19, 2022 at 05:04:11PM -0700, Darrick J. Wong wrote:
-> > [...]
-> > -/*
-> > - * Copy an BUI format buffer from the given buf, and into the destination
-> > - * BUI format structure.  The BUI/BUD items were designed not to need any
-> > - * special alignment handling.
-> > - */
-> > -static int
-> > -xfs_bui_copy_format(
-> > -	struct xfs_log_iovec		*buf,
-> > -	struct xfs_bui_log_format	*dst_bui_fmt)
-> > -{
-> > -	struct xfs_bui_log_format	*src_bui_fmt;
-> > -	uint				len;
-> > -
-> > -	src_bui_fmt = buf->i_addr;
-> > -	len = xfs_bui_log_format_sizeof(src_bui_fmt->bui_nextents);
-> > -
-> > -	if (buf->i_len == len) {
-> > -		memcpy(dst_bui_fmt, src_bui_fmt, len);
-> > -		return 0;
-> > -	}
-> > -	XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_LOW, NULL);
-> > -	return -EFSCORRUPTED;
-> > -}
-> 
-> This is the place where flex_cpy() could be used:
-> 
-> 	flex_cpy(dst_bui_fmt, src_bui_fmt);
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-<nod>
+Kees Cook <keescook@chromium.org> writes:
 
-> > [...]
-> > diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
-> > index 51f66e982484..5367e404aa0f 100644
-> > --- a/fs/xfs/xfs_bmap_item.c
-> > +++ b/fs/xfs/xfs_bmap_item.c
-> > @@ -590,7 +590,7 @@ xfs_bui_item_relog(
-> >  	set_bit(XFS_LI_DIRTY, &budp->bud_item.li_flags);
-> >  
-> >  	buip = xfs_bui_init(tp->t_mountp);
-> > -	memcpy(buip->bui_format.bui_extents, extp, count * sizeof(*extp));
-> > +	memcpy_array(buip->bui_format.bui_extents, extp, count, sizeof(*extp));
-> >  	atomic_set(&buip->bui_next_extent, count);
-> >  	xfs_trans_add_item(tp, &buip->bui_item);
-> >  	set_bit(XFS_LI_DIRTY, &buip->bui_item.li_flags);
-> 
-> Looking more closely, I don't understand why this is treated as a flex
-> array when it's actually fixed size:
-> 
-> xfs_bui_init():
->         buip = kmem_cache_zalloc(xfs_bui_cache, GFP_KERNEL | __GFP_NOFAIL);
-> 	...
->         buip->bui_format.bui_nextents = XFS_BUI_MAX_FAST_EXTENTS;
-> 
-> fs/xfs/xfs_bmap_item.h:#define  XFS_BUI_MAX_FAST_EXTENTS        1
+> + * struct flex_array_struct_example {
+> + *	...			 // arbitrary members
+> + *	bounded_flex_array(
+> + *		u16, part_count, // count of elements stored in "parts" below.
+> + *		u32, parts	 // flexible array with elements of type u32.
+> + *	);
+> + * );
 
-Yeah, after a few more iterations of this patchset I realized that
-*most* of the _relog functions are fine, it's only the one for EFI items
-that trips over the not-flex array[1] definition.  I decided that the
-proper fix for that was simply to fix the field definition to follow the
-modern form for flex arrays.
+> + * struct flex_array_struct_example {
+> + *	...		// position-sensitive members
+> + *	// count of elements stored in "parts" below.
+> + *	DECLARE_FAS_COUNT(u16, part_count);
+> + *	..		// position-sensitive members
+> + *	// flexible array with elements of type u32.
+> + *	DECLARE_FAS_ARRAY(u32, parts);
+> + * };
 
-> > [...]
-> > +/*
-> > + * Copy an array from @src into the @dst buffer, allowing for @dst to be a
-> > + * structure with a VLAs at the end.  gcc11 is smart enough for
-> > + * __builtin_object_size to see through void * arguments to static inline
-> > + * function but not to detect VLAs, which leads to kernel warnings.
-> > + */
-> > +static inline int memcpy_array(void *dst, void *src, size_t nmemb, size_t size)
-> > +{
-> > +	size_t		bytes;
-> > +
-> > +	if (unlikely(check_mul_overflow(nmemb, size, &bytes))) {
-> > +		ASSERT(0);
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	unsafe_memcpy(dst, src, bytes, VLA size detection broken on gcc11 );
-> > +	return 0;
-> > +}
-> 
-> This "unsafe_memcpy" isn't needed. FORTIFY won't warn on this copy:
-> the destination is a flex array member, not a flex array struct
-> (i.e. __builtin_object_size() here will report "-1", rather than a
-> fixed size). And while the type bounds checking for overflow is nice,
-> it should also be checking the allocated size. (i.e. how large is "dst"?
-> this helper only knows how large src is.)
+I'm sure there's a good reason, but these two macros appear to be doing
+similar things and yet have very different naming conventions. Maybe:
 
-<nod> I realized that these helpers introducing unsafe memcpy weren't
-needed.  Later on after chatting with dchinner a bit I came to the
-conclusion that we might as well convert most of the _copy_format
-functions to memcpy the structure head and flex array separately since
-that function is converting an ondisk log item into its in-memory
-representation, and some day we'll make those struct fields endian safe.
-They aren't now, and that's one of the (many) gaping holes that need
-fixing.
+        FAS_DECLARE_COUNT(type, name)
+        FAS_DECLARE_ARRAY(type, name)
+        FAS_DECLARE(size_type, size_name, array_type, array_name)
 
-I sent my candidate fixes series to the list just now.
+> +/* For use with flexible array structure helpers, in <linux/flex_array.h=
+> */
+> +#define __DECLARE_FAS_COUNT(TYPE, NAME)					\
+> +	union {								\
+> +		TYPE __flex_array_elements_count;			\
+> +		TYPE NAME;						\
+> +	}
 
---D
+How often could that second "public" member be 'const'? That would catch
+places which accidentally assign to this field.
 
-> 
-> -Kees
-> 
-> -- 
-> Kees Cook
+For code which does want to write to this field, is it mostly trimming
+data from the end, or does it actually smash in arbitrary values? For
+the former case, would it be helpful to have a test to make sure the
+assigned size isn't larger than the real size (yeah, that would probably
+take an extra field holding the real size), or larger than the current size?
+
+=2D-=20
+=2Dkeith
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEw4O3eCVWE9/bQJ2R2yIaaQAAABEFAmNW2tcACgkQ2yIaaQAA
+ABGa6A//WlcPIt1OZ72U5DGohaUla3vfRSTFFWeGl9RRAdiWSeidLKpuq8iGBpWU
++/2UygeNpW3KV9kJe4WCX/+PLAd2aGmRD1Me7OP+FdHj3FTa5iBEClfjg782geI1
+5yQoGtsM3rujUSRAdlFTBF0S/n7YLE4JqtR51nCSu/jSsJ1GLbi9Yk5Wice/PsKL
+0B7UU1Jl1QPQI6+q/LkCarAizF3/yKnAqVHgKCWAz2neKmd/8JgXdsaX9Kj5GVjV
+q6CoXbrblbybvqaoV6LOARGs92rS55nFAIELZ6nmBdq3jfdpMlaSjGDh1NeIOM+o
+f4Ls+kewrBIKYQljausRJ3YAcWXZNcprnmPr4dQx2iygqcIpe2B5nH/wGwqbiKCK
+dXx8k33WjYJt0AbI9KZmJod52r1qsXk9sSiM/fOeIJ25J2GzCC4i/QjHEuopWdkp
+qMLDnSKQQrPyCTR52csOgHqSvL1cbmkBWyIrzZcMdMGvbTBPNiKBIhOQU/ijSh7g
+vM1sGPaRosgsgHgVMaLXDnUrrS6Lo0TwEM/43tt1KBSADkRx7K9pvhhh+yae3cK3
+KGqj7Rk+acwhC8LMU82VTC557ZNSfnzeQaT0AFZ3wQBVJXt61y2eAqkIRIS4PIKM
+iXFH76M95WGwitiO4kvqsEgcJkypic0/pYpAWAlMljyT6BJ2c9M=
+=g28z
+-----END PGP SIGNATURE-----
+--=-=-=--
