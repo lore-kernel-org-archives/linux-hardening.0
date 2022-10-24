@@ -2,101 +2,138 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BFCC38A2D
-	for <linux-hardening@archiver.kernel.org>; Mon, 24 Oct 2022 18:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39926ECAAA1
+	for <linux-hardening@archiver.kernel.org>; Mon, 24 Oct 2022 19:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232954AbiJXSzd (ORCPT
+        id S229800AbiJXTVv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 24 Oct 2022 14:55:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40216 "EHLO
+        Mon, 24 Oct 2022 15:21:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231582AbiJXSyg (ORCPT
+        with ESMTP id S231206AbiJXTU6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 Oct 2022 14:54:36 -0400
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C4BD10D689
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Oct 2022 10:35:40 -0700 (PDT)
-Received: by mail-il1-f173.google.com with SMTP id i9so5533718ilv.9
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Oct 2022 10:35:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Br7gTGg+bTYjhFikYlTyWIS7XZ/zfRJ4l4mR4BaWnw=;
-        b=kzio6O9foLsTdduw4qPWtUunGy7dBPJQWatiZpSYElPVhm7XOnXTntO5nGwbz5Jvks
-         3hz7ne7iZC6ZidsmPuTeRpLDSFBpb51Fdso6dMUpyV/yXEX4PV2EXtbQsWKYjS30MUMy
-         VEVBye+YalzCl05HweQ5bEdpYqGAFXcc7YWwM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2Br7gTGg+bTYjhFikYlTyWIS7XZ/zfRJ4l4mR4BaWnw=;
-        b=Fe4uPYnUEljB+SnKnMuXdpOcfZgqXAYF7RMG7XOfpeu3UuZqNarLAGpMOVmJ1ELlft
-         SVuBDCWy8rOWYqIaYLVItUI7eXK8/wz4HcGmBAFZNFFQ5IHX8I03ZVo+Sk3ghk/FJ+PB
-         TyiaCqk2j2kyXe9zAfSnlZsJhvXsjLC5xGwdK2Y5o/p0oLDjXXL2WygMUPZ6CJwTkTuO
-         vJHtQ5J3MhYp67HvjTrKNjDfdRoSNEs3gozblhDuqJdJ77BQX9A5/2+F1sjPVJbfqVfv
-         oWbU8tTpeN9uR9HAM3LQPB/Om+jegszeTCB+eFSUNbKqpvkYvecoAqCIW2ckB0GxEavW
-         TjHQ==
-X-Gm-Message-State: ACrzQf2S4ixlG/j8Axq0ENHbjsrZVC98q1H4DcASKXa566AwLwNqin7y
-        8E7/gEQ1u8hj/1m6fqdnHH3CtI+7M0ou6A==
-X-Google-Smtp-Source: AMsMyM6Xf/Ay80cc04aGFXkV1EKdELuQWBz0ZTP9I2z2QQPt8yJjKHPxmWAgCU+8kCnc0Yjjbik3Xw==
-X-Received: by 2002:a63:f903:0:b0:46f:1b5:b4fd with SMTP id h3-20020a63f903000000b0046f01b5b4fdmr5864583pgi.544.1666632060784;
-        Mon, 24 Oct 2022 10:21:00 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u2-20020a170902714200b00172a670607asm19265269plm.300.2022.10.24.10.20.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Oct 2022 10:20:59 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     "Darrick J . Wong" <djwong@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Keith Packard <keithp@keithp.com>,
-        Francis Laniel <laniel_francis@privacyrequired.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Tadeusz Struk <tadeusz.struk@linaro.org>,
-        Zorro Lang <zlang@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2 0/2] Introduce flexible array struct helpers
-Date:   Mon, 24 Oct 2022 10:20:56 -0700
-Message-Id: <20221024171848.never.522-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        Mon, 24 Oct 2022 15:20:58 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C5612DAB7;
+        Mon, 24 Oct 2022 10:56:42 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id F339D1FDA7;
+        Mon, 24 Oct 2022 17:56:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1666634166; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/4AsP2lH5VLRlMfCDU8gypauekMVyVorINlnPMIld2U=;
+        b=NwYY16UVbu0Qf9CD5Uf4XGmdYIdwelYRbEAYjhqsDilgO2tetDQdlOE+5nkt50vXfPLrCC
+        IQ0zVd4V122Oyq5G5yp9b/f/VDlm7L7fBTpoBLfj0TW+bYbmxUVjwijSqf/I6mmrwhESIc
+        208fQlSQ0MM3C2R3NcCKcSjSuWpVNTM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1666634166;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/4AsP2lH5VLRlMfCDU8gypauekMVyVorINlnPMIld2U=;
+        b=UNKXMSF60pToCIgoUKZ5sgBRBY89POUDW/+xz3htk59YQWXppXxCDsNsKfLiPdbCE/qV/G
+        E5S/5pRictJz5FAA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C1D0813357;
+        Mon, 24 Oct 2022 17:56:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id cH6CLrXRVmOmEAAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Mon, 24 Oct 2022 17:56:05 +0000
+Message-ID: <f8d72aa1-3f64-b1a1-b776-f8c181f09ca4@suse.cz>
+Date:   Mon, 24 Oct 2022 19:56:05 +0200
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=700; h=from:subject:message-id; bh=x8uV4aZZztVTmbVMfTDapI60PBgowK00+Q+TiPkLUcA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjVsl56wyNYJzpsbCQL6ohWRdrL8nrZWH1C9b0EBI3 /3hg+QaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY1bJeQAKCRCJcvTf3G3AJp3hD/ 9v0h2HOPT0KyV9Wj+/DDXGTNfp/v78T2NN4VTDIWF9kfNT6gT9udpBvDlL8pQHJOICxaNrYg5cgU9R cvDFc5ySXOydg+z588o2heFtR6qOFdJEINyeRVRD4ue22IHHNYcwhQo3P74c3p2C6ho69L8GWCv46P dEXF5lBV+0KCgbBa/YedDUOU1G0cM5G8axwJciEI0GW7Pum/EDLLp2WX0aUUKiYhuvI2EBIRrrLkjq fJ04uDNEh9LdMRsu/N0Tr0OLRuelhmfga6IIQ0isHJ01FNViYhutX7nOGUjSYnIVZA1Ctk37Fu+aB2 hz3i9i3jypYhLpk9PYhRA6JUq52rC98D3Gn+LKF9quKWkLOXrbCUIDAmlGU0P+dwokq77BYJN4QMjs kaNGQ/yqYXU43FnajQMtF8Pp8spcEn6WyVGLnAwz9WoQNa3f0VDD2SbJDEFpt3ZUFm9RTYAU1LlNzC m2kWPSwWkCsn28Swuw/r/zgh5T41RFP/xVn/fbq44PIbV3+VPnE52BO2z99U5CWHJlhKKBRY4+L1S4 KVjZhjG0SpfQP6pRURij0/JIM6vhDr2yF9KgJxZmPGVBUoXdLxGbD4uA9b+XR4ekc6EnbC4HFR8NX8 2G0TrY2OsBOkvoq7z9WNDVWW8pcUtwVLjfmYu0oD/h6rCTmiuteuImcFwYCw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH v4] skbuff: Proactively round up to kmalloc bucket size
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Menglong Dong <imagedong@tencent.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20221021234713.you.031-kees@kernel.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20221021234713.you.031-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+On 10/22/22 01:49, Kees Cook wrote:
+> Instead of discovering the kmalloc bucket size _after_ allocation, round
+> up proactively so the allocation is explicitly made for the full size,
+> allowing the compiler to correctly reason about the resulting size of
+> the buffer through the existing __alloc_size() hint.
+> 
+> This will allow for kernels built with CONFIG_UBSAN_BOUNDS or the
+> coming dynamic bounds checking under CONFIG_FORTIFY_SOURCE to gain
+> back the __alloc_size() hints that were temporarily reverted in commit
+> 93dd04ab0b2b ("slab: remove __alloc_size attribute from __kmalloc_track_caller")
+> 
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: netdev@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Here's a trimmed-down version of my original proposal, which just includes
-flex_cpy(), as this is needed by XFS.
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
--Kees
+Nit below:
 
-v2: only include flex_cpy(), leaving remaining helpers for the future
-v1: https://lore.kernel.org/all/20220504014440.3697851-1-keescook@chromium.org/
+> ---
+> v4: use kmalloc_size_roundup() in callers, not kmalloc_reserve()
+> v3: https://lore.kernel.org/lkml/20221018093005.give.246-kees@kernel.org
+> v2: https://lore.kernel.org/lkml/20220923202822.2667581-4-keescook@chromium.org
+> ---
+>  net/core/skbuff.c | 50 +++++++++++++++++++++++------------------------
+>  1 file changed, 25 insertions(+), 25 deletions(-)
+> 
+> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+> index 651a82d30b09..77af430296e2 100644
+> --- a/net/core/skbuff.c
+> +++ b/net/core/skbuff.c
+> @@ -508,14 +508,14 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp_t gfp_mask,
+>  	 */
+>  	size = SKB_DATA_ALIGN(size);
+>  	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+> -	data = kmalloc_reserve(size, gfp_mask, node, &pfmemalloc);
+> +	osize = kmalloc_size_roundup(size);
+> +	data = kmalloc_reserve(osize, gfp_mask, node, &pfmemalloc);
+>  	if (unlikely(!data))
+>  		goto nodata;
+>  	/* kmalloc(size) might give us more room than requested.
 
-Kees Cook (2):
-  Introduce flexible array struct helpers
-  xfs: Use flex_cpy() to check extent copying
+The line above should now say kmalloc_size_roundup(size), or maybe could be
+deleted completely now?
 
- fs/xfs/xfs_bmap_item.c      |   7 +-
- include/linux/flex_array.h  | 325 ++++++++++++++++++++++++++++++++++++
- include/linux/string.h      |   1 +
- include/uapi/linux/stddef.h |  14 ++
- 4 files changed, 344 insertions(+), 3 deletions(-)
- create mode 100644 include/linux/flex_array.h
-
--- 
-2.34.1
+>  	 * Put skb_shared_info exactly at the end of allocated zone,
+>  	 * to allow max possible filling before reallocation.
+>  	 */
+> -	osize = ksize(data);
+>  	size = SKB_WITH_OVERHEAD(osize);
+>  	prefetchw(data + size);
+>  
 
