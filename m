@@ -2,139 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71122FA373E
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Oct 2022 18:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 768B2FA373E
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Oct 2022 18:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232026AbiJYSiL (ORCPT
+        id S231357AbiJYSkj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Oct 2022 14:38:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52746 "EHLO
+        Tue, 25 Oct 2022 14:40:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231351AbiJYSiK (ORCPT
+        with ESMTP id S231868AbiJYSkh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Oct 2022 14:38:10 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E5DF53D3
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Oct 2022 11:38:09 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id b11so5572974pjp.2
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Oct 2022 11:38:09 -0700 (PDT)
+        Tue, 25 Oct 2022 14:40:37 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A583FAC3B2
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Oct 2022 11:40:34 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id f9so7942954pgj.2
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Oct 2022 11:40:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=j6v7OmtMJ2b16XOxoV0FAPi5R9UZMGGxZ5W+ahrXitU=;
-        b=acruGIdn9/xBNnQh1BycNFAI8FriRd/SRPwLinDXVN7o5iRN9oVVanxX4jocckw8KE
-         rrBPuGxGWZ6Cez1O8LJl8D6ply4tTfSQNhWiQMsDvh5dJmerpIlgmpxfcO7HCTqyhiz1
-         5iKemh60aO1Vx52mirB7pUeRtXXBIv5O+XBxQ=
+        bh=ypp924cOxRmHJ8467PlsPJpac5ZwhKzqHwYjG4vMAIY=;
+        b=mQqIscoUoR78Aw4+ZOXT7NSKhlzbBIdYBrdStGaIeyFAJ99E+k+uGZ2R3qWQvm05/F
+         MW89Bc0HbsLmfE5k/NykN+XajLXcYkfsEsIhVCSH2OwZE5r1mktm5pLMIeVOoLsKu6Jw
+         apvpHRozka7y4c+v67UC4Vve+dT6xng4qslT8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=j6v7OmtMJ2b16XOxoV0FAPi5R9UZMGGxZ5W+ahrXitU=;
-        b=2c89uU3nTa5AbuRc0zW241stZY0fi+szwTtm8rjDbdmSfJU8ODI1NhLVGk16UUa3pt
-         u0LRb1trfGNkdPpOd6HmNQWLjajltg+sc0z6aKzageh5dKyrxmO3AKwq8+H6vAhw82cq
-         lW9F8yz361crwBGpL/mDB5iXk1kI/8OTuIp+wweY5qFpVlTz655zqd0ukJLMGSfzCWSV
-         jSqExD6BCLTZpzv1MArbU7Y96/ILIyfdXbxVE4ByzDeVDcTv41OCE0Kut6fJFLNi9qsk
-         1dyUI+aQOakCWcOcm/8TKVo6yKN1BQqSs5dqc0yYtnAb5LbMEyfyCdcMfmF23xae8vwl
-         smrg==
-X-Gm-Message-State: ACrzQf1Mxs7o/G+9cJTz+KGa3KFRl3D96VSD1Pzrt7Fom4t9S5Y01kiq
-        W9lECzGhviW+SeM8UK9CRCTW6w==
-X-Google-Smtp-Source: AMsMyM5rGUo3WGRSfCNWAsvk0fN3/AawwDye31UvQzmNmzr7avz0RZdscsKFX344zjBDmEmPlJNpAA==
-X-Received: by 2002:a17:903:181:b0:185:5696:97c2 with SMTP id z1-20020a170903018100b00185569697c2mr39858718plg.160.1666723088910;
-        Tue, 25 Oct 2022 11:38:08 -0700 (PDT)
+        bh=ypp924cOxRmHJ8467PlsPJpac5ZwhKzqHwYjG4vMAIY=;
+        b=2abfiQ3+i5UONEWG5AreHoM6MrWuxiZ3omc3y4xH+hqLnjx8xR8SJfVerkgDjDlij/
+         MK1uvp05ZUekq2Rkh0uKI+oyPjy+zqgR3ZjjOPZlQf3WT9Jsfd470nvt1P8kmf08XBJ0
+         yeyE0HjlJEoHWX0USQPIAjEf2Z6zfftnzH5wy9nF8+A18TN6SfAiqQnp0NkjgSmcuktZ
+         R3d6dk0/kieqEuyuVJP+vF942WJgwUWK0OV7fRXwABfdGyP1WlhLmZHjaKO/UVrKjfv5
+         uA2mv2UtLJBBbu0TkyiKtM/RjWQa3ZVmP/ETeheJIf2dqfxelmibxfsxo01mR2dUvN/i
+         p1XQ==
+X-Gm-Message-State: ACrzQf1Mfw1e7AjaEPYMKLy9O5fd8b+cMjBHGVrTLyIStYjJb7qBD7mj
+        wPiwrq+GvdwRU+Rb6LSWyES9mg==
+X-Google-Smtp-Source: AMsMyM5nbOc8BgUpdi2qEvHsCOyN0L6nfnS73pIqvKPHRx34G0fgtXnb7aCW38It/DJwWuEFaqdzAg==
+X-Received: by 2002:aa7:92c8:0:b0:56b:d0b8:10f0 with SMTP id k8-20020aa792c8000000b0056bd0b810f0mr11874851pfa.46.1666723234002;
+        Tue, 25 Oct 2022 11:40:34 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m3-20020a63fd43000000b004393c5a8006sm1568091pgj.75.2022.10.25.11.38.07
+        by smtp.gmail.com with ESMTPSA id d185-20020a6236c2000000b0056286c552ecsm1666652pfa.184.2022.10.25.11.40.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Oct 2022 11:38:08 -0700 (PDT)
-Date:   Tue, 25 Oct 2022 11:38:06 -0700
+        Tue, 25 Oct 2022 11:40:33 -0700 (PDT)
+Date:   Tue, 25 Oct 2022 11:40:32 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-mm@kvack.org, kasan-dev@googlegroups.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] mm: Make ksize() a reporting-only function
-Message-ID: <202210251125.BAE72214E2@keescook>
-References: <20221022180455.never.023-kees@kernel.org>
- <fabffcfd-4e7f-a4b8-69ac-2865ead36598@suse.cz>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     h@magnolia, xfs <linux-xfs@vger.kernel.org>,
+        Zorro Lang <zlang@redhat.com>, linux-hardening@vger.kernel.org
+Subject: Re: [RFC PATCH] xfs: fix FORTIFY_SOURCE complaints about log item
+ memcpy
+Message-ID: <202210251139.3612057E@keescook>
+References: <Y1CQe9FWctRg3OZI@magnolia>
+ <202210240937.A1404E5@keescook>
+ <Y1cFxnea750izJd7@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fabffcfd-4e7f-a4b8-69ac-2865ead36598@suse.cz>
+In-Reply-To: <Y1cFxnea750izJd7@magnolia>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Oct 25, 2022 at 01:53:54PM +0200, Vlastimil Babka wrote:
-> On 10/22/22 20:08, Kees Cook wrote:
-> > With all "silently resizing" callers of ksize() refactored, remove the
-> > logic in ksize() that would allow it to be used to effectively change
-> > the size of an allocation (bypassing __alloc_size hints, etc). Users
-> > wanting this feature need to either use kmalloc_size_roundup() before an
-> > allocation, or use krealloc() directly.
-> > 
-> > For kfree_sensitive(), move the unpoisoning logic inline. Replace the
-> > some of the partially open-coded ksize() in __do_krealloc with ksize()
-> > now that it doesn't perform unpoisoning.
-> > 
-> > [...]
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+On Mon, Oct 24, 2022 at 02:38:14PM -0700, Darrick J. Wong wrote:
+> <nod> I realized that these helpers introducing unsafe memcpy weren't
+> needed.  Later on after chatting with dchinner a bit I came to the
+> conclusion that we might as well convert most of the _copy_format
+> functions to memcpy the structure head and flex array separately since
+> that function is converting an ondisk log item into its in-memory
+> representation, and some day we'll make those struct fields endian safe.
+> They aren't now, and that's one of the (many) gaping holes that need
+> fixing.
 
-Thanks!
+Ah, perfect! Yeah, this is one of the other standard solutions -- header
+and flex array handled separately. I'm still working on APIs to handle
+the common cases, though. XFS probably will want to keep it separate as
+you've done.
 
-> > ---
-> > This requires at least this be landed first:
-> > https://lore.kernel.org/lkml/20221021234713.you.031-kees@kernel.org/
-> 
-> Don't we need all parts to have landed first, even if the skbuff one is the
-> most prominent?
+> I sent my candidate fixes series to the list just now.
 
-Yes, though, I suspect there will be some cases we couldn't easily find.
-
-Here are the prerequisites I'm aware of:
-
-in -next:
-  36875a063b5e ("net: ipa: Proactively round up to kmalloc bucket size")
-  ab3f7828c979 ("openvswitch: Use kmalloc_size_roundup() to match ksize() usage")
-  d6dd508080a3 ("bnx2: Use kmalloc_size_roundup() to match ksize() usage")
-
-reviewed, waiting to land (should I take these myself?)
-  btrfs: send: Proactively round up to kmalloc bucket size
-    https://lore.kernel.org/lkml/20220923202822.2667581-8-keescook@chromium.org/
-  dma-buf: Proactively round up to kmalloc bucket size
-    https://lore.kernel.org/lkml/20221018090858.never.941-kees@kernel.org/
-
-partially reviewed:
-  igb: Proactively round up to kmalloc bucket size
-    https://lore.kernel.org/lkml/20221018092340.never.556-kees@kernel.org/
-
-unreviewed:
-  coredump: Proactively round up to kmalloc bucket size
-    https://lore.kernel.org/lkml/20221018090701.never.996-kees@kernel.org/
-  devres: Use kmalloc_size_roundup() to match ksize() usage
-    https://lore.kernel.org/lkml/20221018090406.never.856-kees@kernel.org/
-
-needs updating:
-  mempool: Use kmalloc_size_roundup() to match ksize() usage
-    https://lore.kernel.org/lkml/20221018090323.never.897-kees@kernel.org/
-  bpf: Use kmalloc_size_roundup() to match ksize() usage
-    https://lore.kernel.org/lkml/20221018090550.never.834-kees@kernel.org/
+Thanks! I'll go check them out.
 
 -- 
 Kees Cook
