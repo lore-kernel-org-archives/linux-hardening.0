@@ -2,250 +2,139 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D52FA373E
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Oct 2022 18:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71122FA373E
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Oct 2022 18:38:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232661AbiJYSHG (ORCPT
+        id S232026AbiJYSiL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Oct 2022 14:07:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42236 "EHLO
+        Tue, 25 Oct 2022 14:38:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232602AbiJYSG5 (ORCPT
+        with ESMTP id S231351AbiJYSiK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Oct 2022 14:06:57 -0400
-Received: from relay02.th.seeweb.it (relay02.th.seeweb.it [5.144.164.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D229711837
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Oct 2022 11:06:56 -0700 (PDT)
-Received: from localhost.localdomain (unknown [IPv6:2a00:f41:181d:45ba:3479:f7c2:4c21:3ad3])
-        (using TLSv1.3 with cipher TLS_CHACHA20_POLY1305_SHA256 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA512)
-        (No client certificate requested)
-        by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 890D8200B9;
-        Tue, 25 Oct 2022 20:06:52 +0200 (CEST)
-From:   Konrad Dybcio <konrad.dybcio@somainline.org>
-To:     linux-arm-msm@vger.kernel.org, andersson@kernel.org,
-        agross@kernel.org
-Cc:     Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Iskren Chernev <iskren.chernev@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Tue, 25 Oct 2022 14:38:10 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E5DF53D3
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Oct 2022 11:38:09 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id b11so5572974pjp.2
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Oct 2022 11:38:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=j6v7OmtMJ2b16XOxoV0FAPi5R9UZMGGxZ5W+ahrXitU=;
+        b=acruGIdn9/xBNnQh1BycNFAI8FriRd/SRPwLinDXVN7o5iRN9oVVanxX4jocckw8KE
+         rrBPuGxGWZ6Cez1O8LJl8D6ply4tTfSQNhWiQMsDvh5dJmerpIlgmpxfcO7HCTqyhiz1
+         5iKemh60aO1Vx52mirB7pUeRtXXBIv5O+XBxQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j6v7OmtMJ2b16XOxoV0FAPi5R9UZMGGxZ5W+ahrXitU=;
+        b=2c89uU3nTa5AbuRc0zW241stZY0fi+szwTtm8rjDbdmSfJU8ODI1NhLVGk16UUa3pt
+         u0LRb1trfGNkdPpOd6HmNQWLjajltg+sc0z6aKzageh5dKyrxmO3AKwq8+H6vAhw82cq
+         lW9F8yz361crwBGpL/mDB5iXk1kI/8OTuIp+wweY5qFpVlTz655zqd0ukJLMGSfzCWSV
+         jSqExD6BCLTZpzv1MArbU7Y96/ILIyfdXbxVE4ByzDeVDcTv41OCE0Kut6fJFLNi9qsk
+         1dyUI+aQOakCWcOcm/8TKVo6yKN1BQqSs5dqc0yYtnAb5LbMEyfyCdcMfmF23xae8vwl
+         smrg==
+X-Gm-Message-State: ACrzQf1Mxs7o/G+9cJTz+KGa3KFRl3D96VSD1Pzrt7Fom4t9S5Y01kiq
+        W9lECzGhviW+SeM8UK9CRCTW6w==
+X-Google-Smtp-Source: AMsMyM5rGUo3WGRSfCNWAsvk0fN3/AawwDye31UvQzmNmzr7avz0RZdscsKFX344zjBDmEmPlJNpAA==
+X-Received: by 2002:a17:903:181:b0:185:5696:97c2 with SMTP id z1-20020a170903018100b00185569697c2mr39858718plg.160.1666723088910;
+        Tue, 25 Oct 2022 11:38:08 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m3-20020a63fd43000000b004393c5a8006sm1568091pgj.75.2022.10.25.11.38.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Oct 2022 11:38:08 -0700 (PDT)
+Date:   Tue, 25 Oct 2022 11:38:06 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-mm@kvack.org, kasan-dev@googlegroups.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 4/4] arm64: dts: qcom: Add device tree for Sony Xperia 10 IV
-Date:   Tue, 25 Oct 2022 20:06:33 +0200
-Message-Id: <20221025180634.28956-4-konrad.dybcio@somainline.org>
-X-Mailer: git-send-email 2.32.0 (Apple Git-132)
-In-Reply-To: <20221025180634.28956-1-konrad.dybcio@somainline.org>
-References: <20221025180634.28956-1-konrad.dybcio@somainline.org>
+Subject: Re: [PATCH] mm: Make ksize() a reporting-only function
+Message-ID: <202210251125.BAE72214E2@keescook>
+References: <20221022180455.never.023-kees@kernel.org>
+ <fabffcfd-4e7f-a4b8-69ac-2865ead36598@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fabffcfd-4e7f-a4b8-69ac-2865ead36598@suse.cz>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add support for Sony Xperia 10 IV, a.k.a PDX225. This device is a part
-of the SoMC SM6375 Murray platform and currently it is the only
-device based on that board, so no -common DTSI is created until (if?)
-other Murray devices appear.
+On Tue, Oct 25, 2022 at 01:53:54PM +0200, Vlastimil Babka wrote:
+> On 10/22/22 20:08, Kees Cook wrote:
+> > With all "silently resizing" callers of ksize() refactored, remove the
+> > logic in ksize() that would allow it to be used to effectively change
+> > the size of an allocation (bypassing __alloc_size hints, etc). Users
+> > wanting this feature need to either use kmalloc_size_roundup() before an
+> > allocation, or use krealloc() directly.
+> > 
+> > For kfree_sensitive(), move the unpoisoning logic inline. Replace the
+> > some of the partially open-coded ksize() in __do_krealloc with ksize()
+> > now that it doesn't perform unpoisoning.
+> > 
+> > [...]
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-This commit brings support for:
-* USB (only USB2 for now)
-* Display via simplefb
+Thanks!
 
-To create a working boot image, you need to run:
-cat arch/arm64/boot/Image.gz arch/arm64/boot/dts/qcom/sm6375-sony-xperia-\
-murray-pdx225.dtb > .Image.gz-dtb
+> > ---
+> > This requires at least this be landed first:
+> > https://lore.kernel.org/lkml/20221021234713.you.031-kees@kernel.org/
+> 
+> Don't we need all parts to have landed first, even if the skbuff one is the
+> most prominent?
 
-mkbootimg \
---kernel .Image.gz-dtb \
---ramdisk some_initrd.img \
---pagesize 4096 \
---base 0x0 \
---kernel_offset 0x8000 \
---ramdisk_offset 0x1000000 \
---tags_offset 0x100 \
---cmdline "SOME_CMDLINE" \
---dtb_offset 0x1f00000 \
---header_version 1 \
---os_version 12 \
---os_patch_level 2022-04 \ # or newer
--o boot.img-sony-xperia-pdx225
+Yes, though, I suspect there will be some cases we couldn't easily find.
 
-Then, you need to flash it on the device and get rid of all the
-vendor_boot/dtbo mess:
+Here are the prerequisites I'm aware of:
 
-First, you need to get rid of vendor_boot. However, the bootloader
-is utterly retarded and it will not let you neither flash nor erase it.
-There are a couple ways to handle this: you can either dd /dev/zero to
-it from Android (if you have root) or a custom recovery or from fastbootd
-(fastboot/adb reboot fastboot). You will not be able to boot Android
-images on your phone unless you lock the bootloader (fastboot oem lock)
-and restore the factory image with Xperia Companion
-Windows-and-macOS-only software.
+in -next:
+  36875a063b5e ("net: ipa: Proactively round up to kmalloc bucket size")
+  ab3f7828c979 ("openvswitch: Use kmalloc_size_roundup() to match ksize() usage")
+  d6dd508080a3 ("bnx2: Use kmalloc_size_roundup() to match ksize() usage")
 
-The best way so far is probably to use the second (_b) slot and flash
-mainline there. This will however require you to flash some partitions
-manually, as they are not populated from factory:
+reviewed, waiting to land (should I take these myself?)
+  btrfs: send: Proactively round up to kmalloc bucket size
+    https://lore.kernel.org/lkml/20220923202822.2667581-8-keescook@chromium.org/
+  dma-buf: Proactively round up to kmalloc bucket size
+    https://lore.kernel.org/lkml/20221018090858.never.941-kees@kernel.org/
 
-(boot_b, dtbo_b, vendor_boot_b, vbmeta_b, vbmeta_system_b) - these we
-don't really care about as we nuke/replace them
+partially reviewed:
+  igb: Proactively round up to kmalloc bucket size
+    https://lore.kernel.org/lkml/20221018092340.never.556-kees@kernel.org/
 
-(dsp_b, imagefv_b, modem_b, oem_b, rdimage_b) - these you NEED to populate
-to get a successful boot on slot B, otherwise you will have limited / no
-functionality.
+unreviewed:
+  coredump: Proactively round up to kmalloc bucket size
+    https://lore.kernel.org/lkml/20221018090701.never.996-kees@kernel.org/
+  devres: Use kmalloc_size_roundup() to match ksize() usage
+    https://lore.kernel.org/lkml/20221018090406.never.856-kees@kernel.org/
 
-To switch slots, simply run:
+needs updating:
+  mempool: Use kmalloc_size_roundup() to match ksize() usage
+    https://lore.kernel.org/lkml/20221018090323.never.897-kees@kernel.org/
+  bpf: Use kmalloc_size_roundup() to match ksize() usage
+    https://lore.kernel.org/lkml/20221018090550.never.834-kees@kernel.org/
 
-fastboot --set-active=a //or =b
-
-The rest assumes you are on slot A.
-
-// You have to either pull vbmeta{"","_system"} from
-// /dev/block/bootdevice/by-name/ or build one as a part of AOSP
-fastboot --disable-verity --disable-verification flash vbmeta_b vbmeta.img
-fastboot --disable-verity --disable-verification flash vbmeta_system_b \
-vbmeta_system.img
-
-fastboot flash boot_b boot.img-sony-xperia-pdx225
-fastboot reboot fastboot // entering fastbootd
-fastboot flash vendor_boot_b emptything.img
-fastboot flash dtbo_b emptything.img
-fastboot reboot bootloader // entering bootloader fastboot
-fastboot --set-active=b
-fastboot reboot // mainline time!
-
-Where emptything.img is a tiny file that consists of 2 bytes (all zeroes),
-doing a "fastboot erase" won't cut it, the bootloader will go crazy and
-things will fall apart when it tries to overlay random bytes from an empty
-partition onto a perfectly good appended DTB.
-
-From there on you can flash new mainline builds by simply flashing
-boot.img that you create after each kernel rebuild.
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Konrad Dybcio <konrad.dybcio@somainline.org>
----
-Changes since v1:
-- Move the xo_board freq into device DTS
-
- arch/arm64/boot/dts/qcom/Makefile             |  1 +
- .../qcom/sm6375-sony-xperia-murray-pdx225.dts | 86 +++++++++++++++++++
- 2 files changed, 87 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx225.dts
-
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index b0558d3389e5..0292d116c25b 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -144,6 +144,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-samsung-w737.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-sony-xperia-seine-pdx201.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm6350-sony-xperia-lena-pdx213.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sm6375-sony-xperia-murray-pdx225.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm7225-fairphone-fp4.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-hdk.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-microsoft-surface-duo.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx225.dts b/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx225.dts
-new file mode 100644
-index 000000000000..08a705e8ff92
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx225.dts
-@@ -0,0 +1,86 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2022, Konrad Dybcio <konrad.dybcio@somainline.org>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include "sm6375.dtsi"
-+#include "pmr735a.dtsi"
-+
-+/ {
-+	model = "Sony Xperia 10 IV";
-+	compatible = "sony,pdx225", "qcom,sm6375";
-+	chassis-type = "handset";
-+
-+	chosen {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		framebuffer: framebuffer@85200000 {
-+			compatible = "simple-framebuffer";
-+			reg = <0 0x85200000 0 0xc00000>;
-+
-+			width = <1080>;
-+			height = <2520>;
-+			stride = <(1080 * 4)>;
-+			format = "a8r8g8b8";
-+			/*
-+			 * That's (going to be) a lot of clocks, but it's necessary due
-+			 * to unused clk cleanup & no panel driver yet
-+			 */
-+			clocks = <&gcc GCC_DISP_AHB_CLK>,
-+				 <&gcc GCC_DISP_HF_AXI_CLK>,
-+				 <&gcc GCC_DISP_THROTTLE_CORE_CLK>,
-+				 <&gcc GCC_DISP_GPLL0_DIV_CLK_SRC>;
-+		};
-+	};
-+
-+	reserved-memory {
-+		cont_splash_mem: memory@85200000 {
-+			reg = <0 0x85200000 0 0xc00000>;
-+			no-map;
-+		};
-+
-+		ramoops@ffc40000 {
-+			compatible = "ramoops";
-+			reg = <0 0xffc40000 0 0xb0000>;
-+			record-size = <0x10000>;
-+			console-size = <0x60000>;
-+			ftrace-size = <0x10000>;
-+			pmsg-size = <0x20000>;
-+			ecc-size = <16>;
-+		};
-+	};
-+
-+	vph_pwr: vph-pwr-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vph_pwr";
-+		regulator-min-microvolt = <3700000>;
-+		regulator-max-microvolt = <3700000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <13 4>;
-+};
-+
-+&usb_1 {
-+	status = "okay";
-+};
-+
-+&usb_1_dwc3 {
-+	dr_mode = "peripheral";
-+};
-+
-+&usb_1_hsphy {
-+	status = "okay";
-+};
-+
-+&xo_board {
-+	clock-frequency = <19200000>;
-+};
 -- 
-2.38.1
-
+Kees Cook
