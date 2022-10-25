@@ -2,97 +2,97 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7E7FA373D
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Oct 2022 22:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC43AECDFA1
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Oct 2022 23:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231646AbiJYWzJ (ORCPT
+        id S229952AbiJYXRC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Oct 2022 18:55:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56988 "EHLO
+        Tue, 25 Oct 2022 19:17:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231455AbiJYWzG (ORCPT
+        with ESMTP id S232417AbiJYXRB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Oct 2022 18:55:06 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4706975FE7
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Oct 2022 15:55:06 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id v13-20020a17090a6b0d00b0021332e5388fso434408pjj.1
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Oct 2022 15:55:06 -0700 (PDT)
+        Tue, 25 Oct 2022 19:17:01 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D273726B4
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Oct 2022 16:17:00 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id h14so12330692pjv.4
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Oct 2022 16:17:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ra6g/OJlkYVneeWayx4/X1tGU61tNPtmZeLJALiKlsg=;
-        b=OdfBlk3ohwk4OPGswlL77glZyOEhkpZ9paxEg4UCiRkb5yVtyDSa+yHjdwg4rCAr3W
-         yz2OIF4v85vVqzXNMMmsc885oRRYXYJKN3jNWWJ2GA5k2+EM/4MOz0vSg+4c0Ite27nj
-         4D2Ycx9FAwYnUQbGwEWLvzR5J94/ofXVY65Ls=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MsADfAFq9TK5UcRj962QpG64UBItidHRoIZXT+jjNI0=;
+        b=EadsoGPR6HyPwrBeOgAEKduevptWsfT+BfNPAxvGYrSVo10HfQDW9WWGTi15Rn+cM7
+         7uu8tgS1WGFFYvtejcBJ5izBfGlucAyHeP6/2u0y1Ffi5daX+pTRzkGAbaYVjnb2camD
+         +gF18GvsJW697oZ4CYo6fOOgiv5si2TwZoiUU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ra6g/OJlkYVneeWayx4/X1tGU61tNPtmZeLJALiKlsg=;
-        b=VZwWgr+/rQ24nNEQKFbDtZHfYGeoHDKbv4mFmApAWPaAPDthzlBrHRYWhXmNBaC3Lu
-         CAKpmapBBa4iwFvZTuBWmmROTgRQMKJrbQ3+NmCLoG2b5rS1MFAFSy1ME7zE/sXZ9kD7
-         3VIWIpzM/EfAUJGNi+iQ1uAyr5yhWQDyBzieA3VQlC3I81yZkjzDhFvQnF2LAFGxyW7v
-         jzPUF7VQAF/4nVWDP8H10vGsb++TkaSGywcCWPcOTwjSAJ3r8Qpr3JdUO0yRE5AZHf50
-         bCe8qE6gVKFJzdW+uNa1QQZBzTGHLimXXflQucmxP2SFwv2BKGGRnQH1D36bG4v/kMz8
-         OX4w==
-X-Gm-Message-State: ACrzQf1dkrbb19J6cYG+Qb55tXftZwl3PJw0uXGYsKXMvMWo9993d+hz
-        KNC+CeHgfO4CJpwDvN2rjp/pjA==
-X-Google-Smtp-Source: AMsMyM44mRwoe5IWqac/2v8N0xaf9xGSEr4+1fALOhdzTO3Jh2wF+APz+24QcWl4IO/1AQPTfrJywQ==
-X-Received: by 2002:a17:902:d2c1:b0:186:9e90:6ad with SMTP id n1-20020a170902d2c100b001869e9006admr15087411plc.2.1666738505517;
-        Tue, 25 Oct 2022 15:55:05 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MsADfAFq9TK5UcRj962QpG64UBItidHRoIZXT+jjNI0=;
+        b=O3QVkCSKfAN0qoKst1RQab4TSaJUAa5ZYLxVj7EtfEpnCPtt8WfaDgqhjHsBUvO9dP
+         o8gBX/lz89PJcgxBB5N79LvR7RwxiSwEuxR7SqJwLYC10b9KqHlnq/VAGLUlROV8VJnW
+         fHwRie4tshDVmaxfw+40iNj7//gONXVwB9nEsihxHU5eNjsUl7kZMCrNu2/PqdYS7zqV
+         CfslVY1jbbeL4ZEM1I+7Emgr2aUtkWy3X/hGf/PB7S7S/Dt7IWCKsj1iRKEXj5CTRl4e
+         gRcD5ih3/7Vs/iJSnr10G4z5zhgk2SL23j3XdQWjLNm4BYz82pLFyS8M5DfrhtYmcuVi
+         rFIw==
+X-Gm-Message-State: ACrzQf13a4qadmqcNezVUG6cptciWyEPLbw2/c1r6xXUV9BuhDb0xaXK
+        kXR5oORLvLPB6KTQK/SlfyVYag==
+X-Google-Smtp-Source: AMsMyM5X/y2JqLN9OZsWk0fqAzQmVMhBkmDmr+xO/+YfhO25w4RdZr9/wkpQ4JkBhZmS4bFcimPcQA==
+X-Received: by 2002:a17:902:e952:b0:17c:2eee:c0ce with SMTP id b18-20020a170902e95200b0017c2eeec0cemr40672958pll.145.1666739819841;
+        Tue, 25 Oct 2022 16:16:59 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b65-20020a62cf44000000b00562784609fbsm1851645pfg.209.2022.10.25.15.55.04
+        by smtp.gmail.com with ESMTPSA id z1-20020aa79e41000000b0056c396f7539sm874135pfq.157.2022.10.25.16.16.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Oct 2022 15:55:04 -0700 (PDT)
-Date:   Tue, 25 Oct 2022 15:55:03 -0700
+        Tue, 25 Oct 2022 16:16:59 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] mempool: Use kmalloc_size_roundup() to match ksize()
- usage
-Message-ID: <202210251554.11FA130@keescook>
-References: <20221018090323.never.897-kees@kernel.org>
- <20221018155137.f6898d165aade2e3a5f0b2d3@linux-foundation.org>
- <202210182235.3B19DFCB28@keescook>
- <a9c6c111-d92f-f76f-1b7a-f6220d755eeb@kernel.org>
+To:     linux-hardening@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] fortify: Do not cast to "unsigned char"
+Date:   Tue, 25 Oct 2022 16:16:54 -0700
+Message-Id: <20221025231627.never.000-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a9c6c111-d92f-f76f-1b7a-f6220d755eeb@kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1242; h=from:subject:message-id; bh=ongZMPsGsunOFE/Aw5TzydU9CY4BM9qng6Hx1S8Irz8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjWG5l+dmLqCoH6aNAlHtePjkBADhow7KrQzlCgdrQ HSi+1SmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY1huZQAKCRCJcvTf3G3AJjJHEA CC/SsAc9o3xNnq0WhQdMGC96YHBixwqDtDjXN1hC0XFI4c6lQs5Ql0nzaSVRWwuTTzstOR+7Ui9axU YQGPgMt+ZytoL4sjQXR8PPqFLgCRUovDFxQoyOpIQjs+TOtPeW1NYyq/+2ES7eg9gkFnHVSPHGSC3+ Y3vgCZhHa7KTYYogOMb4TDewMU28GLHIXVGVGQe9Rf/M/Y0mpx4id6/OwFxp6oUq5IhfcMnASKYwDl 1QLGVPazvgNFG9QGDNXst6va9CPs+UfJEHOoZi9G+/kdjgIpXQv0aN94tBEIRMBQYhsSnnivYgaY/r aQWcu8M5nSMa3E7GLH1AajOdUTEmIq9TfasF/NVyrRCXkPoclC5SEcYvb5YR4RoWPUL/8QVWskWNIe DM352tS6CxMo2KqRYeuqXpMaPKOWbfgB6yW0uQ36d+CO95d1/8MM8P/U5YN02+Wxq5i0spGzmgiqeP juMSarxV/yko5p5qSfcIG7/VLHnFn/sEfRNtauLNTFcjYQNOczbbGvSbdznS06KEvYe7ovrlb232eG 1MTGX6+o6jRvYjpJpENRpx+nRq3vkLxW3lQ/OIOhlL8uk1rN0QyzcnevnuLc+huCIEDuqIAQDtjQsT pC6GVekHdywZjhSYToC/yprRGiusYEJzggpI8BaPGcM8Nm/chsAz2DBO6pkg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Oct 24, 2022 at 08:03:34PM +0200, Vlastimil Babka (SUSE) wrote:
-> On 10/19/22 07:37, Kees Cook wrote:
-> > On Tue, Oct 18, 2022 at 03:51:37PM -0700, Andrew Morton wrote:
-> >> On Tue, 18 Oct 2022 02:03:29 -0700 Kees Cook <keescook@chromium.org> wrote:
-> >> 
-> >> > Round up allocations with kmalloc_size_roundup() so that mempool's use
-> >> > of ksize() is always accurate and no special handling of the memory is
-> >> > needed by KASAN, UBSAN_BOUNDS, nor FORTIFY_SOURCE.
-> >> 
-> >> Confused.  If the special handling is not needed, why doesn't the patch
-> >> removed the no longer needed special handling?
-> > 
-> > The special handling is in the ksize() implementation, so it can't be
-> > removed[1] until all the ksize()-affected users are updated to see their
-> > true allocation sizes first.
-> > 
-> > [1] https://lore.kernel.org/lkml/20220923202822.2667581-16-keescook@chromium.org/
-> 
-> But in the previous version I was wondering if we can just stop doing
-> ksize()-like poison handling in mempool completely, if no mempool consumers
-> call ksize() to expand their use of the allocated objects. You seemed to
-> agree but this version is uncahnged?
-> 
-> https://lore.kernel.org/all/f4fc52c4-7c18-1d76-0c7a-4058ea2486b9@suse.cz/
+Do not cast to "unsigned char", as this needlessly creates type problems
+when attempting builds without -Wno-pointer-sign[1]. The intent of the
+cast is to drop possible "const" types.
 
-Oops, yes. This failed to get on my TODO list. New version coming!
+[1] https://lore.kernel.org/lkml/CAHk-=wgz3Uba8w7kdXhsqR1qvfemYL+OFQdefJnkeqXG8qZ_pA@mail.gmail.com/
 
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 3009f891bb9f ("fortify: Allow strlen() and strnlen() to pass compile-time known lengths")
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/linux/fortify-string.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index f3dd5d1a6a25..09a032f6ce6b 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -18,7 +18,7 @@ void __write_overflow_field(size_t avail, size_t wanted) __compiletime_warning("
+ 
+ #define __compiletime_strlen(p)					\
+ ({								\
+-	unsigned char *__p = (unsigned char *)(p);		\
++	char *__p = (char *)(p);				\
+ 	size_t __ret = SIZE_MAX;				\
+ 	size_t __p_size = __member_size(p);			\
+ 	if (__p_size != SIZE_MAX &&				\
 -- 
-Kees Cook
+2.34.1
+
