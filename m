@@ -2,31 +2,31 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5E3FA3743
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Oct 2022 14:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D10FA3740
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Oct 2022 14:14:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233071AbiJYOOU (ORCPT
+        id S233090AbiJYOOV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Oct 2022 10:14:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46148 "EHLO
+        Tue, 25 Oct 2022 10:14:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233043AbiJYONw (ORCPT
+        with ESMTP id S233170AbiJYOOH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Oct 2022 10:13:52 -0400
+        Tue, 25 Oct 2022 10:14:07 -0400
 Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B9D5A485F;
-        Tue, 25 Oct 2022 07:13:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9A605F9B5;
+        Tue, 25 Oct 2022 07:14:05 -0700 (PDT)
 Received: from localhost.localdomain (unknown [83.149.199.65])
-        by mail.ispras.ru (Postfix) with ESMTPSA id AFC4B40737B0;
-        Tue, 25 Oct 2022 14:13:48 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru AFC4B40737B0
+        by mail.ispras.ru (Postfix) with ESMTPSA id 2720940737B6;
+        Tue, 25 Oct 2022 14:14:04 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 2720940737B6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-        s=default; t=1666707228;
-        bh=dTEKS+twdCc3BuOiQmL2rt+dm6JwiYtOXDBWNvRh+HU=;
+        s=default; t=1666707244;
+        bh=r8nCG+BSFMZKNWwE0pHsrN0ffee0dDoDl2C/gh/xQ4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XkHD8wpXOt/5CTGbck/z4PwKzDIiZUJm5+z1Lx0bO1CHeCyGFCSv5Do28Rtxedz/p
-         sQ8B9k5qrRwu/Ggz3lFVujvAJNrVMzSXq7kkuzukYRDNZl4gBGCm1IcLudIx2gHuwk
-         4wIHz5lcPkXlBYEDD5Bb0KUDuQr3G3VRW1//vRkc=
+        b=U5YTbnVct96Q5WoGPafr04RLpBH2PEo1QCEmDD8Tkty7iD60sHwC1d9QjPlFcEYzt
+         2Y6ngA/HFyjIs5z/D6xXG9+gXjXGVDvZ0CG4sOqZRyuLlBWsT2Wnz/SgX5T5vjY0lD
+         z6M9RgYzN/1RRfx1NdIM7sd/CV1xeMYfi2vuxPt4=
 From:   Evgeniy Baskov <baskov@ispras.ru>
 To:     Ard Biesheuvel <ardb@kernel.org>
 Cc:     Evgeniy Baskov <baskov@ispras.ru>, Borislav Petkov <bp@alien8.de>,
@@ -39,9 +39,9 @@ Cc:     Evgeniy Baskov <baskov@ispras.ru>, Borislav Petkov <bp@alien8.de>,
         Peter Jones <pjones@redhat.com>, lvc-project@linuxtesting.org,
         x86@kernel.org, linux-efi@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2 14/23] x86/boot: Add EFI kernel extraction interface
-Date:   Tue, 25 Oct 2022 17:12:52 +0300
-Message-Id: <d7b96d197f13f0382fcf85252575dfa78783ba06.1666705333.git.baskov@ispras.ru>
+Subject: [PATCH v2 16/23] x86/boot: Reduce lower limit of physical KASLR
+Date:   Tue, 25 Oct 2022 17:12:54 +0300
+Message-Id: <663de36ee68f37998a809b315fa81b360ce5e2a5.1666705333.git.baskov@ispras.ru>
 X-Mailer: git-send-email 2.37.4
 In-Reply-To: <cover.1666705333.git.baskov@ispras.ru>
 References: <cover.1666705333.git.baskov@ispras.ru>
@@ -51,244 +51,39 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-To enable extraction of kernel image from EFI stub code directly
-extraction code needs to have separate interface that avoid part
-of low level initialization logic, i.e. serial port setup.
+Set lower limit of physical KASLR to 64M.
 
-Add kernel extraction function callable from libstub as a part
-of preparation for extracting the kernel directly from EFI environment.
+Previously is was set to 512M when kernel is loaded higher than that.
+That prevented physical KASLR from being performed on x86_32, where
+upper limit is also set to 512M. The limit is pretty arbitrary, and the
+most important is to set it above the ISA hole, i.e. higher than 16M.
+
+It was not that important before, but now kernel is not getting
+relocated to the lower address when booting via EFI, exposing the
+KASLR failures.
 
 Signed-off-by: Evgeniy Baskov <baskov@ispras.ru>
 ---
- arch/x86/boot/compressed/head_32.S    |   3 +-
- arch/x86/boot/compressed/head_64.S    |   2 +-
- arch/x86/boot/compressed/misc.c       | 101 +++++++++++++++++---------
- arch/x86/boot/compressed/misc.h       |   1 +
- arch/x86/include/asm/shared/extract.h |  27 +++++++
- 5 files changed, 98 insertions(+), 36 deletions(-)
- create mode 100644 arch/x86/include/asm/shared/extract.h
+ arch/x86/boot/compressed/kaslr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index 3b354eb9516d..b46a1c4109cf 100644
---- a/arch/x86/boot/compressed/head_32.S
-+++ b/arch/x86/boot/compressed/head_32.S
-@@ -217,8 +217,7 @@ SYM_DATA(image_offset, .long 0)
-  */
- 	.bss
- 	.balign 4
--boot_heap:
--	.fill BOOT_HEAP_SIZE, 1, 0
-+SYM_DATA(boot_heap,	.fill BOOT_HEAP_SIZE, 1, 0)
- boot_stack:
- 	.fill BOOT_STACK_SIZE, 1, 0
- boot_stack_end:
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 73a2ac2b063d..6cfcdeb4531b 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -1006,7 +1006,7 @@ SYM_FUNC_END(startup32_check_sev_cbit)
-  */
- 	.bss
- 	.balign 4
--SYM_DATA_LOCAL(boot_heap,	.fill BOOT_HEAP_SIZE, 1, 0)
-+SYM_DATA(boot_heap,	.fill BOOT_HEAP_SIZE, 1, 0)
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index 7e09d65f7b57..672550686f62 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -852,10 +852,10 @@ void choose_random_location(unsigned long input,
  
- SYM_DATA_START_LOCAL(boot_stack)
- 	.fill BOOT_STACK_SIZE, 1, 0
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index c9c235d65d16..59264720e87e 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -308,11 +308,11 @@ static inline unsigned long kernel_add_identity_map_dummy(unsigned long start,
-  *             |-------uncompressed kernel image---------|
-  *
-  */
--asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
--				  unsigned char *input_data,
--				  unsigned long input_len,
--				  unsigned char *output,
--				  unsigned long output_len)
-+static void *do_extract_kernel(void *rmode,
-+			       unsigned char *input_data,
-+			       unsigned long input_len,
-+			       unsigned char *output,
-+			       unsigned long output_len)
- {
- 	const unsigned long kernel_total_size = VO__end - VO__text;
- 	unsigned long virt_addr = LOAD_PHYSICAL_ADDR;
-@@ -326,26 +326,6 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
- 
- 	sanitize_boot_params(boot_params);
- 
--	init_default_io_ops();
--
--	/*
--	 * On 64-bit this pointer is set during page table uninitialization,
--	 * but on 32-bit it remains uninitialized, since paging is disabled.
--	 */
--	if (IS_ENABLED(CONFIG_X86_32))
--		kernel_add_identity_map = kernel_add_identity_map_dummy;
--
--
--	/*
--	 * Detect TDX guest environment.
--	 *
--	 * It has to be done before console_init() in order to use
--	 * paravirtualized port I/O operations if needed.
--	 */
--	early_tdx_detect();
--
--	init_bare_console();
--
  	/*
- 	 * Save RSDP address for later use. Have this after console_init()
- 	 * so that early debugging output from the RSDP parsing code can be
-@@ -353,11 +333,6 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+ 	 * Low end of the randomization range should be the
+-	 * smaller of 512M or the initial kernel image
++	 * smaller of 64M or the initial kernel image
+ 	 * location:
  	 */
- 	boot_params->acpi_rsdp_addr = get_rsdp_addr();
+-	min_addr = min(*output, 512UL << 20);
++	min_addr = min(*output, 64UL << 20);
+ 	/* Make sure minimum is aligned. */
+ 	min_addr = ALIGN(min_addr, CONFIG_PHYSICAL_ALIGN);
  
--	debug_putstr("early console in extract_kernel\n");
--
--	free_mem_ptr     = heap;	/* Heap */
--	free_mem_end_ptr = heap + BOOT_HEAP_SIZE;
--
- 	/*
- 	 * The memory hole needed for the kernel is the larger of either
- 	 * the entire decompressed kernel plus relocation table, or the
-@@ -411,12 +386,12 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
- 	if (virt_addr & (MIN_KERNEL_ALIGN - 1))
- 		error("Destination virtual address inappropriately aligned");
- #ifdef CONFIG_X86_64
--	if (heap > 0x3fffffffffffUL)
-+	if (phys_addr > 0x3fffffffffffUL)
- 		error("Destination address too large");
- 	if (virt_addr + max(output_len, kernel_total_size) > KERNEL_IMAGE_SIZE)
- 		error("Destination virtual address is beyond the kernel mapping area");
- #else
--	if (heap > ((-__PAGE_OFFSET-(128<<20)-1) & 0x7fffffff))
-+	if (phys_addr > ((-__PAGE_OFFSET-(128<<20)-1) & 0x7fffffff))
- 		error("Destination address too large");
- #endif
- #ifndef CONFIG_RELOCATABLE
-@@ -430,12 +405,72 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
- 	parse_elf(output, output_len, virt_addr);
- 	debug_putstr("done.\nBooting the kernel.\n");
- 
-+	return output;
-+}
-+
-+asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
-+				  unsigned char *input_data,
-+				  unsigned long input_len,
-+				  unsigned char *output,
-+				  unsigned long output_len)
-+{
-+	void *entry;
-+
-+	init_default_io_ops();
-+
-+	/*
-+	 * On 64-bit this pointer is set during page table uninitialization,
-+	 * but on 32-bit it remains uninitialized, since paging is disabled.
-+	 */
-+	if (IS_ENABLED(CONFIG_X86_32))
-+		kernel_add_identity_map = kernel_add_identity_map_dummy;
-+
-+	/*
-+	 * Detect TDX guest environment.
-+	 *
-+	 * It has to be done before console_init() in order to use
-+	 * paravirtualized port I/O operations if needed.
-+	 */
-+	early_tdx_detect();
-+
-+	init_bare_console();
-+
-+	debug_putstr("early console in extract_kernel\n");
-+
-+	free_mem_ptr     = heap;	/* Heap */
-+	free_mem_end_ptr = heap + BOOT_HEAP_SIZE;
-+
-+	entry = do_extract_kernel(rmode, input_data,
-+				  input_len, output, output_len);
-+
- 	/* Disable exception handling before booting the kernel */
- 	cleanup_exception_handling();
- 
--	return output;
-+	return entry;
- }
- 
-+void *efi_extract_kernel(struct boot_params *rmode,
-+			 struct efi_extract_callbacks *cb,
-+			 unsigned char *input_data,
-+			 unsigned long input_len,
-+			 unsigned char *output,
-+			 unsigned long output_len)
-+{
-+	extern char boot_heap[BOOT_HEAP_SIZE];
-+
-+	free_mem_ptr     = (unsigned long)boot_heap;	/* Heap */
-+	free_mem_end_ptr = (unsigned long)boot_heap + BOOT_HEAP_SIZE;
-+
-+	init_console_func(cb->putstr, cb->puthex);
-+	kernel_add_identity_map = cb->map_range;
-+
-+	return do_extract_kernel(rmode, input_data,
-+				 input_len, output, output_len);
-+}
-+
-+
-+
-+
- void fortify_panic(const char *name)
- {
- 	error("detected buffer overflow");
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 0076b2845b4b..379c4a3ca7dd 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -26,6 +26,7 @@
- #include <asm/boot.h>
- #include <asm/bootparam.h>
- #include <asm/desc_defs.h>
-+#include <asm/shared/extract.h>
- 
- #include "tdx.h"
- 
-diff --git a/arch/x86/include/asm/shared/extract.h b/arch/x86/include/asm/shared/extract.h
-new file mode 100644
-index 000000000000..ebbc93333c74
---- /dev/null
-+++ b/arch/x86/include/asm/shared/extract.h
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef ASM_SHARED_EXTRACT_H
-+#define ASM_SHARED_EXTRACT_H
-+
-+#include <asm/bootparam.h>
-+
-+#define MAP_WRITE	0x02 /* Writable memory */
-+#define MAP_EXEC	0x04 /* Executable memory */
-+#define MAP_ALLOC	0x10 /* Range needs to be allocated */
-+#define MAP_PROTECT	0x20 /* Set exact memory attributes for memory range */
-+
-+struct efi_extract_callbacks {
-+	void (*putstr)(const char *msg);
-+	void (*puthex)(unsigned long x);
-+	unsigned long (*map_range)(unsigned long start,
-+				   unsigned long end,
-+				   unsigned int flags);
-+};
-+
-+void *efi_extract_kernel(struct boot_params *rmode,
-+			 struct efi_extract_callbacks *cb,
-+			 unsigned char *input_data,
-+			 unsigned long input_len,
-+			 unsigned char *output,
-+			 unsigned long output_len);
-+
-+#endif /* ASM_SHARED_EXTRACT_H */
 -- 
 2.37.4
 
