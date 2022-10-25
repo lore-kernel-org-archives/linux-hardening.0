@@ -2,322 +2,250 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C43C38A2D
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Oct 2022 14:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D52FA373E
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Oct 2022 18:07:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233190AbiJYOPk (ORCPT
+        id S232661AbiJYSHG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Oct 2022 10:15:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46804 "EHLO
+        Tue, 25 Oct 2022 14:07:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233180AbiJYOOX (ORCPT
+        with ESMTP id S232602AbiJYSG5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Oct 2022 10:14:23 -0400
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39A38BE2D1;
-        Tue, 25 Oct 2022 07:14:22 -0700 (PDT)
-Received: from localhost.localdomain (unknown [83.149.199.65])
-        by mail.ispras.ru (Postfix) with ESMTPSA id AEB1640737BF;
-        Tue, 25 Oct 2022 14:14:20 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru AEB1640737BF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-        s=default; t=1666707260;
-        bh=tm+hOZOKEnb+VX8cmnhhjsXvyJIWq6CDKqxIhjxKO+o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DqbHhUF9LxYJaRh3m78ioFrYYDnTe6Tqnm4eknPmFJAdM0BQ6ATBNmqGonw5vgpES
-         0aYJeVeBDRNtnkGgLy451EBo4nni5wxLgefOJqHdp8a5rSbqgsqB2mK6DMtyaromeS
-         Ku/w0+8gDNf8ctnR4o6AZWRpQoNFFlswVFljucBI=
-From:   Evgeniy Baskov <baskov@ispras.ru>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Evgeniy Baskov <baskov@ispras.ru>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Peter Jones <pjones@redhat.com>, lvc-project@linuxtesting.org,
-        x86@kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2 23/23] efi/libstub: Use memory attribute protocol
-Date:   Tue, 25 Oct 2022 17:13:01 +0300
-Message-Id: <9b3c892dfc81a8b716abb75a7ce82edd2bf78a00.1666705333.git.baskov@ispras.ru>
-X-Mailer: git-send-email 2.37.4
-In-Reply-To: <cover.1666705333.git.baskov@ispras.ru>
-References: <cover.1666705333.git.baskov@ispras.ru>
+        Tue, 25 Oct 2022 14:06:57 -0400
+Received: from relay02.th.seeweb.it (relay02.th.seeweb.it [5.144.164.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D229711837
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Oct 2022 11:06:56 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPv6:2a00:f41:181d:45ba:3479:f7c2:4c21:3ad3])
+        (using TLSv1.3 with cipher TLS_CHACHA20_POLY1305_SHA256 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA512)
+        (No client certificate requested)
+        by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 890D8200B9;
+        Tue, 25 Oct 2022 20:06:52 +0200 (CEST)
+From:   Konrad Dybcio <konrad.dybcio@somainline.org>
+To:     linux-arm-msm@vger.kernel.org, andersson@kernel.org,
+        agross@kernel.org
+Cc:     Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        Iskren Chernev <iskren.chernev@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v2 4/4] arm64: dts: qcom: Add device tree for Sony Xperia 10 IV
+Date:   Tue, 25 Oct 2022 20:06:33 +0200
+Message-Id: <20221025180634.28956-4-konrad.dybcio@somainline.org>
+X-Mailer: git-send-email 2.32.0 (Apple Git-132)
+In-Reply-To: <20221025180634.28956-1-konrad.dybcio@somainline.org>
+References: <20221025180634.28956-1-konrad.dybcio@somainline.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add EFI_MEMORY_ATTRIBUTE_PROTOCOL as preferred alternative to DXE
-services for changing memory attributes in the EFISTUB.
+Add support for Sony Xperia 10 IV, a.k.a PDX225. This device is a part
+of the SoMC SM6375 Murray platform and currently it is the only
+device based on that board, so no -common DTSI is created until (if?)
+other Murray devices appear.
 
-Use DXE services only as a fallback in case aforementioned protocol
-is not supported by UEFI implementation.
+This commit brings support for:
+* USB (only USB2 for now)
+* Display via simplefb
 
-Move DXE services initialization code closer to the place they are used
-to match EFI_MEMORY_ATTRIBUTE_PROTOCOL initialization code.
+To create a working boot image, you need to run:
+cat arch/arm64/boot/Image.gz arch/arm64/boot/dts/qcom/sm6375-sony-xperia-\
+murray-pdx225.dtb > .Image.gz-dtb
 
-Signed-off-by: Evgeniy Baskov <baskov@ispras.ru>
+mkbootimg \
+--kernel .Image.gz-dtb \
+--ramdisk some_initrd.img \
+--pagesize 4096 \
+--base 0x0 \
+--kernel_offset 0x8000 \
+--ramdisk_offset 0x1000000 \
+--tags_offset 0x100 \
+--cmdline "SOME_CMDLINE" \
+--dtb_offset 0x1f00000 \
+--header_version 1 \
+--os_version 12 \
+--os_patch_level 2022-04 \ # or newer
+-o boot.img-sony-xperia-pdx225
+
+Then, you need to flash it on the device and get rid of all the
+vendor_boot/dtbo mess:
+
+First, you need to get rid of vendor_boot. However, the bootloader
+is utterly retarded and it will not let you neither flash nor erase it.
+There are a couple ways to handle this: you can either dd /dev/zero to
+it from Android (if you have root) or a custom recovery or from fastbootd
+(fastboot/adb reboot fastboot). You will not be able to boot Android
+images on your phone unless you lock the bootloader (fastboot oem lock)
+and restore the factory image with Xperia Companion
+Windows-and-macOS-only software.
+
+The best way so far is probably to use the second (_b) slot and flash
+mainline there. This will however require you to flash some partitions
+manually, as they are not populated from factory:
+
+(boot_b, dtbo_b, vendor_boot_b, vbmeta_b, vbmeta_system_b) - these we
+don't really care about as we nuke/replace them
+
+(dsp_b, imagefv_b, modem_b, oem_b, rdimage_b) - these you NEED to populate
+to get a successful boot on slot B, otherwise you will have limited / no
+functionality.
+
+To switch slots, simply run:
+
+fastboot --set-active=a //or =b
+
+The rest assumes you are on slot A.
+
+// You have to either pull vbmeta{"","_system"} from
+// /dev/block/bootdevice/by-name/ or build one as a part of AOSP
+fastboot --disable-verity --disable-verification flash vbmeta_b vbmeta.img
+fastboot --disable-verity --disable-verification flash vbmeta_system_b \
+vbmeta_system.img
+
+fastboot flash boot_b boot.img-sony-xperia-pdx225
+fastboot reboot fastboot // entering fastbootd
+fastboot flash vendor_boot_b emptything.img
+fastboot flash dtbo_b emptything.img
+fastboot reboot bootloader // entering bootloader fastboot
+fastboot --set-active=b
+fastboot reboot // mainline time!
+
+Where emptything.img is a tiny file that consists of 2 bytes (all zeroes),
+doing a "fastboot erase" won't cut it, the bootloader will go crazy and
+things will fall apart when it tries to overlay random bytes from an empty
+partition onto a perfectly good appended DTB.
+
+From there on you can flash new mainline builds by simply flashing
+boot.img that you create after each kernel rebuild.
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Konrad Dybcio <konrad.dybcio@somainline.org>
 ---
- drivers/firmware/efi/libstub/mem.c      | 168 ++++++++++++++++++------
- drivers/firmware/efi/libstub/x86-stub.c |  17 ---
- 2 files changed, 128 insertions(+), 57 deletions(-)
+Changes since v1:
+- Move the xo_board freq into device DTS
 
-diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/libstub/mem.c
-index cdf1e6fb6430..35acec241dd3 100644
---- a/drivers/firmware/efi/libstub/mem.c
-+++ b/drivers/firmware/efi/libstub/mem.c
-@@ -5,6 +5,9 @@
- 
- #include "efistub.h"
- 
-+const efi_dxe_services_table_t *efi_dxe_table;
-+efi_memory_attribute_protocol_t *efi_mem_attrib_proto;
-+
- /**
-  * efi_get_memory_map() - get memory map
-  * @map:		pointer to memory map pointer to which to assign the
-@@ -126,66 +129,47 @@ void efi_free(unsigned long size, unsigned long addr)
- 	efi_bs_call(free_pages, addr, nr_pages);
- }
- 
--/**
-- * efi_adjust_memory_range_protection() - change memory range protection attributes
-- * @start:	memory range start address
-- * @size:	memory range size
-- *
-- * Actual memory range for which memory attributes are modified is
-- * the smallest ranged with start address and size aligned to EFI_PAGE_SIZE
-- * that includes [start, start + size].
-- *
-- * @return: status code
-- */
--efi_status_t efi_adjust_memory_range_protection(unsigned long start,
--						unsigned long size,
--						unsigned long attributes)
-+static void retrieve_dxe_table(void)
-+{
-+	efi_dxe_table = get_efi_config_table(EFI_DXE_SERVICES_TABLE_GUID);
-+	if (efi_dxe_table &&
-+	    efi_dxe_table->hdr.signature != EFI_DXE_SERVICES_TABLE_SIGNATURE) {
-+		efi_warn("Ignoring DXE services table: invalid signature\n");
-+		efi_dxe_table = NULL;
-+	}
-+}
-+
-+static efi_status_t adjust_mem_attrib_dxe(efi_physical_addr_t rounded_start,
-+					  efi_physical_addr_t rounded_end,
-+					  unsigned long attributes)
- {
- 	efi_status_t status;
- 	efi_gcd_memory_space_desc_t desc;
--	efi_physical_addr_t end, next;
--	efi_physical_addr_t rounded_start, rounded_end;
-+	efi_physical_addr_t end, next, start;
- 	efi_physical_addr_t unprotect_start, unprotect_size;
- 
--	if (efi_dxe_table == NULL)
--		return EFI_UNSUPPORTED;
-+	if (!efi_dxe_table) {
-+		retrieve_dxe_table();
- 
--	/*
--	 * This function should not be used to modify attributes
--	 * other than writable/executable.
--	 */
--
--	if ((attributes & ~(EFI_MEMORY_RO | EFI_MEMORY_XP)) != 0)
--		return EFI_INVALID_PARAMETER;
--
--	/*
--	 * Disallow simultaniously executable and writable memory
--	 * to inforce W^X policy if direct extraction code is enabled.
--	 */
--
--	if ((attributes & (EFI_MEMORY_RO | EFI_MEMORY_XP)) == 0) {
--		efi_warn("W^X violation at [%08lx,%08lx]\n",
--			 (unsigned long)rounded_start,
--			 (unsigned long)rounded_end);
-+		if (!efi_dxe_table)
-+			return EFI_UNSUPPORTED;
- 	}
- 
--	rounded_start = rounddown(start, EFI_PAGE_SIZE);
--	rounded_end = roundup(start + size, EFI_PAGE_SIZE);
--
- 	/*
- 	 * Don't modify memory region attributes, they are
- 	 * already suitable, to lower the possibility to
- 	 * encounter firmware bugs.
- 	 */
- 
--	for (end = start + size; start < end; start = next) {
-+
-+	for (start = rounded_start, end = rounded_end; start < end; start = next) {
- 
- 		status = efi_dxe_call(get_memory_space_descriptor,
- 				      start, &desc);
- 
- 		if (status != EFI_SUCCESS) {
- 			efi_warn("Unable to get memory descriptor at %lx\n",
--				 start);
-+				 (unsigned long)start);
- 			return status;
- 		}
- 
-@@ -227,3 +211,107 @@ efi_status_t efi_adjust_memory_range_protection(unsigned long start,
- 
- 	return EFI_SUCCESS;
- }
-+
-+static void retrieve_memory_attributes_proto(void)
-+{
-+	efi_status_t status;
-+	efi_guid_t guid = EFI_MEMORY_ATTRIBUTE_PROTOCOL_GUID;
-+
-+	status = efi_bs_call(locate_protocol, &guid, NULL,
-+			     (void **)&efi_mem_attrib_proto);
-+	if (status != EFI_SUCCESS)
-+		efi_mem_attrib_proto = NULL;
-+}
-+
-+/**
-+ * efi_adjust_memory_range_protection() - change memory range protection attributes
-+ * @start:	memory range start address
-+ * @size:	memory range size
-+ *
-+ * Actual memory range for which memory attributes are modified is
-+ * the smallest ranged with start address and size aligned to EFI_PAGE_SIZE
-+ * that includes [start, start + size].
-+ *
-+ * This function first attempts to use EFI_MEMORY_ATTRIBUTE_PROTOCOL,
-+ * that is a part of UEFI Specification since version 2.10.
-+ * If the protocol is unavailable it falls back to DXE services functions.
-+ *
-+ * @return: status code
+ arch/arm64/boot/dts/qcom/Makefile             |  1 +
+ .../qcom/sm6375-sony-xperia-murray-pdx225.dts | 86 +++++++++++++++++++
+ 2 files changed, 87 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx225.dts
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index b0558d3389e5..0292d116c25b 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -144,6 +144,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-samsung-w737.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-sony-xperia-seine-pdx201.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm6350-sony-xperia-lena-pdx213.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sm6375-sony-xperia-murray-pdx225.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm7225-fairphone-fp4.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-hdk.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-microsoft-surface-duo.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx225.dts b/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx225.dts
+new file mode 100644
+index 000000000000..08a705e8ff92
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx225.dts
+@@ -0,0 +1,86 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2022, Konrad Dybcio <konrad.dybcio@somainline.org>
 + */
-+efi_status_t efi_adjust_memory_range_protection(unsigned long start,
-+						unsigned long size,
-+						unsigned long attributes)
-+{
-+	efi_status_t status;
-+	efi_physical_addr_t rounded_start, rounded_end;
-+	unsigned long attr_clear;
 +
-+	/*
-+	 * This function should not be used to modify attributes
-+	 * other than writable/executable.
-+	 */
++/dts-v1/;
 +
-+	if ((attributes & ~(EFI_MEMORY_RO | EFI_MEMORY_XP)) != 0)
-+		return EFI_INVALID_PARAMETER;
++#include <dt-bindings/gpio/gpio.h>
++#include "sm6375.dtsi"
++#include "pmr735a.dtsi"
 +
-+	/*
-+	 * Warn if requested to make memory simultaneously
-+	 * executable and writable to enforce W^X policy.
-+	 */
++/ {
++	model = "Sony Xperia 10 IV";
++	compatible = "sony,pdx225", "qcom,sm6375";
++	chassis-type = "handset";
 +
-+	if ((attributes & (EFI_MEMORY_RO | EFI_MEMORY_XP)) == 0) {
-+		efi_warn("W^X violation at  [%08lx,%08lx]",
-+			 (unsigned long)rounded_start,
-+			 (unsigned long)rounded_end);
-+	}
++	chosen {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
 +
-+	rounded_start = rounddown(start, EFI_PAGE_SIZE);
-+	rounded_end = roundup(start + size, EFI_PAGE_SIZE);
++		framebuffer: framebuffer@85200000 {
++			compatible = "simple-framebuffer";
++			reg = <0 0x85200000 0 0xc00000>;
 +
-+	if (!efi_mem_attrib_proto) {
-+		retrieve_memory_attributes_proto();
++			width = <1080>;
++			height = <2520>;
++			stride = <(1080 * 4)>;
++			format = "a8r8g8b8";
++			/*
++			 * That's (going to be) a lot of clocks, but it's necessary due
++			 * to unused clk cleanup & no panel driver yet
++			 */
++			clocks = <&gcc GCC_DISP_AHB_CLK>,
++				 <&gcc GCC_DISP_HF_AXI_CLK>,
++				 <&gcc GCC_DISP_THROTTLE_CORE_CLK>,
++				 <&gcc GCC_DISP_GPLL0_DIV_CLK_SRC>;
++		};
++	};
 +
-+		/* Fall back to DXE services if unsupported */
-+		if (!efi_mem_attrib_proto) {
-+			return adjust_mem_attrib_dxe(rounded_start,
-+						     rounded_end,
-+						     attributes);
-+		}
-+	}
++	reserved-memory {
++		cont_splash_mem: memory@85200000 {
++			reg = <0 0x85200000 0 0xc00000>;
++			no-map;
++		};
 +
-+	/*
-+	 * Unlike DXE services functions, EFI_MEMORY_ATTRIBUTE_PROTOCOL
-+	 * does not clear unset protection bit, so it needs to be cleared
-+	 * explcitly
-+	 */
++		ramoops@ffc40000 {
++			compatible = "ramoops";
++			reg = <0 0xffc40000 0 0xb0000>;
++			record-size = <0x10000>;
++			console-size = <0x60000>;
++			ftrace-size = <0x10000>;
++			pmsg-size = <0x20000>;
++			ecc-size = <16>;
++		};
++	};
 +
-+	attr_clear = ~attributes &
-+		     (EFI_MEMORY_RO | EFI_MEMORY_XP | EFI_MEMORY_RP);
++	vph_pwr: vph-pwr-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vph_pwr";
++		regulator-min-microvolt = <3700000>;
++		regulator-max-microvolt = <3700000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++};
 +
-+	status = efi_call_proto(efi_mem_attrib_proto,
-+				clear_memory_attributes,
-+				rounded_start,
-+				rounded_end - rounded_start,
-+				attr_clear);
-+	if (status != EFI_SUCCESS) {
-+		efi_warn("Failed to clear memory attributes at [%08lx,%08lx]: %lx",
-+			 (unsigned long)rounded_start,
-+			 (unsigned long)rounded_end,
-+			 status);
-+		return status;
-+	}
++&tlmm {
++	gpio-reserved-ranges = <13 4>;
++};
 +
-+	status = efi_call_proto(efi_mem_attrib_proto,
-+				set_memory_attributes,
-+				rounded_start,
-+				rounded_end - rounded_start,
-+				attributes);
-+	if (status != EFI_SUCCESS) {
-+		efi_warn("Failed to set memory attributes at [%08lx,%08lx]: %lx",
-+			 (unsigned long)rounded_start,
-+			 (unsigned long)rounded_end,
-+			 status);
-+	}
++&usb_1 {
++	status = "okay";
++};
 +
-+	return status;
-+}
-diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index d9bb9125d518..95a69c37518e 100644
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -23,7 +23,6 @@
- #define MAXMEM_X86_64_4LEVEL (1ull << 46)
- 
- const efi_system_table_t *efi_system_table;
--const efi_dxe_services_table_t *efi_dxe_table;
- extern u32 image_offset;
- static efi_loaded_image_t *image = NULL;
- 
-@@ -358,15 +357,6 @@ static void setup_sections_memory_protection(void *image_base,
- 					     unsigned long init_size)
- {
- #ifdef CONFIG_EFI_DXE_MEM_ATTRIBUTES
--	efi_dxe_table = get_efi_config_table(EFI_DXE_SERVICES_TABLE_GUID);
--
--	if (!efi_dxe_table ||
--	    efi_dxe_table->hdr.signature != EFI_DXE_SERVICES_TABLE_SIGNATURE) {
--		efi_warn("Unable to locate EFI DXE services table\n");
--		efi_dxe_table = NULL;
--		return;
--	}
--
- 	/* .setup [image_base, _head] */
- 	efi_adjust_memory_range_protection((unsigned long)image_base,
- 					   (unsigned long)_head - (unsigned long)image_base,
-@@ -736,13 +726,6 @@ asmlinkage unsigned long efi_main(efi_handle_t handle,
- 	if (efi_system_table->hdr.signature != EFI_SYSTEM_TABLE_SIGNATURE)
- 		efi_exit(handle, EFI_INVALID_PARAMETER);
- 
--	efi_dxe_table = get_efi_config_table(EFI_DXE_SERVICES_TABLE_GUID);
--	if (efi_dxe_table &&
--	    efi_dxe_table->hdr.signature != EFI_DXE_SERVICES_TABLE_SIGNATURE) {
--		efi_warn("Ignoring DXE services table: invalid signature\n");
--		efi_dxe_table = NULL;
--	}
--
- #ifdef CONFIG_CMDLINE_BOOL
- 	status = efi_parse_options(CONFIG_CMDLINE);
- 	if (status != EFI_SUCCESS) {
++&usb_1_dwc3 {
++	dr_mode = "peripheral";
++};
++
++&usb_1_hsphy {
++	status = "okay";
++};
++
++&xo_board {
++	clock-frequency = <19200000>;
++};
 -- 
-2.37.4
+2.38.1
 
