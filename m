@@ -2,92 +2,223 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D83ADC38A2D
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Oct 2022 21:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FF0C38A2D
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Oct 2022 22:39:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232042AbiJYVaU (ORCPT
+        id S232481AbiJYWjs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Oct 2022 17:30:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52070 "EHLO
+        Tue, 25 Oct 2022 18:39:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232024AbiJYVaS (ORCPT
+        with ESMTP id S232496AbiJYWjn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Oct 2022 17:30:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A773E4F64C;
-        Tue, 25 Oct 2022 14:30:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 43FB161BAC;
-        Tue, 25 Oct 2022 21:30:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 93F39C433D7;
-        Tue, 25 Oct 2022 21:30:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666733416;
-        bh=sOpXMCe9LC1xfyUXh2lmcg/3x2PBBpExWr6Hng1hpAQ=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=i8wngfqK8cXmbc2Bn0/GH0lD40yiiXTzQzGaoftBx6FOZOqMNz1oG92AUzTKJtfTl
-         +PDpYSNe3XbSTSKU8l5LBbV46pmxJhyThuIvEotpWbYqdJaCds48JMHC+sfG3evXVx
-         sDvef30alWKmmKuwUyMRYX0bm1VJHPjv72iwDCQGohaUX9Ouiza3CjwjVyGYbUJtON
-         0LKC38A65N1T53TjX4bmNcFe30fxMADlvL9DkhY9gy0mnEU6HQs3KkcCTpsaAxDT8d
-         8jSMlseccyi94HZJWQFWw+TwqGruQqSC5IwqzOGEBizBsfK67q3jGZe/vIXzBpMz6g
-         EGWSB2dlmasbA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 73CCEE45192;
-        Tue, 25 Oct 2022 21:30:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 25 Oct 2022 18:39:43 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1465617048
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Oct 2022 15:39:38 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id 4so6370983pli.0
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Oct 2022 15:39:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BscdQ/NsM4VDGC3CZQ9/meLTUO36dVnQu3w4n7vR5V4=;
+        b=BCOQ7rQzsFYSHgPqBabqx0HObPPxl5QB944nSKiXYhjcWAiDuA+AUllIWaG/gwyzTR
+         K2AgmbX2Dfp/ZMKmW2o4gXPuC4D7GczOBXjW1SMPyI/j8SSTri5BQO1MC+G3S83WUahC
+         bfQmutxpGyZ0BNm2xxEl/2fZ3fNAmFKoPXYAs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BscdQ/NsM4VDGC3CZQ9/meLTUO36dVnQu3w4n7vR5V4=;
+        b=S6V7JWdyzB0eNKufjbr3iFqdTavB/w1tBQvhUwb+T1rG7a70+IARJwcwJYQSGr4ud7
+         mhEEK9WY55+JZoTFjXa3EdFDc3GwcjOWCCn94rKMSaZxl2NK4oKluiHD01KE59zqjJcr
+         +gpBtvgHOO9hCLA25yPIA3tSoXYg9tFc3IMaNjbTgijtpF421IrMLhSZYrUvBCq0+nOz
+         W+tYk5+FrIxiwvkLkhevbfNf09rKrG2ZbLDDuw/fZFwuXiaod7ecxDox7LYfHqe3ucIc
+         W3ZiIkqGCXuVp/FcXBMVeuWLZbjv82ktmb23EC6WmP13NBW0eZ8FTARDpvOeejwlNxUy
+         CsLQ==
+X-Gm-Message-State: ACrzQf1RCsyXdxYnX219DZ6ZjYIcwb6n4a906AxN5xOtImUZrtoT/aHj
+        k3Be6EtX8/bWbx5yfcx8KFoTfg==
+X-Google-Smtp-Source: AMsMyM74DPlCMXrxnF/Oyu68hwdZ0pFH11L3PRjOmRwT/gKA//op+e4vjaLbvVMoUbtkG0ofseX/cw==
+X-Received: by 2002:a17:902:ef4c:b0:186:6399:6b48 with SMTP id e12-20020a170902ef4c00b0018663996b48mr30731926plx.128.1666737578430;
+        Tue, 25 Oct 2022 15:39:38 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id hh14-20020a17090b418e00b0020a0571b354sm67794pjb.57.2022.10.25.15.39.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Oct 2022 15:39:37 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Menglong Dong <imagedong@tencent.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH net-next v5] skbuff: Proactively round up to kmalloc bucket size
+Date:   Tue, 25 Oct 2022 15:39:35 -0700
+Message-Id: <20221025223811.up.360-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5465; h=from:subject:message-id; bh=+9qWqpVntNhyrU9ZfiOeejtoM8CjXlCTF78ImfFP37E=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjWGWmWfFCucZQp+qJMUtCzotc08S2Crxq47MB7eLP 0xt8ljWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY1hlpgAKCRCJcvTf3G3AJnPsD/ 0Q/cvRjHQMasXbQXJ34ZvnmQbtuxiuSqGXoJx/1b1mx1EkWN09upKQSC7rdKxp9lLThxXnjJncZQSE fOcsH+DK0JbRyLTmuZ69/4IkfdS3fdkmQhhEL0r0BUdzeqZtCUQTj3ksJw3nUmjYlmHgZkt5HcOwNj qgQDKuxmZ0myro8PjcEgx+DSWlWxRwaD/l4ajF10zF+tQISrRH4RkG77hKLPFLCMUlZWKk5nZeqFAO 07iwHGv0bKXarshxjVT6tpFmd9kVZymJJ5EMrhUyozJ7HkemGLvFY0FoK9PxsOsJYHNVoPDgeRhiiM Gtirl8kHgLGIFY5+6r07+9lsTPxJGny5i3gLVWt77E0rat/K6X2YoLa23elnXpDRpYnt05ifKGfsFQ S/92UB2YJZNMWUhOsoSaCV849wOcyk+vfhKdv9JrHwxf+jfEGX7abhHeyNxGXV8nvE58jYvGKHOqcQ sTVmCp2xn0zBQfEwGPx2HhKPEM9EDE9cT7ZKNnaAP8vGUQPEfhVkPE3o97qslQxNF8f2pcpF1KyDSb s3YwWsjP6gLqFLiZCWH6U/i4NynU3DgnRTvz7TitIbUOjwhOIZa20dJP6oEJ3JXcwHY9++/t1e7HRs DSnA8BIJnEzgae68xUKPkPo3O07ZK8jb6mrmPmxpkFv5uZJTqmpj0QQWXzZA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH][next] net: dev: Convert sa_data to flexible array in struct
- sockaddr
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <166673341646.9987.5803101009027995896.git-patchwork-notify@kernel.org>
-Date:   Tue, 25 Oct 2022 21:30:16 +0000
-References: <20221018095503.never.671-kees@kernel.org>
-In-Reply-To: <20221018095503.never.671-kees@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     kuba@kernel.org, davem@davemloft.net, edumazet@google.com,
-        pabeni@redhat.com, axboe@kernel.dk, asml.silence@gmail.com,
-        dsahern@kernel.org, dylany@fb.com, yajun.deng@linux.dev,
-        petrm@nvidia.com, liuhangbin@gmail.com, leon@kernel.org,
-        syzkaller@googlegroups.com, willemb@google.com,
-        pablo@netfilter.org, netdev@vger.kernel.org, nathan@kernel.org,
-        ndesaulniers@google.com, trix@redhat.com,
-        alibuda@linux.alibaba.com, jk@codeconstruct.com.au,
-        bigeasy@linutronix.de, imagedong@tencent.com, kuniyu@amazon.com,
-        liu3101@purdue.edu, wsa+renesas@sang-engineering.com,
-        william.xuanziyang@huawei.com, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
+Instead of discovering the kmalloc bucket size _after_ allocation, round
+up proactively so the allocation is explicitly made for the full size,
+allowing the compiler to correctly reason about the resulting size of
+the buffer through the existing __alloc_size() hint.
 
-This patch was applied to netdev/net-next.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
+This will allow for kernels built with CONFIG_UBSAN_BOUNDS or the
+coming dynamic bounds checking under CONFIG_FORTIFY_SOURCE to gain
+back the __alloc_size() hints that were temporarily reverted in commit
+93dd04ab0b2b ("slab: remove __alloc_size attribute from __kmalloc_track_caller")
 
-On Tue, 18 Oct 2022 02:56:03 -0700 you wrote:
-> One of the worst offenders of "fake flexible arrays" is struct sockaddr,
-> as it is the classic example of why GCC and Clang have been traditionally
-> forced to treat all trailing arrays as fake flexible arrays: in the
-> distant misty past, sa_data became too small, and code started just
-> treating it as a flexible array, even though it was fixed-size. The
-> special case by the compiler is specifically that sizeof(sa->sa_data)
-> and FORTIFY_SOURCE (which uses __builtin_object_size(sa->sa_data, 1))
-> do not agree (14 and -1 respectively), which makes FORTIFY_SOURCE treat
-> it as a flexible array.
-> 
-> [...]
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: David Rientjes <rientjes@google.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Link: https://patchwork.kernel.org/project/netdevbpf/patch/20221021234713.you.031-kees@kernel.org/
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v5: update comment (vbabka)
+v4: https://lore.kernel.org/all/20221021234713.you.031-kees@kernel.org/
+v3: https://lore.kernel.org/lkml/20221018093005.give.246-kees@kernel.org
+v2: https://lore.kernel.org/lkml/20220923202822.2667581-4-keescook@chromium.org
+---
+ net/core/skbuff.c | 52 +++++++++++++++++++++++------------------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
 
-Here is the summary with links:
-  - [next] net: dev: Convert sa_data to flexible array in struct sockaddr
-    https://git.kernel.org/netdev/net-next/c/b5f0de6df6dc
-
-You are awesome, thank you!
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 1d9719e72f9d..21911e4c0aca 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -506,14 +506,14 @@ struct sk_buff *__alloc_skb(unsigned int size, gfp_t gfp_mask,
+ 	 */
+ 	size = SKB_DATA_ALIGN(size);
+ 	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+-	data = kmalloc_reserve(size, gfp_mask, node, &pfmemalloc);
++	osize = kmalloc_size_roundup(size);
++	data = kmalloc_reserve(osize, gfp_mask, node, &pfmemalloc);
+ 	if (unlikely(!data))
+ 		goto nodata;
+-	/* kmalloc(size) might give us more room than requested.
++	/* kmalloc_size_roundup() might give us more room than requested.
+ 	 * Put skb_shared_info exactly at the end of allocated zone,
+ 	 * to allow max possible filling before reallocation.
+ 	 */
+-	osize = ksize(data);
+ 	size = SKB_WITH_OVERHEAD(osize);
+ 	prefetchw(data + size);
+ 
+@@ -1814,10 +1814,11 @@ EXPORT_SYMBOL(__pskb_copy_fclone);
+ int pskb_expand_head(struct sk_buff *skb, int nhead, int ntail,
+ 		     gfp_t gfp_mask)
+ {
+-	int i, osize = skb_end_offset(skb);
+-	int size = osize + nhead + ntail;
++	unsigned int osize = skb_end_offset(skb);
++	unsigned int size = osize + nhead + ntail;
+ 	long off;
+ 	u8 *data;
++	int i;
+ 
+ 	BUG_ON(nhead < 0);
+ 
+@@ -1825,15 +1826,16 @@ int pskb_expand_head(struct sk_buff *skb, int nhead, int ntail,
+ 
+ 	skb_zcopy_downgrade_managed(skb);
+ 
+-	size = SKB_DATA_ALIGN(size);
+-
+ 	if (skb_pfmemalloc(skb))
+ 		gfp_mask |= __GFP_MEMALLOC;
+-	data = kmalloc_reserve(size + SKB_DATA_ALIGN(sizeof(struct skb_shared_info)),
+-			       gfp_mask, NUMA_NO_NODE, NULL);
++
++	size = SKB_DATA_ALIGN(size);
++	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
++	size = kmalloc_size_roundup(size);
++	data = kmalloc_reserve(size, gfp_mask, NUMA_NO_NODE, NULL);
+ 	if (!data)
+ 		goto nodata;
+-	size = SKB_WITH_OVERHEAD(ksize(data));
++	size = SKB_WITH_OVERHEAD(size);
+ 
+ 	/* Copy only real data... and, alas, header. This should be
+ 	 * optimized for the cases when header is void.
+@@ -6167,21 +6169,20 @@ static int pskb_carve_inside_header(struct sk_buff *skb, const u32 off,
+ 				    const int headlen, gfp_t gfp_mask)
+ {
+ 	int i;
+-	int size = skb_end_offset(skb);
++	unsigned int size = skb_end_offset(skb);
+ 	int new_hlen = headlen - off;
+ 	u8 *data;
+ 
+-	size = SKB_DATA_ALIGN(size);
+-
+ 	if (skb_pfmemalloc(skb))
+ 		gfp_mask |= __GFP_MEMALLOC;
+-	data = kmalloc_reserve(size +
+-			       SKB_DATA_ALIGN(sizeof(struct skb_shared_info)),
+-			       gfp_mask, NUMA_NO_NODE, NULL);
++
++	size = SKB_DATA_ALIGN(size);
++	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
++	size = kmalloc_size_roundup(size);
++	data = kmalloc_reserve(size, gfp_mask, NUMA_NO_NODE, NULL);
+ 	if (!data)
+ 		return -ENOMEM;
+-
+-	size = SKB_WITH_OVERHEAD(ksize(data));
++	size = SKB_WITH_OVERHEAD(size);
+ 
+ 	/* Copy real data, and all frags */
+ 	skb_copy_from_linear_data_offset(skb, off, data, new_hlen);
+@@ -6286,22 +6287,21 @@ static int pskb_carve_inside_nonlinear(struct sk_buff *skb, const u32 off,
+ 				       int pos, gfp_t gfp_mask)
+ {
+ 	int i, k = 0;
+-	int size = skb_end_offset(skb);
++	unsigned int size = skb_end_offset(skb);
+ 	u8 *data;
+ 	const int nfrags = skb_shinfo(skb)->nr_frags;
+ 	struct skb_shared_info *shinfo;
+ 
+-	size = SKB_DATA_ALIGN(size);
+-
+ 	if (skb_pfmemalloc(skb))
+ 		gfp_mask |= __GFP_MEMALLOC;
+-	data = kmalloc_reserve(size +
+-			       SKB_DATA_ALIGN(sizeof(struct skb_shared_info)),
+-			       gfp_mask, NUMA_NO_NODE, NULL);
++
++	size = SKB_DATA_ALIGN(size);
++	size += SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
++	size = kmalloc_size_roundup(size);
++	data = kmalloc_reserve(size, gfp_mask, NUMA_NO_NODE, NULL);
+ 	if (!data)
+ 		return -ENOMEM;
+-
+-	size = SKB_WITH_OVERHEAD(ksize(data));
++	size = SKB_WITH_OVERHEAD(size);
+ 
+ 	memcpy((struct skb_shared_info *)(data + size),
+ 	       skb_shinfo(skb), offsetof(struct skb_shared_info, frags[0]));
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.34.1
 
