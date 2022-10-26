@@ -2,130 +2,297 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 657D4C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 26 Oct 2022 20:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 999CCC433FE
+	for <linux-hardening@archiver.kernel.org>; Wed, 26 Oct 2022 23:31:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234338AbiJZUdv (ORCPT
+        id S233881AbiJZXbR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 26 Oct 2022 16:33:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43634 "EHLO
+        Wed, 26 Oct 2022 19:31:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234310AbiJZUdu (ORCPT
+        with ESMTP id S233659AbiJZXbQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 26 Oct 2022 16:33:50 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCFBE7E315
-        for <linux-hardening@vger.kernel.org>; Wed, 26 Oct 2022 13:33:49 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id e129so16078951pgc.9
-        for <linux-hardening@vger.kernel.org>; Wed, 26 Oct 2022 13:33:49 -0700 (PDT)
+        Wed, 26 Oct 2022 19:31:16 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BC4C52801
+        for <linux-hardening@vger.kernel.org>; Wed, 26 Oct 2022 16:31:14 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id f193so16623444pgc.0
+        for <linux-hardening@vger.kernel.org>; Wed, 26 Oct 2022 16:31:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=E0kxEl2S2a68MlFLjbJ42CBU2Unm12GzaCEH0lHQWuY=;
-        b=obeJhxI+ENacAUlLPp+v61BhonjTS9sjU5Bul5it9+TdjHX1b4Op8qbkgN5uiAd9Gn
-         Rd++IsKXJUdHvO+QOHUTGWHEmxI4CX4zFjED0OsH9PsV0jOV3C/F27o4oDQHKnHqCHbR
-         ik1V1MssxtQ/uj/MararQ0+xsoC+XV6V9lfSw=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uTiXMEJ/CoY33sLKioTuUer5OYA6lSASj5Z7HOYEvCU=;
+        b=TOuwrDc0bbdix70NhE1jKBzdwfVRAzTyQxtqVBPa5MjSN3paOlzKdWiUm3alKS1AER
+         GJuCFhCCGyBSB8FRaoN33yIBrnTdeQBOlwE6/cnyaBtoJ0WEs2N7SyR03AxvtmkQSDJF
+         6YH8IhvHf3aJ+V+x5xOQjrOfyofdMYu+nJpfM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E0kxEl2S2a68MlFLjbJ42CBU2Unm12GzaCEH0lHQWuY=;
-        b=m5d3V1JN2ntgaqcAfn2+vEj5ylvB3mxp2LkuG9y4NJse7fuToZjI2YEw+W/nkWmQVL
-         2nzdLCM4NXjTrzVq/G5NEo211yJMHVa6Ju3fmyYZWDpFygMoBC3Ari6WLY5lraQskfLJ
-         hyywtDgvxodcQUtwRyfb2yBh7X32B1pmv3OLa2HiPGRLkw7bmYl26XFif0lQ5iKQ8o42
-         Q4rdBglRrpKXMs6O0bgtRHdAHgqCoEYt5opwfnAKzC/NQLtNsTlC2zKXlEzBuA+mY7GH
-         cvAgjQvqzaJbaIqpCJoSUA7p24NsFJvGQbirGTLQe3r8AISULnhJwupGtq+4bN4/Tftc
-         mYrA==
-X-Gm-Message-State: ACrzQf3MBLzeQM9EcoztimkGhz6KHUmLRF/9jpmIvv+3EtXpp9CGridh
-        BUOiQOh52eJGrwUd2HiVrZ6yBQ==
-X-Google-Smtp-Source: AMsMyM4LL5FU6eakv/Sxfgq+61DepYp6/wpZrXWfv9mn6/p1V/LnMHUZp0tBb0NQskKtGvdKrQEfXA==
-X-Received: by 2002:a05:6a00:2307:b0:565:9079:b165 with SMTP id h7-20020a056a00230700b005659079b165mr46196368pfh.53.1666816429195;
-        Wed, 26 Oct 2022 13:33:49 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uTiXMEJ/CoY33sLKioTuUer5OYA6lSASj5Z7HOYEvCU=;
+        b=6T/Q7hCRVMwlHWYADnFFJodC89VQADJDpfyGemU5UZahi8Wbp7HXhmN+Tbad+FI/WO
+         e7D+4qfXSqfWfHPxs68A55ndYfmvalV0bL0jDEZ3sWUCNZhSVBPdgfAXN7njg2NweyJ3
+         sRnnU57OCiJoqRo7X9Fbzxcls4HPXJKOodt/WkArxwo9/RT06rhAzSGwSz/K5ca8Gvkh
+         8pVeoqnrbto1hXjIgW3B8gTUYgANB8F4RmWkz6KJCMrHByHN7VXueiFo135AoI+9KHjW
+         8aC3o90AOsG4Rb3eYnBFqXvByrb6Hk1tLhPIAggFfJaUrm+i4VgSTw54iArfaTTosVFb
+         styw==
+X-Gm-Message-State: ACrzQf3z9WhiB1qP+vG7s+cfbx31gfafDWEGViKifbhfVS3Fd3fTisGg
+        3btOwQhBby2iHZYP6i+qePbTPw==
+X-Google-Smtp-Source: AMsMyM6vUS8k1RZW8rkiZJ/NtfbRT4JleOwKZRGiZoKyUq7elbWpv7uakSgQFP+Ri49oMPf/cyWaWw==
+X-Received: by 2002:a63:5b5c:0:b0:461:8ba9:457e with SMTP id l28-20020a635b5c000000b004618ba9457emr40053088pgm.218.1666827074080;
+        Wed, 26 Oct 2022 16:31:14 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s27-20020aa78bdb000000b0056bc30e618dsm3377335pfd.38.2022.10.26.13.33.47
+        by smtp.gmail.com with ESMTPSA id k15-20020a170902760f00b001785a72d285sm3445937pll.48.2022.10.26.16.31.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Oct 2022 13:33:48 -0700 (PDT)
-Date:   Wed, 26 Oct 2022 13:33:47 -0700
+        Wed, 26 Oct 2022 16:31:13 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Keith Packard <keithp@keithp.com>
-Cc:     "Darrick J . Wong" <djwong@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Francis Laniel <laniel_francis@privacyrequired.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Tadeusz Struk <tadeusz.struk@linaro.org>,
-        Zorro Lang <zlang@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] Introduce flexible array struct helpers
-Message-ID: <202210260904.41D0BE00A@keescook>
-References: <20221024171848.never.522-kees@kernel.org>
- <20221024172058.534477-1-keescook@chromium.org>
- <87k04pf4tk.fsf@keithp.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        David Howells <dhowells@redhat.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Russ Weight <russell.h.weight@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Tom Talpey <tom@talpey.com>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] cred: Do not default to init_cred in prepare_kernel_cred()
+Date:   Wed, 26 Oct 2022 16:31:11 -0700
+Message-Id: <20221026232943.never.775-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87k04pf4tk.fsf@keithp.com>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7754; h=from:subject:message-id; bh=F4siOobAlkuq3vezhEE05wQ9UmMUALp3i2I2789BOdA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjWcM+V/jGXvCdTmkC/+MaJu/23cacFAOA4bsmrw+9 tYo1k2iJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY1nDPgAKCRCJcvTf3G3AJuRND/ 4+bzoCJCTyzFdDCx6K9xror4+DURVGRLcw2WN6OrzqgY0x4JDkjxt8NJVq1Kn7+2xI1YMgKvN60xlN AZ+iiQNDji7xT6i72/meJLeccjXUbc8oESTEUsSfVksoPzG2mWDBndu7ysJ0dEpuiyzJkOxyWWly/V cWlSxN5yj9A3qqBoS9lCmT2CZbjQ8J2NTvo07H4vXHaniOcNFwyDQWTqJO2xBe+H2OgPxOGDCMphc9 f/dvg0aOvj58P8PvVOmSK68yN2I7jC8KY8OUQhU69SNADTpkcqQEX3fZHIBfhgpHsqEAWElvVxw1uz ZQmFfMwSJWUZhKkP4MUeSVzQfA87auPZwC2pKAdiyKt9qTvVhspNQT4v0FdLZJiBKEbkTtSBICRxdo 1e8MRF9EmCimdBuKzmSa8EI5UTtcU+qvW5jtX0LHJIZFf7stmWh5DChTIPlx66Tp0valgWi4lDrtvl HZNz2zVfxkc6OVdGijlHFBRSipuQyQsTqIw8oInMBl6IORzlu8MAbDCpR/ZXKseWMv6W2YpDy9MW2E lRiiCRzUQ5HFnZNp1oARy59W6BAwE1cHQkqgphJdCKsNowlVLvg5MJliUli6YGMPNqjVfXwqMPRLD/ J0fNFuBOkRbsE5nnE9MVDabfkwWWK3RJpoWBiYLyeIZDeokSu8kaOhx7mgsA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Oct 24, 2022 at 11:35:03AM -0700, Keith Packard wrote:
-> Kees Cook <keescook@chromium.org> writes:
-> 
-> > + * struct flex_array_struct_example {
-> > + *	...			 // arbitrary members
-> > + *	bounded_flex_array(
-> > + *		u16, part_count, // count of elements stored in "parts" below.
-> > + *		u32, parts	 // flexible array with elements of type u32.
-> > + *	);
-> > + * );
-> 
-> > + * struct flex_array_struct_example {
-> > + *	...		// position-sensitive members
-> > + *	// count of elements stored in "parts" below.
-> > + *	DECLARE_FAS_COUNT(u16, part_count);
-> > + *	..		// position-sensitive members
-> > + *	// flexible array with elements of type u32.
-> > + *	DECLARE_FAS_ARRAY(u32, parts);
-> > + * };
-> 
-> I'm sure there's a good reason, but these two macros appear to be doing
-> similar things and yet have very different naming conventions. Maybe:
-> 
->         FAS_DECLARE_COUNT(type, name)
->         FAS_DECLARE_ARRAY(type, name)
->         FAS_DECLARE(size_type, size_name, array_type, array_name)
+A common exploit pattern for ROP attacks is to abuse prepare_kernel_cred()
+in order to construct escalated privileges[1]. Instead of providing a
+short-hand argument (NULL) to the "daemon" argument to indicate using
+init_cred as the base cred, require that "daemon" is always set to
+an actual task. Replace all existing callers that were passing NULL
+with &init_task.
 
-Well, the custom has been for individual things, call it "DECLARE_*",
-and for groups, we went with lower-case macros (e.g. struct_group()).
+Future attacks will need to have sufficiently powerful read/write
+primitives to have found an appropriately privileged task and written it
+to the ROP stack as an argument to succeed, which is similarly difficult
+to the prior effort needed to escalate privileges before struct cred
+existed: locate the current cred and overwrite the uid member.
 
-> 
-> > +/* For use with flexible array structure helpers, in <linux/flex_array.h> */
-> > +#define __DECLARE_FAS_COUNT(TYPE, NAME)					\
-> > +	union {								\
-> > +		TYPE __flex_array_elements_count;			\
-> > +		TYPE NAME;						\
-> > +	}
-> 
-> How often could that second "public" member be 'const'? That would catch
-> places which accidentally assign to this field.
-> 
-> For code which does want to write to this field, is it mostly trimming
-> data from the end, or does it actually smash in arbitrary values? For
-> the former case, would it be helpful to have a test to make sure the
-> assigned size isn't larger than the real size (yeah, that would probably
-> take an extra field holding the real size), or larger than the current size?
+This has the added benefit of meaning that prepare_kernel_cred() can no
+longer exceed the privileges of the init task, which may have changed from
+the original init_cred (e.g. dropping capabilities from the bounding set).
 
-I don't think this'll work within arbitrary struct declarations, but it
-would be nice. :)
+[1] https://google.com/search?q=commit_creds(prepare_kernel_cred(0))
 
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Russ Weight <russell.h.weight@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Steve French <sfrench@samba.org>
+Cc: Paulo Alcantara <pc@cjr.nz>
+Cc: Ronnie Sahlberg <lsahlber@redhat.com>
+Cc: Shyam Prasad N <sprasad@microsoft.com>
+Cc: Tom Talpey <tom@talpey.com>
+Cc: Namjae Jeon <linkinjeon@kernel.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <anna@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>
+Cc: Jeff Layton <jlayton@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: "Michal Koutný" <mkoutny@suse.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-cifs@vger.kernel.org
+Cc: samba-technical@lists.samba.org
+Cc: linux-nfs@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/base/firmware_loader/main.c    |  2 +-
+ fs/cifs/cifs_spnego.c                  |  2 +-
+ fs/cifs/cifsacl.c                      |  2 +-
+ fs/ksmbd/smb_common.c                  |  2 +-
+ fs/nfs/flexfilelayout/flexfilelayout.c |  4 ++--
+ fs/nfs/nfs4idmap.c                     |  2 +-
+ fs/nfsd/nfs4callback.c                 |  2 +-
+ kernel/cred.c                          | 15 +++++++--------
+ net/dns_resolver/dns_key.c             |  2 +-
+ 9 files changed, 16 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
+index 7c3590fd97c2..017c4cdb219e 100644
+--- a/drivers/base/firmware_loader/main.c
++++ b/drivers/base/firmware_loader/main.c
+@@ -821,7 +821,7 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
+ 	 * called by a driver when serving an unrelated request from userland, we use
+ 	 * the kernel credentials to read the file.
+ 	 */
+-	kern_cred = prepare_kernel_cred(NULL);
++	kern_cred = prepare_kernel_cred(&init_task);
+ 	if (!kern_cred) {
+ 		ret = -ENOMEM;
+ 		goto out;
+diff --git a/fs/cifs/cifs_spnego.c b/fs/cifs/cifs_spnego.c
+index 342717bf1dc2..6f3285f1dfee 100644
+--- a/fs/cifs/cifs_spnego.c
++++ b/fs/cifs/cifs_spnego.c
+@@ -189,7 +189,7 @@ init_cifs_spnego(void)
+ 	 * spnego upcalls.
+ 	 */
+ 
+-	cred = prepare_kernel_cred(NULL);
++	cred = prepare_kernel_cred(&init_task);
+ 	if (!cred)
+ 		return -ENOMEM;
+ 
+diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
+index fa480d62f313..574de2b225ae 100644
+--- a/fs/cifs/cifsacl.c
++++ b/fs/cifs/cifsacl.c
+@@ -465,7 +465,7 @@ init_cifs_idmap(void)
+ 	 * this is used to prevent malicious redirections from being installed
+ 	 * with add_key().
+ 	 */
+-	cred = prepare_kernel_cred(NULL);
++	cred = prepare_kernel_cred(&init_task);
+ 	if (!cred)
+ 		return -ENOMEM;
+ 
+diff --git a/fs/ksmbd/smb_common.c b/fs/ksmbd/smb_common.c
+index d96da872d70a..2a4fbbd55b91 100644
+--- a/fs/ksmbd/smb_common.c
++++ b/fs/ksmbd/smb_common.c
+@@ -623,7 +623,7 @@ int ksmbd_override_fsids(struct ksmbd_work *work)
+ 	if (share->force_gid != KSMBD_SHARE_INVALID_GID)
+ 		gid = share->force_gid;
+ 
+-	cred = prepare_kernel_cred(NULL);
++	cred = prepare_kernel_cred(&init_task);
+ 	if (!cred)
+ 		return -ENOMEM;
+ 
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index 1ec79ccf89ad..7deb3cd76abe 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -493,10 +493,10 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
+ 		gid = make_kgid(&init_user_ns, id);
+ 
+ 		if (gfp_flags & __GFP_FS)
+-			kcred = prepare_kernel_cred(NULL);
++			kcred = prepare_kernel_cred(&init_task);
+ 		else {
+ 			unsigned int nofs_flags = memalloc_nofs_save();
+-			kcred = prepare_kernel_cred(NULL);
++			kcred = prepare_kernel_cred(&init_task);
+ 			memalloc_nofs_restore(nofs_flags);
+ 		}
+ 		rc = -ENOMEM;
+diff --git a/fs/nfs/nfs4idmap.c b/fs/nfs/nfs4idmap.c
+index e3fdd2f45b01..25a7c771cfd8 100644
+--- a/fs/nfs/nfs4idmap.c
++++ b/fs/nfs/nfs4idmap.c
+@@ -203,7 +203,7 @@ int nfs_idmap_init(void)
+ 	printk(KERN_NOTICE "NFS: Registering the %s key type\n",
+ 		key_type_id_resolver.name);
+ 
+-	cred = prepare_kernel_cred(NULL);
++	cred = prepare_kernel_cred(&init_task);
+ 	if (!cred)
+ 		return -ENOMEM;
+ 
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index f0e69edf5f0f..4a9e8d17e56a 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -870,7 +870,7 @@ static const struct cred *get_backchannel_cred(struct nfs4_client *clp, struct r
+ 	} else {
+ 		struct cred *kcred;
+ 
+-		kcred = prepare_kernel_cred(NULL);
++		kcred = prepare_kernel_cred(&init_task);
+ 		if (!kcred)
+ 			return NULL;
+ 
+diff --git a/kernel/cred.c b/kernel/cred.c
+index e10c15f51c1f..811ad654abd1 100644
+--- a/kernel/cred.c
++++ b/kernel/cred.c
+@@ -701,9 +701,9 @@ void __init cred_init(void)
+  * override a task's own credentials so that work can be done on behalf of that
+  * task that requires a different subjective context.
+  *
+- * @daemon is used to provide a base for the security record, but can be NULL.
+- * If @daemon is supplied, then the security data will be derived from that;
+- * otherwise they'll be set to 0 and no groups, full capabilities and no keys.
++ * @daemon is used to provide a base cred, with the security data derived from
++ * that; if this is "&init_task", they'll be set to 0, no groups, full
++ * capabilities, and no keys.
+  *
+  * The caller may change these controls afterwards if desired.
+  *
+@@ -714,17 +714,16 @@ struct cred *prepare_kernel_cred(struct task_struct *daemon)
+ 	const struct cred *old;
+ 	struct cred *new;
+ 
++	if (WARN_ON_ONCE(!daemon))
++		return NULL;
++
+ 	new = kmem_cache_alloc(cred_jar, GFP_KERNEL);
+ 	if (!new)
+ 		return NULL;
+ 
+ 	kdebug("prepare_kernel_cred() alloc %p", new);
+ 
+-	if (daemon)
+-		old = get_task_cred(daemon);
+-	else
+-		old = get_cred(&init_cred);
+-
++	old = get_task_cred(daemon);
+ 	validate_creds(old);
+ 
+ 	*new = *old;
+diff --git a/net/dns_resolver/dns_key.c b/net/dns_resolver/dns_key.c
+index 3aced951d5ab..01e54b46ae0b 100644
+--- a/net/dns_resolver/dns_key.c
++++ b/net/dns_resolver/dns_key.c
+@@ -337,7 +337,7 @@ static int __init init_dns_resolver(void)
+ 	 * this is used to prevent malicious redirections from being installed
+ 	 * with add_key().
+ 	 */
+-	cred = prepare_kernel_cred(NULL);
++	cred = prepare_kernel_cred(&init_task);
+ 	if (!cred)
+ 		return -ENOMEM;
+ 
 -- 
-Kees Cook
+2.34.1
+
