@@ -2,159 +2,212 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 380B7C38A2D
-	for <linux-hardening@archiver.kernel.org>; Thu, 27 Oct 2022 00:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4EDC38A2D
+	for <linux-hardening@archiver.kernel.org>; Thu, 27 Oct 2022 00:05:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233448AbiJ0ADN (ORCPT
+        id S233708AbiJ0AF5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 26 Oct 2022 20:03:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42434 "EHLO
+        Wed, 26 Oct 2022 20:05:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233379AbiJ0ADK (ORCPT
+        with ESMTP id S233561AbiJ0AF4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 26 Oct 2022 20:03:10 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2117.outbound.protection.outlook.com [40.107.223.117])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E99773B5;
-        Wed, 26 Oct 2022 17:03:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KNni5RRBFy+xpPXW0OVNdVaxyaP/TZ9+gyM6uAkjDkPCWk/38ar+hhPnMFbeyEmjGup09AzyrQ9j0Z+XjTCzxgErrljQL1KIUlV//A/AZetPLS1LFnzGSMsxFNDO5m/oM/tzPpwKDFXd0ETenSPwNHMKKQSRTjpJ9VXt7oGoBXGykPxLEQWd5SBMcZWHw4SMitr0LRCxSKsRZWriOmIDKzU3fE8jxfgcMPDCOVrvtKDTs6gnFAdU8EVSPQjsls6C3ebsOy4KJ4bAUBGEnAZip6HApsqYFrl7kYGCmhExcVJEs5sTkZmKksxSZtoHEiL2A2btooxKab2cD98AWS76Fw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QSV/t79MmIixr6dsQGexVn9UHMU2vwEdDLTGhx2Z1b0=;
- b=aom0cz4J6AdnuUw+XxGq4xF5TElWQeUuT0LW2r+UN+POfBzUNuHyY7N5XozcIao4UF3bvz9k3D2EKNB+jBKtQ506tA1h44u1hkIeCcgLWQZWZ2373hFsq49mWBlHhuqDY8tpW3YwENe2M3NnYmO85G69NtPwD0uKS6SpVdz3Fwv0WXxSxJCpN/71x3ipYvvnv6/qS6kih8OLs6NzDHC+5invkx1oQ4bf+S3ftqcbpSwwEJ2a9mFklnjf6sZW9SYspbDjqJ31CPf0u1B9r/FvS2JYU+ZWpzi1bRMPmLJzGRWEcUNijjt5A4rfE+XOJps1RCskr0CsYBCSlcRamqPiYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QSV/t79MmIixr6dsQGexVn9UHMU2vwEdDLTGhx2Z1b0=;
- b=QjMCJ2fK74/EzERP4VOGFQxKKJ1PzEWNvHrndK3U11gSlBwhg23wKT66kZzErBoiVOFG/N0T8fSv9l6SPdRX9jSEG7g/pijiH8nkJ5OKb++vDSMin0Q2o1S6waWO5aZPXKrrg00VkYlU09l4hDIv0pV6ZJZScj+Tf/sccaQZJtg=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by SJ0PR13MB5524.namprd13.prod.outlook.com (2603:10b6:a03:421::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.18; Thu, 27 Oct
- 2022 00:03:07 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::9927:a5a2:43a2:4801]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::9927:a5a2:43a2:4801%3]) with mapi id 15.20.5746.028; Thu, 27 Oct 2022
- 00:03:07 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     Kees Cook <keescook@chromium.org>, Anna Schumaker <anna@kernel.org>
-CC:     kernel test robot <yujie.liu@intel.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Dave Jones <davej@codemonkey.org.uk>,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v2] NFS: Avoid memcpy() run-time warning for struct
- sockaddr overflows
-Thread-Topic: [PATCH v2] NFS: Avoid memcpy() run-time warning for struct
- sockaddr overflows
-Thread-Index: AQHY4eIXhHjVxdpaDUmTcKhw/diGna4hYrUAgAAIdoA=
-Date:   Thu, 27 Oct 2022 00:03:07 +0000
-Message-ID: <35A4B422-29FF-4294-8596-D75FC60E55DE@hammerspace.com>
-References: <20221017043107.never.457-kees@kernel.org>
- <202210261631.DE7E4761E@keescook>
-In-Reply-To: <202210261631.DE7E4761E@keescook>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3731.200.110.1.12)
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|SJ0PR13MB5524:EE_
-x-ms-office365-filtering-correlation-id: 7fa9d169-7f06-43e8-ab27-08dab7aea0bd
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qXodDATj2DzUZbfNc5/ypVOjhHJ5GFLGKuaJi8gBSNc9uHowrDaxlo3R7cs/cz1wA3wxF5OnwAQC78ISgMlJ7OPyEEKKmcSGtsdb2aR5l7dgkZd3D/sielOcb9ef/TzIkLrgf64NZv7kArtKBEkLGChse/UsUepzszK6DvIIQzH7gCXWfzDObcmCSQmIiktz2/OfLdhOTTvYVm2GRc2fCGzunAJz4cfjNI1asnP+nkAEkLd4Hbp8BABNrb5JOMuOmrAZ14cj95MDF/3NSW00WhEbNtgLkVEXDmgGiWu7miZgaH8jGCzBJzeULVfYAOrfIrel7AhwdG0u9ZtgpESi8W885KNWce3he/gXaiPWkpqsZ2Jhw9EYDbas24t3i0MZ1gnX3bfnUvo/q3AgvHlq6GfTZ+pdqsLmAXyQMHpKi3h3lGbxrbOEmpKn9ONaWlfC7VadJAVgNSMx9MFSMWOyg5+WxEOmZIA81QjxOChLFfV3zZASdHant73IeV2+aN0aHKsmVLKh3dOQLUkhqtLNt6iHE2rxCdnmETFjnW4wduJFI6mJVs7gaXiPvKTVqSw7aSSfolBsy6H5BgcBMwiB9SHe1zEGXwyBGSMALp/acA+OlAljafhrMSmx9vO2F06bgT+j36MR0yvr8TEWVC13pZxO0+JbK3F52sTabzP4L0CVvv1dDQkQlFr4Dsqdbx3sLVJjdO4EyHDM73JOpGEKWYxrFplz/ZuJ0p20lnw8j3iZgpqhylwMIwSDLkd/PXip51WJV0/mUyuszlCICYXtCrgJ1jh+/ucUwaJ42BbL/Qji0l4qVR8hAuNPhRuwOCSXIEqpvNQUa7V9RWCGGLy1TzETgCDC6Qy9DoipyIuFrlmH30pFgL3Zf3Zjv++7JD5x
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(39840400004)(376002)(396003)(366004)(346002)(451199015)(122000001)(186003)(26005)(110136005)(53546011)(86362001)(38100700002)(2906002)(6506007)(6512007)(6486002)(966005)(2616005)(5660300002)(71200400001)(54906003)(478600001)(41300700001)(316002)(66476007)(8936002)(38070700005)(76116006)(33656002)(66946007)(66556008)(64756008)(36756003)(8676002)(66446008)(83380400001)(4326008)(45980500001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NjRiMW5lVDJHSjJtd0gxNk96YUZncHFtWTg4Vnlod2lnLzRIL3hLQ2RScDlx?=
- =?utf-8?B?WUNkRUxuWEhBWXl1Vzd3YVFTMytTSllKZVoySktQak1WN3RQRUJHMDFYMXdl?=
- =?utf-8?B?djBmaW1vLzBicm84ZEljZ0JmUWlwSlFDaG1FemtaTnkrSmFvTW05YWFsNGR1?=
- =?utf-8?B?Y0wzMGs1dS96WmM3Zm96YzB2UkFIL2JQWkJwNWw2Slc5VGcvQlJrdE00RTVL?=
- =?utf-8?B?VDk5aWZwaEtPcGRzVUMwS2dUVWF3OVpQY05DV0p0SUliSmF3NmxaWEVHRWFB?=
- =?utf-8?B?UWZaTUVUOGVJZXlWZEVRVmFrZmxSSU0ralkxa2hqOEVZVzFLdTk1dU5OUXZn?=
- =?utf-8?B?blkzZkhSVW1HTU44cmtMbzNBUjMzOEM4VmRFektPdXFDckQ3WTlmU1c5M1Bq?=
- =?utf-8?B?Nk1vUVk5QnVlWm15TDdHSHR6NTRRdXFiYXUwcDhlSXBkM0VQNXdSWlRvaU9l?=
- =?utf-8?B?allBeEtIb0dCYUJoaFBubXU2Yld3U1dvZEtNZlFoRW9qZTd1dkdaY3RGQkNM?=
- =?utf-8?B?M2ZIOTlqaFRxSjgzbWpJN3o3RHRmSDAxT0xHRS9qNnZOUTd3MGdnNzBZTlBp?=
- =?utf-8?B?Sm9DVzZEdGwvNzM4QWZvWG1sOGhPeGMzVklVM04yS29EdU1oK3Q4SjB0aGZz?=
- =?utf-8?B?dkZ2YkNIV2d2QnRRM0YwWm9yU1hza0krM3VnRGdXbDlYekhORXJRR0FnTEpW?=
- =?utf-8?B?NmZUdWptb2tUWVRaQzJ6NXZ2NFFPZEtIMWUra1BxcTlGOTR4VUlSUHg2Mnd2?=
- =?utf-8?B?UXVTZ0dIcXJoZDB4aldhbjI3TEtyQTZoa1FYaDhERzhNTFZoM1ZmNGxxSnh3?=
- =?utf-8?B?TklVU04vUWF0cm1ZdXVCa1RUL1UwVWoyZGY0YS9kL3ZWMUlhS1U4bEZVYkhl?=
- =?utf-8?B?bFlYNTJSQ0R3UTJLQll6b09ad0VqdWFVWjB0aUxCTmhuODR1MnhpdTk2MnJm?=
- =?utf-8?B?TXM4aEZvK3R4L052OFNQSDJ5V3IrUHhPUWU1RHI4U0pvenNiU2lUdDNJTk1x?=
- =?utf-8?B?b2RNL3IvelBsWVNCUzhseVN2OExONGQ2YUR1V2h2akRiMExBQXg0aUQ1bEc5?=
- =?utf-8?B?ZVJhYlRPVml3UDJuV205ek9CQmtzT3pkbEw0c0xNakN4bkN0cCtTK1NmVEcz?=
- =?utf-8?B?N1ZEMFpCalArODJNdm9aUSt6QXc4RW1SOWhIYnc0Qkdrb1dLT2hBTi9zSjJC?=
- =?utf-8?B?UTJWSjZzcnoxUkY4dk9yNXZHZEVEWkVCRjVrU1h3eVpOT2lFYitKQ3RDTlds?=
- =?utf-8?B?WGdNS1JiS1NxMHdiYmNVSlpaVzlnV1B6cmtKZjBtSkhybEhqaDJMM2YvYmw3?=
- =?utf-8?B?SnV5em5uUmFJTDcyNTFCTXRMQjhHUFI3OEZicFBTU09xRnp3REU4T09wSzZK?=
- =?utf-8?B?TDIvWlZuS0NZU1VmNXRQWUppU1hEWFN6enpsT3h3TU1relNHbHBNYkp3NHpE?=
- =?utf-8?B?djBwTjZ6T1dSQmh0RDZ5eVNhaUlUdEVhVTBrdkcyejc2WlpxVytBY2xGQzBk?=
- =?utf-8?B?Zm1uVFBubzc1NTJOMVpoMWdTTm9hUHIrNm0rQ0dFdlN4Z1dpQ1pQdVdGc1kr?=
- =?utf-8?B?VDJtSDVqM3RVQzlUUCtKcG1tZTNxN01nOGJGMGhWNU42bjV6eldnTm9DTjBt?=
- =?utf-8?B?L0ZDTUJkSEVvTHhpRWJOMVBiWHZCQ3JmRWVCSFo0Q2pHdGF1aitnQ3ZFdE52?=
- =?utf-8?B?RjhsVlpQWFF6UzIxem8wc1pxc0RvdkRYNDNYRFBwYjNla0wzM3FycEJwVEFp?=
- =?utf-8?B?L08weDBuSEhEcHRyTndEOGVNTlJGTUVNMHpiejJ2alE4ZDE0Y2JnWlhuQVln?=
- =?utf-8?B?S3ZtaDVxQm1hN0c1UytCRWdvMnh0eHZ0OS9saTlpWVl2a2wwTWVLYUZmejdv?=
- =?utf-8?B?aDgzRXZiaHBYMXlKWWhvUmgreUo3ZEV4OFRUaHVsU3grQzFBVDVHcytwbjFL?=
- =?utf-8?B?VVM4NU8vNTlEbFUrL0gvRS9QNVZDM25MWmYwdCtJY2F4cjdxb3RlM00vNXpo?=
- =?utf-8?B?RkxkSGpEVTFwK09HdGxsZzFudVlpNk93ZnZKSHgwbCtOalZiRFJBOGdIWW8v?=
- =?utf-8?B?aXZZL2RQSlRRNCtsOThJZk40UXFkUWlxVTA2bEZDWG1aVnZRdnBMdnpyQ3Qy?=
- =?utf-8?B?Y3FJSEtVV0pUcVI5WXNGRXBxWGo3Y1dnNGJ0ZFl5SFJxbGk1cUZ6ZjhpODhT?=
- =?utf-8?B?b2c9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6D65EC88408E09459B6268D0E9D9E352@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 26 Oct 2022 20:05:56 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DFF649B72
+        for <linux-hardening@vger.kernel.org>; Wed, 26 Oct 2022 17:05:55 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id r18so16630530pgr.12
+        for <linux-hardening@vger.kernel.org>; Wed, 26 Oct 2022 17:05:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MpvHAtEJAdnJXNPB6jLNzA2rsIXVgrYWXkTdDDznyRM=;
+        b=Ulrun5gZgGjQmShW0UweaHSvqXZd9VL1QOY9Fc9U7xLWfD64w6//V+BtkzS8dkZcvh
+         nhUgs11hbV7dWBpYgssRCoR5dysLmJeyNJK5Wcqly7wCOQHR9AvPHdTFeffTc6WnA2RQ
+         afBpmqFUisu6POh7cXHSjdnesESTxNSpUGRmI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MpvHAtEJAdnJXNPB6jLNzA2rsIXVgrYWXkTdDDznyRM=;
+        b=45G3FfDHqworgFgB3qWf/IPSNgJn+JcLaQ+cfE24gqEmP8qL3gEvgX0Ns8EfmxLZRf
+         TLuvseQ0Vaa8wY9tyTm1TRpRpXLeua4aSuH1ejzRLSapQVJzD9hR6Z1mHKyWW1dBgldr
+         1+DshU7Ss49Sozp+DS1GBiL43fl1q+uvc25zNZRQGKBD8S8whM+TzoBSNKSbmmI+yfEh
+         v4HdEMqigr1LnCwelD1m0bqWxHDoc0AEFNw3EEvx6bJHO0Cdz3JgC3KrHmyWfTmlSIzf
+         aK12k3Mq1WtbC9ND6RaCjUdO/ZH15IjzV/lQV5lLvkQZgrmkgyskWo14xtX7+ptAx0l8
+         hirw==
+X-Gm-Message-State: ACrzQf247Rw8dQcQSMLPXd88JouVKV/3/a3JmyAwdCm9EUoJIVFzySfh
+        3BdZ7KZMDy/eQlgrl6hfql6pCw==
+X-Google-Smtp-Source: AMsMyM5lFtwLL+VW0pZCJH1OkUiuWUGg1OSlOkH1bnIwztVKsX0bi2d3MoWLCWsBCzEBOm5GMfxukw==
+X-Received: by 2002:a63:ed01:0:b0:445:4345:4a21 with SMTP id d1-20020a63ed01000000b0044543454a21mr39893224pgi.404.1666829154600;
+        Wed, 26 Oct 2022 17:05:54 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c4-20020a170903234400b00178b9c997e5sm3479477plh.138.2022.10.26.17.05.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Oct 2022 17:05:54 -0700 (PDT)
+From:   coverity-bot <keescook@chromium.org>
+X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
+Date:   Wed, 26 Oct 2022 17:05:53 -0700
+To:     Nick Terrell <terrelln@fb.com>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Coverity: HUF_buildCTableFromTree(): Memory - corruptions
+Message-ID: <202210261704.A5AAF0C@keescook>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7fa9d169-7f06-43e8-ab27-08dab7aea0bd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Oct 2022 00:03:07.4698
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: knr3rz8oXYlCfSFokXGow8bnjORuD5MocdBxwKvBjhuLNUm9ySIywFlyhBPiamhnH91yK2iFjDHsXzl+H+Tq0w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR13MB5524
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-DQoNCj4gT24gT2N0IDI2LCAyMDIyLCBhdCAxOTozMiwgS2VlcyBDb29rIDxrZWVzY29va0BjaHJv
-bWl1bS5vcmc+IHdyb3RlOg0KPiANCj4gT24gU3VuLCBPY3QgMTYsIDIwMjIgYXQgMDk6MzY6NTBQ
-TSAtMDcwMCwgS2VlcyBDb29rIHdyb3RlOg0KPj4gVGhlICduZnNfc2VydmVyJyBhbmQgJ21vdW50
-X3NlcnZlcicgc3RydWN0dXJlcyBpbmNsdWRlIGEgdW5pb24gb2YNCj4+ICdzdHJ1Y3Qgc29ja2Fk
-ZHInICh3aXRoIHRoZSBvbGRlciAxNiBieXRlcyBtYXggYWRkcmVzcyBzaXplKSBhbmQNCj4+ICdz
-dHJ1Y3Qgc29ja2FkZHJfc3RvcmFnZScgd2hpY2ggaXMgbGFyZ2UgZW5vdWdoIHRvIGhvbGQgYWxs
-IHRoZQ0KPj4gc3VwcG9ydGVkIHNhX2ZhbWlseSB0eXBlcyAoMTI4IGJ5dGVzIG1heCBzaXplKS4g
-VGhlIHJ1bnRpbWUgbWVtY3B5KCkNCj4+IGJ1ZmZlciBvdmVyZmxvdyBjaGVja2VyIGlzIHNlZWlu
-ZyBhdHRlbXB0cyB0byB3cml0ZSBiZXlvbmQgdGhlIDE2DQo+PiBieXRlcyBhcyBhbiBvdmVyZmxv
-dywgYnV0IHRoZSBhY3R1YWwgZXhwZWN0ZWQgc2l6ZSBpcyB0aGF0IG9mICdzdHJ1Y3QNCj4+IHNv
-Y2thZGRyX3N0b3JhZ2UnLiBQbHVtYiB0aGUgdXNlIG9mICdzdHJ1Y3Qgc29ja2FkZHJfc3RvcmFn
-ZScgbW9yZQ0KPj4gY29tcGxldGVseSB0aHJvdWdoLW91dCBORlMsIHdoaWNoIHJlc3VsdHMgaW4g
-YWRqdXN0aW5nIHRoZSBtZW1jcHkoKQ0KPj4gYnVmZmVycyB0byB0aGUgY29ycmVjdCB1bmlvbiBt
-ZW1iZXJzLiBBdm9pZHMgdGhpcyBmYWxzZSBwb3NpdGl2ZSBydW4tdGltZQ0KPj4gd2FybmluZyB1
-bmRlciBDT05GSUdfRk9SVElGWV9TT1VSQ0U6DQo+PiANCj4+ICBtZW1jcHk6IGRldGVjdGVkIGZp
-ZWxkLXNwYW5uaW5nIHdyaXRlIChzaXplIDI4KSBvZiBzaW5nbGUgZmllbGQgIiZjdHgtPm5mc19z
-ZXJ2ZXIuYWRkcmVzcyIgYXQgZnMvbmZzL25hbWVzcGFjZS5jOjE3OCAoc2l6ZSAxNikNCj4+IA0K
-Pj4gUmVwb3J0ZWQtYnk6IGtlcm5lbCB0ZXN0IHJvYm90IDx5dWppZS5saXVAaW50ZWwuY29tPg0K
-Pj4gTGluazogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjIxMDExMDk0OC4yNmI0MzEy
-MC15dWppZS5saXVAaW50ZWwuY29tDQo+PiBDYzogVHJvbmQgTXlrbGVidXN0IDx0cm9uZC5teWts
-ZWJ1c3RAaGFtbWVyc3BhY2UuY29tPg0KPj4gQ2M6IEFubmEgU2NodW1ha2VyIDxhbm5hQGtlcm5l
-bC5vcmc+DQo+IA0KPiBGcmllbmRseSBwaW5nIC0tIHRoaXMgbmVlZHMgdG8gbGFuZCBpbiB2Ni4x
-IHRvIGF2b2lkIHRoZXNlIHdhcm5pbmdzLg0KPiBTaG91bGQgSSBjYXJyeSB0aGlzIGluIHRoZSBo
-YXJkZW5pbmcgdHJlZSBpbnN0ZWFkPw0KPiANCj4gVGhhbmtzIQ0KDQpBbm5hLCB0aGlzIGlzIHlv
-dXIgY2FsbCBzaW5jZSB5b3XigJlyZSB0aGUg4oCYNi4xIG5mcyBjbGllbnQgbWFpbnRhaW5lcuKA
-mS4uLg0KDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KVHJvbmQgTXlrbGVi
-dXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWts
-ZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg==
+Hello!
+
+This is an experimental semi-automated report about issues detected by
+Coverity from a scan of next-20221026 as part of the linux-next scan project:
+https://scan.coverity.com/projects/linux-next-weekly-scan
+
+You're getting this email because you were associated with the identified
+lines of code (noted below) that were touched by commits:
+
+  Mon Oct 24 12:12:32 2022 -0700
+    2aa14b1ab2c4 ("zstd: import usptream v1.5.2")
+
+Coverity reported the following:
+
+*** CID 1525550:  Memory - corruptions  (OVERRUN)
+/lib/zstd/compress/huf_compress.c: 673 in HUF_buildCTableFromTree()
+667                 min += nbPerRank[n];
+668                 min >>= 1;
+669         }   }
+670         for (n=0; n<alphabetSize; n++)
+671             HUF_setNbBits(ct + huffNode[n].byte, huffNode[n].nbBits);   /* push nbBits per symbol, symbol order */
+672         for (n=0; n<alphabetSize; n++)
+vvv     CID 1525550:  Memory - corruptions  (OVERRUN)
+vvv     Overrunning array "valPerRank" of 13 2-byte elements at element index 255 (byte offset 511) using index "HUF_getNbBits(ct[n])" (which evaluates to 255).
+673             HUF_setValue(ct + n, valPerRank[HUF_getNbBits(ct[n])]++);   /* assign value within rank, symbol order */
+674         CTable[0] = maxNbBits;
+675     }
+676
+677     size_t HUF_buildCTable_wksp (HUF_CElt* CTable, const unsigned* count, U32 maxSymbolValue, U32 maxNbBits, void* workSpace, size_t wkspSize)
+678     {
+
+
+*** CID 1525549:  Memory - illegal accesses  (OVERRUN)
+/lib/zstd/compress/huf_compress.c: 187 in HUF_writeCTable_wksp()
+181
+182         /* convert to weight */
+183         wksp->bitsToWeight[0] = 0;
+184         for (n=1; n<huffLog+1; n++)
+185             wksp->bitsToWeight[n] = (BYTE)(huffLog + 1 - n);
+186         for (n=0; n<maxSymbolValue; n++)
+vvv     CID 1525549:  Memory - illegal accesses  (OVERRUN)
+vvv     Overrunning array "wksp->bitsToWeight" of 13 bytes at byte offset 255 using index "HUF_getNbBits(ct[n])" (which evaluates to 255).
+187             wksp->huffWeight[n] = wksp->bitsToWeight[HUF_getNbBits(ct[n])];
+188
+189         /* attempt weights compression by FSE */
+190         if (maxDstSize < 1) return ERROR(dstSize_tooSmall);
+191         {   CHECK_V_F(hSize, HUF_compressWeights(op+1, maxDstSize-1, wksp->huffWeight, maxSymbolValue, &wksp->wksp, sizeof(wksp->wksp)) );
+192             if ((hSize>1) & (hSize < maxSymbolValue/2)) {   /* FSE compressed */
+
+
+*** CID 1525501:  Memory - corruptions  (OVERRUN)
+/lib/zstd/compress/huf_compress.c: 253 in HUF_readCTable()
+247                 HUF_setNbBits(ct + n, (BYTE)(tableLog + 1 - w) & -(w != 0));
+248         }   }
+249
+250         /* fill val */
+251         {   U16 nbPerRank[HUF_TABLELOG_MAX+2]  = {0};  /* support w=0=>n=tableLog+1 */
+252             U16 valPerRank[HUF_TABLELOG_MAX+2] = {0};
+vvv     CID 1525501:  Memory - corruptions  (OVERRUN)
+vvv     Overrunning array "nbPerRank" of 14 2-byte elements at element index 255 (byte offset 511) using index "HUF_getNbBits(ct[n])" (which evaluates to 255).
+253             { U32 n; for (n=0; n<nbSymbols; n++) nbPerRank[HUF_getNbBits(ct[n])]++; }
+254             /* determine stating value per rank */
+255             valPerRank[tableLog+1] = 0;   /* for w==0 */
+256             {   U16 min = 0;
+257                 U32 n; for (n=tableLog; n>0; n--) {  /* start at n=tablelog <-> w=1 */
+258                     valPerRank[n] = min;     /* get starting value within each rank */
+
+
+*** CID 1525481:  Memory - corruptions  (OVERRUN)
+/lib/zstd/compress/huf_compress.c: 263 in HUF_readCTable()
+257                 U32 n; for (n=tableLog; n>0; n--) {  /* start at n=tablelog <-> w=1 */
+258                     valPerRank[n] = min;     /* get starting value within each rank */
+259                     min += nbPerRank[n];
+260                     min >>= 1;
+261             }   }
+262             /* assign value within rank, symbol order */
+vvv     CID 1525481:  Memory - corruptions  (OVERRUN)
+vvv     Overrunning array "valPerRank" of 14 2-byte elements at element index 255 (byte offset 511) using index "HUF_getNbBits(ct[n])" (which evaluates to 255).
+263             { U32 n; for (n=0; n<nbSymbols; n++) HUF_setValue(ct + n, valPerRank[HUF_getNbBits(ct[n])]++); }
+264         }
+265
+266         *maxSymbolValuePtr = nbSymbols - 1;
+267         return readSize;
+268     }
+
+
+*** CID 1505962:    (UNINIT)
+/lib/zstd/compress/zstd_compress.c: 2436 in ZSTD_buildSequencesStatistics()
+2430                     prevEntropy->offcodeCTable,
+2431                     sizeof(prevEntropy->offcodeCTable),
+2432                     entropyWorkspace, entropyWkspSize);
+2433                 if (ZSTD_isError(countSize)) {
+2434                     DEBUGLOG(3, "ZSTD_buildCTable for Offsets failed");
+2435                     stats.size = countSize;
+vvv     CID 1505962:    (UNINIT)
+vvv     Using uninitialized value "stats". Field "stats.MLtype" is uninitialized.
+2436                     return stats;
+2437                 }
+2438                 if (stats.Offtype == set_compressed)
+2439                     stats.lastCountSize = countSize;
+2440                 op += countSize;
+2441                 assert(op <= oend);
+/lib/zstd/compress/zstd_compress.c: 2404 in ZSTD_buildSequencesStatistics()
+2398                     prevEntropy->litlengthCTable,
+2399                     sizeof(prevEntropy->litlengthCTable),
+2400                     entropyWorkspace, entropyWkspSize);
+2401                 if (ZSTD_isError(countSize)) {
+2402                     DEBUGLOG(3, "ZSTD_buildCTable for LitLens failed");
+2403                     stats.size = countSize;
+vvv     CID 1505962:    (UNINIT)
+vvv     Using uninitialized value "stats". Field "stats.Offtype" is uninitialized.
+2404                     return stats;
+2405                 }
+2406                 if (stats.LLtype == set_compressed)
+2407                     stats.lastCountSize = countSize;
+2408                 op += countSize;
+2409                 assert(op <= oend);
+
+
+*** CID 1505959:  Memory - corruptions  (OVERRUN)
+/lib/zstd/compress/zstd_compress.c: 3220 in ZSTD_estimateBlockSize_sequences()
+3214                                                       const ZSTD_fseCTablesMetadata_t* fseMetadata,
+3215                                                       void* workspace, size_t wkspSize,
+3216                                                       int writeEntropy)
+3217     {
+3218         size_t sequencesSectionHeaderSize = 1 /* seqHead */ + 1 /* min seqSize size */ + (nbSeq >= 128) + (nbSeq >= LONGNBSEQ);
+3219         size_t cSeqSizeEstimate = 0;
+vvv     CID 1505959:  Memory - corruptions  (OVERRUN)
+vvv     Overrunning array "OF_defaultNorm" of 29 2-byte elements by passing it to a function which accesses it at element index 31 (byte offset 63) using argument "31U".
+3220         cSeqSizeEstimate += ZSTD_estimateBlockSize_symbolType(fseMetadata->ofType, ofCodeTable, nbSeq, MaxOff,
+3221                                              fseTables->offcodeCTable, NULL,
+3222                                              OF_defaultNorm, OF_defaultNormLog, DefaultMaxOff,
+3223                                              workspace, wkspSize);
+3224         cSeqSizeEstimate += ZSTD_estimateBlockSize_symbolType(fseMetadata->llType, llCodeTable, nbSeq, MaxLL,
+3225                                              fseTables->litlengthCTable, LL_bits,
+
+
+If these are false positives, please let us know so we can mark it as
+such, or teach the Coverity rules to be smarter. If not, please make sure
+fixes get into linux-next. :) For patches fixing this, please include
+these lines (but double-check the "Fixes" first):
+
+Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+Addresses-Coverity-ID: 1525550 ("Memory - corruptions")
+Fixes: 2aa14b1ab2c4 ("zstd: import usptream v1.5.2")
+
+Thanks for your attention!
+
+-- 
+Coverity-bot
