@@ -2,59 +2,54 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A030BECAAA1
-	for <linux-hardening@archiver.kernel.org>; Thu, 27 Oct 2022 19:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B2FFA3743
+	for <linux-hardening@archiver.kernel.org>; Thu, 27 Oct 2022 19:13:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234915AbiJ0TGA (ORCPT
+        id S235931AbiJ0TNY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 27 Oct 2022 15:06:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49670 "EHLO
+        Thu, 27 Oct 2022 15:13:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236092AbiJ0TF5 (ORCPT
+        with ESMTP id S233946AbiJ0TNX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 27 Oct 2022 15:05:57 -0400
-Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25E3E54CBB;
-        Thu, 27 Oct 2022 12:05:57 -0700 (PDT)
-Received: by mail-ot1-x333.google.com with SMTP id d18-20020a05683025d200b00661c6f1b6a4so1634799otu.1;
-        Thu, 27 Oct 2022 12:05:57 -0700 (PDT)
+        Thu, 27 Oct 2022 15:13:23 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5C8E70E53
+        for <linux-hardening@vger.kernel.org>; Thu, 27 Oct 2022 12:13:22 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id g62so2575352pfb.10
+        for <linux-hardening@vger.kernel.org>; Thu, 27 Oct 2022 12:13:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=A1XprAgWB0s7wiMtyLLvIEnH2hN1akKHT1cSrZfMn0g=;
-        b=Sqz2uDjbQlvvJWBpIM/mzfHIsX9oc4U1Fvobpx7j4awZ289LhDdgt28RgrQ7eUUrYb
-         bd/0+diGJAN9IGyFXNpPjroo3xxI7q5obkLaSI9dnXviOhXHyiaC0YPBi3sEikUxPPVL
-         xUdSTHktkBwkoN6/HQ9/REsmPkc4LFqNsw4o5T+4mAZ5LYgDyPs1IJhEL5RxVwgq8DFw
-         bO/aXGKYUNL2Ab3Fq2mfiDB00NJScK6qG5AWF+4LrN2F8fg9zybgp/OMWI/GzYIrPNTg
-         /FL+1zOWNkqqBMHCXP0DrsKWvv92+4659qPZzhbk08RzU1aA1lFOo0kJdjkrhWkMobU5
-         i02Q==
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KRy9sqvf0ZM2bZpgrnftqxmIbppdN+rJl6H1sXbtcEA=;
+        b=ePBvbYsqqxinV1869tyLVSPuexY7f5oFCO4bFBrZ0zRyJ8fAIYv6HyDImZpOI7sDK4
+         wV01b3ApWa7HxYPZmSq7Y80QJ8waTqfMmGkATXW/AodfcPzYcSL2X9iXgY+1T73b5Ysl
+         7tELmVPx85ac64Og2sYczqg5VmOjiPDZGHsIc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=A1XprAgWB0s7wiMtyLLvIEnH2hN1akKHT1cSrZfMn0g=;
-        b=E1Y2zvUjsBh2d61ki7j3T8zhLrMCPCukfguVoOWb9jVCNPuk770r/Ln2ir1ok6F8r0
-         ZddSDcqjwX7p+wzt8spykis2+CFgWvZkbl9KNI8P2hdEqB+msvr4tVExEckv4ukT/ooF
-         tSf0hBJJEffATw7fJUaYyHJSyifEaBt9hAGQiJyd0tZW+3shOoW9GDcc/wEQBS65lV/y
-         swlBPEW4hadIl/oOy0Yl4aumwtEwPpx5lCOb+BtCXCRn8kqo3C38b3q349SiJg/eWh8D
-         0VEtbI8U6so2VaTUYsy4kwS9Hc2GoMBYAzfpRPhNKvoyEXKvYnaRHotSWfFw47U/MCIp
-         4xMg==
-X-Gm-Message-State: ACrzQf1jxtbzRCdwvn1JZXul6Jr+kDhfOuTyZDRQSynJ//IcUepeTTIn
-        LkyFWb87k5k/eEbOdEjQo9zAfOLSyApd0DkW/tE=
-X-Google-Smtp-Source: AMsMyM62sEmSG5aCY0b4YK8+TARwW55i4i3cprSqu9DEfEpzzWfueCTetYFLRwjOVkDhkr+y6lZqaDEu+nmEdLaT55w=
-X-Received: by 2002:a9d:5c02:0:b0:65c:20e6:46a with SMTP id
- o2-20020a9d5c02000000b0065c20e6046amr23632464otk.213.1666897556488; Thu, 27
- Oct 2022 12:05:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221022180455.never.023-kees@kernel.org>
-In-Reply-To: <20221022180455.never.023-kees@kernel.org>
-From:   Andrey Konovalov <andreyknvl@gmail.com>
-Date:   Thu, 27 Oct 2022 21:05:45 +0200
-Message-ID: <CA+fCnZcj_Hq1NQv1L2U7+A8quqj+4kA=8A7LwOWz5eYNQFra+A@mail.gmail.com>
-Subject: Re: [PATCH] mm: Make ksize() a reporting-only function
-To:     Kees Cook <keescook@chromium.org>
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KRy9sqvf0ZM2bZpgrnftqxmIbppdN+rJl6H1sXbtcEA=;
+        b=xbPGhYMLvADW8KG/hXR5Fwtz7FADrlObDdsNffKQWx7Hk2c03t5377Mcg1WHgoC8DV
+         I14eYgMr3gfkdr6Mi31van5tLFDImDzTdXD2FzuwHa+tfBwbcuEuVSG/XVTmSCYVjpPR
+         gUk3PtefB0OLiJBAKBGDhfj5Q6lXWmhijXe3mjPRSaL/SaKCL9/I9YVbEHWcusOr3MZ6
+         8qP+Lgu/tyHAfsREOSdFbzs+V2v53hyRO/8ZEMk589cILLj9FPrckpCyJBswoITJ844y
+         HqLKeEsBkeX4ifDCSRB+uow16K/VFN/JdwV5jbe9Y8t8mmX28pOoM1hMX6kAS2VdmAr6
+         EtFQ==
+X-Gm-Message-State: ACrzQf3XJ4eqWB93qbs+XTd2wuwOZ2PhwvwFSVJiYtR618SrHc8j0PU9
+        xQKCdQblQRan9aNKA3mwIPxHxw==
+X-Google-Smtp-Source: AMsMyM4innxfNZAzhGWL/DpqnIwUOYEYiApzjV6DBWLPdx0UZXtA4mdOwut8gE2N2aGulndGyPlvSA==
+X-Received: by 2002:a63:7909:0:b0:458:1ba6:ec80 with SMTP id u9-20020a637909000000b004581ba6ec80mr44062420pgc.414.1666898002301;
+        Thu, 27 Oct 2022 12:13:22 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q10-20020a170903204a00b00176e6f553efsm1525222pla.84.2022.10.27.12.13.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Oct 2022 12:13:21 -0700 (PDT)
+Date:   Thu, 27 Oct 2022 12:13:20 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrey Konovalov <andreyknvl@gmail.com>
 Cc:     Christoph Lameter <cl@linux.com>,
         Dmitry Vyukov <dvyukov@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -72,55 +67,48 @@ Cc:     Christoph Lameter <cl@linux.com>,
         linux-mm@kvack.org, kasan-dev@googlegroups.com,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] mm: Make ksize() a reporting-only function
+Message-ID: <202210271212.EB69EF1@keescook>
+References: <20221022180455.never.023-kees@kernel.org>
+ <CA+fCnZcj_Hq1NQv1L2U7+A8quqj+4kA=8A7LwOWz5eYNQFra+A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+fCnZcj_Hq1NQv1L2U7+A8quqj+4kA=8A7LwOWz5eYNQFra+A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Oct 22, 2022 at 8:08 PM Kees Cook <keescook@chromium.org> wrote:
->
-> With all "silently resizing" callers of ksize() refactored, remove the
-> logic in ksize() that would allow it to be used to effectively change
-> the size of an allocation (bypassing __alloc_size hints, etc). Users
-> wanting this feature need to either use kmalloc_size_roundup() before an
-> allocation, or use krealloc() directly.
->
-> For kfree_sensitive(), move the unpoisoning logic inline. Replace the
-> some of the partially open-coded ksize() in __do_krealloc with ksize()
-> now that it doesn't perform unpoisoning.
->
-> Adjust the KUnit tests to match the new ksize() behavior.
+On Thu, Oct 27, 2022 at 09:05:45PM +0200, Andrey Konovalov wrote:
+> On Sat, Oct 22, 2022 at 8:08 PM Kees Cook <keescook@chromium.org> wrote:
+> [...]
+> > -/* Check that ksize() makes the whole object accessible. */
+> > +/* Check that ksize() does NOT unpoison whole object. */
+> >  static void ksize_unpoisons_memory(struct kunit *test)
+> >  {
+> >         char *ptr;
+> > @@ -791,15 +791,17 @@ static void ksize_unpoisons_memory(struct kunit *test)
+> >
+> >         ptr = kmalloc(size, GFP_KERNEL);
+> >         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+> > +
+> >         real_size = ksize(ptr);
+> > +       KUNIT_EXPECT_GT(test, real_size, size);
+> >
+> >         OPTIMIZER_HIDE_VAR(ptr);
+> >
+> >         /* This access shouldn't trigger a KASAN report. */
+> > -       ptr[size] = 'x';
+> > +       ptr[size - 1] = 'x';
+> >
+> >         /* This one must. */
+> > -       KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size]);
+> > +       KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size - 1]);
+> 
+> How about also accessing ptr[size] here? It would allow for a more
+> precise checking of the in-object redzone.
 
-Hi Kees,
+Sure! Probably both ptr[size] and ptr[real_size -1], yes?
 
-> -/* Check that ksize() makes the whole object accessible. */
-> +/* Check that ksize() does NOT unpoison whole object. */
->  static void ksize_unpoisons_memory(struct kunit *test)
->  {
->         char *ptr;
-> @@ -791,15 +791,17 @@ static void ksize_unpoisons_memory(struct kunit *test)
->
->         ptr = kmalloc(size, GFP_KERNEL);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-> +
->         real_size = ksize(ptr);
-> +       KUNIT_EXPECT_GT(test, real_size, size);
->
->         OPTIMIZER_HIDE_VAR(ptr);
->
->         /* This access shouldn't trigger a KASAN report. */
-> -       ptr[size] = 'x';
-> +       ptr[size - 1] = 'x';
->
->         /* This one must. */
-> -       KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size]);
-> +       KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size - 1]);
-
-How about also accessing ptr[size] here? It would allow for a more
-precise checking of the in-object redzone.
-
->
->         kfree(ptr);
->  }
-
-Thanks!
+-- 
+Kees Cook
