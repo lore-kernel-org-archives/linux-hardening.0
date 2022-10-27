@@ -2,51 +2,46 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F792FA3740
-	for <linux-hardening@archiver.kernel.org>; Thu, 27 Oct 2022 20:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB625FA3740
+	for <linux-hardening@archiver.kernel.org>; Thu, 27 Oct 2022 20:22:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236867AbiJ0UU5 (ORCPT
+        id S236888AbiJ0UWx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 27 Oct 2022 16:20:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54554 "EHLO
+        Thu, 27 Oct 2022 16:22:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236941AbiJ0UUz (ORCPT
+        with ESMTP id S236837AbiJ0UWw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 27 Oct 2022 16:20:55 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 739B562A7A;
-        Thu, 27 Oct 2022 13:20:53 -0700 (PDT)
+        Thu, 27 Oct 2022 16:22:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21BF68D233;
+        Thu, 27 Oct 2022 13:22:51 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0C088B827BE;
-        Thu, 27 Oct 2022 20:20:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8382AC433C1;
-        Thu, 27 Oct 2022 20:20:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A6A82624E3;
+        Thu, 27 Oct 2022 20:22:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 493E0C433D6;
+        Thu, 27 Oct 2022 20:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666902050;
-        bh=671QyGcvQszCHTTsJtgddvWic+PE1QNEPAqRp9OP9cg=;
+        s=k20201202; t=1666902170;
+        bh=qNWH0Mj9EV6KWOBrM1nSFfRrqpnHhdgAOSQGLJl090U=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bcx+06HkpHuPRBnQ4e93HYHRSojoT6lSy5TMxMB8uf6ORcT5AmD5pxeMSZoU3bYZw
-         QxnEueJPZiMKsfkzEsPT9GjlzARLwgtTOiOo6qJ1f+xtJjE5KRLFxua82FI13S6j+/
-         zdoxS1gQzAl5GjhkvGYfXuuzQW3V2a4eshrlrvGTcs6j9A6R3Qu+cnQdKS1j0R21m2
-         WQVcM6tvLG2fX16EHADHfPookJzxCd+sbmNuZHpvklDdaqyyFt2eCBWSeby8hDLLQ8
-         pJMXVdVoLXlSRl0j6+Vo68SArJgAFyMwm2xES5ZvuMznbqCqThZsRfvwY9tar6DLHn
-         qg7XZhzlALm1g==
-Date:   Thu, 27 Oct 2022 15:20:47 -0500
+        b=Jbmc01aw+lNn+2ABpVBYXuNzVDgN1iUKu2xNzTA6Pj90FzztZH5IzqDqvXIRCVWFF
+         EngleDxEP/eObYt+pbI9MZ5GfOs5fswUEeqEIg61uW3vSPwuCGujh13BHLoeVwJiJ1
+         2JAk8bGs3G/t71GClD3FEYpAbAglZyy3RGUIhs7exV73rFmgjmRt2Bl77HNsY9CZJr
+         1M9XUris4WodKznX32qnG0oCGjplEhlSsKACRxY0ESkBW/12d/wL8uhMHY81vC5HR1
+         DBwsjGG/BLSfVrXiROZTrNDOUITZdNjDCEevEaw7OS/29m5SPWPY5SJh3lCDuq7LEM
+         P1QSAk/Ri3Eog==
+Date:   Thu, 27 Oct 2022 15:22:46 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Sudarsana Kalluru <skalluru@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com, Rasesh Mody <rmody@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
         Kees Cook <keescook@chromium.org>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 5/6] bna: Avoid clashing function prototypes
-Message-ID: <2812afc0de278b97413a142d39d939a08ac74025.1666894751.git.gustavoars@kernel.org>
+Subject: [PATCH v2 6/6] staging: ks7010: Avoid clashing function prototypes
+Message-ID: <34bf3ce1b1ca2da4c5ec8a6e26f31bbb9ca1c4f5.1666894751.git.gustavoars@kernel.org>
 References: <cover.1666894751.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -60,365 +55,531 @@ When built with Control Flow Integrity, function prototypes between
 caller and function declaration must match. These mismatches are visible
 at compile time with the new -Wcast-function-type-strict in Clang[1].
 
-Fix a total of 227 warnings like these:
+Fix a total of 27 warnings like these:
 
-drivers/net/ethernet/brocade/bna/bna_enet.c:519:3: warning: cast from 'void (*)(struct bna_ethport *, enum bna_ethport_event)' to 'bfa_fsm_t' (aka 'void (*)(void *, int)') converts to incompatible function type [-Wcast-function-type-strict]
-                bfa_fsm_set_state(ethport, bna_ethport_sm_down);
-                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/staging/ks7010/ks_wlan_net.c:2415:2: warning: cast from 'int (*)(struct net_device *, struct iw_request_info *, struct iw_point *, char *)' to 'iw_handler' (aka 'int (*)(struct net_device *, struct iw_request_info *, union iwreq_data *, char *)') converts to incompatible function type [-Wcast-function-type-strict]
+        (iw_handler)ks_wlan_get_firmware_version,/* 3 KS_WLAN_GET_FIRM_VERSION */
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The bna state machine code heavily overloads its state machine functions,
-so these have been separated into their own sets of structs, enums,
-typedefs, and helper functions. There are almost zero binary code changes,
-all seem to be related to header file line numbers changing, or the
-addition of the new stats helper.
+The ks_wlan_net Wireless Extension handler callbacks (iw_handler) use a
+union for the data argument. Actually use the union and perform explicit
+member selection in the function body instead of having a function
+prototype mismatch. There are no resulting binary differences
+before/after changes.
 
-[1] https://reviews.llvm.org/D134831
+Link: https://reviews.llvm.org/D134831 [1]
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
 Changes in v2:
  - None. This patch is new in the series.
 
- drivers/net/ethernet/brocade/bna/bfa_cs.h    | 60 +++++++++++++-------
- drivers/net/ethernet/brocade/bna/bfa_ioc.c   | 10 ++--
- drivers/net/ethernet/brocade/bna/bfa_ioc.h   |  8 ++-
- drivers/net/ethernet/brocade/bna/bfa_msgq.h  |  8 ++-
- drivers/net/ethernet/brocade/bna/bna_enet.c  |  6 +-
- drivers/net/ethernet/brocade/bna/bna_tx_rx.c |  6 +-
- drivers/net/ethernet/brocade/bna/bna_types.h | 27 +++++++--
- 7 files changed, 82 insertions(+), 43 deletions(-)
+ drivers/staging/ks7010/ks_wlan_net.c | 184 ++++++++++++++-------------
+ 1 file changed, 94 insertions(+), 90 deletions(-)
 
-diff --git a/drivers/net/ethernet/brocade/bna/bfa_cs.h b/drivers/net/ethernet/brocade/bna/bfa_cs.h
-index 8f0ac7b99973..858c92129451 100644
---- a/drivers/net/ethernet/brocade/bna/bfa_cs.h
-+++ b/drivers/net/ethernet/brocade/bna/bfa_cs.h
-@@ -18,15 +18,43 @@
- 
- /* BFA state machine interfaces */
- 
--typedef void (*bfa_sm_t)(void *sm, int event);
--
- /* For converting from state machine function to state encoding. */
--struct bfa_sm_table {
--	bfa_sm_t	sm;	/*!< state machine function	*/
--	int		state;	/*!< state machine encoding	*/
--	char		*name;	/*!< state name for display	*/
--};
--#define BFA_SM(_sm)		((bfa_sm_t)(_sm))
-+#define BFA_SM_TABLE(n, s, e, t)				\
-+struct s;							\
-+enum e;								\
-+typedef void (*t)(struct s *, enum e);				\
-+								\
-+struct n ## _sm_table_s {					\
-+	t		sm;	/* state machine function */	\
-+	int		state;	/* state machine encoding */	\
-+	char		*name;	/* state name for display */	\
-+};								\
-+								\
-+static inline int						\
-+n ## _sm_to_state(struct n ## _sm_table_s *smt, t sm)		\
-+{								\
-+	int	i = 0;						\
-+								\
-+	while (smt[i].sm && smt[i].sm != sm)			\
-+		i++;						\
-+	return smt[i].state;					\
-+}
-+
-+BFA_SM_TABLE(iocpf,	bfa_iocpf,	iocpf_event,	bfa_fsm_iocpf_t)
-+BFA_SM_TABLE(ioc,	bfa_ioc,	ioc_event,	bfa_fsm_ioc_t)
-+BFA_SM_TABLE(cmdq,	bfa_msgq_cmdq,	cmdq_event,	bfa_fsm_msgq_cmdq_t)
-+BFA_SM_TABLE(rspq,	bfa_msgq_rspq,	rspq_event,	bfa_fsm_msgq_rspq_t)
-+
-+BFA_SM_TABLE(ioceth,	bna_ioceth,	bna_ioceth_event, bna_fsm_ioceth_t)
-+BFA_SM_TABLE(enet,	bna_enet,	bna_enet_event, bna_fsm_enet_t)
-+BFA_SM_TABLE(ethport,	bna_ethport,	bna_ethport_event, bna_fsm_ethport_t)
-+BFA_SM_TABLE(tx,	bna_tx,		bna_tx_event,	bna_fsm_tx_t)
-+BFA_SM_TABLE(rxf,	bna_rxf,	bna_rxf_event, bna_fsm_rxf_t)
-+BFA_SM_TABLE(rx,	bna_rx,		bna_rx_event,	bna_fsm_rx_t)
-+
-+#undef BFA_SM_TABLE
-+
-+#define BFA_SM(_sm)	(_sm)
- 
- /* State machine with entry actions. */
- typedef void (*bfa_fsm_t)(void *fsm, int event);
-@@ -41,24 +69,12 @@ typedef void (*bfa_fsm_t)(void *fsm, int event);
- 	static void oc ## _sm_ ## st ## _entry(otype * fsm)
- 
- #define bfa_fsm_set_state(_fsm, _state) do {				\
--	(_fsm)->fsm = (bfa_fsm_t)(_state);				\
-+	(_fsm)->fsm = (_state);						\
- 	_state ## _entry(_fsm);						\
- } while (0)
- 
- #define bfa_fsm_send_event(_fsm, _event)	((_fsm)->fsm((_fsm), (_event)))
--#define bfa_fsm_cmp_state(_fsm, _state)					\
--	((_fsm)->fsm == (bfa_fsm_t)(_state))
--
--static inline int
--bfa_sm_to_state(const struct bfa_sm_table *smt, bfa_sm_t sm)
--{
--	int	i = 0;
--
--	while (smt[i].sm && smt[i].sm != sm)
--		i++;
--	return smt[i].state;
--}
--
-+#define bfa_fsm_cmp_state(_fsm, _state)		((_fsm)->fsm == (_state))
- /* Generic wait counter. */
- 
- typedef void (*bfa_wc_resume_t) (void *cbarg);
-diff --git a/drivers/net/ethernet/brocade/bna/bfa_ioc.c b/drivers/net/ethernet/brocade/bna/bfa_ioc.c
-index cd933817a0b8..b07522ac3e74 100644
---- a/drivers/net/ethernet/brocade/bna/bfa_ioc.c
-+++ b/drivers/net/ethernet/brocade/bna/bfa_ioc.c
-@@ -114,7 +114,7 @@ bfa_fsm_state_decl(bfa_ioc, disabling, struct bfa_ioc, enum ioc_event);
- bfa_fsm_state_decl(bfa_ioc, disabled, struct bfa_ioc, enum ioc_event);
- bfa_fsm_state_decl(bfa_ioc, hwfail, struct bfa_ioc, enum ioc_event);
- 
--static struct bfa_sm_table ioc_sm_table[] = {
-+static struct ioc_sm_table_s ioc_sm_table[] = {
- 	{BFA_SM(bfa_ioc_sm_uninit), BFA_IOC_UNINIT},
- 	{BFA_SM(bfa_ioc_sm_reset), BFA_IOC_RESET},
- 	{BFA_SM(bfa_ioc_sm_enabling), BFA_IOC_ENABLING},
-@@ -183,7 +183,7 @@ bfa_fsm_state_decl(bfa_iocpf, disabling_sync, struct bfa_iocpf,
- 						enum iocpf_event);
- bfa_fsm_state_decl(bfa_iocpf, disabled, struct bfa_iocpf, enum iocpf_event);
- 
--static struct bfa_sm_table iocpf_sm_table[] = {
-+static struct iocpf_sm_table_s iocpf_sm_table[] = {
- 	{BFA_SM(bfa_iocpf_sm_reset), BFA_IOCPF_RESET},
- 	{BFA_SM(bfa_iocpf_sm_fwcheck), BFA_IOCPF_FWMISMATCH},
- 	{BFA_SM(bfa_iocpf_sm_mismatch), BFA_IOCPF_FWMISMATCH},
-@@ -2860,12 +2860,12 @@ static enum bfa_ioc_state
- bfa_ioc_get_state(struct bfa_ioc *ioc)
- {
- 	enum bfa_iocpf_state iocpf_st;
--	enum bfa_ioc_state ioc_st = bfa_sm_to_state(ioc_sm_table, ioc->fsm);
-+	enum bfa_ioc_state ioc_st = ioc_sm_to_state(ioc_sm_table, ioc->fsm);
- 
- 	if (ioc_st == BFA_IOC_ENABLING ||
- 		ioc_st == BFA_IOC_FAIL || ioc_st == BFA_IOC_INITFAIL) {
- 
--		iocpf_st = bfa_sm_to_state(iocpf_sm_table, ioc->iocpf.fsm);
-+		iocpf_st = iocpf_sm_to_state(iocpf_sm_table, ioc->iocpf.fsm);
- 
- 		switch (iocpf_st) {
- 		case BFA_IOCPF_SEMWAIT:
-@@ -2983,7 +2983,7 @@ bfa_nw_iocpf_timeout(struct bfa_ioc *ioc)
- {
- 	enum bfa_iocpf_state iocpf_st;
- 
--	iocpf_st = bfa_sm_to_state(iocpf_sm_table, ioc->iocpf.fsm);
-+	iocpf_st = iocpf_sm_to_state(iocpf_sm_table, ioc->iocpf.fsm);
- 
- 	if (iocpf_st == BFA_IOCPF_HWINIT)
- 		bfa_ioc_poll_fwinit(ioc);
-diff --git a/drivers/net/ethernet/brocade/bna/bfa_ioc.h b/drivers/net/ethernet/brocade/bna/bfa_ioc.h
-index edd0ed5b5332..f30d06ec4ffe 100644
---- a/drivers/net/ethernet/brocade/bna/bfa_ioc.h
-+++ b/drivers/net/ethernet/brocade/bna/bfa_ioc.h
-@@ -147,16 +147,20 @@ struct bfa_ioc_notify {
- 	(__notify)->cbarg = (__cbarg);				\
- } while (0)
- 
-+enum iocpf_event;
-+
- struct bfa_iocpf {
--	bfa_fsm_t		fsm;
-+	void (*fsm)(struct bfa_iocpf *s, enum iocpf_event e);
- 	struct bfa_ioc		*ioc;
- 	bool			fw_mismatch_notified;
- 	bool			auto_recover;
- 	u32			poll_time;
- };
- 
-+enum ioc_event;
-+
- struct bfa_ioc {
--	bfa_fsm_t		fsm;
-+	void (*fsm)(struct bfa_ioc *s, enum ioc_event e);
- 	struct bfa		*bfa;
- 	struct bfa_pcidev	pcidev;
- 	struct timer_list	ioc_timer;
-diff --git a/drivers/net/ethernet/brocade/bna/bfa_msgq.h b/drivers/net/ethernet/brocade/bna/bfa_msgq.h
-index 75343b535798..170a4b4bed96 100644
---- a/drivers/net/ethernet/brocade/bna/bfa_msgq.h
-+++ b/drivers/net/ethernet/brocade/bna/bfa_msgq.h
-@@ -55,8 +55,10 @@ enum bfa_msgq_cmdq_flags {
- 	BFA_MSGQ_CMDQ_F_DB_UPDATE	= 1,
- };
- 
-+enum cmdq_event;
-+
- struct bfa_msgq_cmdq {
--	bfa_fsm_t			fsm;
-+	void (*fsm)(struct bfa_msgq_cmdq *s, enum cmdq_event e);
- 	enum bfa_msgq_cmdq_flags flags;
- 
- 	u16			producer_index;
-@@ -81,8 +83,10 @@ enum bfa_msgq_rspq_flags {
- 
- typedef void (*bfa_msgq_mcfunc_t)(void *cbarg, struct bfi_msgq_mhdr *mhdr);
- 
-+enum rspq_event;
-+
- struct bfa_msgq_rspq {
--	bfa_fsm_t			fsm;
-+	void (*fsm)(struct bfa_msgq_rspq *s, enum rspq_event e);
- 	enum bfa_msgq_rspq_flags flags;
- 
- 	u16			producer_index;
-diff --git a/drivers/net/ethernet/brocade/bna/bna_enet.c b/drivers/net/ethernet/brocade/bna/bna_enet.c
-index a2c983f56b00..883de0ac8de4 100644
---- a/drivers/net/ethernet/brocade/bna/bna_enet.c
-+++ b/drivers/net/ethernet/brocade/bna/bna_enet.c
-@@ -1257,7 +1257,7 @@ bna_enet_mtu_get(struct bna_enet *enet)
- void
- bna_enet_enable(struct bna_enet *enet)
- {
--	if (enet->fsm != (bfa_sm_t)bna_enet_sm_stopped)
-+	if (enet->fsm != bna_enet_sm_stopped)
- 		return;
- 
- 	enet->flags |= BNA_ENET_F_ENABLED;
-@@ -1751,12 +1751,12 @@ bna_ioceth_uninit(struct bna_ioceth *ioceth)
- void
- bna_ioceth_enable(struct bna_ioceth *ioceth)
- {
--	if (ioceth->fsm == (bfa_fsm_t)bna_ioceth_sm_ready) {
-+	if (ioceth->fsm == bna_ioceth_sm_ready) {
- 		bnad_cb_ioceth_ready(ioceth->bna->bnad);
- 		return;
- 	}
- 
--	if (ioceth->fsm == (bfa_fsm_t)bna_ioceth_sm_stopped)
-+	if (ioceth->fsm == bna_ioceth_sm_stopped)
- 		bfa_fsm_send_event(ioceth, IOCETH_E_ENABLE);
+diff --git a/drivers/staging/ks7010/ks_wlan_net.c b/drivers/staging/ks7010/ks_wlan_net.c
+index 7e8d37c169f0..835fa3637bd8 100644
+--- a/drivers/staging/ks7010/ks_wlan_net.c
++++ b/drivers/staging/ks7010/ks_wlan_net.c
+@@ -1763,8 +1763,8 @@ static struct iw_statistics *ks_get_wireless_stats(struct net_device *dev)
  }
  
-diff --git a/drivers/net/ethernet/brocade/bna/bna_tx_rx.c b/drivers/net/ethernet/brocade/bna/bna_tx_rx.c
-index 2623a0da4682..c05dc7a1c4a1 100644
---- a/drivers/net/ethernet/brocade/bna/bna_tx_rx.c
-+++ b/drivers/net/ethernet/brocade/bna/bna_tx_rx.c
-@@ -1956,7 +1956,7 @@ static void
- bna_rx_stop(struct bna_rx *rx)
+ static int ks_wlan_set_stop_request(struct net_device *dev,
+-				    struct iw_request_info *info, __u32 *uwrq,
+-				    char *extra)
++				    struct iw_request_info *info,
++				    union iwreq_data *uwrq, char *extra)
  {
- 	rx->rx_flags &= ~BNA_RX_F_ENET_STARTED;
--	if (rx->fsm == (bfa_fsm_t) bna_rx_sm_stopped)
-+	if (rx->fsm == bna_rx_sm_stopped)
- 		bna_rx_mod_cb_rx_stopped(&rx->bna->rx_mod, rx);
- 	else {
- 		rx->stop_cbfn = bna_rx_mod_cb_rx_stopped;
-@@ -2535,7 +2535,7 @@ bna_rx_destroy(struct bna_rx *rx)
- void
- bna_rx_enable(struct bna_rx *rx)
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+@@ -1772,7 +1772,7 @@ static int ks_wlan_set_stop_request(struct net_device *dev,
+ 		return -EPERM;
+ 
+ 	/* for SLEEP MODE */
+-	if (!(*uwrq))
++	if (!(uwrq->mode))
+ 		return -EINVAL;
+ 
+ 	hostif_sme_enqueue(priv, SME_STOP_REQUEST);
+@@ -1786,7 +1786,9 @@ static int ks_wlan_set_mlme(struct net_device *dev,
  {
--	if (rx->fsm != (bfa_sm_t)bna_rx_sm_stopped)
-+	if (rx->fsm != bna_rx_sm_stopped)
- 		return;
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 	struct iw_mlme *mlme = (struct iw_mlme *)extra;
+-	__u32 mode = 1;
++	union iwreq_data uwrq;
++
++	uwrq.mode = 1;
  
- 	rx->rx_flags |= BNA_RX_F_ENABLED;
-@@ -3523,7 +3523,7 @@ bna_tx_destroy(struct bna_tx *tx)
- void
- bna_tx_enable(struct bna_tx *tx)
+ 	if (priv->sleep_mode == SLP_SLEEP)
+ 		return -EPERM;
+@@ -1799,13 +1801,14 @@ static int ks_wlan_set_mlme(struct net_device *dev,
+ 	    mlme->reason_code == WLAN_REASON_MIC_FAILURE)
+ 		return 0;
+ 
+-	return ks_wlan_set_stop_request(dev, NULL, &mode, NULL);
++	return ks_wlan_set_stop_request(dev, NULL, &uwrq, NULL);
+ }
+ 
+ static int ks_wlan_get_firmware_version(struct net_device *dev,
+ 					struct iw_request_info *info,
+-					struct iw_point *dwrq, char *extra)
++					union iwreq_data *uwrq, char *extra)
  {
--	if (tx->fsm != (bfa_sm_t)bna_tx_sm_stopped)
-+	if (tx->fsm != bna_tx_sm_stopped)
- 		return;
++	struct iw_point *dwrq = &uwrq->data;
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
  
- 	tx->flags |= BNA_TX_F_ENABLED;
-diff --git a/drivers/net/ethernet/brocade/bna/bna_types.h b/drivers/net/ethernet/brocade/bna/bna_types.h
-index 666b6922e24d..a5ebd7110e07 100644
---- a/drivers/net/ethernet/brocade/bna/bna_types.h
-+++ b/drivers/net/ethernet/brocade/bna/bna_types.h
-@@ -312,8 +312,10 @@ struct bna_attr {
+ 	dwrq->length = priv->version_size + 1;
+@@ -1814,8 +1817,8 @@ static int ks_wlan_get_firmware_version(struct net_device *dev,
+ }
  
- /* IOCEth */
+ static int ks_wlan_set_preamble(struct net_device *dev,
+-				struct iw_request_info *info, __u32 *uwrq,
+-				char *extra)
++				struct iw_request_info *info,
++				union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
  
-+enum bna_ioceth_event;
-+
- struct bna_ioceth {
--	bfa_fsm_t		fsm;
-+	void (*fsm)(struct bna_ioceth *s, enum bna_ioceth_event e);
- 	struct bfa_ioc ioc;
+@@ -1823,17 +1826,17 @@ static int ks_wlan_set_preamble(struct net_device *dev,
+ 		return -EPERM;
  
- 	struct bna_attr attr;
-@@ -334,8 +336,10 @@ struct bna_pause_config {
- 	enum bna_status rx_pause;
- };
+ 	/* for SLEEP MODE */
+-	if (*uwrq != LONG_PREAMBLE && *uwrq != SHORT_PREAMBLE)
++	if (uwrq->mode != LONG_PREAMBLE && uwrq->mode != SHORT_PREAMBLE)
+ 		return -EINVAL;
  
-+enum bna_enet_event;
-+
- struct bna_enet {
--	bfa_fsm_t		fsm;
-+	void (*fsm)(struct bna_enet *s, enum bna_enet_event e);
- 	enum bna_enet_flags flags;
+-	priv->reg.preamble = *uwrq;
++	priv->reg.preamble = uwrq->mode;
+ 	priv->need_commit |= SME_MODE_SET;
+ 	return -EINPROGRESS;	/* Call commit handler */
+ }
  
- 	enum bna_enet_type type;
-@@ -360,8 +364,10 @@ struct bna_enet {
+ static int ks_wlan_get_preamble(struct net_device *dev,
+-				struct iw_request_info *info, __u32 *uwrq,
+-				char *extra)
++				struct iw_request_info *info,
++				union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
  
- /* Ethport */
+@@ -1841,37 +1844,37 @@ static int ks_wlan_get_preamble(struct net_device *dev,
+ 		return -EPERM;
  
-+enum bna_ethport_event;
-+
- struct bna_ethport {
--	bfa_fsm_t		fsm;
-+	void (*fsm)(struct bna_ethport *s, enum bna_ethport_event e);
- 	enum bna_ethport_flags flags;
+ 	/* for SLEEP MODE */
+-	*uwrq = priv->reg.preamble;
++	uwrq->mode = priv->reg.preamble;
+ 	return 0;
+ }
  
- 	enum bna_link_status link_status;
-@@ -454,13 +460,16 @@ struct bna_txq {
- };
+ static int ks_wlan_set_power_mgmt(struct net_device *dev,
+-				  struct iw_request_info *info, __u32 *uwrq,
+-				  char *extra)
++				  struct iw_request_info *info,
++				  union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
  
- /* Tx object */
-+
-+enum bna_tx_event;
-+
- struct bna_tx {
- 	/* This should be the first one */
- 	struct list_head			qe;
- 	int			rid;
- 	int			hw_id;
+ 	if (priv->sleep_mode == SLP_SLEEP)
+ 		return -EPERM;
  
--	bfa_fsm_t		fsm;
-+	void (*fsm)(struct bna_tx *s, enum bna_tx_event e);
- 	enum bna_tx_flags flags;
+-	if (*uwrq != POWER_MGMT_ACTIVE &&
+-	    *uwrq != POWER_MGMT_SAVE1 &&
+-	    *uwrq != POWER_MGMT_SAVE2)
++	if (uwrq->mode != POWER_MGMT_ACTIVE &&
++	    uwrq->mode != POWER_MGMT_SAVE1 &&
++	    uwrq->mode != POWER_MGMT_SAVE2)
+ 		return -EINVAL;
  
- 	enum bna_tx_type type;
-@@ -698,8 +707,11 @@ struct bna_rxp {
- };
+-	if ((*uwrq == POWER_MGMT_SAVE1 || *uwrq == POWER_MGMT_SAVE2) &&
++	if ((uwrq->mode == POWER_MGMT_SAVE1 || uwrq->mode == POWER_MGMT_SAVE2) &&
+ 	    (priv->reg.operation_mode != MODE_INFRASTRUCTURE))
+ 		return -EINVAL;
  
- /* RxF structure (hardware Rx Function) */
-+
-+enum bna_rxf_event;
-+
- struct bna_rxf {
--	bfa_fsm_t		fsm;
-+	void (*fsm)(struct bna_rxf *s, enum bna_rxf_event e);
+-	priv->reg.power_mgmt = *uwrq;
++	priv->reg.power_mgmt = uwrq->mode;
+ 	hostif_sme_enqueue(priv, SME_POW_MNGMT_REQUEST);
  
- 	struct bfa_msgq_cmd_entry msgq_cmd;
- 	union {
-@@ -769,13 +781,16 @@ struct bna_rxf {
- };
+ 	return 0;
+ }
  
- /* Rx object */
-+
-+enum bna_rx_event;
-+
- struct bna_rx {
- 	/* This should be the first one */
- 	struct list_head			qe;
- 	int			rid;
- 	int			hw_id;
+ static int ks_wlan_get_power_mgmt(struct net_device *dev,
+-				  struct iw_request_info *info, __u32 *uwrq,
+-				  char *extra)
++				  struct iw_request_info *info,
++				  union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
  
--	bfa_fsm_t		fsm;
-+	void (*fsm)(struct bna_rx *s, enum bna_rx_event e);
+@@ -1879,13 +1882,13 @@ static int ks_wlan_get_power_mgmt(struct net_device *dev,
+ 		return -EPERM;
  
- 	enum bna_rx_type type;
+ 	/* for SLEEP MODE */
+-	*uwrq = priv->reg.power_mgmt;
++	uwrq->mode = priv->reg.power_mgmt;
+ 	return 0;
+ }
  
+ static int ks_wlan_set_scan_type(struct net_device *dev,
+-				 struct iw_request_info *info, __u32 *uwrq,
+-				 char *extra)
++				 struct iw_request_info *info,
++				 union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+@@ -1893,39 +1896,39 @@ static int ks_wlan_set_scan_type(struct net_device *dev,
+ 		return -EPERM;
+ 	/* for SLEEP MODE */
+ 
+-	if (*uwrq != ACTIVE_SCAN && *uwrq != PASSIVE_SCAN)
++	if (uwrq->mode != ACTIVE_SCAN && uwrq->mode != PASSIVE_SCAN)
+ 		return -EINVAL;
+ 
+-	priv->reg.scan_type = *uwrq;
++	priv->reg.scan_type = uwrq->mode;
+ 	return 0;
+ }
+ 
+ static int ks_wlan_get_scan_type(struct net_device *dev,
+-				 struct iw_request_info *info, __u32 *uwrq,
+-				 char *extra)
++				 struct iw_request_info *info,
++				 union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+ 	if (priv->sleep_mode == SLP_SLEEP)
+ 		return -EPERM;
+ 	/* for SLEEP MODE */
+-	*uwrq = priv->reg.scan_type;
++	uwrq->mode = priv->reg.scan_type;
+ 	return 0;
+ }
+ 
+ static int ks_wlan_set_beacon_lost(struct net_device *dev,
+-				   struct iw_request_info *info, __u32 *uwrq,
+-				   char *extra)
++				   struct iw_request_info *info,
++				   union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+ 	if (priv->sleep_mode == SLP_SLEEP)
+ 		return -EPERM;
+ 	/* for SLEEP MODE */
+-	if (*uwrq > BEACON_LOST_COUNT_MAX)
++	if (uwrq->mode > BEACON_LOST_COUNT_MAX)
+ 		return -EINVAL;
+ 
+-	priv->reg.beacon_lost_count = *uwrq;
++	priv->reg.beacon_lost_count = uwrq->mode;
+ 
+ 	if (priv->reg.operation_mode == MODE_INFRASTRUCTURE) {
+ 		priv->need_commit |= SME_MODE_SET;
+@@ -1936,101 +1939,101 @@ static int ks_wlan_set_beacon_lost(struct net_device *dev,
+ }
+ 
+ static int ks_wlan_get_beacon_lost(struct net_device *dev,
+-				   struct iw_request_info *info, __u32 *uwrq,
+-				   char *extra)
++				   struct iw_request_info *info,
++				   union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+ 	if (priv->sleep_mode == SLP_SLEEP)
+ 		return -EPERM;
+ 	/* for SLEEP MODE */
+-	*uwrq = priv->reg.beacon_lost_count;
++	uwrq->mode = priv->reg.beacon_lost_count;
+ 	return 0;
+ }
+ 
+ static int ks_wlan_set_phy_type(struct net_device *dev,
+-				struct iw_request_info *info, __u32 *uwrq,
+-				char *extra)
++				struct iw_request_info *info,
++				union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+ 	if (priv->sleep_mode == SLP_SLEEP)
+ 		return -EPERM;
+ 
+-	if (*uwrq != D_11B_ONLY_MODE &&
+-	    *uwrq != D_11G_ONLY_MODE &&
+-	    *uwrq != D_11BG_COMPATIBLE_MODE)
++	if (uwrq->mode != D_11B_ONLY_MODE &&
++	    uwrq->mode != D_11G_ONLY_MODE &&
++	    uwrq->mode != D_11BG_COMPATIBLE_MODE)
+ 		return -EINVAL;
+ 
+ 	/* for SLEEP MODE */
+-	priv->reg.phy_type = *uwrq;
++	priv->reg.phy_type = uwrq->mode;
+ 	priv->need_commit |= SME_MODE_SET;
+ 	return -EINPROGRESS;	/* Call commit handler */
+ }
+ 
+ static int ks_wlan_get_phy_type(struct net_device *dev,
+-				struct iw_request_info *info, __u32 *uwrq,
+-				char *extra)
++				struct iw_request_info *info,
++				union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+ 	if (priv->sleep_mode == SLP_SLEEP)
+ 		return -EPERM;
+ 	/* for SLEEP MODE */
+-	*uwrq = priv->reg.phy_type;
++	uwrq->mode = priv->reg.phy_type;
+ 	return 0;
+ }
+ 
+ static int ks_wlan_set_cts_mode(struct net_device *dev,
+-				struct iw_request_info *info, __u32 *uwrq,
+-				char *extra)
++				struct iw_request_info *info,
++				union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+ 	if (priv->sleep_mode == SLP_SLEEP)
+ 		return -EPERM;
+ 	/* for SLEEP MODE */
+-	if (*uwrq != CTS_MODE_FALSE && *uwrq != CTS_MODE_TRUE)
++	if (uwrq->mode != CTS_MODE_FALSE && uwrq->mode != CTS_MODE_TRUE)
+ 		return -EINVAL;
+ 
+-	priv->reg.cts_mode = (*uwrq == CTS_MODE_FALSE) ? *uwrq :
++	priv->reg.cts_mode = (uwrq->mode == CTS_MODE_FALSE) ? uwrq->mode :
+ 			      (priv->reg.phy_type == D_11G_ONLY_MODE ||
+ 			       priv->reg.phy_type == D_11BG_COMPATIBLE_MODE) ?
+-			       *uwrq : !*uwrq;
++			       uwrq->mode : !uwrq->mode;
+ 
+ 	priv->need_commit |= SME_MODE_SET;
+ 	return -EINPROGRESS;	/* Call commit handler */
+ }
+ 
+ static int ks_wlan_get_cts_mode(struct net_device *dev,
+-				struct iw_request_info *info, __u32 *uwrq,
+-				char *extra)
++				struct iw_request_info *info,
++				union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+ 	if (priv->sleep_mode == SLP_SLEEP)
+ 		return -EPERM;
+ 	/* for SLEEP MODE */
+-	*uwrq = priv->reg.cts_mode;
++	uwrq->mode = priv->reg.cts_mode;
+ 	return 0;
+ }
+ 
+ static int ks_wlan_set_sleep_mode(struct net_device *dev,
+ 				  struct iw_request_info *info,
+-				  __u32 *uwrq, char *extra)
++				  union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+-	if (*uwrq != SLP_SLEEP &&
+-	    *uwrq != SLP_ACTIVE) {
+-		netdev_err(dev, "SET_SLEEP_MODE %d error\n", *uwrq);
++	if (uwrq->mode != SLP_SLEEP &&
++	    uwrq->mode != SLP_ACTIVE) {
++		netdev_err(dev, "SET_SLEEP_MODE %d error\n", uwrq->mode);
+ 		return -EINVAL;
+ 	}
+ 
+-	priv->sleep_mode = *uwrq;
++	priv->sleep_mode = uwrq->mode;
+ 	netdev_info(dev, "SET_SLEEP_MODE %d\n", priv->sleep_mode);
+ 
+-	if (*uwrq == SLP_SLEEP)
++	if (uwrq->mode == SLP_SLEEP)
+ 		hostif_sme_enqueue(priv, SME_STOP_REQUEST);
+ 
+ 	hostif_sme_enqueue(priv, SME_SLEEP_REQUEST);
+@@ -2040,52 +2043,53 @@ static int ks_wlan_set_sleep_mode(struct net_device *dev,
+ 
+ static int ks_wlan_get_sleep_mode(struct net_device *dev,
+ 				  struct iw_request_info *info,
+-				  __u32 *uwrq, char *extra)
++				  union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+-	*uwrq = priv->sleep_mode;
++	uwrq->mode = priv->sleep_mode;
+ 
+ 	return 0;
+ }
+ 
+ static int ks_wlan_set_wps_enable(struct net_device *dev,
+-				  struct iw_request_info *info, __u32 *uwrq,
+-				  char *extra)
++				  struct iw_request_info *info,
++				  union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+ 	if (priv->sleep_mode == SLP_SLEEP)
+ 		return -EPERM;
+ 	/* for SLEEP MODE */
+-	if (*uwrq != 0 && *uwrq != 1)
++	if (uwrq->mode != 0 && uwrq->mode != 1)
+ 		return -EINVAL;
+ 
+-	priv->wps.wps_enabled = *uwrq;
++	priv->wps.wps_enabled = uwrq->mode;
+ 	hostif_sme_enqueue(priv, SME_WPS_ENABLE_REQUEST);
+ 
+ 	return 0;
+ }
+ 
+ static int ks_wlan_get_wps_enable(struct net_device *dev,
+-				  struct iw_request_info *info, __u32 *uwrq,
+-				  char *extra)
++				  struct iw_request_info *info,
++				  union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+ 	if (priv->sleep_mode == SLP_SLEEP)
+ 		return -EPERM;
+ 	/* for SLEEP MODE */
+-	*uwrq = priv->wps.wps_enabled;
+-	netdev_info(dev, "return=%d\n", *uwrq);
++	uwrq->mode = priv->wps.wps_enabled;
++	netdev_info(dev, "return=%d\n", uwrq->mode);
+ 
+ 	return 0;
+ }
+ 
+ static int ks_wlan_set_wps_probe_req(struct net_device *dev,
+ 				     struct iw_request_info *info,
+-				     struct iw_point *dwrq, char *extra)
++				     union iwreq_data *uwrq, char *extra)
+ {
++	struct iw_point *dwrq = &uwrq->data;
+ 	u8 *p = extra;
+ 	unsigned char len;
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+@@ -2114,76 +2118,76 @@ static int ks_wlan_set_wps_probe_req(struct net_device *dev,
+ }
+ 
+ static int ks_wlan_set_tx_gain(struct net_device *dev,
+-			       struct iw_request_info *info, __u32 *uwrq,
+-			       char *extra)
++			       struct iw_request_info *info,
++			       union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+ 	if (priv->sleep_mode == SLP_SLEEP)
+ 		return -EPERM;
+ 	/* for SLEEP MODE */
+-	if (*uwrq > 0xFF)
++	if (uwrq->mode > 0xFF)
+ 		return -EINVAL;
+ 
+-	priv->gain.tx_gain = (u8)*uwrq;
++	priv->gain.tx_gain = (u8)uwrq->mode;
+ 	priv->gain.tx_mode = (priv->gain.tx_gain < 0xFF) ? 1 : 0;
+ 	hostif_sme_enqueue(priv, SME_SET_GAIN);
+ 	return 0;
+ }
+ 
+ static int ks_wlan_get_tx_gain(struct net_device *dev,
+-			       struct iw_request_info *info, __u32 *uwrq,
+-			       char *extra)
++			       struct iw_request_info *info,
++			       union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+ 	if (priv->sleep_mode == SLP_SLEEP)
+ 		return -EPERM;
+ 	/* for SLEEP MODE */
+-	*uwrq = priv->gain.tx_gain;
++	uwrq->mode = priv->gain.tx_gain;
+ 	hostif_sme_enqueue(priv, SME_GET_GAIN);
+ 	return 0;
+ }
+ 
+ static int ks_wlan_set_rx_gain(struct net_device *dev,
+-			       struct iw_request_info *info, __u32 *uwrq,
+-			       char *extra)
++			       struct iw_request_info *info,
++			       union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+ 	if (priv->sleep_mode == SLP_SLEEP)
+ 		return -EPERM;
+ 	/* for SLEEP MODE */
+-	if (*uwrq > 0xFF)
++	if (uwrq->mode > 0xFF)
+ 		return -EINVAL;
+ 
+-	priv->gain.rx_gain = (u8)*uwrq;
++	priv->gain.rx_gain = (u8)uwrq->mode;
+ 	priv->gain.rx_mode = (priv->gain.rx_gain < 0xFF) ? 1 : 0;
+ 	hostif_sme_enqueue(priv, SME_SET_GAIN);
+ 	return 0;
+ }
+ 
+ static int ks_wlan_get_rx_gain(struct net_device *dev,
+-			       struct iw_request_info *info, __u32 *uwrq,
+-			       char *extra)
++			       struct iw_request_info *info,
++			       union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+ 	if (priv->sleep_mode == SLP_SLEEP)
+ 		return -EPERM;
+ 	/* for SLEEP MODE */
+-	*uwrq = priv->gain.rx_gain;
++	uwrq->mode = priv->gain.rx_gain;
+ 	hostif_sme_enqueue(priv, SME_GET_GAIN);
+ 	return 0;
+ }
+ 
+ static int ks_wlan_get_eeprom_cksum(struct net_device *dev,
+-				    struct iw_request_info *info, __u32 *uwrq,
+-				    char *extra)
++				    struct iw_request_info *info,
++				    union iwreq_data *uwrq, char *extra)
+ {
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+ 
+-	*uwrq = priv->eeprom_checksum;
++	uwrq->mode = priv->eeprom_checksum;
+ 	return 0;
+ }
+ 
+@@ -2302,7 +2306,7 @@ static void print_hif_event(struct net_device *dev, int event)
+ 
+ /* get host command history */
+ static int ks_wlan_hostt(struct net_device *dev, struct iw_request_info *info,
+-			 __u32 *uwrq, char *extra)
++			 union iwreq_data *uwrq, char *extra)
+ {
+ 	int i, event;
+ 	struct ks_wlan_private *priv = netdev_priv(dev);
+@@ -2461,7 +2465,7 @@ static int ks_wlan_netdev_ioctl(struct net_device *dev, struct ifreq *rq,
+ 
+ 	switch (cmd) {
+ 	case SIOCIWFIRSTPRIV + 20:	/* KS_WLAN_SET_STOP_REQ */
+-		ret = ks_wlan_set_stop_request(dev, NULL, &wrq->u.mode, NULL);
++		ret = ks_wlan_set_stop_request(dev, NULL, &wrq->u, NULL);
+ 		break;
+ 		// All other calls are currently unsupported
+ 	default:
 -- 
 2.34.1
 
