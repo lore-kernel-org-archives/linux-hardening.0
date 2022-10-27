@@ -2,50 +2,61 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D63ECAAA1
-	for <linux-hardening@archiver.kernel.org>; Thu, 27 Oct 2022 12:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DA8FA3740
+	for <linux-hardening@archiver.kernel.org>; Thu, 27 Oct 2022 13:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235531AbiJ0MHb (ORCPT
+        id S235986AbiJ0NHd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 27 Oct 2022 08:07:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59290 "EHLO
+        Thu, 27 Oct 2022 09:07:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235475AbiJ0MHa (ORCPT
+        with ESMTP id S235532AbiJ0NH1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 27 Oct 2022 08:07:30 -0400
-X-Greylist: delayed 321 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 27 Oct 2022 05:07:29 PDT
-Received: from mx.cjr.nz (mx.cjr.nz [51.158.111.142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 875E4923E8;
-        Thu, 27 Oct 2022 05:07:29 -0700 (PDT)
-Received: from authenticated-user (mx.cjr.nz [51.158.111.142])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: pc)
-        by mx.cjr.nz (Postfix) with ESMTPSA id AB86B7FC01;
-        Thu, 27 Oct 2022 12:02:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjr.nz; s=dkim;
-        t=1666872124;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MtpMGCF+iBRpVLWgZ5Ofi84bzkswm5lge9Z3x2eJ++g=;
-        b=cGaSQswDbxqhSBVj5pDq2GqhsfWTvLHXYYkMfnzUtzDu9qQoJIAheeOJh6kvSpEf5GvfRG
-        yRGEyPPCKVdpWf1B+kLxd0W9HSAJYK3NXUHVB/UXVrRGK19eRMFPdAp2TDyRAJrxZA4/mG
-        PbyYULxDaGdOHhPFJ1IGHC4xcjeMA0QplsS66eLO39jSdLEjsA2Zfgar8lFMkwj6RRssS7
-        WLUOcZngyyy5D2hJe4t1LhQrRm+4Ofop0TJ6lZWko/2wplsv9yIzIFYLYBhtes4EMzg4nM
-        CFzFh2tBjwghTEY1OzCuUpw850fnEkoZ26nkvczAP3RB+X5CfnZRv2jHEMHE/g==
-From:   Paulo Alcantara <pc@cjr.nz>
-To:     Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Kees Cook <keescook@chromium.org>,
+        Thu, 27 Oct 2022 09:07:27 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 503CA17A015
+        for <linux-hardening@vger.kernel.org>; Thu, 27 Oct 2022 06:07:25 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id v13-20020a17090a6b0d00b0021332e5388fso1414032pjj.1
+        for <linux-hardening@vger.kernel.org>; Thu, 27 Oct 2022 06:07:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bA5UIXoeSiPSdpk42SIcKNh5Hs0RGjWIBYmqNZvV8z0=;
+        b=WMK5ErddZ+UAaVGwb6JZd/hV/xL45PeKozs9Y8Ts6Dl5wl6x54N23+uGqZ1KF/inKX
+         lOIqkJkEFXdPaCgyh2+I9CKKgAPy3C6QQKf0OrAYKwXF1akmSsXU/T7s+DaDMjIXac0f
+         P1VQieyooXdBGZPT78rPl5bE5TaCNoldXNwXU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bA5UIXoeSiPSdpk42SIcKNh5Hs0RGjWIBYmqNZvV8z0=;
+        b=SG37+Uk7JSC02o6IiqKVz0LXpGx6RnqnwaI1sbdkxAQiRy8KkXRx7WP77oJaIWn2tz
+         J7ykBoBI81FGWJ01mc/fOnJnh2vxE7A7QQe90OmpV5zVnwJ+1lRl6UvsjcPmbfVJ+l7S
+         if8zgSi8X33nuoDPMy4VinYN9cyRlfOCSVmEtU3Gfqygd/k6L298dE9CwG23dKmh/Qej
+         XMcnIa8+6obcvIL+3hb8zxDsYY4eRT0SLjWtaWkqJM4WwtTYHRaeb27dapMdVsWwfW+4
+         8OZN0Gzqn3idkMpBxQIZhe4bfF96WrAP9LNZMAfV77D7CAXpFoWLdO18nktzC52KI3+o
+         TczA==
+X-Gm-Message-State: ACrzQf3+ROQwWAqbFhxTUQuiSzDUZjZWs9Lh1XBcYCH0LG8rNiA9WSct
+        G4USwpk+aNRgeXs/4LnRtaY0tg==
+X-Google-Smtp-Source: AMsMyM6XvKHWZb4CUg/of1JGw7Fw/JFlLofrdFN0ZHBinRybiUgEUdo0acHehvuEcDop9LoIA26AjA==
+X-Received: by 2002:a17:903:2306:b0:185:43a2:3d1c with SMTP id d6-20020a170903230600b0018543a23d1cmr19357662plh.154.1666876044670;
+        Thu, 27 Oct 2022 06:07:24 -0700 (PDT)
+Received: from google.com ([240f:75:7537:3187:a253:6b21:b32f:c252])
+        by smtp.gmail.com with ESMTPSA id x14-20020aa7956e000000b0056265011136sm1138963pfq.112.2022.10.27.06.07.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Oct 2022 06:07:24 -0700 (PDT)
+Date:   Thu, 27 Oct 2022 22:07:15 +0900
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
         David Howells <dhowells@redhat.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Russ Weight <russell.h.weight@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
-        Steve French <sfrench@samba.org>,
+        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>,
         Ronnie Sahlberg <lsahlber@redhat.com>,
         Shyam Prasad N <sprasad@microsoft.com>,
         Tom Talpey <tom@talpey.com>,
@@ -59,82 +70,39 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
-        Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
+        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
         Peter Zijlstra <peterz@infradead.org>,
         linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
         linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] cred: Do not default to init_cred in prepare_kernel_cred()
-In-Reply-To: <20221026232943.never.775-kees@kernel.org>
+Subject: Re: [PATCH] cred: Do not default to init_cred in
+ prepare_kernel_cred()
+Message-ID: <Y1qCg+g9je72TneY@google.com>
 References: <20221026232943.never.775-kees@kernel.org>
-Date:   Thu, 27 Oct 2022 09:03:08 -0300
-Message-ID: <87bkpxh3sz.fsf@cjr.nz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221026232943.never.775-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
-
+On (22/10/26 16:31), Kees Cook wrote:
 > A common exploit pattern for ROP attacks is to abuse prepare_kernel_cred()
 > in order to construct escalated privileges[1]. Instead of providing a
 > short-hand argument (NULL) to the "daemon" argument to indicate using
 > init_cred as the base cred, require that "daemon" is always set to
 > an actual task. Replace all existing callers that were passing NULL
 > with &init_task.
->
+> 
 > Future attacks will need to have sufficiently powerful read/write
 > primitives to have found an appropriately privileged task and written it
 > to the ROP stack as an argument to succeed, which is similarly difficult
 > to the prior effort needed to escalate privileges before struct cred
 > existed: locate the current cred and overwrite the uid member.
->
+> 
 > This has the added benefit of meaning that prepare_kernel_cred() can no
 > longer exceed the privileges of the init task, which may have changed from
 > the original init_cred (e.g. dropping capabilities from the bounding set).
->
-> [1] https://google.com/search?q=3Dcommit_creds(prepare_kernel_cred(0))
->
-> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: Luis Chamberlain <mcgrof@kernel.org>
-> Cc: Russ Weight <russell.h.weight@intel.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Steve French <sfrench@samba.org>
-> Cc: Paulo Alcantara <pc@cjr.nz>
-> Cc: Ronnie Sahlberg <lsahlber@redhat.com>
-> Cc: Shyam Prasad N <sprasad@microsoft.com>
-> Cc: Tom Talpey <tom@talpey.com>
-> Cc: Namjae Jeon <linkinjeon@kernel.org>
-> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-> Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-> Cc: Anna Schumaker <anna@kernel.org>
-> Cc: Chuck Lever <chuck.lever@oracle.com>
-> Cc: Jeff Layton <jlayton@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: "Michal Koutn=C3=BD" <mkoutny@suse.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: linux-cifs@vger.kernel.org
-> Cc: samba-technical@lists.samba.org
-> Cc: linux-nfs@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/base/firmware_loader/main.c    |  2 +-
->  fs/cifs/cifs_spnego.c                  |  2 +-
->  fs/cifs/cifsacl.c                      |  2 +-
->  fs/ksmbd/smb_common.c                  |  2 +-
->  fs/nfs/flexfilelayout/flexfilelayout.c |  4 ++--
->  fs/nfs/nfs4idmap.c                     |  2 +-
->  fs/nfsd/nfs4callback.c                 |  2 +-
->  kernel/cred.c                          | 15 +++++++--------
->  net/dns_resolver/dns_key.c             |  2 +-
->  9 files changed, 16 insertions(+), 17 deletions(-)
 
-Acked-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
+Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
