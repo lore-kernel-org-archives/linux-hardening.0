@@ -2,113 +2,108 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C86FA3743
-	for <linux-hardening@archiver.kernel.org>; Thu, 27 Oct 2022 19:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFC6ECAAA1
+	for <linux-hardening@archiver.kernel.org>; Thu, 27 Oct 2022 20:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236002AbiJ0TQI (ORCPT
+        id S235704AbiJ0UQ6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 27 Oct 2022 15:16:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39066 "EHLO
+        Thu, 27 Oct 2022 16:16:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236103AbiJ0TQH (ORCPT
+        with ESMTP id S234943AbiJ0UQ5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 27 Oct 2022 15:16:07 -0400
-Received: from mail-oa1-x29.google.com (mail-oa1-x29.google.com [IPv6:2001:4860:4864:20::29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CD305A836;
-        Thu, 27 Oct 2022 12:16:06 -0700 (PDT)
-Received: by mail-oa1-x29.google.com with SMTP id 586e51a60fabf-13bd19c3b68so3473497fac.7;
-        Thu, 27 Oct 2022 12:16:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=eCsVCuaf2go92u0eYyN6AvJOsvbg6jhQcYiOWielii4=;
-        b=R0iWBH+HPjJ0SQdZ84Mt4uYE+Bta4bVdd1ncs9eqbfofJpPePa6XG9quwkgAuVwy0n
-         kB2rMYQldd1ASFbzPIjghjc19QKB+Vk6xcyLhtzYrIMNQvXD/77YpqD6RoZjUUukcCjm
-         xyG49dB/CLPB1z4W2WwNKBt6boRPtkSTiCNdFuWGWGhenpBeV96nMIUFmI73pjcLv/Jv
-         34hU2DEiJa/Qrg6SRcSoXY5w+BZ8/Ug3vUoSbZDO+2POPYkVhIUs5WxTbDTjTP1plMb7
-         6JGV1JLbFGJFK6kgHRaaYBhxkbbXAKZTB2A8hq1M5BY6EOHWSfHJp1LalMvxbEM4cPTM
-         LKEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eCsVCuaf2go92u0eYyN6AvJOsvbg6jhQcYiOWielii4=;
-        b=o6IXg7inFIaaF9M96y4uu8GRbLK9NXULWGPL1gGvfo/gTqV05mCuX7vdVdXuDOYh0D
-         tH0VxJDtvoi2hF6WtikfC1mfvpGBZigeUUqBKUxAlyAvBfqj7sDZyRFoAEqI4WbHGUiK
-         9PVLH0tKGtH9sYgcPn+n5wjtsknEKCbZn4oFuNWpaWhpCl8fg30UDVi2dYieYFI5Pep9
-         vrWiP0K1XvB3RyRxktH9gdMccktwyW8iTUeQzllK9q6vKWt/ryx1Sowio2FwwU6mXkTh
-         uQhF78ck5vHMyVv74WlSf/VGskUBMXDYu1A8enzsDuDMyUS6KtjErWTm+DphIOAmjK/f
-         d2TA==
-X-Gm-Message-State: ACrzQf10eYL24FxQ7eGzxddEjx1slsdUBT7yVc0QRvo1veGYeoNlo5CA
-        lgpnDlqeTkjwgG4gBXB/H9ZzZRjKzmEzVmrYz1w=
-X-Google-Smtp-Source: AMsMyM7KbsFtvsVIc+R5gFeE/Bsyup166H3kNtBbyj/N9Fb0PKl2TLQArY/Nxb5G1+poimNKiwOW0RK3b4L6fD2AFEA=
-X-Received: by 2002:a05:6870:c182:b0:12a:e54e:c6e8 with SMTP id
- h2-20020a056870c18200b0012ae54ec6e8mr6423090oad.207.1666898165661; Thu, 27
- Oct 2022 12:16:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221022180455.never.023-kees@kernel.org> <CA+fCnZcj_Hq1NQv1L2U7+A8quqj+4kA=8A7LwOWz5eYNQFra+A@mail.gmail.com>
- <202210271212.EB69EF1@keescook>
-In-Reply-To: <202210271212.EB69EF1@keescook>
-From:   Andrey Konovalov <andreyknvl@gmail.com>
-Date:   Thu, 27 Oct 2022 21:15:54 +0200
-Message-ID: <CA+fCnZeTO_eQjSqysoToKCqUhsXc8jL93TdE8W9Fh+xrbUiFtg@mail.gmail.com>
-Subject: Re: [PATCH] mm: Make ksize() a reporting-only function
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
+        Thu, 27 Oct 2022 16:16:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F5E645D2;
+        Thu, 27 Oct 2022 13:16:56 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 03AAC624DE;
+        Thu, 27 Oct 2022 20:16:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B85D3C433C1;
+        Thu, 27 Oct 2022 20:16:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666901815;
+        bh=8HAK4m6E3POACA1m3I3Cl8FtXlz0B1YchOPXq9lU5BU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=k+5h+9HliD+/DKxTYK+Ll9WsQoU4+6L/tUCabezbJnN9zjPXXrxFq0CUllRzMWU6l
+         eXja6U6i6FMLBPBLVR9R3Pxb01oQjTKdx4JMRI0p3v+0W2KYOwatXdmOc+Z9QLPNbr
+         wFIDqWSiWcoyWXGXVEUZDDHm7MwlpZH6Ye7DW5s4cXaQ4XhuIJMfqwun9M7yq9eURT
+         KM/19EZqjB4sMLsqEiP8KZxFeNSzWqoklEbPaNDD/8ldutTBm9vN0l1z3sygu6fOIZ
+         FwUkcYVlAZfSGtRAfvOklVs+9YilA+rg4CjepT47G6qzGueP3K+L18s3or3oKTGMvP
+         S9GYaIAy6PhsQ==
+Date:   Thu, 27 Oct 2022 15:16:51 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-mm@kvack.org, kasan-dev@googlegroups.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jouni Malinen <j@w1.fi>,
+        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>
+Cc:     linux-staging@lists.linux.dev, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH v2 0/6] Avoid clashing function prototypes
+Message-ID: <cover.1666894751.git.gustavoars@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Oct 27, 2022 at 9:13 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Thu, Oct 27, 2022 at 09:05:45PM +0200, Andrey Konovalov wrote:
-> > On Sat, Oct 22, 2022 at 8:08 PM Kees Cook <keescook@chromium.org> wrote:
-> > [...]
-> > > -/* Check that ksize() makes the whole object accessible. */
-> > > +/* Check that ksize() does NOT unpoison whole object. */
-> > >  static void ksize_unpoisons_memory(struct kunit *test)
-> > >  {
-> > >         char *ptr;
-> > > @@ -791,15 +791,17 @@ static void ksize_unpoisons_memory(struct kunit *test)
-> > >
-> > >         ptr = kmalloc(size, GFP_KERNEL);
-> > >         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-> > > +
-> > >         real_size = ksize(ptr);
-> > > +       KUNIT_EXPECT_GT(test, real_size, size);
-> > >
-> > >         OPTIMIZER_HIDE_VAR(ptr);
-> > >
-> > >         /* This access shouldn't trigger a KASAN report. */
-> > > -       ptr[size] = 'x';
-> > > +       ptr[size - 1] = 'x';
-> > >
-> > >         /* This one must. */
-> > > -       KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size]);
-> > > +       KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size - 1]);
-> >
-> > How about also accessing ptr[size] here? It would allow for a more
-> > precise checking of the in-object redzone.
->
-> Sure! Probably both ptr[size] and ptr[real_size -1], yes?
+When built with Control Flow Integrity, function prototypes between
+caller and function declaration must match. These mismatches are visible
+at compile time with the new -Wcast-function-type-strict in Clang[1].
 
-Yes, sounds good. Thank you!
+This series fixes a total of 424 -Wcast-function-type-strict warnings.
+
+Link: https://reviews.llvm.org/D134831 [1]
+
+Changes in v2:
+ - Squash previous patches 1, 2 and 3 into a single patch
+   cfg80211.
+ - Add a couple more patches: bna and staging.
+ - Fix 254 (227 in bna and 27 in staging) more
+   -Wcast-function-type-strict warnings.
+
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/cover.1666038048.git.gustavoars@kernel.org/
+
+Gustavo A. R. Silva (6):
+  cfg80211: Avoid clashing function prototypes
+  hostap: Avoid clashing function prototypes
+  zd1201: Avoid clashing function prototypes
+  airo: Avoid clashing function prototypes
+  bna: Avoid clashing function prototypes
+  staging: ks7010: Avoid clashing function prototypes
+
+ drivers/net/ethernet/brocade/bna/bfa_cs.h     |  60 +++--
+ drivers/net/ethernet/brocade/bna/bfa_ioc.c    |  10 +-
+ drivers/net/ethernet/brocade/bna/bfa_ioc.h    |   8 +-
+ drivers/net/ethernet/brocade/bna/bfa_msgq.h   |   8 +-
+ drivers/net/ethernet/brocade/bna/bna_enet.c   |   6 +-
+ drivers/net/ethernet/brocade/bna/bna_tx_rx.c  |   6 +-
+ drivers/net/ethernet/brocade/bna/bna_types.h  |  27 +-
+ drivers/net/wireless/cisco/airo.c             | 204 ++++++++-------
+ drivers/net/wireless/intel/ipw2x00/ipw2200.c  |   2 +-
+ .../wireless/intersil/hostap/hostap_ioctl.c   | 234 ++++++++++--------
+ drivers/net/wireless/intersil/orinoco/wext.c  | 113 +++++----
+ drivers/net/wireless/zydas/zd1201.c           | 162 ++++++------
+ drivers/staging/ks7010/ks_wlan_net.c          | 184 +++++++-------
+ include/net/cfg80211-wext.h                   |  20 +-
+ net/wireless/scan.c                           |   3 +-
+ net/wireless/wext-compat.c                    | 180 ++++++--------
+ net/wireless/wext-compat.h                    |   8 +-
+ net/wireless/wext-sme.c                       |   5 +-
+ 18 files changed, 661 insertions(+), 579 deletions(-)
+
+-- 
+2.34.1
+
