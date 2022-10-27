@@ -2,113 +2,125 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49363FA3742
-	for <linux-hardening@archiver.kernel.org>; Thu, 27 Oct 2022 19:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A030BECAAA1
+	for <linux-hardening@archiver.kernel.org>; Thu, 27 Oct 2022 19:06:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235586AbiJ0TDb (ORCPT
+        id S234915AbiJ0TGA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 27 Oct 2022 15:03:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43748 "EHLO
+        Thu, 27 Oct 2022 15:06:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234239AbiJ0TDa (ORCPT
+        with ESMTP id S236092AbiJ0TF5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 27 Oct 2022 15:03:30 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE805C4F
-        for <linux-hardening@vger.kernel.org>; Thu, 27 Oct 2022 12:03:29 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id c15-20020a17090a1d0f00b0021365864446so2338731pjd.4
-        for <linux-hardening@vger.kernel.org>; Thu, 27 Oct 2022 12:03:29 -0700 (PDT)
+        Thu, 27 Oct 2022 15:05:57 -0400
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25E3E54CBB;
+        Thu, 27 Oct 2022 12:05:57 -0700 (PDT)
+Received: by mail-ot1-x333.google.com with SMTP id d18-20020a05683025d200b00661c6f1b6a4so1634799otu.1;
+        Thu, 27 Oct 2022 12:05:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=u9re30L3Qf1nWwfY1dsIhAySAPn0ZrFVWEIZ6hesyg0=;
-        b=fnIImG0iDucSTCyvxGTxY3d9lDdBvL7ROo88gDYrVx3xsPfdBvt1S2y+w/INuTYEWz
-         FtNj8P0QY4I+xSWJssWO3K96FRG7Xcdw9VF/dwMA7x7XsCoenHjoq94xVVxrfqn1cvwG
-         VA5mWwTUi7/N9k0hUuttlg+nynQ7Fixhdd/to=
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=A1XprAgWB0s7wiMtyLLvIEnH2hN1akKHT1cSrZfMn0g=;
+        b=Sqz2uDjbQlvvJWBpIM/mzfHIsX9oc4U1Fvobpx7j4awZ289LhDdgt28RgrQ7eUUrYb
+         bd/0+diGJAN9IGyFXNpPjroo3xxI7q5obkLaSI9dnXviOhXHyiaC0YPBi3sEikUxPPVL
+         xUdSTHktkBwkoN6/HQ9/REsmPkc4LFqNsw4o5T+4mAZ5LYgDyPs1IJhEL5RxVwgq8DFw
+         bO/aXGKYUNL2Ab3Fq2mfiDB00NJScK6qG5AWF+4LrN2F8fg9zybgp/OMWI/GzYIrPNTg
+         /FL+1zOWNkqqBMHCXP0DrsKWvv92+4659qPZzhbk08RzU1aA1lFOo0kJdjkrhWkMobU5
+         i02Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u9re30L3Qf1nWwfY1dsIhAySAPn0ZrFVWEIZ6hesyg0=;
-        b=YZh1KQkjKFI1xZWrbYuG5NpqY/AAJY6i5rLVFpmCPDgfGOPqgDTa94+zPM2F3E261s
-         /nYLyBYNxO0Rs6Nwq93tmwTSWmOneR5obSPtqqfh3zd1OWhAFlRfBWMhiLGhXu+iPUv1
-         8Maosr/DyaecCYv1yBSbIke3xfhL8CPY6HzahIti9yUcFEfLkMGywpP4QJHOC0eVpYzW
-         bmrFEYn15Zx8kimMx7dJLjnuvCYEtr/LXkrzshKtWJa3Zx5bSVgEsoWc0ZrZmoMviiut
-         TAYVVB+oYko+lnqcxe9F5I2Jqd2f9mEIAsWhvM91Pj0LYCZX3AnVEe7ls7kroRmgP1dR
-         ef1Q==
-X-Gm-Message-State: ACrzQf3qzJY7f/RYF9yH3ftrb6gYEVG3lUy51gWWaBtiMPRgxrRjTZWq
-        pF3dD0epTDg7PnvwL9dC89lgPQ==
-X-Google-Smtp-Source: AMsMyM6uuk3qiJ1+V1Zd5xs1pexoyzJGJiyIkrfAYgcsIlVtEeXMZwR4mhWPlpFWNxoVtEGbOx9Oew==
-X-Received: by 2002:a17:902:f683:b0:184:d45b:a096 with SMTP id l3-20020a170902f68300b00184d45ba096mr49382092plg.23.1666897409281;
-        Thu, 27 Oct 2022 12:03:29 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x15-20020a17090a46cf00b0020a0571b354sm1276584pjg.57.2022.10.27.12.03.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Oct 2022 12:03:28 -0700 (PDT)
-Date:   Thu, 27 Oct 2022 12:03:27 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Latypov <dlatypov@google.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>, linux-doc@vger.kernel.org,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>
-Subject: [GIT PULL] hardening fixes for v6.1-rc3
-Message-ID: <202210271203.1CABE4152@keescook>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=A1XprAgWB0s7wiMtyLLvIEnH2hN1akKHT1cSrZfMn0g=;
+        b=E1Y2zvUjsBh2d61ki7j3T8zhLrMCPCukfguVoOWb9jVCNPuk770r/Ln2ir1ok6F8r0
+         ZddSDcqjwX7p+wzt8spykis2+CFgWvZkbl9KNI8P2hdEqB+msvr4tVExEckv4ukT/ooF
+         tSf0hBJJEffATw7fJUaYyHJSyifEaBt9hAGQiJyd0tZW+3shOoW9GDcc/wEQBS65lV/y
+         swlBPEW4hadIl/oOy0Yl4aumwtEwPpx5lCOb+BtCXCRn8kqo3C38b3q349SiJg/eWh8D
+         0VEtbI8U6so2VaTUYsy4kwS9Hc2GoMBYAzfpRPhNKvoyEXKvYnaRHotSWfFw47U/MCIp
+         4xMg==
+X-Gm-Message-State: ACrzQf1jxtbzRCdwvn1JZXul6Jr+kDhfOuTyZDRQSynJ//IcUepeTTIn
+        LkyFWb87k5k/eEbOdEjQo9zAfOLSyApd0DkW/tE=
+X-Google-Smtp-Source: AMsMyM62sEmSG5aCY0b4YK8+TARwW55i4i3cprSqu9DEfEpzzWfueCTetYFLRwjOVkDhkr+y6lZqaDEu+nmEdLaT55w=
+X-Received: by 2002:a9d:5c02:0:b0:65c:20e6:46a with SMTP id
+ o2-20020a9d5c02000000b0065c20e6046amr23632464otk.213.1666897556488; Thu, 27
+ Oct 2022 12:05:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20221022180455.never.023-kees@kernel.org>
+In-Reply-To: <20221022180455.never.023-kees@kernel.org>
+From:   Andrey Konovalov <andreyknvl@gmail.com>
+Date:   Thu, 27 Oct 2022 21:05:45 +0200
+Message-ID: <CA+fCnZcj_Hq1NQv1L2U7+A8quqj+4kA=8A7LwOWz5eYNQFra+A@mail.gmail.com>
+Subject: Re: [PATCH] mm: Make ksize() a reporting-only function
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-mm@kvack.org, kasan-dev@googlegroups.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Linus,
+On Sat, Oct 22, 2022 at 8:08 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> With all "silently resizing" callers of ksize() refactored, remove the
+> logic in ksize() that would allow it to be used to effectively change
+> the size of an allocation (bypassing __alloc_size hints, etc). Users
+> wanting this feature need to either use kmalloc_size_roundup() before an
+> allocation, or use krealloc() directly.
+>
+> For kfree_sensitive(), move the unpoisoning logic inline. Replace the
+> some of the partially open-coded ksize() in __do_krealloc with ksize()
+> now that it doesn't perform unpoisoning.
+>
+> Adjust the KUnit tests to match the new ksize() behavior.
 
-Please pull these hardening fixes for v6.1-rc3.
+Hi Kees,
+
+> -/* Check that ksize() makes the whole object accessible. */
+> +/* Check that ksize() does NOT unpoison whole object. */
+>  static void ksize_unpoisons_memory(struct kunit *test)
+>  {
+>         char *ptr;
+> @@ -791,15 +791,17 @@ static void ksize_unpoisons_memory(struct kunit *test)
+>
+>         ptr = kmalloc(size, GFP_KERNEL);
+>         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+> +
+>         real_size = ksize(ptr);
+> +       KUNIT_EXPECT_GT(test, real_size, size);
+>
+>         OPTIMIZER_HIDE_VAR(ptr);
+>
+>         /* This access shouldn't trigger a KASAN report. */
+> -       ptr[size] = 'x';
+> +       ptr[size - 1] = 'x';
+>
+>         /* This one must. */
+> -       KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size]);
+> +       KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size - 1]);
+
+How about also accessing ptr[size] here? It would allow for a more
+precise checking of the in-object redzone.
+
+>
+>         kfree(ptr);
+>  }
 
 Thanks!
-
--Kees
-
-The following changes since commit 9abf2313adc1ca1b6180c508c25f22f9395cc780:
-
-  Linux 6.1-rc1 (2022-10-16 15:36:24 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.1-rc3
-
-for you to fetch changes up to 72c3ebea375c39413d02113758319b74ecd790bd:
-
-  overflow: Refactor test skips for Clang-specific issues (2022-10-25 14:57:42 -0700)
-
-----------------------------------------------------------------
-hardening fixes for v6.1-rc3
-
-- Fix older Clang vs recent overflow KUnit test additions. (Nick
-  Desaulniers, Kees Cook)
-
-- Fix kern-doc visibility for overflow helpers. (Kees Cook)
-
-----------------------------------------------------------------
-Kees Cook (2):
-      overflow: Fix kern-doc markup for functions
-      overflow: Refactor test skips for Clang-specific issues
-
-Nick Desaulniers (1):
-      overflow: disable failing tests for older clang versions
-
- Documentation/core-api/kernel-api.rst |  6 +++++
- Documentation/driver-api/basics.rst   |  3 ---
- include/linux/overflow.h              | 38 ++++++++++++----------------
- lib/overflow_kunit.c                  | 47 +++++++++++++++++++++++++++--------
- 4 files changed, 58 insertions(+), 36 deletions(-)
-
--- 
-Kees Cook
