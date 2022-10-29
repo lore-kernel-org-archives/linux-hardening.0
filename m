@@ -2,147 +2,104 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10611C38A02
-	for <linux-hardening@archiver.kernel.org>; Sat, 29 Oct 2022 02:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7CAC38A02
+	for <linux-hardening@archiver.kernel.org>; Sat, 29 Oct 2022 03:17:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229802AbiJ2CzR (ORCPT
+        id S229456AbiJ2DRn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 28 Oct 2022 22:55:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40706 "EHLO
+        Fri, 28 Oct 2022 23:17:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229792AbiJ2CzQ (ORCPT
+        with ESMTP id S229441AbiJ2DRl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 28 Oct 2022 22:55:16 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52BC924947
-        for <linux-hardening@vger.kernel.org>; Fri, 28 Oct 2022 19:54:38 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id m14-20020a17090a3f8e00b00212dab39bcdso11543901pjc.0
-        for <linux-hardening@vger.kernel.org>; Fri, 28 Oct 2022 19:54:38 -0700 (PDT)
+        Fri, 28 Oct 2022 23:17:41 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2B9D9AFC1
+        for <linux-hardening@vger.kernel.org>; Fri, 28 Oct 2022 20:17:36 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id y4so6420282plb.2
+        for <linux-hardening@vger.kernel.org>; Fri, 28 Oct 2022 20:17:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8tl37lwqGAPyFTOLYOb65cx9juvzNTvoWHjwD7xYuFQ=;
-        b=Cd9tmgsJJdWf0loxgAfE2HPeppCYbVz4D5gJ5tQcKB6L+ovA12Ew9mChsqPQXbuSUK
-         P+EKoy+7WwL8q2rj931dqINtyZh6kEENAED1WS3uD8thf4KfTiTnMhSt3//hP3fVmfyz
-         3nim0DVM7yPvIiHCyNEkq1nGp3MR8CSWdqGbo=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kd4BB28ylqUVziHfqM61lajVeO2UdyApWimbqI2dNa4=;
+        b=BGguppnicqHjW8WfEUzt0WRt/BtvsQBZ/hFQYeUQt7L0+j5PxnRag2L+5pR7ldJmYU
+         fxSlt+6U+ssbdD6d90ZD3GEEvaArZ9CItsMeiHNkML+W/y/hV8zS7Fu7/Ma2ZBZyGjwF
+         fRFvgWG2IXOYzu8hoN0h3BHns4z72AzKnFWX4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8tl37lwqGAPyFTOLYOb65cx9juvzNTvoWHjwD7xYuFQ=;
-        b=eSAhT3jaVPt++k5inSmJbHJ+fWtKccn+SQ12JZRCsbbdPee/1Wi+DV5qTSHb862vKG
-         5Fa7rZGQCM51h05SHcdaTZFoNqsLeMmndJgpzRwPmuqUgmxgNsJXZxq5XUNpkEmOcZpy
-         gcvqP9XpdP+f3OqVgwVZSxtP9gVfxFjZ785I2gNlfLImCGtKoiCmZq+XvC3MZOrQSawi
-         Zwgcm6dpoMI629f8t5OIVX73Xu5tN+hAo1JZCLdJMqonZBfbUFkL7ML7FA3arRtY9Dn/
-         HFJbQ2kKyGtjxa8tAnkeLgXl6xcloJf0Cm8/L5bGFm1V02n1noaYPumdI3dO1djmiHli
-         KOlw==
-X-Gm-Message-State: ACrzQf2iMj+06LzzjRPVq3UJQ3Eps9Af9xr4crFihhFnXVQPP7q3Wo6h
-        HM9/VasGXKNxD8upSJY3uKe0KA==
-X-Google-Smtp-Source: AMsMyM4pP7ShODaS+Vv2buYU2g/jVJzW9tIyo/uOr9kvGNsRBVt6bMvVzIkugYCjOKGHoyJnVIuKXA==
-X-Received: by 2002:a17:902:6b45:b0:186:878e:3b92 with SMTP id g5-20020a1709026b4500b00186878e3b92mr2222756plt.173.1667012077781;
-        Fri, 28 Oct 2022 19:54:37 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Kd4BB28ylqUVziHfqM61lajVeO2UdyApWimbqI2dNa4=;
+        b=FPrMTPurxeFRhPxoJElBj2+7VkXm85Lfp/wnglkhCKY3MM62+WfyVRds/yA9LDGd8e
+         30KZuq4GSomOGyeUnrxPOK8Kzq5scFDkEbq9EkGRk+uFJRoe2ODQ38O623np02OKpK6R
+         tPcf8Hm9SKfrbaf1nSoUnUZTPQD/8CuGeMha8icZDUa2vAM91XHJy1uSnxAnuz8eaSDc
+         aAZ63zprYcyIC9HkrQQuMYK58GQ75bUk1ly2TOuUacMYQtzW0w4AnANamFz/XLWe+Bbu
+         ACfirl2Q/Xl+pznhdu9DsJdo7WfwLCuirs7ndJ4qjQOid30zdhQCwFFho2r8cmAbEInj
+         +JLQ==
+X-Gm-Message-State: ACrzQf2QJ+DFjvF599+tUacjh2FqGaUQgidR8e6dTXCIYq6Nexa4QOIw
+        bEyXrI9gmOjKLnZCkQWCH+xo3Q==
+X-Google-Smtp-Source: AMsMyM5me638ftMDuCR+ussBeXMeJ3H30jUxnuNmVqvD/NnEcnVWySgFAFBzkL8kvpWSPHr7p2FbHg==
+X-Received: by 2002:a17:90b:3803:b0:213:9911:5efd with SMTP id mq3-20020a17090b380300b0021399115efdmr2546152pjb.94.1667013456327;
+        Fri, 28 Oct 2022 20:17:36 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p68-20020a625b47000000b0056b9c2699cesm170223pfb.46.2022.10.28.19.54.34
+        by smtp.gmail.com with ESMTPSA id b12-20020a170903228c00b00186b55e3cd6sm187649plh.133.2022.10.28.20.17.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Oct 2022 19:54:34 -0700 (PDT)
+        Fri, 28 Oct 2022 20:17:35 -0700 (PDT)
+Date:   Fri, 28 Oct 2022 20:17:34 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Alexei Starovoitov <ast@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH bpf-next v2 2/3] bpf/verifier: Use kmalloc_size_roundup() to match ksize() usage
-Date:   Fri, 28 Oct 2022 19:54:31 -0700
-Message-Id: <20221029025433.2533810-2-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221029024444.gonna.633-kees@kernel.org>
-References: <20221029024444.gonna.633-kees@kernel.org>
+To:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] igb: Proactively round up to kmalloc bucket size
+Message-ID: <202210282013.82F28AE92@keescook>
+References: <20221018092340.never.556-kees@kernel.org>
+ <20221018092526.4035344-2-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2473; h=from:subject; bh=cAZzQf4nJI/2AavYPElJQqPl11xZNu41P29+G33SJ9M=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjXJXnQGC8fPZwalh9l14/jG4kobQw8yjDcH8NbjSJ /XPIE3yJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY1yV5wAKCRCJcvTf3G3AJtu9EA CXJjb2SNBE0dlmaXWQ51VUbBpWbuJYO6erazxkwDl20aLVHHY3Axth5HAjZff0RAgI1VuEgK0XZp1r RE0TT1eYl9G5ixdAC59qd1CyEHIcrq8+ifEZo8FgjuCM+csjbDGyrKYcgszia+gdt0jTBIbTc9RPDk h49CV0gy5UmirPGgX8dGIyGnpKI4FNyJSxPrtKEYB1NNT0NKDCYYx+RfELfzFCEUHszzQjq2QGPcoS MQCDLvOy6b2RiQLtsraXNMaGqb45mx9P5O9CTysRsnzDMvCA7NXwCuQuXsdjO/2HsBfxhz7Ar/YR9W Q9PmyZ/L0otSPcROBpRG2q6CUmDpOthzfBzcW58TTyDeLip32DmQpFbyiXtSgKMujj/DUh8fnY/DR8 2j1VH+mqdaYP7FiWIMA+ed88554A/22x76JzNS5Caj75Gk5klIWA9DRXxqyAIhkWj0AZZY0oDA+/bI BaXI9irmdN/ojaCMS7GiewpfSz1XqXzoo+a2/IHb6qtOmcwGzuRXjvvCvZc3nO7FmlQUzB23V63ndC YIDPWXj/8EpTHHzYIkslH/ROZny/WlLvaMSrDlNnM8CWhQz5RGWiBaLDqtr2+lr8CzFydwOd9JaxoT 275n7Yb5433TpvdeSuKo/IQkPJI9tpzIZx8/08+btiQkdvPTHYsFe9hnV9Iw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221018092526.4035344-2-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Round up allocations with kmalloc_size_roundup() so that the verifier's
-use of ksize() is always accurate and no special handling of the memory
-is needed by KASAN, UBSAN_BOUNDS, nor FORTIFY_SOURCE. Pass the new size
-information back up to callers so they can use the space immediately,
-so array resizing to happen less frequently as well.
+On Tue, Oct 18, 2022 at 02:25:25AM -0700, Kees Cook wrote:
+> In preparation for removing the "silently change allocation size"
+> users of ksize(), explicitly round up all q_vector allocations so that
+> allocations can be correctly compared to ksize().
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>
-Cc: Song Liu <song@kernel.org>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: KP Singh <kpsingh@kernel.org>
-Cc: Stanislav Fomichev <sdf@google.com>
-Cc: Hao Luo <haoluo@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: bpf@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- kernel/bpf/verifier.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+Hi! Any feedback on this part of the patch pair?
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index eb8c34db74c7..1c040d27b8f6 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -1008,9 +1008,9 @@ static void *copy_array(void *dst, const void *src, size_t n, size_t size, gfp_t
- 	if (unlikely(check_mul_overflow(n, size, &bytes)))
- 		return NULL;
- 
--	if (ksize(dst) < bytes) {
-+	if (ksize(dst) < ksize(src)) {
- 		kfree(dst);
--		dst = kmalloc_track_caller(bytes, flags);
-+		dst = kmalloc_track_caller(kmalloc_size_roundup(bytes), flags);
- 		if (!dst)
- 			return NULL;
- 	}
-@@ -1027,12 +1027,14 @@ static void *copy_array(void *dst, const void *src, size_t n, size_t size, gfp_t
-  */
- static void *realloc_array(void *arr, size_t old_n, size_t new_n, size_t size)
- {
-+	size_t alloc_size;
- 	void *new_arr;
- 
- 	if (!new_n || old_n == new_n)
- 		goto out;
- 
--	new_arr = krealloc_array(arr, new_n, size, GFP_KERNEL);
-+	alloc_size = kmalloc_size_roundup(size_mul(new_n, size));
-+	new_arr = krealloc(arr, alloc_size, GFP_KERNEL);
- 	if (!new_arr) {
- 		kfree(arr);
- 		return NULL;
-@@ -2504,9 +2506,11 @@ static int push_jmp_history(struct bpf_verifier_env *env,
- {
- 	u32 cnt = cur->jmp_history_cnt;
- 	struct bpf_idx_pair *p;
-+	size_t alloc_size;
- 
- 	cnt++;
--	p = krealloc(cur->jmp_history, cnt * sizeof(*p), GFP_USER);
-+	alloc_size = kmalloc_size_roundup(size_mul(cnt, sizeof(*p)));
-+	p = krealloc(cur->jmp_history, alloc_size, GFP_USER);
- 	if (!p)
- 		return -ENOMEM;
- 	p[cnt - 1].idx = env->insn_idx;
+> ---
+>  drivers/net/ethernet/intel/igb/igb_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+> index 6256855d0f62..7a3a41dc0276 100644
+> --- a/drivers/net/ethernet/intel/igb/igb_main.c
+> +++ b/drivers/net/ethernet/intel/igb/igb_main.c
+> @@ -1195,7 +1195,7 @@ static int igb_alloc_q_vector(struct igb_adapter *adapter,
+>  		return -ENOMEM;
+>  
+>  	ring_count = txr_count + rxr_count;
+> -	size = struct_size(q_vector, ring, ring_count);
+> +	size = kmalloc_size_roundup(struct_size(q_vector, ring, ring_count));
+>  
+>  	/* allocate q_vector and rings */
+>  	q_vector = adapter->q_vector[v_idx];
+
+Thanks! :)
+
+-Kees
+
 -- 
-2.34.1
-
+Kees Cook
