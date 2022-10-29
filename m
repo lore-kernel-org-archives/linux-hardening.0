@@ -2,118 +2,122 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64793C38A02
-	for <linux-hardening@archiver.kernel.org>; Sat, 29 Oct 2022 07:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2739AC433FE
+	for <linux-hardening@archiver.kernel.org>; Sat, 29 Oct 2022 07:47:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229647AbiJ2HoB (ORCPT
+        id S229619AbiJ2Hrn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 29 Oct 2022 03:44:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40836 "EHLO
+        Sat, 29 Oct 2022 03:47:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbiJ2Hn7 (ORCPT
+        with ESMTP id S229441AbiJ2Hri (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 29 Oct 2022 03:43:59 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 530A71C8109
-        for <linux-hardening@vger.kernel.org>; Sat, 29 Oct 2022 00:43:56 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id 78so6654817pgb.13
-        for <linux-hardening@vger.kernel.org>; Sat, 29 Oct 2022 00:43:56 -0700 (PDT)
+        Sat, 29 Oct 2022 03:47:38 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DA47BE2E7
+        for <linux-hardening@vger.kernel.org>; Sat, 29 Oct 2022 00:47:38 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id m14-20020a17090a3f8e00b00212dab39bcdso11872476pjc.0
+        for <linux-hardening@vger.kernel.org>; Sat, 29 Oct 2022 00:47:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=itE6S863fopGMSCeOLGYHCs5YBF6CWEcSSpqYWYgmv0=;
-        b=NaveGOEL7jErRNUNIowHQxw+TdbyaaqXhgsPS4hl/Ahlsl5KSz06bnvQdEHg7ikhgH
-         WQ8ytNoPX9yRUkJeUuRC8D0pvgxLJCXMmASHWKIoZyqoiAVCfO2mwLDNPVcs215Jx40L
-         A8NXEYT1AeCy8Yrz6sxbZr7T76z1Pij8PJwTU=
+        bh=iET1MgkbhbQrIxry/f1xQYIkFRrGZlUGPdYAoIr26co=;
+        b=mZ3+TLyyf+YAKB6grPKR4XJ64ryv/j+QR/P6vbHxeyyDqxta8DzxJBAT0AaWaRcsxN
+         nzKNfDzZQD3pOYizxknWM7Oc2ip1Ate6WKBBLygfgNdP6vxdJ1fhIB39b3y0VafFUmri
+         O4rrz8qlJ3p0Y7v2a8Jj6ZXoFXIjk3cJCQqac=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=itE6S863fopGMSCeOLGYHCs5YBF6CWEcSSpqYWYgmv0=;
-        b=SjZTkqpQcyLuYNjKhqeX73uTWT98pNIArhPwNRD+b0emgrE5pmikcmeYJTZyugqHXS
-         sZSrmRZ0/S76h1sHbIY1cVxw1h2xpspus2Os+FG3U5Xg6Q49ZIidNAPzbpe6JbTv/May
-         DNUNPDxbiL2x5FUVHP19N4/L1qTz4b2pm86HoUDBKy4eC0Lo5hsSR0MlXh4tlNzGDDiY
-         8/3ss/E/pCp9UoPbPksIlsG0yDbZooVWIhUW/8cMi6eZ5+f9VcfinDVZo6J056hvc/Rk
-         0JGi0UYDZxkHmr6T6cjtWwXvoJHqPllVpnxWNHF/X9Lvhwj6nVlAAbco07QXCx9GIJ0s
-         ajDQ==
-X-Gm-Message-State: ACrzQf1dZ9f/ZPMw0+f7gTqOUBPMCein0w9xcPe837lN3ww1wbeUZ96w
-        j5lJXPz602U/211LfvXY4zLC6A==
-X-Google-Smtp-Source: AMsMyM4kRykVhkDH1pyNeeXW+tu7inv6fSKVxMMJDqVKWESyl+uYJtnyiOJPFlYPp1AJ7kvNbSuihw==
-X-Received: by 2002:a63:1025:0:b0:46f:9191:162 with SMTP id f37-20020a631025000000b0046f91910162mr76996pgl.560.1667029435799;
-        Sat, 29 Oct 2022 00:43:55 -0700 (PDT)
+        bh=iET1MgkbhbQrIxry/f1xQYIkFRrGZlUGPdYAoIr26co=;
+        b=CX643FU+5FG3Huzb5OVyJriQyNCIIyk3ba42rST4Tn47lIjlz5CNP41BQ7HKU6vGYN
+         d+clWgM1NgP0jsePomIjOUxbW3/CKGq47BuzO4PD6hruGb9u5uuuNrCOZe8Sj3hckmnu
+         BWj/eDHEy1ql6/A7ot3FXXRn2+k2wGYetcEnY6nPyzV4MDKc+NL+E/LIk7ifsWwAtQ8e
+         RmTrccg9eMUpLGIz9e67tK99e6GAgDGqRz2stv7BX6wxqtYajlaHpqOsl4uAceUXuxsm
+         nzB79w5vwpBjZ18HL5qGlmnolXGR1gf8XD0GygmYkScLKhWb3/sbC+hsc5gjZy1KrFsP
+         /8eA==
+X-Gm-Message-State: ACrzQf058DmfHWdxJqVwQiSIFhx9DoMgKDHeLvTu47PKxSz8NnSQV2CN
+        9vlm5k+f9KW0bDcrYVsEd8w7Vg==
+X-Google-Smtp-Source: AMsMyM6EQFHolbOhV4RL/gqEjO0/bGgmWqy0y9idJlsq+LxGSpsMRetUiPmZAXkaNByP2MTtjVUYog==
+X-Received: by 2002:a17:90b:38d2:b0:20d:8f2a:c4ba with SMTP id nn18-20020a17090b38d200b0020d8f2ac4bamr3487572pjb.209.1667029657664;
+        Sat, 29 Oct 2022 00:47:37 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a4-20020a1709027d8400b00186fd3951f7sm641707plm.211.2022.10.29.00.43.54
+        by smtp.gmail.com with ESMTPSA id f19-20020aa79693000000b0056c003f9169sm622842pfk.196.2022.10.29.00.47.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Oct 2022 00:43:55 -0700 (PDT)
+        Sat, 29 Oct 2022 00:47:37 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Nishanth Menon <nm@ti.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Won Chung <wonchung@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] string: Add __realloc_size hint to kmemdup()
-Date:   Sat, 29 Oct 2022 00:43:52 -0700
-Message-Id: <20221029074346.gonna.839-kees@kernel.org>
+Subject: [PATCH v2] driver core: Add __alloc_size hint to devm allocators
+Date:   Sat, 29 Oct 2022 00:47:34 -0700
+Message-Id: <20221029074734.gonna.276-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2257; h=from:subject:message-id; bh=czgyyr61mC+V6qSzfPE64U9+me9WEnm/+wEEPBegNns=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjXNm40r5bZejps+YA1d47XzyNKgE+3T4HkCXQZH3r mCcgDrqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY1zZuAAKCRCJcvTf3G3AJpEKEA CnTrWCxsLCD6nXNQfM+1a0PNT8wDpH/b90ZFvflQ0OHySnoiv0yjP6/EtKHEfRB/oHcg3+zxPW9Qiy w1rJVHYnrBxQmQpK0Bw7W91bKM7sUw3KwDdi50xYzm60g0k7l0yHlb+M+0kGFzAS6M3EnyAsXZTa2A YjhQO9jWE43sH99UUkzSYxIV8eDdb0thtnnZ/IKWGOICxTJHBCa8Ed4hQZImnsNKouVYC1ZWxjDDSP 4uU5tmpm4l42gGG/JH80J4885fH41VJl54L4O1sUWdR4AqiVSiCX6BkqirbcpSSf3IE22hZBVYT4o3 anPpTk718XmTyEP7A+vWFL1SUiA9z/LpYQnadAHYpjXZLe6OOx38qknF+NEVWZxQ0xuqKWZPgwCBCs THIvI7f2bBznpbUMI25U09hblREzbJ9TvWi0xROxlTu8hlaU4/xu1Kh8Uk/GwTHMEPp043IKDzmAgB abDsvYyxEaTXnjw3B0sSo65Y32mK+6WZiVq5KgcBeSuo3XnNB9J6X2YaNh9pbPKwqHdZlUDuvX/Xtq ccq0jy5+q4F+OEt3TDYZeyv2nUnlVXm+40d+ox4sOwhgkZruODs836QESvXd/X+LDR2rZNjxBY7zvt n5DzqstQNxONX0ItlO8wYSzRlEiTxpP/FeFOL5dmuttmNJxATRDIPabsgh8Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2343; h=from:subject:message-id; bh=bl4eK7ug971gaAZ+iCba/RVpEILgA2NDbUfm+iHo2MU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjXNqWRHPJAx2S72TjRZFwkW12qVeTilB6z4pIHrNa c/9Aig2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY1zalgAKCRCJcvTf3G3AJlwLD/ 0Y6tYgGRaOz6Lukqw+GWNHimgdpRgR4fATDqodCPbi6IY5H8g6UW5BNhVD3q2vuACKCPD8w6LANjvM pTRi3hZMQ1UV+USbzrVVM//6gq0A0t2wy56J5gM3tSu4FvPSdXS9URKPyciGhZmi02k0fOc4OZ8QjK sAJD8M5AiKkiKAQPBuYR6f7tkz8SoXqn3NKVoLiroDdFYdeC/HZMzNNVcku1xi8WA90FoZvUedLsxa 8ajzgWmyIxN3Kqw/5J6I4Lo+wJ/yyrG/wnZCHVYOgD9B+LPe/TlY+4yASZ+ceNJbxL0ffP/69QSRlR vv65snxCu2GVhUVENXo8/psgXq0xFs2Z+GWJS3t5s1+5qebWRSgCy/UofykafWYWcwyRVXLHfSxQtd LpjzN8FTXLQ20gE2+dk5jWtoz2WTCIJh5t6u/LJfPotnL3XEyzTdFfaBMOtMgAGnxFHJlqGYZ6qrsS Dqh1U1Ou03qiNw1PYwawc0W5zfRKs3fJPC7IatsrANWKhRKreEiyOWAnG4DLiW2lyewq5sU6wofRNs GjjH+WNE2ueP2aB25LRTCd/IER775Vq+1Ez5N4NkjiVfrQd/aHsCL6ND49qHGlvSyzEhirTfMponQv BdMn73gkuVKNWTCxfhP7/JC9MZTNoBfHbI5Co81CvaGs8Ts0ohYrrFZ38lZA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add __realloc_size() hint to kmemdup() so the compiler can reason about
-the length of the returned buffer. (These must not use __alloc_size,
-since those include __malloc which says the contents aren't defined[1]).
+Mark the devm_*alloc()-family of allocations with appropriate
+__alloc_size()/__realloc_size() hints so the compiler can attempt to
+reason about buffer lengths from allocations.
 
-[1] https://lore.kernel.org/linux-hardening/d199c2af-06af-8a50-a6a1-00eefa0b67b4@prevas.dk/
-
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Nishanth Menon <nm@ti.com>
+Cc: Michael Kelley <mikelley@microsoft.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Won Chung <wonchung@google.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-v2: use __realloc_size() instead of __alloc_size()
-v1: https://lore.kernel.org/linux-hardening/20221018082232.never.213-kees@kernel.org/
+I'm hoping to carry this via the hardening tree so I can add a
+KUnit test that depends on it...
+v2: use __realloc_size instead of __alloc_size
+v1: https://lore.kernel.org/linux-hardening/20221018073430.never.551-kees@kernel.org/
 ---
- include/linux/fortify-string.h | 3 ++-
- include/linux/string.h         | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ include/linux/device.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-index e5b39b1cc2fc..49782f63f015 100644
---- a/include/linux/fortify-string.h
-+++ b/include/linux/fortify-string.h
-@@ -659,7 +659,8 @@ __FORTIFY_INLINE void *memchr_inv(const void * const POS0 p, int c, size_t size)
- 	return __real_memchr_inv(p, c, size);
- }
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 424b55df0272..5e4cd857e74f 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -197,9 +197,9 @@ void devres_remove_group(struct device *dev, void *id);
+ int devres_release_group(struct device *dev, void *id);
  
--extern void *__real_kmemdup(const void *src, size_t len, gfp_t gfp) __RENAME(kmemdup);
-+extern void *__real_kmemdup(const void *src, size_t len, gfp_t gfp) __RENAME(kmemdup)
-+								    __realloc_size(2);
- __FORTIFY_INLINE void *kmemdup(const void * const POS0 p, size_t size, gfp_t gfp)
- {
- 	size_t p_size = __struct_size(p);
-diff --git a/include/linux/string.h b/include/linux/string.h
-index cf7607b32102..db28802ab0a6 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -176,7 +176,7 @@ extern void kfree_const(const void *x);
- extern char *kstrdup(const char *s, gfp_t gfp) __malloc;
- extern const char *kstrdup_const(const char *s, gfp_t gfp);
- extern char *kstrndup(const char *s, size_t len, gfp_t gfp);
--extern void *kmemdup(const void *src, size_t len, gfp_t gfp);
-+extern void *kmemdup(const void *src, size_t len, gfp_t gfp) __realloc_size(2);
- extern char *kmemdup_nul(const char *s, size_t len, gfp_t gfp);
+ /* managed devm_k.alloc/kfree for device drivers */
+-void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp) __malloc;
++void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp) __alloc_size(2);
+ void *devm_krealloc(struct device *dev, void *ptr, size_t size,
+-		    gfp_t gfp) __must_check;
++		    gfp_t gfp) __must_check __realloc_size(3);
+ __printf(3, 0) char *devm_kvasprintf(struct device *dev, gfp_t gfp,
+ 				     const char *fmt, va_list ap) __malloc;
+ __printf(3, 4) char *devm_kasprintf(struct device *dev, gfp_t gfp,
+@@ -226,7 +226,8 @@ static inline void *devm_kcalloc(struct device *dev,
+ void devm_kfree(struct device *dev, const void *p);
+ char *devm_kstrdup(struct device *dev, const char *s, gfp_t gfp) __malloc;
+ const char *devm_kstrdup_const(struct device *dev, const char *s, gfp_t gfp);
+-void *devm_kmemdup(struct device *dev, const void *src, size_t len, gfp_t gfp);
++void *devm_kmemdup(struct device *dev, const void *src, size_t len, gfp_t gfp)
++	__realloc_size(3);
  
- extern char **argv_split(gfp_t gfp, const char *str, int *argcp);
+ unsigned long devm_get_free_pages(struct device *dev,
+ 				  gfp_t gfp_mask, unsigned int order);
 -- 
 2.34.1
 
