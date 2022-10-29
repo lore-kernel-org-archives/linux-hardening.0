@@ -2,141 +2,99 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58885FA3741
-	for <linux-hardening@archiver.kernel.org>; Sat, 29 Oct 2022 01:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD85C38A02
+	for <linux-hardening@archiver.kernel.org>; Sat, 29 Oct 2022 02:55:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229552AbiJ2Ba6 (ORCPT
+        id S229501AbiJ2Cy7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 28 Oct 2022 21:30:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44580 "EHLO
+        Fri, 28 Oct 2022 22:54:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229522AbiJ2Ba5 (ORCPT
+        with ESMTP id S229738AbiJ2Cy5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 28 Oct 2022 21:30:57 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D37E202716;
-        Fri, 28 Oct 2022 18:30:56 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id r18so6227147pgr.12;
-        Fri, 28 Oct 2022 18:30:56 -0700 (PDT)
+        Fri, 28 Oct 2022 22:54:57 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 292011E706
+        for <linux-hardening@vger.kernel.org>; Fri, 28 Oct 2022 19:54:36 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id d59-20020a17090a6f4100b00213202d77e1so11502487pjk.2
+        for <linux-hardening@vger.kernel.org>; Fri, 28 Oct 2022 19:54:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ljlq0wzNYgqZzF5mdTWeFZiAlKPfpNDbugOhA1C4lDM=;
-        b=Usvn4pjF8UaseNiP1nOoO16Ro9ZiA0ZOISOYmwgLehKa4bT2egg41osfClkVncVUQy
-         4NfKfO8o4bK5UnxAb4H9XvjKODdFuK4+idk3dKS+wjCQsnKCtJQ5uDLVCqNxDCHeSnVJ
-         lyhVMlcu7aibWoRgO6A3/FwsZNe48B5EnYyMBFdZCSpHdBl84r59UBYKkiAsF7fCRgO0
-         D+WlD2rBYnK+Ff48EJf1xOgJQHiFO7T0AJbF8EG4Uv8Ugmb17v6dZJtY9ft2mXGdACRU
-         +ho2IhzRkZx7XdXCuuyV8PbEF39c537enhvePSB6EE/V1RHroFJZ1I8Klf3q5Tk/scBU
-         y8ug==
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YX4+zXrHLSUDOZtVTTXj1VQzXyk0Zm4BhmJdhw8un24=;
+        b=fynUubfTZ8SafzvcZvxZ+2+GX5QxkJX9NJP8KsPcJdS7ZcCj83/1FGIVWV5MXvV+qV
+         pmfYWeDWeCAe5Wi2JUbVYjyfnNHWYl3f+Bc8Q5a/gbfpeMY3BkoACN4LlDXDcNmDPF87
+         Kdb0jDSeVH6Zt8IUpOQPF+ny6StrHyUNYq0b8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Ljlq0wzNYgqZzF5mdTWeFZiAlKPfpNDbugOhA1C4lDM=;
-        b=ww3GlX7K5Wb/VgDWzEnnClybHLADHX3l089GMqpBDtuxwx9jRPyZ5F/D+aVaTwwXtN
-         +PwDY96/JdI6AjK5+PP11yAz2O6Lu9enyfMBILZod0ufkfUG8RfFj/+vKGYBMcWS2IdK
-         oP9sl94YzZ/xjh4yssxYaSypZzuPCHhEKjowlDyJPjFCxSa6MgLbQGNMcP0DsNqEFlAQ
-         vGNSlmDtjuORahlWdjhw/oHVAA8/RSuHlgRvbVyS4bnGOogHbAVQSp/zj6BjgOi8AtOV
-         klARwIqqB5UR3W49B9cSPG5B7rNfJRMI4mciD9J+cwpSmNfER332zy3KmGQ1qY4TEMFB
-         WY3g==
-X-Gm-Message-State: ACrzQf1BeuNmXeFi02L6W97v35nlW6FwlPtD+1Reomo4wR6EhZNSmB3E
-        9uo6E0CZralwseoA451l0Ho=
-X-Google-Smtp-Source: AMsMyM5syXaucmQoxfMV0w2n6EFA7QVHRHRLVaD6hhVGmXqZgpqqfhy3f/oHTSCt85ZKkJzWadmI4A==
-X-Received: by 2002:a63:cc43:0:b0:43a:2f12:d326 with SMTP id q3-20020a63cc43000000b0043a2f12d326mr2084263pgi.320.1667007055418;
-        Fri, 28 Oct 2022 18:30:55 -0700 (PDT)
-Received: from mail.google.com (122-58-209-93-fibre.sparkbb.co.nz. [122.58.209.93])
-        by smtp.gmail.com with ESMTPSA id o7-20020a17090a4b4700b002137d3da760sm70187pjl.39.2022.10.28.18.30.48
+        bh=YX4+zXrHLSUDOZtVTTXj1VQzXyk0Zm4BhmJdhw8un24=;
+        b=8EESbcq56OR9citRHat4vYnkY+d8DJ4nvOHIow3mg1pTrJ8ZH9rUmjWiUsDUStQneC
+         s2SSLw9OYxQUGtqXHA5YNNOdFzBh7YfOT869xWdrlWfT2yMkzSiz5bC/MU9TPgbofe9R
+         KtbttGWzpvhZJNl64qNU5H/ukyutOBMOy3v+rlAZbGr6ST0fcZnd0/w7tro5HHQQQ013
+         sDeRlz4x0D0ojek6ZPRaGJn1sZGzeu/n+bAh74LRKnWNlVTVnWn4LRjPMhQ4lwymZnFc
+         tswe2rawzDVR1zNQln5YvT8UI7zaiOaeQm8XesudUk/SsQkJF7bNfFVqua5PoRPEybW7
+         wsHQ==
+X-Gm-Message-State: ACrzQf1G1S69/DV8FKP24z53hCsGGDzNVP7q1AH8ZO0UxUOyXlUjdbK/
+        rnFMMAE2aUwK/Np14gClQ0/mxg==
+X-Google-Smtp-Source: AMsMyM7RiSWbxRfUm06YG5BuJb7jdUGJtVtDJ9wEcGnOrrzrrPdaqMLhz86wOCVSAJ0IVVDAQBAA8w==
+X-Received: by 2002:a17:902:f60b:b0:178:6a49:d4e3 with SMTP id n11-20020a170902f60b00b001786a49d4e3mr2238922plg.75.1667012075543;
+        Fri, 28 Oct 2022 19:54:35 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id ik23-20020a170902ab1700b0017f9021ddc6sm141780plb.289.2022.10.28.19.54.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Oct 2022 18:30:54 -0700 (PDT)
-Date:   Sat, 29 Oct 2022 14:30:44 +1300
-From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>,
-        Claudio Suarez <cssk@net-c.es>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Grigory Vasilyev <h0tc0d3@gmail.com>,
-        Slark Xiao <slark_xiao@163.com>,
-        Rongguang Wei <weirongguang@kylinos.cn>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        paulo.miguel.almeida.rodenas@gmail.com
-Subject: [PATCH v2] [next] drm/amdgpu: Replace one-element array with
- flexible-array member
-Message-ID: <Y1yCRHgx15ZOiCL4@mail.google.com>
+        Fri, 28 Oct 2022 19:54:34 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexei Starovoitov <ast@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH bpf-next v2 0/3] bpf/verifier: Use kmalloc_size_roundup() to match ksize() usage
+Date:   Fri, 28 Oct 2022 19:54:29 -0700
+Message-Id: <20221029024444.gonna.633-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y1x3MtRJ8ckXxlJn@mail.google.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=754; h=from:subject:message-id; bh=COoV4ApxIFfLjQV4Uq9UDDy9n43aEowo1/u4sSSUlM0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjXJXnisow53qKBRmTKpeDkic5OqEw6GUEFED/OkoF VPV4MXOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY1yV5wAKCRCJcvTf3G3AJvbTD/ 9xgG8uV/hht3vZTOfBNQDP8C7KbswriI2w6jtaQJlGBfPolO+pAUigJKOKKMyNPPsRTSwy9EEh5kwl LntURGjmAwizAMziagVoEbzAI1ZwFg5lQGarc9fQyzgSq5g8MLgmQdr4432lPAquZewMw8tLliGyQ4 wlNw5z3mT5YbqK+dlGknMzyCTekduRVvZcgfgQ7WDUkTOZo3wiYc7TnoWoyZMalzTSKV0qzjvwzh/g oMsk8MMqBFLqolctDpGRLQayRlYZFFQOa04ILGeTeuSDE10GK1+FI7jYdaFknOI+7SmBO6I7FAPrv7 FV6SMHQs0SEx59Efl2SMd9+cntGC9uoHuMxJi62O407mKxQa3WgWaFHeHUKcZkpq9B2OnPEbqZdJsC mR5xhfWI5fWh4HgBkeTYdIFr5nj4arQCajsEP8JCNhRl8C+IHXNA+LQ4QL/nQWTisW+NhKIng4pOs+ kP8yC3G+OvR2c5hjt2X+fwsReF1fENxkrwDAgEP9TNBUq1hrExgVKfBu3IizHtHVnmPTI6tQZZVipj kDzK1cjfSzjN+FdSZugnAcJvnuWJsnSLorzKVxvJ1m8F/6o0TimObU6Q2WukIBtE59hfENhityULJn yMQGu1HjAcRPfWYfoIGNX6FwcE9jb5A1WAnztNVo1K7kGCaZbMlSr9DUKS6Q==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-One-element arrays are deprecated, and we are replacing them with
-flexible array members instead. So, replace one-element array with
-flexible-array member in struct _ATOM_FAKE_EDID_PATCH_RECORD and
-refactor the rest of the code accordingly.
+v2:
+- split up patch into logical changes
+- simplify copy_array, which can use ksize() directly
+v1: https://lore.kernel.org/all/20221018090550.never.834-kees@kernel.org/
 
-Important to mention is that doing a build before/after this patch
-results in no binary output differences.
+Hi,
 
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-routines on memcpy() and help us make progress towards globally
-enabling -fstrict-flex-arrays=3 [1].
+Here's the next version of removing the BPF verifier's dependency on the
+side-effects of ksize(), so we can remove the special handling needed
+for KASAN, UBSAN_BOUNDS, nor FORTIFY_SOURCE in ksize().
 
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://github.com/KSPP/linux/issues/238
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
+Thanks,
 
-Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
----
-Changelog:
+-Kees
 
-v2: no binary output differences patch; report binary changes findings
-    on commit log. Res: Kees Cook
-v1: https://lore.kernel.org/lkml/Y1tkWdwPUp+UdpM0@mail.google.com/
----
- drivers/gpu/drm/amd/amdgpu/atombios_encoders.c | 7 +++++--
- drivers/gpu/drm/amd/include/atombios.h         | 2 +-
- 2 files changed, 6 insertions(+), 3 deletions(-)
+Kees Cook (3):
+  bpf/verifier: Fix potential memory leak in array reallocation
+  bpf/verifier: Use kmalloc_size_roundup() to match ksize() usage
+  bpf/verifier: Take advantage of full allocation sizes
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/atombios_encoders.c b/drivers/gpu/drm/amd/amdgpu/atombios_encoders.c
-index 6be9ac2b9c5b..18ae9433e463 100644
---- a/drivers/gpu/drm/amd/amdgpu/atombios_encoders.c
-+++ b/drivers/gpu/drm/amd/amdgpu/atombios_encoders.c
-@@ -2081,8 +2081,11 @@ amdgpu_atombios_encoder_get_lcd_info(struct amdgpu_encoder *encoder)
- 						}
- 					}
- 					record += fake_edid_record->ucFakeEDIDLength ?
--						fake_edid_record->ucFakeEDIDLength + 2 :
--						sizeof(ATOM_FAKE_EDID_PATCH_RECORD);
-+						  struct_size(fake_edid_record,
-+							      ucFakeEDIDString,
-+							      fake_edid_record->ucFakeEDIDLength) :
-+						  /* empty fake edid record must be 3 bytes long */
-+						  sizeof(ATOM_FAKE_EDID_PATCH_RECORD) + 1;
- 					break;
- 				case LCD_PANEL_RESOLUTION_RECORD_TYPE:
- 					panel_res_record = (ATOM_PANEL_RESOLUTION_PATCH_RECORD *)record;
-diff --git a/drivers/gpu/drm/amd/include/atombios.h b/drivers/gpu/drm/amd/include/atombios.h
-index 15943bc21bc5..b5b1d073f8e2 100644
---- a/drivers/gpu/drm/amd/include/atombios.h
-+++ b/drivers/gpu/drm/amd/include/atombios.h
-@@ -4107,7 +4107,7 @@ typedef struct _ATOM_FAKE_EDID_PATCH_RECORD
- {
-   UCHAR ucRecordType;
-   UCHAR ucFakeEDIDLength;       // = 128 means EDID length is 128 bytes, otherwise the EDID length = ucFakeEDIDLength*128
--  UCHAR ucFakeEDIDString[1];    // This actually has ucFakeEdidLength elements.
-+  UCHAR ucFakeEDIDString[];     // This actually has ucFakeEdidLength elements.
- } ATOM_FAKE_EDID_PATCH_RECORD;
- 
- typedef struct  _ATOM_PANEL_RESOLUTION_PATCH_RECORD
+ kernel/bpf/verifier.c | 44 ++++++++++++++++++++++++++++---------------
+ 1 file changed, 29 insertions(+), 15 deletions(-)
+
 -- 
-2.37.3
+2.34.1
 
