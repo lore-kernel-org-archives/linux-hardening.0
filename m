@@ -2,82 +2,142 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D8EC4332F
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Nov 2022 02:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042EEC433FE
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Nov 2022 05:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230398AbiKBCqy (ORCPT
+        id S229512AbiKBFXq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Nov 2022 22:46:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36486 "EHLO
+        Wed, 2 Nov 2022 01:23:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230400AbiKBCqx (ORCPT
+        with ESMTP id S229457AbiKBFXn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Nov 2022 22:46:53 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 371062127A
-        for <linux-hardening@vger.kernel.org>; Tue,  1 Nov 2022 19:46:53 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id z26so2060930pff.1
-        for <linux-hardening@vger.kernel.org>; Tue, 01 Nov 2022 19:46:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hoE+WEBAOsuiYt/PTXWjfiF1Vpl25jsrqLqs6qRhex4=;
-        b=FFz8PZLezwTcUHm1/JjLbEJ2PnfcBuk9zIDzB0YVBEnTAhRk42awxAgarOcOOMh8aT
-         9pp+ZPj0CfYtKB0vvrmRZr4SA77gpLecOAwApmOxVtHaTl5gG1VLj1D4vAMOnpfpzeLH
-         Amx9nyUwx29SFBuhD7JySgA1xbA2inbMEm+DA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hoE+WEBAOsuiYt/PTXWjfiF1Vpl25jsrqLqs6qRhex4=;
-        b=3qTbleCSUYQq1LbWz3fTuXHohzrp0of1NFCNDmHa04W5wUqeI1Q3XEUnD55dxo/7bz
-         Hat4Uwc6Z1lA43a/Clr0ebEqaKQ95TlQX28FvAQxHITaFrmrolFA33FUy4dW0SSkoi3c
-         ovCowl48UGMngmru1//Q24ku0Rq/3/Fy3bFHaHKcggNAj7kF7WEzOi3tcMDUO2rchK/+
-         5ICw5LvqFhu8ngd719sIEB5c7fiXiCHQUw/hoHQRMErWSS/3xpduKYAp1UAJkhkR8OFY
-         vidhfp7QnYk65//G6wGvgGr5aLUdV7Z0fOn4a5260rItL269dPbL72OklnSSX72UuzB4
-         20WA==
-X-Gm-Message-State: ACrzQf0DNOI3FfiBoJcbA8WOV2/bWTUYI5NwnvNJonyRSzOrwnbcejxc
-        jl40pkT5T0feHlw5LP/xvjrqgOpv5fUvsg==
-X-Google-Smtp-Source: AMsMyM5Vh5Z0D0PjNfR9wH0EUw0jjOjW4Cn4P6WLzHpTK2ejg+loeg3CeqSftHPu8g1fvEGeQu9vPQ==
-X-Received: by 2002:a65:6d8a:0:b0:43c:9fcc:cb24 with SMTP id bc10-20020a656d8a000000b0043c9fcccb24mr19911349pgb.477.1667357212734;
-        Tue, 01 Nov 2022 19:46:52 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id jd21-20020a170903261500b001714e7608fdsm7000949plb.256.2022.11.01.19.46.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Nov 2022 19:46:52 -0700 (PDT)
-Date:   Tue, 1 Nov 2022 19:46:51 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jiri Slaby <jirislaby@kernel.org>,
-        Simon Brand <simon.brand@postadigitale.de>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] tty: Allow TIOCSTI to be disabled
-Message-ID: <202211011946.F7B4C690@keescook>
-References: <20221022182828.give.717-kees@kernel.org>
- <202211011915.02EDB6377@keescook>
- <Y2HWJUuir8E33GkP@kroah.com>
+        Wed, 2 Nov 2022 01:23:43 -0400
+Received: from omta037.useast.a.cloudfilter.net (omta037.useast.a.cloudfilter.net [44.202.169.36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E9A82409F;
+        Tue,  1 Nov 2022 22:23:42 -0700 (PDT)
+Received: from eig-obgw-5011a.ext.cloudfilter.net ([10.0.29.161])
+        by cmsmtp with ESMTP
+        id phouobCb77krOq6E1odTck; Wed, 02 Nov 2022 05:23:41 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTP
+        id q6DzoG578bE09q6E0olbhu; Wed, 02 Nov 2022 05:23:40 +0000
+X-Authority-Analysis: v=2.4 cv=V6xubMri c=1 sm=1 tr=0 ts=6361fedc
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=wTog8WU66it3cfrESHnF4A==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=Qawa6l4ZSaYA:10
+ a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8 a=Twlkf-z8AAAA:8
+ a=Ajr8Ya8xPWvAgL_sw0AA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+ a=xmb-EsYY8bH0VWELuYED:22 a=-74SuR6ZdpOK_LpdRCUo:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=NrXbbGcVenpDWuMVBTnZqZTgRIfDXJVj9AsuNMNu/ac=; b=rxDYabtC4yFlIKvJZrzMTCtL9G
+        yzmT8CVs65TAajvtCrKJccTM55ieXMGzE2ToKKDdUfdsoGeFt7Iy45KtxwGIwYGnIoRlujQGPFkqC
+        rDnI0kqdID5eZkr6llOqnKsgfQ/QpKDgTkIkY5FwRQg2Jiog/QDzacrfrkcAsAH5kb67x+q2A6L0S
+        fGy46jKMtWQTNw/G5k/eDFQFbbh+ttct6U9ORm6taA8k0bzQih1LpQxWB4xY86W1d/iI7zdMPvmD4
+        SaYYEFg3z7wVMJYA1F9VhulYXE47s9WQ7JWuEJAZoYp6sYJMyIe7r5oNmO8JBjVo3HKosHfteBA7X
+        VD+wY8gQ==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:38738 helo=[192.168.15.7])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.95)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1opZI6-003AiS-Gi;
+        Mon, 31 Oct 2022 13:13:42 -0500
+Message-ID: <f31ea73f-143c-ef24-8637-6d68430953bf@embeddedor.com>
+Date:   Mon, 31 Oct 2022 12:13:25 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y2HWJUuir8E33GkP@kroah.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH v2 5/6] bna: Avoid clashing function prototypes
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Sudarsana Kalluru <skalluru@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com, Rasesh Mody <rmody@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <cover.1666894751.git.gustavoars@kernel.org>
+ <2812afc0de278b97413a142d39d939a08ac74025.1666894751.git.gustavoars@kernel.org>
+ <202210290009.C42E731@keescook>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202210290009.C42E731@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1opZI6-003AiS-Gi
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:38738
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfDpNrm1HbivHzY8qNfAFAOOjIAw2i7zeiRkQ10Awb/0JNRbVHg/Jl3G1Y/aaZrD8Uv8feSTVHeZ2C6qT+6P/BzSZWljVpq79ZPq15vZXX90zNTQYE/w9
+ g9OOBH37QbJ8tsUG9TZziY3vhZb1DZfTXDbhXJOuaobjiKKVEP02y5I0G/6beX+HbOPbQzgy5JWZ4OQN9QEH0cLeu09F9U5jU2Evov89YXi+EMoLHZ/mkwvo
+ UflH4maDaDAXU5phiEkIeLD4dBs53elLEC3EfFcct1yNQMvLkLXdRrGt2cNjB65M
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Nov 02, 2022 at 03:29:57AM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Nov 01, 2022 at 07:15:43PM -0700, Kees Cook wrote:
-> > On Sat, Oct 22, 2022 at 11:29:47AM -0700, Kees Cook wrote:
-> > > This is so very long over-due. We just need to do this and put an end
-> > > to this legacy operation.
-> > 
-> > thread ping. Should I carry this in my hardening tree instead?
+
+
+On 10/29/22 02:12, Kees Cook wrote:
+> On Thu, Oct 27, 2022 at 03:20:47PM -0500, Gustavo A. R. Silva wrote:
+>> When built with Control Flow Integrity, function prototypes between
+>> caller and function declaration must match. These mismatches are visible
+>> at compile time with the new -Wcast-function-type-strict in Clang[1].
+>>
+>> Fix a total of 227 warnings like these:
+>>
+>> drivers/net/ethernet/brocade/bna/bna_enet.c:519:3: warning: cast from 'void (*)(struct bna_ethport *, enum bna_ethport_event)' to 'bfa_fsm_t' (aka 'void (*)(void *, int)') converts to incompatible function type [-Wcast-function-type-strict]
+>>                  bfa_fsm_set_state(ethport, bna_ethport_sm_down);
+>>                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>
+>> The bna state machine code heavily overloads its state machine functions,
+>> so these have been separated into their own sets of structs, enums,
+>> typedefs, and helper functions. There are almost zero binary code changes,
+>> all seem to be related to header file line numbers changing, or the
+>> addition of the new stats helper.
 > 
-> I can take it in my tree, I have a bunch of tty/serial patches to go
-> through this week, give me a few more days please.
+> This looks like it borrowed from
+> https://lore.kernel.org/linux-hardening/20220929230334.2109344-1-keescook@chromium.org/
+> Nice to get a couple hundred more fixed. :)
 
-Sounds good; thanks for the update!
+Yep; you're right. That's exactly the patch I was staring at
+while doing these changes. :)
 
--- 
-Kees Cook
+> 
+>> [1] https://reviews.llvm.org/D134831
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>> Changes in v2:
+>>   - None. This patch is new in the series.
+> 
+> This is relatively stand-alone (not an iw_handler patch), so it could
+> also go separately too.
+
+My criteria here was that all these patches avoid clashing function
+prototypes. So, they could be put together into a series, regardless
+if they are "iw_handler" related patches.
+
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+
+Thanks!
+--
+Gustavo
+
