@@ -2,104 +2,149 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2314FA3740
-	for <linux-hardening@archiver.kernel.org>; Mon, 31 Oct 2022 07:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCDCC38A02
+	for <linux-hardening@archiver.kernel.org>; Mon, 31 Oct 2022 10:55:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229636AbiJaHcL (ORCPT
+        id S230234AbiJaKz1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 31 Oct 2022 03:32:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57374 "EHLO
+        Mon, 31 Oct 2022 06:55:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbiJaHcL (ORCPT
+        with ESMTP id S230157AbiJaKzT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 31 Oct 2022 03:32:11 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7758765C0
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Oct 2022 00:32:10 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id 4so10046623pli.0
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Oct 2022 00:32:10 -0700 (PDT)
+        Mon, 31 Oct 2022 06:55:19 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E496E14
+        for <linux-hardening@vger.kernel.org>; Mon, 31 Oct 2022 03:55:18 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id a15so16246195ljb.7
+        for <linux-hardening@vger.kernel.org>; Mon, 31 Oct 2022 03:55:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bLaEG1AxuR7+lWKAQO3jvBzrZanxR9GIBe9arbHLQlY=;
-        b=bZU0WZ4XKQPhFmsbxFnGkMv1hjyf8dK6g8aLLOG1oyjhGYx3zfxLo7s8ylw0lEjHjx
-         Lu/5XoKV76xeY04gmGqY8E6KJnqV+WPHJFJHhh9yeJfAje6nm8oieAnjbTSV/z+Ava7t
-         0ZzmuiFbB7KOlVY3cC4A1WH9r6nW9j0viFSNU=
+        d=linaro.org; s=google;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vs8b348OkSvTZqWJZHM3b1AfWz+B6VWXkmO4oUM6MwQ=;
+        b=GLQL1XmTK3l1MirtqdQhFQskqagjOJx76LN8rUQJq3GZ4Mkv1D49mfJND9JGc/6WJ9
+         L9KjFp0hJNQHI2P0+u/PretVy/enlwJknoyBAFt+pyfT8nHuCe+rrplW1fChhyLSwDvp
+         a44TAW8ApFiZHwEPywv7GPSba8s0tlAP97J8tlCGsHyGLb+EoO7gz5ajTKK4iU7sQRx9
+         uSqZEKEMHbUDIfApVz4DoxRDtoIe1ekrT3Wexfmqs/PloIaVGp8UAwrcqp2IoiDHFteZ
+         qJVF9+n7X9UXmdSWz4xqySyZt0+XLyJOcya1rl/VYPtkT1HmejeJyNyxE4cSLHLrekei
+         iulQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bLaEG1AxuR7+lWKAQO3jvBzrZanxR9GIBe9arbHLQlY=;
-        b=jJwPUbLhgLW85DnCELgxeDpozXHH6FJqwAw7BUs7uIMpzXAcfL2JgukbPPRuRhwFMK
-         35e7VfOUkfadmtcQ4YZEnpFyWWWA/XBnAh6/cukMUwLwdTyeF5cm+YPt63xUDbKqdLf9
-         CitRDH3+Fzs0UBMEKnMy60lT3dzPKTI0YhZcN+6kKlTuvdJGIfSrnpRrJHEoTmf6Tb60
-         V311Sg1nNErgsAGhPegWaB4MZpf9wfhLpCS3XLS9nmH5Hlc5Wx2ZGhUjNQ9ZHDffOE42
-         oBbCDaPWDhYo2o1yzmZfM7XT4gprok+dkb3yHsW2cJHWixx1OVTQ26PEWKed45B+r+cD
-         LSbw==
-X-Gm-Message-State: ACrzQf0wG5y4RTg78wL/U04CiehJw0rfvfTTWExpOaQi04YuWRwVrgOr
-        4PeoQPLYIQTcfl5CSs5alCdGC3cV6y2jHQ==
-X-Google-Smtp-Source: AMsMyM63KrzVf0s9+OO4qil3ZB6Ns6W9yyhUxqgu0fht/8bL9YlnnmByhUTyRGgtVolZAKUs+1PNTg==
-X-Received: by 2002:a17:90a:3947:b0:213:ebeb:2cf3 with SMTP id n7-20020a17090a394700b00213ebeb2cf3mr2754844pjf.9.1667201529999;
-        Mon, 31 Oct 2022 00:32:09 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id iw15-20020a170903044f00b00177324a7862sm3799216plb.45.2022.10.31.00.32.09
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vs8b348OkSvTZqWJZHM3b1AfWz+B6VWXkmO4oUM6MwQ=;
+        b=kqvQEmmcb8Emx4o7uHZoZKOEyoH6E1tQBf3II8ctuZgggMREB0owOcJ5vb7fIElW6A
+         9izPsVBvYB7Io+Yl3Jce+CsQ0wKb+wnB1eF9bKYRVJxlj4tK8w/UM5Y60Y2NykSjigqT
+         p4Ijg3OrjLiyS8oAzCUelajDWIkDC/1iTXpYSnYdVA9trkk+l8V/a+csixJmG+Q6wF5H
+         zYtD47l/xUjmJXeCevDWUHXobY6L7Jd1AxaorLRvFal19sNX4AqojCbCjiLwBCEkmhJ3
+         JGZ+zFGBIVIXDZ8kPaulZieGL31vLTQmN6d7U6V1k0Y10xyJiuYXPY3EVmeI7sdEAu6x
+         7NtQ==
+X-Gm-Message-State: ACrzQf2MqrAgt5/85u4upGNcc3K6dOqCU+JSu+B5JtNXP09xB4NaCalx
+        aCD3meFleqHy+qD05uz3UiZTqQ==
+X-Google-Smtp-Source: AMsMyM5LkywZEAMftHb2Eca7dcpiTQKMZhT2b3Mw0/Ejx0460lEOmxkSj2AeSl5MitKpJv2S5HizeA==
+X-Received: by 2002:a2e:8781:0:b0:26d:e758:ce84 with SMTP id n1-20020a2e8781000000b0026de758ce84mr4895538lji.178.1667213716770;
+        Mon, 31 Oct 2022 03:55:16 -0700 (PDT)
+Received: from mutt (c-e429e555.07-21-73746f28.bbcust.telenor.se. [85.229.41.228])
+        by smtp.gmail.com with ESMTPSA id o17-20020ac25e31000000b0049476667228sm1234690lfg.65.2022.10.31.03.55.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Oct 2022 00:32:09 -0700 (PDT)
-Date:   Mon, 31 Oct 2022 00:32:08 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     John Thomson <git@johnthomson.fastmail.com.au>
-Cc:     tsbogend@alpha.franken.de, linux-mips@vger.kernel.org,
-        linux-hardening@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] mips: boot/compressed: use __NO_FORITFY
-Message-ID: <202210310029.29AB38AE16@keescook>
-References: <20221030183647.3371915-1-git@johnthomson.fastmail.com.au>
+        Mon, 31 Oct 2022 03:55:16 -0700 (PDT)
+Date:   Mon, 31 Oct 2022 11:55:14 +0100
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Rientjes <rientjes@google.com>,
+        Marco Elver <elver@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-mm@kvack.org, Andrey Konovalov <andreyknvl@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4] mempool: Do not use ksize() for poisoning
+Message-ID: <20221031105514.GB69385@mutt>
+References: <20221028154823.you.615-kees@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20221030183647.3371915-1-git@johnthomson.fastmail.com.au>
+In-Reply-To: <20221028154823.you.615-kees@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Oct 31, 2022 at 04:36:47AM +1000, John Thomson wrote:
-> In the mips CONFIG_SYS_SUPPORTS_ZBOOT kernel, fix the compile error
-> when using CONFIG_FORTIFY_SOURCE=y
+On 2022-10-28 08:53, Kees Cook wrote:
+> Nothing appears to be using ksize() within the kmalloc-backed mempools
+> except the mempool poisoning logic. Use the actual pool size instead
+> of the ksize() to avoid needing any special handling of the memory as
+> needed by KASAN, UBSAN_BOUNDS, nor FORTIFY_SOURCE.
 > 
-> LD      vmlinuz
-> mipsel-openwrt-linux-musl-ld: arch/mips/boot/compressed/decompress.o: in
-> function `decompress_kernel':
-> ./include/linux/decompress/mm.h:(.text.decompress_kernel+0x177c):
-> undefined reference to `warn_slowpath_fmt'
-> 
-> kernel test robot helped identify this as related to fortify. The error
-> appeared with commit 54d9469bc515 ("fortify: Add run-time WARN for
-> cross-field memcpy()")
-> Link: https://lore.kernel.org/r/202209161144.x9xSqNQZ-lkp@intel.com/
-> 
-> Resolve this in the same style as commit cfecea6ead5f ("lib/string:
-> Move helper functions out of string.c")
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Fixes: 54d9469bc515 ("fortify: Add run-time WARN for cross-field memcpy()")
-> Signed-off-by: John Thomson <git@johnthomson.fastmail.com.au>
+> Suggested-by: Vlastimil Babka <vbabka@suse.cz>
+> Link: https://lore.kernel.org/lkml/f4fc52c4-7c18-1d76-0c7a-4058ea2486b9@suse.cz/
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Marco Elver <elver@google.com>
+> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-mm@kvack.org
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
-> not sure about the fixes tag:
-> compile error only occurs due to the fortify commit, but it looks like
-> this change could have been part of the other commit identified in the
-> message: lib/string move helper functions?
+> This replaces mempool-use-kmalloc_size_roundup-to-match-ksize-usage.patch
+> v4: add review/ack tags, explicitly call out subject change
+> v3: https://lore.kernel.org/lkml/20221025233421.you.825-kees@kernel.org/
+> v2: https://lore.kernel.org/lkml/20221018090323.never.897-kees@kernel.org/
+> v1: https://lore.kernel.org/lkml/20220923202822.2667581-14-keescook@chromium.org/
+> ---
+>  mm/mempool.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-I think the Fixes tag is reasonable. Strictly speaking, it should likely
-be whatever added the memcpy() in decompress.c, but that's mostly
-nonsense, since nothing else had tripped yet. :)
+Hi,
 
-The issue is that the memcpy() has a runtime length, so
-CONFIG_FORTIFY_SOURCE was inserting the logic for a runtime warning,
-which doesn't exist here. This is the correct fix (turning off FORTIFY
-in the early boot loader).
+I see the following kernel paninc when I boot an arm64 allmodconfig kernel from todays linux-next tag next-20221031
+This is the .config file I built [1], and here is the full log [2].
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+[   17.445316][    T1] [fffe00001188f9bf] address between user and kernel address ranges
+[   17.449021][    T1] Internal error: Oops: 0000000096000044 [#1] PREEMPT SMP
+[   17.453097][    T1] Modules linked in:
+[   17.455384][    T1] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G    B T  6.1.0-rc3-next-20221031 #2 1e3e4f9d63a6fa6d1a293981bef64866cf5e5454
+[   17.463100][    T1] Hardware name: linux,dummy-virt (DT)
+[   17.466247][    T1] pstate: 40400005 (nZcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   17.470778][    T1] pc : __poison_element+0x3c/0x80
+[   17.473688][    T1] lr : __poison_element+0x38/0x80
+[   17.476614][    T1] sp : ffff80000eea7b50
+[   17.478996][    T1] x29: ffff80000eea7b50 x28: ffff000008c88468 x27: ffff000008c88450
+[   17.483694][    T1] x26: 0000000000000cc0 x25: ffff000008c88448 x24: ffff000008b3cf80
+[   17.488338][    T1] x23: ffff000008c8844c x22: ffff000008c88460 x21: ffff000008d52a40
+[   17.493032][    T1] x20: ffff000008d52a40 x19: ffff000008b3cf7f x18: 0000000000000000
+[   17.497707][    T1] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[   17.502413][    T1] x14: 0000000000000000 x13: 0000000000000001 x12: 0000000000000001
+[   17.507109][    T1] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
+[   17.511775][    T1] x8 : 0000000000000000 x7 : 0000000000000000 x6 : 0000000000000000
+[   17.516447][    T1] x5 : 0000000000000000 x4 : 0000000000000000 x3 : 0000000000000000
+[   17.521116][    T1] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 00000000ffffffa5
+[   17.525782][    T1] Call trace:
+[   17.527664][    T1]  __poison_element+0x3c/0x80
+[   17.530409][    T1]  poison_element.isra.0+0x50/0x180
+[   17.533419][    T1]  mempool_init_node+0x224/0x340
+[   17.536298][    T1]  mempool_create+0x78/0x100
+[   17.538989][    T1]  dma_bus_init+0x124/0x2a4
+[   17.541607][    T1]  do_one_initcall+0x29c/0x680
+[   17.544381][    T1]  do_initcalls+0x178/0x240
+[   17.547005][    T1]  kernel_init_freeable+0x2e4/0x36c
+[   17.550018][    T1]  kernel_init+0x30/0x180
+[   17.552534][    T1]  ret_from_fork+0x10/0x20
+[   17.555130][    T1] Code: 94057fb5 8b130280 940575a3 12800b40
+(38336a80) 
+[   17.559124][    T1] ---[ end trace 0000000000000000 ]---
+[   17.562259][    T1] Kernel panic - not syncing: Oops: Fatal exception
+[   17.566094][    T1] ---[ end Kernel panic - not syncing: Oops: Fatal exception ]---
 
--- 
-Kees Cook
+When I revert this patch the kernel boots fine.
+Any idea what goes wrong?
+
+
+Cheers,
+Anders
+[1] https://people.linaro.org/~anders.roxell/next-20221031.config
+[2] http://ix.io/4eAH
