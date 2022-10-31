@@ -2,336 +2,189 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F085AFA3746
-	for <linux-hardening@archiver.kernel.org>; Mon, 31 Oct 2022 21:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36166FA3741
+	for <linux-hardening@archiver.kernel.org>; Mon, 31 Oct 2022 21:53:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229629AbiJaVVg (ORCPT
+        id S229750AbiJaVxt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 31 Oct 2022 17:21:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36752 "EHLO
+        Mon, 31 Oct 2022 17:53:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229928AbiJaVVg (ORCPT
+        with ESMTP id S229515AbiJaVxs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 31 Oct 2022 17:21:36 -0400
-Received: from relay08.th.seeweb.it (relay08.th.seeweb.it [5.144.164.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1624013F9E
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Oct 2022 14:21:35 -0700 (PDT)
-Received: from [192.168.1.101] (95.49.29.156.neoplus.adsl.tpnet.pl [95.49.29.156])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 0FB463EAF3;
-        Mon, 31 Oct 2022 22:21:30 +0100 (CET)
-Message-ID: <c6d23544-bd12-63f3-f37d-1d66cba43196@somainline.org>
-Date:   Mon, 31 Oct 2022 22:21:29 +0100
+        Mon, 31 Oct 2022 17:53:48 -0400
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F675140BD
+        for <linux-hardening@vger.kernel.org>; Mon, 31 Oct 2022 14:53:47 -0700 (PDT)
+Received: by mail-il1-x132.google.com with SMTP id o13so6903756ilc.7
+        for <linux-hardening@vger.kernel.org>; Mon, 31 Oct 2022 14:53:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=UoC+o1dA/kh0+MOmEfvSCDk84t2FIDGBnI6Rcg5ImMo=;
+        b=aK3PQn25+nFHVNHYNimanppB4aRKlWTUzSc9eZq7EiKK0b0Kwl6TzB2G+Q0iMhSkNu
+         8OfDbSlNe9ZWz/oNqNrBnjKKdaTCeNOiGs2sKTxR/73/3CIQDyGibUoGVcIRy4aN+bIy
+         Mc25TWFuu4qLCGQSrk6EvXccTUKSbwYXW4CNZe+rAZgwERLO1C4Mua5krpXBA5xAEdY5
+         KPn/qR9p3gqKF7lDTBZvzRYC9sEJ1+P+LcOL/KO4ddojR6Ci9gTDYxhi2rNcelubL0d6
+         AZ/5v40agOxfcfYMQ9CUG3vjtk0KjMeXkRcFbUqRp37y133fzarooQbb9MhwTNUamFPc
+         dn5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UoC+o1dA/kh0+MOmEfvSCDk84t2FIDGBnI6Rcg5ImMo=;
+        b=wUVceet6/Fl7qNyj2GzJsaepr9jUao0WHJyCTSo6cNqhke03HYwJ3Xso81RIDMJGOG
+         cFQji1Rpt9CnUgFhcqPcxIgSb96/fj+wO1nmKfIq8JEnERjBwYY+GRNYHVRHkEUBRwWO
+         ECG5peOqHql08unxBifK2UunlcwZab8kAMdS9jQMHhu1aHXf8C2T/mSqE8iit5nUzosJ
+         S3LuWglzEtZ0dCeK5GgZnEmeXtGpGlTpVsGKSsM1SVEsJSIKvHpImK1BRSWz3nkdnEff
+         7riPGy9DAgTyPqeEylsra3M3v1VjKFnm2esKdEFbyLu+fOELRZe9V3abPQJ+f8TPMQiS
+         AriQ==
+X-Gm-Message-State: ACrzQf07IR7t83YYoThWrXmpo7kTiXJZXtigsUigsybF9myheqIXsSsa
+        IePhzMnbcSZEp1pvVMO/XywLOZvD22zOiyBRN46yRA==
+X-Google-Smtp-Source: AMsMyM63vFkqFQ/XTot4Z2F499OIgZ3P+z0mQdszUmqz74FFU4KzGigXy7wS+JLjVY3TUKDRO55RjJ/s5tBQ8hx5r6o=
+X-Received: by 2002:a05:6e02:1a41:b0:2fa:969d:fcd0 with SMTP id
+ u1-20020a056e021a4100b002fa969dfcd0mr8403581ilv.6.1667253226708; Mon, 31 Oct
+ 2022 14:53:46 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH v5 8/8] arm64: dts: qcom: sm4250: Add support for
- oneplus-billie2
-Content-Language: en-US
-To:     Iskren Chernev <iskren.chernev@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+References: <20221029024444.gonna.633-kees@kernel.org> <20221029025433.2533810-3-keescook@chromium.org>
+In-Reply-To: <20221029025433.2533810-3-keescook@chromium.org>
+From:   Stanislav Fomichev <sdf@google.com>
+Date:   Mon, 31 Oct 2022 14:53:35 -0700
+Message-ID: <CAKH8qBtS9UHTVZ8PgFd2fOS1k6MLxot_SDBg2+H5BhoqQTOcGg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 3/3] bpf/verifier: Take advantage of full
+ allocation sizes
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>,
+        Jiri Olsa <jolsa@kernel.org>, bpf@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20221030094258.486428-1-iskren.chernev@gmail.com>
- <20221030094258.486428-9-iskren.chernev@gmail.com>
-From:   Konrad Dybcio <konrad.dybcio@somainline.org>
-In-Reply-To: <20221030094258.486428-9-iskren.chernev@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 30.10.2022 10:42, Iskren Chernev wrote:
-> Add initial support for OnePlus Nord N100, based on SM4250. Currently
-> working:
-> - boots
-> - usb
-> - built-in flash storage (UFS)
-> - SD card reader
-> 
-> Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
+On Fri, Oct 28, 2022 at 7:54 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> Since the full kmalloc bucket size is being explicitly allocated, pass
+> back the resulting details to take advantage of the full size so that
+> reallocation checking will be needed less frequently.
+>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: John Fastabend <john.fastabend@gmail.com>
+> Cc: Andrii Nakryiko <andrii@kernel.org>
+> Cc: Martin KaFai Lau <martin.lau@linux.dev>
+> Cc: Song Liu <song@kernel.org>
+> Cc: Yonghong Song <yhs@fb.com>
+> Cc: KP Singh <kpsingh@kernel.org>
+> Cc: Stanislav Fomichev <sdf@google.com>
+> Cc: Hao Luo <haoluo@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: bpf@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  arch/arm64/boot/dts/qcom/Makefile             |   1 +
->  .../boot/dts/qcom/sm4250-oneplus-billie2.dts  | 241 ++++++++++++++++++
->  2 files changed, 242 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sm4250-oneplus-billie2.dts
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index b0558d3389e5..eb2a58b8af5f 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -142,6 +142,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-xiaomi-polaris.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-shift-axolotl.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-samsung-w737.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sm4250-oneplus-billie2.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-sony-xperia-seine-pdx201.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm6350-sony-xperia-lena-pdx213.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm7225-fairphone-fp4.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sm4250-oneplus-billie2.dts b/arch/arm64/boot/dts/qcom/sm4250-oneplus-billie2.dts
-> new file mode 100644
-> index 000000000000..a3f1c7c41fd7
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sm4250-oneplus-billie2.dts
-> @@ -0,0 +1,241 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-> +/*
-> + * Copyright (c) 2021, Iskren Chernev <iskren.chernev@gmail.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sm4250.dtsi"
-> +
-> +/ {
-> +	model = "OnePlus Nord N100";
-> +	compatible = "oneplus,billie2", "qcom,sm4250";
-> +
-> +	/* required for bootloader to select correct board */
-> +	qcom,msm-id = <0x1a1 0x10000 0x1bc 0x10000>;
-> +	qcom,board-id = <0x1000b 0x00>;
-> +
-> +	aliases {
-> +	};
-> +
-> +	chosen {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		stdout-path = "framebuffer0";
-> +
-> +		framebuffer0: framebuffer@9d400000 {
-> +			compatible = "simple-framebuffer";
-> +			reg = <0 0x5c000000 0 (1600 * 720 * 4)>;
-> +			width = <720>;
-> +			height = <1600>;
-> +			stride = <(720 * 4)>;
-> +			format = "a8r8g8b8";
-> +		};
-> +	};
-> +};
-> +
-> +&reserved_memory {
-> +	bootloader_log_mem: memory@5fff7000 {
-> +		reg = <0x0 0x5fff7000 0x0 0x8000>;
-> +		no-map;
-> +	};
-> +
-> +	ramoops@cbe00000 {
-> +		compatible = "ramoops";
-> +		reg = <0x0 0xcbe00000 0x0 0x400000>;
-> +		record-size = <0x40000>;
-> +		pmsg-size = <0x200000>;
-> +		console-size = <0x40000>;
-> +		ftrace-size = <0x40000>;
-> +	};
-> +
-> +	param_mem: memory@cc200000 {
-> +		reg = <0x0 0xcc200000 0x0 0x100000>;
-> +		no-map;
-> +	};
-> +
-> +	mtp_mem: memory@cc300000 {
-> +		reg = <0x00 0xcc300000 0x00 0xb00000>;
-0x00 -> 0x0 for consistency?
+>  kernel/bpf/verifier.c | 27 ++++++++++++++++-----------
+>  1 file changed, 16 insertions(+), 11 deletions(-)
+>
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index 1c040d27b8f6..e58b554e862b 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+> @@ -1020,20 +1020,23 @@ static void *copy_array(void *dst, const void *src, size_t n, size_t size, gfp_t
+>         return dst ? dst : ZERO_SIZE_PTR;
+>  }
+>
+> -/* resize an array from old_n items to new_n items. the array is reallocated if it's too
+> - * small to hold new_n items. new items are zeroed out if the array grows.
+> +/* Resize an array from old_n items to *new_n items. The array is
+> + * reallocated if it's too small to hold *new_n items. New items are
+> + * zeroed out if the array grows. Allocation is rounded up to next kmalloc
+> + * bucket size to reduce frequency of resizing. *new_n contains the new
+> + * total number of items that will fit.
+>   *
+> - * Contrary to krealloc_array, does not free arr if new_n is zero.
+> + * Contrary to krealloc, does not free arr if new_n is zero.
+>   */
+> -static void *realloc_array(void *arr, size_t old_n, size_t new_n, size_t size)
+> +static void *realloc_array(void *arr, size_t old_n, size_t *new_n, size_t size)
+>  {
+>         size_t alloc_size;
+>         void *new_arr;
+>
+> -       if (!new_n || old_n == new_n)
+> +       if (!new_n || !*new_n || old_n == *new_n)
+>                 goto out;
+>
+> -       alloc_size = kmalloc_size_roundup(size_mul(new_n, size));
+> +       alloc_size = kmalloc_size_roundup(size_mul(*new_n, size));
+>         new_arr = krealloc(arr, alloc_size, GFP_KERNEL);
+>         if (!new_arr) {
+>                 kfree(arr);
+> @@ -1041,8 +1044,9 @@ static void *realloc_array(void *arr, size_t old_n, size_t new_n, size_t size)
+>         }
+>         arr = new_arr;
+>
+> -       if (new_n > old_n)
+> -               memset(arr + old_n * size, 0, (new_n - old_n) * size);
+> +       *new_n = alloc_size / size;
+> +       if (*new_n > old_n)
+> +               memset(arr + old_n * size, 0, (*new_n - old_n) * size);
+>
+>  out:
+>         return arr ? arr : ZERO_SIZE_PTR;
 
-Other than that, lgtm
+[..]
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@somainline.org>
+> @@ -1074,7 +1078,7 @@ static int copy_stack_state(struct bpf_func_state *dst, const struct bpf_func_st
+>
+>  static int resize_reference_state(struct bpf_func_state *state, size_t n)
+>  {
+> -       state->refs = realloc_array(state->refs, state->acquired_refs, n,
+> +       state->refs = realloc_array(state->refs, state->acquired_refs, &n,
+>                                     sizeof(struct bpf_reference_state));
+>         if (!state->refs)
+>                 return -ENOMEM;
 
-Konrad
-> +		no-map;
-> +	};
-> +};
-> +
-> +&rpm_requests {
-> +	regulators-0 {
-> +		compatible = "qcom,rpm-pm6125-regulators";
-> +
-> +		vreg_s6a: s6 {
-> +			regulator-min-microvolt = <320000>;
-> +			regulator-max-microvolt = <1456000>;
-> +		};
-> +
-> +		vreg_s7a: s7 {
-> +			regulator-min-microvolt = <1280000>;
-> +			regulator-max-microvolt = <2040000>;
-> +		};
-> +
-> +		vreg_s8a: s8 {
-> +			regulator-min-microvolt = <1064000>;
-> +			regulator-max-microvolt = <1304000>;
-> +		};
-> +
-> +		vreg_l1a: l1 {
-> +			regulator-min-microvolt = <952000>;
-> +			regulator-max-microvolt = <1152000>;
-> +		};
-> +
-> +		vreg_l4a: l4 {
-> +			regulator-min-microvolt = <488000>;
-> +			regulator-max-microvolt = <1000000>;
-> +		};
-> +
-> +		vreg_l5a: l5 {
-> +			regulator-min-microvolt = <1648000>;
-> +			regulator-max-microvolt = <3056000>;
-> +		};
-> +
-> +		vreg_l6a: l6 {
-> +			regulator-min-microvolt = <576000>;
-> +			regulator-max-microvolt = <656000>;
-> +		};
-> +
-> +		vreg_l7a: l7 {
-> +			regulator-min-microvolt = <1200000>;
-> +			regulator-max-microvolt = <1304000>;
-> +		};
-> +
-> +		vreg_l8a: l8 {
-> +			regulator-min-microvolt = <400000>;
-> +			regulator-max-microvolt = <728000>;
-> +		};
-> +
-> +		vreg_l9a: l9 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <2000000>;
-> +		};
-> +
-> +		vreg_l10a: l10 {
-> +			regulator-min-microvolt = <1704000>;
-> +			regulator-max-microvolt = <1904000>;
-> +		};
-> +
-> +		vreg_l11a: l11 {
-> +			regulator-min-microvolt = <1704000>;
-> +			regulator-max-microvolt = <1952000>;
-> +		};
-> +
-> +		vreg_l12a: l12 {
-> +			regulator-min-microvolt = <1624000>;
-> +			regulator-max-microvolt = <1984000>;
-> +		};
-> +
-> +		vreg_l13a: l13 {
-> +			regulator-min-microvolt = <1504000>;
-> +			regulator-max-microvolt = <1952000>;
-> +		};
-> +
-> +		vreg_l14a: l14 {
-> +			regulator-min-microvolt = <1704000>;
-> +			regulator-max-microvolt = <1904000>;
-> +		};
-> +
-> +		vreg_l15a: l15 {
-> +			regulator-min-microvolt = <2920000>;
-> +			regulator-max-microvolt = <3232000>;
-> +		};
-> +
-> +		vreg_l16a: l16 {
-> +			regulator-min-microvolt = <1704000>;
-> +			regulator-max-microvolt = <1904000>;
-> +		};
-> +
-> +		vreg_l17a: l17 {
-> +			regulator-min-microvolt = <1152000>;
-> +			regulator-max-microvolt = <1304000>;
-> +		};
-> +
-> +		vreg_l18a: l18 {
-> +			regulator-min-microvolt = <1104000>;
-> +			regulator-max-microvolt = <1304000>;
-> +		};
-> +
-> +		vreg_l19a: l19 {
-> +			regulator-min-microvolt = <1624000>;
-> +			regulator-max-microvolt = <3304000>;
-> +		};
-> +
-> +		vreg_l20a: l20 {
-> +			regulator-min-microvolt = <1624000>;
-> +			regulator-max-microvolt = <3304000>;
-> +		};
-> +
-> +		vreg_l21a: l21 {
-> +			regulator-min-microvolt = <2400000>;
-> +			regulator-max-microvolt = <3544000>;
-> +		};
-> +
-> +		vreg_l22a: l22 {
-> +			regulator-min-microvolt = <2952000>;
-> +			regulator-max-microvolt = <3304000>;
-> +		};
-> +
-> +		vreg_l23a: l23 {
-> +			regulator-min-microvolt = <3296000>;
-> +			regulator-max-microvolt = <3304000>;
-> +		};
-> +
-> +		vreg_l24a: l24 {
-> +			regulator-min-microvolt = <2704000>;
-> +			regulator-max-microvolt = <3544000>;
-> +		};
-> +	};
-> +};
-> +
-> +&sleep_clk {
-> +	clock-frequency = <32764>;
-> +};
-> +
-> +&sdhc_2 {
-> +	vmmc-supply = <&vreg_l22a>;
-> +	vqmmc-supply = <&vreg_l5a>;
-> +
-> +	cd-gpios = <&tlmm 88 GPIO_ACTIVE_HIGH>;
-> +
-> +	status = "okay";
-> +};
-> +
-> +&tlmm {
-> +	gpio-reserved-ranges = <14 4>;
-> +};
-> +
-> +&ufs_mem_hc {
-> +	vcc-supply = <&vreg_l24a>;
-> +	vcc-max-microamp = <600000>;
-> +	vccq2-supply = <&vreg_l11a>;
-> +	vccq2-max-microamp = <600000>;
-> +	status = "okay";
-> +};
-> +
-> +&ufs_mem_phy {
-> +	vdda-phy-supply = <&vreg_l4a>;
-> +	vdda-pll-supply = <&vreg_l12a>;
-> +	vddp-ref-clk-supply = <&vreg_l18a>;
-> +	status = "okay";
-> +};
-> +
-> +&usb_1 {
-> +	status = "okay";
-> +};
-> +
-> +&usb_1_hsphy {
-> +	vdd-supply = <&vreg_l4a>;
-> +	vdda-pll-supply = <&vreg_l12a>;
-> +	vdda-phy-dpdm-supply = <&vreg_l15a>;
-> +	status = "okay";
-> +};
-> +
-> +&xo_board {
-> +	clock-frequency = <19200000>;
-> +};
+Patches 1 & 2 look good, but not sure about this part. We later do the
+following in the same routine:
+
+state->acquired_refs = n;
+
+And acquire_reference_state() does "new_ofs = state->acquired_refs;" to append..
+
+Which changes semantics a bit? It used to mean array size, now it
+means array capacity.
+Should we keep this part as is but add a shortcut to realloc_array
+when ksize(ptr) == kmalloc_size_roundup(new size) -> reuse existing
+array?
+Or am I missing something? (haven't looked too deep)
+
+
+
+
+
+> @@ -1090,11 +1094,12 @@ static int grow_stack_state(struct bpf_func_state *state, int size)
+>         if (old_n >= n)
+>                 return 0;
+>
+> -       state->stack = realloc_array(state->stack, old_n, n, sizeof(struct bpf_stack_state));
+> +       state->stack = realloc_array(state->stack, old_n, &n,
+> +                                    sizeof(struct bpf_stack_state));
+>         if (!state->stack)
+>                 return -ENOMEM;
+>
+> -       state->allocated_stack = size;
+> +       state->allocated_stack = n * BPF_REG_SIZE;
+>         return 0;
+>  }
+>
+> --
+> 2.34.1
+>
