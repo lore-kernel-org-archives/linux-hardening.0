@@ -2,189 +2,93 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36166FA3741
-	for <linux-hardening@archiver.kernel.org>; Mon, 31 Oct 2022 21:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66101ECAAA1
+	for <linux-hardening@archiver.kernel.org>; Mon, 31 Oct 2022 22:03:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229750AbiJaVxt (ORCPT
+        id S229531AbiJaWDp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 31 Oct 2022 17:53:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49838 "EHLO
+        Mon, 31 Oct 2022 18:03:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbiJaVxs (ORCPT
+        with ESMTP id S229475AbiJaWDp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 31 Oct 2022 17:53:48 -0400
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F675140BD
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Oct 2022 14:53:47 -0700 (PDT)
-Received: by mail-il1-x132.google.com with SMTP id o13so6903756ilc.7
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Oct 2022 14:53:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=UoC+o1dA/kh0+MOmEfvSCDk84t2FIDGBnI6Rcg5ImMo=;
-        b=aK3PQn25+nFHVNHYNimanppB4aRKlWTUzSc9eZq7EiKK0b0Kwl6TzB2G+Q0iMhSkNu
-         8OfDbSlNe9ZWz/oNqNrBnjKKdaTCeNOiGs2sKTxR/73/3CIQDyGibUoGVcIRy4aN+bIy
-         Mc25TWFuu4qLCGQSrk6EvXccTUKSbwYXW4CNZe+rAZgwERLO1C4Mua5krpXBA5xAEdY5
-         KPn/qR9p3gqKF7lDTBZvzRYC9sEJ1+P+LcOL/KO4ddojR6Ci9gTDYxhi2rNcelubL0d6
-         AZ/5v40agOxfcfYMQ9CUG3vjtk0KjMeXkRcFbUqRp37y133fzarooQbb9MhwTNUamFPc
-         dn5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UoC+o1dA/kh0+MOmEfvSCDk84t2FIDGBnI6Rcg5ImMo=;
-        b=wUVceet6/Fl7qNyj2GzJsaepr9jUao0WHJyCTSo6cNqhke03HYwJ3Xso81RIDMJGOG
-         cFQji1Rpt9CnUgFhcqPcxIgSb96/fj+wO1nmKfIq8JEnERjBwYY+GRNYHVRHkEUBRwWO
-         ECG5peOqHql08unxBifK2UunlcwZab8kAMdS9jQMHhu1aHXf8C2T/mSqE8iit5nUzosJ
-         S3LuWglzEtZ0dCeK5GgZnEmeXtGpGlTpVsGKSsM1SVEsJSIKvHpImK1BRSWz3nkdnEff
-         7riPGy9DAgTyPqeEylsra3M3v1VjKFnm2esKdEFbyLu+fOELRZe9V3abPQJ+f8TPMQiS
-         AriQ==
-X-Gm-Message-State: ACrzQf07IR7t83YYoThWrXmpo7kTiXJZXtigsUigsybF9myheqIXsSsa
-        IePhzMnbcSZEp1pvVMO/XywLOZvD22zOiyBRN46yRA==
-X-Google-Smtp-Source: AMsMyM63vFkqFQ/XTot4Z2F499OIgZ3P+z0mQdszUmqz74FFU4KzGigXy7wS+JLjVY3TUKDRO55RjJ/s5tBQ8hx5r6o=
-X-Received: by 2002:a05:6e02:1a41:b0:2fa:969d:fcd0 with SMTP id
- u1-20020a056e021a4100b002fa969dfcd0mr8403581ilv.6.1667253226708; Mon, 31 Oct
- 2022 14:53:46 -0700 (PDT)
+        Mon, 31 Oct 2022 18:03:45 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B3B912625;
+        Mon, 31 Oct 2022 15:03:44 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EDDFAB818CE;
+        Mon, 31 Oct 2022 22:03:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A6F0C433D6;
+        Mon, 31 Oct 2022 22:03:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667253821;
+        bh=2KrZvtoNAsvlrd6mkck8oLOBW7LkNWzEtbJB0OtVx0U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pr0rLvp6Ddz7hufAntFY7GdWEptpMWSaBr2Pdx/XF6qwEwrNDueWnlLgbZI6S4D1p
+         q+aHp8T0wSwQdZzy7NIP4ZEb34q4lbg58e9D4iVtZQd4853dIlmsZ5djqUrKCTXVpC
+         d6Q8dD6o2K1dhls5uB1LhGb42cfsUa2Ly0EeLrZQsQ8J/+pXIT/rMzz9jk8t75kRXd
+         JYBZQzGLx2pCXGbATtW6SZ0gXtUxmhxjrZpNWmeMSOXaaPaZPCtW+v9M4Eg5ZsMtzG
+         TG86tSh3LXFlNBOOn1NtS7dYB9C/oS50iHyKIFsz+h8OXPa94SRUClfD5HEScZq8d6
+         VKU5XHOgBK3Iw==
+Date:   Mon, 31 Oct 2022 16:03:25 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 1/6] cfg80211: Avoid clashing function prototypes
+Message-ID: <Y2A4HS36KtXYKvE7@work>
+References: <cover.1666894751.git.gustavoars@kernel.org>
+ <c8239f5813dec6e5cfb554ca92b1783a18ac5537.1666894751.git.gustavoars@kernel.org>
+ <a92ffa8db8228b5cb41939dc37d6ee677aef0619.camel@sipsolutions.net>
 MIME-Version: 1.0
-References: <20221029024444.gonna.633-kees@kernel.org> <20221029025433.2533810-3-keescook@chromium.org>
-In-Reply-To: <20221029025433.2533810-3-keescook@chromium.org>
-From:   Stanislav Fomichev <sdf@google.com>
-Date:   Mon, 31 Oct 2022 14:53:35 -0700
-Message-ID: <CAKH8qBtS9UHTVZ8PgFd2fOS1k6MLxot_SDBg2+H5BhoqQTOcGg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 3/3] bpf/verifier: Take advantage of full
- allocation sizes
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>,
-        Jiri Olsa <jolsa@kernel.org>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a92ffa8db8228b5cb41939dc37d6ee677aef0619.camel@sipsolutions.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Oct 28, 2022 at 7:54 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Since the full kmalloc bucket size is being explicitly allocated, pass
-> back the resulting details to take advantage of the full size so that
-> reallocation checking will be needed less frequently.
->
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Cc: John Fastabend <john.fastabend@gmail.com>
-> Cc: Andrii Nakryiko <andrii@kernel.org>
-> Cc: Martin KaFai Lau <martin.lau@linux.dev>
-> Cc: Song Liu <song@kernel.org>
-> Cc: Yonghong Song <yhs@fb.com>
-> Cc: KP Singh <kpsingh@kernel.org>
-> Cc: Stanislav Fomichev <sdf@google.com>
-> Cc: Hao Luo <haoluo@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: bpf@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  kernel/bpf/verifier.c | 27 ++++++++++++++++-----------
->  1 file changed, 16 insertions(+), 11 deletions(-)
->
-> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> index 1c040d27b8f6..e58b554e862b 100644
-> --- a/kernel/bpf/verifier.c
-> +++ b/kernel/bpf/verifier.c
-> @@ -1020,20 +1020,23 @@ static void *copy_array(void *dst, const void *src, size_t n, size_t size, gfp_t
->         return dst ? dst : ZERO_SIZE_PTR;
->  }
->
-> -/* resize an array from old_n items to new_n items. the array is reallocated if it's too
-> - * small to hold new_n items. new items are zeroed out if the array grows.
-> +/* Resize an array from old_n items to *new_n items. The array is
-> + * reallocated if it's too small to hold *new_n items. New items are
-> + * zeroed out if the array grows. Allocation is rounded up to next kmalloc
-> + * bucket size to reduce frequency of resizing. *new_n contains the new
-> + * total number of items that will fit.
->   *
-> - * Contrary to krealloc_array, does not free arr if new_n is zero.
-> + * Contrary to krealloc, does not free arr if new_n is zero.
->   */
-> -static void *realloc_array(void *arr, size_t old_n, size_t new_n, size_t size)
-> +static void *realloc_array(void *arr, size_t old_n, size_t *new_n, size_t size)
->  {
->         size_t alloc_size;
->         void *new_arr;
->
-> -       if (!new_n || old_n == new_n)
-> +       if (!new_n || !*new_n || old_n == *new_n)
->                 goto out;
->
-> -       alloc_size = kmalloc_size_roundup(size_mul(new_n, size));
-> +       alloc_size = kmalloc_size_roundup(size_mul(*new_n, size));
->         new_arr = krealloc(arr, alloc_size, GFP_KERNEL);
->         if (!new_arr) {
->                 kfree(arr);
-> @@ -1041,8 +1044,9 @@ static void *realloc_array(void *arr, size_t old_n, size_t new_n, size_t size)
->         }
->         arr = new_arr;
->
-> -       if (new_n > old_n)
-> -               memset(arr + old_n * size, 0, (new_n - old_n) * size);
-> +       *new_n = alloc_size / size;
-> +       if (*new_n > old_n)
-> +               memset(arr + old_n * size, 0, (*new_n - old_n) * size);
->
->  out:
->         return arr ? arr : ZERO_SIZE_PTR;
+On Fri, Oct 28, 2022 at 10:22:47AM +0200, Johannes Berg wrote:
+> Hm.
+> 
+> If you're splitting out per driver,
+> 
+> > +++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+> > @@ -9870,7 +9870,7 @@ static int ipw_wx_sw_reset(struct net_device *dev,
+> >  
+> >  /* Rebase the WE IOCTLs to zero for the handler array */
+> >  static iw_handler ipw_wx_handlers[] = {
+> > -	IW_HANDLER(SIOCGIWNAME, (iw_handler)cfg80211_wext_giwname),
+> > +	IW_HANDLER(SIOCGIWNAME, cfg80211_wext_giwname),
+> 
+> I can see how this (and similar) still belongs into this patch since
+> it's related to the cfg80211 change, but
+> 
+> > +++ b/drivers/net/wireless/intersil/orinoco/wext.c
+> > @@ -154,9 +154,10 @@ static struct iw_statistics *orinoco_get_wireless_stats(struct net_device *dev)
+> >  
+> >  static int orinoco_ioctl_setwap(struct net_device *dev,
+> >  				struct iw_request_info *info,
+> > -				struct sockaddr *ap_addr,
+> > +				union iwreq_data *wrqu,
+> >  				char *extra)
+> >  {
+> > +	struct sockaddr *ap_addr = &wrqu->ap_addr;
+> 
+> why this (and similar) too?
 
-[..]
+mmh... yeah; orinoco should be a separate patch. :)
 
-> @@ -1074,7 +1078,7 @@ static int copy_stack_state(struct bpf_func_state *dst, const struct bpf_func_st
->
->  static int resize_reference_state(struct bpf_func_state *state, size_t n)
->  {
-> -       state->refs = realloc_array(state->refs, state->acquired_refs, n,
-> +       state->refs = realloc_array(state->refs, state->acquired_refs, &n,
->                                     sizeof(struct bpf_reference_state));
->         if (!state->refs)
->                 return -ENOMEM;
-
-Patches 1 & 2 look good, but not sure about this part. We later do the
-following in the same routine:
-
-state->acquired_refs = n;
-
-And acquire_reference_state() does "new_ofs = state->acquired_refs;" to append..
-
-Which changes semantics a bit? It used to mean array size, now it
-means array capacity.
-Should we keep this part as is but add a shortcut to realloc_array
-when ksize(ptr) == kmalloc_size_roundup(new size) -> reuse existing
-array?
-Or am I missing something? (haven't looked too deep)
-
-
-
-
-
-> @@ -1090,11 +1094,12 @@ static int grow_stack_state(struct bpf_func_state *state, int size)
->         if (old_n >= n)
->                 return 0;
->
-> -       state->stack = realloc_array(state->stack, old_n, n, sizeof(struct bpf_stack_state));
-> +       state->stack = realloc_array(state->stack, old_n, &n,
-> +                                    sizeof(struct bpf_stack_state));
->         if (!state->stack)
->                 return -ENOMEM;
->
-> -       state->allocated_stack = size;
-> +       state->allocated_stack = n * BPF_REG_SIZE;
->         return 0;
->  }
->
-> --
-> 2.34.1
->
+Thanks
+--
+Gustavo
