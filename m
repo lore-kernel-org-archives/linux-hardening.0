@@ -2,108 +2,233 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9A0C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 23:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8356FC4332F
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 23:38:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230492AbiKAXVH (ORCPT
+        id S229949AbiKAXiO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Nov 2022 19:21:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50460 "EHLO
+        Tue, 1 Nov 2022 19:38:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229846AbiKAXVG (ORCPT
+        with ESMTP id S229561AbiKAXiN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Nov 2022 19:21:06 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97A9817E39;
-        Tue,  1 Nov 2022 16:21:01 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id bg9-20020a05600c3c8900b003bf249616b0so247535wmb.3;
-        Tue, 01 Nov 2022 16:21:01 -0700 (PDT)
+        Tue, 1 Nov 2022 19:38:13 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BE321C41A
+        for <linux-hardening@vger.kernel.org>; Tue,  1 Nov 2022 16:38:12 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id d24so15010412pls.4
+        for <linux-hardening@vger.kernel.org>; Tue, 01 Nov 2022 16:38:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wxyxXUAbWcBHc9d21EGasKXnhPYfVJvAuFGJWn1enDs=;
-        b=W4VJj2OxkzduLyb1JVdbRtO0v8jmkBqRu5rWTymTBs2xiND8ig1Kf6Dk6XCJ/2f9ep
-         cQJzoRGlY6/DWX+5JYKcdKIHfr0JS0MdaBQyIDUhRd+FOJaZxF3pHcf2xbHChhlW4rty
-         ILkUYe3cws4PsfmVl+bjjyCH5pdUl/TjK0Gb9vr9EHjpFN12YTCZePl8gviTuDyZCDK8
-         0bez6hGXn81BQtpLrWRp/HB6XLFdulYs7Cg5evyxfNLJKpKuGR4tQyfTfrvvLO+6Uevh
-         tYBaubwq+L0LF2LYlxCace4VZ7EeIJQm7yZYpxUbOkPwwXmHvp+E7J4lRV4blnxjtOVV
-         JqCg==
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5D52avhPxbcbZms62P7jg88MPx8Vu63yNQl/KWl+6Cg=;
+        b=eSAPOBiDCmg+ikv7vxQ4ChNLJT7PWqccIWCQFdJmO5nvJcQGpKZZBE5njFOcaYA0F7
+         Qdn3vN1IC1lXz6NZNUBlYc7D7Ezd+khiEyIjIq7X5Ul9lDX5Mgx+yLOUSS9/WcCqOy2P
+         ffHfPTRhjQWAVRguk7Bt8sUmFVG5Je3Q61uKQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wxyxXUAbWcBHc9d21EGasKXnhPYfVJvAuFGJWn1enDs=;
-        b=WyJKLVRoyV9N9cf7pUk6rDRJ1x2mWnJMb9a+cln3bMvmVdMrfxOq3IkfSBFDDCWbAR
-         axVbGykYJmtzsb7cHSgmNT3jnKPry6nxT/nFB50aPos9bJdMSILm/LsLLBzk4hN7DMV2
-         tORYcxN/gqdVZ8yzCYsuFop2NJs5113NTROENdRAJlcdmZ+sL5o6XtfhOslY479sp5wf
-         SkqKhEO9/ktTmnAeimyxajtI2++PdZLOCZ23Cx0666tWtCSPtFqWbhyiEgU6zZ9eeJK8
-         FRwgEYm9ptx2W935NGbMK/hF5N8hM96b/9sRpuOwmILxacQAySz0oys23F27nhWt6m/L
-         TSuA==
-X-Gm-Message-State: ACrzQf0nHjgE+9gcfDo3T75wjXQZAirLE3WTFKeMdRL0LM0guHlVsve/
-        MwdtuqWUHdE+XToGOU/Pkic=
-X-Google-Smtp-Source: AMsMyM50e+QYw8SxGLXTQQSN/H4evMDT0wK2OPuH/ZtE+ylXd4szu1ziml/ktY5vD0j1TqS9pHNVkw==
-X-Received: by 2002:a05:600c:1c0d:b0:3cf:5fd2:1fd1 with SMTP id j13-20020a05600c1c0d00b003cf5fd21fd1mr15921329wms.8.1667344860058;
-        Tue, 01 Nov 2022 16:21:00 -0700 (PDT)
-Received: from suse.localnet (host-79-43-11-206.retail.telecomitalia.it. [79.43.11.206])
-        by smtp.gmail.com with ESMTPSA id dn12-20020a05600c654c00b003cf537ec2efsm123480wmb.36.2022.11.01.16.20.56
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5D52avhPxbcbZms62P7jg88MPx8Vu63yNQl/KWl+6Cg=;
+        b=sqPIthubHit3/JU/H1OiJZuggeNr83G6z4LUp6GU6y1Xux9cYnJ18aDWhE4iKGvai0
+         RLbq6kLTXzB8/JAJeVu2OQiB1x6CJdt+skuAs3YPkbc0O9O9n9Prs0ZlFgNDrjYDQ6KB
+         lDhhiQC9ajwzd1JrFU5O4GDAcS6KYWkqpPBNPagBtsF0T9Iu5SXAFRXQodeNhW2pYKd5
+         FOJSU1j7Rv69dfpvETGsM2mUNHMp+bd7ZcrRlBx338yJ0y+brjhwYV86trZbKoWwLiwd
+         thZGnqmaTaHYXBAvTDmVnQ53kQW/7/DpPlipZbnd1QF6J4KH1vUkAUG1gLEjBGpQceFn
+         1tGw==
+X-Gm-Message-State: ACrzQf1ERQJfZkMgz8wIq4QQgieN5O5eSrqjXjcV+FZT+1FpLLMeemX+
+        Q/Jt67RQ6z4jVbdp/MYXqMC37rByGAZsXA==
+X-Google-Smtp-Source: AMsMyM4E2vAxuWKs3+GwBW0in2lTsFDbozPO3T1dsw/EaJMjkjF+4sT6dmlCesvIEX6Ym/CjUSmMpA==
+X-Received: by 2002:a17:902:7c11:b0:178:a6ca:4850 with SMTP id x17-20020a1709027c1100b00178a6ca4850mr22463473pll.111.1667345891597;
+        Tue, 01 Nov 2022 16:38:11 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 65-20020a621644000000b0056bbcf88b93sm7081158pfw.42.2022.11.01.16.38.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Nov 2022 16:20:58 -0700 (PDT)
-From:   "Fabio M. De Francesco" <fmdefrancesco@gmail.com>
-To:     Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexdeucher@gmail.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Christian Brauner <brauner@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Kees Cook <keescook@chromium.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        linux-hwmon@vger.kernel.org, linux-hardening@vger.kernel.org,
-        "Venkataramanan, Anirudh" <anirudh.venkataramanan@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH] drm/radeon: Replace kmap() with kmap_local_page()
-Date:   Wed, 02 Nov 2022 00:11:53 +0100
-Message-ID: <1942083.usQuhbGJ8B@suse>
-In-Reply-To: <CADnq5_PP3VCXQ5rbC0-8Qsi5W7Ew87U_bRknz4=qxbrPxVQ+qA@mail.gmail.com>
-References: <20221013210714.16320-1-fmdefrancesco@gmail.com> <fb0b7389-7121-04f8-176d-1ababe0ad8f2@amd.com> <CADnq5_PP3VCXQ5rbC0-8Qsi5W7Ew87U_bRknz4=qxbrPxVQ+qA@mail.gmail.com>
+        Tue, 01 Nov 2022 16:38:11 -0700 (PDT)
+Date:   Tue, 1 Nov 2022 16:38:10 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] LSM: Better reporting of actual LSMs at boot
+Message-ID: <202211011636.8C10CB9@keescook>
+References: <20221018064825.never.323-kees@kernel.org>
+ <CAHC9VhTScG513+-_GDN+nzBQjASW31LrE8juU3c03=0fJ_csGw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhTScG513+-_GDN+nzBQjASW31LrE8juU3c03=0fJ_csGw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On luned=EC 17 ottobre 2022 18:52:10 CET Alex Deucher wrote:
-> Applied.  Thanks!
+On Tue, Oct 18, 2022 at 05:50:09PM -0400, Paul Moore wrote:
+> On Tue, Oct 18, 2022 at 2:48 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Enhance the details reported by "lsm.debug" in several ways:
+> >
+> > - report contents of "security="
+> > - report contents of "CONFIG_LSM"
+> > - report contents of "lsm="
+> > - report any early LSM details
+> > - whitespace-align the output of similar phases for easier visual parsing
+> > - change "disabled" to more accurate "skipped"
+> > - explain what "skipped" and "ignored" mean in a parenthetical
+> >
+> > Upgrade the "security= is ignored" warning from pr_info to pr_warn,
+> > and include full arguments list to make the cause even more clear.
+> >
+> > Replace static "Security Framework initializing" pr_info with specific
+> > list of the resulting order of enabled LSMs.
+> >
+> > Cc: Paul Moore <paul@paul-moore.com>
+> > Cc: James Morris <jmorris@namei.org>
+> > Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> > Cc: linux-security-module@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  security/security.c | 61 +++++++++++++++++++++++++++++++++++++++------
+> >  1 file changed, 54 insertions(+), 7 deletions(-)
+> 
+> I don't know about you, but when I'm reading commit descriptions about
+> how a patch changes the user visible output of something, e.g. console
+> messages, I always enjoy seeing an example of the new output, both in
+> normal and debug mode (hint, hint) ;)
 
-Many thanks to you!
+Fair point. Commit log will be looong. :)
 
-However, about a week ago, I received a report saying that this patch is "N=
-ot=20
-Applicable".=20
+> 
+> More comments below ...
+> 
+> > diff --git a/security/security.c b/security/security.c
+> > index 9696dd64095e..6f6079dec270 100644
+> > --- a/security/security.c
+> > +++ b/security/security.c
+> > @@ -159,7 +159,7 @@ static void __init append_ordered_lsm(struct lsm_info *lsm, const char *from)
+> >                 lsm->enabled = &lsm_enabled_true;
+> >         ordered_lsms[last_lsm++] = lsm;
+> >
+> > -       init_debug("%s ordering: %s (%sabled)\n", from, lsm->name,
+> > +       init_debug("%s ordered: %s (%sabled)\n", from, lsm->name,
+> >                    is_enabled(lsm) ? "en" : "dis");
+> 
+> This isn't your fault, but since you're changing this line let's get
+> rid of the "en"/"dis" and do a proper "enabled"/"disabled" string to
+> make it slightly easier to find string while grep'ing through the
+> sources.  Example:
+> 
+>   init_debug("... %s\n", (is_enabled(lsm) ? "enabled" : "disabled"));
 
-That email was also referring to another patch, for which I'll reply in its=
-=20
-own thread.
+Sure, will do.
 
-That report has a link to https://patchwork.linuxtv.org/project/linux-media/
-patch/20221013210714.16320-1-fmdefrancesco@gmail.com/
+> 
+> > @@ -307,7 +308,8 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
+> >                 if (exists_ordered_lsm(lsm))
+> >                         continue;
+> >                 set_enabled(lsm, false);
+> > -               init_debug("%s disabled: %s\n", origin, lsm->name);
+> > +               init_debug("%s skipped: %s (not in requested order)\n",
+> > +                          origin, lsm->name);
+> 
+> I'm not sure the distinction between "disabled" and "skipped" above is
+> that significant, and in fact I tend to think "disabled" is more
+> appropriate.  There is also some (minor) advantage to keeping the user
+> visible log messages consistent.
+> 
+> However, I do think the parenthetical explanations are a nice addition.
+> 
+> (If we did go the "skipped" route, I think we should also change the
+> "security=%s disabled: %s\n" further up the function for the sake of
+> consistent language.)
 
-Can you please let me understand why, despite it was applied, this patch la=
-ter=20
-shifted "State" to "Not Applicable"?
+I prefer "skipped", so I'll update the security= report...
 
-Thanks,
+> 
+> > @@ -318,6 +320,44 @@ static void __init lsm_early_task(struct task_struct *task);
+> >
+> >  static int lsm_append(const char *new, char **result);
+> >
+> > +static void __init report_lsm_order(void)
+> > +{
+> > +       struct lsm_info **lsm, *early;
+> > +       size_t size = 0;
+> > +       char *effective, *step, *end;
+> > +
+> > +       /* Count the length of each enabled LSM name. */
+> > +       for (early = __start_early_lsm_info; early < __end_early_lsm_info; early++)
+> > +               if (is_enabled(early))
+> > +                       size += strlen(early->name) + 1;
+> > +       for (lsm = ordered_lsms; *lsm; lsm++)
+> > +               if (is_enabled(*lsm))
+> > +                       size += strlen((*lsm)->name) + 1;
+> > +
+> > +       /* Allocate space with trailing %NUL or give up. */
+> > +       size += 1;
+> > +       effective = kzalloc(size, GFP_KERNEL);
+> > +       if (!effective)
+> > +               return;
+> > +       end = effective + size;
+> > +       step = effective;
+> > +
+> > +       /* Append each enabled LSM name. */
+> > +       for (early = __start_early_lsm_info; early < __end_early_lsm_info; early++)
+> > +               if (is_enabled(early))
+> > +                       step += scnprintf(step, end - step, "%s%s",
+> > +                                         step == effective ? "" : ",",
+> > +                                         early->name);
+> > +       for (lsm = ordered_lsms; *lsm; lsm++)
+> > +               if (is_enabled(*lsm))
+> > +                       step += scnprintf(step, end - step, "%s%s",
+> > +                                         step == effective ? "" : ",",
+> > +                                         (*lsm)->name);
+> > +
+> > +       pr_info("initializing lsm=%s\n", effective);
+> 
+> Instead of going through all the trouble of determining the string
+> size and formatting the string via a series of scnprintf() calls, why
+> not cut out the intermediate string buffer and use
+> pr_info()/pr_cont()?  What am I missing?
 
-=46abio
+I just kinda dislike pr_cont(), but yeah, it's a lot shorter. :P
 
+ security/security.c |   32 ++++++--------------------------
+ 1 file changed, 6 insertions(+), 26 deletions(-)
 
+> 
+> > @@ -393,13 +436,17 @@ int __init security_init(void)
+> >  {
+> >         struct lsm_info *lsm;
+> >
+> > -       pr_info("Security Framework initializing\n");
+> > +       init_debug("legacy security=%s\n", chosen_major_lsm ?: " *unspecified*");
+> > +       init_debug("  CONFIG_LSM=%s\n", builtin_lsm_order);
+> > +       init_debug("boot arg lsm=%s\n", chosen_lsm_order ?: " *unspecified*");
+> >
+> >         /*
+> >          * Append the names of the early LSM modules now that kmalloc() is
+> >          * available
+> >          */
+> >         for (lsm = __start_early_lsm_info; lsm < __end_early_lsm_info; lsm++) {
+> > +               init_debug("  early started: %s (%sabled)\n", lsm->name,
+> > +                          is_enabled(lsm) ? "en" : "dis");
+> 
+> See the earlier comment about "en"/"dis" versus "enabled"/"disabled".
+> 
+> However, I wonder how useful the above debug message is when you
+> consider report_lsm_order().  Since report_lsm_order() dumps both the
+> early and normal LSMs, perhaps it makes more sense to annotate the
+> output there to indicate early vs normal LSM loading?
 
+I think of it as "debug" being a "show your work" mode, and the final
+list should always be visible.
+
+I will send a v2.
+
+-Kees
+
+-- 
+Kees Cook
