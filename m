@@ -2,105 +2,122 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85FBC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 19:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE17C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 21:14:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229517AbiKATgB (ORCPT
+        id S229949AbiKAVOF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Nov 2022 15:36:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34586 "EHLO
+        Tue, 1 Nov 2022 17:14:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbiKATgA (ORCPT
+        with ESMTP id S229517AbiKAVOE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Nov 2022 15:36:00 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F4A71DDFF;
-        Tue,  1 Nov 2022 12:35:58 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id ABF861F8BA;
-        Tue,  1 Nov 2022 19:35:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1667331356; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Jc3GZbUnGicye2/jncE2VAeBO5z9oAX6w1xDyj0hRaI=;
-        b=zxfEoNp7ByQJWbFfW/abgDH3V5Ms7cBMA7PHBEYuzp95JXxSnlsKV9HE48hNuYThLVm4d8
-        pDUT0NS97pS9sleJdlH4HYB4TuKVZ0sW0UcxJDs6rj6RjjnVG/OYrQhOYfWNtJolbMgKYn
-        42KRxuj4mYVHb7TJUD+FfYxMqVIuygI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1667331356;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Jc3GZbUnGicye2/jncE2VAeBO5z9oAX6w1xDyj0hRaI=;
-        b=R81kdDAat9+Gy9w72WUdJdEEDk1kFsDH5uguOsuZGDmslkZx4I/62V9xhPiUKDalyvl3JQ
-        ekfwdj+5mkwhYwAA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6A11613AAF;
-        Tue,  1 Nov 2022 19:35:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id g9MRGBx1YWOATwAAMHmgww
-        (envelope-from <vbabka@suse.cz>); Tue, 01 Nov 2022 19:35:56 +0000
-Message-ID: <ab914e26-9b90-c878-dd47-f417b03212c5@suse.cz>
-Date:   Tue, 1 Nov 2022 20:35:53 +0100
+        Tue, 1 Nov 2022 17:14:04 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9378D1C42C;
+        Tue,  1 Nov 2022 14:14:03 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id 20so14520878pgc.5;
+        Tue, 01 Nov 2022 14:14:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6indUiCprMB0zjMLWvS6nYLrTKO3j8yjpLRzZacHoFM=;
+        b=RvakqeHbzhIjgHA0SHrXXMScjhxIrsj98u/WPUsnoZgBbiMepcA6jWfxYuNLJ7YZKl
+         7hQeN3cKsZHdgVa+by5PM9qwRAXlERGLBHtTYOATeumHcVBVJh12ijdH6hESg72b+wzw
+         r27PIVAfsU6wsVC8jduamUDUDRQGWhqhfjL5fViN9pYW8AANiVCifGt4VRus4t71d8K3
+         bh7W73of1dfjJMq65cWyAGs/0pzBnk7/j5SrDExP3MtP88tq0+DVqzpssHJq3RUnbrxN
+         ZOeHFX75u3sTcdI+a70BLWQq/HCHg3+AiUVcjCfn2nTWdfUYiuiN2UIjcWOAoiGnLtrt
+         Ah6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6indUiCprMB0zjMLWvS6nYLrTKO3j8yjpLRzZacHoFM=;
+        b=wtDLwGDX8GJdCIu9/lu6GJZIlpu4fyPWU8XyEiYreGwiEzNxUVocWMBB4OPeIobRaO
+         aP1DEIdFqlx3ndZkSQ9h6jNo+RO2CbqDtG4gT7sHCEpzCHCeeH4ZaAM+q7DJtBop2CGB
+         zPcp9wg2f3j2N+jp3UT8KXvHuwSZNzN+oGYdWnMzdYnVdAFsdziB0Yx/0vlYnEM3jR0C
+         ufRt4JgoRR0V4MDaqII4nBm/HAj0FkRnLsOZyl/tgEhEMMEVt0bOcveNynOFOlP6fwx6
+         H3yBR3JtZ8jPmiVNnVxPs3ClzVF/p4WH3fV/o+soWKPmOnS5lewwEYssmwQ6WSZ14GX5
+         yjUw==
+X-Gm-Message-State: ACrzQf3uYJK+3ynSaqrapBct0axZ42I0rtnSrVNhazQnel8y9LchaCOp
+        CpYrGqmII2mCCFCFNHMJ3a0=
+X-Google-Smtp-Source: AMsMyM52pQddQpmtGf7qmD+beu+QOQ/6824R/3H3162dp/zW7VTCB30F2Ej07jtHrVsyBI0az0Lq5A==
+X-Received: by 2002:a05:6a00:234d:b0:561:ec04:e77e with SMTP id j13-20020a056a00234d00b00561ec04e77emr22151908pfj.14.1667337242960;
+        Tue, 01 Nov 2022 14:14:02 -0700 (PDT)
+Received: from mail.google.com ([103.229.249.253])
+        by smtp.gmail.com with ESMTPSA id o20-20020a170903009400b0018685aaf41dsm6804056pld.18.2022.11.01.14.13.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Nov 2022 14:14:02 -0700 (PDT)
+Date:   Wed, 2 Nov 2022 10:13:54 +1300
+From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] [next] drm/radeon: Replace one-element array with
+ flexible-array member
+Message-ID: <Y2GMEjB4NQ3RYk2C@mail.google.com>
+References: <Y1trhRE3nK5iAY6q@mail.google.com>
+ <Y1yetX1CHsr+fibp@mail.google.com>
+ <CADnq5_Mod90O=tN26+Yi74WPYxpVtss+LG_+_HZyFv2EtzR+MA@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH v4] mempool: Do not use ksize() for poisoning
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
-        kernel test robot <oliver.sang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Marco Elver <elver@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-mm@kvack.org, Andrey Konovalov <andreyknvl@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20221028154823.you.615-kees@kernel.org>
- <20221031105514.GB69385@mutt> <13c4bd6e-09d3-efce-43a5-5a99be8bc96b@suse.cz>
- <202211011014.02F2559@keescook>
-Content-Language: en-US
-From:   Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <202211011014.02F2559@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADnq5_Mod90O=tN26+Yi74WPYxpVtss+LG_+_HZyFv2EtzR+MA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 11/1/22 18:15, Kees Cook wrote:
-> On Mon, Oct 31, 2022 at 04:00:25PM +0100, Vlastimil Babka wrote:
->>  From a4a5a40852723dfadb2429bee1d5e1f9d3b75f39 Mon Sep 17 00:00:00 2001
->> From: Vlastimil Babka <vbabka@suse.cz>
->> Date: Mon, 31 Oct 2022 15:55:47 +0100
->> Subject: [PATCH] mempool: Do not use ksize() for poisoning-fix
->>
->> For slab mempools (not kmalloc), pool_data is not object size, but a
->> kmem_cache pointer; we need to extract the size via kmem_cache_size().
->>
->> Reported-by: Anders Roxell <anders.roxell@linaro.org>
->> Link: https://lore.kernel.org/all/20221031105514.GB69385@mutt/
->> Reported-by: kernel test robot <oliver.sang@intel.com>
->> Link: https://lore.kernel.org/oe-lkp/202210312110.1fe5d224-oliver.sang@intel.com
->> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+On Tue, Nov 01, 2022 at 10:42:14AM -0400, Alex Deucher wrote:
+> On Fri, Oct 28, 2022 at 11:32 PM Paulo Miguel Almeida
+> <paulo.miguel.almeida.rodenas@gmail.com> wrote:
+> >
+> > One-element arrays are deprecated, and we are replacing them with
+> > flexible array members instead. So, replace one-element array with
+> > flexible-array member in struct _ATOM_FAKE_EDID_PATCH_RECORD and
+> > refactor the rest of the code accordingly.
+> >
+> > It's worth mentioning that doing a build before/after this patch results
+> > in no binary output differences.
+> >
+> > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> > routines on memcpy() and help us make progress towards globally
+> > enabling -fstrict-flex-arrays=3 [1].
 > 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> This seems like a worthy goal, and I'm not opposed to the patch per
+> se, but it seems a bit at odds with what this header represents.
+> atombios.h represents the memory layout of the data stored in the ROM
+> on the GPU.  This changes the memory layout of that ROM.  We can work
+> around that in the driver code, but if someone were to take this
+> header to try and write some standalone tool or use it for something
+> else in the kernel, it would not reflect reality.
 > 
-> Thanks again for fixing this. I don't see it in -next yet? Should I
-> resend this directly, or how would be best to land it?
+> Alex
+> 
+Hi Alex, thanks for taking the time to review this patch.
 
-I think Andrew will add it from here, but maybe is waiting for Anders 
-acknowledging that it fixes the bug for him?
+I see where you are coming from and why you may be apprehensive with the
+approach. From my humble point of view, I think that the artificial line
+that separates "what we can change at will" and "what we should be extra
+careful not to break/confuse others" is whether the header file is part 
+of the UAPI. Given that atombios.h isn't publicly accessible, I tend to
+gravitate towards the first one.
 
-> -Kees
-> 
+> > +  /* empty fake edid record must be 3 bytes long */
+> +    sizeof(ATOM_FAKE_EDID_PATCH_RECORD) + 1;
+
+I am assuming that this is the part of the patch that makes you feel
+concerned about how devs will get it (should they copy this header),
+is that right? 
+
+If so, would a comment on the ATOM_FAKE_EDID_PATCH_RECORD struct
+specifying the size of the struct when empty do the trick? 
+
+- Paulo A.
 
