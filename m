@@ -2,64 +2,69 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FC6C4332F
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 22:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7095EC433FE
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 22:33:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231166AbiKAWdv (ORCPT
+        id S231297AbiKAWdx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Nov 2022 18:33:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37284 "EHLO
+        Tue, 1 Nov 2022 18:33:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231290AbiKAWd0 (ORCPT
+        with ESMTP id S230409AbiKAWd2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Nov 2022 18:33:26 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC8B9EBE
-        for <linux-hardening@vger.kernel.org>; Tue,  1 Nov 2022 15:33:23 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id p21so11023432plr.7
-        for <linux-hardening@vger.kernel.org>; Tue, 01 Nov 2022 15:33:23 -0700 (PDT)
+        Tue, 1 Nov 2022 18:33:28 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D1991E9
+        for <linux-hardening@vger.kernel.org>; Tue,  1 Nov 2022 15:33:25 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id 192so14771934pfx.5
+        for <linux-hardening@vger.kernel.org>; Tue, 01 Nov 2022 15:33:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nltp5RJKJpJiy+lN1fjyj0tni6FBvjdhxkkPgl9tDbA=;
-        b=gm5F1w4iALvkaMLVUfNT4doyFvvcUHI/RRJNOKifZ5C24lG0VjpTlUZ7Fq6t8XkpKj
-         gqS+JLFVnIHH0zNQaQwjuoWbwEGtfO/BQaKn66WNxlVOE0VfuMNfQg95e/c9emk+sjhk
-         T1jjHDpxnS5pxHyY/PoOzerTiEwjNzlYj77FY=
+        bh=gzM6J7UGnorFDlDysY0MD6P7BjaP+6EbrbAqldiRrKE=;
+        b=OKuDa6YSbANP/NsNkIWjApa9dbOPZfAN/KtOhEl7y//1+lLuJ6c0t6cE9j/ifht6Vy
+         10XhU7TJYo8HMJE/VscMRVZgUI2flZNTZY+0daayeJydtHb94FxLwQJGgZ0qCpAcBHPl
+         7eIkUxKRPJyW+uxeOKrY9C5oPis/Bie6gRUZA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nltp5RJKJpJiy+lN1fjyj0tni6FBvjdhxkkPgl9tDbA=;
-        b=nby7SiGGc4byAIM53H84ue3JpIfCU6vW1BMCzUOngK6lNbOfHrg+um6DlR3yr2FQ4i
-         k41JCn8P5nFbLelUiYXAOMey/IU1e6L2JtNBi1EYbBJRI9pw2hrnHo7aT4zaGpLLBEMb
-         CmY1LYom2NuPgBd15IYIjZ2WFBOGTP695lXBhHy6jy9M1NpFAQ2isMz5YWL5hLMaIGIh
-         mY3a/LLVPq8QlP9DomTpqBfm5eoAEnhL03CHM/36Jj02W6kibGFNUWJfm8YPNTNmQKcE
-         STpheuGOIVIMGJYwWPr1fQ9X6tBx2+s7fBjCg1+OpHQ1V7QVroxC1XrRFTXhKMepfbKd
-         Vgfw==
-X-Gm-Message-State: ACrzQf1/Iv1+m+xYz/z0tfHYxkW8Lv/3Kv2tJ537bjEkJXHqnTOxN8Xh
-        rp44pTgmksc1bclopYfeYCw6OA==
-X-Google-Smtp-Source: AMsMyM7QCr77GngdG52tbkpTWR+ry5SrJoyzn5pEPMgQfu1HqHVFuUzm4y7P9gFfLfMKQ/X0910S2g==
-X-Received: by 2002:a17:902:ef51:b0:180:7922:ce40 with SMTP id e17-20020a170902ef5100b001807922ce40mr21648024plx.8.1667342003248;
-        Tue, 01 Nov 2022 15:33:23 -0700 (PDT)
+        bh=gzM6J7UGnorFDlDysY0MD6P7BjaP+6EbrbAqldiRrKE=;
+        b=XUOzMIy3s83t+vhAl4TVa9MI2LyRNxxq60AQmZD0UTYi8gIpTiQCtYUqxdgEblmLoR
+         vqKhQeQfUOs6zg3gskzFSwerW3PsqHdMY/ST49cDOIhJdDV7qm/rtmDEnY8RKrKQSIk/
+         K3LzIQRS0dTE1CIq351l4agCftf0BooCdp85WtRFraO/G/q9CanKBusNMotykmFUSYRE
+         zSFuRrftiSb6Ual16V1r31bgjQ6RcrO+PtbBV1SbEyU5K7PXBXqihcxvxOFg9G5W989F
+         LceMwMM3Xdue14shJg3MktzJlnN4yfzNHEPK+zX4KshmPyCPrD3slmF3GejQksAdQpwU
+         qZ2w==
+X-Gm-Message-State: ACrzQf0pzrbX2HvIYPnuHulkdvMVNFZSKdtKbILUDShnTtV5cQv5oVKA
+        h2o6zQ3OI84yY/bJA0MZy3couA==
+X-Google-Smtp-Source: AMsMyM5/UJCRTY42PEpY1Y0wufzzSsIn6sCjMrikkeh+nFyBBYr8szUuO8piqBRMJ8AUIXH3cwv2yA==
+X-Received: by 2002:a63:950d:0:b0:46e:d655:b377 with SMTP id p13-20020a63950d000000b0046ed655b377mr19259111pgd.191.1667342004776;
+        Tue, 01 Nov 2022 15:33:24 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p14-20020a170902780e00b00186b280a441sm6818215pll.239.2022.11.01.15.33.22
+        by smtp.gmail.com with ESMTPSA id s7-20020a170902988700b001811a197797sm6778934plp.194.2022.11.01.15.33.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Nov 2022 15:33:22 -0700 (PDT)
+        Tue, 01 Nov 2022 15:33:24 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Vlastimil Babka <vbabka@suse.cz>
 Cc:     Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Nishanth Menon <nm@ti.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Won Chung <wonchung@google.com>,
+        David Gow <davidgow@google.com>,
         Christoph Lameter <cl@linux.com>,
         Pekka Enberg <penberg@kernel.org>,
         David Rientjes <rientjes@google.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
         Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
-        David Gow <davidgow@google.com>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Andy Shevchenko <andriy.shevchenko@intel.com>,
         Paolo Abeni <pabeni@redhat.com>,
@@ -67,87 +72,70 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: [PATCH 2/6] slab: Remove special-casing of const 0 size allocations
-Date:   Tue,  1 Nov 2022 15:33:10 -0700
-Message-Id: <20221101223321.1326815-2-keescook@chromium.org>
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: [PATCH 5/6] driver core: Add __alloc_size hint to devm allocators
+Date:   Tue,  1 Nov 2022 15:33:13 -0700
+Message-Id: <20221101223321.1326815-5-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20221101222520.never.109-kees@kernel.org>
 References: <20221101222520.never.109-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2371; h=from:subject; bh=Orq7dTL01awncjfej5/kmy0rhx2Dkjzjknkna6lKTxc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjYZ6pSkAAJZnxJQ9xGB8j+DBQxCAiERH1Mj1nwMYm gw5gZNWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY2GeqQAKCRCJcvTf3G3AJsm8D/ 0eLG4a2rjG7cnYY/B7BTI50H9t73pU5m3LGv6pIt6e1lw/3d+bA90FWRTEqFL6JQAqkpvbYMuLXnR5 P/4+X17Z9FLSyFqaVh5xQZw5HU2YoCy3Y2BYqBdXjPeUZDvoCyEhSj5A4Szpd5DhuU9/zxCpXpl21t G4M1fsuAQyC2PbBc0Gumphp8cMjF1+ZcskuaCZqEVBmgJYOSJTYql7Fg1GMnzYCvJ2woEGQ1IsIv8Y 2+NhAWv1nGvEOSzs3ry2w7jDcZvh4HFJMcjbg1FyXsvOBYfhkjpotYs6fB4J3yhksLZH8n15AeMiEO idAblEEIBtUfvgvz9o/5jxVbr/sR+eoz+L65byXBdzj8kGsOwlfKVCbT683coTpAMK+qms3pMrZ6cl WTyFGJwXytQH27WOq3c6NVsi3XCgtykkzfzW0jiaue05uaty3VzGTYe1VA+NpcqhWvvzBT2DyVBXT1 XuX+XpkfACWcL9gn4VXOjWKb+tfbxT+nle17naSGPO5cqt9JGNaOh5O0QVGt1rGVVguRP7lmHtMs/m VqSCQ5b6/Bfs5+3A8q1bqWGuFUVBpS7q5DtFAkpB5G8Wke3+wv/l4GTzoGgqIlD4r8FkL9H0fsgjp6 jahyLYHwgVUoupO2TQwC4V4TUtmKK/sQ1F1ChE/7Kn7fKxG5pgQeCOaBPMFQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2391; h=from:subject; bh=aUB9QFgSGPW6FN3jHA0HE05KQ7SqHyl2yIuilOndYc8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjYZ6qr8iT9TeVIzVavaub9kYVPpos80os4w71z521 I5fSEqiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY2GeqgAKCRCJcvTf3G3AJsI+EA CCoCqTQVECoE72alYcrcqBPY9Z20kQHjcfMq2clHkeoyFdKB7/Ud8kY1NoGi9q0m7Xda+lbswp0Jlt WBofqN/HFcFfrXp3FK8cKt+E6z83q0MQ0tPoIJ8VrbX4/wOJvdwTMD01BGiRQ0CbVNKJ7r2fSpRHS8 6wR/YVw5UWOYYryexrUjU3p7shnbVQ78CHVuSyCWWBAbvDwjqN1kQqmGB/xhqF30AtrLCJZeaXlMHI 6OlrqKUn+Izi77UJ7rrqoS6x931kwNHbO1+ZBj/lU9O5yZ7ff8PbhX3q5SJhLRKIVdaADnYGIqt296 LRbxLOfFTiDPd8DdumdGCzmXLZaUhS5Ef1GlGQJ9Ofz+SqZK6WjgYaw/RpelAbMhqf3Pa7NAUSRQ/T 0UZSTeVpU8AwIRrAhLh5s2zUneuHm2F3vZUdRjgBPdXjFW3Q8FsuKiDApeD5UShVJ5L64NL7K2I83F thVgiY7h7bGlpRRORua5rQEQLSEg4vsYiKvvUMbRLIuiacpWqT9b0zk2fLyBRESTF5/gChxZkF3d2S w2P/b+Zmj4VAqX324oLiSUkdASYfidRxN3jN1y+7w1rLl9h/VDvCFRZbbLicPvvMiNK9V6KClVIOZs yZWijWPTj3w0TMU+Cpgdq8ksSrwHICryAxiyTeUEHR3ni/aE+UAIMm7je+Vw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Passing a constant-0 size allocation into kmalloc() or kmalloc_node()
-does not need to be a fast-path operation, so the static return value
-can be removed entirely. This is in preparation for making sure that
-all paths through the inlines result in a full extern function call,
-where __alloc_size() hints will actually be seen[1] by GCC. (A constant
-return value of 0 means the "0" allocation size won't be propagated by
-the inline.)
+Mark the devm_*alloc()-family of allocations with appropriate
+__alloc_size()/__realloc_size() hints so the compiler can attempt to
+reason about buffer lengths from allocations.
 
-[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96503
-
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc: linux-mm@kvack.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Nishanth Menon <nm@ti.com>
+Cc: Michael Kelley <mikelley@microsoft.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Won Chung <wonchung@google.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20221029074734.gonna.276-kees@kernel.org
 ---
- include/linux/slab.h | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+This is already in -next, but I'm including it here again to avoid any
+confusion about this series landing (or being tested) via another tree.
+---
+ include/linux/device.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index e08fe7978b5c..970e9504949e 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -562,17 +562,13 @@ void *kmalloc_large_node(size_t size, gfp_t flags, int node) __assume_page_align
- #ifndef CONFIG_SLOB
- static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
- {
--	if (__builtin_constant_p(size)) {
-+	if (__builtin_constant_p(size) && size) {
- 		unsigned int index;
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 424b55df0272..5e4cd857e74f 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -197,9 +197,9 @@ void devres_remove_group(struct device *dev, void *id);
+ int devres_release_group(struct device *dev, void *id);
  
- 		if (size > KMALLOC_MAX_CACHE_SIZE)
- 			return kmalloc_large(size, flags);
+ /* managed devm_k.alloc/kfree for device drivers */
+-void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp) __malloc;
++void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp) __alloc_size(2);
+ void *devm_krealloc(struct device *dev, void *ptr, size_t size,
+-		    gfp_t gfp) __must_check;
++		    gfp_t gfp) __must_check __realloc_size(3);
+ __printf(3, 0) char *devm_kvasprintf(struct device *dev, gfp_t gfp,
+ 				     const char *fmt, va_list ap) __malloc;
+ __printf(3, 4) char *devm_kasprintf(struct device *dev, gfp_t gfp,
+@@ -226,7 +226,8 @@ static inline void *devm_kcalloc(struct device *dev,
+ void devm_kfree(struct device *dev, const void *p);
+ char *devm_kstrdup(struct device *dev, const char *s, gfp_t gfp) __malloc;
+ const char *devm_kstrdup_const(struct device *dev, const char *s, gfp_t gfp);
+-void *devm_kmemdup(struct device *dev, const void *src, size_t len, gfp_t gfp);
++void *devm_kmemdup(struct device *dev, const void *src, size_t len, gfp_t gfp)
++	__realloc_size(3);
  
- 		index = kmalloc_index(size);
--
--		if (!index)
--			return ZERO_SIZE_PTR;
--
- 		return kmalloc_trace(
- 				kmalloc_caches[kmalloc_type(flags)][index],
- 				flags, size);
-@@ -592,17 +588,13 @@ static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
- #ifndef CONFIG_SLOB
- static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t flags, int node)
- {
--	if (__builtin_constant_p(size)) {
-+	if (__builtin_constant_p(size) && size) {
- 		unsigned int index;
- 
- 		if (size > KMALLOC_MAX_CACHE_SIZE)
- 			return kmalloc_large_node(size, flags, node);
- 
- 		index = kmalloc_index(size);
--
--		if (!index)
--			return ZERO_SIZE_PTR;
--
- 		return kmalloc_node_trace(
- 				kmalloc_caches[kmalloc_type(flags)][index],
- 				flags, node, size);
+ unsigned long devm_get_free_pages(struct device *dev,
+ 				  gfp_t gfp_mask, unsigned int order);
 -- 
 2.34.1
 
