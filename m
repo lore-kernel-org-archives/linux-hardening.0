@@ -2,88 +2,84 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F0AC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 09:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5F0FA373D
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 11:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229556AbiKAJiy (ORCPT
+        id S229950AbiKALAC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Nov 2022 05:38:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40728 "EHLO
+        Tue, 1 Nov 2022 07:00:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230342AbiKAJiY (ORCPT
+        with ESMTP id S229877AbiKALAA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Nov 2022 05:38:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E17F1B1DB;
-        Tue,  1 Nov 2022 02:36:23 -0700 (PDT)
+        Tue, 1 Nov 2022 07:00:00 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBF7E178BC;
+        Tue,  1 Nov 2022 03:59:59 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A4D0961552;
-        Tue,  1 Nov 2022 09:36:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D667C43470;
-        Tue,  1 Nov 2022 09:36:19 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A48B4B81B0F;
+        Tue,  1 Nov 2022 10:59:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B9B7C433D6;
+        Tue,  1 Nov 2022 10:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667295382;
-        bh=g33U7xA0K22xKmt+wrUahIeZScTw24v+60/5Vp+UUpA=;
+        s=k20201202; t=1667300397;
+        bh=dKEuaYyyAw0/iFBymiu6NLIfDXb4VFkaxpP0t9sFQn0=;
         h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=MtlZH/biXGj9c2yyviamR6q25nQqoOp+Uew5Me+Zg43zO+UQm7z7ohQexO5Kz9lt1
-         WOo4ayIvTG/niq+rtN9RtAkdKcUl/BhPAvyZBVfeilFO8GETmGY+mKTWxAvvvw1qwu
-         qjHS3U2tbBGyeRtTg6arXLA1b6rqjs/CsgY7MRq//+ZUXfmQ2CBSqUYNWUcfyI7Apt
-         wIFJwdg0W6UzBsEkzZjUvp1gLNRkqZMXJVf4k6aGhVDXq1K5vZDDwFXVjvN2MRK9UQ
-         opHB+3Y1LQyzNrjCspg1vvcrLNQ0rQ1lO+vJBviqXeuK7OxMqsHhY96ofZO5Wd9AYd
-         SXP0DPpoRFxdA==
+        b=YDcgPJMnCwXLtF5ZBJ3e1vZ/8v2eo7+N0HdsMyBc+vncFG3OJjUegJDLOw5agKDC6
+         1PbS+8y7XUGCrZq2OEylHUwrkPxiot5IQSbbHxOLN5A5yiNy5AP6A3Ybhe/rzB9nSe
+         mVHPDaYWrZbdn/zEpk4w9fay9MbCjrhimbME64d3n/T0DpvUScGkjbGICgaKX7YInb
+         aCsGQ0Be3hl5+REJpUwAN90sH8PM1aaxhQLnJ39aTMMCQLY0VdQfxv/oQX+WzdYdmF
+         cL5T8VBwE7XNQ4mfexmuTJMuPORfqpwTjLu5dvUKISvMFgBp5BRNB+Tb5kd9ZgE005
+         9lv1AEyuofzAA==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2 2/6] hostap: Avoid clashing function prototypes
+Subject: Re: [next] wifi: atmel: Fix atmel_private_handler array size
 From:   Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <8388b5ed9e729eb9dadec875a7576219e6d61223.1666894751.git.gustavoars@kernel.org>
-References: <8388b5ed9e729eb9dadec875a7576219e6d61223.1666894751.git.gustavoars@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Jouni Malinen <j@w1.fi>, "David S. Miller" <davem@davemloft.net>,
+In-Reply-To: <20221018023732.never.700-kees@kernel.org>
+References: <20221018023732.never.700-kees@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Simon Kelley <simon@thekelleys.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
+        Paolo Abeni <pabeni@redhat.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-ID: <166729537521.21401.10713096825251730903.kvalo@kernel.org>
-Date:   Tue,  1 Nov 2022 09:36:19 +0000 (UTC)
+Message-ID: <166730039237.21401.8200103649620545525.kvalo@kernel.org>
+Date:   Tue,  1 Nov 2022 10:59:54 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+Kees Cook <keescook@chromium.org> wrote:
 
-> When built with Control Flow Integrity, function prototypes between
-> caller and function declaration must match. These mismatches are visible
-> at compile time with the new -Wcast-function-type-strict in Clang[1].
+> Fix the atmel_private_handler to correctly sized (1 element) again. (I
+> should have checked the data segment for differences.) This had no
+> behavioral impact (no private callbacks), but it made a very large
+> zero-filled array.
 > 
-> Fix a total of 42 warnings like these:
-> 
-> ../drivers/net/wireless/intersil/hostap/hostap_ioctl.c:3868:2: warning: cast from 'int (*)(struct net_device *, struct iw_request_info *, char *, char *)' to 'iw_handler' (aka 'int (*)(struct net_device *, struct iw_request_info *, union iwreq_data *, char *)') converts to incompatible function type [-Wcast-function-type-strict]
->         (iw_handler) prism2_get_name,                   /* SIOCGIWNAME */
->         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> The hostap Wireless Extension handler callbacks (iw_handler) use a
-> union for the data argument. Actually use the union and perform explicit
-> member selection in the function body instead of having a function
-> prototype mismatch. There are no resulting binary differences
-> before/after changes.
-> 
-> Link: https://github.com/KSPP/linux/issues/235
-> Link: https://reviews.llvm.org/D134831 [1]
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Cc: Simon Kelley <simon@thekelleys.org.uk>
+> Cc: Kalle Valo <kvalo@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Fixes: 8af9d4068e86 ("wifi: atmel: Avoid clashing function prototypes")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Please add "wifi: " to all wireless patches, for example this one should be:
+Patch applied to wireless-next.git, thanks.
 
-wifi: hostap: Avoid clashing function prototypes
+8b860466b137 wifi: atmel: Fix atmel_private_handler array size
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/8388b5ed9e729eb9dadec875a7576219e6d61223.1666894751.git.gustavoars@kernel.org/
+https://patchwork.kernel.org/project/linux-wireless/patch/20221018023732.never.700-kees@kernel.org/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
