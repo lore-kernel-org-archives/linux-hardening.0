@@ -2,63 +2,61 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EF4C4167B
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 22:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE245C43219
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 22:34:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231134AbiKAWeN (ORCPT
+        id S230174AbiKAWeL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Nov 2022 18:34:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37226 "EHLO
+        Tue, 1 Nov 2022 18:34:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231280AbiKAWdZ (ORCPT
+        with ESMTP id S231296AbiKAWd3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Nov 2022 18:33:25 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70ABCE15
-        for <linux-hardening@vger.kernel.org>; Tue,  1 Nov 2022 15:33:23 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id k22so14786194pfd.3
-        for <linux-hardening@vger.kernel.org>; Tue, 01 Nov 2022 15:33:23 -0700 (PDT)
+        Tue, 1 Nov 2022 18:33:29 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B89E42BCE
+        for <linux-hardening@vger.kernel.org>; Tue,  1 Nov 2022 15:33:25 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d10so14763333pfh.6
+        for <linux-hardening@vger.kernel.org>; Tue, 01 Nov 2022 15:33:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TR4DpXpArHwTB3Q/Fu/HeOb4zcIBa/dUESXAom+m+r0=;
-        b=XR/R95kGIa5eEkN76ZwYFuGmF701nv7uoFFFHP2TDaZ1ZmYYGsHVPdtxhWMxyL/WIi
-         nCK6B5wZeapBAY98ZRSshrqH6a9cTH0OVkAfTMWjC1cvjhFcFP4YA0gCgsYYWTHaaWCN
-         e1LQ8yAUTs+wD/EXihacl/voB7iSFt12/H44M=
+        bh=ZgD6VkoidY1K6fgTV3eaPZ8+VeXqzeB8ij/KEzvrtPE=;
+        b=Zw+jdonF3srm2oOPHvE/wciZkC1yJTpG3TlH5S3YyHIINs0uHGKyoAYf5vGGcyPEjk
+         Yhw+0mU8iighIYZhu/NhquSMkNwGmNcRshoLuOHe0mxCTR+CYWlIgtW9rrBMmmmXlpk+
+         C8NLcj1NWzw+ZnaBV55BWXOspaUdrT2J2AQG8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TR4DpXpArHwTB3Q/Fu/HeOb4zcIBa/dUESXAom+m+r0=;
-        b=5ZMPmKZXpNxmHi4PvUkx5h2B9NHoXLkECuPCq54X/2nu32phEkMJfvuIiYACO3FGdI
-         aAbZHe1O1/t7Jojw6mp3Adc5wgqSNCtGDppwKg5vY44dOO3hUwd4hSJYEcoCIDVdhqGQ
-         E7fj0G6enRkLlJu216w26SPExaa3pxtwIC66ERX3jHTGwbqaROYgk/ylDYCoBzpWZl6L
-         5vgN62xk/nPQE5riItongHaoFgsCiy0ZefH+HczPH5b+iYfu2La4sEqgOLnNtCKmWJWV
-         qbn14lRQtorAojw0RYJAVOlRT2xUD23MTLfdx6tdePFayRmlbxOcPmhEQWJOS+Ja3/Yu
-         S/EA==
-X-Gm-Message-State: ACrzQf3u5TukIaFVYGA2POiqt5qsgZL5H0K3heCSvkqENceQQEJWjzin
-        9zyME1EhzVScj5X68KIXWkLmNg==
-X-Google-Smtp-Source: AMsMyM4g9RheqgMMXT+kdLVomwlfmHmSq5aYyTAxpX3GmEp3SjBAvxDOTWRc3EMBzPy3MDlV+aTaZw==
-X-Received: by 2002:a63:ed58:0:b0:439:b3a:4f01 with SMTP id m24-20020a63ed58000000b004390b3a4f01mr18942728pgk.327.1667342002870;
-        Tue, 01 Nov 2022 15:33:22 -0700 (PDT)
+        bh=ZgD6VkoidY1K6fgTV3eaPZ8+VeXqzeB8ij/KEzvrtPE=;
+        b=Xo/jBXqYWk83p0BGVKVp2MFY3YGFZNgePLKAOVznkUzfatgNYQXRpoYJhnFr1JW4QW
+         AiCCUNysXUVhbRDvtCjLLuctF+XJeQgizh0IanxikMELD1ImzXfB09pdcjWent5nScdj
+         hX6X3PFoFsVlVBSbEInDgpHaBuDZkPA9wjWuTbPVTivN5ZGHFqS5XXfisIl8PgrWkxpm
+         zW6A0K8c1Q9OQJmFST3nspcdRy/sxJ9AxgnJSzoYlpitoy1wLTBIGT2oIDSSp1tkyV2s
+         c6+y1/e9KIBugUaogCXUOOUM7l/3fqQ4bVFHiZ/cmDbR9/9BqakFPRFTe8kNa1Um3K2Q
+         HY9w==
+X-Gm-Message-State: ACrzQf22oAX3QCOOlnHcF2VzA7O5rkrekvWcCgr22FpgNe1zCuFi/zO8
+        zDk5of5OyiOHziWHpahdhaiakw==
+X-Google-Smtp-Source: AMsMyM7pxv2Lvo5vKR9F8rfeCTRMS0FxQ0HTHdi2PJZNgWTfKuMPs74vyBlEnyTTOhIdTXzsE6uwaA==
+X-Received: by 2002:a63:dc4a:0:b0:470:5e7:6bba with SMTP id f10-20020a63dc4a000000b0047005e76bbamr1285044pgj.143.1667342004961;
+        Tue, 01 Nov 2022 15:33:24 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x6-20020a626306000000b00565c8634e55sm7000554pfb.135.2022.11.01.15.33.22
+        by smtp.gmail.com with ESMTPSA id w22-20020a1709026f1600b001708c4ebbaesm6735258plk.309.2022.11.01.15.33.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Nov 2022 15:33:22 -0700 (PDT)
+        Tue, 01 Nov 2022 15:33:24 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Christoph Lameter <cl@linux.com>,
+Cc:     Kees Cook <keescook@chromium.org>, David Gow <davidgow@google.com>,
+        linux-hardening@vger.kernel.org, Christoph Lameter <cl@linux.com>,
         Pekka Enberg <penberg@kernel.org>,
         David Rientjes <rientjes@google.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
         Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
-        David Gow <davidgow@google.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
         Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
         Guenter Roeck <linux@roeck-us.net>,
         Andy Shevchenko <andriy.shevchenko@intel.com>,
@@ -67,82 +65,363 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: [PATCH 1/6] slab: Clean up SLOB vs kmalloc() definition
-Date:   Tue,  1 Nov 2022 15:33:09 -0700
-Message-Id: <20221101223321.1326815-1-keescook@chromium.org>
+        linux-mm@kvack.org, llvm@lists.linux.dev
+Subject: [PATCH 6/6] kunit/fortify: Validate __alloc_size attribute results
+Date:   Tue,  1 Nov 2022 15:33:14 -0700
+Message-Id: <20221101223321.1326815-6-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20221101222520.never.109-kees@kernel.org>
 References: <20221101222520.never.109-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2026; h=from:subject; bh=qLerDmEzne6lpaq4KVx5bE//rWAPpMJFdcLBFfnifO8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjYZ6pLIVN1gPOfxNyEH/PkysO24BYL1rHsOiqB1i7 kWFfzeSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY2GeqQAKCRCJcvTf3G3AJrdeD/ 4sAhVz4+NctD5DHBg37o6IgG9K0ySMSyZK6zpStQkAyDq2iJBxfDehPUeOvWXCzi0t1pj4FcJKPKEm rmF3jK6fNN9l/YgIcfA2vsfbpcNlIPSz76g4AsJbeDB2h2+i26p17KgcqvewxqWVF4Q02iW0A0De+I 4oYzPaQ0m9NF1qhJPzxZB9e1GE6j8cUvXDSA9yLbZj0PnLyrlvlul4Tpx/08wQPiAy2Q86mQId55ff /tq9+XQQ5mebvYuakkhQ8FRzgDZNrrHrCvKLbkH5zqkJ3MoF80v8rTPNBDSZW3gaE/GUQPW6TfUgaC mfU+pPrGsMSsz0a89B6UBppmirX9+bt1FanpHkvJtGGLFO2CtoLnQQJKHQXiejPbzpvRidg5bO6kZg HH3p7tMaxy7agCjUaLN9ztuvyRTKe2+kZKOKUteAq4qnEeDqxU3aRvK1APufm4pmniPE0Qn4aJOFxT 76rbAfdpsYv6dmYqpt4eBnuZExBOP6tUTbZIiONbnqnfttx/IAtoqJ4N9LP509HXUoW963HfvoAle+ +DdkpOwzNyjyT+eMv3R7i1ltBDcWj+sUV13ARcRXfpT3ib9UpkLn69A88U3E1PXmlAx6rsGsfIv/Gd OI5HWzey0ZmhYUdvHowXft3iJ8J2zccRoZT2HYEYNpBvBi4hP8I/X6mDxy4Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=13607; h=from:subject; bh=wSAVvLhC49WrEsey+rzI3Mf2kVppLeoS2Xvz7/CIGX8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjYZ6qOpdEK8ymLzEQRofKPXlon+ENY5S/tTJEZj6i spotAHaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY2GeqgAKCRCJcvTf3G3AJmAFD/ 90tYxqc7iT6OunNqTOrQkbn9mc7bapmfR+YkkyhSnAZKeDuHwRfN4p2kwOVaCGcHxgJwS9QQc9wsyJ MyEFyMTdlVu81h3ztDGPI/9oI7qLp0lVbh6hg573DsWPmYrVu0HvzMQA0mp3xtUtrWR5BdcCWkAgsr 8HhVuNTwFSTjLM8DGRnQtIq0FZ6EZ7/6gmcrfVAQ5HsSsYHxVZMp5t+6A5Op4Vf4EqOqSe0TGIAgSw s50gIlJL4hzs0PgV++sohnEJZuskR9o+Y7Rs7qjBsdY4l8BG2N4WB8CSwEtLSWSouiyXbt6aXW/49r 1gAVCV0/uf/LsQ3sMtXkYVEQb+zhut27bgLVDyppx/NJBPUBZLUMbi5vQFTedUG6cVAu/n5RIurbCz 9tVvHM1Q2SEqILXvxOTHjR4bjOIihBxNIV/hfitfkOn5+zMLAid9WcWqkZve2lxVeN+7zL5Wa5HICx J5U9cOj/rwWX1SabXm4vjCRGNjwL+qmd4TIDEDFunxhJU9lmqyA6eDMLFs7u+zz2Pw6T60dy9a3S90 7xUr0yQeXkNdEu2OKNWWbCK74B+jGqtFR9HIRbIFxPI4j8mFBiPUtM6hxahuJNWL/m4XOno+Y4/KKf +N4+iSiPB57uHYauGeWNsoToUSZlEtHpOVent5FYkbsQMY166Avk8ph3mWAA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-As already done for kmalloc_node(), clean up the #ifdef usage in the
-definition of kmalloc() so that the SLOB-only version is an entirely
-separate and much more readable function.
+Validate the effect of the __alloc_size attribute on allocators. If the
+compiler doesn't support __builtin_dynamic_object_size(), skip the
+associated tests.
 
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc: linux-mm@kvack.org
+(For GCC, just remove the "--make_options" line below...)
+
+$ ./tools/testing/kunit/kunit.py run --arch x86_64 \
+        --kconfig_add CONFIG_FORTIFY_SOURCE=y \
+	--make_options LLVM=1
+        fortify
+...
+[15:16:30] ================== fortify (10 subtests) ===================
+[15:16:30] [PASSED] known_sizes_test
+[15:16:30] [PASSED] control_flow_split_test
+[15:16:30] [PASSED] alloc_size_kmalloc_const_test
+[15:16:30] [PASSED] alloc_size_kmalloc_dynamic_test
+[15:16:30] [PASSED] alloc_size_vmalloc_const_test
+[15:16:30] [PASSED] alloc_size_vmalloc_dynamic_test
+[15:16:30] [PASSED] alloc_size_kvmalloc_const_test
+[15:16:30] [PASSED] alloc_size_kvmalloc_dynamic_test
+[15:16:30] [PASSED] alloc_size_devm_kmalloc_const_test
+[15:16:30] [PASSED] alloc_size_devm_kmalloc_dynamic_test
+[15:16:30] ===================== [PASSED] fortify =====================
+[15:16:30] ============================================================
+[15:16:30] Testing complete. Ran 10 tests: passed: 10
+[15:16:31] Elapsed time: 8.348s total, 0.002s configuring, 6.923s building, 1.075s running
+
+For earlier GCC prior to version 12, the dynamic tests will be skipped:
+
+[15:18:59] ================== fortify (10 subtests) ===================
+[15:18:59] [PASSED] known_sizes_test
+[15:18:59] [PASSED] control_flow_split_test
+[15:18:59] [PASSED] alloc_size_kmalloc_const_test
+[15:18:59] [SKIPPED] alloc_size_kmalloc_dynamic_test
+[15:18:59] [PASSED] alloc_size_vmalloc_const_test
+[15:18:59] [SKIPPED] alloc_size_vmalloc_dynamic_test
+[15:18:59] [PASSED] alloc_size_kvmalloc_const_test
+[15:18:59] [SKIPPED] alloc_size_kvmalloc_dynamic_test
+[15:18:59] [PASSED] alloc_size_devm_kmalloc_const_test
+[15:18:59] [SKIPPED] alloc_size_devm_kmalloc_dynamic_test
+[15:18:59] ===================== [PASSED] fortify =====================
+[15:18:59] ============================================================
+[15:18:59] Testing complete. Ran 10 tests: passed: 6, skipped: 4
+[15:18:59] Elapsed time: 11.965s total, 0.002s configuring, 10.540s building, 1.068s running
+
+Cc: David Gow <davidgow@google.com>
+Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/slab.h | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ lib/Makefile        |   1 +
+ lib/fortify_kunit.c | 255 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 256 insertions(+)
 
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index 90877fcde70b..e08fe7978b5c 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -559,15 +559,15 @@ void *kmalloc_large_node(size_t size, gfp_t flags, int node) __assume_page_align
-  *	Try really hard to succeed the allocation but fail
-  *	eventually.
-  */
-+#ifndef CONFIG_SLOB
- static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
- {
- 	if (__builtin_constant_p(size)) {
--#ifndef CONFIG_SLOB
- 		unsigned int index;
--#endif
-+
- 		if (size > KMALLOC_MAX_CACHE_SIZE)
- 			return kmalloc_large(size, flags);
--#ifndef CONFIG_SLOB
-+
- 		index = kmalloc_index(size);
+diff --git a/lib/Makefile b/lib/Makefile
+index 77c7951c8cf0..d197079ef22a 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -377,6 +377,7 @@ obj-$(CONFIG_IS_SIGNED_TYPE_KUNIT_TEST) += is_signed_type_kunit.o
+ obj-$(CONFIG_OVERFLOW_KUNIT_TEST) += overflow_kunit.o
+ CFLAGS_stackinit_kunit.o += $(call cc-disable-warning, switch-unreachable)
+ obj-$(CONFIG_STACKINIT_KUNIT_TEST) += stackinit_kunit.o
++CFLAGS_fortify_kunit.o += $(call cc-disable-warning, unsequenced)
+ obj-$(CONFIG_FORTIFY_KUNIT_TEST) += fortify_kunit.o
+ obj-$(CONFIG_STRSCPY_KUNIT_TEST) += strscpy_kunit.o
+ obj-$(CONFIG_SIPHASH_KUNIT_TEST) += siphash_kunit.o
+diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
+index 409af07f340a..78acfdbda835 100644
+--- a/lib/fortify_kunit.c
++++ b/lib/fortify_kunit.c
+@@ -16,7 +16,10 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
- 		if (!index)
-@@ -576,10 +576,18 @@ static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
- 		return kmalloc_trace(
- 				kmalloc_caches[kmalloc_type(flags)][index],
- 				flags, size);
--#endif
- 	}
- 	return __kmalloc(size, flags);
+ #include <kunit/test.h>
++#include <linux/device.h>
++#include <linux/slab.h>
+ #include <linux/string.h>
++#include <linux/vmalloc.h>
+ 
+ static const char array_of_10[] = "this is 10";
+ static const char *ptr_of_11 = "this is 11!";
+@@ -60,9 +63,261 @@ static void control_flow_split_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, want_minus_one(pick), SIZE_MAX);
  }
-+#else
-+static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
-+{
-+	if (__builtin_constant_p(size) && size > KMALLOC_MAX_CACHE_SIZE)
-+		return kmalloc_large(size, flags);
-+
-+	return __kmalloc(size, flags);
-+}
-+#endif
  
- #ifndef CONFIG_SLOB
- static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t flags, int node)
++#define KUNIT_EXPECT_BOS(test, p, expected, name)			\
++	KUNIT_EXPECT_EQ_MSG(test, __builtin_object_size(p, 1),		\
++		expected,						\
++		"__alloc_size() not working with __bos on " name "\n")
++
++#if !__has_builtin(__builtin_dynamic_object_size)
++#define KUNIT_EXPECT_BDOS(test, p, expected, name)			\
++	/* Silence "unused variable 'expected'" warning. */		\
++	KUNIT_EXPECT_EQ(test, expected, expected)
++#else
++#define KUNIT_EXPECT_BDOS(test, p, expected, name)			\
++	KUNIT_EXPECT_EQ_MSG(test, __builtin_dynamic_object_size(p, 1),	\
++		expected,						\
++		"__alloc_size() not working with __bdos on " name "\n")
++#endif
++
++/* If the execpted size is a constant value, __bos can see it. */
++#define check_const(_expected, alloc, free)		do {		\
++	size_t expected = (_expected);					\
++	void *p = alloc;						\
++	KUNIT_EXPECT_TRUE_MSG(test, p != NULL, #alloc " failed?!\n");	\
++	KUNIT_EXPECT_BOS(test, p, expected, #alloc);			\
++	KUNIT_EXPECT_BDOS(test, p, expected, #alloc);			\
++	free;								\
++} while (0)
++
++/* If the execpted size is NOT a constant value, __bos CANNOT see it. */
++#define check_dynamic(_expected, alloc, free)		do {		\
++	size_t expected = (_expected);					\
++	void *p = alloc;						\
++	KUNIT_EXPECT_TRUE_MSG(test, p != NULL, #alloc " failed?!\n");	\
++	KUNIT_EXPECT_BOS(test, p, SIZE_MAX, #alloc);			\
++	KUNIT_EXPECT_BDOS(test, p, expected, #alloc);			\
++	free;								\
++} while (0)
++
++/* Assortment of constant-value kinda-edge cases. */
++#define CONST_TEST_BODY(TEST_alloc)	do {				\
++	/* Special-case vmalloc()-family to skip 0-sized allocs. */	\
++	if (strcmp(#TEST_alloc, "TEST_vmalloc") != 0)			\
++		TEST_alloc(check_const, 0, 0);				\
++	TEST_alloc(check_const, 1, 1);					\
++	TEST_alloc(check_const, 128, 128);				\
++	TEST_alloc(check_const, 1023, 1023);				\
++	TEST_alloc(check_const, 1025, 1025);				\
++	TEST_alloc(check_const, 4096, 4096);				\
++	TEST_alloc(check_const, 4097, 4097);				\
++} while (0)
++
++static volatile size_t zero_size;
++static volatile size_t unknown_size = 50;
++
++#if !__has_builtin(__builtin_dynamic_object_size)
++#define DYNAMIC_TEST_BODY(TEST_alloc)					\
++	kunit_skip(test, "Compiler is missing __builtin_dynamic_object_size() support\n")
++#else
++#define DYNAMIC_TEST_BODY(TEST_alloc)	do {				\
++	size_t size = unknown_size;					\
++									\
++	/*								\
++	 * Expected size is "size" in each test, before it is then	\
++	 * internally incremented in each test.	Requires we disable	\
++	 * -Wunsequenced.						\
++	 */								\
++	TEST_alloc(check_dynamic, size, size++);			\
++	/* Make sure incrementing actually happened. */			\
++	KUNIT_EXPECT_NE(test, size, unknown_size);			\
++} while (0)
++#endif
++
++#define DEFINE_ALLOC_SIZE_TEST_PAIR(allocator)				\
++static void alloc_size_##allocator##_const_test(struct kunit *test)	\
++{									\
++	CONST_TEST_BODY(TEST_##allocator);				\
++}									\
++static void alloc_size_##allocator##_dynamic_test(struct kunit *test)	\
++{									\
++	DYNAMIC_TEST_BODY(TEST_##allocator);				\
++}
++
++#define TEST_kmalloc(checker, expected_size, alloc_size)	do {	\
++	gfp_t gfp = GFP_KERNEL | __GFP_NOWARN;				\
++	void *orig;							\
++	size_t len;							\
++									\
++	checker(expected_size, kmalloc(alloc_size, gfp),		\
++		kfree(p));						\
++	checker(expected_size,						\
++		kmalloc_node(alloc_size, gfp, NUMA_NO_NODE),		\
++		kfree(p));						\
++	checker(expected_size, kzalloc(alloc_size, gfp),		\
++		kfree(p));						\
++	checker(expected_size,						\
++		kzalloc_node(alloc_size, gfp, NUMA_NO_NODE),		\
++		kfree(p));						\
++	checker(expected_size, kcalloc(1, alloc_size, gfp),		\
++		kfree(p));						\
++	checker(expected_size, kcalloc(alloc_size, 1, gfp),		\
++		kfree(p));						\
++	checker(expected_size,						\
++		kcalloc_node(1, alloc_size, gfp, NUMA_NO_NODE),		\
++		kfree(p));						\
++	checker(expected_size,						\
++		kcalloc_node(alloc_size, 1, gfp, NUMA_NO_NODE),		\
++		kfree(p));						\
++	checker(expected_size, kmalloc_array(1, alloc_size, gfp),	\
++		kfree(p));						\
++	checker(expected_size, kmalloc_array(alloc_size, 1, gfp),	\
++		kfree(p));						\
++	checker(expected_size,						\
++		kmalloc_array_node(1, alloc_size, gfp, NUMA_NO_NODE),	\
++		kfree(p));						\
++	checker(expected_size,						\
++		kmalloc_array_node(alloc_size, 1, gfp, NUMA_NO_NODE),	\
++		kfree(p));						\
++	checker(expected_size, __kmalloc(alloc_size, gfp),		\
++		kfree(p));						\
++	checker(expected_size,						\
++		__kmalloc_node(alloc_size, gfp, NUMA_NO_NODE),		\
++		kfree(p));						\
++									\
++	orig = kmalloc(alloc_size, gfp);				\
++	KUNIT_EXPECT_TRUE(test, orig != NULL);				\
++	checker((expected_size) * 2,					\
++		krealloc(orig, (alloc_size) * 2, gfp),			\
++		kfree(p));						\
++	orig = kmalloc(alloc_size, gfp);				\
++	KUNIT_EXPECT_TRUE(test, orig != NULL);				\
++	checker((expected_size) * 2,					\
++		krealloc_array(orig, 1, (alloc_size) * 2, gfp),		\
++		kfree(p));						\
++	orig = kmalloc(alloc_size, gfp);				\
++	KUNIT_EXPECT_TRUE(test, orig != NULL);				\
++	checker((expected_size) * 2,					\
++		krealloc_array(orig, (alloc_size) * 2, 1, gfp),		\
++		kfree(p));						\
++									\
++	len = 11;							\
++	/* Using memdup() with fixed size, so force unknown length. */	\
++	if (!__builtin_constant_p(expected_size))			\
++		len += zero_size;					\
++	checker(len, kmemdup("hello there", len, gfp), kfree(p));	\
++} while (0)
++DEFINE_ALLOC_SIZE_TEST_PAIR(kmalloc)
++
++/* Sizes are in pages, not bytes. */
++#define TEST_vmalloc(checker, expected_pages, alloc_pages)	do {	\
++	gfp_t gfp = GFP_KERNEL | __GFP_NOWARN;				\
++	checker((expected_pages) * PAGE_SIZE,				\
++		vmalloc((alloc_pages) * PAGE_SIZE),	   vfree(p));	\
++	checker((expected_pages) * PAGE_SIZE,				\
++		vzalloc((alloc_pages) * PAGE_SIZE),	   vfree(p));	\
++	checker((expected_pages) * PAGE_SIZE,				\
++		__vmalloc((alloc_pages) * PAGE_SIZE, gfp), vfree(p));	\
++} while (0)
++DEFINE_ALLOC_SIZE_TEST_PAIR(vmalloc)
++
++/* Sizes are in pages (and open-coded for side-effects), not bytes. */
++#define TEST_kvmalloc(checker, expected_pages, alloc_pages)	do {	\
++	gfp_t gfp = GFP_KERNEL | __GFP_NOWARN;				\
++	size_t prev_size;						\
++	void *orig;							\
++									\
++	checker((expected_pages) * PAGE_SIZE,				\
++		kvmalloc((alloc_pages) * PAGE_SIZE, gfp),		\
++		vfree(p));						\
++	checker((expected_pages) * PAGE_SIZE,				\
++		kvmalloc_node((alloc_pages) * PAGE_SIZE, gfp, NUMA_NO_NODE), \
++		vfree(p));						\
++	checker((expected_pages) * PAGE_SIZE,				\
++		kvzalloc((alloc_pages) * PAGE_SIZE, gfp),		\
++		vfree(p));						\
++	checker((expected_pages) * PAGE_SIZE,				\
++		kvzalloc_node((alloc_pages) * PAGE_SIZE, gfp, NUMA_NO_NODE), \
++		vfree(p));						\
++	checker((expected_pages) * PAGE_SIZE,				\
++		kvcalloc(1, (alloc_pages) * PAGE_SIZE, gfp),		\
++		vfree(p));						\
++	checker((expected_pages) * PAGE_SIZE,				\
++		kvcalloc((alloc_pages) * PAGE_SIZE, 1, gfp),		\
++		vfree(p));						\
++	checker((expected_pages) * PAGE_SIZE,				\
++		kvmalloc_array(1, (alloc_pages) * PAGE_SIZE, gfp),	\
++		vfree(p));						\
++	checker((expected_pages) * PAGE_SIZE,				\
++		kvmalloc_array((alloc_pages) * PAGE_SIZE, 1, gfp),	\
++		vfree(p));						\
++									\
++	prev_size = (expected_pages) * PAGE_SIZE;			\
++	orig = kvmalloc(prev_size, gfp);				\
++	KUNIT_EXPECT_TRUE(test, orig != NULL);				\
++	checker(((expected_pages) * PAGE_SIZE) * 2,			\
++		kvrealloc(orig, prev_size,				\
++			  ((alloc_pages) * PAGE_SIZE) * 2, gfp),	\
++		kvfree(p));						\
++} while (0)
++DEFINE_ALLOC_SIZE_TEST_PAIR(kvmalloc)
++
++#define TEST_devm_kmalloc(checker, expected_size, alloc_size)	do {	\
++	gfp_t gfp = GFP_KERNEL | __GFP_NOWARN;				\
++	const char const dev_name[] = "fortify-test";			\
++	struct device *dev;						\
++	void *orig;							\
++	size_t len;							\
++									\
++	/* Create dummy device for devm_kmalloc()-family tests. */	\
++	dev = root_device_register(dev_name);				\
++	KUNIT_ASSERT_FALSE_MSG(test, IS_ERR(dev),			\
++			       "Cannot register test device\n");	\
++									\
++	checker(expected_size, devm_kmalloc(dev, alloc_size, gfp),	\
++		devm_kfree(dev, p));					\
++	checker(expected_size, devm_kzalloc(dev, alloc_size, gfp),	\
++		devm_kfree(dev, p));					\
++	checker(expected_size,						\
++		devm_kmalloc_array(dev, 1, alloc_size, gfp),		\
++		devm_kfree(dev, p));					\
++	checker(expected_size,						\
++		devm_kmalloc_array(dev, alloc_size, 1, gfp),		\
++		devm_kfree(dev, p));					\
++	checker(expected_size,						\
++		devm_kcalloc(dev, 1, alloc_size, gfp),			\
++		devm_kfree(dev, p));					\
++	checker(expected_size,						\
++		devm_kcalloc(dev, alloc_size, 1, gfp),			\
++		devm_kfree(dev, p));					\
++									\
++	orig = devm_kmalloc(dev, alloc_size, gfp);			\
++	KUNIT_EXPECT_TRUE(test, orig != NULL);				\
++	checker((expected_size) * 2,					\
++		devm_krealloc(dev, orig, (alloc_size) * 2, gfp),	\
++		devm_kfree(dev, p));					\
++									\
++	len = 4;							\
++	/* Using memdup() with fixed size, so force unknown length. */	\
++	if (!__builtin_constant_p(expected_size))			\
++		len += zero_size;					\
++	checker(len, devm_kmemdup(dev, "Ohai", len, gfp),		\
++		devm_kfree(dev, p));					\
++									\
++	device_unregister(dev);						\
++} while (0)
++DEFINE_ALLOC_SIZE_TEST_PAIR(devm_kmalloc)
++
+ static struct kunit_case fortify_test_cases[] = {
+ 	KUNIT_CASE(known_sizes_test),
+ 	KUNIT_CASE(control_flow_split_test),
++	KUNIT_CASE(alloc_size_kmalloc_const_test),
++	KUNIT_CASE(alloc_size_kmalloc_dynamic_test),
++	KUNIT_CASE(alloc_size_vmalloc_const_test),
++	KUNIT_CASE(alloc_size_vmalloc_dynamic_test),
++	KUNIT_CASE(alloc_size_kvmalloc_const_test),
++	KUNIT_CASE(alloc_size_kvmalloc_dynamic_test),
++	KUNIT_CASE(alloc_size_devm_kmalloc_const_test),
++	KUNIT_CASE(alloc_size_devm_kmalloc_dynamic_test),
+ 	{}
+ };
+ 
 -- 
 2.34.1
 
