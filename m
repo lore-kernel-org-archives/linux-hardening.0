@@ -2,132 +2,86 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEB0FA373D
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 11:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24044ECAAA1
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 13:40:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229882AbiKALFv (ORCPT
+        id S229845AbiKANkY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Nov 2022 07:05:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44946 "EHLO
+        Tue, 1 Nov 2022 09:40:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229628AbiKALFu (ORCPT
+        with ESMTP id S229949AbiKANkU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Nov 2022 07:05:50 -0400
-Received: from omta035.useast.a.cloudfilter.net (omta035.useast.a.cloudfilter.net [44.202.169.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0E732ADF
-        for <linux-hardening@vger.kernel.org>; Tue,  1 Nov 2022 04:05:49 -0700 (PDT)
-Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
-        by cmsmtp with ESMTP
-        id pjNdosOypVgqJpp5Yo73To; Tue, 01 Nov 2022 11:05:48 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTP
-        id pp5Xo5zfyrWIfpp5XoOgAE; Tue, 01 Nov 2022 11:05:48 +0000
-X-Authority-Analysis: v=2.4 cv=WcYf1mtX c=1 sm=1 tr=0 ts=6360fd8c
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=wTog8WU66it3cfrESHnF4A==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=Qawa6l4ZSaYA:10
- a=wYkD_t78qR0A:10 a=XPDCPBHLajm3aRFYHAUA:9 a=QEXdDO2ut3YA:10
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=4M+EkqO2JIQhdRROs6iO5knFvCzc2rYBZdIfB6LFo1M=; b=eYQmoSDCBMmgeFFVkQtGqxSpu6
-        VbhdOaE5Q6z1ta4Y4WbtONilXDaXlCi7bvqUp8/lBqNx3816DhW7waQaBPrFYo8iL6kIxedBrjOH/
-        jy9CgKAef2zrh7WR3I/lKcQ53sXf5Of1HnTWJZFr4xfyO9CbMtYVD4yD5xvLMRjZ5J2DEq5BgDRjc
-        Nn/C6ck/0lGwUdTO81d7vAqLMQZUfRuqN6ooq3H9vgDYkCjV30tD7evQn4amKnGbjPgzJM1dmNs3G
-        AwaJd2eIAZIIcJ2KrPdjC3v1jf9dcM/cj1vdI3Sgnd8kpkl9vxnClkoDV2kPABGgGES8vtrNo24uB
-        wi3lTTag==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:60834 helo=[192.168.15.7])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.95)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1opZ6x-002ncA-Um;
-        Mon, 31 Oct 2022 13:02:12 -0500
-Message-ID: <fb504b1e-e558-c3ed-61ed-220a24299599@embeddedor.com>
-Date:   Mon, 31 Oct 2022 12:01:51 -0500
+        Tue, 1 Nov 2022 09:40:20 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FA9410579;
+        Tue,  1 Nov 2022 06:40:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E0ACCB81D8F;
+        Tue,  1 Nov 2022 13:40:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 80098C433D7;
+        Tue,  1 Nov 2022 13:40:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667310015;
+        bh=W7bLHmXjYrutSxRh3BKcNfArwB+U8z8j/jgA2RkevIo=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=RX67JP+VqncVqi+PKtU03Whkkt0NeSfVNWl2UusezFb8FlALzGOZJFuWd1VOb4ZYf
+         ZqUVr68FuyM2XO9jUGrhj66xl6Kkg3LkZlj4Ii4narrelLUDpDN+uZ6Vexm0UYfdB6
+         Y+AKHZdMq2L6jnLvKjPyAFL06FFPC4ZdEgbpcdoLoXsdeXSK0jYiOjEOBSsB0jbgoc
+         cNTpbwjPYoosnojrtrqsz28KymQonvuiKzPaJz5A/LpNygSZuEQ2aU2XpI7eZcJ2fM
+         pkM6lmkH+1cGXMHy5kQ9EnTagoEo2JYTaP/kHZBq+HhFP+G3YBOwiSwlpa2/FblVat
+         ysIG1tS5tA3nw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 62A57E270F9;
+        Tue,  1 Nov 2022 13:40:15 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH v2 1/6] cfg80211: Avoid clashing function prototypes
-Content-Language: en-US
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org
-References: <cover.1666894751.git.gustavoars@kernel.org>
- <c8239f5813dec6e5cfb554ca92b1783a18ac5537.1666894751.git.gustavoars@kernel.org>
- <a92ffa8db8228b5cb41939dc37d6ee677aef0619.camel@sipsolutions.net>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <a92ffa8db8228b5cb41939dc37d6ee677aef0619.camel@sipsolutions.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1opZ6x-002ncA-Um
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:60834
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfLxK7Cpfbhdi3G9NBNIVu84RAU4Ii3cK30IBQVBNfx5yEsNQrWzoh4OcteMJDAwznkyIoXQxobMnmtp12BKTUVHioHNB6+HpO+RPI7ItjSP0112Fgcbf
- X2qs7ilvBHK0kZZl1BLJDFMQOgt+j438tLGhoJ304FesA95iRaqCVZDRHChZkmeltG5sec15O6bQBP8/om5tVjIW3DBp5Nx2UCjbZQWkVyzaoJJQkY8H0HaA
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v2 0/3] bpf/verifier: Use kmalloc_size_roundup() to
+ match ksize() usage
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <166731001539.11065.9599565244134793508.git-patchwork-notify@kernel.org>
+Date:   Tue, 01 Nov 2022 13:40:15 +0000
+References: <20221029024444.gonna.633-kees@kernel.org>
+In-Reply-To: <20221029024444.gonna.633-kees@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Hello:
 
+This series was applied to bpf/bpf.git (master)
+by Daniel Borkmann <daniel@iogearbox.net>:
 
-On 10/28/22 03:22, Johannes Berg wrote:
-> Hm.
+On Fri, 28 Oct 2022 19:54:29 -0700 you wrote:
+> v2:
+> - split up patch into logical changes
+> - simplify copy_array, which can use ksize() directly
+> v1: https://lore.kernel.org/all/20221018090550.never.834-kees@kernel.org/
 > 
-> If you're splitting out per driver,
+> Hi,
 > 
->> +++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
->> @@ -9870,7 +9870,7 @@ static int ipw_wx_sw_reset(struct net_device *dev,
->>   
->>   /* Rebase the WE IOCTLs to zero for the handler array */
->>   static iw_handler ipw_wx_handlers[] = {
->> -	IW_HANDLER(SIOCGIWNAME, (iw_handler)cfg80211_wext_giwname),
->> +	IW_HANDLER(SIOCGIWNAME, cfg80211_wext_giwname),
-> 
-> I can see how this (and similar) still belongs into this patch since
-> it's related to the cfg80211 change, but
-> 
->> +++ b/drivers/net/wireless/intersil/orinoco/wext.c
->> @@ -154,9 +154,10 @@ static struct iw_statistics *orinoco_get_wireless_stats(struct net_device *dev)
->>   
->>   static int orinoco_ioctl_setwap(struct net_device *dev,
->>   				struct iw_request_info *info,
->> -				struct sockaddr *ap_addr,
->> +				union iwreq_data *wrqu,
->>   				char *extra)
->>   {
->> +	struct sockaddr *ap_addr = &wrqu->ap_addr;
-> 
-> why this (and similar) too?
+> [...]
 
-mmh... yeah; orinoco should be a separate patch. :)
+Here is the summary with links:
+  - [bpf-next,v2,1/3] bpf/verifier: Fix potential memory leak in array reallocation
+    https://git.kernel.org/bpf/bpf/c/42378a9ca553
+  - [bpf-next,v2,2/3] bpf/verifier: Use kmalloc_size_roundup() to match ksize() usage
+    (no matching commit)
+  - [bpf-next,v2,3/3] bpf/verifier: Take advantage of full allocation sizes
+    (no matching commit)
 
-Thanks
---
-Gustavo
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
