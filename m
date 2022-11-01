@@ -2,105 +2,199 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48A3C4332F
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 23:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5DDC4332F
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 23:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231165AbiKAXIv (ORCPT
+        id S230388AbiKAXPL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Nov 2022 19:08:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37228 "EHLO
+        Tue, 1 Nov 2022 19:15:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231523AbiKAXIC (ORCPT
+        with ESMTP id S231388AbiKAXO5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Nov 2022 19:08:02 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B959220F79
-        for <linux-hardening@vger.kernel.org>; Tue,  1 Nov 2022 16:06:14 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id b5so14731736pgb.6
-        for <linux-hardening@vger.kernel.org>; Tue, 01 Nov 2022 16:06:14 -0700 (PDT)
+        Tue, 1 Nov 2022 19:14:57 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D86A6543
+        for <linux-hardening@vger.kernel.org>; Tue,  1 Nov 2022 16:14:52 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id g7so25579045lfv.5
+        for <linux-hardening@vger.kernel.org>; Tue, 01 Nov 2022 16:14:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XPbyEQQBk73Ni0h1h30fs6y6Ff39h2pLPwf6IGZm/XU=;
-        b=eUptdhlUsvV6f6+h66eOG5r0izRulrLvkJ5ys7OCQD/MHQs5xN6d6LVLU3v2yxx4CR
-         raSVpGmGBR51oXmx9pkSq8GN45s+bvJYMB8GYdxFRTlJL1yujWq5juUIeiJcJUWwkSQz
-         2/xal7WVL9cZlY4jIns8zQ4LgzzbZdBp7YoPA=
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8yiTQsX1YddIHupT9Jn8m/7K2SjlfUqQTaa+OxHAwfA=;
+        b=D7txH0CL0E3ZJdaEoJ9ZXSBklXaCASoY33ql0hzqTNyBOE99q8QLzgnmY1DVnp20+e
+         cn9VXIMwJG9XQt+EbAQGf+zog8jiEDMKvNZns8ImNcN3HsRbQ05pR3IkfjOWCyskv4+/
+         whSgLG8fvhjiMLJ0FuBmbe8zl7sLg1hq1lGSA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XPbyEQQBk73Ni0h1h30fs6y6Ff39h2pLPwf6IGZm/XU=;
-        b=JwC+qSeNAGqBNxU1jEzOGUS3VBCuI1l6ttgA60algC7swjXYt/3HReEGaUZG9OU9Zg
-         1cLME1+s80ZSUXZj/u9AS1RaS9sADsOgYMxlKSoziaVoK8Nh9azj47hCmKAjyZdC9mBe
-         Ofw1AFzlmDK6GVthhq/E6e3MZNddWDDKdRPr4vlrMxht2oWIGBe3c/v2xuyGz13x8FPt
-         XfxGkBPhFMP14bK39iiCPU5lwmKx395xz/zjS9dkbQnTcuZobkVAwTkufdkwl2DutwKx
-         s2Zd8HnFQwd6LkpVefJQV+LxbnSouQOaRQMW2+/6vJJDkv1cULSNF2GnYHbWdzlCXppC
-         nyFw==
-X-Gm-Message-State: ACrzQf3hhzzQvVWSS71nWvn8vztLnEy1mkqL/rRyxRAPrAr/YWbb3dFy
-        HrtahmvmIpvYhIkJfoAVb0UfLw==
-X-Google-Smtp-Source: AMsMyM7KcPBNktfAVOVyJfxO7PvzhGbnCFsHqvVrZlIhrLio7l35KizVH52ERAEGwnHFBBN97GItsQ==
-X-Received: by 2002:a63:ec51:0:b0:46f:ed8d:7089 with SMTP id r17-20020a63ec51000000b0046fed8d7089mr4658386pgj.469.1667343973773;
-        Tue, 01 Nov 2022 16:06:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h29-20020a63121d000000b004388ba7e5a9sm6344238pgl.49.2022.11.01.16.06.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Nov 2022 16:06:13 -0700 (PDT)
-Date:   Tue, 1 Nov 2022 16:06:12 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>
-Cc:     arnd@kernel.org, mauro.chehab@linux.intel.com,
-        tvrtko.ursulin@linux.intel.com, airlied@linux.ie, trix@redhat.com,
-        dlatypov@google.com, llvm@lists.linux.dev, ndesaulniers@google.com,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        gustavoars@kernel.org, nathan@kernel.org,
-        linux-sparse@vger.kernel.org, linux-hardening@vger.kernel.org,
-        rodrigo.vivi@intel.com, mchehab@kernel.org,
-        intel-gfx@lists.freedesktop.org, luc.vanoostenryck@gmail.com,
-        vitor@massaru.org
-Subject: Re: [PATCH v5] overflow: Introduce overflows_type() and
- castable_to_type()
-Message-ID: <202211011605.2D8C927C2@keescook>
-References: <20220926191109.1803094-1-keescook@chromium.org>
- <20221024201125.1416422-1-gwan-gyeong.mun@intel.com>
- <ffcfb7ce-7646-c827-8d29-7c41e4b121d6@intel.com>
- <202210290029.3CD089A86C@keescook>
- <850085e1-e420-b6eb-104d-15694a400bb7@intel.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8yiTQsX1YddIHupT9Jn8m/7K2SjlfUqQTaa+OxHAwfA=;
+        b=jFU9eP6eiEf2QSWxg1koUFDnRtJ+CqZ8lmK9ABdXs5ZlPU9GS5slVwdahdpil62eW0
+         dAArtOKZabslaYfUy7dNJockKV9YL9DokKnLQRQ5+jPGjwWt82RhSjdj4yKMlH0eFOGI
+         2AbdSPnAY2xSZS95oiWgQr2s8NkQTtUBwsYfahFPZ8brx1a9pTZHP+6XAoSJuo2fZe+P
+         xVvL3XCU5AD96qQUxMZF61FTY6wMxroXFSbVcpjbqykUMH4s2FUyKIaWQimNKNHWwrSw
+         MGOTwqlubMZXL9/olz+s6lhRlEYLccm5tnF6HQMJ3GkjbUTISh+Su86ZmgSqKKmOVB5L
+         KaiQ==
+X-Gm-Message-State: ACrzQf2FMXhBzdMGNQwFpFa9S3fhq7PMBJYQJ4e9pKnxff0hrmWJbu0k
+        BWbYqwEvrYoqNS+JM+RmSxaSKgfYwagtwx0szE8X9Q==
+X-Google-Smtp-Source: AMsMyM6yfVH5g/8K53w1J5qprFRCuXJ+DD6q91X7fVV4O1Nu9EC7J0q+sXRzpoJ2QZB26O4NzdElDUKnyHddCyFEc4g=
+X-Received: by 2002:ac2:5088:0:b0:4a2:2e18:c4c9 with SMTP id
+ f8-20020ac25088000000b004a22e18c4c9mr7814819lfm.5.1667344490528; Tue, 01 Nov
+ 2022 16:14:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <850085e1-e420-b6eb-104d-15694a400bb7@intel.com>
+References: <20220805222126.142525-1-jeffxu@google.com> <202208081018.9C782F184C@keescook>
+In-Reply-To: <202208081018.9C782F184C@keescook>
+From:   Jeff Xu <jeffxu@chromium.org>
+Date:   Tue, 1 Nov 2022 16:14:39 -0700
+Message-ID: <CABi2SkVXMUVhSTJezfHt_BKxyKP+x++9oveuB3qJZL7N672UKw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] mm/memfd: MFD_NOEXEC for memfd_create
+To:     Kees Cook <keescook@chromium.org>
+Cc:     jeffxu@google.com, skhan@linuxfoundation.org,
+        akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
+        dverkamp@chromium.org, hughd@google.com, jorgelo@chromium.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, mnissler@chromium.org, jannh@google.com,
+        linux-hardening@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        dev@opencontainers.org, Christian Brauner <brauner@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Oct 29, 2022 at 11:01:38AM +0300, Gwan-gyeong Mun wrote:
-> 
-> 
-> On 10/29/22 10:32 AM, Kees Cook wrote:
-> > On Sat, Oct 29, 2022 at 08:55:43AM +0300, Gwan-gyeong Mun wrote:
-> > > Hi Kees,
-> > 
-> > Hi! :)
-> > 
-> > > I've updated to v5 with the last comment of Nathan.
-> > > Could you please kindly review what more is needed as we move forward with
-> > > this patch?
-> > 
-> > It looks fine to me -- I assume it'll go via the drm tree? Would you
-> > rather I carry the non-drm changes in my tree instead?
-> > 
-> Hi!
-> Yes, I think it would be better to run this patch on your tree.
-> this patch moves the macro of i915 to overflows.h and modifies one part of
-> drm's driver code, but I think this part can be easily applied when merging
-> into the drm tree.
+Hi Kees
 
-I've rebased it to the hardening tree, and it should appear in -next
-shortly:
+Sorry for the long overdue reply.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=for-next/hardening&id=5904fcb776d0b518be96bca43f258db90f26ba9a
+Those questions are really helpful  to understand the usage of memfd_create,
+I will try to answer them, please see below inline.
 
--- 
-Kees Cook
+On Mon, Aug 8, 2022 at 10:46 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Fri, Aug 05, 2022 at 10:21:21PM +0000, jeffxu@google.com wrote:
+> > This v2 series MFD_NOEXEC, this series includes:
+> > 1> address comments in V1
+> > 2> add sysctl (vm.mfd_noexec) to change the default file permissions
+> >     of memfd_create to be non-executable.
+> >
+> > Below are cover-level for v1:
+> >
+> > The default file permissions on a memfd include execute bits, which
+> > means that such a memfd can be filled with a executable and passed to
+> > the exec() family of functions. This is undesirable on systems where all
+> > code is verified and all filesystems are intended to be mounted noexec,
+> > since an attacker may be able to use a memfd to load unverified code and
+> > execute it.
+>
+> I would absolutely like to see some kind of protection here. However,
+> I'd like a more specific threat model. What are the cases where the X
+> bit has been abused (e.g.[1])? What are the cases where the X bit is
+> needed (e.g.[2])? With those in mind, it should be possible to draw
+> a clear line between the two cases. (e.g. we need to avoid a confused
+> deputy attack where an "unprivileged" user can pass an executable memfd
+> to a "privileged" user. How those privileges are defined may matter a
+> lot based on how memfds are being used. For example, can runc's use of
+> executable memfds be distinguished from an attacker's?)
+>
+runc needs memfd to be executable, so the host with runc need to be able to
+create both non-executable memfd and executable memfd.
+memfd_create API itself can't enforce the security of how it is being used.
+
+> > Additionally, execution via memfd is a common way to avoid scrutiny for
+> > malicious code, since it allows execution of a program without a file
+> > ever appearing on disk. This attack vector is not totally mitigated with
+> > this new flag, since the default memfd file permissions must remain
+> > executable to avoid breaking existing legitimate uses, but it should be
+> > possible to use other security mechanisms to prevent memfd_create calls
+> > without MFD_NOEXEC on systems where it is known that executable memfds
+> > are not necessary.
+>
+> This reminds me of dealing with non-executable stacks. There ended up
+> being three states:
+>
+> - requested to be executable (PT_GNU_STACK X)
+> - requested to be non-executable (PT_GNU_STACK NX)
+> - undefined (no PT_GNU_STACK)
+>
+> The first two are clearly defined, but the third needed a lot of special
+> handling. For a "safe by default" world, the third should be "NX", but
+> old stuff depended on it being "X".
+>
+> Here, we have a bit being present or not, so we only have a binary
+> state. I'd much rather the default be NX (no bit set) instead of making
+> every future (safe) user of memfd have to specify MFD_NOEXEC.
+>
+> It's also easier on a filtering side to say "disallow memfd_create with
+> MFD_EXEC", but how do we deal with the older software?
+>
+> If the default perms of memfd_create()'s exec bit is controlled by a
+> sysctl and the sysctl is set to "leave it executable", how does a user
+> create an NX memfd? (i.e. setting MFD_EXEC means "exec" and not setting
+> it means "exec" also.) Are two bits needed? Seems wasteful.
+> MFD_I_KNOW_HOW_TO_SET_EXEC | MFD_EXEC, etc...
+>
+Great points,  with those questions and usages in mind, I m thinking below:
+
+1> memfd_create:
+Add two flags:
+#define MFD_EXEC                      0x0008
+#define MFD_NOEXEC _SEAL    0x0010
+This lets application to set executable bit explicitly.
+(If application set both, it will be rejected)
+
+2> For old application that doesn't set executable bit:
+Add a pid name-spaced sysctl.kernel.pid_mfd_noexec, with:
+value = 0: Default_EXEC
+     Honor MFD_EXEC and MFD_NOEXEC_SEAL
+     When none is set, will fall back to original behavior (EXEC)
+value = 1: Default_NOEXEC_SEAL
+      Honor MFD_EXEC and MFD_NOEXEC_SEAL
+      When none is set, will default to MFD_NOEXEC_SEAL
+
+3> Add a pid name-spaced sysctl kernel.pid_mfd_noexec_enforced: with:
+value = 0: default, not enforced.
+value = 1: enforce NOEXEC_SEAL (overwrite everything)
+
+Then we can use and secure memfd at host and container as below:
+At host level:
+Case A> In secure by default system where doesn't allow executable memfd:
+sysctl.kernel.pid_mfd_noexec_enforced = 1
+LSM to block creation of executable memfd  system wide.
+This requires a new hook: secure_memfd_create
+
+Case B> In system that need both (runc case),
+use sysctl kernel.pid_mfd_noexec = 0/1 during converting application to new API.
+SELINUX or landlock to sandbox the process.(requires work).
+
+At container level:
+It would be nice for container to control creation of executable memfd too.
+This is through  sysctl kernel.pid_mfd_noexec_enforced
+This lets runc to create two type of contains:
+one with ability to create executable memfd, one without.
+
+The sysctl.kernel.pid_mfd_noexec sets the default value, it is helpful
+during  applications are being migrated to set the executable bit.
+ Alternatively, we can have a new syscall: memfd_create2, where it is mandatary
+to set executable bit (or default to NOEXEC_SEAL),  then
+sysctl.kernel.pid_mfd_noexec
+is not needed.
+
+> For F_SEAL_EXEC, it seems this should imply F_SEAL_WRITE if forced
+> executable to avoid WX mappings (i.e. provide W^X from the start).
+>
+Yes. I agree.
+
+Thanks!
+Best regards,
+Jeff Xu
+
+
+> -Kees
+>
+> [1] https://bugs.chromium.org/p/chromium/issues/list?q=type%3Dbug-security%20memfd%20escalation&can=1
+> [2] https://lwn.net/Articles/781013/
+>
+> --
+> Kees Cook
