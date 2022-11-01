@@ -2,183 +2,105 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBF3C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 18:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85FBC433FE
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 19:36:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230302AbiKASsc (ORCPT
+        id S229517AbiKATgB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Nov 2022 14:48:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58436 "EHLO
+        Tue, 1 Nov 2022 15:36:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230136AbiKASsb (ORCPT
+        with ESMTP id S229601AbiKATgA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Nov 2022 14:48:31 -0400
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FD8517E23;
-        Tue,  1 Nov 2022 11:48:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:
-        Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=KiM8NF3I5HDTZGKG8OKbQBwCPXdwKmsbyN9xYuphi7Y=; b=N1pyzw2l7vEf5w1x4PLENi7pre
-        PsKQZp4roXBXYz4FPYwca1L4/BmSSk7IqfT/hs5lT5iPYtSwsUnxmviA4k0RjMD6BVtNelG+xO+Zv
-        S0hX4hs4+hS+QtuV/dJBi3is1rCy2lkvrdUOleWZOtDWly3t3IYyNlJ3ksmuck9SVMJH8IchEXhfQ
-        B4PXqzl30zZ26srn1JSjxrAJfWzukknBJPXEn0Oh19FKLDWeWlejxf4DDLg1s7pFdbAGUwvWOYLt1
-        JcVTak1XjXp4Z/PV9wlKhxfOOMCga0xHqKzyXFLZn8rtRTd6wFMKNxou579SA0TfaDgKwUd+OAmwH
-        bq+cDykg==;
-Received: from [177.102.148.33] (helo=localhost)
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-        id 1opwJE-00ASTb-ES; Tue, 01 Nov 2022 19:48:25 +0100
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-To:     linux-hardening@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-efi@vger.kernel.org, kernel-dev@igalia.com,
-        kernel@gpiccoli.net, keescook@chromium.org, anton@enomsg.org,
-        ccross@android.com, tony.luck@intel.com,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH V3] efi: pstore: Add module parameter for setting the record size
-Date:   Tue,  1 Nov 2022 15:48:07 -0300
-Message-Id: <20221101184808.80747-1-gpiccoli@igalia.com>
-X-Mailer: git-send-email 2.38.0
+        Tue, 1 Nov 2022 15:36:00 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F4A71DDFF;
+        Tue,  1 Nov 2022 12:35:58 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id ABF861F8BA;
+        Tue,  1 Nov 2022 19:35:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1667331356; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Jc3GZbUnGicye2/jncE2VAeBO5z9oAX6w1xDyj0hRaI=;
+        b=zxfEoNp7ByQJWbFfW/abgDH3V5Ms7cBMA7PHBEYuzp95JXxSnlsKV9HE48hNuYThLVm4d8
+        pDUT0NS97pS9sleJdlH4HYB4TuKVZ0sW0UcxJDs6rj6RjjnVG/OYrQhOYfWNtJolbMgKYn
+        42KRxuj4mYVHb7TJUD+FfYxMqVIuygI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1667331356;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Jc3GZbUnGicye2/jncE2VAeBO5z9oAX6w1xDyj0hRaI=;
+        b=R81kdDAat9+Gy9w72WUdJdEEDk1kFsDH5uguOsuZGDmslkZx4I/62V9xhPiUKDalyvl3JQ
+        ekfwdj+5mkwhYwAA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6A11613AAF;
+        Tue,  1 Nov 2022 19:35:56 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id g9MRGBx1YWOATwAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Tue, 01 Nov 2022 19:35:56 +0000
+Message-ID: <ab914e26-9b90-c878-dd47-f417b03212c5@suse.cz>
+Date:   Tue, 1 Nov 2022 20:35:53 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH v4] mempool: Do not use ksize() for poisoning
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        kernel test robot <oliver.sang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Marco Elver <elver@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-mm@kvack.org, Andrey Konovalov <andreyknvl@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20221028154823.you.615-kees@kernel.org>
+ <20221031105514.GB69385@mutt> <13c4bd6e-09d3-efce-43a5-5a99be8bc96b@suse.cz>
+ <202211011014.02F2559@keescook>
+Content-Language: en-US
+From:   Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <202211011014.02F2559@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-By default, the efi-pstore backend hardcode the UEFI variable size
-as 1024 bytes. The historical reasons for that were discussed by
-Ard in threads [0][1]:
+On 11/1/22 18:15, Kees Cook wrote:
+> On Mon, Oct 31, 2022 at 04:00:25PM +0100, Vlastimil Babka wrote:
+>>  From a4a5a40852723dfadb2429bee1d5e1f9d3b75f39 Mon Sep 17 00:00:00 2001
+>> From: Vlastimil Babka <vbabka@suse.cz>
+>> Date: Mon, 31 Oct 2022 15:55:47 +0100
+>> Subject: [PATCH] mempool: Do not use ksize() for poisoning-fix
+>>
+>> For slab mempools (not kmalloc), pool_data is not object size, but a
+>> kmem_cache pointer; we need to extract the size via kmem_cache_size().
+>>
+>> Reported-by: Anders Roxell <anders.roxell@linaro.org>
+>> Link: https://lore.kernel.org/all/20221031105514.GB69385@mutt/
+>> Reported-by: kernel test robot <oliver.sang@intel.com>
+>> Link: https://lore.kernel.org/oe-lkp/202210312110.1fe5d224-oliver.sang@intel.com
+>> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+> Thanks again for fixing this. I don't see it in -next yet? Should I
+> resend this directly, or how would be best to land it?
 
-"there is some cargo cult from prehistoric EFI times going
-on here, it seems. Or maybe just misinterpretation of the maximum
-size for the variable *name* vs the variable itself.".
+I think Andrew will add it from here, but maybe is waiting for Anders 
+acknowledging that it fixes the bug for him?
 
-"OVMF has
-OvmfPkg/OvmfPkgX64.dsc:
-gEfiMdeModulePkgTokenSpaceGuid.PcdMaxVariableSize|0x2000
-OvmfPkg/OvmfPkgX64.dsc:
-gEfiMdeModulePkgTokenSpaceGuid.PcdMaxVariableSize|0x8400
-
-where the first one is without secure boot and the second with secure
-boot. Interestingly, the default is
-
-gEfiMdeModulePkgTokenSpaceGuid.PcdMaxVariableSize|0x400
-
-so this is probably where this 1k number comes from."
-
-With that, and since there is not such a limit in the UEFI spec, we
-have the confidence to hereby add a module parameter to enable advanced
-users to change the UEFI record size for efi-pstore data collection,
-this way allowing a much easier reading of the collected log, which
-wouldn't be scattered anymore among many small files.
-
-Through empirical analysis we observed that extreme low values (like 8
-bytes) could eventually cause writing issues, so given that and the OVMF
-default discussed, we limited the minimum value to 1024 bytes, which also
-is still the default.
-
-[0] https://lore.kernel.org/lkml/CAMj1kXF4UyRMh2Y_KakeNBHvkHhTtavASTAxXinDO1rhPe_wYg@mail.gmail.com/
-[1] https://lore.kernel.org/lkml/CAMj1kXFy-2KddGu+dgebAdU9v2sindxVoiHLWuVhqYw+R=kqng@mail.gmail.com/
-
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
----
-
-V3:
-- Stick with 1024 to the varname size (thanks Ard!).
-- Rebased to v6.1-rc3.
-
-
-Hey folks, I've tested multiple record_size values, using lz4, zstd, deflate
-and no compression. For smaller ones ( up to 4k), all cases worked (for
-deflate, there was some failures even with 1024, and even with this patch
-reverted). For bigger sizes, no compression/deflate fails for 8k+, lz4 for
-values bigger than 16k and zstd only for values more then 20k.
-
-I've instrumented the function efivar_set_variable_locked() to get the return
-value during panic, and when it fails, usually it gives 0x8000000000000002
-(EFI_INVALID_PARAMETER it seems?). It's not related to this patch specifically,
-but worth mentioning in case you have ideas.
-
-Thanks,
-
-
-Guilherme
-
-
- drivers/firmware/efi/efi-pstore.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-pstore.c
-index 3bddc152fcd4..81ed4fc6d76d 100644
---- a/drivers/firmware/efi/efi-pstore.c
-+++ b/drivers/firmware/efi/efi-pstore.c
-@@ -10,7 +10,9 @@ MODULE_IMPORT_NS(EFIVAR);
- 
- #define DUMP_NAME_LEN 66
- 
--#define EFIVARS_DATA_SIZE_MAX 1024
-+static unsigned int record_size = 1024;
-+module_param(record_size, uint, 0444);
-+MODULE_PARM_DESC(record_size, "size of each pstore UEFI var (in bytes, min/default=1024)");
- 
- static bool efivars_pstore_disable =
- 	IS_ENABLED(CONFIG_EFI_VARS_PSTORE_DEFAULT_DISABLE);
-@@ -30,7 +32,7 @@ static int efi_pstore_open(struct pstore_info *psi)
- 	if (err)
- 		return err;
- 
--	psi->data = kzalloc(EFIVARS_DATA_SIZE_MAX, GFP_KERNEL);
-+	psi->data = kzalloc(record_size, GFP_KERNEL);
- 	if (!psi->data)
- 		return -ENOMEM;
- 
-@@ -52,7 +54,7 @@ static inline u64 generic_id(u64 timestamp, unsigned int part, int count)
- static int efi_pstore_read_func(struct pstore_record *record,
- 				efi_char16_t *varname)
- {
--	unsigned long wlen, size = EFIVARS_DATA_SIZE_MAX;
-+	unsigned long wlen, size = record_size;
- 	char name[DUMP_NAME_LEN], data_type;
- 	efi_status_t status;
- 	int cnt;
-@@ -133,7 +135,7 @@ static ssize_t efi_pstore_read(struct pstore_record *record)
- 	efi_status_t status;
- 
- 	for (;;) {
--		varname_size = EFIVARS_DATA_SIZE_MAX;
-+		varname_size = 1024;
- 
- 		/*
- 		 * If this is the first read() call in the pstore enumeration,
-@@ -224,11 +226,20 @@ static __init int efivars_pstore_init(void)
- 	if (efivars_pstore_disable)
- 		return 0;
- 
--	efi_pstore_info.buf = kmalloc(4096, GFP_KERNEL);
-+	/*
-+	 * Notice that 1024 is the minimum here to prevent issues with
-+	 * decompression algorithms that were spotted during tests;
-+	 * even in the case of not using compression, smaller values would
-+	 * just pollute more the pstore FS with many small collected files.
-+	 */
-+	if (record_size < 1024)
-+		record_size = 1024;
-+
-+	efi_pstore_info.buf = kmalloc(record_size, GFP_KERNEL);
- 	if (!efi_pstore_info.buf)
- 		return -ENOMEM;
- 
--	efi_pstore_info.bufsize = 1024;
-+	efi_pstore_info.bufsize = record_size;
- 
- 	if (pstore_register(&efi_pstore_info)) {
- 		kfree(efi_pstore_info.buf);
--- 
-2.38.0
+> -Kees
+> 
 
