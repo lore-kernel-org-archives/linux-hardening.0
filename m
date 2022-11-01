@@ -2,134 +2,105 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5283C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 21:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C50C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 21:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229648AbiKAV2M (ORCPT
+        id S229877AbiKAVhV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Nov 2022 17:28:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46230 "EHLO
+        Tue, 1 Nov 2022 17:37:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230056AbiKAV2F (ORCPT
+        with ESMTP id S229814AbiKAVhT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Nov 2022 17:28:05 -0400
-Received: from mail-oo1-xc2b.google.com (mail-oo1-xc2b.google.com [IPv6:2607:f8b0:4864:20::c2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A16411DF15;
-        Tue,  1 Nov 2022 14:28:03 -0700 (PDT)
-Received: by mail-oo1-xc2b.google.com with SMTP id x6-20020a4ac586000000b0047f8cc6dbe4so2236366oop.3;
-        Tue, 01 Nov 2022 14:28:03 -0700 (PDT)
+        Tue, 1 Nov 2022 17:37:19 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D05F1E73F
+        for <linux-hardening@vger.kernel.org>; Tue,  1 Nov 2022 14:37:19 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id l22-20020a17090a3f1600b00212fbbcfb78so241314pjc.3
+        for <linux-hardening@vger.kernel.org>; Tue, 01 Nov 2022 14:37:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7floQmYMzLgaddTMF2cgROiayJCZkDQQYG5jcMnB2Mg=;
-        b=CUfRAOLG/90T2J7O+9cTJGRFsZDOddWLZ7QygnM1H/0Jbr/5N8WQkUrvg0y0475BqV
-         OLHYPd+AvEyH95tkvnbCRYACyKOOuNcI0NhLCqN75HTpOJf0jGNkq21AxYSjahqZ2V9X
-         QDIuL9afXBV/pMjDnnax+Va9kqJtBB0qHFwswOtHzcEEKk21lYxKqwl/J/OYhyX+4XdU
-         6A91pNXCQmqcNEPHtw6o7o0XtZP9tSZqYwDLczOkMLxjw5oobQ6u0kJ47dchzuOEFOyQ
-         UWEYvZ9OOM8x+FGIT/Zr19nCZ8ABgot0Ye01RImeViDtjA/t5gvRbpcpobmQlRaKJ7gM
-         sFQA==
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cAGeZclIjBMFiBmV0n4LbZW8io+5YMRxyVOhuTAk5qw=;
+        b=FYEKX7LpkD3IyhVOK2UB4R1S8Ui+o/o1MFilXFE+ITlFq/9x6MeK2KLm0E8IVhfOOu
+         3cPOHKbTHaTg57/V5O7YzNhABL1msNpCOul4oX4Hx1BOLHcDF9vD5ZVyBqHxnGb4mGzw
+         L47q0wTWQbxWh/JLB9fx45Y8WkUDFfWRHBmR0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7floQmYMzLgaddTMF2cgROiayJCZkDQQYG5jcMnB2Mg=;
-        b=G1le+xWNEVNvjrN9uAwzz+qQSCXghtobno0PSlSyBsDHGK4VrnsuNoKXbiJz+jmJLu
-         s78XF+bvpM7jhYGsWh+wPU/bzc3S8lMblVxnyAbV2owsR+ZhV4dBPRauiRdPsfA/ZqYl
-         jr/turzcIwIrQlwvoYgStx8oRFq9eDwHP/0zB46k0hR/cL3SxeiLkRnUqN8m60KlBRb2
-         88ylJOPc7VSKue4Sw3ooEbLLIrVmYB/YbMlO3qM1gWd8KG+nBX3GJRy2pMocTrcPELTs
-         cPypDv9FaATTQoXb23tAJ+yBqFml3AQP8/llsoIKNAECEAfU7ILG+UBZXIPTNpKdPOAQ
-         jeqA==
-X-Gm-Message-State: ACrzQf3e88wDVeDPYDHR0l9o0Y8q2qeB/XWgU3qujWbwSVq2YiaLL2+a
-        leruIdadpHWiCIPyx6hUQZir8ggmeg12DIoZYL20aTRK
-X-Google-Smtp-Source: AMsMyM7yk7X+Cj9EUIZxraYgPnAGIa0+Hu39Z7lSzBEzpctAS8fb7Y+6uxZLdnqcgfbWXEEUoo2awWK5pli6jW0aJmU=
-X-Received: by 2002:a4a:b913:0:b0:480:b3bf:7812 with SMTP id
- x19-20020a4ab913000000b00480b3bf7812mr9031444ooo.97.1667338082817; Tue, 01
- Nov 2022 14:28:02 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cAGeZclIjBMFiBmV0n4LbZW8io+5YMRxyVOhuTAk5qw=;
+        b=xSR6P+3uhjV6XWdpv1JvTLSS0PjgEzCVzPe/5cCBpO9yczThAs+2MF1W/omU1G/mDm
+         byLVhGKku0ZZqm6ofSRYqquTuMKz8JAp+tT4oiOz0P6+4wPuCziDSilEWjwR9VhbWeHB
+         /ZBz/rb73gaBjx15Y1a7qfKJMGzkqpi/uh9cXQrHRDIAGDjp5nqYsKFm84pSz9jHle97
+         RrbyMZnxtAR+juiGR56WIuH0URe8lSmaZ9KdU0nBi7eD8c2f8ZSyamsjoQZclu4+UFmP
+         0swwB/x2gGkgBBvJEfUXYzgVX8Yfb5y/Mth/Bu5MtJrydaWD6QUAKg3QNNYZgSbHssne
+         AAKg==
+X-Gm-Message-State: ACrzQf0Gxdiez+lB7IvsytD5UT54RV2BLbDIH+POziWDV/z+t3gY3kBw
+        KbYqyflkIFe9XYJ2Tczn9V4e9A==
+X-Google-Smtp-Source: AMsMyM5Fz7z4//NNU/2FQNhB3+uFr7/xzcvoPBqfaxkDh2S2pNYrRUQ5dD2oLYwynDTb/ap+OrDczA==
+X-Received: by 2002:a17:903:2596:b0:186:a395:c4bd with SMTP id jb22-20020a170903259600b00186a395c4bdmr21887754plb.60.1667338638881;
+        Tue, 01 Nov 2022 14:37:18 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k36-20020a635624000000b0046ae5cfc3d5sm6232753pgb.61.2022.11.01.14.37.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Nov 2022 14:37:18 -0700 (PDT)
+Date:   Tue, 1 Nov 2022 14:37:17 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+Cc:     "Brandeburg, Jesse" <jesse.brandeburg@intel.com>,
+        "Nguyen, Anthony L" <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v3 2/2] igb: Proactively round up to kmalloc bucket size
+Message-ID: <202211011433.A64BF17F46@keescook>
+References: <20221018092340.never.556-kees@kernel.org>
+ <20221018092526.4035344-2-keescook@chromium.org>
+ <202210282013.82F28AE92@keescook>
+ <DM5PR11MB1324802F3F2098CB3239CF36C1379@DM5PR11MB1324.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-References: <Y1trhRE3nK5iAY6q@mail.google.com> <Y1yetX1CHsr+fibp@mail.google.com>
- <CADnq5_Mod90O=tN26+Yi74WPYxpVtss+LG_+_HZyFv2EtzR+MA@mail.gmail.com> <Y2GMEjB4NQ3RYk2C@mail.google.com>
-In-Reply-To: <Y2GMEjB4NQ3RYk2C@mail.google.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 1 Nov 2022 17:27:51 -0400
-Message-ID: <CADnq5_MuYmxOExeuhQAZ_KU4jfOdFhy1Jn4QBuawuL2Tq64n7w@mail.gmail.com>
-Subject: Re: [PATCH v2] [next] drm/radeon: Replace one-element array with
- flexible-array member
-To:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM5PR11MB1324802F3F2098CB3239CF36C1379@DM5PR11MB1324.namprd11.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Nov 1, 2022 at 5:14 PM Paulo Miguel Almeida
-<paulo.miguel.almeida.rodenas@gmail.com> wrote:
->
-> On Tue, Nov 01, 2022 at 10:42:14AM -0400, Alex Deucher wrote:
-> > On Fri, Oct 28, 2022 at 11:32 PM Paulo Miguel Almeida
-> > <paulo.miguel.almeida.rodenas@gmail.com> wrote:
-> > >
-> > > One-element arrays are deprecated, and we are replacing them with
-> > > flexible array members instead. So, replace one-element array with
-> > > flexible-array member in struct _ATOM_FAKE_EDID_PATCH_RECORD and
-> > > refactor the rest of the code accordingly.
-> > >
-> > > It's worth mentioning that doing a build before/after this patch results
-> > > in no binary output differences.
-> > >
-> > > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> > > routines on memcpy() and help us make progress towards globally
-> > > enabling -fstrict-flex-arrays=3 [1].
-> >
-> > This seems like a worthy goal, and I'm not opposed to the patch per
-> > se, but it seems a bit at odds with what this header represents.
-> > atombios.h represents the memory layout of the data stored in the ROM
-> > on the GPU.  This changes the memory layout of that ROM.  We can work
-> > around that in the driver code, but if someone were to take this
-> > header to try and write some standalone tool or use it for something
-> > else in the kernel, it would not reflect reality.
-> >
-> > Alex
-> >
-> Hi Alex, thanks for taking the time to review this patch.
->
-> I see where you are coming from and why you may be apprehensive with the
-> approach. From my humble point of view, I think that the artificial line
-> that separates "what we can change at will" and "what we should be extra
-> careful not to break/confuse others" is whether the header file is part
-> of the UAPI. Given that atombios.h isn't publicly accessible, I tend to
-> gravitate towards the first one.
+On Mon, Oct 31, 2022 at 08:42:36PM +0000, Ruhl, Michael J wrote:
+> Looking at the size usage (from elixir), I see:
+> 
+> --
+> 	if (!q_vector) {
+> 		q_vector = kzalloc(size, GFP_KERNEL);
+> 	} else if (size > ksize(q_vector)) {
+> 		kfree_rcu(q_vector, rcu);
+> 		q_vector = kzalloc(size, GFP_KERNEL);
+> 	} else {
+> 		memset(q_vector, 0, size);
+> 	}
+> --
+> 
+> If the size is rounded up, will the (size > ksize()) check ever be true?
+> 
+> I.e. have you eliminated this check (and maybe getting rid of the need for first patch?)?
 
-It may not be publicly accessible, but it describes a physical thing
-that is burned into millions of GPU boards out in the wild.  There are
-tons of open source tools out there that take these headers from the
-kernel to be able to parse the date in the ROM on the GPU.  If those
-applications sync up with the latest version of the header from the
-kernel, it will break their tools.  The next time someone from AMD
-syncs up the header with the version maintained by the vbios team, the
-change could accidently sneak back in and break the code.  It seems to
-me in this particular case that the header should reflect the physical
-layout of the ROM since that is what it describes.
+Hi!
 
-Alex
+It looked like igb_alloc_q_vector() was designed to be called multiple
+times on the same q_vector (i.e. to grow its allocation size over time).
+So for that case, yes, the "size > ksize(q_vector)" check is needed. If
+it's only ever called once (which is hard for me to tell), then no. (And
+if "no", why was the alloc/free case even there in the first place?)
 
->
-> > > +  /* empty fake edid record must be 3 bytes long */
-> > +    sizeof(ATOM_FAKE_EDID_PATCH_RECORD) + 1;
->
-> I am assuming that this is the part of the patch that makes you feel
-> concerned about how devs will get it (should they copy this header),
-> is that right?
->
-> If so, would a comment on the ATOM_FAKE_EDID_PATCH_RECORD struct
-> specifying the size of the struct when empty do the trick?
->
-> - Paulo A.
->
+-Kees
+
+-- 
+Kees Cook
