@@ -2,122 +2,113 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE17C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 21:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0F7C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 21:23:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229949AbiKAVOF (ORCPT
+        id S230106AbiKAVXD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Nov 2022 17:14:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60636 "EHLO
+        Tue, 1 Nov 2022 17:23:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbiKAVOE (ORCPT
+        with ESMTP id S230165AbiKAVXC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Nov 2022 17:14:04 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9378D1C42C;
-        Tue,  1 Nov 2022 14:14:03 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id 20so14520878pgc.5;
-        Tue, 01 Nov 2022 14:14:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6indUiCprMB0zjMLWvS6nYLrTKO3j8yjpLRzZacHoFM=;
-        b=RvakqeHbzhIjgHA0SHrXXMScjhxIrsj98u/WPUsnoZgBbiMepcA6jWfxYuNLJ7YZKl
-         7hQeN3cKsZHdgVa+by5PM9qwRAXlERGLBHtTYOATeumHcVBVJh12ijdH6hESg72b+wzw
-         r27PIVAfsU6wsVC8jduamUDUDRQGWhqhfjL5fViN9pYW8AANiVCifGt4VRus4t71d8K3
-         bh7W73of1dfjJMq65cWyAGs/0pzBnk7/j5SrDExP3MtP88tq0+DVqzpssHJq3RUnbrxN
-         ZOeHFX75u3sTcdI+a70BLWQq/HCHg3+AiUVcjCfn2nTWdfUYiuiN2UIjcWOAoiGnLtrt
-         Ah6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6indUiCprMB0zjMLWvS6nYLrTKO3j8yjpLRzZacHoFM=;
-        b=wtDLwGDX8GJdCIu9/lu6GJZIlpu4fyPWU8XyEiYreGwiEzNxUVocWMBB4OPeIobRaO
-         aP1DEIdFqlx3ndZkSQ9h6jNo+RO2CbqDtG4gT7sHCEpzCHCeeH4ZaAM+q7DJtBop2CGB
-         zPcp9wg2f3j2N+jp3UT8KXvHuwSZNzN+oGYdWnMzdYnVdAFsdziB0Yx/0vlYnEM3jR0C
-         ufRt4JgoRR0V4MDaqII4nBm/HAj0FkRnLsOZyl/tgEhEMMEVt0bOcveNynOFOlP6fwx6
-         H3yBR3JtZ8jPmiVNnVxPs3ClzVF/p4WH3fV/o+soWKPmOnS5lewwEYssmwQ6WSZ14GX5
-         yjUw==
-X-Gm-Message-State: ACrzQf3uYJK+3ynSaqrapBct0axZ42I0rtnSrVNhazQnel8y9LchaCOp
-        CpYrGqmII2mCCFCFNHMJ3a0=
-X-Google-Smtp-Source: AMsMyM52pQddQpmtGf7qmD+beu+QOQ/6824R/3H3162dp/zW7VTCB30F2Ej07jtHrVsyBI0az0Lq5A==
-X-Received: by 2002:a05:6a00:234d:b0:561:ec04:e77e with SMTP id j13-20020a056a00234d00b00561ec04e77emr22151908pfj.14.1667337242960;
-        Tue, 01 Nov 2022 14:14:02 -0700 (PDT)
-Received: from mail.google.com ([103.229.249.253])
-        by smtp.gmail.com with ESMTPSA id o20-20020a170903009400b0018685aaf41dsm6804056pld.18.2022.11.01.14.13.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Nov 2022 14:14:02 -0700 (PDT)
-Date:   Wed, 2 Nov 2022 10:13:54 +1300
-From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] [next] drm/radeon: Replace one-element array with
- flexible-array member
-Message-ID: <Y2GMEjB4NQ3RYk2C@mail.google.com>
-References: <Y1trhRE3nK5iAY6q@mail.google.com>
- <Y1yetX1CHsr+fibp@mail.google.com>
- <CADnq5_Mod90O=tN26+Yi74WPYxpVtss+LG_+_HZyFv2EtzR+MA@mail.gmail.com>
+        Tue, 1 Nov 2022 17:23:02 -0400
+X-Greylist: delayed 450 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 01 Nov 2022 14:22:59 PDT
+Received: from smtp.smtpout.orange.fr (smtp-16.smtpout.orange.fr [80.12.242.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D45721AF
+        for <linux-hardening@vger.kernel.org>; Tue,  1 Nov 2022 14:22:59 -0700 (PDT)
+Received: from pop-os.home ([86.243.100.34])
+        by smtp.orange.fr with ESMTPA
+        id pyanoKD2rsfCIpybUoWfKf; Tue, 01 Nov 2022 22:15:24 +0100
+X-ME-Helo: pop-os.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 01 Nov 2022 22:15:24 +0100
+X-ME-IP: 86.243.100.34
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org
+Subject: [PATCH 21/30] mm: Use kstrtobool() instead of strtobool()
+Date:   Tue,  1 Nov 2022 22:14:09 +0100
+Message-Id: <03f9401a6c8b87a1c786a2138d16b048f8d0eb53.1667336095.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1667336095.git.christophe.jaillet@wanadoo.fr>
+References: <cover.1667336095.git.christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADnq5_Mod90O=tN26+Yi74WPYxpVtss+LG_+_HZyFv2EtzR+MA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Nov 01, 2022 at 10:42:14AM -0400, Alex Deucher wrote:
-> On Fri, Oct 28, 2022 at 11:32 PM Paulo Miguel Almeida
-> <paulo.miguel.almeida.rodenas@gmail.com> wrote:
-> >
-> > One-element arrays are deprecated, and we are replacing them with
-> > flexible array members instead. So, replace one-element array with
-> > flexible-array member in struct _ATOM_FAKE_EDID_PATCH_RECORD and
-> > refactor the rest of the code accordingly.
-> >
-> > It's worth mentioning that doing a build before/after this patch results
-> > in no binary output differences.
-> >
-> > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> > routines on memcpy() and help us make progress towards globally
-> > enabling -fstrict-flex-arrays=3 [1].
-> 
-> This seems like a worthy goal, and I'm not opposed to the patch per
-> se, but it seems a bit at odds with what this header represents.
-> atombios.h represents the memory layout of the data stored in the ROM
-> on the GPU.  This changes the memory layout of that ROM.  We can work
-> around that in the driver code, but if someone were to take this
-> header to try and write some standalone tool or use it for something
-> else in the kernel, it would not reflect reality.
-> 
-> Alex
-> 
-Hi Alex, thanks for taking the time to review this patch.
+strtobool() is the same as kstrtobool().
+However, the latter is more used within the kernel.
 
-I see where you are coming from and why you may be apprehensive with the
-approach. From my humble point of view, I think that the artificial line
-that separates "what we can change at will" and "what we should be extra
-careful not to break/confuse others" is whether the header file is part 
-of the UAPI. Given that atombios.h isn't publicly accessible, I tend to
-gravitate towards the first one.
+In order to remove strtobool() and slightly simplify kstrtox.h, switch to
+the other function name.
 
-> > +  /* empty fake edid record must be 3 bytes long */
-> +    sizeof(ATOM_FAKE_EDID_PATCH_RECORD) + 1;
+While at it, include the corresponding header file (<linux/kstrtox.h>)
 
-I am assuming that this is the part of the patch that makes you feel
-concerned about how devs will get it (should they copy this header),
-is that right? 
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+This patch is part of a serie that axes all usages of strtobool().
+Each patch can be applied independently from the other ones.
 
-If so, would a comment on the ATOM_FAKE_EDID_PATCH_RECORD struct
-specifying the size of the struct when empty do the trick? 
+The last patch of the serie removes the definition of strtobool().
 
-- Paulo A.
+You may not be in copy of the cover letter. So, if needed, it is available
+at [1].
+
+[1]: https://lore.kernel.org/all/cover.1667336095.git.christophe.jaillet@wanadoo.fr/
+---
+ mm/page_table_check.c | 3 ++-
+ mm/usercopy.c         | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/mm/page_table_check.c b/mm/page_table_check.c
+index 433dbce13fe1..93e633c1d587 100644
+--- a/mm/page_table_check.c
++++ b/mm/page_table_check.c
+@@ -4,6 +4,7 @@
+  * Copyright (c) 2021, Google LLC.
+  * Pasha Tatashin <pasha.tatashin@soleen.com>
+  */
++#include <linux/kstrtox.h>
+ #include <linux/mm.h>
+ #include <linux/page_table_check.h>
+ 
+@@ -23,7 +24,7 @@ EXPORT_SYMBOL(page_table_check_disabled);
+ 
+ static int __init early_page_table_check_param(char *buf)
+ {
+-	return strtobool(buf, &__page_table_check_enabled);
++	return kstrtobool(buf, &__page_table_check_enabled);
+ }
+ 
+ early_param("page_table_check", early_page_table_check_param);
+diff --git a/mm/usercopy.c b/mm/usercopy.c
+index c1ee15a98633..4c3164beacec 100644
+--- a/mm/usercopy.c
++++ b/mm/usercopy.c
+@@ -12,6 +12,7 @@
+ 
+ #include <linux/mm.h>
+ #include <linux/highmem.h>
++#include <linux/kstrtox.h>
+ #include <linux/slab.h>
+ #include <linux/sched.h>
+ #include <linux/sched/task.h>
+@@ -258,7 +259,7 @@ static bool enable_checks __initdata = true;
+ 
+ static int __init parse_hardened_usercopy(char *str)
+ {
+-	if (strtobool(str, &enable_checks))
++	if (kstrtobool(str, &enable_checks))
+ 		pr_warn("Invalid option string for hardened_usercopy: '%s'\n",
+ 			str);
+ 	return 1;
+-- 
+2.34.1
 
