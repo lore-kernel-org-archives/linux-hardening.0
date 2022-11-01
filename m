@@ -2,151 +2,139 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D40A7C4332F
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 14:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 266C4C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 17:02:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229714AbiKAOmb (ORCPT
+        id S229752AbiKARCE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Nov 2022 10:42:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53792 "EHLO
+        Tue, 1 Nov 2022 13:02:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbiKAOma (ORCPT
+        with ESMTP id S229939AbiKARCD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Nov 2022 10:42:30 -0400
-Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 367D1120B8;
-        Tue,  1 Nov 2022 07:42:27 -0700 (PDT)
-Received: by mail-oi1-x229.google.com with SMTP id r187so16088923oia.8;
-        Tue, 01 Nov 2022 07:42:27 -0700 (PDT)
+        Tue, 1 Nov 2022 13:02:03 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53D2A646F
+        for <linux-hardening@vger.kernel.org>; Tue,  1 Nov 2022 10:02:01 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id 128so13958211pga.1
+        for <linux-hardening@vger.kernel.org>; Tue, 01 Nov 2022 10:02:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=UqZRXhZ8iJLz18c+MvxYoRFq+rJsubjxLq+l9IkQCHc=;
-        b=qKFPc/kz6f3nkMKSMl3PgJ4WiqQoPQvBVOh3dj4/2HGtY0pUacizp+bA07bsX+mIKB
-         FAN95rJVisV2AU1C2HM1iB+wNK0BFDL29XqLIfVjq+be2MUJaJ32y37avBHQ9VPLeDhl
-         nfY2li78agIuV+Ma3kgvE2qSxXc6NdbPF+3gtzTCihJ0xH08JyoKS0cX/RbRBO6TFZ+Q
-         XcrGn2mFrzdA9Xz6XTEk8jOT+/cC/aJ8vgst8DoewhbiXz2A98Z/UIrtHXr6pORv8ADK
-         fMZMKJOSXWF7Zqm/66APPRtFBtUeD86Nrw8HLXvHcWgp0RzFKV4Im6fftbPLCr2fO/j6
-         Lnrw==
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jE7AvJG+Pz67X1gNkDD5t0oKXb/RV/Yt8yibr4qw2hM=;
+        b=X/gV7zp6dIxPh1lTFK7XJ1Lzpq/BU9+/KVrCvofn1ZEe/klpVutZ0tyFNEqWnHK+tY
+         djh1iYMcH01+Smh7fhNrKsh315ifrlU7gHoZ6kjKTsMX9a0o5hYJW5pF4EDXqmJ4VfVP
+         v94BSqS5Z6rlDc3T715VlRhA7zcP2usCNyuUo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UqZRXhZ8iJLz18c+MvxYoRFq+rJsubjxLq+l9IkQCHc=;
-        b=XqOKeOzw9DCEn0PBQtcPC14EEGUlYSqYm3gJlmj0TJW9NZ4kS0xm4Tu0k5oxbm6r2Y
-         g2hPmBjli0h2oxjpzdp2Cs2BYcJ6HbEemqPqbs1g7gSGfUJsvA6FCLkvrWcOvOPvEEs+
-         hZ0zsUTfiT8dnoehvwYIyVujR7B8usTT5k42qOpfhgGy7fiuHHpvkPKhWA2mF37tRRKw
-         7r4nW0o/1+TXT0fi8fqbl2q+SWEWS2vVR9Y0pq2FGjY6wBcvBRaEZnGnxVQyTeSba3TL
-         4aS4YcPYx9145fTSg7EN0GTJXf/GEDDekmTz2/KyBjm7TS5A9Wdq9R65NFSE3BReGDCO
-         3zlQ==
-X-Gm-Message-State: ACrzQf2rTJZX4quS+VA/wM/sXyKJuR4UHILfjKFEvhgyW/uc7tm8BPZ9
-        z4V/VSH1uxeOq0zq5G68Atfe5qpKqVgRVVb1oPsZdDrA
-X-Google-Smtp-Source: AMsMyM4kuFVgyWMCi4ySWY8bQ2GbqY1JyCCaGs2uhIMpeGyncIHdvM868n9C7ngoG+w9v2aGCHlk1+uKeNWzJj2svlE=
-X-Received: by 2002:a05:6808:14d2:b0:354:c733:abd3 with SMTP id
- f18-20020a05680814d200b00354c733abd3mr10232550oiw.96.1667313746565; Tue, 01
- Nov 2022 07:42:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <Y1trhRE3nK5iAY6q@mail.google.com> <Y1yetX1CHsr+fibp@mail.google.com>
-In-Reply-To: <Y1yetX1CHsr+fibp@mail.google.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 1 Nov 2022 10:42:14 -0400
-Message-ID: <CADnq5_Mod90O=tN26+Yi74WPYxpVtss+LG_+_HZyFv2EtzR+MA@mail.gmail.com>
-Subject: Re: [PATCH v2] [next] drm/radeon: Replace one-element array with
- flexible-array member
-To:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jE7AvJG+Pz67X1gNkDD5t0oKXb/RV/Yt8yibr4qw2hM=;
+        b=ddipDpyDQTtWBqI2MT00mtM2QexMC8cwVjz+g8q26Ly/H09AnpuBhMXKqKAJPWaf/X
+         uvQ0iH/xNaeUTgA6/8MGahkvzdne6Lon3IMoEwgd3yy1cwUrtql4c7mg1n4MDyfApepQ
+         ROI0rb377Rifh/HKgXjgIkFTGsUpJu6TOqmaUw+ZYldv5ZjKy40CIR+VhDkkcF51SpYC
+         AUlxB2FtsCYwUQYrOpIT96TCTOgEfESMaYtMcpK7u2M/GYe0QFws0j4wlaCpvAqrxcII
+         B8L/ufdS5hHBQYIla/gDJB6BS8Fg1mAnxE7Y39g/Bp0fgSE073JGsdUPXhouiiBECj94
+         /CCw==
+X-Gm-Message-State: ACrzQf3M7nA8notqSKXk7tA132lbaYVukN+CLjKOhZ6ECsItjlRhHghu
+        haz6wk6tasYA7kiBApTGrM1aWQ==
+X-Google-Smtp-Source: AMsMyM5i16ttcVnnTVedidHBJ9bNsg59Epj19woNCj4kXnyFV8ovuhhEUMMKJaZDZxaCdd+pCO2HVw==
+X-Received: by 2002:a63:551b:0:b0:44b:7dcf:92ee with SMTP id j27-20020a63551b000000b0044b7dcf92eemr18373150pgb.610.1667322120754;
+        Tue, 01 Nov 2022 10:02:00 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a10-20020a1709027e4a00b0016eef326febsm1597080pln.1.2022.11.01.10.02.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Nov 2022 10:02:00 -0700 (PDT)
+Date:   Tue, 1 Nov 2022 10:01:59 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH bpf-next v2 2/3] bpf/verifier: Use kmalloc_size_roundup()
+ to match ksize() usage
+Message-ID: <202211010937.4631CB1B0E@keescook>
+References: <20221029024444.gonna.633-kees@kernel.org>
+ <20221029025433.2533810-2-keescook@chromium.org>
+ <da0959e7-a91c-ab4c-56be-3c3cd280e592@iogearbox.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <da0959e7-a91c-ab4c-56be-3c3cd280e592@iogearbox.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Oct 28, 2022 at 11:32 PM Paulo Miguel Almeida
-<paulo.miguel.almeida.rodenas@gmail.com> wrote:
->
-> One-element arrays are deprecated, and we are replacing them with
-> flexible array members instead. So, replace one-element array with
-> flexible-array member in struct _ATOM_FAKE_EDID_PATCH_RECORD and
-> refactor the rest of the code accordingly.
->
-> It's worth mentioning that doing a build before/after this patch results
-> in no binary output differences.
->
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3 [1].
+On Tue, Nov 01, 2022 at 02:52:16PM +0100, Daniel Borkmann wrote:
+> On 10/29/22 4:54 AM, Kees Cook wrote:
+> > Round up allocations with kmalloc_size_roundup() so that the verifier's
+> > use of ksize() is always accurate and no special handling of the memory
+> > is needed by KASAN, UBSAN_BOUNDS, nor FORTIFY_SOURCE. Pass the new size
+> > information back up to callers so they can use the space immediately,
+> > so array resizing to happen less frequently as well.
+> > 
+> [...]
+> 
+> The commit message is a bit cryptic here without further context. Is this
+> a bug fix or improvement? I read the latter, but it would be good to have
 
-This seems like a worthy goal, and I'm not opposed to the patch per
-se, but it seems a bit at odds with what this header represents.
-atombios.h represents the memory layout of the data stored in the ROM
-on the GPU.  This changes the memory layout of that ROM.  We can work
-around that in the driver code, but if someone were to take this
-header to try and write some standalone tool or use it for something
-else in the kernel, it would not reflect reality.
+It's an improvement -- e.g. it depends on the recently added
+kmalloc_size_roundup() helper.
 
-Alex
+> more context here for reviewers (maybe Link tag pointing to some discussion
+> or the like). Also, why is the kmalloc_size_roundup() not hidden for kmalloc
+> callers, isn't this a tree-wide issue?
 
+The main issue is that _most_ allocation callers want an explicitly sized
+allocation (and not "more"), and that dynamic runtime analysis tools
+(e.g. KASAN, UBSAN_BOUNDS, FORTIFY_SOURCE, etc) are looking for precise
+bounds checking (i.e. not something that is rounded up). A tiny handful
+of allocations were doing an implicit alloc/realloc loop that actually
+depended on ksize(), and didn't actually always call realloc. This has
+created a long series of bugs and problems over many years related to the
+runtime bounds checking, so these callers are finally being adjusted to
+_not_ depend on the ksize() side-effect, by doing one of several things:
 
->
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://github.com/KSPP/linux/issues/239
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
->
-> Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-> ---
-> Changelog:
->
-> v2: no binary output differences patch; report binary changes findings
->     on commit log. Res: Kees Cook.
->
->     This request was made in an identical, yet different, patch but the
->     same feedback applies.
->     https://lore.kernel.org/lkml/Y1x3MtRJ8ckXxlJn@mail.google.com/
->
-> v1: https://lore.kernel.org/lkml/Y1trhRE3nK5iAY6q@mail.google.com/
-> ---
->  drivers/gpu/drm/radeon/atombios.h        | 2 +-
->  drivers/gpu/drm/radeon/radeon_atombios.c | 7 +++++--
->  2 files changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/radeon/atombios.h b/drivers/gpu/drm/radeon/atombios.h
-> index da35a970fcc0..235e59b547a1 100644
-> --- a/drivers/gpu/drm/radeon/atombios.h
-> +++ b/drivers/gpu/drm/radeon/atombios.h
-> @@ -3615,7 +3615,7 @@ typedef struct _ATOM_FAKE_EDID_PATCH_RECORD
->  {
->    UCHAR ucRecordType;
->    UCHAR ucFakeEDIDLength;
-> -  UCHAR ucFakeEDIDString[1];    // This actually has ucFakeEdidLength elements.
-> +  UCHAR ucFakeEDIDString[];    // This actually has ucFakeEdidLength elements.
->  } ATOM_FAKE_EDID_PATCH_RECORD;
->
->  typedef struct  _ATOM_PANEL_RESOLUTION_PATCH_RECORD
-> diff --git a/drivers/gpu/drm/radeon/radeon_atombios.c b/drivers/gpu/drm/radeon/radeon_atombios.c
-> index 204127bad89c..4ad5a328d920 100644
-> --- a/drivers/gpu/drm/radeon/radeon_atombios.c
-> +++ b/drivers/gpu/drm/radeon/radeon_atombios.c
-> @@ -1727,8 +1727,11 @@ struct radeon_encoder_atom_dig *radeon_atombios_get_lvds_info(struct
->                                                 }
->                                         }
->                                         record += fake_edid_record->ucFakeEDIDLength ?
-> -                                               fake_edid_record->ucFakeEDIDLength + 2 :
-> -                                               sizeof(ATOM_FAKE_EDID_PATCH_RECORD);
-> +                                                 struct_size(fake_edid_record,
-> +                                                             ucFakeEDIDString,
-> +                                                             fake_edid_record->ucFakeEDIDLength) :
-> +                                                 /* empty fake edid record must be 3 bytes long */
-> +                                                 sizeof(ATOM_FAKE_EDID_PATCH_RECORD) + 1;
->                                         break;
->                                 case LCD_PANEL_RESOLUTION_RECORD_TYPE:
->                                         panel_res_record = (ATOM_PANEL_RESOLUTION_PATCH_RECORD *)record;
-> --
-> 2.37.3
->
+- tracking the allocation size precisely and just never calling ksize()
+  at all[1].
+
+- always calling realloc and not using ksize() at all. (This solution
+  ends up actually be a subset of the next solution.)
+
+- using kmalloc_size_roundup() to explicitly round up the desired
+  allocation size immediately[2].
+
+The bpf/verifier case is this another of this latter case.
+
+Because some of the dynamic bounds checking depends on the size being an
+_argument_ to an allocator function (i.e. see the __alloc_size attribute),
+the ksize() users are rare, and it could waste local variables, it
+was been deemed better to explicitly separate the rounding up from the
+allocation itself[3].
+
+Hopefully that helps clarify! :)
+
+-Kees
+
+[1] e.g.:
+    https://git.kernel.org/linus/712f210a457d
+    https://git.kernel.org/linus/72c08d9f4c72
+
+[2] e.g.:
+    https://git.kernel.org/netdev/net-next/c/12d6c1d3a2ad
+    https://git.kernel.org/netdev/net-next/c/ab3f7828c979
+    https://git.kernel.org/netdev/net-next/c/d6dd508080a3
+
+[3] https://lore.kernel.org/lkml/0ea1fc165a6c6117f982f4f135093e69cb884930.camel@redhat.com/
+
+-- 
+Kees Cook
