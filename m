@@ -2,113 +2,183 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F80C4332F
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 17:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBF3C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 18:48:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229824AbiKARZN (ORCPT
+        id S230302AbiKASsc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Nov 2022 13:25:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55910 "EHLO
+        Tue, 1 Nov 2022 14:48:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230035AbiKARZM (ORCPT
+        with ESMTP id S230136AbiKASsb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Nov 2022 13:25:12 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D30201A215
-        for <linux-hardening@vger.kernel.org>; Tue,  1 Nov 2022 10:25:11 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d10so14069661pfh.6
-        for <linux-hardening@vger.kernel.org>; Tue, 01 Nov 2022 10:25:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=J6LRwHgWKCwOWn4yhPikzgQ2kZBIaqwpk05PAKv2a3Y=;
-        b=DaPWXxso7FHak1bCmcCm4XM7JydFVSumwyBHyeajKm+BUcXJS5XvMJa5HX+4oQzAf2
-         BgK2+jsDEJ/tANoVPdBBZdUEcePYJaEzGq5oPV+QD9IX4DSY/l8Jrzl6cR21gQhu7hk7
-         Wk6wilFh0GbXbj2e3lsqSrXj/g+aS0h7T5i4w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J6LRwHgWKCwOWn4yhPikzgQ2kZBIaqwpk05PAKv2a3Y=;
-        b=cLIjdHOcKZUy0hJWSkP6XcDYPm9xPJk84rOPyRf7vrbqXhlRthSKrDWfOZ9cEZNAAJ
-         VCDh/X8t7mEZ34C9wzJl2EqXpHSS6ARG3AZhwBZzSyo8SrCbRkoacB14EefMygh8Ggkn
-         sPLug70wBgrQKK6w3KTBMC6U8hO9ES7HeaYLuGWTYKTKXmATlsKWCL83G1Nk1eXWT/j7
-         WLStQUqlnf8kpEDfyOYF4Ydhqj2/2pTBwZgzsnX32brmshNOIOr8JeSxkuOjBcSqEORY
-         R96hg68MP5Sl+egXQ+7BSMYLCqmnuUgX1uBZLtF6txkrw9RZHpDpIgtz9c3MdyMFdiMV
-         8gIw==
-X-Gm-Message-State: ACrzQf3gIrp1eGW/qOHL7tTRGLiM11zFH9ZmI+0fMq8g3yRz6ChAeYVt
-        8WxYNRxatrHBzIlQi+m6AgGQcw==
-X-Google-Smtp-Source: AMsMyM4RhbvP6zf6mrcFpMcWYZuOS96Vv/5KfzXJBc9FbqY8b4WVdeFjPIAPygEaKVIvxgSl8TWn4g==
-X-Received: by 2002:a62:fb13:0:b0:56b:eda9:f47a with SMTP id x19-20020a62fb13000000b0056beda9f47amr166500pfm.84.1667323511344;
-        Tue, 01 Nov 2022 10:25:11 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a16-20020aa794b0000000b005627d995a36sm6789234pfl.44.2022.11.01.10.25.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Nov 2022 10:25:10 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] x86/Kconfig: Enable kernel IBT by default
-Date:   Tue,  1 Nov 2022 10:25:07 -0700
-Message-Id: <20221101172503.gonna.094-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        Tue, 1 Nov 2022 14:48:31 -0400
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FD8517E23;
+        Tue,  1 Nov 2022 11:48:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:
+        Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=KiM8NF3I5HDTZGKG8OKbQBwCPXdwKmsbyN9xYuphi7Y=; b=N1pyzw2l7vEf5w1x4PLENi7pre
+        PsKQZp4roXBXYz4FPYwca1L4/BmSSk7IqfT/hs5lT5iPYtSwsUnxmviA4k0RjMD6BVtNelG+xO+Zv
+        S0hX4hs4+hS+QtuV/dJBi3is1rCy2lkvrdUOleWZOtDWly3t3IYyNlJ3ksmuck9SVMJH8IchEXhfQ
+        B4PXqzl30zZ26srn1JSjxrAJfWzukknBJPXEn0Oh19FKLDWeWlejxf4DDLg1s7pFdbAGUwvWOYLt1
+        JcVTak1XjXp4Z/PV9wlKhxfOOMCga0xHqKzyXFLZn8rtRTd6wFMKNxou579SA0TfaDgKwUd+OAmwH
+        bq+cDykg==;
+Received: from [177.102.148.33] (helo=localhost)
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+        id 1opwJE-00ASTb-ES; Tue, 01 Nov 2022 19:48:25 +0100
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+To:     linux-hardening@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-efi@vger.kernel.org, kernel-dev@igalia.com,
+        kernel@gpiccoli.net, keescook@chromium.org, anton@enomsg.org,
+        ccross@android.com, tony.luck@intel.com,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH V3] efi: pstore: Add module parameter for setting the record size
+Date:   Tue,  1 Nov 2022 15:48:07 -0300
+Message-Id: <20221101184808.80747-1-gpiccoli@igalia.com>
+X-Mailer: git-send-email 2.38.0
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1710; h=from:subject:message-id; bh=BUxMDEzPM1O+OF4wJ0UQbD3pLcsMmA9KesT2iXieSLM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjYVZyS/oylC73YbOHnGd7AZ3+XB8utWx7H13hxxFt hb2/tVeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY2FWcgAKCRCJcvTf3G3AJhdkD/ 0ZjMdk7GOU5BxtJPakr6H6nJZLxj80M+40rUA5iu7K0jdzDunXLeZU6G19PHc909btkp1ZqxEyNT5u jFN6BLDz5o++juRR3+H99/wUCVV2/+n6uKC4lLI5wf/ynYyyK+EE1HoGIAhboDbBaUczSBYp9xbwde KlbJCBtD38HZt2lcBFxatazGdjexh4cCZu8cPGxDjwSejVQk0xhezeonwEPKTI7yZ+LreTzMey4ywg HwTZpAf6WCxFke2lFa3ryxzoKmgnFMaxOAlG9nlX82A7RD85+pGHGNmDN3HysftH5tOftwG3LdNqCc pfP+/r7lwKiF8yH3QqD7+/cFRJuAvGdxIqxanPF0utPCOlepX82b7YR42e6d3hFeWffuJ3lFOopAFq CsdP7reuXXBYOwkglZd6103h8I2wSM898GAQYhK4ddoZ6bDzV3G+1TQtBaieM9HxvTIpFKBXsT9MET IK6AblCd1ltJAfMWjEFczRh5oHaOS8mJQfzO7Q4vc3z+ohmwk4S969jURQ8R/NquqC67h/ARWg7x6p T6CkKwUMZTAGYG0zPlbXxcCoypaGkzIwjwLYb0ZlXuzYmhsZZhWj4x4/Q0LOvbwSZVC03h980/S8pA Ug2HWsbFtkjG1HFxdHXUu7hybNX2XPY+DPtpEeBdJ++QHhM/uqjKPXQpQXgQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The kernel IBT defense strongly mitigates the common "first step" of ROP
-attacks, by eliminating arbitrary stack pivots (that appear either at
-the end of a function or in immediate values), which cannot be reached
-if indirect calls must be to marked function entry addresses. IBT is
-also required to be enabled to gain the FineIBT feature when built with
-Kernel Control Flow Integrity.
+By default, the efi-pstore backend hardcode the UEFI variable size
+as 1024 bytes. The historical reasons for that were discussed by
+Ard in threads [0][1]:
 
-Additionally, given that this feature is runtime enabled via CPU ID,
-it clearly should be built in by default; it will only be enabled if the
-CPU supports it. The build takes 2 seconds longer, which seems a small
-price to pay for gaining this coverage by default.
+"there is some cargo cult from prehistoric EFI times going
+on here, it seems. Or maybe just misinterpretation of the maximum
+size for the variable *name* vs the variable itself.".
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Suggested-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+"OVMF has
+OvmfPkg/OvmfPkgX64.dsc:
+gEfiMdeModulePkgTokenSpaceGuid.PcdMaxVariableSize|0x2000
+OvmfPkg/OvmfPkgX64.dsc:
+gEfiMdeModulePkgTokenSpaceGuid.PcdMaxVariableSize|0x8400
+
+where the first one is without secure boot and the second with secure
+boot. Interestingly, the default is
+
+gEfiMdeModulePkgTokenSpaceGuid.PcdMaxVariableSize|0x400
+
+so this is probably where this 1k number comes from."
+
+With that, and since there is not such a limit in the UEFI spec, we
+have the confidence to hereby add a module parameter to enable advanced
+users to change the UEFI record size for efi-pstore data collection,
+this way allowing a much easier reading of the collected log, which
+wouldn't be scattered anymore among many small files.
+
+Through empirical analysis we observed that extreme low values (like 8
+bytes) could eventually cause writing issues, so given that and the OVMF
+default discussed, we limited the minimum value to 1024 bytes, which also
+is still the default.
+
+[0] https://lore.kernel.org/lkml/CAMj1kXF4UyRMh2Y_KakeNBHvkHhTtavASTAxXinDO1rhPe_wYg@mail.gmail.com/
+[1] https://lore.kernel.org/lkml/CAMj1kXFy-2KddGu+dgebAdU9v2sindxVoiHLWuVhqYw+R=kqng@mail.gmail.com/
+
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 ---
-v2: update commit log with more details
-v1: https://lore.kernel.org/lkml/20220902234213.3034396-1-keescook@chromium.org/
----
- arch/x86/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 67745ceab0db..35d251ba0709 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1854,7 +1854,7 @@ config CC_HAS_IBT
+V3:
+- Stick with 1024 to the varname size (thanks Ard!).
+- Rebased to v6.1-rc3.
+
+
+Hey folks, I've tested multiple record_size values, using lz4, zstd, deflate
+and no compression. For smaller ones ( up to 4k), all cases worked (for
+deflate, there was some failures even with 1024, and even with this patch
+reverted). For bigger sizes, no compression/deflate fails for 8k+, lz4 for
+values bigger than 16k and zstd only for values more then 20k.
+
+I've instrumented the function efivar_set_variable_locked() to get the return
+value during panic, and when it fails, usually it gives 0x8000000000000002
+(EFI_INVALID_PARAMETER it seems?). It's not related to this patch specifically,
+but worth mentioning in case you have ideas.
+
+Thanks,
+
+
+Guilherme
+
+
+ drivers/firmware/efi/efi-pstore.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-pstore.c
+index 3bddc152fcd4..81ed4fc6d76d 100644
+--- a/drivers/firmware/efi/efi-pstore.c
++++ b/drivers/firmware/efi/efi-pstore.c
+@@ -10,7 +10,9 @@ MODULE_IMPORT_NS(EFIVAR);
  
- config X86_KERNEL_IBT
- 	prompt "Indirect Branch Tracking"
--	bool
-+	def_bool y
- 	depends on X86_64 && CC_HAS_IBT && HAVE_OBJTOOL
- 	# https://github.com/llvm/llvm-project/commit/9d7001eba9c4cb311e03cd8cdc231f9e579f2d0f
- 	depends on !LD_IS_LLD || LLD_VERSION >= 140000
+ #define DUMP_NAME_LEN 66
+ 
+-#define EFIVARS_DATA_SIZE_MAX 1024
++static unsigned int record_size = 1024;
++module_param(record_size, uint, 0444);
++MODULE_PARM_DESC(record_size, "size of each pstore UEFI var (in bytes, min/default=1024)");
+ 
+ static bool efivars_pstore_disable =
+ 	IS_ENABLED(CONFIG_EFI_VARS_PSTORE_DEFAULT_DISABLE);
+@@ -30,7 +32,7 @@ static int efi_pstore_open(struct pstore_info *psi)
+ 	if (err)
+ 		return err;
+ 
+-	psi->data = kzalloc(EFIVARS_DATA_SIZE_MAX, GFP_KERNEL);
++	psi->data = kzalloc(record_size, GFP_KERNEL);
+ 	if (!psi->data)
+ 		return -ENOMEM;
+ 
+@@ -52,7 +54,7 @@ static inline u64 generic_id(u64 timestamp, unsigned int part, int count)
+ static int efi_pstore_read_func(struct pstore_record *record,
+ 				efi_char16_t *varname)
+ {
+-	unsigned long wlen, size = EFIVARS_DATA_SIZE_MAX;
++	unsigned long wlen, size = record_size;
+ 	char name[DUMP_NAME_LEN], data_type;
+ 	efi_status_t status;
+ 	int cnt;
+@@ -133,7 +135,7 @@ static ssize_t efi_pstore_read(struct pstore_record *record)
+ 	efi_status_t status;
+ 
+ 	for (;;) {
+-		varname_size = EFIVARS_DATA_SIZE_MAX;
++		varname_size = 1024;
+ 
+ 		/*
+ 		 * If this is the first read() call in the pstore enumeration,
+@@ -224,11 +226,20 @@ static __init int efivars_pstore_init(void)
+ 	if (efivars_pstore_disable)
+ 		return 0;
+ 
+-	efi_pstore_info.buf = kmalloc(4096, GFP_KERNEL);
++	/*
++	 * Notice that 1024 is the minimum here to prevent issues with
++	 * decompression algorithms that were spotted during tests;
++	 * even in the case of not using compression, smaller values would
++	 * just pollute more the pstore FS with many small collected files.
++	 */
++	if (record_size < 1024)
++		record_size = 1024;
++
++	efi_pstore_info.buf = kmalloc(record_size, GFP_KERNEL);
+ 	if (!efi_pstore_info.buf)
+ 		return -ENOMEM;
+ 
+-	efi_pstore_info.bufsize = 1024;
++	efi_pstore_info.bufsize = record_size;
+ 
+ 	if (pstore_register(&efi_pstore_info)) {
+ 		kfree(efi_pstore_info.buf);
 -- 
-2.34.1
+2.38.0
 
