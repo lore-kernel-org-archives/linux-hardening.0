@@ -2,86 +2,126 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24044ECAAA1
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 13:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BF8ECAAA1
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Nov 2022 13:47:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229845AbiKANkY (ORCPT
+        id S229528AbiKANrK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Nov 2022 09:40:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40574 "EHLO
+        Tue, 1 Nov 2022 09:47:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229949AbiKANkU (ORCPT
+        with ESMTP id S229487AbiKANrJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Nov 2022 09:40:20 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FA9410579;
-        Tue,  1 Nov 2022 06:40:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E0ACCB81D8F;
-        Tue,  1 Nov 2022 13:40:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 80098C433D7;
-        Tue,  1 Nov 2022 13:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667310015;
-        bh=W7bLHmXjYrutSxRh3BKcNfArwB+U8z8j/jgA2RkevIo=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=RX67JP+VqncVqi+PKtU03Whkkt0NeSfVNWl2UusezFb8FlALzGOZJFuWd1VOb4ZYf
-         ZqUVr68FuyM2XO9jUGrhj66xl6Kkg3LkZlj4Ii4narrelLUDpDN+uZ6Vexm0UYfdB6
-         Y+AKHZdMq2L6jnLvKjPyAFL06FFPC4ZdEgbpcdoLoXsdeXSK0jYiOjEOBSsB0jbgoc
-         cNTpbwjPYoosnojrtrqsz28KymQonvuiKzPaJz5A/LpNygSZuEQ2aU2XpI7eZcJ2fM
-         pkM6lmkH+1cGXMHy5kQ9EnTagoEo2JYTaP/kHZBq+HhFP+G3YBOwiSwlpa2/FblVat
-         ysIG1tS5tA3nw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 62A57E270F9;
-        Tue,  1 Nov 2022 13:40:15 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v2 0/3] bpf/verifier: Use kmalloc_size_roundup() to
- match ksize() usage
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <166731001539.11065.9599565244134793508.git-patchwork-notify@kernel.org>
-Date:   Tue, 01 Nov 2022 13:40:15 +0000
+        Tue, 1 Nov 2022 09:47:09 -0400
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41E68DF9A;
+        Tue,  1 Nov 2022 06:47:08 -0700 (PDT)
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+        by www62.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1oprbT-000Bjd-Nz; Tue, 01 Nov 2022 14:46:55 +0100
+Received: from [85.1.206.226] (helo=linux.home)
+        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1oprbT-000CPs-6k; Tue, 01 Nov 2022 14:46:55 +0100
+Subject: Re: [PATCH bpf-next v2 1/3] bpf/verifier: Fix potential memory leak
+ in array reallocation
+To:     Bill Wendling <morbo@google.com>, Kees Cook <keescook@chromium.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Zhengchao Shao <shaozhengchao@huawei.com>,
+        Lorenz Bauer <oss@lmb.io>
 References: <20221029024444.gonna.633-kees@kernel.org>
-In-Reply-To: <20221029024444.gonna.633-kees@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
-        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
-        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
-        jolsa@kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, linux-hardening@vger.kernel.org
+ <20221029025433.2533810-1-keescook@chromium.org>
+ <CAGG=3QXYVwQ5pwARdGTenm-mDQn4Tcz6U-=EZ8BDcwBkM5bFfg@mail.gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <2c6203ac-de2a-607e-0589-0a69f91e0479@iogearbox.net>
+Date:   Tue, 1 Nov 2022 14:46:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <CAGG=3QXYVwQ5pwARdGTenm-mDQn4Tcz6U-=EZ8BDcwBkM5bFfg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.6/26706/Tue Nov  1 08:52:34 2022)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
+[ +Lorenz ]
 
-This series was applied to bpf/bpf.git (master)
-by Daniel Borkmann <daniel@iogearbox.net>:
-
-On Fri, 28 Oct 2022 19:54:29 -0700 you wrote:
-> v2:
-> - split up patch into logical changes
-> - simplify copy_array, which can use ksize() directly
-> v1: https://lore.kernel.org/all/20221018090550.never.834-kees@kernel.org/
+On 10/31/22 9:16 PM, Bill Wendling wrote:
+> On Fri, Oct 28, 2022 at 7:55 PM Kees Cook <keescook@chromium.org> wrote:
+>>
+>> If an error (NULL) is returned by krealloc(), callers of realloc_array()
+>> were setting their allocation pointers to NULL, but on error krealloc()
+>> does not touch the original allocation. This would result in a memory
+>> resource leak. Instead, free the old allocation on the error handling
+>> path.
+>>
+>> Cc: Alexei Starovoitov <ast@kernel.org>
+>> Cc: Daniel Borkmann <daniel@iogearbox.net>
+>> Cc: John Fastabend <john.fastabend@gmail.com>
+>> Cc: Andrii Nakryiko <andrii@kernel.org>
+>> Cc: Martin KaFai Lau <martin.lau@linux.dev>
+>> Cc: Song Liu <song@kernel.org>
+>> Cc: Yonghong Song <yhs@fb.com>
+>> Cc: KP Singh <kpsingh@kernel.org>
+>> Cc: Stanislav Fomichev <sdf@google.com>
+>> Cc: Hao Luo <haoluo@google.com>
+>> Cc: Jiri Olsa <jolsa@kernel.org>
+>> Cc: bpf@vger.kernel.org
+>> Signed-off-by: Kees Cook <keescook@chromium.org>
 > 
-> Hi,
+> Reviewed-by: Bill Wendling <morbo@google.com>
 > 
-> [...]
+>> ---
+>>   kernel/bpf/verifier.c | 9 +++++++--
+>>   1 file changed, 7 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+>> index 014ee0953dbd..eb8c34db74c7 100644
+>> --- a/kernel/bpf/verifier.c
+>> +++ b/kernel/bpf/verifier.c
+>> @@ -1027,12 +1027,17 @@ static void *copy_array(void *dst, const void *src, size_t n, size_t size, gfp_t
+>>    */
+>>   static void *realloc_array(void *arr, size_t old_n, size_t new_n, size_t size)
+>>   {
+>> +       void *new_arr;
+>> +
+>>          if (!new_n || old_n == new_n)
+>>                  goto out;
+>>
+>> -       arr = krealloc_array(arr, new_n, size, GFP_KERNEL);
+>> -       if (!arr)
+>> +       new_arr = krealloc_array(arr, new_n, size, GFP_KERNEL);
+>> +       if (!new_arr) {
+>> +               kfree(arr);
+>>                  return NULL;
+>> +       }
+>> +       arr = new_arr;
 
-Here is the summary with links:
-  - [bpf-next,v2,1/3] bpf/verifier: Fix potential memory leak in array reallocation
-    https://git.kernel.org/bpf/bpf/c/42378a9ca553
-  - [bpf-next,v2,2/3] bpf/verifier: Use kmalloc_size_roundup() to match ksize() usage
-    (no matching commit)
-  - [bpf-next,v2,3/3] bpf/verifier: Take advantage of full allocation sizes
-    (no matching commit)
+Fyi, I took this fix into bpf tree and improved commit log a bit with the
+one from Zhengchao [0] given yours came in first. Fixes tag would have been
+nice, I added the c69431aab67a to the commit message while applying.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+   [0] https://patchwork.kernel.org/project/netdevbpf/patch/20221031070812.339883-1-shaozhengchao@huawei.com/
 
+>>          if (new_n > old_n)
+>>                  memset(arr + old_n * size, 0, (new_n - old_n) * size);
+>> --
+>> 2.34.1
+>>
 
