@@ -2,139 +2,107 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B8AC4332F
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Nov 2022 17:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1975FC433FE
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Nov 2022 19:33:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230348AbiKBRSX (ORCPT
+        id S230017AbiKBTdi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Nov 2022 13:18:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44436 "EHLO
+        Wed, 2 Nov 2022 15:33:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230259AbiKBRSV (ORCPT
+        with ESMTP id S230045AbiKBTdg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Nov 2022 13:18:21 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0864E1C41A
-        for <linux-hardening@vger.kernel.org>; Wed,  2 Nov 2022 10:18:20 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id b9so10926762ljr.5
-        for <linux-hardening@vger.kernel.org>; Wed, 02 Nov 2022 10:18:19 -0700 (PDT)
+        Wed, 2 Nov 2022 15:33:36 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A319655A6
+        for <linux-hardening@vger.kernel.org>; Wed,  2 Nov 2022 12:33:35 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id d24so17554904pls.4
+        for <linux-hardening@vger.kernel.org>; Wed, 02 Nov 2022 12:33:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RknuEqUoiunPXi2OLjUbhlEwq60lRe2RTsR6hdfQJ0Y=;
-        b=RRnZ2dze/6CLhyKFhxGEw08Ckp4XwE8DWxZ0rZxAOcMdf5vdt9kUpYu0i/LLqPGehj
-         pYwLBE+/5Qto0rQ3PGtpUP8z7cfs5Z97tOSErjIiA7F6Gr0KhuXI0VS03iRzDSRFYUNa
-         ZtYLM10ihngzyi4eQW3AMFVgmfH2JF5B4VVzM=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Is8uxYlhyk8bBxYXj/AJ+5Ed7risnbmV/bZZuRONlGw=;
+        b=YgTo3g4CWnxassQXwnQGCJRK8UV2dkG1gd5qUAMt9TS//89B3+EgDk8JBHMqQRWbqE
+         SasIIt6rr9pasf/tRkH/JpmtucjEENqYnz4Ij31JPs/tyYvKfhh0Xab/ZL8Kv52Brl9z
+         k+6eHolz1b5J42Hw8E/CNYhE3n7UgliU9iEI8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RknuEqUoiunPXi2OLjUbhlEwq60lRe2RTsR6hdfQJ0Y=;
-        b=6P9wBjCmRUYBZjjOmLiF3W6SO3T+uI4++9qUhatkvxUuiEexKj7uc2RraBc2s1JP16
-         UtERNVnCJ3FVpdgqUpgIS2/rMp8pp66IKmfWRzE07VfUj0tOh6Bh/7W70QMgQ38qkRNL
-         EV1CiRYlVVdfkjGGOdmSqVz9bZ83rtxN5TZXxJ8oiwWBq+Xi674F6wy7Y/GROYO5nmpS
-         xT8fJU5sK9huv15EG2+LYdV5k90gatNT8lBr6nDBSWlLPLjMYUzIhS3x5mTYywVJVrFN
-         JFbXwbjvkZsPTr/qNf+MXFzmpVG1Gr2qoDmvPunC0yrTs7nUVE/1QS+XGYQ5v4O/ROHn
-         okww==
-X-Gm-Message-State: ACrzQf1Z92mMn6wZ8yY3j1hcgnQqOXpQ4Qpu/opstRC89fzzT3YqSMra
-        vKxb57F3KBvkpKpR+knvJfDaH+e2SAqVwmKiSf3Kvg==
-X-Google-Smtp-Source: AMsMyM7GIYG7A4ghgZ0+aS8SyddPotFMK2d1/uL5kMGl7GKycv3x9BCqeqPj62YF1UHA3B/H7CEDTV/OSueDj54yRvU=
-X-Received: by 2002:a05:651c:19a8:b0:277:3cb2:d9f9 with SMTP id
- bx40-20020a05651c19a800b002773cb2d9f9mr9918004ljb.278.1667409498411; Wed, 02
- Nov 2022 10:18:18 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Is8uxYlhyk8bBxYXj/AJ+5Ed7risnbmV/bZZuRONlGw=;
+        b=TWouCDjKwMVJqD73M59QnCY8jWunWqDsnaaSa0O7AQEDCDmcV8v2j808LVVxokjy4T
+         jggMYpjyjXUR1T/4/nLXM7aXTd5QmswuCbrnR6iukR09EqSDekvmLHlm4FZBIVgrXb0m
+         mvmD5jt3kCyjxUPIrxVPbM/6UPQvAoagoeFiNqJYywfFnsJRvng30otQMnD7yeAMCms3
+         6HTzIrMEqg3ZnZllNwFOD/feyvjpoyTknyJoxLNVGlqXFyz8UiuEnlvpLEerie2CHx25
+         rTgf5PAv6cvX3ve+w+LMsV1QIQibY/M3hN0F7oqyA3+tb8OEIjyHu9yZ36gLO7WcuZwe
+         jaew==
+X-Gm-Message-State: ACrzQf3U6MSyDAu9e8f4MMi4teF1daur/V5tL2Ast3Q6KbUE9STFkQRW
+        jhcR+LFoMWO1UBjrDxymXX7Jjg==
+X-Google-Smtp-Source: AMsMyM53U0WVK/IltYw2wXUwLPZJui+ftOfV8T9ZqcZx2iahytioyLerdzpOUR84Yg1+mPoG2ixzFA==
+X-Received: by 2002:a17:902:7446:b0:186:a3a1:782d with SMTP id e6-20020a170902744600b00186a3a1782dmr26452013plt.76.1667417615186;
+        Wed, 02 Nov 2022 12:33:35 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s7-20020a170902988700b001811a197797sm8605891plp.194.2022.11.02.12.33.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Nov 2022 12:33:34 -0700 (PDT)
+Date:   Wed, 2 Nov 2022 12:33:33 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+        luc.vanoostenryck@gmail.com, nathan@kernel.org,
+        ndesaulniers@google.com, trix@redhat.com, dlatypov@google.com,
+        vitor@massaru.org, gustavoars@kernel.org,
+        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, tvrtko.ursulin@linux.intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, linux-kernel@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-sparse@vger.kernel.org, arnd@kernel.org, mchehab@kernel.org,
+        mauro.chehab@linux.intel.com
+Subject: Re: [PATCH v5] overflow: Introduce overflows_type() and
+ castable_to_type()
+Message-ID: <202211021233.02BF0D38@keescook>
+References: <20220926191109.1803094-1-keescook@chromium.org>
+ <20221024201125.1416422-1-gwan-gyeong.mun@intel.com>
+ <307b90cb-b80d-6ce3-14ae-4a0b2ee5e447@prevas.dk>
 MIME-Version: 1.0
-References: <20220805222126.142525-1-jeffxu@google.com> <202208081018.9C782F184C@keescook>
- <CABi2SkVXMUVhSTJezfHt_BKxyKP+x++9oveuB3qJZL7N672UKw@mail.gmail.com> <202211011933.DD0979338@keescook>
-In-Reply-To: <202211011933.DD0979338@keescook>
-From:   Jeff Xu <jeffxu@chromium.org>
-Date:   Wed, 2 Nov 2022 10:18:07 -0700
-Message-ID: <CABi2SkWGo9Jrd=i1e2PoDWYGenGhR=pG=yGsQP5VLmizTmg-iA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] mm/memfd: MFD_NOEXEC for memfd_create
-To:     Kees Cook <keescook@chromium.org>
-Cc:     jeffxu@google.com, skhan@linuxfoundation.org,
-        akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
-        dverkamp@chromium.org, hughd@google.com, jorgelo@chromium.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, mnissler@chromium.org, jannh@google.com,
-        linux-hardening@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        dev@opencontainers.org, Christian Brauner <brauner@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <307b90cb-b80d-6ce3-14ae-4a0b2ee5e447@prevas.dk>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Nov 1, 2022 at 7:45 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Tue, Nov 01, 2022 at 04:14:39PM -0700, Jeff Xu wrote:
-> > Sorry for the long overdue reply.
->
-> No worries! I am a fan of thread necromancy. :)
->
-> > [...]
-> > 1> memfd_create:
-> > Add two flags:
-> > #define MFD_EXEC                      0x0008
-> > #define MFD_NOEXEC_SEAL    0x0010
-> > This lets application to set executable bit explicitly.
-> > (If application set both, it will be rejected)
->
-> So no MFD_NOEXEC without seal? (I'm fine with that.)
->
-no MFD_NOEXEC because memfd can be chmod to add x after creation,
-it is not secure.
+On Wed, Nov 02, 2022 at 12:52:32PM +0100, Rasmus Villemoes wrote:
+> On 24/10/2022 22.11, Gwan-gyeong Mun wrote:
+> > From: Kees Cook <keescook@chromium.org>
+> > 
+> > Implement a robust overflows_type() macro to test if a variable or
+> > constant value would overflow another variable or type. This can be
+> > used as a constant expression for static_assert() (which requires a
+> > constant expression[1][2]) when used on constant values. This must be
+> > constructed manually, since __builtin_add_overflow() does not produce
+> > a constant expression[3].
+> > 
+> > Additionally adds castable_to_type(), similar to __same_type(), but for
+> > checking if a constant value would overflow if cast to a given type.
+> > 
+> 
+> > +#define __overflows_type_constexpr(x, T) (			\
+> > +	is_unsigned_type(typeof(x)) ?				\
+> > +		(x) > type_max(typeof(T)) ? 1 : 0		\
+> > +	: is_unsigned_type(typeof(T)) ?				\
+> > +		(x) < 0 || (x) > type_max(typeof(T)) ? 1 : 0	\
+> > +		: (x) < type_min(typeof(T)) ||			\
+> > +		  (x) > type_max(typeof(T)) ? 1 : 0)
+> > +
+> 
+> Can't all these instances of "foo ? 1 : 0" be simplified to "foo"? That
+> would improve the readability of this thing somewhat IMO.
 
-no MFD_EXEC_SEAL because it is better to apply both w and x seal
-within the same function call, and w seal can't be applied at creation time.
+Oh, good point. :P I'll fix these.
 
-> > 2> For old application that doesn't set executable bit:
-> > Add a pid name-spaced sysctl.kernel.pid_mfd_noexec, with:
->
-> bikeshed: vm.memfd_noexec
-> (doesn't belong in "kernel", and seems better suited to "vm" than "fs")
->
-SG, will use vm.memfd_noexec
-
-> > value = 0: Default_EXEC
-> >      Honor MFD_EXEC and MFD_NOEXEC_SEAL
-> >      When none is set, will fall back to original behavior (EXEC)
->
-> Yeah. Rephrasing for myself to understand more clearly:
->
-> "memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL act like MFD_EXEC
-> was set."
->
-> > value = 1: Default_NOEXEC_SEAL
-> >       Honor MFD_EXEC and MFD_NOEXEC_SEAL
-> >       When none is set, will default to MFD_NOEXEC_SEAL
->
-> "memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL act like
-> MFD_NOEXEC_SEAL was set."
->
-Copy, this is clearer. Thanks.
-
-> Also, I think there should be a pr_warn_ratelimited() when
-> memfd_create() is used without either bit, so that there is some
-> pressure to please adjust their API calls to explicitly set a bit.
->
-Sure
-
-> > 3> Add a pid name-spaced sysctl kernel.pid_mfd_noexec_enforced: with:
-> > value = 0: default, not enforced.
-> > value = 1: enforce NOEXEC_SEAL (overwrite everything)
->
-> How about making this just mode "value 2" for the first sysctl?
-> "memfd_create() without MFD_NOEXEC_SEAL will be rejected."
->
-Good point. Kernel overwriting  might not be a good practice.
-I will add to vm.mfd_noexec.
-value = 2: "memfd_create() without MFD_NOEXEC_SEAL will be rejected."
-
-Thanks!
-Jeff
-
-> -Kees
->
-> --
-> Kees Cook
+-- 
+Kees Cook
