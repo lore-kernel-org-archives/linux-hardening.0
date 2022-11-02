@@ -2,107 +2,109 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1975FC433FE
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Nov 2022 19:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 016CFC433FE
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Nov 2022 19:40:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230017AbiKBTdi (ORCPT
+        id S230179AbiKBTkh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Nov 2022 15:33:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51922 "EHLO
+        Wed, 2 Nov 2022 15:40:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230045AbiKBTdg (ORCPT
+        with ESMTP id S230077AbiKBTkg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Nov 2022 15:33:36 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A319655A6
-        for <linux-hardening@vger.kernel.org>; Wed,  2 Nov 2022 12:33:35 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id d24so17554904pls.4
-        for <linux-hardening@vger.kernel.org>; Wed, 02 Nov 2022 12:33:35 -0700 (PDT)
+        Wed, 2 Nov 2022 15:40:36 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C9E110D9
+        for <linux-hardening@vger.kernel.org>; Wed,  2 Nov 2022 12:40:33 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id h14so17202871pjv.4
+        for <linux-hardening@vger.kernel.org>; Wed, 02 Nov 2022 12:40:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Is8uxYlhyk8bBxYXj/AJ+5Ed7risnbmV/bZZuRONlGw=;
-        b=YgTo3g4CWnxassQXwnQGCJRK8UV2dkG1gd5qUAMt9TS//89B3+EgDk8JBHMqQRWbqE
-         SasIIt6rr9pasf/tRkH/JpmtucjEENqYnz4Ij31JPs/tyYvKfhh0Xab/ZL8Kv52Brl9z
-         k+6eHolz1b5J42Hw8E/CNYhE3n7UgliU9iEI8=
+        bh=eB2CkIIW+FvN/Lo/L+v4C4FsoNsh4QvCTpwzE0gzBz4=;
+        b=kopbiQPKWrumIeCuEELANKVvXKnGRiVq/vRKpUKLVafnmidHI5pNYouJ+JNTPAt/v4
+         MguZEdCgIejN1AFkopf4SKhqQEoqmBgfllHic7LKiJoSRRNGE4nCyQkJ0bFpfskjlGls
+         LLl88AjgS80QOIl4RVeYl/lqzdPgMw4C3Vdn0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Is8uxYlhyk8bBxYXj/AJ+5Ed7risnbmV/bZZuRONlGw=;
-        b=TWouCDjKwMVJqD73M59QnCY8jWunWqDsnaaSa0O7AQEDCDmcV8v2j808LVVxokjy4T
-         jggMYpjyjXUR1T/4/nLXM7aXTd5QmswuCbrnR6iukR09EqSDekvmLHlm4FZBIVgrXb0m
-         mvmD5jt3kCyjxUPIrxVPbM/6UPQvAoagoeFiNqJYywfFnsJRvng30otQMnD7yeAMCms3
-         6HTzIrMEqg3ZnZllNwFOD/feyvjpoyTknyJoxLNVGlqXFyz8UiuEnlvpLEerie2CHx25
-         rTgf5PAv6cvX3ve+w+LMsV1QIQibY/M3hN0F7oqyA3+tb8OEIjyHu9yZ36gLO7WcuZwe
-         jaew==
-X-Gm-Message-State: ACrzQf3U6MSyDAu9e8f4MMi4teF1daur/V5tL2Ast3Q6KbUE9STFkQRW
-        jhcR+LFoMWO1UBjrDxymXX7Jjg==
-X-Google-Smtp-Source: AMsMyM53U0WVK/IltYw2wXUwLPZJui+ftOfV8T9ZqcZx2iahytioyLerdzpOUR84Yg1+mPoG2ixzFA==
-X-Received: by 2002:a17:902:7446:b0:186:a3a1:782d with SMTP id e6-20020a170902744600b00186a3a1782dmr26452013plt.76.1667417615186;
-        Wed, 02 Nov 2022 12:33:35 -0700 (PDT)
+        bh=eB2CkIIW+FvN/Lo/L+v4C4FsoNsh4QvCTpwzE0gzBz4=;
+        b=okK8XT9LOQRBcxQiTyMG6h1mLJ/liW9RiASOiHR+ThHCtyAB7RTAsa8l/BKvECz3EU
+         zB+c3oLrxt6cT/Vgkv3/g0geITk0cukRvnNhWeodm+F3voOojlABeKYm7cMg23nlawtD
+         eiA5aemCbRciMcNq7KPccsCpRmnX1I6Szaw4wcLllugVqC/4Jes1+i9RrFh+YCcM3hL1
+         53zmg2T8yFMsN5LyFJMu/GJkFmGjZT9o5n5Me312/+O8sjrMYKSpIZ5T/4QUqQith1Uc
+         lWwD2UObRzvthzAPNQHrFX9m/r7nedasXINjM2Vls2rkeoCKuNVYKuITp/abvwOuQFuB
+         rdFw==
+X-Gm-Message-State: ACrzQf1EMAj9WoUHXGQFbnEFcheNkFGe3LdjS2jz90OxoM2ptMieWEFx
+        915EWz4RjSG2sBBIRNt+JiGkbg==
+X-Google-Smtp-Source: AMsMyM4pC83ghVbZYi4UhG7ADEOPB5AsNmFJrX+HahRpRwGhQIgX+NMh2hyqdu4Oww6fhD1+9AghfA==
+X-Received: by 2002:a17:90b:2305:b0:213:7a2f:aed8 with SMTP id mt5-20020a17090b230500b002137a2faed8mr27732037pjb.129.1667418032775;
+        Wed, 02 Nov 2022 12:40:32 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s7-20020a170902988700b001811a197797sm8605891plp.194.2022.11.02.12.33.34
+        by smtp.gmail.com with ESMTPSA id iq1-20020a17090afb4100b002135de3013fsm1805607pjb.32.2022.11.02.12.40.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Nov 2022 12:33:34 -0700 (PDT)
-Date:   Wed, 2 Nov 2022 12:33:33 -0700
+        Wed, 02 Nov 2022 12:40:32 -0700 (PDT)
+Date:   Wed, 2 Nov 2022 12:40:31 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc:     Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        luc.vanoostenryck@gmail.com, nathan@kernel.org,
-        ndesaulniers@google.com, trix@redhat.com, dlatypov@google.com,
-        vitor@massaru.org, gustavoars@kernel.org,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, tvrtko.ursulin@linux.intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-sparse@vger.kernel.org, arnd@kernel.org, mchehab@kernel.org,
-        mauro.chehab@linux.intel.com
-Subject: Re: [PATCH v5] overflow: Introduce overflows_type() and
- castable_to_type()
-Message-ID: <202211021233.02BF0D38@keescook>
-References: <20220926191109.1803094-1-keescook@chromium.org>
- <20221024201125.1416422-1-gwan-gyeong.mun@intel.com>
- <307b90cb-b80d-6ce3-14ae-4a0b2ee5e447@prevas.dk>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        David Gow <davidgow@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH 4/6] string: Add __realloc_size hint to kmemdup()
+Message-ID: <202211021240.4A97FDE0@keescook>
+References: <20221101222520.never.109-kees@kernel.org>
+ <20221101223321.1326815-4-keescook@chromium.org>
+ <b0289429-8779-643a-07da-3cda83c8ca9d@prevas.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <307b90cb-b80d-6ce3-14ae-4a0b2ee5e447@prevas.dk>
+In-Reply-To: <b0289429-8779-643a-07da-3cda83c8ca9d@prevas.dk>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Nov 02, 2022 at 12:52:32PM +0100, Rasmus Villemoes wrote:
-> On 24/10/2022 22.11, Gwan-gyeong Mun wrote:
-> > From: Kees Cook <keescook@chromium.org>
+On Wed, Nov 02, 2022 at 10:26:40AM +0100, Rasmus Villemoes wrote:
+> On 01/11/2022 23.33, Kees Cook wrote:
+> > Add __realloc_size() hint to kmemdup() so the compiler can reason about
+> > the length of the returned buffer. (These must not use __alloc_size,
+> > since those include __malloc which says the contents aren't defined[1]).
 > > 
-> > Implement a robust overflows_type() macro to test if a variable or
-> > constant value would overflow another variable or type. This can be
-> > used as a constant expression for static_assert() (which requires a
-> > constant expression[1][2]) when used on constant values. This must be
-> > constructed manually, since __builtin_add_overflow() does not produce
-> > a constant expression[3].
-> > 
-> > Additionally adds castable_to_type(), similar to __same_type(), but for
-> > checking if a constant value would overflow if cast to a given type.
+> > [1] https://lore.kernel.org/linux-hardening/d199c2af-06af-8a50-a6a1-00eefa0b67b4@prevas.dk/
 > > 
 > 
-> > +#define __overflows_type_constexpr(x, T) (			\
-> > +	is_unsigned_type(typeof(x)) ?				\
-> > +		(x) > type_max(typeof(T)) ? 1 : 0		\
-> > +	: is_unsigned_type(typeof(T)) ?				\
-> > +		(x) < 0 || (x) > type_max(typeof(T)) ? 1 : 0	\
-> > +		: (x) < type_min(typeof(T)) ||			\
-> > +		  (x) > type_max(typeof(T)) ? 1 : 0)
-> > +
+> >  extern char *kstrndup(const char *s, size_t len, gfp_t gfp);
+> > -extern void *kmemdup(const void *src, size_t len, gfp_t gfp) __alloc_size(2);
+> > +extern void *kmemdup(const void *src, size_t len, gfp_t gfp) __realloc_size(2);
 > 
-> Can't all these instances of "foo ? 1 : 0" be simplified to "foo"? That
-> would improve the readability of this thing somewhat IMO.
+> What tree is this based on? I see that kmemdup() has grown that bogus
+> __alloc_size in next-20221101, but in next-20221102 this commit seems to
+> DTRT, namely
+> 
+> -extern void *kmemdup(const void *src, size_t len, gfp_t gfp);
+> +extern void *kmemdup(const void *src, size_t len, gfp_t gfp)
+> __realloc_size(2);
+> 
+> (i.e. there should never be an intermediate commit where kmemdup has
+> __alloc_size()).
 
-Oh, good point. :P I'll fix these.
+Right -- I fixed in in my -next tree to not use __alloc_size.
 
 -- 
 Kees Cook
