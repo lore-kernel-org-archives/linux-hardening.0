@@ -2,215 +2,252 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A9BC433FE
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Nov 2022 14:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A5FC433FE
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Nov 2022 15:51:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231574AbiKBOWG (ORCPT
+        id S230312AbiKBPvf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Nov 2022 10:22:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49336 "EHLO
+        Wed, 2 Nov 2022 11:51:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231616AbiKBOVz (ORCPT
+        with ESMTP id S230419AbiKBPvc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Nov 2022 10:21:55 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADF041F9D3;
-        Wed,  2 Nov 2022 07:21:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667398911; x=1698934911;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=retV7GdxqEb0pUxQrkzguKcTO5briOZRQGZ+OOkTEXM=;
-  b=QxLmjb77DeQmg39n28GyPj534PR72/X34LfgOVXrF9QKEhhZ+i+pSgCj
-   U+oncv9DO4VctN9kdsICbp6zuDJ5bim76t0yCdP0VWLazA3BvdAQQ/SST
-   WLIx364R9k8i45LHzqcaXZ8fqawnvp09ba5AfUc9OJ6ytnrb/DPHEurE5
-   CHhNMYwkNzDk3ZqLxFPmdXIYd224zCIgw4XnCPdAVhlOZkepSqmb3qT8y
-   jO32qpC7Tsj8t7xQD04SsqUNgzyYrUaREB9GOVi5PJdgxT7cPj+J8C1/A
-   VCezASjDFNAju5oL+cJDusAeD6EShM8f3i+I3oqcrIYaE8GWMrOvJWwr3
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10519"; a="308136976"
-X-IronPort-AV: E=Sophos;i="5.95,234,1661842800"; 
-   d="scan'208";a="308136976"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2022 07:12:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10519"; a="703279820"
-X-IronPort-AV: E=Sophos;i="5.95,234,1661842800"; 
-   d="scan'208";a="703279820"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga004.fm.intel.com with ESMTP; 02 Nov 2022 07:12:36 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 2 Nov 2022 07:12:35 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31 via Frontend Transport; Wed, 2 Nov 2022 07:12:35 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.31; Wed, 2 Nov 2022 07:12:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bTWK4Jj4JVW/JAMWPqCX1BEf39Qq/F1GiNXYNXk1b0G1uHs7U+hDPEErTfSaUYhUqFZq3xTSQ75gKXGBgylmTTJ6rZLmw5hs1P0orzD7aBlYLKqjhldVVFnddcmqFBzlEAUA2cQRVEQ5HrtGY0LDZqTn/ChquhiXkGQbDZhQN+a9HFiIk2pCQTEox5odKpX0AqLnZH6VI0kSEZh0jNNmu1VCJZZhDpoTggeArV9hag5+ytYOFHu7WXC3Z6AYqPTQyLoKIl25pAIqoAEq6MLgLuqg1Tlp6+QGJdHdnxMPtK35zz137lw2UZXvSiN0DrslSj4/L6/FxegvY+WCqORbdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mib06KMeC8JMgIImcc338NJT7S4nFrlXi4Dl03XcuWg=;
- b=iNLuRgQ+33GgzaCmSuUn1qcb9+pEtvJMap9cuEEiHT/HbSAAq4RQu3qb231qLt5VyvWSkHsymvMzzv1hBxINPE142gh7uBpBk84k3begov+KuNNs1j8RSptMtuxwU+9J6YTYDEPemEs2E1E/ARfqAh2e2EEbASNUZdYVwmdMbiL/s5TIUUWJ/ZhPrBfYQVzfqOOgSLkP2mwSdoEF/awn4Lw+H8ub2pkFZOaMnSfA+9ak7Oxx/d9LMw3Lupxk+ufa7PZ4ktpdjv1ybeQV7SmGt0UmYrOUzkjudyndgdVNAmFzE/RsJXTkBDTclsLvsvMuUvApayCsuJs4sCOaDA8IrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DM5PR11MB1324.namprd11.prod.outlook.com (2603:10b6:3:15::14) by
- BL1PR11MB5237.namprd11.prod.outlook.com (2603:10b6:208:310::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.19; Wed, 2 Nov
- 2022 14:12:34 +0000
-Received: from DM5PR11MB1324.namprd11.prod.outlook.com
- ([fe80::793f:3870:4550:8aee]) by DM5PR11MB1324.namprd11.prod.outlook.com
- ([fe80::793f:3870:4550:8aee%8]) with mapi id 15.20.5791.022; Wed, 2 Nov 2022
- 14:12:33 +0000
-From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+        Wed, 2 Nov 2022 11:51:32 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB1B62BB2D;
+        Wed,  2 Nov 2022 08:51:29 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 9AF0A21A19;
+        Wed,  2 Nov 2022 15:51:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1667404287;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Mcjly+6k+Roo3zyR9RHj6FlFx6EO6C07QIf6qAKL3qo=;
+        b=2r+YUzXzHoC/l/YtjVcBqtY0PK0ewnXcrvCyqe5wLTjz1fNJWCTZneNtn2szwPFsCa8CH3
+        qdufc08KCX3CCv4G4zuTefOFJl3ZVHUaZjwFgWaMWsfxjG838EFzGpVuOh4mXXtIhJy+vO
+        ni0/Esf+rHShei0WTyUr0EwZqC0htaM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1667404287;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Mcjly+6k+Roo3zyR9RHj6FlFx6EO6C07QIf6qAKL3qo=;
+        b=GfmqQXikpWdJagccRC2toRmQB+NQU2EDYKTmps4xBtGO0cwsqy+djFjCmKyaI3p+SK5amY
+        nulqPyXP6SLsL5BA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 209AD139D3;
+        Wed,  2 Nov 2022 15:51:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id alAbBf+RYmNeDwAAMHmgww
+        (envelope-from <pvorel@suse.cz>); Wed, 02 Nov 2022 15:51:27 +0000
+Date:   Wed, 2 Nov 2022 16:51:25 +0100
+From:   Petr Vorel <pvorel@suse.cz>
 To:     Kees Cook <keescook@chromium.org>
-CC:     "Brandeburg, Jesse" <jesse.brandeburg@intel.com>,
-        "Nguyen, Anthony L" <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric Dumazet" <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH v3 2/2] igb: Proactively round up to kmalloc bucket size
-Thread-Topic: [PATCH v3 2/2] igb: Proactively round up to kmalloc bucket size
-Thread-Index: AQHY60UEuvCQ5/6nqkOEi2jDwjCFAa4o+uNAgAGizYCAARDSsA==
-Date:   Wed, 2 Nov 2022 14:12:33 +0000
-Message-ID: <DM5PR11MB1324EC38950CD47541E69EE1C1399@DM5PR11MB1324.namprd11.prod.outlook.com>
-References: <20221018092340.never.556-kees@kernel.org>
- <20221018092526.4035344-2-keescook@chromium.org>
- <202210282013.82F28AE92@keescook>
- <DM5PR11MB1324802F3F2098CB3239CF36C1379@DM5PR11MB1324.namprd11.prod.outlook.com>
- <202211011433.A64BF17F46@keescook>
-In-Reply-To: <202211011433.A64BF17F46@keescook>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.6.500.17
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM5PR11MB1324:EE_|BL1PR11MB5237:EE_
-x-ms-office365-filtering-correlation-id: 82403c92-d89a-40b0-e08d-08dabcdc4988
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MMTZNsJOnyR3BwG/4ugpQqbbuz5Rc+4RMcOgOTGvTD/ZudBbwX8UbTQYDbYqk02/96Z8bPf0yhYeaMT0F43IWSHZgtdtZKjdn+1Qdj22aUEBcrm+t71IXuPwrQhnHXL0JIfgs5oB5V7ml63c/p7IuT96T05wyax471zYOUy8953YE6C9UlOusmZj9Skx4VlBcmpTPoGe+GCOiQqrR5SFBdgvIblXDEdosNDJPSBCqX6S0hzEE5uCn0OojH1dQfALWhjl1Z1WEy4KQQfgADYomeRRf1EP2K+EPK9y/QoBMSkAE3SB7dz5rGY3uLNnZjwz1foa/iL+5iptyZlJ+KVAnkHq2lQ/YilLMzMzxkD5A5MOxLLkOxNSgLrMirfxowsfxFCVLqPjNnSb0Mg26Emf7ic6PDWBxWlCS4ypzYH0FP8Iu2wSORJ7OJX2MNPUtPQynFOV1FnTctZIu3WRNhccUW7qlWnXIMuz0wt4CDggsc7ql9fC1C2p3Gjjh79DvDiq/zKtExtSGxBLznvoVCJWRA3bkOL+sc8nDu7UMdcYERkMACNj0Umi8+VV4mWiMZQnIS1uQTc1/4pwK3Ej5Ud6EKIXBDy5HIPQ409dvB/+wJ7Xx96xhgBYMAkt4qFgtUW0mLSQdIeznmWGIB8xf8fFtbYMIV1bCUyGXiORiqR/xvbFQOQutp4yby55nG2iscHtMSwXO1Jx6Tj3hSyj0XQNsSnXjofoTnwOlH7lJg8qrYgvGS7fxlrL2zfQuS8YsN8atggM9LaGFna/IoE23IUHJw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1324.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(346002)(136003)(396003)(39860400002)(376002)(451199015)(122000001)(83380400001)(2906002)(71200400001)(478600001)(82960400001)(38100700002)(9686003)(66946007)(38070700005)(64756008)(66556008)(76116006)(66476007)(4326008)(8676002)(66446008)(7696005)(41300700001)(55016003)(186003)(86362001)(6506007)(6916009)(33656002)(5660300002)(52536014)(316002)(54906003)(26005)(8936002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?5DRUZsBrwLWpq0POZNu7gUJ/VDIWkmj4U2UT63069JcpRn6Pd08H2QyvtkqL?=
- =?us-ascii?Q?qlWqT3VAzhpWZ2mlIokIuC+qiO2enEqq94uhOCcxmhQjcJpVFmNt8KA1A4Ld?=
- =?us-ascii?Q?jvht6UNYGSqzGH1/7QO+eEgDb0gi/73+SU5GO0PIErnrWHdx/mUv02ouPmmh?=
- =?us-ascii?Q?RxDx5TP4WRu6OH7K5417t2XUGQZcHRprvGZErcxleRd7o5yRwDpZoF26wanS?=
- =?us-ascii?Q?ZjGT3lYkl9jr6RSSmHWfhHEiPtZveFYOeQF29fsKqTrAQPjcJKcS10F931oK?=
- =?us-ascii?Q?Qb1/lhvlSvlBLIod1wgMnU048m+jjzWq49zhF59rf+Y6ttbicoPH7b8JBqLz?=
- =?us-ascii?Q?h9uNxG+ihiYVp8zolayzlfsIndREXngs7fzas9m51Z9MvnP8DrlmuSeCEdtC?=
- =?us-ascii?Q?F2sOHfYY7jiE/nMi/pLQBu6/iM0l4XuLoil9oBDbaG2h34AGkXnP3TBCtS2c?=
- =?us-ascii?Q?AyilW0+fEeK0nmiALEy94Q0wkaQKn2zAggON5tOA0aK9YIVIe+/usOFzCQfB?=
- =?us-ascii?Q?YbNeuNNd84W23ACCqMc7gPXauAzhVsij2k2UQCLHkejeBn2RwaczNzt0ddR6?=
- =?us-ascii?Q?tJO351g0G4JSAcaBAyvLQUNQCZz+Bpog/WKQfBjiFdiZnXwopNl4ZctSDJd7?=
- =?us-ascii?Q?kZTDuq/DkSH5PNKklaJvmw3aeJhUlnowLmBpqkJ39U3C7q5zzFfddZ8uRTfD?=
- =?us-ascii?Q?ctA5CwGQVnljaoeaT5HwjL7nNnAJ5StMdw7h9Gq2JtAqwjsr/XqgTXUa1pEc?=
- =?us-ascii?Q?jUv2m7AmsGbQWtLXlt4pMdgNbcyQb0GtGtNNPHiaB9yx+mowlq+SS8QzWQKo?=
- =?us-ascii?Q?eBWoGJi5hCnuGjHUYX12gv7kdz4RQWqlxYbGI8rfHtFQUaNk+0JUv987TJZl?=
- =?us-ascii?Q?8ixn042MgXW8pkuDcLbGHHCZ2indEHmEV6xZamsZgI8Q3+siO6atyCVVCwJd?=
- =?us-ascii?Q?u0hj2qMJEpBJx77OBDquRe3JQBf0LgC2xksnTpSf7Il/t2y2TLtT02m9QlOB?=
- =?us-ascii?Q?ncqJN06on1NjMyPQMzWXuL0QakeTTheOnZ1qVSGVKk0KgZqmNS5oBpUu0C70?=
- =?us-ascii?Q?3PclfbO8Q9bixZTCRQEkOrI7u01CmqIH0wHpwmTOXqrAHmZegRcNf7G0V7yJ?=
- =?us-ascii?Q?UsYN6I7zOdjNSOLp94J7nQyct6vDuEbuSkFWpiPg7NsPfmklnRGRyeQVKDwm?=
- =?us-ascii?Q?Uq9JkbmvB+AVDPK/exmVKCGpE69QpqT2qG8fJYFpkmT9IAaJ6NhuRAf3lg0b?=
- =?us-ascii?Q?O5f92lW3aUsomftEGj/Lr94aApH3f1dsb5RYxOigjgAMilFvj6UMARyT6qdY?=
- =?us-ascii?Q?ZAHH4xNNHhmJPI0KnFzgQut1XJ6BDoM/f3KXlSjGFor7ti/Znz/dW+qN6zzv?=
- =?us-ascii?Q?rHActq8IwOC9zUvZRlAHP0s2NrRvFCJgujzkrTb8JjC6OTkHWIqUcM73+YZg?=
- =?us-ascii?Q?Ni66Qhf4OZ4AqDSI3C40M3Pp4OxJUEQ0odCZ5grRenWuvqrPEk6/Jrep19x0?=
- =?us-ascii?Q?wKQP4C8hji5TJUsWZMeoBArszbXg/yQxi+hp6UZ9Nga6X0G8cVLlkVZLr83p?=
- =?us-ascii?Q?R4W2T8dbxLtOoxBqfSBiZfCrJNfWDRcipsewv3jp?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        kernel test robot <yujie.liu@intel.com>,
+        Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
+        Dave Jones <davej@codemonkey.org.uk>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH v2] NFS: Avoid memcpy() run-time warning for struct
+ sockaddr overflows
+Message-ID: <Y2KR/Vw/aLJlDoXc@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20221017043107.never.457-kees@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1324.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 82403c92-d89a-40b0-e08d-08dabcdc4988
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Nov 2022 14:12:33.8255
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yLsdh5FPRDaD1PP32O+y9N+e7COoiyA1nPBDVyzqmZaF+AnEXHM2YcmThZN4iLgM/Qb27+nqZM2UnCHohn6NrIXMqIrXw8rDx8vOzU5pEfY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5237
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221017043107.never.457-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
->-----Original Message-----
->From: Kees Cook <keescook@chromium.org>
->Sent: Tuesday, November 1, 2022 5:37 PM
->To: Ruhl, Michael J <michael.j.ruhl@intel.com>
->Cc: Brandeburg, Jesse <jesse.brandeburg@intel.com>; Nguyen, Anthony L
-><anthony.l.nguyen@intel.com>; David S. Miller <davem@davemloft.net>;
->Eric Dumazet <edumazet@google.com>; Jakub Kicinski <kuba@kernel.org>;
->Paolo Abeni <pabeni@redhat.com>; intel-wired-lan@lists.osuosl.org;
->netdev@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
->hardening@vger.kernel.org
->Subject: Re: [PATCH v3 2/2] igb: Proactively round up to kmalloc bucket si=
-ze
->
->On Mon, Oct 31, 2022 at 08:42:36PM +0000, Ruhl, Michael J wrote:
->> Looking at the size usage (from elixir), I see:
->>
->> --
->> 	if (!q_vector) {
->> 		q_vector =3D kzalloc(size, GFP_KERNEL);
->> 	} else if (size > ksize(q_vector)) {
->> 		kfree_rcu(q_vector, rcu);
->> 		q_vector =3D kzalloc(size, GFP_KERNEL);
->> 	} else {
->> 		memset(q_vector, 0, size);
->> 	}
->> --
->>
->> If the size is rounded up, will the (size > ksize()) check ever be true?
->>
->> I.e. have you eliminated this check (and maybe getting rid of the need f=
-or
->first patch?)?
->
->Hi!
->
->It looked like igb_alloc_q_vector() was designed to be called multiple
->times on the same q_vector (i.e. to grow its allocation size over time).
->So for that case, yes, the "size > ksize(q_vector)" check is needed. If
->it's only ever called once (which is hard for me to tell), then no. (And
->if "no", why was the alloc/free case even there in the first place?)
+Hi all,
 
-Ahh, Ok, I missed the fact that size is based on ring_count.  When I saw
-the "struct_size" I assumed that size would be the same every time and
-missed this point.
+Reviewed-by: Petr Vorel <pvorel@suse.cz>
 
-So can vary over time, and this ksize check is needed.
+It looks like it fixed all kernel oops triggered when running LTP NFS tests
+(net.nfs runtest file).
 
-With that in mind these patches look good to me.
+First one was reported by Dave Jones
+(https://lore.kernel.org/all/Y0zEzZwhOxTDcBTB@codemonkey.org.uk/)
 
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+and both were addressed in by this patchset.
 
-Mike
+BTW There are some other errors lockd related (nfslock* tests), I'll investigate
+them during this week:
+[  967.545642] lockd: cannot monitor 10.0.0.2
+[  974.016225] xs_tcp_setup_socket: connect returned unhandled error -107
 
->-Kees
->
->--
->Kees Cook
+Thanks Kees!
+
+Kind regards,
+Petr
+
+[  125.774063] ------------[ cut here ]------------
+[  125.775460] memcpy: detected field-spanning write (size 28) of single field "request.sap" at fs/nfs/super.c:857 (size 18446744073709551615)
+[  125.777904] WARNING: CPU: 0 PID: 3217 at fs/nfs/super.c:857 nfs_request_mount.constprop.0.isra.0+0x1cf/0x1e0 [nfs]
+[  125.779823] Modules linked in: rpcsec_gss_krb5(E) nfsv4(E) dns_resolver(E) nfsv3(E) nfs(E) fscache(E) netfs(E) xfrm_user(E) xfrm_algo(E) veth(E) af_packet(E) rfkill(E) qrtr(E) intel_rapl_msr(E) intel_rapl_common(E) intel_pmc_core_pltdrv(E) intel_pmc_core(E) kvm_intel(E) snd_hda_codec_generic(E) ledtrig_audio(E) snd_hda_intel(E) snd_intel_dspcfg(E) snd_intel_sdw_acpi(E) iTCO_wdt(E) intel_pmc_bxt(E) iTCO_vendor_support(E) snd_hda_codec(E) kvm(E) irqbypass(E) pcspkr(E) snd_hda_core(E) snd_hwdep(E) snd_pcm(E) snd_timer(E) joydev(E) i2c_i801(E) lpc_ich(E) i2c_smbus(E) snd(E) soundcore(E) virtio_net(E) virtio_balloon(E) net_failover(E) failover(E) tiny_power_button(E) button(E) nfsd(E) auth_rpcgss(E) nfs_acl(E) lockd(E) grace(E) fuse(E) configfs(E) sunrpc(E) ip_tables(E) x_tables(E) hid_generic(E) usbhid(E) crct10dif_pclmul(E) crc32_pclmul(E) polyval_clmulni(E) polyval_generic(E) gf128mul(E) ghash_clmulni_intel(E) sha512_ssse3(E) aesni_intel(E) xhci_pci(E) crypto_simd(E)
+[  125.779892]  xhci_pci_renesas(E) cryptd(E) serio_raw(E) xhci_hcd(E) virtio_rng(E) virtio_blk(E) usbcore(E) virtio_gpu(E) virtio_dma_buf(E) btrfs(E) blake2b_generic(E) libcrc32c(E) crc32c_intel(E) xor(E) raid6_pq(E) sg(E) dm_multipath(E) dm_mod(E) scsi_dh_rdac(E) scsi_dh_emc(E) scsi_dh_alua(E) qemu_fw_cfg(E)
+[  125.793324] Unloaded tainted modules: intel_tcc_cooling(E):2 pcc_cpufreq(E):2 acpi_cpufreq(E):2
+[  125.799336] CPU: 0 PID: 3217 Comm: mount.nfs Tainted: G            E      6.1.0-rc3-0.g3b74e67-default #1 openSUSE Tumbleweed (unreleased) 83d9036cc26826a41b4e9f7bea95f22c34b218fc
+[  125.802007] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.0-0-gd239552-rebuilt.opensuse.org 04/01/2014
+[  125.804599] RIP: 0010:nfs_request_mount.constprop.0.isra.0+0x1cf/0x1e0 [nfs]
+[  125.806374] Code: 0f 85 2d ff ff ff 48 c7 c1 ff ff ff ff 48 c7 c2 80 4e da c0 48 89 ee 48 c7 c7 b0 4e da c0 c6 05 68 91 04 00 01 e8 43 e8 d7 ca <0f> 0b 48 8b 3c 24 e9 fe fe ff ff e8 91 01 dd ca 90 0f 1f 44 00 00
+[  125.809487] RSP: 0018:ffffac0a0157fce0 EFLAGS: 00010282
+[  125.810651] RAX: 0000000000000000 RBX: ffff9819c3cd5c00 RCX: 0000000000000027
+[  125.811999] RDX: ffff981a1e4224c8 RSI: 0000000000000001 RDI: ffff981a1e4224c0
+[  125.813296] RBP: 000000000000001c R08: 0000000000000000 R09: ffffac0a0157fb88
+[  125.814622] R10: 0000000000000003 R11: ffffffff8c958348 R12: ffff9819c3cd5d30
+[  125.815971] R13: ffff9819c64c1340 R14: ffff9819c39ae0c0 R15: 0000000000000001
+[  125.817269] FS:  00007f0283539100(0000) GS:ffff981a1e400000(0000) knlGS:0000000000000000
+[  125.818816] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  125.820120] CR2: 00005580d080bc68 CR3: 0000000003c6c003 CR4: 0000000000370ef0
+[  125.821557] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  125.822924] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  125.824417] Call Trace:
+[  125.825286]  <TASK>
+[  125.826030]  nfs_try_get_tree+0xa7/0x200 [nfs 25f29e807864c924ae56dc3fe894ed7d36f5a514]
+[  125.827520]  ? nfs_get_tree+0x1ec/0x6b0 [nfs 25f29e807864c924ae56dc3fe894ed7d36f5a514]
+[  125.829262]  ? __kmalloc_node_track_caller+0x48/0x150
+[  125.830466]  ? get_nfs_version+0x5f/0x130 [nfs 25f29e807864c924ae56dc3fe894ed7d36f5a514]
+[  125.831941]  ? nfs_get_tree+0x447/0x6b0 [nfs 25f29e807864c924ae56dc3fe894ed7d36f5a514]
+[  125.833408]  vfs_get_tree+0x22/0xc0
+[  125.834446]  path_mount+0x458/0xa60
+[  125.835614]  __x64_sys_mount+0x105/0x140
+[  125.836786]  do_syscall_64+0x58/0x80
+[  125.837681]  ? exit_to_user_mode_prepare+0x166/0x1f0
+[  125.838793]  ? syscall_exit_to_user_mode+0x17/0x40
+[  125.840130]  ? do_syscall_64+0x67/0x80
+[  125.841241]  ? do_syscall_64+0x67/0x80
+[  125.842641]  ? exc_page_fault+0x66/0x150
+[  125.844412]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+[  125.845895] RIP: 0033:0x7f02838f268e
+[  125.846862] Code: 48 8b 0d 85 e7 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 52 e7 0c 00 f7 d8 64 89 01 48
+[  125.850094] RSP: 002b:00007ffee724dfd8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+[  125.851555] RAX: ffffffffffffffda RBX: 00007ffee724e1f0 RCX: 00007f02838f268e
+[  125.852917] RDX: 0000563edbf74070 RSI: 0000563edbf74ed0 RDI: 0000563edbf74f40
+[  125.854350] RBP: 0000563edbf99f70 R08: 0000563edbf99f70 R09: 0000563edbf99f70
+[  125.855671] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffee724e1f0
+[  125.857006] R13: 00007ffee724e0d0 R14: 0000563edbf99ed0 R15: 0000563edbf77170
+[  125.858302]  </TASK>
+[  125.859007] ---[ end trace 0000000000000000 ]---
+
+export LTPROOT=/opt/ltp; runltp-ng -r net.nfs
+[   84.451572] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.0-0-gd239552-rebuilt.opensuse.org 04/01/2014
+[   84.454466] RIP: 0010:nfs_d_automount+0x24c/0x290 [nfs]
+[   84.456065] Code: 10 00 00 00 4c 89 ee 4c 89 04 24 48 c7 c2 48 52 da c0 48 c7 c7 88 52 da c0 48 89 44 24 08 c6 05 8c d3 03 00 01 e8 66 2a 77 ce <0f> 0b 48 8b 44 24 08 4c 8b 04 24 e9 b7 fe ff ff be 01 00 00 00 e8
+[   84.459311] RSP: 0018:ffffa50b811039f0 EFLAGS: 00010286
+[   84.460532] RAX: 0000000000000000 RBX: ffff88ad83696000 RCX: 0000000000000000
+[   84.461886] RDX: ffff88adde42efa8 RSI: ffff88adde4224c0 RDI: ffff88adde4224c0
+[   84.463367] RBP: ffff88ad9c862240 R08: 0000000000000000 R09: ffffa50b81103898
+[   84.464727] R10: 0000000000000003 R11: ffffffff90358348 R12: 000000000001e848
+[   84.466115] R13: 000000000000001c R14: ffff88ad82f09000 R15: ffff88ad83694c00
+[   84.467942] FS:  00007f46a8761100(0000) GS:ffff88adde400000(0000) knlGS:0000000000000000
+[   84.469531] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   84.470678] CR2: 0000555c1ce960d8 CR3: 0000000005782006 CR4: 0000000000370ef0
+[   84.471999] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   84.473420] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   84.474894] Call Trace:
+[   84.475701]  <TASK>
+[   84.476446]  __traverse_mounts+0x8c/0x210
+[   84.477494]  step_into+0x339/0x760
+[   84.478461]  link_path_walk.part.0.constprop.0+0x246/0x3b0
+[   84.479583]  ? path_init+0x5c/0x3c0
+[   84.480479]  path_lookupat+0x3e/0x190
+[   84.481439]  filename_lookup+0xd0/0x1d0
+[   84.482341]  ? getname_kernel+0x25/0x110
+[   84.483262]  ? kmem_cache_alloc+0x16a/0x360
+[   84.484258]  ? alloc_mnt_ns+0x57/0x170
+[   84.485522]  vfs_path_lookup+0x4e/0x80
+[   84.486628]  mount_subtree+0x8b/0x130
+[   84.487542]  do_nfs4_mount+0x269/0x360 [nfsv4 59ca3c817e039994690a920010d1ce7d3d851090]
+[   84.488996]  nfs4_try_get_tree+0x44/0xb0 [nfsv4 59ca3c817e039994690a920010d1ce7d3d851090]
+[   84.490854]  vfs_get_tree+0x22/0xc0
+[   84.491735]  path_mount+0x458/0xa60
+[   84.492588]  __x64_sys_mount+0x105/0x140
+[   84.493513]  do_syscall_64+0x58/0x80
+[   84.494343]  ? exit_to_user_mode_prepare+0x166/0x1f0
+[   84.495328]  ? syscall_exit_to_user_mode+0x17/0x40
+[   84.496318]  ? do_syscall_64+0x67/0x80
+[   84.497737]  ? syscall_exit_to_user_mode+0x17/0x40
+[   84.498716]  ? do_syscall_64+0x67/0x80
+[   84.499634]  ? do_syscall_64+0x67/0x80
+[   84.500462]  ? do_user_addr_fault+0x1dc/0x690
+[   84.501534]  ? exc_page_fault+0x66/0x150
+[   84.502373]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+[   84.503350] RIP: 0033:0x7f46a8b1a68e
+[   84.504098] Code: 48 8b 0d 85 e7 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 52 e7 0c 00 f7 d8 64 89 01 48
+[   84.507186] RSP: 002b:00007ffd9cc0c9c8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+[   84.508695] RAX: ffffffffffffffda RBX: 00007ffd9cc0cbf0 RCX: 00007f46a8b1a68e
+[   84.509955] RDX: 000055f08e126070 RSI: 000055f08e126ed0 RDI: 000055f08e126f40
+[   84.511158] RBP: 000055f08e129400 R08: 000055f08e129400 R09: 00313a3a313a313a
+[   84.512318] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffd9cc0cbf0
+[   84.513522] R13: 000055f08e129120 R14: 0000000000000005 R15: 000055f08dfdc8f8
+[   84.514798]  </TASK>
+[   84.515652] ---[ end trace 0000000000000000 ]---
+
+...
+
+[   84.451572] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.0-0-gd239552-rebuilt.opensuse.org 04/01/2014
+[   84.454466] RIP: 0010:nfs_d_automount+0x24c/0x290 [nfs]
+[   84.456065] Code: 10 00 00 00 4c 89 ee 4c 89 04 24 48 c7 c2 48 52 da c0 48 c7 c7 88 52 da c0 48 89 44 24 08 c6 05 8c d3 03 00 01 e8 66 2a 77 ce <0f> 0b 48 8b 44 24 08 4c 8b 04 24 e9 b7 fe ff ff be 01 00 00 00 e8
+[   84.459311] RSP: 0018:ffffa50b811039f0 EFLAGS: 00010286
+[   84.460532] RAX: 0000000000000000 RBX: ffff88ad83696000 RCX: 0000000000000000
+[   84.461886] RDX: ffff88adde42efa8 RSI: ffff88adde4224c0 RDI: ffff88adde4224c0
+[   84.463367] RBP: ffff88ad9c862240 R08: 0000000000000000 R09: ffffa50b81103898
+[   84.464727] R10: 0000000000000003 R11: ffffffff90358348 R12: 000000000001e848
+[   84.466115] R13: 000000000000001c R14: ffff88ad82f09000 R15: ffff88ad83694c00
+[   84.467942] FS:  00007f46a8761100(0000) GS:ffff88adde400000(0000) knlGS:0000000000000000
+[   84.469531] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   84.470678] CR2: 0000555c1ce960d8 CR3: 0000000005782006 CR4: 0000000000370ef0
+[   84.471999] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   84.473420] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   84.474894] Call Trace:
+[   84.475701]  <TASK>
+[   84.476446]  __traverse_mounts+0x8c/0x210
+[   84.477494]  step_into+0x339/0x760
+[   84.478461]  link_path_walk.part.0.constprop.0+0x246/0x3b0
+[   84.479583]  ? path_init+0x5c/0x3c0
+[   84.480479]  path_lookupat+0x3e/0x190
+[   84.481439]  filename_lookup+0xd0/0x1d0
+[   84.482341]  ? getname_kernel+0x25/0x110
+[   84.483262]  ? kmem_cache_alloc+0x16a/0x360
+[   84.484258]  ? alloc_mnt_ns+0x57/0x170
+[   84.485522]  vfs_path_lookup+0x4e/0x80
+[   84.486628]  mount_subtree+0x8b/0x130
+[   84.487542]  do_nfs4_mount+0x269/0x360 [nfsv4 59ca3c817e039994690a920010d1ce7d3d851090]
+[   84.488996]  nfs4_try_get_tree+0x44/0xb0 [nfsv4 59ca3c817e039994690a920010d1ce7d3d851090]
+[   84.490854]  vfs_get_tree+0x22/0xc0
+[   84.491735]  path_mount+0x458/0xa60
+[   84.492588]  __x64_sys_mount+0x105/0x140
+[   84.493513]  do_syscall_64+0x58/0x80
+[   84.494343]  ? exit_to_user_mode_prepare+0x166/0x1f0
+[   84.495328]  ? syscall_exit_to_user_mode+0x17/0x40
+[   84.496318]  ? do_syscall_64+0x67/0x80
+[   84.497737]  ? syscall_exit_to_user_mode+0x17/0x40
+[   84.498716]  ? do_syscall_64+0x67/0x80
+[   84.499634]  ? do_syscall_64+0x67/0x80
+[   84.500462]  ? do_user_addr_fault+0x1dc/0x690
+[   84.501534]  ? exc_page_fault+0x66/0x150
+[   84.502373]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+[   84.503350] RIP: 0033:0x7f46a8b1a68e
+[   84.504098] Code: 48 8b 0d 85 e7 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 52 e7 0c 00 f7 d8 64 89 01 48
+[   84.507186] RSP: 002b:00007ffd9cc0c9c8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+[   84.508695] RAX: ffffffffffffffda RBX: 00007ffd9cc0cbf0 RCX: 00007f46a8b1a68e
+[   84.509955] RDX: 000055f08e126070 RSI: 000055f08e126ed0 RDI: 000055f08e126f40
+[   84.511158] RBP: 000055f08e129400 R08: 000055f08e129400 R09: 00313a3a313a313a
+[   84.512318] R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffd9cc0cbf0
+[   84.513522] R13: 000055f08e129120 R14: 0000000000000005 R15: 000055f08dfdc8f8
+[   84.514798]  </TASK>
+[   84.515652] ---[ end trace 0000000000000000 ]---
