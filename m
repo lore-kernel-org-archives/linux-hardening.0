@@ -2,81 +2,73 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6602EC4332F
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Nov 2022 00:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C55DC4332F
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Nov 2022 02:15:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229528AbiKBAxF (ORCPT
+        id S229962AbiKBCPq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Nov 2022 20:53:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35050 "EHLO
+        Tue, 1 Nov 2022 22:15:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229742AbiKBAxE (ORCPT
+        with ESMTP id S229457AbiKBCPp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Nov 2022 20:53:04 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F2F71C103;
-        Tue,  1 Nov 2022 17:53:04 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 60BE4CE1EFC;
-        Wed,  2 Nov 2022 00:53:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3489AC433D6;
-        Wed,  2 Nov 2022 00:53:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667350380;
-        bh=zU98Qd6nUGmbsVpz/zaMgp0xzDyYsHdeE2cMqaZDK34=;
-        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-        b=ZD0XIW5X8bQ6GyxVaAkhMLCWAlzm9VPmO9F5d8uUJpE9qniKStI1ZrS29WoVjQbpB
-         5GeUbvC2XxFg5wVqqXuOnTx9fUIrnG/YN6LEWIp6v5VADmsmsO8IRMw4LBYxlLEYzj
-         /LStFFZ1y8MApwlitOfYWxqWmfWz+OmglIGAOEuMrCMCIv7B3OJaieOjd8C0yxOL/l
-         BDXaLuHWTOlj5aYuqa/2zY5l14+5Pg5CO61eq9q9HgQC/UjEPxyR7y70csFJ+slmPy
-         0mMRf484UAAkDBxY0meN6Dp7wdo2WfMjxO5031RS6JCkPVhdDPg5n53RmTuYYQ2JV6
-         aDuUf08k/3k1g==
-Date:   Tue, 01 Nov 2022 17:52:58 -0700
-From:   Kees Cook <kees@kernel.org>
-To:     Casey Schaufler <casey@schaufler-ca.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Moore <paul@paul-moore.com>
-CC:     James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org,
-        =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-hardening@vger.kernel.org, casey@schaufler-ca.com
-Subject: Re: [PATCH v2] LSM: Better reporting of actual LSMs at boot
-User-Agent: K-9 Mail for Android
-In-Reply-To: <a737ec91-0eba-94dc-46dc-683abdc96366@schaufler-ca.com>
-References: <20221102000525.gonna.409-kees@kernel.org> <a737ec91-0eba-94dc-46dc-683abdc96366@schaufler-ca.com>
-Message-ID: <970317F3-D1A2-412D-88EF-18A606AC1E6A@kernel.org>
+        Tue, 1 Nov 2022 22:15:45 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 622B7BC85
+        for <linux-hardening@vger.kernel.org>; Tue,  1 Nov 2022 19:15:45 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id u6so15240871plq.12
+        for <linux-hardening@vger.kernel.org>; Tue, 01 Nov 2022 19:15:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2ti4EogjuUVSAXjX8LKJ5hd8zLc80cVbv91Rg8a9RWk=;
+        b=SXTEaTLbwee5S4XolBwI4kB+WP1KdH3mnJ3ahA/qoXfTtCtDsFiyAseNonjQExpXV3
+         XLuYqXcX4CjgjbZDCXvLak5xAt966BJwAZ8cMbPpYmkubLfavf2PIdJ9qIHrAiWg7taj
+         Ieeei7HD6EHVn8+ECUxxrcaq9oiuXK38JTtRs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2ti4EogjuUVSAXjX8LKJ5hd8zLc80cVbv91Rg8a9RWk=;
+        b=rP93+RUkop9Vm0C1DZKgYuO91VKMdGC9J6vvSrNOKYMBNdn8jP8s8jvTEtBl6BzG6x
+         89t9vDCKFpJHJoW3gCL4e7mQm5AIf3xH6ZJe2chsEDZl6MThbk7NvIRFDCFQKJjJqR9N
+         f7X1P3eQ83jzBy1VaBxshQttZPAtpMGYZsdIO4Ngp+JBZ3VGNvDkZmY5y0HSwpJ0+lxm
+         OPh2n3MfwPrFtArKghEY4KjY8rQQ3y4bGyJj1jd1NZliGOAH9tOYU9qdn6y4Y/DXHlqj
+         yl5hKdBFxTnu5pjee+Azv8dc4TjOgr/bmYSYtePRT64ZM9xn0VqyjHGoyfqxVEC8XL5B
+         Am0Q==
+X-Gm-Message-State: ACrzQf0CVYw91nA0Q8FFr5KGK+iVbK+0XRfya1XXDryjqB0Ry1T2+ODK
+        EBIlUZupRm0vUrYihmiQ3mhG+A==
+X-Google-Smtp-Source: AMsMyM5b+oJlZwQ+kjV5skbKpGaSNTevCyYJYHxZ7APrAMcrG2wKPhqa9r8hcgYlWWqPfX7Y4lYMXQ==
+X-Received: by 2002:a17:90b:1490:b0:212:68bf:fcc5 with SMTP id js16-20020a17090b149000b0021268bffcc5mr5661510pjb.52.1667355344859;
+        Tue, 01 Nov 2022 19:15:44 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f63-20020a17090a28c500b00212daa68b7csm197048pjd.44.2022.11.01.19.15.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Nov 2022 19:15:44 -0700 (PDT)
+Date:   Tue, 1 Nov 2022 19:15:43 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jirislaby@kernel.org>,
+        Simon Brand <simon.brand@postadigitale.de>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] tty: Allow TIOCSTI to be disabled
+Message-ID: <202211011915.02EDB6377@keescook>
+References: <20221022182828.give.717-kees@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221022182828.give.717-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On November 1, 2022 5:46:55 PM PDT, Casey Schaufler <casey@schaufler-ca=2Ec=
-om> wrote:
->On 11/1/2022 5:05 PM, Kees Cook wrote:
->> Enhance the details reported by "lsm=2Edebug" in several ways:
-> [=2E=2E=2E]
->
->Acked-by: Casey Schaufler <casey@schaufler-ca=2Ecom>
+On Sat, Oct 22, 2022 at 11:29:47AM -0700, Kees Cook wrote:
+> This is so very long over-due. We just need to do this and put an end
+> to this legacy operation.
 
-Thanks!
+thread ping. Should I carry this in my hardening tree instead?
 
->I'm curious about what is driving this change=2E
-
-I was working on the ima stacking PoC and found the lsm=2Edebug output con=
-fusing to read, and I wrote it=2E :P So, I wanted to clarify things and mak=
-e sure stuff like lockdown was visible=2E Additionally, if we're going to k=
-eep the "lsm=3D" param as-is, I wanted it's value visible at boot so people=
- would know what to start from when making changes=2E
-
--Kees
-
-
---=20
+-- 
 Kees Cook
