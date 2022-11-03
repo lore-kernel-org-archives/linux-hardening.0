@@ -2,107 +2,154 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2C7C43217
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Nov 2022 06:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997C0C4332F
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Nov 2022 13:32:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230508AbiKCGEK (ORCPT
+        id S230460AbiKCNcv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Nov 2022 02:04:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43220 "EHLO
+        Thu, 3 Nov 2022 09:32:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231124AbiKCGEI (ORCPT
+        with ESMTP id S230193AbiKCNcu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Nov 2022 02:04:08 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F3CA193D8;
-        Wed,  2 Nov 2022 23:04:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BDDB3B82623;
-        Thu,  3 Nov 2022 06:04:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA7E1C433D6;
-        Thu,  3 Nov 2022 06:04:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667455445;
-        bh=rFhLifYy+8HsdQTm8osPCDSqqdwFjwybPV/8Y+l48FQ=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=GL8HssBJpWpsGzTIJopmmhZ4bsHyh8YS9odof1AgbpYE56g2V9Rm+HE2tj8PcwftU
-         L/rf6ly9l7WOWecQZkRMv5z+WuABFVSLRYc9neJ5MxTOGIVTrhbMMefZKL0ZsHC5FD
-         EnNqZGoV0yQ1O84UH6lzycrdyB+P6TcJp2GnuFluCrUaEJnPqzW+mjuTn/vpSsB0qy
-         +xmeP6UgvggxBwFaWEIGi+O6iu6pgS4uDOmXcZfSqEt/lezCC8Uq7p/v/rMTYxQlkc
-         uyu44w6Be0sExGRgDaD/eQnzKY9dtjudICfqclrla1pxQ2xzgacf1JOjiXvH71QKo+
-         EQwztzVwxkvNA==
-From:   Kalle Valo <kvalo@kernel.org>
-To:     Ping-Ke Shih <pkshih@realtek.com>
-Cc:     coverity-bot <keescook@chromium.org>,
-        Gary Chang <gary.chang@realtek.com>,
-        Timlee <timlee@realtek.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "linux-next\@vger.kernel.org" <linux-next@vger.kernel.org>,
-        "linux-hardening\@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        linux-wireless@vger.kernel.org
-Subject: Re: Coverity: rtw89_mac_resize_ple_rx_quota(): Integer handling issues
-References: <202211021253.44E254479@keescook>
-        <884ff1b628e44d32960f438f75a6524c@realtek.com>
-Date:   Thu, 03 Nov 2022 08:03:59 +0200
-In-Reply-To: <884ff1b628e44d32960f438f75a6524c@realtek.com> (Ping-Ke Shih's
-        message of "Thu, 3 Nov 2022 01:26:45 +0000")
-Message-ID: <87h6zgfub4.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 3 Nov 2022 09:32:50 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FC8C635D;
+        Thu,  3 Nov 2022 06:32:49 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d10so1600300pfh.6;
+        Thu, 03 Nov 2022 06:32:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=opwfbW0762ODyDc7uXtbMZOYVw4Y0uBaxSM8z+IHWTE=;
+        b=pBEvOPt8RqH/Q7RQT7xTZBt7qG/22c6e0IXqun2iUIkaf09m62O6gBpaECjyRKx0te
+         V4kaEbd3mx28yQpCm/IclIHtbJwyNpGOdZCRR3vHVgq+Tfh8XfLgDyqXspnNjy33+Geb
+         Eqqnpl/2OC76Q3TTmyTDd1edUwehiBhkAMpcn4iwFDJtIrXl3kbK+ktQ2lDSi7N1F/+B
+         qatWJGBwIH1/vZASQF7Oi1CkQ1/BUr4ajPUznBW3Kjke0pPrRKHuODemY2XydnCNR0fM
+         2CzYV8sq/LZGGwEecTgQXHitJQxaHi/wPAd8b2U6CK2bu2VnnYN0CKBassB2KzobsF1Z
+         6KPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=opwfbW0762ODyDc7uXtbMZOYVw4Y0uBaxSM8z+IHWTE=;
+        b=zCcRFZY7o6txRIiF55AwRrSi58eUbY4EIXQp6/RY4dApmF06dRhmpw2+gouOhu5NJH
+         S8jpdSldYxg3WoSwo7CTNg01y2TA4pYP478t+CeLjUIjjFLtQZXtHZpdnBCCtvzTFuQA
+         mQbsQNdFJFBtRXWg27ccHD9uCdcv4NhrnvHU/uDtL3aLIGHf9OFOMqChzW98YySGG8nb
+         NBP0tmt39Hmzoh7cz5mkbZ9wciu0EQRx48XPcjS4PNyu5HIG7U3leaiA6vf+VRudn14Y
+         2e3jx0qHMMBWR5Dwzn5f2W7LPEwkViBlcZAw5kXNG4tBBgaypZ5Ir4ZpD2G01hQN8evs
+         9M8w==
+X-Gm-Message-State: ACrzQf3sJ7TaiX5OTITihZLDLDKY9412I5Orl0KDZZfQ0MIpK4I2R4p3
+        MY0CePPS0hkdjg0rDJ0OjR4=
+X-Google-Smtp-Source: AMsMyM4x2PHt1DutjHxdBXGcFzCyFqfybLisdTBbqdK9sJ87ldXvyLGv53ZB/Co/v1POBSzAH437Wg==
+X-Received: by 2002:a63:5853:0:b0:46f:fdfc:a651 with SMTP id i19-20020a635853000000b0046ffdfca651mr9429044pgm.385.1667482368756;
+        Thu, 03 Nov 2022 06:32:48 -0700 (PDT)
+Received: from hyeyoo ([114.29.91.56])
+        by smtp.gmail.com with ESMTPSA id y133-20020a62ce8b000000b00565cbad9616sm770509pfg.6.2022.11.03.06.32.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Nov 2022 06:32:47 -0700 (PDT)
+Date:   Thu, 3 Nov 2022 22:32:38 +0900
+From:   Hyeonggon Yoo <42.hyeyoo@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
+        David Gow <davidgow@google.com>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH 1/6] slab: Clean up SLOB vs kmalloc() definition
+Message-ID: <Y2PC9tz6OyU8yYtu@hyeyoo>
+References: <20221101222520.never.109-kees@kernel.org>
+ <20221101223321.1326815-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221101223321.1326815-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Ping-Ke Shih <pkshih@realtek.com> writes:
+On Tue, Nov 01, 2022 at 03:33:09PM -0700, Kees Cook wrote:
+> As already done for kmalloc_node(), clean up the #ifdef usage in the
+> definition of kmalloc() so that the SLOB-only version is an entirely
+> separate and much more readable function.
+> 
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Pekka Enberg <penberg@kernel.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Roman Gushchin <roman.gushchin@linux.dev>
+> Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+> Cc: linux-mm@kvack.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  include/linux/slab.h | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> index 90877fcde70b..e08fe7978b5c 100644
+> --- a/include/linux/slab.h
+> +++ b/include/linux/slab.h
+> @@ -559,15 +559,15 @@ void *kmalloc_large_node(size_t size, gfp_t flags, int node) __assume_page_align
+>   *	Try really hard to succeed the allocation but fail
+>   *	eventually.
+>   */
+> +#ifndef CONFIG_SLOB
+>  static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
+>  {
+>  	if (__builtin_constant_p(size)) {
+> -#ifndef CONFIG_SLOB
+>  		unsigned int index;
+> -#endif
+> +
+>  		if (size > KMALLOC_MAX_CACHE_SIZE)
+>  			return kmalloc_large(size, flags);
+> -#ifndef CONFIG_SLOB
+> +
+>  		index = kmalloc_index(size);
+>  
+>  		if (!index)
+> @@ -576,10 +576,18 @@ static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
+>  		return kmalloc_trace(
+>  				kmalloc_caches[kmalloc_type(flags)][index],
+>  				flags, size);
+> -#endif
+>  	}
+>  	return __kmalloc(size, flags);
+>  }
+> +#else
+> +static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
+> +{
+> +	if (__builtin_constant_p(size) && size > KMALLOC_MAX_CACHE_SIZE)
+> +		return kmalloc_large(size, flags);
+> +
+> +	return __kmalloc(size, flags);
+> +}
+> +#endif
+>  
+>  #ifndef CONFIG_SLOB
+>  static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t flags, int node)
+> -- 
+> 2.34.1
 
->> -----Original Message-----
->> From: coverity-bot <keescook@chromium.org>
->> Sent: Thursday, November 3, 2022 3:53 AM
->> To: Gary Chang <gary.chang@realtek.com>
->> Cc: Timlee <timlee@realtek.com>; Kalle Valo <kvalo@kernel.org>; Ping-Ke Shih <pkshih@realtek.com>; Gustavo
->> A. R. Silva <gustavo@embeddedor.com>; linux-next@vger.kernel.org; linux-hardening@vger.kernel.org
->> Subject: Coverity: rtw89_mac_resize_ple_rx_quota(): Integer handling issues
->> 
->> Hello!
->> 
->> This is an experimental semi-automated report about issues detected by
->> Coverity from a scan of next-20221102 as part of the linux-next scan project:
->> https://scan.coverity.com/projects/linux-next-weekly-scan
->> 
->> You're getting this email because you were associated with the identified
->> lines of code (noted below) that were touched by commits:
->> 
->>   Tue Nov 1 11:26:13 2022 +0200
->>     7a68ec3da79e ("wifi: rtw89: add function to adjust and restore PLE quota")
->> 
->> Coverity reported the following:
->> 
->> *** CID 1527095:  Integer handling issues  (SIGN_EXTENSION)
->> /drivers/net/wireless/realtek/rtw89/mac.c: 1562 in rtw89_mac_resize_ple_rx_quota()
->> 1556     		rtw89_err(rtwdev, "[ERR]get_dle_mem_cfg\n");
->> 1557     		return -EINVAL;
->> 1558     	}
->> 1559
->> 1560     	min_cfg = cfg->ple_min_qt;
->> 1561     	max_cfg = cfg->ple_max_qt;
->> vvv     CID 1527095:  Integer handling issues  (SIGN_EXTENSION)
->> vvv     Suspicious implicit sign extension: "max_cfg->cma0_dma" with type "u16" (16 bits, unsigned) is
->> promoted in "max_cfg->cma0_dma << 16" to type "int" (32 bits, signed), then sign-extended to type "unsigned
->> long" (64 bits, unsigned).  If "max_cfg->cma0_dma << 16" is greater than 0x7FFFFFFF, the upper bits of the
->> result will all be 1.
->
-> Thanks for pointing this. I'll fix it.
+Looks good to me.
 
-Thanks Ping.
-
-I noticed that linux-wireless list was missing in CC, would it possible
-for the bot to automatically add that to all wireless related reports?
-Adding it manually now.
+Reviewed-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Thanks,
+Hyeonggon
