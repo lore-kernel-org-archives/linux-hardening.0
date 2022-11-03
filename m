@@ -2,323 +2,198 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99411C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Nov 2022 16:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E664C43219
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Nov 2022 17:05:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232297AbiKCQKq (ORCPT
+        id S231588AbiKCRFl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Nov 2022 12:10:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37184 "EHLO
+        Thu, 3 Nov 2022 13:05:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231991AbiKCQK2 (ORCPT
+        with ESMTP id S231633AbiKCRFR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Nov 2022 12:10:28 -0400
-Received: from smtp-8fae.mail.infomaniak.ch (smtp-8fae.mail.infomaniak.ch [IPv6:2001:1600:4:17::8fae])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82E801D677;
-        Thu,  3 Nov 2022 09:09:42 -0700 (PDT)
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4N37xc16zjzMpnTN;
-        Thu,  3 Nov 2022 17:09:40 +0100 (CET)
-Received: from ns3096276.ip-94-23-54.eu (unknown [23.97.221.149])
-        by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4N37xb0B4pzMpphG;
-        Thu,  3 Nov 2022 17:09:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-        s=20191114; t=1667491780;
-        bh=nAGLkQKdFqX2PHeLP/p0EHiQdszCz61dANsujoabcoE=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=N7JAAHTsCzpwdAZCamgd480C38UUIhZj3IfHifZ6XxGhVbPNmHSl2t+xd5RM0pd4N
-         nysRkw+4JwMCVFCimEIVztaYcX+x8aVW6VVR32kJzfgONL7ANm79koMM6v/xpbXARF
-         YUybVOVwr/vVCprWG+Psou276VsbNqzCQODLb/cs=
-Message-ID: <1fe5c84d-6f85-9ee8-76d4-d184a47ebff2@digikod.net>
-Date:   Thu, 3 Nov 2022 17:09:38 +0100
+        Thu, 3 Nov 2022 13:05:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD2BB1D0EC;
+        Thu,  3 Nov 2022 10:04:36 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9E5EB61F8A;
+        Thu,  3 Nov 2022 17:04:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09ECFC433C1;
+        Thu,  3 Nov 2022 17:04:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667495075;
+        bh=+joR9NVTsHUffCgeuXOyUVVfI4JaMOo8gzGUT6ED320=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lysq/3AFiylziUli6KVvFnF7bJiasbmKzFUcNhVfTkWRD9+fer8IktrOeA3nVKTSI
+         GCwC397eq5pBxpnEsfMVgxAAm+aJtuFVYXriOARNZQR+un2zwpV41bRQXPN55tvcIh
+         eiwzIdqsa7p1M8HOi/tzxlvdXNmvtKxgqc4UkbYc2FMtzPgdGt7R+uXAQVJlspFfwm
+         l1qXMeOEi6YAktN97wS0/u96P4+b35FLCqdwzJVsKp/oI48y/rtphqSh0gMxC/vxKn
+         WsPJ3xBt8UkyGdze3KhSKRbeQa2OvYS4KmQHA0P/Q5k/a0lnDwJdNIuObeyMKHEUVC
+         c9esc3Xngg3xA==
+Received: by mail-lf1-f51.google.com with SMTP id g12so3910378lfh.3;
+        Thu, 03 Nov 2022 10:04:34 -0700 (PDT)
+X-Gm-Message-State: ACrzQf03NPHBymasP6428qDRII9I8DS+MS0W32k075Hw4xj1SEG7MhZE
+        oY4N+HF5+k8bkHcRZkVIfvV+gGPqamkQJoHMC2Y=
+X-Google-Smtp-Source: AMsMyM4IBiCzW6DPfrMvNTjRQkL2Kk699BmrmU6wEe280umT8RgunZyHPpGK1szQj9w/pAT5RmjJ7Gd+efisaRLBr/U=
+X-Received: by 2002:a19:6512:0:b0:4a9:32dd:39a4 with SMTP id
+ z18-20020a196512000000b004a932dd39a4mr12407327lfb.539.1667495072983; Thu, 03
+ Nov 2022 10:04:32 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: 
-Subject: Re: [PATCH v2] LSM: Better reporting of actual LSMs at boot
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>, Paul Moore <paul@paul-moore.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20221102000525.gonna.409-kees@kernel.org>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-In-Reply-To: <20221102000525.gonna.409-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20221101184808.80747-1-gpiccoli@igalia.com>
+In-Reply-To: <20221101184808.80747-1-gpiccoli@igalia.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 3 Nov 2022 18:04:21 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXH5B0Op7Aab45x_tdkM1YsoSJ9euNqLMzeJg4uK++ojJQ@mail.gmail.com>
+Message-ID: <CAMj1kXH5B0Op7Aab45x_tdkM1YsoSJ9euNqLMzeJg4uK++ojJQ@mail.gmail.com>
+Subject: Re: [PATCH V3] efi: pstore: Add module parameter for setting the
+ record size
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-efi@vger.kernel.org,
+        kernel-dev@igalia.com, kernel@gpiccoli.net, keescook@chromium.org,
+        anton@enomsg.org, ccross@android.com, tony.luck@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Tue, 1 Nov 2022 at 19:48, Guilherme G. Piccoli <gpiccoli@igalia.com> wrote:
+>
+> By default, the efi-pstore backend hardcode the UEFI variable size
+> as 1024 bytes. The historical reasons for that were discussed by
+> Ard in threads [0][1]:
+>
+> "there is some cargo cult from prehistoric EFI times going
+> on here, it seems. Or maybe just misinterpretation of the maximum
+> size for the variable *name* vs the variable itself.".
+>
+> "OVMF has
+> OvmfPkg/OvmfPkgX64.dsc:
+> gEfiMdeModulePkgTokenSpaceGuid.PcdMaxVariableSize|0x2000
+> OvmfPkg/OvmfPkgX64.dsc:
+> gEfiMdeModulePkgTokenSpaceGuid.PcdMaxVariableSize|0x8400
+>
+> where the first one is without secure boot and the second with secure
+> boot. Interestingly, the default is
+>
+> gEfiMdeModulePkgTokenSpaceGuid.PcdMaxVariableSize|0x400
+>
+> so this is probably where this 1k number comes from."
+>
+> With that, and since there is not such a limit in the UEFI spec, we
+> have the confidence to hereby add a module parameter to enable advanced
+> users to change the UEFI record size for efi-pstore data collection,
+> this way allowing a much easier reading of the collected log, which
+> wouldn't be scattered anymore among many small files.
+>
+> Through empirical analysis we observed that extreme low values (like 8
+> bytes) could eventually cause writing issues, so given that and the OVMF
+> default discussed, we limited the minimum value to 1024 bytes, which also
+> is still the default.
+>
+> [0] https://lore.kernel.org/lkml/CAMj1kXF4UyRMh2Y_KakeNBHvkHhTtavASTAxXinDO1rhPe_wYg@mail.gmail.com/
+> [1] https://lore.kernel.org/lkml/CAMj1kXFy-2KddGu+dgebAdU9v2sindxVoiHLWuVhqYw+R=kqng@mail.gmail.com/
+>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 
-On 02/11/2022 01:05, Kees Cook wrote:
-> Enhance the details reported by "lsm.debug" in several ways:
-> 
-> - report contents of "security="
-> - report contents of "CONFIG_LSM"
-> - report contents of "lsm="
-> - report any early LSM details
-> - whitespace-align the output of similar phases for easier visual parsing
-> - change "disabled" to more accurate "skipped"
-> - explain what "skipped" and "ignored" mean in a parenthetical
-> 
-> Upgrade the "security= is ignored" warning from pr_info to pr_warn,
-> and include full arguments list to make the cause even more clear.
-> 
-> Replace static "Security Framework initializing" pr_info with specific
-> list of the resulting order of enabled LSMs.
-> 
-> For example, if the kernel is built with:
-> 
-> CONFIG_SECURITY_SELINUX=y
-> CONFIG_SECURITY_APPARMOR=y
-> CONFIG_SECURITY_LOADPIN=y
-> CONFIG_SECURITY_YAMA=y
-> CONFIG_SECURITY_SAFESETID=y
-> CONFIG_SECURITY_LOCKDOWN_LSM=y
-> CONFIG_SECURITY_LANDLOCK=y
-> CONFIG_INTEGRITY=y
-> CONFIG_BPF_LSM=y
-> CONFIG_DEFAULT_SECURITY_APPARMOR=y
-> CONFIG_LSM="landlock,lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor,bpf"
-> 
-> Booting without options will show:
-> 
-> LSM: initializing lsm=lockdown,capability,landlock,yama,loadpin,safesetid,integrity,selinux,bpf
-> landlock: Up and running.
-> Yama: becoming mindful.
-> LoadPin: ready to pin (currently not enforcing)
-> SELinux:  Initializing.
-> LSM support for eBPF active
-> 
-> Boot with "lsm.debug" will show:
-> 
-> LSM: legacy security= *unspecified*
-> LSM: CONFIG_LSM=landlock,lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor,bpf
-> LSM: boot arg lsm= *unspecified*
-> LSM:   early started: lockdown (enabled)
-> LSM:   first ordered: capability (enabled)
-> LSM: builtin ordered: landlock (enabled)
-> LSM: builtin ignored: lockdown (not built into kernel)
-> LSM: builtin ordered: yama (enabled)
-> LSM: builtin ordered: loadpin (enabled)
-> LSM: builtin ordered: safesetid (enabled)
-> LSM: builtin ordered: integrity (enabled)
-> LSM: builtin ordered: selinux (enabled)
-> LSM: builtin ignored: smack (not built into kernel)
-> LSM: builtin ignored: tomoyo (not built into kernel)
-> LSM: builtin ordered: apparmor (enabled)
-> LSM: builtin ordered: bpf (enabled)
-> LSM: exclusive chosen:   selinux
-> LSM: exclusive disabled: apparmor
-> LSM: initializing lsm=lockdown,capability,landlock,yama,loadpin,safesetid,integrity,selinux,bpf
-> LSM: cred blob size       = 32
-> LSM: file blob size       = 16
-> LSM: inode blob size      = 72
-> LSM: ipc blob size        = 8
-> LSM: msg_msg blob size    = 4
-> LSM: superblock blob size = 80
-> LSM: task blob size       = 8
-> LSM: initializing capability
-> LSM: initializing landlock
-> landlock: Up and running.
-> LSM: initializing yama
-> Yama: becoming mindful.
-> LSM: initializing loadpin
-> LoadPin: ready to pin (currently not enforcing)
-> LSM: initializing safesetid
-> LSM: initializing integrity
-> LSM: initializing selinux
-> SELinux:  Initializing.
-> LSM: initializing bpf
-> LSM support for eBPF active
-> 
-> And some examples of how the lsm.debug ordering report changes...
-> 
-> With "lsm.debug security=selinux":
-> 
-> LSM: legacy security=selinux
-> LSM: CONFIG_LSM=landlock,lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor,bpf
-> LSM: boot arg lsm= *unspecified*
-> LSM:   early started: lockdown (enabled)
-> LSM:   first ordered: capability (enabled)
-> LSM: security=selinux disabled: apparmor (only one legacy major LSM)
-> LSM: builtin ordered: landlock (enabled)
-> LSM: builtin ignored: lockdown (not built into kernel)
-> LSM: builtin ordered: yama (enabled)
-> LSM: builtin ordered: loadpin (enabled)
-> LSM: builtin ordered: safesetid (enabled)
-> LSM: builtin ordered: integrity (enabled)
-> LSM: builtin ordered: selinux (enabled)
-> LSM: builtin ignored: smack (not built into kernel)
-> LSM: builtin ignored: tomoyo (not built into kernel)
-> LSM: builtin ordered: apparmor (disabled)
-> LSM: builtin ordered: bpf (enabled)
-> LSM: exclusive chosen:   selinux
-> LSM: initializing lsm=lockdown,capability,landlock,yama,loadpin,safesetid,integrity,selinux,bpf
-> 
-> With "lsm.debug lsm=integrity,selinux,loadpin,crabability,bpf,loadpin,loadpin":
-> 
-> LSM: legacy security= *unspecified*
-> LSM: CONFIG_LSM=landlock,lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor,bpf
-> LSM: boot arg lsm=integrity,selinux,loadpin,capability,bpf,loadpin,loadpin
-> LSM:   early started: lockdown (enabled)
-> LSM:   first ordered: capability (enabled)
-> LSM: cmdline ordered: integrity (enabled)
-> LSM: cmdline ordered: selinux (enabled)
-> LSM: cmdline ordered: loadpin (enabled)
-> LSM: cmdline ignored: crabability (not built into kernel)
-> LSM: cmdline ordered: bpf (enabled)
-> LSM: cmdline skipped: apparmor (not in requested order)
-> LSM: cmdline skipped: yama (not in requested order)
-> LSM: cmdline skipped: safesetid (not in requested order)
-> LSM: cmdline skipped: landlock (not in requested order)
-> LSM: exclusive chosen:   selinux
-> LSM: initializing lsm=lockdown,capability,integrity,selinux,loadpin,bpf
-> 
-> Cc: Paul Moore <paul@paul-moore.com>
-> Cc: James Morris <jmorris@namei.org>
-> Cc: "Serge E. Hallyn" <serge@hallyn.com>
-> Cc: linux-security-module@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-I think this change would be useful to help users debug their LSM 
-configuration. I'm not sure about the whitespace-aligned output though, 
-I guess it could break some scripts, but it is not part of the ABI and 
-only relevant for debug purpose.
-
-Acked-by: Mickaël Salaün <mic@digikod.net>
-
+Thanks, I'll queue this up for v6.2
 
 > ---
-> v2: en/dis-enabled expanded, example output in commit log, use pr_cont.
-> v1: https://lore.kernel.org/lkml/20221018064825.never.323-kees@kernel.org/
-> ---
->   security/security.c | 45 ++++++++++++++++++++++++++++++++++++---------
->   1 file changed, 36 insertions(+), 9 deletions(-)
-> 
-> diff --git a/security/security.c b/security/security.c
-> index 79d82cb6e469..abceabda103d 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -161,8 +161,8 @@ static void __init append_ordered_lsm(struct lsm_info *lsm, const char *from)
->   		lsm->enabled = &lsm_enabled_true;
->   	ordered_lsms[last_lsm++] = lsm;
->   
-> -	init_debug("%s ordering: %s (%sabled)\n", from, lsm->name,
-> -		   is_enabled(lsm) ? "en" : "dis");
-> +	init_debug("%s ordered: %s (%s)\n", from, lsm->name,
-> +		   is_enabled(lsm) ? "enabled" : "disabled");
->   }
->   
->   /* Is an LSM allowed to be initialized? */
-> @@ -224,7 +224,7 @@ static void __init prepare_lsm(struct lsm_info *lsm)
->   	if (enabled) {
->   		if ((lsm->flags & LSM_FLAG_EXCLUSIVE) && !exclusive) {
->   			exclusive = lsm;
-> -			init_debug("exclusive chosen: %s\n", lsm->name);
-> +			init_debug("exclusive chosen:   %s\n", lsm->name);
->   		}
->   
->   		lsm_set_blob_sizes(lsm->blobs);
-> @@ -252,7 +252,7 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
->   	/* LSM_ORDER_FIRST is always first. */
->   	for (lsm = __start_lsm_info; lsm < __end_lsm_info; lsm++) {
->   		if (lsm->order == LSM_ORDER_FIRST)
-> -			append_ordered_lsm(lsm, "first");
-> +			append_ordered_lsm(lsm, "  first");
->   	}
->   
->   	/* Process "security=", if given. */
-> @@ -270,7 +270,7 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
->   			if ((major->flags & LSM_FLAG_LEGACY_MAJOR) &&
->   			    strcmp(major->name, chosen_major_lsm) != 0) {
->   				set_enabled(major, false);
-> -				init_debug("security=%s disabled: %s\n",
-> +				init_debug("security=%s disabled: %s (only one legacy major LSM)\n",
->   					   chosen_major_lsm, major->name);
->   			}
->   		}
-> @@ -291,7 +291,8 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
->   		}
->   
->   		if (!found)
-> -			init_debug("%s ignored: %s\n", origin, name);
-> +			init_debug("%s ignored: %s (not built into kernel)\n",
-> +				   origin, name);
->   	}
->   
->   	/* Process "security=", if given. */
-> @@ -309,7 +310,8 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
->   		if (exists_ordered_lsm(lsm))
->   			continue;
->   		set_enabled(lsm, false);
-> -		init_debug("%s disabled: %s\n", origin, lsm->name);
-> +		init_debug("%s skipped: %s (not in requested order)\n",
-> +			   origin, lsm->name);
->   	}
->   
->   	kfree(sep);
-> @@ -320,6 +322,24 @@ static void __init lsm_early_task(struct task_struct *task);
->   
->   static int lsm_append(const char *new, char **result);
->   
-> +static void __init report_lsm_order(void)
-> +{
-> +	struct lsm_info **lsm, *early;
-> +	int first = 0;
+>
+> V3:
+> - Stick with 1024 to the varname size (thanks Ard!).
+> - Rebased to v6.1-rc3.
+>
+>
+> Hey folks, I've tested multiple record_size values, using lz4, zstd, deflate
+> and no compression. For smaller ones ( up to 4k), all cases worked (for
+> deflate, there was some failures even with 1024, and even with this patch
+> reverted). For bigger sizes, no compression/deflate fails for 8k+, lz4 for
+> values bigger than 16k and zstd only for values more then 20k.
+>
+> I've instrumented the function efivar_set_variable_locked() to get the return
+> value during panic, and when it fails, usually it gives 0x8000000000000002
+> (EFI_INVALID_PARAMETER it seems?). It's not related to this patch specifically,
+> but worth mentioning in case you have ideas.
+>
+> Thanks,
+>
+>
+> Guilherme
+>
+>
+>  drivers/firmware/efi/efi-pstore.c | 23 +++++++++++++++++------
+>  1 file changed, 17 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-pstore.c
+> index 3bddc152fcd4..81ed4fc6d76d 100644
+> --- a/drivers/firmware/efi/efi-pstore.c
+> +++ b/drivers/firmware/efi/efi-pstore.c
+> @@ -10,7 +10,9 @@ MODULE_IMPORT_NS(EFIVAR);
+>
+>  #define DUMP_NAME_LEN 66
+>
+> -#define EFIVARS_DATA_SIZE_MAX 1024
+> +static unsigned int record_size = 1024;
+> +module_param(record_size, uint, 0444);
+> +MODULE_PARM_DESC(record_size, "size of each pstore UEFI var (in bytes, min/default=1024)");
+>
+>  static bool efivars_pstore_disable =
+>         IS_ENABLED(CONFIG_EFI_VARS_PSTORE_DEFAULT_DISABLE);
+> @@ -30,7 +32,7 @@ static int efi_pstore_open(struct pstore_info *psi)
+>         if (err)
+>                 return err;
+>
+> -       psi->data = kzalloc(EFIVARS_DATA_SIZE_MAX, GFP_KERNEL);
+> +       psi->data = kzalloc(record_size, GFP_KERNEL);
+>         if (!psi->data)
+>                 return -ENOMEM;
+>
+> @@ -52,7 +54,7 @@ static inline u64 generic_id(u64 timestamp, unsigned int part, int count)
+>  static int efi_pstore_read_func(struct pstore_record *record,
+>                                 efi_char16_t *varname)
+>  {
+> -       unsigned long wlen, size = EFIVARS_DATA_SIZE_MAX;
+> +       unsigned long wlen, size = record_size;
+>         char name[DUMP_NAME_LEN], data_type;
+>         efi_status_t status;
+>         int cnt;
+> @@ -133,7 +135,7 @@ static ssize_t efi_pstore_read(struct pstore_record *record)
+>         efi_status_t status;
+>
+>         for (;;) {
+> -               varname_size = EFIVARS_DATA_SIZE_MAX;
+> +               varname_size = 1024;
+>
+>                 /*
+>                  * If this is the first read() call in the pstore enumeration,
+> @@ -224,11 +226,20 @@ static __init int efivars_pstore_init(void)
+>         if (efivars_pstore_disable)
+>                 return 0;
+>
+> -       efi_pstore_info.buf = kmalloc(4096, GFP_KERNEL);
+> +       /*
+> +        * Notice that 1024 is the minimum here to prevent issues with
+> +        * decompression algorithms that were spotted during tests;
+> +        * even in the case of not using compression, smaller values would
+> +        * just pollute more the pstore FS with many small collected files.
+> +        */
+> +       if (record_size < 1024)
+> +               record_size = 1024;
 > +
-> +	pr_info("initializing lsm=");
-> +
-> +	/* Report each enabled LSM name, comma separated. */
-> +	for (early = __start_early_lsm_info; early < __end_early_lsm_info; early++)
-> +		if (is_enabled(early))
-> +			pr_cont("%s%s", first++ == 0 ? "" : ",", early->name);
-> +	for (lsm = ordered_lsms; *lsm; lsm++)
-> +		if (is_enabled(*lsm))
-> +			pr_cont("%s%s", first++ == 0 ? "" : ",", (*lsm)->name);
-> +
-> +	pr_cont("\n");
-> +}
-> +
->   static void __init ordered_lsm_init(void)
->   {
->   	struct lsm_info **lsm;
-> @@ -329,7 +349,8 @@ static void __init ordered_lsm_init(void)
->   
->   	if (chosen_lsm_order) {
->   		if (chosen_major_lsm) {
-> -			pr_info("security= is ignored because it is superseded by lsm=\n");
-> +			pr_warn("security=%s is ignored because it is superseded by lsm=%s\n",
-> +				chosen_major_lsm, chosen_lsm_order);
->   			chosen_major_lsm = NULL;
->   		}
->   		ordered_lsm_parse(chosen_lsm_order, "cmdline");
-> @@ -339,6 +360,8 @@ static void __init ordered_lsm_init(void)
->   	for (lsm = ordered_lsms; *lsm; lsm++)
->   		prepare_lsm(*lsm);
->   
-> +	report_lsm_order();
-> +
->   	init_debug("cred blob size       = %d\n", blob_sizes.lbs_cred);
->   	init_debug("file blob size       = %d\n", blob_sizes.lbs_file);
->   	init_debug("inode blob size      = %d\n", blob_sizes.lbs_inode);
-> @@ -395,13 +418,17 @@ int __init security_init(void)
->   {
->   	struct lsm_info *lsm;
->   
-> -	pr_info("Security Framework initializing\n");
-> +	init_debug("legacy security=%s\n", chosen_major_lsm ?: " *unspecified*");
-> +	init_debug("  CONFIG_LSM=%s\n", builtin_lsm_order);
-> +	init_debug("boot arg lsm=%s\n", chosen_lsm_order ?: " *unspecified*");
->   
->   	/*
->   	 * Append the names of the early LSM modules now that kmalloc() is
->   	 * available
->   	 */
->   	for (lsm = __start_early_lsm_info; lsm < __end_early_lsm_info; lsm++) {
-> +		init_debug("  early started: %s (%s)\n", lsm->name,
-> +			   is_enabled(lsm) ? "enabled" : "disabled");
->   		if (lsm->enabled)
->   			lsm_append(lsm->name, &lsm_names);
->   	}
+> +       efi_pstore_info.buf = kmalloc(record_size, GFP_KERNEL);
+>         if (!efi_pstore_info.buf)
+>                 return -ENOMEM;
+>
+> -       efi_pstore_info.bufsize = 1024;
+> +       efi_pstore_info.bufsize = record_size;
+>
+>         if (pstore_register(&efi_pstore_info)) {
+>                 kfree(efi_pstore_info.buf);
+> --
+> 2.38.0
+>
