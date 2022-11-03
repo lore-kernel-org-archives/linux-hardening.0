@@ -2,189 +2,323 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A186C4332F
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Nov 2022 14:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99411C433FE
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Nov 2022 16:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231544AbiKCOS0 (ORCPT
+        id S232297AbiKCQKq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Nov 2022 10:18:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35632 "EHLO
+        Thu, 3 Nov 2022 12:10:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229994AbiKCOSA (ORCPT
+        with ESMTP id S231991AbiKCQK2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Nov 2022 10:18:00 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FFA61276F;
-        Thu,  3 Nov 2022 07:17:02 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id p21so2052417plr.7;
-        Thu, 03 Nov 2022 07:17:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TXM8klCKeS/1DhTbx8K3iCyLUoszcYkLgPKVfT2w3RI=;
-        b=Dj2pPTFC101sAAfrY4zflBUJClmV9LJZxnnCPvVEzazZjXW9x6Iou63wyMzbWWJ89t
-         j7oG7vn2aWB82f9fzyWmPHG63C+CQUm+qwAoUG3K74Fk3xmcvdnvKO4Sp0ycbkbtwPgw
-         JzrIdfcY7mQqqs7S18anyeX4NFJTJnli7LB2jquJ5OItfQTJ45DakgtpHPfWnRHvsNu1
-         Cr9Mnvcfdfol9a9tH1m/7hBJ7sjSitaRXs0XBuFTZ80eps6WUXOUmeTW5p5KdwfKRcJn
-         kHzY4dj2Gsl7YsbhQno5Uipu6iHZrNsc2ifuvTnubkgmzNCZZn8C3ozR0OLLl1pO4Xqp
-         hC2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TXM8klCKeS/1DhTbx8K3iCyLUoszcYkLgPKVfT2w3RI=;
-        b=FzwlCM//CUtsXhM08SLCpzVXVFflvOYJzCOpz3My61NKBolkYuex8rkD66YLPIGy4V
-         153zotcoDMf3MQOtDxUPajrayecvLbC45YJ429+JYENgNR+/I3rLh6UhxAO1+/Qmq3Dp
-         7AJMpeQ9tE0nS2Q2P7bc3zeXpeskF0YhFkiIegiX1LVpdqBtFkkdoFK2bWuryGciZU+b
-         R/+x7Fyqw23lKhYPO9wxBFLZhCqgDJAXE3oGCU7R45O4crFwkFO2OxHSXSpddTisBNIu
-         HC4+GmYUXQ/Okad/4Fy3SLxmMjGJ5OcAEP0BZJ+ZAPvGmvT6bYIACzWUPm7dg0snXAwC
-         cSsA==
-X-Gm-Message-State: ACrzQf0PSvrjg0/6NZuexkntSlEHYAkOO2M8347k0e2MFr/Wvs8nVV4V
-        N/8x08XW0LtqCfPHHmOErro=
-X-Google-Smtp-Source: AMsMyM5aZCQxn6cjfpIQMj53LX631TQBC0V4f2tlHG5CUeGpwa3qaw2TjwQ+WDAG8nje39/0KAyYqA==
-X-Received: by 2002:a17:90b:400d:b0:213:be60:b0d2 with SMTP id ie13-20020a17090b400d00b00213be60b0d2mr28215061pjb.75.1667485021870;
-        Thu, 03 Nov 2022 07:17:01 -0700 (PDT)
-Received: from hyeyoo ([114.29.91.56])
-        by smtp.gmail.com with ESMTPSA id z8-20020a6553c8000000b0046f6d7dcd1dsm851109pgr.25.2022.11.03.07.16.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Nov 2022 07:17:01 -0700 (PDT)
-Date:   Thu, 3 Nov 2022 23:16:53 +0900
-From:   Hyeonggon Yoo <42.hyeyoo@gmail.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
-        David Gow <davidgow@google.com>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH 3/6] slab: Provide functional __alloc_size() hints to
- kmalloc_trace*()
-Message-ID: <Y2PNVUzHWCg765ml@hyeyoo>
-References: <20221101222520.never.109-kees@kernel.org>
- <20221101223321.1326815-3-keescook@chromium.org>
+        Thu, 3 Nov 2022 12:10:28 -0400
+Received: from smtp-8fae.mail.infomaniak.ch (smtp-8fae.mail.infomaniak.ch [IPv6:2001:1600:4:17::8fae])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82E801D677;
+        Thu,  3 Nov 2022 09:09:42 -0700 (PDT)
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4N37xc16zjzMpnTN;
+        Thu,  3 Nov 2022 17:09:40 +0100 (CET)
+Received: from ns3096276.ip-94-23-54.eu (unknown [23.97.221.149])
+        by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4N37xb0B4pzMpphG;
+        Thu,  3 Nov 2022 17:09:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+        s=20191114; t=1667491780;
+        bh=nAGLkQKdFqX2PHeLP/p0EHiQdszCz61dANsujoabcoE=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=N7JAAHTsCzpwdAZCamgd480C38UUIhZj3IfHifZ6XxGhVbPNmHSl2t+xd5RM0pd4N
+         nysRkw+4JwMCVFCimEIVztaYcX+x8aVW6VVR32kJzfgONL7ANm79koMM6v/xpbXARF
+         YUybVOVwr/vVCprWG+Psou276VsbNqzCQODLb/cs=
+Message-ID: <1fe5c84d-6f85-9ee8-76d4-d184a47ebff2@digikod.net>
+Date:   Thu, 3 Nov 2022 17:09:38 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221101223321.1326815-3-keescook@chromium.org>
+User-Agent: 
+Subject: Re: [PATCH v2] LSM: Better reporting of actual LSMs at boot
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>, Paul Moore <paul@paul-moore.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20221102000525.gonna.409-kees@kernel.org>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+In-Reply-To: <20221102000525.gonna.409-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Nov 01, 2022 at 03:33:11PM -0700, Kees Cook wrote:
-> Since GCC cannot apply the __alloc_size attributes to inlines[1], all
-> allocator inlines need to explicitly call into extern functions that
-> contain a size argument. Provide these wrappers that end up just
-> ignoring the size argument for the actual allocation.
+
+On 02/11/2022 01:05, Kees Cook wrote:
+> Enhance the details reported by "lsm.debug" in several ways:
 > 
-> This allows CONFIG_FORTIFY_SOURCE=y to see all various dynamic allocation
-> sizes under GCC 12+ and all supported Clang versions.
+> - report contents of "security="
+> - report contents of "CONFIG_LSM"
+> - report contents of "lsm="
+> - report any early LSM details
+> - whitespace-align the output of similar phases for easier visual parsing
+> - change "disabled" to more accurate "skipped"
+> - explain what "skipped" and "ignored" mean in a parenthetical
 > 
-> [1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96503
+> Upgrade the "security= is ignored" warning from pr_info to pr_warn,
+> and include full arguments list to make the cause even more clear.
 > 
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: Pekka Enberg <penberg@kernel.org>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Roman Gushchin <roman.gushchin@linux.dev>
-> Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-> Cc: linux-mm@kvack.org
+> Replace static "Security Framework initializing" pr_info with specific
+> list of the resulting order of enabled LSMs.
+> 
+> For example, if the kernel is built with:
+> 
+> CONFIG_SECURITY_SELINUX=y
+> CONFIG_SECURITY_APPARMOR=y
+> CONFIG_SECURITY_LOADPIN=y
+> CONFIG_SECURITY_YAMA=y
+> CONFIG_SECURITY_SAFESETID=y
+> CONFIG_SECURITY_LOCKDOWN_LSM=y
+> CONFIG_SECURITY_LANDLOCK=y
+> CONFIG_INTEGRITY=y
+> CONFIG_BPF_LSM=y
+> CONFIG_DEFAULT_SECURITY_APPARMOR=y
+> CONFIG_LSM="landlock,lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor,bpf"
+> 
+> Booting without options will show:
+> 
+> LSM: initializing lsm=lockdown,capability,landlock,yama,loadpin,safesetid,integrity,selinux,bpf
+> landlock: Up and running.
+> Yama: becoming mindful.
+> LoadPin: ready to pin (currently not enforcing)
+> SELinux:  Initializing.
+> LSM support for eBPF active
+> 
+> Boot with "lsm.debug" will show:
+> 
+> LSM: legacy security= *unspecified*
+> LSM: CONFIG_LSM=landlock,lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor,bpf
+> LSM: boot arg lsm= *unspecified*
+> LSM:   early started: lockdown (enabled)
+> LSM:   first ordered: capability (enabled)
+> LSM: builtin ordered: landlock (enabled)
+> LSM: builtin ignored: lockdown (not built into kernel)
+> LSM: builtin ordered: yama (enabled)
+> LSM: builtin ordered: loadpin (enabled)
+> LSM: builtin ordered: safesetid (enabled)
+> LSM: builtin ordered: integrity (enabled)
+> LSM: builtin ordered: selinux (enabled)
+> LSM: builtin ignored: smack (not built into kernel)
+> LSM: builtin ignored: tomoyo (not built into kernel)
+> LSM: builtin ordered: apparmor (enabled)
+> LSM: builtin ordered: bpf (enabled)
+> LSM: exclusive chosen:   selinux
+> LSM: exclusive disabled: apparmor
+> LSM: initializing lsm=lockdown,capability,landlock,yama,loadpin,safesetid,integrity,selinux,bpf
+> LSM: cred blob size       = 32
+> LSM: file blob size       = 16
+> LSM: inode blob size      = 72
+> LSM: ipc blob size        = 8
+> LSM: msg_msg blob size    = 4
+> LSM: superblock blob size = 80
+> LSM: task blob size       = 8
+> LSM: initializing capability
+> LSM: initializing landlock
+> landlock: Up and running.
+> LSM: initializing yama
+> Yama: becoming mindful.
+> LSM: initializing loadpin
+> LoadPin: ready to pin (currently not enforcing)
+> LSM: initializing safesetid
+> LSM: initializing integrity
+> LSM: initializing selinux
+> SELinux:  Initializing.
+> LSM: initializing bpf
+> LSM support for eBPF active
+> 
+> And some examples of how the lsm.debug ordering report changes...
+> 
+> With "lsm.debug security=selinux":
+> 
+> LSM: legacy security=selinux
+> LSM: CONFIG_LSM=landlock,lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor,bpf
+> LSM: boot arg lsm= *unspecified*
+> LSM:   early started: lockdown (enabled)
+> LSM:   first ordered: capability (enabled)
+> LSM: security=selinux disabled: apparmor (only one legacy major LSM)
+> LSM: builtin ordered: landlock (enabled)
+> LSM: builtin ignored: lockdown (not built into kernel)
+> LSM: builtin ordered: yama (enabled)
+> LSM: builtin ordered: loadpin (enabled)
+> LSM: builtin ordered: safesetid (enabled)
+> LSM: builtin ordered: integrity (enabled)
+> LSM: builtin ordered: selinux (enabled)
+> LSM: builtin ignored: smack (not built into kernel)
+> LSM: builtin ignored: tomoyo (not built into kernel)
+> LSM: builtin ordered: apparmor (disabled)
+> LSM: builtin ordered: bpf (enabled)
+> LSM: exclusive chosen:   selinux
+> LSM: initializing lsm=lockdown,capability,landlock,yama,loadpin,safesetid,integrity,selinux,bpf
+> 
+> With "lsm.debug lsm=integrity,selinux,loadpin,crabability,bpf,loadpin,loadpin":
+> 
+> LSM: legacy security= *unspecified*
+> LSM: CONFIG_LSM=landlock,lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor,bpf
+> LSM: boot arg lsm=integrity,selinux,loadpin,capability,bpf,loadpin,loadpin
+> LSM:   early started: lockdown (enabled)
+> LSM:   first ordered: capability (enabled)
+> LSM: cmdline ordered: integrity (enabled)
+> LSM: cmdline ordered: selinux (enabled)
+> LSM: cmdline ordered: loadpin (enabled)
+> LSM: cmdline ignored: crabability (not built into kernel)
+> LSM: cmdline ordered: bpf (enabled)
+> LSM: cmdline skipped: apparmor (not in requested order)
+> LSM: cmdline skipped: yama (not in requested order)
+> LSM: cmdline skipped: safesetid (not in requested order)
+> LSM: cmdline skipped: landlock (not in requested order)
+> LSM: exclusive chosen:   selinux
+> LSM: initializing lsm=lockdown,capability,integrity,selinux,loadpin,bpf
+> 
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: James Morris <jmorris@namei.org>
+> Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> Cc: linux-security-module@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
+
+I think this change would be useful to help users debug their LSM 
+configuration. I'm not sure about the whitespace-aligned output though, 
+I guess it could break some scripts, but it is not part of the ABI and 
+only relevant for debug purpose.
+
+Acked-by: Mickaël Salaün <mic@digikod.net>
+
+
 > ---
->  include/linux/slab.h |  8 ++++++--
->  mm/slab_common.c     | 14 ++++++++++++++
->  2 files changed, 20 insertions(+), 2 deletions(-)
+> v2: en/dis-enabled expanded, example output in commit log, use pr_cont.
+> v1: https://lore.kernel.org/lkml/20221018064825.never.323-kees@kernel.org/
+> ---
+>   security/security.c | 45 ++++++++++++++++++++++++++++++++++++---------
+>   1 file changed, 36 insertions(+), 9 deletions(-)
 > 
-> diff --git a/include/linux/slab.h b/include/linux/slab.h
-> index 970e9504949e..051d86ca31a8 100644
-> --- a/include/linux/slab.h
-> +++ b/include/linux/slab.h
-> @@ -442,6 +442,8 @@ static_assert(PAGE_SHIFT <= 20);
->  
->  void *__kmalloc(size_t size, gfp_t flags) __assume_kmalloc_alignment __alloc_size(1);
->  void *kmem_cache_alloc(struct kmem_cache *s, gfp_t flags) __assume_slab_alignment __malloc;
-> +void *kmem_cache_alloc_sized(struct kmem_cache *s, gfp_t flags, size_t size)
-> +			     __assume_slab_alignment __alloc_size(3);
->  void *kmem_cache_alloc_lru(struct kmem_cache *s, struct list_lru *lru,
->  			   gfp_t gfpflags) __assume_slab_alignment __malloc;
->  void kmem_cache_free(struct kmem_cache *s, void *objp);
-> @@ -469,6 +471,8 @@ void *__kmalloc_node(size_t size, gfp_t flags, int node) __assume_kmalloc_alignm
->  							 __alloc_size(1);
->  void *kmem_cache_alloc_node(struct kmem_cache *s, gfp_t flags, int node) __assume_slab_alignment
->  									 __malloc;
-> +void *kmem_cache_alloc_node_sized(struct kmem_cache *s, gfp_t flags, int node, size_t size)
-> +				  __assume_slab_alignment __alloc_size(4);
->  
->  #ifdef CONFIG_TRACING
->  void *kmalloc_trace(struct kmem_cache *s, gfp_t flags, size_t size)
-> @@ -482,7 +486,7 @@ void *kmalloc_node_trace(struct kmem_cache *s, gfp_t gfpflags,
->  static __always_inline __alloc_size(3)
->  void *kmalloc_trace(struct kmem_cache *s, gfp_t flags, size_t size)
->  {
-> -	void *ret = kmem_cache_alloc(s, flags);
-> +	void *ret = kmem_cache_alloc_sized(s, flags, size);
->  
->  	ret = kasan_kmalloc(s, ret, size, flags);
->  	return ret;
-> @@ -492,7 +496,7 @@ static __always_inline __alloc_size(4)
->  void *kmalloc_node_trace(struct kmem_cache *s, gfp_t gfpflags,
->  			 int node, size_t size)
->  {
-> -	void *ret = kmem_cache_alloc_node(s, gfpflags, node);
-> +	void *ret = kmem_cache_alloc_node_sized(s, gfpflags, node, size);
->  
->  	ret = kasan_kmalloc(s, ret, size, gfpflags);
->  	return ret;
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index 33b1886b06eb..5fa547539a6a 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -1457,6 +1457,20 @@ size_t ksize(const void *objp)
->  }
->  EXPORT_SYMBOL(ksize);
->  
-> +/* Wrapper so __alloc_size() can see the actual allocation size. */
-> +void *kmem_cache_alloc_sized(struct kmem_cache *s, gfp_t flags, size_t size)
+> diff --git a/security/security.c b/security/security.c
+> index 79d82cb6e469..abceabda103d 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -161,8 +161,8 @@ static void __init append_ordered_lsm(struct lsm_info *lsm, const char *from)
+>   		lsm->enabled = &lsm_enabled_true;
+>   	ordered_lsms[last_lsm++] = lsm;
+>   
+> -	init_debug("%s ordering: %s (%sabled)\n", from, lsm->name,
+> -		   is_enabled(lsm) ? "en" : "dis");
+> +	init_debug("%s ordered: %s (%s)\n", from, lsm->name,
+> +		   is_enabled(lsm) ? "enabled" : "disabled");
+>   }
+>   
+>   /* Is an LSM allowed to be initialized? */
+> @@ -224,7 +224,7 @@ static void __init prepare_lsm(struct lsm_info *lsm)
+>   	if (enabled) {
+>   		if ((lsm->flags & LSM_FLAG_EXCLUSIVE) && !exclusive) {
+>   			exclusive = lsm;
+> -			init_debug("exclusive chosen: %s\n", lsm->name);
+> +			init_debug("exclusive chosen:   %s\n", lsm->name);
+>   		}
+>   
+>   		lsm_set_blob_sizes(lsm->blobs);
+> @@ -252,7 +252,7 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
+>   	/* LSM_ORDER_FIRST is always first. */
+>   	for (lsm = __start_lsm_info; lsm < __end_lsm_info; lsm++) {
+>   		if (lsm->order == LSM_ORDER_FIRST)
+> -			append_ordered_lsm(lsm, "first");
+> +			append_ordered_lsm(lsm, "  first");
+>   	}
+>   
+>   	/* Process "security=", if given. */
+> @@ -270,7 +270,7 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
+>   			if ((major->flags & LSM_FLAG_LEGACY_MAJOR) &&
+>   			    strcmp(major->name, chosen_major_lsm) != 0) {
+>   				set_enabled(major, false);
+> -				init_debug("security=%s disabled: %s\n",
+> +				init_debug("security=%s disabled: %s (only one legacy major LSM)\n",
+>   					   chosen_major_lsm, major->name);
+>   			}
+>   		}
+> @@ -291,7 +291,8 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
+>   		}
+>   
+>   		if (!found)
+> -			init_debug("%s ignored: %s\n", origin, name);
+> +			init_debug("%s ignored: %s (not built into kernel)\n",
+> +				   origin, name);
+>   	}
+>   
+>   	/* Process "security=", if given. */
+> @@ -309,7 +310,8 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
+>   		if (exists_ordered_lsm(lsm))
+>   			continue;
+>   		set_enabled(lsm, false);
+> -		init_debug("%s disabled: %s\n", origin, lsm->name);
+> +		init_debug("%s skipped: %s (not in requested order)\n",
+> +			   origin, lsm->name);
+>   	}
+>   
+>   	kfree(sep);
+> @@ -320,6 +322,24 @@ static void __init lsm_early_task(struct task_struct *task);
+>   
+>   static int lsm_append(const char *new, char **result);
+>   
+> +static void __init report_lsm_order(void)
 > +{
-> +	return kmem_cache_alloc(s, flags);
-> +}
-> +EXPORT_SYMBOL(kmem_cache_alloc_sized);
+> +	struct lsm_info **lsm, *early;
+> +	int first = 0;
 > +
-> +/* Wrapper so __alloc_size() can see the actual allocation size. */
-> +void *kmem_cache_alloc_node_sized(struct kmem_cache *s, gfp_t flags, int node, size_t size)
-> +{
-> +	return kmem_cache_alloc_node(s, flags, node);
+> +	pr_info("initializing lsm=");
+> +
+> +	/* Report each enabled LSM name, comma separated. */
+> +	for (early = __start_early_lsm_info; early < __end_early_lsm_info; early++)
+> +		if (is_enabled(early))
+> +			pr_cont("%s%s", first++ == 0 ? "" : ",", early->name);
+> +	for (lsm = ordered_lsms; *lsm; lsm++)
+> +		if (is_enabled(*lsm))
+> +			pr_cont("%s%s", first++ == 0 ? "" : ",", (*lsm)->name);
+> +
+> +	pr_cont("\n");
 > +}
-> +EXPORT_SYMBOL(kmem_cache_alloc_node_sized);
-
-The reason that we have two implementations of kmalloc_trace*
-depending on CONFIG_TRACING is to save additional function call when
-CONFIG_TRACING is not set.
-
-With this patch there is no reason to keep both.
-So let's drop #ifdefs and use single implementation in mm/slab_common.c.
-
-Thanks!
-
->  /* Tracepoints definitions. */
->  EXPORT_TRACEPOINT_SYMBOL(kmalloc);
->  EXPORT_TRACEPOINT_SYMBOL(kmem_cache_alloc);
-> -- 
-> 2.34.1
-> 
-
--- 
-Hyeonggon
+> +
+>   static void __init ordered_lsm_init(void)
+>   {
+>   	struct lsm_info **lsm;
+> @@ -329,7 +349,8 @@ static void __init ordered_lsm_init(void)
+>   
+>   	if (chosen_lsm_order) {
+>   		if (chosen_major_lsm) {
+> -			pr_info("security= is ignored because it is superseded by lsm=\n");
+> +			pr_warn("security=%s is ignored because it is superseded by lsm=%s\n",
+> +				chosen_major_lsm, chosen_lsm_order);
+>   			chosen_major_lsm = NULL;
+>   		}
+>   		ordered_lsm_parse(chosen_lsm_order, "cmdline");
+> @@ -339,6 +360,8 @@ static void __init ordered_lsm_init(void)
+>   	for (lsm = ordered_lsms; *lsm; lsm++)
+>   		prepare_lsm(*lsm);
+>   
+> +	report_lsm_order();
+> +
+>   	init_debug("cred blob size       = %d\n", blob_sizes.lbs_cred);
+>   	init_debug("file blob size       = %d\n", blob_sizes.lbs_file);
+>   	init_debug("inode blob size      = %d\n", blob_sizes.lbs_inode);
+> @@ -395,13 +418,17 @@ int __init security_init(void)
+>   {
+>   	struct lsm_info *lsm;
+>   
+> -	pr_info("Security Framework initializing\n");
+> +	init_debug("legacy security=%s\n", chosen_major_lsm ?: " *unspecified*");
+> +	init_debug("  CONFIG_LSM=%s\n", builtin_lsm_order);
+> +	init_debug("boot arg lsm=%s\n", chosen_lsm_order ?: " *unspecified*");
+>   
+>   	/*
+>   	 * Append the names of the early LSM modules now that kmalloc() is
+>   	 * available
+>   	 */
+>   	for (lsm = __start_early_lsm_info; lsm < __end_early_lsm_info; lsm++) {
+> +		init_debug("  early started: %s (%s)\n", lsm->name,
+> +			   is_enabled(lsm) ? "enabled" : "disabled");
+>   		if (lsm->enabled)
+>   			lsm_append(lsm->name, &lsm_names);
+>   	}
