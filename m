@@ -2,66 +2,64 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E0FC4332F
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Nov 2022 19:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F26EC433FE
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Nov 2022 19:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229549AbiKDT3j (ORCPT
+        id S229608AbiKDTct (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Nov 2022 15:29:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58624 "EHLO
+        Fri, 4 Nov 2022 15:32:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbiKDT3i (ORCPT
+        with ESMTP id S229601AbiKDTcm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Nov 2022 15:29:38 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAC5124F2D
-        for <linux-hardening@vger.kernel.org>; Fri,  4 Nov 2022 12:29:36 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id io19so5778691plb.8
-        for <linux-hardening@vger.kernel.org>; Fri, 04 Nov 2022 12:29:36 -0700 (PDT)
+        Fri, 4 Nov 2022 15:32:42 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF54945084
+        for <linux-hardening@vger.kernel.org>; Fri,  4 Nov 2022 12:32:40 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id z26so5368681pff.1
+        for <linux-hardening@vger.kernel.org>; Fri, 04 Nov 2022 12:32:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=coppeWfhGCt8RrFh4xp+o6BaCFfthicfV88Hga7Ywrs=;
-        b=bXaVfbdb3ZcahXxunt5x8dpa93cEIlg83ooOkQZ8Xca/qcP9mecyVfzC59GKM3ic7r
-         C2LwHAjdc3W4bJoDaUB6364Dip+DxzhWZSlJqBjd2UnrA4UQnQyDx0wkV/IskMEJ89WD
-         gJITpdGbc51rtgK3c7N/pLdDDrjrZqkC+BSvU=
+        bh=GJx5Vo13L9gX9apUbugbGq7p+vwBn4IOzk+4YVYJbZo=;
+        b=PWyXmK+bN4YM6UWblyRMVutXuc2f46M8K5kj7AsPvSQYau24NgfA3c14hTpOkY/lXh
+         TgZknkLqE8+M15xi09X/3zFxiyUz3OD4glTMJZRgR90wrf2JsTPhor8EbFM0YrK/rKoG
+         YgSETYSHttYklZcLjRGnOLHKMpA0xM6Z8PDlw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=coppeWfhGCt8RrFh4xp+o6BaCFfthicfV88Hga7Ywrs=;
-        b=Wzelx2k1jnE+UlN8b2AZmq3gfUUgU0kfM6SEntQQw6hS8AISS4GxTbwHtLvKEi+dsP
-         7vlNqhEL7U56DRrMa00l7buvJ53FL43PoBdmDJpWr6QeEfdl+nppL2IkpUH/hjEZsXF+
-         j7SQnGGpN/zN5Q1d6B26ImukQaJYTtOEXidWvnY4wHw15iTxMnx4l1LwZ8x2FXUrfecK
-         yIBAcQchFt44+ZKdwuMMZV32k8aSD1SC7adlS2AtPoCPvjw8Z3/QkC4PDjZblJBxmZ3C
-         tc1FPe3oJVmyZFK9oC9tg0+XLwo/sfaWIq21nhYZSdtjD+fFazfFtyeVyXgRO6JPQ7lE
-         i/7A==
-X-Gm-Message-State: ACrzQf1G2NuA2fiSoRGJSoXDh6SoDuAXRkRUItdwn8baVQEo04nZJmmS
-        V2VYF2tjiE0lg6jZ26TJC8Jjrg==
-X-Google-Smtp-Source: AMsMyM5GA4vWe+7Au3BfwULC3SI7otx4Z3kmU+RAsXyTVz1BP2dUWnjKFDmRuAy9Wg2mW/X84RWcaw==
-X-Received: by 2002:a17:90a:f414:b0:212:cacf:42c3 with SMTP id ch20-20020a17090af41400b00212cacf42c3mr55439472pjb.198.1667590176353;
-        Fri, 04 Nov 2022 12:29:36 -0700 (PDT)
+        bh=GJx5Vo13L9gX9apUbugbGq7p+vwBn4IOzk+4YVYJbZo=;
+        b=piF12f+dYOSl7APWA2i8OfLhSLO3SeL4aqEJEPsZIfhQxjN7pKJO3i9BNklAxEptC/
+         Dbs/5hAOIR3otITa+V26/6wx15rYykrn1t4ICN1K/VT1lunJRg0yUfv3vuyN12OFKm7r
+         2ZhOYZ/Ys4FcAlX9A4RfYJ1j1YsC9gAatLbhk5w5OYVZSog9r+anPonVYV8TeDwrCemy
+         1tOJi1bcMpJN+ac1py7WXkcPfFHUpd/OFG3sWJFGaYeZYmBdrI1XjHtLu0AZNLldnwNC
+         opufkDFvHJLpfdk5AynM61qpFY0r01UUNoJuYRxxcKC+ZK5mYcRuq50bYMWJA+lHnSwl
+         +TYA==
+X-Gm-Message-State: ACrzQf1Bckkaab7wZRN+sXO2f/f+B1N39JhqLQzPdjk4LELHj4rv2pR4
+        0Py1BpBnd1IQL+OxU2LlR8kfzg==
+X-Google-Smtp-Source: AMsMyM6b3yzI6tcnLNCUvQjftaq74cgnM4/tQtryFCIdjr3n8azek7qjQaYlxgkqWKXcmSealD9oKA==
+X-Received: by 2002:a05:6a00:a8c:b0:558:991a:6691 with SMTP id b12-20020a056a000a8c00b00558991a6691mr37351768pfl.53.1667590360362;
+        Fri, 04 Nov 2022 12:32:40 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u7-20020a170902e5c700b00174d9bbeda4sm117527plf.197.2022.11.04.12.29.35
+        by smtp.gmail.com with ESMTPSA id e4-20020a17090a684400b00212daa6f41dsm95856pjm.28.2022.11.04.12.32.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Nov 2022 12:29:36 -0700 (PDT)
+        Fri, 04 Nov 2022 12:32:39 -0700 (PDT)
 From:   coverity-bot <keescook@chromium.org>
 X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date:   Fri, 4 Nov 2022 12:29:35 -0700
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sergey Shtylyov <s.shtylyov@omp.ru>,
-        linux-renesas-soc@vger.kernel.org,
+Date:   Fri, 4 Nov 2022 12:32:38 -0700
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>, linux-kernel@vger.kernel.org,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Borislav Petkov <bp@suse.de>, Yujie Liu <yujie.liu@intel.com>,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: rswitch_gwca_queue_alloc_skb(): Control flow issues
-Message-ID: <202211041229.F3B37C03@keescook>
+Subject: Coverity: elf_create_prefix_symbol(): Resource leaks
+Message-ID: <202211041232.6071ACE@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -78,27 +76,27 @@ https://scan.coverity.com/projects/linux-next-weekly-scan
 You're getting this email because you were associated with the identified
 lines of code (noted below) that were touched by commits:
 
-  Wed Nov 2 12:38:53 2022 +0000
-    3590918b5d07 ("net: ethernet: renesas: Add support for "Ethernet Switch"")
+  Tue Nov 1 13:44:09 2022 +0100
+    9f2899fe36a6 ("objtool: Add option to generate prefix symbols")
 
 Coverity reported the following:
 
-*** CID 1527147:  Control flow issues  (NO_EFFECT)
-drivers/net/ethernet/renesas/rswitch.c:270 in rswitch_gwca_queue_alloc_skb()
-264     			goto err;
-265     	}
-266
-267     	return 0;
-268
-269     err:
-vvv     CID 1527147:  Control flow issues  (NO_EFFECT)
-vvv     This greater-than-or-equal-to-zero comparison of an unsigned value is always true. "i >= 0U".
-270     	for (i--; i >= 0; i--) {
-271     		index = (i + start_index) % gq->ring_size;
-272     		dev_kfree_skb(gq->skbs[index]);
-273     		gq->skbs[index] = NULL;
-274     	}
-275
+*** CID 1527141:  Resource leaks  (RESOURCE_LEAK)
+tools/objtool/elf.c:833 in elf_create_prefix_symbol()
+827     	struct symbol *sym = calloc(1, sizeof(*sym));
+828     	size_t namelen = strlen(orig->name) + sizeof("__pfx_");
+829     	char *name = malloc(namelen);
+830
+831     	if (!sym || !name) {
+832     		perror("malloc");
+vvv     CID 1527141:  Resource leaks  (RESOURCE_LEAK)
+vvv     Variable "sym" going out of scope leaks the storage it points to.
+833     		return NULL;
+834     	}
+835
+836     	snprintf(name, namelen, "__pfx_%s", orig->name);
+837
+838     	sym->name = name;
 
 If this is a false positive, please let us know so we can mark it as
 such, or teach the Coverity rules to be smarter. If not, please make
@@ -106,8 +104,8 @@ sure fixes get into linux-next. :) For patches fixing this, please
 include these lines (but double-check the "Fixes" first):
 
 Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1527147 ("Control flow issues")
-Fixes: 3590918b5d07 ("net: ethernet: renesas: Add support for "Ethernet Switch"")
+Addresses-Coverity-ID: 1527141 ("Resource leaks")
+Fixes: 9f2899fe36a6 ("objtool: Add option to generate prefix symbols")
 
 Thanks for your attention!
 
