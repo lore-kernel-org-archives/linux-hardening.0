@@ -2,71 +2,132 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCB8C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Nov 2022 20:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 111DBC4332F
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Nov 2022 05:00:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231653AbiKCUJA (ORCPT
+        id S230231AbiKDFAb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Nov 2022 16:09:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56808 "EHLO
+        Fri, 4 Nov 2022 01:00:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231591AbiKCUIn (ORCPT
+        with ESMTP id S230003AbiKDFA3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Nov 2022 16:08:43 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2611F240B6;
-        Thu,  3 Nov 2022 13:06:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E3CE5B82A0C;
-        Thu,  3 Nov 2022 20:06:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C2E4C43470;
-        Thu,  3 Nov 2022 20:06:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667505988;
-        bh=aQc0ltm9i79K48wYxyYSqtW3BHtN1jgvUXlb9ICcslA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pm+x7YvLJ9ocxE6+8wtecuGSXz2Ama5noVK3lnM0V0bYcxVNxNghJBFt6Eh6b3eMz
-         AijT08GwXe8BgUtV+V6AZVfxzZgwj1BMI4kt8qKig3bXhz8e7h/aOfzYY4IREnz8Bg
-         S0Ju2cRDM5hH3GdfCMa53ae490hPHeDLgaScxBsrHK2COglNOXc3869sBoqbC5fogV
-         lskxkenq9Lr17At7pKIMOTOS2AeX/Z+3sbpkVFcYwDbTqXn5ZGJy6gBu6SOhp5XkAv
-         5+jCCJnE7wKlA+3hWarj5X1Jk8j2GLrpQsqqEBaPDAixnF6SkdpBF7WwkZuZqtvDIL
-         lLa6npJ8rfTVg==
-Received: by mail-lj1-f170.google.com with SMTP id u2so3608854ljl.3;
-        Thu, 03 Nov 2022 13:06:28 -0700 (PDT)
-X-Gm-Message-State: ACrzQf3VUhdUP1Hagr3ljZdeu6p+3h3azdwiKml6Yhb08BGGFk216TkK
-        lkEVr0i2+LCMXm6F4JDifjLgR+tiwaccbkPAOqg=
-X-Google-Smtp-Source: AMsMyM4Yj0jeFfoCqF1M9bL6KQAXXQQnFYf3U2XJpoZXg8pIpmggWrlUxIrgyVOiFwJ6h5Lw2/5LnuFjXlUMwQtE6Vs=
-X-Received: by 2002:a2e:5c82:0:b0:26c:4311:9b84 with SMTP id
- q124-20020a2e5c82000000b0026c43119b84mr5804536ljb.152.1667505986582; Thu, 03
- Nov 2022 13:06:26 -0700 (PDT)
+        Fri, 4 Nov 2022 01:00:29 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BFFF25EB6;
+        Thu,  3 Nov 2022 22:00:29 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id b185so3540401pfb.9;
+        Thu, 03 Nov 2022 22:00:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RbsKwk2Ze0a5EYeW42rZ4T7BWU2ghCIbOlL+4KjCrSA=;
+        b=RFzz9X9p1w1SEIQ63P5JxPgyV2EcluHej5H3tsRel7O7ey7zGeegO7k9PwoTsMNjrs
+         T5cb96OwKV0zwXbw4r1rJVQQOrMo+O1MJWpmWLq06pU98nvGNL8ZuK5HjNubjpazbiLs
+         x9btqZAQljMdHgAyqjHeau03vEp1aUvhmeeNEJdZ/abpbI9+MaSApNk13lAIlIsekb2/
+         CngVaHk1ddZlmGFB2U9Y4W5uE13FeG4tARBHIWhmP+4mQrsWwV3h747w6duX8sC7znKF
+         UtqJ/2DzQdqCX5BXJH+HWDw6gKyRQS8sr4hCiz2C3nKPwkBHYKovINGi0rVL0hBEIMIw
+         +kDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RbsKwk2Ze0a5EYeW42rZ4T7BWU2ghCIbOlL+4KjCrSA=;
+        b=dBPUQk9+pT3Z5e/92sKCay4lsTakOfFWHSSfNMfa/E1HqPPWtXvyj/RVvxeR5iTRJH
+         o/SVFBzH6w7SSYSpuKfcE5gC0Nj+/v+vuJ2XWZqIArs0NSNwxPixgqGePf2gcdRrb4CV
+         yx/kUqr3G4FD11I6vmVueJV/PiuUopOLwq+A+q2ObXP7dXfGZ6+y1opZ4Ja8plAgkZ/D
+         5F7eX9I2D8Ii51iJDalQIjr5Tve9FFBZtbvrtBgbcH16h+H9uwqYz/r+w5Vr/r/qbH3A
+         pU+EEN7TOkmyLESHJkPmYwCIaVlzc0PJ1QMC3Uxb88ssAZK2mqFeEmNwYrH3yJST3MyD
+         NarQ==
+X-Gm-Message-State: ACrzQf3lzxcmWmDS8T9rabsvwr71wd/izMVkDUHnh1IOOBGTVhHhRRqj
+        Y+gxgr7QtgEfTxwkn7cS4zSZfdxzdHtjazz0
+X-Google-Smtp-Source: AMsMyM4j1xPj2Iui456ebdwBJaC4wCNuIKpEFlws2n1lOFGR5OsDZ89KfBpXvz0TsIH42WasFCiXQQ==
+X-Received: by 2002:a63:dc45:0:b0:43c:b43f:5228 with SMTP id f5-20020a63dc45000000b0043cb43f5228mr267639pgj.58.1667538028712;
+        Thu, 03 Nov 2022 22:00:28 -0700 (PDT)
+Received: from mail.google.com (125-237-50-34-fibre.sparkbb.co.nz. [125.237.50.34])
+        by smtp.gmail.com with ESMTPSA id d16-20020a63ed10000000b00459a36795cbsm1569438pgi.42.2022.11.03.22.00.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Nov 2022 22:00:28 -0700 (PDT)
+Date:   Fri, 4 Nov 2022 18:00:22 +1300
+From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+To:     Christine Caulfield <ccaulfie@redhat.com>,
+        David Teigland <teigland@redhat.com>, cluster-devel@redhat.com
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v5] [next] dlm: replace one-element array with fixed size
+ array
+Message-ID: <Y2ScZqWnJKe7J6NR@mail.google.com>
+References: <202210111305.743F591@keescook>
+ <Y0XQsqdRzlrSpgOh@mail.google.com>
 MIME-Version: 1.0
-References: <20221101184808.80747-1-gpiccoli@igalia.com> <CAMj1kXH5B0Op7Aab45x_tdkM1YsoSJ9euNqLMzeJg4uK++ojJQ@mail.gmail.com>
- <aac42f75-413b-c247-1a35-5d140ef38ff8@igalia.com>
-In-Reply-To: <aac42f75-413b-c247-1a35-5d140ef38ff8@igalia.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 3 Nov 2022 21:06:15 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXH-JUmeCS0627day7NDc5DbigqSRfug8xNx=u5k3sZhxg@mail.gmail.com>
-Message-ID: <CAMj1kXH-JUmeCS0627day7NDc5DbigqSRfug8xNx=u5k3sZhxg@mail.gmail.com>
-Subject: Re: [PATCH V3] efi: pstore: Add module parameter for setting the
- record size
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-efi@vger.kernel.org,
-        kernel-dev@igalia.com, kernel@gpiccoli.net, keescook@chromium.org,
-        anton@enomsg.org, ccross@android.com, tony.luck@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y0XQsqdRzlrSpgOh@mail.google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 3 Nov 2022 at 19:38, Guilherme G. Piccoli <gpiccoli@igalia.com> wrote:
->
-> On 03/11/2022 14:04, Ard Biesheuvel wrote:
-> > [...]
-> > Thanks, I'll queue this up for v6.2
->
-> Thanks a lot for all the discussions Ard, it was very informative =)
+On Wed, Oct 12, 2022 at 09:23:14AM +1300, Paulo Miguel Almeida wrote:
+> One-element arrays are deprecated. So, replace one-element array with
+> fixed size array member in struct dlm_ls, and refactor the rest of the
+> code, accordingly.
+> 
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/228
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836
+> Link: https://lore.kernel.org/lkml/Y0W5jkiXUkpNl4ap@mail.google.com/
+> 
+> Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+> ---
+> Changelog:
+> 
+> v5: use preferred sizeof style. Req: Gustavo Silva
+> v4: resend patch using the right version number. Req: Gustavo Silva
+> v3: replace one-element array with a fixed size array. Req: Kees Cook
+> v2: patch resent as I had an issue with a <CRLF> char in my mail client
+> v1: https://lore.kernel.org/lkml/Y0ICbf8tCtXMn+W0@mail.google.com/
+> ---
+> 
+>  fs/dlm/dlm_internal.h | 2 +-
+>  fs/dlm/lockspace.c    | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/dlm/dlm_internal.h b/fs/dlm/dlm_internal.h
+> index e34c3d2639a5..94fadb619ba0 100644
+> --- a/fs/dlm/dlm_internal.h
+> +++ b/fs/dlm/dlm_internal.h
+> @@ -670,7 +670,7 @@ struct dlm_ls {
+>  	void			*ls_ops_arg;
+>  
+>  	int			ls_namelen;
+> -	char			ls_name[1];
+> +	char			ls_name[DLM_LOCKSPACE_LEN + 1];
+>  };
+>  
+>  /*
+> diff --git a/fs/dlm/lockspace.c b/fs/dlm/lockspace.c
+> index bae050df7abf..9479c8110979 100644
+> --- a/fs/dlm/lockspace.c
+> +++ b/fs/dlm/lockspace.c
+> @@ -473,7 +473,7 @@ static int new_lockspace(const char *name, const char *cluster,
+>  
+>  	error = -ENOMEM;
+>  
+> -	ls = kzalloc(sizeof(struct dlm_ls) + namelen, GFP_NOFS);
+> +	ls = kzalloc(sizeof(*ls), GFP_NOFS);
+>  	if (!ls)
+>  		goto out;
+>  	memcpy(ls->ls_name, name, namelen);
+> -- 
+> 2.37.3
+> 
 
-My pleasure
+Christine, David,
+
+Just following up on this patch. Is there anything that either of you
+want me change for this patch to be merged?
+
+thanks!
+
+- Paulo A.
