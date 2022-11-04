@@ -2,61 +2,68 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AE2C433FE
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Nov 2022 19:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAD3C4332F
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Nov 2022 19:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229505AbiKDTf2 (ORCPT
+        id S229547AbiKDTlG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Nov 2022 15:35:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33238 "EHLO
+        Fri, 4 Nov 2022 15:41:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229667AbiKDTf0 (ORCPT
+        with ESMTP id S229487AbiKDTlF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Nov 2022 15:35:26 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F8854508D
-        for <linux-hardening@vger.kernel.org>; Fri,  4 Nov 2022 12:35:24 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id z26so5374146pff.1
-        for <linux-hardening@vger.kernel.org>; Fri, 04 Nov 2022 12:35:24 -0700 (PDT)
+        Fri, 4 Nov 2022 15:41:05 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1D27108A
+        for <linux-hardening@vger.kernel.org>; Fri,  4 Nov 2022 12:41:02 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id d20so4744551plr.10
+        for <linux-hardening@vger.kernel.org>; Fri, 04 Nov 2022 12:41:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Fi3uLXH+szzqTxRSWVS63wUkqoaeAU4TkZNAaOvVK+s=;
-        b=aWx+oPO+Srbo1w+pEL6tCCG2kMxu7Owtr3UvsxPEkOsAPbsNEoWsMP/nloh4Xfxmjt
-         yAPc0edxVQcVDqNuzsSO7GcAU0weBGcazqHv85VCQxprA0/+UVoKiaaE+p7ftEd7g2sC
-         TGxq/1cx5xFlVcjBZr75s1UfKRd0G0E9umQIQ=
+        bh=xTleQU4VJfAukQnxKaDYAnGqK2WphhJc8fFwPIDZB8o=;
+        b=msmwpF6Ois8LGAEpwDgc+v1z3O9zPF/gToUCKqHVslP3hhHCt/dUr3MBgaajqYY8+r
+         v8IHIH33Nb8tZyr5wzF1Z1u4/02bw3vX6jbPl/qjsYR+o3kurpTnt8kUpMPNspaplUPj
+         EIS1wt0Z83toaM+v3HO8zDdOzYakLB7A3sIXY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fi3uLXH+szzqTxRSWVS63wUkqoaeAU4TkZNAaOvVK+s=;
-        b=hxuEdMSJxQSpvb0F92sPBTjkHaM9wVItVt5rooCsBk92z3nA+g/C68rZqsaEXtqVDZ
-         9XnHADvCgEykUzIoxFitNq4brMe4DwADbKCKAVSX8tCawbeM1YKFISnCPLBO8FaSWtEb
-         4HaJJj96DVMBBxEtMtKgCduCZGnvTTwmPeAu67Jf2a7jqJgZrV+k4b81ReocqHojaW+7
-         z7wjCHDvK1jpPeZTyIBGthOmwcebGY8oZe/kiR4E8yyh+RHuanH36IQGv7EP/urikddT
-         ECUPhdeuV8vvCSPWUv5AhXwKSgViWD1eT25vybsPqaXGAD+h+WxW+O7l/2/P5rPeAVao
-         3yWQ==
-X-Gm-Message-State: ACrzQf1Q/oy9Y+nb0KaWhro1wj/uXxCvzi0wyyorRVstzukrG8w19ooj
-        v2XESCzQnl4St7lrpkgpVh1Qdg==
-X-Google-Smtp-Source: AMsMyM7t+PovjIzz0bK0Dmex/GB5uaGqzigeaTOQYl4Zm0s+THtQgtXB0FMtorvOI4GBtIiH/aigqg==
-X-Received: by 2002:a05:6a00:4508:b0:56d:8afe:b7c1 with SMTP id cw8-20020a056a00450800b0056d8afeb7c1mr25958465pfb.29.1667590523697;
-        Fri, 04 Nov 2022 12:35:23 -0700 (PDT)
+        bh=xTleQU4VJfAukQnxKaDYAnGqK2WphhJc8fFwPIDZB8o=;
+        b=frWMkNiaNjB6dnbervbgKzZ3Y1pc9PXdaJ9O99Qg0OaSU2t3IeDEef7sjdLxhjrzLx
+         Bvt30Xr0ACsd766wllAC0ag+zOd0Xuh4kKY5DuU+/lKutPMS3FfdHnRHC/Rdnj0NK8fa
+         +Es5WfQJEGcsrk3Vj33rBACV5jkxVRDJCWPrazxtzLCHvLEWZSw9GAN6WjKgGpa3tS92
+         JcfBuV/nsZ9pA700B1KISLeIeJjgVQ7BvD+88O8IMvsrghzeq6Oqv4bhc3/WsDJFSaVi
+         ID331KNCcvNlOmtSkqQJuBcuctN9d63FLZvXZ97Qhpp8KCeavHPELPOvG2pgZVOUBaUy
+         Egkw==
+X-Gm-Message-State: ACrzQf2Azo3ehPVe10MmxUEqYxkgdiwUQP7eBBKxaawOtrNWvbvyD1Yu
+        qYhPa3pqDsIlJsgZ4Jk2gUO9v8HOGBu6Hg==
+X-Google-Smtp-Source: AMsMyM5lPZwJMkVoNQNtETbRNTdHQI/XbapUB0H45rWGJXujIBislKOpf8ovzPpaS4yP5yAJByf1Sw==
+X-Received: by 2002:a17:902:aa44:b0:186:7a6b:7bbd with SMTP id c4-20020a170902aa4400b001867a6b7bbdmr37459295plr.78.1667590862227;
+        Fri, 04 Nov 2022 12:41:02 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i16-20020a632210000000b0043a18cef977sm109241pgi.13.2022.11.04.12.35.23
+        by smtp.gmail.com with ESMTPSA id ik12-20020a170902ab0c00b00187197c499asm128906plb.164.2022.11.04.12.41.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Nov 2022 12:35:23 -0700 (PDT)
+        Fri, 04 Nov 2022 12:41:01 -0700 (PDT)
 From:   coverity-bot <keescook@chromium.org>
 X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date:   Fri, 4 Nov 2022 12:35:22 -0700
-To:     Crt Mori <cmo@melexis.com>
-Cc:     linux-iio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+Date:   Fri, 4 Nov 2022 12:41:01 -0700
+To:     Harish Kasiviswanathan <Harish.Kasiviswanathan@amd.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@gmail.com>,
+        amd-gfx@lists.freedesktop.org, Oded Gabbay <oded.gabbay@gmail.com>,
+        Jay Cornwall <Jay.Cornwall@amd.com>, Ben Goz <ben.goz@amd.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Kent Russell <kent.russell@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Amber Lin <Amber.Lin@amd.com>,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: mlx90632_probe(): Error handling issues
-Message-ID: <202211041235.FB1AF7F6F@keescook>
+Subject: Coverity: kfd_parse_subtype_cache(): Memory - corruptions
+Message-ID: <202211041239.2B98F280@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -73,27 +80,27 @@ https://scan.coverity.com/projects/linux-next-weekly-scan
 You're getting this email because you were associated with the identified
 lines of code (noted below) that were touched by commits:
 
-  Thu Nov 3 21:42:26 2022 +0000
-    c83d3e5ca97f ("iio: temperature: mlx90632 Add runtime powermanagement modes")
+  Fri Dec 8 23:08:59 2017 -0500
+    3a87177eb141 ("drm/amdkfd: Add topology support for dGPUs")
 
 Coverity reported the following:
 
-*** CID 1527134:  Error handling issues  (CHECKED_RETURN)
-drivers/iio/temperature/mlx90632.c:1270 in mlx90632_probe()
-1264     	mlx90632->object_ambient_temperature = 25000; /* 25 degrees milliCelsius */
-1265     	mlx90632->interaction_ts = jiffies; /* Set initial value */
-1266
-1267     	pm_runtime_get_noresume(&client->dev);
-1268     	pm_runtime_set_active(&client->dev);
-1269
-vvv     CID 1527134:  Error handling issues  (CHECKED_RETURN)
-vvv     Calling "devm_pm_runtime_enable" without checking return value (as is done elsewhere 21 out of 24 times).
-1270     	devm_pm_runtime_enable(&client->dev);
-1271     	pm_runtime_set_autosuspend_delay(&client->dev, MLX90632_SLEEP_DELAY_MS);
-1272     	pm_runtime_use_autosuspend(&client->dev);
-1273     	pm_runtime_put_autosuspend(&client->dev);
-1274
-1275     	return devm_iio_device_register(&client->dev, indio_dev);
+*** CID 1527133:  Memory - corruptions  (OVERRUN)
+drivers/gpu/drm/amd/amdkfd/kfd_crat.c:1113 in kfd_parse_subtype_cache()
+1107     			props->cache_size = cache->cache_size;
+1108     			props->cacheline_size = cache->cache_line_size;
+1109     			props->cachelines_per_tag = cache->lines_per_tag;
+1110     			props->cache_assoc = cache->associativity;
+1111     			props->cache_latency = cache->cache_latency;
+1112
+vvv     CID 1527133:  Memory - corruptions  (OVERRUN)
+vvv     Overrunning array "cache->sibling_map" of 32 bytes by passing it to a function which accesses it at byte offset 63 using argument "64UL". [Note: The source code implementation of the function has been overridden by a builtin model.]
+1113     			memcpy(props->sibling_map, cache->sibling_map,
+1114     					sizeof(props->sibling_map));
+1115
+1116     			/* set the sibling_map_size as 32 for CRAT from ACPI */
+1117     			props->sibling_map_size = CRAT_SIBLINGMAP_SIZE;
+1118
 
 If this is a false positive, please let us know so we can mark it as
 such, or teach the Coverity rules to be smarter. If not, please make
@@ -101,8 +108,24 @@ sure fixes get into linux-next. :) For patches fixing this, please
 include these lines (but double-check the "Fixes" first):
 
 Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1527134 ("Error handling issues")
-Fixes: c83d3e5ca97f ("iio: temperature: mlx90632 Add runtime powermanagement modes")
+Addresses-Coverity-ID: 1527133 ("Memory - corruptions")
+Fixes: 3a87177eb141 ("drm/amdkfd: Add topology support for dGPUs")
+
+I'm not sure why this suddenly appeared after 5 years, but the read
+over-run looks legit:
+
+struct crat_subtype_cache {
+        ...
+        uint8_t         sibling_map[CRAT_SIBLINGMAP_SIZE];
+
+#define CRAT_SIBLINGMAP_SIZE    32
+
+
+struct kfd_cache_properties {
+        ...
+        uint8_t                 sibling_map[CACHE_SIBLINGMAP_SIZE];
+
+#define CACHE_SIBLINGMAP_SIZE 64
 
 Thanks for your attention!
 
