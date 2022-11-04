@@ -2,82 +2,141 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3ECC4332F
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Nov 2022 19:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E869C43219
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Nov 2022 19:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229481AbiKDTP1 (ORCPT
+        id S229849AbiKDTRP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Nov 2022 15:15:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51186 "EHLO
+        Fri, 4 Nov 2022 15:17:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229598AbiKDTPQ (ORCPT
+        with ESMTP id S229805AbiKDTRN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Nov 2022 15:15:16 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8229A48745
-        for <linux-hardening@vger.kernel.org>; Fri,  4 Nov 2022 12:15:14 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id y203so5324189pfb.4
-        for <linux-hardening@vger.kernel.org>; Fri, 04 Nov 2022 12:15:14 -0700 (PDT)
+        Fri, 4 Nov 2022 15:17:13 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDB2B4876C
+        for <linux-hardening@vger.kernel.org>; Fri,  4 Nov 2022 12:17:07 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id z1so3666558qkl.9
+        for <linux-hardening@vger.kernel.org>; Fri, 04 Nov 2022 12:17:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MEf9d311gYlVy+enAlEz8rGW1CJ9xfrOljmhcAt92Dg=;
-        b=LhjGaHgkBVWHBr/Hub8tG7h7OMzM9VZ+F9/RSmJH3AmPOAxF3jcmpjLhRHst+xu34F
-         En6EekpQvCmcfyhPAgT8Wnsm+PpVO9AydAUvODs7XTbkYHVHJw8YrzKiOS6WWcQgh1T1
-         NSsrq4CnpSZUgzr5KqYrrWERL+HiysUc2s+us=
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A3IQuXma0cjf2XddXrRe8ESj+gGbbWZ0MQ+tC4zj4Es=;
+        b=Z6EyrOpVxPv9TAsb7BTYoQW7CNbsYZWdk+Fr1gKr9GL9OvufRSAxWryOMvUOQ7SX7H
+         GtjWn2iEEYB/9OO7+GbV2KI+j9dr6fGl/LffGFO/OFSPUgrbddtqucNZFbMn0uEC6tv2
+         QRUPVgKG+CW32ru3iITtYHiidMSGjJTYdmBRYuyVpYLcZSfU8Rcml78x1G+OtOE7x1em
+         z4FHvqycOK7FYeX57qY0mGWTlYPvACqIJVyXMEm1r51qXNYSiCrH4HHrx4BvUE4PmrYM
+         bTSPZr1nivB1LpPo6nAzDwr552lxLB83wcZNcIn9/A8OSdl6nrGTA4V1JcM6j5Du1SGg
+         nHMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MEf9d311gYlVy+enAlEz8rGW1CJ9xfrOljmhcAt92Dg=;
-        b=x9fleSZA/4RpLIQrhGwKCQ6SSVdQ0ZQayQASSbfhMZJmEpfgUnCFayMsFar+LEzi65
-         TkWAwVfVzcg4oBYJS/mf6TQdCkFkiH9iTAtFNlTetgeRgpEc3trAWY9Aw3s/HXZ3eBIU
-         LALETel1jsu1MYp9OPKnKFhalOH/lgc073QWePB39QgSjBCdqVomevrZTxGIaGb+RYC8
-         BFIlkcwLDupCl/1N9SwFwObJZ1sSKOafmCTtdDynxpxOOLNMRpmmQrc6ubjvH96K8KYU
-         07+d6DFOmOoikHzhApsFQY/3cT3A6T3zOAjad8HhaAZiOA9yv+O/ntB6fmyAphcom8W5
-         27Gw==
-X-Gm-Message-State: ACrzQf3pbbJc7rQaC31c5nLGGP1wh/B2frJYMzJej1iCZRrYA68h6zHC
-        Y5Z84aPi2cPmsDOqpMCA/LGugw==
-X-Google-Smtp-Source: AMsMyM7YfYNFEIynGzowgsu6m5LvrNg+n/4e5PtDyEWzcl6lmyrNsLMr56TmeYEshR0X8edL+EHHRg==
-X-Received: by 2002:a05:6a00:1749:b0:56e:4586:4bc1 with SMTP id j9-20020a056a00174900b0056e45864bc1mr10268770pfc.41.1667589314056;
-        Fri, 04 Nov 2022 12:15:14 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j7-20020a170902758700b0017f7e0f4a4esm126654pll.35.2022.11.04.12.15.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Nov 2022 12:15:13 -0700 (PDT)
-Date:   Fri, 4 Nov 2022 12:15:12 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Kalle Valo <kvalo@kernel.org>
-Cc:     Ping-Ke Shih <pkshih@realtek.com>,
-        Gary Chang <gary.chang@realtek.com>,
-        Timlee <timlee@realtek.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        linux-wireless@vger.kernel.org
-Subject: Re: Coverity: rtw89_mac_resize_ple_rx_quota(): Integer handling
- issues
-Message-ID: <202211041204.CCA9C3F778@keescook>
-References: <202211021253.44E254479@keescook>
- <884ff1b628e44d32960f438f75a6524c@realtek.com>
- <87h6zgfub4.fsf@kernel.org>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A3IQuXma0cjf2XddXrRe8ESj+gGbbWZ0MQ+tC4zj4Es=;
+        b=KfpUhDWwBkCDnY4XO397WX3i3fCWbrNFS3+vQVpLJ0mPdpd+8ubP/SqCpWhnJG8kwC
+         ChDlz/IkLkZj/ZnLxHMlIj5ZzFPm8ZlCFkGBCghqtsk+Em3CMk/Q6247GoS5BsSzuyiA
+         dOgerzAJ7tkX7VznJDlZNRW6ZkVF2BbYOokjYuAm3f484fESq71wKOL0n/gMMFRMjfS7
+         S5Z/bCcreMrhvfSjh50Tbc3L/hx2AUTsWZdOwf1OWubIFSlFViRU9w7f3HWnr0zMCjpv
+         MyBTuhLFUb9c/2S1TqtQJPYJLh/DBdVqeU4aTYOHC3+BcIBbew+kgi2lL4tsZdP2L0xq
+         s9Eg==
+X-Gm-Message-State: ACrzQf3KAGlb59JimC3KDKBtNs8ggt65ToDTcvvel8DV9keUXzP1twKi
+        HR5v46s89zv4ysjllLolFpk23Q==
+X-Google-Smtp-Source: AMsMyM6xbn9mzynOw8KybXlugzplo7nLIe11G4YCPG/JyHuRwL/LdTZuRgcA3eFMTFoUtLAu6VKDKg==
+X-Received: by 2002:a37:f502:0:b0:6f8:c3b2:51b9 with SMTP id l2-20020a37f502000000b006f8c3b251b9mr26954851qkk.616.1667589426961;
+        Fri, 04 Nov 2022 12:17:06 -0700 (PDT)
+Received: from ?IPV6:2601:586:5000:570:aad6:acd8:4ed9:299b? ([2601:586:5000:570:aad6:acd8:4ed9:299b])
+        by smtp.gmail.com with ESMTPSA id y12-20020a37f60c000000b006cfaee39ccesm3366383qkj.114.2022.11.04.12.17.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Nov 2022 12:17:06 -0700 (PDT)
+Message-ID: <1880c054-08d9-3901-f44e-290d1fd27ed4@linaro.org>
+Date:   Fri, 4 Nov 2022 15:17:04 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87h6zgfub4.fsf@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v5 8/8] arm64: dts: qcom: sm4250: Add support for
+ oneplus-billie2
+Content-Language: en-US
+To:     Iskren Chernev <iskren.chernev@gmail.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20221030094258.486428-1-iskren.chernev@gmail.com>
+ <20221030094258.486428-9-iskren.chernev@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221030094258.486428-9-iskren.chernev@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Nov 03, 2022 at 08:03:59AM +0200, Kalle Valo wrote:
-> I noticed that linux-wireless list was missing in CC, would it possible
-> for the bot to automatically add that to all wireless related reports?
-> Adding it manually now.
+On 30/10/2022 05:42, Iskren Chernev wrote:
+> Add initial support for OnePlus Nord N100, based on SM4250. Currently
+> working:
+> - boots
+> - usb
+> - built-in flash storage (UFS)
+> - SD card reader
+> 
+> Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  .../boot/dts/qcom/sm4250-oneplus-billie2.dts  | 241 ++++++++++++++++++
+>  2 files changed, 242 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sm4250-oneplus-billie2.dts
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index b0558d3389e5..eb2a58b8af5f 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -142,6 +142,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-xiaomi-polaris.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-shift-axolotl.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-samsung-w737.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= sm4250-oneplus-billie2.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-sony-xperia-seine-pdx201.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sm6350-sony-xperia-lena-pdx213.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sm7225-fairphone-fp4.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/sm4250-oneplus-billie2.dts b/arch/arm64/boot/dts/qcom/sm4250-oneplus-billie2.dts
+> new file mode 100644
+> index 000000000000..a3f1c7c41fd7
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sm4250-oneplus-billie2.dts
+> @@ -0,0 +1,241 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+> +/*
+> + * Copyright (c) 2021, Iskren Chernev <iskren.chernev@gmail.com>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "sm4250.dtsi"
+> +
+> +/ {
+> +	model = "OnePlus Nord N100";
+> +	compatible = "oneplus,billie2", "qcom,sm4250";
+> +
+> +	/* required for bootloader to select correct board */
+> +	qcom,msm-id = <0x1a1 0x10000 0x1bc 0x10000>;
+> +	qcom,board-id = <0x1000b 0x00>;
 
-Yes, good point. The tooling was looking at the commit's tags, rather
-than getting a get_maintainers.pl list. I'll add this logic.
+These are currently not allowed for SM4250. If there are really needed,
+please justify it and update
+Documentation/devicetree/bindings/arm/qcom.yaml. Then also update
+include/dt-bindings/arm/qcom,ids.h and socinfo driver.
 
--- 
-Kees Cook
+
+Best regards,
+Krzysztof
+
