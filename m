@@ -2,181 +2,96 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E988AC4332F
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Nov 2022 18:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E327C43219
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Nov 2022 18:25:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232021AbiKDSXm (ORCPT
+        id S231646AbiKDSZW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Nov 2022 14:23:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41488 "EHLO
+        Fri, 4 Nov 2022 14:25:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232068AbiKDSXP (ORCPT
+        with ESMTP id S231272AbiKDSZU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Nov 2022 14:23:15 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E42859FE7
-        for <linux-hardening@vger.kernel.org>; Fri,  4 Nov 2022 11:22:44 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id y13so5202298pfp.7
-        for <linux-hardening@vger.kernel.org>; Fri, 04 Nov 2022 11:22:44 -0700 (PDT)
+        Fri, 4 Nov 2022 14:25:20 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97F871BEB0
+        for <linux-hardening@vger.kernel.org>; Fri,  4 Nov 2022 11:25:18 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id l2so3514468qtq.11
+        for <linux-hardening@vger.kernel.org>; Fri, 04 Nov 2022 11:25:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5kwrddbh0AjpQHJDtv4p1kwlSWL7OpMjxgVy9tJ3ZdE=;
-        b=mediYFwUYG/2yUbilqGlldO/gRsGC6/mgEYuIhDe1Si39QjNc/trPYKiP1p9XhU8FS
-         YC6GtGaQ7BTmWdx71ehDpLJFh9gH4TAS6wjDRpintwM7thIXMmpHNBa+YpPp7Sk910xG
-         LjmbkmsEmGX5jCFZeb0bEhpFMYS1j5fKV131E=
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5myViM0Mbitalv+h2W7ojA0wizSVLia8tVgqtAEEIiw=;
+        b=oKRjd8lrK6oMYPvCsr2LpKxSu5PF/taXDK7+ZPdTF9B8zpUJsNB0mOdg2ogGJivAoS
+         pf0pNumTk+d7QaG1ExL3TE6PzurNyc2COM6PLB08mdfNm/l4rXRneHFhYQ+jp04zRWzr
+         +qGp/IUBPFYZkh+oxBmGyouBzGB+/4V6yi7w+cT8z2z00oXp3wwrif+pTbKiwcwQekyb
+         nD4fz5DTvvL2UX+tvuSrFDkX9sgwkHoaETmx1QeguaJ0Zi5349UyaqlNlbiJQt0UQI7d
+         MCPEELZCn8LsMxqehO8G02+XJ856dfh0EN438iD8GoNyp/5H6ROfkOvLiNNzIIEp9GCB
+         9DdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5kwrddbh0AjpQHJDtv4p1kwlSWL7OpMjxgVy9tJ3ZdE=;
-        b=rGX2xpZKCxdg0IQwC7JNSuAcikRspxdoViy/UuQck5KDu4/URhUfjx3TlYlOnW0jgB
-         samLESqyJJdtU/NhtjqKKhS/z1EKt338NxYMqf0KVUtCwLuy2in51vWy1yLTnInOey8I
-         7UwdPuTTbfOwErJw+kmoTc0t9GoF7KmYs6Imvsd27jTq5BxlwJvI2i1MQ33KjrpGxF7n
-         CdAw0s3AR98kKxkRoP5l+UGwWR72uE7P6lIlRkawopR9x9j/6HMCG64cHfYGnu6eDEkp
-         cvOluvkkK7vDZNG3eYds3U15J0HVEOieIgsHvCSOVBrXdyRHFKi8pgBN2EeNgJDOLAZ4
-         WRZQ==
-X-Gm-Message-State: ACrzQf20YQavtfRaHZ9euBuBfvk7m8tS4SKYAA7q1GbBfNE2SguC//R3
-        uwBgxWvIxooK84KHpbez1f1VvQ==
-X-Google-Smtp-Source: AMsMyM4CO8L3McL6UsxwJau7ib17Hp7kzIQy7y4IuR8J7fZLkaa5SiTqyGOJadghOQ5ciylvf87g2g==
-X-Received: by 2002:aa7:81cc:0:b0:563:4e53:c08b with SMTP id c12-20020aa781cc000000b005634e53c08bmr36706082pfn.19.1667586163647;
-        Fri, 04 Nov 2022 11:22:43 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z7-20020aa79e47000000b0053e38ac0ff4sm3013789pfq.115.2022.11.04.11.22.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Nov 2022 11:22:43 -0700 (PDT)
-Date:   Fri, 4 Nov 2022 11:22:42 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
-        David Gow <davidgow@google.com>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH 3/6] slab: Provide functional __alloc_size() hints to
- kmalloc_trace*()
-Message-ID: <202211041121.2F1639D2@keescook>
-References: <20221101222520.never.109-kees@kernel.org>
- <20221101223321.1326815-3-keescook@chromium.org>
- <Y2PNVUzHWCg765ml@hyeyoo>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5myViM0Mbitalv+h2W7ojA0wizSVLia8tVgqtAEEIiw=;
+        b=gDSgDiEaCyRV54aZpv2hSK0Az3iqeRkgXckurYzvdCU/FShwBI6me45UtKLJv/NtCq
+         cn/d7DH1Hejn6QUZ3dIFcxmZE53e41XUKq+6Qzq4RzEeGpJRAYAb/f8Pv7fVCyzIo9lQ
+         VIVjWJZ4L4S2kF559atcbg0QpnavsF7heeZw3bn3uQnFNJczSMbvo1C1P1fWt9XjvQhW
+         gtagV72B6XXdU3/6gpTCbKyQfkVRtDqsAcmqKs6pm1PVqL41HrzGlCVJeJgrK9jOrO+6
+         IXIZQwf0GCFVAot9T6Secz3G1Qx6GFShl5/PmX3sJ7q7kjmctsTogGdl2ggZtMfR0ZT4
+         fECQ==
+X-Gm-Message-State: ACrzQf2GMUzM2gGY+t9prkSTs+s9oB8pkffCFIFUd0rhzHXy+t3gqvWl
+        C8G/PD3bsJEXarz6s9HA7WS99g==
+X-Google-Smtp-Source: AMsMyM5Jst7+ITulPoeWgI+1S4r6/paD+1w9tohGl9CkbWnIIpM/XKJ/YTYcFauWcikgNphrIaW/6Q==
+X-Received: by 2002:ac8:71c7:0:b0:3a5:4cb1:7baa with SMTP id i7-20020ac871c7000000b003a54cb17baamr10801563qtp.303.1667586317782;
+        Fri, 04 Nov 2022 11:25:17 -0700 (PDT)
+Received: from ?IPV6:2601:586:5000:570:aad6:acd8:4ed9:299b? ([2601:586:5000:570:aad6:acd8:4ed9:299b])
+        by smtp.gmail.com with ESMTPSA id k11-20020a05620a0b8b00b006fa0d98a037sm3210386qkh.87.2022.11.04.11.25.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Nov 2022 11:25:17 -0700 (PDT)
+Message-ID: <5bafce51-5f03-499c-65d4-3040cfc03ed9@linaro.org>
+Date:   Fri, 4 Nov 2022 14:25:15 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y2PNVUzHWCg765ml@hyeyoo>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH 1/9] dt-bindings: iio: qcom-spmi-vadc: Add definitions for
+ USB DP/DM VADCs
+Content-Language: en-US
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>, agross@kernel.org
+Cc:     andersson@kernel.org, konrad.dybcio@somainline.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        lee@kernel.org, ulf.hansson@linaro.org,
+        srinivas.kandagatla@linaro.org, jic23@kernel.org, lars@metafoo.de,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        bhupesh.sharma@linaro.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-hardening@vger.kernel.org, marijn.suijten@somainline.org,
+        kernel@collabora.com, luca@z3ntu.xyz, a39.skl@gmail.com,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@somainline.org>
+References: <20221104172122.252761-1-angelogioacchino.delregno@collabora.com>
+ <20221104172122.252761-2-angelogioacchino.delregno@collabora.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221104172122.252761-2-angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Nov 03, 2022 at 11:16:53PM +0900, Hyeonggon Yoo wrote:
-> On Tue, Nov 01, 2022 at 03:33:11PM -0700, Kees Cook wrote:
-> > Since GCC cannot apply the __alloc_size attributes to inlines[1], all
-> > allocator inlines need to explicitly call into extern functions that
-> > contain a size argument. Provide these wrappers that end up just
-> > ignoring the size argument for the actual allocation.
-> > 
-> > This allows CONFIG_FORTIFY_SOURCE=y to see all various dynamic allocation
-> > sizes under GCC 12+ and all supported Clang versions.
-> > 
-> > [1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96503
-> > 
-> > Cc: Vlastimil Babka <vbabka@suse.cz>
-> > Cc: Christoph Lameter <cl@linux.com>
-> > Cc: Pekka Enberg <penberg@kernel.org>
-> > Cc: David Rientjes <rientjes@google.com>
-> > Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Roman Gushchin <roman.gushchin@linux.dev>
-> > Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-> > Cc: linux-mm@kvack.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  include/linux/slab.h |  8 ++++++--
-> >  mm/slab_common.c     | 14 ++++++++++++++
-> >  2 files changed, 20 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/include/linux/slab.h b/include/linux/slab.h
-> > index 970e9504949e..051d86ca31a8 100644
-> > --- a/include/linux/slab.h
-> > +++ b/include/linux/slab.h
-> > @@ -442,6 +442,8 @@ static_assert(PAGE_SHIFT <= 20);
-> >  
-> >  void *__kmalloc(size_t size, gfp_t flags) __assume_kmalloc_alignment __alloc_size(1);
-> >  void *kmem_cache_alloc(struct kmem_cache *s, gfp_t flags) __assume_slab_alignment __malloc;
-> > +void *kmem_cache_alloc_sized(struct kmem_cache *s, gfp_t flags, size_t size)
-> > +			     __assume_slab_alignment __alloc_size(3);
-> >  void *kmem_cache_alloc_lru(struct kmem_cache *s, struct list_lru *lru,
-> >  			   gfp_t gfpflags) __assume_slab_alignment __malloc;
-> >  void kmem_cache_free(struct kmem_cache *s, void *objp);
-> > @@ -469,6 +471,8 @@ void *__kmalloc_node(size_t size, gfp_t flags, int node) __assume_kmalloc_alignm
-> >  							 __alloc_size(1);
-> >  void *kmem_cache_alloc_node(struct kmem_cache *s, gfp_t flags, int node) __assume_slab_alignment
-> >  									 __malloc;
-> > +void *kmem_cache_alloc_node_sized(struct kmem_cache *s, gfp_t flags, int node, size_t size)
-> > +				  __assume_slab_alignment __alloc_size(4);
-> >  
-> >  #ifdef CONFIG_TRACING
-> >  void *kmalloc_trace(struct kmem_cache *s, gfp_t flags, size_t size)
-> > @@ -482,7 +486,7 @@ void *kmalloc_node_trace(struct kmem_cache *s, gfp_t gfpflags,
-> >  static __always_inline __alloc_size(3)
-> >  void *kmalloc_trace(struct kmem_cache *s, gfp_t flags, size_t size)
-> >  {
-> > -	void *ret = kmem_cache_alloc(s, flags);
-> > +	void *ret = kmem_cache_alloc_sized(s, flags, size);
-> >  
-> >  	ret = kasan_kmalloc(s, ret, size, flags);
-> >  	return ret;
-> > @@ -492,7 +496,7 @@ static __always_inline __alloc_size(4)
-> >  void *kmalloc_node_trace(struct kmem_cache *s, gfp_t gfpflags,
-> >  			 int node, size_t size)
-> >  {
-> > -	void *ret = kmem_cache_alloc_node(s, gfpflags, node);
-> > +	void *ret = kmem_cache_alloc_node_sized(s, gfpflags, node, size);
-> >  
-> >  	ret = kasan_kmalloc(s, ret, size, gfpflags);
-> >  	return ret;
-> > diff --git a/mm/slab_common.c b/mm/slab_common.c
-> > index 33b1886b06eb..5fa547539a6a 100644
-> > --- a/mm/slab_common.c
-> > +++ b/mm/slab_common.c
-> > @@ -1457,6 +1457,20 @@ size_t ksize(const void *objp)
-> >  }
-> >  EXPORT_SYMBOL(ksize);
-> >  
-> > +/* Wrapper so __alloc_size() can see the actual allocation size. */
-> > +void *kmem_cache_alloc_sized(struct kmem_cache *s, gfp_t flags, size_t size)
-> > +{
-> > +	return kmem_cache_alloc(s, flags);
-> > +}
-> > +EXPORT_SYMBOL(kmem_cache_alloc_sized);
-> > +
-> > +/* Wrapper so __alloc_size() can see the actual allocation size. */
-> > +void *kmem_cache_alloc_node_sized(struct kmem_cache *s, gfp_t flags, int node, size_t size)
-> > +{
-> > +	return kmem_cache_alloc_node(s, flags, node);
-> > +}
-> > +EXPORT_SYMBOL(kmem_cache_alloc_node_sized);
+On 04/11/2022 13:21, AngeloGioacchino Del Regno wrote:
+> From: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
 > 
-> The reason that we have two implementations of kmalloc_trace*
-> depending on CONFIG_TRACING is to save additional function call when
-> CONFIG_TRACING is not set.
+> Some SoCs do have a USB DP/DM ADC at 0x43, 0x44.
 > 
-> With this patch there is no reason to keep both.
-> So let's drop #ifdefs and use single implementation in mm/slab_common.c.
 
-Okay, I'll respin...
 
--- 
-Kees Cook
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
+
