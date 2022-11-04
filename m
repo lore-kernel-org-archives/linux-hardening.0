@@ -2,59 +2,97 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8ECC4332F
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Nov 2022 09:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10026C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Nov 2022 16:26:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230301AbiKDJDf (ORCPT
+        id S231272AbiKDQ0m (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Nov 2022 05:03:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34698 "EHLO
+        Fri, 4 Nov 2022 12:26:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229553AbiKDJDe (ORCPT
+        with ESMTP id S229481AbiKDQ0m (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Nov 2022 05:03:34 -0400
-Received: from formenos.hmeau.com (helcar.hmeau.com [216.24.177.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69EFF1AD85;
-        Fri,  4 Nov 2022 02:03:33 -0700 (PDT)
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-        by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-        id 1oqsb9-00A1aS-Jq; Fri, 04 Nov 2022 17:03:25 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 04 Nov 2022 17:03:24 +0800
-Date:   Fri, 4 Nov 2022 17:03:24 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-        Pankaj Gupta <pankaj.gupta@nxp.com>,
-        Gaurav Jain <gaurav.jain@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] crypto/caam: Avoid GCC constprop bug warning
-Message-ID: <Y2TVXDfQUwlYFv9S@gondor.apana.org.au>
-References: <20221028210527.never.934-kees@kernel.org>
+        Fri, 4 Nov 2022 12:26:42 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77D471F2C8
+        for <linux-hardening@vger.kernel.org>; Fri,  4 Nov 2022 09:26:41 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id 78so4772594pgb.13
+        for <linux-hardening@vger.kernel.org>; Fri, 04 Nov 2022 09:26:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vl/MFnMZWToBmu5A4jVqt8zL5+NKQFzCISCwYnVAW2Y=;
+        b=PQdq7E71ycg0gOwLD2lncqKFIIQ9DNU4sK+LFxXU88WpDYN733tfqEj0iR4vZAKh+g
+         2GtEi07IMbGTx89JVyqW4en1DSpSnQMnEIa+QpF0SrRorfxokN3/mjlenOYRMuvs7gt2
+         jK8rhBVoUDPH1SMbGkSvEpbV6Q3+FPC4k7nEc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vl/MFnMZWToBmu5A4jVqt8zL5+NKQFzCISCwYnVAW2Y=;
+        b=LnMKEof4f1O+9Pb+yXOV3kEEFJTHgrIU4N0pRIglTiBlY+Z+3a7HoLFQn+gsaXSMq4
+         1Wt6O9bvldGziyTu66guQ8uLJSPQPCnI+SWKMwIBT05tRTcdORbAk8rpgtDRRdM6E46K
+         YZlgoIdNsXXgp/oNgEJOT46yfbOIm5Qf9KzBmmSx6Zzzte2cSAxe8RVd98zONtCL+zVv
+         9E0oGcx0XVnFJwwwzom5SuUmsQnAz9ejY7eoOS5j57EwwG22SZ1GJ5Lh8YN6TCTkxaNA
+         vjCgkCcq0j9aHfQFO4CbcG996jZvQZnb5sqWyieRijGaNcR5zbwkpLouYj0ZBNzimfv6
+         d+1A==
+X-Gm-Message-State: ACrzQf2NoKNK95JYCy2DJ59tlKmKXlNlbLXARlCUkzm75zz5cTwm5XsE
+        3+vK+wY3T5qYQhYNGv6Lp/rGIw==
+X-Google-Smtp-Source: AMsMyM4cVgTe4Ak7y9MLEhk5QYQz3506Yk94FQT+AjVk3TLswCnDvtG5MCqa67zwxU1riSTtyNk/6g==
+X-Received: by 2002:a05:6a00:993:b0:56c:80f6:db5 with SMTP id u19-20020a056a00099300b0056c80f60db5mr36279550pfg.45.1667579200953;
+        Fri, 04 Nov 2022 09:26:40 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c16-20020a170902d49000b0017854cee6ebsm2921403plg.72.2022.11.04.09.26.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Nov 2022 09:26:40 -0700 (PDT)
+Date:   Fri, 4 Nov 2022 09:26:39 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Dr. David Alan Gilbert" <linux@treblig.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: [GIT PULL] hardening fix for v6.1-rc4
+Message-ID: <202211040926.0E7BBDB1@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221028210527.never.934-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Oct 28, 2022 at 02:05:31PM -0700, Kees Cook wrote:
->
-> @@ -163,7 +163,7 @@ static inline void append_data(u32 * const desc, const void *data, int len)
->  {
->  	u32 *offset = desc_end(desc);
->  
-> -	if (len) /* avoid sparse warning: memcpy with byte count of 0 */
-> +	if (data && len) /* avoid sparse warning: memcpy with byte count of 0 */
->  		memcpy(offset, data, len);
+Hi Linus,
 
-How about just killing the if clause altogether? I don't see
-any sparse warnings without it.  What am I missing?
+Please pull this tiny kernel hardening fix for v6.1-rc4.
 
-Cheers,
+Thanks!
+
+-Kees
+
+The following changes since commit 72c3ebea375c39413d02113758319b74ecd790bd:
+
+  overflow: Refactor test skips for Clang-specific issues (2022-10-25 14:57:42 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.1-rc4
+
+for you to fetch changes up to 6f7630b1b5bc672b54c1285ee6aba752b446672c:
+
+  fortify: Capture __bos() results in const temp vars (2022-10-28 16:07:01 -0700)
+
+----------------------------------------------------------------
+kernel hardening fix for v6.1-rc4
+
+- Correctly report struct member size on memcpy overflow (Kees Cook)
+
+----------------------------------------------------------------
+Kees Cook (1):
+      fortify: Capture __bos() results in const temp vars
+
+ include/linux/fortify-string.h | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Kees Cook
