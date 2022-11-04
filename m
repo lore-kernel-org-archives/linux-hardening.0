@@ -2,141 +2,112 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E869C43219
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Nov 2022 19:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFAAC43217
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Nov 2022 19:26:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229849AbiKDTRP (ORCPT
+        id S229445AbiKDT0J (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Nov 2022 15:17:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52162 "EHLO
+        Fri, 4 Nov 2022 15:26:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229805AbiKDTRN (ORCPT
+        with ESMTP id S229494AbiKDT0I (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Nov 2022 15:17:13 -0400
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDB2B4876C
-        for <linux-hardening@vger.kernel.org>; Fri,  4 Nov 2022 12:17:07 -0700 (PDT)
-Received: by mail-qk1-x734.google.com with SMTP id z1so3666558qkl.9
-        for <linux-hardening@vger.kernel.org>; Fri, 04 Nov 2022 12:17:07 -0700 (PDT)
+        Fri, 4 Nov 2022 15:26:08 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F22C96249
+        for <linux-hardening@vger.kernel.org>; Fri,  4 Nov 2022 12:26:05 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id 78so5161136pgb.13
+        for <linux-hardening@vger.kernel.org>; Fri, 04 Nov 2022 12:26:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=chromium.org; s=google;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=A3IQuXma0cjf2XddXrRe8ESj+gGbbWZ0MQ+tC4zj4Es=;
-        b=Z6EyrOpVxPv9TAsb7BTYoQW7CNbsYZWdk+Fr1gKr9GL9OvufRSAxWryOMvUOQ7SX7H
-         GtjWn2iEEYB/9OO7+GbV2KI+j9dr6fGl/LffGFO/OFSPUgrbddtqucNZFbMn0uEC6tv2
-         QRUPVgKG+CW32ru3iITtYHiidMSGjJTYdmBRYuyVpYLcZSfU8Rcml78x1G+OtOE7x1em
-         z4FHvqycOK7FYeX57qY0mGWTlYPvACqIJVyXMEm1r51qXNYSiCrH4HHrx4BvUE4PmrYM
-         bTSPZr1nivB1LpPo6nAzDwr552lxLB83wcZNcIn9/A8OSdl6nrGTA4V1JcM6j5Du1SGg
-         nHMg==
+        bh=ytLIhKZuYdmh84oUVdzM6+Xt1URUXrJYojk/wKNfrD8=;
+        b=O+tMUcOtLUO27foXcasLA7fBSvjCJZGLiylgapTnNf+R617vScp8qdh672FH/pq5zD
+         j0hL6YPGSsYuAZoaqzebFkEkndKOT1MhyYcL6iFHjuWmCGwP4w3vGyJlG9Q0+4H7M1rx
+         lju2sCW+AdCH3dasrSOBNaahaBnnyHEisA/Yw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A3IQuXma0cjf2XddXrRe8ESj+gGbbWZ0MQ+tC4zj4Es=;
-        b=KfpUhDWwBkCDnY4XO397WX3i3fCWbrNFS3+vQVpLJ0mPdpd+8ubP/SqCpWhnJG8kwC
-         ChDlz/IkLkZj/ZnLxHMlIj5ZzFPm8ZlCFkGBCghqtsk+Em3CMk/Q6247GoS5BsSzuyiA
-         dOgerzAJ7tkX7VznJDlZNRW6ZkVF2BbYOokjYuAm3f484fESq71wKOL0n/gMMFRMjfS7
-         S5Z/bCcreMrhvfSjh50Tbc3L/hx2AUTsWZdOwf1OWubIFSlFViRU9w7f3HWnr0zMCjpv
-         MyBTuhLFUb9c/2S1TqtQJPYJLh/DBdVqeU4aTYOHC3+BcIBbew+kgi2lL4tsZdP2L0xq
-         s9Eg==
-X-Gm-Message-State: ACrzQf3KAGlb59JimC3KDKBtNs8ggt65ToDTcvvel8DV9keUXzP1twKi
-        HR5v46s89zv4ysjllLolFpk23Q==
-X-Google-Smtp-Source: AMsMyM6xbn9mzynOw8KybXlugzplo7nLIe11G4YCPG/JyHuRwL/LdTZuRgcA3eFMTFoUtLAu6VKDKg==
-X-Received: by 2002:a37:f502:0:b0:6f8:c3b2:51b9 with SMTP id l2-20020a37f502000000b006f8c3b251b9mr26954851qkk.616.1667589426961;
-        Fri, 04 Nov 2022 12:17:06 -0700 (PDT)
-Received: from ?IPV6:2601:586:5000:570:aad6:acd8:4ed9:299b? ([2601:586:5000:570:aad6:acd8:4ed9:299b])
-        by smtp.gmail.com with ESMTPSA id y12-20020a37f60c000000b006cfaee39ccesm3366383qkj.114.2022.11.04.12.17.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Nov 2022 12:17:06 -0700 (PDT)
-Message-ID: <1880c054-08d9-3901-f44e-290d1fd27ed4@linaro.org>
-Date:   Fri, 4 Nov 2022 15:17:04 -0400
+        bh=ytLIhKZuYdmh84oUVdzM6+Xt1URUXrJYojk/wKNfrD8=;
+        b=xeIIHPZCTkK9j2KsJC8F/O+CzkJVplbWZ329Qqei51USNaJ1pGM1Q2loGACtBGjQc9
+         EWTL2vZYWKjMrbK02hGqSULiYzZVsI8zFZDDbzgw34elZH0/cU3FsbBhkMc77J2XLgxp
+         eNVmEydrmBAKvxVyHCr2OyqCfiHK8zc3yc+eMj7LBmyL+37bIvt8/ML7nUh/HIINmqA/
+         NBYhVZtw+PdbPcaOKfWdLnO3hwW/n4hdb7oGMjnixPZdlZNVf78vY/tUGVV1eK5EkJ4O
+         1cTBCwJP1fbWmdnqw8R7mCkpA28jkn9Li0Mou886R8y1Sw6m1DDGwI6uGubm6xgEG0BD
+         z+EQ==
+X-Gm-Message-State: ACrzQf1WFEQNcVNqo7oqbZdWMlRhQ2+FHCGx2LbZxAFktfIevJwhlKYi
+        /x0Snqagi1tmmfQfAQuN68pMAw==
+X-Google-Smtp-Source: AMsMyM4puBHy4Rz/W6PItnEMR/7sY4Ht+hZTcYiZeHp4JNp/zgQEonPnvSrDu9FZgasYBNB+TeWwvw==
+X-Received: by 2002:a63:3182:0:b0:46f:ed32:54a6 with SMTP id x124-20020a633182000000b0046fed3254a6mr17225891pgx.69.1667589941673;
+        Fri, 04 Nov 2022 12:25:41 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w128-20020a626286000000b0056ca3569a66sm3045377pfb.129.2022.11.04.12.25.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Nov 2022 12:25:41 -0700 (PDT)
+From:   coverity-bot <keescook@chromium.org>
+X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
+Date:   Fri, 4 Nov 2022 12:25:40 -0700
+To:     Jiawen Wu <jiawenwu@trustnetic.com>
+Cc:     Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Mengyuan Lou <mengyuanlou@net-swift.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Coverity: txgbe_calc_eeprom_checksum(): Control flow issues
+Message-ID: <202211041225.FF75B11482@keescook>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v5 8/8] arm64: dts: qcom: sm4250: Add support for
- oneplus-billie2
-Content-Language: en-US
-To:     Iskren Chernev <iskren.chernev@gmail.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20221030094258.486428-1-iskren.chernev@gmail.com>
- <20221030094258.486428-9-iskren.chernev@gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221030094258.486428-9-iskren.chernev@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 30/10/2022 05:42, Iskren Chernev wrote:
-> Add initial support for OnePlus Nord N100, based on SM4250. Currently
-> working:
-> - boots
-> - usb
-> - built-in flash storage (UFS)
-> - SD card reader
-> 
-> Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile             |   1 +
->  .../boot/dts/qcom/sm4250-oneplus-billie2.dts  | 241 ++++++++++++++++++
->  2 files changed, 242 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sm4250-oneplus-billie2.dts
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index b0558d3389e5..eb2a58b8af5f 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -142,6 +142,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-xiaomi-polaris.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-shift-axolotl.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-samsung-w737.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sm4250-oneplus-billie2.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-sony-xperia-seine-pdx201.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm6350-sony-xperia-lena-pdx213.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm7225-fairphone-fp4.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sm4250-oneplus-billie2.dts b/arch/arm64/boot/dts/qcom/sm4250-oneplus-billie2.dts
-> new file mode 100644
-> index 000000000000..a3f1c7c41fd7
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sm4250-oneplus-billie2.dts
-> @@ -0,0 +1,241 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-> +/*
-> + * Copyright (c) 2021, Iskren Chernev <iskren.chernev@gmail.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sm4250.dtsi"
-> +
-> +/ {
-> +	model = "OnePlus Nord N100";
-> +	compatible = "oneplus,billie2", "qcom,sm4250";
-> +
-> +	/* required for bootloader to select correct board */
-> +	qcom,msm-id = <0x1a1 0x10000 0x1bc 0x10000>;
-> +	qcom,board-id = <0x1000b 0x00>;
+Hello!
 
-These are currently not allowed for SM4250. If there are really needed,
-please justify it and update
-Documentation/devicetree/bindings/arm/qcom.yaml. Then also update
-include/dt-bindings/arm/qcom,ids.h and socinfo driver.
+This is an experimental semi-automated report about issues detected by
+Coverity from a scan of next-20221104 as part of the linux-next scan project:
+https://scan.coverity.com/projects/linux-next-weekly-scan
 
+You're getting this email because you were associated with the identified
+lines of code (noted below) that were touched by commits:
 
-Best regards,
-Krzysztof
+  Wed Nov 2 12:31:23 2022 +0000
+    049fe5365324 ("net: txgbe: Add operations to interact with firmware")
 
+Coverity reported the following:
+
+*** CID 1527152:  Control flow issues  (NO_EFFECT)
+drivers/net/ethernet/wangxun/txgbe/txgbe_hw.c:200 in txgbe_calc_eeprom_checksum()
+194
+195     	for (i = 0; i < TXGBE_EEPROM_LAST_WORD; i++)
+196     		if (i != wxhw->eeprom.sw_region_offset + TXGBE_EEPROM_CHECKSUM)
+197     			*checksum += local_buffer[i];
+198
+199     	*checksum = TXGBE_EEPROM_SUM - *checksum;
+vvv     CID 1527152:  Control flow issues  (NO_EFFECT)
+vvv     This less-than-zero comparison of an unsigned value is never true. "*checksum < 0".
+200     	if (*checksum < 0)
+201     		return -EINVAL;
+202
+203     	if (eeprom_ptrs)
+204     		kvfree(eeprom_ptrs);
+205
+
+If this is a false positive, please let us know so we can mark it as
+such, or teach the Coverity rules to be smarter. If not, please make
+sure fixes get into linux-next. :) For patches fixing this, please
+include these lines (but double-check the "Fixes" first):
+
+Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+Addresses-Coverity-ID: 1527152 ("Control flow issues")
+Fixes: 049fe5365324 ("net: txgbe: Add operations to interact with firmware")
+
+Thanks for your attention!
+
+-- 
+Coverity-bot
