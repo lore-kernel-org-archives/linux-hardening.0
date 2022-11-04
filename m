@@ -2,97 +2,112 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10026C433FE
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Nov 2022 16:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1407EC43217
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Nov 2022 17:22:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231272AbiKDQ0m (ORCPT
+        id S230139AbiKDRWA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Nov 2022 12:26:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53022 "EHLO
+        Fri, 4 Nov 2022 13:22:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbiKDQ0m (ORCPT
+        with ESMTP id S230035AbiKDRV7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Nov 2022 12:26:42 -0400
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77D471F2C8
-        for <linux-hardening@vger.kernel.org>; Fri,  4 Nov 2022 09:26:41 -0700 (PDT)
-Received: by mail-pg1-x530.google.com with SMTP id 78so4772594pgb.13
-        for <linux-hardening@vger.kernel.org>; Fri, 04 Nov 2022 09:26:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vl/MFnMZWToBmu5A4jVqt8zL5+NKQFzCISCwYnVAW2Y=;
-        b=PQdq7E71ycg0gOwLD2lncqKFIIQ9DNU4sK+LFxXU88WpDYN733tfqEj0iR4vZAKh+g
-         2GtEi07IMbGTx89JVyqW4en1DSpSnQMnEIa+QpF0SrRorfxokN3/mjlenOYRMuvs7gt2
-         jK8rhBVoUDPH1SMbGkSvEpbV6Q3+FPC4k7nEc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vl/MFnMZWToBmu5A4jVqt8zL5+NKQFzCISCwYnVAW2Y=;
-        b=LnMKEof4f1O+9Pb+yXOV3kEEFJTHgrIU4N0pRIglTiBlY+Z+3a7HoLFQn+gsaXSMq4
-         1Wt6O9bvldGziyTu66guQ8uLJSPQPCnI+SWKMwIBT05tRTcdORbAk8rpgtDRRdM6E46K
-         YZlgoIdNsXXgp/oNgEJOT46yfbOIm5Qf9KzBmmSx6Zzzte2cSAxe8RVd98zONtCL+zVv
-         9E0oGcx0XVnFJwwwzom5SuUmsQnAz9ejY7eoOS5j57EwwG22SZ1GJ5Lh8YN6TCTkxaNA
-         vjCgkCcq0j9aHfQFO4CbcG996jZvQZnb5sqWyieRijGaNcR5zbwkpLouYj0ZBNzimfv6
-         d+1A==
-X-Gm-Message-State: ACrzQf2NoKNK95JYCy2DJ59tlKmKXlNlbLXARlCUkzm75zz5cTwm5XsE
-        3+vK+wY3T5qYQhYNGv6Lp/rGIw==
-X-Google-Smtp-Source: AMsMyM4cVgTe4Ak7y9MLEhk5QYQz3506Yk94FQT+AjVk3TLswCnDvtG5MCqa67zwxU1riSTtyNk/6g==
-X-Received: by 2002:a05:6a00:993:b0:56c:80f6:db5 with SMTP id u19-20020a056a00099300b0056c80f60db5mr36279550pfg.45.1667579200953;
-        Fri, 04 Nov 2022 09:26:40 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c16-20020a170902d49000b0017854cee6ebsm2921403plg.72.2022.11.04.09.26.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Nov 2022 09:26:40 -0700 (PDT)
-Date:   Fri, 4 Nov 2022 09:26:39 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Dr. David Alan Gilbert" <linux@treblig.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: [GIT PULL] hardening fix for v6.1-rc4
-Message-ID: <202211040926.0E7BBDB1@keescook>
+        Fri, 4 Nov 2022 13:21:59 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA1CFAE5A;
+        Fri,  4 Nov 2022 10:21:58 -0700 (PDT)
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 0C36B6602989;
+        Fri,  4 Nov 2022 17:21:55 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1667582516;
+        bh=R/MBlJBNY8EYBt6oZqjxP8TEcbb7lnlRlY2DZ7434zU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Ku0bwUVtf5oKlMLP0ahGkM/AFF1NVvTK4xSv08D6bDpoArwk7fNUVX4up8i7p+YS6
+         WYrOAkqaccZpd+oaLAiY6Ar/q++RvqReKQX4DoxIjAmVuVNG4GjKc1P9nsptV/qTry
+         fO/9xoBfP6Fe2KUuOnbg0KciaFngjlPyxceVz0aygW5fdg0kTOe207ImIimWwaj+8I
+         c/JLmjU7DXdI1qr+B8jWvJ7lVkPiq+U3fNvcRPvcf3wQ03oottMi2qAEsC+bClQ0EW
+         inX+4W/B9XPKzo6kWvJgQBTRMCKkOHDjQ557fzpi6e/7KlREFMyxoq6MVsZM7R5LBv
+         wiLqQNjOVMKAg==
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+To:     agross@kernel.org
+Cc:     andersson@kernel.org, konrad.dybcio@somainline.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        lee@kernel.org, ulf.hansson@linaro.org,
+        srinivas.kandagatla@linaro.org, jic23@kernel.org, lars@metafoo.de,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        bhupesh.sharma@linaro.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-hardening@vger.kernel.org, marijn.suijten@somainline.org,
+        kernel@collabora.com, luca@z3ntu.xyz, a39.skl@gmail.com,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Subject: [PATCH 0/9] MSM8956/76 and Sony Xperia X / X Compact support
+Date:   Fri,  4 Nov 2022 18:21:13 +0100
+Message-Id: <20221104172122.252761-1-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Linus,
+This series adds basic support for MSM8976 and its lower spec variant
+MSM8956, along with two devices: the Sony Xperia X and X Compact.
 
-Please pull this tiny kernel hardening fix for v6.1-rc4.
+For now, even though I do have a tree in which these two devices are
+fully booting, only a basic console boot is provided as the rest is
+awaiting cleanup and some more dependencies.
+Especially every device requiring IOMMU support, like MDSS, MDP and
+Adreno GPU cannot work with the current qcom_iommu driver, as it
+needs some code to get the ASIDs right for MSM8956/76.
 
-Thanks!
+This series depends on [1].
 
--Kees
+Tested on both Xperia X and X Compact.
 
-The following changes since commit 72c3ebea375c39413d02113758319b74ecd790bd:
+[1]: https://patchwork.kernel.org/project/linux-arm-msm/list/?series=690889
 
-  overflow: Refactor test skips for Clang-specific issues (2022-10-25 14:57:42 -0700)
+AngeloGioacchino Del Regno (7):
+  dt-bindings: iio: qcom-spmi-vadc: Add definitions for USB DP/DM VADCs
+  dt-bindings: soc: qcom: qcom,smd-rpm: Use qcom,smd-channels on MSM8976
+  dt-bindings: mmc: sdhci-msm: Document compatible for MSM8976
+  dt-bindings: mfd: qcom,tcsr: Add compatible for MSM8976
+  arm64: dts: qcom: Add configuration for PM8950 peripheral
+  arm64: dts: qcom: Add DTS for MSM8976 and MSM8956 SoCs
+  arm64: dts: qcom: Add support for SONY Xperia X/X Compact
 
-are available in the Git repository at:
+Marijn Suijten (2):
+  dt-bindings: nvmem: Add compatible for MSM8976
+  dt-bindings: arm: qcom: Document msm8956 and msm8976 SoC and devices
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.1-rc4
-
-for you to fetch changes up to 6f7630b1b5bc672b54c1285ee6aba752b446672c:
-
-  fortify: Capture __bos() results in const temp vars (2022-10-28 16:07:01 -0700)
-
-----------------------------------------------------------------
-kernel hardening fix for v6.1-rc4
-
-- Correctly report struct member size on memcpy overflow (Kees Cook)
-
-----------------------------------------------------------------
-Kees Cook (1):
-      fortify: Capture __bos() results in const temp vars
-
- include/linux/fortify-string.h | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/arm/qcom.yaml         |   10 +
+ .../devicetree/bindings/mfd/qcom,tcsr.yaml    |    1 +
+ .../devicetree/bindings/mmc/sdhci-msm.yaml    |    1 +
+ .../bindings/nvmem/qcom,qfprom.yaml           |    1 +
+ .../bindings/soc/qcom/qcom,smd-rpm.yaml       |    1 +
+ arch/arm64/boot/dts/qcom/Makefile             |    2 +
+ .../qcom/msm8956-sony-xperia-loire-kugo.dts   |   36 +
+ .../qcom/msm8956-sony-xperia-loire-suzu.dts   |   17 +
+ .../dts/qcom/msm8956-sony-xperia-loire.dtsi   |  269 ++++
+ arch/arm64/boot/dts/qcom/msm8956.dtsi         |   18 +
+ arch/arm64/boot/dts/qcom/msm8976.dtsi         | 1208 +++++++++++++++++
+ arch/arm64/boot/dts/qcom/pm8950.dtsi          |  165 +++
+ include/dt-bindings/iio/qcom,spmi-vadc.h      |    3 +
+ 13 files changed, 1732 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire-kugo.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire-suzu.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8956.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8976.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8950.dtsi
 
 -- 
-Kees Cook
+2.37.2
+
