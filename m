@@ -2,117 +2,195 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF6FC4332F
-	for <linux-hardening@archiver.kernel.org>; Sat,  5 Nov 2022 06:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B72BC4332F
+	for <linux-hardening@archiver.kernel.org>; Sat,  5 Nov 2022 06:46:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229486AbiKEGfm (ORCPT
+        id S229516AbiKEGqD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 5 Nov 2022 02:35:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47116 "EHLO
+        Sat, 5 Nov 2022 02:46:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbiKEGfm (ORCPT
+        with ESMTP id S229457AbiKEGqC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 5 Nov 2022 02:35:42 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE06A18362
-        for <linux-hardening@vger.kernel.org>; Fri,  4 Nov 2022 23:35:40 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id m14-20020a17090a3f8e00b00212dab39bcdso10127815pjc.0
-        for <linux-hardening@vger.kernel.org>; Fri, 04 Nov 2022 23:35:40 -0700 (PDT)
+        Sat, 5 Nov 2022 02:46:02 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A26BC27FEE
+        for <linux-hardening@vger.kernel.org>; Fri,  4 Nov 2022 23:46:01 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id y4so6774750plb.2
+        for <linux-hardening@vger.kernel.org>; Fri, 04 Nov 2022 23:46:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=V+ttrriw2jHbnwBq8r9WNw6hEcBwWElO92RwaTxM2O4=;
-        b=JUkgp/e0IphClCG54NWjL/yqLptR2OE1WH8h5TEyrYSFpfliB6k3FR2lKYsnWuL6oh
-         SyK0PjXgG139TvsIyS/25Lj4cPM3HwsOAYC7fIH8elQXWGzAi+AdpJQo9K2hoCR9G6Ym
-         FcWOplSbLVVXPJfoLops5eLetitvWlePoZQUc=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=srq0262QxbkEV6kNYP4erFtvI0rgH+oqu5/TPMxlwy4=;
+        b=W4KaJP6FV2vwHiDT+VvgaGaA1jeM6SQ8YJpGYx2Pbkhvyt+b8ut77tl012BXpoCSKZ
+         u+nxM1dLCKIVpLHfyXG1p88984BbMhKZGcd9C4F0RT8kncpFr41iKYeXmFz2HFf1Qd2/
+         RsyWHfwKmiA0qvv+5iNwqot7JBpHFX9AjApgU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=V+ttrriw2jHbnwBq8r9WNw6hEcBwWElO92RwaTxM2O4=;
-        b=MhA8p2FOhlPaFDB++srCQR7L9ShqsNYL1wBW7K5eAXGwrtTsqOfO3iPqoAHFhtn59l
-         8BS1MXN8PrCbQ8i4BXqawnP/IducUMcpQkCsO2VqA8zRO6TFGvTKTBJqFKI8eF9p3OAx
-         db0k1uopRs+kfiJ1sqpmSEM8h2AXNthWb67GPttvDPhswMcrlLIX8RkWKvEk9CfJ28Ai
-         QE2Rq4MKR4pnHvCoN1BSlTICwbxOrdtuYS1CyZ/Va3PlScx7Z2Jld/uoav/ShX0mHLfR
-         Y6+a4xybQH5NQQYsH3B0XcgJ1QWRqx6Krmt3PzLn4KEMoFtRBDbZBAdf5wlS1NwNacHU
-         6hHw==
-X-Gm-Message-State: ACrzQf2Rza1gv1AfoCcrKsciUPMCYVltl+ZBkLORPgoievluixDgm34a
-        td2AxOFJGtBug9ON9A/VFW6boA==
-X-Google-Smtp-Source: AMsMyM6GIqPmhSXRWkyElAVjS2i8skcIDYLMxIhJaZ10L9qTgqe0jzDdEDbRPuGBca3OtaF+p3hqPA==
-X-Received: by 2002:a17:90a:9a8f:b0:212:ea8d:dc34 with SMTP id e15-20020a17090a9a8f00b00212ea8ddc34mr59411973pjp.30.1667630140271;
-        Fri, 04 Nov 2022 23:35:40 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=srq0262QxbkEV6kNYP4erFtvI0rgH+oqu5/TPMxlwy4=;
+        b=xsLcaWiRKWRhqWz0veykienilbHJnbu10UodeELhyqrFi/mb6FRPmZ5pUuyUxxINPS
+         Xd4OJg5wQfuSd30suicY4veGc8YOeWIjgBOlr0PmMJGSdUjZsXGFVhPBWwC3UMjXAGqY
+         d4Nc64J18i2kOL2K2uH90vaC5b5LpTZ0XpeOX3hW6nHNaxcNBOYj1oGfg2jq6hUYabTO
+         p0IaWs7wAlZX0KjLw6aOH1fX1jFzvz+J+Usyu3v6gY+pyGQ4Rz5m4Vc6gYpmNygCzTHX
+         zBbWt7/dihcQ49a9VOkZqTxaQIR95jl030ZP+bD+K8MQVT4Y3aF74sKNGczKmT0jHxDP
+         4VRg==
+X-Gm-Message-State: ACrzQf0YvQMwnUdfc8aYT6xmoTFsoFN3Zendtjh/8D+tZW1ARf8gdPol
+        mwpnnuMxDT4YWxpAm25Ox9bQUnnys0PiHw==
+X-Google-Smtp-Source: AMsMyM4oJjpqJJcKwUVLP7X5WeicCqIX6jcTy1xHjHbJtoU/3/GvJrm+L6ClZGrmleAPy813oxTJNQ==
+X-Received: by 2002:a17:903:1c6:b0:185:47ce:f4f0 with SMTP id e6-20020a17090301c600b0018547cef4f0mr40384496plh.132.1667630761129;
+        Fri, 04 Nov 2022 23:46:01 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i36-20020a635864000000b00464aa9ea6fasm678014pgm.20.2022.11.04.23.35.39
+        by smtp.gmail.com with ESMTPSA id n2-20020a170902d2c200b0018099c9618esm857879plc.231.2022.11.04.23.46.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Nov 2022 23:35:39 -0700 (PDT)
+        Fri, 04 Nov 2022 23:46:00 -0700 (PDT)
+Date:   Fri, 4 Nov 2022 23:45:59 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
+Cc:     Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
         Pekka Enberg <penberg@kernel.org>,
         David Rientjes <rientjes@google.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] mm/slab_common: Restore passing "caller" for tracing
-Date:   Fri,  4 Nov 2022 23:35:34 -0700
-Message-Id: <20221105063529.never.818-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        David Gow <davidgow@google.com>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH 3/6] slab: Provide functional __alloc_size() hints to
+ kmalloc_trace*()
+Message-ID: <202211042345.B1D74469BC@keescook>
+References: <20221101222520.never.109-kees@kernel.org>
+ <20221101223321.1326815-3-keescook@chromium.org>
+ <Y2PNVUzHWCg765ml@hyeyoo>
+ <202211041121.2F1639D2@keescook>
+ <Y2W3zEcMd82B0O1I@hyeyoo>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1630; h=from:subject:message-id; bh=JSGlXxVXB24xybNyyB3Vx4Hgog1N3EuhU50a+R/H2V4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjZgQ1daoz1U/VFQdp/4qneXVJ7s/nT76PsVBHEcUw Hku/Y+aJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY2YENQAKCRCJcvTf3G3AJpYND/ 43VInsS7w3k6nIW0kEAEKttCAbRNuYUQth1geGAKEEnDhfwHwhs5BI39fidAQfdwJ3DUS2DkWf2Abu esup2SlME5eBOZ0ffdxyq5O2bH7IsrT1akDDnac6gMn9lrJndYJlVfeigjZlKA+zcpbXCkns6OCLL/ 24AFCoY3DQ8Pjnzlwa2FurtmroYYVT1iiYXGGZMcYUJSM9hLXe9Q+dAjex6CuyNXZp8wwdL7rNnegi qyq3bPBfpuWBA29l+r080Ua4pn74ON7En9+6CQtVaX5bibHwgcsV9aT2LxMmskIhCeMko5Xxl9cN0r u5M5qHnPyjCYLS4IXSUsuJQ7DE/SRA81W6Qh0dQXfazCHFjI1+8TSCHX/hwxCZ6811idprz+VsFoiR y0Z7wojUwvY2odkzybSQeDJoAEVzVX2A7PfzXspwoA+D9VFDdHcyrdNB0JJkfHE69wzSqVpoijFfQD hy/CkLNl9l2YS9QupqWIdzSGDqbvB0+VyxvH2aYakKv9/KxcYJscLbz+jZdtflujeR0WWvUSX68GTv oH+P+DwmUSJ2l5Y9KcfQ17ysXUbFSZRkuiAYFNV8XbYN2jtlC+GAuWWNBP4N2+ieim+FxlBMlAt9Pu sl/rXgcX304x0jVRzknC7ISFsscd2pr+27sGDOhWxNEvzSLSkFrov1lVe/9w==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y2W3zEcMd82B0O1I@hyeyoo>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The "caller" argument was accidentally being ignored in a few places
-that were recently refactored. Restore these "caller" arguments, instead
-of _RET_IP_.
+On Sat, Nov 05, 2022 at 10:09:32AM +0900, Hyeonggon Yoo wrote:
+> On Fri, Nov 04, 2022 at 11:22:42AM -0700, Kees Cook wrote:
+> > On Thu, Nov 03, 2022 at 11:16:53PM +0900, Hyeonggon Yoo wrote:
+> > > On Tue, Nov 01, 2022 at 03:33:11PM -0700, Kees Cook wrote:
+> > > > Since GCC cannot apply the __alloc_size attributes to inlines[1], all
+> > > > allocator inlines need to explicitly call into extern functions that
+> > > > contain a size argument. Provide these wrappers that end up just
+> > > > ignoring the size argument for the actual allocation.
+> > > > 
+> > > > This allows CONFIG_FORTIFY_SOURCE=y to see all various dynamic allocation
+> > > > sizes under GCC 12+ and all supported Clang versions.
+> > > > 
+> > > > [1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96503
+> > > > 
+> > > > Cc: Vlastimil Babka <vbabka@suse.cz>
+> > > > Cc: Christoph Lameter <cl@linux.com>
+> > > > Cc: Pekka Enberg <penberg@kernel.org>
+> > > > Cc: David Rientjes <rientjes@google.com>
+> > > > Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> > > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > > Cc: Roman Gushchin <roman.gushchin@linux.dev>
+> > > > Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+> > > > Cc: linux-mm@kvack.org
+> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > > ---
+> > > >  include/linux/slab.h |  8 ++++++--
+> > > >  mm/slab_common.c     | 14 ++++++++++++++
+> > > >  2 files changed, 20 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/include/linux/slab.h b/include/linux/slab.h
+> > > > index 970e9504949e..051d86ca31a8 100644
+> > > > --- a/include/linux/slab.h
+> > > > +++ b/include/linux/slab.h
+> > > > @@ -442,6 +442,8 @@ static_assert(PAGE_SHIFT <= 20);
+> > > >  
+> > > >  void *__kmalloc(size_t size, gfp_t flags) __assume_kmalloc_alignment __alloc_size(1);
+> > > >  void *kmem_cache_alloc(struct kmem_cache *s, gfp_t flags) __assume_slab_alignment __malloc;
+> > > > +void *kmem_cache_alloc_sized(struct kmem_cache *s, gfp_t flags, size_t size)
+> > > > +			     __assume_slab_alignment __alloc_size(3);
+> > > >  void *kmem_cache_alloc_lru(struct kmem_cache *s, struct list_lru *lru,
+> > > >  			   gfp_t gfpflags) __assume_slab_alignment __malloc;
+> > > >  void kmem_cache_free(struct kmem_cache *s, void *objp);
+> > > > @@ -469,6 +471,8 @@ void *__kmalloc_node(size_t size, gfp_t flags, int node) __assume_kmalloc_alignm
+> > > >  							 __alloc_size(1);
+> > > >  void *kmem_cache_alloc_node(struct kmem_cache *s, gfp_t flags, int node) __assume_slab_alignment
+> > > >  									 __malloc;
+> > > > +void *kmem_cache_alloc_node_sized(struct kmem_cache *s, gfp_t flags, int node, size_t size)
+> > > > +				  __assume_slab_alignment __alloc_size(4);
+> > > >  
+> > > >  #ifdef CONFIG_TRACING
+> > > >  void *kmalloc_trace(struct kmem_cache *s, gfp_t flags, size_t size)
+> > > > @@ -482,7 +486,7 @@ void *kmalloc_node_trace(struct kmem_cache *s, gfp_t gfpflags,
+> > > >  static __always_inline __alloc_size(3)
+> > > >  void *kmalloc_trace(struct kmem_cache *s, gfp_t flags, size_t size)
+> > > >  {
+> > > > -	void *ret = kmem_cache_alloc(s, flags);
+> > > > +	void *ret = kmem_cache_alloc_sized(s, flags, size);
+> > > >  
+> > > >  	ret = kasan_kmalloc(s, ret, size, flags);
+> > > >  	return ret;
+> > > > @@ -492,7 +496,7 @@ static __always_inline __alloc_size(4)
+> > > >  void *kmalloc_node_trace(struct kmem_cache *s, gfp_t gfpflags,
+> > > >  			 int node, size_t size)
+> > > >  {
+> > > > -	void *ret = kmem_cache_alloc_node(s, gfpflags, node);
+> > > > +	void *ret = kmem_cache_alloc_node_sized(s, gfpflags, node, size);
+> > > >  
+> > > >  	ret = kasan_kmalloc(s, ret, size, gfpflags);
+> > > >  	return ret;
+> > > > diff --git a/mm/slab_common.c b/mm/slab_common.c
+> > > > index 33b1886b06eb..5fa547539a6a 100644
+> > > > --- a/mm/slab_common.c
+> > > > +++ b/mm/slab_common.c
+> > > > @@ -1457,6 +1457,20 @@ size_t ksize(const void *objp)
+> > > >  }
+> > > >  EXPORT_SYMBOL(ksize);
+> > > >  
+> > > > +/* Wrapper so __alloc_size() can see the actual allocation size. */
+> > > > +void *kmem_cache_alloc_sized(struct kmem_cache *s, gfp_t flags, size_t size)
+> > > > +{
+> > > > +	return kmem_cache_alloc(s, flags);
+> > > > +}
+> > > > +EXPORT_SYMBOL(kmem_cache_alloc_sized);
+> > > > +
+> > > > +/* Wrapper so __alloc_size() can see the actual allocation size. */
+> > > > +void *kmem_cache_alloc_node_sized(struct kmem_cache *s, gfp_t flags, int node, size_t size)
+> > > > +{
+> > > > +	return kmem_cache_alloc_node(s, flags, node);
+> > > > +}
+> > > > +EXPORT_SYMBOL(kmem_cache_alloc_node_sized);
+> > > 
+> > > The reason that we have two implementations of kmalloc_trace*
+> > > depending on CONFIG_TRACING is to save additional function call when
+> > > CONFIG_TRACING is not set.
+> > > 
+> > > With this patch there is no reason to keep both.
+> > > So let's drop #ifdefs and use single implementation in mm/slab_common.c.
+> > 
+> > Okay, I'll respin...
+> > 
+> > -- 
+> > Kees Cook
+> 
+> Oh, it seems Vlastimil already did that.
+> Maybe simply drop this patch in next spin?
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/vbabka/slab.git/commit/?h=slab/for-6.1-rc4/fixes&id=eb4940d4adf590590a9d0c47e38d2799c2ff9670
 
-Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: linux-mm@kvack.org
-Fixes: 11e9734bcb6a ("mm/slab_common: unify NUMA and UMA version of tracepoints")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- mm/slab_common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Oh! Well, yes, that makes that easy. :)
 
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 33b1886b06eb..0e614f9e7ed7 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -941,7 +941,7 @@ void *__do_kmalloc_node(size_t size, gfp_t flags, int node, unsigned long caller
- 
- 	if (unlikely(size > KMALLOC_MAX_CACHE_SIZE)) {
- 		ret = __kmalloc_large_node(size, flags, node);
--		trace_kmalloc(_RET_IP_, ret, size,
-+		trace_kmalloc(caller, ret, size,
- 			      PAGE_SIZE << get_order(size), flags, node);
- 		return ret;
- 	}
-@@ -953,7 +953,7 @@ void *__do_kmalloc_node(size_t size, gfp_t flags, int node, unsigned long caller
- 
- 	ret = __kmem_cache_alloc_node(s, flags, node, size, caller);
- 	ret = kasan_kmalloc(s, ret, size, flags);
--	trace_kmalloc(_RET_IP_, ret, size, s->size, flags, node);
-+	trace_kmalloc(caller, ret, size, s->size, flags, node);
- 	return ret;
- }
- 
 -- 
-2.34.1
-
+Kees Cook
