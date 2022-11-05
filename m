@@ -2,196 +2,140 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE64C43217
-	for <linux-hardening@archiver.kernel.org>; Sat,  5 Nov 2022 01:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D947C4332F
+	for <linux-hardening@archiver.kernel.org>; Sat,  5 Nov 2022 02:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229542AbiKEBJo (ORCPT
+        id S229579AbiKEC7C (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Nov 2022 21:09:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55014 "EHLO
+        Fri, 4 Nov 2022 22:59:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbiKEBJm (ORCPT
+        with ESMTP id S229492AbiKEC7C (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Nov 2022 21:09:42 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B25964091D;
-        Fri,  4 Nov 2022 18:09:41 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id u6so6347729plq.12;
-        Fri, 04 Nov 2022 18:09:41 -0700 (PDT)
+        Fri, 4 Nov 2022 22:59:02 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0DEF419B8
+        for <linux-hardening@vger.kernel.org>; Fri,  4 Nov 2022 19:58:59 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id v17so10094123edc.8
+        for <linux-hardening@vger.kernel.org>; Fri, 04 Nov 2022 19:58:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UZRKTfzUgUmUoDMmXtLNWbH1d7SRg9NOYtTV2ieREGk=;
-        b=WEeQ3oedxebSq3TylgaXd4uhHZ9fSf85t4y+VbXKEnRu/7HDBOu+78DX1+z7CCi5y7
-         iXRQ9RG1+Zg01X1PRF7ztSjuRtPSWejAzJyKjVmW5vQBGjgN+PSGGvaFgNrjYR/yHXLH
-         sn53T4Ne/NmwBRYJ5cRZM4YACVxoe+c7TnndsA9ak7FT4Nk/uRjxeR9Kgv2Ji9Kwf4GZ
-         ZSwkypKIL9HoKD6Va65PrJYvi1yFVSeWLvEEoMsWeLDq5B7KPzuGinuq4ql9AMXKXWPu
-         tMeggNh/G7KLz4CDnMCUtPkiNqH/satSpu6aMojsrEmZbKZLfg2X2ZK94qwSx3yGOOOC
-         l90A==
+        d=soleen.com; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=uDDAW4bfixZV9jxCbkjO/hz8g7Y57vtJ/LbWD2zWZg0=;
+        b=aBYv502mu5ffMnm/ju1VA5lVoHbMZd1zLNmKFIYeyVqluZxcQKGuLTGYcvb4TNYZ+c
+         S5WL8awJiq5PFIfb7bg3Jhx9mEa4UU5S8CasjXmZASxieB3+IiJPizYBrOkrsVOEuc7t
+         eIlcm6UnRaDRjIXpgrqfn1ICHw9+OYnY4LqBdtTG1TafgUOsdWYeRULs1LHtVuuN6ltO
+         vKSgcGXivF32sOK6XR2dndvN1WtQMxg7+V+5PBvWM4uPpYj8XIdZ07a3mRBl8EYPYRG6
+         fOaNoI8OsZ367sJefgVdXHz+Va62zPqMz4pa0BRVDEle2kjiJfZJ2Ny4XMlRh5GrBCyf
+         pIYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UZRKTfzUgUmUoDMmXtLNWbH1d7SRg9NOYtTV2ieREGk=;
-        b=DZc0sm3msTx3QTgEcO7AVt4hZY6AWUedJUY3cfv18wqCi3Rx44vswdLqwg9LZMRcAc
-         Oxh1MGuoWlY+PWI8Qb6kUrWnRPFNhhQYbUQ8xtSmsNnk+ZMTVeyZsX/Z1WWX5e+mGGgI
-         HOP7V7d1rPlPX7Y2c7IFjlvZOFCVvY6IrtDDNmxw/yndO15tq3sTfXmMR5mMwMIzT8GP
-         GhkattzhZP3eCuxC02/gev8dgZPlJfscROJMi8UH3BPoDytg4ZOmQKfbB6/Ghi5qniXy
-         iOau8A+ctUeNjJntn+L6AS1FsAt0odozqxTjx+aeQrDX3yx4VbS5JPASPLebqNA29Dxw
-         vGhw==
-X-Gm-Message-State: ACrzQf0Wa0SLsv5iO9p2fOdEDB3xMyg7DB4oLQU0HW/EPlECtG3vw23L
-        gPZcP8yFH8JJHIVYfsW26E8=
-X-Google-Smtp-Source: AMsMyM7rn2BtRhnzi3h+OsA0B40E06ImoWbABI8HcmyJhN73GZyM7ao3+XvXzCg/8TYVD9EkwCIrNg==
-X-Received: by 2002:a17:90a:ba85:b0:212:d644:fc28 with SMTP id t5-20020a17090aba8500b00212d644fc28mr39973129pjr.72.1667610581148;
-        Fri, 04 Nov 2022 18:09:41 -0700 (PDT)
-Received: from hyeyoo ([114.29.91.56])
-        by smtp.gmail.com with ESMTPSA id u7-20020a63ef07000000b004393c5a8006sm310615pgh.75.2022.11.04.18.09.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Nov 2022 18:09:40 -0700 (PDT)
-Date:   Sat, 5 Nov 2022 10:09:32 +0900
-From:   Hyeonggon Yoo <42.hyeyoo@gmail.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
-        David Gow <davidgow@google.com>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH 3/6] slab: Provide functional __alloc_size() hints to
- kmalloc_trace*()
-Message-ID: <Y2W3zEcMd82B0O1I@hyeyoo>
-References: <20221101222520.never.109-kees@kernel.org>
- <20221101223321.1326815-3-keescook@chromium.org>
- <Y2PNVUzHWCg765ml@hyeyoo>
- <202211041121.2F1639D2@keescook>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uDDAW4bfixZV9jxCbkjO/hz8g7Y57vtJ/LbWD2zWZg0=;
+        b=Nm7cHgBC/xnBtEl2rSOy856M+Yo0qPT11AoPxyKCM/4I2zViLqoCURTnQRAqQ+iJRS
+         CqZAErQvC1xvwxJiK+sjSeVWF3PR/WwhaO9R7LBJb+q+AaCUfeobX9olQD5uWS0D6WQI
+         2djMFx7Dtxsnxb2Q98N0tztcOhBD4S1s8ezraljGvIrY58TQvmqMDto85FksqOJYuTnM
+         fRCMfzMENdd4c3LK+EpQ8n5KCaBSHgmPC3rPrcyi7NRoOz+UCnO2ys8Bqqle0+8CnRoo
+         gNHvXGYiaDNK1PXO7jafNViJeryFN7hCvYpm326VpLAxmMbX5dRBwuSCn1irRNQoe+TB
+         f8jQ==
+X-Gm-Message-State: ACrzQf1q3RIXK9FGYlmR8TdvY3TazhV8lfEMpUSGvWAwhf+HlY1FxpgM
+        COwbf9qMXuskZR+4FkVuAuH6ETh+8i01Gdy/pNDJbw==
+X-Google-Smtp-Source: AMsMyM4/G+GGwu/XWb7PryL7j0Ob5S/pX6DTxOjBIX9oRf9pcoBvcDWaB2iq48g4djXsLr6PkXjNCVNKoQCGxSwdmuo=
+X-Received: by 2002:a05:6402:2025:b0:464:67fd:e5d3 with SMTP id
+ ay5-20020a056402202500b0046467fde5d3mr6533366edb.59.1667617138320; Fri, 04
+ Nov 2022 19:58:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202211041121.2F1639D2@keescook>
+References: <cover.1667336095.git.christophe.jaillet@wanadoo.fr> <03f9401a6c8b87a1c786a2138d16b048f8d0eb53.1667336095.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <03f9401a6c8b87a1c786a2138d16b048f8d0eb53.1667336095.git.christophe.jaillet@wanadoo.fr>
+From:   Pasha Tatashin <pasha.tatashin@soleen.com>
+Date:   Fri, 4 Nov 2022 22:58:20 -0400
+Message-ID: <CA+CK2bDJjYuO8Xk_8cP874hxDKA5LFhpdbZ+s0SE6bgFPpMg3w@mail.gmail.com>
+Subject: Re: [PATCH 21/30] mm: Use kstrtobool() instead of strtobool()
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Nov 04, 2022 at 11:22:42AM -0700, Kees Cook wrote:
-> On Thu, Nov 03, 2022 at 11:16:53PM +0900, Hyeonggon Yoo wrote:
-> > On Tue, Nov 01, 2022 at 03:33:11PM -0700, Kees Cook wrote:
-> > > Since GCC cannot apply the __alloc_size attributes to inlines[1], all
-> > > allocator inlines need to explicitly call into extern functions that
-> > > contain a size argument. Provide these wrappers that end up just
-> > > ignoring the size argument for the actual allocation.
-> > > 
-> > > This allows CONFIG_FORTIFY_SOURCE=y to see all various dynamic allocation
-> > > sizes under GCC 12+ and all supported Clang versions.
-> > > 
-> > > [1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96503
-> > > 
-> > > Cc: Vlastimil Babka <vbabka@suse.cz>
-> > > Cc: Christoph Lameter <cl@linux.com>
-> > > Cc: Pekka Enberg <penberg@kernel.org>
-> > > Cc: David Rientjes <rientjes@google.com>
-> > > Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > Cc: Roman Gushchin <roman.gushchin@linux.dev>
-> > > Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-> > > Cc: linux-mm@kvack.org
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > >  include/linux/slab.h |  8 ++++++--
-> > >  mm/slab_common.c     | 14 ++++++++++++++
-> > >  2 files changed, 20 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/include/linux/slab.h b/include/linux/slab.h
-> > > index 970e9504949e..051d86ca31a8 100644
-> > > --- a/include/linux/slab.h
-> > > +++ b/include/linux/slab.h
-> > > @@ -442,6 +442,8 @@ static_assert(PAGE_SHIFT <= 20);
-> > >  
-> > >  void *__kmalloc(size_t size, gfp_t flags) __assume_kmalloc_alignment __alloc_size(1);
-> > >  void *kmem_cache_alloc(struct kmem_cache *s, gfp_t flags) __assume_slab_alignment __malloc;
-> > > +void *kmem_cache_alloc_sized(struct kmem_cache *s, gfp_t flags, size_t size)
-> > > +			     __assume_slab_alignment __alloc_size(3);
-> > >  void *kmem_cache_alloc_lru(struct kmem_cache *s, struct list_lru *lru,
-> > >  			   gfp_t gfpflags) __assume_slab_alignment __malloc;
-> > >  void kmem_cache_free(struct kmem_cache *s, void *objp);
-> > > @@ -469,6 +471,8 @@ void *__kmalloc_node(size_t size, gfp_t flags, int node) __assume_kmalloc_alignm
-> > >  							 __alloc_size(1);
-> > >  void *kmem_cache_alloc_node(struct kmem_cache *s, gfp_t flags, int node) __assume_slab_alignment
-> > >  									 __malloc;
-> > > +void *kmem_cache_alloc_node_sized(struct kmem_cache *s, gfp_t flags, int node, size_t size)
-> > > +				  __assume_slab_alignment __alloc_size(4);
-> > >  
-> > >  #ifdef CONFIG_TRACING
-> > >  void *kmalloc_trace(struct kmem_cache *s, gfp_t flags, size_t size)
-> > > @@ -482,7 +486,7 @@ void *kmalloc_node_trace(struct kmem_cache *s, gfp_t gfpflags,
-> > >  static __always_inline __alloc_size(3)
-> > >  void *kmalloc_trace(struct kmem_cache *s, gfp_t flags, size_t size)
-> > >  {
-> > > -	void *ret = kmem_cache_alloc(s, flags);
-> > > +	void *ret = kmem_cache_alloc_sized(s, flags, size);
-> > >  
-> > >  	ret = kasan_kmalloc(s, ret, size, flags);
-> > >  	return ret;
-> > > @@ -492,7 +496,7 @@ static __always_inline __alloc_size(4)
-> > >  void *kmalloc_node_trace(struct kmem_cache *s, gfp_t gfpflags,
-> > >  			 int node, size_t size)
-> > >  {
-> > > -	void *ret = kmem_cache_alloc_node(s, gfpflags, node);
-> > > +	void *ret = kmem_cache_alloc_node_sized(s, gfpflags, node, size);
-> > >  
-> > >  	ret = kasan_kmalloc(s, ret, size, gfpflags);
-> > >  	return ret;
-> > > diff --git a/mm/slab_common.c b/mm/slab_common.c
-> > > index 33b1886b06eb..5fa547539a6a 100644
-> > > --- a/mm/slab_common.c
-> > > +++ b/mm/slab_common.c
-> > > @@ -1457,6 +1457,20 @@ size_t ksize(const void *objp)
-> > >  }
-> > >  EXPORT_SYMBOL(ksize);
-> > >  
-> > > +/* Wrapper so __alloc_size() can see the actual allocation size. */
-> > > +void *kmem_cache_alloc_sized(struct kmem_cache *s, gfp_t flags, size_t size)
-> > > +{
-> > > +	return kmem_cache_alloc(s, flags);
-> > > +}
-> > > +EXPORT_SYMBOL(kmem_cache_alloc_sized);
-> > > +
-> > > +/* Wrapper so __alloc_size() can see the actual allocation size. */
-> > > +void *kmem_cache_alloc_node_sized(struct kmem_cache *s, gfp_t flags, int node, size_t size)
-> > > +{
-> > > +	return kmem_cache_alloc_node(s, flags, node);
-> > > +}
-> > > +EXPORT_SYMBOL(kmem_cache_alloc_node_sized);
-> > 
-> > The reason that we have two implementations of kmalloc_trace*
-> > depending on CONFIG_TRACING is to save additional function call when
-> > CONFIG_TRACING is not set.
-> > 
-> > With this patch there is no reason to keep both.
-> > So let's drop #ifdefs and use single implementation in mm/slab_common.c.
-> 
-> Okay, I'll respin...
-> 
-> -- 
-> Kees Cook
+On Tue, Nov 1, 2022 at 5:15 PM Christophe JAILLET
+<christophe.jaillet@wanadoo.fr> wrote:
+>
+> strtobool() is the same as kstrtobool().
+> However, the latter is more used within the kernel.
+>
+> In order to remove strtobool() and slightly simplify kstrtox.h, switch to
+> the other function name.
+>
+> While at it, include the corresponding header file (<linux/kstrtox.h>)
+>
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> This patch is part of a serie that axes all usages of strtobool().
+> Each patch can be applied independently from the other ones.
+>
+> The last patch of the serie removes the definition of strtobool().
+>
+> You may not be in copy of the cover letter. So, if needed, it is available
+> at [1].
+>
+> [1]: https://lore.kernel.org/all/cover.1667336095.git.christophe.jaillet@wanadoo.fr/
+> ---
+>  mm/page_table_check.c | 3 ++-
+>  mm/usercopy.c         | 3 ++-
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/mm/page_table_check.c b/mm/page_table_check.c
+> index 433dbce13fe1..93e633c1d587 100644
+> --- a/mm/page_table_check.c
+> +++ b/mm/page_table_check.c
+> @@ -4,6 +4,7 @@
+>   * Copyright (c) 2021, Google LLC.
+>   * Pasha Tatashin <pasha.tatashin@soleen.com>
+>   */
+> +#include <linux/kstrtox.h>
+>  #include <linux/mm.h>
+>  #include <linux/page_table_check.h>
+>
+> @@ -23,7 +24,7 @@ EXPORT_SYMBOL(page_table_check_disabled);
+>
+>  static int __init early_page_table_check_param(char *buf)
+>  {
+> -       return strtobool(buf, &__page_table_check_enabled);
+> +       return kstrtobool(buf, &__page_table_check_enabled);
+>  }
 
-Oh, it seems Vlastimil already did that.
-Maybe simply drop this patch in next spin?
+Acked-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 
-https://git.kernel.org/pub/scm/linux/kernel/git/vbabka/slab.git/commit/?h=slab/for-6.1-rc4/fixes&id=eb4940d4adf590590a9d0c47e38d2799c2ff9670
-
-Thanks!
-
--- 
-Hyeonggon
+>
+>  early_param("page_table_check", early_page_table_check_param);
+> diff --git a/mm/usercopy.c b/mm/usercopy.c
+> index c1ee15a98633..4c3164beacec 100644
+> --- a/mm/usercopy.c
+> +++ b/mm/usercopy.c
+> @@ -12,6 +12,7 @@
+>
+>  #include <linux/mm.h>
+>  #include <linux/highmem.h>
+> +#include <linux/kstrtox.h>
+>  #include <linux/slab.h>
+>  #include <linux/sched.h>
+>  #include <linux/sched/task.h>
+> @@ -258,7 +259,7 @@ static bool enable_checks __initdata = true;
+>
+>  static int __init parse_hardened_usercopy(char *str)
+>  {
+> -       if (strtobool(str, &enable_checks))
+> +       if (kstrtobool(str, &enable_checks))
+>                 pr_warn("Invalid option string for hardened_usercopy: '%s'\n",
+>                         str);
+>         return 1;
+> --
+> 2.34.1
+>
