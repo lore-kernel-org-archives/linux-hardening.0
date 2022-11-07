@@ -2,227 +2,104 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD25C433FE
-	for <linux-hardening@archiver.kernel.org>; Mon,  7 Nov 2022 20:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A588C43217
+	for <linux-hardening@archiver.kernel.org>; Mon,  7 Nov 2022 20:14:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232791AbiKGUNe (ORCPT
+        id S233038AbiKGUOi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 7 Nov 2022 15:13:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50428 "EHLO
+        Mon, 7 Nov 2022 15:14:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232141AbiKGUNd (ORCPT
+        with ESMTP id S232845AbiKGUOI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 7 Nov 2022 15:13:33 -0500
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2E20B4BC
-        for <linux-hardening@vger.kernel.org>; Mon,  7 Nov 2022 12:13:31 -0800 (PST)
-Received: by mail-wm1-x336.google.com with SMTP id t4so7553123wmj.5
-        for <linux-hardening@vger.kernel.org>; Mon, 07 Nov 2022 12:13:31 -0800 (PST)
+        Mon, 7 Nov 2022 15:14:08 -0500
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B2752B616
+        for <linux-hardening@vger.kernel.org>; Mon,  7 Nov 2022 12:13:59 -0800 (PST)
+Received: by mail-pf1-x436.google.com with SMTP id b185so11674392pfb.9
+        for <linux-hardening@vger.kernel.org>; Mon, 07 Nov 2022 12:13:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yObtQ9wJPrlYkrbPvdnk4VcNP5+2kVedV7p00zrzpqk=;
-        b=HOMpNU6pIG9ak3/AXz03bACY3qUle3fLU/VLA/B9MwgoIWX+AhFbWitAWrf6kcUXLa
-         jNiAW6/0Icd7ZEJI4CzlfnpwO88fkzbNMOKjdYcHMx2LGFk0LJH21udPJFdHSMlEJswV
-         PfAGu3QM6OP71N7I4P3S4kGQT9Iw1dzvvkaoP7fJxhT6YF7KU6K7M3mKHpfsoreGHiX1
-         l8hS/3GOuWcRF4UXInnYFdnE4j6CvhSub3ZymWotAqGjVZriNU7HqztS6qi88nvaIG7m
-         +gPUdqf2Tpf4UJ8kLL9EkoNunqfRoBMilJds1Zsj6W6GapSOMbLoO2MswuSeojqmHqk4
-         IRQw==
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5xwUUkKpDcIPfyqgEqqK+GlgxLC+bvP4zY8tMROFslo=;
+        b=DLbUXpx5BGpG1DMQLOiBzekr6LKIQl3xNK69EzWu9cBTt0IhkdmZEwISLEFENb2XyY
+         F6/uOEAYvPy0pCsiKqNfvo+OIfm6SIX23KDx3yvMgH3sgSWchQIKDJE3GlzipiOCntXn
+         /clhW8ucjAP0zT0zof+RkYMmEXv6b4ZGsStnqT8oNHT2Ijc8ADMZhCAzlI2lH+fr1/YO
+         x8c4BelTxgBcJGxLGvn23wE5GsMamdtb7aMOLH1Yng9pUzNmTj0K1sanTKJko582ilbk
+         F/TgKqkz4ALp59zsfD87HDFQgUw9Nn7h4v9gTInuzb4aaEecdA3lo3c7rkliEi2oPP/4
+         KM3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yObtQ9wJPrlYkrbPvdnk4VcNP5+2kVedV7p00zrzpqk=;
-        b=BjOvb+zJveL8h3QtyoYvHiWIVUh+AAWxmiwW+181SiVJUtIozZTWb3yPcPlv7IQxVZ
-         rPyxHUhkcnsoaSCIZm7maU155afS/IBHn6VNMMHN88IDEuOaybVt3foKSfQbLTrcxQvu
-         01yagji929zuiw+jAHnNqDs7rUYpWUlfp9FIZ3WlG6oaz+O8x0H7abJnXxVF+NI0czsE
-         LysizM9NqFQ0+mLDjhuVfYW1VdGr21ymS/qPlOVO7TMZ2lSLJjjL/Tdn7C29rvDuMAfK
-         0ENvqGUwzvBhw6ad0CoYRbTu8Zj544YLlK+MeoUCcd1NLl9OmeLeiagsPzePhti4v7X8
-         eCOg==
-X-Gm-Message-State: ACrzQf3VYtwaqXNYOirTBMOGw6WzElbuImLi6DvqDCH0qyGJqUJXGu+a
-        aud995EvHTxXw7hnaghbfYBMew==
-X-Google-Smtp-Source: AMsMyM4b3+XCLhjgUrqMXTfAGe9uH4LbZ+s+iFGzGMlyEel+1kEyciYB99VqzTqw80cLZms5rJtgmA==
-X-Received: by 2002:a05:600c:4691:b0:3cf:9cac:85c7 with SMTP id p17-20020a05600c469100b003cf9cac85c7mr11989812wmo.150.1667852010069;
-        Mon, 07 Nov 2022 12:13:30 -0800 (PST)
-Received: from localhost ([2a00:79e0:9d:4:fe7:f71:71e4:91f8])
-        by smtp.gmail.com with ESMTPSA id 124-20020a1c1982000000b003c65c9a36dfsm8956891wmz.48.2022.11.07.12.13.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Nov 2022 12:13:29 -0800 (PST)
-From:   Jann Horn <jannh@google.com>
-To:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Seth Jenkins <sethjenkins@google.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] exit: Put an upper limit on how often we can oops
-Date:   Mon,  7 Nov 2022 21:13:17 +0100
-Message-Id: <20221107201317.324457-1-jannh@google.com>
-X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
+        bh=5xwUUkKpDcIPfyqgEqqK+GlgxLC+bvP4zY8tMROFslo=;
+        b=Dh2M4Owtk5gVaWM/S0sIO7vZ/mFsUu6dP39vSaEWl28KADRN46mbVn/iUvk9UmHTAM
+         nsaSYnkkVWku9K/n0g4Gmg5HYEgMHYwsZisODHbYCXcLo3P7vcXCsyAR115J6e5iuwVC
+         BmasYHKVTipgBgUWOJKbC1fVxeOe56chWtIzg7G5amT+pX/IJD/B6LDgHl0suao5spd9
+         +y6QPzSom+j4GeAxodIr3SdxzOiZmissnx8UclUNOTDGxuN7dId87tuGt1XnDarDdljv
+         8QLwG8PsQmjP43uCKXi/g/N115VLvCfj40S2rgffUKvjU4DmbPJRfJ06iNJFLIwdPoOO
+         wvRg==
+X-Gm-Message-State: ACrzQf33ELxF5rxHuPRLeqlZHh5jY2Mw25Dwve+Nqb57+yjIvLHuqqoW
+        8f0+Ar+zbRDzztlEWReU3pVlwtETbbbnffEtrmlDYA==
+X-Google-Smtp-Source: AMsMyM74vaf7W54OL8zd+LH6la1LzG3+QlIhG7MtdJ/FbfqblOiiJopqiebGx/275JBCdBk/+joGXH2EXp7Nnh5kKbs=
+X-Received: by 2002:a63:464d:0:b0:441:5968:cd0e with SMTP id
+ v13-20020a63464d000000b004415968cd0emr46115918pgk.595.1667852038821; Mon, 07
+ Nov 2022 12:13:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <20221104172122.252761-1-angelogioacchino.delregno@collabora.com> <20221104172122.252761-6-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20221104172122.252761-6-angelogioacchino.delregno@collabora.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 7 Nov 2022 21:13:22 +0100
+Message-ID: <CAPDyKFramrp3gvOCCULC6anTh9ZfFbdtSgrmE_iGCJgbT0vYLQ@mail.gmail.com>
+Subject: Re: [PATCH 5/9] dt-bindings: mmc: sdhci-msm: Document compatible for MSM8976
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Cc:     agross@kernel.org, andersson@kernel.org,
+        konrad.dybcio@somainline.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, lee@kernel.org,
+        srinivas.kandagatla@linaro.org, jic23@kernel.org, lars@metafoo.de,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        bhupesh.sharma@linaro.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-hardening@vger.kernel.org, marijn.suijten@somainline.org,
+        kernel@collabora.com, luca@z3ntu.xyz, a39.skl@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Many Linux systems are configured to not panic on oops; but allowing an
-attacker to oops the system **really** often can make even bugs that look
-completely unexploitable exploitable (like NULL dereferences and such) if
-each crash elevates a refcount by one or a lock is taken in read mode, and
-this causes a counter to eventually overflow.
+On Fri, 4 Nov 2022 at 18:22, AngeloGioacchino Del Regno
+<angelogioacchino.delregno@collabora.com> wrote:
+>
+> Document the compatible for the SDHCI controller(s) found on MSM8976.
+>
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-The most interesting counters for this are 32 bits wide (like open-coded
-refcounts that don't use refcount_t). (The ldsem reader count on 32-bit
-platforms is just 16 bits, but probably nobody cares about 32-bit platforms
-that much nowadays.)
+Applied for next, thanks!
 
-So let's panic the system if the kernel is constantly oopsing.
+Kind regards
+Uffe
 
-The speed of oopsing 2^32 times probably depends on several factors, like
-how long the stack trace is and which unwinder you're using; an empirically
-important one is whether your console is showing a graphical environment or
-a text console that oopses will be printed to.
-In a quick single-threaded benchmark, it looks like oopsing in a vfork()
-child with a very short stack trace only takes ~510 microseconds per run
-when a graphical console is active; but switching to a text console that
-oopses are printed to slows it down around 87x, to ~45 milliseconds per
-run.
-(Adding more threads makes this faster, but the actual oops printing
-happens under &die_lock on x86, so you can maybe speed this up by a factor
-of around 2 and then any further improvement gets eaten up by lock
-contention.)
 
-It looks like it would take around 8-12 days to overflow a 32-bit counter
-with repeated oopsing on a multi-core X86 system running a graphical
-environment; both me (in an X86 VM) and Seth (with a distro kernel on
-normal hardware in a standard configuration) got numbers in that ballpark.
-
-12 days aren't *that* short on a desktop system, and you'd likely need much
-longer on a typical server system (assuming that people don't run graphical
-desktop environments on their servers), and this is a *very* noisy and
-violent approach to exploiting the kernel; and it also seems to take orders
-of magnitude longer on some machines, probably because stuff like EFI
-pstore will slow it down a ton if that's active.
-
-Signed-off-by: Jann Horn <jannh@google.com>
----
-I picked 10000 here to also provide safety for the ldsem code on 32-bit
-systems, but you could also argue that the real fix there is to make
-ldsem more robust, and that the limit should be something like 2^31...
-
-An alternative approach would be to always let make_task_dead() take the
-do_task_dead() path and never exit; but that would probably be a more
-disruptive change?
-
-@Kees should this go through your tree? (After waiting a while for
-the inevitable bikeshedding on whether the default limit should be closer
-to 10000 or 2^31.)
-
- Documentation/admin-guide/sysctl/kernel.rst |  7 +++++++
- include/linux/panic.h                       |  1 +
- kernel/exit.c                               | 22 +++++++++++++++++++++
- kernel/sysctl.c                             |  7 +++++++
- 4 files changed, 37 insertions(+)
-
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/ad=
-min-guide/sysctl/kernel.rst
-index 98d1b198b2b4c..09713f25b3d62 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -667,6 +667,13 @@ This is the default behavior.
- an oops event is detected.
-=20
-=20
-+oops_limit
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+Number of kernel oopses after which the kernel should panic when
-+``panic_on_oops`` is not set.
-+
-+
- osrelease, ostype & version
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-=20
-diff --git a/include/linux/panic.h b/include/linux/panic.h
-index c7759b3f20452..5b3e029fe1eb0 100644
---- a/include/linux/panic.h
-+++ b/include/linux/panic.h
-@@ -21,6 +21,7 @@ extern int panic_on_oops;
- extern int panic_on_unrecovered_nmi;
- extern int panic_on_io_nmi;
- extern int panic_on_warn;
-+extern int oops_limit;
-=20
- extern unsigned long panic_on_taint;
- extern bool panic_on_taint_nousertaint;
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 35e0a31a0315c..827ceffbfa432 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -872,8 +872,17 @@ void __noreturn do_exit(long code)
- 	do_task_dead();
- }
-=20
-+/*
-+ * The default value should be high enough to not crash a system that rand=
-omly
-+ * crashes its kernel from time to time, but low enough to at least not pe=
-rmit
-+ * overflowing 32-bit refcounts or the ldsem writer count.
-+ */
-+int oops_limit =3D 10000;
-+
- void __noreturn make_task_dead(int signr)
- {
-+	static atomic_t oops_count =3D ATOMIC_INIT(0);
-+
- 	/*
- 	 * Take the task off the cpu after something catastrophic has
- 	 * happened.
-@@ -897,6 +906,19 @@ void __noreturn make_task_dead(int signr)
- 		preempt_count_set(PREEMPT_ENABLED);
- 	}
-=20
-+	/*
-+	 * Every time the system oopses, if the oops happens while a reference
-+	 * to an object was held, the reference leaks.
-+	 * If the oops doesn't also leak memory, repeated oopsing can cause
-+	 * reference counters to wrap around (if they're not using refcount_t).
-+	 * This means that repeated oopsing can make unexploitable-looking bugs
-+	 * exploitable through repeated oopsing.
-+	 * To make sure this can't happen, place an upper bound on how often the
-+	 * kernel may oops without panic().
-+	 */
-+	if (atomic_inc_return(&oops_count) >=3D READ_ONCE(oops_limit))
-+		panic("Oopsed too often (oops_limit is %d)", oops_limit);
-+
- 	/*
- 	 * We're taking recursive faults here in make_task_dead. Safest is to just
- 	 * leave this task alone and wait for reboot.
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 188c305aeb8b7..63370aa4c078f 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -1866,6 +1866,13 @@ static struct ctl_table kern_table[] =3D {
- 		.mode		=3D 0644,
- 		.proc_handler	=3D proc_dointvec,
- 	},
-+	{
-+		.procname	=3D "oops_limit",
-+		.data		=3D &oops_limit,
-+		.maxlen		=3D sizeof(int),
-+		.mode		=3D 0644,
-+		.proc_handler	=3D proc_dointvec,
-+	},
- 	{
- 		.procname	=3D "panic_print",
- 		.data		=3D &panic_print,
-
-base-commit: f0c4d9fc9cc9462659728d168387191387e903cc
---=20
-2.38.1.431.g37b22c650d-goog
-
+> ---
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+> index a96f143479c7..fc8a6b345d97 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+> @@ -26,6 +26,7 @@ properties:
+>                - qcom,msm8226-sdhci
+>                - qcom,msm8953-sdhci
+>                - qcom,msm8974-sdhci
+> +              - qcom,msm8976-sdhci
+>                - qcom,msm8916-sdhci
+>                - qcom,msm8992-sdhci
+>                - qcom,msm8994-sdhci
+> --
+> 2.37.2
+>
