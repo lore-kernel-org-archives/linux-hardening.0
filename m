@@ -2,222 +2,283 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FDEC4332F
-	for <linux-hardening@archiver.kernel.org>; Mon,  7 Nov 2022 09:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92396C43219
+	for <linux-hardening@archiver.kernel.org>; Mon,  7 Nov 2022 12:06:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231299AbiKGJdD (ORCPT
+        id S231510AbiKGMGN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 7 Nov 2022 04:33:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58020 "EHLO
+        Mon, 7 Nov 2022 07:06:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231158AbiKGJdC (ORCPT
+        with ESMTP id S231909AbiKGMGK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 7 Nov 2022 04:33:02 -0500
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F657167FB;
-        Mon,  7 Nov 2022 01:33:01 -0800 (PST)
-Received: by mail-pg1-x534.google.com with SMTP id s196so9960871pgs.3;
-        Mon, 07 Nov 2022 01:33:01 -0800 (PST)
+        Mon, 7 Nov 2022 07:06:10 -0500
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E82981ADA9
+        for <linux-hardening@vger.kernel.org>; Mon,  7 Nov 2022 04:06:06 -0800 (PST)
+Received: by mail-lj1-x230.google.com with SMTP id s24so15871215ljs.11
+        for <linux-hardening@vger.kernel.org>; Mon, 07 Nov 2022 04:06:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HyF0E2uS8X0XmlEoNWDzlwWSu7iz2vHvvgzUM/YnP+A=;
-        b=CoSZl3HBAWY7ETrvTdR5S7+/MmJmuqylZeECCz9wlPJT+OIEeoDq009df1e+5/csjW
-         rx8+mP8rUTmBT88nDvqZCEnQF3Zh1qesZN5TDb47yft5nJx6V0SEPpg4uf93sRBVPwc4
-         R2ju+NpUXsrXpu5IXVYKruw/6TMl2hSxJsbNv/0xx4ymRqb5SDPWdkmXoV8U7CIrp5Xa
-         8ux57lPMa4NT+ctiVfq/Sf1EuliuFnjiO7+JhlL0byaECuR0a2HaMnFKKK8Po5F4lOZb
-         UryIBc1oJi/HPwu8ISeMI65d8Oa1uOd6toUbydYIYctLpmpMOvQDaeywxveMCslUQMdN
-         8AmQ==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7fwJYLTPxSL8RBLmYfxs82yq/hSniUHLwdjhPd9wCOs=;
+        b=eNG5odUUZT/n1tr5yqQZC6T3QwCCwVLAmgTDbU/akb+2DvO3QvYe/oFNWzU12fZfpE
+         s0Pg7oU/gDE4POELloFenmtszTdtjjJ34d8tv9THiDsqyzxK4My2JWwtdYCAz0TmpC0K
+         FXMQGttSsIsw69ndc6oa9Qk5bMsktC3Zu3o6XJZA8eGlFLNMmLnAobykYF/sjCnGoJFE
+         tt+U7iQHhxlwhfeWJ3jKtVkVraSKvpFU7AjPg9ROOBNUbxD1l+o2Jg9SELO6TF650e4l
+         03+N4RQaY33M+KBgO+OVGUhOs2nCRpZALTg3Bdx8VEsN46wQaih51uJLXYs7f7orR78f
+         k9fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HyF0E2uS8X0XmlEoNWDzlwWSu7iz2vHvvgzUM/YnP+A=;
-        b=tafENdFCTVKLO38FQYCFCXZ7TSYURJyFzUkUxn+JSW0kzmFODIsaDV3OhAEQC5RVRK
-         8c6wS/GFsSyW5MbUXWZKYIno//9tOmoGQV6NHhj+aJXyytA+3zwFWpf99rtsytm6w4qB
-         MzcNpZi8DV2uaFVsVZ3J+Eo+Sgg5TWqXBWJpXHlZcrYK4eIl0IZ5GwW9vSOTzmmBtJh5
-         ENKhn9uSXd808HCOo0s7iYtW05e+kGCmYKD+MwD2hRm6MLOxTdl1EIrQXIt72GrM30Um
-         YsUZh3cQ9m00dfcr0iOKh5BwI5x+OZtfc/5VuZwcQ4J16F79YN6wteVPoOUxJJIoBwjx
-         LMAA==
-X-Gm-Message-State: ACrzQf2tdQFmWGZ/Ov/5OkaiDKoNkwAUxCDmvAU1RaSYOTnMGq+8CyXi
-        Qv2ej2+tE7UzUCv8KBv/4fg=
-X-Google-Smtp-Source: AMsMyM5Awr0jJbRUWHXZ5qyYgIfGaxsEijvpVNZMKUQ+4/4fy+co78DyrzE+K9CCq9kjgWxVM8rnTw==
-X-Received: by 2002:a63:2bd4:0:b0:451:5df1:4b15 with SMTP id r203-20020a632bd4000000b004515df14b15mr42870684pgr.518.1667813580875;
-        Mon, 07 Nov 2022 01:33:00 -0800 (PST)
-Received: from mail.google.com (125-237-50-34-fibre.sparkbb.co.nz. [125.237.50.34])
-        by smtp.gmail.com with ESMTPSA id e24-20020a63db18000000b00460fbe0d75esm3768526pgg.31.2022.11.07.01.32.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Nov 2022 01:33:00 -0800 (PST)
-Date:   Mon, 7 Nov 2022 22:32:51 +1300
-From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>,
-        Slark Xiao <slark_xiao@163.com>,
-        Rongguang Wei <weirongguang@kylinos.cn>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        paulo.miguel.almeida.rodenas@gmail.com
-Subject: [PATCH] [next] drm/amdgpu: Replace 1-element array with
- flexible-array member
-Message-ID: <Y2jQw6ve83Bvb/D9@mail.google.com>
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7fwJYLTPxSL8RBLmYfxs82yq/hSniUHLwdjhPd9wCOs=;
+        b=Q58EDsWPCPtx/Ody0YRFIKy7w4c81vRF/RQnscQ7Va3SfuPfKU6/srDn20dVpMmIV5
+         Irbv1sZcewvDF4AXeFYcrosj0QIHelQ0OU2maSVJqTtD4Ym09jL/d1CTmF7UUsj5fEVt
+         xJSumHBnv9M/XcOmRVmbTcF6YkgMfZJf4Ah8mg4NGXxNtUq9aXCcj/QtNZdH7EEWemiF
+         hJv3LMV6GNnpyE75+Q9VMMlKtQAdfZKAMY+Hllbvf3l9PBIHng5s7mwcdGHikuyh+idF
+         pvgeZYiw4sjH6cxCvZZrSmJwDUku+/MXGl4a3GghKpMkeBi5uXYDubezzRVUqCl/vBSk
+         BK/Q==
+X-Gm-Message-State: ACrzQf2EMEjjjgsFgzUa4XkZ+6NG/8zHZM6pulH4Vi/e4E2u2vRMS5KR
+        hk0sE84WohvsOTiLy1CJXem2ag==
+X-Google-Smtp-Source: AMsMyM5923my7UB1u31iDo/5Pz2HHBy5tm30iPqj+8fhPTicYF2tsgYra0Y/H8f2o5BmdSTFeyTbIg==
+X-Received: by 2002:a2e:924b:0:b0:26d:fe34:6dc0 with SMTP id v11-20020a2e924b000000b0026dfe346dc0mr5626825ljg.477.1667822765161;
+        Mon, 07 Nov 2022 04:06:05 -0800 (PST)
+Received: from localhost.localdomain ([194.29.137.22])
+        by smtp.gmail.com with ESMTPSA id p13-20020ac24ecd000000b0049936272173sm1200065lfr.204.2022.11.07.04.06.03
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 07 Nov 2022 04:06:04 -0800 (PST)
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+To:     linux-arm-msm@vger.kernel.org, andersson@kernel.org,
+        agross@kernel.org
+Cc:     patches@linaro.org, Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Chanho Park <chanho61.park@samsung.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v2 4/4] arm64: dts: qcom: Add device tree for Sony Xperia 10 IV
+Date:   Mon,  7 Nov 2022 13:05:37 +0100
+Message-Id: <20221107120539.12305-4-konrad.dybcio@linaro.org>
+X-Mailer: git-send-email 2.32.0 (Apple Git-132)
+In-Reply-To: <20221107120539.12305-1-konrad.dybcio@linaro.org>
+References: <20221107120539.12305-1-konrad.dybcio@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-One-element arrays are deprecated, and we are replacing them with
-flexible array members instead. So, replace one-element array with
-flexible-array member in structs _ATOM_GPIO_PIN_ASSIGNMENT,
-_ATOM_DISPLAY_OBJECT_PATH, _ATOM_DISPLAY_OBJECT_PATH_TABLE,
-_ATOM_OBJECT_TABLE and refactor the rest of the code accordingly.
+From: Konrad Dybcio <konrad.dybcio@somainline.org>
 
-Important to mention is that doing a build before/after this patch results
-in no functional binary output differences.
+Add support for Sony Xperia 10 IV, a.k.a PDX225. This device is a part
+of the SoMC SM6375 Murray platform and currently it is the only
+device based on that board, so no -common DTSI is created until (if?)
+other Murray devices appear.
 
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-routines on memcpy() and help us make progress towards globally
-enabling -fstrict-flex-arrays=3 [1].
+This commit brings support for:
+* USB (only USB2 for now)
+* Display via simplefb
 
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://github.com/KSPP/linux/issues/238
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
+To create a working boot image, you need to run:
+cat arch/arm64/boot/Image.gz arch/arm64/boot/dts/qcom/sm6375-sony-xperia-\
+murray-pdx225.dtb > .Image.gz-dtb
 
-Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+mkbootimg \
+--kernel .Image.gz-dtb \
+--ramdisk some_initrd.img \
+--pagesize 4096 \
+--base 0x0 \
+--kernel_offset 0x8000 \
+--ramdisk_offset 0x1000000 \
+--tags_offset 0x100 \
+--cmdline "SOME_CMDLINE" \
+--dtb_offset 0x1f00000 \
+--header_version 1 \
+--os_version 12 \
+--os_patch_level 2022-04 \ # or newer
+-o boot.img-sony-xperia-pdx225
+
+Then, you need to flash it on the device and get rid of all the
+vendor_boot/dtbo mess:
+
+First, you need to get rid of vendor_boot. However, the bootloader
+is utterly retarded and it will not let you neither flash nor erase it.
+There are a couple ways to handle this: you can either dd /dev/zero to
+it from Android (if you have root) or a custom recovery or from fastbootd
+(fastboot/adb reboot fastboot). You will not be able to boot Android
+images on your phone unless you lock the bootloader (fastboot oem lock)
+and restore the factory image with Xperia Companion
+Windows-and-macOS-only software.
+
+The best way so far is probably to use the second (_b) slot and flash
+mainline there. This will however require you to flash some partitions
+manually, as they are not populated from factory:
+
+(boot_b, dtbo_b, vendor_boot_b, vbmeta_b, vbmeta_system_b) - these we
+don't really care about as we nuke/replace them
+
+(dsp_b, imagefv_b, modem_b, oem_b, rdimage_b) - these you NEED to populate
+to get a successful boot on slot B, otherwise you will have limited / no
+functionality.
+
+To switch slots, simply run:
+
+fastboot --set-active=a //or =b
+
+The rest assumes you are on slot A.
+
+// You have to either pull vbmeta{"","_system"} from
+// /dev/block/bootdevice/by-name/ or build one as a part of AOSP
+fastboot --disable-verity --disable-verification flash vbmeta_b vbmeta.img
+fastboot --disable-verity --disable-verification flash vbmeta_system_b \
+vbmeta_system.img
+
+fastboot flash boot_b boot.img-sony-xperia-pdx225
+fastboot reboot fastboot // entering fastbootd
+fastboot flash vendor_boot_b emptything.img
+fastboot flash dtbo_b emptything.img
+fastboot reboot bootloader // entering bootloader fastboot
+fastboot --set-active=b
+fastboot reboot // mainline time!
+
+Where emptything.img is a tiny file that consists of 2 bytes (all zeroes),
+doing a "fastboot erase" won't cut it, the bootloader will go crazy and
+things will fall apart when it tries to overlay random bytes from an empty
+partition onto a perfectly good appended DTB.
+
+From there on you can flash new mainline builds by simply flashing
+boot.img that you create after each kernel rebuild.
+
+Signed-off-by: Konrad Dybcio <konrad.dybcio@somainline.org>
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
+Changes since v1:
+- Pick up tags
+- Move xo freq to this DTS
 
-Binary difference findings:
+ arch/arm64/boot/dts/qcom/Makefile             |  1 +
+ .../qcom/sm6375-sony-xperia-murray-pdx225.dts | 86 +++++++++++++++++++
+ 2 files changed, 87 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx225.dts
 
-	Some changes took more than a single line which changed the line
-	number parameter passed to the drm_dbg function (which leverages
-	kernel's dynamic debugging). Functionally-wise, nothing changed
-	after doing a before/after patch build.
-
-Additional one-element arrays to be changed:
-
-	There are more instances of one-element arrays to be changed but
-	I will keep patches small so they are easy to review. [and I can
-	only dedicate a few hours per day on this :-) ]
-
----
- .../gpu/drm/amd/display/dc/bios/bios_parser.c | 23 ++++++++++++-------
- drivers/gpu/drm/amd/include/atombios.h        |  8 +++----
- 2 files changed, 19 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
-index 9b8ea6e9a2b9..39dd8b2dc254 100644
---- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
-+++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
-@@ -138,7 +138,9 @@ static uint8_t get_number_of_objects(struct bios_parser *bp, uint32_t offset)
- 
- 	uint32_t object_table_offset = bp->object_info_tbl_offset + offset;
- 
--	table = GET_IMAGE(ATOM_OBJECT_TABLE, object_table_offset);
-+	table = ((ATOM_OBJECT_TABLE *) bios_get_image(&bp->base,
-+				object_table_offset,
-+				struct_size(table, asObjects, 1)));
- 
- 	if (!table)
- 		return 0;
-@@ -166,8 +168,9 @@ static struct graphics_object_id bios_parser_get_connector_id(
- 	uint32_t connector_table_offset = bp->object_info_tbl_offset
- 		+ le16_to_cpu(bp->object_info_tbl.v1_1->usConnectorObjectTableOffset);
- 
--	ATOM_OBJECT_TABLE *tbl =
--		GET_IMAGE(ATOM_OBJECT_TABLE, connector_table_offset);
-+	ATOM_OBJECT_TABLE *tbl = ((ATOM_OBJECT_TABLE *) bios_get_image(&bp->base,
-+				connector_table_offset,
-+				struct_size(tbl, asObjects, 1)));
- 
- 	if (!tbl) {
- 		dm_error("Can't get connector table from atom bios.\n");
-@@ -1789,11 +1792,13 @@ static enum bp_result bios_parser_get_gpio_pin_info(
- 	if (!DATA_TABLES(GPIO_Pin_LUT))
- 		return BP_RESULT_BADBIOSTABLE;
- 
--	header = GET_IMAGE(ATOM_GPIO_PIN_LUT, DATA_TABLES(GPIO_Pin_LUT));
-+	header = ((ATOM_GPIO_PIN_LUT *) bios_get_image(&bp->base,
-+				DATA_TABLES(GPIO_Pin_LUT),
-+				struct_size(header, asGPIO_Pin, 1)));
- 	if (!header)
- 		return BP_RESULT_BADBIOSTABLE;
- 
--	if (sizeof(ATOM_COMMON_TABLE_HEADER) + sizeof(ATOM_GPIO_PIN_LUT)
-+	if (sizeof(ATOM_COMMON_TABLE_HEADER) + struct_size(header, asGPIO_Pin, 1)
- 			> le16_to_cpu(header->sHeader.usStructureSize))
- 		return BP_RESULT_BADBIOSTABLE;
- 
-@@ -1978,7 +1983,8 @@ static ATOM_OBJECT *get_bios_object(struct bios_parser *bp,
- 
- 	offset += bp->object_info_tbl_offset;
- 
--	tbl = GET_IMAGE(ATOM_OBJECT_TABLE, offset);
-+	tbl = ((ATOM_OBJECT_TABLE *) bios_get_image(&bp->base, offset,
-+				struct_size(tbl, asObjects, 1)));
- 	if (!tbl)
- 		return NULL;
- 
-@@ -2709,8 +2715,9 @@ static enum bp_result get_bracket_layout_record(
- 
- 	genericTableOffset = bp->object_info_tbl_offset +
- 		bp->object_info_tbl.v1_3->usMiscObjectTableOffset;
--	object_table = (ATOM_OBJECT_TABLE *)
--		GET_IMAGE(ATOM_OBJECT_TABLE, genericTableOffset);
-+	object_table = ((ATOM_OBJECT_TABLE *) bios_get_image(&bp->base,
-+				genericTableOffset,
-+				struct_size(object_table, asObjects, 1)));
- 	if (!object_table)
- 		return BP_RESULT_FAILURE;
- 
-diff --git a/drivers/gpu/drm/amd/include/atombios.h b/drivers/gpu/drm/amd/include/atombios.h
-index b5b1d073f8e2..55ae93c1e365 100644
---- a/drivers/gpu/drm/amd/include/atombios.h
-+++ b/drivers/gpu/drm/amd/include/atombios.h
-@@ -4386,7 +4386,7 @@ typedef struct _ATOM_GPIO_PIN_ASSIGNMENT
- typedef struct _ATOM_GPIO_PIN_LUT
- {
-   ATOM_COMMON_TABLE_HEADER  sHeader;
--  ATOM_GPIO_PIN_ASSIGNMENT   asGPIO_Pin[1];
-+  ATOM_GPIO_PIN_ASSIGNMENT   asGPIO_Pin[];
- }ATOM_GPIO_PIN_LUT;
- 
- /****************************************************************************/
-@@ -4513,7 +4513,7 @@ typedef struct  _ATOM_DISPLAY_OBJECT_PATH
-   USHORT    usSize;                                        //the size of ATOM_DISPLAY_OBJECT_PATH
-   USHORT    usConnObjectId;                                //Connector Object ID
-   USHORT    usGPUObjectId;                                 //GPU ID
--  USHORT    usGraphicObjIds[1];                            //1st Encoder Obj source from GPU to last Graphic Obj destinate to connector.
-+  USHORT    usGraphicObjIds[];                            //1st Encoder Obj source from GPU to last Graphic Obj destinate to connector.
- }ATOM_DISPLAY_OBJECT_PATH;
- 
- typedef struct  _ATOM_DISPLAY_EXTERNAL_OBJECT_PATH
-@@ -4530,7 +4530,7 @@ typedef struct _ATOM_DISPLAY_OBJECT_PATH_TABLE
-   UCHAR                           ucNumOfDispPath;
-   UCHAR                           ucVersion;
-   UCHAR                           ucPadding[2];
--  ATOM_DISPLAY_OBJECT_PATH        asDispPath[1];
-+  ATOM_DISPLAY_OBJECT_PATH        asDispPath[];
- }ATOM_DISPLAY_OBJECT_PATH_TABLE;
- 
- typedef struct _ATOM_OBJECT                                //each object has this structure
-@@ -4545,7 +4545,7 @@ typedef struct _ATOM_OBJECT_TABLE                         //Above 4 object table
- {
-   UCHAR               ucNumberOfObjects;
-   UCHAR               ucPadding[3];
--  ATOM_OBJECT         asObjects[1];
-+  ATOM_OBJECT         asObjects[];
- }ATOM_OBJECT_TABLE;
- 
- typedef struct _ATOM_SRC_DST_TABLE_FOR_ONE_OBJECT         //usSrcDstTableOffset pointing to this structure
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index b0558d3389e5..0292d116c25b 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -144,6 +144,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-samsung-w737.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-sony-xperia-seine-pdx201.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm6350-sony-xperia-lena-pdx213.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sm6375-sony-xperia-murray-pdx225.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm7225-fairphone-fp4.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-hdk.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-microsoft-surface-duo.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx225.dts b/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx225.dts
+new file mode 100644
+index 000000000000..450d4a557df1
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx225.dts
+@@ -0,0 +1,86 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2022, Konrad Dybcio <konrad.dybcio@somainline.org>
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include "sm6375.dtsi"
++#include "pmr735a.dtsi"
++
++/ {
++	model = "Sony Xperia 10 IV";
++	compatible = "sony,pdx225", "qcom,sm6375";
++	chassis-type = "handset";
++
++	chosen {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		framebuffer: framebuffer@85200000 {
++			compatible = "simple-framebuffer";
++			reg = <0 0x85200000 0 0xc00000>;
++
++			width = <1080>;
++			height = <2520>;
++			stride = <(1080 * 4)>;
++			format = "a8r8g8b8";
++			/*
++			 * That's (going to be) a lot of clocks, but it's necessary due
++			 * to unused clk cleanup & no panel driver yet
++			 */
++			clocks = <&gcc GCC_DISP_AHB_CLK>,
++				 <&gcc GCC_DISP_HF_AXI_CLK>,
++				 <&gcc GCC_DISP_THROTTLE_CORE_CLK>,
++				 <&gcc GCC_DISP_GPLL0_DIV_CLK_SRC>;
++		};
++	};
++
++	reserved-memory {
++		cont_splash_mem: memory@85200000 {
++			reg = <0 0x85200000 0 0xc00000>;
++			no-map;
++		};
++
++		ramoops@ffc40000 {
++			compatible = "ramoops";
++			reg = <0 0xffc40000 0 0xb0000>;
++			record-size = <0x10000>;
++			console-size = <0x60000>;
++			ftrace-size = <0x10000>;
++			pmsg-size = <0x20000>;
++			ecc-size = <16>;
++		};
++	};
++
++	vph_pwr: vph-pwr-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vph_pwr";
++		regulator-min-microvolt = <3700000>;
++		regulator-max-microvolt = <3700000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++};
++
++&tlmm {
++	gpio-reserved-ranges = <13 4>;
++};
++
++&usb_1 {
++	status = "okay";
++};
++
++&usb_1_dwc3 {
++	dr_mode = "peripheral";
++};
++
++&usb_1_hsphy {
++	status = "okay";
++};
++
++&xo_board_clk {
++	clock-frequency = <19200000>;
++};
 -- 
-2.37.3
+2.38.1
 
