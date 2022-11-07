@@ -2,55 +2,80 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 622B7C4332F
-	for <linux-hardening@archiver.kernel.org>; Mon,  7 Nov 2022 08:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4B1C43217
+	for <linux-hardening@archiver.kernel.org>; Mon,  7 Nov 2022 09:02:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229986AbiKGI4j (ORCPT
+        id S229586AbiKGJCE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 7 Nov 2022 03:56:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56404 "EHLO
+        Mon, 7 Nov 2022 04:02:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbiKGI4i (ORCPT
+        with ESMTP id S231596AbiKGJCC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 7 Nov 2022 03:56:38 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1BBF15836;
-        Mon,  7 Nov 2022 00:56:37 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9B85FB80E59;
-        Mon,  7 Nov 2022 08:56:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51FF3C433D6;
-        Mon,  7 Nov 2022 08:56:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667811395;
-        bh=mRQqDDo7h2WtOH56vRgwnhYTYbCXcOsZBM0uKXEWQ+Y=;
-        h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-        b=HIRQu2IRF9Jddq2VZbtwVA7irRrBf0ivmSk6B0iqHD9LnZkrTxqOhB9w7cDYRxxeG
-         UEjoq8H95pL9q8mW9zfyeAxwF3Qf0HezTTcaC744Z2i7FPBKs+w2nS9uPlwfdMopN2
-         XjpVI1Xf0cFru/UxK8Aeetl1LPAy9wdw9xSxg1HwZzqgvdzPdDEFgIZcFYjnwEFj7X
-         R/2yQvK+mNv9SG5Tw0g7lfkwr2jc6/V/Xq0+I4Wmaw58YknBNYf0rkSBOlbNPQKnJZ
-         SXDONxBn2MnRMiyAcm6x56dl+NrEKlioY0X/NdogX6+pFsvT6Q7JkCIDiYaNv8rlZn
-         pOinaR69fud9w==
-Message-ID: <e4e4c4f0-782b-9f89-d7a2-859c7759ca66@kernel.org>
-Date:   Mon, 7 Nov 2022 10:56:30 +0200
+        Mon, 7 Nov 2022 04:02:02 -0500
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D092A12AFA;
+        Mon,  7 Nov 2022 01:02:00 -0800 (PST)
+Received: by mail-ej1-x629.google.com with SMTP id f5so28245514ejc.5;
+        Mon, 07 Nov 2022 01:02:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cW5LkWgcRlMNKLV3GazkMSxbvLqyy3R2vB1Tb2XIh4k=;
+        b=FJtmWIUmERN0XZT6R7B0ZeZ/AZdoSIRjpHX24tLtPg4vmwpC7n0lbmli9A4ArzUdwN
+         RjvCoyOzDdt4RlQBTatgdGY6PzoivWqC2mialFJUMEZR5NSiTdXsoazK+js3Gj1H6WDw
+         +k/F/62Kt/i1N06Fb8X298f0xqPxepzkyVPnSDqC8u2C94jZP3EA1AkhgwaxmvQa5YCs
+         7ArUDSo/AL6n+Wk4itecHmVXWtIuqGgl4fSrDqITk6kj9cDjkyYYFx2tQtmrMXsfCRK/
+         5qIp548tPhscmU8YVqrmMb44IcmIzZmNfkrNwM+U3g5Q5N654YFd/xB3sMlL8kt+CAmu
+         I0Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cW5LkWgcRlMNKLV3GazkMSxbvLqyy3R2vB1Tb2XIh4k=;
+        b=GuTeWnFzX2hdN6ji+zMF30NBNQeLpkMe07pzlRsA828hGplEUb7vS7BjuRI35wonUQ
+         3H9Ix8pe+TFvvrT+R17wPpnNdwzclZu799XH2IGVBfzFoAnPS6gl0VUCJ+dZxe8GRcw2
+         IdC+L2hA2rOpLwoAYOvVYZ4cBfeLn9RVLxaroaTA3ftsKT8bXf2g7JX9c3ACUkP2W706
+         U1UVMfElEJieZhmDv4aaxG7w0tIe8UyItaAWyLIz5fTJ9+vI1FfS7/X2g/arz2NR/uVj
+         ktBgt5elTks8BZbhnAb+ZyNWLGPRu7hNUMz3xnEKb1648iembeb009pMtyxAlVRu+KfI
+         VPqA==
+X-Gm-Message-State: ACrzQf1EYeMklbzs6PcmFZvdYRoKjUqnTprdZPVUUU7h6jm6n7ClzYqm
+        YG80+9EP5iJFojo36I0OXRA=
+X-Google-Smtp-Source: AMsMyM5EN3f0b4ueU4DZk3y/oY0gnVreX+TZQctLnAwmzjUlOuqffd20LFevB1oZ2YD5YFmR7WPWIA==
+X-Received: by 2002:a17:907:3f19:b0:7a3:2317:4221 with SMTP id hq25-20020a1709073f1900b007a323174221mr46310466ejc.562.1667811719295;
+        Mon, 07 Nov 2022 01:01:59 -0800 (PST)
+Received: from [192.168.74.101] ([77.78.20.135])
+        by smtp.gmail.com with ESMTPSA id k18-20020a05640212d200b0044ef2ac2650sm3793355edx.90.2022.11.07.01.01.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Nov 2022 01:01:58 -0800 (PST)
+Message-ID: <fa8450f5-13c5-17b7-a239-768554b150e5@gmail.com>
+Date:   Mon, 7 Nov 2022 11:01:57 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: Coverity: gpmc_is_valid_waitpin(): Control flow issues
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.1
+Subject: Re: [PATCH v5 8/8] arm64: dts: qcom: sm4250: Add support for
+ oneplus-billie2
 Content-Language: en-US
-From:   Roger Quadros <rogerq@kernel.org>
-To:     coverity-bot <keescook@chromium.org>,
-        Benedikt Niedermayr <benedikt.niedermayr@siemens.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        linux-omap@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <202211041233.4D45359E7@keescook>
- <7cdf3d14-3f1b-7cd4-e8b9-e94b5359bf82@kernel.org>
-In-Reply-To: <7cdf3d14-3f1b-7cd4-e8b9-e94b5359bf82@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20221030094258.486428-1-iskren.chernev@gmail.com>
+ <20221030094258.486428-9-iskren.chernev@gmail.com>
+ <1880c054-08d9-3901-f44e-290d1fd27ed4@linaro.org>
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+In-Reply-To: <1880c054-08d9-3901-f44e-290d1fd27ed4@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -59,63 +84,69 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 07/11/2022 10:53, Roger Quadros wrote:
-> Hi Benedikt,
-> 
-> On 04/11/2022 21:33, coverity-bot wrote:
->> Hello!
+On 11/4/22 21:17, Krzysztof Kozlowski wrote:
+> On 30/10/2022 05:42, Iskren Chernev wrote:
+>> Add initial support for OnePlus Nord N100, based on SM4250. Currently
+>> working:
+>> - boots
+>> - usb
+>> - built-in flash storage (UFS)
+>> - SD card reader
 >>
->> This is an experimental semi-automated report about issues detected by
->> Coverity from a scan of next-20221104 as part of the linux-next scan project:
->> https://scan.coverity.com/projects/linux-next-weekly-scan
+>> Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
+>> ---
+>>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>>  .../boot/dts/qcom/sm4250-oneplus-billie2.dts  | 241 ++++++++++++++++++
+>>  2 files changed, 242 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/qcom/sm4250-oneplus-billie2.dts
 >>
->> You're getting this email because you were associated with the identified
->> lines of code (noted below) that were touched by commits:
->>
->>   Wed Nov 2 10:02:39 2022 -0400
->>     89aed3cd5cb9 ("memory: omap-gpmc: wait pin additions")
->>
->> Coverity reported the following:
->>
->> *** CID 1527139:  Control flow issues  (NO_EFFECT)
->> drivers/memory/omap-gpmc.c:1048 in gpmc_is_valid_waitpin()
->> 1042     	spin_unlock(&gpmc_mem_lock);
->> 1043     }
->> 1044     EXPORT_SYMBOL(gpmc_cs_free);
->> 1045
->> 1046     static bool gpmc_is_valid_waitpin(u32 waitpin)
-> 
-> We will need to change this waitpin argument to int.
-> In addition we will also need to change
-> struct gpmc_waitpin->pin and struct gpmc_setting->wait_pin
-> to int as in the code we are relying on GPMC_WAITPIN_INVALID logic which is -1.
+>> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+>> index b0558d3389e5..eb2a58b8af5f 100644
+>> --- a/arch/arm64/boot/dts/qcom/Makefile
+>> +++ b/arch/arm64/boot/dts/qcom/Makefile
+>> @@ -142,6 +142,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-xiaomi-polaris.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-shift-axolotl.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-samsung-w737.dtb
+>> +dtb-$(CONFIG_ARCH_QCOM)	+= sm4250-oneplus-billie2.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-sony-xperia-seine-pdx201.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= sm6350-sony-xperia-lena-pdx213.dtb
+>>  dtb-$(CONFIG_ARCH_QCOM)	+= sm7225-fairphone-fp4.dtb
+>> diff --git a/arch/arm64/boot/dts/qcom/sm4250-oneplus-billie2.dts b/arch/arm64/boot/dts/qcom/sm4250-oneplus-billie2.dts
+>> new file mode 100644
+>> index 000000000000..a3f1c7c41fd7
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/sm4250-oneplus-billie2.dts
+>> @@ -0,0 +1,241 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+>> +/*
+>> + * Copyright (c) 2021, Iskren Chernev <iskren.chernev@gmail.com>
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include "sm4250.dtsi"
+>> +
+>> +/ {
+>> +	model = "OnePlus Nord N100";
+>> +	compatible = "oneplus,billie2", "qcom,sm4250";
+>> +
+>> +	/* required for bootloader to select correct board */
+>> +	qcom,msm-id = <0x1a1 0x10000 0x1bc 0x10000>;
+>> +	qcom,board-id = <0x1000b 0x00>;
+>
+> These are currently not allowed for SM4250. If there are really needed,
+> please justify it and update
+> Documentation/devicetree/bindings/arm/qcom.yaml. Then also update
+> include/dt-bindings/arm/qcom,ids.h and socinfo driver.
 
-Another alternative with less churn is to leave them as u32
-but make GPMC_WAITPIN_INVALID set to a large positive number.
+I'm having some trouble with testing this ATM. If this is the only patch
+with remaining complaints, the rest can be merged (because there is other
+work prepped for 4250/6115 that depends on it), and once billie2 is figured
+out it could be merged separately.
 
-> 
->> 1047     {
->> vvv     CID 1527139:  Control flow issues  (NO_EFFECT)
->> vvv     This greater-than-or-equal-to-zero comparison of an unsigned value is always true. "waitpin >= 0U".
->> 1048     	return waitpin >= 0 && waitpin < gpmc_nr_waitpins;
->> 1049     }
->> 1050
->> 1051     static int gpmc_alloc_waitpin(struct gpmc_device *gpmc,
->> 1052     			      struct gpmc_settings *p)
->> 1053     {
->>
->> If this is a false positive, please let us know so we can mark it as
->> such, or teach the Coverity rules to be smarter. If not, please make
->> sure fixes get into linux-next. :) For patches fixing this, please
->> include these lines (but double-check the "Fixes" first):
->>
->> Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
->> Addresses-Coverity-ID: 1527139 ("Control flow issues")
->> Fixes: 89aed3cd5cb9 ("memory: omap-gpmc: wait pin additions")
->>
->> Thanks for your attention!
->>
-> 
+> Best regards,
+> Krzysztof
 
-cheers,
--roger
+Regards,
+Iskren
