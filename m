@@ -2,55 +2,55 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92396C43219
-	for <linux-hardening@archiver.kernel.org>; Mon,  7 Nov 2022 12:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E54BFC433FE
+	for <linux-hardening@archiver.kernel.org>; Mon,  7 Nov 2022 12:10:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231510AbiKGMGN (ORCPT
+        id S231978AbiKGMKK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 7 Nov 2022 07:06:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35912 "EHLO
+        Mon, 7 Nov 2022 07:10:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231909AbiKGMGK (ORCPT
+        with ESMTP id S231590AbiKGMJ7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 7 Nov 2022 07:06:10 -0500
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E82981ADA9
-        for <linux-hardening@vger.kernel.org>; Mon,  7 Nov 2022 04:06:06 -0800 (PST)
-Received: by mail-lj1-x230.google.com with SMTP id s24so15871215ljs.11
-        for <linux-hardening@vger.kernel.org>; Mon, 07 Nov 2022 04:06:06 -0800 (PST)
+        Mon, 7 Nov 2022 07:09:59 -0500
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63508B46
+        for <linux-hardening@vger.kernel.org>; Mon,  7 Nov 2022 04:09:56 -0800 (PST)
+Received: by mail-lj1-x234.google.com with SMTP id l8so15890005ljh.13
+        for <linux-hardening@vger.kernel.org>; Mon, 07 Nov 2022 04:09:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7fwJYLTPxSL8RBLmYfxs82yq/hSniUHLwdjhPd9wCOs=;
-        b=eNG5odUUZT/n1tr5yqQZC6T3QwCCwVLAmgTDbU/akb+2DvO3QvYe/oFNWzU12fZfpE
-         s0Pg7oU/gDE4POELloFenmtszTdtjjJ34d8tv9THiDsqyzxK4My2JWwtdYCAz0TmpC0K
-         FXMQGttSsIsw69ndc6oa9Qk5bMsktC3Zu3o6XJZA8eGlFLNMmLnAobykYF/sjCnGoJFE
-         tt+U7iQHhxlwhfeWJ3jKtVkVraSKvpFU7AjPg9ROOBNUbxD1l+o2Jg9SELO6TF650e4l
-         03+N4RQaY33M+KBgO+OVGUhOs2nCRpZALTg3Bdx8VEsN46wQaih51uJLXYs7f7orR78f
-         k9fQ==
+        bh=AxKWVOswdBco5ma866B6Lf4pSuG2XDt8/IH4jcoYTSQ=;
+        b=jmAhlMLKWKm2L2oRzwVLoe/YclTG857LI5aHsp4261khfuvRx867Kd4EyOHyfjq4e1
+         YSzoHEeHnP7b6TbUEkcB48FwaedLYR7Fd7KOoS3MPQDLLJq9EG/cwS11IjopccNSIBIc
+         vnC5HJ9Sw0H7fLMl3SlZ255iHxW7xZW/UyF4hcgJ/7XXdNCcAf5DUoSGF3DmYKKuXGUP
+         k1HlljnYPkHC4w6ldXkjCDbh5F/YeS7ysdaUDCJRw+ipeI8CO7S8YpqOa7xvoIr9uQym
+         4AsTKxo6iCCoEF8NnYXJLFtaJKiBaFkIH9x0w/Jnr4BgqUciegje2Xnk+iBJJy8SKGF3
+         sv+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7fwJYLTPxSL8RBLmYfxs82yq/hSniUHLwdjhPd9wCOs=;
-        b=Q58EDsWPCPtx/Ody0YRFIKy7w4c81vRF/RQnscQ7Va3SfuPfKU6/srDn20dVpMmIV5
-         Irbv1sZcewvDF4AXeFYcrosj0QIHelQ0OU2maSVJqTtD4Ym09jL/d1CTmF7UUsj5fEVt
-         xJSumHBnv9M/XcOmRVmbTcF6YkgMfZJf4Ah8mg4NGXxNtUq9aXCcj/QtNZdH7EEWemiF
-         hJv3LMV6GNnpyE75+Q9VMMlKtQAdfZKAMY+Hllbvf3l9PBIHng5s7mwcdGHikuyh+idF
-         pvgeZYiw4sjH6cxCvZZrSmJwDUku+/MXGl4a3GghKpMkeBi5uXYDubezzRVUqCl/vBSk
-         BK/Q==
-X-Gm-Message-State: ACrzQf2EMEjjjgsFgzUa4XkZ+6NG/8zHZM6pulH4Vi/e4E2u2vRMS5KR
-        hk0sE84WohvsOTiLy1CJXem2ag==
-X-Google-Smtp-Source: AMsMyM5923my7UB1u31iDo/5Pz2HHBy5tm30iPqj+8fhPTicYF2tsgYra0Y/H8f2o5BmdSTFeyTbIg==
-X-Received: by 2002:a2e:924b:0:b0:26d:fe34:6dc0 with SMTP id v11-20020a2e924b000000b0026dfe346dc0mr5626825ljg.477.1667822765161;
-        Mon, 07 Nov 2022 04:06:05 -0800 (PST)
+        bh=AxKWVOswdBco5ma866B6Lf4pSuG2XDt8/IH4jcoYTSQ=;
+        b=m6E43Ch4+imy1igxb4a3KnOyJGRuJTC5RD5D6L6U498JSN3ORN+DL5xlZhYUuVZkyP
+         DLj0j78Ac9U60VfF6DOe2zP2Lb4rhfmbibYXp4pqadNDwbob3Uyqmtg0Zjh7S2Io/Qax
+         am66ufliPFLlPftj/mTlZ6vqvY5gFAXWQ8Q0n3fkbY+TM8R/OijJZPI8yNqNzYoGY1zy
+         K+7Vdb6hqKGov2GdCDj/nuSm/OKTvt//7UA1OPTGw3nLLMT+dpUBQi5DuS04ivIJ21IL
+         HtByWHZJFzvDzxJQyPgNH90OpLIzkluq1/DmJ5URqd/QM5uG8CgoNwk22t9mmwvsRyL0
+         eEmw==
+X-Gm-Message-State: ACrzQf2AGXGyfN2Tn1E37yovZRFmc5SUE0yCg7MgGNe6z+6nb1OCW8gO
+        wyyTLmhsT7O7qTCt8m7fwzF1sw==
+X-Google-Smtp-Source: AMsMyM7S/PSn5TZVi5GtjxfZrpsY7HoYZwinRMq7G0i1mRqfmZEuMUkrWSB9imGJumnH7MIIbD+yJQ==
+X-Received: by 2002:a2e:834c:0:b0:277:24e1:7b80 with SMTP id l12-20020a2e834c000000b0027724e17b80mr16375564ljh.302.1667822994621;
+        Mon, 07 Nov 2022 04:09:54 -0800 (PST)
 Received: from localhost.localdomain ([194.29.137.22])
-        by smtp.gmail.com with ESMTPSA id p13-20020ac24ecd000000b0049936272173sm1200065lfr.204.2022.11.07.04.06.03
+        by smtp.gmail.com with ESMTPSA id p13-20020ac24ecd000000b004a608ec6d8csm1219723lfr.27.2022.11.07.04.09.53
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 07 Nov 2022 04:06:04 -0800 (PST)
+        Mon, 07 Nov 2022 04:09:54 -0800 (PST)
 From:   Konrad Dybcio <konrad.dybcio@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, andersson@kernel.org,
         agross@kernel.org
@@ -61,20 +61,23 @@ Cc:     patches@linaro.org, Konrad Dybcio <konrad.dybcio@somainline.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Vinod Koul <vkoul@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
+        Luca Weiss <luca@z3ntu.xyz>,
         Chanho Park <chanho61.park@samsung.com>,
         Thierry Reding <treding@nvidia.com>,
+        Iskren Chernev <iskren.chernev@gmail.com>,
+        Stephan Gerhold <stephan.gerhold@kernkonzept.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Kees Cook <keescook@chromium.org>,
         Tony Luck <tony.luck@intel.com>,
         "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 4/4] arm64: dts: qcom: Add device tree for Sony Xperia 10 IV
-Date:   Mon,  7 Nov 2022 13:05:37 +0100
-Message-Id: <20221107120539.12305-4-konrad.dybcio@linaro.org>
+Subject: [PATCH RESEND v3 4/4] arm64: dts: qcom: Add device tree for Sony Xperia 10 IV
+Date:   Mon,  7 Nov 2022 13:09:19 +0100
+Message-Id: <20221107120920.12593-4-konrad.dybcio@linaro.org>
 X-Mailer: git-send-email 2.32.0 (Apple Git-132)
-In-Reply-To: <20221107120539.12305-1-konrad.dybcio@linaro.org>
-References: <20221107120539.12305-1-konrad.dybcio@linaro.org>
+In-Reply-To: <20221107120920.12593-1-konrad.dybcio@linaro.org>
+References: <20221107120920.12593-1-konrad.dybcio@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -166,8 +169,8 @@ Signed-off-by: Konrad Dybcio <konrad.dybcio@somainline.org>
 Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-Changes since v1:
-- Pick up tags
+Changes since v2:
+- Add second S-o-b
 - Move xo freq to this DTS
 
  arch/arm64/boot/dts/qcom/Makefile             |  1 +
