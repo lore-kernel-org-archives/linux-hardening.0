@@ -2,75 +2,111 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC05C43217
-	for <linux-hardening@archiver.kernel.org>; Mon,  7 Nov 2022 08:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFC5C433FE
+	for <linux-hardening@archiver.kernel.org>; Mon,  7 Nov 2022 08:54:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231169AbiKGIZ5 (ORCPT
+        id S231408AbiKGIx7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 7 Nov 2022 03:25:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38774 "EHLO
+        Mon, 7 Nov 2022 03:53:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230263AbiKGIZ4 (ORCPT
+        with ESMTP id S231448AbiKGIx7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 7 Nov 2022 03:25:56 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E94813F7A;
-        Mon,  7 Nov 2022 00:25:56 -0800 (PST)
+        Mon, 7 Nov 2022 03:53:59 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FC3C5F6C;
+        Mon,  7 Nov 2022 00:53:58 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9EB0060F2D;
-        Mon,  7 Nov 2022 08:25:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1820C433D6;
-        Mon,  7 Nov 2022 08:25:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E0C5460F49;
+        Mon,  7 Nov 2022 08:53:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5760AC433C1;
+        Mon,  7 Nov 2022 08:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667809555;
-        bh=BgvfSDSm1KzNyxI29x4rNw5VHuvwCpeNH5GsLnzFpWM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hebR34ZdME225oyD8T0lUlNi/yquuSWbZqGGPugMTfQsGWJVLUpv/v1ndpgbUYuNn
-         UnlKQKHLrmocbOS8m9KFpY8MaFf66n/TfGubmxKrWqkO3EvI4eQH/oOC6Z1lx5av2J
-         avi4vMWYwNQ/qRbBO21wZx+H8HLPWIrSJ81cPVbDK/2Zq7ScKt+ueAx7WMB5d4Wy+s
-         H2/WLqX0CIog5fFOV+outYWTm4XCoz0nDMZSUGPTJdBx8Wj/xlb4UQB9iv100ZhGYX
-         ixCHOALz6c81yn4UyBdF3Z+k6ExiYWDGbW5Uaw0bXvRNwbOyayusD+jMjVs3RRIubS
-         IojL+C6Uf/rJg==
-Date:   Mon, 7 Nov 2022 08:25:46 +0000
-From:   Lee Jones <lee@kernel.org>
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Cc:     agross@kernel.org, andersson@kernel.org,
-        konrad.dybcio@somainline.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, ulf.hansson@linaro.org,
-        srinivas.kandagatla@linaro.org, jic23@kernel.org, lars@metafoo.de,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        bhupesh.sharma@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-hardening@vger.kernel.org, marijn.suijten@somainline.org,
-        kernel@collabora.com, luca@z3ntu.xyz, a39.skl@gmail.com
-Subject: Re: [PATCH 6/9] dt-bindings: mfd: qcom,tcsr: Add compatible for
- MSM8976
-Message-ID: <Y2jBCh0PI/2uhVH9@google.com>
-References: <20221104172122.252761-1-angelogioacchino.delregno@collabora.com>
- <20221104172122.252761-7-angelogioacchino.delregno@collabora.com>
+        s=k20201202; t=1667811237;
+        bh=MkGqyvrlKZCyXWKRmtTmz66/zHNHcStkTmoWNHfjow0=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=m3uI7jARqaZ3dTske6Q8K75F79f36XLSAdpj4g0a4dY6EN4VBldLunb4bhEhYkU7k
+         VzoqAZMgr/xVZBpCCtq2e2TJEiYmxNpDxgC1dDq/X5peXL6YKRn0t7U0Vb7Y9iPFf0
+         ubWO1kzNSfbPGXo0hfjnUegDhstaltL6sqVYRixhsbKePiObtc76/ppoBIn8HQbDoA
+         6NX7AMUatoyB2fXlTWz4pXkUepETr+MaiDMqbjcuJgly8viRFNQYWpGrRNlRyDig+r
+         YFFbTFQBYrSPbg+2iRWZF/HZaNjwTp2Vmn5Qx7QITRzEaOmkKrN8aUuryYgmZgg4Ms
+         XeazdZG51CWpw==
+Message-ID: <7cdf3d14-3f1b-7cd4-e8b9-e94b5359bf82@kernel.org>
+Date:   Mon, 7 Nov 2022 10:53:52 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221104172122.252761-7-angelogioacchino.delregno@collabora.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: Coverity: gpmc_is_valid_waitpin(): Control flow issues
+Content-Language: en-US
+To:     coverity-bot <keescook@chromium.org>,
+        Benedikt Niedermayr <benedikt.niedermayr@siemens.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        linux-omap@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <202211041233.4D45359E7@keescook>
+From:   Roger Quadros <rogerq@kernel.org>
+In-Reply-To: <202211041233.4D45359E7@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 04 Nov 2022, AngeloGioacchino Del Regno wrote:
+Hi Benedikt,
 
-> Document the qcom,msm8976-tcsr compatible.
+On 04/11/2022 21:33, coverity-bot wrote:
+> Hello!
 > 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->  Documentation/devicetree/bindings/mfd/qcom,tcsr.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> This is an experimental semi-automated report about issues detected by
+> Coverity from a scan of next-20221104 as part of the linux-next scan project:
+> https://scan.coverity.com/projects/linux-next-weekly-scan
+> 
+> You're getting this email because you were associated with the identified
+> lines of code (noted below) that were touched by commits:
+> 
+>   Wed Nov 2 10:02:39 2022 -0400
+>     89aed3cd5cb9 ("memory: omap-gpmc: wait pin additions")
+> 
+> Coverity reported the following:
+> 
+> *** CID 1527139:  Control flow issues  (NO_EFFECT)
+> drivers/memory/omap-gpmc.c:1048 in gpmc_is_valid_waitpin()
+> 1042     	spin_unlock(&gpmc_mem_lock);
+> 1043     }
+> 1044     EXPORT_SYMBOL(gpmc_cs_free);
+> 1045
+> 1046     static bool gpmc_is_valid_waitpin(u32 waitpin)
 
-Applied, thanks.
+We will need to change this waitpin argument to int.
+In addition we will also need to change
+struct gpmc_waitpin->pin and struct gpmc_setting->wait_pin
+to int as in the code we are relying on GPMC_WAITPIN_INVALID logic which is -1.
 
--- 
-Lee Jones [李琼斯]
+> 1047     {
+> vvv     CID 1527139:  Control flow issues  (NO_EFFECT)
+> vvv     This greater-than-or-equal-to-zero comparison of an unsigned value is always true. "waitpin >= 0U".
+> 1048     	return waitpin >= 0 && waitpin < gpmc_nr_waitpins;
+> 1049     }
+> 1050
+> 1051     static int gpmc_alloc_waitpin(struct gpmc_device *gpmc,
+> 1052     			      struct gpmc_settings *p)
+> 1053     {
+> 
+> If this is a false positive, please let us know so we can mark it as
+> such, or teach the Coverity rules to be smarter. If not, please make
+> sure fixes get into linux-next. :) For patches fixing this, please
+> include these lines (but double-check the "Fixes" first):
+> 
+> Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+> Addresses-Coverity-ID: 1527139 ("Control flow issues")
+> Fixes: 89aed3cd5cb9 ("memory: omap-gpmc: wait pin additions")
+> 
+> Thanks for your attention!
+> 
+
+cheers,
+-roger
