@@ -2,150 +2,78 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 958B7C4332F
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Nov 2022 16:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D64C6C4332F
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Nov 2022 17:22:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233453AbiKHQVS (ORCPT
+        id S234317AbiKHRWv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Nov 2022 11:21:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54390 "EHLO
+        Tue, 8 Nov 2022 12:22:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232035AbiKHQVS (ORCPT
+        with ESMTP id S234286AbiKHRWt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Nov 2022 11:21:18 -0500
-Received: from FRA01-PR2-obe.outbound.protection.outlook.com (mail-eopbgr120043.outbound.protection.outlook.com [40.107.12.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C2D4A1AE
-        for <linux-hardening@vger.kernel.org>; Tue,  8 Nov 2022 08:21:17 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gjYSKQukEEkhz/uyqcRv76kdu7xoO1OWlDRMazfzNGTy6tbEPchkuHQCVKHbU1J8ODWh0FG7Hw4hia06FyfIjFMRZ7rJVOqVWYsMItaj90MzLgnLRmtnbkEHKxNtGsWoOOxyNJB04NzpfTCdXR5KZqZndEIv1wn9tsdkcTsY5rUNUdj5RlTPJBVZ4QiRkvyldGcnKeNE5N5P1+HEq2qXQ+wR8sPlP6IDzArwhqT1dMLTIiaaB8o9UAMbgzcahiwwmxB5vEX8hqFZUWo/J03uijEFfJU6JY0KBg1fTsD+Jl4p7mRDkGzOxLFZU0z2rpm+iZDjbxT2cAbW8uJZhv/NSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6E9qn1C4R1YgXAUqtJ+sn/5pbpZGPfzky6Fi1ijJEKs=;
- b=IpmBuQ0K01mk7Woq6lbjir+YaHT8rbPDpQGsKGvnxHjKdZsedKOCdtf6Jc+AMUP8RgvdOYTnULI+FNsO0JY2J2Y6pjeoOHkwks17Gw13Lxo28quQoT8eMxd4Y+vgPJy4u+mhSu3nXHiEYXh7vssjUjtzaZRTStmHkWguDApeBr1wFhyl2ciAfhrGZN3GUp7QJnpgTR6QFzltZk1bMsnddtTTKJQFVunYDdA++8kXZT7+5jcIfpKbkVROHw4sCxa+hWFFn4leMuaA/OV+0bB1csauxDXv6qBs0Aqcb+wfc80aziVrerkNOi3yvzOoVnodUKM3bhj0md+hDVUE7MBPHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=csgroup.eu; dmarc=pass action=none header.from=csgroup.eu;
- dkim=pass header.d=csgroup.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=csgroup.eu;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6E9qn1C4R1YgXAUqtJ+sn/5pbpZGPfzky6Fi1ijJEKs=;
- b=5Gp1mgMAXRuBDlHcKmrrIGgAmtKEZOaPUkEkt5GIn6Ljz7hiP8G3gmt/CdwvcBVw3pklw8WtQJosOs2JwoE3v3zp91qXlbAqLy4boiqkA3yzbRhFWstjbu7gKJ+vKAChQeSMScq/a2DVuYTrqH7gfvNGrDNc+F7JGRMneCrPpIgB9fnW4RsbinPeU3H/ZmEDVPenFGYhOclqcfaD0g1oBUQGzggqcKd2rCg/HmKiC75NHlkCfeDhTf12I/26/TvihKNkgH1uViiacZmA1GXWlFEeylBEo/kfX8rLKzS9aIdH+MiURU85cuzFv5h+xvG3HJdJL/Wr57ex1ZDDIdLaUQ==
-Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:31::15)
- by MRZP264MB2119.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:16::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.25; Tue, 8 Nov
- 2022 16:21:12 +0000
-Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
- ([fe80::a85b:a9b6:cb36:fa6]) by MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
- ([fe80::a85b:a9b6:cb36:fa6%9]) with mapi id 15.20.5791.027; Tue, 8 Nov 2022
- 16:21:12 +0000
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-To:     Andrew Donnellan <ajd@linux.ibm.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-CC:     "ruscur@russell.cc" <ruscur@russell.cc>,
-        "cmr@bluescreens.de" <cmr@bluescreens.de>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [RFC PATCH 4/6] powerpc/powernv: Convert pointers to physical
- addresses in OPAL call args
-Thread-Topic: [RFC PATCH 4/6] powerpc/powernv: Convert pointers to physical
- addresses in OPAL call args
-Thread-Index: AQHY8HLhUOD02tuTL0SfL+2VpYWDu641O1SA
-Date:   Tue, 8 Nov 2022 16:21:12 +0000
-Message-ID: <dd4e0dc1-1e5a-4408-6af0-4bf321f38ed4@csgroup.eu>
-References: <20221104172737.391978-1-ajd@linux.ibm.com>
- <20221104172737.391978-5-ajd@linux.ibm.com>
-In-Reply-To: <20221104172737.391978-5-ajd@linux.ibm.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=csgroup.eu;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MRZP264MB2988:EE_|MRZP264MB2119:EE_
-x-ms-office365-filtering-correlation-id: e419b213-e4e8-4f76-d190-08dac1a5406c
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hEKLthw9BQN/J66ZX93XrRBA71WlbrwTf4YN0bto+cmnYAuyIoqjhyywOxhb/bDulYmUh47PBYnn6eJTpzTAc4sUfsHPfED46G7ZgR/kKQOmNablR+ITq9ZyRprH8w6U27aLu5jmMSuRvP5n4TC8/g/dNVPAI22EnGzGLs8wt45blD367Z7IzMoQLJ/WzqYytucD5Ax4IOfn9G51qo14aKtv+vRg4jl2sXy6o4+ZK47KoRjeD2fpOVSW26wIEAxGOdjMne/rfoDWAsH5UQySoMgSv+O+bk3jpmDkuxUbUVkjfrQfZkS4wgUGEOmwB3N1CAEvCHLdOTGt9DLptybtGZq7JOJgxErk96OsuNlLSmfm08WfnXtbyrehiwcQgWLb1SOvCcMd/6+hJt5pYcf+L6dl1LPLH9txzw8pU+wYhb+kst5DsBoFJTkvR9YYePqskQWWPyHTDruLhiUuZ99qpIJhVKBRHidiA6no0GjHkrD7tOc7cedeLCkATO3myY5f46ayqr2VcjeCKkmNpkjEpNPGz2F7QyES8ops+VP5dXvuE0LDpkpm/VLtjnM2obtDjDIvbvjEpb3osB29vjmQL01vQTW2bLvlwXXNv57w3T5M4ngp3T36Qop4DbRRT6UTrxkRCo/iqzb2Komc9TbSaGjXoyHGhzUV5WBBdmv4PRfbM6jcGAWfEWihJZW4d0+2sixuvt0/cnulO2TJdcQl4yjuzXA3Hvh3rjQ+JKnoCDzz1z/SqS9DsKOaeF2VN7JLKhTZgrJ6XF9oknG4mg+S5ZckZW19UmHEB0GPsZF8/o1oGX79dVI6/L8oRTuAlQfhxx/h30ROsmEQMKuOTeq6hg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(396003)(136003)(39860400002)(366004)(346002)(451199015)(2906002)(66946007)(8936002)(4326008)(316002)(66476007)(44832011)(66446008)(8676002)(478600001)(91956017)(76116006)(6486002)(110136005)(38070700005)(71200400001)(64756008)(41300700001)(66556008)(5660300002)(122000001)(186003)(31696002)(38100700002)(6506007)(86362001)(2616005)(6512007)(26005)(31686004)(54906003)(36756003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MDNCSml2Zk0wSE9jd3NTTDM1cXYxcU56aWRVZ3pFVEpHMGFIbHRTb01OY0VR?=
- =?utf-8?B?dEYvelRkbXdkb1RkYVVxZ0RwdVAwQ0kxTFd1Rm5YckluWHNOZDBUZndxcFNz?=
- =?utf-8?B?cHY2bVNSNXBjdmtiQXV4d3lLVEhyT21jQzdCdElmbHhrMVIvWjF1ZEtTQzAz?=
- =?utf-8?B?M0VPVlVCNTdYMU5iNUJRSFRVOGIvbmlSOWxCcit6Zk4ySUlvWkdHaXR5SWs5?=
- =?utf-8?B?QWpsaVBxVTUyTi9FTk9RS3FDTU9OTFlnN0txV0cva0sxL3VsaXpnY1J6RUsx?=
- =?utf-8?B?dFZ5bmdqTFVubHNsMzY2bWRpeGxieUIveFpQUEE5bkF5UzNScHdhL3RuNEsv?=
- =?utf-8?B?SXNHcE4vR214eE9VL0RvZGtJRWFZeDB0cGZtVHNIcVV1WGJHemtJTEhtb0F6?=
- =?utf-8?B?SWs0SllITldIUWZXS3hmMzdsbjk5ZXBOL25Hb2FNSlhJZjQybHEwd2tzU2U5?=
- =?utf-8?B?SkxRa002SEx1QVk5VTF1T0l4K0NuRDRsTDBUMnM4eHBSUTdLV05JWWoyc1Iz?=
- =?utf-8?B?ak5TZk8vU1U3aU15akI5UTdza3lTeS9yb0xRaG1FQ0dsR2E5eGFmNkJlakcv?=
- =?utf-8?B?N3Z6RmxjRExxdmdYSERidmFQQlBub1g1VzdxVXh6K0VCWUZSSWhtMUxpVGtZ?=
- =?utf-8?B?RlJHemE3bWFVZDVvdldIVXYwR2NIOUN4WUV1NHdTaG4vVkgxcVVyUUZIWGlS?=
- =?utf-8?B?SklueFVpVzBNV0dyN2FkSjJhR0huT2xBT1lESU9XSVhITVh0Z01KazF2WVRU?=
- =?utf-8?B?YUxwQlJYaHo4UXBUK242bHpiRlZUVEtvc3ZFMnJYQnZBemFUS0d2RjVwN2FE?=
- =?utf-8?B?U3J3NFp3bjE2OHZIOWhzbVAyRTdpNGs4Z2VQQURqNHY5RWYrczZBUmRlZ29L?=
- =?utf-8?B?SlRpY1lXd3FCalg4ZlJUS0p0cmpudStGczhGb2YreW5naS92YTN4YlV1aHhk?=
- =?utf-8?B?TDJOaHNyMUpaU3hjU09FQVlyOGRiOUVqSVhvczBjUXZhYzhlU242RlQrTWph?=
- =?utf-8?B?ZUhwVlNQMVhPcGN5WEVrS3VLVVNTcW5GVkdXMFA5QytZQ2FNUFRoYUp2VVl2?=
- =?utf-8?B?dWJQVC9pK1diVnE4ak9nTXcyTlMyS1c0U2xWQlhTTDg3WFdXbEFxWTlORXpG?=
- =?utf-8?B?SExyZnNYWW1QSHhzWnZyWDBJNnIzbzBiU3Yxcmh5WjNQMWZCNHBpdnVHZnhZ?=
- =?utf-8?B?c0tEREZPd2dlb3pIRDM5a2xYQitLUWdtblU5Y3ZVRWplb1VnZmk0SXF1Z2pz?=
- =?utf-8?B?Rk1UM1BJcTFuVVc3NklMaE1ncnU1bGRxT0lPOWl0QUpjOUFHL2JOSXZ2SU9L?=
- =?utf-8?B?cW4yb1h3RlRIRk1GYWRlY2lpSFYweHN2ZHZnV3BDclMxNW91MFRJMDU5blQr?=
- =?utf-8?B?WEFTUmVtaTRQNUIyd1UzbDgwdTZzM010dkxlNm1RZ010R1IyWldqK3hiTEhO?=
- =?utf-8?B?cktOSitrQVA0TjJ3SG9zZXg5UWlYWHBUWHZXOGFxUElMZ3hmUnhSNEdCT01q?=
- =?utf-8?B?bDdBUzBLOWNMa1pybU9LRXlZMS9GcURLdnhnb2pndmxDTnBIWWVEaU1ySDJV?=
- =?utf-8?B?OE13c2N0eXRkeXBqZXhvSHRCdHhlcGZ0cHVHZUhEWkRlcThnV3pKdUhsS1Q5?=
- =?utf-8?B?QzNoRFREd3pHWk9CWU1xcFo4MDMxQzUvNmtUS245QWNGVzEwYnUrNC9NcjVi?=
- =?utf-8?B?WkxqRDhsUTBKN3JLRjBsOEtnSW8wb21sbVNlb280ZDBOazhCQXJvK0F4UE8v?=
- =?utf-8?B?TXBlSHE0dEFBM1lLaUVnVENQbFIrWDZteTM2Mm52OVU2M3g4TklrVklGRy9X?=
- =?utf-8?B?ZkYzOXJ1RkcySi81ZExRYTJQZmZXM1dmaWRHQzVaTUszYW1aNVplM0tobC9l?=
- =?utf-8?B?alVpQWtmS2lIOFZVdEJQR284R05xUGQxT2Q3Y3QvRFNuMGFVU1djVWVSbEk1?=
- =?utf-8?B?dmx2MFNtYTF1THllRnMwTEoyelFndDQvRG8vRzRHQXlER1QwZ3pPeUlWcWJX?=
- =?utf-8?B?TDgvT25BUndBVzVQTVFHUm1PQmE0T0RjQVkwZks2UUFOSzNvQ2Zsd0I2VHpj?=
- =?utf-8?B?NW5jMTFodEU2ak84ZlgzaEphNlAyc1JoSXNIRm05M0tkc0VHZzdLeUFmSTNh?=
- =?utf-8?B?MmdSWVkvSkNuOUFBd1lIVHBYRDlFa2dlcVJsZzg1TzloeGlPbFhzb3hzWURC?=
- =?utf-8?Q?XWWuttoNviYDqS+BJbDLmCw=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BDA0C764F9F87E46A3141567EC29B115@FRAP264.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+        Tue, 8 Nov 2022 12:22:49 -0500
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DC75115C
+        for <linux-hardening@vger.kernel.org>; Tue,  8 Nov 2022 09:22:49 -0800 (PST)
+Received: by mail-pg1-x52e.google.com with SMTP id h193so13934453pgc.10
+        for <linux-hardening@vger.kernel.org>; Tue, 08 Nov 2022 09:22:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lMk4PVCi8MpYMDkTe7xjdobh7931rVJKCrHxnRJEZ/s=;
+        b=hH8t9+Espo0GrgedJ9kMDPtH/SwZJLvzS42Mpnzj25bSeGNKWC/KhRsX+Bk5RGBoYh
+         GS89jcjEhdmZQCZmsXftPjQPRRk67Sp6/5ZHG3Enccq5LOmxhTx1Wil+jM384G6zHYUE
+         HEAuY+LA8P/URl4U6jup79JIboPvC9ydZMpHg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lMk4PVCi8MpYMDkTe7xjdobh7931rVJKCrHxnRJEZ/s=;
+        b=myHaozS3UtYZwPOzbYweo7BiSvSt+N0fd9fg0ZjORrecJQ4pViTBEFaw4lFXC1GV7s
+         4/RMJ6u6MgYygOXt8fGS3/7qxt1VzDIEXG4BelQ0h845GGJyEcXBha+ZGaTwZ+k4SY61
+         AhUincyUhd2LR/OhhuziNJotN+s8RhOEA9rfhCe60bivtVoG3w2zoKIaUb+mXJRggHRO
+         2nJlUiHuQzQgwJH47KSRVAZF99IHK11XSZVZj+oc9uxmpaTytIYklPrweS8zhrR1nSo5
+         WYgHKr1Wuv35qlfn1C+JJEiqLUDGjXWmSKEsgLRjsmYbmxHPVnVYYppPICPCvh5pEcBW
+         fTVQ==
+X-Gm-Message-State: ACrzQf2OejtPaf0ziFcusjCp1FCG41TM3KFTptvlmEVAswVW/fgufjma
+        PwW6wOXpy0qOOPpXyFtGw5u0HQ==
+X-Google-Smtp-Source: AMsMyM4Ab4Kr0QUaf2x7BxJa/AITAVTNdya0GPA8aZCXQG+csEC+UsBcfir62wN3+d9ly4DUl+wEDQ==
+X-Received: by 2002:a05:6a02:282:b0:439:7a97:ccd with SMTP id bk2-20020a056a02028200b004397a970ccdmr49560686pgb.297.1667928168583;
+        Tue, 08 Nov 2022 09:22:48 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i2-20020a170902c94200b001869394a372sm7241421pla.201.2022.11.08.09.22.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Nov 2022 09:22:47 -0800 (PST)
+Date:   Tue, 8 Nov 2022 09:22:47 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     linux-hardening@vger.kernel.org,
+        kernel-hardening@lists.openwall.com,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Seth Jenkins <sethjenkins@google.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] exit: Put an upper limit on how often we can oops
+Message-ID: <202211080922.8B4A9A16AA@keescook>
+References: <20221107201317.324457-1-jannh@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: csgroup.eu
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: e419b213-e4e8-4f76-d190-08dac1a5406c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2022 16:21:12.0516
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 9914def7-b676-4fda-8815-5d49fb3b45c8
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dBVWA7qahBLJ8DpQK/SyBAUWRzqF4n4jSCiXwHQQttxeDxUeHpPul7iPYvJabZCoMRJeaIzonehpo0QAGEeTQlZRZybuQCYkVjjY2Usj7Ig=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MRZP264MB2119
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221107201317.324457-1-jannh@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-DQoNCkxlIDA0LzExLzIwMjIgw6AgMTg6MjcsIEFuZHJldyBEb25uZWxsYW4gYSDDqWNyaXTCoDoN
-Cj4gQSBudW1iZXIgb2YgT1BBTCBjYWxscyB0YWtlIGFkZHJlc3NlcyBhcyBhcmd1bWVudHMgKGUu
-Zy4gYnVmZmVycyB3aXRoDQo+IHN0cmluZ3MgdG8gcHJpbnQsIGV0YykuIFRoZXNlIGFkZHJlc3Nl
-cyBuZWVkIHRvIGJlIHBoeXNpY2FsIGFkZHJlc3NlcywgYXMNCj4gT1BBTCBydW5zIGluIHJlYWwg
-bW9kZS4NCj4gDQo+IFNpbmNlIHRoZSBoYXJkd2FyZSBpZ25vcmVzIHRoZSB0b3AgdHdvIGJpdHMg
-b2YgdGhlIGFkZHJlc3MgaW4gcmVhbCBtb2RlLA0KPiBwYXNzaW5nIGFkZHJlc3NlcyBpbiB0aGUg
-a2VybmVsJ3MgbGluZWFyIG1hcCB3b3JrcyBmaW5lIGV2ZW4gaWYgd2UgZG9uJ3QNCj4gd3JhcCB0
-aGVtIGluIF9fcGEoKS4NCj4gDQo+IFdpdGggVk1BUF9TVEFDSywgaG93ZXZlciwgd2UncmUgZ29p
-bmcgdG8gaGF2ZSB0byB1c2Ugdm1hbGxvY190b19waHlzKCkgdG8NCj4gY29udmVydCBhZGRyZXNz
-ZXMgZnJvbSB0aGUgc3RhY2sgaW50byBhbiBhZGRyZXNzIHRoYXQgT1BBTCBjYW4gdXNlLg0KDQoN
-CkkgdGhpbmsgeW91IHNob3VsZCB0aGVuIGF2b2lkIHVzaW5nIHRoZSBzdGFjayBmb3IgYWxsIHRo
-b3NlIHBhcmFtZXRlcnMuIA0KSXQgc2hvdWxkIGJlIGhhbmRsZWQganVzdCBsaWtlIERNQSBpbiBk
-cml2ZXJzIDogRG9uJ3QgdXNlIHRoZSBzdGFjaywgdXNlIA0Ka21hbGxvYyBtZW1vcnkgaW5zdGVh
-ZC4NCg0KPiANCj4gSW50cm9kdWNlIGEgbmV3IG1hY3JvLCBzdGFja19wYSgpLCB0aGF0IHVzZXMg
-dm1hbGxvY190b19waHlzKCkgZm9yDQo+IGFkZHJlc3NlcyBpbiB0aGUgdm1hbGxvYyBhcmVhLCBh
-bmQgX19wYSgpIGZvciBsaW5lYXIgbWFwIGFkZHJlc3Nlcy4gQWRkIGl0DQo+IHRvIGFsbCB0aGUg
-ZXhpc3RpbmcgY2FsbHNpdGVzIHdoZXJlIHdlIHBhc3MgcG9pbnRlcnMgdG8gT1BBTC4NCg0KWW91
-IHNob3VsZCBhdm9pZCB0aGF0LiBJbnN0ZWFkLCBqdXN0IHVzZSBrbWFsbG9jIGZvciBsb2NhbCBk
-YXRhLiBJZiANCnRoYXQncyBkYXRhIHlvdSBnZXQgZnJvbSBvdXRzaWRlIHRoZSBmdW5jdGlvbiwg
-dXNlIGttZW1kdXAoKS4NCg0KQ2hyaXN0b3BoZQ==
+On Mon, Nov 07, 2022 at 09:13:17PM +0100, Jann Horn wrote:
+> @Kees should this go through your tree? (After waiting a while for
+> the inevitable bikeshedding on whether the default limit should be closer
+> to 10000 or 2^31.)
+
+Sure, yeah. I can take it.
+
+-- 
+Kees Cook
