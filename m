@@ -2,185 +2,87 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08F1C43219
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Nov 2022 09:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE414C433FE
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Nov 2022 09:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233343AbiKHJG7 (ORCPT
+        id S233584AbiKHJ0N convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Nov 2022 04:06:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59634 "EHLO
+        Tue, 8 Nov 2022 04:26:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233654AbiKHJGv (ORCPT
+        with ESMTP id S233103AbiKHJ0M (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Nov 2022 04:06:51 -0500
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 423281D665;
-        Tue,  8 Nov 2022 01:06:50 -0800 (PST)
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 5A4366602339;
-        Tue,  8 Nov 2022 09:06:47 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1667898408;
-        bh=ueI+2JlJ8usQR2qw2C5uUQ8cXmpDFvzCuDuDhHJLK6k=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=Cdl0yXa75sc5uC9OZZNK8dJnq9kBEwkNsoj/Xag2CA0BWHRCUKt4WkSQMHUQ845GQ
-         saCu/BmwHKUDjX7dn4NleewUVVhHWtTsR8WSm5WXIfxx2xOUoxwp70wTprD5nYUmo5
-         5BJ0TWZqFPHIn4b3mG5h7SGb4ECS+0OMpVq+TJ1cLXqEdgshDQgaYE2P5ALSeD4xP5
-         zTaVLgDl2apypZen3F4dFpFNCUUGqR8WlZeAO95Iv3UDSAUsP0xnf/SuKzkYV6SACG
-         sHlvSzh5tLzdSkKXc6tSR6WEabp5Rkoh+6NZf6Qa82pTabMR+oE+Zz59tLNSjjBH4N
-         8aZJaOk6t1UcA==
-Message-ID: <b99a3071-0982-a1bd-f3b9-14e2a8fdd904@collabora.com>
-Date:   Tue, 8 Nov 2022 10:06:45 +0100
+        Tue, 8 Nov 2022 04:26:12 -0500
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E974286CE
+        for <linux-hardening@vger.kernel.org>; Tue,  8 Nov 2022 01:26:11 -0800 (PST)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-275-iyhD-bNnNIqZzr0HEwK7vA-1; Tue, 08 Nov 2022 09:26:08 +0000
+X-MC-Unique: iyhD-bNnNIqZzr0HEwK7vA-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Tue, 8 Nov
+ 2022 09:26:07 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.042; Tue, 8 Nov 2022 09:26:07 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Jann Horn' <jannh@google.com>, Kees Cook <keescook@chromium.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>
+CC:     Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Seth Jenkins <sethjenkins@google.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] exit: Put an upper limit on how often we can oops
+Thread-Topic: [PATCH] exit: Put an upper limit on how often we can oops
+Thread-Index: AQHY8uVtJeqm4QnZJEegjt8nfpQUG640wW1Q
+Date:   Tue, 8 Nov 2022 09:26:06 +0000
+Message-ID: <3e2f7e2cb4f6451a9ef5d0fb9e1f6080@AcuMS.aculab.com>
+References: <20221107201317.324457-1-jannh@google.com>
+In-Reply-To: <20221107201317.324457-1-jannh@google.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: [PATCH 8/9] arm64: dts: qcom: Add DTS for MSM8976 and MSM8956
- SoCs
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Language: en-US
-To:     Bjorn Andersson <andersson@kernel.org>
-Cc:     agross@kernel.org, konrad.dybcio@somainline.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        lee@kernel.org, ulf.hansson@linaro.org,
-        srinivas.kandagatla@linaro.org, jic23@kernel.org, lars@metafoo.de,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        bhupesh.sharma@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-hardening@vger.kernel.org, marijn.suijten@somainline.org,
-        kernel@collabora.com, luca@z3ntu.xyz, a39.skl@gmail.com,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@somainline.org>
-References: <20221104172122.252761-1-angelogioacchino.delregno@collabora.com>
- <20221104172122.252761-9-angelogioacchino.delregno@collabora.com>
- <20221108045508.hnnwt22m6ceg5u4y@builder.lan>
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20221108045508.hnnwt22m6ceg5u4y@builder.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Il 08/11/22 05:55, Bjorn Andersson ha scritto:
-> On Fri, Nov 04, 2022 at 06:21:21PM +0100, AngeloGioacchino Del Regno wrote:
->> From: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
->>
->> This commit adds device trees for MSM8956 and MSM8976 SoCs.
->> They are *almost* identical, with minor differences, such as
->> MSM8956 having two A72 cores less.
->>
->> However, there is a bug in Sony Loire bootloader that requires presence
->> of all 8 cores in the cpu{} node, so these will not be deleted.
->>
->> Co-developed-by: Konrad Dybcio <konrad.dybcio@somainline.org>
->> Signed-off-by: Konrad Dybcio <konrad.dybcio@somainline.org>
->> Co-developed-by: Marijn Suijten <marijn.suijten@somainline.org>
->> Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
->> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
->> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
-Hello,
-
-Thanks to everyone for the feedback!
-I'll send a new version this Friday, according to the received reviews.
-
-In the meanwhile, a few answers will follow, check below.
-
->> ---
->>   arch/arm64/boot/dts/qcom/msm8956.dtsi |   18 +
->>   arch/arm64/boot/dts/qcom/msm8976.dtsi | 1208 +++++++++++++++++++++++++
->>   2 files changed, 1226 insertions(+)
->>   create mode 100644 arch/arm64/boot/dts/qcom/msm8956.dtsi
->>   create mode 100644 arch/arm64/boot/dts/qcom/msm8976.dtsi
->>
-
-..snip..
-
->> +		cpu-map {
->> +			cluster0 {
->> +				core0 {
->> +					cpu = <&CPU0>;
->> +				};
->> +
->> +				core1 {
->> +					cpu = <&CPU1>;
->> +				};
->> +
->> +				core2 {
->> +					cpu = <&CPU2>;
->> +				};
->> +
->> +				core3 {
->> +					cpu = <&CPU3>;
->> +				};
->> +			};
->> +
->> +			cluster1 {
+From: Jann Horn
+> Sent: 07 November 2022 20:13
 > 
-> Are you sure that the two clusters should be expressed separately in the
-> cpu-map?
+> Many Linux systems are configured to not panic on oops; but allowing an
+> attacker to oops the system **really** often can make even bugs that look
+> completely unexploitable exploitable (like NULL dereferences and such) if
+> each crash elevates a refcount by one or a lock is taken in read mode, and
+> this causes a counter to eventually overflow.
 > 
-
-This SoC has two clusters with split L2 cache, can shutdown one cluster CPU, or
-the L2 cache for one cluster, or one entire cluster, hence can also manage idle
-states on a per-cluster basis.
-
-Also, as per bindings/cpu/cpu-topology.txt - I am here describing the hierarchy
-of CPUs in MSM8976, containing one "little" cluster, composed of four slower CPU
-cores and its own L2 cache slice, and one "big" cluster, composed of four (8976)
-or two (8956) faster CPU cores and its own L2 cache slice.
-
-That said, I am sure that the two clusters shall be expressed separately.
-
-Am I underestimating and/or ignoring anything?
-
->> +				core0 {
->> +					cpu = <&CPU4>;
->> +				};
->> +
-
-..snip..
-
->> +
->> +	reserved-memory {
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +		ranges;
->> +
->> +		cont_splash_mem: memory@83000000 {
+> The most interesting counters for this are 32 bits wide (like open-coded
+> refcounts that don't use refcount_t). (The ldsem reader count on 32-bit
+> platforms is just 16 bits, but probably nobody cares about 32-bit platforms
+> that much nowadays.)
 > 
-> memory is "reserved", please use specific node names for these regions.
-> 
+> So let's panic the system if the kernel is constantly oopsing.
 
-Agreed.
+I think you are pretty much guaranteed to run out of memory
+(or at least KVA) before any 32bit counter wraps.
 
->> +			reg = <0x0 0x83000000 0x0 0x2800000>;
->> +		};
-> [..]
->> +		apcs: syscon@b011000 {
->> +			compatible = "syscon";
-> 
-> Why not use qcom,msm8976-apcs-kpss-global here?
-> 
+That is probably even harder to diagnose than a refcount wrap!
 
-There's no reason not to use the suggested compatible. I'm sorry for the miss.
+	David
 
->> +			reg = <0x0b011000 0x1000>;
->> +		};
-> [..]
->> +
->> +		imem: imem@8600000 {
->> +			compatible = "simple-mfd";
-> 
-> sram/qcom,imem.yaml please.
-> 
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-Will do on v2.
-
-Regards,
-Angelo
