@@ -2,87 +2,126 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE414C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Nov 2022 09:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF408C43219
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Nov 2022 09:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233584AbiKHJ0N convert rfc822-to-8bit (ORCPT
+        id S233683AbiKHJj4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Nov 2022 04:26:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43650 "EHLO
+        Tue, 8 Nov 2022 04:39:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233103AbiKHJ0M (ORCPT
+        with ESMTP id S233805AbiKHJjx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Nov 2022 04:26:12 -0500
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E974286CE
-        for <linux-hardening@vger.kernel.org>; Tue,  8 Nov 2022 01:26:11 -0800 (PST)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-275-iyhD-bNnNIqZzr0HEwK7vA-1; Tue, 08 Nov 2022 09:26:08 +0000
-X-MC-Unique: iyhD-bNnNIqZzr0HEwK7vA-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Tue, 8 Nov
- 2022 09:26:07 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.042; Tue, 8 Nov 2022 09:26:07 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Jann Horn' <jannh@google.com>, Kees Cook <keescook@chromium.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>
-CC:     Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Seth Jenkins <sethjenkins@google.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] exit: Put an upper limit on how often we can oops
-Thread-Topic: [PATCH] exit: Put an upper limit on how often we can oops
-Thread-Index: AQHY8uVtJeqm4QnZJEegjt8nfpQUG640wW1Q
-Date:   Tue, 8 Nov 2022 09:26:06 +0000
-Message-ID: <3e2f7e2cb4f6451a9ef5d0fb9e1f6080@AcuMS.aculab.com>
-References: <20221107201317.324457-1-jannh@google.com>
-In-Reply-To: <20221107201317.324457-1-jannh@google.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 8 Nov 2022 04:39:53 -0500
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E8A62715B
+        for <linux-hardening@vger.kernel.org>; Tue,  8 Nov 2022 01:39:51 -0800 (PST)
+Received: by mail-lf1-x136.google.com with SMTP id g7so20447921lfv.5
+        for <linux-hardening@vger.kernel.org>; Tue, 08 Nov 2022 01:39:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kSwog5ERxG3EokF124vpEbubj3vdn0vtr+WUZpZ5SIc=;
+        b=gdeDy+kVAls2tF3+8sTJ9fVAWpvclXEl/RcjTan6GjLB1bEPXlpzRWWD0uXdzu1vWt
+         A9zjjA8AiNshAQJha7dQq6pslJ8AKFoE61X7ry6GdgkBi2l4ef4jJJzdChn12qckcqBV
+         S4w7wKz4e0ZYehkm8WUcCsJW+M94nMoOJ17Ae872c1lt7U9O+H1W25wcR6hYUffJYNVg
+         YSnT8wyAo6SF7rmfLLi/6kMhx6zIBVZW7Wo1At5CiBc/vF+C1ceE0ejDpJo1rhNoNMGO
+         n/nQCb8A1WmlLy8/+dN7yL8k85KRYFzmKVWRtZbfj3/PLlqvIGQ9NAgMMEh4oxjBa0qs
+         31Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kSwog5ERxG3EokF124vpEbubj3vdn0vtr+WUZpZ5SIc=;
+        b=ReFR9fDYIrDrpDXjrny7EyS7NwgtuMOq63O9W4Nr5fOYo2gFufrz9tNUXtbK2XPkbw
+         28MCyR/WSV3xcZdHLmih2ZB4bkiX8PRXDZ6TmoH5hJIUjiUWJFdrLXpymaOiWNw1kGoc
+         7l2nLHjBOSkVVYpgPYKEL27GkwAmL6AsxdrxRnhaYUA3y2LJQboDmeMqYRc94duydh0Y
+         SymKtpnp2sXGb8sI4TlS7YH7yv0dxKlPO7sTLWyi+puleqeSsgy68ECWhzgRSX6gsuhh
+         PM2msji3mxS+eSAQ0p1HFm4kyqIFc1TEh2PNfZSLK5Gmd9ol4lKku6VRvQsYgmLxXy8P
+         KoQQ==
+X-Gm-Message-State: ACrzQf0ZBe0tQcG9zO2KX/x2QaUEVY/Fn7lFQgp4gTkA+v7rBiTQgDap
+        miG/Yka+DcrXx3xWNEuJsxsTi4P/9D/YYw==
+X-Google-Smtp-Source: AMsMyM6aCyd7GLTchlaoL+Cpdzc6zcZSwGdB4+XrqFm7lPITXo+4Eqv8OHH2Ff2W8eeXs7CVhE7+RA==
+X-Received: by 2002:a19:dc48:0:b0:4a8:d24b:d78 with SMTP id f8-20020a19dc48000000b004a8d24b0d78mr20399524lfj.351.1667900389861;
+        Tue, 08 Nov 2022 01:39:49 -0800 (PST)
+Received: from [192.168.0.20] (088156142199.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.199])
+        by smtp.gmail.com with ESMTPSA id t3-20020a19ad03000000b004a459799bc3sm1700025lfc.283.2022.11.08.01.39.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Nov 2022 01:39:49 -0800 (PST)
+Message-ID: <32f42513-0c55-042e-2530-c58d980a9ce0@linaro.org>
+Date:   Tue, 8 Nov 2022 10:39:48 +0100
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: Coverity: gpmc_is_valid_waitpin(): Control flow issues
 Content-Language: en-US
+To:     "Niedermayr, BENEDIKT" <benedikt.niedermayr@siemens.com>,
+        "rogerq@kernel.org" <rogerq@kernel.org>,
+        "keescook@chromium.org" <keescook@chromium.org>
+Cc:     "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
+        "tony@atomide.com" <tony@atomide.com>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+References: <202211041233.4D45359E7@keescook>
+ <7cdf3d14-3f1b-7cd4-e8b9-e94b5359bf82@kernel.org>
+ <e4e4c4f0-782b-9f89-d7a2-859c7759ca66@kernel.org>
+ <b18cddde778ada5030f6a80308854cf9c0dc4d23.camel@siemens.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <b18cddde778ada5030f6a80308854cf9c0dc4d23.camel@siemens.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Jann Horn
-> Sent: 07 November 2022 20:13
-> 
-> Many Linux systems are configured to not panic on oops; but allowing an
-> attacker to oops the system **really** often can make even bugs that look
-> completely unexploitable exploitable (like NULL dereferences and such) if
-> each crash elevates a refcount by one or a lock is taken in read mode, and
-> this causes a counter to eventually overflow.
-> 
-> The most interesting counters for this are 32 bits wide (like open-coded
-> refcounts that don't use refcount_t). (The ldsem reader count on 32-bit
-> platforms is just 16 bits, but probably nobody cares about 32-bit platforms
-> that much nowadays.)
-> 
-> So let's panic the system if the kernel is constantly oopsing.
+On 08/11/2022 09:02, Niedermayr, BENEDIKT wrote:
+> On Mon, 2022-11-07 at 10:56 +0200, Roger Quadros wrote:
+>>
+>> On 07/11/2022 10:53, Roger Quadros wrote:
+>>> Hi Benedikt,
+>>>
+>>> On 04/11/2022 21:33, coverity-bot wrote:
+>>>> Hello!
+>>>>
+>>>> This is an experimental semi-automated report about issues detected by
+>>>> Coverity from a scan of next-20221104 as part of the linux-next scan project:
+>>>> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fscan.coverity.com%2Fprojects%2Flinux-next-weekly-scan&amp;data=05%7C01%7Cbenedikt.niedermayr%40siemens.com%7C1a25cc8704524f24224108dac09dfab7%7C38ae3bcd95794fd4addab42e1495d55a%7C1%7C0%7C638034081994087461%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=W1KlBKg9nwEDfFAbqW6Jw7v1d46HQLj8RX8wlZ9RHyc%3D&amp;reserved=0
+>>>>
+>>>> You're getting this email because you were associated with the identified
+>>>> lines of code (noted below) that were touched by commits:
+>>>>
+>>>>   Wed Nov 2 10:02:39 2022 -0400
+>>>>     89aed3cd5cb9 ("memory: omap-gpmc: wait pin additions")
+>>>>
+>>>> Coverity reported the following:
+>>>>
+>>>> *** CID 1527139:  Control flow issues  (NO_EFFECT)
+>>>> drivers/memory/omap-gpmc.c:1048 in gpmc_is_valid_waitpin()
+>>>> 1042     	spin_unlock(&gpmc_mem_lock);
+>>>> 1043     }
+>>>> 1044     EXPORT_SYMBOL(gpmc_cs_free);
+>>>> 1045
+>>>> 1046     static bool gpmc_is_valid_waitpin(u32 waitpin)
+>>>
+>>> We will need to change this waitpin argument to int.
+>>> In addition we will also need to change
+>>> struct gpmc_waitpin->pin and struct gpmc_setting->wait_pin
+>>> to int as in the code we are relying on GPMC_WAITPIN_INVALID logic which is -1.
+>>
+>> Another alternative with less churn is to leave them as u32
+>> but make GPMC_WAITPIN_INVALID set to a large positive number.
+> Ok, I will fix that. 
+> Do I need to send a new fix-patch on top the current patch series? 
+> Or should I just send only the bugfix-patch for the coverity-bot? 
+>
 
-I think you are pretty much guaranteed to run out of memory
-(or at least KVA) before any 32bit counter wraps.
+A bugfix patch on current next is ok.
 
-That is probably even harder to diagnose than a refcount wrap!
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Best regards,
+Krzysztof
 
