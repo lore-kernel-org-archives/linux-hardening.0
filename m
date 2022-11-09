@@ -2,67 +2,61 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3816C43219
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Nov 2022 20:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B713C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Nov 2022 20:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231947AbiKIUBD (ORCPT
+        id S231996AbiKIUBF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Nov 2022 15:01:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51066 "EHLO
+        Wed, 9 Nov 2022 15:01:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231996AbiKIUBA (ORCPT
+        with ESMTP id S232007AbiKIUBA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Wed, 9 Nov 2022 15:01:00 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23BF213D75
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D1C12F00C
         for <linux-hardening@vger.kernel.org>; Wed,  9 Nov 2022 12:00:56 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id k5so17694509pjo.5
+Received: by mail-pj1-x1033.google.com with SMTP id m6-20020a17090a5a4600b00212f8dffec9so2979118pji.0
         for <linux-hardening@vger.kernel.org>; Wed, 09 Nov 2022 12:00:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=t5tPw3hkeTB324+bIPHjvhZ9LhWv7TTl0XHczdtESK4=;
-        b=I1GTcHYtB8YdG9fl2OaQqVeKR34nKD1YdPrA64q7FsG6q2E6ffr69kJwfJMMOkJ/Sr
-         odbQT5/HnpjggIyr9lMyFcumFpexhjb75nlj49y0dOhZmmrVi8y1b7uZXbpqcg4Su2oy
-         nGrJzVFszBPQAQCAgRJRuuX+U+mRLq4h+Zkgs=
+        bh=ro0afIwumapgwWvmG1YsaLR3d/PQtiJimII64ZaFtl0=;
+        b=Bj6yZrGQoXcj6tNclOshbH3J9egAhjRfmkDStPVklR9XEa2v3+3RdklXH8z9cfK7y6
+         PPcmlkc0mboBMbnoQZtz+vYF6J+Wi51E/b/I8emu9c/PT+P5E72HPuJEYseo44GJfTjC
+         LNoK4lTry2eXlMd8D+D4AHavtEoQuosMVMq10=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=t5tPw3hkeTB324+bIPHjvhZ9LhWv7TTl0XHczdtESK4=;
-        b=vMdSiueo4cT3Ixze5kvKk40b9iwPdUkXCR6RzRzokDBFxEgxYubpLnJai1TlEI/WiJ
-         rCAR1ms1/+i+9PIB1kfDd4Dn4RQljjeblGzJFztKe22sMfkotwyE83GkLBX9WT20U+Wr
-         8RQOPCpsmS30dctAPaqG00QT6PNWnIUESCZqR2E1pvHcSxhvPXvNBeiKGCiemiyKAiVA
-         zeb/muixSj8p/EAGvtnhHQahAhj7PHHVUjepUKIIPd2RLbRog6Ej4Qfn5PLLKV7C8tFL
-         0sJX0cx3z9W207iYLbLp+heW443+qoYSe3z60IbR+b+2VtQwLf2Q5u/rsDA9W7VBPkGU
-         +fCw==
-X-Gm-Message-State: ACrzQf1LcuvkWPhHeG8CNESp8JH3g+TRSDrwOF8/5G55JdnU0DsrPwL6
-        o7Y132prpUkwTmfHHMZfZ+gsXQ==
-X-Google-Smtp-Source: AMsMyM5SANqY078orgX6dY68ZUWThz6OawQG+ENCYzuNrVVACjjBb7dQsTuNuerSN/q+uZVcLFc7gQ==
-X-Received: by 2002:a17:903:40d2:b0:186:6f1d:608c with SMTP id t18-20020a17090340d200b001866f1d608cmr63246987pld.52.1668024055366;
+        bh=ro0afIwumapgwWvmG1YsaLR3d/PQtiJimII64ZaFtl0=;
+        b=gDiqcS3Xg3sB5P2Ag3KZLvm1F75YSCuxJQNroZWCpEiU799r0h7nXp2sMMurYEtDaH
+         IwQHRjiaE0GrCuN7QxX78I4Ouj1Pi+gsI3xRrmu4ilLaSALuHfXNfiiiyiFnNzh0Tl2Y
+         xcZj54VtbJlk9/4KDT1U9pW2+c7J32M9U5U/Q/R7EMX1CIGur6zRf99fCWpGhTjrrXbt
+         S++a5ja7xoqQBC4x/COdp80lhDtYlfGjdcEQkq5sCHvx+XPi45nkxPAbwkSyg1fg41Xp
+         I6bF7Mz8sC3xRNgjm3IGln2tIfDwhme8ZhcWtqS/yn4e6qdsIYm2gEdlcyYjLtBE8OJe
+         3hNQ==
+X-Gm-Message-State: ACrzQf1IzmR8hwIS3v547EJHIL+emzkHjRHnYt1/flqnVisn8M/lLSt+
+        izc9P2w2L4vcsVSUa/4uJnuC2w==
+X-Google-Smtp-Source: AMsMyM6s+8KZY3HwZ2NBLRKmVoBPCut+WPXxEXFmTLrSqQTqHLCi1hv7jT0ImlockAyWwGGLZF71bw==
+X-Received: by 2002:a17:902:edd5:b0:187:1e83:8b96 with SMTP id q21-20020a170902edd500b001871e838b96mr54187822plk.1.1668024055895;
         Wed, 09 Nov 2022 12:00:55 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l5-20020a622505000000b0056be1581126sm8965936pfl.143.2022.11.09.12.00.52
+        by smtp.gmail.com with ESMTPSA id bf20-20020a17090b0b1400b0020ad53b5883sm1639166pjb.14.2022.11.09.12.00.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 09 Nov 2022 12:00:54 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
 To:     Jann Horn <jannh@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
+Cc:     Kees Cook <keescook@chromium.org>, Petr Mladek <pmladek@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
         tangmeng <tangmeng@uniontech.com>,
         "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-doc@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Greg KH <gregkh@linuxfoundation.org>,
         Linus Torvalds <torvalds@linuxfoundation.org>,
         Seth Jenkins <sethjenkins@google.com>,
         Andy Lutomirski <luto@kernel.org>,
@@ -84,107 +78,119 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Luis Chamberlain <mcgrof@kernel.org>,
         David Gow <davidgow@google.com>,
         "Paul E. McKenney" <paulmck@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Huang Ying <ying.huang@intel.com>,
         Anton Vorontsov <anton@enomsg.org>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Laurent Dufour <ldufour@linux.ibm.com>,
         Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
         kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v2 5/6] panic: Introduce warn_limit
-Date:   Wed,  9 Nov 2022 12:00:48 -0800
-Message-Id: <20221109200050.3400857-5-keescook@chromium.org>
+        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v2 6/6] panic: Expose "warn_count" to sysfs
+Date:   Wed,  9 Nov 2022 12:00:49 -0800
+Message-Id: <20221109200050.3400857-6-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20221109194404.gonna.558-kees@kernel.org>
 References: <20221109194404.gonna.558-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2660; h=from:subject; bh=Rm+lJ6u++jsmLEQkzPRQ5ICHP8+KAUDhfRVS5zjHPJE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjbAbwcHBlBplI6+7kNyZcKwP+Sml/277Z4LaSTf0u 9eRZjBiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY2wG8AAKCRCJcvTf3G3AJh1aD/ 9xflRviDrYBqPld0yVa3h4GYZgnj9k/BudvGLDeZgQ06918EaiTlebzGcxbEnFK/Au8S4maFKSwALy TFXCJWRYa99rQHPpbupXdfXoEa5jCKoNbrmLRQfssWJeQK8sCfP2uSAsDa7MVpgHm3DdjJrDhPsGcj IKq2X6+Bp8tvNslJm2CGJGLmdxv8catsbbA4u3nnxUyVoC4TSGDGnT/0qgrcmjnzD7FgJ/0zzWkS/z JO9QWa92/1FFddRhRdTYL4i/Zb8DcTUf1Zs/FFAPPy2YVN5nDMdBZmnRfHu8MRnhCV6EvaIATcF1mv hzaDeqIB5a6IHWQt1o3fkIhnTClQpvKn5KGSbt3WdCQL3UIvDQyDPPb7SkleOAHv7JUtDilQwn0CI/ ITPXTBIFuT9wcUQISWWb5hK2LsGhlqoIVigQx1I35f+TLjd13Jb9Kw8BuOuFKWyY9jxsBKl0t7g5VQ 7RpZubqS/13Dn6lCOtASVrfQ4hBlefUop5zVkeIOa1td6YoKFEgu0wNjV19haFm/xfZLZkEbIkafel yZHFuA5KEjrUh9vxzO6KXOhJv9bya2JKJ37BPoZCdFEPtjynjSfxcICwraUUOg8KX06Yz/OVFnktJa GgDhFRMJXgvpB4ir9DCwhcXC2BmPk900nMHvxiJUihERg0jE+/9VpX8wHjIg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3046; h=from:subject; bh=crjf/DqHlmowr17FD7/hL69h8FPT+JeC7P8wT4Sy3y8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjbAbwTj82NH1mVc/BdwILXJUeaZUer5Kuv1KXHcsT gLf80RyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY2wG8AAKCRCJcvTf3G3AJqs9D/ 44ACl1LNxgKhWqINCpUTjTgHQ0kvWjIPxs52zdEdrIVDv2BZZ/DhUpxrcC730QQtcJ6F7xe3UlmePB 3hKgSYaj13nxQyS3P9cvMUtbFrQj7cCWQ8v2Q4xYikQw5hnl76PZNNLk9JRzNurPZykchYWXpIrXDt yPp0o/bmBoaDGuwOBGLA3ZcGPZgVtS3734GCjfABnwjPchjreV8dXC7sLPVxx1MAcgHOKuqoYRTcfZ sqZKqkLm9KLO/nZ5dm5UtR/R6AljYC5Y1uxCfYNkicYlrzReWZefDGPaBPR/ZQ68eDwIUiGSi8G9cz 6S9Jy7hFaGQGgsxyLMJQwKOVFoLDLpm6q2HbyNVp2Cenh5utpS6/TVtvR9OqFo+7w1UPBi0z1Hczye 6qKolXHZNNv70gNEN8fXOJGu0vqBZAEaSYp5YvkGnnymFY5tMIOG2FM+dJ1Rh3eFx1KoKh5/8uWgLP zR9Vl5PP3Wi27coL560UkZve06uP7FO8GZnRBiPLpOxZw7AGp1jlCAXOn28uBrDybJAvFxZt1W5emj 6AfqaB0D26hF55T8TAlhjp8jtR0Nk247ofFgCq/h7fshmRCFK94izJo05cL5SWAJFlphsHH6pYPpk/ 9L8qhMC3W+qJVj26D2+kYfHGTR7ruMYJ2UqU1p94HQJ4R8tORQAiouOk+uWA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Like oops_limit, add warn_limit for limiting the number of warnings when
-panic_on_warn is not set.
+Since Warn count is now tracked and is a fairly interesting signal, add
+the entry /sys/kernel/warn_count to expose it to userspace.
 
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Eric Biggers <ebiggers@google.com>
-Cc: Huang Ying <ying.huang@intel.com>
 Cc: Petr Mladek <pmladek@suse.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: tangmeng <tangmeng@uniontech.com>
 Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
 Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-doc@vger.kernel.org
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- Documentation/admin-guide/sysctl/kernel.rst |  9 +++++++++
- kernel/panic.c                              | 13 +++++++++++++
- 2 files changed, 22 insertions(+)
+ .../ABI/testing/sysfs-kernel-warn_count       |  6 +++++
+ MAINTAINERS                                   |  1 +
+ kernel/panic.c                                | 22 +++++++++++++++++--
+ 3 files changed, 27 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-warn_count
 
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index 09f3fb2f8585..c385d5319cdf 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -1508,6 +1508,15 @@ entry will default to 2 instead of 0.
- 2 Unprivileged calls to ``bpf()`` are disabled
- = =============================================================
- 
-+
-+warn_limit
-+==========
-+
-+Number of kernel warnings after which the kernel should panic when
-+``panic_on_warn`` is not set. Setting this to 0 or 1 has the same effect
-+as setting ``panic_on_warn=1``.
-+
-+
- watchdog
- ========
- 
+diff --git a/Documentation/ABI/testing/sysfs-kernel-warn_count b/Documentation/ABI/testing/sysfs-kernel-warn_count
+new file mode 100644
+index 000000000000..08f083d2fd51
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-kernel-warn_count
+@@ -0,0 +1,6 @@
++What:		/sys/kernel/oops_count
++Date:		November 2022
++KernelVersion:	6.2.0
++Contact:	Linux Kernel Hardening List <linux-hardening@vger.kernel.org>
++Description:
++		Shows how many times the system has Warned since last boot.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0a1e95a58e54..282cd8a513fd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11107,6 +11107,7 @@ L:	linux-hardening@vger.kernel.org
+ S:	Supported
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
+ F:	Documentation/ABI/testing/sysfs-kernel-oops_count
++F:	Documentation/ABI/testing/sysfs-kernel-warn_count
+ F:	include/linux/overflow.h
+ F:	include/linux/randomize_kstack.h
+ F:	mm/usercopy.c
 diff --git a/kernel/panic.c b/kernel/panic.c
-index 3afd234767bc..b235fa4a6fc8 100644
+index b235fa4a6fc8..ddf0f8956d6e 100644
 --- a/kernel/panic.c
 +++ b/kernel/panic.c
-@@ -58,6 +58,7 @@ bool crash_kexec_post_notifiers;
- int panic_on_warn __read_mostly;
- unsigned long panic_on_taint;
- bool panic_on_taint_nousertaint = false;
-+static unsigned int warn_limit __read_mostly = 10000;
+@@ -32,6 +32,7 @@
+ #include <linux/bug.h>
+ #include <linux/ratelimit.h>
+ #include <linux/debugfs.h>
++#include <linux/sysfs.h>
+ #include <trace/events/error_report.h>
+ #include <asm/sections.h>
  
- int panic_timeout = CONFIG_PANIC_TIMEOUT;
- EXPORT_SYMBOL_GPL(panic_timeout);
-@@ -88,6 +89,13 @@ static struct ctl_table kern_panic_table[] = {
- 		.extra2         = SYSCTL_ONE,
- 	},
+@@ -107,6 +108,25 @@ static __init int kernel_panic_sysctls_init(void)
+ late_initcall(kernel_panic_sysctls_init);
  #endif
-+	{
-+		.procname       = "warn_limit",
-+		.data           = &warn_limit,
-+		.maxlen         = sizeof(warn_limit),
-+		.mode           = 0644,
-+		.proc_handler   = proc_douintvec,
-+	},
- 	{ }
- };
  
-@@ -203,8 +211,13 @@ static void panic_print_sys_info(bool console_flush)
++static atomic_t warn_count = ATOMIC_INIT(0);
++
++#ifdef CONFIG_SYSFS
++static ssize_t warn_count_show(struct kobject *kobj, struct kobj_attribute *attr,
++			       char *page)
++{
++	return sysfs_emit(page, "%d\n", atomic_read(&warn_count));
++}
++
++static struct kobj_attribute warn_count_attr = __ATTR_RO(warn_count);
++
++static __init int kernel_panic_sysfs_init(void)
++{
++	sysfs_add_file_to_group(kernel_kobj, &warn_count_attr.attr, NULL);
++	return 0;
++}
++late_initcall(kernel_panic_sysfs_init);
++#endif
++
+ static long no_blink(int state)
+ {
+ 	return 0;
+@@ -211,8 +231,6 @@ static void panic_print_sys_info(bool console_flush)
  
  void check_panic_on_warn(const char *reason)
  {
-+	static atomic_t warn_count = ATOMIC_INIT(0);
-+
+-	static atomic_t warn_count = ATOMIC_INIT(0);
+-
  	if (panic_on_warn)
  		panic("%s: panic_on_warn set ...\n", reason);
-+
-+	if (atomic_inc_return(&warn_count) >= READ_ONCE(warn_limit))
-+		panic("Warned too often (warn_limit is %d)", warn_limit);
- }
  
- /**
 -- 
 2.34.1
 
