@@ -2,195 +2,138 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B713C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Nov 2022 20:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E9BC433FE
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Nov 2022 20:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231996AbiKIUBF (ORCPT
+        id S231426AbiKIU1V (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Nov 2022 15:01:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51072 "EHLO
+        Wed, 9 Nov 2022 15:27:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232007AbiKIUBA (ORCPT
+        with ESMTP id S230251AbiKIU1A (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Nov 2022 15:01:00 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D1C12F00C
-        for <linux-hardening@vger.kernel.org>; Wed,  9 Nov 2022 12:00:56 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id m6-20020a17090a5a4600b00212f8dffec9so2979118pji.0
-        for <linux-hardening@vger.kernel.org>; Wed, 09 Nov 2022 12:00:56 -0800 (PST)
+        Wed, 9 Nov 2022 15:27:00 -0500
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 534B52FC16
+        for <linux-hardening@vger.kernel.org>; Wed,  9 Nov 2022 12:26:59 -0800 (PST)
+Received: by mail-pf1-x430.google.com with SMTP id v28so17737425pfi.12
+        for <linux-hardening@vger.kernel.org>; Wed, 09 Nov 2022 12:26:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ro0afIwumapgwWvmG1YsaLR3d/PQtiJimII64ZaFtl0=;
-        b=Bj6yZrGQoXcj6tNclOshbH3J9egAhjRfmkDStPVklR9XEa2v3+3RdklXH8z9cfK7y6
-         PPcmlkc0mboBMbnoQZtz+vYF6J+Wi51E/b/I8emu9c/PT+P5E72HPuJEYseo44GJfTjC
-         LNoK4lTry2eXlMd8D+D4AHavtEoQuosMVMq10=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AEzo0Im4rLsC0Jz4I/uQtqWlQCVQMU0Di7BhivJNleg=;
+        b=a332E6VYrkuF9zlRA477aAuMJNrBiton1Sw4npiZsoaaeW8kgvFXwDUvTwqW/7Xd4Y
+         ZvyW0gqjp92lNld1XYDHIyvCCUfgdM1qbLNGoQL9c8YyP8p4yha9m4ST+twLm4hxVTCn
+         /kSg0Ose83LSR+cDDFbbAf4gIf7WRl1VyPMo0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ro0afIwumapgwWvmG1YsaLR3d/PQtiJimII64ZaFtl0=;
-        b=gDiqcS3Xg3sB5P2Ag3KZLvm1F75YSCuxJQNroZWCpEiU799r0h7nXp2sMMurYEtDaH
-         IwQHRjiaE0GrCuN7QxX78I4Ouj1Pi+gsI3xRrmu4ilLaSALuHfXNfiiiyiFnNzh0Tl2Y
-         xcZj54VtbJlk9/4KDT1U9pW2+c7J32M9U5U/Q/R7EMX1CIGur6zRf99fCWpGhTjrrXbt
-         S++a5ja7xoqQBC4x/COdp80lhDtYlfGjdcEQkq5sCHvx+XPi45nkxPAbwkSyg1fg41Xp
-         I6bF7Mz8sC3xRNgjm3IGln2tIfDwhme8ZhcWtqS/yn4e6qdsIYm2gEdlcyYjLtBE8OJe
-         3hNQ==
-X-Gm-Message-State: ACrzQf1IzmR8hwIS3v547EJHIL+emzkHjRHnYt1/flqnVisn8M/lLSt+
-        izc9P2w2L4vcsVSUa/4uJnuC2w==
-X-Google-Smtp-Source: AMsMyM6s+8KZY3HwZ2NBLRKmVoBPCut+WPXxEXFmTLrSqQTqHLCi1hv7jT0ImlockAyWwGGLZF71bw==
-X-Received: by 2002:a17:902:edd5:b0:187:1e83:8b96 with SMTP id q21-20020a170902edd500b001871e838b96mr54187822plk.1.1668024055895;
-        Wed, 09 Nov 2022 12:00:55 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AEzo0Im4rLsC0Jz4I/uQtqWlQCVQMU0Di7BhivJNleg=;
+        b=E+3e9Tst645ovM8wKHzYij4UKEgfoDog0S7PGVQnmUYXZ90mYfA9iBqEtaCU+/nAQy
+         T0Wbx89H0FehOhC/0+Jx9dSduVEKajhF7PSIwAT7AEtg0mnlhvz3QGRT20vpOFlfjnQR
+         7q+FKEaG/v53fU3gPFP4yO9ilmFefvhPaonVkhdvB8oi/ANZUnngNXt8dBhPNUwmKlfZ
+         XBwTm9h8JGP4CGIu3V8ywTQvWuq1cmIqNtaa4pzhvLkE26/kdDHy8fBCX6c9ArJPVdTw
+         eB7oWxQiPL4hBVeprflEZaMxlfDHmNMZI3YZqj1pnZ4M5Z0Fscrkjud7k7N/oMQxhPI3
+         OURw==
+X-Gm-Message-State: ACrzQf13f3wys4wW9388xnJWz6rwVOwU0gRWwSALj/N9NbudGU3DgPRS
+        GYnd/d0m2wROG7mUwMRTFfOf7YDr/vZiug==
+X-Google-Smtp-Source: AMsMyM4IjdJUb0+vleHp4Wn+3XtGrV7nxLWGnzRAE/PXG0ao15fsaZcBgJieA6mC86Or1vHKTlnoWg==
+X-Received: by 2002:a62:8141:0:b0:56b:c435:f003 with SMTP id t62-20020a628141000000b0056bc435f003mr62551373pfd.15.1668025618778;
+        Wed, 09 Nov 2022 12:26:58 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id bf20-20020a17090b0b1400b0020ad53b5883sm1639166pjb.14.2022.11.09.12.00.52
+        by smtp.gmail.com with ESMTPSA id t13-20020a170902e84d00b0017b264a2d4asm9604884plg.44.2022.11.09.12.26.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Nov 2022 12:00:54 -0800 (PST)
+        Wed, 09 Nov 2022 12:26:58 -0800 (PST)
+Date:   Wed, 9 Nov 2022 12:26:57 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Kees Cook <keescook@chromium.org>, Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        tangmeng <tangmeng@uniontech.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Seth Jenkins <sethjenkins@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Arnd Bergmann <arnd@arndb.de>, Marco Elver <elver@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        David Gow <davidgow@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2 6/6] panic: Expose "warn_count" to sysfs
-Date:   Wed,  9 Nov 2022 12:00:49 -0800
-Message-Id: <20221109200050.3400857-6-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221109194404.gonna.558-kees@kernel.org>
-References: <20221109194404.gonna.558-kees@kernel.org>
+To:     stable@vger.kernel.org
+Cc:     kernel test robot <lkp@intel.com>,
+        Akira Kawata <akirakawata1@gmail.com>,
+        linux-hardening@vger.kernel.org
+Subject: v5.10.y (was Re: [linux-stable-rc:linux-5.10.y 4906/9423])
+ arch/mips/kernel/../../../fs/binfmt_elf.c:823:16: warning: variable
+ 'load_addr' set but not used)
+Message-ID: <202211091218.79009F93@keescook>
+References: <202211100224.TrhZPz0k-lkp@intel.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3046; h=from:subject; bh=crjf/DqHlmowr17FD7/hL69h8FPT+JeC7P8wT4Sy3y8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjbAbwTj82NH1mVc/BdwILXJUeaZUer5Kuv1KXHcsT gLf80RyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY2wG8AAKCRCJcvTf3G3AJqs9D/ 44ACl1LNxgKhWqINCpUTjTgHQ0kvWjIPxs52zdEdrIVDv2BZZ/DhUpxrcC730QQtcJ6F7xe3UlmePB 3hKgSYaj13nxQyS3P9cvMUtbFrQj7cCWQ8v2Q4xYikQw5hnl76PZNNLk9JRzNurPZykchYWXpIrXDt yPp0o/bmBoaDGuwOBGLA3ZcGPZgVtS3734GCjfABnwjPchjreV8dXC7sLPVxx1MAcgHOKuqoYRTcfZ sqZKqkLm9KLO/nZ5dm5UtR/R6AljYC5Y1uxCfYNkicYlrzReWZefDGPaBPR/ZQ68eDwIUiGSi8G9cz 6S9Jy7hFaGQGgsxyLMJQwKOVFoLDLpm6q2HbyNVp2Cenh5utpS6/TVtvR9OqFo+7w1UPBi0z1Hczye 6qKolXHZNNv70gNEN8fXOJGu0vqBZAEaSYp5YvkGnnymFY5tMIOG2FM+dJ1Rh3eFx1KoKh5/8uWgLP zR9Vl5PP3Wi27coL560UkZve06uP7FO8GZnRBiPLpOxZw7AGp1jlCAXOn28uBrDybJAvFxZt1W5emj 6AfqaB0D26hF55T8TAlhjp8jtR0Nk247ofFgCq/h7fshmRCFK94izJo05cL5SWAJFlphsHH6pYPpk/ 9L8qhMC3W+qJVj26D2+kYfHGTR7ruMYJ2UqU1p94HQJ4R8tORQAiouOk+uWA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202211100224.TrhZPz0k-lkp@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Since Warn count is now tracked and is a fairly interesting signal, add
-the entry /sys/kernel/warn_count to expose it to userspace.
+Hi stable maintainers,
 
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: tangmeng <tangmeng@uniontech.com>
-Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- .../ABI/testing/sysfs-kernel-warn_count       |  6 +++++
- MAINTAINERS                                   |  1 +
- kernel/panic.c                                | 22 +++++++++++++++++--
- 3 files changed, 27 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-kernel-warn_count
+Can you please backport commit
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-warn_count b/Documentation/ABI/testing/sysfs-kernel-warn_count
-new file mode 100644
-index 000000000000..08f083d2fd51
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-kernel-warn_count
-@@ -0,0 +1,6 @@
-+What:		/sys/kernel/oops_count
-+Date:		November 2022
-+KernelVersion:	6.2.0
-+Contact:	Linux Kernel Hardening List <linux-hardening@vger.kernel.org>
-+Description:
-+		Shows how many times the system has Warned since last boot.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0a1e95a58e54..282cd8a513fd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11107,6 +11107,7 @@ L:	linux-hardening@vger.kernel.org
- S:	Supported
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
- F:	Documentation/ABI/testing/sysfs-kernel-oops_count
-+F:	Documentation/ABI/testing/sysfs-kernel-warn_count
- F:	include/linux/overflow.h
- F:	include/linux/randomize_kstack.h
- F:	mm/usercopy.c
-diff --git a/kernel/panic.c b/kernel/panic.c
-index b235fa4a6fc8..ddf0f8956d6e 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -32,6 +32,7 @@
- #include <linux/bug.h>
- #include <linux/ratelimit.h>
- #include <linux/debugfs.h>
-+#include <linux/sysfs.h>
- #include <trace/events/error_report.h>
- #include <asm/sections.h>
- 
-@@ -107,6 +108,25 @@ static __init int kernel_panic_sysctls_init(void)
- late_initcall(kernel_panic_sysctls_init);
- #endif
- 
-+static atomic_t warn_count = ATOMIC_INIT(0);
-+
-+#ifdef CONFIG_SYSFS
-+static ssize_t warn_count_show(struct kobject *kobj, struct kobj_attribute *attr,
-+			       char *page)
-+{
-+	return sysfs_emit(page, "%d\n", atomic_read(&warn_count));
-+}
-+
-+static struct kobj_attribute warn_count_attr = __ATTR_RO(warn_count);
-+
-+static __init int kernel_panic_sysfs_init(void)
-+{
-+	sysfs_add_file_to_group(kernel_kobj, &warn_count_attr.attr, NULL);
-+	return 0;
-+}
-+late_initcall(kernel_panic_sysfs_init);
-+#endif
-+
- static long no_blink(int state)
- {
- 	return 0;
-@@ -211,8 +231,6 @@ static void panic_print_sys_info(bool console_flush)
- 
- void check_panic_on_warn(const char *reason)
- {
--	static atomic_t warn_count = ATOMIC_INIT(0);
--
- 	if (panic_on_warn)
- 		panic("%s: panic_on_warn set ...\n", reason);
- 
+  2b4bfbe09676 ("fs/binfmt_elf: Refactor load_elf_binary function")
+
+to v5.10.y and v5.15.y?
+
+It seems that commit
+
+  0da1d5002745 ("fs/binfmt_elf: Fix AT_PHDR for unusual ELF files")
+
+was backported into v5.10.110 and v5.15.33, but needs the additional
+patch for a clean build.
+
+Thanks!
+
+-Kees
+
+On Thu, Nov 10, 2022 at 03:04:25AM +0800, kernel test robot wrote:
+> Hi Akira,
+> 
+> FYI, the error/warning still remains.
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
+> head:   69a0227f6bd671ba8efa071c58d9f127932e25f2
+> commit: dd85ed4af8f5cb42990fb5f42c22d268028693a3 [4906/9423] fs/binfmt_elf: Fix AT_PHDR for unusual ELF files
+> config: mips-buildonly-randconfig-r001-20221109
+> compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 463da45892e2d2a262277b91b96f5f8c05dc25d0)
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # install mips cross compiling tool for clang build
+>         # apt-get install binutils-mips64el-linux-gnuabi64
+>         # https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?id=dd85ed4af8f5cb42990fb5f42c22d268028693a3
+>         git remote add linux-stable-rc https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+>         git fetch --no-tags linux-stable-rc linux-5.10.y
+>         git checkout dd85ed4af8f5cb42990fb5f42c22d268028693a3
+>         # save the config file
+>         mkdir build_dir && cp config build_dir/.config
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=mips SHELL=/bin/bash
+> 
+> If you fix the issue, kindly add following tag where applicable
+> | Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    In file included from arch/mips/kernel/binfmt_elfn32.c:113:
+> >> arch/mips/kernel/../../../fs/binfmt_elf.c:823:16: warning: variable 'load_addr' set but not used [-Wunused-but-set-variable]
+>            unsigned long load_addr, load_bias = 0, phdr_addr = 0;
+>                          ^
+>    arch/mips/kernel/binfmt_elfn32.c:86:1: warning: unused function 'jiffies_to_old_timeval32' [-Wunused-function]
+>    jiffies_to_old_timeval32(unsigned long jiffies, struct old_timeval32 *value)
+>    ^
+>    2 warnings generated.
+> 
+> 
+> vim +/load_addr +823 arch/mips/kernel/../../../fs/binfmt_elf.c
+> 
+>    819	
+>    820	static int load_elf_binary(struct linux_binprm *bprm)
+>    821	{
+>    822		struct file *interpreter = NULL; /* to shut gcc up */
+>  > 823		unsigned long load_addr, load_bias = 0, phdr_addr = 0;
+>    824		int load_addr_set = 0;
+>    825		unsigned long error;
+>    826		struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
+>    827		struct elf_phdr *elf_property_phdata = NULL;
+
 -- 
-2.34.1
-
+Kees Cook
