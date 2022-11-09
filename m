@@ -2,113 +2,80 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7DCC433FE
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Nov 2022 12:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992D7C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Nov 2022 15:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230036AbiKIMYS (ORCPT
+        id S229872AbiKIP72 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Nov 2022 07:24:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53796 "EHLO
+        Wed, 9 Nov 2022 10:59:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230034AbiKIMYS (ORCPT
+        with ESMTP id S231313AbiKIP7Y (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Nov 2022 07:24:18 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A21E8165B7;
-        Wed,  9 Nov 2022 04:24:17 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 48279619B0;
-        Wed,  9 Nov 2022 12:24:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2340C433C1;
-        Wed,  9 Nov 2022 12:24:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667996656;
-        bh=DI1kLMp44xPVivyHSAligYnyPf6dFzjoVZS6wmJz3vI=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=eHdjWLt/D/I6Taff/2jooQHAvslWkKHU6ukiP4v30Dpwr6niXIzlfm6J1oh4A0LOb
-         FhricsW+pWU6T0vcC7kx7q2f/u5HMBWg4yQA5PjSqAcUQqtmnBJhASjFjua3PxFMUQ
-         n9ErCO4lk0M4DX01a2T6bBoA0+hawX0p6WTLANsfH9F1b1aIG37cD1cMmHsozV6C4K
-         e8lzz+JwXp/+tlKwGJ6dswbatIvBidiiU3Z5w4sspScq85QXxD9M8vssWok2yXNer0
-         9Vtilwh7bu/DRujyg9IhhMgZhOFQsmP7xsJ1A1qQAdqY2QD3vPoS1U6p8lJUVL68ce
-         WJ/51EHeqbmpQ==
-Message-ID: <b2509306-7d41-ff78-90ec-0d34dec762e6@kernel.org>
-Date:   Wed, 9 Nov 2022 14:24:12 +0200
+        Wed, 9 Nov 2022 10:59:24 -0500
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6E01140CF
+        for <linux-hardening@vger.kernel.org>; Wed,  9 Nov 2022 07:59:20 -0800 (PST)
+Received: by mail-ej1-x62e.google.com with SMTP id f5so47907901ejc.5
+        for <linux-hardening@vger.kernel.org>; Wed, 09 Nov 2022 07:59:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kMpz0htQ7/MGd5vuDayKM00Lvv56YDt4hT+zhs8g2Ss=;
+        b=DxPii1rwpWX2KNM5w6aU83V4P3pvCEWJ+OmIRRU67Ed9ghnzy/dQxWPypq6nc8KYq2
+         7z7ReF/5u/9goEHI9sjm6aqEfwD3Dm0+URnSHRERstVHqeWod2vS+lnqtEkfyWsAZKtk
+         RbTK7hh0N0Re5P+xD3+fdpgA9OnxaGC2bHWncjxstBmqbtuEI1xxQ2WvdJ9Nde5cdEed
+         OBTx0QZTjNsnnXcrsODJBHWQn5QAwF32qdWc5/k9Garax/RG6gxVZ/Irrcj3nPj4nBFR
+         aUy7nvaFnOg+YVvqk+UtIGsHLPWWKo4Fup4GJZ7ULRJOzKiMKf68sAaaeC+jplrU44PQ
+         LKRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kMpz0htQ7/MGd5vuDayKM00Lvv56YDt4hT+zhs8g2Ss=;
+        b=2YsEPolTaHM4CWQqqIIHhPZr8ul9hIc7WHioJ3g1TlSNEq4HiN5b5597WYSRHNGig2
+         UhVwN3tL372RCubiohiXkqeHnWyjbiAFQCiE7hNQUjOjTIIpZ6dEFYhUXG4c1+d+eXIb
+         wDmeY673257x+PIedxmENtbxxqsgV9awZECk43Aefql3bQPh1P10v9KExcQjIBxbCfvo
+         mVSS+5sCREPBUxxazRnTKLBqLw57aE2hE6dGMrmvg5oez8RsF91qSmYh5HHFOQXTGP4Z
+         g5paKWdFy6MrG6sUyjFNkVWrLKecpjgwcfEionyCe63I7RDs5l+XJDByNMvDMjP9OY1i
+         nceA==
+X-Gm-Message-State: ACrzQf0W4Lh9G6hD26+PjvWX43Fik73MmPQowqCIzxcDQPP6gTZQGx9V
+        WA4Ku0t+zSZOiqaw+KOQdJ6wNLcpU+4OzHcxM0kg0ccULyeoBw==
+X-Google-Smtp-Source: AMsMyM6KcsdIruaq2XMS8h3WG9IGI3ifDSKwPpa34n/XxwnANIIvZR1obFMCRGMiLLfgo0+LTXJDaGAweOynKOsEtMc=
+X-Received: by 2002:a17:906:7048:b0:7ae:db2:f10a with SMTP id
+ r8-20020a170906704800b007ae0db2f10amr1136400ejj.709.1668009558671; Wed, 09
+ Nov 2022 07:59:18 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH] memory: omap-gpmc: fix coverity issue "Control flow
- issues"
-Content-Language: en-US
-To:     "B. Niedermayr" <benedikt.niedermayr@siemens.com>,
-        linux-next@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-hardening@vger.kernel.org, keescook@chromium.org,
-        krzysztof.kozlowski@linaro.org, tony@atomide.com,
-        gustavo@embeddedor.com
-References: <20221109102454.174320-1-benedikt.niedermayr@siemens.com>
-From:   Roger Quadros <rogerq@kernel.org>
-In-Reply-To: <20221109102454.174320-1-benedikt.niedermayr@siemens.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20221107201317.324457-1-jannh@google.com> <3e2f7e2cb4f6451a9ef5d0fb9e1f6080@AcuMS.aculab.com>
+ <CAG48ez3AGh-R+deQMbNPt6PCQazOz8a96skW+qP3_HmUaANmmQ@mail.gmail.com>
+ <d88999d8e9ec486bb1a0f75911457985@AcuMS.aculab.com> <CAG48ez3UO03RRMxxj-ZAcw5vhjhPYeoN1DB82s2SAiYm-qWmYw@mail.gmail.com>
+In-Reply-To: <CAG48ez3UO03RRMxxj-ZAcw5vhjhPYeoN1DB82s2SAiYm-qWmYw@mail.gmail.com>
+From:   Seth Jenkins <sethjenkins@google.com>
+Date:   Wed, 9 Nov 2022 10:59:07 -0500
+Message-ID: <CALxfFW4RQmLf9QRdP8VUH0fZU_vUsCqXfxRtjeu6g7QvKAGOmQ@mail.gmail.com>
+Subject: Re: [PATCH] exit: Put an upper limit on how often we can oops
+To:     Jann Horn <jannh@google.com>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 09/11/2022 12:24, B. Niedermayr wrote:
-> From: Benedikt Niedermayr <benedikt.niedermayr@siemens.com>
-> 
-> Assign a big positive integer instead of an negative integer to an
-> u32 variable. Also remove the check for ">= 0" which doesn't make sense
-> for unsigned integers.
-> 
-> Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-> Addresses-Coverity-ID: 1527139 ("Control flow issues")
-> Fixes: 89aed3cd5cb9 ("memory: omap-gpmc: wait pin additions")
-> Signed-off-by: Benedikt Niedermayr <benedikt.niedermayr@siemens.com>
-
-Reviewed-by: Roger Quadros <rogerq@kernel.org>
-
-> ---
->  drivers/memory/omap-gpmc.c              | 2 +-
->  include/linux/platform_data/gpmc-omap.h | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
-> index e427572712e2..57d9f91fe89b 100644
-> --- a/drivers/memory/omap-gpmc.c
-> +++ b/drivers/memory/omap-gpmc.c
-> @@ -1045,7 +1045,7 @@ EXPORT_SYMBOL(gpmc_cs_free);
->  
->  static bool gpmc_is_valid_waitpin(u32 waitpin)
->  {
-> -	return waitpin >= 0 && waitpin < gpmc_nr_waitpins;
-> +	return waitpin < gpmc_nr_waitpins;
->  }
->  
->  static int gpmc_alloc_waitpin(struct gpmc_device *gpmc,
-> diff --git a/include/linux/platform_data/gpmc-omap.h b/include/linux/platform_data/gpmc-omap.h
-> index 296b080c5c67..dcca6c5e23bb 100644
-> --- a/include/linux/platform_data/gpmc-omap.h
-> +++ b/include/linux/platform_data/gpmc-omap.h
-> @@ -137,11 +137,11 @@ struct gpmc_device_timings {
->  #define GPMC_MUX_AD			2	/* Addr-Data multiplex */
->  
->  /* Wait pin polarity values */
-> -#define GPMC_WAITPINPOLARITY_INVALID -1
-> +#define GPMC_WAITPINPOLARITY_INVALID UINT_MAX
->  #define GPMC_WAITPINPOLARITY_ACTIVE_LOW 0
->  #define GPMC_WAITPINPOLARITY_ACTIVE_HIGH 1
->  
-> -#define GPMC_WAITPIN_INVALID -1
-> +#define GPMC_WAITPIN_INVALID UINT_MAX
->  
->  struct gpmc_settings {
->  	bool burst_wrap;	/* enables wrap bursting */
-
---
-cheers,
--roger
+I'll add to this by noting that it is highly oops dependent. Depending
+on what locks and refcounts you had taken at the moment you oops'd, it
+may not be possible to clean up the process e.g. if you're holding
+your own mmap lock at the moment you oops you're liable to deadlock in
+__mmput. But there are certainly empirical cases (not all too isolated
+ones) where the kernel really *is* able to clean up the entire
+process.
