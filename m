@@ -2,95 +2,144 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F24C4332F
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Nov 2022 16:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D6EC43219
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Nov 2022 20:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231501AbiKIQTO (ORCPT
+        id S231939AbiKIUA4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Nov 2022 11:19:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36124 "EHLO
+        Wed, 9 Nov 2022 15:00:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231445AbiKIQTO (ORCPT
+        with ESMTP id S231416AbiKIUAz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Nov 2022 11:19:14 -0500
-Received: from second.openwall.net (second.openwall.net [193.110.157.125])
-        by lindbergh.monkeyblade.net (Postfix) with SMTP id 257A714017
-        for <linux-hardening@vger.kernel.org>; Wed,  9 Nov 2022 08:19:11 -0800 (PST)
-Received: (qmail 32128 invoked from network); 9 Nov 2022 16:19:10 -0000
-Received: from localhost (HELO pvt.openwall.com) (127.0.0.1)
-  by localhost with SMTP; 9 Nov 2022 16:19:10 -0000
-Received: by pvt.openwall.com (Postfix, from userid 503)
-        id A4C24AB3A4; Wed,  9 Nov 2022 17:19:04 +0100 (CET)
-Date:   Wed, 9 Nov 2022 17:19:04 +0100
-From:   Solar Designer <solar@openwall.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jann Horn <jannh@google.com>, linux-hardening@vger.kernel.org,
-        kernel-hardening@lists.openwall.com,
+        Wed, 9 Nov 2022 15:00:55 -0500
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3BC13D40
+        for <linux-hardening@vger.kernel.org>; Wed,  9 Nov 2022 12:00:52 -0800 (PST)
+Received: by mail-pg1-x532.google.com with SMTP id o13so7822687pgu.7
+        for <linux-hardening@vger.kernel.org>; Wed, 09 Nov 2022 12:00:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TOl6z/umIA2dhnmGMIG6cWX9VY1K0BEEK1Uosuato8Y=;
+        b=Gka6JzDygIJ+DxhGOwp9S4RRCCCas04VGzIVik8QVniYT/h00GDqtbUPtAuiwLyLSo
+         IcgRZX8xWzDMOfRAL0zquC3Ofpvb2fxZp/na3w0ujskXq0kO/9uZJwY68rl9BDhrkX2l
+         86vacPYObXCyQOmEyb8omdqyh55iUH4MV+7/U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TOl6z/umIA2dhnmGMIG6cWX9VY1K0BEEK1Uosuato8Y=;
+        b=y3AAg9nHwvajlOPPoqwDNxKAvrFUZelzI6/9OaWq8lZuyGgrPfcmdRvs67TzCAhjkk
+         Nf3XfTGmx67oibCLDGPq3UUJMorc1RvvvR9mEqNnTgtx1ZEtBiSuq13vHmdotdZgPrff
+         d2NAJhz67SIxCy47zoi1ck1oVTp5dWq0ikEo/rfwOzXiWlYvNYPSl/jTgIMG93RaTiL2
+         31V1vmCc+AXkpF/CsfnQpIUqiGjWA2645UMjNlfUOuuym4Ayqgv0MvVjawcP6RXGpdOp
+         LW3J6MhadhpzYJ7nsGCSuaNdXKVgiwdU4TbX6xn8f+K+FDbYDq+mWX8XJxxEbxyLmjKL
+         13KA==
+X-Gm-Message-State: ACrzQf3dmBFCz1LT9IpKW/4NLpAgaEcmd+X/K3FGZPBxr1t5e6QlRC+4
+        mbdzD1CczNRiURtwv3FTGUuMow==
+X-Google-Smtp-Source: AMsMyM4yF1PgLzGEhlLvREfoGwRGCLaCp4b09MgHR3ZbYDeWI2E6+jguZ+DVChze5gOOKmIr3sL0wA==
+X-Received: by 2002:a63:5150:0:b0:46f:be60:d1eb with SMTP id r16-20020a635150000000b0046fbe60d1ebmr45016359pgl.82.1668024052025;
+        Wed, 09 Nov 2022 12:00:52 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a17-20020aa794b1000000b0056eaa577eb0sm8654375pfl.215.2022.11.09.12.00.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Nov 2022 12:00:51 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Kees Cook <keescook@chromium.org>, Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        tangmeng <tangmeng@uniontech.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Greg KH <gregkh@linuxfoundation.org>,
         Linus Torvalds <torvalds@linuxfoundation.org>,
         Seth Jenkins <sethjenkins@google.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] exit: Put an upper limit on how often we can oops
-Message-ID: <20221109161904.GA10899@openwall.com>
-References: <20221107201317.324457-1-jannh@google.com> <20221107211440.GA4233@openwall.com> <CAG48ez2-xUawSs4ji_+0Bnyn_QTiS930UiOypXreU_RhwhVo_w@mail.gmail.com> <202211080923.8BAEA9980@keescook> <202211081100.AA81FBE964@keescook>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202211081100.AA81FBE964@keescook>
-User-Agent: Mutt/1.4.2.3i
+        Andy Lutomirski <luto@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Arnd Bergmann <arnd@arndb.de>, Marco Elver <elver@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        David Gow <davidgow@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v2 1/6] panic: Separate sysctl logic from CONFIG_SMP
+Date:   Wed,  9 Nov 2022 12:00:44 -0800
+Message-Id: <20221109200050.3400857-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221109194404.gonna.558-kees@kernel.org>
+References: <20221109194404.gonna.558-kees@kernel.org>
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1192; h=from:subject; bh=IoW4clR1Z0l0tOPQKCaXz5ByKX5rPTSXg36TIGSUe64=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjbAbv1LOBj/eV9FJ9roBnkkNtYxaBPhV1cL6wlgbR D9gETvCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY2wG7wAKCRCJcvTf3G3AJlUtD/ 97OgZ7IMn3jz6bT9vmc/YgFyUCFPLVBPbEk8QBykQqQITpRvaIn71jcxvGnQ6p0uGNEiQuoxc7AhU1 ah6MKCbYMay02cZ0WqCIGOnGcoH30Chbhu1peQ1QPCY24ArACK+DU5g1FSe2/rMFXFDBh7omd2GKVR jA30ciu1aIlQ//Lo8ZE5yW3VVKAGBhuohwQ04R/CawrVz/qXjSl/RqgyiXkINJNOCcytNkFPPcJBhQ 889xaIIzfX5NijRPr8S8tmJcGnNbLAuSV+ejNRUMQAWnbtbHZNBFUJyL2w3GPFqGOy5polHHUb6EQG Z7Cvlc4eOt4GP5drNlw+1smVVa68Oj+DTzuTkUEYpUpc0ajYX63hOFn2eMC1e25/l+5Sl2jfjT58ZZ 5aZrHCGfBHK7mrz+AL+7NkF9PHD1iLGqXT4tMG0mNbpftOn/h93mg8RKDi6vusCqKUwgQsYY4Q6B2l Mg9AP9hEjp0dtI2NCekNW23wvTElrzNMqldUgwJjvGnft7gCT4wsIqR/rzl92YKChzX3P9e0jfoSco nPPCFRMXOhY100moOq2KtKG49g/Ms4RvvyFP1Gmo+m3ppsvsqeBp7apapgTsE6pKtVzWkcgAlBArGI /0UUIHG03P7pOXIEOq/Ec7ouKxipBwYsM8AvUGRA9D9IDd7bcKz5j/VoZbBg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Nov 08, 2022 at 11:38:22AM -0800, Kees Cook wrote:
-> On Tue, Nov 08, 2022 at 09:24:40AM -0800, Kees Cook wrote:
-> > On Mon, Nov 07, 2022 at 10:48:20PM +0100, Jann Horn wrote:
-> > > On Mon, Nov 7, 2022 at 10:15 PM Solar Designer <solar@openwall.com> wrote:
-> > > > On Mon, Nov 07, 2022 at 09:13:17PM +0100, Jann Horn wrote:
-> > > > > +oops_limit
-> > > > > +==========
-> > > > > +
-> > > > > +Number of kernel oopses after which the kernel should panic when
-> > > > > +``panic_on_oops`` is not set.
-> > > >
-> > > > Rather than introduce this separate oops_limit, how about making
-> > > > panic_on_oops (and maybe all panic_on_*) take the limit value(s) instead
-> > > > of being Boolean?  I think this would preserve the current behavior at
-> > > > panic_on_oops = 0 and panic_on_oops = 1, but would introduce your
-> > > > desired behavior at panic_on_oops = 10000.  We can make 10000 the new
-> > > > default.  If a distro overrides panic_on_oops, it probably sets it to 1
-> > > > like RHEL does.
-> > > >
-> > > > Are there distros explicitly setting panic_on_oops to 0?  If so, that
-> > > > could be a reason to introduce the separate oops_limit.
-> > > >
-> > > > I'm not advocating one way or the other - I just felt this should be
-> > > > explicitly mentioned and decided on.
-> > > 
-> > > I think at least internally in the kernel, it probably works better to
-> > > keep those two concepts separate? For example, sparc has a function
-> > > die_nmi() that uses panic_on_oops to determine whether the system
-> > > should panic when a watchdog detects a lockup.
-> > 
-> > Internally, yes, the kernel should keep "panic_on_oops" to mean "panic
-> > _NOW_ on oops?" but I would agree with Solar -- this is a counter as far
-> > as userspace is concerned. "Panic on Oops" after 1 oops, 2, oopses, etc.
-> > I would like to see this for panic_on_warn too, actually.
-> 
-> Hm, in looking at this more closely, I think it does make sense as you
-> already have it. The count is for the panic_on_oops=0 case, so even in
-> userspace, trying to remap that doesn't make a bunch of sense. So, yes,
-> let's keep this as-is.
+In preparation for adding more sysctls directly in kernel/panic.c, split
+CONFIG_SMP from the logic that adds sysctls.
 
-I don't follow your logic there - maybe you got confused?  Yes, as
-proposed the count is for panic_on_oops=0, but that's just weird - first
-kind of request no panic with panic_on_oops=0, then override that with
-oops_limit=10000.  I think it is more natural to request
-panic_on_oops=10000 in one step.  Also, I think it is more natural to
-preserve panic_on_oops=0's meaning of no panic on Oops.
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: tangmeng <tangmeng@uniontech.com>
+Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ kernel/panic.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-To me, about the only reason to introduce the override is if we want to
-literally override a distro's explicit default of panic_on_oops=0.
+diff --git a/kernel/panic.c b/kernel/panic.c
+index da323209f583..129936511380 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -75,8 +75,9 @@ ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
+ 
+ EXPORT_SYMBOL(panic_notifier_list);
+ 
+-#if defined(CONFIG_SMP) && defined(CONFIG_SYSCTL)
++#if CONFIG_SYSCTL
+ static struct ctl_table kern_panic_table[] = {
++#if defined(CONFIG_SMP)
+ 	{
+ 		.procname       = "oops_all_cpu_backtrace",
+ 		.data           = &sysctl_oops_all_cpu_backtrace,
+@@ -86,6 +87,7 @@ static struct ctl_table kern_panic_table[] = {
+ 		.extra1         = SYSCTL_ZERO,
+ 		.extra2         = SYSCTL_ONE,
+ 	},
++#endif
+ 	{ }
+ };
+ 
+-- 
+2.34.1
 
-Alexander
