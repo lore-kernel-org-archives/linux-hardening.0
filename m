@@ -2,80 +2,95 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 992D7C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Nov 2022 15:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F24C4332F
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Nov 2022 16:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229872AbiKIP72 (ORCPT
+        id S231501AbiKIQTO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Nov 2022 10:59:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48276 "EHLO
+        Wed, 9 Nov 2022 11:19:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231313AbiKIP7Y (ORCPT
+        with ESMTP id S231445AbiKIQTO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Nov 2022 10:59:24 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6E01140CF
-        for <linux-hardening@vger.kernel.org>; Wed,  9 Nov 2022 07:59:20 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id f5so47907901ejc.5
-        for <linux-hardening@vger.kernel.org>; Wed, 09 Nov 2022 07:59:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kMpz0htQ7/MGd5vuDayKM00Lvv56YDt4hT+zhs8g2Ss=;
-        b=DxPii1rwpWX2KNM5w6aU83V4P3pvCEWJ+OmIRRU67Ed9ghnzy/dQxWPypq6nc8KYq2
-         7z7ReF/5u/9goEHI9sjm6aqEfwD3Dm0+URnSHRERstVHqeWod2vS+lnqtEkfyWsAZKtk
-         RbTK7hh0N0Re5P+xD3+fdpgA9OnxaGC2bHWncjxstBmqbtuEI1xxQ2WvdJ9Nde5cdEed
-         OBTx0QZTjNsnnXcrsODJBHWQn5QAwF32qdWc5/k9Garax/RG6gxVZ/Irrcj3nPj4nBFR
-         aUy7nvaFnOg+YVvqk+UtIGsHLPWWKo4Fup4GJZ7ULRJOzKiMKf68sAaaeC+jplrU44PQ
-         LKRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kMpz0htQ7/MGd5vuDayKM00Lvv56YDt4hT+zhs8g2Ss=;
-        b=2YsEPolTaHM4CWQqqIIHhPZr8ul9hIc7WHioJ3g1TlSNEq4HiN5b5597WYSRHNGig2
-         UhVwN3tL372RCubiohiXkqeHnWyjbiAFQCiE7hNQUjOjTIIpZ6dEFYhUXG4c1+d+eXIb
-         wDmeY673257x+PIedxmENtbxxqsgV9awZECk43Aefql3bQPh1P10v9KExcQjIBxbCfvo
-         mVSS+5sCREPBUxxazRnTKLBqLw57aE2hE6dGMrmvg5oez8RsF91qSmYh5HHFOQXTGP4Z
-         g5paKWdFy6MrG6sUyjFNkVWrLKecpjgwcfEionyCe63I7RDs5l+XJDByNMvDMjP9OY1i
-         nceA==
-X-Gm-Message-State: ACrzQf0W4Lh9G6hD26+PjvWX43Fik73MmPQowqCIzxcDQPP6gTZQGx9V
-        WA4Ku0t+zSZOiqaw+KOQdJ6wNLcpU+4OzHcxM0kg0ccULyeoBw==
-X-Google-Smtp-Source: AMsMyM6KcsdIruaq2XMS8h3WG9IGI3ifDSKwPpa34n/XxwnANIIvZR1obFMCRGMiLLfgo0+LTXJDaGAweOynKOsEtMc=
-X-Received: by 2002:a17:906:7048:b0:7ae:db2:f10a with SMTP id
- r8-20020a170906704800b007ae0db2f10amr1136400ejj.709.1668009558671; Wed, 09
- Nov 2022 07:59:18 -0800 (PST)
-MIME-Version: 1.0
-References: <20221107201317.324457-1-jannh@google.com> <3e2f7e2cb4f6451a9ef5d0fb9e1f6080@AcuMS.aculab.com>
- <CAG48ez3AGh-R+deQMbNPt6PCQazOz8a96skW+qP3_HmUaANmmQ@mail.gmail.com>
- <d88999d8e9ec486bb1a0f75911457985@AcuMS.aculab.com> <CAG48ez3UO03RRMxxj-ZAcw5vhjhPYeoN1DB82s2SAiYm-qWmYw@mail.gmail.com>
-In-Reply-To: <CAG48ez3UO03RRMxxj-ZAcw5vhjhPYeoN1DB82s2SAiYm-qWmYw@mail.gmail.com>
-From:   Seth Jenkins <sethjenkins@google.com>
-Date:   Wed, 9 Nov 2022 10:59:07 -0500
-Message-ID: <CALxfFW4RQmLf9QRdP8VUH0fZU_vUsCqXfxRtjeu6g7QvKAGOmQ@mail.gmail.com>
-Subject: Re: [PATCH] exit: Put an upper limit on how often we can oops
-To:     Jann Horn <jannh@google.com>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "kernel-hardening@lists.openwall.com" 
-        <kernel-hardening@lists.openwall.com>,
+        Wed, 9 Nov 2022 11:19:14 -0500
+Received: from second.openwall.net (second.openwall.net [193.110.157.125])
+        by lindbergh.monkeyblade.net (Postfix) with SMTP id 257A714017
+        for <linux-hardening@vger.kernel.org>; Wed,  9 Nov 2022 08:19:11 -0800 (PST)
+Received: (qmail 32128 invoked from network); 9 Nov 2022 16:19:10 -0000
+Received: from localhost (HELO pvt.openwall.com) (127.0.0.1)
+  by localhost with SMTP; 9 Nov 2022 16:19:10 -0000
+Received: by pvt.openwall.com (Postfix, from userid 503)
+        id A4C24AB3A4; Wed,  9 Nov 2022 17:19:04 +0100 (CET)
+Date:   Wed, 9 Nov 2022 17:19:04 +0100
+From:   Solar Designer <solar@openwall.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jann Horn <jannh@google.com>, linux-hardening@vger.kernel.org,
+        kernel-hardening@lists.openwall.com,
         Greg KH <gregkh@linuxfoundation.org>,
         Linus Torvalds <torvalds@linuxfoundation.org>,
+        Seth Jenkins <sethjenkins@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] exit: Put an upper limit on how often we can oops
+Message-ID: <20221109161904.GA10899@openwall.com>
+References: <20221107201317.324457-1-jannh@google.com> <20221107211440.GA4233@openwall.com> <CAG48ez2-xUawSs4ji_+0Bnyn_QTiS930UiOypXreU_RhwhVo_w@mail.gmail.com> <202211080923.8BAEA9980@keescook> <202211081100.AA81FBE964@keescook>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202211081100.AA81FBE964@keescook>
+User-Agent: Mutt/1.4.2.3i
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-I'll add to this by noting that it is highly oops dependent. Depending
-on what locks and refcounts you had taken at the moment you oops'd, it
-may not be possible to clean up the process e.g. if you're holding
-your own mmap lock at the moment you oops you're liable to deadlock in
-__mmput. But there are certainly empirical cases (not all too isolated
-ones) where the kernel really *is* able to clean up the entire
-process.
+On Tue, Nov 08, 2022 at 11:38:22AM -0800, Kees Cook wrote:
+> On Tue, Nov 08, 2022 at 09:24:40AM -0800, Kees Cook wrote:
+> > On Mon, Nov 07, 2022 at 10:48:20PM +0100, Jann Horn wrote:
+> > > On Mon, Nov 7, 2022 at 10:15 PM Solar Designer <solar@openwall.com> wrote:
+> > > > On Mon, Nov 07, 2022 at 09:13:17PM +0100, Jann Horn wrote:
+> > > > > +oops_limit
+> > > > > +==========
+> > > > > +
+> > > > > +Number of kernel oopses after which the kernel should panic when
+> > > > > +``panic_on_oops`` is not set.
+> > > >
+> > > > Rather than introduce this separate oops_limit, how about making
+> > > > panic_on_oops (and maybe all panic_on_*) take the limit value(s) instead
+> > > > of being Boolean?  I think this would preserve the current behavior at
+> > > > panic_on_oops = 0 and panic_on_oops = 1, but would introduce your
+> > > > desired behavior at panic_on_oops = 10000.  We can make 10000 the new
+> > > > default.  If a distro overrides panic_on_oops, it probably sets it to 1
+> > > > like RHEL does.
+> > > >
+> > > > Are there distros explicitly setting panic_on_oops to 0?  If so, that
+> > > > could be a reason to introduce the separate oops_limit.
+> > > >
+> > > > I'm not advocating one way or the other - I just felt this should be
+> > > > explicitly mentioned and decided on.
+> > > 
+> > > I think at least internally in the kernel, it probably works better to
+> > > keep those two concepts separate? For example, sparc has a function
+> > > die_nmi() that uses panic_on_oops to determine whether the system
+> > > should panic when a watchdog detects a lockup.
+> > 
+> > Internally, yes, the kernel should keep "panic_on_oops" to mean "panic
+> > _NOW_ on oops?" but I would agree with Solar -- this is a counter as far
+> > as userspace is concerned. "Panic on Oops" after 1 oops, 2, oopses, etc.
+> > I would like to see this for panic_on_warn too, actually.
+> 
+> Hm, in looking at this more closely, I think it does make sense as you
+> already have it. The count is for the panic_on_oops=0 case, so even in
+> userspace, trying to remap that doesn't make a bunch of sense. So, yes,
+> let's keep this as-is.
+
+I don't follow your logic there - maybe you got confused?  Yes, as
+proposed the count is for panic_on_oops=0, but that's just weird - first
+kind of request no panic with panic_on_oops=0, then override that with
+oops_limit=10000.  I think it is more natural to request
+panic_on_oops=10000 in one step.  Also, I think it is more natural to
+preserve panic_on_oops=0's meaning of no panic on Oops.
+
+To me, about the only reason to introduce the override is if we want to
+literally override a distro's explicit default of panic_on_oops=0.
+
+Alexander
