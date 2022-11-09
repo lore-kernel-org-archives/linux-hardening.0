@@ -2,176 +2,91 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3AAC4332F
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Nov 2022 23:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42266C43217
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Nov 2022 03:45:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230013AbiKHXtO (ORCPT
+        id S229624AbiKIDpt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Nov 2022 18:49:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47036 "EHLO
+        Tue, 8 Nov 2022 22:45:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230074AbiKHXtM (ORCPT
+        with ESMTP id S229634AbiKIDps (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Nov 2022 18:49:12 -0500
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 693055B866;
-        Tue,  8 Nov 2022 15:49:11 -0800 (PST)
-Received: from mail.ispras.ru (unknown [83.149.199.84])
-        by mail.ispras.ru (Postfix) with ESMTPSA id 38CDC419E9CC;
-        Tue,  8 Nov 2022 23:49:08 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 38CDC419E9CC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-        s=default; t=1667951348;
-        bh=A9g4mlGOpgbc9SfTjDYTZ+BTxLDY01DkiMQcvJ7EXdg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ObZlrKDOcTgS01n7ylb3MREgXfjMe6vbQEs2hJCUZbgE7IqTyKrsWGZ2hXOh+DMFk
-         ZJsGSSWbI7N98oMuR9uF9NfHa1k+YFNtgXxJOB6oKX+HPaO9C59Xkehh9eSH7I/SQ1
-         AYe9N7PRQ86ftAvWFoArTD2YRb/p07ZVSdR3BmVg=
+        Tue, 8 Nov 2022 22:45:48 -0500
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C3B71571D
+        for <linux-hardening@vger.kernel.org>; Tue,  8 Nov 2022 19:45:48 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id p21so15940274plr.7
+        for <linux-hardening@vger.kernel.org>; Tue, 08 Nov 2022 19:45:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pnMg2Hpw6/iJzd3FM2wY8v5EWPbAWF9J3lAMqPkfldo=;
+        b=IBalqdBg9Jf+M2TCfV5GNefgRsipVGvyqMHgtq59bQctNW+pZ9E0KeYLmoDocmljBt
+         JWoYE2AuK+1g1Nr/BsYvyM+4IpxVVdur4sB/z4ZGrOUxq1sksMKFJ8mMaP+A8M1TrBXL
+         VM5oIwA3uvbtXSmEHRke454Jn6lM3st6HE3w2uZW6nJV6WP25ja5m4Ro6z6/A5pxhxpl
+         4t+uzOsVtITcDHtP3zffCRDjM9OF2xMKzrELCJ9HxHJ3fZ3eYIkR0w0qGpxTebHDvAD5
+         4xGBByLMMxw2cyW+B52MRNZgDgmatYKOA0VRIrQV4aQbumXGwQMy4KnqjPzlpZKj8UFK
+         7B0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pnMg2Hpw6/iJzd3FM2wY8v5EWPbAWF9J3lAMqPkfldo=;
+        b=fDHRTve/YdVtEsDuBTxTQ+Ux0QB2CXlVxVUDytoeZhRf3AO/azoaSyLThS+QwgF6ZU
+         4j5/gLvx95YLFdSNlF2ktdVkqYmbUsz9csCB1Y4e2q16VDYuzlQBiMaeqJ1EOcHhVJ4u
+         SWb9rtJi8ASnGuaIlFsSMFl93zl3rxoYPjP39TrTMZ5LKG8JPoEcsiQjWjgVB1qTgO0Y
+         A1ox1+7L4+6GnpzWo7GM0qHENCK731bw8QoFtXG4iW0CgCZMupLIxyPipcXBGmTjvNj3
+         pYOmaNCYiOhw4JFgYBT42kL1QN2dssRHQMhDqSVTYGVLWJRpgvscwD/pT8cHqdU/clCQ
+         WfVg==
+X-Gm-Message-State: ACrzQf3qhdBwWr06mbbHSd8lalGv8rz+hYO8a5lCrGyL9cRbaZSIcjOy
+        MSJwGacYYCat3uJ+qzd5/AsJvnCh/FGbatUD
+X-Google-Smtp-Source: AMsMyM4UChEr3gBlmSu7UQ1IG/FTAC1V/ic63iMzUUWW7mFp+jWNbdhNfy5cnvG0opS1ZRwqBD4wXA==
+X-Received: by 2002:a17:902:d48a:b0:187:2b1d:10e2 with SMTP id c10-20020a170902d48a00b001872b1d10e2mr46597584plg.86.1667965547232;
+        Tue, 08 Nov 2022 19:45:47 -0800 (PST)
+Received: from mail.google.com (125-237-50-34-fibre.sparkbb.co.nz. [125.237.50.34])
+        by smtp.gmail.com with ESMTPSA id p12-20020a170902bd0c00b001754fa42065sm7741411pls.143.2022.11.08.19.45.45
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Nov 2022 19:45:46 -0800 (PST)
+Date:   Wed, 9 Nov 2022 16:45:42 +1300
+From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+To:     linux-hardening@vger.kernel.org
+Subject: [RFC] Approaches to deal with a struct with multiple fake flexible
+ arrays members
+Message-ID: <Y2siZmiTD40mTYpJ@mail.google.com>
 MIME-Version: 1.0
-Date:   Wed, 09 Nov 2022 02:49:08 +0300
-From:   Evgeniy Baskov <baskov@ispras.ru>
-To:     "Limonciello, Mario" <mario.limonciello@amd.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Peter Jones <pjones@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        lvc-project@linuxtesting.org, x86@kernel.org,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 00/23] x86_64: Improvements at compressed kernel stage
-In-Reply-To: <fc262405-451e-3842-9b08-bc36614e810a@amd.com>
-References: <cover.1666705333.git.baskov@ispras.ru>
- <e2beec0b-22d3-91bd-c57c-8c8ad2137406@amd.com>
- <d97fdff486959dbf841c92b3cb644740@ispras.ru>
- <fc262405-451e-3842-9b08-bc36614e810a@amd.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <4a942ab07fd320ba9a058c8a112503bd@ispras.ru>
-X-Sender: baskov@ispras.ru
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2022-11-08 21:17, Limonciello, Mario wrote:
-> On 11/8/2022 01:01, Evgeniy Baskov wrote:
->> On 2022-11-04 21:21, Limonciello, Mario wrote:
->>> On 10/25/2022 09:12, Evgeniy Baskov wrote:
->>>> ...
->>>> 
->>> 
->>> Hi,
->>> 
->>> I was talking to Peter Jones recently about what was still missing 
->>> for
->>> NX support in the kernel and he pointed me at this series.
->>> 
->>> So I had a try with this series on top of:
->>> 
->>> ee6050c8af96 ("Merge tag 'ata-6.1-rc4' of
->>> git://git.kernel.org/pub/scm/linux/kernel/git/dlemoal/libata")
->>> 
->>> Unfortunately I can't boot the system with this series applied.
->>> This is not on a system that enforces NX pre-boot (but that was my
->>> goal after I could prove booting on something that doesn't).
->>> I didn't apply Peter's patch 6 you referenced in your cover letter,
->>> but I don't expect that's the reason for the failure.
->>> 
->>> I get:
->>> 
->>> "Failed to allocate space for tmp_cmdline"
->>> 
->>>    -- System Halted
->>> 
->>> This is early enough [1] that I don't have anything else output to a
->>> serial log from the kernel.
->>> 
->>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2Ftorvalds%2Flinux%2Fblob%2Fd4013bc4d49f6da8178a340348369bb9920225c9%2Farch%2Fx86%2Fboot%2Fcompressed%2Fkaslr.c%23L268&amp;data=05%7C01%7Cmario.limonciello%40amd.com%7C9280e92e85bc4e2b52cd08dac15704a5%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C638034876740462327%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=oiCJUa8M3x%2FYCxVjJj98R7iU%2FzIj%2FQxdVOWbnqGWCNI%3D&amp;reserved=0
->>> 
->>> Since this is only in the kaslr path, I tried to turn that off with
->>> 'nokaslr' on the kernel command line.
->>> 
->>> I then get a failure of:
->>> 
->>> "Out of memory while allocating zstd_dctx"
->>> 
->>>   -- System Halted
->>> 
->>> This kernel was booted from the following path:
->>> -> Insyde BIOS
->>> --> shim (from Fedora 36 repository)
->>> ---> GRUB (from Peter for Fedora 36 w/ some level NX support)
->>> ----> kernel binary (self-built)
->>> 
->>> The BIOS on this system doesn't validate NX, but also the shim binary
->>> did not have the NX bit set in the PE header.
->>> 
->>> Your cover letter referenced CONFIG_EFI_STUB_EXTRACT_DIRECT but I
->>> didn't find this option in the series.  I also tried both with
->>> CONFIG_EFI_DXE_MEM_ATTRIBUTES=y or unset, same result.
->> 
->> Hi,
->> 
->> Thanks for your feedback!
->> 
-> 
-> Sure!
-> 
->> CONFIG_EFI_STUB_EXTRACT_DIRECT option was removed in v2 of the series
->> and direct extraction is unconditional now.
->> 
->> You are getting really weird errors, which unfortunately I am unable
->> to reproduce yet. I've tried booting with fedora's grub and the series
->> applied on top of ee6050c8af96, but it did boot successfully.
-> 
-> Well so I expect the unique difference is that I'm using Peter's GRUB
-> that has some NX support landed.  He has binaries for it here:
-> 
-> https://blog.uncooperative.org/~pjones/nx/repo/
-> 
-> *Theoretically* a BIOS that enforces NX should be able to boot a shim 
-> with
-> the NX compat bit set which should be able to boot that GRUB
-> supporting NX which should be able to boot this series.
-> 
->> 
->>  From the error messages it's some problem with malloc() 
->> implementation
->> of compressed kernel code. I suspect that malloc_ptr inside .bss is 
->> not
->> zeroed. This should not happen when booting via either non-UEFI
->> interface, or via UEFI (when kernel is properly loaded as PE image).
->> The problem, I think, arises when kernel is loaded as a blob, but EFI
->> handover protocol is used to start its execution. This is what grub
->> seems to be doing.
->> 
->> Can you please try booting with patches below applied on top?
->> If this fixes the problem, I'll include these changes in v3.
-> 
-> Yup, spot on.  I can the kernel from Peter's NX enabled GRUB now with:
-> * 6.1-rc4
-> * Your existing 23 patch series
-> * this new patch
-> 
+Hi KSPP community,
 
+I've been working on replacing 1-element arrays with flex array members
+on the drm/amdgpu files. I came across one insteresting case which I
+may need to pick your brains to find a solution for it.
 
+The structure below has two fake flexible arrays but I would get an
+error if I try make them both FAM. How should/could I deal with the
+asRegIndexBuf in this case? In theory, DECLARE_FLEX_ARRAY would "work"
+but that doesn't seem to be its intended usage as far I've searched.
+(unless I got it wrong, if that's the case, feel free to set me straight)
 
-> Thanks!!
-> 
-> Would you mind CC me when you submit v3?  As I have an interest in
-> seeing NX support I'd like to continue to follow along on the series.
+Any ideas? 
 
-Ok.
-> 
-> Anything in the series you don't change in any material way from v2
-> please feel free to include:
-> 
-> Tested-by: Mario Limonciello <mario.limonciello@amd.com>
-> 
+struct _ATOM_INIT_REG_BLOCK {
+	USHORT                     usRegIndexTblSize;    /*     0     2 */
+	USHORT                     usRegDataBlkSize;     /*     2     2 */
+	ATOM_INIT_REG_INDEX_FORMAT asRegIndexBuf[1];     /*     4     3 */
+	ATOM_MEMORY_SETTING_DATA_BLOCK asRegDataBuf[1];  /*     7     8 */
 
-Great, thanks!
+	/* size: 15, cachelines: 1, members: 4 */
+	/* last cacheline: 15 bytes */
+} __attribute__((__packed__));
+
+thanks!
+
+- Paulo A.
