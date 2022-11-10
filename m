@@ -2,64 +2,66 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B39CC4332F
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Nov 2022 16:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C325C433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Nov 2022 16:29:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231737AbiKJQ3X (ORCPT
+        id S231719AbiKJQ3m (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Nov 2022 11:29:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56696 "EHLO
+        Thu, 10 Nov 2022 11:29:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231728AbiKJQ3W (ORCPT
+        with ESMTP id S231446AbiKJQ3l (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Nov 2022 11:29:22 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AB7B303DB
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:29:21 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id b21so1784191plc.9
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:29:21 -0800 (PST)
+        Thu, 10 Nov 2022 11:29:41 -0500
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84A7832066
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:29:40 -0800 (PST)
+Received: by mail-pl1-x62f.google.com with SMTP id p12so1805634plq.4
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:29:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=qnovQdeIx+egc+wctWL+zO6cHJ44FnQ3qczpXh6b5Rc=;
-        b=Gwp1kDX1FCipY1yoLpoRT+LKjTgivm7wfhgwGSd+RxZ9DNE5AG3m9vlIgq9mLbP0Mv
-         nQbd8Jt8mHZgthGzGyDe8BU1HvPhBk04H663rBtsiO7WgszATd/0LdyYYXz/0Gpdb7it
-         FEhrmO0m4dENT3TwGhnrL3hBp/C7TXrZIQVZQ=
+        bh=p69BmXsrcWg/AzWNjyneaVi3RC0xN6d46X3rBdkjEas=;
+        b=RIIdTaRLJ4myYuVCFN493P4QMvBKfU1UZzeNk8H62PwZ0tpzOBy1xKWDWcKJBeEZ6Y
+         65fUOJQMIl/yOykTZd6ANRQ/WKPqe4DW1B+Q8YzVQFUzennraovICu65Py2enLE8+smK
+         lpHEk1lsEW35fhaBqhL+xmuF23Q7GLl1ahpFI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qnovQdeIx+egc+wctWL+zO6cHJ44FnQ3qczpXh6b5Rc=;
-        b=sJypucsYNvKSTM0rDHUgeBJ674sN5s4Zscp6hhgnfmBCuImwW0I0y4pOdGBpFF5Hfp
-         zL+zmJUzav+0gL47kjXhTRW71SfVue7Rff3UkR1Gp6cFV5njrCfSz4Svp1w5lQx+WcBw
-         PKQov++l0t0kQ/seTkTn3z834X+Tgd76Ff4aBTYWQzT7ktfAfS6r+OLekfS2bh53mx2K
-         zve27C+WWKwd2CAp6zKRudWpL3DtpZlb+4yVGEAZzXRgFnAfCadrOgTyGBIfTwPzeVnT
-         5VvhPmbcAHDNsxdGvp3MU1BbSYg05w1AqchS0wCarHl27JRMG0psZqVB1dkEeFJkophi
-         BRfA==
-X-Gm-Message-State: ANoB5pmM0JFwco8/uYE6x0sWD53qf3U/tNYQignWSbBq11aFs+9cCPm/
-        gH+L6chU2jiKe/2QfNAIw6v69g==
-X-Google-Smtp-Source: AA0mqf4OAxg/aPEkLol3W9r99Ywjc2Hkx53s92PFLJXoZPdWyG8E6OPkaKwZNdmxaRGyPJxvqOAU9Q==
-X-Received: by 2002:a17:902:ca0d:b0:188:9806:2e05 with SMTP id w13-20020a170902ca0d00b0018898062e05mr4228345pld.112.1668097760798;
-        Thu, 10 Nov 2022 08:29:20 -0800 (PST)
+        bh=p69BmXsrcWg/AzWNjyneaVi3RC0xN6d46X3rBdkjEas=;
+        b=z6NHhy9yM8JUf+uBg4iLokHp6lm/7mSbVV10Chrsj0Ki5PNxjPR2fDEmVAcp7zUsrt
+         ymdH4HNjOyFvI6DlWfTw/rdWwxaTfsgWp/3H2o3eHP32aF2unrUN5bs5exW2R0qqJY6M
+         gu0NmgKQq/xwalyzCKQWr0JNypmRlnxkm5MqtiYBPmRRKBKPsvKVR3x902xcB6fyPxXG
+         AAuhpmvNTt3XsDyDmDcpQ8PgVqK2sbh9jR4iktQlviAQKpRqW+9bcUVk+I/0k0nyJfe1
+         eIozvnbeeSpdRM10ewuxNJ1wN4D3+pG2xIN1avFpgRfIeDwDbJI+JrZeA+Zq+EZ65Whs
+         Cmag==
+X-Gm-Message-State: ACrzQf0VvC6n4uqmp6ROqVSytGA36etZmBZN9C04xTIQLzh5xsF2HRRj
+        qHXhGPYcankKHKUPiQOLQMTtzg==
+X-Google-Smtp-Source: AMsMyM7TO7eGHeFeneQtU/cxkE5lpW5+G4R6pi9U6CwPb1b3VFqCVQD2LWaqEaoSGdyvJ0wZfSrMfA==
+X-Received: by 2002:a17:90b:e0e:b0:213:2a98:6486 with SMTP id ge14-20020a17090b0e0e00b002132a986486mr65134012pjb.96.1668097779885;
+        Thu, 10 Nov 2022 08:29:39 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id nn14-20020a17090b38ce00b00213d28a6dedsm3315459pjb.13.2022.11.10.08.29.20
+        by smtp.gmail.com with ESMTPSA id u7-20020a170902e80700b0017a032d7ae4sm11569791plg.104.2022.11.10.08.29.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Nov 2022 08:29:20 -0800 (PST)
+        Thu, 10 Nov 2022 08:29:39 -0800 (PST)
 From:   coverity-bot <keescook@chromium.org>
 X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date:   Thu, 10 Nov 2022 08:29:19 -0800
-To:     Daniel Drake <dsd@laptop.org>
+Date:   Thu, 10 Nov 2022 08:29:38 -0800
+To:     Marco Felsch <m.felsch@pengutronix.de>
 Cc:     linux-kernel@vger.kernel.org,
-        "John W. Linville" <linville@tuxdriver.com>,
-        linux-wireless@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Jean-Michel Hautbois <jeanmichel.hautbois@ideasonboard.com>,
+        Shawn Tu <shawnx.tu@intel.com>, linux-media@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: if_sdio_reset_card_worker(): Error handling issues
-Message-ID: <202211100829.34D7E6894@keescook>
+Subject: Coverity: tc358746_g_register(): Error handling issues
+Message-ID: <202211100829.085BC218E@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -76,27 +78,27 @@ https://scan.coverity.com/projects/linux-next-weekly-scan
 You're getting this email because you were associated with the identified
 lines of code (noted below) that were touched by commits:
 
-  Fri Jun 10 14:57:47 2011 -0400
-    9a821f5d0fc3 ("libertas: add sd8686 reset_card support")
+  Thu Oct 27 14:48:40 2022 +0300
+    80a21da36051 ("media: tc358746: add Toshiba TC358746 Parallel to CSI-2 bridge driver")
 
 Coverity reported the following:
 
-*** CID 1527255:  Error handling issues  (CHECKED_RETURN)
-drivers/net/wireless/marvell/libertas/if_sdio.c:1048 in if_sdio_reset_card_worker()
-1042     	 * We run it in a workqueue totally independent from the if_sdio_card
-1043     	 * instance for that reason.
-1044     	 */
-1045
-1046     	pr_info("Resetting card...");
-1047     	mmc_remove_host(reset_host);
-vvv     CID 1527255:  Error handling issues  (CHECKED_RETURN)
-vvv     Calling "mmc_add_host" without checking return value (as is done elsewhere 27 out of 32 times).
-1048     	mmc_add_host(reset_host);
-1049     }
-1050     static DECLARE_WORK(card_reset_work, if_sdio_reset_card_worker);
-1051
-1052     static void if_sdio_reset_card(struct lbs_private *priv)
-1053     {
+*** CID 1527254:  Error handling issues  (CHECKED_RETURN)
+drivers/media/i2c/tc358746.c:998 in tc358746_g_register()
+992     	/* 32-bit registers starting from CLW_DPHYCONTTX */
+993     	reg->size = reg->reg < CLW_DPHYCONTTX_REG ? 2 : 4;
+994
+995     	if (!pm_runtime_get_if_in_use(sd->dev))
+996     		return 0;
+997
+vvv     CID 1527254:  Error handling issues  (CHECKED_RETURN)
+vvv     Calling "tc358746_read" without checking return value (as is done elsewhere 5 out of 6 times).
+998     	tc358746_read(tc358746, reg->reg, (u32 *)&reg->val);
+999
+1000     	pm_runtime_mark_last_busy(sd->dev);
+1001     	pm_runtime_put_sync_autosuspend(sd->dev);
+1002
+1003     	return 0;
 
 If this is a false positive, please let us know so we can mark it as
 such, or teach the Coverity rules to be smarter. If not, please make
@@ -104,8 +106,8 @@ sure fixes get into linux-next. :) For patches fixing this, please
 include these lines (but double-check the "Fixes" first):
 
 Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1527255 ("Error handling issues")
-Fixes: 9a821f5d0fc3 ("libertas: add sd8686 reset_card support")
+Addresses-Coverity-ID: 1527254 ("Error handling issues")
+Fixes: 80a21da36051 ("media: tc358746: add Toshiba TC358746 Parallel to CSI-2 bridge driver")
 
 Thanks for your attention!
 
