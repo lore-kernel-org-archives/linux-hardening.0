@@ -2,57 +2,57 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B854C4332F
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Nov 2022 15:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C56C4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Nov 2022 16:01:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229914AbiKJP6M (ORCPT
+        id S229701AbiKJQBU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Nov 2022 10:58:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37932 "EHLO
+        Thu, 10 Nov 2022 11:01:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229688AbiKJP6M (ORCPT
+        with ESMTP id S231251AbiKJQAz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Nov 2022 10:58:12 -0500
-Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 171222B248;
-        Thu, 10 Nov 2022 07:58:11 -0800 (PST)
-Received: by mail-oi1-x22e.google.com with SMTP id n186so2227087oih.7;
-        Thu, 10 Nov 2022 07:58:11 -0800 (PST)
+        Thu, 10 Nov 2022 11:00:55 -0500
+Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E74B8303D3;
+        Thu, 10 Nov 2022 08:00:53 -0800 (PST)
+Received: by mail-oi1-x232.google.com with SMTP id r76so2204641oie.13;
+        Thu, 10 Nov 2022 08:00:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PqIxv0ykgX1dUcCkKNelcPiK/Dm8WOI9ANa20Luuz78=;
-        b=OeMN1rKkePk0RMijxlVlQsnyZva5JsgGdk5gD1Wmfp7zgg8+KrQGMefkBvzr+SwW44
-         s1wNFKq9I7T0DgF0Ai2dExVtOhu3yU7GanqxsRIjgwOPwxHpRDfA1UqoHu/qXI8osEey
-         uaCMOJc7hPOr9Bn5/DhUldUC4Jbj2aXb+ZHSIxC0ObYxXTACp84XRJcNR2XmXN7E+B82
-         ZSko+6Tnz/F1L0TlLzaIiJxfm4DcyLWSncUbNnI6LasnDYaOjXCc8cInixSvW/8FNbaW
-         gI8gssOFwptiwlEVmr09g2dgOVeOKPhdW7ei14S8gviE/FH2cBX0K2q2HIievlWtLBhO
-         NO9Q==
+        bh=aYz8foOjK1gz42upwQJGKNCoSPauwma/4inAgcdejWk=;
+        b=d68/6bKoUpRcQvmE6N2gQ+c1NN7gBxju/dpNpX8drJeA2WEkizNvfkXpP0lJ50uoIt
+         tyY/Huxo6+ShOa8zerMIO1I6r4maPEkVBv6RJ8eN9U9c9czxrwMON0qEjKoEFOIkUgPZ
+         WIVl5w91ZNp0J6uc13p2W70q3yYcBiCbMoYk/0HTEYKc3FGmAVNtnpdvHh3QZXpJMl5v
+         ht2QKmL7DhHYmIIbOO+dKevn5wnn8b6UvZloBcSMZtM/khcWaCEnweR4j8hTVtlKGN+S
+         T3+UHyRS5hS8dYgG2ZwYn6mTi37LscjB2/u6zgjSpql6HcTz/ly1ZnD/x44ls7gEv7eR
+         B+6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PqIxv0ykgX1dUcCkKNelcPiK/Dm8WOI9ANa20Luuz78=;
-        b=AHWXkVZPeJb6RkT2os7S/0TUN3Zqyz5wBYtDyuOOCn1Y6B8E4kl/9rjnSacn/2eb9H
-         q4qafmjV0/6SSjYV951R8wA+DSxANGO88Nlm2vO4b3Vk8ZTxDiqbQ+XdnV+bs679uOY7
-         XHtoc/57X7QDsxj0o/hocrn0HsGX5miNjkV2ryMZO5N0AcvMUAHM2W6AAwI+oM3ebXeW
-         Hw66EuUkdRF0JSNE/lnb42/dR3bPY/6YBFU48zRpGgH/2kQHjnIBAlKQ1pEJqpd+r245
-         Nz+Vd3TdiuILlzaoBG4jhWsBfXmYcx5GL/o8oTgkW1Fy5bKocSnngeY8zHCL23c2UrYd
-         tAOQ==
-X-Gm-Message-State: ACrzQf0tdylFaP1LQK3ifiCakVOW5RlKDJVy+z0EoRAftvAPIyoHQtvH
-        5KA3USpLpvMHbKl5Eb+uX33E+CPGbS/lx0PC5+I=
-X-Google-Smtp-Source: AMsMyM5yu9fp0U9ivZ86w+s8zY9m83vob70VluIoUBlOY2mSDFVVApkRPdDlzgO7pSrJ207FPp7MAWV6dVAFZV4Y9dY=
-X-Received: by 2002:a05:6808:7dc:b0:34f:97ea:14d with SMTP id
- f28-20020a05680807dc00b0034f97ea014dmr1581484oij.96.1668095890301; Thu, 10
- Nov 2022 07:58:10 -0800 (PST)
+        bh=aYz8foOjK1gz42upwQJGKNCoSPauwma/4inAgcdejWk=;
+        b=fA00LjMCb7HwPQxfiA3YyKIjGOMpmy4cCuqF93ttDGBKqr2QSLH2bFDoqSYWKKVtCe
+         RGE84za9sCykrCkwXkgsArAVaXlG8UYpjG7frFtnHiheAlMe+m68/1RHvmlgsL1OuF61
+         4Ksjy3kIUkHWN790omCoojmDkSORd9TDLx4bO3xZ0b6hXn74geMqrh2AnZw6Qgfitp8H
+         YuZqgE735egsoVgtUZfxd8s//JxMJiVfaDQDpIh+boZSWc+y0hgUbKbNsFmasylcle1B
+         8UTwDps7efoxUz99Q0oyFDsnPMhNQjtADWhuHRivBx1b2zdO1OVZXM+FypLVEXL/0Nhq
+         xkag==
+X-Gm-Message-State: ACrzQf1yWp5PQV+vNZveCAj0585r6bq06L2G7fANPWduMGjTx9remlPE
+        4K7rfzK2yecMfa3wHTt47ys3WmiLg8s1UtQ3isOaJWIN
+X-Google-Smtp-Source: AMsMyM4pvr38ZhDB5nbS4nygOg6LSNWRFpLF7uwCXqLtbdC2X54kkn8Lf63pCovrcbcMWAC5QsZRTBtDzUND/ESPVFI=
+X-Received: by 2002:aca:b655:0:b0:35a:4fb4:c3d2 with SMTP id
+ g82-20020acab655000000b0035a4fb4c3d2mr20399155oif.96.1668096053219; Thu, 10
+ Nov 2022 08:00:53 -0800 (PST)
 MIME-Version: 1.0
-References: <Y2tXzlBDxgg9WMl7@mail.google.com>
-In-Reply-To: <Y2tXzlBDxgg9WMl7@mail.google.com>
+References: <Y2tXzlBDxgg9WMl7@mail.google.com> <CADnq5_NJNa41y28-+PPjA6hUPrYGXc87K50LeiEYGnyGyackUQ@mail.gmail.com>
+In-Reply-To: <CADnq5_NJNa41y28-+PPjA6hUPrYGXc87K50LeiEYGnyGyackUQ@mail.gmail.com>
 From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 10 Nov 2022 10:57:58 -0500
-Message-ID: <CADnq5_NJNa41y28-+PPjA6hUPrYGXc87K50LeiEYGnyGyackUQ@mail.gmail.com>
+Date:   Thu, 10 Nov 2022 11:00:41 -0500
+Message-ID: <CADnq5_NS_dRzvBG9qgfrCLkUp0GQas=zFZ9ow=4BmvdiZuzQpg@mail.gmail.com>
 Subject: Re: [PATCH] [next] drm/amdgpu: Replace one-element array with
  flex-array member
 To:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
@@ -73,154 +73,165 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Nov 9, 2022 at 2:33 AM Paulo Miguel Almeida
-<paulo.miguel.almeida.rodenas@gmail.com> wrote:
+On Thu, Nov 10, 2022 at 10:57 AM Alex Deucher <alexdeucher@gmail.com> wrote:
 >
-> One-element arrays are deprecated, and we are replacing them with
-> flexible array members instead. So, replace one-element array with
-> flexible-array member in structs _ATOM_CONNECTOR_DEVICE_TAG_RECORD,
-> _ATOM_OBJECT_GPIO_CNTL_RECORD, _ATOM_BRACKET_LAYOUT_RECORD,
-> _ATOM_BRACKET_LAYOUT_RECORD, _ATOM_LEAKAGE_VOLTAGE_OBJECT_V3,
-> _ATOM_FUSION_SYSTEM_INFO_V3, _ATOM_I2C_DATA_RECORD,
-> _ATOM_I2C_DEVICE_SETUP_INFO, _ATOM_ASIC_MVDD_INFO and refactor the
-> rest of the code accordingly. While at it, removed a redundant casting.
+> On Wed, Nov 9, 2022 at 2:33 AM Paulo Miguel Almeida
+> <paulo.miguel.almeida.rodenas@gmail.com> wrote:
+> >
+> > One-element arrays are deprecated, and we are replacing them with
+> > flexible array members instead. So, replace one-element array with
+> > flexible-array member in structs _ATOM_CONNECTOR_DEVICE_TAG_RECORD,
+> > _ATOM_OBJECT_GPIO_CNTL_RECORD, _ATOM_BRACKET_LAYOUT_RECORD,
+> > _ATOM_BRACKET_LAYOUT_RECORD, _ATOM_LEAKAGE_VOLTAGE_OBJECT_V3,
+> > _ATOM_FUSION_SYSTEM_INFO_V3, _ATOM_I2C_DATA_RECORD,
+> > _ATOM_I2C_DEVICE_SETUP_INFO, _ATOM_ASIC_MVDD_INFO and refactor the
+> > rest of the code accordingly. While at it, removed a redundant casting.
+> >
+> > Important to mention is that doing a build before/after this patch results
+> > in no binary output differences.
+> >
+> > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> > routines on memcpy() and help us make progress towards globally
+> > enabling -fstrict-flex-arrays=3 [1].
+> >
+> > Link: https://github.com/KSPP/linux/issues/79
+> > Link: https://github.com/KSPP/linux/issues/238
+> > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
+> >
+> > Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+> > ---
+> >
+> > Alex, I noticed a few structs in atombios.h that were not referenced. Is
+> > there any appetite for removing them? Or is that one of those cases
+> > where the structs are there should one driver ever need it?
 >
-> Important to mention is that doing a build before/after this patch results
-> in no binary output differences.
->
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3 [1].
->
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://github.com/KSPP/linux/issues/238
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
->
-> Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-> ---
->
-> Alex, I noticed a few structs in atombios.h that were not referenced. Is
-> there any appetite for removing them? Or is that one of those cases
-> where the structs are there should one driver ever need it?
+> A lot of userspace tools use these tables and I'd like to keep the
+> headers compatible.  Also, as I mentioned in the other thread, the
+> atombios command tables often parse these tables when initializing the
+> hardware so when you are debugging a command table, it helps to have
+> the relevant structures defined so it's easier to understand what the
+> command tables are doing.
 
-A lot of userspace tools use these tables and I'd like to keep the
-headers compatible.  Also, as I mentioned in the other thread, the
-atombios command tables often parse these tables when initializing the
-hardware so when you are debugging a command table, it helps to have
-the relevant structures defined so it's easier to understand what the
-command tables are doing.
+Also, because this header is shared by multiple components within AMD
+(linux, windows, bios, etc.), it would make things a lot easier if we
+maintained compatibility.
+
+Applied this patch.  Thanks,
 
 Alex
 
-
 >
-> Ex.:
->         struct _ATOM_I2C_DATA_RECORD
->         struct _ATOM_I2C_DEVICE_SETUP_INFO
->         struct _ATOM_ASIC_MVDD_INFO
-> ---
->  .../gpu/drm/amd/display/dc/bios/bios_parser.c    |  5 ++---
->  drivers/gpu/drm/amd/include/atombios.h           | 16 ++++++++--------
->  2 files changed, 10 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
-> index 39dd8b2dc254..6b9e64cd4379 100644
-> --- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
-> +++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
-> @@ -2606,8 +2606,7 @@ static enum bp_result update_slot_layout_info(
->
->         for (;;) {
->
-> -               record_header = (ATOM_COMMON_RECORD_HEADER *)
-> -                       GET_IMAGE(ATOM_COMMON_RECORD_HEADER, record_offset);
-> +               record_header = GET_IMAGE(ATOM_COMMON_RECORD_HEADER, record_offset);
->                 if (record_header == NULL) {
->                         result = BP_RESULT_BADBIOSTABLE;
->                         break;
-> @@ -2621,7 +2620,7 @@ static enum bp_result update_slot_layout_info(
->
->                 if (record_header->ucRecordType ==
->                         ATOM_BRACKET_LAYOUT_RECORD_TYPE &&
-> -                       sizeof(ATOM_BRACKET_LAYOUT_RECORD)
-> +                       struct_size(record, asConnInfo, 1)
->                         <= record_header->ucRecordSize) {
->                         record = (ATOM_BRACKET_LAYOUT_RECORD *)
->                                 (record_header);
-> diff --git a/drivers/gpu/drm/amd/include/atombios.h b/drivers/gpu/drm/amd/include/atombios.h
-> index 55ae93c1e365..60c44a8a067f 100644
-> --- a/drivers/gpu/drm/amd/include/atombios.h
-> +++ b/drivers/gpu/drm/amd/include/atombios.h
-> @@ -4733,7 +4733,7 @@ typedef struct  _ATOM_CONNECTOR_DEVICE_TAG_RECORD
->    ATOM_COMMON_RECORD_HEADER   sheader;
->    UCHAR                       ucNumberOfDevice;
->    UCHAR                       ucReserved;
-> -  ATOM_CONNECTOR_DEVICE_TAG   asDeviceTag[1];         //This Id is same as "ATOM_DEVICE_XXX_SUPPORT", 1 is only for allocation
-> +  ATOM_CONNECTOR_DEVICE_TAG   asDeviceTag[];          //This Id is same as "ATOM_DEVICE_XXX_SUPPORT"
->  }ATOM_CONNECTOR_DEVICE_TAG_RECORD;
+> Alex
 >
 >
-> @@ -4793,7 +4793,7 @@ typedef struct  _ATOM_OBJECT_GPIO_CNTL_RECORD
->    ATOM_COMMON_RECORD_HEADER   sheader;
->    UCHAR                       ucFlags;                // Future expnadibility
->    UCHAR                       ucNumberOfPins;         // Number of GPIO pins used to control the object
-> -  ATOM_GPIO_PIN_CONTROL_PAIR  asGpio[1];              // the real gpio pin pair determined by number of pins ucNumberOfPins
-> +  ATOM_GPIO_PIN_CONTROL_PAIR  asGpio[];               // the real gpio pin pair determined by number of pins ucNumberOfPins
->  }ATOM_OBJECT_GPIO_CNTL_RECORD;
->
->  //Definitions for GPIO pin state
-> @@ -4982,7 +4982,7 @@ typedef struct  _ATOM_BRACKET_LAYOUT_RECORD
->    UCHAR                       ucWidth;
->    UCHAR                       ucConnNum;
->    UCHAR                       ucReserved;
-> -  ATOM_CONNECTOR_LAYOUT_INFO  asConnInfo[1];
-> +  ATOM_CONNECTOR_LAYOUT_INFO  asConnInfo[];
->  }ATOM_BRACKET_LAYOUT_RECORD;
->
->
-> @@ -5161,7 +5161,7 @@ typedef struct  _ATOM_GPIO_VOLTAGE_OBJECT_V3
->     UCHAR  ucPhaseDelay;                      // phase delay in unit of micro second
->     UCHAR  ucReserved;
->     ULONG  ulGpioMaskVal;                     // GPIO Mask value
-> -   VOLTAGE_LUT_ENTRY_V2 asVolGpioLut[1];
-> +   VOLTAGE_LUT_ENTRY_V2 asVolGpioLut[];
->  }ATOM_GPIO_VOLTAGE_OBJECT_V3;
->
->  typedef struct  _ATOM_LEAKAGE_VOLTAGE_OBJECT_V3
-> @@ -5171,7 +5171,7 @@ typedef struct  _ATOM_LEAKAGE_VOLTAGE_OBJECT_V3
->     UCHAR    ucLeakageEntryNum;               // indicate the entry number of LeakageId/Voltage Lut table
->     UCHAR    ucReserved[2];
->     ULONG    ulMaxVoltageLevel;
-> -   LEAKAGE_VOLTAGE_LUT_ENTRY_V2 asLeakageIdLut[1];
-> +   LEAKAGE_VOLTAGE_LUT_ENTRY_V2 asLeakageIdLut[];
->  }ATOM_LEAKAGE_VOLTAGE_OBJECT_V3;
->
->
-> @@ -6599,7 +6599,7 @@ typedef struct _ATOM_FUSION_SYSTEM_INFO_V3
->  typedef struct _ATOM_I2C_DATA_RECORD
->  {
->    UCHAR         ucNunberOfBytes;                                              //Indicates how many bytes SW needs to write to the external ASIC for one block, besides to "Start" and "Stop"
-> -  UCHAR         ucI2CData[1];                                                 //I2C data in bytes, should be less than 16 bytes usually
-> +  UCHAR         ucI2CData[];                                                  //I2C data in bytes, should be less than 16 bytes usually
->  }ATOM_I2C_DATA_RECORD;
->
->
-> @@ -6610,14 +6610,14 @@ typedef struct _ATOM_I2C_DEVICE_SETUP_INFO
->    UCHAR                              ucSSChipID;             //SS chip being used
->    UCHAR                              ucSSChipSlaveAddr;      //Slave Address to set up this SS chip
->    UCHAR                           ucNumOfI2CDataRecords;  //number of data block
-> -  ATOM_I2C_DATA_RECORD            asI2CData[1];
-> +  ATOM_I2C_DATA_RECORD            asI2CData[];
->  }ATOM_I2C_DEVICE_SETUP_INFO;
->
->  //==========================================================================================
->  typedef struct  _ATOM_ASIC_MVDD_INFO
->  {
->    ATOM_COMMON_TABLE_HEADER         sHeader;
-> -  ATOM_I2C_DEVICE_SETUP_INFO      asI2CSetup[1];
-> +  ATOM_I2C_DEVICE_SETUP_INFO      asI2CSetup[];
->  }ATOM_ASIC_MVDD_INFO;
->
->  //==========================================================================================
-> --
-> 2.37.3
->
+> >
+> > Ex.:
+> >         struct _ATOM_I2C_DATA_RECORD
+> >         struct _ATOM_I2C_DEVICE_SETUP_INFO
+> >         struct _ATOM_ASIC_MVDD_INFO
+> > ---
+> >  .../gpu/drm/amd/display/dc/bios/bios_parser.c    |  5 ++---
+> >  drivers/gpu/drm/amd/include/atombios.h           | 16 ++++++++--------
+> >  2 files changed, 10 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
+> > index 39dd8b2dc254..6b9e64cd4379 100644
+> > --- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
+> > +++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
+> > @@ -2606,8 +2606,7 @@ static enum bp_result update_slot_layout_info(
+> >
+> >         for (;;) {
+> >
+> > -               record_header = (ATOM_COMMON_RECORD_HEADER *)
+> > -                       GET_IMAGE(ATOM_COMMON_RECORD_HEADER, record_offset);
+> > +               record_header = GET_IMAGE(ATOM_COMMON_RECORD_HEADER, record_offset);
+> >                 if (record_header == NULL) {
+> >                         result = BP_RESULT_BADBIOSTABLE;
+> >                         break;
+> > @@ -2621,7 +2620,7 @@ static enum bp_result update_slot_layout_info(
+> >
+> >                 if (record_header->ucRecordType ==
+> >                         ATOM_BRACKET_LAYOUT_RECORD_TYPE &&
+> > -                       sizeof(ATOM_BRACKET_LAYOUT_RECORD)
+> > +                       struct_size(record, asConnInfo, 1)
+> >                         <= record_header->ucRecordSize) {
+> >                         record = (ATOM_BRACKET_LAYOUT_RECORD *)
+> >                                 (record_header);
+> > diff --git a/drivers/gpu/drm/amd/include/atombios.h b/drivers/gpu/drm/amd/include/atombios.h
+> > index 55ae93c1e365..60c44a8a067f 100644
+> > --- a/drivers/gpu/drm/amd/include/atombios.h
+> > +++ b/drivers/gpu/drm/amd/include/atombios.h
+> > @@ -4733,7 +4733,7 @@ typedef struct  _ATOM_CONNECTOR_DEVICE_TAG_RECORD
+> >    ATOM_COMMON_RECORD_HEADER   sheader;
+> >    UCHAR                       ucNumberOfDevice;
+> >    UCHAR                       ucReserved;
+> > -  ATOM_CONNECTOR_DEVICE_TAG   asDeviceTag[1];         //This Id is same as "ATOM_DEVICE_XXX_SUPPORT", 1 is only for allocation
+> > +  ATOM_CONNECTOR_DEVICE_TAG   asDeviceTag[];          //This Id is same as "ATOM_DEVICE_XXX_SUPPORT"
+> >  }ATOM_CONNECTOR_DEVICE_TAG_RECORD;
+> >
+> >
+> > @@ -4793,7 +4793,7 @@ typedef struct  _ATOM_OBJECT_GPIO_CNTL_RECORD
+> >    ATOM_COMMON_RECORD_HEADER   sheader;
+> >    UCHAR                       ucFlags;                // Future expnadibility
+> >    UCHAR                       ucNumberOfPins;         // Number of GPIO pins used to control the object
+> > -  ATOM_GPIO_PIN_CONTROL_PAIR  asGpio[1];              // the real gpio pin pair determined by number of pins ucNumberOfPins
+> > +  ATOM_GPIO_PIN_CONTROL_PAIR  asGpio[];               // the real gpio pin pair determined by number of pins ucNumberOfPins
+> >  }ATOM_OBJECT_GPIO_CNTL_RECORD;
+> >
+> >  //Definitions for GPIO pin state
+> > @@ -4982,7 +4982,7 @@ typedef struct  _ATOM_BRACKET_LAYOUT_RECORD
+> >    UCHAR                       ucWidth;
+> >    UCHAR                       ucConnNum;
+> >    UCHAR                       ucReserved;
+> > -  ATOM_CONNECTOR_LAYOUT_INFO  asConnInfo[1];
+> > +  ATOM_CONNECTOR_LAYOUT_INFO  asConnInfo[];
+> >  }ATOM_BRACKET_LAYOUT_RECORD;
+> >
+> >
+> > @@ -5161,7 +5161,7 @@ typedef struct  _ATOM_GPIO_VOLTAGE_OBJECT_V3
+> >     UCHAR  ucPhaseDelay;                      // phase delay in unit of micro second
+> >     UCHAR  ucReserved;
+> >     ULONG  ulGpioMaskVal;                     // GPIO Mask value
+> > -   VOLTAGE_LUT_ENTRY_V2 asVolGpioLut[1];
+> > +   VOLTAGE_LUT_ENTRY_V2 asVolGpioLut[];
+> >  }ATOM_GPIO_VOLTAGE_OBJECT_V3;
+> >
+> >  typedef struct  _ATOM_LEAKAGE_VOLTAGE_OBJECT_V3
+> > @@ -5171,7 +5171,7 @@ typedef struct  _ATOM_LEAKAGE_VOLTAGE_OBJECT_V3
+> >     UCHAR    ucLeakageEntryNum;               // indicate the entry number of LeakageId/Voltage Lut table
+> >     UCHAR    ucReserved[2];
+> >     ULONG    ulMaxVoltageLevel;
+> > -   LEAKAGE_VOLTAGE_LUT_ENTRY_V2 asLeakageIdLut[1];
+> > +   LEAKAGE_VOLTAGE_LUT_ENTRY_V2 asLeakageIdLut[];
+> >  }ATOM_LEAKAGE_VOLTAGE_OBJECT_V3;
+> >
+> >
+> > @@ -6599,7 +6599,7 @@ typedef struct _ATOM_FUSION_SYSTEM_INFO_V3
+> >  typedef struct _ATOM_I2C_DATA_RECORD
+> >  {
+> >    UCHAR         ucNunberOfBytes;                                              //Indicates how many bytes SW needs to write to the external ASIC for one block, besides to "Start" and "Stop"
+> > -  UCHAR         ucI2CData[1];                                                 //I2C data in bytes, should be less than 16 bytes usually
+> > +  UCHAR         ucI2CData[];                                                  //I2C data in bytes, should be less than 16 bytes usually
+> >  }ATOM_I2C_DATA_RECORD;
+> >
+> >
+> > @@ -6610,14 +6610,14 @@ typedef struct _ATOM_I2C_DEVICE_SETUP_INFO
+> >    UCHAR                              ucSSChipID;             //SS chip being used
+> >    UCHAR                              ucSSChipSlaveAddr;      //Slave Address to set up this SS chip
+> >    UCHAR                           ucNumOfI2CDataRecords;  //number of data block
+> > -  ATOM_I2C_DATA_RECORD            asI2CData[1];
+> > +  ATOM_I2C_DATA_RECORD            asI2CData[];
+> >  }ATOM_I2C_DEVICE_SETUP_INFO;
+> >
+> >  //==========================================================================================
+> >  typedef struct  _ATOM_ASIC_MVDD_INFO
+> >  {
+> >    ATOM_COMMON_TABLE_HEADER         sHeader;
+> > -  ATOM_I2C_DEVICE_SETUP_INFO      asI2CSetup[1];
+> > +  ATOM_I2C_DEVICE_SETUP_INFO      asI2CSetup[];
+> >  }ATOM_ASIC_MVDD_INFO;
+> >
+> >  //==========================================================================================
+> > --
+> > 2.37.3
+> >
