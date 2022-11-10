@@ -2,66 +2,64 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F332C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Nov 2022 16:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B39CC4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Nov 2022 16:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231620AbiKJQ26 (ORCPT
+        id S231737AbiKJQ3X (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Nov 2022 11:28:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56346 "EHLO
+        Thu, 10 Nov 2022 11:29:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231582AbiKJQ24 (ORCPT
+        with ESMTP id S231728AbiKJQ3W (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Nov 2022 11:28:56 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E1482F035
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:28:55 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id k5so1925388pjo.5
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:28:55 -0800 (PST)
+        Thu, 10 Nov 2022 11:29:22 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AB7B303DB
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:29:21 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id b21so1784191plc.9
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:29:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=kYFwHEO1MQlzL5988RRWEhawb+X2ogNV7IVaKnMutAU=;
-        b=Rm55ZdKNphJGqjoRbhXa5JBhBhiPEiMwlpKtjW361GKLVvfqEtEX7Y7clPYJfMgqWR
-         kpkrS895JF1SRdfNduRLBrodr2uK3vPGtZkRoWxsm94syt6dYHOvxrM+H2ctwB/h8AAO
-         7XhSInP9a3nufSN5jxqnRX2+Gk55ecO7ma2S0=
+        bh=qnovQdeIx+egc+wctWL+zO6cHJ44FnQ3qczpXh6b5Rc=;
+        b=Gwp1kDX1FCipY1yoLpoRT+LKjTgivm7wfhgwGSd+RxZ9DNE5AG3m9vlIgq9mLbP0Mv
+         nQbd8Jt8mHZgthGzGyDe8BU1HvPhBk04H663rBtsiO7WgszATd/0LdyYYXz/0Gpdb7it
+         FEhrmO0m4dENT3TwGhnrL3hBp/C7TXrZIQVZQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kYFwHEO1MQlzL5988RRWEhawb+X2ogNV7IVaKnMutAU=;
-        b=j49bXuAWj5oy28i89RieWIJc6rJOHRHwCeg2UnxZ/Wy2V0PzD12MsRPHxPbMEbxEBl
-         Lb7NT3L66voZH3/V0h00i3hQ8tn76tLJpnCe7ia5ArJrmxzwDRdGUQRbohXcuLVY01ub
-         Go48RvCKYw2Aba5Jm3IfhJ8IpSUECy8oj47lQz1+ALkEy1MB7YkKV4yuI+kFOHjaiw83
-         30tIlitloyVzr6jsyXjEKgbwEAwCUPXqonFdGQd8Cpx4T1rE2jS4a9denwCKfhhSL2L/
-         2lvMsi5wdWDmBbp7rwR9aXWn/2Xztd1NjapJg1RUysK4idj11AszgOOJIPJ4xHcLhQIq
-         Zh3g==
-X-Gm-Message-State: ACrzQf3yv2H8jZqCQF2n6gPPW69e4JNZjxo9t+yUJtOJ2dTyE5LasHvT
-        ANLnHS/zsuBaqnc1mnBIRXi83Q==
-X-Google-Smtp-Source: AMsMyM4emYZP3L1Fe5or/JUatDIpzgVdYnSmSA1gAw+IRUfMU2GbSXaLJGFz4dkzBNNwc1PTVrDwog==
-X-Received: by 2002:a17:90a:dd95:b0:213:7d3d:a769 with SMTP id l21-20020a17090add9500b002137d3da769mr1418306pjv.22.1668097735017;
-        Thu, 10 Nov 2022 08:28:55 -0800 (PST)
+        bh=qnovQdeIx+egc+wctWL+zO6cHJ44FnQ3qczpXh6b5Rc=;
+        b=sJypucsYNvKSTM0rDHUgeBJ674sN5s4Zscp6hhgnfmBCuImwW0I0y4pOdGBpFF5Hfp
+         zL+zmJUzav+0gL47kjXhTRW71SfVue7Rff3UkR1Gp6cFV5njrCfSz4Svp1w5lQx+WcBw
+         PKQov++l0t0kQ/seTkTn3z834X+Tgd76Ff4aBTYWQzT7ktfAfS6r+OLekfS2bh53mx2K
+         zve27C+WWKwd2CAp6zKRudWpL3DtpZlb+4yVGEAZzXRgFnAfCadrOgTyGBIfTwPzeVnT
+         5VvhPmbcAHDNsxdGvp3MU1BbSYg05w1AqchS0wCarHl27JRMG0psZqVB1dkEeFJkophi
+         BRfA==
+X-Gm-Message-State: ANoB5pmM0JFwco8/uYE6x0sWD53qf3U/tNYQignWSbBq11aFs+9cCPm/
+        gH+L6chU2jiKe/2QfNAIw6v69g==
+X-Google-Smtp-Source: AA0mqf4OAxg/aPEkLol3W9r99Ywjc2Hkx53s92PFLJXoZPdWyG8E6OPkaKwZNdmxaRGyPJxvqOAU9Q==
+X-Received: by 2002:a17:902:ca0d:b0:188:9806:2e05 with SMTP id w13-20020a170902ca0d00b0018898062e05mr4228345pld.112.1668097760798;
+        Thu, 10 Nov 2022 08:29:20 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p1-20020a170902a40100b00177f4ef7970sm11463523plq.11.2022.11.10.08.28.54
+        by smtp.gmail.com with ESMTPSA id nn14-20020a17090b38ce00b00213d28a6dedsm3315459pjb.13.2022.11.10.08.29.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Nov 2022 08:28:54 -0800 (PST)
+        Thu, 10 Nov 2022 08:29:20 -0800 (PST)
 From:   coverity-bot <keescook@chromium.org>
 X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date:   Thu, 10 Nov 2022 08:28:53 -0800
-To:     Marco Felsch <m.felsch@pengutronix.de>
+Date:   Thu, 10 Nov 2022 08:29:19 -0800
+To:     Daniel Drake <dsd@laptop.org>
 Cc:     linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Jean-Michel Hautbois <jeanmichel.hautbois@ideasonboard.com>,
-        Shawn Tu <shawnx.tu@intel.com>, linux-media@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "John W. Linville" <linville@tuxdriver.com>,
+        linux-wireless@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: tc358746_g_register(): Integer handling issues
-Message-ID: <202211100828.AFD4E1799@keescook>
+Subject: Coverity: if_sdio_reset_card_worker(): Error handling issues
+Message-ID: <202211100829.34D7E6894@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -78,27 +76,27 @@ https://scan.coverity.com/projects/linux-next-weekly-scan
 You're getting this email because you were associated with the identified
 lines of code (noted below) that were touched by commits:
 
-  Thu Oct 27 14:48:40 2022 +0300
-    80a21da36051 ("media: tc358746: add Toshiba TC358746 Parallel to CSI-2 bridge driver")
+  Fri Jun 10 14:57:47 2011 -0400
+    9a821f5d0fc3 ("libertas: add sd8686 reset_card support")
 
 Coverity reported the following:
 
-*** CID 1527256:  Integer handling issues  (INCOMPATIBLE_CAST)
-drivers/media/i2c/tc358746.c:998 in tc358746_g_register()
-992     	/* 32-bit registers starting from CLW_DPHYCONTTX */
-993     	reg->size = reg->reg < CLW_DPHYCONTTX_REG ? 2 : 4;
-994
-995     	if (!pm_runtime_get_if_in_use(sd->dev))
-996     		return 0;
-997
-vvv     CID 1527256:  Integer handling issues  (INCOMPATIBLE_CAST)
-vvv     Pointer "&reg->val" points to an object whose effective type is "unsigned long long" (64 bits, unsigned) but is dereferenced as a narrower "unsigned int" (32 bits, unsigned). This may lead to unexpected results depending on machine endianness.
-998     	tc358746_read(tc358746, reg->reg, (u32 *)&reg->val);
-999
-1000     	pm_runtime_mark_last_busy(sd->dev);
-1001     	pm_runtime_put_sync_autosuspend(sd->dev);
-1002
-1003     	return 0;
+*** CID 1527255:  Error handling issues  (CHECKED_RETURN)
+drivers/net/wireless/marvell/libertas/if_sdio.c:1048 in if_sdio_reset_card_worker()
+1042     	 * We run it in a workqueue totally independent from the if_sdio_card
+1043     	 * instance for that reason.
+1044     	 */
+1045
+1046     	pr_info("Resetting card...");
+1047     	mmc_remove_host(reset_host);
+vvv     CID 1527255:  Error handling issues  (CHECKED_RETURN)
+vvv     Calling "mmc_add_host" without checking return value (as is done elsewhere 27 out of 32 times).
+1048     	mmc_add_host(reset_host);
+1049     }
+1050     static DECLARE_WORK(card_reset_work, if_sdio_reset_card_worker);
+1051
+1052     static void if_sdio_reset_card(struct lbs_private *priv)
+1053     {
 
 If this is a false positive, please let us know so we can mark it as
 such, or teach the Coverity rules to be smarter. If not, please make
@@ -106,8 +104,8 @@ sure fixes get into linux-next. :) For patches fixing this, please
 include these lines (but double-check the "Fixes" first):
 
 Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1527256 ("Integer handling issues")
-Fixes: 80a21da36051 ("media: tc358746: add Toshiba TC358746 Parallel to CSI-2 bridge driver")
+Addresses-Coverity-ID: 1527255 ("Error handling issues")
+Fixes: 9a821f5d0fc3 ("libertas: add sd8686 reset_card support")
 
 Thanks for your attention!
 
