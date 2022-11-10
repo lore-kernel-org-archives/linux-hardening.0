@@ -2,53 +2,53 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8FEC43217
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Nov 2022 16:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDBDC4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Nov 2022 16:49:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232117AbiKJQtV (ORCPT
+        id S232684AbiKJQtn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Nov 2022 11:49:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49522 "EHLO
+        Thu, 10 Nov 2022 11:49:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232133AbiKJQtB (ORCPT
+        with ESMTP id S232660AbiKJQtS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Nov 2022 11:49:01 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 435AFA195
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:48:19 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id r61-20020a17090a43c300b00212f4e9cccdso5170751pjg.5
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:48:19 -0800 (PST)
+        Thu, 10 Nov 2022 11:49:18 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 862031F633
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:48:50 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id p21so1844863plr.7
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:48:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=LDJ5GbeH4x/1yjxtjF2BP9FcVDh9qhDYbgp39xw30DM=;
-        b=Fe2LrkP4LSaAmzpNbzUlL4Sz8W/ckj87PLB0s4ExV2y1hr/SBDx2aHXMGIHH4Q1HZp
-         SlVXRYyU/kLp+VT2nJhpvSEpLp5Gw306usHXiFoSvkdLXpFh1XiL/tfTwivIahCI7ZWT
-         lxhf3NYj8/XNq2LoDLiXIqTqCb4OIr0rR5gOM=
+        bh=g9kSxsO17Q+SGuhgv7bQJn3B89MxfwFUgXJQwdBXWxc=;
+        b=np5+c7/D+/Pe+ETkZmBCcBkcIkF9rWztcNUNpZ8fjJM55FzJgNq4nkQ3nqPKjpN1y4
+         +Vz42qN8iUh+CDPgfd4HJ+e7+YwQlV2RCywPsaAB8YsN7K22LSZWTzUSOkIgU8aIF4vU
+         Sg6WhOoBQQUUrmLT0u0VujZkRgeFf/Mp4HGoQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LDJ5GbeH4x/1yjxtjF2BP9FcVDh9qhDYbgp39xw30DM=;
-        b=fTsmv7E4uhxk1Go+Sf2AOrLwrhtnAP2Mcoz615kXqlQ7l/n5Oenr5eQ0yFz6eKby5K
-         LpIKACLglgKd9EhQGs4bK4BzQ81B4S36Sq2X1OkEZF+sFd3P/E/cTQo1D+Xf38jGobB1
-         Tmolbjg2kOMg5vcluQASwMGhZLDUkM5hV0/D0UPIgQBSOtadvGYN4oouy0JxfduTuuKs
-         sZOgnyRL5c0gBlwDlHCLJPaWRwepAzAGWuSCto91rUBG/r586jCAopY6exZsXR633/M+
-         Kuqzt6S47KBaigurBsKHlpjt8IdPo0TW+EUQ0e/3OURjNi2g+uPGUoUwEBLa525lveKq
-         rm2A==
-X-Gm-Message-State: ACrzQf2VUpY4sl6CUfRJiBilTUIb9m64k01/yyJxE6WFHD2ptvC5Puh3
-        mc8IJ7WboH8BiOv7JOMdgkJttg==
-X-Google-Smtp-Source: AMsMyM5L7JASpAto4IfQ834QGHOPC/E4fFSGlP1B6IiNOx5M0h4LxXrBlQ6jL1GcB0G62qrRYLVm/w==
-X-Received: by 2002:a17:902:d503:b0:187:19c4:f9db with SMTP id b3-20020a170902d50300b0018719c4f9dbmr58312424plg.82.1668098898782;
-        Thu, 10 Nov 2022 08:48:18 -0800 (PST)
+        bh=g9kSxsO17Q+SGuhgv7bQJn3B89MxfwFUgXJQwdBXWxc=;
+        b=4bI1ntsSem+lNJq1rkG8f9ZNG1NrKINFQWwgnwn4+FVPIO2CyYFfwmu2seLLeqpSdw
+         35iusfn8PF29Wn2S3qld0cVdqrS1GFTNjJ05IuOm8oTYNSh1xnwxO0YZs4w4llBlEdnY
+         U9XyfyGSKNuAAFReyjJU93ksOhqTHmTePX/iFU9M5XUqmaCWR7sdWJWPxJYjRp6oRKrN
+         Xf8DiZDz763q1AWEmGbPWbqGItMQdoJI9Y+c44cLvut+bqiMlLzod7oOp8PjyAGFYWxv
+         a0EO1vsjqa0gOe4zP7SMsDqvGcq3vIQ+aAkBT7xNvXdAal1C45MJWK01WDlKxS+YUs4X
+         7hlg==
+X-Gm-Message-State: ACrzQf1XIDYUE6Oum/3magGv1aFz5GELzd6ODZvA9i44YiZ37N/RSbzB
+        zPSBZRymBT5LgUbohsvFOQhTlw==
+X-Google-Smtp-Source: AMsMyM46trOzdUYGkS4TOBz+lvhrf5w6Z58imMinDBIdbLY+Ryt5gQlR73fs5ggqqfV6HJyw6Yc/cw==
+X-Received: by 2002:a17:902:8d8d:b0:17d:b9c:cd64 with SMTP id v13-20020a1709028d8d00b0017d0b9ccd64mr1509659plo.40.1668098929893;
+        Thu, 10 Nov 2022 08:48:49 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id om15-20020a17090b3a8f00b00213c7cf21c0sm50871pjb.5.2022.11.10.08.48.18
+        by smtp.gmail.com with ESMTPSA id s9-20020a63e809000000b00473c36ea150sm3597920pgh.92.2022.11.10.08.48.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Nov 2022 08:48:18 -0800 (PST)
+        Thu, 10 Nov 2022 08:48:49 -0800 (PST)
 From:   coverity-bot <keescook@chromium.org>
 X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date:   Thu, 10 Nov 2022 08:48:17 -0800
+Date:   Thu, 10 Nov 2022 08:48:48 -0800
 To:     Ben Skeggs <bskeggs@redhat.com>
 Cc:     Thomas Zimmermann <tzimmermann@suse.de>,
         linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
@@ -60,8 +60,8 @@ Cc:     Thomas Zimmermann <tzimmermann@suse.de>,
         Dave Airlie <airlied@redhat.com>,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: nv50_sor_atomic_enable(): Memory - corruptions
-Message-ID: <202211100848.FFBA2432@keescook>
+Subject: Coverity: nv50_pior_atomic_enable(): Memory - corruptions
+Message-ID: <202211100848.F4C2819BB@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -83,22 +83,22 @@ lines of code (noted below) that were touched by commits:
 
 Coverity reported the following:
 
-*** CID 1527269:  Memory - corruptions  (OVERRUN)
-drivers/gpu/drm/nouveau/dispnv50/disp.c:1619 in nv50_sor_atomic_enable()
-1613     				lvds_8bpc = true;
-1614     		}
-1615
-1616     		nvif_outp_acquire_lvds(&nv_encoder->outp, lvds_dual, lvds_8bpc);
-1617     		break;
-1618     	case DCB_OUTPUT_DP:
-vvv     CID 1527269:  Memory - corruptions  (OVERRUN)
+*** CID 1527268:  Memory - corruptions  (OVERRUN)
+drivers/gpu/drm/nouveau/dispnv50/disp.c:1817 in nv50_pior_atomic_enable()
+1811     	case DCB_OUTPUT_TMDS:
+1812     		ctrl |= NVDEF(NV507D, PIOR_SET_CONTROL, PROTOCOL, EXT_TMDS_ENC);
+1813     		nvif_outp_acquire_tmds(&nv_encoder->outp, false, false, 0, 0, 0, false);
+1814     		break;
+1815     	case DCB_OUTPUT_DP:
+1816     		ctrl |= NVDEF(NV507D, PIOR_SET_CONTROL, PROTOCOL, EXT_TMDS_ENC);
+vvv     CID 1527268:  Memory - corruptions  (OVERRUN)
 vvv     Overrunning array "(*nv_encoder).dp.dpcd" of 15 bytes by passing it to a function which accesses it at byte offset 15.
-1619     		nvif_outp_acquire_dp(&nv_encoder->outp, nv_encoder->dp.dpcd, 0, 0, hda, false);
-1620     		depth = nv50_dp_bpc_to_depth(asyh->or.bpc);
-1621
-1622     		if (nv_encoder->outp.or.link & 1)
-1623     			proto = NV887D_SOR_SET_CONTROL_PROTOCOL_DP_A;
-1624     		else
+1817     		nvif_outp_acquire_dp(&nv_encoder->outp, nv_encoder->dp.dpcd, 0, 0, false, false);
+1818     		break;
+1819     	default:
+1820     		BUG();
+1821     		break;
+1822     	}
 
 If this is a false positive, please let us know so we can mark it as
 such, or teach the Coverity rules to be smarter. If not, please make
@@ -106,7 +106,7 @@ sure fixes get into linux-next. :) For patches fixing this, please
 include these lines (but double-check the "Fixes" first):
 
 Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1527269 ("Memory - corruptions")
+Addresses-Coverity-ID: 1527268 ("Memory - corruptions")
 Fixes: 813443721331 ("drm/nouveau/disp: move DP link config into acquire")
 
 Thanks for your attention!
