@@ -2,66 +2,66 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561B8C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Nov 2022 16:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D25C4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Nov 2022 16:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232417AbiKJQn5 (ORCPT
+        id S232229AbiKJQtD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Nov 2022 11:43:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40656 "EHLO
+        Thu, 10 Nov 2022 11:49:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232170AbiKJQnQ (ORCPT
+        with ESMTP id S232308AbiKJQs2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Nov 2022 11:43:16 -0500
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEDF245EEF
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:42:58 -0800 (PST)
-Received: by mail-pl1-x634.google.com with SMTP id y4so1849416plb.2
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:42:58 -0800 (PST)
+        Thu, 10 Nov 2022 11:48:28 -0500
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 223A847309
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:47:14 -0800 (PST)
+Received: by mail-pf1-x42e.google.com with SMTP id 130so2689541pfu.8
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:47:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=EfgsLc2+G9HPdaL8aH3Xzd8lv8JeS+eH5Ba4xV4l/yA=;
-        b=IruV/cOGCppTZMecE2WVY8zukl+kcYVeoo7vFWW6yGTBj+JNzqw7SwdygU11Ap5tXp
-         +IWICnrL7OpPlowtcizxkZ8u7fNIf7VOdlhb+UCVVdiNOgc1eLngTeYpENadc4W7k2ql
-         lwVFIi2Zm+49ixbK5qXD6pVFvTfaAaG7iPD9c=
+        bh=GceMGOT23bDdO1sSROQwcwP69H1ZqtgPMLAw5MYkScc=;
+        b=APGWSySH0nQ+8O7iWRU1RBBRPkDJD4BGBlNNvOVv2ZH8wyvRuICxAHt2mCA78hzuWr
+         a5V6f0KCzdxdcNRV+nHFWc2/hzROgVtbZ4repKZJTuhbyTJ1NoKMR/gHKFSE3NRcShEP
+         5NO7lcrAB4okpWmVROknBLQM60yTAB9q7TBwM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EfgsLc2+G9HPdaL8aH3Xzd8lv8JeS+eH5Ba4xV4l/yA=;
-        b=A1eC+WhQDZTv2ZxqYdQr2Ar9/kQikyeb3obc0koFtOyZtZWslLaTUQ7lsVSdzyiK3o
-         tsqIq8uiXdXWzq91OSVssFpFWoEBJkQIGDJX1n4b5/2SQYt7z4C3obv0+/+tSzMksjeA
-         w5o3OK2Wx0GYY9n9InV7fkO/I+vi3ufZkW08QHz2SmeFx1g8ct4a6yQUbiQSwK363Js8
-         4F1RILLvKYEvvL4fd6cqW501kirT9+NJ+IJ0i/vaDN9D3pJ7r1OPBXhSbRv+56guVzZB
-         79Rxhg1mug306N3EaVdCIS0Zn+gezJZb+PpDURhaAUzsB+otaEY5Irav8ivz2LP0aIKx
-         J4JA==
-X-Gm-Message-State: ACrzQf0KOvo05JLhF9G92rWRwj2fPEWkK+/sJoVreb5XK6hbfqXFEJ3a
-        OTtsaVokzcC03jmCUhSWzXUOsA==
-X-Google-Smtp-Source: AMsMyM4zFp+Wrf9N4R4CuG0pbWGCwDSSClCq2oRdgHwJJKI1w+NXOW7FDTxl0KXE16WpLHC9sb8z8g==
-X-Received: by 2002:a17:902:82c2:b0:188:5581:c8de with SMTP id u2-20020a17090282c200b001885581c8demr1293917plz.140.1668098578376;
-        Thu, 10 Nov 2022 08:42:58 -0800 (PST)
+        bh=GceMGOT23bDdO1sSROQwcwP69H1ZqtgPMLAw5MYkScc=;
+        b=nRKjP6+GIteEFL7jh/1M8iRu086SoDvPvpXvJzQyPFVwG29RPTWT3X5nj3w7RGaSZI
+         yP+v+2Tp0997kKWu8VGB/p1PNFHFSvu1ZfbB7MpJolg1+W6Z7BdXsORCgzjZKrgJJXKo
+         cDsnrWwjV/GQinwWYPr/YTOfUDS/DwFpfI8ZIIK/gC5c3ZX4ysxP+I0bh7/GPMxYeGKk
+         FeB+P3ZE0bEDCRWBrVLIQXrVCWzX7mSzuOsTZpscS8V+TPPhSTxVLEipH1/ZAOXyBwmq
+         ELuyoqPsFHuyn9GulxRqqPuaVS/4JaKzt8E9+HkoNuoMw4POVgbf+WM0+87TsoOU+cBD
+         0imw==
+X-Gm-Message-State: ACrzQf2esfvzBt75ELN9YwgD2jy2u3LzognCnKGLqxn7dbLOlyajsqLp
+        ycdGScwihPwQAQ0FSF0YimeKrA==
+X-Google-Smtp-Source: AMsMyM7q8wtqwy/hkh/glFOXuhiV3wodhFZXacYSxWn6EtsbfrHYW6QjhuJ8/1DJMeN7KpH68ghfPw==
+X-Received: by 2002:aa7:93ae:0:b0:56b:ac5c:f3dc with SMTP id x14-20020aa793ae000000b0056bac5cf3dcmr2934151pff.77.1668098833554;
+        Thu, 10 Nov 2022 08:47:13 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t4-20020a1709027fc400b00186f0f59d1esm11373906plb.192.2022.11.10.08.42.57
+        by smtp.gmail.com with ESMTPSA id r23-20020a17090b051700b001ef8ab65052sm45974pjz.11.2022.11.10.08.47.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Nov 2022 08:42:58 -0800 (PST)
+        Thu, 10 Nov 2022 08:47:13 -0800 (PST)
 From:   coverity-bot <keescook@chromium.org>
 X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date:   Thu, 10 Nov 2022 08:42:57 -0800
-To:     Ben Skeggs <bskeggs@redhat.com>
-Cc:     Thomas Zimmermann <tzimmermann@suse.de>,
-        linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
-        Lyude Paul <lyude@redhat.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        David Airlie <airlied@gmail.com>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        Jani Nikula <jani.nikula@intel.com>,
-        Dave Airlie <airlied@redhat.com>,
+Date:   Thu, 10 Nov 2022 08:47:12 -0800
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc:     Alexey Romanov <avromanov@sberdevices.ru>,
+        linux-kernel@vger.kernel.org, Nick Terrell <terrelln@fb.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Suleiman Souhlal <suleiman@google.com>,
+        Nitin Gupta <ngupta@vflare.org>, Jens Axboe <axboe@kernel.dk>,
+        Nhat Pham <nphamcs@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-block@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: nv50_hdmi_enable(): OVERRUN
-Message-ID: <202211100842.076585A@keescook>
+Subject: Coverity: zram_recompress(): OVERRUN
+Message-ID: <202211100847.388C61B3@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -78,42 +78,87 @@ https://scan.coverity.com/projects/linux-next-weekly-scan
 You're getting this email because you were associated with the identified
 lines of code (noted below) that were touched by commits:
 
-  Wed Nov 9 08:22:02 2022 +1000
-    f530bc60a30b ("drm/nouveau/disp: move HDMI config into acquire + infoframe methods")
+  Wed Nov 9 20:33:48 2022 -0800
+    03e6c729aa64 ("zram: introduce recompress sysfs knob")
 
 Coverity reported the following:
 
-*** CID 1527272:    (OVERRUN)
-drivers/gpu/drm/nouveau/dispnv50/disp.c:801 in nv50_hdmi_enable()
-795
-796     		size = hdmi_infoframe_pack(&infoframe, args.data, 17);
-797     	} else {
-798     		size = 0;
-799     	}
-800
-vvv     CID 1527272:    (OVERRUN)
-vvv     Overrunning struct type nvif_outp_infoframe_v0 of 8 bytes by passing it to a function which accesses it at byte offset 21 using argument "size" (which evaluates to 14).
-801     	nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_AVI, &args.infoframe, size);
-802
-803     	/* Vendor InfoFrame. */
-804     	if (!drm_hdmi_vendor_infoframe_from_display_mode(&infoframe.vendor.hdmi,
-805     							 &nv_connector->base, mode))
-806     		size = hdmi_infoframe_pack(&infoframe, args.data, 17);
-drivers/gpu/drm/nouveau/dispnv50/disp.c:810 in nv50_hdmi_enable()
-804     	if (!drm_hdmi_vendor_infoframe_from_display_mode(&infoframe.vendor.hdmi,
-805     							 &nv_connector->base, mode))
-806     		size = hdmi_infoframe_pack(&infoframe, args.data, 17);
-807     	else
-808     		size = 0;
-809
-vvv     CID 1527272:    (OVERRUN)
-vvv     Overrunning struct type nvif_outp_infoframe_v0 of 8 bytes by passing it to a function which accesses it at byte offset 21 using argument "size" (which evaluates to 14).
-810     	nvif_outp_infoframe(&nv_encoder->outp, NVIF_OUTP_INFOFRAME_V0_VSI, &args.infoframe, size);
-811
-812     	nv50_audio_enable(encoder, nv_crtc, nv_connector, state, mode);
-813     }
-814
-815     /******************************************************************************
+*** CID 1527270:    (OVERRUN)
+drivers/block/zram/zram_drv.c:1727 in zram_recompress()
+1721     		zstrm = zcomp_stream_get(zram->comps[prio]);
+1722     		src = kmap_atomic(page);
+1723     		ret = zcomp_compress(zstrm, src, &comp_len_new);
+1724     		kunmap_atomic(src);
+1725
+1726     		if (ret) {
+vvv     CID 1527270:    (OVERRUN)
+vvv     Overrunning array "zram->comps" of 4 8-byte elements at element index 4 (byte offset 39) using index "prio" (which evaluates to 4).
+1727     			zcomp_stream_put(zram->comps[prio]);
+1728     			return ret;
+1729     		}
+1730
+1731     		class_index_new = zs_lookup_class_index(zram->mem_pool,
+1732     							comp_len_new);
+drivers/block/zram/zram_drv.c:1786 in zram_recompress()
+1780     	handle_new = zs_malloc(zram->mem_pool, comp_len_new,
+1781     			       __GFP_KSWAPD_RECLAIM |
+1782     			       __GFP_NOWARN |
+1783     			       __GFP_HIGHMEM |
+1784     			       __GFP_MOVABLE);
+1785     	if (IS_ERR_VALUE(handle_new)) {
+vvv     CID 1527270:    (OVERRUN)
+vvv     Overrunning array "zram->comps" of 4 8-byte elements at element index 4 (byte offset 39) using index "prio" (which evaluates to 4).
+1786     		zcomp_stream_put(zram->comps[prio]);
+1787     		return PTR_ERR((void *)handle_new);
+1788     	}
+1789
+1790     	dst = zs_map_object(zram->mem_pool, handle_new, ZS_MM_WO);
+1791     	memcpy(dst, zstrm->buffer, comp_len_new);
+drivers/block/zram/zram_drv.c:1737 in zram_recompress()
+1731     		class_index_new = zs_lookup_class_index(zram->mem_pool,
+1732     							comp_len_new);
+1733
+1734     		/* Continue until we make progress */
+1735     		if (class_index_new >= class_index_old ||
+1736     		    (threshold && comp_len_new >= threshold)) {
+vvv     CID 1527270:    (OVERRUN)
+vvv     Overrunning array "zram->comps" of 4 8-byte elements at element index 4 (byte offset 39) using index "prio" (which evaluates to 4).
+1737     			zcomp_stream_put(zram->comps[prio]);
+1738     			continue;
+1739     		}
+1740
+1741     		/* Recompression was successful so break out */
+1742     		break;
+drivers/block/zram/zram_drv.c:1721 in zram_recompress()
+1715     		 * priority algorithm (or same algorithm).
+1716     		 */
+1717     		if (prio <= zram_get_priority(zram, index))
+1718     			continue;
+1719
+1720     		num_recomps++;
+vvv     CID 1527270:    (OVERRUN)
+vvv     Overrunning array "zram->comps" of 4 8-byte elements at element index 4 (byte offset 39) using index "prio" (which evaluates to 4).
+1721     		zstrm = zcomp_stream_get(zram->comps[prio]);
+1722     		src = kmap_atomic(page);
+1723     		ret = zcomp_compress(zstrm, src, &comp_len_new);
+1724     		kunmap_atomic(src);
+1725
+1726     		if (ret) {
+drivers/block/zram/zram_drv.c:1710 in zram_recompress()
+1704     	class_index_old = zs_lookup_class_index(zram->mem_pool, comp_len_old);
+1705     	/*
+1706     	 * Iterate the secondary comp algorithms list (in order of priority)
+1707     	 * and try to recompress the page.
+1708     	 */
+1709     	for (; prio < prio_max; prio++) {
+vvv     CID 1527270:    (OVERRUN)
+vvv     Overrunning array "zram->comps" of 4 8-byte elements at element index 4 (byte offset 39) using index "prio" (which evaluates to 4).
+1710     		if (!zram->comps[prio])
+1711     			continue;
+1712
+1713     		/*
+1714     		 * Skip if the object is already re-compressed with a higher
+1715     		 * priority algorithm (or same algorithm).
 
 If this is a false positive, please let us know so we can mark it as
 such, or teach the Coverity rules to be smarter. If not, please make
@@ -121,11 +166,8 @@ sure fixes get into linux-next. :) For patches fixing this, please
 include these lines (but double-check the "Fixes" first):
 
 Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1527272 ("OVERRUN")
-Fixes: f530bc60a30b ("drm/nouveau/disp: move HDMI config into acquire + infoframe methods")
-
-It looks like this should address &args not &args.infoframe, if the
-intention is to include the "data" member.
+Addresses-Coverity-ID: 1527270 ("OVERRUN")
+Fixes: 03e6c729aa64 ("zram: introduce recompress sysfs knob")
 
 Thanks for your attention!
 
