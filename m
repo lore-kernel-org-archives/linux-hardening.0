@@ -2,112 +2,131 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55ECDC43219
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Nov 2022 16:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC7AC4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Nov 2022 16:57:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230312AbiKJQul (ORCPT
+        id S230181AbiKJQ5Q (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Nov 2022 11:50:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49336 "EHLO
+        Thu, 10 Nov 2022 11:57:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232037AbiKJQuM (ORCPT
+        with ESMTP id S232796AbiKJQ4z (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Nov 2022 11:50:12 -0500
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3687EBC9D
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:49:49 -0800 (PST)
-Received: by mail-pj1-x1032.google.com with SMTP id b11so2007918pjp.2
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:49:49 -0800 (PST)
+        Thu, 10 Nov 2022 11:56:55 -0500
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 633DF2A415
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:56:52 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id p12so1882280plq.4
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:56:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wyrWfcByjJXJ5u7emZGohwKYRcoGGODByISYDFHgldU=;
-        b=SkZKW3Yo1le1fuMFEG+mH3AW0pGZzhfl1jquZr26xXoWgcpGUgwx/9i59trYLnbyNp
-         0fECbdTZThXTLRMivyi83uOwpVX+PQtcAkIY/lpHnBGqzgJ8HE/JGcY/yGpDr/tts6s8
-         fEUAZIy98nqHcvqsGCP73UaA5HAyPfN1MhCsc=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MObtVKIB7l4b8WfJfpmkCk3gsljGAahPc93DAQJ6frg=;
+        b=W/0Fkr/byKXpfxP6+/jTpnDsIjqIxtuvfL0qjcv4YJK39Z2TVqxxhwqsaNDUOUbx1c
+         2KijmlCyXt1eIEfCI7vM+r4LVEDXUIbT3iGDtqC5dVjQgqWg2Z2TPnd2gakmNTZPCd+5
+         Ggcho7pqKNfRLqnV0GXCOcZHHVyeg+PPxDxWs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wyrWfcByjJXJ5u7emZGohwKYRcoGGODByISYDFHgldU=;
-        b=t+V5H9AuysrpJBsYKEyQwwTUNdptonZ1KE07wW7FH2VO17sZM+TtKpgGaK74shIgj/
-         azG3hF+tSDnhvCa7p/o7uxEL/Aa9+r0H1AXkfcTpRMzXT2GD/SDxLaFMCPUyV8b3aCtT
-         1mvv/VrCDlVXfHXlvuMY/FtzmHcx4HuqtMQPKJVe0d3aFaFR82vewo+pyhZxF8g/KS7N
-         bOR99Jt8fqUiATc3jXocH3QRGOdizICk3fxRJq24VITj+rcpbV8zPlb8gt5ds+swwi6P
-         TK+NwB+RlY6nKMlMG3NMjnawtI+N3PzeVGxWGrfKzmwm4b+XcM23eTiiXDDbkUhTz0P6
-         VVCQ==
-X-Gm-Message-State: ACrzQf3r3wQKsBwGYTMQWM9boMaukqPx6ItyrxcUK+knc0GZZjWjI/Wf
-        pCXwPoQfzEsW6v6dkYhUEL3FXw==
-X-Google-Smtp-Source: AMsMyM4giYvP77sTPDWGk4iRexWkKdhko7Z9x8ZbVQ0+6fKkZQD8biAGSZtsNEYAUXSGiobU0OhdmQ==
-X-Received: by 2002:a17:902:e803:b0:187:3a52:d262 with SMTP id u3-20020a170902e80300b001873a52d262mr47366180plg.85.1668098988693;
-        Thu, 10 Nov 2022 08:49:48 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MObtVKIB7l4b8WfJfpmkCk3gsljGAahPc93DAQJ6frg=;
+        b=vFqYNgGfW2tuWf68RHfFj3LZ9KB+n3nj5aIly+VQdUl/NUMZ6CjVMnvg8KueiQg01S
+         LHsLQ4xePV/Wu/GRzPtBTxD/8tsG0L5UG5mH2KkM2ZyMhLILzRimnPlVaYAVZANs6JkM
+         2c29x6CPx5lxMrf5kTLq5s3iZdvFI/94unXte3gjmHfJWslT7NEcQn91vFJ7118Wsv3V
+         iBKkTUD6RDs5uB0YUHuAwjCVg384Bkkocji5TW2AoqZYRml0nNPi7HodDVVCIN9EocWH
+         BLMgjQG3uTvEIk1qiZZR74D37YxSgFwwOjhD04RRxjw37T669RnGV0A6Ze2YFqXr/DDU
+         8VOw==
+X-Gm-Message-State: ACrzQf0bkG7em601KUrJkYI86Xs8aN4SZ6ZemrJLb972dw90tbGSnInP
+        Zhrha3Hx+XqdTmI2jTWs9LXogg==
+X-Google-Smtp-Source: AMsMyM6aYNGQRU9jd0TsshThz+/JIVzG11NvElrb65k/L5ym/ko6eFmmta8lbovKLs0qzsYhiQnHTA==
+X-Received: by 2002:a17:90a:8503:b0:212:9b3f:dee5 with SMTP id l3-20020a17090a850300b002129b3fdee5mr1464006pjn.62.1668099411538;
+        Thu, 10 Nov 2022 08:56:51 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l14-20020a170903120e00b0016be834d54asm11586089plh.306.2022.11.10.08.49.48
+        by smtp.gmail.com with ESMTPSA id z10-20020aa79f8a000000b00560bb4a57f7sm10748151pfr.179.2022.11.10.08.56.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Nov 2022 08:49:48 -0800 (PST)
-From:   coverity-bot <keescook@chromium.org>
-X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date:   Thu, 10 Nov 2022 08:49:47 -0800
-To:     Ben Skeggs <bskeggs@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
-        Lyude Paul <lyude@redhat.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        David Airlie <airlied@gmail.com>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        Dave Airlie <airlied@redhat.com>,
+        Thu, 10 Nov 2022 08:56:51 -0800 (PST)
+Date:   Thu, 10 Nov 2022 08:56:50 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org,
+        Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        linux-media@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: nvkm_dp_train(): Integer handling issues
-Message-ID: <202211100849.DDBADD2A6@keescook>
+Subject: Re: Coverity: imx290_ctrl_init(): Error handling issues
+Message-ID: <202211100856.9CE03EC@keescook>
+References: <202211100830.1F097DC@keescook>
+ <CAPY8ntCkjG0BafMy+iLna2BDvr0n10E8hzUqL01WpUgFCjwV4g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAPY8ntCkjG0BafMy+iLna2BDvr0n10E8hzUqL01WpUgFCjwV4g@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello!
+On Thu, Nov 10, 2022 at 04:41:28PM +0000, Dave Stevenson wrote:
+> On Thu, 10 Nov 2022 at 16:31, coverity-bot <keescook@chromium.org> wrote:
+> >
+> > Hello!
+> >
+> > This is an experimental semi-automated report about issues detected by
+> > Coverity from a scan of next-20221110 as part of the linux-next scan project:
+> > https://scan.coverity.com/projects/linux-next-weekly-scan
+> >
+> > You're getting this email because you were associated with the identified
+> > lines of code (noted below) that were touched by commits:
+> >
+> >   Thu Oct 27 14:38:02 2022 +0300
+> >     4c9c93cf8657 ("media: i2c: imx290: Create controls for fwnode properties")
+> >
+> > Coverity reported the following:
+> >
+> > *** CID 1527251:  Error handling issues  (CHECKED_RETURN)
+> > drivers/media/i2c/imx290.c:1056 in imx290_ctrl_init()
+> > 1050            imx290->vblank = v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
+> > 1051                                               V4L2_CID_VBLANK, blank, blank, 1,
+> > 1052                                               blank);
+> > 1053            if (imx290->vblank)
+> > 1054                    imx290->vblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> > 1055
+> > vvv     CID 1527251:  Error handling issues  (CHECKED_RETURN)
+> > vvv     Calling "v4l2_ctrl_new_fwnode_properties" without checking return value (as is done elsewhere 9 out of 10 times).
+> > 1056            v4l2_ctrl_new_fwnode_properties(&imx290->ctrls, &imx290_ctrl_ops,
+> > 1057                                            &props);
+> > 1058
+> > 1059            imx290->sd.ctrl_handler = &imx290->ctrls;
+> > 1060
+> > 1061            if (imx290->ctrls.error) {
+> >
+> > If this is a false positive, please let us know so we can mark it as
+> > such, or teach the Coverity rules to be smarter. If not, please make
+> > sure fixes get into linux-next. :) For patches fixing this, please
+> > include these lines (but double-check the "Fixes" first):
+> 
+> I looked at this one when the patches were sent to the list.
+> 
+> On failure, v4l2_ctrl_new_fwnode_properties will have set the error
+> flag in struct v4l2_ctrl_handler. This is also what it returns.
+> 
+> In most of the existing drivers the error flag has already been
+> checked before calling v4l2_ctrl_new_fwnode_properties, therefore the
+> return value has to be checked explicitly. In this case it is checked
+> at line 1061 which is after v4l2_ctrl_new_fwnode_properties has been
+> called, and therefore there is no need to check the return value of
+> the call.
+> 
+> IMHO Neither is particularly right or wrong, just slightly different
+> approaches. In some regards this new code pattern is nicer as it
+> removes a number of error handling paths.
 
-This is an experimental semi-automated report about issues detected by
-Coverity from a scan of next-20221110 as part of the linux-next scan project:
-https://scan.coverity.com/projects/linux-next-weekly-scan
-
-You're getting this email because you were associated with the identified
-lines of code (noted below) that were touched by commits:
-
-  Wed Nov 9 10:43:10 2022 +1000
-    8bb30c882334 ("drm/nouveau/disp: add method to trigger DP link retrain")
-
-Coverity reported the following:
-
-*** CID 1527267:  Integer handling issues  (NEGATIVE_RETURNS)
-drivers/gpu/drm/nouveau/nvkm/engine/disp/dp.c:458 in nvkm_dp_train()
-452     	u8  pwr;
-453
-454     	/* Retraining link?  Skip source configuration, it can mess up the active modeset. */
-455     	if (atomic_read(&outp->dp.lt.done)) {
-456     		for (rate = 0; rate < outp->dp.rates; rate++) {
-457     			if (outp->dp.rate[rate].rate == ior->dp.bw * 27000)
-vvv     CID 1527267:  Integer handling issues  (NEGATIVE_RETURNS)
-vvv     "ret" is passed to a parameter that cannot be negative.
-458     				return nvkm_dp_train_link(outp, ret);
-459     		}
-460     		WARN_ON(1);
-461     		return -EINVAL;
-462     	}
-463
-
-If this is a false positive, please let us know so we can mark it as
-such, or teach the Coverity rules to be smarter. If not, please make
-sure fixes get into linux-next. :) For patches fixing this, please
-include these lines (but double-check the "Fixes" first):
-
-Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1527267 ("Integer handling issues")
-Fixes: 8bb30c882334 ("drm/nouveau/disp: add method to trigger DP link retrain")
-
-Thanks for your attention!
+Great! Thanks for double-checking it. :)
 
 -- 
-Coverity-bot
+Kees Cook
