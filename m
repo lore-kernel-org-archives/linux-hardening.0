@@ -2,66 +2,64 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3669C4332F
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Nov 2022 16:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD18C4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Nov 2022 16:30:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231737AbiKJQaq (ORCPT
+        id S231782AbiKJQaw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Nov 2022 11:30:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58220 "EHLO
+        Thu, 10 Nov 2022 11:30:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231782AbiKJQai (ORCPT
+        with ESMTP id S231173AbiKJQas (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Nov 2022 11:30:38 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51E3D3C6D2
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:30:37 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id v4-20020a17090a088400b00212cb0ed97eso1954611pjc.5
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:30:37 -0800 (PST)
+        Thu, 10 Nov 2022 11:30:48 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CABD031231
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:30:47 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id l22-20020a17090a3f1600b00212fbbcfb78so5120627pjc.3
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:30:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=bkaCawdyh08WkrauD8ZffwaibgAf2YaVEV/UkOO9ThM=;
-        b=b9fVsn/o+EOVocD3Uk3T/6+Egpep17b2sHPHBYYf8mmj4zXEus3ZyLWi+H5Oe0fTF4
-         H5/hnFyx8Iu9FOzKvO4KPvQmBXxoT/g9/RE/ZI8NWyRJHt33JiyPxdELIpu0SC8m2Sxr
-         clzDY2KgOtiwGV43m0lljTqNkWm7DRqM2unIQ=
+        bh=A7BqZAlE1bjvuU8uo7I+oqV+cV0QxCreGR2RF30Isq4=;
+        b=OPKatcHwrxkE3M6fiQu8U7vULB9rcjQ8OUS9rvEAifwKQ5EGkkmQ3nBniu0kkulau6
+         Fad81+VZTcHivXF3l4PpFgT+uqPuNK96mkNlK4VrYv6CKHiu+WuusmrYDIN4XPYPERdj
+         rQ5jnZp15THRxWIxvaAh1Ag49BGOl81Ntv7i0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bkaCawdyh08WkrauD8ZffwaibgAf2YaVEV/UkOO9ThM=;
-        b=DGTvQDLmF7V+CwGSM5Ig+OGix+aTKa0U6JW015xbrLWMZ0EdAgo+BYp38J4p1+UtHr
-         9qqgEFZpdqPQo3LInGJ/ttMp7tlGl47Zw4yIpACZlvmG/koNedST3vnmvtUw20JI1tVo
-         wq8Ee6jJt9uBi27iZlIKOWbzo3j4yPPgduAP5Xj4Wuy0CRac9/OV8Dn8yaPjZ3iwTa+O
-         onLMbSoyln9FofX8k3VmuPhgdVTCVKd4yQOCU3JES9CQLyHnbq8mrmr3PWawDaJ9nY3/
-         okHFzfe5mPlcw35TMuvToRy90ExpBejM1v5uf9f2u2930LlbEaEzlnWMAZHUFAa4bkTz
-         qh8Q==
-X-Gm-Message-State: ACrzQf3RZB+zbK1GSGzVzPpoqX0Gmv4jYaAi8a7/qcZIyyhThnNO66p0
-        6Fr39F3Q3sQJJSYOo9o+VOJByw==
-X-Google-Smtp-Source: AMsMyM7yWmOrmcdHdEJ1q1Xd7kAoXGvcFQoV13t8RSx7BBM2CgbxhLhelQ4tNE3SMAQe3Wm0pAReYg==
-X-Received: by 2002:a17:902:82c2:b0:188:5581:c8de with SMTP id u2-20020a17090282c200b001885581c8demr1274837plz.140.1668097836751;
-        Thu, 10 Nov 2022 08:30:36 -0800 (PST)
+        bh=A7BqZAlE1bjvuU8uo7I+oqV+cV0QxCreGR2RF30Isq4=;
+        b=jvF6HiXTQI8tlH9XShmYc5oZ3H+OdvAwjfLk4VTlBBtyRcL24CWo3UR4xjBLIhxN3a
+         ozIJw24dmyPtwsAare048nnfpXhn6J0d6a90+MSh486+QjBJ+/WNbGRkCIqItVzzFESV
+         ROd/eUL5J6u3bn2pvgvvfYo/fKT/0qZRki1pm/GWN5QZDL0zi67fYpMIxElJd6bRYlHZ
+         qwUsRPqIVRDDmJr9YCTPP4v2yZtQDwI/X1ZFxuRUEvOdRaCLGgp6tNRiajP4hRRNuITK
+         jC3KSFZMSfNgoHjZnaLZCNWzqtPRne0bn684i1jodhLZH+lfflL+D2KdJTKxB814KaTD
+         0kcg==
+X-Gm-Message-State: ACrzQf0vkSP6a4nZZpfTNdxm800n/T0vS08Jgxu5pUJheyDildkq4P9n
+        cMlfp3lq8btmyrtBMkEjJEJRyg==
+X-Google-Smtp-Source: AMsMyM5t1N5DGEHJvdbVXCFFu+XA100ABhAMc+3XBEiCqL4DImdyIuks4K6C5y/OeUYg0mFGzTn7eg==
+X-Received: by 2002:a17:90a:4d08:b0:20b:25f6:3e30 with SMTP id c8-20020a17090a4d0800b0020b25f63e30mr1469078pjg.227.1668097847308;
+        Thu, 10 Nov 2022 08:30:47 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q7-20020a17090a430700b001fd6066284dsm35926pjg.6.2022.11.10.08.30.36
+        by smtp.gmail.com with ESMTPSA id a24-20020a170902b59800b001788ccecbf5sm11373668pls.31.2022.11.10.08.30.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Nov 2022 08:30:36 -0800 (PST)
+        Thu, 10 Nov 2022 08:30:47 -0800 (PST)
 From:   coverity-bot <keescook@chromium.org>
 X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date:   Thu, 10 Nov 2022 08:30:35 -0800
-To:     Marco Felsch <m.felsch@pengutronix.de>
+Date:   Thu, 10 Nov 2022 08:30:46 -0800
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc:     linux-kernel@vger.kernel.org,
+        Alexander Stein <alexander.stein@ew.tq-group.com>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Jean-Michel Hautbois <jeanmichel.hautbois@ideasonboard.com>,
-        Shawn Tu <shawnx.tu@intel.com>, linux-media@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        linux-media@vger.kernel.org,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: tc358746_apply_pll_config(): Control flow issues
-Message-ID: <202211100830.5E3EE2678@keescook>
+Subject: Coverity: imx290_ctrl_init(): Error handling issues
+Message-ID: <202211100830.1F097DC@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -78,27 +76,27 @@ https://scan.coverity.com/projects/linux-next-weekly-scan
 You're getting this email because you were associated with the identified
 lines of code (noted below) that were touched by commits:
 
-  Thu Oct 27 14:48:40 2022 +0300
-    80a21da36051 ("media: tc358746: add Toshiba TC358746 Parallel to CSI-2 bridge driver")
+  Thu Oct 27 14:38:02 2022 +0300
+    4c9c93cf8657 ("media: i2c: imx290: Create controls for fwnode properties")
 
 Coverity reported the following:
 
-*** CID 1527252:  Control flow issues  (DEADCODE)
-drivers/media/i2c/tc358746.c:411 in tc358746_apply_pll_config()
-405     		return err;
-406
-407     	val = PLL_FRS(ilog2(post)) | RESETB | PLL_EN;
-408     	mask = PLL_FRS_MASK | RESETB | PLL_EN;
-409     	tc358746_update_bits(tc358746, PLLCTL1_REG, mask, val);
-410     	if (err)
-vvv     CID 1527252:  Control flow issues  (DEADCODE)
-vvv     Execution cannot reach this statement: "return err;".
-411     		return err;
-412
-413     	fsleep(1000);
-414
-415     	return tc358746_set_bits(tc358746, PLLCTL1_REG, CKEN);
-416     }
+*** CID 1527251:  Error handling issues  (CHECKED_RETURN)
+drivers/media/i2c/imx290.c:1056 in imx290_ctrl_init()
+1050     	imx290->vblank = v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
+1051     					   V4L2_CID_VBLANK, blank, blank, 1,
+1052     					   blank);
+1053     	if (imx290->vblank)
+1054     		imx290->vblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+1055
+vvv     CID 1527251:  Error handling issues  (CHECKED_RETURN)
+vvv     Calling "v4l2_ctrl_new_fwnode_properties" without checking return value (as is done elsewhere 9 out of 10 times).
+1056     	v4l2_ctrl_new_fwnode_properties(&imx290->ctrls, &imx290_ctrl_ops,
+1057     					&props);
+1058
+1059     	imx290->sd.ctrl_handler = &imx290->ctrls;
+1060
+1061     	if (imx290->ctrls.error) {
 
 If this is a false positive, please let us know so we can mark it as
 such, or teach the Coverity rules to be smarter. If not, please make
@@ -106,8 +104,8 @@ sure fixes get into linux-next. :) For patches fixing this, please
 include these lines (but double-check the "Fixes" first):
 
 Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1527252 ("Control flow issues")
-Fixes: 80a21da36051 ("media: tc358746: add Toshiba TC358746 Parallel to CSI-2 bridge driver")
+Addresses-Coverity-ID: 1527251 ("Error handling issues")
+Fixes: 4c9c93cf8657 ("media: i2c: imx290: Create controls for fwnode properties")
 
 Thanks for your attention!
 
