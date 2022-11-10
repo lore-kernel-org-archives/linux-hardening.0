@@ -2,236 +2,117 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C56C4332F
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Nov 2022 16:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C86C4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Nov 2022 16:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229701AbiKJQBU (ORCPT
+        id S231446AbiKJQ1o (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Nov 2022 11:01:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39542 "EHLO
+        Thu, 10 Nov 2022 11:27:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231251AbiKJQAz (ORCPT
+        with ESMTP id S231357AbiKJQ1m (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Nov 2022 11:00:55 -0500
-Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E74B8303D3;
-        Thu, 10 Nov 2022 08:00:53 -0800 (PST)
-Received: by mail-oi1-x232.google.com with SMTP id r76so2204641oie.13;
-        Thu, 10 Nov 2022 08:00:53 -0800 (PST)
+        Thu, 10 Nov 2022 11:27:42 -0500
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D090C1DDE3
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:27:41 -0800 (PST)
+Received: by mail-pg1-x531.google.com with SMTP id q1so2289693pgl.11
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 08:27:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=aYz8foOjK1gz42upwQJGKNCoSPauwma/4inAgcdejWk=;
-        b=d68/6bKoUpRcQvmE6N2gQ+c1NN7gBxju/dpNpX8drJeA2WEkizNvfkXpP0lJ50uoIt
-         tyY/Huxo6+ShOa8zerMIO1I6r4maPEkVBv6RJ8eN9U9c9czxrwMON0qEjKoEFOIkUgPZ
-         WIVl5w91ZNp0J6uc13p2W70q3yYcBiCbMoYk/0HTEYKc3FGmAVNtnpdvHh3QZXpJMl5v
-         ht2QKmL7DhHYmIIbOO+dKevn5wnn8b6UvZloBcSMZtM/khcWaCEnweR4j8hTVtlKGN+S
-         T3+UHyRS5hS8dYgG2ZwYn6mTi37LscjB2/u6zgjSpql6HcTz/ly1ZnD/x44ls7gEv7eR
-         B+6Q==
+        d=chromium.org; s=google;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9QDbTV0hvgJIMwlYM/H+CYfboYjCEAWjnTGIDpVXMU0=;
+        b=oEog2Gj7capmtsmcj2GyJWN4VajuPy7IRXg+obDX370R+osb3Ra84m8163VuhYeMTU
+         Pg6eL03U8tM7cqPFxGl0vAB5diLNsciymBeJ/Ga3tLVoTW4r54dhaRVbu82PIV2ewySi
+         iW14hUEyaPifcnrO8kYPLWCKzloA/fMCmmz7Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aYz8foOjK1gz42upwQJGKNCoSPauwma/4inAgcdejWk=;
-        b=fA00LjMCb7HwPQxfiA3YyKIjGOMpmy4cCuqF93ttDGBKqr2QSLH2bFDoqSYWKKVtCe
-         RGE84za9sCykrCkwXkgsArAVaXlG8UYpjG7frFtnHiheAlMe+m68/1RHvmlgsL1OuF61
-         4Ksjy3kIUkHWN790omCoojmDkSORd9TDLx4bO3xZ0b6hXn74geMqrh2AnZw6Qgfitp8H
-         YuZqgE735egsoVgtUZfxd8s//JxMJiVfaDQDpIh+boZSWc+y0hgUbKbNsFmasylcle1B
-         8UTwDps7efoxUz99Q0oyFDsnPMhNQjtADWhuHRivBx1b2zdO1OVZXM+FypLVEXL/0Nhq
-         xkag==
-X-Gm-Message-State: ACrzQf1yWp5PQV+vNZveCAj0585r6bq06L2G7fANPWduMGjTx9remlPE
-        4K7rfzK2yecMfa3wHTt47ys3WmiLg8s1UtQ3isOaJWIN
-X-Google-Smtp-Source: AMsMyM4pvr38ZhDB5nbS4nygOg6LSNWRFpLF7uwCXqLtbdC2X54kkn8Lf63pCovrcbcMWAC5QsZRTBtDzUND/ESPVFI=
-X-Received: by 2002:aca:b655:0:b0:35a:4fb4:c3d2 with SMTP id
- g82-20020acab655000000b0035a4fb4c3d2mr20399155oif.96.1668096053219; Thu, 10
- Nov 2022 08:00:53 -0800 (PST)
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9QDbTV0hvgJIMwlYM/H+CYfboYjCEAWjnTGIDpVXMU0=;
+        b=ceN214G7xBYoPwuTHD19G6cKtlYl4GbSrOadP9yijBNrcBp0gQhllaT0aIfPLlxtPA
+         KBHK7PKNcXkUjr59AL3zZWBsm1kbEQTRB+V4J+8pKSff2STYVtZhbrvmIIRm1GbQT41F
+         WlDoGddQvnlxCHo6sM9EII7sxJa5ksrwX4qny5sjtKFr4qZCQo8W/exYkhJrIYtSvDhq
+         BEw5GWyjAbv1f+cQ12zniJ9oQ+kq9qjmSx7i/lv0fWn5IYew+wloqm8xnYbpJOwrHCZa
+         ZXrHs2QGpO42khSVGd/LAp+L5KnBCZGrxnjhc9i/K/Sk7QeV4WnqOH/vgejN3FWMQzi7
+         39kQ==
+X-Gm-Message-State: ANoB5plO+ic2FJQvU9x+uKKnVJNrUrMJw2Meku8R3zeFS4QAUZcWq4H8
+        59YzczxPQdgFPe+EKTdERdOJYg==
+X-Google-Smtp-Source: AA0mqf5XT2btL5Z35ZGarHtKgubWVQk8whdcAKB4borfUWw4sSl2bcSGjVY7xUytCpVuQrW0LtMo3g==
+X-Received: by 2002:a63:42c5:0:b0:470:70d7:5a43 with SMTP id p188-20020a6342c5000000b0047070d75a43mr2240176pga.44.1668097661290;
+        Thu, 10 Nov 2022 08:27:41 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id rm12-20020a17090b3ecc00b00213a9e1f863sm30467pjb.4.2022.11.10.08.27.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Nov 2022 08:27:40 -0800 (PST)
+From:   coverity-bot <keescook@chromium.org>
+X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
+Date:   Thu, 10 Nov 2022 08:27:39 -0800
+To:     Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Jean-Michel Hautbois <jeanmichel.hautbois@ideasonboard.com>,
+        Shawn Tu <shawnx.tu@intel.com>, linux-media@vger.kernel.org,
+        Sylvain Petinot <sylvain.petinot@foss.st.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Coverity: vgxy61_tx_from_ep(): Memory - corruptions
+Message-ID: <202211100827.8A08F58A@keescook>
 MIME-Version: 1.0
-References: <Y2tXzlBDxgg9WMl7@mail.google.com> <CADnq5_NJNa41y28-+PPjA6hUPrYGXc87K50LeiEYGnyGyackUQ@mail.gmail.com>
-In-Reply-To: <CADnq5_NJNa41y28-+PPjA6hUPrYGXc87K50LeiEYGnyGyackUQ@mail.gmail.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 10 Nov 2022 11:00:41 -0500
-Message-ID: <CADnq5_NS_dRzvBG9qgfrCLkUp0GQas=zFZ9ow=4BmvdiZuzQpg@mail.gmail.com>
-Subject: Re: [PATCH] [next] drm/amdgpu: Replace one-element array with
- flex-array member
-To:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rongguang Wei <weirongguang@kylinos.cn>,
-        Slark Xiao <slark_xiao@163.com>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Nov 10, 2022 at 10:57 AM Alex Deucher <alexdeucher@gmail.com> wrote:
->
-> On Wed, Nov 9, 2022 at 2:33 AM Paulo Miguel Almeida
-> <paulo.miguel.almeida.rodenas@gmail.com> wrote:
-> >
-> > One-element arrays are deprecated, and we are replacing them with
-> > flexible array members instead. So, replace one-element array with
-> > flexible-array member in structs _ATOM_CONNECTOR_DEVICE_TAG_RECORD,
-> > _ATOM_OBJECT_GPIO_CNTL_RECORD, _ATOM_BRACKET_LAYOUT_RECORD,
-> > _ATOM_BRACKET_LAYOUT_RECORD, _ATOM_LEAKAGE_VOLTAGE_OBJECT_V3,
-> > _ATOM_FUSION_SYSTEM_INFO_V3, _ATOM_I2C_DATA_RECORD,
-> > _ATOM_I2C_DEVICE_SETUP_INFO, _ATOM_ASIC_MVDD_INFO and refactor the
-> > rest of the code accordingly. While at it, removed a redundant casting.
-> >
-> > Important to mention is that doing a build before/after this patch results
-> > in no binary output differences.
-> >
-> > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> > routines on memcpy() and help us make progress towards globally
-> > enabling -fstrict-flex-arrays=3 [1].
-> >
-> > Link: https://github.com/KSPP/linux/issues/79
-> > Link: https://github.com/KSPP/linux/issues/238
-> > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
-> >
-> > Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-> > ---
-> >
-> > Alex, I noticed a few structs in atombios.h that were not referenced. Is
-> > there any appetite for removing them? Or is that one of those cases
-> > where the structs are there should one driver ever need it?
->
-> A lot of userspace tools use these tables and I'd like to keep the
-> headers compatible.  Also, as I mentioned in the other thread, the
-> atombios command tables often parse these tables when initializing the
-> hardware so when you are debugging a command table, it helps to have
-> the relevant structures defined so it's easier to understand what the
-> command tables are doing.
+Hello!
 
-Also, because this header is shared by multiple components within AMD
-(linux, windows, bios, etc.), it would make things a lot easier if we
-maintained compatibility.
+This is an experimental semi-automated report about issues detected by
+Coverity from a scan of next-20221110 as part of the linux-next scan project:
+https://scan.coverity.com/projects/linux-next-weekly-scan
 
-Applied this patch.  Thanks,
+You're getting this email because you were associated with the identified
+lines of code (noted below) that were touched by commits:
 
-Alex
+  Thu Oct 27 14:37:38 2022 +0300
+    153e4ad44d60 ("media: i2c: Add driver for ST VGXY61 camera sensor")
 
->
-> Alex
->
->
-> >
-> > Ex.:
-> >         struct _ATOM_I2C_DATA_RECORD
-> >         struct _ATOM_I2C_DEVICE_SETUP_INFO
-> >         struct _ATOM_ASIC_MVDD_INFO
-> > ---
-> >  .../gpu/drm/amd/display/dc/bios/bios_parser.c    |  5 ++---
-> >  drivers/gpu/drm/amd/include/atombios.h           | 16 ++++++++--------
-> >  2 files changed, 10 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
-> > index 39dd8b2dc254..6b9e64cd4379 100644
-> > --- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
-> > +++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
-> > @@ -2606,8 +2606,7 @@ static enum bp_result update_slot_layout_info(
-> >
-> >         for (;;) {
-> >
-> > -               record_header = (ATOM_COMMON_RECORD_HEADER *)
-> > -                       GET_IMAGE(ATOM_COMMON_RECORD_HEADER, record_offset);
-> > +               record_header = GET_IMAGE(ATOM_COMMON_RECORD_HEADER, record_offset);
-> >                 if (record_header == NULL) {
-> >                         result = BP_RESULT_BADBIOSTABLE;
-> >                         break;
-> > @@ -2621,7 +2620,7 @@ static enum bp_result update_slot_layout_info(
-> >
-> >                 if (record_header->ucRecordType ==
-> >                         ATOM_BRACKET_LAYOUT_RECORD_TYPE &&
-> > -                       sizeof(ATOM_BRACKET_LAYOUT_RECORD)
-> > +                       struct_size(record, asConnInfo, 1)
-> >                         <= record_header->ucRecordSize) {
-> >                         record = (ATOM_BRACKET_LAYOUT_RECORD *)
-> >                                 (record_header);
-> > diff --git a/drivers/gpu/drm/amd/include/atombios.h b/drivers/gpu/drm/amd/include/atombios.h
-> > index 55ae93c1e365..60c44a8a067f 100644
-> > --- a/drivers/gpu/drm/amd/include/atombios.h
-> > +++ b/drivers/gpu/drm/amd/include/atombios.h
-> > @@ -4733,7 +4733,7 @@ typedef struct  _ATOM_CONNECTOR_DEVICE_TAG_RECORD
-> >    ATOM_COMMON_RECORD_HEADER   sheader;
-> >    UCHAR                       ucNumberOfDevice;
-> >    UCHAR                       ucReserved;
-> > -  ATOM_CONNECTOR_DEVICE_TAG   asDeviceTag[1];         //This Id is same as "ATOM_DEVICE_XXX_SUPPORT", 1 is only for allocation
-> > +  ATOM_CONNECTOR_DEVICE_TAG   asDeviceTag[];          //This Id is same as "ATOM_DEVICE_XXX_SUPPORT"
-> >  }ATOM_CONNECTOR_DEVICE_TAG_RECORD;
-> >
-> >
-> > @@ -4793,7 +4793,7 @@ typedef struct  _ATOM_OBJECT_GPIO_CNTL_RECORD
-> >    ATOM_COMMON_RECORD_HEADER   sheader;
-> >    UCHAR                       ucFlags;                // Future expnadibility
-> >    UCHAR                       ucNumberOfPins;         // Number of GPIO pins used to control the object
-> > -  ATOM_GPIO_PIN_CONTROL_PAIR  asGpio[1];              // the real gpio pin pair determined by number of pins ucNumberOfPins
-> > +  ATOM_GPIO_PIN_CONTROL_PAIR  asGpio[];               // the real gpio pin pair determined by number of pins ucNumberOfPins
-> >  }ATOM_OBJECT_GPIO_CNTL_RECORD;
-> >
-> >  //Definitions for GPIO pin state
-> > @@ -4982,7 +4982,7 @@ typedef struct  _ATOM_BRACKET_LAYOUT_RECORD
-> >    UCHAR                       ucWidth;
-> >    UCHAR                       ucConnNum;
-> >    UCHAR                       ucReserved;
-> > -  ATOM_CONNECTOR_LAYOUT_INFO  asConnInfo[1];
-> > +  ATOM_CONNECTOR_LAYOUT_INFO  asConnInfo[];
-> >  }ATOM_BRACKET_LAYOUT_RECORD;
-> >
-> >
-> > @@ -5161,7 +5161,7 @@ typedef struct  _ATOM_GPIO_VOLTAGE_OBJECT_V3
-> >     UCHAR  ucPhaseDelay;                      // phase delay in unit of micro second
-> >     UCHAR  ucReserved;
-> >     ULONG  ulGpioMaskVal;                     // GPIO Mask value
-> > -   VOLTAGE_LUT_ENTRY_V2 asVolGpioLut[1];
-> > +   VOLTAGE_LUT_ENTRY_V2 asVolGpioLut[];
-> >  }ATOM_GPIO_VOLTAGE_OBJECT_V3;
-> >
-> >  typedef struct  _ATOM_LEAKAGE_VOLTAGE_OBJECT_V3
-> > @@ -5171,7 +5171,7 @@ typedef struct  _ATOM_LEAKAGE_VOLTAGE_OBJECT_V3
-> >     UCHAR    ucLeakageEntryNum;               // indicate the entry number of LeakageId/Voltage Lut table
-> >     UCHAR    ucReserved[2];
-> >     ULONG    ulMaxVoltageLevel;
-> > -   LEAKAGE_VOLTAGE_LUT_ENTRY_V2 asLeakageIdLut[1];
-> > +   LEAKAGE_VOLTAGE_LUT_ENTRY_V2 asLeakageIdLut[];
-> >  }ATOM_LEAKAGE_VOLTAGE_OBJECT_V3;
-> >
-> >
-> > @@ -6599,7 +6599,7 @@ typedef struct _ATOM_FUSION_SYSTEM_INFO_V3
-> >  typedef struct _ATOM_I2C_DATA_RECORD
-> >  {
-> >    UCHAR         ucNunberOfBytes;                                              //Indicates how many bytes SW needs to write to the external ASIC for one block, besides to "Start" and "Stop"
-> > -  UCHAR         ucI2CData[1];                                                 //I2C data in bytes, should be less than 16 bytes usually
-> > +  UCHAR         ucI2CData[];                                                  //I2C data in bytes, should be less than 16 bytes usually
-> >  }ATOM_I2C_DATA_RECORD;
-> >
-> >
-> > @@ -6610,14 +6610,14 @@ typedef struct _ATOM_I2C_DEVICE_SETUP_INFO
-> >    UCHAR                              ucSSChipID;             //SS chip being used
-> >    UCHAR                              ucSSChipSlaveAddr;      //Slave Address to set up this SS chip
-> >    UCHAR                           ucNumOfI2CDataRecords;  //number of data block
-> > -  ATOM_I2C_DATA_RECORD            asI2CData[1];
-> > +  ATOM_I2C_DATA_RECORD            asI2CData[];
-> >  }ATOM_I2C_DEVICE_SETUP_INFO;
-> >
-> >  //==========================================================================================
-> >  typedef struct  _ATOM_ASIC_MVDD_INFO
-> >  {
-> >    ATOM_COMMON_TABLE_HEADER         sHeader;
-> > -  ATOM_I2C_DEVICE_SETUP_INFO      asI2CSetup[1];
-> > +  ATOM_I2C_DEVICE_SETUP_INFO      asI2CSetup[];
-> >  }ATOM_ASIC_MVDD_INFO;
-> >
-> >  //==========================================================================================
-> > --
-> > 2.37.3
-> >
+Coverity reported the following:
+
+*** CID 1527258:  Memory - corruptions  (OVERRUN)
+drivers/media/i2c/st-vgxy61.c:1528 in vgxy61_tx_from_ep()
+1522     	 * valid for hardware stuff.
+1523     	 */
+1524     	for (p = 0; p < VGXY61_NB_POLARITIES; p++) {
+1525     		if (phy2log[p] != ~0)
+1526     			continue;
+1527     		phy2log[p] = l;
+vvv     CID 1527258:  Memory - corruptions  (OVERRUN)
+vvv     Overrunning array "log2phy" of 5 4-byte elements at element index 5 (byte offset 23) using index "l" (which evaluates to 5).
+1528     		log2phy[l] = p;
+1529     		l++;
+1530     	}
+1531     	for (l = 0; l < l_nb + 1; l++)
+1532     		polarities[l] = ep.bus.mipi_csi2.lane_polarities[l];
+1533
+
+If this is a false positive, please let us know so we can mark it as
+such, or teach the Coverity rules to be smarter. If not, please make
+sure fixes get into linux-next. :) For patches fixing this, please
+include these lines (but double-check the "Fixes" first):
+
+Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+Addresses-Coverity-ID: 1527258 ("Memory - corruptions")
+Fixes: 153e4ad44d60 ("media: i2c: Add driver for ST VGXY61 camera sensor")
+
+Note that l starts at 1, 2, or 4, so line 1529 could push it to 5, which
+is out of bounds, etc...
+
+Thanks for your attention!
+
+-- 
+Coverity-bot
