@@ -2,253 +2,162 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A21BC4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Nov 2022 20:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C5EC433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Nov 2022 20:39:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234334AbiKKU1l (ORCPT
+        id S234153AbiKKUjn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 11 Nov 2022 15:27:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57878 "EHLO
+        Fri, 11 Nov 2022 15:39:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234079AbiKKU1l (ORCPT
+        with ESMTP id S234113AbiKKUjl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 11 Nov 2022 15:27:41 -0500
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E05107340F
-        for <linux-hardening@vger.kernel.org>; Fri, 11 Nov 2022 12:27:39 -0800 (PST)
-Received: by mail-pg1-x52a.google.com with SMTP id e129so5218135pgc.9
-        for <linux-hardening@vger.kernel.org>; Fri, 11 Nov 2022 12:27:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VenKawNdI6vht+/5rGH39TnWAPmNSDWBqV+Ma0YasTE=;
-        b=qXOnXYoTn4MSk0EEKJLu2DIgcOrdHYPGnG+66FDnWf4OaNHtkc86/ZqlshCEMMCMtd
-         OZe+obHgSI5aGVhVhTMCJ/lVvo1UFUcE7L2BLR86uoK6XFXVekh+1NAB8cN7s4jRseTm
-         S1mkUrP+IUQ237XG/8l+Bf/TgR/0E8xXhhCyE9nQhqnehDZo2g6jHd/U7XvyzyWN1J6g
-         aiOjtL7Ho0/UAvsz0U6JuBD+tMmZ48xM91UO5SBuGphPW2kD2mWCDSRCTA0HBQc7FP50
-         dlkr6wGL28un/msWyOjl1ktz2CYnWNx8nNo2b+qCejCD9dAaGo8TwAOwr9avK/138r1f
-         UvXw==
+        Fri, 11 Nov 2022 15:39:41 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD73667F5A
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Nov 2022 12:38:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1668199121;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=iOc02DiC+CaIVCkcAVw6EXV28570qCIpUk2+es1FDOA=;
+        b=drQID7XaTAX3aswo40tSMFD1LWAu1r91cQUZoIIhFywYUSVtveQXrASiTKsBauMz+xm550
+        xXVfFN/oCJ2e7nlMrOuHpjHORtlbD7PJ/geZabtr4Tpr7TXTGLQR4WIXA0JwSBzQmaxl+0
+        OqiJhUorUdsJnWfJCbZM2PxBzw+d2Pg=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-46-DyATBpccPyK3dZgXjWXYIQ-1; Fri, 11 Nov 2022 15:38:40 -0500
+X-MC-Unique: DyATBpccPyK3dZgXjWXYIQ-1
+Received: by mail-qv1-f69.google.com with SMTP id ob9-20020a0562142f8900b004bba5363ad9so4307731qvb.8
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Nov 2022 12:38:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VenKawNdI6vht+/5rGH39TnWAPmNSDWBqV+Ma0YasTE=;
-        b=UPelWc0NRF3Xiyl21Kg2EQ9CA4OUR0ThqJNwgSmX9hKOnAn4TJhATv+eQY59HAor9k
-         8oNqSndXZwa5DsXNB2HI6HqSkCF+Tm7xKMKuX0bqWTxOppfIap3aGP80FYNOM4L/nw6p
-         GvGY4Jy2kV0+/6A2AK9a0kB1kPmVSggIvxF2X4j4P5DtyhTDqlZddEzAT1JwmIm0xtZn
-         aIXxNkeI67sG14H1fWO1HPs6QB9SQYhwC2A1fU81gzdIN9m7pCnK4Kh5Mym7YheiwTUJ
-         U3tcM5F520izCLZRGK74Gd+7Zv6rMfo63VB6uWB+3Vqu91j1lKjkYC8q6V/JfxYcmBtv
-         YXqg==
-X-Gm-Message-State: ANoB5pkOAvFMGUdAhyVsVZAvO9W6muZALhStO9nCCV4i5o1odbYmdtuC
-        LpYAUg1AJDArb1A0hL9G+LO/OA==
-X-Google-Smtp-Source: AA0mqf7p+q950DoxxPAxQxTUsalRqJn9q8r0sFdVKzATt8Xe3HgzH38KcItMCpO/f3fIGxvOkGA0xg==
-X-Received: by 2002:a63:4e53:0:b0:434:aa69:bba2 with SMTP id o19-20020a634e53000000b00434aa69bba2mr2910064pgl.567.1668198459215;
-        Fri, 11 Nov 2022 12:27:39 -0800 (PST)
-Received: from google.com ([2620:15c:2ce:200:8b77:5448:ea74:27a])
-        by smtp.gmail.com with ESMTPSA id c2-20020a17090a108200b002137d3da760sm5251776pja.39.2022.11.11.12.27.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Nov 2022 12:27:38 -0800 (PST)
-Date:   Fri, 11 Nov 2022 12:27:34 -0800
-From:   Fangrui Song <maskray@google.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Pedro Falcato <pedro.falcato@gmail.com>,
-        Rich Felker <dalias@libc.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Eric Biederman <ebiederm@xmission.com>, sam@gentoo.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] binfmt_elf: Allow .bss in any interp PT_LOAD
-Message-ID: <20221111202734.m5gk6vr4e5zd25lk@google.com>
-References: <20221111061315.gonna.703-kees@kernel.org>
- <20221111074234.xm5a6ota7ppdsto5@google.com>
- <202211111211.93ED8B4B@keescook>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iOc02DiC+CaIVCkcAVw6EXV28570qCIpUk2+es1FDOA=;
+        b=jyR/huBuE8hdC5AgmyfJen0TUez/GwaSMGVIpTXcC3u6DTeuFG9OAuPEmwk3wRgIbQ
+         JrSkp2sWUrLsclP69w0Lx4P1ce4JpcPgePZMvM+1BRchyXs9QS2BY68ni5rT21Hxjrtn
+         2RqVsHAI6io9qp21koMwkMYirqTC0OuOutxF6dJ2PuQfH9ixOyPuDbIe3cu1y9mgaIbb
+         x/43SQeiPJdoiKR2IiS5LqGDBoqKF2LhymEZsN9iNBpJQbL74H6bCJNlEl15A1700d+m
+         wgUCXLU1jhwvvwlMnFBnGlaR5/hjtpgMVMWZoRZgXTF4aKXBthDQIhWzrTil7VcSMNL1
+         7zIw==
+X-Gm-Message-State: ANoB5plLnQdattAOEhzIz+v7Sa1AEE0O4qRxgpmFHB41LgP2K4UvR2oZ
+        49P9U5XeoReoXbzYsMs0Za8XAoJBJjKXMjoew8h6wqJgJZHK4cFK3cF+rD+USO8+A5AjUVLl0H9
+        tU/PLJS5LElTNUgGA6oMFwDJi2QeE1FAr80bRPjOeuaub
+X-Received: by 2002:ac8:140e:0:b0:398:5f25:649 with SMTP id k14-20020ac8140e000000b003985f250649mr3006121qtj.673.1668199120417;
+        Fri, 11 Nov 2022 12:38:40 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf5LOmUpWj0zC/+L7Y7H4Tvue8JzxcncnqkZQZYbqztBBpUxGN2/AlKbzfkTgtWEPvFTFIdqi6rdOfPhtKrf+k8=
+X-Received: by 2002:ac8:140e:0:b0:398:5f25:649 with SMTP id
+ k14-20020ac8140e000000b003985f250649mr3006098qtj.673.1668199120192; Fri, 11
+ Nov 2022 12:38:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <202211111211.93ED8B4B@keescook>
+References: <202211100850.7A8DD75@keescook> <87iljl6ehe.fsf@intel.com>
+ <202211111110.11B554B@keescook> <CACO55tt5KOgDYMEw=spDeoMaYuj2GQOuHU+BEgadr1nQiFOGhw@mail.gmail.com>
+ <202211111215.1F421B7E@keescook>
+In-Reply-To: <202211111215.1F421B7E@keescook>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Fri, 11 Nov 2022 21:38:28 +0100
+Message-ID: <CACO55tvaXFyAMiAYmx2DKNj9fNtapThejHkRsvZd_5StYXTy+w@mail.gmail.com>
+Subject: Re: Coverity: nouveau_dp_irq(): Null pointer dereferences
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jani Nikula <jani.nikula@intel.com>, Lyude Paul <lyude@redhat.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        linux-kernel@vger.kernel.org, Ilia Mirkin <imirkin@alum.mit.edu>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@gmail.com>,
+        "Nathan E. Egge" <unlord@xiph.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        Dave Airlie <airlied@redhat.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2022-11-11, Kees Cook wrote:
->On Thu, Nov 10, 2022 at 11:42:34PM -0800, Fangrui Song wrote:
->> (+ sam@gentoo.org from Pedro Falcato's patch)
->>
->> On 2022-11-10, Kees Cook wrote:
->> > Traditionally, only the final PT_LOAD for load_elf_interp() supported
->> > having p_memsz > p_filesz. Recently, lld's construction of musl's
->> > libc.so on PowerPC64 started having two PT_LOAD program headers with
->> > p_memsz > p_filesz.
->> >
->> > As the least invasive change possible, check for p_memsz > p_filesz for
->> > each PT_LOAD in load_elf_interp.
->> >
->> > Reported-by: Rich Felker <dalias@libc.org>
->> > Link: https://maskray.me/blog/2022-11-05-lld-musl-powerpc64
->> > Cc: Pedro Falcato <pedro.falcato@gmail.com>
->> > Cc: Fangrui Song <maskray@google.com>
->> > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
->> > Cc: Eric Biederman <ebiederm@xmission.com>
->> > Cc: linux-fsdevel@vger.kernel.org
->> > Cc: linux-mm@kvack.org
->> > Signed-off-by: Kees Cook <keescook@chromium.org>
->> > ---
->> > v2: I realized we need to retain the final padding call.
->> > v1: https://lore.kernel.org/linux-hardening/20221111055747.never.202-kees@kernel.org/
->> > ---
->> > fs/binfmt_elf.c | 18 ++++++++++++++----
->> > 1 file changed, 14 insertions(+), 4 deletions(-)
->> >
->> > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
->> > index 528e2ac8931f..0a24bbbef1d6 100644
->> > --- a/fs/binfmt_elf.c
->> > +++ b/fs/binfmt_elf.c
->> > @@ -673,15 +673,25 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
->> > 				last_bss = k;
->> > 				bss_prot = elf_prot;
->> > 			}
->> > +
->> > +			/*
->> > +			 * Clear any p_memsz > p_filesz area up to the end
->> > +			 * of the page to wipe anything left over from the
->> > +			 * loaded file contents.
->> > +			 */
->> > +			if (last_bss > elf_bss && padzero(elf_bss))
->>
->> Missing {
->>
->> But after fixing this, I get a musl ld.so error.
->>
->> > +				error = -EFAULT;
->> > +				goto out;
->> > +			}
->> > 		}
->> > 	}
->> >
->> > 	/*
->> > -	 * Now fill out the bss section: first pad the last page from
->> > -	 * the file up to the page boundary, and zero it from elf_bss
->> > -	 * up to the end of the page.
->> > +	 * Finally, pad the last page from the file up to the page boundary,
->> > +	 * and zero it from elf_bss up to the end of the page, if this did
->> > +	 * not already happen with the last PT_LOAD.
->> > 	 */
->> > -	if (padzero(elf_bss)) {
->> > +	if (last_bss == elf_bss && padzero(elf_bss)) {
->> > 		error = -EFAULT;
->> > 		goto out;
->> > 	}
->> > --
->> > 2.34.1
->> >
->>
->> I added a new section to https://maskray.me/blog/2022-11-05-lld-musl-powerpc64
->> Copying here:
->>
->> To test that the kernel ELF loader can handle more RW `PT_LOAD` program headers, we can create an executable with more RW `PT_LOAD` program headers with `p_filesz < p_memsz`.
->> We can place a read-only section after `.bss` followed by a `SHT_NOBITS` `SHF_ALLOC|SHF_WRITE` section. The read-only section will form a read-only `PT_LOAD` while the RW section will form a RW `PT_LOAD`.
->>
->> ```text
->> #--- a.c
->> #include <assert.h>
->> #include <stdio.h>
->>
->> extern const char toc[];
->> char nobits0[0] __attribute__((section(".nobits0")));
->> char nobits1[0] __attribute__((section(".nobits1")));
->>
->> int main(void) {
->>   assert(toc[4096-1] == 0);
->>   for (int i = 0; i < 1024; i++)
->>     assert(nobits0[i] == 0);
->>   nobits0[0] = nobits0[1024-1] = 1;
->>   for (int i = 0; i < 4096; i++)
->>     assert(nobits1[i] == 0);
->>   nobits1[0] = nobits1[4096-1] = 1;
->>
->>   puts("hello");
->> }
->>
->> #--- toc.s
->> .section .toc,"aw",@nobits
->> .globl toc
->> toc:
->> .space 4096
->>
->> .section .ro0,"a"; .byte 255
->> .section .nobits0,"aw",@nobits; .space 1024
->> .section .ro1,"a"; .byte 255
->> .section .nobits1,"aw",@nobits; .space 4096
->>
->> #--- a.lds
->> SECTIONS { .ro0 : {} .nobits0 : {} .ro1 : {} .nobits1 : {} } INSERT AFTER .bss;
->> ```
->>
->> ```sh
->> split-file a.txt a
->> path/to/musl-gcc -Wl,--dynamic-linker=/lib/libc.so a/a.c a/a.lds -o toy
->> ```
->>
->> split-file is a utility in llvm-project.
+On Fri, Nov 11, 2022 at 9:16 PM Kees Cook <keescook@chromium.org> wrote:
 >
->Where is a.txt? Also, it'd be nice to have this without needing the
->musl-gcc.
+> On Fri, Nov 11, 2022 at 09:06:54PM +0100, Karol Herbst wrote:
+> > On Fri, Nov 11, 2022 at 8:21 PM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > On Fri, Nov 11, 2022 at 11:13:17AM +0200, Jani Nikula wrote:
+> > > > On Thu, 10 Nov 2022, coverity-bot <keescook@chromium.org> wrote:
+> > > > > Hello!
+> > > > >
+> > > > > This is an experimental semi-automated report about issues detected by
+> > > > > Coverity from a scan of next-20221110 as part of the linux-next scan project:
+> > > > > https://scan.coverity.com/projects/linux-next-weekly-scan
+> > > > >
+> > > > > You're getting this email because you were associated with the identified
+> > > > > lines of code (noted below) that were touched by commits:
+> > > > >
+> > > > >   Mon Aug 31 19:10:08 2020 -0400
+> > > > >     a0922278f83e ("drm/nouveau/kms/nv50-: Refactor and cleanup DP HPD handling")
+> > > >
+> > > > Hi Kees, this looks like a good idea, but maybe double check the Cc list
+> > > > generation? I was Cc'd on four mails today that I thought were
+> > > > irrelevant to me.
+> > >
+> > > Hi!
+> > >
+> > > Heh, I was recently asked to _expand_ the CC list. :)
+> > >
+> > > For these last pass of reports, I added a get_maintainers.pl run to the
+> > > identified commit. In this instance, the commit touched:
+> > >
+> > >  drivers/gpu/drm/nouveau/dispnv04/disp.c     |    6 +
+> > >  drivers/gpu/drm/nouveau/dispnv50/disp.c     |  192 ++++++++++++++++++++++--------------------------
+> > >  drivers/gpu/drm/nouveau/nouveau_connector.c |   14 ---
+> > >  drivers/gpu/drm/nouveau/nouveau_display.c   |    2
+> > >  drivers/gpu/drm/nouveau/nouveau_display.h   |    2
+> > >  drivers/gpu/drm/nouveau/nouveau_dp.c        |  132 ++++++++++++++++++++++++++++-----
+> > >  drivers/gpu/drm/nouveau/nouveau_encoder.h   |   33 +++++++-
+> > >  7 files changed, 244 insertions(+), 137 deletions(-)
+> > >
+> > > And the get_maintainers.pl rationale was:
+> > >
+> > > Ben Skeggs <bskeggs@redhat.com> (supporter:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS,commit_signer:1/1=100%,commit_signer:6/16=38%,authored:4/16=25%,added_lines:23/124=19%,removed_lines:36/152=24%)
+> > > Karol Herbst <kherbst@redhat.com> (supporter:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS,commit_signer:2/1=100%)
+> > > Lyude Paul <lyude@redhat.com> (supporter:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS,commit_signer:9/16=56%,authored:6/16=38%,added_lines:92/124=74%,removed_lines:107/152=70%)
+> > > David Airlie <airlied@gmail.com> (maintainer:DRM DRIVERS)
+> > > Daniel Vetter <daniel@ffwll.ch> (maintainer:DRM DRIVERS)
+> > > Ilia Mirkin <imirkin@alum.mit.edu> (commit_signer:1/1=100%,authored:1/1=100%,added_lines:2/2=100%,removed_lines:2/2=100%)
+> > > "Nathan E. Egge" <unlord@xiph.org> (commit_signer:1/1=100%)
+> > > Jani Nikula <jani.nikula@intel.com> (commit_signer:6/16=38%)
+> > > Dave Airlie <airlied@redhat.com> (commit_signer:5/16=31%)
+> > > Thomas Zimmermann <tzimmermann@suse.de> (commit_signer:4/16=25%,authored:4/16=25%)
+> > > dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS)
+> > > nouveau@lists.freedesktop.org (open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS)
+> > >
+> >
+> > I'd say it's good enough to message supporters and the mailing lists
+> > for at least Nouveau code, maybe even all drm drivers.
+>
+> i.e. leave out the commit_signer hits?
+>
 
-Sorry for the unclear description. I rewrite it.
-(`char nobits0[0] __attribute__((section(".nobits0")));` is not effective. It's SHT_PROGBITS and makes the output section SHT_PROGBITS.
-The new example addresses the deficiency.)
+yes.
 
+> > Not sure what to do about actual maintainers, but I doubt Dave and
+> > Daniel want to be CCed on every Coverity report here either.
+>
+> I updated the CC logic based on this feedback:
+> https://lore.kernel.org/linux-hardening/87h6zgfub4.fsf@kernel.org/
+>
+> So maybe just mailing lists?
+>
 
+That should be good enough, but maybe the DRM subsystem is big enough
+so it's reasonable to add special rules. For Nouveau either way is
+fine.
 
-Create some files. If you have split-file (a [test utility](https://llvm.org/docs/TestingGuide.html#extra-files) from llvm-project), you may place the following content into `a.txt`.
+> --
+> Kees Cook
+>
 
-```text
-#--- a.c
-#include <assert.h>
-#include <stdio.h>
-
-extern const char toc[];
-extern char nobits0[], nobits1[];
-
-int main(void) {
-   assert(toc[4096-1] == 0);
-   for (int i = 0; i < 1024; i++) {
-     assert(nobits0[i] == 0);
-     nobits0[i] = 1;
-   }
-   for (int i = 0; i < 8192; i++) {
-     assert(nobits1[i] == 0);
-     nobits1[i] = 1;
-   }
-
-   puts("hello");
-}
-
-#--- toc.s
-.globl toc, nobits0, nobits1
-
-.section .toc,"aw",@nobits; toc: .space 4096
-
-.section .ro0,"a"; .byte 255
-.section .nobits0,"aw",@nobits; nobits0: .space 1024
-.section .ro1,"a"; .byte 255
-.section .nobits1,"aw",@nobits; nobits1: .space 8192
-
-#--- a.lds
-SECTIONS { .ro0 : {} .nobits0 : {} .ro1 : {} .nobits1 : {} } INSERT AFTER .bss;
-```
-
-Then run:
-```sh
-split-file a.txt a
-path/to/musl-gcc -Wl,--dynamic-linker=/lib/libc.so a/a.c a/a.lds -o toy
-```
-
-Note: when a `SHT_NOBITS` section is followed by another section, the `SHT_NOBITS` section behaves as if it occupies the file offset range. This is because ld.lld does not implement a file size optimization.
-
-
-For this simple example, using glibc based gcc works as well (musl provides __assert_fail and puts referenced by the executable):
-
-gcc -Wl,--dynamic-linker=/lib/libc.so a/a.c a/a.lds -o toy
