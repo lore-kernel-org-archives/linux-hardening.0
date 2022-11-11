@@ -2,181 +2,129 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA64DC4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Nov 2022 05:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E90C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Nov 2022 05:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230417AbiKKFj0 (ORCPT
+        id S231860AbiKKF6A (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 11 Nov 2022 00:39:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60046 "EHLO
+        Fri, 11 Nov 2022 00:58:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229675AbiKKFjZ (ORCPT
+        with ESMTP id S230431AbiKKF56 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 11 Nov 2022 00:39:25 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2987682BC
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 21:39:22 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5B448B823E6
-        for <linux-hardening@vger.kernel.org>; Fri, 11 Nov 2022 05:39:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB31C433C1;
-        Fri, 11 Nov 2022 05:39:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668145160;
-        bh=4WyU6wZydtLH9EzoO7VQVBOwfi9ty//0BkyFJCH/dvw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R/WTQakoWJj24jD4lJg8roZAlKHQqmc10FW5keNKKVc+U2nE/LR7QclD3hblVAph9
-         VRtuHZG8vc2CjKAbj5VDrlEhuY9sf3ol0rIqrZLYSuEtWxhz1rMYx4vPatwgUw9xBg
-         9i7DwDafpCaLPI84kU8zGfjsINWemRaxwuKFQ3xorLvCoNhle+AkxbtyXmZ7iIPrqg
-         IMw856ECTDVReyoZuFg4/6EiiPDCOYgg4jnOIg1f+LHWYCGXdt2mOy16Ive/Ni0bic
-         ZLPfbk4aXelwwBxJxVQKheDtFhWFYwTDysXtVbQfeGoiwFxhK3cWJ1p8aEK1IhJkHV
-         HWBhzycrxjcGg==
-Date:   Thu, 10 Nov 2022 23:39:02 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>,
-        linux-hardening@vger.kernel.org,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [RFC] Approaches to deal with a struct with multiple fake
- flexible arrays members
-Message-ID: <Y23f9u6wQjwj1cRL@work>
-References: <Y2siZmiTD40mTYpJ@mail.google.com>
- <Y2xJxUnDnesWYckj@work>
- <Y2xUc9Q/+zTYbjaL@mail.google.com>
- <CADnq5_NKeqFm9ysEC78gYFL_PKzgSfXBa6v6rB+sE8aYZffqfA@mail.gmail.com>
+        Fri, 11 Nov 2022 00:57:58 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC4006EB48
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 21:57:57 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id m14-20020a17090a3f8e00b00212dab39bcdso6928047pjc.0
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 21:57:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KHGjxOmAPLTjSOKR1E4aRsoBMeGm6miKnYzYvwRoo/8=;
+        b=gohmZcSym6vfl404dEer4RoKFe3HbwM9Rjry0f1+FaJjNGXrOUU3IzieHCGv9fVlXU
+         20HPKuKbTfKr27+1pOgyQagqOwshsJdmX4++YUlZIJXEP0+OKkA7uvi2RIXbNPR061cE
+         wLFe9pHX6mFxXca6OZ0XiYwMbnGgeQ3SH20Mw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KHGjxOmAPLTjSOKR1E4aRsoBMeGm6miKnYzYvwRoo/8=;
+        b=xpkuHXLmM3kbOtNn57O6aRgHsYjozHnfnqiItfSrGXkV9C96Vu9/YbuZ7R/MfAV9tI
+         JrmqJWO1lHNYR/vmTJHIaAchlO5GRwpF+RQPWaNxGvKFrfdDEJ9JbpuL1ff8qvK0cBZu
+         xLk/88puIhnxXZ/Zz5mky7jdT6xCKpIcBgb0wx79JXEFYINQUPJ0vMbMLwE5KKwnLfnR
+         wc+JMhLqFid9lXknuDo9XuvxDo8LUmaI/FknHId1/6jUx8tzWqEVlraZ+kaCiDmQk7M/
+         LupCiI66s70YGXWa9Vd/O1hbVadOqMSZ2pLGziS63lDUC4v9FXuldIQiEetJtixo64xP
+         QgYw==
+X-Gm-Message-State: ANoB5plGL1PFzPyn2mVbSOZnQjXCO4bnPAHEFP0iGYtKXC5k5XwpFeM6
+        Sky0nbD7q/Sj4jJyf6tkjI5Fvg==
+X-Google-Smtp-Source: AA0mqf7iCcbOHwArRxyvqVIciEKulpY/TXf68aGvXkWAfzFVPXNotTaucQGneOg2BSYMzD+eEfnsGg==
+X-Received: by 2002:a17:902:efd1:b0:17b:4ace:b67f with SMTP id ja17-20020a170902efd100b0017b4aceb67fmr1229537plb.12.1668146277473;
+        Thu, 10 Nov 2022 21:57:57 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y197-20020a62cece000000b0056c47a5c34dsm662595pfg.122.2022.11.10.21.57.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Nov 2022 21:57:57 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Pedro Falcato <pedro.falcato@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>, Rich Felker <dalias@libc.org>,
+        Fangrui Song <maskray@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] binfmt_elf: Allow .bss in any interp PT_LOAD
+Date:   Thu, 10 Nov 2022 21:57:54 -0800
+Message-Id: <20221111055747.never.202-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADnq5_NKeqFm9ysEC78gYFL_PKzgSfXBa6v6rB+sE8aYZffqfA@mail.gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1993; h=from:subject:message-id; bh=IFv7zG9ua/TUw6RPzUQWoXA14J5yfz12EiQFTB5lii0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjbeRibkBnJb+JHCktBamRZlj///oiFFeK7VpOpPsB 44aQDc2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY23kYgAKCRCJcvTf3G3AJnJvD/ wMpSquxigcVJfg5ewqR3cpfP5urArMS1hWUeQchcdyXTMfEUFgqyt9Ty+7OE6vdD/z3R3uiC3lpphP FBxBvEkLF5ZynousHcyUauCkIiwZT1PLigA2z5DGCbu2tRUOeUZEI4uaYvMxWwJf+LoEIgjeWcXlHH QfBmP/w18M2HZvcH5ma39HbdZQPEU9Nn1sa4/WuZLf6xs+a6yVjJL2JpWk1Z6Md0kGbSu/n7KQkvRM OtJvFB3QrDrI8Mhm/UgZ/44bBI8kpStf/wXcD2PCGfSie6D+bPUvNlMk0t8eVQ0tq22d3po13Shtph N8IJDsgmVLbS0jbJLbWS5DQN5RlRrvmd+ss6JeZeCxMQVyJsUbft/Yydnvd6uxj/WLMK/Y1SsMrBgR vvBEdrAbJ1uO6PTohfPWyTOBG4P0nwz5/GodjBItoS6ceZjbf5tr82KhuQ8skBW+uztDUbi98znHu7 494BhsMzVXPETrqKnMIshOd0fSUYuawrnNvCqKGN0O4MYRiv06uCFYyyK45PqZOsFT2NA7U1hC8FF+ 11Hn4IoGq6LaAsuVbgTfBE7LR0lxPnBLwXLrsf3woKx8wRL7SCI7XKcYsaHeu0JFg/ukPkU1tMpiII tv6vNwpD91PO6uTpbXuWBE8xgYj3IBtoPba44NCzuwf246ajS31oQK2S+zVA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Nov 09, 2022 at 10:20:34PM -0500, Alex Deucher wrote:
-> On Wed, Nov 9, 2022 at 8:31 PM Paulo Miguel Almeida
-> <paulo.miguel.almeida.rodenas@gmail.com> wrote:
-> >
-> > On Wed, Nov 09, 2022 at 06:45:57PM -0600, Gustavo A. R. Silva wrote:
-> > > On Wed, Nov 09, 2022 at 04:45:42PM +1300, Paulo Miguel Almeida wrote:
-> > >
-> > > Adding Alex, Christian and DRM lists to the thread.
-> >
-> > Thanks so much for your reply Gustavo
-> > Yep, that's a good idea.
-> >
-> > >
-> > > > struct _ATOM_INIT_REG_BLOCK {
-> > > >     USHORT                     usRegIndexTblSize;    /*     0     2 */
-> > > >     USHORT                     usRegDataBlkSize;     /*     2     2 */
-> > > >     ATOM_INIT_REG_INDEX_FORMAT asRegIndexBuf[1];     /*     4     3 */
-> > > >     ATOM_MEMORY_SETTING_DATA_BLOCK asRegDataBuf[1];  /*     7     8 */
-> > >
-> > > I didn't find evidence that asRegDataBuf is used anywhere in the
-> > > codebase[1].
-> > > ...
-> > > <snip>
-> > > ...
-> > > As I pointed out above, I don't see asRegDataBuf[] being used in the
-> > > codebase (of course it may describe firmware memory layout). Instead,
-> > > there is this jump to a block of data past asRegIndexBuf[]:
-> > >
-> > > drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:1444:
-> > > 1444: ATOM_MEMORY_SETTING_DATA_BLOCK *reg_data =
-> > > 1445:         (ATOM_MEMORY_SETTING_DATA_BLOCK *)
-> > > 1446:         ((u8 *)reg_block + (2 * sizeof(u16)) +
-> > > 1447:                  le16_to_cpu(reg_block->usRegIndexTblSize));
-> > >
-> > > So, it seems the one relevant array, from the kernel side, is
-> > > asRegIndexBuf[]. I wonder if we really need asRegDataBuf[] in that
-> > > structure... or if we could try modifying that struct and only have
-> > > asRegIndexBuf[] as last member? and then we can transform it into a
-> > > flex-array member.
-> >
-> > I saw that one too. That would be the way it's currently accessing
-> > asRegDataBuf member as the existing struct would make asRegDataBuf[0] point
-> > to some index within the asRegIndexBuf member (as you probably got it too)
-> >
-> > you are right... asRegDataBuff isn't used from a static analysis
-> > point of view but removing it make the code a bit cryptic, right?
-> >
-> > That's pickle, ay? :-)
-> >
-> > >
-> > > If for any strong reasong we cannot remove asRegDataBuf[] then I think we
-> > > could give it a try and use DECLARE_FLEX_ARRAY() to declare both arrays
-> > > in the structure.
-> > >
-> >
-> > Out of curiosity, why both rather than just asRegIndexBuf?
+Traditionally, only the final PT_LOAD for load_elf_interp() supported
+having p_memsz > p_filesz. Recently, lld's construction of musl's
+libc.so on PowerPC64 started having two PT_LOAD program headers with
+p_memsz > p_filesz.
 
-Because if I understand the code and Alex's reply below correctly, both
-arrays are being used to describe data of variable size, and both arrays
-need to stay. The situation is that it'd be _strange_ to transform just
-one of them into a flex-array member and not the other, and at the same
-time a flex-array member may only appear as the last member of a
-struct, and it's not _great_ to have more than one flex-array member
-in a struct --in fact, we can't.
+As the least invasive change possible, check for p_memsz > p_filesz for
+each PT_LOAD in load_elf_interp.
 
-DECLARE_FLEX_ARRAY() was originally designed to have flex-array members
-in unions. This is, we can declare multiple flex-array members as long as
-they all share the same address. Unfortunately, this is not the case with
-asRegIndexBuf[] and asRegDataBuf[], and I don't see[1] DECLARE_FLEX_ARRAY()
-working in this case. So, nope, we cannot use it to declare both arrays
-and we also cannot have a flex-array in the middle of a struct, so we
-cannot use it to declare asRegIndexBuf[] alone. :/
+Reported-by: Rich Felker <dalias@libc.org>
+Link: https://maskray.me/blog/2022-11-05-lld-musl-powerpc64
+Cc: Pedro Falcato <pedro.falcato@gmail.com>
+Cc: Fangrui Song <maskray@google.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Rich, Pedro, and Fangrui, are you able to test this change? I haven't
+constructed a trivial reproducer yet (though it would be nice to have
+a self-contained test-case).
+---
+ fs/binfmt_elf.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-On the other hand, I fail to see how the current state of the code is
-problematic for things like -fstrict-flex-arrays, right now. asRegDataBuf[]
-is not being used for anything in the kernel, and asRegIndexBuf[] is
-correctly being accessed through it's only valid index zero, after which
-is decays into a pointer[2].
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 528e2ac8931f..3f07945ff085 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -673,18 +673,19 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
+ 				last_bss = k;
+ 				bss_prot = elf_prot;
+ 			}
++
++			/*
++			 * Now fill out any zeroed region (e.g. .bss): first pad the
++			 * last page from the file up to the page boundary, and zero
++			 * it from elf_bss up to the end of the page.
++			 */
++			if (last_bss > elf_bss && padzero(elf_bss)) {
++				error = -EFAULT;
++				goto out;
++			}
+ 		}
+ 	}
+ 
+-	/*
+-	 * Now fill out the bss section: first pad the last page from
+-	 * the file up to the page boundary, and zero it from elf_bss
+-	 * up to the end of the page.
+-	 */
+-	if (padzero(elf_bss)) {
+-		error = -EFAULT;
+-		goto out;
+-	}
+ 	/*
+ 	 * Next, align both the file and mem bss up to the page size,
+ 	 * since this is where elf_bss was just zeroed up to, and where
+-- 
+2.34.1
 
-That struct is definitely not great (I don't love it), but we might try
-to explore other cases while we determine how and if we ultimately need
-to modify it.
-
-I'll open an issue for this in the bug tracker, so we keep an eye on it.
-:)
-
-> >
-> > > But first, of course, Alex, Christian, it'd be really great if we can
-> > > have your input and feedback. :)
-> 
-> This header describes the layout of memory stored in the ROM on the
-> GPU.  It's shared between vbios and driver so some parts aren't
-> necessarily directly used by the driver.  As for what to do about it,
-> I'm not sure.  This structure stores a set of register offsets
-> (asRegIndexBuf) and data values (asRegDataBuf) for specific operations
-> (e.g., walk this structure and program register X with value Y.  For a
-> little background on atombios, it's a set of data and command tables
-> stored in the vbios ROM image.  The driver has an interpreter for the
-> command tables (see atom.c) so it can parse the command tables to
-> initialize the asic to a usable state.  The various programming
-> sequences vary depending on the components the AIB/OEM uses for the
-> board (different vram vendors, different clock/voltage settings,
-> etc.).  The legacy VGA/VBE and the GOP driver and the OS driver can
-> use these tables, so this allows us to initialize any GPU in a generic
-> way on any architecture even if the platform firmware doesn't post the
-> card.  For the most part the driver doesn't have to deal with these
-> particular tables directly, other than for some very specific cases
-> where the driver needs to grab some elements from the tables to
-> populate the power management controller for GPU memory reclocking
-> parameters.  However, the command tables as interpreted by the parser
-> very often will directly parse these tables.  So you might have a
-> command table that the driver executes to initialize some part of the
-> GPU which ultimately fetches the table from the ROM image and walks it
-> programming registers based on the offset and values in that table.
-> So if you were debugging something that involves the atombios parser
-> and walking through one of the command tables, you may be confused if
-> the data tables don't match what header says.  So ideally, we'd keep
-> both arrays.
-
-Thanks a lot for the input, Alex.
---
-Gustavo
-
-[1] https://godbolt.org/z/sxa7K9Erd
-[2] https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c#L1448
