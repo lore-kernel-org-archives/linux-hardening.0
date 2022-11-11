@@ -2,210 +2,129 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F1DC433FE
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Nov 2022 06:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7A3C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Nov 2022 06:13:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229536AbiKKGFc (ORCPT
+        id S232707AbiKKGN2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 11 Nov 2022 01:05:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40176 "EHLO
+        Fri, 11 Nov 2022 01:13:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbiKKGFb (ORCPT
+        with ESMTP id S232650AbiKKGNY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 11 Nov 2022 01:05:31 -0500
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86BFA766A
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 22:05:30 -0800 (PST)
-Received: by mail-pf1-x432.google.com with SMTP id z26so4092790pff.1
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 22:05:30 -0800 (PST)
+        Fri, 11 Nov 2022 01:13:24 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69572B8C
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 22:13:23 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id b11so3640973pjp.2
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 22:13:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ALbqWn+YL8M50XLCfgkXbFZ6qiStxMdCmB11f1vM6Qo=;
-        b=j29LXutMSWr8pwcIj4DoA1+DYr/kLsz1qvLxSdejrHKDPbypUbK2KzKT7nGdHpKUxb
-         hsmYsMouw1iJwaxgt2FQSB5vXsNXzHw7PsTVDz6m/4eGFNSDfsTYgDkmc/ImKmBFz6Nk
-         E5vMr7pb2L6AMzT7AZsOcIOU1/DTwKQbZ2rgU7UWi+bdkceXAKVs3VodKBS0TLAFkae6
-         i8QTjs4xLH+Us9yzjjon/YA5BtAa9nC+62xSnbtUud0lGzl8vxp5h+JBjIObDBg92QOU
-         cIEnOOMBO5tHlRhV8EwcZ8z3MaqqzAEkW5qXAgrGHX4ETAepvFY6ujpU5d2+mHAbPEym
-         lsYw==
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LJbZhJS9Ev1XMOM4wW/EgY/OFSEa8D+Vt9N5SxaJSHs=;
+        b=a2uE97e3Dcchu89fkZ3gY9WePVwKJGjK7Up57d0kS7VljHzA93kFQnDEGoaNzk7akx
+         FbE5jDsPkJoQOdhi2fpzKV0AMFBEuO7sqUB6aKbW50VryFTbonmAC0ItGTxOz55L/XJW
+         82c/fFG9f1otpcAjcMtZBQMf8sGiejXUweLag=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ALbqWn+YL8M50XLCfgkXbFZ6qiStxMdCmB11f1vM6Qo=;
-        b=xNR/tCtkHnG/8YjEyUNsWyycTWAh1myhI7RSHDq5ArTKspo5wT2pKyeJBMR5L/7GBk
-         JXRI/3jEDw5kVfk64pUyZabn5RvzbMIRIq/WHRjcEdM6tWgDqmCcjGaFc4NO1Pj7KxBV
-         kb1RCOR9YqxlMFo4IJvbvui57LOBAQOwNe4d2FnixtfqXVTyvGlenOifu3JW7n30zWQU
-         KsYpGOGxd/Fr84clveaE4VFJAvyEEkjJ9OgcgHe8kFH2IuGRCQvHXYJoOP3DUllbhmTV
-         ebVskD8c2qxgkQEmcGwigbLL1drXe3i8uhGcmiyGFs2YkMvN1xHfmUqQs9k/uDcPsU6x
-         mutQ==
-X-Gm-Message-State: ANoB5pl0WgEzY8nz1cDME3SYElv87gLbc8fVUNgHGQ8pbF4RbXZHkb4Q
-        Jt80g2h1nBEix7Mlovepp18=
-X-Google-Smtp-Source: AA0mqf7bZje/kwnW4RSlfQYKlhfQjvwAuCazv+TcT8XgOIWjNepygL24yW9gS/19++m84Mfo4ntuyg==
-X-Received: by 2002:a63:d354:0:b0:46b:3acb:77b2 with SMTP id u20-20020a63d354000000b0046b3acb77b2mr322174pgi.560.1668146729896;
-        Thu, 10 Nov 2022 22:05:29 -0800 (PST)
-Received: from mail.google.com (125-237-50-34-fibre.sparkbb.co.nz. [125.237.50.34])
-        by smtp.gmail.com with ESMTPSA id ik15-20020a170902ab0f00b00172973d3cd9sm749319plb.55.2022.11.10.22.05.26
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LJbZhJS9Ev1XMOM4wW/EgY/OFSEa8D+Vt9N5SxaJSHs=;
+        b=e+BsLruCGTmthaDIRSbUvwRfJ7JiMdEQfJpKM6+pooBoy/mjlo5CTSsNatkRgKJIm4
+         gUAjw4DEz9F28sshIvT7KfF7blMpRYNSYhpqzKIRoV3AsafNFzpzKMXN508AbM9iv4NK
+         st+B3Ekm1pdN6NojJ0GqyCBzhz2L+4v/nToS7ImzoCTe3zMw6jzWvZERZm3uR7vcO1OR
+         gyodnhp0uxHDJm200UwGYXxqEiKX6f85ldu1GzGTwY4C/ejY0RefMkVVCMO/VOuWcITY
+         S+TtOh2Yjp2RX4oac0SKV96vVbZUp7V9+OZ/r2x7KvglKoFZPA5hRGC5YWDfJJ/ETXS1
+         CLOA==
+X-Gm-Message-State: ANoB5pktm+Pw6wLO2KymfnbA4bDllJvGkNTzw3rA1/swVS0XStqT8AnO
+        uatlaEIV7cgzQ9Hha7G8DUR/Vw==
+X-Google-Smtp-Source: AA0mqf6MjTXRlKDFh5J/QealI2TZICyMWy1lWdOK6vVH3VGXWxISZjjfHqxAOEHoddGtvzLObxhABg==
+X-Received: by 2002:a17:902:82c5:b0:188:547d:b142 with SMTP id u5-20020a17090282c500b00188547db142mr1151214plz.103.1668147202950;
+        Thu, 10 Nov 2022 22:13:22 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u6-20020a17090341c600b0017f9021ddc6sm738931ple.289.2022.11.10.22.13.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Nov 2022 22:05:29 -0800 (PST)
-Date:   Fri, 11 Nov 2022 19:05:23 +1300
-From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Alex Deucher <alexdeucher@gmail.com>,
-        linux-hardening@vger.kernel.org,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [RFC] Approaches to deal with a struct with multiple fake
- flexible arrays members
-Message-ID: <Y23mI6pQ0yOl1L/o@mail.google.com>
-References: <Y2siZmiTD40mTYpJ@mail.google.com>
- <Y2xJxUnDnesWYckj@work>
- <Y2xUc9Q/+zTYbjaL@mail.google.com>
- <CADnq5_NKeqFm9ysEC78gYFL_PKzgSfXBa6v6rB+sE8aYZffqfA@mail.gmail.com>
- <Y23f9u6wQjwj1cRL@work>
+        Thu, 10 Nov 2022 22:13:22 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Pedro Falcato <pedro.falcato@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>, Rich Felker <dalias@libc.org>,
+        Fangrui Song <maskray@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v2] binfmt_elf: Allow .bss in any interp PT_LOAD
+Date:   Thu, 10 Nov 2022 22:13:20 -0800
+Message-Id: <20221111061315.gonna.703-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y23f9u6wQjwj1cRL@work>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2024; h=from:subject:message-id; bh=Y24MMuXgCRmwN8M9lMQ21fXH3PL7d1cIRSZ/p8LhrwM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjbef/6hzUuUZGLGrWJBWxgKZYE29qBjmhTy3LRXQp irXkyeaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY23n/wAKCRCJcvTf3G3AJk3dEA CIXfVDmGV7/YBxAB4wFGgxUpRivIRXez/dovh1l8xssD3q3bjdUJrxkzCsPrcEE/xNrOZiIHiXYFJV fCcQfwtmeVU1WrRUCGhwPxnfuMweCUte6qAuXQNNrf0swBefm8UYxQ3J3PfLPSWas6F32v+4mGkMMH UW69zCp+/TB87IXYknrKqw8PiE3SdOeNnZhnwfuQH9VWlNvy4Z0r1A9WCduyTXODw6CNC6MzTZDBoX 6pUzR+XyqvJARUHcg5mjPXrTUX4Odh9VmKMRT/vL6H4jQxKg2gSj/fMmY6jTnRlgEY93I+82L0Jlag jZfXxNKbSiCD84qLRUJwhHtFfypBrQtDiQzyN3piesT0vUmPHxwAVez+lf6sPmJDxm+ZsvtpePbCgP 3Gw0WHeuR5naODEOwvE+mBJWMIKzDjSlrzsdQ74Wot+ZzvE5keQN08R4UWVeCcu0y5pMPsTORxZE7K rJSOOaKvAlEEqJ+mPrszpXCudNN1d655Jt2fUIJj5gM4MtzNnC5trkijk6OzYwcUUlCQd5ScyFKvlV jezeFCHDx1aimUkMkSLCBnkXbVSd2wklLcscSFVqZiHxEWygZzNFbs6NRSyFTemptbIKZTvpeR50lW nJ+zAROtHOVfVb4upzYWUVOn8+t8vEaSzruQdPPvEQrV4Xm9O0BbQOJytazA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Nov 10, 2022 at 11:39:02PM -0600, Gustavo A. R. Silva wrote:
-> On Wed, Nov 09, 2022 at 10:20:34PM -0500, Alex Deucher wrote:
-> > On Wed, Nov 9, 2022 at 8:31 PM Paulo Miguel Almeida
-> > <paulo.miguel.almeida.rodenas@gmail.com> wrote:
-> > >
-> > > On Wed, Nov 09, 2022 at 06:45:57PM -0600, Gustavo A. R. Silva wrote:
-> > > > On Wed, Nov 09, 2022 at 04:45:42PM +1300, Paulo Miguel Almeida wrote:
-> > > >
-> > > > Adding Alex, Christian and DRM lists to the thread.
-> > >
-> > > Thanks so much for your reply Gustavo
-> > > Yep, that's a good idea.
-> > >
-> > > >
-> > > > > struct _ATOM_INIT_REG_BLOCK {
-> > > > >     USHORT                     usRegIndexTblSize;    /*     0     2 */
-> > > > >     USHORT                     usRegDataBlkSize;     /*     2     2 */
-> > > > >     ATOM_INIT_REG_INDEX_FORMAT asRegIndexBuf[1];     /*     4     3 */
-> > > > >     ATOM_MEMORY_SETTING_DATA_BLOCK asRegDataBuf[1];  /*     7     8 */
-> > > >
-> > > > I didn't find evidence that asRegDataBuf is used anywhere in the
-> > > > codebase[1].
-> > > > ...
-> > > > <snip>
-> > > > ...
-> > > > As I pointed out above, I don't see asRegDataBuf[] being used in the
-> > > > codebase (of course it may describe firmware memory layout). Instead,
-> > > > there is this jump to a block of data past asRegIndexBuf[]:
-> > > >
-> > > > drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:1444:
-> > > > 1444: ATOM_MEMORY_SETTING_DATA_BLOCK *reg_data =
-> > > > 1445:         (ATOM_MEMORY_SETTING_DATA_BLOCK *)
-> > > > 1446:         ((u8 *)reg_block + (2 * sizeof(u16)) +
-> > > > 1447:                  le16_to_cpu(reg_block->usRegIndexTblSize));
-> > > >
-> > > > So, it seems the one relevant array, from the kernel side, is
-> > > > asRegIndexBuf[]. I wonder if we really need asRegDataBuf[] in that
-> > > > structure... or if we could try modifying that struct and only have
-> > > > asRegIndexBuf[] as last member? and then we can transform it into a
-> > > > flex-array member.
-> > >
-> > > I saw that one too. That would be the way it's currently accessing
-> > > asRegDataBuf member as the existing struct would make asRegDataBuf[0] point
-> > > to some index within the asRegIndexBuf member (as you probably got it too)
-> > >
-> > > you are right... asRegDataBuff isn't used from a static analysis
-> > > point of view but removing it make the code a bit cryptic, right?
-> > >
-> > > That's pickle, ay? :-)
-> > >
-> > > >
-> > > > If for any strong reasong we cannot remove asRegDataBuf[] then I think we
-> > > > could give it a try and use DECLARE_FLEX_ARRAY() to declare both arrays
-> > > > in the structure.
-> > > >
-> > >
-> > > Out of curiosity, why both rather than just asRegIndexBuf?
-> 
-> Because if I understand the code and Alex's reply below correctly, both
-> arrays are being used to describe data of variable size, and both arrays
-> need to stay. The situation is that it'd be _strange_ to transform just
-> one of them into a flex-array member and not the other, and at the same
+Traditionally, only the final PT_LOAD for load_elf_interp() supported
+having p_memsz > p_filesz. Recently, lld's construction of musl's
+libc.so on PowerPC64 started having two PT_LOAD program headers with
+p_memsz > p_filesz.
 
-My apologies, I tried being succinct and I ended up mistakenly leading you 
-to understand a different thing. I will be more careful next time :-)
+As the least invasive change possible, check for p_memsz > p_filesz for
+each PT_LOAD in load_elf_interp.
 
-What I meant was why would you use DECLARE_FLEX_ARRAY macro for both
-members instead of the following ?
+Reported-by: Rich Felker <dalias@libc.org>
+Link: https://maskray.me/blog/2022-11-05-lld-musl-powerpc64
+Cc: Pedro Falcato <pedro.falcato@gmail.com>
+Cc: Fangrui Song <maskray@google.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v2: I realized we need to retain the final padding call.
+v1: https://lore.kernel.org/linux-hardening/20221111055747.never.202-kees@kernel.org/
+---
+ fs/binfmt_elf.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-typedef struct _ATOM_INIT_REG_BLOCK{
-   USHORT                           usRegIndexTblSize;
-   USHORT                           usRegDataBlkSize;
-   DECLARE_FLEX_ARRAY(ATOM_INIT_REG_INDEX_FORMAT, asRegIndexBuf);  // Macro needed
-   ATOM_MEMORY_SETTING_DATA_BLOCK   asRegDataBuf[];		   // Regular FMA
-}ATOM_INIT_REG_BLOCK;
-
-> On the other hand, I fail to see how the current state of the code is
-> problematic for things like -fstrict-flex-arrays, right now. asRegDataBuf[]
-> is not being used for anything in the kernel, and asRegIndexBuf[] is
-> correctly being accessed through it's only valid index zero, after which
-> is decays into a pointer[2].
-> 
-> That struct is definitely not great (I don't love it), but we might try
-> to explore other cases while we determine how and if we ultimately need
-> to modify it.
-> 
-> I'll open an issue for this in the bug tracker, so we keep an eye on it.
-> :)
-
-Fair enough. Thanks heaps Gustavo, I will move on to the other fake flex
-array occurences and circle back to it once a decision in made. Please
-count on me to make the changes :-)
-
-> 
-> > >
-> > > > But first, of course, Alex, Christian, it'd be really great if we can
-> > > > have your input and feedback. :)
-> > 
-> > This header describes the layout of memory stored in the ROM on the
-> > GPU.  It's shared between vbios and driver so some parts aren't
-> > necessarily directly used by the driver.  As for what to do about it,
-> > I'm not sure.  This structure stores a set of register offsets
-> > (asRegIndexBuf) and data values (asRegDataBuf) for specific operations
-> > (e.g., walk this structure and program register X with value Y.  For a
-> > little background on atombios, it's a set of data and command tables
-> > stored in the vbios ROM image.  The driver has an interpreter for the
-> > command tables (see atom.c) so it can parse the command tables to
-> > initialize the asic to a usable state.  The various programming
-> > sequences vary depending on the components the AIB/OEM uses for the
-> > board (different vram vendors, different clock/voltage settings,
-> > etc.).  The legacy VGA/VBE and the GOP driver and the OS driver can
-> > use these tables, so this allows us to initialize any GPU in a generic
-> > way on any architecture even if the platform firmware doesn't post the
-> > card.  For the most part the driver doesn't have to deal with these
-> > particular tables directly, other than for some very specific cases
-> > where the driver needs to grab some elements from the tables to
-> > populate the power management controller for GPU memory reclocking
-> > parameters.  However, the command tables as interpreted by the parser
-> > very often will directly parse these tables.  So you might have a
-> > command table that the driver executes to initialize some part of the
-> > GPU which ultimately fetches the table from the ROM image and walks it
-> > programming registers based on the offset and values in that table.
-> > So if you were debugging something that involves the atombios parser
-> > and walking through one of the command tables, you may be confused if
-> > the data tables don't match what header says.  So ideally, we'd keep
-> > both arrays.
-> 
-> Thanks a lot for the input, Alex.
-> --
-> Gustavo
-> 
-
-Same here, thanks heaps Alex!
-
-- Paulo A.
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 528e2ac8931f..0a24bbbef1d6 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -673,15 +673,25 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
+ 				last_bss = k;
+ 				bss_prot = elf_prot;
+ 			}
++
++			/*
++			 * Clear any p_memsz > p_filesz area up to the end
++			 * of the page to wipe anything left over from the
++			 * loaded file contents.
++			 */
++			if (last_bss > elf_bss && padzero(elf_bss))
++				error = -EFAULT;
++				goto out;
++			}
+ 		}
+ 	}
+ 
+ 	/*
+-	 * Now fill out the bss section: first pad the last page from
+-	 * the file up to the page boundary, and zero it from elf_bss
+-	 * up to the end of the page.
++	 * Finally, pad the last page from the file up to the page boundary,
++	 * and zero it from elf_bss up to the end of the page, if this did
++	 * not already happen with the last PT_LOAD.
+ 	 */
+-	if (padzero(elf_bss)) {
++	if (last_bss == elf_bss && padzero(elf_bss)) {
+ 		error = -EFAULT;
+ 		goto out;
+ 	}
+-- 
+2.34.1
 
