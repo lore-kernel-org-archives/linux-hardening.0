@@ -2,90 +2,70 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90878C4167B
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Nov 2022 15:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C20DC433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Nov 2022 16:47:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234996AbiKKPJB (ORCPT
+        id S234195AbiKKQrT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 11 Nov 2022 10:09:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35792 "EHLO
+        Fri, 11 Nov 2022 11:47:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234923AbiKKPIF (ORCPT
+        with ESMTP id S233938AbiKKQrS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 11 Nov 2022 10:08:05 -0500
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DDA376B211;
-        Fri, 11 Nov 2022 07:06:50 -0800 (PST)
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1otVcD-00037d-05; Fri, 11 Nov 2022 16:06:45 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id D998FC11F2; Fri, 11 Nov 2022 16:05:51 +0100 (CET)
-Date:   Fri, 11 Nov 2022 16:05:51 +0100
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     John Thomson <git@johnthomson.fastmail.com.au>
-Cc:     keescook@chromium.org, linux-mips@vger.kernel.org,
-        linux-hardening@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2] mips: boot/compressed: use __NO_FORTIFY
-Message-ID: <20221111150551.GF13465@alpha.franken.de>
-References: <20221031170749.2159430-1-git@johnthomson.fastmail.com.au>
+        Fri, 11 Nov 2022 11:47:18 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9568D836BF;
+        Fri, 11 Nov 2022 08:47:17 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4FE6DB82670;
+        Fri, 11 Nov 2022 16:47:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78AA9C433C1;
+        Fri, 11 Nov 2022 16:47:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668185234;
+        bh=LwhJGLEfSkfTskA9KybUESIxesCQ0DPf6xYj+bgbvLs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sCpzFBXvuCOJQtE+LbnmnPTc9hKbE3kuYZ5dZIlfFUBPaQicQcqUTKvIaWnKuH5Bo
+         C7nK7R/hnCC91eYsQ2+sfa8c3iuhFCSF7ruHaUHyBpe9kV85ZUlLnNYYklmWoKpGv3
+         Fzkm23SUx02FfJqiIbNs8IQM5i+Y17YzZTKndnePlU6OvVhWjeHOPrtQT4DBnXRaBh
+         i/rwcdnt2hVYjBCJT6sVlsa50ulK2gT3Ta1p90yRtgNllIaNuqugSg/CwM0sGf0Po2
+         ZeDo2IX5wOPS0KaZSlEk8XUVh+FAH3kVCKg9uDHYexpdDTzqA9QTKv3zAr77wZqWm1
+         AphFvmJYHkWkQ==
+Date:   Fri, 11 Nov 2022 10:46:56 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kalle Valo <kvalo@kernel.org>
+Cc:     Sudarsana Kalluru <skalluru@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com, Rasesh Mody <rmody@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 6/7] bna: Avoid clashing function prototypes
+Message-ID: <Y258gPo/WE6AbV+o@work>
+References: <cover.1667934775.git.gustavoars@kernel.org>
+ <f813f239cd75c341e26909f59f153cb9b72b1267.1667934775.git.gustavoars@kernel.org>
+ <87v8nns6t4.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221031170749.2159430-1-git@johnthomson.fastmail.com.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87v8nns6t4.fsf@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Nov 01, 2022 at 03:07:49AM +1000, John Thomson wrote:
-> In the mips CONFIG_SYS_SUPPORTS_ZBOOT kernel, fix the compile error
-> when using CONFIG_FORTIFY_SOURCE=y
-> 
-> LD      vmlinuz
-> mipsel-openwrt-linux-musl-ld: arch/mips/boot/compressed/decompress.o: in
-> function `decompress_kernel':
-> ./include/linux/decompress/mm.h:(.text.decompress_kernel+0x177c):
-> undefined reference to `warn_slowpath_fmt'
-> 
-> kernel test robot helped identify this as related to fortify. The error
-> appeared with commit 54d9469bc515 ("fortify: Add run-time WARN for
-> cross-field memcpy()")
-> Link: https://lore.kernel.org/r/202209161144.x9xSqNQZ-lkp@intel.com/
-> 
-> Resolve this in the same style as commit cfecea6ead5f ("lib/string:
-> Move helper functions out of string.c")
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Fixes: 54d9469bc515 ("fortify: Add run-time WARN for cross-field memcpy()")
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: John Thomson <git@johnthomson.fastmail.com.au>
-> ---
-> v2:
-> fix subject typo: FORITFY->FORTIFY
-> ---
->  arch/mips/boot/compressed/decompress.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/mips/boot/compressed/decompress.c b/arch/mips/boot/compressed/decompress.c
-> index 5b38a802e101..c5dd415254d3 100644
-> --- a/arch/mips/boot/compressed/decompress.c
-> +++ b/arch/mips/boot/compressed/decompress.c
-> @@ -9,6 +9,7 @@
->  
->  #define DISABLE_BRANCH_PROFILING
->  
-> +#define __NO_FORTIFY
->  #include <linux/types.h>
->  #include <linux/kernel.h>
->  #include <linux/string.h>
-> -- 
-> 2.37.2
+> Mixing wifi and ethernet patches in the same patch is not a good idea,
+> the network maintainers might miss this patch. I recommend submitting
+> patch 6 separately.
 
-applied to mips-fixes.
+OK.
 
-Thomas.
+In the meantime, can you take patches 1-5? :)
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Thanks!
+--
+Gustavo
