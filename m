@@ -2,127 +2,181 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52949C4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Nov 2022 03:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA64DC4332F
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Nov 2022 05:39:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232730AbiKKDQU (ORCPT
+        id S230417AbiKKFj0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Nov 2022 22:16:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53796 "EHLO
+        Fri, 11 Nov 2022 00:39:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232583AbiKKDQS (ORCPT
+        with ESMTP id S229675AbiKKFjZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Nov 2022 22:16:18 -0500
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82E6638BD
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 19:16:17 -0800 (PST)
-Received: by mail-pf1-x42f.google.com with SMTP id k15so3821550pfg.2
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 19:16:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EHYtmfAkk1aJiFrWOQcK74WseWK+F2wWdmGdTPL8r5I=;
-        b=PLhiLl2rFexSXAqPrdy+JcBIIVG9if/iJukhcki/6b31uXZj13fFwWK2CUJm1Baj2s
-         /30vEA6cCpgthMu5aerjhcoSyL3VNIf7YC6No9K3mAw9NTtQZXBxIAdl8YFcrSUNk2ax
-         PKLw8/PceYAM/t+0hRJJeWRUDRoy+1/uckzZY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EHYtmfAkk1aJiFrWOQcK74WseWK+F2wWdmGdTPL8r5I=;
-        b=TitEbQBBd5bm1MkaIJ98Cw4qwM9ccAVP/UO8k2EOu7XVF/+vJvsUOcBN3i3oznEoCL
-         2sEATlMMqHgPZb0jBnJacP6BrjqqGKcKZZ8rS/xihuhTs8H6FoyPjwM6Abv4FhxC9RJG
-         rUB3I/C2c+tu2QCpI3wcmVQSSJg2K4KjWLZjBQE57cEY2YWykfxrUGa0EWoi8GSUppi6
-         YdmTF27oWkqcc6JgWmkIyQ9OSPlRZ8LE1OWgbsKinHLh28Byq4aFxYM0pmz0lz4SY63H
-         +USab8VNIbigkLG6pTVlW3Pob2aHfCG8Sz1FDLfxYdNeh6IG6bMGZ9hHRmN33RhobkGj
-         pKFQ==
-X-Gm-Message-State: ANoB5pmHhf97lUywCuK5KWq3I4udkLvV+Zj6UIjS71n3IzNV7wb/xXdb
-        z3TxyLzfi02UNQINSsDoT6+Z5w==
-X-Google-Smtp-Source: AA0mqf5oumcRWXs+UNB8JbUMhp0s1tVKT0S+NPKFT46G7SRi1Mu55t1aEsRugB1x0ZpTt2hj0XpNyg==
-X-Received: by 2002:aa7:9218:0:b0:562:ce80:1417 with SMTP id 24-20020aa79218000000b00562ce801417mr692070pfo.19.1668136577012;
-        Thu, 10 Nov 2022 19:16:17 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z28-20020aa7959c000000b0056be4dbd4besm402806pfj.111.2022.11.10.19.16.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Nov 2022 19:16:16 -0800 (PST)
-Date:   Thu, 10 Nov 2022 19:16:16 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc:     Alexey Romanov <avromanov@sberdevices.ru>,
-        linux-kernel@vger.kernel.org, Nick Terrell <terrelln@fb.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Suleiman Souhlal <suleiman@google.com>,
-        Nitin Gupta <ngupta@vflare.org>, Jens Axboe <axboe@kernel.dk>,
-        Nhat Pham <nphamcs@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-block@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: Coverity: zram_recompress(): OVERRUN
-Message-ID: <202211101915.6A6C5758AA@keescook>
-References: <202211100847.388C61B3@keescook>
- <Y22ZNtdH9s+cuL9l@google.com>
- <Y22afneyl4pZ32ig@google.com>
+        Fri, 11 Nov 2022 00:39:25 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2987682BC
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Nov 2022 21:39:22 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5B448B823E6
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Nov 2022 05:39:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB31C433C1;
+        Fri, 11 Nov 2022 05:39:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668145160;
+        bh=4WyU6wZydtLH9EzoO7VQVBOwfi9ty//0BkyFJCH/dvw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R/WTQakoWJj24jD4lJg8roZAlKHQqmc10FW5keNKKVc+U2nE/LR7QclD3hblVAph9
+         VRtuHZG8vc2CjKAbj5VDrlEhuY9sf3ol0rIqrZLYSuEtWxhz1rMYx4vPatwgUw9xBg
+         9i7DwDafpCaLPI84kU8zGfjsINWemRaxwuKFQ3xorLvCoNhle+AkxbtyXmZ7iIPrqg
+         IMw856ECTDVReyoZuFg4/6EiiPDCOYgg4jnOIg1f+LHWYCGXdt2mOy16Ive/Ni0bic
+         ZLPfbk4aXelwwBxJxVQKheDtFhWFYwTDysXtVbQfeGoiwFxhK3cWJ1p8aEK1IhJkHV
+         HWBhzycrxjcGg==
+Date:   Thu, 10 Nov 2022 23:39:02 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>,
+        linux-hardening@vger.kernel.org,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [RFC] Approaches to deal with a struct with multiple fake
+ flexible arrays members
+Message-ID: <Y23f9u6wQjwj1cRL@work>
+References: <Y2siZmiTD40mTYpJ@mail.google.com>
+ <Y2xJxUnDnesWYckj@work>
+ <Y2xUc9Q/+zTYbjaL@mail.google.com>
+ <CADnq5_NKeqFm9ysEC78gYFL_PKzgSfXBa6v6rB+sE8aYZffqfA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y22afneyl4pZ32ig@google.com>
+In-Reply-To: <CADnq5_NKeqFm9ysEC78gYFL_PKzgSfXBa6v6rB+sE8aYZffqfA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Nov 11, 2022 at 09:42:38AM +0900, Sergey Senozhatsky wrote:
-> On (22/11/11 09:37), Sergey Senozhatsky wrote:
-> > On (22/11/10 08:47), coverity-bot wrote:
-> > [..]
-> > > 1704     	class_index_old = zs_lookup_class_index(zram->mem_pool, comp_len_old);
-> > > 1705     	/*
-> > > 1706     	 * Iterate the secondary comp algorithms list (in order of priority)
-> > > 1707     	 * and try to recompress the page.
-> > > 1708     	 */
-> > > 1709     	for (; prio < prio_max; prio++) {
-> > > vvv     CID 1527270:    (OVERRUN)
-> > > vvv     Overrunning array "zram->comps" of 4 8-byte elements at element index 4 (byte offset 39) using index "prio" (which evaluates to 4).
-> > > 1710     		if (!zram->comps[prio])
-> > > 1711     			continue;
-> > > 1712
-> > > 1713     		/*
-> > > 1714     		 * Skip if the object is already re-compressed with a higher
-> > > 1715     		 * priority algorithm (or same algorithm).
-> > 
-> > prio_max is always limited and max value it can have is 4 (ZRAM_MAX_COMPS).
-> > Depending on use case we can limit prio_max even to lower values.
-> > 
-> > So we have
-> > 
-> > 	for (; prio < 4; prio++) {
-> > 		foo = comps[prio];
-> > 	}
-> > 
-> > I don't see how prio can be 4 inside of this loop.
-> 
-> Kees, if we do something like this will it make coverity happy?
-> 
-> ---
-> 
-> diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-> index 9d33801e8ba8..e67a124f2e88 100644
-> --- a/drivers/block/zram/zram_drv.c
-> +++ b/drivers/block/zram/zram_drv.c
-> @@ -1706,6 +1706,7 @@ static int zram_recompress(struct zram *zram, u32 index, struct page *page,
->  	 * Iterate the secondary comp algorithms list (in order of priority)
->  	 * and try to recompress the page.
->  	 */
-> +	prio_max = min(prio_max, ZRAM_MAX_COMPS);
->  	for (; prio < prio_max; prio++) {
->  		if (!zram->comps[prio])
->  			continue;
+On Wed, Nov 09, 2022 at 10:20:34PM -0500, Alex Deucher wrote:
+> On Wed, Nov 9, 2022 at 8:31 PM Paulo Miguel Almeida
+> <paulo.miguel.almeida.rodenas@gmail.com> wrote:
+> >
+> > On Wed, Nov 09, 2022 at 06:45:57PM -0600, Gustavo A. R. Silva wrote:
+> > > On Wed, Nov 09, 2022 at 04:45:42PM +1300, Paulo Miguel Almeida wrote:
+> > >
+> > > Adding Alex, Christian and DRM lists to the thread.
+> >
+> > Thanks so much for your reply Gustavo
+> > Yep, that's a good idea.
+> >
+> > >
+> > > > struct _ATOM_INIT_REG_BLOCK {
+> > > >     USHORT                     usRegIndexTblSize;    /*     0     2 */
+> > > >     USHORT                     usRegDataBlkSize;     /*     2     2 */
+> > > >     ATOM_INIT_REG_INDEX_FORMAT asRegIndexBuf[1];     /*     4     3 */
+> > > >     ATOM_MEMORY_SETTING_DATA_BLOCK asRegDataBuf[1];  /*     7     8 */
+> > >
+> > > I didn't find evidence that asRegDataBuf is used anywhere in the
+> > > codebase[1].
+> > > ...
+> > > <snip>
+> > > ...
+> > > As I pointed out above, I don't see asRegDataBuf[] being used in the
+> > > codebase (of course it may describe firmware memory layout). Instead,
+> > > there is this jump to a block of data past asRegIndexBuf[]:
+> > >
+> > > drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:1444:
+> > > 1444: ATOM_MEMORY_SETTING_DATA_BLOCK *reg_data =
+> > > 1445:         (ATOM_MEMORY_SETTING_DATA_BLOCK *)
+> > > 1446:         ((u8 *)reg_block + (2 * sizeof(u16)) +
+> > > 1447:                  le16_to_cpu(reg_block->usRegIndexTblSize));
+> > >
+> > > So, it seems the one relevant array, from the kernel side, is
+> > > asRegIndexBuf[]. I wonder if we really need asRegDataBuf[] in that
+> > > structure... or if we could try modifying that struct and only have
+> > > asRegIndexBuf[] as last member? and then we can transform it into a
+> > > flex-array member.
+> >
+> > I saw that one too. That would be the way it's currently accessing
+> > asRegDataBuf member as the existing struct would make asRegDataBuf[0] point
+> > to some index within the asRegIndexBuf member (as you probably got it too)
+> >
+> > you are right... asRegDataBuff isn't used from a static analysis
+> > point of view but removing it make the code a bit cryptic, right?
+> >
+> > That's pickle, ay? :-)
+> >
+> > >
+> > > If for any strong reasong we cannot remove asRegDataBuf[] then I think we
+> > > could give it a try and use DECLARE_FLEX_ARRAY() to declare both arrays
+> > > in the structure.
+> > >
+> >
+> > Out of curiosity, why both rather than just asRegIndexBuf?
 
-It would, but given this is a clear false positive, don't feel the need
-to add this just for Coverity's sake. It is a nice bit of added
-robustness, but I leave that decision up to you! :)
+Because if I understand the code and Alex's reply below correctly, both
+arrays are being used to describe data of variable size, and both arrays
+need to stay. The situation is that it'd be _strange_ to transform just
+one of them into a flex-array member and not the other, and at the same
+time a flex-array member may only appear as the last member of a
+struct, and it's not _great_ to have more than one flex-array member
+in a struct --in fact, we can't.
 
--- 
-Kees Cook
+DECLARE_FLEX_ARRAY() was originally designed to have flex-array members
+in unions. This is, we can declare multiple flex-array members as long as
+they all share the same address. Unfortunately, this is not the case with
+asRegIndexBuf[] and asRegDataBuf[], and I don't see[1] DECLARE_FLEX_ARRAY()
+working in this case. So, nope, we cannot use it to declare both arrays
+and we also cannot have a flex-array in the middle of a struct, so we
+cannot use it to declare asRegIndexBuf[] alone. :/
+
+On the other hand, I fail to see how the current state of the code is
+problematic for things like -fstrict-flex-arrays, right now. asRegDataBuf[]
+is not being used for anything in the kernel, and asRegIndexBuf[] is
+correctly being accessed through it's only valid index zero, after which
+is decays into a pointer[2].
+
+That struct is definitely not great (I don't love it), but we might try
+to explore other cases while we determine how and if we ultimately need
+to modify it.
+
+I'll open an issue for this in the bug tracker, so we keep an eye on it.
+:)
+
+> >
+> > > But first, of course, Alex, Christian, it'd be really great if we can
+> > > have your input and feedback. :)
+> 
+> This header describes the layout of memory stored in the ROM on the
+> GPU.  It's shared between vbios and driver so some parts aren't
+> necessarily directly used by the driver.  As for what to do about it,
+> I'm not sure.  This structure stores a set of register offsets
+> (asRegIndexBuf) and data values (asRegDataBuf) for specific operations
+> (e.g., walk this structure and program register X with value Y.  For a
+> little background on atombios, it's a set of data and command tables
+> stored in the vbios ROM image.  The driver has an interpreter for the
+> command tables (see atom.c) so it can parse the command tables to
+> initialize the asic to a usable state.  The various programming
+> sequences vary depending on the components the AIB/OEM uses for the
+> board (different vram vendors, different clock/voltage settings,
+> etc.).  The legacy VGA/VBE and the GOP driver and the OS driver can
+> use these tables, so this allows us to initialize any GPU in a generic
+> way on any architecture even if the platform firmware doesn't post the
+> card.  For the most part the driver doesn't have to deal with these
+> particular tables directly, other than for some very specific cases
+> where the driver needs to grab some elements from the tables to
+> populate the power management controller for GPU memory reclocking
+> parameters.  However, the command tables as interpreted by the parser
+> very often will directly parse these tables.  So you might have a
+> command table that the driver executes to initialize some part of the
+> GPU which ultimately fetches the table from the ROM image and walks it
+> programming registers based on the offset and values in that table.
+> So if you were debugging something that involves the atombios parser
+> and walking through one of the command tables, you may be confused if
+> the data tables don't match what header says.  So ideally, we'd keep
+> both arrays.
+
+Thanks a lot for the input, Alex.
+--
+Gustavo
+
+[1] https://godbolt.org/z/sxa7K9Erd
+[2] https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c#L1448
