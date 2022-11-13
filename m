@@ -2,162 +2,195 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C5EC433FE
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Nov 2022 20:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4769C433FE
+	for <linux-hardening@archiver.kernel.org>; Sun, 13 Nov 2022 07:44:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234153AbiKKUjn (ORCPT
+        id S232495AbiKMHoQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 11 Nov 2022 15:39:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33644 "EHLO
+        Sun, 13 Nov 2022 02:44:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234113AbiKKUjl (ORCPT
+        with ESMTP id S229753AbiKMHoQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 11 Nov 2022 15:39:41 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD73667F5A
-        for <linux-hardening@vger.kernel.org>; Fri, 11 Nov 2022 12:38:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668199121;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=iOc02DiC+CaIVCkcAVw6EXV28570qCIpUk2+es1FDOA=;
-        b=drQID7XaTAX3aswo40tSMFD1LWAu1r91cQUZoIIhFywYUSVtveQXrASiTKsBauMz+xm550
-        xXVfFN/oCJ2e7nlMrOuHpjHORtlbD7PJ/geZabtr4Tpr7TXTGLQR4WIXA0JwSBzQmaxl+0
-        OqiJhUorUdsJnWfJCbZM2PxBzw+d2Pg=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-46-DyATBpccPyK3dZgXjWXYIQ-1; Fri, 11 Nov 2022 15:38:40 -0500
-X-MC-Unique: DyATBpccPyK3dZgXjWXYIQ-1
-Received: by mail-qv1-f69.google.com with SMTP id ob9-20020a0562142f8900b004bba5363ad9so4307731qvb.8
-        for <linux-hardening@vger.kernel.org>; Fri, 11 Nov 2022 12:38:40 -0800 (PST)
+        Sun, 13 Nov 2022 02:44:16 -0500
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16B82E085;
+        Sat, 12 Nov 2022 23:44:15 -0800 (PST)
+Received: by mail-pg1-x534.google.com with SMTP id n17so135449pgh.9;
+        Sat, 12 Nov 2022 23:44:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qL9/GcihZbBgWiJpiQOaCK02h1wcxZCDXO7uyUTbbw8=;
+        b=exHblae4M4MunjcOekShbyrgIe/nxUgEbvn46rsg4RBRR0o05I2r3Mqz4IM7u4DI+w
+         tQpM4t0IJAwXJmjKsyw18yBCPqNKE8BhfQm/Gk6c79TTi4uX7HSdzRB8qcXQF5R0pJzm
+         79Of43NBlAbmsBszgp1iTIVxNIjO4PrOgOtENIb8U9X4PPHpVaY00K9kntqvzokJ4rZy
+         dwe1JVDl/pUegx3+S6oUbhxZdDJRD9cXUkHxgWB2s3XeJ4pn3wjbUBuY6bmXAleRgWLS
+         qsr/lveeC06QExsBi30GM5qyFYmblLJ8rAi3xzo+5+q9U4ANzx5EZ1aI7KhNfUlxwie8
+         IEVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iOc02DiC+CaIVCkcAVw6EXV28570qCIpUk2+es1FDOA=;
-        b=jyR/huBuE8hdC5AgmyfJen0TUez/GwaSMGVIpTXcC3u6DTeuFG9OAuPEmwk3wRgIbQ
-         JrSkp2sWUrLsclP69w0Lx4P1ce4JpcPgePZMvM+1BRchyXs9QS2BY68ni5rT21Hxjrtn
-         2RqVsHAI6io9qp21koMwkMYirqTC0OuOutxF6dJ2PuQfH9ixOyPuDbIe3cu1y9mgaIbb
-         x/43SQeiPJdoiKR2IiS5LqGDBoqKF2LhymEZsN9iNBpJQbL74H6bCJNlEl15A1700d+m
-         wgUCXLU1jhwvvwlMnFBnGlaR5/hjtpgMVMWZoRZgXTF4aKXBthDQIhWzrTil7VcSMNL1
-         7zIw==
-X-Gm-Message-State: ANoB5plLnQdattAOEhzIz+v7Sa1AEE0O4qRxgpmFHB41LgP2K4UvR2oZ
-        49P9U5XeoReoXbzYsMs0Za8XAoJBJjKXMjoew8h6wqJgJZHK4cFK3cF+rD+USO8+A5AjUVLl0H9
-        tU/PLJS5LElTNUgGA6oMFwDJi2QeE1FAr80bRPjOeuaub
-X-Received: by 2002:ac8:140e:0:b0:398:5f25:649 with SMTP id k14-20020ac8140e000000b003985f250649mr3006121qtj.673.1668199120417;
-        Fri, 11 Nov 2022 12:38:40 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf5LOmUpWj0zC/+L7Y7H4Tvue8JzxcncnqkZQZYbqztBBpUxGN2/AlKbzfkTgtWEPvFTFIdqi6rdOfPhtKrf+k8=
-X-Received: by 2002:ac8:140e:0:b0:398:5f25:649 with SMTP id
- k14-20020ac8140e000000b003985f250649mr3006098qtj.673.1668199120192; Fri, 11
- Nov 2022 12:38:40 -0800 (PST)
-MIME-Version: 1.0
-References: <202211100850.7A8DD75@keescook> <87iljl6ehe.fsf@intel.com>
- <202211111110.11B554B@keescook> <CACO55tt5KOgDYMEw=spDeoMaYuj2GQOuHU+BEgadr1nQiFOGhw@mail.gmail.com>
- <202211111215.1F421B7E@keescook>
-In-Reply-To: <202211111215.1F421B7E@keescook>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Fri, 11 Nov 2022 21:38:28 +0100
-Message-ID: <CACO55tvaXFyAMiAYmx2DKNj9fNtapThejHkRsvZd_5StYXTy+w@mail.gmail.com>
-Subject: Re: Coverity: nouveau_dp_irq(): Null pointer dereferences
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jani Nikula <jani.nikula@intel.com>, Lyude Paul <lyude@redhat.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        linux-kernel@vger.kernel.org, Ilia Mirkin <imirkin@alum.mit.edu>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qL9/GcihZbBgWiJpiQOaCK02h1wcxZCDXO7uyUTbbw8=;
+        b=svt28T8cKEK2xNiJipbVOMykF7TTUh4kRSpM/rrpRl7oJ0E2A9nkTDt7GK3lksBRvD
+         hst+2qQ/fgq1b6kyxc2vIQWPiOKDYR41eRnStuWsWmJ87RuNhaDng2HGj4Py/LSgoJZU
+         3VlCaI5Fj2mhDyuuLHInsyZWdi2QjxZEGUrdysFSATkD58Ay1ihuoetecoG6fzdAqL7c
+         888D4KIff6UvU8RfQY+J5eogPUzIrRXEi9Wvz9CxPvDsP/Nlf88RQfksdMgJITcKoGgY
+         wECrByhxZIZJvoj+SdOxDhl8lZOHzr0MelkBcKakOAomfjiGxs15iDGkFLKE/KzHYhbP
+         czqg==
+X-Gm-Message-State: ANoB5pm6CsWtUpJXUCU/7YozV5Awi0hWPt15cW5LscJE+j9EvbJwCeqI
+        AKdNV5F4FPp8AMFfEq4fYtI=
+X-Google-Smtp-Source: AA0mqf7xCPxr3QdLrQQtVMxQusmnnPZ/wGEg3gbqNmLmxC1Ol2OkKmcY36w5wQYnwrPkF7wsQMntew==
+X-Received: by 2002:a63:cf50:0:b0:470:4522:f317 with SMTP id b16-20020a63cf50000000b004704522f317mr7721909pgj.129.1668325454453;
+        Sat, 12 Nov 2022 23:44:14 -0800 (PST)
+Received: from mail.google.com (125-237-50-34-fibre.sparkbb.co.nz. [125.237.50.34])
+        by smtp.gmail.com with ESMTPSA id i7-20020a1709026ac700b00176c0e055f8sm4700960plt.64.2022.11.12.23.44.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Nov 2022 23:44:14 -0800 (PST)
+Date:   Sun, 13 Nov 2022 20:44:05 +1300
+From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
         David Airlie <airlied@gmail.com>,
-        "Nathan E. Egge" <unlord@xiph.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        Dave Airlie <airlied@redhat.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+        Daniel Vetter <daniel@ffwll.ch>,
+        Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>,
+        Slark Xiao <slark_xiao@163.com>,
+        Rongguang Wei <weirongguang@kylinos.cn>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        paulo.miguel.almeida.rodenas@gmail.com
+Subject: [PATCH] [next] drm/amdgpu: Replace one-elements array with
+ flex-array members
+Message-ID: <Y3CgReK3e519a7bs@mail.google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Nov 11, 2022 at 9:16 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Fri, Nov 11, 2022 at 09:06:54PM +0100, Karol Herbst wrote:
-> > On Fri, Nov 11, 2022 at 8:21 PM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Fri, Nov 11, 2022 at 11:13:17AM +0200, Jani Nikula wrote:
-> > > > On Thu, 10 Nov 2022, coverity-bot <keescook@chromium.org> wrote:
-> > > > > Hello!
-> > > > >
-> > > > > This is an experimental semi-automated report about issues detected by
-> > > > > Coverity from a scan of next-20221110 as part of the linux-next scan project:
-> > > > > https://scan.coverity.com/projects/linux-next-weekly-scan
-> > > > >
-> > > > > You're getting this email because you were associated with the identified
-> > > > > lines of code (noted below) that were touched by commits:
-> > > > >
-> > > > >   Mon Aug 31 19:10:08 2020 -0400
-> > > > >     a0922278f83e ("drm/nouveau/kms/nv50-: Refactor and cleanup DP HPD handling")
-> > > >
-> > > > Hi Kees, this looks like a good idea, but maybe double check the Cc list
-> > > > generation? I was Cc'd on four mails today that I thought were
-> > > > irrelevant to me.
-> > >
-> > > Hi!
-> > >
-> > > Heh, I was recently asked to _expand_ the CC list. :)
-> > >
-> > > For these last pass of reports, I added a get_maintainers.pl run to the
-> > > identified commit. In this instance, the commit touched:
-> > >
-> > >  drivers/gpu/drm/nouveau/dispnv04/disp.c     |    6 +
-> > >  drivers/gpu/drm/nouveau/dispnv50/disp.c     |  192 ++++++++++++++++++++++--------------------------
-> > >  drivers/gpu/drm/nouveau/nouveau_connector.c |   14 ---
-> > >  drivers/gpu/drm/nouveau/nouveau_display.c   |    2
-> > >  drivers/gpu/drm/nouveau/nouveau_display.h   |    2
-> > >  drivers/gpu/drm/nouveau/nouveau_dp.c        |  132 ++++++++++++++++++++++++++++-----
-> > >  drivers/gpu/drm/nouveau/nouveau_encoder.h   |   33 +++++++-
-> > >  7 files changed, 244 insertions(+), 137 deletions(-)
-> > >
-> > > And the get_maintainers.pl rationale was:
-> > >
-> > > Ben Skeggs <bskeggs@redhat.com> (supporter:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS,commit_signer:1/1=100%,commit_signer:6/16=38%,authored:4/16=25%,added_lines:23/124=19%,removed_lines:36/152=24%)
-> > > Karol Herbst <kherbst@redhat.com> (supporter:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS,commit_signer:2/1=100%)
-> > > Lyude Paul <lyude@redhat.com> (supporter:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS,commit_signer:9/16=56%,authored:6/16=38%,added_lines:92/124=74%,removed_lines:107/152=70%)
-> > > David Airlie <airlied@gmail.com> (maintainer:DRM DRIVERS)
-> > > Daniel Vetter <daniel@ffwll.ch> (maintainer:DRM DRIVERS)
-> > > Ilia Mirkin <imirkin@alum.mit.edu> (commit_signer:1/1=100%,authored:1/1=100%,added_lines:2/2=100%,removed_lines:2/2=100%)
-> > > "Nathan E. Egge" <unlord@xiph.org> (commit_signer:1/1=100%)
-> > > Jani Nikula <jani.nikula@intel.com> (commit_signer:6/16=38%)
-> > > Dave Airlie <airlied@redhat.com> (commit_signer:5/16=31%)
-> > > Thomas Zimmermann <tzimmermann@suse.de> (commit_signer:4/16=25%,authored:4/16=25%)
-> > > dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS)
-> > > nouveau@lists.freedesktop.org (open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS)
-> > >
-> >
-> > I'd say it's good enough to message supporters and the mailing lists
-> > for at least Nouveau code, maybe even all drm drivers.
->
-> i.e. leave out the commit_signer hits?
->
+One-element arrays are deprecated, and we are replacing them with
+flexible array members instead. So, replace one-element array with
+flexible-array member in structs ATOM_I2C_VOLTAGE_OBJECT_V3,
+ATOM_ASIC_INTERNAL_SS_INFO_V2, ATOM_ASIC_INTERNAL_SS_INFO_V3,
+and refactor the rest of the code accordingly.
 
-yes.
+Important to mention is that doing a build before/after this patch
+results in no functional binary output differences.
 
-> > Not sure what to do about actual maintainers, but I doubt Dave and
-> > Daniel want to be CCed on every Coverity report here either.
->
-> I updated the CC logic based on this feedback:
-> https://lore.kernel.org/linux-hardening/87h6zgfub4.fsf@kernel.org/
->
-> So maybe just mailing lists?
->
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [1].
 
-That should be good enough, but maybe the DRM subsystem is big enough
-so it's reasonable to add special rules. For Nouveau either way is
-fine.
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/238
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
 
-> --
-> Kees Cook
->
+Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+---
+Binary difference findings:
+
+	Some changes took more than a single line which changed the line
+	number parameter passed to the drm_dbg function (which leverages
+	kernel's dynamic debugging). Functionally-wise, nothing changed
+	after doing a before/after patch build.
+
+---
+ .../gpu/drm/amd/display/dc/bios/bios_parser.c | 22 ++++++++++++-------
+ drivers/gpu/drm/amd/include/atombios.h        |  6 ++---
+ 2 files changed, 17 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
+index 6b9e64cd4379..a1a00f432168 100644
+--- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
++++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser.c
+@@ -665,8 +665,9 @@ static enum bp_result get_ss_info_v3_1(
+ 	if (!DATA_TABLES(ASIC_InternalSS_Info))
+ 		return BP_RESULT_UNSUPPORTED;
+ 
+-	ss_table_header_include = GET_IMAGE(ATOM_ASIC_INTERNAL_SS_INFO_V3,
+-		DATA_TABLES(ASIC_InternalSS_Info));
++	ss_table_header_include = ((ATOM_ASIC_INTERNAL_SS_INFO_V3 *) bios_get_image(&bp->base,
++				DATA_TABLES(ASIC_InternalSS_Info),
++				struct_size(ss_table_header_include, asSpreadSpectrum, 1)));
+ 	table_size =
+ 		(le16_to_cpu(ss_table_header_include->sHeader.usStructureSize)
+ 				- sizeof(ATOM_COMMON_TABLE_HEADER))
+@@ -1032,8 +1033,10 @@ static enum bp_result get_ss_info_from_internal_ss_info_tbl_V2_1(
+ 	if (!DATA_TABLES(ASIC_InternalSS_Info))
+ 		return result;
+ 
+-	header = GET_IMAGE(ATOM_ASIC_INTERNAL_SS_INFO_V2,
+-		DATA_TABLES(ASIC_InternalSS_Info));
++	header = ((ATOM_ASIC_INTERNAL_SS_INFO_V2 *) bios_get_image(
++				&bp->base,
++				DATA_TABLES(ASIC_InternalSS_Info),
++				struct_size(header, asSpreadSpectrum, 1)));
+ 
+ 	memset(info, 0, sizeof(struct spread_spectrum_info));
+ 
+@@ -1712,8 +1715,10 @@ static uint32_t get_ss_entry_number_from_internal_ss_info_tbl_v2_1(
+ 	if (!DATA_TABLES(ASIC_InternalSS_Info))
+ 		return 0;
+ 
+-	header_include = GET_IMAGE(ATOM_ASIC_INTERNAL_SS_INFO_V2,
+-			DATA_TABLES(ASIC_InternalSS_Info));
++	header_include = ((ATOM_ASIC_INTERNAL_SS_INFO_V2 *) bios_get_image(
++				&bp->base,
++				DATA_TABLES(ASIC_InternalSS_Info),
++				struct_size(header_include, asSpreadSpectrum, 1)));
+ 
+ 	size = (le16_to_cpu(header_include->sHeader.usStructureSize)
+ 			- sizeof(ATOM_COMMON_TABLE_HEADER))
+@@ -1749,8 +1754,9 @@ static uint32_t get_ss_entry_number_from_internal_ss_info_tbl_V3_1(
+ 	if (!DATA_TABLES(ASIC_InternalSS_Info))
+ 		return number;
+ 
+-	header_include = GET_IMAGE(ATOM_ASIC_INTERNAL_SS_INFO_V3,
+-			DATA_TABLES(ASIC_InternalSS_Info));
++	header_include = ((ATOM_ASIC_INTERNAL_SS_INFO_V3 *) bios_get_image(&bp->base,
++				DATA_TABLES(ASIC_InternalSS_Info),
++				struct_size(header_include, asSpreadSpectrum, 1)));
+ 	size = (le16_to_cpu(header_include->sHeader.usStructureSize) -
+ 			sizeof(ATOM_COMMON_TABLE_HEADER)) /
+ 					sizeof(ATOM_ASIC_SS_ASSIGNMENT_V3);
+diff --git a/drivers/gpu/drm/amd/include/atombios.h b/drivers/gpu/drm/amd/include/atombios.h
+index 60c44a8a067f..4dc738c51771 100644
+--- a/drivers/gpu/drm/amd/include/atombios.h
++++ b/drivers/gpu/drm/amd/include/atombios.h
+@@ -5146,7 +5146,7 @@ typedef struct  _ATOM_I2C_VOLTAGE_OBJECT_V3
+    UCHAR  ucVoltageControlOffset;
+    UCHAR  ucVoltageControlFlag;              // Bit0: 0 - One byte data; 1 - Two byte data
+    UCHAR  ulReserved[3];
+-   VOLTAGE_LUT_ENTRY asVolI2cLut[1];         // end with 0xff
++   VOLTAGE_LUT_ENTRY asVolI2cLut[];         // end with 0xff
+ }ATOM_I2C_VOLTAGE_OBJECT_V3;
+ 
+ // ATOM_I2C_VOLTAGE_OBJECT_V3.ucVoltageControlFlag
+@@ -6679,7 +6679,7 @@ typedef struct _ATOM_ASIC_INTERNAL_SS_INFO
+ typedef struct _ATOM_ASIC_INTERNAL_SS_INFO_V2
+ {
+   ATOM_COMMON_TABLE_HEADER         sHeader;
+-  ATOM_ASIC_SS_ASSIGNMENT_V2        asSpreadSpectrum[1];      //this is point only.
++  ATOM_ASIC_SS_ASSIGNMENT_V2        asSpreadSpectrum[];      //this is point only.
+ }ATOM_ASIC_INTERNAL_SS_INFO_V2;
+ 
+ typedef struct _ATOM_ASIC_SS_ASSIGNMENT_V3
+@@ -6701,7 +6701,7 @@ typedef struct _ATOM_ASIC_SS_ASSIGNMENT_V3
+ typedef struct _ATOM_ASIC_INTERNAL_SS_INFO_V3
+ {
+   ATOM_COMMON_TABLE_HEADER         sHeader;
+-  ATOM_ASIC_SS_ASSIGNMENT_V3        asSpreadSpectrum[1];      //this is pointer only.
++  ATOM_ASIC_SS_ASSIGNMENT_V3        asSpreadSpectrum[];      //this is pointer only.
+ }ATOM_ASIC_INTERNAL_SS_INFO_V3;
+ 
+ 
+-- 
+2.37.3
 
