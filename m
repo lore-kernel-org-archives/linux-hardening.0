@@ -2,114 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 317BEC43219
-	for <linux-hardening@archiver.kernel.org>; Tue, 15 Nov 2022 16:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C275DC4332F
+	for <linux-hardening@archiver.kernel.org>; Tue, 15 Nov 2022 20:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229723AbiKOQq4 (ORCPT
+        id S230051AbiKOUZe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 15 Nov 2022 11:46:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58796 "EHLO
+        Tue, 15 Nov 2022 15:25:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231935AbiKOQqw (ORCPT
+        with ESMTP id S229495AbiKOUZd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 15 Nov 2022 11:46:52 -0500
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1FA614012
-        for <linux-hardening@vger.kernel.org>; Tue, 15 Nov 2022 08:46:50 -0800 (PST)
-Received: by mail-lj1-x22f.google.com with SMTP id a15so18274292ljb.7
-        for <linux-hardening@vger.kernel.org>; Tue, 15 Nov 2022 08:46:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sceBr5k80clJTRXCKFIVIMMX5ozvXAUs5Z1IN2Voph4=;
-        b=gN9Y1flhTtF21icTbLQq488O0MR/imW0kXrtsgEPuMITvYukZvTqhlo659IanWVE+R
-         5sYLx5o04Og3+y1e7oH8noDDOi/zzlJ1alUurwNFI10piZta+b5wCc9tuceh84PAMG6s
-         yUU8sYVyVHgrhj9e+4jRB/k0B2kCzAfjZ3QQBjCBkPS7Cx1QhiZf+0P6NNz15fqL29lv
-         CoOKs38WQ0J3abeVEmeSTZuSWJxbMzHmrx3IcmrrBPMibNlS2TE9pMzh/HVosbi58XHT
-         QnD45MaEDxeyHmuD8gQoPVL8lTvjOOuyH+J6F14hncuOkvESBc8Q7iJOlKgCBRKgFVQ0
-         l+7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sceBr5k80clJTRXCKFIVIMMX5ozvXAUs5Z1IN2Voph4=;
-        b=ZMCehzyQHnlAg3bEZ55E0XLHM6zbM7eSfsnT96rw8bCSEbq85KrUwWazUUy6pq0tuL
-         pqfrHuWYe+iIRXN6toeNZXO2uF91+LxF7biD2X7rJk67pYSmgXAHhLUBtDdA/5gWbX3Q
-         JmHRhxTzZjGlLzeEo2EfLF0Q3yqCu4k9MwABh61PywJ9lFih/TGyS4+IcQy03RgSGgQs
-         FGYxd2uD3ltu/g+JZBLQxwrtemoK9ABnGu1qXQMMEIjdAqanxELjbIwNi5fW1ihtURHz
-         MbHBC1huLM/vRThIprz68RlbjXl9siva92qzNKC2Rz6V2MJ/9wB7MDtVsPbOZab++F0A
-         Mc+A==
-X-Gm-Message-State: ANoB5pl0YojY2hZP3Bdx1jW/x/QqPD9+Dtm+zoDRlVaGkm3w6gSV4bjU
-        23ZmLO1dBa+2MIOWyTT4VU539Q==
-X-Google-Smtp-Source: AA0mqf42JOJbwVkixEPLkVqAGG3duJa1LS45GbDm4xh7isDuj6cJjR4uaiZqHwFcfiOlFumAFn4uQA==
-X-Received: by 2002:a2e:9798:0:b0:26f:bd6e:7f7f with SMTP id y24-20020a2e9798000000b0026fbd6e7f7fmr6271817lji.87.1668530809036;
-        Tue, 15 Nov 2022 08:46:49 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id c10-20020ac2414a000000b0049313f77755sm2265971lfi.213.2022.11.15.08.46.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Nov 2022 08:46:48 -0800 (PST)
-Message-ID: <2664eb1f-3567-9b41-3aaa-b4af76f9ce1f@linaro.org>
-Date:   Tue, 15 Nov 2022 17:46:47 +0100
+        Tue, 15 Nov 2022 15:25:33 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FD796577;
+        Tue, 15 Nov 2022 12:25:32 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E3FC2619FA;
+        Tue, 15 Nov 2022 20:25:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4707AC433D6;
+        Tue, 15 Nov 2022 20:25:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668543931;
+        bh=wkeY+zmuuIfH0P91UWN754W6X7lV8EgxxsphFuXI3qQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Fgg0M1Pa192/Avsm6D+UwDM5fJrY2sspV5S56Q+2trynAiKPqcStFT+abyT6XSc1/
+         a3x5kEAWQ+sZwqGN2K0FTFXyAZdYfUN6Mki0F8ZAudv4vZfDZ+u0gGMe6RDRJXWukL
+         UrAyFqTp5Mc39jkIyvLQ72CN/beRH3tKjCTt+cTA7RMKzxEC6PaGr0wIHueFBRSjUV
+         bV2vE5peSGuf1XnRLsrqSIftx4J3h+OftKuhb14g3jryyWGSZJotmApNd3daqKV3yh
+         +OD4viYDiq4mM10gITPiTO7iDtLGMwdaEAt/kDTFf2CzRk2MjUQIQVGWg29SM34K7J
+         7Fj+EZ52eSMkA==
+Date:   Tue, 15 Nov 2022 14:25:16 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
+        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] scsi: bfa: Replace one-element array with
+ flexible-array member
+Message-ID: <Y3P1rEEBq7HzJygq@work>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v2 11/11] arm64: dts: qcom: Add support for SONY Xperia
- X/X Compact
-Content-Language: en-US
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>, agross@kernel.org
-Cc:     andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, jassisinghbrar@gmail.com,
-        srinivas.kandagatla@linaro.org, jic23@kernel.org, lars@metafoo.de,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        evgreen@chromium.org, gregkh@linuxfoundation.org,
-        a39.skl@gmail.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-hardening@vger.kernel.org,
-        marijn.suijten@somainline.org, kernel@collabora.com,
-        luca@z3ntu.xyz, Konrad Dybcio <konrad.dybcio@somainline.org>
-References: <20221111120156.48040-1-angelogioacchino.delregno@collabora.com>
- <20221111120156.48040-12-angelogioacchino.delregno@collabora.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221111120156.48040-12-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 11/11/2022 13:01, AngeloGioacchino Del Regno wrote:
-> This adds support for the Sony Xperia Loire/SmartLoire platform
-> with a base configuration that is common across all of the
-> devices that are based on this project.
-> 
-> Also adds a base DT configuration for the Xperia X and Xperia
-> X Compact (respectively, Suzu and Kugo) which is valid for both
-> their RoW (single-sim), DSDS (dual-sim) and other regional
-> variants of these two smartphones, that makes us able to boot
-> to a UART console.
-> 
-> Please note that, currently, the APC0/1 (cluster 0/1) vregs
-> are set to a safe voltage in order to ensure boot stability
-> until a proper solution for CPU DVFS scaling lands.
-> 
-> Co-developed-by: Konrad Dybcio <konrad.dybcio@somainline.org>
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@somainline.org>
-> Co-developed-by: Marijn Suijten <marijn.suijten@somainline.org>
-> Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile             |   2 +
->  .../qcom/msm8956-sony-xperia-loire-kugo.dts   |  35 +++
->  .../qcom/msm8956-sony-xperia-loire-suzu.dts   |  17 ++
->  .../dts/qcom/msm8956-sony-xperia-loire.dtsi   | 282 ++++++++++++++++++
+One-element arrays are deprecated, and we are replacing them with flexible
+array members instead. So, replace one-element array with flexible-array
+member in struct fdmi_attr_s.
 
+Important to mention is that doing a build before/after this patch results
+in no binary output differences.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE routines
+on memcpy() and help us make progress towards globally enabling
+-fstrict-flex-arrays=3 [1].
 
-Best regards,
-Krzysztof
+Link: https://github.com/KSPP/linux/issues/209
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/scsi/bfa/bfa_fc.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/bfa/bfa_fc.h b/drivers/scsi/bfa/bfa_fc.h
+index 0314e4b9e1fb..a12d693065ce 100644
+--- a/drivers/scsi/bfa/bfa_fc.h
++++ b/drivers/scsi/bfa/bfa_fc.h
+@@ -1548,7 +1548,7 @@ enum fdmi_port_attribute_type {
+ struct fdmi_attr_s {
+ 	__be16        type;
+ 	__be16        len;
+-	u8         value[1];
++	u8         value[];
+ };
+ 
+ /*
+-- 
+2.34.1
 
