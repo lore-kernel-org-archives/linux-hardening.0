@@ -2,98 +2,127 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B34CC43217
-	for <linux-hardening@archiver.kernel.org>; Tue, 15 Nov 2022 01:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B688C4332F
+	for <linux-hardening@archiver.kernel.org>; Tue, 15 Nov 2022 13:17:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232054AbiKOBQJ (ORCPT
+        id S229924AbiKONRa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 14 Nov 2022 20:16:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58430 "EHLO
+        Tue, 15 Nov 2022 08:17:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235675AbiKOBPz (ORCPT
+        with ESMTP id S238123AbiKONRY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 14 Nov 2022 20:15:55 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B75513F75;
-        Mon, 14 Nov 2022 17:15:51 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3B555B8165D;
-        Tue, 15 Nov 2022 01:15:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ACB0C433C1;
-        Tue, 15 Nov 2022 01:15:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668474948;
-        bh=Zmxsw+WMrSQ5KSvvst5HClsbTbH/T6qsb3zD+F60Q0I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tV0h1djW1CL/g46jRKWt+OmNgrg671wwc0TP73GGB1j25i0HajWf1ZwtnzpW6MNwf
-         zxJ7M6v+eqT60XW2qXVJ5J7KhBYqmrJ5DjYABsZzc7LQjfBmn94eT8fqaDrOlfjx63
-         NdkUKMjpy9TRDmZg36NxikTCASulGkK5FGIORAaLiC3nFGMzNIbLYSUbEwKm6/2PjH
-         aHpXihyXaGsbGN/cL3iIlkhpzzZ2sxdopkWi9QlbtkpP/eEmJqmUKpxk76MK6txyjv
-         +tLORXmsfwA9/qPVyfT5FnbGTkgH/mOgEjerqAzgw3BAqNYgzMlEvLz2X4jxvPSd8y
-         pL7fg9ph8TtKw==
-Date:   Mon, 14 Nov 2022 19:15:32 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     guo.ziliang@zte.com.cn
-Cc:     robh+dt@kernel.org, frowand.list@gmail.com, keescook@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH linux-next] scripts/dtc: Replace zero-length array with
- DECLARE_FLEX_ARRAY() helper
-Message-ID: <Y3LoNLVzdYPmGU2J@work>
-References: <202211150903277271642@zte.com.cn>
+        Tue, 15 Nov 2022 08:17:24 -0500
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 185832A96C;
+        Tue, 15 Nov 2022 05:17:22 -0800 (PST)
+Received: by mail-qk1-f175.google.com with SMTP id i9so9386007qki.10;
+        Tue, 15 Nov 2022 05:17:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Tl8NQgIvIe7TyMtrjFXQ+PIFZ5WFuLSc0VcNaYyRH9Y=;
+        b=AFCyWCGixDBbJkosdsXgD2VFfMDjQnLFW10e8tC2Zvb1hS0nAhWcsdFT35Fg+lzKdr
+         L/U8BYi9YR+ym3D3aJ6SEM0lEZ4h/HWt1nu4DcxFiYJubFQQhP2K0eHr8fRKUWax/QKP
+         B1adi/swRtDULOVXNYFA5lRKG0DcoldZ7+quG8cjk9bUB0ie8QqDP+IWmMofhVYq3i5g
+         2rsURmIsIseiqwgaEUExcTCj3peT2vKZwaT1ljjrCofIPdJmlsy4sgyBVG7jBy/8xbuV
+         iWqtwEBgUCGgOCmUKHheq2akWay/8Q8yEAcMSZ91UqOTBkYvTIXR0zwsjxYSXhRo8JTS
+         VIog==
+X-Gm-Message-State: ANoB5plXn45R9Dg0B4uDrl7iKKh4Oi5lOSZBgJ6h0w6bmTggCaR9db75
+        3NB4iZba0JuUn0mGZlyH2ArWV6/3eLZqKw==
+X-Google-Smtp-Source: AA0mqf50fWe5mqrQLfQzkN6m2q3kWy4RtQbJ5wRalJz9kV9DwmPDsZh6xTGYIg1nxWM274Q7e0mS5g==
+X-Received: by 2002:a05:620a:1d51:b0:6fa:57a4:6526 with SMTP id dm17-20020a05620a1d5100b006fa57a46526mr15174683qkb.671.1668518241054;
+        Tue, 15 Nov 2022 05:17:21 -0800 (PST)
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
+        by smtp.gmail.com with ESMTPSA id c8-20020ac853c8000000b00359961365f1sm7073961qtq.68.2022.11.15.05.17.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Nov 2022 05:17:20 -0800 (PST)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-370547b8ca0so137087617b3.0;
+        Tue, 15 Nov 2022 05:17:20 -0800 (PST)
+X-Received: by 2002:a81:4ed2:0:b0:370:202b:f085 with SMTP id
+ c201-20020a814ed2000000b00370202bf085mr17176976ywb.502.1668518240254; Tue, 15
+ Nov 2022 05:17:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202211150903277271642@zte.com.cn>
+References: <20221022182828.give.717-kees@kernel.org> <20221022182949.2684794-2-keescook@chromium.org>
+In-Reply-To: <20221022182949.2684794-2-keescook@chromium.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 15 Nov 2022 14:17:08 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdV2k2CXB2qfPeAN8LDGsqN-koLSLgp5azEB1HHHiqhQRQ@mail.gmail.com>
+Message-ID: <CAMuHMdV2k2CXB2qfPeAN8LDGsqN-koLSLgp5azEB1HHHiqhQRQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] tty: Allow TIOCSTI to be disabled
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Simon Brand <simon.brand@postadigitale.de>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Nov 15, 2022 at 09:03:27AM +0800, guo.ziliang@zte.com.cn wrote:
-> From: guo ziliang <guo.ziliang@zte.com.cn>
-> 
-> Zero-length arrays are deprecated and we are moving towards adopting
-> C99 flexible-array members, instead. So, replace zero-length arrays
-> declarations in anonymous union with the new DECLARE_FLEX_ARRAY()
-> helper macro.
-> 
-> Signed-off-by: guo ziliang <guo.ziliang@zte.com.cn>
-> ---
->  scripts/dtc/libfdt/fdt.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/scripts/dtc/libfdt/fdt.h b/scripts/dtc/libfdt/fdt.h
-> index f2e6880..f66fff1 100644
-> --- a/scripts/dtc/libfdt/fdt.h
-> +++ b/scripts/dtc/libfdt/fdt.h
-> @@ -35,14 +35,14 @@ struct fdt_reserve_entry {
-> 
->  struct fdt_node_header {
->         fdt32_t tag;
-> -       char name[0];
-> +       DECLARE_FLEX_ARRAY(char, name);
->  };
-> 
->  struct fdt_property {
->         fdt32_t tag;
->         fdt32_t len;
->         fdt32_t nameoff;
-> -       char data[0];
-> +       DECLARE_FLEX_ARRAY(char, data);
->  };
+Hi Kees,
 
-This was addressed in commit:
+On Sat, Oct 22, 2022 at 9:14 PM Kees Cook <keescook@chromium.org> wrote:
+> TIOCSTI continues its long history of being used in privilege escalation
+> attacks[1]. Prior attempts to provide a mechanism to disable this have
+> devolved into discussions around creating full-blown LSMs to provide
+> arbitrary ioctl filtering, which is hugely over-engineered -- only
+> TIOCSTI is being used this way. 3 years ago OpenBSD entirely removed
+> TIOCSTI[2], Android has had it filtered for longer[3], and the tools that
+> had historically used TIOCSTI either do not need it, are not commonly
+> built with it, or have had its use removed.
+>
+> Provide a simple CONFIG and global sysctl to disable this for the system
+> builders who have wanted this functionality for literally decades now,
+> much like the ldisc_autoload CONFIG and sysctl.
+>
+> [1] https://lore.kernel.org/linux-hardening/Y0m9l52AKmw6Yxi1@hostpad
+> [2] https://undeadly.org/cgi?action=article;sid=20170701132619
+> [3] https://lore.kernel.org/lkml/CAFJ0LnFGRuEEn1tCLhoki8ZyWrKfktbF+rwwN7WzyC_kBFoQVA@mail.gmail.com/
+>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Jiri Slaby <jirislaby@kernel.org>
+> Cc: Simon Brand <simon.brand@postadigitale.de>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-        5224f7909617 ("treewide: Replace zero-length arrays with flexible-array members")
+Thanks for your patch, which is now commit 83efeeeb3d04b22a ("tty:
+Allow TIOCSTI to be disabled") in tty/tty-next.
 
-My question here is why these changes were reverted by commit:
+> --- a/drivers/tty/Kconfig
+> +++ b/drivers/tty/Kconfig
+> @@ -149,6 +149,25 @@ config LEGACY_PTY_COUNT
+>           When not in use, each legacy PTY occupies 12 bytes on 32-bit
+>           architectures and 24 bytes on 64-bit architectures.
+>
+> +config LEGACY_TIOCSTI
+> +       bool "Allow legacy TIOCSTI usage"
+> +       default y
 
-        ea3723a541c1 ("scripts/dtc: Update to upstream version v1.6.1-63-g55778a03df61")
+Obviously this should either default to n, ...
 
-?? :O
+> +       help
+> +         Historically the kernel has allowed TIOCSTI, which will push
+> +         characters into a controlling TTY. This continues to be used
+> +         as a malicious privilege escalation mechanism, and provides no
+> +         meaningful real-world utility any more. Its use is considered
+> +         a dangerous legacy operation, and can be disabled on most
+> +         systems.
+> +
+> +         Say 'Y here only if you have confirmed that your system's
+> +         userspace depends on this functionality to continue operating
+> +         normally.
 
-Thanks
+... or the help text should be made less scary.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-Gustavo
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
