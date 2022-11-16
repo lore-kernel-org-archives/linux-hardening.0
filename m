@@ -2,96 +2,118 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2283C4332F
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Nov 2022 09:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 292C7C43217
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Nov 2022 09:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233620AbiKPJcT (ORCPT
+        id S233435AbiKPJo7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Nov 2022 04:32:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52208 "EHLO
+        Wed, 16 Nov 2022 04:44:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232019AbiKPJcS (ORCPT
+        with ESMTP id S232785AbiKPJo7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Nov 2022 04:32:18 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 062E212AA7;
-        Wed, 16 Nov 2022 01:32:17 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BDA74B81C56;
-        Wed, 16 Nov 2022 09:32:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28B2EC433D7;
-        Wed, 16 Nov 2022 09:32:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668591134;
-        bh=gTs3K9d/PdhPyra4juo+80Yt54DsbmGjg8a5VaaNvbQ=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=YuOZEXxK4NdTpbnxVCqSw6gEPxF0wD86605uSrIsXL1v/gaJnTEfq5JmCqG1ziR03
-         cbjL+i3Of/KqFIaHnEfgiA7CIab7kuRyFXUrQuqdYvSzhZ2QmwHcFhxAV3o/UvGkOj
-         RhoyqLr6MeDOVHTp8/mjDsUo7eoeRKYkdOG5WR9DrXJww0zs+9h5EmMFXJUG063CYQ
-         ylz/KhlhSzZWo9PIVvn/y20Tc9kP5rQBycp+yivCdzrRbyEF96Hm085epEyOANraOu
-         WGPKeAJbPa/M1vCfNTzOjQA4dkrXYn2RHHRBpQnigxIPXXoEb3VkfN3Wbsaz/8KuWb
-         VBqpwe3/r3Zmw==
-Content-Type: text/plain; charset="utf-8"
+        Wed, 16 Nov 2022 04:44:59 -0500
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F4FC26C4
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Nov 2022 01:44:58 -0800 (PST)
+Received: by mail-lf1-x12f.google.com with SMTP id bp15so28556809lfb.13
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Nov 2022 01:44:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pgS+Ovv0eXOJwFTViusXUlwcEa0Tx7ZA7lRyTAv8k4w=;
+        b=RCe4P4IceE6ZUqJglE+YVt+Dny9tnUgYpgasdp8+S6rXcaCc7k9FtCvWd5x2Bj/sBV
+         NAVASAdFtSlrI+TrToOf3ARBu7wuCOzIF7KDffariJDavuOisxcP1b+91qua69biztg0
+         uGsemHhaMQ0pBs0UcTft6qARg9oiPnZVW2nn5ja8UU27z4v/vz42rv/nV2f2ZxqLyCMp
+         77qSLcgHngG/Eoh2HjSHgQY/VWAvQWZANyGvy/SbToN+hIU8RQN/ULzpAzOZk0n5d1Vr
+         AhDCUuR7iP8in6MICx3X2fC71sp1qR/COkLRjG4njZ8KAuK8zy1cbCpLq1uvSaWGwgS4
+         emEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pgS+Ovv0eXOJwFTViusXUlwcEa0Tx7ZA7lRyTAv8k4w=;
+        b=j/cy90I1PYgHb4RR/iw/EZZho78nfsA9aV5zGwRcWPei+qJjcynHAAe74RgTnrexQy
+         aGxvQ9hQoqhb1PWSLwhdm955poqQ1YyG3hlc6F5HKfCZBGGZdKTvSkIGgjItHhfOdCwa
+         DzW2W6i5hQIdaj3Lq6Swx0O4UBitzlSmtxm1cWpSTc5mqkV6FL9jBD40CRX050dExRFX
+         lwLGPpu2oMpGa/07Z65yl6diWRROJsYlea2D6YrJ48Ohb8KXZ915dDSmvN/tdmwjg4D0
+         OfLJ6Ls5BbkeQNQlsrlDd4vjtd7JKx7kDIVHvcMXH08fkQ+6fMQirLc72XPR2aZSqi2p
+         vh2w==
+X-Gm-Message-State: ANoB5pl9YoqM0vt8yfm+oeWuoHQAMPXcByUPFVSo/7v4NhQjPW267DWj
+        Bgk7F68T3//5jYkA63ziBC0wP7gjS6iYEQtM
+X-Google-Smtp-Source: AA0mqf6rTJFMk6b2mLxnOY8Sft920fWk28nxriGe7jyDuJtMB+LZZKA6WnYqmqoNq3pFIBP+3eFblg==
+X-Received: by 2002:a05:6512:308a:b0:4a2:39e6:4d48 with SMTP id z10-20020a056512308a00b004a239e64d48mr6999988lfd.234.1668591896428;
+        Wed, 16 Nov 2022 01:44:56 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id g5-20020a056512118500b00496693860dcsm2516397lfr.232.2022.11.16.01.44.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Nov 2022 01:44:56 -0800 (PST)
+Message-ID: <0ac1f247-be87-0f92-9ef0-c653bcdb6c1f@linaro.org>
+Date:   Wed, 16 Nov 2022 10:44:54 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v2 05/11] dt-bindings: mailbox: qcom: Allow syscon on
+ qcom,msm8976-apcs-kpss-global
+Content-Language: en-US
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>, agross@kernel.org
+Cc:     andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, jassisinghbrar@gmail.com,
+        srinivas.kandagatla@linaro.org, jic23@kernel.org, lars@metafoo.de,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        evgreen@chromium.org, gregkh@linuxfoundation.org,
+        a39.skl@gmail.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-hardening@vger.kernel.org,
+        marijn.suijten@somainline.org, kernel@collabora.com, luca@z3ntu.xyz
+References: <20221111120156.48040-1-angelogioacchino.delregno@collabora.com>
+ <20221111120156.48040-6-angelogioacchino.delregno@collabora.com>
+ <14947ae2-c8d4-de86-ce9e-29175e73cbb2@linaro.org>
+ <9f3e88fa-0aaf-2edd-366e-c3f5b2269dba@collabora.com>
+ <513a2dc3-d053-6e4b-a125-394cf1f6c81b@linaro.org>
+ <f60ccd79-9c82-0844-2c5f-21ec29c14dcf@collabora.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <f60ccd79-9c82-0844-2c5f-21ec29c14dcf@collabora.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v3 1/7] wifi: orinoco: Avoid clashing function prototypes
-From:   Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <e564003608a1f2ad86283370ef816805c92b30f6.1667934775.git.gustavoars@kernel.org>
-References: <e564003608a1f2ad86283370ef816805c92b30f6.1667934775.git.gustavoars@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-ID: <166859113003.16887.7125863875259889843.kvalo@kernel.org>
-Date:   Wed, 16 Nov 2022 09:32:11 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
-
-> When built with Control Flow Integrity, function prototypes between
-> caller and function declaration must match. These mismatches are visible
-> at compile time with the new -Wcast-function-type-strict in Clang[1].
+On 16/11/2022 10:00, AngeloGioacchino Del Regno wrote:
+> Il 16/11/22 09:57, Krzysztof Kozlowski ha scritto:
+>> On 16/11/2022 09:52, AngeloGioacchino Del Regno wrote:
+>>> Il 15/11/22 17:44, Krzysztof Kozlowski ha scritto:
+>>>> On 11/11/2022 13:01, AngeloGioacchino Del Regno wrote:
+>>>>> MSM8976 supports SMSM, which needs this node to also be a syscon:
+>>>>> move the compatible to allow that.
+>>>>>
+>>>>> Fixes: bcc8d70f912d ("dt-bindings: mailbox: Add compatible for the MSM8976")
+>>>>
+>>>> I am not sure if this is still a bug. Maybe just a missing feature?
+>>>>
+>>>
+>>> This changes how you use this mailbox across the entire devicetree (as other
+>>> nodes will not use mboxes = xxxx, but qcom,ipc = xxxx as syscon), so I think
+>>> that this is not a missing feature?
+>>
+>> Whether it is a bug depends on existing usage. If none of msm8976 DTSes
+>> use it the other way, then it is just incomplete or missing support. Not
+>> a bug. If existing DTSes use it as syscon, thus you need to add syscon
+>> to compatible, then it would be a bugfix.
+>>
 > 
-> Fix a total of 43 warnings like these:
+> It's not a bugfix then. The Fixes tag shall be dropped.
 > 
-> drivers/net/wireless/intersil/orinoco/wext.c:1379:27: warning: cast from 'int (*)(struct net_device *, struct iw_request_info *, struct iw_param *, char *)' to 'iw_handler' (aka 'int (*)(struct net_device *, struct iw_request_info *, union iwreq_data *, char *)') converts to incompatible function type [-Wcast-function-type-strict]
->         IW_HANDLER(SIOCGIWPOWER,        (iw_handler)orinoco_ioctl_getpower),
->                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> The orinoco Wireless Extension handler callbacks (iw_handler) use a
-> union for the data argument. Actually use the union and perform explicit
-> member selection in the function body instead of having a function
-> prototype mismatch. No significant binary differences were seen
-> before/after changes.
-> 
-> These changes were made partly manually and partly with the help of
-> Coccinelle.
-> 
-> Link: https://github.com/KSPP/linux/issues/234
-> Link: https://reviews.llvm.org/D134831 [1]
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Same question like the other commit, should I send a v3 or can it be dropped while
+> applying?
 
-5 patches applied to wireless-next.git, thanks.
+Maybe better send a v3.
 
-2c0e077db65a wifi: orinoco: Avoid clashing function prototypes
-02ae6a7034d7 wifi: cfg80211: Avoid clashing function prototypes
-fd7ef879a983 wifi: hostap: Avoid clashing function prototypes
-ff7efc66b7ea wifi: zd1201: Avoid clashing function prototypes
-89e706459848 wifi: airo: Avoid clashing function prototypes
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/e564003608a1f2ad86283370ef816805c92b30f6.1667934775.git.gustavoars@kernel.org/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Best regards,
+Krzysztof
 
