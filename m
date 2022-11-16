@@ -2,115 +2,84 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4C8C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 15 Nov 2022 21:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFA6C433FE
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Nov 2022 00:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231947AbiKOVzz (ORCPT
+        id S229978AbiKPAVb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 15 Nov 2022 16:55:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43598 "EHLO
+        Tue, 15 Nov 2022 19:21:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231902AbiKOVzv (ORCPT
+        with ESMTP id S230124AbiKPAV1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 15 Nov 2022 16:55:51 -0500
+        Tue, 15 Nov 2022 19:21:27 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E312C10B;
-        Tue, 15 Nov 2022 13:55:51 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E4A22A726;
+        Tue, 15 Nov 2022 16:21:27 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B9A8661A08;
-        Tue, 15 Nov 2022 21:55:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 869EFC433C1;
-        Tue, 15 Nov 2022 21:55:48 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B08BD60E65;
+        Wed, 16 Nov 2022 00:21:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18E42C433D6;
+        Wed, 16 Nov 2022 00:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668549350;
-        bh=iQK5X8lQkyk5IDtQF7i4ML+XXWtDJaKhb1wsrEPYeKg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IsTmLPLiQubsT8pjKF4wwwKt6rVvP/OmC9K3DPTAYk942qqAhx3B//gZ0cr++RwTh
-         kVIWgdDqsSlsXOFZA1yJ4xQsD0ixOsSL0VHcxRyvSB7X2fAyzWaqD/FQTZZrLgQSqe
-         v/qizdtnbbp1tbIpjSXmVoOutKSqhFKeIAtQjZc7yXj9VR/pJarIWIXejHujeMxfRA
-         rTz9MWnG7ZCg1eBsYB08owq/tUie28CV7r17ZJJrlpjPp+QCGiPvtoypcLXe8/voSP
-         OKaVpr/3z+M2W+3FUAwZmOIl1bCCbdiL83bEbsg15KsDM1lbUOOjK216Qo2lFHNC2a
-         mtPn1b0XamrBw==
-Date:   Tue, 15 Nov 2022 15:55:34 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Hante Meuleman <hante.meuleman@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Arend van Spriel <aspriel@gmail.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>
-Cc:     SHA-cyfmac-dev-list@infineon.com,
-        brcm80211-dev-list.pdl@broadcom.com, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH 2/2][next] wifi: brcmfmac: Use struct_size() in code ralated
- to struct brcmf_dload_data_le
-Message-ID: <41845ad3660ed4375f0c03fd36a67b2e12fafed5.1668548907.git.gustavoars@kernel.org>
-References: <cover.1668548907.git.gustavoars@kernel.org>
+        s=k20201202; t=1668558086;
+        bh=hwUOc/FCJNlwMvzC8ps/UK4ePUya28SQYKY1V9Te5Ek=;
+        h=In-Reply-To:References:From:Date:Subject:To:Cc:From;
+        b=MOyQfLkgUboBUhoax1FFM3j8JxTYQqCIqrLPZHit1GbcD9tr+UUvOcnMfbJ5BKyC9
+         tO+c04mcakviQC+8F5HZ0VV3g2ID9BjaLWOIP7v7yFUuBNcvb9BXMyb+AdgX6Wz6od
+         BSFVgLrdtSUlHPcuQo3F6Lzto1IdFt1WSbUtvzZxIBC2wo/eEpN6jeKUoaaYvD3D3G
+         PsgMVQ+XuPNJj+d4jLjoexPbVY0eNVGYzKsfaCbXjUkCjkXD7eIshMtbuehbyqDxzO
+         yETkmF/5PoApznpM6ZHM/u634RfZZnSQQTlfA6NefZjkfvFIhXNW374Z0O6Ot4wuYB
+         ML9FE+PKKqxCg==
+Received: by mail-oi1-f180.google.com with SMTP id s206so16750514oie.3;
+        Tue, 15 Nov 2022 16:21:26 -0800 (PST)
+X-Gm-Message-State: ANoB5pkXM1AZVXSeRBvy84XG2V6NZjvjNJKwEydBZoQLq/DmYBTY4sgK
+        sZcvbS0wFtjsuFe1y1S9hviZZnUbCGApeHv6mKY=
+X-Google-Smtp-Source: AA0mqf4mdSSC3UAEYBUd+P0Z6luz95XKyNOxCm8IWo4hHdxZbcKdV3WWPlBD8NHhTuekkl7Ac6go5tjCouAf1VDaF70=
+X-Received: by 2002:aca:b9c4:0:b0:34f:63a5:a654 with SMTP id
+ j187-20020acab9c4000000b0034f63a5a654mr386110oif.257.1668558085274; Tue, 15
+ Nov 2022 16:21:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1668548907.git.gustavoars@kernel.org>
+Received: by 2002:a05:6839:1a4e:0:0:0:0 with HTTP; Tue, 15 Nov 2022 16:21:24
+ -0800 (PST)
+In-Reply-To: <Y3OxronfaPYv9qGP@work>
+References: <Y3OxronfaPYv9qGP@work>
+From:   Namjae Jeon <linkinjeon@kernel.org>
+Date:   Wed, 16 Nov 2022 09:21:24 +0900
+X-Gmail-Original-Message-ID: <CAKYAXd-evHBWbXbfa4tg9LEGVv6f=y9PBbDaBSySmsN0LuCCMQ@mail.gmail.com>
+Message-ID: <CAKYAXd-evHBWbXbfa4tg9LEGVv6f=y9PBbDaBSySmsN0LuCCMQ@mail.gmail.com>
+Subject: Re: [PATCH][next] ksmbd: replace one-element arrays with
+ flexible-array members
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Steve French <sfrench@samba.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Tom Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Prefer struct_size() over open-coded versions of idiom:
+2022-11-16 0:35 GMT+09:00, Gustavo A. R. Silva <gustavoars@kernel.org>:
+> One-element arrays are deprecated, and we are replacing them with flexible
+> array members instead. So, replace one-element arrays with flexible-array
+> members in multiple structs in fs/ksmbd/smb_common.h and one in
+> fs/ksmbd/smb2pdu.h.
+>
+> Important to mention is that doing a build before/after this patch results
+> in no binary output differences.
+>
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE routines
+> on memcpy() and help us make progress towards globally enabling
+> -fstrict-flex-arrays=3 [1].
+>
+> Link: https://github.com/KSPP/linux/issues/242
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html
+> [1]
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Acked-by: Namjae Jeon <linkinjeon@kernel.org>
 
-sizeof(struct-with-flex-array) + sizeof(typeof-flex-array-elements) * count
-
-where count is the max number of items the flexible array is supposed to
-contain.
-
-In this particular case, in the open-coded version sizeof(typeof-flex-array-elements)
-is implicit in _count_ because the type of the flex array data is u8:
-
-drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h:941:
- 941 struct brcmf_dload_data_le {
- 942         __le16 flag;
- 943         __le16 dload_type;
- 944         __le32 len;
- 945         __le32 crc;
- 946         u8 data[];
- 947 };
-
-Link: https://github.com/KSPP/linux/issues/160
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
-index 2e836566e218..4a309e5a5707 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/common.c
-@@ -110,9 +110,9 @@ static int brcmf_c_download(struct brcmf_if *ifp, u16 flag,
- 	dload_buf->dload_type = cpu_to_le16(DL_TYPE_CLM);
- 	dload_buf->len = cpu_to_le32(len);
- 	dload_buf->crc = cpu_to_le32(0);
--	len = sizeof(*dload_buf) + len;
- 
--	err = brcmf_fil_iovar_data_set(ifp, "clmload", dload_buf, len);
-+	err = brcmf_fil_iovar_data_set(ifp, "clmload", dload_buf,
-+				       struct_size(dload_buf, data, len));
- 
- 	return err;
- }
-@@ -139,7 +139,8 @@ static int brcmf_c_process_clm_blob(struct brcmf_if *ifp)
- 		return 0;
- 	}
- 
--	chunk_buf = kzalloc(sizeof(*chunk_buf) + MAX_CHUNK_LEN, GFP_KERNEL);
-+	chunk_buf = kzalloc(struct_size(chunk_buf, data, MAX_CHUNK_LEN),
-+			    GFP_KERNEL);
- 	if (!chunk_buf) {
- 		err = -ENOMEM;
- 		goto done;
--- 
-2.34.1
-
+Thanks for your patch!
