@@ -2,105 +2,416 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F016CC4332F
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Nov 2022 14:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC872C43217
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Nov 2022 14:58:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234322AbiKPO5g (ORCPT
+        id S233869AbiKPO66 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Nov 2022 09:57:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48846 "EHLO
+        Wed, 16 Nov 2022 09:58:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233959AbiKPO5T (ORCPT
+        with ESMTP id S233846AbiKPO44 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Nov 2022 09:57:19 -0500
+        Wed, 16 Nov 2022 09:56:56 -0500
 Received: from mail.z3ntu.xyz (mail.z3ntu.xyz [128.199.32.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 432B428E03;
-        Wed, 16 Nov 2022 06:57:18 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 427F865FD;
+        Wed, 16 Nov 2022 06:56:54 -0800 (PST)
 Received: from g550jk.arnhem.chello.nl (unknown [62.108.10.64])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 7572EC4128;
-        Wed, 16 Nov 2022 14:56:46 +0000 (UTC)
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id A6502D05CE;
+        Wed, 16 Nov 2022 14:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1668610606; bh=KsW+8ENBtu4UJFdA+5lLI+Dz/2DZB+GaYC01A1U7Lcw=;
-        h=From:To:Cc:Subject:Date;
-        b=XxUwPzofsEE7PuNWDE1ZT9obfxoeFh5cK+KEr/pUwMq2MVWJ6DjnSIg1ZOZGTcnpn
-         kHx7zp7fZXR1fp52oH1HOd9dqnCxDT+xh0t+kHf2/fZj6jYtJs+Dkha0D1bHDyBtk4
-         po2A1SEohZck7zotkdGTXiSsqOV9XS5Wq/bz70hw=
+        t=1668610612; bh=nQKON/VqxV/NqWxLv7slFOlAG85TPHQ00YyS0fWvzx4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=QKvy4qadCz0TEl0JgVAA/UGNYkxIYY6EkcEUOtiw8R3G8kjxXaP88ClejbtDk2jjU
+         cCYHAkIXHplQbDjKFWBp0h1G4/Bg6QhiT1SGX+vgeAj1ASavCV82Z2dSBi/cvwNawP
+         iv+P2NJ9kCY2/yMLnpMw1PY0RxM24QE8LoVrq4OQ=
 From:   Luca Weiss <luca@z3ntu.xyz>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        Luca Weiss <luca@z3ntu.xyz>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Adam Skladowski <a39.skl@gmail.com>,
+        Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Tony Luck <tony.luck@intel.com>, devicetree@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/8] Add a bunch of msm8953 dts files
-Date:   Wed, 16 Nov 2022 15:56:01 +0100
-Message-Id: <20221116145616.17884-1-luca@z3ntu.xyz>
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH 5/8] arm64: dts: qcom: msm8953: Add device tree for Xiaomi Redmi Note 4X
+Date:   Wed, 16 Nov 2022 15:56:06 +0100
+Message-Id: <20221116145616.17884-6-luca@z3ntu.xyz>
 X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20221116145616.17884-1-luca@z3ntu.xyz>
+References: <20221116145616.17884-1-luca@z3ntu.xyz>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The following patches add a bunch of msm8953-based devices that have
-been created in the msm8953-mainline[0] repository, which includes
-Snapdragon 450 (SDM450), Snapdragon 625 (msm8953) and Snapdragon 632
-(SDM632) devices.
-The dts files are trimmed down to what is currently supported upstream,
-as a way to also minimizing diff for further patches.
+From: Adam Skladowski <a39.skl@gmail.com>
 
-I've tried my best in keeping all the relevant author tags based on the
-git info I could find there.
+Add device tree for the Xiaomi Redmi Note 4X (mido) smartphone. This
+device is based on Snapdragon 625 (msm8953) SoC.
 
-*This series depends on pmi8950.dtsi patches[1]*
-
-[0] https://github.com/msm8953-mainline/linux
-[1] https://lore.kernel.org/linux-arm-msm/20221101161801.1058969-2-luca@z3ntu.xyz/
-
-Adam Skladowski (1):
-  arm64: dts: qcom: msm8953: Add device tree for Xiaomi Redmi Note 4X
-
-Alejandro Tafalla (1):
-  arm64: dts: qcom: msm8953: Add device tree for Xiaomi Mi A2 Lite
-
-Danila Tikhonov (1):
-  arm64: dts: qcom: msm8953: Add device tree for Xiaomi Mi A1
-
-Eugene Lepshy (1):
-  arm64: dts: qcom: msm8953: Add device tree for Xiaomi Redmi 5 Plus
-
-Gabriela David (1):
-  arm64: dts: qcom: sdm632: Add device tree for Motorola G7 Power
-
-Julian Braha (1):
-  arm64: dts: qcom: sdm450: Add device tree for Motorola Moto G6
-
-Luca Weiss (1):
-  dt-bindings: arm: qcom: document new msm8953-family devices
-
-Sireesh Kodali (1):
-  arm64: dts: qcom: msm8953: Add device tree for Motorola G5 Plus
-
- .../devicetree/bindings/arm/qcom.yaml         |  17 +
- arch/arm64/boot/dts/qcom/Makefile             |   7 +
- .../boot/dts/qcom/msm8953-motorola-potter.dts | 306 ++++++++++++++++
- .../boot/dts/qcom/msm8953-xiaomi-daisy.dts    | 316 +++++++++++++++++
+Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
+---
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
  .../boot/dts/qcom/msm8953-xiaomi-mido.dts     | 331 ++++++++++++++++++
- .../boot/dts/qcom/msm8953-xiaomi-tissot.dts   | 317 +++++++++++++++++
- .../boot/dts/qcom/msm8953-xiaomi-vince.dts    | 330 +++++++++++++++++
- .../boot/dts/qcom/sdm450-motorola-ali.dts     | 256 ++++++++++++++
- .../boot/dts/qcom/sdm632-motorola-ocean.dts   | 287 +++++++++++++++
- 9 files changed, 2167 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/msm8953-motorola-potter.dts
- create mode 100644 arch/arm64/boot/dts/qcom/msm8953-xiaomi-daisy.dts
+ 2 files changed, 332 insertions(+)
  create mode 100644 arch/arm64/boot/dts/qcom/msm8953-xiaomi-mido.dts
- create mode 100644 arch/arm64/boot/dts/qcom/msm8953-xiaomi-tissot.dts
- create mode 100644 arch/arm64/boot/dts/qcom/msm8953-xiaomi-vince.dts
- create mode 100644 arch/arm64/boot/dts/qcom/sdm450-motorola-ali.dts
- create mode 100644 arch/arm64/boot/dts/qcom/sdm632-motorola-ocean.dts
 
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 6a80a36465f7..229fa48c8006 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -23,6 +23,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-samsung-serranove.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-wingtech-wt88047.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-motorola-potter.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-xiaomi-daisy.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-xiaomi-mido.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-lg-bullhead-rev-10.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-lg-bullhead-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-msft-lumia-octagon-talkman.dtb
+diff --git a/arch/arm64/boot/dts/qcom/msm8953-xiaomi-mido.dts b/arch/arm64/boot/dts/qcom/msm8953-xiaomi-mido.dts
+new file mode 100644
+index 000000000000..dc0228c06e3b
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8953-xiaomi-mido.dts
+@@ -0,0 +1,331 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2022, The Linux Foundation. All rights reserved.
++ */
++/dts-v1/;
++
++#include "msm8953.dtsi"
++#include "pm8953.dtsi"
++#include "pmi8950.dtsi"
++#include <dt-bindings/leds/common.h>
++
++/ {
++	model = "Xiaomi Redmi Note 4X";
++	compatible = "xiaomi,mido", "qcom,msm8953";
++	chassis-type = "handset";
++	qcom,msm-id = <293 0>;
++	qcom,board-id = <11 0>;
++
++	aliases {
++		mmc0 = &sdhc_1;
++		mmc1 = &sdhc_2;
++	};
++
++	speaker_amp: audio-amplifier {
++		compatible = "awinic,aw8738";
++		mode-gpios = <&tlmm 96 GPIO_ACTIVE_HIGH>;
++		awinic,mode = <5>;
++		sound-name-prefix = "Speaker Amp";
++	};
++
++	chosen {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		framebuffer@90001000 {
++			compatible = "simple-framebuffer";
++			reg = <0 0x90001000 0 (1920 * 1080 * 3)>;
++
++			width = <1080>;
++			height = <1920>;
++			stride = <(1080 * 3)>;
++			format = "r8g8b8";
++
++			power-domains = <&gcc MDSS_GDSC>;
++
++			clocks = <&gcc GCC_MDSS_AHB_CLK>,
++				 <&gcc GCC_MDSS_AXI_CLK>,
++				 <&gcc GCC_MDSS_VSYNC_CLK>,
++				 <&gcc GCC_MDSS_MDP_CLK>,
++				 <&gcc GCC_MDSS_BYTE0_CLK>,
++				 <&gcc GCC_MDSS_PCLK0_CLK>,
++				 <&gcc GCC_MDSS_ESC0_CLK>;
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&gpio_key_default>;
++
++		key-volume-up {
++			label = "Volume Up";
++			gpios = <&tlmm 85 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_VOLUMEUP>;
++		};
++	};
++
++	reserved-memory {
++		/delete-node/ memory@85b00000;
++
++		memory@84a00000 {
++			reg = <0x0 0x84a00000 0x0 0x1900000>;
++			no-map;
++		};
++
++		memory@90001000 {
++			reg = <0x0 0x90001000 0x0 (1080 * 1920 * 3)>;
++			no-map;
++		};
++
++		ramoops@9ff00000 {
++			compatible = "ramoops";
++			reg = <0x0 0x9ff00000 0x0 0x00100000>;
++			console-size = <0x100000>;
++		};
++	};
++
++	vph_pwr: vph-pwr-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vph_pwr";
++		regulator-min-microvolt = <3700000>;
++		regulator-max-microvolt = <3700000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++};
++
++&hsusb_phy {
++	vdd-supply = <&pm8953_l3>;
++	vdda-pll-supply = <&pm8953_l7>;
++	vdda-phy-dpdm-supply = <&pm8953_l13>;
++
++	status = "okay";
++};
++
++&i2c_2 {
++	status = "okay";
++
++	led-controller@45 {
++		compatible = "awinic,aw2013";
++		reg = <0x45>;
++
++		vcc-supply = <&pm8953_l10>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		led@0 {
++			reg = <0>;
++			color = <LED_COLOR_ID_RED>;
++			function = LED_FUNCTION_INDICATOR;
++			led-max-microamp = <5000>;
++		};
++
++		led@1 {
++			reg = <1>;
++			color = <LED_COLOR_ID_GREEN>;
++			function = LED_FUNCTION_INDICATOR;
++			led-max-microamp = <5000>;
++		};
++
++		led@2 {
++			reg = <2>;
++			color = <LED_COLOR_ID_BLUE>;
++			function = LED_FUNCTION_INDICATOR;
++			led-max-microamp = <5000>;
++		};
++	};
++};
++
++&i2c_3 {
++	status = "okay";
++
++	touchscreen@38 {
++		compatible = "edt,edt-ft5406";
++		reg = <0x38>;
++
++		interrupt-parent = <&tlmm>;
++		interrupts = <65 IRQ_TYPE_EDGE_FALLING>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&ts_int_active>;
++
++		reset-gpios = <&tlmm 64 GPIO_ACTIVE_LOW>;
++
++		vcc-supply = <&pm8953_l10>;
++
++		touchscreen-size-x = <1080>;
++		touchscreen-size-y = <1920>;
++	};
++};
++
++&pm8953_resin {
++	linux,code = <KEY_VOLUMEDOWN>;
++	status = "okay";
++};
++
++&rpm_requests {
++	regulators {
++		compatible = "qcom,rpm-pm8953-regulators";
++
++		vdd_s1-supply = <&vph_pwr>;
++		vdd_s2-supply = <&vph_pwr>;
++		vdd_s3-supply = <&vph_pwr>;
++		vdd_s4-supply = <&vph_pwr>;
++		vdd_s5-supply = <&vph_pwr>;
++		vdd_s6-supply = <&vph_pwr>;
++		vdd_s7-supply = <&vph_pwr>;
++		vdd_l1-supply = <&pm8953_s3>;
++		vdd_l2_l3-supply = <&pm8953_s3>;
++		vdd_l4_l5_l6_l7_l16_l19-supply = <&pm8953_s4>;
++		vdd_l8_l11_l12_l13_l14_l15-supply = <&vph_pwr>;
++		vdd_l9_l10_l17_l18_l22-supply = <&vph_pwr>;
++		vdd_l23-supply = <&pm8953_s3>;
++
++		pm8953_s1: s1 {
++			regulator-min-microvolt = <863000>;
++			regulator-max-microvolt = <1152000>;
++		};
++
++		pm8953_s3: s3 {
++			regulator-min-microvolt = <1224000>;
++			regulator-max-microvolt = <1224000>;
++		};
++
++		pm8953_s4: s4 {
++			regulator-min-microvolt = <1896000>;
++			regulator-max-microvolt = <2048000>;
++		};
++
++		pm8953_l1: l1 {
++			regulator-min-microvolt = <1000000>;
++			regulator-max-microvolt = <1100000>;
++		};
++
++		pm8953_l2: l2 {
++			regulator-min-microvolt = <975000>;
++			regulator-max-microvolt = <1225000>;
++		};
++
++		pm8953_l3: l3 {
++			regulator-min-microvolt = <925000>;
++			regulator-max-microvolt = <925000>;
++			regulator-allow-set-load;
++		};
++
++		pm8953_l5: l5 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		pm8953_l6: l6 {
++			regulator-always-on;
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		pm8953_l7: l7 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1900000>;
++		};
++
++		pm8953_l8: l8 {
++			regulator-min-microvolt = <2900000>;
++			regulator-max-microvolt = <2900000>;
++		};
++
++		pm8953_l9: l9 {
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3300000>;
++		};
++
++		pm8953_l10: l10 {
++			regulator-always-on;
++			regulator-min-microvolt = <2850000>;
++			regulator-max-microvolt = <2850000>;
++		};
++
++		pm8953_l11: l11 {
++			regulator-min-microvolt = <2950000>;
++			regulator-max-microvolt = <2950000>;
++		};
++
++		pm8953_l12: l12 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <2950000>;
++		};
++
++		pm8953_l13: l13 {
++			regulator-min-microvolt = <3125000>;
++			regulator-max-microvolt = <3125000>;
++		};
++
++		pm8953_l16: l16 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		pm8953_l17: l17 {
++			regulator-min-microvolt = <2850000>;
++			regulator-max-microvolt = <2850000>;
++		};
++
++		pm8953_l19: l19 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1350000>;
++		};
++
++		pm8953_l22: l22 {
++			regulator-always-on;
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2850000>;
++		};
++
++		pm8953_l23: l23 {
++			regulator-min-microvolt = <975000>;
++			regulator-max-microvolt = <1225000>;
++		};
++	};
++};
++
++&sdhc_1 {
++	vmmc-supply = <&pm8953_l8>;
++	vqmmc-supply = <&pm8953_l5>;
++
++	status = "okay";
++};
++
++&sdhc_2 {
++	cd-gpios = <&tlmm 133 GPIO_ACTIVE_LOW>;
++
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
++	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
++
++	vmmc-supply = <&pm8953_l11>;
++	vqmmc-supply = <&pm8953_l12>;
++
++	status = "okay";
++};
++
++&tlmm {
++	gpio-reserved-ranges = <0 4>, <135 4>;
++
++	ts_int_active: ts-int-active-state {
++		pins = "gpio65";
++		function = "gpio";
++		drive-strength = <8>;
++		bias-pull-up;
++	};
++};
++
++&usb3 {
++	status = "okay";
++};
++
++&usb3_dwc3 {
++	dr_mode = "peripheral";
++};
 -- 
 2.38.1
 
