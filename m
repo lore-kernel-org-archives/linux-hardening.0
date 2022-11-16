@@ -2,84 +2,84 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFA6C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Nov 2022 00:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B168CC43219
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Nov 2022 08:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229978AbiKPAVb (ORCPT
+        id S233139AbiKPIup (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 15 Nov 2022 19:21:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54966 "EHLO
+        Wed, 16 Nov 2022 03:50:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230124AbiKPAV1 (ORCPT
+        with ESMTP id S232670AbiKPIuo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 15 Nov 2022 19:21:27 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E4A22A726;
-        Tue, 15 Nov 2022 16:21:27 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 16 Nov 2022 03:50:44 -0500
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF72A1A05D;
+        Wed, 16 Nov 2022 00:50:41 -0800 (PST)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B08BD60E65;
-        Wed, 16 Nov 2022 00:21:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18E42C433D6;
-        Wed, 16 Nov 2022 00:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668558086;
-        bh=hwUOc/FCJNlwMvzC8ps/UK4ePUya28SQYKY1V9Te5Ek=;
-        h=In-Reply-To:References:From:Date:Subject:To:Cc:From;
-        b=MOyQfLkgUboBUhoax1FFM3j8JxTYQqCIqrLPZHit1GbcD9tr+UUvOcnMfbJ5BKyC9
-         tO+c04mcakviQC+8F5HZ0VV3g2ID9BjaLWOIP7v7yFUuBNcvb9BXMyb+AdgX6Wz6od
-         BSFVgLrdtSUlHPcuQo3F6Lzto1IdFt1WSbUtvzZxIBC2wo/eEpN6jeKUoaaYvD3D3G
-         PsgMVQ+XuPNJj+d4jLjoexPbVY0eNVGYzKsfaCbXjUkCjkXD7eIshMtbuehbyqDxzO
-         yETkmF/5PoApznpM6ZHM/u634RfZZnSQQTlfA6NefZjkfvFIhXNW374Z0O6Ot4wuYB
-         ML9FE+PKKqxCg==
-Received: by mail-oi1-f180.google.com with SMTP id s206so16750514oie.3;
-        Tue, 15 Nov 2022 16:21:26 -0800 (PST)
-X-Gm-Message-State: ANoB5pkXM1AZVXSeRBvy84XG2V6NZjvjNJKwEydBZoQLq/DmYBTY4sgK
-        sZcvbS0wFtjsuFe1y1S9hviZZnUbCGApeHv6mKY=
-X-Google-Smtp-Source: AA0mqf4mdSSC3UAEYBUd+P0Z6luz95XKyNOxCm8IWo4hHdxZbcKdV3WWPlBD8NHhTuekkl7Ac6go5tjCouAf1VDaF70=
-X-Received: by 2002:aca:b9c4:0:b0:34f:63a5:a654 with SMTP id
- j187-20020acab9c4000000b0034f63a5a654mr386110oif.257.1668558085274; Tue, 15
- Nov 2022 16:21:25 -0800 (PST)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 3AFB16602A81;
+        Wed, 16 Nov 2022 08:50:39 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1668588640;
+        bh=UGw+5yUczjb2PkEG6B9/HaNrOcAqFKLMrvc6BAUVOP8=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=ketnzDti5gZW6WM7CNR0kWaRb7Q2Vy0mwisMLM49ofYe4ouHUz6q87GclgQr4HtPx
+         MPfcf5kwp1e0tk3kWE7q7TyNe8oxbadG0VDSgJ/aCvUEbZT7D/MayaXPAsL4Af4s/H
+         +Z0vjZ0/r68nbFU8lTeWNSACjwxRfqjSZLjd3F0vZ99twJE6G5nkiYV8I3qLcha62O
+         TpBiS+5ct101WFbr+Ah34I18N31WBni9kGpHHz4VMc0Wg1fJv/yd6dmG9p/wswZw54
+         p+DYkELOcQPs6jM97vbFZ9+FHLszsmEu15NXb7yHrx99GdmKgi8DIIz28+ss4EY79Q
+         PITEQUf5lBHvA==
+Message-ID: <1fac581e-ef02-4576-0dbf-67662a29f724@collabora.com>
+Date:   Wed, 16 Nov 2022 09:50:37 +0100
 MIME-Version: 1.0
-Received: by 2002:a05:6839:1a4e:0:0:0:0 with HTTP; Tue, 15 Nov 2022 16:21:24
- -0800 (PST)
-In-Reply-To: <Y3OxronfaPYv9qGP@work>
-References: <Y3OxronfaPYv9qGP@work>
-From:   Namjae Jeon <linkinjeon@kernel.org>
-Date:   Wed, 16 Nov 2022 09:21:24 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd-evHBWbXbfa4tg9LEGVv6f=y9PBbDaBSySmsN0LuCCMQ@mail.gmail.com>
-Message-ID: <CAKYAXd-evHBWbXbfa4tg9LEGVv6f=y9PBbDaBSySmsN0LuCCMQ@mail.gmail.com>
-Subject: Re: [PATCH][next] ksmbd: replace one-element arrays with
- flexible-array members
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Steve French <sfrench@samba.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Tom Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH v2 02/11] dt-bindings: nvmem: Fix qcom,qfprom compatibles
+ enum ordering
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        agross@kernel.org
+Cc:     andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, jassisinghbrar@gmail.com,
+        srinivas.kandagatla@linaro.org, jic23@kernel.org, lars@metafoo.de,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        evgreen@chromium.org, gregkh@linuxfoundation.org,
+        a39.skl@gmail.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-hardening@vger.kernel.org,
+        marijn.suijten@somainline.org, kernel@collabora.com, luca@z3ntu.xyz
+References: <20221111120156.48040-1-angelogioacchino.delregno@collabora.com>
+ <20221111120156.48040-3-angelogioacchino.delregno@collabora.com>
+ <b611f647-c46f-3780-c6b4-3cfb4fe402e7@linaro.org>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <b611f647-c46f-3780-c6b4-3cfb4fe402e7@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-2022-11-16 0:35 GMT+09:00, Gustavo A. R. Silva <gustavoars@kernel.org>:
-> One-element arrays are deprecated, and we are replacing them with flexible
-> array members instead. So, replace one-element arrays with flexible-array
-> members in multiple structs in fs/ksmbd/smb_common.h and one in
-> fs/ksmbd/smb2pdu.h.
->
-> Important to mention is that doing a build before/after this patch results
-> in no binary output differences.
->
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE routines
-> on memcpy() and help us make progress towards globally enabling
-> -fstrict-flex-arrays=3 [1].
->
-> Link: https://github.com/KSPP/linux/issues/242
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html
-> [1]
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Acked-by: Namjae Jeon <linkinjeon@kernel.org>
+Il 15/11/22 17:42, Krzysztof Kozlowski ha scritto:
+> On 11/11/2022 13:01, AngeloGioacchino Del Regno wrote:
+>> Move qcom,msm8974-qfprom after qcom,msm8916-qfprom to respect
+>> alphabetical ordering.
+>>
+>> Fixes: c8b336bb1aeb ("dt-bindings: nvmem: Add soc qfprom compatible strings")
+> 
+> It's a style, code readability, but not a bug. I propose to drop the tag.
+> 
+> With that:
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> 
 
-Thanks for your patch!
+Should I send a v3, or is it possible to drop the tag while applying it?
+
+Thanks,
+Angelo
+
