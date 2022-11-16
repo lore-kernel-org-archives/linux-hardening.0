@@ -2,118 +2,341 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 292C7C43217
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Nov 2022 09:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE52C43219
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Nov 2022 14:57:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233435AbiKPJo7 (ORCPT
+        id S233195AbiKPO4w (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Nov 2022 04:44:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60816 "EHLO
+        Wed, 16 Nov 2022 09:56:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232785AbiKPJo7 (ORCPT
+        with ESMTP id S233056AbiKPO4v (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Nov 2022 04:44:59 -0500
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F4FC26C4
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Nov 2022 01:44:58 -0800 (PST)
-Received: by mail-lf1-x12f.google.com with SMTP id bp15so28556809lfb.13
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Nov 2022 01:44:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pgS+Ovv0eXOJwFTViusXUlwcEa0Tx7ZA7lRyTAv8k4w=;
-        b=RCe4P4IceE6ZUqJglE+YVt+Dny9tnUgYpgasdp8+S6rXcaCc7k9FtCvWd5x2Bj/sBV
-         NAVASAdFtSlrI+TrToOf3ARBu7wuCOzIF7KDffariJDavuOisxcP1b+91qua69biztg0
-         uGsemHhaMQ0pBs0UcTft6qARg9oiPnZVW2nn5ja8UU27z4v/vz42rv/nV2f2ZxqLyCMp
-         77qSLcgHngG/Eoh2HjSHgQY/VWAvQWZANyGvy/SbToN+hIU8RQN/ULzpAzOZk0n5d1Vr
-         AhDCUuR7iP8in6MICx3X2fC71sp1qR/COkLRjG4njZ8KAuK8zy1cbCpLq1uvSaWGwgS4
-         emEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pgS+Ovv0eXOJwFTViusXUlwcEa0Tx7ZA7lRyTAv8k4w=;
-        b=j/cy90I1PYgHb4RR/iw/EZZho78nfsA9aV5zGwRcWPei+qJjcynHAAe74RgTnrexQy
-         aGxvQ9hQoqhb1PWSLwhdm955poqQ1YyG3hlc6F5HKfCZBGGZdKTvSkIGgjItHhfOdCwa
-         DzW2W6i5hQIdaj3Lq6Swx0O4UBitzlSmtxm1cWpSTc5mqkV6FL9jBD40CRX050dExRFX
-         lwLGPpu2oMpGa/07Z65yl6diWRROJsYlea2D6YrJ48Ohb8KXZ915dDSmvN/tdmwjg4D0
-         OfLJ6Ls5BbkeQNQlsrlDd4vjtd7JKx7kDIVHvcMXH08fkQ+6fMQirLc72XPR2aZSqi2p
-         vh2w==
-X-Gm-Message-State: ANoB5pl9YoqM0vt8yfm+oeWuoHQAMPXcByUPFVSo/7v4NhQjPW267DWj
-        Bgk7F68T3//5jYkA63ziBC0wP7gjS6iYEQtM
-X-Google-Smtp-Source: AA0mqf6rTJFMk6b2mLxnOY8Sft920fWk28nxriGe7jyDuJtMB+LZZKA6WnYqmqoNq3pFIBP+3eFblg==
-X-Received: by 2002:a05:6512:308a:b0:4a2:39e6:4d48 with SMTP id z10-20020a056512308a00b004a239e64d48mr6999988lfd.234.1668591896428;
-        Wed, 16 Nov 2022 01:44:56 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id g5-20020a056512118500b00496693860dcsm2516397lfr.232.2022.11.16.01.44.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Nov 2022 01:44:56 -0800 (PST)
-Message-ID: <0ac1f247-be87-0f92-9ef0-c653bcdb6c1f@linaro.org>
-Date:   Wed, 16 Nov 2022 10:44:54 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v2 05/11] dt-bindings: mailbox: qcom: Allow syscon on
- qcom,msm8976-apcs-kpss-global
-Content-Language: en-US
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>, agross@kernel.org
-Cc:     andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, jassisinghbrar@gmail.com,
-        srinivas.kandagatla@linaro.org, jic23@kernel.org, lars@metafoo.de,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        evgreen@chromium.org, gregkh@linuxfoundation.org,
-        a39.skl@gmail.com, linux-arm-msm@vger.kernel.org,
+        Wed, 16 Nov 2022 09:56:51 -0500
+Received: from mail.z3ntu.xyz (mail.z3ntu.xyz [128.199.32.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 091ED6598;
+        Wed, 16 Nov 2022 06:56:50 -0800 (PST)
+Received: from g550jk.arnhem.chello.nl (unknown [62.108.10.64])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 46934D0557;
+        Wed, 16 Nov 2022 14:56:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1668610608; bh=EQuJ7inTJZHxBI4FVg9vF3zI0GpW7tMV+9iGtvBVnRM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=VYp1xwxud0WROeLcCBKIP5BFIqM4UboYEvfNPVu0trcMcuQqy2dFhzlSbUYkUWhkp
+         rcm8Su8QVA66HW0EyfMURxi54OZm8dFCgLXXBLdU4Ri3dm6GwSWgrHe/vk9eqcgYaW
+         TsPkXzidCvpyGF/5F+9aJNaFq+Ly7Reeshm46/eQ=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        Julian Braha <julianbraha@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-hardening@vger.kernel.org,
-        marijn.suijten@somainline.org, kernel@collabora.com, luca@z3ntu.xyz
-References: <20221111120156.48040-1-angelogioacchino.delregno@collabora.com>
- <20221111120156.48040-6-angelogioacchino.delregno@collabora.com>
- <14947ae2-c8d4-de86-ce9e-29175e73cbb2@linaro.org>
- <9f3e88fa-0aaf-2edd-366e-c3f5b2269dba@collabora.com>
- <513a2dc3-d053-6e4b-a125-394cf1f6c81b@linaro.org>
- <f60ccd79-9c82-0844-2c5f-21ec29c14dcf@collabora.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <f60ccd79-9c82-0844-2c5f-21ec29c14dcf@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        linux-hardening@vger.kernel.org
+Subject: [PATCH 2/8] arm64: dts: qcom: sdm450: Add device tree for Motorola Moto G6
+Date:   Wed, 16 Nov 2022 15:56:03 +0100
+Message-Id: <20221116145616.17884-3-luca@z3ntu.xyz>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20221116145616.17884-1-luca@z3ntu.xyz>
+References: <20221116145616.17884-1-luca@z3ntu.xyz>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 16/11/2022 10:00, AngeloGioacchino Del Regno wrote:
-> Il 16/11/22 09:57, Krzysztof Kozlowski ha scritto:
->> On 16/11/2022 09:52, AngeloGioacchino Del Regno wrote:
->>> Il 15/11/22 17:44, Krzysztof Kozlowski ha scritto:
->>>> On 11/11/2022 13:01, AngeloGioacchino Del Regno wrote:
->>>>> MSM8976 supports SMSM, which needs this node to also be a syscon:
->>>>> move the compatible to allow that.
->>>>>
->>>>> Fixes: bcc8d70f912d ("dt-bindings: mailbox: Add compatible for the MSM8976")
->>>>
->>>> I am not sure if this is still a bug. Maybe just a missing feature?
->>>>
->>>
->>> This changes how you use this mailbox across the entire devicetree (as other
->>> nodes will not use mboxes = xxxx, but qcom,ipc = xxxx as syscon), so I think
->>> that this is not a missing feature?
->>
->> Whether it is a bug depends on existing usage. If none of msm8976 DTSes
->> use it the other way, then it is just incomplete or missing support. Not
->> a bug. If existing DTSes use it as syscon, thus you need to add syscon
->> to compatible, then it would be a bugfix.
->>
-> 
-> It's not a bugfix then. The Fixes tag shall be dropped.
-> 
-> Same question like the other commit, should I send a v3 or can it be dropped while
-> applying?
+From: Julian Braha <julianbraha@gmail.com>
 
-Maybe better send a v3.
+Add device tree for the Motorola Moto G6 (ali) smartphone. This device
+is based on Snapdragon 450 (sdm450) SoC which is a variant of MSM8953.
 
-Best regards,
-Krzysztof
+Signed-off-by: Julian Braha <julianbraha@gmail.com>
+---
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/sdm450-motorola-ali.dts     | 256 ++++++++++++++++++
+ 2 files changed, 257 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm450-motorola-ali.dts
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index d7669a7cee9f..a0b537414593 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -115,6 +115,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sc7280-crd-r3.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc8280xp-crd.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc8280xp-lenovo-thinkpad-x13s.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sda660-inforce-ifc6560.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sdm450-motorola-ali.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-ganges-kirin.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-discovery.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-pioneer.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sdm450-motorola-ali.dts b/arch/arm64/boot/dts/qcom/sdm450-motorola-ali.dts
+new file mode 100644
+index 000000000000..62874306fc24
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sdm450-motorola-ali.dts
+@@ -0,0 +1,256 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++/dts-v1/;
++
++#include "msm8953.dtsi"
++#include "pm8953.dtsi"
++#include "pmi8950.dtsi"
++
++/ {
++	model = "Motorola Moto G6";
++	compatible = "motorola,ali", "qcom,sdm450";
++	chassis-type = "handset";
++	qcom,msm-id = <338 0>;
++	qcom,board-id = <0x41 0xb1a0>,
++			<0x42 0xb1a0>,
++			<0x43 0xc100>,
++			<0x42 0xb1b0>,
++			<0x43 0xc200>,
++			<0x44 0xc200>,
++			<0x42 0xb200>,
++			<0x43 0xb200>;
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		key-volume-up {
++			label = "volume_up";
++			gpios = <&tlmm 85 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_VOLUMEUP>;
++		};
++	};
++
++	reserved-memory {
++		/delete-node/ memory@85b00000;
++		memory@84300000 {
++			no-map;
++			reg = <0x0 0x84300000 0x0 0x2000000>;
++		};
++
++		ramoops@ef000000 {
++			compatible = "ramoops";
++			reg = <0x0 0xef000000 0x0 0xC0000>;
++			console-size = <0x40000>;
++		};
++	};
++
++	vph_pwr: vph-pwr-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vph_pwr";
++		regulator-always-on;
++		regulator-boot-on;
++	};
++};
++
++&hsusb_phy {
++	vdd-supply = <&pm8953_l3>;
++	vdda-pll-supply = <&pm8953_l7>;
++	vdda-phy-dpdm-supply = <&pm8953_l13>;
++
++	status = "okay";
++};
++
++&i2c_3 {
++	status = "okay";
++
++	touchscreen@38 {
++		compatible = "edt,edt-ft5406";
++		reg = <0x38>;
++		interrupt-parent = <&tlmm>;
++		interrupts = <65 IRQ_TYPE_EDGE_FALLING>;
++		vcc-supply = <&pm8953_l10>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&ts_int_active &ts_reset_active>;
++
++		reset-gpios = <&tlmm 64 GPIO_ACTIVE_LOW>;
++		touchscreen-size-x = <1080>;
++		touchscreen-size-y = <2160>;
++	};
++};
++
++&pm8953_resin {
++	linux,code = <KEY_VOLUMEDOWN>;
++	status = "okay";
++};
++
++&pmi8950_wled {
++	qcom,num-strings = <3>;
++	qcom,external-pfet;
++	qcom,cabc;
++
++	status = "okay";
++};
++
++&rpm_requests {
++	regulators {
++		compatible = "qcom,rpm-pm8953-regulators";
++
++		vdd_s1-supply = <&vph_pwr>;
++		vdd_s2-supply = <&vph_pwr>;
++		vdd_s3-supply = <&vph_pwr>;
++		vdd_s4-supply = <&vph_pwr>;
++		vdd_s5-supply = <&vph_pwr>;
++		vdd_s6-supply = <&vph_pwr>;
++		vdd_s7-supply = <&vph_pwr>;
++		vdd_l1-supply = <&pm8953_s3>;
++		vdd_l2_l3-supply = <&pm8953_s3>;
++		vdd_l4_l5_l6_l7_l16_l19-supply = <&pm8953_s4>;
++		vdd_l8_l11_l12_l13_l14_l15-supply = <&vph_pwr>;
++		vdd_l9_l10_l17_l18_l22-supply = <&vph_pwr>;
++
++		pm8953_s1: s1 {
++			regulator-min-microvolt = <795000>;
++			regulator-max-microvolt = <1081000>;
++		};
++
++		pm8953_s3: s3 {
++			regulator-min-microvolt = <1224000>;
++			regulator-max-microvolt = <1224000>;
++		};
++
++		pm8953_s4: s4 {
++			regulator-min-microvolt = <1900000>;
++			regulator-max-microvolt = <2050000>;
++		};
++
++		pm8953_l1: l1 {
++			regulator-min-microvolt = <1000000>;
++			regulator-max-microvolt = <1100000>;
++		};
++
++		pm8953_l2: l2 {
++			regulator-min-microvolt = <975000>;
++			regulator-max-microvolt = <1225000>;
++		};
++
++		pm8953_l3: l3 {
++			regulator-min-microvolt = <925000>;
++			regulator-max-microvolt = <925000>;
++		};
++
++		pm8953_l5: l5 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		pm8953_l6: l6 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		pm8953_l7: l7 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1900000>;
++		};
++
++		pm8953_l8: l8 {
++			regulator-min-microvolt = <2900000>;
++			regulator-max-microvolt = <2900000>;
++		};
++
++		pm8953_l9: l9 {
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3300000>;
++		};
++
++		pm8953_l10: l10 {
++			regulator-min-microvolt = <2850000>;
++			regulator-max-microvolt = <2850000>;
++		};
++
++		pm8953_l11: l11 {
++			regulator-min-microvolt = <2950000>;
++			regulator-max-microvolt = <2950000>;
++		};
++
++		pm8953_l12: l12 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <2950000>;
++		};
++
++		pm8953_l13: l13 {
++			regulator-min-microvolt = <3125000>;
++			regulator-max-microvolt = <3125000>;
++		};
++
++		pm8953_l16: l16 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		pm8953_l17: l17 {
++			regulator-min-microvolt = <2850000>;
++			regulator-max-microvolt = <2850000>;
++		};
++
++		pm8953_l19: l19 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1350000>;
++		};
++
++		pm8953_l22: l22 {
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2850000>;
++		};
++
++		pm8953_l23: l23 {
++			regulator-min-microvolt = <975000>;
++			regulator-max-microvolt = <1225000>;
++		};
++	};
++};
++
++&sdhc_1 {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&sdc1_clk_on &sdc1_cmd_on &sdc1_data_on  &sdc1_rclk_on>;
++	pinctrl-1 = <&sdc1_clk_off &sdc1_cmd_off &sdc1_data_off &sdc1_rclk_off>;
++
++	status = "okay";
++};
++
++&sdhc_2 {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_off>;
++	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
++
++	status = "okay";
++};
++
++&tlmm {
++	gpio-reserved-ranges = <95 5>, <111 1>, <126 1>;
++
++	ts_int_active: ts-int-active-state {
++		pins = "gpio65";
++		function = "gpio";
++		drive-strength = <8>;
++		bias-pull-up;
++	};
++
++	ts_reset_active: ts-reset-active-state {
++		pins = "gpio64";
++		function = "gpio";
++		drive-strength = <0x08>;
++		bias-pull-up;
++	};
++};
++
++&usb3 {
++	status = "okay";
++};
++
++&usb3_dwc3 {
++	dr_mode = "peripheral";
++};
+-- 
+2.38.1
 
