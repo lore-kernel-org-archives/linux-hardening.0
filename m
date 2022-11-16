@@ -2,407 +2,111 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5090C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Nov 2022 15:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C835C43217
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Nov 2022 16:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233379AbiKPPXC (ORCPT
+        id S230204AbiKPQA5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Nov 2022 10:23:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42018 "EHLO
+        Wed, 16 Nov 2022 11:00:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233046AbiKPPXB (ORCPT
+        with ESMTP id S233697AbiKPQA4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Nov 2022 10:23:01 -0500
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D30C51C02
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Nov 2022 07:22:59 -0800 (PST)
-Received: by mail-ej1-x62d.google.com with SMTP id ud5so44949472ejc.4
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Nov 2022 07:22:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zq32idYhytase3b+qGwHGuurayWxlLOgtL0nhKOUPZw=;
-        b=SD1QmYdEeGeZkRRlfzP1WDK6gZbqXe+Rc0b/4skmq1BGZUXJEwjvrRmKqnl73yirK5
-         0v0G95fVtjdkaWCOJZt8Y6TU3kJtJtH1IYUOK91P8TL69q4bvL/44YdN6W5MSoEkbvjh
-         R48xLNh6d6uiwKzEtYtcsaMVvaGhVGsqVhSq6TgAGABArSQV7vFgvswuMEe4/MiSCyix
-         ro6Jzhck2qEUO2lVxYwY4RWQNUSnHy3wGvBAEt6ygYN53hVZlj/wlhdRlQqqtUEeGrRR
-         B2I6rCp1q/j4XRNHTp1og00Ncf2U4hRSRqd0PKc2QsIb7gMEBsHhYyPcKUBYDK3x9Qju
-         vlJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zq32idYhytase3b+qGwHGuurayWxlLOgtL0nhKOUPZw=;
-        b=aeTFbuyeIVMv2pTi9gh4gWJkWqCoybbz2vYOneZf/Rq7MhSrrLsKSiPKFwfkKkQHAE
-         vY9gcLWjtjmfhOyKoYhJaNDN1/BePuuC718yfZv3IGziLQfiypYVGnTvKPd+E/+nIKRM
-         hFRlC6JeSHn6JUDNZEqyM7Ke5wL3W78HHbmM+kCNjylqz+XLQNTHY+jnjFpplTWgdvb0
-         qholbWIAQh6YWCJDCMpxGz0IWYQojPaghaJQvcT5EioTzTUiw8fWXQE8ZVRcovIN9fRv
-         R6eXK0exwkcsSBtU0wGT641GKiSy1vWw45yfR34iJhUGsNQFNV2ADy7PqYR+ZfKbvJTN
-         6/Vg==
-X-Gm-Message-State: ANoB5plcOfA/6A2QzONv8KEOG+43csQOaAupkEWraHFjxXDYxyIJrXRs
-        FxH3A2EM99+mHGMiSPeikdVVdQ==
-X-Google-Smtp-Source: AA0mqf4I3JZIMtbUB5DE0eyTSH8bZV5es/Xu7YAZ3I6Y7sgJ5deGux9Vp+UzHNb6PaneVhFeE3mtmA==
-X-Received: by 2002:a17:906:4e0b:b0:7ad:7d4a:ec2c with SMTP id z11-20020a1709064e0b00b007ad7d4aec2cmr17811442eju.710.1668612177865;
-        Wed, 16 Nov 2022 07:22:57 -0800 (PST)
-Received: from [192.168.31.208] ([194.29.137.22])
-        by smtp.gmail.com with ESMTPSA id s1-20020a056402164100b004616cce0a26sm7570818edx.24.2022.11.16.07.22.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Nov 2022 07:22:57 -0800 (PST)
-Message-ID: <744d3b6b-8543-0cec-da3b-3a08e2892103@linaro.org>
-Date:   Wed, 16 Nov 2022 16:22:50 +0100
+        Wed, 16 Nov 2022 11:00:56 -0500
+X-Greylist: delayed 1069 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 16 Nov 2022 08:00:54 PST
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC4DE532CB
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Nov 2022 08:00:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=uEp/AYkOd3P719eDIHWqZuulyir5i1Y+id7NNquZ33c=; b=pPb8Ko9dW6Kdj5ISZbtKCX2+86
+        B9C6znqczRS8yDXYJfUYM8TH7FUzpqjn/69Yj1uFbALnKzxVb5xCOYWys/eZo4ayiyw/1BIl6fL3C
+        Exce9kf7emcEPCntrEnuOpT6AAk4wkDHQ8RpwJ5eSgD7gYibaiymbGrZjP8zz5mekjeotaJ6ECG0l
+        bnqoFYB3KVW6GKGUCgvche4ZVXK6joAzbO4nVJIVmd7G0aZ4+bt7Ktly7RyY6oYUMkBYbzwCy07y2
+        TXERWWdFUBjvcT4y4Zuiq/ToetD7p2NSXDJz02bNw0CO9T9MmnICxFHUqhROl1IaAuWT0/MOq9F4A
+        g6mSQ7Wg==;
+Received: from [177.102.6.147] (helo=[192.168.1.60])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1ovKZ0-001q51-Mu; Wed, 16 Nov 2022 16:42:58 +0100
+Message-ID: <542aa83d-6227-ea7d-2150-a74293cbf59a@igalia.com>
+Date:   Wed, 16 Nov 2022 12:42:53 -0300
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.4.2
-Subject: Re: [PATCH 8/8] arm64: dts: qcom: sdm632: Add device tree for
- Motorola G7 Power
-To:     Luca Weiss <luca@z3ntu.xyz>, linux-arm-msm@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        Gabriela David <ultracoolguy@disroot.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.2
+Subject: Re: [PATCH 5/5] MAINTAINERS: Update pstore maintainers
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
+Cc:     Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
         Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20221116145616.17884-1-luca@z3ntu.xyz>
- <20221116145616.17884-9-luca@z3ntu.xyz>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20221116145616.17884-9-luca@z3ntu.xyz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Paramjit Oberoi <pso@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
+References: <20221011200112.731334-1-keescook@chromium.org>
+ <20221011200112.731334-6-keescook@chromium.org>
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20221011200112.731334-6-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 16/11/2022 15:56, Luca Weiss wrote:
-> From: Gabriela David <ultracoolguy@disroot.org>
+On 11/10/2022 17:01, Kees Cook wrote:
+> Update pstore to better reflect reality of active contributors:
 > 
-> Add device tree for the Motorola G7 Power (ocean) smartphone. This
-> device is based on Snapdragon 632 (sdm632) SoC which is a variant of
-> MSM8953.
+> - Remove Anton and Colin (thank you for your help through the years!)
+> - Move Tony to Reviewer
+> - Add Guilherme as Reviewer
+> - Add mailing list
+> - Upgrade to Supported
 > 
-> Signed-off-by: Gabriela David <ultracoolguy@disroot.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->   arch/arm64/boot/dts/qcom/Makefile             |   1 +
->   .../boot/dts/qcom/sdm632-motorola-ocean.dts   | 287 ++++++++++++++++++
->   2 files changed, 288 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/qcom/sdm632-motorola-ocean.dts
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index bed490c095dd..d125ea98ce3b 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -126,6 +126,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-discovery.dtb
->   dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-pioneer.dtb
->   dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-voyager.dtb
->   dtb-$(CONFIG_ARCH_QCOM)	+= sdm632-fairphone-fp3.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm632-motorola-ocean.dtb
->   dtb-$(CONFIG_ARCH_QCOM)	+= sdm636-sony-xperia-ganges-mermaid.dtb
->   dtb-$(CONFIG_ARCH_QCOM)	+= sdm660-xiaomi-lavender.dtb
->   dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r1.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sdm632-motorola-ocean.dts b/arch/arm64/boot/dts/qcom/sdm632-motorola-ocean.dts
-> new file mode 100644
-> index 000000000000..7ec7ec0ef2d5
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm632-motorola-ocean.dts
-> @@ -0,0 +1,287 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/dts-v1/;
-> +
-> +#include "sdm632.dtsi"
-> +#include "pm8953.dtsi"
-> +#include <dt-bindings/leds/common.h>
-> +
-> +/ {
-> +	model = "Motorola G7 Power";
-> +	compatible = "motorola,ocean", "qcom,sdm632";
-> +	chassis-type = "handset";
-> +	qcom,msm-id = <349 0>;
-> +	qcom,board-id = <0x141 0xc100>;
-> +	qcom,pmic-id = <0x10016 0x25 0x00 0x00>;
-> +
-> +	backlight: backlight {
-> +		compatible = "led-backlight";
-> +		leds = <&led>;
-> +	};
-> +
-> +	chosen {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		framebuffer@90001000 {
-> +			compatible = "simple-framebuffer";
-> +			reg = <0 0x90001000 0 (720 * 1520 * 3)>;
-> +
-> +			width = <720>;
-> +			height = <1520>;
-> +			stride = <(720 * 3)>;
-> +			format = "r8g8b8";
-> +
-> +			power-domains = <&gcc MDSS_GDSC>;
-> +
-> +			clocks = <&gcc GCC_MDSS_AHB_CLK>,
-> +				 <&gcc GCC_MDSS_AXI_CLK>,
-> +				 <&gcc GCC_MDSS_VSYNC_CLK>,
-> +				 <&gcc GCC_MDSS_MDP_CLK>,
-> +				 <&gcc GCC_MDSS_BYTE0_CLK>,
-> +				 <&gcc GCC_MDSS_PCLK0_CLK>,
-> +				 <&gcc GCC_MDSS_ESC0_CLK>;
-> +		};
-> +	};
-> +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&gpio_key_default>;
-> +
-> +		key-volume-up {
-> +			label = "Volume Up";
-> +			gpios = <&tlmm 85 GPIO_ACTIVE_LOW>;
-> +			linux,code = <KEY_VOLUMEUP>;
-> +		};
-> +	};
-> +
-> +	reserved-memory {
-> +		/delete-node/ memory@85b00000;
-> +
-> +		memory@84300000 {
-> +			reg = <0x0 0x84300000 0x0 0x2000000>;
-> +			no-map;
-> +		};
-> +
-> +		memory@90001000 {
-> +			reg = <0x0 0x90001000 0x0 (720 * 1520 * 3)>;
-> +			no-map;
-> +		};
-> +
-> +		memory@eefa1800 {
-> +			reg = <0x00 0xeefa1800 0x00 0x5e800>;
-> +			no-map;
-> +		};
-> +
-> +		ramoops@ef000000 {
-> +			compatible = "ramoops";
-> +			reg = <0x0 0xef000000 0x0 0xbf800>;
-> +			console-size = <0x40000>;
-> +			pmsg-size = <0x40000>;
-> +			record-size = <0x3f800>;
-> +		};
-> +	};
-> +
-> +	vph_pwr: vph-pwr-regulator {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vph_pwr";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +};
-> +
-> +&hsusb_phy {
-> +	vdd-supply = <&pm8953_l3>;
-> +	vdda-pll-supply = <&pm8953_l7>;
-> +	vdda-phy-dpdm-supply = <&pm8953_l13>;
-> +
-> +	status = "okay";
-> +};
-> +
-> +&i2c_3 {
-> +	status = "okay";
-> +
-> +	touchscreen@41 {
-> +		compatible = "ilitek,ili2117";
-> +		reg = <0x41>;
-> +
-> +		interrupt-parent = <&tlmm>;
-> +		interrupts = <65 IRQ_TYPE_EDGE_FALLING>;
-> +
-> +		touchscreen-inverted-x;
-> +	};
-> +};
-> +
-> +&i2c_5 {
-> +	status = "okay";
-> +
-> +	led-controller@36 {
-> +		compatible = "ti,lm3697";
-> +		reg = <0x36>;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		led: led@1 {
-> +			reg = <1>;
-> +			default-trigger = "backlight";
-> +			function = LED_FUNCTION_BACKLIGHT;
-> +			led-sources = <0 1 2>;
-> +		};
-> +	};
-> +};
-> +
-> +&pm8953_resin {
-> +	linux,code = <KEY_VOLUMEDOWN>;
-> +	status = "okay";
-> +};
-> +
-> +&rpm_requests {
-> +	regulators {
-> +		compatible = "qcom,rpm-pm8953-regulators";
-> +
-> +		vdd_l1-supply = <&pm8953_s3>;
-> +		vdd_l2_l3-supply = <&pm8953_s3>;
-> +		vdd_l4_l5_l6_l7_l16_l19-supply = <&pm8953_s4>;
-> +		vdd_l8_l11_l12_l13_l14_l15-supply = <&vph_pwr>;
-> +		vdd_l9_l10_l17_l18_l22-supply = <&vph_pwr>;
-> +
-> +		pm8953_s3: s3 {
-> +			regulator-min-microvolt = <984000>;
-> +			regulator-max-microvolt = <1240000>;
-> +		};
-> +
-> +		pm8953_s4: s4 {
-> +			regulator-min-microvolt = <1036000>;
-> +			regulator-max-microvolt = <2040000>;
-> +		};
-> +
-> +		pm8953_l1: l1 {
-> +			regulator-min-microvolt = <975000>;
-> +			regulator-max-microvolt = <1050000>;
-> +		};
-> +
-> +		pm8953_l2: l2 {
-> +			regulator-min-microvolt = <975000>;
-> +			regulator-max-microvolt = <1175000>;
-> +		};
-> +
-> +		pm8953_l3: l3 {
-> +			regulator-min-microvolt = <925000>;
-> +			regulator-max-microvolt = <925000>;
-> +			regulator-allow-set-load;
-> +		};
-> +
-> +		pm8953_l5: l5 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +		};
-> +
-> +		pm8953_l6: l6 { // other ocean models use l22 instead
-/* C-style comments, please */
-+ please clarify what it is used for
-+ all the comments I made to the previous 6 DTs
+>  MAINTAINERS | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 
-Konrad
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +		};
-> +
-> +		pm8953_l7: l7 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1900000>;
-> +		};
-> +
-> +		pm8953_l8: l8 {
-> +			regulator-min-microvolt = <2900000>;
-> +			regulator-max-microvolt = <2900000>;
-> +		};
-> +
-> +		pm8953_l9: l9 {
-> +			regulator-min-microvolt = <3000000>;
-> +			regulator-max-microvolt = <3300000>;
-> +		};
-> +
-> +		pm8953_l10: l10 {
-> +			regulator-min-microvolt = <2800000>;
-> +			regulator-max-microvolt = <3000000>;
-> +		};
-> +
-> +		pm8953_l11: l11 {
-> +			regulator-min-microvolt = <2950000>;
-> +			regulator-max-microvolt = <2950000>;
-> +		};
-> +
-> +		pm8953_l12: l12 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <2950000>;
-> +		};
-> +
-> +		pm8953_l13: l13 {
-> +			regulator-min-microvolt = <3125000>;
-> +			regulator-max-microvolt = <3125000>;
-> +		};
-> +
-> +		pm8953_l16: l16 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +		};
-> +
-> +		pm8953_l17: l17 {
-> +			regulator-min-microvolt = <2850000>;
-> +			regulator-max-microvolt = <2850000>;
-> +		};
-> +
-> +		pm8953_l18: l18 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <2700000>;
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +		};
-> +
-> +		pm8953_l19: l19 {
-> +			regulator-min-microvolt = <1200000>;
-> +			regulator-max-microvolt = <1350000>;
-> +		};
-> +
-> +		pm8953_l22: l22 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		pm8953_l23: l23 {
-> +			regulator-min-microvolt = <975000>;
-> +			regulator-max-microvolt = <1225000>;
-> +		};
-> +	};
-> +};
-> +
-> +&sdhc_1 {
-> +	vmmc-supply = <&pm8953_l8>;
-> +	vqmmc-supply = <&pm8953_l5>;
-> +
-> +	status = "okay";
-> +};
-> +
-> +&sdhc_2 {
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
-> +	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
-> +
-> +	vmmc-supply = <&pm8953_l11>;
-> +	vqmmc-supply = <&pm8953_l12>;
-> +
-> +	status = "okay";
-> +};
-> +
-> +&tlmm {
-> +	gpio-reserved-ranges = <96 4>;
-> +};
-> +
-> +&usb3 {
-> +	status = "okay";
-> +};
-> +
-> +&usb3_dwc3 {
-> +	dr_mode = "peripheral";
-> +};
+Hi Kees, sorry to revamp this thread for a "tangential" topic, but it
+feels a "kinda" proper thread.
+
+Since I was added as a reviewer on pstore (in linux-next so far), I
+started to receive a bunch of emails from ARM device-tree folks; they're
+adding ramoops entries to their DTs and looping pstore folks.
+
+Examples:
+
+https://lore.kernel.org/linux-hardening/20221111120156.48040-1-angelogioacchino.delregno@collabora.com/
+
+https://lore.kernel.org/linux-hardening/20221116145616.17884-1-luca@z3ntu.xyz/
+
+
+Personally, I have no knowledge of these HW to evaluate if the ramoops
+setting is appropriate, so they're nop from my side, I just delete them.
+But that raises the question - are you/Tony reviewing this kind of
+change? It's not related to pstore/ramoops code, it's just users setting
+ramoops in their DTs, so seems to me a bit far from the purpose of the
+pstore entry.
+
+What do you/Tony think about that? Likely the DT folks are following
+this entry in the MAINTAINERS to send these emails:
+
+PSTORE FILESYSTEM
+M:      Kees Cook <keescook@chromium.org>
+[...]
+F:      include/linux/pstore*
+K:      \b(pstore|ramoops) <------
+
+Should this be kept? Maybe only the ramoops entry could be removed?
+
+Again, totally fine be me to keep'em, it's just that I'm receiving and
+ignoring the emails, so if everybody else is doing the same, better to
+just remove this entry from MAINTAINERS.
+
+Thanks,
+
+
+Guilherme
