@@ -2,82 +2,113 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE78C4332F
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 22:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EF2C43217
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 22:17:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241259AbiKQWGQ (ORCPT
+        id S234739AbiKQWR0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Nov 2022 17:06:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41788 "EHLO
+        Thu, 17 Nov 2022 17:17:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241207AbiKQWF4 (ORCPT
+        with ESMTP id S234802AbiKQWRR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Nov 2022 17:05:56 -0500
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 028471C40B;
-        Thu, 17 Nov 2022 14:05:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8ZhcWlDmltUwtE56L7IJOVNcjiS8H2R20Q2ecjdjAR4=; b=iy70dn2qtlIcrwfa2yL8sKHJoK
-        avVbMWlJvogZM3a2lmxrr0rSUDpzfMlJYX3kjp5yioqskPaB//cSq+Voo0srqXiCJ5EbWHVF5HZvm
-        uvaCPKssSVVV771NggIS4QTfPfWkaI271Z5S1MR5YlqB2VOsno6Qc7Z6mXAxEcdpWVLwUu0Zu2czT
-        CekscdOn0gAZTvCaPEoQxmWZV/VtEHh84D0uuacFlUEmCG8SWFt0qN34k2khGxHc7Ev2OiWaKW4bX
-        +9/e/ZG1aCvF7Gs3mIt8/5wCDLbjkoXN0uDukLLszrfn/10zy1RiP99+bL55pDeATzVdI03UYIZG5
-        heLlAMDw==;
-Received: from [177.102.6.147] (helo=[192.168.1.60])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1ovn0S-002sqU-AP; Thu, 17 Nov 2022 23:05:12 +0100
-Message-ID: <34c3a141-ca0a-d4db-15de-399f4948518d@igalia.com>
-Date:   Thu, 17 Nov 2022 19:05:05 -0300
+        Thu, 17 Nov 2022 17:17:17 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DB90786C3
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 14:17:17 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id io19so2912364plb.8
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 14:17:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nJFXSIQ783ozGJIEcq7M0/X5+WZmAwzKbqXzhdiC6Ac=;
+        b=K0Bjuug0PMBmGyIJKJh38l6aGh9Uv5KTby8hRtEeGfVVQ1uk8H1iE3Jy3X9g3QumnZ
+         m2UP0vy7n4K5mWAusXU9baE2QnR29kZ4q50wmoljG4b2D2eX+mVF6sHH4MHZ7t18A4bO
+         LdNjNf/Fkk/7a/wD3qmB8jz3Qcgz8Rz2OAuHI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nJFXSIQ783ozGJIEcq7M0/X5+WZmAwzKbqXzhdiC6Ac=;
+        b=5gPiU61w5LxRRI2VLOxUJtypAGysLBZTN+ZTZ42BQJ1OM//6YBVFfNhfdof98ayTOC
+         RnXV/qGPh8I0StUyGVMRxtpYpWk1O8yv1JIc/QFYa7VYu2TBZ5PwRBWnoFXak5q7xSv2
+         RmHFdq3z5jNTBTnPnB23qNh99qj6qRncd3LTf8N89UUQLo+SMyMmCNnwpzyx94VpFiPp
+         CrAEklINaK2A3iVWipW33fQN4txJpOQfu3f1xa8/MVllfOB3roohcrViiG5SuP5eIqh8
+         iPdUD28mOiCYyd4R4oo8T/AoDQcB0B3A74nIe998zsIkzA/tpcbP+xSckwO/Bpb3XzKB
+         OLBg==
+X-Gm-Message-State: ANoB5pkfVUYSOLOzSbkAvi3N5dI4X5oGk8jUpGcajI2Q816/OHx95b/7
+        BxmazDcbYQn4oDFaF8inSGONpyY08pYW6A==
+X-Google-Smtp-Source: AA0mqf41Wqejx3gjkqAto1lEjNVUWFDLIcHhPUNfGeI3XvM/RrkDVObROJw0YVQF/ox1gXuNsYVNtA==
+X-Received: by 2002:a17:90b:3d7:b0:200:2538:1ca8 with SMTP id go23-20020a17090b03d700b0020025381ca8mr10837807pjb.79.1668723436518;
+        Thu, 17 Nov 2022 14:17:16 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id t3-20020a625f03000000b0056da2ad6503sm1684293pfb.39.2022.11.17.14.17.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Nov 2022 14:17:16 -0800 (PST)
+From:   coverity-bot <keescook@chromium.org>
+X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
+Date:   Thu, 17 Nov 2022 14:17:15 -0800
+To:     Edward Cree <ecree.xilinx@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Martin Habets <habetsm.xilinx@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Coverity: efx_tc_rx(): Memory - illegal accesses
+Message-ID: <202211171416.0BC0EDDA36@keescook>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH 5/5] MAINTAINERS: Update pstore maintainers
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Paramjit Oberoi <pso@chromium.org>,
-        Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
-References: <20221011200112.731334-1-keescook@chromium.org>
- <20221011200112.731334-6-keescook@chromium.org>
- <542aa83d-6227-ea7d-2150-a74293cbf59a@igalia.com>
- <202211171359.232C769E3A@keescook>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <202211171359.232C769E3A@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 17/11/2022 19:01, Kees Cook wrote:
-> [...]
->> PSTORE FILESYSTEM
->> M:      Kees Cook <keescook@chromium.org>
->> [...]
->> F:      include/linux/pstore*
->> K:      \b(pstore|ramoops) <------
->>
->> Should this be kept? Maybe only the ramoops entry could be removed?
-> 
-> I would like to keep it -- if something mentions pstore and ramoops, I'd
-> like to see it. I can't review all of it, but I'd like it to at least
-> show up in my inbox. :)
-> 
+Hello!
 
-Totally fine by me, was curious and now I understand this is not legacy,
-but something of your interest indeed.
-Thanks for the prompt response!
+This is an experimental semi-automated report about issues detected by
+Coverity from a scan of next-20221117 as part of the linux-next scan project:
+https://scan.coverity.com/projects/linux-next-weekly-scan
 
-Cheers,
+You're getting this email because you were associated with the identified
+lines of code (noted below) that were touched by commits:
 
+  Wed Nov 16 09:07:02 2022 +0000
+    25730d8be5d8 ("sfc: add extra RX channel to receive MAE counter updates on ef100")
 
-Guilherme
+Coverity reported the following:
+
+*** CID 1527356:  Memory - illegal accesses  (OVERRUN)
+drivers/net/ethernet/sfc/tc_counters.c:483 in efx_tc_rx()
+477     	}
+478
+479     	/* Update seen_gen unconditionally, to avoid a missed wakeup if
+480     	 * we race with efx_mae_stop_counters().
+481     	 */
+482     	efx->tc->seen_gen[type] = mark;
+vvv     CID 1527356:  Memory - illegal accesses  (OVERRUN)
+vvv     Overrunning array "efx->tc->flush_gen" of 3 4-byte elements at element index 3 (byte offset 15) using index "type" (which evaluates to 3).
+483     	if (efx->tc->flush_counters &&
+484     	    (s32)(efx->tc->flush_gen[type] - mark) <= 0)
+485     		wake_up(&efx->tc->flush_wq);
+486     out:
+487     	efx_free_rx_buffers(rx_queue, rx_buf, 1);
+488     	channel->rx_pkt_n_frags = 0;
+
+If this is a false positive, please let us know so we can mark it as
+such, or teach the Coverity rules to be smarter. If not, please make
+sure fixes get into linux-next. :) For patches fixing this, please
+include these lines (but double-check the "Fixes" first):
+
+Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+Addresses-Coverity-ID: 1527356 ("Memory - illegal accesses")
+Fixes: 25730d8be5d8 ("sfc: add extra RX channel to receive MAE counter updates on ef100")
+
+AFAICT, efx_tc_rx_version_2() may return EFX_TC_COUNTER_TYPE_MAX.
+
+Thanks for your attention!
+
+-- 
+Coverity-bot
