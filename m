@@ -2,83 +2,82 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32BEC433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 23:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 426C9C4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 23:43:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234406AbiKQX2r (ORCPT
+        id S239843AbiKQXnd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Nov 2022 18:28:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41214 "EHLO
+        Thu, 17 Nov 2022 18:43:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234747AbiKQX2q (ORCPT
+        with ESMTP id S234063AbiKQXnc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Nov 2022 18:28:46 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C398876153
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 15:28:45 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id v17so3068403plo.1
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 15:28:45 -0800 (PST)
+        Thu, 17 Nov 2022 18:43:32 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 384B360F9
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 15:43:30 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id v4-20020a17090a088400b00212cb0ed97eso3476189pjc.5
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 15:43:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FcOLKLI7Dm9mEvWr+m80g8x+dHIAf7454LwMBIEgBJs=;
-        b=lj3JmYhmFP49enZ7BxP/5GWppKnAj8SCgQGp6xPE+6+tFUOgdM7wDLFEj70QX9lmbX
-         yGcp5CKcwqVjrv/Mk2mtpSyahI9rVFSpvCnHXYBUYU8FPmUKWsFrnsXv8zBXVi5jSr/l
-         mKjLka+gt5yA5FVG5FscBRzNyfWnHm2lnmqbw=
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oZAyTYmNqDqjhiVXCbn/iUUPGOe7A4x1iLp5SSq3M+Y=;
+        b=dLZRKPT5/7kx0TlEiZlNB+Bsy9MykCBzKuYvbf+8/d1f6JvHA95KD9yWjQ7NUiaK9U
+         ltEsZgLLEbUiTwbrbPyy6lXrjWCmu0gC3RhGlwHRH0yyW/HaeOrAZGhMncVoFTbs5K1S
+         u/OTX3D96+lxdOUPshdERc3h+34GJk/uYpU9k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FcOLKLI7Dm9mEvWr+m80g8x+dHIAf7454LwMBIEgBJs=;
-        b=ksGxLKj1k8uy/ubNJFjdKEWw+vZd5DE9Em1TezzHdoGAEhed1GWX3y3MwmaZFtvHGX
-         mIvIsxgrX8/IIu9bNVRTxLwSOAclPNxE41mKP/P7zYwVVJg6X2CEnhCaZHDHgURC4p2C
-         6gapKY/njVnAl1polFn1c+/Sw89o8U0FhAgXSxCGX1R7vHFb2Nmk2i2GdUHBQ8cSRbDI
-         f8PZwruxGJle55mjatBjBFPq+tomiVLPsKBp9tnO+xzzsISEAco5vZmUBmoreaYAAeDh
-         fI5h7N9x/E56+3nbbnbcWfqotMjWyvgkx11IL84C0WMCTR/62F1ml4oyO8EDZaU+HFBh
-         dfHQ==
-X-Gm-Message-State: ANoB5pnUY20zkHch4uy+5de9FBGgJuEBLlhxkKdKg8qIjY2Lxm3T3v1z
-        y6g6PMZmwVVuuYd3cKvFMWxLsQ==
-X-Google-Smtp-Source: AA0mqf58Ma7eiUSU1v06lTRmXyRIaf5qGvRu9GMxwZP155Uu9IDglDpTru83Stj4Ke9kGjDXEKX0gg==
-X-Received: by 2002:a17:902:f651:b0:186:b5c8:4c8f with SMTP id m17-20020a170902f65100b00186b5c84c8fmr4827739plg.124.1668727725304;
-        Thu, 17 Nov 2022 15:28:45 -0800 (PST)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oZAyTYmNqDqjhiVXCbn/iUUPGOe7A4x1iLp5SSq3M+Y=;
+        b=wnDuKFZWfyva/N1nOk/D70Z5whIzcj2eXwYmgm08eJfsM/btYgKaaSqYsfaRze1cNO
+         4RxO67KhiVMkL3PlLB0LRxe0yY2gl8m/eXfZZpWGSYJHvM0z+LkHDaf4/MVqDYt1fyDh
+         goP6zsR2CKcyB4Q5hxaZhkQQAkO+cYvlIrSQ/uuCuWOwVAHpG0C2XVfiRJFhVF9mDBkE
+         Lqou9qXaattRV1hQlxOl9uzCJ5jkAQeQah3fCfX5IxOjNIDBcw8NoKOjPG9jOIBKs+2E
+         /nXM+kJhcZByWbXThyFS50ZHTzehSFiFITnBV4XFtbkxzJiiJ2fwCthpWffhsilUylhs
+         Bzuw==
+X-Gm-Message-State: ANoB5pkI3TNi8jP1STgcZyj2QpWBHmMfqjr1Bhf6UKkxj2r8xaSULyrx
+        p0G8e7EL3TCAcjFlhaTBJa7Eog==
+X-Google-Smtp-Source: AA0mqf7bGaPbQBrK6tbmbhHYb+m32ki2iXpenM8TbT/Nda2AQsswz2Zx8KwCbvhgBsQ3yTreZUvBTA==
+X-Received: by 2002:a17:903:1c2:b0:182:631a:ef28 with SMTP id e2-20020a17090301c200b00182631aef28mr4854752plh.46.1668728609730;
+        Thu, 17 Nov 2022 15:43:29 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y15-20020a656c0f000000b0046f7e1ca434sm1643826pgu.0.2022.11.17.15.28.44
+        by smtp.gmail.com with ESMTPSA id t15-20020a1709027fcf00b00186a8085382sm777889plb.43.2022.11.17.15.43.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Nov 2022 15:28:44 -0800 (PST)
-Date:   Thu, 17 Nov 2022 15:28:44 -0800
+        Thu, 17 Nov 2022 15:43:29 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Jann Horn <jannh@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+To:     Jann Horn <jannh@google.com>
+Cc:     Kees Cook <keescook@chromium.org>, Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        tangmeng <tangmeng@uniontech.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Seth Jenkins <sethjenkins@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dmitry Vyukov <dvyukov@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Juri Lelli <juri.lelli@redhat.com>,
         Vincent Guittot <vincent.guittot@linaro.org>,
         Dietmar Eggemann <dietmar.eggemann@arm.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Ben Segall <bsegall@google.com>,
         Daniel Bristot de Oliveira <bristot@redhat.com>,
         Valentin Schneider <vschneid@redhat.com>,
         Andrey Ryabinin <ryabinin.a.a@gmail.com>,
         Alexander Potapenko <glider@google.com>,
         Andrey Konovalov <andreyknvl@gmail.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
         David Gow <davidgow@google.com>,
-        tangmeng <tangmeng@uniontech.com>,
-        Petr Mladek <pmladek@suse.com>,
         "Paul E. McKenney" <paulmck@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Seth Jenkins <sethjenkins@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Arnd Bergmann <arnd@arndb.de>,
         Jonathan Corbet <corbet@lwn.net>,
         Baolin Wang <baolin.wang@linux.alibaba.com>,
         "Jason A. Donenfeld" <Jason@zx2c4.com>,
@@ -88,122 +87,60 @@ Cc:     Jann Horn <jannh@google.com>, Dmitry Vyukov <dvyukov@google.com>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Laurent Dufour <ldufour@linux.ibm.com>,
         Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
         linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 4/6] panic: Consolidate open-coded panic_on_warn checks
-Message-ID: <202211171528.DF818B1CB6@keescook>
-References: <20221109194404.gonna.558-kees@kernel.org>
- <20221109200050.3400857-4-keescook@chromium.org>
- <CANpmjNNrYDNrRR8i+8xAFnmSjZ0Rdp-P14Sf9d+dadfsik18QA@mail.gmail.com>
+Subject: [PATCH v3 1/6] panic: Separate sysctl logic from CONFIG_SMP
+Date:   Thu, 17 Nov 2022 15:43:21 -0800
+Message-Id: <20221117234328.594699-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221117233838.give.484-kees@kernel.org>
+References: <20221117233838.give.484-kees@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNNrYDNrRR8i+8xAFnmSjZ0Rdp-P14Sf9d+dadfsik18QA@mail.gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1240; h=from:subject; bh=MYCrkHw9R8LxDYIRQQdTTq6YEsTSsq26SRgNezbmUEc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjdsccw0YheOkdHY6sLAGx2i/EwJzpirGYe5KFf1J2 O3NKspCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY3bHHAAKCRCJcvTf3G3AJjQmD/ 9UudpK/LjYQqgT+uDSinOff7b8X/IOatcfoEVeqxjwXnW5g1w8/uvDchyE3AXUMKMSqUL9wlcA2YXY 9FsQwXAM9SiZxvpzbNCULf1J9dLOyGZpct/rt6MSKpGwRSboVh0q5IKCPpt527XqaY7ei1zE4MGiam 4eFnNJQKnOeU1nSKPj5C9V3FwStWVScAeP+eeWYhLytRpj+AVZ65/N4hdvCBK+rdV6a4k8uvS2o1bc VPNDgNxBbJIEn99M4tO00reM1b8JeS0x3kiCpL01KE2rYCeYC3Y5qFbAz1yj7TQZuDivhvVAgEXYTZ NDMeu733A70XHkm9eLHey8Sxdt+a59iiTDijcBqgOsjqMI67Xdt+mVA4MezxNn8c7TDJMukp7vYHgX 7w30Ut4mulgDUtaSbDBIDC4K8BJ8oInCdVm95U2j9U02tg0CltGRlNZXtdr66ydcPFz+lJUS53O9w4 bwCG83c270M7bk/bmJBKGbtETZLb2agP21esArCedrmGjWFHD9oKCEguHLI18J99mQ0kXvsA7yGkjq /Shb8v/SxobU3/gQ+OIl1a/paUZr1PmFr9F9y6PQ5NUfzucIpmrys6aUhc29wrFnuH1aiuyTroVlhx BkC9tCUjIlr2fuDrSQdTWWKaCmXp0MpZ8IUofmDmVX3pbG53VF2v2STqkKTA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 10:57:15AM +0100, Marco Elver wrote:
-> On Wed, 9 Nov 2022 at 21:00, Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Several run-time checkers (KASAN, UBSAN, KFENCE, KCSAN, sched) roll
-> > their own warnings, and each check "panic_on_warn". Consolidate this
-> > into a single function so that future instrumentation can be added in
-> > a single location.
-> >
-> > Cc: Marco Elver <elver@google.com>
-> > Cc: Dmitry Vyukov <dvyukov@google.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Juri Lelli <juri.lelli@redhat.com>
-> > Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> > Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: Ben Segall <bsegall@google.com>
-> > Cc: Mel Gorman <mgorman@suse.de>
-> > Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-> > Cc: Valentin Schneider <vschneid@redhat.com>
-> > Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-> > Cc: Alexander Potapenko <glider@google.com>
-> > Cc: Andrey Konovalov <andreyknvl@gmail.com>
-> > Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Luis Chamberlain <mcgrof@kernel.org>
-> > Cc: David Gow <davidgow@google.com>
-> > Cc: tangmeng <tangmeng@uniontech.com>
-> > Cc: Jann Horn <jannh@google.com>
-> > Cc: Petr Mladek <pmladek@suse.com>
-> > Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> > Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-> > Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > Cc: kasan-dev@googlegroups.com
-> > Cc: linux-mm@kvack.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  include/linux/panic.h | 1 +
-> >  kernel/kcsan/report.c | 3 +--
-> >  kernel/panic.c        | 9 +++++++--
-> >  kernel/sched/core.c   | 3 +--
-> >  lib/ubsan.c           | 3 +--
-> >  mm/kasan/report.c     | 4 ++--
-> >  mm/kfence/report.c    | 3 +--
-> >  7 files changed, 14 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/include/linux/panic.h b/include/linux/panic.h
-> > index c7759b3f2045..1702aeb74927 100644
-> > --- a/include/linux/panic.h
-> > +++ b/include/linux/panic.h
-> > @@ -11,6 +11,7 @@ extern long (*panic_blink)(int state);
-> >  __printf(1, 2)
-> >  void panic(const char *fmt, ...) __noreturn __cold;
-> >  void nmi_panic(struct pt_regs *regs, const char *msg);
-> > +void check_panic_on_warn(const char *reason);
-> >  extern void oops_enter(void);
-> >  extern void oops_exit(void);
-> >  extern bool oops_may_print(void);
-> > diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-> > index 67794404042a..e95ce7d7a76e 100644
-> > --- a/kernel/kcsan/report.c
-> > +++ b/kernel/kcsan/report.c
-> > @@ -492,8 +492,7 @@ static void print_report(enum kcsan_value_change value_change,
-> >         dump_stack_print_info(KERN_DEFAULT);
-> >         pr_err("==================================================================\n");
-> >
-> > -       if (panic_on_warn)
-> > -               panic("panic_on_warn set ...\n");
-> > +       check_panic_on_warn("KCSAN");
-> >  }
-> >
-> >  static void release_report(unsigned long *flags, struct other_info *other_info)
-> > diff --git a/kernel/panic.c b/kernel/panic.c
-> > index 129936511380..3afd234767bc 100644
-> > --- a/kernel/panic.c
-> > +++ b/kernel/panic.c
-> > @@ -201,6 +201,12 @@ static void panic_print_sys_info(bool console_flush)
-> >                 ftrace_dump(DUMP_ALL);
-> >  }
-> >
-> > +void check_panic_on_warn(const char *reason)
-> > +{
-> > +       if (panic_on_warn)
-> > +               panic("%s: panic_on_warn set ...\n", reason);
-> > +}
-> > +
-> >  /**
-> >   *     panic - halt the system
-> >   *     @fmt: The text string to print
-> > @@ -619,8 +625,7 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
-> >         if (regs)
-> >                 show_regs(regs);
-> >
-> > -       if (panic_on_warn)
-> > -               panic("panic_on_warn set ...\n");
-> > +       check_panic_on_warn("kernel");
-> 
-> What is the reason "kernel" in this context? The real reason is a WARN
-> - so would the reason "WARNING" be more intuitive?
+In preparation for adding more sysctls directly in kernel/panic.c, split
+CONFIG_SMP from the logic that adds sysctls.
 
-I'll rename "reason" to "origin" or something -- it's mainly to see
-who was calling this when it's not core kernel logic.
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: tangmeng <tangmeng@uniontech.com>
+Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ kernel/panic.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/kernel/panic.c b/kernel/panic.c
+index da323209f583..d843d036651e 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -75,8 +75,9 @@ ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
+ 
+ EXPORT_SYMBOL(panic_notifier_list);
+ 
+-#if defined(CONFIG_SMP) && defined(CONFIG_SYSCTL)
++#ifdef CONFIG_SYSCTL
+ static struct ctl_table kern_panic_table[] = {
++#ifdef CONFIG_SMP
+ 	{
+ 		.procname       = "oops_all_cpu_backtrace",
+ 		.data           = &sysctl_oops_all_cpu_backtrace,
+@@ -86,6 +87,7 @@ static struct ctl_table kern_panic_table[] = {
+ 		.extra1         = SYSCTL_ZERO,
+ 		.extra2         = SYSCTL_ONE,
+ 	},
++#endif
+ 	{ }
+ };
+ 
 -- 
-Kees Cook
+2.34.1
+
