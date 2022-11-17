@@ -2,87 +2,185 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA4FC4332F
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 00:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DF7C4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 00:55:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233825AbiKQAfH (ORCPT
+        id S234547AbiKQAz6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Nov 2022 19:35:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34008 "EHLO
+        Wed, 16 Nov 2022 19:55:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233204AbiKQAfG (ORCPT
+        with ESMTP id S234125AbiKQAz5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Nov 2022 19:35:06 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBB0CDE9A
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Nov 2022 16:35:05 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id d13-20020a17090a3b0d00b00213519dfe4aso445787pjc.2
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Nov 2022 16:35:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tmvJEwiZ21xXLrZBi1WIG/q1ERap31TpLTpBBT5zmxU=;
-        b=cakRGVlFP4zUUwjnILOJJPN0XKbQNn0ZanA9TWdtV07Sm+c6Bw6IqGBgu3qize0fev
-         s3xAxHQe/+6KbKtzhhRRZngAIPva5ZZ0QfQCpQ4Ky/icC0A10gkkNIo0Yc0hMvcoom1H
-         H1hQRpPincosjsYy1r4B9an3mEa3ozSoAZYXI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tmvJEwiZ21xXLrZBi1WIG/q1ERap31TpLTpBBT5zmxU=;
-        b=nn7QdUBLgo8/3GtG16ZZfpPHorLCCa4DT7qbCoe31QkEE7H7h7Q7wpX9cnMAlHJKen
-         z1rEMdvvlDt2Tgzir5Ei2bPq1d2WKvPP7qvIY6d/3Z6YBjV3siTKWS122i6DdUw4rxxB
-         IJQ1isAJ7sz2yVMpX4DF7l5iCS07uwRJsQdClHo1GL4hTm3QZyRABGQdsmjmKcOOoLG/
-         LkohFubvxKKAw+lThLBk08htFehXVg3qb/7IrDGP7oDK149WWDUOor9V6IHAGYD/daOH
-         mpUDikj/RL1r9oezClv2PF9yzDgvQSg+G+O98g04eTnG3IEudQMcfl+zR9GmonL4zCqM
-         spuA==
-X-Gm-Message-State: ANoB5pmihnR6dZKoFgXbihYMnTu3a8AmSproAkRwGNsSX+yq0M+K55/I
-        6h8lVr9y2wvwSbo/v9zHgj9PfQ==
-X-Google-Smtp-Source: AA0mqf7hGFDPMqrXLDMFH04Laqegvn/zp/DoAbfPZEQx8qVyF2TAzljQnVqhbhiC7J0cic+rnY/IhQ==
-X-Received: by 2002:a17:902:c085:b0:186:fd58:c700 with SMTP id j5-20020a170902c08500b00186fd58c700mr274156pld.119.1668645305460;
-        Wed, 16 Nov 2022 16:35:05 -0800 (PST)
-Received: from google.com ([240f:75:7537:3187:d87c:a39a:d965:288])
-        by smtp.gmail.com with ESMTPSA id c133-20020a624e8b000000b00572275e68b2sm6980384pfb.116.2022.11.16.16.35.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Nov 2022 16:35:04 -0800 (PST)
-Date:   Thu, 17 Nov 2022 09:35:00 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Namjae Jeon <linkinjeon@kernel.org>,
-        Steve French <sfrench@samba.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Tom Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] ksmbd: replace one-element arrays with
- flexible-array members
-Message-ID: <Y3WBtLYcBonVrJio@google.com>
-References: <Y3OxronfaPYv9qGP@work>
+        Wed, 16 Nov 2022 19:55:57 -0500
+Received: from omta037.useast.a.cloudfilter.net (omta037.useast.a.cloudfilter.net [44.202.169.36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ABB768691
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Nov 2022 16:55:56 -0800 (PST)
+Received: from eig-obgw-5017a.ext.cloudfilter.net ([10.0.29.154])
+        by cmsmtp with ESMTP
+        id vSK2o0T7rGK0JvTC7ow6wT; Thu, 17 Nov 2022 00:55:55 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTP
+        id vTC6oWAI81ndkvTC6ouy6T; Thu, 17 Nov 2022 00:55:54 +0000
+X-Authority-Analysis: v=2.4 cv=NPzGRm2g c=1 sm=1 tr=0 ts=6375869a
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=wTog8WU66it3cfrESHnF4A==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=9xFQ1JgjjksA:10
+ a=wYkD_t78qR0A:10 a=9hnffCmvl_RKTy2oYacA:9 a=QEXdDO2ut3YA:10
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=vWsztSAw6Xd/AVWrRnjZEspYx6MigMA8LIcIFc387Hs=; b=jV83/Jvak8rSgvoq6Mp+KTGs8T
+        PHocpwe4PfY3hx4bjokBFx8RjC1nPL3lidcdLXcLxEl5+35CohZ+AQIaHoXRuron0EHMRy54MNFWe
+        SSys14mE1nTfh+FPlRhSQ2PiI+np17vwu6bOUG4r2WG+XNvdSTLhlZX2oqxIS/WB41bS226qU7JxZ
+        Fr7eyuR2feoQQ6ibrVlByBLKrG73Y2AxwkBeh6YgdoBiPwPwI8vvJexThiAT2zIl0biNuXCSXgbO5
+        lUn2PSpVzwcwaJdygrI/3qCRT2scSpKYz06pH6ZPmdDm9uT1ZFyR5yvWyItOLs89jsQG2f2LA9WSx
+        eAE74R7g==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:41342 helo=[192.168.15.7])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.95)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1ovTC5-001GJV-GW;
+        Wed, 16 Nov 2022 18:55:53 -0600
+Message-ID: <1e97660d-32ff-c0cc-951b-5beda6283571@embeddedor.com>
+Date:   Wed, 16 Nov 2022 18:55:36 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y3OxronfaPYv9qGP@work>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH net-next v2] netlink: split up copies in the ack
+ construction
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>, Jakub Kicinski <kuba@kernel.org>
+Cc:     David Ahern <dsahern@kernel.org>, davem@davemloft.net,
+        netdev@vger.kernel.org, edumazet@google.com, pabeni@redhat.com,
+        linux-hardening@vger.kernel.org
+References: <20221027212553.2640042-1-kuba@kernel.org>
+ <20221114023927.GA685@u2004-local> <20221114090614.2bfeb81c@kernel.org>
+ <202211161444.04F3EDEB@keescook> <202211161454.D5FA4ED44@keescook>
+ <202211161502.142D146@keescook>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202211161502.142D146@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1ovTC5-001GJV-GW
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:41342
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfJocbRq4T0Nc8Qw9NLJV00CXIKOU3MgcJw95YeBoY+GlZB5fwSlaLtsL/6G4+goS3VS7W9NikMRa0V3EHICrUERBuPNDhAg5lpn0yL5lCBxQfaJauToi
+ xhsdbzqXIzxO3fttIwCxGC/AxbJfwpIDov9buIiumEPn7QlMdVBp7R2CJus5Y123rtBOQHJCJuLLnNR6/cEM6unDbMjpIKELbs3CbmUUmTi9PfTaxP5RvVjr
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On (22/11/15 09:35), Gustavo A. R. Silva wrote:
-> One-element arrays are deprecated, and we are replacing them with flexible
-> array members instead. So, replace one-element arrays with flexible-array
-> members in multiple structs in fs/ksmbd/smb_common.h and one in
-> fs/ksmbd/smb2pdu.h.
-> 
-> Important to mention is that doing a build before/after this patch results
-> in no binary output differences.
-> 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE routines
-> on memcpy() and help us make progress towards globally enabling
-> -fstrict-flex-arrays=3 [1].
-> 
-> Link: https://github.com/KSPP/linux/issues/242
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+
+On 11/16/22 18:27, Kees Cook wrote:
+> On Wed, Nov 16, 2022 at 02:56:25PM -0800, Kees Cook wrote:
+>> On Mon, Nov 14, 2022 at 09:06:14AM -0800, Jakub Kicinski wrote:
+>>> On Sun, 13 Nov 2022 19:39:27 -0700 David Ahern wrote:
+>>>> On Thu, Oct 27, 2022 at 02:25:53PM -0700, Jakub Kicinski wrote:
+>>>>> diff --git a/include/uapi/linux/netlink.h b/include/uapi/linux/netlink.h
+>>>>> index e2ae82e3f9f7..5da0da59bf01 100644
+>>>>> --- a/include/uapi/linux/netlink.h
+>>>>> +++ b/include/uapi/linux/netlink.h
+>>>>> @@ -48,6 +48,7 @@ struct sockaddr_nl {
+>>>>>    * @nlmsg_flags: Additional flags
+>>>>>    * @nlmsg_seq:   Sequence number
+>>>>>    * @nlmsg_pid:   Sending process port ID
+>>>>> + * @nlmsg_data:  Message payload
+>>>>>    */
+>>>>>   struct nlmsghdr {
+>>>>>   	__u32		nlmsg_len;
+>>>>> @@ -55,6 +56,7 @@ struct nlmsghdr {
+>>>>>   	__u16		nlmsg_flags;
+>>>>>   	__u32		nlmsg_seq;
+>>>>>   	__u32		nlmsg_pid;
+>>>>> +	__u8		nlmsg_data[];
+>>>>
+>>>> This breaks compile of iproute2 with clang. It does not like the
+>>>> variable length array in the middle of a struct. While I could re-do the
+>>>> structs in iproute2, I doubt it is alone in being affected by this
+>>>> change.
+
+Yep; this is a fine Clang warning. We cannot have a variable length object
+immediately followed by another object because that would cause undefined
+behavior.
+
+>>
+>> Eww.
+>>
+>>>
+>>> Kees, would you mind lending your expertise?
+> 
+> Perhaps this would be better? We could leave the _header_ struct alone,
+> but add the data to the nlmsgerr struct instead?
+> 
+> diff --git a/include/uapi/linux/netlink.h b/include/uapi/linux/netlink.h
+> index 5da0da59bf01..d0629cb343b2 100644
+> --- a/include/uapi/linux/netlink.h
+> +++ b/include/uapi/linux/netlink.h
+> @@ -48,7 +48,6 @@ struct sockaddr_nl {
+>    * @nlmsg_flags: Additional flags
+>    * @nlmsg_seq:   Sequence number
+>    * @nlmsg_pid:   Sending process port ID
+> - * @nlmsg_data:  Message payload
+>    */
+>   struct nlmsghdr {
+>   	__u32		nlmsg_len;
+> @@ -56,7 +55,6 @@ struct nlmsghdr {
+>   	__u16		nlmsg_flags;
+>   	__u32		nlmsg_seq;
+>   	__u32		nlmsg_pid;
+> -	__u8		nlmsg_data[];
+>   };
+
+This seems to be a sensible change. In general, it's not a good idea
+to have variable length objects (flex-array members) in structures used
+as headers, and that we know will ultimately be followed by more objects
+when embedded inside other structures.
+
+>   
+>   /* Flags values */
+> @@ -121,6 +119,7 @@ struct nlmsghdr {
+>   struct nlmsgerr {
+>   	int		error;
+>   	struct nlmsghdr msg;
+> +	__u8		data[];
+>   	/*
+>   	 * followed by the message contents unless NETLINK_CAP_ACK was set
+>   	 * or the ACK indicates success (error == 0)
+> diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
+> index b8afec32cff6..fe8493d3ae56 100644
+> --- a/net/netlink/af_netlink.c
+> +++ b/net/netlink/af_netlink.c
+> @@ -2514,8 +2514,7 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
+>   		if (!nlmsg_append(skb, nlmsg_len(nlh)))
+>   			goto err_bad_put;
+>   
+> -		memcpy(errmsg->msg.nlmsg_data, nlh->nlmsg_data,
+> -		       nlmsg_len(nlh));
+> +		memcpy(errmsg->data, nlmsg_data(nlh), nlmsg_len(nlh));
+>   	}
+>   
+>   	if (tlvlen)
+> 
+> 
+
+--
+Gustavo
