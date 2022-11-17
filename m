@@ -2,65 +2,67 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12673C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 22:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDA3C43217
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 22:24:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240834AbiKQWXy (ORCPT
+        id S240571AbiKQWY0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Nov 2022 17:23:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34382 "EHLO
+        Thu, 17 Nov 2022 17:24:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240876AbiKQWXd (ORCPT
+        with ESMTP id S240525AbiKQWYJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Nov 2022 17:23:33 -0500
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D8F592B4A
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 14:21:47 -0800 (PST)
-Received: by mail-pg1-x536.google.com with SMTP id b62so3418498pgc.0
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 14:21:47 -0800 (PST)
+        Thu, 17 Nov 2022 17:24:09 -0500
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70A2D786F8
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 14:22:35 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id z26so3150768pff.1
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 14:22:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=lSwJV2KYxBElCKXN+JgGSpLARwCfSn0ae92xplQAFic=;
-        b=TwEHZg8sV4C4VuUBGudICbSbcvrp8OQsn0eQKHKdMKujOovO5I+rxSVCirl/IR5r7S
-         7uWpBOwAOUgJRYgGlPkl+JBNzE7LvNJgU9wNg7Lal5ktuI8OAKWTl7I3yfRXNdIl4NvF
-         EZVjOTol9GfLD5u3GgNM46VUoBtQfFWCWkJDE=
+        bh=GWX8xZ3siPWUJmFJ+ak5rgGJi5tbSkwD+aeiBnxAmP8=;
+        b=EM8Vk/IuYu8zsCx3D/aXB1ydE3hr9wSOvvA42mWznF7gALJ+S0g32LM4VMRNu1vT0I
+         IPnZPUy1UHRB7LAfgLDHAN9pUPbP7x9qAzaFWa855hCAHbw9CsPIIBF5+anBUiN/O8k3
+         wugLM9mY7sID2s8OU8olcNXrMbck9LM8PlAVI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lSwJV2KYxBElCKXN+JgGSpLARwCfSn0ae92xplQAFic=;
-        b=uUxKAE69R51OO92S0dGT8Ir5LoCOmOMrC9K7gnzEAaSTeDTd2dQ/0SytGiwRfbZ+ow
-         obnM6juUpg5Zip2FzGs70++Bt/mfQMRgLHMW/Dm4x0886GW+3W4Z22DkXSLfzn2ZRekm
-         8gkYYetviVAUnZN3yA0Rn02J1ZDoKqaHK8pQ1lEN67pVq6VSEXwkNwglHJf9LcpFZLr4
-         1960hiG9DBo0ml6X7jY7LSIuUY0VAiz6Ex0LgatOXJB0dzbar8RzU/HHwfKAxGtaFPcX
-         6dyRKBMNFFFYDuTZ8dzO4CM98khc7erhqEeMVmYigioWAY9y1nHY1Fdae0z0XNVev0/8
-         Rfbw==
-X-Gm-Message-State: ANoB5pl8Yr6E80zlKviGi61RtopnmFbYUyZr7l4Ve6mzjde041YhoPAW
-        VjMVJbpJRiliDK6gz4uemMDrVw==
-X-Google-Smtp-Source: AA0mqf6nbW+rxyP+i6B7Axg0KIP23raSHJTeKi8rSP5n/ZD0poWcqUnhn4XDJpFixIo7gBZXc1VuZg==
-X-Received: by 2002:a63:887:0:b0:460:633b:5702 with SMTP id 129-20020a630887000000b00460633b5702mr4093864pgi.9.1668723706884;
-        Thu, 17 Nov 2022 14:21:46 -0800 (PST)
+        bh=GWX8xZ3siPWUJmFJ+ak5rgGJi5tbSkwD+aeiBnxAmP8=;
+        b=NwPDzvPdLMbncAV5dMFPLhLv5aWH2gVTD2h/mndcQIPwXoXfPspAizFKAP7JPZ3SYE
+         kAyq4sjYkUEQX9KXSsIkA21IBbNeUEdw1buBM8ayuvC0ji8YSXKwoJ9VuzZYpnFGv0nk
+         RHQFHuE+B0qHQOQPgDP732cYwr16BHd8aX+OAF7eGPIynh7gVF9Yu+ZN3gxroeY4p81U
+         IwU2E/EpcS2xirDreD/5n+VM9gZoC2uGYt/YDuym5i5tAjUv2fLkrkkGb1G/hxWHlWk5
+         P2nIltHZGMPx/x+2qCEllg90Kg20liQ0MD6oDDcJagmyeWYDx24XkKtS5KZQpOALy7nQ
+         RsYw==
+X-Gm-Message-State: ANoB5pmmu8N3GUzMsAo8gpwROiyh5C/9yJN8TxGDUTDFn8kZwEpaNRwV
+        AIuhOvsRwIJZxQhRnHLpUdOyCw==
+X-Google-Smtp-Source: AA0mqf6X+fpknreQzV9svORhPmRkzR9ZQ875/5OC9hPXiNreh29vMThcE29r/hJZCyBpnjdvstKNoQ==
+X-Received: by 2002:a63:1626:0:b0:46e:96b9:ed63 with SMTP id w38-20020a631626000000b0046e96b9ed63mr4102293pgl.258.1668723754996;
+        Thu, 17 Nov 2022 14:22:34 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id s12-20020a63f04c000000b0047681fa88d1sm1554188pgj.53.2022.11.17.14.21.46
+        by smtp.gmail.com with ESMTPSA id w1-20020aa79541000000b0056c360af4e3sm1690348pfq.9.2022.11.17.14.22.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Nov 2022 14:21:46 -0800 (PST)
+        Thu, 17 Nov 2022 14:22:34 -0800 (PST)
 From:   coverity-bot <keescook@chromium.org>
 X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date:   Thu, 17 Nov 2022 14:21:46 -0800
-To:     Ananda <a.badmaev@clicknet.pro>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        Minchan Kim <minchan@kernel.org>,
-        Ananda Badmaev <a.badmaev@clicknet.pro>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        linux-mm@kvack.org, linux-doc@vger.kernel.org,
-        Vitaly Wool <vitaly.wool@konsulko.com>,
+Date:   Thu, 17 Nov 2022 14:22:34 -0800
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Nikolay Aleksandrov <nikolay@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: zblock_reclaim_block(): Control flow issues
-Message-ID: <202211171421.914F0F3719@keescook>
+Subject: Coverity: __sock_gen_cookie(): Error handling issues
+Message-ID: <202211171422.7A7A7A9@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -77,27 +79,27 @@ https://scan.coverity.com/projects/linux-next-weekly-scan
 You're getting this email because you were associated with the identified
 lines of code (noted below) that were touched by commits:
 
-  Wed Nov 16 16:19:12 2022 -0800
-    9097e28c25c8 ("mm: add zblock - new allocator for use via zpool API")
+  Wed Nov 16 12:42:01 2022 +0000
+    4ebf802cf1c6 ("net: __sock_gen_cookie() cleanup")
 
 Coverity reported the following:
 
-*** CID 1527349:  Control flow issues  (NO_EFFECT)
-mm/zblock.c:412 in zblock_reclaim_block()
-406     	unsigned long handle, block_type, slot;
-407     	int ret, i, reclaimed;
-408
-409     	/* start with list storing blocks with the worst compression and try
-410     	 * to evict the first added (oldest) block in this list
-411     	 */
-vvv     CID 1527349:  Control flow issues  (NO_EFFECT)
-vvv     This greater-than-or-equal-to-zero comparison of an unsigned value is always true. "block_type >= 0UL".
-412     	for (block_type = ARRAY_SIZE(block_desc) - 1; block_type >= 0; --block_type) {
-413     		list = &(pool->block_lists[block_type]);
-414     		spin_lock(&list->lock);
-415
-416     		/* find the oldest block in list */
-417     		block = list_last_entry(&list->head, struct zblock_block, block_node);
+*** CID 1527347:  Error handling issues  (CHECKED_RETURN)
+net/core/sock_diag.c:33 in __sock_gen_cookie()
+27     {
+28     	u64 res = atomic64_read(&sk->sk_cookie);
+29
+30     	if (!res) {
+31     		u64 new = gen_cookie_next(&sock_cookie);
+32
+vvv     CID 1527347:  Error handling issues  (CHECKED_RETURN)
+vvv     Calling "atomic64_try_cmpxchg" without checking return value (as is done elsewhere 8 out of 9 times).
+33     		atomic64_try_cmpxchg(&sk->sk_cookie, &res, new);
+34     	}
+35     	return res;
+36     }
+37
+38     int sock_diag_check_cookie(struct sock *sk, const __u32 *cookie)
 
 If this is a false positive, please let us know so we can mark it as
 such, or teach the Coverity rules to be smarter. If not, please make
@@ -105,8 +107,8 @@ sure fixes get into linux-next. :) For patches fixing this, please
 include these lines (but double-check the "Fixes" first):
 
 Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1527349 ("Control flow issues")
-Fixes: 9097e28c25c8 ("mm: add zblock - new allocator for use via zpool API")
+Addresses-Coverity-ID: 1527347 ("Error handling issues")
+Fixes: 4ebf802cf1c6 ("net: __sock_gen_cookie() cleanup")
 
 Thanks for your attention!
 
