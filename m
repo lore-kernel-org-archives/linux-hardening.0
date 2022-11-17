@@ -2,63 +2,67 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EF2C43217
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 22:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 962A5C433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 22:19:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234739AbiKQWR0 (ORCPT
+        id S240950AbiKQWTj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Nov 2022 17:17:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54712 "EHLO
+        Thu, 17 Nov 2022 17:19:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234802AbiKQWRR (ORCPT
+        with ESMTP id S240611AbiKQWTD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Nov 2022 17:17:17 -0500
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DB90786C3
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 14:17:17 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id io19so2912364plb.8
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 14:17:17 -0800 (PST)
+        Thu, 17 Nov 2022 17:19:03 -0500
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D945898CF
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 14:18:19 -0800 (PST)
+Received: by mail-pf1-x436.google.com with SMTP id v28so3100554pfi.12
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 14:18:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=nJFXSIQ783ozGJIEcq7M0/X5+WZmAwzKbqXzhdiC6Ac=;
-        b=K0Bjuug0PMBmGyIJKJh38l6aGh9Uv5KTby8hRtEeGfVVQ1uk8H1iE3Jy3X9g3QumnZ
-         m2UP0vy7n4K5mWAusXU9baE2QnR29kZ4q50wmoljG4b2D2eX+mVF6sHH4MHZ7t18A4bO
-         LdNjNf/Fkk/7a/wD3qmB8jz3Qcgz8Rz2OAuHI=
+        bh=JYzob4348nYU+2Eh2QmU2auy9qKtGqawS3+SiTC3pr8=;
+        b=mT6f5gl1eMimurIMmfHra1ZzdxxC44UxnmLk9ya83XFZxxCWVmAJlNJsuQm9+hWqo9
+         clAArb97Lztgdt9fUawtaUPdSOcO3YtzWHrw3P6moc6Dh0+MA3W56f7CCeSMPYplF2h3
+         a7COln0GoeKLRrAgBqCQmkPuOYTL1GDqAZjjA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nJFXSIQ783ozGJIEcq7M0/X5+WZmAwzKbqXzhdiC6Ac=;
-        b=5gPiU61w5LxRRI2VLOxUJtypAGysLBZTN+ZTZ42BQJ1OM//6YBVFfNhfdof98ayTOC
-         RnXV/qGPh8I0StUyGVMRxtpYpWk1O8yv1JIc/QFYa7VYu2TBZ5PwRBWnoFXak5q7xSv2
-         RmHFdq3z5jNTBTnPnB23qNh99qj6qRncd3LTf8N89UUQLo+SMyMmCNnwpzyx94VpFiPp
-         CrAEklINaK2A3iVWipW33fQN4txJpOQfu3f1xa8/MVllfOB3roohcrViiG5SuP5eIqh8
-         iPdUD28mOiCYyd4R4oo8T/AoDQcB0B3A74nIe998zsIkzA/tpcbP+xSckwO/Bpb3XzKB
-         OLBg==
-X-Gm-Message-State: ANoB5pkfVUYSOLOzSbkAvi3N5dI4X5oGk8jUpGcajI2Q816/OHx95b/7
-        BxmazDcbYQn4oDFaF8inSGONpyY08pYW6A==
-X-Google-Smtp-Source: AA0mqf41Wqejx3gjkqAto1lEjNVUWFDLIcHhPUNfGeI3XvM/RrkDVObROJw0YVQF/ox1gXuNsYVNtA==
-X-Received: by 2002:a17:90b:3d7:b0:200:2538:1ca8 with SMTP id go23-20020a17090b03d700b0020025381ca8mr10837807pjb.79.1668723436518;
-        Thu, 17 Nov 2022 14:17:16 -0800 (PST)
+        bh=JYzob4348nYU+2Eh2QmU2auy9qKtGqawS3+SiTC3pr8=;
+        b=d5FokWxgRxZZbj/CdE8xC5AtJK1ZHLRkye2TPRjC00bGAJvoJfC3UbxqmRR39XnH5y
+         FHh3c80+m0xYhSQjlj/40tbacxqTPyaVB9ueE8N4Zc7rclylaMf1ngo/NlXAA4evTLlB
+         e0jKUfd2nRHAWlRoU12vePEUuLqvcwKw5wLrSpB2bZHV0K2w0Ek41Z1XHJPIGtI3HeJg
+         xT+XdF6yTwMBW0q9eo9lHFtkWLqgLLaenS8jVBXlamy3TtpRqIJeIG4QCvn3sTEBlmpt
+         v4yYcGnlbxaLfbcB6gfYkBNVgqY2OQaf+xmNOAkRDPLbyjvUwMlCTXRdyMN0QiZyBxk3
+         C7JQ==
+X-Gm-Message-State: ANoB5pl5mQRw/bpMedTHItKEKhGFvblFO30CIoEv39RAWK5wjucI7OU5
+        pNOm//oVjdeKf9UoNauIOHt2ig==
+X-Google-Smtp-Source: AA0mqf4WXJ8bLo8CDx+tvlgGvCwBPESTcqzdM/ckT0mWIDLw4npKCloTa0mrn276bHYnkJex23nlEg==
+X-Received: by 2002:a63:f047:0:b0:476:7742:de19 with SMTP id s7-20020a63f047000000b004767742de19mr3827473pgj.343.1668723498884;
+        Thu, 17 Nov 2022 14:18:18 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id t3-20020a625f03000000b0056da2ad6503sm1684293pfb.39.2022.11.17.14.17.16
+        by smtp.gmail.com with ESMTPSA id n14-20020a170902d2ce00b00188ef3ea2b6sm1901208plc.262.2022.11.17.14.18.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Nov 2022 14:17:16 -0800 (PST)
+        Thu, 17 Nov 2022 14:18:18 -0800 (PST)
 From:   coverity-bot <keescook@chromium.org>
 X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date:   Thu, 17 Nov 2022 14:17:15 -0800
-To:     Edward Cree <ecree.xilinx@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Martin Habets <habetsm.xilinx@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+Date:   Thu, 17 Nov 2022 14:18:18 -0800
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+        Mateusz Kwiatkowski <kfyatek+publicgit@gmail.com>,
+        David Airlie <airlied@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        Maxime Ripard <mripard@kernel.org>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: efx_tc_rx(): Memory - illegal accesses
-Message-ID: <202211171416.0BC0EDDA36@keescook>
+Subject: Coverity: drm_mode_parse_cmdline_named_mode(): Security best
+ practices violations
+Message-ID: <202211171417.5A924A838@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -75,27 +79,27 @@ https://scan.coverity.com/projects/linux-next-weekly-scan
 You're getting this email because you were associated with the identified
 lines of code (noted below) that were touched by commits:
 
-  Wed Nov 16 09:07:02 2022 +0000
-    25730d8be5d8 ("sfc: add extra RX channel to receive MAE counter updates on ef100")
+  Tue Nov 15 10:09:44 2022 +0100
+    a7ab155397dd ("drm/modes: Switch to named mode descriptors")
 
 Coverity reported the following:
 
-*** CID 1527356:  Memory - illegal accesses  (OVERRUN)
-drivers/net/ethernet/sfc/tc_counters.c:483 in efx_tc_rx()
-477     	}
-478
-479     	/* Update seen_gen unconditionally, to avoid a missed wakeup if
-480     	 * we race with efx_mae_stop_counters().
-481     	 */
-482     	efx->tc->seen_gen[type] = mark;
-vvv     CID 1527356:  Memory - illegal accesses  (OVERRUN)
-vvv     Overrunning array "efx->tc->flush_gen" of 3 4-byte elements at element index 3 (byte offset 15) using index "type" (which evaluates to 3).
-483     	if (efx->tc->flush_counters &&
-484     	    (s32)(efx->tc->flush_gen[type] - mark) <= 0)
-485     		wake_up(&efx->tc->flush_wq);
-486     out:
-487     	efx_free_rx_buffers(rx_queue, rx_buf, 1);
-488     	channel->rx_pkt_n_frags = 0;
+*** CID 1527354:  Security best practices violations  (STRING_OVERFLOW)
+drivers/gpu/drm/drm_modes.c:1812 in drm_mode_parse_cmdline_named_mode()
+1806     		int ret;
+1807
+1808     		ret = str_has_prefix(name, mode->name);
+1809     		if (ret != name_end)
+1810     			continue;
+1811
+vvv     CID 1527354:  Security best practices violations  (STRING_OVERFLOW)
+vvv     You might overrun the 32-character fixed-size string "cmdline_mode->name" by copying "mode->name" without checking the length.
+1812     		strcpy(cmdline_mode->name, mode->name);
+1813     		cmdline_mode->pixel_clock = mode->pixel_clock_khz;
+1814     		cmdline_mode->xres = mode->xres;
+1815     		cmdline_mode->yres = mode->yres;
+1816     		cmdline_mode->interlace = !!(mode->flags & DRM_MODE_FLAG_INTERLACE);
+1817     		cmdline_mode->specified = true;
 
 If this is a false positive, please let us know so we can mark it as
 such, or teach the Coverity rules to be smarter. If not, please make
@@ -103,10 +107,11 @@ sure fixes get into linux-next. :) For patches fixing this, please
 include these lines (but double-check the "Fixes" first):
 
 Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1527356 ("Memory - illegal accesses")
-Fixes: 25730d8be5d8 ("sfc: add extra RX channel to receive MAE counter updates on ef100")
+Addresses-Coverity-ID: 1527354 ("Security best practices violations")
+Fixes: a7ab155397dd ("drm/modes: Switch to named mode descriptors")
 
-AFAICT, efx_tc_rx_version_2() may return EFX_TC_COUNTER_TYPE_MAX.
+Since mode->name is unbounded, this may overrun cmdline_mode->name
+without CONFIG_FORTIFY_SOURCE=y. Please use strscpy().
 
 Thanks for your attention!
 
