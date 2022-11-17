@@ -2,52 +2,52 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 593FCC433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 23:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC53C4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 23:17:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235128AbiKQXQi (ORCPT
+        id S240609AbiKQXR2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Nov 2022 18:16:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33938 "EHLO
+        Thu, 17 Nov 2022 18:17:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235047AbiKQXQg (ORCPT
+        with ESMTP id S239762AbiKQXQ5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Nov 2022 18:16:36 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C359F7342B
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 15:16:34 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id y4so3047477plb.2
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 15:16:34 -0800 (PST)
+        Thu, 17 Nov 2022 18:16:57 -0500
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3763748E5
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 15:16:56 -0800 (PST)
+Received: by mail-pj1-x102b.google.com with SMTP id w4-20020a17090ac98400b002186f5d7a4cso3217256pjt.0
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 15:16:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qBaTUoDsXALrUVQtij25WDMU7eXVKHt6J9ZXCE39/vs=;
-        b=mPx7GfLKwl5PN26MoaT6nRGqXps4iNeaIV3mZJ2OrRc+k8ZGxjmrhLJ5GKKMgle1Vt
-         VZoTFVV72Da8WA67ax23QGqZckaZpge9lfoa35250ISwHoqYy1Rq4+5hyuKdOUb5oFKE
-         7Nkj5fpNRne7ObCD/w9tabX/9KfFNvUUIoP/4=
+        bh=oFHM35UNmfkldWlBK35cn48oG6HZgrQ/KKBOkaB7rqU=;
+        b=ATU3KjrZtjnHaTJObubyH+A7KNgBJz/4UaptmzMu4aSuS9NdqlPG0tYK4xIrw4V0NB
+         4RU5QBMu8DWiBXX1/TktUDKtbUKAnZx48Xhzr5n3cj0tYPXPgg6lNQQwF68TEdbEM6dh
+         1Bx+Y3+kimUVDCJga+7SSlvRvh7BS7Opi4JuQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qBaTUoDsXALrUVQtij25WDMU7eXVKHt6J9ZXCE39/vs=;
-        b=gtRHR8JgkZ9A0niB7HEyw6iWk4BFR8OOgo4Mlh7+Wb5CTYc3NzO0dZOqi71uxCItc3
-         lWqwpuPTZLUd8zFKHkqzAvv0p6l4Au2nX2GsfE2RS2UQNMefIABlBl4wzqAjr/nGAShi
-         ZHNWtt+MvmIjmPVH9b0lD7/a8DyjcxMyPPPqiLV1Pj+XKCb50DQlLvC/WJCLsU1/tY2R
-         g+hzVm9m4GYr5RaVEuTT6/6hLz+DfKYPzE0EIBwdRY0qHrUus4ifxA8aeXa1YeOtXybI
-         oOPzdBNu1hkgU3dL2DzZN1CcLnqnU474LdbysxU/th3am0I1eClWEyOI0wulI8ik1Yf1
-         Y4sQ==
-X-Gm-Message-State: ANoB5pnRwmTWWfeZc4A1+XZZ2BX1x7hzZ2U+ifJok0eLpVpnhpjjxFls
-        Tm1awrbzpK3+fiG/TVLK/is/mw==
-X-Google-Smtp-Source: AA0mqf4Dk5voBB082r8Rrpwvcj3grSiIUC5dxPvucpmLRslxiH0tXg3k9C9HsKhUo4r5XO/MYhuZEA==
-X-Received: by 2002:a17:90a:b285:b0:216:ab1b:98d0 with SMTP id c5-20020a17090ab28500b00216ab1b98d0mr10943008pjr.67.1668726994206;
-        Thu, 17 Nov 2022 15:16:34 -0800 (PST)
+        bh=oFHM35UNmfkldWlBK35cn48oG6HZgrQ/KKBOkaB7rqU=;
+        b=PHk8EeCvg9AIVdBY8c4Ia0+yxPCpimsyqZ8n3NkGA/77rjGJIi/mrTXhpi5jQ1aT8Q
+         Tbihq/3xDHw53gWurgNzCXzmrpSVhsxTg1DBjm6SFJKjkL2sh/O3v9ttrYc7hJIDY1b3
+         mSeRwicY/HIgAIGPhXci6cOgil9eqWFNFf19X1dMmW8VekT3SJHdxucWuVTWDhkbL985
+         K8r+hb724/sY0PmIGRp0OEfK1OW5S6ee/+vkLUEySSNcIFVNv3DKOMXDOpARQPQqBAIv
+         hQwmDYLOQGGFUo4FRrJH6+Vmo3YeVYCG2NtYFekBgd7T1+izjOu7zp6+cnA4kwuNSB2v
+         iHnw==
+X-Gm-Message-State: ANoB5plYyBrOW6RGpMSHxPRTKaulRmLJnjmiW51CSHFt+1O1Fne7t4mx
+        ldPQpQNIOzr3uuISx7YHnmpopw==
+X-Google-Smtp-Source: AA0mqf4Z52LhYoKCKnrcJ/sZ0XNkqqlzxYRePSfLz9EXsNXDAWUPh3OJgEchOas5UoNkbsmIaRRXqA==
+X-Received: by 2002:a17:90a:6e47:b0:205:a550:e529 with SMTP id s7-20020a17090a6e4700b00205a550e529mr5065529pjm.25.1668727016281;
+        Thu, 17 Nov 2022 15:16:56 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n16-20020a170903111000b00188fc6766d6sm334840plh.219.2022.11.17.15.16.33
+        by smtp.gmail.com with ESMTPSA id ls5-20020a17090b350500b00205f013f275sm4149719pjb.22.2022.11.17.15.16.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Nov 2022 15:16:33 -0800 (PST)
-Date:   Thu, 17 Nov 2022 15:16:33 -0800
+        Thu, 17 Nov 2022 15:16:55 -0800 (PST)
+Date:   Thu, 17 Nov 2022 15:16:55 -0800
 From:   Kees Cook <keescook@chromium.org>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc:     Arend van Spriel <aspriel@gmail.com>,
@@ -62,34 +62,30 @@ Cc:     Arend van Spriel <aspriel@gmail.com>,
         SHA-cyfmac-dev-list@infineon.com, netdev@vger.kernel.org,
         linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/2][next] wifi: brcmfmac: Replace one-element array with
- flexible-array member
-Message-ID: <202211171516.4BDCE17@keescook>
+Subject: Re: [PATCH 2/2][next] wifi: brcmfmac: Use struct_size() and
+ array_size() in code ralated to struct brcmf_gscan_config
+Message-ID: <202211171516.19C8EB37@keescook>
 References: <cover.1668466470.git.gustavoars@kernel.org>
- <7694550aa9a2753a73a687f61af9441c8cf52fd7.1668466470.git.gustavoars@kernel.org>
+ <de0226a549c8d000d8974e207ede786220a3df1a.1668466470.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7694550aa9a2753a73a687f61af9441c8cf52fd7.1668466470.git.gustavoars@kernel.org>
+In-Reply-To: <de0226a549c8d000d8974e207ede786220a3df1a.1668466470.git.gustavoars@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 05:01:11PM -0600, Gustavo A. R. Silva wrote:
-> One-element arrays are deprecated, and we are replacing them with flexible
-> array members instead. So, replace one-element array with flexible-array
-> member in struct brcmf_gscan_config.
+On Mon, Nov 14, 2022 at 05:02:06PM -0600, Gustavo A. R. Silva wrote:
+> Prefer struct_size() over open-coded versions of idiom:
 > 
-> Important to mention is that doing a build before/after this patch results
-> in no binary output differences.
+> sizeof(struct-with-flex-array) + sizeof(typeof-flex-array-elements) * count
 > 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE routines
-> on memcpy() and help us make progress towards globally enabling
-> -fstrict-flex-arrays=3 [1].
+> where count is the max number of items the flexible array is supposed to
+> contain.
 > 
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://github.com/KSPP/linux/issues/241
-> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+> Also, use array_size() in call to memcpy().
+> 
+> Link: https://github.com/KSPP/linux/issues/160
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
