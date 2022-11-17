@@ -2,132 +2,97 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBA8C4332F
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 23:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 593FCC433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 23:16:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234905AbiKQXOe (ORCPT
+        id S235128AbiKQXQi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Nov 2022 18:14:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32960 "EHLO
+        Thu, 17 Nov 2022 18:16:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233437AbiKQXOd (ORCPT
+        with ESMTP id S235047AbiKQXQg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Nov 2022 18:14:33 -0500
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA58470A3D
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 15:14:32 -0800 (PST)
-Received: by mail-pl1-x62f.google.com with SMTP id g10so3010846plo.11
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 15:14:32 -0800 (PST)
+        Thu, 17 Nov 2022 18:16:36 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C359F7342B
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 15:16:34 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id y4so3047477plb.2
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 15:16:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mxh7ZIMAwOf8tQ5bBt1rmaA7jYZVydQJoYO/fiU1FyU=;
-        b=AqrwnZuhFVU0aPbl6IZJR1sckJQiFv7nsHmnRXjrQmyy5Clie241H6/UT49hXOVXfZ
-         TuDtO4NNlWlIE0MYuxvXRt/ed8k/ohuRSDt4AX9HIZ3lo9bIgnjFVyWuwAl1R/0xyAcL
-         MCjNVGLccDlGLaBeO0b4AQ6NlugIF8Ihx3eTc=
+        bh=qBaTUoDsXALrUVQtij25WDMU7eXVKHt6J9ZXCE39/vs=;
+        b=mPx7GfLKwl5PN26MoaT6nRGqXps4iNeaIV3mZJ2OrRc+k8ZGxjmrhLJ5GKKMgle1Vt
+         VZoTFVV72Da8WA67ax23QGqZckaZpge9lfoa35250ISwHoqYy1Rq4+5hyuKdOUb5oFKE
+         7Nkj5fpNRne7ObCD/w9tabX/9KfFNvUUIoP/4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mxh7ZIMAwOf8tQ5bBt1rmaA7jYZVydQJoYO/fiU1FyU=;
-        b=pfKBgfYFZ/JG43BSxrGLcADU/wtRp2AZGU7gJgIn38R4Dk7H4LZPnKVT4EEUVa+07t
-         87c5tbKryYY9oAF1micecNOIeBMj30fhBlmigO93qEoWiDFhVvD1IoLDsuhlaTC+hjR1
-         wOx477c1LpRF4RW0k4apE+Bl+uYTzz4FA1uBtDQTea0BOSY9kIBZmusqoFPKBywb3T/K
-         Eu5GlASqJ91sBWc/IELiqeSP3narywBJKmY6OtI+aI0M/T1YyfaWWBjWbuldrvmtZnnD
-         SJn89sKAGKYrJVzNYmXG8n+SeLFStzvt/YtEnBOgTSXSyTcnUxkdFSOgAwm2skUh7x5S
-         semQ==
-X-Gm-Message-State: ANoB5pk/6K0H+qv833b3IE114kBM7EIRUIIJ/n9M9Dpvwd+eluVnd0Uk
-        TucJH0t9m9LXOzwfEctCcZ5mUA==
-X-Google-Smtp-Source: AA0mqf70nFKYuMRGCOQGuJkKtnuOjfjcKxMd3tjx4JHvxkYbX4cYLXpfT1uIvdiKYUwiSYoduSWqVg==
-X-Received: by 2002:a17:90a:6904:b0:208:4bfa:51e1 with SMTP id r4-20020a17090a690400b002084bfa51e1mr10606132pjj.228.1668726872280;
-        Thu, 17 Nov 2022 15:14:32 -0800 (PST)
+        bh=qBaTUoDsXALrUVQtij25WDMU7eXVKHt6J9ZXCE39/vs=;
+        b=gtRHR8JgkZ9A0niB7HEyw6iWk4BFR8OOgo4Mlh7+Wb5CTYc3NzO0dZOqi71uxCItc3
+         lWqwpuPTZLUd8zFKHkqzAvv0p6l4Au2nX2GsfE2RS2UQNMefIABlBl4wzqAjr/nGAShi
+         ZHNWtt+MvmIjmPVH9b0lD7/a8DyjcxMyPPPqiLV1Pj+XKCb50DQlLvC/WJCLsU1/tY2R
+         g+hzVm9m4GYr5RaVEuTT6/6hLz+DfKYPzE0EIBwdRY0qHrUus4ifxA8aeXa1YeOtXybI
+         oOPzdBNu1hkgU3dL2DzZN1CcLnqnU474LdbysxU/th3am0I1eClWEyOI0wulI8ik1Yf1
+         Y4sQ==
+X-Gm-Message-State: ANoB5pnRwmTWWfeZc4A1+XZZ2BX1x7hzZ2U+ifJok0eLpVpnhpjjxFls
+        Tm1awrbzpK3+fiG/TVLK/is/mw==
+X-Google-Smtp-Source: AA0mqf4Dk5voBB082r8Rrpwvcj3grSiIUC5dxPvucpmLRslxiH0tXg3k9C9HsKhUo4r5XO/MYhuZEA==
+X-Received: by 2002:a17:90a:b285:b0:216:ab1b:98d0 with SMTP id c5-20020a17090ab28500b00216ab1b98d0mr10943008pjr.67.1668726994206;
+        Thu, 17 Nov 2022 15:16:34 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 19-20020a621513000000b0056c0b98617esm1744204pfv.0.2022.11.17.15.14.31
+        by smtp.gmail.com with ESMTPSA id n16-20020a170903111000b00188fc6766d6sm334840plh.219.2022.11.17.15.16.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Nov 2022 15:14:31 -0800 (PST)
-Date:   Thu, 17 Nov 2022 15:14:31 -0800
+        Thu, 17 Nov 2022 15:16:33 -0800 (PST)
+Date:   Thu, 17 Nov 2022 15:16:33 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Nikolay Aleksandrov <nikolay@nvidia.com>,
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Arend van Spriel <aspriel@gmail.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Kalle Valo <kvalo@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: Coverity: __sock_gen_cookie(): Error handling issues
-Message-ID: <202211171513.28D070E@keescook>
-References: <202211171422.7A7A7A9@keescook>
- <CANn89iLQcLNX+x_gJCMy5kD5GW3Xg8U4s0VGHtSuN8iegmhjxQ@mail.gmail.com>
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        SHA-cyfmac-dev-list@infineon.com, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/2][next] wifi: brcmfmac: Replace one-element array with
+ flexible-array member
+Message-ID: <202211171516.4BDCE17@keescook>
+References: <cover.1668466470.git.gustavoars@kernel.org>
+ <7694550aa9a2753a73a687f61af9441c8cf52fd7.1668466470.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANn89iLQcLNX+x_gJCMy5kD5GW3Xg8U4s0VGHtSuN8iegmhjxQ@mail.gmail.com>
+In-Reply-To: <7694550aa9a2753a73a687f61af9441c8cf52fd7.1668466470.git.gustavoars@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 02:49:55PM -0800, Eric Dumazet wrote:
-> On Thu, Nov 17, 2022 at 2:22 PM coverity-bot <keescook@chromium.org> wrote:
-> >
-> > Hello!
-> >
-> > This is an experimental semi-automated report about issues detected by
-> > Coverity from a scan of next-20221117 as part of the linux-next scan project:
-> > https://scan.coverity.com/projects/linux-next-weekly-scan
-> >
-> > You're getting this email because you were associated with the identified
-> > lines of code (noted below) that were touched by commits:
-> >
-> >   Wed Nov 16 12:42:01 2022 +0000
-> >     4ebf802cf1c6 ("net: __sock_gen_cookie() cleanup")
-> >
-> > Coverity reported the following:
-> >
-> > *** CID 1527347:  Error handling issues  (CHECKED_RETURN)
-> > net/core/sock_diag.c:33 in __sock_gen_cookie()
-> > 27     {
-> > 28      u64 res = atomic64_read(&sk->sk_cookie);
-> > 29
-> > 30      if (!res) {
-> > 31              u64 new = gen_cookie_next(&sock_cookie);
-> > 32
-> > vvv     CID 1527347:  Error handling issues  (CHECKED_RETURN)
-> > vvv     Calling "atomic64_try_cmpxchg" without checking return value (as is done elsewhere 8 out of 9 times).
-> > 33              atomic64_try_cmpxchg(&sk->sk_cookie, &res, new);
+On Mon, Nov 14, 2022 at 05:01:11PM -0600, Gustavo A. R. Silva wrote:
+> One-element arrays are deprecated, and we are replacing them with flexible
+> array members instead. So, replace one-element array with flexible-array
+> member in struct brcmf_gscan_config.
 > 
+> Important to mention is that doing a build before/after this patch results
+> in no binary output differences.
 > 
-> Hmmm. for some reason I thought @res was always updated...
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE routines
+> on memcpy() and help us make progress towards globally enabling
+> -fstrict-flex-arrays=3 [1].
 > 
-> A fix would be to read sk->sk_cookie, but I guess your tool will still
-> complain we do not care
-> of  atomic64_try_cmpxchg() return value ?
-> 
-> diff --git a/net/core/sock_diag.c b/net/core/sock_diag.c
-> index b11593cae5a09b15a10d6ba35bccc22263cb8fc8..58efb9c1c8dd4f8e5a3009a0176e1b96487daaff
-> 100644
-> --- a/net/core/sock_diag.c
-> +++ b/net/core/sock_diag.c
-> @@ -31,6 +31,10 @@ u64 __sock_gen_cookie(struct sock *sk)
->                 u64 new = gen_cookie_next(&sock_cookie);
-> 
->                 atomic64_try_cmpxchg(&sk->sk_cookie, &res, new);
-> +               /* Another cpu/thread might have won the race,
-> +                * reload the final value.
-> +                */
-> +               res = atomic64_read(&sk->sk_cookie);
->         }
->         return res;
->  }
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/241
+> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-I think it's saying it was expecting an update loop -- i.e. to make sure
-the value actually got swapped (the "try" part...)?
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
