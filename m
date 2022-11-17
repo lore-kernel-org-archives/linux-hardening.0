@@ -2,223 +2,152 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D96C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Nov 2022 23:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D788C433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 00:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238559AbiKPXEa (ORCPT
+        id S233963AbiKQA14 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Nov 2022 18:04:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42854 "EHLO
+        Wed, 16 Nov 2022 19:27:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233202AbiKPXE2 (ORCPT
+        with ESMTP id S232521AbiKQA1z (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Nov 2022 18:04:28 -0500
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41E43317CD
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Nov 2022 15:04:27 -0800 (PST)
-Received: by mail-pg1-x535.google.com with SMTP id n17so328132pgh.9
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Nov 2022 15:04:27 -0800 (PST)
+        Wed, 16 Nov 2022 19:27:55 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2B436317F
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Nov 2022 16:27:53 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id r61-20020a17090a43c300b00212f4e9cccdso3887209pjg.5
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Nov 2022 16:27:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3XP941acguvK1ZAkrhvPDttgcSVa1z7xUK43PRl+uio=;
-        b=56syu10yY4F1zazjA7qQqh2STRuHElk9eY+YEZ2JcKVraIu6zSy+d7hqJ6YBhnyKnk
-         1+LuOwiNiju5AdvI9xdh5g/G80aKnuJ11AaNiNKaHFRuda9VJx8tJcobAEuesbGIYHgS
-         tMzqZ7quPD44w/BpPwpIxIYOAHQ0Eu6vcZcGfDNkWyxWllI9JW5MvHxeDqabzek7mvJF
-         lRPHcIEV4pjuGc5AmAsFH4Jf4S3BLYvw3FN1EFQw3CaTcsnQ/rxPpU5CayDHenZMNu9J
-         ZglvH/USVkAoU8iRANLUdGJML73p0sP2EWzu5aiesLr10lbTtOu9kbvOSISR4gHJF93H
-         u1/w==
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GOfJp/fj5HzusV96DGisTfNWHmd3QApItydQHTNqdkw=;
+        b=UCb1tx0XfoRRD7aMbF1pwTgDhjSL6KNbmtqzQX3q2Sq9Mj+sJ2Qz8koQ3lL1Jc5DAV
+         LDtVORFYpaK70B24UJztTdIrEu2rJ8Ke7wIo/knOYNfAgSnpCGjPkyj2aFORmIjQocZg
+         2/eOCqSdjoTsOHlL8ldkIbqE24X5h31zq4ABU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3XP941acguvK1ZAkrhvPDttgcSVa1z7xUK43PRl+uio=;
-        b=EnioaAuyZujKiDfXjnjTbN2rtN3yYrqg/Ri+SqGFMNaTwCDbZJEwaZirKAKj+/Rx//
-         csI9wnak+9vulZGmJJDgxY3LeCELSBaINRcwimnUS4nffbNTngkydy4f0x7umKMKcj/M
-         7/Y59QVe5CIIgnrlLPqbip3kNARrnTaNMAWNCdQiPM9eDNfFFbTRC2KWPf2fizno0DVS
-         ZKJPhpSetwot5eudDC7CzYEO5A9bjDss6CoKsiNO4VQmouSshlgyZ5e8m17sfv8s6iO3
-         U2eGmLGQ3OrU5LD+VGXWm3JfxrQRte0iG6Jwt7Gs2UDQ4BYUqJiJ57v+HqvQgpWB1z6d
-         F8iw==
-X-Gm-Message-State: ANoB5pnJ4wF3/elLbK1Ul3wpK0yDzHlJ3ExbKWcHkAxPhkxdyAsNKNH0
-        hh7DRJRHhgDnSg1IZF2L2qV0YJD9KqwRIPg+lcku
-X-Google-Smtp-Source: AA0mqf4KnTW/Rs1/rqT5ydHUWbdtFyquLEB9AfGl4n344VRBZodroHoiuUE+EPtZ149p+/6c710BcebRhYhln41jNs4=
-X-Received: by 2002:aa7:9518:0:b0:56c:8c13:24fd with SMTP id
- b24-20020aa79518000000b0056c8c1324fdmr319516pfp.2.1668639866677; Wed, 16 Nov
- 2022 15:04:26 -0800 (PST)
-MIME-Version: 1.0
-References: <20221102000525.gonna.409-kees@kernel.org>
-In-Reply-To: <20221102000525.gonna.409-kees@kernel.org>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 16 Nov 2022 18:04:15 -0500
-Message-ID: <CAHC9VhRh2VSEHSOdiTg-1K0zbpa_oj9iKJHi6ZLYj3Ubt4tGRQ@mail.gmail.com>
-Subject: Re: [PATCH v2] LSM: Better reporting of actual LSMs at boot
-To:     Kees Cook <keescook@chromium.org>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GOfJp/fj5HzusV96DGisTfNWHmd3QApItydQHTNqdkw=;
+        b=vyueNH6z7iewgkGOkTqmi4tGuYswviMX+UD7s2b4hY0Hwvxfa4GSjVN/b+Jt2kjkYr
+         K/d7WQOh6aC7fsxQ67LMPn6D4g6vP28ar/xf0TOAEfrDs3Se/Bd5HH8DDqZpqWLo58v1
+         luDRIe24C5UGuP4D/yDZpjfBCLucyYyfwyvh1QM/iob6IBL8o9a+vn8aG0mz+tEghokT
+         k1zQKcnlDK+QEj2TWLM0u61SdT7Ah4FTf7IB9aCtJ5DMd1tUgaRswR/500NZ1fFInxZ6
+         DUlfuHmov32fTcijOLREdZIRwA+hAkWTJVfD6r4jDmPwZrfmLVhetOfb/0/iXZDRq2cF
+         zXjA==
+X-Gm-Message-State: ANoB5pnx1/IlLztgZLDWzNzlx/y3wc+2vYuCfrCswHxnwD8ULgJfMP/Q
+        oa0/QnRULHlpK17xF9kfSDMhyw==
+X-Google-Smtp-Source: AA0mqf7izgIs4tamVP5xvwZJPDhJpWbrUlVRtclK4Zm0Gem7xy+bfFhhmp2zLDMVnFyCDwTaHGh3LQ==
+X-Received: by 2002:a17:90a:ff84:b0:213:1e05:f992 with SMTP id hf4-20020a17090aff8400b002131e05f992mr6254360pjb.191.1668644873195;
+        Wed, 16 Nov 2022 16:27:53 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id r17-20020a170903411100b00186c3727294sm12733956pld.270.2022.11.16.16.27.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Nov 2022 16:27:52 -0800 (PST)
+Date:   Wed, 16 Nov 2022 16:27:51 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     David Ahern <dsahern@kernel.org>, davem@davemloft.net,
+        netdev@vger.kernel.org, edumazet@google.com, pabeni@redhat.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH net-next v2] netlink: split up copies in the ack
+ construction
+Message-ID: <202211161502.142D146@keescook>
+References: <20221027212553.2640042-1-kuba@kernel.org>
+ <20221114023927.GA685@u2004-local>
+ <20221114090614.2bfeb81c@kernel.org>
+ <202211161444.04F3EDEB@keescook>
+ <202211161454.D5FA4ED44@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202211161454.D5FA4ED44@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Nov 1, 2022 at 8:05 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Enhance the details reported by "lsm.debug" in several ways:
->
-> - report contents of "security=3D"
-> - report contents of "CONFIG_LSM"
-> - report contents of "lsm=3D"
-> - report any early LSM details
-> - whitespace-align the output of similar phases for easier visual parsing
-> - change "disabled" to more accurate "skipped"
-> - explain what "skipped" and "ignored" mean in a parenthetical
->
-> Upgrade the "security=3D is ignored" warning from pr_info to pr_warn,
-> and include full arguments list to make the cause even more clear.
->
-> Replace static "Security Framework initializing" pr_info with specific
-> list of the resulting order of enabled LSMs.
->
-> For example, if the kernel is built with:
->
-> CONFIG_SECURITY_SELINUX=3Dy
-> CONFIG_SECURITY_APPARMOR=3Dy
-> CONFIG_SECURITY_LOADPIN=3Dy
-> CONFIG_SECURITY_YAMA=3Dy
-> CONFIG_SECURITY_SAFESETID=3Dy
-> CONFIG_SECURITY_LOCKDOWN_LSM=3Dy
-> CONFIG_SECURITY_LANDLOCK=3Dy
-> CONFIG_INTEGRITY=3Dy
-> CONFIG_BPF_LSM=3Dy
-> CONFIG_DEFAULT_SECURITY_APPARMOR=3Dy
-> CONFIG_LSM=3D"landlock,lockdown,yama,loadpin,safesetid,integrity,selinux,=
-smack,tomoyo,apparmor,bpf"
->
-> Booting without options will show:
->
-> LSM: initializing lsm=3Dlockdown,capability,landlock,yama,loadpin,safeset=
-id,integrity,selinux,bpf
-> landlock: Up and running.
-> Yama: becoming mindful.
-> LoadPin: ready to pin (currently not enforcing)
-> SELinux:  Initializing.
-> LSM support for eBPF active
->
-> Boot with "lsm.debug" will show:
->
-> LSM: legacy security=3D *unspecified*
-> LSM: CONFIG_LSM=3Dlandlock,lockdown,yama,loadpin,safesetid,integrity,seli=
-nux,smack,tomoyo,apparmor,bpf
-> LSM: boot arg lsm=3D *unspecified*
-> LSM:   early started: lockdown (enabled)
-> LSM:   first ordered: capability (enabled)
-> LSM: builtin ordered: landlock (enabled)
-> LSM: builtin ignored: lockdown (not built into kernel)
-> LSM: builtin ordered: yama (enabled)
-> LSM: builtin ordered: loadpin (enabled)
-> LSM: builtin ordered: safesetid (enabled)
-> LSM: builtin ordered: integrity (enabled)
-> LSM: builtin ordered: selinux (enabled)
-> LSM: builtin ignored: smack (not built into kernel)
-> LSM: builtin ignored: tomoyo (not built into kernel)
-> LSM: builtin ordered: apparmor (enabled)
-> LSM: builtin ordered: bpf (enabled)
-> LSM: exclusive chosen:   selinux
-> LSM: exclusive disabled: apparmor
-> LSM: initializing lsm=3Dlockdown,capability,landlock,yama,loadpin,safeset=
-id,integrity,selinux,bpf
-> LSM: cred blob size       =3D 32
-> LSM: file blob size       =3D 16
-> LSM: inode blob size      =3D 72
-> LSM: ipc blob size        =3D 8
-> LSM: msg_msg blob size    =3D 4
-> LSM: superblock blob size =3D 80
-> LSM: task blob size       =3D 8
-> LSM: initializing capability
-> LSM: initializing landlock
-> landlock: Up and running.
-> LSM: initializing yama
-> Yama: becoming mindful.
-> LSM: initializing loadpin
-> LoadPin: ready to pin (currently not enforcing)
-> LSM: initializing safesetid
-> LSM: initializing integrity
-> LSM: initializing selinux
-> SELinux:  Initializing.
-> LSM: initializing bpf
-> LSM support for eBPF active
->
-> And some examples of how the lsm.debug ordering report changes...
->
-> With "lsm.debug security=3Dselinux":
->
-> LSM: legacy security=3Dselinux
-> LSM: CONFIG_LSM=3Dlandlock,lockdown,yama,loadpin,safesetid,integrity,seli=
-nux,smack,tomoyo,apparmor,bpf
-> LSM: boot arg lsm=3D *unspecified*
-> LSM:   early started: lockdown (enabled)
-> LSM:   first ordered: capability (enabled)
-> LSM: security=3Dselinux disabled: apparmor (only one legacy major LSM)
-> LSM: builtin ordered: landlock (enabled)
-> LSM: builtin ignored: lockdown (not built into kernel)
-> LSM: builtin ordered: yama (enabled)
-> LSM: builtin ordered: loadpin (enabled)
-> LSM: builtin ordered: safesetid (enabled)
-> LSM: builtin ordered: integrity (enabled)
-> LSM: builtin ordered: selinux (enabled)
-> LSM: builtin ignored: smack (not built into kernel)
-> LSM: builtin ignored: tomoyo (not built into kernel)
-> LSM: builtin ordered: apparmor (disabled)
-> LSM: builtin ordered: bpf (enabled)
-> LSM: exclusive chosen:   selinux
-> LSM: initializing lsm=3Dlockdown,capability,landlock,yama,loadpin,safeset=
-id,integrity,selinux,bpf
->
-> With "lsm.debug lsm=3Dintegrity,selinux,loadpin,crabability,bpf,loadpin,l=
-oadpin":
->
-> LSM: legacy security=3D *unspecified*
-> LSM: CONFIG_LSM=3Dlandlock,lockdown,yama,loadpin,safesetid,integrity,seli=
-nux,smack,tomoyo,apparmor,bpf
-> LSM: boot arg lsm=3Dintegrity,selinux,loadpin,capability,bpf,loadpin,load=
-pin
-> LSM:   early started: lockdown (enabled)
-> LSM:   first ordered: capability (enabled)
-> LSM: cmdline ordered: integrity (enabled)
-> LSM: cmdline ordered: selinux (enabled)
-> LSM: cmdline ordered: loadpin (enabled)
-> LSM: cmdline ignored: crabability (not built into kernel)
-> LSM: cmdline ordered: bpf (enabled)
-> LSM: cmdline skipped: apparmor (not in requested order)
-> LSM: cmdline skipped: yama (not in requested order)
-> LSM: cmdline skipped: safesetid (not in requested order)
-> LSM: cmdline skipped: landlock (not in requested order)
-> LSM: exclusive chosen:   selinux
-> LSM: initializing lsm=3Dlockdown,capability,integrity,selinux,loadpin,bpf
->
-> Cc: Paul Moore <paul@paul-moore.com>
-> Cc: James Morris <jmorris@namei.org>
-> Cc: "Serge E. Hallyn" <serge@hallyn.com>
-> Cc: linux-security-module@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v2: en/dis-enabled expanded, example output in commit log, use pr_cont.
-> v1: https://lore.kernel.org/lkml/20221018064825.never.323-kees@kernel.org=
-/
-> ---
->  security/security.c | 45 ++++++++++++++++++++++++++++++++++++---------
->  1 file changed, 36 insertions(+), 9 deletions(-)
+On Wed, Nov 16, 2022 at 02:56:25PM -0800, Kees Cook wrote:
+> On Mon, Nov 14, 2022 at 09:06:14AM -0800, Jakub Kicinski wrote:
+> > On Sun, 13 Nov 2022 19:39:27 -0700 David Ahern wrote:
+> > > On Thu, Oct 27, 2022 at 02:25:53PM -0700, Jakub Kicinski wrote:
+> > > > diff --git a/include/uapi/linux/netlink.h b/include/uapi/linux/netlink.h
+> > > > index e2ae82e3f9f7..5da0da59bf01 100644
+> > > > --- a/include/uapi/linux/netlink.h
+> > > > +++ b/include/uapi/linux/netlink.h
+> > > > @@ -48,6 +48,7 @@ struct sockaddr_nl {
+> > > >   * @nlmsg_flags: Additional flags
+> > > >   * @nlmsg_seq:   Sequence number
+> > > >   * @nlmsg_pid:   Sending process port ID
+> > > > + * @nlmsg_data:  Message payload
+> > > >   */
+> > > >  struct nlmsghdr {
+> > > >  	__u32		nlmsg_len;
+> > > > @@ -55,6 +56,7 @@ struct nlmsghdr {
+> > > >  	__u16		nlmsg_flags;
+> > > >  	__u32		nlmsg_seq;
+> > > >  	__u32		nlmsg_pid;
+> > > > +	__u8		nlmsg_data[];  
+> > > 
+> > > This breaks compile of iproute2 with clang. It does not like the
+> > > variable length array in the middle of a struct. While I could re-do the
+> > > structs in iproute2, I doubt it is alone in being affected by this
+> > > change.
+> 
+> Eww.
+> 
+> > 
+> > Kees, would you mind lending your expertise?
 
-I tend to agree with Micka=C3=ABl regarding the aligned output, but that's
-not worth worrying too much about for debug stuff.  Merged into
-lsm/next, thanks Kees.
+Perhaps this would be better? We could leave the _header_ struct alone,
+but add the data to the nlmsgerr struct instead?
 
---=20
-paul-moore.com
+diff --git a/include/uapi/linux/netlink.h b/include/uapi/linux/netlink.h
+index 5da0da59bf01..d0629cb343b2 100644
+--- a/include/uapi/linux/netlink.h
++++ b/include/uapi/linux/netlink.h
+@@ -48,7 +48,6 @@ struct sockaddr_nl {
+  * @nlmsg_flags: Additional flags
+  * @nlmsg_seq:   Sequence number
+  * @nlmsg_pid:   Sending process port ID
+- * @nlmsg_data:  Message payload
+  */
+ struct nlmsghdr {
+ 	__u32		nlmsg_len;
+@@ -56,7 +55,6 @@ struct nlmsghdr {
+ 	__u16		nlmsg_flags;
+ 	__u32		nlmsg_seq;
+ 	__u32		nlmsg_pid;
+-	__u8		nlmsg_data[];
+ };
+ 
+ /* Flags values */
+@@ -121,6 +119,7 @@ struct nlmsghdr {
+ struct nlmsgerr {
+ 	int		error;
+ 	struct nlmsghdr msg;
++	__u8		data[];
+ 	/*
+ 	 * followed by the message contents unless NETLINK_CAP_ACK was set
+ 	 * or the ACK indicates success (error == 0)
+diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
+index b8afec32cff6..fe8493d3ae56 100644
+--- a/net/netlink/af_netlink.c
++++ b/net/netlink/af_netlink.c
+@@ -2514,8 +2514,7 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
+ 		if (!nlmsg_append(skb, nlmsg_len(nlh)))
+ 			goto err_bad_put;
+ 
+-		memcpy(errmsg->msg.nlmsg_data, nlh->nlmsg_data,
+-		       nlmsg_len(nlh));
++		memcpy(errmsg->data, nlmsg_data(nlh), nlmsg_len(nlh));
+ 	}
+ 
+ 	if (tlvlen)
+
+
+-- 
+Kees Cook
