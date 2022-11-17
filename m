@@ -2,143 +2,145 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0B2C433FE
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 05:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA24C4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 06:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231748AbiKQFyO (ORCPT
+        id S233725AbiKQGNL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Nov 2022 00:54:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48824 "EHLO
+        Thu, 17 Nov 2022 01:13:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230037AbiKQFyN (ORCPT
+        with ESMTP id S231734AbiKQGNJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Nov 2022 00:54:13 -0500
-Received: from omta037.useast.a.cloudfilter.net (omta037.useast.a.cloudfilter.net [44.202.169.36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FAB54E43C;
-        Wed, 16 Nov 2022 21:54:12 -0800 (PST)
-Received: from eig-obgw-6011a.ext.cloudfilter.net ([10.0.30.170])
-        by cmsmtp with ESMTP
-        id vX3co0qNLGK0JvXqlowW8G; Thu, 17 Nov 2022 05:54:11 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTP
-        id vXqjo66hHNkqcvXqkoVxpy; Thu, 17 Nov 2022 05:54:10 +0000
-X-Authority-Analysis: v=2.4 cv=SKhR6cjH c=1 sm=1 tr=0 ts=6375cc82
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=wTog8WU66it3cfrESHnF4A==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=9xFQ1JgjjksA:10
- a=wYkD_t78qR0A:10 a=mDV3o1hIAAAA:8 a=2MnAaCYfOD4pXKyC1zoA:9 a=QEXdDO2ut3YA:10
- a=DJlwVr9uAhcA:10 a=_FVE-zBwftR9WsbkzFJk:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=IVX0Ndlx1QpYhjf6muh2ZPSSsujamdKE8h0m5gxriWg=; b=ugXaIBaR4SHJOdHpIfJSysQRJk
-        hMygA3NHigKCOmE5iAW0VZjHyR0CwhUgP30QHNr6WsO4z05rCNLNSbspxE82ao1QRGzoq3RImwp9j
-        GtQ9ZexrPKOHKREupWjN7634OqdDMGlVHQ6xaK5tw0bQlBdOhcEfUVn1lFAYYs0EJ/zvIh4BPinqP
-        2hcDv/2Ahg/pDw2r4SHBqlqYSG+1KTcUfUSgFmkXOx6sI8xRR4ZOb5shl3PNocyfHjBUG6Yj6YIH3
-        78Te8wPDAGFqJ68kpL3dmG8jVRkx/ECkwcC2KvnIAHwuZCi4JyMMsadD/emMtxoZZ8vgg1lzRFLGE
-        H+/OXVLQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:57016 helo=[192.168.15.7])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.95)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1ovTaS-001jBu-26;
-        Wed, 16 Nov 2022 19:21:04 -0600
-Message-ID: <1b373b08-988d-b870-d363-814f8083157c@embeddedor.com>
-Date:   Wed, 16 Nov 2022 19:20:51 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH net-next v2] netlink: split up copies in the ack
- construction
-Content-Language: en-US
-To:     Jakub Kicinski <kuba@kernel.org>
+        Thu, 17 Nov 2022 01:13:09 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D30C22F3BB;
+        Wed, 16 Nov 2022 22:13:08 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6EA9362098;
+        Thu, 17 Nov 2022 06:13:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69696C433D6;
+        Thu, 17 Nov 2022 06:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668665587;
+        bh=gLckPaA2RbWy+qeW1Y4mm8k80EgIFB5RtSqjqWtke/Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=G36v79fw4yxJ8qCDYlRX7RBZnRQJWWBmKf1QLizuJVpIqAVQvBAxSDJvtj7kH+xqh
+         2Au3NXirMSfsHSsNku6OuwgbvinSs7Oq64lnHptYILRCzYLGYRRzpDh+rtXppIPnwU
+         M8AySb3vmnGbW+V15GONVGmfmMqoHd0JYH220l38G8YfozM70LdzvsgYwAA69/PMWI
+         pa274aV5NMLbsMQXf/tEk5r0SRBND0il1CmkXmUg7P2LH2G/GXA582Z9hNjyfifSGs
+         VikO5h0SXPh90YtEbpny/QyaP25rIJ+mQZ2KQw99m2aN6KIEVhV4yqvrAx8N1VJYFg
+         5StUDY8ih0MVQ==
+Date:   Wed, 16 Nov 2022 22:13:06 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Cc:     Kees Cook <keescook@chromium.org>,
         David Ahern <dsahern@kernel.org>, davem@davemloft.net,
         netdev@vger.kernel.org, edumazet@google.com, pabeni@redhat.com,
         linux-hardening@vger.kernel.org
+Subject: Re: [PATCH net-next v2] netlink: split up copies in the ack
+ construction
+Message-ID: <20221116221306.5a4bd5f8@kernel.org>
+In-Reply-To: <1b373b08-988d-b870-d363-814f8083157c@embeddedor.com>
 References: <20221027212553.2640042-1-kuba@kernel.org>
- <20221114023927.GA685@u2004-local> <20221114090614.2bfeb81c@kernel.org>
- <202211161444.04F3EDEB@keescook> <202211161454.D5FA4ED44@keescook>
- <202211161502.142D146@keescook>
- <1e97660d-32ff-c0cc-951b-5beda6283571@embeddedor.com>
- <20221116170526.752c304b@kernel.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20221116170526.752c304b@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        <20221114023927.GA685@u2004-local>
+        <20221114090614.2bfeb81c@kernel.org>
+        <202211161444.04F3EDEB@keescook>
+        <202211161454.D5FA4ED44@keescook>
+        <202211161502.142D146@keescook>
+        <1e97660d-32ff-c0cc-951b-5beda6283571@embeddedor.com>
+        <20221116170526.752c304b@kernel.org>
+        <1b373b08-988d-b870-d363-814f8083157c@embeddedor.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1ovTaS-001jBu-26
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:57016
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfGnFtwXyMzEZr0qCQ2E57yecRpTyr4V7mLRrI/N5+fofzAMLl/3YJvDZkX+M+AlacciKVOB7Yp6hNA7rDmy8K2NluJ61jKu3FxM94N0qC9U5ROmWOtan
- Maak1/0HAGGTy6eGvb9J1UPBMB7N9DL5Qz+ICFmSqsBWBCccPeHD/eHbDwfCmIhPuTa29mBHZWy04lb4bouMM4Drya2v0sQnhrdxdB2cCbB96HkUk/WR8xSU
- cKRI8Pjm3fstyZYzTsTuMw==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 11/16/22 19:05, Jakub Kicinski wrote:
-> On Wed, 16 Nov 2022 18:55:36 -0600 Gustavo A. R. Silva wrote:
->>> @@ -56,7 +55,6 @@ struct nlmsghdr {
->>>    	__u16		nlmsg_flags;
->>>    	__u32		nlmsg_seq;
->>>    	__u32		nlmsg_pid;
->>> -	__u8		nlmsg_data[];
->>>    };
->>
->> This seems to be a sensible change. In general, it's not a good idea
->> to have variable length objects (flex-array members) in structures used
->> as headers, and that we know will ultimately be followed by more objects
->> when embedded inside other structures.
+On Wed, 16 Nov 2022 19:20:51 -0600 Gustavo A. R. Silva wrote:
+> On 11/16/22 19:05, Jakub Kicinski wrote:
+> >> This seems to be a sensible change. In general, it's not a good idea
+> >> to have variable length objects (flex-array members) in structures used
+> >> as headers, and that we know will ultimately be followed by more objects
+> >> when embedded inside other structures.  
+> > 
+> > Meaning we should go back to zero-length arrays instead?  
 > 
-> Meaning we should go back to zero-length arrays instead?
+> No.
 
-No.
-> Is there something in the standard that makes flexible array
-> at the end of an embedded struct a problem?
+I was asking based on your own commit 1e6e9d0f4859 ("uapi: revert
+flexible-array conversions"). This is uAPI as well.
 
-I haven't seen any problems ss long as the flex-array appears last:
+Since we can't prevent user space from wrapping structures seems
+like adding a flex member to an existing struct should never be
+permitted in uAPI headers? We can just wrap things locally, I guess:
 
-struct foo {
-	... members
-	struct boo {
-		... members
-		char flex[];
-	};
-};
+diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
+index 9ebdf3262015..2af2f8de4043 100644
+--- a/net/netlink/af_netlink.c
++++ b/net/netlink/af_netlink.c
+@@ -2479,7 +2479,10 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
+ {
+        struct sk_buff *skb;
+        struct nlmsghdr *rep;
+-       struct nlmsgerr *errmsg;
++       struct hashtag_silly {
++               struct nlmsgerr err;
++               u8 data[];
++       } *errmsg;
+        size_t payload = sizeof(*errmsg);
+        struct netlink_sock *nlk = nlk_sk(NETLINK_CB(in_skb).sk);
+        unsigned int flags = 0;
+@@ -2507,15 +2510,14 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
+        if (!rep)
+                goto err_bad_put;
+        errmsg = nlmsg_data(rep);
+-       errmsg->error = err;
+-       errmsg->msg = *nlh;
++       errmsg->err.error = err;
++       errmsg->err.msg = *nlh;
+ 
+        if (!(flags & NLM_F_CAPPED)) {
+                if (!nlmsg_append(skb, nlmsg_len(nlh)))
+                        goto err_bad_put;
+ 
+-               memcpy(errmsg->msg.nlmsg_data, nlh->nlmsg_data,
+-                      nlmsg_len(nlh));
++               memcpy(errmsg->data, nlmsg_data(nlh), nlmsg_len(nlh));
+        }
+ 
+        if (tlvlen)
 
-struct complex {
-	... members
-	struct foo embedded;
-};
+In this particular case, tho, we're probably better off giving up 
+on the flex array and doing nlmsg_data() on both src and dst.
 
-However, the GCC docs[1] mention this:
+> > Is there something in the standard that makes flexible array
+> > at the end of an embedded struct a problem?  
+> 
+> I haven't seen any problems ss long as the flex-array appears last:
+> 
+> struct foo {
+> 	... members
+> 	struct boo {
+> 		... members
+> 		char flex[];
+> 	};
+> };
+> 
+> struct complex {
+> 	... members
+> 	struct foo embedded;
+> };
+> 
+> However, the GCC docs[1] mention this:
+> 
+> "A structure containing a flexible array member [..] may not be a
+> member of a structure [..] (However, these uses are permitted by GCC
+> as extensions.)"
+> 
+> And in this case it seems that's the reason why GCC doesn't complain?
 
-"A structure containing a flexible array member [..] may not be a
-member of a structure [..] (However, these uses are permitted by GCC
-as extensions.)"
-
-And in this case it seems that's the reason why GCC doesn't complain?
-
---
-Gustavo
-
-[1] https://gcc.gnu.org/onlinedocs/gcc-12.2.0/gcc/Zero-Length.html#Zero-Length
+Seems so, clang's warning is called -Wgnu-variable-sized-type-not-at-end
