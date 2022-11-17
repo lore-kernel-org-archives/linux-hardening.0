@@ -2,77 +2,70 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E94EC4332F
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 02:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0B2C433FE
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Nov 2022 05:54:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238951AbiKQCxZ (ORCPT
+        id S231748AbiKQFyO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Nov 2022 21:53:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36402 "EHLO
+        Thu, 17 Nov 2022 00:54:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238988AbiKQCxV (ORCPT
+        with ESMTP id S230037AbiKQFyN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Nov 2022 21:53:21 -0500
-Received: from omta035.useast.a.cloudfilter.net (omta035.useast.a.cloudfilter.net [44.202.169.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF95243AD6;
-        Wed, 16 Nov 2022 18:53:19 -0800 (PST)
-Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
+        Thu, 17 Nov 2022 00:54:13 -0500
+Received: from omta037.useast.a.cloudfilter.net (omta037.useast.a.cloudfilter.net [44.202.169.36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FAB54E43C;
+        Wed, 16 Nov 2022 21:54:12 -0800 (PST)
+Received: from eig-obgw-6011a.ext.cloudfilter.net ([10.0.30.170])
         by cmsmtp with ESMTP
-        id vUhcoS2B8XLQOvV1jo4gcx; Thu, 17 Nov 2022 02:53:19 +0000
+        id vX3co0qNLGK0JvXqlowW8G; Thu, 17 Nov 2022 05:54:11 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with ESMTP
-        id vV1ho1mSMnOb9vV1iomTTM; Thu, 17 Nov 2022 02:53:18 +0000
-X-Authority-Analysis: v=2.4 cv=FaMkeby6 c=1 sm=1 tr=0 ts=6375a21e
+        id vXqjo66hHNkqcvXqkoVxpy; Thu, 17 Nov 2022 05:54:10 +0000
+X-Authority-Analysis: v=2.4 cv=SKhR6cjH c=1 sm=1 tr=0 ts=6375cc82
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=wTog8WU66it3cfrESHnF4A==:17
  a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=9xFQ1JgjjksA:10
- a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8 a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8
- a=Oz70HW-ix1QoszwUlecA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=xmb-EsYY8bH0VWELuYED:22
+ a=wYkD_t78qR0A:10 a=mDV3o1hIAAAA:8 a=2MnAaCYfOD4pXKyC1zoA:9 a=QEXdDO2ut3YA:10
+ a=DJlwVr9uAhcA:10 a=_FVE-zBwftR9WsbkzFJk:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
         In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=YIJybe7+LxLFiC77zqCyEKPoKaSBRm10qrdRa86ipds=; b=ZCEPuDyt/NayeF12PJcrr0qHu4
-        q1OVCGRP9cDrkUOyUZhSOfu/GAagNToqoxQ8kI3XXVI3BqV7V6z/mqcjR3TQloGqlybfIbOTXCInu
-        YHPiOLowob0O/yAuPBTch/1Ph/pvabQBVATxXfWrtKoatg2kUwNh8xAr5T2z7SUKY1QLOTkEm1CmN
-        qAhROs1zdGTCzPa6Mkrzs/DHL1skPRUR0sdFLlWxy981ialg2LjInEiQK81rWqXJRyBCsDqCWp+mD
-        iCpmxAdRPWPHwkOaCxSc5BYZr6kG73wnJFGRkTfcpGLJ3/jgggrLs653RXwzu7WvxsuBqkfCZgc8Z
-        wwNquQSg==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:60960 helo=[192.168.15.7])
+        bh=IVX0Ndlx1QpYhjf6muh2ZPSSsujamdKE8h0m5gxriWg=; b=ugXaIBaR4SHJOdHpIfJSysQRJk
+        hMygA3NHigKCOmE5iAW0VZjHyR0CwhUgP30QHNr6WsO4z05rCNLNSbspxE82ao1QRGzoq3RImwp9j
+        GtQ9ZexrPKOHKREupWjN7634OqdDMGlVHQ6xaK5tw0bQlBdOhcEfUVn1lFAYYs0EJ/zvIh4BPinqP
+        2hcDv/2Ahg/pDw2r4SHBqlqYSG+1KTcUfUSgFmkXOx6sI8xRR4ZOb5shl3PNocyfHjBUG6Yj6YIH3
+        78Te8wPDAGFqJ68kpL3dmG8jVRkx/ECkwcC2KvnIAHwuZCi4JyMMsadD/emMtxoZZ8vgg1lzRFLGE
+        H+/OXVLQ==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:57016 helo=[192.168.15.7])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.95)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1ovTMM-001Ria-NT;
-        Wed, 16 Nov 2022 19:06:30 -0600
-Message-ID: <ec1bd4b0-6ef1-1673-edaa-8d2abc3e6957@embeddedor.com>
-Date:   Wed, 16 Nov 2022 19:06:16 -0600
+        id 1ovTaS-001jBu-26;
+        Wed, 16 Nov 2022 19:21:04 -0600
+Message-ID: <1b373b08-988d-b870-d363-814f8083157c@embeddedor.com>
+Date:   Wed, 16 Nov 2022 19:20:51 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.2
-Subject: Re: [PATCH 2/2][next] wifi: brcmfmac: Use struct_size() in code
- ralated to struct brcmf_dload_data_le
+Subject: Re: [PATCH net-next v2] netlink: split up copies in the ack
+ construction
 Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Hante Meuleman <hante.meuleman@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Arend van Spriel <aspriel@gmail.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        SHA-cyfmac-dev-list@infineon.com,
-        brcm80211-dev-list.pdl@broadcom.com, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        David Ahern <dsahern@kernel.org>, davem@davemloft.net,
+        netdev@vger.kernel.org, edumazet@google.com, pabeni@redhat.com,
         linux-hardening@vger.kernel.org
-References: <cover.1668548907.git.gustavoars@kernel.org>
- <41845ad3660ed4375f0c03fd36a67b2e12fafed5.1668548907.git.gustavoars@kernel.org>
- <202211161423.2531CADA73@keescook>
+References: <20221027212553.2640042-1-kuba@kernel.org>
+ <20221114023927.GA685@u2004-local> <20221114090614.2bfeb81c@kernel.org>
+ <202211161444.04F3EDEB@keescook> <202211161454.D5FA4ED44@keescook>
+ <202211161502.142D146@keescook>
+ <1e97660d-32ff-c0cc-951b-5beda6283571@embeddedor.com>
+ <20221116170526.752c304b@kernel.org>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202211161423.2531CADA73@keescook>
+In-Reply-To: <20221116170526.752c304b@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -83,54 +76,69 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.31.110
 X-Source-L: No
-X-Exim-ID: 1ovTMM-001Ria-NT
+X-Exim-ID: 1ovTaS-001jBu-26
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:60960
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:57016
 X-Source-Auth: gustavo@embeddedor.com
 X-Email-Count: 0
 X-Org:  HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfANhfVq5PPKVf+YioRGkY6QNckHLtxBi9wXqc37JAuY5bYhIr1Dx1ptLxitCPhMqJ5x+mmUF/OsyUs3K2e3XZuYVVXPXG2bXhJIZZbSDuOVpB0We6qIS
- A68pgMzya3FElcszOzQcZeZ9UzfyIgWVZm7gH62YMpmLaJSjw/7kyQ0We8PfzPtg09oce/d8SqvD7O5F25u/PxmZLKXcoKNRTmz7EwwAuiVG8EMufR7e9PCu
- kE/4hBgTAGFHpUxlK2+cxSgjybUsLKy66LZ6IBDDi9392pUa6gRdZBiph8LSSbDnZRAGCgQ1xCEiNjQT7T1WlGX9ZQzPbfu8HAYqZTQ4IhUVkh8ESxtqIrXB
- 5OugMOne
+X-CMAE-Envelope: MS4xfGnFtwXyMzEZr0qCQ2E57yecRpTyr4V7mLRrI/N5+fofzAMLl/3YJvDZkX+M+AlacciKVOB7Yp6hNA7rDmy8K2NluJ61jKu3FxM94N0qC9U5ROmWOtan
+ Maak1/0HAGGTy6eGvb9J1UPBMB7N9DL5Qz+ICFmSqsBWBCccPeHD/eHbDwfCmIhPuTa29mBHZWy04lb4bouMM4Drya2v0sQnhrdxdB2cCbB96HkUk/WR8xSU
+ cKRI8Pjm3fstyZYzTsTuMw==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 11/16/22 16:23, Kees Cook wrote:
-> On Tue, Nov 15, 2022 at 03:55:34PM -0600, Gustavo A. R. Silva wrote:
->> Prefer struct_size() over open-coded versions of idiom:
+On 11/16/22 19:05, Jakub Kicinski wrote:
+> On Wed, 16 Nov 2022 18:55:36 -0600 Gustavo A. R. Silva wrote:
+>>> @@ -56,7 +55,6 @@ struct nlmsghdr {
+>>>    	__u16		nlmsg_flags;
+>>>    	__u32		nlmsg_seq;
+>>>    	__u32		nlmsg_pid;
+>>> -	__u8		nlmsg_data[];
+>>>    };
 >>
->> sizeof(struct-with-flex-array) + sizeof(typeof-flex-array-elements) * count
->>
->> where count is the max number of items the flexible array is supposed to
->> contain.
->>
->> In this particular case, in the open-coded version sizeof(typeof-flex-array-elements)
->> is implicit in _count_ because the type of the flex array data is u8:
->>
->> drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h:941:
->>   941 struct brcmf_dload_data_le {
->>   942         __le16 flag;
->>   943         __le16 dload_type;
->>   944         __le32 len;
->>   945         __le32 crc;
->>   946         u8 data[];
->>   947 };
->>
->> Link: https://github.com/KSPP/linux/issues/160
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> This seems to be a sensible change. In general, it's not a good idea
+>> to have variable length objects (flex-array members) in structures used
+>> as headers, and that we know will ultimately be followed by more objects
+>> when embedded inside other structures.
 > 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
+> Meaning we should go back to zero-length arrays instead?
 
-Thanks for the reviews! :)
+No.
+> Is there something in the standard that makes flexible array
+> at the end of an embedded struct a problem?
+
+I haven't seen any problems ss long as the flex-array appears last:
+
+struct foo {
+	... members
+	struct boo {
+		... members
+		char flex[];
+	};
+};
+
+struct complex {
+	... members
+	struct foo embedded;
+};
+
+However, the GCC docs[1] mention this:
+
+"A structure containing a flexible array member [..] may not be a
+member of a structure [..] (However, these uses are permitted by GCC
+as extensions.)"
+
+And in this case it seems that's the reason why GCC doesn't complain?
 
 --
 Gustavo
+
+[1] https://gcc.gnu.org/onlinedocs/gcc-12.2.0/gcc/Zero-Length.html#Zero-Length
