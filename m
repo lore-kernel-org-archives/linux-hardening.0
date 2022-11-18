@@ -2,91 +2,82 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52350C433FE
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 11:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AE2C4332F
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 11:38:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240700AbiKRLfV (ORCPT
+        id S240950AbiKRLha (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Nov 2022 06:35:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35070 "EHLO
+        Fri, 18 Nov 2022 06:37:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241303AbiKRLe6 (ORCPT
+        with ESMTP id S241586AbiKRLhH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Nov 2022 06:34:58 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 987FF8A17B;
-        Fri, 18 Nov 2022 03:34:03 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 4D5A11F924;
-        Fri, 18 Nov 2022 11:34:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1668771242; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vqSiCxu0crNnAzpBOtWKIOFuXwsDyaQFJ8B2fw8hztU=;
-        b=xp48TrunWilM2VXMJbQPGTCbgKrJrgN3/aoAOejdXxVAGchLpF3F9uvn6FpEgI4NasjQk6
-        3WycA9Mc4kS/QqHoRbGZNk7C6mHpBWX6tl0lo3GZCDqb/c7wmgK15aQJwiCZhcOl1wtkwy
-        N2dvm/1Uh/7JlElbffoX2que33AsF3M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1668771242;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vqSiCxu0crNnAzpBOtWKIOFuXwsDyaQFJ8B2fw8hztU=;
-        b=CgCD0rV8e7C6NT95+K7bUFTcW0V980dqZtzu8vKcdLloVmCtk7emO2d9lT5afUd5q1K5Mf
-        Wt3GVlDesgwQ/mDA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 231CB13A66;
-        Fri, 18 Nov 2022 11:34:02 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id Q9jqB6ptd2P4aQAAMHmgww
-        (envelope-from <vbabka@suse.cz>); Fri, 18 Nov 2022 11:34:02 +0000
-Message-ID: <f008f8a2-8d5e-88ab-8d23-a2043ea5abe7@suse.cz>
-Date:   Fri, 18 Nov 2022 12:34:01 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v2 2/2] slab: Remove special-casing of const 0 size
- allocations
-Content-Language: en-US
+        Fri, 18 Nov 2022 06:37:07 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF76F97345;
+        Fri, 18 Nov 2022 03:36:20 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id b1-20020a17090a7ac100b00213fde52d49so4809645pjl.3;
+        Fri, 18 Nov 2022 03:36:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MQTkJG6vtTjSw1QDg2CpqnHiBaML0X5nO5Q/zgAHjJs=;
+        b=FSxO4upCiy5Qd6ep2BBFisIeyWZ+D5vSLW3Ow/h8K40AVCtOf51KOuZUImxLiPZywH
+         koR+wH5GFs4ZrbkVkTgcvC9EI8vkubomItYg6mfbC+XuBII7bJv5oV0Qt15kUn0+INIH
+         m48HNO6e7xWoVhfE4d5/jlcAsV5AfFdz773VQuoctfrRLjamSW5qnDRzn/jfxRHseevp
+         yOZy7BCzc8O6aT6fI1WSCqVT28CwbH7LU9j/zluH8rEX4PiDbmQ6zxBMHHvH5eezjdky
+         dt3Apz3AGnDcrIXiApdjlHyUaR/o8BhH5bEUUFEBec2eBCTHo+ymGbtkXuHmzZuSwc2Z
+         G6yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MQTkJG6vtTjSw1QDg2CpqnHiBaML0X5nO5Q/zgAHjJs=;
+        b=jmi/O91lH0vSTPVQ72CPP/e1Ll6J2uLSIUW/d+aeVsTx9B6AVEXRJwMp+WukfZSdgJ
+         XK0yoVWMKhLB1UhjZQyI0ZJC9Ttd/0Zh54j2jcUXASuOz4MQDEgCoyDt0pRZo7Kv+1kD
+         ViSaBCd6DOiJxz+xl1qaqqoqVqpJ1rW02lHw1v3Bt9s4VxcSfthMtAbrqfo+C4GVygSj
+         AWBrExzMHSyqOmW3zNPFON5+mDIkpd3ZnTtxsrCr1XLTXUgjAJUA/jCTTjjesUZzVEUZ
+         rPrWx+yWcFY4eh9ct7J3lLtVYBwouPghVxEF1uIVFGu6xBpTgtptqfQqjVNS10Y3PaLW
+         Oh8Q==
+X-Gm-Message-State: ANoB5plM5zdkN7zKhHh1Vf8I1pAVL/ZbPfqvOSXnFqYOL090Oz2qSqml
+        p54O2igFvjtzWbeoZs+11ysDK/HwrxM=
+X-Google-Smtp-Source: AA0mqf4SVBbjrGyE3yo/NOKhVg2kU6NEYZMORQuo5dI35UBGFiqlsJO0rf3Du8HYoy3w+pxrXWgr9A==
+X-Received: by 2002:a17:90b:2684:b0:218:907c:da24 with SMTP id pl4-20020a17090b268400b00218907cda24mr407705pjb.18.1668771380175;
+        Fri, 18 Nov 2022 03:36:20 -0800 (PST)
+Received: from hyeyoo ([114.29.91.56])
+        by smtp.gmail.com with ESMTPSA id e1-20020a056a0000c100b0056283e2bdbdsm2916623pfj.138.2022.11.18.03.36.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Nov 2022 03:36:19 -0800 (PST)
+Date:   Fri, 18 Nov 2022 20:36:13 +0900
+From:   Hyeonggon Yoo <42.hyeyoo@gmail.com>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Christoph Lameter <cl@linux.com>,
+Cc:     Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
         Pekka Enberg <penberg@kernel.org>,
         David Rientjes <rientjes@google.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+        Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] slab: Remove special-casing of const 0 size
+ allocations
+Message-ID: <Y3duLdce3Srlewsq@hyeyoo>
 References: <20221118034713.gonna.754-kees@kernel.org>
  <20221118035200.1269184-2-keescook@chromium.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20221118035200.1269184-2-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 11/18/22 04:51, Kees Cook wrote:
+On Thu, Nov 17, 2022 at 07:51:59PM -0800, Kees Cook wrote:
 > Passing a constant-0 size allocation into kmalloc() or kmalloc_node()
 > does not need to be a fast-path operation, so the static return value
 > can be removed entirely. This is in preparation for making sure that
 > all paths through the inlines result in a full extern function call,
-
-So with the kmalloc_trace() already solved, we could now say it's not "in
-preparation", but simply "makes sure", right? I can correct that while
-picking this patch.
-
 > where __alloc_size() hints will actually be seen[1] by GCC. (A constant
 > return value of 0 means the "0" allocation size won't be propagated by
 > the inline.)
@@ -149,4 +140,11 @@ picking this patch.
 >  		return kmalloc_node_trace(
 >  				kmalloc_caches[kmalloc_type(flags)][index],
 >  				flags, node, size);
+> -- 
+> 2.34.1
 
+Reviewed-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+
+-- 
+Thanks,
+Hyeonggon
