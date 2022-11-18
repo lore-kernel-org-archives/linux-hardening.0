@@ -2,127 +2,122 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B907AC433FE
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 16:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C934C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 16:43:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241312AbiKRP77 (ORCPT
+        id S242198AbiKRQnb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Nov 2022 10:59:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34852 "EHLO
+        Fri, 18 Nov 2022 11:43:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241666AbiKRP74 (ORCPT
+        with ESMTP id S242000AbiKRQn3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Nov 2022 10:59:56 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59E2462C3;
-        Fri, 18 Nov 2022 07:59:55 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B1CDFB82455;
-        Fri, 18 Nov 2022 15:59:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D853C433D6;
-        Fri, 18 Nov 2022 15:59:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668787192;
-        bh=CChf7DUpCbOUyXpVSp3h/KRe88ht0WNKGTeyeKvzDQQ=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=YAaQE3v2vCCk3Y+WgCMlfSj0JFgZ8S444yvjAxoeIPsd80t/8mRckeKucRx9zEWCI
-         2Tms9xQT7HxpfSHVYNa6sV5xCTXYRDcRJZh75hOYTzgAoyO3gcQnBkuP8hZs5SRD6R
-         oWPlM8rEPDdh3IrUu8vUKYp0+k63ycYhVW4gJfLFUlCBxEexl6f2QlRZpMMtwF35WC
-         8z09gjR+pr+H9qr6v0hLgdUg9MfMb0lvzdkoCOdsBQ9/8E6WuAKMffKw8xoUzBn/Ol
-         qEQDGUmAr7eLCWrC2Jm23/mAlu26P5ZEJdgevUZv4RFvWilbHghfQskPAFrcI4brjv
-         YkZwmuDIHNFMQ==
-Message-ID: <eb9b208a-6e37-8597-03b7-acfa21547c50@kernel.org>
-Date:   Fri, 18 Nov 2022 08:59:51 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.13.1
-Subject: Re: [PATCH net-next v2] netlink: split up copies in the ack
- construction
-Content-Language: en-US
-To:     Jakub Kicinski <kuba@kernel.org>, Kees Cook <keescook@chromium.org>
-Cc:     Stephen Hemminger <stephen@networkplumber.org>,
+        Fri, 18 Nov 2022 11:43:29 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE934B87
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 08:43:24 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id e7-20020a17090a77c700b00216928a3917so8778188pjs.4
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 08:43:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=bFpydVEsN0sToFVtM7jELuhoofQy9t2jPUFLTcIXRx8=;
+        b=PHxZLY8Iha2TaDny05JWQTVe0OvBw0y5kIlu1jrIxQ+y043xEur9SKJwSXJGZdYF/C
+         zq1dqTPaNBWrbbSY2FkMBWe5upYYu4TBKzmWhWP/uY+H7Mu+CtEdN3peJYoo9fHOgNqT
+         R5v38A+RV3qaU4RRHUv5Htt/vmgr5kCH78AXk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bFpydVEsN0sToFVtM7jELuhoofQy9t2jPUFLTcIXRx8=;
+        b=NEC9McwffJXXQbgGtClJVdErW7D2HZjtg46RrHipH0+LVpNk2in5Hs2Z8pjGZuCk4U
+         sNSd6XGS46/g3hNPXQsPmIIqSSCT8lQvTXI405vN+Zs/4/VL2fbHmrKgNPu4LjdkOQCQ
+         qJ6Vf+KiwplwZ42/Jrp60V6zLLZBUwqtzAPQy3n86Zwo7HTNagNAw+hfDyo3aZrDZTQK
+         x6zSIcZcE/2WHDWOY1lR/+byRckQ9eobJb1BEZSMT73e900fPmUfwqqpf5Inlkkhbk26
+         5QaCRmMQuDVlREwY5BPREb1gwmdrhLO92R2uFE6vanM9KwKqZCw4vAQ5fAEmL8Em46/c
+         WcwQ==
+X-Gm-Message-State: ANoB5pnOfptLZMBNGbyx4xB31vFn9wcenXFMVPpm7zzhyuvolMObwcbI
+        LoCTqRd5MV0+PIe1Q9EwWpaSbstEtzEUmg==
+X-Google-Smtp-Source: AA0mqf40QW2uM/mdUZtAUwUfmrT0ybXaxtav/kplbk3xWLYOjhj55pBX/fcy0ASDVHC8fxxYw0QVxA==
+X-Received: by 2002:a17:902:7242:b0:17c:4ae7:cf23 with SMTP id c2-20020a170902724200b0017c4ae7cf23mr448359pll.2.1668789804136;
+        Fri, 18 Nov 2022 08:43:24 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c3-20020a170903234300b0017f59ebafe7sm3928259plh.212.2022.11.18.08.43.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Nov 2022 08:43:20 -0800 (PST)
+Date:   Fri, 18 Nov 2022 08:43:19 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Ananda Badmaev <a.badmaev@clicknet.pro>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        linux-mm@kvack.org, linux-doc@vger.kernel.org,
+        Vitaly Wool <vitaly.wool@konsulko.com>,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        davem@davemloft.net, netdev@vger.kernel.org, edumazet@google.com,
-        pabeni@redhat.com, linux-hardening@vger.kernel.org
-References: <20221114090614.2bfeb81c@kernel.org>
- <202211161444.04F3EDEB@keescook> <202211161454.D5FA4ED44@keescook>
- <202211161502.142D146@keescook>
- <1e97660d-32ff-c0cc-951b-5beda6283571@embeddedor.com>
- <20221116170526.752c304b@kernel.org>
- <1b373b08-988d-b870-d363-814f8083157c@embeddedor.com>
- <20221116221306.5a4bd5f8@kernel.org> <20221117082556.37b8028f@hermes.local>
- <20221117123615.41d9c71a@kernel.org> <202211171431.6C8675E2@keescook>
- <20221117162822.5cb04021@kernel.org>
-From:   David Ahern <dsahern@kernel.org>
-In-Reply-To: <20221117162822.5cb04021@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: Coverity: zblock_alloc(): Memory - illegal accesses
+Message-ID: <202211180841.39558B5E5@keescook>
+References: <202211171419.FCDC8EE@keescook>
+ <74337ebd-0222-2e78-9149-8fa40b0c815e@clicknet.pro>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <74337ebd-0222-2e78-9149-8fa40b0c815e@clicknet.pro>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 11/17/22 5:28 PM, Jakub Kicinski wrote:
-> On Thu, 17 Nov 2022 14:35:32 -0800 Kees Cook wrote:
->> As for testing, I can do that if you want -- the goal was to make sure
->> the final result doesn't trip FORTIFY when built with -fstrict-flex-arrays
->> (not yet in a released compiler version, but present in both GCC and Clang
->> truck builds) and with __builtin_dynamic_object_size() enabled (which
->> is not yet in -next, as it is waiting on the last of ksize() clean-ups).
+On Fri, Nov 18, 2022 at 04:05:36PM +0300, Ananda Badmaev wrote:
+> 18.11.2022 01:20, coverity-bot пишет:
+> > Coverity reported the following:
+> > 
+> > *** CID 1527352:  Memory - illegal accesses  (OVERRUN)
+> > mm/zblock.c:320 in zblock_alloc()
+> > 314     	}
+> > 315     	list = &(pool->block_lists[block_type]);
+> > 316
+> > 317     check:
+> > 318     	spin_lock(&list->lock);
+> > 319     	/* check if there are free slots in cache */
+> > vvv     CID 1527352:  Memory - illegal accesses  (OVERRUN)
+> > vvv     Overrunning array of 10208 bytes at byte offset 10208 by dereferencing pointer "list".
+> > 320     	block = cache_find_block(list);
+> > 321     	if (block)
+> > 322     		goto found;
+> > 323     	spin_unlock(&list->lock);
+> > 324
+> > 325     	/* not found block with free slots try to allocate new empty block */
+> > 
+> > If this is a false positive, please let us know so we can mark it as
+> > such, or teach the Coverity rules to be smarter. If not, please make
+> > sure fixes get into linux-next. :) For patches fixing this, please
+> > include these lines (but double-check the "Fixes" first):
+> > 
+> > Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+> > Addresses-Coverity-ID: 1527352 ("Memory - illegal accesses")
+> > Fixes: 9097e28c25c8 ("mm: add zblock - new allocator for use via zpool API")
+> > 
+> > It looks like block_type is not checked to be < ARRAY_SIZE(block_desc)
+> > after exiting the earlier loop, so the access through "list" may be past
+> > the end of pool->block_lists.
+> > 
 > 
-> I got distracted, sorry. Does this work?
-> 
-> -->8--------------
-> 
-> From: Jakub Kicinski <kuba@kernel.org>
-> Subject: netlink: remove the flex array from struct nlmsghdr
-> 
-> I've added a flex array to struct nlmsghdr to allow accessing
-> the data easily. But it leads to warnings with clang, when user
-> space wraps this structure into another struct and the flex
-> array is not at the end of the container.
-> 
-> Link: https://lore.kernel.org/all/20221114023927.GA685@u2004-local/
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> ---
->  include/uapi/linux/netlink.h | 2 --
->  net/netlink/af_netlink.c     | 2 +-
->  2 files changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/include/uapi/linux/netlink.h b/include/uapi/linux/netlink.h
-> index 5da0da59bf01..e2ae82e3f9f7 100644
-> --- a/include/uapi/linux/netlink.h
-> +++ b/include/uapi/linux/netlink.h
-> @@ -48,7 +48,6 @@ struct sockaddr_nl {
->   * @nlmsg_flags: Additional flags
->   * @nlmsg_seq:   Sequence number
->   * @nlmsg_pid:   Sending process port ID
-> - * @nlmsg_data:  Message payload
->   */
->  struct nlmsghdr {
->  	__u32		nlmsg_len;
-> @@ -56,7 +55,6 @@ struct nlmsghdr {
->  	__u16		nlmsg_flags;
->  	__u32		nlmsg_seq;
->  	__u32		nlmsg_pid;
-> -	__u8		nlmsg_data[];
->  };
->  
->  /* Flags values */
-> diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
-> index 9ebdf3262015..d73091f6bb0f 100644
-> --- a/net/netlink/af_netlink.c
-> +++ b/net/netlink/af_netlink.c
-> @@ -2514,7 +2514,7 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
->  		if (!nlmsg_append(skb, nlmsg_len(nlh)))
->  			goto err_bad_put;
->  
-> -		memcpy(errmsg->msg.nlmsg_data, nlh->nlmsg_data,
-> +		memcpy(nlmsg_data(&errmsg->msg), nlmsg_data(nlh),
->  		       nlmsg_len(nlh));
->  	}
->  
+> There is no need for this check because it is guaranteed that this code will
+> be executed only if size <= PAGE_SIZE. Since slot_size for the last list
+> even exceeds PAGE_SIZE, block_type will be always valid.
 
-LGTM and removing the flex array fixes the iproute2 compile.
-Reviewed-by: David Ahern <dsahern@kernel.org>
+Ah-ha, understood. Well, if you do want to catch it if there is ever a
+typo in the block_desc values (which are not obviously >4096 without
+sitting down and calculating them), perhaps add:
+
+        if (WARN_ON(block_type >= ARRAY_SIZE(block_desc))
+                return -ENOSPC;
+
+
+-- 
+Kees Cook
