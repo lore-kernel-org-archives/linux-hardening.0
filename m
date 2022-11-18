@@ -2,150 +2,101 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FD0C433FE
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 03:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FAFC4332F
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 03:43:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234794AbiKRD2E (ORCPT
+        id S235129AbiKRDnB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Nov 2022 22:28:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39906 "EHLO
+        Thu, 17 Nov 2022 22:43:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234786AbiKRD2D (ORCPT
+        with ESMTP id S235016AbiKRDnA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Nov 2022 22:28:03 -0500
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 948F513F89
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 19:28:02 -0800 (PST)
-Received: by mail-pj1-x1029.google.com with SMTP id k5so3379437pjo.5
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 19:28:02 -0800 (PST)
+        Thu, 17 Nov 2022 22:43:00 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEDC65EF89
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 19:42:58 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id u6-20020a17090a5e4600b0021881a8d264so1550661pji.4
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 19:42:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=F36ePDNlCEzEo7uhtE/7mj1A0uCdl18mggSDLjAIBVk=;
-        b=YGVVEvY578X0bTstx0iAIrqJGez3hsnxoOoUpBJT4Q9jd9MXem7asmcwvnybW4tQ6n
-         O2sYVrDWp3ZDjHWyIpKoSkDDM8DX1wS35HCnLZ5qUAqvYm8P1Oop8ScWiHthkWoTiwEo
-         CEV64OSa2G+hbEfS6PUOfR0b6WGDjNC290oqM=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WOVj/vcA43GEmLzOxkf/CHOVgdiQSuspf1pwsCrY4DI=;
+        b=N9jcBtuWkS8x6QuPDI6a/CaFzzlJ3Ass1QGsZ4K1wyf53R8TxQNZykeyan0RhuLHNC
+         ScLsHL5MuylEzgS8BIivm2uCy6J9erKFz48w567dPx0zXVI89dtKi4uDaTRSrBS8sx85
+         WEEyPtE2IM62HuRC+LlnYtfWNYSHLRjn5eE+A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F36ePDNlCEzEo7uhtE/7mj1A0uCdl18mggSDLjAIBVk=;
-        b=7xcLmf9bOdZW21WD095QQQFhN5KeT0/9b6T3hktGfDll/+B9EeDfN4wJPUMu2VZ9to
-         3RTiA+tOgmx1QYsoc4szFJOf2jWSKy1cHHv2brTvu/e4fgMngcjbF+zMUaPhUrtEbFHB
-         gjtFO/kgc91twpcla72Uc1CKwiPMVp4LMXjN8xHBxdJTFqvCz4rlQPEc8grDNaHF6n9I
-         jMOrSYcxWzVXvdAOwUtnNWwCEnBU9f0vbsc34CwCCosL5ls26iyfGkeQ5dKZB8rN6fQD
-         gVFJOZkOWnWEroFiSrzZamKEVinokAShHscEIjlcGBh6EF6DxUYrNyZQGTL7UEI4ZgyY
-         BtSw==
-X-Gm-Message-State: ANoB5pmQSH2W6eazQumuUEZMFwlAvS3NxwusG1Jw6JbV9MVmGRsgZWFx
-        DzZbLzwoxSLuc5eXMXKe5Bq81g==
-X-Google-Smtp-Source: AA0mqf5NTXas/rZvXyznEcobhz5OK9ZKiMSPkpTirE6uepnuMidQlAXHwj1y8KC784/f0fIKmsAVdg==
-X-Received: by 2002:a17:902:6b08:b0:187:4467:7aba with SMTP id o8-20020a1709026b0800b0018744677abamr5639625plk.61.1668742082081;
-        Thu, 17 Nov 2022 19:28:02 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WOVj/vcA43GEmLzOxkf/CHOVgdiQSuspf1pwsCrY4DI=;
+        b=wLr8h+GVh76JA5aUy8q2OYo424FogIIms5HeovdThIAGZozMCXS7ItgSiqC+RvHTwm
+         0YmzfP7bpTXYvBQBP2i6JHmqQDErlW2hckRrqug+Sih358+4buCB5r5uLeMBegafoCs9
+         qh/eeoMBsW0E1J3KyUV/5OxjSLi9UUqTl+/H3jQ71kMloepTVtpWtoGDy70nfcyiQP+V
+         0x1Yu2yjLsegzxBNNazJ/FmaxBE5rqGBDEK2tlv+q9sqTIIHXPMMHgutUqaOpdJ5PqCK
+         GPqsNArereVkUH0blMpH1m+bzUYhNzRhfQVqXY910y8yWLYYDPgRwMSOVE0M+6a0GEkq
+         PX7w==
+X-Gm-Message-State: ANoB5pny24AaMRGWIlo16amzTTWTja8zhySUzX4VeNT5IoReskZ5KS28
+        MfZMKlDP9l8unt1Znd5z7WpxKQ==
+X-Google-Smtp-Source: AA0mqf7oPtZISN4+9QfW8E/l3HubTOkufxUVDeuTtst0mgG92D/JFZGMTleYkAibN6J9x0yzxsBhuQ==
+X-Received: by 2002:a17:90a:ad4c:b0:212:d3ec:632f with SMTP id w12-20020a17090aad4c00b00212d3ec632fmr5904213pjv.43.1668742978266;
+        Thu, 17 Nov 2022 19:42:58 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c4-20020a17090a558400b00210c84b8ae5sm1598458pji.35.2022.11.17.19.28.00
+        by smtp.gmail.com with ESMTPSA id i15-20020a655b8f000000b00470275c8d6dsm1775011pgr.10.2022.11.17.19.42.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Nov 2022 19:28:01 -0800 (PST)
-Date:   Thu, 17 Nov 2022 19:27:59 -0800
+        Thu, 17 Nov 2022 19:42:57 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Stephen Hemminger <stephen@networkplumber.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        David Ahern <dsahern@kernel.org>, davem@davemloft.net,
-        netdev@vger.kernel.org, edumazet@google.com, pabeni@redhat.com,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next v2] netlink: split up copies in the ack
- construction
-Message-ID: <202211171855.9AEB6E3@keescook>
-References: <202211161454.D5FA4ED44@keescook>
- <202211161502.142D146@keescook>
- <1e97660d-32ff-c0cc-951b-5beda6283571@embeddedor.com>
- <20221116170526.752c304b@kernel.org>
- <1b373b08-988d-b870-d363-814f8083157c@embeddedor.com>
- <20221116221306.5a4bd5f8@kernel.org>
- <20221117082556.37b8028f@hermes.local>
- <20221117123615.41d9c71a@kernel.org>
- <202211171431.6C8675E2@keescook>
- <20221117162822.5cb04021@kernel.org>
+To:     Clemens Ladisch <clemens@ladisch.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] hpet: Replace one-element array with flexible-array member
+Date:   Thu, 17 Nov 2022 19:42:55 -0800
+Message-Id: <20221118034250.never.999-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221117162822.5cb04021@kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1182; h=from:subject:message-id; bh=3hBZWlpQeB25CbJOuKYMyAJRSVDo5TGnXwmNCkPCrPo=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjdv8+VYED8zZ28eD8b2rN1FwHB0FxGowuj+UwvoB6 n/LrI5iJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY3b/PgAKCRCJcvTf3G3AJt3hD/ 4w6jgJDMghcOe7eJGjGCHM5me8MjMOqWObyVYbnIZDNGnuVP4C3zmjH1viyf5AeQNj/6XPk8Z7WS3C uYnosPtQ+NjM3YQneG/RJbw4IHJQHcBrrHipz7nLIgTzfTROJAHfD4ZrMq0vVbQ4vTDajO5GBpt4uN ZZB0ZvcRJ8nI9YGi+/e511k2YcbT3jJIu8xXsk/LfJm43X7K25RaMAMWJBiubUf2NbwYJVUEJZGgYi WZM2txmwf3DR+3TOoFdkz06x3wohOsO4vNre7i9ub0qiP+NTqLVq2MJ70Kswi8CM/5UMZaJTsjRAJe rPQAjmCXXtKvJnVy/3tk4VeWBTELTWzQi44Pq5S9taVc18zUIYHLy9V5L9y+N1Ltb/6RAFo4XTD2D4 RFYCfMtQ81rHI7DEIlFDakI++2PK19oojPk9YAqoOJl1I4tZFtp6Fswel4p/kfVtSkIqBg4G9Bw9hs 69ECP1wY9AZWVcmAk39wxeWL25d8HVl43l6cta6rzRFRmwb0YO88vGcgwxhoScPebO3Cao61KOA62F Zs+yJ7t/0C6m9mG7S9Z8Y2G4UwZIf3/ccM+k4J4BeEu31YZLqBA5+D4aDcoZFfdCiccLyY+jHmKpps JlSmkhx6DYmnbQd8jyxMUU83I9QPUSpWibI39KqoHsb8Jk8KcVEDfoG6grOg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 04:28:22PM -0800, Jakub Kicinski wrote:
-> On Thu, 17 Nov 2022 14:35:32 -0800 Kees Cook wrote:
-> > As for testing, I can do that if you want -- the goal was to make sure
-> > the final result doesn't trip FORTIFY when built with -fstrict-flex-arrays
-> > (not yet in a released compiler version, but present in both GCC and Clang
-> > truck builds) and with __builtin_dynamic_object_size() enabled (which
-> > is not yet in -next, as it is waiting on the last of ksize() clean-ups).
-> 
-> I got distracted, sorry. Does this work?
-> 
-> -->8--------------
-> 
-> From: Jakub Kicinski <kuba@kernel.org>
-> Subject: netlink: remove the flex array from struct nlmsghdr
-> 
-> I've added a flex array to struct nlmsghdr to allow accessing
-> the data easily. But it leads to warnings with clang, when user
-> space wraps this structure into another struct and the flex
-> array is not at the end of the container.
-> 
-> Link: https://lore.kernel.org/all/20221114023927.GA685@u2004-local/
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+One-element arrays are deprecated[1] and are being replaced with
+flexible array members in support of the ongoing efforts to tighten the
+FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
+with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
 
-Thanks! Yes, this seems to be happy with all the future stuff enabled.
+Replace one-element array with flexible-array member in struct hpet.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+This results in no differences in binary output. The use of struct hpet
+is never used with sizeof() and accesses via hpet_timers array are
+already done after explicit bounds checking.
 
--Kees
+[1] https://github.com/KSPP/linux/issues/79
 
-> ---
->  include/uapi/linux/netlink.h | 2 --
->  net/netlink/af_netlink.c     | 2 +-
->  2 files changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/include/uapi/linux/netlink.h b/include/uapi/linux/netlink.h
-> index 5da0da59bf01..e2ae82e3f9f7 100644
-> --- a/include/uapi/linux/netlink.h
-> +++ b/include/uapi/linux/netlink.h
-> @@ -48,7 +48,6 @@ struct sockaddr_nl {
->   * @nlmsg_flags: Additional flags
->   * @nlmsg_seq:   Sequence number
->   * @nlmsg_pid:   Sending process port ID
-> - * @nlmsg_data:  Message payload
->   */
->  struct nlmsghdr {
->  	__u32		nlmsg_len;
-> @@ -56,7 +55,6 @@ struct nlmsghdr {
->  	__u16		nlmsg_flags;
->  	__u32		nlmsg_seq;
->  	__u32		nlmsg_pid;
-> -	__u8		nlmsg_data[];
->  };
->  
->  /* Flags values */
-> diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
-> index 9ebdf3262015..d73091f6bb0f 100644
-> --- a/net/netlink/af_netlink.c
-> +++ b/net/netlink/af_netlink.c
-> @@ -2514,7 +2514,7 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
->  		if (!nlmsg_append(skb, nlmsg_len(nlh)))
->  			goto err_bad_put;
->  
-> -		memcpy(errmsg->msg.nlmsg_data, nlh->nlmsg_data,
-> +		memcpy(nlmsg_data(&errmsg->msg), nlmsg_data(nlh),
->  		       nlmsg_len(nlh));
->  	}
->  
-> -- 
-> 2.38.1
-> 
+Cc: Clemens Ladisch <clemens@ladisch.de>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/linux/hpet.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/include/linux/hpet.h b/include/linux/hpet.h
+index 8604564b985d..21e69eaf7a36 100644
+--- a/include/linux/hpet.h
++++ b/include/linux/hpet.h
+@@ -30,7 +30,7 @@ struct hpet {
+ 			unsigned long _hpet_compare;
+ 		} _u1;
+ 		u64 hpet_fsb[2];	/* FSB route */
+-	} hpet_timers[1];
++	} hpet_timers[];
+ };
+ 
+ #define	hpet_mc		_u0._hpet_mc
 -- 
-Kees Cook
+2.34.1
+
