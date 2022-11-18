@@ -2,121 +2,80 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3344C433FE
-	for <linux-hardening@archiver.kernel.org>; Sat, 19 Nov 2022 00:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0C0C4332F
+	for <linux-hardening@archiver.kernel.org>; Sat, 19 Nov 2022 00:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232906AbiKSAeh (ORCPT
+        id S238029AbiKSAp2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Nov 2022 19:34:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57944 "EHLO
+        Fri, 18 Nov 2022 19:45:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232643AbiKSAeL (ORCPT
+        with ESMTP id S236727AbiKSApG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Nov 2022 19:34:11 -0500
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84E42113FFB
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 15:42:47 -0800 (PST)
-Received: by mail-pf1-x431.google.com with SMTP id b185so6293249pfb.9
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 15:42:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gdy8THFQ217ArK5qAf8locqq0ea0wdI2wQ0KQQ2fz/s=;
-        b=BxtRWJrHgOasPDbyKA01nQReUZgzUZg6/4Bvt2wpUMbvtO/NzBRy4yb4K7NNnaui7z
-         ZKoGcX+rZGZwaFdgXrnSa2czgwNPRRYNXG71hyg0aQ9HxMwIlmkn+NGMMTz5Y1m91xRw
-         6E5v8oz/mfPDQhfGbLbEdYGZ6/kBrnVXVXF3w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gdy8THFQ217ArK5qAf8locqq0ea0wdI2wQ0KQQ2fz/s=;
-        b=pbBSFnpwut0EzOmhmW/xsLX6QEMcU9V8VfYZ6GoVDPLtcP5a8Qi0kJV6gb4+w3VPOp
-         si1SSngaQ2iE9gzxcgeIR4ZTHBOhM+Kyf5c/Tr9Fbrge2EZoYYGGeT09N4SIB5WnLyAH
-         gehBdVPapaLifXB76Ct47qBPjKtbY9T6KmeguwcDBqbr1pVi26Q9H67YsUqcvEv34m+P
-         2X54mDAt+5I1rJKsrXYk1xeri1uddWD3yLkdV7lFct5VJPjQmgIX08N8FM+rJI9aq5KQ
-         Vf3xCXm+UETd2/f5pyI6teA+tLa2n3F6gmqgEC6B/ZzASXvYjcmiCGqZnwe62MGrcJk+
-         fWsA==
-X-Gm-Message-State: ANoB5pnu8Nk+Cwk6/L9fl5M7BVbrRl4YmhB6WmnJdMbBhMrBIkhkmJ2l
-        /dVKmnBIuh87pUplzl6RHJoP6A==
-X-Google-Smtp-Source: AA0mqf66SlkGoi1KeBiWbmO1baSn/GeKKLl0in2EE+JnpytDffihGspac3rJNaC2ddKrmgRrYzkDpw==
-X-Received: by 2002:a63:e09:0:b0:46b:8e9:749 with SMTP id d9-20020a630e09000000b0046b08e90749mr8370837pgl.260.1668814966918;
-        Fri, 18 Nov 2022 15:42:46 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n14-20020a170902e54e00b00186c54188b4sm164191plf.240.2022.11.18.15.42.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Nov 2022 15:42:46 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Lamparter <chunkeey@googlemail.com>
-Cc:     Kees Cook <keescook@chromium.org>, Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
+        Fri, 18 Nov 2022 19:45:06 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3181BD39F8;
+        Fri, 18 Nov 2022 15:46:37 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A4DBA627B9;
+        Fri, 18 Nov 2022 23:46:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F883C433D6;
+        Fri, 18 Nov 2022 23:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668815196;
+        bh=mq6yPCqX22eHbmxs61ieFNDcYRcxIKCg8jAgghOAhVI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=F71YIb4iF66AT2xgpSZbPmYkvhO6pgg+5pWCAv8woAtx0hpyWRDuBmfw6rlixEayH
+         uQK5tew6hP61wy+AOxJBg5Is6MXkjzdmovBKF14warorwuWzF2rlgHkji3p1qyLIZf
+         pVHR5BYNjPSx9QlSih+zC4VTAbhwv/evBiQeO2fkellBlp6fFjqQ1R21XqAssSITVO
+         5zk/dib0mqv5LNmfUs+ya/VA3O4l5XVD3/62JTAFxQNq5di3KAwXjewK8VgSFCa/gd
+         +RLyhompfyVtojP7laKt6F8bPwcEZ1huTdR6TcigLRf7BOAk6YWPUrK4h+pIeoH6bi
+         +BrTLpaATbpQw==
+Date:   Fri, 18 Nov 2022 17:46:21 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        GR-QLogic-Storage-Upstream@marvell.com,
+        Nilesh Javali <njavali@marvell.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] p54: Replace zero-length array of trailing structs with flex-array
-Date:   Fri, 18 Nov 2022 15:42:44 -0800
-Message-Id: <20221118234240.gonna.369-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        linux-hardening@vger.kernel.org
+Subject: [PATCH 0/2][next] scsi: qla2xxx: Replace one-element array with
+ flexible-array member
+Message-ID: <cover.1668814746.git.gustavoars@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1744; h=from:subject:message-id; bh=frYwS/CNxid8oyzmUWma7Osq+zP62XTvZCZTt4IGeWs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjeBh0f9MnBuxNAcv8AF9IXJq5IQXcPhkrRYT3czBK XoiyBLGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY3gYdAAKCRCJcvTf3G3AJo5DEA CErDezf9uGBzeffXHVEc6KW5d8b6cJulenKDodro6pDA0mLJLYysESpyoAEe5dxT0q1pYdE0tzhV3S jWP0krg7whj91sCODp2jVmwPHK+fwU9/QiYarSJb+w3aAMuPx44QzBLTEWl9zbpjrPVTzuyVpVrftn jlGwx84wxKoeQdJGBF5in0GyzFLP/hVeLE4Zd+ntsc2BmVULzfrwNwqlN5I/4pAX0Q7zYwMyIVOR8j z5v64icaG0BGj5RLTZ7wauNbfIqOZST4aOTNwebR5VK0+zLAyYKg5OVjsfhVcaATEXiYfEzRq6L1xn qMzwjvXdv/0EzjBFV5b4UI5FOsAdQ0VWPc/qDCDZ+1z0TOs0LBuQTyLnxubd5HXz+kOxLDMjQqge3Q 3Mpr2qPcaVaqjRpAN1YNFhgli/fb3dK2GYf6VunwqdTSMTfEykk1vKWlJbpPX2nm2oNJFnk3aaRsFd m083OQZQZ+QOkekrxZ6oukm5qapc+LcBjy+/CWQhdzI1Yxr4S0m2IZ+nKfZpGBTSjI7rTEWS/iIJ6u GD/HrfqnStwjJjgGx/GRClHRWZ4roYUXubU4mEQ/9J55gTJ0VQvJvp7nUiS9ODC51JZxaWTFDogTXe elAmug2mMq8e8aQEfFbVhcAjCnBInU6Jt9iYU4uZeorSptPZtaZ8iJooDsgQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Zero-length arrays are deprecated[1] and are being replaced with
-flexible array members in support of the ongoing efforts to tighten the
-FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
-with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
+Hi!
 
-Replace zero-length array with flexible-array member.
+This series aims to replace a one-element array with flexible-array
+member in drivers/scsi/qla2xxx/qla_def.h through the use of the
+DECLARE_FLEX_ARRAY() helper.
 
-This results in no differences in binary output (most especially because
-struct pda_antenna_gain is unused). The struct is kept for future
-reference.
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [1].
 
-[1] https://github.com/KSPP/linux/issues/78
+Link: https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
 
-Cc: Christian Lamparter <chunkeey@googlemail.com>
-Cc: Kalle Valo <kvalo@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v2:
-- convert normally (chunkeey)
-v1: https://lore.kernel.org/lkml/20221118210639.never.072-kees@kernel.org/
----
- drivers/net/wireless/intersil/p54/eeprom.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Gustavo A. R. Silva (2):
+  scsi: qla2xxx: Replace one-element array with DECLARE_FLEX_ARRAY()
+    helper
+  scsi: qla2xxx: Use struct_size() in code related to struct
+    ct_sns_gpnft_rsp
 
-diff --git a/drivers/net/wireless/intersil/p54/eeprom.h b/drivers/net/wireless/intersil/p54/eeprom.h
-index 1d0aaf54389a..641c4e79879e 100644
---- a/drivers/net/wireless/intersil/p54/eeprom.h
-+++ b/drivers/net/wireless/intersil/p54/eeprom.h
-@@ -108,10 +108,10 @@ struct pda_country {
- } __packed;
- 
- struct pda_antenna_gain {
--	struct {
-+	DECLARE_FLEX_ARRAY(struct {
- 		u8 gain_5GHz;	/* 0.25 dBi units */
- 		u8 gain_2GHz;	/* 0.25 dBi units */
--	} __packed antenna[0];
-+	} __packed, antenna);
- } __packed;
- 
- struct pda_custom_wrapper {
+ drivers/scsi/qla2xxx/qla_def.h | 4 ++--
+ drivers/scsi/qla2xxx/qla_gs.c  | 5 ++---
+ 2 files changed, 4 insertions(+), 5 deletions(-)
+
 -- 
 2.34.1
 
