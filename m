@@ -2,122 +2,187 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EF8C4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 18:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C67DC4332F
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 18:34:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242539AbiKRSP6 (ORCPT
+        id S235480AbiKRSeX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Nov 2022 13:15:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56094 "EHLO
+        Fri, 18 Nov 2022 13:34:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242557AbiKRSPz (ORCPT
+        with ESMTP id S235084AbiKRSeW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Nov 2022 13:15:55 -0500
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B01C9898FC
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 10:15:54 -0800 (PST)
-Received: by mail-pg1-x52a.google.com with SMTP id v3so5674115pgh.4
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 10:15:54 -0800 (PST)
+        Fri, 18 Nov 2022 13:34:22 -0500
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE6D17661
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 10:34:20 -0800 (PST)
+Received: by mail-pf1-x431.google.com with SMTP id 130so5659753pfu.8
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 10:34:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tmg0LliGpsZZHm4HXiakpzT3kGjALzuosA9bdBtcr+Q=;
-        b=eiAPF5GM7kr6LedkAaCy65AdbVFDpDohOTBtN5jzYKzNKrFe9SMUfOeHShgkG72ML/
-         TsZq+WEQoaSw0hMt+I5CwhPS5//DaY0NCujymzjFkkHz8CoYyrH7MzIACPlboc+3lm38
-         RDqL5ZoJZO9q+GU5AddFLfwE9IpWtNpDyk7N8=
+        bh=JWBg2ZM+5LY+DPWE9KaJWuwKCy+tCudVMmncE2yGD/w=;
+        b=YI9XhArXpxIssWvzDDKUAPsPQRsDbBXsCvssOj329a1V33PILDfsCv1QtkvOXno5Uk
+         2ohX2Yph9tzOaS6mPz/ztfB19uu4mth+aIDdbPLR4IBpSt8KonYF2BrUrj4Tod6H+KvI
+         nNsLOBnqjnfCAu15W83Zck7APkMPr3fT0evWU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=tmg0LliGpsZZHm4HXiakpzT3kGjALzuosA9bdBtcr+Q=;
-        b=K1fDdHy6YKpyHo2Jozb/PaNi84+qqKb3lG+7dUVlVL6ZQgMv7YtOVU7U2M3044vB/f
-         3OTDf/ysn81pf8xNpKo+R5x5U89cJVdgKaoJKwjTPv6hKGSjO7Wi0o2NyKeM7nLK3y27
-         xr6AjWsNekuPvLayGbA4Pqmln2VqINd6rUbe8d4YEQE7S79pFFu4zAVqaj3M3f+MooSU
-         XLR3YworRKERJtnZG4hgdL+vLDLi3QZxWCMhG5MMuMZUubrn+LTfxxP2heWNpHa6u7Cd
-         s5NiGDCKouEet0clWxxaLMi0yujIXvi301ATlyZXBOqdUDiQYV4RQK65k4/jU0UGnUdf
-         1xAg==
-X-Gm-Message-State: ANoB5pkzxMS4t1YAPEVfgSn3CxL5/rlEU1cZ2eLf92aJ44LktXFofXng
-        ca0oDw1xd3lpeYgqnk+AkZlnmQ==
-X-Google-Smtp-Source: AA0mqf5WDnA1r5jesMg2Qg61/95ge1c7MF8CtLnRwIZaYDBuT4OQmMYteUJ6lQc50XLxtxY/qLeJXg==
-X-Received: by 2002:a62:ab18:0:b0:56b:9ae8:ca05 with SMTP id p24-20020a62ab18000000b0056b9ae8ca05mr8908089pff.59.1668795354181;
-        Fri, 18 Nov 2022 10:15:54 -0800 (PST)
+        bh=JWBg2ZM+5LY+DPWE9KaJWuwKCy+tCudVMmncE2yGD/w=;
+        b=OqH92r1eDjpV0A5Qab4w1Fpr7uMNQqbRn2zKYPKaBPRHVq0Nj1JpUYXev8YwjF7xs1
+         2JYVA5H0niBdmZBr71Ph+M2ygsLoEhvqaax8Rh952WKpay6r0Dz9+77mQCbszWlHI48/
+         qWwp6LWeoeKYOeEjOd2YgryGkKygQpjcVWxB6MIR2b97Y0cP8zezife4ZOvh4cMBLv7m
+         zWjTENT9GRJ+mtyrRSyNJs5dmrCZWk8xLv/agFrL0tVJy2yDUJ+wiovNf87QSPyU1qSi
+         BID8H6fAsMD2yRmAV9l45Xu6orhNcogY/DAwHksvoRQtD+xg2pl6v4VDVsZ+9jwuCSwv
+         2QJw==
+X-Gm-Message-State: ANoB5plWJAnQmvxYclJyaXb9n3C4n1FgjGQWea96lWT1fsoT1R/2MUL3
+        B6sbE2np9DuXs2Jho6cyskcg6w==
+X-Google-Smtp-Source: AA0mqf68n5Vi70FZHtlJfpm84MyPVpxCEiFDQvN+/+JJ1+WkfRdVfKGRYpmOxWhMUA3LHPSw5jWJag==
+X-Received: by 2002:a65:6049:0:b0:477:2ac1:9d2c with SMTP id a9-20020a656049000000b004772ac19d2cmr4147048pgp.184.1668796460410;
+        Fri, 18 Nov 2022 10:34:20 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e10-20020a17090a4a0a00b00217090ece49sm3068381pjh.31.2022.11.18.10.15.53
+        by smtp.gmail.com with ESMTPSA id e7-20020aa798c7000000b0056bee23a80bsm3465524pfm.137.2022.11.18.10.34.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Nov 2022 10:15:53 -0800 (PST)
+        Fri, 18 Nov 2022 10:34:19 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, Len Brown <lenb@kernel.org>,
-        Robert Moore <robert.moore@intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-acpi@vger.kernel.org, devel@acpica.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] ACPICA: Replace fake flexible arrays with flexible array members
-Date:   Fri, 18 Nov 2022 10:15:51 -0800
-Message-Id: <20221118181538.never.225-kees@kernel.org>
+To:     Alexei Starovoitov <ast@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH bpf-next v3] bpf/verifier: Use kmalloc_size_roundup() to match ksize() usage
+Date:   Fri, 18 Nov 2022 10:34:14 -0800
+Message-Id: <20221118183409.give.387-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1891; h=from:subject:message-id; bh=hNQ8xGwsN5w0u1FbYYQ7J14X7B6YxBpfy2M2HM3+Jjc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjd8vXU+Wg7XOvkEcmLqHTez5MBdtt0fUOreosAnS4 ntlijcaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY3fL1wAKCRCJcvTf3G3AJjDkD/ sFy/fgnccpfOxOXUfmtmxp15lFZTGFZrdm9pbQImExpBb+3wb3jtS5vOigfPdnrVbUAgGA4vw2yBmZ QkApv68Dgc5HzHHbjzpWx2Doo6zdD7kuIygYQqG1TRHIQjr4NWA47yR63Aq3AFYKPh2q+xRCpMrMK5 ZEbxM26zdW+0jmw3BtJ1mmi8V4Q2bhU5+8EyqJ7ESMcqxQKPIrdOtdorD+ACi2P/tJv7prDbSVHFuo 04Jm+Io0K50lcfK9MBGuP45auU9z25kCe/rM5fh5QE9TJrXEVb4lJhoyX64FHY7ya1K9uXk7mGpTuq rCZqhfrGcJvSetSG3qWaP14jtazw1pGpyTE1jMvmuCebgEHupzq2DrThTsn8XX9xLKE9pplLP1OziQ 5tgbmRcDMxNFRQxVL/W1XwTl72j1QD9FbaanBJHksNkYuNAlTPJmVWZR5BowGyuSZJKQ2z0M/fTs0O LXegQJRXyN4FjtHyN/1N7XXNMtEiygKrFXA6YCU4RuSM/C25VrCFo5Rfjlvoed3qfBOTejkqRy1MNV nI21vUXGwSzoJAunS1g5tGn007d7H5tGmp9qY2OTJZBQK3tC1QxMy2Hr1/4XeqygKonufrTM05F3wP eI1e7KQ4oKKMbtYa4eQBq4YsSjyId0Th+edmiKiF/uIcwqjKiKtrc6iqflUg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4318; h=from:subject:message-id; bh=nSdV4wW4rhE2V2JgCPdZCO/CD3bcTE7aQbwWRnxWy7M=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjd9AmEhS0Oiwnde/cDpv1CK8Q0c5N9kxXIxXFg3zD C2cfTj+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY3fQJgAKCRCJcvTf3G3AJsIwD/ 4lBP73J5C3K2v0Blo/NFbBficvB0M/s/lCRJefT1g8onHiFpL7bEBFYnGI1KiObgY83cBXwkR77O8s vCOmMYNQl1M8sTrwP+MFvGDjNcNMf101GzlUi43idXgjZFRXuXAZjxMt+ClxrMbgrM+fD3sON0WgPu 4wVOkaFqdEv5wNnWz0TLbq5cgcEHYcT8Yd6p7vZNOy3UQLsdrDo5vGPtMKH1/Fs+JmyuBlid8Tslrg pLD0xf1SAShe9WI987JIok8jFcB6aGe5FOJ+BEpbt3OdRRrQpofkQcuMYn1ZlIoNLZUnFaOQODAzVs WuBZ21HtCJPiwrrZErvnZK56OCco5G80+bjrHMDgkhRAGyfE25gyv3X0TVv7Zf/1+TTDwt3OAT/HY8 pPh891vY8GOMNlmqwUG0hyBo/v1qN1E54INHRr2nY75z1ga+4AEHdAqN04U9i7v5i5m0SWNdQ3NPCZ sDPy+gnX6yeUpqKEJpUaK9ah+OmpGgDao2u2XcGTved1UPfw2wnRnpsPZrtT+tjL79O1OkS24NJKjh gSWr0EpzLaYvgrkafqVAUYTSE6pj+Ikro010v1DIpIoL7zYKrqPr7aYKNy7lyW7Wcx8QTzpFDxUBNK NxSLc0jHogciAXOErC1Y9iGAEHgOnj1Va2NrHGEieG5IsD0GBv7FY51SkDCg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Functionally identical to ACPICA upstream pull request 813:
-https://github.com/acpica/acpica/pull/813
+Most allocation sites in the kernel want an explicitly sized allocation
+(and not "more"), and that dynamic runtime analysis tools (e.g. KASAN,
+UBSAN_BOUNDS, FORTIFY_SOURCE, etc) are looking for precise bounds checking
+(i.e. not something that is rounded up). A tiny handful of allocations
+were doing an implicit alloc/realloc loop that actually depended on
+ksize(), and didn't actually always call realloc. This has created a
+long series of bugs and problems over many years related to the runtime
+bounds checking, so these callers are finally being adjusted to _not_
+depend on the ksize() side-effect, by doing one of several things:
 
-One-element arrays (and multi-element arrays being treated as
-dynamically sized) are deprecated[1] and are being replaced with
-flexible array members in support of the ongoing efforts to tighten the
-FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
-with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
+- tracking the allocation size precisely and just never calling ksize()
+  at all[1].
 
-Replace one-element array with flexible-array member in struct
-acpi_resource_extended_irq. Replace 4-byte fixed-size array with 4-byte
-padding in a union with a flexible-array member in struct
-acpi_pci_routing_table.
+- always calling realloc and not using ksize() at all. (This solution
+  ends up actually be a subset of the next solution.)
 
-This results in no differences in binary output.
+- using kmalloc_size_roundup() to explicitly round up the desired
+  allocation size immediately[2].
 
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Robert Moore <robert.moore@intel.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-acpi@vger.kernel.org
-Cc: devel@acpica.org
+The bpf/verifier case is this another of this latter case, and is the
+last outstanding case to be fixed in the kernel.
+
+Because some of the dynamic bounds checking depends on the size being an
+_argument_ to an allocator function (i.e. see the __alloc_size attribute),
+the ksize() users are rare, and it could waste local variables, it
+was been deemed better to explicitly separate the rounding up from the
+allocation itself[3].
+
+Round up allocations with kmalloc_size_roundup() so that the verifier's
+use of ksize() is always accurate.
+
+[1] e.g.:
+    https://git.kernel.org/linus/712f210a457d
+    https://git.kernel.org/linus/72c08d9f4c72
+
+[2] e.g.:
+    https://git.kernel.org/netdev/net-next/c/12d6c1d3a2ad
+    https://git.kernel.org/netdev/net-next/c/ab3f7828c979
+    https://git.kernel.org/netdev/net-next/c/d6dd508080a3
+
+[3] https://lore.kernel.org/lkml/0ea1fc165a6c6117f982f4f135093e69cb884930.camel@redhat.com/
+
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>
+Cc: Song Liu <song@kernel.org>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: KP Singh <kpsingh@kernel.org>
+Cc: Stanislav Fomichev <sdf@google.com>
+Cc: Hao Luo <haoluo@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: bpf@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/acpi/acrestyp.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+v3:
+- memory leak already taken into -next (daniel)
+- improve commit log (daniel)
+- drop optimization patch for now (sdf)
+v2: https://lore.kernel.org/lkml/20221029024444.gonna.633-kees@kernel.org/
+v1: https://lore.kernel.org/lkml/20221018090550.never.834-kees@kernel.org/
+---
+ kernel/bpf/verifier.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/include/acpi/acrestyp.h b/include/acpi/acrestyp.h
-index a7fb8ddb3dc6..ee945084d46e 100644
---- a/include/acpi/acrestyp.h
-+++ b/include/acpi/acrestyp.h
-@@ -332,7 +332,7 @@ struct acpi_resource_extended_irq {
- 	u8 wake_capable;
- 	u8 interrupt_count;
- 	struct acpi_resource_source resource_source;
--	u32 interrupts[1];
-+	u32 interrupts[];
- };
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index beed7e03addc..c596c7c75d25 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -1010,9 +1010,9 @@ static void *copy_array(void *dst, const void *src, size_t n, size_t size, gfp_t
+ 	if (unlikely(check_mul_overflow(n, size, &bytes)))
+ 		return NULL;
  
- struct acpi_resource_generic_register {
-@@ -679,7 +679,10 @@ struct acpi_pci_routing_table {
- 	u32 pin;
- 	u64 address;		/* here for 64-bit alignment */
- 	u32 source_index;
--	char source[4];		/* pad to 64 bits so sizeof() works in all cases */
-+	union {
-+		char pad[4];	/* pad to 64 bits so sizeof() works in all cases */
-+		DECLARE_FLEX_ARRAY(char, source);
-+	};
- };
+-	if (ksize(dst) < bytes) {
++	if (ksize(dst) < ksize(src)) {
+ 		kfree(dst);
+-		dst = kmalloc_track_caller(bytes, flags);
++		dst = kmalloc_track_caller(kmalloc_size_roundup(bytes), flags);
+ 		if (!dst)
+ 			return NULL;
+ 	}
+@@ -1029,12 +1029,14 @@ static void *copy_array(void *dst, const void *src, size_t n, size_t size, gfp_t
+  */
+ static void *realloc_array(void *arr, size_t old_n, size_t new_n, size_t size)
+ {
++	size_t alloc_size;
+ 	void *new_arr;
  
- #endif				/* __ACRESTYP_H__ */
+ 	if (!new_n || old_n == new_n)
+ 		goto out;
+ 
+-	new_arr = krealloc_array(arr, new_n, size, GFP_KERNEL);
++	alloc_size = kmalloc_size_roundup(size_mul(new_n, size));
++	new_arr = krealloc(arr, alloc_size, GFP_KERNEL);
+ 	if (!new_arr) {
+ 		kfree(arr);
+ 		return NULL;
+@@ -2506,9 +2508,11 @@ static int push_jmp_history(struct bpf_verifier_env *env,
+ {
+ 	u32 cnt = cur->jmp_history_cnt;
+ 	struct bpf_idx_pair *p;
++	size_t alloc_size;
+ 
+ 	cnt++;
+-	p = krealloc(cur->jmp_history, cnt * sizeof(*p), GFP_USER);
++	alloc_size = kmalloc_size_roundup(size_mul(cnt, sizeof(*p)));
++	p = krealloc(cur->jmp_history, alloc_size, GFP_USER);
+ 	if (!p)
+ 		return -ENOMEM;
+ 	p[cnt - 1].idx = env->insn_idx;
 -- 
 2.34.1
 
