@@ -2,103 +2,150 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B26C433FE
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 02:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FD0C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 03:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234861AbiKRChk (ORCPT
+        id S234794AbiKRD2E (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Nov 2022 21:37:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52990 "EHLO
+        Thu, 17 Nov 2022 22:28:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234664AbiKRChi (ORCPT
+        with ESMTP id S234786AbiKRD2D (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Nov 2022 21:37:38 -0500
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5A878D4AD
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 18:37:37 -0800 (PST)
-Received: by mail-pg1-x536.google.com with SMTP id 62so3784516pgb.13
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 18:37:37 -0800 (PST)
+        Thu, 17 Nov 2022 22:28:03 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 948F513F89
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 19:28:02 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id k5so3379437pjo.5
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 19:28:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7Y3buhQ43czxzDcyasaiKPiKRm9LEuYX1OiS918u2Js=;
-        b=HGrIUHIWMQwEoiRLP93PtNJsSSxNGqHLzm3xwseLuj+F+NeTilya5vXcbexzSd6a2Q
-         Ju6Zdip1//Zoo2DIa5XvQTxjFYrw7S67Kvf9MeiKs5m0/780onqzAmrOWGrD2Ybsrd5G
-         wok705udZm21rxjCUCHzB/Rp6T0KOHhisXkBUq7yjqMsocv/gR0lTp2crEn3C9LLTtbr
-         vV39t9F2i67L7xoosy+99uPtlE66uUIeDffWtq0/QOn4h8O1hr7V1kGykbUD1dlEPdmV
-         Gz+6Iy1fcMpbV6zGcG8eHGURWVGqEMSoXuHQCA3OV/+NulbhQSq4njqKtp4YvLAZ+bTp
-         4IeA==
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=F36ePDNlCEzEo7uhtE/7mj1A0uCdl18mggSDLjAIBVk=;
+        b=YGVVEvY578X0bTstx0iAIrqJGez3hsnxoOoUpBJT4Q9jd9MXem7asmcwvnybW4tQ6n
+         O2sYVrDWp3ZDjHWyIpKoSkDDM8DX1wS35HCnLZ5qUAqvYm8P1Oop8ScWiHthkWoTiwEo
+         CEV64OSa2G+hbEfS6PUOfR0b6WGDjNC290oqM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7Y3buhQ43czxzDcyasaiKPiKRm9LEuYX1OiS918u2Js=;
-        b=ICC6Rmvz3zVw1i2FoK7hVkr6vt2a6fs8sabnqQC2YVzJZ9wx6S+LqMEz95KrMpTXyg
-         tGjlfjj395B54Np5VT2F7AX/RymieFL1qTzsaiWjm4OAv28FKSxRqWVoqWsh/lxdv+GG
-         rlyoRB8Od8oCVNIKtMRiGMlXleL+JflqDzrOJXJoF59jfbHH7S/HcY7qngAEfBNkFN5p
-         fxM7FugPa62p9qgbqhkQg+TxHfpR1KOaX5rF5VnfbQfjx05jIrm7O/KaIPvGeYf+tfDk
-         1ZErJ+7RnzDdJOr4YrkHm9UsNb4qkgGtW4B7nipJQ3IlDOrv4KeC+GAMl2yM36QdK1vY
-         adsA==
-X-Gm-Message-State: ANoB5pms1ZfC8g/ctnpoPVy9qFVCpJa8I7lV9rOZbPt9/hpLO4XGhqVs
-        nkci9tkF7i1p8rexcaGceYJ5xA==
-X-Google-Smtp-Source: AA0mqf4fVlCM1W9CNGvedEAdELiJUSqaxsnNkIFbID7My555jXLkUBcMe6TjsIbxMwNpp1DFQQIHfQ==
-X-Received: by 2002:aa7:9551:0:b0:56b:1fca:18b0 with SMTP id w17-20020aa79551000000b0056b1fca18b0mr5803334pfq.42.1668739057328;
-        Thu, 17 Nov 2022 18:37:37 -0800 (PST)
-Received: from hermes.local (204-195-120-218.wavecable.com. [204.195.120.218])
-        by smtp.gmail.com with ESMTPSA id jg18-20020a17090326d200b00174c0dd29f0sm2168800plb.144.2022.11.17.18.37.36
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F36ePDNlCEzEo7uhtE/7mj1A0uCdl18mggSDLjAIBVk=;
+        b=7xcLmf9bOdZW21WD095QQQFhN5KeT0/9b6T3hktGfDll/+B9EeDfN4wJPUMu2VZ9to
+         3RTiA+tOgmx1QYsoc4szFJOf2jWSKy1cHHv2brTvu/e4fgMngcjbF+zMUaPhUrtEbFHB
+         gjtFO/kgc91twpcla72Uc1CKwiPMVp4LMXjN8xHBxdJTFqvCz4rlQPEc8grDNaHF6n9I
+         jMOrSYcxWzVXvdAOwUtnNWwCEnBU9f0vbsc34CwCCosL5ls26iyfGkeQ5dKZB8rN6fQD
+         gVFJOZkOWnWEroFiSrzZamKEVinokAShHscEIjlcGBh6EF6DxUYrNyZQGTL7UEI4ZgyY
+         BtSw==
+X-Gm-Message-State: ANoB5pmQSH2W6eazQumuUEZMFwlAvS3NxwusG1Jw6JbV9MVmGRsgZWFx
+        DzZbLzwoxSLuc5eXMXKe5Bq81g==
+X-Google-Smtp-Source: AA0mqf5NTXas/rZvXyznEcobhz5OK9ZKiMSPkpTirE6uepnuMidQlAXHwj1y8KC784/f0fIKmsAVdg==
+X-Received: by 2002:a17:902:6b08:b0:187:4467:7aba with SMTP id o8-20020a1709026b0800b0018744677abamr5639625plk.61.1668742082081;
+        Thu, 17 Nov 2022 19:28:02 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c4-20020a17090a558400b00210c84b8ae5sm1598458pji.35.2022.11.17.19.28.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Nov 2022 18:37:36 -0800 (PST)
-Date:   Thu, 17 Nov 2022 18:37:33 -0800
-From:   Stephen Hemminger <stephen@networkplumber.org>
+        Thu, 17 Nov 2022 19:28:01 -0800 (PST)
+Date:   Thu, 17 Nov 2022 19:27:59 -0800
+From:   Kees Cook <keescook@chromium.org>
 To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>,
+Cc:     Stephen Hemminger <stephen@networkplumber.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         David Ahern <dsahern@kernel.org>, davem@davemloft.net,
         netdev@vger.kernel.org, edumazet@google.com, pabeni@redhat.com,
         linux-hardening@vger.kernel.org
 Subject: Re: [PATCH net-next v2] netlink: split up copies in the ack
  construction
-Message-ID: <20221117183733.5ff1dcb5@hermes.local>
-In-Reply-To: <20221117123615.41d9c71a@kernel.org>
-References: <20221027212553.2640042-1-kuba@kernel.org>
-        <20221114023927.GA685@u2004-local>
-        <20221114090614.2bfeb81c@kernel.org>
-        <202211161444.04F3EDEB@keescook>
-        <202211161454.D5FA4ED44@keescook>
-        <202211161502.142D146@keescook>
-        <1e97660d-32ff-c0cc-951b-5beda6283571@embeddedor.com>
-        <20221116170526.752c304b@kernel.org>
-        <1b373b08-988d-b870-d363-814f8083157c@embeddedor.com>
-        <20221116221306.5a4bd5f8@kernel.org>
-        <20221117082556.37b8028f@hermes.local>
-        <20221117123615.41d9c71a@kernel.org>
+Message-ID: <202211171855.9AEB6E3@keescook>
+References: <202211161454.D5FA4ED44@keescook>
+ <202211161502.142D146@keescook>
+ <1e97660d-32ff-c0cc-951b-5beda6283571@embeddedor.com>
+ <20221116170526.752c304b@kernel.org>
+ <1b373b08-988d-b870-d363-814f8083157c@embeddedor.com>
+ <20221116221306.5a4bd5f8@kernel.org>
+ <20221117082556.37b8028f@hermes.local>
+ <20221117123615.41d9c71a@kernel.org>
+ <202211171431.6C8675E2@keescook>
+ <20221117162822.5cb04021@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221117162822.5cb04021@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 17 Nov 2022 12:36:15 -0800
-Jakub Kicinski <kuba@kernel.org> wrote:
-
-> On Thu, 17 Nov 2022 08:25:56 -0800 Stephen Hemminger wrote:
-> > > I was asking based on your own commit 1e6e9d0f4859 ("uapi: revert
-> > > flexible-array conversions"). This is uAPI as well.    
-> >  
-> > Some of the flex-array conversions fixed build warnings that occur in
-> > iproute2 when using Gcc 12 or later.  
+On Thu, Nov 17, 2022 at 04:28:22PM -0800, Jakub Kicinski wrote:
+> On Thu, 17 Nov 2022 14:35:32 -0800 Kees Cook wrote:
+> > As for testing, I can do that if you want -- the goal was to make sure
+> > the final result doesn't trip FORTIFY when built with -fstrict-flex-arrays
+> > (not yet in a released compiler version, but present in both GCC and Clang
+> > truck builds) and with __builtin_dynamic_object_size() enabled (which
+> > is not yet in -next, as it is waiting on the last of ksize() clean-ups).
 > 
-> Alright, this is getting complicated. I'll post a patch to fix 
-> the issue I've added and gently place my head back into the sand.
+> I got distracted, sorry. Does this work?
+> 
+> -->8--------------
+> 
+> From: Jakub Kicinski <kuba@kernel.org>
+> Subject: netlink: remove the flex array from struct nlmsghdr
+> 
+> I've added a flex array to struct nlmsghdr to allow accessing
+> the data easily. But it leads to warnings with clang, when user
+> space wraps this structure into another struct and the flex
+> array is not at the end of the container.
+> 
+> Link: https://lore.kernel.org/all/20221114023927.GA685@u2004-local/
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 
-Building iproute2 with current 6.1-rc5 headers.
-Gcc-12 is clean but Clang gets:
-    CC       xfrm_state.o
-xfrm_state.c:490:8: warning: field 'u' with variable sized type 'union (unnamed union at xfrm_state.c:486:6)' not at the end of a struct or class is a GNU extension [-Wgnu-variable-sized-type-not-at-end]
-                                        } u;
-                                          ^
-This problem started with 6.0.
+Thanks! Yes, this seems to be happy with all the future stuff enabled.
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> ---
+>  include/uapi/linux/netlink.h | 2 --
+>  net/netlink/af_netlink.c     | 2 +-
+>  2 files changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/include/uapi/linux/netlink.h b/include/uapi/linux/netlink.h
+> index 5da0da59bf01..e2ae82e3f9f7 100644
+> --- a/include/uapi/linux/netlink.h
+> +++ b/include/uapi/linux/netlink.h
+> @@ -48,7 +48,6 @@ struct sockaddr_nl {
+>   * @nlmsg_flags: Additional flags
+>   * @nlmsg_seq:   Sequence number
+>   * @nlmsg_pid:   Sending process port ID
+> - * @nlmsg_data:  Message payload
+>   */
+>  struct nlmsghdr {
+>  	__u32		nlmsg_len;
+> @@ -56,7 +55,6 @@ struct nlmsghdr {
+>  	__u16		nlmsg_flags;
+>  	__u32		nlmsg_seq;
+>  	__u32		nlmsg_pid;
+> -	__u8		nlmsg_data[];
+>  };
+>  
+>  /* Flags values */
+> diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
+> index 9ebdf3262015..d73091f6bb0f 100644
+> --- a/net/netlink/af_netlink.c
+> +++ b/net/netlink/af_netlink.c
+> @@ -2514,7 +2514,7 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
+>  		if (!nlmsg_append(skb, nlmsg_len(nlh)))
+>  			goto err_bad_put;
+>  
+> -		memcpy(errmsg->msg.nlmsg_data, nlh->nlmsg_data,
+> +		memcpy(nlmsg_data(&errmsg->msg), nlmsg_data(nlh),
+>  		       nlmsg_len(nlh));
+>  	}
+>  
+> -- 
+> 2.38.1
+> 
+
+-- 
+Kees Cook
