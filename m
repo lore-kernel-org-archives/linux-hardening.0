@@ -2,105 +2,82 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 809DCC4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 10:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 811B3C4332F
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 11:29:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235145AbiKRKck (ORCPT
+        id S235196AbiKRL3R (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Nov 2022 05:32:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55180 "EHLO
+        Fri, 18 Nov 2022 06:29:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234711AbiKRKcj (ORCPT
+        with ESMTP id S230004AbiKRL3Q (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Nov 2022 05:32:39 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D803D922EE;
-        Fri, 18 Nov 2022 02:32:38 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 7D77F1F890;
-        Fri, 18 Nov 2022 10:32:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1668767557; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XzHJXeK3Q2/Bx013Ighw0ir5MysszSUlvQpViISJqBs=;
-        b=g8xwvhAwqhbxisPUlVbujWUoHsv5l3uONqGun9DeIQiCAadM+i1rYsCwZIaj4H4PpmIkgI
-        v0pg0R+CThhbSKC5VAVA1zhrmiDrRN84oYCMC+vbKDlunUICpi8B7IdDTW2/+eKdRxmt/s
-        Yx8YBG1i1FbxFUiL3sXhWVkWHeEWA2U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1668767557;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XzHJXeK3Q2/Bx013Ighw0ir5MysszSUlvQpViISJqBs=;
-        b=IGKMdrU51wRPjSgtt3cDgq7HIyboRyHc/nsdePlag/9cMrpqnR2NQkqLjJOG1FY+dFyZeS
-        Pge36YS2pYY05lDg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3C66113A66;
-        Fri, 18 Nov 2022 10:32:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id XG5tDUVfd2NwRgAAMHmgww
-        (envelope-from <vbabka@suse.cz>); Fri, 18 Nov 2022 10:32:37 +0000
-Message-ID: <230127af-6c71-e51e-41a4-aa9547c2c847@suse.cz>
-Date:   Fri, 18 Nov 2022 11:32:36 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v2] mm: Make ksize() a reporting-only function
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        Andrey Konovalov <andreyknvl@gmail.com>
-Cc:     Christoph Lameter <cl@linux.com>,
+        Fri, 18 Nov 2022 06:29:16 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BF3FFCDF;
+        Fri, 18 Nov 2022 03:29:15 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id r61-20020a17090a43c300b00212f4e9cccdso8023620pjg.5;
+        Fri, 18 Nov 2022 03:29:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=c6pa+0i/2gW0CZzxA4RT9DmS5V0eY1vqhUMm1tY+xHk=;
+        b=W4rtUd3eoC1VUscW3kwcMKIkY/VkxFLjhZVPX/KGdSZd+FgtiMNU7qkYplQPT+11Pf
+         RGdFyMXj6V5ypIkOxZPWq61sTZlPnNLl3PKu50X/+2InRbcjETZbGg0LT6dmibMpR5Qj
+         dnr7UfrJk2fTY7XmIqWyHCZYVp4kFZeW+P7oNKhzBqgwJBawzuO01O6KgGoHJMoSFF3T
+         HdOW00SLudrOrld6I0J2niFcBJDxvXVfueRIQHW3ulAJql8Uoc8FcQxTjONl83I3F7lK
+         LsG/rlisIOShHkw8P0FxxFtbY9A952iZGb5OD3pGWcif7LghFBNQGAlcyM+aBYHvTwu2
+         fy7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c6pa+0i/2gW0CZzxA4RT9DmS5V0eY1vqhUMm1tY+xHk=;
+        b=vxXJCHYt07/sAPb3BA7C+OV+1yZFCq5sJf9hG+PCQKiHRZBqH5F408DmGVQfjxOX39
+         d86pCrErJVEyaOZohTD7DAJP/EMLZG5bK0ivIs1CTfg0i+kvkVu1MZYFoKKA4K3uDn+C
+         CYUlotmDh6o1Ibz98YyB7TFkth5q8zVYHkbgv2kUzj0fqLszM1SvESA6w+eYMNB0yxNH
+         n63KlyiDAK/teGih0Ru8RDI08nvVFuuee9WVaTufEhb5CD+RXzgVwcMrvG5Ws0kyQIaw
+         uBzOc2c8wObL6qesx0GvRl5dY23Y/1KcQNdj7I6MahwpUFXBzM3XsTCnMbu4ad60l02F
+         ifMA==
+X-Gm-Message-State: ANoB5pkQ34DJh2NrMpOt10INdosmCDKRrBXSI7BIc2YqU4nkiVgBpk+0
+        vf6lziZSzH0odGd5m2zw/5c=
+X-Google-Smtp-Source: AA0mqf78hu8u0LtNBUUNRLEiEQqHEpYKlWC5OU0vCGq6wlyjoqxy+zKllm3Jn1VAuDnPQfKHpdhtrg==
+X-Received: by 2002:a17:90a:9e7:b0:213:68c5:5579 with SMTP id 94-20020a17090a09e700b0021368c55579mr13453872pjo.150.1668770954692;
+        Fri, 18 Nov 2022 03:29:14 -0800 (PST)
+Received: from hyeyoo ([114.29.91.56])
+        by smtp.gmail.com with ESMTPSA id l7-20020a170902f68700b0017f756563bcsm3475044plg.47.2022.11.18.03.29.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Nov 2022 03:29:13 -0800 (PST)
+Date:   Fri, 18 Nov 2022 20:29:08 +0900
+From:   Hyeonggon Yoo <42.hyeyoo@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
         Pekka Enberg <penberg@kernel.org>,
         David Rientjes <rientjes@google.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-mm@kvack.org, kasan-dev@googlegroups.com,
+        Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20221118035656.gonna.698-kees@kernel.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20221118035656.gonna.698-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 1/2] slab: Clean up SLOB vs kmalloc() definition
+Message-ID: <Y3dshBYUwubvZ6le@hyeyoo>
+References: <20221118034713.gonna.754-kees@kernel.org>
+ <20221118035200.1269184-1-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221118035200.1269184-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 11/18/22 04:56, Kees Cook wrote:
-> With all "silently resizing" callers of ksize() refactored, remove the
-
-At cursory look seems it's true now in -next (but not mainline?) can you
-confirm?
-That would probably be safe enough to have slab.git expose this to -next now
-and time a PR appropriately in the next merge window?
-
-> logic in ksize() that would allow it to be used to effectively change
-> the size of an allocation (bypassing __alloc_size hints, etc). Users
-> wanting this feature need to either use kmalloc_size_roundup() before an
-> allocation, or use krealloc() directly.
+On Thu, Nov 17, 2022 at 07:51:58PM -0800, Kees Cook wrote:
+> As already done for kmalloc_node(), clean up the #ifdef usage in the
+> definition of kmalloc() so that the SLOB-only version is an entirely
+> separate and much more readable function.
 > 
-> For kfree_sensitive(), move the unpoisoning logic inline. Replace the
-> some of the partially open-coded ksize() in __do_krealloc with ksize()
-> now that it doesn't perform unpoisoning.
-> 
-> Adjust the KUnit tests to match the new ksize() behavior.
-> 
-> Cc: Andrey Konovalov <andreyknvl@gmail.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
 > Cc: Christoph Lameter <cl@linux.com>
 > Cc: Pekka Enberg <penberg@kernel.org>
 > Cc: David Rientjes <rientjes@google.com>
@@ -108,121 +85,60 @@ and time a PR appropriately in the next merge window?
 > Cc: Andrew Morton <akpm@linux-foundation.org>
 > Cc: Roman Gushchin <roman.gushchin@linux.dev>
 > Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-> Cc: Alexander Potapenko <glider@google.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
 > Cc: linux-mm@kvack.org
-> Cc: kasan-dev@googlegroups.com
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
-> v2:
-> - improve kunit test precision (andreyknvl)
-> - add Ack (vbabka)
-> v1: https://lore.kernel.org/all/20221022180455.never.023-kees@kernel.org
-> ---
->  mm/kasan/kasan_test.c | 14 +++++++++-----
->  mm/slab_common.c      | 26 ++++++++++----------------
->  2 files changed, 19 insertions(+), 21 deletions(-)
+>  include/linux/slab.h | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
 > 
-> diff --git a/mm/kasan/kasan_test.c b/mm/kasan/kasan_test.c
-> index 7502f03c807c..fc4b22916587 100644
-> --- a/mm/kasan/kasan_test.c
-> +++ b/mm/kasan/kasan_test.c
-> @@ -821,7 +821,7 @@ static void kasan_global_oob_left(struct kunit *test)
->  	KUNIT_EXPECT_KASAN_FAIL(test, *(volatile char *)p);
->  }
->  
-> -/* Check that ksize() makes the whole object accessible. */
-> +/* Check that ksize() does NOT unpoison whole object. */
->  static void ksize_unpoisons_memory(struct kunit *test)
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> index 1c670c16c737..9033937c758e 100644
+> --- a/include/linux/slab.h
+> +++ b/include/linux/slab.h
+> @@ -558,15 +558,15 @@ void *kmalloc_large_node(size_t size, gfp_t flags, int node) __assume_page_align
+>   *	Try really hard to succeed the allocation but fail
+>   *	eventually.
+>   */
+> +#ifndef CONFIG_SLOB
+>  static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
 >  {
->  	char *ptr;
-> @@ -829,15 +829,19 @@ static void ksize_unpoisons_memory(struct kunit *test)
->  
->  	ptr = kmalloc(size, GFP_KERNEL);
->  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+>  	if (__builtin_constant_p(size)) {
+> -#ifndef CONFIG_SLOB
+>  		unsigned int index;
+> -#endif
 > +
->  	real_size = ksize(ptr);
-> +	KUNIT_EXPECT_GT(test, real_size, size);
+>  		if (size > KMALLOC_MAX_CACHE_SIZE)
+>  			return kmalloc_large(size, flags);
+> -#ifndef CONFIG_SLOB
+> +
+>  		index = kmalloc_index(size);
 >  
->  	OPTIMIZER_HIDE_VAR(ptr);
->  
-> -	/* This access shouldn't trigger a KASAN report. */
-> -	ptr[size] = 'x';
-> +	/* These accesses shouldn't trigger a KASAN report. */
-> +	ptr[0] = 'x';
-> +	ptr[size - 1] = 'x';
->  
-> -	/* This one must. */
-> -	KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size]);
-> +	/* These must trigger a KASAN report. */
-> +	KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[size]);
-> +	KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size - 1]);
->  
->  	kfree(ptr);
+>  		if (!index)
+> @@ -575,10 +575,18 @@ static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
+>  		return kmalloc_trace(
+>  				kmalloc_caches[kmalloc_type(flags)][index],
+>  				flags, size);
+> -#endif
+>  	}
+>  	return __kmalloc(size, flags);
 >  }
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index 8276022f0da4..27caa57af070 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -1335,11 +1335,11 @@ __do_krealloc(const void *p, size_t new_size, gfp_t flags)
->  	void *ret;
->  	size_t ks;
+> +#else
+> +static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
+> +{
+> +	if (__builtin_constant_p(size) && size > KMALLOC_MAX_CACHE_SIZE)
+> +		return kmalloc_large(size, flags);
+> +
+> +	return __kmalloc(size, flags);
+> +}
+> +#endif
 >  
-> -	/* Don't use instrumented ksize to allow precise KASAN poisoning. */
-> +	/* Check for double-free before calling ksize. */
->  	if (likely(!ZERO_OR_NULL_PTR(p))) {
->  		if (!kasan_check_byte(p))
->  			return NULL;
-> -		ks = kfence_ksize(p) ?: __ksize(p);
-> +		ks = ksize(p);
->  	} else
->  		ks = 0;
->  
-> @@ -1407,21 +1407,21 @@ void kfree_sensitive(const void *p)
->  	void *mem = (void *)p;
->  
->  	ks = ksize(mem);
-> -	if (ks)
-> +	if (ks) {
-> +		kasan_unpoison_range(mem, ks);
->  		memzero_explicit(mem, ks);
-> +	}
->  	kfree(mem);
->  }
->  EXPORT_SYMBOL(kfree_sensitive);
->  
->  size_t ksize(const void *objp)
->  {
-> -	size_t size;
-> -
->  	/*
-> -	 * We need to first check that the pointer to the object is valid, and
-> -	 * only then unpoison the memory. The report printed from ksize() is
-> -	 * more useful, then when it's printed later when the behaviour could
-> -	 * be undefined due to a potential use-after-free or double-free.
-> +	 * We need to first check that the pointer to the object is valid.
-> +	 * The KASAN report printed from ksize() is more useful, then when
-> +	 * it's printed later when the behaviour could be undefined due to
-> +	 * a potential use-after-free or double-free.
->  	 *
->  	 * We use kasan_check_byte(), which is supported for the hardware
->  	 * tag-based KASAN mode, unlike kasan_check_read/write().
-> @@ -1435,13 +1435,7 @@ size_t ksize(const void *objp)
->  	if (unlikely(ZERO_OR_NULL_PTR(objp)) || !kasan_check_byte(objp))
->  		return 0;
->  
-> -	size = kfence_ksize(objp) ?: __ksize(objp);
-> -	/*
-> -	 * We assume that ksize callers could use whole allocated area,
-> -	 * so we need to unpoison this area.
-> -	 */
-> -	kasan_unpoison_range(objp, size);
-> -	return size;
-> +	return kfence_ksize(objp) ?: __ksize(objp);
->  }
->  EXPORT_SYMBOL(ksize);
->  
+>  #ifndef CONFIG_SLOB
+>  static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t flags, int node)
+> -- 
+> 2.34.1
 
+Reviewed-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+
+-- 
+Thanks,
+Hyeonggon
