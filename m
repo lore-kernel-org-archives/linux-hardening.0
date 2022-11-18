@@ -2,149 +2,97 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AE2C4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 11:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 561D2C4332F
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 13:13:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240950AbiKRLha (ORCPT
+        id S241538AbiKRNNf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Nov 2022 06:37:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36180 "EHLO
+        Fri, 18 Nov 2022 08:13:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241586AbiKRLhH (ORCPT
+        with ESMTP id S235188AbiKRNNc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Nov 2022 06:37:07 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF76F97345;
-        Fri, 18 Nov 2022 03:36:20 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id b1-20020a17090a7ac100b00213fde52d49so4809645pjl.3;
-        Fri, 18 Nov 2022 03:36:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MQTkJG6vtTjSw1QDg2CpqnHiBaML0X5nO5Q/zgAHjJs=;
-        b=FSxO4upCiy5Qd6ep2BBFisIeyWZ+D5vSLW3Ow/h8K40AVCtOf51KOuZUImxLiPZywH
-         koR+wH5GFs4ZrbkVkTgcvC9EI8vkubomItYg6mfbC+XuBII7bJv5oV0Qt15kUn0+INIH
-         m48HNO6e7xWoVhfE4d5/jlcAsV5AfFdz773VQuoctfrRLjamSW5qnDRzn/jfxRHseevp
-         yOZy7BCzc8O6aT6fI1WSCqVT28CwbH7LU9j/zluH8rEX4PiDbmQ6zxBMHHvH5eezjdky
-         dt3Apz3AGnDcrIXiApdjlHyUaR/o8BhH5bEUUFEBec2eBCTHo+ymGbtkXuHmzZuSwc2Z
-         G6yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MQTkJG6vtTjSw1QDg2CpqnHiBaML0X5nO5Q/zgAHjJs=;
-        b=jmi/O91lH0vSTPVQ72CPP/e1Ll6J2uLSIUW/d+aeVsTx9B6AVEXRJwMp+WukfZSdgJ
-         XK0yoVWMKhLB1UhjZQyI0ZJC9Ttd/0Zh54j2jcUXASuOz4MQDEgCoyDt0pRZo7Kv+1kD
-         ViSaBCd6DOiJxz+xl1qaqqoqVqpJ1rW02lHw1v3Bt9s4VxcSfthMtAbrqfo+C4GVygSj
-         AWBrExzMHSyqOmW3zNPFON5+mDIkpd3ZnTtxsrCr1XLTXUgjAJUA/jCTTjjesUZzVEUZ
-         rPrWx+yWcFY4eh9ct7J3lLtVYBwouPghVxEF1uIVFGu6xBpTgtptqfQqjVNS10Y3PaLW
-         Oh8Q==
-X-Gm-Message-State: ANoB5plM5zdkN7zKhHh1Vf8I1pAVL/ZbPfqvOSXnFqYOL090Oz2qSqml
-        p54O2igFvjtzWbeoZs+11ysDK/HwrxM=
-X-Google-Smtp-Source: AA0mqf4SVBbjrGyE3yo/NOKhVg2kU6NEYZMORQuo5dI35UBGFiqlsJO0rf3Du8HYoy3w+pxrXWgr9A==
-X-Received: by 2002:a17:90b:2684:b0:218:907c:da24 with SMTP id pl4-20020a17090b268400b00218907cda24mr407705pjb.18.1668771380175;
-        Fri, 18 Nov 2022 03:36:20 -0800 (PST)
-Received: from hyeyoo ([114.29.91.56])
-        by smtp.gmail.com with ESMTPSA id e1-20020a056a0000c100b0056283e2bdbdsm2916623pfj.138.2022.11.18.03.36.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Nov 2022 03:36:19 -0800 (PST)
-Date:   Fri, 18 Nov 2022 20:36:13 +0900
-From:   Hyeonggon Yoo <42.hyeyoo@gmail.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] slab: Remove special-casing of const 0 size
- allocations
-Message-ID: <Y3duLdce3Srlewsq@hyeyoo>
-References: <20221118034713.gonna.754-kees@kernel.org>
- <20221118035200.1269184-2-keescook@chromium.org>
+        Fri, 18 Nov 2022 08:13:32 -0500
+X-Greylist: delayed 427 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 18 Nov 2022 05:13:27 PST
+Received: from forward502o.mail.yandex.net (forward502o.mail.yandex.net [37.140.190.204])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE911D86;
+        Fri, 18 Nov 2022 05:13:27 -0800 (PST)
+Received: from sas1-37da021029ee.qloud-c.yandex.net (sas1-37da021029ee.qloud-c.yandex.net [IPv6:2a02:6b8:c08:1612:0:640:37da:210])
+        by forward502o.mail.yandex.net (Yandex) with ESMTP id C0A5425D50C0;
+        Fri, 18 Nov 2022 16:05:53 +0300 (MSK)
+Received: by sas1-37da021029ee.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id eOks44V6nS-5pVmNm92;
+        Fri, 18 Nov 2022 16:05:52 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=clicknet.pro; s=mail; t=1668776752;
+        bh=/wHdhb6bOR6sr6GxP7nToVvgKT4uV8iQ9aNeJQuYTyc=;
+        h=From:In-Reply-To:Cc:Date:References:To:Subject:Message-ID;
+        b=PnxOE3On7J7+RxaOegVmOD9Cjmq8zBQgeNI4H+6xOoRyil6MRagvAHjkaudPAWb7P
+         Nqeh2yBpd6j1CYWT66JdB6fGmEz23W4qwTJB9nBTn5BmGsWcEI3W1eVSMdoVYzNGRZ
+         jV/kfqMyeoywwn6lL7US2uIkqrxzWQDrodXWQ108=
+Authentication-Results: sas1-37da021029ee.qloud-c.yandex.net; dkim=pass header.i=@clicknet.pro
+Message-ID: <74337ebd-0222-2e78-9149-8fa40b0c815e@clicknet.pro>
+Date:   Fri, 18 Nov 2022 16:05:36 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221118035200.1269184-2-keescook@chromium.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: Coverity: zblock_alloc(): Memory - illegal accesses
+To:     coverity-bot <keescook@chromium.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        linux-mm@kvack.org, linux-doc@vger.kernel.org,
+        Vitaly Wool <vitaly.wool@konsulko.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <202211171419.FCDC8EE@keescook>
+Content-Language: en-US
+From:   Ananda Badmaev <a.badmaev@clicknet.pro>
+In-Reply-To: <202211171419.FCDC8EE@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 07:51:59PM -0800, Kees Cook wrote:
-> Passing a constant-0 size allocation into kmalloc() or kmalloc_node()
-> does not need to be a fast-path operation, so the static return value
-> can be removed entirely. This is in preparation for making sure that
-> all paths through the inlines result in a full extern function call,
-> where __alloc_size() hints will actually be seen[1] by GCC. (A constant
-> return value of 0 means the "0" allocation size won't be propagated by
-> the inline.)
+18.11.2022 01:20, coverity-bot пишет:
+> Coverity reported the following:
 > 
-> [1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96503
+> *** CID 1527352:  Memory - illegal accesses  (OVERRUN)
+> mm/zblock.c:320 in zblock_alloc()
+> 314     	}
+> 315     	list = &(pool->block_lists[block_type]);
+> 316
+> 317     check:
+> 318     	spin_lock(&list->lock);
+> 319     	/* check if there are free slots in cache */
+> vvv     CID 1527352:  Memory - illegal accesses  (OVERRUN)
+> vvv     Overrunning array of 10208 bytes at byte offset 10208 by dereferencing pointer "list".
+> 320     	block = cache_find_block(list);
+> 321     	if (block)
+> 322     		goto found;
+> 323     	spin_unlock(&list->lock);
+> 324
+> 325     	/* not found block with free slots try to allocate new empty block */
 > 
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: Pekka Enberg <penberg@kernel.org>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Roman Gushchin <roman.gushchin@linux.dev>
-> Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-> Cc: linux-mm@kvack.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  include/linux/slab.h | 12 ++----------
->  1 file changed, 2 insertions(+), 10 deletions(-)
+> If this is a false positive, please let us know so we can mark it as
+> such, or teach the Coverity rules to be smarter. If not, please make
+> sure fixes get into linux-next. :) For patches fixing this, please
+> include these lines (but double-check the "Fixes" first):
 > 
-> diff --git a/include/linux/slab.h b/include/linux/slab.h
-> index 9033937c758e..84be05208418 100644
-> --- a/include/linux/slab.h
-> +++ b/include/linux/slab.h
-> @@ -561,17 +561,13 @@ void *kmalloc_large_node(size_t size, gfp_t flags, int node) __assume_page_align
->  #ifndef CONFIG_SLOB
->  static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
->  {
-> -	if (__builtin_constant_p(size)) {
-> +	if (__builtin_constant_p(size) && size) {
->  		unsigned int index;
->  
->  		if (size > KMALLOC_MAX_CACHE_SIZE)
->  			return kmalloc_large(size, flags);
->  
->  		index = kmalloc_index(size);
-> -
-> -		if (!index)
-> -			return ZERO_SIZE_PTR;
-> -
->  		return kmalloc_trace(
->  				kmalloc_caches[kmalloc_type(flags)][index],
->  				flags, size);
-> @@ -591,17 +587,13 @@ static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
->  #ifndef CONFIG_SLOB
->  static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t flags, int node)
->  {
-> -	if (__builtin_constant_p(size)) {
-> +	if (__builtin_constant_p(size) && size) {
->  		unsigned int index;
->  
->  		if (size > KMALLOC_MAX_CACHE_SIZE)
->  			return kmalloc_large_node(size, flags, node);
->  
->  		index = kmalloc_index(size);
-> -
-> -		if (!index)
-> -			return ZERO_SIZE_PTR;
-> -
->  		return kmalloc_node_trace(
->  				kmalloc_caches[kmalloc_type(flags)][index],
->  				flags, node, size);
-> -- 
-> 2.34.1
+> Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+> Addresses-Coverity-ID: 1527352 ("Memory - illegal accesses")
+> Fixes: 9097e28c25c8 ("mm: add zblock - new allocator for use via zpool API")
+> 
+> It looks like block_type is not checked to be < ARRAY_SIZE(block_desc)
+> after exiting the earlier loop, so the access through "list" may be past
+> the end of pool->block_lists.
+>
 
-Reviewed-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+There is no need for this check because it is guaranteed that this code 
+will be executed only if size <= PAGE_SIZE. Since slot_size for the last 
+list even exceeds PAGE_SIZE, block_type will be always valid.
 
--- 
-Thanks,
-Hyeonggon
+
+
+
