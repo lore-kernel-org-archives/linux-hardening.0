@@ -2,131 +2,121 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5ACC4167B
-	for <linux-hardening@archiver.kernel.org>; Sat, 19 Nov 2022 00:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3344C433FE
+	for <linux-hardening@archiver.kernel.org>; Sat, 19 Nov 2022 00:34:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237466AbiKSAF1 (ORCPT
+        id S232906AbiKSAeh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Nov 2022 19:05:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59938 "EHLO
+        Fri, 18 Nov 2022 19:34:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237451AbiKSAFG (ORCPT
+        with ESMTP id S232643AbiKSAeL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Nov 2022 19:05:06 -0500
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C7ADEBF18
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 15:31:11 -0800 (PST)
-Received: by mail-pf1-x432.google.com with SMTP id q9so6291602pfg.5
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 15:31:11 -0800 (PST)
+        Fri, 18 Nov 2022 19:34:11 -0500
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84E42113FFB
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 15:42:47 -0800 (PST)
+Received: by mail-pf1-x431.google.com with SMTP id b185so6293249pfb.9
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 15:42:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=33uTqF7+W9KqoilqutefSDNFwFq6HUhByT2ijkZ5G9U=;
-        b=W7BD5tRI2ij3JGhvPX7uO8vqAdAyVOqI9DLZKtEoNRzDBDtdyxCMAXG4j1tyxVCRUJ
-         vovMvBOZBrVZi/mehG9tAFdBnkNYl/5uVOONDWEVQbnKxaAnud8exlwTl0qnL+ACLAYb
-         CAp+d12k8Q3YC0kSv41zBn2Y5Sh/wxJWEbiuA=
+        bh=gdy8THFQ217ArK5qAf8locqq0ea0wdI2wQ0KQQ2fz/s=;
+        b=BxtRWJrHgOasPDbyKA01nQReUZgzUZg6/4Bvt2wpUMbvtO/NzBRy4yb4K7NNnaui7z
+         ZKoGcX+rZGZwaFdgXrnSa2czgwNPRRYNXG71hyg0aQ9HxMwIlmkn+NGMMTz5Y1m91xRw
+         6E5v8oz/mfPDQhfGbLbEdYGZ6/kBrnVXVXF3w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=33uTqF7+W9KqoilqutefSDNFwFq6HUhByT2ijkZ5G9U=;
-        b=1yNHrxhThcPPmIMLClnubnfFLJnDjr/w+Ys4dt3Jr9xh12jxfc/fhJ0U1gFu7HcrEM
-         3e9+7OefZ/AgR0S91uuLYKtpBgK+CYb1czCWvRONf12lLqRKsQjnQc4xDtSAOk5BCh++
-         0HT2aA04b7Sdix0pizwKIdt4aXlzHqpKCqBGr6OJJEoEisY0xU5JbbFL/LqEdPgnXB72
-         DtwiaXsdzCbcgEJaBa+McZgi5LRg6RZ0jAaLhVFzbXgWVHgh0nKAEFzgIamoQmA6XSi3
-         3a2W+Q/im6jLVrc+zOIQCRvcVdW3tkuacm/93FMgE7dwZCl7GCvuwRpvFeXuiz+j7ibx
-         KukQ==
-X-Gm-Message-State: ANoB5pm6DZaX/EhT1mh6dmmS5Y3YdnbEKIlxvA5+c2as22/K3Xc6EAiA
-        ZEQC7yY5Vj2sDFzjULzkI4d7wQ==
-X-Google-Smtp-Source: AA0mqf6wi59hZOm6qV685//732ZaWyFw539tCrYb7S5osK83avH6C4bX0DQYRJw1N6Xnew1vP6XUiQ==
-X-Received: by 2002:a62:ab18:0:b0:56b:9ae8:ca05 with SMTP id p24-20020a62ab18000000b0056b9ae8ca05mr9949345pff.59.1668814265054;
-        Fri, 18 Nov 2022 15:31:05 -0800 (PST)
+        bh=gdy8THFQ217ArK5qAf8locqq0ea0wdI2wQ0KQQ2fz/s=;
+        b=pbBSFnpwut0EzOmhmW/xsLX6QEMcU9V8VfYZ6GoVDPLtcP5a8Qi0kJV6gb4+w3VPOp
+         si1SSngaQ2iE9gzxcgeIR4ZTHBOhM+Kyf5c/Tr9Fbrge2EZoYYGGeT09N4SIB5WnLyAH
+         gehBdVPapaLifXB76Ct47qBPjKtbY9T6KmeguwcDBqbr1pVi26Q9H67YsUqcvEv34m+P
+         2X54mDAt+5I1rJKsrXYk1xeri1uddWD3yLkdV7lFct5VJPjQmgIX08N8FM+rJI9aq5KQ
+         Vf3xCXm+UETd2/f5pyI6teA+tLa2n3F6gmqgEC6B/ZzASXvYjcmiCGqZnwe62MGrcJk+
+         fWsA==
+X-Gm-Message-State: ANoB5pnu8Nk+Cwk6/L9fl5M7BVbrRl4YmhB6WmnJdMbBhMrBIkhkmJ2l
+        /dVKmnBIuh87pUplzl6RHJoP6A==
+X-Google-Smtp-Source: AA0mqf66SlkGoi1KeBiWbmO1baSn/GeKKLl0in2EE+JnpytDffihGspac3rJNaC2ddKrmgRrYzkDpw==
+X-Received: by 2002:a63:e09:0:b0:46b:8e9:749 with SMTP id d9-20020a630e09000000b0046b08e90749mr8370837pgl.260.1668814966918;
+        Fri, 18 Nov 2022 15:42:46 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n1-20020a170902f60100b00186ac4b21cfsm4261573plg.230.2022.11.18.15.31.04
+        by smtp.gmail.com with ESMTPSA id n14-20020a170902e54e00b00186c54188b4sm164191plf.240.2022.11.18.15.42.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Nov 2022 15:31:04 -0800 (PST)
+        Fri, 18 Nov 2022 15:42:46 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Daniel Palmer <daniel@thingy.jp>
-Cc:     Kees Cook <keescook@chromium.org>,
-        kernel test robot <lkp@intel.com>,
-        Romain Perier <romain.perier@gmail.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+To:     Christian Lamparter <chunkeey@googlemail.com>
+Cc:     Kees Cook <keescook@chromium.org>, Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: [PATCH] rtc: msc313: Fix function prototype mismatch in msc313_rtc_probe()
-Date:   Fri, 18 Nov 2022 15:31:02 -0800
-Message-Id: <20221118233101.never.215-kees@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v2] p54: Replace zero-length array of trailing structs with flex-array
+Date:   Fri, 18 Nov 2022 15:42:44 -0800
+Message-Id: <20221118234240.gonna.369-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2135; h=from:subject:message-id; bh=2uMBrJl4p11kK9eP2yD/st+7tL8825ju2BfNzfsIAFA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjeBW2pC2rpMYTXJkLShGmag664z+K5tiPE3dQug6d 6k7LWyyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY3gVtgAKCRCJcvTf3G3AJqmjD/ 9x/r5mwDVIWZVDGrRBJNY7gBhWQVZs9Z/nqdCrOe6qOkAmhPjIchn1IB6cV1GmDz8UW59kGEtnLdS7 jC1s1/P6gDmZxDY0YrSjBwBrCYTjgk5SEdiG7UleuvQHMDj4ivlWWYw1Yqt2M3qa6wWcjVLZVrBwiW xRgtgPDq8FVLfcjzIztHR/cnfpj5bIFbB4IgjY6l3OgpNY7mssysn2+ggS9aSPfJ5gkG3pPvGtWIi6 EEtLfAjNUNWlED/tP+Tkmmp1PTPTQy6PgDvNCMJrygx0Fv75AsxP7RlPthymvYAGFF+43FCQgQSmLR Yj7JsKW/WC/nTnrsPgyoJME7NdMR3xSOQPspj3DlCxT1EwEn3CEnDdQm/A9amOcCGkiWLUF0Ad0ML7 Qbw+Hf8rGp4VNDDvh54agrBrF29dyoWZj0Dc3fYNZmv/eBV0zjd9IoTkeC1viSK1Bjb1xVrQixTci5 kvaylDZn64g0v7V2S6i8HppnbUtYlHLV973KUmaqypRQP9FNfwo959Bw+LcTa/SCVjNB75LTr7PxaQ cLrhF9jVvisMmnMX44nc/0YGD+rAGhjVRAZkNiyaJycNQd4UJRIMsuTYjBuNUuIZCoL40Nc5IQo+4k qDdrX+pjyAvguJBTMEt2wCJMJIn6QqaLdnvI6LevBtHnBsoy8iGJbeGEZ5JA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1744; h=from:subject:message-id; bh=frYwS/CNxid8oyzmUWma7Osq+zP62XTvZCZTt4IGeWs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjeBh0f9MnBuxNAcv8AF9IXJq5IQXcPhkrRYT3czBK XoiyBLGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY3gYdAAKCRCJcvTf3G3AJo5DEA CErDezf9uGBzeffXHVEc6KW5d8b6cJulenKDodro6pDA0mLJLYysESpyoAEe5dxT0q1pYdE0tzhV3S jWP0krg7whj91sCODp2jVmwPHK+fwU9/QiYarSJb+w3aAMuPx44QzBLTEWl9zbpjrPVTzuyVpVrftn jlGwx84wxKoeQdJGBF5in0GyzFLP/hVeLE4Zd+ntsc2BmVULzfrwNwqlN5I/4pAX0Q7zYwMyIVOR8j z5v64icaG0BGj5RLTZ7wauNbfIqOZST4aOTNwebR5VK0+zLAyYKg5OVjsfhVcaATEXiYfEzRq6L1xn qMzwjvXdv/0EzjBFV5b4UI5FOsAdQ0VWPc/qDCDZ+1z0TOs0LBuQTyLnxubd5HXz+kOxLDMjQqge3Q 3Mpr2qPcaVaqjRpAN1YNFhgli/fb3dK2GYf6VunwqdTSMTfEykk1vKWlJbpPX2nm2oNJFnk3aaRsFd m083OQZQZ+QOkekrxZ6oukm5qapc+LcBjy+/CWQhdzI1Yxr4S0m2IZ+nKfZpGBTSjI7rTEWS/iIJ6u GD/HrfqnStwjJjgGx/GRClHRWZ4roYUXubU4mEQ/9J55gTJ0VQvJvp7nUiS9ODC51JZxaWTFDogTXe elAmug2mMq8e8aQEfFbVhcAjCnBInU6Jt9iYU4uZeorSptPZtaZ8iJooDsgQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With clang's kernel control flow integrity (kCFI, CONFIG_CFI_CLANG),
-indirect call targets are validated against the expected function
-pointer prototype to make sure the call target is valid to help mitigate
-ROP attacks. If they are not identical, there is a failure at run time,
-which manifests as either a kernel panic or thread getting killed.
+Zero-length arrays are deprecated[1] and are being replaced with
+flexible array members in support of the ongoing efforts to tighten the
+FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
+with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
 
-msc313_rtc_probe() was passing clk_disable_unprepare() directly, which
-did not have matching prototypes for devm_add_action_or_reset()'s callback
-argument. Add a wrapper and remove the cast.
+Replace zero-length array with flexible-array member.
 
-This was found as a result of Clang's new -Wcast-function-type-strict
-flag, which is more sensitive than the simpler -Wcast-function-type,
-which only checks for type width mismatches.
+This results in no differences in binary output (most especially because
+struct pda_antenna_gain is unused). The struct is kept for future
+reference.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/lkml/202211041527.HD8TLSE1-lkp@intel.com
-Cc: Daniel Palmer <daniel@thingy.jp>
-Cc: Romain Perier <romain.perier@gmail.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+[1] https://github.com/KSPP/linux/issues/78
+
+Cc: Christian Lamparter <chunkeey@googlemail.com>
+Cc: Kalle Valo <kvalo@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
 Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-rtc@vger.kernel.org
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/rtc/rtc-msc313.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+v2:
+- convert normally (chunkeey)
+v1: https://lore.kernel.org/lkml/20221118210639.never.072-kees@kernel.org/
+---
+ drivers/net/wireless/intersil/p54/eeprom.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/rtc/rtc-msc313.c b/drivers/rtc/rtc-msc313.c
-index f3fde013c4b8..36e3e77f303e 100644
---- a/drivers/rtc/rtc-msc313.c
-+++ b/drivers/rtc/rtc-msc313.c
-@@ -177,6 +177,13 @@ static irqreturn_t msc313_rtc_interrupt(s32 irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
+diff --git a/drivers/net/wireless/intersil/p54/eeprom.h b/drivers/net/wireless/intersil/p54/eeprom.h
+index 1d0aaf54389a..641c4e79879e 100644
+--- a/drivers/net/wireless/intersil/p54/eeprom.h
++++ b/drivers/net/wireless/intersil/p54/eeprom.h
+@@ -108,10 +108,10 @@ struct pda_country {
+ } __packed;
  
-+static void msc313_clk_disable_unprepare(void *data)
-+{
-+	struct clk *clk = data;
-+
-+	clk_disable_unprepare(clk);
-+}
-+
- static int msc313_rtc_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -224,7 +231,7 @@ static int msc313_rtc_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+ struct pda_antenna_gain {
+-	struct {
++	DECLARE_FLEX_ARRAY(struct {
+ 		u8 gain_5GHz;	/* 0.25 dBi units */
+ 		u8 gain_2GHz;	/* 0.25 dBi units */
+-	} __packed antenna[0];
++	} __packed, antenna);
+ } __packed;
  
--	ret = devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unprepare, clk);
-+	ret = devm_add_action_or_reset(dev, msc313_clk_disable_unprepare, clk);
- 	if (ret)
- 		return ret;
- 
+ struct pda_custom_wrapper {
 -- 
 2.34.1
 
