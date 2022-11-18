@@ -2,78 +2,80 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59100C43217
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 16:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A89C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 16:54:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242011AbiKRQui (ORCPT
+        id S242352AbiKRQy6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Nov 2022 11:50:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36418 "EHLO
+        Fri, 18 Nov 2022 11:54:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235460AbiKRQuh (ORCPT
+        with ESMTP id S235509AbiKRQy5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Nov 2022 11:50:37 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C5A48CFC8
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 08:50:36 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id v4-20020a17090a088400b00212cb0ed97eso5562791pjc.5
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 08:50:36 -0800 (PST)
+        Fri, 18 Nov 2022 11:54:57 -0500
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81E7667F58
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 08:54:56 -0800 (PST)
+Received: by mail-pg1-x52f.google.com with SMTP id 136so5509084pga.1
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 08:54:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=vDeF35wdLYG1P15QPsioTjibeocs7bxGmPk/YQhsj6s=;
-        b=nEwUH22V3Px2AJ0nfhnVjJM1rBPM9FKR685a6v3VuuhfgW52O+PKMaplMTwyxfiFA8
-         nKs9/aTXQQ4zPvNHj+eAYhJdYMektFDaVSFAFfKBnKtL8Coa1PcYz3r4Giub0PhK9aJ+
-         xNxRIaTXBnko1GceMEjnoroVYL6UshpQX/9c4=
+        bh=qkJ6eq/fIahCF8o8UiVfnfFhlL7awmXBJQtRWOpGmqU=;
+        b=UogA1CMJuDCS5kW93n44fMAJHDPCoXm/kKTw86eNm8lbL18uCLPvJ8jJQvRyaBwV0J
+         zshx3ls6pm30x5NULXL6Q1ZA+b+N2IWs6NECGAVbA0AHECidbuzdgxX/N6kVG1BHqHPo
+         OKRH2/o0DU7FlwYadK4GvZBUV4OycoXpPrhcs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vDeF35wdLYG1P15QPsioTjibeocs7bxGmPk/YQhsj6s=;
-        b=g41iBdQQHOiPYEot6KMFw0bz5QYHxRAF6717usLitHWzjMf19JnUeHij+cLJpBsDw2
-         D3qSz0dAI2SmkbaVIWQ6Wt7M2XqsIvir/kxGJsZKh9DIEtfxC4M4lS88F2dnKizKZrzF
-         ouwzTuRjwtlQBbBiIYNXnmir1bElsmmKjJu2GcbO1KDq0DtEJzib4uSdpoFyov4Wulpl
-         nGFQL12iJOkAn+625UQRsG5MwsVdEwD9pjg0WNBWoyEx1HwYyJSTkZqbDB1TU1uUmHVO
-         /vA+i0jCqUTJRW/CIONFvIZ1iM1mVb4ycDjycY/J1/1G+vw+4yitb+L1CxlQmxaL3W1g
-         v9gQ==
-X-Gm-Message-State: ANoB5ploDz/r0/rOYYu73GB8HmUJ72QLXR5x0WiR6gNxTEoPDS/ZgzX7
-        +Yp9jwhpHJfkGxdZDcCosl+5Gw==
-X-Google-Smtp-Source: AA0mqf5nc7sx9BVUy4AHRDyHuAxCzDSQw3UQYN4kbHosvvppGk9Ks17mBJFq8EiYAnsMiKkMdrSZ7A==
-X-Received: by 2002:a17:90a:3e47:b0:213:1a9f:8d72 with SMTP id t7-20020a17090a3e4700b002131a9f8d72mr14862628pjm.155.1668790236086;
-        Fri, 18 Nov 2022 08:50:36 -0800 (PST)
+        bh=qkJ6eq/fIahCF8o8UiVfnfFhlL7awmXBJQtRWOpGmqU=;
+        b=7zIMRuCpdyGLDjqdMgSJJkRGz6QgPjw7yaQE+KRahrT1ti0JmtQKMbqdw54mKdCssO
+         HzaHgJXI6efYwAQ5SG4VA7dcmrIy5bLd9R5OQwCKx8fLw9j23LObCpCyrvoeXjzCyUQM
+         UYss+MffOXdOx6LFw/JdjPm8VP6hIB2I3fhhBmOsT/740p7FCbzFrOqJ4TO1+x7GyhyM
+         IvSvxx0qNj+MTNb3K2pBfJGWCplvUc9CDy0B6fZ5ppOAx/HPN5KVRV+ACUZiK4YDJ5OZ
+         RYxO/zA51JCQBVaRc+GwgNH9IX8Vt6MA0dFbGXhUWZ7EOnsN3hrIOk26YG1rhr9ZIvSk
+         Di9g==
+X-Gm-Message-State: ANoB5pmeKRjhKthxEcxcreat2pVnngbBobVW5OZrzofEZC2Xv9j5JqOP
+        tJNerQqzGEb/UArP2tt2YPn+Fw==
+X-Google-Smtp-Source: AA0mqf4TdqgLeKRagwwALD8Gxu+PQC0hD+r1aGZbWUB3kl2trIcaAzvMBP0naIGIsuzPtEcUTtpH4Q==
+X-Received: by 2002:a63:1c66:0:b0:476:c782:e5d1 with SMTP id c38-20020a631c66000000b00476c782e5d1mr7298165pgm.261.1668790496027;
+        Fri, 18 Nov 2022 08:54:56 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j15-20020a170902da8f00b00176dd41320dsm3992706plx.119.2022.11.18.08.50.35
+        by smtp.gmail.com with ESMTPSA id f7-20020a625107000000b0056b818142a2sm3391659pfb.109.2022.11.18.08.54.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Nov 2022 08:50:35 -0800 (PST)
+        Fri, 18 Nov 2022 08:54:55 -0800 (PST)
 From:   coverity-bot <keescook@chromium.org>
 X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date:   Fri, 18 Nov 2022 08:50:35 -0800
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     David Airlie <airlied@gmail.com>, Fangzhi Zuo <Jerry.Zuo@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Wayne Lin <Wayne.Lin@amd.com>, stable@vger.kernel.org,
-        #v5.6+@kernel, linux-kernel@vger.kernel.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Roman Li <roman.li@amd.com>, amd-gfx@lists.freedesktop.org,
-        Daniel Wheeler <daniel.wheeler@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        hersen wu <hersenxs.wu@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        dri-devel@lists.freedesktop.org,
-        Aurabindo Pillai <aurabindo.pillai@amd.com>,
-        Hamza Mahfooz <hamza.mahfooz@amd.com>,
-        Alex Hung <alex.hung@amd.com>,
+Date:   Fri, 18 Nov 2022 08:54:54 -0800
+To:     Johannes Berg <johannes.berg@intel.com>
+Cc:     Luca Coelho <luciano.coelho@intel.com>,
+        Haim Dreyfuss <haim.dreyfuss@intel.com>,
+        Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+        Petr Stourac <pstourac@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Mordechay Goodstein <mordechay.goodstein@intel.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Nathan Errera <nathan.errera@intel.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Shaul Triebitz <shaul.triebitz@intel.com>,
+        netdev@vger.kernel.org,
+        Gregory Greenman <gregory.greenman@intel.com>,
+        Abhishek Naik <abhishek.naik@intel.com>,
+        Jose Ignacio Tornos Martinez <jtornosm@redhat.com>,
+        Ayala Beker <ayala.beker@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org,
+        Sriram R <quic_srirrama@quicinc.com>,
+        Kalle Valo <kvalo@kernel.org>,
+        Mike Golant <michael.golant@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: pre_compute_mst_dsc_configs_for_state(): Uninitialized
- variables
-Message-ID: <202211180850.560AD5A74@keescook>
+Subject: Coverity: iwl_mvm_sec_key_add(): Memory - corruptions
+Message-ID: <202211180854.CD96D54D36@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -90,27 +92,27 @@ https://scan.coverity.com/projects/linux-next-weekly-scan
 You're getting this email because you were associated with the identified
 lines of code (noted below) that were touched by commits:
 
-  Thu Nov 17 00:18:25 2022 -0500
-    7cce4cd628be ("drm/amdgpu/mst: Stop ignoring error codes and deadlocking")
+  Thu Nov 10 13:26:51 2022 +0200
+    5c75a208c244 ("wifi: iwlwifi: mvm: support new key API")
 
 Coverity reported the following:
 
-*** CID 1527373:  Uninitialized variables  (UNINIT)
-drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c:1227 in pre_compute_mst_dsc_configs_for_state()
-1221     		for (j = 0; j < dc_state->stream_count; j++) {
-1222     			if (dc_state->streams[j]->link == stream->link)
-1223     				computed_streams[j] = true;
-1224     		}
-1225     	}
-1226
-vvv     CID 1527373:  Uninitialized variables  (UNINIT)
-vvv     Using uninitialized value "ret".
-1227     	return ret;
-1228     }
-1229
-1230     static int find_crtc_index_in_state_by_stream(struct drm_atomic_state *state,
-1231     					      struct dc_stream_state *stream)
-1232     {
+*** CID 1527370:  Memory - corruptions  (OVERRUN)
+drivers/net/wireless/intel/iwlwifi/mvm/mld-key.c:123 in iwl_mvm_sec_key_add()
+117
+118     	if (WARN_ON(keyconf->keylen > sizeof(cmd.u.add.key)))
+119     		return -EINVAL;
+120
+121     	if (keyconf->cipher == WLAN_CIPHER_SUITE_WEP40 ||
+122     	    keyconf->cipher == WLAN_CIPHER_SUITE_WEP104)
+vvv     CID 1527370:  Memory - corruptions  (OVERRUN)
+vvv     Overrunning buffer pointed to by "cmd.u.add.key + 3" of 32 bytes by passing it to a function which accesses it at byte offset 34 using argument "keyconf->keylen" (which evaluates to 32). [Note: The source code implementation of the function has been overridden by a builtin model.]
+123     		memcpy(cmd.u.add.key + IWL_SEC_WEP_KEY_OFFSET, keyconf->key,
+124     		       keyconf->keylen);
+125     	else
+126     		memcpy(cmd.u.add.key, keyconf->key, keyconf->keylen);
+127
+128     	if (keyconf->cipher == WLAN_CIPHER_SUITE_TKIP) {
 
 If this is a false positive, please let us know so we can mark it as
 such, or teach the Coverity rules to be smarter. If not, please make
@@ -118,11 +120,11 @@ sure fixes get into linux-next. :) For patches fixing this, please
 include these lines (but double-check the "Fixes" first):
 
 Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1527373 ("Uninitialized variables")
-Fixes: 7cce4cd628be ("drm/amdgpu/mst: Stop ignoring error codes and deadlocking")
+Addresses-Coverity-ID: 1527370 ("Memory - corruptions")
+Fixes: 5c75a208c244 ("wifi: iwlwifi: mvm: support new key API")
 
-If dc_state->stream_count is 0, "ret" is undefined. Perhaps initialize
-it as -EINVAL?
+keyconf->keylen is only bounds-checked against sizeof(cmd.u.add.key),
+but the memcpy() is starting a write at key + 3.
 
 Thanks for your attention!
 
