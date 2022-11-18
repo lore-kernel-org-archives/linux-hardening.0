@@ -2,138 +2,97 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0A1C4167B
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 03:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C864AC433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 03:54:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232532AbiKRDwF (ORCPT
+        id S235088AbiKRDyX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Nov 2022 22:52:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47166 "EHLO
+        Thu, 17 Nov 2022 22:54:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240484AbiKRDwD (ORCPT
+        with ESMTP id S235045AbiKRDyW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Nov 2022 22:52:03 -0500
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD95D8F3F8
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 19:52:02 -0800 (PST)
-Received: by mail-pf1-x42a.google.com with SMTP id y203so3727225pfb.4
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 19:52:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Kl2HCmuKXCRtuCV8keQkppjI9HHVusIDw26V+KNW/hE=;
-        b=TvL+I/WOxW0UWgdWvgJ0gvY2Fk0cjOtxylk/v1UA6dttCvpI1kE/XpZJv57lTN1ZSQ
-         9zfsGIldon1ArmWFGGhT0hzWaukocjI+WLMq+JWyItCq99MGxbLnN/hq2lmyIomVrFrf
-         KpZuajZ/wA7ltdKsh4/x05FY/9udPWBqve9qc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Kl2HCmuKXCRtuCV8keQkppjI9HHVusIDw26V+KNW/hE=;
-        b=uAMXhGCwCkLtNJTjwGTlVY9GsNm1+0dEJc423e/uAhxvUE3Q6IiIlH1IjawgFRgLDd
-         6tk/G5rRFIzTx/PfZ3ccmgDpr1QfpikB/x1xJ4egBXmORsKMihEuiKL9SWvs2cdEwStC
-         MzRY6/gVYMeXCoPUm6vq2cmoZi4v9TOaCs9EQ1Xh2vOFmy/jDRPXRFigbByQCUS447/N
-         q3qms76vg97BhsyMF2AFxImqFq/XR9EBQPnGVeuUq+SYPmOYEw8EgEpArn3tLMVfiJOp
-         OR7Dl5c5ChOTRp9mZPjDs2zPIozuGC3SpQARNKnGgkENlf9xB9RxXEZa/c5LCiVuPSzI
-         Mc/g==
-X-Gm-Message-State: ANoB5pmbOWTQxHfEhxDPI8MMkvvgn+Lokv5HSGDdboWjyl/hyXNQ8OOZ
-        UxKvj4uDMZVNUE7fos5H5+pylg==
-X-Google-Smtp-Source: AA0mqf7HS6tS+6S6c48a5+nH45KT6BsUA5aJzuSM7l/pjNwX3dKMq7yLshBvt6nVve0qTN8OxxufbA==
-X-Received: by 2002:a63:42c5:0:b0:460:9fe9:d325 with SMTP id p188-20020a6342c5000000b004609fe9d325mr4873891pga.608.1668743522250;
-        Thu, 17 Nov 2022 19:52:02 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d8-20020a170902cec800b00186e2b3e12fsm2254854plg.261.2022.11.17.19.52.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Nov 2022 19:52:01 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2 1/2] slab: Clean up SLOB vs kmalloc() definition
-Date:   Thu, 17 Nov 2022 19:51:58 -0800
-Message-Id: <20221118035200.1269184-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221118034713.gonna.754-kees@kernel.org>
-References: <20221118034713.gonna.754-kees@kernel.org>
+        Thu, 17 Nov 2022 22:54:22 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE08E905B8;
+        Thu, 17 Nov 2022 19:54:21 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 2B9DECE1FCA;
+        Fri, 18 Nov 2022 03:54:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD7C9C433C1;
+        Fri, 18 Nov 2022 03:54:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668743658;
+        bh=VXNicNtjreRGd3uzhXnaHlX16PiEgIZSc4IxaUpQf1Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=blpIBpYqG8kamYrSjg1GHDUuELON6bpq1PL1PVPXqjqDXFmbz9L8Ji2OJhRM9UIds
+         REBfOLVBzMTth0Z6fj55E6TW6tNEfVsjLRoGcZ+UbXkYb3L/Bguj5uY30ev9XZ932j
+         EpMtvwjhwYhMRNW/ghqIhF81ejUtApaqnyGuRJxIRYUd73vKQVUnsS5fxDh3rwwh0H
+         SGIDtpCYIeHeNJcnMSzvwvca88a9O066x2pdH1XJMI8SOw4HIdsiBlvqYGAGpZnkUi
+         nn4gzWpF1SQq0iqj86U0LJs/WGhLtBilIdkwoTyfLxeEo/alYT0tTnPih5mV9LUUmb
+         /aQkPdEtEb+8A==
+Date:   Thu, 17 Nov 2022 21:54:04 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Clemens Ladisch <clemens@ladisch.de>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] hpet: Replace one-element array with flexible-array
+ member
+Message-ID: <Y3cB3MqiM+KFJHNm@work>
+References: <20221118034250.never.999-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2026; h=from:subject; bh=XCqnPjfv4o/NKArWFRHDgYWfDTlT2kWs5IGt+A3wTyQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjdwFfTA7j/LHUkXVUp6HAaWlDXQgvh/IdCZT/aouq MnYGyIOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY3cBXwAKCRCJcvTf3G3AJp8VEA CnjcKb2iCpqmX0eLs3YrJn7gR2VmSD2hbc20QVLE5MxIZJBJgcap3GTy5i1qgCFw2KASeJLxX0fboz KIcE1Mw81hfNEkXWK6vKZ5xFg/pYKmvV6RV7AyQC947FQXvZIi0BaGFsNkS1H1zkCCkAeVMfN80mI0 1dX8ervJ42PpR9KAL7ySYtqYc5nKiffXK78XUMp0GBTZPg5qaurwfYUORKYh3QgkS5uq37EH6B5l0T uHDTLHL8dx2eDshTmfH5c+aw49XVD8zMUwoFc1A1jeD4exIqQHuOahoU0ZSyyjQW1LRXIQTuCzVJC/ o+tEaCPzfAVUa/qfEBHzHbRQW7rMwSguwAz0QAb+bdJLKrN7MR/LtheapmaVMGQjpjJU3Z3DPEt/wi Aq0IbtyxN6RooERZkVULRpRfS9DRzUv6YnmAXOhC0nXVnSVkHSGjOHyjnRfRDxizmrGvl2J0ZORyGE ehH2e6SDBf8yXy3C2gujb+9Xemv/Z2BxHV4BzI46EpD2x9xHZdgIoffQYFanYzr3R8BADb8voGurr+ PSgtL/PqvYl1cj6TsrtAgXAMpDc4VyT7rSMYo6rpO9XUYPhy9iH8YvnGWQ/R5/YwaqcOYjZ2Qq5KpN h6BaSq7PorQjdZiIwkoCEbhD9KEgyIBjAavfzOHXAo+MmXKGPmUKxMabAB2w==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221118034250.never.999-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-As already done for kmalloc_node(), clean up the #ifdef usage in the
-definition of kmalloc() so that the SLOB-only version is an entirely
-separate and much more readable function.
+On Thu, Nov 17, 2022 at 07:42:55PM -0800, Kees Cook wrote:
+> One-element arrays are deprecated[1] and are being replaced with
+> flexible array members in support of the ongoing efforts to tighten the
+> FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
+> with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
+> 
+> Replace one-element array with flexible-array member in struct hpet.
+> 
+> This results in no differences in binary output. The use of struct hpet
+> is never used with sizeof() and accesses via hpet_timers array are
+> already done after explicit bounds checking.
+> 
+> [1] https://github.com/KSPP/linux/issues/79
+> 
+> Cc: Clemens Ladisch <clemens@ladisch.de>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc: linux-mm@kvack.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/linux/slab.h | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+Such a sneaky 1-element... ~.~
 
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index 1c670c16c737..9033937c758e 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -558,15 +558,15 @@ void *kmalloc_large_node(size_t size, gfp_t flags, int node) __assume_page_align
-  *	Try really hard to succeed the allocation but fail
-  *	eventually.
-  */
-+#ifndef CONFIG_SLOB
- static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
- {
- 	if (__builtin_constant_p(size)) {
--#ifndef CONFIG_SLOB
- 		unsigned int index;
--#endif
-+
- 		if (size > KMALLOC_MAX_CACHE_SIZE)
- 			return kmalloc_large(size, flags);
--#ifndef CONFIG_SLOB
-+
- 		index = kmalloc_index(size);
- 
- 		if (!index)
-@@ -575,10 +575,18 @@ static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
- 		return kmalloc_trace(
- 				kmalloc_caches[kmalloc_type(flags)][index],
- 				flags, size);
--#endif
- 	}
- 	return __kmalloc(size, flags);
- }
-+#else
-+static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
-+{
-+	if (__builtin_constant_p(size) && size > KMALLOC_MAX_CACHE_SIZE)
-+		return kmalloc_large(size, flags);
-+
-+	return __kmalloc(size, flags);
-+}
-+#endif
- 
- #ifndef CONFIG_SLOB
- static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t flags, int node)
--- 
-2.34.1
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
+Thanks!
+--
+Gustavo
+
+> ---
+>  include/linux/hpet.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/hpet.h b/include/linux/hpet.h
+> index 8604564b985d..21e69eaf7a36 100644
+> --- a/include/linux/hpet.h
+> +++ b/include/linux/hpet.h
+> @@ -30,7 +30,7 @@ struct hpet {
+>  			unsigned long _hpet_compare;
+>  		} _u1;
+>  		u64 hpet_fsb[2];	/* FSB route */
+> -	} hpet_timers[1];
+> +	} hpet_timers[];
+>  };
+>  
+>  #define	hpet_mc		_u0._hpet_mc
+> -- 
+> 2.34.1
+> 
