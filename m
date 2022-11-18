@@ -2,50 +2,49 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E48C433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB766C4321E
 	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 03:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240825AbiKRDwE (ORCPT
+        id S232659AbiKRDwE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
         Thu, 17 Nov 2022 22:52:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47160 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232659AbiKRDwD (ORCPT
+        with ESMTP id S240540AbiKRDwD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Thu, 17 Nov 2022 22:52:03 -0500
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BF058F3ED
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD7B78F3F9
         for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 19:52:02 -0800 (PST)
-Received: by mail-pf1-x431.google.com with SMTP id q9so3739524pfg.5
+Received: by mail-pg1-x532.google.com with SMTP id o13so3935154pgu.7
         for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 19:52:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=13POlA7CELUjT6ZjE2YlVT7xlxRT3lU0xqTeymXfKuQ=;
-        b=mln/mgTD/8ZiYnrfEL5sJdItSGA3CsUZXe0Rbw9VmgWwP7++319wUWFlXAOZhmdkE+
-         Q1A8F59QiRmh/VDbUqCYA2L/XIIyIXNDrRkekGA+mdDaZnqnT7Iacfw8H/f5UlHKWNFL
-         zWFpNrCeB4pUtxOC9D7mAQUfGrSn4vB3tbBI4=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bpPiECtcuuwxxZW6I2l04Yvk+0H4NlRCXaVbSAhBEDs=;
+        b=Y4k+ITVdnWabWfy2tpUEza7/ctINKSkaBCZ3/PX3qAfvyf89lki00V0Xwn2eethcgE
+         uklfgJsqroV1nl1rka+esAOWp1TVQZrLJB8wd4WQlZocW/JszizcYUWarJxjffrgQ6R0
+         ru/MdhgJmf+22TnqXyIM1tBM2WrHzqbDsi/U4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=13POlA7CELUjT6ZjE2YlVT7xlxRT3lU0xqTeymXfKuQ=;
-        b=ULhYtcD/kxGr4R+eiUxtUQfhhfO2tUUmv6ouFaJroxFaixgV08sswM5BEkgszBRugD
-         4L1klVw15YTXIZJ9YO6UD9jcx+1mIkEi0unU10P/bz5hlYOtH4Qsk4bH29ueneE5FSGk
-         6coQwLIVgDLr9hMuJ8lEJFsV2b/TH0UqL73krf2+8dXMpCb62GDWKwcyy/tjw7nKUMjT
-         SdBho6hJVlXMo9YOnS3FsexZVgbUi1jBpvy4OGbpUaFBXBYYqh6C+EwEjunCJsFM2iGD
-         mIghb9ilj3rcFB0ysy/FQ42oMpj+Y+m+9uC78FXalccrmRZisul+X4HASFhKETNuNyK/
-         S+Mw==
-X-Gm-Message-State: ANoB5pkr6xfIEj4E9t8qpqpBM2R3Nu9PNEzeTHb87G/5tmqHC4QpitkQ
-        BpX9o9uNykjLJpwOmjcAL+8sxQ==
-X-Google-Smtp-Source: AA0mqf6N+OlYszLxbtmqYFwWBrZKb2ySfrwYomT8syL2s6d6kloyN/S01vclXkdw4lKt9+nfwwJ+dw==
-X-Received: by 2002:a65:6847:0:b0:476:f43e:a86 with SMTP id q7-20020a656847000000b00476f43e0a86mr4988332pgt.363.1668743522032;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bpPiECtcuuwxxZW6I2l04Yvk+0H4NlRCXaVbSAhBEDs=;
+        b=S06ZOk7Bhcwq4STcTvc3AOBvKcgQE2PV+JbpT0ZV1VgUOM1q6CBSTJNB/lEa/7tPXS
+         OcRXoq/JNp8mTtCqcKE+W/gqGcU2pRQYXz6YFH7vTtjmCwoaxl4YM5ogzH+POz4LEF/b
+         h5MQmbTZTdAN/FEOHfl2dinNUjtD8E8IqzVXeZRx56SFnnO0hb5/fJPO0DuJWMTZ/Uft
+         rJZ1FUAQWNpqGYbuwd8kWmurzRo9feaYIl9oMYP1N1893G7Pgu9WJtdudk8pqyCx930S
+         dsUx6kmT+AggQ4ebVMq54ooLyOTtt9U6eP1uKvRd1+twR+Lxu5nSg43iLtEwnf3xu69C
+         TYwg==
+X-Gm-Message-State: ANoB5plC9inhE9zKl9rGEuHf0ywKTXRXKml6TRwJECDJRwFbTe+PVFKG
+        ZRxupNIYbzDevjKgW4kvRQEHxxvbx68gSA==
+X-Google-Smtp-Source: AA0mqf5LIOGY++xcoY7JcVjGfKd3ueopnrI6Mq6ww0CuYAUNPQKL6pVl34gT7LPuQraWiXJ/HTNFkA==
+X-Received: by 2002:a62:d441:0:b0:53e:6210:96de with SMTP id u1-20020a62d441000000b0053e621096demr5945073pfl.58.1668743522435;
         Thu, 17 Nov 2022 19:52:02 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u18-20020a170902e5d200b00186748fe6ccsm2276693plf.214.2022.11.17.19.52.01
+        by smtp.gmail.com with ESMTPSA id r11-20020a63ec4b000000b0043ae1797e2bsm1794260pgj.63.2022.11.17.19.52.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 17 Nov 2022 19:52:01 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
@@ -57,88 +56,50 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2 2/2] slab: Remove special-casing of const 0 size allocations
-Date:   Thu, 17 Nov 2022 19:51:59 -0800
-Message-Id: <20221118035200.1269184-2-keescook@chromium.org>
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v2 0/2] slab: Provide full coverage for __alloc_size attribute
+Date:   Thu, 17 Nov 2022 19:51:57 -0800
+Message-Id: <20221118034713.gonna.754-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221118034713.gonna.754-kees@kernel.org>
-References: <20221118034713.gonna.754-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2371; h=from:subject; bh=roYcJKurZ1Ad0yqcM7lIDF6nN9ThBNp448RHSIPN1YQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjdwFfZxDK7dz/ZV+GaTBVSw8vUtlA5Z9lYg4dYZxh Ty2FDZaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY3cBXwAKCRCJcvTf3G3AJqB3D/ 92I8BImb3l8xp7T7C/K708vzPl/8cg+RmpOK6O8J9tqppE4B5M+SHEFIwWoiPjeSunOrFQ1DwDx9iZ u69XcPWH0rvSq6XgAS4hKKx3hUEvm7SfHhU/tMqqLMduePCXfFRifcSHXyzlATJyq8Wouii8HIaWo4 wpwfW8/jeErjZCLwxoOQFfOGSdrPISOLAvnII7IHQyoHd/w0i9HLKgRHtB8xe4z9u/B0X33zioYBJN J62lW7fZXdQJey/y170LtBc8LAW/Tw7fwE8hxD0AsbzzOxgYShr8FnHhwwcu0EC4j4GnYBuTey8frV EySb8ats1/DK6YD0YCsS5AQB+/IUERCstiwsPOzLUZgZd8bdSusAxZhGH4iBRRof6wHWXGNrjAVwhn 3Snjp2O9GaBhJWiCAuNsthWjbSRE5KabMfNcSbunYrPfQXvBCXcdsUNxPVAILnJG2RgVexDJXdP1+S 95JSp0z6rrSxXhOefnmqdca5dura/qA18ttumMHL/6w2vykG0fx4VLfMizyQgi3/yTu9ykaTsw77+6 /VGws3PmhsMC0P+WacnTRQRezboPQxcBN65EO5en1ch1MUhYl6E+/yKf9e6POwUMv6e8aO56MI3us9 C/kaUdRHt4xCbf/FUTiy6plT2ZYVnNHudbi4m84b46NIo/ancm1AFn8JpH1A==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1019; h=from:subject:message-id; bh=PjCBiF2sN+bzrV7VCSddGmjoguZq6Cl6RI+yFLufVf4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjdwFfNcru+k/Q+zCg8JWAMeqDxHq8sLjKOG5JeKE3 0h6oVzaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY3cBXwAKCRCJcvTf3G3AJj5/D/ 42TO5oeunaOTHbu1yBGFAh47GzImY9MtSgcNOrMok8hnHPtevpfbnlSegxe0HbUP7jbID1ihtqFruR b8XwYzWQxIBMoIc21M5aD70wqlFyfKI0jwWu6i7jVgCOakCY2VPKMOXU7SXtCwcXcvdx+7jyT/axy+ FLnWHtyr+DeWh639lj+oqqG6Bb1O9iVV/ghsBoHdYybtRNVdG67KqyXBHRz0shvKapS2sLhe5jUUrv 0lCjDp4s4oww7gnWYrYYzFlE1s7WBWLMS8QG93zUHMG3jzdWueNlaWbOrylPuYhHimLpG2bANJxQYs 8Odnd1Se+AJd4aXvCfxOxIsfI4pT2yjepl04B8gtXjYD/0I3zO+qXORjitTA1VmYijAWVU+WQ/Qno/ tELZotiNyAwbA0PjhtqMuXZ/VC4PXHZ7uy3rJioJEB8eo60gh3FX1U+vs51KxSHPaxZt+LLnmDz1ts 2PhSrilHbcTMd9nawq8EgdDJ0odurxcwsZFvHXAVaWsW8L8Z0LecdXWGfKI1BH3ndVyBgC7/QoowC5 +Qv6EtEdFp5kz+3miOfrxz/EHw/2rWb0tf1X3T3sUBoUr8TAUFcc34oG+BicxWUXltcl3CAptWVBK/ izeVl073EbSAffqbEN+BuSxGy7gJTPTYNrU7DwWVkCVbUgihdfgC9c+Xrn9g==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Passing a constant-0 size allocation into kmalloc() or kmalloc_node()
-does not need to be a fast-path operation, so the static return value
-can be removed entirely. This is in preparation for making sure that
-all paths through the inlines result in a full extern function call,
-where __alloc_size() hints will actually be seen[1] by GCC. (A constant
-return value of 0 means the "0" allocation size won't be propagated by
-the inline.)
+Hi,
 
-[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96503
+These patches work around a deficiency in GCC (>=11) and Clang (<16)
+where the __alloc_size attribute does not apply to inlines. :(
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96503
 
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc: linux-mm@kvack.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/linux/slab.h | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+This manifests as reduced overflow detection coverage for many allocation
+sites under CONFIG_FORTIFY_SOURCE=y, where the allocation size was not
+actually being propagated to __builtin_dynamic_object_size(). The problem
+was in two halves: the trace wrapper (now fixed in -next), and const-0
+special-casing (covered here).
 
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index 9033937c758e..84be05208418 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -561,17 +561,13 @@ void *kmalloc_large_node(size_t size, gfp_t flags, int node) __assume_page_align
- #ifndef CONFIG_SLOB
- static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
- {
--	if (__builtin_constant_p(size)) {
-+	if (__builtin_constant_p(size) && size) {
- 		unsigned int index;
- 
- 		if (size > KMALLOC_MAX_CACHE_SIZE)
- 			return kmalloc_large(size, flags);
- 
- 		index = kmalloc_index(size);
--
--		if (!index)
--			return ZERO_SIZE_PTR;
--
- 		return kmalloc_trace(
- 				kmalloc_caches[kmalloc_type(flags)][index],
- 				flags, size);
-@@ -591,17 +587,13 @@ static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
- #ifndef CONFIG_SLOB
- static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t flags, int node)
- {
--	if (__builtin_constant_p(size)) {
-+	if (__builtin_constant_p(size) && size) {
- 		unsigned int index;
- 
- 		if (size > KMALLOC_MAX_CACHE_SIZE)
- 			return kmalloc_large_node(size, flags, node);
- 
- 		index = kmalloc_index(size);
--
--		if (!index)
--			return ZERO_SIZE_PTR;
--
- 		return kmalloc_node_trace(
- 				kmalloc_caches[kmalloc_type(flags)][index],
- 				flags, node, size);
+Thanks,
+
+-Kees
+
+v2:
+- drop trace wrapper refactoring -- handled differently now (vbabka)
+- drop kunit/fortify test patch since it depends on other changes
+- rebase
+v1: https://lore.kernel.org/all/20221101222520.never.109-kees@kernel.org
+
+Kees Cook (2):
+  slab: Clean up SLOB vs kmalloc() definition
+  slab: Remove special-casing of const 0 size allocations
+
+ include/linux/slab.h | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
 -- 
 2.34.1
 
