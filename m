@@ -2,97 +2,87 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561D2C4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 13:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C30C4332F
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 15:41:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241538AbiKRNNf (ORCPT
+        id S242419AbiKRPlT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Nov 2022 08:13:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39470 "EHLO
+        Fri, 18 Nov 2022 10:41:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235188AbiKRNNc (ORCPT
+        with ESMTP id S242352AbiKRPlN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Nov 2022 08:13:32 -0500
-X-Greylist: delayed 427 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 18 Nov 2022 05:13:27 PST
-Received: from forward502o.mail.yandex.net (forward502o.mail.yandex.net [37.140.190.204])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE911D86;
-        Fri, 18 Nov 2022 05:13:27 -0800 (PST)
-Received: from sas1-37da021029ee.qloud-c.yandex.net (sas1-37da021029ee.qloud-c.yandex.net [IPv6:2a02:6b8:c08:1612:0:640:37da:210])
-        by forward502o.mail.yandex.net (Yandex) with ESMTP id C0A5425D50C0;
-        Fri, 18 Nov 2022 16:05:53 +0300 (MSK)
-Received: by sas1-37da021029ee.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id eOks44V6nS-5pVmNm92;
-        Fri, 18 Nov 2022 16:05:52 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=clicknet.pro; s=mail; t=1668776752;
-        bh=/wHdhb6bOR6sr6GxP7nToVvgKT4uV8iQ9aNeJQuYTyc=;
-        h=From:In-Reply-To:Cc:Date:References:To:Subject:Message-ID;
-        b=PnxOE3On7J7+RxaOegVmOD9Cjmq8zBQgeNI4H+6xOoRyil6MRagvAHjkaudPAWb7P
-         Nqeh2yBpd6j1CYWT66JdB6fGmEz23W4qwTJB9nBTn5BmGsWcEI3W1eVSMdoVYzNGRZ
-         jV/kfqMyeoywwn6lL7US2uIkqrxzWQDrodXWQ108=
-Authentication-Results: sas1-37da021029ee.qloud-c.yandex.net; dkim=pass header.i=@clicknet.pro
-Message-ID: <74337ebd-0222-2e78-9149-8fa40b0c815e@clicknet.pro>
-Date:   Fri, 18 Nov 2022 16:05:36 +0300
+        Fri, 18 Nov 2022 10:41:13 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE0AB78D4B;
+        Fri, 18 Nov 2022 07:41:05 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 96084B8244F;
+        Fri, 18 Nov 2022 15:41:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E359AC433B5;
+        Fri, 18 Nov 2022 15:41:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668786063;
+        bh=R4xBJmP/myMQ0Kip18TRQGWMGPC+256bduAJsZzqgm8=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=Pt0nEkiYP3Ivn4a4HL4M+vbconKZ7ATVzTHnVeCQ+LegKL8X286/oC1lyMsME/OXW
+         ZMbTuE2qFVQLMuF8va+AOyLbVPqK30Yu74zham5+Guz2H9iplrRwJvZk2Is293TSPD
+         Skuk3pPei4Cuitu/21dNYeFzCwmxHf7v59A+7rRRAxJE6dirbxk9Ksfgz/IFX7j6xF
+         tpu6JsI5ZPCdgloE6dPrd09m5fsG22G+Wyl0onBDvdhzivzrtHmy7kfgJoE0jqoS+j
+         x+zKiG91/B9E/11/sPBgiRXd2CMmtjSTAlm1xjUE/xgVSZcw2IqTkxjYikZ4zsPMWw
+         x/ux5+87roo7Q==
+Message-ID: <ebac6d76-6d6f-85e4-769c-b7e62c84e47b@kernel.org>
+Date:   Fri, 18 Nov 2022 08:41:00 -0700
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: Coverity: zblock_alloc(): Memory - illegal accesses
-To:     coverity-bot <keescook@chromium.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        linux-mm@kvack.org, linux-doc@vger.kernel.org,
-        Vitaly Wool <vitaly.wool@konsulko.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <202211171419.FCDC8EE@keescook>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.13.1
+Subject: Re: [PATCH] ipv4/fib: Replace zero-length array with
+ DECLARE_FLEX_ARRAY() helper
 Content-Language: en-US
-From:   Ananda Badmaev <a.badmaev@clicknet.pro>
-In-Reply-To: <202211171419.FCDC8EE@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To:     Kees Cook <keescook@chromium.org>, Jakub Kicinski <kuba@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20221118042142.never.400-kees@kernel.org>
+From:   David Ahern <dsahern@kernel.org>
+In-Reply-To: <20221118042142.never.400-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-18.11.2022 01:20, coverity-bot пишет:
-> Coverity reported the following:
+On 11/17/22 9:21 PM, Kees Cook wrote:
+> Zero-length arrays are deprecated[1] and are being replaced with
+> flexible array members in support of the ongoing efforts to tighten the
+> FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
+> with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
 > 
-> *** CID 1527352:  Memory - illegal accesses  (OVERRUN)
-> mm/zblock.c:320 in zblock_alloc()
-> 314     	}
-> 315     	list = &(pool->block_lists[block_type]);
-> 316
-> 317     check:
-> 318     	spin_lock(&list->lock);
-> 319     	/* check if there are free slots in cache */
-> vvv     CID 1527352:  Memory - illegal accesses  (OVERRUN)
-> vvv     Overrunning array of 10208 bytes at byte offset 10208 by dereferencing pointer "list".
-> 320     	block = cache_find_block(list);
-> 321     	if (block)
-> 322     		goto found;
-> 323     	spin_unlock(&list->lock);
-> 324
-> 325     	/* not found block with free slots try to allocate new empty block */
+> Replace zero-length array with flexible-array member in struct key_vector.
 > 
-> If this is a false positive, please let us know so we can mark it as
-> such, or teach the Coverity rules to be smarter. If not, please make
-> sure fixes get into linux-next. :) For patches fixing this, please
-> include these lines (but double-check the "Fixes" first):
+> This results in no differences in binary output.
 > 
-> Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-> Addresses-Coverity-ID: 1527352 ("Memory - illegal accesses")
-> Fixes: 9097e28c25c8 ("mm: add zblock - new allocator for use via zpool API")
+> [1] https://github.com/KSPP/linux/issues/78
 > 
-> It looks like block_type is not checked to be < ARRAY_SIZE(block_desc)
-> after exiting the earlier loop, so the access through "list" may be past
-> the end of pool->block_lists.
->
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+> Cc: David Ahern <dsahern@kernel.org>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  net/ipv4/fib_trie.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-There is no need for this check because it is guaranteed that this code 
-will be executed only if size <= PAGE_SIZE. Since slot_size for the last 
-list even exceeds PAGE_SIZE, block_type will be always valid.
-
-
-
+Reviewed-by: David Ahern <dsahern@kernel.org>
 
