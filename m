@@ -2,88 +2,265 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFE9C433FE
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 04:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD0BC43219
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 08:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235172AbiKREkY (ORCPT
+        id S241568AbiKRIfN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Nov 2022 23:40:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38276 "EHLO
+        Fri, 18 Nov 2022 03:35:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235178AbiKREkX (ORCPT
+        with ESMTP id S241469AbiKRIey (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Nov 2022 23:40:23 -0500
-Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BB672EF09
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 20:40:22 -0800 (PST)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-369426664f9so38886527b3.12
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 20:40:22 -0800 (PST)
+        Fri, 18 Nov 2022 03:34:54 -0500
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56ED78EB6D
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 00:34:13 -0800 (PST)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-381662c78a9so43003617b3.7
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 00:34:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3Dr1Bit9E2xIsyjg35lmCOjqfBFsJ1wOMewib20+A9s=;
-        b=S2m69yrwZynGvy8xNpigka4CC35Tdckv+IU7cZIjoPN/muy3Vk0cBC5wA0XMCBJ4sl
-         IY3mgjEaTXF/Vk1pvaHePA7bFVIqAKsC/7M5c0wet6QSG03MTB/zprxTZqoKysZ1aOjy
-         w7v5npbzpfrzy1ZaiQSFSKnVHdXrd+C5elFmmqxfjq7JnmMVAhFDZ09ySgVMXtM8nnPD
-         CpyrXmRhbGHh0gDjdYFAh25WcEALsLUhwsTecG84NjHg9lu30VACF66fEiZT981A/dLl
-         yRYp4dkopCCqwX2He7FLaZ64ZXW8KmN0O1eZ5i5kXsY0sTwjx7Hx7HNHnCS6p+9+wWPL
-         aZEw==
+        bh=wyrIZGrkRGaBx3SBlr53l5QP2brkzSvBi6iVTIgs8bA=;
+        b=p/97bDSMHPSl8KJZhheAqVfFItZr4N5ToAF1sL/eRnSDT78a47IjZqZRBiAf1ZRvOg
+         StG+00tSdXWDsXeAgM1Yp4aXIAfaybTBv9cNAchnMtgmo5aXXMYFTmz0irktfNHmHGj6
+         HWDw/TPmRe0g0WB2Bn0IuhYCvVpx8PcVB34dJWrW/PoSrRDMyZ+v49sW/TslbSrrbRWe
+         IuAekW2Aa1UflkJMuh4WDsqRlRIRZieQ1tAGqw8BHbmtlDXAtkrp9FB38PUidu9Tt9Mw
+         +GTq7+MjLHDrW7xbA+tLEmVml4W+IkGZGuucNdqLMkzWITkL4uAGfzxdBda0MyxfbW0k
+         GLmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3Dr1Bit9E2xIsyjg35lmCOjqfBFsJ1wOMewib20+A9s=;
-        b=v4/W0mJkBKMPTBj93hanrsvLOhJFqC+tBKVFehfJJmaSn1AUsQcEq1gaNpYNhiVsFL
-         tMZJe8VrQKCYvpz3PoAdZkqOISJq+Frx7ZMso4tngJZg71+3aor2nIHN63+AaNSBelPa
-         ve/T4yWhd7o69BqAU0mMG5yqkXam0PAoI2f+2N92NyTuAjufya3TlfkgYoMVYGbMVDyC
-         hZ11UGnzoBwBZ7RcfQmcE43n2Yh3hNh2/EWQ6+Z+Sk5OnszxuTSrU1G6JqU4GG+uwpbw
-         xg1368/pa1zn5jkaODy9Gc6dlctTLyiTZq9oX5a+A9x6qqXJby1LZSYyp1wMZM7aVbHe
-         YUHw==
-X-Gm-Message-State: ANoB5plvKPmiqpR/lEbL689g37Kx/frBynaAq2tFmGRoghGYFtK8avtq
-        hxkyz5ylhYI0SKErNw1o3BfhhSCf9gJhiK7XO3XZRw==
-X-Google-Smtp-Source: AA0mqf446ZeH40Y49UBBftPkEOKX3UbeWSS1TwZfSCeFIZ5/4hKnGjwyW5mX4zidCRqlg92GBzKqZdjaq4oPJcl2jmw=
-X-Received: by 2002:a81:5f04:0:b0:393:ab0b:5a31 with SMTP id
- t4-20020a815f04000000b00393ab0b5a31mr2980661ywb.55.1668746421116; Thu, 17 Nov
- 2022 20:40:21 -0800 (PST)
+        bh=wyrIZGrkRGaBx3SBlr53l5QP2brkzSvBi6iVTIgs8bA=;
+        b=0NaXsPhliMHEODnrCJWcDGhUthSOTUa5P0OIuqpe1V1PRYs0b9Wsbd6MYugKm/woL9
+         G7Dd30+czxFHsscdCP/4rox85AjPxR3iSUN7K9uqsWoAjiYm65BQhYMhbruTffE7eByA
+         oZYcCgWEO+sLDNDVWJ5hebkvnO2VAH+1SHx+Zb0hhXajq1otMp73oQCjNNnu28j/x4t6
+         tdZcsDqXtBb5oaCoB4hc2IYJKYgPCFV+EFa7pQfhhExz4ed+wGe3f/KOMZnL9/PNq0wv
+         lFnt/KPLTdxsy/jaFiLa2E58IXOONNZYb3My3EUDt9yOu8Sl1PuqxJhAxG3c7+Xm/Wzq
+         ht+Q==
+X-Gm-Message-State: ANoB5pkXWF6YHgmk6exlmjEbq3XKNsSZqNLBJBJQ8+9FZGXWMwHMDV8D
+        nE/DmM8AAyNr89jEJRENhNtDSOp+L4M++i13ENdARA==
+X-Google-Smtp-Source: AA0mqf6Kvf44HlZn6iojLaECPn2leREJv9EFhtuvAZO/Mw6881fUR5KToU610B8qLHSvq9W6O51u62BW9Qbmllua0rI=
+X-Received: by 2002:a81:1717:0:b0:36f:c0f7:856f with SMTP id
+ 23-20020a811717000000b0036fc0f7856fmr5472096ywx.4.1668760453041; Fri, 18 Nov
+ 2022 00:34:13 -0800 (PST)
 MIME-Version: 1.0
-References: <202211171422.7A7A7A9@keescook> <CANn89iLQcLNX+x_gJCMy5kD5GW3Xg8U4s0VGHtSuN8iegmhjxQ@mail.gmail.com>
- <202211171513.28D070E@keescook> <CANn89iKgMvhLbTi=SHn41R--rBQ8As=E52Hnecch6nOhXVYGrg@mail.gmail.com>
- <202211171624.963F44FCE@keescook> <CANn89iJ1ciQkv5nt5XgRXAXPVzEW6J=GdiUYvqrYgjUU440OtQ@mail.gmail.com>
- <202211171815.D076ED9C@keescook>
-In-Reply-To: <202211171815.D076ED9C@keescook>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Thu, 17 Nov 2022 20:40:09 -0800
-Message-ID: <CANn89iK_uQzXx5ihDnbDCDmiJc3+2kLWTGTNC-+2PiiHfCHCjA@mail.gmail.com>
-Subject: Re: Coverity: __sock_gen_cookie(): Error handling issues
+References: <20221117233838.give.484-kees@kernel.org> <20221117234328.594699-4-keescook@chromium.org>
+In-Reply-To: <20221117234328.594699-4-keescook@chromium.org>
+From:   Marco Elver <elver@google.com>
+Date:   Fri, 18 Nov 2022 09:33:36 +0100
+Message-ID: <CANpmjNN2oHP0xLhPG9TboqcXFxdvhE9Hh6qKa0xPGnyFyGDRQg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] panic: Consolidate open-coded panic_on_warn checks
 To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Nikolay Aleksandrov <nikolay@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc:     Jann Horn <jannh@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Gow <davidgow@google.com>,
+        tangmeng <tangmeng@uniontech.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Petr Mladek <pmladek@suse.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Seth Jenkins <sethjenkins@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 6:16 PM Kees Cook <keescook@chromium.org> wrote:
-
+On Fri, 18 Nov 2022 at 00:43, Kees Cook <keescook@chromium.org> wrote:
 >
-> It looks like the existing code already works as intended, so no need to
-> silence the warning. The comment and reload might be nice to add, just
-> to clarify for anyone looking at it again in the future, though.
+> Several run-time checkers (KASAN, UBSAN, KFENCE, KCSAN, sched) roll
+> their own warnings, and each check "panic_on_warn". Consolidate this
+> into a single function so that future instrumentation can be added in
+> a single location.
+>
+> Cc: Marco Elver <elver@google.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+> Cc: Alexander Potapenko <glider@google.com>
+> Cc: Andrey Konovalov <andreyknvl@gmail.com>
+> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Gow <davidgow@google.com>
+> Cc: tangmeng <tangmeng@uniontech.com>
+> Cc: Jann Horn <jannh@google.com>
+> Cc: Shuah Khan <skhan@linuxfoundation.org>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Cc: kasan-dev@googlegroups.com
+> Cc: linux-mm@kvack.org
+> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
+Reviewed-by: Marco Elver <elver@google.com>
 
-The current code in net-next is broken, because if we succeed to
-change sk->sk_cookie,
-we return 0 (instead of @new). So your report was not a false positive.
-
-Thanks.
+> ---
+>  include/linux/panic.h | 1 +
+>  kernel/kcsan/report.c | 3 +--
+>  kernel/panic.c        | 9 +++++++--
+>  kernel/sched/core.c   | 3 +--
+>  lib/ubsan.c           | 3 +--
+>  mm/kasan/report.c     | 4 ++--
+>  mm/kfence/report.c    | 3 +--
+>  7 files changed, 14 insertions(+), 12 deletions(-)
+>
+> diff --git a/include/linux/panic.h b/include/linux/panic.h
+> index c7759b3f2045..979b776e3bcb 100644
+> --- a/include/linux/panic.h
+> +++ b/include/linux/panic.h
+> @@ -11,6 +11,7 @@ extern long (*panic_blink)(int state);
+>  __printf(1, 2)
+>  void panic(const char *fmt, ...) __noreturn __cold;
+>  void nmi_panic(struct pt_regs *regs, const char *msg);
+> +void check_panic_on_warn(const char *origin);
+>  extern void oops_enter(void);
+>  extern void oops_exit(void);
+>  extern bool oops_may_print(void);
+> diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
+> index 67794404042a..e95ce7d7a76e 100644
+> --- a/kernel/kcsan/report.c
+> +++ b/kernel/kcsan/report.c
+> @@ -492,8 +492,7 @@ static void print_report(enum kcsan_value_change value_change,
+>         dump_stack_print_info(KERN_DEFAULT);
+>         pr_err("==================================================================\n");
+>
+> -       if (panic_on_warn)
+> -               panic("panic_on_warn set ...\n");
+> +       check_panic_on_warn("KCSAN");
+>  }
+>
+>  static void release_report(unsigned long *flags, struct other_info *other_info)
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index d843d036651e..cfa354322d5f 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -201,6 +201,12 @@ static void panic_print_sys_info(bool console_flush)
+>                 ftrace_dump(DUMP_ALL);
+>  }
+>
+> +void check_panic_on_warn(const char *origin)
+> +{
+> +       if (panic_on_warn)
+> +               panic("%s: panic_on_warn set ...\n", origin);
+> +}
+> +
+>  /**
+>   *     panic - halt the system
+>   *     @fmt: The text string to print
+> @@ -619,8 +625,7 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
+>         if (regs)
+>                 show_regs(regs);
+>
+> -       if (panic_on_warn)
+> -               panic("panic_on_warn set ...\n");
+> +       check_panic_on_warn("kernel");
+>
+>         if (!regs)
+>                 dump_stack();
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 5800b0623ff3..285ef8821b4f 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -5729,8 +5729,7 @@ static noinline void __schedule_bug(struct task_struct *prev)
+>                 pr_err("Preemption disabled at:");
+>                 print_ip_sym(KERN_ERR, preempt_disable_ip);
+>         }
+> -       if (panic_on_warn)
+> -               panic("scheduling while atomic\n");
+> +       check_panic_on_warn("scheduling while atomic");
+>
+>         dump_stack();
+>         add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
+> diff --git a/lib/ubsan.c b/lib/ubsan.c
+> index 36bd75e33426..60c7099857a0 100644
+> --- a/lib/ubsan.c
+> +++ b/lib/ubsan.c
+> @@ -154,8 +154,7 @@ static void ubsan_epilogue(void)
+>
+>         current->in_ubsan--;
+>
+> -       if (panic_on_warn)
+> -               panic("panic_on_warn set ...\n");
+> +       check_panic_on_warn("UBSAN");
+>  }
+>
+>  void __ubsan_handle_divrem_overflow(void *_data, void *lhs, void *rhs)
+> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+> index df3602062bfd..cc98dfdd3ed2 100644
+> --- a/mm/kasan/report.c
+> +++ b/mm/kasan/report.c
+> @@ -164,8 +164,8 @@ static void end_report(unsigned long *flags, void *addr)
+>                                        (unsigned long)addr);
+>         pr_err("==================================================================\n");
+>         spin_unlock_irqrestore(&report_lock, *flags);
+> -       if (panic_on_warn && !test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
+> -               panic("panic_on_warn set ...\n");
+> +       if (!test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
+> +               check_panic_on_warn("KASAN");
+>         if (kasan_arg_fault == KASAN_ARG_FAULT_PANIC)
+>                 panic("kasan.fault=panic set ...\n");
+>         add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
+> diff --git a/mm/kfence/report.c b/mm/kfence/report.c
+> index 7e496856c2eb..110c27ca597d 100644
+> --- a/mm/kfence/report.c
+> +++ b/mm/kfence/report.c
+> @@ -268,8 +268,7 @@ void kfence_report_error(unsigned long address, bool is_write, struct pt_regs *r
+>
+>         lockdep_on();
+>
+> -       if (panic_on_warn)
+> -               panic("panic_on_warn set ...\n");
+> +       check_panic_on_warn("KFENCE");
+>
+>         /* We encountered a memory safety error, taint the kernel! */
+>         add_taint(TAINT_BAD_PAGE, LOCKDEP_STILL_OK);
+> --
+> 2.34.1
+>
