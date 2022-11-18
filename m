@@ -2,101 +2,164 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE89C4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 00:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4C4C433FE
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 01:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234080AbiKRAeX (ORCPT
+        id S239454AbiKRBYv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Nov 2022 19:34:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43538 "EHLO
+        Thu, 17 Nov 2022 20:24:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234802AbiKRAeS (ORCPT
+        with ESMTP id S235133AbiKRBYu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Nov 2022 19:34:18 -0500
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FA58716E4
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 16:34:17 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id g10so3153597plo.11
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 16:34:17 -0800 (PST)
+        Thu, 17 Nov 2022 20:24:50 -0500
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C83936D486
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 17:24:48 -0800 (PST)
+Received: by mail-io1-xd36.google.com with SMTP id h206so2798665iof.10
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Nov 2022 17:24:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zfKoIXcdSbSCG4X8dhvdkumwWP5cdUHpW/BAvV90utQ=;
-        b=hBAITYaklRvHDDl64erxDCykr4u6NNFZ8OfJfZ1JT3AFy1r2suv3k/1rLcyzRXga0N
-         /Gxby+KLLrwQV7OBkH8LYJSkKhJPZmRywFIeLAjhWp9a/BDOFymG1t+YxoeVqcooLMOC
-         THVmW0Q2Ukz0Y0EPe7mbObmo0p8I/djfdpo1U=
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=R4T4enbQOsqO6XmAV2f5zgRx0vHX3wK4skHjCmqpICo=;
+        b=tRE8MM8ca79bEn0b3rkDQO5fw0/vkOWKZR1tr+6audLccXPFKXC4mMpzZrEnQ9Rstr
+         I4lbu9pQcWPcS5m05iK8xB2g6dLdJikgg+I7JKxU3RSpVo7rYenwhKYV+maXu5Gnb8sa
+         da9yZCzhVhRxfwlmoD01NV8jLinl+wLctMmxx2+PLcrUNdxNQUJolSTlrIXOg62ccbhf
+         Pt+GqFxBC4fZ4c2/o5Z94wZuBvxnvPMnVz6W13PArWGHzVfScmN/bqWlDq8KiDpmkyNS
+         gU6G67Z5VCRqDUGFk9bhZz3789ejikfK7LH83pOfy0jt0E/NQgtBT4+wDBKuO6302iyQ
+         kP+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=zfKoIXcdSbSCG4X8dhvdkumwWP5cdUHpW/BAvV90utQ=;
-        b=z6YCzoOQRBNzXQTenYewLDVQXpa8zu6D6m2jCMAMHODpCDxb3Rbq49OloaxH1+vllG
-         NUPVxD4xXnROuIV5tAE7a13WtX0K6ed4cayVJmxK3t4hzh8NJyHqlww+sQH8TI963bgg
-         y7vRU6dcsBAv1i2WTz//gLuihI8eDWbIwolpjWhnLfzBta6Aj91vXSl7hVcWFBKr8ljv
-         Jpm9EiKDY4E8TWA49/XMqy+8+0WNE3vv1wRIUCZxeLGPUkqpiQLVe8VaGBXgxLdlxbf8
-         YkBY6MtyzACq2eZm+7hM+RKsRM6breAB3drWtsP1ApFVfTsM4PS+i+MrL+jJE6fJnXV6
-         EWyA==
-X-Gm-Message-State: ANoB5pmQjqv0DLkxZAtq/2yI2s1mzj87SgR72EUTMKqLdBYQbayldEKN
-        cZWNjaqzEKYWmsV1UZJQq8fP4g==
-X-Google-Smtp-Source: AA0mqf6qI1CpK2kkytMt09iK5URjD1iMJmLNXdgwK+fruRzJWWFpW2jfwg3hAMw41jRbyichhCspbA==
-X-Received: by 2002:a17:902:9a01:b0:176:cf64:2f39 with SMTP id v1-20020a1709029a0100b00176cf642f39mr5096556plp.93.1668731656837;
-        Thu, 17 Nov 2022 16:34:16 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id m4-20020a170902db0400b0016c50179b1esm2058299plx.152.2022.11.17.16.34.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Nov 2022 16:34:16 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Eric Biederman <ebiederm@xmission.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        David Hildenbrand <david@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] exec: Remove FOLL_FORCE for stack setup
-Date:   Thu, 17 Nov 2022 16:34:14 -0800
-Message-Id: <20221118003410.never.653-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        bh=R4T4enbQOsqO6XmAV2f5zgRx0vHX3wK4skHjCmqpICo=;
+        b=jdxi4qWWKvpb3CgsTYEVbLXi0fRK6QLyCyYawIsCSG/U44qr3JxBWLLxBnduFmblDR
+         ehfLMN07Heq0kJX0bq/5+f/PE/idOgRqOCDeSx5/xG+T86vk9P/DQZLEd4/pxv1qNCDI
+         9wf5dER7vjLQnHF3HdT6YwHAGqmdr+pXOhpMWzgXDp4rznJaiWkE3c2F8mMgCeijK6J4
+         FTuEVK/SL7H7yBAxBKXiZaucCj8CE2KI4i7M5LZ1KLcJDQrIzCbU0xrkFVQqlLvJ1IT+
+         s0IkplRlLSW2cpAgUcwc16gCClv0RF7fIO1Btv1xM1zQZakaOVMt+wSK3bXd5tT8shFo
+         HJyg==
+X-Gm-Message-State: ANoB5plsKEKuDTOsBRPIgJryjI92kdjQzqCCuG+IpLx5YfMHuxsUxWnr
+        GOr8ZVK+Oc8E2zGSgsK44ivYQGrhMjV3eiCB7Z1ttw==
+X-Google-Smtp-Source: AA0mqf6NkBSAY4uvxVSPwmaPsyhvjtFX0CdumrT/0Ae0/Afz6RGYfmyK7Nfejp1L55e1tCG1ilHwXKgSN00I+OwRtQE=
+X-Received: by 2002:a6b:6d0d:0:b0:6c4:ad4d:b23a with SMTP id
+ a13-20020a6b6d0d000000b006c4ad4db23amr2378611iod.2.1668734687862; Thu, 17 Nov
+ 2022 17:24:47 -0800 (PST)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1103; h=from:subject:message-id; bh=Q3A301qUeRB8tq7dkiRpjGQmp7qcdEcbj6KnmtW0Kwk=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjdtMFIHEE/2aFsG+0+1k2j6trtVeqZg6//sNcJ9PZ qpTOZmaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY3bTBQAKCRCJcvTf3G3AJmxND/ 4nU1/hNVNbDf3WDg7BJbbkga3ERM+KhF9FnAQVu8KD6VPUt+W3bNr9NimO5ebcKzxJIpAWnFFquFte arvoVm5AdjVA997ZUKDrwC3EfEOyszPX6WaRYz6/CTXy7OFJiJKAgdqiz0rM0Jb/VpEyNJFTQNVyxV wMroI6NjViv6G3EUD1FiAkTEyQvtGBfX4ps6mqXa+VFwFlzH56Pqq95o3+RDaekupGblAKIBILa3px 8qchKhd+rbNaM/5Q+krz/xGgEM3pADGVa1Gc7LcICT0swoJlyfl1/5QZCPntj70a0cp50YlpWLkL48 45rCEUBDdCNJ4zVQ8RGTTK7xxjzkZU/6LtVntk/6bvsujeJDTaexOWPF3/qYjPI2jUerZlakCMj4rf Tgd33LBDRv/KHbPWibXCHmOHgWJwjfNWmVbwxsDs+Yksj/1JiO7OX0fLNJpZn9GbNjmBjfKyz4MjzP c5GmSJFRqJPwPubdfziNeJUTx6BpruAG2rBrcZWSPMAW+hvDOXwvycOVf6FcXrKbuxWDN0o4vHAS4B PtDF7gVEHcr/1T1ve6JOKyFcoF5KHZnCDfMJa7DhDf/f6beMa0KDPvcVSZKFe40c//VyjBP88R8yis ZoZVUu2RUXJONdTela0ORVr6/2I+UkBiTe7Sdd4SleuMafvG7eTx4ES95sfA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <202211171422.7A7A7A9@keescook> <CANn89iLQcLNX+x_gJCMy5kD5GW3Xg8U4s0VGHtSuN8iegmhjxQ@mail.gmail.com>
+ <202211171513.28D070E@keescook> <CANn89iKgMvhLbTi=SHn41R--rBQ8As=E52Hnecch6nOhXVYGrg@mail.gmail.com>
+ <202211171624.963F44FCE@keescook>
+In-Reply-To: <202211171624.963F44FCE@keescook>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Thu, 17 Nov 2022 17:24:36 -0800
+Message-ID: <CANn89iJ1ciQkv5nt5XgRXAXPVzEW6J=GdiUYvqrYgjUU440OtQ@mail.gmail.com>
+Subject: Re: Coverity: __sock_gen_cookie(): Error handling issues
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Nikolay Aleksandrov <nikolay@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-It does not appear that FOLL_FORCE should be needed for setting up the
-stack pages. They are allocated using the nascent brpm->vma, which was
-newly created with VM_STACK_FLAGS, which an arch can override, but they
-all appear to include VM_WRITE | VM_MAYWRITE. Remove FOLL_FORCE.
+On Thu, Nov 17, 2022 at 4:25 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Thu, Nov 17, 2022 at 03:22:22PM -0800, Eric Dumazet wrote:
+> > On Thu, Nov 17, 2022 at 3:14 PM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > On Thu, Nov 17, 2022 at 02:49:55PM -0800, Eric Dumazet wrote:
+> > > > On Thu, Nov 17, 2022 at 2:22 PM coverity-bot <keescook@chromium.org> wrote:
+> > > > >
+> > > > > Hello!
+> > > > >
+> > > > > This is an experimental semi-automated report about issues detected by
+> > > > > Coverity from a scan of next-20221117 as part of the linux-next scan project:
+> > > > > https://scan.coverity.com/projects/linux-next-weekly-scan
+> > > > >
+> > > > > You're getting this email because you were associated with the identified
+> > > > > lines of code (noted below) that were touched by commits:
+> > > > >
+> > > > >   Wed Nov 16 12:42:01 2022 +0000
+> > > > >     4ebf802cf1c6 ("net: __sock_gen_cookie() cleanup")
+> > > > >
+> > > > > Coverity reported the following:
+> > > > >
+> > > > > *** CID 1527347:  Error handling issues  (CHECKED_RETURN)
+> > > > > net/core/sock_diag.c:33 in __sock_gen_cookie()
+> > > > > 27     {
+> > > > > 28      u64 res = atomic64_read(&sk->sk_cookie);
+> > > > > 29
+> > > > > 30      if (!res) {
+> > > > > 31              u64 new = gen_cookie_next(&sock_cookie);
+> > > > > 32
+> > > > > vvv     CID 1527347:  Error handling issues  (CHECKED_RETURN)
+> > > > > vvv     Calling "atomic64_try_cmpxchg" without checking return value (as is done elsewhere 8 out of 9 times).
+> > > > > 33              atomic64_try_cmpxchg(&sk->sk_cookie, &res, new);
+> > > >
+> > > >
+> > > > Hmmm. for some reason I thought @res was always updated...
+> > > >
+> > > > A fix would be to read sk->sk_cookie, but I guess your tool will still
+> > > > complain we do not care
+> > > > of  atomic64_try_cmpxchg() return value ?
+> > > >
+> > > > diff --git a/net/core/sock_diag.c b/net/core/sock_diag.c
+> > > > index b11593cae5a09b15a10d6ba35bccc22263cb8fc8..58efb9c1c8dd4f8e5a3009a0176e1b96487daaff
+> > > > 100644
+> > > > --- a/net/core/sock_diag.c
+> > > > +++ b/net/core/sock_diag.c
+> > > > @@ -31,6 +31,10 @@ u64 __sock_gen_cookie(struct sock *sk)
+> > > >                 u64 new = gen_cookie_next(&sock_cookie);
+> > > >
+> > > >                 atomic64_try_cmpxchg(&sk->sk_cookie, &res, new);
+> > > > +               /* Another cpu/thread might have won the race,
+> > > > +                * reload the final value.
+> > > > +                */
+> > > > +               res = atomic64_read(&sk->sk_cookie);
+> > > >         }
+> > > >         return res;
+> > > >  }
+> > >
+> > > I think it's saying it was expecting an update loop -- i.e. to make sure
+> > > the value actually got swapped (the "try" part...)?
+> >
+> > The value has been updated, either by us or someone else.
+> >
+> > We do not particularly care who won the race, since the value is
+> > updated once only.
+>
+> Ah! Okay, now I understand the added comment. Thanks :)
 
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Link: https://lore.kernel.org/lkml/202211171439.CDE720EAD@keescook/
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- fs/exec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I guess we could simply go back to atomic64_cmpxchg() to avoid a false positive.
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 9585bc1bc970..870a707b5d3b 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -200,7 +200,7 @@ static struct page *get_arg_page(struct linux_binprm *bprm, unsigned long pos,
- {
- 	struct page *page;
- 	int ret;
--	unsigned int gup_flags = FOLL_FORCE;
-+	unsigned int gup_flags = 0;
- 
- #ifdef CONFIG_STACK_GROWSUP
- 	if (write) {
--- 
-2.34.1
+This boils to avoid the loop we had prior to 4ebf802cf1c6
 
+diff --git a/net/core/sock_diag.c b/net/core/sock_diag.c
+index b11593cae5a09b15a10d6ba35bccc22263cb8fc8..7b9e321e0f6b15f2fb7af9f53fceb874439cbd02
+100644
+--- a/net/core/sock_diag.c
++++ b/net/core/sock_diag.c
+@@ -30,7 +30,11 @@ u64 __sock_gen_cookie(struct sock *sk)
+        if (!res) {
+                u64 new = gen_cookie_next(&sock_cookie);
+
+-               atomic64_try_cmpxchg(&sk->sk_cookie, &res, new);
++               atomic64_cmpxchg(&sk->sk_cookie, res, new);
++               /* Another cpu/thread might have won the race,
++                * load the final value.
++                */
++               res = atomic64_read(&sk->sk_cookie);
+        }
+        return res;
+ }
