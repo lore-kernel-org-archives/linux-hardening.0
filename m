@@ -2,108 +2,227 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15200C4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 08:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 809DCC4332F
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 10:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230523AbiKRI61 (ORCPT
+        id S235145AbiKRKck (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Nov 2022 03:58:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48452 "EHLO
+        Fri, 18 Nov 2022 05:32:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241606AbiKRI6Y (ORCPT
+        with ESMTP id S234711AbiKRKcj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Nov 2022 03:58:24 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 729BD6EB58
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 00:57:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668761842;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+        Fri, 18 Nov 2022 05:32:39 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D803D922EE;
+        Fri, 18 Nov 2022 02:32:38 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 7D77F1F890;
+        Fri, 18 Nov 2022 10:32:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1668767557; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=p0ERrz7JCn9BnDY0Ayxan7lnfD5vEWFwGFrA85kPodc=;
-        b=OgUb7Rrvd0S/1tG9DsbgoEtyLBNYbCxqqbYFJDbu35hqQZr+wJtAgx+w6bHE4eJ5qICerB
-        PrUVi5E4XJ3R+fwhh48R+uyH9MRTyR0deqnoNeQqWHjDMXZH/jSahOOlZYNILqGReO7bUD
-        +MDfdnfgesbPwedipXYp9OSr/kKJZUc=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-156-AX4gT3A_MrCNT0WYiIG3oQ-1; Fri, 18 Nov 2022 03:57:21 -0500
-X-MC-Unique: AX4gT3A_MrCNT0WYiIG3oQ-1
-Received: by mail-wm1-f72.google.com with SMTP id o5-20020a05600c510500b003cfca1a327fso1959214wms.8
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 00:57:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p0ERrz7JCn9BnDY0Ayxan7lnfD5vEWFwGFrA85kPodc=;
-        b=K9Pi8bR+buMyYfEha2F/8d+A2+aZf9EgQSWCUoxniKL17P+M1uvDn7iebFZRtzRUa9
-         hDI6L5EnqG+xWf+cwZi4E7A5PwM30AbNHRgQzP8cuM1d+nFSE2+pppKhswUuV2Dajjyl
-         759IKUgWJ/OS1e0uS40JibYfvmr97Y0boH39zxv3PL5uVK6GkjqD3e4fCS3iN7YzJS+u
-         FIrMWTj54VL9XOcHYKp5jZ3wZ5x9O15SSyp+V3bYSf2qkTpWeZi9Vg68BO06V0R7vC2/
-         oc84YkUa6snZyttAKP4+DCexIcJ7cAFXNe1ljCl05hQDmPajmW09wF6B/hzHPW+gyXYO
-         IhWw==
-X-Gm-Message-State: ANoB5pmXJ3Tf+a0s7zrc67C0kAZoJ5OCbMlRq2yjSwMTgPXcH+5CsuE8
-        L+z7QbzLsdb0n1uihvdSCFc9prx+Ks80XiJlPktGRtHz6pvW5FI/OLszDXtE13LJr9EM4Fknjhe
-        5QQLwOFoGF06QLMpH4ljOqSwr/O/Q
-X-Received: by 2002:adf:facd:0:b0:231:482f:ed6b with SMTP id a13-20020adffacd000000b00231482fed6bmr3694259wrs.253.1668761840126;
-        Fri, 18 Nov 2022 00:57:20 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf50oZR0yD/v8/9UR7ki7wIw/KZLKr9m6FVoEPYMGY5P+v3sgErCbw58kQiRgWrcKNl7n+7VHQ==
-X-Received: by 2002:adf:facd:0:b0:231:482f:ed6b with SMTP id a13-20020adffacd000000b00231482fed6bmr3694247wrs.253.1668761839750;
-        Fri, 18 Nov 2022 00:57:19 -0800 (PST)
-Received: from ?IPV6:2003:cb:c704:f500:6512:fac3:2687:15ff? (p200300cbc704f5006512fac3268715ff.dip0.t-ipconnect.de. [2003:cb:c704:f500:6512:fac3:2687:15ff])
-        by smtp.gmail.com with ESMTPSA id 6-20020a05600c024600b003b50428cf66sm3709552wmj.33.2022.11.18.00.57.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Nov 2022 00:57:19 -0800 (PST)
-Message-ID: <16759fd4-3a8c-b52c-20c3-9a9129f26799@redhat.com>
-Date:   Fri, 18 Nov 2022 09:57:18 +0100
+        bh=XzHJXeK3Q2/Bx013Ighw0ir5MysszSUlvQpViISJqBs=;
+        b=g8xwvhAwqhbxisPUlVbujWUoHsv5l3uONqGun9DeIQiCAadM+i1rYsCwZIaj4H4PpmIkgI
+        v0pg0R+CThhbSKC5VAVA1zhrmiDrRN84oYCMC+vbKDlunUICpi8B7IdDTW2/+eKdRxmt/s
+        Yx8YBG1i1FbxFUiL3sXhWVkWHeEWA2U=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1668767557;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XzHJXeK3Q2/Bx013Ighw0ir5MysszSUlvQpViISJqBs=;
+        b=IGKMdrU51wRPjSgtt3cDgq7HIyboRyHc/nsdePlag/9cMrpqnR2NQkqLjJOG1FY+dFyZeS
+        Pge36YS2pYY05lDg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3C66113A66;
+        Fri, 18 Nov 2022 10:32:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id XG5tDUVfd2NwRgAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Fri, 18 Nov 2022 10:32:37 +0000
+Message-ID: <230127af-6c71-e51e-41a4-aa9547c2c847@suse.cz>
+Date:   Fri, 18 Nov 2022 11:32:36 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH] exec: Remove FOLL_FORCE for stack setup
-To:     Kees Cook <keescook@chromium.org>,
-        Eric Biederman <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20221118003410.never.653-kees@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <20221118003410.never.653-kees@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v2] mm: Make ksize() a reporting-only function
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     Kees Cook <keescook@chromium.org>,
+        Andrey Konovalov <andreyknvl@gmail.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-mm@kvack.org, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20221118035656.gonna.698-kees@kernel.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20221118035656.gonna.698-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 18.11.22 01:34, Kees Cook wrote:
-> It does not appear that FOLL_FORCE should be needed for setting up the
-> stack pages. They are allocated using the nascent brpm->vma, which was
-> newly created with VM_STACK_FLAGS, which an arch can override, but they
-> all appear to include VM_WRITE | VM_MAYWRITE. Remove FOLL_FORCE.
+On 11/18/22 04:56, Kees Cook wrote:
+> With all "silently resizing" callers of ksize() refactored, remove the
+
+At cursory look seems it's true now in -next (but not mainline?) can you
+confirm?
+That would probably be safe enough to have slab.git expose this to -next now
+and time a PR appropriately in the next merge window?
+
+> logic in ksize() that would allow it to be used to effectively change
+> the size of an allocation (bypassing __alloc_size hints, etc). Users
+> wanting this feature need to either use kmalloc_size_roundup() before an
+> allocation, or use krealloc() directly.
 > 
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: linux-fsdevel@vger.kernel.org
+> For kfree_sensitive(), move the unpoisoning logic inline. Replace the
+> some of the partially open-coded ksize() in __do_krealloc with ksize()
+> now that it doesn't perform unpoisoning.
+> 
+> Adjust the KUnit tests to match the new ksize() behavior.
+> 
+> Cc: Andrey Konovalov <andreyknvl@gmail.com>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Pekka Enberg <penberg@kernel.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Roman Gushchin <roman.gushchin@linux.dev>
+> Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+> Cc: Alexander Potapenko <glider@google.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
 > Cc: linux-mm@kvack.org
-> Link: https://lore.kernel.org/lkml/202211171439.CDE720EAD@keescook/
+> Cc: kasan-dev@googlegroups.com
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Thanks for looking into this!
-
-Reviewed-by: David Hildenbrand <david@redhat.com>
-
--- 
-Thanks,
-
-David / dhildenb
+> ---
+> v2:
+> - improve kunit test precision (andreyknvl)
+> - add Ack (vbabka)
+> v1: https://lore.kernel.org/all/20221022180455.never.023-kees@kernel.org
+> ---
+>  mm/kasan/kasan_test.c | 14 +++++++++-----
+>  mm/slab_common.c      | 26 ++++++++++----------------
+>  2 files changed, 19 insertions(+), 21 deletions(-)
+> 
+> diff --git a/mm/kasan/kasan_test.c b/mm/kasan/kasan_test.c
+> index 7502f03c807c..fc4b22916587 100644
+> --- a/mm/kasan/kasan_test.c
+> +++ b/mm/kasan/kasan_test.c
+> @@ -821,7 +821,7 @@ static void kasan_global_oob_left(struct kunit *test)
+>  	KUNIT_EXPECT_KASAN_FAIL(test, *(volatile char *)p);
+>  }
+>  
+> -/* Check that ksize() makes the whole object accessible. */
+> +/* Check that ksize() does NOT unpoison whole object. */
+>  static void ksize_unpoisons_memory(struct kunit *test)
+>  {
+>  	char *ptr;
+> @@ -829,15 +829,19 @@ static void ksize_unpoisons_memory(struct kunit *test)
+>  
+>  	ptr = kmalloc(size, GFP_KERNEL);
+>  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+> +
+>  	real_size = ksize(ptr);
+> +	KUNIT_EXPECT_GT(test, real_size, size);
+>  
+>  	OPTIMIZER_HIDE_VAR(ptr);
+>  
+> -	/* This access shouldn't trigger a KASAN report. */
+> -	ptr[size] = 'x';
+> +	/* These accesses shouldn't trigger a KASAN report. */
+> +	ptr[0] = 'x';
+> +	ptr[size - 1] = 'x';
+>  
+> -	/* This one must. */
+> -	KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size]);
+> +	/* These must trigger a KASAN report. */
+> +	KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[size]);
+> +	KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size - 1]);
+>  
+>  	kfree(ptr);
+>  }
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index 8276022f0da4..27caa57af070 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -1335,11 +1335,11 @@ __do_krealloc(const void *p, size_t new_size, gfp_t flags)
+>  	void *ret;
+>  	size_t ks;
+>  
+> -	/* Don't use instrumented ksize to allow precise KASAN poisoning. */
+> +	/* Check for double-free before calling ksize. */
+>  	if (likely(!ZERO_OR_NULL_PTR(p))) {
+>  		if (!kasan_check_byte(p))
+>  			return NULL;
+> -		ks = kfence_ksize(p) ?: __ksize(p);
+> +		ks = ksize(p);
+>  	} else
+>  		ks = 0;
+>  
+> @@ -1407,21 +1407,21 @@ void kfree_sensitive(const void *p)
+>  	void *mem = (void *)p;
+>  
+>  	ks = ksize(mem);
+> -	if (ks)
+> +	if (ks) {
+> +		kasan_unpoison_range(mem, ks);
+>  		memzero_explicit(mem, ks);
+> +	}
+>  	kfree(mem);
+>  }
+>  EXPORT_SYMBOL(kfree_sensitive);
+>  
+>  size_t ksize(const void *objp)
+>  {
+> -	size_t size;
+> -
+>  	/*
+> -	 * We need to first check that the pointer to the object is valid, and
+> -	 * only then unpoison the memory. The report printed from ksize() is
+> -	 * more useful, then when it's printed later when the behaviour could
+> -	 * be undefined due to a potential use-after-free or double-free.
+> +	 * We need to first check that the pointer to the object is valid.
+> +	 * The KASAN report printed from ksize() is more useful, then when
+> +	 * it's printed later when the behaviour could be undefined due to
+> +	 * a potential use-after-free or double-free.
+>  	 *
+>  	 * We use kasan_check_byte(), which is supported for the hardware
+>  	 * tag-based KASAN mode, unlike kasan_check_read/write().
+> @@ -1435,13 +1435,7 @@ size_t ksize(const void *objp)
+>  	if (unlikely(ZERO_OR_NULL_PTR(objp)) || !kasan_check_byte(objp))
+>  		return 0;
+>  
+> -	size = kfence_ksize(objp) ?: __ksize(objp);
+> -	/*
+> -	 * We assume that ksize callers could use whole allocated area,
+> -	 * so we need to unpoison this area.
+> -	 */
+> -	kasan_unpoison_range(objp, size);
+> -	return size;
+> +	return kfence_ksize(objp) ?: __ksize(objp);
+>  }
+>  EXPORT_SYMBOL(ksize);
+>  
 
