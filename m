@@ -2,88 +2,99 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 332CCC433FE
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 17:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B024C4332F
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Nov 2022 17:11:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242336AbiKRRGl (ORCPT
+        id S242258AbiKRRLQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Nov 2022 12:06:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44148 "EHLO
+        Fri, 18 Nov 2022 12:11:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241826AbiKRRGf (ORCPT
+        with ESMTP id S242334AbiKRRLJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Nov 2022 12:06:35 -0500
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F8B111465
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 09:06:32 -0800 (PST)
-Received: by mail-pg1-x535.google.com with SMTP id 6so5505591pgm.6
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 09:06:32 -0800 (PST)
+        Fri, 18 Nov 2022 12:11:09 -0500
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 090608A16D
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 09:11:09 -0800 (PST)
+Received: by mail-pf1-x42d.google.com with SMTP id b185so5444424pfb.9
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 09:11:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AGuGWp5XCDdHJkP/ZVzcY0JNFnAf0r/m3zS2HVfgluM=;
-        b=EF20HVvgV91jn4cZ3X3NrdTFvw1O1FGOatUDshSJu6yJPlh+xkrX/7AsdG9iutTwh3
-         D2kSGxbYUBU3Nh7zBm54rQsCM21o1p1wb4g3y5FQ1cE6jG8zwnQ7sCpAp65yXz/8dAOJ
-         DgZXfwYSGezpi9JmZc+1nFbRmCINaF3Upd3UA=
+        bh=cDyeQiupLB9oqNpxPK4jyqPn5HRNeTYV3/chespM10E=;
+        b=mmBzH89Hj2Bxse1fbp/MklJ4r7OTki1zNjRRRoNQFmICn2xKHkYyz+YKjcBjiei1rV
+         8aGlrsSZjZwe06eqH7BaCdtc1W69Hm0vttGjaN7A1SZITtFdzA5ZWyCsvO9CFMjt7TIV
+         HXgVsNpwjx4s42njacRq4K+S9PszEvbNPTV08=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AGuGWp5XCDdHJkP/ZVzcY0JNFnAf0r/m3zS2HVfgluM=;
-        b=Zb8f9TSTT9psRxn1JYc4Pe5wpj5BTXHvA81Sw7OP3koHzHAa9cdQSDjXFiGzxTnzo6
-         r5GxTFg1UWPhdAniA+bdeMCxuGRtsFftvWLbMnlnUFIcCDeRNEFhrAL22j15/O31zcr7
-         YKhpmPUESyE+PlRTGl3RTq8GKyGfbhEAHdze/Me5aN++BBt0tr1tLynYeeDRyoTla1xA
-         xedcXwLgq1OVB7JZ8ZRch2HwvAhbsF4+Ok8j+KkfRUyry977MV8m7dXy17C7JbG9tfEa
-         ejfpRhodkZYMUhCmAxK1L8xn6Ryh8kQKjcspqqTLSwyTBKcgw8HDkzn5Mc+EwRqrLijL
-         0+SA==
-X-Gm-Message-State: ANoB5pnPesvLyznmGohshWb/bhzZAqTqrmiHC7uLvb00s00kS5V3uSci
-        Y2SyvXJ9DBvWnGFCesszNXZyTQ==
-X-Google-Smtp-Source: AA0mqf66Th+JaUaR6SALYWcOu+b5KEs15JPlRbwXz1ZO7OP5vyoVUmI5BCievEOVALjrQFn4+48xbw==
-X-Received: by 2002:a63:3d8:0:b0:476:eee6:d394 with SMTP id 207-20020a6303d8000000b00476eee6d394mr7387317pgd.228.1668791191672;
-        Fri, 18 Nov 2022 09:06:31 -0800 (PST)
+        bh=cDyeQiupLB9oqNpxPK4jyqPn5HRNeTYV3/chespM10E=;
+        b=5m2VMurQlu6eFhYogRZS6eNoZpxkpHF2nwZs8joofskNfsLphrHdV7qpTgBes1muFr
+         C3Yy7hAkrAFUidG6hbh2q0eRLoh8ZIv7zaJdfScAji9MkccmzYQHFs/ecG1jL2Cuy0sg
+         ol6LCgAEtQS9H0f577Er1SKp2C3hTMAFvRbGzAF/aIV2X6qh3sMbtCd5dqFPzb3PS6bs
+         qGj7zYwLzWNCBN7anbz26V+bB7ZaHG4Frt9AQKd5kQ+77/zi3JPrKFyblOB+Nd21+vRz
+         vSbRD/pM5umwDgf6WYpyr1baLW1TBieNfjSestXHtet73MQwOuhlXyEcS5g+DJnmMb4v
+         j4Ow==
+X-Gm-Message-State: ANoB5pmyqcD6a+hWMFarDI6X7akVA0/kNoBl57r8LT2arhIgFNsbPJMU
+        vwrvCZwIsEgfG+WvUKFnB6SY0A==
+X-Google-Smtp-Source: AA0mqf4ZnmEE8OLUxPyWmX6DtdMNs26euLf7TggL/hADBnpVlbL4hqcSzhOLXCBe0EvSz9uq5N2EHw==
+X-Received: by 2002:a63:ec11:0:b0:470:5b0d:b50e with SMTP id j17-20020a63ec11000000b004705b0db50emr7217183pgh.488.1668791468487;
+        Fri, 18 Nov 2022 09:11:08 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 19-20020a621513000000b0056c0b98617esm3435797pfv.0.2022.11.18.09.06.30
+        by smtp.gmail.com with ESMTPSA id x6-20020a170902a38600b00186881688f2sm3884671pla.220.2022.11.18.09.11.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Nov 2022 09:06:31 -0800 (PST)
-Date:   Fri, 18 Nov 2022 09:06:30 -0800
+        Fri, 18 Nov 2022 09:11:08 -0800 (PST)
+Date:   Fri, 18 Nov 2022 09:11:07 -0800
 From:   Kees Cook <keescook@chromium.org>
 To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Christoph Lameter <cl@linux.com>,
+Cc:     Andrey Konovalov <andreyknvl@gmail.com>,
+        Christoph Lameter <cl@linux.com>,
         Pekka Enberg <penberg@kernel.org>,
         David Rientjes <rientjes@google.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-mm@kvack.org, kasan-dev@googlegroups.com,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] slab: Remove special-casing of const 0 size
- allocations
-Message-ID: <202211180906.3030FDDB4@keescook>
-References: <20221118034713.gonna.754-kees@kernel.org>
- <20221118035200.1269184-2-keescook@chromium.org>
- <f008f8a2-8d5e-88ab-8d23-a2043ea5abe7@suse.cz>
+Subject: Re: [PATCH v2] mm: Make ksize() a reporting-only function
+Message-ID: <202211180907.A4C218F@keescook>
+References: <20221118035656.gonna.698-kees@kernel.org>
+ <230127af-6c71-e51e-41a4-aa9547c2c847@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f008f8a2-8d5e-88ab-8d23-a2043ea5abe7@suse.cz>
+In-Reply-To: <230127af-6c71-e51e-41a4-aa9547c2c847@suse.cz>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Nov 18, 2022 at 12:34:01PM +0100, Vlastimil Babka wrote:
-> On 11/18/22 04:51, Kees Cook wrote:
-> > Passing a constant-0 size allocation into kmalloc() or kmalloc_node()
-> > does not need to be a fast-path operation, so the static return value
-> > can be removed entirely. This is in preparation for making sure that
-> > all paths through the inlines result in a full extern function call,
+On Fri, Nov 18, 2022 at 11:32:36AM +0100, Vlastimil Babka wrote:
+> On 11/18/22 04:56, Kees Cook wrote:
+> > With all "silently resizing" callers of ksize() refactored, remove the
 > 
-> So with the kmalloc_trace() already solved, we could now say it's not "in
-> preparation", but simply "makes sure", right? I can correct that while
-> picking this patch.
+> At cursory look seems it's true now in -next (but not mainline?) can you
+> confirm?
 
-Yeah, good point. I missed this when updating the commit logs. Thanks!
+Almost, yes. I realized there is 1 case in the BPF verifier that
+remains. (I thought it was picked up, but only a prereq patch was.) I'm
+going to resend that one today, but I would expect it to be picked
+up soon. (But, yes, definitely not for mainline.)
+
+> That would probably be safe enough to have slab.git expose this to -next now
+> and time a PR appropriately in the next merge window?
+
+Possibly. I suspect syzkaller might trip KASAN on any larger BPF tests
+until I get the last one landed. And if you don't want to do the timing
+of the PR, I can carry this patch in my hardening tree, since I already
+have to do a two-part early/late-merge-window PR there.
 
 -- 
 Kees Cook
