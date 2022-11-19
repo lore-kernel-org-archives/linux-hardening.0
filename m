@@ -2,39 +2,54 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D52E7C4332F
-	for <linux-hardening@archiver.kernel.org>; Sat, 19 Nov 2022 06:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 603DEC433FE
+	for <linux-hardening@archiver.kernel.org>; Sat, 19 Nov 2022 07:08:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231904AbiKSGlK (ORCPT
+        id S232429AbiKSHIz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 19 Nov 2022 01:41:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37908 "EHLO
+        Sat, 19 Nov 2022 02:08:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231300AbiKSGlJ (ORCPT
+        with ESMTP id S232618AbiKSHIp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 19 Nov 2022 01:41:09 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE6BA13CA;
-        Fri, 18 Nov 2022 22:41:07 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 55EBA60A73;
-        Sat, 19 Nov 2022 06:41:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ACF8C433D6;
-        Sat, 19 Nov 2022 06:41:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668840066;
-        bh=ZeqWS3qlxBPkQlLxIdswf7hLuV3mbyIpTRc3e2a1flE=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=PVN7pS/StHDC8nqh91wKoPK4gJL2fVkFtwNv/G2XVFvKaVCGVmI3gC+PgkUcIo/Fm
-         MU7LL0eL51JvmxhLy/KTMyF+Fvi9WYCNJyql22Bp+KmCI77upsvWri+TTlhxSoIKBp
-         DJIhOGjszVvFO9Lc/LlPwgJsg/pMvUJtBo2cuNUBKjS4xavooRBPxQ2LuTOd+J8GeM
-         RQkovpx6aX/psuZq8emOysPjFClkKfTbK0qZz9fijAy8Dp7mt+/1REP9P+JO7Ki0p5
-         iK3Oc865hrybBYcfzFBHc8eg3FCgwuVY6ZDVMV6MTYzuaInP12Or3Ogj8qONtQpodt
-         hUZOIq6U2pkmQ==
-From:   Kalle Valo <kvalo@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
+        Sat, 19 Nov 2022 02:08:45 -0500
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB7C02CE3B
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 23:08:38 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id g62so6896432pfb.10
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Nov 2022 23:08:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JAomBLzMWpxG+jKkSWv7aeDaZwvbB6/vO10KmU8WTn4=;
+        b=XFZNNwUBtpky5AvtQ3KG/OOizK7sfxo4Mc0+CYLH8LZtO5cS0vhuXi3Gc7+bsucxAT
+         UOekSiNbjEW0FF2soQCYEc6CErOmClQUcIbE2T4NAZzFN+cmXTDEMfqLxz5aAgLDaA4m
+         /xyBsm1XxzNoQwCmToyZTVqhs/GTOBG67Z6sc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JAomBLzMWpxG+jKkSWv7aeDaZwvbB6/vO10KmU8WTn4=;
+        b=MWzK8E/c7P36YjGXTVvFMtv7QVRiiI2g3Xoww/bxhmXRK8BIwYD+pPVO821m43bBAj
+         LTCETgyt33rE2d4SPiVwiGJGg0KFc4iysQf6zM44od6eqJixgyVBp1gOgHG83d/w5nhE
+         0LK4jwc3EHQdNLL3ckc2YMKpVB2OLidJj48kYPx/O27qeyA2jVBOz3SP1I9yJ5XCWlxf
+         zmqv/jzVlf6JY/HsMwFkByNqsNMFIDAEZ/Bl/exz6zgd8Kwmba4f2CVP6dKO+24w8Fpv
+         iVS/oYrhNvP8GZ7EdvMLEvYY2tlPJ5IvbxWf++CxqgqKqCSjA34Xn6S3A7yHyz7OB3iZ
+         X08Q==
+X-Gm-Message-State: ANoB5pmFCLcSecSArZ0rcnThHHdrrsdIg5DNRXv67yto7rbU9ixDkiB9
+        IDBy2ZIoDscZcjvCMDehO2RI3A==
+X-Google-Smtp-Source: AA0mqf5yxrtOD/a/N7wAQgsex//ZjQfa+t4D7cq4uMpYXby9xwV1i8aqA0ejg5jd+aWdvhTIN3h4tw==
+X-Received: by 2002:a63:e802:0:b0:46f:ed3a:f36c with SMTP id s2-20020a63e802000000b0046fed3af36cmr9800450pgh.372.1668841718412;
+        Fri, 18 Nov 2022 23:08:38 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n62-20020a622741000000b0056b88187374sm4308162pfn.85.2022.11.18.23.08.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Nov 2022 23:08:37 -0800 (PST)
+Date:   Fri, 18 Nov 2022 23:08:36 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Kalle Valo <kvalo@kernel.org>
 Cc:     Christian Lamparter <chunkeey@googlemail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
@@ -43,48 +58,49 @@ Cc:     Christian Lamparter <chunkeey@googlemail.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] p54: Replace zero-length array of trailing structs with flex-array
-References: <20221118234240.gonna.369-kees@kernel.org>
-Date:   Sat, 19 Nov 2022 08:41:02 +0200
-In-Reply-To: <20221118234240.gonna.369-kees@kernel.org> (Kees Cook's message
-        of "Fri, 18 Nov 2022 15:42:44 -0800")
-Message-ID: <87zgcnphtt.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+Subject: Re: [PATCH] carl9170: Replace zero-length array of trailing structs
+ with flex-array
+Message-ID: <202211182307.3EF1218@keescook>
+References: <20221118211146.never.395-kees@kernel.org>
+ <877czrqwhc.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <877czrqwhc.fsf@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
+On Sat, Nov 19, 2022 at 08:39:11AM +0200, Kalle Valo wrote:
+> Kees Cook <keescook@chromium.org> writes:
+> 
+> > Zero-length arrays are deprecated[1] and are being replaced with
+> > flexible array members in support of the ongoing efforts to tighten the
+> > FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
+> > with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
+> >
+> > Replace zero-length array with flexible-array member.
+> >
+> > This results in no differences in binary output.
+> >
+> > [1] https://github.com/KSPP/linux/issues/78
+> >
+> > Cc: Christian Lamparter <chunkeey@googlemail.com>
+> > Cc: Kalle Valo <kvalo@kernel.org>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Eric Dumazet <edumazet@google.com>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: Paolo Abeni <pabeni@redhat.com>
+> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> > Cc: linux-wireless@vger.kernel.org
+> > Cc: netdev@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> Nowadays we include "wifi:" in the subject, but I can add that. But
+> please use this in the future for all wireless patches.
 
-> Zero-length arrays are deprecated[1] and are being replaced with
-> flexible array members in support of the ongoing efforts to tighten the
-> FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
-> with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
->
-> Replace zero-length array with flexible-array member.
->
-> This results in no differences in binary output (most especially because
-> struct pda_antenna_gain is unused). The struct is kept for future
-> reference.
->
-> [1] https://github.com/KSPP/linux/issues/78
->
-> Cc: Christian Lamparter <chunkeey@googlemail.com>
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-I'll add "wifi:".
+Okay, thanks! I use a recency/frequency prefix guesser, but I've updated
+it to include "wifi: " if "linux-wireless@vger.kernel.org" is in CC. :)
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Kees Cook
