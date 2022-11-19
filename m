@@ -2,65 +2,86 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B3EC433FE
-	for <linux-hardening@archiver.kernel.org>; Sat, 19 Nov 2022 08:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75592C433FE
+	for <linux-hardening@archiver.kernel.org>; Sat, 19 Nov 2022 08:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232527AbiKSIFi (ORCPT
+        id S231830AbiKSIU5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 19 Nov 2022 03:05:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58120 "EHLO
+        Sat, 19 Nov 2022 03:20:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230371AbiKSIFh (ORCPT
+        with ESMTP id S230211AbiKSIU4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 19 Nov 2022 03:05:37 -0500
-Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AAD46DFF2
-        for <linux-hardening@vger.kernel.org>; Sat, 19 Nov 2022 00:05:34 -0800 (PST)
-Received: from [192.168.1.18] ([86.243.100.34])
-        by smtp.orange.fr with ESMTPA
-        id wIquoyL42zQOKwIquoElgP; Sat, 19 Nov 2022 09:05:32 +0100
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 19 Nov 2022 09:05:32 +0100
-X-ME-IP: 86.243.100.34
-Message-ID: <ef3c1a62-029e-ffae-8a37-fde35a8235d5@wanadoo.fr>
-Date:   Sat, 19 Nov 2022 09:05:28 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH] rtc: msc313: Fix function prototype mismatch in
- msc313_rtc_probe()
-Content-Language: fr, en-GB
-To:     Kees Cook <keescook@chromium.org>, Daniel Palmer <daniel@thingy.jp>
-Cc:     kernel test robot <lkp@intel.com>,
-        Romain Perier <romain.perier@gmail.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sat, 19 Nov 2022 03:20:56 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FCC4950EF;
+        Sat, 19 Nov 2022 00:20:54 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id DDF5B1F383;
+        Sat, 19 Nov 2022 08:20:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1668846052; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QEDCwVW6uuuHbiiKcc9DBnvWg+TJfsJ2v3EhFL0XN9o=;
+        b=H/Ryjm1NMX2N+WZ3ckhenCooygFEg9Yfn77aE0Hsrl/e2jTVUqUKBgY/4R7swkNah6+M9R
+        PmnDKkTTpFAoXi4Bt56ucl0dEidCF+itn9cvEQekhnSbpfBvSOBEEgtJwHUhxfxIGXiI0u
+        C515FCgXPmknejVhuntrIlRbBzQ0H2o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1668846052;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QEDCwVW6uuuHbiiKcc9DBnvWg+TJfsJ2v3EhFL0XN9o=;
+        b=CTLCvID1yyQQODN5uIjEn4sdakmHfW057PiOsxEIkb8i+993/7daQouoSNWKhS/GUmqS0G
+        saXmX594nhhnsWCA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9856D1377F;
+        Sat, 19 Nov 2022 08:20:52 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 6oogJOSReGNafQAAMHmgww
+        (envelope-from <tiwai@suse.de>); Sat, 19 Nov 2022 08:20:52 +0000
+Date:   Sat, 19 Nov 2022 09:20:53 +0100
+Message-ID: <87a64nxsm2.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jaroslav Kysela <perex@perex.cz>,
+        kernel test robot <lkp@intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
+        alsa-devel@alsa-project.org, Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20221118233101.never.215-kees@kernel.org>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20221118233101.never.215-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] ALSA: seq: Fix function prototype mismatch in snd_seq_expand_var_event
+In-Reply-To: <20221118232346.never.380-kees@kernel.org>
+References: <20221118232346.never.380-kees@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Le 19/11/2022 à 00:31, Kees Cook a écrit :
+On Sat, 19 Nov 2022 00:23:50 +0100,
+Kees Cook wrote:
+> 
 > With clang's kernel control flow integrity (kCFI, CONFIG_CFI_CLANG),
 > indirect call targets are validated against the expected function
 > pointer prototype to make sure the call target is valid to help mitigate
 > ROP attacks. If they are not identical, there is a failure at run time,
 > which manifests as either a kernel panic or thread getting killed.
 > 
-> msc313_rtc_probe() was passing clk_disable_unprepare() directly, which
-> did not have matching prototypes for devm_add_action_or_reset()'s callback
-> argument. Add a wrapper and remove the cast.
+> seq_copy_in_user() and seq_copy_in_kernel() did not have prototypes
+> matching snd_seq_dump_func_t. Adjust this and remove the casts. There
+> are not resulting binary output differences.
 > 
 > This was found as a result of Clang's new -Wcast-function-type-strict
 > flag, which is more sensitive than the simpler -Wcast-function-type,
@@ -68,52 +89,13 @@ Le 19/11/2022 à 00:31, Kees Cook a écrit :
 > 
 > Reported-by: kernel test robot <lkp@intel.com>
 > Link: https://lore.kernel.org/lkml/202211041527.HD8TLSE1-lkp@intel.com
-> Cc: Daniel Palmer <daniel@thingy.jp>
-> Cc: Romain Perier <romain.perier@gmail.com>
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Jaroslav Kysela <perex@perex.cz>
+> Cc: Takashi Iwai <tiwai@suse.com>
 > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-rtc@vger.kernel.org
+> Cc: alsa-devel@alsa-project.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->   drivers/rtc/rtc-msc313.c | 9 ++++++++-
->   1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/rtc/rtc-msc313.c b/drivers/rtc/rtc-msc313.c
-> index f3fde013c4b8..36e3e77f303e 100644
-> --- a/drivers/rtc/rtc-msc313.c
-> +++ b/drivers/rtc/rtc-msc313.c
-> @@ -177,6 +177,13 @@ static irqreturn_t msc313_rtc_interrupt(s32 irq, void *dev_id)
->   	return IRQ_HANDLED;
->   }
->   
-> +static void msc313_clk_disable_unprepare(void *data)
-> +{
-> +	struct clk *clk = data;
-> +
-> +	clk_disable_unprepare(clk);
-> +}
-> +
->   static int msc313_rtc_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
-> @@ -224,7 +231,7 @@ static int msc313_rtc_probe(struct platform_device *pdev)
->   		return ret;
->   	}
->   
-> -	ret = devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unprepare, clk);
-> +	ret = devm_add_action_or_reset(dev, msc313_clk_disable_unprepare, clk);
->   	if (ret)
->   		return ret;
->   
 
-Hi,
+Thanks, applied.
 
-another way to fix it, is to use devm_clk_get_enabled().
 
-It removes some LoC instead of introducing some new ones and saves a few 
-bytes of memory.
-
-CJ
-
+Takashi
