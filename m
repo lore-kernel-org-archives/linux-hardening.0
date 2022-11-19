@@ -2,118 +2,118 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA97C433FE
-	for <linux-hardening@archiver.kernel.org>; Sat, 19 Nov 2022 07:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B3EC433FE
+	for <linux-hardening@archiver.kernel.org>; Sat, 19 Nov 2022 08:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232831AbiKSHtd (ORCPT
+        id S232527AbiKSIFi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 19 Nov 2022 02:49:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48932 "EHLO
+        Sat, 19 Nov 2022 03:05:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbiKSHtc (ORCPT
+        with ESMTP id S230371AbiKSIFh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 19 Nov 2022 02:49:32 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7670D4A056;
-        Fri, 18 Nov 2022 23:49:31 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EFEE260B04;
-        Sat, 19 Nov 2022 07:49:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 324C3C433D6;
-        Sat, 19 Nov 2022 07:49:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668844170;
-        bh=1iHofFxDs+k8g+czw81aPVHhnz1WiyY0BGTlSsyDFb0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZE7grWCns5eIT52eXsP4/vCsLtIgeA/U6BgzMNPwEzpDce/RozHobnuFfX23T8qtl
-         2mzNw3AAoxbI3OYqwvIfUteCj38NRsSDmNLbn8s74yBYKIkjn3/RBJHK7dvJxBWj5Q
-         mMDRpQW0GLhkZVqBrCOWJZ0KqFJVgPSrFWxs5440VsP+woBNTbG6eqanTHqr/6tNaO
-         p+R+nySiY6kZTqBCbEavB3zFzUDeeJpcz3enBXsSOlO9MIqnjF1gLDgcHmT+NfiAfo
-         Qe6MRHuWWNh8uE/TKifzYChpL2Zj1NronlpPHJxA7S/Ec42ZuBFS++rgSgzKEK6DIl
-         cABmSp2nQGE3Q==
-Date:   Sat, 19 Nov 2022 01:49:16 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        GR-QLogic-Storage-Upstream@marvell.com,
-        Nilesh Javali <njavali@marvell.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/2][next] scsi: qla2xxx: Use struct_size() in code
- related to struct ct_sns_gpnft_rsp
-Message-ID: <Y3iKfHMmsm3UF23M@work>
-References: <cover.1668814746.git.gustavoars@kernel.org>
- <9bd4775fe9c88b33c3194f841a2ec2f559d58032.1668814746.git.gustavoars@kernel.org>
- <202211182309.D5AC082E3@keescook>
- <Y3iDqTPFdoUQ3a0f@work>
+        Sat, 19 Nov 2022 03:05:37 -0500
+Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AAD46DFF2
+        for <linux-hardening@vger.kernel.org>; Sat, 19 Nov 2022 00:05:34 -0800 (PST)
+Received: from [192.168.1.18] ([86.243.100.34])
+        by smtp.orange.fr with ESMTPA
+        id wIquoyL42zQOKwIquoElgP; Sat, 19 Nov 2022 09:05:32 +0100
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 19 Nov 2022 09:05:32 +0100
+X-ME-IP: 86.243.100.34
+Message-ID: <ef3c1a62-029e-ffae-8a37-fde35a8235d5@wanadoo.fr>
+Date:   Sat, 19 Nov 2022 09:05:28 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y3iDqTPFdoUQ3a0f@work>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH] rtc: msc313: Fix function prototype mismatch in
+ msc313_rtc_probe()
+Content-Language: fr, en-GB
+To:     Kees Cook <keescook@chromium.org>, Daniel Palmer <daniel@thingy.jp>
+Cc:     kernel test robot <lkp@intel.com>,
+        Romain Perier <romain.perier@gmail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20221118233101.never.215-kees@kernel.org>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20221118233101.never.215-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Nov 19, 2022 at 01:20:09AM -0600, Gustavo A. R. Silva wrote:
-> On Fri, Nov 18, 2022 at 11:10:44PM -0800, Kees Cook wrote:
-> > On Fri, Nov 18, 2022 at 05:47:56PM -0600, Gustavo A. R. Silva wrote:
-> > > Prefer struct_size() over open-coded versions of idiom:
-> > > 
-> > > sizeof(struct-with-flex-array) + sizeof(typeof-flex-array-elements) * count
-> > > 
-> > > where count is the max number of items the flexible array is supposed to
-> > > contain.
-> > > 
-> > > Link: https://github.com/KSPP/linux/issues/160
-> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > > ---
-> > >  drivers/scsi/qla2xxx/qla_gs.c | 5 ++---
-> > >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
-> > > index 69d3bc795f90..27e1df56b0fb 100644
-> > > --- a/drivers/scsi/qla2xxx/qla_gs.c
-> > > +++ b/drivers/scsi/qla2xxx/qla_gs.c
-> > > @@ -4072,9 +4072,8 @@ int qla24xx_async_gpnft(scsi_qla_host_t *vha, u8 fc4_type, srb_t *sp)
-> > >  		}
-> > >  		sp->u.iocb_cmd.u.ctarg.req_size = GPN_FT_REQ_SIZE;
-> > >  
-> > > -		rspsz = sizeof(struct ct_sns_gpnft_rsp) +
-> > > -			(vha->hw->max_fibre_devices *
-> > > -			    sizeof(struct ct_sns_gpn_ft_data));
-> > > +		rspsz = struct_size((struct ct_sns_gpnft_rsp *)0, entries,
-> > > +				vha->hw->max_fibre_devices);
-> > 
-> > This should be able to use sp->u.iocb_cmd.u.ctarg.rsp instead of the
-> > explicit struct with a NULL. (It's just using typeof() internally, so
-> > it's okay that it isn't allocated yet.)
+Le 19/11/2022 à 00:31, Kees Cook a écrit :
+> With clang's kernel control flow integrity (kCFI, CONFIG_CFI_CLANG),
+> indirect call targets are validated against the expected function
+> pointer prototype to make sure the call target is valid to help mitigate
+> ROP attacks. If they are not identical, there is a failure at run time,
+> which manifests as either a kernel panic or thread getting killed.
 > 
-> mmh... yeah; and considering they're already going all the way down to
-> sp->u.iocb_cmd.u.ctarg.req_size, I think accessing sp->u.iocb_cmd.u.ctarg.rsp
-> is perfectly fine. :)
+> msc313_rtc_probe() was passing clk_disable_unprepare() directly, which
+> did not have matching prototypes for devm_add_action_or_reset()'s callback
+> argument. Add a wrapper and remove the cast.
+> 
+> This was found as a result of Clang's new -Wcast-function-type-strict
+> flag, which is more sensitive than the simpler -Wcast-function-type,
+> which only checks for type width mismatches.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/lkml/202211041527.HD8TLSE1-lkp@intel.com
+> Cc: Daniel Palmer <daniel@thingy.jp>
+> Cc: Romain Perier <romain.perier@gmail.com>
+> Cc: Alessandro Zummo <a.zummo@towertech.it>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-rtc@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>   drivers/rtc/rtc-msc313.c | 9 ++++++++-
+>   1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/rtc/rtc-msc313.c b/drivers/rtc/rtc-msc313.c
+> index f3fde013c4b8..36e3e77f303e 100644
+> --- a/drivers/rtc/rtc-msc313.c
+> +++ b/drivers/rtc/rtc-msc313.c
+> @@ -177,6 +177,13 @@ static irqreturn_t msc313_rtc_interrupt(s32 irq, void *dev_id)
+>   	return IRQ_HANDLED;
+>   }
+>   
+> +static void msc313_clk_disable_unprepare(void *data)
+> +{
+> +	struct clk *clk = data;
+> +
+> +	clk_disable_unprepare(clk);
+> +}
+> +
+>   static int msc313_rtc_probe(struct platform_device *pdev)
+>   {
+>   	struct device *dev = &pdev->dev;
+> @@ -224,7 +231,7 @@ static int msc313_rtc_probe(struct platform_device *pdev)
+>   		return ret;
+>   	}
+>   
+> -	ret = devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unprepare, clk);
+> +	ret = devm_add_action_or_reset(dev, msc313_clk_disable_unprepare, clk);
+>   	if (ret)
+>   		return ret;
+>   
 
-except that... it seems sp->u.iocb_cmd.u.ctarg.rsp is a pointer to void
-and not a struct of type struct ct_sns_gpnft_rsp. :O
+Hi,
 
-drivers/scsi/qla2xxx/qla_def.h:474:
-struct ct_arg {
-        void            *iocb;
-        u16             nport_handle;
-        dma_addr_t      req_dma;
-        dma_addr_t      rsp_dma;
-        u32             req_size;
-        u32             rsp_size;
-        u32             req_allocated_size;
-        u32             rsp_allocated_size;
-        void            *req;
-        void            *rsp;
-        port_id_t       id;
-};
+another way to fix it, is to use devm_clk_get_enabled().
 
-I wonder if you wanted to point out something entirely different...?
+It removes some LoC instead of introducing some new ones and saves a few 
+bytes of memory.
 
---
-Gustavo
+CJ
+
