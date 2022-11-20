@@ -2,413 +2,194 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D70D5C43217
-	for <linux-hardening@archiver.kernel.org>; Sat, 19 Nov 2022 20:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9DBC4332F
+	for <linux-hardening@archiver.kernel.org>; Sun, 20 Nov 2022 01:49:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234867AbiKSUjn (ORCPT
+        id S229551AbiKTBtk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 19 Nov 2022 15:39:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45414 "EHLO
+        Sat, 19 Nov 2022 20:49:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231445AbiKSUjY (ORCPT
+        with ESMTP id S229480AbiKTBtj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 19 Nov 2022 15:39:24 -0500
-Received: from mail.z3ntu.xyz (mail.z3ntu.xyz [128.199.32.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7EF212D24;
-        Sat, 19 Nov 2022 12:39:22 -0800 (PST)
-Received: from g550jk.arnhem.chello.nl (unknown [62.108.10.64])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id E2495D0668;
-        Sat, 19 Nov 2022 20:38:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1668890329; bh=Fvqc16Qggc9+W7PdVEDrCJkFPmsSLRE3tlAPL2QS6Y4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=oLHeD5WAteSXyFqmb8oR1Z00c1siRMhE3/RYN1g6hsMRwroPJK0nnp3Om2rL7NNDW
-         yDJA8jDkcuLT/EOjPtCYX60jB/WdRU25+teASIJEGxrPMZt+9Iem57on/vELbgHd2C
-         UKVSX/FFC9MYYnTcoKZNFmcK0x8G3h3nIOxWsWEQ=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        Danila Tikhonov <JIaxyga@protonmail.com>,
-        Anton Bambura <jenneron@protonmail.com>,
-        Vladimir Lypak <vladimir.lypak@gmail.com>,
-        Luca Weiss <luca@z3ntu.xyz>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v2 7/9] arm64: dts: qcom: msm8953: Add device tree for Xiaomi Mi A1
-Date:   Sat, 19 Nov 2022 21:37:48 +0100
-Message-Id: <20221119203758.888207-8-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221119203758.888207-1-luca@z3ntu.xyz>
-References: <20221119203758.888207-1-luca@z3ntu.xyz>
+        Sat, 19 Nov 2022 20:49:39 -0500
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2071.outbound.protection.outlook.com [40.107.22.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B329B8FAC;
+        Sat, 19 Nov 2022 17:49:38 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Xu2wg0E7E4quWFOLBI1G5X6Yb1PsD+UmAkjLX9M/2aHFjtrXXqMeW2ZA0xxsTj0R20MwsaKDXVlUg3Vm6or/SHtmKPjC7JJWWqGIBsvIbAqPSbZRc/rUlNha9ZWJR0ogR+Tww/mgjLPFfEkB373fYEslVewrWF4sCYwgW1IH/Mt4a2jALHsPFmcVgGc+YYftEC+cTl9CanvzQL6n2ehTWJ58Hwl/0zqwpHnYrkl6HzId9QTxEGYXyRnWVbnIrx2slrLovGpMh0D9IOeACqKI7pdcHl+j2PZrnSkAHk0LwXSsR2SCNXZrW1a/GE1EzpSjeHqhjbAtmsrII/IL1N5TCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hp9dEtxNs+t2sJlBB417b9lPyVSVf0ifQMEkjAtCgmw=;
+ b=Et/+IhptgWGLuBH/Fe0SCtaAGOyVeuTTYvfSCfFzv6tFmEo6q6RvY3IMAmqUVU1B6t9I2o3kK70sduMAOlES/TjUOuV4rUTdaWx7sDXXbHrhnN0bulGlro4hEpcW39ir0WUjzWrLKJ91R1qCU6pa+xEcJ98DqltsoWN2BMOGbY5TnV3zm2tDMSdaysgxp4nqz3wuwFadvBkY4LaEwxgb7rrMHc16OHmgLuq1z5FwRl9tjsmNbx6Fujj3C3LeStductfxFxHiCdzhaLXuSEVtZjdKufiTg5iOV+JX8m2b5WwZl+1TbTfY9O6GakMRM1M+WclaybHKJ1k35GVyCvBnhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hp9dEtxNs+t2sJlBB417b9lPyVSVf0ifQMEkjAtCgmw=;
+ b=eI07cZ7O+cVdu5q1svwuE/1/R3RLXnwX6cltTEoR0VmEXJROTfvzBWO9rFns4avIrJFNLkmd1OqyzfOp7sTyalV9Eanf5wEcbKoGFNTVpsMQpexK8ftTt74DuuxkEL3uVJJYjmvwbdd9+tBs8IinqxZJOVYk6RE6+EdVjuiRquE8Ll+FQCpLgiP0TB7wb5kLHZGm+uqNiGYNdRU49U52hSc+z34FQZYWW6Lt8ioGGmOsmHFWsOcdNdOcn5z4gWoqIpTENmS9zZ7X6lvPhwyeBGK3vFAZXEr1i2ZeZrA8JA9VCXaDEtzpWIFmt3xSqQlYJq3ogmFo427N9V2TarZtQw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from DB8PR04MB7164.eurprd04.prod.outlook.com (2603:10a6:10:129::23)
+ by VI1PR04MB7055.eurprd04.prod.outlook.com (2603:10a6:800:123::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.13; Sun, 20 Nov
+ 2022 01:49:36 +0000
+Received: from DB8PR04MB7164.eurprd04.prod.outlook.com
+ ([fe80::3cc9:78f1:6e76:b1ef]) by DB8PR04MB7164.eurprd04.prod.outlook.com
+ ([fe80::3cc9:78f1:6e76:b1ef%5]) with mapi id 15.20.5813.020; Sun, 20 Nov 2022
+ 01:49:35 +0000
+Date:   Sun, 20 Nov 2022 09:49:19 +0800
+From:   joeyli <jlee@suse.com>
+To:     Evgeniy Baskov <baskov@ispras.ru>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Peter Jones <pjones@redhat.com>, lvc-project@linuxtesting.org,
+        x86@kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 00/23] x86_64: Improvements at compressed kernel stage
+Message-ID: <20221120014919.GV3967@linux-l9pv.suse>
+References: <cover.1666705333.git.baskov@ispras.ru>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1666705333.git.baskov@ispras.ru>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-ClientProxiedBy: TYCPR01CA0002.jpnprd01.prod.outlook.com (2603:1096:405::14)
+ To DB8PR04MB7164.eurprd04.prod.outlook.com (2603:10a6:10:129::23)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB8PR04MB7164:EE_|VI1PR04MB7055:EE_
+X-MS-Office365-Filtering-Correlation-Id: e2bd8367-8c14-4186-7943-08daca997952
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uYRqgAI5WClgK/QN6PWJ0Fgl92fJS0+4pZw/xu7WbnGHmQhYM7BVVWV6dFrAxGgLhcpINd83uJ+BcmC3n2hEy3DgNHgdC4kxFgidb3a7Vkyd1jgipeY+NfE8KuOli+uH/3/uR6W5zreb5DgCUMHzPAoHbdmT6wglte7an9pCJYTS7hYn5JKy2XI2Vr2dGVal6liGrq/xGXCll3LUruiuolSYyEa7eoNt1WzPI1ZAsY13H4/jtPtlG00RwCYCwmvHh0YLJJc6uEuaVnjAMZeoR1Eh6Oi+Zf4DGAJJkMjbY/mYHFc892G/yggof4YDAO4S0FuQduVizV2gxB9kbuBxOSVRP4gBNUK7pJybONc5RY2Yk8jkwNZKqJayWYvjOBmehBEaWESOSY9ixjC/G+zBPCEd0PouRhd96SG2Pi1b3CJK7esLm9TBBDV7RcfOftqb09bIXbiXtoICURt2Zrpj70MnvXRi8oKsGdF6JCbDZzuA4d0BUIj6zCZ0kPfVmhb6FipNC1oKq9nBFkbpu5geCHbcz4Ec9u7Tg9S+l/g4UWGS7hmjnVfMm7V617IlGmNjflw7A42b17vitpbW9sBCNPsu7acL3cgh35lxUFCMvX9L/kaCqhcgfMzhRUn8luID
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB7164.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(376002)(39850400004)(396003)(366004)(346002)(451199015)(36756003)(86362001)(33656002)(54906003)(6916009)(45080400002)(6486002)(6666004)(478600001)(6506007)(7416002)(5660300002)(41300700001)(2906002)(316002)(19627235002)(8936002)(66556008)(66476007)(4326008)(8676002)(66946007)(38100700002)(1076003)(186003)(9686003)(6512007)(26005)(83380400001)(84970400001)(43062005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ZXbCpcWn93lOvI8BGNDHKPPCj+einVhgtvpMlxEmN3EQfJb6yYfuP99I9h2J?=
+ =?us-ascii?Q?/lej6+Yx/F7uISquoFtr2UWshPRcm15n/wPEKNiExWxfos2os7ncrt6XU82y?=
+ =?us-ascii?Q?Hh3hNr0DbwIcpElmpNv6DRSS6Sg/jgNqcbNIUnGpAHG7Hn2nGzqghTSgRMDK?=
+ =?us-ascii?Q?xBzJXkmeysuRMffq0dcK2wkr5VVW3aGfz4enTy0CRA8d3YGFN48RntJrrXWz?=
+ =?us-ascii?Q?Sszllt0myQLxigc495r3dH3V1Q27/xbONjaLV3OFFyDLQmyqb67v46GZZgUt?=
+ =?us-ascii?Q?8J6pBWWDhFd1Gg+Wh5EfjC9IOvTc0p3cqd8SnnTacAruU2iIWNaRqJK0IITX?=
+ =?us-ascii?Q?zl/MHkzeMw7zqLeqCMN8dqTrif6MVLEBXd7z562IhZcNe96PoWOAs2fuJWh5?=
+ =?us-ascii?Q?+YIbWxUO/2lBi8BGEHfelWbmtYjHzLHbJhW0CXJB1kUBGzMshg7t7BBT623T?=
+ =?us-ascii?Q?Za8sau+alXWnZF9wX7jm+Vz53lMSEFs/NHhOHZwlSRU0z7JGcsVAvhEwdf6l?=
+ =?us-ascii?Q?8NWEE3258EpXtGwFpH+S7Vck2XbkroGCkBw+4F3y5pcvV8CpFBnr+vu0yGgX?=
+ =?us-ascii?Q?vFQUNERSlz8b5Bi3bthimdOYJvc9F2WNvK+yizJcvaUhyb2l6VOhJtciDEIu?=
+ =?us-ascii?Q?swEdleFETulEk80DsM7lZT9syfSgM/06e2zWHcAeWFnKuN7Sm0r+tzDfCYcw?=
+ =?us-ascii?Q?0eYZ2UKnARL7uBtlgPYxDWFziRAOVZnM9LK31RsSSVuYAcwGNzqQORW5gR3F?=
+ =?us-ascii?Q?9n1UpHgp33/iP8lL1YISVQPqQOof3viVXTmrWoU4l4nsLnQ1fbuqpqKDHUVk?=
+ =?us-ascii?Q?ZnVxm5RyTuxRR7m++xta7bV5MFbHqMGtjkyYQHZeYae7Rkt0OUKD/Pww7UDo?=
+ =?us-ascii?Q?ZK/7wAZxp/xNqVg8CLfFRDyLtD2cFsAMNLGeLgjcsjCcTlo6TrMmFOZe+Lo0?=
+ =?us-ascii?Q?wHS+su/X6OW7YhVLHAeX0Mgf6Mv3Yj1TYk/hHHGra9NQrtJl+zgBYmi2esQT?=
+ =?us-ascii?Q?g9Cyzp9xbvuW0S8Xn6yTvuuMyRKlM460ute0+H7RA1WU2yDcaRitLOrpmfK5?=
+ =?us-ascii?Q?jSXq01kTWeq5Zi2fuPFoWZwbsCOA1th1g8hkHGFkXPnCKWg2PajyIlOw4Es4?=
+ =?us-ascii?Q?VeoBr8ykfdf5wtzG/HTWl2Y0u/pCsI3n7eqXx16cqS84Dz+QJ8068vdM73Ky?=
+ =?us-ascii?Q?3OvMi0333S3YiTmFsd/yYhNuxIHqMLsxKiN99iAEsyNkHsFSGW7iSoFVZO+8?=
+ =?us-ascii?Q?50VCop3N1QQYrd87vXdlpggjPncxt01Vxa5kCPlp/bdg+KkeR0yMy6Y1arUr?=
+ =?us-ascii?Q?Y0qb547/rXos+u2dX8IU6F57lz0k0OaEHMalPnIRGhvHOLgU5Qc7PAi+fi/A?=
+ =?us-ascii?Q?2OpXdpmkwrlQSY8VQjeKKVyr7IEqPpd4U2vPmwGH20KFFMSKZf/RzuObbUY9?=
+ =?us-ascii?Q?2Ni+iUWtQRKDkmAaJyhxpB7fX+euBsEhKQ8DKx+F9uZ7FX7e9+IQDMZox/ey?=
+ =?us-ascii?Q?4LYkytwZ7uEbUVfzjKkog7GjLBQmMIQN6QE9/xO16LZbnXPTGKQcgCSIQZBc?=
+ =?us-ascii?Q?gmt0HEYqQYu3un4DlR0=3D?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e2bd8367-8c14-4186-7943-08daca997952
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB7164.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2022 01:49:35.2017
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QQqteQsOMl6u5cUwbaZHNqDZdy82EZnQsgl1ZsQa4LsgesChi0UN5tZil8OEXezN
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7055
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Danila Tikhonov <JIaxyga@protonmail.com>
+Hi Evgeniy,
 
-Add device tree for the Xiaomi Mi A1 (tissot) smartphone. This device is
-based on Snapdragon 625 (msm8953) SoC.
+Thanks for your effort!
 
-Co-developed-by: Anton Bambura <jenneron@protonmail.com>
-Signed-off-by: Anton Bambura <jenneron@protonmail.com>
-Signed-off-by: Danila Tikhonov <JIaxyga@protonmail.com>
-Signed-off-by: Vladimir Lypak <vladimir.lypak@gmail.com>
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
-Changes in v2:
-* address review comments from v1
+On Tue, Oct 25, 2022 at 05:12:38PM +0300, Evgeniy Baskov wrote:
+> This patchset is aimed
+> * to improve UEFI compatibility of compressed kernel code for x86_64
+> * to setup proper memory access attributes for code and rodata sections
+> * to implement W^X protection policy throughout the whole execution 
+>   of compressed kernel for EFISTUB code path. 
+> 
+> Kernel is made to be more compatible with PE image specification [3],
+> allowing it to be successfully loaded by stricter PE loader
+> implementations like the one from [2]. There is at least one
+> known implementation that uses that loader in production [4].
+> There are also ongoing efforts to upstream these changes.
+> 
+> Also the patchset adds EFI_MEMORY_ATTTRIBUTE_PROTOCOL, included into
+> EFI specification since version 2.10, as a better alternative to
+> using DXE services for memory protection attributes manipulation,
+> since it is defined by the UEFI specification itself and not UEFI PI
+> specification. This protocol is not widely available so the code
+> using DXE services is kept in place as a fallback in case specific
+> implementation does not support the new protocol.
+> One of EFI implementations that already support
+> EFI_MEMORY_ATTTRIBUTE_PROTOCOL is Microsoft Project Mu [5].
+>  
 
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../boot/dts/qcom/msm8953-xiaomi-tissot.dts   | 319 ++++++++++++++++++
- 2 files changed, 320 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/msm8953-xiaomi-tissot.dts
+Because Peter Jones point out this patchset to me, so I tried it
+on OVMF, and I set the EfiLoaderData in DXE memory protection policy:
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index cd667df63326..f93e5cf062e5 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -24,6 +24,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-wingtech-wt88047.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-motorola-potter.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-xiaomi-daisy.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-xiaomi-mido.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8953-xiaomi-tissot.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-lg-bullhead-rev-10.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-lg-bullhead-rev-101.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-msft-lumia-octagon-talkman.dtb
-diff --git a/arch/arm64/boot/dts/qcom/msm8953-xiaomi-tissot.dts b/arch/arm64/boot/dts/qcom/msm8953-xiaomi-tissot.dts
-new file mode 100644
-index 000000000000..7c3b809cc551
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8953-xiaomi-tissot.dts
-@@ -0,0 +1,319 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2022, Danila Tikhonov <JIaxyga@protonmail.com>
-+ * Copyright (c) 2022, Anton Bambura <jenneron@protonmail.com>
-+ */
-+/dts-v1/;
-+
-+#include "msm8953.dtsi"
-+#include "pm8953.dtsi"
-+#include "pmi8950.dtsi"
-+#include <dt-bindings/leds/common.h>
-+
-+/delete-node/ &adsp_fw_mem;
-+/delete-node/ &qseecom_mem;
-+/delete-node/ &wcnss_fw_mem;
-+
-+/ {
-+	model = "Xiaomi Mi A1";
-+	compatible = "xiaomi,tissot", "qcom,msm8953";
-+	chassis-type = "handset";
-+	qcom,msm-id = <293 0>;
-+	qcom,board-id = <0x1000b 0x00>;
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpio_key_default>, <&gpio_hall_sensor_default>;
-+
-+		event-hall-sensor {
-+			label = "Hall Effect Sensor";
-+			gpios = <&tlmm 44 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <EV_SW>;
-+			linux,code = <SW_LID>;
-+			linux,can-disable;
-+		};
-+
-+		key-volume-up {
-+			label = "Volume Up";
-+			gpios = <&tlmm 85 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEUP>;
-+		};
-+	};
-+
-+	reserved-memory {
-+		qseecom_mem: qseecom@84a00000 {
-+			reg = <0x0 0x84a00000 0x0 0x1900000>;
-+			no-map;
-+		};
-+
-+		adsp_fw_mem: adsp@8d600000 {
-+			reg = <0x0 0x8d600000 0x0 0x1200000>;
-+			no-map;
-+		};
-+
-+		wcnss_fw_mem: wcnss@8e800000 {
-+			reg = <0x0 0x8e800000 0x0 0x700000>;
-+			no-map;
-+		};
-+
-+		ramoops@9ff00000 {
-+			compatible = "ramoops";
-+			reg = <0x0 0x9ff00000 0x0 0x00100000>;
-+			record-size = <0x1000>;
-+			console-size = <0x80000>;
-+			ftrace-size = <0x1000>;
-+			pmsg-size = <0x8000>;
-+		};
-+	};
-+
-+	vph_pwr: vph-pwr-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vph_pwr";
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&hsusb_phy {
-+	vdd-supply = <&pm8953_l3>;
-+	vdda-pll-supply = <&pm8953_l7>;
-+	vdda-phy-dpdm-supply = <&pm8953_l13>;
-+
-+	status = "okay";
-+};
-+
-+&i2c_2 {
-+	status = "okay";
-+
-+	max98927_codec: audio-codec@3a {
-+		compatible = "maxim,max98927";
-+		reg = <0x3a>;
-+
-+		reset-gpios = <&tlmm 86 GPIO_ACTIVE_LOW>;
-+
-+		vmon-slot-no = <1>;
-+		imon-slot-no = <1>;
-+
-+		#sound-dai-cells = <1>;
-+	};
-+
-+	led-controller@45 {
-+		compatible = "awinic,aw2013";
-+		reg = <0x45>;
-+
-+		vcc-supply = <&pm8953_l10>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		led@0 {
-+			reg = <0>;
-+			led-max-microamp = <5000>;
-+			function = LED_FUNCTION_INDICATOR;
-+			color = <LED_COLOR_ID_WHITE>;
-+		};
-+	};
-+};
-+
-+&i2c_3 {
-+	status = "okay";
-+
-+	touchscreen@38 {
-+		compatible = "edt,edt-ft5406";
-+		reg = <0x38>;
-+
-+		interrupt-parent = <&tlmm>;
-+		interrupts = <65 IRQ_TYPE_EDGE_FALLING>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&ts_int_default>;
-+
-+		reset-gpios = <&tlmm 64 GPIO_ACTIVE_LOW>;
-+
-+		vcc-supply = <&pm8953_l10>;
-+
-+		touchscreen-size-x = <1080>;
-+		touchscreen-size-y = <1920>;
-+	};
-+};
-+
-+&pm8953_resin {
-+	linux,code = <KEY_VOLUMEDOWN>;
-+	status = "okay";
-+};
-+
-+&pmi8950_wled {
-+	qcom,num-strings = <2>;
-+	qcom,external-pfet;
-+	qcom,cabc;
-+
-+	status = "okay";
-+};
-+
-+&sdhc_1 {
-+	status = "okay";
-+};
-+
-+&sdhc_2 {
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
-+	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
-+
-+	cd-gpios = <&tlmm 133 GPIO_ACTIVE_HIGH>;
-+
-+	status = "okay";
-+};
-+
-+&rpm_requests {
-+	regulators {
-+		compatible = "qcom,rpm-pm8953-regulators";
-+
-+		vdd_s1-supply = <&vph_pwr>;
-+		vdd_s2-supply = <&vph_pwr>;
-+		vdd_s3-supply = <&vph_pwr>;
-+		vdd_s4-supply = <&vph_pwr>;
-+		vdd_s5-supply = <&vph_pwr>;
-+		vdd_s6-supply = <&vph_pwr>;
-+		vdd_s7-supply = <&vph_pwr>;
-+		vdd_l1-supply = <&pm8953_s3>;
-+		vdd_l2_l3-supply = <&pm8953_s3>;
-+		vdd_l4_l5_l6_l7_l16_l19-supply = <&pm8953_s4>;
-+		vdd_l8_l11_l12_l13_l14_l15-supply = <&vph_pwr>;
-+		vdd_l9_l10_l17_l18_l22-supply = <&vph_pwr>;
-+
-+		pm8953_s1: s1 {
-+			regulator-min-microvolt = <870000>;
-+			regulator-max-microvolt = <1156000>;
-+		};
-+
-+		pm8953_s3: s3 {
-+			regulator-min-microvolt = <1224000>;
-+			regulator-max-microvolt = <1224000>;
-+		};
-+
-+		pm8953_s4: s4 {
-+			regulator-min-microvolt = <1900000>;
-+			regulator-max-microvolt = <2050000>;
-+		};
-+
-+		pm8953_l1: l1 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1000000>;
-+		};
-+
-+		pm8953_l2: l2 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1225000>;
-+		};
-+
-+		pm8953_l3: l3 {
-+			regulator-min-microvolt = <925000>;
-+			regulator-max-microvolt = <925000>;
-+		};
-+
-+		pm8953_l5: l5 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8953_l6: l6 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8953_l7: l7 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1900000>;
-+		};
-+
-+		pm8953_l8: l8 {
-+			regulator-min-microvolt = <2900000>;
-+			regulator-max-microvolt = <2900000>;
-+		};
-+
-+		pm8953_l9: l9 {
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		pm8953_l10:l10 {
-+			regulator-min-microvolt = <2850000>;
-+			regulator-max-microvolt = <2850000>;
-+		};
-+
-+		pm8953_l11: l11 {
-+			regulator-min-microvolt = <2950000>;
-+			regulator-max-microvolt = <2950000>;
-+		};
-+
-+		pm8953_l12: l12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2950000>;
-+		};
-+
-+		pm8953_l13: l13 {
-+			regulator-min-microvolt = <3125000>;
-+			regulator-max-microvolt = <3125000>;
-+		};
-+
-+		pm8953_l16: l16 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8953_l17: l17 {
-+			regulator-min-microvolt = <2750000>;
-+			regulator-max-microvolt = <2850000>;
-+		};
-+
-+		pm8953_l19: l19 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1350000>;
-+		};
-+
-+		pm8953_l22: l22 {
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2800000>;
-+		};
-+
-+		pm8953_l23: l23 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1225000>;
-+		};
-+	};
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <0 4>, <16 4>, <135 4>;
-+
-+	gpio_hall_sensor_default: gpio-hall-sensor-state {
-+		pins = "gpio44";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-pull-up;
-+	};
-+
-+	ts_int_default: ts-int-default-state {
-+		pins = "gpio65";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-pull-up;
-+	};
-+};
-+
-+&uart_0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart_console_active>;
-+
-+	status = "okay";
-+};
-+
-+&usb3 {
-+	status = "okay";
-+};
-+
-+&usb3_dwc3 {
-+	dr_mode = "peripheral";
-+};
--- 
-2.38.1
+Index: edk2/MdeModulePkg/MdeModulePkg.dec
+===================================================================
+--- edk2.orig/MdeModulePkg/MdeModulePkg.dec
++++ edk2/MdeModulePkg/MdeModulePkg.dec
+@@ -1392,7 +1392,7 @@
+   # e.g. 0x7BD4 can be used for all memory except Code and ACPINVS/Reserved. <BR>
+   #
+   # @Prompt Set DXE memory protection policy.
+-  gEfiMdeModulePkgTokenSpaceGuid.PcdDxeNxMemoryProtectionPolicy|0x0000000|UINT64|0x00001048^M
++  gEfiMdeModulePkgTokenSpaceGuid.PcdDxeNxMemoryProtectionPolicy|0x0000004|UINT64|0x00001048^M
+ 
+   ## PCI Serial Device Info. It is an array of Device, Function, and Power Management
+   #  information that describes the path that contains zero or more PCI to PCI bridges
 
+
+I applied this v2 patch set on top of v6.1-rc5 kernel, and boot with a shim which
+set the PE NX-compatibility DLL Characteristic flag. I got a page fault exception:
+
+Loading Linux 6.1.0-rc5-default+ ...
+Loading initial ramdisk ...
+!!!! X64 Exception Type - 0E(#PF - Page-Fault)  CPU Apic ID - 00000000 !!!!
+ExceptionData - 0000000000000011  I:1 R:0 U:0 W:0 P:1 PK:0 SS:0 SGX:0
+RIP  - 0000000076A3C390, CS  - 0000000000000038, RFLAGS - 0000000000210202
+RAX  - 000000007D8CCDF8, RCX - 0000000076A3C390, RDX - 000000007DE86000
+RBX  - 0000000076A3C000, RSP - 000000007FF0D2C8, RBP - 000000007DE86000
+RSI  - 000000007F9EE018, RDI - 000000007DFD1C18
+R8   - 0000000076A3C000, R9  - 0000000000000190, R10 - 000000007FF1D658
+R11  - 0000000000000004, R12 - 0000000000000190, R13 - 000000007D8CCE00
+R14  - 000000007D8C76B4, R15 - 000000007BF0CBD5
+DS   - 0000000000000030, ES  - 0000000000000030, FS  - 0000000000000030
+GS   - 0000000000000030, SS  - 0000000000000030
+CR0  - 0000000080010033, CR2 - 0000000076A3C390, CR3 - 000000007FC01000
+CR4  - 0000000000000668, CR8 - 0000000000000000
+DR0  - 0000000000000000, DR1 - 0000000000000000, DR2 - 0000000000000000
+DR3  - 0000000000000000, DR6 - 00000000FFFF0FF0, DR7 - 0000000000000400
+GDTR - 000000007F9DE000 0000000000000047, LDTR - 0000000000000000
+IDTR - 000000007F2E9018 0000000000000FFF,   TR - 0000000000000000
+FXSAVE_STATE - 000000007FF0CF20
+!!!! Find image based on IP(0x7BF0BAB5) /mnt/working/source_code-git/edk2/Build/OvmfX64/DEBUG_GCC5/X64/MdeModulePkg/Universal/Variable/RuntimeDxe/VariableRuntimeDxe/DEBUG/VariableRuntimeDxe.dll (ImageBase=0000000000F40E7C, EntryPoint=0000000000F767B8) !!!!
+
+
+My question is: Can I just set EfiLoaderData in DXE memory protection policy
+in EDK2/OVMF to test this patchset? Or which platform (virtual or physical)
+can we use for testing?
+
+Thanks a lot!
+Joey Lee
