@@ -2,85 +2,119 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70148C4332F
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Nov 2022 14:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCD4C4332F
+	for <linux-hardening@archiver.kernel.org>; Mon, 21 Nov 2022 17:43:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229919AbiKUOUV (ORCPT
+        id S229552AbiKURnk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 21 Nov 2022 09:20:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60630 "EHLO
+        Mon, 21 Nov 2022 12:43:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230271AbiKUOUT (ORCPT
+        with ESMTP id S229604AbiKURnj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 21 Nov 2022 09:20:19 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9709038A6;
-        Mon, 21 Nov 2022 06:20:17 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D1C5F6126C;
-        Mon, 21 Nov 2022 14:20:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 32C17C433C1;
-        Mon, 21 Nov 2022 14:20:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669040416;
-        bh=X9ahzx6QOLG7vlYDgeNpixkQvDQMZlf4eg6Lylxp+SA=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=BD3cb/mtADpfWvoUqv7DaMRW3jScXHegfyNfkCHKLKH55leaK2X5/qxF4UZkQnYL9
-         bqdUZnShGytI5xUIekIGpFakVT/YkanSMTAX+4Yc2wI3wCAI9J7WPGOAhoUuoUd7pT
-         kDhlImfi7mItcmqaafYdPtdKpJK7GG20HX/pAeVN98siPmzXXBqZO9uox2b1Sl/Pd9
-         nwbUoaw4cf34d2ateBL685cNeccLU0hJZAInxTZJQzYYW0nn1AsZnlwhSvEvVQTZQe
-         U/WkBo4SmIlIiX2XqyzLRgiovzedTTu1AT/XO5uFZSwsZ2n/Apo7GZ2k1DB/drj+O+
-         dOjWTv6460d1w==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 14089C395FF;
-        Mon, 21 Nov 2022 14:20:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Mon, 21 Nov 2022 12:43:39 -0500
+Received: from mail-oa1-x2b.google.com (mail-oa1-x2b.google.com [IPv6:2001:4860:4864:20::2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02F0C2C122;
+        Mon, 21 Nov 2022 09:43:38 -0800 (PST)
+Received: by mail-oa1-x2b.google.com with SMTP id 586e51a60fabf-1322d768ba7so14517646fac.5;
+        Mon, 21 Nov 2022 09:43:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=RVYmRlCIWUFfeVnOV5mudLBiIVI6uJJnon3FBZNLLUI=;
+        b=jcz1PMWg/P6eUBxRDkxKc0yQD7GP7vplwKzu1inK0mhWJoI8/LloPny5bXkEwBymN5
+         DE81ekBRjKVErsWjLKQIKkswXFOZa5bvoPUbkqafrlIq6oxhq6VQfXSUpSMoVBvgPJhu
+         H/VFqb2KjN2B7qnEk/Xb9WoeNPDQiWVKGN4k9glKFGm56FT10T3L+0XhXw+y8E6X6vUq
+         0tu2oeQYspe06D815oLeil6BWq1FGQ/ZliZhLtVcUuJjmYdwoXBDVO50HCGOwCbfIaOF
+         8w7HZGRzCVQ3FAwz0vSJYuwzGAnJXKKtM4S5xKxO5rpbnC+9IQR3Q/uIGgWdXVhYcJev
+         mBpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RVYmRlCIWUFfeVnOV5mudLBiIVI6uJJnon3FBZNLLUI=;
+        b=vQdu379wv0eIS6YWT+Bi1sXTXVt+H7sxdhUomdCl06XLrm0Fv4FfCF88jNFlVZ7epT
+         7zYQq7CrhbUYMRomVQW/Chbp6Jf3+1swAUbnHSbj/Ll3jxPQF0DALWxyC6IFgoPTzDPy
+         ASAsYn5D4LkvnKD531IK+gC7Iifubd6U1B2XLTJysAEUpRAfbhwnfmuJKYdTz4DOg2dh
+         +kPI0I+RQClG9HwivgY9zuWESBysmI+FekJfMMrvoeRi3nwbPTYrL9o7WjzjzoSXotS4
+         h457nJ6tSV4FHgA6zk8yPpSJz0npArMCFrQtg948j82vE9sqBbybkOz4pt4kU+LgVi0N
+         aIDA==
+X-Gm-Message-State: ANoB5pltUhQqTSCoY+X1bivVEmQhs8XIcIFA7wTYb/Ouml/NBMVyl19b
+        jKttzjyZPbFb2CPEbHDOJg1c7yUDB1XA7X1xpJs=
+X-Google-Smtp-Source: AA0mqf74KkrNkY8BdaZc8j5XcGxfP6V3NbT9q1EO2RMtGv3fnMb3YyW9WSIaGDRpu2Sazq4MO0bHaAxzARnC7vzHCpg=
+X-Received: by 2002:a05:6870:b07:b0:13b:d07f:f29d with SMTP id
+ lh7-20020a0568700b0700b0013bd07ff29dmr2050631oab.96.1669052617328; Mon, 21
+ Nov 2022 09:43:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v3] bpf/verifier: Use kmalloc_size_roundup() to match
- ksize() usage
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <166904041607.17586.16719074912703775400.git-patchwork-notify@kernel.org>
-Date:   Mon, 21 Nov 2022 14:20:16 +0000
-References: <20221118183409.give.387-kees@kernel.org>
-In-Reply-To: <20221118183409.give.387-kees@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
-        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
-        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
-        jolsa@kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <Y3soBt1jmXHUKhW9@mail.google.com>
+In-Reply-To: <Y3soBt1jmXHUKhW9@mail.google.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 21 Nov 2022 12:43:25 -0500
+Message-ID: <CADnq5_NAaX6t3r+J8qcEfL1-8SOunU9YR3HqohmuGTm_xBow+g@mail.gmail.com>
+Subject: Re: [PATCH] [next] drm/amdgpu: Replace remaining 1-element array with flex-array
+To:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rongguang Wei <weirongguang@kylinos.cn>,
+        Slark Xiao <slark_xiao@163.com>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
+Applied.  Thanks!
 
-This patch was applied to bpf/bpf-next.git (master)
-by Daniel Borkmann <daniel@iogearbox.net>:
+Alex
 
-On Fri, 18 Nov 2022 10:34:14 -0800 you wrote:
-> Most allocation sites in the kernel want an explicitly sized allocation
-> (and not "more"), and that dynamic runtime analysis tools (e.g. KASAN,
-> UBSAN_BOUNDS, FORTIFY_SOURCE, etc) are looking for precise bounds checking
-> (i.e. not something that is rounded up). A tiny handful of allocations
-> were doing an implicit alloc/realloc loop that actually depended on
-> ksize(), and didn't actually always call realloc. This has created a
-> long series of bugs and problems over many years related to the runtime
-> bounds checking, so these callers are finally being adjusted to _not_
-> depend on the ksize() side-effect, by doing one of several things:
-> 
-> [...]
-
-Here is the summary with links:
-  - [bpf-next,v3] bpf/verifier: Use kmalloc_size_roundup() to match ksize() usage
-    https://git.kernel.org/bpf/bpf-next/c/ceb35b666d42
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+On Mon, Nov 21, 2022 at 2:26 AM Paulo Miguel Almeida
+<paulo.miguel.almeida.rodenas@gmail.com> wrote:
+>
+> One-element arrays are deprecated, and we are replacing them with
+> flexible array members instead. So, replace one-element array with
+> flexible-array member in struct GOP_VBIOS_CONTENT and refactor the
+> rest of the code accordingly.
+>
+> Important to mention is that doing a build before/after this patch
+> results in no functional binary output differences.
+>
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
+>
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/238
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
+>
+> Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+> ---
+> This should be the last one-element array that had references in source
+> code. Given the way it was used, no *.c code change was required.
+>
+> I will move on to the atombios.h in the radeon driver.
+> ---
+>  drivers/gpu/drm/amd/include/atombios.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/include/atombios.h b/drivers/gpu/drm/amd/include/atombios.h
+> index 4dc738c51771..b78360a71bc9 100644
+> --- a/drivers/gpu/drm/amd/include/atombios.h
+> +++ b/drivers/gpu/drm/amd/include/atombios.h
+> @@ -9292,7 +9292,7 @@ typedef struct {
+>
+>  typedef struct {
+>    VFCT_IMAGE_HEADER   VbiosHeader;
+> -  UCHAR   VbiosContent[1];
+> +  UCHAR   VbiosContent[];
+>  }GOP_VBIOS_CONTENT;
+>
+>  typedef struct {
+> --
+> 2.37.3
+>
