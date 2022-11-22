@@ -2,142 +2,89 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA99C433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 22 Nov 2022 04:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A2AC4332F
+	for <linux-hardening@archiver.kernel.org>; Tue, 22 Nov 2022 04:31:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229817AbiKVEXe (ORCPT
+        id S230139AbiKVEbM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 21 Nov 2022 23:23:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48916 "EHLO
+        Mon, 21 Nov 2022 23:31:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbiKVEXc (ORCPT
+        with ESMTP id S229883AbiKVEbL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 21 Nov 2022 23:23:32 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1605E1F621
-        for <linux-hardening@vger.kernel.org>; Mon, 21 Nov 2022 20:23:31 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id w4-20020a17090ac98400b002186f5d7a4cso12619897pjt.0
-        for <linux-hardening@vger.kernel.org>; Mon, 21 Nov 2022 20:23:31 -0800 (PST)
+        Mon, 21 Nov 2022 23:31:11 -0500
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26BDB2251B
+        for <linux-hardening@vger.kernel.org>; Mon, 21 Nov 2022 20:31:10 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id 4so12536428pli.0
+        for <linux-hardening@vger.kernel.org>; Mon, 21 Nov 2022 20:31:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=X7lLL7qM289jDC3C70clhpmuDor0yKHlczxRAFUa82I=;
-        b=czCrEbFTdndmwuKkx5wkcTqzm6BGu7n8947RPn+hTkip89t/uwpMHeLCIhMPTvWVmQ
-         Nxo3JIu3+OjYJ4/K6sqwvmkdL1xvaxbX9huv16OwfxK91uIkC2Y//hMEPT9ND0EU99oZ
-         W9G1RhZlkDfOTZPfnL4q2rjVlyZX0jR9mx9S4=
+        bh=MQoC9G5+F/Ju5PfRIYOxwBoO5pKbuPnwuuzZSSIVqIQ=;
+        b=ntrjaMOFF4KcRMcRuI/OMTJHDkMcLlQDmb7qkvWl5ufL8qnIt/QiKo/0DNXErjHsKc
+         wLl4+tEhemj4Y3R1gD8fzR79SACereQARlyK6w5E7RfsZLLi0RHIAGaKtewUfFKMIuDE
+         gHBud7EL1xGOaQLwlHrahzz22C7CUPLRocEg0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=X7lLL7qM289jDC3C70clhpmuDor0yKHlczxRAFUa82I=;
-        b=YiaoAJC0OrOWzqT/CkymQDofVlntJAq3JAqqFg+b52314hmAMwem3a3qIBMXYgiCEn
-         30N8ZswiChgv18XoOdhX15uLNBc9+lBMI5pLx9Iw+cDgX7A8FI57yew7mqSfMXHEMcPd
-         nqLqyvUajM0z9S9MRtWyE+0keRM95V0GjDmh5M3AJZ6R468lPBBNbkIftK4GhSesH8nf
-         Qc/SpeRxSGT1KLmARj7pHVvs9VTFA0uwJQgp1FWRU/vRvwu015HOs6hhJ2mb5FS0IY3p
-         P7Ow7Sh8UNG71dS5ij++Hgeo9q5apayagJKumuUfQ8mgpMMAAckbtpeTwdtHtB4eSW37
-         xqfQ==
-X-Gm-Message-State: ANoB5pkRu3bTVWBac9qLXr/TrNIcPh1pu6dgMXRfC4ewW5b4zMlfkeC8
-        Bfl21zMiYVBzr+4lkGG9uGb98Q==
-X-Google-Smtp-Source: AA0mqf7DwyAp7Kcnn4i/IfdQvZ3qzZzFM4xAr40YfuTXwz3PweIxwJ3mWEexrYygFUuzc7p1QJNJeg==
-X-Received: by 2002:a17:903:191:b0:186:5cda:1e01 with SMTP id z17-20020a170903019100b001865cda1e01mr2999450plg.111.1669091010549;
-        Mon, 21 Nov 2022 20:23:30 -0800 (PST)
+        bh=MQoC9G5+F/Ju5PfRIYOxwBoO5pKbuPnwuuzZSSIVqIQ=;
+        b=phKtSM0RJlUPUZXso4c6zLZMcP2fU4LxrfI1WrBPaLLb6zgCVxjjbpUYILigtjbp8k
+         Eobh7IDkLXV93tNLjgopwENoK62/wcfamnnHpwOkOwAccfB1NyaVIkTSavSr90xfpDEd
+         AZu3mFJIy2viFUB24D/bAdK56GI2fHg3WTJMX5o7GTHHhegqrZYREyTb1Zukz2+EJvHk
+         k0J9O1MmITbou/iqtEmpW/RONTr7Km3snq1bzRKlUXEVMQ5TUiBW7Qt9o/zeicYekgTV
+         WnW/saHY4CSJVAaOvX5mEbli840pKS41VOtWbCw9rSflFaaZgq6Xs9sDxwxqxyl5smtE
+         Y24Q==
+X-Gm-Message-State: ANoB5pmx4Me5N+S9L8IdJRAVmJ7BKaLa2cFRjapFUq0Lpar1XOa8zc9g
+        2Qpb6wEvvxQOIt4FAoPm3dSM5g==
+X-Google-Smtp-Source: AA0mqf4y3DsoXAZGKeEvsgxTtGZ+Mei0TjiZb4L/folehYpc7k3YX2pDOB7u1A/toObKXGGiEvyIqw==
+X-Received: by 2002:a17:90b:3c4c:b0:218:a8a1:933a with SMTP id pm12-20020a17090b3c4c00b00218a8a1933amr10071443pjb.14.1669091469608;
+        Mon, 21 Nov 2022 20:31:09 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v14-20020aa799ce000000b00573e0f0a711sm1093153pfi.195.2022.11.21.20.23.28
+        by smtp.gmail.com with ESMTPSA id h11-20020aa796cb000000b0056c3a0dc65fsm9507750pfq.71.2022.11.21.20.31.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Nov 2022 20:23:29 -0800 (PST)
-Date:   Mon, 21 Nov 2022 20:23:28 -0800
+        Mon, 21 Nov 2022 20:31:08 -0800 (PST)
+Date:   Mon, 21 Nov 2022 20:31:07 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Sam Mendoza-Jonas <sam@mendozajonas.com>,
-        Joel Stanley <joel@jms.id.au>
-Cc:     Networking <netdev@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: Re: warn in ncsi netlink code
-Message-ID: <202211211936.9537DD8D@keescook>
-References: <CACPK8Xdfi=OJKP0x0D1w87fQeFZ4A2DP2qzGCRcuVbpU-9=4sQ@mail.gmail.com>
- <74BE39CB-E770-4526-9FCD-CC602178E26F@mendozajonas.com>
+To:     Oliver Neukum <oneukum@suse.com>
+Cc:     Gregory Greenman <gregory.greenman@intel.com>,
+        linux-wireless@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: warning upon association with latest kernel
+Message-ID: <202211212026.6959A4CBBC@keescook>
+References: <f6cb6803-602f-91e3-8bd3-3bbbd924731d@suse.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <74BE39CB-E770-4526-9FCD-CC602178E26F@mendozajonas.com>
+In-Reply-To: <f6cb6803-602f-91e3-8bd3-3bbbd924731d@suse.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Nov 20, 2022 at 11:27:14AM +1100, Sam Mendoza-Jonas wrote:
-> On November 17, 2022 3:35:17 PM GMT+11:00, Joel Stanley <joel@jms.id.au> wrote:
-> >next-20221114 running on an ast2600 system produced this:
-> >
-> >[   44.627332] ------------[ cut here ]------------
-> >[   44.632657] WARNING: CPU: 0 PID: 508 at net/ncsi/ncsi-cmd.c:231 ncsi_cmd_handler_oem+0xbc/0xd0
-> >[   44.642387] memcpy: detected field-spanning write (size 7) of single field "&cmd->mfr_id" at net/ncsi/ncsi-cmd.c:231 (size 4)
+On Wed, Nov 09, 2022 at 04:26:39PM +0100, Oliver Neukum wrote:
+> I am getting this warning when I connect to my home
+> wifi upon boot:
+> 
 > [...]
-> >
-> >The relevant code:
-> >
-> >static int ncsi_cmd_handler_oem(struct sk_buff *skb,
-> >                                struct ncsi_cmd_arg *nca)
-> >{
-> >        struct ncsi_cmd_oem_pkt *cmd;
-> >        unsigned int len;
-> >        int payload;
-> >        /* NC-SI spec DSP_0222_1.2.0, section 8.2.2.2
-> >         * requires payload to be padded with 0 to
-> >         * 32-bit boundary before the checksum field.
-> >         * Ensure the padding bytes are accounted for in
-> >         * skb allocation
-> >         */
-> >
-> >        payload = ALIGN(nca->payload, 4);
-> >        len = sizeof(struct ncsi_cmd_pkt_hdr) + 4;
-> >        len += max(payload, padding_bytes);
-> >
-> >        cmd = skb_put_zero(skb, len);
-> >        memcpy(&cmd->mfr_id, nca->data, nca->payload);
-> >        ncsi_cmd_build_header(&cmd->cmd.common, nca);
-> >
-> >        return 0;
-> >}
-> >
-> >I think it's copying the command payload to the command packet,
-> >starting at the offset of mfr_id:
-> >
-> >struct ncsi_cmd_oem_pkt {
-> >        struct ncsi_cmd_pkt_hdr cmd;         /* Command header    */
-> >        __be32                  mfr_id;      /* Manufacture ID    */
-> >        unsigned char           data[];      /* OEM Payload Data  */
-> >};
-> >
-> >But I'm not too sure.
-> >
-> >Cheers,
-> >
-> >Joel
+> [ 1321.321889] memcpy: detected field-spanning write (size 16) of single field "&compat_event->pointer" at net/wireless/wext-core.c:624 (size 4)
+
+This should be fixed by commit e3e6e1d16a4c ("wifi: wext: use flex array
+destination for memcpy()").
+
+> [...]
+> Head commit is:
 > 
+> commit f141df371335645ce29a87d9683a3f79fba7fd67 (origin/master, origin/HEAD)
+> Merge: f49b2d89fb10 986d93f55bde
+> Author: Linus Torvalds <torvalds@linux-foundation.org>
+> Date:   Tue Nov 8 12:30:29 2022 -0800
 > 
-> While it looks a little gross I'm pretty sure this is the intended behavior for the OEM commands. We'll need to massage that into something nicer.
+>     Merge tag 'audit-pr-20221107' of git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit
 
-Hi!
-
-Ah, yes, another case of deserializing into a flexible array structure.
-It looks like payload length is kept in cmd.common.length, and has
-been effectively bounds-checked.
-
-Regardless, we've been handling this in a couple ways:
-1) split the struct member write from the dynamically sized
-   portion of the write.
-2) use unsafe_memcpy() with a good comment.
-
-I'd like to be using a third option, a common deserializer[1], but it
-doesn't exist yet. (This case would use the proposed mem_to_flex().)
-
-In this case, since "payload" may be less than sizeof(mfr_id), I suspect
-an unsafe_memcpy() is best.
-
--Kees
-
-[1] https://lore.kernel.org/all/20220504014440.3697851-3-keescook@chromium.org/
+Are you sure that's the same kernel? The stated commit no longer has
+"&compat_event->pointer" as a memcpy argument...
 
 -- 
 Kees Cook
