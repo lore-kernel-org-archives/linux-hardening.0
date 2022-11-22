@@ -2,95 +2,141 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F163C4167B
-	for <linux-hardening@archiver.kernel.org>; Tue, 22 Nov 2022 10:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 626ADC4332F
+	for <linux-hardening@archiver.kernel.org>; Tue, 22 Nov 2022 10:22:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233511AbiKVKSA (ORCPT
+        id S232617AbiKVKWK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 22 Nov 2022 05:18:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43756 "EHLO
+        Tue, 22 Nov 2022 05:22:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232893AbiKVKR3 (ORCPT
+        with ESMTP id S233244AbiKVKV2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 22 Nov 2022 05:17:29 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 490D1310;
-        Tue, 22 Nov 2022 02:17:25 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 22 Nov 2022 05:21:28 -0500
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CCEFD7B;
+        Tue, 22 Nov 2022 02:20:42 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id B42BB3C0F8C;
+        Tue, 22 Nov 2022 10:20:41 +0000 (UTC)
+Received: from pdx1-sub0-mail-a305.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 149133C0A9D;
+        Tue, 22 Nov 2022 10:20:41 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1669112441; a=rsa-sha256;
+        cv=none;
+        b=l991j0ndctJJAKL1CVEFkMOfzSlZbXoH4aEl45t+N1uBz+AoZM1z7jfRm//9LSbSHJvWoF
+        XzFkbnMVzACZm7nHJsFzo9z/zvwFsrlOMDgyseEN7hvNBsuHCKIfGrAAAi5/E26ZA8uE7z
+        PTpuBb4s7yxk9BwUXwibZiDvLZCxRIqXsyfGYumANtU+z0Qn4B/a2yaMOx+gRjFrDrDxDT
+        bQv/OemMdBEFv/s21+cH+nPiPCsCJsy2VSa1KVFO1HSRbLvnPGyfl/sIgUoIqrs+ilMOpU
+        M/Z+JwnslOxXc2wOdKVfHlOChRuMVzD8EgiiWSIgX+uZY5L/9EQUc+EoE4BXdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1669112441;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=qiPhbkwAI/xsCItHsFRuVip1BIcjDwn1WOh9E0WKWWA=;
+        b=kjTb1EHAOocHKzoSaje4LBfxjDyL6VuYdhVcYqhUDiUKcPKtFDklNTBuvNuBY2Fc6Dd1Ju
+        u17lmk1LjdA3lifCpK34jDej+ASHl6DpkCufC6KiVixeqDOzY0sXmmw8NcS2DmtVZxOme1
+        adYylYcFjatCWzuWTqnH22zOAkfR215L8ygV++Ho30+4QNpgmRvNOQY9DTVvI4N/qydn3w
+        xCPOjsjk+URGWc7eQng8ZvC0CPBRhLVdhymW0XI1cECjBmLVAxWTZ2ef63MRtQ5r3S8kqw
+        ocyzxqfyCvhM9m8KqtG5cLXyDl5dFXX9sjnu2eWmw1VtRezGl+HC/c2Y2JU7ww==
+ARC-Authentication-Results: i=1;
+        rspamd-64c57ffbcf-gmhf8;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=siddhesh@gotplt.org
+X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|siddhesh@gotplt.org
+X-MailChannels-Auth-Id: dreamhost
+X-Vacuous-Robust: 5419300679b2401a_1669112441516_4245864710
+X-MC-Loop-Signature: 1669112441516:1950271019
+X-MC-Ingress-Time: 1669112441516
+Received: from pdx1-sub0-mail-a305.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.116.179.81 (trex/6.7.1);
+        Tue, 22 Nov 2022 10:20:41 +0000
+Received: from [192.168.0.182] (bras-base-toroon4834w-grc-23-76-68-24-147.dsl.bell.ca [76.68.24.147])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D8267615F8;
-        Tue, 22 Nov 2022 10:17:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF07EC433D6;
-        Tue, 22 Nov 2022 10:17:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669112244;
-        bh=ND68hnkjba0GVllvUV/YBAXJHbUnHdXUBGD+ZZqUcVA=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=Sg0xRnhDkewhctADJ2YcEwpuio9UuuifRlZdEcijAZusFgThJwApWXvVRFw/8OLEA
-         9Qp6mH4xH4H0sWI2IXiTwZtFoL5wvU0a/52IO6S2c/uEk5fjSvvAaLGSYvER0tx/nU
-         TyK7N31zvzmcmKqaKYjgHaJv59yyxhqyVrr2e8nT+bQBxg1QxaUCGuPXbqL7UHbgr7
-         ZciK0CH8ZddhyQLAsRgCWLXaQnw26ekJsRsRvGHvwWSU70AAd1xZnSV/YwAop+6ith
-         oFxfv+6C8EujDzRVMNK3WUMT51pIFzJSd46BrWo8+eniSS2EdrIHcCKbz1N7Kl0vQ8
-         3bTbdJvYOpt8Q==
-Content-Type: text/plain; charset="utf-8"
+        (Authenticated sender: siddhesh@gotplt.org)
+        by pdx1-sub0-mail-a305.dreamhost.com (Postfix) with ESMTPSA id 4NGgJ71dRvzSB;
+        Tue, 22 Nov 2022 02:20:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gotplt.org;
+        s=dreamhost; t=1669112440;
+        bh=qiPhbkwAI/xsCItHsFRuVip1BIcjDwn1WOh9E0WKWWA=;
+        h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
+        b=wJxTewb1A8WOR3hcBGdT/BQJa4rCcOq2EPVtOuauuy4Nn1tL60H1eWIEZt0ztOo9f
+         6qVD+rx2fNDVRlpaK8+lITQ+H1ZxUdeIvfuS7vtAy9PMaMc4eKK7SXzt/jC3U6oVEp
+         SU2LOHhwikC3m+Qu+9zf8BiCkOkjtZKoYagndAeU4FdapikRsUGEdESeiT4S4iLjrJ
+         uc+6UyEyG+aM5ONt/TM7PO/eK2ZXcff42739Jr0uCyCYnQe+epC8KJcphDPpR2OTZI
+         5t+/Qd0LlOvaaY21NpGfVH6DRlWVgfOfiaoehn8YZdmObYYuQ7n91xleGrzYENC74/
+         jpjLBabVpnvrg==
+Message-ID: <0da67f73-dd73-7e6d-74c2-14aec5d79902@gotplt.org>
+Date:   Tue, 22 Nov 2022 05:20:37 -0500
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH 4/4] fortify: Use __builtin_dynamic_object_size() when
+ available
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
+Cc:     Miguel Ojeda <ojeda@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Tom Rix <trix@redhat.com>, llvm@lists.linux.dev,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        linux-kernel@vger.kernel.org
+References: <20220920192202.190793-1-keescook@chromium.org>
+ <20220920192202.190793-5-keescook@chromium.org>
+From:   Siddhesh Poyarekar <siddhesh@gotplt.org>
+In-Reply-To: <20220920192202.190793-5-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Subject: Re: [v2] wifi: p54: Replace zero-length array of trailing structs
- with flex-array
-From:   Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <20221118234240.gonna.369-kees@kernel.org>
-References: <20221118234240.gonna.369-kees@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christian Lamparter <chunkeey@googlemail.com>,
-        Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-ID: <166911223826.12832.1582733446998520230.kvalo@kernel.org>
-Date:   Tue, 22 Nov 2022 10:17:21 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> wrote:
-
-> Zero-length arrays are deprecated[1] and are being replaced with
-> flexible array members in support of the ongoing efforts to tighten the
-> FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
-> with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
+On 2022-09-20 15:22, Kees Cook wrote:
+> Since the commits starting with c37495d6254c ("slab: add __alloc_size
+> attributes for better bounds checking"), the compilers have runtime
+> allocation size hints available in some places. This was immediately
+> available to CONFIG_UBSAN_BOUNDS, but CONFIG_FORTIFY_SOURCE needed
+> updating to explicitly make use the hints via the associated
+> __builtin_dynamic_object_size() helper. Detect and use the builtin when
+> it is available, increasing the accuracy of the mitigation. When runtime
+> sizes are not available, __builtin_dynamic_object_size() falls back to
+> __builtin_object_size(), leaving the existing bounds checking unchanged.
 > 
-> Replace zero-length array with flexible-array member.
+> Additionally update the VMALLOC_LINEAR_OVERFLOW LKDTM test to make the
+> hint invisible, otherwise the architectural defense is not exercised
+> (the buffer overflow is detected in the memset() rather than when it
+> crosses the edge of the allocation).
 > 
-> This results in no differences in binary output (most especially because
-> struct pda_antenna_gain is unused). The struct is kept for future
-> reference.
-> 
-> [1] https://github.com/KSPP/linux/issues/78
-> 
-> Cc: Christian Lamparter <chunkeey@googlemail.com>
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
+> Cc: Miguel Ojeda <ojeda@kernel.org>
+> Cc: Siddhesh Poyarekar <siddhesh@gotplt.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Tom Rix <trix@redhat.com>
+> Cc: linux-hardening@vger.kernel.org
+> Cc: llvm@lists.linux.dev
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-> Acked-by: Christian Lamparter <chunkeey@gmail.com>
+> ---
+>   drivers/misc/lkdtm/heap.c           | 1 +
+>   include/linux/compiler_attributes.h | 5 +++++
+>   include/linux/fortify-string.h      | 7 +++++++
+>   3 files changed, 13 insertions(+)
 
-Patch applied to wireless-next.git, thanks.
+Hi Kees,
 
-3b79d4bad3a0 wifi: p54: Replace zero-length array of trailing structs with flex-array
+Circling back on this, I noticed that all but this patch got pulled into 
+Linus' tree.  Is there a reason why this has been held back?
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20221118234240.gonna.369-kees@kernel.org/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Thanks,
+Sid
