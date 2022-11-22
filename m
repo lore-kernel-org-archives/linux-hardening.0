@@ -2,31 +2,31 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51645C4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 22 Nov 2022 11:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 691E8C07E9D
+	for <linux-hardening@archiver.kernel.org>; Tue, 22 Nov 2022 11:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233083AbiKVLNC (ORCPT
+        id S232930AbiKVLNF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 22 Nov 2022 06:13:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59812 "EHLO
+        Tue, 22 Nov 2022 06:13:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233035AbiKVLMu (ORCPT
+        with ESMTP id S233033AbiKVLMu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Tue, 22 Nov 2022 06:12:50 -0500
 Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5ABC26E7;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F8002673;
         Tue, 22 Nov 2022 03:12:48 -0800 (PST)
 Received: from localhost.localdomain (unknown [83.149.199.65])
-        by mail.ispras.ru (Postfix) with ESMTPSA id 0EA8940737D3;
-        Tue, 22 Nov 2022 11:12:43 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 0EA8940737D3
+        by mail.ispras.ru (Postfix) with ESMTPSA id 5F9CF40737BF;
+        Tue, 22 Nov 2022 11:12:41 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 5F9CF40737BF
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-        s=default; t=1669115563;
-        bh=JKR4+ObQtQjwfYYyUcXe53+b720hGz8SOe315kCniAg=;
+        s=default; t=1669115561;
+        bh=yLQbGes8MGXboxk0W0ZEpZH6+wuhbRcghPYnIxLpUGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k4Abx8h56041Vq0U7YfMBwa3ZyQpLeGUi9nHJQRAKJc0apeT9oSeCEasQ1JPH1llt
-         OeJjy3sOgtT16CpHIqFLQwcX5yOeZ+Ht7otPJ7EXOy5UlpnQYyZps+WxJ+bTQqEGe3
-         Q8RGjV1KB/cdNjIAseSi6o2/fRWnG8w1h2hlEHQ0=
+        b=nXF1x2Zs9hgLsP6hyg+4GamD9SM67ZWEuTf5NPpXk1gRC1LYnMzHVmlsTYWjMZQka
+         j2KMoOit5Cl6d5Gh4iITL6MLul5NRLNQmCEQDNmQz8ySaheTi2NzeaozLsPBNU7di1
+         8dkuNtO6oJGySRYudBBLyTcachKtdGNhrjqAUumI=
 From:   Evgeniy Baskov <baskov@ispras.ru>
 To:     Ard Biesheuvel <ardb@kernel.org>
 Cc:     Evgeniy Baskov <baskov@ispras.ru>, Borislav Petkov <bp@alien8.de>,
@@ -41,9 +41,9 @@ Cc:     Evgeniy Baskov <baskov@ispras.ru>, Borislav Petkov <bp@alien8.de>,
         joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
         x86@kernel.org, linux-efi@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v3 11/24] x86/boot: Make console interface more abstract
-Date:   Tue, 22 Nov 2022 14:12:20 +0300
-Message-Id: <3b10a3a30ed854e42291c64cc4446c3711a48bcf.1668958803.git.baskov@ispras.ru>
+Subject: [PATCH v3 05/24] x86/boot: Support 4KB pages for identity mapping
+Date:   Tue, 22 Nov 2022 14:12:14 +0300
+Message-Id: <4fe2e1ba651511d279f6c32af1f0c993083e64ac.1668958803.git.baskov@ispras.ru>
 X-Mailer: git-send-email 2.37.4
 In-Reply-To: <cover.1668958803.git.baskov@ispras.ru>
 References: <cover.1668958803.git.baskov@ispras.ru>
@@ -53,339 +53,307 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-To be able to extract kernel from EFI, console output functions
-need to be replaceable by alternative implementations.
+Current identity mapping code only supports 2M and 1G pages.
+4KB pages are desirable for better memory protection granularity
+in compressed kernel code.
 
-Make all of those functions pointers.
-Move serial console code to separate file.
+Change identity mapping code to support 4KB pages and
+memory remapping with different attributes.
 
 Tested-by: Mario Limonciello <mario.limonciello@amd.com>
 Signed-off-by: Evgeniy Baskov <baskov@ispras.ru>
 ---
- arch/x86/boot/compressed/Makefile |   2 +-
- arch/x86/boot/compressed/misc.c   | 109 +------------------------
- arch/x86/boot/compressed/misc.h   |   9 ++-
- arch/x86/boot/compressed/putstr.c | 130 ++++++++++++++++++++++++++++++
- 4 files changed, 139 insertions(+), 111 deletions(-)
- create mode 100644 arch/x86/boot/compressed/putstr.c
+ arch/x86/include/asm/init.h |   1 +
+ arch/x86/mm/ident_map.c     | 185 +++++++++++++++++++++++++++++-------
+ 2 files changed, 154 insertions(+), 32 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 64de6c2b1740..f79273f46cc7 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -93,7 +93,7 @@ $(obj)/misc.o: $(obj)/../voffset.h
+diff --git a/arch/x86/include/asm/init.h b/arch/x86/include/asm/init.h
+index 5f1d3c421f68..a8277ee82c51 100644
+--- a/arch/x86/include/asm/init.h
++++ b/arch/x86/include/asm/init.h
+@@ -8,6 +8,7 @@ struct x86_mapping_info {
+ 	unsigned long page_flag;	 /* page flag for PMD or PUD entry */
+ 	unsigned long offset;		 /* ident mapping offset */
+ 	bool direct_gbpages;		 /* PUD level 1GB page support */
++	bool allow_4kpages;		 /* Allow more granular mappings with 4K pages */
+ 	unsigned long kernpg_flag;	 /* kernel pagetable flag override */
+ };
  
- vmlinux-objs-y := $(obj)/vmlinux.lds $(obj)/kernel_info.o $(obj)/head_$(BITS).o \
- 	$(obj)/misc.o $(obj)/string.o $(obj)/cmdline.o $(obj)/error.o \
--	$(obj)/piggy.o $(obj)/cpuflags.o
-+	$(obj)/piggy.o $(obj)/cpuflags.o $(obj)/putstr.o
- 
- vmlinux-objs-$(CONFIG_EARLY_PRINTK) += $(obj)/early_serial_console.o
- vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr.o
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index 0c7ec290044d..aa4a22bc9cf9 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -53,13 +53,6 @@ struct port_io_ops pio_ops;
- memptr free_mem_ptr;
- memptr free_mem_end_ptr;
- 
--static char *vidmem;
--static int vidport;
--
--/* These might be accessed before .bss is cleared, so use .data instead. */
--static int lines __section(".data");
--static int cols __section(".data");
--
- #ifdef CONFIG_KERNEL_GZIP
- #include "../../../../lib/decompress_inflate.c"
- #endif
-@@ -92,95 +85,6 @@ static int cols __section(".data");
-  * ../header.S.
+diff --git a/arch/x86/mm/ident_map.c b/arch/x86/mm/ident_map.c
+index 968d7005f4a7..662e794a325d 100644
+--- a/arch/x86/mm/ident_map.c
++++ b/arch/x86/mm/ident_map.c
+@@ -4,24 +4,127 @@
+  * included by both the compressed kernel and the regular kernel.
   */
  
--static void scroll(void)
--{
--	int i;
--
--	memmove(vidmem, vidmem + cols * 2, (lines - 1) * cols * 2);
--	for (i = (lines - 1) * cols * 2; i < lines * cols * 2; i += 2)
--		vidmem[i] = ' ';
--}
--
--#define XMTRDY          0x20
--
--#define TXR             0       /*  Transmit register (WRITE) */
--#define LSR             5       /*  Line Status               */
--static void serial_putchar(int ch)
--{
--	unsigned timeout = 0xffff;
--
--	while ((inb(early_serial_base + LSR) & XMTRDY) == 0 && --timeout)
--		cpu_relax();
--
--	outb(ch, early_serial_base + TXR);
--}
--
--void __putstr(const char *s)
--{
--	int x, y, pos;
--	char c;
--
--	if (early_serial_base) {
--		const char *str = s;
--		while (*str) {
--			if (*str == '\n')
--				serial_putchar('\r');
--			serial_putchar(*str++);
--		}
--	}
--
--	if (lines == 0 || cols == 0)
--		return;
--
--	x = boot_params->screen_info.orig_x;
--	y = boot_params->screen_info.orig_y;
--
--	while ((c = *s++) != '\0') {
--		if (c == '\n') {
--			x = 0;
--			if (++y >= lines) {
--				scroll();
--				y--;
--			}
--		} else {
--			vidmem[(x + cols * y) * 2] = c;
--			if (++x >= cols) {
--				x = 0;
--				if (++y >= lines) {
--					scroll();
--					y--;
--				}
--			}
--		}
--	}
--
--	boot_params->screen_info.orig_x = x;
--	boot_params->screen_info.orig_y = y;
--
--	pos = (x + cols * y) * 2;	/* Update cursor position */
--	outb(14, vidport);
--	outb(0xff & (pos >> 9), vidport+1);
--	outb(15, vidport);
--	outb(0xff & (pos >> 1), vidport+1);
--}
--
--void __puthex(unsigned long value)
--{
--	char alpha[2] = "0";
--	int bits;
--
--	for (bits = sizeof(value) * 8 - 4; bits >= 0; bits -= 4) {
--		unsigned long digit = (value >> bits) & 0xf;
--
--		if (digit < 0xA)
--			alpha[0] = '0' + digit;
--		else
--			alpha[0] = 'a' + (digit - 0xA);
--
--		__putstr(alpha);
--	}
--}
--
- #ifdef CONFIG_X86_NEED_RELOCS
- static void handle_relocations(void *output, unsigned long output_len,
- 			       unsigned long virt_addr)
-@@ -406,17 +310,6 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
- 
- 	sanitize_boot_params(boot_params);
- 
--	if (boot_params->screen_info.orig_video_mode == 7) {
--		vidmem = (char *) 0xb0000;
--		vidport = 0x3b4;
--	} else {
--		vidmem = (char *) 0xb8000;
--		vidport = 0x3d4;
--	}
--
--	lines = boot_params->screen_info.orig_video_lines;
--	cols = boot_params->screen_info.orig_video_cols;
--
- 	init_default_io_ops();
- 
- 	/*
-@@ -427,7 +320,7 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
- 	 */
- 	early_tdx_detect();
- 
--	console_init();
-+	init_bare_console();
- 
- 	/*
- 	 * Save RSDP address for later use. Have this after console_init()
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 033db9b536e6..38d31bec062d 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -57,8 +57,8 @@ extern memptr free_mem_end_ptr;
- void *malloc(int size);
- void free(void *where);
- extern struct boot_params *boot_params;
--void __putstr(const char *s);
--void __puthex(unsigned long value);
-+extern void (*__putstr)(const char *s);
-+extern void (*__puthex)(unsigned long value);
- #define error_putstr(__x)  __putstr(__x)
- #define error_puthex(__x)  __puthex(__x)
- 
-@@ -128,6 +128,11 @@ static inline void console_init(void)
- { }
- #endif
- 
-+/* putstr.c */
-+void init_bare_console(void);
-+void init_console_func(void (*putstr_)(const char *),
-+		       void (*puthex_)(unsigned long));
+-static void ident_pmd_init(struct x86_mapping_info *info, pmd_t *pmd_page,
+-			   unsigned long addr, unsigned long end)
++static void ident_pte_init(struct x86_mapping_info *info, pte_t *pte_page,
++			   unsigned long addr, unsigned long end,
++			   unsigned long flags)
+ {
+-	addr &= PMD_MASK;
+-	for (; addr < end; addr += PMD_SIZE) {
++	addr &= PAGE_MASK;
++	for (; addr < end; addr += PAGE_SIZE) {
++		pte_t *pte = pte_page + pte_index(addr);
 +
- #ifdef CONFIG_AMD_MEM_ENCRYPT
- void sev_enable(struct boot_params *bp);
- void sev_es_shutdown_ghcb(void);
-diff --git a/arch/x86/boot/compressed/putstr.c b/arch/x86/boot/compressed/putstr.c
-new file mode 100644
-index 000000000000..44a4c3dacec5
---- /dev/null
-+++ b/arch/x86/boot/compressed/putstr.c
-@@ -0,0 +1,130 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "misc.h"
-+
-+/* These might be accessed before .bss is cleared, so use .data instead. */
-+static char *vidmem __section(".data");
-+static int vidport __section(".data");
-+static int lines __section(".data");
-+static int cols __section(".data");
-+
-+void (*__putstr)(const char *s);
-+void (*__puthex)(unsigned long value);
-+
-+static void putstr(const char *s);
-+static void puthex(unsigned long value);
-+
-+void init_console_func(void (*putstr_)(const char *),
-+		       void (*puthex_)(unsigned long))
-+{
-+	__putstr = putstr_;
-+	__puthex = puthex_;
-+}
-+
-+void init_bare_console(void)
-+{
-+	init_console_func(putstr, puthex);
-+
-+	if (boot_params->screen_info.orig_video_mode == 7) {
-+		vidmem = (char *) 0xb0000;
-+		vidport = 0x3b4;
-+	} else {
-+		vidmem = (char *) 0xb8000;
-+		vidport = 0x3d4;
++		set_pte(pte, __pte((addr - info->offset) | flags));
 +	}
-+
-+	lines = boot_params->screen_info.orig_video_lines;
-+	cols = boot_params->screen_info.orig_video_cols;
-+
-+	console_init();
 +}
 +
-+static void scroll(void)
++pte_t *ident_split_large_pmd(struct x86_mapping_info *info,
++			     pmd_t *pmdp, unsigned long page_addr)
 +{
-+	int i;
++	unsigned long pmd_addr, page_flags;
++	pte_t *pte;
 +
-+	memmove(vidmem, vidmem + cols * 2, (lines - 1) * cols * 2);
-+	for (i = (lines - 1) * cols * 2; i < lines * cols * 2; i += 2)
-+		vidmem[i] = ' ';
++	pte = (pte_t *)info->alloc_pgt_page(info->context);
++	if (!pte)
++		return NULL;
++
++	pmd_addr = page_addr & PMD_MASK;
++
++	/* Not a large page - clear PSE flag */
++	page_flags = pmd_flags(*pmdp) & ~_PSE;
++	ident_pte_init(info, pte, pmd_addr, pmd_addr + PMD_SIZE, page_flags);
++
++	return pte;
 +}
 +
-+#define XMTRDY          0x20
-+
-+#define TXR             0       /*  Transmit register (WRITE) */
-+#define LSR             5       /*  Line Status               */
-+
-+static void serial_putchar(int ch)
++static int ident_pmd_init(struct x86_mapping_info *info, pmd_t *pmd_page,
++			  unsigned long addr, unsigned long end,
++			  unsigned long flags)
 +{
-+	unsigned int timeout = 0xffff;
++	unsigned long next;
++	bool new_table = 0;
 +
-+	while ((inb(early_serial_base + LSR) & XMTRDY) == 0 && --timeout)
-+		cpu_relax();
++	for (; addr < end; addr = next) {
+ 		pmd_t *pmd = pmd_page + pmd_index(addr);
++		pte_t *pte;
+ 
+-		if (pmd_present(*pmd))
++		next = (addr & PMD_MASK) + PMD_SIZE;
++		if (next > end)
++			next = end;
 +
-+	outb(ch, early_serial_base + TXR);
-+}
++		/*
++		 * Use 2M pages if 4k pages are not allowed or
++		 * we are not mapping extra, i.e. address and size are aligned.
++		 */
 +
-+static void putstr(const char *s)
-+{
-+	int x, y, pos;
-+	char c;
++		if (!info->allow_4kpages ||
++		    (!(addr & ~PMD_MASK) && next == addr + PMD_SIZE)) {
 +
-+	if (early_serial_base) {
-+		const char *str = s;
++			pmd_t pmdval;
 +
-+		while (*str) {
-+			if (*str == '\n')
-+				serial_putchar('\r');
-+			serial_putchar(*str++);
++			addr &= PMD_MASK;
++			pmdval = __pmd((addr - info->offset) | flags | _PSE);
++			set_pmd(pmd, pmdval);
+ 			continue;
 +		}
-+	}
 +
-+	if (lines == 0 || cols == 0)
-+		return;
-+
-+	x = boot_params->screen_info.orig_x;
-+	y = boot_params->screen_info.orig_y;
-+
-+	while ((c = *s++) != '\0') {
-+		if (c == '\n') {
-+			x = 0;
-+			if (++y >= lines) {
-+				scroll();
-+				y--;
-+			}
++		/*
++		 * If currently mapped page is large, we need to split it.
++		 * The case when we don't can remap 2M page to 2M page
++		 * with different flags is already covered above.
++		 *
++		 * If there's nothing mapped to desired address,
++		 * we need to allocate new page table.
++		 */
+ 
+-		set_pmd(pmd, __pmd((addr - info->offset) | info->page_flag));
++		if (pmd_large(*pmd)) {
++			pte = ident_split_large_pmd(info, pmd, addr);
++			new_table = 1;
++		} else if (!pmd_present(*pmd)) {
++			pte = (pte_t *)info->alloc_pgt_page(info->context);
++			new_table = 1;
 +		} else {
-+			vidmem[(x + cols * y) * 2] = c;
-+			if (++x >= cols) {
-+				x = 0;
-+				if (++y >= lines) {
-+					scroll();
-+					y--;
-+				}
-+			}
++			pte = pte_offset_kernel(pmd, 0);
++			new_table = 0;
 +		}
-+	}
 +
-+	boot_params->screen_info.orig_x = x;
-+	boot_params->screen_info.orig_y = y;
++		if (!pte)
++			return -ENOMEM;
 +
-+	pos = (x + cols * y) * 2;	/* Update cursor position */
-+	outb(14, vidport);
-+	outb(0xff & (pos >> 9), vidport+1);
-+	outb(15, vidport);
-+	outb(0xff & (pos >> 1), vidport+1);
-+}
++		ident_pte_init(info, pte, addr, next, flags);
 +
-+static void puthex(unsigned long value)
++		if (new_table)
++			set_pmd(pmd, __pmd(__pa(pte) | info->kernpg_flag));
+ 	}
++
++	return 0;
+ }
+ 
++
++pmd_t *ident_split_large_pud(struct x86_mapping_info *info,
++			     pud_t *pudp, unsigned long page_addr)
 +{
-+	char alpha[2] = "0";
-+	int bits;
++	unsigned long pud_addr, page_flags;
++	pmd_t *pmd;
 +
-+	for (bits = sizeof(value) * 8 - 4; bits >= 0; bits -= 4) {
-+		unsigned long digit = (value >> bits) & 0xf;
++	pmd = (pmd_t *)info->alloc_pgt_page(info->context);
++	if (!pmd)
++		return NULL;
 +
-+		if (digit < 0xA)
-+			alpha[0] = '0' + digit;
-+		else
-+			alpha[0] = 'a' + (digit - 0xA);
++	pud_addr = page_addr & PUD_MASK;
 +
-+		putstr(alpha);
-+	}
++	/* Not a large page - clear PSE flag */
++	page_flags = pud_flags(*pudp) & ~_PSE;
++	ident_pmd_init(info, pmd, pud_addr, pud_addr + PUD_SIZE, page_flags);
++
++	return pmd;
 +}
++
++
+ static int ident_pud_init(struct x86_mapping_info *info, pud_t *pud_page,
+ 			  unsigned long addr, unsigned long end)
+ {
+ 	unsigned long next;
++	bool new_table = 0;
++	int result;
+ 
+ 	for (; addr < end; addr = next) {
+ 		pud_t *pud = pud_page + pud_index(addr);
+@@ -31,28 +134,39 @@ static int ident_pud_init(struct x86_mapping_info *info, pud_t *pud_page,
+ 		if (next > end)
+ 			next = end;
+ 
++		/* Use 1G pages only if forced, even if they are supported. */
+ 		if (info->direct_gbpages) {
+ 			pud_t pudval;
+-
+-			if (pud_present(*pud))
+-				continue;
++			unsigned long flags;
+ 
+ 			addr &= PUD_MASK;
+-			pudval = __pud((addr - info->offset) | info->page_flag);
++			flags = info->page_flag | _PSE;
++			pudval = __pud((addr - info->offset) | flags);
++
+ 			set_pud(pud, pudval);
+ 			continue;
+ 		}
+ 
+-		if (pud_present(*pud)) {
++		if (pud_large(*pud)) {
++			pmd = ident_split_large_pud(info, pud, addr);
++			new_table = 1;
++		} else if (!pud_present(*pud)) {
++			pmd = (pmd_t *)info->alloc_pgt_page(info->context);
++			new_table = 1;
++		} else {
+ 			pmd = pmd_offset(pud, 0);
+-			ident_pmd_init(info, pmd, addr, next);
+-			continue;
++			new_table = 0;
+ 		}
+-		pmd = (pmd_t *)info->alloc_pgt_page(info->context);
++
+ 		if (!pmd)
+ 			return -ENOMEM;
+-		ident_pmd_init(info, pmd, addr, next);
+-		set_pud(pud, __pud(__pa(pmd) | info->kernpg_flag));
++
++		result = ident_pmd_init(info, pmd, addr, next, info->page_flag);
++		if (result)
++			return result;
++
++		if (new_table)
++			set_pud(pud, __pud(__pa(pmd) | info->kernpg_flag));
+ 	}
+ 
+ 	return 0;
+@@ -63,6 +177,7 @@ static int ident_p4d_init(struct x86_mapping_info *info, p4d_t *p4d_page,
+ {
+ 	unsigned long next;
+ 	int result;
++	bool new_table = 0;
+ 
+ 	for (; addr < end; addr = next) {
+ 		p4d_t *p4d = p4d_page + p4d_index(addr);
+@@ -72,15 +187,14 @@ static int ident_p4d_init(struct x86_mapping_info *info, p4d_t *p4d_page,
+ 		if (next > end)
+ 			next = end;
+ 
+-		if (p4d_present(*p4d)) {
++		if (!p4d_present(*p4d)) {
++			pud = (pud_t *)info->alloc_pgt_page(info->context);
++			new_table = 1;
++		} else {
+ 			pud = pud_offset(p4d, 0);
+-			result = ident_pud_init(info, pud, addr, next);
+-			if (result)
+-				return result;
+-
+-			continue;
++			new_table = 0;
+ 		}
+-		pud = (pud_t *)info->alloc_pgt_page(info->context);
++
+ 		if (!pud)
+ 			return -ENOMEM;
+ 
+@@ -88,19 +202,22 @@ static int ident_p4d_init(struct x86_mapping_info *info, p4d_t *p4d_page,
+ 		if (result)
+ 			return result;
+ 
+-		set_p4d(p4d, __p4d(__pa(pud) | info->kernpg_flag));
++		if (new_table)
++			set_p4d(p4d, __p4d(__pa(pud) | info->kernpg_flag));
+ 	}
+ 
+ 	return 0;
+ }
+ 
+-int kernel_ident_mapping_init(struct x86_mapping_info *info, pgd_t *pgd_page,
+-			      unsigned long pstart, unsigned long pend)
++int kernel_ident_mapping_init(struct x86_mapping_info *info,
++			      pgd_t *pgd_page, unsigned long pstart,
++			      unsigned long pend)
+ {
+ 	unsigned long addr = pstart + info->offset;
+ 	unsigned long end = pend + info->offset;
+ 	unsigned long next;
+ 	int result;
++	bool new_table;
+ 
+ 	/* Set the default pagetable flags if not supplied */
+ 	if (!info->kernpg_flag)
+@@ -117,20 +234,24 @@ int kernel_ident_mapping_init(struct x86_mapping_info *info, pgd_t *pgd_page,
+ 		if (next > end)
+ 			next = end;
+ 
+-		if (pgd_present(*pgd)) {
++		if (!pgd_present(*pgd)) {
++			p4d = (p4d_t *)info->alloc_pgt_page(info->context);
++			new_table = 1;
++		} else {
+ 			p4d = p4d_offset(pgd, 0);
+-			result = ident_p4d_init(info, p4d, addr, next);
+-			if (result)
+-				return result;
+-			continue;
++			new_table = 0;
+ 		}
+ 
+-		p4d = (p4d_t *)info->alloc_pgt_page(info->context);
+ 		if (!p4d)
+ 			return -ENOMEM;
++
+ 		result = ident_p4d_init(info, p4d, addr, next);
+ 		if (result)
+ 			return result;
++
++		if (!new_table)
++			continue;
++
+ 		if (pgtable_l5_enabled()) {
+ 			set_pgd(pgd, __pgd(__pa(p4d) | info->kernpg_flag));
+ 		} else {
 -- 
 2.37.4
 
