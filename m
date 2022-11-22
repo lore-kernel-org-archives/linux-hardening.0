@@ -2,31 +2,31 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892CBC43219
-	for <linux-hardening@archiver.kernel.org>; Tue, 22 Nov 2022 11:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96449C4321E
+	for <linux-hardening@archiver.kernel.org>; Tue, 22 Nov 2022 11:13:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233008AbiKVLM4 (ORCPT
+        id S231318AbiKVLM7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 22 Nov 2022 06:12:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59472 "EHLO
+        Tue, 22 Nov 2022 06:12:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232999AbiKVLMr (ORCPT
+        with ESMTP id S233013AbiKVLMt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 22 Nov 2022 06:12:47 -0500
+        Tue, 22 Nov 2022 06:12:49 -0500
 Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 866C81030;
-        Tue, 22 Nov 2022 03:12:44 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F354A4;
+        Tue, 22 Nov 2022 03:12:48 -0800 (PST)
 Received: from localhost.localdomain (unknown [83.149.199.65])
-        by mail.ispras.ru (Postfix) with ESMTPSA id 4CF12419E9F0;
-        Tue, 22 Nov 2022 11:12:40 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 4CF12419E9F0
+        by mail.ispras.ru (Postfix) with ESMTPSA id 0491940737C3;
+        Tue, 22 Nov 2022 11:12:42 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 0491940737C3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-        s=default; t=1669115560;
-        bh=4ZeCfeL+Tv55vKbW3Vc1Ph6Cjl3WL9hmJicrinwykXM=;
+        s=default; t=1669115562;
+        bh=zJyjXdeGncN0/sCqkQ6LWnTu+HAOR00PivwRmGI/62E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LJ+J+4AHnuC2D2QMr1jHJSyjPXrNYVvD5P4BnmbIvK/cWY1vZJBkzMMOQB8GL/p17
-         UpFi694ht927LmhYZA4meBb6AfGoTq9HdUGyglSFGnIxUCN2x+YtLmOyFi5Hcla056
-         qEQVE5BwUH9rZ7DQwz54vwlIGTIId+iTIGi2Y1QA=
+        b=XOkIZdYOveVvoUdyG5wJ1ub0mdhP43FQ/wnUmCYA90XpAOfHLev5q4XWjd+mmHXnX
+         RvZZEsePoUe5/5lNRDYmdrM0J2lSA2lqxwSv0C5tolDpC9/FjmGGXfpF1KrlTUUqh/
+         XXcfH0sglQeGoz6jxe4vQk2uu/eZ6L8XQG+M+5PM=
 From:   Evgeniy Baskov <baskov@ispras.ru>
 To:     Ard Biesheuvel <ardb@kernel.org>
 Cc:     Evgeniy Baskov <baskov@ispras.ru>, Borislav Petkov <bp@alien8.de>,
@@ -41,9 +41,9 @@ Cc:     Evgeniy Baskov <baskov@ispras.ru>, Borislav Petkov <bp@alien8.de>,
         joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
         x86@kernel.org, linux-efi@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v3 01/24] x86/boot: Align vmlinuz sections on page size
-Date:   Tue, 22 Nov 2022 14:12:10 +0300
-Message-Id: <a2cff4833c33a3493764c00794416ce6536e66ad.1668958803.git.baskov@ispras.ru>
+Subject: [PATCH v3 07/24] x86/build: Check W^X of vmlinux during build
+Date:   Tue, 22 Nov 2022 14:12:16 +0300
+Message-Id: <686f40eb9c83f9b5e4deba7bfb6cc9c0626d310c.1668958803.git.baskov@ispras.ru>
 X-Mailer: git-send-email 2.37.4
 In-Reply-To: <cover.1668958803.git.baskov@ispras.ru>
 References: <cover.1668958803.git.baskov@ispras.ru>
@@ -53,49 +53,39 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-To protect sections on page table level each section
-needs to be aligned on page size (4KB).
+Check if there are simultaneously writable and executable
+program segments in vmlinux ELF image and fail build if there are any.
 
-Set sections alignment in linker script.
+This would prevent accidental introduction of RWX segments.
 
 Tested-by: Mario Limonciello <mario.limonciello@amd.com>
 Signed-off-by: Evgeniy Baskov <baskov@ispras.ru>
 ---
- arch/x86/boot/compressed/vmlinux.lds.S | 6 ++++++
+ arch/x86/boot/compressed/Makefile | 6 ++++++
  1 file changed, 6 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-index 112b2375d021..6be90f1a1198 100644
---- a/arch/x86/boot/compressed/vmlinux.lds.S
-+++ b/arch/x86/boot/compressed/vmlinux.lds.S
-@@ -27,21 +27,27 @@ SECTIONS
- 		HEAD_TEXT
- 		_ehead = . ;
- 	}
-+	. = ALIGN(PAGE_SIZE);
- 	.rodata..compressed : {
-+		_compressed = .;
- 		*(.rodata..compressed)
-+		_ecompressed = .;
- 	}
-+	. = ALIGN(PAGE_SIZE);
- 	.text :	{
- 		_text = .; 	/* Text */
- 		*(.text)
- 		*(.text.*)
- 		_etext = . ;
- 	}
-+	. = ALIGN(PAGE_SIZE);
- 	.rodata : {
- 		_rodata = . ;
- 		*(.rodata)	 /* read-only data */
- 		*(.rodata.*)
- 		_erodata = . ;
- 	}
-+	. = ALIGN(PAGE_SIZE);
- 	.data :	{
- 		_data = . ;
- 		*(.data)
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 3a261abb6d15..64de6c2b1740 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -112,11 +112,17 @@ vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
+ vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
+ efi-obj-$(CONFIG_EFI_STUB) = $(objtree)/drivers/firmware/efi/libstub/lib.a
+ 
++quiet_cmd_wx_check = WXCHK   $<
++cmd_wx_check = if $(OBJDUMP) -p $< | grep "flags .wx" > /dev/null; \
++	       then (echo >&2 "$<: Simultaneously writable and executable sections are prohibited"; \
++		     /bin/false); fi
++
+ $(obj)/vmlinux: $(vmlinux-objs-y) $(efi-obj-y) FORCE
+ 	$(call if_changed,ld)
+ 
+ OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
+ $(obj)/vmlinux.bin: vmlinux FORCE
++	$(call cmd,wx_check)
+ 	$(call if_changed,objcopy)
+ 
+ targets += $(patsubst $(obj)/%,%,$(vmlinux-objs-y)) vmlinux.bin.all vmlinux.relocs
 -- 
 2.37.4
 
