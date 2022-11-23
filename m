@@ -2,54 +2,89 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5F0C433FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 23 Nov 2022 05:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CD0C4332F
+	for <linux-hardening@archiver.kernel.org>; Wed, 23 Nov 2022 15:30:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235741AbiKWFP4 (ORCPT
+        id S238334AbiKWPaf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 23 Nov 2022 00:15:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48090 "EHLO
+        Wed, 23 Nov 2022 10:30:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235728AbiKWFPz (ORCPT
+        with ESMTP id S238314AbiKWPaE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 23 Nov 2022 00:15:55 -0500
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B39ABECCD0
-        for <linux-hardening@vger.kernel.org>; Tue, 22 Nov 2022 21:15:54 -0800 (PST)
-Received: by mail-pg1-x52b.google.com with SMTP id v3so15877488pgh.4
-        for <linux-hardening@vger.kernel.org>; Tue, 22 Nov 2022 21:15:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SpV9LZG6lum2+mJs6hiaJhY/GA7UnSa+zZbSm43A0ug=;
-        b=cDeVvprPd40bk4/tjBwKAlkCE7CYWPe+LHBDXgCiAgsBMQBPE6TpXcNgWUk3jEhejY
-         JGf+qknBzyWA481RCia2iuQpJZtg0muVzCUri5xXZk1KHO/zAwZy0qft9gdlIZMQLONN
-         br2iEl5Zwjuz3zGFjCIRK0CksLz8BBUUnyhqI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SpV9LZG6lum2+mJs6hiaJhY/GA7UnSa+zZbSm43A0ug=;
-        b=n7RacXLjJZ+NJC0bovbTwDJVYCjzre2psQG36XBxfMsF9DNJi5QSiAZdvYdBQd9RZN
-         uPug6qD+Z0HVczrxWFesLPrPVoLPQKt6yK3x8W1A0BS/R9koLJT28oPHV/WRUD2C00lJ
-         zmu7xuWSCym+4wvNJeyd4gIRcfuU6KirGvPUIsnEsTNvsIvJyTEvjT2P3w0mxbp75F5k
-         hITU+UpbaE5IFEa++ZsaRHM0mk9WeJ6rtNPmQwbhvir9sDtHuelyZRBoSjPnNDi6ywjE
-         1fUoZ1aBQN8AvRRYR8x4DHoQgHlC8YhAsu448qhFA28VoTW44a6Z1Sj3xhVUmcOdouey
-         ixaA==
-X-Gm-Message-State: ANoB5pkzYX6LbnqhuB2Pn4wtf2YKL8Ajm6T7k9VSsj2tyV3ATInahpoL
-        uFjoMtB+JLl22K5W7Xls9290fw==
-X-Google-Smtp-Source: AA0mqf5hwNBtV6faGgkTJ4/wTG7/m9Pmba4L3GkFgHEdHUI22Lo6Bdo1kYX8qMnu6KN0VLwUccrhnw==
-X-Received: by 2002:a63:5153:0:b0:41a:4bd4:f43f with SMTP id r19-20020a635153000000b0041a4bd4f43fmr7621643pgl.460.1669180554101;
-        Tue, 22 Nov 2022 21:15:54 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 11-20020a17090a1a0b00b00218cd71781csm451793pjk.51.2022.11.22.21.15.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Nov 2022 21:15:52 -0800 (PST)
-Date:   Tue, 22 Nov 2022 21:15:51 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Siddhesh Poyarekar <siddhesh@gotplt.org>
+        Wed, 23 Nov 2022 10:30:04 -0500
+Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FE66C4B5F;
+        Wed, 23 Nov 2022 07:29:08 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 5CB5C921989;
+        Wed, 23 Nov 2022 15:29:05 +0000 (UTC)
+Received: from pdx1-sub0-mail-a306.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 62A109215A8;
+        Wed, 23 Nov 2022 15:29:04 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1669217344; a=rsa-sha256;
+        cv=none;
+        b=6TW77D8Ar+SeO6vesgbCSPdzBQ7D2R0FKH7bxJXtSZY5R8jjk6rJ7HMXoBvo6p2gS6mENq
+        bte6P37T0JeFR9kNmEOFTfmciHaCYw8J6k3uziatZRwbAR8Fv8rrIPok6Ag3NITqXGfKTW
+        0kLJ57oJ3ei8Sp1nUYVz2y9SWpJ2Vs7qLm0rDsdTCSiE3ZCANpygMSMGHQ02epRiqoqkld
+        FhR3AsWdLrE8bcBywDeug8GO404oURXCQxsxel6QoXqvPIu9dG4+TM1yBEpBZyBAmxd+g+
+        k2ljlb/HreNiANr/l4D1bwFOojjcazrK0SURo7alKsVPS8zo8tnPPFWQ+xveLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1669217344;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=sGvRTBGDTkBsnA1+bVPHCS1GTnaqg1DEaasrICdNkt0=;
+        b=loHbejB12ouufdZUXF2Giv3hJ3OrQs1PdWmi4OehcWQ7iJ/9STJAl5gUAmnLWwHL0yqyko
+        w3C24fi3NbdcZe1bqXsLiK7yCQ8veZmv5HnJM0nlIB6IGyeB2kU1Xdq3tx8+NM+3eybXqA
+        gT1E4p0ESs707HYdX+/aRkywowC2LQFN138OadJc9cQSq+G4hjltm3eA+mO8xzmdEGfiDe
+        zStMarlMErsK9hD/Hys9/HVp4vCKRTF3bctZLYt8UKPqozgX565HN70JMfpiPQYZeBDDvk
+        Tq6Buv7kTExYN53e+tjugLSMG1Ls/tcY0dOQkaSeYhGN0W0I2rIJDYvkNMWdcQ==
+ARC-Authentication-Results: i=1;
+        rspamd-64c57ffbcf-j2d44;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=siddhesh@gotplt.org
+X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|siddhesh@gotplt.org
+X-MailChannels-Auth-Id: dreamhost
+X-Absorbed-Decisive: 01c853c271ab01f2_1669217344831_2421916507
+X-MC-Loop-Signature: 1669217344831:2788001007
+X-MC-Ingress-Time: 1669217344831
+Received: from pdx1-sub0-mail-a306.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.116.179.81 (trex/6.7.1);
+        Wed, 23 Nov 2022 15:29:04 +0000
+Received: from [192.168.0.182] (bras-base-toroon4834w-grc-23-76-68-24-147.dsl.bell.ca [76.68.24.147])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: siddhesh@gotplt.org)
+        by pdx1-sub0-mail-a306.dreamhost.com (Postfix) with ESMTPSA id 4NHQ5V3qF0z81;
+        Wed, 23 Nov 2022 07:29:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gotplt.org;
+        s=dreamhost; t=1669217344;
+        bh=sGvRTBGDTkBsnA1+bVPHCS1GTnaqg1DEaasrICdNkt0=;
+        h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
+        b=QExHXNZfe/T1hLFwa3wUEl72oNFOLGLjJc4j7xnnMWQha9tS9ihTYizhmrx6aS8cr
+         SvDcTY0G4BaELr+hzwYmoN1xIMiddgy34AKUAZBm7/+1Yo1QsoM3Pj0zReZa1Qg87Z
+         xTENwZNzUpM0Jmg0k+ain/kzruGmW48HzaP8DSnc/u3NV0z1Kdhf6lbjlAy6fByLsf
+         dc4pfQeyxdfnMjKntvrxrKzlRnHnEu4L941coBob1o3Fy16pDL1ffCH2LznufL07z1
+         bf3NzggJKtGjyre854J00wpEkOc9yLKkVGiKhiRjO4NTneChOmB7SUNWbh+zrDjnW2
+         Os6cRHArEzWrQ==
+Message-ID: <706f23a9-8798-b8b3-2934-c4b56ab34058@gotplt.org>
+Date:   Wed, 23 Nov 2022 10:29:01 -0500
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH 4/4] fortify: Use __builtin_dynamic_object_size() when
+ available
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>
 Cc:     linux-hardening@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Nick Desaulniers <ndesaulniers@google.com>,
@@ -58,66 +93,25 @@ Cc:     linux-hardening@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
         Juergen Gross <jgross@suse.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] fortify: Use __builtin_dynamic_object_size() when
- available
-Message-ID: <202211222113.10003CF8FD@keescook>
 References: <20220920192202.190793-1-keescook@chromium.org>
  <20220920192202.190793-5-keescook@chromium.org>
  <0da67f73-dd73-7e6d-74c2-14aec5d79902@gotplt.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0da67f73-dd73-7e6d-74c2-14aec5d79902@gotplt.org>
+ <202211222113.10003CF8FD@keescook>
+From:   Siddhesh Poyarekar <siddhesh@gotplt.org>
+In-Reply-To: <202211222113.10003CF8FD@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Nov 22, 2022 at 05:20:37AM -0500, Siddhesh Poyarekar wrote:
-> On 2022-09-20 15:22, Kees Cook wrote:
-> > Since the commits starting with c37495d6254c ("slab: add __alloc_size
-> > attributes for better bounds checking"), the compilers have runtime
-> > allocation size hints available in some places. This was immediately
-> > available to CONFIG_UBSAN_BOUNDS, but CONFIG_FORTIFY_SOURCE needed
-> > updating to explicitly make use the hints via the associated
-> > __builtin_dynamic_object_size() helper. Detect and use the builtin when
-> > it is available, increasing the accuracy of the mitigation. When runtime
-> > sizes are not available, __builtin_dynamic_object_size() falls back to
-> > __builtin_object_size(), leaving the existing bounds checking unchanged.
-> > 
-> > Additionally update the VMALLOC_LINEAR_OVERFLOW LKDTM test to make the
-> > hint invisible, otherwise the architectural defense is not exercised
-> > (the buffer overflow is detected in the memset() rather than when it
-> > crosses the edge of the allocation).
-> > 
-> > Cc: Miguel Ojeda <ojeda@kernel.org>
-> > Cc: Siddhesh Poyarekar <siddhesh@gotplt.org>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > Cc: Nathan Chancellor <nathan@kernel.org>
-> > Cc: Tom Rix <trix@redhat.com>
-> > Cc: linux-hardening@vger.kernel.org
-> > Cc: llvm@lists.linux.dev
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >   drivers/misc/lkdtm/heap.c           | 1 +
-> >   include/linux/compiler_attributes.h | 5 +++++
-> >   include/linux/fortify-string.h      | 7 +++++++
-> >   3 files changed, 13 insertions(+)
-> 
-> Hi Kees,
-> 
-> Circling back on this, I noticed that all but this patch got pulled into
-> Linus' tree.  Is there a reason why this has been held back?
+On 2022-11-23 00:15, Kees Cook wrote:
+> Yeah, it depended on a bunch of various clean-ups, which have finally
+> managed to land. It's late enough in the devel cycle that I suspect I
+> will hold this one back until after the merge window and then make sure
+> it has plenty of time to bake in -next. If the rest of the patches
+> continue to behave, I may change my mind... :)
 
-Hi!
+OK, thanks for responding!
 
-Yeah, it depended on a bunch of various clean-ups, which have finally
-managed to land. It's late enough in the devel cycle that I suspect I
-will hold this one back until after the merge window and then make sure
-it has plenty of time to bake in -next. If the rest of the patches
-continue to behave, I may change my mind... :)
-
--Kees
-
--- 
-Kees Cook
+Sid
