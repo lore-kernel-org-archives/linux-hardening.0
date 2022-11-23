@@ -2,121 +2,109 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1875BC4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 22 Nov 2022 16:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A53EBC433FE
+	for <linux-hardening@archiver.kernel.org>; Wed, 23 Nov 2022 01:31:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234060AbiKVQqt (ORCPT
+        id S235246AbiKWBbB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 22 Nov 2022 11:46:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46692 "EHLO
+        Tue, 22 Nov 2022 20:31:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234113AbiKVQqr (ORCPT
+        with ESMTP id S234457AbiKWBa7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 22 Nov 2022 11:46:47 -0500
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8233C697CA;
-        Tue, 22 Nov 2022 08:46:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-        Resent-Cc:Resent-Message-ID; bh=cfCEpsHVZR+VbInAoPMp32ekOw5sXB2mwaZRbX/GjM0=;
-        t=1669135605; x=1670345205; b=wBpYOUVpun4OcoDQh56MgJLB6Vonb0MoWY0iAxmiJ3s35eh
-        OtZ7qG4WKZC3Vz5KzAA5uyLFpEAgcHDjKZeaSfY0LrcG+t+RQoaQLHvxmdxbMPQFd43k63t81XJjp
-        kiDB9XlCfdXh5UUUiLpgv4lGc5J79x5L90v80KWf2RWryYpKO1Nv3z01HtQYf1MYI2pJDADZeKaTM
-        bWSZ7WZHJsy5eXgR5rrMSz3nnJSXG0CWt546zo/zpJb+hk1sc6syBMvoIjkjRVQSr9v5VYz/BtI+r
-        i5bMStm7akVf1xDQRHPxw04uPEVJlYdEeVwj0qCBsscf0nBsu0Q0ijIQoNS4b5WQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.96)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1oxWPS-006PQd-38;
-        Tue, 22 Nov 2022 17:46:11 +0100
-Message-ID: <1d3a2fafcc14de7406fd689029277fd74ed3ce87.camel@sipsolutions.net>
-Subject: Re: Coverity: iwl_mvm_sec_key_add(): Memory - corruptions
-From:   Johannes Berg <johannes@sipsolutions.net>
+        Tue, 22 Nov 2022 20:30:59 -0500
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E54A68DA7B
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Nov 2022 17:30:58 -0800 (PST)
+Received: by mail-pg1-x535.google.com with SMTP id q71so15510470pgq.8
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Nov 2022 17:30:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DKO5lR4cLz6p7NWkfnd0y6rPCWBH2+knxhaYnv/yN7g=;
+        b=NXD0++W1grzconoV0x+G2IAlIiJtVCOGTMBnUhvmAstsMhj6jtOs7BcAJGgKzdSGxJ
+         6WRKCQPUQQdVSYMLLzc9pngh3MZKR8YrFD8d/E9qcP1+rhgI4WqDBdm04K8qAIi5/dCs
+         l/OF72+iUkIrkggctoMI3+D8SQLzptPdnkw+nsDBb4TjXNCOUZkK4+AEHFZDAycjlOeW
+         mSZqXSpomAhvM2koEPenAJbEQl7m64YkqH7+NoPou3o3g13CGO3qQd3jpsYENN9pD+95
+         KZWGcbJIpU5W+68tUnqzWFjs0R7CLIucsBRjr7AHpne6oOJ+/xKUwsr2KtjsxZjhRTVc
+         Zt7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DKO5lR4cLz6p7NWkfnd0y6rPCWBH2+knxhaYnv/yN7g=;
+        b=51Nt6wCZ4lTBHZ828PdVAhFX760ADYeMvzRJTwQgcidFZmEhB2RNVRcQtTI7ERSc/Z
+         KcQyrh2p1bwJbQzrkQXPMrEP0WtHHTfpxXRbDFlT4LeumJyoeorWGKcJkFEzAcgRd76O
+         Pax3VlrcbXiUR2c/6WiZqoW4ZLdmBHbcZD40coTixfNtvTCKSb1WgiljzljJxJEmdzmc
+         ZL5Gr8ch8hKaiqK6ah+OMEIoNT9l6nBV8qwOH79J9wpcB97ZI9ciPjJ+lkBSRI8PWrTD
+         N49hZVXBkZtB387AarYnkFp9XPxwk9ubPw5no9H/xm8rJPOhljTImk9aXa7prjtKRd3C
+         XIzw==
+X-Gm-Message-State: ANoB5pkU3EL1CiCLv2mGY36F+y05bSLsncZ97VP/HP+kAhcrkfJpoxVE
+        M3shiuG1sLTXfM03x9Pq264rYA==
+X-Google-Smtp-Source: AA0mqf7QekbcagrdW2ZDZzvV7seCNJVnDeErvb+ZQk78iSZep5oGbGV2XKOj4eOZEI3kIJGB0bxSpg==
+X-Received: by 2002:a05:6a00:1a14:b0:572:5be2:505b with SMTP id g20-20020a056a001a1400b005725be2505bmr6959442pfv.52.1669167058288;
+        Tue, 22 Nov 2022 17:30:58 -0800 (PST)
+Received: from [2620:15c:29:203:2520:fc16:115d:2f43] ([2620:15c:29:203:2520:fc16:115d:2f43])
+        by smtp.gmail.com with ESMTPSA id r8-20020a170902be0800b00176e6f553efsm12647970pls.84.2022.11.22.17.30.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Nov 2022 17:30:57 -0800 (PST)
+Date:   Tue, 22 Nov 2022 17:30:57 -0800 (PST)
+From:   David Rientjes <rientjes@google.com>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Luca Coelho <luciano.coelho@intel.com>,
-        Haim Dreyfuss <haim.dreyfuss@intel.com>,
-        Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-        Petr Stourac <pstourac@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Mordechay Goodstein <mordechay.goodstein@intel.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Nathan Errera <nathan.errera@intel.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Shaul Triebitz <shaul.triebitz@intel.com>,
-        netdev@vger.kernel.org,
-        Gregory Greenman <gregory.greenman@intel.com>,
-        Abhishek Naik <abhishek.naik@intel.com>,
-        Jose Ignacio Tornos Martinez <jtornosm@redhat.com>,
-        Ayala Beker <ayala.beker@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org,
-        Sriram R <quic_srirrama@quicinc.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        Mike Golant <michael.golant@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Date:   Tue, 22 Nov 2022 17:46:09 +0100
-In-Reply-To: <202211181424.794FCAD@keescook>
-References: <202211180854.CD96D54D36@keescook>
-         <d4c07fa45de290f32611420e2f116d8a6e32d22a.camel@sipsolutions.net>
-         <202211181424.794FCAD@keescook>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
+cc:     Andrey Konovalov <andreyknvl@gmail.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-mm@kvack.org, kasan-dev@googlegroups.com,
+        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] mm: Make ksize() a reporting-only function
+In-Reply-To: <20221118035656.gonna.698-kees@kernel.org>
+Message-ID: <d49df494-7c42-1d2a-97c8-62972c0d6c03@google.com>
+References: <20221118035656.gonna.698-kees@kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 2022-11-18 at 14:25 -0800, Kees Cook wrote:
-> On Fri, Nov 18, 2022 at 10:04:38PM +0100, Johannes Berg wrote:
-> > On Fri, 2022-11-18 at 08:54 -0800, coverity-bot wrote:
-> > >=20
-> > > *** CID 1527370:  Memory - corruptions  (OVERRUN)
-> > > drivers/net/wireless/intel/iwlwifi/mvm/mld-key.c:123 in iwl_mvm_sec_k=
-ey_add()
-> > > 117
-> > > 118     	if (WARN_ON(keyconf->keylen > sizeof(cmd.u.add.key)))
-> > > 119     		return -EINVAL;
-> > > 120
-> > > 121     	if (keyconf->cipher =3D=3D WLAN_CIPHER_SUITE_WEP40 ||
-> > > 122     	    keyconf->cipher =3D=3D WLAN_CIPHER_SUITE_WEP104)
-> > > vvv     CID 1527370:  Memory - corruptions  (OVERRUN)
-> > > vvv     Overrunning buffer pointed to by "cmd.u.add.key + 3" of 32 by=
-tes by passing it to a function which accesses it at byte offset 34 using a=
-rgument "keyconf->keylen" (which evaluates to 32). [Note: The source code i=
-mplementation of the function has been overridden by a builtin model.]
-> > > 123     		memcpy(cmd.u.add.key + IWL_SEC_WEP_KEY_OFFSET, keyconf->key=
-,
-> > > 124     		       keyconf->keylen);
-> > > 125     	else
-> > > 126     		memcpy(cmd.u.add.key, keyconf->key, keyconf->keylen);
-> > > 127
-> > > 128     	if (keyconf->cipher =3D=3D WLAN_CIPHER_SUITE_TKIP) {
-> > >=20
-> > > If this is a false positive, please let us know so we can mark it as
-> > > such, or teach the Coverity rules to be smarter. If not, please make
-> > > sure fixes get into linux-next. :) For patches fixing this, please
-> > > include these lines (but double-check the "Fixes" first):
-> > >=20
-> >=20
-> > Well, I don't think you can teach coverity this easily, but the
-> > WARN_ON() check there is not really meant to protect this - WEP keys
-> > must have a length of either 5 or 13 bytes (40 or 104 bits!).
-> >=20
-> > So there's no issue here, but I'm not surprised that coverity wouldn't
-> > be able to figure that out through the stack.
->=20
-> Gotcha. And some other layer is doing the verification that cipher and
-> keylen are correctly matched?
+On Thu, 17 Nov 2022, Kees Cook wrote:
 
+> With all "silently resizing" callers of ksize() refactored, remove the
+> logic in ksize() that would allow it to be used to effectively change
+> the size of an allocation (bypassing __alloc_size hints, etc). Users
+> wanting this feature need to either use kmalloc_size_roundup() before an
+> allocation, or use krealloc() directly.
+> 
+> For kfree_sensitive(), move the unpoisoning logic inline. Replace the
+> some of the partially open-coded ksize() in __do_krealloc with ksize()
+> now that it doesn't perform unpoisoning.
+> 
+> Adjust the KUnit tests to match the new ksize() behavior.
+> 
+> Cc: Andrey Konovalov <andreyknvl@gmail.com>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Pekka Enberg <penberg@kernel.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Roman Gushchin <roman.gushchin@linux.dev>
+> Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+> Cc: Alexander Potapenko <glider@google.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Cc: linux-mm@kvack.org
+> Cc: kasan-dev@googlegroups.com
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Yes, the key must come through cfg80211_validate_key_settings() at some
-point.
-
-johannes
+Acked-by: David Rientjes <rientjes@google.com>
