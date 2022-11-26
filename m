@@ -2,231 +2,264 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B5BC46467
-	for <linux-hardening@archiver.kernel.org>; Sat, 26 Nov 2022 17:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0454FC4167B
+	for <linux-hardening@archiver.kernel.org>; Sat, 26 Nov 2022 17:09:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229551AbiKZREy (ORCPT
+        id S229769AbiKZRJo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 26 Nov 2022 12:04:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59120 "EHLO
+        Sat, 26 Nov 2022 12:09:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229531AbiKZREx (ORCPT
+        with ESMTP id S229462AbiKZRJm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 26 Nov 2022 12:04:53 -0500
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BD32165BD;
-        Sat, 26 Nov 2022 09:04:51 -0800 (PST)
-Received: by mail-pg1-x531.google.com with SMTP id r18so6306089pgr.12;
-        Sat, 26 Nov 2022 09:04:51 -0800 (PST)
+        Sat, 26 Nov 2022 12:09:42 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53CA419288;
+        Sat, 26 Nov 2022 09:09:41 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id k2-20020a17090a4c8200b002187cce2f92so10247286pjh.2;
+        Sat, 26 Nov 2022 09:09:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uKmnIaloULHriFcopQa51nxjENCmgGQKjpIIPfSTFtA=;
-        b=cUl3qd8uHgMRnh/jnbftDT5GuOqOGJykCT0pya8ESdkiNfooRYdYuiSOuFbi6w33q0
-         z54HxlT4PtUYM/1qhIPEZBiXQJ7WSuwNx2xlQgP6BKp21xw8RQoecof64jc7AaarEseG
-         7ooKsL4oeFBlvE3/IBHNRYQ6aDhlmVNYVB4pnJnhZyGAHQFKx1MYNc/wsFicJ+hqf5aZ
-         vruBYyyEKpuKKA5K53JKW+sitwUlXyLTjv5Z0OVBb/OOSxnU7i6Y//RxtAJYK4EYlaLO
-         tTPxVFL1iOHrADsTKZrnRNjFIOGluQkFeHLIsV05MxwKLlZcaJztx8K6uK1d/Zb/5RWM
-         FvRA==
+        bh=sLFIKfte67bdoQLm56Ip88k11Q1iXzAXCyP4EbfifyQ=;
+        b=Qqdy2+7IeuUQYby+p2g2YD8tGvWMxicv1Ioj0/ANeJyIqaeZBM+ryEn69gs8EgLQj8
+         OsKqfgMCujGLXOW7Brr6oT7X7RpQGkIeh7cBicSP0KCHGbD0EgyyjKfkdhKoPJLoltl/
+         OIcCd/599NWw12BSkXYU+SA/biJa98039xA0tllKPPxlMcjABR337XIFwWeGAslnt1Ia
+         s6byov1peg3lZfXd4v/t13hTYmMrLlAh82i4VRpvravpxGRxkZyAOCOOVTQ2RNLCj82i
+         5hqhd2OsBGXyLvFSRvdy6EMyY4zhHj9VQxumVWy5oQN7yjHQbLDwD7gAPBGQ+LvAXtUP
+         fBHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=uKmnIaloULHriFcopQa51nxjENCmgGQKjpIIPfSTFtA=;
-        b=tl5pp97gLbb9vdR3u9tUxW+mBU/13bWZ/OOc5ZfnxiZGIstl/t1XXxnxwWMFc1eGxS
-         uE2l+ZpVM1ppaQB6r44D3D94jsYJOX/FH9ChVnSXrywIvBnlnLKs2P4+aBP8qMDjHly9
-         m+UFKA1Ws+iowoJ+JcihdwGO2EBUJkkQIGubn2xyxs4Q9Gb6j8YXuiFqxLbiNyu6XWJF
-         Nv3s4lJOnp37AyYfBnr9RUhQh3MCi2GHdMbKKhQ1gFXEcmf97JBuNUd9Vcj/GhaOOMGv
-         5if6PLUQaWz97y5tvkpXE05oA5EnrBtTjXwQZ5X6jbQjKrNeQ9NkqMmHFETXxf4o/jGf
-         cKwA==
-X-Gm-Message-State: ANoB5pl4xZs77uHZX9OD67Y/sASWKPpMnmEIkUVsmDdpUNyqKV1YREuT
-        i4h85vgQae/Oz2hOipbd7VcrOQUiJGogDIauf6lJDvEBTm0=
-X-Google-Smtp-Source: AA0mqf7LcR92cxqWYPsjOyXeEfk+DWYLmX6aavVi7/wkWWex0aMbJRaW7PDJ8WhIgUqw7J233DDg7osc4GCEU+Cq+WU=
-X-Received: by 2002:a63:1659:0:b0:477:98cc:3cfe with SMTP id
- 25-20020a631659000000b0047798cc3cfemr20169345pgw.508.1669482290899; Sat, 26
- Nov 2022 09:04:50 -0800 (PST)
+        bh=sLFIKfte67bdoQLm56Ip88k11Q1iXzAXCyP4EbfifyQ=;
+        b=j33OxB+sU6vdNx9iFIkmRwU9WuppxKVJxAEu+MPOrxK3w96hsQSBvxprqIOodVIzlE
+         IYgU+0Y3rW45Hv5eoPEib7IePteWy7t/eTigRIOyHRTS4+0WU8zy5uPMGJ6oxaz147SY
+         iR6vKXOCxfPYSjLXu67JShMWfMIkRmF3wrWpWY8Me2yBPB5ND+8eUnYvkRmyq8WT4Cfm
+         s75q3HShg68YVVNAI/OGf5xUrsFjODbDXMY2WI2UGfuLMtW6VB+zUX33zZeC0FqUjOzj
+         9gJFXYTQFrvOVIZMw76XBM8o9VL5MjItr2u25i2czKky/jRsij9S/HC1bD7ubd8ABgZ2
+         SoqA==
+X-Gm-Message-State: ANoB5plvY74UCrYh+k50wDj3Y7qLqqDG4sNbtrOekRn8o5tVTSmWEVpQ
+        ZdPT15lFZH1HxDGDLF2X9Chilb6VjQA77Yi0agM=
+X-Google-Smtp-Source: AA0mqf4TJsENZt3RxiaDOoBbJDmgDFN8Sjw0MX6oPq4zVEGXXt4w7TuhSBtUO9e4gAyy4y002l9CxuLwLJjv7m3cSuY=
+X-Received: by 2002:a17:903:300c:b0:186:9ef5:4d59 with SMTP id
+ o12-20020a170903300c00b001869ef54d59mr36934713pla.89.1669482580757; Sat, 26
+ Nov 2022 09:09:40 -0800 (PST)
 MIME-Version: 1.0
-References: <20221118035656.gonna.698-kees@kernel.org>
-In-Reply-To: <20221118035656.gonna.698-kees@kernel.org>
+References: <20221117233838.give.484-kees@kernel.org> <20221117234328.594699-4-keescook@chromium.org>
+In-Reply-To: <20221117234328.594699-4-keescook@chromium.org>
 From:   Andrey Konovalov <andreyknvl@gmail.com>
-Date:   Sat, 26 Nov 2022 18:04:39 +0100
-Message-ID: <CA+fCnZfVZLLmipRBBMn1ju=U6wZL+zqf7S2jpUURPJmH3vPLNw@mail.gmail.com>
-Subject: Re: [PATCH v2] mm: Make ksize() a reporting-only function
+Date:   Sat, 26 Nov 2022 18:09:29 +0100
+Message-ID: <CA+fCnZdMNs8Ut=_vwZNu-ksAW1T9+dxR3AcLpGb_3rYJjzOffg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] panic: Consolidate open-coded panic_on_warn checks
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+Cc:     Jann Horn <jannh@google.com>, Marco Elver <elver@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
         Andrey Ryabinin <ryabinin.a.a@gmail.com>,
         Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-mm@kvack.org, kasan-dev@googlegroups.com,
-        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Gow <davidgow@google.com>,
+        tangmeng <tangmeng@uniontech.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Petr Mladek <pmladek@suse.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Seth Jenkins <sethjenkins@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linuxfoundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Nov 18, 2022 at 4:57 AM Kees Cook <keescook@chromium.org> wrote:
+On Fri, Nov 18, 2022 at 12:43 AM Kees Cook <keescook@chromium.org> wrote:
 >
-> With all "silently resizing" callers of ksize() refactored, remove the
-> logic in ksize() that would allow it to be used to effectively change
-> the size of an allocation (bypassing __alloc_size hints, etc). Users
-> wanting this feature need to either use kmalloc_size_roundup() before an
-> allocation, or use krealloc() directly.
+> Several run-time checkers (KASAN, UBSAN, KFENCE, KCSAN, sched) roll
+> their own warnings, and each check "panic_on_warn". Consolidate this
+> into a single function so that future instrumentation can be added in
+> a single location.
 >
-> For kfree_sensitive(), move the unpoisoning logic inline. Replace the
-> some of the partially open-coded ksize() in __do_krealloc with ksize()
-> now that it doesn't perform unpoisoning.
->
-> Adjust the KUnit tests to match the new ksize() behavior.
->
-> Cc: Andrey Konovalov <andreyknvl@gmail.com>
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: Pekka Enberg <penberg@kernel.org>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Roman Gushchin <roman.gushchin@linux.dev>
-> Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+> Cc: Marco Elver <elver@google.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+> Cc: Valentin Schneider <vschneid@redhat.com>
 > Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
 > Cc: Alexander Potapenko <glider@google.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Andrey Konovalov <andreyknvl@gmail.com>
 > Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Cc: linux-mm@kvack.org
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Gow <davidgow@google.com>
+> Cc: tangmeng <tangmeng@uniontech.com>
+> Cc: Jann Horn <jannh@google.com>
+> Cc: Shuah Khan <skhan@linuxfoundation.org>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+> Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
 > Cc: kasan-dev@googlegroups.com
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> Cc: linux-mm@kvack.org
+> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
-> v2:
-> - improve kunit test precision (andreyknvl)
-> - add Ack (vbabka)
-> v1: https://lore.kernel.org/all/20221022180455.never.023-kees@kernel.org
-> ---
->  mm/kasan/kasan_test.c | 14 +++++++++-----
->  mm/slab_common.c      | 26 ++++++++++----------------
->  2 files changed, 19 insertions(+), 21 deletions(-)
+>  include/linux/panic.h | 1 +
+>  kernel/kcsan/report.c | 3 +--
+>  kernel/panic.c        | 9 +++++++--
+>  kernel/sched/core.c   | 3 +--
+>  lib/ubsan.c           | 3 +--
+>  mm/kasan/report.c     | 4 ++--
+>  mm/kfence/report.c    | 3 +--
+>  7 files changed, 14 insertions(+), 12 deletions(-)
 >
-> diff --git a/mm/kasan/kasan_test.c b/mm/kasan/kasan_test.c
-> index 7502f03c807c..fc4b22916587 100644
-> --- a/mm/kasan/kasan_test.c
-> +++ b/mm/kasan/kasan_test.c
-> @@ -821,7 +821,7 @@ static void kasan_global_oob_left(struct kunit *test)
->         KUNIT_EXPECT_KASAN_FAIL(test, *(volatile char *)p);
+> diff --git a/include/linux/panic.h b/include/linux/panic.h
+> index c7759b3f2045..979b776e3bcb 100644
+> --- a/include/linux/panic.h
+> +++ b/include/linux/panic.h
+> @@ -11,6 +11,7 @@ extern long (*panic_blink)(int state);
+>  __printf(1, 2)
+>  void panic(const char *fmt, ...) __noreturn __cold;
+>  void nmi_panic(struct pt_regs *regs, const char *msg);
+> +void check_panic_on_warn(const char *origin);
+>  extern void oops_enter(void);
+>  extern void oops_exit(void);
+>  extern bool oops_may_print(void);
+> diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
+> index 67794404042a..e95ce7d7a76e 100644
+> --- a/kernel/kcsan/report.c
+> +++ b/kernel/kcsan/report.c
+> @@ -492,8 +492,7 @@ static void print_report(enum kcsan_value_change value_change,
+>         dump_stack_print_info(KERN_DEFAULT);
+>         pr_err("==================================================================\n");
+>
+> -       if (panic_on_warn)
+> -               panic("panic_on_warn set ...\n");
+> +       check_panic_on_warn("KCSAN");
 >  }
 >
-> -/* Check that ksize() makes the whole object accessible. */
-> +/* Check that ksize() does NOT unpoison whole object. */
->  static void ksize_unpoisons_memory(struct kunit *test)
->  {
->         char *ptr;
-> @@ -829,15 +829,19 @@ static void ksize_unpoisons_memory(struct kunit *test)
+>  static void release_report(unsigned long *flags, struct other_info *other_info)
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index d843d036651e..cfa354322d5f 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -201,6 +201,12 @@ static void panic_print_sys_info(bool console_flush)
+>                 ftrace_dump(DUMP_ALL);
+>  }
 >
->         ptr = kmalloc(size, GFP_KERNEL);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+> +void check_panic_on_warn(const char *origin)
+> +{
+> +       if (panic_on_warn)
+> +               panic("%s: panic_on_warn set ...\n", origin);
+> +}
 > +
->         real_size = ksize(ptr);
-> +       KUNIT_EXPECT_GT(test, real_size, size);
+>  /**
+>   *     panic - halt the system
+>   *     @fmt: The text string to print
+> @@ -619,8 +625,7 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
+>         if (regs)
+>                 show_regs(regs);
 >
->         OPTIMIZER_HIDE_VAR(ptr);
+> -       if (panic_on_warn)
+> -               panic("panic_on_warn set ...\n");
+> +       check_panic_on_warn("kernel");
 >
-> -       /* This access shouldn't trigger a KASAN report. */
-> -       ptr[size] = 'x';
-> +       /* These accesses shouldn't trigger a KASAN report. */
-> +       ptr[0] = 'x';
-> +       ptr[size - 1] = 'x';
+>         if (!regs)
+>                 dump_stack();
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 5800b0623ff3..285ef8821b4f 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -5729,8 +5729,7 @@ static noinline void __schedule_bug(struct task_struct *prev)
+>                 pr_err("Preemption disabled at:");
+>                 print_ip_sym(KERN_ERR, preempt_disable_ip);
+>         }
+> -       if (panic_on_warn)
+> -               panic("scheduling while atomic\n");
+> +       check_panic_on_warn("scheduling while atomic");
 >
-> -       /* This one must. */
-> -       KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size]);
-> +       /* These must trigger a KASAN report. */
-> +       KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[size]);
-> +       KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size - 1]);
-
-Hi Kees,
-
-I just realized there's an issue here with the tag-based modes, as
-they align the unpoisoned area to 16 bytes.
-
-One solution would be to change the allocation size to 128 -
-KASAN_GRANULE_SIZE - 5, the same way kmalloc_oob_right test does it,
-so that the last 16-byte granule won't get unpoisoned for the
-tag-based modes. And then check that the ptr[size] access fails only
-for the Generic mode.
-
-Thanks!
-
+>         dump_stack();
+>         add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
+> diff --git a/lib/ubsan.c b/lib/ubsan.c
+> index 36bd75e33426..60c7099857a0 100644
+> --- a/lib/ubsan.c
+> +++ b/lib/ubsan.c
+> @@ -154,8 +154,7 @@ static void ubsan_epilogue(void)
 >
->         kfree(ptr);
+>         current->in_ubsan--;
+>
+> -       if (panic_on_warn)
+> -               panic("panic_on_warn set ...\n");
+> +       check_panic_on_warn("UBSAN");
 >  }
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index 8276022f0da4..27caa57af070 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -1335,11 +1335,11 @@ __do_krealloc(const void *p, size_t new_size, gfp_t flags)
->         void *ret;
->         size_t ks;
 >
-> -       /* Don't use instrumented ksize to allow precise KASAN poisoning. */
-> +       /* Check for double-free before calling ksize. */
->         if (likely(!ZERO_OR_NULL_PTR(p))) {
->                 if (!kasan_check_byte(p))
->                         return NULL;
-> -               ks = kfence_ksize(p) ?: __ksize(p);
-> +               ks = ksize(p);
->         } else
->                 ks = 0;
+>  void __ubsan_handle_divrem_overflow(void *_data, void *lhs, void *rhs)
+> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+> index df3602062bfd..cc98dfdd3ed2 100644
+> --- a/mm/kasan/report.c
+> +++ b/mm/kasan/report.c
+> @@ -164,8 +164,8 @@ static void end_report(unsigned long *flags, void *addr)
+>                                        (unsigned long)addr);
+>         pr_err("==================================================================\n");
+>         spin_unlock_irqrestore(&report_lock, *flags);
+> -       if (panic_on_warn && !test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
+> -               panic("panic_on_warn set ...\n");
+> +       if (!test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
+> +               check_panic_on_warn("KASAN");
+>         if (kasan_arg_fault == KASAN_ARG_FAULT_PANIC)
+>                 panic("kasan.fault=panic set ...\n");
+>         add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
+> diff --git a/mm/kfence/report.c b/mm/kfence/report.c
+> index 7e496856c2eb..110c27ca597d 100644
+> --- a/mm/kfence/report.c
+> +++ b/mm/kfence/report.c
+> @@ -268,8 +268,7 @@ void kfence_report_error(unsigned long address, bool is_write, struct pt_regs *r
 >
-> @@ -1407,21 +1407,21 @@ void kfree_sensitive(const void *p)
->         void *mem = (void *)p;
+>         lockdep_on();
 >
->         ks = ksize(mem);
-> -       if (ks)
-> +       if (ks) {
-> +               kasan_unpoison_range(mem, ks);
->                 memzero_explicit(mem, ks);
-> +       }
->         kfree(mem);
->  }
->  EXPORT_SYMBOL(kfree_sensitive);
+> -       if (panic_on_warn)
+> -               panic("panic_on_warn set ...\n");
+> +       check_panic_on_warn("KFENCE");
 >
->  size_t ksize(const void *objp)
->  {
-> -       size_t size;
-> -
->         /*
-> -        * We need to first check that the pointer to the object is valid, and
-> -        * only then unpoison the memory. The report printed from ksize() is
-> -        * more useful, then when it's printed later when the behaviour could
-> -        * be undefined due to a potential use-after-free or double-free.
-> +        * We need to first check that the pointer to the object is valid.
-> +        * The KASAN report printed from ksize() is more useful, then when
-> +        * it's printed later when the behaviour could be undefined due to
-> +        * a potential use-after-free or double-free.
->          *
->          * We use kasan_check_byte(), which is supported for the hardware
->          * tag-based KASAN mode, unlike kasan_check_read/write().
-> @@ -1435,13 +1435,7 @@ size_t ksize(const void *objp)
->         if (unlikely(ZERO_OR_NULL_PTR(objp)) || !kasan_check_byte(objp))
->                 return 0;
->
-> -       size = kfence_ksize(objp) ?: __ksize(objp);
-> -       /*
-> -        * We assume that ksize callers could use whole allocated area,
-> -        * so we need to unpoison this area.
-> -        */
-> -       kasan_unpoison_range(objp, size);
-> -       return size;
-> +       return kfence_ksize(objp) ?: __ksize(objp);
->  }
->  EXPORT_SYMBOL(ksize);
->
+>         /* We encountered a memory safety error, taint the kernel! */
+>         add_taint(TAINT_BAD_PAGE, LOCKDEP_STILL_OK);
 > --
 > 2.34.1
 >
+
+Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
