@@ -2,96 +2,94 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E920DC4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 25 Nov 2022 11:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B888C47088
+	for <linux-hardening@archiver.kernel.org>; Sat, 26 Nov 2022 03:27:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230104AbiKYLPH (ORCPT
+        id S230141AbiKZD1z (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 25 Nov 2022 06:15:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42320 "EHLO
+        Fri, 25 Nov 2022 22:27:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbiKYLPH (ORCPT
+        with ESMTP id S230092AbiKZD1w (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 25 Nov 2022 06:15:07 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7024824958;
-        Fri, 25 Nov 2022 03:15:06 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0ADDD6239A;
-        Fri, 25 Nov 2022 11:15:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D478DC433C1;
-        Fri, 25 Nov 2022 11:15:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669374905;
-        bh=jbz6wVa+XiyBRVRh8XiIiRYL5nN8ly7IaofiEJMqw7E=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=Kmiwn3hXLX57+xwkCq9XvrTQcY1dFIep1GSam6l0m0xxAXkkvdJwavbhxAbtpfLY7
-         p1j20js7sgvD4E83SNqWtFAS6ra8FxPnxdEZ4CQLkwj0fZ6l1Rm0NpVtQ8ePBJIjwF
-         x0IKGasRu93eUlbJh2edStvAWRKofoisTSu+067pMy9HVMDbKdnMYTo2sJL5J1vbUz
-         jMxEr7wXOSfVoOyHVOwWotw0vGjt+xRbqJfax8h/qw53VjmTLAVzxmYNcwd8BIysAb
-         hvth31sCYMXd3AfV4TDXHWRsN26tObifhA+aEkhhUsqqgAZ1F4eaXBBCImSRYA10v2
-         k/syhCfUnFqXg==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] carl9170: Replace zero-length array of trailing structs
- with
- flex-array
-From:   Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <20221118211146.never.395-kees@kernel.org>
-References: <20221118211146.never.395-kees@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christian Lamparter <chunkeey@googlemail.com>,
-        Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
+        Fri, 25 Nov 2022 22:27:52 -0500
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE0B11837;
+        Fri, 25 Nov 2022 19:27:51 -0800 (PST)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AQ1vdkE020171;
+        Sat, 26 Nov 2022 03:27:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2022-7-12;
+ bh=m6KHJuOIeWbW3FNEPlj/1DnHECg3pQAj0KPYHsZWyo4=;
+ b=bqqUKtL3prx9RkHZQ/FbCsxzHO2TVxxLwofhl7WyxEf5LV5q1FXOhakI0q/e8cTQwYUh
+ q91oVCoea47/sEnNQENG74zE/Qyi2+tvFSbW6rHCtTm4z15GieYdARjhIl55v5tKD5Lk
+ H7IsdjqMZeVZw2JYASYovxXWgAcjeLUigsSvpqJ9wMItUjpXjVip6girxw+VCdpZmZaT
+ 6WeG8FnUmP1b+0HGKANMXlaEiSlNgcn/q8ANpJT4Su4AfqfH6jxflITrS8wSFTfwJMwZ
+ 6X93pxsROx7t7iOIu0QwjW3Sn+QFPhxpt347cwm0W72KwEgFE6Kedb9KynzS+OH1Iucy 8A== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3m39k2g1ne-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 26 Nov 2022 03:27:45 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2AQ1XWdk007337;
+        Sat, 26 Nov 2022 03:27:45 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3m3988b80b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 26 Nov 2022 03:27:45 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2AQ3RhsT028327;
+        Sat, 26 Nov 2022 03:27:44 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3m3988b7y9-4;
+        Sat, 26 Nov 2022 03:27:44 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
+        Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-ID: <166937490066.28196.15714498796045859464.kvalo@kernel.org>
-Date:   Fri, 25 Nov 2022 11:15:02 +0000 (UTC)
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH][next] scsi: bfa: Replace one-element array with flexible-array member
+Date:   Sat, 26 Nov 2022 03:27:35 +0000
+Message-Id: <166943312547.1684293.4109491775873711686.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <Y3P1rEEBq7HzJygq@work>
+References: <Y3P1rEEBq7HzJygq@work>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-26_02,2022-11-25_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 phishscore=0
+ mlxlogscore=853 mlxscore=0 adultscore=0 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
+ definitions=main-2211260024
+X-Proofpoint-GUID: cVSRcpvB2mow_RUikDVZmEFMplyT-GIw
+X-Proofpoint-ORIG-GUID: cVSRcpvB2mow_RUikDVZmEFMplyT-GIw
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> wrote:
+On Tue, 15 Nov 2022 14:25:16 -0600, Gustavo A. R. Silva wrote:
 
-> Zero-length arrays are deprecated[1] and are being replaced with
-> flexible array members in support of the ongoing efforts to tighten the
-> FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
-> with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
+> One-element arrays are deprecated, and we are replacing them with flexible
+> array members instead. So, replace one-element array with flexible-array
+> member in struct fdmi_attr_s.
 > 
-> Replace zero-length array with flexible-array member.
+> Important to mention is that doing a build before/after this patch results
+> in no binary output differences.
 > 
-> This results in no differences in binary output.
-> 
-> [1] https://github.com/KSPP/linux/issues/78
-> 
-> Cc: Christian Lamparter <chunkeey@googlemail.com>
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Acked-by: Christian Lamparter <chunkeey@gmail.com>
-> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+> [...]
 
-Patch applied to ath-next branch of ath.git, thanks.
+Applied to 6.2/scsi-queue, thanks!
 
-7256f28767fa wifi: carl9170: Replace zero-length array of trailing structs with flex-array
+[1/1] scsi: bfa: Replace one-element array with flexible-array member
+      https://git.kernel.org/mkp/scsi/c/c4c5fa35563a
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20221118211146.never.395-kees@kernel.org/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Martin K. Petersen	Oracle Linux Engineering
