@@ -2,94 +2,231 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B888C47088
-	for <linux-hardening@archiver.kernel.org>; Sat, 26 Nov 2022 03:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B5BC46467
+	for <linux-hardening@archiver.kernel.org>; Sat, 26 Nov 2022 17:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230141AbiKZD1z (ORCPT
+        id S229551AbiKZREy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 25 Nov 2022 22:27:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35912 "EHLO
+        Sat, 26 Nov 2022 12:04:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230092AbiKZD1w (ORCPT
+        with ESMTP id S229531AbiKZREx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 25 Nov 2022 22:27:52 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE0B11837;
-        Fri, 25 Nov 2022 19:27:51 -0800 (PST)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AQ1vdkE020171;
-        Sat, 26 Nov 2022 03:27:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2022-7-12;
- bh=m6KHJuOIeWbW3FNEPlj/1DnHECg3pQAj0KPYHsZWyo4=;
- b=bqqUKtL3prx9RkHZQ/FbCsxzHO2TVxxLwofhl7WyxEf5LV5q1FXOhakI0q/e8cTQwYUh
- q91oVCoea47/sEnNQENG74zE/Qyi2+tvFSbW6rHCtTm4z15GieYdARjhIl55v5tKD5Lk
- H7IsdjqMZeVZw2JYASYovxXWgAcjeLUigsSvpqJ9wMItUjpXjVip6girxw+VCdpZmZaT
- 6WeG8FnUmP1b+0HGKANMXlaEiSlNgcn/q8ANpJT4Su4AfqfH6jxflITrS8wSFTfwJMwZ
- 6X93pxsROx7t7iOIu0QwjW3Sn+QFPhxpt347cwm0W72KwEgFE6Kedb9KynzS+OH1Iucy 8A== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3m39k2g1ne-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 26 Nov 2022 03:27:45 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2AQ1XWdk007337;
-        Sat, 26 Nov 2022 03:27:45 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3m3988b80b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 26 Nov 2022 03:27:45 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2AQ3RhsT028327;
-        Sat, 26 Nov 2022 03:27:44 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3m3988b7y9-4;
-        Sat, 26 Nov 2022 03:27:44 +0000
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
-        Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH][next] scsi: bfa: Replace one-element array with flexible-array member
-Date:   Sat, 26 Nov 2022 03:27:35 +0000
-Message-Id: <166943312547.1684293.4109491775873711686.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <Y3P1rEEBq7HzJygq@work>
-References: <Y3P1rEEBq7HzJygq@work>
+        Sat, 26 Nov 2022 12:04:53 -0500
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BD32165BD;
+        Sat, 26 Nov 2022 09:04:51 -0800 (PST)
+Received: by mail-pg1-x531.google.com with SMTP id r18so6306089pgr.12;
+        Sat, 26 Nov 2022 09:04:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=uKmnIaloULHriFcopQa51nxjENCmgGQKjpIIPfSTFtA=;
+        b=cUl3qd8uHgMRnh/jnbftDT5GuOqOGJykCT0pya8ESdkiNfooRYdYuiSOuFbi6w33q0
+         z54HxlT4PtUYM/1qhIPEZBiXQJ7WSuwNx2xlQgP6BKp21xw8RQoecof64jc7AaarEseG
+         7ooKsL4oeFBlvE3/IBHNRYQ6aDhlmVNYVB4pnJnhZyGAHQFKx1MYNc/wsFicJ+hqf5aZ
+         vruBYyyEKpuKKA5K53JKW+sitwUlXyLTjv5Z0OVBb/OOSxnU7i6Y//RxtAJYK4EYlaLO
+         tTPxVFL1iOHrADsTKZrnRNjFIOGluQkFeHLIsV05MxwKLlZcaJztx8K6uK1d/Zb/5RWM
+         FvRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uKmnIaloULHriFcopQa51nxjENCmgGQKjpIIPfSTFtA=;
+        b=tl5pp97gLbb9vdR3u9tUxW+mBU/13bWZ/OOc5ZfnxiZGIstl/t1XXxnxwWMFc1eGxS
+         uE2l+ZpVM1ppaQB6r44D3D94jsYJOX/FH9ChVnSXrywIvBnlnLKs2P4+aBP8qMDjHly9
+         m+UFKA1Ws+iowoJ+JcihdwGO2EBUJkkQIGubn2xyxs4Q9Gb6j8YXuiFqxLbiNyu6XWJF
+         Nv3s4lJOnp37AyYfBnr9RUhQh3MCi2GHdMbKKhQ1gFXEcmf97JBuNUd9Vcj/GhaOOMGv
+         5if6PLUQaWz97y5tvkpXE05oA5EnrBtTjXwQZ5X6jbQjKrNeQ9NkqMmHFETXxf4o/jGf
+         cKwA==
+X-Gm-Message-State: ANoB5pl4xZs77uHZX9OD67Y/sASWKPpMnmEIkUVsmDdpUNyqKV1YREuT
+        i4h85vgQae/Oz2hOipbd7VcrOQUiJGogDIauf6lJDvEBTm0=
+X-Google-Smtp-Source: AA0mqf7LcR92cxqWYPsjOyXeEfk+DWYLmX6aavVi7/wkWWex0aMbJRaW7PDJ8WhIgUqw7J233DDg7osc4GCEU+Cq+WU=
+X-Received: by 2002:a63:1659:0:b0:477:98cc:3cfe with SMTP id
+ 25-20020a631659000000b0047798cc3cfemr20169345pgw.508.1669482290899; Sat, 26
+ Nov 2022 09:04:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-26_02,2022-11-25_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 phishscore=0
- mlxlogscore=853 mlxscore=0 adultscore=0 bulkscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
- definitions=main-2211260024
-X-Proofpoint-GUID: cVSRcpvB2mow_RUikDVZmEFMplyT-GIw
-X-Proofpoint-ORIG-GUID: cVSRcpvB2mow_RUikDVZmEFMplyT-GIw
+References: <20221118035656.gonna.698-kees@kernel.org>
+In-Reply-To: <20221118035656.gonna.698-kees@kernel.org>
+From:   Andrey Konovalov <andreyknvl@gmail.com>
+Date:   Sat, 26 Nov 2022 18:04:39 +0100
+Message-ID: <CA+fCnZfVZLLmipRBBMn1ju=U6wZL+zqf7S2jpUURPJmH3vPLNw@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: Make ksize() a reporting-only function
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-mm@kvack.org, kasan-dev@googlegroups.com,
+        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 15 Nov 2022 14:25:16 -0600, Gustavo A. R. Silva wrote:
+On Fri, Nov 18, 2022 at 4:57 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> With all "silently resizing" callers of ksize() refactored, remove the
+> logic in ksize() that would allow it to be used to effectively change
+> the size of an allocation (bypassing __alloc_size hints, etc). Users
+> wanting this feature need to either use kmalloc_size_roundup() before an
+> allocation, or use krealloc() directly.
+>
+> For kfree_sensitive(), move the unpoisoning logic inline. Replace the
+> some of the partially open-coded ksize() in __do_krealloc with ksize()
+> now that it doesn't perform unpoisoning.
+>
+> Adjust the KUnit tests to match the new ksize() behavior.
+>
+> Cc: Andrey Konovalov <andreyknvl@gmail.com>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Pekka Enberg <penberg@kernel.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Roman Gushchin <roman.gushchin@linux.dev>
+> Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+> Cc: Alexander Potapenko <glider@google.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Cc: linux-mm@kvack.org
+> Cc: kasan-dev@googlegroups.com
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> v2:
+> - improve kunit test precision (andreyknvl)
+> - add Ack (vbabka)
+> v1: https://lore.kernel.org/all/20221022180455.never.023-kees@kernel.org
+> ---
+>  mm/kasan/kasan_test.c | 14 +++++++++-----
+>  mm/slab_common.c      | 26 ++++++++++----------------
+>  2 files changed, 19 insertions(+), 21 deletions(-)
+>
+> diff --git a/mm/kasan/kasan_test.c b/mm/kasan/kasan_test.c
+> index 7502f03c807c..fc4b22916587 100644
+> --- a/mm/kasan/kasan_test.c
+> +++ b/mm/kasan/kasan_test.c
+> @@ -821,7 +821,7 @@ static void kasan_global_oob_left(struct kunit *test)
+>         KUNIT_EXPECT_KASAN_FAIL(test, *(volatile char *)p);
+>  }
+>
+> -/* Check that ksize() makes the whole object accessible. */
+> +/* Check that ksize() does NOT unpoison whole object. */
+>  static void ksize_unpoisons_memory(struct kunit *test)
+>  {
+>         char *ptr;
+> @@ -829,15 +829,19 @@ static void ksize_unpoisons_memory(struct kunit *test)
+>
+>         ptr = kmalloc(size, GFP_KERNEL);
+>         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
+> +
+>         real_size = ksize(ptr);
+> +       KUNIT_EXPECT_GT(test, real_size, size);
+>
+>         OPTIMIZER_HIDE_VAR(ptr);
+>
+> -       /* This access shouldn't trigger a KASAN report. */
+> -       ptr[size] = 'x';
+> +       /* These accesses shouldn't trigger a KASAN report. */
+> +       ptr[0] = 'x';
+> +       ptr[size - 1] = 'x';
+>
+> -       /* This one must. */
+> -       KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size]);
+> +       /* These must trigger a KASAN report. */
+> +       KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[size]);
+> +       KUNIT_EXPECT_KASAN_FAIL(test, ((volatile char *)ptr)[real_size - 1]);
 
-> One-element arrays are deprecated, and we are replacing them with flexible
-> array members instead. So, replace one-element array with flexible-array
-> member in struct fdmi_attr_s.
-> 
-> Important to mention is that doing a build before/after this patch results
-> in no binary output differences.
-> 
-> [...]
+Hi Kees,
 
-Applied to 6.2/scsi-queue, thanks!
+I just realized there's an issue here with the tag-based modes, as
+they align the unpoisoned area to 16 bytes.
 
-[1/1] scsi: bfa: Replace one-element array with flexible-array member
-      https://git.kernel.org/mkp/scsi/c/c4c5fa35563a
+One solution would be to change the allocation size to 128 -
+KASAN_GRANULE_SIZE - 5, the same way kmalloc_oob_right test does it,
+so that the last 16-byte granule won't get unpoisoned for the
+tag-based modes. And then check that the ptr[size] access fails only
+for the Generic mode.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Thanks!
+
+>
+>         kfree(ptr);
+>  }
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index 8276022f0da4..27caa57af070 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -1335,11 +1335,11 @@ __do_krealloc(const void *p, size_t new_size, gfp_t flags)
+>         void *ret;
+>         size_t ks;
+>
+> -       /* Don't use instrumented ksize to allow precise KASAN poisoning. */
+> +       /* Check for double-free before calling ksize. */
+>         if (likely(!ZERO_OR_NULL_PTR(p))) {
+>                 if (!kasan_check_byte(p))
+>                         return NULL;
+> -               ks = kfence_ksize(p) ?: __ksize(p);
+> +               ks = ksize(p);
+>         } else
+>                 ks = 0;
+>
+> @@ -1407,21 +1407,21 @@ void kfree_sensitive(const void *p)
+>         void *mem = (void *)p;
+>
+>         ks = ksize(mem);
+> -       if (ks)
+> +       if (ks) {
+> +               kasan_unpoison_range(mem, ks);
+>                 memzero_explicit(mem, ks);
+> +       }
+>         kfree(mem);
+>  }
+>  EXPORT_SYMBOL(kfree_sensitive);
+>
+>  size_t ksize(const void *objp)
+>  {
+> -       size_t size;
+> -
+>         /*
+> -        * We need to first check that the pointer to the object is valid, and
+> -        * only then unpoison the memory. The report printed from ksize() is
+> -        * more useful, then when it's printed later when the behaviour could
+> -        * be undefined due to a potential use-after-free or double-free.
+> +        * We need to first check that the pointer to the object is valid.
+> +        * The KASAN report printed from ksize() is more useful, then when
+> +        * it's printed later when the behaviour could be undefined due to
+> +        * a potential use-after-free or double-free.
+>          *
+>          * We use kasan_check_byte(), which is supported for the hardware
+>          * tag-based KASAN mode, unlike kasan_check_read/write().
+> @@ -1435,13 +1435,7 @@ size_t ksize(const void *objp)
+>         if (unlikely(ZERO_OR_NULL_PTR(objp)) || !kasan_check_byte(objp))
+>                 return 0;
+>
+> -       size = kfence_ksize(objp) ?: __ksize(objp);
+> -       /*
+> -        * We assume that ksize callers could use whole allocated area,
+> -        * so we need to unpoison this area.
+> -        */
+> -       kasan_unpoison_range(objp, size);
+> -       return size;
+> +       return kfence_ksize(objp) ?: __ksize(objp);
+>  }
+>  EXPORT_SYMBOL(ksize);
+>
+> --
+> 2.34.1
+>
