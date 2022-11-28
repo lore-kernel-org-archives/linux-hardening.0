@@ -2,283 +2,288 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FE7C43217
-	for <linux-hardening@archiver.kernel.org>; Mon, 28 Nov 2022 02:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C429C4321E
+	for <linux-hardening@archiver.kernel.org>; Mon, 28 Nov 2022 04:05:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229762AbiK1CqX (ORCPT
+        id S229568AbiK1EF5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 27 Nov 2022 21:46:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46010 "EHLO
+        Sun, 27 Nov 2022 23:05:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229810AbiK1CqO (ORCPT
+        with ESMTP id S229682AbiK1EFU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 27 Nov 2022 21:46:14 -0500
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61BAF11A2E;
-        Sun, 27 Nov 2022 18:46:09 -0800 (PST)
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AS2073Q031281;
-        Mon, 28 Nov 2022 02:45:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=a/Rq0+U1+15sqcQSlIDpM91XzZeSDEDxu2YquRk1eAc=;
- b=Jvy2YMP3peJQ0kUDmfBAafuJknhNWEnKTEKRuU+TBgaO+oNQkpn4fSMmZnZL++vuQ8/g
- IPElYcVcjGlkXsrjWACVII+H8XXhSK3S3jTzPmQmMdCkmjGFJk6/DwLIsZjn057AsTYu
- VD6Iel173zUiGTCXCCYjOdpTrbFV2qyk5/QBQ0AkIvcnDqqgLoYEbQRUNsvI7aoGSopn
- F+IdPBDJLODz4p/6B60+q1uDJejhKOB4JynlbdYRm7yowl/tsInvCnSi+UBe/Uz4bU8g
- x5xuFrMjRVZfe8euKGKcuAzc5yodM+ouv9xL9cA5sK3lVrZOMHb5PJxEYnmtW2Jcwudl ww== 
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m3vn6ups4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Nov 2022 02:45:49 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2AS2ZSWq004979;
-        Mon, 28 Nov 2022 02:45:47 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04fra.de.ibm.com with ESMTP id 3m3ae91bb7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Nov 2022 02:45:47 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2AS2jjO623724292
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Nov 2022 02:45:45 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F1C875204F;
-        Mon, 28 Nov 2022 02:45:44 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 534115204E;
-        Mon, 28 Nov 2022 02:45:44 +0000 (GMT)
-Received: from li-0d7fa1cc-2c9d-11b2-a85c-aed20764436d.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 538D36083B;
-        Mon, 28 Nov 2022 13:45:39 +1100 (AEDT)
-From:   Benjamin Gray <bgray@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     ajd@linux.ibm.com, ruscur@russell.cc, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, cmr@bluescreens.de,
-        Benjamin Gray <bgray@linux.ibm.com>
-Subject: [RFC PATCH 07/13] powerpc/dexcr: Add sysctl entry for SBHE system override
-Date:   Mon, 28 Nov 2022 13:44:52 +1100
-Message-Id: <20221128024458.46121-8-bgray@linux.ibm.com>
-X-Mailer: git-send-email 2.38.1
+        Sun, 27 Nov 2022 23:05:20 -0500
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A1E713D41;
+        Sun, 27 Nov 2022 20:05:17 -0800 (PST)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 01B6D5C00B2;
+        Sun, 27 Nov 2022 23:05:15 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Sun, 27 Nov 2022 23:05:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=russell.cc; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1669608314; x=
+        1669694714; bh=Y3tnyB2smEGJhveOUBIsKZHaDd+IwyR52h9uCaveTjU=; b=f
+        TVRXzUgXgrf0AhG7IY315R32aMiUMIm/XAqigSEPg37UF/A8C9p8U4iX4nDqZtVk
+        SbSEi45DBQhvhC7ddV+hc61i8fuyjB1ck4KB6U6wUD35EIYWwz99bSGaEEEIY8JJ
+        R0K5nBp4Q0RcDMzZKGDnKQoti46lMrMBPBmhzXfBC3H1nGsFFQow8d/I/JMbI+pb
+        41vUops6akMDGLvZIf5rhAvnDdsfgl6Lgy/VkBMjrMeuo7XFzYqi+/J8lAsbDXio
+        V6+DT1rSyu6i7ZSdiwYo0nNjrssfxz8LPRCa+82Qi+9IOhO/BANleK+zrwYPGUdU
+        8qf3kp/ZykwjZVX0vxrVg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1669608314; x=
+        1669694714; bh=Y3tnyB2smEGJhveOUBIsKZHaDd+IwyR52h9uCaveTjU=; b=q
+        keidwh/911FsqIxLWituvptwqfFUgwvs1TS8OoP9w72V5fjTkVwd2XEkpKf9K7DC
+        s1oGdx0GDCx9BlI8nI2UJwqLa82LCVXNHyFrzjFKjw4xhAglC/CJ3jO/NhNoI+rT
+        gMgfmgDM/bCXUzGxV0DqWwplwLl/lti4/ionh282Munp8pIawEHwie3dT+XB9k5H
+        k8ooaZPdg1I/T93Bcz8GKK5ep1ldJ0ZiT1RDNMZ2djPKXMyKVoztK8HVV9I3HR8G
+        eFaSPo08WpaG/AwCRNiYupGqiYd6CtGLHoy43KO7kPZldCPZEHT4S594i3egS6l5
+        8zQKuph+bMK8cLpbx9F/Q==
+X-ME-Sender: <xms:ejOEY1AHZnKnXDPPq-sjURkqWT4jrYDCD6cq_WvFIxL5uaSvELRiOw>
+    <xme:ejOEYzgZucUDEBALzak2BpGkNfAAe_RM9gQb30Nw_DoBVHbOXIZcSz3G7siwBRs8g
+    Dr6sCInDYH1vcjOfQ>
+X-ME-Received: <xmr:ejOEYwlleEN2OvY82VndbIkLWHoa-ISG9Dy2UCMr2cNtuicW-Ye52dBcvXIq2xPNVORJxacFhU2o92qXiCkq2pf-dpkUJZxlWw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrjedugdeijecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculdduhedmnecujfgurhepkffuhffvveffjghftgfgfgggsehtqhertddt
+    reejnecuhfhrohhmpeftuhhsshgvlhhlucevuhhrrhgvhicuoehruhhstghurhesrhhush
+    hsvghllhdrtggtqeenucggtffrrghtthgvrhhnpeduvdffgfffleetgfelledugfevjeef
+    leevveelhfeugfejuefffeejvdduveefffenucffohhmrghinhepohiilhgrsghsrdhorh
+    hgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprhhu
+    shgtuhhrsehruhhsshgvlhhlrdgttg
+X-ME-Proxy: <xmx:ejOEY_yGOBzfn2QT7F-X-8y1sxeuwFS_cONFBZomC5ubaT8_Tv1JuA>
+    <xmx:ejOEY6Sl6wFOqFiQXudhsnwhYkIogFUJ-HYORjHmF1Hx_455q1UEoA>
+    <xmx:ejOEYyZ7PfSqm_E2WGJ9F9COYHT1KwurR82JGd2QPPU8V9wYDQo3hw>
+    <xmx:ejOEYwMWHaYDaThJZzlgx-aj-j7cqTJN4bPsVyTjvRWvIxuK_NpVyQ>
+Feedback-ID: i4421424f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 27 Nov 2022 23:05:12 -0500 (EST)
+Message-ID: <5fc3102ef379d2a34d64cfea93ce7599e0fd640f.camel@russell.cc>
+Subject: Re: [RFC PATCH 00/13] Add DEXCR support
+From:   Russell Currey <ruscur@russell.cc>
+To:     Benjamin Gray <bgray@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc:     ajd@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, cmr@bluescreens.de
+Date:   Mon, 28 Nov 2022 15:05:08 +1100
 In-Reply-To: <20221128024458.46121-1-bgray@linux.ibm.com>
 References: <20221128024458.46121-1-bgray@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.1 (3.46.1-1.fc37) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: _S9RuewqPl6ZVPFqKschrucwXbaaOpkr
-X-Proofpoint-ORIG-GUID: _S9RuewqPl6ZVPFqKschrucwXbaaOpkr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-28_02,2022-11-25_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- suspectscore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
- mlxlogscore=999 phishscore=0 clxscore=1015 bulkscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2210170000 definitions=main-2211280018
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The DEXCR Speculative Branch Hint Enable (SBHE) aspect controls whether
-the hints provided by BO field of Branch instructions are obeyed during
-speculative execution.
+On Mon, 2022-11-28 at 13:44 +1100, Benjamin Gray wrote:
+> This series is based on initial work by Chris Riedl that was not sent
+> to the list.
+>=20
+> Adds a kernel interface for userspace to interact with the DEXCR.
+> The DEXCR is a SPR that allows control over various execution
+> 'aspects', such as indirect branch prediction and enabling the
+> hashst/hashchk instructions. Further details are in ISA 3.1B
+> Book 3 chapter 12.
+>=20
+> This RFC proposes an interface for users to interact with the DEXCR.
+> It aims to support
+>=20
+> * Querying supported aspects
+> * Getting/setting aspects on a per-process level
+> * Allowing global overrides across all processes
+>=20
+> There are some parts that I'm not sure on the best way to approach
+> (hence RFC):
+>=20
+> * The feature names in arch/powerpc/kernel/dt_cpu_ftrs.c appear to be
+> unimplemented
+> =C2=A0 in skiboot, so are being defined by this series. Is being so
+> verbose fine?
 
-SBHE behaviour per ISA 3.1B:
+These are going to need to be added to skiboot before they can be
+referenced in the kernel.  Inclusion in skiboot makes them ABI, the
+kernel is just a consumer.
 
-0:	The hints provided by BO field of Branch instructions may be
-	ignored during speculative execution
+> * What aspects should be editable by a process? E.g., SBHE has
+> =C2=A0 effects that potentially bleed into other processes. Should
+> =C2=A0 it only be system wide configurable?
 
-1:	The hints provided by BO field of Branch instructions are obeyed
-	during speculative execution
+For context, ISA 3.1B p1358 says:=20
 
-Add a sysctl entry to allow changing this aspect globally in the system
-at runtime:
+   In some micro-architectures, the execution behav-
+   ior controlled by aspect 0 is difficult to change with
+   any degree of timing precision. The change may
+   also bleed over into other threads on the same pro-
+   cessor. Any environment that has a dependence on
+   the more secure setting of aspect 0 should not
+   change the value, and ideally should share a pro-
+   cessor only with similar threads. For other environ-
+   ments, changes to the effective value of aspect 0
+   represent a relative risk tolerance for its aspect of
+   execution behavior, with the understanding that
+   there will be significant hysteresis in the execution
+   behavior.
+  =20
+If a process sets SBHE for itself and all it takes is context switching
+from a process with SBHE unset to cause exposure, then yeah I think it
+should just be global.  I doubt branch hints have enough impact for
+process granularity to be especially desirable anyway.
 
-	/proc/sys/kernel/speculative_branch_hint_enable
+> * Should configuring certain aspects for the process be non-
+> privileged? E.g.,
+> =C2=A0 Is there harm in always allowing configuration of IBRTPD, SRAPD?
+> The *FORCE_SET*
+> =C2=A0 action prevents further process local changes regardless of
+> privilege.
 
-Three values are supported:
+I'm not aware of a reason why it would be a problem to allow
+unprivileged configuration as long as there's a way to prevent further
+changes.  The concerning case is if a mitigation is set by a trusted
+process context, and then untrusted code is executed that manages to
+turn the mitigation off again.
 
--1:	Disable DEXCR SBHE sysctl override
- 0:	Override and set DEXCR[SBHE] aspect to 0
- 1:	Override and set DEXCR[SBHE] aspect to 1
+> * The tests fail Patchwork CI because of the new prctl macros, and
+> the CI
+> =C2=A0 doesn't run headers_install and add -isystem
+> <buildpath>/usr/include to
+> =C2=A0 the make command.
 
-Internally, introduces a mechanism to apply arbitrary system wide
-overrides on top of the prctl() config.
+The CI runs on x86 and cross compiles the kernel and selftests, and
+boots are done in qemu tcg.  Maybe we can skip the build if the symbols
+are undefined or do something like
 
-Signed-off-by: Benjamin Gray <bgray@linux.ibm.com>
----
- arch/powerpc/kernel/dexcr.c | 125 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 125 insertions(+)
+	#ifndef PR_PPC_DEXCR_...
+		return KSFT_SKIP;
+	#endif
 
-diff --git a/arch/powerpc/kernel/dexcr.c b/arch/powerpc/kernel/dexcr.c
-index 9290beed722a..8239bcc92026 100644
---- a/arch/powerpc/kernel/dexcr.c
-+++ b/arch/powerpc/kernel/dexcr.c
-@@ -1,8 +1,11 @@
- #include <linux/cache.h>
- #include <linux/capability.h>
-+#include <linux/cpu.h>
- #include <linux/init.h>
- #include <linux/prctl.h>
- #include <linux/sched.h>
-+#include <linux/spinlock.h>
-+#include <linux/sysctl.h>
- 
- #include <asm/cpu_has_feature.h>
- #include <asm/cputable.h>
-@@ -18,6 +21,58 @@
- #define DEXCR_PRCTL_EDITABLE (DEXCR_PRO_SBHE | DEXCR_PRO_IBRTPD | \
- 			      DEXCR_PRO_SRAPD | DEXCR_PRO_NPHIE)
- 
-+/*
-+ * Lock to protect system DEXCR override from concurrent updates.
-+ * RCU semantics: writers take lock, readers are unlocked.
-+ * Writers ensure the memory update is atomic, readers read
-+ * atomically.
-+ */
-+static DEFINE_SPINLOCK(dexcr_sys_enforced_write_lock);
+in the test itself?
+
+> * On handling an exception, I don't check if the NPHIE bit is enabled
+> in the DEXCR.
+> =C2=A0 To do so would require reading both the DEXCR and HDEXCR, for
+> little gain (it
+> =C2=A0 should only matter that the current instruction was a hashchk. If
+> so, the only
+> =C2=A0 reason it would cause an exception is the failed check. If the
+> instruction is
+> =C2=A0 rewritten between exception and check we'd be wrong anyway).
+
+For context, the hashst and hashchk instructions are implemented using
+previously reserved nops.  I'm not aware of any reason a nop could trap
+(i.e. we could check for a trap that came from hashchk even if NPHIE is
+not set), but afaik that'd be the only reason we would have to check.
+
+>=20
+> The series is based on the earlier selftest utils series[1], so the
+> tests won't build
+> at all without applying that first. The kernel side should build fine
+> on ppc/next
+> 247f34f7b80357943234f93f247a1ae6b6c3a740 though.
+>=20
+> [1]:
+> https://patchwork.ozlabs.org/project/linuxppc-dev/cover/20221122231103.15=
+829-1-bgray@linux.ibm.com/
+>=20
+> Benjamin Gray (13):
+> =C2=A0 powerpc/book3s: Add missing <linux/sched.h> include
+> =C2=A0 powerpc: Add initial Dynamic Execution Control Register (DEXCR)
+> =C2=A0=C2=A0=C2=A0 support
+> =C2=A0 powerpc/dexcr: Handle hashchk exception
+> =C2=A0 powerpc/dexcr: Support userspace ROP protection
+> =C2=A0 prctl: Define PowerPC DEXCR interface
+> =C2=A0 powerpc/dexcr: Add prctl implementation
+> =C2=A0 powerpc/dexcr: Add sysctl entry for SBHE system override
+> =C2=A0 powerpc/dexcr: Add enforced userspace ROP protection config
+> =C2=A0 selftests/powerpc: Add more utility macros
+> =C2=A0 selftests/powerpc: Add hashst/hashchk test
+> =C2=A0 selftests/powerpc: Add DEXCR prctl, sysctl interface test
+> =C2=A0 selftests/powerpc: Add DEXCR status utility lsdexcr
+> =C2=A0 Documentation: Document PowerPC kernel DEXCR interface
+>=20
+> =C2=A0Documentation/powerpc/dexcr.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 183 +++++++++++
+> =C2=A0Documentation/powerpc/index.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> =C2=A0arch/powerpc/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 5 +
+> =C2=A0arch/powerpc/include/asm/book3s/64/kexec.h=C2=A0=C2=A0=C2=A0 |=C2=
+=A0=C2=A0 6 +
+> =C2=A0arch/powerpc/include/asm/book3s/64/kup.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0=C2=A0 1 +
+> =C2=A0arch/powerpc/include/asm/cputable.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
+> =C2=A0arch/powerpc/include/asm/ppc-opcode.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> =C2=A0arch/powerpc/include/asm/processor.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 33 ++
+> =C2=A0arch/powerpc/include/asm/reg.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 7 +
+> =C2=A0arch/powerpc/kernel/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=
+=A0 1 +
+> =C2=A0arch/powerpc/kernel/dexcr.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 310
+> ++++++++++++++++++
+> =C2=A0arch/powerpc/kernel/dt_cpu_ftrs.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 4 +
+> =C2=A0arch/powerpc/kernel/process.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 31 +-
+> =C2=A0arch/powerpc/kernel/prom.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ |=C2=A0=C2=A0 4 +
+> =C2=A0arch/powerpc/kernel/traps.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
+=A0=C2=A0 6 +
+> =C2=A0include/uapi/linux/prctl.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ |=C2=A0 14 +
+> =C2=A0kernel/sys.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
+=A0 16 +
+> =C2=A0tools/testing/selftests/powerpc/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0=C2=A0 1 +
+> =C2=A0.../selftests/powerpc/dexcr/.gitignore=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +
+> =C2=A0.../testing/selftests/powerpc/dexcr/Makefile=C2=A0 |=C2=A0 11 +
+> =C2=A0tools/testing/selftests/powerpc/dexcr/cap.c=C2=A0=C2=A0 |=C2=A0 72 =
+++++
+> =C2=A0tools/testing/selftests/powerpc/dexcr/cap.h=C2=A0=C2=A0 |=C2=A0 18 =
 +
-+struct mask_override {
-+	union {
-+		struct {
-+			unsigned int mask;
-+			unsigned int override;
-+		};
-+
-+		/* Raw access for atomic read/write */
-+		unsigned long all;
-+	};
-+};
-+
-+static struct mask_override dexcr_sys_enforced;
-+
-+static int spec_branch_hint_enable = -1;
-+
-+static void update_userspace_system_dexcr(unsigned int pro_mask, int value)
-+{
-+	struct mask_override update = { .all = 0 };
-+
-+	switch (value) {
-+	case -1:  /* Clear the mask bit, clear the override bit */
-+		break;
-+	case 0:  /* Set the mask bit, clear the override bit */
-+		update.mask |= pro_mask;
-+		break;
-+	case 1:  /* Set the mask bit, set the override bit */
-+		update.mask |= pro_mask;
-+		update.override |= pro_mask;
-+		break;
-+	}
-+
-+	spin_lock(&dexcr_sys_enforced_write_lock);
-+
-+	/* Use the existing values for the non-updated bits */
-+	update.mask |= dexcr_sys_enforced.mask & ~pro_mask;
-+	update.override |= dexcr_sys_enforced.override & ~pro_mask;
-+
-+	/* Atomically update system enforced aspects */
-+	WRITE_ONCE(dexcr_sys_enforced.all, update.all);
-+
-+	spin_unlock(&dexcr_sys_enforced_write_lock);
-+}
-+
- static int __init dexcr_init(void)
- {
- 	if (!early_cpu_has_feature(CPU_FTR_ARCH_31))
-@@ -25,6 +80,9 @@ static int __init dexcr_init(void)
- 
- 	mtspr(SPRN_DEXCR, DEFAULT_DEXCR);
- 
-+	if (early_cpu_has_feature(CPU_FTR_DEXCR_SBHE))
-+		update_userspace_system_dexcr(DEXCR_PRO_SBHE, spec_branch_hint_enable);
-+
- 	return 0;
- }
- early_initcall(dexcr_init);
-@@ -52,9 +110,15 @@ unsigned long get_thread_dexcr(struct thread_struct const *t)
- {
- 	unsigned long dexcr = DEFAULT_DEXCR;
- 
-+	/* Atomically read enforced mask & override */
-+	struct mask_override enforced = READ_ONCE(dexcr_sys_enforced);
-+
- 	/* Apply prctl overrides */
- 	dexcr = (dexcr & ~t->dexcr_mask) | t->dexcr_override;
- 
-+	/* Apply system overrides */
-+	dexcr = (dexcr & ~enforced.mask) | enforced.override;
-+
- 	return dexcr;
- }
- 
-@@ -176,3 +240,64 @@ int dexcr_prctl_set(struct task_struct *task, unsigned long which, unsigned long
- 
- 	return 0;
- }
-+
-+#ifdef CONFIG_SYSCTL
-+
-+static const int min_sysctl_val = -1;
-+
-+static int sysctl_dexcr_sbhe_handler(struct ctl_table *table, int write,
-+				     void *buf, size_t *lenp, loff_t *ppos)
-+{
-+	int err;
-+	int prev = spec_branch_hint_enable;
-+
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	if (!cpu_has_feature(CPU_FTR_DEXCR_SBHE))
-+		return -ENODEV;
-+
-+	err = proc_dointvec_minmax(table, write, buf, lenp, ppos);
-+	if (err)
-+		return err;
-+
-+	if (prev != spec_branch_hint_enable && write) {
-+		update_userspace_system_dexcr(DEXCR_PRO_SBHE, spec_branch_hint_enable);
-+		cpus_read_lock();
-+		on_each_cpu(update_dexcr_on_cpu, NULL, 1);
-+		cpus_read_unlock();
-+	}
-+
-+	return 0;
-+}
-+
-+static struct ctl_table dexcr_sbhe_ctl_table[] = {
-+	{
-+		.procname	= "speculative_branch_hint_enable",
-+		.data		= &spec_branch_hint_enable,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= sysctl_dexcr_sbhe_handler,
-+		.extra1		= (void *)&min_sysctl_val,
-+		.extra2		= SYSCTL_ONE,
-+	},
-+	{}
-+};
-+
-+static struct ctl_table dexcr_sbhe_ctl_root[] = {
-+	{
-+		.procname	= "kernel",
-+		.mode		= 0555,
-+		.child		= dexcr_sbhe_ctl_table,
-+	},
-+	{}
-+};
-+
-+static int __init register_dexcr_aspects_sysctl(void)
-+{
-+	register_sysctl_table(dexcr_sbhe_ctl_root);
-+	return 0;
-+}
-+device_initcall(register_dexcr_aspects_sysctl);
-+
-+#endif /* CONFIG_SYSCTL */
--- 
-2.38.1
+> =C2=A0tools/testing/selftests/powerpc/dexcr/dexcr.c | 118 +++++++
+> =C2=A0tools/testing/selftests/powerpc/dexcr/dexcr.h |=C2=A0 54 +++
+> =C2=A0.../selftests/powerpc/dexcr/dexcr_test.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 | 241 ++++++++++++++
+> =C2=A0.../selftests/powerpc/dexcr/hashchk_test.c=C2=A0=C2=A0=C2=A0 | 229 =
++++++++++++++
+> =C2=A0.../testing/selftests/powerpc/dexcr/lsdexcr.c | 178 ++++++++++
+> =C2=A0tools/testing/selftests/powerpc/include/reg.h |=C2=A0=C2=A0 4 +
+> =C2=A0.../testing/selftests/powerpc/include/utils.h |=C2=A0 44 +++
+> =C2=A029 files changed, 1602 insertions(+), 2 deletions(-)
+> =C2=A0create mode 100644 Documentation/powerpc/dexcr.rst
+> =C2=A0create mode 100644 arch/powerpc/kernel/dexcr.c
+> =C2=A0create mode 100644 tools/testing/selftests/powerpc/dexcr/.gitignore
+> =C2=A0create mode 100644 tools/testing/selftests/powerpc/dexcr/Makefile
+> =C2=A0create mode 100644 tools/testing/selftests/powerpc/dexcr/cap.c
+> =C2=A0create mode 100644 tools/testing/selftests/powerpc/dexcr/cap.h
+> =C2=A0create mode 100644 tools/testing/selftests/powerpc/dexcr/dexcr.c
+> =C2=A0create mode 100644 tools/testing/selftests/powerpc/dexcr/dexcr.h
+> =C2=A0create mode 100644
+> tools/testing/selftests/powerpc/dexcr/dexcr_test.c
+> =C2=A0create mode 100644
+> tools/testing/selftests/powerpc/dexcr/hashchk_test.c
+> =C2=A0create mode 100644 tools/testing/selftests/powerpc/dexcr/lsdexcr.c
+>=20
+>=20
+> base-commit: 9dc58a6040662faaf24c8932861f485670fce7ff
+> --
+> 2.38.1
 
