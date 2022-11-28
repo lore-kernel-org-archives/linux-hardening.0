@@ -2,288 +2,209 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C429C4321E
-	for <linux-hardening@archiver.kernel.org>; Mon, 28 Nov 2022 04:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A08C4332F
+	for <linux-hardening@archiver.kernel.org>; Mon, 28 Nov 2022 18:31:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229568AbiK1EF5 (ORCPT
+        id S234081AbiK1Sbj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 27 Nov 2022 23:05:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49746 "EHLO
+        Mon, 28 Nov 2022 13:31:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229682AbiK1EFU (ORCPT
+        with ESMTP id S232583AbiK1SbW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 27 Nov 2022 23:05:20 -0500
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A1E713D41;
-        Sun, 27 Nov 2022 20:05:17 -0800 (PST)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 01B6D5C00B2;
-        Sun, 27 Nov 2022 23:05:15 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Sun, 27 Nov 2022 23:05:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=russell.cc; h=cc
-        :cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm2; t=1669608314; x=
-        1669694714; bh=Y3tnyB2smEGJhveOUBIsKZHaDd+IwyR52h9uCaveTjU=; b=f
-        TVRXzUgXgrf0AhG7IY315R32aMiUMIm/XAqigSEPg37UF/A8C9p8U4iX4nDqZtVk
-        SbSEi45DBQhvhC7ddV+hc61i8fuyjB1ck4KB6U6wUD35EIYWwz99bSGaEEEIY8JJ
-        R0K5nBp4Q0RcDMzZKGDnKQoti46lMrMBPBmhzXfBC3H1nGsFFQow8d/I/JMbI+pb
-        41vUops6akMDGLvZIf5rhAvnDdsfgl6Lgy/VkBMjrMeuo7XFzYqi+/J8lAsbDXio
-        V6+DT1rSyu6i7ZSdiwYo0nNjrssfxz8LPRCa+82Qi+9IOhO/BANleK+zrwYPGUdU
-        8qf3kp/ZykwjZVX0vxrVg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1669608314; x=
-        1669694714; bh=Y3tnyB2smEGJhveOUBIsKZHaDd+IwyR52h9uCaveTjU=; b=q
-        keidwh/911FsqIxLWituvptwqfFUgwvs1TS8OoP9w72V5fjTkVwd2XEkpKf9K7DC
-        s1oGdx0GDCx9BlI8nI2UJwqLa82LCVXNHyFrzjFKjw4xhAglC/CJ3jO/NhNoI+rT
-        gMgfmgDM/bCXUzGxV0DqWwplwLl/lti4/ionh282Munp8pIawEHwie3dT+XB9k5H
-        k8ooaZPdg1I/T93Bcz8GKK5ep1ldJ0ZiT1RDNMZ2djPKXMyKVoztK8HVV9I3HR8G
-        eFaSPo08WpaG/AwCRNiYupGqiYd6CtGLHoy43KO7kPZldCPZEHT4S594i3egS6l5
-        8zQKuph+bMK8cLpbx9F/Q==
-X-ME-Sender: <xms:ejOEY1AHZnKnXDPPq-sjURkqWT4jrYDCD6cq_WvFIxL5uaSvELRiOw>
-    <xme:ejOEYzgZucUDEBALzak2BpGkNfAAe_RM9gQb30Nw_DoBVHbOXIZcSz3G7siwBRs8g
-    Dr6sCInDYH1vcjOfQ>
-X-ME-Received: <xmr:ejOEYwlleEN2OvY82VndbIkLWHoa-ISG9Dy2UCMr2cNtuicW-Ye52dBcvXIq2xPNVORJxacFhU2o92qXiCkq2pf-dpkUJZxlWw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrjedugdeijecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdduhedmnecujfgurhepkffuhffvveffjghftgfgfgggsehtqhertddt
-    reejnecuhfhrohhmpeftuhhsshgvlhhlucevuhhrrhgvhicuoehruhhstghurhesrhhush
-    hsvghllhdrtggtqeenucggtffrrghtthgvrhhnpeduvdffgfffleetgfelledugfevjeef
-    leevveelhfeugfejuefffeejvdduveefffenucffohhmrghinhepohiilhgrsghsrdhorh
-    hgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprhhu
-    shgtuhhrsehruhhsshgvlhhlrdgttg
-X-ME-Proxy: <xmx:ejOEY_yGOBzfn2QT7F-X-8y1sxeuwFS_cONFBZomC5ubaT8_Tv1JuA>
-    <xmx:ejOEY6Sl6wFOqFiQXudhsnwhYkIogFUJ-HYORjHmF1Hx_455q1UEoA>
-    <xmx:ejOEYyZ7PfSqm_E2WGJ9F9COYHT1KwurR82JGd2QPPU8V9wYDQo3hw>
-    <xmx:ejOEYwMWHaYDaThJZzlgx-aj-j7cqTJN4bPsVyTjvRWvIxuK_NpVyQ>
-Feedback-ID: i4421424f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 27 Nov 2022 23:05:12 -0500 (EST)
-Message-ID: <5fc3102ef379d2a34d64cfea93ce7599e0fd640f.camel@russell.cc>
-Subject: Re: [RFC PATCH 00/13] Add DEXCR support
-From:   Russell Currey <ruscur@russell.cc>
-To:     Benjamin Gray <bgray@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc:     ajd@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, cmr@bluescreens.de
-Date:   Mon, 28 Nov 2022 15:05:08 +1100
-In-Reply-To: <20221128024458.46121-1-bgray@linux.ibm.com>
-References: <20221128024458.46121-1-bgray@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.1 (3.46.1-1.fc37) 
+        Mon, 28 Nov 2022 13:31:22 -0500
+Received: from out02.mta.xmission.com (out02.mta.xmission.com [166.70.13.232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B536A1094;
+        Mon, 28 Nov 2022 10:27:05 -0800 (PST)
+Received: from in01.mta.xmission.com ([166.70.13.51]:35544)
+        by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1oziGY-00778D-Ki; Mon, 28 Nov 2022 10:50:02 -0700
+Received: from ip68-110-29-46.om.om.cox.net ([68.110.29.46]:58100 helo=email.froward.int.ebiederm.org.xmission.com)
+        by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1oziGW-006oqs-Bm; Mon, 28 Nov 2022 10:50:02 -0700
+From:   "Eric W. Biederman" <ebiederm@xmission.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Andy Lutomirski' <luto@kernel.org>, Jann Horn <jannh@google.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jorge Merlino <jorge.merlino@canonical.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "John Johansen" <john.johansen@canonical.com>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Richard Haines <richard_c_haines@btinternet.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Todd Kjos <tkjos@google.com>,
+        "Ondrej Mosnacek" <omosnace@redhat.com>,
+        Prashanth Prahlad <pprahlad@redhat.com>,
+        Micah Morton <mortonm@chromium.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "apparmor@lists.ubuntu.com" <apparmor@lists.ubuntu.com>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+References: <20221006082735.1321612-1-keescook@chromium.org>
+        <20221006082735.1321612-2-keescook@chromium.org>
+        <20221006090506.paqjf537cox7lqrq@wittgenstein>
+        <CAG48ez0sEkmaez9tYqgMXrkREmXZgxC9fdQD3mzF9cGo_=Tfyg@mail.gmail.com>
+        <2032f766-1704-486b-8f24-a670c0b3cb32@app.fastmail.com>
+        <d2a6ccdd8a734d36ae88866a4c16019b@AcuMS.aculab.com>
+Date:   Mon, 28 Nov 2022 11:49:07 -0600
+In-Reply-To: <d2a6ccdd8a734d36ae88866a4c16019b@AcuMS.aculab.com> (David
+        Laight's message of "Fri, 14 Oct 2022 22:03:18 +0000")
+Message-ID: <87sfi3rmuk.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1oziGW-006oqs-Bm;;;mid=<87sfi3rmuk.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.110.29.46;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX18hSeGIl+yv8nxANHdnXAlOdUtCNX9Vl/s=
+X-SA-Exim-Connect-IP: 68.110.29.46
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 1/2] fs/exec: Explicitly unshare fs_struct on exec
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 2022-11-28 at 13:44 +1100, Benjamin Gray wrote:
-> This series is based on initial work by Chris Riedl that was not sent
-> to the list.
->=20
-> Adds a kernel interface for userspace to interact with the DEXCR.
-> The DEXCR is a SPR that allows control over various execution
-> 'aspects', such as indirect branch prediction and enabling the
-> hashst/hashchk instructions. Further details are in ISA 3.1B
-> Book 3 chapter 12.
->=20
-> This RFC proposes an interface for users to interact with the DEXCR.
-> It aims to support
->=20
-> * Querying supported aspects
-> * Getting/setting aspects on a per-process level
-> * Allowing global overrides across all processes
->=20
-> There are some parts that I'm not sure on the best way to approach
-> (hence RFC):
->=20
-> * The feature names in arch/powerpc/kernel/dt_cpu_ftrs.c appear to be
-> unimplemented
-> =C2=A0 in skiboot, so are being defined by this series. Is being so
-> verbose fine?
+David Laight <David.Laight@ACULAB.COM> writes:
 
-These are going to need to be added to skiboot before they can be
-referenced in the kernel.  Inclusion in skiboot makes them ABI, the
-kernel is just a consumer.
+> From: Andy Lutomirski
+>> Sent: 14 October 2022 04:18
+> ...
+>> But seriously, this makes no sense at all.  It should not be possible to exec a program and then,
+>> without ptrace, change its cwd out from under it.  Do we really need to preserve this behavior?
+>
+> it maybe ok if the exec'ed program also 'bought-in' to the
+> fact that its cwd and open files might get changed.
+> But imagine someone doing it to a login shell!
 
-> * What aspects should be editable by a process? E.g., SBHE has
-> =C2=A0 effects that potentially bleed into other processes. Should
-> =C2=A0 it only be system wide configurable?
 
-For context, ISA 3.1B p1358 says:=20
+I am slowly catching up on my email and I saw this conversation.
 
-   In some micro-architectures, the execution behav-
-   ior controlled by aspect 0 is difficult to change with
-   any degree of timing precision. The change may
-   also bleed over into other threads on the same pro-
-   cessor. Any environment that has a dependence on
-   the more secure setting of aspect 0 should not
-   change the value, and ideally should share a pro-
-   cessor only with similar threads. For other environ-
-   ments, changes to the effective value of aspect 0
-   represent a relative risk tolerance for its aspect of
-   execution behavior, with the understanding that
-   there will be significant hysteresis in the execution
-   behavior.
-  =20
-If a process sets SBHE for itself and all it takes is context switching
-from a process with SBHE unset to cause exposure, then yeah I think it
-should just be global.  I doubt branch hints have enough impact for
-process granularity to be especially desirable anyway.
+When I initially saw this thread I was confused and thought this
+might run into an issue with fs/locks.c.  I was close but wrong.
+fs/locks.c uses current->files as a sort of process identifier
+and so is very sensitive to when it is unshared.  Making
+unsharing current->files unconditionally a bug.  Not relevant to
+this conversation.
 
-> * Should configuring certain aspects for the process be non-
-> privileged? E.g.,
-> =C2=A0 Is there harm in always allowing configuration of IBRTPD, SRAPD?
-> The *FORCE_SET*
-> =C2=A0 action prevents further process local changes regardless of
-> privilege.
 
-I'm not aware of a reason why it would be a problem to allow
-unprivileged configuration as long as there's a way to prevent further
-changes.  The concerning case is if a mitigation is set by a trusted
-process context, and then untrusted code is executed that manages to
-turn the mitigation off again.
+There are several clone options that were only relevant for the old
+LinuxThreads implementation including CLONE_FS and CLONE_SIGHAND.
+The LinuxThreads implementation has not been needed since
+the introduction of CLONE_THREAD in linux-2.6.0 in 17 Dec 2003.
+Almost 20 years ago.
 
-> * The tests fail Patchwork CI because of the new prctl macros, and
-> the CI
-> =C2=A0 doesn't run headers_install and add -isystem
-> <buildpath>/usr/include to
-> =C2=A0 the make command.
+I suggest we introduce CONFIG_CLONE_FS and CONFIG_SIGHAND to allow
+disabling support of these clone options.  No known user space will
+care.  The are both getting in the way of kernel maintenance so there
+is a reason to start pushing them out.
 
-The CI runs on x86 and cross compiles the kernel and selftests, and
-boots are done in qemu tcg.  Maybe we can skip the build if the symbols
-are undefined or do something like
+Further simply not worrying about UNSHARE_FS during exec fixes the
+race so it essentially a bug fix by code removal.
 
-	#ifndef PR_PPC_DEXCR_...
-		return KSFT_SKIP;
-	#endif
+I believe something like the patch below should get the job done.
 
-in the test itself?
-
-> * On handling an exception, I don't check if the NPHIE bit is enabled
-> in the DEXCR.
-> =C2=A0 To do so would require reading both the DEXCR and HDEXCR, for
-> little gain (it
-> =C2=A0 should only matter that the current instruction was a hashchk. If
-> so, the only
-> =C2=A0 reason it would cause an exception is the failed check. If the
-> instruction is
-> =C2=A0 rewritten between exception and check we'd be wrong anyway).
-
-For context, the hashst and hashchk instructions are implemented using
-previously reserved nops.  I'm not aware of any reason a nop could trap
-(i.e. we could check for a trap that came from hashchk even if NPHIE is
-not set), but afaik that'd be the only reason we would have to check.
-
->=20
-> The series is based on the earlier selftest utils series[1], so the
-> tests won't build
-> at all without applying that first. The kernel side should build fine
-> on ppc/next
-> 247f34f7b80357943234f93f247a1ae6b6c3a740 though.
->=20
-> [1]:
-> https://patchwork.ozlabs.org/project/linuxppc-dev/cover/20221122231103.15=
-829-1-bgray@linux.ibm.com/
->=20
-> Benjamin Gray (13):
-> =C2=A0 powerpc/book3s: Add missing <linux/sched.h> include
-> =C2=A0 powerpc: Add initial Dynamic Execution Control Register (DEXCR)
-> =C2=A0=C2=A0=C2=A0 support
-> =C2=A0 powerpc/dexcr: Handle hashchk exception
-> =C2=A0 powerpc/dexcr: Support userspace ROP protection
-> =C2=A0 prctl: Define PowerPC DEXCR interface
-> =C2=A0 powerpc/dexcr: Add prctl implementation
-> =C2=A0 powerpc/dexcr: Add sysctl entry for SBHE system override
-> =C2=A0 powerpc/dexcr: Add enforced userspace ROP protection config
-> =C2=A0 selftests/powerpc: Add more utility macros
-> =C2=A0 selftests/powerpc: Add hashst/hashchk test
-> =C2=A0 selftests/powerpc: Add DEXCR prctl, sysctl interface test
-> =C2=A0 selftests/powerpc: Add DEXCR status utility lsdexcr
-> =C2=A0 Documentation: Document PowerPC kernel DEXCR interface
->=20
-> =C2=A0Documentation/powerpc/dexcr.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 183 +++++++++++
-> =C2=A0Documentation/powerpc/index.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
-> =C2=A0arch/powerpc/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 5 +
-> =C2=A0arch/powerpc/include/asm/book3s/64/kexec.h=C2=A0=C2=A0=C2=A0 |=C2=
-=A0=C2=A0 6 +
-> =C2=A0arch/powerpc/include/asm/book3s/64/kup.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0=C2=A0 1 +
-> =C2=A0arch/powerpc/include/asm/cputable.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
-> =C2=A0arch/powerpc/include/asm/ppc-opcode.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
-> =C2=A0arch/powerpc/include/asm/processor.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 33 ++
-> =C2=A0arch/powerpc/include/asm/reg.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 7 +
-> =C2=A0arch/powerpc/kernel/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=
-=A0 1 +
-> =C2=A0arch/powerpc/kernel/dexcr.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 310
-> ++++++++++++++++++
-> =C2=A0arch/powerpc/kernel/dt_cpu_ftrs.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 4 +
-> =C2=A0arch/powerpc/kernel/process.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 31 +-
-> =C2=A0arch/powerpc/kernel/prom.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- |=C2=A0=C2=A0 4 +
-> =C2=A0arch/powerpc/kernel/traps.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
-=A0=C2=A0 6 +
-> =C2=A0include/uapi/linux/prctl.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- |=C2=A0 14 +
-> =C2=A0kernel/sys.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 16 +
-> =C2=A0tools/testing/selftests/powerpc/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0=C2=A0 1 +
-> =C2=A0.../selftests/powerpc/dexcr/.gitignore=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +
-> =C2=A0.../testing/selftests/powerpc/dexcr/Makefile=C2=A0 |=C2=A0 11 +
-> =C2=A0tools/testing/selftests/powerpc/dexcr/cap.c=C2=A0=C2=A0 |=C2=A0 72 =
-++++
-> =C2=A0tools/testing/selftests/powerpc/dexcr/cap.h=C2=A0=C2=A0 |=C2=A0 18 =
+diff --git a/fs/exec.c b/fs/exec.c
+index a0b1f0337a62..7ff13c77ad04 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1186,7 +1186,8 @@ static int unshare_sighand(struct task_struct *me)
+ {
+ 	struct sighand_struct *oldsighand = me->sighand;
+ 
+-	if (refcount_read(&oldsighand->count) != 1) {
++	if (IS_ENABLED(CONFIG_CLONE_SIGHAND) &&
++	    refcount_read(&oldsighand->count) != 1) {
+ 		struct sighand_struct *newsighand;
+ 		/*
+ 		 * This ->sighand is shared with the CLONE_SIGHAND
+@@ -1568,6 +1569,9 @@ static void check_unsafe_exec(struct linux_binprm *bprm)
+ 	if (task_no_new_privs(current))
+ 		bprm->unsafe |= LSM_UNSAFE_NO_NEW_PRIVS;
+ 
++	if (!IS_ENABLED(CONFIG_CLONE_FS))
++		return;
 +
-> =C2=A0tools/testing/selftests/powerpc/dexcr/dexcr.c | 118 +++++++
-> =C2=A0tools/testing/selftests/powerpc/dexcr/dexcr.h |=C2=A0 54 +++
-> =C2=A0.../selftests/powerpc/dexcr/dexcr_test.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 | 241 ++++++++++++++
-> =C2=A0.../selftests/powerpc/dexcr/hashchk_test.c=C2=A0=C2=A0=C2=A0 | 229 =
-+++++++++++++
-> =C2=A0.../testing/selftests/powerpc/dexcr/lsdexcr.c | 178 ++++++++++
-> =C2=A0tools/testing/selftests/powerpc/include/reg.h |=C2=A0=C2=A0 4 +
-> =C2=A0.../testing/selftests/powerpc/include/utils.h |=C2=A0 44 +++
-> =C2=A029 files changed, 1602 insertions(+), 2 deletions(-)
-> =C2=A0create mode 100644 Documentation/powerpc/dexcr.rst
-> =C2=A0create mode 100644 arch/powerpc/kernel/dexcr.c
-> =C2=A0create mode 100644 tools/testing/selftests/powerpc/dexcr/.gitignore
-> =C2=A0create mode 100644 tools/testing/selftests/powerpc/dexcr/Makefile
-> =C2=A0create mode 100644 tools/testing/selftests/powerpc/dexcr/cap.c
-> =C2=A0create mode 100644 tools/testing/selftests/powerpc/dexcr/cap.h
-> =C2=A0create mode 100644 tools/testing/selftests/powerpc/dexcr/dexcr.c
-> =C2=A0create mode 100644 tools/testing/selftests/powerpc/dexcr/dexcr.h
-> =C2=A0create mode 100644
-> tools/testing/selftests/powerpc/dexcr/dexcr_test.c
-> =C2=A0create mode 100644
-> tools/testing/selftests/powerpc/dexcr/hashchk_test.c
-> =C2=A0create mode 100644 tools/testing/selftests/powerpc/dexcr/lsdexcr.c
->=20
->=20
-> base-commit: 9dc58a6040662faaf24c8932861f485670fce7ff
-> --
-> 2.38.1
+ 	t = p;
+ 	n_fs = 1;
+ 	spin_lock(&p->fs->lock);
+diff --git a/init/Kconfig b/init/Kconfig
+index 94125d3b6893..8660a6bcc1cf 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1764,6 +1764,23 @@ config KALLSYMS_BASE_RELATIVE
+ 	  time constants, and no relocation pass is required at runtime to fix
+ 	  up the entries based on the runtime load address of the kernel.
+ 
++config CLONE_FS
++	bool
++	default y
++	help
++	  Support CLONE_FS being passed to clone.  The only known user
++	  is the old LinuxThreads package so it should be safe to disable
++	  this option.
++
++config CLONE_SIGHAND
++	bool
++	default y
++	help
++	  Support CLONE_SIGHAND being passed to clone.  The only known user
++	  is the old LinuxThreads package so it should be safe to disable
++	  this option.
++
++
+ # end of the "standard kernel features (expert users)" menu
+ 
+ # syscall, maps, verifier
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 08969f5aa38d..da9017b51da4 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2023,6 +2023,16 @@ static __latent_entropy struct task_struct *copy_process(
+ 	if ((clone_flags & CLONE_SIGHAND) && !(clone_flags & CLONE_VM))
+ 		return ERR_PTR(-EINVAL);
+ 
++	/* Don't allow CLONE_FS if not enabled */
++	if (!IS_ENABLED(CONFIG_CLONE_FS) &&
++	    ((clone_flags & (CLONE_THREAD | CLONE_FS)) == CLONE_FS))
++		return ERR_PTR(-EINVAL);
++
++	/* Don't allow CLONE_SIGHAND if not enabled */
++	if (!IS_ENABLED(CONFIG_CLONE_SIGHAND) &&
++	    ((clone_flags & (CLONE_THREAD | CLONE_SIGHAND)) == CLONE_SIGHAND))
++		return ERR_PTR(-EINVAL);
++
+ 	/*
+ 	 * Siblings of global init remain as zombies on exit since they are
+ 	 * not reaped by their parent (swapper). To solve this and to avoid
+@@ -3101,6 +3111,9 @@ static int unshare_fs(unsigned long unshare_flags, struct fs_struct **new_fsp)
+ 	if (fs->users == 1)
+ 		return 0;
+ 
++	if (!IS_ENABLED(CONFIG_CLONE_FS))
++		return -EINVAL;
++
+ 	*new_fsp = copy_fs_struct(fs);
+ 	if (!*new_fsp)
+ 		return -ENOMEM;
 
+Eric
