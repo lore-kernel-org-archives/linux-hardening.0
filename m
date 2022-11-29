@@ -2,189 +2,134 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1264C4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 29 Nov 2022 10:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA72C4321E
+	for <linux-hardening@archiver.kernel.org>; Tue, 29 Nov 2022 12:24:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229954AbiK2Kjb (ORCPT
+        id S232468AbiK2MY6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 29 Nov 2022 05:39:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58412 "EHLO
+        Tue, 29 Nov 2022 07:24:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231425AbiK2Kjb (ORCPT
+        with ESMTP id S230385AbiK2MY6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 29 Nov 2022 05:39:31 -0500
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EDF1C6E;
-        Tue, 29 Nov 2022 02:39:30 -0800 (PST)
-Received: by mail-pg1-x52d.google.com with SMTP id 62so12584939pgb.13;
-        Tue, 29 Nov 2022 02:39:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ct/dPbMqE7h4fq9J5MYHkEa28gohGcxwuExR+jn/KN4=;
-        b=dZfNI+PJvmBE0K8/tpV17gUYFoJrq/7YYPKSLyrT3W42D7MIR04xIKfZoKqBmU8hLn
-         sysz8GeEG/iceJJW7lCPjthwaS4hvEt1vktABsFlfqb/RelGgwrad3178/G//+isllBA
-         Frudxdh7UtE0a+bb4Dg1RPIhli0g7RC7y5UDPpGl49cUjZKdfOcO6YgCaX0MbMvAyJ8Z
-         uE6L7d0rVIR6IUSwA3yKwVM9zVRThIp/7KPem96bTb6Abr50t0lFJEkwlV5fFxtK4eBS
-         kOYHFs2Dmq415op7mE9d3vmEyAvJ5hfvpOPmLGISVktaJ0EIoguBB9e6Fe1xz7FDrycc
-         rx7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Ct/dPbMqE7h4fq9J5MYHkEa28gohGcxwuExR+jn/KN4=;
-        b=Umla/+gSC33r90qS5pHtgo15C/rG5Jokq8ZJrprjJ2RZwI7tbiHIfIfNzuTbuxpIHg
-         +Y19TIDzYJqyXKy1I2JUn1retD5QjGlmOnToIe2fAUXykNAjp/ZowcBr1hbCWI7GH84+
-         6ILwP7UUBf1tdCOiLM5zGbKbrRIgL7NSbH2RyIQAN+EodGM1rvuWWfmmGUn4ft4tj3ND
-         zjCgcMmxBpnYjvvx/d07L2n6uicSWLY8LjAw5g9RNYnSj1YkRYhXyzgy1/2TUB4ia+4z
-         /ue3xkQJfMZMx8/DwFQ+Af8hKD+OlPWY58ciO7jVpp9XoEU/u+GBXAoenIok7Hq2XLFk
-         ndbw==
-X-Gm-Message-State: ANoB5pk9GT9djXrZ7fXBBE1+QF+vHq2qOblWHSuzagTMG6uOp+mc9hFp
-        s3mr07ST/r3glxRh03uhmlU=
-X-Google-Smtp-Source: AA0mqf67p/212mvFT9Sy0Q8ojeDQfSte4J1QPkHDdKaNdgtjhitBMyj0HLEgKUsBAijfv/fnndHcPw==
-X-Received: by 2002:a63:140e:0:b0:477:b461:3a3b with SMTP id u14-20020a63140e000000b00477b4613a3bmr28146081pgl.623.1669718369512;
-        Tue, 29 Nov 2022 02:39:29 -0800 (PST)
-Received: from localhost (193-116-112-94.tpgi.com.au. [193.116.112.94])
-        by smtp.gmail.com with ESMTPSA id u10-20020a170902714a00b0018941395c40sm10415281plm.285.2022.11.29.02.39.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Nov 2022 02:39:28 -0800 (PST)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Tue, 29 Nov 2022 20:39:24 +1000
-Message-Id: <COOPRF72WR3V.1WPE5NI7M8V7J@bobo>
-Subject: Re: [RFC PATCH 03/13] powerpc/dexcr: Handle hashchk exception
-From:   "Nicholas Piggin" <npiggin@gmail.com>
-To:     "Benjamin Gray" <bgray@linux.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>
-Cc:     <ajd@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>, <cmr@bluescreens.de>
-X-Mailer: aerc 0.13.0
-References: <20221128024458.46121-1-bgray@linux.ibm.com>
- <20221128024458.46121-4-bgray@linux.ibm.com>
-In-Reply-To: <20221128024458.46121-4-bgray@linux.ibm.com>
+        Tue, 29 Nov 2022 07:24:58 -0500
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50CBD4A041;
+        Tue, 29 Nov 2022 04:24:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1669724697; x=1701260697;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=sgAPAU2YJaG40uPP2ZS1Letyp9PAABP/Vbd40Hx4+eQ=;
+  b=pGz/KLPJv1mLdsP/4BGuOHR/7UIiM5eHPjjk454ke4gHjOxaVJZjQaaq
+   48tyQ8o7+0W9v3NQNWEoZyYTc04UQwaTmY6F3DrfW/3bzfbny7umNqjdG
+   ROU4q7oFy77kA4CbAMpZeNoQFy+3U8H3NrrePStb6JiXH4skhufQmpK2O
+   9PEtCXQQFKtFuGEJO+ce6t1ay+QoA3e5kW+qMoKK9FwOH81C4ogzf5RR2
+   lquzMH8BzksjP9c7D15E2AXkblc1IY4Wm3JxdLbnUIgFLWAd5umt9xEq8
+   IS/i0nMrV5QToVnLdhcvF1X59hPNK0OUhG+5nr1izUJFzD54YkseeUXx+
+   g==;
+X-IronPort-AV: E=Sophos;i="5.96,203,1665471600"; 
+   d="scan'208";a="189146869"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Nov 2022 05:24:55 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.12; Tue, 29 Nov 2022 05:24:53 -0700
+Received: from wendy (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12 via Frontend
+ Transport; Tue, 29 Nov 2022 05:24:50 -0700
+Date:   Tue, 29 Nov 2022 12:24:32 +0000
+From:   Conor Dooley <conor.dooley@microchip.com>
+To:     Kees Cook <keescook@chromium.org>
+CC:     Vlastimil Babka <vbabka@suse.cz>, David Gow <davidgow@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-hardening@vger.kernel.org>,
+        <llvm@lists.linux.dev>
+Subject: Re: [PATCH 0/6] slab: Provide full coverage for __alloc_size
+ attribute
+Message-ID: <Y4X6AHdMZcxvFnDP@wendy>
+References: <20221101222520.never.109-kees@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20221101222520.never.109-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon Nov 28, 2022 at 12:44 PM AEST, Benjamin Gray wrote:
-> Recognise and pass the appropriate signal to the user program when a
-> hashchk instruction triggers. This is independent of allowing
-> configuration of DEXCR[NPHIE], as a hypervisor can enforce this aspect
-> regardless of the kernel.
->
-> Signed-off-by: Benjamin Gray <bgray@linux.ibm.com>
-> ---
->  arch/powerpc/include/asm/ppc-opcode.h |  1 +
->  arch/powerpc/include/asm/processor.h  |  6 ++++++
->  arch/powerpc/kernel/dexcr.c           | 22 ++++++++++++++++++++++
->  arch/powerpc/kernel/traps.c           |  6 ++++++
->  4 files changed, 35 insertions(+)
->
-> diff --git a/arch/powerpc/include/asm/ppc-opcode.h b/arch/powerpc/include=
-/asm/ppc-opcode.h
-> index 21e33e46f4b8..89b316466ed1 100644
-> --- a/arch/powerpc/include/asm/ppc-opcode.h
-> +++ b/arch/powerpc/include/asm/ppc-opcode.h
-> @@ -215,6 +215,7 @@
->  #define OP_31_XOP_STFSX	    663
->  #define OP_31_XOP_STFSUX    695
->  #define OP_31_XOP_STFDX     727
-> +#define OP_31_XOP_HASHCHK   754
->  #define OP_31_XOP_STFDUX    759
->  #define OP_31_XOP_LHBRX     790
->  #define OP_31_XOP_LFIWAX    855
-> diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/=
-asm/processor.h
-> index 0a8a793b8b8b..c17ec1e44c86 100644
-> --- a/arch/powerpc/include/asm/processor.h
-> +++ b/arch/powerpc/include/asm/processor.h
-> @@ -448,10 +448,16 @@ void *exit_vmx_ops(void *dest);
-> =20
->  #ifdef CONFIG_PPC_BOOK3S_64
-> =20
-> +bool is_hashchk_trap(struct pt_regs const *regs);
->  unsigned long get_thread_dexcr(struct thread_struct const *t);
-> =20
->  #else
-> =20
-> +static inline bool is_hashchk_trap(struct pt_regs const *regs)
-> +{
-> +	return false;
-> +}
-> +
->  static inline unsigned long get_thread_dexcr(struct thread_struct const =
-*t)
->  {
->  	return 0;
-> diff --git a/arch/powerpc/kernel/dexcr.c b/arch/powerpc/kernel/dexcr.c
-> index 32a0a69ff638..11515e67afac 100644
-> --- a/arch/powerpc/kernel/dexcr.c
-> +++ b/arch/powerpc/kernel/dexcr.c
-> @@ -3,6 +3,9 @@
-> =20
->  #include <asm/cpu_has_feature.h>
->  #include <asm/cputable.h>
-> +#include <asm/disassemble.h>
-> +#include <asm/inst.h>
-> +#include <asm/ppc-opcode.h>
->  #include <asm/processor.h>
->  #include <asm/reg.h>
-> =20
-> @@ -19,6 +22,25 @@ static int __init dexcr_init(void)
->  }
->  early_initcall(dexcr_init);
-> =20
-> +bool is_hashchk_trap(struct pt_regs const *regs)
-> +{
-> +	ppc_inst_t insn;
-> +
-> +	if (!cpu_has_feature(CPU_FTR_DEXCR_NPHIE))
-> +		return false;
-> +
-> +	if (get_user_instr(insn, (void __user *)regs->nip)) {
-> +		WARN_ON(1);
-> +		return false;
-> +	}
+On Tue, Nov 01, 2022 at 03:33:08PM -0700, Kees Cook wrote:
+> Hi,
+> 
+> This is a series to work around a deficiency in GCC (>=11) and Clang
+> (<16) where the __alloc_size attribute does not apply to inlines. :(
+> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96503
+> 
+> This manifests as reduced overflow detection coverage for many allocation
+> sites under CONFIG_FORTIFY_SOURCE=y, where the allocation size was
+> not actually being propagated to __builtin_dynamic_object_size(). In
+> addition to working around the issue, expand use of __alloc_size (and
+> __realloc_size) to more places and provide KUnit tests to validate all
+> the covered allocator APIs.
 
-Nice series, just starting to have a look at it.
+Hello Kees!
 
-You probably don't want a WARN_ON() here because it's user triggerable
-and isn't necessarily even indiciating a problem or attack if the app
-is doing code unmapping in order to get faults.
+It would appear that one of the macros you've added here is doing Bad
+Things^TM to allmodconfig on RISC-V since the 22nd:
 
-Check some of the other instruction emulation for what to do in case of
-an EFAULT.
+../lib/fortify_kunit.c: In function 'alloc_size_kmalloc_const_test':
+../lib/fortify_kunit.c:140:1: error: the frame size of 2384 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
+  140 | }                                                                       \
+      | ^
+../lib/fortify_kunit.c:209:1: note: in expansion of macro 'DEFINE_ALLOC_SIZE_TEST_PAIR'
+  209 | DEFINE_ALLOC_SIZE_TEST_PAIR(kmalloc)
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
 
-> +
-> +	if (ppc_inst_primary_opcode(insn) =3D=3D 31 &&
-> +	    get_xop(ppc_inst_val(insn)) =3D=3D OP_31_XOP_HASHCHK)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
->  unsigned long get_thread_dexcr(struct thread_struct const *t)
->  {
->  	return DEFAULT_DEXCR;
-> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-> index 9bdd79aa51cf..b83f5b382f24 100644
-> --- a/arch/powerpc/kernel/traps.c
-> +++ b/arch/powerpc/kernel/traps.c
-> @@ -1516,6 +1516,12 @@ static void do_program_check(struct pt_regs *regs)
->  				return;
->  			}
->  		}
-> +
-> +		if (user_mode(regs) && is_hashchk_trap(regs)) {
-> +			_exception(SIGILL, regs, ILL_ILLOPN, regs->nip);
-> +			return;
-> +		}
+CONFIG_GCC_VERSION=110100
+CONFIG_AS_VERSION=23700
+CONFIG_LD_VERSION=23700
 
-I guess ILLOPN makes sense. Do you know if any other archs do similar?
+The report came out of my CI (which I should have passed on sooner) so
+I do not have anything other than stderr - I can get you anything else
+you'd like/need though if you LMK.
 
 Thanks,
-Nick
+Conor.
+
+> Kees Cook (6):
+>   slab: Clean up SLOB vs kmalloc() definition
+>   slab: Remove special-casing of const 0 size allocations
+>   slab: Provide functional __alloc_size() hints to kmalloc_trace*()
+>   string: Add __realloc_size hint to kmemdup()
+>   driver core: Add __alloc_size hint to devm allocators
+>   kunit/fortify: Validate __alloc_size attribute results
+> 
+>  include/linux/device.h         |   7 +-
+>  include/linux/fortify-string.h |   2 +-
+>  include/linux/slab.h           |  36 ++---
+>  include/linux/string.h         |   2 +-
+>  lib/Makefile                   |   1 +
+>  lib/fortify_kunit.c            | 255 +++++++++++++++++++++++++++++++++
+>  mm/slab_common.c               |  14 ++
+>  7 files changed, 296 insertions(+), 21 deletions(-)
+> 
+> -- 
+> 2.34.1
+> 
+> 
