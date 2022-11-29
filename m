@@ -2,209 +2,189 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A08C4332F
-	for <linux-hardening@archiver.kernel.org>; Mon, 28 Nov 2022 18:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1264C4332F
+	for <linux-hardening@archiver.kernel.org>; Tue, 29 Nov 2022 10:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234081AbiK1Sbj (ORCPT
+        id S229954AbiK2Kjb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 28 Nov 2022 13:31:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41024 "EHLO
+        Tue, 29 Nov 2022 05:39:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232583AbiK1SbW (ORCPT
+        with ESMTP id S231425AbiK2Kjb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 28 Nov 2022 13:31:22 -0500
-Received: from out02.mta.xmission.com (out02.mta.xmission.com [166.70.13.232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B536A1094;
-        Mon, 28 Nov 2022 10:27:05 -0800 (PST)
-Received: from in01.mta.xmission.com ([166.70.13.51]:35544)
-        by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1oziGY-00778D-Ki; Mon, 28 Nov 2022 10:50:02 -0700
-Received: from ip68-110-29-46.om.om.cox.net ([68.110.29.46]:58100 helo=email.froward.int.ebiederm.org.xmission.com)
-        by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1oziGW-006oqs-Bm; Mon, 28 Nov 2022 10:50:02 -0700
-From:   "Eric W. Biederman" <ebiederm@xmission.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Andy Lutomirski' <luto@kernel.org>, Jann Horn <jannh@google.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jorge Merlino <jorge.merlino@canonical.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "John Johansen" <john.johansen@canonical.com>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Richard Haines <richard_c_haines@btinternet.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Todd Kjos <tkjos@google.com>,
-        "Ondrej Mosnacek" <omosnace@redhat.com>,
-        Prashanth Prahlad <pprahlad@redhat.com>,
-        Micah Morton <mortonm@chromium.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "apparmor@lists.ubuntu.com" <apparmor@lists.ubuntu.com>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-References: <20221006082735.1321612-1-keescook@chromium.org>
-        <20221006082735.1321612-2-keescook@chromium.org>
-        <20221006090506.paqjf537cox7lqrq@wittgenstein>
-        <CAG48ez0sEkmaez9tYqgMXrkREmXZgxC9fdQD3mzF9cGo_=Tfyg@mail.gmail.com>
-        <2032f766-1704-486b-8f24-a670c0b3cb32@app.fastmail.com>
-        <d2a6ccdd8a734d36ae88866a4c16019b@AcuMS.aculab.com>
-Date:   Mon, 28 Nov 2022 11:49:07 -0600
-In-Reply-To: <d2a6ccdd8a734d36ae88866a4c16019b@AcuMS.aculab.com> (David
-        Laight's message of "Fri, 14 Oct 2022 22:03:18 +0000")
-Message-ID: <87sfi3rmuk.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1oziGW-006oqs-Bm;;;mid=<87sfi3rmuk.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.110.29.46;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX18hSeGIl+yv8nxANHdnXAlOdUtCNX9Vl/s=
-X-SA-Exim-Connect-IP: 68.110.29.46
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 1/2] fs/exec: Explicitly unshare fs_struct on exec
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+        Tue, 29 Nov 2022 05:39:31 -0500
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EDF1C6E;
+        Tue, 29 Nov 2022 02:39:30 -0800 (PST)
+Received: by mail-pg1-x52d.google.com with SMTP id 62so12584939pgb.13;
+        Tue, 29 Nov 2022 02:39:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ct/dPbMqE7h4fq9J5MYHkEa28gohGcxwuExR+jn/KN4=;
+        b=dZfNI+PJvmBE0K8/tpV17gUYFoJrq/7YYPKSLyrT3W42D7MIR04xIKfZoKqBmU8hLn
+         sysz8GeEG/iceJJW7lCPjthwaS4hvEt1vktABsFlfqb/RelGgwrad3178/G//+isllBA
+         Frudxdh7UtE0a+bb4Dg1RPIhli0g7RC7y5UDPpGl49cUjZKdfOcO6YgCaX0MbMvAyJ8Z
+         uE6L7d0rVIR6IUSwA3yKwVM9zVRThIp/7KPem96bTb6Abr50t0lFJEkwlV5fFxtK4eBS
+         kOYHFs2Dmq415op7mE9d3vmEyAvJ5hfvpOPmLGISVktaJ0EIoguBB9e6Fe1xz7FDrycc
+         rx7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Ct/dPbMqE7h4fq9J5MYHkEa28gohGcxwuExR+jn/KN4=;
+        b=Umla/+gSC33r90qS5pHtgo15C/rG5Jokq8ZJrprjJ2RZwI7tbiHIfIfNzuTbuxpIHg
+         +Y19TIDzYJqyXKy1I2JUn1retD5QjGlmOnToIe2fAUXykNAjp/ZowcBr1hbCWI7GH84+
+         6ILwP7UUBf1tdCOiLM5zGbKbrRIgL7NSbH2RyIQAN+EodGM1rvuWWfmmGUn4ft4tj3ND
+         zjCgcMmxBpnYjvvx/d07L2n6uicSWLY8LjAw5g9RNYnSj1YkRYhXyzgy1/2TUB4ia+4z
+         /ue3xkQJfMZMx8/DwFQ+Af8hKD+OlPWY58ciO7jVpp9XoEU/u+GBXAoenIok7Hq2XLFk
+         ndbw==
+X-Gm-Message-State: ANoB5pk9GT9djXrZ7fXBBE1+QF+vHq2qOblWHSuzagTMG6uOp+mc9hFp
+        s3mr07ST/r3glxRh03uhmlU=
+X-Google-Smtp-Source: AA0mqf67p/212mvFT9Sy0Q8ojeDQfSte4J1QPkHDdKaNdgtjhitBMyj0HLEgKUsBAijfv/fnndHcPw==
+X-Received: by 2002:a63:140e:0:b0:477:b461:3a3b with SMTP id u14-20020a63140e000000b00477b4613a3bmr28146081pgl.623.1669718369512;
+        Tue, 29 Nov 2022 02:39:29 -0800 (PST)
+Received: from localhost (193-116-112-94.tpgi.com.au. [193.116.112.94])
+        by smtp.gmail.com with ESMTPSA id u10-20020a170902714a00b0018941395c40sm10415281plm.285.2022.11.29.02.39.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Nov 2022 02:39:28 -0800 (PST)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Tue, 29 Nov 2022 20:39:24 +1000
+Message-Id: <COOPRF72WR3V.1WPE5NI7M8V7J@bobo>
+Subject: Re: [RFC PATCH 03/13] powerpc/dexcr: Handle hashchk exception
+From:   "Nicholas Piggin" <npiggin@gmail.com>
+To:     "Benjamin Gray" <bgray@linux.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>
+Cc:     <ajd@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <cmr@bluescreens.de>
+X-Mailer: aerc 0.13.0
+References: <20221128024458.46121-1-bgray@linux.ibm.com>
+ <20221128024458.46121-4-bgray@linux.ibm.com>
+In-Reply-To: <20221128024458.46121-4-bgray@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-David Laight <David.Laight@ACULAB.COM> writes:
-
-> From: Andy Lutomirski
->> Sent: 14 October 2022 04:18
-> ...
->> But seriously, this makes no sense at all.  It should not be possible to exec a program and then,
->> without ptrace, change its cwd out from under it.  Do we really need to preserve this behavior?
+On Mon Nov 28, 2022 at 12:44 PM AEST, Benjamin Gray wrote:
+> Recognise and pass the appropriate signal to the user program when a
+> hashchk instruction triggers. This is independent of allowing
+> configuration of DEXCR[NPHIE], as a hypervisor can enforce this aspect
+> regardless of the kernel.
 >
-> it maybe ok if the exec'ed program also 'bought-in' to the
-> fact that its cwd and open files might get changed.
-> But imagine someone doing it to a login shell!
+> Signed-off-by: Benjamin Gray <bgray@linux.ibm.com>
+> ---
+>  arch/powerpc/include/asm/ppc-opcode.h |  1 +
+>  arch/powerpc/include/asm/processor.h  |  6 ++++++
+>  arch/powerpc/kernel/dexcr.c           | 22 ++++++++++++++++++++++
+>  arch/powerpc/kernel/traps.c           |  6 ++++++
+>  4 files changed, 35 insertions(+)
+>
+> diff --git a/arch/powerpc/include/asm/ppc-opcode.h b/arch/powerpc/include=
+/asm/ppc-opcode.h
+> index 21e33e46f4b8..89b316466ed1 100644
+> --- a/arch/powerpc/include/asm/ppc-opcode.h
+> +++ b/arch/powerpc/include/asm/ppc-opcode.h
+> @@ -215,6 +215,7 @@
+>  #define OP_31_XOP_STFSX	    663
+>  #define OP_31_XOP_STFSUX    695
+>  #define OP_31_XOP_STFDX     727
+> +#define OP_31_XOP_HASHCHK   754
+>  #define OP_31_XOP_STFDUX    759
+>  #define OP_31_XOP_LHBRX     790
+>  #define OP_31_XOP_LFIWAX    855
+> diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/=
+asm/processor.h
+> index 0a8a793b8b8b..c17ec1e44c86 100644
+> --- a/arch/powerpc/include/asm/processor.h
+> +++ b/arch/powerpc/include/asm/processor.h
+> @@ -448,10 +448,16 @@ void *exit_vmx_ops(void *dest);
+> =20
+>  #ifdef CONFIG_PPC_BOOK3S_64
+> =20
+> +bool is_hashchk_trap(struct pt_regs const *regs);
+>  unsigned long get_thread_dexcr(struct thread_struct const *t);
+> =20
+>  #else
+> =20
+> +static inline bool is_hashchk_trap(struct pt_regs const *regs)
+> +{
+> +	return false;
+> +}
+> +
+>  static inline unsigned long get_thread_dexcr(struct thread_struct const =
+*t)
+>  {
+>  	return 0;
+> diff --git a/arch/powerpc/kernel/dexcr.c b/arch/powerpc/kernel/dexcr.c
+> index 32a0a69ff638..11515e67afac 100644
+> --- a/arch/powerpc/kernel/dexcr.c
+> +++ b/arch/powerpc/kernel/dexcr.c
+> @@ -3,6 +3,9 @@
+> =20
+>  #include <asm/cpu_has_feature.h>
+>  #include <asm/cputable.h>
+> +#include <asm/disassemble.h>
+> +#include <asm/inst.h>
+> +#include <asm/ppc-opcode.h>
+>  #include <asm/processor.h>
+>  #include <asm/reg.h>
+> =20
+> @@ -19,6 +22,25 @@ static int __init dexcr_init(void)
+>  }
+>  early_initcall(dexcr_init);
+> =20
+> +bool is_hashchk_trap(struct pt_regs const *regs)
+> +{
+> +	ppc_inst_t insn;
+> +
+> +	if (!cpu_has_feature(CPU_FTR_DEXCR_NPHIE))
+> +		return false;
+> +
+> +	if (get_user_instr(insn, (void __user *)regs->nip)) {
+> +		WARN_ON(1);
+> +		return false;
+> +	}
 
+Nice series, just starting to have a look at it.
 
-I am slowly catching up on my email and I saw this conversation.
+You probably don't want a WARN_ON() here because it's user triggerable
+and isn't necessarily even indiciating a problem or attack if the app
+is doing code unmapping in order to get faults.
 
-When I initially saw this thread I was confused and thought this
-might run into an issue with fs/locks.c.  I was close but wrong.
-fs/locks.c uses current->files as a sort of process identifier
-and so is very sensitive to when it is unshared.  Making
-unsharing current->files unconditionally a bug.  Not relevant to
-this conversation.
+Check some of the other instruction emulation for what to do in case of
+an EFAULT.
 
+> +
+> +	if (ppc_inst_primary_opcode(insn) =3D=3D 31 &&
+> +	    get_xop(ppc_inst_val(insn)) =3D=3D OP_31_XOP_HASHCHK)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>  unsigned long get_thread_dexcr(struct thread_struct const *t)
+>  {
+>  	return DEFAULT_DEXCR;
+> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+> index 9bdd79aa51cf..b83f5b382f24 100644
+> --- a/arch/powerpc/kernel/traps.c
+> +++ b/arch/powerpc/kernel/traps.c
+> @@ -1516,6 +1516,12 @@ static void do_program_check(struct pt_regs *regs)
+>  				return;
+>  			}
+>  		}
+> +
+> +		if (user_mode(regs) && is_hashchk_trap(regs)) {
+> +			_exception(SIGILL, regs, ILL_ILLOPN, regs->nip);
+> +			return;
+> +		}
 
-There are several clone options that were only relevant for the old
-LinuxThreads implementation including CLONE_FS and CLONE_SIGHAND.
-The LinuxThreads implementation has not been needed since
-the introduction of CLONE_THREAD in linux-2.6.0 in 17 Dec 2003.
-Almost 20 years ago.
+I guess ILLOPN makes sense. Do you know if any other archs do similar?
 
-I suggest we introduce CONFIG_CLONE_FS and CONFIG_SIGHAND to allow
-disabling support of these clone options.  No known user space will
-care.  The are both getting in the way of kernel maintenance so there
-is a reason to start pushing them out.
-
-Further simply not worrying about UNSHARE_FS during exec fixes the
-race so it essentially a bug fix by code removal.
-
-I believe something like the patch below should get the job done.
-
-diff --git a/fs/exec.c b/fs/exec.c
-index a0b1f0337a62..7ff13c77ad04 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1186,7 +1186,8 @@ static int unshare_sighand(struct task_struct *me)
- {
- 	struct sighand_struct *oldsighand = me->sighand;
- 
--	if (refcount_read(&oldsighand->count) != 1) {
-+	if (IS_ENABLED(CONFIG_CLONE_SIGHAND) &&
-+	    refcount_read(&oldsighand->count) != 1) {
- 		struct sighand_struct *newsighand;
- 		/*
- 		 * This ->sighand is shared with the CLONE_SIGHAND
-@@ -1568,6 +1569,9 @@ static void check_unsafe_exec(struct linux_binprm *bprm)
- 	if (task_no_new_privs(current))
- 		bprm->unsafe |= LSM_UNSAFE_NO_NEW_PRIVS;
- 
-+	if (!IS_ENABLED(CONFIG_CLONE_FS))
-+		return;
-+
- 	t = p;
- 	n_fs = 1;
- 	spin_lock(&p->fs->lock);
-diff --git a/init/Kconfig b/init/Kconfig
-index 94125d3b6893..8660a6bcc1cf 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1764,6 +1764,23 @@ config KALLSYMS_BASE_RELATIVE
- 	  time constants, and no relocation pass is required at runtime to fix
- 	  up the entries based on the runtime load address of the kernel.
- 
-+config CLONE_FS
-+	bool
-+	default y
-+	help
-+	  Support CLONE_FS being passed to clone.  The only known user
-+	  is the old LinuxThreads package so it should be safe to disable
-+	  this option.
-+
-+config CLONE_SIGHAND
-+	bool
-+	default y
-+	help
-+	  Support CLONE_SIGHAND being passed to clone.  The only known user
-+	  is the old LinuxThreads package so it should be safe to disable
-+	  this option.
-+
-+
- # end of the "standard kernel features (expert users)" menu
- 
- # syscall, maps, verifier
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 08969f5aa38d..da9017b51da4 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2023,6 +2023,16 @@ static __latent_entropy struct task_struct *copy_process(
- 	if ((clone_flags & CLONE_SIGHAND) && !(clone_flags & CLONE_VM))
- 		return ERR_PTR(-EINVAL);
- 
-+	/* Don't allow CLONE_FS if not enabled */
-+	if (!IS_ENABLED(CONFIG_CLONE_FS) &&
-+	    ((clone_flags & (CLONE_THREAD | CLONE_FS)) == CLONE_FS))
-+		return ERR_PTR(-EINVAL);
-+
-+	/* Don't allow CLONE_SIGHAND if not enabled */
-+	if (!IS_ENABLED(CONFIG_CLONE_SIGHAND) &&
-+	    ((clone_flags & (CLONE_THREAD | CLONE_SIGHAND)) == CLONE_SIGHAND))
-+		return ERR_PTR(-EINVAL);
-+
- 	/*
- 	 * Siblings of global init remain as zombies on exit since they are
- 	 * not reaped by their parent (swapper). To solve this and to avoid
-@@ -3101,6 +3111,9 @@ static int unshare_fs(unsigned long unshare_flags, struct fs_struct **new_fsp)
- 	if (fs->users == 1)
- 		return 0;
- 
-+	if (!IS_ENABLED(CONFIG_CLONE_FS))
-+		return -EINVAL;
-+
- 	*new_fsp = copy_fs_struct(fs);
- 	if (!*new_fsp)
- 		return -ENOMEM;
-
-Eric
+Thanks,
+Nick
