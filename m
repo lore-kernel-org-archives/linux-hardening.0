@@ -2,249 +2,60 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A9DC433FE
-	for <linux-hardening@archiver.kernel.org>; Tue, 29 Nov 2022 22:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D80DC4708D
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Nov 2022 09:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235900AbiK2WE1 (ORCPT
+        id S233842AbiK3JcW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 29 Nov 2022 17:04:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43368 "EHLO
+        Wed, 30 Nov 2022 04:32:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233673AbiK2WE0 (ORCPT
+        with ESMTP id S234219AbiK3Jb4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 29 Nov 2022 17:04:26 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E870E6F0C2;
-        Tue, 29 Nov 2022 14:04:25 -0800 (PST)
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2ATKZ2Of014057;
-        Tue, 29 Nov 2022 22:04:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=f9mI2EBvu8nr25/8LzdML+KOEqFBwP1Q3nhzFVYjJvM=;
- b=YDt/sRLOKkjcRN/SKr1ZGxRXcY7OibX78Fa0B6E4CGdoRR+AGkESJ5uoC3n4rH0ZJ6uJ
- PSOxu0j0g0K4L9VvLGS0tEkjFNZUrJXh9jwNcbGNS51emMdCx0WdwNsBZc3rO/pf+nk6
- +A9qtY5UY3xJqwtgU1FROleKcVe/4Qku+41b3ijyxwk86zqt6pCyZwDJCd/I9uNRi1Yf
- yy6sDZwXdUonXjt8ZKrNH+tgU1uQKkaOfWqHBBiYcNYjpOMbMuwUbiy66Zu3ACWhyspF
- iPrD3f40geTdMAoR12Eaa66Sqx3jecO150kyDt+jVYi9mlVMlFujy495KLau6sdtEZmx Hg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3m5q9yn5c0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Nov 2022 22:04:14 +0000
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2ATK30NZ020375;
-        Tue, 29 Nov 2022 22:04:14 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3m5q9yn5aw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Nov 2022 22:04:14 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2ATLoM2O015464;
-        Tue, 29 Nov 2022 22:04:12 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 3m3a2hvsg8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Nov 2022 22:04:12 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2ATM4qxR64422328
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Nov 2022 22:04:52 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DE9C842041;
-        Tue, 29 Nov 2022 22:04:09 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3F73E4203F;
-        Tue, 29 Nov 2022 22:04:09 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 29 Nov 2022 22:04:09 +0000 (GMT)
-Received: from li-0d7fa1cc-2c9d-11b2-a85c-aed20764436d.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 30 Nov 2022 04:31:56 -0500
+Received: from gandalf.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C812C66C8D;
+        Wed, 30 Nov 2022 01:31:38 -0800 (PST)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 1FB33602FD;
-        Wed, 30 Nov 2022 09:04:03 +1100 (AEDT)
-Message-ID: <53d5c0793e3eb2176a19b4fe75d23cc3bc675329.camel@linux.ibm.com>
-Subject: Re: [RFC PATCH 03/13] powerpc/dexcr: Handle hashchk exception
-From:   Benjamin Gray <bgray@linux.ibm.com>
-To:     Nicholas Piggin <npiggin@gmail.com>, linuxppc-dev@lists.ozlabs.org
-Cc:     ajd@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, cmr@bluescreens.de
-Date:   Wed, 30 Nov 2022 09:04:02 +1100
-In-Reply-To: <COOPRF72WR3V.1WPE5NI7M8V7J@bobo>
-References: <20221128024458.46121-1-bgray@linux.ibm.com>
-         <20221128024458.46121-4-bgray@linux.ibm.com>
-         <COOPRF72WR3V.1WPE5NI7M8V7J@bobo>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.1 (3.46.1-1.fc37) 
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4NMYqr6mR0z4xN4;
+        Wed, 30 Nov 2022 20:31:36 +1100 (AEDT)
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+To:     Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <YySE6FHiOcbWWR+9@work>
+References: <YySE6FHiOcbWWR+9@work>
+Subject: Re: [PATCH][next] powerpc/xmon: Fix -Wswitch-unreachable warning in bpt_cmds
+Message-Id: <166980023574.3017288.3366504099438296796.b4-ty@ellerman.id.au>
+Date:   Wed, 30 Nov 2022 20:23:55 +1100
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 6CgXXraI-ooQGJEur6jiiOW1aaHD4ZBs
-X-Proofpoint-ORIG-GUID: pPnkiAmnPiZpEMBTo77ku2XtFvADPSYb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-29_13,2022-11-29_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 mlxlogscore=999 impostorscore=0 adultscore=0 phishscore=0
- malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2210170000 definitions=main-2211290131
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 2022-11-29 at 20:39 +1000, Nicholas Piggin wrote:
-> On Mon Nov 28, 2022 at 12:44 PM AEST, Benjamin Gray wrote:
-> > Recognise and pass the appropriate signal to the user program when
-> > a
-> > hashchk instruction triggers. This is independent of allowing
-> > configuration of DEXCR[NPHIE], as a hypervisor can enforce this
-> > aspect
-> > regardless of the kernel.
-> >=20
-> > Signed-off-by: Benjamin Gray <bgray@linux.ibm.com>
-> > ---
-> > =C2=A0arch/powerpc/include/asm/ppc-opcode.h |=C2=A0 1 +
-> > =C2=A0arch/powerpc/include/asm/processor.h=C2=A0 |=C2=A0 6 ++++++
-> > =C2=A0arch/powerpc/kernel/dexcr.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 | 22 ++++++++++++++++++++++
-> > =C2=A0arch/powerpc/kernel/traps.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 6 ++++++
-> > =C2=A04 files changed, 35 insertions(+)
-> >=20
-> > diff --git a/arch/powerpc/include/asm/ppc-opcode.h
-> > b/arch/powerpc/include/asm/ppc-opcode.h
-> > index 21e33e46f4b8..89b316466ed1 100644
-> > --- a/arch/powerpc/include/asm/ppc-opcode.h
-> > +++ b/arch/powerpc/include/asm/ppc-opcode.h
-> > @@ -215,6 +215,7 @@
-> > =C2=A0#define OP_31_XOP_STFSX=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 663
-> > =C2=A0#define OP_31_XOP_STFSUX=C2=A0=C2=A0=C2=A0 695
-> > =C2=A0#define OP_31_XOP_STFDX=C2=A0=C2=A0=C2=A0=C2=A0 727
-> > +#define OP_31_XOP_HASHCHK=C2=A0=C2=A0 754
-> > =C2=A0#define OP_31_XOP_STFDUX=C2=A0=C2=A0=C2=A0 759
-> > =C2=A0#define OP_31_XOP_LHBRX=C2=A0=C2=A0=C2=A0=C2=A0 790
-> > =C2=A0#define OP_31_XOP_LFIWAX=C2=A0=C2=A0=C2=A0 855
-> > diff --git a/arch/powerpc/include/asm/processor.h
-> > b/arch/powerpc/include/asm/processor.h
-> > index 0a8a793b8b8b..c17ec1e44c86 100644
-> > --- a/arch/powerpc/include/asm/processor.h
-> > +++ b/arch/powerpc/include/asm/processor.h
-> > @@ -448,10 +448,16 @@ void *exit_vmx_ops(void *dest);
-> > =C2=A0
-> > =C2=A0#ifdef CONFIG_PPC_BOOK3S_64
-> > =C2=A0
-> > +bool is_hashchk_trap(struct pt_regs const *regs);
-> > =C2=A0unsigned long get_thread_dexcr(struct thread_struct const *t);
-> > =C2=A0
-> > =C2=A0#else
-> > =C2=A0
-> > +static inline bool is_hashchk_trap(struct pt_regs const *regs)
-> > +{
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return false;
-> > +}
-> > +
-> > =C2=A0static inline unsigned long get_thread_dexcr(struct thread_struct
-> > const *t)
-> > =C2=A0{
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
-> > diff --git a/arch/powerpc/kernel/dexcr.c
-> > b/arch/powerpc/kernel/dexcr.c
-> > index 32a0a69ff638..11515e67afac 100644
-> > --- a/arch/powerpc/kernel/dexcr.c
-> > +++ b/arch/powerpc/kernel/dexcr.c
-> > @@ -3,6 +3,9 @@
-> > =C2=A0
-> > =C2=A0#include <asm/cpu_has_feature.h>
-> > =C2=A0#include <asm/cputable.h>
-> > +#include <asm/disassemble.h>
-> > +#include <asm/inst.h>
-> > +#include <asm/ppc-opcode.h>
-> > =C2=A0#include <asm/processor.h>
-> > =C2=A0#include <asm/reg.h>
-> > =C2=A0
-> > @@ -19,6 +22,25 @@ static int __init dexcr_init(void)
-> > =C2=A0}
-> > =C2=A0early_initcall(dexcr_init);
-> > =C2=A0
-> > +bool is_hashchk_trap(struct pt_regs const *regs)
-> > +{
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ppc_inst_t insn;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!cpu_has_feature(CPU_FTR=
-_DEXCR_NPHIE))
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0return false;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (get_user_instr(insn, (vo=
-id __user *)regs->nip)) {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0WARN_ON(1);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0return false;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
->=20
-> Nice series, just starting to have a look at it.
->=20
-> You probably don't want a WARN_ON() here because it's user
-> triggerable
-> and isn't necessarily even indiciating a problem or attack if the app
-> is doing code unmapping in order to get faults.
->=20
-> Check some of the other instruction emulation for what to do in case
-> of
-> an EFAULT.
+On Fri, 16 Sep 2022 15:15:04 +0100, Gustavo A. R. Silva wrote:
+> When building with automatic stack variable initialization, GCC 12
+> complains about variables defined outside of switch case statements.
+> Move the variable into the case that uses it, which silences the warning:
+> 
+> arch/powerpc/xmon/xmon.c: In function ‘bpt_cmds’:
+> arch/powerpc/xmon/xmon.c:1529:13: warning: statement will never be executed [-Wswitch-unreachable]
+>  1529 |         int mode;
+>       |             ^~~~
+> 
+> [...]
 
-Alright, I'll take a look
+Applied to powerpc/next.
 
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (ppc_inst_primary_opcode(=
-insn) =3D=3D 31 &&
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 get_xop(p=
-pc_inst_val(insn)) =3D=3D OP_31_XOP_HASHCHK)
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0return true;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return false;
-> > +}
-> > +
-> > =C2=A0unsigned long get_thread_dexcr(struct thread_struct const *t)
-> > =C2=A0{
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return DEFAULT_DEXCR;
-> > diff --git a/arch/powerpc/kernel/traps.c
-> > b/arch/powerpc/kernel/traps.c
-> > index 9bdd79aa51cf..b83f5b382f24 100644
-> > --- a/arch/powerpc/kernel/traps.c
-> > +++ b/arch/powerpc/kernel/traps.c
-> > @@ -1516,6 +1516,12 @@ static void do_program_check(struct pt_regs
-> > *regs)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-}
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0if (user_mode(regs) && is_hashchk_trap(regs)) {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0_excep=
-tion(SIGILL, regs, ILL_ILLOPN, regs-
-> > >nip);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return=
-;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0}
->=20
-> I guess ILLOPN makes sense. Do you know if any other archs do
-> similar?
+[1/1] powerpc/xmon: Fix -Wswitch-unreachable warning in bpt_cmds
+      https://git.kernel.org/powerpc/c/1c4a4a4c8410be4a231a58b23e7a30923ff954ac
 
-Ah sorry, when refactoring Chris' patches I forgot to put back in the
-commit message that this is how ARM reports their similar check
-failure. For example, their FPAC handler in
-arch/arm64/kernel/traps.c:518 does this.
+cheers
