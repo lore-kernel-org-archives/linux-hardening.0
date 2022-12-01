@@ -2,113 +2,138 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3A0C43217
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Dec 2022 16:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B836BC43217
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Dec 2022 16:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232209AbiLAQZy (ORCPT
+        id S229851AbiLAQq3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Dec 2022 11:25:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42920 "EHLO
+        Thu, 1 Dec 2022 11:46:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232191AbiLAQZx (ORCPT
+        with ESMTP id S229715AbiLAQqT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Dec 2022 11:25:53 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83068A47E1
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Dec 2022 08:25:52 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id hd14-20020a17090b458e00b0021909875bccso4472007pjb.1
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Dec 2022 08:25:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7Hs75c2RhI6TXhTdmq3LNKwlHtjDutkhRkFYCtYKKrI=;
-        b=Qpi4DGe/ljQZkxVzxzmv+mwMi5BwzACkFN6l31jQTjSBelVBkQ+PVUo3Xz03lrAst2
-         zwJpCgGZQhZClhELY3Vy19Ae+NDtrzl+1S/d+CWrtVEgEwZ1vc5pLer3Pn5yNB2w7pA/
-         eLesWhq2wJwal07BE5Ij1HetfU6apauIQlfJY=
+        Thu, 1 Dec 2022 11:46:19 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E044AAFCD7
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Dec 2022 08:45:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1669913121;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0j7iDCqKcud61bnCVouYTAjXYx/lMBjTVmeuK6IwiIs=;
+        b=JE7etUm8egdxRXYUhmANPa02iyKHHiOlaXYXU/pbuE3kcQYXSpuzw1A3faA5nKKIMLCJqX
+        Ilb0MVni/neJgL43rrQ8bGljrwRAzoc59Ye15Xp6F5W1/JHk9fz+BS7psAGSgsXsdA2ErI
+        W6fSo4DCu/3DN+ITUNo2dNQc5V9Bq6c=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-158-8GSeE8kANBOWn7wNWUAqJw-1; Thu, 01 Dec 2022 11:45:18 -0500
+X-MC-Unique: 8GSeE8kANBOWn7wNWUAqJw-1
+Received: by mail-ej1-f72.google.com with SMTP id oz34-20020a1709077da200b007adc8d68e90so1660944ejc.11
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Dec 2022 08:45:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Hs75c2RhI6TXhTdmq3LNKwlHtjDutkhRkFYCtYKKrI=;
-        b=Di248Snb/l0bz8ef+QzTqK2XjH/kZn1wTl/24spc64fqrq+D1ZiEChQvELkiL2dfPp
-         lupwcE5xfwmNDC1kKsl7K7lc48spajO1aK7rW/1bNzNoOYDl48AiVQERQpqgzOwHAaSW
-         MwaqsYyJ7GuuIWVk7ryX5N0giR2tzaP53HSSD+q9jpJkLx8qI5/+CA2DJv0ibEoznm7E
-         qNVRZu7BTAqF9dt+ZglNahS+fni5J8g12KW2jUz64bqmojMtjRhpJ1L0IHzJc/AjxxKM
-         NrFfgnBr9wwVz4SxAK87F/fhCONfs/MQnY+exBb3tVwULhvpv3u1DukNsudsLRYEetSE
-         g2Wg==
-X-Gm-Message-State: ANoB5pn4jk2EFCws9AvW09uMBG+oEVDVHKy8NIEXdm2t+0MBbWSY26bm
-        NoJB062rJxIzzcaGoHa6T4DyXQ==
-X-Google-Smtp-Source: AA0mqf5Yoi5gUr2+jfODvzG0lhgp9wysmv7TqcWatFoaSj460wZp7jPXjwuGpbg91q0r7SYRxRSPbg==
-X-Received: by 2002:a17:90a:4594:b0:218:f745:76fe with SMTP id v20-20020a17090a459400b00218f74576femr39246937pjg.245.1669911952042;
-        Thu, 01 Dec 2022 08:25:52 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q15-20020a17090311cf00b00176b63535adsm3861906plh.260.2022.12.01.08.25.51
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0j7iDCqKcud61bnCVouYTAjXYx/lMBjTVmeuK6IwiIs=;
+        b=wlQtfcjF+XxbdokpPy78CIsDHnqef4Eh9hU8y9dPPo8RYET9fVhMEFjTktDJF/Bjli
+         t9zwnlZSTcBmkt3vny/tYJ4FtZnLkpRIRRHFHdcTrO2i+Xw5/rGaXEbbifPYE5G4hww7
+         Kgk7t4HuZGMFsK2GYxP9QYeV9Me25bGF9+m4Ii62UasiVmQ0FXemu/Y+KjFcIaLO+crg
+         FUmh+cKrRduSsK8xz15SAEF6jhcVTnBtcfEYg/+vGBfzf0G/fV1+8rGwjcnHeBKANAoo
+         4EZZNK0E4AO9cjHBqpiVr1oax9UHLnyXHI21tfhK+wK+H2DHoqPlwkTKl5JLC4tt9eBZ
+         LBeQ==
+X-Gm-Message-State: ANoB5pm4YoC0cyEFaEezZymaq1LTWYKhJyikkJ1Rke9HKH8TXrOYabEy
+        xkUCQza0aqVK+irRwFb6FY+ASpf+mnXWVlTbHZ7fm6uNip50e+q+nXLP2TmxXRulfIwAsCO69Fn
+        XSep/JpGw7fXCctJgIWczcG9iojy8RvMI7BGagYnvN/uvzq364nkGRi+riBN6Wl9GtGsnBAhItp
+        AhPEJr
+X-Received: by 2002:a17:906:6c7:b0:78d:4061:5e1b with SMTP id v7-20020a17090606c700b0078d40615e1bmr47970160ejb.47.1669913117118;
+        Thu, 01 Dec 2022 08:45:17 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf4eaU/O5iQxd1YPRfrkTQE4uquPar9KRJcIbFIa3jXZVSj/nGj010qrX05SJquNTJ1RK03UPA==
+X-Received: by 2002:a17:906:6c7:b0:78d:4061:5e1b with SMTP id v7-20020a17090606c700b0078d40615e1bmr47970132ejb.47.1669913116866;
+        Thu, 01 Dec 2022 08:45:16 -0800 (PST)
+Received: from ovpn-194-141.brq.redhat.com (nat-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id m11-20020a056402050b00b00467cc919072sm1917760edv.17.2022.12.01.08.45.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Dec 2022 08:25:51 -0800 (PST)
-From:   coverity-bot <keescook@chromium.org>
-X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date:   Thu, 1 Dec 2022 08:25:50 -0800
-To:     Paolo Bonzini <pbonzini@redhat.com>
+        Thu, 01 Dec 2022 08:45:15 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     coverity-bot <keescook@chromium.org>
 Cc:     Sean Christopherson <seanjc@google.com>, x86@kernel.org,
-        Maxim Levitsky <mlevitsk@redhat.com>,
         linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
         Ingo Molnar <mingo@redhat.com>,
         "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>, kvm@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
         Dave Hansen <dave.hansen@linux.intel.com>,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: emulator_leave_smm(): Error handling issues
-Message-ID: <202212010825.8589611F@keescook>
+Subject: Re: Coverity: kvm_hv_flush_tlb(): Uninitialized variables
+In-Reply-To: <202212010825.9FB75F1F@keescook>
+References: <202212010825.9FB75F1F@keescook>
+Date:   Thu, 01 Dec 2022 17:45:14 +0100
+Message-ID: <87edtjf4yt.fsf@ovpn-194-141.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello!
+coverity-bot <keescook@chromium.org> writes:
 
-This is an experimental semi-automated report about issues detected by
-Coverity from a scan of next-20221201 as part of the linux-next scan project:
-https://scan.coverity.com/projects/linux-next-weekly-scan
+> Hello!
+>
+> This is an experimental semi-automated report about issues detected by
+> Coverity from a scan of next-20221201 as part of the linux-next scan project:
+> https://scan.coverity.com/projects/linux-next-weekly-scan
+>
+> You're getting this email because you were associated with the identified
+> lines of code (noted below) that were touched by commits:
+>
+>   Fri Nov 18 12:59:05 2022 -0500
+>     260970862c88 ("KVM: x86: hyper-v: Handle HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST{,EX} calls gently")
+>
+> Coverity reported the following:
+>
+> *** CID 1527764:  Uninitialized variables  (UNINIT)
+> arch/x86/kvm/hyperv.c:2024 in kvm_hv_flush_tlb()
+> 2018     		 * Hyper-V TLFS doesn't explicitly forbid non-empty sparse vCPU
+> 2019     		 * banks (and, thus, non-zero 'var_cnt') for the 'all vCPUs'
+> 2020     		 * case (HV_GENERIC_SET_ALL).  Always adjust data_offset and
+> 2021     		 * consumed_xmm_halves to make sure TLB flush entries are read
+> 2022     		 * from the correct offset.
+> 2023     		 */
+> vvv     CID 1527764:  Uninitialized variables  (UNINIT)
+> vvv     Using uninitialized value "data_offset".
+> 2024     		data_offset += hc->var_cnt * sizeof(sparse_banks[0]);
+> 2025     		consumed_xmm_halves += hc->var_cnt;
+> 2026     	}
+> 2027
+> 2028     	if (hc->code == HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE ||
+> 2029     	    hc->code == HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE_EX ||
+>
+> If this is a false positive, please let us know so we can mark it as
+> such, or teach the Coverity rules to be smarter. If not, please make
+> sure fixes get into linux-next. :) For patches fixing this, please
+> include these lines (but double-check the "Fixes" first):
 
-You're getting this email because you were associated with the identified
-lines of code (noted below) that were touched by commits:
+Looks half legit) 'data_offset' can only be uninitialized here in
+'hc->fast' case but this also means that the only user of 'data_offset'
+(kvm_hv_get_tlb_flush_entries()) below will not use it. So yes, we do
+increment an uninitialized variable but we won't use the result. I think
+we're better off fixing this, even if there's no real issue. I'll send a
+patch, hopefully tomorrow.
 
-  Wed Nov 9 12:31:18 2022 -0500
-    1d0da94cdafe ("KVM: x86: do not go through ctxt->ops when emulating rsm")
+Thanks!
 
-Coverity reported the following:
-
-*** CID 1527763:  Error handling issues  (CHECKED_RETURN)
-arch/x86/kvm/smm.c:631 in emulator_leave_smm()
-625     		cr4 = kvm_read_cr4(vcpu);
-626     		if (cr4 & X86_CR4_PAE)
-627     			kvm_set_cr4(vcpu, cr4 & ~X86_CR4_PAE);
-628
-629     		/* And finally go back to 32-bit mode.  */
-630     		efer = 0;
-vvv     CID 1527763:  Error handling issues  (CHECKED_RETURN)
-vvv     Calling "kvm_set_msr" without checking return value (as is done elsewhere 5 out of 6 times).
-631     		kvm_set_msr(vcpu, MSR_EFER, efer);
-632     	}
-633     #endif
-634
-635     	/*
-636     	 * Give leave_smm() a chance to make ISA-specific changes to the vCPU
-
-If this is a false positive, please let us know so we can mark it as
-such, or teach the Coverity rules to be smarter. If not, please make
-sure fixes get into linux-next. :) For patches fixing this, please
-include these lines (but double-check the "Fixes" first):
-
-Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1527763 ("Error handling issues")
-Fixes: 1d0da94cdafe ("KVM: x86: do not go through ctxt->ops when emulating rsm")
-
-Thanks for your attention!
+>
+> Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+> Addresses-Coverity-ID: 1527764 ("Uninitialized variables")
+> Fixes: 260970862c88 ("KVM: x86: hyper-v: Handle HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST{,EX} calls gently")
+>
+> Thanks for your attention!
 
 -- 
-Coverity-bot
+Vitaly
+
