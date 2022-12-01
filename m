@@ -2,90 +2,100 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCD8C43217
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Dec 2022 20:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31860C4321E
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Dec 2022 21:14:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229913AbiLAURQ (ORCPT
+        id S229658AbiLAVOd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Dec 2022 15:17:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46064 "EHLO
+        Thu, 1 Dec 2022 16:14:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229711AbiLAURP (ORCPT
+        with ESMTP id S229629AbiLAVOc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Dec 2022 15:17:15 -0500
-X-Greylist: delayed 476 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 01 Dec 2022 12:17:14 PST
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050:0:465::202])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1076BEC78
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Dec 2022 12:17:14 -0800 (PST)
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4NNRx42Zfkz9sTB;
-        Thu,  1 Dec 2022 21:09:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-        t=1669925352;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=3nMuZflHCJgjbZeRaAyuyXiAQeVA5CjS44ClyCpw2/w=;
-        b=s5/qofVi31/3/5WDjM8Qau/u5B63myolBZyabcCX+W5aMh89LUzeqt51upKRqfjnnJcIXZ
-        QLGlSnRkR6Tvedxc5wPmdYWUYl+SFlZR7rh8Z84xqf2WpjqxVliHAbzZYacplUPiG7OCfu
-        B4J1NeLzuE0CQRAAI49jYjg8HfFcpQcmPUyMd5z3T/UkrCEawR7n3l145EMqWDaajZ7U2p
-        tbeBB4c0pn8TbGZM9Xe/z3rx7Rw6IuriTn0k4G6bDrfdWQQgIkQ69OKQ/LFKLXmlhPDwAc
-        3M/nrIkIk4rGuSw4Ieuzfb9VGhgwxbIrcIszM/ED/SJOjcgVit34Gx/QwMLFHA==
-Date:   Thu, 1 Dec 2022 21:09:04 +0100
-From:   Stefan Bavendiek <stefan.bavendiek@mailbox.org>
-To:     kernel-hardening@lists.openwall.com
-Cc:     linux-hardening@vger.kernel.org
-Subject: Reducing runtime complexity
-Message-ID: <Y4kJ4Hw0DVfy7S37@mailbox.org>
+        Thu, 1 Dec 2022 16:14:32 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D153BF66E
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Dec 2022 13:14:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669929271; x=1701465271;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rGV9/sGB5NA5ei2xfzI/Xf9HZin/s7i+I+92rYOoLQE=;
+  b=HrFNR+75Gscr71FsEzGXSdxKjomnDt7iToiZBbAmUlAuzuue/vzMkC4q
+   JPSXcVXeTgu/cGsepAbEfi9HiSJkh+ZhC5BUV7xPxuLhR2JFgTO/98dns
+   ie0LStkUV3DKLfXRsp5Pp0+H/G9Ov+vXOIFh8ycfYxCNgGSnn94g2fg0R
+   LkRXaKIgazgd/ggipLQThcbwO0P5rjT31ous0NNIXE3Md7HhxKCjyH31j
+   AG+vwl6xZ/DnyMgTUZ/7aiI9uvHln994oPDsxIR7UaR69ttMD6TPtiAY3
+   wEd4X+pGgdq4m7BL+Q9W/D02TZu5ncFyzTFui/rRwBOKN47ckGCn1v9pB
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="342733212"
+X-IronPort-AV: E=Sophos;i="5.96,210,1665471600"; 
+   d="asc'?scan'208";a="342733212"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 13:14:31 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="646913065"
+X-IronPort-AV: E=Sophos;i="5.96,210,1665471600"; 
+   d="asc'?scan'208";a="646913065"
+Received: from subratad-mobl1.amr.corp.intel.com (HELO desk) ([10.209.101.31])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 13:14:30 -0800
+Date:   Thu, 1 Dec 2022 13:14:29 -0800
+From:   Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To:     Stefan Bavendiek <stefan.bavendiek@mailbox.org>
+Cc:     kernel-hardening@lists.openwall.com,
+        linux-hardening@vger.kernel.org
+Subject: Re: Reducing runtime complexity
+Message-ID: <20221201211429.venqtlzegdbdc7et@desk>
+References: <Y4kJ4Hw0DVfy7S37@mailbox.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="MPVpsBocrGziZFTp"
+        protocol="application/pgp-signature"; boundary="vl2okk3xc343pg2o"
 Content-Disposition: inline
-X-MBO-RS-ID: 2d2959ca247fda16885
-X-MBO-RS-META: j17x8cqmw8u9reffy354333mgtww1roa
+In-Reply-To: <Y4kJ4Hw0DVfy7S37@mailbox.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
---MPVpsBocrGziZFTp
-Content-Type: text/plain; charset=us-ascii
+--vl2okk3xc343pg2o
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
 
-Some time ago I wrote a thesis about complexity in the Linux kernel and how to reduce it in order to limit the attack surface[1].
-While the results are unlikely to bring news to the audience here, it did indicate some possible ways to avoid exposing optional kernel features when they are not needed.
-The basic idea would be to either build or configure parts of the kernel after or during the installation on a specific host.
+On Thu, Dec 01, 2022 at 09:09:04PM +0100, Stefan Bavendiek wrote:
+>Some time ago I wrote a thesis about complexity in the Linux kernel and
+>how to reduce it in order to limit the attack surface[1]. While the
+>results are unlikely to bring news to the audience here, it did
+>indicate some possible ways to avoid exposing optional kernel features
+>when they are not needed. The basic idea would be to either build or
+>configure parts of the kernel after or during the installation on a
+>specific host. Distributions are commonly shipping the kernel as one
+>large binary that includes support for nearly every hardware driver and
+>optional feature
 
-Distributions are commonly shipping the kernel as one large binary that includes support for nearly every hardware driver and optional feature, but the end user will normally use very little of this.
-In comparison, a custom kernel build for a particular device and use case, would be significantly smaller. While the reduced complexity won't be directly linked with reduction in attack surface, from my understanding the difference would make a relevant impact.
+Is this really true? Most drivers are built as loadable modules and are
+only loaded when the hardware is present.
 
-The question I keep wondering about is how feasible this is for general purpose distributions to have the kernel "rebuild" in this way when it is installed on a particular machine.
+Are you suggesting to configure-out the modules that are always static?
+This sounds like an embedded system build.
 
-- Stefan
-
-
-[1] https://doi.org/10.13140/RG.2.2.29943.70561
-
---MPVpsBocrGziZFTp
+--vl2okk3xc343pg2o
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEjLwAv8xLYF1doyZLdIuckz2DLQMFAmOJCdQACgkQdIuckz2D
-LQMndA//WbwikJvResHro4tj8M59EvcRMfcgMSSGWidjb1GtxJEfH6HA1yjcDFKL
-5N8S+BdLy40wUClNQ8G1I3fRDOALJAUceaJj7bhvmHqDpD9gmOgYMRDukUq2eD9w
-/mdFgtYug4WAlBbrCAEI0QzjAHL2zYjYkGV45MvK1z8QGC0u8U6VolnuIJftk2pT
-QiTcU4Mg7l0E68hIrbEiRb+uVJgVYf+FQ18AsBrY9Cv9m+E+KP5z9Zi6yiKZDLWt
-HSm2po2NfGq65hovAS1oHEMZI8Gdmo6Fr1EE6K3QSksox0zSwmhsyGDr61qKPOWx
-83UEkmsDuFbkBpgDb/PWxx1Y78b71VBMg3Nd3DfLw4bsRtkNGm7JhZtEUv3yPASO
-0Dmjr0jzYsGEOHsF2pvrOeod/HiQ0/b/mPiLQb9ufG9wsqiVDU8Rydjvbgi1kMB/
-kudD8Dn72LCnqrSSQX9hu54clIPZUnePdahI+zvRFYbkfKpb1fPCc2xWxBq1dcsD
-VB7XVLEklaCI+rG1feKmxcnYmXezl/CsKe+6wzFxQszH/G29NOOy5R9pjvhpXiJw
-T5FddGp58q1/6en4bXbsK9XyjieOjhY+qWVn69QnfQt3s2ISGipQpbKLj4CJ4TyH
-yaEHmQoy4C5D2BJFg9opSONOrsA2MfPdOwrhgYaWdAPnlpZGefg=
-=XKYN
+iQIzBAABCAAdFiEEhLB5DdoLvdxF3TZu/KkigcHMTKMFAmOJGTUACgkQ/KkigcHM
+TKO8Hg/7BtJQa0gxh2s6wp8eQu0bVFa6vPEf4jHnO27WARZRidGnlg9WzOqxF4Pq
+BTrdHlRsmrNbW0dl2T2ke2s5bs5YBIb1j/6nAVEiHy58yS89r80AXxIrPuQU6h/u
+IeebBtst8mvgj/cOUnguiE191ZmBizyGcgiRDVHTXFOFWBhNBe3dmSUNefgiUpr0
+BWKticd6Dm0EeKyOE3xR+gvsdz9kbmw2nE6KXpdwnjcu0VH7tMJx4v/jmzb+EUV4
+i/c9p3DmPR6HSBQM3OzMozFt55ttlw+P9R14PHt2oNJWNbgVvdkr8kq6Am4QUn0M
+q7QyD6nennNS2Gq5NsOlF6CR3xt1YLGZJjglpOuGGLwF0kNO1JTjlVKdKe3AjkjB
+9KS+QVLIcm/KaT8wJaTKZc+AvlHQBRaXgY+X6IwLAPDHkISEqRHjESmDhI4KYSLo
+qEhLbVBu+2dnSbn7PAF3dIbqP9Sa3y6ioieRBjBZW6if2IkNHwSxfV1pq6WtkvQ6
+3pGbCVu1Ah4LWIqRbfXFkX6VEt9V+A4kiytqNXnBdodZjCeOTNIr6rmbRMH18Z8d
+F/4xyh7kNqrbFn68K0mMloR3Oc0eWzdcTtBXjwoNyJ2nuq6i3CEYx+d5QBijCUgf
+GDENGYW15VujEs5jfdN+UDdv8xpJFJECs1pdf+WQfKMpyyM+J1I=
+=NnWb
 -----END PGP SIGNATURE-----
 
---MPVpsBocrGziZFTp--
+--vl2okk3xc343pg2o--
