@@ -2,80 +2,117 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DA8C4332F
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Dec 2022 23:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C57C4332F
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Dec 2022 23:22:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231293AbiLAXVk (ORCPT
+        id S231543AbiLAXWu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Dec 2022 18:21:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51180 "EHLO
+        Thu, 1 Dec 2022 18:22:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231335AbiLAXVj (ORCPT
+        with ESMTP id S231518AbiLAXWu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Dec 2022 18:21:39 -0500
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21F4AC8680
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Dec 2022 15:21:39 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id b21so3093937plc.9
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Dec 2022 15:21:39 -0800 (PST)
+        Thu, 1 Dec 2022 18:22:50 -0500
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 617C122505
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Dec 2022 15:22:48 -0800 (PST)
+Received: by mail-pg1-x52f.google.com with SMTP id h193so2953483pgc.10
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Dec 2022 15:22:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=l8fV0JLFD2/Rj3gFozDpPt6akgqe3c/uNAz9i68e/Ns=;
-        b=irGAoFAzu0KV2LWJLDt6khSgbUR9v1U0syF34+yTJCoS8bB/v3VBjQ4vn8GiJ/NImP
-         SpQH4mGgKrrwElMOUJlTEvfsU+eqlA4zUXh0I2g6U3bmEpiqLQv77Bd0VkzpRdlzoydh
-         xw9kHifI4gaIMAmxfe2lEWbQFhfZriZ0KgKRw=
+        bh=S55j1GM26l88fCy8Cwvgg1U+53HZFDkiSHsMw4aLUOg=;
+        b=B5JEM5AvjXgpEVamzuf8eGSnPsd/ZyjSbjDL/1h1I+QGbLhYvNWxN/GvwJsZ9Hnk6U
+         fSsUUB2XCABsd5N8c/kuaZlFUimXjDi2XcML/IxiXvPtraObdRIrG6FvQxVzMso3Ai2m
+         V31M/9uhRF5yvwhbaIr317ihQfnl71bRfUpOo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l8fV0JLFD2/Rj3gFozDpPt6akgqe3c/uNAz9i68e/Ns=;
-        b=yRuvEQb/9d3fZ4YoBVkl/mwBC/SC5v5t11+zy4+xMQdPvGsSuZFftoEnCbHrIBQx70
-         of0jPfxk1809XiGxfbTlhWcwXpn/ohGVJxVbkQLPVTNKRYdCjs3aDTRYzHV/HCmrl8z5
-         eDzgQfndejCIM7km4Wje/Gui+tx8Ye8a+bu8ow3t+7e/lkB1DP6f9bCzRAyDBGddX5pJ
-         9OTjArVWxRcrSof79Y8Hs1ZOV8gfibSVA3SHXPH0Oa0LUfCB2QJ2RUPPCW/wSkTdgFk+
-         llJAONa58O7Ve+3fN57GiTgIKT8ekrHGzI/m9OYtgmjgAt4sqPXp5Dndc/djZw3Pabpq
-         efgA==
-X-Gm-Message-State: ANoB5pmV7e9jxf2gvd+h8G05aMHrTLB4m3A86kDHgfRw9PW6Y1jNw/eP
-        uG/DwF1ELplJUyXhikDInp8qqg==
-X-Google-Smtp-Source: AA0mqf7Cx5IGen6d2/oau4vpJ7GD2N1BTLjfZZxHShOWSrBCuScbfeKEMudxRcgY1ZxyX9tKrwPFQg==
-X-Received: by 2002:a17:902:e949:b0:189:7a15:1336 with SMTP id b9-20020a170902e94900b001897a151336mr28155708pll.122.1669936898649;
-        Thu, 01 Dec 2022 15:21:38 -0800 (PST)
+        bh=S55j1GM26l88fCy8Cwvgg1U+53HZFDkiSHsMw4aLUOg=;
+        b=Wcqgq7/4tFDoQCT7m5SWfE8/qjjBgi3+vJX5t9Vx9VESx4o3blDAbhvwunYioWahv4
+         /S0gxkZCucpPxuB0asCjni9MnXetdE+aAPgfg8CLbMp2EZu+E1IqWx61sFPcIR+WA5yM
+         KgQ0nqk6jNyQwgFFBKTXqtEI/1gtKrIMUgks6r8BaSZaPA8pe38O6/WHV53u6qU/0S1X
+         yWK7EDFBvvmqyqwqWQZH4OpWvoxa6Qz6P948c7i202Xi8+kykcGI2Z8EqBahjgwB0w+y
+         +O+8PT+dvdJkEHMQdlCcWNAG5WSXrbAGIYTEXFeLAE1N6o6QblpVIhatTALFGpFOsrXK
+         GrAQ==
+X-Gm-Message-State: ANoB5pl8jWzp5zxuUTZYSBhlc+7nFoYfNn6P72hyQtARq4huJUgI4riD
+        EWjf28jy5N4V1xsA726whEDIEw==
+X-Google-Smtp-Source: AA0mqf7fZxs4hLpJQQbUuA0FCBTxjIxpVNLkOGaREDWVex2GFWW/6G0JzwsrZ3tOTgk3YMpayim+/w==
+X-Received: by 2002:a63:495e:0:b0:43c:a5cb:5d1b with SMTP id y30-20020a63495e000000b0043ca5cb5d1bmr43861545pgk.134.1669936967871;
+        Thu, 01 Dec 2022 15:22:47 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c194-20020a621ccb000000b0056d3b8f530csm3771504pfc.34.2022.12.01.15.21.37
+        by smtp.gmail.com with ESMTPSA id i17-20020a170902c95100b001870dc3b4c0sm4263317pla.74.2022.12.01.15.22.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Dec 2022 15:21:38 -0800 (PST)
-Date:   Thu, 1 Dec 2022 15:21:37 -0800
+        Thu, 01 Dec 2022 15:22:47 -0800 (PST)
+Date:   Thu, 1 Dec 2022 15:22:46 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Stefan Bavendiek <stefan.bavendiek@mailbox.org>
-Cc:     kernel-hardening@lists.openwall.com,
-        linux-hardening@vger.kernel.org
-Subject: Re: Reducing runtime complexity
-Message-ID: <202212011520.F7FE481@keescook>
-References: <Y4kJ4Hw0DVfy7S37@mailbox.org>
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>, kvm@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: Coverity: emulator_leave_smm(): Error handling issues
+Message-ID: <202212011522.0A318649@keescook>
+References: <202212010825.8589611F@keescook>
+ <Y4jwBahPrkwOI3w9@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y4kJ4Hw0DVfy7S37@mailbox.org>
+In-Reply-To: <Y4jwBahPrkwOI3w9@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Dec 01, 2022 at 09:09:04PM +0100, Stefan Bavendiek wrote:
-> Some time ago I wrote a thesis about complexity in the Linux kernel and how to reduce it in order to limit the attack surface[1].
-> While the results are unlikely to bring news to the audience here, it did indicate some possible ways to avoid exposing optional kernel features when they are not needed.
-> The basic idea would be to either build or configure parts of the kernel after or during the installation on a specific host.
+On Thu, Dec 01, 2022 at 06:18:45PM +0000, Sean Christopherson wrote:
+> On Thu, Dec 01, 2022, coverity-bot wrote:
+> > Hello!
+> > 
+> > This is an experimental semi-automated report about issues detected by
+> > Coverity from a scan of next-20221201 as part of the linux-next scan project:
+> > https://scan.coverity.com/projects/linux-next-weekly-scan
+> > 
+> > You're getting this email because you were associated with the identified
+> > lines of code (noted below) that were touched by commits:
+> > 
+> >   Wed Nov 9 12:31:18 2022 -0500
+> >     1d0da94cdafe ("KVM: x86: do not go through ctxt->ops when emulating rsm")
+> > 
+> > Coverity reported the following:
+> > 
+> > *** CID 1527763:  Error handling issues  (CHECKED_RETURN)
+> > arch/x86/kvm/smm.c:631 in emulator_leave_smm()
+> > 625     		cr4 = kvm_read_cr4(vcpu);
+> > 626     		if (cr4 & X86_CR4_PAE)
+> > 627     			kvm_set_cr4(vcpu, cr4 & ~X86_CR4_PAE);
+> > 628
+> > 629     		/* And finally go back to 32-bit mode.  */
+> > 630     		efer = 0;
+> > vvv     CID 1527763:  Error handling issues  (CHECKED_RETURN)
+> > vvv     Calling "kvm_set_msr" without checking return value (as is done elsewhere 5 out of 6 times).
+> > 631     		kvm_set_msr(vcpu, MSR_EFER, efer);
+> > 632     	}
+> > 633     #endif
+> > 634
+> > 635     	/*
+> > 636     	 * Give leave_smm() a chance to make ISA-specific changes to the vCPU
+> > 
+> > If this is a false positive, please let us know so we can mark it as
 > 
-> Distributions are commonly shipping the kernel as one large binary that includes support for nearly every hardware driver and optional feature, but the end user will normally use very little of this.
-> In comparison, a custom kernel build for a particular device and use case, would be significantly smaller. While the reduced complexity won't be directly linked with reduction in attack surface, from my understanding the difference would make a relevant impact.
-> 
-> The question I keep wondering about is how feasible this is for general purpose distributions to have the kernel "rebuild" in this way when it is installed on a particular machine.
+> It's not a false positive per se, but absent a KVM bug the call can never fail.
+> Ditto for the kvm_set_cr{0,4}() calls above.  That said, I'm tempted to "fix"
+> these since we've had bugs related to this code in the past.  This doesn't seem
+> too ugly...
 
-Much of the functionality is modules, so once a system is booted and
-running the expected workloads, one can set the modules_disabled sysctl
-and block everything else from being loaded.
+Yeah, that's what I've done with similar cases. "This should be
+impossible" get a WARN_ONCE and fail gracefully.
 
 -Kees
 
