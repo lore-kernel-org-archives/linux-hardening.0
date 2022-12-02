@@ -2,53 +2,53 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E75EC4321E
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 22:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F62C47090
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 22:13:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229657AbiLBWLi (ORCPT
+        id S234872AbiLBWNO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Dec 2022 17:11:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58824 "EHLO
+        Fri, 2 Dec 2022 17:13:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233793AbiLBWLg (ORCPT
+        with ESMTP id S234869AbiLBWNH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Dec 2022 17:11:36 -0500
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B0FBF89A6
-        for <linux-hardening@vger.kernel.org>; Fri,  2 Dec 2022 14:11:35 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id s7so5860845plk.5
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Dec 2022 14:11:35 -0800 (PST)
+        Fri, 2 Dec 2022 17:13:07 -0500
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57E69BD406
+        for <linux-hardening@vger.kernel.org>; Fri,  2 Dec 2022 14:13:04 -0800 (PST)
+Received: by mail-pf1-x430.google.com with SMTP id l127so5503107pfl.2
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Dec 2022 14:13:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=w0dcCRAw7breQBxRgO7vXMzRE1EKaCH1sm8fAccBDKk=;
-        b=OwVi+W7xvxR/nGjj39pmX3oRQiji/LPiwOpKAVbcIfM5DiCUEx2CVjjGCPgXGrAYj2
-         5UoXRgnzXLZKAL8W05vLqFxBXlQ6XcoYM3KtBnvhqQMVng3lNY2A1Ac0VfEk1e+mkKH0
-         2KCcNECGN1AEN2hcX554Bmw8qWfXqc5l8cIxA=
+        bh=/kWu3ykUp6jy2oE1ZRRlRshB8WYV422H/n94yGeyIhw=;
+        b=GAXzEoo+S14lTK4cD0oXTEUsG2k/16arWIJHGYDGGoAITzPptHOYra+4PIZqAMKrAp
+         0tB61+aGUNfbM+CwM2yGVn+YfT1RARaHjexCaAWA6Kq22roouKhqhimPBUwevE+wG2Sg
+         ZdiVdxiW6gDD6Q9OAe7rXSCASwOhwS+nWPyfQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-disposition:mime-version:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w0dcCRAw7breQBxRgO7vXMzRE1EKaCH1sm8fAccBDKk=;
-        b=RU8xA006wP5VdzA/sswZyEXNK7uhUjfVsc3tRdKUCh4cGLsAhzhJt1L8OJNs6iLJjQ
-         0X5PnmUNXPMYlbGElT0cws032barUOgcbnbNfLBTWOReSZXwF56BeXM8q7p9tzZsfNRJ
-         ChgW4SrtQT25Kb9vV/c3xG1ZJYBj3+5j8pvoYI7RFvrfsC6F6RQQxlALhjSopjaOYWHn
-         8hAOGHpUjmILXZISfec8suvA4veqkmVQRjMtB9SKhHKRF+2VXOHoQ1BdwiuJgjFRVtHH
-         vwpoye4pCiLhFZ7YKZK9zPZDqGZmbVdlCOi0uLrJ5MYKXV7E1TJx66VhWQoljsiMTPt7
-         CM2Q==
-X-Gm-Message-State: ANoB5pm9dT0qmUm4z0kXGjSTYByFiRtoJOI3FxFlg9mCIKvpxuh+Dp4q
-        7a0wvu5+yorrdQtI8dgSZeI3qQ==
-X-Google-Smtp-Source: AA0mqf6QTLbmI+X8jti2r+C7tdO68/bOJUECQQLNnuZG8zdOtdYlL2NT2bZgqzSjU6DeRIsbPY36zw==
-X-Received: by 2002:a17:90a:9e5:b0:219:5139:7fa8 with SMTP id 92-20020a17090a09e500b0021951397fa8mr20815064pjo.15.1670019094904;
-        Fri, 02 Dec 2022 14:11:34 -0800 (PST)
+        bh=/kWu3ykUp6jy2oE1ZRRlRshB8WYV422H/n94yGeyIhw=;
+        b=WWP/iBYufLhAe7y9qwhq6C0HWapHhEi6nkDIyy8q7jPlhrDnQ0w78s70VzK7KlsVEh
+         MNsoG1NoQwQPaJRygb3BnqHeQimfsme8F8cOgbh3yXOoVI80KY+7hvQ4hwSWpBSaQc8b
+         3G9wCJSwTHw3c0RAEbaU+7bTD3Cy0DEyOeaaWJh9e2ZBsKc6xexeqX8BrL2Zljnys5JW
+         XK0kp9X5KNx+7f85/NxDRE+PRf/GJkzOpwJvAoxQbNyVWTF7TDBwHnk05OqIxdpCPSAd
+         N1TqXUFBokagSRb1BX3yAOdZbkq/I1+jRA7ZquykmCvcQMsV5OquUgvlRAkxd0fLd1oj
+         gO+w==
+X-Gm-Message-State: ANoB5pnjoujX1E5VQcqYAE5fee3ERyMqpj2PDEBPMMJTYMuHy60Y5TYO
+        tuFvB/VYOHG8OhK9E0qJnW7HSg==
+X-Google-Smtp-Source: AA0mqf4yMGLxJ4yzBzgABiEyiOC9Cw7v89H4Mg51yU3dIagFC0iIYu5hjOGUJWotx3YNlubWgYaiJQ==
+X-Received: by 2002:a63:dd16:0:b0:476:d2d9:5151 with SMTP id t22-20020a63dd16000000b00476d2d95151mr45023874pgg.487.1670019184321;
+        Fri, 02 Dec 2022 14:13:04 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h131-20020a628389000000b0056bb36c047asm5510216pfe.105.2022.12.02.14.11.34
+        by smtp.gmail.com with ESMTPSA id f205-20020a6238d6000000b00574679561b4sm5563234pfa.134.2022.12.02.14.13.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Dec 2022 14:11:34 -0800 (PST)
+        Fri, 02 Dec 2022 14:13:03 -0800 (PST)
 From:   coverity-bot <keescook@chromium.org>
 X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date:   Fri, 2 Dec 2022 14:11:33 -0800
+Date:   Fri, 2 Dec 2022 14:13:02 -0800
 To:     Shayne Chen <shayne.chen@mediatek.com>
 Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
         linux-wireless@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
@@ -72,8 +72,8 @@ Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
         Sujuan Chen <sujuan.chen@mediatek.com>,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: mt7996_hw_queue_read(): Integer handling issues
-Message-ID: <202212021411.A5E618D3@keescook>
+Subject: Coverity: mt7996_mcu_rx_radar_detected(): Insecure data handling
+Message-ID: <202212021413.392BADAF@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -95,22 +95,22 @@ lines of code (noted below) that were touched by commits:
 
 Coverity reported the following:
 
-*** CID 1527813:  Integer handling issues  (SIGN_EXTENSION)
-drivers/net/wireless/mediatek/mt76/mt7996/debugfs.c:460 in mt7996_hw_queue_read()
-454     	for (i = 0; i < size; i++) {
-455     		u32 ctrl, head, tail, queued;
-456
-457     		if (val & BIT(map[i].index))
-458     			continue;
-459
-vvv     CID 1527813:  Integer handling issues  (SIGN_EXTENSION)
-vvv     Suspicious implicit sign extension: "map[i].qid" with type "u8" (8 bits, unsigned) is promoted in "map[i].qid << 24" to type "int" (32 bits, signed), then sign-extended to type "unsigned long" (64 bits, unsigned).  If "map[i].qid << 24" is greater than 0x7FFFFFFF, the upper bits of the result will all be 1.
-460     		ctrl = BIT(31) | (map[i].pid << 10) | (map[i].qid << 24);
-461     		mt76_wr(dev, MT_FL_Q0_CTRL, ctrl);
-462
-463     		head = mt76_get_field(dev, MT_FL_Q2_CTRL,
-464     				      GENMASK(11, 0));
-465     		tail = mt76_get_field(dev, MT_FL_Q2_CTRL,
+*** CID 1527812:  Insecure data handling  (TAINTED_SCALAR)
+drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:338 in mt7996_mcu_rx_radar_detected()
+332     {
+333     	struct mt76_phy *mphy = &dev->mt76.phy;
+334     	struct mt7996_mcu_rdd_report *r;
+335
+336     	r = (struct mt7996_mcu_rdd_report *)skb->data;
+337
+vvv     CID 1527812:  Insecure data handling  (TAINTED_SCALAR)
+vvv     Using tainted variable "r->band_idx" as an index into an array "(*dev).mt76.phys".
+338     	mphy = dev->mt76.phys[r->band_idx];
+339     	if (!mphy)
+340     		return;
+341
+342     	if (r->band_idx == MT_RX_SEL2)
+343     		cfg80211_background_radar_event(mphy->hw->wiphy,
 
 If this is a false positive, please let us know so we can mark it as
 such, or teach the Coverity rules to be smarter. If not, please make
@@ -118,7 +118,7 @@ sure fixes get into linux-next. :) For patches fixing this, please
 include these lines (but double-check the "Fixes" first):
 
 Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1527813 ("Integer handling issues")
+Addresses-Coverity-ID: 1527812 ("Insecure data handling")
 Fixes: 98686cd21624 ("wifi: mt76: mt7996: add driver for MediaTek Wi-Fi 7 (802.11be) devices")
 
 Thanks for your attention!
