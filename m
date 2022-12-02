@@ -2,141 +2,117 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8B5C4332F
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 01:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 576BBC3A5A7
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 01:35:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232108AbiLBBET (ORCPT
+        id S230456AbiLBBff (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Dec 2022 20:04:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55780 "EHLO
+        Thu, 1 Dec 2022 20:35:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231142AbiLBBES (ORCPT
+        with ESMTP id S229893AbiLBBff (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Dec 2022 20:04:18 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A1ECB206
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Dec 2022 17:04:17 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id k7so3270915pll.6
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Dec 2022 17:04:17 -0800 (PST)
+        Thu, 1 Dec 2022 20:35:35 -0500
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58CCDD20A4
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Dec 2022 17:35:34 -0800 (PST)
+Received: by mail-pg1-x531.google.com with SMTP id 6so3180813pgm.6
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Dec 2022 17:35:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mgD8FhgaFk9oCftVcbd5rE8c85Ck+hk9NaPIDPM9D7Y=;
-        b=aXrpwNbgm5OLZXe+psbrCgfJS4wj+DxUnSQ11xpRLZp40aoUthPqou72FOg4Nk2znH
-         WQrtt3K6jfLcVlpWIHtisgX0R7aWBFh2i7PfSELXEFP/a6bue3UTlFtiw48XuH4WDtc0
-         F8Xh1TTkIXfh1heg7JV6bZrQ7+BE0SvwOoZaQ=
+        bh=CFb3U5p+g9lHeAJEKkWmB54GJi34sM+dMSVNG4ofgcI=;
+        b=mdafWcQTAJYDEQ2dOGqG6ilVN2VKgB8RpEUHnDf8RiKhaOq0MKEbdp5cfX8NIvn97I
+         6/ahQ5hyeJLoiAtAMJ/lMf7umtTcDcoTi33aivbciA8wLlGp2BDEi42fdNinfTJ34jTz
+         9IclAngJoJMYwcRhCg0k4ykpIKZU8Yl5koyAo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=mgD8FhgaFk9oCftVcbd5rE8c85Ck+hk9NaPIDPM9D7Y=;
-        b=L41lJAgTACgTSfsPeVohlcGVybzrVZl2oTJN0Whguzervf2vcUuTEgSdOCYLj0twMZ
-         UvyPJ4XAZavUWPL3tiObzuUhfDYBxj0xudTgX/ufaMoZPCU7kNoFEZa749+XaXW4Ul3K
-         zteX2Xe+d6M3XH+90JDLwpSNjhyWeQjuytj8xLNTi+INk1/qHwew4GwNQ4Oh22U0tnKn
-         Lu17uq+eHgXXVUXELZ3f0zIWRFWYALN8yet1KlDQ9OwxZFYjPIB4vBNy79jko7SI2vCp
-         0D2w5BwdadYtjXW4eyytDJza3voKrwtKfBOKPo3FN1R6V44Ht5fNK+tdAPsqPVvsyYRe
-         wk4A==
-X-Gm-Message-State: ANoB5pnRk76CLMDJbQsSOhSfuopF4rPT/g9LT2Em0TYuUuSH0SkVyWXp
-        RcmBRSGQSwFuUiBzeedatp91bA==
-X-Google-Smtp-Source: AA0mqf5o3BeIFoW83AbmXDjzB9oWBsGdeQwe595mOIjOvfykNr4VKujP0z1ZS/WKspE1J6UFVJIEgA==
-X-Received: by 2002:a17:902:bd04:b0:189:38a1:30fe with SMTP id p4-20020a170902bd0400b0018938a130femr47006070pls.47.1669943057301;
-        Thu, 01 Dec 2022 17:04:17 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w81-20020a627b54000000b0057255b7c8easm3839384pfc.33.2022.12.01.17.04.16
+        bh=CFb3U5p+g9lHeAJEKkWmB54GJi34sM+dMSVNG4ofgcI=;
+        b=wXyD5yJ2nmD5TVUloWWQcORai/SR99dJIEINZ/J4FOO1cVeDgUe9YwhMX/kgttlOcv
+         VZVnafLNo+IKB6nMxF0uBWwICLkZfdIzS/nw25SxwJPCJzga6BoB/+KXeV2S37txYu94
+         LLkj6cDnAm4wRge8hat0KSsAmffvDA3ja5VoTzj0nrhIkDTeVGslmRuPjboDfsRiq+IA
+         FfMkYJ7OHOmtDupUkdQQYwGYdYWPpvI143qX6u038wHkXXzsKQAhRj6cZbEJkEGXuYhv
+         hY/EhloV/vJLGYtdQQlnOS5kClfe7cz5mpDu1Rsi3UumNs5um+jjwP+1qHnV6hyadwRp
+         9wJA==
+X-Gm-Message-State: ANoB5pmvsY7pdN5oolJty1dCkuA7qiBk2UE2x49uIDNMwp9brPeiAbCO
+        2fAJwDDVDyM/I+jvNxl0fDgnXg==
+X-Google-Smtp-Source: AA0mqf7A4pjAtf52pyg17PB+DLjH1xkxcDzx5zywoVg/h0X18sxGNmaa3OBZrWn1jeYQiHgNE8kbhw==
+X-Received: by 2002:aa7:8686:0:b0:576:1b68:2b59 with SMTP id d6-20020aa78686000000b005761b682b59mr5884350pfo.72.1669944933695;
+        Thu, 01 Dec 2022 17:35:33 -0800 (PST)
+Received: from jeffxud.c.googlers.com.com (30.202.168.34.bc.googleusercontent.com. [34.168.202.30])
+        by smtp.gmail.com with ESMTPSA id s13-20020a65690d000000b00477fb27eaddsm3074241pgq.63.2022.12.01.17.35.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Dec 2022 17:04:16 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Pankaj Gupta <pankaj.gupta@nxp.com>,
-        Gaurav Jain <gaurav.jain@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] crypto/caam: Avoid GCC constprop bug warning
-Date:   Thu,  1 Dec 2022 17:04:14 -0800
-Message-Id: <20221202010410.gonna.444-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        Thu, 01 Dec 2022 17:35:33 -0800 (PST)
+From:   jeffxu@chromium.org
+To:     skhan@linuxfoundation.org, keescook@chromium.org
+Cc:     akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
+        dverkamp@chromium.org, hughd@google.com, jeffxu@google.com,
+        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        mnissler@chromium.org, jannh@google.com,
+        linux-hardening@vger.kernel.org, Jeff Xu <jeffxu@chromium.org>
+Subject: [PATCH v3] mm/memfd: MFD_NOEXEC_SEAL and MFD_EXEC
+Date:   Fri,  2 Dec 2022 01:33:58 +0000
+Message-Id: <20221202013404.163143-1-jeffxu@google.com>
+X-Mailer: git-send-email 2.39.0.rc0.267.gcb52ba06e7-goog
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2834; h=from:subject:message-id; bh=xh4MxFL84Wy20TxfRpoAzNdIE896T/TUz2F6Ru6YtCM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjiU8Nv8CsDf2sTBuvc9KYWF5qFW721OEsR46gpWiR MEbbVnOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY4lPDQAKCRCJcvTf3G3AJlVYD/ 9v+qIE/EyYegIvaxfV8obcYEMuN3x9SF+CAa68Qd6JGjXbCipnKim4YNCrlIhsmVwE/tO06p+LJk2S kHXAL6vsoN8TZnp6ByyH6NeLmuftpptVBT6wu4lxkXmBjJQzuYtlgAkRDOgOq9Wm0D+ly2MlMJW9h2 bKGxJY8YkYWTDT9OzSKuQLpU6y5kVkfDiGDP7QKRkpk7buT2aQa0xHRZTZY7MFutfNstcw+XeL8e5C 5DFuHMKzZQtXsN9p9O5QsBFqsphVli3xl34t3YDd9c4uyhL8mdl6ahVQeOYmu8tr+6a+OShw+WEi1b nGhekoLQM5CB6XTAfmvV2XIMVgfpb0c2zR16DGGCqgKDZKfe2ZgCyywnkt7MN6aVc9+Y66GkgZ1kEV 7pSNjP3T+YYOiWVM/52S6yQna03IBCV9ls5bEO32XUxOniZWb1JxXCyjQ+w6DfISBx8Rl5zjNq1Fz0 KRlV6zqUf0PO65GGn1POuty8nOLxPQ6hbt6PylPrXDbBGkRq7Cjcc6K70xyNWWxCeHgm+f7uVqmdoX 7RdOXI8r5s+3uFH+cSuH2dawHfH/sLmip+qlNnjFG83BrSygx0nb1kYoWmEXcdc4ZR4iFVaD8GZshx JBcSKCu2FceYBBugRUkJC/L2PFrEceTaJS/hTlK+dX1X8pnHU6o06gAjfBVQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-GCC 12 appears to perform constant propagation incompletely(?) and can
-no longer notice that "len" is always 0 when "data" is NULL. Expand the
-check to avoid warnings about memcpy() having a NULL argument:
+From: Jeff Xu <jeffxu@chromium.org>
 
-   ...
-                    from drivers/crypto/caam/key_gen.c:8:
-   drivers/crypto/caam/desc_constr.h: In function 'append_data.constprop':
-   include/linux/fortify-string.h:48:33: warning: argument 2 null where non-null expected [-Wnonnull]
-      48 | #define __underlying_memcpy     __builtin_memcpy
-         |                                 ^
-   include/linux/fortify-string.h:438:9: note: in expansion of macro '__underlying_memcpy'
-     438 |         __underlying_##op(p, q, __fortify_size);                        \
-         |         ^~~~~~~~~~~~~
+Since Linux introduced the memfd feature, memfd have always had their execute bit set, and the memfd_create() syscall doesn't allow setting it differently.
 
-The NULL was being propagated from:
+However, in a secure by default system, such as ChromeOS, (where all executables should come from the rootfs, which is protected by Verified boot), this executable nature of memfd opens a door for NoExec bypass and enables “confused deputy attack”.  E.g, in VRP bug [1]: cros_vm process created a memfd to share the content with an external process, however the memfd is overwritten and used for executing arbitrary code and root escalation. [2] lists more VRP in this kind.
 
-        append_fifo_load_as_imm(desc, NULL, 0, LDST_CLASS_2_CCB |
-                                FIFOLD_TYPE_MSG | FIFOLD_TYPE_LAST2);
-...
-static inline void append_##cmd##_as_imm(u32 * const desc, const void *data, \
-                                         unsigned int len, u32 options) \
-{ \
-        PRINT_POS; \
-        append_cmd_data(desc, data, len, CMD_##op | options); \
-}
-...
-APPEND_CMD_PTR_TO_IMM(fifo_load, FIFO_LOAD);
-...
-static inline void append_cmd_data(u32 * const desc, const void *data, int len,
-                                   u32 command)
-{
-        append_cmd(desc, command | IMMEDIATE | len);
-        append_data(desc, data, len);
-}
+On the other hand, executable memfd has its legit use, runc uses memfd’s seal and executable feature to copy the contents of the binary then execute them, for such system, we need a solution to differentiate runc's use of  executable memfds and an attacker's [3].
 
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "Horia Geantă" <horia.geanta@nxp.com>
-Cc: Pankaj Gupta <pankaj.gupta@nxp.com>
-Cc: Gaurav Jain <gaurav.jain@nxp.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: linux-crypto@vger.kernel.org
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/lkml/202210290446.qBayTfzl-lkp@intel.com
-Tested-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v1: https://lore.kernel.org/lkml/20221028210527.never.934-kees@kernel.org/
-v2: update comment (anders)
-Note that this is about GCC, not sparse (any more).
----
- drivers/crypto/caam/desc_constr.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+To address those above, this set of patches add following:
+1> Let memfd_create() set X bit at creation time.
+2> Let memfd to be sealed for modifying X bit.
+3> A new pid namespace sysctl: vm.memfd_noexec to control behavior of X bit.  For example, if a container has vm.memfd_noexec=2, then memfd_create() without MFD_NOEXEC_SEAL will be rejected.
+4> A new security hook in memfd_create(). This make it possible to a new LSM, which rejects or allows executable memfd based on its security policy.
 
-diff --git a/drivers/crypto/caam/desc_constr.h b/drivers/crypto/caam/desc_constr.h
-index 62ce6421bb3f..d9da4173af9d 100644
---- a/drivers/crypto/caam/desc_constr.h
-+++ b/drivers/crypto/caam/desc_constr.h
-@@ -163,7 +163,8 @@ static inline void append_data(u32 * const desc, const void *data, int len)
- {
- 	u32 *offset = desc_end(desc);
- 
--	if (len) /* avoid sparse warning: memcpy with byte count of 0 */
-+	/* Avoid GCC warning: memcpy with NULL dest (but byte count of 0). */
-+	if (data && len)
- 		memcpy(offset, data, len);
- 
- 	(*desc) = cpu_to_caam32(caam32_to_cpu(*desc) +
+This is V3 version of patch: see [4] [5] for previous versions.
+ 
+[1] https://crbug.com/1305411
+[2] https://bugs.chromium.org/p/chromium/issues/list?q=type%3Dbug-security%20memfd%20escalation&can=1
+[3] https://lwn.net/Articles/781013/
+[4] https://lwn.net/Articles/890096/
+[5] https://lore.kernel.org/lkml/20220805222126.142525-1-jeffxu@google.com/
+
+Daniel Verkamp (2):
+  mm/memfd: add F_SEAL_EXEC
+  selftests/memfd: add tests for F_SEAL_EXEC
+
+Jeff Xu (4):
+  mm/memfd: add MFD_NOEXEC_SEAL and MFD_EXEC
+  selftests/memfd: add tests for MFD_NOEXEC_SEAL MFD_EXEC
+  mm/memfd: security hook for memfd_create
+  mm/memfd: Add write seals when apply SEAL_EXEC to executable memfd
+
+ include/linux/lsm_hook_defs.h              |   1 +
+ include/linux/lsm_hooks.h                  |   4 +
+ include/linux/pid_namespace.h              |  19 ++
+ include/linux/security.h                   |   6 +
+ include/uapi/linux/fcntl.h                 |   1 +
+ include/uapi/linux/memfd.h                 |   4 +
+ kernel/pid_namespace.c                     |  47 ++++
+ mm/memfd.c                                 |  54 +++-
+ mm/shmem.c                                 |   6 +
+ tools/testing/selftests/memfd/fuse_test.c  |   1 +
+ tools/testing/selftests/memfd/memfd_test.c | 305 ++++++++++++++++++++-
+ 11 files changed, 445 insertions(+), 3 deletions(-)
+
+
+base-commit: eb7081409f94a9a8608593d0fb63a1aa3d6f95d8
 -- 
-2.34.1
+2.39.0.rc0.267.gcb52ba06e7-goog
 
