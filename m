@@ -2,126 +2,126 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A44C4332F
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 22:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96079C47088
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 22:09:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234818AbiLBWFs (ORCPT
+        id S234372AbiLBWJC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Dec 2022 17:05:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52300 "EHLO
+        Fri, 2 Dec 2022 17:09:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234698AbiLBWFq (ORCPT
+        with ESMTP id S234317AbiLBWJA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Dec 2022 17:05:46 -0500
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B66F2DB0DB
-        for <linux-hardening@vger.kernel.org>; Fri,  2 Dec 2022 14:05:45 -0800 (PST)
-Received: by mail-pf1-x42b.google.com with SMTP id z14so2217961pfr.11
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Dec 2022 14:05:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YGmhfz9LKketteJ29KbDn67sA38cLHNS36kuvwxlMm8=;
-        b=TSqUQgbjbBdg6dvDWR1KVKuTEI3gAe6/W+8DLD7nw2mWi+QX+pcwtPxwJFoxQmJGEe
-         uNxgwfWgkBGeh75QcHsRkRMQfxOkr6GVNv7M9DU6N537BAZNupUYZmYR8DdUZWlAAwbR
-         KMF3Htct7RWcrCqmWw5tW/Ic0PXvyQHTzFYVE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YGmhfz9LKketteJ29KbDn67sA38cLHNS36kuvwxlMm8=;
-        b=qE7YBX0r4n/awFcxgQ58lp8a3iCUsL4lkyydyGXzvT+OiBWL6GsEUSlMBNVmW5yA+W
-         /fp4quSyp/9h+2k+t84Dya46qohgaSVJ0c9R2o+ZS0ti2geIg5lJebM7MvUvyTavm4iy
-         IKVQVHVgFkm0fuASNmDd1/BbCK2ZZUYnFwOnMCFKPe9LbYwbXgkDO8JWQHe9cOOiexkB
-         ID6Y78uJzmFg3BSjWLgqPiFWpHBJp2Tiq0Y15yFn6ClJdcqTa7UaA2Ee+KYMBpFSZd/w
-         gCvlyGDiE3zakQ5hFYHdtI9Pv2hVaZDb25ofimDdr2lU3wuURvcwxgGQQa4kF2+5K6+X
-         G0rA==
-X-Gm-Message-State: ANoB5pn+yLlFI1Cs/Njx3oCTbKud121+iTRIKWGRQMDlsXch7TaEHxVS
-        8p3bTZKoxkE5waFxjyFdW/OtHA==
-X-Google-Smtp-Source: AA0mqf5DhG6zysI+aj3WH5KAazaNoxWHCLIcnDeHYGVOYKMWwq4jAur5eQGJ0+dbDGN2a+EriUvEoA==
-X-Received: by 2002:a05:6a00:4009:b0:563:2ada:30a3 with SMTP id by9-20020a056a00400900b005632ada30a3mr55402742pfb.27.1670018745233;
-        Fri, 02 Dec 2022 14:05:45 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s24-20020a17090ad49800b00210125b789dsm5170014pju.54.2022.12.02.14.05.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Dec 2022 14:05:44 -0800 (PST)
-From:   coverity-bot <keescook@chromium.org>
-X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
-Date:   Fri, 2 Dec 2022 14:05:43 -0800
-To:     Shayne Chen <shayne.chen@mediatek.com>
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
-        linux-wireless@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Kalle Valo <kvalo@kernel.org>,
-        StanleyYP Wang <StanleyYP.Wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Peter Chiu <chui-hao.chiu@mediatek.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Money Wang <Money.Wang@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        Howard Hsu <howard-yh.hsu@mediatek.com>,
-        linux-mediatek@lists.infradead.org, Felix Fietkau <nbd@nbd.name>,
+        Fri, 2 Dec 2022 17:09:00 -0500
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32778E801F
+        for <linux-hardening@vger.kernel.org>; Fri,  2 Dec 2022 14:08:58 -0800 (PST)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-251-qOdtnuOcMPyNnrWdwCRZpQ-1; Fri, 02 Dec 2022 22:08:55 +0000
+X-MC-Unique: qOdtnuOcMPyNnrWdwCRZpQ-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 2 Dec
+ 2022 22:08:54 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.044; Fri, 2 Dec 2022 22:08:54 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Kees Cook' <keescook@chromium.org>
+CC:     'Anders Roxell' <anders.roxell@linaro.org>,
+        =?iso-8859-2?Q?Horia_Geant=E3?= <horia.geanta@nxp.com>,
+        Pankaj Gupta <pankaj.gupta@nxp.com>,
+        Gaurav Jain <gaurav.jain@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
-        Evelyn Tsai <evelyn.tsai@mediatek.com>,
-        linux-kernel@vger.kernel.org,
-        MeiChia Chiu <meichia.chiu@mediatek.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Bo Jiao <Bo.Jiao@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Sujuan Chen <sujuan.chen@mediatek.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Coverity: mt7996_rf_regval_set(): Integer handling issues
-Message-ID: <202212021405.93CF11D2A@keescook>
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "kernel test robot" <lkp@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: RE: [PATCH] crypto/caam: Avoid GCC constprop bug warning
+Thread-Topic: [PATCH] crypto/caam: Avoid GCC constprop bug warning
+Thread-Index: AQHZBekth9IOKPP1MEG2CcwZTmA4Xa5aWPsAgACbPoCAADOrgA==
+Date:   Fri, 2 Dec 2022 22:08:54 +0000
+Message-ID: <188246d459d14c93a9b71352fdc4698e@AcuMS.aculab.com>
+References: <20221028210527.never.934-kees@kernel.org>
+ <20221202005814.GD69385@mutt>
+ <4f7ffdd948a84013a0e84876b3e3944b@AcuMS.aculab.com>
+ <202212021057.B1B1BDE380@keescook>
+In-Reply-To: <202212021057.B1B1BDE380@keescook>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello!
+From: Kees Cook
+> Sent: 02 December 2022 18:58
+> 
+> On Fri, Dec 02, 2022 at 10:01:50AM +0000, David Laight wrote:
+> > From: Anders Roxell
+> > > Sent: 02 December 2022 00:58
+> > >
+> > > On 2022-10-28 14:05, Kees Cook wrote:
+> > > > GCC 12 appears to perform constant propagation incompletely(?) and can
+> > > > no longer notice that "len" is always 0 when "data" is NULL. Expand the
+> > > > check to avoid warnings about memcpy() having a NULL argument:
+> > > >
+> > > >    ...
+> > > >                     from drivers/crypto/caam/key_gen.c:8:
+> > > >    drivers/crypto/caam/desc_constr.h: In function 'append_data.constprop':
+> > > >    include/linux/fortify-string.h:48:33: warning: argument 2 null where non-null expected [-
+> > > Wnonnull]
+> > > >       48 | #define __underlying_memcpy     __builtin_memcpy
+> > > >          |                                 ^
+> > > >    include/linux/fortify-string.h:438:9: note: in expansion of macro '__underlying_memcpy'
+> > > >      438 |         __underlying_##op(p, q, __fortify_size);                        \
+> > > >          |         ^~~~~~~~~~~~~
+> > ...
+> >
+> > Is this really a bug in the fortify-string wrappers?
+> > IIRC the call is memcpy(NULL, ptr, 0) (or maybe memcpy(ptr, NULL, 0).
+> > In either case call can be removed at compile time.
+> >
+> > I'd bet that the constant propagation of 'len' fails because
+> > of all the intermediate variables that get used in order to
+> > avoid multiple evaluation.
+> >
+> > The some 'tricks' that are used in min() (see minmax.h) to
+> > generate a constant output for constant input could be
+> > use to detect a compile-time zero length.
+> >
+> > Something like:
+> > #define memcpy(dst, src, len) \
+> > 	(__is_constzero(len) ? (dst) : memcpy_check(dst, src, len))
+> >
+> > With:
+> > #define __is_constzero(x) sizeof(*(1 ? (void *)(x) : (int *)0) != 1)
+> > Which could go into const.h and used in the definition of __is_constexpr().
+> 
+> While it could be possible to strip the nonnull attribute, I think it's
+> not an unreasonable check to have. This is literally the only case in
+> the entire kernel that is tripped, for example.
 
-This is an experimental semi-automated report about issues detected by
-Coverity from a scan of next-20221202 as part of the linux-next scan project:
-https://scan.coverity.com/projects/linux-next-weekly-scan
+It is probably the only place that calls memcpy() with compile-time
+NULL and zero length.
+IIRC the memcpy() call comes from a #define expansion where some
+expansions don't need anything copied.
+A simple 'builtin_constant' check and then one for zero in the
+#define itself would probably suffice - and avoid the call
+being compiled in at all.
 
-You're getting this email because you were associated with the identified
-lines of code (noted below) that were touched by commits:
+	David
 
-  Thu Dec 1 17:29:14 2022 +0100
-    98686cd21624 ("wifi: mt76: mt7996: add driver for MediaTek Wi-Fi 7 (802.11be) devices")
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-Coverity reported the following:
-
-*** CID 1527816:  Integer handling issues  (INCOMPATIBLE_CAST)
-drivers/net/wireless/mediatek/mt76/mt7996/debugfs.c:657 in mt7996_rf_regval_set()
-651
-652     static int
-653     mt7996_rf_regval_set(void *data, u64 val)
-654     {
-655     	struct mt7996_dev *dev = data;
-656
-vvv     CID 1527816:  Integer handling issues  (INCOMPATIBLE_CAST)
-vvv     Pointer "&val" points to an object whose effective type is "unsigned long long" (64 bits, unsigned) but is dereferenced as a narrower "unsigned int" (32 bits, unsigned). This may lead to unexpected results depending on machine endianness.
-657     	return mt7996_mcu_rf_regval(dev, dev->mt76.debugfs_reg, (u32 *)&val, true);
-658     }
-659
-660     DEFINE_DEBUGFS_ATTRIBUTE(fops_rf_regval, mt7996_rf_regval_get,
-661     			 mt7996_rf_regval_set, "0x%08llx\n");
-662
-
-If this is a false positive, please let us know so we can mark it as
-such, or teach the Coverity rules to be smarter. If not, please make
-sure fixes get into linux-next. :) For patches fixing this, please
-include these lines (but double-check the "Fixes" first):
-
-Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 1527816 ("Integer handling issues")
-Fixes: 98686cd21624 ("wifi: mt76: mt7996: add driver for MediaTek Wi-Fi 7 (802.11be) devices")
-
-Thanks for your attention!
-
--- 
-Coverity-bot
