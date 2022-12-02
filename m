@@ -2,124 +2,168 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D2AC4332F
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 06:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A990C4332F
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 06:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232068AbiLBGbV (ORCPT
+        id S231929AbiLBGxD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Dec 2022 01:31:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54500 "EHLO
+        Fri, 2 Dec 2022 01:53:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231395AbiLBGbU (ORCPT
+        with ESMTP id S232314AbiLBGxC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Dec 2022 01:31:20 -0500
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050:0:465::201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEB12CB22D
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Dec 2022 22:31:18 -0800 (PST)
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4NNjkl36DJz9sV8;
-        Fri,  2 Dec 2022 07:31:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-        t=1669962671;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TAidHwLvCZiWXPKoDiPoA7+jsmvdHAxQZ4vloxVVvr8=;
-        b=TP7EqhQtbjSAP8ZtIzVc2jlSVWi9XctekTvppuj18MmtrGc4opUIWADNGAhnLHRlUm5rJq
-        XFicGjjbKPyzzH8iitGPDf3wO50msqfbJldDBNURAMLvXp7m5hB9i4gxDfvhs8W1BvefCq
-        EShvU0bsQ7uvdMS1Rrt10A+NjywOCCdy1bTai36AHkG6WI8slWRH/epoGLbmjC/A7K6F5P
-        VsLsRLfgqk5ITKQVl7bv5PFY6dJiTrRAzZKhmS7E68zhMdyXpiW2XDv/+urfTpV0eTf27n
-        9CCJQhRKfVB4gmWEVRQUrBYndAE7fwu+Xtg7r4T/UVm1bOwu00Y4Se4eOteGfw==
-Date:   Fri, 2 Dec 2022 07:31:06 +0100
-From:   Stefan Bavendiek <stefan.bavendiek@mailbox.org>
-To:     kernel-hardening@lists.openwall.com
-Cc:     linux-hardening@vger.kernel.org
-Subject: Re: Reducing runtime complexity
-Message-ID: <Y4mbqmsMjTA63SlP@mailbox.org>
-References: <Y4kJ4Hw0DVfy7S37@mailbox.org>
- <202212011520.F7FE481@keescook>
+        Fri, 2 Dec 2022 01:53:02 -0500
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 891B970DC6
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Dec 2022 22:53:00 -0800 (PST)
+Received: by mail-yb1-xb31.google.com with SMTP id l67so4991691ybl.1
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Dec 2022 22:53:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=KuNoZxiTrmfjKsxDRYPGbSZH4dvdETO0z/V8f41EKUo=;
+        b=nVQJ9sDIFfHsNSTcfxNX0I66r0S9gWTXEsGYnQe7B6JZUSHz/aiElX7okc5+TsEA/N
+         9W+Oxya7p3kXmaxF0501jvEKDY+yc5bzOqJQZfCQc2SjxOPKZsCpDXOKOm3PYX6vkYyB
+         COHn0nIhQ69AeK/z1OutltGPUU+ZUADpgptSjDDwvGBfbf+RayUuGK8jWkaC82lJ+NvU
+         hriwRTScshESej1++sQw0YGsB4Mt3/cnpVpgzOr4pDcm6F6y5K2NGjeedKN/1YarrF3v
+         Y5nU0Y/4+nOivBuzAarWQjJJ72D8jpKJElGHVeBcR4QSnRJUCy1F9U6NPwTrF4s124Pu
+         a1sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KuNoZxiTrmfjKsxDRYPGbSZH4dvdETO0z/V8f41EKUo=;
+        b=tKaoctOS6wQKKmPd6lxLVtqa1+7cm1KAeIC1dwnh8J6mGQ0oEUJS/pBBFT99fY8CF+
+         UDRvkp/cZ3h84V3nxMZCqTEzsQUuLADvEkDj0wG/QP2DzrZXQVuDNGmjzizagpk2udhh
+         mx2r9wv7ZvwURVwfLLUK8n41O8Co8mLkDJ6jyRykWygRGP/6wZlFc+YFd5Di6ux4PZl3
+         GVt+Qq//mkGXX+TCEGgz40qmzp1Nz29QEOxeLwo7hok8O3yvEkTTQ6PeAMX9hnJzFU2n
+         WBBIkRm9C/Fr9U8y1a+XZzDbvnXUvLbSKuxjJJLdfnVLdKifT1cTPyGDFPcrrXQyk45q
+         jYPg==
+X-Gm-Message-State: ANoB5pmS/TUagrf0x2yWKtNo01B2nVmK070mtxmU/WZVdwz5DwVZMARc
+        iqSERcrcUCOvkzxsaSy2uPO2tLJ5j1wugodm81+gmQ==
+X-Google-Smtp-Source: AA0mqf4xZpa7c9YCUNgBdAUXTrufz1OtkArYdI4YWAEn3Nx7if9jEVF3Lw02VOThX2Ktr0XFRy1+4V2uqbHO4tTHJDk=
+X-Received: by 2002:a25:aae1:0:b0:6e7:39fa:a7be with SMTP id
+ t88-20020a25aae1000000b006e739faa7bemr48947108ybi.644.1669963979618; Thu, 01
+ Dec 2022 22:52:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="OjJW4BtemAF6EUG0"
-Content-Disposition: inline
-In-Reply-To: <202212011520.F7FE481@keescook>
-X-MBO-RS-META: boiihxb3r6n4p47cknpzx7p59hi4msf4
-X-MBO-RS-ID: 624dc7f5390c9debb5b
+References: <202212012008.D6F6109@keescook>
+In-Reply-To: <202212012008.D6F6109@keescook>
+From:   Daniel Latypov <dlatypov@google.com>
+Date:   Thu, 1 Dec 2022 22:52:48 -0800
+Message-ID: <CAGS_qxrf6zYkBaY29Z3QGw13vf7QK8SDgLpLC71a6FvwV5Sa6A@mail.gmail.com>
+Subject: Re: mocking init_task ?
+To:     Kees Cook <keescook@chromium.org>
+Cc:     David Gow <davidgow@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        kunit-dev@googlegroups.com, Petr Skocik <pskocik@gmail.com>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Thu, Dec 1, 2022 at 8:28 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> Hi,
+>
+> I want to make a unit test for kill_something_info(), as there is a patch
+> to fix a bug with it not working as expected under a specific process
+> tree arrangement[1]. This seems like a great candidate for a unit test:
+> given a specific state, return a specific result. Emboldened, I applied
+> the "kunit: Support redirecting function calls" series[2], preparing to
+> mock group_send_sig_info(), and ran head-long into for_each_process()
+> ... which uses the address of the global init_task:
+>
+> #define for_each_process(p) \
+>         for (p = &init_task ; (p = next_task(p)) != &init_task ; )
+>
+> :(
+>
+> I'm curious what you think might be the right approach to mock
+> init_task, or for_each_process(), so I can apply unit tests to some of
+> the "simple" process tree walkers...
+>
+> One idea I had was using the "kunit: Provide a static key to check if
+> KUnit is actively running tests" series[3], and do something like this:
+>
+> #ifndef CONFIG_KUNIT
+> #define init_task_ptr   &init_task
+> #else
+> #define init_task_ptr   ({                                      \
+>                 struct task_struct *task = &init_task;          \
+>                 if (static_branch_unlikely(&kunit_running)) {   \
 
---OjJW4BtemAF6EUG0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+nit: if(kunit_get_current_test()) is probably a bit safer.
+For UML, it will never make a difference (IIUC), but we probably want
+to ensure that current == the task_struct executing kunit tests.
 
-On Thu, Dec 01, 2022 at 03:21:37PM -0800, Kees Cook wrote:
-> On Thu, Dec 01, 2022 at 09:09:04PM +0100, Stefan Bavendiek wrote:
-> > Some time ago I wrote a thesis about complexity in the Linux kernel and=
- how to reduce it in order to limit the attack surface[1].
-> > While the results are unlikely to bring news to the audience here, it d=
-id indicate some possible ways to avoid exposing optional kernel features w=
-hen they are not needed.
-> > The basic idea would be to either build or configure parts of the kerne=
-l after or during the installation on a specific host.
-> >=20
-> > Distributions are commonly shipping the kernel as one large binary that=
- includes support for nearly every hardware driver and optional feature, bu=
-t the end user will normally use very little of this.
-> > In comparison, a custom kernel build for a particular device and use ca=
-se, would be significantly smaller. While the reduced complexity won't be d=
-irectly linked with reduction in attack surface, from my understanding the =
-difference would make a relevant impact.
-> >=20
-> > The question I keep wondering about is how feasible this is for general=
- purpose distributions to have the kernel "rebuild" in this way when it is =
-installed on a particular machine.
->=20
-> Much of the functionality is modules, so once a system is booted and
-> running the expected workloads, one can set the modules_disabled sysctl
-> and block everything else from being loaded.
->=20
+>                         struct kunit *test;                     \
+>                         test = current->kunit_test;             \
+>                         if (test->mock_init_task)               \
+>                                 task = test->mock_init_task;    \
+>                 }                                               \
+>                 task;                                           \
+>         })
+> #endif
+>
+> #define for_each_process(p) \
+>         for (p = init_task_ptr ; (p = next_task(p)) != init_task_ptr ; )
+
+I think this is pretty close to being the best you can do.
+
+I have a terrible idea that afaict should work.
+If it does work, I like it a lot better since it's less intrusive.
+
+== my_test.c ==
+
+#include <linux/sched/signal.h>
+#undef for_each_process
+#define for_each_process(p) \
+        for (p = test_init_task ; (p = next_task(p)) != test_init_task ; )
+
+struct task_struct _test_init_task = {
+        .tasks          = LIST_HEAD_INIT(_test_init_task.tasks),
+};
+
+#define test_init_task ({ \
+                        struct task_struct *task = &init_task;\
+                        if (kunit_get_current_test()) {\
+                                task = &_test_init_task;\
+                        }\
+                        task;\
+})
+
+#include <kunit/test.h>
+
+static void my_test(struct kunit *test)
+{
+        struct task_struct *p;
+
+        for_each_process(p)
+                KUNIT_FAIL(test, "should not be called");
+
+       /* can modify test_init_task as you see fit here */
+}
+
+And then you explicitly keep nothing else in this translation unit so
+we limit the damage we've done.
+
+Daniel
+
+>
+> And then tests can hang a mock init_task off the test? It seems really
+> horrible, but there is a LOT of global state in the kernel, so I figured
+> I had to start somewhere? :P
+>
+> Thoughts?
+>
 > -Kees
->=20
-> --=20
+>
+> [1] https://lore.kernel.org/lkml/20221122161240.137570-1-pskocik@gmail.com/
+> [2] https://lore.kernel.org/lkml/20220910212804.670622-1-davidgow@google.com/
+> [3] https://lore.kernel.org/lkml/20221125084306.1063074-1-davidgow@google.com/
+>
+> --
 > Kees Cook
-
-Disableing modules in general will prevent quite a lot of functionality tha=
-t would still be expected to work, like plugging in a usb device.
-One approach may be to load everything that may possibly be required in the=
- future as well based on the use case of the specific system and then disab=
-le loading additional modules, but that does not seem like a good solution =
-either.
-
-Perhaps exploring embedded device deployments is an idea, but in general th=
-e idea is to ship a smaller kernel to something like Linux desktops without=
- limiting functionality that likely to be required.
-
-- Stefan
-
---OjJW4BtemAF6EUG0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEjLwAv8xLYF1doyZLdIuckz2DLQMFAmOJm54ACgkQdIuckz2D
-LQOSxhAAksnvYcW4WbFuMsSPeLIU3ORenpBT4p3Gzs577psCvT6i21Yhc0T+GsAB
-VsXRT4QuAnRfMR8NfL8UPc5BaH9e1oETsgIn3OWdsxYxpwL4A/rj106QzBkMS1wW
-/qeg0N6ctrqdnzgDbkTuoxrLtT3u1m9IyhyCh8lSOwcKoF9bXhuWV0BPbYmceRla
-lajUTel/sKJcxKf1Sxz8r0nCIV/aPgLMVuHSz6+9QZ1/ApPQA4wdnkXLJO07LLlg
-JFq6D5pSb0xzl66eh0t0s3aBG32TqRbjrvgh+FrOnkfNoQCOWs4L5Up/wHXroNaY
-mp/E2hJQSfKYxdCEvIwhJFT/CmwKufPeqBGYv/O0mIvSTcZNphxn00lcR/xm+Agc
-dUcfceWdFRMbm7pZ1M9btjrIwi2fJDDe3PJkGryFKw33sEVEpAmHiSSR2TCQPcfw
-jl13tvjWnQQiCx7rwB2D1KqUV2FsiohXIXCV/oPVppK4GiMhh6ooME426k1KrGEa
-ryZPDSfvCayhEMX/rOzsgLd3jCMx6d/0ZqgDZNS9uBvQIo3iVVlC/uulRoH1cI0H
-zd9jhmjwPsI7KdNk71op45h8uNjfffuk39RR+RvdVkHlJzNvU7HpHj82BP290Tke
-HCHxA77kJoC5JfKg3x6EbVrQJbmiHcMqMwg3rGdWjLtVT03fUIo=
-=Hegd
------END PGP SIGNATURE-----
-
---OjJW4BtemAF6EUG0--
