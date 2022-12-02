@@ -2,63 +2,70 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98792C4708D
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 23:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF51C4332F
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 23:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234204AbiLBXYS (ORCPT
+        id S234148AbiLBXaV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Dec 2022 18:24:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54982 "EHLO
+        Fri, 2 Dec 2022 18:30:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234612AbiLBXYQ (ORCPT
+        with ESMTP id S233221AbiLBXaU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Dec 2022 18:24:16 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E69F0F8984
-        for <linux-hardening@vger.kernel.org>; Fri,  2 Dec 2022 15:24:14 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id y17so5997002plp.3
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Dec 2022 15:24:14 -0800 (PST)
+        Fri, 2 Dec 2022 18:30:20 -0500
+Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71DADC852
+        for <linux-hardening@vger.kernel.org>; Fri,  2 Dec 2022 15:30:19 -0800 (PST)
+Received: by mail-qt1-x82b.google.com with SMTP id jr1so7359232qtb.7
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Dec 2022 15:30:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
+        d=chromium.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=on58jY6T434zQgu2CSXS/icw6nLEfVeftPkBpeTWD00=;
-        b=f9N08HoP3vjXrlBMoa1BWvaTSWYndYLcM4wvp+sp+YXl3LIIVsOpQuF46rZaSwVNfq
-         nHVkSzNk6vjd6vvV4fmVD3rpGz5vZAwUikyB5tUcEHoW+afHzh1WXuoPSu784boKvqNM
-         FdiMdq9PdHK4j0Q/imjoWxQ2FaNvTxNHqr7LrJfZ9lwi3EMqsJfwCF3hnBUWxxpwRTn0
-         0jvlP5iIb4KaObAhu8XtR2n5TKJLYoG7RLWkUrDoas8k4jsWcAWlntQBnMiRZqlEYoTP
-         H442pPWf0jqdJyXM05cDctKukg6U+w+JyvNaWMDjfVn+YuFO5hK7+MJnmg0T32oxYnDL
-         oH6w==
+        bh=ofSHfJEl53nBxTKL7kEN4Zg0gZG24eP3ZO/twC4u+1k=;
+        b=HeigGMHv29ce9DCaTPYVM3dw6G+hA6RazCRkjT3KQZLg25j/kXIJzVk1CREUf4Tnjy
+         ObHsN/+LfiA+cHa5FGu5yq1n8lo5ofkI8FlaEx18YFuhsuonRWe5rGWezpeJ+mAErWcz
+         bONfAWoJMb2gN0IP5FjGges9W5cH/wdhI0L3s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=on58jY6T434zQgu2CSXS/icw6nLEfVeftPkBpeTWD00=;
-        b=3+uHVYE8XFBNunDhOfaCZMPQO8waRy2LoyeoHfEC6hALsD5xsq4qgkK1Hh5aNptkg0
-         Y3k46z6JiSwwVemo7X0BF/N736FOxWIKm2k0GfW73i95YYdjcgo+AnRsKk6Rp/95dSwf
-         eUZD4Nqa9qthU2dznZeBxvCp5iqI2EQZDwrV8I89RsEkmsP5ruZD58Ix7YH3r76J0boi
-         66xKENtOZwZ7x0OZQ84psa+ZLPrQf43/lp5Fy5YcfGWxa3drs7c/YfjdzP7crC4/L9Hz
-         3WYwnPz3HgYW6NE6ulrwmwBBq7ZURr9oN9K5gD/p70/RNTFcfsylmkGSANZxFsbhyPkw
-         QDKA==
-X-Gm-Message-State: ANoB5pkFxd1hujKeSrmGKHD1hC6JUo++4SvdaxdtexUScBJqo/qobkJc
-        Lo8hibKnsQg24N61Uj3Itmyzf6bPEEkwF4Ts9ZfxgA==
-X-Google-Smtp-Source: AA0mqf5E8zMLU2q3bZ7mZyyna7VvQKkHk3cfGKZrg32/dY3cWByKKJPBLwGkdKGt4CtkQAcmr9HvbrVMpAETT+qUAP8=
-X-Received: by 2002:a17:902:ec04:b0:189:894c:6b58 with SMTP id
- l4-20020a170902ec0400b00189894c6b58mr28915373pld.172.1670023454228; Fri, 02
- Dec 2022 15:24:14 -0800 (PST)
+        bh=ofSHfJEl53nBxTKL7kEN4Zg0gZG24eP3ZO/twC4u+1k=;
+        b=UvvFvgZysAHfk8DhI41MoNjzP4luTW37J8YcINE7dpdduwgz8A4s1J+NFmaR+OB+4C
+         4Kde7xxNRCmymPKeZN1DDChXtPnCfshbpCk+zr8AQyDDCx/Xt7zF86DpAQbKqbaKM/xW
+         E7e6/g4KFoWhxT4qjtggGte2XTnDCNx02ah/Wk3k409ob3ouiM20zlR+v/FM6HmIxA5L
+         HwZxKMS/idVYwzTwzrHWAhh7yKsqjnsBDCbObTrzxDRlv3p0P7s5mTaNe15GKgK16a8o
+         nTBZ8vdB12kqEwTayPTL22KozeChjclgFtzo1y2iTGwr5DIgbME+ki7TVkjiS6sdSMMM
+         ckkA==
+X-Gm-Message-State: ANoB5plw+R/fuIyplHKQE5nzkNHLg9fafhDP3ie5Z9V9LVI9ZxKX+2f6
+        Qsyz3UM/QYSVLgah2eTpbqPzbKM3UPwdyl01
+X-Google-Smtp-Source: AA0mqf6kNjEDg4KOHjQAeWP+RqCoz6+2hY35+HwgADcUIHcQWAfsxgRocodu89nha2t8I25/MqNCUw==
+X-Received: by 2002:ac8:4998:0:b0:3a5:7062:b8a0 with SMTP id f24-20020ac84998000000b003a57062b8a0mr50123622qtq.82.1670023818715;
+        Fri, 02 Dec 2022 15:30:18 -0800 (PST)
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com. [209.85.219.50])
+        by smtp.gmail.com with ESMTPSA id bb4-20020a05622a1b0400b003a51e8ef03dsm4859243qtb.62.2022.12.02.15.30.18
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 Dec 2022 15:30:18 -0800 (PST)
+Received: by mail-qv1-f50.google.com with SMTP id p12so4430356qvu.5
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Dec 2022 15:30:18 -0800 (PST)
+X-Received: by 2002:a17:902:e807:b0:189:117c:fcfe with SMTP id
+ u7-20020a170902e80700b00189117cfcfemr54885077plg.124.1670023447808; Fri, 02
+ Dec 2022 15:24:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20221202013404.163143-1-jeffxu@google.com> <20221202013404.163143-6-jeffxu@google.com>
- <202212021457.EC46B27677@keescook>
-In-Reply-To: <202212021457.EC46B27677@keescook>
-From:   Jeff Xu <jeffxu@google.com>
-Date:   Fri, 2 Dec 2022 15:23:37 -0800
-Message-ID: <CALmYWFuQUcd1RYu1idS5cirAXNbynDLkxLYTHRAFS6yQE=gOmw@mail.gmail.com>
-Subject: Re: [PATCH v3] mm/memfd: security hook for memfd_create
-To:     Kees Cook <keescook@chromium.org>
-Cc:     jeffxu@chromium.org, skhan@linuxfoundation.org,
+References: <20221202013404.163143-1-jeffxu@google.com> <20221202013404.163143-7-jeffxu@google.com>
+In-Reply-To: <20221202013404.163143-7-jeffxu@google.com>
+From:   Daniel Verkamp <dverkamp@chromium.org>
+Date:   Fri, 2 Dec 2022 15:23:41 -0800
+X-Gmail-Original-Message-ID: <CABVzXAkoGoypAs86EG5RsJZ=CXPu3NtTHb7_2=byQt7A7p7krQ@mail.gmail.com>
+Message-ID: <CABVzXAkoGoypAs86EG5RsJZ=CXPu3NtTHb7_2=byQt7A7p7krQ@mail.gmail.com>
+Subject: Re: [PATCH v3] mm/memfd: Add write seals when apply SEAL_EXEC to
+ executable memfd
+To:     jeffxu@chromium.org
+Cc:     skhan@linuxfoundation.org, keescook@chromium.org,
         akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
-        dverkamp@chromium.org, hughd@google.com, jorgelo@chromium.org,
+        hughd@google.com, jeffxu@google.com, jorgelo@chromium.org,
         linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
         linux-mm@kvack.org, mnissler@chromium.org, jannh@google.com,
         linux-hardening@vger.kernel.org
@@ -67,104 +74,62 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Dec 2, 2022 at 2:58 PM Kees Cook <keescook@chromium.org> wrote:
+On Thu, Dec 1, 2022 at 5:36 PM <jeffxu@chromium.org> wrote:
 >
-> On Fri, Dec 02, 2022 at 01:34:03AM +0000, jeffxu@chromium.org wrote:
-> > From: Jeff Xu <jeffxu@chromium.org>
-> >
-> > The new security_memfd_create allows lsm to check flags of
-> > memfd_create.
-> >
-> > The security by default system (such as chromeos) can use this
-> > to implement system wide lsm to allow only non-executable memfd
-> > being created.
-> >
-> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> > ---
-> >  include/linux/lsm_hook_defs.h | 1 +
-> >  include/linux/lsm_hooks.h     | 4 ++++
-> >  include/linux/security.h      | 6 ++++++
-> >  mm/memfd.c                    | 5 +++++
-> >  4 files changed, 16 insertions(+)
-> >
-> > diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-> > index ec119da1d89b..fd40840927c8 100644
-> > --- a/include/linux/lsm_hook_defs.h
-> > +++ b/include/linux/lsm_hook_defs.h
-> > @@ -164,6 +164,7 @@ LSM_HOOK(int, 0, file_alloc_security, struct file *file)
-> >  LSM_HOOK(void, LSM_RET_VOID, file_free_security, struct file *file)
-> >  LSM_HOOK(int, 0, file_ioctl, struct file *file, unsigned int cmd,
-> >        unsigned long arg)
-> > +LSM_HOOK(int, 0, memfd_create, char *name, unsigned int flags)
-> >  LSM_HOOK(int, 0, mmap_addr, unsigned long addr)
-> >  LSM_HOOK(int, 0, mmap_file, struct file *file, unsigned long reqprot,
-> >        unsigned long prot, unsigned long flags)
-> > diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-> > index 4ec80b96c22e..5a18a6552278 100644
-> > --- a/include/linux/lsm_hooks.h
-> > +++ b/include/linux/lsm_hooks.h
-> > @@ -543,6 +543,10 @@
-> >   *   simple integer value.  When @arg represents a user space pointer, it
-> >   *   should never be used by the security module.
-> >   *   Return 0 if permission is granted.
-> > + * @memfd_create:
-> > + *   @name is the name of memfd file.
-> > + *   @flags is the flags used in memfd_create.
-> > + *   Return 0 if permission is granted.
-> >   * @mmap_addr :
-> >   *   Check permissions for a mmap operation at @addr.
-> >   *   @addr contains virtual address that will be used for the operation.
-> > diff --git a/include/linux/security.h b/include/linux/security.h
-> > index ca1b7109c0db..5b87a780822a 100644
-> > --- a/include/linux/security.h
-> > +++ b/include/linux/security.h
-> > @@ -384,6 +384,7 @@ int security_file_permission(struct file *file, int mask);
-> >  int security_file_alloc(struct file *file);
-> >  void security_file_free(struct file *file);
-> >  int security_file_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
-> > +int security_memfd_create(char *name, unsigned int flags);
-> >  int security_mmap_file(struct file *file, unsigned long prot,
-> >                       unsigned long flags);
-> >  int security_mmap_addr(unsigned long addr);
-> > @@ -963,6 +964,11 @@ static inline int security_file_ioctl(struct file *file, unsigned int cmd,
-> >       return 0;
-> >  }
-> >
-> > +static inline int security_memfd_create(char *name, unsigned int flags)
-> > +{
-> > +     return 0;
-> > +}
+> From: Jeff Xu <jeffxu@chromium.org>
 >
-> I think this is missing the security/security.c changes for the
-> non-inline version?
+> When apply F_SEAL_EXEC to an executable memfd, add write seals also to
+> prevent modification of memfd.
 >
-Yes. I will add that in V4.
+> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> ---
+>  mm/memfd.c                                 |  3 +++
+>  tools/testing/selftests/memfd/memfd_test.c | 25 ++++++++++++++++++++++
+>  2 files changed, 28 insertions(+)
+>
+> diff --git a/mm/memfd.c b/mm/memfd.c
+> index 96dcfbfed09e..3a04c0698957 100644
+> --- a/mm/memfd.c
+> +++ b/mm/memfd.c
+> @@ -222,6 +222,9 @@ static int memfd_add_seals(struct file *file, unsigned int seals)
+>                 }
+>         }
+>
+> +       if (seals & F_SEAL_EXEC && inode->i_mode & 0111)
+> +               seals |= F_ALL_SEALS;
+> +
+>         *file_seals |= seals;
+>         error = 0;
+>
 
-> -Kees
->
-> > +
-> >  static inline int security_mmap_file(struct file *file, unsigned long prot,
-> >                                    unsigned long flags)
-> >  {
-> > diff --git a/mm/memfd.c b/mm/memfd.c
-> > index 69e897dea6d5..96dcfbfed09e 100644
-> > --- a/mm/memfd.c
-> > +++ b/mm/memfd.c
-> > @@ -346,6 +346,11 @@ SYSCALL_DEFINE2(memfd_create,
-> >               goto err_name;
-> >       }
-> >
-> > +     /* security hook for memfd_create */
-> > +     error = security_memfd_create(name, flags);
-> > +     if (error)
-> > +             return error;
-> > +
-> >       if (flags & MFD_HUGETLB) {
-> >               file = hugetlb_file_setup(name, 0, VM_NORESERVE,
-> >                                       HUGETLB_ANONHUGE_INODE,
-> > --
-> > 2.39.0.rc0.267.gcb52ba06e7-goog
-> >
->
-> --
-> Kees Cook
+Hi Jeff,
+
+(Following up on some discussion on the original review, sorry for any
+duplicate comments.)
+
+Making F_SEAL_EXEC imply all seals (including F_SEAL_SEAL) seems a bit
+confusing. This at least needs documentation to make it clear.
+
+Rather than silently adding other seals, perhaps we could return an
+error if the caller requests F_SEAL_EXEC but not the write seals, so
+the other seals would have to be explicitly listed in the application
+code. This would have the same net effect without making the
+F_SEAL_EXEC operation too magical.
+
+Additionally, if the goal is to enforce W^X, I don't think this
+completely closes the gap. There will always be a period where it is
+both writable and executable with this API:
+
+1. memfd_create(MFD_EXEC). Can't use MFD_NOEXEC since that would seal
+chmod(+x), so the memfd is W + X here.
+2. write() code to the memfd.
+3. fcntl(F_ADD_SEALS, F_SEAL_EXEC) to convert the memfd to !W + X.
+
+I think one of the attack vectors involved the attacker waiting for
+another process to create a memfd, pausing/delaying the victim
+process, overwriting the memfd with their own code, and calling exec()
+on it, which is still possible in the window between steps 1 and 3
+with this design.
+
+Thanks,
+-- Daniel
