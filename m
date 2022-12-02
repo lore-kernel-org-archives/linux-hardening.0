@@ -2,159 +2,169 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEDCC4332F
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 23:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98792C4708D
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 23:24:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234056AbiLBXEx (ORCPT
+        id S234204AbiLBXYS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Dec 2022 18:04:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35758 "EHLO
+        Fri, 2 Dec 2022 18:24:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233308AbiLBXEw (ORCPT
+        with ESMTP id S234612AbiLBXYQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Dec 2022 18:04:52 -0500
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89B52D96B3
-        for <linux-hardening@vger.kernel.org>; Fri,  2 Dec 2022 15:04:51 -0800 (PST)
-Received: by mail-pg1-x533.google.com with SMTP id 6so5543383pgm.6
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Dec 2022 15:04:51 -0800 (PST)
+        Fri, 2 Dec 2022 18:24:16 -0500
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E69F0F8984
+        for <linux-hardening@vger.kernel.org>; Fri,  2 Dec 2022 15:24:14 -0800 (PST)
+Received: by mail-pl1-x635.google.com with SMTP id y17so5997002plp.3
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Dec 2022 15:24:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3eWdYeAABAMnoEoSZbvIqfAvjGuNN+NLL8O7DVcc5tw=;
-        b=LPDjcXKRkJF0ChWSvwqdMs4z+WaNIJwO0yY5Q59nGeM3pDMHVwIb6cPYLQgWVJguAB
-         ciAtCM4G0YFdDjeGOSSxDSrCrEHGWnroQqTT/uQy4yjM39FpLTUwFW+H4Sr88a8juay4
-         4lauU6rk4+hFPwNW6zqanjTHmoMbiFkIJBgIM=
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=on58jY6T434zQgu2CSXS/icw6nLEfVeftPkBpeTWD00=;
+        b=f9N08HoP3vjXrlBMoa1BWvaTSWYndYLcM4wvp+sp+YXl3LIIVsOpQuF46rZaSwVNfq
+         nHVkSzNk6vjd6vvV4fmVD3rpGz5vZAwUikyB5tUcEHoW+afHzh1WXuoPSu784boKvqNM
+         FdiMdq9PdHK4j0Q/imjoWxQ2FaNvTxNHqr7LrJfZ9lwi3EMqsJfwCF3hnBUWxxpwRTn0
+         0jvlP5iIb4KaObAhu8XtR2n5TKJLYoG7RLWkUrDoas8k4jsWcAWlntQBnMiRZqlEYoTP
+         H442pPWf0jqdJyXM05cDctKukg6U+w+JyvNaWMDjfVn+YuFO5hK7+MJnmg0T32oxYnDL
+         oH6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3eWdYeAABAMnoEoSZbvIqfAvjGuNN+NLL8O7DVcc5tw=;
-        b=1jOeveSYap42H4jg8NISZ2k5h7Jk58v6VoDYahJ+iaNZK2Ir4vpkdrg0Ju76H6UdqQ
-         BTK5yMo5tDuYmm6fo6tFdD5ZxULk4VQxrujX6FqR02p/gtX+cftcGmIoAu9FwhDkEaZD
-         zc+aLDTZBlXKFldMwIHxnlMGYbwecTE5zQW2KJvEh1XQAoiIiYORLSn7gusW1e4egGgf
-         jHB6DFy+eJNicv83GB0vdjv2w0MJBKzPMYtT3QPruCbaM6QKivBOTgYaMPfy0Vrp4Dny
-         Eo4xpGmVxqJu4B8lf1ylo4jt7mGJbnkzAYjOXC6dUlizZCUSLzWw/y6BZoyHVuadNswt
-         y2pA==
-X-Gm-Message-State: ANoB5pnK2p1a+YvaKtryiRmRDs3d3+RMtLKCL+Pwi3yHs+X50GfEUHUe
-        7Og/fVkcKXMpXR14vhisNggWkw==
-X-Google-Smtp-Source: AA0mqf6wCldb+aTkXQCqBjXUJrvffCgFhxrhyXTrWtI0GxUZ1d4eeeVzDPxJ8FdEPH3kPGZuS+RPDw==
-X-Received: by 2002:a63:e34b:0:b0:477:de0a:3233 with SMTP id o11-20020a63e34b000000b00477de0a3233mr34109179pgj.467.1670022291026;
-        Fri, 02 Dec 2022 15:04:51 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c3-20020a17090a4d0300b00218998eb828sm7058622pjg.45.2022.12.02.15.04.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Dec 2022 15:04:50 -0800 (PST)
-Date:   Fri, 2 Dec 2022 15:04:49 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Ryder Lee <Ryder.Lee@mediatek.com>
-Cc:     Bo Jiao =?utf-8?B?KOeEpuazoik=?= <Bo.Jiao@mediatek.com>,
-        MeiChia Chiu =?utf-8?B?KOmCsee+juWYiSk=?= 
-        <MeiChia.Chiu@mediatek.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        Shayne Chen =?utf-8?B?KOmZs+i7kuS4nik=?= 
-        <Shayne.Chen@mediatek.com>, "nbd@nbd.name" <nbd@nbd.name>,
-        "lorenzo@kernel.org" <lorenzo@kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        "kvalo@kernel.org" <kvalo@kernel.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        Sujuan Chen =?utf-8?B?KOmZiOe0oOWonyk=?= 
-        <Sujuan.Chen@mediatek.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-Subject: Re: Coverity: mt7915_mcu_get_chan_mib_info(): Memory - illegal
- accesses
-Message-ID: <202212021504.A1942911@keescook>
-References: <202212021424.34C0F695E4@keescook>
- <1a16599dd5e4eed86bae112a232a3599af43a5f2.camel@mediatek.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=on58jY6T434zQgu2CSXS/icw6nLEfVeftPkBpeTWD00=;
+        b=3+uHVYE8XFBNunDhOfaCZMPQO8waRy2LoyeoHfEC6hALsD5xsq4qgkK1Hh5aNptkg0
+         Y3k46z6JiSwwVemo7X0BF/N736FOxWIKm2k0GfW73i95YYdjcgo+AnRsKk6Rp/95dSwf
+         eUZD4Nqa9qthU2dznZeBxvCp5iqI2EQZDwrV8I89RsEkmsP5ruZD58Ix7YH3r76J0boi
+         66xKENtOZwZ7x0OZQ84psa+ZLPrQf43/lp5Fy5YcfGWxa3drs7c/YfjdzP7crC4/L9Hz
+         3WYwnPz3HgYW6NE6ulrwmwBBq7ZURr9oN9K5gD/p70/RNTFcfsylmkGSANZxFsbhyPkw
+         QDKA==
+X-Gm-Message-State: ANoB5pkFxd1hujKeSrmGKHD1hC6JUo++4SvdaxdtexUScBJqo/qobkJc
+        Lo8hibKnsQg24N61Uj3Itmyzf6bPEEkwF4Ts9ZfxgA==
+X-Google-Smtp-Source: AA0mqf5E8zMLU2q3bZ7mZyyna7VvQKkHk3cfGKZrg32/dY3cWByKKJPBLwGkdKGt4CtkQAcmr9HvbrVMpAETT+qUAP8=
+X-Received: by 2002:a17:902:ec04:b0:189:894c:6b58 with SMTP id
+ l4-20020a170902ec0400b00189894c6b58mr28915373pld.172.1670023454228; Fri, 02
+ Dec 2022 15:24:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1a16599dd5e4eed86bae112a232a3599af43a5f2.camel@mediatek.com>
+References: <20221202013404.163143-1-jeffxu@google.com> <20221202013404.163143-6-jeffxu@google.com>
+ <202212021457.EC46B27677@keescook>
+In-Reply-To: <202212021457.EC46B27677@keescook>
+From:   Jeff Xu <jeffxu@google.com>
+Date:   Fri, 2 Dec 2022 15:23:37 -0800
+Message-ID: <CALmYWFuQUcd1RYu1idS5cirAXNbynDLkxLYTHRAFS6yQE=gOmw@mail.gmail.com>
+Subject: Re: [PATCH v3] mm/memfd: security hook for memfd_create
+To:     Kees Cook <keescook@chromium.org>
+Cc:     jeffxu@chromium.org, skhan@linuxfoundation.org,
+        akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
+        dverkamp@chromium.org, hughd@google.com, jorgelo@chromium.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, mnissler@chromium.org, jannh@google.com,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Dec 02, 2022 at 10:56:19PM +0000, Ryder Lee wrote:
-> On Fri, 2022-12-02 at 14:24 -0800, coverity-bot wrote:
-> > Hello!
-> > 
-> > This is an experimental semi-automated report about issues detected
-> > by
-> > Coverity from a scan of next-20221202 as part of the linux-next scan
-> > project:
-> > 
-> https://urldefense.com/v3/__https://scan.coverity.com/projects/linux-next-weekly-scan__;!!CTRNKA9wMg0ARbw!j7j_C0KpO4VD2yMOodvpeIexTGq4fhy2yq6nokNua9u4LToiUOLk4ou8JFFNrXkrh80d5BK2k44faRQstHE9$ 
-> >  
-> > 
-> > You're getting this email because you were associated with the
-> > identified
-> > lines of code (noted below) that were touched by commits:
-> > 
-> >   Thu Feb 3 13:57:56 2022 +0100
-> >     417a4534d223 ("mt76: mt7915: update mt7915_chan_mib_offs for
-> > mt7916")
-> > 
-> > Coverity reported the following:
-> > 
-> > *** CID 1527801:  Memory - illegal accesses  (OVERRUN)
-> > drivers/net/wireless/mediatek/mt76/mt7915/mcu.c:3005 in
-> > mt7915_mcu_get_chan_mib_info()
-> > 2999     		start = 5;
-> > 3000     		ofs = 0;
-> > 3001     	}
-> > 3002
-> > 3003     	for (i = 0; i < 5; i++) {
-> > 3004     		req[i].band = cpu_to_le32(phy->mt76->band_idx);
-> > vvv     CID 1527801:  Memory - illegal accesses  (OVERRUN)
-> > vvv     Overrunning array "offs" of 9 4-byte elements at element
-> > index 9 (byte offset 39) using index "i + start" (which evaluates to
-> > 9).
-> > 3005     		req[i].offs = cpu_to_le32(offs[i + start]);
-> > 3006
-> > 3007     		if (!is_mt7915(&dev->mt76) && i == 3)
-> > 3008     			break;
-> > 3009     	}
-> > 3010
-> > 
-> > If this is a false positive, please let us know so we can mark it as
-> > such, or teach the Coverity rules to be smarter. If not, please make
-> > sure fixes get into linux-next. :) For patches fixing this, please
-> > include these lines (but double-check the "Fixes" first):
-> > 
-> 
-> I think this is a false postive as the subsequent check 'if
-> (!is_mt7915(&dev->mt76) && i == 3)' should break array "offs" of 8.
+On Fri, Dec 2, 2022 at 2:58 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Fri, Dec 02, 2022 at 01:34:03AM +0000, jeffxu@chromium.org wrote:
+> > From: Jeff Xu <jeffxu@chromium.org>
+> >
+> > The new security_memfd_create allows lsm to check flags of
+> > memfd_create.
+> >
+> > The security by default system (such as chromeos) can use this
+> > to implement system wide lsm to allow only non-executable memfd
+> > being created.
+> >
+> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> > ---
+> >  include/linux/lsm_hook_defs.h | 1 +
+> >  include/linux/lsm_hooks.h     | 4 ++++
+> >  include/linux/security.h      | 6 ++++++
+> >  mm/memfd.c                    | 5 +++++
+> >  4 files changed, 16 insertions(+)
+> >
+> > diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+> > index ec119da1d89b..fd40840927c8 100644
+> > --- a/include/linux/lsm_hook_defs.h
+> > +++ b/include/linux/lsm_hook_defs.h
+> > @@ -164,6 +164,7 @@ LSM_HOOK(int, 0, file_alloc_security, struct file *file)
+> >  LSM_HOOK(void, LSM_RET_VOID, file_free_security, struct file *file)
+> >  LSM_HOOK(int, 0, file_ioctl, struct file *file, unsigned int cmd,
+> >        unsigned long arg)
+> > +LSM_HOOK(int, 0, memfd_create, char *name, unsigned int flags)
+> >  LSM_HOOK(int, 0, mmap_addr, unsigned long addr)
+> >  LSM_HOOK(int, 0, mmap_file, struct file *file, unsigned long reqprot,
+> >        unsigned long prot, unsigned long flags)
+> > diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+> > index 4ec80b96c22e..5a18a6552278 100644
+> > --- a/include/linux/lsm_hooks.h
+> > +++ b/include/linux/lsm_hooks.h
+> > @@ -543,6 +543,10 @@
+> >   *   simple integer value.  When @arg represents a user space pointer, it
+> >   *   should never be used by the security module.
+> >   *   Return 0 if permission is granted.
+> > + * @memfd_create:
+> > + *   @name is the name of memfd file.
+> > + *   @flags is the flags used in memfd_create.
+> > + *   Return 0 if permission is granted.
+> >   * @mmap_addr :
+> >   *   Check permissions for a mmap operation at @addr.
+> >   *   @addr contains virtual address that will be used for the operation.
+> > diff --git a/include/linux/security.h b/include/linux/security.h
+> > index ca1b7109c0db..5b87a780822a 100644
+> > --- a/include/linux/security.h
+> > +++ b/include/linux/security.h
+> > @@ -384,6 +384,7 @@ int security_file_permission(struct file *file, int mask);
+> >  int security_file_alloc(struct file *file);
+> >  void security_file_free(struct file *file);
+> >  int security_file_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
+> > +int security_memfd_create(char *name, unsigned int flags);
+> >  int security_mmap_file(struct file *file, unsigned long prot,
+> >                       unsigned long flags);
+> >  int security_mmap_addr(unsigned long addr);
+> > @@ -963,6 +964,11 @@ static inline int security_file_ioctl(struct file *file, unsigned int cmd,
+> >       return 0;
+> >  }
+> >
+> > +static inline int security_memfd_create(char *name, unsigned int flags)
+> > +{
+> > +     return 0;
+> > +}
+>
+> I think this is missing the security/security.c changes for the
+> non-inline version?
+>
+Yes. I will add that in V4.
 
-Ah, okay. What if is_mt7915(&dev->mt76) is always true?
-
--Kees
-
-> 
-> Ryder
-> 
-> > Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-> > Addresses-Coverity-ID: 1527801 ("Memory - illegal accesses")
-> > Fixes: 417a4534d223 ("mt76: mt7915: update mt7915_chan_mib_offs for
-> > mt7916")
-> > 
-> > Thanks for your attention!
-> > 
-
--- 
-Kees Cook
+> -Kees
+>
+> > +
+> >  static inline int security_mmap_file(struct file *file, unsigned long prot,
+> >                                    unsigned long flags)
+> >  {
+> > diff --git a/mm/memfd.c b/mm/memfd.c
+> > index 69e897dea6d5..96dcfbfed09e 100644
+> > --- a/mm/memfd.c
+> > +++ b/mm/memfd.c
+> > @@ -346,6 +346,11 @@ SYSCALL_DEFINE2(memfd_create,
+> >               goto err_name;
+> >       }
+> >
+> > +     /* security hook for memfd_create */
+> > +     error = security_memfd_create(name, flags);
+> > +     if (error)
+> > +             return error;
+> > +
+> >       if (flags & MFD_HUGETLB) {
+> >               file = hugetlb_file_setup(name, 0, VM_NORESERVE,
+> >                                       HUGETLB_ANONHUGE_INODE,
+> > --
+> > 2.39.0.rc0.267.gcb52ba06e7-goog
+> >
+>
+> --
+> Kees Cook
