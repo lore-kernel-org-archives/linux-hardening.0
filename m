@@ -2,165 +2,163 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10992C47089
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 17:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB01AC47088
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 17:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233389AbiLBRJm (ORCPT
+        id S233911AbiLBRyQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Dec 2022 12:09:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46428 "EHLO
+        Fri, 2 Dec 2022 12:54:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234353AbiLBRJd (ORCPT
+        with ESMTP id S233609AbiLBRyO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Dec 2022 12:09:33 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60CDAE51D3;
-        Fri,  2 Dec 2022 09:09:32 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1E09FB8220F;
-        Fri,  2 Dec 2022 17:09:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8C0FC433C1;
-        Fri,  2 Dec 2022 17:09:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670000969;
-        bh=aleQ0G3RwMJMe6voe4CYfUe3I8+zy6zas8qBKUpPHCI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fH/R5pCMFQsiBmQBrVMEP3NI7wzOghBsU05RHfMI/PHmccsdigox+u0ml9wUL1cuf
-         X/G+Qplc+uFurErTIfA+A/qyXc4PU6Oakq2gCK+fmCJ/IS+xyV/c7D9OqNFcwRjflV
-         +HmXh4N23rzNTM6P7hmUn0k3LAkp/XCiJFnAaFuICQWHae3oRKGuT7WMs9C/nqUNeT
-         8gNVAfHcgrKT2hBgvDaP6rVvnB9iCiCEuRPBfwrXttn8ZHQxR6ks7ZTpTm9GPiX1OD
-         Jq0KZXA/06OP/6jNISroTnMvxhuuiVQwNmX12jDaiWVzvy7ObhGv+oujuyZD1Xgsyo
-         yNsKUurRhtKIg==
-From:   SeongJae Park <sj@kernel.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        "Liam R . Howlett" <Liam.Howlett@Oracle.com>,
-        Yu Zhao <yuzhao@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        David Hildenbrand <david@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Matthew Wilcox <willy@infradead.org>,
-        SeongJae Park <sj@kernel.org>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] mm: do not BUG_ON missing brk mapping, because userspace can unmap it
-Date:   Fri,  2 Dec 2022 17:09:26 +0000
-Message-Id: <20221202170926.1423-1-sj@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221202162724.2009-1-Jason@zx2c4.com>
-References: 
+        Fri, 2 Dec 2022 12:54:14 -0500
+Received: from smtp.smtpout.orange.fr (smtp-19.smtpout.orange.fr [80.12.242.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC2E8DEA4D
+        for <linux-hardening@vger.kernel.org>; Fri,  2 Dec 2022 09:54:12 -0800 (PST)
+Received: from [192.168.1.18] ([86.243.100.34])
+        by smtp.orange.fr with ESMTPA
+        id 1AEhpL49Pb9QW1AEhp4Yhx; Fri, 02 Dec 2022 18:54:10 +0100
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 02 Dec 2022 18:54:10 +0100
+X-ME-IP: 86.243.100.34
+Message-ID: <4bef43c9-1ba9-6739-07be-2a819ee01091@wanadoo.fr>
+Date:   Fri, 2 Dec 2022 18:54:07 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH] rtc: msc313: Fix function prototype mismatch in
+ msc313_rtc_probe()
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Daniel Palmer <daniel@thingy.jp>,
+        kernel test robot <lkp@intel.com>,
+        Romain Perier <romain.perier@gmail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20221118233101.never.215-kees@kernel.org>
+ <ef3c1a62-029e-ffae-8a37-fde35a8235d5@wanadoo.fr>
+ <202212012043.C4ED0824@keescook>
+Content-Language: fr, en-GB
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <202212012043.C4ED0824@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 2 Dec 2022 17:27:24 +0100 "Jason A. Donenfeld" <Jason@zx2c4.com> wrote:
+Le 02/12/2022 à 05:46, Kees Cook a écrit :
+> On Sat, Nov 19, 2022 at 09:05:28AM +0100, Christophe JAILLET wrote:
+>> Le 19/11/2022 à 00:31, Kees Cook a écrit :
+>>> With clang's kernel control flow integrity (kCFI, CONFIG_CFI_CLANG),
+>>> indirect call targets are validated against the expected function
+>>> pointer prototype to make sure the call target is valid to help mitigate
+>>> ROP attacks. If they are not identical, there is a failure at run time,
+>>> which manifests as either a kernel panic or thread getting killed.
+>>>
+>>> msc313_rtc_probe() was passing clk_disable_unprepare() directly, which
+>>> did not have matching prototypes for devm_add_action_or_reset()'s callback
+>>> argument. Add a wrapper and remove the cast.
+>>>
+>>> This was found as a result of Clang's new -Wcast-function-type-strict
+>>> flag, which is more sensitive than the simpler -Wcast-function-type,
+>>> which only checks for type width mismatches.
+>>>
+>>> Reported-by: kernel test robot <lkp@intel.com>
+>>> Link: https://lore.kernel.org/lkml/202211041527.HD8TLSE1-lkp@intel.com
+>>> Cc: Daniel Palmer <daniel@thingy.jp>
+>>> Cc: Romain Perier <romain.perier@gmail.com>
+>>> Cc: Alessandro Zummo <a.zummo@towertech.it>
+>>> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>>> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+>>> Cc: linux-arm-kernel@lists.infradead.org
+>>> Cc: linux-rtc@vger.kernel.org
+>>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>>> ---
+>>>    drivers/rtc/rtc-msc313.c | 9 ++++++++-
+>>>    1 file changed, 8 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/rtc/rtc-msc313.c b/drivers/rtc/rtc-msc313.c
+>>> index f3fde013c4b8..36e3e77f303e 100644
+>>> --- a/drivers/rtc/rtc-msc313.c
+>>> +++ b/drivers/rtc/rtc-msc313.c
+>>> @@ -177,6 +177,13 @@ static irqreturn_t msc313_rtc_interrupt(s32 irq, void *dev_id)
+>>>    	return IRQ_HANDLED;
+>>>    }
+>>> +static void msc313_clk_disable_unprepare(void *data)
+>>> +{
+>>> +	struct clk *clk = data;
+>>> +
+>>> +	clk_disable_unprepare(clk);
+>>> +}
+>>> +
+>>>    static int msc313_rtc_probe(struct platform_device *pdev)
+>>>    {
+>>>    	struct device *dev = &pdev->dev;
+>>> @@ -224,7 +231,7 @@ static int msc313_rtc_probe(struct platform_device *pdev)
+>>>    		return ret;
+>>>    	}
+>>> -	ret = devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unprepare, clk);
+>>> +	ret = devm_add_action_or_reset(dev, msc313_clk_disable_unprepare, clk);
+>>>    	if (ret)
+>>>    		return ret;
+>>
+>> Hi,
+>>
+>> another way to fix it, is to use devm_clk_get_enabled().
+>>
+>> It removes some LoC instead of introducing some new ones and saves a few
+>> bytes of memory.
+> 
+> Hrm, I'm not familiar with the clk stuff here -- how do I use it? Should
+> it just be like this? (The NULL argument is ok?)
 
-> The following program will trigger the BUG_ON that this patch removes,
-> because the user can munmap() mm->brk:
-> 
->   #include <sys/syscall.h>
->   #include <sys/mman.h>
->   #include <assert.h>
->   #include <unistd.h>
-> 
->   static void *brk_now(void)
->   {
->     return (void *)syscall(SYS_brk, 0);
->   }
-> 
->   static void brk_set(void *b)
->   {
->     assert(syscall(SYS_brk, b) != -1);
->   }
-> 
->   int main(int argc, char *argv[])
->   {
->     void *b = brk_now();
->     brk_set(b + 4096);
->     assert(munmap(b - 4096, 4096 * 2) == 0);
->     brk_set(b);
->     return 0;
->   }
-> 
-> Compile that with musl, since glibc actually uses brk(), and then
-> execute it, and it'll hit this splat:
-> 
->   kernel BUG at mm/mmap.c:229!
->   invalid opcode: 0000 [#1] PREEMPT SMP
->   CPU: 12 PID: 1379 Comm: a.out Tainted: G S   U             6.1.0-rc7+ #419
->   RIP: 0010:__do_sys_brk+0x2fc/0x340
->   Code: 00 00 4c 89 ef e8 04 d3 fe ff eb 9a be 01 00 00 00 4c 89 ff e8 35 e0 fe ff e9 6e ff ff ff 4d 89 a7 20>
->   RSP: 0018:ffff888140bc7eb0 EFLAGS: 00010246
->   RAX: 0000000000000000 RBX: 00000000007e7000 RCX: ffff8881020fe000
->   RDX: ffff8881020fe001 RSI: ffff8881955c9b00 RDI: ffff8881955c9b08
->   RBP: 0000000000000000 R08: ffff8881955c9b00 R09: 00007ffc77844000
->   R10: 0000000000000000 R11: 0000000000000001 R12: 00000000007e8000
->   R13: 00000000007e8000 R14: 00000000007e7000 R15: ffff8881020fe000
->   FS:  0000000000604298(0000) GS:ffff88901f700000(0000) knlGS:0000000000000000
->   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->   CR2: 0000000000603fe0 CR3: 000000015ba9a005 CR4: 0000000000770ee0
->   PKRU: 55555554
->   Call Trace:
->    <TASK>
->    do_syscall_64+0x2b/0x50
->    entry_SYSCALL_64_after_hwframe+0x46/0xb0
->   RIP: 0033:0x400678
->   Code: 10 4c 8d 41 08 4c 89 44 24 10 4c 8b 01 8b 4c 24 08 83 f9 2f 77 0a 4c 8d 4c 24 20 4c 01 c9 eb 05 48 8b>
->   RSP: 002b:00007ffc77863890 EFLAGS: 00000212 ORIG_RAX: 000000000000000c
->   RAX: ffffffffffffffda RBX: 000000000040031b RCX: 0000000000400678
->   RDX: 00000000004006a1 RSI: 00000000007e6000 RDI: 00000000007e7000
->   RBP: 00007ffc77863900 R08: 0000000000000000 R09: 00000000007e6000
->   R10: 00007ffc77863930 R11: 0000000000000212 R12: 00007ffc77863978
->   R13: 00007ffc77863988 R14: 0000000000000000 R15: 0000000000000000
->    </TASK>
-> 
-> Instead, just error out if the original mapping has been removed.
-> 
-> Fixes: 2e7ce7d354f2 ("mm/mmap: change do_brk_flags() to expand existing VMA and add do_brk_munmap()")
-> Cc: Liam R. Howlett <Liam.Howlett@Oracle.com>
-> Cc: Yu Zhao <yuzhao@google.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: SeongJae Park <sj@kernel.org>
-> Cc: Sven Schnelle <svens@linux.ibm.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Yes, the code below looks fine.
+NULL argument is ok.
 
-Reviewed-by: SeongJae Park <sj@kernel.org>
+See [1]. Both function are very similar. devm_clk_get_enabled() just 
+pass some additional init() and exit() functions.
+
+CJ
 
 
-Thanks,
-SJ
+[1]: 
+https://elixir.bootlin.com/linux/v6.1-rc7/source/drivers/clk/clk-devres.c#L63
+> 
+> diff --git a/drivers/rtc/rtc-msc313.c b/drivers/rtc/rtc-msc313.c
+> index f3fde013c4b8..8d7737e0e2e0 100644
+> --- a/drivers/rtc/rtc-msc313.c
+> +++ b/drivers/rtc/rtc-msc313.c
+> @@ -212,22 +212,12 @@ static int msc313_rtc_probe(struct platform_device *pdev)
+>   		return ret;
+>   	}
+>   
+> -	clk = devm_clk_get(dev, NULL);
+> +	clk = devm_clk_get_enabled(dev, NULL);
+>   	if (IS_ERR(clk)) {
+>   		dev_err(dev, "No input reference clock\n");
+>   		return PTR_ERR(clk);
+>   	}
+>   
+> -	ret = clk_prepare_enable(clk);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to enable the reference clock, %d\n", ret);
+> -		return ret;
+> -	}
+> -
+> -	ret = devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unprepare, clk);
+> -	if (ret)
+> -		return ret;
+> -
+>   	rate = clk_get_rate(clk);
+>   	writew(rate & 0xFFFF, priv->rtc_base + REG_RTC_FREQ_CW_L);
+>   	writew((rate >> 16) & 0xFFFF, priv->rtc_base + REG_RTC_FREQ_CW_H);
+> 
 
-> ---
->  mm/mmap.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index c3c5c1d6103d..f5a37fe9a19e 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -226,8 +226,7 @@ SYSCALL_DEFINE1(brk, unsigned long, brk)
->  		/* Search one past newbrk */
->  		mas_set(&mas, newbrk);
->  		brkvma = mas_find(&mas, oldbrk);
-> -		BUG_ON(brkvma == NULL);
-> -		if (brkvma->vm_start >= oldbrk)
-> +		if (!brkvma || brkvma->vm_start >= oldbrk)
->  			goto out; /* mapping intersects with an existing non-brk vma. */
->  		/*
->  		 * mm->brk must be protected by write mmap_lock.
-> -- 
-> 2.38.1
-> 
