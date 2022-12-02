@@ -2,158 +2,146 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C47CAC3A5A7
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 00:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89963C4332F
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 00:58:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232214AbiLBAdP (ORCPT
+        id S231785AbiLBA6V (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Dec 2022 19:33:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48158 "EHLO
+        Thu, 1 Dec 2022 19:58:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232202AbiLBAcp (ORCPT
+        with ESMTP id S231468AbiLBA6U (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Dec 2022 19:32:45 -0500
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC8311C416
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Dec 2022 16:31:47 -0800 (PST)
-Received: by mail-pj1-x1036.google.com with SMTP id b13-20020a17090a5a0d00b0021906102d05so3690195pjd.5
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Dec 2022 16:31:47 -0800 (PST)
+        Thu, 1 Dec 2022 19:58:20 -0500
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 163E55BD7C
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Dec 2022 16:58:19 -0800 (PST)
+Received: by mail-lf1-x12c.google.com with SMTP id bp15so5097911lfb.13
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Dec 2022 16:58:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aSqvQJ0r+p8u1Rw63qJBl5IXkE2qQ7qq7yw5MIhA6Vg=;
-        b=hRo4cH3NdrgJYtHz2zuqiIhKDpaIbVnLZSSaOpnURDdSwno6JVGbQ7sbRiyma4ID5p
-         yak5WLuD9BpCyMdRbRYLcSsZzQM2ryqSUUUOSEKtTA+d4BJKSwimD0yAdnj/qihgXXrR
-         xWF8NsCINgzkXi6gYlB3KJ0GCOnfMBmWziTK8=
+        d=linaro.org; s=google;
+        h=user-agent:in-reply-to:content-transfer-encoding
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MxkuzgUgTifQFdxhVWtsmKUpSCQdyimcV2FkUnufBLc=;
+        b=hEKWleQh2i+coIcgnXZbCte2WweMX/4rdEPNBC4I72YPpG558YYdUC4fOePrPsorTm
+         EHPrqFfQsXLYlxX2BcJfTnzEoMNfkMDARFrw9zWcv2rvRuq47qOzVq7h3tzi2rM6UrgV
+         T9I/XGQ8zYHn5ePdix76dWi26hvtQt9cjY26rSG+R7eRGCwqy7Pibsgxy+XiDgud+2RW
+         6DloAOKq3Cn5k/2bNPsTZMwO9Gf5PVje3i79eHmMzYCh0Y5K7DH2ImTv54BklKMpeY6/
+         DIs5AhoOB3wOf+bQNB+nAi48QTPsPJ2I5r1Xw8Nj5Ixxawy26rPBYAGupqgVqXkouDHC
+         xzTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=user-agent:in-reply-to:content-transfer-encoding
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=aSqvQJ0r+p8u1Rw63qJBl5IXkE2qQ7qq7yw5MIhA6Vg=;
-        b=cprA87C2VSLrg5/vfdFMj/trX0FETRXwnkCXIllQAeHA4btTWgNZauqaCRbGkImBY4
-         O+y2xdrjOo11R9OYRiVkXxxEZVuGkTdfq22Jz08HpwxME717OwV5hYUyZzJcGAQjzHCV
-         8UYVBZMq3bWu/w83oz5DbykyhrkqMcgF7KggddzIHXUf2Ne8PeIsOfm1nppr44umkIHl
-         yHUrRcQiyp+5BzNmtScD6SkomNwzFNgbxjs31i/xue51pv7r/qXIDke7xbNStRQAkm76
-         Yca0L4mBdH/Jni5WENYr6wbYT6jUyan/afgQg5i9GgGSWpO9oq2tflWyP8y0n5bc99K3
-         md5w==
-X-Gm-Message-State: ANoB5pkkfp/VUMiH1Er3Nkb1m1MxvJgOsm23XtDA7dwIIvA79DZ910nL
-        /I306wx7mJRR55vsG2HVmkKY8w==
-X-Google-Smtp-Source: AA0mqf6LVRpqR8NBytmtT7u31/qaDNdBjLsbDJ8yBeh+AlyAyqNWNLgWfS0QZIwBvqjayllQfetnag==
-X-Received: by 2002:a17:902:e20c:b0:189:a934:ee37 with SMTP id u12-20020a170902e20c00b00189a934ee37mr11428560plb.141.1669941107286;
-        Thu, 01 Dec 2022 16:31:47 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id cp6-20020a170902e78600b0018986ba1db9sm4194500plb.284.2022.12.01.16.31.45
+        bh=MxkuzgUgTifQFdxhVWtsmKUpSCQdyimcV2FkUnufBLc=;
+        b=aLGedSjbpjYt4tFo4PmpSm62pUXvzDYTJjKF64p0FU4tW5i8OKg7GVRhlVQbbi+G2w
+         ws/fsTQQH62NpLaqSuEL1AtJMoAZ6ubsHdwRf1Z2GSBFNp1ih1AnPKlqjxgMavkNwWnO
+         Wid5wHrZmhTdNWkOq3Muwdwld6jBQUACHst6X1I5vPVdSysd11mJaCdspcaoqkZlqNnB
+         DrDOo6j5FW7BxMjggeyLmnvLHiyVrmqpMjZF9LbTFXQeFC6i9yNdL0P0ywSTDX3Mo1mJ
+         B0T5sF4C3P1gmiYoo9Z5NDVryVqRiCJNvZ7LqTT7ToeQJ29LXcFyzdLhZrGG42chKDkD
+         +cuA==
+X-Gm-Message-State: ANoB5plEOVsCgUwd5ZyGY/ALtur3pYwL576wMoWwQcxDzH7IsUGIM6kE
+        FzP05eWdtWMaDisJHilbjcCp+Q==
+X-Google-Smtp-Source: AA0mqf7ugLlYgzqNY4td3eTdffNA1JNbGconIkradRBMScyhPpphWZqVWKGCXfhlAfixQHasGwz7Fw==
+X-Received: by 2002:ac2:558c:0:b0:4a2:4b78:a8e8 with SMTP id v12-20020ac2558c000000b004a24b78a8e8mr19587673lfg.292.1669942697389;
+        Thu, 01 Dec 2022 16:58:17 -0800 (PST)
+Received: from mutt (c-e429e555.07-21-73746f28.bbcust.telenor.se. [85.229.41.228])
+        by smtp.gmail.com with ESMTPSA id s22-20020a056512315600b004979e1ff641sm815816lfi.115.2022.12.01.16.58.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Dec 2022 16:31:46 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Richard Weinberger <richard@nod.at>
-Cc:     Kees Cook <keescook@chromium.org>,
-        kernel test robot <lkp@intel.com>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, stable@vger.kernel.org,
-        David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] um: virt-pci: Avoid GCC non-NULL warning
-Date:   Thu,  1 Dec 2022 16:31:41 -0800
-Message-Id: <20221202003137.never.887-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        Thu, 01 Dec 2022 16:58:16 -0800 (PST)
+Date:   Fri, 2 Dec 2022 01:58:14 +0100
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
+        Pankaj Gupta <pankaj.gupta@nxp.com>,
+        Gaurav Jain <gaurav.jain@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] crypto/caam: Avoid GCC constprop bug warning
+Message-ID: <20221202005814.GD69385@mutt>
+References: <20221028210527.never.934-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3245; h=from:subject:message-id; bh=hW5b+KjTlhouCD6j7qImof+KSRreUfVk0FReUZhRGoc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjiUdt7k5NB8JKjV1GuvCZKo99RzxrLKkWs3CIhEoZ Yq0gvHqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY4lHbQAKCRCJcvTf3G3AJjb8D/ 0bdy8kTQRSRZfyYIeJyp7oCXVcKdUFnjAq+L0zfS54vo7VwW8jT61/ZKz0yR1mmLGvzBvj3orLFcWR iKTNhv9doXjX+zJwgQpDHWYIn4Scxpa6SL2qj0DZFK096DFP5K2wJGfXNiyBmvCgNG1iVhqIHw2UJX FVBFoDrenCDo8YeiNxanR5Bsaj8ymv73WfL6L0St8d5wVc2A5KQOk0iJVWPDkH8oNUMxeRSZEsxzxM Wm3IzXEn+BKBJaOLenZjBVV4eGza5V6tTDWPs1R+pOAjocB1xhbnslwG7FkW3ji4IBckWJYhsZ9C41 iWfJ9JxbDi6QluS/fD442ldJQpc7xqcHEQjckRK1vvzMa1KL+5hCoJFyo5nWkKY7seL3ohOfdPtUdz rc5aVt/af7aB0TydI0BYvedhriFKbHDYfhA9dUkccQeuzVgkXcxO1CxBax7orPIWouspRQNr4al36K PtSyqJfKNOO+q/UcsT1WPmn2FgKgB9adsggH37j0MDNXiO6dqkFa5EGQ0vIzSM4C9oU2FkTbERbK1z E2Md4XHyRnMmz6cBwAAtSx2TcOIjT1aTJUySGZ2PqLthuyzyPj9O8sIVbvWcUgxe9CF37InmRO5k6k /LG391zGyuXB2PuVLbbfVIlxz3msT11T+igz3B4mvf/jecCOcCIv9C1noyZQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221028210527.never.934-kees@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-GCC gets confused about the return value of get_cpu_var() possibly
-being NULL, so explicitly test for it before calls to memcpy() and
-memset(). Avoids warnings like this:
+On 2022-10-28 14:05, Kees Cook wrote:
+> GCC 12 appears to perform constant propagation incompletely(?) and can
+> no longer notice that "len" is always 0 when "data" is NULL. Expand the
+> check to avoid warnings about memcpy() having a NULL argument:
+> 
+>    ...
+>                     from drivers/crypto/caam/key_gen.c:8:
+>    drivers/crypto/caam/desc_constr.h: In function 'append_data.constprop':
+>    include/linux/fortify-string.h:48:33: warning: argument 2 null where non-null expected [-Wnonnull]
+>       48 | #define __underlying_memcpy     __builtin_memcpy
+>          |                                 ^
+>    include/linux/fortify-string.h:438:9: note: in expansion of macro '__underlying_memcpy'
+>      438 |         __underlying_##op(p, q, __fortify_size);                        \
+>          |         ^~~~~~~~~~~~~
+> 
+> The NULL was being propagated from:
+> 
+>         append_fifo_load_as_imm(desc, NULL, 0, LDST_CLASS_2_CCB |
+>                                 FIFOLD_TYPE_MSG | FIFOLD_TYPE_LAST2);
+> ...
+> static inline void append_##cmd##_as_imm(u32 * const desc, const void *data, \
+>                                          unsigned int len, u32 options) \
+> { \
+>         PRINT_POS; \
+>         append_cmd_data(desc, data, len, CMD_##op | options); \
+> }
+> ...
+> APPEND_CMD_PTR_TO_IMM(fifo_load, FIFO_LOAD);
+> ...
+> static inline void append_cmd_data(u32 * const desc, const void *data, int len,
+>                                    u32 command)
+> {
+>         append_cmd(desc, command | IMMEDIATE | len);
+>         append_data(desc, data, len);
+> }
+> 
+> Cc: "Horia Geantă" <horia.geanta@nxp.com>
+> Cc: Pankaj Gupta <pankaj.gupta@nxp.com>
+> Cc: Gaurav Jain <gaurav.jain@nxp.com>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: linux-crypto@vger.kernel.org
+> Reported-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/lkml/202210290446.qBayTfzl-lkp@intel.com
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-   arch/um/drivers/virt-pci.c: In function 'um_pci_send_cmd':
-   include/linux/fortify-string.h:48:33: warning: argument 1 null where non-null expected [-Wnonnull]
-      48 | #define __underlying_memcpy     __builtin_memcpy
-         |                                 ^
-   include/linux/fortify-string.h:438:9: note: in expansion of macro '__underlying_memcpy'
-     438 |         __underlying_##op(p, q, __fortify_size);                        \
-         |         ^~~~~~~~~~~~~
-   include/linux/fortify-string.h:483:26: note: in expansion of macro '__fortify_memcpy_chk'
-     483 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
-         |                          ^~~~~~~~~~~~~~~~~~~~
-   arch/um/drivers/virt-pci.c:100:9: note: in expansion of macro 'memcpy'
-     100 |         memcpy(buf, cmd, cmd_size);
-         |         ^~~~~~
 
-While at it, avoid literal "8" and use stored sizeof(buf->data) in
-memset() and um_pci_send_cmd().
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
 
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/lkml/202211271212.SUZSC9f9-lkp@intel.com
-Fixes: ba38961a069b ("um: Enable FORTIFY_SOURCE")
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Xiu Jianfeng <xiujianfeng@huawei.com>
-Cc: Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc: linux-um@lists.infradead.org
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-I can take this via the hardening tree, since that's where I introduced
-the warning. :)
----
- arch/um/drivers/virt-pci.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+> ---
+>  drivers/crypto/caam/desc_constr.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/crypto/caam/desc_constr.h b/drivers/crypto/caam/desc_constr.h
+> index 62ce6421bb3f..ddbba8b00ab7 100644
+> --- a/drivers/crypto/caam/desc_constr.h
+> +++ b/drivers/crypto/caam/desc_constr.h
+> @@ -163,7 +163,7 @@ static inline void append_data(u32 * const desc, const void *data, int len)
+>  {
+>  	u32 *offset = desc_end(desc);
+>  
+> -	if (len) /* avoid sparse warning: memcpy with byte count of 0 */
+> +	if (data && len) /* avoid sparse warning: memcpy with byte count of 0 */
 
-diff --git a/arch/um/drivers/virt-pci.c b/arch/um/drivers/virt-pci.c
-index acb55b302b14..3ac220dafec4 100644
---- a/arch/um/drivers/virt-pci.c
-+++ b/arch/um/drivers/virt-pci.c
-@@ -97,7 +97,8 @@ static int um_pci_send_cmd(struct um_pci_device *dev,
- 	}
- 
- 	buf = get_cpu_var(um_pci_msg_bufs);
--	memcpy(buf, cmd, cmd_size);
-+	if (buf)
-+		memcpy(buf, cmd, cmd_size);
- 
- 	if (posted) {
- 		u8 *ncmd = kmalloc(cmd_size + extra_size, GFP_ATOMIC);
-@@ -182,6 +183,7 @@ static unsigned long um_pci_cfgspace_read(void *priv, unsigned int offset,
- 	struct um_pci_message_buffer *buf;
- 	u8 *data;
- 	unsigned long ret = ULONG_MAX;
-+	size_t bytes = sizeof(buf->data);
- 
- 	if (!dev)
- 		return ULONG_MAX;
-@@ -189,7 +191,8 @@ static unsigned long um_pci_cfgspace_read(void *priv, unsigned int offset,
- 	buf = get_cpu_var(um_pci_msg_bufs);
- 	data = buf->data;
- 
--	memset(buf->data, 0xff, sizeof(buf->data));
-+	if (buf)
-+		memset(data, 0xff, bytes);
- 
- 	switch (size) {
- 	case 1:
-@@ -204,7 +207,7 @@ static unsigned long um_pci_cfgspace_read(void *priv, unsigned int offset,
- 		goto out;
- 	}
- 
--	if (um_pci_send_cmd(dev, &hdr, sizeof(hdr), NULL, 0, data, 8))
-+	if (um_pci_send_cmd(dev, &hdr, sizeof(hdr), NULL, 0, data, bytes))
- 		goto out;
- 
- 	switch (size) {
--- 
-2.34.1
+Maybe we should update the comment, since newer releases of sparse
+doesn't warn about this.
 
+
+Cheers,
+Anders
