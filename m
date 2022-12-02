@@ -2,96 +2,156 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DE9C4708D
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 10:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FFCC4321E
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 16:28:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233001AbiLBKCA (ORCPT
+        id S234223AbiLBQ2U (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Dec 2022 05:02:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37740 "EHLO
+        Fri, 2 Dec 2022 11:28:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232482AbiLBKB6 (ORCPT
+        with ESMTP id S234173AbiLBQ2I (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Dec 2022 05:01:58 -0500
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6EB1CA7A1
-        for <linux-hardening@vger.kernel.org>; Fri,  2 Dec 2022 02:01:55 -0800 (PST)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-259-gU3wSqt4NfGibvtvFXD_wg-1; Fri, 02 Dec 2022 10:01:52 +0000
-X-MC-Unique: gU3wSqt4NfGibvtvFXD_wg-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 2 Dec
- 2022 10:01:50 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.044; Fri, 2 Dec 2022 10:01:50 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Anders Roxell' <anders.roxell@linaro.org>,
-        Kees Cook <keescook@chromium.org>
-CC:     =?utf-8?B?SG9yaWEgR2VhbnTEgw==?= <horia.geanta@nxp.com>,
-        Pankaj Gupta <pankaj.gupta@nxp.com>,
-        Gaurav Jain <gaurav.jain@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "kernel test robot" <lkp@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH] crypto/caam: Avoid GCC constprop bug warning
-Thread-Topic: [PATCH] crypto/caam: Avoid GCC constprop bug warning
-Thread-Index: AQHZBekth9IOKPP1MEG2CcwZTmA4Xa5aWPsA
-Date:   Fri, 2 Dec 2022 10:01:50 +0000
-Message-ID: <4f7ffdd948a84013a0e84876b3e3944b@AcuMS.aculab.com>
-References: <20221028210527.never.934-kees@kernel.org>
- <20221202005814.GD69385@mutt>
-In-Reply-To: <20221202005814.GD69385@mutt>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 2 Dec 2022 11:28:08 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E9FAE0ED;
+        Fri,  2 Dec 2022 08:27:39 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EB7EBB82149;
+        Fri,  2 Dec 2022 16:27:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1367CC43470;
+        Fri,  2 Dec 2022 16:27:34 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="K2mu/d0h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+        t=1669998453;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=efvuuNTBLR4HLAxHYiJEHInfh40yYXX9WEzTI0HmGLg=;
+        b=K2mu/d0hu0fuzeoZKXgWBK7i9x1nguVwSTDZXFuEa3J7bt0HjPrQQ9z0Xwa1mFBqiNMNvZ
+        dmtf6N02mK4Q9NAL9afNBybBlywue7fSRDHHInpB8fOVOct1LuB2lxQ5gzsu8zpbNFgJ/J
+        JqygsfBkKumNEQHAEK4/CX3G3WXIWe8=
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 228e8cf8 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Fri, 2 Dec 2022 16:27:32 +0000 (UTC)
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Liam R . Howlett" <Liam.Howlett@Oracle.com>,
+        Yu Zhao <yuzhao@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Matthew Wilcox <willy@infradead.org>,
+        SeongJae Park <sj@kernel.org>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>
+Subject: [PATCH] mm: do not BUG_ON missing brk mapping, because userspace can unmap it
+Date:   Fri,  2 Dec 2022 17:27:24 +0100
+Message-Id: <20221202162724.2009-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-RnJvbTogQW5kZXJzIFJveGVsbA0KPiBTZW50OiAwMiBEZWNlbWJlciAyMDIyIDAwOjU4DQo+IA0K
-PiBPbiAyMDIyLTEwLTI4IDE0OjA1LCBLZWVzIENvb2sgd3JvdGU6DQo+ID4gR0NDIDEyIGFwcGVh
-cnMgdG8gcGVyZm9ybSBjb25zdGFudCBwcm9wYWdhdGlvbiBpbmNvbXBsZXRlbHkoPykgYW5kIGNh
-bg0KPiA+IG5vIGxvbmdlciBub3RpY2UgdGhhdCAibGVuIiBpcyBhbHdheXMgMCB3aGVuICJkYXRh
-IiBpcyBOVUxMLiBFeHBhbmQgdGhlDQo+ID4gY2hlY2sgdG8gYXZvaWQgd2FybmluZ3MgYWJvdXQg
-bWVtY3B5KCkgaGF2aW5nIGEgTlVMTCBhcmd1bWVudDoNCj4gPg0KPiA+ICAgIC4uLg0KPiA+ICAg
-ICAgICAgICAgICAgICAgICAgZnJvbSBkcml2ZXJzL2NyeXB0by9jYWFtL2tleV9nZW4uYzo4Og0K
-PiA+ICAgIGRyaXZlcnMvY3J5cHRvL2NhYW0vZGVzY19jb25zdHIuaDogSW4gZnVuY3Rpb24gJ2Fw
-cGVuZF9kYXRhLmNvbnN0cHJvcCc6DQo+ID4gICAgaW5jbHVkZS9saW51eC9mb3J0aWZ5LXN0cmlu
-Zy5oOjQ4OjMzOiB3YXJuaW5nOiBhcmd1bWVudCAyIG51bGwgd2hlcmUgbm9uLW51bGwgZXhwZWN0
-ZWQgWy0NCj4gV25vbm51bGxdDQo+ID4gICAgICAgNDggfCAjZGVmaW5lIF9fdW5kZXJseWluZ19t
-ZW1jcHkgICAgIF9fYnVpbHRpbl9tZW1jcHkNCj4gPiAgICAgICAgICB8ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgXg0KPiA+ICAgIGluY2x1ZGUvbGludXgvZm9ydGlmeS1zdHJpbmcu
-aDo0Mzg6OTogbm90ZTogaW4gZXhwYW5zaW9uIG9mIG1hY3JvICdfX3VuZGVybHlpbmdfbWVtY3B5
-Jw0KPiA+ICAgICAgNDM4IHwgICAgICAgICBfX3VuZGVybHlpbmdfIyNvcChwLCBxLCBfX2ZvcnRp
-Znlfc2l6ZSk7ICAgICAgICAgICAgICAgICAgICAgICAgXA0KPiA+ICAgICAgICAgIHwgICAgICAg
-ICBefn5+fn5+fn5+fn5+DQouLi4NCg0KSXMgdGhpcyByZWFsbHkgYSBidWcgaW4gdGhlIGZvcnRp
-Znktc3RyaW5nIHdyYXBwZXJzPw0KSUlSQyB0aGUgY2FsbCBpcyBtZW1jcHkoTlVMTCwgcHRyLCAw
-KSAob3IgbWF5YmUgbWVtY3B5KHB0ciwgTlVMTCwgMCkuDQpJbiBlaXRoZXIgY2FzZSBjYWxsIGNh
-biBiZSByZW1vdmVkIGF0IGNvbXBpbGUgdGltZS4NCg0KSSdkIGJldCB0aGF0IHRoZSBjb25zdGFu
-dCBwcm9wYWdhdGlvbiBvZiAnbGVuJyBmYWlscyBiZWNhdXNlDQpvZiBhbGwgdGhlIGludGVybWVk
-aWF0ZSB2YXJpYWJsZXMgdGhhdCBnZXQgdXNlZCBpbiBvcmRlciB0bw0KYXZvaWQgbXVsdGlwbGUg
-ZXZhbHVhdGlvbi4NCg0KVGhlIHNvbWUgJ3RyaWNrcycgdGhhdCBhcmUgdXNlZCBpbiBtaW4oKSAo
-c2VlIG1pbm1heC5oKSB0bw0KZ2VuZXJhdGUgYSBjb25zdGFudCBvdXRwdXQgZm9yIGNvbnN0YW50
-IGlucHV0IGNvdWxkIGJlDQp1c2UgdG8gZGV0ZWN0IGEgY29tcGlsZS10aW1lIHplcm8gbGVuZ3Ro
-Lg0KDQpTb21ldGhpbmcgbGlrZToNCiNkZWZpbmUgbWVtY3B5KGRzdCwgc3JjLCBsZW4pIFwNCgko
-X19pc19jb25zdHplcm8obGVuKSA/IChkc3QpIDogbWVtY3B5X2NoZWNrKGRzdCwgc3JjLCBsZW4p
-KQ0KDQpXaXRoOg0KI2RlZmluZSBfX2lzX2NvbnN0emVybyh4KSBzaXplb2YoKigxID8gKHZvaWQg
-KikoeCkgOiAoaW50ICopMCkgIT0gMSkNCldoaWNoIGNvdWxkIGdvIGludG8gY29uc3QuaCBhbmQg
-dXNlZCBpbiB0aGUgZGVmaW5pdGlvbiBvZiBfX2lzX2NvbnN0ZXhwcigpLg0KDQoJRGF2aWQNCg0K
-LQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0s
-IE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdh
-bGVzKQ0K
+The following program will trigger the BUG_ON that this patch removes,
+because the user can munmap() mm->brk:
+
+  #include <sys/syscall.h>
+  #include <sys/mman.h>
+  #include <assert.h>
+  #include <unistd.h>
+
+  static void *brk_now(void)
+  {
+    return (void *)syscall(SYS_brk, 0);
+  }
+
+  static void brk_set(void *b)
+  {
+    assert(syscall(SYS_brk, b) != -1);
+  }
+
+  int main(int argc, char *argv[])
+  {
+    void *b = brk_now();
+    brk_set(b + 4096);
+    assert(munmap(b - 4096, 4096 * 2) == 0);
+    brk_set(b);
+    return 0;
+  }
+
+Compile that with musl, since glibc actually uses brk(), and then
+execute it, and it'll hit this splat:
+
+  kernel BUG at mm/mmap.c:229!
+  invalid opcode: 0000 [#1] PREEMPT SMP
+  CPU: 12 PID: 1379 Comm: a.out Tainted: G S   U             6.1.0-rc7+ #419
+  RIP: 0010:__do_sys_brk+0x2fc/0x340
+  Code: 00 00 4c 89 ef e8 04 d3 fe ff eb 9a be 01 00 00 00 4c 89 ff e8 35 e0 fe ff e9 6e ff ff ff 4d 89 a7 20>
+  RSP: 0018:ffff888140bc7eb0 EFLAGS: 00010246
+  RAX: 0000000000000000 RBX: 00000000007e7000 RCX: ffff8881020fe000
+  RDX: ffff8881020fe001 RSI: ffff8881955c9b00 RDI: ffff8881955c9b08
+  RBP: 0000000000000000 R08: ffff8881955c9b00 R09: 00007ffc77844000
+  R10: 0000000000000000 R11: 0000000000000001 R12: 00000000007e8000
+  R13: 00000000007e8000 R14: 00000000007e7000 R15: ffff8881020fe000
+  FS:  0000000000604298(0000) GS:ffff88901f700000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000603fe0 CR3: 000000015ba9a005 CR4: 0000000000770ee0
+  PKRU: 55555554
+  Call Trace:
+   <TASK>
+   do_syscall_64+0x2b/0x50
+   entry_SYSCALL_64_after_hwframe+0x46/0xb0
+  RIP: 0033:0x400678
+  Code: 10 4c 8d 41 08 4c 89 44 24 10 4c 8b 01 8b 4c 24 08 83 f9 2f 77 0a 4c 8d 4c 24 20 4c 01 c9 eb 05 48 8b>
+  RSP: 002b:00007ffc77863890 EFLAGS: 00000212 ORIG_RAX: 000000000000000c
+  RAX: ffffffffffffffda RBX: 000000000040031b RCX: 0000000000400678
+  RDX: 00000000004006a1 RSI: 00000000007e6000 RDI: 00000000007e7000
+  RBP: 00007ffc77863900 R08: 0000000000000000 R09: 00000000007e6000
+  R10: 00007ffc77863930 R11: 0000000000000212 R12: 00007ffc77863978
+  R13: 00007ffc77863988 R14: 0000000000000000 R15: 0000000000000000
+   </TASK>
+
+Instead, just error out if the original mapping has been removed.
+
+Fixes: 2e7ce7d354f2 ("mm/mmap: change do_brk_flags() to expand existing VMA and add do_brk_munmap()")
+Cc: Liam R. Howlett <Liam.Howlett@Oracle.com>
+Cc: Yu Zhao <yuzhao@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: SeongJae Park <sj@kernel.org>
+Cc: Sven Schnelle <svens@linux.ibm.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Will Deacon <will@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+---
+ mm/mmap.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/mm/mmap.c b/mm/mmap.c
+index c3c5c1d6103d..f5a37fe9a19e 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -226,8 +226,7 @@ SYSCALL_DEFINE1(brk, unsigned long, brk)
+ 		/* Search one past newbrk */
+ 		mas_set(&mas, newbrk);
+ 		brkvma = mas_find(&mas, oldbrk);
+-		BUG_ON(brkvma == NULL);
+-		if (brkvma->vm_start >= oldbrk)
++		if (!brkvma || brkvma->vm_start >= oldbrk)
+ 			goto out; /* mapping intersects with an existing non-brk vma. */
+ 		/*
+ 		 * mm->brk must be protected by write mmap_lock.
+-- 
+2.38.1
 
