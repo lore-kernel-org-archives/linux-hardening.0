@@ -2,173 +2,73 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91674C47088
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 04:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23299C4332F
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 05:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232130AbiLBEqx (ORCPT
+        id S230163AbiLBFFb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Dec 2022 23:46:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53670 "EHLO
+        Fri, 2 Dec 2022 00:05:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232000AbiLBEqv (ORCPT
+        with ESMTP id S230447AbiLBFFa (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Dec 2022 23:46:51 -0500
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71A1BD679E
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Dec 2022 20:46:50 -0800 (PST)
-Received: by mail-pf1-x435.google.com with SMTP id z17so3883911pff.1
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Dec 2022 20:46:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ToAtkmB3UW/Z4QJiw4Bpk2zHiZGqtOKBNj//sKNA6ok=;
-        b=XU/BGI/X6BKC5tjX50ll8ytZwymHQDMQoO03htc8KgB6bNGoVlvWdy0Yva+aEYFRGS
-         1TtOwkr7rsikZMvvSWFPel0mTobZhkeMNNmn/Kp0/NemQPJ8sAO1znbTfkZETg2jCIlv
-         x/eiVULjiqpKrpOqTT60kdGbOiTXqnb1+RtAo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ToAtkmB3UW/Z4QJiw4Bpk2zHiZGqtOKBNj//sKNA6ok=;
-        b=0wOk8feazA3gQNnNG3qKDHgalBwaCfzxTRNkZZKX6efDquz7ehh40jy9ueXDs0zTrB
-         OH+g1HH5qGUGwm2Do2/pGftBUq0Earn+Mxj2iaYmYH9tR/cN4c+CJccpHhrqRzZ47E4k
-         pQaig2kNujSqDCb96SWZXYCkaRSsElIhk/PDl7tcNZdZ3e6QWewJ+fbU+/s/lmRgD4MQ
-         vFeWo8NrVYyjWy4bMTv7FrLrYdRKYziPwHrWcSgULy/Fikr5ocn1Ss6xGokvWqD415ON
-         NkfJ+zzPmCI1IvaaS8gxg6xvdQQZIAVD2Xz3aZS3ui4DH1DeQ6ON3ak0fFe54jffGcv9
-         wLEQ==
-X-Gm-Message-State: ANoB5pkAluqKaHSPD6Q8IeaQZ0fWZcwXN2vCgaipLdUX1mt7FYj01EcI
-        1GoCFKUn2JuAIjmw/C1owN14xw==
-X-Google-Smtp-Source: AA0mqf4U0bjGUApaDsyQLPrBCs0HpmHPmifKlyra3wRhE/eJwL1VLH75z53Ep2l9GtPyqeIEScUkUQ==
-X-Received: by 2002:a63:2001:0:b0:477:b0d0:bbee with SMTP id g1-20020a632001000000b00477b0d0bbeemr42114357pgg.51.1669956409938;
-        Thu, 01 Dec 2022 20:46:49 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k27-20020aa7973b000000b0057610894c71sm2460656pfg.209.2022.12.01.20.46.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Dec 2022 20:46:48 -0800 (PST)
-Date:   Thu, 1 Dec 2022 20:46:47 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Daniel Palmer <daniel@thingy.jp>,
-        kernel test robot <lkp@intel.com>,
-        Romain Perier <romain.perier@gmail.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] rtc: msc313: Fix function prototype mismatch in
- msc313_rtc_probe()
-Message-ID: <202212012043.C4ED0824@keescook>
-References: <20221118233101.never.215-kees@kernel.org>
- <ef3c1a62-029e-ffae-8a37-fde35a8235d5@wanadoo.fr>
+        Fri, 2 Dec 2022 00:05:30 -0500
+Received: from formenos.hmeau.com (helcar.hmeau.com [216.24.177.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0A30CFE40;
+        Thu,  1 Dec 2022 21:05:28 -0800 (PST)
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+        by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+        id 1p0yEe-00371q-Db; Fri, 02 Dec 2022 13:05:17 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 02 Dec 2022 13:05:16 +0800
+Date:   Fri, 2 Dec 2022 13:05:16 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
+        Pankaj Gupta <pankaj.gupta@nxp.com>,
+        Gaurav Jain <gaurav.jain@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] crypto/caam: Avoid GCC constprop bug warning
+Message-ID: <Y4mHjKXnF/4Pfw5I@gondor.apana.org.au>
+References: <20221202010410.gonna.444-kees@kernel.org>
+ <Y4loCFGhxecG6Ta0@gondor.apana.org.au>
+ <202212011928.97A43D01@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ef3c1a62-029e-ffae-8a37-fde35a8235d5@wanadoo.fr>
+In-Reply-To: <202212011928.97A43D01@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Nov 19, 2022 at 09:05:28AM +0100, Christophe JAILLET wrote:
-> Le 19/11/2022 à 00:31, Kees Cook a écrit :
-> > With clang's kernel control flow integrity (kCFI, CONFIG_CFI_CLANG),
-> > indirect call targets are validated against the expected function
-> > pointer prototype to make sure the call target is valid to help mitigate
-> > ROP attacks. If they are not identical, there is a failure at run time,
-> > which manifests as either a kernel panic or thread getting killed.
-> > 
-> > msc313_rtc_probe() was passing clk_disable_unprepare() directly, which
-> > did not have matching prototypes for devm_add_action_or_reset()'s callback
-> > argument. Add a wrapper and remove the cast.
-> > 
-> > This was found as a result of Clang's new -Wcast-function-type-strict
-> > flag, which is more sensitive than the simpler -Wcast-function-type,
-> > which only checks for type width mismatches.
-> > 
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Link: https://lore.kernel.org/lkml/202211041527.HD8TLSE1-lkp@intel.com
-> > Cc: Daniel Palmer <daniel@thingy.jp>
-> > Cc: Romain Perier <romain.perier@gmail.com>
-> > Cc: Alessandro Zummo <a.zummo@towertech.it>
-> > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-rtc@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >   drivers/rtc/rtc-msc313.c | 9 ++++++++-
-> >   1 file changed, 8 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/rtc/rtc-msc313.c b/drivers/rtc/rtc-msc313.c
-> > index f3fde013c4b8..36e3e77f303e 100644
-> > --- a/drivers/rtc/rtc-msc313.c
-> > +++ b/drivers/rtc/rtc-msc313.c
-> > @@ -177,6 +177,13 @@ static irqreturn_t msc313_rtc_interrupt(s32 irq, void *dev_id)
-> >   	return IRQ_HANDLED;
-> >   }
-> > +static void msc313_clk_disable_unprepare(void *data)
-> > +{
-> > +	struct clk *clk = data;
-> > +
-> > +	clk_disable_unprepare(clk);
-> > +}
-> > +
-> >   static int msc313_rtc_probe(struct platform_device *pdev)
-> >   {
-> >   	struct device *dev = &pdev->dev;
-> > @@ -224,7 +231,7 @@ static int msc313_rtc_probe(struct platform_device *pdev)
-> >   		return ret;
-> >   	}
-> > -	ret = devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unprepare, clk);
-> > +	ret = devm_add_action_or_reset(dev, msc313_clk_disable_unprepare, clk);
-> >   	if (ret)
-> >   		return ret;
-> 
-> Hi,
-> 
-> another way to fix it, is to use devm_clk_get_enabled().
-> 
-> It removes some LoC instead of introducing some new ones and saves a few
-> bytes of memory.
+On Thu, Dec 01, 2022 at 07:30:22PM -0800, Kees Cook wrote:
+>
+> Getting rid of the if doesn't solve the warning. I can switch it to just
+> "if (data)", though. That keeps GCC happy.
 
-Hrm, I'm not familiar with the clk stuff here -- how do I use it? Should
-it just be like this? (The NULL argument is ok?)
+OK I misread the thread.
 
-diff --git a/drivers/rtc/rtc-msc313.c b/drivers/rtc/rtc-msc313.c
-index f3fde013c4b8..8d7737e0e2e0 100644
---- a/drivers/rtc/rtc-msc313.c
-+++ b/drivers/rtc/rtc-msc313.c
-@@ -212,22 +212,12 @@ static int msc313_rtc_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+Anyhow, it appears that this warning only occurs due to a debug
+printk in caam.  So how about something like this?
+
+diff --git a/drivers/crypto/caam/desc_constr.h b/drivers/crypto/caam/desc_constr.h
+index 62ce6421bb3f..b49c995e1cc6 100644
+--- a/drivers/crypto/caam/desc_constr.h
++++ b/drivers/crypto/caam/desc_constr.h
+@@ -163,7 +163,7 @@ static inline void append_data(u32 * const desc, const void *data, int len)
+ {
+ 	u32 *offset = desc_end(desc);
  
--	clk = devm_clk_get(dev, NULL);
-+	clk = devm_clk_get_enabled(dev, NULL);
- 	if (IS_ERR(clk)) {
- 		dev_err(dev, "No input reference clock\n");
- 		return PTR_ERR(clk);
- 	}
+-	if (len) /* avoid sparse warning: memcpy with byte count of 0 */
++	if (!IS_ENABLED(CONFIG_CRYPTO_DEV_FSL_CAAM_DEBUG) || data)
+ 		memcpy(offset, data, len);
  
--	ret = clk_prepare_enable(clk);
--	if (ret) {
--		dev_err(dev, "Failed to enable the reference clock, %d\n", ret);
--		return ret;
--	}
--
--	ret = devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unprepare, clk);
--	if (ret)
--		return ret;
--
- 	rate = clk_get_rate(clk);
- 	writew(rate & 0xFFFF, priv->rtc_base + REG_RTC_FREQ_CW_L);
- 	writew((rate >> 16) & 0xFFFF, priv->rtc_base + REG_RTC_FREQ_CW_H);
+ 	(*desc) = cpu_to_caam32(caam32_to_cpu(*desc) +
 
+Thanks,
 -- 
-Kees Cook
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
