@@ -2,119 +2,158 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C57C4332F
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Dec 2022 23:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C47CAC3A5A7
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Dec 2022 00:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231543AbiLAXWu (ORCPT
+        id S232214AbiLBAdP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Dec 2022 18:22:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52724 "EHLO
+        Thu, 1 Dec 2022 19:33:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231518AbiLAXWu (ORCPT
+        with ESMTP id S232202AbiLBAcp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Dec 2022 18:22:50 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 617C122505
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Dec 2022 15:22:48 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id h193so2953483pgc.10
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Dec 2022 15:22:48 -0800 (PST)
+        Thu, 1 Dec 2022 19:32:45 -0500
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC8311C416
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Dec 2022 16:31:47 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id b13-20020a17090a5a0d00b0021906102d05so3690195pjd.5
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Dec 2022 16:31:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=S55j1GM26l88fCy8Cwvgg1U+53HZFDkiSHsMw4aLUOg=;
-        b=B5JEM5AvjXgpEVamzuf8eGSnPsd/ZyjSbjDL/1h1I+QGbLhYvNWxN/GvwJsZ9Hnk6U
-         fSsUUB2XCABsd5N8c/kuaZlFUimXjDi2XcML/IxiXvPtraObdRIrG6FvQxVzMso3Ai2m
-         V31M/9uhRF5yvwhbaIr317ihQfnl71bRfUpOo=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aSqvQJ0r+p8u1Rw63qJBl5IXkE2qQ7qq7yw5MIhA6Vg=;
+        b=hRo4cH3NdrgJYtHz2zuqiIhKDpaIbVnLZSSaOpnURDdSwno6JVGbQ7sbRiyma4ID5p
+         yak5WLuD9BpCyMdRbRYLcSsZzQM2ryqSUUUOSEKtTA+d4BJKSwimD0yAdnj/qihgXXrR
+         xWF8NsCINgzkXi6gYlB3KJ0GCOnfMBmWziTK8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S55j1GM26l88fCy8Cwvgg1U+53HZFDkiSHsMw4aLUOg=;
-        b=Wcqgq7/4tFDoQCT7m5SWfE8/qjjBgi3+vJX5t9Vx9VESx4o3blDAbhvwunYioWahv4
-         /S0gxkZCucpPxuB0asCjni9MnXetdE+aAPgfg8CLbMp2EZu+E1IqWx61sFPcIR+WA5yM
-         KgQ0nqk6jNyQwgFFBKTXqtEI/1gtKrIMUgks6r8BaSZaPA8pe38O6/WHV53u6qU/0S1X
-         yWK7EDFBvvmqyqwqWQZH4OpWvoxa6Qz6P948c7i202Xi8+kykcGI2Z8EqBahjgwB0w+y
-         +O+8PT+dvdJkEHMQdlCcWNAG5WSXrbAGIYTEXFeLAE1N6o6QblpVIhatTALFGpFOsrXK
-         GrAQ==
-X-Gm-Message-State: ANoB5pl8jWzp5zxuUTZYSBhlc+7nFoYfNn6P72hyQtARq4huJUgI4riD
-        EWjf28jy5N4V1xsA726whEDIEw==
-X-Google-Smtp-Source: AA0mqf7fZxs4hLpJQQbUuA0FCBTxjIxpVNLkOGaREDWVex2GFWW/6G0JzwsrZ3tOTgk3YMpayim+/w==
-X-Received: by 2002:a63:495e:0:b0:43c:a5cb:5d1b with SMTP id y30-20020a63495e000000b0043ca5cb5d1bmr43861545pgk.134.1669936967871;
-        Thu, 01 Dec 2022 15:22:47 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aSqvQJ0r+p8u1Rw63qJBl5IXkE2qQ7qq7yw5MIhA6Vg=;
+        b=cprA87C2VSLrg5/vfdFMj/trX0FETRXwnkCXIllQAeHA4btTWgNZauqaCRbGkImBY4
+         O+y2xdrjOo11R9OYRiVkXxxEZVuGkTdfq22Jz08HpwxME717OwV5hYUyZzJcGAQjzHCV
+         8UYVBZMq3bWu/w83oz5DbykyhrkqMcgF7KggddzIHXUf2Ne8PeIsOfm1nppr44umkIHl
+         yHUrRcQiyp+5BzNmtScD6SkomNwzFNgbxjs31i/xue51pv7r/qXIDke7xbNStRQAkm76
+         Yca0L4mBdH/Jni5WENYr6wbYT6jUyan/afgQg5i9GgGSWpO9oq2tflWyP8y0n5bc99K3
+         md5w==
+X-Gm-Message-State: ANoB5pkkfp/VUMiH1Er3Nkb1m1MxvJgOsm23XtDA7dwIIvA79DZ910nL
+        /I306wx7mJRR55vsG2HVmkKY8w==
+X-Google-Smtp-Source: AA0mqf6LVRpqR8NBytmtT7u31/qaDNdBjLsbDJ8yBeh+AlyAyqNWNLgWfS0QZIwBvqjayllQfetnag==
+X-Received: by 2002:a17:902:e20c:b0:189:a934:ee37 with SMTP id u12-20020a170902e20c00b00189a934ee37mr11428560plb.141.1669941107286;
+        Thu, 01 Dec 2022 16:31:47 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i17-20020a170902c95100b001870dc3b4c0sm4263317pla.74.2022.12.01.15.22.47
+        by smtp.gmail.com with ESMTPSA id cp6-20020a170902e78600b0018986ba1db9sm4194500plb.284.2022.12.01.16.31.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Dec 2022 15:22:47 -0800 (PST)
-Date:   Thu, 1 Dec 2022 15:22:46 -0800
+        Thu, 01 Dec 2022 16:31:46 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>, kvm@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: Coverity: emulator_leave_smm(): Error handling issues
-Message-ID: <202212011522.0A318649@keescook>
-References: <202212010825.8589611F@keescook>
- <Y4jwBahPrkwOI3w9@google.com>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     Kees Cook <keescook@chromium.org>,
+        kernel test robot <lkp@intel.com>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-um@lists.infradead.org, stable@vger.kernel.org,
+        David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] um: virt-pci: Avoid GCC non-NULL warning
+Date:   Thu,  1 Dec 2022 16:31:41 -0800
+Message-Id: <20221202003137.never.887-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y4jwBahPrkwOI3w9@google.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3245; h=from:subject:message-id; bh=hW5b+KjTlhouCD6j7qImof+KSRreUfVk0FReUZhRGoc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjiUdt7k5NB8JKjV1GuvCZKo99RzxrLKkWs3CIhEoZ Yq0gvHqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY4lHbQAKCRCJcvTf3G3AJjb8D/ 0bdy8kTQRSRZfyYIeJyp7oCXVcKdUFnjAq+L0zfS54vo7VwW8jT61/ZKz0yR1mmLGvzBvj3orLFcWR iKTNhv9doXjX+zJwgQpDHWYIn4Scxpa6SL2qj0DZFK096DFP5K2wJGfXNiyBmvCgNG1iVhqIHw2UJX FVBFoDrenCDo8YeiNxanR5Bsaj8ymv73WfL6L0St8d5wVc2A5KQOk0iJVWPDkH8oNUMxeRSZEsxzxM Wm3IzXEn+BKBJaOLenZjBVV4eGza5V6tTDWPs1R+pOAjocB1xhbnslwG7FkW3ji4IBckWJYhsZ9C41 iWfJ9JxbDi6QluS/fD442ldJQpc7xqcHEQjckRK1vvzMa1KL+5hCoJFyo5nWkKY7seL3ohOfdPtUdz rc5aVt/af7aB0TydI0BYvedhriFKbHDYfhA9dUkccQeuzVgkXcxO1CxBax7orPIWouspRQNr4al36K PtSyqJfKNOO+q/UcsT1WPmn2FgKgB9adsggH37j0MDNXiO6dqkFa5EGQ0vIzSM4C9oU2FkTbERbK1z E2Md4XHyRnMmz6cBwAAtSx2TcOIjT1aTJUySGZ2PqLthuyzyPj9O8sIVbvWcUgxe9CF37InmRO5k6k /LG391zGyuXB2PuVLbbfVIlxz3msT11T+igz3B4mvf/jecCOcCIv9C1noyZQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Dec 01, 2022 at 06:18:45PM +0000, Sean Christopherson wrote:
-> On Thu, Dec 01, 2022, coverity-bot wrote:
-> > Hello!
-> > 
-> > This is an experimental semi-automated report about issues detected by
-> > Coverity from a scan of next-20221201 as part of the linux-next scan project:
-> > https://scan.coverity.com/projects/linux-next-weekly-scan
-> > 
-> > You're getting this email because you were associated with the identified
-> > lines of code (noted below) that were touched by commits:
-> > 
-> >   Wed Nov 9 12:31:18 2022 -0500
-> >     1d0da94cdafe ("KVM: x86: do not go through ctxt->ops when emulating rsm")
-> > 
-> > Coverity reported the following:
-> > 
-> > *** CID 1527763:  Error handling issues  (CHECKED_RETURN)
-> > arch/x86/kvm/smm.c:631 in emulator_leave_smm()
-> > 625     		cr4 = kvm_read_cr4(vcpu);
-> > 626     		if (cr4 & X86_CR4_PAE)
-> > 627     			kvm_set_cr4(vcpu, cr4 & ~X86_CR4_PAE);
-> > 628
-> > 629     		/* And finally go back to 32-bit mode.  */
-> > 630     		efer = 0;
-> > vvv     CID 1527763:  Error handling issues  (CHECKED_RETURN)
-> > vvv     Calling "kvm_set_msr" without checking return value (as is done elsewhere 5 out of 6 times).
-> > 631     		kvm_set_msr(vcpu, MSR_EFER, efer);
-> > 632     	}
-> > 633     #endif
-> > 634
-> > 635     	/*
-> > 636     	 * Give leave_smm() a chance to make ISA-specific changes to the vCPU
-> > 
-> > If this is a false positive, please let us know so we can mark it as
-> 
-> It's not a false positive per se, but absent a KVM bug the call can never fail.
-> Ditto for the kvm_set_cr{0,4}() calls above.  That said, I'm tempted to "fix"
-> these since we've had bugs related to this code in the past.  This doesn't seem
-> too ugly...
+GCC gets confused about the return value of get_cpu_var() possibly
+being NULL, so explicitly test for it before calls to memcpy() and
+memset(). Avoids warnings like this:
 
-Yeah, that's what I've done with similar cases. "This should be
-impossible" get a WARN_ONCE and fail gracefully.
+   arch/um/drivers/virt-pci.c: In function 'um_pci_send_cmd':
+   include/linux/fortify-string.h:48:33: warning: argument 1 null where non-null expected [-Wnonnull]
+      48 | #define __underlying_memcpy     __builtin_memcpy
+         |                                 ^
+   include/linux/fortify-string.h:438:9: note: in expansion of macro '__underlying_memcpy'
+     438 |         __underlying_##op(p, q, __fortify_size);                        \
+         |         ^~~~~~~~~~~~~
+   include/linux/fortify-string.h:483:26: note: in expansion of macro '__fortify_memcpy_chk'
+     483 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
+         |                          ^~~~~~~~~~~~~~~~~~~~
+   arch/um/drivers/virt-pci.c:100:9: note: in expansion of macro 'memcpy'
+     100 |         memcpy(buf, cmd, cmd_size);
+         |         ^~~~~~
 
--Kees
+While at it, avoid literal "8" and use stored sizeof(buf->data) in
+memset() and um_pci_send_cmd().
 
+Reported-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/lkml/202211271212.SUZSC9f9-lkp@intel.com
+Fixes: ba38961a069b ("um: Enable FORTIFY_SOURCE")
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Xiu Jianfeng <xiujianfeng@huawei.com>
+Cc: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc: linux-um@lists.infradead.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+I can take this via the hardening tree, since that's where I introduced
+the warning. :)
+---
+ arch/um/drivers/virt-pci.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/arch/um/drivers/virt-pci.c b/arch/um/drivers/virt-pci.c
+index acb55b302b14..3ac220dafec4 100644
+--- a/arch/um/drivers/virt-pci.c
++++ b/arch/um/drivers/virt-pci.c
+@@ -97,7 +97,8 @@ static int um_pci_send_cmd(struct um_pci_device *dev,
+ 	}
+ 
+ 	buf = get_cpu_var(um_pci_msg_bufs);
+-	memcpy(buf, cmd, cmd_size);
++	if (buf)
++		memcpy(buf, cmd, cmd_size);
+ 
+ 	if (posted) {
+ 		u8 *ncmd = kmalloc(cmd_size + extra_size, GFP_ATOMIC);
+@@ -182,6 +183,7 @@ static unsigned long um_pci_cfgspace_read(void *priv, unsigned int offset,
+ 	struct um_pci_message_buffer *buf;
+ 	u8 *data;
+ 	unsigned long ret = ULONG_MAX;
++	size_t bytes = sizeof(buf->data);
+ 
+ 	if (!dev)
+ 		return ULONG_MAX;
+@@ -189,7 +191,8 @@ static unsigned long um_pci_cfgspace_read(void *priv, unsigned int offset,
+ 	buf = get_cpu_var(um_pci_msg_bufs);
+ 	data = buf->data;
+ 
+-	memset(buf->data, 0xff, sizeof(buf->data));
++	if (buf)
++		memset(data, 0xff, bytes);
+ 
+ 	switch (size) {
+ 	case 1:
+@@ -204,7 +207,7 @@ static unsigned long um_pci_cfgspace_read(void *priv, unsigned int offset,
+ 		goto out;
+ 	}
+ 
+-	if (um_pci_send_cmd(dev, &hdr, sizeof(hdr), NULL, 0, data, 8))
++	if (um_pci_send_cmd(dev, &hdr, sizeof(hdr), NULL, 0, data, bytes))
+ 		goto out;
+ 
+ 	switch (size) {
 -- 
-Kees Cook
+2.34.1
+
