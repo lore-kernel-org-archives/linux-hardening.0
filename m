@@ -2,185 +2,169 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEBEC47088
-	for <linux-hardening@archiver.kernel.org>; Sat,  3 Dec 2022 02:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2012DC47089
+	for <linux-hardening@archiver.kernel.org>; Sat,  3 Dec 2022 02:30:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235044AbiLCCRd (ORCPT
+        id S234951AbiLCCaM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Dec 2022 21:17:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58174 "EHLO
+        Fri, 2 Dec 2022 21:30:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234490AbiLCCRc (ORCPT
+        with ESMTP id S235035AbiLCCaL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Dec 2022 21:17:32 -0500
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58C1DDEA5E
-        for <linux-hardening@vger.kernel.org>; Fri,  2 Dec 2022 18:17:31 -0800 (PST)
-Received: by mail-pf1-x435.google.com with SMTP id c15so6492379pfb.13
-        for <linux-hardening@vger.kernel.org>; Fri, 02 Dec 2022 18:17:31 -0800 (PST)
+        Fri, 2 Dec 2022 21:30:11 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BF8BE077B
+        for <linux-hardening@vger.kernel.org>; Fri,  2 Dec 2022 18:30:10 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id e7-20020a17090a77c700b00216928a3917so9929809pjs.4
+        for <linux-hardening@vger.kernel.org>; Fri, 02 Dec 2022 18:30:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KslJTB66xKixbMkJwqpVpZSA0E9W1pT9X9b2hTanY44=;
-        b=FdRPAwVZYUKWI0GixKt1/Mt+MzbcNPYjYP0eTaKVlj9agMe+JiJxyY5avV9WtorCm+
-         EK+OYvzUfadggHErH3DkUit8KsSW1LwHMxmJnXE6B74hzYeyVOXZyI2rEJGSVj+Q7E1e
-         1/TvPb0HpDfja1G3IDLH+2UgTDmiIMikYkJLc=
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=CWt07COLqhM0wZS8+aSuBFX0K5MaXOD5vm4AlkQK9u8=;
+        b=ibJN+4wupMeFZ8AsO0XiaFGivYyW2MY8j9syFwSujyzsv8WIvvQldHP0Mw+8z+BtGq
+         +UM8iq8dyM8sYwdY14XNad29HiFmWd6Qav74FWK5Ij3GLXj+9mUdrsoQ9Op6Brm9boVS
+         qA69QuShWk84L3KGUcVi8zcoNcRtMcDwru8WtwsOUxBX4PCzQq2yi4ArmDlhntkN4FuY
+         SrkCGavYXx5dNpTWKxnmz4RLfgfohN8Uebag3wtDA4QffX+MVkAr/CjWUbotqfxo0Sd5
+         5eGUlsoWU0/Vd2EXp3Oorpz8Dx0a0o6CyY8W3M5Bfyo98mfI74cnheSly1UbCCx0hDzj
+         46qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KslJTB66xKixbMkJwqpVpZSA0E9W1pT9X9b2hTanY44=;
-        b=6Tq58pUIaY9PAgmCwIbwSCVVXHS4+ELHrJ37jdfdMzpSUV3yQmXCVyWOqNBgBPrMC4
-         XIF1BV8Pm5MbacBo3s90IrohSB/KJ+eEP3JKKdG27QprtjPZGhhtp3xmmGwPlSci6ZX1
-         gKzYFZLV1bhFeJcRV4621WqY3UBj1o6r8D1mPiH/c8U6VU/pS6F4rTZVU5rd9QcuUeiZ
-         5sENYRGUuqU/pJ+Ke8YzedSkE6kIatedXBjKCrkwx54gs9/ZAe8HvIIhOT2wT8EgSsRE
-         QEfl4E/yxo4CGSTP0ZfIjJGp/0QnKaWRSTQLVKIJrCOztxL1zZGxPxwE2ryn6kA6EdSQ
-         Tsyg==
-X-Gm-Message-State: ANoB5pk1rDNcUguuVH2Yrc4Il4POxB1fTSR3XWglMursjuqgv5iWLS+I
-        Ou4FEU3oKcL6TGmjrh/Tab8AZQ==
-X-Google-Smtp-Source: AA0mqf5Xy39Vb8BDohYQdotTcroYHHMKN0SWFeCLIULcJFfsg4B5WlYx3CbASMwsZUX/N56aaa5Rzw==
-X-Received: by 2002:a05:6a00:1409:b0:56b:e1d8:e7a1 with SMTP id l9-20020a056a00140900b0056be1d8e7a1mr54566551pfu.28.1670033850672;
-        Fri, 02 Dec 2022 18:17:30 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y69-20020a62ce48000000b00571bdf45888sm2157422pfg.154.2022.12.02.18.17.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Dec 2022 18:17:29 -0800 (PST)
-Date:   Fri, 2 Dec 2022 18:17:28 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Ryder Lee <Ryder.Lee@mediatek.com>
-Cc:     MeiChia Chiu =?utf-8?B?KOmCsee+juWYiSk=?= 
-        <MeiChia.Chiu@mediatek.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        Shayne Chen =?utf-8?B?KOmZs+i7kuS4nik=?= 
-        <Shayne.Chen@mediatek.com>, "nbd@nbd.name" <nbd@nbd.name>,
-        "lorenzo@kernel.org" <lorenzo@kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        "kvalo@kernel.org" <kvalo@kernel.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        Sujuan Chen =?utf-8?B?KOmZiOe0oOWonyk=?= 
-        <Sujuan.Chen@mediatek.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Bo Jiao =?utf-8?B?KOeEpuazoik=?= <Bo.Jiao@mediatek.com>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-Subject: Re: Coverity: mt7915_mcu_get_chan_mib_info(): Memory - illegal
- accesses
-Message-ID: <202212021817.E35115E1@keescook>
-References: <202212021424.34C0F695E4@keescook>
- <1a16599dd5e4eed86bae112a232a3599af43a5f2.camel@mediatek.com>
- <202212021504.A1942911@keescook>
- <6285b967a37d7f641b13ba73c10033450ee8ea7f.camel@mediatek.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CWt07COLqhM0wZS8+aSuBFX0K5MaXOD5vm4AlkQK9u8=;
+        b=DymJWGXaILBZxi5XbZNdvCDhuiUrD5hqVRQ4lEVG0m89Iy6UZePwvOw3ZuYZkO8ZSZ
+         KJ3EvefP8Zi4KbAQ6BmUc1eGS81DR08RfdeL8WMXCkCtQOLttXLt8nPN/J2bfLM0ah2O
+         8ssOSeDzhHHlIyHwxGiFaWDCgKnBFuDlhf+f6LmXoHf0wXLA6CMvNuG3o86XgaItpXDU
+         o3PInTeS6IHlUUc/3QhWqnBIehgqoEgjaaGo4hj0BH6NekHjBCJblbKfho0ItLtfRrCp
+         mzPLbxvGjjPZOj8xT7ckT1MnyMCnpNjtLvo9d9zqY0Qmt+BtqLcx2M9RmwK05sesjs7X
+         ooqA==
+X-Gm-Message-State: ANoB5pmj99RW84igg2quH57dg28HAD60eON+kCqIzgDIy+UaB5T+4siF
+        PWP1wYj7uvsfaSVhwF8LkcrZuuSHrDQ+IYbR5MEQ1w==
+X-Google-Smtp-Source: AA0mqf4+7wHUUYy7iS3SBS3k5hhK+zqhcW2r6ExsGfYHliv7BR/cjYNM/HINU3xucnxLrSzdQD0p4/Gr+j/OQbHxh0I=
+X-Received: by 2002:a17:90a:5317:b0:213:34f7:fb14 with SMTP id
+ x23-20020a17090a531700b0021334f7fb14mr82075775pjh.25.1670034609492; Fri, 02
+ Dec 2022 18:30:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6285b967a37d7f641b13ba73c10033450ee8ea7f.camel@mediatek.com>
+References: <20221202013404.163143-1-jeffxu@google.com> <20221202013404.163143-7-jeffxu@google.com>
+ <CABVzXAkoGoypAs86EG5RsJZ=CXPu3NtTHb7_2=byQt7A7p7krQ@mail.gmail.com>
+In-Reply-To: <CABVzXAkoGoypAs86EG5RsJZ=CXPu3NtTHb7_2=byQt7A7p7krQ@mail.gmail.com>
+From:   Jeff Xu <jeffxu@google.com>
+Date:   Fri, 2 Dec 2022 18:29:32 -0800
+Message-ID: <CALmYWFuR93cgj1_P4=S81Wntg-m_6g-0Vd2JQmrLWmA7=B7QVA@mail.gmail.com>
+Subject: Re: [PATCH v3] mm/memfd: Add write seals when apply SEAL_EXEC to
+ executable memfd
+To:     Daniel Verkamp <dverkamp@chromium.org>
+Cc:     jeffxu@chromium.org, skhan@linuxfoundation.org,
+        keescook@chromium.org, akpm@linux-foundation.org,
+        dmitry.torokhov@gmail.com, hughd@google.com, jorgelo@chromium.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, mnissler@chromium.org, jannh@google.com,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Dec 02, 2022 at 11:42:36PM +0000, Ryder Lee wrote:
-> On Fri, 2022-12-02 at 15:04 -0800, Kees Cook wrote:
-> > > 
-> > On Fri, Dec 02, 2022 at 10:56:19PM +0000, Ryder Lee wrote:
-> > > On Fri, 2022-12-02 at 14:24 -0800, coverity-bot wrote:
-> > > > Hello!
-> > > > 
-> > > > This is an experimental semi-automated report about issues
-> > > > detected
-> > > > by
-> > > > Coverity from a scan of next-20221202 as part of the linux-next
-> > > > scan
-> > > > project:
-> > > > 
-> > > 
-> > > 
-> https://urldefense.com/v3/__https://scan.coverity.com/projects/linux-next-weekly-scan__;!!CTRNKA9wMg0ARbw!j7j_C0KpO4VD2yMOodvpeIexTGq4fhy2yq6nokNua9u4LToiUOLk4ou8JFFNrXkrh80d5BK2k44faRQstHE9$
-> > >  
-> > > >  
-> > > > 
-> > > > You're getting this email because you were associated with the
-> > > > identified
-> > > > lines of code (noted below) that were touched by commits:
-> > > > 
-> > > >   Thu Feb 3 13:57:56 2022 +0100
-> > > >     417a4534d223 ("mt76: mt7915: update mt7915_chan_mib_offs for
-> > > > mt7916")
-> > > > 
-> > > > Coverity reported the following:
-> > > > 
-> > > > *** CID 1527801:  Memory - illegal accesses  (OVERRUN)
-> > > > drivers/net/wireless/mediatek/mt76/mt7915/mcu.c:3005 in
-> > > > mt7915_mcu_get_chan_mib_info()
-> > > > 2999     		start = 5;
-> > > > 3000     		ofs = 0;
-> > > > 3001     	}
-> > > > 3002
-> > > > 3003     	for (i = 0; i < 5; i++) {
-> > > > 3004     		req[i].band = cpu_to_le32(phy->mt76->band_idx);
-> > > > vvv     CID 1527801:  Memory - illegal accesses  (OVERRUN)
-> > > > vvv     Overrunning array "offs" of 9 4-byte elements at element
-> > > > index 9 (byte offset 39) using index "i + start" (which evaluates
-> > > > to
-> > > > 9).
-> > > > 3005     		req[i].offs = cpu_to_le32(offs[i + start]);
-> > > > 3006
-> > > > 3007     		if (!is_mt7915(&dev->mt76) && i == 3)
-> > > > 3008     			break;
-> > > > 3009     	}
-> > > > 3010
-> > > > 
-> > > > If this is a false positive, please let us know so we can mark it
-> > > > as
-> > > > such, or teach the Coverity rules to be smarter. If not, please
-> > > > make
-> > > > sure fixes get into linux-next. :) For patches fixing this,
-> > > > please
-> > > > include these lines (but double-check the "Fixes" first):
-> > > > 
-> > > 
-> > > I think this is a false postive as the subsequent check 'if
-> > > (!is_mt7915(&dev->mt76) && i == 3)' should break array "offs" of 8.
-> > 
-> > Ah, okay. What if is_mt7915(&dev->mt76) is always true?
-> > 
-> > -Kees
-> 
-> 	int start = 0;
-> 
-> 	if (!is_mt7915(&dev->mt76)) {
-> 		start = 5;
-> 		ofs = 0;
-> 	}
-> 
-> 	for (i = 0; i < 5; i++) {
-> 		req[i].band = cpu_to_le32(phy->band_idx);
-> 		req[i].offs = cpu_to_le32(offs[i + start]);
-> 
-> 		if (!is_mt7915(&dev->mt76) && i == 3) //
-> 			break;
-> 	}
-> 
-> For 'is_mt7915' case, start:0 and i: 0 1 2 3 4, whereas !is_mt7915'
-> case, start:5 and i: 0 1 2 3 (then break).
-> 
-> I know it's a bit tricky. This is used to differentiate chipset
-> revision.
+Hi Daniel
 
-Ah-ha! Gotcha now. Thanks for the details and sorry for the noise! :)
+Thanks for your review.
 
--Kees
+On Fri, Dec 2, 2022 at 3:24 PM Daniel Verkamp <dverkamp@chromium.org> wrote:
+>
+> On Thu, Dec 1, 2022 at 5:36 PM <jeffxu@chromium.org> wrote:
+> >
+> > From: Jeff Xu <jeffxu@chromium.org>
+> >
+> > When apply F_SEAL_EXEC to an executable memfd, add write seals also to
+> > prevent modification of memfd.
+> >
+> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> > ---
+> >  mm/memfd.c                                 |  3 +++
+> >  tools/testing/selftests/memfd/memfd_test.c | 25 ++++++++++++++++++++++
+> >  2 files changed, 28 insertions(+)
+> >
+> > diff --git a/mm/memfd.c b/mm/memfd.c
+> > index 96dcfbfed09e..3a04c0698957 100644
+> > --- a/mm/memfd.c
+> > +++ b/mm/memfd.c
+> > @@ -222,6 +222,9 @@ static int memfd_add_seals(struct file *file, unsigned int seals)
+> >                 }
+> >         }
+> >
+> > +       if (seals & F_SEAL_EXEC && inode->i_mode & 0111)
+> > +               seals |= F_ALL_SEALS;
+> > +
+> >         *file_seals |= seals;
+> >         error = 0;
+> >
+>
+> Hi Jeff,
+>
+> (Following up on some discussion on the original review, sorry for any
+> duplicate comments.)
+>
+> Making F_SEAL_EXEC imply all seals (including F_SEAL_SEAL) seems a bit
+> confusing. This at least needs documentation to make it clear.
+>
+> Rather than silently adding other seals, perhaps we could return an
+> error if the caller requests F_SEAL_EXEC but not the write seals, so
+> the other seals would have to be explicitly listed in the application
+> code. This would have the same net effect without making the
+> F_SEAL_EXEC operation too magical.
+>
+If we take error out approach, application need to add
+F_SEAL_SHRINK|F_SEAL_GROW|F_SEAL_WRITE|F_SEAL_FUTURE_WRITE
+when F_SEAL_EXEC is used.
+Personally I think it is a bit long. From an API point of view, we can
+think of this as
+sealing the whole executable instead of just "X" bit.
 
--- 
-Kees Cook
+If there is a new type of write SEAL in future, all applications need
+to be updated, that is much harder,
+and updating the kernel is easier.
+
+Maybe I should remove F_SEAL_SEAL, so this code is still correct if a
+new type of "Non-Write" seal  is added in future.
+
+> Additionally, if the goal is to enforce W^X, I don't think this
+> completely closes the gap. There will always be a period where it is
+> both writable and executable with this API:
+>
+> 1. memfd_create(MFD_EXEC). Can't use MFD_NOEXEC since that would seal
+> chmod(+x), so the memfd is W + X here.
+> 2. write() code to the memfd.
+> 3. fcntl(F_ADD_SEALS, F_SEAL_EXEC) to convert the memfd to !W + X.
+>
+> I think one of the attack vectors involved the attacker waiting for
+> another process to create a memfd, pausing/delaying the victim
+> process, overwriting the memfd with their own code, and calling exec()
+> on it, which is still possible in the window between steps 1 and 3
+> with this design.
+>
+There are also step 4.
+4. call exec on the memfd,
+In confused deputy attack, attacker wants to inject content into memfd
+before step 4,
+because step 4 is by a privilege process, attackers can gain root
+escalation this way.
+
+Ideally step 2 rewrites the whole memfd,  (injecting  content between
+1 and 2 won't work), and
+step 3 is the next line after 2, making the process to stop  exactly
+between 2 and 3 is not easy.
+
+So enforcing W^X can reduce the attack surface. It also defines the
+most secure way for dev,
+or else, dev might:
+- forget to apply the W seal.
+- choose to apply X and W seal in multiple calls, thus adding a gap.
+
+> Thanks,
+> -- Daniel
+
+Thanks
+Jeff
