@@ -2,100 +2,149 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88320C3A5A7
-	for <linux-hardening@archiver.kernel.org>; Tue,  6 Dec 2022 23:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D53C352A1
+	for <linux-hardening@archiver.kernel.org>; Tue,  6 Dec 2022 23:37:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229612AbiLFX3S (ORCPT
+        id S229714AbiLFXhJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 6 Dec 2022 18:29:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37546 "EHLO
+        Tue, 6 Dec 2022 18:37:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbiLFX3R (ORCPT
+        with ESMTP id S229500AbiLFXhI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 6 Dec 2022 18:29:17 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66BC242F40
-        for <linux-hardening@vger.kernel.org>; Tue,  6 Dec 2022 15:29:16 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id t17so15941793pjo.3
-        for <linux-hardening@vger.kernel.org>; Tue, 06 Dec 2022 15:29:16 -0800 (PST)
+        Tue, 6 Dec 2022 18:37:08 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 910C43E0B9
+        for <linux-hardening@vger.kernel.org>; Tue,  6 Dec 2022 15:37:07 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id jl24so15466401plb.8
+        for <linux-hardening@vger.kernel.org>; Tue, 06 Dec 2022 15:37:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WmgrCnASburr+5cVUc5KG8Caw9/9YKt8WG6bY9poME4=;
-        b=mFGx+LYiH6kZQoSl47u8lZUfR3k8CUegLiAIDtIhHVd2wupq9H4/muVoS/1sNw7WjB
-         Kxbz1EbFOMugNDfbTyzuZMHMJenJUk+rQVOBvM9bUCHQz1eyzEKP+pDOQEASSQkGYv0S
-         xhkkIJgsQQwJZ6WGZxN7r9WABhzhIAfi3HV+I=
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=otCW253l7ot84a9vVRmiVoG+lIxgrQNkYbdDhCOtC9c=;
+        b=haGQ+FidVA17wTfx2NQ/Pqq/OpXe0/1Dzr59IUgqxAZNDk/WVBWDpcWJ3Z0fulUStb
+         c9584Lh0t96uOzS0fNsUaG3BeUFW/tFfU14Y5naNZYWEGRdecx0Ipv+sGXFNxH6hWuys
+         qqWvECLFxx4lkR87n0Itr+zaBfL1HXV8FGs7A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WmgrCnASburr+5cVUc5KG8Caw9/9YKt8WG6bY9poME4=;
-        b=FYzsII2MuPYu7y5psVbE0mVlCpQrLymi1Y+T87xTuHKZv635U9lEi1ci+DVSMIP5e/
-         MNZy52Nl9F7R4PXjq/MZaYDhg3yhg2zAv2Pe71lrxqP0efpQ+WqbhBuJpYWiqErZBFSZ
-         iqWTOfqWQnXTdyMFsNLCDT83r4SyvBdfghr2SSNPr0EyIQ68auuGVMW3T3E3inggy9Ss
-         X+yhq05NSq1zTOsOpss/dIjysxJRtmHoZnNRp133yU4PkpYeVrZYbXk8+/cebRlMyM7p
-         1F/+1weyQmd1oaz51DPCFloTsuUO3LAFm8q/0lrS6ygi8Kzb1liXofa19Z0WHCwDKsb2
-         RWog==
-X-Gm-Message-State: ANoB5pm5CR2z9RbSkjEMYB9RjE658JiAOwk4tlcooFe+OyFlr6cs+3dR
-        aU5lWguk8dvuhGaZtydIJAHWPw==
-X-Google-Smtp-Source: AA0mqf4kdBuDZu72vaVsTfeJJjSuey29Eib09n2LG87hJibFKu13Kt1VzaGrQ1hrhSf1O+2Hm0uXRw==
-X-Received: by 2002:a17:902:caca:b0:189:af2a:1d08 with SMTP id y10-20020a170902caca00b00189af2a1d08mr30309895pld.98.1670369355954;
-        Tue, 06 Dec 2022 15:29:15 -0800 (PST)
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=otCW253l7ot84a9vVRmiVoG+lIxgrQNkYbdDhCOtC9c=;
+        b=vYYOTwRiT9GZgwza9hbapwG+yfr+mfDoVT19auWQ4gjzeTfLeKrqpQr/L4EaPHAnFJ
+         Dv7t4gBXP2d/k8sLWcPGx1mLLh4NbXYYOS8SmmUXM/n5aI8H45iFsOYi+qdDzFN5Obbj
+         SHfS1fQsXCuIQc6FmU5vROl2JanUfT2dDyhU9bdw7b3OeW2Wk/Kt8wU7zGaervqFFCHP
+         VZMplM2uV29jfZ3s1JJQT0Ftfixkp/A50lDu9SRZNuAGIkSd38V/G9eo3/AQELoHKzlx
+         hHsMJxkp/ydP7h+9HkJYvKFRiS6NxK19tZxhEwQKG4TFE77vwb31UUSAX1ciftW8neLx
+         T4lA==
+X-Gm-Message-State: ANoB5pkeP0w0YZsCQwA0Tk8oKwlkH23kAjhx8WXlnVa/JdeewCJrHuja
+        4r/oQbdoxQKiRzX7ERjlLOJ7XQ==
+X-Google-Smtp-Source: AA0mqf4q1OYKyKIO9N36w2rvWCO+pr3fDJLBXlCWFivm02RH39BnlErnrXEIOx2DhnvBhvDcTwOt7w==
+X-Received: by 2002:a17:90a:d383:b0:219:c8d3:c503 with SMTP id q3-20020a17090ad38300b00219c8d3c503mr14436340pju.65.1670369827082;
+        Tue, 06 Dec 2022 15:37:07 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y189-20020a6232c6000000b0056b2e70c2f5sm12209798pfy.25.2022.12.06.15.29.15
+        by smtp.gmail.com with ESMTPSA id w10-20020a62820a000000b00574cf11aaf3sm12178022pfd.208.2022.12.06.15.37.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Dec 2022 15:29:15 -0800 (PST)
-Date:   Tue, 6 Dec 2022 15:29:14 -0800
+        Tue, 06 Dec 2022 15:37:06 -0800 (PST)
+Date:   Tue, 6 Dec 2022 15:37:05 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Paolo Abeni <pabeni@redhat.com>
-Cc:     Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        Joel Stanley <joel@jms.id.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net/ncsi: Silence runtime memcpy() false positive warning
-Message-ID: <202212061528.EEA3557C@keescook>
-References: <20221202212418.never.837-kees@kernel.org>
- <abd1a8e98d8b6d19520ae41d164ee905a40b3c42.camel@redhat.com>
+To:     Ryder Lee <Ryder.Lee@mediatek.com>
+Cc:     Shayne Chen =?utf-8?B?KOmZs+i7kuS4nik=?= 
+        <Shayne.Chen@mediatek.com>,
+        StanleyYP Wang =?utf-8?B?KOeOi+S+kemCpik=?= 
+        <StanleyYP.Wang@mediatek.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Howard-YH Hsu =?utf-8?B?KOioseiCsuixqik=?= 
+        <Howard-YH.Hsu@mediatek.com>,
+        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
+        Evelyn Tsai =?utf-8?B?KOiUoeePiumIuik=?= 
+        <Evelyn.Tsai@mediatek.com>,
+        Money Wang =?utf-8?B?KOeOi+S/oeWuiSk=?= 
+        <Money.Wang@mediatek.com>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "nbd@nbd.name" <nbd@nbd.name>,
+        MeiChia Chiu =?utf-8?B?KOmCsee+juWYiSk=?= 
+        <MeiChia.Chiu@mediatek.com>,
+        "lorenzo@kernel.org" <lorenzo@kernel.org>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        Sean Wang <Sean.Wang@mediatek.com>,
+        "kvalo@kernel.org" <kvalo@kernel.org>,
+        "edumazet@google.com" <edumazet@google.com>,
+        Sujuan Chen =?utf-8?B?KOmZiOe0oOWonyk=?= 
+        <Sujuan.Chen@mediatek.com>,
+        Chui-hao Chiu =?utf-8?B?KOmCseWegua1qSk=?= 
+        <Chui-hao.Chiu@mediatek.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        Bo Jiao =?utf-8?B?KOeEpuazoik=?= <Bo.Jiao@mediatek.com>
+Subject: Re: Coverity: mt7996_hw_queue_read(): Integer handling issues
+Message-ID: <202212061535.5D3DA489FB@keescook>
+References: <202212021411.A5E618D3@keescook>
+ <786eff1a1751a5bc0dc68d6567be585b635bddb1.camel@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <abd1a8e98d8b6d19520ae41d164ee905a40b3c42.camel@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <786eff1a1751a5bc0dc68d6567be585b635bddb1.camel@mediatek.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Dec 06, 2022 at 11:36:54AM +0100, Paolo Abeni wrote:
-> Hello,
-> 
-> On Fri, 2022-12-02 at 13:24 -0800, Kees Cook wrote:
-> > The memcpy() in ncsi_cmd_handler_oem deserializes nca->data into a
-> > flexible array structure that overlapping with non-flex-array members
-> > (mfr_id) intentionally. Since the mem_to_flex() API is not finished,
-> > temporarily silence this warning, since it is a false positive, using
-> > unsafe_memcpy().
+On Sat, Dec 03, 2022 at 04:40:09AM +0000, Ryder Lee wrote:
+> On Fri, 2022-12-02 at 14:11 -0800, coverity-bot wrote:
+> > Hello!
 > > 
-> > Reported-by: Joel Stanley <joel@jms.id.au>
-> > Link: https://lore.kernel.org/netdev/CACPK8Xdfi=OJKP0x0D1w87fQeFZ4A2DP2qzGCRcuVbpU-9=4sQ@mail.gmail.com/
-> > Cc: Samuel Mendoza-Jonas <sam@mendozajonas.com>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Eric Dumazet <edumazet@google.com>
-> > Cc: Jakub Kicinski <kuba@kernel.org>
-> > Cc: Paolo Abeni <pabeni@redhat.com>
-> > Cc: netdev@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > This is an experimental semi-automated report about issues detected
+> > by
+> > Coverity from a scan of next-20221202 as part of the linux-next scan
+> > project:
+> > 
+> https://urldefense.com/v3/__https://scan.coverity.com/projects/linux-next-weekly-scan__;!!CTRNKA9wMg0ARbw!jBOoj6LMqqA8E0AyjKQTa-0rVzcFiZ3BbpciEIn7so974kcMBeG4zZm-QU4AudLXY7-jNUSt0unzAt2zirSF$ 
+> >  
+> > 
+> > You're getting this email because you were associated with the
+> > identified
+> > lines of code (noted below) that were touched by commits:
+> > 
+> >   Thu Dec 1 17:29:14 2022 +0100
+> >     98686cd21624 ("wifi: mt76: mt7996: add driver for MediaTek Wi-Fi
+> > 7 (802.11be) devices")
+> > 
+> > Coverity reported the following:
+> > 
+> > *** CID 1527813:  Integer handling issues  (SIGN_EXTENSION)
+> > drivers/net/wireless/mediatek/mt76/mt7996/debugfs.c:460 in
+> > mt7996_hw_queue_read()
+> > 454     	for (i = 0; i < size; i++) {
+> > 455     		u32 ctrl, head, tail, queued;
+> > 456
+> > 457     		if (val & BIT(map[i].index))
+> > 458     			continue;
+> > 459
+> > vvv     CID 1527813:  Integer handling issues  (SIGN_EXTENSION)
+> > vvv     Suspicious implicit sign extension: "map[i].qid" with type
+> > "u8" (8 bits, unsigned) is promoted in "map[i].qid << 24" to type
+> > "int" (32 bits, signed), then sign-extended to type "unsigned long"
+> > (64 bits, unsigned).  If "map[i].qid << 24" is greater than
+> > 0x7FFFFFFF, the upper bits of the result will all be 1.
+> > 460     		ctrl = BIT(31) | (map[i].pid << 10) |
+> > (map[i].qid << 24);
 > 
-> Is this for the -net or the -net-next tree? It applies to both...
+> u32 ctrl = BIT(31) | (map[i].pid << 10) | (map[i].qid << 24);
 > 
-> It you are targetting the -net tree, I think it would be nicer adding a
-> suitable Fixes tag.
+> Hmm ...where's type "int" (32 bits, signed) from?
 
--net-next (v6.2) is fine -- this is where the warning manifests.
-
--Kees
+	map[i].qid is promoted to int before the "<< 24".
 
 -- 
 Kees Cook
