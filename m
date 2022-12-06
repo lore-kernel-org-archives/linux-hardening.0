@@ -2,84 +2,165 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D2BC6370C
-	for <linux-hardening@archiver.kernel.org>; Tue,  6 Dec 2022 18:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D563C3A5A7
+	for <linux-hardening@archiver.kernel.org>; Tue,  6 Dec 2022 23:17:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229513AbiLFSTo (ORCPT
+        id S229766AbiLFXRZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 6 Dec 2022 13:19:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33630 "EHLO
+        Tue, 6 Dec 2022 18:17:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229778AbiLFSTl (ORCPT
+        with ESMTP id S229769AbiLFXRX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 6 Dec 2022 13:19:41 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 877479FF9;
-        Tue,  6 Dec 2022 10:19:40 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 23944617F2;
-        Tue,  6 Dec 2022 18:19:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E799CC43470;
-        Tue,  6 Dec 2022 18:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670350779;
-        bh=qy91yRHK7/rNs9k0s4jgURDTbyCEZs1LsZFvSNmtcwQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KgOT0XWcr3Bx+7v4MvRUjOixreAjzyH87RJjf4rC0PgvZpjGhJmPSHIBVXjhbYoFN
-         4KUZbeumwqy+SZsskNMYdMfWEY2T2oB42aBBQUkaDGXR7NApPVnZs4w9q97hnZU7q4
-         D0mkPZha4RVwErZwOc6PzRR7eEOX6J5aAfAZOcbMBJihNfX8qnrV6PE7lBEQMOwpiS
-         rshr1ELgb5q2Pl5pxzeEG5Nv2JzYS642NG3IXfexosC3ShhVjlzbK33CWiOCza4GLY
-         SyMHFkw+zNCycjRXS41EdapmX3sbxjOSKd3oE5LkbIRkFHFZbuxGnM7eqvv8EIXuj0
-         ww7hH23OlBVRA==
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     agross@kernel.org, angelogioacchino.delregno@collabora.com
-Cc:     kernel@collabora.com, keescook@chromium.org,
-        linux-iio@vger.kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, jassisinghbrar@gmail.com,
-        jic23@kernel.org, devicetree@vger.kernel.org, luca@z3ntu.xyz,
-        gregkh@linuxfoundation.org, a39.skl@gmail.com,
-        marijn.suijten@somainline.org, gpiccoli@igalia.com,
-        srinivas.kandagatla@linaro.org, evgreen@chromium.org,
-        konrad.dybcio@linaro.org, lars@metafoo.de,
-        Tony Luck <tony.luck@intel.com>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: (subset) [PATCH v2 00/11] MSM8956/76 and Sony Xperia X / X Compact support
-Date:   Tue,  6 Dec 2022 12:18:45 -0600
-Message-Id: <167035076330.3155086.18379797801018993736.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20221111120156.48040-1-angelogioacchino.delregno@collabora.com>
-References: <20221111120156.48040-1-angelogioacchino.delregno@collabora.com>
+        Tue, 6 Dec 2022 18:17:23 -0500
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1AAA429BA
+        for <linux-hardening@vger.kernel.org>; Tue,  6 Dec 2022 15:17:22 -0800 (PST)
+Received: by mail-pg1-x532.google.com with SMTP id 82so14776287pgc.0
+        for <linux-hardening@vger.kernel.org>; Tue, 06 Dec 2022 15:17:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3vbRaeuklEF43T7OpAaK1TLfMIWz7cNmPbZiH16DjEk=;
+        b=RcfNgmVFnKB8u4Z10nfAYSiF9cW9vtwIUqMKJZBCkVHsHejK4CNP4ry8bejkhPODLX
+         dztTcdBeS0CFH5anZgg6xaPMINIXLgJxeamBaKetRXAFZBdOghQurw29Afc71OBqIf9r
+         0o0nH0fPYw9RhNSRaTlDQFa+nnNyViS67CDWA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3vbRaeuklEF43T7OpAaK1TLfMIWz7cNmPbZiH16DjEk=;
+        b=S5m9rT7Fl02tEFEC+1I/uoVdu6c7ZLMrB0z+ROErVhlbBFHzkI0ZkSJVe+hI9+43PZ
+         FZwvJdzS/uD2V7F6rx5fxm7PEBlXrQp+gPc0tqWcyT4h89hGf3ir6u5hEkNJZPCd2G/P
+         ThPf+lkWa6+2tmCBi8s2LCp8h+JcZEMFXFugdFztF8pWcc6rPYN7nZ4w4e6V5Cz6QfDy
+         0J0RpEM0lBZnuUYDr46xoOrg9yYDOuDfFEGkxyYwwe1NZXWVkcuMr9tcwQ4XjldAsFKl
+         dCan9+4ZMa9+EymML5yfwixIPSQfKpJDpqH1zIDl03CqnWak13+IoQ4BUDxpn5ZsYI5i
+         BZ7w==
+X-Gm-Message-State: ANoB5pmuMDQOUozL1TE9sv/p+VBTc91cOhAR6UOGq63zF58dzjKqo8mn
+        fFBJ0MjS9R5Vp3P6v3uA9PkpyQ==
+X-Google-Smtp-Source: AA0mqf70yq/wiSE63G+S5dvMbxwJzEtdGs7svgHjnyKixD6By2l7CJqbb/S9LNtBgDlXwJlqIzbBTA==
+X-Received: by 2002:a63:d149:0:b0:478:dfd4:fc2b with SMTP id c9-20020a63d149000000b00478dfd4fc2bmr4745390pgj.234.1670368642119;
+        Tue, 06 Dec 2022 15:17:22 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x14-20020a170902a38e00b0017f36638010sm13058718pla.276.2022.12.06.15.17.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Dec 2022 15:17:21 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Kees Cook <keescook@chromium.org>,
+        syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        pepsipu <soopthegoop@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Andrii Nakryiko <andrii@kernel.org>, ast@kernel.org,
+        bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Hao Luo <haoluo@google.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>, jolsa@kernel.org,
+        KP Singh <kpsingh@kernel.org>, martin.lau@linux.dev,
+        Stanislav Fomichev <sdf@google.com>, song@kernel.org,
+        Yonghong Song <yhs@fb.com>, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Menglong Dong <imagedong@tencent.com>,
+        David Ahern <dsahern@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Richard Gobert <richardbgobert@gmail.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        David Rientjes <rientjes@google.com>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] skbuff: Reallocate to ksize() in __build_skb_around()
+Date:   Tue,  6 Dec 2022 15:17:14 -0800
+Message-Id: <20221206231659.never.929-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2831; h=from:subject:message-id; bh=SEGHsTZp5rUk6+r1FvL0rwY8bYvfT9UgLniC3mssO5w=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjj81513DL6A5/30d+E/4ZlSiL3Nec8HQn2RQ2kFzs 0hZX4L+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY4/NeQAKCRCJcvTf3G3AJgEWEA CP3WJylXFSIh5ufMvAJQvK79bcfGQEV+CDUcSNcXTWdDEohBbp8tEFod5Nfj2l3fynK91HxFZsxogF kEnuK8O/7SyKs7X8L7bGXpX9pXLRMweVYccLF5Nwxh4ERV1DNDsQmjZH1uDF7SNi9blnULpHvzg34i Byw6v5p0mynHLS3alptN8Pw1n6DTuP2wYEVV8vkB1gcqBOJ6MRbcCbnshUxezF2lTqORLUeVAKvn1S HhI3U5ydjsp6VsIcFmzIau3s9l5lF+z2D/Hrb28myH81E9/ec8nEljNqB5nwlZHAupJnwLxlBhukCC ILfKn0kAdEZLXwhYqmxctrFDB5aNYK+lcNtF2RKXnZsy0Tr3q7ubILFHbQLBSvEKQ8QfpAvwH4Gby9 BS+ELN1eAQ6WQqraXDr/ox/ZzfOPEk3IjsSY2jJ3UcGtqjz7rE7UXCEaAxTO+CmY+eGit7U/Y1HinQ JwhD/C4H1lNNPpJilKLWGmqOLnOYKkDKGfKWdTmSFJa3sxIlzWz5RlTPRoXPmMamZINipZHKl8BjU+ Ee0qzhGS5qQ8uuefIru++zAjBvy3ww83P/5IaKBqSma+SQkucNI4OEa4nqnSAZGLIwfYXc4sit2pHB WMtK/l1bgCdHLPDCL8cHfNH7f64jUTfmdEtV/urQ91TRLv497uFJ/hH07ZUg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 11 Nov 2022 13:01:45 +0100, AngeloGioacchino Del Regno wrote:
-> This series adds basic support for MSM8976 and its lower spec variant
-> MSM8956, along with two devices: the Sony Xperia X and X Compact.
-> 
-> For now, even though I do have a tree in which these two devices are
-> fully booting, only a basic console boot is provided as the rest is
-> awaiting cleanup and some more dependencies.
-> Especially every device requiring IOMMU support, like MDSS, MDP and
-> Adreno GPU cannot work with the current qcom_iommu driver, as it
-> needs some code to get the ASIDs right for MSM8956/76.
-> 
-> [...]
+When build_skb() is passed a frag_size of 0, it means the buffer came
+from kmalloc. In these cases, ksize() is used to find its actual size,
+but since the allocation may not have been made to that size, actually
+perform the krealloc() call so that all the associated buffer size
+checking will be correctly notified. For example, syzkaller reported:
 
-Applied, thanks!
+  BUG: KASAN: slab-out-of-bounds in __build_skb_around+0x235/0x340 net/core/skbuff.c:294
+  Write of size 32 at addr ffff88802aa172c0 by task syz-executor413/5295
 
-[09/11] arm64: dts: qcom: Add configuration for PM8950 peripheral
-        commit: e07f41b0e1db8244867ff363f1d1eceefe8d6ad2
-[10/11] arm64: dts: qcom: Add DTS for MSM8976 and MSM8956 SoCs
-        commit: 0484d3ce090252048daaeb6c7df982b0c7400830
-[11/11] arm64: dts: qcom: Add support for SONY Xperia X/X Compact
-        commit: ff7f6d34ca07f76f430e8c2cac80495076895a99
+For bpf_prog_test_run_skb(), which uses a kmalloc()ed buffer passed to
+build_skb().
 
-Best regards,
+Reported-by: syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com
+Link: https://groups.google.com/g/syzkaller-bugs/c/UnIKxTtU5-0/m/-wbXinkgAQAJ
+Fixes: 38931d8989b5 ("mm: Make ksize() a reporting-only function")
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Pavel Begunkov <asml.silence@gmail.com>
+Cc: pepsipu <soopthegoop@gmail.com>
+Cc: syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: kasan-dev <kasan-dev@googlegroups.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Cc: ast@kernel.org
+Cc: bpf <bpf@vger.kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Hao Luo <haoluo@google.com>
+Cc: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: jolsa@kernel.org
+Cc: KP Singh <kpsingh@kernel.org>
+Cc: martin.lau@linux.dev
+Cc: Stanislav Fomichev <sdf@google.com>
+Cc: song@kernel.org
+Cc: Yonghong Song <yhs@fb.com>
+Cc: netdev@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ net/core/skbuff.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 1d9719e72f9d..b55d061ed8b4 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -274,7 +274,23 @@ static void __build_skb_around(struct sk_buff *skb, void *data,
+ 			       unsigned int frag_size)
+ {
+ 	struct skb_shared_info *shinfo;
+-	unsigned int size = frag_size ? : ksize(data);
++	unsigned int size = frag_size;
++
++	/* When frag_size == 0, the buffer came from kmalloc, so we
++	 * must find its true allocation size (and grow it to match).
++	 */
++	if (unlikely(size == 0)) {
++		void *resized;
++
++		size = ksize(data);
++		/* krealloc() will immediate return "data" when
++		 * "ksize(data)" is requested: it is the existing upper
++		 * bounds. As a result, GFP_ATOMIC will be ignored.
++		 */
++		resized = krealloc(data, size, GFP_ATOMIC);
++		if (WARN_ON(resized != data))
++			data = resized;
++	}
+ 
+ 	size -= SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+ 
 -- 
-Bjorn Andersson <andersson@kernel.org>
+2.34.1
+
