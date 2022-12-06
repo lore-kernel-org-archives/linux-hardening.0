@@ -2,52 +2,52 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189A1C63707
-	for <linux-hardening@archiver.kernel.org>; Tue,  6 Dec 2022 15:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C65DC63703
+	for <linux-hardening@archiver.kernel.org>; Tue,  6 Dec 2022 15:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234901AbiLFPYO (ORCPT
+        id S234717AbiLFPYL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 6 Dec 2022 10:24:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49486 "EHLO
+        Tue, 6 Dec 2022 10:24:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234698AbiLFPYK (ORCPT
+        with ESMTP id S234523AbiLFPYJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 6 Dec 2022 10:24:10 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18C5D62C5
-        for <linux-hardening@vger.kernel.org>; Tue,  6 Dec 2022 07:24:09 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id s7so14232271plk.5
-        for <linux-hardening@vger.kernel.org>; Tue, 06 Dec 2022 07:24:09 -0800 (PST)
+        Tue, 6 Dec 2022 10:24:09 -0500
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37DD69589
+        for <linux-hardening@vger.kernel.org>; Tue,  6 Dec 2022 07:24:06 -0800 (PST)
+Received: by mail-pg1-x535.google.com with SMTP id q1so13639064pgl.11
+        for <linux-hardening@vger.kernel.org>; Tue, 06 Dec 2022 07:24:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RP30KXKl/PR6YPpKgU+DDNG5UwR2kZxBVDTlEl1cNxU=;
-        b=fmR1lznJtSVRR9L4Ia3CMGkwAZ2v4hkWoOPZm7PR1nH/3nuAorOgqKoWJuydk4wqi1
-         4Jv46XmZFzLlrkx7ctSkFgyRoHoerAtS2sX3lfOp8Jl6EZM58L/vapg/v4JYZQWR5omU
-         taxuDneZ5WG7Y4370lPtuckGfA3P8kfdDM44o=
+        bh=SdDrnGbeR2v4+0YeS8iLZurDBTuoZ6giO5nJB6MXDpc=;
+        b=hy4suxKV0CyxFkQ/z0Lxf0gL1yedefQH7rpxWKiGLEXG11CaUMjqSwBNt4//d8Yxut
+         t8l+OOBEGKoLm75Fu0H9KVpPxy0L7HBWe9P0jq+lD75ae+9pN2+63j2gfiStg4HrqjUj
+         dihRnu1ru6UOyG/D0new9gAKAkWXGkicC3NDY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RP30KXKl/PR6YPpKgU+DDNG5UwR2kZxBVDTlEl1cNxU=;
-        b=EXYGOlxnSA0G8CirulkHkjAAGXzOfdr8wbMWC5TqWp82J1UIHwCSHhz+SKBOLNI9We
-         6yD4PwsYQ12HzYtMsWWC1k9ol+YPo+yEhWwlU55xiGEloyaxAiCfxjZpg1dGmj6yX0zn
-         zdQRHwMIYfRcoM5pCykJrTDH/i/IwGrYAy5JiZA8yKdvKnpPjLiegyq7h+CzYGmXtywZ
-         rjv0IystDogvaw37wmC892BOQ8uNk133YMOKVC8+h4txJYidSoJiHJt9G5FmTu5HcIOJ
-         o95XjZIWbrm5YTSRptb2aM463MsWA7+50k9N3Ax4S+GicpW6zKsdWL6JJK2m4xwAeK/b
-         ZckQ==
-X-Gm-Message-State: ANoB5pl2SjErlybLEpZ5J1pgz02BJTLDP8QPles6Kb4IjDaAhJsZyQgF
-        Y2v6gL7reCmzifjH7mNgGckPekB9PThek+s8
-X-Google-Smtp-Source: AA0mqf6EhFnYhQ5JfLUH2vxmtsq3k5PjP/AHU5doy5X0JZFulMFt5fVeH5kDyg6mfzg+AZ9j8VWMyw==
-X-Received: by 2002:a17:902:7898:b0:188:584d:b6d4 with SMTP id q24-20020a170902789800b00188584db6d4mr70697461pll.170.1670340248607;
-        Tue, 06 Dec 2022 07:24:08 -0800 (PST)
+        bh=SdDrnGbeR2v4+0YeS8iLZurDBTuoZ6giO5nJB6MXDpc=;
+        b=pFN+u+PA4XAhLnf2OEOfR9YgwgvdETYZPtTKxWeoVhZ9xCPIzUrLOGnTi4eM3pX6xd
+         AwZg3lZ77isQfQnlOyjqJp5DRkrU6FZZFLe8lRwKKXYO8+jPu+tsvz8+K1hLTOYg68Pu
+         k6EFdCqprgn30VJy8DNepO829OglieUijr1oSEtJiQNgvU14Xgz/LBTaIX9ygecn+NHf
+         Es1m8V2eCOoJnaDM94k/U2Qb2DqY3Hw31VrRNLSwYb1dfRzUMGvVIdypmcP4vXFGa4UP
+         +q/B1XUZAlGO6GhxP1GxCU0RcB+nFO/wE1fCEgM1bNyC1ZzlVPIsA16BfR/9MnDsE1U7
+         0wSw==
+X-Gm-Message-State: ANoB5plduyEUqqITr4oFhxayIKnaJzdl49NsKBNvqRHrsSGCH/hp/TBx
+        1mveNQ/aSF4rXs5TIiG8jFkKeQ==
+X-Google-Smtp-Source: AA0mqf7hmx55Kw+OHzvYFR+AHsG9oKpdy3Z1svwgYWVgdMcFmRoc0/JdTnW1Q7D/EpeoG38bhWZi7Q==
+X-Received: by 2002:a05:6a00:368e:b0:574:ead0:7c22 with SMTP id dw14-20020a056a00368e00b00574ead07c22mr29281567pfb.9.1670340245699;
+        Tue, 06 Dec 2022 07:24:05 -0800 (PST)
 Received: from jeffxud.c.googlers.com.com (30.202.168.34.bc.googleusercontent.com. [34.168.202.30])
-        by smtp.gmail.com with ESMTPSA id r25-20020a635d19000000b0046b1dabf9a8sm10004686pgb.70.2022.12.06.07.24.07
+        by smtp.gmail.com with ESMTPSA id r25-20020a635d19000000b0046b1dabf9a8sm10004686pgb.70.2022.12.06.07.24.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Dec 2022 07:24:07 -0800 (PST)
+        Tue, 06 Dec 2022 07:24:05 -0800 (PST)
 From:   jeffxu@chromium.org
 To:     skhan@linuxfoundation.org, keescook@chromium.org
 Cc:     akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
@@ -57,9 +57,9 @@ Cc:     akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
         jannh@google.com, linux-hardening@vger.kernel.org,
         Jeff Xu <jeffxu@chromium.org>,
         kernel test robot <lkp@intel.com>
-Subject: [PATCH v5 6/6] mm/memfd: security hook for memfd_create
-Date:   Tue,  6 Dec 2022 15:23:58 +0000
-Message-Id: <20221206152358.1966099-7-jeffxu@google.com>
+Subject: [PATCH v5 3/6] mm/memfd: add MFD_NOEXEC_SEAL and MFD_EXEC
+Date:   Tue,  6 Dec 2022 15:23:55 +0000
+Message-Id: <20221206152358.1966099-4-jeffxu@google.com>
 X-Mailer: git-send-email 2.39.0.rc0.267.gcb52ba06e7-goog
 In-Reply-To: <20221206152358.1966099-1-jeffxu@google.com>
 References: <20221206152358.1966099-1-jeffxu@google.com>
@@ -71,114 +71,249 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Jeff Xu <jeffxu@chromium.org>
 
-The new security_memfd_create allows lsm to check flags of
-memfd_create.
+The new MFD_NOEXEC_SEAL and MFD_EXEC flags allows application to
+set executable bit at creation time (memfd_create).
 
-The security by default system (such as chromeos) can use this
-to implement system wide lsm to allow only non-executable memfd
-being created.
+When MFD_NOEXEC_SEAL is set, memfd is created without executable bit
+(mode:0666), and sealed with F_SEAL_EXEC, so it can't be chmod to
+be executable (mode: 0777) after creation.
+
+when MFD_EXEC flag is set, memfd is created with executable bit
+(mode:0777), this is the same as the old behavior of memfd_create.
+
+The new pid namespaced sysctl vm.memfd_noexec has 3 values:
+0: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL acts like
+	MFD_EXEC was set.
+1: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL acts like
+	MFD_NOEXEC_SEAL was set.
+2: memfd_create() without MFD_NOEXEC_SEAL will be rejected.
+
+The sysctl allows finer control of memfd_create for old-software
+that doesn't set the executable bit, for example, a container with
+vm.memfd_noexec=1 means the old-software will create non-executable
+memfd by default.
 
 Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+Co-developed-by: Daniel Verkamp <dverkamp@chromium.org>
+Signed-off-by: Daniel Verkamp <dverkamp@chromium.org>
 Reported-by: kernel test robot <lkp@intel.com>
 ---
- include/linux/lsm_hook_defs.h |  1 +
- include/linux/lsm_hooks.h     |  4 ++++
- include/linux/security.h      |  6 ++++++
- mm/memfd.c                    |  5 +++++
- security/security.c           | 13 +++++++++++++
- 5 files changed, 29 insertions(+)
+ include/linux/pid_namespace.h | 19 ++++++++++++++
+ include/uapi/linux/memfd.h    |  4 +++
+ kernel/pid_namespace.c        | 48 +++++++++++++++++++++++++++++++++++
+ mm/memfd.c                    | 48 +++++++++++++++++++++++++++++++++--
+ 4 files changed, 117 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-index ec119da1d89b..fd40840927c8 100644
---- a/include/linux/lsm_hook_defs.h
-+++ b/include/linux/lsm_hook_defs.h
-@@ -164,6 +164,7 @@ LSM_HOOK(int, 0, file_alloc_security, struct file *file)
- LSM_HOOK(void, LSM_RET_VOID, file_free_security, struct file *file)
- LSM_HOOK(int, 0, file_ioctl, struct file *file, unsigned int cmd,
- 	 unsigned long arg)
-+LSM_HOOK(int, 0, memfd_create, char *name, unsigned int flags)
- LSM_HOOK(int, 0, mmap_addr, unsigned long addr)
- LSM_HOOK(int, 0, mmap_file, struct file *file, unsigned long reqprot,
- 	 unsigned long prot, unsigned long flags)
-diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-index 4ec80b96c22e..5a18a6552278 100644
---- a/include/linux/lsm_hooks.h
-+++ b/include/linux/lsm_hooks.h
-@@ -543,6 +543,10 @@
-  *	simple integer value.  When @arg represents a user space pointer, it
-  *	should never be used by the security module.
-  *	Return 0 if permission is granted.
-+ * @memfd_create:
-+ *	@name is the name of memfd file.
-+ *	@flags is the flags used in memfd_create.
-+ *	Return 0 if permission is granted.
-  * @mmap_addr :
-  *	Check permissions for a mmap operation at @addr.
-  *	@addr contains virtual address that will be used for the operation.
-diff --git a/include/linux/security.h b/include/linux/security.h
-index ca1b7109c0db..5b87a780822a 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -384,6 +384,7 @@ int security_file_permission(struct file *file, int mask);
- int security_file_alloc(struct file *file);
- void security_file_free(struct file *file);
- int security_file_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
-+int security_memfd_create(char *name, unsigned int flags);
- int security_mmap_file(struct file *file, unsigned long prot,
- 			unsigned long flags);
- int security_mmap_addr(unsigned long addr);
-@@ -963,6 +964,11 @@ static inline int security_file_ioctl(struct file *file, unsigned int cmd,
+diff --git a/include/linux/pid_namespace.h b/include/linux/pid_namespace.h
+index 07481bb87d4e..a4789a7b34a9 100644
+--- a/include/linux/pid_namespace.h
++++ b/include/linux/pid_namespace.h
+@@ -16,6 +16,21 @@
+ 
+ struct fs_pin;
+ 
++#if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
++/*
++ * sysctl for vm.memfd_noexec
++ * 0: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL
++ *	acts like MFD_EXEC was set.
++ * 1: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL
++ *	acts like MFD_NOEXEC_SEAL was set.
++ * 2: memfd_create() without MFD_NOEXEC_SEAL will be
++ *	rejected.
++ */
++#define MEMFD_NOEXEC_SCOPE_EXEC		0
++#define MEMFD_NOEXEC_SCOPE_NOEXEC_SEAL		1
++#define MEMFD_NOEXEC_SCOPE_NOEXEC_ENFORCED	2
++#endif
++
+ struct pid_namespace {
+ 	struct idr idr;
+ 	struct rcu_head rcu;
+@@ -31,6 +46,10 @@ struct pid_namespace {
+ 	struct ucounts *ucounts;
+ 	int reboot;	/* group exit code if this pidns was rebooted */
+ 	struct ns_common ns;
++#if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
++	/* sysctl for vm.memfd_noexec */
++	int memfd_noexec_scope;
++#endif
+ } __randomize_layout;
+ 
+ extern struct pid_namespace init_pid_ns;
+diff --git a/include/uapi/linux/memfd.h b/include/uapi/linux/memfd.h
+index 7a8a26751c23..273a4e15dfcf 100644
+--- a/include/uapi/linux/memfd.h
++++ b/include/uapi/linux/memfd.h
+@@ -8,6 +8,10 @@
+ #define MFD_CLOEXEC		0x0001U
+ #define MFD_ALLOW_SEALING	0x0002U
+ #define MFD_HUGETLB		0x0004U
++/* not executable and sealed to prevent changing to executable. */
++#define MFD_NOEXEC_SEAL		0x0008U
++/* executable */
++#define MFD_EXEC		0x0010U
+ 
+ /*
+  * Huge page size encoding when MFD_HUGETLB is specified, and a huge page
+diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+index f4f8cb0435b4..2b7563ddd22c 100644
+--- a/kernel/pid_namespace.c
++++ b/kernel/pid_namespace.c
+@@ -110,6 +110,11 @@ static struct pid_namespace *create_pid_namespace(struct user_namespace *user_ns
+ 	ns->ucounts = ucounts;
+ 	ns->pid_allocated = PIDNS_ADDING;
+ 
++#if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
++	ns->memfd_noexec_scope =
++		task_active_pid_ns(current)->memfd_noexec_scope;
++#endif
++
+ 	return ns;
+ 
+ out_free_idr:
+@@ -255,6 +260,45 @@ void zap_pid_ns_processes(struct pid_namespace *pid_ns)
+ 	return;
+ }
+ 
++#if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
++static int pid_mfd_noexec_dointvec_minmax(struct ctl_table *table, int write,
++	void *buffer, size_t *lenp, loff_t *ppos)
++{
++	struct pid_namespace *ns = task_active_pid_ns(current);
++	struct ctl_table table_copy;
++
++	if (write && !capable(CAP_SYS_ADMIN))
++		return -EPERM;
++
++	table_copy = *table;
++	if (ns != &init_pid_ns)
++		table_copy.data = &ns->memfd_noexec_scope;
++
++	/*
++	 * set minimum to current value, the effect is only bigger
++	 * value is accepted.
++	 */
++	if (*(int *)table_copy.data > *(int *)table_copy.extra1)
++		table_copy.extra1 = table_copy.data;
++
++	return proc_dointvec_minmax(&table_copy, write, buffer, lenp, ppos);
++}
++
++static struct ctl_table pid_ns_ctl_table_vm[] = {
++	{
++		.procname	= "memfd_noexec",
++		.data		= &init_pid_ns.memfd_noexec_scope,
++		.maxlen		= sizeof(init_pid_ns.memfd_noexec_scope),
++		.mode		= 0644,
++		.proc_handler	= pid_mfd_noexec_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_TWO,
++	},
++	{ }
++};
++static struct ctl_path vm_path[] = { { .procname = "vm", }, { } };
++#endif
++
+ #ifdef CONFIG_CHECKPOINT_RESTORE
+ static int pid_ns_ctl_handler(struct ctl_table *table, int write,
+ 		void *buffer, size_t *lenp, loff_t *ppos)
+@@ -455,6 +499,10 @@ static __init int pid_namespaces_init(void)
+ #ifdef CONFIG_CHECKPOINT_RESTORE
+ 	register_sysctl_paths(kern_path, pid_ns_ctl_table);
+ #endif
++
++#if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
++	register_sysctl_paths(vm_path, pid_ns_ctl_table_vm);
++#endif
  	return 0;
  }
  
-+static inline int security_memfd_create(char *name, unsigned int flags)
-+{
-+	return 0;
-+}
-+
- static inline int security_mmap_file(struct file *file, unsigned long prot,
- 				     unsigned long flags)
- {
 diff --git a/mm/memfd.c b/mm/memfd.c
-index 92f0a5765f7c..f04ed5f0474f 100644
+index 4ebeab94aa74..ec70675a7069 100644
 --- a/mm/memfd.c
 +++ b/mm/memfd.c
-@@ -356,6 +356,11 @@ SYSCALL_DEFINE2(memfd_create,
- 		goto err_name;
+@@ -18,6 +18,7 @@
+ #include <linux/hugetlb.h>
+ #include <linux/shmem_fs.h>
+ #include <linux/memfd.h>
++#include <linux/pid_namespace.h>
+ #include <uapi/linux/memfd.h>
+ 
+ /*
+@@ -263,12 +264,14 @@ long memfd_fcntl(struct file *file, unsigned int cmd, unsigned long arg)
+ #define MFD_NAME_PREFIX_LEN (sizeof(MFD_NAME_PREFIX) - 1)
+ #define MFD_NAME_MAX_LEN (NAME_MAX - MFD_NAME_PREFIX_LEN)
+ 
+-#define MFD_ALL_FLAGS (MFD_CLOEXEC | MFD_ALLOW_SEALING | MFD_HUGETLB)
++#define MFD_ALL_FLAGS (MFD_CLOEXEC | MFD_ALLOW_SEALING | MFD_HUGETLB | MFD_NOEXEC_SEAL | MFD_EXEC)
+ 
+ SYSCALL_DEFINE2(memfd_create,
+ 		const char __user *, uname,
+ 		unsigned int, flags)
+ {
++	char comm[TASK_COMM_LEN];
++	struct pid_namespace *ns;
+ 	unsigned int *file_seals;
+ 	struct file *file;
+ 	int fd, error;
+@@ -285,6 +288,39 @@ SYSCALL_DEFINE2(memfd_create,
+ 			return -EINVAL;
  	}
  
-+	/* security hook for memfd_create */
-+	error = security_memfd_create(name, flags);
-+	if (error)
-+		return error;
++	/* Invalid if both EXEC and NOEXEC_SEAL are set.*/
++	if ((flags & MFD_EXEC) && (flags & MFD_NOEXEC_SEAL))
++		return -EINVAL;
 +
- 	if (flags & MFD_HUGETLB) {
- 		file = hugetlb_file_setup(name, 0, VM_NORESERVE,
- 					HUGETLB_ANONHUGE_INODE,
-diff --git a/security/security.c b/security/security.c
-index 79d82cb6e469..5c018e080923 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -1010,6 +1010,19 @@ int security_sb_clone_mnt_opts(const struct super_block *oldsb,
- }
- EXPORT_SYMBOL(security_sb_clone_mnt_opts);
++	if (!(flags & (MFD_EXEC | MFD_NOEXEC_SEAL))) {
++#ifdef CONFIG_SYSCTL
++		int sysctl = MEMFD_NOEXEC_SCOPE_EXEC;
++
++		ns = task_active_pid_ns(current);
++		if (ns)
++			sysctl = ns->memfd_noexec_scope;
++
++		switch (sysctl) {
++		case MEMFD_NOEXEC_SCOPE_EXEC:
++			flags |= MFD_EXEC;
++			break;
++		case MEMFD_NOEXEC_SCOPE_NOEXEC_SEAL:
++			flags |= MFD_NOEXEC_SEAL;
++			break;
++		default:
++			pr_warn_ratelimited(
++				"memfd_create(): MFD_NOEXEC_SEAL is enforced, pid=%d '%s'\n",
++				task_pid_nr(current), get_task_comm(comm, current));
++			return -EINVAL;
++		}
++#else
++		flags |= MFD_EXEC;
++#endif
++		pr_warn_ratelimited(
++			"memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL, pid=%d '%s'\n",
++			task_pid_nr(current), get_task_comm(comm, current));
++	}
++
+ 	/* length includes terminating zero */
+ 	len = strnlen_user(uname, MFD_NAME_MAX_LEN + 1);
+ 	if (len <= 0)
+@@ -328,7 +364,15 @@ SYSCALL_DEFINE2(memfd_create,
+ 	file->f_mode |= FMODE_LSEEK | FMODE_PREAD | FMODE_PWRITE;
+ 	file->f_flags |= O_LARGEFILE;
  
-+int security_add_mnt_opt(const char *option, const char *val, int len,
-+			 void **mnt_opts)
-+{
-+	return call_int_hook(sb_add_mnt_opt, -EINVAL,
-+					option, val, len, mnt_opts);
-+}
-+EXPORT_SYMBOL(security_add_mnt_opt);
+-	if (flags & MFD_ALLOW_SEALING) {
++	if (flags & MFD_NOEXEC_SEAL) {
++		struct inode *inode = file_inode(file);
 +
-+int security_memfd_create(char *name, unsigned int flags)
-+{
-+	return call_int_hook(memfd_create, 0, name, flags);
-+}
-+
- int security_move_mount(const struct path *from_path, const struct path *to_path)
- {
- 	return call_int_hook(move_mount, 0, from_path, to_path);
++		inode->i_mode &= ~0111;
++		file_seals = memfd_file_seals_ptr(file);
++		*file_seals &= ~F_SEAL_SEAL;
++		*file_seals |= F_SEAL_EXEC;
++	} else if (flags & MFD_ALLOW_SEALING) {
++		/* MFD_EXEC and MFD_ALLOW_SEALING are set */
+ 		file_seals = memfd_file_seals_ptr(file);
+ 		*file_seals &= ~F_SEAL_SEAL;
+ 	}
 -- 
 2.39.0.rc0.267.gcb52ba06e7-goog
 
