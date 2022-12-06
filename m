@@ -2,51 +2,51 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E78C352A1
-	for <linux-hardening@archiver.kernel.org>; Tue,  6 Dec 2022 15:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FE5C4708C
+	for <linux-hardening@archiver.kernel.org>; Tue,  6 Dec 2022 15:15:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234965AbiLFPMs (ORCPT
+        id S234097AbiLFPPa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 6 Dec 2022 10:12:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40106 "EHLO
+        Tue, 6 Dec 2022 10:15:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235446AbiLFPMK (ORCPT
+        with ESMTP id S235370AbiLFPPG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 6 Dec 2022 10:12:10 -0500
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CD123123A
-        for <linux-hardening@vger.kernel.org>; Tue,  6 Dec 2022 07:08:58 -0800 (PST)
-Received: by mail-pl1-x634.google.com with SMTP id s7so14184442plk.5
-        for <linux-hardening@vger.kernel.org>; Tue, 06 Dec 2022 07:08:58 -0800 (PST)
+        Tue, 6 Dec 2022 10:15:06 -0500
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 846CF2FC30
+        for <linux-hardening@vger.kernel.org>; Tue,  6 Dec 2022 07:11:06 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id d82so6029044pfd.11
+        for <linux-hardening@vger.kernel.org>; Tue, 06 Dec 2022 07:11:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
         bh=SdDrnGbeR2v4+0YeS8iLZurDBTuoZ6giO5nJB6MXDpc=;
-        b=HRXDHMToyddfrl/ROUn4uOBcTbTQ2QyyCXAjNDopj6X5rVwgC32M4mUD7NJ01wB6wa
-         GM13EEGIbDYLGbpfyisp5Ga6uTYs07egLysIKA05ecCKqMD8EECOCGM7j1SVlEVxA2Q4
-         2KMk5V1gqCKzZ50fX5ae0iG4J289AqAjBUdMI=
+        b=ocf0WcHkh8dvwUJrGmV00rf6G/CG4LUStvxqGvo+gKVDtbmuos0CTsQ4vp/xzhZ47u
+         MkmBPvFgXnzVURzNT8z1MNMOYG/CE3MBCykYBIrX6Xvb0bP1OhB/AZXua9mfBDX68icN
+         S6/sOTO2S/SgME34EZ7dhvoi1/nCT8Iu1+8Z4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
         bh=SdDrnGbeR2v4+0YeS8iLZurDBTuoZ6giO5nJB6MXDpc=;
-        b=724c+XJvAz7/IzPykwywsRrH8nfMGoHW+wGrCss6GOv2RAL9yHGBbFtmB62Zy90mu5
-         w89XlgJO7QZ/908tTX9DT/V48UoCTcQcg/am3CZLsAgTyiOq869e0dRunIHRbanqNKh1
-         yTk6HHKY4E8mKixOUitcA7n5tIwXjCdCBjfZfVmzXvVItCxH4mTlSwIPVq0rE0PJ3TiA
-         xUyuMN9moEPqTN+kxMfhcVvodUBI1xciCkaxykaNRQruems2h5tMk1DIqc31dPSZayt8
-         XXiXWYxx52Jpi9ZYlNaeXwydawE3qOtczHyps5Sk7vD3B1ro9kpiZZ3LqWp4Ou8M4yG5
-         aOXA==
-X-Gm-Message-State: ANoB5pkcqTXPSsleaM+DK67tli0lNrzqG/5t8mShdyl6TxNUaKdrNCQm
-        mfxLUkQbajFTK76FKFCJKAxLeg==
-X-Google-Smtp-Source: AA0mqf5iBwQsRXbelwBgW9iBe9GzeLTZlNMT7NEjGg5QPj3iPqWVdVG8HciDAnbX24nGijTuvHfYvg==
-X-Received: by 2002:a17:90a:df91:b0:219:8464:84d5 with SMTP id p17-20020a17090adf9100b00219846484d5mr24362180pjv.9.1670339306071;
-        Tue, 06 Dec 2022 07:08:26 -0800 (PST)
+        b=qnVR1dDtgT5ZgVskMZY7I0fCY2VUwXFUL0huKwwcJJItKiET1xCHz5S7L83HdU8Jjz
+         QRpudNPWpQGCpVnEXFL2e+p0aAEdyZqO4DNwn+FdOHNLP3dme+KFbPOi9n5VBWK3fr6S
+         xfLq9+WrJ9FBSTvmtImGgOuKK7x0rpz6KX4w5YN2PtVmf3uvngBdyCvCUQy0i3h7HTtZ
+         LBprD0r1VlkAjja1tYQOdSX6t9gC2EzDsq8EMSJowjcv4uJLeOUqIYrxIDaxkETEK1d3
+         tDkCbAEl7BJTAavu1u3AxXDP4pwTyKn/hfKPFQ74gXtitCZFiXCMmz41f/vxf8XADbse
+         50uQ==
+X-Gm-Message-State: ANoB5plnQHEcO1CoHhPiMcA6x89OAMSp4yD5dTCr4XkxkR8hhlOozMmm
+        CQJfflosZ3O2/WMGdMxImaJ2+g==
+X-Google-Smtp-Source: AA0mqf6G5YNIXvlfMvFQmb6LBzDrvlmtIiYN9dbBGZN2xsYKIuO1vCRq91axeIECt3HTti2agcBH8w==
+X-Received: by 2002:a62:87c8:0:b0:576:c944:d2c2 with SMTP id i191-20020a6287c8000000b00576c944d2c2mr13007256pfe.72.1670339450175;
+        Tue, 06 Dec 2022 07:10:50 -0800 (PST)
 Received: from jeffxud.c.googlers.com.com (30.202.168.34.bc.googleusercontent.com. [34.168.202.30])
-        by smtp.gmail.com with ESMTPSA id n3-20020a170902dc8300b00189a50d2a3esm12652874pld.241.2022.12.06.07.08.25
+        by smtp.gmail.com with ESMTPSA id x15-20020a170902ec8f00b0016d9b101413sm1394799plg.200.2022.12.06.07.10.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Dec 2022 07:08:25 -0800 (PST)
+        Tue, 06 Dec 2022 07:10:49 -0800 (PST)
 From:   jeffxu@chromium.org
 To:     skhan@linuxfoundation.org, keescook@chromium.org
 Cc:     akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
@@ -57,8 +57,8 @@ Cc:     akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
         Jeff Xu <jeffxu@chromium.org>,
         kernel test robot <lkp@intel.com>
 Subject: [PATCH v4 3/6] mm/memfd: add MFD_NOEXEC_SEAL and MFD_EXEC
-Date:   Tue,  6 Dec 2022 15:08:18 +0000
-Message-Id: <20221206150818.1964179-1-jeffxu@google.com>
+Date:   Tue,  6 Dec 2022 15:10:46 +0000
+Message-Id: <20221206151046.1964616-1-jeffxu@google.com>
 X-Mailer: git-send-email 2.39.0.rc0.267.gcb52ba06e7-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
