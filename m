@@ -2,103 +2,85 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24378C4321E
-	for <linux-hardening@archiver.kernel.org>; Mon,  5 Dec 2022 08:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF13EC4708C
+	for <linux-hardening@archiver.kernel.org>; Tue,  6 Dec 2022 02:21:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231981AbiLEIRi (ORCPT
+        id S233676AbiLFCVB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 5 Dec 2022 03:17:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40770 "EHLO
+        Mon, 5 Dec 2022 21:21:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232014AbiLEIRa (ORCPT
+        with ESMTP id S232883AbiLFCU7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 5 Dec 2022 03:17:30 -0500
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24BCA15FED
-        for <linux-hardening@vger.kernel.org>; Mon,  5 Dec 2022 00:17:28 -0800 (PST)
-Received: by mail-lj1-x234.google.com with SMTP id h10so12626526ljk.11
-        for <linux-hardening@vger.kernel.org>; Mon, 05 Dec 2022 00:17:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bf6Nbj5cxRxF5T9bn4Fy/raNIgAK309Q68fjLTBm7eI=;
-        b=p5kQNYNHPNalXdM+733RBJdI9HKCqDM+hMORWwDeb5fyl1AvTEzc+Y3gEjY9kwh2zp
-         uge52YfmoJfA7DYYyObmwDaaDMhiG2MYUhsaZ4MM7YGpsy05vxD/QNePpYTrXoR4mXwH
-         upZXn0q3UHrz2P/zQsTky0fjB0pzud4kJiq4HB6HSFZJ9WDyMJPB/COY/33rCF5qbPsJ
-         WPqz4miEWVYeU3IWoHXbk5K8baf99T/KLQIvuqe2+pFdb1kBFF1XETB6P8Mnln+8PyFr
-         ddWwTZZBNQD4qnpD+GikamKbbuc8GK/sU+w4LU9fUQqjVwrMT9rNLNDDw3Jl+c69xdKp
-         DRvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bf6Nbj5cxRxF5T9bn4Fy/raNIgAK309Q68fjLTBm7eI=;
-        b=VTQr5L4l3NAXMVTji5+NdCkP9Iqe0dhlugmgxSly0729lp17dESt2l5Ac0QgfsY4b2
-         iekjRvird/DSUv5bP56xFynrDqxuDYP3Z7BJKlfW0qCXGrlGeUKkIIXdk+l4lDEx5vwg
-         MXGlPbz8g5rFW65uJrKgUXrQC4SdI9NxTu1ob0jO0K1nc03BOflkbevusN3fSpeU3y30
-         DrurKCFDZ0/qITGTg9GqrKGxdZbQNKvps/vefGLKTIoBeIG8B7PJbwRKO9ForG+NHlgy
-         fvaPc8K/LUPwhPGfCMpIhQYZRugxWEGmGRot+71Xl4AWg0FtYDJ7RrUvogocj6SAJKMk
-         W6QQ==
-X-Gm-Message-State: ANoB5plyECWEmCRNA0KtjG1a2v+OYF8rWQ0EM86XX/aSKBlpYMvnr9oi
-        FA45RcGqITgKUC4NJRH2HImFrw==
-X-Google-Smtp-Source: AA0mqf5kKgi93Ya3eHrNU7WE2C68xMRTgktckuxGsCFsnTqA54QrDg9C+bwHtTwQXyWbIA+VbTq8Yw==
-X-Received: by 2002:a2e:b550:0:b0:27a:273:eb51 with SMTP id a16-20020a2eb550000000b0027a0273eb51mr672981ljn.485.1670228246336;
-        Mon, 05 Dec 2022 00:17:26 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id a11-20020ac25e6b000000b0048a9e899693sm2057639lfr.16.2022.12.05.00.17.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Dec 2022 00:17:25 -0800 (PST)
-Message-ID: <a2458e6a-6b19-cd67-2b84-5cef6388e011@linaro.org>
-Date:   Mon, 5 Dec 2022 09:17:24 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH] NFC: nci: Bounds check struct nfc_target arrays
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     syzbot+210e196cef4711b65139@syzkaller.appspotmail.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        "John W. Linville" <linville@tuxdriver.com>,
-        Ilan Elias <ilane@ti.com>, linux-kernel@vger.kernel.org,
+        Mon, 5 Dec 2022 21:20:59 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF75325295
+        for <linux-hardening@vger.kernel.org>; Mon,  5 Dec 2022 18:20:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=XgHpLZolXFhpniWydLmueG76MYWdihoFTNZvRbiBzwM=; b=WaJxTiHC6WjwagJSr48pdIwNp4
+        zQG1/zv1giTfMhnlXx4sXrr2qQ3JyZ2V41ktKlzRaLAwd4q5sSbwRstW08LWvh2PsQQCEtUlz0AfU
+        YeYcfmExxDT7Uq7eNNRW7yUSheAglyqZ2barL1LP/0NIFZaIN4gVvjzvv9y81eSvhWj36EAPL5S2L
+        lY25b0Zk9fLdVIp/O7XPDgsUMIe+c2keKCOxYygIS8aTtWfWhCvTehcOv5WSD8Ocy906qQO3FPqub
+        WSQMC1SSbYjx3nGRvOyv6qukpbJTaFuZKbLBbZrHNSVNcqeFTKUZHsZzcQOFGd2VtiWa0bg5mac9v
+        WlLFG75Q==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1p2NZa-00FR3Z-1G; Tue, 06 Dec 2022 02:20:42 +0000
+Date:   Mon, 5 Dec 2022 18:20:42 -0800
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Stefan Bavendiek <stefan.bavendiek@mailbox.org>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     kernel-hardening@lists.openwall.com,
         linux-hardening@vger.kernel.org
-References: <20221202214410.never.693-kees@kernel.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221202214410.never.693-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: Reducing runtime complexity
+Message-ID: <Y46m+rhDe7otOFpp@bombadil.infradead.org>
+References: <Y4kJ4Hw0DVfy7S37@mailbox.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y4kJ4Hw0DVfy7S37@mailbox.org>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 02/12/2022 22:44, Kees Cook wrote:
-> While running under CONFIG_FORTIFY_SOURCE=y, syzkaller reported:
-> 
->   memcpy: detected field-spanning write (size 129) of single field "target->sensf_res" at net/nfc/nci/ntf.c:260 (size 18)
-> 
-> This appears to be a legitimate lack of bounds checking in
-> nci_add_new_protocol(). Add the missing checks.
-> 
-> Reported-by: syzbot+210e196cef4711b65139@syzkaller.appspotmail.com
-> Link: https://lore.kernel.org/lkml/0000000000001c590f05ee7b3ff4@google.com
-> Fixes: 019c4fbaa790 ("NFC: Add NCI multiple targets support")
-> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
+On Thu, Dec 01, 2022 at 09:09:04PM +0100, Stefan Bavendiek wrote:
+> Distributions are commonly shipping the kernel as one large binary
+> that includes support for nearly every hardware driver and optional
+> feature, but the end user will normally use very little of this.  In
+> comparison, a custom kernel build for a particular device and use
+> case, would be significantly smaller. While the reduced complexity
+> won't be directly linked with reduction in attack surface, from my
+> understanding the difference would make a relevant impact.
 
+I looked into a similar problem back in the day when trying to vet
+correctness of the Xen hypervisor when you are boooting a Xen guest
+and not a KVM guest, how do we ensure that code that should not be
+run should not run? Although it's a separate problem the solution
+to strive to block / drop code which should not run essentially
+would accomplish the same goal: prevent dead code to run.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+It is *one* reason why I ended up implementing linker-tables long
+ago on Linux, although this didn't get merged. The idea there was
+that *eventually*, once you have mapped code into a section and
+you are certain it should not not via ELF sections, you could just
+drop / NX the code you don't need at runtime.
 
-Best regards,
-Krzysztof
+It turns out obviously Linux is not the only place where we could
+benefit from this sort of work and when I reviewed the prospects
+on the Qemu with Alexander Graf we instead persued the idea of a
+GCC compiler multiverse support, and thanks to some researchers
+that is now real code.
 
+All these things are related, and so I started long ago jotting
+some of the ideas here:
+
+https://kernelnewbies.org/KernelProjects/kernel-sandboxing
+
+Since linker tables didn't get merged I didn't follow up though but
+in theory a lot of NX / free'ing dead code shoudl be possible for large
+parts of text dynamically at runtime.
+
+  Luis
