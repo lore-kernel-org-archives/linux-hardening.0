@@ -2,82 +2,110 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E7F1C352A1
-	for <linux-hardening@archiver.kernel.org>; Tue,  6 Dec 2022 05:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCB3C352A1
+	for <linux-hardening@archiver.kernel.org>; Tue,  6 Dec 2022 10:38:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231990AbiLFFAo (ORCPT
+        id S234265AbiLFKh7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 6 Dec 2022 00:00:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50622 "EHLO
+        Tue, 6 Dec 2022 05:37:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233366AbiLFFAf (ORCPT
+        with ESMTP id S233889AbiLFKhx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 6 Dec 2022 00:00:35 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C9822657B;
-        Mon,  5 Dec 2022 21:00:19 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 31B77B816A1;
-        Tue,  6 Dec 2022 05:00:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DCB6BC433D6;
-        Tue,  6 Dec 2022 05:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670302816;
-        bh=zV+T0hsrwOx0nTIxYua5JY5/4x5uafiNfIzCdSBdbMg=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=bUpvQevQoEldRvj6qiXxCm0hfUh6OuJMvmmlDBx+mD40GHrVg8o04WEN8DxrC5JeX
-         f1gdNSw0xdyup28FejuhJp1fCqanTCMoPqjth/OkULr/sZQSs9yXKz6veXyBO1f3eu
-         dQOKWIp4SYJ9RKOjYWpSHuBMbN7oz6BFUxWJBNXYuwnhPZ6LR1fIXNeRJ3eYDnhPQ2
-         Gpmh7f2JBcD4C2/x1t9l61jCnv5c1nYSRVYJ5WppC3MApd9f12VHBczHBzr8ynPgij
-         lxoYcqF+QWGbWRjinsoxnJDP2cga0uTDQwOAdNxmZCPALMo/TQx/RCCAKBOoCMLMmC
-         mU3/bUKquIEFQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B8C77C395E5;
-        Tue,  6 Dec 2022 05:00:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 6 Dec 2022 05:37:53 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365A8DFDC
+        for <linux-hardening@vger.kernel.org>; Tue,  6 Dec 2022 02:36:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1670323018;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=D9WTzI07B2T90FQ6MBF1oIvNELJRpqkR308N9NI9I8E=;
+        b=SB99WnPf9f6kGafyfbOktewcGCfDrvcu1b3i+msWfAh+WL2/ZLbSJftHUFpPXrwWlvWiHD
+        VQalX8SMAnKeBXwj2I4WB1uDi0i5qjXclc60Vne+orHeg7cGwVbrexfyAdgV/BsFE7EDTP
+        WCqgqL0YpDw22/YC62jYIB/P6Hzd8/0=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-180--OKESQHSP7yv3xnMOB4hAw-1; Tue, 06 Dec 2022 05:36:57 -0500
+X-MC-Unique: -OKESQHSP7yv3xnMOB4hAw-1
+Received: by mail-wm1-f69.google.com with SMTP id r67-20020a1c4446000000b003d09b0fbf54so5082901wma.3
+        for <linux-hardening@vger.kernel.org>; Tue, 06 Dec 2022 02:36:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=D9WTzI07B2T90FQ6MBF1oIvNELJRpqkR308N9NI9I8E=;
+        b=poD93g+6Rzh/qZLhq2F+SUgS3vvp9Klm1QKNww1k/tdDdYaiPGAxXZbs2BTRKAR6OB
+         Ofx5qFu945a3oqY3nUIPeY/TN/NqFG/aFwBpay+7fuX+TQbDcY+mETCHoZ2Agk6a+DIk
+         Q1WjfWvRTudRdDGR352RMDx/4x8WEDfY3UIE1VjtYeZmg3Kyo2Wm6DRWGqyrWI5rRis9
+         6NocjtNe8TWKtJchcyfj9CFV0Zp+miZdGsvMSynHqk5oT0cbVY8+t2Z11eJrI7tGNXHw
+         d3o0j6Y51Oyckd6qXMyZNILIbL6XkidYzOYuyehpkI7UvybN+WX1wmNOf8cgkEq5ek+I
+         TVaQ==
+X-Gm-Message-State: ANoB5pm8EFAqZlIGIYRa944CYeZiXXVQaWlovUMpL+ttiahOQNlKI0QH
+        DmheFTl8h8F4xatfk4AJ2xMYR0AhzO77c+jHqW5+HA0r/9CnFjE5kV2Oo4BCYzJ2WQ03VnAW1b7
+        1cNjSzS9BPBCMgFyhujgTqx57Nv5K
+X-Received: by 2002:a5d:6101:0:b0:242:46d0:3ee1 with SMTP id v1-20020a5d6101000000b0024246d03ee1mr10075197wrt.315.1670323015968;
+        Tue, 06 Dec 2022 02:36:55 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf4hdCTFiVaTLif2boeNw/kxGbQScPuaS1un/J2RGjn40Favi8QTQ0cVDhBrer5EXpUMnibKEw==
+X-Received: by 2002:a5d:6101:0:b0:242:46d0:3ee1 with SMTP id v1-20020a5d6101000000b0024246d03ee1mr10075190wrt.315.1670323015747;
+        Tue, 06 Dec 2022 02:36:55 -0800 (PST)
+Received: from gerbillo.redhat.com (146-241-106-100.dyn.eolo.it. [146.241.106.100])
+        by smtp.gmail.com with ESMTPSA id v128-20020a1cac86000000b003cfa80443a0sm20734164wme.35.2022.12.06.02.36.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Dec 2022 02:36:55 -0800 (PST)
+Message-ID: <abd1a8e98d8b6d19520ae41d164ee905a40b3c42.camel@redhat.com>
+Subject: Re: [PATCH] net/ncsi: Silence runtime memcpy() false positive
+ warning
+From:   Paolo Abeni <pabeni@redhat.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Samuel Mendoza-Jonas <sam@mendozajonas.com>
+Cc:     Joel Stanley <joel@jms.id.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Date:   Tue, 06 Dec 2022 11:36:54 +0100
+In-Reply-To: <20221202212418.never.837-kees@kernel.org>
+References: <20221202212418.never.837-kees@kernel.org>
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] NFC: nci: Bounds check struct nfc_target arrays
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <167030281674.5465.6825440514451542808.git-patchwork-notify@kernel.org>
-Date:   Tue, 06 Dec 2022 05:00:16 +0000
-References: <20221202214410.never.693-kees@kernel.org>
-In-Reply-To: <20221202214410.never.693-kees@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     krzysztof.kozlowski@linaro.org,
-        syzbot+210e196cef4711b65139@syzkaller.appspotmail.com,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, netdev@vger.kernel.org, linville@tuxdriver.com,
-        ilane@ti.com, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
+Hello,
 
-This patch was applied to netdev/net.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Fri,  2 Dec 2022 13:44:14 -0800 you wrote:
-> While running under CONFIG_FORTIFY_SOURCE=y, syzkaller reported:
+On Fri, 2022-12-02 at 13:24 -0800, Kees Cook wrote:
+> The memcpy() in ncsi_cmd_handler_oem deserializes nca->data into a
+> flexible array structure that overlapping with non-flex-array members
+> (mfr_id) intentionally. Since the mem_to_flex() API is not finished,
+> temporarily silence this warning, since it is a false positive, using
+> unsafe_memcpy().
 > 
->   memcpy: detected field-spanning write (size 129) of single field "target->sensf_res" at net/nfc/nci/ntf.c:260 (size 18)
-> 
-> This appears to be a legitimate lack of bounds checking in
-> nci_add_new_protocol(). Add the missing checks.
-> 
-> [...]
+> Reported-by: Joel Stanley <joel@jms.id.au>
+> Link: https://lore.kernel.org/netdev/CACPK8Xdfi=OJKP0x0D1w87fQeFZ4A2DP2qzGCRcuVbpU-9=4sQ@mail.gmail.com/
+> Cc: Samuel Mendoza-Jonas <sam@mendozajonas.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Here is the summary with links:
-  - NFC: nci: Bounds check struct nfc_target arrays
-    https://git.kernel.org/netdev/net/c/e329e71013c9
+Is this for the -net or the -net-next tree? It applies to both...
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+It you are targetting the -net tree, I think it would be nicer adding a
+suitable Fixes tag.
 
+Thanks!
+
+Paolo
 
