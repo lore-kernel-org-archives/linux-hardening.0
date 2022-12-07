@@ -2,69 +2,66 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A0EC352A1
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Dec 2022 09:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F8BC352A1
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Dec 2022 10:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229636AbiLGJTV (ORCPT
+        id S229572AbiLGKbG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 7 Dec 2022 04:19:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37548 "EHLO
+        Wed, 7 Dec 2022 05:31:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230108AbiLGJTI (ORCPT
+        with ESMTP id S229462AbiLGKbE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 7 Dec 2022 04:19:08 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38978293;
-        Wed,  7 Dec 2022 01:19:06 -0800 (PST)
-Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id D08EF1FDBC;
-        Wed,  7 Dec 2022 09:19:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1670404744; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ijRcVYqPEjBAfgioAlVUgPdPwzo/HNYZ8f5vv1ik9Sk=;
-        b=0aPcXOex+E1M4o5no6RISe8VqofletEFf1ZLxOzclSAm166hTjcp044ed4Rk8MMu10x/ZH
-        znpNvLXbFsWDBTpxbzJ++83/YyeTTFyQgugQNowkuppSWZYwXP+8Zl51tBMActTQWYjsPN
-        roICipK+C606GpImLgg2eO9107E39AI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1670404744;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ijRcVYqPEjBAfgioAlVUgPdPwzo/HNYZ8f5vv1ik9Sk=;
-        b=wXLCuKSsXGXdou8O/5nq6Vbdd4/23AOh0ptXIuoTwKXjGMkUD4Qo0FU5yWrazDnWuGDPxv
-        8nRPcyblUsJPCeAQ==
-Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap1.suse-dmz.suse.de (Postfix) with ESMTPS id 63842136B4;
-        Wed,  7 Dec 2022 09:19:04 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap1.suse-dmz.suse.de with ESMTPSA
-        id EnylF4hakGOjZgAAGKfGzw
-        (envelope-from <vbabka@suse.cz>); Wed, 07 Dec 2022 09:19:04 +0000
-Message-ID: <ef7c0afb-cc93-e171-d439-bf2a7b960db4@suse.cz>
-Date:   Wed, 7 Dec 2022 10:19:04 +0100
+        Wed, 7 Dec 2022 05:31:04 -0500
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC58CA1
+        for <linux-hardening@vger.kernel.org>; Wed,  7 Dec 2022 02:31:01 -0800 (PST)
+Received: by mail-yb1-xb35.google.com with SMTP id i186so9953057ybc.9
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Dec 2022 02:31:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Te+qRfL0gSPa2I5bK5OY5bAXbxohK6qh4ntuX06onLw=;
+        b=eBPc6LCdVbJNZrD/vNuWi34IC2I2EByvcZ8T0bOHHwJG02J4XKMyBtJKL5TXNyKr4l
+         d2If4UglHwt630P/gso8MBO1XAPD4/15iytfqwluNRAjCjHvYaQX6lqz92qU1KueqWLl
+         NmEtQ6abKgUm6qF8HpC29w+VmYMpJBX6lk06RhkXqIM9gvHs/UgSHGt9e1c749PUkstn
+         JEkgkYj0nWksUc/pyFxQvgoiSB+fxrbCrHfYpt751cz2XxTcjqE/hdsmUs5eBIkUlkj6
+         Y0xvfCUPe9v+Y3nCGvY+7x0g7pjw9eqxhnA819SOFLRlldbiFVDZtpE2xX/6x/MdWLVi
+         l40Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Te+qRfL0gSPa2I5bK5OY5bAXbxohK6qh4ntuX06onLw=;
+        b=lFe9yzzB25TXwv/XiKBTdRwaH+3gVYBxfQVd+9BKPvrqjL0fkfP/YfcZNmba0i5KN1
+         j9qTQbsvPIKQUWkTEuBLnswVHei0f6m9xmm+cd+vvpKCP7ArbEGoTO13P+Qhihf+nQBR
+         Xs0OrFi6APC7JpEb11O6b/tXOmzO4fuXG7MNqYqlTrDx+VzPRJ+DZTTlEOE2fG+KfEYT
+         H/gPxeMcjgQoC2w5Lw7m+8n0d51dhEA9NDigrQSSMb50WoIieNaDuyt2vQYVGmEbVN8W
+         /L3Uif1cyt1iWnpsccEkwfkMRxksY7PCpkLDsZzWmCzHmD6K9Dk+hw0bxyefCixoouea
+         JU5Q==
+X-Gm-Message-State: ANoB5pk0VhlkFwRtE/AUHdzbGiOJ4v/9K5GX6ULGtbMs422wAZNBYAer
+        1WHjMgQ4AIfwn5iBnIkaKJ7XzGn5ubLbRYsW8k81xg==
+X-Google-Smtp-Source: AA0mqf6t39Rs8bP0A/bgsq+RjfUaGFwDeeFVVvJr2EUDgik0KecD4HhEv5Xo7lS6iqkDVNk/fFXWXXRma5m/Cfa/4Mw=
+X-Received: by 2002:a05:6902:1004:b0:6fe:d784:282a with SMTP id
+ w4-20020a056902100400b006fed784282amr17363367ybt.598.1670409060680; Wed, 07
+ Dec 2022 02:31:00 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
+References: <20221206231659.never.929-kees@kernel.org> <20221206175557.1cbd3baa@kernel.org>
+In-Reply-To: <20221206175557.1cbd3baa@kernel.org>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Wed, 7 Dec 2022 11:30:36 +0100
+Message-ID: <CANn89i+A49o1zXLJHTjQPrGrdATv7Mkis06FahZ0Yy2gLB1BXQ@mail.gmail.com>
 Subject: Re: [PATCH] skbuff: Reallocate to ksize() in __build_skb_around()
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com,
         Paolo Abeni <pabeni@redhat.com>,
         Pavel Begunkov <asml.silence@gmail.com>,
         pepsipu <soopthegoop@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
         kasan-dev <kasan-dev@googlegroups.com>,
         Andrii Nakryiko <andrii@kernel.org>, ast@kernel.org,
         bpf <bpf@vger.kernel.org>,
@@ -84,99 +81,48 @@ Cc:     syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com,
         Andrey Konovalov <andreyknvl@gmail.com>,
         David Rientjes <rientjes@google.com>,
         linux-hardening@vger.kernel.org
-References: <20221206231659.never.929-kees@kernel.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20221206231659.never.929-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 12/7/22 00:17, Kees Cook wrote:
-> When build_skb() is passed a frag_size of 0, it means the buffer came
-> from kmalloc. In these cases, ksize() is used to find its actual size,
-> but since the allocation may not have been made to that size, actually
-> perform the krealloc() call so that all the associated buffer size
-> checking will be correctly notified. For example, syzkaller reported:
-> 
->   BUG: KASAN: slab-out-of-bounds in __build_skb_around+0x235/0x340 net/core/skbuff.c:294
->   Write of size 32 at addr ffff88802aa172c0 by task syz-executor413/5295
-> 
-> For bpf_prog_test_run_skb(), which uses a kmalloc()ed buffer passed to
-> build_skb().
+On Wed, Dec 7, 2022 at 2:56 AM Jakub Kicinski <kuba@kernel.org> wrote:
+>
+> On Tue,  6 Dec 2022 15:17:14 -0800 Kees Cook wrote:
+> > -     unsigned int size = frag_size ? : ksize(data);
+> > +     unsigned int size = frag_size;
+> > +
+> > +     /* When frag_size == 0, the buffer came from kmalloc, so we
+> > +      * must find its true allocation size (and grow it to match).
+> > +      */
+> > +     if (unlikely(size == 0)) {
+> > +             void *resized;
+> > +
+> > +             size = ksize(data);
+> > +             /* krealloc() will immediate return "data" when
+> > +              * "ksize(data)" is requested: it is the existing upper
+> > +              * bounds. As a result, GFP_ATOMIC will be ignored.
+> > +              */
+> > +             resized = krealloc(data, size, GFP_ATOMIC);
+> > +             if (WARN_ON(resized != data))
+> > +                     data = resized;
+> > +     }
+> >
+>
+> Aammgh. build_skb(0) is plain silly, AFAIK. The performance hit of
+> using kmalloc()'ed heads is large because GRO can't free the metadata.
+> So we end up carrying per-MTU skbs across to the application and then
+> freeing them one by one. With pages we just aggregate up to 64k of data
+> in a single skb.
+>
+> I can only grep out 3 cases of build_skb(.. 0), could we instead
+> convert them into a new build_skb_slab(), and handle all the silliness
+> in such a new helper? That'd be a win both for the memory safety and one
+> fewer branch for the fast path.
+>
+> I think it's worth doing, so LMK if you're okay to do this extra work,
+> otherwise I can help (unless e.g. Eric tells me I'm wrong..).
 
-Weren't all such kmalloc() users converted to kmalloc_size_roundup() to
-prevent this?
-
-> Reported-by: syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com
-> Link: https://groups.google.com/g/syzkaller-bugs/c/UnIKxTtU5-0/m/-wbXinkgAQAJ
-> Fixes: 38931d8989b5 ("mm: Make ksize() a reporting-only function")
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: Pavel Begunkov <asml.silence@gmail.com>
-> Cc: pepsipu <soopthegoop@gmail.com>
-> Cc: syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: kasan-dev <kasan-dev@googlegroups.com>
-> Cc: Andrii Nakryiko <andrii@kernel.org>
-> Cc: ast@kernel.org
-> Cc: bpf <bpf@vger.kernel.org>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Cc: Hao Luo <haoluo@google.com>
-> Cc: Jesper Dangaard Brouer <hawk@kernel.org>
-> Cc: John Fastabend <john.fastabend@gmail.com>
-> Cc: jolsa@kernel.org
-> Cc: KP Singh <kpsingh@kernel.org>
-> Cc: martin.lau@linux.dev
-> Cc: Stanislav Fomichev <sdf@google.com>
-> Cc: song@kernel.org
-> Cc: Yonghong Song <yhs@fb.com>
-> Cc: netdev@vger.kernel.org
-> Cc: LKML <linux-kernel@vger.kernel.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  net/core/skbuff.c | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-> index 1d9719e72f9d..b55d061ed8b4 100644
-> --- a/net/core/skbuff.c
-> +++ b/net/core/skbuff.c
-> @@ -274,7 +274,23 @@ static void __build_skb_around(struct sk_buff *skb, void *data,
->  			       unsigned int frag_size)
->  {
->  	struct skb_shared_info *shinfo;
-> -	unsigned int size = frag_size ? : ksize(data);
-> +	unsigned int size = frag_size;
-> +
-> +	/* When frag_size == 0, the buffer came from kmalloc, so we
-> +	 * must find its true allocation size (and grow it to match).
-> +	 */
-> +	if (unlikely(size == 0)) {
-> +		void *resized;
-> +
-> +		size = ksize(data);
-> +		/* krealloc() will immediate return "data" when
-> +		 * "ksize(data)" is requested: it is the existing upper
-> +		 * bounds. As a result, GFP_ATOMIC will be ignored.
-> +		 */
-> +		resized = krealloc(data, size, GFP_ATOMIC);
-> +		if (WARN_ON(resized != data))
-
-WARN_ON_ONCE() could be sufficient as either this is impossible to hit by
-definition, or something went very wrong (a patch screwed ksize/krealloc?)
-and it can be hit many times?
-
-> +			data = resized;
-
-In that "impossible" case, this could also end up as NULL due to GFP_ATOMIC
-allocation failure, but maybe it's really impractical to do anything about it...
-
-> +	}
->  
->  	size -= SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
->  
-
+I totally agree, I would indeed remove ksize() use completely,
+let callers give us the size, and the head_frag boolean,
+instead of inferring from size==0
