@@ -2,89 +2,132 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849C6C352A1
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Dec 2022 02:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC9DC352A1
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Dec 2022 03:47:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229554AbiLGCKV (ORCPT
+        id S229719AbiLGDrT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 6 Dec 2022 21:10:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49358 "EHLO
+        Tue, 6 Dec 2022 22:47:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229703AbiLGCKU (ORCPT
+        with ESMTP id S229462AbiLGDrS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 6 Dec 2022 21:10:20 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5021645ECD;
-        Tue,  6 Dec 2022 18:10:19 -0800 (PST)
+        Tue, 6 Dec 2022 22:47:18 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D508B57;
+        Tue,  6 Dec 2022 19:47:17 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E0EF0611D6;
-        Wed,  7 Dec 2022 02:10:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3D9EEC433D7;
-        Wed,  7 Dec 2022 02:10:18 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 194A7B81CB6;
+        Wed,  7 Dec 2022 03:47:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A349AC433C1;
+        Wed,  7 Dec 2022 03:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670379018;
-        bh=dOr+qztnngszfpp2eOrSQgntQvej41Vfq61jH8VjaMI=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=RW1ksyP0fxUdLoR21eUi2nzrfdGTNE6RfNWquYu0ZLpVWIJ5Mkqa8gRPGXdRqBuFp
-         Q9dIsrqjI8tdCqG8dLJgkvGefow+BNhqRKHy0rGBDJ9nEMSc78WOqWjwiapLl8MZEx
-         3hmthm8fsAbDq35BsnUa7XeMotpOogAgO6JM9kMUX6o52LfmaapERurfhc7mob7vh/
-         P6FqUMPtNmwZPzSVt75vqT9H+tAOa9WDDu3+o1OejzIA/qmdwnfS1GlX4Z1pyI+S14
-         kWo+h/w7UQiJHYvdUIB/QEMF81I2vCeY1nnKq/dCfPuex9VTFvTDnQJMT+Aa8po2+o
-         h+g3VjjCdlkYQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 20AD5C395E5;
-        Wed,  7 Dec 2022 02:10:18 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] net/ncsi: Silence runtime memcpy() false positive warning
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <167037901812.29262.11761339624947092178.git-patchwork-notify@kernel.org>
-Date:   Wed, 07 Dec 2022 02:10:18 +0000
-References: <20221202212418.never.837-kees@kernel.org>
-In-Reply-To: <20221202212418.never.837-kees@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     sam@mendozajonas.com, joel@jms.id.au, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        s=k20201202; t=1670384834;
+        bh=FhD1qk9K8yePWo5SGyPjxKqDUjkOZgMvody+RDCvRlw=;
+        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+        b=Q0fQujpVK68aD55F3z9XIUae6c0CiM/t7DaaUIf2dZnBsYqV/NtKcjZXL5coc4ZmW
+         ONosLDm76QCgc67KeuQLQwBjDXLP/0sbVNQM/Dzz1y9tRfqbYNwxeHs6Vv1E+oWGkC
+         W9C/9yzbT4Fyu10g6GxajCWCMeDboz2/PHmJo1iMGi4wnG1LW5n7cLqzU2UXXmMDrU
+         BjC9i2DoJ7o5jzZMkKj4h0RfSMUX3UaBB0Pccf6iqhaycIgEOyos5p1Cq8YitBKiAf
+         OY/Z0VGwB9EdirNFmikmjRSHYoczvpn+HudiKZuEg755Ai7z+XeDNp25GCjEl0vPHK
+         mGvyY2Gkf9WvQ==
+Date:   Tue, 06 Dec 2022 19:47:13 -0800
+From:   Kees Cook <kees@kernel.org>
+To:     Jakub Kicinski <kuba@kernel.org>, Kees Cook <keescook@chromium.org>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        pepsipu <soopthegoop@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Andrii Nakryiko <andrii@kernel.org>, ast@kernel.org,
+        bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Hao Luo <haoluo@google.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>, jolsa@kernel.org,
+        KP Singh <kpsingh@kernel.org>, martin.lau@linux.dev,
+        Stanislav Fomichev <sdf@google.com>, song@kernel.org,
+        Yonghong Song <yhs@fb.com>, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Menglong Dong <imagedong@tencent.com>,
+        David Ahern <dsahern@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Richard Gobert <richardbgobert@gmail.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        David Rientjes <rientjes@google.com>,
         linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] skbuff: Reallocate to ksize() in __build_skb_around()
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20221206175557.1cbd3baa@kernel.org>
+References: <20221206231659.never.929-kees@kernel.org> <20221206175557.1cbd3baa@kernel.org>
+Message-ID: <67D5F9F1-3416-4E08-9D5A-369ED5B4EA95@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
+On December 6, 2022 5:55:57 PM PST, Jakub Kicinski <kuba@kernel=2Eorg> wrot=
+e:
+>On Tue,  6 Dec 2022 15:17:14 -0800 Kees Cook wrote:
+>> -	unsigned int size =3D frag_size ? : ksize(data);
+>> +	unsigned int size =3D frag_size;
+>> +
+>> +	/* When frag_size =3D=3D 0, the buffer came from kmalloc, so we
+>> +	 * must find its true allocation size (and grow it to match)=2E
+>> +	 */
+>> +	if (unlikely(size =3D=3D 0)) {
+>> +		void *resized;
+>> +
+>> +		size =3D ksize(data);
+>> +		/* krealloc() will immediate return "data" when
+>> +		 * "ksize(data)" is requested: it is the existing upper
+>> +		 * bounds=2E As a result, GFP_ATOMIC will be ignored=2E
+>> +		 */
+>> +		resized =3D krealloc(data, size, GFP_ATOMIC);
+>> +		if (WARN_ON(resized !=3D data))
+>> +			data =3D resized;
+>> +	}
+>> =20
+>
+>Aammgh=2E build_skb(0) is plain silly, AFAIK=2E The performance hit of
+>using kmalloc()'ed heads is large because GRO can't free the metadata=2E
+>So we end up carrying per-MTU skbs across to the application and then
+>freeing them one by one=2E With pages we just aggregate up to 64k of data
+>in a single skb=2E
 
-This patch was applied to netdev/net-next.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
+This isn't changed by this patch, though? The users of kmalloc+build_skb a=
+re pre-existing=2E
 
-On Fri,  2 Dec 2022 13:24:22 -0800 you wrote:
-> The memcpy() in ncsi_cmd_handler_oem deserializes nca->data into a
-> flexible array structure that overlapping with non-flex-array members
-> (mfr_id) intentionally. Since the mem_to_flex() API is not finished,
-> temporarily silence this warning, since it is a false positive, using
-> unsafe_memcpy().
-> 
-> Reported-by: Joel Stanley <joel@jms.id.au>
-> Link: https://lore.kernel.org/netdev/CACPK8Xdfi=OJKP0x0D1w87fQeFZ4A2DP2qzGCRcuVbpU-9=4sQ@mail.gmail.com/
-> Cc: Samuel Mendoza-Jonas <sam@mendozajonas.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> [...]
+>I can only grep out 3 cases of build_skb(=2E=2E 0), could we instead
+>convert them into a new build_skb_slab(), and handle all the silliness
+>in such a new helper? That'd be a win both for the memory safety and one
+>fewer branch for the fast path=2E
 
-Here is the summary with links:
-  - net/ncsi: Silence runtime memcpy() false positive warning
-    https://git.kernel.org/netdev/net-next/c/b93884eea26f
+When I went through callers, it was many more than 3=2E Regardless, I don'=
+t see the point: my patch has no more branches than the original code (in f=
+act, it may actually be faster because I made the initial assignment uncond=
+itional, and zero-test-after-assign is almost free, where as before it test=
+ed before the assign=2E And now it's marked as unlikely to keep it out-of-l=
+ine=2E
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+>I think it's worth doing, so LMK if you're okay to do this extra work,
+>otherwise I can help (unless e=2Eg=2E Eric tells me I'm wrong=2E=2E)=2E
+
+I had been changing callers to round up (e=2Eg=2E bnx2), but it seemed lik=
+e centralizing this makes more sense=2E I don't think a different helper wi=
+ll clean this up=2E
+
+-Kees
 
 
+--=20
+Kees Cook
