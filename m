@@ -2,127 +2,135 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F8BC352A1
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Dec 2022 10:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC910C352A1
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Dec 2022 15:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229572AbiLGKbG (ORCPT
+        id S229757AbiLGPts (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 7 Dec 2022 05:31:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58096 "EHLO
+        Wed, 7 Dec 2022 10:49:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229462AbiLGKbE (ORCPT
+        with ESMTP id S229565AbiLGPtq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 7 Dec 2022 05:31:04 -0500
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC58CA1
-        for <linux-hardening@vger.kernel.org>; Wed,  7 Dec 2022 02:31:01 -0800 (PST)
-Received: by mail-yb1-xb35.google.com with SMTP id i186so9953057ybc.9
-        for <linux-hardening@vger.kernel.org>; Wed, 07 Dec 2022 02:31:01 -0800 (PST)
+        Wed, 7 Dec 2022 10:49:46 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B782326D2
+        for <linux-hardening@vger.kernel.org>; Wed,  7 Dec 2022 07:49:45 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id p24so17413837plw.1
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Dec 2022 07:49:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Te+qRfL0gSPa2I5bK5OY5bAXbxohK6qh4ntuX06onLw=;
-        b=eBPc6LCdVbJNZrD/vNuWi34IC2I2EByvcZ8T0bOHHwJG02J4XKMyBtJKL5TXNyKr4l
-         d2If4UglHwt630P/gso8MBO1XAPD4/15iytfqwluNRAjCjHvYaQX6lqz92qU1KueqWLl
-         NmEtQ6abKgUm6qF8HpC29w+VmYMpJBX6lk06RhkXqIM9gvHs/UgSHGt9e1c749PUkstn
-         JEkgkYj0nWksUc/pyFxQvgoiSB+fxrbCrHfYpt751cz2XxTcjqE/hdsmUs5eBIkUlkj6
-         Y0xvfCUPe9v+Y3nCGvY+7x0g7pjw9eqxhnA819SOFLRlldbiFVDZtpE2xX/6x/MdWLVi
-         l40Q==
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SebK6VeMwVI8zNPc+AGDZ/foDvzVT7LenZ1q5aL6Vd0=;
+        b=bXpIMlKZLOugUItEp+yK3IZEPErrpxgFQ3yGo+icXLxideMkE4N9Fl1V9tRqJmVJKL
+         kkGO+i3x5P4gqnCUXgxjG6vCaQUG4ifV0IyOaZqXC1wAIy4PoD6cdcnJ+oJrZBc/aqiq
+         xPr95nZlhxEuoy7lqLgIC5sVkXFhlAxbDK/BU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Te+qRfL0gSPa2I5bK5OY5bAXbxohK6qh4ntuX06onLw=;
-        b=lFe9yzzB25TXwv/XiKBTdRwaH+3gVYBxfQVd+9BKPvrqjL0fkfP/YfcZNmba0i5KN1
-         j9qTQbsvPIKQUWkTEuBLnswVHei0f6m9xmm+cd+vvpKCP7ArbEGoTO13P+Qhihf+nQBR
-         Xs0OrFi6APC7JpEb11O6b/tXOmzO4fuXG7MNqYqlTrDx+VzPRJ+DZTTlEOE2fG+KfEYT
-         H/gPxeMcjgQoC2w5Lw7m+8n0d51dhEA9NDigrQSSMb50WoIieNaDuyt2vQYVGmEbVN8W
-         /L3Uif1cyt1iWnpsccEkwfkMRxksY7PCpkLDsZzWmCzHmD6K9Dk+hw0bxyefCixoouea
-         JU5Q==
-X-Gm-Message-State: ANoB5pk0VhlkFwRtE/AUHdzbGiOJ4v/9K5GX6ULGtbMs422wAZNBYAer
-        1WHjMgQ4AIfwn5iBnIkaKJ7XzGn5ubLbRYsW8k81xg==
-X-Google-Smtp-Source: AA0mqf6t39Rs8bP0A/bgsq+RjfUaGFwDeeFVVvJr2EUDgik0KecD4HhEv5Xo7lS6iqkDVNk/fFXWXXRma5m/Cfa/4Mw=
-X-Received: by 2002:a05:6902:1004:b0:6fe:d784:282a with SMTP id
- w4-20020a056902100400b006fed784282amr17363367ybt.598.1670409060680; Wed, 07
- Dec 2022 02:31:00 -0800 (PST)
+        bh=SebK6VeMwVI8zNPc+AGDZ/foDvzVT7LenZ1q5aL6Vd0=;
+        b=4vQRFOKHXtgYE3JAqqVn0WU/fzfFAQ9aF8da/rFqEhcK/DhBkZggsn6tweOxVTo+NM
+         dsWGq0Wk0Jho7lmlPrdIn7OUqC2cvKfOsYp7/W7CPbnrBXvASku9wiE5WKiK28ad42TM
+         wibC7aYchE6hYMRADLhnOZSMwgdLC9Tz0+omCBHJOcOGmrdmrIC07Aok21Yq66RC+eWn
+         C5y5s9Buu3oNo919pK+YfgR9x3KoTQeG+MQEDkvoklTYJe+m8Rra4xdAKY+Qhk+SFPxj
+         4tvVojMHu/JD0/8gt17G5uhQ+1I4eA3unSMOdFWhmphhS4PCG7EHTZOm/pKywj4xT5Wh
+         URgA==
+X-Gm-Message-State: ANoB5pmm3g4YwbOEOySPbZcxiXwYqsfGuBdjU1ePChuD3kyyVGChdJhV
+        hh9jkULVvVsUPHL4Ztosn9RqU58p+gpAJyPD
+X-Google-Smtp-Source: AA0mqf7DJw1rIWEXKC49n6cPVKA1w2gt+CVOmiPUQGyrAdU+wzfuFVLdh+Ap0uUT4HhJtSSro1Heww==
+X-Received: by 2002:a17:902:9a82:b0:189:e085:8416 with SMTP id w2-20020a1709029a8200b00189e0858416mr714393plp.17.1670428184683;
+        Wed, 07 Dec 2022 07:49:44 -0800 (PST)
+Received: from jeffxud.c.googlers.com.com (30.202.168.34.bc.googleusercontent.com. [34.168.202.30])
+        by smtp.gmail.com with ESMTPSA id a9-20020a170902ecc900b0017f7628cbddsm14920934plh.30.2022.12.07.07.49.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Dec 2022 07:49:44 -0800 (PST)
+From:   jeffxu@chromium.org
+To:     skhan@linuxfoundation.org, keescook@chromium.org
+Cc:     akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
+        dverkamp@chromium.org, hughd@google.com, jeffxu@google.com,
+        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        jannh@google.com, linux-hardening@vger.kernel.org
+Subject: [PATCH v6 0/6] mm/memfd: introduce MFD_NOEXEC_SEAL and MFD_EXEC
+Date:   Wed,  7 Dec 2022 15:49:33 +0000
+Message-Id: <20221207154939.2532830-1-jeffxu@google.com>
+X-Mailer: git-send-email 2.39.0.rc0.267.gcb52ba06e7-goog
 MIME-Version: 1.0
-References: <20221206231659.never.929-kees@kernel.org> <20221206175557.1cbd3baa@kernel.org>
-In-Reply-To: <20221206175557.1cbd3baa@kernel.org>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Wed, 7 Dec 2022 11:30:36 +0100
-Message-ID: <CANn89i+A49o1zXLJHTjQPrGrdATv7Mkis06FahZ0Yy2gLB1BXQ@mail.gmail.com>
-Subject: Re: [PATCH] skbuff: Reallocate to ksize() in __build_skb_around()
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com,
-        Paolo Abeni <pabeni@redhat.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        pepsipu <soopthegoop@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Andrii Nakryiko <andrii@kernel.org>, ast@kernel.org,
-        bpf <bpf@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Hao Luo <haoluo@google.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>, jolsa@kernel.org,
-        KP Singh <kpsingh@kernel.org>, martin.lau@linux.dev,
-        Stanislav Fomichev <sdf@google.com>, song@kernel.org,
-        Yonghong Song <yhs@fb.com>, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Menglong Dong <imagedong@tencent.com>,
-        David Ahern <dsahern@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Richard Gobert <richardbgobert@gmail.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Dec 7, 2022 at 2:56 AM Jakub Kicinski <kuba@kernel.org> wrote:
->
-> On Tue,  6 Dec 2022 15:17:14 -0800 Kees Cook wrote:
-> > -     unsigned int size = frag_size ? : ksize(data);
-> > +     unsigned int size = frag_size;
-> > +
-> > +     /* When frag_size == 0, the buffer came from kmalloc, so we
-> > +      * must find its true allocation size (and grow it to match).
-> > +      */
-> > +     if (unlikely(size == 0)) {
-> > +             void *resized;
-> > +
-> > +             size = ksize(data);
-> > +             /* krealloc() will immediate return "data" when
-> > +              * "ksize(data)" is requested: it is the existing upper
-> > +              * bounds. As a result, GFP_ATOMIC will be ignored.
-> > +              */
-> > +             resized = krealloc(data, size, GFP_ATOMIC);
-> > +             if (WARN_ON(resized != data))
-> > +                     data = resized;
-> > +     }
-> >
->
-> Aammgh. build_skb(0) is plain silly, AFAIK. The performance hit of
-> using kmalloc()'ed heads is large because GRO can't free the metadata.
-> So we end up carrying per-MTU skbs across to the application and then
-> freeing them one by one. With pages we just aggregate up to 64k of data
-> in a single skb.
->
-> I can only grep out 3 cases of build_skb(.. 0), could we instead
-> convert them into a new build_skb_slab(), and handle all the silliness
-> in such a new helper? That'd be a win both for the memory safety and one
-> fewer branch for the fast path.
->
-> I think it's worth doing, so LMK if you're okay to do this extra work,
-> otherwise I can help (unless e.g. Eric tells me I'm wrong..).
+From: Jeff Xu <jeffxu@google.com>
 
-I totally agree, I would indeed remove ksize() use completely,
-let callers give us the size, and the head_frag boolean,
-instead of inferring from size==0
+Since Linux introduced the memfd feature, memfd have always had their
+execute bit set, and the memfd_create() syscall doesn't allow setting
+it differently.
+
+However, in a secure by default system, such as ChromeOS, (where all
+executables should come from the rootfs, which is protected by Verified
+boot), this executable nature of memfd opens a door for NoExec bypass
+and enables “confused deputy attack”.  E.g, in VRP bug [1]: cros_vm
+process created a memfd to share the content with an external process,
+however the memfd is overwritten and used for executing arbitrary code
+and root escalation. [2] lists more VRP in this kind.
+
+On the other hand, executable memfd has its legit use, runc uses memfd’s
+seal and executable feature to copy the contents of the binary then
+execute them, for such system, we need a solution to differentiate runc's
+use of  executable memfds and an attacker's [3].
+
+To address those above, this set of patches add following:
+1> Let memfd_create() set X bit at creation time.
+2> Let memfd to be sealed for modifying X bit.
+3> A new pid namespace sysctl: vm.memfd_noexec to control the behavior of
+   X bit.For example, if a container has vm.memfd_noexec=2, then
+   memfd_create() without MFD_NOEXEC_SEAL will be rejected.
+4> A new security hook in memfd_create(). This make it possible to a new
+LSM, which rejects or allows executable memfd based on its security policy.
+
+This is V6 version of patch: see [4] [5] [6] [7] for previous versions.
+
+[1] https://crbug.com/1305411
+[2] https://bugs.chromium.org/p/chromium/issues/list?q=type%3Dbug-security%20memfd%20escalation&can=1
+[3] https://lwn.net/Articles/781013/
+[4] https://lwn.net/Articles/890096/
+[5] https://lore.kernel.org/lkml/20220805222126.142525-1-jeffxu@google.com/
+[6] https://lore.kernel.org/lkml/20221202013404.163143-1-jeffxu@google.com/
+[7] https://lore.kernel.org/lkml/20221206152358.1966099-1-jeffxu@google.com/
+
+Daniel Verkamp (2):
+  mm/memfd: add F_SEAL_EXEC
+  selftests/memfd: add tests for F_SEAL_EXEC
+
+Jeff Xu (4):
+  mm/memfd: add MFD_NOEXEC_SEAL and MFD_EXEC
+  mm/memfd: Add write seals when apply SEAL_EXEC to executable memfd
+  selftests/memfd: add tests for MFD_NOEXEC_SEAL MFD_EXEC
+  mm/memfd: security hook for memfd_create
+
+ include/linux/lsm_hook_defs.h              |   1 +
+ include/linux/lsm_hooks.h                  |   4 +
+ include/linux/pid_namespace.h              |  19 ++
+ include/linux/security.h                   |   6 +
+ include/uapi/linux/fcntl.h                 |   1 +
+ include/uapi/linux/memfd.h                 |   4 +
+ kernel/pid_namespace.c                     |   5 +
+ kernel/pid_sysctl.h                        |  59 ++++
+ mm/memfd.c                                 |  61 +++-
+ mm/shmem.c                                 |   6 +
+ security/security.c                        |  13 +
+ tools/testing/selftests/memfd/fuse_test.c  |   1 +
+ tools/testing/selftests/memfd/memfd_test.c | 348 ++++++++++++++++++++-
+ 13 files changed, 525 insertions(+), 3 deletions(-)
+ create mode 100644 kernel/pid_sysctl.h
+
+
+base-commit: eb7081409f94a9a8608593d0fb63a1aa3d6f95d8
+-- 
+2.39.0.rc0.267.gcb52ba06e7-goog
+
