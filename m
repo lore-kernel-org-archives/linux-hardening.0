@@ -2,177 +2,309 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6486C4332F
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Dec 2022 06:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5724BC63705
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Dec 2022 08:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229556AbiLHGWn (ORCPT
+        id S229462AbiLHINv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 8 Dec 2022 01:22:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59854 "EHLO
+        Thu, 8 Dec 2022 03:13:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229544AbiLHGWl (ORCPT
+        with ESMTP id S229662AbiLHINp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 8 Dec 2022 01:22:41 -0500
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 753CC9581
-        for <linux-hardening@vger.kernel.org>; Wed,  7 Dec 2022 22:22:38 -0800 (PST)
-Received: by mail-pg1-x52a.google.com with SMTP id h33so421673pgm.9
-        for <linux-hardening@vger.kernel.org>; Wed, 07 Dec 2022 22:22:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=s6jTgKsQ68J7skKW9eoZwb+OAXDCIfdVmUwGyZmiR50=;
-        b=AyUhrXdx4t4YNuWSvUXNR0u6S9ja5ELKXekSpg11PKxxIcrOAvXxfHUrzsjmWsZWXQ
-         C849JfRruviAREfe8IOQZ21YCj+oTkq+ow5MQs77e1hP8w9nps/75PQJZmhZAviDhikl
-         4jzN3TiwDqgr8Ax7mkbv+zD5mq7M9EDsx0yfk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s6jTgKsQ68J7skKW9eoZwb+OAXDCIfdVmUwGyZmiR50=;
-        b=ncJJldM2zzQdFm+QGfHyTPVWJtvUohgIhIiRg060AoXxW4O5FnC6usf0m6R6pyjE/O
-         AwYZh1U64FQbSI7l+xR2FNQbsBjKoJYB7ZtoerUM7wOtWCiEnlDhcNb7R/CQB7e5jzNL
-         jAfkwv2b4rKpdr+68kjgi8KZB6Ak7OlGLmSjAlyzUiUJ3N1vbn4RBrAFvbL61wjXVeNN
-         sUz6vjXL6/EtLb1NdoT2aA7OHOn2S7Xsd0VCQEBZa/G93Jq//WuybELkAb/WrSkGTHon
-         EA5cMSOp/K/VUzpRn1CGBH7R9Jl/ikcDXayf6jpID0CCUBNtWLhgg+ny6VvHZikCbSWZ
-         dSDg==
-X-Gm-Message-State: ANoB5plEzfMZjDwGipeN9AaAjMI1w1tKhqUWhmtcqoJzHFbkSzYd4jhV
-        ayAjfLFa3faVmaMugOVTbb2qB3JeqK2W+Obv
-X-Google-Smtp-Source: AA0mqf6BVrewrRkokET1aUlODnvYJPULRifGLbbikXTrtOHQ58JHn3uEnJ/pHsMHinBavlzZriYsRQ==
-X-Received: by 2002:a05:6a00:2794:b0:575:335f:dd33 with SMTP id bd20-20020a056a00279400b00575335fdd33mr49246661pfb.84.1670480557858;
-        Wed, 07 Dec 2022 22:22:37 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y6-20020a17090322c600b00188f8badbcdsm10158750plg.137.2022.12.07.22.22.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Dec 2022 22:22:37 -0800 (PST)
-Date:   Wed, 7 Dec 2022 22:22:36 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
-Cc:     Dan Li <ashimida@linux.alibaba.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] lkdtm: Add CFI_BACKWARD to test ROP mitigations
-Message-ID: <202212072221.A9FCC905CF@keescook>
-References: <20220416001103.1524653-1-keescook@chromium.org>
- <CAEUSe78kDPxQmQqCWW-_9LCgJDFhAeMoVBFnX9QLx18Z4uT4VQ@mail.gmail.com>
+        Thu, 8 Dec 2022 03:13:45 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FE20B1F;
+        Thu,  8 Dec 2022 00:13:43 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 5971A33697;
+        Thu,  8 Dec 2022 08:13:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1670487222; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jL4y5FJYbDHm9XGKTrDmZ6J5zAhRaZRJLpsFAXD4/0o=;
+        b=bUmI0w3LiRlTcWoMMsF7HYKbPvEOxVnb/AfLz53RFL8tnZy/0vujoh8ukqEXQcwRpYPmbc
+        /VFErUGzHPbzt3R6Zbs5PnXdb9qeh+kbcoJMHj7PCiTtgEmhq4qLWmhc3ilNKMRFF8bPf6
+        oX45AMzM5tF0aP4WF7jcEd34tw2+ctw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1670487222;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jL4y5FJYbDHm9XGKTrDmZ6J5zAhRaZRJLpsFAXD4/0o=;
+        b=CE+RarLm/bXrKJ8p4njmXUm5YCYVHkyy0c4d8Pu/EfDrnoSBRnq823VqlWiVYbr3DJyaRh
+        cz+2/WxKhqY8SGBg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D55BD138E0;
+        Thu,  8 Dec 2022 08:13:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id NGJkM7WckWPMHQAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Thu, 08 Dec 2022 08:13:41 +0000
+Message-ID: <6923d6a9-7728-fc71-f963-3617e5361732@suse.cz>
+Date:   Thu, 8 Dec 2022 09:13:41 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEUSe78kDPxQmQqCWW-_9LCgJDFhAeMoVBFnX9QLx18Z4uT4VQ@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH net-next v3] skbuff: Introduce slab_build_skb()
+To:     Kees Cook <keescook@chromium.org>, Jakub Kicinski <kuba@kernel.org>
+Cc:     syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        pepsipu <soopthegoop@gmail.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Andrii Nakryiko <andrii@kernel.org>, ast@kernel.org,
+        bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Hao Luo <haoluo@google.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>, jolsa@kernel.org,
+        KP Singh <kpsingh@kernel.org>, martin.lau@linux.dev,
+        Stanislav Fomichev <sdf@google.com>, song@kernel.org,
+        Yonghong Song <yhs@fb.com>, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rasesh Mody <rmody@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Manish Chopra <manishc@marvell.com>,
+        Menglong Dong <imagedong@tencent.com>,
+        David Ahern <dsahern@kernel.org>,
+        Richard Gobert <richardbgobert@gmail.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        David Rientjes <rientjes@google.com>,
+        GR-Linux-NIC-Dev@marvell.com, linux-hardening@vger.kernel.org,
+        Feng Tang <feng.tang@intel.com>
+References: <20221208060256.give.994-kees@kernel.org>
+Content-Language: en-US
+From:   Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20221208060256.give.994-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Dec 06, 2022 at 06:28:53PM -0600, Daniel Díaz wrote:
-> Hello!
+On 12/8/22 07:02, Kees Cook wrote:
+> syzkaller reported:
 > 
-> On Sat, 16 Apr 2022 at 00:30, Kees Cook <keescook@chromium.org> wrote:
-> > In order to test various backward-edge control flow integrity methods,
-> > add a test that manipulates the return address on the stack. Currently
-> > only arm64 Pointer Authentication and Shadow Call Stack is supported.
-> >
-> >  $ echo CFI_BACKWARD | cat >/sys/kernel/debug/provoke-crash/DIRECT
-> >
-> > Under SCS, successful test of the mitigation is reported as:
-> >
-> >  lkdtm: Performing direct entry CFI_BACKWARD
-> >  lkdtm: Attempting unchecked stack return address redirection ...
-> >  lkdtm: ok: redirected stack return address.
-> >  lkdtm: Attempting checked stack return address redirection ...
-> >  lkdtm: ok: control flow unchanged.
-> >
-> > Under PAC, successful test of the mitigation is reported by the PAC
-> > exception handler:
-> >
-> >  lkdtm: Performing direct entry CFI_BACKWARD
-> >  lkdtm: Attempting unchecked stack return address redirection ...
-> >  lkdtm: ok: redirected stack return address.
-> >  lkdtm: Attempting checked stack return address redirection ...
-> >  Unable to handle kernel paging request at virtual address bfffffc0088d0514
-> >  Mem abort info:
-> >    ESR = 0x86000004
-> >    EC = 0x21: IABT (current EL), IL = 32 bits
-> >    SET = 0, FnV = 0
-> >    EA = 0, S1PTW = 0
-> >    FSC = 0x04: level 0 translation fault
-> >  [bfffffc0088d0514] address between user and kernel address ranges
-> >  ...
-> >
-> > If the CONFIGs are missing (or the mitigation isn't working), failure
-> > is reported as:
-> >
-> >  lkdtm: Performing direct entry CFI_BACKWARD
-> >  lkdtm: Attempting unchecked stack return address redirection ...
-> >  lkdtm: ok: redirected stack return address.
-> >  lkdtm: Attempting checked stack return address redirection ...
-> >  lkdtm: FAIL: stack return address was redirected!
-> >  lkdtm: This is probably expected, since this kernel was built *without* CONFIG_ARM64_PTR_AUTH_KERNEL=y nor CONFIG_SHADOW_CALL_STACK=y
-> >
-> > Co-developed-by: Dan Li <ashimida@linux.alibaba.com>
-> > Signed-off-by: Dan Li <ashimida@linux.alibaba.com>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> > v1: https://lore.kernel.org/lkml/20220413213917.711770-1-keescook@chromium.org
-> > v2:
-> >  - add PAGE_OFFSET setting for PAC bits (Dan Li)
-> > ---
-> >  drivers/misc/lkdtm/cfi.c                | 134 ++++++++++++++++++++++++
-> >  tools/testing/selftests/lkdtm/tests.txt |   1 +
-> >  2 files changed, 135 insertions(+)
-> >
-> > diff --git a/drivers/misc/lkdtm/cfi.c b/drivers/misc/lkdtm/cfi.c
-> > index e88f778be0d5..804965a480b7 100644
-> > --- a/drivers/misc/lkdtm/cfi.c
-> > +++ b/drivers/misc/lkdtm/cfi.c
-> > @@ -3,6 +3,7 @@
-> >   * This is for all the tests relating directly to Control Flow Integrity.
-> >   */
-> >  #include "lkdtm.h"
-> > +#include <asm/page.h>
-> >
-> >  static int called_count;
-> >
-> > @@ -42,8 +43,141 @@ static void lkdtm_CFI_FORWARD_PROTO(void)
-> >         pr_expected_config(CONFIG_CFI_CLANG);
-> >  }
-> >
-> > +/*
-> > + * This can stay local to LKDTM, as there should not be a production reason
-> > + * to disable PAC && SCS.
-> > + */
-> > +#ifdef CONFIG_ARM64_PTR_AUTH_KERNEL
-> > +# ifdef CONFIG_ARM64_BTI_KERNEL
-> > +#  define __no_pac             "branch-protection=bti"
-> > +# else
-> > +#  define __no_pac             "branch-protection=none"
-> > +# endif
-> > +# define __no_ret_protection   __noscs __attribute__((__target__(__no_pac)))
-> > +#else
-> > +# define __no_ret_protection   __noscs
-> > +#endif
+>   BUG: KASAN: slab-out-of-bounds in __build_skb_around+0x235/0x340 net/core/skbuff.c:294
+>   Write of size 32 at addr ffff88802aa172c0 by task syz-executor413/5295
 > 
-> We're seeing this problem with allmodconfig on arm64 and GCC 8 (this
-> one observed on 6.0.12-rc3):
+> For bpf_prog_test_run_skb(), which uses a kmalloc()ed buffer passed to
+> build_skb().
 > 
-> -----8<----------8<----------8<-----
-> make --silent --keep-going --jobs=8
-> O=/home/tuxbuild/.cache/tuxmake/builds/2/build
-> CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- ARCH=arm64
-> CROSS_COMPILE=aarch64-linux-gnu- 'CC=sccache aarch64-linux-gnu-gcc'
-> 'HOSTCC=sccache gcc'
-> /builds/linux/drivers/misc/lkdtm/cfi.c:67:1: error: pragma or
-> attribute 'target("branch-protection=none")' is not valid
+> When build_skb() is passed a frag_size of 0, it means the buffer came
+> from kmalloc. In these cases, ksize() is used to find its actual size,
+> but since the allocation may not have been made to that size, actually
+> perform the krealloc() call so that all the associated buffer size
+> checking will be correctly notified (and use the "new" pointer so that
+> compiler hinting works correctly). Split this logic out into a new
+> interface, slab_build_skb(), but leave the original 0 checking for now
+> to catch any stragglers.
+> 
+> Reported-by: syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com
+> Link: https://groups.google.com/g/syzkaller-bugs/c/UnIKxTtU5-0/m/-wbXinkgAQAJ
+> Fixes: 38931d8989b5 ("mm: Make ksize() a reporting-only function")
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Pavel Begunkov <asml.silence@gmail.com>
+> Cc: pepsipu <soopthegoop@gmail.com>
+> Cc: syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: kasan-dev <kasan-dev@googlegroups.com>
+> Cc: Andrii Nakryiko <andrii@kernel.org>
+> Cc: ast@kernel.org
+> Cc: bpf <bpf@vger.kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: Hao Luo <haoluo@google.com>
+> Cc: Jesper Dangaard Brouer <hawk@kernel.org>
+> Cc: John Fastabend <john.fastabend@gmail.com>
+> Cc: jolsa@kernel.org
+> Cc: KP Singh <kpsingh@kernel.org>
+> Cc: martin.lau@linux.dev
+> Cc: Stanislav Fomichev <sdf@google.com>
+> Cc: song@kernel.org
+> Cc: Yonghong Song <yhs@fb.com>
+> Cc: netdev@vger.kernel.org
+> Cc: LKML <linux-kernel@vger.kernel.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> v3:
+> - make sure "resized" is passed back so compiler hints survive
+> - update kerndoc (kuba)
+> v2: https://lore.kernel.org/lkml/20221208000209.gonna.368-kees@kernel.org
+> v1: https://lore.kernel.org/netdev/20221206231659.never.929-kees@kernel.org/
+> ---
+>  drivers/net/ethernet/broadcom/bnx2.c      |  2 +-
+>  drivers/net/ethernet/qlogic/qed/qed_ll2.c |  2 +-
+>  include/linux/skbuff.h                    |  1 +
+>  net/bpf/test_run.c                        |  2 +-
+>  net/core/skbuff.c                         | 70 ++++++++++++++++++++---
+>  5 files changed, 66 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/broadcom/bnx2.c b/drivers/net/ethernet/broadcom/bnx2.c
+> index fec57f1982c8..b2230a4a2086 100644
+> --- a/drivers/net/ethernet/broadcom/bnx2.c
+> +++ b/drivers/net/ethernet/broadcom/bnx2.c
+> @@ -3045,7 +3045,7 @@ bnx2_rx_skb(struct bnx2 *bp, struct bnx2_rx_ring_info *rxr, u8 *data,
+>  
+>  	dma_unmap_single(&bp->pdev->dev, dma_addr, bp->rx_buf_use_size,
+>  			 DMA_FROM_DEVICE);
+> -	skb = build_skb(data, 0);
+> +	skb = slab_build_skb(data);
+>  	if (!skb) {
+>  		kfree(data);
+>  		goto error;
+> diff --git a/drivers/net/ethernet/qlogic/qed/qed_ll2.c b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
+> index ed274f033626..e5116a86cfbc 100644
+> --- a/drivers/net/ethernet/qlogic/qed/qed_ll2.c
+> +++ b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
+> @@ -200,7 +200,7 @@ static void qed_ll2b_complete_rx_packet(void *cxt,
+>  	dma_unmap_single(&cdev->pdev->dev, buffer->phys_addr,
+>  			 cdev->ll2->rx_size, DMA_FROM_DEVICE);
+>  
+> -	skb = build_skb(buffer->data, 0);
+> +	skb = slab_build_skb(buffer->data);
+>  	if (!skb) {
+>  		DP_INFO(cdev, "Failed to build SKB\n");
+>  		kfree(buffer->data);
+> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+> index 7be5bb4c94b6..0b391b635430 100644
+> --- a/include/linux/skbuff.h
+> +++ b/include/linux/skbuff.h
+> @@ -1253,6 +1253,7 @@ struct sk_buff *build_skb_around(struct sk_buff *skb,
+>  void skb_attempt_defer_free(struct sk_buff *skb);
+>  
+>  struct sk_buff *napi_build_skb(void *data, unsigned int frag_size);
+> +struct sk_buff *slab_build_skb(void *data);
+>  
+>  /**
+>   * alloc_skb - allocate a network buffer
+> diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
+> index 13d578ce2a09..611b1f4082cf 100644
+> --- a/net/bpf/test_run.c
+> +++ b/net/bpf/test_run.c
+> @@ -1130,7 +1130,7 @@ int bpf_prog_test_run_skb(struct bpf_prog *prog, const union bpf_attr *kattr,
+>  	}
+>  	sock_init_data(NULL, sk);
+>  
+> -	skb = build_skb(data, 0);
+> +	skb = slab_build_skb(data);
+>  	if (!skb) {
+>  		kfree(data);
+>  		kfree(ctx);
+> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+> index 1d9719e72f9d..ae5a6f7db37b 100644
+> --- a/net/core/skbuff.c
+> +++ b/net/core/skbuff.c
+> @@ -269,12 +269,10 @@ static struct sk_buff *napi_skb_cache_get(void)
+>  	return skb;
+>  }
+>  
+> -/* Caller must provide SKB that is memset cleared */
+> -static void __build_skb_around(struct sk_buff *skb, void *data,
+> -			       unsigned int frag_size)
+> +static inline void __finalize_skb_around(struct sk_buff *skb, void *data,
+> +					 unsigned int size)
 >  {
->  ^
+>  	struct skb_shared_info *shinfo;
+> -	unsigned int size = frag_size ? : ksize(data);
+>  
+>  	size -= SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+>  
+> @@ -296,15 +294,71 @@ static void __build_skb_around(struct sk_buff *skb, void *data,
+>  	skb_set_kcov_handle(skb, kcov_common_handle());
+>  }
+>  
+> +static inline void *__slab_build_skb(struct sk_buff *skb, void *data,
+> +				     unsigned int *size)
+> +{
+> +	void *resized;
+> +
+> +	/* Must find the allocation size (and grow it to match). */
+> +	*size = ksize(data);
+> +	/* krealloc() will immediately return "data" when
+> +	 * "ksize(data)" is requested: it is the existing upper
+> +	 * bounds. As a result, GFP_ATOMIC will be ignored. Note
+> +	 * that this "new" pointer needs to be passed back to the
+> +	 * caller for use so the __alloc_size hinting will be
+> +	 * tracked correctly.
+> +	 */
+> +	resized = krealloc(data, *size, GFP_ATOMIC);
 
-Uuuh... how is CONFIG_ARM64_PTR_AUTH_KERNEL getting set if the compiler
-can't support the 'target("branch-protection=none")' attribute?
+Hmm, I just realized, this trick will probably break the new kmalloc size
+tracking from Feng Tang (CC'd)? We need to make krealloc() update the stored
+size, right? And even worse if slab_debug redzoning is enabled and after
+commit 946fa0dbf2d8 ("mm/slub: extend redzone check to extra allocated
+kmalloc space than requested") where the lack of update will result in
+redzone check failures.
 
--- 
-Kees Cook
+> +	WARN_ON_ONCE(resized != data);
+> +	return resized;
+> +}
+> +
+> +/* build_skb() variant which can operate on slab buffers.
+> + * Note that this should be used sparingly as slab buffers
+> + * cannot be combined efficiently by GRO!
+> + */
+> +struct sk_buff *slab_build_skb(void *data)
+> +{
+> +	struct sk_buff *skb;
+> +	unsigned int size;
+> +
+> +	skb = kmem_cache_alloc(skbuff_head_cache, GFP_ATOMIC);
+> +	if (unlikely(!skb))
+> +		return NULL;
+> +
+> +	memset(skb, 0, offsetof(struct sk_buff, tail));
+> +	data = __slab_build_skb(skb, data, &size);
+> +	__finalize_skb_around(skb, data, size);
+> +
+> +	return skb;
+> +}
+> +EXPORT_SYMBOL(slab_build_skb);
+> +
+> +/* Caller must provide SKB that is memset cleared */
+> +static void __build_skb_around(struct sk_buff *skb, void *data,
+> +			       unsigned int frag_size)
+> +{
+> +	unsigned int size = frag_size;
+> +
+> +	/* frag_size == 0 is considered deprecated now. Callers
+> +	 * using slab buffer should use slab_build_skb() instead.
+> +	 */
+> +	if (WARN_ONCE(size == 0, "Use slab_build_skb() instead"))
+> +		data = __slab_build_skb(skb, data, &size);
+> +	__finalize_skb_around(skb, data, size);
+> +}
+> +
+>  /**
+>   * __build_skb - build a network buffer
+>   * @data: data buffer provided by caller
+> - * @frag_size: size of data, or 0 if head was kmalloced
+> + * @frag_size: size of data (must not be 0)
+>   *
+>   * Allocate a new &sk_buff. Caller provides space holding head and
+> - * skb_shared_info. @data must have been allocated by kmalloc() only if
+> - * @frag_size is 0, otherwise data should come from the page allocator
+> - *  or vmalloc()
+> + * skb_shared_info. @data must have been allocated from the page
+> + * allocator or vmalloc(). (A @frag_size of 0 to indicate a kmalloc()
+> + * allocation is deprecated, and callers should use slab_build_skb()
+> + * instead.)
+>   * The return is the new skb buffer.
+>   * On a failure the return is %NULL, and @data is not freed.
+>   * Notes :
+
