@@ -2,406 +2,272 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F49CC6371D
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Dec 2022 18:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64768C4708D
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Dec 2022 00:02:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229838AbiLGSbs (ORCPT
+        id S230179AbiLHACT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 7 Dec 2022 13:31:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43050 "EHLO
+        Wed, 7 Dec 2022 19:02:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229759AbiLGSbf (ORCPT
+        with ESMTP id S229814AbiLHACR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 7 Dec 2022 13:31:35 -0500
-Received: from mail.z3ntu.xyz (mail.z3ntu.xyz [128.199.32.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D65BF6E57A;
-        Wed,  7 Dec 2022 10:31:34 -0800 (PST)
-Received: from [192.168.178.23] (unknown [62.108.10.64])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 992B2CA474;
-        Wed,  7 Dec 2022 18:31:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1670437862; bh=S3rdsnAd+EN2Xrpqco5hkvF1iY6KBSEemrYqRZ09QIY=;
-        h=From:Date:Subject:References:In-Reply-To:To:Cc;
-        b=NitHY5mmigiSLN0KzddnI4U8I1P+e/GPwsuiYMVvUk3fgQHv2oAU5qaTWWRJhGw62
-         kID9XpLQGuOI4EcYDoSYj5TJzs++KjAhX7DD8UpPFOlUBWtH597lonc0VPUAzLJm36
-         yD1qDaCtAWZ5WiyVqAV84LYQe0TpUr1dL1VWaxLI=
-From:   Luca Weiss <luca@z3ntu.xyz>
-Date:   Wed, 07 Dec 2022 19:30:46 +0100
-Subject: [PATCH v3 9/9] arm64: dts: qcom: sdm632: Add device tree for Motorola G7
- Power
+        Wed, 7 Dec 2022 19:02:17 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D35B8BD38
+        for <linux-hardening@vger.kernel.org>; Wed,  7 Dec 2022 16:02:16 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id z8-20020a17090abd8800b00219ed30ce47so2964852pjr.3
+        for <linux-hardening@vger.kernel.org>; Wed, 07 Dec 2022 16:02:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dk1yAoyQU+RLCYzQPhP3++n5k0AlqyyhOlwfArVtCN8=;
+        b=CfAuGzp9X4iBKtpuQ05m/nLzqNjWLddivhcjBXfwQpOFO0jBdxJx2iBZedSmSZhQkq
+         xUTzYrTLLf23grDjO0hf/+R8GsE4OfFz5vPRSFlyvyiRbq7JAN5B0OhF2O1LGbvKXpc2
+         dkD25p/EY7gml9MOqEmL3vlNPDCwS8NjoJx1w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dk1yAoyQU+RLCYzQPhP3++n5k0AlqyyhOlwfArVtCN8=;
+        b=Pp2JjbKKw4ZO3tfGZfBOpkIx9/akNNk/UYtMOoHSQAGL1sxBh9ytrx7mnZ+/bFkAwK
+         H+QbwIqeblXPl9AErnUlIZr+xQ8HkFnq3fbA+deqp1G9KYgFeh8Q2UaI4TX3Ua7eyjwc
+         wFGvPlnoLc89qJjoTi57nesUN8IK4fwSyT1tcSb3QwrOvcozGwugwNtmg5NjVZOKkMng
+         Vrn+7iW+FVwbL/VDnAh4biLGpkXxV7jHxy3x2eakbVD6t37spHzz6g1bYGvQDadDEwjf
+         JsEQA5+rk27z1kOwgtLf8JPSFfJ2sd9q/54tFzoYE8rPd1CjNuInbTaZbfaiYAWf3jfn
+         I1EQ==
+X-Gm-Message-State: ANoB5pnawhvKxyPkPoGv86P68/+5/9lCiGuKED8E+sOJ+N5WZUvuB2xB
+        mBn0FPDdyAKyhq9yyHKZWCMoAA==
+X-Google-Smtp-Source: AA0mqf4HIgFTUJHMRF3JILeCrjw7S70fUUJWDbaPjwiHDjSbqcJpUgdTYeHaVR0Jfy9Z0A83nK/xfA==
+X-Received: by 2002:a17:90b:711:b0:210:9858:2b2c with SMTP id s17-20020a17090b071100b0021098582b2cmr102785702pjz.191.1670457735590;
+        Wed, 07 Dec 2022 16:02:15 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s30-20020a63925e000000b00477def759cbsm5933519pgn.58.2022.12.07.16.02.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Dec 2022 16:02:15 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        pepsipu <soopthegoop@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Andrii Nakryiko <andrii@kernel.org>, ast@kernel.org,
+        bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Hao Luo <haoluo@google.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>, jolsa@kernel.org,
+        KP Singh <kpsingh@kernel.org>, martin.lau@linux.dev,
+        Stanislav Fomichev <sdf@google.com>, song@kernel.org,
+        Yonghong Song <yhs@fb.com>, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rasesh Mody <rmody@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Manish Chopra <manishc@marvell.com>,
+        Menglong Dong <imagedong@tencent.com>,
+        David Ahern <dsahern@kernel.org>,
+        Richard Gobert <richardbgobert@gmail.com>,
+        David Rientjes <rientjes@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        GR-Linux-NIC-Dev@marvell.com, linux-hardening@vger.kernel.org
+Subject: [PATCH net-next v2] skbuff: Introduce slab_build_skb()
+Date:   Wed,  7 Dec 2022 16:02:13 -0800
+Message-Id: <20221208000209.gonna.368-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6532; h=from:subject:message-id; bh=I5zpjdf6giyPTGWK3waT0b1aZ9hEwojgcygujraz8dc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjkSmEkOgkOZcWwciYH5GLWV3obftsCrvUcG4e847b Bi5nkbGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY5EphAAKCRCJcvTf3G3AJrfZD/ 9J2X/Gw9ncWI4dk8wA/WdzHwO05CFaHzRpUpXr+GMG8xWhch5i+SxqJDXVTzXb0YA7TXlpkO9D+otk 5R29AmizYM7EXsl1yZeyMbGQ5hpAufcuX82qAOIodz/lW3bzrzs21vRcUZLrwoV/Fyw0pxzHY5Pf5h ph+jxiId3DghZjSkowXYtsPGXEcnWxRVtUdTcXIwi4Ry8XvyJpqk0jOBV7ZnM8kEJVJ6pUgNjdt61c Gdhjag0bgthVFgM2mpz/QmavD+S+3QlwLB9a3DoVWUJOKJTSQrHNNzbygYMoN5RqmnPz+OcqVneI4E +XcJ6Dh3/v1qbD+rVNET9u/b3bPLy/x06rWB8dgrKn0P/mb601uzlKCKhmm1TG24z1Z9h8w366AVA7 9dU9EwQINOJTDi6NUYcnGa3GApoKuVGCZ03C9xewFJ6BfCrj5qjwQT7CGTH5Vug9puDgl7rBqlIskS WiKGOdtd2hO+BdD3ggipo0i6+bmO07sYVTvcUDv/6GsZZyUy8jET1YpxQS6KU6pKyabXunytY0XNDN o2/3jZeX+Q1xeLy+ge8aeZvS6ypBvKHk51BiHlDd+HM/Ea0wvyjuZr6d5xnNwg9UqO3Po4lIYkKctJ kXJR6WE6EASTgDFD1Xdp19J2MB65NyB2AMFRRTo2I8Nk6cmA+N6Z+5R+M5Sg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-Message-Id: <20221207-msm8953-6-1-next-dtbs-v3-v3-9-a64b3b0af0eb@z3ntu.xyz>
-References: <20221207-msm8953-6-1-next-dtbs-v3-v3-0-a64b3b0af0eb@z3ntu.xyz>
-In-Reply-To: <20221207-msm8953-6-1-next-dtbs-v3-v3-0-a64b3b0af0eb@z3ntu.xyz>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Tony Luck <tony.luck@intel.com>
-Cc:     Gabriela David <ultracoolguy@disroot.org>,
-        Eugene Lepshy <fekz115@gmail.com>,
-        linux-hardening@vger.kernel.org,
-        Anton Bambura <jenneron@protonmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Adam Skladowski <a39.skl@gmail.com>,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org, phone-devel@vger.kernel.org,
-        Danila Tikhonov <JIaxyga@protonmail.com>,
-        Gianluca Boiano <morf3089@gmail.com>,
-        Sireesh Kodali <sireeshkodali1@gmail.com>,
-        Vladimir Lypak <vladimir.lypak@gmail.com>,
-        Julian Braha <julianbraha@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Alejandro Tafalla <atafalla@dnyon.com>
-X-Mailer: b4 0.10.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7685; i=luca@z3ntu.xyz;
- h=from:subject:message-id; bh=9S+RsrnSlN1BSxEP9zi4JIArpOHnf7x58PHkAZu4K3Q=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBjkNvhL9fP9Ci+H+fvhrD9iSucX4ZnGxU5W4r4UJf1
- j3su3nmJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCY5Db4QAKCRBy2EO4nU3XVua6D/
- 9b6T+4I5jNQ1mqGef+/ce+CAx10lgbDZWvaulXM8gPe/vDVcWNX3xShsfn1BZVGFNnUmJTh+LHG1CU
- megwbI7ioJrxizo1PVSuSH89NEwHVrLlO0laLzr6XFEidUVVhI8mHN4XLgNer5jyCB7X71x/px6rmi
- MyuilswLTL061Fn90DBFBmv+mnE+E5wZC04FKirXKIYSYjTp8unJb5eSf4PT3d/Gs+EW3peEIriw3j
- 1Q5hJvAo4XNVGwWpFgsAtFNe0+sCvLVVT8LwRyJRvsjQoA8oXNlGPI5MkaM2barcRoOAQ+QOPGfFlk
- Aawm2dj5nteV3b1RB+nP1awti7BFZsM1za8rByzfO+l1fPCjBhLcWn7/pHLVYqh53H3Hq+KPay+T60
- pf7jpKfQ1Y8Yp/geS7dU+QPOMl7j+4fmU8TtA67A+BMabdTKwn4IoKDQOnOhDvqIKshzdphUxP9c6O
- 8FfHn8OjTveGG7o3q0palzkYySHPeAICm7QjE2WWXJp9Ier0gvuW1jP2Vq587/u1/QmzdgxjqKV5RH
- sfH517Wef+BoxEDof3i5UIN0sT5OaBeZyEQ56z/lQMobRwqo1dZWNwsBgcLNVoLJOSOlGbxZCJ5wX6
- sj3K/g1ynCN6VOjuAJV+uC66jwqDd30TfNZmPVWLeaH6X5JwhOUTK0b3LwXg==
-X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
- fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Gabriela David <ultracoolguy@disroot.org>
+syzkaller reported:
 
-Add device tree for the Motorola G7 Power (ocean) smartphone. This
-device is based on Snapdragon 632 (sdm632) SoC which is a variant of
-MSM8953.
+  BUG: KASAN: slab-out-of-bounds in __build_skb_around+0x235/0x340 net/core/skbuff.c:294
+  Write of size 32 at addr ffff88802aa172c0 by task syz-executor413/5295
 
-Signed-off-by: Gabriela David <ultracoolguy@disroot.org>
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+For bpf_prog_test_run_skb(), which uses a kmalloc()ed buffer passed to
+build_skb().
+
+When build_skb() is passed a frag_size of 0, it means the buffer came
+from kmalloc. In these cases, ksize() is used to find its actual size,
+but since the allocation may not have been made to that size, actually
+perform the krealloc() call so that all the associated buffer size
+checking will be correctly notified. Split this logic out into a new
+interface, slab_build_skb(), but leave the original 0 checking for now
+to catch any stragglers.
+
+Reported-by: syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com
+Link: https://groups.google.com/g/syzkaller-bugs/c/UnIKxTtU5-0/m/-wbXinkgAQAJ
+Fixes: 38931d8989b5 ("mm: Make ksize() a reporting-only function")
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Pavel Begunkov <asml.silence@gmail.com>
+Cc: pepsipu <soopthegoop@gmail.com>
+Cc: syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: kasan-dev <kasan-dev@googlegroups.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Cc: ast@kernel.org
+Cc: bpf <bpf@vger.kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Hao Luo <haoluo@google.com>
+Cc: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: jolsa@kernel.org
+Cc: KP Singh <kpsingh@kernel.org>
+Cc: martin.lau@linux.dev
+Cc: Stanislav Fomichev <sdf@google.com>
+Cc: song@kernel.org
+Cc: Yonghong Song <yhs@fb.com>
+Cc: netdev@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm64/boot/dts/qcom/Makefile                  |   1 +
- arch/arm64/boot/dts/qcom/sdm632-motorola-ocean.dts | 291 +++++++++++++++++++++
- 2 files changed, 292 insertions(+)
+Is this what you had in mind for this kind of change?
+v2: introduce separate helper (kuba)
+v1: https://lore.kernel.org/netdev/20221206231659.never.929-kees@kernel.org/
+---
+ drivers/net/ethernet/broadcom/bnx2.c      |  2 +-
+ drivers/net/ethernet/qlogic/qed/qed_ll2.c |  2 +-
+ include/linux/skbuff.h                    |  1 +
+ net/bpf/test_run.c                        |  2 +-
+ net/core/skbuff.c                         | 52 +++++++++++++++++++++--
+ 5 files changed, 52 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 995973d3960a..21fd4aae31bc 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -138,6 +138,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-discovery.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-pioneer.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-voyager.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm632-fairphone-fp3.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sdm632-motorola-ocean.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm636-sony-xperia-ganges-mermaid.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm660-xiaomi-lavender.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm670-google-sargo.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sdm632-motorola-ocean.dts b/arch/arm64/boot/dts/qcom/sdm632-motorola-ocean.dts
-new file mode 100644
-index 000000000000..c82d6e628d2c
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sdm632-motorola-ocean.dts
-@@ -0,0 +1,291 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2022, Gabriela David
-+ */
-+/dts-v1/;
+diff --git a/drivers/net/ethernet/broadcom/bnx2.c b/drivers/net/ethernet/broadcom/bnx2.c
+index fec57f1982c8..b2230a4a2086 100644
+--- a/drivers/net/ethernet/broadcom/bnx2.c
++++ b/drivers/net/ethernet/broadcom/bnx2.c
+@@ -3045,7 +3045,7 @@ bnx2_rx_skb(struct bnx2 *bp, struct bnx2_rx_ring_info *rxr, u8 *data,
+ 
+ 	dma_unmap_single(&bp->pdev->dev, dma_addr, bp->rx_buf_use_size,
+ 			 DMA_FROM_DEVICE);
+-	skb = build_skb(data, 0);
++	skb = slab_build_skb(data);
+ 	if (!skb) {
+ 		kfree(data);
+ 		goto error;
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_ll2.c b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
+index ed274f033626..e5116a86cfbc 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_ll2.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
+@@ -200,7 +200,7 @@ static void qed_ll2b_complete_rx_packet(void *cxt,
+ 	dma_unmap_single(&cdev->pdev->dev, buffer->phys_addr,
+ 			 cdev->ll2->rx_size, DMA_FROM_DEVICE);
+ 
+-	skb = build_skb(buffer->data, 0);
++	skb = slab_build_skb(buffer->data);
+ 	if (!skb) {
+ 		DP_INFO(cdev, "Failed to build SKB\n");
+ 		kfree(buffer->data);
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index 7be5bb4c94b6..0b391b635430 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -1253,6 +1253,7 @@ struct sk_buff *build_skb_around(struct sk_buff *skb,
+ void skb_attempt_defer_free(struct sk_buff *skb);
+ 
+ struct sk_buff *napi_build_skb(void *data, unsigned int frag_size);
++struct sk_buff *slab_build_skb(void *data);
+ 
+ /**
+  * alloc_skb - allocate a network buffer
+diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
+index 13d578ce2a09..611b1f4082cf 100644
+--- a/net/bpf/test_run.c
++++ b/net/bpf/test_run.c
+@@ -1130,7 +1130,7 @@ int bpf_prog_test_run_skb(struct bpf_prog *prog, const union bpf_attr *kattr,
+ 	}
+ 	sock_init_data(NULL, sk);
+ 
+-	skb = build_skb(data, 0);
++	skb = slab_build_skb(data);
+ 	if (!skb) {
+ 		kfree(data);
+ 		kfree(ctx);
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 1d9719e72f9d..2bff6af6a777 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -269,12 +269,10 @@ static struct sk_buff *napi_skb_cache_get(void)
+ 	return skb;
+ }
+ 
+-/* Caller must provide SKB that is memset cleared */
+-static void __build_skb_around(struct sk_buff *skb, void *data,
+-			       unsigned int frag_size)
++static inline void __finalize_skb_around(struct sk_buff *skb, void *data,
++					 unsigned int size)
+ {
+ 	struct skb_shared_info *shinfo;
+-	unsigned int size = frag_size ? : ksize(data);
+ 
+ 	size -= SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+ 
+@@ -296,6 +294,52 @@ static void __build_skb_around(struct sk_buff *skb, void *data,
+ 	skb_set_kcov_handle(skb, kcov_common_handle());
+ }
+ 
++static inline void __slab_build_skb(struct sk_buff *skb, void *data,
++				    unsigned int *size)
++{
++	void *resized;
 +
-+#include "sdm632.dtsi"
-+#include "pm8953.dtsi"
-+#include <dt-bindings/leds/common.h>
++	*size = ksize(data);
++	/* krealloc() will immediate return "data" when
++	 * "ksize(data)" is requested: it is the existing upper
++	 * bounds. As a result, GFP_ATOMIC will be ignored.
++	 */
++	resized = krealloc(data, *size, GFP_ATOMIC);
++	WARN_ON_ONCE(resized != data);
++}
 +
-+/delete-node/ &cont_splash_mem;
-+/delete-node/ &qseecom_mem;
++struct sk_buff *slab_build_skb(void *data)
++{
++	struct sk_buff *skb;
++	unsigned int size;
 +
-+/ {
-+	model = "Motorola G7 Power";
-+	compatible = "motorola,ocean", "qcom,sdm632";
-+	chassis-type = "handset";
-+	qcom,msm-id = <349 0>;
-+	qcom,board-id = <0x141 0xc100>;
-+	qcom,pmic-id = <0x10016 0x25 0x00 0x00>;
++	skb = kmem_cache_alloc(skbuff_head_cache, GFP_ATOMIC);
++	if (unlikely(!skb))
++		return NULL;
 +
-+	backlight: backlight {
-+		compatible = "led-backlight";
-+		leds = <&led>;
-+	};
++	memset(skb, 0, offsetof(struct sk_buff, tail));
++	__slab_build_skb(skb, data, &size);
++	__finalize_skb_around(skb, data, size);
 +
-+	chosen {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
++	return skb;
++}
++EXPORT_SYMBOL(slab_build_skb);
 +
-+		framebuffer@90001000 {
-+			compatible = "simple-framebuffer";
-+			reg = <0 0x90001000 0 (720 * 1520 * 3)>;
++/* Caller must provide SKB that is memset cleared */
++static void __build_skb_around(struct sk_buff *skb, void *data,
++			       unsigned int frag_size)
++{
++	unsigned int size = frag_size;
 +
-+			width = <720>;
-+			height = <1520>;
-+			stride = <(720 * 3)>;
-+			format = "r8g8b8";
++	/* When frag_size == 0, the buffer came from kmalloc, so we
++	 * must find its true allocation size (and grow it to match).
++	 */
++	if (WARN_ONCE(size == 0, "Use slab_build_skb() instead"))
++		__slab_build_skb(skb, data, &size);
 +
-+			power-domains = <&gcc MDSS_GDSC>;
++	__finalize_skb_around(skb, data, size);
++}
 +
-+			clocks = <&gcc GCC_MDSS_AHB_CLK>,
-+				 <&gcc GCC_MDSS_AXI_CLK>,
-+				 <&gcc GCC_MDSS_VSYNC_CLK>,
-+				 <&gcc GCC_MDSS_MDP_CLK>,
-+				 <&gcc GCC_MDSS_BYTE0_CLK>,
-+				 <&gcc GCC_MDSS_PCLK0_CLK>,
-+				 <&gcc GCC_MDSS_ESC0_CLK>;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpio_key_default>;
-+
-+		key-volume-up {
-+			label = "Volume Up";
-+			gpios = <&tlmm 85 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEUP>;
-+		};
-+	};
-+
-+	reserved-memory {
-+		qseecom_mem: qseecom@84300000 {
-+			reg = <0x0 0x84300000 0x0 0x2000000>;
-+			no-map;
-+		};
-+
-+		cont_splash_mem: cont-splash@90001000 {
-+			reg = <0x0 0x90001000 0x0 (720 * 1520 * 3)>;
-+			no-map;
-+		};
-+
-+		reserved@eefa1800 {
-+			reg = <0x00 0xeefa1800 0x00 0x5e800>;
-+			no-map;
-+		};
-+
-+		ramoops@ef000000 {
-+			compatible = "ramoops";
-+			reg = <0x0 0xef000000 0x0 0xbf800>;
-+			console-size = <0x40000>;
-+			pmsg-size = <0x40000>;
-+			record-size = <0x3f800>;
-+		};
-+	};
-+
-+	vph_pwr: vph-pwr-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vph_pwr";
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&hsusb_phy {
-+	vdd-supply = <&pm8953_l3>;
-+	vdda-pll-supply = <&pm8953_l7>;
-+	vdda-phy-dpdm-supply = <&pm8953_l13>;
-+
-+	status = "okay";
-+};
-+
-+&i2c_3 {
-+	status = "okay";
-+
-+	touchscreen@41 {
-+		compatible = "ilitek,ili2117";
-+		reg = <0x41>;
-+
-+		interrupt-parent = <&tlmm>;
-+		interrupts = <65 IRQ_TYPE_EDGE_FALLING>;
-+
-+		touchscreen-inverted-x;
-+	};
-+};
-+
-+&i2c_5 {
-+	status = "okay";
-+
-+	led-controller@36 {
-+		compatible = "ti,lm3697";
-+		reg = <0x36>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		led: led@1 {
-+			reg = <1>;
-+			default-trigger = "backlight";
-+			function = LED_FUNCTION_BACKLIGHT;
-+			led-sources = <0 1 2>;
-+		};
-+	};
-+};
-+
-+&pm8953_resin {
-+	linux,code = <KEY_VOLUMEDOWN>;
-+	status = "okay";
-+};
-+
-+&rpm_requests {
-+	regulators {
-+		compatible = "qcom,rpm-pm8953-regulators";
-+
-+		vdd_l1-supply = <&pm8953_s3>;
-+		vdd_l2_l3-supply = <&pm8953_s3>;
-+		vdd_l4_l5_l6_l7_l16_l19-supply = <&pm8953_s4>;
-+		vdd_l8_l11_l12_l13_l14_l15-supply = <&vph_pwr>;
-+		vdd_l9_l10_l17_l18_l22-supply = <&vph_pwr>;
-+
-+		pm8953_s3: s3 {
-+			regulator-min-microvolt = <984000>;
-+			regulator-max-microvolt = <1240000>;
-+		};
-+
-+		pm8953_s4: s4 {
-+			regulator-min-microvolt = <1036000>;
-+			regulator-max-microvolt = <2040000>;
-+		};
-+
-+		pm8953_l1: l1 {
-+			regulator-min-microvolt = <975000>;
-+			regulator-max-microvolt = <1050000>;
-+		};
-+
-+		pm8953_l2: l2 {
-+			regulator-min-microvolt = <975000>;
-+			regulator-max-microvolt = <1175000>;
-+		};
-+
-+		pm8953_l3: l3 {
-+			regulator-min-microvolt = <925000>;
-+			regulator-max-microvolt = <925000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		pm8953_l5: l5 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8953_l6: l6 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+
-+		pm8953_l7: l7 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1900000>;
-+		};
-+
-+		pm8953_l8: l8 {
-+			regulator-min-microvolt = <2900000>;
-+			regulator-max-microvolt = <2900000>;
-+		};
-+
-+		pm8953_l9: l9 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		pm8953_l10: l10 {
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <3000000>;
-+		};
-+
-+		pm8953_l11: l11 {
-+			regulator-min-microvolt = <2950000>;
-+			regulator-max-microvolt = <2950000>;
-+		};
-+
-+		pm8953_l12: l12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2950000>;
-+		};
-+
-+		pm8953_l13: l13 {
-+			regulator-min-microvolt = <3125000>;
-+			regulator-max-microvolt = <3125000>;
-+		};
-+
-+		pm8953_l16: l16 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8953_l17: l17 {
-+			regulator-min-microvolt = <2850000>;
-+			regulator-max-microvolt = <2850000>;
-+		};
-+
-+		pm8953_l18: l18 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2700000>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+
-+		pm8953_l19: l19 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1350000>;
-+		};
-+
-+		pm8953_l22: l22 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+
-+		pm8953_l23: l23 {
-+			regulator-min-microvolt = <975000>;
-+			regulator-max-microvolt = <1225000>;
-+		};
-+	};
-+};
-+
-+&sdhc_1 {
-+	vmmc-supply = <&pm8953_l8>;
-+	vqmmc-supply = <&pm8953_l5>;
-+
-+	status = "okay";
-+};
-+
-+&sdhc_2 {
-+	vmmc-supply = <&pm8953_l11>;
-+	vqmmc-supply = <&pm8953_l12>;
-+
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
-+	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
-+
-+	status = "okay";
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <96 4>;
-+};
-+
-+&usb3 {
-+	status = "okay";
-+};
-+
-+&usb3_dwc3 {
-+	dr_mode = "peripheral";
-+};
-
+ /**
+  * __build_skb - build a network buffer
+  * @data: data buffer provided by caller
 -- 
-b4 0.10.1
+2.34.1
+
