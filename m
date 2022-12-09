@@ -2,174 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55274C4332F
-	for <linux-hardening@archiver.kernel.org>; Fri,  9 Dec 2022 19:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31880C4708D
+	for <linux-hardening@archiver.kernel.org>; Fri,  9 Dec 2022 19:57:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230016AbiLIT5w (ORCPT
+        id S229971AbiLIT5y (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 9 Dec 2022 14:57:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46566 "EHLO
+        Fri, 9 Dec 2022 14:57:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229951AbiLIT5u (ORCPT
+        with ESMTP id S229985AbiLIT5v (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 9 Dec 2022 14:57:50 -0500
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1FB1FAC3
-        for <linux-hardening@vger.kernel.org>; Fri,  9 Dec 2022 11:57:48 -0800 (PST)
-Received: by mail-pl1-x633.google.com with SMTP id w23so5958127ply.12
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Dec 2022 11:57:48 -0800 (PST)
+        Fri, 9 Dec 2022 14:57:51 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 932171115E
+        for <linux-hardening@vger.kernel.org>; Fri,  9 Dec 2022 11:57:49 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id v13-20020a17090a6b0d00b00219c3be9830so6035063pjj.4
+        for <linux-hardening@vger.kernel.org>; Fri, 09 Dec 2022 11:57:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AWRQXWMGLPgHepp4vFWTTWBscI/fkP3Si7wPX1GCGCk=;
-        b=euqFpG+4uBmvDf843vzZWop+YwoQXBlPf7xZAvfP7CUKN0IBX5xhIxbaRt4orfqkPh
-         y9ggtZJHS/QIOVAQA1qopga++DFumRKRURcPC5xzeH8wrgIeCUVpsio5L4MIpTubhkj3
-         teI5hu3BHh2BaubBAhfnhNs85u/g5vJNaGsXw=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=N/HWN1rYxC7zqqh9NLR282rgIMZMEdI98wd3PXfAsK4=;
+        b=iLHbQTaPpfYAY3PAixj5CAwnoYNb9cKPfdrBeByC8OoQn3iAm/Ul6GXUp/oSKIZb+m
+         TJKdvHSfQ6Ct4eQjfXAqaymo7N/K761ddfJ0tKKJkShmU6T9zuZN6/1ywTiI5qYCIk1R
+         DhfEq7F1XWlBu+RYvITIdfg8ocwm4OGGVQ4zg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AWRQXWMGLPgHepp4vFWTTWBscI/fkP3Si7wPX1GCGCk=;
-        b=rizEKkrSjXO8WfXy49kOIl5qNTF5XFIT2PvQkjHt0kzNRVG1z9dKbPtz7MaOC3xYlk
-         JoeKJdX3IfrlpqLi7XkmsHcHJ9Tdi0m4hi02v/C+BgggSsZrVpPwVNs+NAncEbsA0rKO
-         VNZGOqh6bD2KWRFcLMST8OKY1F/kYF3gVSEJeCpLRrCRwTpbtUPmfPRzyfslADq2F5/g
-         kX1sKqV7VFT/6esUiJEjHclcT2Wxlg9pJ7m/NAKbb6yaH1vPVQevEh5AX64DtqFQfwM9
-         4J6vYItQ74QwdsaqDh5rSS4Nicaj0b6ku31Bt5DUQe+1wtTdkfGjWb3uYWEW5memaxJi
-         uK8A==
-X-Gm-Message-State: ANoB5plEJhbxzNqCeUBllWmGJzqJwDstT3wyWOAUngnZSOsT1zAbmCc2
-        3ciXDLWUgT30YTJraQnYAhTLkQ==
-X-Google-Smtp-Source: AA0mqf4xreSs2kzJGdPh7ZzAenPhd/07+xeZE9HjNIvQ4yzD3TI933zWiQ1lKTSzRaY/8XsSLATOFg==
-X-Received: by 2002:a17:902:7243:b0:18c:cde:fddb with SMTP id c3-20020a170902724300b0018c0cdefddbmr5513700pll.65.1670615868075;
-        Fri, 09 Dec 2022 11:57:48 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N/HWN1rYxC7zqqh9NLR282rgIMZMEdI98wd3PXfAsK4=;
+        b=kys5uo1xpdPztZ7h8WXBClJc61INX0HTNBUYoE0CRqXTbhcMtkAsaz9JIh9rQ3sAlD
+         WE9IHWA5kjQhRWVZA0QU22Colh8W8YHeYDmFhHAyrD+jfG2KXkXMKquEismbtSKcOu0b
+         RYNa3Fzj3H8yq6ICyT9+utyEszQXmqudelNJdM9+MWZqG2E9Ojf3/9l2kNXDJMva7/iI
+         3YghhDAVKgPTqLx81usydqfFBO09L4wGOMOHM7HxNhTnU+gdLYcII7SAHoPGdtR/ym8/
+         myYNl/RxzPnVfmnN7xUZLJk4OAFu+0uBOJKbbJzX7oXlW/gKcBSYmyAQO1o/DP2GowM9
+         l/PQ==
+X-Gm-Message-State: ANoB5pkW7qSLKG2BlRaUX9wkB38E+s2rnzUAoNNxyoVGs++CKj3t0Px5
+        QKgXXrVZXnUaHB+9JyhrEPfrBg==
+X-Google-Smtp-Source: AA0mqf5k3pCfVBHBU4QquFPbvut4m9Nu8znFCAkduAMlfS/nvX1/gQsy6LeeX3fNoYjfWwrxbsMn/w==
+X-Received: by 2002:a05:6a20:662f:b0:a4:cb41:298f with SMTP id n47-20020a056a20662f00b000a4cb41298fmr6044546pzh.6.1670615869098;
+        Fri, 09 Dec 2022 11:57:49 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e14-20020a17090301ce00b00188c9c11559sm1713993plh.1.2022.12.09.11.57.47
+        by smtp.gmail.com with ESMTPSA id s1-20020a63f041000000b0045ff216a0casm1336663pgj.3.2022.12.09.11.57.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 09 Dec 2022 11:57:47 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
 To:     Paul Moore <paul@paul-moore.com>
 Cc:     Kees Cook <keescook@chromium.org>,
         James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org,
         linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH 1/4] LoadPin: Refactor read-only check into a helper
-Date:   Fri,  9 Dec 2022 11:57:42 -0800
-Message-Id: <20221209195746.1366607-1-keescook@chromium.org>
+        linux-hardening@vger.kernel.org
+Subject: [PATCH 0/4] LoadPin: Allow filesystem switch when not enforcing
+Date:   Fri,  9 Dec 2022 11:57:41 -0800
+Message-Id: <20221209195520.never.357-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221209195520.never.357-kees@kernel.org>
-References: <20221209195520.never.357-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3377; h=from:subject; bh=gbYMbpgNPEhAbd9b/hiVEdi/hzWQV3pKzGKmwKeatLM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjk5M4v863YO6OmjVAFboqWMjG+L24JbKQ295kQddg gOTTpUqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY5OTOAAKCRCJcvTf3G3AJmBXEA Ckm9C7K7+KpajGNz01m4kpN8j+B9Uh9yHTSEHIRzhNPhaYrRavAx15k+ok+34SVIDmwD9yA7F9fg+i p6dmh1hpfThWXVuHH+KFw2jl7ag+g3XuagmOeLArJ8QlJte9iJ/qePM01979RwywvQ58mKDuyNfV5C URF1KUR24VIDmkd6UsSvndjBfeR0IH4g2pnloK7pCmkpKJc/5wKm8wRQrWCFuh+f/cBNxjLUf9pulM zkM5Mht0zLP481O7GbDImBdYk3E+F2dRRhg4fS2KG5io6VvwQKtaCdwj5Lwg8iP69ACE7/D86/Gxkb o11b6wAnj6HQv0zT5f+h27oXGHPR0YVObqaQKU5bnt6r87ryn7JdYS9GLtqF9ToR2eiowLfxJDC7of x4fFsNmfMYJQcEOXNzXZBDM0CMvVHzL1LuMM2UNyQZs82AV0u0HQH5v7pznh63Fo0lEdzTKEz8VclN cuG/isssBg/HIf2vVQowPMvDvUZyUqaDQm8Ex/QBrPMLbDURLk7xWT9UGIY49+DywGxN8maa4Qr9Bw ZQMstCN2Zk8itpTs7HYSuBJKzS2QbxT71fQDtot3+Qz5N7Rc57dZ+HGeALsXS2PyrbuJ3L8PCSgJcA Cr8HBfjXNL0sVJn1HCjyvc4Ibx67CdX/OBNHpmiXpFmFMNXSzEfliun+nmMA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=618; h=from:subject:message-id; bh=+nryc41vQfgiZxHCuNSNqDAbomd6sCJfIFUcZmpvNPg=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjk5M4+FhVo9ou2lxGYgE2D8ZhXK4TWFWC91oaF6uu 7bPI9b+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY5OTOAAKCRCJcvTf3G3AJmu+D/ 44LmrxSKtfx7C1fELprrQ4bZPv6J5KQO/juAYQU8ZZQ7O3DobYJoFbOuoGgsB46clB+hrr5IWxbDkQ v864YnIHdyKx2fayWoEKEBMO8iuIuiAu+xEyfXD/RoVtrBIfb9666hyexlDnhk9VUtLz4Bsm/ylm3j 5KeRDZPv7p8mGlsQXoxRgsAnkHoBJb1zAWgF22GGZbA1Qt8Y6bEE+LlLQvpgkfg7nlpNgAUJOSqCtf eC95tnKKn+yuYF6dV/CA8GJ7rqtILIU2VVe+jxe4n3GWP1iBp/HOwf29EFjRPafLJCIEkWrZBkErrg pDFw4BfMdKQkJRLitaIhs6KlwqgimfeayVCm67VTJxeOJ/KJoF3/Xp6g+wCBi0JS2pEZVEO7pB/prl 5m7YxF/nWzC4UdRazJE9GjeY731j+Tn8eOsx0E9JLW6r4noVbnoVCPZbApuQkfeXAqSFjcvfCAsjjS BJbjABn1BHe+h70DAWQXLtJcUOG6ostC+CXzGT/vXUa3ly/ifLBLSSQ5teuPIkdFMgALSb7IAhfDKO DT5pSTUSItPeVAE16KolYObza7pRJp5PdpCwFg8blAuCrYV7SsFF4LB7y5zJ1HBIv56kqp2NN7Eso7 jAoX7jFTOA/NSgeQBpWc41lY8nL52ha7rmIDhMPEI5Bp1aIGJ4C+WNirkITQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In preparation for allowing mounts to shift when not enforced, move
-read-only checking into a separate helper.
+Hi,
 
-Cc: Paul Moore <paul@paul-moore.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-security-module@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- security/loadpin/loadpin.c | 33 +++++++++++++++++++++------------
- 1 file changed, 21 insertions(+), 12 deletions(-)
+Right now, LoadPin isn't much use on general purpose distros since modules
+tend to be loaded from multiple filesystems at boot (first initramfs,
+then real rootfs). Allow the potential mount pin to move when enforcement
+is not enabled.
 
-diff --git a/security/loadpin/loadpin.c b/security/loadpin/loadpin.c
-index 110a5ab2b46b..ca0eff3ce9d0 100644
---- a/security/loadpin/loadpin.c
-+++ b/security/loadpin/loadpin.c
-@@ -72,28 +72,21 @@ static struct ctl_table loadpin_sysctl_table[] = {
- 	{ }
- };
- 
--/*
-- * This must be called after early kernel init, since then the rootdev
-- * is available.
-- */
--static void check_pinning_enforcement(struct super_block *mnt_sb)
-+static void report_writable(struct super_block *mnt_sb, bool writable)
- {
--	bool ro = false;
--
- 	/*
- 	 * If load pinning is not enforced via a read-only block
- 	 * device, allow sysctl to change modes for testing.
- 	 */
- 	if (mnt_sb->s_bdev) {
--		ro = bdev_read_only(mnt_sb->s_bdev);
- 		pr_info("%pg (%u:%u): %s\n", mnt_sb->s_bdev,
- 			MAJOR(mnt_sb->s_bdev->bd_dev),
- 			MINOR(mnt_sb->s_bdev->bd_dev),
--			ro ? "read-only" : "writable");
-+			writable ? "writable" : "read-only");
- 	} else
- 		pr_info("mnt_sb lacks block device, treating as: writable\n");
- 
--	if (!ro) {
-+	if (writable) {
- 		if (!register_sysctl_paths(loadpin_sysctl_path,
- 					   loadpin_sysctl_table))
- 			pr_notice("sysctl registration failed!\n");
-@@ -103,12 +96,26 @@ static void check_pinning_enforcement(struct super_block *mnt_sb)
- 		pr_info("load pinning engaged.\n");
- }
- #else
--static void check_pinning_enforcement(struct super_block *mnt_sb)
-+static void report_writable(struct super_block *mnt_sb, bool writable)
- {
- 	pr_info("load pinning engaged.\n");
- }
- #endif
- 
-+/*
-+ * This must be called after early kernel init, since then the rootdev
-+ * is available.
-+ */
-+static bool sb_is_writable(struct super_block *mnt_sb)
-+{
-+	bool writable = true;
-+
-+	if (mnt_sb->s_bdev)
-+		writable = !bdev_read_only(mnt_sb->s_bdev);
-+
-+	return writable;
-+}
-+
- static void loadpin_sb_free_security(struct super_block *mnt_sb)
- {
- 	/*
-@@ -126,6 +133,7 @@ static int loadpin_check(struct file *file, enum kernel_read_file_id id)
- {
- 	struct super_block *load_root;
- 	const char *origin = kernel_read_file_id_str(id);
-+	bool load_root_writable;
- 
- 	/* If the file id is excluded, ignore the pinning. */
- 	if ((unsigned int)id < ARRAY_SIZE(ignore_read_file_id) &&
-@@ -146,6 +154,7 @@ static int loadpin_check(struct file *file, enum kernel_read_file_id id)
- 	}
- 
- 	load_root = file->f_path.mnt->mnt_sb;
-+	load_root_writable = sb_is_writable(load_root);
- 
- 	/* First loaded module/firmware defines the root for all others. */
- 	spin_lock(&pinned_root_spinlock);
-@@ -162,7 +171,7 @@ static int loadpin_check(struct file *file, enum kernel_read_file_id id)
- 		 * enforcing. This would be purely cosmetic.
- 		 */
- 		spin_unlock(&pinned_root_spinlock);
--		check_pinning_enforcement(pinned_root);
-+		report_writable(pinned_root, load_root_writable);
- 		report_load(origin, file, "pinned");
- 	} else {
- 		spin_unlock(&pinned_root_spinlock);
+-Kees
+
+Kees Cook (4):
+  LoadPin: Refactor read-only check into a helper
+  LoadPin: Refactor sysctl initialization
+  LoadPin: Move pin reporting cleanly out of locking
+  LoadPin: Allow filesystem switch when not enforcing
+
+ security/loadpin/loadpin.c | 89 ++++++++++++++++++++++----------------
+ 1 file changed, 52 insertions(+), 37 deletions(-)
+
 -- 
 2.34.1
 
