@@ -2,101 +2,141 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D5CC4332F
-	for <linux-hardening@archiver.kernel.org>; Fri,  9 Dec 2022 18:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AE3C04FDE
+	for <linux-hardening@archiver.kernel.org>; Fri,  9 Dec 2022 19:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229888AbiLIS3W (ORCPT
+        id S229573AbiLITzF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 9 Dec 2022 13:29:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54134 "EHLO
+        Fri, 9 Dec 2022 14:55:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbiLIS3V (ORCPT
+        with ESMTP id S229720AbiLITzE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 9 Dec 2022 13:29:21 -0500
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B341F4198B
-        for <linux-hardening@vger.kernel.org>; Fri,  9 Dec 2022 10:29:20 -0800 (PST)
-Received: by mail-pl1-x62c.google.com with SMTP id g10so5732501plo.11
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Dec 2022 10:29:20 -0800 (PST)
+        Fri, 9 Dec 2022 14:55:04 -0500
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EF32801EB
+        for <linux-hardening@vger.kernel.org>; Fri,  9 Dec 2022 11:55:03 -0800 (PST)
+Received: by mail-pj1-x102b.google.com with SMTP id o1-20020a17090a678100b00219cf69e5f0so9222231pjj.2
+        for <linux-hardening@vger.kernel.org>; Fri, 09 Dec 2022 11:55:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=r2PSJMZNi7Lx3K9QcpxGsYdFe40hPnGOZyUy1ujyzNA=;
-        b=tfI4xAi74SE707QKT/mlAJrn1WsRQMKi7foG6V+hJ3/ZeeH4mn18qk1TNdC36Ofusg
-         ux9dVwjH+WeN8+ll50wN/ZVU3fRCV4j51jzLF1QBiKy3L9UcnDNWfvJFpdXUVutD6LSX
-         B+nJJ/Z+4pMPkiKT5aQXAVSXC5gZy5nkHgjxcvcgJaZh4I2OJC7oMP//CIrni2xl0jSV
-         Mmw/ny6WvzljNwb3mAlZHa2O41ZhCD7YCeG0EvMDL4eX3mZ4scebmz0Nk9VnZxQOhYOB
-         3LvxaClg/ESU/pP7naEJRn8Pv2TZh2Wrj3eyhM2yqtbeuzCfNRyNSicIITnV7GFt+P1e
-         tuXA==
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FL5Mxmv7ODIlEDZq/8j08cewsGW36kitXNchLqx6+8U=;
+        b=WZNOVqrirVQquuq60VScBrJ9NWVTKDlyjoEaTbQrtRksRVT1MUBEQ3OTRZilvuQ4go
+         fvxyqsqAScKUNpdHI3KgQpr/RHi1kYBi3gDU6VKh3OWBr85C1hPSXGNrN7j3ZRf8JgbU
+         nKuQCyz6cdeN33osi+dFwf9HbblL85TZ0NHJ8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=r2PSJMZNi7Lx3K9QcpxGsYdFe40hPnGOZyUy1ujyzNA=;
-        b=VA/QJL8ZashZ5aAoq+CahizUPb5YMmHN53cZc3/YjfiraVdQ/SmD/HB9CiYBilXZ5U
-         uXUyyR2KpwtpM39TEaaVGoKzn1UPFfWfpshuKx0faDT4ZU2xqHMvbmpHz97XMeLcV3Ar
-         Qc7rG1poVTcWqtig4afMKJ/Vbz5Bn5DkPTmOV1P/I2pkEOtQUp1gFTXxECpY+h/1GAqZ
-         FGqCEbV6KhbKiuwm5uz0qcUFZUY2hbgmVjQLU3GZumOXWAj83wUuKsRYN/uA4yo1ZZZP
-         prwMiuiwVdGeWlrbp/d+yETQ6R08El3lCJuAHs+JZs/h1JK38sfQXr8zj+/uRO8k2r/m
-         SZDw==
-X-Gm-Message-State: ANoB5plWJWg52kwQACJnKLjqK+h7E8jFs1+HZaErIZkGIWYxOc3we2tc
-        RV4YpKS/hpMbvfi31yKFYpfN6uIQBmaze9GvC+9R
-X-Google-Smtp-Source: AA0mqf4pAFPz9IcBXP3Ikc3/BIQ2Fh9HTUyem6n1RTDDoggYxub8h7ftdTIbBK+SxRWviGCqD0xcosbYz5JA2HpPsTg=
-X-Received: by 2002:a17:90b:2743:b0:20d:4173:faf9 with SMTP id
- qi3-20020a17090b274300b0020d4173faf9mr108649177pjb.147.1670610559976; Fri, 09
- Dec 2022 10:29:19 -0800 (PST)
-MIME-Version: 1.0
-References: <20221209160453.3246150-1-jeffxu@google.com> <20221209160453.3246150-7-jeffxu@google.com>
-In-Reply-To: <20221209160453.3246150-7-jeffxu@google.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 9 Dec 2022 13:29:08 -0500
-Message-ID: <CAHC9VhRBMTQvnBdSwMbkOsk9eemYfvCmj9TRgxtMeuex4KLCPA@mail.gmail.com>
-Subject: Re: [PATCH v7 6/6] mm/memfd: security hook for memfd_create
-To:     jeffxu@chromium.org
-Cc:     skhan@linuxfoundation.org, keescook@chromium.org,
-        akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
-        dverkamp@chromium.org, hughd@google.com, jeffxu@google.com,
-        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-        jannh@google.com, linux-hardening@vger.kernel.org,
+        bh=FL5Mxmv7ODIlEDZq/8j08cewsGW36kitXNchLqx6+8U=;
+        b=AKmlvbwgvtUK2afplErAIClxJbnUhXoXcZtKf4bKF1uBdRh0HjZCmCuXWezemZPlvC
+         bfYWCd31phX9SOR4kYFXz+iR7L6aHIc0v04LezgmwsVszvsUDlAiPa7P3X05EkEJn8UT
+         Vf1OFfFohKxUZjYJeR/O1MlpJwzQkYcq/7j7fbsbt+eqW7F+UmjRke2Hb6BZ7HrrldIh
+         HWGR8PQ2StyoLTe8+d9jRuYss2qispgV+HJTQ/1+NYd+IknG1L/ebEIxf/EoiP+3MOOC
+         id2pX15YGaqax0UWvsn+CHliqSkaoW+kjhQvOOCAZmcRjUD3s4sr34dy+mtinkYzhcug
+         XbIw==
+X-Gm-Message-State: ANoB5pmfFY52JjASDeVJPmppCXyT0HtApP7HHUlXeEItSlgv54hChenT
+        8FYfpBD79QWTpHjaCVmm9QUcZQ==
+X-Google-Smtp-Source: AA0mqf5asVjHxvpOsLGmbpn+1ehHUFGL8UqVz3KSDp9PpxJTP+NzFakLHud+RnA5SPJotq2DRBXvGA==
+X-Received: by 2002:a17:902:c755:b0:189:47a8:e9d0 with SMTP id q21-20020a170902c75500b0018947a8e9d0mr6031152plq.51.1670615702700;
+        Fri, 09 Dec 2022 11:55:02 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q3-20020a17090311c300b00189b2b8dbedsm1700025plh.228.2022.12.09.11.55.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Dec 2022 11:55:02 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
         linux-security-module@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] LoadPin: Ignore the "contents" argument of the LSM hooks
+Date:   Fri,  9 Dec 2022 11:54:57 -0800
+Message-Id: <20221209195453.never.494-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2557; h=from:subject:message-id; bh=NyOSzyqOU/AeDA19RQqsUCPh2wuwt80QQlxHAZKpzlQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjk5KRVmj58M+uOtoVMJjwqOPNQu3ZJm3uKzSmoSaE 9ojdx/iJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY5OSkQAKCRCJcvTf3G3AJsOJD/ 9HuKsTrjjMu5QnYHndlcOvspNVUNRW2WhEBINIAVk3mT7hVZNFliJNdlq8RpE9DJ1/KpuXF5qbLxcx spB1nyAReOpOOPUUssIfanBqxdY0mkSihWYz/2krtoM7jy/AmfiAgI/9FIDnJ9W9nUUZRmOkPKqPmL udvZVmZ4Nkseq73j1ZZYf4NDEVkgroW6eUJrHsDJDD55+FtBqQghQPWT5U3JMF0LZnzIlZ40ePAk/y 5rLEHt89Ap/D5zoG91dzkoIhv5oxb5q9FY/HM7veRosMUm8X7uARyxCMFRSoze3e0j4vC1O4oSO31J 9B54Er/8NFp9FmZg0Zxnta/acigU1ggJ3Lz721rqzKg3bTZppChpQDb8q7fdq45Yk/Q9LrWjSof1fA pSoRTuQnuI1J/QVRT2x8wymE1J5r3p52aFQdD0YwyStKNttnoiX3kztUmFA+pLY4H6zKcjixOhmp+B bphi6ox/XT4tL9FvlU/gGmoBuLE8wsq9Fdiy+CzjEzYY1SNWLoRFFd72S66sMMNwUNtxnYh/8CAXk3 4ky8CgrRnCHlKEiWhB5xPbE4aFr3I5X+FrUji0qcT5yegWw/YLxRWa6sMCs3pnAw04AcuBY9OgqnKR iI21OozT62OGA/o+xR0Vk3RTNSIt903EbfkD+NYtVf8D+No3mWUdoqAOrxVg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Dec 9, 2022 at 11:05 AM <jeffxu@chromium.org> wrote:
->
-> From: Jeff Xu <jeffxu@google.com>
->
-> The new security_memfd_create allows lsm to check flags of
-> memfd_create.
->
-> The security by default system (such as chromeos) can use this
-> to implement system wide lsm to allow only non-executable memfd
-> being created.
->
-> Signed-off-by: Jeff Xu <jeffxu@google.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> ---
->  include/linux/lsm_hook_defs.h | 1 +
->  include/linux/lsm_hooks.h     | 4 ++++
->  include/linux/security.h      | 6 ++++++
->  mm/memfd.c                    | 5 +++++
->  security/security.c           | 5 +++++
->  5 files changed, 21 insertions(+)
+LoadPin only enforces the read-only origin of kernel file reads. Whether
+or not it was a partial read isn't important. Remove the overly
+conservative checks so that things like partial firmware reads will
+succeed (i.e. reading a firmware header).
 
-We typically require at least one in-tree LSM implementation to
-accompany a new LSM hook.  Beyond simply providing proof that the hook
-has value, it helps provide a functional example both for reviewers as
-well as future LSM implementations.  Also, while the BPF LSM is
-definitely "in-tree", its nature is such that the actual
-implementation lives out-of-tree; something like SELinux, AppArmor,
-Smack, etc. are much more desirable from an in-tree example
-perspective.
+Fixes: 2039bda1fa8d ("LSM: Add "contents" flag to kernel_read_file hook")
+Cc: Paul Moore <paul@paul-moore.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: linux-security-module@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ security/loadpin/loadpin.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
+diff --git a/security/loadpin/loadpin.c b/security/loadpin/loadpin.c
+index de41621f4998..110a5ab2b46b 100644
+--- a/security/loadpin/loadpin.c
++++ b/security/loadpin/loadpin.c
+@@ -122,21 +122,11 @@ static void loadpin_sb_free_security(struct super_block *mnt_sb)
+ 	}
+ }
+ 
+-static int loadpin_read_file(struct file *file, enum kernel_read_file_id id,
+-			     bool contents)
++static int loadpin_check(struct file *file, enum kernel_read_file_id id)
+ {
+ 	struct super_block *load_root;
+ 	const char *origin = kernel_read_file_id_str(id);
+ 
+-	/*
+-	 * If we will not know that we'll be seeing the full contents
+-	 * then we cannot trust a load will be complete and unchanged
+-	 * off disk. Treat all contents=false hooks as if there were
+-	 * no associated file struct.
+-	 */
+-	if (!contents)
+-		file = NULL;
+-
+ 	/* If the file id is excluded, ignore the pinning. */
+ 	if ((unsigned int)id < ARRAY_SIZE(ignore_read_file_id) &&
+ 	    ignore_read_file_id[id]) {
+@@ -192,9 +182,25 @@ static int loadpin_read_file(struct file *file, enum kernel_read_file_id id,
+ 	return 0;
+ }
+ 
++static int loadpin_read_file(struct file *file, enum kernel_read_file_id id,
++			     bool contents)
++{
++	/*
++	 * LoadPin only cares about the _origin_ of a file, not its
++	 * contents, so we can ignore the "are full contents available"
++	 * argument here.
++	 */
++	return loadpin_check(file, id);
++}
++
+ static int loadpin_load_data(enum kernel_load_data_id id, bool contents)
+ {
+-	return loadpin_read_file(NULL, (enum kernel_read_file_id) id, contents);
++	/*
++	 * LoadPin only cares about the _origin_ of a file, not its
++	 * contents, so a NULL file is passed, and we can ignore the
++	 * state of "contents".
++	 */
++	return loadpin_check(NULL, (enum kernel_read_file_id) id);
+ }
+ 
+ static struct security_hook_list loadpin_hooks[] __lsm_ro_after_init = {
 -- 
-paul-moore.com
+2.34.1
+
