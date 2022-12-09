@@ -2,150 +2,159 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27952C04FDE
-	for <linux-hardening@archiver.kernel.org>; Fri,  9 Dec 2022 08:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC35C4167B
+	for <linux-hardening@archiver.kernel.org>; Fri,  9 Dec 2022 16:05:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229606AbiLIIYZ (ORCPT
+        id S230010AbiLIQFD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 9 Dec 2022 03:24:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40140 "EHLO
+        Fri, 9 Dec 2022 11:05:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229612AbiLIIYU (ORCPT
+        with ESMTP id S229721AbiLIQFB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 9 Dec 2022 03:24:20 -0500
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B14395E9E7;
-        Fri,  9 Dec 2022 00:24:17 -0800 (PST)
-Received: by mail-pg1-x529.google.com with SMTP id 142so3073814pga.1;
-        Fri, 09 Dec 2022 00:24:17 -0800 (PST)
+        Fri, 9 Dec 2022 11:05:01 -0500
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6079E511F8
+        for <linux-hardening@vger.kernel.org>; Fri,  9 Dec 2022 08:05:00 -0800 (PST)
+Received: by mail-pf1-x433.google.com with SMTP id d82so3984205pfd.11
+        for <linux-hardening@vger.kernel.org>; Fri, 09 Dec 2022 08:05:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nfGR+A3eKXKMGqzBUlCOhIFQ9p7mfUwRScCRtlT3bf8=;
-        b=oO8+wfEfvd9QPgp5U+Xc+raLr2ynWq6lrWRQBd6ze6L5f0Zw8OprN20XgP6aVlIG3J
-         8KxFEzRo51qErLo4hwYTbHz76cFxAmdtff/vc6Z0seEJiY5W0ZNiwttOiNiF7aNY3czi
-         iNHdMJ3CKXJ4UWIn1melvLVMBml2PqyUbe/HlrFYptCxOEG/AgTc9Sibc+gk1JJudVUO
-         jS/6HkyTU1GS1/Fw4k1647Fhlr8KjYcdym03tYQ+oPMiq6Hkp6bOFsBsnwphzegkKVk/
-         EVDWq5TT+GzGD4zcisz2tqlTEkd2Hwn6u4mJu1YeMQIG9GRD8Gvxz0vf5TLhaoJBIHkm
-         bxrw==
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ueWjZxTYbaDQuWzBrDeCTZV53qbvnkwWshi5C3odIuU=;
+        b=EWSu99laS2GBJK/j/npVWxjB2fyUhNZIb5ap7uGNrpmhSjYdFN/R5KpVoxG7XCsT28
+         eSKCiuIsD3XZsUYjZbzlb6EMTTSOe2j5irk0ak1/VsWmw5GdGbvIraYAA7d8py5Y9LVc
+         gc+Rh7B/MQTSKEPQllLXMnkWdzW6pKuiXnL2U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nfGR+A3eKXKMGqzBUlCOhIFQ9p7mfUwRScCRtlT3bf8=;
-        b=4TunkNbhZibQUdxLnJapfbILUYF4fCuFNwI4ZGU2ZyMHwqzizZOKtCGeTdNnlxl07t
-         4cwl5sSzaSGi2exp957dVDAwVBtLISRQo3RUzE/QrmRfGV/1xPkhtEeHnQMmebQcYmSH
-         uDhsRTwdSJRIRRyeZ416C1DTHhlvgisQdZSzOGmcndor/q5Gzc7HwtATsoIz415fI2BQ
-         PKtXm8DDb0idtVR9CdONrnlVBEzersHTOpmGX6tQalfTnawFz08sbdg7O7vUTsSpymIi
-         SVCTAEp4oyL7X6i1XXRRwE6Rqz+Felel7QzJHN4bvWm0pWD44YfSfgzzFIDTfXwBY8nU
-         bI0w==
-X-Gm-Message-State: ANoB5pmeJKWAFQj3wseTOsrJ27VKLWKl7wiqNRD0fLeHzmLlUpnlryBf
-        YvWhBM+B0FeX5f2cMKE7+5w=
-X-Google-Smtp-Source: AA0mqf5PLyz3drF93OwJwfC6NN9jyNWVp3Kvc0nGTPqxXEc76j7+IoFGUj1YIvIhHSUl0EiQ19B4mg==
-X-Received: by 2002:aa7:848a:0:b0:56b:b113:9d09 with SMTP id u10-20020aa7848a000000b0056bb1139d09mr1030403pfn.2.1670574257105;
-        Fri, 09 Dec 2022 00:24:17 -0800 (PST)
-Received: from mail.google.com (125-237-37-88-fibre.sparkbb.co.nz. [125.237.37.88])
-        by smtp.gmail.com with ESMTPSA id c79-20020a621c52000000b005772d55df03sm728098pfc.35.2022.12.09.00.24.12
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ueWjZxTYbaDQuWzBrDeCTZV53qbvnkwWshi5C3odIuU=;
+        b=ljYGtfO/OdLvKwrudQ4/aHTXFP8HLwRp92nvmDBnP1HCIMqgT31INnFnJttcbX3aIO
+         QzSKqTAH1bfcB8iqseMTkVszgbGKFVWbxYEmq2HgfRs6y06nXHnKDCfvOOBfUu9BoQyr
+         GZmBD6Mo8GZ3AP0X8LbfGwLzH60ThX91ZdZYK6W/CvRbWnFI7CKqKkkPS+mCUP3MXdC5
+         j5dwfh+tOa27Y84gy7TBb8EiWvC6PIDHRRldqLxpKotqg+9Jt6HRf3sJk9LTyRAj7f4z
+         Rjzq/LxV/17EwvuUpJ14SqjjSc13+X28NayvO6R5Fzu8VxNCM5jpjrPurO3Z7AtSpWbG
+         88AQ==
+X-Gm-Message-State: ANoB5pnpkbSxhFTrGyvzCPGBsavhlDSixQOxZT/rMNIuDp8pRHPxaJRW
+        pqyh41YiVglolraRwCVA0oLbHg==
+X-Google-Smtp-Source: AA0mqf5i1xoBmEhRL9IDhhL+iKpEzBdOcNxUpPz5R22PuXbmHssMXjzHK5BBkv0qkIG7zHOA1PGhoA==
+X-Received: by 2002:a62:87cc:0:b0:576:dc40:6db9 with SMTP id i195-20020a6287cc000000b00576dc406db9mr6237516pfe.13.1670601899690;
+        Fri, 09 Dec 2022 08:04:59 -0800 (PST)
+Received: from jeffxud.c.googlers.com.com (30.202.168.34.bc.googleusercontent.com. [34.168.202.30])
+        by smtp.gmail.com with ESMTPSA id a15-20020aa795af000000b00576670cc170sm1460504pfk.93.2022.12.09.08.04.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Dec 2022 00:24:16 -0800 (PST)
-Date:   Fri, 9 Dec 2022 21:24:09 +1300
-From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        paulo.miguel.almeida.rodenas@gmail.com
-Subject: [PATCH] [next] drm/radeon: Replace 1-element arrays with
- flexible-array members
-Message-ID: <Y5LwqRCPcYLizJFt@mail.google.com>
+        Fri, 09 Dec 2022 08:04:59 -0800 (PST)
+From:   jeffxu@chromium.org
+To:     skhan@linuxfoundation.org, keescook@chromium.org
+Cc:     akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
+        dverkamp@chromium.org, hughd@google.com, jeffxu@google.com,
+        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        jannh@google.com, linux-hardening@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH v7 0/6] mm/memfd: introduce MFD_NOEXEC_SEAL and MFD_EXEC
+Date:   Fri,  9 Dec 2022 16:04:47 +0000
+Message-Id: <20221209160453.3246150-1-jeffxu@google.com>
+X-Mailer: git-send-email 2.39.0.rc1.256.g54fd8350bd-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-One-element arrays are deprecated, and we are replacing them with
-flexible array members instead. So, replace one-element array with
-flexible-array member in structs _ATOM_DISPLAY_OBJECT_PATH,
-_ATOM_DISPLAY_OBJECT_PATH_TABLE, _ATOM_OBJECT_TABLE, GOP_VBIOS_CONTENT
-_ATOM_GPIO_VOLTAGE_OBJECT_V3 and refactor the rest of the code accordingly.
+From: Jeff Xu <jeffxu@google.com>
 
-It's worth mentioning that doing a build before/after this patch
-results in no binary output differences.
+Since Linux introduced the memfd feature, memfd have always had their
+execute bit set, and the memfd_create() syscall doesn't allow setting
+it differently.
 
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-routines on memcpy() and help us make progress towards globally
-enabling -fstrict-flex-arrays=3 [1].
+However, in a secure by default system, such as ChromeOS, (where all
+executables should come from the rootfs, which is protected by Verified
+boot), this executable nature of memfd opens a door for NoExec bypass
+and enables “confused deputy attack”.  E.g, in VRP bug [1]: cros_vm
+process created a memfd to share the content with an external process,
+however the memfd is overwritten and used for executing arbitrary code
+and root escalation. [2] lists more VRP in this kind.
 
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://github.com/KSPP/linux/issues/239
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
+On the other hand, executable memfd has its legit use, runc uses memfd’s
+seal and executable feature to copy the contents of the binary then
+execute them, for such system, we need a solution to differentiate runc's
+use of  executable memfds and an attacker's [3].
 
-Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
----
-Notes for the maintainer:
+To address those above, this set of patches add following:
+1> Let memfd_create() set X bit at creation time.
+2> Let memfd to be sealed for modifying X bit.
+3> A new pid namespace sysctl: vm.memfd_noexec to control the behavior of
+   X bit.For example, if a container has vm.memfd_noexec=2, then
+   memfd_create() without MFD_NOEXEC_SEAL will be rejected.
+4> A new security hook in memfd_create(). This make it possible to a new
+LSM, which rejects or allows executable memfd based on its security policy.
 
-- These are all fake-flexible arrays with references in source code for
-  the radeon driver. Given the way they are used, no change to *.c files
-  were required.
----
- drivers/gpu/drm/radeon/atombios.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Change history:
+v7:
+- patch 2/6: remove #ifdef and MAX_PATH (memfd_test.c).
+- patch 3/6: check capability (CAP_SYS_ADMIN) from userns instead of
+		global ns (pid_sysctl.h). Add a tab (pid_namespace.h).
+- patch 5/6: remove #ifdef (memfd_test.c)
+- patch 6/6: remove unneeded security_move_mount(security.c).
 
-diff --git a/drivers/gpu/drm/radeon/atombios.h b/drivers/gpu/drm/radeon/atombios.h
-index 235e59b547a1..8a6621f1e82c 100644
---- a/drivers/gpu/drm/radeon/atombios.h
-+++ b/drivers/gpu/drm/radeon/atombios.h
-@@ -4020,7 +4020,7 @@ typedef struct  _ATOM_DISPLAY_OBJECT_PATH
-   USHORT    usSize;                                        //the size of ATOM_DISPLAY_OBJECT_PATH
-   USHORT    usConnObjectId;                                //Connector Object ID 
-   USHORT    usGPUObjectId;                                 //GPU ID 
--  USHORT    usGraphicObjIds[1];                             //1st Encoder Obj source from GPU to last Graphic Obj destinate to connector.
-+  USHORT    usGraphicObjIds[];                             //1st Encoder Obj source from GPU to last Graphic Obj destinate to connector.
- }ATOM_DISPLAY_OBJECT_PATH;
- 
- typedef struct  _ATOM_DISPLAY_EXTERNAL_OBJECT_PATH
-@@ -4037,7 +4037,7 @@ typedef struct _ATOM_DISPLAY_OBJECT_PATH_TABLE
-   UCHAR                           ucNumOfDispPath;
-   UCHAR                           ucVersion;
-   UCHAR                           ucPadding[2];
--  ATOM_DISPLAY_OBJECT_PATH        asDispPath[1];
-+  ATOM_DISPLAY_OBJECT_PATH        asDispPath[];
- }ATOM_DISPLAY_OBJECT_PATH_TABLE;
- 
- 
-@@ -4053,7 +4053,7 @@ typedef struct _ATOM_OBJECT_TABLE                         //Above 4 object table
- {
-   UCHAR               ucNumberOfObjects;
-   UCHAR               ucPadding[3];
--  ATOM_OBJECT         asObjects[1];
-+  ATOM_OBJECT         asObjects[];
- }ATOM_OBJECT_TABLE;
- 
- typedef struct _ATOM_SRC_DST_TABLE_FOR_ONE_OBJECT         //usSrcDstTableOffset pointing to this structure
-@@ -4615,7 +4615,7 @@ typedef struct  _ATOM_GPIO_VOLTAGE_OBJECT_V3
-    UCHAR    ucPhaseDelay;                // phase delay in unit of micro second
-    UCHAR    ucReserved;   
-    ULONG    ulGpioMaskVal;               // GPIO Mask value
--   VOLTAGE_LUT_ENTRY_V2 asVolGpioLut[1];   
-+   VOLTAGE_LUT_ENTRY_V2 asVolGpioLut[];
- }ATOM_GPIO_VOLTAGE_OBJECT_V3;
- 
- typedef struct  _ATOM_LEAKAGE_VOLTAGE_OBJECT_V3
-@@ -7964,7 +7964,7 @@ typedef struct {
- 
- typedef struct {
-   VFCT_IMAGE_HEADER	VbiosHeader;
--  UCHAR	VbiosContent[1];
-+  UCHAR	VbiosContent[];
- }GOP_VBIOS_CONTENT;
- 
- typedef struct {
+v6:https://lore.kernel.org/lkml/20221206150233.1963717-1-jeffxu@google.com/
+- Address comment and move "#ifdef CONFIG_" from .c file to pid_sysctl.h
+
+v5:https://lore.kernel.org/lkml/20221206152358.1966099-1-jeffxu@google.com/
+- Pass vm.memfd_noexec from current ns to child ns.
+- Fix build issue detected by kernel test robot.
+- Add missing security.c
+
+v3:https://lore.kernel.org/lkml/20221202013404.163143-1-jeffxu@google.com/
+- Address API design comments in v2.
+- Let memfd_create() to set X bit at creation time.
+- A new pid namespace sysctl: vm.memfd_noexec to control behavior of X bit.
+- A new security hook in memfd_create().
+
+v2:https://lore.kernel.org/lkml/20220805222126.142525-1-jeffxu@google.com/
+- address comments in V1.
+- add sysctl (vm.mfd_noexec) to set the default file permissions of
+  memfd_create to be non-executable.
+
+v1:https://lwn.net/Articles/890096/
+
+[1] https://crbug.com/1305411
+[2] https://bugs.chromium.org/p/chromium/issues/list?q=type%3Dbug-security%20memfd%20escalation&can=1
+[3] https://lwn.net/Articles/781013/
+
+Daniel Verkamp (2):
+  mm/memfd: add F_SEAL_EXEC
+  selftests/memfd: add tests for F_SEAL_EXEC
+
+Jeff Xu (4):
+  mm/memfd: add MFD_NOEXEC_SEAL and MFD_EXEC
+  mm/memfd: Add write seals when apply SEAL_EXEC to executable memfd
+  selftests/memfd: add tests for MFD_NOEXEC_SEAL MFD_EXEC
+  mm/memfd: security hook for memfd_create
+
+ include/linux/lsm_hook_defs.h              |   1 +
+ include/linux/lsm_hooks.h                  |   4 +
+ include/linux/pid_namespace.h              |  19 ++
+ include/linux/security.h                   |   6 +
+ include/uapi/linux/fcntl.h                 |   1 +
+ include/uapi/linux/memfd.h                 |   4 +
+ kernel/pid_namespace.c                     |   5 +
+ kernel/pid_sysctl.h                        |  59 ++++
+ mm/memfd.c                                 |  61 +++-
+ mm/shmem.c                                 |   6 +
+ security/security.c                        |   5 +
+ tools/testing/selftests/memfd/fuse_test.c  |   1 +
+ tools/testing/selftests/memfd/memfd_test.c | 341 ++++++++++++++++++++-
+ 13 files changed, 510 insertions(+), 3 deletions(-)
+ create mode 100644 kernel/pid_sysctl.h
+
+
+base-commit: eb7081409f94a9a8608593d0fb63a1aa3d6f95d8
 -- 
-2.38.1
+2.39.0.rc1.256.g54fd8350bd-goog
 
