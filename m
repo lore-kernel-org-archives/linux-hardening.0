@@ -2,131 +2,156 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D21C10F1B
-	for <linux-hardening@archiver.kernel.org>; Fri,  9 Dec 2022 19:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB11C4332F
+	for <linux-hardening@archiver.kernel.org>; Fri,  9 Dec 2022 23:16:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230043AbiLIT56 (ORCPT
+        id S229573AbiLIXQt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 9 Dec 2022 14:57:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46618 "EHLO
+        Fri, 9 Dec 2022 18:16:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229894AbiLIT5w (ORCPT
+        with ESMTP id S229545AbiLIXQs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 9 Dec 2022 14:57:52 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB8BF13DDC
-        for <linux-hardening@vger.kernel.org>; Fri,  9 Dec 2022 11:57:50 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id o1-20020a17090a678100b00219cf69e5f0so9229706pjj.2
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Dec 2022 11:57:50 -0800 (PST)
+        Fri, 9 Dec 2022 18:16:48 -0500
+Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 544C152146;
+        Fri,  9 Dec 2022 15:16:47 -0800 (PST)
+Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-1322d768ba7so1555172fac.5;
+        Fri, 09 Dec 2022 15:16:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oGkVWEa5T6qjzunke8iqiL9y1vbCzAYhZe+DJ6bp/6U=;
-        b=YxYIoV/nSKqI3pErZbKeQ+OkDCJm4+BV+FwVp0x9JxlywPESjTUrYN+hT1YeqoRHJj
-         58pXWErDz4iQ3HmCmcfLNgA/9aKFWIIRJ1e68Nlc8f7cluB3scf4xAQjEODflZhqQpC1
-         yYXvK9ZEHFO1UxFS1T65RhM/dlBkpLwKi5Qsg=
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PkLQpu5eL9OZHKRdAfTyoXfk6Fj63Rxr9laOGfg5xGc=;
+        b=IRlMxe/QOBYNsZOuFX2veFnSjEcbVyUfnIFUjzu7cAUBoFvhBrAaqJDzWWdVJMjMTg
+         lO7d4nhXBvVfUdinsnNcocldGhGe5YBDB4BzQy54ZcIzuUscMEXv0JNrVKpZi2ppZ9bC
+         /9pp1sp7Q4FiNKbgnacrziuWpvY8GNsBoRRcHcB+2DIwO1mdrAR9ECLBPG8dUAv3ciXJ
+         i2fBuNWyfruZxToVdAlV23G/60j4Bbl4D52ZBnVcMfSheftPK859x3Gd/kHNw+Pbkuyn
+         Iv0Ejc29hRhdSTUbIq8qtlKxf4dumHmin/ghLjPGURAMBnceWh2GMwFHjsHgjolu6e0v
+         nYTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oGkVWEa5T6qjzunke8iqiL9y1vbCzAYhZe+DJ6bp/6U=;
-        b=SePH/Pc1hsfi1p9WnGtlYGX6UlWkJl4gsBoF9VzUQU6Db9Cbj+nURjo3fTtrMKuaCB
-         E543ainjfKfxIeeGMzl9jf4KXFpF4ZwskRbOKN9vDo+Gh9KdauOfHFA1isVpICSWg3VO
-         du+FhB7pYFo+ea9EaSA+9KQyS//0iqis5yAWqNAw9X6a31L3MpRcGqwMYBGR9YA9B8Ux
-         bMwmXrj8NWfQpIQI8AnTsxsw63jcvAO4iZRi+nugpnaTBM6Sydfm+bw1FPY2NlnU8eF3
-         pYe/Lu+w1wDvviuPEDo4hMCT7eKCK+fmgkUYl4VnW/BpPGb/w5F8GNLSXCr/zACMmIyj
-         zyTA==
-X-Gm-Message-State: ANoB5pn3nZd1wwc7HOHA9pHJiwC9JNYnYgWCSf9LuffJCrsvWrGiy+0N
-        zxwGvRmPRnGdQEerYH9RYc5Y+A==
-X-Google-Smtp-Source: AA0mqf7AHghEqWHBk2qK+HA8SKaR3vV04rR+Y0hdwdmcjeKe7svSSE8m1yoEiOaO5NLGjTm3McEELw==
-X-Received: by 2002:a17:90a:8f03:b0:218:fa36:ad6a with SMTP id g3-20020a17090a8f0300b00218fa36ad6amr7149816pjo.4.1670615870177;
-        Fri, 09 Dec 2022 11:57:50 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z8-20020a17090a8b8800b002199eaa80e1sm1480173pjn.13.2022.12.09.11.57.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Dec 2022 11:57:47 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH 4/4] LoadPin: Allow filesystem switch when not enforcing
-Date:   Fri,  9 Dec 2022 11:57:45 -0800
-Message-Id: <20221209195746.1366607-4-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221209195520.never.357-kees@kernel.org>
-References: <20221209195520.never.357-kees@kernel.org>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PkLQpu5eL9OZHKRdAfTyoXfk6Fj63Rxr9laOGfg5xGc=;
+        b=csENKk6cvSa0oC5DCyA9Xa5ilvPPRZArTDjApVy5hkZZYEIzuZOFaKUCb21HLQmuQN
+         Ty1TuL1zz7HgV9HL0pikLu8vLGf0NLuVn2krF2tRHvXitMWPHHGb9PTIc+/CqXRvz6Cy
+         WuON1whyCCCS35R5TyhHL/ZKjbCub6WdQh9Vpsmahnu7CSVK2Vtf3u3ga7FEwZFcXv8x
+         jNT7FPzGSkSxxyvHOhVJMsOgUXNAg2OETuoYE3KIuL35VSYw5RodRb88/n3Dg4KYCPBE
+         ULX/0q6smAr6u8yqf2pXqmCWvPzKOt1y5WY4B/rDg/o0vPQdFLcqHIKG7vouQBmsechM
+         Avlw==
+X-Gm-Message-State: ANoB5plMQXZVzTZjcD8cntPQ7A+aKJS3vkp+50jFxkUzujl/eiIM+I7z
+        ojFbZS7TVtmFnCYSVVpZ5ZwCgPnhyxc9X1JyQZE=
+X-Google-Smtp-Source: AA0mqf6MtRxq7OjbEiJtrmZnXTvTYRNWU2BbVAy8sQApGfyusInceJkgyzbXJEi2tUHTr2CeLSl9o+U+ljlumUDckC0=
+X-Received: by 2002:a05:6870:2b05:b0:12d:58c1:33f9 with SMTP id
+ ld5-20020a0568702b0500b0012d58c133f9mr44331937oab.46.1670627806672; Fri, 09
+ Dec 2022 15:16:46 -0800 (PST)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2460; h=from:subject; bh=fZeLjQA82vU81dQmP0SkURZPi2Xeq07Q0YGb0gDxICs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjk5M5YgZfaDfRh3GV0WAB5frGjrqzt0HVxRlIyT5F ShdHp42JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY5OTOQAKCRCJcvTf3G3AJtIhEA CG+MP65o4vsx9LrA/BTfp93kFMlahQKQp/LZVmywRGc0dlSGywP1qJ82Hhunso+NQ3WyYgxK2k8gDu KDnDdlUhK3X45LokRqyWe+iHsZ/TLfCumpYikmt5nNknIHQrbsfWwRGk8iuztb0b6PELNloUxtWNyF P2Zlg6Keka/RrQrrI39kfz9rhRRq6Z7LfNh+zphduwb+T0QVPXIp/w811m/IK8Pe9ApPv0TQL0oWRv WwOPL9VTCopNFmmvwdR9D7ZatXo3JshPaQWcxaPQ/F5pNmgT+oR1vdZXTla7/RZG6ceyA2miKysWWX lO+JgyszP1nylCYySX6lf3TeoFLYj7IvyQbDH/KQ2RecO6PH0ADj6uvPrk1R83PJb+i6mBjLDMVaVu IC4U3FmsSyTTMU6X/0GhgzdPGLdfU+HNUHfSLmYORGQQHGEHSkZuXyF7UbUCaWqjk1C4gLh0KuT35N BDKNiY8ewe01D9912PnouT+X9yuP+D16iN6xZEp5qDXJwVKKcFmTvfY8M330lDiWR14umJgCERyp5e ZNoM70nrGCAlFqVP2bfgda0CV/EoCaMEZnDz8s4gksDnlgAN0/xMN3tz9R0Sj2JPVpKHA8NDdKlpws sHRWEv15zSNDSIwOR8i/yfMVJuRHW/3f23LTGeFfSXebtvraan+uYn18txtA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <Y5LwqRCPcYLizJFt@mail.google.com>
+In-Reply-To: <Y5LwqRCPcYLizJFt@mail.google.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 9 Dec 2022 18:16:34 -0500
+Message-ID: <CADnq5_NOyyLetx+wUtYL4f7ETHzVFAw_JnbGXGh5G1KYbUH3Zg@mail.gmail.com>
+Subject: Re: [PATCH] [next] drm/radeon: Replace 1-element arrays with
+ flexible-array members
+To:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-For LoadPin to be used at all in a classic distro environment, it needs
-to allow for switching filesystems (from the initramfs to the "real"
-root filesystem). To allow for this, if the "enforce" mode is not set at
-boot, reset the pinned filesystem tracking when the pinned filesystem
-gets unmounted instead of invalidating further loads. Once enforcement
-is set, it cannot be unset, and the pinning will stick.
+Applied.  Thanks!
 
-This means that distros can build with CONFIG_SECURITY_LOADPIN=y, but with
-CONFIG_SECURITY_LOADPIN_ENFORCE disabled, but after boot is running,
-the system can enable enforcement:
+Alex
 
-  $ sysctl -w kernel.loadpin.enforced=1
-
-Cc: Paul Moore <paul@paul-moore.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-security-module@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- security/loadpin/loadpin.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
-
-diff --git a/security/loadpin/loadpin.c b/security/loadpin/loadpin.c
-index ef12d77548ae..d73a281adf86 100644
---- a/security/loadpin/loadpin.c
-+++ b/security/loadpin/loadpin.c
-@@ -119,11 +119,16 @@ static void loadpin_sb_free_security(struct super_block *mnt_sb)
- 	/*
- 	 * When unmounting the filesystem we were using for load
- 	 * pinning, we acknowledge the superblock release, but make sure
--	 * no other modules or firmware can be loaded.
-+	 * no other modules or firmware can be loaded when we are in
-+	 * enforcing mode. Otherwise, allow the root to be reestablished.
- 	 */
- 	if (!IS_ERR_OR_NULL(pinned_root) && mnt_sb == pinned_root) {
--		pinned_root = ERR_PTR(-EIO);
--		pr_info("umount pinned fs: refusing further loads\n");
-+		if (enforce) {
-+			pinned_root = ERR_PTR(-EIO);
-+			pr_info("umount pinned fs: refusing further loads\n");
-+		} else {
-+			pinned_root = NULL;
-+		}
- 	}
- }
- 
-@@ -158,8 +163,9 @@ static int loadpin_check(struct file *file, enum kernel_read_file_id id)
- 	/* First loaded module/firmware defines the root for all others. */
- 	spin_lock(&pinned_root_spinlock);
- 	/*
--	 * pinned_root is only NULL at startup. Otherwise, it is either
--	 * a valid reference, or an ERR_PTR.
-+	 * pinned_root is only NULL at startup or when the pinned root has
-+	 * been unmounted while we are not in enforcing mode. Otherwise, it
-+	 * is either a valid reference, or an ERR_PTR.
- 	 */
- 	if (!pinned_root) {
- 		pinned_root = load_root;
--- 
-2.34.1
-
+On Fri, Dec 9, 2022 at 3:24 AM Paulo Miguel Almeida
+<paulo.miguel.almeida.rodenas@gmail.com> wrote:
+>
+> One-element arrays are deprecated, and we are replacing them with
+> flexible array members instead. So, replace one-element array with
+> flexible-array member in structs _ATOM_DISPLAY_OBJECT_PATH,
+> _ATOM_DISPLAY_OBJECT_PATH_TABLE, _ATOM_OBJECT_TABLE, GOP_VBIOS_CONTENT
+> _ATOM_GPIO_VOLTAGE_OBJECT_V3 and refactor the rest of the code accordingly.
+>
+> It's worth mentioning that doing a build before/after this patch
+> results in no binary output differences.
+>
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
+>
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/239
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
+>
+> Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+> ---
+> Notes for the maintainer:
+>
+> - These are all fake-flexible arrays with references in source code for
+>   the radeon driver. Given the way they are used, no change to *.c files
+>   were required.
+> ---
+>  drivers/gpu/drm/radeon/atombios.h | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/radeon/atombios.h b/drivers/gpu/drm/radeon/atombios.h
+> index 235e59b547a1..8a6621f1e82c 100644
+> --- a/drivers/gpu/drm/radeon/atombios.h
+> +++ b/drivers/gpu/drm/radeon/atombios.h
+> @@ -4020,7 +4020,7 @@ typedef struct  _ATOM_DISPLAY_OBJECT_PATH
+>    USHORT    usSize;                                        //the size of ATOM_DISPLAY_OBJECT_PATH
+>    USHORT    usConnObjectId;                                //Connector Object ID
+>    USHORT    usGPUObjectId;                                 //GPU ID
+> -  USHORT    usGraphicObjIds[1];                             //1st Encoder Obj source from GPU to last Graphic Obj destinate to connector.
+> +  USHORT    usGraphicObjIds[];                             //1st Encoder Obj source from GPU to last Graphic Obj destinate to connector.
+>  }ATOM_DISPLAY_OBJECT_PATH;
+>
+>  typedef struct  _ATOM_DISPLAY_EXTERNAL_OBJECT_PATH
+> @@ -4037,7 +4037,7 @@ typedef struct _ATOM_DISPLAY_OBJECT_PATH_TABLE
+>    UCHAR                           ucNumOfDispPath;
+>    UCHAR                           ucVersion;
+>    UCHAR                           ucPadding[2];
+> -  ATOM_DISPLAY_OBJECT_PATH        asDispPath[1];
+> +  ATOM_DISPLAY_OBJECT_PATH        asDispPath[];
+>  }ATOM_DISPLAY_OBJECT_PATH_TABLE;
+>
+>
+> @@ -4053,7 +4053,7 @@ typedef struct _ATOM_OBJECT_TABLE                         //Above 4 object table
+>  {
+>    UCHAR               ucNumberOfObjects;
+>    UCHAR               ucPadding[3];
+> -  ATOM_OBJECT         asObjects[1];
+> +  ATOM_OBJECT         asObjects[];
+>  }ATOM_OBJECT_TABLE;
+>
+>  typedef struct _ATOM_SRC_DST_TABLE_FOR_ONE_OBJECT         //usSrcDstTableOffset pointing to this structure
+> @@ -4615,7 +4615,7 @@ typedef struct  _ATOM_GPIO_VOLTAGE_OBJECT_V3
+>     UCHAR    ucPhaseDelay;                // phase delay in unit of micro second
+>     UCHAR    ucReserved;
+>     ULONG    ulGpioMaskVal;               // GPIO Mask value
+> -   VOLTAGE_LUT_ENTRY_V2 asVolGpioLut[1];
+> +   VOLTAGE_LUT_ENTRY_V2 asVolGpioLut[];
+>  }ATOM_GPIO_VOLTAGE_OBJECT_V3;
+>
+>  typedef struct  _ATOM_LEAKAGE_VOLTAGE_OBJECT_V3
+> @@ -7964,7 +7964,7 @@ typedef struct {
+>
+>  typedef struct {
+>    VFCT_IMAGE_HEADER    VbiosHeader;
+> -  UCHAR        VbiosContent[1];
+> +  UCHAR        VbiosContent[];
+>  }GOP_VBIOS_CONTENT;
+>
+>  typedef struct {
+> --
+> 2.38.1
+>
