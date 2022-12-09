@@ -2,197 +2,96 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB27EC4332F
-	for <linux-hardening@archiver.kernel.org>; Fri,  9 Dec 2022 17:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C74C10F1E
+	for <linux-hardening@archiver.kernel.org>; Fri,  9 Dec 2022 18:15:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229809AbiLIRfD (ORCPT
+        id S229571AbiLISPS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 9 Dec 2022 12:35:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51998 "EHLO
+        Fri, 9 Dec 2022 13:15:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbiLIRfD (ORCPT
+        with ESMTP id S229685AbiLISPQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 9 Dec 2022 12:35:03 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A7D446BC83;
-        Fri,  9 Dec 2022 09:35:01 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1B1623A;
-        Fri,  9 Dec 2022 09:35:07 -0800 (PST)
-Received: from [10.57.7.11] (unknown [10.57.7.11])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C25993F73D;
-        Fri,  9 Dec 2022 09:34:59 -0800 (PST)
-Message-ID: <ba52dac5-2ce7-a567-41af-841b857abbed@arm.com>
-Date:   Fri, 9 Dec 2022 17:34:41 +0000
+        Fri, 9 Dec 2022 13:15:16 -0500
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1C99A5049
+        for <linux-hardening@vger.kernel.org>; Fri,  9 Dec 2022 10:15:14 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id w23so5691592ply.12
+        for <linux-hardening@vger.kernel.org>; Fri, 09 Dec 2022 10:15:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UGtkhaHKIrr5OpNYU4T9L+BnCs/0pP1qyXvWMaI760s=;
+        b=6iTO86Yg/c+D/tyDbB1/u7VSMypyassCrDFcKnXQLmk+pJtNANCaCBZuPVolwpgZPD
+         5nhxxtWuGJ2hOBupmq8Zp03kmnFxZTPpg4ncChc9D84/DYQEhZ6L78LuSbF4rg7/5ML+
+         PHzcnP+a9LvHU+6LbXtQRNYCgdeZZP4Rsn2bGT97VZ3TYa9w4c5m1P0JrOjGxKzzkyQx
+         zYy0WDCkxyrXBY2SRUWDt5YZ5/rAOeHt7q/EmCpBIX4Qc8ulYIKshX6FTvXnyGFniucB
+         qdAnrLLt90D1lPP44uJhr8AnfFHJDV6Hf/XTPtyy0NYDd3GXcJn9j1Z0KMbiKPaXD8y9
+         y9XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UGtkhaHKIrr5OpNYU4T9L+BnCs/0pP1qyXvWMaI760s=;
+        b=xkztH96OijutxkAUwDdMCRsY2c/tEkU6UASXcV+XW0X+R9TZKfLm1Casyp5AAixNcj
+         Nt4SxSx6NRaBjzKscQMWMT1QpLrWFykzpJnNP1hwXscCD7EyNt0StFDYQpJL4/OuBt/y
+         Gmp4CnpbGd6Tmwrt7hj2uP5lCJINN6kccJx+NYhIN+JjlN9psTUu/FxmBEweNZVvpA+K
+         eflYGfJXfA1dnY3yGmI1+xlFOHDlhn2SyBd5AZCFk4CHAdnPV/fU0yuPsaUwwOj21PTK
+         MhK21BSHH+wUhze1dwWlGEt2MJMqoj9DusaWgNMNv6PYcJtkuNwBoZE/LvCzx3FDzG/I
+         i2qA==
+X-Gm-Message-State: ANoB5pnxp3a0RHo6kaxTVWvgDrb6jH4sOAmPUM0wwWFbfbPnZED0lzF4
+        MvDKhMDdRoL3JyL03dIzcvcECgwfFyXQ2K+7eQ6/
+X-Google-Smtp-Source: AA0mqf4XkzUN61EgDM5th316VM+D1Q3XG+pvsxXjlS+qJMhlXby8XRLO4K+xY63ljp1PmYb4MaI6gOJ3nG0Lf1RB7sE=
+X-Received: by 2002:a17:90a:2f22:b0:219:8ee5:8dc0 with SMTP id
+ s31-20020a17090a2f2200b002198ee58dc0mr31097837pjd.72.1670609714373; Fri, 09
+ Dec 2022 10:15:14 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v2] lkdtm: Add CFI_BACKWARD to test ROP mitigations
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        =?UTF-8?Q?Daniel_D=c3=adaz?= <daniel.diaz@linaro.org>
-Cc:     Dan Li <ashimida@linux.alibaba.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20220416001103.1524653-1-keescook@chromium.org>
- <CAEUSe78kDPxQmQqCWW-_9LCgJDFhAeMoVBFnX9QLx18Z4uT4VQ@mail.gmail.com>
- <202212072221.A9FCC905CF@keescook>
-From:   Kristina Martsenko <kristina.martsenko@arm.com>
-In-Reply-To: <202212072221.A9FCC905CF@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20221209160453.3246150-1-jeffxu@google.com>
+In-Reply-To: <20221209160453.3246150-1-jeffxu@google.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 9 Dec 2022 13:15:03 -0500
+Message-ID: <CAHC9VhQ2P0rif2hiVGMGafWXQyZqPQc-yGQDEzjEehH1gzWgSA@mail.gmail.com>
+Subject: Re: [PATCH v7 0/6] mm/memfd: introduce MFD_NOEXEC_SEAL and MFD_EXEC
+To:     jeffxu@chromium.org
+Cc:     skhan@linuxfoundation.org, keescook@chromium.org,
+        akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
+        dverkamp@chromium.org, hughd@google.com, jeffxu@google.com,
+        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        jannh@google.com, linux-hardening@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 08/12/2022 06:22, Kees Cook wrote:
-> On Tue, Dec 06, 2022 at 06:28:53PM -0600, Daniel Dï¿½az wrote:
->> Hello!
->>
->> On Sat, 16 Apr 2022 at 00:30, Kees Cook <keescook@chromium.org> wrote:
->>> In order to test various backward-edge control flow integrity methods,
->>> add a test that manipulates the return address on the stack. Currently
->>> only arm64 Pointer Authentication and Shadow Call Stack is supported.
->>>
->>>  $ echo CFI_BACKWARD | cat >/sys/kernel/debug/provoke-crash/DIRECT
->>>
->>> Under SCS, successful test of the mitigation is reported as:
->>>
->>>  lkdtm: Performing direct entry CFI_BACKWARD
->>>  lkdtm: Attempting unchecked stack return address redirection ...
->>>  lkdtm: ok: redirected stack return address.
->>>  lkdtm: Attempting checked stack return address redirection ...
->>>  lkdtm: ok: control flow unchanged.
->>>
->>> Under PAC, successful test of the mitigation is reported by the PAC
->>> exception handler:
->>>
->>>  lkdtm: Performing direct entry CFI_BACKWARD
->>>  lkdtm: Attempting unchecked stack return address redirection ...
->>>  lkdtm: ok: redirected stack return address.
->>>  lkdtm: Attempting checked stack return address redirection ...
->>>  Unable to handle kernel paging request at virtual address bfffffc0088d0514
->>>  Mem abort info:
->>>    ESR = 0x86000004
->>>    EC = 0x21: IABT (current EL), IL = 32 bits
->>>    SET = 0, FnV = 0
->>>    EA = 0, S1PTW = 0
->>>    FSC = 0x04: level 0 translation fault
->>>  [bfffffc0088d0514] address between user and kernel address ranges
->>>  ...
->>>
->>> If the CONFIGs are missing (or the mitigation isn't working), failure
->>> is reported as:
->>>
->>>  lkdtm: Performing direct entry CFI_BACKWARD
->>>  lkdtm: Attempting unchecked stack return address redirection ...
->>>  lkdtm: ok: redirected stack return address.
->>>  lkdtm: Attempting checked stack return address redirection ...
->>>  lkdtm: FAIL: stack return address was redirected!
->>>  lkdtm: This is probably expected, since this kernel was built *without* CONFIG_ARM64_PTR_AUTH_KERNEL=y nor CONFIG_SHADOW_CALL_STACK=y
->>>
->>> Co-developed-by: Dan Li <ashimida@linux.alibaba.com>
->>> Signed-off-by: Dan Li <ashimida@linux.alibaba.com>
->>> Cc: Arnd Bergmann <arnd@arndb.de>
->>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>> Signed-off-by: Kees Cook <keescook@chromium.org>
->>> ---
->>> v1: https://lore.kernel.org/lkml/20220413213917.711770-1-keescook@chromium.org
->>> v2:
->>>  - add PAGE_OFFSET setting for PAC bits (Dan Li)
->>> ---
->>>  drivers/misc/lkdtm/cfi.c                | 134 ++++++++++++++++++++++++
->>>  tools/testing/selftests/lkdtm/tests.txt |   1 +
->>>  2 files changed, 135 insertions(+)
->>>
->>> diff --git a/drivers/misc/lkdtm/cfi.c b/drivers/misc/lkdtm/cfi.c
->>> index e88f778be0d5..804965a480b7 100644
->>> --- a/drivers/misc/lkdtm/cfi.c
->>> +++ b/drivers/misc/lkdtm/cfi.c
->>> @@ -3,6 +3,7 @@
->>>   * This is for all the tests relating directly to Control Flow Integrity.
->>>   */
->>>  #include "lkdtm.h"
->>> +#include <asm/page.h>
->>>
->>>  static int called_count;
->>>
->>> @@ -42,8 +43,141 @@ static void lkdtm_CFI_FORWARD_PROTO(void)
->>>         pr_expected_config(CONFIG_CFI_CLANG);
->>>  }
->>>
->>> +/*
->>> + * This can stay local to LKDTM, as there should not be a production reason
->>> + * to disable PAC && SCS.
->>> + */
->>> +#ifdef CONFIG_ARM64_PTR_AUTH_KERNEL
->>> +# ifdef CONFIG_ARM64_BTI_KERNEL
->>> +#  define __no_pac             "branch-protection=bti"
->>> +# else
->>> +#  define __no_pac             "branch-protection=none"
->>> +# endif
->>> +# define __no_ret_protection   __noscs __attribute__((__target__(__no_pac)))
->>> +#else
->>> +# define __no_ret_protection   __noscs
->>> +#endif
->>
->> We're seeing this problem with allmodconfig on arm64 and GCC 8 (this
->> one observed on 6.0.12-rc3):
->>
->> -----8<----------8<----------8<-----
->> make --silent --keep-going --jobs=8
->> O=/home/tuxbuild/.cache/tuxmake/builds/2/build
->> CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- ARCH=arm64
->> CROSS_COMPILE=aarch64-linux-gnu- 'CC=sccache aarch64-linux-gnu-gcc'
->> 'HOSTCC=sccache gcc'
->> /builds/linux/drivers/misc/lkdtm/cfi.c:67:1: error: pragma or
->> attribute 'target("branch-protection=none")' is not valid
->>  {
->>  ^
-> 
-> Uuuh... how is CONFIG_ARM64_PTR_AUTH_KERNEL getting set if the compiler
-> can't support the 'target("branch-protection=none")' attribute?
-> 
+On Fri, Dec 9, 2022 at 11:05 AM <jeffxu@chromium.org> wrote:
+> From: Jeff Xu <jeffxu@google.com>
+>
+> Since Linux introduced the memfd feature, memfd have always had their
+> execute bit set, and the memfd_create() syscall doesn't allow setting
+> it differently.
+>
+> However, in a secure by default system, such as ChromeOS, (where all
+> executables should come from the rootfs, which is protected by Verified
+> boot), this executable nature of memfd opens a door for NoExec bypass
+> and enables =E2=80=9Cconfused deputy attack=E2=80=9D.  E.g, in VRP bug [1=
+]: cros_vm
+> process created a memfd to share the content with an external process,
+> however the memfd is overwritten and used for executing arbitrary code
+> and root escalation. [2] lists more VRP in this kind.
 
-Older GCC versions supported the (now deprecated) -msign-return-address option 
-instead of the newer -mbranch-protection option, and the kernel checks for that
-too when setting CONFIG_ARM64_PTR_AUTH_KERNEL. I guess the test has never
-compiled with older GCC versions. The following patch should fix it.
+...
 
--- 8< --
+> [1] https://crbug.com/1305411
 
-Subject: [PATCH] lkdtm: cfi: Make PAC test work with GCC 7 and 8
+Can you make this accessible so those of us on the public lists can
+view this bug?  If not, please remove it from future postings and
+adjust your description accordingly.
 
-The CFI test uses the branch-protection=none compiler attribute to
-disable PAC return address protection on a function. While newer GCC
-versions support this attribute, older versions (GCC 7 and 8) instead
-supported the sign-return-address=none attribute, leading to a build
-failure when the test is built with older compilers. Fix it by checking
-which attribute is supported and using the correct one.
-
-Fixes: 2e53b877dc12 ("lkdtm: Add CFI_BACKWARD to test ROP mitigations")
-Reported-by: Daniel Díaz <daniel.diaz@linaro.org>
-Signed-off-by: Kristina Martsenko <kristina.martsenko@arm.com>
-Link: https://lore.kernel.org/all/CAEUSe78kDPxQmQqCWW-_9LCgJDFhAeMoVBFnX9QLx18Z4uT4VQ@mail.gmail.com/
----
- drivers/misc/lkdtm/cfi.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/misc/lkdtm/cfi.c b/drivers/misc/lkdtm/cfi.c
-index 5245cf6013c9..d4bb8e31a2fe 100644
---- a/drivers/misc/lkdtm/cfi.c
-+++ b/drivers/misc/lkdtm/cfi.c
-@@ -54,7 +54,11 @@ static void lkdtm_CFI_FORWARD_PROTO(void)
- # ifdef CONFIG_ARM64_BTI_KERNEL
- #  define __no_pac             "branch-protection=bti"
- # else
--#  define __no_pac             "branch-protection=none"
-+#  ifdef CONFIG_CC_HAS_BRANCH_PROT_PAC_RET
-+#   define __no_pac             "branch-protection=none"
-+#  else
-+#   define __no_pac             "sign-return-address=none"
-+#  endif
- # endif
- # define __no_ret_protection   __noscs __attribute__((__target__(__no_pac)))
- #else
-
+--=20
+paul-moore.com
