@@ -2,87 +2,112 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7636C4332F
-	for <linux-hardening@archiver.kernel.org>; Sat, 10 Dec 2022 04:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BF5C4332F
+	for <linux-hardening@archiver.kernel.org>; Sat, 10 Dec 2022 10:26:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229843AbiLJEOH (ORCPT
+        id S229475AbiLJK0R (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 9 Dec 2022 23:14:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56234 "EHLO
+        Sat, 10 Dec 2022 05:26:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229816AbiLJEN7 (ORCPT
+        with ESMTP id S229512AbiLJK0O (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 9 Dec 2022 23:13:59 -0500
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F20062FBF8
-        for <linux-hardening@vger.kernel.org>; Fri,  9 Dec 2022 20:13:56 -0800 (PST)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-3b5d9050e48so76844847b3.2
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Dec 2022 20:13:56 -0800 (PST)
+        Sat, 10 Dec 2022 05:26:14 -0500
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F8B3192AA
+        for <linux-hardening@vger.kernel.org>; Sat, 10 Dec 2022 02:26:10 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id cf42so10874054lfb.1
+        for <linux-hardening@vger.kernel.org>; Sat, 10 Dec 2022 02:26:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thingy.jp; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ulh9++McEWHTOB6P5Ka9efyv+3TP8QPl365askkEGq0=;
-        b=mvrQxKIdQOElepQpJg4WS4ziBVtlbOrqfbO4vOBulo9R1mBEsanZDv0fE32SVgrfkS
-         2rE22wEBnTwI/hCNIj9UF3eIEZ648J4344ps9vRQYcO6Nv01JmEibNn1PJ8gRH4ZBYYe
-         rVX4sVNuPaqB4S9Pb+DDF1aahut0DIf9+pcbA=
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VtLJNDu+OcXPIw8jTOxpwXv8sktDAvQVvTt3GUvBQb8=;
+        b=EeqEI9z66oRr6x2wHZFZ5qBrARJNGjJFvItHPRCHkOfiqXE0UZYXGWWriTMY38G6KP
+         zHs7RH35l8oT75tuRbtzMC+SkZeIqxDlgmym8qk5RsT6jZwl+zFrC4MJWT9GiZCq2eeK
+         AaHqbaa4gJaVCtIu/e29DSGQ7h1PkkWW+rzAU92o8ftToCSjRI+bXkhC/a0mylhrR9u2
+         8YUCPCKJm5PnyllM7CSi83wHb30JYY1OI43L4ITMQGSMLoLUYGKBzISt1y0xCTQI/Qas
+         6f/RksuoffvznEehPhbNTd1GOjk5AtgRzh+mu1/phimoaFVOQqUQUBGKmDz75YjzycCi
+         9IJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Ulh9++McEWHTOB6P5Ka9efyv+3TP8QPl365askkEGq0=;
-        b=tb6B8YQ0XyQgBe0JbGomuJSc9uA9rjr/m0AsQ2BB9znDYRQ6lgYxPK6KJ1K4r4GvG/
-         rTOjZL7GBFEnBX450iw+Tmk9gTB2AbhwwZjQ/m+ByUR4uq03YVuqbL1gQL8+d90WchiS
-         hVh0yriaRjtfcMYNeReMJOcQi9owSK3K0SVLYXKkp9DN0aEt2cu0Asx+BAXRq3J1NUcJ
-         FkQiC8wqG1KKru+A5TY5DZlz6anadDBVwZXbNMnj9LxAvLoue4YPa9TwESgq3XJGvKDe
-         Du4agfPBuDDJSIqIZvhJ7XWz8J/JEbbXvbOruQhFeUwtHHftRL9ERlDTAieXZGgRaNMy
-         l6IQ==
-X-Gm-Message-State: ANoB5pk3TU3zFWF7sLsTz4T0w4TOtrUB3nVX/so38TGPGGT/jMrIFsBU
-        Atpni7ZbLFO78JfKAuvaRMgLmfChhBD9q+OVvWCZ1w==
-X-Google-Smtp-Source: AA0mqf7dx5jjunaFJZjtrPR2XLjbxLbkIeL3qmdNqILQwcA/YZNLbCMwbWD2LXY2kj/nq4/AC3BtcFd5bvgudEYX2/E=
-X-Received: by 2002:a0d:d988:0:b0:3eb:447b:6840 with SMTP id
- b130-20020a0dd988000000b003eb447b6840mr17744763ywe.307.1670645636141; Fri, 09
- Dec 2022 20:13:56 -0800 (PST)
+        bh=VtLJNDu+OcXPIw8jTOxpwXv8sktDAvQVvTt3GUvBQb8=;
+        b=Erol+q0Ie/7Dz/Awx9q6N0TGB51o87bv1V9bf4WeYRAS3Ay60s8IcEhjK0SHhMoXyF
+         pTtuo+TLcdi8Bjoc74CQ1QPQcudpjsBx7tH1JdcOcql5Y9MHPXDawrGW+PFWqc1z65vK
+         a3VSDrZldPJ+hjjtfR4SH+seoxreKhyNw2cTYyyKYZ/bMu+s/mZMFVwuZfxGaykpS0Yw
+         ntWwbuDumWbWS0tSsgLhW/4OJ0q+iVsT8ktSM2b3/GHMIIww2+hwwrBZrpP5trawSv/R
+         XjJVPYN+4clfzTh+klN8ui3SC6qkqyUcvv7zHLNsr2AfEuEwYDlHa3rYmxyN1uw2zvHz
+         VLDg==
+X-Gm-Message-State: ANoB5pmRoj6T2ORbjBZzfIHsvQPXwabU6UVZ7drhjofnk/V5bMQ30nYW
+        iZsZkLiyS14AzBboy+19+kxKvg==
+X-Google-Smtp-Source: AA0mqf6J3YQDAOpPlFae5H80QTDe2s6nxrZKvhZ0wS6Uer1nbjq+KtLf05a0mU8r7EaH4aZkQINmOg==
+X-Received: by 2002:a05:6512:23a9:b0:4a4:68b8:f4ef with SMTP id c41-20020a05651223a900b004a468b8f4efmr3521377lfv.53.1670667968588;
+        Sat, 10 Dec 2022 02:26:08 -0800 (PST)
+Received: from localhost.localdomain (abxh44.neoplus.adsl.tpnet.pl. [83.9.1.44])
+        by smtp.gmail.com with ESMTPSA id n6-20020a05651203e600b004b58fadba35sm656049lfq.296.2022.12.10.02.26.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 Dec 2022 02:26:08 -0800 (PST)
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+To:     linux-arm-msm@vger.kernel.org, andersson@kernel.org,
+        agross@kernel.org, krzysztof.kozlowski@linaro.org
+Cc:     patches@linaro.org, Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Luca Weiss <luca.weiss@fairphone.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: sm6350: Fix up the ramoops node
+Date:   Sat, 10 Dec 2022 11:25:59 +0100
+Message-Id: <20221210102600.589028-1-konrad.dybcio@linaro.org>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-References: <20221202184525.gonna.423-kees@kernel.org>
-In-Reply-To: <20221202184525.gonna.423-kees@kernel.org>
-From:   Daniel Palmer <daniel@thingy.jp>
-Date:   Sat, 10 Dec 2022 13:13:45 +0900
-Message-ID: <CAFr9PXngqDMYNOsNSLNEq=sRY0JDhAn5H5vuMVZD2o1=W1iU_Q@mail.gmail.com>
-Subject: Re: [PATCH v2] rtc: msc313: Fix function prototype mismatch in msc313_rtc_probe()
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        kernel test robot <lkp@intel.com>,
-        Romain Perier <romain.perier@gmail.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
+Fix up the ramoops node to make it match bindings and style:
 
-On Sat, 3 Dec 2022 at 03:45, Kees Cook <keescook@chromium.org> wrote:
-> msc313_rtc_probe() was passing clk_disable_unprepare() directly, which
-> did not have matching prototypes for devm_add_action_or_reset()'s
-> callback argument. Refactor to use devm_clk_get_enabled() instead.
+- remove "removed-dma-pool"
+- don't pad size to 8 hex digits
+- change cc-size to ecc-size so that it's used
+- increase ecc-size from to 16
+- remove the zeroed ftrace-size
 
-I didn't know devm_clk_get_enabled() existed. Learned something new. :)
-Really nice that it fixes an issue and gets rid of a bunch of lines.
+Fixes: 5f82b9cda61e ("arm64: dts: qcom: Add SM6350 device tree")
+Reported-by: Luca Weiss <luca.weiss@fairphone.com>
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sm6350.dtsi | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Anyhow, the change looks good to me, I build, boot and "does RTC still
-work?" tested this so:
+diff --git a/arch/arm64/boot/dts/qcom/sm6350.dtsi b/arch/arm64/boot/dts/qcom/sm6350.dtsi
+index 567f4893c562..b8e03efc44a7 100644
+--- a/arch/arm64/boot/dts/qcom/sm6350.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm6350.dtsi
+@@ -344,13 +344,12 @@ last_log_region: memory@ffbc0000 {
+ 		};
+ 
+ 		ramoops: ramoops@ffc00000 {
+-			compatible = "removed-dma-pool", "ramoops";
+-			reg = <0 0xffc00000 0 0x00100000>;
++			compatible = "ramoops";
++			reg = <0 0xffc00000 0 0x100000>;
+ 			record-size = <0x1000>;
+ 			console-size = <0x40000>;
+-			ftrace-size = <0x0>;
+ 			msg-size = <0x20000 0x20000>;
+-			cc-size = <0x0>;
++			ecc-size = <16>;
+ 			no-map;
+ 		};
+ 
+-- 
+2.38.1
 
-Reviewed-by: Daniel Palmer <daniel@thingy.jp>
-Tested-by: Daniel Palmer <daniel@thingy.jp>
-
-Cheers,
-
-Daniel
