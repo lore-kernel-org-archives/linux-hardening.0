@@ -2,156 +2,91 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB11C4332F
-	for <linux-hardening@archiver.kernel.org>; Fri,  9 Dec 2022 23:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0978C4332F
+	for <linux-hardening@archiver.kernel.org>; Sat, 10 Dec 2022 04:00:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229573AbiLIXQt (ORCPT
+        id S229628AbiLJEAX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 9 Dec 2022 18:16:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60136 "EHLO
+        Fri, 9 Dec 2022 23:00:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229545AbiLIXQs (ORCPT
+        with ESMTP id S229723AbiLJEAV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 9 Dec 2022 18:16:48 -0500
-Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 544C152146;
-        Fri,  9 Dec 2022 15:16:47 -0800 (PST)
-Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-1322d768ba7so1555172fac.5;
-        Fri, 09 Dec 2022 15:16:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PkLQpu5eL9OZHKRdAfTyoXfk6Fj63Rxr9laOGfg5xGc=;
-        b=IRlMxe/QOBYNsZOuFX2veFnSjEcbVyUfnIFUjzu7cAUBoFvhBrAaqJDzWWdVJMjMTg
-         lO7d4nhXBvVfUdinsnNcocldGhGe5YBDB4BzQy54ZcIzuUscMEXv0JNrVKpZi2ppZ9bC
-         /9pp1sp7Q4FiNKbgnacrziuWpvY8GNsBoRRcHcB+2DIwO1mdrAR9ECLBPG8dUAv3ciXJ
-         i2fBuNWyfruZxToVdAlV23G/60j4Bbl4D52ZBnVcMfSheftPK859x3Gd/kHNw+Pbkuyn
-         Iv0Ejc29hRhdSTUbIq8qtlKxf4dumHmin/ghLjPGURAMBnceWh2GMwFHjsHgjolu6e0v
-         nYTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PkLQpu5eL9OZHKRdAfTyoXfk6Fj63Rxr9laOGfg5xGc=;
-        b=csENKk6cvSa0oC5DCyA9Xa5ilvPPRZArTDjApVy5hkZZYEIzuZOFaKUCb21HLQmuQN
-         Ty1TuL1zz7HgV9HL0pikLu8vLGf0NLuVn2krF2tRHvXitMWPHHGb9PTIc+/CqXRvz6Cy
-         WuON1whyCCCS35R5TyhHL/ZKjbCub6WdQh9Vpsmahnu7CSVK2Vtf3u3ga7FEwZFcXv8x
-         jNT7FPzGSkSxxyvHOhVJMsOgUXNAg2OETuoYE3KIuL35VSYw5RodRb88/n3Dg4KYCPBE
-         ULX/0q6smAr6u8yqf2pXqmCWvPzKOt1y5WY4B/rDg/o0vPQdFLcqHIKG7vouQBmsechM
-         Avlw==
-X-Gm-Message-State: ANoB5plMQXZVzTZjcD8cntPQ7A+aKJS3vkp+50jFxkUzujl/eiIM+I7z
-        ojFbZS7TVtmFnCYSVVpZ5ZwCgPnhyxc9X1JyQZE=
-X-Google-Smtp-Source: AA0mqf6MtRxq7OjbEiJtrmZnXTvTYRNWU2BbVAy8sQApGfyusInceJkgyzbXJEi2tUHTr2CeLSl9o+U+ljlumUDckC0=
-X-Received: by 2002:a05:6870:2b05:b0:12d:58c1:33f9 with SMTP id
- ld5-20020a0568702b0500b0012d58c133f9mr44331937oab.46.1670627806672; Fri, 09
- Dec 2022 15:16:46 -0800 (PST)
+        Fri, 9 Dec 2022 23:00:21 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 293D057B53;
+        Fri,  9 Dec 2022 20:00:21 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D512FB82A4B;
+        Sat, 10 Dec 2022 04:00:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 78931C433EF;
+        Sat, 10 Dec 2022 04:00:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1670644818;
+        bh=Rz+P4SaGHSIpmQsi3KIQXlPIq5hb6Gs+1inK2v4ojnI=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=mVRc8GNEm3ThZgLn47sVD2FOsXz5OhPQcQagxoFEqhhaxT+/zxO723gzOqpLKhFvr
+         xwsHbsZW/+vf2aafWyVXqsIu5kx2Ts5cyw7S+hzfkiodTa+hTArFWIOG9SXqKR/gzW
+         8gj/j3HwVwLz98tOtFjF+mg7Fk5AQJvFNwz/TAAxKRlvUD2j1Nk8u5OWTRTC5ecMzP
+         onfyGfdpRywRkKy+jjd8QePbW4e9vxT/nzrMLLHUH2RwPTxghDSK1fmYDzN/hGpFS+
+         9wSi/0B8xHd4JadPgcWEskDaYcAKCoJjtHAoOJLIyApA4lor6kn8HIhiwkc6TcjUzG
+         OGBUIaIzb6wFw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 41E41C41606;
+        Sat, 10 Dec 2022 04:00:18 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <Y5LwqRCPcYLizJFt@mail.google.com>
-In-Reply-To: <Y5LwqRCPcYLizJFt@mail.google.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 9 Dec 2022 18:16:34 -0500
-Message-ID: <CADnq5_NOyyLetx+wUtYL4f7ETHzVFAw_JnbGXGh5G1KYbUH3Zg@mail.gmail.com>
-Subject: Re: [PATCH] [next] drm/radeon: Replace 1-element arrays with
- flexible-array members
-To:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v3] skbuff: Introduce slab_build_skb()
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <167064481825.12189.4717731779203655380.git-patchwork-notify@kernel.org>
+Date:   Sat, 10 Dec 2022 04:00:18 +0000
+References: <20221208060256.give.994-kees@kernel.org>
+In-Reply-To: <20221208060256.give.994-kees@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     kuba@kernel.org,
+        syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com,
+        edumazet@google.com, davem@davemloft.net, pabeni@redhat.com,
+        asml.silence@gmail.com, soopthegoop@gmail.com, vbabka@suse.cz,
+        kasan-dev@googlegroups.com, andrii@kernel.org, ast@kernel.org,
+        bpf@vger.kernel.org, daniel@iogearbox.net, haoluo@google.com,
+        hawk@kernel.org, john.fastabend@gmail.com, jolsa@kernel.org,
+        kpsingh@kernel.org, martin.lau@linux.dev, sdf@google.com,
+        song@kernel.org, yhs@fb.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rmody@marvell.com,
+        aelior@marvell.com, manishc@marvell.com, imagedong@tencent.com,
+        dsahern@kernel.org, richardbgobert@gmail.com, andreyknvl@gmail.com,
+        rientjes@google.com, GR-Linux-NIC-Dev@marvell.com,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Applied.  Thanks!
+Hello:
 
-Alex
+This patch was applied to netdev/net-next.git (master)
+by Jakub Kicinski <kuba@kernel.org>:
 
-On Fri, Dec 9, 2022 at 3:24 AM Paulo Miguel Almeida
-<paulo.miguel.almeida.rodenas@gmail.com> wrote:
->
-> One-element arrays are deprecated, and we are replacing them with
-> flexible array members instead. So, replace one-element array with
-> flexible-array member in structs _ATOM_DISPLAY_OBJECT_PATH,
-> _ATOM_DISPLAY_OBJECT_PATH_TABLE, _ATOM_OBJECT_TABLE, GOP_VBIOS_CONTENT
-> _ATOM_GPIO_VOLTAGE_OBJECT_V3 and refactor the rest of the code accordingly.
->
-> It's worth mentioning that doing a build before/after this patch
-> results in no binary output differences.
->
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3 [1].
->
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://github.com/KSPP/linux/issues/239
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
->
-> Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-> ---
-> Notes for the maintainer:
->
-> - These are all fake-flexible arrays with references in source code for
->   the radeon driver. Given the way they are used, no change to *.c files
->   were required.
-> ---
->  drivers/gpu/drm/radeon/atombios.h | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/radeon/atombios.h b/drivers/gpu/drm/radeon/atombios.h
-> index 235e59b547a1..8a6621f1e82c 100644
-> --- a/drivers/gpu/drm/radeon/atombios.h
-> +++ b/drivers/gpu/drm/radeon/atombios.h
-> @@ -4020,7 +4020,7 @@ typedef struct  _ATOM_DISPLAY_OBJECT_PATH
->    USHORT    usSize;                                        //the size of ATOM_DISPLAY_OBJECT_PATH
->    USHORT    usConnObjectId;                                //Connector Object ID
->    USHORT    usGPUObjectId;                                 //GPU ID
-> -  USHORT    usGraphicObjIds[1];                             //1st Encoder Obj source from GPU to last Graphic Obj destinate to connector.
-> +  USHORT    usGraphicObjIds[];                             //1st Encoder Obj source from GPU to last Graphic Obj destinate to connector.
->  }ATOM_DISPLAY_OBJECT_PATH;
->
->  typedef struct  _ATOM_DISPLAY_EXTERNAL_OBJECT_PATH
-> @@ -4037,7 +4037,7 @@ typedef struct _ATOM_DISPLAY_OBJECT_PATH_TABLE
->    UCHAR                           ucNumOfDispPath;
->    UCHAR                           ucVersion;
->    UCHAR                           ucPadding[2];
-> -  ATOM_DISPLAY_OBJECT_PATH        asDispPath[1];
-> +  ATOM_DISPLAY_OBJECT_PATH        asDispPath[];
->  }ATOM_DISPLAY_OBJECT_PATH_TABLE;
->
->
-> @@ -4053,7 +4053,7 @@ typedef struct _ATOM_OBJECT_TABLE                         //Above 4 object table
->  {
->    UCHAR               ucNumberOfObjects;
->    UCHAR               ucPadding[3];
-> -  ATOM_OBJECT         asObjects[1];
-> +  ATOM_OBJECT         asObjects[];
->  }ATOM_OBJECT_TABLE;
->
->  typedef struct _ATOM_SRC_DST_TABLE_FOR_ONE_OBJECT         //usSrcDstTableOffset pointing to this structure
-> @@ -4615,7 +4615,7 @@ typedef struct  _ATOM_GPIO_VOLTAGE_OBJECT_V3
->     UCHAR    ucPhaseDelay;                // phase delay in unit of micro second
->     UCHAR    ucReserved;
->     ULONG    ulGpioMaskVal;               // GPIO Mask value
-> -   VOLTAGE_LUT_ENTRY_V2 asVolGpioLut[1];
-> +   VOLTAGE_LUT_ENTRY_V2 asVolGpioLut[];
->  }ATOM_GPIO_VOLTAGE_OBJECT_V3;
->
->  typedef struct  _ATOM_LEAKAGE_VOLTAGE_OBJECT_V3
-> @@ -7964,7 +7964,7 @@ typedef struct {
->
->  typedef struct {
->    VFCT_IMAGE_HEADER    VbiosHeader;
-> -  UCHAR        VbiosContent[1];
-> +  UCHAR        VbiosContent[];
->  }GOP_VBIOS_CONTENT;
->
->  typedef struct {
-> --
-> 2.38.1
->
+On Wed,  7 Dec 2022 22:02:59 -0800 you wrote:
+> syzkaller reported:
+> 
+>   BUG: KASAN: slab-out-of-bounds in __build_skb_around+0x235/0x340 net/core/skbuff.c:294
+>   Write of size 32 at addr ffff88802aa172c0 by task syz-executor413/5295
+> 
+> For bpf_prog_test_run_skb(), which uses a kmalloc()ed buffer passed to
+> build_skb().
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,v3] skbuff: Introduce slab_build_skb()
+    https://git.kernel.org/netdev/net-next/c/ce098da1497c
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
