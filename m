@@ -2,91 +2,87 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0978C4332F
-	for <linux-hardening@archiver.kernel.org>; Sat, 10 Dec 2022 04:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7636C4332F
+	for <linux-hardening@archiver.kernel.org>; Sat, 10 Dec 2022 04:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbiLJEAX (ORCPT
+        id S229843AbiLJEOH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 9 Dec 2022 23:00:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50852 "EHLO
+        Fri, 9 Dec 2022 23:14:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229723AbiLJEAV (ORCPT
+        with ESMTP id S229816AbiLJEN7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 9 Dec 2022 23:00:21 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 293D057B53;
-        Fri,  9 Dec 2022 20:00:21 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D512FB82A4B;
-        Sat, 10 Dec 2022 04:00:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 78931C433EF;
-        Sat, 10 Dec 2022 04:00:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670644818;
-        bh=Rz+P4SaGHSIpmQsi3KIQXlPIq5hb6Gs+1inK2v4ojnI=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=mVRc8GNEm3ThZgLn47sVD2FOsXz5OhPQcQagxoFEqhhaxT+/zxO723gzOqpLKhFvr
-         xwsHbsZW/+vf2aafWyVXqsIu5kx2Ts5cyw7S+hzfkiodTa+hTArFWIOG9SXqKR/gzW
-         8gj/j3HwVwLz98tOtFjF+mg7Fk5AQJvFNwz/TAAxKRlvUD2j1Nk8u5OWTRTC5ecMzP
-         onfyGfdpRywRkKy+jjd8QePbW4e9vxT/nzrMLLHUH2RwPTxghDSK1fmYDzN/hGpFS+
-         9wSi/0B8xHd4JadPgcWEskDaYcAKCoJjtHAoOJLIyApA4lor6kn8HIhiwkc6TcjUzG
-         OGBUIaIzb6wFw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 41E41C41606;
-        Sat, 10 Dec 2022 04:00:18 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Fri, 9 Dec 2022 23:13:59 -0500
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F20062FBF8
+        for <linux-hardening@vger.kernel.org>; Fri,  9 Dec 2022 20:13:56 -0800 (PST)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-3b5d9050e48so76844847b3.2
+        for <linux-hardening@vger.kernel.org>; Fri, 09 Dec 2022 20:13:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thingy.jp; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ulh9++McEWHTOB6P5Ka9efyv+3TP8QPl365askkEGq0=;
+        b=mvrQxKIdQOElepQpJg4WS4ziBVtlbOrqfbO4vOBulo9R1mBEsanZDv0fE32SVgrfkS
+         2rE22wEBnTwI/hCNIj9UF3eIEZ648J4344ps9vRQYcO6Nv01JmEibNn1PJ8gRH4ZBYYe
+         rVX4sVNuPaqB4S9Pb+DDF1aahut0DIf9+pcbA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ulh9++McEWHTOB6P5Ka9efyv+3TP8QPl365askkEGq0=;
+        b=tb6B8YQ0XyQgBe0JbGomuJSc9uA9rjr/m0AsQ2BB9znDYRQ6lgYxPK6KJ1K4r4GvG/
+         rTOjZL7GBFEnBX450iw+Tmk9gTB2AbhwwZjQ/m+ByUR4uq03YVuqbL1gQL8+d90WchiS
+         hVh0yriaRjtfcMYNeReMJOcQi9owSK3K0SVLYXKkp9DN0aEt2cu0Asx+BAXRq3J1NUcJ
+         FkQiC8wqG1KKru+A5TY5DZlz6anadDBVwZXbNMnj9LxAvLoue4YPa9TwESgq3XJGvKDe
+         Du4agfPBuDDJSIqIZvhJ7XWz8J/JEbbXvbOruQhFeUwtHHftRL9ERlDTAieXZGgRaNMy
+         l6IQ==
+X-Gm-Message-State: ANoB5pk3TU3zFWF7sLsTz4T0w4TOtrUB3nVX/so38TGPGGT/jMrIFsBU
+        Atpni7ZbLFO78JfKAuvaRMgLmfChhBD9q+OVvWCZ1w==
+X-Google-Smtp-Source: AA0mqf7dx5jjunaFJZjtrPR2XLjbxLbkIeL3qmdNqILQwcA/YZNLbCMwbWD2LXY2kj/nq4/AC3BtcFd5bvgudEYX2/E=
+X-Received: by 2002:a0d:d988:0:b0:3eb:447b:6840 with SMTP id
+ b130-20020a0dd988000000b003eb447b6840mr17744763ywe.307.1670645636141; Fri, 09
+ Dec 2022 20:13:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v3] skbuff: Introduce slab_build_skb()
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <167064481825.12189.4717731779203655380.git-patchwork-notify@kernel.org>
-Date:   Sat, 10 Dec 2022 04:00:18 +0000
-References: <20221208060256.give.994-kees@kernel.org>
-In-Reply-To: <20221208060256.give.994-kees@kernel.org>
+References: <20221202184525.gonna.423-kees@kernel.org>
+In-Reply-To: <20221202184525.gonna.423-kees@kernel.org>
+From:   Daniel Palmer <daniel@thingy.jp>
+Date:   Sat, 10 Dec 2022 13:13:45 +0900
+Message-ID: <CAFr9PXngqDMYNOsNSLNEq=sRY0JDhAn5H5vuMVZD2o1=W1iU_Q@mail.gmail.com>
+Subject: Re: [PATCH v2] rtc: msc313: Fix function prototype mismatch in msc313_rtc_probe()
 To:     Kees Cook <keescook@chromium.org>
-Cc:     kuba@kernel.org,
-        syzbot+fda18eaa8c12534ccb3b@syzkaller.appspotmail.com,
-        edumazet@google.com, davem@davemloft.net, pabeni@redhat.com,
-        asml.silence@gmail.com, soopthegoop@gmail.com, vbabka@suse.cz,
-        kasan-dev@googlegroups.com, andrii@kernel.org, ast@kernel.org,
-        bpf@vger.kernel.org, daniel@iogearbox.net, haoluo@google.com,
-        hawk@kernel.org, john.fastabend@gmail.com, jolsa@kernel.org,
-        kpsingh@kernel.org, martin.lau@linux.dev, sdf@google.com,
-        song@kernel.org, yhs@fb.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rmody@marvell.com,
-        aelior@marvell.com, manishc@marvell.com, imagedong@tencent.com,
-        dsahern@kernel.org, richardbgobert@gmail.com, andreyknvl@gmail.com,
-        rientjes@google.com, GR-Linux-NIC-Dev@marvell.com,
-        linux-hardening@vger.kernel.org
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        kernel test robot <lkp@intel.com>,
+        Romain Perier <romain.perier@gmail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
+Hi Kees,
 
-This patch was applied to netdev/net-next.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
+On Sat, 3 Dec 2022 at 03:45, Kees Cook <keescook@chromium.org> wrote:
+> msc313_rtc_probe() was passing clk_disable_unprepare() directly, which
+> did not have matching prototypes for devm_add_action_or_reset()'s
+> callback argument. Refactor to use devm_clk_get_enabled() instead.
 
-On Wed,  7 Dec 2022 22:02:59 -0800 you wrote:
-> syzkaller reported:
-> 
->   BUG: KASAN: slab-out-of-bounds in __build_skb_around+0x235/0x340 net/core/skbuff.c:294
->   Write of size 32 at addr ffff88802aa172c0 by task syz-executor413/5295
-> 
-> For bpf_prog_test_run_skb(), which uses a kmalloc()ed buffer passed to
-> build_skb().
-> 
-> [...]
+I didn't know devm_clk_get_enabled() existed. Learned something new. :)
+Really nice that it fixes an issue and gets rid of a bunch of lines.
 
-Here is the summary with links:
-  - [net-next,v3] skbuff: Introduce slab_build_skb()
-    https://git.kernel.org/netdev/net-next/c/ce098da1497c
+Anyhow, the change looks good to me, I build, boot and "does RTC still
+work?" tested this so:
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Reviewed-by: Daniel Palmer <daniel@thingy.jp>
+Tested-by: Daniel Palmer <daniel@thingy.jp>
 
+Cheers,
 
+Daniel
