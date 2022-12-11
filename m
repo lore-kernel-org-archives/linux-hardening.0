@@ -2,112 +2,80 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BF5C4332F
-	for <linux-hardening@archiver.kernel.org>; Sat, 10 Dec 2022 10:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF53CC4332F
+	for <linux-hardening@archiver.kernel.org>; Sun, 11 Dec 2022 17:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229475AbiLJK0R (ORCPT
+        id S230255AbiLKROs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 10 Dec 2022 05:26:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44206 "EHLO
+        Sun, 11 Dec 2022 12:14:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229512AbiLJK0O (ORCPT
+        with ESMTP id S229947AbiLKROq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 10 Dec 2022 05:26:14 -0500
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F8B3192AA
-        for <linux-hardening@vger.kernel.org>; Sat, 10 Dec 2022 02:26:10 -0800 (PST)
-Received: by mail-lf1-x12e.google.com with SMTP id cf42so10874054lfb.1
-        for <linux-hardening@vger.kernel.org>; Sat, 10 Dec 2022 02:26:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VtLJNDu+OcXPIw8jTOxpwXv8sktDAvQVvTt3GUvBQb8=;
-        b=EeqEI9z66oRr6x2wHZFZ5qBrARJNGjJFvItHPRCHkOfiqXE0UZYXGWWriTMY38G6KP
-         zHs7RH35l8oT75tuRbtzMC+SkZeIqxDlgmym8qk5RsT6jZwl+zFrC4MJWT9GiZCq2eeK
-         AaHqbaa4gJaVCtIu/e29DSGQ7h1PkkWW+rzAU92o8ftToCSjRI+bXkhC/a0mylhrR9u2
-         8YUCPCKJm5PnyllM7CSi83wHb30JYY1OI43L4ITMQGSMLoLUYGKBzISt1y0xCTQI/Qas
-         6f/RksuoffvznEehPhbNTd1GOjk5AtgRzh+mu1/phimoaFVOQqUQUBGKmDz75YjzycCi
-         9IJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VtLJNDu+OcXPIw8jTOxpwXv8sktDAvQVvTt3GUvBQb8=;
-        b=Erol+q0Ie/7Dz/Awx9q6N0TGB51o87bv1V9bf4WeYRAS3Ay60s8IcEhjK0SHhMoXyF
-         pTtuo+TLcdi8Bjoc74CQ1QPQcudpjsBx7tH1JdcOcql5Y9MHPXDawrGW+PFWqc1z65vK
-         a3VSDrZldPJ+hjjtfR4SH+seoxreKhyNw2cTYyyKYZ/bMu+s/mZMFVwuZfxGaykpS0Yw
-         ntWwbuDumWbWS0tSsgLhW/4OJ0q+iVsT8ktSM2b3/GHMIIww2+hwwrBZrpP5trawSv/R
-         XjJVPYN+4clfzTh+klN8ui3SC6qkqyUcvv7zHLNsr2AfEuEwYDlHa3rYmxyN1uw2zvHz
-         VLDg==
-X-Gm-Message-State: ANoB5pmRoj6T2ORbjBZzfIHsvQPXwabU6UVZ7drhjofnk/V5bMQ30nYW
-        iZsZkLiyS14AzBboy+19+kxKvg==
-X-Google-Smtp-Source: AA0mqf6J3YQDAOpPlFae5H80QTDe2s6nxrZKvhZ0wS6Uer1nbjq+KtLf05a0mU8r7EaH4aZkQINmOg==
-X-Received: by 2002:a05:6512:23a9:b0:4a4:68b8:f4ef with SMTP id c41-20020a05651223a900b004a468b8f4efmr3521377lfv.53.1670667968588;
-        Sat, 10 Dec 2022 02:26:08 -0800 (PST)
-Received: from localhost.localdomain (abxh44.neoplus.adsl.tpnet.pl. [83.9.1.44])
-        by smtp.gmail.com with ESMTPSA id n6-20020a05651203e600b004b58fadba35sm656049lfq.296.2022.12.10.02.26.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 10 Dec 2022 02:26:08 -0800 (PST)
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-To:     linux-arm-msm@vger.kernel.org, andersson@kernel.org,
-        agross@kernel.org, krzysztof.kozlowski@linaro.org
-Cc:     patches@linaro.org, Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Luca Weiss <luca.weiss@fairphone.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: sm6350: Fix up the ramoops node
-Date:   Sat, 10 Dec 2022 11:25:59 +0100
-Message-Id: <20221210102600.589028-1-konrad.dybcio@linaro.org>
-X-Mailer: git-send-email 2.38.1
+        Sun, 11 Dec 2022 12:14:46 -0500
+Received: from relay11.mail.gandi.net (relay11.mail.gandi.net [217.70.178.231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 671CDE0A5;
+        Sun, 11 Dec 2022 09:14:45 -0800 (PST)
+Received: (Authenticated sender: alexandre.belloni@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id DBE9F100004;
+        Sun, 11 Dec 2022 17:14:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1670778883;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rBDims/zkL1hUiQmCOcc4chEh7a5Jbi2KbYlhUI9MIA=;
+        b=memQZf3frHdebnPRjVSe3lRVg/+Xk4rIjKElSq13xvse53ZNtO8mDkF2YZchgSv54YkNFJ
+        09cWmF4OoJldYEJRZyL8fBi46G481IgIVUcueJuvQuKB9aKJ8hgdKUphgZ3+XtEM8AAyJn
+        mLTPkWCk5wdZWKQkJujdDrfFXM7+uyWaGReB7S55b+lMihH33KxXz0p01blA8zw7ZjZ5VM
+        bRR4V4+FpwWvU+ETs71IX9iAPE276ODJgiqDKI5OmDtbVUx7XCWjfzdEyUF8dICds7PsSW
+        Q0DElObMBQXu3FDWNJqruvUwpxqWVQVKTGarZVM0oeSr8Pyt1rS0OKNGeYdD6A==
+Date:   Sun, 11 Dec 2022 18:14:41 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     linux-hardening@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel test robot <lkp@intel.com>,
+        Romain Perier <romain.perier@gmail.com>, llvm@lists.linux.dev,
+        Tom Rix <trix@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Daniel Palmer <daniel@thingy.jp>, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v2] rtc: msc313: Fix function prototype mismatch in
+ msc313_rtc_probe()
+Message-ID: <167077884687.347026.2422549159298910618.b4-ty@bootlin.com>
+References: <20221202184525.gonna.423-kees@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221202184525.gonna.423-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Fix up the ramoops node to make it match bindings and style:
+On Fri, 2 Dec 2022 10:45:30 -0800, Kees Cook wrote:
+> With clang's kernel control flow integrity (kCFI, CONFIG_CFI_CLANG),
+> indirect call targets are validated against the expected function
+> pointer prototype to make sure the call target is valid to help mitigate
+> ROP attacks. If they are not identical, there is a failure at run time,
+> which manifests as either a kernel panic or thread getting killed.
+> 
+> msc313_rtc_probe() was passing clk_disable_unprepare() directly, which
+> did not have matching prototypes for devm_add_action_or_reset()'s
+> callback argument. Refactor to use devm_clk_get_enabled() instead.
+> 
+> [...]
 
-- remove "removed-dma-pool"
-- don't pad size to 8 hex digits
-- change cc-size to ecc-size so that it's used
-- increase ecc-size from to 16
-- remove the zeroed ftrace-size
+Applied, thanks!
 
-Fixes: 5f82b9cda61e ("arm64: dts: qcom: Add SM6350 device tree")
-Reported-by: Luca Weiss <luca.weiss@fairphone.com>
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
----
- arch/arm64/boot/dts/qcom/sm6350.dtsi | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+[1/1] rtc: msc313: Fix function prototype mismatch in msc313_rtc_probe()
+      commit: 21b8a1dd56a163825e5749b303858fb902ebf198
 
-diff --git a/arch/arm64/boot/dts/qcom/sm6350.dtsi b/arch/arm64/boot/dts/qcom/sm6350.dtsi
-index 567f4893c562..b8e03efc44a7 100644
---- a/arch/arm64/boot/dts/qcom/sm6350.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm6350.dtsi
-@@ -344,13 +344,12 @@ last_log_region: memory@ffbc0000 {
- 		};
- 
- 		ramoops: ramoops@ffc00000 {
--			compatible = "removed-dma-pool", "ramoops";
--			reg = <0 0xffc00000 0 0x00100000>;
-+			compatible = "ramoops";
-+			reg = <0 0xffc00000 0 0x100000>;
- 			record-size = <0x1000>;
- 			console-size = <0x40000>;
--			ftrace-size = <0x0>;
- 			msg-size = <0x20000 0x20000>;
--			cc-size = <0x0>;
-+			ecc-size = <16>;
- 			no-map;
- 		};
- 
+Best regards,
+
 -- 
-2.38.1
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
