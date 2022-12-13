@@ -2,103 +2,130 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05397C10F1B
-	for <linux-hardening@archiver.kernel.org>; Tue, 13 Dec 2022 18:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E01C4167B
+	for <linux-hardening@archiver.kernel.org>; Tue, 13 Dec 2022 19:22:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236602AbiLMSPV (ORCPT
+        id S236386AbiLMTWe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 13 Dec 2022 13:15:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47484 "EHLO
+        Tue, 13 Dec 2022 14:22:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236623AbiLMSOv (ORCPT
+        with ESMTP id S235365AbiLMTWd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 13 Dec 2022 13:14:51 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3944324944
-        for <linux-hardening@vger.kernel.org>; Tue, 13 Dec 2022 10:13:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1670955228;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BSZsQt2b+00I9NkxFr1DqCxFQqOr+fjPaGhCqsEly6E=;
-        b=WfB4CjBZOB6+f+wsk6nioJbXaxbqn+lxbafGu78sxwkMd1fYJpH2eYAUB88NY/58iKbn23
-        Egwpdpcm1GFKtZ4BV8+Lr0jNs3WqmQDDNKEKCvPUXdibXOPoum8scsVzBc2ioyS137VHsp
-        7uF4iwuY/H2FShpaL5zH0K9pT1aa5s4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-639-C6I4TzwDNDuSersUHDqtIg-1; Tue, 13 Dec 2022 13:13:41 -0500
-X-MC-Unique: C6I4TzwDNDuSersUHDqtIg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E9410101A588;
-        Tue, 13 Dec 2022 18:13:40 +0000 (UTC)
-Received: from redhat.com (unknown [10.2.17.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5AB9051FF;
-        Tue, 13 Dec 2022 18:13:40 +0000 (UTC)
-Date:   Tue, 13 Dec 2022 13:13:37 -0500
-From:   Peter Jones <pjones@redhat.com>
-To:     Evgeniy Baskov <baskov@ispras.ru>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        "Limonciello, Mario" <mario.limonciello@amd.com>,
-        joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
-        x86@kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 00/24] x86_64: Improvements at compressed kernel stage
-Message-ID: <20221213181336.fjyxagxkjtq3jchl@redhat.com>
-References: <cover.1668958803.git.baskov@ispras.ru>
- <20221213180317.qoy2l3mcpjparocq@redhat.com>
+        Tue, 13 Dec 2022 14:22:33 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 354701A83B
+        for <linux-hardening@vger.kernel.org>; Tue, 13 Dec 2022 11:22:31 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id w23so838075ply.12
+        for <linux-hardening@vger.kernel.org>; Tue, 13 Dec 2022 11:22:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GooOz5xzwABA0aXeznw8tJUM/w4xxzmJuyWu/svzARU=;
+        b=JQhIG2Dnt+kBdWNk3DVyFOdSdA0ib8mpr1HWSpWifG0Wgsu5cuwDKCXsQh8tWSrgyH
+         42GLmuR2Ph/Wci79VjQVy/C/W1o9PE46hYWAfq6TzhzJhdV7/d7OqkZ2F8n88iknOoVz
+         hkMKqFCyV52bkH93aadGRLMw2f38wQCcx+hq0MfiIE/9xCfCA6vzvyy2StriIrmjZt/s
+         Kp5RjTqR9zVNNWyBrneZ8Evqug9QLnxruisFOoy4/pOTlPwghDIaLH80mrTgUuFaN8dY
+         CdLmgmoqvfnRiL7VkF08qMmXGb9EEGcjpzdpOejtRPF6oCABT9Y6c47t+Zw54yxDiRnh
+         91fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GooOz5xzwABA0aXeznw8tJUM/w4xxzmJuyWu/svzARU=;
+        b=5d2gY7637tuhWeCmiRCuAz+W7aRNJaYyUJptN5CI/n6ROfzbrjC/rpSCVyBCX8e26A
+         YmYkS3rmGIhEhE7un1V+nnyyCTobLPtYoSRElQsgMzGMee2FTHkVQP6pk9GKXh1C8OHr
+         x9rd0bOJZXPsQdpw/pHqh1FvfTc6Rfud3pBRZhROw7p7zI7ErOXodKxB95ZioCX5MGAq
+         7ER4CqnqQnS3uNsvAnQDk7MIZRElfefAjXKJh4gbHl17qNI+iIrtbptP6YsgtX+8jP7O
+         tYiZnJfVL8Uoyi1GNQ8Ep99LU35u4b4ZzwJTF1xWOGBubDL/eJelSxVIOS/3RzuDXLMH
+         Scjg==
+X-Gm-Message-State: ANoB5pmGBUcRfhCQhfsPFP5dp1JDQJGIGx/WNpaEqOk407Lr30h+DHKL
+        Nt1TkpvKgeceJsnpZM61KJHiPGLhkzTHBmdYLhY/
+X-Google-Smtp-Source: AA0mqf7aGuvEMwZQ2myz4q21F/vwAjdbZ8+nOsSBmZZRAt8LcZga6xnXTekj7k2zRVU4K/i46QHyS2HTCWcbSGlnof8=
+X-Received: by 2002:a17:902:a70b:b0:189:b0a3:cf4f with SMTP id
+ w11-20020a170902a70b00b00189b0a3cf4fmr37496320plq.56.1670959350637; Tue, 13
+ Dec 2022 11:22:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20221213180317.qoy2l3mcpjparocq@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+References: <20221209160453.3246150-1-jeffxu@google.com> <20221209160453.3246150-7-jeffxu@google.com>
+ <CAHC9VhRBMTQvnBdSwMbkOsk9eemYfvCmj9TRgxtMeuex4KLCPA@mail.gmail.com> <CALmYWFvrasXnshO01YGWRyC7qKk4o0G88yAgkgjO1YBumF5zeA@mail.gmail.com>
+In-Reply-To: <CALmYWFvrasXnshO01YGWRyC7qKk4o0G88yAgkgjO1YBumF5zeA@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 13 Dec 2022 14:22:19 -0500
+Message-ID: <CAHC9VhQKsjiGv3Af0iqg_TLNzCvdTaLnhw+BRTF9OEtJg1hX7g@mail.gmail.com>
+Subject: Re: [PATCH v7 6/6] mm/memfd: security hook for memfd_create
+To:     Jeff Xu <jeffxu@google.com>
+Cc:     jeffxu@chromium.org, skhan@linuxfoundation.org,
+        keescook@chromium.org, akpm@linux-foundation.org,
+        dmitry.torokhov@gmail.com, dverkamp@chromium.org, hughd@google.com,
+        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        jannh@google.com, linux-hardening@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Dec 13, 2022 at 01:03:17PM -0500, Peter Jones wrote:
-> On Tue, Nov 22, 2022 at 02:12:09PM +0300, Evgeniy Baskov wrote:
-> > This patchset is aimed
-> > * to improve UEFI compatibility of compressed kernel code for x86_64
-> > * to setup proper memory access attributes for code and rodata sections
-> > * to implement W^X protection policy throughout the whole execution 
-> >   of compressed kernel for EFISTUB code path. 
-> 
-> Hi Evgeniy,
-> 
-> I've tested this patch set on hardware and QEMU+MU firmware, and it
-> works for me with a couple of minor issues:
-> 
-> - on one machine that has the DXE protocol but not the EFI one, we get
->   an error because the firmware doesn't support EFI_MEMORY_RP
-> - on QEMU I'm seeing the size of "(unsigned long)_head - image_base"
->   wind up as 0, which leads to an EFI_INVALID_PARAMETER on the
->   clear_memory_attributes() call.
-> 
-> In both cases the system winds up working, but with unnecessary console
-> output.
+On Tue, Dec 13, 2022 at 10:00 AM Jeff Xu <jeffxu@google.com> wrote:
+> On Fri, Dec 9, 2022 at 10:29 AM Paul Moore <paul@paul-moore.com> wrote:
+> > On Fri, Dec 9, 2022 at 11:05 AM <jeffxu@chromium.org> wrote:
+> > >
+> > > From: Jeff Xu <jeffxu@google.com>
+> > >
+> > > The new security_memfd_create allows lsm to check flags of
+> > > memfd_create.
+> > >
+> > > The security by default system (such as chromeos) can use this
+> > > to implement system wide lsm to allow only non-executable memfd
+> > > being created.
+> > >
+> > > Signed-off-by: Jeff Xu <jeffxu@google.com>
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > ---
+> > >  include/linux/lsm_hook_defs.h | 1 +
+> > >  include/linux/lsm_hooks.h     | 4 ++++
+> > >  include/linux/security.h      | 6 ++++++
+> > >  mm/memfd.c                    | 5 +++++
+> > >  security/security.c           | 5 +++++
+> > >  5 files changed, 21 insertions(+)
+> >
+> > We typically require at least one in-tree LSM implementation to
+> > accompany a new LSM hook.  Beyond simply providing proof that the hook
+> > has value, it helps provide a functional example both for reviewers as
+> > well as future LSM implementations.  Also, while the BPF LSM is
+> > definitely "in-tree", its nature is such that the actual
+> > implementation lives out-of-tree; something like SELinux, AppArmor,
+> > Smack, etc. are much more desirable from an in-tree example
+> > perspective.
+>
+> Thanks for the comments.
+> Would that be OK if I add a new LSM in the kernel  to block executable
+> memfd creation ?
 
-I just realized I've overstated here - I haven't actually hit the first
-problem on x86, only on ARM, where we don't currently use this code.  I
-discovered it in grub, and checked your patch set to see if you had the
-same issue I did.  That said, "in both cases the system winds up
-working" is probably still true - in that the edk2 code supports
-EFI_MEMORY_RP on x86 but not ARM, so x86 won't hit the issue when using
-DXE unless someone cooks up another implementation.  Nevertheless I
-believe the patch to fix it is correct and should be applied.
+If you would be proposing the LSM only to meet the requirement of
+providing an in-tree LSM example, no that would definitely *not* be
+okay.
 
-Thanks!
+Proposing a new LSM involves documenting a meaningful security model,
+implementing it, developing tests, going through a (likely multi-step)
+review process, and finally accepting the long term maintenance
+responsibilities of this new LSM.  If you are proposing a new LSM
+because you feel the current LSMs do not provide a security model
+which meets your needs, then yes, proposing a new LSM might be a good
+idea.  However, if you are proposing a new LSM because you don't want
+to learn how to add a new hook to an existing LSM, then I suspect you
+are misguided/misinformed with the amount of work involved in
+submitting a new LSM.
+
+> Alternatively,  it might be possible to add this into SELinux or
+> landlock, it will be a larger change.
+
+It will be a much smaller change than submitting a new LSM, and it
+would have infinitely more value to the community than a throw-away
+LSM where the only use-case is getting your code merged upstream.
 
 -- 
-        Peter
-
+paul-moore.com
