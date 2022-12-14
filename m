@@ -2,95 +2,114 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44480C4332F
-	for <linux-hardening@archiver.kernel.org>; Wed, 14 Dec 2022 22:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FF3C4167B
+	for <linux-hardening@archiver.kernel.org>; Wed, 14 Dec 2022 22:48:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229566AbiLNWH0 (ORCPT
+        id S229460AbiLNWsd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 14 Dec 2022 17:07:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46876 "EHLO
+        Wed, 14 Dec 2022 17:48:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbiLNWHZ (ORCPT
+        with ESMTP id S229437AbiLNWsc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 14 Dec 2022 17:07:25 -0500
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F18A61EEF5;
-        Wed, 14 Dec 2022 14:07:23 -0800 (PST)
-Received: by mail-qt1-x82a.google.com with SMTP id x11so3665239qtv.13;
-        Wed, 14 Dec 2022 14:07:23 -0800 (PST)
+        Wed, 14 Dec 2022 17:48:32 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4761327DFC
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Dec 2022 14:48:31 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id z8-20020a17090abd8800b00219ed30ce47so822805pjr.3
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Dec 2022 14:48:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5/39cbinCm2DlY6z44q1qFPXCL75QR7vAT6pW5+yC8Y=;
-        b=iLYrwhVnnNIL/F6TsTsvS9Shdni52MY2EjTZE2RucUeMYmjxAiipoGvckF8Hv8cXzO
-         XQrblOKgcOqF5DxvUJlpsPLHeVhF9+sBjCUbW8hZ3n2GaSsLWAuV773rMukDU0z+QUGY
-         5Pow4U6J+dk0BU556isbAaQG0ZhxN1F6hX9LFuoXlg5QZqGtcscAsJeTAulmfTRBLfKL
-         jINWBk4+2Dz7FIHt65DQbvfgVdDpCdqalUqyN+ei4MUn0URzwnng8dwKbqSrbje7w6NJ
-         mdl+g1JU8rKZno5jIRa9tUisz4UnaN/ZHUV19wxGx2lP9wUrfBMexoTiX6nXjp33vr2O
-         48MA==
+        d=chromium.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=iMEJ8qWvU17qF8Iw6KkCvqlY5TEaxk9MDPpeFJN2leo=;
+        b=aXfHEhtI9R9soKDZaToBP0eHoF2wK2L4yt464De59nc6HszERIRBsqLpZZ+DFxc96F
+         ErGuCCGWsqQeO+Y1l54z466jTHAlyVTnV523ltKdLyfd0Iho/DTDTk578EVfOjG7+STh
+         xQf2eoCCBBhAtR68zaS7SgJiOTnl2XhSwFrvM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5/39cbinCm2DlY6z44q1qFPXCL75QR7vAT6pW5+yC8Y=;
-        b=jCCfFR+8ZGVwaSm/ugSObWxlxXYEZUUi2JQJZ+ZOKHt+mnnH5BMHypj3NXMcil+028
-         YODR3Zm7wxsUYi64k3AjtX5OSdcQ3d9K/jP3TFXQBhf+wS3kjZ2mJyfF3wMC7Vto48+Q
-         bKECP9U2EuhGY5VKxTPJEBCIQqOqnZvYChAoeH1LVZDPpKYGG8IlJJCzK/gwJgzV7BU/
-         oaBFDH2euy4LpLb8tv3KmdgAi5bgV0jMHceLXj0zgk1jn+/fyV5y2EnjelNcUpW7J/9B
-         QFqv3xbOA5ePI3ZAxK/OrJVwZVdi1dd9lRg08unlSoeA4tmf4ZwzHfMxtZ2eoCjOgH4+
-         YWPA==
-X-Gm-Message-State: ANoB5pm6eTb2t1d58SKiiDJYieVLSEZw0MZ+jHSJV/YtdXG8BEe1GzQ2
-        UEoO+lt9byHTL55lzyRQiiiPCeZ8s5Ff+UW+lCQ=
-X-Google-Smtp-Source: AA0mqf6mUwKlSDOlkhQHSbAqiZFQHKjcVjQaDVm2zvGjx0vP0jSbepa69mG+0GZTmQab4bXnHCqn1uaWHvBy7nQpFE4=
-X-Received: by 2002:ac8:730c:0:b0:3a8:175b:a966 with SMTP id
- x12-20020ac8730c000000b003a8175ba966mr854132qto.384.1671055643046; Wed, 14
- Dec 2022 14:07:23 -0800 (PST)
-MIME-Version: 1.0
-References: <Y5mMWEtHWKOiPVU+@mail.google.com> <202212141124.736E3DE2A8@keescook>
- <Y5otilaHc6HBPCAF@mail.google.com> <CAHp75VdHU3g_t8u-hr1C=mttvEq-jWmMuCwaQqXToP-kH3xstQ@mail.gmail.com>
- <202212141347.9AD66DEBC8@keescook>
-In-Reply-To: <202212141347.9AD66DEBC8@keescook>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 15 Dec 2022 00:06:46 +0200
-Message-ID: <CAHp75VdqUMs1uz8zeyDi6rJKayFt6UMrm0A=-Hp8tQpCUSGujQ@mail.gmail.com>
-Subject: Re: [PATCH] [next] pcmcia: synclink_cs: replace 1-element array with
- flex-array member
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>,
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iMEJ8qWvU17qF8Iw6KkCvqlY5TEaxk9MDPpeFJN2leo=;
+        b=w61pnxufRIJXq++FQOEcwueejEhSNRsV3HFlk6u3XCJuvvrW3P6IrAxDWCm90x/zZw
+         X4hGKGfGciiWTHmFm7sln1j7X9qDNnV3bK2GDWS7+Yo9Qh0/fQ7c9QOCW/Ly47aVgrqv
+         JTMjnoJnc9ctBmdbWo4ek3xL+NYBpLTAf7uqxJCiHhi1HEa/yvQMCg1i0WtcyyM/YNeU
+         Ni6Bj7owBHYOqYUE+RBkWMMEyscZx8EDvlsxj6CZ9wjE3bQ+lAPAo8z/SuBrbUGv4E5v
+         4Tgkkr/3kXX9xSDXGM49wrni8iWu7g0Njt8lcL8lF9ZHK6hlCxEw24wZ+Bs1KmLpR6EJ
+         AXWQ==
+X-Gm-Message-State: ANoB5pnD0cnJ8F5nik0w3Q3sbwaJX4AWUGXlp4K1WFAH9OIqHWC/fEIu
+        Hl/3+IgxYj7tv88aOkbbfOVNuQ==
+X-Google-Smtp-Source: AA0mqf7qKN79UVZEaW0Ls76RahKulLM3pvcDvRzXwGVbF7i+MXNF8rKr0K5wWQE/acWibVQATBg9tQ==
+X-Received: by 2002:a05:6a20:429a:b0:af:89c2:ad01 with SMTP id o26-20020a056a20429a00b000af89c2ad01mr1690943pzj.40.1671058110782;
+        Wed, 14 Dec 2022 14:48:30 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h8-20020a170902680800b00172f6726d8esm2327431plk.277.2022.12.14.14.48.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Dec 2022 14:48:29 -0800 (PST)
+Date:   Wed, 14 Dec 2022 14:48:28 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Kristina Martsenko <kristina.martsenko@arm.com>
+Cc:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
+        Dan Li <ashimida@linux.alibaba.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Haowen Bai <baihaowen@meizu.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] lkdtm: Add CFI_BACKWARD to test ROP mitigations
+Message-ID: <202212141448.03552F3@keescook>
+References: <20220416001103.1524653-1-keescook@chromium.org>
+ <CAEUSe78kDPxQmQqCWW-_9LCgJDFhAeMoVBFnX9QLx18Z4uT4VQ@mail.gmail.com>
+ <202212072221.A9FCC905CF@keescook>
+ <ba52dac5-2ce7-a567-41af-841b857abbed@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ba52dac5-2ce7-a567-41af-841b857abbed@arm.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Dec 14, 2022 at 11:49 PM Kees Cook <keescook@chromium.org> wrote:
-> On Wed, Dec 14, 2022 at 10:39:52PM +0200, Andy Shevchenko wrote:
-> > Yes, and Try to make it work with __packed. As I said, the problem is
-> > that the code is relying on something which is architecture dependent
-> > strictly speaking. And hence I disagree with Kees that v2 is okay to
-> > go.
->
-> I meant that v2 is functionally identical to the existing code.
+On Fri, Dec 09, 2022 at 05:34:41PM +0000, Kristina Martsenko wrote:
+> Subject: [PATCH] lkdtm: cfi: Make PAC test work with GCC 7 and 8
+> 
+> The CFI test uses the branch-protection=none compiler attribute to
+> disable PAC return address protection on a function. While newer GCC
+> versions support this attribute, older versions (GCC 7 and 8) instead
+> supported the sign-return-address=none attribute, leading to a build
+> failure when the test is built with older compilers. Fix it by checking
+> which attribute is supported and using the correct one.
+> 
+> Fixes: 2e53b877dc12 ("lkdtm: Add CFI_BACKWARD to test ROP mitigations")
+> Reported-by: Daniel Díaz <daniel.diaz@linaro.org>
+> Signed-off-by: Kristina Martsenko <kristina.martsenko@arm.com>
+> Link: https://lore.kernel.org/all/CAEUSe78kDPxQmQqCWW-_9LCgJDFhAeMoVBFnX9QLx18Z4uT4VQ@mail.gmail.com/
 
-Ah, sorry for misunderstanding.
+Thanks! Added to my tree.
 
-> > The full change should be something like
-> >
-> > check_add(sizeof(), max_frame_size)
-> > kcalloc(8, size)
->
-> Right -- this would fix the existing mistakes in size calculation (and
-> is certainly better).
-
-Glad to hear that we are on the same page.
+> ---
+>  drivers/misc/lkdtm/cfi.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/misc/lkdtm/cfi.c b/drivers/misc/lkdtm/cfi.c
+> index 5245cf6013c9..d4bb8e31a2fe 100644
+> --- a/drivers/misc/lkdtm/cfi.c
+> +++ b/drivers/misc/lkdtm/cfi.c
+> @@ -54,7 +54,11 @@ static void lkdtm_CFI_FORWARD_PROTO(void)
+>  # ifdef CONFIG_ARM64_BTI_KERNEL
+>  #  define __no_pac             "branch-protection=bti"
+>  # else
+> -#  define __no_pac             "branch-protection=none"
+> +#  ifdef CONFIG_CC_HAS_BRANCH_PROT_PAC_RET
+> +#   define __no_pac             "branch-protection=none"
+> +#  else
+> +#   define __no_pac             "sign-return-address=none"
+> +#  endif
+>  # endif
+>  # define __no_ret_protection   __noscs __attribute__((__target__(__no_pac)))
+>  #else
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Kees Cook
