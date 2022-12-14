@@ -2,113 +2,82 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE03C4167B
-	for <linux-hardening@archiver.kernel.org>; Wed, 14 Dec 2022 11:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4919AC4332F
+	for <linux-hardening@archiver.kernel.org>; Wed, 14 Dec 2022 18:53:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229867AbiLNLtG (ORCPT
+        id S237128AbiLNSxC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 14 Dec 2022 06:49:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56164 "EHLO
+        Wed, 14 Dec 2022 13:53:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229834AbiLNLtF (ORCPT
+        with ESMTP id S229649AbiLNSxA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 14 Dec 2022 06:49:05 -0500
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C8D826D;
-        Wed, 14 Dec 2022 03:49:03 -0800 (PST)
-Received: from mail.ispras.ru (unknown [83.149.199.84])
-        by mail.ispras.ru (Postfix) with ESMTPSA id 1A7E4419E9DE;
-        Wed, 14 Dec 2022 11:49:01 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 1A7E4419E9DE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-        s=default; t=1671018541;
-        bh=bh8Zdc2f3HMlsvorMmpYM+UbWvlZb6yMDnwhRqB5YZ0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JIgI7XPCbzQnmchfdKs0F74i6cRbzRZ9Du10xt1fD8Os9GI7+pw1RtdpdxJUwPW6z
-         dvaOI/+eNaVta8pv2akqBHipPjuggxrdvcjWceGVNoFek5llgH8S2UKNXQvTksOd0H
-         MffLmfwy+PIdoEgcB9CYpwW51vWD0b0XIxCpNaQ0=
+        Wed, 14 Dec 2022 13:53:00 -0500
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E55F728E28
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Dec 2022 10:52:56 -0800 (PST)
+Received: by mail-pg1-x52f.google.com with SMTP id e126so2601704pgc.6
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Dec 2022 10:52:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3OH5piqQgYs2HTpmjsVvlC/zkWvQoKtSKrvl3IZUHZQ=;
+        b=bI1QN40VfMI5YffahIskXJ19TxDe1I9BCbHooK/Oq0RHU8deXnhE+Uzgfmwy9d4kI9
+         4l5UD0lWzsJh0Wh1y5ViJkI5rntsqx9KWbjNYwh6ih7fissYH/mdaOxsJXfbTnXWqtob
+         pvxkFzZ/YnE344PU68pGDiTSvnfzuCbQUByWI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3OH5piqQgYs2HTpmjsVvlC/zkWvQoKtSKrvl3IZUHZQ=;
+        b=uqjGKBaHxt2gpg0SNxLrHLX7Mi22oamq+Eu7dVQ5b9E+t0ItqQWqknSSrSaPSx8Vag
+         CAABv/IfwRTsUGg0AoXs3uf9qdiu4GZme+WQ0a62FGWhITnMPHeIj9Ikd7e93h3fo9Tb
+         EqNCCtkfTKDzAGytjwGtEeWiNvysdvvOG/HJEwux934H33JZYnO8noY+UbqQ+S9bzUsI
+         soMvYaFNnoyYaZ81KdlO6/x6UTgBTseQVdZ+OJZJWGjF8vgX8LHMjbdTDHVcYbvAiTxJ
+         V8q4kAp2lSv5DpDgbz3YobAmaK56jBGw4IWILAOJYQARBlR6nBnfZwSHVvLYX3xj9M8U
+         hgTw==
+X-Gm-Message-State: ANoB5pnSFHfmMnxopCCpTLFuiY/T1efYBJ2PGH3r5fOIM+4KnwAZk/Qc
+        myGXGJC9hw114GS0henqkxBBCw==
+X-Google-Smtp-Source: AA0mqf65AEZDaIMr5dElxYb0kE1PXzokNGbweS278MyeHeqmjC2k8jXN/Ezzt8ghTuysEsp3KngeHQ==
+X-Received: by 2002:a62:3103:0:b0:576:14a4:b76a with SMTP id x3-20020a623103000000b0057614a4b76amr22717330pfx.34.1671043976432;
+        Wed, 14 Dec 2022 10:52:56 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a2-20020a624d02000000b00576d4d69909sm228569pfb.8.2022.12.14.10.52.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Dec 2022 10:52:55 -0800 (PST)
+Date:   Wed, 14 Dec 2022 10:52:54 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     jeffxu@chromium.org
+Cc:     skhan@linuxfoundation.org, akpm@linux-foundation.org,
+        dmitry.torokhov@gmail.com, dverkamp@chromium.org, hughd@google.com,
+        jeffxu@google.com, jorgelo@chromium.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, jannh@google.com,
+        linux-hardening@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v7 2/6] selftests/memfd: add tests for F_SEAL_EXEC
+Message-ID: <202212141052.3B04BF6@keescook>
+References: <20221209160453.3246150-1-jeffxu@google.com>
+ <20221209160453.3246150-3-jeffxu@google.com>
 MIME-Version: 1.0
-Date:   Wed, 14 Dec 2022 14:49:01 +0300
-From:   Evgeniy Baskov <baskov@ispras.ru>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Peter Jones <pjones@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        "Limonciello, Mario" <mario.limonciello@amd.com>,
-        joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
-        x86@kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 00/24] x86_64: Improvements at compressed kernel stage
-In-Reply-To: <CAMj1kXEVffE8nm5qP_tGzQ9zGaXP11RtdFQhhwQc_DDyAk6qOw@mail.gmail.com>
-References: <cover.1668958803.git.baskov@ispras.ru>
- <20221213180317.qoy2l3mcpjparocq@redhat.com>
- <20221213181336.fjyxagxkjtq3jchl@redhat.com>
- <e28ce5943937225517d460dabda6f8e5@ispras.ru>
- <CAMj1kXEVffE8nm5qP_tGzQ9zGaXP11RtdFQhhwQc_DDyAk6qOw@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <e2c8e3ce6cb7a1aca156186946b22eb0@ispras.ru>
-X-Sender: baskov@ispras.ru
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221209160453.3246150-3-jeffxu@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2022-12-14 13:09, Ard Biesheuvel wrote:
-> On Tue, 13 Dec 2022 at 23:16, Evgeniy Baskov <baskov@ispras.ru> wrote:
->> 
->> On 2022-12-13 21:13, Peter Jones wrote:
->> > On Tue, Dec 13, 2022 at 01:03:17PM -0500, Peter Jones wrote:
->> >> On Tue, Nov 22, 2022 at 02:12:09PM +0300, Evgeniy Baskov wrote:
->> >> > This patchset is aimed
->> >> > * to improve UEFI compatibility of compressed kernel code for x86_64
->> >> > * to setup proper memory access attributes for code and rodata sections
->> >> > * to implement W^X protection policy throughout the whole execution
->> >> >   of compressed kernel for EFISTUB code path.
->> >>
->> >> Hi Evgeniy,
->> >>
->> >> I've tested this patch set on hardware and QEMU+MU firmware, and it
->> >> works for me with a couple of minor issues:
->> >>
->> >> - on one machine that has the DXE protocol but not the EFI one, we get
->> >>   an error because the firmware doesn't support EFI_MEMORY_RP
->> >> - on QEMU I'm seeing the size of "(unsigned long)_head - image_base"
->> >>   wind up as 0, which leads to an EFI_INVALID_PARAMETER on the
->> >>   clear_memory_attributes() call.
->> >>
->> >> In both cases the system winds up working, but with unnecessary
->> >> console
->> >> output.
->> >
->> > I just realized I've overstated here - I haven't actually hit the first
->> > problem on x86, only on ARM, where we don't currently use this code.  I
->> > discovered it in grub, and checked your patch set to see if you had the
->> > same issue I did.  That said, "in both cases the system winds up
->> > working" is probably still true - in that the edk2 code supports
->> > EFI_MEMORY_RP on x86 but not ARM, so x86 won't hit the issue when using
->> > DXE unless someone cooks up another implementation.  Nevertheless I
->> > believe the patch to fix it is correct and should be applied.
->> >
->> > Thanks!
->> 
->> Hi,
->> 
->> Thank you for testing and fixes!
->> 
->> I have also discovered one issue with v3, that can only be hit when
->> booting with grub -- there's one kernel_add_identity_map() missing in
->> the get_acpi_srat_table() function, before header->length is read.
->> So I'll prepare the v4 soon and include your new patches there.
->> 
+On Fri, Dec 09, 2022 at 04:04:49PM +0000, jeffxu@chromium.org wrote:
+> From: Daniel Verkamp <dverkamp@chromium.org>
 > 
-> Happy to see this is converging. Please rebase onto latest mainline as
-> well - some cleanups to the early boot code have landed there
-> yesterday.
+> Basic tests to ensure that user/group/other execute bits cannot be
+> changed after applying F_SEAL_EXEC to a memfd.
+> 
+> Signed-off-by: Daniel Verkamp <dverkamp@chromium.org>
 
-Will do, thanks!
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
