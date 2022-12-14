@@ -2,52 +2,53 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABD9C4332F
-	for <linux-hardening@archiver.kernel.org>; Wed, 14 Dec 2022 18:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DDCC001B2
+	for <linux-hardening@archiver.kernel.org>; Wed, 14 Dec 2022 18:54:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238869AbiLNSxj (ORCPT
+        id S238281AbiLNSyp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 14 Dec 2022 13:53:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59056 "EHLO
+        Wed, 14 Dec 2022 13:54:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238985AbiLNSx1 (ORCPT
+        with ESMTP id S238843AbiLNSyn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 14 Dec 2022 13:53:27 -0500
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E3BC2A96E
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Dec 2022 10:53:20 -0800 (PST)
-Received: by mail-pg1-x52c.google.com with SMTP id w37so2604119pga.5
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Dec 2022 10:53:20 -0800 (PST)
+        Wed, 14 Dec 2022 13:54:43 -0500
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9149C2A72E
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Dec 2022 10:54:42 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id s7so4314456plk.5
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Dec 2022 10:54:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=x9cSnaEhv8Xds1q1FVg4f4vmMN7yeuDq7gGdjSEFO6Y=;
-        b=DPayc+N/6klm+cJJopr92jIZbcDzMcXAgHRTd0IdOF/l4lVMTfSv9uiMdbB9vgE7Rn
-         KbN0Mf0w8PPxXiyyFo2dcpPrOOs/0smlRbhGYtuM7nD8UC7C5xF9GWVy9VrRO8OTEMv3
-         4YqQIBNhShJXwz7nnmrlPdy5R/1q13TzzW7ZY=
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=o2e1a6vpAxQHzaMqe1Zz1YgsBuyNkLZSUPq8vet5Q+E=;
+        b=ljRXDQoz8d06UpaHKC+SuGt8xrjQEfQSizAAs+M7Oa0UFCOyc+ZVFVtSu/m47RyC0P
+         WJux7UP4wXmjSPCsUwuDwIDa9H/CfAsZyqgqoA57G2Fm50pMq3dHqVuXQUKJBj9giDuO
+         9zDWG2mb8TECeq3VFaiiXxcz6/WlWRjsZr/D8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x9cSnaEhv8Xds1q1FVg4f4vmMN7yeuDq7gGdjSEFO6Y=;
-        b=z8PC+pkrE2p4YQQVGo+ks8lKjZ52bsM/DWNSawRBjb6MT4ysMguvNbE5LvVURZSVzy
-         Sn2lb+ZE3YeqSCmBMrY5gFabi5Xa6sfaQDK45UelZKMqpanbfhx+Xg5PbCZGD2nWxgVt
-         kFnX0ldP59BuvTrqj+7v6KMc99QYq2N7N22vNhUxxXJvOVJUYrJeL0/cUgIwKgMhCfHW
-         RwQc5FLl+N7O2y8K3dGONOay9wu8Non8pS1zcNm6qkUGFchQq5bQM8JUQCGXCpEmEXs7
-         OoF3EvlzVndBFGgpMIleE1UK1/JEGVDTsE5tkQlQLry8cH/zV3r5GYJ9ocDRdY+IgZPJ
-         /nIQ==
-X-Gm-Message-State: ANoB5pnIUpHBac4ZUPUt5rvoTH/5/chMGooCa5HMeyPnBi8W+GFMlDhL
-        d6omXuuzpXihWPFxeqXqNGyF6Q==
-X-Google-Smtp-Source: AA0mqf4dRo8AoZc0bYEWLv4+RgOdgi6k/5UHIiZnszRrU+HEBbp0UQLJCi++JGunvqp7GrihTtWLRw==
-X-Received: by 2002:a05:6a00:791:b0:577:f836:6bcb with SMTP id g17-20020a056a00079100b00577f8366bcbmr23822313pfu.29.1671044000031;
-        Wed, 14 Dec 2022 10:53:20 -0800 (PST)
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o2e1a6vpAxQHzaMqe1Zz1YgsBuyNkLZSUPq8vet5Q+E=;
+        b=lh5mlW9hu+LpQd+0LqbDyPPnukGbbCLTZf5IhJkG9MVi1nrTy3bOT2hN/du9pXkAu6
+         KFCqaTts+WEO7pNrMuYsNXBsi9qZXEoliVaplWrttZB53l/phx69B1hJGK91HcJDvNQ5
+         vrZRnYXBNHKYqHlEfOY3Ggq+9DDUkVc6psKBWoC9Wn41HPPTk/Jqzc48ojKIZF17NEtF
+         N6VdsQnHp7/0US5TV14JkIK/P6loluemi96ftDXTb/s4TbSvVmGqvcCoeMR9cseqAVd0
+         MFypkB1uBMQgxQsgsSxqtXJ0K+x2jQRgEvuu5aMCa/P9e6hQ2OrnkZV/cRDtoZyrTmBY
+         ILLw==
+X-Gm-Message-State: ANoB5pm62hJ4brVt6wT82gCbWtgllCMH24itFtOUU3eXVda9Qs+6lmRD
+        8LctosQt2zttKNYyoEYlixK8Dw==
+X-Google-Smtp-Source: AA0mqf5EzxQYQAX02yhiiZgN1ZRrh5wT7FRtFv9+LhYZc4owjG2hoCS8v2lD4r8dZcTHO5Rdw9SJhw==
+X-Received: by 2002:a17:90a:6506:b0:214:222:6ed3 with SMTP id i6-20020a17090a650600b0021402226ed3mr27015223pjj.43.1671044082079;
+        Wed, 14 Dec 2022 10:54:42 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c129-20020a624e87000000b0056b9ec7e2desm198403pfb.125.2022.12.14.10.53.19
+        by smtp.gmail.com with ESMTPSA id k7-20020a17090a9d8700b00218f9bd50c7sm1710962pjp.50.2022.12.14.10.54.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Dec 2022 10:53:19 -0800 (PST)
-Date:   Wed, 14 Dec 2022 10:53:19 -0800
+        Wed, 14 Dec 2022 10:54:41 -0800 (PST)
+Date:   Wed, 14 Dec 2022 10:54:40 -0800
 From:   Kees Cook <keescook@chromium.org>
 To:     jeffxu@chromium.org
 Cc:     skhan@linuxfoundation.org, akpm@linux-foundation.org,
@@ -56,50 +57,54 @@ Cc:     skhan@linuxfoundation.org, akpm@linux-foundation.org,
         linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
         linux-mm@kvack.org, jannh@google.com,
         linux-hardening@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v7 3/6] mm/memfd: add MFD_NOEXEC_SEAL and MFD_EXEC
-Message-ID: <202212141053.DD016F79B@keescook>
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v7 0/6] mm/memfd: introduce MFD_NOEXEC_SEAL and MFD_EXEC
+Message-ID: <202212141053.7F5D1F6@keescook>
 References: <20221209160453.3246150-1-jeffxu@google.com>
- <20221209160453.3246150-4-jeffxu@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20221209160453.3246150-4-jeffxu@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221209160453.3246150-1-jeffxu@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Dec 09, 2022 at 04:04:50PM +0000, jeffxu@chromium.org wrote:
+On Fri, Dec 09, 2022 at 04:04:47PM +0000, jeffxu@chromium.org wrote:
 > From: Jeff Xu <jeffxu@google.com>
 > 
-> The new MFD_NOEXEC_SEAL and MFD_EXEC flags allows application to
-> set executable bit at creation time (memfd_create).
+> Since Linux introduced the memfd feature, memfd have always had their
+> execute bit set, and the memfd_create() syscall doesn't allow setting
+> it differently.
 > 
-> When MFD_NOEXEC_SEAL is set, memfd is created without executable bit
-> (mode:0666), and sealed with F_SEAL_EXEC, so it can't be chmod to
-> be executable (mode: 0777) after creation.
+> However, in a secure by default system, such as ChromeOS, (where all
+> executables should come from the rootfs, which is protected by Verified
+> boot), this executable nature of memfd opens a door for NoExec bypass
+> and enables “confused deputy attack”.  E.g, in VRP bug [1]: cros_vm
+> process created a memfd to share the content with an external process,
+> however the memfd is overwritten and used for executing arbitrary code
+> and root escalation. [2] lists more VRP in this kind.
 > 
-> when MFD_EXEC flag is set, memfd is created with executable bit
-> (mode:0777), this is the same as the old behavior of memfd_create.
+> On the other hand, executable memfd has its legit use, runc uses memfd’s
+> seal and executable feature to copy the contents of the binary then
+> execute them, for such system, we need a solution to differentiate runc's
+> use of  executable memfds and an attacker's [3].
 > 
-> The new pid namespaced sysctl vm.memfd_noexec has 3 values:
-> 0: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL acts like
->         MFD_EXEC was set.
-> 1: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL acts like
->         MFD_NOEXEC_SEAL was set.
-> 2: memfd_create() without MFD_NOEXEC_SEAL will be rejected.
-> 
-> The sysctl allows finer control of memfd_create for old-software
-> that doesn't set the executable bit, for example, a container with
-> vm.memfd_noexec=1 means the old-software will create non-executable
-> memfd by default. Also, the value of memfd_noexec is passed to child
-> namespace at creation time. For example, if the init namespace has
-> vm.memfd_noexec=2, all its children namespaces will be created with 2.
-> 
-> Signed-off-by: Jeff Xu <jeffxu@google.com>
+> To address those above, this set of patches add following:
+> 1> Let memfd_create() set X bit at creation time.
+> 2> Let memfd to be sealed for modifying X bit.
+> 3> A new pid namespace sysctl: vm.memfd_noexec to control the behavior of
+>    X bit.For example, if a container has vm.memfd_noexec=2, then
+>    memfd_create() without MFD_NOEXEC_SEAL will be rejected.
+> 4> A new security hook in memfd_create(). This make it possible to a new
+> LSM, which rejects or allows executable memfd based on its security policy.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+I think patch 1-5 look good to land. The LSM hook seems separable, and
+could continue on its own. Thoughts?
+
+(Which tree should memfd change go through?)
+
+-Kees
 
 -- 
 Kees Cook
