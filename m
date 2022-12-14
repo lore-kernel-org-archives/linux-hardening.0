@@ -2,116 +2,118 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26737C4332F
-	for <linux-hardening@archiver.kernel.org>; Wed, 14 Dec 2022 08:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E7CC4167B
+	for <linux-hardening@archiver.kernel.org>; Wed, 14 Dec 2022 10:12:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229836AbiLNI7D (ORCPT
+        id S238036AbiLNKM2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 14 Dec 2022 03:59:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58576 "EHLO
+        Wed, 14 Dec 2022 05:12:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236910AbiLNI7B (ORCPT
+        with ESMTP id S238188AbiLNKMD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 14 Dec 2022 03:59:01 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EDED1FCC4;
-        Wed, 14 Dec 2022 00:58:59 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id fa4-20020a17090af0c400b002198d1328a0so3541316pjb.0;
-        Wed, 14 Dec 2022 00:58:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QJpPmTe/XBClfxdnG0INFkwd4DEdd16k8DnX9kH12Oo=;
-        b=nDsigzCB1W7unRbCm/62QVdANiKye41IPr668xqAA/mAmbC5qg+yVVhU3Rq9BCSfr8
-         vZ1Kljwnw7W0Saf6246IeTK3MFXLQtrk67qxycMVU1luzfjhPkC39F6FRskX2IxhdfMJ
-         4QYcjiQ91bNvBbafQwqk2dsjV0CVjZd3HR9JYjz0YdrUe7hEvTAyiujPZxJSlHKscixR
-         tpD5uRf1c7/GidwqXdFBUx5IS7HRpe6IVxSD+2qg4k7Bd0n2I+CLOwzbIOA+Qn+b07Kd
-         DXTa/HFQtMAb0wDq9cUclcQOSzTPxAlj6tcZSEj5IhTO6gNZngH0Vszu64SfpxesjDSm
-         TsOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QJpPmTe/XBClfxdnG0INFkwd4DEdd16k8DnX9kH12Oo=;
-        b=4T2pId9gMb1sdUmeWrHLGokL9524SalcGyBqJXCr+pckmhWpgbEJhcQdXoV2DvKeKX
-         rFW3eg8JYJBhXFCTMcaoqSoj/Hx9DPFHvplwyH1SRDyS8VhCv8hFxQF50ZIPuURJcGDs
-         lNM2r3hqIqe+GiI9nNS/ogBfsc6vbiIHY7Z7KneVKI+6uY267JFespddfRz189HrhhQM
-         kT1Bvr9LALsZrub+FTli4kI2EjvIWepMvPHIOD3RvIf7tHhirXu5OPIiJq7zK0MT1rk9
-         sfQLTd7B0/vhdFZF0CJeqICrmUN9vqyN2sU/fhUXj2fdIM/swkcjq5jngNIrW39smAZh
-         Aj+g==
-X-Gm-Message-State: ANoB5pkzxdcUYhSgWHJllD6WSOKoMI8iAmOAutJyl/e8nk/2oLVp4lLa
-        6lDIoEHbL8T/Xv1qNVoBcZ0=
-X-Google-Smtp-Source: AA0mqf4jHLLcFiPuJmR9AvYsVGZxYSKqcp1xdj0nTpCk4d4X5bTvCxT/+wXnw7Fmpm2x/Im3UKD4Tw==
-X-Received: by 2002:a17:902:6b08:b0:186:639f:6338 with SMTP id o8-20020a1709026b0800b00186639f6338mr5984814plk.6.1671008338906;
-        Wed, 14 Dec 2022 00:58:58 -0800 (PST)
-Received: from mail.google.com (125-237-37-88-fibre.sparkbb.co.nz. [125.237.37.88])
-        by smtp.gmail.com with ESMTPSA id s15-20020a170902b18f00b00189393ab02csm1327487plr.99.2022.12.14.00.58.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Dec 2022 00:58:58 -0800 (PST)
-Date:   Wed, 14 Dec 2022 21:58:52 +1300
-From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Haowen Bai <baihaowen@meizu.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        paulo.miguel.almeida.rodenas@gmail.com
-Subject: [PATCH v2] [next] pcmcia: synclink_cs: replace 1-element array with
- flex-array member
-Message-ID: <Y5mQTOqFOGbJMerV@mail.google.com>
+        Wed, 14 Dec 2022 05:12:03 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 836E8233A4;
+        Wed, 14 Dec 2022 02:09:46 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D4FBF618BB;
+        Wed, 14 Dec 2022 10:09:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4041FC433D2;
+        Wed, 14 Dec 2022 10:09:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1671012585;
+        bh=9Fl50pE2AYKpTZsVNJkvTqaiaCa/zyH+CxC4HbLrEc4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=us6Gg4Fst8ebLkXk4Lwbh7ogPG0TKCnlNHahABCkMmP9P6gNNcVwn1ULzek49Iswv
+         yPhQ5njxsxzRcWf/iDEIkJq8Bm++1YJHpRFqteYft0ufTlBqKKv7Xk+5t6HBi1HPJI
+         8nzn/19o5ImHLoYuVLict5Gmq+XOtvXoTU4SR17lgQdokLYoiZIwTvgNuyXTX7lISF
+         tu7L5Wd9g3bjqm+PbBJewJ2Wpxq7L8B2Hw9FwCWUjV2FrgA+MtMJkEJwh2hKGUunr6
+         p9fDZ6GwEgD6wAZMEJ5KhUhTNpDCjDcVidboIwP/NZwLqXhzGNqj/RiHySh/CChTmt
+         UI/bqSa5rjRGQ==
+Received: by mail-lf1-f46.google.com with SMTP id bp15so9544956lfb.13;
+        Wed, 14 Dec 2022 02:09:45 -0800 (PST)
+X-Gm-Message-State: ANoB5pllTxM5x5rSyqBNFIvqiVUmKkbcnGN/6wl0zmLPu1VDp3hvutLC
+        rJGoyJbstMUKHS/t+Dt75n7sIK41F7IfrYadNwg=
+X-Google-Smtp-Source: AA0mqf5Of7N6hHY8RP8I50a7Mr21vrO18YBYb3mx7EtfLdkRfhqqXCYXcn+71eEb7rI9gdmT5LtYqUu+n5AYVnSNU50=
+X-Received: by 2002:a05:6512:3082:b0:4b5:964d:49a4 with SMTP id
+ z2-20020a056512308200b004b5964d49a4mr3831362lfd.637.1671012583304; Wed, 14
+ Dec 2022 02:09:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y5mMWEtHWKOiPVU+@mail.google.com>
+References: <cover.1668958803.git.baskov@ispras.ru> <20221213180317.qoy2l3mcpjparocq@redhat.com>
+ <20221213181336.fjyxagxkjtq3jchl@redhat.com> <e28ce5943937225517d460dabda6f8e5@ispras.ru>
+In-Reply-To: <e28ce5943937225517d460dabda6f8e5@ispras.ru>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 14 Dec 2022 11:09:32 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXEVffE8nm5qP_tGzQ9zGaXP11RtdFQhhwQc_DDyAk6qOw@mail.gmail.com>
+Message-ID: <CAMj1kXEVffE8nm5qP_tGzQ9zGaXP11RtdFQhhwQc_DDyAk6qOw@mail.gmail.com>
+Subject: Re: [PATCH v3 00/24] x86_64: Improvements at compressed kernel stage
+To:     Evgeniy Baskov <baskov@ispras.ru>
+Cc:     Peter Jones <pjones@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        "Limonciello, Mario" <mario.limonciello@amd.com>,
+        joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
+        x86@kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-One-element arrays are deprecated, and we are replacing them with
-flexible array members instead. So, replace one-element array with
-flexible-array member in struct RXBUF. No changes were required
-within the source code because of the existing padding in RXBUF struct
+On Tue, 13 Dec 2022 at 23:16, Evgeniy Baskov <baskov@ispras.ru> wrote:
+>
+> On 2022-12-13 21:13, Peter Jones wrote:
+> > On Tue, Dec 13, 2022 at 01:03:17PM -0500, Peter Jones wrote:
+> >> On Tue, Nov 22, 2022 at 02:12:09PM +0300, Evgeniy Baskov wrote:
+> >> > This patchset is aimed
+> >> > * to improve UEFI compatibility of compressed kernel code for x86_64
+> >> > * to setup proper memory access attributes for code and rodata sections
+> >> > * to implement W^X protection policy throughout the whole execution
+> >> >   of compressed kernel for EFISTUB code path.
+> >>
+> >> Hi Evgeniy,
+> >>
+> >> I've tested this patch set on hardware and QEMU+MU firmware, and it
+> >> works for me with a couple of minor issues:
+> >>
+> >> - on one machine that has the DXE protocol but not the EFI one, we get
+> >>   an error because the firmware doesn't support EFI_MEMORY_RP
+> >> - on QEMU I'm seeing the size of "(unsigned long)_head - image_base"
+> >>   wind up as 0, which leads to an EFI_INVALID_PARAMETER on the
+> >>   clear_memory_attributes() call.
+> >>
+> >> In both cases the system winds up working, but with unnecessary
+> >> console
+> >> output.
+> >
+> > I just realized I've overstated here - I haven't actually hit the first
+> > problem on x86, only on ARM, where we don't currently use this code.  I
+> > discovered it in grub, and checked your patch set to see if you had the
+> > same issue I did.  That said, "in both cases the system winds up
+> > working" is probably still true - in that the edk2 code supports
+> > EFI_MEMORY_RP on x86 but not ARM, so x86 won't hit the issue when using
+> > DXE unless someone cooks up another implementation.  Nevertheless I
+> > believe the patch to fix it is correct and should be applied.
+> >
+> > Thanks!
+>
+> Hi,
+>
+> Thank you for testing and fixes!
+>
+> I have also discovered one issue with v3, that can only be hit when
+> booting with grub -- there's one kernel_add_identity_map() missing in
+> the get_acpi_srat_table() function, before header->length is read.
+> So I'll prepare the v4 soon and include your new patches there.
+>
 
-It's worth mentioning that doing a build before/after this patch
-results in no binary output differences.
-
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-routines on memcpy() and help us make progress towards globally
-enabling -fstrict-flex-arrays=3 [1].
-
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
-
-Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
----
-Changelog:
-
-- v2: removed changes to how the size of RXBUF was calculated. I
-  changed my mind after thinking about the existing padding in the
-  struct. Happy to discuss it if anyone sees it differently.
-
-- v1: https://lore.kernel.org/lkml/Y5mMWEtHWKOiPVU+@mail.google.com/
----
- drivers/char/pcmcia/synclink_cs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/char/pcmcia/synclink_cs.c b/drivers/char/pcmcia/synclink_cs.c
-index b2735be81ab2..0b03c6d13d59 100644
---- a/drivers/char/pcmcia/synclink_cs.c
-+++ b/drivers/char/pcmcia/synclink_cs.c
-@@ -105,7 +105,7 @@ static MGSL_PARAMS default_params = {
- typedef struct {
- 	int count;
- 	unsigned char status;
--	char data[1];
-+	char data[];
- } RXBUF;
- 
- /* The queue of BH actions to be performed */
--- 
-2.38.1
-
+Happy to see this is converging. Please rebase onto latest mainline as
+well - some cleanups to the early boot code have landed there
+yesterday.
