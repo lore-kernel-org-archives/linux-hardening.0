@@ -2,98 +2,116 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76ED5C4332F
-	for <linux-hardening@archiver.kernel.org>; Wed, 14 Dec 2022 04:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BABBC4332F
+	for <linux-hardening@archiver.kernel.org>; Wed, 14 Dec 2022 08:42:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237424AbiLNEHi (ORCPT
+        id S237453AbiLNImJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 13 Dec 2022 23:07:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50052 "EHLO
+        Wed, 14 Dec 2022 03:42:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237677AbiLNEG6 (ORCPT
+        with ESMTP id S237356AbiLNImI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 13 Dec 2022 23:06:58 -0500
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4718327B17
-        for <linux-hardening@vger.kernel.org>; Tue, 13 Dec 2022 20:06:57 -0800 (PST)
-Received: by mail-pf1-x434.google.com with SMTP id 65so3611148pfx.9
-        for <linux-hardening@vger.kernel.org>; Tue, 13 Dec 2022 20:06:57 -0800 (PST)
+        Wed, 14 Dec 2022 03:42:08 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A58116580;
+        Wed, 14 Dec 2022 00:42:08 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id u15-20020a17090a3fcf00b002191825cf02so6339794pjm.2;
+        Wed, 14 Dec 2022 00:42:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8rKEV9W9fSxR0xRR3DSmLMtebWk2YTiMQPBl9c/07mg=;
-        b=JUiHhh9U/ve+vlJsWZf7ZOpMUM4syjPZb4nbKg2MzXiIWlXZiUPAaNjul/0MQBPViO
-         rLPF5uUfmLfksFpudg2ZTn1bZ7RsrJl4+UuZpbCHeENZTxOP0kohNFFJQClyqwxAjIME
-         RNOqlmy8zOow1j9BiCDP81jWWATVny8BRH9O8=
+        d=gmail.com; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mKIXxnGp5Qeh1H1kOjUA7WrQEgWAzUUtfWKKqj9aC5A=;
+        b=RUKS8+/pkEoTD8k0JJKHv8nza/xwr2KJsRoJ713qLCRtM5TldRtS0CrAdQWHN15/T5
+         7ccfexgetApOumRV8EN13507YFLVeL2s8O9PjsVi2TS8qI8exUMro2LR/A2QzL4n8oii
+         XEsXw+zgiiX54cwxIn7/n9O9xOs3pWxw4G38lW2bV4H3w/ymJ1MdIWUdS2IVvObxEjjy
+         RLbqgR0Uj30QoSQH0A8y75S29JO6e1cXEpjsFy8Jh3rhsqqC2dp34FcaWoMMrxLTKAUz
+         +qjdg3exntCjFNlOAIWjZQr40KeOkJ6I6RNgEtcmkcyPxzouYG8ydU1G8gz0wb9Zox+b
+         kOzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8rKEV9W9fSxR0xRR3DSmLMtebWk2YTiMQPBl9c/07mg=;
-        b=vQh8LLaTIp49SHX8h6wb75HVN1owlt1hKIK+L0FsvzGbf3bontQsAQzjE57p8G8zCq
-         +9UUDtze+tUMXvLkmh76xH1hPrIDnupTrjoXzt7tdPU5nY6b1yPMj5H90Vr0P+qHEOq8
-         g5UWWdXLKfZ+9kLR9aZaQZdrgjWrUaJKf7Pj3/bH47uZpYBdVWMY0P80vboZrBTXHUIJ
-         ngs+lnEeOIr9S99NTc6Vgrrzr/1RsdqCZP28SueQ9qFZsPGgQ07w+btkslMb24unLHWm
-         LP+yelC6NSuSFjoy6g7SboeXFkJ8noUn9SYIVyVJFACEz8rIfDrNmrjgAGBCgtmpKhK3
-         OKlQ==
-X-Gm-Message-State: ANoB5pkQ/rXtZN8HuEGlpxdQNY3uOACyrnJ6PryvnWl9XrRyfhrR20Ms
-        gzAYX7xqKHl0nSQMBOWvXULF0w==
-X-Google-Smtp-Source: AA0mqf5ory1OhG7Na5zVVXjcLYy36xrTIivlxVIKKQi8e4DGPo71Kz5Rawog/uBIvlTrVtV6PN9Yag==
-X-Received: by 2002:aa7:9243:0:b0:56b:fa67:1f7f with SMTP id 3-20020aa79243000000b0056bfa671f7fmr22439011pfp.19.1670990816786;
-        Tue, 13 Dec 2022 20:06:56 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l6-20020a622506000000b00576e75e753asm8378718pfl.27.2022.12.13.20.06.56
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mKIXxnGp5Qeh1H1kOjUA7WrQEgWAzUUtfWKKqj9aC5A=;
+        b=lDn9mgjptMrHFIRf9xsLH5iU+KsTPdFoJ+6UkrPmasY1qW1JDQVjsVMjjy0lZkjD6F
+         K/np1i7CUIYmLpJv2YQpcF5bQ2jYIWftKDfLhQdAlSYaRW4WgN1PfncD86SXpgr04bNz
+         m79T1XfiNDn13c7GhmPuUP6gO7YKnn99JXer+MPndZxo/CzQhdjK+6jQBluREiojtQyX
+         TEq+yZCWiD00xGIT5wC+XHokwWArsGG4XamHhjsrutQ/xR+JvcbeJtP28rov1tDczdf2
+         HQf5vhKc7M0OdbxB/4KZDE4qr9ITcOfGQN4YbmdllpPDdDxbsqjWneTcIvNOYBekT/65
+         aMwg==
+X-Gm-Message-State: ANoB5pl8qr5EHeyniwib+nDjMJtMwrW3W1MZEy2GIt0bj4heUG0C7XJp
+        j6yIQ7y9WmDCTzIPyCd8Xug=
+X-Google-Smtp-Source: AA0mqf6Hba9NrxKs9cSo+ap0YeChuE8DZR0BYER9d526tatQdUrWAarN8isTG7rAZnMWfnuHLGBR1g==
+X-Received: by 2002:a17:902:7fcb:b0:18b:cea3:645 with SMTP id t11-20020a1709027fcb00b0018bcea30645mr5353251plb.0.1671007327631;
+        Wed, 14 Dec 2022 00:42:07 -0800 (PST)
+Received: from mail.google.com (125-237-37-88-fibre.sparkbb.co.nz. [125.237.37.88])
+        by smtp.gmail.com with ESMTPSA id d9-20020a170903230900b00189988a1a9esm1278650plh.135.2022.12.14.00.42.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Dec 2022 20:06:56 -0800 (PST)
-Date:   Tue, 13 Dec 2022 20:06:55 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        linux-security-module@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>,
+        Wed, 14 Dec 2022 00:42:07 -0800 (PST)
+Date:   Wed, 14 Dec 2022 21:42:00 +1300
+From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] LoadPin: Ignore the "contents" argument of the LSM hooks
-Message-ID: <202212132006.F29BB81A@keescook>
-References: <20221209195453.never.494-kees@kernel.org>
- <20221212211319.GA15511@mail.hallyn.com>
+        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Haowen Bai <baihaowen@meizu.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        paulo.miguel.almeida.rodenas@gmail.com
+Subject: [PATCH] [next] pcmcia: synclink_cs: replace 1-element array with
+ flex-array member
+Message-ID: <Y5mMWEtHWKOiPVU+@mail.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221212211319.GA15511@mail.hallyn.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Dec 12, 2022 at 03:13:19PM -0600, Serge E. Hallyn wrote:
-> On Fri, Dec 09, 2022 at 11:54:57AM -0800, Kees Cook wrote:
-> > LoadPin only enforces the read-only origin of kernel file reads. Whether
-> > or not it was a partial read isn't important. Remove the overly
-> > conservative checks so that things like partial firmware reads will
-> > succeed (i.e. reading a firmware header).
-> > 
-> > Fixes: 2039bda1fa8d ("LSM: Add "contents" flag to kernel_read_file hook")
-> > Cc: Paul Moore <paul@paul-moore.com>
-> > Cc: James Morris <jmorris@namei.org>
-> > Cc: "Serge E. Hallyn" <serge@hallyn.com>
-> 
-> Acked-by: Serge Hallyn <serge@hallyn.com>
-> 
-> Seems reasonable.
+One-element arrays are deprecated, and we are replacing them with
+flexible array members instead. So, replace one-element array with
+flexible-array member in struct RXBUF and refactor the rest of the code
+accordingly.
 
-Thanks!
+It's worth mentioning that doing a build before/after this patch
+results in no binary output differences.
 
-> So the patch which introduced this was
-> 2039bda1f: LSM: Add "contents" flag to kernel_read_file hook
-> It sounds like the usage of @contents which it added to ima still
-> makes sense.  But what about the selinux_kernel_read_file() one?
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [1].
 
-I think those continue to make sense since those LSM may be sensitive to
-the _content_ (rather than the _origin_) of the file.
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
 
--Kees
+Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+---
+ drivers/char/pcmcia/synclink_cs.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/char/pcmcia/synclink_cs.c b/drivers/char/pcmcia/synclink_cs.c
+index b2735be81ab2..1ab2d552f498 100644
+--- a/drivers/char/pcmcia/synclink_cs.c
++++ b/drivers/char/pcmcia/synclink_cs.c
+@@ -105,7 +105,7 @@ static MGSL_PARAMS default_params = {
+ typedef struct {
+ 	int count;
+ 	unsigned char status;
+-	char data[1];
++	char data[];
+ } RXBUF;
+ 
+ /* The queue of BH actions to be performed */
+@@ -2611,7 +2611,8 @@ static int mgslpc_proc_show(struct seq_file *m, void *v)
+ static int rx_alloc_buffers(MGSLPC_INFO *info)
+ {
+ 	/* each buffer has header and data */
+-	info->rx_buf_size = sizeof(RXBUF) + info->max_frame_size;
++	info->rx_buf_size = max(offsetof(typeof(RXBUF), data) + 1, sizeof(RXBUF))
++		+ info->max_frame_size;
+ 
+ 	/* calculate total allocation size for 8 buffers */
+ 	info->rx_buf_total_size = info->rx_buf_size * 8;
 -- 
-Kees Cook
+2.38.1
+
