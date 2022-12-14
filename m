@@ -2,91 +2,95 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BDAC4332F
-	for <linux-hardening@archiver.kernel.org>; Wed, 14 Dec 2022 21:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44480C4332F
+	for <linux-hardening@archiver.kernel.org>; Wed, 14 Dec 2022 22:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229496AbiLNVtF (ORCPT
+        id S229566AbiLNWH0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 14 Dec 2022 16:49:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40792 "EHLO
+        Wed, 14 Dec 2022 17:07:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbiLNVtD (ORCPT
+        with ESMTP id S229558AbiLNWHZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 14 Dec 2022 16:49:03 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 670CE40449
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Dec 2022 13:49:02 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id w23so4770616ply.12
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Dec 2022 13:49:02 -0800 (PST)
+        Wed, 14 Dec 2022 17:07:25 -0500
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F18A61EEF5;
+        Wed, 14 Dec 2022 14:07:23 -0800 (PST)
+Received: by mail-qt1-x82a.google.com with SMTP id x11so3665239qtv.13;
+        Wed, 14 Dec 2022 14:07:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+31TVcZbQVfkTbbiw5O9TBq3yKVpcplDaH8+a0gR/CM=;
-        b=Efm0dbIKL/j9IJ0lYIGfx5YCAi57xWuL62QscFdjVcC+VEa+TDKuePOyXXBMb0phGV
-         6HBMc7hy1r0pyD+pkeyJ52USB7IiiKuUECs50RyxqZnlJK/dedgdiCWrrTssYzhesZyE
-         f5OKQ/kslON/oYUWCJ++K2F6LWKDOY4GlAJeI=
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5/39cbinCm2DlY6z44q1qFPXCL75QR7vAT6pW5+yC8Y=;
+        b=iLYrwhVnnNIL/F6TsTsvS9Shdni52MY2EjTZE2RucUeMYmjxAiipoGvckF8Hv8cXzO
+         XQrblOKgcOqF5DxvUJlpsPLHeVhF9+sBjCUbW8hZ3n2GaSsLWAuV773rMukDU0z+QUGY
+         5Pow4U6J+dk0BU556isbAaQG0ZhxN1F6hX9LFuoXlg5QZqGtcscAsJeTAulmfTRBLfKL
+         jINWBk4+2Dz7FIHt65DQbvfgVdDpCdqalUqyN+ei4MUn0URzwnng8dwKbqSrbje7w6NJ
+         mdl+g1JU8rKZno5jIRa9tUisz4UnaN/ZHUV19wxGx2lP9wUrfBMexoTiX6nXjp33vr2O
+         48MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+31TVcZbQVfkTbbiw5O9TBq3yKVpcplDaH8+a0gR/CM=;
-        b=PeQOf/v2rOatiAwk7+A4aK1AiOhUqJ6sT6lEVyq1zSBqJxjAVqcUFI2isxXcKV3blz
-         CrK+Ru9hzC0sb0VNPctTSIDVgWaiBHeHtg3UBsHUE+xDK+2WTkFIaPeTodQ5ZIwfBGs4
-         NZv8qnzWZ9MyNo0SwmqG+/E7FiIeuAY6NbqWcspHMZ0QMQ99yJTUpMCuRIAqORIf4DTm
-         PC5NZMbNb9/YHkEcEQwhZKOo9aeELLOyWSLZecagkIziPgE8rY0LvIpGERpJl2IpZXlE
-         84waKhovyL1zN3c0WtrSNpo1pbq1s1LtkBhSXZ/eMF1zN+HXSkF6blSyixYcH4Hp6ho1
-         go+A==
-X-Gm-Message-State: ANoB5plTMJ5m3A+8nnH3L+97wmzu2+Uzv+P0o6mPToWf8CkJ4IVdsDrv
-        hhrjPjkCrrN6UhH6D3DzYAcXAw==
-X-Google-Smtp-Source: AA0mqf4CevhzWpnsEH+YwSnhMAcIQAMxfeL7BLkWOMsUAnIgZZi+JoiUyR/RD9XAXkYybl5sC53aqw==
-X-Received: by 2002:a17:903:2ca:b0:189:8329:dba8 with SMTP id s10-20020a17090302ca00b001898329dba8mr32167358plk.39.1671054541957;
-        Wed, 14 Dec 2022 13:49:01 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u18-20020a170903125200b001897916be2bsm2290041plh.268.2022.12.14.13.49.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Dec 2022 13:49:01 -0800 (PST)
-Date:   Wed, 14 Dec 2022 13:49:00 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5/39cbinCm2DlY6z44q1qFPXCL75QR7vAT6pW5+yC8Y=;
+        b=jCCfFR+8ZGVwaSm/ugSObWxlxXYEZUUi2JQJZ+ZOKHt+mnnH5BMHypj3NXMcil+028
+         YODR3Zm7wxsUYi64k3AjtX5OSdcQ3d9K/jP3TFXQBhf+wS3kjZ2mJyfF3wMC7Vto48+Q
+         bKECP9U2EuhGY5VKxTPJEBCIQqOqnZvYChAoeH1LVZDPpKYGG8IlJJCzK/gwJgzV7BU/
+         oaBFDH2euy4LpLb8tv3KmdgAi5bgV0jMHceLXj0zgk1jn+/fyV5y2EnjelNcUpW7J/9B
+         QFqv3xbOA5ePI3ZAxK/OrJVwZVdi1dd9lRg08unlSoeA4tmf4ZwzHfMxtZ2eoCjOgH4+
+         YWPA==
+X-Gm-Message-State: ANoB5pm6eTb2t1d58SKiiDJYieVLSEZw0MZ+jHSJV/YtdXG8BEe1GzQ2
+        UEoO+lt9byHTL55lzyRQiiiPCeZ8s5Ff+UW+lCQ=
+X-Google-Smtp-Source: AA0mqf6mUwKlSDOlkhQHSbAqiZFQHKjcVjQaDVm2zvGjx0vP0jSbepa69mG+0GZTmQab4bXnHCqn1uaWHvBy7nQpFE4=
+X-Received: by 2002:ac8:730c:0:b0:3a8:175b:a966 with SMTP id
+ x12-20020ac8730c000000b003a8175ba966mr854132qto.384.1671055643046; Wed, 14
+ Dec 2022 14:07:23 -0800 (PST)
+MIME-Version: 1.0
+References: <Y5mMWEtHWKOiPVU+@mail.google.com> <202212141124.736E3DE2A8@keescook>
+ <Y5otilaHc6HBPCAF@mail.google.com> <CAHp75VdHU3g_t8u-hr1C=mttvEq-jWmMuCwaQqXToP-kH3xstQ@mail.gmail.com>
+ <202212141347.9AD66DEBC8@keescook>
+In-Reply-To: <202212141347.9AD66DEBC8@keescook>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 15 Dec 2022 00:06:46 +0200
+Message-ID: <CAHp75VdqUMs1uz8zeyDi6rJKayFt6UMrm0A=-Hp8tQpCUSGujQ@mail.gmail.com>
+Subject: Re: [PATCH] [next] pcmcia: synclink_cs: replace 1-element array with
+ flex-array member
+To:     Kees Cook <keescook@chromium.org>
 Cc:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Jiri Slaby <jirislaby@kernel.org>,
         Haowen Bai <baihaowen@meizu.com>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] [next] pcmcia: synclink_cs: replace 1-element array with
- flex-array member
-Message-ID: <202212141347.9AD66DEBC8@keescook>
-References: <Y5mMWEtHWKOiPVU+@mail.google.com>
- <202212141124.736E3DE2A8@keescook>
- <Y5otilaHc6HBPCAF@mail.google.com>
- <CAHp75VdHU3g_t8u-hr1C=mttvEq-jWmMuCwaQqXToP-kH3xstQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdHU3g_t8u-hr1C=mttvEq-jWmMuCwaQqXToP-kH3xstQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Dec 14, 2022 at 10:39:52PM +0200, Andy Shevchenko wrote:
-> Yes, and Try to make it work with __packed. As I said, the problem is
-> that the code is relying on something which is architecture dependent
-> strictly speaking. And hence I disagree with Kees that v2 is okay to
-> go.
+On Wed, Dec 14, 2022 at 11:49 PM Kees Cook <keescook@chromium.org> wrote:
+> On Wed, Dec 14, 2022 at 10:39:52PM +0200, Andy Shevchenko wrote:
+> > Yes, and Try to make it work with __packed. As I said, the problem is
+> > that the code is relying on something which is architecture dependent
+> > strictly speaking. And hence I disagree with Kees that v2 is okay to
+> > go.
+>
+> I meant that v2 is functionally identical to the existing code.
 
-I meant that v2 is functionally identical to the existing code.
+Ah, sorry for misunderstanding.
 
-> The full change should be something like
-> 
-> check_add(sizeof(), max_frame_size)
-> kcalloc(8, size)
+> > The full change should be something like
+> >
+> > check_add(sizeof(), max_frame_size)
+> > kcalloc(8, size)
+>
+> Right -- this would fix the existing mistakes in size calculation (and
+> is certainly better).
 
-Right -- this would fix the existing mistakes in size calculation (and
-is certainly better).
+Glad to hear that we are on the same page.
 
 -- 
-Kees Cook
+With Best Regards,
+Andy Shevchenko
