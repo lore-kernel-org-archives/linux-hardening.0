@@ -2,55 +2,55 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C88C4332F
-	for <linux-hardening@archiver.kernel.org>; Thu, 15 Dec 2022 04:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE09C4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 15 Dec 2022 06:36:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229558AbiLOE32 (ORCPT
+        id S229514AbiLOGgB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 14 Dec 2022 23:29:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33570 "EHLO
+        Thu, 15 Dec 2022 01:36:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229536AbiLOE3Y (ORCPT
+        with ESMTP id S229448AbiLOGgA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 14 Dec 2022 23:29:24 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CCC631EE3;
-        Wed, 14 Dec 2022 20:29:23 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id t18so5887211pfq.13;
-        Wed, 14 Dec 2022 20:29:23 -0800 (PST)
+        Thu, 15 Dec 2022 01:36:00 -0500
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A38AB1CD;
+        Wed, 14 Dec 2022 22:35:59 -0800 (PST)
+Received: by mail-pf1-x432.google.com with SMTP id d82so6042663pfd.11;
+        Wed, 14 Dec 2022 22:35:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1r0u0A1WptWkIvm6YdryJeqFLCv2drBlsiURXvnV+Vc=;
-        b=li2mdodu7SvA0wkvxfIDkRKtud7njzwwAluJ/mUOoOhPhQ0GSYRY03D/3bUGr+XohN
-         7kKEy3rpJLbhgjazL1zknuBcLVBb6P74q9Uq2USt1IZUXv8/rKqa58D8JxUqMcODeiLd
-         O51lD7OwUfmxm3y5bbmuSIs3WLoWsfHvcBQHoimxkgqAB/MtECemFcl1efTmmP7zjOo7
-         kOunrH73UfNdVAGAH0Daa84MJAoE91SnWMd9W0IkTs6QN2DpN46M/Le4eN0oRclRBZK0
-         t/6bWBU0LK6NEy8GB7brI/+xn14txanLWD5Q/SnfGPX5AVwAHkSkW6aQ48axzhcUjAc0
-         C3Tg==
+        bh=+Zntq683qGGW9uGqNJUwpXpXMNNKQE/pGbpUuo9i8rA=;
+        b=guyIeSLZpY8xMW9BqgiBAuwBAeuy4bh5lN7jmOI1KyQAWeiGe+rYvJiYtZP8ehiFTw
+         M6RlR+Hwkcb+l+IHxUVOAiBJpANiV0oCdRqH9W3Qbw3oimOtQG7RptutNUtfBud0Cn/J
+         JkRPM091LtaXylCndoUIKe9gfMcFrPQW2b0wf3MooFotzQl94+8EMrtxVKMU+UooUEHl
+         0Bv0rnP1c7EBp5nAyBjN1MRno7HPEAQrZdv30wMpyzJ2dlSqplCEIYp4Scr7ALdI3W6q
+         KII3vTiKLKVxVi7Pp0CopY3FV7YQpl4ljXCLvGQb7z2x5zqARoB7TmdJjdGY8Nm71ZaZ
+         3raA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1r0u0A1WptWkIvm6YdryJeqFLCv2drBlsiURXvnV+Vc=;
-        b=7PwW+PpYa8wn5vhHoAQq4LB1rQFrdRuZ9Lcr2GtQpJZdj+cV0MjsJuCJwxtmsPlOLe
-         JylVFxflhfNy8W90A36clLBoCA7pSghgLYEhtCcIPPOe6r0DMOecAIMu7zEY1eYDqdZX
-         75K4jYHoLI9ZKR5zkG22ceGL1wjCrwBun3B/NgB9Jed6BW/iDgTvJ6SIbSFeSZmHbNOM
-         GbWKwHd38TMkMhO+XxA5jkqmmo0qxzvUIxnnqZDkhLChgeQMN5aTI98B6+ngyoWZ2KoQ
-         vnTyUd96X8zjw05cO+JfcWjvTItebtR1WQUmAtIxoQbsQwCiMwRKz+CQPaeXg9AFbkVt
-         A0Qw==
-X-Gm-Message-State: ANoB5plogwYPMsd0Aoj8HOZl4JHWQmxuWTQFDzk4wJWxICmecUaQB8ko
-        NlfB5Nl5I+Q+WzvjhN/DUdc/nQ/aW5NWvJgM
-X-Google-Smtp-Source: AA0mqf7c7js48IggK/2tD5t/9qCiy43LZ9AYH2nqjklRVivtcyCwlsI5QJz9202669zWLWzgeRo8yg==
-X-Received: by 2002:a62:16d0:0:b0:576:a899:78e2 with SMTP id 199-20020a6216d0000000b00576a89978e2mr6234595pfw.1.1671078562784;
-        Wed, 14 Dec 2022 20:29:22 -0800 (PST)
+        bh=+Zntq683qGGW9uGqNJUwpXpXMNNKQE/pGbpUuo9i8rA=;
+        b=gOYcCafbccFwRXKl5gfe99yfO61pmHuCYDojjb/b9zqY5WLmPXpUI5aQAnpNspftIi
+         Mw0cW8DSnDk5HFT6B35XS56+VTIIIlzEPq9vDTJA+8Dw+Q+VTQwdyrBkusgZx53p96Jt
+         ymDr/IWSEu9KpCtvbdb3afj4w8nwgm6jrydi0+zCuliu393ZOkrFLESujEHqK9zp75VA
+         ApNoHb9Myu5hBsejHxL4Am5eomNSIF20tiWfQI8R/DLKD8rnEqoGoKxzus33ceABntQo
+         YSHN6iMH1gXMjImtG3UhNzxvsT+oj/wg2OmAWakeKEh2YTaJzcddiwrKxoImQYPV0v2t
+         hNXQ==
+X-Gm-Message-State: ANoB5pkBmcphU0jRtUENR/3VkfhJ26dIRyOV1TCu/dMbKBiXMXFlpq2T
+        xYtoNfOyqggSe7kDjyeysTw=
+X-Google-Smtp-Source: AA0mqf5JgZozvKq87LDQbHlR0OP/IEDZxtyuCWF8YtZEY8Ml4kbCpZ5+ZkNiWYn2Up22K3+XT4o7hg==
+X-Received: by 2002:aa7:99d0:0:b0:576:f200:bf1b with SMTP id v16-20020aa799d0000000b00576f200bf1bmr5537207pfi.3.1671086158996;
+        Wed, 14 Dec 2022 22:35:58 -0800 (PST)
 Received: from mail.google.com (125-237-37-88-fibre.sparkbb.co.nz. [125.237.37.88])
-        by smtp.gmail.com with ESMTPSA id r3-20020aa79623000000b00575bab45644sm649333pfg.61.2022.12.14.20.29.17
+        by smtp.gmail.com with ESMTPSA id 202-20020a6214d3000000b005774f19b41csm898549pfu.88.2022.12.14.22.35.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Dec 2022 20:29:22 -0800 (PST)
-Date:   Thu, 15 Dec 2022 17:29:15 +1300
+        Wed, 14 Dec 2022 22:35:58 -0800 (PST)
+Date:   Thu, 15 Dec 2022 19:35:52 +1300
 From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
@@ -58,63 +58,75 @@ Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
         Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
         Jiri Slaby <jirislaby@kernel.org>,
         Haowen Bai <baihaowen@meizu.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        paulo.miguel.almeida.rodenas@gmail.com
+        linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] [next] pcmcia: synclink_cs: replace 1-element array with
  flex-array member
-Message-ID: <Y5qim07QaqyvAtRX@mail.google.com>
+Message-ID: <Y5rASDcHCzsiF+Iw@mail.google.com>
 References: <Y5mMWEtHWKOiPVU+@mail.google.com>
  <202212141124.736E3DE2A8@keescook>
  <Y5otilaHc6HBPCAF@mail.google.com>
  <CAHp75VdHU3g_t8u-hr1C=mttvEq-jWmMuCwaQqXToP-kH3xstQ@mail.gmail.com>
  <202212141347.9AD66DEBC8@keescook>
  <CAHp75VdqUMs1uz8zeyDi6rJKayFt6UMrm0A=-Hp8tQpCUSGujQ@mail.gmail.com>
+ <Y5qim07QaqyvAtRX@mail.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VdqUMs1uz8zeyDi6rJKayFt6UMrm0A=-Hp8tQpCUSGujQ@mail.gmail.com>
+In-Reply-To: <Y5qim07QaqyvAtRX@mail.google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Dec 15, 2022 at 12:06:46AM +0200, Andy Shevchenko wrote:
-> On Wed, Dec 14, 2022 at 11:49 PM Kees Cook <keescook@chromium.org> wrote:
-> > On Wed, Dec 14, 2022 at 10:39:52PM +0200, Andy Shevchenko wrote:
-> > > Yes, and Try to make it work with __packed. As I said, the problem is
-> > > that the code is relying on something which is architecture dependent
-> > > strictly speaking. And hence I disagree with Kees that v2 is okay to
-> > > go.
-> >
-> > I meant that v2 is functionally identical to the existing code.
-> 
-> Ah, sorry for misunderstanding.
-> 
-
-I agree with using __packed attribute to remove the extra padding (and
-for the reasons you mentioned before). That would reduce the sizeof(RXBUF)
-from 8 to 5 (which is good) but that is still 1 byte "too much".
-
-Piggying back on a suggestion Kees gave before:
-
--       info->rx_buf_size = sizeof(RXBUF) + info->max_frame_size;
-+       info->rx_buf_size = sizeof(RXBUF) - 1 + info->max_frame_size;
-
-That way RXBUF->data will point to the first byte of the frame_size 
-(MGSLPC_INFO->max_frame_size) which is what is actually needed.
-
-> > > The full change should be something like
+On Thu, Dec 15, 2022 at 05:29:15PM +1300, Paulo Miguel Almeida wrote:
+> On Thu, Dec 15, 2022 at 12:06:46AM +0200, Andy Shevchenko wrote:
+> > On Wed, Dec 14, 2022 at 11:49 PM Kees Cook <keescook@chromium.org> wrote:
+> > > On Wed, Dec 14, 2022 at 10:39:52PM +0200, Andy Shevchenko wrote:
+> > > > Yes, and Try to make it work with __packed. As I said, the problem is
+> > > > that the code is relying on something which is architecture dependent
+> > > > strictly speaking. And hence I disagree with Kees that v2 is okay to
+> > > > go.
 > > >
-> > > check_add(sizeof(), max_frame_size)
-> > > kcalloc(8, size)
-> >
-> > Right -- this would fix the existing mistakes in size calculation (and
-> > is certainly better).
+> > > I meant that v2 is functionally identical to the existing code.
+> > 
+> > Ah, sorry for misunderstanding.
+> > 
 > 
-> Glad to hear that we are on the same page.
+> I agree with using __packed attribute to remove the extra padding (and
+> for the reasons you mentioned before). That would reduce the sizeof(RXBUF)
+> from 8 to 5 (which is good) but that is still 1 byte "too much".
+> 
+> Piggying back on a suggestion Kees gave before:
+> 
+> -       info->rx_buf_size = sizeof(RXBUF) + info->max_frame_size;
+> +       info->rx_buf_size = sizeof(RXBUF) - 1 + info->max_frame_size;
+> 
+> That way RXBUF->data will point to the first byte of the frame_size 
+> (MGSLPC_INFO->max_frame_size) which is what is actually needed.
 > 
 
-That makes sense to me.
+I chose my words poorly here... sorry my brain is a bit fried today.
 
-thanks!
+Let me rephrase that last sentence. After that change (or similar
+change), RXBUF->data will point to the first byte of the buffer
+allocated during the initialisation process. (which is
+limited/controlled by the size of MGSLPC_INFO->max_frame_size)...
+so no 'extra byte/padding' will be there.
 
 - Paulo A.
+
+> > > > The full change should be something like
+> > > >
+> > > > check_add(sizeof(), max_frame_size)
+> > > > kcalloc(8, size)
+> > >
+> > > Right -- this would fix the existing mistakes in size calculation (and
+> > > is certainly better).
+> > 
+> > Glad to hear that we are on the same page.
+> > 
+> 
+> That makes sense to me.
+> 
+> thanks!
+> 
+> - Paulo A.
