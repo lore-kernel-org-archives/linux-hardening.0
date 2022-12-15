@@ -2,101 +2,112 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6022C4167B
-	for <linux-hardening@archiver.kernel.org>; Thu, 15 Dec 2022 20:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AA3C4167B
+	for <linux-hardening@archiver.kernel.org>; Thu, 15 Dec 2022 21:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229543AbiLOUQT (ORCPT
+        id S229680AbiLOVNh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 15 Dec 2022 15:16:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59422 "EHLO
+        Thu, 15 Dec 2022 16:13:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229488AbiLOUQP (ORCPT
+        with ESMTP id S229613AbiLOVNd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 15 Dec 2022 15:16:15 -0500
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9D3F379EF
-        for <linux-hardening@vger.kernel.org>; Thu, 15 Dec 2022 12:16:14 -0800 (PST)
-Received: by mail-pg1-x52d.google.com with SMTP id 62so347460pgb.13
-        for <linux-hardening@vger.kernel.org>; Thu, 15 Dec 2022 12:16:14 -0800 (PST)
+        Thu, 15 Dec 2022 16:13:33 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF921705C;
+        Thu, 15 Dec 2022 13:13:33 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id w4-20020a17090ac98400b002186f5d7a4cso4070591pjt.0;
+        Thu, 15 Dec 2022 13:13:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=E4naCWagDDNWcJfZ4giahWBUN8Tiu/D+CnkJXaoCn4I=;
-        b=LjjqHVVBowUybQjG82rnjJe+F8hs1qicEYul58tnTyt23xDcn2E0r4inwVLRfydSHc
-         C9a35wJ651tp7QQB6uOkFi1wXA3qIIVZsmH4XubLF9bUEItPe3bhh260zxE239dBYUsJ
-         VHKmhzKdkZT134gwNk1FjGgMrA9+Ol2xZI9q/yijm65h4F8Tzhjn3bMpb9shazrkhK6+
-         RiBLxadlYztFtdvqO918dlZwLjdUjkP8I5E6QfcmX1fFyJydKoh9WKRCVuRlnVpUXyeP
-         SWfIb/hAmtfXHvdZQSJWQid0+pfH9b7T8KGxZP4h++RtfdqcnufOc9PpXDGUs2fuSPjy
-         xFEA==
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1GRyBXwIl/yIj6DjGjuLYR4NV25MWL4dlrs9/synEW4=;
+        b=L9mroEBZVJmwpUbs0cjhBI8GcxztTfJESPxIow5xqm7kwOthC3Z9UVqDagpD4SPV8H
+         2pdAMGH0gxx97RwCm71WG6cWJZc2xdheEBF5fppqjXJvyfOlXAVBa82TNaO9ECfr0lTU
+         tWnIY9O/VBIjNciO8JRsCeNPsT25c6fKtFy4u8X5X5NyDR87bZbVX3gPyl5gGZ3xDuaf
+         VJjKH3MwQeSNyFcBEJb73Dc73YHMV8+qS+hqjxZ9xCxfImuXxpXjIgG+U4h6EncGqG4/
+         HpvOTKJ0LE3K2iY2ra/CYQY8geLOPetbniTT7ek3Otm/MfWx8OUYhn77Fz6NF5owPZ11
+         pYQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=E4naCWagDDNWcJfZ4giahWBUN8Tiu/D+CnkJXaoCn4I=;
-        b=VwQEwb3VflF5Zh0tn+EJlTluM3SqwQVv9HEvI41X56pIamfnz5SEFDclkH5Jj9Cgu3
-         aTNU5YdUUe9mN8sCEQiorDB5fCBIJx7p7aKxPdMgt8n+bIS3/6MUhELAieNWYIy1Dxxc
-         TDzLv6f4JzFol3SUDBDFL5Omxj1qV+0JnNwy8dVzg4lSu73war4bIT6AICIXBb/dF7l9
-         GFVAaksbkDmDEy+knayjtQe5vo1HXxqB7OXX/C7W7rtAEmU1rJepppBfUii0LuI2Wspf
-         AOaUhaCGHyC//xGctEfTknQnX86OBcU5GMA++Y9oP83sIbpnPmNiRgmL+O2cUl5fBb+I
-         WqIA==
-X-Gm-Message-State: ANoB5pkxXVvz/5nboI0JATPx8frgto3pImGXOdQUk+/rq41twODA5yrr
-        LgmHoS0VpLcztj4EkSJ6kv1Ufmci5TCximetQS/w
-X-Google-Smtp-Source: AA0mqf5S7JAbYH8Ih4fAgPVXpRLUfWfQlEXzX7kbt3sla7bqd90TNHKutCodLt3485BYMP/dTMYGw8FGwkcr9dLI+2A=
-X-Received: by 2002:a63:64c5:0:b0:479:2109:506 with SMTP id
- y188-20020a6364c5000000b0047921090506mr1313297pgb.92.1671135374221; Thu, 15
- Dec 2022 12:16:14 -0800 (PST)
-MIME-Version: 1.0
-References: <20221209195453.never.494-kees@kernel.org> <20221212211319.GA15511@mail.hallyn.com>
- <202212132006.F29BB81A@keescook>
-In-Reply-To: <202212132006.F29BB81A@keescook>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 15 Dec 2022 15:16:03 -0500
-Message-ID: <CAHC9VhQ7DWQWqiMqHXQO==axnHr3qaxzD22wbK4R78saJt=P2w@mail.gmail.com>
-Subject: Re: [PATCH] LoadPin: Ignore the "contents" argument of the LSM hooks
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        linux-security-module@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>,
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1GRyBXwIl/yIj6DjGjuLYR4NV25MWL4dlrs9/synEW4=;
+        b=0455fNkVmiiUO6oANfKEC+RTITd9gkf0NyTzckrcAQJgvXj1zgpZpfB00JHw/kzCS8
+         g89kaW4zY5nF6EAikWeX3EFO4WhbJCVFz+SaST5+X63aSnWG1/5uvCLa6N254H+Gwd8j
+         vPVIavzkS2B4buRCrb+8A7dU5Z0kJbJu4CRPnbhb6OMntdQJSrys5wuZRQ+9DDGJDGnO
+         3KmfxyR/CFpzb6bNVyashW2KByra8qa4ZoUGXNbbfcGQ2xbXsapoiXDhN8R8v9pbtkJJ
+         8RiFazx2M3G3n8x9fMjTGw7DY+kcZmPBXCV+xIIJ3b3/Xui1DySRIrSKYYcmwI2VjQx3
+         Z3KA==
+X-Gm-Message-State: ANoB5plXHXRHx9reJaWUEg1LSuO5lOJZwDBMbW6m5VHLOhCO5rvvG2A8
+        z5Q/mfkXaOit+0B/+2nYHgk=
+X-Google-Smtp-Source: AA0mqf7CRRvqdGzgLS7omdB/ZLh8/ndysbNNv7QZyL65PuY8F+NTrIknSlXs9iqnYZzsWIcyWl/rtA==
+X-Received: by 2002:a17:902:dacb:b0:189:e687:b373 with SMTP id q11-20020a170902dacb00b00189e687b373mr8741535plx.0.1671138812710;
+        Thu, 15 Dec 2022 13:13:32 -0800 (PST)
+Received: from mail.google.com ([103.229.249.253])
+        by smtp.gmail.com with ESMTPSA id y2-20020a17090264c200b00190efb4071dsm81293pli.160.2022.12.15.13.13.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Dec 2022 13:13:32 -0800 (PST)
+Date:   Fri, 16 Dec 2022 10:13:25 +1300
+From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Haowen Bai <baihaowen@meizu.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] [next] pcmcia: synclink_cs: replace 1-element array with
+ flex-array member
+Message-ID: <Y5uN9Rr3v1uWH765@mail.google.com>
+References: <Y5mMWEtHWKOiPVU+@mail.google.com>
+ <202212141124.736E3DE2A8@keescook>
+ <Y5otilaHc6HBPCAF@mail.google.com>
+ <CAHp75VdHU3g_t8u-hr1C=mttvEq-jWmMuCwaQqXToP-kH3xstQ@mail.gmail.com>
+ <202212141347.9AD66DEBC8@keescook>
+ <CAHp75VdqUMs1uz8zeyDi6rJKayFt6UMrm0A=-Hp8tQpCUSGujQ@mail.gmail.com>
+ <Y5qim07QaqyvAtRX@mail.google.com>
+ <CAHp75VcSnRPfmk9gAgz+hb7VYtL5buzDi_1e53u8b8+PrtxAvQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcSnRPfmk9gAgz+hb7VYtL5buzDi_1e53u8b8+PrtxAvQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Dec 13, 2022 at 11:06 PM Kees Cook <keescook@chromium.org> wrote:
-> On Mon, Dec 12, 2022 at 03:13:19PM -0600, Serge E. Hallyn wrote:
-> > On Fri, Dec 09, 2022 at 11:54:57AM -0800, Kees Cook wrote:
-> > > LoadPin only enforces the read-only origin of kernel file reads. Whether
-> > > or not it was a partial read isn't important. Remove the overly
-> > > conservative checks so that things like partial firmware reads will
-> > > succeed (i.e. reading a firmware header).
+On Thu, Dec 15, 2022 at 10:57:57AM +0200, Andy Shevchenko wrote:
+> On Thu, Dec 15, 2022 at 6:29 AM Paulo Miguel Almeida
+> <paulo.miguel.almeida.rodenas@gmail.com> wrote:
+> > On Thu, Dec 15, 2022 at 12:06:46AM +0200, Andy Shevchenko wrote:
+> > > On Wed, Dec 14, 2022 at 11:49 PM Kees Cook <keescook@chromium.org> wrote:
+> > > > On Wed, Dec 14, 2022 at 10:39:52PM +0200, Andy Shevchenko wrote:
+> 
+> ...
+> 
+> > > > > Yes, and Try to make it work with __packed. As I said, the problem is
+> > > > > that the code is relying on something which is architecture dependent
+> > > > > strictly speaking. And hence I disagree with Kees that v2 is okay to
+> > > > > go.
+> > > >
+> > > > I meant that v2 is functionally identical to the existing code.
 > > >
-> > > Fixes: 2039bda1fa8d ("LSM: Add "contents" flag to kernel_read_file hook")
-> > > Cc: Paul Moore <paul@paul-moore.com>
-> > > Cc: James Morris <jmorris@namei.org>
-> > > Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> > > Ah, sorry for misunderstanding.
 > >
-> > Acked-by: Serge Hallyn <serge@hallyn.com>
-> >
-> > Seems reasonable.
->
-> Thanks!
->
-> > So the patch which introduced this was
-> > 2039bda1f: LSM: Add "contents" flag to kernel_read_file hook
-> > It sounds like the usage of @contents which it added to ima still
-> > makes sense.  But what about the selinux_kernel_read_file() one?
->
-> I think those continue to make sense since those LSM may be sensitive to
-> the _content_ (rather than the _origin_) of the file.
+> > I agree with using __packed attribute to remove the extra padding (and
+> > for the reasons you mentioned before). That would reduce the sizeof(RXBUF)
+> > from 8 to 5 (which is good) but that is still 1 byte "too much".
+> 
+> What I meant with the above is that the code has to work properly with
+> or without __packed. It's just to show you that this code has flaws if
+> it relies on the padding.
+> 
 
-Agreed.  When @contents is false SELinux does a permission check
-between the calling process and itself, but when @contents is true it
-performs a check between the calling process and the file being read.
+Right - that would work just as well. I will work on v3 with the
+suggestions given by you (sizing calculation amendments using overflow.h
+macros) and kees (adding the notes regarding the padding) then.
 
--- 
-paul-moore.com
+- Paulo A.
+
