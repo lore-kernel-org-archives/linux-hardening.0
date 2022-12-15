@@ -2,84 +2,101 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F71C4332F
-	for <linux-hardening@archiver.kernel.org>; Thu, 15 Dec 2022 19:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6022C4167B
+	for <linux-hardening@archiver.kernel.org>; Thu, 15 Dec 2022 20:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229731AbiLOTWx (ORCPT
+        id S229543AbiLOUQT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 15 Dec 2022 14:22:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34144 "EHLO
+        Thu, 15 Dec 2022 15:16:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbiLOTWx (ORCPT
+        with ESMTP id S229488AbiLOUQP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 15 Dec 2022 14:22:53 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36013F06F
-        for <linux-hardening@vger.kernel.org>; Thu, 15 Dec 2022 11:22:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1671132125;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Vp2bThwHIB6WQ0sb6fAkdMYsQig9ewPh2eMzT18STEE=;
-        b=djynl12W9o8MLYlL+E+LwWt5OaG4Y4JD+lOrBBpYd3uDPIsTZS5ytXI7JKO3miKgDnrq9+
-        9n/ZVXBIyzjw53EO6E3yfmWslamapz4C3wo8hCy62QMsxt0je98FIRS7wfLLYvH9ixowjO
-        0MIuUDLVBMSBh3Nxy0smv3IblN3rgpc=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-235-Tis-Ll8mOVWIKyKvvNlgBQ-1; Thu, 15 Dec 2022 14:22:00 -0500
-X-MC-Unique: Tis-Ll8mOVWIKyKvvNlgBQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7CF501C07828;
-        Thu, 15 Dec 2022 19:21:59 +0000 (UTC)
-Received: from redhat.com (unknown [10.2.17.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7DB9C40C2064;
-        Thu, 15 Dec 2022 19:21:58 +0000 (UTC)
-Date:   Thu, 15 Dec 2022 14:21:55 -0500
-From:   Peter Jones <pjones@redhat.com>
-To:     Evgeniy Baskov <baskov@ispras.ru>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        "Limonciello, Mario" <mario.limonciello@amd.com>,
-        joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
-        x86@kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 00/26] x86_64: Improvements at compressed kernel stage
-Message-ID: <20221215192154.fuu47gsultcqd3wh@redhat.com>
-References: <cover.1671098103.git.baskov@ispras.ru>
+        Thu, 15 Dec 2022 15:16:15 -0500
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9D3F379EF
+        for <linux-hardening@vger.kernel.org>; Thu, 15 Dec 2022 12:16:14 -0800 (PST)
+Received: by mail-pg1-x52d.google.com with SMTP id 62so347460pgb.13
+        for <linux-hardening@vger.kernel.org>; Thu, 15 Dec 2022 12:16:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=E4naCWagDDNWcJfZ4giahWBUN8Tiu/D+CnkJXaoCn4I=;
+        b=LjjqHVVBowUybQjG82rnjJe+F8hs1qicEYul58tnTyt23xDcn2E0r4inwVLRfydSHc
+         C9a35wJ651tp7QQB6uOkFi1wXA3qIIVZsmH4XubLF9bUEItPe3bhh260zxE239dBYUsJ
+         VHKmhzKdkZT134gwNk1FjGgMrA9+Ol2xZI9q/yijm65h4F8Tzhjn3bMpb9shazrkhK6+
+         RiBLxadlYztFtdvqO918dlZwLjdUjkP8I5E6QfcmX1fFyJydKoh9WKRCVuRlnVpUXyeP
+         SWfIb/hAmtfXHvdZQSJWQid0+pfH9b7T8KGxZP4h++RtfdqcnufOc9PpXDGUs2fuSPjy
+         xFEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E4naCWagDDNWcJfZ4giahWBUN8Tiu/D+CnkJXaoCn4I=;
+        b=VwQEwb3VflF5Zh0tn+EJlTluM3SqwQVv9HEvI41X56pIamfnz5SEFDclkH5Jj9Cgu3
+         aTNU5YdUUe9mN8sCEQiorDB5fCBIJx7p7aKxPdMgt8n+bIS3/6MUhELAieNWYIy1Dxxc
+         TDzLv6f4JzFol3SUDBDFL5Omxj1qV+0JnNwy8dVzg4lSu73war4bIT6AICIXBb/dF7l9
+         GFVAaksbkDmDEy+knayjtQe5vo1HXxqB7OXX/C7W7rtAEmU1rJepppBfUii0LuI2Wspf
+         AOaUhaCGHyC//xGctEfTknQnX86OBcU5GMA++Y9oP83sIbpnPmNiRgmL+O2cUl5fBb+I
+         WqIA==
+X-Gm-Message-State: ANoB5pkxXVvz/5nboI0JATPx8frgto3pImGXOdQUk+/rq41twODA5yrr
+        LgmHoS0VpLcztj4EkSJ6kv1Ufmci5TCximetQS/w
+X-Google-Smtp-Source: AA0mqf5S7JAbYH8Ih4fAgPVXpRLUfWfQlEXzX7kbt3sla7bqd90TNHKutCodLt3485BYMP/dTMYGw8FGwkcr9dLI+2A=
+X-Received: by 2002:a63:64c5:0:b0:479:2109:506 with SMTP id
+ y188-20020a6364c5000000b0047921090506mr1313297pgb.92.1671135374221; Thu, 15
+ Dec 2022 12:16:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cover.1671098103.git.baskov@ispras.ru>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+References: <20221209195453.never.494-kees@kernel.org> <20221212211319.GA15511@mail.hallyn.com>
+ <202212132006.F29BB81A@keescook>
+In-Reply-To: <202212132006.F29BB81A@keescook>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 15 Dec 2022 15:16:03 -0500
+Message-ID: <CAHC9VhQ7DWQWqiMqHXQO==axnHr3qaxzD22wbK4R78saJt=P2w@mail.gmail.com>
+Subject: Re: [PATCH] LoadPin: Ignore the "contents" argument of the LSM hooks
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        linux-security-module@vger.kernel.org,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Dec 15, 2022 at 03:37:51PM +0300, Evgeniy Baskov wrote:
-> This patchset is aimed
-> * to improve UEFI compatibility of compressed kernel code for x86_64
-> * to setup proper memory access attributes for code and rodata sections
-> * to implement W^X protection policy throughout the whole execution 
->   of compressed kernel for EFISTUB code path. 
+On Tue, Dec 13, 2022 at 11:06 PM Kees Cook <keescook@chromium.org> wrote:
+> On Mon, Dec 12, 2022 at 03:13:19PM -0600, Serge E. Hallyn wrote:
+> > On Fri, Dec 09, 2022 at 11:54:57AM -0800, Kees Cook wrote:
+> > > LoadPin only enforces the read-only origin of kernel file reads. Whether
+> > > or not it was a partial read isn't important. Remove the overly
+> > > conservative checks so that things like partial firmware reads will
+> > > succeed (i.e. reading a firmware header).
+> > >
+> > > Fixes: 2039bda1fa8d ("LSM: Add "contents" flag to kernel_read_file hook")
+> > > Cc: Paul Moore <paul@paul-moore.com>
+> > > Cc: James Morris <jmorris@namei.org>
+> > > Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> >
+> > Acked-by: Serge Hallyn <serge@hallyn.com>
+> >
+> > Seems reasonable.
+>
+> Thanks!
+>
+> > So the patch which introduced this was
+> > 2039bda1f: LSM: Add "contents" flag to kernel_read_file hook
+> > It sounds like the usage of @contents which it added to ima still
+> > makes sense.  But what about the selinux_kernel_read_file() one?
+>
+> I think those continue to make sense since those LSM may be sensitive to
+> the _content_ (rather than the _origin_) of the file.
 
-Hi Evgeniy,
-
-Aside from some minor patch fuzz in patch 6 due to building this in
-today's Fedora rawhide kernel rather than mainline, this patch set works
-for me.
-
-Thanks!
+Agreed.  When @contents is false SELinux does a permission check
+between the calling process and itself, but when @contents is true it
+performs a check between the calling process and the file being read.
 
 -- 
-        Peter
-
+paul-moore.com
