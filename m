@@ -2,123 +2,86 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66328C4167B
-	for <linux-hardening@archiver.kernel.org>; Wed, 14 Dec 2022 23:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C35C001B2
+	for <linux-hardening@archiver.kernel.org>; Thu, 15 Dec 2022 00:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229469AbiLNXeG (ORCPT
+        id S230003AbiLOANB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 14 Dec 2022 18:34:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34518 "EHLO
+        Wed, 14 Dec 2022 19:13:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229756AbiLNXdj (ORCPT
+        with ESMTP id S229475AbiLOAMe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 14 Dec 2022 18:33:39 -0500
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE051159
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Dec 2022 15:32:54 -0800 (PST)
-Received: by mail-pg1-x529.google.com with SMTP id 62so3032865pgb.13
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Dec 2022 15:32:54 -0800 (PST)
+        Wed, 14 Dec 2022 19:12:34 -0500
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7304A21882
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Dec 2022 16:06:46 -0800 (PST)
+Received: by mail-pl1-x62f.google.com with SMTP id g10so5094690plo.11
+        for <linux-hardening@vger.kernel.org>; Wed, 14 Dec 2022 16:06:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EX38wRipK6YZXjwZPd7Su4K9Er1H54jvjyAx9rqRw1Q=;
-        b=PDEg3nH3xgHnheIK+JiFoLehsOV0gTUq21j4kLrRR1ZLvl25FbD7m8LX1fSIYwz/87
-         PIxzI5e9Pfn8V6aq1oOKcTbffZGDbFjXTXJhyLPaPkgFnINJjvhacuxaIOC1x6UwmVsZ
-         d3iVOkBRfgId+oB/p//Pexfh3cuN+6pDvx6QMWBzGeykcVt02UbhvWYbj5G/9VF1Mrgi
-         SOuvClJPMP6WbasvMUuLP1kVi84M3frkmNzV0VYdxvfWNm8RJXyMUXR2L9ZznH7S//1F
-         vMvSYMesxZ8hHbbrwxzlnOR/mS/6Ywx+ti6WoVXe+D/TlHqjypG2vGA+5YOFEjXALgM4
-         JWEQ==
+        bh=Io4os3gTaCz4PVaBpjHUj2dUPT6iCaDC19vKypF5Q6s=;
+        b=i/gqh+ULBL84l7W+HaI+YPVA3abaIfQIMOgVOnljOmr/KVA68zwjp++CaIKotf3jQg
+         ZUOzQKPjmqqy4B/7LyynthiKp6gDWwdZ0BWj+GzLXpD3URXB/Z683HOwIBXxeh93b6GF
+         S1iZx+2M8h1CY+bK9AdVvDyvmaaHb+Ig46C2A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EX38wRipK6YZXjwZPd7Su4K9Er1H54jvjyAx9rqRw1Q=;
-        b=fEGoMBLGoBaY1dTKDs2+n1H2aKEjykq5ldsHj/98xnjxVo3gKjpQ/EPDq1pO4EbTFB
-         +/AC9wPlQwy4mr6zK/XFicY6RG3Pe/VARwCEphGoZxTb9or7tiTcL+1o5CA+CDTxBKRr
-         MvggG8gaF50MvcM0Xot8W3W9ZWv9ETdOjfNwrm1He0xfsQK4Wq0pBilO8WXZ4Jk9muuK
-         c9fweq20PTlz/oKI2LRMXiU22jwlyPTPybMm5hxClkW/6jdSsH6qnEu0TOLQQvOvJe43
-         FbTEhz73nxReN3t8xOJcXSZQkoEYV2BoYnQM9jNo+p6sd288ab21StZUYi4JwIXPFkCE
-         MZxA==
-X-Gm-Message-State: ANoB5pneU8gt253YilvuqTKG0mUnb+RA9/5X1dsLK4o6wut9Mwiapz6Z
-        rsBTfydg5Y7QoSqodIOw8W2YDTk+j0615RLyxdYsjA==
-X-Google-Smtp-Source: AA0mqf6FrLS1D7V7SRNCy3k8CyVO9nDpptYhTX527VVCoLeeGz/DIxUaHIqaRhNRIJVDOOmwzpQTEeBAzUWYmJerZnw=
-X-Received: by 2002:a63:f04d:0:b0:470:5d17:a62e with SMTP id
- s13-20020a63f04d000000b004705d17a62emr68719053pgj.620.1671060773915; Wed, 14
- Dec 2022 15:32:53 -0800 (PST)
+        bh=Io4os3gTaCz4PVaBpjHUj2dUPT6iCaDC19vKypF5Q6s=;
+        b=G20HOayUtmO3MKMiCNSrDKtSINMw2zRk+tpGo6MluTKS4qFlq8YU6s4fXYj3+Ul0KT
+         ixyyBLLhVWhgSQgE48PsWl18MkivG4RtNTC8CVXygFxNYpaE95Sz9E6i368ZY1oFvFEx
+         35mFGGu9XBxQL+w7YSqyE9hGcVCP7UiG9F8DWfUN79fNiJ53RggiLXq//LWdfwlXvmJV
+         DZhp7bKRS0BkpCkg1SR8I2A/sEYiYAACRf0SM3emGIan2yc49H5VuctxxYnrsiTXuEEb
+         CaZisnbvfCNR7NXVivTz9zul44OnxHO2EA3T5hW1pz2GUUPFVuHSTeAoReGUj7ofDPWx
+         W7Rg==
+X-Gm-Message-State: ANoB5plvq1V4dGmuXSHKWfddLWBsYgf0ym79/7T7K7inp5H2lbVrwQma
+        Hwy4uIfGEjeuiNOC1JQIBVdHiQ==
+X-Google-Smtp-Source: AA0mqf7K90bP3UUUfX9ygJAAX4zTnSIy4/T4H3TdPQBfKafxMyTh8efvMuJMEGl3HGTGWDSfjK9dew==
+X-Received: by 2002:a17:90a:b908:b0:21a:8c6:c89e with SMTP id p8-20020a17090ab90800b0021a08c6c89emr27261520pjr.2.1671062806002;
+        Wed, 14 Dec 2022 16:06:46 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id gj1-20020a17090b108100b002086ac07041sm1910624pjb.44.2022.12.14.16.06.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Dec 2022 16:06:45 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     ndesaulniers@google.com, nathan@kernel.org
+Cc:     Kees Cook <keescook@chromium.org>, stable@vger.kernel.org,
+        trix@redhat.com, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, patches@lists.linux.dev,
+        llvm@lists.linux.dev
+Subject: Re: [PATCH] security: Restrict CONFIG_ZERO_CALL_USED_REGS to gcc or clang > 15.0.6
+Date:   Wed, 14 Dec 2022 16:06:19 -0800
+Message-Id: <167106277582.3571286.12639413013649335692.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221214232602.4118147-1-nathan@kernel.org>
+References: <20221214232602.4118147-1-nathan@kernel.org>
 MIME-Version: 1.0
-References: <20221209160453.3246150-1-jeffxu@google.com> <202212141053.7F5D1F6@keescook>
-In-Reply-To: <202212141053.7F5D1F6@keescook>
-From:   Jeff Xu <jeffxu@google.com>
-Date:   Wed, 14 Dec 2022 15:32:16 -0800
-Message-ID: <CALmYWFss4hGOgJaeah8p7q86xmE7AOwOazxggGCuY=A+ZUVWhQ@mail.gmail.com>
-Subject: Re: [PATCH v7 0/6] mm/memfd: introduce MFD_NOEXEC_SEAL and MFD_EXEC
-To:     Kees Cook <keescook@chromium.org>
-Cc:     jeffxu@chromium.org, skhan@linuxfoundation.org,
-        akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
-        dverkamp@chromium.org, hughd@google.com, jorgelo@chromium.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, jannh@google.com,
-        linux-hardening@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Dec 14, 2022 at 10:54 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Fri, Dec 09, 2022 at 04:04:47PM +0000, jeffxu@chromium.org wrote:
-> > From: Jeff Xu <jeffxu@google.com>
-> >
-> > Since Linux introduced the memfd feature, memfd have always had their
-> > execute bit set, and the memfd_create() syscall doesn't allow setting
-> > it differently.
-> >
-> > However, in a secure by default system, such as ChromeOS, (where all
-> > executables should come from the rootfs, which is protected by Verified
-> > boot), this executable nature of memfd opens a door for NoExec bypass
-> > and enables =E2=80=9Cconfused deputy attack=E2=80=9D.  E.g, in VRP bug =
-[1]: cros_vm
-> > process created a memfd to share the content with an external process,
-> > however the memfd is overwritten and used for executing arbitrary code
-> > and root escalation. [2] lists more VRP in this kind.
-> >
-> > On the other hand, executable memfd has its legit use, runc uses memfd=
-=E2=80=99s
-> > seal and executable feature to copy the contents of the binary then
-> > execute them, for such system, we need a solution to differentiate runc=
-'s
-> > use of  executable memfds and an attacker's [3].
-> >
-> > To address those above, this set of patches add following:
-> > 1> Let memfd_create() set X bit at creation time.
-> > 2> Let memfd to be sealed for modifying X bit.
-> > 3> A new pid namespace sysctl: vm.memfd_noexec to control the behavior =
-of
-> >    X bit.For example, if a container has vm.memfd_noexec=3D2, then
-> >    memfd_create() without MFD_NOEXEC_SEAL will be rejected.
-> > 4> A new security hook in memfd_create(). This make it possible to a ne=
-w
-> > LSM, which rejects or allows executable memfd based on its security pol=
-icy.
->
-> I think patch 1-5 look good to land. The LSM hook seems separable, and
-> could continue on its own. Thoughts?
->
-Agreed.
+On Wed, 14 Dec 2022 16:26:03 -0700, Nathan Chancellor wrote:
+> A bad bug in clang's implementation of -fzero-call-used-regs can result
+> in NULL pointer dereferences (see the links above the check for more
+> information). Restrict CONFIG_CC_HAS_ZERO_CALL_USED_REGS to either a
+> supported GCC version or a clang newer than 15.0.6, which will catch
+> both a theoretical 15.0.7 and the upcoming 16.0.0, which will both have
+> the bug fixed.
+> 
+> [...]
 
-> (Which tree should memfd change go through?)
->
-I'm not sure, is there a recommendation ?
+Applied to for-next/hardening, thanks! (And I'll send it for v6.2-rc1 too.)
 
-Thanks.
-Jeff
+[1/1] security: Restrict CONFIG_ZERO_CALL_USED_REGS to gcc or clang > 15.0.6
+      https://git.kernel.org/kees/c/d6a9fb87e9d1
 
-> -Kees
->
-> --
-> Kees Cook
+-- 
+Kees Cook
+
