@@ -2,131 +2,99 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE09C4332F
-	for <linux-hardening@archiver.kernel.org>; Thu, 15 Dec 2022 06:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD323C4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 15 Dec 2022 08:58:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229514AbiLOGgB (ORCPT
+        id S229655AbiLOI6h (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 15 Dec 2022 01:36:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41270 "EHLO
+        Thu, 15 Dec 2022 03:58:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbiLOGgA (ORCPT
+        with ESMTP id S229547AbiLOI6f (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 15 Dec 2022 01:36:00 -0500
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A38AB1CD;
-        Wed, 14 Dec 2022 22:35:59 -0800 (PST)
-Received: by mail-pf1-x432.google.com with SMTP id d82so6042663pfd.11;
-        Wed, 14 Dec 2022 22:35:59 -0800 (PST)
+        Thu, 15 Dec 2022 03:58:35 -0500
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69BDA2DABB;
+        Thu, 15 Dec 2022 00:58:34 -0800 (PST)
+Received: by mail-qk1-x72a.google.com with SMTP id pa22so2354208qkn.9;
+        Thu, 15 Dec 2022 00:58:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Zntq683qGGW9uGqNJUwpXpXMNNKQE/pGbpUuo9i8rA=;
-        b=guyIeSLZpY8xMW9BqgiBAuwBAeuy4bh5lN7jmOI1KyQAWeiGe+rYvJiYtZP8ehiFTw
-         M6RlR+Hwkcb+l+IHxUVOAiBJpANiV0oCdRqH9W3Qbw3oimOtQG7RptutNUtfBud0Cn/J
-         JkRPM091LtaXylCndoUIKe9gfMcFrPQW2b0wf3MooFotzQl94+8EMrtxVKMU+UooUEHl
-         0Bv0rnP1c7EBp5nAyBjN1MRno7HPEAQrZdv30wMpyzJ2dlSqplCEIYp4Scr7ALdI3W6q
-         KII3vTiKLKVxVi7Pp0CopY3FV7YQpl4ljXCLvGQb7z2x5zqARoB7TmdJjdGY8Nm71ZaZ
-         3raA==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/U5x9gDIB/4HhGGJfOuNSIzuDjkerS4xKeFi7M9ylu0=;
+        b=YT10LRYShR+CF/S+V2PLdnOKMpCA1XP88d+VkYPWmW+S0P81sVGPH8rgs4tQPMYcCl
+         YEhyJ9kP0bJMRCiAeNA0Vj6B3YgTYcggXd5qh1TCZw9EbTx2ez4STXeREjFi60IJyOAv
+         hvPOOo6RF+xVd5KY5RowkNhkBKIgX0RsX5UdUilHtLQDiQkbfjhj/mI12WNHYVS0rdtg
+         mUgNm3f4nbGITnE63owk991YhpYdo2z0uV+29DEhFklv4w3+sLAq2Iun9GZ85kI2hs4f
+         dec7HkKfzLgQZ3FcX//hZQ36ykpyxRXAvqLDnV4cUIE+u2jmAX23awdX/p3Rl8tAcvo4
+         Lc7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+Zntq683qGGW9uGqNJUwpXpXMNNKQE/pGbpUuo9i8rA=;
-        b=gOYcCafbccFwRXKl5gfe99yfO61pmHuCYDojjb/b9zqY5WLmPXpUI5aQAnpNspftIi
-         Mw0cW8DSnDk5HFT6B35XS56+VTIIIlzEPq9vDTJA+8Dw+Q+VTQwdyrBkusgZx53p96Jt
-         ymDr/IWSEu9KpCtvbdb3afj4w8nwgm6jrydi0+zCuliu393ZOkrFLESujEHqK9zp75VA
-         ApNoHb9Myu5hBsejHxL4Am5eomNSIF20tiWfQI8R/DLKD8rnEqoGoKxzus33ceABntQo
-         YSHN6iMH1gXMjImtG3UhNzxvsT+oj/wg2OmAWakeKEh2YTaJzcddiwrKxoImQYPV0v2t
-         hNXQ==
-X-Gm-Message-State: ANoB5pkBmcphU0jRtUENR/3VkfhJ26dIRyOV1TCu/dMbKBiXMXFlpq2T
-        xYtoNfOyqggSe7kDjyeysTw=
-X-Google-Smtp-Source: AA0mqf5JgZozvKq87LDQbHlR0OP/IEDZxtyuCWF8YtZEY8Ml4kbCpZ5+ZkNiWYn2Up22K3+XT4o7hg==
-X-Received: by 2002:aa7:99d0:0:b0:576:f200:bf1b with SMTP id v16-20020aa799d0000000b00576f200bf1bmr5537207pfi.3.1671086158996;
-        Wed, 14 Dec 2022 22:35:58 -0800 (PST)
-Received: from mail.google.com (125-237-37-88-fibre.sparkbb.co.nz. [125.237.37.88])
-        by smtp.gmail.com with ESMTPSA id 202-20020a6214d3000000b005774f19b41csm898549pfu.88.2022.12.14.22.35.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Dec 2022 22:35:58 -0800 (PST)
-Date:   Thu, 15 Dec 2022 19:35:52 +1300
-From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/U5x9gDIB/4HhGGJfOuNSIzuDjkerS4xKeFi7M9ylu0=;
+        b=dd3Jc09MvEnUzSUkHKBnQBe8mUvzygufbW9NkDZM6KRsdpkpKeo5eyAaOiljF18kRG
+         bLzit4SS7WfOM/gZF/9eSOpeBJxZ0Xbc5veturCxwn6NmHS2SXi0xkzoYJVWjfdW5MW7
+         0tfVJiqTQ2iWlceNblKFQ5hfRraE9dSMZSN9eUmEoQkZQ2ixUyIKyiCylZbyyuUVJX4s
+         xd8131ZU9NAqaZog1LAlgigBbz0zsrBm3c4hgqp9fg9oLM8h6mxH725JKKjzA31RjfJn
+         jiJLOWIzQnYUBmqrMtEaYUupyLKwe71MC8tY2M70jTU0XWTgPPmRcu/gDBz42h+uaLq3
+         nKkg==
+X-Gm-Message-State: ANoB5pnU1od3Qox4AWBmmydI9oi8KVUA+VReQHaz+/RmbloMnN5AzlcN
+        hkB+Ghtenm3jKOz+mAkIiUYSYixShHcaQGjOmJE=
+X-Google-Smtp-Source: AA0mqf7XfM9p3HJSyShtl+YS6ddXslSbaGRLL33UnHdjcKIoqsLsotA4YkR9uCLn2islrYuWNdsQXAwf9dOXxLt8FC4=
+X-Received: by 2002:a37:a9d2:0:b0:6ff:c2e:c71c with SMTP id
+ s201-20020a37a9d2000000b006ff0c2ec71cmr1837351qke.734.1671094713484; Thu, 15
+ Dec 2022 00:58:33 -0800 (PST)
+MIME-Version: 1.0
+References: <Y5mMWEtHWKOiPVU+@mail.google.com> <202212141124.736E3DE2A8@keescook>
+ <Y5otilaHc6HBPCAF@mail.google.com> <CAHp75VdHU3g_t8u-hr1C=mttvEq-jWmMuCwaQqXToP-kH3xstQ@mail.gmail.com>
+ <202212141347.9AD66DEBC8@keescook> <CAHp75VdqUMs1uz8zeyDi6rJKayFt6UMrm0A=-Hp8tQpCUSGujQ@mail.gmail.com>
+ <Y5qim07QaqyvAtRX@mail.google.com>
+In-Reply-To: <Y5qim07QaqyvAtRX@mail.google.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 15 Dec 2022 10:57:57 +0200
+Message-ID: <CAHp75VcSnRPfmk9gAgz+hb7VYtL5buzDi_1e53u8b8+PrtxAvQ@mail.gmail.com>
+Subject: Re: [PATCH] [next] pcmcia: synclink_cs: replace 1-element array with
+ flex-array member
+To:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
 Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Jiri Slaby <jirislaby@kernel.org>,
         Haowen Bai <baihaowen@meizu.com>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] [next] pcmcia: synclink_cs: replace 1-element array with
- flex-array member
-Message-ID: <Y5rASDcHCzsiF+Iw@mail.google.com>
-References: <Y5mMWEtHWKOiPVU+@mail.google.com>
- <202212141124.736E3DE2A8@keescook>
- <Y5otilaHc6HBPCAF@mail.google.com>
- <CAHp75VdHU3g_t8u-hr1C=mttvEq-jWmMuCwaQqXToP-kH3xstQ@mail.gmail.com>
- <202212141347.9AD66DEBC8@keescook>
- <CAHp75VdqUMs1uz8zeyDi6rJKayFt6UMrm0A=-Hp8tQpCUSGujQ@mail.gmail.com>
- <Y5qim07QaqyvAtRX@mail.google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y5qim07QaqyvAtRX@mail.google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Dec 15, 2022 at 05:29:15PM +1300, Paulo Miguel Almeida wrote:
+On Thu, Dec 15, 2022 at 6:29 AM Paulo Miguel Almeida
+<paulo.miguel.almeida.rodenas@gmail.com> wrote:
 > On Thu, Dec 15, 2022 at 12:06:46AM +0200, Andy Shevchenko wrote:
 > > On Wed, Dec 14, 2022 at 11:49 PM Kees Cook <keescook@chromium.org> wrote:
 > > > On Wed, Dec 14, 2022 at 10:39:52PM +0200, Andy Shevchenko wrote:
+
+...
+
 > > > > Yes, and Try to make it work with __packed. As I said, the problem is
 > > > > that the code is relying on something which is architecture dependent
 > > > > strictly speaking. And hence I disagree with Kees that v2 is okay to
 > > > > go.
 > > >
 > > > I meant that v2 is functionally identical to the existing code.
-> > 
+> >
 > > Ah, sorry for misunderstanding.
-> > 
-> 
+>
 > I agree with using __packed attribute to remove the extra padding (and
 > for the reasons you mentioned before). That would reduce the sizeof(RXBUF)
 > from 8 to 5 (which is good) but that is still 1 byte "too much".
-> 
-> Piggying back on a suggestion Kees gave before:
-> 
-> -       info->rx_buf_size = sizeof(RXBUF) + info->max_frame_size;
-> +       info->rx_buf_size = sizeof(RXBUF) - 1 + info->max_frame_size;
-> 
-> That way RXBUF->data will point to the first byte of the frame_size 
-> (MGSLPC_INFO->max_frame_size) which is what is actually needed.
-> 
 
-I chose my words poorly here... sorry my brain is a bit fried today.
+What I meant with the above is that the code has to work properly with
+or without __packed. It's just to show you that this code has flaws if
+it relies on the padding.
 
-Let me rephrase that last sentence. After that change (or similar
-change), RXBUF->data will point to the first byte of the buffer
-allocated during the initialisation process. (which is
-limited/controlled by the size of MGSLPC_INFO->max_frame_size)...
-so no 'extra byte/padding' will be there.
-
-- Paulo A.
-
-> > > > The full change should be something like
-> > > >
-> > > > check_add(sizeof(), max_frame_size)
-> > > > kcalloc(8, size)
-> > >
-> > > Right -- this would fix the existing mistakes in size calculation (and
-> > > is certainly better).
-> > 
-> > Glad to hear that we are on the same page.
-> > 
-> 
-> That makes sense to me.
-> 
-> thanks!
-> 
-> - Paulo A.
+-- 
+With Best Regards,
+Andy Shevchenko
