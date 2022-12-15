@@ -2,31 +2,31 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5ABC4708D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1B0C3DA79
 	for <linux-hardening@archiver.kernel.org>; Thu, 15 Dec 2022 12:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229822AbiLOMi6 (ORCPT
+        id S229806AbiLOMi6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
         Thu, 15 Dec 2022 07:38:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53612 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229841AbiLOMij (ORCPT
+        with ESMTP id S229797AbiLOMij (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Thu, 15 Dec 2022 07:38:39 -0500
 Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 860BE2EF73;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85FD12EF6C;
         Thu, 15 Dec 2022 04:38:25 -0800 (PST)
 Received: from localhost.localdomain (unknown [83.149.199.65])
-        by mail.ispras.ru (Postfix) with ESMTPSA id 2592440737A4;
-        Thu, 15 Dec 2022 12:38:22 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 2592440737A4
+        by mail.ispras.ru (Postfix) with ESMTPSA id AD20F400CBDC;
+        Thu, 15 Dec 2022 12:38:21 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru AD20F400CBDC
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-        s=default; t=1671107902;
-        bh=1F14ng0uLHc/D7bnuLtuXVTUn3HgOEnB5AX6fPcjqBs=;
+        s=default; t=1671107901;
+        bh=LKdPN2ZvZx4fnLPS2t3A1XEN4tVvozM/uwlffktRvcE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SZV5LPnFRRwOxLW9AgC7+BiUVkUyPiE5XGxWQI1ygUg2UA0XM2otaW7W/o4VWSzNt
-         o52yfkqykKgst8Cxp/l3xrbB4k8RmuW1J3rsm8cl86lOkprezWF6Gp6Rx7mIrW/wcp
-         qZCHZNDQvL2Pr/Brg7SJ3teeqsG4A8Mz8Gc8aFDg=
+        b=ZX0IrRnsenVbR64VOD4t+61yrGNmLTwUUhZm4VdJHbvwWZKDY0FDAhig3UQXx9ynv
+         3NpWs1+D0wD5XIuz0DWBRRqT2RZ9DpntTQd+h35zrGmdPLYaBoxdke6KA1MxWNAz1C
+         bzaxCj4glhhojWN1lIgyNViKDrVyduWp+wJdHXxY=
 From:   Evgeniy Baskov <baskov@ispras.ru>
 To:     Ard Biesheuvel <ardb@kernel.org>
 Cc:     Evgeniy Baskov <baskov@ispras.ru>, Borislav Petkov <bp@alien8.de>,
@@ -41,9 +41,9 @@ Cc:     Evgeniy Baskov <baskov@ispras.ru>, Borislav Petkov <bp@alien8.de>,
         joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
         x86@kernel.org, linux-efi@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v4 04/26] x86/boot: Increase boot page table size
-Date:   Thu, 15 Dec 2022 15:37:55 +0300
-Message-Id: <71444a474b94ed69dbc4bc6b1592b10fad4e42a5.1671098103.git.baskov@ispras.ru>
+Subject: [PATCH v4 02/26] x86/build: Remove RWX sections and align on 4KB
+Date:   Thu, 15 Dec 2022 15:37:53 +0300
+Message-Id: <721b5c42e0e79d307d5bcb08f9c8402f5067ded0.1671098103.git.baskov@ispras.ru>
 X-Mailer: git-send-email 2.37.4
 In-Reply-To: <cover.1671098103.git.baskov@ispras.ru>
 References: <cover.1671098103.git.baskov@ispras.ru>
@@ -53,63 +53,70 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Previous upper limit ignored pages implicitly mapped from #PF handler
-by code accessing ACPI tables (boot/compressed/{acpi.c,efi.c}),
-so theoretical upper limit is higher than it was set.
+Avoid creating sections simultaneously writable and readable
+to prepare for W^X implementation. Align sections on page size (4KB) to
+allow protecting them in the page tables.
 
-Using 4KB pages is desirable for better memory protection granularity.
-Approximately twice as much memory is required for those.
+Split init code form ".init" segment into separate R_X ".inittext"
+segment and make ".init" segment non-executable.
 
-Increase initial page table size to 64 4KB page tables.
+Also add these segments to x86_32 architecture for consistency.
+Currently paging is disabled in x86_32 in compressed kernel, so
+protection is not applied anyways, but .init code was incorrectly
+placed in non-executable ".data" segment. This should not change
+anything meaningful in memory layout now, but might be required in case
+memory protection will also be implemented in compressed kernel for
+x86_32.
 
 Tested-by: Mario Limonciello <mario.limonciello@amd.com>
 Tested-by: Peter Jones <pjones@redhat.com>
 Signed-off-by: Evgeniy Baskov <baskov@ispras.ru>
 ---
- arch/x86/include/asm/boot.h | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ arch/x86/kernel/vmlinux.lds.S | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/include/asm/boot.h b/arch/x86/include/asm/boot.h
-index 9191280d9ea3..024d972c248e 100644
---- a/arch/x86/include/asm/boot.h
-+++ b/arch/x86/include/asm/boot.h
-@@ -41,22 +41,24 @@
- # define BOOT_STACK_SIZE	0x4000
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 2e0ee14229bf..2e56d694c491 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -102,12 +102,11 @@ jiffies = jiffies_64;
+ PHDRS {
+ 	text PT_LOAD FLAGS(5);          /* R_E */
+ 	data PT_LOAD FLAGS(6);          /* RW_ */
+-#ifdef CONFIG_X86_64
+-#ifdef CONFIG_SMP
++#if defined(CONFIG_X86_64) && defined(CONFIG_SMP)
+ 	percpu PT_LOAD FLAGS(6);        /* RW_ */
+ #endif
+-	init PT_LOAD FLAGS(7);          /* RWE */
+-#endif
++	inittext PT_LOAD FLAGS(5);      /* R_E */
++	init PT_LOAD FLAGS(6);          /* RW_ */
+ 	note PT_NOTE FLAGS(0);          /* ___ */
+ }
  
- # define BOOT_INIT_PGT_SIZE	(6*4096)
--# ifdef CONFIG_RANDOMIZE_BASE
- /*
-  * Assuming all cross the 512GB boundary:
-  * 1 page for level4
-- * (2+2)*4 pages for kernel, param, cmd_line, and randomized kernel
-- * 2 pages for first 2M (video RAM: CONFIG_X86_VERBOSE_BOOTUP).
-- * Total is 19 pages.
-+ * (3+3)*2 pages for param and cmd_line
-+ * (2+2+S)*2 pages for kernel and randomized kernel, where S is total number
-+ *     of sections of kernel. Explanation: 2+2 are upper level page tables.
-+ *     We can have only S unaligned parts of section: 1 at the end of the kernel
-+ *     and (S-1) at the section borders. The start address of the kernel is
-+ *     aligned, so an extra page table. There are at most S=6 sections in
-+ *     vmlinux ELF image.
-+ * 3 pages for first 2M (video RAM: CONFIG_X86_VERBOSE_BOOTUP).
-+ * Total is 36 pages.
-+ *
-+ * Some pages are also required for UEFI memory map and
-+ * ACPI table mappings, so we need to add extra space.
-+ * FIXME: Figure out exact amount of pages.
-  */
--#  ifdef CONFIG_X86_VERBOSE_BOOTUP
--#   define BOOT_PGT_SIZE	(19*4096)
--#  else /* !CONFIG_X86_VERBOSE_BOOTUP */
--#   define BOOT_PGT_SIZE	(17*4096)
--#  endif
--# else /* !CONFIG_RANDOMIZE_BASE */
--#  define BOOT_PGT_SIZE		BOOT_INIT_PGT_SIZE
--# endif
-+# define BOOT_PGT_SIZE		(64*4096)
+@@ -227,9 +226,10 @@ SECTIONS
+ #endif
  
- #else /* !CONFIG_X86_64 */
- # define BOOT_STACK_SIZE	0x1000
+ 	INIT_TEXT_SECTION(PAGE_SIZE)
+-#ifdef CONFIG_X86_64
+-	:init
+-#endif
++	:inittext
++
++	. = ALIGN(PAGE_SIZE);
++
+ 
+ 	/*
+ 	 * Section for code used exclusively before alternatives are run. All
+@@ -241,6 +241,7 @@ SECTIONS
+ 	.altinstr_aux : AT(ADDR(.altinstr_aux) - LOAD_OFFSET) {
+ 		*(.altinstr_aux)
+ 	}
++	:init
+ 
+ 	INIT_DATA_SECTION(16)
+ 
 -- 
 2.37.4
 
