@@ -2,142 +2,359 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873BDC46467
-	for <linux-hardening@archiver.kernel.org>; Thu, 15 Dec 2022 16:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9F9C4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 15 Dec 2022 18:25:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229951AbiLOQ4N (ORCPT
+        id S229704AbiLOSZU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 15 Dec 2022 11:56:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48104 "EHLO
+        Thu, 15 Dec 2022 13:25:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229733AbiLOQ4J (ORCPT
+        with ESMTP id S229996AbiLOSYx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 15 Dec 2022 11:56:09 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CA272F9
-        for <linux-hardening@vger.kernel.org>; Thu, 15 Dec 2022 08:56:04 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id o12so11094729pjo.4
-        for <linux-hardening@vger.kernel.org>; Thu, 15 Dec 2022 08:56:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DOs+4sldiwGC1XG54dp5mVgT4uLPOQwpbZy8XgG5P7U=;
-        b=BwAd8aLPF5gd7FIHoISnAe0Zyh/n9acpz7ASV5bArM8hi+12M+FokUGMCFBYex8YYT
-         nxAxlAOtheavS0XJFp986uZEh6iP0Ge1ESokWEFBokuizRQABamacozxfHoHFFmuc1ig
-         og9sJEbM9bDah05cislLrAkqozwsfBmeI2c0IATzpQQH3Shewyh+bhXQoOzGvx/VhhF4
-         q0IchDuQ9ETeLCwyhWh4KMyKbH1/EIDfepr0bi0OHiqJSTjhJ7A3Nxt8kXYoynQWbMgP
-         NFZaNJrEnOv3E7GDTrJU47AoUmR++UPFYGrV0RFmWai23NVv2rwcyUqZetoHP0TjnvhP
-         tb3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DOs+4sldiwGC1XG54dp5mVgT4uLPOQwpbZy8XgG5P7U=;
-        b=BByHYlLEycXybqTMLqTKGwAfuPfMdkXBuhwJwAkUw7oDfw3tJ5BmTBrQsp0/JLqRvk
-         J0BJjopToR9RDJj/dhN26LAieFg0k5Ks1jT+Nfh7nEI/nxyl0I18ibr8+wWdj6aC+0Xo
-         X//nl+K+JJf91WK/tnG5BaJ2MUjY3+ZU+oM7vNGixVHrQmOKKIJUr/DJo6PwAaMX45Rc
-         upP9AeNGbHyMsiAOM6ncx9S9VOtmVcBNaeFmZSAgK1qHv0RsvzjbPJk7cmxAARku3lBQ
-         VeX0kfUhGfJ8Jw1bCD2eWlqz++bOjzdkKL/wJrneXjzXgPMM91GCbIpCm0GSPmJP8rEM
-         y1jQ==
-X-Gm-Message-State: AFqh2ko320pNw3iSx4Gh6O9a/dU3Qe0oy2uQakH945AlTfzaNSG9Z+Zp
-        VNAdCpBoQcQT3lZtVeZPwR5CK0FFQSq5lqxjvffiZROE5XK5aRXX
-X-Google-Smtp-Source: AMrXdXtENt/mhPma/+EbgzmxkFLEmcOUooUWEz4dux8uEyqEYR9PwvfNgIzmFBek41FGvcb4TrN/AF2YjFTKl7rw3wI=
-X-Received: by 2002:a17:90a:4612:b0:219:a43b:1006 with SMTP id
- w18-20020a17090a461200b00219a43b1006mr786360pjg.195.1671123363557; Thu, 15
- Dec 2022 08:56:03 -0800 (PST)
+        Thu, 15 Dec 2022 13:24:53 -0500
+Received: from amity.mint.lgbt (vmi888983.contaboserver.net [149.102.157.145])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE6547330
+        for <linux-hardening@vger.kernel.org>; Thu, 15 Dec 2022 10:24:52 -0800 (PST)
+Received: from amity.mint.lgbt (mx.mint.lgbt [127.0.0.1])
+        by amity.mint.lgbt (Postfix) with ESMTP id 4NY0yB3rWHz1S5CF
+        for <linux-hardening@vger.kernel.org>; Thu, 15 Dec 2022 13:24:50 -0500 (EST)
+Authentication-Results: amity.mint.lgbt (amavisd-new);
+        dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
+        header.d=mint.lgbt
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mint.lgbt; h=
+        content-transfer-encoding:mime-version:references:in-reply-to
+        :x-mailer:message-id:date:subject:to:from; s=dkim; t=1671128689;
+         x=1671992690; bh=L2vpO3fqYNWaVdzbjd/ELrTw+gV/I3Z57NB7dWfmFMc=; b=
+        bbPTlw/tKl0/RA0tzcWR7j4r3+ZmzGNHe2/qLl3KmOSA3/W+mYCvlL6NC9m3hPAi
+        kCd3Dy/Rivan3hpwexPzyrKNyiiwkKjA75DgmaUbvhEYBhL7oup8/uBbCvA4jwS2
+        sOPkC3tdhtyMe5w7y9eOQ8oheR9ZrynWo5sc4lNcb3OtE9lNdBdZty/P5fiWXR1m
+        bjkVRZWglPXUMKFYg3rs3Uv0KkXMDAFs7wMBu0v5Qiz5FmyjqxwUGGt6J3YEYqEK
+        OGzQNorjathocJehC5GB4qEJLOBKLEMM016ZBuKeHOtsmD6MmbE4MubtME/QTU+p
+        E6HWow7ZbQNj89qtQaUSUA==
+X-Virus-Scanned: amavisd-new at amity.mint.lgbt
+Received: from amity.mint.lgbt ([127.0.0.1])
+        by amity.mint.lgbt (amity.mint.lgbt [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 93TFXuEKT7HB for <linux-hardening@vger.kernel.org>;
+        Thu, 15 Dec 2022 13:24:49 -0500 (EST)
+Received: from dorothy.. (unknown [190.196.92.66])
+        by amity.mint.lgbt (Postfix) with ESMTPSA id 4NY0y35s9Dz1S5D0;
+        Thu, 15 Dec 2022 13:24:43 -0500 (EST)
+From:   Lux Aliaga <they@mint.lgbt>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     Lux Aliaga <they@mint.lgbt>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v3 4/4] arm64: dts: qcom: sm6125: Initial support for xiaomi-laurel-sprout
+Date:   Thu, 15 Dec 2022 15:24:12 -0300
+Message-Id: <20221215182412.386064-4-they@mint.lgbt>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20221215182412.386064-1-they@mint.lgbt>
+References: <20221215182412.386064-1-they@mint.lgbt>
 MIME-Version: 1.0
-References: <20221209160453.3246150-1-jeffxu@google.com> <202212141053.7F5D1F6@keescook>
- <CALmYWFss4hGOgJaeah8p7q86xmE7AOwOazxggGCuY=A+ZUVWhQ@mail.gmail.com> <202212141607.D2D986C076@keescook>
-In-Reply-To: <202212141607.D2D986C076@keescook>
-From:   Jeff Xu <jeffxu@google.com>
-Date:   Thu, 15 Dec 2022 08:55:26 -0800
-Message-ID: <CALmYWFvJv_4yLxnv=8Bpx0mE_WLi0yGVxR-ybN8VAatEwmM+iQ@mail.gmail.com>
-Subject: Re: [PATCH v7 0/6] mm/memfd: introduce MFD_NOEXEC_SEAL and MFD_EXEC
-To:     Kees Cook <keescook@chromium.org>
-Cc:     akpm@linux-foundation.org, jeffxu@chromium.org,
-        skhan@linuxfoundation.org, dmitry.torokhov@gmail.com,
-        dverkamp@chromium.org, hughd@google.com, jorgelo@chromium.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, jannh@google.com,
-        linux-hardening@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Dec 14, 2022 at 4:08 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Wed, Dec 14, 2022 at 03:32:16PM -0800, Jeff Xu wrote:
-> > On Wed, Dec 14, 2022 at 10:54 AM Kees Cook <keescook@chromium.org> wrot=
-e:
-> > >
-> > > On Fri, Dec 09, 2022 at 04:04:47PM +0000, jeffxu@chromium.org wrote:
-> > > > From: Jeff Xu <jeffxu@google.com>
-> > > >
-> > > > Since Linux introduced the memfd feature, memfd have always had the=
-ir
-> > > > execute bit set, and the memfd_create() syscall doesn't allow setti=
-ng
-> > > > it differently.
-> > > >
-> > > > However, in a secure by default system, such as ChromeOS, (where al=
-l
-> > > > executables should come from the rootfs, which is protected by Veri=
-fied
-> > > > boot), this executable nature of memfd opens a door for NoExec bypa=
-ss
-> > > > and enables =E2=80=9Cconfused deputy attack=E2=80=9D.  E.g, in VRP =
-bug [1]: cros_vm
-> > > > process created a memfd to share the content with an external proce=
-ss,
-> > > > however the memfd is overwritten and used for executing arbitrary c=
-ode
-> > > > and root escalation. [2] lists more VRP in this kind.
-> > > >
-> > > > On the other hand, executable memfd has its legit use, runc uses me=
-mfd=E2=80=99s
-> > > > seal and executable feature to copy the contents of the binary then
-> > > > execute them, for such system, we need a solution to differentiate =
-runc's
-> > > > use of  executable memfds and an attacker's [3].
-> > > >
-> > > > To address those above, this set of patches add following:
-> > > > 1> Let memfd_create() set X bit at creation time.
-> > > > 2> Let memfd to be sealed for modifying X bit.
-> > > > 3> A new pid namespace sysctl: vm.memfd_noexec to control the behav=
-ior of
-> > > >    X bit.For example, if a container has vm.memfd_noexec=3D2, then
-> > > >    memfd_create() without MFD_NOEXEC_SEAL will be rejected.
-> > > > 4> A new security hook in memfd_create(). This make it possible to =
-a new
-> > > > LSM, which rejects or allows executable memfd based on its security=
- policy.
-> > >
-> > > I think patch 1-5 look good to land. The LSM hook seems separable, an=
-d
-> > > could continue on its own. Thoughts?
-> > >
-> > Agreed.
-> >
-> > > (Which tree should memfd change go through?)
-> > >
-> > I'm not sure, is there a recommendation ?
->
-> It looks like it's traditionally through akpm's tree. Andrew, will you
-> carry patches 1-5?
->
-Hi Andrew, if you are taking this, V8 is the latest that contains patch 1-5=
-.
+Adds support for the Xiaomi Mi A3 (xiaomi-laurel-sprout). Here's a
+summary on what's working.
 
-Thanks
-Jeff
+- dmesg output to bootloader preconfigured display
+- USB
+- UFS
+- SMD RPM regulators
 
-> Thanks!
->
-> --
-> Kees Cook
+Signed-off-by: Lux Aliaga <they@mint.lgbt>
+---
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../dts/qcom/sm6125-xiaomi-laurel-sprout.dts  | 254 ++++++++++++++++++
+ 2 files changed, 255 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.=
+dts
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom=
+/Makefile
+index 3e79496292e7..2b2a0170db14 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -157,6 +157,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+=3D sdm850-lenovo-yoga-c630.=
+dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+=3D sdm850-samsung-w737.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+=3D sm4250-oneplus-billie2.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+=3D sm6125-sony-xperia-seine-pdx201.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+=3D sm6125-xiaomi-laurel-sprout.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+=3D sm6350-sony-xperia-lena-pdx213.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+=3D sm6375-sony-xperia-murray-pdx225.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+=3D sm7225-fairphone-fp4.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts b/a=
+rch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
+new file mode 100644
+index 000000000000..acdfaa83b152
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
+@@ -0,0 +1,254 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2022, Lux Aliaga <they@mint.lgbt>
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/input/gpio-keys.h>
++#include "sm6125.dtsi"
++
++/ {
++	/* required for bootloader to select correct board */
++	qcom,msm-id =3D <394 0>; /* sm6125 v0 */
++	qcom,board-id =3D <11 0>;
++
++	model =3D "Xiaomi Mi A3";
++	compatible =3D "xiaomi,laurel-sprout", "qcom,sm6125";
++	chassis-type =3D "handset";
++
++	chosen {
++		#address-cells =3D <2>;
++		#size-cells =3D <2>;
++		ranges;
++
++		framebuffer0: framebuffer@5c000000 {
++			compatible =3D "simple-framebuffer";
++			reg =3D <0 0x5c000000 0 (1560 * 720 * 4)>;
++			width =3D <720>;
++			height =3D <1560>;
++			stride =3D <(720 * 4)>;
++			format =3D "a8r8g8b8";
++		};
++	};
++
++	extcon_usb: usb-id {
++		compatible =3D "linux,extcon-usb-gpio";
++		id-gpio =3D <&tlmm 102 GPIO_ACTIVE_HIGH>;
++	};
++
++	reserved-memory {
++		#address-cells =3D <2>;
++		#size-cells =3D <2>;
++
++		debug_mem: memory@ffb00000 {
++			reg =3D <0x0 0xffb00000 0x0 0xc0000>;
++			no-map;
++		};
++
++		last_log_mem: memory@ffbc0000 {
++			reg =3D <0x0 0xffbc0000 0x0 0x80000>;
++			no-map;
++		};
++
++		pstore_mem: ramoops@ffc00000 {
++			compatible =3D "ramoops";
++			reg =3D <0x0 0xffc40000 0x0 0xc0000>;
++			record-size =3D <0x1000>;
++			console-size =3D <0x40000>;
++			msg-size =3D <0x20000 0x20000>;
++		};
++
++		cmdline_mem: memory@ffd00000 {
++			reg =3D <0x0 0xffd40000 0x0 0x1000>;
++			no-map;
++		};
++	};
++};
++
++
++&hsusb_phy1 {
++	status =3D "okay";
++};
++
++&rpm_requests {
++	regulators-0 {
++		compatible =3D "qcom,rpm-pm6125-regulators";
++
++		vreg_s6a: s6 {
++			regulator-min-microvolt =3D <936000>;
++			regulator-max-microvolt =3D <1422000>;
++		};
++
++		vreg_l1a: l1 {
++			regulator-min-microvolt =3D <1200000>;
++			regulator-max-microvolt =3D <1256000>;
++		};
++
++		vreg_l2a: l2 {
++			regulator-min-microvolt =3D <1000000>;
++			regulator-max-microvolt =3D <1056000>;
++		};
++
++		vreg_l3a: l3 {
++			regulator-min-microvolt =3D <1000000>;
++			regulator-max-microvolt =3D <1064000>;
++		};
++
++		vreg_l4a: l4 {
++			regulator-min-microvolt =3D <872000>;
++			regulator-max-microvolt =3D <976000>;
++		};
++
++		vreg_l5a: l5 {
++			regulator-min-microvolt =3D <1648000>;
++			regulator-max-microvolt =3D <3104000>;
++		};
++
++		vreg_l6a: l6 {
++			regulator-min-microvolt =3D <576000>;
++			regulator-max-microvolt =3D <656000>;
++		};
++
++		vreg_l7a: l7 {
++			regulator-min-microvolt =3D <872000>;
++			regulator-max-microvolt =3D <976000>;
++		};
++
++		vreg_l8a: l8 {
++			regulator-min-microvolt =3D <400000>;
++			regulator-max-microvolt =3D <728000>;
++		};
++
++		vreg_l9a: l9 {
++			regulator-min-microvolt =3D <1800000>;
++			regulator-max-microvolt =3D <1896000>;
++		};
++
++		vreg_l10a: l10 {
++			regulator-min-microvolt =3D <1800000>;
++			regulator-max-microvolt =3D <1896000>;
++		};
++
++		vreg_l11a: l11 {
++			regulator-min-microvolt =3D <1800000>;
++			regulator-max-microvolt =3D <1952000>;
++		};
++
++		vreg_l12a: l12 {
++			regulator-min-microvolt =3D <1800000>;
++			regulator-max-microvolt =3D <1996000>;
++		};
++
++		vreg_l13a: l13 {
++			regulator-min-microvolt =3D <1800000>;
++			regulator-max-microvolt =3D <1832000>;
++		};
++
++		vreg_l14a: l14 {
++			regulator-min-microvolt =3D <1800000>;
++			regulator-max-microvolt =3D <1904000>;
++		};
++
++		vreg_l15a: l15 {
++			regulator-min-microvolt =3D <3104000>;
++			regulator-max-microvolt =3D <3232000>;
++		};
++
++		vreg_l16a: l16 {
++			regulator-min-microvolt =3D <1800000>;
++			regulator-max-microvolt =3D <1904000>;
++		};
++
++		vreg_l17a: l17 {
++			regulator-min-microvolt =3D <1248000>;
++			regulator-max-microvolt =3D <1304000>;
++		};
++
++		vreg_l18a: l18 {
++			regulator-min-microvolt =3D <1200000>;
++			regulator-max-microvolt =3D <1264000>;
++		};
++
++		vreg_l19a: l19 {
++			regulator-min-microvolt =3D <1648000>;
++			regulator-max-microvolt =3D <2952000>;
++		};
++
++		vreg_l20a: l20 {
++			regulator-min-microvolt =3D <1648000>;
++			regulator-max-microvolt =3D <2952000>;
++		};
++
++		vreg_l21a: l21 {
++			regulator-min-microvolt =3D <2600000>;
++			regulator-max-microvolt =3D <2856000>;
++		};
++
++		vreg_l22a: l22 {
++			regulator-min-microvolt =3D <2944000>;
++			regulator-max-microvolt =3D <3304000>;
++		};
++
++		vreg_l23a: l23 {
++			regulator-min-microvolt =3D <3000000>;
++			regulator-max-microvolt =3D <3400000>;
++		};
++
++		vreg_l24a: l24 {
++			regulator-min-microvolt =3D <2944000>;
++			regulator-max-microvolt =3D <3304000>;
++		};
++	};
++};
++
++&sdc2_off_state {
++	sd-cd-pins {
++		pins =3D "gpio98";
++		function =3D "gpio";
++		drive-strength =3D <2>;
++		bias-disable;
++	};
++};
++
++&sdc2_on_state {
++	sd-cd-pins {
++		pins =3D "gpio98";
++		function =3D "gpio";
++		drive-strength =3D <2>;
++		bias-pull-up;
++	};
++};
++
++&tlmm {
++	gpio-reserved-ranges =3D <22 2>, <28 6>;
++};
++
++&ufs_mem_hc {
++	vcc-supply =3D <&vreg_l24a>;
++	vccq2-supply =3D <&vreg_l11a>;
++	vcc-max-microamp =3D <600000>;
++	vccq2-max-microamp =3D <600000>;
++
++	status =3D "okay";
++};
++
++&ufs_mem_phy {
++	vdda-phy-supply =3D <&vreg_l4a>;
++	vdda-pll-supply =3D <&vreg_l10a>;
++	vdda-phy-max-microamp =3D <51400>;
++	vdda-pll-max-microamp =3D <14200>;
++	vddp-ref-clk-supply =3D <&vreg_l18a>;
++
++	status =3D "okay";
++};
++
++&usb3 {
++	status =3D "okay";
++};
++
++&usb3_dwc3 {
++	extcon =3D <&extcon_usb>;
++};
+--=20
+2.38.1
+
