@@ -2,379 +2,88 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBFAC53210
-	for <linux-hardening@archiver.kernel.org>; Fri, 16 Dec 2022 11:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8754AC001B2
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Dec 2022 14:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230456AbiLPLc0 (ORCPT
+        id S230193AbiLPOFx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 16 Dec 2022 06:32:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39656 "EHLO
+        Fri, 16 Dec 2022 09:05:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231390AbiLPLcX (ORCPT
+        with ESMTP id S229453AbiLPOFw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 16 Dec 2022 06:32:23 -0500
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A5DFD7
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Dec 2022 03:32:21 -0800 (PST)
-Received: by mail-lf1-x135.google.com with SMTP id b3so3072002lfv.2
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Dec 2022 03:32:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dAx/1r3Bgtwb5gejIiLMQD2z5RpFJAB22ApCDcu9cys=;
-        b=W1KEfyCP1EPfqe+EFNlDgY5uuLVCqJqF03dWExRdMCHQMkE620y1TrUDuyeEdg7zUn
-         he3UdSCXrYIQEAWmuOhh49saZvkmtFB1Xqt6PhZVezQ+vtdxBgWZ/kXCUeYULPklY0L7
-         DPOjHIrcWJMpNb3Hwv8Yh03PYGIV9yPmbf2dRUc+Wh75AFVgF4vURfQOl3XjGvArm9nJ
-         lXoTdoXgvIom2IPMjZ7f2lO8AtGsLPwvn1iAW/H0ExJSiEswKHUILoUFFKVfJNvEWDfH
-         uznUELjCuBDB4D4viwgTqsEc5yVKqyr2xk+hDkNHGAp7ZRHTMxpKjR+coH2yH/r2BD08
-         I7/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dAx/1r3Bgtwb5gejIiLMQD2z5RpFJAB22ApCDcu9cys=;
-        b=0zmr7GmwqV+Qzock3TNGT9pCQ+5Lod/V2urlGq2F7f4P2XrzhtbEVIwQBM4xoWOWK6
-         3//JTe0i+FKURmRlQit7lUfYKFK5vEPVPk25EZ56Mov+EbqKd8rGdi1YkT3B/3rF0eFZ
-         u8W8aorIQ9fE5QNj+4jzNz5ZQsMqpUzo3rIYCiMwt6+NL6V3fHMt7oQj3vy9aiFUkOT+
-         6ro26ZCZkYGcdsGT2ThYop6xEIMLdYUtj7TuQq5OM/S0vQl0tI4+tmHOgli8BdxqeXAh
-         XoFWy7ZE4XvHupTsclzV2hUiPThd78YP6J3xR+fdSFdwtmPmp2CZ9Cr97yGVorJibfcP
-         lSIA==
-X-Gm-Message-State: ANoB5plxUU9hHIEO41PdpIodC1PJsUVddSkMszZl2XGH+LFr+eRYO2CC
-        EOAH7u2jYwHdGbxeVLj6iqujKw==
-X-Google-Smtp-Source: AA0mqf4ZhjmOvV5922vukAGUOlFpL4ayukZvFPADDzt+0ywiaB2yUSwWv14YnGU6D0lvb15/zE87vg==
-X-Received: by 2002:ac2:4f8d:0:b0:4a4:68b9:19f1 with SMTP id z13-20020ac24f8d000000b004a468b919f1mr8730959lfs.25.1671190339565;
-        Fri, 16 Dec 2022 03:32:19 -0800 (PST)
-Received: from [192.168.1.101] (abxh44.neoplus.adsl.tpnet.pl. [83.9.1.44])
-        by smtp.gmail.com with ESMTPSA id w1-20020a05651234c100b004b5b4126237sm198535lfr.67.2022.12.16.03.32.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Dec 2022 03:32:19 -0800 (PST)
-Message-ID: <afcb9378-f331-df8c-ced5-1c10999f5fb8@linaro.org>
-Date:   Fri, 16 Dec 2022 12:32:17 +0100
+        Fri, 16 Dec 2022 09:05:52 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 282A128E10;
+        Fri, 16 Dec 2022 06:05:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1GFjpQ7kUqBpcsYqnNwkgNJfjVlRXjx2+yVp8vKZtKI=; b=Fe0FYw4U4c3kW0Zci6+CADjzz3
+        va1rfx7hiXgVMTUEtidbcRCuQSyUruUQVyVtkHIEH8bDzJESRCK0UPHkUPNgxy0+z1mhn8W5U8Ua6
+        lmDrTc8YhGj48EBs1vRjKAUtNiB5IBVD6ABEcsCf0hnXzEdEjfCNfz/U8LPiQ/5nBr+NEutz1R0v+
+        z3hqXnUrerECq5lzL1PSa/fPophynKrG9korPQJOswrmkr85RiYtcK3yr6nL/Bia3Ay2tRnMdLoqd
+        Hikm52CTDsfHnKqckNN5wzhvb+6SvvNcZUkeKHsZOwzZRvmmpdk4dzc8CeIhbGsfQlMAFusJRrAy2
+        6y9VGGwQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1p6BL3-00FWKQ-ID; Fri, 16 Dec 2022 14:05:25 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EE0033001E7;
+        Fri, 16 Dec 2022 15:05:13 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 88051201D8171; Fri, 16 Dec 2022 15:05:13 +0100 (CET)
+Date:   Fri, 16 Dec 2022 15:05:13 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jann Horn <jannh@google.com>,
+        Seth Jenkins <sethjenkins@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Huang Ying <ying.huang@intel.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Joel Savitz <jsavitz@redhat.com>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Rob Herring <robh@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] exit: Allow oops_limit to be disabled
+Message-ID: <Y5x7GXeluFmZ8E0E@hirez.programming.kicks-ass.net>
+References: <20221202210617.never.105-kees@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v4 4/4] arm64: dts: qcom: sm6125: Initial support for
- xiaomi-laurel-sprout
-Content-Language: en-US
-To:     Lux Aliaga <they@mint.lgbt>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20221215190404.398788-1-they@mint.lgbt>
- <20221215190404.398788-4-they@mint.lgbt>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20221215190404.398788-4-they@mint.lgbt>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221202210617.never.105-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Fri, Dec 02, 2022 at 01:06:21PM -0800, Kees Cook wrote:
 
+> --- a/kernel/exit.c
+> +++ b/kernel/exit.c
+> @@ -954,7 +954,7 @@ void __noreturn make_task_dead(int signr)
+>  	 * To make sure this can't happen, place an upper bound on how often the
+>  	 * kernel may oops without panic().
+>  	 */
+> -	if (atomic_inc_return(&oops_count) >= READ_ONCE(oops_limit))
+> +	if (atomic_inc_return(&oops_count) >= READ_ONCE(oops_limit) && oops_limit)
+>  		panic("Oopsed too often (kernel.oops_limit is %d)", oops_limit);
+>  
 
-On 15.12.2022 20:04, Lux Aliaga wrote:
-> Adds support for the Xiaomi Mi A3 (xiaomi-laurel-sprout). Here's a
-> summary on what's working.
-> 
-> - dmesg output to bootloader preconfigured display
-> - USB
-> - UFS
-> - SMD RPM regulators
-> 
-> Signed-off-by: Lux Aliaga <they@mint.lgbt>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile             |   1 +
->  .../dts/qcom/sm6125-xiaomi-laurel-sprout.dts  | 254 ++++++++++++++++++
->  2 files changed, 255 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 3e79496292e7..2b2a0170db14 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -157,6 +157,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-samsung-w737.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm4250-oneplus-billie2.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-sony-xperia-seine-pdx201.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-xiaomi-laurel-sprout.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm6350-sony-xperia-lena-pdx213.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm6375-sony-xperia-murray-pdx225.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm7225-fairphone-fp4.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
-> new file mode 100644
-> index 000000000000..86e1ec47bf5e
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
-> @@ -0,0 +1,254 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2022, Lux Aliaga <they@mint.lgbt>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/input/gpio-keys.h>
-> +#include "sm6125.dtsi"
-> +
-> +/ {
-> +	model = "Xiaomi Mi A3";
-> +	compatible = "xiaomi,laurel-sprout", "qcom,sm6125";
-> +	chassis-type = "handset";
-> +
-> +	/* required for bootloader to select correct board */
-> +	qcom,msm-id = <394 0>; /* sm6125 v0 */
-Unless you have a prototype device, this is not correct.
+That's dodgy, please write as:
 
-Please run `cat /sys/bus/soc/devices/soc0/revision` and confirm
-which revision is used on your phone.
-> +	qcom,board-id = <11 0>;
-> +
-> +	chosen {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		framebuffer0: framebuffer@5c000000 {
-> +			compatible = "simple-framebuffer";
-> +			reg = <0 0x5c000000 0 (1560 * 720 * 4)>;
-> +			width = <720>;
-> +			height = <1560>;
-> +			stride = <(720 * 4)>;
-> +			format = "a8r8g8b8";
-> +		};
-> +	};
-> +
-> +	extcon_usb: usb-id {
-'r' < 'u', usb-id should go after reserved-memory.
+	limit = READ_ONCE(oops_limit);
+	if (atomic_inc_return(&oops_count) >= limit && limit)
 
-> +		compatible = "linux,extcon-usb-gpio";
-> +		id-gpio = <&tlmm 102 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +
-> +		debug_mem: memory@ffb00000 {
-Memory node names should be more specific, for example
-debug@ instead of memory@.
-
-Konrad
-> +			reg = <0x0 0xffb00000 0x0 0xc0000>;
-> +			no-map;
-> +		};
-> +
-> +		last_log_mem: memory@ffbc0000 {
-> +			reg = <0x0 0xffbc0000 0x0 0x80000>;
-> +			no-map;
-> +		};
-> +
-> +		pstore_mem: ramoops@ffc00000 {
-> +			compatible = "ramoops";
-> +			reg = <0x0 0xffc40000 0x0 0xc0000>;
-> +			record-size = <0x1000>;
-> +			console-size = <0x40000>;
-> +			msg-size = <0x20000 0x20000>;
-> +		};
-> +
-> +		cmdline_mem: memory@ffd00000 {
-> +			reg = <0x0 0xffd40000 0x0 0x1000>;
-> +			no-map;
-> +		};
-> +	};
-> +};
-> +
-> +
-> +&hsusb_phy1 {
-> +	status = "okay";
-> +};
-> +
-> +&rpm_requests {
-> +	regulators-0 {
-> +		compatible = "qcom,rpm-pm6125-regulators";
-> +
-> +		vreg_s6a: s6 {
-> +			regulator-min-microvolt = <936000>;
-> +			regulator-max-microvolt = <1422000>;
-> +		};
-> +
-> +		vreg_l1a: l1 {
-> +			regulator-min-microvolt = <1200000>;
-> +			regulator-max-microvolt = <1256000>;
-> +		};
-> +
-> +		vreg_l2a: l2 {
-> +			regulator-min-microvolt = <1000000>;
-> +			regulator-max-microvolt = <1056000>;
-> +		};
-> +
-> +		vreg_l3a: l3 {
-> +			regulator-min-microvolt = <1000000>;
-> +			regulator-max-microvolt = <1064000>;
-> +		};
-> +
-> +		vreg_l4a: l4 {
-> +			regulator-min-microvolt = <872000>;
-> +			regulator-max-microvolt = <976000>;
-> +		};
-> +
-> +		vreg_l5a: l5 {
-> +			regulator-min-microvolt = <1648000>;
-> +			regulator-max-microvolt = <3104000>;
-> +		};
-> +
-> +		vreg_l6a: l6 {
-> +			regulator-min-microvolt = <576000>;
-> +			regulator-max-microvolt = <656000>;
-> +		};
-> +
-> +		vreg_l7a: l7 {
-> +			regulator-min-microvolt = <872000>;
-> +			regulator-max-microvolt = <976000>;
-> +		};
-> +
-> +		vreg_l8a: l8 {
-> +			regulator-min-microvolt = <400000>;
-> +			regulator-max-microvolt = <728000>;
-> +		};
-> +
-> +		vreg_l9a: l9 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1896000>;
-> +		};
-> +
-> +		vreg_l10a: l10 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1896000>;
-> +		};
-> +
-> +		vreg_l11a: l11 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1952000>;
-> +		};
-> +
-> +		vreg_l12a: l12 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1996000>;
-> +		};
-> +
-> +		vreg_l13a: l13 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1832000>;
-> +		};
-> +
-> +		vreg_l14a: l14 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1904000>;
-> +		};
-> +
-> +		vreg_l15a: l15 {
-> +			regulator-min-microvolt = <3104000>;
-> +			regulator-max-microvolt = <3232000>;
-> +		};
-> +
-> +		vreg_l16a: l16 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1904000>;
-> +		};
-> +
-> +		vreg_l17a: l17 {
-> +			regulator-min-microvolt = <1248000>;
-> +			regulator-max-microvolt = <1304000>;
-> +		};
-> +
-> +		vreg_l18a: l18 {
-> +			regulator-min-microvolt = <1200000>;
-> +			regulator-max-microvolt = <1264000>;
-> +		};
-> +
-> +		vreg_l19a: l19 {
-> +			regulator-min-microvolt = <1648000>;
-> +			regulator-max-microvolt = <2952000>;
-> +		};
-> +
-> +		vreg_l20a: l20 {
-> +			regulator-min-microvolt = <1648000>;
-> +			regulator-max-microvolt = <2952000>;
-> +		};
-> +
-> +		vreg_l21a: l21 {
-> +			regulator-min-microvolt = <2600000>;
-> +			regulator-max-microvolt = <2856000>;
-> +		};
-> +
-> +		vreg_l22a: l22 {
-> +			regulator-min-microvolt = <2944000>;
-> +			regulator-max-microvolt = <3304000>;
-> +		};
-> +
-> +		vreg_l23a: l23 {
-> +			regulator-min-microvolt = <3000000>;
-> +			regulator-max-microvolt = <3400000>;
-> +		};
-> +
-> +		vreg_l24a: l24 {
-> +			regulator-min-microvolt = <2944000>;
-> +			regulator-max-microvolt = <3304000>;
-> +		};
-> +	};
-> +};
-> +
-> +&sdc2_off_state {
-> +	sd-cd-pins {
-> +		pins = "gpio98";
-> +		function = "gpio";
-> +		drive-strength = <2>;
-> +		bias-disable;
-> +	};
-> +};
-> +
-> +&sdc2_on_state {
-> +	sd-cd-pins {
-> +		pins = "gpio98";
-> +		function = "gpio";
-> +		drive-strength = <2>;
-> +		bias-pull-up;
-> +	};
-> +};
-> +
-> +&tlmm {
-> +	gpio-reserved-ranges = <22 2>, <28 6>;
-> +};
-> +
-> +&ufs_mem_hc {
-> +	vcc-supply = <&vreg_l24a>;
-> +	vccq2-supply = <&vreg_l11a>;
-> +	vcc-max-microamp = <600000>;
-> +	vccq2-max-microamp = <600000>;
-> +
-> +	status = "okay";
-> +};
-> +
-> +&ufs_mem_phy {
-> +	vdda-phy-supply = <&vreg_l4a>;
-> +	vdda-pll-supply = <&vreg_l10a>;
-> +	vdda-phy-max-microamp = <51400>;
-> +	vdda-pll-max-microamp = <14200>;
-> +	vddp-ref-clk-supply = <&vreg_l18a>;
-> +
-> +	status = "okay";
-> +};
-> +
-> +&usb3 {
-> +	status = "okay";
-> +};
-> +
-> +&usb3_dwc3 {
-> +	extcon = <&extcon_usb>;
-> +};
+So we don't explicitly add a reload that negates the whole READ_ONCE().
