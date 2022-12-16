@@ -2,149 +2,106 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E01CC4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 16 Dec 2022 20:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AA1C001B2
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Dec 2022 20:32:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231703AbiLPUae (ORCPT
+        id S229568AbiLPUc5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 16 Dec 2022 15:30:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37254 "EHLO
+        Fri, 16 Dec 2022 15:32:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231485AbiLPUad (ORCPT
+        with ESMTP id S230237AbiLPUcz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 16 Dec 2022 15:30:33 -0500
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ED513EAC6
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Dec 2022 12:30:32 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id w23so3387228ply.12
-        for <linux-hardening@vger.kernel.org>; Fri, 16 Dec 2022 12:30:32 -0800 (PST)
+        Fri, 16 Dec 2022 15:32:55 -0500
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E706CFD06
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Dec 2022 12:32:54 -0800 (PST)
+Received: by mail-pl1-x62b.google.com with SMTP id d7so3410882pll.9
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Dec 2022 12:32:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rhdvcMuCK8cVd24YqXpIq4X0YsKEOwsG/ikZkxQ8Me8=;
-        b=Td09ZtE0IX5Fvm5IdQS1h9XVZyhi2weGB+7yVfa+EFDjgIFxxqIc4OAqCKlJ5ruqyX
-         XNdCAR9FhchU3lupE56ZkZu2lHS9qCrUOAgQ2mmpo7ZbPwgKW01wGuQe0mVi6I3ha7Rt
-         XU1UFK91y4FzgunLMUSG7yQB9W+9rQCHddMg0=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZHhZ9ZPwjqbZ4BcttSt3Sdnf2qIn3B52gMX2PCgd3xg=;
+        b=LWJb4jETCkdIV7xwZtPKFKqnBfRSGtDxr7b66C7yE2bTbTaDzkWz+4OKI39o84LAKl
+         0K8UgyhKz8UI++gjYxjpZc42BOykIlvpCB0rQYhwh8+TMTFNEpLpjcKujq9JGiROE6s5
+         jTPkLUp4wlnBaeM32SbGfc66gmPSy63uURfoY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rhdvcMuCK8cVd24YqXpIq4X0YsKEOwsG/ikZkxQ8Me8=;
-        b=KE4imYLWyuAflFtx4F2OulGHoXhLcCV01jhJygZxDowiYpCW9e/n3QHqOJbscYdbBS
-         0O5rDgSJB5g9n94VkdZY/keG5/9hvWVbG35VAc57EJ+zemv8uNKwXXrVRxPdkUPk0riv
-         MSAZYM+wLujeb3+IMIAiMigmu9m0rCajC99V/Z61T2Qt0KcANGo4yqMQg5l4UEuNS9AI
-         K/b4cZ5ru4r8e2v32Hza7oH8fiVQesANnVtBFeXtBNGwH6pHTAyp/kQY9XsCVUmDSF30
-         Pt0vIiJWlT3D6yBbCgjC5Vqouz+VZRGLuy1ScSIMnlsijrSPebk60mX/Vnyhkc6WyW/P
-         x74Q==
-X-Gm-Message-State: ANoB5pmvxWDhVUPLIMZxNJzq2WsJTOSiWAttshTrxfvTLDi5rO1KuBpy
-        2ZMeKpVGoBR4fbAIya9P3vDa3A==
-X-Google-Smtp-Source: AA0mqf73RQLdFg1DKa5OzEUZTRGuJf67QUFJ16BcAJmMnR4C55b3SGJzfoyJBn+RJFcLiVroZRRIhw==
-X-Received: by 2002:a17:90a:4f4b:b0:219:15b0:3da3 with SMTP id w11-20020a17090a4f4b00b0021915b03da3mr33713864pjl.37.1671222631618;
-        Fri, 16 Dec 2022 12:30:31 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZHhZ9ZPwjqbZ4BcttSt3Sdnf2qIn3B52gMX2PCgd3xg=;
+        b=e2ZNZAsSwmR1z+YN6J9aJAt2T1lt8Z+UltsVZyq3aqbdyBWxrZrpnQDT383V7wuFiW
+         kGf3VkgELGKQsJfc6Sb4jMhnE4sV6rfGp1vzAT+7lgnAmGYyn0OYTxhjYrhdus+7rlQS
+         8lihJMT1yB6kjyUL32Yg9XkYUsBNgyIVHaYCFodEpkeYj6X6U0YjsIKshlF/JRqI+48b
+         XKtVGEI8JpJofDEmkOJ4hBDPVHRGz3UNoghboj4VQYmIT8Wz7lQ+GlR0o4QFzoNRPIoL
+         3Ng8kxalOSUxOaoJpRbze1Bz/HTLmAIrkF0SnTEdUyQbubXwlVm7/I7hVssHt2EWve4v
+         nieA==
+X-Gm-Message-State: ANoB5pkBUYqiwZkNa2ZOD2foLv6aSw0wgVL3bPdRSgpmMX6FJAqHGyZS
+        E2kRzwdEaxPKFtJ1beyRLBBOTw==
+X-Google-Smtp-Source: AA0mqf6Y2ZywjGs0mB+Uova/fqMsnSnunDEP+ZiLAHwTDeXSyAzc/Cvzm2FmPHyyWH35eIUM0u3IWA==
+X-Received: by 2002:a17:902:ab8d:b0:187:467f:c76c with SMTP id f13-20020a170902ab8d00b00187467fc76cmr30243669plr.51.1671222774412;
+        Fri, 16 Dec 2022 12:32:54 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p15-20020a17090a348f00b0021952b5e9bcsm5170108pjb.53.2022.12.16.12.30.30
+        by smtp.gmail.com with ESMTPSA id v7-20020a170902b7c700b00186e2123506sm2005977plz.300.2022.12.16.12.32.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Dec 2022 12:30:31 -0800 (PST)
+        Fri, 16 Dec 2022 12:32:53 -0800 (PST)
+Date:   Fri, 16 Dec 2022 12:32:53 -0800
 From:   Kees Cook <keescook@chromium.org>
 To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Petr Mladek <pmladek@suse.com>,
+Cc:     Jann Horn <jannh@google.com>,
+        Seth Jenkins <sethjenkins@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Marco Elver <elver@google.com>,
-        tangmeng <tangmeng@uniontech.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Stafford Horne <shorne@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Huang Ying <ying.huang@intel.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org,
         "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        John Ogness <john.ogness@linutronix.de>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] exit: Use READ_ONCE() for all oops/warn limit reads
-Date:   Fri, 16 Dec 2022 12:30:28 -0800
-Message-Id: <20221216203024.never.640-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        Joel Savitz <jsavitz@redhat.com>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Rob Herring <robh@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] exit: Allow oops_limit to be disabled
+Message-ID: <202212161232.D752E46@keescook>
+References: <20221202210617.never.105-kees@kernel.org>
+ <Y5x7GXeluFmZ8E0E@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2639; h=from:subject:message-id; bh=QFDv42gSw8RrL/kT/bLCpkDTyQ5e1mjGxtt244QW9V0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjnNVkYwcCuX3+lRp4U1y4bVoF7qP2EdUuq4JMMDD2 0AFmIzyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY5zVZAAKCRCJcvTf3G3AJlNcD/ 0QvyfFKYGmpjzAId3QIjrakY8NxwFTZRZWL6SjPD22tFgR90XCdBibLo6mbOWrszOVuhsYlDrc2/Tn jxZqKMuAVbU8ybDSpXio897z7ooUsCJe6RX3IKjAJ0M0ToVvnsY9o5k1VleYRZJH0FsIN+LQrda8Yh qClm/+UwCGCJV+mYCiLGqB9F/Bs2oLxUgdfOk0PBpNAewEVz46tTlLj/me8beXXtABSMY595LjRDVr zgUb5LaPaYYIGwksz33bGSsHRI+lyI05RWuG+DGLz5xHfTQtlz/zONesrX0Q8pAiqkVkoSz1qjXJEF h85OXdmGjwEQxQG+JXTySbrhnbsRg3kOTjHuiJKs93On3G2M9KFSC2vAWhENdi/zPTnGR8iyNg8UrU NmHvOIeTKSkRGu2Sr6zkhwWhAa76SqO+YGU4AtuFA7UGK2Xwuaq3YmQTvZENJyBojoRoley2Oc4n/4 Phu3zm03tPfE7mTAfowjhuKKvhEBOF54gnyP3sIrZ0dLcQ9aP1sbb2KpDaPA4pWWEQAah2OCjELhh6 ke4JhhJ/QoXAZ9w+dpjLUgniEDtnZSPvfMnDhWAn1RBfj06+om5o4RcdrjiOqcwxnyVQkDhzVk2vBq 8f2bsA4MpSbk+OhcluHRTvpxuVCD5apQLNDcCcoNYoIR5HI8bTiOUt2OXrQA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y5x7GXeluFmZ8E0E@hirez.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Use a temporary variable to take full advantage of READ_ONCE() behavior.
-Without this, the report (and even the test) might be out of sync with
-the initial test.
+On Fri, Dec 16, 2022 at 03:05:13PM +0100, Peter Zijlstra wrote:
+> On Fri, Dec 02, 2022 at 01:06:21PM -0800, Kees Cook wrote:
+> 
+> > --- a/kernel/exit.c
+> > +++ b/kernel/exit.c
+> > @@ -954,7 +954,7 @@ void __noreturn make_task_dead(int signr)
+> >  	 * To make sure this can't happen, place an upper bound on how often the
+> >  	 * kernel may oops without panic().
+> >  	 */
+> > -	if (atomic_inc_return(&oops_count) >= READ_ONCE(oops_limit))
+> > +	if (atomic_inc_return(&oops_count) >= READ_ONCE(oops_limit) && oops_limit)
+> >  		panic("Oopsed too often (kernel.oops_limit is %d)", oops_limit);
+> >  
+> 
+> That's dodgy, please write as:
+> 
+> 	limit = READ_ONCE(oops_limit);
+> 	if (atomic_inc_return(&oops_count) >= limit && limit)
+> 
+> So we don't explicitly add a reload that negates the whole READ_ONCE().
 
-Reported-by: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/lkml/Y5x7GXeluFmZ8E0E@hirez.programming.kicks-ass.net
-Fixes: 9fc9e278a5c0 ("panic: Introduce warn_limit")
-Fixes: d4ccd54d28d3 ("exit: Put an upper limit on how often we can oops")
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Marco Elver <elver@google.com>
-Cc: tangmeng <tangmeng@uniontech.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- kernel/exit.c  | 6 ++++--
- kernel/panic.c | 7 +++++--
- 2 files changed, 9 insertions(+), 4 deletions(-)
+Yup, that's more correct. Sent:
+https://lore.kernel.org/lkml/20221216203024.never.640-kees@kernel.org
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index deffb8e4b1b2..15dc2ec80c46 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -931,6 +931,7 @@ void __noreturn make_task_dead(int signr)
- 	 * Then do everything else.
- 	 */
- 	struct task_struct *tsk = current;
-+	unsigned int limit;
- 
- 	if (unlikely(in_interrupt()))
- 		panic("Aiee, killing interrupt handler!");
-@@ -954,8 +955,9 @@ void __noreturn make_task_dead(int signr)
- 	 * To make sure this can't happen, place an upper bound on how often the
- 	 * kernel may oops without panic().
- 	 */
--	if (atomic_inc_return(&oops_count) >= READ_ONCE(oops_limit) && oops_limit)
--		panic("Oopsed too often (kernel.oops_limit is %d)", oops_limit);
-+	limit = READ_ONCE(oops_limit);
-+	if (atomic_inc_return(&oops_count) >= limit && limit)
-+		panic("Oopsed too often (kernel.oops_limit is %d)", limit);
- 
- 	/*
- 	 * We're taking recursive faults here in make_task_dead. Safest is to just
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 54deb743b2d5..7834c9854e02 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -231,12 +231,15 @@ static void panic_print_sys_info(bool console_flush)
- 
- void check_panic_on_warn(const char *origin)
- {
-+	unsigned int limit;
-+
- 	if (panic_on_warn)
- 		panic("%s: panic_on_warn set ...\n", origin);
- 
--	if (atomic_inc_return(&warn_count) >= READ_ONCE(warn_limit) && warn_limit)
-+	limit = READ_ONCE(warn_limit);
-+	if (atomic_inc_return(&warn_count) >= limit && limit)
- 		panic("%s: system warned too often (kernel.warn_limit is %d)",
--		      origin, warn_limit);
-+		      origin, limit);
- }
- 
- /**
 -- 
-2.34.1
-
+Kees Cook
