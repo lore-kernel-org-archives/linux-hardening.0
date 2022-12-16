@@ -2,112 +2,379 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AA3C4167B
-	for <linux-hardening@archiver.kernel.org>; Thu, 15 Dec 2022 21:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBFAC53210
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Dec 2022 11:32:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229680AbiLOVNh (ORCPT
+        id S230456AbiLPLc0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 15 Dec 2022 16:13:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53254 "EHLO
+        Fri, 16 Dec 2022 06:32:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229613AbiLOVNd (ORCPT
+        with ESMTP id S231390AbiLPLcX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 15 Dec 2022 16:13:33 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF921705C;
-        Thu, 15 Dec 2022 13:13:33 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id w4-20020a17090ac98400b002186f5d7a4cso4070591pjt.0;
-        Thu, 15 Dec 2022 13:13:33 -0800 (PST)
+        Fri, 16 Dec 2022 06:32:23 -0500
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A5DFD7
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Dec 2022 03:32:21 -0800 (PST)
+Received: by mail-lf1-x135.google.com with SMTP id b3so3072002lfv.2
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Dec 2022 03:32:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1GRyBXwIl/yIj6DjGjuLYR4NV25MWL4dlrs9/synEW4=;
-        b=L9mroEBZVJmwpUbs0cjhBI8GcxztTfJESPxIow5xqm7kwOthC3Z9UVqDagpD4SPV8H
-         2pdAMGH0gxx97RwCm71WG6cWJZc2xdheEBF5fppqjXJvyfOlXAVBa82TNaO9ECfr0lTU
-         tWnIY9O/VBIjNciO8JRsCeNPsT25c6fKtFy4u8X5X5NyDR87bZbVX3gPyl5gGZ3xDuaf
-         VJjKH3MwQeSNyFcBEJb73Dc73YHMV8+qS+hqjxZ9xCxfImuXxpXjIgG+U4h6EncGqG4/
-         HpvOTKJ0LE3K2iY2ra/CYQY8geLOPetbniTT7ek3Otm/MfWx8OUYhn77Fz6NF5owPZ11
-         pYQg==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dAx/1r3Bgtwb5gejIiLMQD2z5RpFJAB22ApCDcu9cys=;
+        b=W1KEfyCP1EPfqe+EFNlDgY5uuLVCqJqF03dWExRdMCHQMkE620y1TrUDuyeEdg7zUn
+         he3UdSCXrYIQEAWmuOhh49saZvkmtFB1Xqt6PhZVezQ+vtdxBgWZ/kXCUeYULPklY0L7
+         DPOjHIrcWJMpNb3Hwv8Yh03PYGIV9yPmbf2dRUc+Wh75AFVgF4vURfQOl3XjGvArm9nJ
+         lXoTdoXgvIom2IPMjZ7f2lO8AtGsLPwvn1iAW/H0ExJSiEswKHUILoUFFKVfJNvEWDfH
+         uznUELjCuBDB4D4viwgTqsEc5yVKqyr2xk+hDkNHGAp7ZRHTMxpKjR+coH2yH/r2BD08
+         I7/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1GRyBXwIl/yIj6DjGjuLYR4NV25MWL4dlrs9/synEW4=;
-        b=0455fNkVmiiUO6oANfKEC+RTITd9gkf0NyTzckrcAQJgvXj1zgpZpfB00JHw/kzCS8
-         g89kaW4zY5nF6EAikWeX3EFO4WhbJCVFz+SaST5+X63aSnWG1/5uvCLa6N254H+Gwd8j
-         vPVIavzkS2B4buRCrb+8A7dU5Z0kJbJu4CRPnbhb6OMntdQJSrys5wuZRQ+9DDGJDGnO
-         3KmfxyR/CFpzb6bNVyashW2KByra8qa4ZoUGXNbbfcGQ2xbXsapoiXDhN8R8v9pbtkJJ
-         8RiFazx2M3G3n8x9fMjTGw7DY+kcZmPBXCV+xIIJ3b3/Xui1DySRIrSKYYcmwI2VjQx3
-         Z3KA==
-X-Gm-Message-State: ANoB5plXHXRHx9reJaWUEg1LSuO5lOJZwDBMbW6m5VHLOhCO5rvvG2A8
-        z5Q/mfkXaOit+0B/+2nYHgk=
-X-Google-Smtp-Source: AA0mqf7CRRvqdGzgLS7omdB/ZLh8/ndysbNNv7QZyL65PuY8F+NTrIknSlXs9iqnYZzsWIcyWl/rtA==
-X-Received: by 2002:a17:902:dacb:b0:189:e687:b373 with SMTP id q11-20020a170902dacb00b00189e687b373mr8741535plx.0.1671138812710;
-        Thu, 15 Dec 2022 13:13:32 -0800 (PST)
-Received: from mail.google.com ([103.229.249.253])
-        by smtp.gmail.com with ESMTPSA id y2-20020a17090264c200b00190efb4071dsm81293pli.160.2022.12.15.13.13.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Dec 2022 13:13:32 -0800 (PST)
-Date:   Fri, 16 Dec 2022 10:13:25 +1300
-From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Haowen Bai <baihaowen@meizu.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] [next] pcmcia: synclink_cs: replace 1-element array with
- flex-array member
-Message-ID: <Y5uN9Rr3v1uWH765@mail.google.com>
-References: <Y5mMWEtHWKOiPVU+@mail.google.com>
- <202212141124.736E3DE2A8@keescook>
- <Y5otilaHc6HBPCAF@mail.google.com>
- <CAHp75VdHU3g_t8u-hr1C=mttvEq-jWmMuCwaQqXToP-kH3xstQ@mail.gmail.com>
- <202212141347.9AD66DEBC8@keescook>
- <CAHp75VdqUMs1uz8zeyDi6rJKayFt6UMrm0A=-Hp8tQpCUSGujQ@mail.gmail.com>
- <Y5qim07QaqyvAtRX@mail.google.com>
- <CAHp75VcSnRPfmk9gAgz+hb7VYtL5buzDi_1e53u8b8+PrtxAvQ@mail.gmail.com>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dAx/1r3Bgtwb5gejIiLMQD2z5RpFJAB22ApCDcu9cys=;
+        b=0zmr7GmwqV+Qzock3TNGT9pCQ+5Lod/V2urlGq2F7f4P2XrzhtbEVIwQBM4xoWOWK6
+         3//JTe0i+FKURmRlQit7lUfYKFK5vEPVPk25EZ56Mov+EbqKd8rGdi1YkT3B/3rF0eFZ
+         u8W8aorIQ9fE5QNj+4jzNz5ZQsMqpUzo3rIYCiMwt6+NL6V3fHMt7oQj3vy9aiFUkOT+
+         6ro26ZCZkYGcdsGT2ThYop6xEIMLdYUtj7TuQq5OM/S0vQl0tI4+tmHOgli8BdxqeXAh
+         XoFWy7ZE4XvHupTsclzV2hUiPThd78YP6J3xR+fdSFdwtmPmp2CZ9Cr97yGVorJibfcP
+         lSIA==
+X-Gm-Message-State: ANoB5plxUU9hHIEO41PdpIodC1PJsUVddSkMszZl2XGH+LFr+eRYO2CC
+        EOAH7u2jYwHdGbxeVLj6iqujKw==
+X-Google-Smtp-Source: AA0mqf4ZhjmOvV5922vukAGUOlFpL4ayukZvFPADDzt+0ywiaB2yUSwWv14YnGU6D0lvb15/zE87vg==
+X-Received: by 2002:ac2:4f8d:0:b0:4a4:68b9:19f1 with SMTP id z13-20020ac24f8d000000b004a468b919f1mr8730959lfs.25.1671190339565;
+        Fri, 16 Dec 2022 03:32:19 -0800 (PST)
+Received: from [192.168.1.101] (abxh44.neoplus.adsl.tpnet.pl. [83.9.1.44])
+        by smtp.gmail.com with ESMTPSA id w1-20020a05651234c100b004b5b4126237sm198535lfr.67.2022.12.16.03.32.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Dec 2022 03:32:19 -0800 (PST)
+Message-ID: <afcb9378-f331-df8c-ced5-1c10999f5fb8@linaro.org>
+Date:   Fri, 16 Dec 2022 12:32:17 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VcSnRPfmk9gAgz+hb7VYtL5buzDi_1e53u8b8+PrtxAvQ@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v4 4/4] arm64: dts: qcom: sm6125: Initial support for
+ xiaomi-laurel-sprout
+Content-Language: en-US
+To:     Lux Aliaga <they@mint.lgbt>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20221215190404.398788-1-they@mint.lgbt>
+ <20221215190404.398788-4-they@mint.lgbt>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20221215190404.398788-4-they@mint.lgbt>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Dec 15, 2022 at 10:57:57AM +0200, Andy Shevchenko wrote:
-> On Thu, Dec 15, 2022 at 6:29 AM Paulo Miguel Almeida
-> <paulo.miguel.almeida.rodenas@gmail.com> wrote:
-> > On Thu, Dec 15, 2022 at 12:06:46AM +0200, Andy Shevchenko wrote:
-> > > On Wed, Dec 14, 2022 at 11:49 PM Kees Cook <keescook@chromium.org> wrote:
-> > > > On Wed, Dec 14, 2022 at 10:39:52PM +0200, Andy Shevchenko wrote:
-> 
-> ...
-> 
-> > > > > Yes, and Try to make it work with __packed. As I said, the problem is
-> > > > > that the code is relying on something which is architecture dependent
-> > > > > strictly speaking. And hence I disagree with Kees that v2 is okay to
-> > > > > go.
-> > > >
-> > > > I meant that v2 is functionally identical to the existing code.
-> > >
-> > > Ah, sorry for misunderstanding.
-> >
-> > I agree with using __packed attribute to remove the extra padding (and
-> > for the reasons you mentioned before). That would reduce the sizeof(RXBUF)
-> > from 8 to 5 (which is good) but that is still 1 byte "too much".
-> 
-> What I meant with the above is that the code has to work properly with
-> or without __packed. It's just to show you that this code has flaws if
-> it relies on the padding.
-> 
 
-Right - that would work just as well. I will work on v3 with the
-suggestions given by you (sizing calculation amendments using overflow.h
-macros) and kees (adding the notes regarding the padding) then.
 
-- Paulo A.
+On 15.12.2022 20:04, Lux Aliaga wrote:
+> Adds support for the Xiaomi Mi A3 (xiaomi-laurel-sprout). Here's a
+> summary on what's working.
+> 
+> - dmesg output to bootloader preconfigured display
+> - USB
+> - UFS
+> - SMD RPM regulators
+> 
+> Signed-off-by: Lux Aliaga <they@mint.lgbt>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  .../dts/qcom/sm6125-xiaomi-laurel-sprout.dts  | 254 ++++++++++++++++++
+>  2 files changed, 255 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 3e79496292e7..2b2a0170db14 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -157,6 +157,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-samsung-w737.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sm4250-oneplus-billie2.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-sony-xperia-seine-pdx201.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-xiaomi-laurel-sprout.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sm6350-sony-xperia-lena-pdx213.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sm6375-sony-xperia-murray-pdx225.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sm7225-fairphone-fp4.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
+> new file mode 100644
+> index 000000000000..86e1ec47bf5e
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
+> @@ -0,0 +1,254 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2022, Lux Aliaga <they@mint.lgbt>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/input/gpio-keys.h>
+> +#include "sm6125.dtsi"
+> +
+> +/ {
+> +	model = "Xiaomi Mi A3";
+> +	compatible = "xiaomi,laurel-sprout", "qcom,sm6125";
+> +	chassis-type = "handset";
+> +
+> +	/* required for bootloader to select correct board */
+> +	qcom,msm-id = <394 0>; /* sm6125 v0 */
+Unless you have a prototype device, this is not correct.
 
+Please run `cat /sys/bus/soc/devices/soc0/revision` and confirm
+which revision is used on your phone.
+> +	qcom,board-id = <11 0>;
+> +
+> +	chosen {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		framebuffer0: framebuffer@5c000000 {
+> +			compatible = "simple-framebuffer";
+> +			reg = <0 0x5c000000 0 (1560 * 720 * 4)>;
+> +			width = <720>;
+> +			height = <1560>;
+> +			stride = <(720 * 4)>;
+> +			format = "a8r8g8b8";
+> +		};
+> +	};
+> +
+> +	extcon_usb: usb-id {
+'r' < 'u', usb-id should go after reserved-memory.
+
+> +		compatible = "linux,extcon-usb-gpio";
+> +		id-gpio = <&tlmm 102 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +
+> +		debug_mem: memory@ffb00000 {
+Memory node names should be more specific, for example
+debug@ instead of memory@.
+
+Konrad
+> +			reg = <0x0 0xffb00000 0x0 0xc0000>;
+> +			no-map;
+> +		};
+> +
+> +		last_log_mem: memory@ffbc0000 {
+> +			reg = <0x0 0xffbc0000 0x0 0x80000>;
+> +			no-map;
+> +		};
+> +
+> +		pstore_mem: ramoops@ffc00000 {
+> +			compatible = "ramoops";
+> +			reg = <0x0 0xffc40000 0x0 0xc0000>;
+> +			record-size = <0x1000>;
+> +			console-size = <0x40000>;
+> +			msg-size = <0x20000 0x20000>;
+> +		};
+> +
+> +		cmdline_mem: memory@ffd00000 {
+> +			reg = <0x0 0xffd40000 0x0 0x1000>;
+> +			no-map;
+> +		};
+> +	};
+> +};
+> +
+> +
+> +&hsusb_phy1 {
+> +	status = "okay";
+> +};
+> +
+> +&rpm_requests {
+> +	regulators-0 {
+> +		compatible = "qcom,rpm-pm6125-regulators";
+> +
+> +		vreg_s6a: s6 {
+> +			regulator-min-microvolt = <936000>;
+> +			regulator-max-microvolt = <1422000>;
+> +		};
+> +
+> +		vreg_l1a: l1 {
+> +			regulator-min-microvolt = <1200000>;
+> +			regulator-max-microvolt = <1256000>;
+> +		};
+> +
+> +		vreg_l2a: l2 {
+> +			regulator-min-microvolt = <1000000>;
+> +			regulator-max-microvolt = <1056000>;
+> +		};
+> +
+> +		vreg_l3a: l3 {
+> +			regulator-min-microvolt = <1000000>;
+> +			regulator-max-microvolt = <1064000>;
+> +		};
+> +
+> +		vreg_l4a: l4 {
+> +			regulator-min-microvolt = <872000>;
+> +			regulator-max-microvolt = <976000>;
+> +		};
+> +
+> +		vreg_l5a: l5 {
+> +			regulator-min-microvolt = <1648000>;
+> +			regulator-max-microvolt = <3104000>;
+> +		};
+> +
+> +		vreg_l6a: l6 {
+> +			regulator-min-microvolt = <576000>;
+> +			regulator-max-microvolt = <656000>;
+> +		};
+> +
+> +		vreg_l7a: l7 {
+> +			regulator-min-microvolt = <872000>;
+> +			regulator-max-microvolt = <976000>;
+> +		};
+> +
+> +		vreg_l8a: l8 {
+> +			regulator-min-microvolt = <400000>;
+> +			regulator-max-microvolt = <728000>;
+> +		};
+> +
+> +		vreg_l9a: l9 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1896000>;
+> +		};
+> +
+> +		vreg_l10a: l10 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1896000>;
+> +		};
+> +
+> +		vreg_l11a: l11 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1952000>;
+> +		};
+> +
+> +		vreg_l12a: l12 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1996000>;
+> +		};
+> +
+> +		vreg_l13a: l13 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1832000>;
+> +		};
+> +
+> +		vreg_l14a: l14 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1904000>;
+> +		};
+> +
+> +		vreg_l15a: l15 {
+> +			regulator-min-microvolt = <3104000>;
+> +			regulator-max-microvolt = <3232000>;
+> +		};
+> +
+> +		vreg_l16a: l16 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1904000>;
+> +		};
+> +
+> +		vreg_l17a: l17 {
+> +			regulator-min-microvolt = <1248000>;
+> +			regulator-max-microvolt = <1304000>;
+> +		};
+> +
+> +		vreg_l18a: l18 {
+> +			regulator-min-microvolt = <1200000>;
+> +			regulator-max-microvolt = <1264000>;
+> +		};
+> +
+> +		vreg_l19a: l19 {
+> +			regulator-min-microvolt = <1648000>;
+> +			regulator-max-microvolt = <2952000>;
+> +		};
+> +
+> +		vreg_l20a: l20 {
+> +			regulator-min-microvolt = <1648000>;
+> +			regulator-max-microvolt = <2952000>;
+> +		};
+> +
+> +		vreg_l21a: l21 {
+> +			regulator-min-microvolt = <2600000>;
+> +			regulator-max-microvolt = <2856000>;
+> +		};
+> +
+> +		vreg_l22a: l22 {
+> +			regulator-min-microvolt = <2944000>;
+> +			regulator-max-microvolt = <3304000>;
+> +		};
+> +
+> +		vreg_l23a: l23 {
+> +			regulator-min-microvolt = <3000000>;
+> +			regulator-max-microvolt = <3400000>;
+> +		};
+> +
+> +		vreg_l24a: l24 {
+> +			regulator-min-microvolt = <2944000>;
+> +			regulator-max-microvolt = <3304000>;
+> +		};
+> +	};
+> +};
+> +
+> +&sdc2_off_state {
+> +	sd-cd-pins {
+> +		pins = "gpio98";
+> +		function = "gpio";
+> +		drive-strength = <2>;
+> +		bias-disable;
+> +	};
+> +};
+> +
+> +&sdc2_on_state {
+> +	sd-cd-pins {
+> +		pins = "gpio98";
+> +		function = "gpio";
+> +		drive-strength = <2>;
+> +		bias-pull-up;
+> +	};
+> +};
+> +
+> +&tlmm {
+> +	gpio-reserved-ranges = <22 2>, <28 6>;
+> +};
+> +
+> +&ufs_mem_hc {
+> +	vcc-supply = <&vreg_l24a>;
+> +	vccq2-supply = <&vreg_l11a>;
+> +	vcc-max-microamp = <600000>;
+> +	vccq2-max-microamp = <600000>;
+> +
+> +	status = "okay";
+> +};
+> +
+> +&ufs_mem_phy {
+> +	vdda-phy-supply = <&vreg_l4a>;
+> +	vdda-pll-supply = <&vreg_l10a>;
+> +	vdda-phy-max-microamp = <51400>;
+> +	vdda-pll-max-microamp = <14200>;
+> +	vddp-ref-clk-supply = <&vreg_l18a>;
+> +
+> +	status = "okay";
+> +};
+> +
+> +&usb3 {
+> +	status = "okay";
+> +};
+> +
+> +&usb3_dwc3 {
+> +	extcon = <&extcon_usb>;
+> +};
