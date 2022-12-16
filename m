@@ -2,105 +2,140 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55220C001B2
-	for <linux-hardening@archiver.kernel.org>; Fri, 16 Dec 2022 19:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5E4C001B2
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Dec 2022 20:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231844AbiLPTb7 (ORCPT
+        id S232005AbiLPU1n (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 16 Dec 2022 14:31:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40466 "EHLO
+        Fri, 16 Dec 2022 15:27:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231689AbiLPTb5 (ORCPT
+        with ESMTP id S231958AbiLPU1m (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 16 Dec 2022 14:31:57 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDEB62251C;
-        Fri, 16 Dec 2022 11:31:56 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6C891621E4;
-        Fri, 16 Dec 2022 19:31:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CA32C433D2;
-        Fri, 16 Dec 2022 19:31:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671219115;
-        bh=UiZJecR1KEdfUqt0tb4Uui5jnE7dFBjPmP37ANDfxHc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sqbCtdEz4pPvHAdzQkgmcvSyDiIqQ9xJuHDYkWFTwPUzLNdMzwQznaKrNZJxP3Ctx
-         ubqmqZnGMPkRHbWg/u/VvYx1utnBO3IJ3oC0ittHfV6cyJhjbBsuWt7yrfOqgkmkHz
-         o2t/Le1aBw9FtYhTAE/GcSr90/8AfSG5PrJcLLPo7qCzY9awrpF5ReZe2TB9I6uxJl
-         BiGFRBPFdqsglWuX6u5X79f1mc/jF2L/3zIEvtY1EJkhZ908QejqTcbT045oE8z0CG
-         KJFg/R2I0XzeHigYkc13ooUkOu1DhOhgSkpjFfh0aDGUwGkvO1w5RMvfvO9GSSZv2z
-         IfpjE/1vdBlNA==
-From:   SeongJae Park <sj@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jeff Xu <jeffxu@google.com>, SeongJae Park <sj@kernel.org>,
-        skhan@linuxfoundation.org, keescook@chromium.org,
-        dmitry.torokhov@gmail.com, dverkamp@chromium.org, hughd@google.com,
-        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-        jannh@google.com, linux-hardening@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v7 3/6] mm/memfd: add MFD_NOEXEC_SEAL and MFD_EXEC
-Date:   Fri, 16 Dec 2022 19:31:53 +0000
-Message-Id: <20221216193153.100849-1-sj@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221216112102.8eec617257eb90fccb9ff503@linux-foundation.org>
-References: 
+        Fri, 16 Dec 2022 15:27:42 -0500
+Received: from amity.mint.lgbt (vmi888983.contaboserver.net [149.102.157.145])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82E903EAC9
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Dec 2022 12:27:39 -0800 (PST)
+Received: from amity.mint.lgbt (mx.mint.lgbt [127.0.0.1])
+        by amity.mint.lgbt (Postfix) with ESMTP id 4NYgdP0l9kz1S4tC
+        for <linux-hardening@vger.kernel.org>; Fri, 16 Dec 2022 15:27:37 -0500 (EST)
+Authentication-Results: amity.mint.lgbt (amavisd-new);
+        dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
+        header.d=mint.lgbt
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mint.lgbt; h=
+        content-transfer-encoding:content-type:in-reply-to:from
+        :content-language:references:to:subject:user-agent:mime-version
+        :date:message-id; s=dkim; t=1671222456; x=1672086457; bh=IpJmud+
+        XEx9PKkU79dSSMg1CiFu7r9OxFpEYtS1E59w=; b=Ss0S5+ylltwEkcNqxY2Cfqi
+        6J0812qCLEG90MJ/5Q3Bm5u/BFPyFSGWVVDR+92Mj9o0lf/Hkjpvp0vYp9uPIoWW
+        xwY4BKkjIHUM6Tc9bHL6RZ3IQRs5o1iwMG9gSxsFBPIysleYVbsS4ROnNLpxsexV
+        mEgD9p3RGAmgfjYM8qpVE4v251JdtxRGCAqSLUzhbDWTy/zYi7vb1/5alK8s7PM/
+        Eof75PcH+zaSKqra0RGo8E523fI6ThaaBqNA/4shHXJHnmMa8GvewaY+XP89a1ut
+        g5RctfmztiyBvw+n0GlqbGpUeI/R1Srs9u8LpkyeWXpWp4Z66UFLd+yJPeML5hQ=
+        =
+X-Virus-Scanned: amavisd-new at amity.mint.lgbt
+Received: from amity.mint.lgbt ([127.0.0.1])
+        by amity.mint.lgbt (amity.mint.lgbt [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 29fUoQ7GnxFw for <linux-hardening@vger.kernel.org>;
+        Fri, 16 Dec 2022 15:27:36 -0500 (EST)
+Received: from [192.168.1.96] (unknown [186.105.44.155])
+        by amity.mint.lgbt (Postfix) with ESMTPSA id 4NYgd50Bw7z1S52q;
+        Fri, 16 Dec 2022 15:27:20 -0500 (EST)
+Message-ID: <d0157452-307b-37a5-890a-b479a880ab95@mint.lgbt>
+Date:   Fri, 16 Dec 2022 17:27:17 -0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH v4 4/4] arm64: dts: qcom: sm6125: Initial support for
+ xiaomi-laurel-sprout
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20221215190404.398788-1-they@mint.lgbt>
+ <20221215190404.398788-4-they@mint.lgbt>
+ <afcb9378-f331-df8c-ced5-1c10999f5fb8@linaro.org>
+Content-Language: en-US
+From:   Lux Aliaga <they@mint.lgbt>
+In-Reply-To: <afcb9378-f331-df8c-ced5-1c10999f5fb8@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Jeff and Andrew,
 
-On Fri, 16 Dec 2022 11:21:02 -0800 Andrew Morton <akpm@linux-foundation.org> wrote:
+On 16/12/2022 08:32, Konrad Dybcio wrote:
+>
+> On 15.12.2022 20:04, Lux Aliaga wrote:
+>> Adds support for the Xiaomi Mi A3 (xiaomi-laurel-sprout). Here's a
+>> summary on what's working.
+>>
+>> - dmesg output to bootloader preconfigured display
+>> - USB
+>> - UFS
+>> - SMD RPM regulators
+>>
+>> Signed-off-by: Lux Aliaga <they@mint.lgbt>
+>> ---
+>>   arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>>   .../dts/qcom/sm6125-xiaomi-laurel-sprout.dts  | 254 ++++++++++++++++++
+>>   2 files changed, 255 insertions(+)
+>>   create mode 100644 arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+>> index 3e79496292e7..2b2a0170db14 100644
+>> --- a/arch/arm64/boot/dts/qcom/Makefile
+>> +++ b/arch/arm64/boot/dts/qcom/Makefile
+>> @@ -157,6 +157,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-samsung-w737.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= sm4250-oneplus-billie2.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-sony-xperia-seine-pdx201.dtb
+>> +dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-xiaomi-laurel-sprout.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= sm6350-sony-xperia-lena-pdx213.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= sm6375-sony-xperia-murray-pdx225.dtb
+>>   dtb-$(CONFIG_ARCH_QCOM)	+= sm7225-fairphone-fp4.dtb
+>> diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
+>> new file mode 100644
+>> index 000000000000..86e1ec47bf5e
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
+>> @@ -0,0 +1,254 @@
+>> +// SPDX-License-Identifier: BSD-3-Clause
+>> +/*
+>> + * Copyright (c) 2022, Lux Aliaga <they@mint.lgbt>
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/input/input.h>
+>> +#include <dt-bindings/input/gpio-keys.h>
+>> +#include "sm6125.dtsi"
+>> +
+>> +/ {
+>> +	model = "Xiaomi Mi A3";
+>> +	compatible = "xiaomi,laurel-sprout", "qcom,sm6125";
+>> +	chassis-type = "handset";
+>> +
+>> +	/* required for bootloader to select correct board */
+>> +	qcom,msm-id = <394 0>; /* sm6125 v0 */
+> Unless you have a prototype device, this is not correct.
+>
+> Please run `cat /sys/bus/soc/devices/soc0/revision` and confirm
+> which revision is used on your phone.
+This segment has already been cross-referenced from downstream, and the 
+device boots up successfully when using this ID, unless you're referring 
+to the comment next to it, in which case I can recheck later, since 
+currently I'm away from my device.
 
-> On Fri, 16 Dec 2022 11:03:06 -0800 Jeff Xu <jeffxu@google.com> wrote:
-> 
-> > >
-> > > I just posted a patch for that:
-> > > https://lore.kernel.org/linux-mm/20221216183314.169707-1-sj@kernel.org/
-> > >
-> > > Could you please check?
-> > >
-> > Hi SeongJae,
-> > Thanks for the patch ! I responded to the other thread.
+-- 
+Lux Aliaga
+https://nixgoat.me/
 
-Thank you for the quick and nice response, Jeff :)
-
-> > 
-> > Andrew,
-> > >From a process point of view, should I update this patch to V9 to
-> > include the fix ?
-> > or add a patch directly on top in the mm-unstable branch.
-> 
-> A little fixup patch wouild be preferable.
-> 
-> But I added the below yesterday, so I think we're all good?
-
-Good, thank you.  I should be more patient until you push it, but I was unable
-to resist ;)
-
-
-Thanks,
-SJ
-
-> 
-> --- a/kernel/pid_sysctl.h~mm-memfd-add-mfd_noexec_seal-and-mfd_exec-fix
-> +++ a/kernel/pid_sysctl.h
-> @@ -52,8 +52,10 @@ static inline void register_pid_ns_sysct
->  	register_sysctl_paths(vm_path, pid_ns_ctl_table_vm);
->  }
->  #else
-> +static inline void initialize_memfd_noexec_scope(struct pid_namespace *ns) {}
->  static inline void set_memfd_noexec_scope(struct pid_namespace *ns) {}
->  static inline void register_pid_ns_ctl_table_vm(void) {}
-> +static inline void register_pid_ns_sysctl_table_vm(void) {}
->  #endif
->  
->  #endif /* LINUX_PID_SYSCTL_H */
-> _
