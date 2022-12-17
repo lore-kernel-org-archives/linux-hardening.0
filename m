@@ -2,175 +2,238 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B46C4167B
-	for <linux-hardening@archiver.kernel.org>; Sat, 17 Dec 2022 00:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F446C4332F
+	for <linux-hardening@archiver.kernel.org>; Sat, 17 Dec 2022 00:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230302AbiLQAMG (ORCPT
+        id S230429AbiLQAPK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 16 Dec 2022 19:12:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44194 "EHLO
+        Fri, 16 Dec 2022 19:15:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230155AbiLQALW (ORCPT
+        with ESMTP id S230286AbiLQANp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 16 Dec 2022 19:11:22 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4225C897C7;
-        Fri, 16 Dec 2022 16:10:27 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C93DA622D0;
-        Sat, 17 Dec 2022 00:10:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E64CEC4339C;
-        Sat, 17 Dec 2022 00:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671235826;
-        bh=l/uTSJpkb7iF9/bwE+UEqemQYnCtWxrWUH9JUkWJkGE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dhdd7xkr6rP22tO0oUkeB1G3jtT88Nyi+rMojDaTMp72vwew6YDJo5HoSHWgM9wo9
-         8jh7HhBeBWZjCy+WbDmAtOrot86Ze4kh9FSUPOrzxKCwQGi2M25XOi/iTBSYkXC4aT
-         jvVX+omNn13dzyBE+mYIfXF1VwFvIbPTkQnttd/p1sLh0knVFpAt/XLii1JK1dEx6p
-         lWjOpMGABaGNa1IfjkteHxfGKGnpIhraqupBXnMrkcF2FOZABneGZ3WcuEVatvE2WQ
-         EepvjBGlXwLxuwyX5DZqd+A/o8zBIdavX3YKIRoMKEAcEmOSaECJBq19fA4jh/LDAy
-         YSgJw3TkbiEKg==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adriana Kobylak <anoo@us.ibm.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Joel Stanley <joel@jms.id.au>, Sasha Levin <sashal@kernel.org>,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        keescook@chromium.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.0 3/8] ARM: dts: aspeed: rainier,everest: Move reserved memory regions
-Date:   Fri, 16 Dec 2022 19:10:07 -0500
-Message-Id: <20221217001013.41239-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221217001013.41239-1-sashal@kernel.org>
-References: <20221217001013.41239-1-sashal@kernel.org>
+        Fri, 16 Dec 2022 19:13:45 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C848676162;
+        Fri, 16 Dec 2022 16:11:33 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id d3so3811249plr.10;
+        Fri, 16 Dec 2022 16:11:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=I9FKRW77SPIzbxdxP83UgvxoJbJk4rIU/292OxhIMLU=;
+        b=aXuvIuiXdqlx6q7HBT9BW5yA5Q5398YbwOY0qBvdLmfTiuGpvvQJAPsPRJXRlNBoLc
+         pgrpNJzdA4cOuHfLR1VvpVIeHESPkMyXp/MDtLEk5Kpq9qAvcX2AtD85r04tYoKw0YEb
+         GBJMjG6ETDhpudzbjWupMwB16AC8gWHhnC31Ln3/vNCnUvGqaKjiBPiKSu85XiOAV9av
+         N0nGPKHqzusn5engUrRVOPPh199lQ8NUmZ9F44d0DFsP9grTkENjxBe8rWcJbqD1Ecc8
+         tlDrlNOk4lYwoW1LWO9JfH4fBNDAg1tHq/4V4brOrMEd8yney6kN42q+qjs8ZQGtIldD
+         vr3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I9FKRW77SPIzbxdxP83UgvxoJbJk4rIU/292OxhIMLU=;
+        b=bcuwI4NzRhJKc9O/ZHfwi7A09FcpeVc2JI2bQHShHcXdaFB5ITLxmY3kQ72WN1Nr+Y
+         XX1q0hd23kV/v+Sh6ad90vcqsRHbLllFUxmA8PrFZwaZ9M4Z9BnW3DoOdma1omdwoeSn
+         aMPv3+Gl/DMVnYsZRA0uGc8t83G+r+MZWdHOPBbTVvNtw6qWksSHUOk4OGnouy5auLst
+         aa9n6Wh+KBanbxc4u9irB/znep3tg3r4S3mdioMygjb/eTeFo/BD5y3Bls/v2u2787i7
+         DSj+Wx34c31KhQZSxVy7E4/s8uZMllbFVHE6v2Ax4XnrZ47Gthhl0L5njtc5FV3hYxUB
+         YvZg==
+X-Gm-Message-State: ANoB5pmNSO+76HzYi8ROEYxSX/uuIZPzz22vf6F3xKog8c4MCzyxCb1Q
+        LKZq7IFBKhiFEs8VCnnumkA=
+X-Google-Smtp-Source: AA0mqf6JYJY9WXiUojJwOqSthqXA2oXk9c1ROzHxi4bFpSUsjgKkhLPmWzv47hbziVJ/1ZgOPz2flw==
+X-Received: by 2002:a05:6a20:9598:b0:ab:9997:8ee2 with SMTP id iu24-20020a056a20959800b000ab99978ee2mr10658768pzb.6.1671235893233;
+        Fri, 16 Dec 2022 16:11:33 -0800 (PST)
+Received: from mail.google.com (125-237-37-88-fibre.sparkbb.co.nz. [125.237.37.88])
+        by smtp.gmail.com with ESMTPSA id k15-20020a63d10f000000b00478b930f970sm1975974pgg.66.2022.12.16.16.11.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Dec 2022 16:11:32 -0800 (PST)
+Date:   Sat, 17 Dec 2022 13:11:25 +1300
+From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Haowen Bai <baihaowen@meizu.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] [next] pcmcia: synclink_cs: replace 1-element array
+ with flex-array member
+Message-ID: <Y50JLZH/xVx9nxle@mail.google.com>
+References: <Y5uN9Rr3v1uWH765@mail.google.com>
+ <Y5z4Og3XmCGQwTO9@mail.google.com>
+ <202212161542.CA466D97B@keescook>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202212161542.CA466D97B@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Adriana Kobylak <anoo@us.ibm.com>
+On Fri, Dec 16, 2022 at 03:42:47PM -0800, Kees Cook wrote:
+> On Sat, Dec 17, 2022 at 11:59:06AM +1300, Paulo Miguel Almeida wrote:
+> > One-element arrays are deprecated, and we are replacing them with
+> > flexible array members instead. So, replace one-element array with
+> > flexible-array member in struct RXBUF and refactor the rest of the code
+> > accordingly. While at it, fix an edge case which could cause
+> > rx_buf_count to be 0 when max_frame_size was set to the maximum
+> > allowed value (65535).
+> > 
+> > It's worth mentioning that struct RXBUF was allocating 1 byte "too much"
+> > for what is required (ignoring bytes added by padding).
+> 
+> What was the result of using __packed to make sure there wasn't a sizing
+> error?
+> 
+> -Kees
+> 
 
-[ Upstream commit e184d42a6e085f95f5c4f1a4fbabebab2984cb68 ]
+With or without __packed__ attribute, sufficient space would be
+allocated which is good :-)
 
-Move the reserved regions to account for a decrease in DRAM when ECC is
-enabled. ECC takes 1/9th of memory.
+In both cases there is still some "extra space" (1 byte on __packed and
+4 bytes on non-packed) but that should be negligible. OTOH, if I'm asked
+to cull those bytes I am happy to do it too.
 
-Running on HW with ECC off, u-boot prints:
-DRAM:  already initialized, 1008 MiB (capacity:1024 MiB, VGA:16 MiB, ECC:off)
+pahole -C RXBUF non-packed/drivers/char/pcmcia/synclink_cs.o
+typedef struct {
+	int                        count;                /*     0     4 */
+	unsigned char              status;               /*     4     1 */
+	char                       data[];               /*     5     0 */
 
-And with ECC on, u-boot prints:
-DRAM:  already initialized, 896 MiB (capacity:1024 MiB, VGA:16 MiB, ECC:on, ECC size:896 MiB)
+	/* size: 8, cachelines: 1, members: 3 */
+	/* padding: 3 */
+	/* last cacheline: 8 bytes */
+} RXBUF;
 
-This implies that MCR54 is configured for ECC to be bounded at the
-bottom of a 16MiB VGA memory region:
+pahole -C RXBUF packed/drivers/char/pcmcia/synclink_cs.o
+typedef struct {
+	int                        count;                /*     0     4 */
+	unsigned char              status;               /*     4     1 */
+	char                       data[];               /*     5     0 */
 
-1024MiB - 16MiB (VGA) = 1008MiB
-1008MiB / 9 (for ECC) = 112MiB
-1008MiB - 112MiB = 896MiB (available DRAM)
+	/* size: 5, cachelines: 1, members: 3 */
+	/* last cacheline: 5 bytes */
+} __attribute__((__packed__)) RXBUF;
 
-The flash_memory region currently starts at offset 896MiB:
-0xb8000000 (flash_memory offset) - 0x80000000 (base memory address) = 0x38000000 = 896MiB
+- Paulo A.
 
-This is the end of the available DRAM with ECC enabled and therefore it
-needs to be moved.
-
-Since the flash_memory is 64MiB in size and needs to be 64MiB aligned,
-it can just be moved up by 64MiB and would sit right at the end of the
-available DRAM buffer.
-
-The ramoops region currently follows the flash_memory, but it can be
-moved to sit above flash_memory which would minimize the address-space
-fragmentation.
-
-Signed-off-by: Adriana Kobylak <anoo@us.ibm.com>
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-Link: https://lore.kernel.org/r/20220916195535.1020185-1-anoo@linux.ibm.com
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/aspeed-bmc-ibm-everest.dts | 17 ++++++++---------
- arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 16 +++++++++-------
- 2 files changed, 17 insertions(+), 16 deletions(-)
-
-diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-everest.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-everest.dts
-index a6a2bc3b855c..fcc890e3ad73 100644
---- a/arch/arm/boot/dts/aspeed-bmc-ibm-everest.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-ibm-everest.dts
-@@ -162,16 +162,9 @@ reserved-memory {
- 		#size-cells = <1>;
- 		ranges;
- 
--		/* LPC FW cycle bridge region requires natural alignment */
--		flash_memory: region@b8000000 {
--			no-map;
--			reg = <0xb8000000 0x04000000>; /* 64M */
--		};
--
--		/* 48MB region from the end of flash to start of vga memory */
--		ramoops@bc000000 {
-+		ramoops@b3e00000 {
- 			compatible = "ramoops";
--			reg = <0xbc000000 0x200000>; /* 16 * (4 * 0x8000) */
-+			reg = <0xb3e00000 0x200000>; /* 16 * (4 * 0x8000) */
- 			record-size = <0x8000>;
- 			console-size = <0x8000>;
- 			ftrace-size = <0x8000>;
-@@ -179,6 +172,12 @@ ramoops@bc000000 {
- 			max-reason = <3>; /* KMSG_DUMP_EMERG */
- 		};
- 
-+		/* LPC FW cycle bridge region requires natural alignment */
-+		flash_memory: region@b4000000 {
-+			no-map;
-+			reg = <0xb4000000 0x04000000>; /* 64M */
-+		};
-+
- 		/* VGA region is dictated by hardware strapping */
- 		vga_memory: region@bf000000 {
- 			no-map;
-diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-index bf59a9962379..4879da4cdbd2 100644
---- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-@@ -95,14 +95,9 @@ reserved-memory {
- 		#size-cells = <1>;
- 		ranges;
- 
--		flash_memory: region@b8000000 {
--			no-map;
--			reg = <0xb8000000 0x04000000>; /* 64M */
--		};
--
--		ramoops@bc000000 {
-+		ramoops@b3e00000 {
- 			compatible = "ramoops";
--			reg = <0xbc000000 0x200000>; /* 16 * (4 * 0x8000) */
-+			reg = <0xb3e00000 0x200000>; /* 16 * (4 * 0x8000) */
- 			record-size = <0x8000>;
- 			console-size = <0x8000>;
- 			ftrace-size = <0x8000>;
-@@ -110,6 +105,13 @@ ramoops@bc000000 {
- 			max-reason = <3>; /* KMSG_DUMP_EMERG */
- 		};
- 
-+		/* LPC FW cycle bridge region requires natural alignment */
-+		flash_memory: region@b4000000 {
-+			no-map;
-+			reg = <0xb4000000 0x04000000>; /* 64M */
-+		};
-+
-+		/* VGA region is dictated by hardware strapping */
- 		vga_memory: region@bf000000 {
- 			no-map;
- 			compatible = "shared-dma-pool";
--- 
-2.35.1
-
+> > 
+> > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> > routines on memcpy() and help us make progress towards globally
+> > enabling -fstrict-flex-arrays=3 [1].
+> > 
+> > Link: https://github.com/KSPP/linux/issues/79
+> > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
+> > Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+> > ---
+> > Changelog:
+> > 
+> > - v3:
+> >   fix size calculation mistakes using overflow.h macros: (Req: Andy
+> >   Shevchenko, Kees Cook)
+> >   add notes struct RXBUF size (Kees Cook)
+> > 
+> > - v2: removed changes to how the size of RXBUF was calculated. I
+> >   changed my mind after thinking about the existing padding in the
+> >   struct. Happy to discuss it if anyone sees it differently.
+> > 
+> > - v1: https://lore.kernel.org/lkml/Y5mMWEtHWKOiPVU+@mail.google.com/
+> > ---
+> >  drivers/char/pcmcia/synclink_cs.c | 33 +++++++++++++++++++------------
+> >  1 file changed, 20 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/drivers/char/pcmcia/synclink_cs.c b/drivers/char/pcmcia/synclink_cs.c
+> > index b2735be81ab2..eee6772a0978 100644
+> > --- a/drivers/char/pcmcia/synclink_cs.c
+> > +++ b/drivers/char/pcmcia/synclink_cs.c
+> > @@ -105,7 +105,7 @@ static MGSL_PARAMS default_params = {
+> >  typedef struct {
+> >  	int count;
+> >  	unsigned char status;
+> > -	char data[1];
+> > +	char data[];
+> >  } RXBUF;
+> >  
+> >  /* The queue of BH actions to be performed */
+> > @@ -229,12 +229,18 @@ typedef struct _mgslpc_info {
+> >  } MGSLPC_INFO;
+> >  
+> >  #define MGSLPC_MAGIC 0x5402
+> > +#define MGSLPC_MAX_FRAME_SIZE 65535
+> > +#define MGSLPC_MIN_FRAME_SIZE 4096
+> >  
+> >  /*
+> >   * The size of the serial xmit buffer is 1 page, or 4096 bytes
+> >   */
+> >  #define TXBUFSIZE 4096
+> >  
+> > +/*
+> > + * RXBUF accommodates at least 1 buffer (header+data) of MGSLPC_MAX_FRAME_SIZE
+> > + */
+> > +#define RXBUF_MAX_SIZE (sizeof(RXBUF) + MGSLPC_MAX_FRAME_SIZE)
+> >  
+> >  #define CHA     0x00   /* channel A offset */
+> >  #define CHB     0x40   /* channel B offset */
+> > @@ -529,7 +535,7 @@ static int mgslpc_probe(struct pcmcia_device *link)
+> >  	tty_port_init(&info->port);
+> >  	info->port.ops = &mgslpc_port_ops;
+> >  	INIT_WORK(&info->task, bh_handler);
+> > -	info->max_frame_size = 4096;
+> > +	info->max_frame_size = MGSLPC_MIN_FRAME_SIZE;
+> >  	init_waitqueue_head(&info->status_event_wait_q);
+> >  	init_waitqueue_head(&info->event_wait_q);
+> >  	spin_lock_init(&info->lock);
+> > @@ -2611,19 +2617,20 @@ static int mgslpc_proc_show(struct seq_file *m, void *v)
+> >  static int rx_alloc_buffers(MGSLPC_INFO *info)
+> >  {
+> >  	/* each buffer has header and data */
+> > -	info->rx_buf_size = sizeof(RXBUF) + info->max_frame_size;
+> > +	if (check_add_overflow(sizeof(RXBUF), info->max_frame_size, &info->rx_buf_size))
+> > +		return -EINVAL;
+> >  
+> > -	/* calculate total allocation size for 8 buffers */
+> > -	info->rx_buf_total_size = info->rx_buf_size * 8;
+> > +	/* try to alloc as many buffers that can fit within RXBUF_MAX_SIZE (up to 8) */
+> > +	if (check_mul_overflow(info->rx_buf_size, 8, &info->rx_buf_total_size))
+> > +		return -EINVAL;
+> >  
+> > -	/* limit total allocated memory */
+> > -	if (info->rx_buf_total_size > 0x10000)
+> > -		info->rx_buf_total_size = 0x10000;
+> > +	if (info->rx_buf_total_size > RXBUF_MAX_SIZE)
+> > +		info->rx_buf_total_size = RXBUF_MAX_SIZE;
+> >  
+> >  	/* calculate number of buffers */
+> >  	info->rx_buf_count = info->rx_buf_total_size / info->rx_buf_size;
+> >  
+> > -	info->rx_buf = kmalloc(info->rx_buf_total_size, GFP_KERNEL);
+> > +	info->rx_buf = kcalloc(info->rx_buf_count, info->rx_buf_size, GFP_KERNEL);
+> >  	if (info->rx_buf == NULL)
+> >  		return -ENOMEM;
+> >  
+> > @@ -2695,10 +2702,10 @@ static int mgslpc_add_device(MGSLPC_INFO *info)
+> >  		current_dev->next_device = info;
+> >  	}
+> >  
+> > -	if (info->max_frame_size < 4096)
+> > -		info->max_frame_size = 4096;
+> > -	else if (info->max_frame_size > 65535)
+> > -		info->max_frame_size = 65535;
+> > +	if (info->max_frame_size < MGSLPC_MIN_FRAME_SIZE)
+> > +		info->max_frame_size = MGSLPC_MIN_FRAME_SIZE;
+> > +	else if (info->max_frame_size > MGSLPC_MAX_FRAME_SIZE)
+> > +		info->max_frame_size = MGSLPC_MAX_FRAME_SIZE;
+> >  
+> >  	printk("SyncLink PC Card %s:IO=%04X IRQ=%d\n",
+> >  		info->device_name, info->io_base, info->irq_level);
+> > -- 
+> > 2.38.1
+> > 
+> 
+> -- 
+> Kees Cook
