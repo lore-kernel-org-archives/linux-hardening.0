@@ -2,164 +2,151 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B86C4332F
-	for <linux-hardening@archiver.kernel.org>; Sat, 17 Dec 2022 11:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7ECAC4332F
+	for <linux-hardening@archiver.kernel.org>; Sat, 17 Dec 2022 14:23:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229469AbiLQLoU (ORCPT
+        id S229613AbiLQOXm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 17 Dec 2022 06:44:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44740 "EHLO
+        Sat, 17 Dec 2022 09:23:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiLQLoT (ORCPT
+        with ESMTP id S229583AbiLQOXm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 17 Dec 2022 06:44:19 -0500
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B8713E86;
-        Sat, 17 Dec 2022 03:44:17 -0800 (PST)
-Received: by mail-qt1-x82a.google.com with SMTP id z12so4729073qtv.5;
-        Sat, 17 Dec 2022 03:44:17 -0800 (PST)
+        Sat, 17 Dec 2022 09:23:42 -0500
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD6FB14D11
+        for <linux-hardening@vger.kernel.org>; Sat, 17 Dec 2022 06:23:40 -0800 (PST)
+Received: by mail-lf1-x134.google.com with SMTP id j4so7711400lfk.0
+        for <linux-hardening@vger.kernel.org>; Sat, 17 Dec 2022 06:23:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lB8JW0XG9L04FrmEfB+XTkr4c7bEVDxGvwgTSNbUoEw=;
-        b=mghHDdgAnnsgxvGgaP7rrvrwQUQw5EO03iSFLZ32EvIVmRHV10rXNz1h+57ORw09EQ
-         HubrwFgmNsCJKL2WHg47trOmu6FgxM8wlf85HK9YNbu18COWrSeE3BXAVFOm7NDRjJe9
-         oP/CTaG+JZvsmyTsJ2T+ijORpZ8s8neUSAHFIloe0sCn3GxDVY+jYxI/WqSt2S618+1i
-         xbTCju0+zRiuotQkd2uVQuZuEiJ1yhuXqahEuBl+8GpRQaE/0/8vawiJcI4B8mc4HUUD
-         Y2SzHB2QVfBSzUqTpOsq1asaaDvIw0OPz0yYeUKDMUZmdxMSJd/W8rz+ZaLe2CihkDGW
-         L/hg==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=B7GKQb3+L4Pk6YPHkpx+N3XR70m8LhkH5VdXkJBb8HM=;
+        b=l3zUMMylLYscZgrd3uGYnNAviEF5RmJ/vOMiKyfBCuHjqso6Lexgmxu+Zww6tWqhIm
+         AtLCsjKLwC1Q6S6lGTsriuaEF54P7Sp2smj72CEHrBw1IfUKtxZWPuJlynW2XTsl/Qb/
+         WRNFSbYcTnHCYlcoiC3qiCmzsGwSmeUMnFVq71vHM2Lzw10xUYHyJTo225vv0G0WCkFd
+         Wa18RG3VRjcxFXAA+4S5yM5aLgXnXA0l8UDPLBcanSQT/SgzBP8WNy3vmBjo+4eEHUoJ
+         kaiYMAVQAY2OdBa1i3eq7nGShc4Uku9yS+9VSAd6jx5J3/IUQcJ9zk8T1KhF1Mi3U6ZJ
+         RQ4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lB8JW0XG9L04FrmEfB+XTkr4c7bEVDxGvwgTSNbUoEw=;
-        b=yvcihB7NTt6vHWrQB6JjZgA/pMaodQanCw1jAQtxC6wdMMUxThwp7JJPgJCVFBSqnU
-         3ECVBZ7k16IibFcYU1Yuh92jwVB7URtfBKcgW+gPYHB88G5jDxnuaxpT11jS6yi/vqtc
-         NbmKCZpow7MVDQIyymkdoiDKsRNVOfHOt/fFKeFwMG3JHjrWhD1/cKQBwnpOUKzVVs7e
-         u4sm1o09oEP3eLo6eHL/xyj3Cynyzf15ywHXGN99RSo5mA5FKLFf4n4Vo4Dygg7X07va
-         4rdmJgVOupzxD+GauQFQJdRsAsNEaziq9269uSqVfd7sLNR6bDN6J2qqbLpQDFAH5v/M
-         cQew==
-X-Gm-Message-State: ANoB5pmVfkN9OklMF+YESRDdzhffdp8PFSyEEtZAAIJIkt9FT/6/lQ3m
-        FE4K9Nw6iz6AsZqCqyeNbK9Xzo7ZhFsUukuqYfqdT1AL9WY0X7vN
-X-Google-Smtp-Source: AA0mqf5aU4y2ms+Gj8NLQJsj3yg4gwh+yfuzMG/wMwuMaWT6z9kPDBmnna1KKVe6/IlKgkUdPTDU99534S74VFzkd3w=
-X-Received: by 2002:ac8:44a9:0:b0:3a7:ed31:1b2e with SMTP id
- a9-20020ac844a9000000b003a7ed311b2emr9899847qto.429.1671277456558; Sat, 17
- Dec 2022 03:44:16 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=B7GKQb3+L4Pk6YPHkpx+N3XR70m8LhkH5VdXkJBb8HM=;
+        b=40JuW8ELAgr0WgkxKk8x50PO9LBxQf9/Gd5Xv600xIFUpyIyz1oa1ccBJYUtpO298c
+         sVieNSGEqzB9CMXl6j4IS44ti5Va+wXwaQHPYPTqWG53T91IL6CVlNJ52cU2DTcQapL/
+         ckan3xnYFtWPGsZNP4CPR0+hT4663IZT8RhlzMqzK1ztHVOXjNE4mWgON+GscL/1oiyE
+         M1V/DerZjyEAo1W7q3+dUr8UFyXxEG4VRPEQ1R9PvHPZ4byF16tiomfbNcXK8iTTRc2G
+         nNO5jhy8ngzUrwSQjXYMYrrDtgOMScWd4NqBsNSjda2MJLcI3yJeczqvwOmDtgtBwzjH
+         1Lgg==
+X-Gm-Message-State: ANoB5pmeuBCnzkeILv1JuroVerTGZrSzVMptpVadj2jAvQMdUPDs0qsV
+        nzPCMjc0zi3YWm08MrVv1+YK6Q==
+X-Google-Smtp-Source: AA0mqf64o7muDYa18mOkrzyFwBX3O94Y9WDbwZXYNtcpuGdqZrnxhYJePiH8NiGRov/9PB/Ra/CEsg==
+X-Received: by 2002:a05:6512:2087:b0:4b5:7817:419d with SMTP id t7-20020a056512208700b004b57817419dmr9690622lfr.41.1671287019093;
+        Sat, 17 Dec 2022 06:23:39 -0800 (PST)
+Received: from [192.168.1.101] (abxh44.neoplus.adsl.tpnet.pl. [83.9.1.44])
+        by smtp.gmail.com with ESMTPSA id v21-20020ac258f5000000b004b5872a7003sm526315lfo.98.2022.12.17.06.23.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 17 Dec 2022 06:23:38 -0800 (PST)
+Message-ID: <07f2a180-8a93-6c54-6d97-208ac8426fa6@linaro.org>
+Date:   Sat, 17 Dec 2022 15:23:37 +0100
 MIME-Version: 1.0
-References: <Y5uN9Rr3v1uWH765@mail.google.com> <Y5z4Og3XmCGQwTO9@mail.google.com>
-In-Reply-To: <Y5z4Og3XmCGQwTO9@mail.google.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 17 Dec 2022 13:43:40 +0200
-Message-ID: <CAHp75VeNcPjngJcF96Y9hV=Y+NeaGadSMGMvgCTD6kdBi=+9fg@mail.gmail.com>
-Subject: Re: [PATCH v3] [next] pcmcia: synclink_cs: replace 1-element array
- with flex-array member
-To:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Haowen Bai <baihaowen@meizu.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v4 4/4] arm64: dts: qcom: sm6125: Initial support for
+ xiaomi-laurel-sprout
+Content-Language: en-US
+To:     Lux Aliaga <they@mint.lgbt>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20221215190404.398788-1-they@mint.lgbt>
+ <20221215190404.398788-4-they@mint.lgbt>
+ <afcb9378-f331-df8c-ced5-1c10999f5fb8@linaro.org>
+ <d0157452-307b-37a5-890a-b479a880ab95@mint.lgbt>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <d0157452-307b-37a5-890a-b479a880ab95@mint.lgbt>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Dec 17, 2022 at 12:59 AM Paulo Miguel Almeida
-<paulo.miguel.almeida.rodenas@gmail.com> wrote:
->
-> One-element arrays are deprecated, and we are replacing them with
-> flexible array members instead. So, replace one-element array with
-> flexible-array member in struct RXBUF and refactor the rest of the code
-> accordingly. While at it, fix an edge case which could cause
-> rx_buf_count to be 0 when max_frame_size was set to the maximum
-> allowed value (65535).
->
-> It's worth mentioning that struct RXBUF was allocating 1 byte "too much"
-> for what is required (ignoring bytes added by padding).
->
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3 [1].
 
-...
 
->  static int rx_alloc_buffers(MGSLPC_INFO *info)
->  {
->         /* each buffer has header and data */
-> -       info->rx_buf_size = sizeof(RXBUF) + info->max_frame_size;
-> +       if (check_add_overflow(sizeof(RXBUF), info->max_frame_size, &info->rx_buf_size))
-> +               return -EINVAL;
->
-> -       /* calculate total allocation size for 8 buffers */
-> -       info->rx_buf_total_size = info->rx_buf_size * 8;
+On 16.12.2022 21:27, Lux Aliaga wrote:
+> 
+> On 16/12/2022 08:32, Konrad Dybcio wrote:
+>>
+>> On 15.12.2022 20:04, Lux Aliaga wrote:
+>>> Adds support for the Xiaomi Mi A3 (xiaomi-laurel-sprout). Here's a
+>>> summary on what's working.
+>>>
+>>> - dmesg output to bootloader preconfigured display
+>>> - USB
+>>> - UFS
+>>> - SMD RPM regulators
+>>>
+>>> Signed-off-by: Lux Aliaga <they@mint.lgbt>
+>>> ---
+>>>   arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>>>   .../dts/qcom/sm6125-xiaomi-laurel-sprout.dts  | 254 ++++++++++++++++++
+>>>   2 files changed, 255 insertions(+)
+>>>   create mode 100644 arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+>>> index 3e79496292e7..2b2a0170db14 100644
+>>> --- a/arch/arm64/boot/dts/qcom/Makefile
+>>> +++ b/arch/arm64/boot/dts/qcom/Makefile
+>>> @@ -157,6 +157,7 @@ dtb-$(CONFIG_ARCH_QCOM)    += sdm850-lenovo-yoga-c630.dtb
+>>>   dtb-$(CONFIG_ARCH_QCOM)    += sdm850-samsung-w737.dtb
+>>>   dtb-$(CONFIG_ARCH_QCOM)    += sm4250-oneplus-billie2.dtb
+>>>   dtb-$(CONFIG_ARCH_QCOM)    += sm6125-sony-xperia-seine-pdx201.dtb
+>>> +dtb-$(CONFIG_ARCH_QCOM)    += sm6125-xiaomi-laurel-sprout.dtb
+>>>   dtb-$(CONFIG_ARCH_QCOM)    += sm6350-sony-xperia-lena-pdx213.dtb
+>>>   dtb-$(CONFIG_ARCH_QCOM)    += sm6375-sony-xperia-murray-pdx225.dtb
+>>>   dtb-$(CONFIG_ARCH_QCOM)    += sm7225-fairphone-fp4.dtb
+>>> diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
+>>> new file mode 100644
+>>> index 000000000000..86e1ec47bf5e
+>>> --- /dev/null
+>>> +++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
+>>> @@ -0,0 +1,254 @@
+>>> +// SPDX-License-Identifier: BSD-3-Clause
+>>> +/*
+>>> + * Copyright (c) 2022, Lux Aliaga <they@mint.lgbt>
+>>> + */
+>>> +
+>>> +/dts-v1/;
+>>> +
+>>> +#include <dt-bindings/gpio/gpio.h>
+>>> +#include <dt-bindings/input/input.h>
+>>> +#include <dt-bindings/input/gpio-keys.h>
+>>> +#include "sm6125.dtsi"
+>>> +
+>>> +/ {
+>>> +    model = "Xiaomi Mi A3";
+>>> +    compatible = "xiaomi,laurel-sprout", "qcom,sm6125";
+>>> +    chassis-type = "handset";
+>>> +
+>>> +    /* required for bootloader to select correct board */
+>>> +    qcom,msm-id = <394 0>; /* sm6125 v0 */
+>> Unless you have a prototype device, this is not correct.
+>>
+>> Please run `cat /sys/bus/soc/devices/soc0/revision` and confirm
+>> which revision is used on your phone.
+> This segment has already been cross-referenced from downstream, and the device boots up successfully when using this ID, unless you're referring to the comment next to it, in which case I can recheck later, since currently I'm away from my device.
+The device boots fine, because the DTB selection works on a "best match"
+basis. If it can't find one for the exact version of the SoC, it may
+try to boot the closest one.
 
-> +       /* try to alloc as many buffers that can fit within RXBUF_MAX_SIZE (up to 8) */
-> +       if (check_mul_overflow(info->rx_buf_size, 8, &info->rx_buf_total_size))
-> +               return -EINVAL;
-
-This check is implied by kcalloc(). But to make it effective we
-probably need to get a count first.
-
-> -       /* limit total allocated memory */
-> -       if (info->rx_buf_total_size > 0x10000)
-> -               info->rx_buf_total_size = 0x10000;
-> +       if (info->rx_buf_total_size > RXBUF_MAX_SIZE)
-> +               info->rx_buf_total_size = RXBUF_MAX_SIZE;
-
-If max_frame_size > 8192 - sizeof(RXBUF), we bump into this condition...
-
->         /* calculate number of buffers */
->         info->rx_buf_count = info->rx_buf_total_size / info->rx_buf_size;
-
-...which means that rx_buf_count < 8...
-(and if max_frame_size > RXBUF_MAX_SIZE - sizeof(RXBUF), count becomes
-0, I don't know if below clamp_val() is the only place to guarantee
-that)
-
-> -       info->rx_buf = kmalloc(info->rx_buf_total_size, GFP_KERNEL);
-> +       info->rx_buf = kcalloc(info->rx_buf_count, info->rx_buf_size, GFP_KERNEL);
-
-...hence rx_buf size will be less than rx_buf_total_size.
-
-That is probably not an issue per se, but I'm wondering if the
-(bigger) value of rx_buf_total_size is the problem further in the
-code.
-
->         if (info->rx_buf == NULL)
->                 return -ENOMEM;
-
-Maybe something like
-
-static int rx_alloc_buffers(MGSLPC_INFO *info)
-{
-    /* Prevent count from being 0 */
-    if (->max_frame_size > MAX_FRAME_SIZE)
-        return -EINVAL;
-    ...
-   count = ...;
-   ...
-   rx_total_size = ...
-   rx_buf = kcalloc(...);
-
-Then you don't need to check overflow with check_add_overflow() and
-check_mul_overflow() will be inside the kcalloc.
-
-...
-
-> -       if (info->max_frame_size < 4096)
-> -               info->max_frame_size = 4096;
-> -       else if (info->max_frame_size > 65535)
-> -               info->max_frame_size = 65535;
-> +       if (info->max_frame_size < MGSLPC_MIN_FRAME_SIZE)
-> +               info->max_frame_size = MGSLPC_MIN_FRAME_SIZE;
-> +       else if (info->max_frame_size > MGSLPC_MAX_FRAME_SIZE)
-> +               info->max_frame_size = MGSLPC_MAX_FRAME_SIZE;
-
-You can use clamp_val() macro here.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Konrad
+> 
