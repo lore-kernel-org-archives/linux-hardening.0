@@ -2,90 +2,164 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46460C4332F
-	for <linux-hardening@archiver.kernel.org>; Sat, 17 Dec 2022 11:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B86C4332F
+	for <linux-hardening@archiver.kernel.org>; Sat, 17 Dec 2022 11:44:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229469AbiLQLbe (ORCPT
+        id S229469AbiLQLoU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 17 Dec 2022 06:31:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43158 "EHLO
+        Sat, 17 Dec 2022 06:44:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiLQLbd (ORCPT
+        with ESMTP id S229453AbiLQLoT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 17 Dec 2022 06:31:33 -0500
-Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C3ADF90;
-        Sat, 17 Dec 2022 03:31:24 -0800 (PST)
-X-QQ-mid: bizesmtp76t1671276650tdrswa6d
-Received: from localhost.localdomain ( [113.200.76.118])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Sat, 17 Dec 2022 19:30:48 +0800 (CST)
-X-QQ-SSF: 0140000000200090D000B00A0000000
-X-QQ-FEAT: 90EFqYDyPxCkbDFXxFdW7X7FJpfnpNAakESINYCEm+gO9LHamBz3FT0QOjoMP
-        f61gSQVZV/nRltLjaPQsV6lAuJxjEarMMxjqhND2SUBYnv7QXmPLQDTVmu/lOvBkhzR2VZa
-        n3ZD26PN0906qrHBpYgw67c3rj2dxZv4hGoVXHj4tE/yJ0VpbqTHetayVrlSN9CMlKmHUW/
-        wdj6rHm+7Md9UG0PJd27S6/r53tkh4fX+1eaPUBefAQsJ+By370HGucNGXuzil2MDjTix+Y
-        RZM7jgooj1GFSE5TWHUN8tPUNpt3xBJKoVJ9WjRw14FK+dhA8Nlk9eEZ/dYNlrm5XaphabW
-        tdpq6o0UHZyQDyOI7XtXbsUcQEErq7qRbORNUnXMboTrX1tZkTvyUTHsyUptCLkfTs/KoYS
-        rg1pi+Edkjg=
-X-QQ-GoodBg: 2
-From:   gouhao@uniontech.com
-To:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, vbabka@suse.cz,
-        roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
-        keescook@chromium.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, mingo@elte.hu, gouhaojake@163.com,
-        Gou Hao <gouhao@uniontech.com>
-Subject: [PATCH] mm/slab: remove unused slab_early_init
-Date:   Sat, 17 Dec 2022 19:30:45 +0800
-Message-Id: <20221217113045.15997-1-gouhao@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 17 Dec 2022 06:44:19 -0500
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B8713E86;
+        Sat, 17 Dec 2022 03:44:17 -0800 (PST)
+Received: by mail-qt1-x82a.google.com with SMTP id z12so4729073qtv.5;
+        Sat, 17 Dec 2022 03:44:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lB8JW0XG9L04FrmEfB+XTkr4c7bEVDxGvwgTSNbUoEw=;
+        b=mghHDdgAnnsgxvGgaP7rrvrwQUQw5EO03iSFLZ32EvIVmRHV10rXNz1h+57ORw09EQ
+         HubrwFgmNsCJKL2WHg47trOmu6FgxM8wlf85HK9YNbu18COWrSeE3BXAVFOm7NDRjJe9
+         oP/CTaG+JZvsmyTsJ2T+ijORpZ8s8neUSAHFIloe0sCn3GxDVY+jYxI/WqSt2S618+1i
+         xbTCju0+zRiuotQkd2uVQuZuEiJ1yhuXqahEuBl+8GpRQaE/0/8vawiJcI4B8mc4HUUD
+         Y2SzHB2QVfBSzUqTpOsq1asaaDvIw0OPz0yYeUKDMUZmdxMSJd/W8rz+ZaLe2CihkDGW
+         L/hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lB8JW0XG9L04FrmEfB+XTkr4c7bEVDxGvwgTSNbUoEw=;
+        b=yvcihB7NTt6vHWrQB6JjZgA/pMaodQanCw1jAQtxC6wdMMUxThwp7JJPgJCVFBSqnU
+         3ECVBZ7k16IibFcYU1Yuh92jwVB7URtfBKcgW+gPYHB88G5jDxnuaxpT11jS6yi/vqtc
+         NbmKCZpow7MVDQIyymkdoiDKsRNVOfHOt/fFKeFwMG3JHjrWhD1/cKQBwnpOUKzVVs7e
+         u4sm1o09oEP3eLo6eHL/xyj3Cynyzf15ywHXGN99RSo5mA5FKLFf4n4Vo4Dygg7X07va
+         4rdmJgVOupzxD+GauQFQJdRsAsNEaziq9269uSqVfd7sLNR6bDN6J2qqbLpQDFAH5v/M
+         cQew==
+X-Gm-Message-State: ANoB5pmVfkN9OklMF+YESRDdzhffdp8PFSyEEtZAAIJIkt9FT/6/lQ3m
+        FE4K9Nw6iz6AsZqCqyeNbK9Xzo7ZhFsUukuqYfqdT1AL9WY0X7vN
+X-Google-Smtp-Source: AA0mqf5aU4y2ms+Gj8NLQJsj3yg4gwh+yfuzMG/wMwuMaWT6z9kPDBmnna1KKVe6/IlKgkUdPTDU99534S74VFzkd3w=
+X-Received: by 2002:ac8:44a9:0:b0:3a7:ed31:1b2e with SMTP id
+ a9-20020ac844a9000000b003a7ed311b2emr9899847qto.429.1671277456558; Sat, 17
+ Dec 2022 03:44:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvr:qybglogicsvr7
+References: <Y5uN9Rr3v1uWH765@mail.google.com> <Y5z4Og3XmCGQwTO9@mail.google.com>
+In-Reply-To: <Y5z4Og3XmCGQwTO9@mail.google.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 17 Dec 2022 13:43:40 +0200
+Message-ID: <CAHp75VeNcPjngJcF96Y9hV=Y+NeaGadSMGMvgCTD6kdBi=+9fg@mail.gmail.com>
+Subject: Re: [PATCH v3] [next] pcmcia: synclink_cs: replace 1-element array
+ with flex-array member
+To:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Haowen Bai <baihaowen@meizu.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Gou Hao <gouhao@uniontech.com>
+On Sat, Dec 17, 2022 at 12:59 AM Paulo Miguel Almeida
+<paulo.miguel.almeida.rodenas@gmail.com> wrote:
+>
+> One-element arrays are deprecated, and we are replacing them with
+> flexible array members instead. So, replace one-element array with
+> flexible-array member in struct RXBUF and refactor the rest of the code
+> accordingly. While at it, fix an edge case which could cause
+> rx_buf_count to be 0 when max_frame_size was set to the maximum
+> allowed value (65535).
+>
+> It's worth mentioning that struct RXBUF was allocating 1 byte "too much"
+> for what is required (ignoring bytes added by padding).
+>
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
 
-'slab_early_init' was introduced by 'commit e0a42726794f
-("[PATCH] mm/slab.c: fix early init assumption")', this
-flag was used to prevented off-slab caches being created
-so early during bootup.
+...
 
-The only user of 'slab_early_init' was removed in commit
-'3217fd9bdf00 ("mm/slab: make criteria for off slab
-determination robust and simple")'.
+>  static int rx_alloc_buffers(MGSLPC_INFO *info)
+>  {
+>         /* each buffer has header and data */
+> -       info->rx_buf_size = sizeof(RXBUF) + info->max_frame_size;
+> +       if (check_add_overflow(sizeof(RXBUF), info->max_frame_size, &info->rx_buf_size))
+> +               return -EINVAL;
+>
+> -       /* calculate total allocation size for 8 buffers */
+> -       info->rx_buf_total_size = info->rx_buf_size * 8;
 
-Signed-off-by: Gou Hao <gouhao@uniontech.com>
----
- mm/slab.c | 3 ---
- 1 file changed, 3 deletions(-)
+> +       /* try to alloc as many buffers that can fit within RXBUF_MAX_SIZE (up to 8) */
+> +       if (check_mul_overflow(info->rx_buf_size, 8, &info->rx_buf_total_size))
+> +               return -EINVAL;
 
-diff --git a/mm/slab.c b/mm/slab.c
-index 7a269db050ee..ede1f29fd81c 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -220,7 +220,6 @@ static inline void fixup_objfreelist_debug(struct kmem_cache *cachep,
- static inline void fixup_slab_list(struct kmem_cache *cachep,
- 				struct kmem_cache_node *n, struct slab *slab,
- 				void **list);
--static int slab_early_init = 1;
- 
- #define INDEX_NODE kmalloc_index(sizeof(struct kmem_cache_node))
- 
-@@ -1249,8 +1248,6 @@ void __init kmem_cache_init(void)
- 	slab_state = PARTIAL_NODE;
- 	setup_kmalloc_cache_index_table();
- 
--	slab_early_init = 0;
--
- 	/* 5) Replace the bootstrap kmem_cache_node */
- 	{
- 		int nid;
+This check is implied by kcalloc(). But to make it effective we
+probably need to get a count first.
+
+> -       /* limit total allocated memory */
+> -       if (info->rx_buf_total_size > 0x10000)
+> -               info->rx_buf_total_size = 0x10000;
+> +       if (info->rx_buf_total_size > RXBUF_MAX_SIZE)
+> +               info->rx_buf_total_size = RXBUF_MAX_SIZE;
+
+If max_frame_size > 8192 - sizeof(RXBUF), we bump into this condition...
+
+>         /* calculate number of buffers */
+>         info->rx_buf_count = info->rx_buf_total_size / info->rx_buf_size;
+
+...which means that rx_buf_count < 8...
+(and if max_frame_size > RXBUF_MAX_SIZE - sizeof(RXBUF), count becomes
+0, I don't know if below clamp_val() is the only place to guarantee
+that)
+
+> -       info->rx_buf = kmalloc(info->rx_buf_total_size, GFP_KERNEL);
+> +       info->rx_buf = kcalloc(info->rx_buf_count, info->rx_buf_size, GFP_KERNEL);
+
+...hence rx_buf size will be less than rx_buf_total_size.
+
+That is probably not an issue per se, but I'm wondering if the
+(bigger) value of rx_buf_total_size is the problem further in the
+code.
+
+>         if (info->rx_buf == NULL)
+>                 return -ENOMEM;
+
+Maybe something like
+
+static int rx_alloc_buffers(MGSLPC_INFO *info)
+{
+    /* Prevent count from being 0 */
+    if (->max_frame_size > MAX_FRAME_SIZE)
+        return -EINVAL;
+    ...
+   count = ...;
+   ...
+   rx_total_size = ...
+   rx_buf = kcalloc(...);
+
+Then you don't need to check overflow with check_add_overflow() and
+check_mul_overflow() will be inside the kcalloc.
+
+...
+
+> -       if (info->max_frame_size < 4096)
+> -               info->max_frame_size = 4096;
+> -       else if (info->max_frame_size > 65535)
+> -               info->max_frame_size = 65535;
+> +       if (info->max_frame_size < MGSLPC_MIN_FRAME_SIZE)
+> +               info->max_frame_size = MGSLPC_MIN_FRAME_SIZE;
+> +       else if (info->max_frame_size > MGSLPC_MAX_FRAME_SIZE)
+> +               info->max_frame_size = MGSLPC_MAX_FRAME_SIZE;
+
+You can use clamp_val() macro here.
+
 -- 
-2.20.1
-
+With Best Regards,
+Andy Shevchenko
