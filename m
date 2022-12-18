@@ -2,226 +2,121 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5855C4332F
-	for <linux-hardening@archiver.kernel.org>; Sat, 17 Dec 2022 20:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1392EC4332F
+	for <linux-hardening@archiver.kernel.org>; Sun, 18 Dec 2022 02:06:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229705AbiLQUGB (ORCPT
+        id S229635AbiLRCGx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 17 Dec 2022 15:06:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35828 "EHLO
+        Sat, 17 Dec 2022 21:06:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbiLQUGA (ORCPT
+        with ESMTP id S229625AbiLRCGw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 17 Dec 2022 15:06:00 -0500
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50DB910547;
-        Sat, 17 Dec 2022 12:05:59 -0800 (PST)
-Received: by mail-pf1-x436.google.com with SMTP id 130so3838900pfu.8;
-        Sat, 17 Dec 2022 12:05:59 -0800 (PST)
+        Sat, 17 Dec 2022 21:06:52 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B3F101D0;
+        Sat, 17 Dec 2022 18:06:52 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id e7-20020a17090a77c700b00216928a3917so9742096pjs.4;
+        Sat, 17 Dec 2022 18:06:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YJvFao2kum+z/fRIMmSQ6AmqGMnYsMDljV3fMQWk5zA=;
-        b=Rvb7IOdopngt0BcTjJcQQ2vCbW5QyTbvCXh/hf8jI5PfdObMLw25ghLyHgA2ML4sfa
-         vEjpo3w8rkbfl82dStG2UvDwZ6HUmXRAWE2TDwS0wDUT+qW++y3a07YOCdR23LgJ5wyQ
-         ZrFJMxWfG4up800F43BogCj7mqm8l8/Y4BX6VGDUXy9pnwkBvs4+eYAA2MdWzFC45dah
-         sm8VoWeZchvn6kEd6RZRnWTUaefZhymbK9fHkFyHXRj4rK3RHsm6006jL+UgbxutzZ3G
-         w1B5EXtblob9kKtt1OT/9MxY/hT1uXwc6Ll6H8U6On+S/FbiIpspy0sjJpv0SrZSbdwe
-         vnww==
+        bh=bQlL5ghD7N0N01DujD2JXmYgCfDGcy7QogVwZx4Fjmk=;
+        b=J1gBib2Q784kiXcU/vut8sUBNvdQgVqgCdUXusll8rXTeI5hQxVytK/hJ+aQpiYDHO
+         FE3bRIHokQ6x1YStbDNVSg+7w/rohIeQh6Ckjceu/LaK5nx1JztXpSSIOhFzBEZZZipG
+         xa6hyjye7AwuwphAdNvvH1fTt0oY3in6il9nVaLkFBnUebbbk7Sg5+HF8XAMwogFMkZg
+         +W1nhiVHBxzBstAn8R28tc1LPStKKumCNgnwKF+LmGrKpPTnhFB7SIhGIpI/sj50jK09
+         2/WSuQDUjGulUbRvKlf8t95BaZ3MVDF2fVZfMhUa/QVk2FiNRjlswKWiRf311v2hNqip
+         Nkkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YJvFao2kum+z/fRIMmSQ6AmqGMnYsMDljV3fMQWk5zA=;
-        b=MgiAJAw0ei+eFDSER3ELlxBq6zYxXy9UbZfQ+wmUhecJ7AZUzdvCFdkjIbN9OGyysg
-         EECC2urnsB6YRsm7p0KJYHAzvlmY0o2IWQYIhC7WFuoOXFdoeAkRr+cEFgL/jui0ffJI
-         ZsVgvIdhlkvoWtJGOTv0Rmo8zgH+DozdcjJqcxTCEmXMWhX5kyPJHqsY2qph3RDceo4x
-         WEyakb64FrF2/jydbLwicTW6qBRd0nVpCalCV9LwLSXCch93YUdLbC/wyDXTKQ8URjD+
-         6B+snns+bESkaeKWp/pwmJlIdgoblrBAgfInC+T2l3xtTDGDKbA1IFlLLnXhPY7CeSqE
-         3Npg==
-X-Gm-Message-State: ANoB5pkSEQTf/4n5a6pYKBO2ZyiiLXW3XSgKO8ejDnFN7CEa+z72fG82
-        TchFMr1vBJa/XmEcl0suKM4=
-X-Google-Smtp-Source: AA0mqf5r7u9O0zYn2CAB3n7q1oStHj6rVMmZTNKuyyIFVVwd/AegbRRQDt9GBvMtGVPY4k+OAu1aqg==
-X-Received: by 2002:aa7:8b48:0:b0:56b:ae1d:a3c6 with SMTP id i8-20020aa78b48000000b0056bae1da3c6mr8845616pfd.1.1671307558741;
-        Sat, 17 Dec 2022 12:05:58 -0800 (PST)
-Received: from mail.google.com (125-237-37-88-fibre.sparkbb.co.nz. [125.237.37.88])
-        by smtp.gmail.com with ESMTPSA id k10-20020aa79d0a000000b00575da69a16asm3615691pfp.179.2022.12.17.12.05.54
+        bh=bQlL5ghD7N0N01DujD2JXmYgCfDGcy7QogVwZx4Fjmk=;
+        b=eOTFkOiuCHuLT2yOhEHFxHaEpgey1za49cASlzEFrmQqkSnYfu/sm041XNMESBHd+5
+         kejXlXxYdQESWfawckUcDIsnQeIsl2GZNFDTkh31i95cnzTuzRJJX185EbM0ITTn2Gvz
+         ziEkpR5WviOMaqNwy9a+bNpO6u0VaoJecnPkshzzRt45QIvAPvYoaGuBHXub0YcLSdTE
+         XN/g59IOVWfD7m3ODEKbRmKqYtoNCtJgJcHdl51rUWpcqCoRnTErPOHzSqyuVdTcF3z9
+         y5Gpc7YgaE33wDqSduZZ+wGeOM/XyD2p+Fiw2fTMntMmK9Fz6Uiloe9waSwBqphaguVK
+         Wg1Q==
+X-Gm-Message-State: ANoB5pkQVsInuOksyCsPQ0WZdxP/ypLagqBLA6kR9+eN3AgEoiqxtGc3
+        JeJmbOSRTJ3h53AnXcb1K0U=
+X-Google-Smtp-Source: AA0mqf7Qiqj4Lf1RGe8dDZvnYHrIQLS5TCLeM0jd61cz/BJ5Z6igzixS54FlFJ4hkoVFNjhr/lH58w==
+X-Received: by 2002:a17:90a:dc14:b0:219:20b6:55e5 with SMTP id i20-20020a17090adc1400b0021920b655e5mr39424070pjv.5.1671329211448;
+        Sat, 17 Dec 2022 18:06:51 -0800 (PST)
+Received: from hyeyoo ([114.29.91.56])
+        by smtp.gmail.com with ESMTPSA id mi14-20020a17090b4b4e00b0020d67a726easm6895842pjb.10.2022.12.17.18.06.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Dec 2022 12:05:58 -0800 (PST)
-Date:   Sun, 18 Dec 2022 09:05:51 +1300
-From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Haowen Bai <baihaowen@meizu.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        paulo.miguel.almeida.rodenas@gmail.com
-Subject: Re: [PATCH v3] [next] pcmcia: synclink_cs: replace 1-element array
- with flex-array member
-Message-ID: <Y54hHyoUW/tGioLx@mail.google.com>
-References: <Y5uN9Rr3v1uWH765@mail.google.com>
- <Y5z4Og3XmCGQwTO9@mail.google.com>
- <CAHp75VeNcPjngJcF96Y9hV=Y+NeaGadSMGMvgCTD6kdBi=+9fg@mail.gmail.com>
+        Sat, 17 Dec 2022 18:06:50 -0800 (PST)
+Date:   Sun, 18 Dec 2022 11:06:44 +0900
+From:   Hyeonggon Yoo <42.hyeyoo@gmail.com>
+To:     gouhao@uniontech.com
+Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, vbabka@suse.cz,
+        roman.gushchin@linux.dev, keescook@chromium.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, mingo@elte.hu, gouhaojake@163.com
+Subject: Re: [PATCH] mm/slab: remove unused slab_early_init
+Message-ID: <Y551tFBVcYxPlFlH@hyeyoo>
+References: <20221217113045.15997-1-gouhao@uniontech.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VeNcPjngJcF96Y9hV=Y+NeaGadSMGMvgCTD6kdBi=+9fg@mail.gmail.com>
+In-Reply-To: <20221217113045.15997-1-gouhao@uniontech.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Dec 17, 2022 at 01:43:40PM +0200, Andy Shevchenko wrote:
-> On Sat, Dec 17, 2022 at 12:59 AM Paulo Miguel Almeida
-> <paulo.miguel.almeida.rodenas@gmail.com> wrote:
-> >
-> > One-element arrays are deprecated, and we are replacing them with
-> > flexible array members instead. So, replace one-element array with
-> > flexible-array member in struct RXBUF and refactor the rest of the code
-> > accordingly. While at it, fix an edge case which could cause
-> > rx_buf_count to be 0 when max_frame_size was set to the maximum
-> > allowed value (65535).
-> >
-> > It's worth mentioning that struct RXBUF was allocating 1 byte "too much"
-> > for what is required (ignoring bytes added by padding).
-> >
-> > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> > routines on memcpy() and help us make progress towards globally
-> > enabling -fstrict-flex-arrays=3 [1].
+On Sat, Dec 17, 2022 at 07:30:45PM +0800, gouhao@uniontech.com wrote:
+> From: Gou Hao <gouhao@uniontech.com>
 > 
-> ...
+> 'slab_early_init' was introduced by 'commit e0a42726794f
+> ("[PATCH] mm/slab.c: fix early init assumption")', this
+> flag was used to prevented off-slab caches being created
+
+s/prevented/prevent
+
+> so early during bootup.
 > 
-> >  static int rx_alloc_buffers(MGSLPC_INFO *info)
-> >  {
-> >         /* each buffer has header and data */
-> > -       info->rx_buf_size = sizeof(RXBUF) + info->max_frame_size;
-> > +       if (check_add_overflow(sizeof(RXBUF), info->max_frame_size, &info->rx_buf_size))
-> > +               return -EINVAL;
-> >
-> > -       /* calculate total allocation size for 8 buffers */
-> > -       info->rx_buf_total_size = info->rx_buf_size * 8;
+> The only user of 'slab_early_init' was removed in commit
+> '3217fd9bdf00 ("mm/slab: make criteria for off slab
+> determination robust and simple")'.
 > 
-> > +       /* try to alloc as many buffers that can fit within RXBUF_MAX_SIZE (up to 8) */
-> > +       if (check_mul_overflow(info->rx_buf_size, 8, &info->rx_buf_total_size))
-> > +               return -EINVAL;
+> Signed-off-by: Gou Hao <gouhao@uniontech.com>
+> ---
+>  mm/slab.c | 3 ---
+>  1 file changed, 3 deletions(-)
 > 
-> This check is implied by kcalloc(). But to make it effective we
-> probably need to get a count first.
-> 
-> > -       /* limit total allocated memory */
-> > -       if (info->rx_buf_total_size > 0x10000)
-> > -               info->rx_buf_total_size = 0x10000;
-> > +       if (info->rx_buf_total_size > RXBUF_MAX_SIZE)
-> > +               info->rx_buf_total_size = RXBUF_MAX_SIZE;
-> 
-> If max_frame_size > 8192 - sizeof(RXBUF), we bump into this condition...
-> 
-> >         /* calculate number of buffers */
-> >         info->rx_buf_count = info->rx_buf_total_size / info->rx_buf_size;
-> 
-> ...which means that rx_buf_count < 8...
+> diff --git a/mm/slab.c b/mm/slab.c
+> index 7a269db050ee..ede1f29fd81c 100644
+> --- a/mm/slab.c
+> +++ b/mm/slab.c
+> @@ -220,7 +220,6 @@ static inline void fixup_objfreelist_debug(struct kmem_cache *cachep,
+>  static inline void fixup_slab_list(struct kmem_cache *cachep,
+>  				struct kmem_cache_node *n, struct slab *slab,
+>  				void **list);
+> -static int slab_early_init = 1;
+>  
+>  #define INDEX_NODE kmalloc_index(sizeof(struct kmem_cache_node))
+>  
+> @@ -1249,8 +1248,6 @@ void __init kmem_cache_init(void)
+>  	slab_state = PARTIAL_NODE;
+>  	setup_kmalloc_cache_index_table();
+>  
+> -	slab_early_init = 0;
+> -
+>  	/* 5) Replace the bootstrap kmem_cache_node */
+>  	{
+>  		int nid;
+> -- 
+> 2.20.1
 
-that's correct. My reading of what the original author intended is the
-following:
+Nice cleanup, thanks!
 
-- rx_buf_count can be < 8 if max_frame_size needs to be > 8192 so that
-  userspace tools don't need to collate the different packets together
-  then again, SyncLink_CS supports a variety of protocols.
+Acked-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
 
-- the more circular buffers, the better, but it looks perfectly acceptable
-  to have 1 big rx_buf (max_frame_size possible) if the communication is
-  orchestrated nicely (which part sends what and when) especially for
-  RS-232-based communications.
-
-
-> (and if max_frame_size > RXBUF_MAX_SIZE - sizeof(RXBUF), count becomes
-> 0, I don't know if below clamp_val() is the only place to guarantee
-> that)
-> 
-
-I can confirm that the clamp_val() below is the only place that
-guarantees the max_frame_size isn't greater than RXBUF_MAX_SIZE. That
-happens at the device probing stage: 
-
-( mgslpc_probe > mgslpc_add_device > clamp_val-like routine )
-
-As max_frame_size can only be set as a module parameter and no other way
-is exposed to userspace to tweak that afterwards, my 2 cents is that 
-clamp_val() routine should be fine as rx_buf_count will always be > 0 
-after this fix.
-
-> > -       info->rx_buf = kmalloc(info->rx_buf_total_size, GFP_KERNEL);
-> > +       info->rx_buf = kcalloc(info->rx_buf_count, info->rx_buf_size, GFP_KERNEL);
-> 
-> ...hence rx_buf size will be less than rx_buf_total_size.
-> 
-> That is probably not an issue per se, but I'm wondering if the
-> (bigger) value of rx_buf_total_size is the problem further in the
-> code.
-> 
-
-rx_buf_total_size isn't used outside of this function so it
-could be a local variable IMO.. so I would say that this wouldn't be a
-problem.
-
-I had noticed that rx_buf_total_size could be moved into a local
-variable before but I thought that removing it from MGSLPC struct
-should be part of a separate patch instead.
-
-> >         if (info->rx_buf == NULL)
-> >                 return -ENOMEM;
-> 
-> Maybe something like
-> 
-> static int rx_alloc_buffers(MGSLPC_INFO *info)
-> {
->     /* Prevent count from being 0 */
->     if (->max_frame_size > MAX_FRAME_SIZE)
->         return -EINVAL;
-
-This boils down to whether having the clamp_val() on the probe method is
-sufficient in your point of view. You make the final call on this :-)
-
->     ...
->    count = ...;
->    ...
->    rx_total_size = ...
->    rx_buf = kcalloc(...);
-> 
-> Then you don't need to check overflow with check_add_overflow() and
-> check_mul_overflow() will be inside the kcalloc.
-> 
-
-check_mul_overflow point -> agreed.
-
-check_add_overflow -> similar suggestion as my previous point, if the
-clamp_val on probe is sufficient for you, I would say that we don't need
-it as of now too. But if you still think that we need it, I'm flexible
-with that too.
-
-> ...
-> 
-> > -       if (info->max_frame_size < 4096)
-> > -               info->max_frame_size = 4096;
-> > -       else if (info->max_frame_size > 65535)
-> > -               info->max_frame_size = 65535;
-> > +       if (info->max_frame_size < MGSLPC_MIN_FRAME_SIZE)
-> > +               info->max_frame_size = MGSLPC_MIN_FRAME_SIZE;
-> > +       else if (info->max_frame_size > MGSLPC_MAX_FRAME_SIZE)
-> > +               info->max_frame_size = MGSLPC_MAX_FRAME_SIZE;
-> 
-> You can use clamp_val() macro here.
-> 
-
-Nice, I didn't know about this macro. I will make that change for v4.
-
-All really nice points you've made Andy, I'm learning heaps of new
-things with this patch :-)
-
-thanks!
-
-- Paulo A.
-
+-- 
+Thanks,
+Hyeonggon
