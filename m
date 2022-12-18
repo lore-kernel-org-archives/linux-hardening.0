@@ -2,91 +2,166 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06850C4332F
-	for <linux-hardening@archiver.kernel.org>; Sun, 18 Dec 2022 12:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1E6C4167B
+	for <linux-hardening@archiver.kernel.org>; Sun, 18 Dec 2022 14:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230323AbiLRMcd (ORCPT
+        id S230124AbiLRO0m (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 18 Dec 2022 07:32:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60536 "EHLO
+        Sun, 18 Dec 2022 09:26:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230008AbiLRMcc (ORCPT
+        with ESMTP id S230416AbiLRO0k (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 18 Dec 2022 07:32:32 -0500
-Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08212BC28;
-        Sun, 18 Dec 2022 04:32:25 -0800 (PST)
-X-QQ-mid: bizesmtp91t1671366705t90nn764
-Received: from localhost.localdomain ( [113.200.76.118])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Sun, 18 Dec 2022 20:31:43 +0800 (CST)
-X-QQ-SSF: 01400000002000B0D000B00A0000000
-X-QQ-FEAT: 3M0okmaRx3gbC4OVuUY0z+BVAZLPmxZcAXXWoPgJkrW6IAgAdHBU/h9y0nu7D
-        NQ36j+kwQWe5ZwXnc1v8TUiJH9QkRhlI+b6DaENkNQduG1ekmejzwvjVeAYEUQQdY47vkqz
-        O6EwJcQLflI9Zb1Il0UnUPZd7bcZWT12KjR44Cc4UEEnMLfbF+GmdLi9Wn7KpMtJadhe3Y2
-        NieKbWeugJevRA+BWKcoX3v6GVtltZqAHyuxftuNNORgamzohpGVNhpUyOir0NxArj6AHBF
-        XiGFDBC0gbAqIMbaZgdeey61qYDTD/1hjwG5S7lPcu+ohOBsa8B5QXQUSF0aWxZHEtWXvHX
-        kB6vZY9PaloVsD9hzYm9Eerw6hClvXF8v72L2y/i2MVEEq0QQjSWni7ozsncpjte9RWwNd+
-        z2VZ8m/AyyjSnfeaCvE2sUrUqUh/2MyD
-X-QQ-GoodBg: 2
-From:   gouhao@uniontech.com
-To:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, vbabka@suse.cz,
-        roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
-        keescook@chromium.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, mingo@elte.hu,
-        Gou Hao <gouhao@uniontech.com>
-Subject: [PATCH V2] mm/slab: remove unused slab_early_init
-Date:   Sun, 18 Dec 2022 20:31:27 +0800
-Message-Id: <20221218123127.23810-1-gouhao@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 18 Dec 2022 09:26:40 -0500
+Received: from amity.mint.lgbt (vmi888983.contaboserver.net [149.102.157.145])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5BF965AC
+        for <linux-hardening@vger.kernel.org>; Sun, 18 Dec 2022 06:26:36 -0800 (PST)
+Received: from amity.mint.lgbt (mx.mint.lgbt [127.0.0.1])
+        by amity.mint.lgbt (Postfix) with ESMTP id 4NZlWt6dyDz1S5B4
+        for <linux-hardening@vger.kernel.org>; Sun, 18 Dec 2022 09:26:34 -0500 (EST)
+Authentication-Results: amity.mint.lgbt (amavisd-new);
+        dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
+        header.d=mint.lgbt
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mint.lgbt; h=
+        content-transfer-encoding:content-type:in-reply-to:from
+        :content-language:references:to:subject:user-agent:mime-version
+        :date:message-id; s=dkim; t=1671373593; x=1672237594; bh=NtwwfTJ
+        35XqFurSMfDIwOCOk77rKIDyhJoth9Mky+S8=; b=ETwbc0Bu3j3GMbIMOoaID39
+        fjf6/ooigqCz/zWgWzirFVRu9e14snJRsp+mjURJADyA6ij1WC/VPclspii6facR
+        HdlcfdA2jUnfXTuLtfX/Ud2H1Zq78PBdwzyvGDVqSDk/ylNUdV4pdeZ0y5VXe3Dt
+        a3eeol/CaSr0qmh5pV5vuAyiBfyHjGmbRoZWCbyRh9w2j9S3/XU6HVNXB5aC9gNM
+        oTrZKpA50mBkc/EfH0JImmuSg+rlo3kgABfLCpATPk37tOF7llsBinqK2z0nzJeJ
+        9emmKLVMFqKKRhADtHAn1aFB1S/i/S7bDroyk0fE3CiUzkSjeHkgpUT0tOOwBXA=
+        =
+X-Virus-Scanned: amavisd-new at amity.mint.lgbt
+Received: from amity.mint.lgbt ([127.0.0.1])
+        by amity.mint.lgbt (amity.mint.lgbt [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id NZQeirqVsU7G for <linux-hardening@vger.kernel.org>;
+        Sun, 18 Dec 2022 09:26:33 -0500 (EST)
+Received: from [192.168.0.15] (pc-16-114-239-201.cm.vtr.net [201.239.114.16])
+        by amity.mint.lgbt (Postfix) with ESMTPSA id 4NZlWk4kNpz1S4t5;
+        Sun, 18 Dec 2022 09:26:25 -0500 (EST)
+Message-ID: <672d61c2-33a6-4b3b-fbb5-a12556d673a5@mint.lgbt>
+Date:   Sun, 18 Dec 2022 11:26:22 -0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvr:qybglogicsvr7
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v4 4/4] arm64: dts: qcom: sm6125: Initial support for
+ xiaomi-laurel-sprout
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20221215190404.398788-1-they@mint.lgbt>
+ <20221215190404.398788-4-they@mint.lgbt>
+ <afcb9378-f331-df8c-ced5-1c10999f5fb8@linaro.org>
+ <d0157452-307b-37a5-890a-b479a880ab95@mint.lgbt>
+ <07f2a180-8a93-6c54-6d97-208ac8426fa6@linaro.org>
+Content-Language: en-US
+From:   Lux Aliaga <they@mint.lgbt>
+In-Reply-To: <07f2a180-8a93-6c54-6d97-208ac8426fa6@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Gou Hao <gouhao@uniontech.com>
 
-'slab_early_init' was introduced by 'commit e0a42726794f
-("[PATCH] mm/slab.c: fix early init assumption")', this
-flag was used to prevent off-slab caches being created
-so early during bootup.
+On 17/12/2022 11:23, Konrad Dybcio wrote:
+> On 16.12.2022 21:27, Lux Aliaga wrote:
+>> On 16/12/2022 08:32, Konrad Dybcio wrote:
+>>> On 15.12.2022 20:04, Lux Aliaga wrote:
+>>>> Adds support for the Xiaomi Mi A3 (xiaomi-laurel-sprout). Here's a
+>>>> summary on what's working.
+>>>>
+>>>> - dmesg output to bootloader preconfigured display
+>>>> - USB
+>>>> - UFS
+>>>> - SMD RPM regulators
+>>>>
+>>>> Signed-off-by: Lux Aliaga <they@mint.lgbt>
+>>>> ---
+>>>>  =C2=A0 arch/arm64/boot/dts/qcom/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+>>>>  =C2=A0 .../dts/qcom/sm6125-xiaomi-laurel-sprout.dts=C2=A0 | 254 +++=
++++++++++++++++
+>>>>  =C2=A0 2 files changed, 255 insertions(+)
+>>>>  =C2=A0 create mode 100644 arch/arm64/boot/dts/qcom/sm6125-xiaomi-la=
+urel-sprout.dts
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts=
+/qcom/Makefile
+>>>> index 3e79496292e7..2b2a0170db14 100644
+>>>> --- a/arch/arm64/boot/dts/qcom/Makefile
+>>>> +++ b/arch/arm64/boot/dts/qcom/Makefile
+>>>> @@ -157,6 +157,7 @@ dtb-$(CONFIG_ARCH_QCOM)=C2=A0=C2=A0=C2=A0 +=3D s=
+dm850-lenovo-yoga-c630.dtb
+>>>>  =C2=A0 dtb-$(CONFIG_ARCH_QCOM)=C2=A0=C2=A0=C2=A0 +=3D sdm850-samsun=
+g-w737.dtb
+>>>>  =C2=A0 dtb-$(CONFIG_ARCH_QCOM)=C2=A0=C2=A0=C2=A0 +=3D sm4250-oneplu=
+s-billie2.dtb
+>>>>  =C2=A0 dtb-$(CONFIG_ARCH_QCOM)=C2=A0=C2=A0=C2=A0 +=3D sm6125-sony-x=
+peria-seine-pdx201.dtb
+>>>> +dtb-$(CONFIG_ARCH_QCOM)=C2=A0=C2=A0=C2=A0 +=3D sm6125-xiaomi-laurel=
+-sprout.dtb
+>>>>  =C2=A0 dtb-$(CONFIG_ARCH_QCOM)=C2=A0=C2=A0=C2=A0 +=3D sm6350-sony-x=
+peria-lena-pdx213.dtb
+>>>>  =C2=A0 dtb-$(CONFIG_ARCH_QCOM)=C2=A0=C2=A0=C2=A0 +=3D sm6375-sony-x=
+peria-murray-pdx225.dtb
+>>>>  =C2=A0 dtb-$(CONFIG_ARCH_QCOM)=C2=A0=C2=A0=C2=A0 +=3D sm7225-fairph=
+one-fp4.dtb
+>>>> diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dt=
+s b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
+>>>> new file mode 100644
+>>>> index 000000000000..86e1ec47bf5e
+>>>> --- /dev/null
+>>>> +++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
+>>>> @@ -0,0 +1,254 @@
+>>>> +// SPDX-License-Identifier: BSD-3-Clause
+>>>> +/*
+>>>> + * Copyright (c) 2022, Lux Aliaga <they@mint.lgbt>
+>>>> + */
+>>>> +
+>>>> +/dts-v1/;
+>>>> +
+>>>> +#include <dt-bindings/gpio/gpio.h>
+>>>> +#include <dt-bindings/input/input.h>
+>>>> +#include <dt-bindings/input/gpio-keys.h>
+>>>> +#include "sm6125.dtsi"
+>>>> +
+>>>> +/ {
+>>>> +=C2=A0=C2=A0=C2=A0 model =3D "Xiaomi Mi A3";
+>>>> +=C2=A0=C2=A0=C2=A0 compatible =3D "xiaomi,laurel-sprout", "qcom,sm6=
+125";
+>>>> +=C2=A0=C2=A0=C2=A0 chassis-type =3D "handset";
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0 /* required for bootloader to select correct boa=
+rd */
+>>>> +=C2=A0=C2=A0=C2=A0 qcom,msm-id =3D <394 0>; /* sm6125 v0 */
+>>> Unless you have a prototype device, this is not correct.
+>>>
+>>> Please run `cat /sys/bus/soc/devices/soc0/revision` and confirm
+>>> which revision is used on your phone.
+>> This segment has already been cross-referenced from downstream, and th=
+e device boots up successfully when using this ID, unless you're referrin=
+g to the comment next to it, in which case I can recheck later, since cur=
+rently I'm away from my device.
+> The device boots fine, because the DTB selection works on a "best match=
+"
+> basis. If it can't find one for the exact version of the SoC, it may
+> try to boot the closest one.
+>
+> Konrad
 
-The only user of 'slab_early_init' was removed in 'commit
- 3217fd9bdf00 ("mm/slab: make criteria for off slab
-determination robust and simple")'.
+Confirmed it. It's an sm6125 v1. Will fix.
 
-Signed-off-by: Gou Hao <gouhao@uniontech.com>
-Acked-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
----
- mm/slab.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/mm/slab.c b/mm/slab.c
-index 7a269db050ee..ede1f29fd81c 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -220,7 +220,6 @@ static inline void fixup_objfreelist_debug(struct kmem_cache *cachep,
- static inline void fixup_slab_list(struct kmem_cache *cachep,
- 				struct kmem_cache_node *n, struct slab *slab,
- 				void **list);
--static int slab_early_init = 1;
- 
- #define INDEX_NODE kmalloc_index(sizeof(struct kmem_cache_node))
- 
-@@ -1249,8 +1248,6 @@ void __init kmem_cache_init(void)
- 	slab_state = PARTIAL_NODE;
- 	setup_kmalloc_cache_index_table();
- 
--	slab_early_init = 0;
--
- 	/* 5) Replace the bootstrap kmem_cache_node */
- 	{
- 		int nid;
--- 
-2.20.1
+--=20
+Lux Aliaga
+https://nixgoat.me/
 
