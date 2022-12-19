@@ -2,92 +2,160 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0462C4332F
-	for <linux-hardening@archiver.kernel.org>; Sun, 18 Dec 2022 19:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFADC4332F
+	for <linux-hardening@archiver.kernel.org>; Mon, 19 Dec 2022 05:55:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230167AbiLRT3U (ORCPT
+        id S229499AbiLSFzm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 18 Dec 2022 14:29:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47222 "EHLO
+        Mon, 19 Dec 2022 00:55:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229537AbiLRT3T (ORCPT
+        with ESMTP id S229688AbiLSFzl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 18 Dec 2022 14:29:19 -0500
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEA45C55
-        for <linux-hardening@vger.kernel.org>; Sun, 18 Dec 2022 11:29:18 -0800 (PST)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4NZtF546TYz9sV5;
-        Sun, 18 Dec 2022 20:29:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-        t=1671391753;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=iy61Bv29b7eU5u1BuQzjFi316i/jl5kEL6q4Ed1CqWI=;
-        b=N1FTRwvT92pNoF+fotwoH+e487aoYThJfw9DwNNwbVFQ7nPdPadaZChV4RqqRKNdgK+BFE
-        HUaD+Su4CoYXRNMdyn9qW858DZ6qUi9JWRrotheNCzfGX9/osTMCrX3+g3Z8EFHMSaN1zy
-        PyWjrkdakNmISfTUCvY/IrrAx4F3Wd09CHu46y7MazT0BToDHeJqem5v2REsf6nDoUE0Ty
-        /TGf8BYhQzhZQlRExvEBeuy5E4KXQfm81P3J9oL7Qr+qpMMOA4cb8ZXAVpobGSR2h/wIEQ
-        NQEMu/oU8r8U6Smr7zJ1vYvYUvAalI3RdVJ22o12e/UBYGZJ5oVCWx+Jp8WEzg==
-Date:   Sun, 18 Dec 2022 20:29:10 +0100
-From:   Stefan Bavendiek <stefan.bavendiek@mailbox.org>
-To:     kernel-hardening@lists.openwall.com
-Cc:     linux-hardening@vger.kernel.org
-Subject: Isolating abstract sockets
-Message-ID: <Y59qBh9rRDgsIHaj@mailbox.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4SpAY+DyRUPjL6EC"
-Content-Disposition: inline
-X-MBO-RS-ID: a0bd702a9cf4f698059
-X-MBO-RS-META: gqg5ww8xstoc7um9t59atpnpi4saufmh
+        Mon, 19 Dec 2022 00:55:41 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3ADEB1;
+        Sun, 18 Dec 2022 21:55:39 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id 3-20020a17090a098300b00219041dcbe9so7849616pjo.3;
+        Sun, 18 Dec 2022 21:55:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rHzEIi0IzwDcW6qehabkUJ0tP11qKINwVZkQDVdKT0Q=;
+        b=XkOpXb81CmxQ682F7rjpRz1Hxg3Pvzg4IoARDxvSGNhlfXN5gCbwNWvOlryS2HYWlq
+         RMAjdRoU24YkZmD+IPs527XteVhOMeL59kWEVnCBknkb+KRDcS5DzQfeR7V/F/kZRLpk
+         qS5CUy6Me2Ps1RrpOX5nliFLpDIPzqNzn7UjBKeBm2MwC6tTGD6UDa4a9cEuq7J3Vrh6
+         OVdQwHYHkQEilt5XD21s9Fy8lxkoaGZiYSRKdQ0MB0Jaz+0BbDm5gCeuMc8OFs0oEnkp
+         sgwYV0KHreBK1HAuJD0kvL0nz8sk/uABvYL5fGfP3OuQGHfP33l5DxkkeXrETs+1zaA5
+         aHqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rHzEIi0IzwDcW6qehabkUJ0tP11qKINwVZkQDVdKT0Q=;
+        b=fOchBtlvht08gg2//IFC+QFFxcylIUHl2s+vVij1xLrgXjQsprUNE8m2d8c9pA8GT2
+         LV8Gm1khw/Zuhqvt+pj00g6tGk8KHz7KFzZNCXP0pLHJXmvwZLWYwyxMiELUKeP2NmrT
+         3tNedk3ebCC+VSeN7Uni0qBsS7Vkjpwib+x0hSh9JBLm7jSvXQksAKGbNr9d1mpLdxy3
+         hfQqlsB2qXUmYsU9Klp0M87dAw6Bq7M8Tx83yYnccCkyIqvLDIIpZX5QDngkoLijxnsL
+         OcoWli6Hz7sUAVPv+owEGssxjUmoFPgya4yP7XPlgzMtiOtvK8/OODdCqBlQCavkFb/z
+         Q3dQ==
+X-Gm-Message-State: ANoB5pn617IaDbZ/GMBhG3hFs53YAJTrwm976fXokgAvr1e92tpt4gd6
+        o1ztE6C+vvwQb8tRBOi2OG8=
+X-Google-Smtp-Source: AA0mqf4162d2wz/tcqPOfHcQD65f+tQLW8hGBDIuBRcx6CcMBX3aX0PwqQq3LS75LC/nDYoumCuJcg==
+X-Received: by 2002:a17:90b:1181:b0:219:c87a:6926 with SMTP id gk1-20020a17090b118100b00219c87a6926mr41765963pjb.26.1671429339065;
+        Sun, 18 Dec 2022 21:55:39 -0800 (PST)
+Received: from localhost ([103.152.220.92])
+        by smtp.gmail.com with ESMTPSA id y10-20020a17090a1f4a00b001ef8ab65052sm4954640pjy.11.2022.12.18.21.55.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 18 Dec 2022 21:55:38 -0800 (PST)
+From:   Dan Li <ashimida.1990@gmail.com>
+To:     gcc-patches@gcc.gnu.org,
+        Richard Sandiford <richard.sandiford@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Tom Rix <trix@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Dan Li <ashimida.1990@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Song Liu <song@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uros Bizjak <ubizjak@gmail.com>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Yuntao Wang <ytcoode@gmail.com>,
+        Changbin Du <changbin.du@intel.com>
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Subject: [RFC/RFT 0/3] Add compiler support for Control Flow Integrity
+Date:   Sun, 18 Dec 2022 21:54:28 -0800
+Message-Id: <20221219055431.22596-1-ashimida.1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+This series of patches is mainly used to support the control flow
+integrity protection of the linux kernel [1], which is similar to
+-fsanitize=kcfi in clang 16.0 [2,3].
 
---4SpAY+DyRUPjL6EC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I hope that this feature will also support user-mode CFI in the
+future (at least for developers who can recompile the runtime),
+so I use -fsanitize=cfi as a compilation option here.
 
-When building userspace application sandboxes, one issue that does not seem trivial to solve is the isolation of abstract sockets.
+Any suggestion please let me know :).
 
-While most IPC mechanism can be isolated by mechanisms like mount namespaces, abstract sockets are part of the network namespace.
-It is possible to isolate abstract sockets by using a new network namespace, however, unprivileged processes can only create a new empty network namespace, which removes network access as well and makes this useless for network clients.
+Thanks, Dan.
 
-Same linux sandbox projects try to solve this by bridging the existing network interfaces into the new namespace or use something like slirp4netns to archive this, but this does not look like an ideal solution to this problem, especially since sandboxing should reduce the kernel attack surface without introducing more complexity.
+[1] https://lore.kernel.org/all/20220908215504.3686827-1-samitolvanen@google.com/
+[2] https://clang.llvm.org/docs/ControlFlowIntegrity.html
+[3] https://reviews.llvm.org/D119296
 
-Aside from containers using namespaces, sandbox implementations based on seccomp and landlock would also run into the same problem, since landlock only provides file system isolation and seccomp cannot filter the path argument and therefore it can only be used to block new unix domain socket connections completely.
+Dan Li (3):
+  [PR102768] flag-types.h (enum sanitize_code): Extend sanitize_code to
+    64 bits to support more features
+  [PR102768] Support CFI: Add new pass for Control Flow Integrity
+  [PR102768] aarch64: Add support for Control Flow Integrity
 
-Currently there does not seem to be any way to disable network namespaces in the kernel without also disabling unix domain sockets.
+Signed-off-by: Dan Li <ashimida.1990@gmail.com>
 
-The question is how to solve the issue of abstract socket isolation in a clean and efficient way, possibly even without namespaces.
-What would be the ideal way to implement a mechanism to disable abstract sockets either globally or even better, in the context of a process.
-And would such a patch have a realistic chance to make it into the kernel?
+---
+ gcc/Makefile.in                               |   1 +
+ gcc/asan.h                                    |   4 +-
+ gcc/c-family/c-attribs.cc                     |  10 +-
+ gcc/c-family/c-common.h                       |   2 +-
+ gcc/c/c-parser.cc                             |   4 +-
+ gcc/cgraphunit.cc                             |  34 +++
+ gcc/common.opt                                |   4 +-
+ gcc/config/aarch64/aarch64.cc                 | 106 ++++++++
+ gcc/cp/typeck.cc                              |   2 +-
+ gcc/doc/invoke.texi                           |  35 +++
+ gcc/doc/passes.texi                           |  10 +
+ gcc/doc/tm.texi                               |  27 +++
+ gcc/doc/tm.texi.in                            |   8 +
+ gcc/dwarf2asm.cc                              |   2 +-
+ gcc/flag-types.h                              |  67 ++---
+ gcc/opt-suggestions.cc                        |   2 +-
+ gcc/opts.cc                                   |  26 +-
+ gcc/opts.h                                    |   8 +-
+ gcc/output.h                                  |   3 +
+ gcc/passes.def                                |   1 +
+ gcc/target.def                                |  39 +++
+ .../aarch64/control_flow_integrity_1.c        |  14 ++
+ .../aarch64/control_flow_integrity_2.c        |  25 ++
+ .../aarch64/control_flow_integrity_3.c        |  23 ++
+ gcc/toplev.cc                                 |   4 +
+ gcc/tree-cfg.cc                               |   2 +-
+ gcc/tree-cfi.cc                               | 229 ++++++++++++++++++
+ gcc/tree-pass.h                               |   1 +
+ gcc/tree.cc                                   | 144 +++++++++++
+ gcc/tree.h                                    |   1 +
+ gcc/varasm.cc                                 |  29 +++
+ 31 files changed, 803 insertions(+), 64 deletions(-)
+ create mode 100644 gcc/testsuite/gcc.target/aarch64/control_flow_integrity_1.c
+ create mode 100644 gcc/testsuite/gcc.target/aarch64/control_flow_integrity_2.c
+ create mode 100644 gcc/testsuite/gcc.target/aarch64/control_flow_integrity_3.c
+ create mode 100644 gcc/tree-cfi.cc
 
-- Stefan
+-- 
+2.17.1
 
---4SpAY+DyRUPjL6EC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEjLwAv8xLYF1doyZLdIuckz2DLQMFAmOfafUACgkQdIuckz2D
-LQPBvA/+N4WC1HWkoKk72tdHgduIFCoMS+xXF2H2aCGVUKQ5w5ZsZ3dXmHH1oT4T
-smPOQf8yXHLZMriKx/neOcibX99G4Ta9OLXR37UOsz58psMoVXobJN33GuoDpWMx
-+2yxVD2AeUNzoUJiRxQI7onDYN786Hdsd+tJP9KHFJ6Uwk3xo8rtpBjOPyaMEWRC
-uGy9ljltt5khLAEojdNGyZN64mFj6GdTU6xecHHnN/lA/JYNWyTWIGIxVPp6nny6
-doL1QJi/3h6D2sWWdaTiYzIErBmSbWn1OYO+hcEcyIe8HJMpJi+mm6zQ85YkhB1i
-zvBc5H9i/7/N0V/9qzCCZ/9yaEimNzGDIAp4DCBDqoqt983EkQTMeqdNEU022L9r
-rY9SUHnA+KagrYyk4979/Z9k12B7ldIT+oCqZ5SMQBElV6dVw/SJBq4Uepgc1Z++
-wc7FQtz+nlaWib9c0z6GC4jc7BtGV+BHWeoLnTH0xj9nRym/r7HDXD7Xycbwwwne
-8CUceP0cdVyd09+Ztd20OTRrMAzxAqacJi54zBm/HYYa0GEXsAP05+fZvC0/pHs1
-0l3WHXoxUDNzfrPn7RDnTuTW9c9BJ51xcd9GrKXOb+HN8/eiLXHGZyuLuYp50DLj
-A+3xUUIhMJpuRuW3EwQ1rf4S1y9mW01AES01H5rG7WocbeEwyT0=
-=Rz8x
------END PGP SIGNATURE-----
-
---4SpAY+DyRUPjL6EC--
