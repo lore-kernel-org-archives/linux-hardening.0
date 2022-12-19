@@ -2,76 +2,123 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A663EC4332F
-	for <linux-hardening@archiver.kernel.org>; Mon, 19 Dec 2022 14:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A206DC4167B
+	for <linux-hardening@archiver.kernel.org>; Mon, 19 Dec 2022 20:57:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231474AbiLSOIg (ORCPT
+        id S229690AbiLSU5D (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 19 Dec 2022 09:08:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53688 "EHLO
+        Mon, 19 Dec 2022 15:57:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231394AbiLSOIf (ORCPT
+        with ESMTP id S232484AbiLSU4y (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 19 Dec 2022 09:08:35 -0500
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB49DE0A2;
-        Mon, 19 Dec 2022 06:08:34 -0800 (PST)
-Received: from mail.ispras.ru (unknown [83.149.199.84])
-        by mail.ispras.ru (Postfix) with ESMTPSA id 010C8419E9D7;
-        Mon, 19 Dec 2022 14:08:31 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 010C8419E9D7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-        s=default; t=1671458911;
-        bh=cOvrBGL1daGiSnbPOu9jOYiOu8Dbls2LR4IVVeA1Mdo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rkcxKyjlJFXPVmBNanyCv8CLsiTYqn329Vipy8bn0WMX93g/yGgg2AqeOhv+nGEgM
-         iqrP572TJTOxMH9D3vLaRXNnFMdBi+LkqTONSXdshHyUQaIiS1ITcoRywpa+O/BKoQ
-         VvCo+QHdHrDYcX0DO2yqqabH02Utpfh0a98gcYSU=
-MIME-Version: 1.0
-Date:   Mon, 19 Dec 2022 17:08:30 +0300
-From:   Evgeniy Baskov <baskov@ispras.ru>
-To:     Peter Jones <pjones@redhat.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Mon, 19 Dec 2022 15:56:54 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0620CA47D
+        for <linux-hardening@vger.kernel.org>; Mon, 19 Dec 2022 12:56:53 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id q17-20020a17090aa01100b002194cba32e9so14405243pjp.1
+        for <linux-hardening@vger.kernel.org>; Mon, 19 Dec 2022 12:56:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AP0DPgy6juzYjbnmoSK4DSIse02YvBVHuic1zb1crI0=;
+        b=n2Cb9GinsIjyEaT+YGxcLDI2zefP9STnyh6mk+easKE+YmRAE9neZPO5KKQ0un7hzA
+         1WfQoF2Qy0Oo6ffwsDhxOVc59fCZU/OEXw2pDj+gQV0719Bol/qBcaBjr/N/1fCixHbV
+         ii3Mixw1qykkBdRq56vPuUoU5eSuiWj0Y/li7hPZ1nkZn0PUrxr1Ssco3G6XWTYk0jUX
+         q4f7k/NwuXW5lT7SorZpgTcJN3pVISAhO39PNgwLfXd7DlNY8/GHIY8XYdFgsXUjmFu0
+         W9mV9ZnGjHaq6eAnzo7i3kzYthj9wRa40zLu/snuft72nTrG+Y3Azx55N1JgbakviMQY
+         s+6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AP0DPgy6juzYjbnmoSK4DSIse02YvBVHuic1zb1crI0=;
+        b=VrVWL4xVZDZhzjpIzrg15hJb+GhReVxlKzXqKacrYB6SJ91cRDtKkSKcJzlD60alcX
+         xjd3l8enNLDMDRSGKptvhsAhZbi6RKngkkQQZa8Q6mzrLblIucDXzblog+O+0BmVtXg4
+         qYTT1wriw2rPT6hMDVwSKQ4p9a4K2LC3E8bT3fz7fqli2FNTYigwtu2znvpOuEmYfHy6
+         S5wQhEPX5p2mDX4R0KIcmVP9r+bjF1o0DtvIDuEXGGuSTbMAe5+xoFVy7VyEfYM2PCON
+         DSTM+xLzvKbotiCF5FpeeImYu6V82C7E7QFpuhyZNv1aUoaoQc8BE3mt2tpx5krCWJje
+         bR0A==
+X-Gm-Message-State: AFqh2koksgw4OMq/2eYF5e5bGfnQwpL6vgZy1pGTk6ID1Q3t4keXQH3I
+        HaYMexENuhXbwu/4BVEkxKx5Sw==
+X-Google-Smtp-Source: AMrXdXuYwK2oZVtQXVR6Uo4lZSOvVHJU5q2NtoAiJA4PqmRch5RIgzCrcaxiZPZosP5g1PcjUUJE1g==
+X-Received: by 2002:a17:902:e5cd:b0:189:b910:c6d2 with SMTP id u13-20020a170902e5cd00b00189b910c6d2mr1353085plf.1.1671483412369;
+        Mon, 19 Dec 2022 12:56:52 -0800 (PST)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id q18-20020a17090311d200b00188f07c9eedsm7601657plh.176.2022.12.19.12.56.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Dec 2022 12:56:51 -0800 (PST)
+Date:   Mon, 19 Dec 2022 20:56:48 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     coverity-bot <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        "Limonciello, Mario" <mario.limonciello@amd.com>,
-        joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
-        x86@kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4 00/26] x86_64: Improvements at compressed kernel stage
-In-Reply-To: <20221215192154.fuu47gsultcqd3wh@redhat.com>
-References: <cover.1671098103.git.baskov@ispras.ru>
- <20221215192154.fuu47gsultcqd3wh@redhat.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <9b3c3314e4eeabc642409f5e6ff19c2a@ispras.ru>
-X-Sender: baskov@ispras.ru
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: Coverity: handle_vmclear(): Error handling issues
+Message-ID: <Y6DQEFYmjLTXvw/g@google.com>
+References: <202212010825.C23022D@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202212010825.C23022D@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2022-12-15 22:21, Peter Jones wrote:
-> On Thu, Dec 15, 2022 at 03:37:51PM +0300, Evgeniy Baskov wrote:
->> This patchset is aimed
->> * to improve UEFI compatibility of compressed kernel code for x86_64
->> * to setup proper memory access attributes for code and rodata 
->> sections
->> * to implement W^X protection policy throughout the whole execution
->>   of compressed kernel for EFISTUB code path.
+On Thu, Dec 01, 2022, coverity-bot wrote:
+> Hello!
 > 
-> Hi Evgeniy,
+> This is an experimental semi-automated report about issues detected by
+> Coverity from a scan of next-20221201 as part of the linux-next scan project:
+> https://scan.coverity.com/projects/linux-next-weekly-scan
 > 
-> Aside from some minor patch fuzz in patch 6 due to building this in
-> today's Fedora rawhide kernel rather than mainline, this patch set 
-> works
-> for me.
+> You're getting this email because you were associated with the identified
+> lines of code (noted below) that were touched by commits:
 > 
-> Thanks!
+>   Fri Dec 14 17:59:46 2018 +0100
+>     55d2375e58a6 ("KVM: nVMX: Move nested code to dedicated files")
+> 
+> Coverity reported the following:
+> 
+> *** CID 1527765:  Error handling issues  (CHECKED_RETURN)
+> arch/x86/kvm/vmx/nested.c:5269 in handle_vmclear()
+> 5263     	 */
+> 5264     	if (likely(!guest_cpuid_has_evmcs(vcpu) ||
+> 5265     		   !evmptr_is_valid(nested_get_evmptr(vcpu)))) {
+> 5266     		if (vmptr == vmx->nested.current_vmptr)
+> 5267     			nested_release_vmcs12(vcpu);
+> 5268
+> vvv     CID 1527765:  Error handling issues  (CHECKED_RETURN)
+> vvv     Calling "kvm_vcpu_write_guest" without checking return value (as is done elsewhere 7 out of 8 times).
+> 5269     		kvm_vcpu_write_guest(vcpu,
+> 5270     				     vmptr + offsetof(struct vmcs12,
+> 5271     						      launch_state),
+> 5272     				     &zero, sizeof(zero));
+> 5273     	} else if (vmx->nested.hv_evmcs && vmptr == vmx->nested.hv_evmcs_vmptr) {
+> 5274     		nested_release_evmcs(vcpu);
+> 
+> If this is a false positive, please let us know so we can mark it as
+> such, or teach the Coverity rules to be smarter. If not, please make
+> sure fixes get into linux-next. :) For patches fixing this, please
+> include these lines (but double-check the "Fixes" first):
+> 
+> Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+> Addresses-Coverity-ID: 1527765 ("Error handling issues")
+> Fixes: 55d2375e58a6 ("KVM: nVMX: Move nested code to dedicated files")
 
-Nice to hear that, thank you for testing again!
+Nit on the bot, if it's going to provide a Fixes without human verification, then
+it should probably try to bisect (which I realize could get quite nasty).  Both
+this VMCLEAR issue and the SMM issue report bogus Fixes due to code movement.  If
+the blamed commit on this won't hadn't been so obviously wrong I likely would have
+copy+pasted without ever verifying.
+
+Maybe just omit the Fixes entirely and rely on the above "touched by commits" to
+provide the developer with the hint?
