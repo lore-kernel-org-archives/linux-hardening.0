@@ -2,104 +2,178 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F8DC4332F
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Dec 2022 06:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11538C4332F
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Dec 2022 08:32:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233260AbiLTG6s (ORCPT
+        id S230090AbiLTIcN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Dec 2022 01:58:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51038 "EHLO
+        Tue, 20 Dec 2022 03:32:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233240AbiLTG63 (ORCPT
+        with ESMTP id S232836AbiLTIcL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Dec 2022 01:58:29 -0500
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82B9014D2E;
-        Mon, 19 Dec 2022 22:58:28 -0800 (PST)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1p7Wa0-0001aJ-CJ; Tue, 20 Dec 2022 07:58:24 +0100
-Message-ID: <ccc4740d-7e1c-5b17-ceba-23f2c1eb1961@leemhuis.info>
-Date:   Tue, 20 Dec 2022 07:58:23 +0100
+        Tue, 20 Dec 2022 03:32:11 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10217178AF;
+        Tue, 20 Dec 2022 00:32:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1671525131; x=1703061131;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   mime-version:in-reply-to;
+  bh=C/hTgZEZo75zb+BTntVx1WXDyCh8QkxVDLKYtiG9wWc=;
+  b=XzCCj1cdQxYn9sfVK7WwvHnRWwimlxtdsSvGxItQ+7jH4g5UhAj0yYWk
+   j7OFG2vSIalIlkwRJXp6IL1IW+EQN+gsJ4Lw/ZwC5EzSsEpzsax+h49qk
+   i322D/urwq655wbJS5+KEDhY5McRlQ0YddIs27fzH/Lqcy7/2ot5HRIjR
+   GF6In/1O86HWJ37BMKiI/KWySczgJuTJJ6AyajIrjFtLefnl2ZVcyoZZ2
+   CjV+oqKg3oa1Vmc9LBr8fyQOpO7qYfbKQGIR8u/Jv1hXecY30nnmgpYWd
+   e3MHX6KOmSHAqXWE6DN4CT+jCdT8xqUKYq6DUoOHCQTGx9+TjjXb/cCWg
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10566"; a="299902622"
+X-IronPort-AV: E=Sophos;i="5.96,258,1665471600"; 
+   d="asc'?scan'208";a="299902622"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2022 00:31:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10566"; a="650908730"
+X-IronPort-AV: E=Sophos;i="5.96,258,1665471600"; 
+   d="asc'?scan'208";a="650908730"
+Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.159.108])
+  by orsmga002.jf.intel.com with ESMTP; 20 Dec 2022 00:31:48 -0800
+Date:   Tue, 20 Dec 2022 16:29:50 +0800
+From:   Zhenyu Wang <zhenyuw@linux.intel.com>
+To:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+Cc:     Zhi Wang <zhi.a.wang@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] [next] i915/gvt: Replace one-element array with
+ flexible-array member
+Message-ID: <20221220082950.GF30028@zhen-hp.sh.intel.com>
+Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <Y6Eu2604cqtryP4g@mail.google.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Content-Language: en-US, de-DE
-To:     coverity-bot <keescook@chromium.org>,
-        Sean Christopherson <seanjc@google.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <202212010825.C23022D@keescook>
-From:   Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: Coverity: handle_vmclear(): Error handling issues
-In-Reply-To: <202212010825.C23022D@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1671519508;07fd6584;
-X-HE-SMSGID: 1p7Wa0-0001aJ-CJ
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="WVf18ZLo9bznw8Mz"
+Content-Disposition: inline
+In-Reply-To: <Y6Eu2604cqtryP4g@mail.google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 01.12.22 17:25, coverity-bot wrote:
-> 
-> This is an experimental semi-automated report about issues detected by
-> Coverity from a scan of next-20221201 as part of the linux-next scan project:
-> https://scan.coverity.com/projects/linux-next-weekly-scan
-> 
-> You're getting this email because you were associated with the identified
-> lines of code (noted below) that were touched by commits:
-> 
->   Fri Dec 14 17:59:46 2018 +0100
->     55d2375e58a6 ("KVM: nVMX: Move nested code to dedicated files")
-> 
-> Coverity reported the following:
-> 
-> [...]
-> 
-> If this is a false positive, please let us know so we can mark it as
-> such, or teach the Coverity rules to be smarter. If not, please make
-> sure fixes get into linux-next. :) For patches fixing this, please
-> include these lines (but double-check the "Fixes" first):
-> 
-> Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
 
+--WVf18ZLo9bznw8Mz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Inspired by Sean's reply yesterday a "nit on the bot" from my side, too:
+On 2022.12.20 16:41:15 +1300, Paulo Miguel Almeida wrote:
+> One-element arrays are deprecated, and we are replacing them with
+> flexible array members instead. So, replace one-element array with
+> flexible-array member in struct gvt_firmware_header and refactor the
+> rest of the code accordingly.
+>=20
+> Additionally, previous implementation was allocating 8 bytes more than
+> required to represent firmware_header + cfg_space data + mmio data.
+>=20
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3D3 [1].
+>=20
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D101836 [1]
+> Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.c=
+om>
+> ---
+> To make reviewing this patch easier, I'm pasting before/after struct
+> sizes.
+>=20
+> pahole -C gvt_firmware_header before/drivers/gpu/drm/i915/gvt/firmware.o=
+=20
+> struct gvt_firmware_header {
+> 	u64                        magic;                /*     0     8 */
+> 	u32                        crc32;                /*     8     4 */
+> 	u32                        version;              /*    12     4 */
+> 	u64                        cfg_space_size;       /*    16     8 */
+> 	u64                        cfg_space_offset;     /*    24     8 */
+> 	u64                        mmio_size;            /*    32     8 */
+> 	u64                        mmio_offset;          /*    40     8 */
+> 	unsigned char              data[1];              /*    48     1 */
+>=20
+> 	/* size: 56, cachelines: 1, members: 8 */
+> 	/* padding: 7 */
+> 	/* last cacheline: 56 bytes */
+> };
+>=20
+> pahole -C gvt_firmware_header after/drivers/gpu/drm/i915/gvt/firmware.o=
+=20
+> struct gvt_firmware_header {
+> 	u64                        magic;                /*     0     8 */
+> 	u32                        crc32;                /*     8     4 */
+> 	u32                        version;              /*    12     4 */
+> 	u64                        cfg_space_size;       /*    16     8 */
+> 	u64                        cfg_space_offset;     /*    24     8 */
+> 	u64                        mmio_size;            /*    32     8 */
+> 	u64                        mmio_offset;          /*    40     8 */
+> 	unsigned char              data[];               /*    48     0 */
+>=20
+> 	/* size: 48, cachelines: 1, members: 8 */
+> 	/* last cacheline: 48 bytes */
+> };
+>=20
+> As you can see the additional byte of the fake-flexible array (data[1])
+> forced the compiler to pad the struct but those bytes aren't actually used
+> as first & last bytes (of both cfg_space and mmio) are controlled by the
+> <>_size and <>_offset members present in the gvt_firmware_header struct.
+> ---
+>  drivers/gpu/drm/i915/gvt/firmware.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/i915/gvt/firmware.c b/drivers/gpu/drm/i915/g=
+vt/firmware.c
+> index a683c22d5b64..dce93738e98a 100644
+> --- a/drivers/gpu/drm/i915/gvt/firmware.c
+> +++ b/drivers/gpu/drm/i915/gvt/firmware.c
+> @@ -45,7 +45,7 @@ struct gvt_firmware_header {
+>  	u64 cfg_space_offset;	/* offset in the file */
+>  	u64 mmio_size;
+>  	u64 mmio_offset;	/* offset in the file */
+> -	unsigned char data[1];
+> +	unsigned char data[];
+>  };
+> =20
+>  #define dev_to_drm_minor(d) dev_get_drvdata((d))
+> @@ -77,7 +77,7 @@ static int expose_firmware_sysfs(struct intel_gvt *gvt)
+>  	unsigned long size, crc32_start;
+>  	int ret;
+> =20
+> -	size =3D sizeof(*h) + info->mmio_size + info->cfg_space_size;
+> +	size =3D offsetof(struct gvt_firmware_header, data) + info->mmio_size +=
+ info->cfg_space_size;
+>  	firmware =3D vzalloc(size);
+>  	if (!firmware)
+>  		return -ENOMEM;
+> --=20
 
-Reports like this will sometimes generate a discussion, hence it IMHO
-would be good if the bot would suggest to place a "Link:" tag to the
-report itself right after the "Reported-by:" tag. That might be a bit
-tricky, but with a bit of luck the bot might already know the msgid of
-the msg it is about to sent, which makes it straight forward to predict
-the link the report will later have in the lore archives.
+Looks good to me.
+Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
 
-To explain: These links make things easier for future code
-archaeologists. That's why Linus[1] considers proper link tags important
-and why our documentation for some time says to place tags in cases like
-this, too[2].
+Thanks!
 
-[1] for details, see:
-https://lore.kernel.org/all/CAHk-=wjMmSZzMJ3Xnskdg4+GGz=5p5p+GSYyFBTh0f-DgvdBWg@mail.gmail.com/
-https://lore.kernel.org/all/CAHk-=wgs38ZrfPvy=nOwVkVzjpM3VFU1zobP37Fwd_h9iAD5JQ@mail.gmail.com/
-https://lore.kernel.org/all/CAHk-=wjxzafG-=J8oT30s7upn4RhBs6TX-uVFZ5rME+L5_DoJA@mail.gmail.com/
+--WVf18ZLo9bznw8Mz
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[2] see Documentation/process/submitting-patches.rst
-(http://docs.kernel.org/process/submitting-patches.html) and
-Documentation/process/5.Posting.rst
-(https://docs.kernel.org/process/5.Posting.html)
+-----BEGIN PGP SIGNATURE-----
 
-> Addresses-Coverity-ID: 1527765 ("Error handling issues")
-> Fixes: 55d2375e58a6 ("KVM: nVMX: Move nested code to dedicated files")
-> [...]
+iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCY6FyfgAKCRCxBBozTXgY
+J4H/AJ0TiZ3MGB5514oDdiz4Nwdq5iOREwCfdiEwH2G89X6y35mKtGCBryNZ02g=
+=O2Zy
+-----END PGP SIGNATURE-----
 
-Ciao, Thorsten
-
-
+--WVf18ZLo9bznw8Mz--
