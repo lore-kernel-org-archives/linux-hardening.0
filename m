@@ -2,157 +2,104 @@ Return-Path: <linux-hardening-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCBBC4167B
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Dec 2022 03:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F8DC4332F
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Dec 2022 06:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229489AbiLTDl1 (ORCPT
+        id S233260AbiLTG6s (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 19 Dec 2022 22:41:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58868 "EHLO
+        Tue, 20 Dec 2022 01:58:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232921AbiLTDl0 (ORCPT
+        with ESMTP id S233240AbiLTG63 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 19 Dec 2022 22:41:26 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD9FB62CD;
-        Mon, 19 Dec 2022 19:41:24 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id b13-20020a17090a5a0d00b0021906102d05so10820897pjd.5;
-        Mon, 19 Dec 2022 19:41:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xVh7BhiLAFK1y5fgqjdCBQvyDDgKeEj33/rk76TBR5s=;
-        b=eIyMUGuhIXBj94VjBrAUhYLj+94tayhIXD10HOZKzIQ6CrgTN/phMZCweKAwIaCB8k
-         oamV0qlLPDCgbgw7XnOEvPb4i4TP9cIkGd0h5jj5uofBKK52E7+6LLxTAhvXfkmkIBip
-         VSX/P9iBKBhYtqZnVypFSj6sPW0lssLLdT4W0nQg2vMyQGXiWd6B4I7Fkx++aZ6uiZoA
-         BgE3YZdcwBbhaAOm9F0Z/X++ekd/r+gI3p14y42+3M4stYmaJu2zuHihydMPYqQgxlf0
-         a1c64nfggXO5y7B/yo7l9SuIvOrI0XMmDhcsfXkxUUYYMdTrJFeMwIoeTzYLQlXDqANx
-         oUCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xVh7BhiLAFK1y5fgqjdCBQvyDDgKeEj33/rk76TBR5s=;
-        b=dj1LLc5XS+nfrRMoqRmnLZBiMEdg8tUbW1CgRkMmBP14GB4BMMSJuuBNRg39Mp9TQd
-         ZkNyHnlqNkr966msnzzFnOS+shh/ydJtHdt+ny7pjlOX8br/czulFPGaD7kFZQ0epl36
-         MwbKQDcwBcekWYKfJZXkR++m88Fy8Sx2A0abFqEECl1O3SBv1IfLf2AXIt/EvbWw79N8
-         WSChIINvHCSwqMiG1jgnBrYUUb/raya//1rh6xEmc7TQH5+vdjIh/W1rQyn17HFsTCem
-         tXr9wz6AvVBNXLT1WZZFKWeG4kjnCg8Q2WwdV/NGcE4nDFLoM43SEd/jyqzt3W/W1WND
-         kNDQ==
-X-Gm-Message-State: ANoB5pnh+DzrEG9osdZGSACzKzT4VtLZNLY6YelT2fEqYBijfPTWgPAG
-        /I1iN8fAf2dATDt/MKE+XVM=
-X-Google-Smtp-Source: AA0mqf6scQ9/TUdhQyckyTVN2l+rTWw5xP6+kf2svgdOWFmDqEGeGWPdfv/YMte1IhWDSljq4EL8Fg==
-X-Received: by 2002:a17:902:6b08:b0:186:639f:6338 with SMTP id o8-20020a1709026b0800b00186639f6338mr11003150plk.6.1671507684172;
-        Mon, 19 Dec 2022 19:41:24 -0800 (PST)
-Received: from mail.google.com (125-237-37-88-fibre.sparkbb.co.nz. [125.237.37.88])
-        by smtp.gmail.com with ESMTPSA id y16-20020a17090322d000b001896af10ca7sm7974566plg.134.2022.12.19.19.41.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Dec 2022 19:41:23 -0800 (PST)
-Date:   Tue, 20 Dec 2022 16:41:15 +1300
-From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
-To:     Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        paulo.miguel.almeida.rodenas@gmail.com
-Subject: [PATCH] [next] i915/gvt: Replace one-element array with
- flexible-array member
-Message-ID: <Y6Eu2604cqtryP4g@mail.google.com>
+        Tue, 20 Dec 2022 01:58:29 -0500
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82B9014D2E;
+        Mon, 19 Dec 2022 22:58:28 -0800 (PST)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1p7Wa0-0001aJ-CJ; Tue, 20 Dec 2022 07:58:24 +0100
+Message-ID: <ccc4740d-7e1c-5b17-ceba-23f2c1eb1961@leemhuis.info>
+Date:   Tue, 20 Dec 2022 07:58:23 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Content-Language: en-US, de-DE
+To:     coverity-bot <keescook@chromium.org>,
+        Sean Christopherson <seanjc@google.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <202212010825.C23022D@keescook>
+From:   Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: Coverity: handle_vmclear(): Error handling issues
+In-Reply-To: <202212010825.C23022D@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1671519508;07fd6584;
+X-HE-SMSGID: 1p7Wa0-0001aJ-CJ
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-One-element arrays are deprecated, and we are replacing them with
-flexible array members instead. So, replace one-element array with
-flexible-array member in struct gvt_firmware_header and refactor the
-rest of the code accordingly.
+On 01.12.22 17:25, coverity-bot wrote:
+> 
+> This is an experimental semi-automated report about issues detected by
+> Coverity from a scan of next-20221201 as part of the linux-next scan project:
+> https://scan.coverity.com/projects/linux-next-weekly-scan
+> 
+> You're getting this email because you were associated with the identified
+> lines of code (noted below) that were touched by commits:
+> 
+>   Fri Dec 14 17:59:46 2018 +0100
+>     55d2375e58a6 ("KVM: nVMX: Move nested code to dedicated files")
+> 
+> Coverity reported the following:
+> 
+> [...]
+> 
+> If this is a false positive, please let us know so we can mark it as
+> such, or teach the Coverity rules to be smarter. If not, please make
+> sure fixes get into linux-next. :) For patches fixing this, please
+> include these lines (but double-check the "Fixes" first):
+> 
+> Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
 
-Additionally, previous implementation was allocating 8 bytes more than
-required to represent firmware_header + cfg_space data + mmio data.
 
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-routines on memcpy() and help us make progress towards globally
-enabling -fstrict-flex-arrays=3 [1].
+Inspired by Sean's reply yesterday a "nit on the bot" from my side, too:
 
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
-Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
----
-To make reviewing this patch easier, I'm pasting before/after struct
-sizes.
+Reports like this will sometimes generate a discussion, hence it IMHO
+would be good if the bot would suggest to place a "Link:" tag to the
+report itself right after the "Reported-by:" tag. That might be a bit
+tricky, but with a bit of luck the bot might already know the msgid of
+the msg it is about to sent, which makes it straight forward to predict
+the link the report will later have in the lore archives.
 
-pahole -C gvt_firmware_header before/drivers/gpu/drm/i915/gvt/firmware.o 
-struct gvt_firmware_header {
-	u64                        magic;                /*     0     8 */
-	u32                        crc32;                /*     8     4 */
-	u32                        version;              /*    12     4 */
-	u64                        cfg_space_size;       /*    16     8 */
-	u64                        cfg_space_offset;     /*    24     8 */
-	u64                        mmio_size;            /*    32     8 */
-	u64                        mmio_offset;          /*    40     8 */
-	unsigned char              data[1];              /*    48     1 */
+To explain: These links make things easier for future code
+archaeologists. That's why Linus[1] considers proper link tags important
+and why our documentation for some time says to place tags in cases like
+this, too[2].
 
-	/* size: 56, cachelines: 1, members: 8 */
-	/* padding: 7 */
-	/* last cacheline: 56 bytes */
-};
+[1] for details, see:
+https://lore.kernel.org/all/CAHk-=wjMmSZzMJ3Xnskdg4+GGz=5p5p+GSYyFBTh0f-DgvdBWg@mail.gmail.com/
+https://lore.kernel.org/all/CAHk-=wgs38ZrfPvy=nOwVkVzjpM3VFU1zobP37Fwd_h9iAD5JQ@mail.gmail.com/
+https://lore.kernel.org/all/CAHk-=wjxzafG-=J8oT30s7upn4RhBs6TX-uVFZ5rME+L5_DoJA@mail.gmail.com/
 
-pahole -C gvt_firmware_header after/drivers/gpu/drm/i915/gvt/firmware.o 
-struct gvt_firmware_header {
-	u64                        magic;                /*     0     8 */
-	u32                        crc32;                /*     8     4 */
-	u32                        version;              /*    12     4 */
-	u64                        cfg_space_size;       /*    16     8 */
-	u64                        cfg_space_offset;     /*    24     8 */
-	u64                        mmio_size;            /*    32     8 */
-	u64                        mmio_offset;          /*    40     8 */
-	unsigned char              data[];               /*    48     0 */
+[2] see Documentation/process/submitting-patches.rst
+(http://docs.kernel.org/process/submitting-patches.html) and
+Documentation/process/5.Posting.rst
+(https://docs.kernel.org/process/5.Posting.html)
 
-	/* size: 48, cachelines: 1, members: 8 */
-	/* last cacheline: 48 bytes */
-};
+> Addresses-Coverity-ID: 1527765 ("Error handling issues")
+> Fixes: 55d2375e58a6 ("KVM: nVMX: Move nested code to dedicated files")
+> [...]
 
-As you can see the additional byte of the fake-flexible array (data[1])
-forced the compiler to pad the struct but those bytes aren't actually used
-as first & last bytes (of both cfg_space and mmio) are controlled by the
-<>_size and <>_offset members present in the gvt_firmware_header struct.
----
- drivers/gpu/drm/i915/gvt/firmware.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Ciao, Thorsten
 
-diff --git a/drivers/gpu/drm/i915/gvt/firmware.c b/drivers/gpu/drm/i915/gvt/firmware.c
-index a683c22d5b64..dce93738e98a 100644
---- a/drivers/gpu/drm/i915/gvt/firmware.c
-+++ b/drivers/gpu/drm/i915/gvt/firmware.c
-@@ -45,7 +45,7 @@ struct gvt_firmware_header {
- 	u64 cfg_space_offset;	/* offset in the file */
- 	u64 mmio_size;
- 	u64 mmio_offset;	/* offset in the file */
--	unsigned char data[1];
-+	unsigned char data[];
- };
- 
- #define dev_to_drm_minor(d) dev_get_drvdata((d))
-@@ -77,7 +77,7 @@ static int expose_firmware_sysfs(struct intel_gvt *gvt)
- 	unsigned long size, crc32_start;
- 	int ret;
- 
--	size = sizeof(*h) + info->mmio_size + info->cfg_space_size;
-+	size = offsetof(struct gvt_firmware_header, data) + info->mmio_size + info->cfg_space_size;
- 	firmware = vzalloc(size);
- 	if (!firmware)
- 		return -ENOMEM;
--- 
-2.38.1
 
