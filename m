@@ -2,51 +2,52 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDB7C4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 23 Dec 2022 18:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6608DC4332F
+	for <linux-hardening@archiver.kernel.org>; Fri, 23 Dec 2022 18:41:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230400AbiLWSkH (ORCPT
+        id S232066AbiLWSlO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 23 Dec 2022 13:40:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56160 "EHLO
+        Fri, 23 Dec 2022 13:41:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229658AbiLWSkG (ORCPT
+        with ESMTP id S231253AbiLWSlM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 23 Dec 2022 13:40:06 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1F5F1572D
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Dec 2022 10:40:04 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id q17-20020a17090aa01100b002194cba32e9so9509022pjp.1
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Dec 2022 10:40:04 -0800 (PST)
+        Fri, 23 Dec 2022 13:41:12 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8335F1EEE6
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Dec 2022 10:41:11 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id o1-20020a17090a678100b00219cf69e5f0so9504295pjj.2
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Dec 2022 10:41:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/K5s6GQ5c0Fl7h8Q3vjGYSICC8DwtoPDk3CYf+DbHR0=;
-        b=bBjEl+jjssxnMJPc+K1JNmIFXEx2lWOLSHwlOQ/M3JiZ58DP+dad09cwvP8wsY1FYU
-         UkHtTeG7i9TaXVCNDzwlbqyj2ZezrKd06FybmG8T4GF8DkYbJRJE5KupEi8zCYWt2/Oj
-         HeVm5TOzkkwncKxD/gB9vB4CNxhy08X0/FEFk=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fR8IA5HghKSQ9FgjGdgnRa1qakr0JhCwjYS6vZEikZU=;
+        b=LnhS/jgwr3aFvQJYbl+K5MsWVcPAP5jRbK6RiU1mm7FqD5WaS6fHe0JdjgBCEYZ26m
+         676+zKKbgSDVBO+1a3g+zDTowtMA0w7l/Qsc6a1tmLPL5Kf+/IHV8YXMUNfKJOaTpkpE
+         BXB+Ba0gx+Tq5B2Cq3z4tKWx1+qt39I9vRI94=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/K5s6GQ5c0Fl7h8Q3vjGYSICC8DwtoPDk3CYf+DbHR0=;
-        b=Y5e8VOLX7RwEwEhOdQWZR1AfOLCB7W/YjJzouc761GrC//nAWdgtSFAUZ12HSl2XCw
-         7wSzxKMb98F9RXzNdiHnlEVwwWT2lZKVmPN/7OJ5otfolBmRXwjS0MoL2N3AEly8QNWg
-         mQdL8h1j5VeOQViQouSHi7PHW5dRKm33FBLssQQa1UEgEV0dKY87aQVA8IFSBQiv3jRH
-         S+yzjAK0OcdOt81s+Bt2tIKg7qvSqqaHANDVdDyWPdGnbncweYzmjsld4gmtQbhmQB0i
-         U68DeVLRkc7C0vCVJiZOxoguLKPZHr7DRN6IpfOxyiS+Uv8GyTdfqi/4jniAwQQ6RWGs
-         5fyg==
-X-Gm-Message-State: AFqh2kozzNlxmNk1bCB5WOo2Xs6WF1GjXJyI0JTQCoIsZETgssq7c9jC
-        FWphj75xTZki7Jp/hG/VnSFuRQ==
-X-Google-Smtp-Source: AMrXdXs+QHPmxwDy7aPJ1g+JYLej95aQhHI3yqa4ZuGWIBwyQi/3+rmMhhK70nTpgnK71s48rvMTEg==
-X-Received: by 2002:a05:6a21:788f:b0:b2:2e66:482d with SMTP id bf15-20020a056a21788f00b000b22e66482dmr17159162pzc.50.1671820804375;
-        Fri, 23 Dec 2022 10:40:04 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fR8IA5HghKSQ9FgjGdgnRa1qakr0JhCwjYS6vZEikZU=;
+        b=XurBWKDpy9iMMIIH45dEa5NiJAGspMb4ARfU0miTZtwoIYk2wxVM43DqztDRfZ4oqo
+         rv/yAd+KINaSfj5S/dNPfC7gHhuOmfd73vAnH2/G8AkkhRrAE+YWYNMlJzw3xgERzsMy
+         Jw1rcplPIsKdji9H9i7eOlXmu4jiuTDTA01UiBxThQLVeWFbwBgqSeCqDud29YTuyj/m
+         r9iyJFIkMBnCvn0ara3Uc4dTMX2U5Ne9sVkpeOyteEvAKOegGb6Jz3M/f2eD/dNWOCbL
+         j4+kghtXKvpVW8k9h1w+41KMUAj1qM42YJGZ/tPCVS02Jx2MJAPl/hws/9ly+bLffpVc
+         VdoQ==
+X-Gm-Message-State: AFqh2kpYIAXuwiaA9eadTHoxWGfR5vFZNQK4KMx7W+SxetkTzJW7yUMA
+        1o22XX7iQdqra31nZfvAux3Pyw==
+X-Google-Smtp-Source: AMrXdXsAa24RroS47+INAqXRa2gPvLFTO4iM9NRBoXhjWS+RYk/23NCC7e9uMO2E4ap5gEywVStVLQ==
+X-Received: by 2002:a17:902:b60e:b0:189:89a4:3954 with SMTP id b14-20020a170902b60e00b0018989a43954mr11176601pls.41.1671820871085;
+        Fri, 23 Dec 2022 10:41:11 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f17-20020a63f751000000b0047712e4bc51sm2576700pgk.55.2022.12.23.10.40.03
+        by smtp.gmail.com with ESMTPSA id p4-20020a170902e74400b00178b9c997e5sm2723760plf.138.2022.12.23.10.41.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Dec 2022 10:40:03 -0800 (PST)
-Date:   Fri, 23 Dec 2022 10:40:03 -0800
+        Fri, 23 Dec 2022 10:41:10 -0800 (PST)
+Date:   Fri, 23 Dec 2022 10:41:10 -0800
 From:   Kees Cook <keescook@chromium.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org,
@@ -55,7 +56,6 @@ Cc:     linux-kernel@vger.kernel.org,
         Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
         James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
         kernel test robot <lkp@intel.com>,
         Kristina Martsenko <kristina.martsenko@arm.com>,
         linux-hardening@vger.kernel.org,
@@ -73,73 +73,23 @@ Cc:     linux-kernel@vger.kernel.org,
         "Serge E. Hallyn" <serge@hallyn.com>,
         tangmeng <tangmeng@uniontech.com>,
         Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [GIT PULL] kernel hardening fixes for v6.2-rc1
-Message-ID: <202212231039.504D027B9@keescook>
+Subject: Re: [GIT PULL] kernel hardening fixes for v6.1-rc1
+Message-ID: <202212231040.2D92409F@keescook>
+References: <202212231009.EC864645D8@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <202212231009.EC864645D8@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Linus,
+On Fri, Dec 23, 2022 at 10:10:19AM -0800, Kees Cook wrote:
+> Please pull these kernel hardening fixes for v6.1-rc1, collected over the
+> last week.
 
-Please pull these kernel hardening fixes for v6.2-rc1. (Yay typos.)
-
-Thanks!
-
--Kees
-
-The following changes since commit d272e01fa0a2f15c5c331a37cd99c6875c7b7186:
-
-  ksmbd: replace one-element arrays with flexible-array members (2022-12-02 13:14:29 -0800)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.2-rc1-fixes
-
-for you to fetch changes up to cf8016408d880afe9c5dc495af40dc2932874e77:
-
-  cfi: Fix CFI failure with KASAN (2022-12-23 10:04:31 -0800)
-
-----------------------------------------------------------------
-kernel hardening fixes for v6.2-rc1
-
-- Fix CFI failure with KASAN (Sami Tolvanen)
-
-- Fix LKDTM + CFI under GCC 7 and 8 (Kristina Martsenko)
-
-- Limit CONFIG_ZERO_CALL_USED_REGS to Clang > 15.0.6 (Nathan Chancellor)
-
-- Ignore "contents" argument in LoadPin's LSM hook handling
-
-- Fix paste-o in /sys/kernel/warn_count API docs
-
-- Use READ_ONCE() consistently for oops/warn limit reading
-
-----------------------------------------------------------------
-Kees Cook (3):
-      LoadPin: Ignore the "contents" argument of the LSM hooks
-      docs: Fix path paste-o for /sys/kernel/warn_count
-      exit: Use READ_ONCE() for all oops/warn limit reads
-
-Kristina Martsenko (1):
-      lkdtm: cfi: Make PAC test work with GCC 7 and 8
-
-Nathan Chancellor (1):
-      security: Restrict CONFIG_ZERO_CALL_USED_REGS to gcc or clang > 15.0.6
-
-Sami Tolvanen (1):
-      cfi: Fix CFI failure with KASAN
-
- Documentation/ABI/testing/sysfs-kernel-warn_count |  2 +-
- drivers/misc/lkdtm/cfi.c                          |  6 ++++-
- kernel/Makefile                                   |  3 ---
- kernel/exit.c                                     |  6 +++--
- kernel/panic.c                                    |  7 ++++--
- security/Kconfig.hardening                        |  3 +++
- security/loadpin/loadpin.c                        | 30 ++++++++++++++---------
- 7 files changed, 36 insertions(+), 21 deletions(-)
+Ugh. I mistyped the version obviously. This should be v6.2-rc1. I've
+sent another PR with the tag fixed. Sorry about the noise.
 
 -- 
 Kees Cook
