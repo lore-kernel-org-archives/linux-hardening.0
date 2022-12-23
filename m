@@ -2,133 +2,144 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22076C4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 23 Dec 2022 18:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDB7C4332F
+	for <linux-hardening@archiver.kernel.org>; Fri, 23 Dec 2022 18:40:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229658AbiLWS2x (ORCPT
+        id S230400AbiLWSkH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 23 Dec 2022 13:28:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54332 "EHLO
+        Fri, 23 Dec 2022 13:40:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231295AbiLWS2w (ORCPT
+        with ESMTP id S229658AbiLWSkG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 23 Dec 2022 13:28:52 -0500
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C3A9186C0
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Dec 2022 10:28:50 -0800 (PST)
-Received: by mail-pj1-x1032.google.com with SMTP id ge16so1989308pjb.5
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Dec 2022 10:28:50 -0800 (PST)
+        Fri, 23 Dec 2022 13:40:06 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1F5F1572D
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Dec 2022 10:40:04 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id q17-20020a17090aa01100b002194cba32e9so9509022pjp.1
+        for <linux-hardening@vger.kernel.org>; Fri, 23 Dec 2022 10:40:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uFmJ94vgdYtHsEMf0/KuGJB8O++/BC7ohIyt5Fgn7pI=;
-        b=ElgK4ZOatixFeDSXHWG1Ja36Gaa/aRySfgH6IWbKvHwrt+qWRmB8Q0V6Axbh6WUnIS
-         95A/hEHYA64Jr/hlfVkIc/NbGXmDDT1rwsY2QZorZnE25auressDUTSkJCD91hYmSBgT
-         3B58T79yKrzeMcWOjAtdRIiMm1gQfdBnlNI20=
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/K5s6GQ5c0Fl7h8Q3vjGYSICC8DwtoPDk3CYf+DbHR0=;
+        b=bBjEl+jjssxnMJPc+K1JNmIFXEx2lWOLSHwlOQ/M3JiZ58DP+dad09cwvP8wsY1FYU
+         UkHtTeG7i9TaXVCNDzwlbqyj2ZezrKd06FybmG8T4GF8DkYbJRJE5KupEi8zCYWt2/Oj
+         HeVm5TOzkkwncKxD/gB9vB4CNxhy08X0/FEFk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uFmJ94vgdYtHsEMf0/KuGJB8O++/BC7ohIyt5Fgn7pI=;
-        b=ctHR0/0T+o+28ZJ0rJnHimDBT/bxxTWAN3exel5jltUZE6pwyS1/RVJx0zCLfqqafr
-         oOKZHz0K6kSYGdoqwoExcV+WsK7h1YddSfvVSuvEcRE0tVAUvgZABll61PxcLHR6Gvjs
-         GRR3gQfBWC1Sqa8sjAkouzDQWkamSRauy+35pjegbEhJ/Cki7ok3dqU2Co0mQQR4s7tK
-         lkjneutF0xr0+Kt3ps5CD3R/ty1IP4k3VkgE7EVnzf56e2ln5Ry53M/M7WDW0LN5rPzZ
-         dsOP0O7/ajOUXRU1pdfzQAII9A6nbhLuYR/8We3nrv0DrYcnNFK3XWvdlsyeoIIaIciA
-         cihg==
-X-Gm-Message-State: AFqh2krE6hhx0UA3FtQt9x3N83JuVcAsXt6rwrnzoVaVdPKrKHRMUSov
-        K9HCatRazPmsyf3tNc10DcmgLg==
-X-Google-Smtp-Source: AMrXdXvdOaCB6ie+xu0/3TyseJFb8oYp2nnjiDsW9wbBkVz+xBXlhD9nOsqGw7ayHOFxxe0wYLovFw==
-X-Received: by 2002:a17:903:328e:b0:191:191f:e7af with SMTP id jh14-20020a170903328e00b00191191fe7afmr11434481plb.16.1671820130175;
-        Fri, 23 Dec 2022 10:28:50 -0800 (PST)
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/K5s6GQ5c0Fl7h8Q3vjGYSICC8DwtoPDk3CYf+DbHR0=;
+        b=Y5e8VOLX7RwEwEhOdQWZR1AfOLCB7W/YjJzouc761GrC//nAWdgtSFAUZ12HSl2XCw
+         7wSzxKMb98F9RXzNdiHnlEVwwWT2lZKVmPN/7OJ5otfolBmRXwjS0MoL2N3AEly8QNWg
+         mQdL8h1j5VeOQViQouSHi7PHW5dRKm33FBLssQQa1UEgEV0dKY87aQVA8IFSBQiv3jRH
+         S+yzjAK0OcdOt81s+Bt2tIKg7qvSqqaHANDVdDyWPdGnbncweYzmjsld4gmtQbhmQB0i
+         U68DeVLRkc7C0vCVJiZOxoguLKPZHr7DRN6IpfOxyiS+Uv8GyTdfqi/4jniAwQQ6RWGs
+         5fyg==
+X-Gm-Message-State: AFqh2kozzNlxmNk1bCB5WOo2Xs6WF1GjXJyI0JTQCoIsZETgssq7c9jC
+        FWphj75xTZki7Jp/hG/VnSFuRQ==
+X-Google-Smtp-Source: AMrXdXs+QHPmxwDy7aPJ1g+JYLej95aQhHI3yqa4ZuGWIBwyQi/3+rmMhhK70nTpgnK71s48rvMTEg==
+X-Received: by 2002:a05:6a21:788f:b0:b2:2e66:482d with SMTP id bf15-20020a056a21788f00b000b22e66482dmr17159162pzc.50.1671820804375;
+        Fri, 23 Dec 2022 10:40:04 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z5-20020a1709027e8500b00189c62eac37sm2727890pla.32.2022.12.23.10.28.49
+        by smtp.gmail.com with ESMTPSA id f17-20020a63f751000000b0047712e4bc51sm2576700pgk.55.2022.12.23.10.40.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Dec 2022 10:28:49 -0800 (PST)
+        Fri, 23 Dec 2022 10:40:03 -0800 (PST)
+Date:   Fri, 23 Dec 2022 10:40:03 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Alexei Starovoitov <ast@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, Hyunwoo Kim <v4bel@theori.io>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        bpf@vger.kernel.org,
-        syzbot+b1e1f7feb407b56d0355@syzkaller.appspotmail.com,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] bpf: Always use maximal size for copy_array()
-Date:   Fri, 23 Dec 2022 10:28:44 -0800
-Message-Id: <20221223182836.never.866-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        kernel test robot <lkp@intel.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        linux-hardening@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Marco Elver <elver@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        tangmeng <tangmeng@uniontech.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [GIT PULL] kernel hardening fixes for v6.2-rc1
+Message-ID: <202212231039.504D027B9@keescook>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2069; h=from:subject:message-id; bh=t1OBGhUbcR8nf2++QuxM7FqpZ9UFkmqZvOnliSZEUTE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjpfNcsRz8afKnm1B38atDy/LxrBm3b4UZpSVoEyiC oYseHr6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY6XzXAAKCRCJcvTf3G3AJkA0EA CQvcv59+py3Ot0bfishkg0yCD3rI/T6QxpeFBbXklzHVSMjI++zbfBaTXo91O4rwjrC2NoDxEPY0xx D5mr5lj2NDFwNMvff8tSRJyH7COrX9W7wMoHR38Bhp4klOmbWWIeLjL8weeD7vm+17jmOP/PtTo/wM ++vHN/270KNs9+XfDR81LRnRze89Oir88FBWTtQDVmyz1t/ILTosrmkczJ/WhTKOZD8epirnm883Id Ixer5RmOPNpZCNu8H0KM32WKmyClUDMdy5JBIAqCPd8mjWY0ke9b6zhExgu9z6oBLelR/WFkmAs45w ThqMBox1hgSWHHZPD3lPfbaLIdaR5YwO7VHlKdCzgnnt1Vp6KeuoDuOSHoiXpauzS2tB/NW41p+h6M 8C6fFzPZfF8sgLwXRpoOasVGgrdCCZAGd7TE3wS3KcPh7BlM9UI7Yr6O6I8gik9sQCvhis1jsxUmHD Pysboz4zLQPLmA9dhBFWLCBfUpQ8AWk8ytREuiNrPrX1mLI3vKrFGCY12vF0MPvg0h8RWG00+dOwrP XBcasg0ir+Jd3pdQDUwS3AW+t2/WFyJH6Id5UvAJX9t/GzhMYFTAhT+Z8W7AuUI3mhn8Qgih8/6n5l zLTvUzzDuG3+3qhaytMOM265N8GDR2JIsH3tXcSa7B6I0XzQ2+PqoOki0lMQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Instead of counting on prior allocations to have sized allocations to
-the next kmalloc bucket size, always perform a krealloc that is at least
-ksize(dst) in size (which is a no-op), so the size can be correctly
-tracked by all the various allocation size trackers (KASAN,
-__alloc_size, etc).
+Hi Linus,
 
-Reported-by: Hyunwoo Kim <v4bel@theori.io>
-Link: https://lore.kernel.org/bpf/20221223094551.GA1439509@ubuntu
-Fixes: ceb35b666d42 ("bpf/verifier: Use kmalloc_size_roundup() to match ksize() usage")
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>
-Cc: Song Liu <song@kernel.org>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: KP Singh <kpsingh@kernel.org>
-Cc: Stanislav Fomichev <sdf@google.com>
-Cc: Hao Luo <haoluo@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: bpf@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- kernel/bpf/verifier.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+Please pull these kernel hardening fixes for v6.2-rc1. (Yay typos.)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index a5255a0dcbb6..969e61bd6d39 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -1054,6 +1054,8 @@ static void print_insn_state(struct bpf_verifier_env *env,
-  */
- static void *copy_array(void *dst, const void *src, size_t n, size_t size, gfp_t flags)
- {
-+	size_t alloc_bytes;
-+	void *orig = dst;
- 	size_t bytes;
- 
- 	if (ZERO_OR_NULL_PTR(src))
-@@ -1062,11 +1064,11 @@ static void *copy_array(void *dst, const void *src, size_t n, size_t size, gfp_t
- 	if (unlikely(check_mul_overflow(n, size, &bytes)))
- 		return NULL;
- 
--	if (ksize(dst) < ksize(src)) {
--		kfree(dst);
--		dst = kmalloc_track_caller(kmalloc_size_roundup(bytes), flags);
--		if (!dst)
--			return NULL;
-+	alloc_bytes = max(ksize(orig), kmalloc_size_roundup(bytes));
-+	dst = krealloc(orig, alloc_bytes, flags);
-+	if (!dst) {
-+		kfree(orig);
-+		return NULL;
- 	}
- 
- 	memcpy(dst, src, bytes);
+Thanks!
+
+-Kees
+
+The following changes since commit d272e01fa0a2f15c5c331a37cd99c6875c7b7186:
+
+  ksmbd: replace one-element arrays with flexible-array members (2022-12-02 13:14:29 -0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.2-rc1-fixes
+
+for you to fetch changes up to cf8016408d880afe9c5dc495af40dc2932874e77:
+
+  cfi: Fix CFI failure with KASAN (2022-12-23 10:04:31 -0800)
+
+----------------------------------------------------------------
+kernel hardening fixes for v6.2-rc1
+
+- Fix CFI failure with KASAN (Sami Tolvanen)
+
+- Fix LKDTM + CFI under GCC 7 and 8 (Kristina Martsenko)
+
+- Limit CONFIG_ZERO_CALL_USED_REGS to Clang > 15.0.6 (Nathan Chancellor)
+
+- Ignore "contents" argument in LoadPin's LSM hook handling
+
+- Fix paste-o in /sys/kernel/warn_count API docs
+
+- Use READ_ONCE() consistently for oops/warn limit reading
+
+----------------------------------------------------------------
+Kees Cook (3):
+      LoadPin: Ignore the "contents" argument of the LSM hooks
+      docs: Fix path paste-o for /sys/kernel/warn_count
+      exit: Use READ_ONCE() for all oops/warn limit reads
+
+Kristina Martsenko (1):
+      lkdtm: cfi: Make PAC test work with GCC 7 and 8
+
+Nathan Chancellor (1):
+      security: Restrict CONFIG_ZERO_CALL_USED_REGS to gcc or clang > 15.0.6
+
+Sami Tolvanen (1):
+      cfi: Fix CFI failure with KASAN
+
+ Documentation/ABI/testing/sysfs-kernel-warn_count |  2 +-
+ drivers/misc/lkdtm/cfi.c                          |  6 ++++-
+ kernel/Makefile                                   |  3 ---
+ kernel/exit.c                                     |  6 +++--
+ kernel/panic.c                                    |  7 ++++--
+ security/Kconfig.hardening                        |  3 +++
+ security/loadpin/loadpin.c                        | 30 ++++++++++++++---------
+ 7 files changed, 36 insertions(+), 21 deletions(-)
+
 -- 
-2.34.1
-
+Kees Cook
