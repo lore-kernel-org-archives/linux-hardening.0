@@ -2,94 +2,185 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6608DC4332F
-	for <linux-hardening@archiver.kernel.org>; Fri, 23 Dec 2022 18:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE03C46467
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Dec 2022 23:49:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232066AbiLWSlO (ORCPT
+        id S229608AbiL0Xtp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 23 Dec 2022 13:41:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56772 "EHLO
+        Tue, 27 Dec 2022 18:49:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231253AbiLWSlM (ORCPT
+        with ESMTP id S229665AbiL0Xtn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 23 Dec 2022 13:41:12 -0500
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8335F1EEE6
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Dec 2022 10:41:11 -0800 (PST)
-Received: by mail-pj1-x1032.google.com with SMTP id o1-20020a17090a678100b00219cf69e5f0so9504295pjj.2
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Dec 2022 10:41:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fR8IA5HghKSQ9FgjGdgnRa1qakr0JhCwjYS6vZEikZU=;
-        b=LnhS/jgwr3aFvQJYbl+K5MsWVcPAP5jRbK6RiU1mm7FqD5WaS6fHe0JdjgBCEYZ26m
-         676+zKKbgSDVBO+1a3g+zDTowtMA0w7l/Qsc6a1tmLPL5Kf+/IHV8YXMUNfKJOaTpkpE
-         BXB+Ba0gx+Tq5B2Cq3z4tKWx1+qt39I9vRI94=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fR8IA5HghKSQ9FgjGdgnRa1qakr0JhCwjYS6vZEikZU=;
-        b=XurBWKDpy9iMMIIH45dEa5NiJAGspMb4ARfU0miTZtwoIYk2wxVM43DqztDRfZ4oqo
-         rv/yAd+KINaSfj5S/dNPfC7gHhuOmfd73vAnH2/G8AkkhRrAE+YWYNMlJzw3xgERzsMy
-         Jw1rcplPIsKdji9H9i7eOlXmu4jiuTDTA01UiBxThQLVeWFbwBgqSeCqDud29YTuyj/m
-         r9iyJFIkMBnCvn0ara3Uc4dTMX2U5Ne9sVkpeOyteEvAKOegGb6Jz3M/f2eD/dNWOCbL
-         j4+kghtXKvpVW8k9h1w+41KMUAj1qM42YJGZ/tPCVS02Jx2MJAPl/hws/9ly+bLffpVc
-         VdoQ==
-X-Gm-Message-State: AFqh2kpYIAXuwiaA9eadTHoxWGfR5vFZNQK4KMx7W+SxetkTzJW7yUMA
-        1o22XX7iQdqra31nZfvAux3Pyw==
-X-Google-Smtp-Source: AMrXdXsAa24RroS47+INAqXRa2gPvLFTO4iM9NRBoXhjWS+RYk/23NCC7e9uMO2E4ap5gEywVStVLQ==
-X-Received: by 2002:a17:902:b60e:b0:189:89a4:3954 with SMTP id b14-20020a170902b60e00b0018989a43954mr11176601pls.41.1671820871085;
-        Fri, 23 Dec 2022 10:41:11 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p4-20020a170902e74400b00178b9c997e5sm2723760plf.138.2022.12.23.10.41.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Dec 2022 10:41:10 -0800 (PST)
-Date:   Fri, 23 Dec 2022 10:41:10 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
-        kernel test robot <lkp@intel.com>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        linux-hardening@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Marco Elver <elver@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        tangmeng <tangmeng@uniontech.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [GIT PULL] kernel hardening fixes for v6.1-rc1
-Message-ID: <202212231040.2D92409F@keescook>
-References: <202212231009.EC864645D8@keescook>
+        Tue, 27 Dec 2022 18:49:43 -0500
+X-Greylist: delayed 458 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 27 Dec 2022 15:49:41 PST
+Received: from hera.aquilenet.fr (hera.aquilenet.fr [IPv6:2a0c:e300::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E640F1025;
+        Tue, 27 Dec 2022 15:49:40 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+        by hera.aquilenet.fr (Postfix) with ESMTP id 706E51725;
+        Wed, 28 Dec 2022 00:42:01 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at hera.aquilenet.fr
+Received: from hera.aquilenet.fr ([127.0.0.1])
+        by localhost (hera.aquilenet.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id xU42aC6-5EEs; Wed, 28 Dec 2022 00:42:00 +0100 (CET)
+Received: from begin.home (2a01cb008c016e00de41a9fffe47ec49.ipv6.abo.wanadoo.fr [IPv6:2a01:cb00:8c01:6e00:de41:a9ff:fe47:ec49])
+        by hera.aquilenet.fr (Postfix) with ESMTPSA id 7DE431721;
+        Wed, 28 Dec 2022 00:42:00 +0100 (CET)
+Received: from samy by begin.home with local (Exim 4.96)
+        (envelope-from <samuel.thibault@aquilenet.fr>)
+        id 1pAJa3-000Rnb-34;
+        Wed, 28 Dec 2022 00:41:59 +0100
+Date:   Wed, 28 Dec 2022 00:41:59 +0100
+From:   Samuel Thibault <samuel.thibault@aquilenet.fr>
+To:     Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Simon Brand <simon.brand@postadigitale.de>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] tty: Allow TIOCSTI to be disabled
+Message-ID: <20221227234159.y53uxqc6i2tkd4nq@begin>
+Mail-Followup-To: Samuel Thibault <samuel.thibault@aquilenet.fr>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Simon Brand <simon.brand@postadigitale.de>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20221022182828.give.717-kees@kernel.org>
+ <20221022182949.2684794-2-keescook@chromium.org>
+ <20221227234000.jgosvixx7eahqb3z@begin>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <202212231009.EC864645D8@keescook>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221227234000.jgosvixx7eahqb3z@begin>
+Organization: I am not organized
+User-Agent: NeoMutt/20170609 (1.8.3)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Dec 23, 2022 at 10:10:19AM -0800, Kees Cook wrote:
-> Please pull these kernel hardening fixes for v6.1-rc1, collected over the
-> last week.
+Samuel Thibault, le mer. 28 déc. 2022 00:40:00 +0100, a ecrit:
+> Hello,
+> 
+> Kees Cook, le sam. 22 oct. 2022 11:29:49 -0700, a ecrit:
+> > TIOCSTI continues its long history of being used in privilege escalation
+> > attacks[1]. Prior attempts to provide a mechanism to disable this have
+> > devolved into discussions around creating full-blown LSMs to provide
+> > arbitrary ioctl filtering, which is hugely over-engineered -- only
+> > TIOCSTI is being used this way. 3 years ago OpenBSD entirely removed
+> > TIOCSTI[2], Android has had it filtered for longer[3], and the tools that
+> > had historically used TIOCSTI either do not need it, are not commonly
+> > built with it, or have had its use removed.
+> 
+> No. The Brltty screen reader entirely relies on TIOCSTI to be able to
+> support input from various Braille devices.
 
-Ugh. I mistyped the version obviously. This should be v6.2-rc1. I've
-sent another PR with the tag fixed. Sorry about the noise.
+(it only needs support for it on the linux console itself, nowhere else)
+
+> Please make sure to keep
+> TIOCSTI enabled by default, otherwise some people would just completely
+> lose their usual way of simply typing on Linux.
+> 
+> Samuel
+> 
+> > Provide a simple CONFIG and global sysctl to disable this for the system
+> > builders who have wanted this functionality for literally decades now,
+> > much like the ldisc_autoload CONFIG and sysctl.
+> > 
+> > [1] https://lore.kernel.org/linux-hardening/Y0m9l52AKmw6Yxi1@hostpad
+> > [2] https://undeadly.org/cgi?action=article;sid=20170701132619
+> > [3] https://lore.kernel.org/lkml/CAFJ0LnFGRuEEn1tCLhoki8ZyWrKfktbF+rwwN7WzyC_kBFoQVA@mail.gmail.com/
+> > 
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Jiri Slaby <jirislaby@kernel.org>
+> > Cc: Simon Brand <simon.brand@postadigitale.de>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  drivers/tty/Kconfig  | 19 +++++++++++++++++++
+> >  drivers/tty/tty_io.c | 11 +++++++++++
+> >  2 files changed, 30 insertions(+)
+> > 
+> > diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
+> > index cc30ff93e2e4..d35fc068da74 100644
+> > --- a/drivers/tty/Kconfig
+> > +++ b/drivers/tty/Kconfig
+> > @@ -149,6 +149,25 @@ config LEGACY_PTY_COUNT
+> >  	  When not in use, each legacy PTY occupies 12 bytes on 32-bit
+> >  	  architectures and 24 bytes on 64-bit architectures.
+> >  
+> > +config LEGACY_TIOCSTI
+> > +	bool "Allow legacy TIOCSTI usage"
+> > +	default y
+> > +	help
+> > +	  Historically the kernel has allowed TIOCSTI, which will push
+> > +	  characters into a controlling TTY. This continues to be used
+> > +	  as a malicious privilege escalation mechanism, and provides no
+> > +	  meaningful real-world utility any more.
+> 
+> Yes it does.
+> 
+> > +       Its use is considered
+> > +	  a dangerous legacy operation, and can be disabled on most
+> > +	  systems.
+> > +
+> > +	  Say 'Y here only if you have confirmed that your system's
+> > +	  userspace depends on this functionality to continue operating
+> > +	  normally.
+> > +
+> > +	  This functionality can be changed at runtime with the
+> > +	  dev.tty.legacy_tiocsti sysctl. This configuration option sets
+> > +	  the default value of the sysctl.
+> > +
+> >  config LDISC_AUTOLOAD
+> >  	bool "Automatically load TTY Line Disciplines"
+> >  	default y
+> > diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+> > index fe77a3d41326..a6a16cf986b7 100644
+> > --- a/drivers/tty/tty_io.c
+> > +++ b/drivers/tty/tty_io.c
+> > @@ -2268,11 +2268,15 @@ static int tty_fasync(int fd, struct file *filp, int on)
+> >   *  * Called functions take tty_ldiscs_lock
+> >   *  * current->signal->tty check is safe without locks
+> >   */
+> > +static bool tty_legacy_tiocsti __read_mostly = IS_ENABLED(CONFIG_LEGACY_TIOCSTI);
+> >  static int tiocsti(struct tty_struct *tty, char __user *p)
+> >  {
+> >  	char ch, mbz = 0;
+> >  	struct tty_ldisc *ld;
+> >  
+> > +	if (!tty_legacy_tiocsti)
+> > +		return -EIO;
+> > +
+> >  	if ((current->signal->tty != tty) && !capable(CAP_SYS_ADMIN))
+> >  		return -EPERM;
+> >  	if (get_user(ch, p))
+> > @@ -3573,6 +3577,13 @@ void console_sysfs_notify(void)
+> >  }
+> >  
+> >  static struct ctl_table tty_table[] = {
+> > +	{
+> > +		.procname	= "legacy_tiocsti",
+> > +		.data		= &tty_legacy_tiocsti,
+> > +		.maxlen		= sizeof(tty_legacy_tiocsti),
+> > +		.mode		= 0644,
+> > +		.proc_handler	= proc_dobool,
+> > +	},
+> >  	{
+> >  		.procname	= "ldisc_autoload",
+> >  		.data		= &tty_ldisc_autoload,
+> > -- 
+> > 2.34.1
+> > 
+> 
+> -- 
+> Samuel
+> ---
+> Pour une évaluation indépendante, transparente et rigoureuse !
+> Je soutiens la Commission d'Évaluation de l'Inria.
 
 -- 
-Kees Cook
+Samuel
+---
+Pour une évaluation indépendante, transparente et rigoureuse !
+Je soutiens la Commission d'Évaluation de l'Inria.
