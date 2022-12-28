@@ -2,97 +2,98 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3015C4332F
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Dec 2022 20:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B63DDC4167B
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Dec 2022 23:20:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230464AbiL1U5b (ORCPT
+        id S230328AbiL1XUV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Dec 2022 15:57:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35602 "EHLO
+        Wed, 28 Dec 2022 18:20:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230006AbiL1U5b (ORCPT
+        with ESMTP id S231351AbiL1XUR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Dec 2022 15:57:31 -0500
-Received: from hera.aquilenet.fr (hera.aquilenet.fr [185.233.100.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E468167C2;
-        Wed, 28 Dec 2022 12:57:29 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        by hera.aquilenet.fr (Postfix) with ESMTP id 867F0640;
-        Wed, 28 Dec 2022 21:57:27 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at hera.aquilenet.fr
-Received: from hera.aquilenet.fr ([127.0.0.1])
-        by localhost (hera.aquilenet.fr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id HCs0dfKZ8YnL; Wed, 28 Dec 2022 21:57:27 +0100 (CET)
-Received: from begin.home (2a01cb008c016e00de41a9fffe47ec49.ipv6.abo.wanadoo.fr [IPv6:2a01:cb00:8c01:6e00:de41:a9ff:fe47:ec49])
-        by hera.aquilenet.fr (Postfix) with ESMTPSA id 0A2653E7;
-        Wed, 28 Dec 2022 21:57:27 +0100 (CET)
-Received: from samy by begin.home with local (Exim 4.96)
-        (envelope-from <samuel.thibault@aquilenet.fr>)
-        id 1pAdUM-005Zph-1D;
-        Wed, 28 Dec 2022 21:57:26 +0100
-Date:   Wed, 28 Dec 2022 21:57:26 +0100
-From:   Samuel Thibault <samuel.thibault@aquilenet.fr>
-To:     Kees Cook <kees@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Simon Brand <simon.brand@postadigitale.de>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] tty: Allow TIOCSTI to be disabled
-Message-ID: <20221228205726.rfevry7ud6gmttg5@begin>
-Mail-Followup-To: Samuel Thibault <samuel.thibault@aquilenet.fr>,
-        Kees Cook <kees@kernel.org>, Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Simon Brand <simon.brand@postadigitale.de>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20221022182828.give.717-kees@kernel.org>
- <20221022182949.2684794-2-keescook@chromium.org>
- <20221227234000.jgosvixx7eahqb3z@begin>
- <C95AF535-7A95-48BA-8921-1932C15A1931@kernel.org>
+        Wed, 28 Dec 2022 18:20:17 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35B4013DCB;
+        Wed, 28 Dec 2022 15:20:16 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BEDB66155F;
+        Wed, 28 Dec 2022 23:20:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0B0FBC433EF;
+        Wed, 28 Dec 2022 23:20:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1672269615;
+        bh=ukGYtnji64fNz0j/C9DjQzPepMfL0eVGBGYr8Mu7cYs=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=nipEUjUbsh4mpteGa01r31hwAv/axl6lrBS8nCs2rzW5kAvMjfjs/5RokyiprC1LC
+         UZUDduRuLYyppnXY5kQ9cSMcsFqpEeYSFFAkhZd6nVZgKjDhpfFv6ZuFZ8/CFgONmf
+         9IPdj2+5W66WfRMystUKbOjipLqvBpuabhpikMeU06PIEjrAHihZyQDDAR27kY1wB4
+         TAbGgPfYldVrhe0y0RIYN9rZ3sh9JxPUQhgpYzruR5Ox8RvInfk5oP1SHMSxM0RXPN
+         RoXJ7qAVmVXoG3l9/aYsvI61WJbsay1WtqLpmQ1PDkzpxo+Ve0guBi/7YrigEWpNbN
+         FHgXabzdroMdQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E34B3C395E0;
+        Wed, 28 Dec 2022 23:20:14 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <C95AF535-7A95-48BA-8921-1932C15A1931@kernel.org>
-Organization: I am not organized
-User-Agent: NeoMutt/20170609 (1.8.3)
+Subject: Re: [PATCH] bpf: Always use maximal size for copy_array()
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <167226961492.3239.2685338674313032711.git-patchwork-notify@kernel.org>
+Date:   Wed, 28 Dec 2022 23:20:14 +0000
+References: <20221223182836.never.866-kees@kernel.org>
+In-Reply-To: <20221223182836.never.866-kees@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     ast@kernel.org, v4bel@theori.io, daniel@iogearbox.net,
+        john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
+        song@kernel.org, yhs@fb.com, kpsingh@kernel.org, sdf@google.com,
+        haoluo@google.com, jolsa@kernel.org, bpf@vger.kernel.org,
+        syzbot+b1e1f7feb407b56d0355@syzkaller.appspotmail.com,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello,
+Hello:
 
-Kees Cook, le mar. 27 déc. 2022 19:32:55 -0800, a ecrit:
-> On December 27, 2022 3:40:00 PM PST, Samuel Thibault <samuel.thibault@aquilenet.fr> wrote:
-> >Kees Cook, le sam. 22 oct. 2022 11:29:49 -0700, a ecrit:
-> >> TIOCSTI continues its long history of being used in privilege escalation
-> >> attacks[1]. Prior attempts to provide a mechanism to disable this have
-> >> devolved into discussions around creating full-blown LSMs to provide
-> >> arbitrary ioctl filtering, which is hugely over-engineered -- only
-> >> TIOCSTI is being used this way. 3 years ago OpenBSD entirely removed
-> >> TIOCSTI[2], Android has had it filtered for longer[3], and the tools that
-> >> had historically used TIOCSTI either do not need it, are not commonly
-> >> built with it, or have had its use removed.
-> >
-> >No. The Brltty screen reader entirely relies on TIOCSTI to be able to
-> >support input from various Braille devices. Please make sure to keep
-> >TIOCSTI enabled by default, otherwise some people would just completely
-> >lose their usual way of simply typing on Linux.
+This patch was applied to bpf/bpf.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
+
+On Fri, 23 Dec 2022 10:28:44 -0800 you wrote:
+> Instead of counting on prior allocations to have sized allocations to
+> the next kmalloc bucket size, always perform a krealloc that is at least
+> ksize(dst) in size (which is a no-op), so the size can be correctly
+> tracked by all the various allocation size trackers (KASAN,
+> __alloc_size, etc).
 > 
-> Yup, it remains default enabled:
+> Reported-by: Hyunwoo Kim <v4bel@theori.io>
+> Link: https://lore.kernel.org/bpf/20221223094551.GA1439509@ubuntu
+> Fixes: ceb35b666d42 ("bpf/verifier: Use kmalloc_size_roundup() to match ksize() usage")
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: John Fastabend <john.fastabend@gmail.com>
+> Cc: Andrii Nakryiko <andrii@kernel.org>
+> Cc: Martin KaFai Lau <martin.lau@linux.dev>
+> Cc: Song Liu <song@kernel.org>
+> Cc: Yonghong Song <yhs@fb.com>
+> Cc: KP Singh <kpsingh@kernel.org>
+> Cc: Stanislav Fomichev <sdf@google.com>
+> Cc: Hao Luo <haoluo@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: bpf@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> [...]
 
-Yes, but thining of it, very soon people in various security-sensitive
-distributions will disable it, as they should indeed. And people who
-need to use their Braille device on such distributions will get stuck.
+Here is the summary with links:
+  - bpf: Always use maximal size for copy_array()
+    https://git.kernel.org/bpf/bpf/c/45435d8da71f
 
-Can we perhaps just introduce a CAP_TIOCSTI that the brltty daemon would
-be able to use? We could even make it only allow TIOCSTI on the linux
-console (tty->ops == con_ops).
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-> Also, what does FreeBSD use for screen readers?
 
-FreeBSD provides poor support for that, people have to use a patched
-screen tool to somehow access the console (but only after login).
-
-Samuel
