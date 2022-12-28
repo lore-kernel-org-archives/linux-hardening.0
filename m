@@ -2,86 +2,100 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C09C46467
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Dec 2022 01:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEBEC10F1B
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Dec 2022 03:33:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229632AbiL1BrD (ORCPT
+        id S229665AbiL1Dc7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Dec 2022 20:47:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35730 "EHLO
+        Tue, 27 Dec 2022 22:32:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232500AbiL1Bqn (ORCPT
+        with ESMTP id S229660AbiL1Dc6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Dec 2022 20:46:43 -0500
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6887ADFC6
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Dec 2022 17:46:42 -0800 (PST)
-Received: by mail-pf1-x429.google.com with SMTP id c9so4963800pfj.5
-        for <linux-hardening@vger.kernel.org>; Tue, 27 Dec 2022 17:46:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1VAg9I6sGgystoJ3TQ/I1KhSIRtbmfENt04grq0O1eU=;
-        b=ka7NTMQ0c8GwGaYNC4TLnUyVjpW/DOHmjrxHXinFVEpU9D9Duc65ev4L/I5G73dWFo
-         chfrWJakpcYJmHmRro4TIZeN1yLCHJb/DDm2nSOO4GLssDl7OCu1793DakqfQqVt/GN0
-         6mmm3+zJsoTSrWcARVMJNzTS6JnSpgk966ZpD+Vw5s7TTxvX0gV5PkvRUGT+1x75lnaR
-         jSuEiVKum/kJ6BHwWnMwYKo40m+jhgnT4J48TJ06rTkYD/+fjnvOWcvA9thKZIIEnikH
-         ndI2b7DduJ3WmXKQobI2rErE52wlocqfmB77yUXPlOIX7HoGskdAKk83uK5OMHrB6WJm
-         Bt3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1VAg9I6sGgystoJ3TQ/I1KhSIRtbmfENt04grq0O1eU=;
-        b=k8alViwOp4juZfTGDmZLh5nnENeoRtd+I2mSx7i0LmqsPawCyDZetDW2ZbtBsRiMEe
-         z91NQC19vu0bFyMPLOJiX1xxwyS+R+myNCCopGjqVlTQG4leorrhQiAdMQHDRQZOZ+qR
-         eG49mq1Nd02ixjRSEmFLUo0VUn+3YZ2cOY3FziniXsjn/1YacqAXA6B2juRUrUOpEeq3
-         Z9J6sOayxJ0g5c/aXpskckV1KHhz6fM6mBAwlrfYkfiyCPTDbYg0nkNZSeEHJgACNA1f
-         rP7rsKVrbfEVQ/JLMfwJV0sG7th6enAq20wHQTvqu4ocJ/P/3iaE85JuX2bnUJ+MPKVq
-         K7+A==
-X-Gm-Message-State: AFqh2kpqC47w4m/V2/xm0MyqJYW6JjBhKOeMGIe/mW8cNpH4KNyoWgGD
-        evnnXWufxSbYDSR58yKzO7yRGw==
-X-Google-Smtp-Source: AMrXdXs5gFho3jeOXwhmodws3dxxhHKTouLxX4u+ck0jgPmPtTo/nc3FPPXMYElaqZB+vWfHJzxyyg==
-X-Received: by 2002:a62:6486:0:b0:576:22d7:fd9e with SMTP id y128-20020a626486000000b0057622d7fd9emr1989207pfb.0.1672192001796;
-        Tue, 27 Dec 2022 17:46:41 -0800 (PST)
-Received: from [2620:15c:29:203:93f7:84:3b7b:8294] ([2620:15c:29:203:93f7:84:3b7b:8294])
-        by smtp.gmail.com with ESMTPSA id h135-20020a62838d000000b005754106e364sm9060069pfe.199.2022.12.27.17.46.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Dec 2022 17:46:41 -0800 (PST)
-Date:   Tue, 27 Dec 2022 17:46:40 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-To:     Gou Hao <gouhao@uniontech.com>
-cc:     cl@linux.com, penberg@kernel.org, iamjoonsoo.kim@lge.com,
-        akpm@linux-foundation.org, vbabka@suse.cz,
-        roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
-        keescook@chromium.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        mingo@elte.hu
-Subject: Re: [PATCH V2] mm/slab: remove unused slab_early_init
-In-Reply-To: <20221218123127.23810-1-gouhao@uniontech.com>
-Message-ID: <544c9bd1-c262-1915-de79-d6e00109eff4@google.com>
-References: <20221218123127.23810-1-gouhao@uniontech.com>
+        Tue, 27 Dec 2022 22:32:58 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEDCE635B;
+        Tue, 27 Dec 2022 19:32:57 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 19969612E8;
+        Wed, 28 Dec 2022 03:32:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C5C2C433EF;
+        Wed, 28 Dec 2022 03:32:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1672198376;
+        bh=bc+s+NbQoL95udEHZ4Axbwh4eI0R3gw4cmHickwG5nE=;
+        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+        b=OH0Lyt6+n6l25DKimmA9JD3OXpI2oBTwGv8S45TDcXtmj1INpaG/92riGhvA2uqOP
+         Fh5jmHd/wyKaiUkmrkOzqxfiqC1xnx2GZCmFvg/kIjNCBY22/W0xtXfUwhM7VzTqa/
+         KmaQFpc6wEJisymhk1dhLvZVGY21VCtSTezLoNV8+kiY0p39cVb9j5WmQuE9wWqBCX
+         0iIFqgv7JQehIwPrjV91VhoFYzQhlTrATOGre4OuH9N/ccn5ebfS8FNLTaZPTI9TGK
+         hYtjjsQ8NxeH6RlZdMW9ylIJpBtEBwQ9sWkARHwE3I/ad1lEC9Rvm1BF+jIQd7ps6o
+         JkMs24OYDECMQ==
+Date:   Tue, 27 Dec 2022 19:32:55 -0800
+From:   Kees Cook <kees@kernel.org>
+To:     Samuel Thibault <samuel.thibault@aquilenet.fr>,
+        Kees Cook <keescook@chromium.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Simon Brand <simon.brand@postadigitale.de>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] tty: Allow TIOCSTI to be disabled
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20221227234000.jgosvixx7eahqb3z@begin>
+References: <20221022182828.give.717-kees@kernel.org> <20221022182949.2684794-2-keescook@chromium.org> <20221227234000.jgosvixx7eahqb3z@begin>
+Message-ID: <C95AF535-7A95-48BA-8921-1932C15A1931@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, 18 Dec 2022, gouhao@uniontech.com wrote:
+On December 27, 2022 3:40:00 PM PST, Samuel Thibault <samuel=2Ethibault@aqu=
+ilenet=2Efr> wrote:
+>Hello,
+>
+>Kees Cook, le sam=2E 22 oct=2E 2022 11:29:49 -0700, a ecrit:
+>> TIOCSTI continues its long history of being used in privilege escalatio=
+n
+>> attacks[1]=2E Prior attempts to provide a mechanism to disable this hav=
+e
+>> devolved into discussions around creating full-blown LSMs to provide
+>> arbitrary ioctl filtering, which is hugely over-engineered -- only
+>> TIOCSTI is being used this way=2E 3 years ago OpenBSD entirely removed
+>> TIOCSTI[2], Android has had it filtered for longer[3], and the tools th=
+at
+>> had historically used TIOCSTI either do not need it, are not commonly
+>> built with it, or have had its use removed=2E
+>
+>No=2E The Brltty screen reader entirely relies on TIOCSTI to be able to
+>support input from various Braille devices=2E Please make sure to keep
+>TIOCSTI enabled by default, otherwise some people would just completely
+>lose their usual way of simply typing on Linux=2E
 
-> From: Gou Hao <gouhao@uniontech.com>
-> 
-> 'slab_early_init' was introduced by 'commit e0a42726794f
-> ("[PATCH] mm/slab.c: fix early init assumption")', this
-> flag was used to prevent off-slab caches being created
-> so early during bootup.
-> 
-> The only user of 'slab_early_init' was removed in 'commit
->  3217fd9bdf00 ("mm/slab: make criteria for off slab
-> determination robust and simple")'.
-> 
-> Signed-off-by: Gou Hao <gouhao@uniontech.com>
-> Acked-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Yup, it remains default enabled:
 
-Acked-by: David Rientjes <rientjes@google.com>
+> [=2E=2E=2E]
+>> +config LEGACY_TIOCSTI
+>> +	bool "Allow legacy TIOCSTI usage"
+>> +	default y
+>> +	help
+>> +	  Historically the kernel has allowed TIOCSTI, which will push
+>> +	  characters into a controlling TTY=2E This continues to be used
+>> +	  as a malicious privilege escalation mechanism, and provides no
+>> +	  meaningful real-world utility any more=2E
+>
+>Yes it does=2E
+
+Can you send a patch to adjust this language?
+
+Also, what does FreeBSD use for screen readers?
+
+-Kees
+
+
+--=20
+Kees Cook
