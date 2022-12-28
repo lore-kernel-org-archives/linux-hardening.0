@@ -2,74 +2,80 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956E7C46467
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Dec 2022 04:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D27C4332F
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Dec 2022 08:49:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231233AbiL1EhM (ORCPT
+        id S232689AbiL1ItW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Dec 2022 23:37:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42680 "EHLO
+        Wed, 28 Dec 2022 03:49:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229660AbiL1EhJ (ORCPT
+        with ESMTP id S232808AbiL1Is4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Dec 2022 23:37:09 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 135FEBC83;
-        Tue, 27 Dec 2022 20:37:08 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A3AA761236;
-        Wed, 28 Dec 2022 04:37:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13518C433EF;
-        Wed, 28 Dec 2022 04:37:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672202227;
-        bh=0NEJIsSsSe6bGC55i0B6YrnD9Muybz+0yhe4GSyJ7AQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X3Svbmklla26K/S8dkyCQh4KS3vFM6x+4t0QOKANXyxwQKgMq3mOagAoP7cTJ96Fb
-         +CzDMqAb85ItjAsiclmLVHRdWDDauKCHYpGpWdgFa2nVhPKZuusF8r4E1rQeuKqBfj
-         Yio23mc5HIrpEL7P/Vp+T+Xklq6GsBpH+1zZRHSWzA1n8+KkFBRmQMnUbpsWQgZL7s
-         AIputisLWe7UwsERq0OaVer7/OOiT/wWfhvqzPTykYxRQ1zN9fMKZ+wMmTzxKvNd3M
-         3V8dGpGKr/UBMocDPsB6Kx06imixDybD1wDeqHfhuBofmUaSs8cCdUsOBrmrp4d9O8
-         vJccyppt3M3Tg==
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     krzysztof.kozlowski@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, konrad.dybcio@linaro.org
-Cc:     gpiccoli@igalia.com, Tony Luck <tony.luck@intel.com>,
-        keescook@chromium.org, krzysztof.kozlowski+dt@linaro.org,
-        linux-kernel@vger.kernel.org, luca.weiss@fairphone.com,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-hardening@vger.kernel.org, patches@linaro.org
-Subject: Re: [PATCH] arm64: dts: qcom: sm6350: Fix up the ramoops node
-Date:   Tue, 27 Dec 2022 22:36:41 -0600
-Message-Id: <167220221234.833009.3159849283583093837.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20221210102600.589028-1-konrad.dybcio@linaro.org>
-References: <20221210102600.589028-1-konrad.dybcio@linaro.org>
+        Wed, 28 Dec 2022 03:48:56 -0500
+Received: from formenos.hmeau.com (helcar.hmeau.com [216.24.177.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B467CE72;
+        Wed, 28 Dec 2022 00:46:53 -0800 (PST)
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+        by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+        id 1pAS59-00BTqH-2k; Wed, 28 Dec 2022 16:46:40 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 28 Dec 2022 16:46:39 +0800
+Date:   Wed, 28 Dec 2022 16:46:39 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
+        Gaurav Jain <gaurav.jain@nxp.com>,
+        Pankaj Gupta <pankaj.gupta@nxp.com>,
+        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
+        "David S. Miller" <davem@davemloft.net>,
+        Kees Cook <keescook@chromium.org>,
+        kernel test robot <lkp@intel.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] crypto: caam - Avoid GCC memset bug warning
+Message-ID: <Y6wCbyttJ+WVzmZX@gondor.apana.org.au>
+References: <20221222162513.4021928-1-u.kleine-koenig@pengutronix.de>
+ <Y6VK4IJkHiawAbJz@gondor.apana.org.au>
+ <20221223174719.4n6pmwio4zycj2qm@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221223174719.4n6pmwio4zycj2qm@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, 10 Dec 2022 11:25:59 +0100, Konrad Dybcio wrote:
-> Fix up the ramoops node to make it match bindings and style:
-> 
-> - remove "removed-dma-pool"
-> - don't pad size to 8 hex digits
-> - change cc-size to ecc-size so that it's used
-> - increase ecc-size from to 16
-> - remove the zeroed ftrace-size
-> 
-> [...]
+Certain versions of gcc don't like the memcpy with a NULL dst
+(which only happens with a zero length).  This only happens
+when debugging is enabled so add an if clause to work around
+these warnings.
 
-Applied, thanks!
+A similar warning used to be generated by sparse but that was
+fixed years ago.
 
-[1/1] arm64: dts: qcom: sm6350: Fix up the ramoops node
-      commit: 3b2ff50da499178cc418f4b319e279d1b52958ed
+Link: https://lore.kernel.org/lkml/202210290446.qBayTfzl-lkp@intel.com
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Kees Cook <keescook@chromium.org>
+Reported-by: Uwe Kleine-K�nig <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-Best regards,
+diff --git a/drivers/crypto/caam/desc_constr.h b/drivers/crypto/caam/desc_constr.h
+index 62ce6421bb3f..824c94d44f94 100644
+--- a/drivers/crypto/caam/desc_constr.h
++++ b/drivers/crypto/caam/desc_constr.h
+@@ -163,7 +163,8 @@ static inline void append_data(u32 * const desc, const void *data, int len)
+ {
+ 	u32 *offset = desc_end(desc);
+ 
+-	if (len) /* avoid sparse warning: memcpy with byte count of 0 */
++	/* Avoid gcc warning: memcpy with data == NULL */
++	if (!IS_ENABLED(CONFIG_CRYPTO_DEV_FSL_CAAM_DEBUG) || data)
+ 		memcpy(offset, data, len);
+ 
+ 	(*desc) = cpu_to_caam32(caam32_to_cpu(*desc) +
 -- 
-Bjorn Andersson <andersson@kernel.org>
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
