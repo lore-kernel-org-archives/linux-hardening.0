@@ -2,86 +2,93 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32952C4332F
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Dec 2022 01:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFA1C4708E
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Dec 2022 03:45:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230257AbiL2Bsv (ORCPT
+        id S231249AbiL2Dpr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Dec 2022 20:48:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39942 "EHLO
+        Wed, 28 Dec 2022 22:45:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230106AbiL2Bsv (ORCPT
+        with ESMTP id S230488AbiL2Dpp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Dec 2022 20:48:51 -0500
-Received: from formenos.hmeau.com (helcar.hmeau.com [216.24.177.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5666E12604;
-        Wed, 28 Dec 2022 17:48:48 -0800 (PST)
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-        by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-        id 1pAi28-00BrPk-4O; Thu, 29 Dec 2022 09:48:37 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 29 Dec 2022 09:48:36 +0800
-Date:   Thu, 29 Dec 2022 09:48:36 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-        Gaurav Jain <gaurav.jain@nxp.com>,
-        Pankaj Gupta <pankaj.gupta@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
-        "David S. Miller" <davem@davemloft.net>,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] crypto: caam - Avoid GCC memset bug warning
-Message-ID: <Y6zx9H7pZZ6VTzUd@gondor.apana.org.au>
-References: <20221222162513.4021928-1-u.kleine-koenig@pengutronix.de>
- <Y6VK4IJkHiawAbJz@gondor.apana.org.au>
- <20221223174719.4n6pmwio4zycj2qm@pengutronix.de>
- <Y6wCbyttJ+WVzmZX@gondor.apana.org.au>
- <20221228113035.ups6echnsmo4flnz@pengutronix.de>
+        Wed, 28 Dec 2022 22:45:45 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0C72B3F;
+        Wed, 28 Dec 2022 19:45:44 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 68D16B816E4;
+        Thu, 29 Dec 2022 03:45:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7066CC433EF;
+        Thu, 29 Dec 2022 03:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1672285542;
+        bh=alCJu5XAjMvKb+w02CBSziyyOEltpCAw/XCcSnAbcuk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AWVpuj5foLvPtcXPEKqfw0DoLzqyOXgKpm8loWrcWzFCx9x1HAGhq1+H2xh6FDgft
+         tiOxrDVp42TPAczZTjiaTkNCyYelRu20N7woz+978EI9U2qo6D4sM6IdbrTLjJm9b9
+         BDYjBz4hkRwGBlqFp35eyon5jyCkJscIJVhqb2A732TGBiK3d29+nVmZHyuxDyeI7a
+         AkUqXhS7acN3Gu4GTg61iI2ijgBZNZbhdo5nO7F+8XWJZZV+1gshYlBR8Z02nRLJGU
+         ZYtCzy1PNtJFO39EmgrTvIDu3rH3HRI+ouTvdVNVVBCdeY9BV/5LQdLrBmn1CWUDZW
+         u5JbdpRlv3fcA==
+From:   Bjorn Andersson <andersson@kernel.org>
+To:     keescook@chromium.org, Tony Luck <tony.luck@intel.com>,
+        luca@z3ntu.xyz, gpiccoli@igalia.com,
+        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
+        agross@kernel.org, konrad.dybcio@linaro.org
+Cc:     linux-kernel@vger.kernel.org, a39.skl@gmail.com,
+        krzysztof.kozlowski@linaro.org, devicetree@vger.kernel.org,
+        ultracoolguy@disroot.org, vladimir.lypak@gmail.com,
+        morf3089@gmail.com, atafalla@dnyon.com,
+        linux-arm-msm@vger.kernel.org, jenneron@protonmail.com,
+        ~postmarketos/upstreaming@lists.sr.ht, julianbraha@gmail.com,
+        fekz115@gmail.com, JIaxyga@protonmail.com,
+        sireeshkodali1@gmail.com, linux-hardening@vger.kernel.org,
+        phone-devel@vger.kernel.org
+Subject: Re: (subset) [PATCH v3 0/9] Add a bunch of msm8953 dts files
+Date:   Wed, 28 Dec 2022 21:45:38 -0600
+Message-Id: <167228553507.1017132.4894386227853517055.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20221207-msm8953-6-1-next-dtbs-v3-v3-0-a64b3b0af0eb@z3ntu.xyz>
+References: <20221207-msm8953-6-1-next-dtbs-v3-v3-0-a64b3b0af0eb@z3ntu.xyz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221228113035.ups6echnsmo4flnz@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Dec 28, 2022 at 12:30:35PM +0100, Uwe Kleine-König wrote:
->
-> > -	if (len) /* avoid sparse warning: memcpy with byte count of 0 */
-> > +	/* Avoid gcc warning: memcpy with data == NULL */
-> > +	if (!IS_ENABLED(CONFIG_CRYPTO_DEV_FSL_CAAM_DEBUG) || data)
+On Wed, 07 Dec 2022 19:30:37 +0100, Luca Weiss wrote:
+> The following patches add a bunch of msm8953-based devices that have
+> been created in the msm8953-mainline[0] repository, which includes
+> Snapdragon 450 (SDM450), Snapdragon 625 (msm8953) and Snapdragon 632
+> (SDM632) devices.
+> The dts files are trimmed down to what is currently supported upstream,
+> as a way to also minimizing diff for further patches.
 > 
-> I just tried: For me a plain
-> 
-> 	if (data)
-> 
-> is also enough to make both gcc and sparse happy.
+> [...]
 
-Of course it is.  The point of the extra condition is to remove
-the unnecessary check on data unless we are in debugging mode
-(as it is only needed in debugging mode to work around the buggy
-compiler).
+Applied, thanks!
 
-> (On a related note, sparse reports:
-> 
->   CHECK   drivers/crypto/caam/jr.c
-> drivers/crypto/caam/jr.c: note: in included file (through arch/arm64/include/asm/io.h, include/linux/io.h, include/linux/irq.h, ...):
-> include/asm-generic/io.h:290:22: warning: incorrect type in argument 1 (different base types)
-> include/asm-generic/io.h:290:22:    expected unsigned long long [usertype] val
-> include/asm-generic/io.h:290:22:    got restricted __le64 [usertype]
-> include/asm-generic/io.h:290:22: warning: incorrect type in argument 1 (different base types)
-> include/asm-generic/io.h:290:22:    expected unsigned long long [usertype] val
-> include/asm-generic/io.h:290:22:    got restricted __le64 [usertype]
+[2/9] arm64: dts: qcom: msm8953: Adjust reserved-memory nodes
+      commit: eca9ee35e895686d179964dc6f94e6c473d2a171
+[3/9] arm64: dts: qcom: sdm450: Add device tree for Motorola Moto G6
+      commit: eee5a89b4fe5615ba57fd8048102504aaa052065
+[4/9] arm64: dts: qcom: msm8953: Add device tree for Motorola G5 Plus
+      commit: 4ccd0dd6a3d2a98b11664992012af04cb0ce8f6c
+[5/9] arm64: dts: qcom: msm8953: Add device tree for Xiaomi Mi A2 Lite
+      commit: 38d779c26395df5f7f66bb5da7af6241180283e1
+[6/9] arm64: dts: qcom: msm8953: Add device tree for Xiaomi Redmi Note 4X
+      commit: c144005129b09141b292820d35f0094e54b12d6d
+[7/9] arm64: dts: qcom: msm8953: Add device tree for Xiaomi Mi A1
+      commit: cf152c05eb35afc9db3c9480ce17b27a703b2893
+[8/9] arm64: dts: qcom: msm8953: Add device tree for Xiaomi Redmi 5 Plus
+      commit: aa17e707e04a0446de5e40f74aac979582185559
+[9/9] arm64: dts: qcom: sdm632: Add device tree for Motorola G7 Power
+      commit: 3176c4d6b9beba4a554bebba6b19b56942705a28
 
-That's a bug in include/asm-generic/io.h.  It feeds an __le64 to
-__raw_writeq which wants a u64.
-
-Cheers,
+Best regards,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Bjorn Andersson <andersson@kernel.org>
