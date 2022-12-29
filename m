@@ -2,98 +2,86 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B63DDC4167B
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Dec 2022 23:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32952C4332F
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Dec 2022 01:48:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230328AbiL1XUV (ORCPT
+        id S230257AbiL2Bsv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Dec 2022 18:20:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37006 "EHLO
+        Wed, 28 Dec 2022 20:48:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231351AbiL1XUR (ORCPT
+        with ESMTP id S230106AbiL2Bsv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Dec 2022 18:20:17 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35B4013DCB;
-        Wed, 28 Dec 2022 15:20:16 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BEDB66155F;
-        Wed, 28 Dec 2022 23:20:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0B0FBC433EF;
-        Wed, 28 Dec 2022 23:20:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672269615;
-        bh=ukGYtnji64fNz0j/C9DjQzPepMfL0eVGBGYr8Mu7cYs=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=nipEUjUbsh4mpteGa01r31hwAv/axl6lrBS8nCs2rzW5kAvMjfjs/5RokyiprC1LC
-         UZUDduRuLYyppnXY5kQ9cSMcsFqpEeYSFFAkhZd6nVZgKjDhpfFv6ZuFZ8/CFgONmf
-         9IPdj2+5W66WfRMystUKbOjipLqvBpuabhpikMeU06PIEjrAHihZyQDDAR27kY1wB4
-         TAbGgPfYldVrhe0y0RIYN9rZ3sh9JxPUQhgpYzruR5Ox8RvInfk5oP1SHMSxM0RXPN
-         RoXJ7qAVmVXoG3l9/aYsvI61WJbsay1WtqLpmQ1PDkzpxo+Ve0guBi/7YrigEWpNbN
-         FHgXabzdroMdQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E34B3C395E0;
-        Wed, 28 Dec 2022 23:20:14 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 28 Dec 2022 20:48:51 -0500
+Received: from formenos.hmeau.com (helcar.hmeau.com [216.24.177.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5666E12604;
+        Wed, 28 Dec 2022 17:48:48 -0800 (PST)
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+        by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+        id 1pAi28-00BrPk-4O; Thu, 29 Dec 2022 09:48:37 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 29 Dec 2022 09:48:36 +0800
+Date:   Thu, 29 Dec 2022 09:48:36 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
+        Gaurav Jain <gaurav.jain@nxp.com>,
+        Pankaj Gupta <pankaj.gupta@nxp.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
+        "David S. Miller" <davem@davemloft.net>,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] crypto: caam - Avoid GCC memset bug warning
+Message-ID: <Y6zx9H7pZZ6VTzUd@gondor.apana.org.au>
+References: <20221222162513.4021928-1-u.kleine-koenig@pengutronix.de>
+ <Y6VK4IJkHiawAbJz@gondor.apana.org.au>
+ <20221223174719.4n6pmwio4zycj2qm@pengutronix.de>
+ <Y6wCbyttJ+WVzmZX@gondor.apana.org.au>
+ <20221228113035.ups6echnsmo4flnz@pengutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] bpf: Always use maximal size for copy_array()
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <167226961492.3239.2685338674313032711.git-patchwork-notify@kernel.org>
-Date:   Wed, 28 Dec 2022 23:20:14 +0000
-References: <20221223182836.never.866-kees@kernel.org>
-In-Reply-To: <20221223182836.never.866-kees@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     ast@kernel.org, v4bel@theori.io, daniel@iogearbox.net,
-        john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
-        song@kernel.org, yhs@fb.com, kpsingh@kernel.org, sdf@google.com,
-        haoluo@google.com, jolsa@kernel.org, bpf@vger.kernel.org,
-        syzbot+b1e1f7feb407b56d0355@syzkaller.appspotmail.com,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+In-Reply-To: <20221228113035.ups6echnsmo4flnz@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
-
-This patch was applied to bpf/bpf.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
-
-On Fri, 23 Dec 2022 10:28:44 -0800 you wrote:
-> Instead of counting on prior allocations to have sized allocations to
-> the next kmalloc bucket size, always perform a krealloc that is at least
-> ksize(dst) in size (which is a no-op), so the size can be correctly
-> tracked by all the various allocation size trackers (KASAN,
-> __alloc_size, etc).
+On Wed, Dec 28, 2022 at 12:30:35PM +0100, Uwe Kleine-König wrote:
+>
+> > -	if (len) /* avoid sparse warning: memcpy with byte count of 0 */
+> > +	/* Avoid gcc warning: memcpy with data == NULL */
+> > +	if (!IS_ENABLED(CONFIG_CRYPTO_DEV_FSL_CAAM_DEBUG) || data)
 > 
-> Reported-by: Hyunwoo Kim <v4bel@theori.io>
-> Link: https://lore.kernel.org/bpf/20221223094551.GA1439509@ubuntu
-> Fixes: ceb35b666d42 ("bpf/verifier: Use kmalloc_size_roundup() to match ksize() usage")
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Cc: John Fastabend <john.fastabend@gmail.com>
-> Cc: Andrii Nakryiko <andrii@kernel.org>
-> Cc: Martin KaFai Lau <martin.lau@linux.dev>
-> Cc: Song Liu <song@kernel.org>
-> Cc: Yonghong Song <yhs@fb.com>
-> Cc: KP Singh <kpsingh@kernel.org>
-> Cc: Stanislav Fomichev <sdf@google.com>
-> Cc: Hao Luo <haoluo@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: bpf@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> I just tried: For me a plain
 > 
-> [...]
+> 	if (data)
+> 
+> is also enough to make both gcc and sparse happy.
 
-Here is the summary with links:
-  - bpf: Always use maximal size for copy_array()
-    https://git.kernel.org/bpf/bpf/c/45435d8da71f
+Of course it is.  The point of the extra condition is to remove
+the unnecessary check on data unless we are in debugging mode
+(as it is only needed in debugging mode to work around the buggy
+compiler).
 
-You are awesome, thank you!
+> (On a related note, sparse reports:
+> 
+>   CHECK   drivers/crypto/caam/jr.c
+> drivers/crypto/caam/jr.c: note: in included file (through arch/arm64/include/asm/io.h, include/linux/io.h, include/linux/irq.h, ...):
+> include/asm-generic/io.h:290:22: warning: incorrect type in argument 1 (different base types)
+> include/asm-generic/io.h:290:22:    expected unsigned long long [usertype] val
+> include/asm-generic/io.h:290:22:    got restricted __le64 [usertype]
+> include/asm-generic/io.h:290:22: warning: incorrect type in argument 1 (different base types)
+> include/asm-generic/io.h:290:22:    expected unsigned long long [usertype] val
+> include/asm-generic/io.h:290:22:    got restricted __le64 [usertype]
+
+That's a bug in include/asm-generic/io.h.  It feeds an __le64 to
+__raw_writeq which wants a u64.
+
+Cheers,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
