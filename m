@@ -2,61 +2,61 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 463D5C4167B
-	for <linux-hardening@archiver.kernel.org>; Fri, 30 Dec 2022 13:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07151C4167B
+	for <linux-hardening@archiver.kernel.org>; Fri, 30 Dec 2022 13:42:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235073AbiL3Nma (ORCPT
+        id S235065AbiL3Nmx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 30 Dec 2022 08:42:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42224 "EHLO
+        Fri, 30 Dec 2022 08:42:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235069AbiL3NmI (ORCPT
+        with ESMTP id S235084AbiL3Nmv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 30 Dec 2022 08:42:08 -0500
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27E0193E7
-        for <linux-hardening@vger.kernel.org>; Fri, 30 Dec 2022 05:42:06 -0800 (PST)
-Received: by mail-lj1-x232.google.com with SMTP id f20so22143198lja.4
-        for <linux-hardening@vger.kernel.org>; Fri, 30 Dec 2022 05:42:06 -0800 (PST)
+        Fri, 30 Dec 2022 08:42:51 -0500
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75FBB1AA0D
+        for <linux-hardening@vger.kernel.org>; Fri, 30 Dec 2022 05:42:48 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id p36so31763155lfa.12
+        for <linux-hardening@vger.kernel.org>; Fri, 30 Dec 2022 05:42:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=c2pVyvBRe9UtYAx8u7XzYBaaywvqrbS7Yhpl9r5NENo=;
-        b=G4K5CU5hr8/JczDFbEKuEBJO6xlwqP0w0MrNn3FkJJaavx3vt5Mha/bR/f3urlDm2i
-         FfqUWF+n+IKtUgEM064ALRlsOS4j89QpqXxbbbLQ1L/uAybfT3JBnEnRNxS0h7F0FNCp
-         1ilN+HMKBkRQbP3/n/7zLmFdZn8KhdRiINECEc22VTFKZ4AI++WyW5gtLZihEfCMTK4a
-         KpgYhoTzHYl78qD0fp1pOfw7Jhyf6IS8O1mnx/r+Tqzu0TSBU5V5rS6ct83n8D2UdhFH
-         jPEz5W9cz3FrQ/XjRkt3HkC71M0iCOcgUtiUM7t2M9ktYMenufmQNSKPhoBAmxjUkp08
-         grog==
+        bh=983TfHkac1zoLLZNOo1G/P2rbHBWZJH70ymZx4ERoZM=;
+        b=PVU/TkknWqqAQJY+NsdYGcm0hS+VksojD6MazP63J9R7X8c+QfDAxRxLoly0sVmaXY
+         DmkDxeRFC2SgbX7SHPJAx6CmjiCKKU47WZWLXk6o1iXEfr8WnQLGyreJSwYHpZJq3H5G
+         xu++m1r+Ov7P41PZ5UurSgfsdgCXCia+Rf6cqleJB1aSVP0KtRc+G8A1S011D4OAXIdr
+         ev6XHExu5teYRgWCRzelm9V4uKF8kmdc1Pfoxt92ir2kZweLw3e5RrFhwC3BS0TAfrpq
+         NCNeUCvyO1wi/19muKO35hthF6BrQwI2N4/X1TCbqm8tUUyV6Cpv+x7MWQvqvvtCwJKk
+         WctQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c2pVyvBRe9UtYAx8u7XzYBaaywvqrbS7Yhpl9r5NENo=;
-        b=VH2VdwIzNKmojOsW7hhZFFB3Nnl9q7sx2r+9ailq+EQ4UPLVOWsE42qEvO3cyFv4Pj
-         UUvwsofcpgg84wIte3UOHtHTIJGQblEWyY1Md1y5F6r9mUYXa5I0+Kfp3RboQemFUpmv
-         mpWT+dd2MbG54WZoOy/KAWNzMy7wq8j09X2xdLCRVFaQHraLVftBjA8y6MV9tqNairdm
-         S7Jpj6NJTJ0e9Rz5zOkfuBK/tMeLjMDbykCWMRrENipyo/cnH8Lcq1HklucmlPAHu1CY
-         8qeD7kbY+PiEl0yukZSHCoJoRnM2l1IRqERIvUTolQpDpa+BguDH0d56iu18dUCLtD0c
-         E/6Q==
-X-Gm-Message-State: AFqh2koWn1dR2+IB9d4e++X3I9ZzANDBEunLYJ3pYa642EIWMuvtkvOn
-        cd9/sJStmO9qM/GPTh7hmiIRfA==
-X-Google-Smtp-Source: AMrXdXvs56V7XyEXSMVKcuexXJ95w3LQyI5rNEb1uvme3kjeI1j/8eYTJOnEciY+Zq2OEo2yo1pIEg==
-X-Received: by 2002:a2e:80d9:0:b0:27f:e337:1ead with SMTP id r25-20020a2e80d9000000b0027fe3371eadmr383945ljg.43.1672407725242;
-        Fri, 30 Dec 2022 05:42:05 -0800 (PST)
+        bh=983TfHkac1zoLLZNOo1G/P2rbHBWZJH70ymZx4ERoZM=;
+        b=c7eMpJAuKaZYGfeX4I1QZQsYxuDKChBBMzBTOF5trexy2/GPoyicpy/Lv4f+thk5Zq
+         VKnWPV52uHhCjHOmpBOmWjraXX4iJvlHmwrtBmODo0zr2tOxxBx6SjbJ+H2vxkvrX4bk
+         HFCCkGv4VsnhRke9NTvdUvCtsrzrAMw0bqkH1RWxjChy3TfIyd5r9CgUdRArJ9EwkMB5
+         +mu7pWN5MXka88MvNceFxTkEKBynCXX7l00LsfgZMPChThSaKc72Y/em7tuaPLMD/GQ7
+         7HpUH84Se5EUVzxuY1vYvcCyNcsdK+u4xoD6oc/ftD6Qwpmg3WJ8I0GiFh7TCRuVXLbT
+         3vzw==
+X-Gm-Message-State: AFqh2koZOFSUY9IA2nO41m3J2I8aA/krIdFeZB74Ijt9CkfFZwn7lTJJ
+        AtS6QaI9Qx5MOmzjHhIg0mnxwg==
+X-Google-Smtp-Source: AMrXdXvBo+PUX10ICfd0UGqjX9eVGOxRSVPicSQl0XgZKFjQ2YIiosZMxA+SwC0YWUJ/FDVpxZM8YA==
+X-Received: by 2002:a05:6512:169e:b0:4ca:fa2d:2686 with SMTP id bu30-20020a056512169e00b004cafa2d2686mr8207830lfb.35.1672407766802;
+        Fri, 30 Dec 2022 05:42:46 -0800 (PST)
 Received: from [192.168.1.101] (abyl184.neoplus.adsl.tpnet.pl. [83.9.31.184])
-        by smtp.gmail.com with ESMTPSA id r22-20020a2eb616000000b0027fbfaa26dbsm1657913ljn.14.2022.12.30.05.42.03
+        by smtp.gmail.com with ESMTPSA id c18-20020ac25f72000000b004a2386b8cf5sm3479671lfc.215.2022.12.30.05.42.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Dec 2022 05:42:04 -0800 (PST)
-Message-ID: <617ec8c1-26ce-18ca-bda3-a8c5b2569b43@linaro.org>
-Date:   Fri, 30 Dec 2022 14:42:03 +0100
+        Fri, 30 Dec 2022 05:42:46 -0800 (PST)
+Message-ID: <97e5d783-faa3-f19c-9b3c-ff608bce9183@linaro.org>
+Date:   Fri, 30 Dec 2022 14:42:45 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH 1/2] ARM: dts: qcom: add missing space before {
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: add missing space before {
 Content-Language: en-US
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         Andy Gross <agross@kernel.org>,
@@ -69,8 +69,9 @@ To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 References: <20221230134006.48111-1-krzysztof.kozlowski@linaro.org>
+ <20221230134006.48111-2-krzysztof.kozlowski@linaro.org>
 From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20221230134006.48111-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221230134006.48111-2-krzysztof.kozlowski@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -82,81 +83,165 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 On 30.12.2022 14:40, Krzysztof Kozlowski wrote:
 > Add missingh whitespace between node name/label and opening {.
 redundant 'h'
-
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
 Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
 Konrad
->  arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts | 2 +-
->  arch/arm/boot/dts/qcom-apq8064.dtsi                | 6 +++---
->  arch/arm/boot/dts/qcom-mdm9615.dtsi                | 4 ++--
->  3 files changed, 6 insertions(+), 6 deletions(-)
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi                        | 2 +-
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi                         | 2 +-
+>  arch/arm64/boot/dts/qcom/sc7280-herobrine-zombie.dtsi        | 2 +-
+>  arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts   | 2 +-
+>  arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-common.dtsi | 2 +-
+>  arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts         | 2 +-
+>  arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts             | 2 +-
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi                         | 2 +-
+>  arch/arm64/boot/dts/qcom/sm8250.dtsi                         | 2 +-
+>  arch/arm64/boot/dts/qcom/sm8350.dtsi                         | 2 +-
+>  arch/arm64/boot/dts/qcom/sm8450.dtsi                         | 2 +-
+>  11 files changed, 11 insertions(+), 11 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-> index bf2fb0f70fe4..c57c27cd8a20 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-> +++ b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-> @@ -22,7 +22,7 @@ reserved-memory {
->  		#size-cells = <1>;
->  		ranges;
->  
-> -		ramoops@88d00000{
-> +		ramoops@88d00000 {
->  			compatible = "ramoops";
->  			reg = <0x88d00000 0x100000>;
->  			record-size = <0x00020000>;
-> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> index 1f40a3dd5748..e045edeb5736 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> @@ -1101,7 +1101,7 @@ sdcc3: mmc@12180000 {
->  			dma-names = "tx", "rx";
+> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> index d2b3fdf2df13..cbdf7c1f31b9 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> @@ -3292,7 +3292,7 @@ blsp2_i2c6: i2c@75ba000 {
+>  			status = "disabled";
 >  		};
 >  
-> -		sdcc3bam: dma-controller@12182000{
-> +		sdcc3bam: dma-controller@12182000 {
->  			compatible = "qcom,bam-v1.3.0";
->  			reg = <0x12182000 0x8000>;
->  			interrupts = <0 96 IRQ_TYPE_LEVEL_HIGH>;
-> @@ -1129,7 +1129,7 @@ sdcc4: mmc@121c0000 {
->  			pinctrl-0 = <&sdc4_gpios>;
+> -		blsp2_spi6: spi@75ba000{
+> +		blsp2_spi6: spi@75ba000 {
+>  			compatible = "qcom,spi-qup-v2.2.1";
+>  			reg = <0x075ba000 0x600>;
+>  			interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index c20e48da44f8..031320baec3d 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -3419,7 +3419,7 @@ watchdog@17c10000 {
+>  			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
 >  		};
 >  
-> -		sdcc4bam: dma-controller@121c2000{
-> +		sdcc4bam: dma-controller@121c2000 {
->  			compatible = "qcom,bam-v1.3.0";
->  			reg = <0x121c2000 0x8000>;
->  			interrupts = <0 95 IRQ_TYPE_LEVEL_HIGH>;
-> @@ -1158,7 +1158,7 @@ sdcc1: mmc@12400000 {
->  			dma-names = "tx", "rx";
+> -		timer@17c20000{
+> +		timer@17c20000 {
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges = <0 0 0 0x20000000>;
+> diff --git a/arch/arm64/boot/dts/qcom/sc7280-herobrine-zombie.dtsi b/arch/arm64/boot/dts/qcom/sc7280-herobrine-zombie.dtsi
+> index 7fc0b6bfc0d6..552646c073e2 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7280-herobrine-zombie.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7280-herobrine-zombie.dtsi
+> @@ -70,7 +70,7 @@ &pcie1_phy {
+>  	status = "okay";
+>  };
+>  
+> -&pm8350c_pwm_backlight{
+> +&pm8350c_pwm_backlight {
+>  	/* Set the PWM period to 200 microseconds (5kHz duty cycle) */
+>  	pwms = <&pm8350c_pwm 3 200000>;
+>  };
+> diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+> index 0201c6776746..1a5a5764e6a1 100644
+> --- a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+> @@ -743,7 +743,7 @@ left_spkr: wsa8830-left@0,1 {
+>  		vdd-supply = <&vreg_s10b>;
+>  	};
+>  
+> -	right_spkr: wsa8830-right@0,2{
+> +	right_spkr: wsa8830-right@0,2 {
+>  		compatible = "sdw10217020200";
+>  		reg = <0 2>;
+>  		pinctrl-names = "default";
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-common.dtsi b/arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-common.dtsi
+> index c3453f291286..64de4ed9b0c8 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-common.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-common.dtsi
+> @@ -541,7 +541,7 @@ &venus {
+>  	firmware-name = "qcom/sdm845/beryllium/venus.mbn";
+>  };
+>  
+> -&wcd9340{
+> +&wcd9340 {
+>  	pinctrl-0 = <&wcd_intr_default>;
+>  	pinctrl-names = "default";
+>  	clock-names = "extclk";
+> diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> index 501232bdf9cf..d9581f4440b3 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> @@ -745,7 +745,7 @@ &venus {
+>  	status = "okay";
+>  };
+>  
+> -&wcd9340{
+> +&wcd9340 {
+>  	pinctrl-0 = <&wcd_intr_default>;
+>  	pinctrl-names = "default";
+>  	clock-names = "extclk";
+> diff --git a/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts b/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts
+> index 9215066146ff..6730804f4e3e 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts
+> @@ -654,7 +654,7 @@ &venus {
+>  	firmware-name = "qcom/sdm850/samsung/w737/qcvss850.mbn";
+>  };
+>  
+> -&wcd9340{
+> +&wcd9340 {
+>  	pinctrl-0 = <&wcd_intr_default>;
+>  	pinctrl-names = "default";
+>  	clock-names = "extclk";
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> index 90dec84055c3..5886710b3c65 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> @@ -4124,7 +4124,7 @@ timer@17c20000 {
+>  			reg = <0x0 0x17c20000 0x0 0x1000>;
+>  			clock-frequency = <19200000>;
+>  
+> -			frame@17c21000{
+> +			frame@17c21000 {
+>  				frame-number = <0>;
+>  				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+>  					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> index ab5a2851a314..6c7adce6c9b8 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+> @@ -2397,7 +2397,7 @@ aoncc: clock-controller@3380000 {
+>  			clock-names = "core", "audio", "bus";
 >  		};
 >  
-> -		sdcc1bam: dma-controller@12402000{
-> +		sdcc1bam: dma-controller@12402000 {
->  			compatible = "qcom,bam-v1.3.0";
->  			reg = <0x12402000 0x8000>;
->  			interrupts = <0 98 IRQ_TYPE_LEVEL_HIGH>;
-> diff --git a/arch/arm/boot/dts/qcom-mdm9615.dtsi b/arch/arm/boot/dts/qcom-mdm9615.dtsi
-> index 536bd7b50762..8e9ea61a1e48 100644
-> --- a/arch/arm/boot/dts/qcom-mdm9615.dtsi
-> +++ b/arch/arm/boot/dts/qcom-mdm9615.dtsi
-> @@ -294,7 +294,7 @@ pmicgpio: gpio@150 {
->  			};
+> -		lpass_tlmm: pinctrl@33c0000{
+> +		lpass_tlmm: pinctrl@33c0000 {
+>  			compatible = "qcom,sm8250-lpass-lpi-pinctrl";
+>  			reg = <0 0x033c0000 0x0 0x20000>,
+>  			      <0 0x03550000 0x0 0x10000>;
+> diff --git a/arch/arm64/boot/dts/qcom/sm8350.dtsi b/arch/arm64/boot/dts/qcom/sm8350.dtsi
+> index 1d5b52b13cc2..a7da48b7e788 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8350.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8350.dtsi
+> @@ -1598,7 +1598,7 @@ lpass_ag_noc: interconnect@3c40000 {
+>  			qcom,bcm-voters = <&apps_bcm_voter>;
 >  		};
 >  
-> -		sdcc1bam: dma-controller@12182000{
-> +		sdcc1bam: dma-controller@12182000 {
->  			compatible = "qcom,bam-v1.3.0";
->  			reg = <0x12182000 0x8000>;
->  			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-> @@ -304,7 +304,7 @@ sdcc1bam: dma-controller@12182000{
->  			qcom,ee = <0>;
+> -		compute_noc: interconnect@a0c0000{
+> +		compute_noc: interconnect@a0c0000 {
+>  			compatible = "qcom,sm8350-compute-noc";
+>  			reg = <0 0x0a0c0000 0 0xa180>;
+>  			#interconnect-cells = <1>;
+> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> index 73df5494d49c..33db6b6c4123 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> @@ -3519,7 +3519,7 @@ qup_uart20_default: qup-uart20-default-state {
+>  
 >  		};
 >  
-> -		sdcc2bam: dma-controller@12142000{
-> +		sdcc2bam: dma-controller@12142000 {
->  			compatible = "qcom,bam-v1.3.0";
->  			reg = <0x12142000 0x8000>;
->  			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+> -		lpass_tlmm: pinctrl@3440000{
+> +		lpass_tlmm: pinctrl@3440000 {
+>  			compatible = "qcom,sm8450-lpass-lpi-pinctrl";
+>  			reg = <0 0x3440000 0x0 0x20000>,
+>  			      <0 0x34d0000 0x0 0x10000>;
