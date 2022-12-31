@@ -2,92 +2,522 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA33EC4332F
-	for <linux-hardening@archiver.kernel.org>; Sat, 31 Dec 2022 16:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4221C4708E
+	for <linux-hardening@archiver.kernel.org>; Sat, 31 Dec 2022 22:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbiLaQov (ORCPT
+        id S236001AbiLaWZd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 31 Dec 2022 11:44:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57228 "EHLO
+        Sat, 31 Dec 2022 17:25:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229597AbiLaQou (ORCPT
+        with ESMTP id S235964AbiLaWZZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 31 Dec 2022 11:44:50 -0500
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FD93659C
-        for <linux-hardening@vger.kernel.org>; Sat, 31 Dec 2022 08:44:49 -0800 (PST)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-7-Ol7Icuy6OlKckfPU2enxww-1; Sat, 31 Dec 2022 16:44:46 +0000
-X-MC-Unique: Ol7Icuy6OlKckfPU2enxww-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Sat, 31 Dec
- 2022 16:44:45 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.044; Sat, 31 Dec 2022 16:44:45 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Herbert Xu' <herbert@gondor.apana.org.au>,
-        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     Anders Roxell <anders.roxell@linaro.org>,
+        Sat, 31 Dec 2022 17:25:25 -0500
+Received: from amity.mint.lgbt (vmi888983.contaboserver.net [149.102.157.145])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E146FB7DF
+        for <linux-hardening@vger.kernel.org>; Sat, 31 Dec 2022 14:25:10 -0800 (PST)
+Received: from amity.mint.lgbt (mx.mint.lgbt [127.0.0.1])
+        by amity.mint.lgbt (Postfix) with ESMTP id 4NkxX45LSlz1S5Ck
+        for <linux-hardening@vger.kernel.org>; Sat, 31 Dec 2022 17:25:08 -0500 (EST)
+Authentication-Results: amity.mint.lgbt (amavisd-new);
+        dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
+        header.d=mint.lgbt
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mint.lgbt; h=
+        content-transfer-encoding:mime-version:references:in-reply-to
+        :x-mailer:message-id:date:subject:to:from; s=dkim; t=1672525507;
+         x=1673389508; bh=FFiZGTOLqnc5O7NWNkxiJRm1CIiUGan+2JsCabL8LJo=; b=
+        iMgG0XjYMBgrdzAflBuM0sdaaMBa+AR8g8plK0ZKLBAqaBy9w7JoqcjSLxC9smdL
+        +HEx1nPS4sbFVIuMpkQc6UNcWppvUhoZYVke40JvSAsDB80Hki38sTA9r6MKS/tM
+        Lj5AGPFTQilAjJazSTp7ep/Jeh6UfkyIVvZ/3VDu0+ej/4NkBkRgN5Xe0MwfoxJY
+        9zIIDkXtMC5KRo5EVJW5CisXQNelhnvLAL17oaD/ECpqVyxzGePuoeQQ6qacpnUS
+        /a2RbXVaT4VRMvtrbvt3x9dclpWKMYr/Zcf0q5iMpe+K3Hp3KMK2sGNqxlx86zND
+        xvM9BOjLbld0G/Kk7kkPOg==
+X-Virus-Scanned: amavisd-new at amity.mint.lgbt
+Received: from amity.mint.lgbt ([127.0.0.1])
+        by amity.mint.lgbt (amity.mint.lgbt [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id Sm6efNHsDjsK for <linux-hardening@vger.kernel.org>;
+        Sat, 31 Dec 2022 17:25:07 -0500 (EST)
+Received: from dorothy.. (unknown [190.196.92.66])
+        by amity.mint.lgbt (Postfix) with ESMTPSA id 4NkxWy077sz1S5Dr;
+        Sat, 31 Dec 2022 17:25:01 -0500 (EST)
+From:   Lux Aliaga <they@mint.lgbt>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Kees Cook <keescook@chromium.org>,
-        =?utf-8?B?SG9yaWEgR2VhbnTEgw==?= <horia.geanta@nxp.com>,
-        Gaurav Jain <gaurav.jain@nxp.com>,
-        Pankaj Gupta <pankaj.gupta@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        "kernel test robot" <lkp@intel.com>
-Subject: RE: [PATCH] crypto: caam - Avoid GCC memset bug warning
-Thread-Topic: [PATCH] crypto: caam - Avoid GCC memset bug warning
-Thread-Index: AQHZGye3tmYlgJJWpEm0756mILvCfK6INU/Q
-Date:   Sat, 31 Dec 2022 16:44:45 +0000
-Message-ID: <f3e9add2210a46af99cf0fc79121c7db@AcuMS.aculab.com>
-References: <20221222162513.4021928-1-u.kleine-koenig@pengutronix.de>
- <Y6VK4IJkHiawAbJz@gondor.apana.org.au>
- <20221223174719.4n6pmwio4zycj2qm@pengutronix.de>
- <Y6wCbyttJ+WVzmZX@gondor.apana.org.au>
- <20221228113035.ups6echnsmo4flnz@pengutronix.de>
- <Y6zx9H7pZZ6VTzUd@gondor.apana.org.au>
-In-Reply-To: <Y6zx9H7pZZ6VTzUd@gondor.apana.org.au>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, martin.botka@somainline.org,
+        marijn.suijten@somainline.org, Lux Aliaga <they@mint.lgbt>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v5 6/6] arm64: dts: qcom: sm6125: Initial support for xiaomi-laurel-sprout
+Date:   Sat, 31 Dec 2022 19:24:20 -0300
+Message-Id: <20221231222420.75233-7-they@mint.lgbt>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20221231222420.75233-1-they@mint.lgbt>
+References: <20221231222420.75233-1-they@mint.lgbt>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-RnJvbTogSGVyYmVydCBYdQ0KPiBTZW50OiAyOSBEZWNlbWJlciAyMDIyIDAxOjQ5DQo+IA0KPiBP
-biBXZWQsIERlYyAyOCwgMjAyMiBhdCAxMjozMDozNVBNICswMTAwLCBVd2UgS2xlaW5lLUvDg8K2
-bmlnIHdyb3RlOg0KPiA+DQo+ID4gPiAtCWlmIChsZW4pIC8qIGF2b2lkIHNwYXJzZSB3YXJuaW5n
-OiBtZW1jcHkgd2l0aCBieXRlIGNvdW50IG9mIDAgKi8NCj4gPiA+ICsJLyogQXZvaWQgZ2NjIHdh
-cm5pbmc6IG1lbWNweSB3aXRoIGRhdGEgPT0gTlVMTCAqLw0KPiA+ID4gKwlpZiAoIUlTX0VOQUJM
-RUQoQ09ORklHX0NSWVBUT19ERVZfRlNMX0NBQU1fREVCVUcpIHx8IGRhdGEpDQo+ID4NCj4gPiBJ
-IGp1c3QgdHJpZWQ6IEZvciBtZSBhIHBsYWluDQo+ID4NCj4gPiAJaWYgKGRhdGEpDQo+ID4NCj4g
-PiBpcyBhbHNvIGVub3VnaCB0byBtYWtlIGJvdGggZ2NjIGFuZCBzcGFyc2UgaGFwcHkuDQo+IA0K
-PiBPZiBjb3Vyc2UgaXQgaXMuICBUaGUgcG9pbnQgb2YgdGhlIGV4dHJhIGNvbmRpdGlvbiBpcyB0
-byByZW1vdmUNCj4gdGhlIHVubmVjZXNzYXJ5IGNoZWNrIG9uIGRhdGEgdW5sZXNzIHdlIGFyZSBp
-biBkZWJ1Z2dpbmcgbW9kZQ0KPiAoYXMgaXQgaXMgb25seSBuZWVkZWQgaW4gZGVidWdnaW5nIG1v
-ZGUgdG8gd29yayBhcm91bmQgdGhlIGJ1Z2d5DQo+IGNvbXBpbGVyKS4NCg0KSUlSQyB0aGUgJ3By
-b2JsZW1hdGljJyBjYXNlIGlzIG9uZSB3aGVyZSAnbGVuJyBhbmQgJ2RhdGEnDQphcmUgYWN0dWFs
-bHkgY29tcGlsZS10aW1lIHplcm9zIC0gaW4gd2hpY2ggY2FzZSB5b3UgZG9uJ3QNCndhbnQgdG8g
-Y2FsbCBtZW1jcHkoKSBhdCBhbGwuDQpJbiBhbGwgb3RoZXIgY2FzZXMgSSB0aGluayB0aGVyZSBp
-cyBzb21ldGhpbmcgdG8gY29weSBzbyB5b3UNCmRvbid0IHJlYWxseSB3YW50IHRoZSBjaGVjayAo
-b3IgdGhlIG9uZSBpbiBtZW1jcHkoKSB3aWxsIGRvKS4NCg0KV2hldGhlciAoYnVpbHRpbl9jb25z
-dGFudF9wKGRhdGEpICYmICFkYXRhKSBpcyBnb29kIGVub3VnaCBpcw0KYW5vdGhlciBtYXR0ZXIu
-DQpJdCBtaWdodCBuZWVkIHRoZSAoc2l6ZW9mICooMSA/ICh2b2lkICopKGRhdGEpIDogKGludCAq
-KTApID09IDEpDQp0ZXN0Lg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2Vz
-aWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVL
-DQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+Adds support for the Xiaomi Mi A3 (xiaomi-laurel-sprout). Here's a
+summary on what's working.
+
+- dmesg output to bootloader preconfigured display
+- USB
+- UFS
+- SD card
+- SMD RPM regulators
+- Volume Up, Down and Power buttons
+- Thermistors
+
+Signed-off-by: Lux Aliaga <they@mint.lgbt>
+---
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../dts/qcom/sm6125-xiaomi-laurel-sprout.dts  | 413 ++++++++++++++++++
+ 2 files changed, 414 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.=
+dts
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom=
+/Makefile
+index 3e79496292e7..2b2a0170db14 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -157,6 +157,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+=3D sdm850-lenovo-yoga-c630.=
+dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+=3D sdm850-samsung-w737.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+=3D sm4250-oneplus-billie2.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+=3D sm6125-sony-xperia-seine-pdx201.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+=3D sm6125-xiaomi-laurel-sprout.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+=3D sm6350-sony-xperia-lena-pdx213.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+=3D sm6375-sony-xperia-murray-pdx225.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+=3D sm7225-fairphone-fp4.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts b/a=
+rch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
+new file mode 100644
+index 000000000000..cc338c7ef358
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
+@@ -0,0 +1,413 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2022, Lux Aliaga <they@mint.lgbt>
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/input/gpio-keys.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
++#include "sm6125.dtsi"
++#include "pm6125.dtsi"
++
++/ {
++	model =3D "Xiaomi Mi A3";
++	compatible =3D "xiaomi,laurel-sprout", "qcom,sm6125";
++	chassis-type =3D "handset";
++
++	/* required for bootloader to select correct board */
++	qcom,msm-id =3D <394 0>; /* sm6125 v1 */
++	qcom,board-id =3D <11 0>;
++
++	chosen {
++		#address-cells =3D <2>;
++		#size-cells =3D <2>;
++		ranges;
++
++		framebuffer0: framebuffer@5c000000 {
++			compatible =3D "simple-framebuffer";
++			reg =3D <0 0x5c000000 0 (1560 * 720 * 4)>;
++			width =3D <720>;
++			height =3D <1560>;
++			stride =3D <(720 * 4)>;
++			format =3D "a8r8g8b8";
++		};
++	};
++
++	reserved-memory {
++		#address-cells =3D <2>;
++		#size-cells =3D <2>;
++
++		debug_mem: debug@ffb00000 {
++			reg =3D <0x0 0xffb00000 0x0 0xc0000>;
++			no-map;
++		};
++
++		last_log_mem: lastlog@ffbc0000 {
++			reg =3D <0x0 0xffbc0000 0x0 0x80000>;
++			no-map;
++		};
++
++		pstore_mem: ramoops@ffc00000 {
++			compatible =3D "ramoops";
++			reg =3D <0x0 0xffc40000 0x0 0xc0000>;
++			record-size =3D <0x1000>;
++			console-size =3D <0x40000>;
++			msg-size =3D <0x20000 0x20000>;
++		};
++
++		cmdline_mem: memory@ffd00000 {
++			reg =3D <0x0 0xffd40000 0x0 0x1000>;
++			no-map;
++		};
++	};
++
++	extcon_usb: usb-id {
++		compatible =3D "linux,extcon-usb-gpio";
++		id-gpio =3D <&tlmm 102 GPIO_ACTIVE_HIGH>;
++	};
++
++	gpio-keys {
++		status =3D "okay";
++		compatible =3D "gpio-keys";
++		autorepeat;
++
++		key-vol-up {
++			label =3D "Volume Up";
++			gpios =3D <&pm6125_gpio 5 GPIO_ACTIVE_LOW>;
++			linux,input-type =3D <1>;
++			linux,code =3D <KEY_VOLUMEUP>;
++			gpio-key,wakeup;
++			debounce-interval =3D <15>;
++		};
++	};
++
++	thermal-zones {
++		rf-pa0-thermal {
++			polling-delay-passive =3D <0>;
++			polling-delay =3D <0>;
++			thermal-sensors =3D <&pm6125_adc_tm 0>;
++
++			trips {
++				active-config0 {
++					temperature =3D <125000>;
++					hysteresis =3D <1000>;
++					type =3D "critical";
++				};
++			};
++		};
++
++		quiet-thermal {
++			polling-delay-passive =3D <0>;
++			polling-delay =3D <5000>;
++			thermal-sensors =3D <&pm6125_adc_tm 1>;
++
++			trips {
++				active-config0 {
++					temperature =3D <125000>;
++					hysteresis =3D <1000>;
++					type =3D "critical";
++				};
++			};
++		};
++
++		xo-thermal {
++			polling-delay-passive =3D <0>;
++			polling-delay =3D <0>;
++			thermal-sensors =3D <&pm6125_adc_tm 2>;
++
++			trips {
++				active-config0 {
++					temperature =3D <125000>;
++					hysteresis =3D <1000>;
++					type =3D "critical";
++				};
++			};
++		};
++	};
++};
++
++&hsusb_phy1 {
++	vdd-supply =3D <&vreg_l7a>;
++	vdda-pll-supply =3D <&vreg_l10a>;
++	vdda-phy-dpdm-supply =3D <&vreg_l15a>;
++	status =3D "okay";
++};
++
++&pm6125_adc {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&camera_flash_therm &emmc_ufs_therm>;
++
++	rf-pa0-therm@4d {
++		reg =3D <ADC5_AMUX_THM1_100K_PU>;
++		qcom,ratiometric;
++		qcom,hw-settle-time =3D <200>;
++		qcom,pre-scaling =3D <1 1>;
++	};
++
++	quiet-therm@4e {
++		reg =3D <ADC5_AMUX_THM2_100K_PU>;
++		qcom,ratiometric;
++		qcom,hw-settle-time =3D <200>;
++		qcom,pre-scaling =3D <1 1>;
++	};
++
++	camera-flash-therm@52 {
++		reg =3D <ADC5_GPIO1_100K_PU>;
++		qcom,ratiometric;
++		qcom,hw-settle-time =3D <200>;
++		qcom,pre-scaling =3D <1 1>;
++	};
++
++	emmc-ufs-therm@54 {
++		reg =3D <ADC5_GPIO3_100K_PU>;
++		qcom,ratiometric;
++		qcom,hw-settle-time =3D <200>;
++		qcom,pre-scaling =3D <1 1>;
++	};
++};
++
++&pm6125_adc_tm {
++	status =3D "okay";
++
++	rf-pa0-therm@0 {
++		reg =3D <0>;
++		io-channels =3D <&pm6125_adc ADC5_AMUX_THM1_100K_PU>;
++		qcom,ratiometric;
++		qcom,hw-settle-time-us =3D <200>;
++	};
++
++	quiet-therm@1 {
++		reg =3D <1>;
++		io-channels =3D <&pm6125_adc ADC5_AMUX_THM2_100K_PU>;
++		qcom,ratiometric;
++		qcom,hw-settle-time-us =3D <200>;
++	};
++
++	xo-therm@2 {
++		reg =3D <2>;
++		io-channels =3D <&pm6125_adc ADC5_XO_THERM_100K_PU>;
++		qcom,ratiometric;
++		qcom,hw-settle-time-us =3D <200>;
++	};
++};
++
++&pm6125_gpio {
++	camera_flash_therm: camera-flash-therm-state {
++		pins =3D "gpio3";
++		function =3D PMIC_GPIO_FUNC_NORMAL;
++		bias-high-impedance;
++	};
++
++	emmc_ufs_therm: emmc-ufs-therm-state {
++		pins =3D "gpio6";
++		function =3D PMIC_GPIO_FUNC_NORMAL;
++		bias-high-impedance;
++	};
++
++	key_vol_up: key_vol_up {
++		pins =3D "gpio5";
++		function =3D PMIC_GPIO_FUNC_NORMAL;
++		input-enable;
++		bias-pull-up;
++	};
++};
++
++&pon_pwrkey {
++	status =3D "okay";
++};
++
++&pon_resin {
++	status =3D "okay";
++	linux,code =3D <KEY_VOLUMEDOWN>;
++};
++
++&rpm_requests {
++	regulators-0 {
++		compatible =3D "qcom,rpm-pm6125-regulators";
++
++		vreg_s6a: s6 {
++			regulator-min-microvolt =3D <936000>;
++			regulator-max-microvolt =3D <1422000>;
++		};
++
++		vreg_l1a: l1 {
++			regulator-min-microvolt =3D <1200000>;
++			regulator-max-microvolt =3D <1256000>;
++		};
++
++		vreg_l2a: l2 {
++			regulator-min-microvolt =3D <1000000>;
++			regulator-max-microvolt =3D <1056000>;
++		};
++
++		vreg_l3a: l3 {
++			regulator-min-microvolt =3D <1000000>;
++			regulator-max-microvolt =3D <1064000>;
++		};
++
++		vreg_l4a: l4 {
++			regulator-min-microvolt =3D <872000>;
++			regulator-max-microvolt =3D <976000>;
++		};
++
++		vreg_l5a: l5 {
++			regulator-min-microvolt =3D <1648000>;
++			regulator-max-microvolt =3D <2950000>;
++		};
++
++		vreg_l6a: l6 {
++			regulator-min-microvolt =3D <576000>;
++			regulator-max-microvolt =3D <656000>;
++		};
++
++		vreg_l7a: l7 {
++			regulator-min-microvolt =3D <872000>;
++			regulator-max-microvolt =3D <976000>;
++		};
++
++		vreg_l8a: l8 {
++			regulator-min-microvolt =3D <400000>;
++			regulator-max-microvolt =3D <728000>;
++		};
++
++		vreg_l9a: l9 {
++			regulator-min-microvolt =3D <1800000>;
++			regulator-max-microvolt =3D <1896000>;
++		};
++
++		vreg_l10a: l10 {
++			regulator-min-microvolt =3D <1800000>;
++			regulator-max-microvolt =3D <1896000>;
++		};
++
++		vreg_l11a: l11 {
++			regulator-min-microvolt =3D <1800000>;
++			regulator-max-microvolt =3D <1952000>;
++		};
++
++		vreg_l12a: l12 {
++			regulator-min-microvolt =3D <1800000>;
++			regulator-max-microvolt =3D <1996000>;
++		};
++
++		vreg_l13a: l13 {
++			regulator-min-microvolt =3D <1800000>;
++			regulator-max-microvolt =3D <1832000>;
++		};
++
++		vreg_l14a: l14 {
++			regulator-min-microvolt =3D <1800000>;
++			regulator-max-microvolt =3D <1904000>;
++		};
++
++		vreg_l15a: l15 {
++			regulator-min-microvolt =3D <3104000>;
++			regulator-max-microvolt =3D <3232000>;
++		};
++
++		vreg_l16a: l16 {
++			regulator-min-microvolt =3D <1800000>;
++			regulator-max-microvolt =3D <1904000>;
++		};
++
++		vreg_l17a: l17 {
++			regulator-min-microvolt =3D <1248000>;
++			regulator-max-microvolt =3D <1304000>;
++		};
++
++		vreg_l18a: l18 {
++			regulator-min-microvolt =3D <1200000>;
++			regulator-max-microvolt =3D <1264000>;
++		};
++
++		vreg_l19a: l19 {
++			regulator-min-microvolt =3D <1648000>;
++			regulator-max-microvolt =3D <2952000>;
++		};
++
++		vreg_l20a: l20 {
++			regulator-min-microvolt =3D <1648000>;
++			regulator-max-microvolt =3D <2952000>;
++		};
++
++		vreg_l21a: l21 {
++			regulator-min-microvolt =3D <2600000>;
++			regulator-max-microvolt =3D <2856000>;
++		};
++
++		vreg_l22a: l22 {
++			regulator-min-microvolt =3D <2944000>;
++			regulator-max-microvolt =3D <2950000>;
++			regulator-allow-set-load;
++		};
++
++		vreg_l23a: l23 {
++			regulator-min-microvolt =3D <3000000>;
++			regulator-max-microvolt =3D <3400000>;
++		};
++
++		vreg_l24a: l24 {
++			regulator-min-microvolt =3D <2944000>;
++			regulator-max-microvolt =3D <3304000>;
++		};
++	};
++};
++
++&sdc2_off_state {
++	sd-cd-pins {
++		pins =3D "gpio98";
++		function =3D "gpio";
++		drive-strength =3D <2>;
++		bias-disable;
++	};
++};
++
++&sdc2_on_state {
++	sd-cd-pins {
++		pins =3D "gpio98";
++		function =3D "gpio";
++		drive-strength =3D <2>;
++		bias-pull-up;
++	};
++};
++
++&sdhc_2 {
++	cd-gpios =3D <&tlmm 98 GPIO_ACTIVE_HIGH>;
++	vmmc-supply =3D <&vreg_l22a>;
++	vqmmc-supply =3D <&vreg_l5a>;
++	no-sdio;
++	no-mmc;
++	status =3D "okay";
++};
++
++&tlmm {
++	gpio-reserved-ranges =3D <22 2>, <28 6>;
++};
++
++&ufs_mem_hc {
++	vcc-supply =3D <&vreg_l24a>;
++	vccq2-supply =3D <&vreg_l11a>;
++	vcc-max-microamp =3D <600000>;
++	vccq2-max-microamp =3D <600000>;
++	status =3D "okay";
++};
++
++&ufs_mem_phy {
++	vdda-phy-supply =3D <&vreg_l4a>;
++	vdda-pll-supply =3D <&vreg_l10a>;
++	vdda-phy-max-microamp =3D <51400>;
++	vdda-pll-max-microamp =3D <14200>;
++	vddp-ref-clk-supply =3D <&vreg_l18a>;
++	status =3D "okay";
++};
++
++&usb3 {
++	status =3D "okay";
++};
++
++&usb3_dwc3 {
++	extcon =3D <&extcon_usb>;
++};
+--=20
+2.38.1
 
