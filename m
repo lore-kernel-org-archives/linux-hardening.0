@@ -2,46 +2,64 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4221C4708E
-	for <linux-hardening@archiver.kernel.org>; Sat, 31 Dec 2022 22:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3A4C3DA7D
+	for <linux-hardening@archiver.kernel.org>; Sun,  1 Jan 2023 15:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236001AbiLaWZd (ORCPT
+        id S231421AbjAAPod (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 31 Dec 2022 17:25:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55812 "EHLO
+        Sun, 1 Jan 2023 10:44:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235964AbiLaWZZ (ORCPT
+        with ESMTP id S229445AbjAAPoc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 31 Dec 2022 17:25:25 -0500
-Received: from amity.mint.lgbt (vmi888983.contaboserver.net [149.102.157.145])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E146FB7DF
-        for <linux-hardening@vger.kernel.org>; Sat, 31 Dec 2022 14:25:10 -0800 (PST)
-Received: from amity.mint.lgbt (mx.mint.lgbt [127.0.0.1])
-        by amity.mint.lgbt (Postfix) with ESMTP id 4NkxX45LSlz1S5Ck
-        for <linux-hardening@vger.kernel.org>; Sat, 31 Dec 2022 17:25:08 -0500 (EST)
-Authentication-Results: amity.mint.lgbt (amavisd-new);
-        dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
-        header.d=mint.lgbt
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mint.lgbt; h=
-        content-transfer-encoding:mime-version:references:in-reply-to
-        :x-mailer:message-id:date:subject:to:from; s=dkim; t=1672525507;
-         x=1673389508; bh=FFiZGTOLqnc5O7NWNkxiJRm1CIiUGan+2JsCabL8LJo=; b=
-        iMgG0XjYMBgrdzAflBuM0sdaaMBa+AR8g8plK0ZKLBAqaBy9w7JoqcjSLxC9smdL
-        +HEx1nPS4sbFVIuMpkQc6UNcWppvUhoZYVke40JvSAsDB80Hki38sTA9r6MKS/tM
-        Lj5AGPFTQilAjJazSTp7ep/Jeh6UfkyIVvZ/3VDu0+ej/4NkBkRgN5Xe0MwfoxJY
-        9zIIDkXtMC5KRo5EVJW5CisXQNelhnvLAL17oaD/ECpqVyxzGePuoeQQ6qacpnUS
-        /a2RbXVaT4VRMvtrbvt3x9dclpWKMYr/Zcf0q5iMpe+K3Hp3KMK2sGNqxlx86zND
-        xvM9BOjLbld0G/Kk7kkPOg==
-X-Virus-Scanned: amavisd-new at amity.mint.lgbt
-Received: from amity.mint.lgbt ([127.0.0.1])
-        by amity.mint.lgbt (amity.mint.lgbt [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id Sm6efNHsDjsK for <linux-hardening@vger.kernel.org>;
-        Sat, 31 Dec 2022 17:25:07 -0500 (EST)
-Received: from dorothy.. (unknown [190.196.92.66])
-        by amity.mint.lgbt (Postfix) with ESMTPSA id 4NkxWy077sz1S5Dr;
-        Sat, 31 Dec 2022 17:25:01 -0500 (EST)
-From:   Lux Aliaga <they@mint.lgbt>
-To:     Andy Gross <agross@kernel.org>,
+        Sun, 1 Jan 2023 10:44:32 -0500
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D978D558F
+        for <linux-hardening@vger.kernel.org>; Sun,  1 Jan 2023 07:44:30 -0800 (PST)
+Received: by mail-lf1-x12b.google.com with SMTP id bp15so38390561lfb.13
+        for <linux-hardening@vger.kernel.org>; Sun, 01 Jan 2023 07:44:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MQmnB80I9cJgJY0s3MQo9q3VV9Uh6izq71o/UJT78Jo=;
+        b=CuI8GPRA90j6ZBI/fMSKjfbzM7gvQzorHW1qEWlRFACc8IQ5oBgGvwA5AMvRrHCH9Y
+         E/feHJCcnoWkppszSmrBmnMDN8XNpVWZb7m1e7rFxpd915WNbeEFzmdOgSGt9RCnnULg
+         TLsSmQ/ypbPy2HFfdQpZHnNmgEFKNw6x0XkYj+QkvlL6CnkaZVbreGXkl5aowFi6w7Ni
+         ZIHZtm6LxFeEaYgBonwYYPiwZuo5pjXgWzrGSM76TFMFAZke9SSyHmpWt8MOFYA/H39w
+         7e8hadvfcS0wtGy6f7zXwvAHrtccArBMxdmmF9y1Fn+SMuocmRLYhOnYNpB6DS/tfimd
+         DrAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MQmnB80I9cJgJY0s3MQo9q3VV9Uh6izq71o/UJT78Jo=;
+        b=odnScNru/jw4PDqJtiDhymA1lq0mPxyuqTj+YwvonIxcxCXbu5paV65TSVIgDPAIDN
+         ZZv7rcs/O91H34X8nw5QeGUqVK/pNyV5Hon62aHqXYJ58BUukSfv4IQB4RmUWjsplExz
+         mhw6Jk0LpCLh87onnBOkT8W02XjPc1EuUD1rxn+D423fyQYb3ZvRUjCh0B1ibjdpRrZD
+         76y9WJYZXJ6mpAG/1YluPiKXIIxKcpCc3wsw14jdaIDjqN4dYmbEmjHAjQm7n66QWR8G
+         YU9pF6Lm9sZeD7Jj/QMlJbsZtb6KBM77lVDN0n9Yl2g8qnh1EjB+1HX4A31/obV1cJu4
+         7jEQ==
+X-Gm-Message-State: AFqh2kpcN4KU0UKuZlU4DVJqWohaYQDgurs7WnfHO2/sBa9f3lq6Lb5E
+        MJBzPkYczJjj61d6gx9k+OX9Jw==
+X-Google-Smtp-Source: AMrXdXtIhwfJxF6Q6rWWLXpIcgwDM/eZMeXAYb6J/UJrejxpympVA6DYsW4C2s88PUHtLn75d7zgkQ==
+X-Received: by 2002:ac2:43a4:0:b0:4cb:3a60:65cc with SMTP id t4-20020ac243a4000000b004cb3a6065ccmr53650lfl.5.1672587869269;
+        Sun, 01 Jan 2023 07:44:29 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id y2-20020ac24202000000b004bd8534ebbcsm4150100lfh.37.2023.01.01.07.44.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 01 Jan 2023 07:44:28 -0800 (PST)
+Message-ID: <cd9d74eb-a3bb-7996-7c5c-0777c26a23f4@linaro.org>
+Date:   Sun, 1 Jan 2023 16:44:27 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v5 6/6] arm64: dts: qcom: sm6125: Initial support for
+ xiaomi-laurel-sprout
+Content-Language: en-US
+To:     Lux Aliaga <they@mint.lgbt>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konrad.dybcio@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -50,474 +68,192 @@ To:     Andy Gross <agross@kernel.org>,
         Tony Luck <tony.luck@intel.com>,
         "Guilherme G. Piccoli" <gpiccoli@igalia.com>
 Cc:     ~postmarketos/upstreaming@lists.sr.ht, martin.botka@somainline.org,
-        marijn.suijten@somainline.org, Lux Aliaga <they@mint.lgbt>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v5 6/6] arm64: dts: qcom: sm6125: Initial support for xiaomi-laurel-sprout
-Date:   Sat, 31 Dec 2022 19:24:20 -0300
-Message-Id: <20221231222420.75233-7-they@mint.lgbt>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221231222420.75233-1-they@mint.lgbt>
+        marijn.suijten@somainline.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
 References: <20221231222420.75233-1-they@mint.lgbt>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+ <20221231222420.75233-7-they@mint.lgbt>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221231222420.75233-7-they@mint.lgbt>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Adds support for the Xiaomi Mi A3 (xiaomi-laurel-sprout). Here's a
-summary on what's working.
+On 31/12/2022 23:24, Lux Aliaga wrote:
+> Adds support for the Xiaomi Mi A3 (xiaomi-laurel-sprout). Here's a
+> summary on what's working.
+> 
+> - dmesg output to bootloader preconfigured display
+> - USB
+> - UFS
+> - SD card
 
-- dmesg output to bootloader preconfigured display
-- USB
-- UFS
-- SD card
-- SMD RPM regulators
-- Volume Up, Down and Power buttons
-- Thermistors
 
-Signed-off-by: Lux Aliaga <they@mint.lgbt>
----
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../dts/qcom/sm6125-xiaomi-laurel-sprout.dts  | 413 ++++++++++++++++++
- 2 files changed, 414 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.=
-dts
+(...)
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom=
-/Makefile
-index 3e79496292e7..2b2a0170db14 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -157,6 +157,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+=3D sdm850-lenovo-yoga-c630.=
-dtb
- dtb-$(CONFIG_ARCH_QCOM)	+=3D sdm850-samsung-w737.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+=3D sm4250-oneplus-billie2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+=3D sm6125-sony-xperia-seine-pdx201.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+=3D sm6125-xiaomi-laurel-sprout.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+=3D sm6350-sony-xperia-lena-pdx213.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+=3D sm6375-sony-xperia-murray-pdx225.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+=3D sm7225-fairphone-fp4.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts b/a=
-rch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
-new file mode 100644
-index 000000000000..cc338c7ef358
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
-@@ -0,0 +1,413 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2022, Lux Aliaga <they@mint.lgbt>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/input/gpio-keys.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+#include "sm6125.dtsi"
-+#include "pm6125.dtsi"
-+
-+/ {
-+	model =3D "Xiaomi Mi A3";
-+	compatible =3D "xiaomi,laurel-sprout", "qcom,sm6125";
-+	chassis-type =3D "handset";
-+
-+	/* required for bootloader to select correct board */
-+	qcom,msm-id =3D <394 0>; /* sm6125 v1 */
-+	qcom,board-id =3D <11 0>;
-+
-+	chosen {
-+		#address-cells =3D <2>;
-+		#size-cells =3D <2>;
-+		ranges;
-+
-+		framebuffer0: framebuffer@5c000000 {
-+			compatible =3D "simple-framebuffer";
-+			reg =3D <0 0x5c000000 0 (1560 * 720 * 4)>;
-+			width =3D <720>;
-+			height =3D <1560>;
-+			stride =3D <(720 * 4)>;
-+			format =3D "a8r8g8b8";
-+		};
-+	};
-+
-+	reserved-memory {
-+		#address-cells =3D <2>;
-+		#size-cells =3D <2>;
-+
-+		debug_mem: debug@ffb00000 {
-+			reg =3D <0x0 0xffb00000 0x0 0xc0000>;
-+			no-map;
-+		};
-+
-+		last_log_mem: lastlog@ffbc0000 {
-+			reg =3D <0x0 0xffbc0000 0x0 0x80000>;
-+			no-map;
-+		};
-+
-+		pstore_mem: ramoops@ffc00000 {
-+			compatible =3D "ramoops";
-+			reg =3D <0x0 0xffc40000 0x0 0xc0000>;
-+			record-size =3D <0x1000>;
-+			console-size =3D <0x40000>;
-+			msg-size =3D <0x20000 0x20000>;
-+		};
-+
-+		cmdline_mem: memory@ffd00000 {
-+			reg =3D <0x0 0xffd40000 0x0 0x1000>;
-+			no-map;
-+		};
-+	};
-+
-+	extcon_usb: usb-id {
-+		compatible =3D "linux,extcon-usb-gpio";
-+		id-gpio =3D <&tlmm 102 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	gpio-keys {
-+		status =3D "okay";
-+		compatible =3D "gpio-keys";
-+		autorepeat;
-+
-+		key-vol-up {
-+			label =3D "Volume Up";
-+			gpios =3D <&pm6125_gpio 5 GPIO_ACTIVE_LOW>;
-+			linux,input-type =3D <1>;
-+			linux,code =3D <KEY_VOLUMEUP>;
-+			gpio-key,wakeup;
-+			debounce-interval =3D <15>;
-+		};
-+	};
-+
-+	thermal-zones {
-+		rf-pa0-thermal {
-+			polling-delay-passive =3D <0>;
-+			polling-delay =3D <0>;
-+			thermal-sensors =3D <&pm6125_adc_tm 0>;
-+
-+			trips {
-+				active-config0 {
-+					temperature =3D <125000>;
-+					hysteresis =3D <1000>;
-+					type =3D "critical";
-+				};
-+			};
-+		};
-+
-+		quiet-thermal {
-+			polling-delay-passive =3D <0>;
-+			polling-delay =3D <5000>;
-+			thermal-sensors =3D <&pm6125_adc_tm 1>;
-+
-+			trips {
-+				active-config0 {
-+					temperature =3D <125000>;
-+					hysteresis =3D <1000>;
-+					type =3D "critical";
-+				};
-+			};
-+		};
-+
-+		xo-thermal {
-+			polling-delay-passive =3D <0>;
-+			polling-delay =3D <0>;
-+			thermal-sensors =3D <&pm6125_adc_tm 2>;
-+
-+			trips {
-+				active-config0 {
-+					temperature =3D <125000>;
-+					hysteresis =3D <1000>;
-+					type =3D "critical";
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&hsusb_phy1 {
-+	vdd-supply =3D <&vreg_l7a>;
-+	vdda-pll-supply =3D <&vreg_l10a>;
-+	vdda-phy-dpdm-supply =3D <&vreg_l15a>;
-+	status =3D "okay";
-+};
-+
-+&pm6125_adc {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&camera_flash_therm &emmc_ufs_therm>;
-+
-+	rf-pa0-therm@4d {
-+		reg =3D <ADC5_AMUX_THM1_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time =3D <200>;
-+		qcom,pre-scaling =3D <1 1>;
-+	};
-+
-+	quiet-therm@4e {
-+		reg =3D <ADC5_AMUX_THM2_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time =3D <200>;
-+		qcom,pre-scaling =3D <1 1>;
-+	};
-+
-+	camera-flash-therm@52 {
-+		reg =3D <ADC5_GPIO1_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time =3D <200>;
-+		qcom,pre-scaling =3D <1 1>;
-+	};
-+
-+	emmc-ufs-therm@54 {
-+		reg =3D <ADC5_GPIO3_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time =3D <200>;
-+		qcom,pre-scaling =3D <1 1>;
-+	};
-+};
-+
-+&pm6125_adc_tm {
-+	status =3D "okay";
-+
-+	rf-pa0-therm@0 {
-+		reg =3D <0>;
-+		io-channels =3D <&pm6125_adc ADC5_AMUX_THM1_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time-us =3D <200>;
-+	};
-+
-+	quiet-therm@1 {
-+		reg =3D <1>;
-+		io-channels =3D <&pm6125_adc ADC5_AMUX_THM2_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time-us =3D <200>;
-+	};
-+
-+	xo-therm@2 {
-+		reg =3D <2>;
-+		io-channels =3D <&pm6125_adc ADC5_XO_THERM_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time-us =3D <200>;
-+	};
-+};
-+
-+&pm6125_gpio {
-+	camera_flash_therm: camera-flash-therm-state {
-+		pins =3D "gpio3";
-+		function =3D PMIC_GPIO_FUNC_NORMAL;
-+		bias-high-impedance;
-+	};
-+
-+	emmc_ufs_therm: emmc-ufs-therm-state {
-+		pins =3D "gpio6";
-+		function =3D PMIC_GPIO_FUNC_NORMAL;
-+		bias-high-impedance;
-+	};
-+
-+	key_vol_up: key_vol_up {
-+		pins =3D "gpio5";
-+		function =3D PMIC_GPIO_FUNC_NORMAL;
-+		input-enable;
-+		bias-pull-up;
-+	};
-+};
-+
-+&pon_pwrkey {
-+	status =3D "okay";
-+};
-+
-+&pon_resin {
-+	status =3D "okay";
-+	linux,code =3D <KEY_VOLUMEDOWN>;
-+};
-+
-+&rpm_requests {
-+	regulators-0 {
-+		compatible =3D "qcom,rpm-pm6125-regulators";
-+
-+		vreg_s6a: s6 {
-+			regulator-min-microvolt =3D <936000>;
-+			regulator-max-microvolt =3D <1422000>;
-+		};
-+
-+		vreg_l1a: l1 {
-+			regulator-min-microvolt =3D <1200000>;
-+			regulator-max-microvolt =3D <1256000>;
-+		};
-+
-+		vreg_l2a: l2 {
-+			regulator-min-microvolt =3D <1000000>;
-+			regulator-max-microvolt =3D <1056000>;
-+		};
-+
-+		vreg_l3a: l3 {
-+			regulator-min-microvolt =3D <1000000>;
-+			regulator-max-microvolt =3D <1064000>;
-+		};
-+
-+		vreg_l4a: l4 {
-+			regulator-min-microvolt =3D <872000>;
-+			regulator-max-microvolt =3D <976000>;
-+		};
-+
-+		vreg_l5a: l5 {
-+			regulator-min-microvolt =3D <1648000>;
-+			regulator-max-microvolt =3D <2950000>;
-+		};
-+
-+		vreg_l6a: l6 {
-+			regulator-min-microvolt =3D <576000>;
-+			regulator-max-microvolt =3D <656000>;
-+		};
-+
-+		vreg_l7a: l7 {
-+			regulator-min-microvolt =3D <872000>;
-+			regulator-max-microvolt =3D <976000>;
-+		};
-+
-+		vreg_l8a: l8 {
-+			regulator-min-microvolt =3D <400000>;
-+			regulator-max-microvolt =3D <728000>;
-+		};
-+
-+		vreg_l9a: l9 {
-+			regulator-min-microvolt =3D <1800000>;
-+			regulator-max-microvolt =3D <1896000>;
-+		};
-+
-+		vreg_l10a: l10 {
-+			regulator-min-microvolt =3D <1800000>;
-+			regulator-max-microvolt =3D <1896000>;
-+		};
-+
-+		vreg_l11a: l11 {
-+			regulator-min-microvolt =3D <1800000>;
-+			regulator-max-microvolt =3D <1952000>;
-+		};
-+
-+		vreg_l12a: l12 {
-+			regulator-min-microvolt =3D <1800000>;
-+			regulator-max-microvolt =3D <1996000>;
-+		};
-+
-+		vreg_l13a: l13 {
-+			regulator-min-microvolt =3D <1800000>;
-+			regulator-max-microvolt =3D <1832000>;
-+		};
-+
-+		vreg_l14a: l14 {
-+			regulator-min-microvolt =3D <1800000>;
-+			regulator-max-microvolt =3D <1904000>;
-+		};
-+
-+		vreg_l15a: l15 {
-+			regulator-min-microvolt =3D <3104000>;
-+			regulator-max-microvolt =3D <3232000>;
-+		};
-+
-+		vreg_l16a: l16 {
-+			regulator-min-microvolt =3D <1800000>;
-+			regulator-max-microvolt =3D <1904000>;
-+		};
-+
-+		vreg_l17a: l17 {
-+			regulator-min-microvolt =3D <1248000>;
-+			regulator-max-microvolt =3D <1304000>;
-+		};
-+
-+		vreg_l18a: l18 {
-+			regulator-min-microvolt =3D <1200000>;
-+			regulator-max-microvolt =3D <1264000>;
-+		};
-+
-+		vreg_l19a: l19 {
-+			regulator-min-microvolt =3D <1648000>;
-+			regulator-max-microvolt =3D <2952000>;
-+		};
-+
-+		vreg_l20a: l20 {
-+			regulator-min-microvolt =3D <1648000>;
-+			regulator-max-microvolt =3D <2952000>;
-+		};
-+
-+		vreg_l21a: l21 {
-+			regulator-min-microvolt =3D <2600000>;
-+			regulator-max-microvolt =3D <2856000>;
-+		};
-+
-+		vreg_l22a: l22 {
-+			regulator-min-microvolt =3D <2944000>;
-+			regulator-max-microvolt =3D <2950000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		vreg_l23a: l23 {
-+			regulator-min-microvolt =3D <3000000>;
-+			regulator-max-microvolt =3D <3400000>;
-+		};
-+
-+		vreg_l24a: l24 {
-+			regulator-min-microvolt =3D <2944000>;
-+			regulator-max-microvolt =3D <3304000>;
-+		};
-+	};
-+};
-+
-+&sdc2_off_state {
-+	sd-cd-pins {
-+		pins =3D "gpio98";
-+		function =3D "gpio";
-+		drive-strength =3D <2>;
-+		bias-disable;
-+	};
-+};
-+
-+&sdc2_on_state {
-+	sd-cd-pins {
-+		pins =3D "gpio98";
-+		function =3D "gpio";
-+		drive-strength =3D <2>;
-+		bias-pull-up;
-+	};
-+};
-+
-+&sdhc_2 {
-+	cd-gpios =3D <&tlmm 98 GPIO_ACTIVE_HIGH>;
-+	vmmc-supply =3D <&vreg_l22a>;
-+	vqmmc-supply =3D <&vreg_l5a>;
-+	no-sdio;
-+	no-mmc;
-+	status =3D "okay";
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges =3D <22 2>, <28 6>;
-+};
-+
-+&ufs_mem_hc {
-+	vcc-supply =3D <&vreg_l24a>;
-+	vccq2-supply =3D <&vreg_l11a>;
-+	vcc-max-microamp =3D <600000>;
-+	vccq2-max-microamp =3D <600000>;
-+	status =3D "okay";
-+};
-+
-+&ufs_mem_phy {
-+	vdda-phy-supply =3D <&vreg_l4a>;
-+	vdda-pll-supply =3D <&vreg_l10a>;
-+	vdda-phy-max-microamp =3D <51400>;
-+	vdda-pll-max-microamp =3D <14200>;
-+	vddp-ref-clk-supply =3D <&vreg_l18a>;
-+	status =3D "okay";
-+};
-+
-+&usb3 {
-+	status =3D "okay";
-+};
-+
-+&usb3_dwc3 {
-+	extcon =3D <&extcon_usb>;
-+};
---=20
-2.38.1
+> +	};
+> +
+> +	extcon_usb: usb-id {
+> +		compatible = "linux,extcon-usb-gpio";
+> +		id-gpio = <&tlmm 102 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	gpio-keys {
+> +		status = "okay";
+
+Drop.
+
+> +		compatible = "gpio-keys";
+> +		autorepeat;
+> +
+> +		key-vol-up {
+> +			label = "Volume Up";
+> +			gpios = <&pm6125_gpio 5 GPIO_ACTIVE_LOW>;
+> +			linux,input-type = <1>;
+> +			linux,code = <KEY_VOLUMEUP>;
+> +			gpio-key,wakeup;
+> +			debounce-interval = <15>;
+> +		};
+> +	};
+> +
+> +	thermal-zones {
+> +		rf-pa0-thermal {
+> +			polling-delay-passive = <0>;
+> +			polling-delay = <0>;
+> +			thermal-sensors = <&pm6125_adc_tm 0>;
+> +
+> +			trips {
+> +				active-config0 {
+> +					temperature = <125000>;
+> +					hysteresis = <1000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +		};
+> +
+> +		quiet-thermal {
+> +			polling-delay-passive = <0>;
+> +			polling-delay = <5000>;
+> +			thermal-sensors = <&pm6125_adc_tm 1>;
+> +
+> +			trips {
+> +				active-config0 {
+> +					temperature = <125000>;
+> +					hysteresis = <1000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +		};
+> +
+> +		xo-thermal {
+> +			polling-delay-passive = <0>;
+> +			polling-delay = <0>;
+> +			thermal-sensors = <&pm6125_adc_tm 2>;
+> +
+> +			trips {
+> +				active-config0 {
+> +					temperature = <125000>;
+> +					hysteresis = <1000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&hsusb_phy1 {
+> +	vdd-supply = <&vreg_l7a>;
+> +	vdda-pll-supply = <&vreg_l10a>;
+> +	vdda-phy-dpdm-supply = <&vreg_l15a>;
+> +	status = "okay";
+> +};
+> +
+> +&pm6125_adc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&camera_flash_therm &emmc_ufs_therm>;
+> +
+> +	rf-pa0-therm@4d {
+> +		reg = <ADC5_AMUX_THM1_100K_PU>;
+> +		qcom,ratiometric;
+> +		qcom,hw-settle-time = <200>;
+> +		qcom,pre-scaling = <1 1>;
+> +	};
+> +
+> +	quiet-therm@4e {
+> +		reg = <ADC5_AMUX_THM2_100K_PU>;
+> +		qcom,ratiometric;
+> +		qcom,hw-settle-time = <200>;
+> +		qcom,pre-scaling = <1 1>;
+> +	};
+> +
+> +	camera-flash-therm@52 {
+> +		reg = <ADC5_GPIO1_100K_PU>;
+> +		qcom,ratiometric;
+> +		qcom,hw-settle-time = <200>;
+> +		qcom,pre-scaling = <1 1>;
+> +	};
+> +
+> +	emmc-ufs-therm@54 {
+> +		reg = <ADC5_GPIO3_100K_PU>;
+> +		qcom,ratiometric;
+> +		qcom,hw-settle-time = <200>;
+> +		qcom,pre-scaling = <1 1>;
+> +	};
+> +};
+> +
+> +&pm6125_adc_tm {
+> +	status = "okay";
+> +
+> +	rf-pa0-therm@0 {
+> +		reg = <0>;
+> +		io-channels = <&pm6125_adc ADC5_AMUX_THM1_100K_PU>;
+> +		qcom,ratiometric;
+> +		qcom,hw-settle-time-us = <200>;
+> +	};
+> +
+> +	quiet-therm@1 {
+> +		reg = <1>;
+> +		io-channels = <&pm6125_adc ADC5_AMUX_THM2_100K_PU>;
+> +		qcom,ratiometric;
+> +		qcom,hw-settle-time-us = <200>;
+> +	};
+> +
+> +	xo-therm@2 {
+> +		reg = <2>;
+> +		io-channels = <&pm6125_adc ADC5_XO_THERM_100K_PU>;
+> +		qcom,ratiometric;
+> +		qcom,hw-settle-time-us = <200>;
+> +	};
+> +};
+> +
+> +&pm6125_gpio {
+> +	camera_flash_therm: camera-flash-therm-state {
+> +		pins = "gpio3";
+> +		function = PMIC_GPIO_FUNC_NORMAL;
+> +		bias-high-impedance;
+> +	};
+> +
+> +	emmc_ufs_therm: emmc-ufs-therm-state {
+> +		pins = "gpio6";
+> +		function = PMIC_GPIO_FUNC_NORMAL;
+> +		bias-high-impedance;
+> +	};
+> +
+> +	key_vol_up: key_vol_up {
+
+
+No underscores in node names, missing state suffix.
+
+> +		pins = "gpio5";
+> +		function = PMIC_GPIO_FUNC_NORMAL;
+> +		input-enable;
+> +		bias-pull-up;
+> +	};
+> +};
+> +
+
+Best regards,
+Krzysztof
 
