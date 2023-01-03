@@ -2,64 +2,67 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AF2C46467
-	for <linux-hardening@archiver.kernel.org>; Tue,  3 Jan 2023 11:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51076C46467
+	for <linux-hardening@archiver.kernel.org>; Tue,  3 Jan 2023 11:58:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236987AbjACL6L (ORCPT
+        id S237409AbjACL6f (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 3 Jan 2023 06:58:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48656 "EHLO
+        Tue, 3 Jan 2023 06:58:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233232AbjACL6K (ORCPT
+        with ESMTP id S237438AbjACL6b (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 3 Jan 2023 06:58:10 -0500
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8347FDFF8
-        for <linux-hardening@vger.kernel.org>; Tue,  3 Jan 2023 03:58:03 -0800 (PST)
-Received: by mail-wm1-x334.google.com with SMTP id k22-20020a05600c1c9600b003d1ee3a6289so22914421wms.2
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Jan 2023 03:58:03 -0800 (PST)
+        Tue, 3 Jan 2023 06:58:31 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68C0FFCFC
+        for <linux-hardening@vger.kernel.org>; Tue,  3 Jan 2023 03:58:30 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id t15so20337578wro.9
+        for <linux-hardening@vger.kernel.org>; Tue, 03 Jan 2023 03:58:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=riuB621SAvRb1u+xy63QHjUE1rwJNvyT5glJGdZN9mw=;
-        b=BrvkzBh+9tQ870R8RXVgmfdRSgUWvkX8myruFn1qJQ5UOeRFc09yefnFgmJHlWuvdw
-         JAm0Rxsrdk6NCcm1L7GGvbRWax0aR0AlSDXfCgkmzd+4Yczjc4Ameu1fdQuf+S1ybzE8
-         d8fmvP6lvwG/jja1dTC5jX3ENd/qWpT9m4W8FMpTwZ0l/rS0Kk/dVgtgSrtYJTFj7GA9
-         ukqZGtpihiqiGYrr4Mb8JvLVB1QxR2FeDXiyc4B73aFVOCv/777TS5FI14snPeBodvsl
-         YLqzYcMViOLrcChdjUfaca2JfFU/bBss8dzxYHU2t49Je3OLOsR7l1U7DJfM+dDOOvcs
-         buVQ==
+        bh=TM/fv8r72lGY1GkkNJAibywbzPYZQ5pCj0+GnYUBcVE=;
+        b=S9pzhbApE4DSBcx8w0AJB2s+gmZXZHMhAw15lib1KWhbytevy9S8uApTmEAXV8l+DO
+         t2lkOLId5MBnR2GrBjxK5tuOSIIZM873lOa0Vf2ESmAxxbVjfBvqw0SzQ3PexlH+VHQk
+         RVrBZi5lXAbd6f6sfydjbOZ9JncrgY75S+hukiYVr4Fxyv6hBmKOjmNnj3R8KEvNzdZ3
+         i4Nq+FxOYTcPr/tBClvHOAasNcfQkb2zMTYLU+jXRFSZwSc+lBWnPSmqlThQVbLpdLfe
+         EdYSgb2LJ+sfF1SmlA3YsnbHFJNun3HFiigamI+rf6Ibo1tWfM/xpCYL5P2pPNuDfnTU
+         OBJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=riuB621SAvRb1u+xy63QHjUE1rwJNvyT5glJGdZN9mw=;
-        b=svYu3751A8SacUFZV/6c5+3PBlD8wo3r8msw7D5HvMLXAR4bIpqyZl8Dx/k2cIVhZ9
-         7soov5iJk1UnnOip8SpRr2xkei+Ioly3ls5xbpYxxW1Bsgsz80qhcAQGgqKcjb8b3UtV
-         Wjj8m39Dz0MBOQg1gS0oyYpioOppPMK7okhVl44BlKJOVyrDrkLG7ezYKiGdFqaCGS44
-         zoW3iNDBOdB2OJlRXNttLax2598wA2uH1vjhd4+h3EjqnGJ8NQkt/Z2OpgZv/z151x9U
-         1CnqGrsNcSJGqtsPSQ3tShqDdH0Qt7ZHqjIDgRTxA8sgy6I5XymgQjyXHJ8SxGA2prgN
-         y/jg==
-X-Gm-Message-State: AFqh2kppLPjJIFyonyzp1H2VPs2n9WbdzWg93qNED2q1ujU2+yFl7lyU
-        1oyh+IOKITwylTnnjozHTgdDxA==
-X-Google-Smtp-Source: AMrXdXvM2GCi6P68d2DLmesx7lUf8rCnEwp/jl+nTjy/3bSafdJE7PTv06jftjnaNvz2XDo41FwNDg==
-X-Received: by 2002:a05:600c:3ba4:b0:3cf:d428:21d6 with SMTP id n36-20020a05600c3ba400b003cfd42821d6mr30008705wms.3.1672747082040;
-        Tue, 03 Jan 2023 03:58:02 -0800 (PST)
+        bh=TM/fv8r72lGY1GkkNJAibywbzPYZQ5pCj0+GnYUBcVE=;
+        b=tht0G7V7MtoWMC1+d0q1JJD2e7U/s6hYcaompa6XmP7PSfJ6PxtDXM5zmifPe8hucQ
+         3a3VoDSxC3jmMXumuA92SJV0FSjfrw9agjBC0vAZoiyO345CLUKBA5n9apk8cStqd/ke
+         IlE6K/++7k4KlYAAnWiKb15UUkP5//eahr4JRMCuTzc3FDDbL+WUHcyTHYXZDfvfXxZ+
+         Uu8vaSRUpqdyN0+x2tAeJ2g+scoQfiwhJD2T5a7QP8fCVN7n73Ab05u962LrSzgfmyix
+         xGx/focAiykF30DZJTWFDFqWyK2rdnez/SQ4rkU+SAuZtEHKn6SUD2qBhatv8GgNHkMX
+         P3QA==
+X-Gm-Message-State: AFqh2kpmGiz4f9hWaXCvzyuQxwYnezwP9G8C9BdFQDRgLjVW+wYWv3yX
+        I1UrWLB9QCOoBBiYmrYSf3r+wQ==
+X-Google-Smtp-Source: AMrXdXto5B4pnQxpO4E1hO08Dv+wSKzyJnlYGGjudihTtX6h1rcgkc8jXUuQ7G9YvGMckIGAIgFk+g==
+X-Received: by 2002:adf:a159:0:b0:284:356:3400 with SMTP id r25-20020adfa159000000b0028403563400mr18099556wrr.30.1672747108877;
+        Tue, 03 Jan 2023 03:58:28 -0800 (PST)
 Received: from [192.168.1.195] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id p34-20020a05600c1da200b003d99fad7511sm17934292wms.22.2023.01.03.03.58.00
+        by smtp.googlemail.com with ESMTPSA id c8-20020a5d4148000000b002428c4fb16asm31073289wrq.10.2023.01.03.03.58.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jan 2023 03:58:01 -0800 (PST)
-Message-ID: <0ae643ac-c07e-fe04-ad7c-e853d4db6909@linaro.org>
-Date:   Tue, 3 Jan 2023 11:57:59 +0000
+        Tue, 03 Jan 2023 03:58:28 -0800 (PST)
+Message-ID: <c5ef569d-0f36-19ac-da53-3a5acdca4165@linaro.org>
+Date:   Tue, 3 Jan 2023 11:58:26 +0000
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.2
-Subject: Re: [PATCH v2 03/11] dt-bindings: nvmem: Add compatible for MSM8976
+Subject: Re: [PATCH v2 02/11] dt-bindings: nvmem: Fix qcom,qfprom compatibles
+ enum ordering
 Content-Language: en-US
 To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>, agross@kernel.org
+        <angelogioacchino.delregno@collabora.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        agross@kernel.org
 Cc:     andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, jassisinghbrar@gmail.com,
         jic23@kernel.org, lars@metafoo.de, keescook@chromium.org,
@@ -70,9 +73,11 @@ Cc:     andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
         linux-hardening@vger.kernel.org, marijn.suijten@somainline.org,
         kernel@collabora.com, luca@z3ntu.xyz
 References: <20221111120156.48040-1-angelogioacchino.delregno@collabora.com>
- <20221111120156.48040-4-angelogioacchino.delregno@collabora.com>
+ <20221111120156.48040-3-angelogioacchino.delregno@collabora.com>
+ <b611f647-c46f-3780-c6b4-3cfb4fe402e7@linaro.org>
+ <1fac581e-ef02-4576-0dbf-67662a29f724@collabora.com>
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <20221111120156.48040-4-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <1fac581e-ef02-4576-0dbf-67662a29f724@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -81,29 +86,28 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 11/11/2022 12:01, AngeloGioacchino Del Regno wrote:
-> From: Marijn Suijten <marijn.suijten@somainline.org>
+On 16/11/2022 08:50, AngeloGioacchino Del Regno wrote:
+> Il 15/11/22 17:42, Krzysztof Kozlowski ha scritto:
+>> On 11/11/2022 13:01, AngeloGioacchino Del Regno wrote:
+>>> Move qcom,msm8974-qfprom after qcom,msm8916-qfprom to respect
+>>> alphabetical ordering.
+>>>
+>>> Fixes: c8b336bb1aeb ("dt-bindings: nvmem: Add soc qfprom compatible 
+>>> strings")
+>>
+>> It's a style, code readability, but not a bug. I propose to drop the tag.
+>>
+>> With that:
+>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>
+>>
 > 
-> Document generic QFPROM compatibility on MSM8976.
-> 
-> Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->   Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml | 1 +
->   1 file changed, 1 insertion(+)
-> 
-Applied thanks,
+> Should I send a v3, or is it possible to drop the tag while applying it?
+
+Applied after dropping fixes tag..
 
 --srini
-> diff --git a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-> index 474abdbb1ee7..336cc05c3e32 100644
-> --- a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-> +++ b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
-> @@ -21,6 +21,7 @@ properties:
->             - qcom,ipq8064-qfprom
->             - qcom,msm8916-qfprom
->             - qcom,msm8974-qfprom
-> +          - qcom,msm8976-qfprom
->             - qcom,msm8996-qfprom
->             - qcom,msm8998-qfprom
->             - qcom,qcs404-qfprom
+> 
+> Thanks,
+> Angelo
+> 
