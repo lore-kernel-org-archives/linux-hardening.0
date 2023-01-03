@@ -2,116 +2,114 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBF5C4708E
-	for <linux-hardening@archiver.kernel.org>; Tue,  3 Jan 2023 23:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78B0C3DA7D
+	for <linux-hardening@archiver.kernel.org>; Tue,  3 Jan 2023 23:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230504AbjACXq1 (ORCPT
+        id S234091AbjACXsw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 3 Jan 2023 18:46:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54014 "EHLO
+        Tue, 3 Jan 2023 18:48:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230367AbjACXq0 (ORCPT
+        with ESMTP id S234133AbjACXso (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 3 Jan 2023 18:46:26 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C071E7C
-        for <linux-hardening@vger.kernel.org>; Tue,  3 Jan 2023 15:46:25 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id h7-20020a17090aa88700b00225f3e4c992so24749862pjq.1
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Jan 2023 15:46:25 -0800 (PST)
+        Tue, 3 Jan 2023 18:48:44 -0500
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FC6F1004E
+        for <linux-hardening@vger.kernel.org>; Tue,  3 Jan 2023 15:48:39 -0800 (PST)
+Received: by mail-pl1-x62c.google.com with SMTP id y19so15262511plb.2
+        for <linux-hardening@vger.kernel.org>; Tue, 03 Jan 2023 15:48:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=euRwx6QF/OV6RpXiKr7BIdAc00ukRSAUiOkpbL7iCKU=;
-        b=XjKNtQpNLJ8aqo7xjHoll4+DdwZrxKRZXlYp6JqqXGXYzu6avm3dJLbOsMQuy89EdG
-         OIWBFWbEMo8JNz8qp4S5dPsIzqCFDBkzKAK65Fd3iUKktYjLfZgxonKbHUMSqauJ6Kyx
-         kSt3wX07D1moGHhO+wh5Wh7DHypEKw3VjuYS0=
+        bh=kDnfWPh2h9/FS+QZS/MSOgsNnMP44C24NODsrzRFUuM=;
+        b=JZ8UC9FMNChsjAjclGrQ6PEw9HlE0aeBAxKyAg+tRtQ71C1VRJ9l24kwhapJ7z+l0K
+         QAVCJW+NtLO9X/viSTN5RnZV/oz8FFoCixVq1PpSxuniK7kmSWvjcy3oe0GiXLg0WJq9
+         54x6qhh/PtzWp3DntyqNr3zplvC2uTHtSQIAg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=euRwx6QF/OV6RpXiKr7BIdAc00ukRSAUiOkpbL7iCKU=;
-        b=egt5QL8V76UNOZwTly7sV5133h5eLZMVmxnqt3jQ5NvyMT8BaJMLIa+gfOtqaU0N7i
-         NpMJEK2TpdWR3b6OWuAtuU0Dh46NTv38Iv8euAARHrOKQ7i2keEAJ5tSU4nq22XuBlPc
-         MJv1yPZIWkN41QoVppc1y/2p7G/54Ie7S6xmpqdw56YnSc27W2RKC54bJplnaUUMKtvE
-         HvFp4Qx8OnZnhRx6kA2Q3163dgSP7EZBWn+8bZOr0r1N2LS0ldsIPSwqdf/TgEFSGuEl
-         St9cqgaOzkbmjM5d8DIqVWsXTM2h60LTVWBzpX1451wW76qO82Qi/sUKxy1SAmn1utyB
-         MYBg==
-X-Gm-Message-State: AFqh2krsyuZS+95R+Ou2apmhR86hBu8fo+bkpfwfqgrn5MKrq53GaxCS
-        PegUSq2ZAoo36U+4kiPNZlD2RA==
-X-Google-Smtp-Source: AMrXdXv/JNePduRY0txUDdRCt5JhRSIR6DrhMpv75pkJ3d4K/8KqbSdJC4O5iyMFwg38vN8/tHD1Kg==
-X-Received: by 2002:a05:6a20:bf19:b0:af:dc62:8abd with SMTP id gc25-20020a056a20bf1900b000afdc628abdmr50713685pzb.0.1672789584914;
-        Tue, 03 Jan 2023 15:46:24 -0800 (PST)
+        bh=kDnfWPh2h9/FS+QZS/MSOgsNnMP44C24NODsrzRFUuM=;
+        b=aW/eoqoneXfc/qfpjo9/YKfQC30G15mK30wYnP2sbmC6HCkMf4dcpaDdL6Xk82QEja
+         GKsf9MJqcOZeV3CDoIEGe1BOgYvq9KUG/GXR3PuOlbdC+FjMbRdlAYajCym6B/xHExri
+         a7/Tjoqlncfne7IM+UA2+5bwVQnr6pg6diTNmKIEBKpSF41UFzLNxsJ+qLWbO/8AhVaN
+         6MdxGHklrMVoYUIK9Kt+mvw+EGKdpJo8O3zpWTHCPUvvRiTPTblF8YRgUlCFqja6iR2F
+         +pDJaQYLlu/AUFZOxMzrm4sBuE6CxKztFtcEuFeHt+x/CJZ8n+vPANn2AJN9cjKKQncC
+         ZeWg==
+X-Gm-Message-State: AFqh2koXq040tAbh0YOfLFyZtLuBbJH0QhF9IMYsBhz0MpnBWczdEEBj
+        r2CXvGlkXg4jIKSuoKwBYgO/jA==
+X-Google-Smtp-Source: AMrXdXuepV8mNjVcT1jIuOIjLZRa7GtnpsPXc2zlWgD4hMVRlZuIUNt/EGTz5ehdWZmXD6nTu/ZW9Q==
+X-Received: by 2002:a17:90b:1bc2:b0:212:daa7:590 with SMTP id oa2-20020a17090b1bc200b00212daa70590mr64679889pjb.7.1672789719104;
+        Tue, 03 Jan 2023 15:48:39 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a23-20020aa794b7000000b00582729b7032sm4793752pfl.97.2023.01.03.15.46.23
+        by smtp.gmail.com with ESMTPSA id c21-20020a17090aa61500b00219463262desm19148364pjq.39.2023.01.03.15.48.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jan 2023 15:46:24 -0800 (PST)
+        Tue, 03 Jan 2023 15:48:38 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     tytso@mit.edu
+To:     Ben Skeggs <bskeggs@redhat.com>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] ext4: Fix function prototype mismatch for ext4_feat_ktype
-Date:   Tue,  3 Jan 2023 15:46:20 -0800
-Message-Id: <20230103234616.never.915-kees@kernel.org>
+        Karol Herbst <kherbst@redhat.com>,
+        Lyude Paul <lyude@redhat.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Gourav Samaiya <gsamaiya@nvidia.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [RESEND][PATCH] drm/nouveau/fb/ga102: Replace zero-length array of trailing structs with flex-array
+Date:   Tue,  3 Jan 2023 15:48:36 -0800
+Message-Id: <20230103234835.never.378-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1630; h=from:subject:message-id; bh=EPPA4fAFZuWB5pdzvby7FTtYsOyM2XQPaphR85N5tMQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjtL5MF54NCvmDQY0Dd7rNnLX1L0GvWxEKudKalV75 pS6Nr92JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7S+TAAKCRCJcvTf3G3AJjndD/ 47MN61Dsc0UtJKECZp7gwKoY73Pw3qTWJzGhEO8zpglulKrzEkZeTmPqhCIiQ7U8fC9E6hyPMOvGkR JL3zryAjWLo9eGZSahA3Hd7tbnnwYZ/ZF2iKqEhnkRF/dnXpC5Pa1QozMpdidQ6rZO5/v9dnLQDW0w Xi98Dw0EjbPMvKQnM7L+uJoYyyiI7kBjsYAePwWSerOGNflmjK7jj+RLCAZgdRUMgPdvSSm/BCLYqg kDeTUx8FPOHowELmcRgHBexBBzvFKb65KXlUBj4hndW/bMUjLR2s9VTm09L3DeILJrL9iH6sNLRyjL ADKZtflw7g7rUxaQX3RIK5ML2pcj/272P3g/5uNtCyBkOkNgKWsAqedOsIP4goqWAI0QCMsKY3RIm2 7du4nSWz7sQdkpIIVqNJfHoKbtKKrkjwN552ikIhXKWsDOsjDzFzi0VbHikZiWupfdcX3Yl8JIeKvW BpVAP83s1pbJS54o4CwGMT+1M/K0iX1xNpYhaieiJfX6qePvsAdYLNmi2KmdDrPVNmDv7Lp8tCudP8 NKdrr8dUolvQoy3K9oBsuxGUcStGfPSaiMfyIhuAuGaPJbXjLMpTjkygqQBdEmRgYh3HSnPqeLNyQi EeXk5XyMYgH2WqJLhtBB1KTJuOLGoSuBDmmUvEPBF5znyJD3023rRY+4SY8w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1514; h=from:subject:message-id; bh=yNDAQz5L/StW+b14k9XOZhzSrABBg07i4qvrOt4rnsQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjtL7UV5oPZ4aSWc790jMdrk79oP2SuDFrhpYN3dAV U45tjoCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7S+1AAKCRCJcvTf3G3AJjfoD/ 9eZAMC/zIpdWOvrTeGfrphFv3DowrWpQpy2/jYIqQfGi7/r2Yp9ZLfiIgpABUIQFOEBtxRI6DBYzhn j2Jnr9dC8QT94UIJBjmGYn3FGybpbB9n0xlQs+FvSs+RF9gvvOqA8Eue8I+8S5KCW5gjQOB3zOXP30 A82/LDSd9t6zwmSrjqJ/bDzpZ5W1zZxLIBlE+lkIoo4olaSzK2DQ6Kn78aGPoICV2Rs6a4kduTTT+/ CYX/w+1ba6iK7n/cA0x8z8HNR6BPGBhedyeSQsU0PkxyYKBnJ7+lOeRozCD0mtCrCvCIB8ZCZ3xUov 85+IMnp6earP8cWAh0GGqEJUlZ/R2OaiB7eLG4QqsMZQfcoFe6s6VJUiqqf2F+qI3NjgzfB4aIfFEx zXVZdNH04Mpb/k0nl/PtHO2Uj42hp9eenr6zjMPDBsQl4oMUn6nemlkNrfw6pnJncakLLH00TjFkCY ObgbCLGQDpYqt1sNj3Ogv1CDBgNtNAgXyOfLVbwKxUr/widlNwnCPLvMdGkW+vhkg6mpiFdA9Bzo6Y 3lYANl81UelN34Y7TmyIWAEYr6Hr1XMKAUuubdA3tlCoQLPP0sXfgFv5S3Z3fAeRp4tRqLAMDVJVKW RIHhb0ND8kYXODJQU314xcLTgpvXoaSamYHoUlD6hP8snaFkWc9XRjhuWaMg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With clang's kernel control flow integrity (kCFI, CONFIG_CFI_CLANG),
-indirect call targets are validated against the expected function
-pointer prototype to make sure the call target is valid to help mitigate
-ROP attacks. If they are not identical, there is a failure at run time,
-which manifests as either a kernel panic or thread getting killed.
+Zero-length arrays are deprecated[1] and are being replaced with
+flexible array members in support of the ongoing efforts to tighten the
+FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
+with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
 
-ext4_feat_ktype was setting the "release" handler to "kfree", which
-doesn't have a matching function prototype. Add a simple wrapper
-with the correct prototype.
+Replace zero-length array with flexible-array member.
 
-This was found as a result of Clang's new -Wcast-function-type-strict
-flag, which is more sensitive than the simpler -Wcast-function-type,
-which only checks for type width mismatches.
+This results in no differences in binary output.
 
+[1] https://github.com/KSPP/linux/issues/78
+
+Cc: Ben Skeggs <bskeggs@redhat.com>
+Cc: Karol Herbst <kherbst@redhat.com>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Gourav Samaiya <gsamaiya@nvidia.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: dri-devel@lists.freedesktop.org
+Cc: nouveau@lists.freedesktop.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/ext4/sysfs.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Sent before as: https://lore.kernel.org/all/20221118211207.never.039-kees@kernel.org/
+---
+ drivers/gpu/drm/nouveau/include/nvfw/hs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ext4/sysfs.c b/fs/ext4/sysfs.c
-index d233c24ea342..83cf8b5afb54 100644
---- a/fs/ext4/sysfs.c
-+++ b/fs/ext4/sysfs.c
-@@ -491,6 +491,11 @@ static void ext4_sb_release(struct kobject *kobj)
- 	complete(&sbi->s_kobj_unregister);
- }
- 
-+static void ext4_kobject_release(struct kobject *kobj)
-+{
-+	kfree(kobj);
-+}
-+
- static const struct sysfs_ops ext4_attr_ops = {
- 	.show	= ext4_attr_show,
- 	.store	= ext4_attr_store,
-@@ -505,7 +510,7 @@ static struct kobj_type ext4_sb_ktype = {
- static struct kobj_type ext4_feat_ktype = {
- 	.default_groups = ext4_feat_groups,
- 	.sysfs_ops	= &ext4_attr_ops,
--	.release	= (void (*)(struct kobject *))kfree,
-+	.release	= ext4_kobject_release,
+diff --git a/drivers/gpu/drm/nouveau/include/nvfw/hs.h b/drivers/gpu/drm/nouveau/include/nvfw/hs.h
+index 8c4cd08a7b5f..8b58b668fc0c 100644
+--- a/drivers/gpu/drm/nouveau/include/nvfw/hs.h
++++ b/drivers/gpu/drm/nouveau/include/nvfw/hs.h
+@@ -52,7 +52,7 @@ struct nvfw_hs_load_header_v2 {
+ 	struct {
+ 		u32 offset;
+ 		u32 size;
+-	} app[0];
++	} app[];
  };
  
- void ext4_notify_error_sysfs(struct ext4_sb_info *sbi)
+ const struct nvfw_hs_load_header_v2 *nvfw_hs_load_header_v2(struct nvkm_subdev *, const void *);
 -- 
 2.34.1
 
