@@ -2,115 +2,142 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FEBC46467
-	for <linux-hardening@archiver.kernel.org>; Wed,  4 Jan 2023 06:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D700C46467
+	for <linux-hardening@archiver.kernel.org>; Wed,  4 Jan 2023 21:09:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230303AbjADGnt (ORCPT
+        id S235379AbjADVJX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 4 Jan 2023 01:43:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53910 "EHLO
+        Wed, 4 Jan 2023 16:09:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233513AbjADGnl (ORCPT
+        with ESMTP id S240267AbjADVJR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 4 Jan 2023 01:43:41 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F88E1157;
-        Tue,  3 Jan 2023 22:43:40 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 338C2615B9;
-        Wed,  4 Jan 2023 06:43:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C343C433D2;
-        Wed,  4 Jan 2023 06:43:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672814619;
-        bh=6N2Ke/st2hAmX2V/VgSABXPm5IauQsGR3LMjD5iJN8Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CoPzNQXbuZbSVda/faaYideuP/YV0mH1Cm201igkahsCYWKp/9CZ7fq67eVdgST4g
-         s74JrHfPByRtGaFM+mIG3FtWZmxD1fGOwFO9AkRs1Ccu3y4HVOmKlclhv9+jqFBZaN
-         YYVZo/hWZ2LpSdE8Ugql18VpQ1ap3x4vWJS8v06L/ln5EN6ugWf/2G9ZxP8riDDo/C
-         sHcTLSTS/Wc9KvZgkGOeN97v4gwtOBBZI2ewMCDi2RQmzA5qMuZYtTXdRqOW8xfXui
-         k21k3HSS6hCmZP037e1e4qFUKrp4pIU1DxouZeoTqncsDGUvoRNGPj9qYqjUNUoJk+
-         l5xEXxAUE9TUQ==
-Date:   Tue, 3 Jan 2023 22:43:37 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     tytso@mit.edu, Andreas Dilger <adilger.kernel@dilger.ca>,
+        Wed, 4 Jan 2023 16:09:17 -0500
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 758291D0D5
+        for <linux-hardening@vger.kernel.org>; Wed,  4 Jan 2023 13:09:15 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id c6so3967034pls.4
+        for <linux-hardening@vger.kernel.org>; Wed, 04 Jan 2023 13:09:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=N7e2wI5rOH0TCS8vVnB78L3eDotCSnHcKsvZPx9y4wU=;
+        b=C40Gz9QcfmKE0+Yw+ZeeTtIoek8V2TWOtdR4AwnrKaklJs1/LZvWLUeB1itG4Ck7np
+         NvAjiGYGr+Bgcu814J00sXqoYVsSICOnjmrhBRtx07jFQtcJ7pQUAVzh3jVRGTt0V192
+         8p0dpcIHT8EpUHXJWkMhixUl1sAJWNWU12Q4M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N7e2wI5rOH0TCS8vVnB78L3eDotCSnHcKsvZPx9y4wU=;
+        b=CBkSy1nz/X8XZ5n3XbNvX3HeKBaje6mWubmwoNUScU85Hmw7B5rwW2dpmiskYvj9ZZ
+         g3SFIBQ8IHFhD64SviqzlzQAXbmij3Huk+zmsJghb1QupVmqcfu6gK5tEaTkxJu7kOGo
+         B7pwpN+uhxysY9y4v7+WvxMBsTe0AMfkClWsnQbbssaDUs0Ii5lK+Oje93aFT16nfLbi
+         lF65fJ3KJ54reBHvKA2oqvjhXlHwHmm9FXVpdz243MWR2EHAkBtnC20tktfhEH8zdekQ
+         ba2LfaKCW5ukZwLJ+UP8t0M1QQ7BwbLhdDzfNjYleNU3I3bLXJMY8UhB87VvnKxXgbyO
+         K0wQ==
+X-Gm-Message-State: AFqh2kodr6F1NhnEpeG7Hr9nMYnY5L4Lob9hJ2XBrcQ8g8VLMtRPNV/h
+        ZfUN7wa2nMRmDjpY1X7hRHVSlQ==
+X-Google-Smtp-Source: AMrXdXsS+rbrcdC8oxPFmFfnIHZhQwxagm363BI8RJ3ymU5GkpRbqX0sIx+1yKRH2LDDjk/ySqK3IQ==
+X-Received: by 2002:a17:903:2682:b0:192:f12a:42de with SMTP id jf2-20020a170903268200b00192f12a42demr2516867plb.42.1672866554980;
+        Wed, 04 Jan 2023 13:09:14 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d19-20020a656b93000000b00476dc914262sm20817436pgw.1.2023.01.04.13.09.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jan 2023 13:09:14 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Theodore Ts'o <tytso@mit.edu>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Eric Biggers <ebiggers@kernel.org>, stable@vger.kernel.org,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
         Nathan Chancellor <nathan@kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ext4: Fix function prototype mismatch for ext4_feat_ktype
-Message-ID: <Y7UgGSoeB+3yQD8V@sol.localdomain>
-References: <20230103234616.never.915-kees@kernel.org>
- <Y7THENi5v2+fgUAc@gmail.com>
+        Tom Rix <trix@redhat.com>,
+        Riccardo Schirone <sirmy15@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: [PATCH v2] ext4: Fix function prototype mismatch for ext4_feat_ktype
+Date:   Wed,  4 Jan 2023 13:09:12 -0800
+Message-Id: <20230104210908.gonna.388-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y7THENi5v2+fgUAc@gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2508; h=from:subject:message-id; bh=rWss1AWpfgN5m5MJ3ZzB8riftLh8uHlWslxcv4hTtPQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjter33m3BUzBmkepopp8BSQH8S0ACYSatzHFDr43m Af3b0nKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7Xq9wAKCRCJcvTf3G3AJlFJD/ 4lw5d6tzW8szirp5AWtqCSAk2F8btgMJ0kn+otr52eFrv50d4FyF2DrGCrjKHW6TrCV5R1IbGuxzyC cNxeDeUXZ08+2+Z5coqXuQVIKi2ccgbzJXkcpJyBqidP6Q5EE/9jPxv1isYpI8Wx6pUqvFb3JC3JNU TxeGXpu1Etl3gs6tj+WVwfVrf3waEGXNvG7oVLMSK9SY2GMqJdQvBE2m8It9yxubznQVH4FcdUZkge WZiHcQxMTjJJvExrAJQMPCOZTGydwKp4sFIEfuBik8owEqDw+rp0pLWFDykwlB2gQ43H31hlfp5qvD ja0NSNl9ClP3XMtlAddoBVD83OAz5WM5QLRmjfkQZcLpeV4OoEhoLFkkPTOmhrtgYD4QR+oboFL5VJ bR+fyrp9wFy7sabuSYn7UD2SLENbyhyRQJ1Wq+KvK/POkLsr2q2OEyiFD5QxFhuJcQxqQjSu+dusLQ eQAXZxZNr2EY+gc/MsVQo82SCi1QUaYrz9iMWQBmPeUDvdzzPNg9HzV//sljmjTyt/lUfh+txYyN+D kqSNKiD/EKX27Rb/N8+6MRVLavRsCvZInKdmiJRsZ4m9Ht4fJQkF7+V+d+YDJkJHTdvyr2LdZK3GuT iZ9bjmYHTDnQQL+Ry+OxvAHK3To6Qg+N+G8ZLl8PsGiWtfPDv+XCmw+7WWmw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jan 04, 2023 at 12:23:44AM +0000, Eric Biggers wrote:
-> I'm also surprised that this wasn't found earlier.  Is it possible that CFI does
-> not actually distinguish between the two function prototypes here?
-> 
+With clang's kernel control flow integrity (kCFI, CONFIG_CFI_CLANG),
+indirect call targets are validated against the expected function
+pointer prototype to make sure the call target is valid to help mitigate
+ROP attacks. If they are not identical, there is a failure at run time,
+which manifests as either a kernel panic or thread getting killed.
 
-It's because this code is only reached when ext4 is a loadable module and it is
-being unloaded.  I can reproduce the CFI failure by doing that.
+ext4_feat_ktype was setting the "release" handler to "kfree", which
+doesn't have a matching function prototype. Add a simple wrapper
+with the correct prototype.
 
-In addition to the naming tweak I requested, can you also add Fixes and Cc
-stable tags?
+This was found as a result of Clang's new -Wcast-function-type-strict
+flag, which is more sensitive than the simpler -Wcast-function-type,
+which only checks for type width mismatches.
 
-By the way, here's the log from the CFI failure I got:
+Note that this code is only reached when ext4 is a loadable module and
+it is being unloaded:
 
-[   16.412498] CFI failure at kobject_put+0xbb/0x1b0 (target: kfree+0x0/0x180; expected type: 0x7c4aa698)
-[   16.413716] invalid opcode: 0000 [#1] PREEMPT SMP
-[   16.414299] CPU: 2 PID: 179 Comm: rmmod Tainted: G                T  6.2.0-rc2 #28
-[   16.415223] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linux 1.16.1-1-1 04/01/2014
-[   16.416383] RIP: 0010:kobject_put+0xbb/0x1b0
-[   16.416926] Code: df e8 f9 03 00 00 4d 85 e4 74 24 49 83 3c 24 00 74 1d 0f 1f 44 00 00 48 89 df 4d 8b 1c 24 41 ba 68 59 b5 9
-[   16.419199] RSP: 0018:ffffc90000283e20 EFLAGS: 00010a13
-[   16.419842] RAX: 0000000000000000 RBX: ffff88800436c9c0 RCX: 0000000000000000
-[   16.420719] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88800436c9c0
-[   16.421595] RBP: ffffc90000283e40 R08: 0000000000000000 R09: 0000000000000000
-[   16.422465] R10: 0000000017461662 R11: ffffffff81216a20 R12: ffffffffa00f9510
-[   16.423330] R13: 0000000000000000 R14: ffff88800436ca80 R15: ffff888007643950
-[   16.424207] FS:  00007f7bf573f740(0000) GS:ffff88807dd00000(0000) knlGS:0000000000000000
-[   16.425188] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   16.425814] CR2: 0000561eb661f818 CR3: 00000000074c9000 CR4: 00000000003506e0
-[   16.426574] Call Trace:
-[   16.426862]  <TASK>
-[   16.427098]  ext4_exit_sysfs+0x14/0x60 [ext4]
-[   16.427604]  cleanup_module+0x67/0xedb [ext4]
-[   16.428099]  __se_sys_delete_module+0x22d/0x3e0
-[   16.428593]  ? syscall_enter_from_user_mode+0x2a/0x1d0
-[   16.429142]  ? syscall_enter_from_user_mode+0x2a/0x1d0
-[   16.429694]  __x64_sys_delete_module+0x11/0x20
-[   16.430173]  do_syscall_64+0x53/0xb0
-[   16.430562]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
-[   16.431151] RIP: 0033:0x7f7bf584ccfb
-[   16.431544] Code: 73 01 c3 48 8b 0d 8d f0 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 8
-[   16.433517] RSP: 002b:00007fff7d959068 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
-[   16.434327] RAX: ffffffffffffffda RBX: 0000561eb6615750 RCX: 00007f7bf584ccfb
-[   16.435090] RDX: 0000000000000000 RSI: 0000000000000800 RDI: 0000561eb66157b8
-[   16.435852] RBP: 0000000000000000 R08: 1999999999999999 R09: 0000000000000000
-[   16.436617] R10: 00007f7bf58c2ac0 R11: 0000000000000206 R12: 0000000000000000
-[   16.437472] R13: 00007fff7d9592d0 R14: 00007fff7d959d80 R15: 0000561eb66152a0
-[   16.438307]  </TASK>
-[   16.438552] Modules linked in: ext4(-) crc32c_generic mbcache crc16 jbd2
-[   16.439321] ---[ end trace 0000000000000000 ]---
-[   16.439829] RIP: 0010:kobject_put+0xbb/0x1b0
-[   16.440294] Code: df e8 f9 03 00 00 4d 85 e4 74 24 49 83 3c 24 00 74 1d 0f 1f 44 00 00 48 89 df 4d 8b 1c 24 41 ba 68 59 b5 9
-[   16.442310] RSP: 0018:ffffc90000283e20 EFLAGS: 00010a13
-[   16.442960] RAX: 0000000000000000 RBX: ffff88800436c9c0 RCX: 0000000000000000
-[   16.443719] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88800436c9c0
-[   16.444472] RBP: ffffc90000283e40 R08: 0000000000000000 R09: 0000000000000000
-[   16.445231] R10: 0000000017461662 R11: ffffffff81216a20 R12: ffffffffa00f9510
-[   16.446012] R13: 0000000000000000 R14: ffff88800436ca80 R15: ffff888007643950
-[   16.446779] FS:  00007f7bf573f740(0000) GS:ffff88807dd00000(0000) knlGS:0000000000000000
-[   16.447658] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   16.448276] CR2: 0000561eb661f818 CR3: 00000000074c9000 CR4: 00000000003506e0
+ CFI failure at kobject_put+0xbb/0x1b0 (target: kfree+0x0/0x180; expected type: 0x7c4aa698)
+ ...
+ RIP: 0010:kobject_put+0xbb/0x1b0
+ ...
+ Call Trace:
+  <TASK>
+  ext4_exit_sysfs+0x14/0x60 [ext4]
+  cleanup_module+0x67/0xedb [ext4]
+
+Fixes: b99fee58a20a ("ext4: create ext4_feat kobject dynamically")
+Cc: Theodore Ts'o <tytso@mit.edu>
+Cc: Eric Biggers <ebiggers@kernel.org>
+Cc: stable@vger.kernel.org
+Build-tested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Link: https://lore.kernel.org/r/20230103234616.never.915-kees@kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v2: rename callback, improve commit log (ebiggers)
+v1: https://lore.kernel.org/lkml/20230103234616.never.915-kees@kernel.org
+---
+ fs/ext4/sysfs.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/fs/ext4/sysfs.c b/fs/ext4/sysfs.c
+index d233c24ea342..e2b8b3437c58 100644
+--- a/fs/ext4/sysfs.c
++++ b/fs/ext4/sysfs.c
+@@ -491,6 +491,11 @@ static void ext4_sb_release(struct kobject *kobj)
+ 	complete(&sbi->s_kobj_unregister);
+ }
+ 
++static void ext4_feat_release(struct kobject *kobj)
++{
++	kfree(kobj);
++}
++
+ static const struct sysfs_ops ext4_attr_ops = {
+ 	.show	= ext4_attr_show,
+ 	.store	= ext4_attr_store,
+@@ -505,7 +510,7 @@ static struct kobj_type ext4_sb_ktype = {
+ static struct kobj_type ext4_feat_ktype = {
+ 	.default_groups = ext4_feat_groups,
+ 	.sysfs_ops	= &ext4_attr_ops,
+-	.release	= (void (*)(struct kobject *))kfree,
++	.release	= ext4_feat_release,
+ };
+ 
+ void ext4_notify_error_sysfs(struct ext4_sb_info *sbi)
+-- 
+2.34.1
+
