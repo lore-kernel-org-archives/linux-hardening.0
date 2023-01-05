@@ -2,170 +2,102 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C849BC3DA7A
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Jan 2023 17:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B756C3DA7A
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 Jan 2023 18:05:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231858AbjAERry (ORCPT
+        id S235507AbjAESFv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 Jan 2023 12:47:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57090 "EHLO
+        Thu, 5 Jan 2023 13:05:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234237AbjAERrw (ORCPT
+        with ESMTP id S235523AbjAESFK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 Jan 2023 12:47:52 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D6684C734;
-        Thu,  5 Jan 2023 09:47:51 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 42CA7B81B83;
-        Thu,  5 Jan 2023 17:47:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24C73C433D2;
-        Thu,  5 Jan 2023 17:47:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672940868;
-        bh=QalbsF+xuCr6irdBvTcOAewjg1oMUswJseJlMj7wYME=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lyeCJldLLFWMeZtHKleORXR5QoNua/yZwxbz6Uhu1CsN92Ixe4BHD43KvlpA/JLZ4
-         hHhzu8vQzRC36BE1VthrhVJkYfIz4AEmKH3ak9spnkRlhpmMYEifrnEDwwv6Qc02C/
-         Ogf0SCvqK1XzDfNns+FWO5go+jC4dI3tXW2NGkmGRfOx0R5aC/RVo3fJcDlS7u1uFF
-         LJ4loZWHKelDNE2d4cvWpPVazesgWO497s0uFlfBGGEMdXZUrKg+BwdpNb0gPnNIMA
-         jDpu1r7yN/6VgE2womlzzst2S4MvLpY8PAD2vCwnvJ1BVVZcsc71DfO5FjQGr0fUqf
-         8PCI64sMPy8mw==
-Date:   Thu, 5 Jan 2023 11:47:53 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Adam Radford <aradford@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thu, 5 Jan 2023 13:05:10 -0500
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27D6F60842
+        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 10:04:28 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id 17so40178086pll.0
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 10:04:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0P8fWNB9uGiIbEBnadT8SZ/GnrLR3KrMQPnTu697WXU=;
+        b=eHv012K+wdORG+6g8TCLO+HUDJknB406VNyrXM/nfxeii7+a+W90WE6MNBjWm9opwo
+         o39UmpFAl4/rtjmDyklQwDOEssFsvXqIJlyiC2LmEuFeSBgQ+AfkMng0eSvfskSVOUtr
+         M3AyqpJmHpbEX9I97056RTdRgpsxknXpyWyoM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0P8fWNB9uGiIbEBnadT8SZ/GnrLR3KrMQPnTu697WXU=;
+        b=c7KOESdmCrVY843QtTNXSwq42RDJkXS6/OSZIoFNVtv3l838zwDGYmMEfUAkh8vhQQ
+         G05B/rglTn9eUZP84x672Gt7CDEZxQ5zW0QvkXUZCtFpmFYGaoD32GfjiDifItZYofpK
+         rHpIu+f7uWsqbV/TjPiAvi+Q4wsGh86FBJubzXC0/F3Fz2PCtdCop2Qp0nMuHZLPJYSg
+         KcrVx3FRFkKEQvF0tN7mvD4uKRv0+GS8gZ9ADlKG/Kr2KABKZe69mxoyi//mgOw3h++f
+         jsDDrt3qHlGtn92aKY6do+11d8cLUEOZBz9C6ZhznvrBwMfg4J7YES3m7mn1mUpr/Gj/
+         TVlA==
+X-Gm-Message-State: AFqh2kpSB4+LaH0fO0ozZ+bAgh4OwX8yhkoWms2dUoKQK4QA29P+sfR7
+        TKrLWQ/Q1DLdfGpE40ZNi78XMg==
+X-Google-Smtp-Source: AMrXdXufN+/oh/UGgwRcTi2k/DtAOkHqn7zTKMSm+wdkn8ikP+9NewxMGZWcNYnDPdJxmVHjDyGi4Q==
+X-Received: by 2002:a17:903:2312:b0:192:8c7f:2654 with SMTP id d18-20020a170903231200b001928c7f2654mr43094188plh.0.1672941864581;
+        Thu, 05 Jan 2023 10:04:24 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h10-20020a170902f54a00b0017f592a7eccsm26349263plf.298.2023.01.05.10.04.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jan 2023 10:04:22 -0800 (PST)
+Date:   Thu, 5 Jan 2023 10:04:19 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        stable@vger.kernel.org, io-uring@vger.kernel.org,
+        Dylan Yudaken <dylany@fb.com>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: 3w-sas: Replace 1-element arrays with flexible
- array members
-Message-ID: <Y7cNSXnO8yBY5OP8@work>
-References: <20230105004757.never.017-kees@kernel.org>
+Subject: Re: [PATCH] io_uring: Replace 0-length array with flexible array
+Message-ID: <202301051003.27CF3DC@keescook>
+References: <20230105033743.never.628-kees@kernel.org>
+ <Y7Z+xN+BDy5yoK5f@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230105004757.never.017-kees@kernel.org>
+In-Reply-To: <Y7Z+xN+BDy5yoK5f@kroah.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jan 04, 2023 at 04:48:01PM -0800, Kees Cook wrote:
-> One-element arrays (and multi-element arrays being treated as
-> dynamically sized) are deprecated[1] and are being replaced with
-> flexible array members in support of the ongoing efforts to tighten the
-> FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
-> with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
+On Thu, Jan 05, 2023 at 08:39:48AM +0100, Greg KH wrote:
+> On Wed, Jan 04, 2023 at 07:37:48PM -0800, Kees Cook wrote:
+> > Zero-length arrays are deprecated[1]. Replace struct io_uring_buf_ring's
+> > "bufs" with a flexible array member. (How is the size of this array
+> > verified?) Detected with GCC 13, using -fstrict-flex-arrays=3:
+> > 
+> > In function 'io_ring_buffer_select',
+> >     inlined from 'io_buffer_select' at io_uring/kbuf.c:183:10:
+> > io_uring/kbuf.c:141:23: warning: array subscript 255 is outside the bounds of an interior zero-length array 'struct io_uring_buf[0]' [-Wzero-length-bounds]
+> >   141 |                 buf = &br->bufs[head];
+> >       |                       ^~~~~~~~~~~~~~~
+> > In file included from include/linux/io_uring.h:7,
+> >                  from io_uring/kbuf.c:10:
+> > include/uapi/linux/io_uring.h: In function 'io_buffer_select':
+> > include/uapi/linux/io_uring.h:628:41: note: while referencing 'bufs'
+> >   628 |                 struct io_uring_buf     bufs[0];
+> >       |                                         ^~~~
+> > 
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+> > 
+> > Fixes: c7fb19428d67 ("io_uring: add support for ring mapped supplied buffers")
+> > Cc: Jens Axboe <axboe@kernel.dk>
+> > Cc: Pavel Begunkov <asml.silence@gmail.com>
+> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> > Cc: stable@vger.kernel.org
 > 
-> Replace one-element arrays with flexible-array member in TW_Ioctl_Buf_Apache
-> and TW_Param_Apache, adjusting the explicit sizing calculations at the
-> same time.
-> 
-> This results in no differences in binary output.
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
-> 
-> Cc: Adam Radford <aradford@gmail.com>
-> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-scsi@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Build problem aside, why is this a stable kernel issue?
 
-This is great. :) It's quite similar to this other commit:
+My thinking was that since this is technically a UAPI change, it'd be
+best to get it changed as widely as possible.
 
-	44c5027bb5c8 ("scsi: 3w-9xxx: Use flexible array members to avoid struct padding")
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks!
---
-Gustavo
-
-> ---
->  drivers/scsi/3w-sas.c | 12 ++++++------
->  drivers/scsi/3w-sas.h |  4 ++--
->  2 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/scsi/3w-sas.c b/drivers/scsi/3w-sas.c
-> index 3ebe66151dcb..f41c93454f0c 100644
-> --- a/drivers/scsi/3w-sas.c
-> +++ b/drivers/scsi/3w-sas.c
-> @@ -690,7 +690,7 @@ static void twl_load_sgl(TW_Device_Extension *tw_dev, TW_Command_Full *full_comm
->  		newcommand->request_id__lunl =
->  			cpu_to_le16(TW_REQ_LUN_IN(TW_LUN_OUT(newcommand->request_id__lunl), request_id));
->  		if (length) {
-> -			newcommand->sg_list[0].address = TW_CPU_TO_SGL(dma_handle + sizeof(TW_Ioctl_Buf_Apache) - 1);
-> +			newcommand->sg_list[0].address = TW_CPU_TO_SGL(dma_handle + sizeof(TW_Ioctl_Buf_Apache));
->  			newcommand->sg_list[0].length = TW_CPU_TO_SGL(length);
->  		}
->  		newcommand->sgl_entries__lunh =
-> @@ -702,7 +702,7 @@ static void twl_load_sgl(TW_Device_Extension *tw_dev, TW_Command_Full *full_comm
->  		if (TW_SGL_OUT(oldcommand->opcode__sgloffset)) {
->  			/* Load the sg list */
->  			sgl = (TW_SG_Entry_ISO *)((u32 *)oldcommand+oldcommand->size - (sizeof(TW_SG_Entry_ISO)/4) + pae + (sizeof(dma_addr_t) > 4 ? 1 : 0));
-> -			sgl->address = TW_CPU_TO_SGL(dma_handle + sizeof(TW_Ioctl_Buf_Apache) - 1);
-> +			sgl->address = TW_CPU_TO_SGL(dma_handle + sizeof(TW_Ioctl_Buf_Apache));
->  			sgl->length = TW_CPU_TO_SGL(length);
->  			oldcommand->size += pae;
->  			oldcommand->size += sizeof(dma_addr_t) > 4 ? 1 : 0;
-> @@ -748,7 +748,7 @@ static long twl_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long
->  	data_buffer_length_adjusted = (driver_command.buffer_length + 511) & ~511;
->  
->  	/* Now allocate ioctl buf memory */
-> -	cpu_addr = dma_alloc_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted+sizeof(TW_Ioctl_Buf_Apache) - 1, &dma_handle, GFP_KERNEL);
-> +	cpu_addr = dma_alloc_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted + sizeof(TW_Ioctl_Buf_Apache), &dma_handle, GFP_KERNEL);
->  	if (!cpu_addr) {
->  		retval = -ENOMEM;
->  		goto out2;
-> @@ -757,7 +757,7 @@ static long twl_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long
->  	tw_ioctl = (TW_Ioctl_Buf_Apache *)cpu_addr;
->  
->  	/* Now copy down the entire ioctl */
-> -	if (copy_from_user(tw_ioctl, argp, driver_command.buffer_length + sizeof(TW_Ioctl_Buf_Apache) - 1))
-> +	if (copy_from_user(tw_ioctl, argp, driver_command.buffer_length + sizeof(TW_Ioctl_Buf_Apache)))
->  		goto out3;
->  
->  	/* See which ioctl we are doing */
-> @@ -815,11 +815,11 @@ static long twl_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long
->  	}
->  
->  	/* Now copy the entire response to userspace */
-> -	if (copy_to_user(argp, tw_ioctl, sizeof(TW_Ioctl_Buf_Apache) + driver_command.buffer_length - 1) == 0)
-> +	if (copy_to_user(argp, tw_ioctl, sizeof(TW_Ioctl_Buf_Apache) + driver_command.buffer_length) == 0)
->  		retval = 0;
->  out3:
->  	/* Now free ioctl buf memory */
-> -	dma_free_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted+sizeof(TW_Ioctl_Buf_Apache) - 1, cpu_addr, dma_handle);
-> +	dma_free_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted + sizeof(TW_Ioctl_Buf_Apache), cpu_addr, dma_handle);
->  out2:
->  	mutex_unlock(&tw_dev->ioctl_lock);
->  out:
-> diff --git a/drivers/scsi/3w-sas.h b/drivers/scsi/3w-sas.h
-> index b0508039a280..096dec29e2ac 100644
-> --- a/drivers/scsi/3w-sas.h
-> +++ b/drivers/scsi/3w-sas.h
-> @@ -335,7 +335,7 @@ typedef struct TAG_TW_Ioctl_Apache {
->  	TW_Ioctl_Driver_Command driver_command;
->  	char padding[488];
->  	TW_Command_Full firmware_command;
-> -	char data_buffer[1];
-> +	char data_buffer[];
->  } TW_Ioctl_Buf_Apache;
->  
->  /* GetParam descriptor */
-> @@ -344,7 +344,7 @@ typedef struct {
->  	unsigned short	parameter_id;
->  	unsigned short	parameter_size_bytes;
->  	unsigned short  actual_parameter_size_bytes;
-> -	unsigned char	data[1];
-> +	unsigned char	data[];
->  } TW_Param_Apache;
->  
->  /* Compatibility information structure */
-> -- 
-> 2.34.1
-> 
+-- 
+Kees Cook
