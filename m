@@ -2,115 +2,122 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9487DC3DA7A
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Jan 2023 20:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BB0C3DA7D
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 Jan 2023 21:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235281AbjAEUBc (ORCPT
+        id S235815AbjAEVlk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 Jan 2023 15:01:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47008 "EHLO
+        Thu, 5 Jan 2023 16:41:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235586AbjAEUBa (ORCPT
+        with ESMTP id S235600AbjAEVlj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 Jan 2023 15:01:30 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 515201AA13
-        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 12:01:24 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id n12so28095436pjp.1
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 12:01:24 -0800 (PST)
+        Thu, 5 Jan 2023 16:41:39 -0500
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED51D671A2
+        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 13:41:38 -0800 (PST)
+Received: by mail-pg1-x535.google.com with SMTP id 141so7074750pgc.0
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 13:41:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pVxwqNbug9kzVKOL3oZqGnvdYf9glDYyhFwWJ28UE9c=;
-        b=GHsPtBur+p4pVrDOJtCpuXZtHd6ZyxGvlJhmjJ6qN6fHChX0vhJ2s8WI5qTqrb51LT
-         oGX+F4kCNJMT0IlQzaus2qSDSSZAH140BEMq76BpoNGFZn8LedpF6Khmidi1poaMxB7m
-         t/JU+z/2udLVgHEnc/WhZy8MsbfhX6DNst8pg=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gr7VY1xr8D50GfMBWbQ+mcfUi8VYRH93LwFJZAO1KrE=;
+        b=biqkWJn0JUgt6jN4Ix6J/6fD4m/GhQDQiMCPCM8Ezph5YY1SQnjqZKMB5f7QVA3ruy
+         tT5z9opi5Ifq9fwpW+P8BDtYJCxGWahQkTZfnQDJlEYruUx6Hfcjxz/aeliuYZuEcsjG
+         spbnNKGDNcv9emj8ItKmvjqCnXJoAs8jfKwcY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pVxwqNbug9kzVKOL3oZqGnvdYf9glDYyhFwWJ28UE9c=;
-        b=iuj57ruk4adc97CxXxlNsTlX23p3wpLG4vwwKTACQxEsqdVMXlJxSqumEXl42XBH2c
-         PY6P8xJOJ2+8cGLcUrsEolWourdN1VgZXj1RaQqcFRWtFjxdtLlfAx1giOYQpazZAgJR
-         dLRjKYBeJKI4qlW3oH/oZYmIPwAv9uEADCIpfQn1oRci9kIiUDg67VWpXsfAjcWtzBO/
-         wH5NAloknBmEhGgKMy0eApgBuDrKEBHyq+3ZZZrR9tgrHhvXJuG/Uh60fnd8IrwGLlFR
-         gXvcCYuRk9SPacDVvSLv4Uo5juK83kJL2oOqFjYh0TTlMssxchWlRQ8KfdUici+x8Ln5
-         PqsA==
-X-Gm-Message-State: AFqh2krnu/MJUevrJGWbLTth5x9HOiqP8TnjQuuIQn6XErOs4ualt96B
-        pNWPpg50athwlGru7iv8PSfHAw==
-X-Google-Smtp-Source: AMrXdXtiSYCndt8IrAXOQDq9FZ2AmUK0DrLHAa9LWFBHa5cn4ItMrAiA2RYWW90jFvgtGv8uMgl+YQ==
-X-Received: by 2002:a17:90a:acf:b0:226:ddf6:b7da with SMTP id r15-20020a17090a0acf00b00226ddf6b7damr370799pje.41.1672948884061;
-        Thu, 05 Jan 2023 12:01:24 -0800 (PST)
+        bh=Gr7VY1xr8D50GfMBWbQ+mcfUi8VYRH93LwFJZAO1KrE=;
+        b=JzBmmUThnyJ7JJqrBvj3gJhV/V1QQDYpDKkgHfxKYg3SjSk09Hor+A+BQfJnvoxMIw
+         ZvUgHJiY+X8SOIvPz9hW6yEtGDoxc7+aUu2AzyR8NmDPl0CcN2decq/tVfyubEPcCC93
+         utE8XmHA0M+IDD+VIj351Ojr1UIzaK9xZi0XBJjajNXO2JB7JQizsDC3KcOJmLvyCTto
+         cAB8w7c6SZ6cj2JBWUG4SGKg95tBiqw7B+Sf+33rtrmeqz/NsBJx6aPskIos/BIBI0vX
+         YmSuwjtdp4yS6Ru06Au/CCTwsQ5MtsSoWcnfdDwjSmFR7ta8X3GmjjVGL3/MRNuq0uve
+         3Kcw==
+X-Gm-Message-State: AFqh2krppVbcmnrMnq2zSbhzNpJUcrxhfY/mpurQU+XyvENSBS4VRMA4
+        OR7XFIHMSK8CF4VBl2dzq5QZeQ==
+X-Google-Smtp-Source: AMrXdXs+i062aZ3YucZ6kdj0ad3n/WRCnVgFIGfp+XaI0FnkCKs4/4m8+uqDObh8Z1kSjKmdbRKLOQ==
+X-Received: by 2002:a05:6a00:24c9:b0:57f:7bb4:8fce with SMTP id d9-20020a056a0024c900b0057f7bb48fcemr62907948pfv.32.1672954898477;
+        Thu, 05 Jan 2023 13:41:38 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g6-20020a17090a640600b00225ffb9c43dsm1728484pjj.5.2023.01.05.12.01.23
+        by smtp.gmail.com with ESMTPSA id f17-20020aa79691000000b005825b8e0540sm9219022pfk.204.2023.01.05.13.41.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jan 2023 12:01:23 -0800 (PST)
-Date:   Thu, 5 Jan 2023 12:01:22 -0800
+        Thu, 05 Jan 2023 13:41:37 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Pavel Begunkov <asml.silence@gmail.com>,
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        kernel test robot <lkp@intel.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Sean Anderson <sean.anderson@seco.com>,
+        Alexandru Tachici <alexandru.tachici@analog.com>,
+        Amit Cohen <amcohen@nvidia.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        stable@vger.kernel.org, io-uring@vger.kernel.org,
-        Dylan Yudaken <dylany@fb.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] io_uring: Replace 0-length array with flexible array
-Message-ID: <202301051159.9CBE8DE09@keescook>
+        Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] ethtool: Replace 0-length array with flexible array
+Date:   Thu,  5 Jan 2023 13:41:34 -0800
+Message-Id: <20230105214126.never.757-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y7cnGT0dK86BA4b7@kroah.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1999; h=from:subject:message-id; bh=l87vgCNM54oMq3NmxL6kds7jYVmQqBDhqu2JC3Cjh/U=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjt0QOa22l3Q274W3yAGBVWu+cD27M21OizpluzMHW zmLGeXyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7dEDgAKCRCJcvTf3G3AJgxED/ sHusJjKAWOo0tmDLlG/D9LAVElK2oD/fFV4n2wXZduPK5X6mtQ2VIMJGbXqW4shFHUTX0MMw2pgYiS 6xbDlY3/TLuU6oRKlPL9OjviI5R4kxwREx/m+CnFV0YjMjIsmLMNzuNSB9sUwIYp6Wr/iARWeMkgpv XVUK7ujwfwxKbw+gMDU19IkL6xlh1Z1pPI4H13w1rZmO03v3WfofSLOxc4ST9uowmhnowtrPH35jki afPHMiSXb8wfGn6evxLz7WG/ga2grxvoHcfFHTbBWWqBKpG6a0ga9L0DTLyKIWduFGW3sYvLTQlSec x8tSnxgqOncZuTMfFdHKiOUX72KjD/EEIzZsuYVLIND6WAbvsq2J6TY71Aevbu4JR17QEbiJAJm9vG PXBodZdFkAElbgH0cFilyKsUsbVNpmcweFi6b0nvJ1294E4w2kfR2R7hsw4XFPJ7K36/nIUmZIiJQh HJQ8Uvyc3k/F9/wZuWJfNlHBeWndxlJbgiKvbdQj7tmYcb4IFQkGWtoLgA+coL7i/v1keiLUJmwjPu iZiLJkm+58YDJueYesJzwEx1Hs7G5H6/8O1gm68dlFMF553iKTaykRzk3Ovg4lwId8lJsUFv3VV1VS QrI6Jb1RYihGQT0LxXCxFGxrddRjQY6VLYFfFuFlWdGxvevcKSop1xYQfkrQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-[resend -- I failed to CC the thread]
+Zero-length arrays are deprecated[1]. Replace struct ethtool_rxnfc's
+"rule_locs" 0-length array with a flexible array. Detected with GCC 13,
+using -fstrict-flex-arrays=3:
 
-On Thu, Jan 05, 2023 at 08:38:01PM +0100, Greg KH wrote:
-> On Thu, Jan 05, 2023 at 10:04:19AM -0800, Kees Cook wrote:
-> > On Thu, Jan 05, 2023 at 08:39:48AM +0100, Greg KH wrote:
-> > > On Wed, Jan 04, 2023 at 07:37:48PM -0800, Kees Cook wrote:
-> > > > Zero-length arrays are deprecated[1]. Replace struct io_uring_buf_ring's
-> > > > "bufs" with a flexible array member. (How is the size of this array
-> > > > verified?) Detected with GCC 13, using -fstrict-flex-arrays=3:
-> > > > 
-> > > > In function 'io_ring_buffer_select',
-> > > >     inlined from 'io_buffer_select' at io_uring/kbuf.c:183:10:
-> > > > io_uring/kbuf.c:141:23: warning: array subscript 255 is outside the bounds of an interior zero-length array 'struct io_uring_buf[0]' [-Wzero-length-bounds]
-> > > >   141 |                 buf = &br->bufs[head];
-> > > >       |                       ^~~~~~~~~~~~~~~
-> > > > In file included from include/linux/io_uring.h:7,
-> > > >                  from io_uring/kbuf.c:10:
-> > > > include/uapi/linux/io_uring.h: In function 'io_buffer_select':
-> > > > include/uapi/linux/io_uring.h:628:41: note: while referencing 'bufs'
-> > > >   628 |                 struct io_uring_buf     bufs[0];
-> > > >       |                                         ^~~~
-> > > > 
-> > > > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
-> > > > 
-> > > > Fixes: c7fb19428d67 ("io_uring: add support for ring mapped supplied buffers")
-> > > > Cc: Jens Axboe <axboe@kernel.dk>
-> > > > Cc: Pavel Begunkov <asml.silence@gmail.com>
-> > > > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> > > > Cc: stable@vger.kernel.org
-> > > 
-> > > Build problem aside, why is this a stable kernel issue?
-> > 
-> > My thinking was that since this is technically a UAPI change, it'd be
-> > best to get it changed as widely as possible.
-> 
-> You can't break the uapi, so it should be the same with or without your
-> change right?
-> 
-> confused,
+net/ethtool/common.c: In function 'ethtool_get_max_rxnfc_channel':
+net/ethtool/common.c:558:55: warning: array subscript i is outside array bounds of '__u32[0]' {aka 'unsigned int[]'} [-Warray-bounds=]
+  558 |                         .fs.location = info->rule_locs[i],
+      |                                        ~~~~~~~~~~~~~~~^~~
+In file included from include/linux/ethtool.h:19,
+                 from include/uapi/linux/ethtool_netlink.h:12,
+                 from include/linux/ethtool_netlink.h:6,
+                 from net/ethtool/common.c:3:
+include/uapi/linux/ethtool.h:1186:41: note: while referencing
+'rule_locs'
+ 1186 |         __u32                           rule_locs[0];
+      |                                         ^~~~~~~~~
 
-Correct -- but we've had a hard time finding breakages (with extremely
-weird stuff like non-C .h file scrapers) due to the lag between making
-UAPI changes like this.
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
 
-Anyway, I can drop the CC stable if it's more sensible.
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: kernel test robot <lkp@intel.com>
+Cc: Oleksij Rempel <linux@rempel-privat.de>
+Cc: Sean Anderson <sean.anderson@seco.com>
+Cc: Alexandru Tachici <alexandru.tachici@analog.com>
+Cc: Amit Cohen <amcohen@nvidia.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/uapi/linux/ethtool.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+index 58e587ba0450..9b97b3e0ec1f 100644
+--- a/include/uapi/linux/ethtool.h
++++ b/include/uapi/linux/ethtool.h
+@@ -1183,7 +1183,7 @@ struct ethtool_rxnfc {
+ 		__u32			rule_cnt;
+ 		__u32			rss_context;
+ 	};
+-	__u32				rule_locs[0];
++	__DECLARE_FLEX_ARRAY(__u32,	rule_locs);
+ };
+ 
+ 
 -- 
-Kees Cook
+2.34.1
+
